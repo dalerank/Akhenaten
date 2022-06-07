@@ -8,22 +8,6 @@
 #include "graphics/boilerplate.h"
 #include "graphics/text.h"
 
-
-static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int cross_country_y, int *pixel_x, int *pixel_y) {
-    int dir = city_view_orientation();
-    if (dir == DIR_0_TOP_RIGHT || dir == DIR_4_BOTTOM_LEFT) {
-        int base_pixel_x = 2 * cross_country_x - 2 * cross_country_y;
-        int base_pixel_y = cross_country_x + cross_country_y;
-        *pixel_x = dir == DIR_0_TOP_RIGHT ? base_pixel_x : -base_pixel_x;
-        *pixel_y = dir == DIR_0_TOP_RIGHT ? base_pixel_y : -base_pixel_y;
-    } else {
-        int base_pixel_x = 2 * cross_country_x + 2 * cross_country_y;
-        int base_pixel_y = cross_country_x - cross_country_y;
-        *pixel_x = dir == DIR_2_BOTTOM_RIGHT ? base_pixel_x : -base_pixel_x;
-        *pixel_y = dir == DIR_6_TOP_LEFT ? base_pixel_y : -base_pixel_y;
-    }
-}
-
 void figure::draw_fort_standard(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out) {
     if (!formation_get(formation_id)->in_distant_battle) {
         // base
@@ -62,7 +46,9 @@ void figure::adjust_pixel_offset(pixel_coordinate *pixel) {
     int x_offset = 0;
     int y_offset = 0;
     if (use_cross_country) {
-        tile_cross_country_offset_to_pixel_offset(cc_coords.x % 15, cc_coords.y % 15, &x_offset, &y_offset);
+        auto cc_offets = tile_pixel_coords();
+        x_offset = cc_offets.x;
+        y_offset = cc_offets.y;
         y_offset -= missile_damage;
     } else {
         int dir = figure_image_normalize_direction(direction);

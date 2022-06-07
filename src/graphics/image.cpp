@@ -234,4 +234,18 @@ const image_t *image_get_enemy(int id) {
     return data.enemy->get_image(id);
 }
 
+const int image_t::isometric_size() const {
+    return (width + 2) / TILE_WIDTH_PIXELS;
+}
+const int image_t::isometric_top_height() const {
+    if (has_isometric_top)
+        return height - (isometric_size() * TILE_HEIGHT_PIXELS);
+    return 0;
+}
+const int image_t::isometric_3d_height() const {
+    if (has_isometric_top)
+        return isometric_box_height;
+    return 0;
+}
+
 int terrain_ph_offset;

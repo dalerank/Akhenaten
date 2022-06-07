@@ -512,8 +512,6 @@ const terrain_image *map_image_context_get_shore(int grid_offset) {
 const terrain_image *map_image_context_get_river(int grid_offset) {
     int tiles[MAX_TILES];
     fill_matches(grid_offset, TERRAIN_DEEPWATER, 1, 0, tiles);
-    if (grid_offset == 26814)
-        int a = 24;
     return get_image(CONTEXT_DEEPWATER, tiles);
 }
 const terrain_image *map_image_context_get_floodplain_shore(int grid_offset) {

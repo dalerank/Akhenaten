@@ -246,6 +246,7 @@ public:
     int figure_image_corpse_offset();
     int figure_image_missile_launcher_offset();
     int figure_image_direction();
+    pixel_coordinate tile_pixel_coords();
 
     // city_figure.c
     void draw_debug();

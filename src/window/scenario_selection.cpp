@@ -301,9 +301,9 @@ static void draw_scores(int scenario_id) {
     }
 
     uint8_t txt[200];
-    draw_debug_line(txt, INFO_X, -100, 100, "rank", rank, COLOR_FONT_YELLOW);
-    draw_debug_line(txt, INFO_X, -80, 100, "unlocked", unlocked, COLOR_FONT_YELLOW);
-    draw_debug_line(txt, INFO_X, -60, 100, "beaten", beaten, COLOR_FONT_YELLOW);
+    debug_text(txt, INFO_X, -100, 100, "rank", rank, COLOR_FONT_YELLOW);
+    debug_text(txt, INFO_X, -80, 100, "unlocked", unlocked, COLOR_FONT_YELLOW);
+    debug_text(txt, INFO_X, -60, 100, "beaten", beaten, COLOR_FONT_YELLOW);
 }
 static void draw_side_panel_info() {
     switch (data.dialog) {
@@ -421,7 +421,7 @@ static void draw_foreground(void) {
     }
 
     uint8_t txt[200];
-    draw_debug_line(txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
+    debug_text(txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
 //    draw_debug_line(txt, INFO_X + 100, -120, 0, "", get_junk2(), COLOR_FONT_YELLOW);
 
     image_buttons_draw(0, 0, &start_button, 1);

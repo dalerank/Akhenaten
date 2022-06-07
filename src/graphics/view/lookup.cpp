@@ -2,6 +2,7 @@
 #include "core/calc.h"
 #include "grid/grid.h"
 #include "lookup.h"
+#include "graphics/image.h"
 
 static map_point SCREENTILE_TO_MAPPOINT_LOOKUP[4][500][500];
 static void screentile_calc_params_by_orientation(int city_orientation,

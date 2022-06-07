@@ -7,6 +7,7 @@
 #include "grid/image.h"
 #include "widget/minimap.h"
 #include "lookup.h"
+#include "graphics/image.h"
 
 ///////
 

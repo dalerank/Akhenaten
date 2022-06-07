@@ -15,9 +15,19 @@
 
 enum {
     IMAGE_TYPE_WITH_TRANSPARENCY = 0,
+    IMAGE_TYPE_FULLY_OPAQUE = 1,
+    IMAGE_TYPE_16x16 = 10,
+    IMAGE_TYPE_24x24 = 12,
+    IMAGE_TYPE_32x32 = 13, // only used in system.bmp
+    IMAGE_TYPE_PLAIN_FONT = 20,
     IMAGE_TYPE_ISOMETRIC = 30,
     IMAGE_TYPE_MOD = 40
 };
+
+#define TILE_WIDTH_PIXELS 60
+#define TILE_HEIGHT_PIXELS 30
+#define HALF_TILE_WIDTH_PIXELS 30
+#define HALF_TILE_HEIGHT_PIXELS 15
 
 //typedef struct image;
 typedef struct {
@@ -32,6 +42,11 @@ typedef struct {
 struct image_t;
 struct image_t {
     char *pak_name;
+    struct {
+        char *name;
+        int group_id;
+        int entry_index;
+    } bmp;
     int sgx_index;
     int sgx_data_offset;
     int data_length;
@@ -62,14 +77,10 @@ struct image_t {
     int type;
     bool is_fully_compressed;
     bool is_external;
-    int top_height;
+    bool has_isometric_top;
+    int isometric_box_height;
     int unk11; //
     int unk12; //
-    struct {
-        char *name;
-        int group_id;
-        int entry_index;
-    } bmp;
     int unk13; //
     // (anim speed id)
     int unk14; //
@@ -89,6 +100,10 @@ struct image_t {
     } atlas;
 
     color_t *TEMP_PIXEL_DATA = nullptr;
+
+    const int isometric_size() const;
+    const int isometric_top_height() const;
+    const int isometric_3d_height() const;
 };
 
 extern int terrain_ph_offset;

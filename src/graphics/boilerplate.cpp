@@ -2,7 +2,6 @@
 
 #include "graphics/screen.h"
 #include "platform/renderer.h"
-#include "dev/debug.h"
 
 #ifdef __vita__
 #include <vita2d.h>
@@ -90,15 +89,14 @@ void graphics_draw_from_texture(int image_id, int x, int y, int width, int heigh
 //};
 
 static int get_visible_footprint_pixels_per_row(int tiles, int width, int height, int row) {
-    int base_height = tiles * FOOTPRINT_HEIGHT;
+    int base_height = tiles * TILE_HEIGHT_PIXELS;
     int footprint_row = row - (height - base_height);
     if (footprint_row < 0)
         return 0;
-    else if (footprint_row < tiles * FOOTPRINT_HALF_HEIGHT)
+    else if (footprint_row < tiles * HALF_TILE_HEIGHT_PIXELS)
         return 2 + 4 * footprint_row;
-    else {
+    else
         return 2 + 4 * (base_height - 1 - footprint_row);
-    }
 }
 
 //static void draw_modded_footprint(int image_id, int x, int y, color_t color) {
@@ -709,10 +707,10 @@ void ImageDraw::img_sprite(int image_id, int x, int y, color_t color_mask, float
 void ImageDraw::img_ornament(int image_id, int base_id, int x, int y, color_t color_mask, float scale) {
     const image_t *img = image_get(image_id);
     const image_t *base = image_get(base_id);
-    int tile_size = (base->width + 2) / (FOOTPRINT_WIDTH + 2);
-    int ydiff = FOOTPRINT_HALF_HEIGHT * (tile_size + 1);
+    int ydiff = HALF_TILE_HEIGHT_PIXELS * (base->isometric_size() + 1);
     x += base->animation.sprite_x_offset;
     y += base->animation.sprite_y_offset - base->height + ydiff;
+//    y += base->animation.sprite_y_offset - img->isometric_ydiff();
     graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
 }
 void ImageDraw::img_from_below(int image_id, int x, int y, color_t color_mask, float scale) {
@@ -799,7 +797,6 @@ void ImageDraw::isometric_from_drawtile(int image_id, int x, int y, color_t colo
 //    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
 //        assets_load_unpacked_asset(image_id);
 //    }
-    int tile_size = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-    y += FOOTPRINT_HALF_HEIGHT * (tile_size + 1) - img->height;
+    y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
     graphics_renderer()->draw_image(img, x, y, color_mask, 1.0f, false);
 }

@@ -30,6 +30,7 @@
 #include "window/city.h"
 #include "platform/renderer.h"
 #include "widget/city/figures_cached_draw.h"
+#include "core/stopwatch.h"
 
 static struct {
     map_point current_tile;
@@ -88,6 +89,8 @@ static int input_coords_in_city(int x, int y) {
     return (x >= 0 && x < width && y >= 0 && y < height);
 }
 
+stopwatch WATCH;
+
 static void draw_TEST(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
@@ -114,6 +117,8 @@ static void draw_tile_boxes(pixel_coordinate pixel, map_point point) {
     }
 };
 void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *figure_coord, map_point tile) {
+    WATCH.REPEAT();
+
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
         highlighted_formation = formation_legion_at_grid_offset(tile.grid_offset());
@@ -137,7 +142,11 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
     // finally, draw these on top of everything else
     city_view_foreach_valid_map_tile(
             draw_debug_tile,
-            draw_debug_figures);
+            draw_debug_figurecaches);
+    city_view_foreach_valid_map_tile(draw_debug_figures);
+
+    WATCH.STOP();
+//    WATCH.LOG();
 }
 void widget_city_draw_with_overlay(map_point tile) {
     if (!select_city_overlay())

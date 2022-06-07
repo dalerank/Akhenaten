@@ -123,25 +123,41 @@ static void draw_messages(int total_messages) {
             color_t c = COLOR_WHITE;
             uint8_t str[10];
 
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_body_id, c);
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_title_id, c); // FF FF
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_02, c); // FF FF
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city, c);; // enum?
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_body_id, c);
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_title_id, c); // FF FF
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_02, c); // FF FF
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city, c);; // enum?
 
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount, c);;
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource, c);;
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_months_left, c);
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_07, c);
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount, c);;
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource, c);;
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_months_left, c);
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_07, c);
 
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_phrase_id, c);
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city_past, c);; // enum?
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_09, c); // 00 00
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_10, c); // 00 00
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_phrase_id, c);
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city_past, c);; // enum?
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_09, c); // 00 00
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_10, c); // 00 00
 
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount_past, c);;
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource_past, c);;
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_11a_i8, c);; // FF FF
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_12, c);; // 00 00
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount_past, c);;
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource_past, c);;
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_11a_i8, c);; // FF FF
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_12, c);; // 00 00
 
             continue;
         }

@@ -335,8 +335,6 @@ io_buffer *iob_empire_cities = new io_buffer([](io_buffer *iob) {
             iob->bind(BIND_SIGNATURE_UINT8, &city->buys_resource[r]);
         for (int r = 0; r < RESOURCES_MAX; r++) {
             iob->bind(BIND_SIGNATURE_UINT8, &city->sells_resource[r]);
-            if (city->sells_resource[r])
-                int a = 5;
         }
         iob->bind(BIND_SIGNATURE_INT16, &city->cost_to_open);
         iob->bind(BIND_SIGNATURE_INT16, &city->ph_unk01);

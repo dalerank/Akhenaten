@@ -66,8 +66,6 @@ void figure::map_figure_add() {
     if (on_tile) {
         figure *checking = figure_get(on_tile); // get first figure (head) on the new tile, if any is present
 //        assert(checking->id != f->id); // hmmmm that'd be wrong
-        if (checking->id == id)
-            int a = 2;
 
         // traverse through chain
         while (checking->next_figure) {

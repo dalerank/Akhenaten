@@ -524,9 +524,8 @@ void figure::set_cross_country_direction(int x_src, int y_src, int x_dst, int y_
         cc_delta_xy = 2 * cc_delta.x - cc_delta.y;
     else if (cc_delta.y < cc_delta.x)
         cc_delta_xy = 2 * cc_delta.y - cc_delta.x;
-    else { // equal
+    else // equal
         cc_delta_xy = 0;
-    }
     if (is_missile)
         direction = calc_missile_direction(x_src, y_src, x_dst, y_dst);
     else {
@@ -558,9 +557,8 @@ void figure::set_cross_country_direction(int x_src, int y_src, int x_dst, int y_
     }
     if (cc_delta.x >= cc_delta.y)
         cc_direction = 1;
-    else {
+    else
         cc_direction = 2;
-    }
 }
 void figure::set_cross_country_destination(int x_dst, int y_dst) {
     destination_tile.set(x_dst, y_dst);
@@ -574,16 +572,14 @@ void figure::cross_country_update_delta() {
     if (cc_direction == 1) { // x
         if (cc_delta_xy >= 0)
             cc_delta_xy += 2 * (cc_delta.y - cc_delta.x);
-        else {
+        else
             cc_delta_xy += 2 * cc_delta.y;
-        }
         cc_delta.x--;
     } else { // y
         if (cc_delta_xy >= 0)
             cc_delta_xy += 2 * (cc_delta.x - cc_delta.y);
-        else {
+        else
             cc_delta_xy += 2 * cc_delta.x;
-        }
         cc_delta.y--;
     }
 }

@@ -7,7 +7,6 @@
 #include "io/io.h"
 #include "atlas_packer.h"
 #include "graphics/font.h"
-#include "graphics/boilerplate.h"
 #include "io/log.h"
 #include "SDL_log.h"
 #include "core/struct_types.h"
@@ -75,6 +74,9 @@ static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
         28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0,
         0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
 };
+#define FOOTPRINT_WIDTH 58
+#define FOOTPRINT_HEIGHT 30
+#define FOOTPRINT_HALF_HEIGHT 15
 
 static int convert_footprint_tile(buffer *buf, const image_t *img, int x_offset, int y_offset) {
     int pixels_count = 0;
@@ -96,41 +98,40 @@ static int convert_isometric_footprint(buffer *buf, const image_t *img) {
     int pixels_count = 0;
     auto p_atlas = img->atlas.p_atlas;
 
-    int num_tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-    int x_start = (num_tiles - 1) * 30;
+    int num_tiles = img->isometric_size();
+    int x_start = (num_tiles - 1) * FOOTPRINT_HEIGHT;
     int y_offset;
 
-//    if (graphics_renderer()->isometric_images_are_joined()) {
-    y_offset = img->height - 30 * num_tiles;
-//    } else {
-//        y_offset = img->top_height;
-//    }
+    y_offset = img->height - FOOTPRINT_HEIGHT * num_tiles;
 
     for (int i = 0; i < num_tiles; i++) {
-        int x = -30 * i + x_start;
+        int x = -FOOTPRINT_HEIGHT * i + x_start;
         int y = FOOTPRINT_HALF_HEIGHT * i + y_offset;
         for (int j = 0; j <= i; j++) {
             convert_footprint_tile(buf, img, x, y);
-            x += 60;
+            x += FOOTPRINT_WIDTH + 2;
         }
     }
     for (int i = num_tiles - 2; i >= 0; i--) {
-        int x = -30 * i + x_start;
+        int x = -FOOTPRINT_HEIGHT * i + x_start;
         int y = FOOTPRINT_HALF_HEIGHT * (num_tiles * 2 - i - 2) + y_offset;
         for (int j = 0; j <= i; j++) {
             convert_footprint_tile(buf, img, x, y);
-            x += 60;
+            x += FOOTPRINT_WIDTH + 2;
         }
     }
     return pixels_count;
 }
 
+static bool is_pixel_transparent(color_t pixel) {
+    return (pixel & COLOR_CHANNEL_ALPHA) == ALPHA_TRANSPARENT;
+}
 static void convert_to_plain_white(const image_t *img) {
     color_t *pixels = img->TEMP_PIXEL_DATA;
     int atlas_width = img->atlas.p_atlas->width;
     for (int y = 0; y < img->height; y++) {
         for (int x = 0; x < img->width; x++) {
-            if ((pixels[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT)
+            if (!is_pixel_transparent(pixels[x]))
                 pixels[x] |= 0x00ffffff;
         }
         pixels += atlas_width;
@@ -157,7 +158,8 @@ static void add_edge_to_letter(const image_t *img) {
     auto edge_color = COLOR_BLACK;
     for (int y = 0; y < img->height; y++) {
         for (int x = 0; x < img->width; x++) {
-            if ((p_buffer_row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+            if (!is_pixel_transparent(p_buffer_row[x])) {
+//            if ((p_buffer_row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
 //                pixels[atlas_width * 0 + x + 0] = COLOR_BLACK;
                 pixels_row[atlas_width * 0 + x + 1] = edge_color;
                 pixels_row[atlas_width * 0 + x + 2] = edge_color;
@@ -178,7 +180,8 @@ static void add_edge_to_letter(const image_t *img) {
     p_buffer_row = TEMP_BUFFER;
     for (int y = 0; y < img->height; y++) {
         for (int x = 0; x < img->width; x++) {
-            if ((p_buffer_row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT)
+            if (!is_pixel_transparent(p_buffer_row[x]))
+//            if ((p_buffer_row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT)
                 pixels_row[atlas_width * 1 + x + 1] = COLOR_WHITE;
         }
         pixels_row += atlas_width;
@@ -249,19 +252,39 @@ static buffer *load_external_data(const image_t *img) {
     }
     return external_image_buf;
 }
+static int isometric_calculate_top_height(const image_t *img) {
+    int top_height = img->isometric_top_height();
+    int tri_rows = img->height - top_height - HALF_TILE_HEIGHT_PIXELS * img->isometric_size() - 1;
+
+    for (int d = 0; d < tri_rows; ++d) { // diagonals
+        for (int y = 0; y < d + 1; ++y) { // steps in the diagonal == y axis, too
+            int x = 2 * (d - y);
+            color_t *row = &img->TEMP_PIXEL_DATA[y * img->atlas.p_atlas->width];
+            color_t *x_left = &row[x];
+            color_t *x_right = &row[img->width - x - 2];
+            if (!is_pixel_transparent(x_left[0]) || !is_pixel_transparent(x_left[1])
+                || !is_pixel_transparent(x_right[0]) || !is_pixel_transparent(x_right[1])) {
+                return top_height + tri_rows - d;
+            }
+        }
+    }
+    return top_height;
+}
 static int convert_image_data(buffer *buf, image_t *img, bool convert_fonts) {
     if (img->is_external)
         buf = load_external_data(img);
     if (buf == nullptr)
         return 0;
     img->TEMP_PIXEL_DATA = &img->atlas.p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset * img->atlas.p_atlas->width) + img->atlas.x_offset];
-    if (img->is_fully_compressed)
+
+    if (img->type == IMAGE_TYPE_ISOMETRIC) {
+        convert_isometric_footprint(buf, img);
+        if (img->has_isometric_top) {
+            convert_compressed(buf, img->data_length - img->uncompressed_length, img);
+            img->isometric_box_height = isometric_calculate_top_height(img);
+        }
+    } else if (img->is_fully_compressed)
         convert_compressed(buf, img->data_length, img);
-    else if (img->top_height) { // isometric tile
-        convert_isometric_footprint(buf, img);
-        convert_compressed(buf, img->data_length - img->uncompressed_length, img);
-    } else if (img->type == IMAGE_TYPE_ISOMETRIC)
-        convert_isometric_footprint(buf, img);
     else
         convert_uncompressed(buf, img);
 
@@ -445,7 +468,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
         img.type = pak_buf->read_u8();
         img.is_fully_compressed = pak_buf->read_i8();
         img.is_external = pak_buf->read_i8();
-        img.top_height = pak_buf->read_i8();
+        img.has_isometric_top = pak_buf->read_i8();
         img.unk11 = pak_buf->read_i8();
         img.unk12 = pak_buf->read_i8();
         img.bmp.group_id = pak_buf->read_u8();

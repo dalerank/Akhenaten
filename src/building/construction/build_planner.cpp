@@ -854,8 +854,7 @@ void BuildPlanner::set_graphics_row(int row, int *image_ids, int total) {
         int tile_size = 0;
         if (image_ids[i] != 0) {
             auto img = image_get(image_ids[i]);
-            int tile_size = (img->width + 2) / 60;
-            set_tile_size(row, i, tile_size);
+            set_tile_size(row, i, img->isometric_size());
         }
     }
 }

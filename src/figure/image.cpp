@@ -1,6 +1,7 @@
 #include "image.h"
 
 #include "graphics/image_groups.h"
+#include "graphics/image.h"
 
 static const int CORPSE_IMAGE_OFFSETS[128] = {
         0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -27,7 +28,43 @@ static const int MISSILE_LAUNCHER_OFFSETS[128] = {
 static const int CART_OFFSETS_X[] = {17, 22, 17, 0, -17, -22, -17, 0};
 static const int CART_OFFSETS_Y[] = {-7, -1, 7, 11, 6, -1, -7, -12};
 
-#include "graphics/image.h"
+static void cc_coords_to_pixel_offset(int cross_country_x, int cross_country_y, int *pixel_x, int *pixel_y) {
+    int dir = city_view_orientation();
+    if (dir == DIR_0_TOP_RIGHT || dir == DIR_4_BOTTOM_LEFT) {
+        int base_pixel_x = 2 * cross_country_x - 2 * cross_country_y;
+        int base_pixel_y = cross_country_x + cross_country_y;
+        *pixel_x = dir == DIR_0_TOP_RIGHT ? base_pixel_x : -base_pixel_x;
+        *pixel_y = dir == DIR_0_TOP_RIGHT ? base_pixel_y : -base_pixel_y;
+    } else {
+        int base_pixel_x = 2 * cross_country_x + 2 * cross_country_y;
+        int base_pixel_y = cross_country_x - cross_country_y;
+        *pixel_x = dir == DIR_2_BOTTOM_RIGHT ? base_pixel_x : -base_pixel_x;
+        *pixel_y = dir == DIR_6_TOP_LEFT ? base_pixel_y : -base_pixel_y;
+    }
+}
+pixel_coordinate figure::tile_pixel_coords() {
+    int x;
+    int y;
+    if (!use_cross_country) {
+        // todo? too complicated...
+//        cc_coords_to_pixel_offset((cc_coords.x - 15) % 15, (cc_coords.y) % 15, &x, &y);
+        int prg_r = progress_on_tile > 7 ? progress_on_tile - 15 : progress_on_tile;
+        int prg_x = 2 * (prg_r);
+        int prg_y = (prg_r);
+        switch ((8 + direction - city_view_orientation()) % 8) {
+            case 0: return {prg_x, -prg_y}; break;
+            case 1: return {2 * prg_x, 0}; break;
+            case 2: return {prg_x, prg_y}; break;
+            case 3: return {0, 2 * prg_y}; break;
+            case 4: return {-prg_x, prg_y}; break;
+            case 5: return {-2 * prg_x, 0}; break;
+            case 6: return {-prg_x, -prg_y}; break;
+            case 7: return {0, -2 * prg_y}; break;
+        }
+    } else
+        cc_coords_to_pixel_offset(cc_coords.x % 15, cc_coords.y % 15, &x, &y);
+    return {x, y};
+}
 
 void figure::image_set_animation(int collection, int group, int offset, int max_frames, int duration) {
     anim_base = image_id_from_group(collection, group);
@@ -38,6 +75,29 @@ void figure::image_set_animation(int collection, int group, int offset, int max_
     anim_frame_duration = duration;
 }
 void figure::figure_image_update(bool refresh_only) {
+    // update pixel coords
+//    sprite_pixel_on_tile = {HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS};
+//    if (use_cross_country) {
+//        int prg_x;
+//        int prg_y;
+//        cc_coords_to_pixel_offset(cc_coords.x % 15, cc_coords.y % 15,
+//                                  &prg_x, &prg_y);
+//        sprite_pixel_on_tile += {prg_x, prg_y};
+//    } else {
+//        int prg_r = progress_on_tile > 7 ? progress_on_tile - 16 : progress_on_tile;
+//        int prg_x = 2 * (prg_r);
+//        int prg_y = (prg_r);
+//        switch ((8 + direction - city_view_orientation()) % 8) {
+//            case 0: sprite_pixel_on_tile += {prg_x, -prg_y}; break;
+//            case 1: sprite_pixel_on_tile += {2 * prg_x, 0}; break;
+//            case 2: sprite_pixel_on_tile += {prg_x, prg_y}; break;
+//            case 3: sprite_pixel_on_tile += {0, 2 * prg_y}; break;
+//            case 4: sprite_pixel_on_tile += {-prg_x, prg_y}; break;
+//            case 5: sprite_pixel_on_tile += {-2 * prg_x, 0}; break;
+//            case 6: sprite_pixel_on_tile += {-prg_x, -prg_y}; break;
+//            case 7: sprite_pixel_on_tile += {0, -2 * prg_y}; break;
+//        }
+//    }
 
     // null images
     if (anim_base <= 0)

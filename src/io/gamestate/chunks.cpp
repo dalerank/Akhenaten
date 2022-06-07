@@ -35,8 +35,6 @@ io_buffer *iob_chunks_schema = new io_buffer([](io_buffer *iob) {
         //    MAP: 24
         //    SAV: 175
         //    SAV (v.160+): 181
-        if (i == 77)
-            int a = 5;
         auto chunk = &data.chunks[i];
         iob->bind(BIND_SIGNATURE_UINT32, &chunk->compressed);
 
