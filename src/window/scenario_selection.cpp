@@ -1,17 +1,14 @@
 #include "scenario_selection.h"
 
-#include "core/dir.h"
 #include "core/encoding.h"
-#include "core/file.h"
-#include "core/image_group.h"
-#include "game/io/boilerplate.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/image_button.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
-#include "graphics/scrollbar.h"
+#include "io/file.h"
+#include "graphics/image_groups.h"
+#include "io/gamestate/boilerplate.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -19,19 +16,14 @@
 #include "scenario/invasion.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
-#include "sound/music.h"
-#include "window/city.h"
 #include "message_dialog.h"
 
-#include <string.h>
-#include <graphics/scroll_list_panel.h>
-#include <game/mission.h>
-#include <game/player_data.h>
-#include <core/lang.h>
+#include "graphics/elements/scroll_list_panel.h"
+#include "game/mission.h"
+#include "io/playerdata/player_data.h"
 #include <cmath>
-#include <game/io/manager.h>
-#include <game/io/chunks.h>
-#include <dev/debug.h>
+#include "io/manager.h"
+#include "dev/debug.h"
 
 static void button_select_item(int index, int param2);
 static void button_select_campaign(int index, int param2);
@@ -309,9 +301,9 @@ static void draw_scores(int scenario_id) {
     }
 
     uint8_t txt[200];
-    draw_debug_line(txt, INFO_X, -100, 100, "rank", rank, COLOR_FONT_YELLOW);
-    draw_debug_line(txt, INFO_X, -80, 100, "unlocked", unlocked, COLOR_FONT_YELLOW);
-    draw_debug_line(txt, INFO_X, -60, 100, "beaten", beaten, COLOR_FONT_YELLOW);
+    debug_text(txt, INFO_X, -100, 100, "rank", rank, COLOR_FONT_YELLOW);
+    debug_text(txt, INFO_X, -80, 100, "unlocked", unlocked, COLOR_FONT_YELLOW);
+    debug_text(txt, INFO_X, -60, 100, "beaten", beaten, COLOR_FONT_YELLOW);
 }
 static void draw_side_panel_info() {
     switch (data.dialog) {
@@ -378,7 +370,6 @@ static void draw_side_panel_info() {
 }
 
 static void draw_background(void) {
-    graphics_reset_dialog();
     switch (data.dialog) {
         case MAP_SELECTION_CCK_LEGACY:
             ImageDraw::img_background(image_id_from_group(GROUP_MAP_SELECTION_CCK));
@@ -391,7 +382,7 @@ static void draw_background(void) {
             ImageDraw::img_background(image_id_from_group(GROUP_MAP_SELECTION_HISTORY));
             break;
     }
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     if (data.dialog != MAP_SELECTION_CAMPAIGN) {
         panel->draw();
         draw_side_panel_info();
@@ -399,7 +390,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     switch (data.dialog) {
         case MAP_SELECTION_CUSTOM:
@@ -430,7 +421,7 @@ static void draw_foreground(void) {
     }
 
     uint8_t txt[200];
-    draw_debug_line(txt, INFO_X, -120, 0, "", GamestateIO::get_file_version(), COLOR_FONT_YELLOW);
+    debug_text(txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
 //    draw_debug_line(txt, INFO_X + 100, -120, 0, "", get_junk2(), COLOR_FONT_YELLOW);
 
     image_buttons_draw(0, 0, &start_button, 1);

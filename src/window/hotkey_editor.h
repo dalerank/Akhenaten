@@ -1,7 +1,7 @@
 #ifndef WINDOW_HOTKEY_EDITOR_H
 #define WINDOW_HOTKEY_EDITOR_H
 
-#include "core/hotkey_config.h"
+#include "io/config/hotkeys.h"
 #include "input/keys.h"
 
 void window_hotkey_editor_show(int action, int index,

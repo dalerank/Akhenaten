@@ -6,9 +6,9 @@
 #include "city/data.h"
 #include "city/message.h"
 #include "city/victory.h"
-#include "city/view/view.h"
-#include "core/image.h"
-#include "core/image_group_editor.h"
+#include "graphics/view/view.h"
+#include "graphics/image.h"
+#include "graphics/image_groups.h"
 #include "empire/empire.h"
 #include "empire/object.h"
 #include "figure/enemy_army.h"
@@ -19,25 +19,25 @@
 #include "figure/trader.h"
 #include "figuretype/editor.h"
 #include "figuretype/water.h"
-#include "game/animation.h"
+#include "graphics/animation_timers.h"
 #include "game/state.h"
 #include "game/time.h"
-#include "map/aqueduct.h"
-#include "map/building.h"
-#include "map/desirability.h"
-#include "map/elevation.h"
-#include "map/figure.h"
-#include "map/image.h"
-#include "map/image_context.h"
-#include "map/natives.h"
-#include "map/property.h"
-#include "map/random.h"
-#include "map/road_network.h"
-#include "map/routing/routing_terrain.h"
-#include "map/soldier_strength.h"
-#include "map/sprite.h"
-#include "map/terrain.h"
-#include "map/tiles.h"
+#include "grid/aqueduct.h"
+#include "grid/building.h"
+#include "grid/desirability.h"
+#include "grid/elevation.h"
+#include "grid/figure.h"
+#include "grid/image.h"
+#include "grid/image_context.h"
+#include "grid/natives.h"
+#include "grid/property.h"
+#include "grid/random.h"
+#include "grid/road_network.h"
+#include "grid/routing/routing_terrain.h"
+#include "grid/soldier_strength.h"
+#include "grid/sprite.h"
+#include "grid/terrain.h"
+#include "grid/tiles.h"
 #include "scenario/distant_battle.h"
 #include "scenario/editor.h"
 #include "scenario/empire.h"
@@ -93,12 +93,12 @@ static void create_blank_map(int size) {
     scenario_editor_create(size);
     clear_map_data();
     map_image_init_edges();
-    city_view_go_to_screen_tile_corner(screen_tile(76, 152), true);
+    camera_go_to_corner_tile(screen_tile(76, 152), true);
     city_view_reset_orientation();
 }
 
 static void prepare_map_for_editing(void) {
-    image_load_main_paks(scenario_property_climate(), 1, 0);
+//    image_load_main_paks(scenario_property_climate(), 1, 0);
 
 //    empire_load_external_c3(1, scenario_empire_id());
     empire_object_init_cities();

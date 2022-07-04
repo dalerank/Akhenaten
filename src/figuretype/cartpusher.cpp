@@ -8,15 +8,15 @@
 #include "building/warehouse.h"
 #include "city/resource.h"
 #include "core/calc.h"
-#include "core/config.h"
-#include "core/image.h"
+#include "io/config/config.h"
+#include "graphics/image.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "game/resource.h"
-#include "map/road_network.h"
-#include "map/routing/routing_terrain.h"
+#include "grid/road_network.h"
+#include "grid/routing/routing_terrain.h"
 
 static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static const int CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};

@@ -1,12 +1,11 @@
 #include "core/buffer.h"
-#include "core/log.h"
 
-#include <vector>
 #include <cstring>
 #include <algorithm>
 #include <cassert>
 
 void safe_realloc_for_size(buffer **p_buf, int size) {
+    // this function is ONLY valid for buffers created on the HEAP.
     if (*p_buf == nullptr)
         *p_buf = new buffer(size);
     else {
@@ -18,12 +17,9 @@ void safe_realloc_for_size(buffer **p_buf, int size) {
     }
 }
 
-buffer::buffer():
-    data{std::vector<uint8_t>()}, index{0} {
+buffer::buffer(): data{std::vector<uint8_t>()}, index{0} {
 }
-
-buffer::buffer(size_t s):
-    data{std::vector<uint8_t>(s)}, index{0} {
+buffer::buffer(size_t s): data{std::vector<uint8_t>(s)}, index{0} {
 }
 
 void buffer::clear() {
@@ -46,25 +42,14 @@ size_t buffer::size() const {
 bool buffer::at_end() const {
     return index >= size();
 }
-
 int buffer::get_offset() const {
     return index;
 }
-
 void buffer::set_offset(size_t offset) {
     index = offset;
 }
-
 void buffer::reset_offset() {
     index = 0;
-}
-
-void buffer::skip(size_t s) {
-    if (!is_valid(s)) {
-        index = size();
-    } else {
-        index += s;
-    }
 }
 
 bool buffer::is_valid(size_t count) const {
@@ -86,7 +71,6 @@ uint8_t buffer::read_u8() {
 
     return result;
 }
-
 uint16_t buffer::read_u16() {
     uint16_t result = 0;
     if (is_valid(sizeof(result))) {
@@ -97,7 +81,6 @@ uint16_t buffer::read_u16() {
 
     return result;
 }
-
 uint32_t buffer::read_u32() {
     uint32_t result = 0;
     if (is_valid(sizeof(result))) {
@@ -110,7 +93,6 @@ uint32_t buffer::read_u32() {
 
     return result;
 }
-
 int8_t buffer::read_i8() {
     int8_t result = 0;
     if (is_valid(sizeof(result))) {
@@ -141,7 +123,6 @@ int32_t buffer::read_i32() {
 
     return result;
 }
-
 size_t buffer::read_raw(void *value, size_t s) {
     size_t result = 0;
     if (is_valid(sizeof(result))) {
@@ -156,20 +137,17 @@ size_t buffer::read_raw(void *value, size_t s) {
 void buffer::fill(uint8_t val) {
     std::fill(data.begin(), data.end(), val);
 }
-
 void buffer::write_u8(uint8_t value) {
     if (is_valid(sizeof(value))) {
         data.at(index++) = value;
     }
 }
-
 void buffer::write_u16(uint16_t value) {
     if (is_valid(sizeof(value))) {
         data.at(index++) = value & 0xff;
         data.at(index++) = (value >> 8) & 0xff;
     }
 }
-
 void buffer::write_u32(uint32_t value) {
     if (is_valid(sizeof(value))) {
         data.at(index++) = value & 0xff;
@@ -178,7 +156,6 @@ void buffer::write_u32(uint32_t value) {
         data.at(index++) = (value >> 24) & 0xff;
     }
 }
-
 void buffer::write_i8(int8_t value) {
     if (is_valid(sizeof(value))) {
         data.at(index++) = value & 0xff;
@@ -205,24 +182,27 @@ void buffer::write_raw(const void *value, size_t s) {
     }
 }
 
+void buffer::skip(size_t s) {
+    if (!is_valid(s)) {
+        index = size();
+    } else {
+        index += s;
+    }
+}
+
 size_t buffer::from_file(size_t count, FILE *__restrict__ fp) {
     assert(count <= size());
-
     size_t result = 0;
-    if (count <= size()) {
+    if (count <= size())
         result = fread(data.data(), sizeof(get_value(0)), count, fp);
-    }
-
     return result;
 }
 
 size_t buffer::to_file(size_t count, FILE *__restrict__ fp) const {
     assert(count <= size());
-
     size_t result = 0;
-    if (count <= size() && fp != nullptr) {
+    if (count <= size() && fp != nullptr)
         result = fwrite(get_data(), sizeof(get_value(0)), count, fp);
-    }
     return result;
 }
 

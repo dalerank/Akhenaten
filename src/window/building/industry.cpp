@@ -1,4 +1,4 @@
-#include <map/floodplain.h>
+#include <grid/floodplain.h>
 #include "industry.h"
 
 #include "building/building.h"
@@ -7,11 +7,11 @@
 #include "core/calc.h"
 #include "figure/figure.h"
 #include "game/resource.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
-#include "map/terrain.h"
+#include "grid/terrain.h"
 
 static void draw_farm(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource) {
     c->help_id = help_id;

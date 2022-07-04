@@ -185,12 +185,17 @@ set(TINYFD_FILES
 #    ext/zlib/zutil.c
 #)
 
+#set(SDL_IMAGE_FILES
+##    ext/SDL_image/IMG_savejpg.c
+#    ext/SDL_image/IMG_savepng.c
+#)
+
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/arguments.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/julius.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/log.cpp
+    src/io/log.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/mouse.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/platform.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/prefs.cpp
@@ -198,6 +203,7 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/touch.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/version.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/virtual_keyboard.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/renderer.cpp
 )
 
 if (VITA_BUILD)
@@ -228,29 +234,38 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/backtrace.cpp
     ${PROJECT_SOURCE_DIR}/src/core/buffer.cpp
     ${PROJECT_SOURCE_DIR}/src/core/calc.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/config.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/dir.cpp
     ${PROJECT_SOURCE_DIR}/src/core/encoding.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/encoding_korean.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/encoding_simp_chinese.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/encoding_trad_chinese.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/file.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/hotkey_config.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/image.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/io.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/lang.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/encoding/korean.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/encoding/simp_chinese.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/encoding/trad_chinese.cpp
     ${PROJECT_SOURCE_DIR}/src/core/locale.cpp
-#    ${PROJECT_SOURCE_DIR}/src/core/mods.cpp
-#    ${PROJECT_SOURCE_DIR}/src/core/png_read.cpp
     ${PROJECT_SOURCE_DIR}/src/core/random.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/smacker.cpp
     ${PROJECT_SOURCE_DIR}/src/core/speed.cpp
     ${PROJECT_SOURCE_DIR}/src/core/string.cpp
     ${PROJECT_SOURCE_DIR}/src/core/time.cpp
     ${PROJECT_SOURCE_DIR}/src/core/zip.cpp
     ${PROJECT_SOURCE_DIR}/src/core/game_environment.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/stopwatch.cpp)
-
+    ${PROJECT_SOURCE_DIR}/src/core/stopwatch.cpp
+)
+set(IO_FILES
+    ${PROJECT_SOURCE_DIR}/src/io/dir.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/file.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/file_formats.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/io.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/io_buffer.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/config/config.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/config/hotkeys.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/gamestate/chunks.cpp
+    src/io/manager.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/gamestate/boilerplate.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/imagepaks/imagepak.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/imagepaks/atlas_packer.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/playerdata/player_data.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/gamefiles/lang.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/gamefiles/smacker.cpp
+#    ${PROJECT_SOURCE_DIR}/src/io/gamefiles/mods.cpp
+#    ${PROJECT_SOURCE_DIR}/src/io/gamefiles/png_read.cpp
+)
 set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/animation.cpp
     ${PROJECT_SOURCE_DIR}/src/building/barracks.cpp
@@ -310,8 +325,6 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/victory.cpp
     ${PROJECT_SOURCE_DIR}/src/city/warning.cpp
     ${PROJECT_SOURCE_DIR}/src/city/floods.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/view/view.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/view/lookup.cpp
 )
 set(EMPIRE_FILES
     ${PROJECT_SOURCE_DIR}/src/empire/city.cpp
@@ -362,7 +375,6 @@ set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/gatherers.cpp
 )
 set(GAME_FILES
-    ${PROJECT_SOURCE_DIR}/src/game/animation.cpp
     ${PROJECT_SOURCE_DIR}/src/game/cheats.cpp
     ${PROJECT_SOURCE_DIR}/src/game/difficulty.cpp
     ${PROJECT_SOURCE_DIR}/src/game/file_editor.cpp
@@ -376,11 +388,6 @@ set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/time.cpp
     ${PROJECT_SOURCE_DIR}/src/game/tutorial.cpp
     ${PROJECT_SOURCE_DIR}/src/game/undo.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/player_data.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/io/io_buffer.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/io/chunks.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/io/manager.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/io/boilerplate.cpp
 )
 set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/cursor.cpp
@@ -391,43 +398,42 @@ set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/mouse.cpp
     ${PROJECT_SOURCE_DIR}/src/input/scroll.cpp
     ${PROJECT_SOURCE_DIR}/src/input/touch.cpp
-    ${PROJECT_SOURCE_DIR}/src/input/zoom.cpp
 )
-set(MAP_FILES
-    ${PROJECT_SOURCE_DIR}/src/map/aqueduct.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/bookmark.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/bridge.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/building.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/building_tiles.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/desirability.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/elevation.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/figure.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/grid.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/image.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/image_context.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/natives.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/orientation.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/point.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/property.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/random.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/ring.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/road_access.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/road_aqueduct.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/road_network.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/routing/routing.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/routing/routing_grids.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/routing/queue.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/routing/routing_terrain.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/soldier_strength.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/sprite.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/terrain.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/tiles.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/water.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/water_supply.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/tile_cache.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/floodplain.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/vegetation.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/moisture.cpp
+set(GRID_FILES
+    ${PROJECT_SOURCE_DIR}/src/grid/aqueduct.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/bookmark.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/bridge.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/building.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/building_tiles.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/desirability.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/elevation.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/figure.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/grid.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/image.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/image_context.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/natives.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/orientation.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/point.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/property.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/random.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/ring.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/road_access.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/road_aqueduct.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/road_network.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/routing/routing.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/routing/routing_grids.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/routing/queue.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/routing/routing_terrain.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/soldier_strength.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/sprite.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/terrain.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/tiles.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/water.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/water_supply.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/tile_cache.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/floodplain.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/vegetation.cpp
+    ${PROJECT_SOURCE_DIR}/src/grid/moisture.cpp
 )
 set(SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/building.cpp
@@ -451,26 +457,29 @@ set(SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/scenario.cpp
 )
 set(GRAPHICS_FILES
-    ${PROJECT_SOURCE_DIR}/src/graphics/arrow_button.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/button.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/font.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/generic_button.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/graphics.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/image.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/image_button.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/lang_text.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/menu.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/panel.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/rich_text.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/boilerplate.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/screen.cpp
-#    ${PROJECT_SOURCE_DIR}/src/graphics/screenshot.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/scrollbar.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/scroll_list_panel.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/text.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/tooltip.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/video.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/warning.cpp
+    #    ${PROJECT_SOURCE_DIR}/src/graphics/screenshot.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/window.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/video.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/animation_timers.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/font.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/text.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/elements/lang_text.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/elements/rich_text.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/elements/tooltip.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/elements/warning.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/elements/button.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/elements/arrow_button.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/elements/generic_button.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/elements/image_button.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/elements/panel.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/elements/scrollbar.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/elements/scroll_list_panel.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/view/view.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/view/lookup.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/view/zoom.cpp
 )
 set(SOUND_FILES
     ${PROJECT_SOURCE_DIR}/src/sound/city.cpp
@@ -488,6 +497,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu_editor.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city/tile_draw.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city/figures_cached_draw.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city/bridges.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city/building_ghost.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city/ornaments.cpp
@@ -620,6 +630,7 @@ endif()
 set(SOURCE_FILES
     ${PLATFORM_FILES}
     ${CORE_FILES}
+    ${IO_FILES}
     ${BUILDING_FILES}
     ${CITY_FILES}
     ${EMPIRE_FILES}
@@ -627,7 +638,7 @@ set(SOURCE_FILES
     ${FIGURETYPE_FILES}
     ${GAME_FILES}
     ${INPUT_FILES}
-    ${MAP_FILES}
+    ${GRID_FILES}
     ${SCENARIO_FILES}
     ${GRAPHICS_FILES}
     ${SOUND_FILES}
@@ -640,6 +651,7 @@ set(SOURCE_FILES
 #    ${PROJECT_SOURCE_DIR}/res/augustus.rc
     ${MACOSX_FILES}
 #    ${PNG_FILES}
+#    ${SDL_IMAGE_FILES}
 #    ${ZLIB_FILES}
 )
 
@@ -668,6 +680,7 @@ endfunction()
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
+find_package(SDL2_image REQUIRED)
 
 add_executable(${SHORT_NAME} WIN32 ${SOURCE_FILES})
 
@@ -881,7 +894,7 @@ else()
     if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
         target_link_libraries(${SHORT_NAME} m)
     endif()
-    target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
+    target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY})
     if(NOT APPLE)
         install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
     endif()

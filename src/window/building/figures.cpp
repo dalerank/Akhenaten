@@ -1,19 +1,19 @@
-#include <city/view/lookup.h>
+#include <graphics/view/lookup.h>
 #include "figures.h"
 
 #include "building/building.h"
-#include "city/view/view.h"
-#include "core/config.h"
+#include "graphics/view/view.h"
+#include "io/config/config.h"
 #include "empire/city.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "figure/phrase.h"
 #include "figure/trader.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
@@ -43,7 +43,7 @@ static generic_button figure_buttons[] = {
 };
 
 static struct {
-    color_t figure_images[7][48 * 48];
+    int figure_images[7];
     int focus_button_id;
     building_info_context *context_for_callback;
 } data;
@@ -412,7 +412,8 @@ void window_building_draw_figure_list(building_info_context *c) {
     else {
         for (int i = 0; i < c->figure.count; i++) {
             button_border_draw(c->x_offset + 60 * i + 25, c->y_offset + 45, 52, 52, i == c->figure.selected_index);
-            graphics_draw_from_buffer(c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48, data.figure_images[i]);
+            graphics_draw_from_texture(data.figure_images[i], c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48);
+//            graphics_draw_from_buffer(c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48, data.figure_images[i]);
         }
         draw_figure_info(c, c->figure.figure_ids[c->figure.selected_index]);
     }
@@ -420,7 +421,7 @@ void window_building_draw_figure_list(building_info_context *c) {
 }
 
 static void draw_figure_in_city(int figure_id, pixel_coordinate *coord) {
-    map_point camera_tile = city_view_get_camera_tile();
+    map_point camera_tile = city_view_get_camera_mappoint();
 
     int grid_offset = figure_get(figure_id)->tile.grid_offset();
 //    int x, y;
@@ -436,14 +437,18 @@ static void draw_figure_in_city(int figure_id, pixel_coordinate *coord) {
 void window_building_prepare_figure_list(building_info_context *c) {
     if (c->figure.count > 0) {
         pixel_coordinate coord = {0, 0};
-        if (config_get(CONFIG_UI_ZOOM))
-            graphics_set_active_canvas(CANVAS_CITY);
-
         for (int i = 0; i < c->figure.count; i++) {
             draw_figure_in_city(c->figure.figure_ids[i], &coord);
-            graphics_save_to_buffer(coord.x - 25, coord.y - 45, 48, 48, data.figure_images[i]);
+            data.figure_images[i] = graphics_save_to_texture(data.figure_images[i], coord.x, coord.y, 48, 48);
         }
-        graphics_set_active_canvas(CANVAS_UI);
+//        if (config_get(CONFIG_UI_ZOOM))
+//            graphics_set_active_canvas(CANVAS_CITY);
+//
+//        for (int i = 0; i < c->figure.count; i++) {
+//            draw_figure_in_city(c->figure.figure_ids[i], &coord);
+//            graphics_save_to_buffer(coord.x - 25, coord.y - 45, 48, 48, data.figure_images[i]);
+//        }
+//        graphics_set_active_canvas(CANVAS_UI);
         widget_city_draw();
     }
 }

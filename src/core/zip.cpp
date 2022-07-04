@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "core/log.h"
+#include "io/log.h"
 
 #include <cassert>
 
@@ -702,8 +702,6 @@ int zip_compress(const void *input_buffer, int input_length, void *output_buffer
         ok = 0;
     } else {
 //        assert(*output_length == token.output_ptr);
-        if (*output_length != token.output_ptr)
-            int a = 235;
 
         *output_length = token.output_ptr;
     }
@@ -729,8 +727,6 @@ int zip_decompress(const void *input_buffer, int input_length, void *output_buff
         ok = 0;
     } else {
 //        assert(*output_length == token.output_ptr);
-        if (*output_length != token.output_ptr)
-            int a = 235;
 
         *output_length = token.output_ptr;
         ok = *output_length;

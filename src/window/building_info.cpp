@@ -8,28 +8,28 @@
 #include "building/warehouse.h"
 #include "city/map.h"
 #include "city/resource.h"
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 #include "core/calc.h"
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 #include "figure/figure.h"
 #include "figure/formation_legion.h"
 #include "figure/phrase.h"
-#include "graphics/generic_button.h"
-#include "graphics/image.h"
-#include "graphics/image_button.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "map/aqueduct.h"
-#include "map/building.h"
-#include "map/figure.h"
-#include "map/grid.h"
-#include "map/image.h"
-#include "map/property.h"
-#include "map/road_access.h"
-#include "map/sprite.h"
-#include "map/terrain.h"
+#include "grid/aqueduct.h"
+#include "grid/building.h"
+#include "grid/figure.h"
+#include "grid/grid.h"
+#include "grid/image.h"
+#include "grid/property.h"
+#include "grid/road_access.h"
+#include "grid/sprite.h"
+#include "grid/terrain.h"
 #include "window/advisors.h"
 #include "window/city.h"
 #include "window/message_dialog.h"
@@ -204,7 +204,7 @@ static void get_tooltip(tooltip_context *c) {
 
 static int center_in_city(int element_width_pixels) {
     int x, y, width, height;
-    city_view_get_unscaled_viewport(&x, &y, &width, &height);
+    city_view_get_viewport(&x, &y, &width, &height);
     int margin = (width - element_width_pixels) / 2;
     return x + margin;
 }

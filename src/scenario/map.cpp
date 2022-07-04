@@ -1,7 +1,7 @@
 #include "map.h"
 
 #include "core/calc.h"
-#include "map/grid.h"
+#include "grid/grid.h"
 #include "scenario/data.h"
 
 const map_data_t *scenario_map_data() {

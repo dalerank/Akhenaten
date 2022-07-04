@@ -1,7 +1,7 @@
 #include "locale.h"
 
-#include "core/lang.h"
-#include "core/log.h"
+#include "io/gamefiles/lang.h"
+#include "io/log.h"
 #include "core/string.h"
 
 #include <stdint.h>

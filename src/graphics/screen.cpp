@@ -1,9 +1,9 @@
 #include "screen.h"
-
-#include "city/view/view.h"
+#include "boilerplate.h"
+#include "platform/renderer.h"
+#include "graphics/view/view.h"
 #include "city/warning.h"
-#include "graphics/graphics.h"
-#include "graphics/window.h"
+#include "window.h"
 
 static struct {
     int width;
@@ -20,7 +20,8 @@ void screen_set_resolution(int width, int height) {
     data.dialog_offset.x = (width - 640) / 2;
     data.dialog_offset.y = (height - 480) / 2;
 
-    graphics_init_canvas(width, height);
+    graphics_clear_screen();
+    graphics_renderer()->set_clip_rectangle(0, 0, width, height);
 
     city_view_set_viewport(width, height);
     city_warning_clear_all();
@@ -30,7 +31,6 @@ void screen_set_resolution(int width, int height) {
 int screen_width(void) {
     return data.width;
 }
-
 int screen_height(void) {
     return data.height;
 }
@@ -38,7 +38,6 @@ int screen_height(void) {
 int screen_dialog_offset_x(void) {
     return data.dialog_offset.x;
 }
-
 int screen_dialog_offset_y(void) {
     return data.dialog_offset.y;
 }

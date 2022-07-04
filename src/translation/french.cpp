@@ -50,7 +50,7 @@ static translation_string all_strings[] = {
         {TR_CONFIG_FIX_100_YEAR_GHOSTS,                 "Corrige le bug des fantômes de 100 ans"},
         {TR_CONFIG_FIX_EDITOR_EVENTS,                   "Corrige \"Nouvel Empereur\" et la survie des parties créees avec l'éditeur"},
         {TR_CONFIG_DRAW_WALKER_WAYPOINTS,               "Affiche l'itinéraire du marcheur en cliquant droit sur un bâtiment"},
-        {TR_CONFIG_ENABLE_ZOOM,                         "Active le zoom (peut être lent et utilise plus de RAM)"},
+        {TR_CONFIG_ZOOM_STEPPED,                         "Active le zoom (peut être lent et utilise plus de RAM)"},
         {TR_CONFIG_COMPLETE_RATING_COLUMNS,             "Corrige les colonnes d'évaluation incomplètes"},
         {TR_CONFIG_GRANDFESTIVAL,                       "Les grandes fêtes permettent une bénédiction supplémentaire d'un dieu"},
         {TR_CONFIG_JEALOUS_GODS,                        "Déactive la jalousie des dieux"},

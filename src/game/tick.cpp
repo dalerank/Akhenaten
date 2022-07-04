@@ -1,7 +1,7 @@
 #include <city/floods.h>
 #include <scenario/events.h>
-#include <game/io/manager.h>
-#include <map/vegetation.h>
+#include "io/manager.h"
+#include <grid/vegetation.h>
 #include "tick.h"
 
 #include "building/count.h"
@@ -35,17 +35,17 @@
 #include "empire/city.h"
 #include "figure/formation.h"
 #include "figuretype/crime.h"
-#include "game/io/boilerplate.h"
+#include "io/gamestate/boilerplate.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
-#include "map/desirability.h"
-#include "map/natives.h"
-#include "map/road_network.h"
-#include "map/routing/routing_terrain.h"
-#include "map/tiles.h"
-#include "map/water_supply.h"
+#include "grid/desirability.h"
+#include "grid/natives.h"
+#include "grid/road_network.h"
+#include "grid/routing/routing_terrain.h"
+#include "grid/tiles.h"
+#include "grid/water_supply.h"
 #include "scenario/demand_change.h"
 #include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"

@@ -1,7 +1,7 @@
 #include "translation.h"
 
 #include "core/encoding.h"
-#include "core/log.h"
+#include "io/log.h"
 #include "core/string.h"
 
 #include <string.h>

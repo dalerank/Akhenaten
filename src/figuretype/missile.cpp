@@ -1,14 +1,15 @@
 #include "missile.h"
 
-#include "city/view/view.h"
-#include "core/image.h"
+#include "graphics/view/view.h"
+#include "graphics/image.h"
 #include "figure/formation.h"
 #include "figure/movement.h"
 #include "figure/properties.h"
 #include "figure/sound.h"
-#include "map/figure.h"
-#include "map/point.h"
+#include "grid/figure.h"
+#include "grid/point.h"
 #include "sound/effect.h"
+#include "graphics/image_groups.h"
 
 static const int CLOUD_TILE_OFFSETS[] = {0, 0, 0, 1, 1, 2};
 
@@ -18,7 +19,7 @@ static const int CLOUD_SPEED[] = {
         1, 2, 1, 3, 2, 1, 3, 2, 1, 1, 2, 1, 2, 1, 3, 1
 };
 
-static const coords CLOUD_DIRECTION[] = {
+static const coords_t CLOUD_DIRECTION[] = {
         {0,  -6},
         {-2, -5},
         {-4, -4},

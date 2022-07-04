@@ -1,7 +1,7 @@
 #ifndef GRAPHICS_WINDOW_H
 #define GRAPHICS_WINDOW_H
 
-#include "graphics/tooltip.h"
+#include "graphics/elements/tooltip.h"
 #include "input/hotkey.h"
 #include "input/mouse.h"
 

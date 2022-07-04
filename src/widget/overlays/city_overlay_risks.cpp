@@ -3,12 +3,12 @@
 
 #include "building/industry.h"
 #include "game/state.h"
-#include "graphics/image.h"
-#include "map/building.h"
-#include "map/image.h"
-#include "map/property.h"
-#include "map/random.h"
-#include "map/terrain.h"
+#include "graphics/boilerplate.h"
+#include "grid/building.h"
+#include "grid/image.h"
+#include "grid/property.h"
+#include "grid/random.h"
+#include "grid/terrain.h"
 
 static int is_problem_cartpusher(figure *fig) {
     if (fig->id > 0)
@@ -226,19 +226,19 @@ static void draw_footprint_native(pixel_coordinate pixel, map_point point) {
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
         else {
-            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
+            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0);
         }
     } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
         // display groundwater
         int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-        ImageDraw::isometric_footprint_from_drawtile(image_id, x, y, 0);
+        ImageDraw::isometric_from_drawtile(image_id, x, y, 0);
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
         city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
     else {
         if (map_property_is_native_land(grid_offset))
-            ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + 1, x, y, 0);
+            ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + 1, x, y, 0);
         else {
-            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
+            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0);
         }
     }
 }
@@ -254,11 +254,10 @@ static void draw_top_native(pixel_coordinate pixel, map_point point) {
             if (map_property_is_deleted(grid_offset) && map_property_multi_tile_size(grid_offset) == 1)
                 color_mask = COLOR_MASK_RED;
 
-            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
+//            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask, city_view_get_scale_float());
         }
     } else if (map_building_at(grid_offset))
         city_with_overlay_draw_building_top(pixel, point);
-
 }
 
 const city_overlay *city_overlay_for_native(void) {

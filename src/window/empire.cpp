@@ -5,18 +5,18 @@
 #include "building/menu.h"
 #include "city/military.h"
 #include "city/warning.h"
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 #include "empire/city.h"
 #include "empire/empire.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "game/tutorial.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/image_button.h"
-#include "graphics/lang_text.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -241,7 +241,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
     int y_offset = data.y_max - 113;
 
     if (city->is_open) {
-        font_t traded_font = FONT_NORMAL_PLAIN;
+        font_t traded_font = FONT_SMALL_PLAIN;
 //        font_t traded_font = FONT_OBJECT_INFO[GAME_ENV];
 
         // city sells
@@ -494,16 +494,16 @@ static void draw_empire_object(const empire_object *obj) {
 
             switch (obj->text_align) {
                 case 0:
-                    lang_text_draw_left_colored(text_group, city->name_id, text_x, text_y + (obj->height / 2), FONT_NORMAL_PLAIN, COLOR_FONT_DARK_RED);
+                    lang_text_draw_left_colored(text_group, city->name_id, text_x, text_y + (obj->height / 2), FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
                     break;
                 case 1:
-                    lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y - 10, 300, FONT_NORMAL_PLAIN, COLOR_FONT_DARK_RED);
+                    lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y - 10, 300, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
                     break;
                 case 2:
-                    lang_text_draw_colored(text_group, city->name_id, text_x + obj->width, text_y + (obj->height / 2), FONT_NORMAL_PLAIN, COLOR_FONT_DARK_RED);
+                    lang_text_draw_colored(text_group, city->name_id, text_x + obj->width, text_y + (obj->height / 2), FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
                     break;
                 case 3:
-                    lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y + obj->height + 5, 300, FONT_NORMAL_PLAIN, COLOR_FONT_DARK_RED);
+                    lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y + obj->height + 5, 300, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
                     break;
             }
         }
@@ -512,7 +512,7 @@ static void draw_empire_object(const empire_object *obj) {
             int text_x = data.x_draw_offset + x + 0;
             int text_y = data.y_draw_offset + y + 0;
 
-            lang_text_draw_centered_colored(196, full->city_name_id, text_x - 5, text_y, 100, FONT_NORMAL_SHADED, COLOR_FONT_SHITTY_BROWN);
+            lang_text_draw_centered_colored(196, full->city_name_id, text_x - 5, text_y, 100, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN);
             return;
         }
     }
@@ -533,12 +533,12 @@ static void draw_empire_object(const empire_object *obj) {
             return;
     }
     ImageDraw::img_generic(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
-    const image *img = image_get(image_id);
-    if (img->animation_speed_id) {
+    const image_t *img = image_get(image_id);
+    if (img->animation.speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
         ImageDraw::img_generic(image_id + new_animation,
-                               data.x_draw_offset + x + img->sprite_offset_x,
-                               data.y_draw_offset + y + img->sprite_offset_y);
+                               data.x_draw_offset + x + img->animation.sprite_x_offset,
+                               data.y_draw_offset + y + img->animation.sprite_y_offset);
     }
 }
 static void draw_invasion_warning(int x, int y, int image_id) {
@@ -646,7 +646,7 @@ static void draw_background(void) {
     data.y_max = s_height <= EMPIRE_HEIGHT[GAME_ENV] ? s_height : data.y_min + EMPIRE_HEIGHT[GAME_ENV];
 
     if (data.x_min || data.y_min)
-        graphics_clear_screens();
+        graphics_clear_screen();
 }
 static void draw_foreground(void) {
 //    fade_in_out++;

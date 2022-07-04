@@ -1,7 +1,7 @@
 #ifndef WINDOW_TOP_MENU_H
 #define WINDOW_TOP_MENU_H
 
-#include "graphics/tooltip.h"
+#include "graphics/elements/tooltip.h"
 #include "input/hotkey.h"
 #include "input/mouse.h"
 

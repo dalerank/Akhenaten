@@ -1,15 +1,17 @@
 #include "object.h"
 
 #include "core/calc.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "empire/city.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
-#include "game/animation.h"
+#include "graphics/animation_timers.h"
 #include "scenario/empire.h"
 #include "core/game_environment.h"
-#include <game/io/io_buffer.h>
-#include <game/io/manager.h>
+#include "io/io_buffer.h"
+#include "io/manager.h"
+#include "graphics/image_groups.h"
+#include "io/gamestate/boilerplate.h"
 
 #define MAX_OBJECTS 200
 #define MAX_ROUTES 20
@@ -37,7 +39,7 @@ static int get_trade_amount_code(int index, int resource) {
     if (!is_trade_city(index))
         return 0;
 
-    if (GamestateIO::get_file_version() < 160) {
+    if (FILEIO.get_file_version() < 160) {
         int result = 0;
         if (resource < 32) { // only holds data up to 31 (sandstone)
             int resource_flag = 1 << resource;
@@ -280,12 +282,12 @@ static int get_animation_offset(int image_id, int current_index) {
     if (current_index <= 0)
         current_index = 1;
 
-    const image *img = image_get(image_id);
-    int animation_speed = img->animation_speed_id;
+    const image_t *img = image_get(image_id);
+    int animation_speed = img->animation.speed_id;
     if (!game_animation_should_advance(animation_speed))
         return current_index;
 
-    if (img->animation_can_reverse) {
+    if (img->animation.can_reverse) {
         int is_reverse = 0;
         if (current_index & 0x80)
             is_reverse = 1;
@@ -299,8 +301,8 @@ static int get_animation_offset(int image_id, int current_index) {
             }
         } else {
             current_index = current_sprite + 1;
-            if (current_index > img->num_animation_sprites) {
-                current_index = img->num_animation_sprites;
+            if (current_index > img->animation.num_sprites) {
+                current_index = img->animation.num_sprites;
                 is_reverse = 1;
             }
         }
@@ -310,7 +312,7 @@ static int get_animation_offset(int image_id, int current_index) {
     } else {
         // Absolutely normal case
         current_index++;
-        if (current_index > img->num_animation_sprites)
+        if (current_index > img->animation.num_sprites)
             current_index = 1;
 
     }
@@ -370,7 +372,7 @@ io_buffer *iob_empire_map_objects = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_UINT8, &obj->invasion_years);
 
         // TODO: WRITE
-        if (GamestateIO::get_file_version() < 160) {
+        if (FILEIO.get_file_version() < 160) {
             iob->bind____skip(2);
             iob->bind(BIND_SIGNATURE_UINT32, &full->trade40);
             iob->bind(BIND_SIGNATURE_UINT32, &full->trade25);

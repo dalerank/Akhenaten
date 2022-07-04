@@ -7,7 +7,7 @@
 #include "city/message.h"
 #include "city/population.h"
 #include "city/trade.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "core/random.h"
 #include "scenario/data.h"
 #include "scenario/property.h"

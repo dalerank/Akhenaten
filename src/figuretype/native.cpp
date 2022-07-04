@@ -8,7 +8,7 @@
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
-#include "map/terrain.h"
+#include "grid/terrain.h"
 
 void figure::indigenous_native_action() {
     building *b = home();

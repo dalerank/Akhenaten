@@ -3,15 +3,15 @@
 #include "building/count.h"
 #include "city/resource.h"
 #include "core/calc.h"
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 #include "empire/city.h"
-#include "graphics/arrow_button.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/image_button.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/arrow_button.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -73,7 +73,7 @@ static void draw_background(void) {
     window_draw_underlying_window();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(32, 128, 36, 15);
     int image_offset = data.resource + resource_image_offset(data.resource, RESOURCE_IMAGE_ICON);

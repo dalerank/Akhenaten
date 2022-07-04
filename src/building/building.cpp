@@ -9,19 +9,19 @@
 #include "figure/formation_legion.h"
 #include "game/resource.h"
 #include "game/undo.h"
-#include "map/building_tiles.h"
-#include "map/desirability.h"
-#include "map/elevation.h"
-#include "map/grid.h"
-#include "map/random.h"
-#include "map/routing/routing_terrain.h"
-#include "map/terrain.h"
-#include "map/tiles.h"
+#include "grid/building_tiles.h"
+#include "grid/desirability.h"
+#include "grid/elevation.h"
+#include "grid/grid.h"
+#include "grid/random.h"
+#include "grid/routing/routing_terrain.h"
+#include "grid/terrain.h"
+#include "grid/tiles.h"
 #include "menu.h"
 #include "monuments.h"
 
 #include <string.h>
-#include <map/building.h>
+#include <grid/building.h>
 
 static building all_buildings[5000];
 

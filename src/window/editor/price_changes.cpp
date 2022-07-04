@@ -1,13 +1,13 @@
 #include "price_changes.h"
 
-#include "core/image_group_editor.h"
+#include "graphics/image_groups.h"
 #include "game/resource.h"
-#include "graphics/button.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/button.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -49,7 +49,7 @@ static void draw_background(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(0, 0, 40, 30);
     lang_text_draw(44, 95, 20, 12, FONT_LARGE_BLACK_ON_LIGHT);

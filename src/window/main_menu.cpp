@@ -5,12 +5,12 @@
 #include "editor/editor.h"
 #include "game/game.h"
 #include "game/system.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/image_button.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
@@ -62,15 +62,13 @@ static void draw_version_string(void) {
         text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
 }
 static void draw_background(void) {
-    graphics_clear_screens();
-    graphics_in_dialog();
-    ImageDraw::img_generic(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
-    graphics_reset_dialog();
+    graphics_clear_screen();
+    ImageDraw::img_background(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND));
     if (window_is(WINDOW_MAIN_MENU))
         draw_version_string();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     switch (GAME_ENV) {
         case ENGINE_ENV_PHARAOH: {

@@ -16,7 +16,11 @@ typedef uint32_t color_t;
 #define COLOR_LIGHT_BLUE 0xff48a5ff
 
 #define COLOR_SG2_TRANSPARENT 0xfff700ff
-#define COLOR_TOOLTIP 0xff424242
+//#define COLOR_TOOLTIP_TEXT 0xff424242
+#define COLOR_TOOLTIP_TEXT 0xffffe7d6
+#define COLOR_TOOLTIP_SHADOW 0xff392410
+#define COLOR_TOOLTIP_BORDER 0xff5A1400
+#define COLOR_TOOLTIP_FILL 0xffbd7142
 #define COLOR_SIDEBAR 0xffbdb592
 
 #define COLOR_FONT_RED COLOR_RED
@@ -25,12 +29,16 @@ typedef uint32_t color_t;
 #define COLOR_FONT_ORANGE 0xffff5a08
 #define COLOR_FONT_ORANGE_LIGHT 0xffffa500
 #define COLOR_FONT_LIGHT_GRAY 0xffb3b3b3
+#define COLOR_FONT_MEDIUM_GRAY 0xff777777
 #define COLOR_FONT_DARK_RED 0xff803820
 #define COLOR_FONT_SHITTY_BROWN 0xffa86050
+
+#define COLOR_FONT_PLAIN 0xff180800
 
 #define COLOR_INSET_LIGHT 0xffffffff
 #define COLOR_INSET_DARK 0xff848484
 
+#define COLOR_NULL 0x00000000
 #define COLOR_MASK_NONE 0xffffffff
 #define COLOR_MASK_RED 0xffff0818
 #define COLOR_MASK_GREEN 0xff18ff18
@@ -61,6 +69,11 @@ typedef uint32_t color_t;
 #define COLOR_CHANNEL_RED 0x00ff0000
 #define COLOR_CHANNEL_GREEN 0x0000ff00
 #define COLOR_CHANNEL_BLUE 0x000000ff
+
+#define COLOR_BITSHIFT_ALPHA 24
+#define COLOR_BITSHIFT_RED 16
+#define COLOR_BITSHIFT_GREEN 8
+#define COLOR_BITSHIFT_BLUE 0
 
 #define COLOR_COMPONENT(c, shift) ((c >> shift) & 0xff)
 

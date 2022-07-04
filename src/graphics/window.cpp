@@ -1,12 +1,9 @@
 #include "window.h"
 
-#include "graphics/graphics.h"
-#include "graphics/warning.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/warning.h"
 #include "input/cursor.h"
-#include "input/hotkey.h"
 #include "input/scroll.h"
-#include "input/touch.h"
-#include "window/city.h"
 
 #define MAX_QUEUE 6
 
@@ -94,7 +91,7 @@ void window_draw(int force) {
     update_input_before();
     window_type *w = data.current_window;
     if (force || data.refresh_on_draw) {
-        graphics_clear_screen(CANVAS_UI);
+        graphics_clear_screen();
         tooltip_invalidate();
         w->draw_background();
         data.refresh_on_draw = 0;

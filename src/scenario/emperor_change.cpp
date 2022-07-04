@@ -2,7 +2,7 @@
 
 #include "city/message.h"
 #include "city/ratings.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "core/random.h"
 #include "game/time.h"
 #include "scenario/data.h"

@@ -5,7 +5,7 @@
 #include "city/figures.h"
 #include "city/finance.h"
 #include "city/message.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "game/time.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"

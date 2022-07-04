@@ -1,16 +1,16 @@
-#include <game/player_data.h>
+#include "io/playerdata/player_data.h"
 #include <core/game_environment.h>
 #include "new_career.h"
 
-#include "core/image_group.h"
-#include "core/lang.h"
+#include "graphics/image_groups.h"
+#include "io/gamefiles/lang.h"
 #include "core/string.h"
 #include "game/settings.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/image_button.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -40,7 +40,7 @@ static void init(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     outer_panel_draw(128, 160, 24, 8);
     lang_text_draw_centered(31, 0, 128, 172, 384, FONT_LARGE_BLACK_ON_LIGHT);
     lang_text_draw(13, 5, 352, 256, FONT_NORMAL_BLACK_ON_LIGHT);

@@ -6,9 +6,9 @@
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "game/difficulty.h"
-#include "map/figure.h"
+#include "grid/figure.h"
 #include "sound/effect.h"
-#include "map/point.h"
+#include "grid/point.h"
 
 int attack_is_same_direction(int dir1, int dir2) {
     if (dir1 == dir2)

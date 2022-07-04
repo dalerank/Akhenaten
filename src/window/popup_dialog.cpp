@@ -1,10 +1,10 @@
 #include "popup_dialog.h"
 
-#include "core/image_group.h"
-#include "graphics/graphics.h"
-#include "graphics/image_button.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/image_groups.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/window.h"
 #include "input/input.h"
 
@@ -47,7 +47,7 @@ static int init(int type, int custom_text_group, int custom_text_id, void (*clos
 
 static void draw_background(void) {
     window_draw_underlying_window();
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     outer_panel_draw(80, 80, 30, 10);
     if (data.popup_text_offset >= 0) {
         lang_text_draw_centered(GROUP, data.popup_text_offset, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
@@ -62,7 +62,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     if (data.has_buttons) // this can be 0, 1 or 2
         image_buttons_draw(80, 80, buttons, data.has_buttons);
     else

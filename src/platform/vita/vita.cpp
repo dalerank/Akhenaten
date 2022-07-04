@@ -1,6 +1,6 @@
 #include "vita.h"
 
-#include "core/file.h"
+#include "io/file.h"
 #include "input/touch.h"
 
 #include <vita2d.h>

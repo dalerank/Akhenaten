@@ -2,11 +2,11 @@
 
 #include "city/emperor.h"
 #include "game/resource.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -33,7 +33,7 @@ static void init(void) {
 static void draw_background(void) {
     window_advisors_draw_dialog_background();
 
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(96, 144, 30, 15);
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_DEBEN, 112, 160);
@@ -47,7 +47,7 @@ static void draw_background(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     inner_panel_draw(112, 208, 28, 5);
 

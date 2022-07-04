@@ -1,6 +1,6 @@
 #include "victory_video.h"
 
-#include "graphics/graphics.h"
+#include "graphics/boilerplate.h"
 #include "graphics/screen.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
@@ -23,7 +23,7 @@ static int init(const char *filename, int width, int height, void (*callback)(vo
 }
 
 static void draw_background(void) {
-    graphics_clear_screens();
+    graphics_clear_screen();
 }
 
 static void draw_foreground(void) {

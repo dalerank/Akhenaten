@@ -1,23 +1,23 @@
 #include "player_selection.h"
 
 #include "core/calc.h"
-#include "core/dir.h"
+#include "io/dir.h"
 #include "core/encoding.h"
-#include "core/file.h"
-#include "core/image_group.h"
-#include "core/lang.h"
+#include "io/file.h"
+#include "graphics/image_groups.h"
+#include "io/gamefiles/lang.h"
 #include "core/string.h"
 #include "core/time.h"
-#include "game/io/boilerplate.h"
+#include "io/gamestate/boilerplate.h"
 #include "game/file_editor.h"
-#include "game/player_data.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/image_button.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
-#include "graphics/scrollbar.h"
+#include "io/playerdata/player_data.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
+#include "graphics/elements/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -32,7 +32,7 @@
 #include <string.h>
 #include <game/settings.h>
 #include <core/game_environment.h>
-#include <graphics/scroll_list_panel.h>
+#include "graphics/elements/scroll_list_panel.h"
 
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
 
@@ -95,13 +95,11 @@ void window_player_selection_init() {
 }
 
 static void draw_background(void) {
-    graphics_clear_screens();
-    graphics_in_dialog();
-    ImageDraw::img_generic(image_id_from_group(GROUP_PLAYER_SELECTION), 0, 0);
-    graphics_reset_dialog();
+    graphics_clear_screen();
+    ImageDraw::img_background(image_id_from_group(GROUP_PLAYER_SELECTION));
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(128, 40, 24, 21);
 

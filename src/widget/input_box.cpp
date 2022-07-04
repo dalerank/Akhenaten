@@ -1,7 +1,7 @@
 #include "input_box.h"
 
 #include "game/system.h"
-#include "graphics/panel.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "input/keyboard.h"
 

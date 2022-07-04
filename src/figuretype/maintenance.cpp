@@ -1,4 +1,4 @@
-#include <core/config.h>
+#include "io/config/config.h"
 #include "maintenance.h"
 
 #include "building/building.h"
@@ -6,17 +6,18 @@
 #include "building/maintenance.h"
 #include "city/figures.h"
 #include "core/calc.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "figure/combat.h"
 #include "figure/enemy_army.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
-#include "map/building.h"
-#include "map/road_access.h"
+#include "grid/building.h"
+#include "grid/road_access.h"
 #include "sound/effect.h"
 
 #include "core/game_environment.h"
+#include "graphics/image_groups.h"
 
 #include "figure/properties.h"
 

@@ -1,10 +1,10 @@
 #include "build_menu.h"
 
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 #include "editor/tool.h"
-#include "graphics/generic_button.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "widget/map_editor.h"
@@ -75,7 +75,7 @@ static void draw_background(void) {
 
 static int get_sidebar_x_offset(void) {
     int view_x, view_y, view_width, view_height;
-    city_view_get_unscaled_viewport(&view_x, &view_y, &view_width, &view_height);
+    city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
     return view_x + view_width;
 }
 

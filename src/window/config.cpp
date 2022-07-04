@@ -1,21 +1,21 @@
 #include "config.h"
 
-#include "core/config.h"
-#include "core/dir.h"
-#include "core/image_group.h"
-#include "core/lang.h"
-#include "core/log.h"
+#include "io/config/config.h"
+#include "io/dir.h"
+#include "graphics/image_groups.h"
+#include "io/gamefiles/lang.h"
+#include "io/log.h"
 #include "core/string.h"
 #include "core/game_environment.h"
 #include "game/game.h"
 #include "game/system.h"
-#include "graphics/button.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/panel.h"
+#include "graphics/elements/button.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/panel.h"
 #include "graphics/screen.h"
-#include "graphics/scrollbar.h"
+#include "graphics/elements/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "window/hotkey_config.h"
@@ -51,7 +51,7 @@ static void button_hotkeys(int param1, int param2);
 static void button_close(int save, int param2);
 static void button_page(int param1, int param2);
 static int config_change_basic(int key);
-static int config_change_zoom(int key);
+//static int config_change_zoom(int key);
 static int config_change_string_basic(int key);
 static int config_change_string_language(int key);
 
@@ -64,7 +64,7 @@ static generic_button checkbox_buttons[] = {
         {20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE,              TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE},
         {20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE,             TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE},
         {20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE,                 TR_CONFIG_SHOW_CONSTRUCTION_SIZE},
-        {20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_ZOOM,                                   TR_CONFIG_ENABLE_ZOOM},
+        {20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_ZOOM_STEPPED,                           TR_CONFIG_ZOOM_STEPPED},
         {20, 264, 20, 20, toggle_switch, button_none, CONFIG_UI_COMPLETE_RATING_COLUMNS,                TR_CONFIG_COMPLETE_RATING_COLUMNS},
         {20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_LEGIONS,                      TR_CONFIG_HIGHLIGHT_LEGIONS},
         {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_ROTATE_MANUALLY,                        TR_CONFIG_ROTATE_MANUALLY},
@@ -178,11 +178,11 @@ static int config_change_string_basic(int key) {
             CONFIG_STRING_VALUE_MAX - 1);
     return 1;
 }
-static int config_change_zoom(int key) {
-    config_change_basic(key);
-    system_reload_textures();
-    return 1;
-}
+//static int config_change_zoom(int key) {
+//    config_change_basic(key);
+////    system_reload_textures();
+//    return 1;
+//}
 static int config_change_string_language(int key) {
     config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].new_value);
     if (!game_reload_language()) {
@@ -299,7 +299,7 @@ static void init(void) {
         strncpy(data.config_string_values[i].original_value, value, CONFIG_STRING_VALUE_MAX - 1);
         strncpy(data.config_string_values[i].new_value, value, CONFIG_STRING_VALUE_MAX - 1);
     }
-    data.config_values[CONFIG_UI_ZOOM].change_action = config_change_zoom;
+//    data.config_values[CONFIG_UI_ZOOM].change_action = config_change_zoom;
     data.config_string_values[0].change_action = config_change_string_language;
 
     string_copy(translation_for(TR_CONFIG_LANGUAGE_DEFAULT), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
@@ -321,11 +321,10 @@ static void init(void) {
 
 }
 static void draw_background(void) {
-    graphics_clear_screens();
+    graphics_clear_screen();
 
     ImageDraw::img_background(image_id_from_group(GROUP_CONFIG_BACKGROUND));
-
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     outer_panel_draw(0, 0, 40, 30);
 
     text_draw_centered(translation_for(page_names[data.page]), 16, 16, 608, FONT_LARGE_BLACK_ON_LIGHT, 0);
@@ -366,7 +365,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     for (int i = 0; i < options_per_page[data.page]; i++) {
         int value = data.starting_option + i;

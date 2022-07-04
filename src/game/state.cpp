@@ -1,11 +1,11 @@
 #include "state.h"
 
 #include "city/victory.h"
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 #include "city/warning.h"
 #include "core/random.h"
-#include "map/ring.h"
-#include "map/building.h"
+#include "grid/ring.h"
+#include "grid/building.h"
 
 static struct {
     bool paused;
@@ -18,7 +18,7 @@ void game_state_init(void) {
     map_ring_init();
 
     city_view_reset_orientation();
-    city_view_go_to_screen_tile_corner(screen_tile(76, 152), true);
+//    city_view_go_to_screen_tile_corner(screen_tile(76, 152), true);
 
     random_generate_pool();
 

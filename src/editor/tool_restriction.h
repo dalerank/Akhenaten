@@ -2,7 +2,7 @@
 #define EDITOR_TOOL_RESTRICTION_H
 
 #include "editor/tool.h"
-#include "map/point.h"
+#include "grid/point.h"
 
 int editor_tool_can_place_flag(int type, map_point tile, int *warning);
 

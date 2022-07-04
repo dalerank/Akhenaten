@@ -83,6 +83,6 @@ int speed_get_current_direction(const speed_type *speed);
  * @param speed Speed structure to act on
  * @return Whether the speed is changing
  */
-int speed_is_changing(const speed_type *speed);
+bool speed_is_changing(const speed_type *speed);
 
 #endif // CORE_SPEED_H

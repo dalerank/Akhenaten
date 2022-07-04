@@ -1,30 +1,12 @@
-#include <cmath>
-#include <map/terrain.h>
+
+#include "grid/terrain.h"
 #include "action.h"
 
 #include "city/entertainment.h"
 #include "city/figures.h"
 #include "figure/figure.h"
-#include "figuretype/animal.h"
-#include "figuretype/cartpusher.h"
-#include "figuretype/crime.h"
-#include "figuretype/docker.h"
-#include "figuretype/editor.h"
-#include "figuretype/enemy.h"
-#include "figuretype/entertainer.h"
-#include "figuretype/maintenance.h"
-#include "figuretype/market.h"
-#include "figuretype/migrant.h"
-#include "figuretype/missile.h"
-#include "figuretype/native.h"
-#include "figuretype/service.h"
-#include "figuretype/soldier.h"
-#include "figuretype/trader.h"
-#include "figuretype/wall.h"
-#include "figuretype/water.h"
-#include "core/game_environment.h"
-#include "map/road_access.h"
-#include "core/image_group.h"
+#include "grid/road_access.h"
+#include "graphics/image_groups.h"
 
 typedef struct {
     char speed_mult;
@@ -140,10 +122,6 @@ static figure_action_property action_properties_lookup[] = {
         {1, TERRAIN_USAGE_ANY,     0,      0, 0},  // 99
         {1, TERRAIN_USAGE_ROADS,   0,      0, 0},  // 100
 };
-
-#include "core/image.h"
-#include "map/building.h"
-#include "map/grid.h"
 
 bool is_coords_within_range(int x, int y, int b_x, int b_y, int size, int radius) {
     int min_x = b_x - radius;
@@ -536,7 +514,7 @@ void figure::action_perform() {
             poof();
 
         // advance sprite offset
-        figure_image_update();
+        figure_image_update(false);
     }
 }
 

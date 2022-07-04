@@ -1,25 +1,23 @@
+#include "grid/water_supply.h"
 #include "animation.h"
 
 #include "building/industry.h"
-#include "building/model.h"
 #include "core/calc.h"
-#include "core/image.h"
-#include "game/animation.h"
-#include "map/sprite.h"
-#include "core/game_environment.h"
+#include "graphics/animation_timers.h"
+#include "grid/sprite.h"
 
 int generic_sprite_offset(int grid_offset, int max_frames, int anim_speed) {
 //    const image *img = image_get(image_id);
 //    if (!max_frames)
-//        max_frames = img->num_animation_sprites;
-//    int anim_speed = img->animation_speed_id;
+//        max_frames = img->animation.num_sprites;
+//    int anim_speed = img->animation.speed_id;
     if (!game_animation_should_advance(anim_speed))
         return map_sprite_animation_at(grid_offset) & 0x7f;
 
     // advance animation
     int new_sprite = 0;
 //    bool is_reverse = false;
-//    if (img->animation_can_reverse) {
+//    if (img->animation.can_reverse) {
 //        if (map_sprite_animation_at(grid_offset) & 0x80)
 //            is_reverse = true;
 //
@@ -66,6 +64,10 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
                 else if (!b->has_water_access)
                     return 0;
             }
+            break;
+        case BUILDING_WELL:
+            if (map_water_supply_is_well_unnecessary(b->id, 3) != WELL_NECESSARY)
+                return 0;
             break;
 //        case BUILDING_PREFECTURE: // police house
 //        case BUILDING_ENGINEERS_POST:
@@ -114,10 +116,10 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
             break;
     }
 
-    const image *img = image_get(image_id);
+    const image_t *img = image_get(image_id);
     if (!max_frames)
-        max_frames = img->num_animation_sprites;
-    int anim_speed = img->animation_speed_id;
+        max_frames = img->animation.num_sprites;
+    int anim_speed = img->animation.speed_id;
     // Bugfix: some wrong values from Pharaoh
     switch(b->type) {
         case BUILDING_APOTHECARY:
@@ -159,7 +161,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
                     new_sprite = 12;
             }
         }
-    } else if (img->animation_can_reverse) {
+    } else if (img->animation.can_reverse) {
         if (map_sprite_animation_at(grid_offset) & 0x80)
             is_reverse = true;
 

@@ -1,4 +1,4 @@
-#include <map/road_network.h>
+#include <grid/road_network.h>
 #include "movement.h"
 
 #include "building/building.h"
@@ -8,15 +8,15 @@
 #include "figure/combat.h"
 #include "figure/route.h"
 #include "game/time.h"
-#include "map/bridge.h"
-#include "map/building.h"
-#include "map/figure.h"
-#include "map/grid.h"
-#include "map/property.h"
-#include "map/random.h"
-#include "map/road_access.h"
-#include "map/routing/routing_terrain.h"
-#include "map/terrain.h"
+#include "grid/bridge.h"
+#include "grid/building.h"
+#include "grid/figure.h"
+#include "grid/grid.h"
+#include "grid/property.h"
+#include "grid/random.h"
+#include "grid/road_access.h"
+#include "grid/routing/routing_terrain.h"
+#include "grid/terrain.h"
 
 void figure::advance_figure_tick() {
     switch (direction) {
@@ -191,7 +191,6 @@ void figure::advance_route_tile(int roaming_enabled) {
     if (direction >= 8)
         return;
     int target_grid_offset = tile.grid_offset() + map_grid_direction_delta(direction);
-
 
     if (is_boat && !map_terrain_is(target_grid_offset, TERRAIN_WATER)) // boats can not travel on land
             direction = DIR_FIGURE_REROUTE;
@@ -525,9 +524,8 @@ void figure::set_cross_country_direction(int x_src, int y_src, int x_dst, int y_
         cc_delta_xy = 2 * cc_delta.x - cc_delta.y;
     else if (cc_delta.y < cc_delta.x)
         cc_delta_xy = 2 * cc_delta.y - cc_delta.x;
-    else { // equal
+    else // equal
         cc_delta_xy = 0;
-    }
     if (is_missile)
         direction = calc_missile_direction(x_src, y_src, x_dst, y_dst);
     else {
@@ -559,9 +557,8 @@ void figure::set_cross_country_direction(int x_src, int y_src, int x_dst, int y_
     }
     if (cc_delta.x >= cc_delta.y)
         cc_direction = 1;
-    else {
+    else
         cc_direction = 2;
-    }
 }
 void figure::set_cross_country_destination(int x_dst, int y_dst) {
     destination_tile.set(x_dst, y_dst);
@@ -575,16 +572,14 @@ void figure::cross_country_update_delta() {
     if (cc_direction == 1) { // x
         if (cc_delta_xy >= 0)
             cc_delta_xy += 2 * (cc_delta.y - cc_delta.x);
-        else {
+        else
             cc_delta_xy += 2 * cc_delta.y;
-        }
         cc_delta.x--;
     } else { // y
         if (cc_delta_xy >= 0)
             cc_delta_xy += 2 * (cc_delta.x - cc_delta.y);
-        else {
+        else
             cc_delta_xy += 2 * cc_delta.x;
-        }
         cc_delta.y--;
     }
 }
@@ -593,14 +588,12 @@ void figure::cross_country_advance_x() {
         cc_coords.x++;
     else if (cc_coords.x > cc_destination.x)
         cc_coords.x--;
-
 }
 void figure::cross_country_advance_y() {
     if (cc_coords.y < cc_destination.y)
         cc_coords.y++;
     else if (cc_coords.y > cc_destination.y)
         cc_coords.y--;
-
 }
 void figure::cross_country_advance() {
     cross_country_update_delta();
@@ -625,16 +618,15 @@ int figure::move_ticks_cross_country(int num_ticks) {
         num_ticks--;
         if (missile_damage > 0)
             missile_damage--;
-        else {
+        else
             missile_damage = 0;
-        }
         if (cc_delta.x + cc_delta.y <= 0) {
             is_at_destination = 1;
             break;
         }
         cross_country_advance();
     }
-
+    map_point old = tile;
     tile.set(cc_coords.x / 15, cc_coords.y / 15);
 //    tile.x() = cc_coords.x / 15;
 //    tile.y() = cc_coords.y / 15;
@@ -645,6 +637,8 @@ int figure::move_ticks_cross_country(int num_ticks) {
         in_building_wait_ticks--;
 
     map_figure_add();
+    if (tile.grid_offset() != old.grid_offset())
+        previous_tile = old;
     return is_at_destination;
 }
 int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x_dst, int y_dst) {

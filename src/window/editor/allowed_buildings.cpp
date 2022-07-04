@@ -1,11 +1,11 @@
 #include "allowed_buildings.h"
 
-#include "graphics/button.h"
+#include "graphics/elements/button.h"
 #include "graphics/color.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "scenario/editor.h"
@@ -72,7 +72,7 @@ static void draw_background(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(16, 32, 38, 26);
 
@@ -94,7 +94,7 @@ static void draw_foreground(void) {
         if (scenario_editor_is_building_allowed(i))
             lang_text_draw_centered(67, i, x, y + 4, 190, FONT_NORMAL_BLACK_ON_LIGHT);
         else {
-            lang_text_draw_centered_colored(67, i, x, y + 4, 190, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
+            lang_text_draw_centered_colored(67, i, x, y + 4, 190, FONT_SMALL_PLAIN, COLOR_FONT_RED);
         }
     }
 

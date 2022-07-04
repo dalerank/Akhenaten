@@ -1,20 +1,19 @@
-#include <city/view/lookup.h>
+#include <graphics/view/lookup.h>
 #include "map_editor.h"
 
-#include "city/view/view.h"
-#include "core/config.h"
+#include "graphics/view/view.h"
+#include "io/config/config.h"
 #include "editor/tool.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/menu.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/menu.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
-#include "input/zoom.h"
-#include "map/figure.h"
-#include "map/grid.h"
-#include "map/image.h"
-#include "map/point.h"
-#include "map/property.h"
+#include "grid/figure.h"
+#include "grid/grid.h"
+#include "grid/image.h"
+#include "grid/point.h"
+#include "grid/property.h"
 #include "sound/city.h"
 #include "sound/effect.h"
 #include "widget/map_editor_tool.h"
@@ -59,7 +58,7 @@ static void draw_flags(pixel_coordinate pixel, map_point point) {
     while (figure_id) {
         figure *f = figure_get(figure_id);
         if (!f->is_ghost)
-            f->city_draw_figure(x, y, 0);
+            f->city_draw_figure(pixel, 0);
 
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;
@@ -68,36 +67,30 @@ static void draw_flags(pixel_coordinate pixel, map_point point) {
     }
 }
 
-static void set_city_scaled_clip_rectangle(void) {
-    int x, y, width, height;
-    city_view_get_scaled_viewport(&x, &y, &width, &height);
-    graphics_set_clip_rectangle(x, y, width, height);
-}
+//static void set_city_clip_rectangle(void) {
+//    int x, y, width, height;
+//    city_view_get_viewport(&x, &y, &width, &height);
+//    graphics_set_clip_rectangle(x, y, width, height);
+//}
 
 static void update_zoom_level(void) {
-    int zoom = city_view_get_scale();
-    pixel_coordinate offset;
-    city_view_get_camera_position(&offset.x, &offset.y);
-    if (zoom_update_value(&zoom, &offset)) {
-        city_view_set_scale(zoom);
-        city_view_go_to_pixel_coord(offset.x, offset.y, true);
+    pixel_coordinate offset = camera_get_position();
+    if (zoom_update_value(&offset)) {
+        city_view_refresh_viewport();
+        camera_go_to_pixel(offset, true);
         sound_city_decay_views();
     }
 }
 
 void widget_map_editor_draw(void) {
-    if (config_get(CONFIG_UI_ZOOM)) {
-        update_zoom_level();
-        graphics_set_active_canvas(CANVAS_CITY);
-    }
-    set_city_scaled_clip_rectangle();
+    update_zoom_level();
+    set_city_clip_rectangle();
 
     init_draw_context();
-    city_view_foreach_map_tile(draw_footprint);
-    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
+//    city_view_foreach_map_tile(draw_buildings);
+    city_view_foreach_valid_map_tile(draw_isometrics);
+//    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
     map_editor_tool_draw(data.current_tile);
-
-    graphics_set_active_canvas(CANVAS_UI);
 }
 
 static void update_city_view_coords(int x, int y, map_point *tile) {
@@ -112,14 +105,14 @@ static void update_city_view_coords(int x, int y, map_point *tile) {
 static void scroll_map(const mouse *m) {
     pixel_coordinate delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
-        city_view_scroll(delta.x, delta.y);
+        camera_scroll(delta.x, delta.y);
         sound_city_decay_views();
     }
 }
 
 static int input_coords_in_map(int x, int y) {
     int x_offset, y_offset, width, height;
-    city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
+    city_view_get_viewport(&x_offset, &y_offset, &width, &height);
 
     x -= x_offset;
     y -= y_offset;
@@ -131,7 +124,7 @@ static void handle_touch_scroll(const touch *t) {
     if (editor_tool_is_active()) {
         if (t->has_started) {
             int x_offset, y_offset, width, height;
-            city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
+            city_view_get_viewport(&x_offset, &y_offset, &width, &height);
             scroll_set_custom_margins(x_offset, y_offset, width, height);
         }
         if (t->has_ended)
@@ -159,7 +152,7 @@ static void handle_touch_scroll(const touch *t) {
 
 static void handle_touch_zoom(const touch *first, const touch *last) {
     if (touch_not_click(first))
-        zoom_update_touch(first, last, city_view_get_scale());
+        zoom_update_touch(first, last, zoom_get_percentage());
 
     if (first->has_ended || last->has_ended)
         zoom_end_touch();
@@ -184,7 +177,7 @@ static bool handle_cancel_construction_button(const touch *t) {
         return false;
 
     int x, y, width, height;
-    city_view_get_unscaled_viewport(&x, &y, &width, &height);
+    city_view_get_viewport(&x, &y, &width, &height);
     int box_size = 5 * 16;
     width -= box_size;
 

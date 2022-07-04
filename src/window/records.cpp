@@ -1,14 +1,14 @@
 #include "records.h"
 
 #include "core/game_environment.h"
-#include "core/file.h"
+#include "io/file.h"
 #include "input/input.h"
-#include "game/player_data.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
-#include "graphics/scrollbar.h"
+#include "io/playerdata/player_data.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
+#include "graphics/elements/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 
@@ -34,7 +34,7 @@ static void draw_background(void) {
     ImageDraw::img_background(image_id_from_group(GROUP_SCORES_BACKGROUND));
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(0, 0, 40, 30);
     inner_panel_draw(LIST_X, LIST_Y - 12, LIST_WIDTH, LIST_MAX_SIZE + 1);
@@ -43,7 +43,7 @@ static void draw_foreground(void) {
     lang_text_draw_centered(296, 0, 160, 20, 304, FONT_LARGE_BLACK_ON_LIGHT);
 
     // high scores
-    font_t font = FONT_SMALL_BLACK;
+    font_t font = FONT_SMALL_SHADED;
     for (int i = 0; i < LIST_MAX_SIZE; i++) {
         const player_record *record = highscores_get(scrollbar.scroll_position + i);
         if (record->nonempty) {

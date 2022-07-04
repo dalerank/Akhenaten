@@ -1,10 +1,10 @@
-#include <graphics/image.h>
+#include <graphics/boilerplate.h>
 #include <tgmath.h>
 #include "slide.h"
 
 #include "core/speed.h"
-#include "graphics/graphics.h"
-#include "graphics/menu.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/menu.h"
 #include "graphics/window.h"
 #include "sound/effect.h"
 #include "widget/sidebar/common.h"

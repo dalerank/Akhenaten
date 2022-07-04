@@ -2,7 +2,7 @@
 #define OZYMANDIAS_ORNAMENTS_H
 
 #include "graphics/color.h"
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 
 int get_farm_image(int grid_offset);
 void draw_farm_crops(int type, int progress, int grid_offset, int x, int y, color_t color_mask);

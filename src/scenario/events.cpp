@@ -1,14 +1,14 @@
-#include <core/lang.h>
+#include "io/gamefiles/lang.h"
 #include <game/time.h>
 #include <ios>
 #include <core/random.h>
 #include "data.h"
 #include "event_phrases.h"
 #include "city/message.h"
-#include "core/io.h"
-#include "core/log.h"
+#include "io/io.h"
+#include "io/log.h"
 #include "core/string.h"
-#include <game/io/io_buffer.h>
+#include "io/io_buffer.h"
 
 #define MAX_EVENTS 150
 #define NUM_AUTO_PHRASE_VARIANTS 54

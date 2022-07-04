@@ -31,7 +31,7 @@ int string_length(const uint8_t *str);
  * @param str C string
  * @return Game string, or NULL if non-ascii values are found in str
  */
-const uint8_t *string_from_ascii(const char *str);
+const uint8_t *string_from_ascii(const char *str, bool extended = false);
 
 /**
  * Converts the string to integer

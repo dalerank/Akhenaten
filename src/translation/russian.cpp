@@ -38,7 +38,7 @@ static translation_string all_strings[] = {
         {TR_CONFIG_FIX_100_YEAR_GHOSTS,                 "Исправлять ошибку '100-летних призраков' населения"},
         {TR_CONFIG_FIX_EDITOR_EVENTS,                   "Исправлять запросы Императора и время выживания в польз. миссиях"},
         {TR_CONFIG_DRAW_WALKER_WAYPOINTS,               "Отображать маршрут ходоков по правому щелчку на здании"},
-        {TR_CONFIG_ENABLE_ZOOM,                         "Включить функцию зума (возможно замедление)"},
+        {TR_CONFIG_ZOOM_STEPPED,                         "Включить функцию зума (возможно замедление)"},
         {TR_CONFIG_COMPLETE_RATING_COLUMNS,             "Исправить незавершенные колонны рейтинга"},
         {TR_CONFIG_GRANDFESTIVAL,                       "Великий фестиваль разрешает дополнительное благословение от божества"},
         {TR_CONFIG_JEALOUS_GODS,                        "Отключить ревность божеств"},

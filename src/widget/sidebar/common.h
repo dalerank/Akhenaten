@@ -1,7 +1,7 @@
 #ifndef WIDGET_SIDEBAR_COMMON_H
 #define WIDGET_SIDEBAR_COMMON_H
 
-#include "graphics/menu.h"
+#include "graphics/elements/menu.h"
 
 #define SIDEBAR_COLLAPSED_WIDTH 42
 //#define SIDEBAR_EXPANDED_WIDTH 162

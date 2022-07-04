@@ -1,15 +1,15 @@
 #include "speed_options.h"
 
 #include "game/settings.h"
-#include "graphics/arrow_button.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/arrow_button.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "core/image.h"
+#include "graphics/image.h"
 
 static void button_ok(int param1, int param2);
 static void button_cancel(int param1, int param2);
@@ -45,7 +45,7 @@ static void init(void (*close_callback)(void)) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(80, 80, 20, 14);
     // ok/cancel labels
@@ -58,11 +58,11 @@ static void draw_foreground(void) {
     lang_text_draw_centered(45, 4, 128, 236, 224, FONT_NORMAL_BLACK_ON_DARK);
     lang_text_draw_centered(45, 1, 128, 266, 224, FONT_NORMAL_BLACK_ON_DARK);
     // game speed
-    lang_text_draw(45, 2, 112, 146, FONT_NORMAL_PLAIN);
-    text_draw_percentage(setting_game_speed(), 328, 146, FONT_NORMAL_PLAIN);
+    lang_text_draw(45, 2, 112, 146, FONT_SMALL_PLAIN);
+    text_draw_percentage(setting_game_speed(), 328, 146, FONT_SMALL_PLAIN);
     // scroll speed
-    lang_text_draw(45, 3, 112, 182, FONT_NORMAL_PLAIN);
-    text_draw_percentage(setting_scroll_speed(), 328, 182, FONT_NORMAL_PLAIN);
+    lang_text_draw(45, 3, 112, 182, FONT_SMALL_PLAIN);
+    text_draw_percentage(setting_scroll_speed(), 328, 182, FONT_SMALL_PLAIN);
 
     arrow_buttons_draw(160, 40, arrow_buttons, 4);
     graphics_reset_dialog();

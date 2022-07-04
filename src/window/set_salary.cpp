@@ -5,11 +5,11 @@
 #include "city/ratings.h"
 #include "city/victory.h"
 #include "game/resource.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -48,7 +48,7 @@ static int get_dialog_width(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     int dialog_width = get_dialog_width();
     int dialog_x = 128 - (dialog_width - MIN_DIALOG_WIDTH) / 2;

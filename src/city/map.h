@@ -1,7 +1,7 @@
 #ifndef CITY_MAP_H
 #define CITY_MAP_H
 
-#include "map/point.h"
+#include "grid/point.h"
 
 map_point *city_map_entry_point(void);
 map_point *city_map_exit_point(void);

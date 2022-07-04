@@ -4,17 +4,17 @@
 
 #include "city/message.h"
 #include "city/sentiment.h"
-#include "city/view/view.h"
-#include "core/image_group.h"
-#include "core/lang.h"
+#include "graphics/view/view.h"
+#include "graphics/image_groups.h"
+#include "io/gamefiles/lang.h"
 #include "empire/city.h"
 #include "figure/formation.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/image_button.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
-#include "graphics/rich_text.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
+#include "graphics/elements/rich_text.h"
 #include "graphics/text.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
@@ -341,7 +341,7 @@ static void draw_title(const lang_message *msg) {
     if (!text)
         return;
     int image_id = get_message_image_id(msg);
-    const image *img = image_id ? image_get(image_id) : 0;
+    const image_t *img = image_id ? image_get(image_id) : 0;
     // title
     if (msg->message_type == MESSAGE_TYPE_TUTORIAL) {
         text_draw_centered(text,
@@ -497,7 +497,7 @@ static void draw_background(void) {
     else {
         window_draw_underlying_window();
     }
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     if (data.show_video)
         draw_background_video();
     else {
@@ -558,7 +558,7 @@ static void draw_foreground_video(void) {
 
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     if (data.show_video)
         draw_foreground_video();
     else {
@@ -672,7 +672,7 @@ static void button_go_to_problem(int param1, int param2) {
 
     }
     if (grid_offset > 0 && grid_offset < 26244)
-        city_view_go_to_point(map_point(grid_offset));
+        camera_go_to_mappoint(map_point(grid_offset));
 
     window_city_show();
 }

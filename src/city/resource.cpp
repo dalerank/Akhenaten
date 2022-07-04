@@ -7,7 +7,7 @@
 #include "core/calc.h"
 #include "empire/city.h"
 #include "game/tutorial.h"
-#include "map/road_access.h"
+#include "grid/road_access.h"
 #include "scenario/building.h"
 #include "scenario/property.h"
 

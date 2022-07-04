@@ -4,9 +4,9 @@
 #include "city/health.h"
 #include "city/houses.h"
 #include "city/population.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 
 #define ADVISOR_HEIGHT 18
@@ -34,9 +34,8 @@ static int draw_background(void) {
     lang_text_draw(56, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     if (city_population() >= 200)
         lang_text_draw_multiline(56, city_health() / 10 + 16, 60, 46, 512, FONT_NORMAL_BLACK_ON_LIGHT);
-    else {
+    else
         lang_text_draw_multiline(56, 15, 60, 46, 512, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
     lang_text_draw(56, 3, 180, 94, FONT_SMALL_PLAIN);
     lang_text_draw(56, 4, 290, 94, FONT_SMALL_PLAIN);
     lang_text_draw_centered(56, 5, 440, 94, 160, FONT_SMALL_PLAIN);

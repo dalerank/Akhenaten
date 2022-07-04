@@ -11,7 +11,7 @@
 #include "city/resource.h"
 #include "city/trade.h"
 #include "core/calc.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "empire/city.h"
 #include "empire/empire.h"
 #include "empire/trade_prices.h"
@@ -21,9 +21,10 @@
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "figure/trader.h"
-#include "map/figure.h"
-#include "map/road_access.h"
+#include "grid/figure.h"
+#include "grid/road_access.h"
 #include "scenario/map.h"
+#include "graphics/image_groups.h"
 
 void figure::trader_buy(int amounts) {
     trader_amount_bought += amounts;

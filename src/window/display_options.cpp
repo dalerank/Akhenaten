@@ -2,10 +2,10 @@
 
 #include "game/settings.h"
 #include "game/system.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/window.h"
 #include "input/input.h"
 
@@ -32,7 +32,7 @@ static void init(void (*close_callback)(void)) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(96, 80, 18, 12);
 

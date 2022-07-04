@@ -1,5 +1,5 @@
 #include <scenario/property.h>
-#include <game/io/io_buffer.h>
+#include "io/io_buffer.h"
 #include "time.h"
 
 static time_data_t data;

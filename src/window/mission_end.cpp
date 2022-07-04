@@ -10,10 +10,10 @@
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/undo.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -96,7 +96,7 @@ static void draw_won(void) {
 }
 static void draw_background(void) {
     window_draw_underlying_window();
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     if (city_victory_state() == VICTORY_STATE_WON)
         draw_won();
     else {
@@ -106,7 +106,7 @@ static void draw_background(void) {
 }
 static void draw_foreground(void) {
     if (city_victory_state() != VICTORY_STATE_WON) {
-        graphics_in_dialog();
+        graphics_set_to_dialog();
         large_label_draw(80, 224, 30, focus_button_id == 1);
         lang_text_draw_centered(62, 6, 80, 230, 480, FONT_NORMAL_BLACK_ON_DARK);
         graphics_reset_dialog();

@@ -1,13 +1,9 @@
 #include "text.h"
 
-#include "core/lang.h"
+#include "io/gamefiles/lang.h"
 #include "core/string.h"
-#include "core/time.h"
 #include "core/game_environment.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-
-#include <string.h>
+#include "graphics/boilerplate.h"
 
 #define ELLIPSIS_LENGTH 4
 #define NUMBER_BUFFER_LENGTH 100
@@ -76,7 +72,8 @@ void text_draw_cursor(int x_offset, int y_offset, int is_insert) {
         } else {
             graphics_fill_rect(
                     x_offset + input_cursor.x_offset, y_offset + input_cursor.y_offset + 14,
-                    input_cursor.width, 2, COLOR_WHITE);
+                    input_cursor.width, 2,
+                    COLOR_WHITE);
         }
     }
 }
@@ -90,9 +87,11 @@ int text_get_width(const uint8_t *str, font_t font) {
             width += def->space_width;
         else {
             int letter_id = font_letter_id(def, str, &num_bytes);
-            if (letter_id >= 0)
-                width += def->letter_spacing + image_letter(letter_id)->width;
-
+            if (letter_id >= 0) {
+                const image_t *img = image_letter(letter_id);
+                if (img != nullptr)
+                    width += def->letter_spacing + img->width;
+            }
         }
         str += num_bytes;
         maxlen -= num_bytes;
@@ -217,34 +216,11 @@ void text_ellipsize(uint8_t *str, font_t font, int requested_width) {
 
 }
 
-int text_draw_shadow(const uint8_t *str, int _x, int _y, color_t color) {
-    for (int x = -1; x < 2; x++)
-        for (int y = -1; y < 2; y++)
-            text_draw(str, _x+x, _y+y, FONT_NORMAL_PLAIN, 0);
-    return text_draw(str, _x, _y, FONT_NORMAL_PLAIN, color);
-}
-int text_draw_shadow_left(uint8_t *str, int _x, int _y, color_t color) {
-    int width = text_get_width(str, FONT_NORMAL_PLAIN);
-    _x -= width;
-    for (int x = -1; x < 2; x++)
-        for (int y = -1; y < 2; y++)
-            text_draw(str, _x+x, _y+y, FONT_NORMAL_PLAIN, 0);
-    return text_draw(str, _x, _y, FONT_NORMAL_PLAIN, color);
-}
 int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         y = y - 3;
 
-//    const font_definition *def = font_definition_for(font);
-    const font_definition *def;
-    switch (font) {
-        default:
-            def = font_definition_for(font);
-            break;
-        case FONT_NORMAL_SHADED:
-            def = font_definition_for(FONT_NORMAL_PLAIN);
-            break;
-    }
+    const font_definition *def = font_definition_for(font);
 
     int length = string_length(str);
     if (input_cursor.capture) {
@@ -262,10 +238,12 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color) {
             if (*str == ' ' || *str == '_' || letter_id < 0)
                 width = def->space_width;
             else {
-                const image *img = image_letter(letter_id);
-                int height = def->image_y_offset(*str, img->height, def->line_height);
-                ImageDraw::img_letter(font, letter_id, current_x, y - height, color);
-                width = def->letter_spacing + img->width;
+                const image_t *img = image_letter(letter_id);
+                if (img != nullptr) {
+                    int height = def->image_y_offset(*str, img->height, def->line_height);
+                    ImageDraw::img_letter(font, letter_id, current_x, y - height, color);
+                    width = def->letter_spacing + img->width;
+                }
             }
             if (input_cursor.capture && input_cursor.position == input_cursor.cursor_position) {
                 if (!input_cursor.seen) {
@@ -295,6 +273,9 @@ void text_draw_centered(const uint8_t *str, int x, int y, int box_width, font_t 
         offset = 0;
 
     text_draw(str, offset + x, y, font, color);
+}
+int text_draw_left(uint8_t *str, int x, int y, font_t font, color_t color) {
+    return text_draw(str, x - text_get_width(str, font), y, font, color);
 }
 
 static int number_to_string(uint8_t *str, int value, char prefix, const char *postfix) {

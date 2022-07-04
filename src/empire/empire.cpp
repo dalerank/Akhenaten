@@ -5,15 +5,15 @@
 #include "city/population.h"
 #include "city/resource.h"
 #include "core/calc.h"
-#include "core/log.h"
-#include "core/io.h"
+#include "io/log.h"
+#include "io/io.h"
 #include "empire/city.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "type.h"
 
 #include <string.h>
-#include <game/io/io_buffer.h>
+#include "io/io_buffer.h"
 
 const static int EMPIRE_WIDTH[2] = {
         2000,

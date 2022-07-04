@@ -2,7 +2,7 @@
 
 #include "building/count.h"
 #include "building/model.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "city/buildings.h"
 #include "city/military.h"
 #include "city/resource.h"
@@ -10,8 +10,8 @@
 #include "figure/action.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
-#include "map/grid.h"
-#include "map/road_access.h"
+#include "grid/grid.h"
+#include "grid/road_access.h"
 
 #define INFINITE 10000
 

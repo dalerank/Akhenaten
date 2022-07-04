@@ -2,8 +2,8 @@
 #define BUILDING_INDUSTRY_H
 
 #include "building/building.h"
-#include "map/point.h"
-#include "graphics/image.h"
+#include "grid/point.h"
+#include "graphics/boilerplate.h"
 
 //int get_farm_image(int grid_offset);
 //int get_crops_image(int type, int growth);

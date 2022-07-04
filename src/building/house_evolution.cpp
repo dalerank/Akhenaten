@@ -7,10 +7,10 @@
 #include "core/calc.h"
 #include "game/resource.h"
 #include "game/time.h"
-#include "map/building.h"
-#include "map/grid.h"
-#include "map/routing/routing_terrain.h"
-#include "map/tiles.h"
+#include "grid/building.h"
+#include "grid/grid.h"
+#include "grid/routing/routing_terrain.h"
+#include "grid/tiles.h"
 
 enum {
     EVOLVE = 1,

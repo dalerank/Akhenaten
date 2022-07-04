@@ -1,7 +1,7 @@
 #include "core/random.h"
 
 #include <string.h>
-#include <game/io/io_buffer.h>
+#include "io/io_buffer.h"
 //#include <cmath>
 
 static random_data_t data;

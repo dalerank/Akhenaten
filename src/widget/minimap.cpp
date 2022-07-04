@@ -1,22 +1,15 @@
 #include "minimap.h"
 
 #include "building/building.h"
-#include "city/view/view.h"
-#include "figure/figure.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
+#include "graphics/boilerplate.h"
 #include "input/scroll.h"
-#include "map/building.h"
-#include "map/figure.h"
-#include "map/grid.h"
-#include "map/property.h"
-#include "map/random.h"
-#include "map/terrain.h"
+#include "grid/figure.h"
+#include "grid/property.h"
+#include "grid/random.h"
+#include "grid/terrain.h"
 #include "scenario/property.h"
 
-#include <stdlib.h>
-#include <window/city.h>
-#include <dev/debug.h>
+#include "dev/debug.h"
 
 enum {
     FIGURE_COLOR_NONE = 0,
@@ -40,6 +33,7 @@ static struct {
     int y_offset;
     int width;
     int height;
+    int cache_width;
     color_t enemy_color;
     color_t *cache;
     struct {
@@ -66,11 +60,11 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     data.y_offset = y_offset;
     data.width = 2 * width_tiles;
     data.height = height_tiles;
-    data.absolute_x = (MAP_TILE_UPPER_LIMIT_X() - width_tiles) / 2;
-    data.absolute_y = (MAP_TILE_UPPER_LIMIT_Y() - height_tiles) / 2;
+    data.absolute_x = (GRID_LENGTH - width_tiles) / 2 + 1;
+    data.absolute_y = ((2 * GRID_LENGTH) + 1 - height_tiles) / 2;
 
 //    int camera_x, camera_y;
-    map_point camera_tile = city_view_get_camera_tile();
+    map_point camera_tile = city_view_get_camera_mappoint();
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
@@ -240,8 +234,8 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
     }
 }
 static void draw_viewport_rectangle(void) {
-    map_point camera_tile = city_view_get_camera_tile();
-    pixel_coordinate camera_pixels = city_view_get_camera_pixel_offset();
+    map_point camera_tile = city_view_get_camera_mappoint();
+    pixel_coordinate camera_pixels = camera_get_pixel_offset_internal();
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
@@ -260,19 +254,27 @@ static void draw_viewport_rectangle(void) {
 }
 
 static void prepare_minimap_cache(int width, int height) {
-    if (width != data.width || height != data.height) {
-        free(data.cache);
-        data.cache = (color_t *) malloc(sizeof(color_t) * width * height);
-    }
+    return;
+//    if (width != data.width || height != data.height || !graphics_renderer()->has_custom_image(CUSTOM_IMAGE_MINIMAP)) {
+//        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_MINIMAP, width, height);
+//    }
+//    data.cache = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_MINIMAP, &data.cache_width);
 }
-static void cache_minimap(void) {
-    graphics_save_to_buffer(data.x_offset, data.y_offset, data.width, data.height, data.cache);
+static void clear_minimap(void) {
+    for (int y = 0; y < data.height; y++) {
+        color_t *line = &data.cache[y * data.cache_width];
+        for (int x = 0; x < data.cache_width; x++) {
+            line[x] = COLOR_BLACK;
+        }
+    }
 }
 
 static void draw_minimap(void) {
     graphics_set_clip_rectangle(data.x_offset, data.y_offset, data.width, data.height);
+    clear_minimap();
     foreach_map_tile(draw_minimap_tile);
-    cache_minimap();
+//    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
+//    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
 }
@@ -299,26 +301,26 @@ void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_ti
     }
 
     graphics_set_clip_rectangle(x_offset, y_offset, 2 * width_tiles, height_tiles);
-    graphics_draw_from_buffer(x_offset, y_offset, data.width, data.height, data.cache);
+//    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
 }
 
 void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles, int force) {
     if (data.refresh_requested || scroll_in_progress() || force) {
-        if (data.refresh_requested) {
+//        if (data.refresh_requested) {
             draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
             data.refresh_requested = 0;
-        } else {
-            draw_using_cache(x_offset, y_offset, width_tiles, height_tiles, scroll_in_progress());
-        }
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width_tiles * 2, y_offset - 1,
-                                          COLOR_MINIMAP_DARK);
-            graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height_tiles, COLOR_MINIMAP_DARK);
-            graphics_draw_vertical_line(x_offset - 1 + width_tiles * 2, y_offset, y_offset + height_tiles,
-                                        COLOR_MINIMAP_LIGHT);
-        }
+//        } else {
+//            draw_using_cache(x_offset, y_offset, width_tiles, height_tiles, scroll_in_progress());
+//        }
+//        if (GAME_ENV == ENGINE_ENV_C3) {
+//            graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width_tiles * 2, y_offset - 1,
+//                                          COLOR_MINIMAP_DARK);
+//            graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height_tiles, COLOR_MINIMAP_DARK);
+//            graphics_draw_vertical_line(x_offset - 1 + width_tiles * 2, y_offset, y_offset + height_tiles,
+//                                        COLOR_MINIMAP_LIGHT);
+//        }
     }
 }
 
@@ -354,7 +356,7 @@ bool widget_minimap_handle_mouse(const mouse *m) {
     || ((m->left.is_down || m->right.is_down) && mouse_is_moving)) {
         int grid_offset = get_mouse_grid_offset(m);
         if (grid_offset > 0) {
-            city_view_go_to_point(map_point(grid_offset));
+            camera_go_to_mappoint(map_point(grid_offset));
             widget_minimap_invalidate();
             mouse_last_coords = {m->x, m->y};
             return true;

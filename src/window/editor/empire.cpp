@@ -1,16 +1,16 @@
 #include "empire.h"
 
-#include "core/image_group_editor.h"
+#include "graphics/image_groups.h"
 #include "empire/city.h"
 #include "empire/empire.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
-#include "graphics/arrow_button.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
+#include "graphics/elements/arrow_button.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -114,14 +114,15 @@ static void draw_background(void) {
     data.y_max = s_height <= EMPIRE_HEIGHT[GAME_ENV] ? s_height : data.y_min + EMPIRE_HEIGHT[GAME_ENV];
 
     if (data.x_min || data.y_min)
-        graphics_clear_screens();
+        graphics_clear_screen();
 
     draw_paneling();
 }
 
 static void draw_shadowed_number(int value, int x, int y, color_t color) {
-    text_draw_number_colored(value, '@', " ", x + 1, y - 1, FONT_SMALL_PLAIN, COLOR_BLACK);
-    text_draw_number_colored(value, '@', " ", x, y, FONT_SMALL_PLAIN, color);
+    return;
+//    text_draw_number_colored(value, '@', " ", x + 1, y - 1, FONT_SMALL_PLAIN, COLOR_BLACK);
+//    text_draw_number_colored(value, '@', " ", x, y, FONT_SMALL_PLAIN, color);
 }
 
 static void draw_empire_object(const empire_object *obj) {
@@ -151,12 +152,12 @@ static void draw_empire_object(const empire_object *obj) {
                              obj->type == EMPIRE_OBJECT_ROMAN_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
     }
     ImageDraw::img_generic(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
-    const image *img = image_get(image_id);
-    if (img->animation_speed_id) {
+    const image_t *img = image_get(image_id);
+    if (img->animation.speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
         ImageDraw::img_generic(image_id + new_animation,
-                               data.x_draw_offset + x + img->sprite_offset_x,
-                               data.y_draw_offset + y + img->sprite_offset_y);
+                               data.x_draw_offset + x + img->animation.sprite_x_offset,
+                               data.y_draw_offset + y + img->animation.sprite_y_offset);
     }
 }
 

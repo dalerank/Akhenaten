@@ -1,7 +1,7 @@
 #include <game/tutorial.h>
 #include <building/destruction.h>
 #include <sound/effect.h>
-#include <map/routing/routing_terrain.h>
+#include <grid/routing/routing_terrain.h>
 #include <building/warehouse.h>
 #include "gods.h"
 
@@ -15,7 +15,7 @@
 #include "city/sentiment.h"
 #include "city/trade.h"
 #include "core/calc.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "core/random.h"
 #include "figure/formation_legion.h"
 #include "figuretype/water.h"

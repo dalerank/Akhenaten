@@ -1,14 +1,14 @@
 #ifndef FIGURE_FIGURE_H
 #define FIGURE_FIGURE_H
 
-#include <game/io/io_buffer.h>
+#include "io/io_buffer.h"
 #include <memory.h>
 #include "core/buffer.h"
 #include "core/direction.h"
 #include "figure/action.h"
 #include "figure/type.h"
 #include "figure/formation.h"
-#include "map/point.h"
+#include "grid/point.h"
 #include "window/building/common.h"
 #include "widget/city.h"
 
@@ -90,9 +90,9 @@ public:
     unsigned char roam_random_counter;
     signed char roam_turn_direction;
     signed char roam_ticks_until_next_turn;
-    coords cc_coords;
-    coords cc_destination;
-    coords cc_delta;
+    coords_t cc_coords;
+    coords_t cc_destination;
+    coords_t cc_delta;
 //    short cross_country_x; // position = 15 * x + offset on tile
 //    short cross_country_y; // position = 15 * y + offset on tile
 //    short cc_destination_x;
@@ -118,7 +118,7 @@ public:
     short leading_figure_id;
     unsigned char attack_image_offset;
     unsigned char wait_ticks_missile;
-    coords cart_offset;
+    coords_t cart_offset;
 //    signed char x_offset_cart;
 //    signed char y_offset_cart;
     unsigned char empire_city_id;
@@ -232,7 +232,7 @@ public:
 
 //    bool is_roamer();
 
-    // map/figure.c
+    // grid/figure.c
     void map_figure_add();
     void map_figure_update();
     void map_figure_remove();
@@ -241,24 +241,25 @@ public:
 
     // image.c
     void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1);
-    void figure_image_update();
+    void figure_image_update(bool refresh_only);
     void figure_image_set_cart_offset(int direction);
     int figure_image_corpse_offset();
     int figure_image_missile_launcher_offset();
     int figure_image_direction();
+    pixel_coordinate tile_pixel_coords();
 
     // city_figure.c
     void draw_debug();
-    void adjust_pixel_offset(int *x, int *y);
+    void adjust_pixel_offset(pixel_coordinate *pixel);
 //    void draw_figure(int x, int y, int highlight);
-    void draw_figure_main(int x, int y);
-    void draw_figure_cart(int x, int y);
-    void city_draw_figure(int x, int y, int highlight, pixel_coordinate *coord = nullptr);
+    void draw_figure_main(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
+    void draw_figure_cart(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
+    void city_draw_figure(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
 //    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
-    void draw_figure_with_cart(int x, int y);
+    void draw_figure_with_cart(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
 //    void draw_hippodrome_horse(int x, int y);
-    void draw_fort_standard(int x, int y);
-    void draw_map_flag(int x, int y);
+    void draw_fort_standard(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
+    void draw_map_flag(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
 
     // movement.c
     void advance_figure_tick();
@@ -479,7 +480,7 @@ public:
     void draw_market_buyer(building_info_context *c);
     void draw_normal_figure(building_info_context *c);
 
-    // map/marshland.c
+    // grid/marshland.c
     bool find_resource_tile(int resource_type, int *out_x, int *out_y);
 };
 

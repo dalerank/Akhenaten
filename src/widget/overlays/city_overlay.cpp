@@ -1,5 +1,5 @@
 #include <game/state.h>
-#include <map/building.h>
+#include <grid/building.h>
 #include "city_overlay.h"
 
 #include "widget/overlays/city_overlay_risks.h"

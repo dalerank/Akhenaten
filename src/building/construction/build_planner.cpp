@@ -1,14 +1,13 @@
-#include <widget/sidebar/city.h>
-#include <figure/formation_herd.h>
-#include <SDL_log.h>
-#include <map/floodplain.h>
-#include <city/view/lookup.h>
+#include "widget/sidebar/city.h"
+#include "figure/formation_herd.h"
+#include "SDL_log.h"
+#include "grid/floodplain.h"
+#include "graphics/view/lookup.h"
 #include "build_planner.h"
 
 #include "clear.h"
 #include "routed.h"
 #include "warnings.h"
-#include "building/count.h"
 #include "building/model.h"
 #include "building/properties.h"
 #include "building/storage.h"
@@ -19,37 +18,24 @@
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/resource.h"
-#include "city/view/view.h"
 #include "city/warning.h"
-#include "core/calc.h"
-#include "core/config.h"
-#include "core/image.h"
-#include "core/random.h"
-#include "figure/formation.h"
+#include "io/config/config.h"
+#include "graphics/image.h"
 #include "figure/formation_legion.h"
 #include "game/undo.h"
 #include "graphics/window.h"
-#include "map/aqueduct.h"
-#include "map/bridge.h"
-#include "map/building.h"
-#include "map/building_tiles.h"
-#include "map/grid.h"
-#include "map/image.h"
-#include "map/orientation.h"
-#include "map/point.h"
-#include "map/property.h"
-#include "map/routing/routing.h"
-#include "map/routing/routing_terrain.h"
-#include "map/terrain.h"
-#include "map/tiles.h"
-#include "map/water.h"
+#include "grid/bridge.h"
+#include "grid/building.h"
+#include "grid/building_tiles.h"
+#include "grid/image.h"
+#include "grid/orientation.h"
+#include "grid/property.h"
+#include "grid/routing/routing_terrain.h"
+#include "grid/terrain.h"
+#include "grid/tiles.h"
+#include "grid/water.h"
 #include "building/monuments.h"
-
-struct reservoir_info {
-    int cost;
-    int place_reservoir_at_start;
-    int place_reservoir_at_end;
-};
+#include "graphics/image_groups.h"
 
 enum {
     PLACE_RESERVOIR_BLOCKED = -1,
@@ -868,8 +854,7 @@ void BuildPlanner::set_graphics_row(int row, int *image_ids, int total) {
         int tile_size = 0;
         if (image_ids[i] != 0) {
             auto img = image_get(image_ids[i]);
-            int tile_size = (img->width + 2) / 60;
-            set_tile_size(row, i, tile_size);
+            set_tile_size(row, i, img->isometric_size());
         }
     }
 }
@@ -1433,7 +1418,7 @@ void BuildPlanner::update_coord_caches() {
     if (view_tile.x == 0 && view_tile.y == 0)
         // this prevents graphics from being drawn on the top left corner
         // of the screen when the current "end" tile isn't valid.
-        city_view_get_selected_tile_pixels(&view_tile.x, &view_tile.y);
+        view_tile = camera_get_selected_screen_tile();
     int orientation = city_view_orientation() / 2;
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
@@ -1593,13 +1578,8 @@ void BuildPlanner::construction_cancel() {
 }
 void BuildPlanner::construction_update(map_point tile) {
     end = tile;
-//    if (grid_offset) {
-//        end = map_point(grid_offset);
-//    } else {
-//        x = end.x();
-//        y = end.y();
-//        grid_offset = end.grid_offset();
-//    }
+    if (end == map_point(-1, -1))
+        return;
     int x = end.x();
     int y = end.y();
     if (!build_type || city_finance_out_of_money()) {
@@ -1786,6 +1766,9 @@ bool BuildPlanner::place() {
     // attempt placing!
     int x = end.x();
     int y = end.y();
+
+    if (end == map_point(-1, -1))
+        return false;
 
     // for debugging...
     SDL_Log("Attempting to place at: %03i %03i %06i", x, y, MAP_OFFSET(x, y));

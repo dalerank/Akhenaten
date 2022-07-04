@@ -1,13 +1,13 @@
-#include <core/file.h>
+#include "io/file.h"
 #include <core/buffer.h>
-#include <core/io.h>
-#include <core/log.h>
+#include "io/io.h"
+#include "io/log.h"
 #include <core/string.h>
 #include "mission.h"
 
 #include "scenario/property.h"
 #include "core/game_environment.h"
-#include "player_data.h"
+#include "io/playerdata/player_data.h"
 
 struct {
     uint8_t map_names[300][300];

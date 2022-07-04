@@ -2,13 +2,13 @@
 
 #include "building/building.h"
 #include "building/roadblock.h"
-#include "core/image.h"
-#include "graphics/generic_button.h"
 #include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/window.h"
-#include "map/water_supply.h"
+#include "grid/water_supply.h"
 #include "window/building_info.h"
 
 

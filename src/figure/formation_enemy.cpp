@@ -12,12 +12,12 @@
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
 #include "figure/route.h"
-#include "map/figure.h"
-#include "map/grid.h"
-#include "map/routing/routing.h"
-#include "map/routing/queue.h"
-#include "map/soldier_strength.h"
-#include "map/terrain.h"
+#include "grid/figure.h"
+#include "grid/grid.h"
+#include "grid/routing/routing.h"
+#include "grid/routing/queue.h"
+#include "grid/soldier_strength.h"
+#include "grid/terrain.h"
 
 static const int ENEMY_ATTACK_PRIORITY[4][100] = {
         {

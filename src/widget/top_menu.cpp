@@ -1,42 +1,36 @@
 #include <tgmath.h>
-#include <window/game_menu.h>
-#include <city/data.h>
-#include <game/io/manager.h>
+#include "window/game_menu.h"
+#include "io/manager.h"
 #include "top_menu.h"
 
 #include "building/construction/build_planner.h"
 #include "city/finance.h"
 #include "city/population.h"
-#include "game/io/boilerplate.h"
+#include "io/gamestate/boilerplate.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
 #include "game/time.h"
 #include "game/undo.h"
 #include "game/orientation.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/menu.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/menu.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "graphics/image_button.h"
-#include "graphics/generic_button.h"
-#include "scenario/property.h"
-#include "widget/city.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/generic_button.h"
 #include "window/advisors.h"
 #include "window/city.h"
 #include "window/difficulty_options.h"
 #include "window/display_options.h"
 #include "window/file_dialog.h"
-#include "window/main_menu.h"
 #include "window/message_dialog.h"
-#include "window/mission_briefing.h"
 #include "window/popup_dialog.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
-#include "core/game_environment.h"
+#include "graphics/elements/panel.h"
 
 enum {
     INFO_NONE = 0,
@@ -148,6 +142,129 @@ static struct {
     int focus_sub_menu_id;
 } data;
 
+#define TOP_MENU_BASE_X_OFFSET 10
+#define MENU_BASE_TEXT_Y_OFFSET 6
+#define MENU_ITEM_HEIGHT 20
+
+void menu_bar_draw(menu_bar_item *items, int num_items) {
+    short x_offset = TOP_MENU_BASE_X_OFFSET;
+    for (int i = 0; i < num_items; i++) {
+        items[i].x_start = x_offset;
+        x_offset += lang_text_draw(items[i].text_group, 0, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT);
+        items[i].x_end = x_offset;
+        x_offset += 32; // spacing
+    }
+}
+static int get_menu_bar_item(const mouse *m, menu_bar_item *items, int num_items) {
+    for (int i = 0; i < num_items; i++) {
+        if (items[i].x_start <= m->x &&
+            items[i].x_end > m->x &&
+            MENU_BASE_TEXT_Y_OFFSET <= m->y &&
+            MENU_BASE_TEXT_Y_OFFSET + 12 > m->y) {
+            return i + 1;
+        }
+    }
+    return 0;
+}
+int menu_bar_handle_mouse(const mouse *m, menu_bar_item *items, int num_items, int *focus_menu_id) {
+    int menu_id = get_menu_bar_item(m, items, num_items);
+    if (focus_menu_id)
+        *focus_menu_id = menu_id;
+
+    return menu_id;
+}
+
+static void calculate_menu_dimensions(menu_bar_item *menu) {
+    int max_width = 0;
+    int height_pixels = MENU_ITEM_HEIGHT;
+    for (int i = 0; i < menu->num_items; i++) {
+        menu_item *sub = &menu->items[i];
+        if (sub->hidden)
+            continue;
+
+        int width_pixels = lang_text_get_width(
+                sub->text_group, sub->text_number, FONT_NORMAL_BLACK_ON_LIGHT);
+        if (width_pixels > max_width)
+            max_width = width_pixels;
+
+        height_pixels += MENU_ITEM_HEIGHT;
+    }
+    int blocks = (max_width + 8) / 16 + 1; // 1 block padding
+    menu->calculated_width_blocks = blocks < 10 ? 10 : blocks;
+    menu->calculated_height_blocks = height_pixels / 16;
+}
+void menu_draw(menu_bar_item *menu, int focus_item_id) {
+    if (menu->calculated_width_blocks == 0 || menu->calculated_height_blocks == 0)
+        calculate_menu_dimensions(menu);
+
+    unbordered_panel_draw(menu->x_start, TOP_MENU_HEIGHT,
+                          menu->calculated_width_blocks, menu->calculated_height_blocks);
+    int y_offset = TOP_MENU_HEIGHT + MENU_BASE_TEXT_Y_OFFSET * 2;
+    for (int i = 0; i < menu->num_items; i++) {
+        menu_item *sub = &menu->items[i];
+        if (sub->hidden)
+            continue;
+
+        // Set color/font on the menu item mouse hover
+        if (i == focus_item_id - 1) {
+            if (GAME_ENV == ENGINE_ENV_C3) {
+                graphics_fill_rect(menu->x_start, y_offset - 4,
+                                   16 * menu->calculated_width_blocks, 20, COLOR_BLACK);
+                lang_text_draw_colored(sub->text_group, sub->text_number,
+                                       menu->x_start + 8, y_offset, FONT_SMALL_PLAIN, COLOR_FONT_ORANGE);
+            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                lang_text_draw(sub->text_group, sub->text_number,
+                               menu->x_start + 8, y_offset, FONT_NORMAL_YELLOW);
+            }
+        } else {
+            lang_text_draw(sub->text_group, sub->text_number,
+                           menu->x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT);
+        }
+        y_offset += MENU_ITEM_HEIGHT;
+    }
+}
+static int get_menu_item(const mouse *m, menu_bar_item *menu) {
+    int y_offset = TOP_MENU_HEIGHT + MENU_BASE_TEXT_Y_OFFSET * 2;
+    for (int i = 0; i < menu->num_items; i++) {
+        if (menu->items[i].hidden)
+            continue;
+
+        if (menu->x_start <= m->x &&
+            menu->x_start + 16 * menu->calculated_width_blocks > m->x &&
+            y_offset - 2 <= m->y &&
+            y_offset + 19 > m->y) {
+            return i + 1;
+        }
+        y_offset += MENU_ITEM_HEIGHT;
+    }
+    return 0;
+}
+int menu_handle_mouse(const mouse *m, menu_bar_item *menu, int *focus_item_id) {
+    int item_id = get_menu_item(m, menu);
+    if (focus_item_id)
+        *focus_item_id = item_id;
+
+    if (!item_id)
+        return 0;
+
+    if (m->left.went_up) {
+        menu_item *item = &menu->items[item_id - 1];
+        item->left_click_handler(item->parameter);
+    }
+    return item_id;
+}
+
+void menu_update_text(menu_bar_item *menu, int index, int text_number) {
+    menu->items[index].text_number = text_number;
+    if (menu->calculated_width_blocks > 0) {
+        int item_width = lang_text_get_width(
+                menu->items[index].text_group, text_number, FONT_NORMAL_BLACK_ON_LIGHT);
+        int blocks = (item_width + 8) / 16 + 1;
+        if (blocks > menu->calculated_width_blocks)
+            menu->calculated_width_blocks = blocks;
+    }
+}
+
 static struct {
     int population;
     int treasury;
@@ -216,8 +333,6 @@ static void top_menu_window_show(void) {
     window_show(&window);
 }
 
-#include "city/view/view.h"
-
 int orientation_button_state = 0;
 int orientation_button_pressed = 0;
 
@@ -264,7 +379,7 @@ void widget_top_menu_draw(int force) {
     int treasury = city_finance_treasury();
     if (treasury < 0)
         treasure_color = COLOR_FONT_RED;
-    font_t treasure_font = treasury >= 0 ? FONT_NORMAL_BLACK_ON_DARK : FONT_NORMAL_YELLOW;
+    font_t treasure_font = treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
     int s_width = screen_width();
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         data.offset_funds = s_width - 540;
@@ -274,7 +389,7 @@ void widget_top_menu_draw(int force) {
 
 
         lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), data.offset_date - 2, 5, 110,
-                                            FONT_NORMAL_BLACK_ON_DARK, 0);
+                                            FONT_NORMAL_BLACK_ON_LIGHT, 0);
         // Orientation icon
         if (orientation_button_pressed) {
             ImageDraw::img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3,
@@ -291,62 +406,29 @@ void widget_top_menu_draw(int force) {
             data.offset_date = 547;
             data.offset_rotate = data.offset_date - 50;
 
-            int width = lang_text_draw_colored(6, 0, 341, 5, FONT_NORMAL_PLAIN, treasure_color);
-            text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
+            int width = lang_text_draw_colored(6, 0, 341, 5, FONT_SMALL_PLAIN, treasure_color);
+            text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_SMALL_PLAIN, treasure_color);
 
-            width = lang_text_draw(6, 1, 458, 5, FONT_NORMAL_BLACK_ON_DARK);
-            text_draw_number(city_population(), '@', " ", 450 + width, 5, FONT_NORMAL_BLACK_ON_DARK);
+            width = lang_text_draw(6, 1, 458, 5, FONT_NORMAL_BLACK_ON_LIGHT);
+            text_draw_number(city_population(), '@', " ", 450 + width, 5, FONT_NORMAL_BLACK_ON_LIGHT);
 
-            lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 540, 5, 100, FONT_NORMAL_BLACK_ON_DARK, 0);
+            lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 540, 5, 100, FONT_NORMAL_BLACK_ON_LIGHT, 0);
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             // TODO: draw for 800x600 resolution
         }
-
     } else if (s_width < 1024) {
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            data.offset_funds = 338; // +2
-            data.offset_population = 458; // +2
-            data.offset_date = 652;
-            data.offset_rotate = data.offset_date - 50;
+        int width = lang_text_draw_colored(6, 0, data.offset_funds + 2 + 100, 5, treasure_font, 0);
+        text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width + 100, 5, treasure_font, 0);
 
-            int width = lang_text_draw_colored(6, 0, 341, 5, FONT_NORMAL_PLAIN, treasure_color);
-            text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
-
-            width = lang_text_draw_colored(6, 1, 460, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
-            text_draw_number_colored(city_population(), '@', " ", 466 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
-
-            lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 655, 5, 110, FONT_NORMAL_PLAIN,
-                                                COLOR_FONT_YELLOW);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            int width = lang_text_draw_colored(6, 0, data.offset_funds + 2 + 100, 5, treasure_font, 0);
-            text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width + 100, 5, treasure_font, 0);
-
-            width = lang_text_draw(6, 1, data.offset_population + 2 + 100, 5, FONT_NORMAL_BLACK_ON_DARK);
-            text_draw_number(city_population(), '@', " ", data.offset_population + 7 + width + 100, 5,
-                             FONT_NORMAL_BLACK_ON_DARK);
-        }
+        width = lang_text_draw(6, 1, data.offset_population + 2 + 100, 5, FONT_NORMAL_BLACK_ON_LIGHT);
+        text_draw_number(city_population(), '@', " ", data.offset_population + 7 + width + 100, 5,
+                         FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            data.offset_funds = 493; // +2
-            data.offset_population = 637; // +8
-            data.offset_date = 852;
-            data.offset_rotate = data.offset_date - 50;
+        int width = lang_text_draw_colored(6, 0, data.offset_funds + 2, 5, treasure_font, 0);
+        text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width, 5, treasure_font, 0);
 
-            int width = lang_text_draw_colored(6, 0, 495, 5, FONT_NORMAL_PLAIN, treasure_color);
-            text_draw_number_colored(treasury, '@', " ", 501 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
-
-            width = lang_text_draw_colored(6, 1, 645, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
-            text_draw_number_colored(city_population(), '@', " ", 651 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
-
-            lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 850, 5, 110, FONT_NORMAL_PLAIN,
-                                                COLOR_FONT_YELLOW);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            int width = lang_text_draw_colored(6, 0, data.offset_funds + 2, 5, treasure_font, 0);
-            text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width, 5, treasure_font, 0);
-
-            width = lang_text_draw(6, 1, data.offset_population + 2, 5, FONT_NORMAL_BLACK_ON_DARK);
-            text_draw_number(city_population(), '@', " ", data.offset_population + 7 + width, 5, FONT_NORMAL_BLACK_ON_DARK);
-        }
+        width = lang_text_draw(6, 1, data.offset_population + 2, 5, FONT_NORMAL_BLACK_ON_LIGHT);
+        text_draw_number(city_population(), '@', " ", data.offset_population + 7 + width, 5, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     drawn.treasury = treasury;
     drawn.population = city_population();
@@ -452,7 +534,7 @@ bool widget_top_menu_handle_input(const mouse *m, const hotkeys *h) {
 }
 int widget_top_menu_get_tooltip_text(tooltip_context *c) {
     if (data.focus_menu_id)
-        return 49 + data.focus_menu_id;
+        return 50 + data.focus_menu_id;
 
     int button_id = get_info_id(c->mouse_x, c->mouse_y);
     if (button_id && GAME_ENV == ENGINE_ENV_PHARAOH)

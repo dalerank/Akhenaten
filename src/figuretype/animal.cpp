@@ -3,9 +3,9 @@
 #include "building/building.h"
 #include "city/entertainment.h"
 #include "city/figures.h"
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 #include "core/calc.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "core/random.h"
 #include "figure/combat.h"
 #include "figure/formation.h"
@@ -13,15 +13,16 @@
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
-#include "map/figure.h"
-#include "map/grid.h"
-#include "map/point.h"
+#include "grid/figure.h"
+#include "grid/grid.h"
+#include "grid/point.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
-#include "map/terrain.h"
-#include "map/building.h"
+#include "grid/terrain.h"
+#include "grid/building.h"
+#include "graphics/image_groups.h"
 
-static const coords SEAGULL_OFFSETS[] = {
+static const coords_t SEAGULL_OFFSETS[] = {
         {0,  0},
         {0,  -2},
         {-2, 0},
@@ -33,7 +34,7 @@ static const coords SEAGULL_OFFSETS[] = {
         {0,  0}
 };
 
-static const coords HORSE_DESTINATION_1[] = {
+static const coords_t HORSE_DESTINATION_1[] = {
         {2,  1},
         {3,  1},
         {4,  1},
@@ -57,7 +58,7 @@ static const coords HORSE_DESTINATION_1[] = {
         {3,  3},
         {2,  2}
 };
-static const coords HORSE_DESTINATION_2[] = {
+static const coords_t HORSE_DESTINATION_2[] = {
         {12, 3},
         {11, 3},
         {10, 3},

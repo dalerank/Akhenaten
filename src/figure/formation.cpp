@@ -2,14 +2,14 @@
 
 #include "city/military.h"
 #include "core/calc.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "figure/enemy_army.h"
 #include "figure/figure.h"
 #include "figure/formation_enemy.h"
 #include "figure/formation_herd.h"
 #include "figure/formation_legion.h"
 #include "figure/properties.h"
-#include "map/grid.h"
+#include "grid/grid.h"
 #include "sound/effect.h"
 
 #include <string.h>
@@ -667,9 +667,6 @@ io_buffer *iob_formations = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_UINT8, &f->invasion_id);
         iob->bind(BIND_SIGNATURE_UINT8, &f->herd_wolf_spawn_delay);                      // --> 4
         iob->bind(BIND_SIGNATURE_UINT8, &f->herd_direction);                             // 6
-        if (i == 10) {
-            int a = 24;
-        }
         if (GAME_ENV == ENGINE_ENV_PHARAOH)
             iob->bind____skip(6);
         iob->bind____skip(17);

@@ -1,5 +1,5 @@
-#include <graphics/scrollbar.h>
-#include <graphics/image_button.h>
+#include "graphics/elements/scrollbar.h"
+#include "graphics/elements/image_button.h"
 #include "distribution.h"
 
 #include "building/building.h"
@@ -10,10 +10,10 @@
 #include "city/resource.h"
 #include "figure/figure.h"
 #include "game/resource.h"
-#include "graphics/generic_button.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/property.h"

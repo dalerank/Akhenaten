@@ -1,16 +1,16 @@
 #include "attributes.h"
 
-#include "core/image.h"
-#include "core/image_group_editor.h"
+#include "graphics/image.h"
+#include "graphics/image_groups.h"
 #include "core/string.h"
 #include "game/resource.h"
-#include "graphics/arrow_button.h"
-#include "graphics/button.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/arrow_button.h"
+#include "graphics/elements/button.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -95,7 +95,7 @@ static void draw_background(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     outer_panel_draw(0, 28, 30, 28);
 
     input_box_draw(&scenario_description_input);
@@ -226,7 +226,7 @@ static void button_demand_changes(int param1, int param2) {
 
 static void change_climate(int param1, int param2) {
     scenario_editor_cycle_climate();
-    image_load_main_paks(scenario_property_climate(), 1, 0);
+//    image_load_main_paks(scenario_property_climate(), 1, 0);
     widget_minimap_invalidate();
     window_request_refresh();
 }

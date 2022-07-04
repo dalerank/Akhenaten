@@ -1,28 +1,23 @@
 #include "game_menu.h"
 #include "message_dialog.h"
 #include "file_dialog.h"
-#include "mission_next.h"
-#include "mission_briefing.h"
 #include "player_selection.h"
 #include "scenario_selection.h"
 #include "city.h"
 
-#include <graphics/window.h>
-#include <graphics/graphics.h>
-#include <graphics/image.h>
-#include <graphics/panel.h>
-#include <input/input.h>
-#include <graphics/generic_button.h>
-#include <graphics/lang_text.h>
-#include <core/lang.h>
-#include <game/settings.h>
-#include <graphics/text.h>
-#include <game/player_data.h>
-#include <core/file.h>
-#include <game/io/boilerplate.h>
-#include <scenario/property.h>
-#include <game/mission.h>
-#include <game/io/manager.h>
+#include "graphics/window.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/panel.h"
+#include "input/input.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/elements/lang_text.h"
+#include "io/gamefiles/lang.h"
+#include "game/settings.h"
+#include "graphics/text.h"
+#include "io/playerdata/player_data.h"
+#include "game/mission.h"
+#include "io/manager.h"
+#include "io/gamestate/boilerplate.h"
 
 static void button_click(int param1, int param2);
 
@@ -71,13 +66,13 @@ static void init() {
 }
 
 static void draw_background() {
-    graphics_clear_screens();
-    graphics_in_dialog();
-    ImageDraw::img_generic(image_id_from_group(GROUP_GAME_MENU), 0, 0);
+    graphics_clear_screen();
+    ImageDraw::img_background(image_id_from_group(GROUP_GAME_MENU));
+    graphics_set_to_dialog();
     graphics_reset_dialog();
 }
 static void draw_foreground() {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     outer_panel_draw(128, 56, 24, 19);
 
     // title

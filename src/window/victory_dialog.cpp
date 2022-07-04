@@ -2,10 +2,10 @@
 #include "victory_dialog.h"
 
 #include "city/victory.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
@@ -25,7 +25,7 @@ static int focus_button_id = 0;
 
 static void draw_background(void) {
     window_draw_underlying_window();
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(48, 128, 34, 15);
     if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
@@ -40,7 +40,7 @@ static void draw_background(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     if (city_victory_state() == VICTORY_STATE_WON) {
         large_label_draw(80, 240, 30, focus_button_id == 1);

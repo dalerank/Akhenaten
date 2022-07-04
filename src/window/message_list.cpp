@@ -5,15 +5,15 @@
 
 #include "city/message.h"
 #include "core/calc.h"
-#include "core/image_group.h"
-#include "core/lang.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/image_button.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
-#include "graphics/scrollbar.h"
+#include "graphics/image_groups.h"
+#include "io/gamefiles/lang.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
+#include "graphics/elements/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -68,7 +68,7 @@ static void init(void) {
 static void draw_background(void) {
     window_city_draw_all();
 
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     data.width_blocks = 30;
     data.height_blocks = 22;
     data.x_text = 16;
@@ -123,25 +123,41 @@ static void draw_messages(int total_messages) {
             color_t c = COLOR_WHITE;
             uint8_t str[10];
 
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_body_id, c);
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_title_id, c); // FF FF
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_02, c); // FF FF
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city, c);; // enum?
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_body_id, c);
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_title_id, c); // FF FF
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_02, c); // FF FF
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city, c);; // enum?
 
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount, c);;
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource, c);;
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_months_left, c);
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_07, c);
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount, c);;
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource, c);;
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_months_left, c);
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_07, c);
 
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_phrase_id, c);
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city_past, c);; // enum?
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_09, c); // 00 00
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_10, c); // 00 00
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_phrase_id, c);
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city_past, c);; // enum?
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_09, c); // 00 00
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_10, c); // 00 00
 
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount_past, c);;
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource_past, c);;
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_11a_i8, c);; // FF FF
-            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_12, c);; // 00 00
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount_past, c);;
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource_past, c);;
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_11a_i8, c);; // FF FF
+            o += oo;
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_12, c);; // 00 00
 
             continue;
         }
@@ -157,7 +173,7 @@ static void draw_messages(int total_messages) {
     scrollbar_draw(&scrollbar);
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     image_buttons_draw(16, 32 + 16 * data.height_blocks - 42, &image_button_help, 1);
     image_buttons_draw(16 * data.width_blocks - 38, 32 + 16 * data.height_blocks - 36, &image_button_close, 1);
 

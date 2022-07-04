@@ -3,15 +3,16 @@
 #include "building/building.h"
 #include "building/list.h"
 #include "core/calc.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
-#include "map/grid.h"
-#include "map/road_access.h"
-#include "map/road_network.h"
+#include "grid/grid.h"
+#include "grid/road_access.h"
+#include "grid/road_network.h"
 #include "scenario/gladiator_revolt.h"
+#include "graphics/image_groups.h"
 
 int determine_venue_destination(int x, int y, int type1, int type2, int type3) {
     int road_network = map_road_network_get(MAP_OFFSET(x, y));

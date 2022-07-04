@@ -4,7 +4,7 @@
 #include "city/constants.h"
 #include "core/buffer.h"
 #include "core/calc.h"
-#include "core/io.h"
+#include "io/io.h"
 #include "core/string.h"
 #include "core/game_environment.h"
 
@@ -84,7 +84,7 @@ static void load_settings(buffer *buf) {
     data.sound_music.enabled = buf->read_u8();
     data.sound_speech.enabled = buf->read_u8();
     buf->skip(6);
-    data.game_speed = buf->read_i32(); data.game_speed = 100; // todo: fix settings
+    data.game_speed = buf->read_i32(); data.game_speed = 80; // todo: fix settings
     data.scroll_speed = buf->read_i32();
     buf->read_raw(data.player_name, MAX_PLAYER_NAME);
     buf->skip(16);

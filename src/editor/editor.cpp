@@ -1,6 +1,6 @@
 #include "editor/editor.h"
 
-#include "core/file.h"
+#include "io/file.h"
 
 #define MAX_EDITOR_FILES 9
 

@@ -10,15 +10,16 @@
 #include "city/military.h"
 #include "city/resource.h"
 #include "core/calc.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "empire/trade_prices.h"
 #include "game/tutorial.h"
-#include "map/image.h"
-#include "map/road_access.h"
+#include "grid/image.h"
+#include "grid/road_access.h"
 #include "scenario/property.h"
+#include "graphics/image_groups.h"
 
 #include <math.h>
-#include <core/config.h>
+#include "io/config/config.h"
 
 int building_warehouse_get_space_info(building *warehouse) {
     int total_amounts = 0;

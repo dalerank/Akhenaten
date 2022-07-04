@@ -2,16 +2,16 @@
 
 #include "city/figures.h"
 #include "city/military.h"
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 #include "figure/formation_legion.h"
-#include "graphics/generic_button.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
-#include "graphics/scrollbar.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
+#include "graphics/elements/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "map/grid.h"
+#include "grid/grid.h"
 #include "scenario/invasion.h"
 #include "window/city.h"
 
@@ -173,7 +173,7 @@ static int handle_mouse(const mouse *m) {
 
 static void button_go_to_legion(int legion_id, int param2) {
     const formation *m = formation_get(formation_for_legion(legion_id + scrollbar.scroll_position));
-    city_view_go_to_point(map_point(MAP_OFFSET(m->x_home, m->y_home)));
+    camera_go_to_mappoint(map_point(MAP_OFFSET(m->x_home, m->y_home)));
     window_city_show();
 }
 

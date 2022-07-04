@@ -1,17 +1,17 @@
 #include "population.h"
 
-#include "core/config.h"
+#include "io/config/config.h"
 #include "city/finance.h"
 #include "city/migration.h"
 #include "city/population.h"
 #include "city/ratings.h"
 #include "city/resource.h"
 #include "game/time.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
@@ -391,8 +391,8 @@ static void print_history_info(void) {
 }
 
 static void draw_housing_button(int full_size, int x, int y) {
-    ImageDraw::isometric_footprint(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE);
-    ImageDraw::isometric_top(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE);
+    ImageDraw::isometric(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE, 1.0f);
+//    ImageDraw::isometric_top(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE);
 }
 
 static int draw_background(void) {

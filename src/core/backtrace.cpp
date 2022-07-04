@@ -1,6 +1,6 @@
 #include "backtrace.h"
 
-#include "core/log.h"
+#include "io/log.h"
 
 #if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && !defined(__vita__) && !defined(__SWITCH__)
 

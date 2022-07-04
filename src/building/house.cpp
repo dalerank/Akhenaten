@@ -1,16 +1,17 @@
 #include <game/tutorial.h>
 #include "house.h"
 
-#include "core/config.h"
-#include "core/image.h"
+#include "io/config/config.h"
+#include "graphics/image.h"
 #include "core/game_environment.h"
 #include "game/resource.h"
-#include "map/building.h"
-#include "map/building_tiles.h"
-#include "map/grid.h"
-#include "map/image.h"
-#include "map/random.h"
-#include "map/terrain.h"
+#include "grid/building.h"
+#include "grid/building_tiles.h"
+#include "grid/grid.h"
+#include "grid/image.h"
+#include "grid/random.h"
+#include "grid/terrain.h"
+#include "graphics/image_groups.h"
 
 #define MAX_DIR 4
 

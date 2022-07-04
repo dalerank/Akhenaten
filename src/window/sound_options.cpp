@@ -1,11 +1,11 @@
 #include "sound_options.h"
 
 #include "game/settings.h"
-#include "graphics/arrow_button.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/arrow_button.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -13,7 +13,7 @@
 #include "sound/effect.h"
 #include "sound/music.h"
 #include "sound/speech.h"
-#include "core/image.h"
+#include "graphics/image.h"
 
 static void button_toggle(int type, int param2);
 static void button_ok(int param1, int param2);
@@ -65,7 +65,7 @@ static void init(void (*close_callback)(void)) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(48, 80, 24, 18);
 
@@ -89,19 +89,19 @@ static void draw_foreground(void) {
 
     const set_sound *music = setting_sound(SOUND_MUSIC);
     lang_text_draw_centered(46, music->enabled ? 2 : 1, 64, 166, 224, FONT_NORMAL_BLACK_ON_DARK);
-    text_draw_percentage(music->volume, 374, 166, FONT_NORMAL_PLAIN);
+    text_draw_percentage(music->volume, 374, 166, FONT_SMALL_PLAIN);
 
     const set_sound *speech = setting_sound(SOUND_SPEECH);
     lang_text_draw_centered(46, speech->enabled ? 4 : 3, 64, 196, 224, FONT_NORMAL_BLACK_ON_DARK);
-    text_draw_percentage(speech->volume, 374, 196, FONT_NORMAL_PLAIN);
+    text_draw_percentage(speech->volume, 374, 196, FONT_SMALL_PLAIN);
 
     const set_sound *effects = setting_sound(SOUND_EFFECTS);
     lang_text_draw_centered(46, effects->enabled ? 6 : 5, 64, 226, 224, FONT_NORMAL_BLACK_ON_DARK);
-    text_draw_percentage(effects->volume, 374, 226, FONT_NORMAL_PLAIN);
+    text_draw_percentage(effects->volume, 374, 226, FONT_SMALL_PLAIN);
 
     const set_sound *city = setting_sound(SOUND_CITY);
     lang_text_draw_centered(46, city->enabled ? 8 : 7, 64, 256, 224, FONT_NORMAL_BLACK_ON_DARK);
-    text_draw_percentage(city->volume, 374, 256, FONT_NORMAL_PLAIN);
+    text_draw_percentage(city->volume, 374, 256, FONT_SMALL_PLAIN);
 
     arrow_buttons_draw(208, 60, arrow_buttons, 8);
 

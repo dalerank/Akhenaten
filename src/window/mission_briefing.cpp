@@ -1,16 +1,16 @@
 #include "mission_briefing.h"
 
 #include "city/mission.h"
-#include "core/image_group.h"
-#include "core/lang.h"
-#include "game/io/boilerplate.h"
+#include "graphics/image_groups.h"
+#include "io/gamefiles/lang.h"
+#include "io/gamestate/boilerplate.h"
 #include "game/mission.h"
 #include "game/tutorial.h"
-#include "graphics/graphics.h"
-#include "graphics/image_button.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
-#include "graphics/rich_text.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
+#include "graphics/elements/rich_text.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/criteria.h"
@@ -63,7 +63,7 @@ static void draw_background(void) {
 
     window_draw_underlying_window();
 
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     int text_id = 200 + scenario_campaign_scenario_id();
     const lang_message *msg = lang_get_message(text_id);
 
@@ -146,7 +146,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     rich_text_draw_scrollbar();
     image_buttons_draw(516, 426, &image_button_start_mission, 1);

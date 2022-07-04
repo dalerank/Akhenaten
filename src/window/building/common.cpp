@@ -4,9 +4,9 @@
 #include "building/model.h"
 #include "city/labor.h"
 #include "city/population.h"
-#include "city/view/view.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
+#include "graphics/view/view.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "sound/speech.h"
@@ -16,7 +16,7 @@ void window_building_set_possible_position(int *x_offset, int *y_offset, int wid
     int dialog_height = 16 * height_blocks;
     int stub;
     int width;
-    city_view_get_unscaled_viewport(&stub, &stub, &width, &stub);
+    city_view_get_viewport(&stub, &stub, &width, &stub);
     width -= MARGIN_POSITION;
 
     if (*y_offset + dialog_height > screen_height() - MARGIN_POSITION)

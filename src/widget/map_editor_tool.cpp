@@ -1,12 +1,13 @@
+#include <graphics/view/zoom.h>
 #include "map_editor_tool.h"
 
 #include "building/properties.h"
-#include "core/image_group_editor.h"
+#include "graphics/image_groups.h"
 #include "editor/tool.h"
 #include "editor/tool_restriction.h"
-#include "graphics/image.h"
+#include "graphics/boilerplate.h"
 #include "input/scroll.h"
-#include "map/terrain.h"
+#include "grid/terrain.h"
 #include "scenario/property.h"
 
 #define MAX_TILES 4
@@ -42,8 +43,8 @@ static void draw_partially_blocked(int x, int y, int num_tiles, int *blocked_til
 }
 
 static void draw_building_image(int image_id, int x, int y) {
-    ImageDraw::isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
-    ImageDraw::isometric_top(image_id, x, y, COLOR_MASK_GREEN);
+    ImageDraw::isometric(image_id, x, y, COLOR_MASK_GREEN);
+//    ImageDraw::isometric_top(image_id, x, y, COLOR_MASK_GREEN, city_view_get_scale_float());
 }
 
 static void draw_building(map_point tile, int screen_x, int screen_y, int type) {
@@ -60,7 +61,7 @@ static void draw_building(map_point tile, int screen_x, int screen_y, int type) 
         for (int i = 0; i < num_tiles; i++) {
             int x_offset = screen_x + X_VIEW_OFFSETS[i];
             int y_offset = screen_y + Y_VIEW_OFFSETS[i];
-            ImageDraw::isometric_footprint(image_id, x_offset, y_offset, 0);
+            ImageDraw::isometric(image_id, x_offset, y_offset);
         }
     } else {
         int image_id;
@@ -124,8 +125,9 @@ void map_editor_tool_draw(map_point tile) {
         return;
 
     int type = editor_tool_type();
-    int x, y;
-    city_view_get_selected_tile_pixels(&x, &y);
+    screen_tile screen = camera_get_selected_screen_tile();
+    int x = screen.x;
+    int y = screen.y;
     switch (type) {
         case TOOL_NATIVE_CENTER:
             draw_building(tile, x, y, BUILDING_NATIVE_MEETING);

@@ -6,17 +6,16 @@
 #include <stdint.h>
 
 typedef enum {
-    FONT_NORMAL_PLAIN,
+    FONT_SMALL_PLAIN,
     FONT_NORMAL_BLACK_ON_LIGHT,
     FONT_NORMAL_WHITE_ON_DARK,
     FONT_NORMAL_YELLOW, // Yellow font for Pharaoh
     FONT_NORMAL_BLUE, // Blue font for Pharaoh
     FONT_LARGE_BLACK_ON_LIGHT,
     FONT_LARGE_BLACK_ON_DARK,
-    FONT_SMALL_PLAIN,
+    FONT_SMALL_OUTLINED,
     FONT_NORMAL_BLACK_ON_DARK,
-    FONT_SMALL_BLACK,
-    FONT_NORMAL_SHADED,
+    FONT_SMALL_SHADED,
     FONT_TYPES_MAX
 } font_t;
 
@@ -37,6 +36,12 @@ typedef struct {
     */
     int (*image_y_offset)(uint8_t c, int image_height, int line_height);
 } font_definition;
+
+enum {
+    NO_EXTRA_FONT = 0,
+    FULL_CHARSET_IN_FONT = 1,
+    MULTIBYTE_IN_FONT = 2
+};
 
 /**
  * Sets the encoding for font drawing functions

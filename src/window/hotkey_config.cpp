@@ -1,15 +1,15 @@
 #include "config.h"
 
 #include "building/type.h"
-#include "core/hotkey_config.h"
-#include "core/image_group.h"
+#include "io/config/hotkeys.h"
+#include "graphics/image_groups.h"
 #include "core/string.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
-#include "graphics/scrollbar.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
+#include "graphics/elements/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "translation/translation.h"
@@ -183,11 +183,10 @@ static void init(void) {
 }
 
 static void draw_background(void) {
-    graphics_clear_screen(CANVAS_UI);
+    graphics_clear_screen();
 
     ImageDraw::img_background(image_id_from_group(GROUP_CONFIG_BACKGROUND));
-
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     outer_panel_draw(0, 0, 40, 30);
 
     text_draw_centered(translation_for(TR_HOTKEY_TITLE), 16, 16, 608, FONT_LARGE_BLACK_ON_LIGHT, 0);
@@ -242,7 +241,7 @@ static void draw_background(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     scrollbar_draw(&scrollbar);
 

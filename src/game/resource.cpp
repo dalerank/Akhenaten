@@ -3,6 +3,7 @@
 #include "building/type.h"
 #include "scenario/building.h"
 #include "core/game_environment.h"
+#include "graphics/image_groups.h"
 
 int resource_image_offset(int resource, int type) {
     switch (type) {
@@ -19,7 +20,7 @@ int resource_image_offset(int resource, int type) {
     }
 }
 #include "core/game_environment.h"
-#include "graphics/image.h"
+#include "graphics/boilerplate.h"
 
 int resource_get_icon(int resource, int quantity) {
     return resource + image_id_from_group(GROUP_RESOURCE_ICONS);

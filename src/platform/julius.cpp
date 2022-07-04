@@ -2,8 +2,8 @@
 
 #include "core/backtrace.h"
 #include "core/encoding.h"
-#include "core/file.h"
-#include "core/lang.h"
+#include "io/file.h"
+#include "io/gamefiles/lang.h"
 #include "core/time.h"
 #include "core/game_environment.h"
 #include "game/game.h"
@@ -20,6 +20,7 @@
 #include "platform/touch.h"
 
 #include "tinyfiledialogs/tinyfiledialogs.h"
+#include "renderer.h"
 
 #include <signal.h>
 #include <stdio.h>
@@ -44,7 +45,7 @@
 
 #ifdef DRAW_FPS
 #include "graphics/window.h"
-#include "graphics/graphics.h"
+#include "graphics/boilerplate.h"
 #include "graphics/text.h"
 #endif
 
@@ -81,7 +82,7 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
     }
 }
 static void setup_logging(void) {
-    log_file = file_open("augustus-log.txt", "wt");
+    log_file = file_open("ozymandias-log.txt", "wt");
     SDL_LogSetOutputFunction(write_log, NULL);
 }
 static void teardown_logging(void) {
@@ -327,7 +328,7 @@ static void run_and_draw(void) {
     game_run();
     game_draw();
 
-    platform_screen_render();
+    platform_renderer_render();
 }
 #endif
 

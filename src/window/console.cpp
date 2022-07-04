@@ -1,14 +1,14 @@
 #include "window/console.h"
 
 #include "city/warning.h"
-#include "core/image_group.h"
-#include "core/log.h"
+#include "graphics/image_groups.h"
+#include "io/log.h"
 #include "core/string.h"
 #include "game/cheats.h"
-#include "graphics/graphics.h"
-#include "graphics/image_button.h"
-#include "graphics/panel.h"
-#include "graphics/lang_text.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/panel.h"
+#include "graphics/elements/lang_text.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -31,7 +31,7 @@ static void init(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     outer_panel_draw(128, 160, 24, 8);
     text_draw_centered((uint8_t *) "Console", 128, 172, 384, FONT_LARGE_BLACK_ON_LIGHT, 0);
     lang_text_draw(13, 5, 352, 256, FONT_NORMAL_BLACK_ON_LIGHT);

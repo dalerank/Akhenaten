@@ -1,13 +1,13 @@
 #include "difficulty_options.h"
 
 #include "game/settings.h"
-#include "graphics/arrow_button.h"
-#include "graphics/graphics.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/arrow_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "core/image.h"
+#include "graphics/image.h"
 
 static void arrow_button_difficulty(int is_down, int param2);
 static void arrow_button_gods(int param1, int param2);
@@ -23,7 +23,7 @@ static struct {
 } data;
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(48, 80, 24, 12);
 
