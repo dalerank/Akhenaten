@@ -126,15 +126,11 @@ void figure::draw_figure_main(pixel_coordinate pixel, int highlight, pixel_coord
     }
 
     const image_t *img = is_enemy_image ? image_get_enemy(sprite_image_id) : image_get(sprite_image_id);
-    if (is_enemy_image)
-        ImageDraw::img_enemy(sprite_image_id, pixel.x + x_correction, pixel.y + y_correction, COLOR_MASK_NONE);
-    else
-        ImageDraw::img_sprite(sprite_image_id, pixel.x + x_correction, pixel.y + y_correction, COLOR_MASK_NONE);
+    ImageDraw::img_sprite(sprite_image_id, pixel.x + x_correction, pixel.y + y_correction, COLOR_MASK_NONE);
 }
 void figure::draw_figure_cart(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out) {
     const image_t *img = image_get(cart_image_id);
-    ImageDraw::img_generic(cart_image_id, pixel.x + cart_offset.x - img->animation.sprite_x_offset,
-                           pixel.y + cart_offset.y - img->animation.sprite_y_offset - 7);
+    ImageDraw::img_sprite(cart_image_id, pixel.x + cart_offset.x, pixel.y + cart_offset.y - 7);
 }
 void figure::draw_figure_with_cart(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out) {
     draw_figure_cart(pixel, highlight, coord_out);

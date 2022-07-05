@@ -108,6 +108,7 @@ void figure::figure_image_update(bool refresh_only) {
         anim_frame++;
     if (anim_frame >= anim_max_frames * anim_frame_duration)
         anim_frame = 0;
+    cart_update_image();
 
     switch (type) {
         case FIGURE_JAVELIN:

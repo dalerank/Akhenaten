@@ -717,51 +717,6 @@ void ImageDraw::img_from_below(int image_id, int x, int y, color_t color_mask, f
     const image_t *img = image_get(image_id);
     graphics_renderer()->draw_image(img, x, y - img->height, color_mask, scale, false);
 }
-void ImageDraw::img_enemy(int image_id, int x, int y, color_t color_mask, float scale) {
-    if (image_id <= 0 || image_id >= 801)
-        return;
-    ImageDraw::img_sprite(image_id, x, y, color_mask, scale);
-
-//    const image *img = image_get_enemy(image_id);
-//    const color_t *data = image_data_enemy(image_id);
-//    if (data)
-//        draw_compressed(img, data, x, y, img->height);
-//    graphics_renderer()->draw_image(img, x, y, 0, scale);
-//    ImageDraw::img_generic(image_id, x, y, 0, scale);
-}
-void ImageDraw::img_blended(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image_t *img = image_get(image_id);
-//    const color_t *data = image_data(image_id);
-//    if (!data)
-//        return;
-//
-//    if (img->type == IMAGE_TYPE_ISOMETRIC)
-//        return;
-//
-//    if (img->is_fully_compressed)
-//        draw_compressed_blend(img, data, x, y, img->height, color);
-//    else {
-//        draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND);
-//    }
-//    graphics_renderer()->draw_image(img, x, y, color, scale);
-    ImageDraw::img_generic(image_id, x, y, color_mask, scale);
-}
-void ImageDraw::img_alpha_blended(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image_t *img = image_get(image_id);
-//    const color_t *data = image_data(image_id);
-//    if (!data)
-//        return;
-//
-//    if (img->type == IMAGE_TYPE_ISOMETRIC)
-//        return;
-//
-//    if (img->is_fully_compressed)
-//        draw_compressed_blend_alpha(img, data, x, y, img->height, color);
-//    else
-//        draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
-//    graphics_renderer()->draw_image(img, x, y, color, scale);
-    ImageDraw::img_generic(image_id, x, y, color_mask, scale);
-}
 void ImageDraw::img_letter(font_t font, int letter_id, int x, int y, color_t color_mask, float scale) {
     const image_t *img = image_letter(letter_id);
     if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {

@@ -32,9 +32,6 @@ namespace ImageDraw {
     void img_sprite(int image_id, int x, int y, color_t color_mask = COLOR_MASK_NONE, float scale = 1.0f);
     void img_ornament(int image_id, int base_id, int x, int y, color_t color_mask = COLOR_MASK_NONE, float scale = 1.0f);
     void img_from_below(int image_id, int x, int y, color_t color_mask = COLOR_MASK_NONE, float scale = 1.0f);
-    void img_enemy(int image_id, int x, int y, color_t color_mask = COLOR_MASK_NONE, float scale = 1.0f);
-    void img_blended(int image_id, int x, int y, color_t color_mask, float scale = 1.0f);
-    void img_alpha_blended(int image_id, int x, int y, color_t color_mask, float scale = 1.0f);
     void img_letter(font_t font, int letter_id, int x, int y, color_t color_mask = COLOR_MASK_NONE, float scale = 1.0f);
     void img_background(int image_id, float scale = 1.0f);
     void isometric(int image_id, int x, int y, color_t color_mask = COLOR_MASK_NONE, float scale = 1.0f);

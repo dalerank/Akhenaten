@@ -262,7 +262,7 @@ static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_
 }
 
 static void draw_flat_tile(int x, int y, color_t color_mask) {
-    ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
+    ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
 }
 static void draw_partially_blocked(int x, int y, int fully_blocked, int num_tiles, int *blocked_tiles) {
     for (int i = 0; i < num_tiles; i++) {
@@ -279,7 +279,7 @@ void draw_building(int image_id, int x, int y, color_t color_mask) {
 }
 
 static void draw_fountain_range(pixel_coordinate pixel, map_point point) {
-    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE,
+    ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE,
                                  zoom_get_scale());
 }
 static void draw_warehouse(int x, int y) {
@@ -679,7 +679,7 @@ bool city_building_ghost_mark_deleting(map_point tile) {
     return true;
 }
 void BuildPlanner::draw_flat_tile(int x, int y, color_t color_mask) {
-    ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
+    ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
 }
 void BuildPlanner::draw_blueprints(bool fully_blocked) {
     for (int row = 0; row < size.y; row++) {

@@ -452,7 +452,7 @@ void figure::cartpusher_action() {
                 do_returnhome();
             break;
     }
-    cart_update_image();
+//    cart_update_image();
 }
 void figure::warehouseman_action() {
     int road_network_id = map_road_network_get(tile.grid_offset());
@@ -495,5 +495,5 @@ void figure::warehouseman_action() {
             cartpusher_do_retrieve(FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE);
             break;
     }
-    cart_update_image();
+//    cart_update_image();
 }
