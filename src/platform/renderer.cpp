@@ -400,103 +400,110 @@ static const SDL_Color *convert_color(color_t color) {
     return &new_color;
 }
 
-static void draw_texture_raw(const image *img, SDL_Texture *texture,
-    const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale) {
-    int texture_width, texture_height;
-    SDL_QueryTexture(texture, 0, 0, &texture_width, &texture_height);
+// TODO: Does not compile because of image
+// Also not in header defined?
+// static void draw_texture_raw(const image *img, SDL_Texture *texture,
+//     const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale) {
+//     int texture_width, texture_height;
+//     SDL_QueryTexture(texture, 0, 0, &texture_width, &texture_height);
 
-    float minu = src_coords->x / (float) texture_width;
-    float minv = src_coords->y / (float) texture_height;
-    float maxu = (src_coords->x + img->width) / (float) texture_width;
-    float maxv = (src_coords->y + img->height) / (float) texture_height;
+//     float minu = src_coords->x / (float) texture_width;
+//     float minv = src_coords->y / (float) texture_height;
+//     float maxu = (src_coords->x + img->width) / (float) texture_width;
+//     float maxv = (src_coords->y + img->height) / (float) texture_height;
 
-    float minx = dst_coords->x;
-    float miny = dst_coords->y;
-    float maxx = dst_coords->x + dst_coords->w;
-    float maxy = dst_coords->y + dst_coords->h;
+//     float minx = dst_coords->x;
+//     float miny = dst_coords->y;
+//     float maxx = dst_coords->x + dst_coords->w;
+//     float maxy = dst_coords->y + dst_coords->h;
 
-    const float uv[8] = { maxu, minv, minu, minv, minu, maxv, maxu, maxv };
-    const float xy[8] = { maxx, miny, minx, miny, minx, maxy, maxx, maxy };
-    const int indices[6] = { 0, 1, 2, 0, 2, 3 };
+//     const float uv[8] = { maxu, minv, minu, minv, minu, maxv, maxu, maxv };
+//     const float xy[8] = { maxx, miny, minx, miny, minx, maxy, maxx, maxy };
+//     const int indices[6] = { 0, 1, 2, 0, 2, 3 };
 
-    SDL_RenderGeometryRaw(data.renderer, texture, xy, 2 * sizeof(float), convert_color(color), 0,
-        uv, 2 * sizeof(float), 4, indices, sizeof(indices) / sizeof(int), sizeof(int));
-}
+//     SDL_RenderGeometryRaw(data.renderer, texture, xy, 2 * sizeof(float), convert_color(color), 0,
+//         uv, 2 * sizeof(float), 4, indices, sizeof(indices) / sizeof(int), sizeof(int));
+// }
 
-static void draw_isometric_footprint_raw(const image *img, SDL_Texture *texture,
-    const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale) {
-    int tiles = (img->width + 2) / 60;
-    int width = tiles * 60 - 2;
-    int half_width = tiles * 30 - 1;
-    int height = tiles * 30;
-    int half_height = tiles * 15;
+// TODO: Does not compile because of image
+// Also not in header defined?
+// static void draw_isometric_footprint_raw(const image *img, SDL_Texture *texture,
+//     const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale) {
+//     int tiles = (img->width + 2) / 60;
+//     int width = tiles * 60 - 2;
+//     int half_width = tiles * 30 - 1;
+//     int height = tiles * 30;
+//     int half_height = tiles * 15;
 
-    int texture_width, texture_height;
-    SDL_QueryTexture(texture, 0, 0, &texture_width, &texture_height);
+//     int texture_width, texture_height;
+//     SDL_QueryTexture(texture, 0, 0, &texture_width, &texture_height);
 
-    float texture_coord_correction = scale == 1.0f ? 0.0f : 0.5f;
-    float grid_correction = (config_get(CONFIG_UI_SHOW_GRID) && data.city_scale > 2.0f) * 0.75f;
-    texture_coord_correction += grid_correction;
+//     float texture_coord_correction = scale == 1.0f ? 0.0f : 0.5f;
+//     float grid_correction = (config_get(CONFIG_UI_SHOW_GRID) && data.city_scale > 2.0f) * 0.75f;
+//     texture_coord_correction += grid_correction;
 
-    float minu = (src_coords->x + texture_coord_correction) / (float) texture_width;
-    float minv = (src_coords->y + texture_coord_correction) / (float) texture_height;
-    float medu = (src_coords->x + half_width) / (float) texture_width;
-    float medv = (src_coords->y + half_height) / (float) texture_height;
-    float maxu = (src_coords->x + width - texture_coord_correction) / (float) texture_width;
-    float maxv = (src_coords->y + height - texture_coord_correction) / (float) texture_height;
+//     float minu = (src_coords->x + texture_coord_correction) / (float) texture_width;
+//     float minv = (src_coords->y + texture_coord_correction) / (float) texture_height;
+//     float medu = (src_coords->x + half_width) / (float) texture_width;
+//     float medv = (src_coords->y + half_height) / (float) texture_height;
+//     float maxu = (src_coords->x + width - texture_coord_correction) / (float) texture_width;
+//     float maxv = (src_coords->y + height - texture_coord_correction) / (float) texture_height;
 
-    float dst_coord_correction = scale == 1.0f ? 0.5f : 1.0f / scale;
-    grid_correction /= scale;
+//     float dst_coord_correction = scale == 1.0f ? 0.5f : 1.0f / scale;
+//     grid_correction /= scale;
 
-    float minx = dst_coords->x - dst_coord_correction + grid_correction;
-    float miny = dst_coords->y + grid_correction;
-    float medx = dst_coords->x + half_width / scale;
-    float medy = dst_coords->y + half_height / scale;
-    float maxx = dst_coords->x + dst_coord_correction + width / scale - grid_correction;
-    float maxy = dst_coords->y + height / scale - grid_correction;
+//     float minx = dst_coords->x - dst_coord_correction + grid_correction;
+//     float miny = dst_coords->y + grid_correction;
+//     float medx = dst_coords->x + half_width / scale;
+//     float medy = dst_coords->y + half_height / scale;
+//     float maxx = dst_coords->x + dst_coord_correction + width / scale - grid_correction;
+//     float maxy = dst_coords->y + height / scale - grid_correction;
 
-    const float uv[8] = { medu, minv, minu, medv, medu, maxv, maxu, medv };
-    const float xy[8] = { medx, miny, minx, medy, medx, maxy, maxx, medy };
-    const int indices[6] = { 0, 1, 2, 0, 2, 3 };
+//     const float uv[8] = { medu, minv, minu, medv, medu, maxv, maxu, medv };
+//     const float xy[8] = { medx, miny, minx, medy, medx, maxy, maxx, medy };
+//     const int indices[6] = { 0, 1, 2, 0, 2, 3 };
 
-    SDL_RenderGeometryRaw(data.renderer, texture, xy, 2 * sizeof(float), convert_color(color), 0,
-        uv, 2 * sizeof(float), 4, indices, sizeof(indices) / sizeof(int), sizeof(int));
-}
+//     SDL_RenderGeometryRaw(data.renderer, texture, xy, 2 * sizeof(float), convert_color(color), 0,
+//         uv, 2 * sizeof(float), 4, indices, sizeof(indices) / sizeof(int), sizeof(int));
+// }
 
-static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
-    const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale) {
-    int tiles = (img->width + 2) / 60;
-    int half_width = tiles * 30 - 1;
-    int half_height = tiles * 15;
 
-    int texture_width, texture_height;
-    SDL_QueryTexture(texture, 0, 0, &texture_width, &texture_height);
+// TODO: Does not compile because of image
+// Also not in header defined?
+// static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
+//     const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale) {
+//     int tiles = (img->width + 2) / 60;
+//     int half_width = tiles * 30 - 1;
+//     int half_height = tiles * 15;
 
-    float texture_coord_correction = scale == 1.0f ? 0.0f : 0.5f;
+//     int texture_width, texture_height;
+//     SDL_QueryTexture(texture, 0, 0, &texture_width, &texture_height);
 
-    float minu = (src_coords->x + texture_coord_correction) / (float) texture_width;
-    float minv = (src_coords->y + texture_coord_correction) / (float) texture_height;
-    float medu = (src_coords->x + half_width) / (float) texture_width;
-    float medv = (src_coords->y + src_coords->h - half_height) / (float) texture_height;
-    float maxu = (src_coords->x + src_coords->w - texture_coord_correction) / (float) texture_width;
-    float maxv = (src_coords->y + src_coords->h) / (float) texture_height;
+//     float texture_coord_correction = scale == 1.0f ? 0.0f : 0.5f;
 
-    float dst_coord_correction = scale == 1.0f ? 0.0f : 1.0f / scale;
+//     float minu = (src_coords->x + texture_coord_correction) / (float) texture_width;
+//     float minv = (src_coords->y + texture_coord_correction) / (float) texture_height;
+//     float medu = (src_coords->x + half_width) / (float) texture_width;
+//     float medv = (src_coords->y + src_coords->h - half_height) / (float) texture_height;
+//     float maxu = (src_coords->x + src_coords->w - texture_coord_correction) / (float) texture_width;
+//     float maxv = (src_coords->y + src_coords->h) / (float) texture_height;
 
-    float minx = dst_coords->x - dst_coord_correction;
-    float miny = dst_coords->y;
-    float medx = dst_coords->x + half_width / scale;
-    float medy = dst_coords->y + dst_coords->h - half_height / scale;
-    float maxx = dst_coords->x + dst_coords->w + dst_coord_correction;
-    float maxy = dst_coords->y + dst_coords->h;
+//     float dst_coord_correction = scale == 1.0f ? 0.0f : 1.0f / scale;
 
-    const float uv[10] = { minu, minv, maxu, minv, medu, medv, minu, maxv, maxu, maxv };
-    const float xy[10] = { minx, miny, maxx, miny, medx, medy, minx, maxy, maxx, maxy };
-    const int indices[9] = { 0, 1, 2, 0, 2, 3, 1, 2, 4 };
+//     float minx = dst_coords->x - dst_coord_correction;
+//     float miny = dst_coords->y;
+//     float medx = dst_coords->x + half_width / scale;
+//     float medy = dst_coords->y + dst_coords->h - half_height / scale;
+//     float maxx = dst_coords->x + dst_coords->w + dst_coord_correction;
+//     float maxy = dst_coords->y + dst_coords->h;
 
-    SDL_RenderGeometryRaw(data.renderer, texture, xy, 2 * sizeof(float), convert_color(color), 0,
-        uv, 2 * sizeof(float), 5, indices, sizeof(indices) / sizeof(int), sizeof(int));
-}
+//     const float uv[10] = { minu, minv, maxu, minv, medu, medv, minu, maxv, maxu, maxv };
+//     const float xy[10] = { minx, miny, maxx, miny, medx, medy, minx, maxy, maxx, maxy };
+//     const int indices[9] = { 0, 1, 2, 0, 2, 3, 1, 2, 4 };
+
+//     SDL_RenderGeometryRaw(data.renderer, texture, xy, 2 * sizeof(float), convert_color(color), 0,
+//         uv, 2 * sizeof(float), 5, indices, sizeof(indices) / sizeof(int), sizeof(int));
+// }
 #endif
 
 graphics_renderer_interface *graphics_renderer(void) {
@@ -547,16 +554,16 @@ void graphics_renderer_interface::draw_image(const image_t *img, float x, float 
     float height = img->height;
 
 #ifdef USE_RENDER_GEOMETRY
-    if (HAS_RENDER_GEOMETRY) {
-        SDL_Rect src_coords = { x_offset, y_offset, img->width, height };
-        SDL_FRect dst_coords = { x / scale, y / scale, img->width / scale, height / scale };
-        if (img->type == IMAGE_TYPE_ISOMETRIC) {
-            draw_isometric_footprint_raw(img, texture, &src_coords, &dst_coords, color, scale);
-        } else {
-            draw_texture_raw(img, texture, &src_coords, &dst_coords, color, scale);
-        }
-        return;
-    }
+    // if (HAS_RENDER_GEOMETRY) {
+    //     SDL_Rect src_coords = { x_offset, y_offset, img->width, height };
+    //     SDL_FRect dst_coords = { x / scale, y / scale, img->width / scale, height / scale };
+    //     if (img->type == IMAGE_TYPE_ISOMETRIC) {
+    //         draw_isometric_footprint_raw(img, texture, &src_coords, &dst_coords, color, scale);
+    //     } else {
+    //         draw_texture_raw(img, texture, &src_coords, &dst_coords, color, scale);
+    //     }
+    //     return;
+    // }
 #endif
 
     SDL_SetTextureColorMod(texture,
@@ -567,17 +574,20 @@ void graphics_renderer_interface::draw_image(const image_t *img, float x, float 
     SDL_SetTextureBlendMode(texture, premult_alpha);
 
     float texture_coord_correction = 0;
-    SDL_Rect texture_coords = {x_offset + texture_coord_correction, y_offset + texture_coord_correction,
-        img->width - texture_coord_correction, height - texture_coord_correction };
+    SDL_Rect texture_coords = {
+        static_cast<int>(x_offset + texture_coord_correction), 
+        static_cast<int>(y_offset + texture_coord_correction),
+        static_cast<int>(img->width - texture_coord_correction), 
+        static_cast<int>(height - texture_coord_correction)};
 
     SDL_FRect screen_coords;
     if (DOWNSCALED_CITY) {
         // hack to prevent ugly dark borders around sprites -- yes, there's DEFINITELY a better way to do this,
         // but I can't be arsed to find it. I tried, I gave up.
-        screen_coords = {x * data.global_render_scale - 0.25,
-                         y * data.global_render_scale - 0.25,
-                         img->width * overall_scale_factor + 0.5,
-                         height * overall_scale_factor + 0.5 };
+        screen_coords = {static_cast<float>(x * data.global_render_scale - 0.25),
+                         static_cast<float>(y * data.global_render_scale - 0.25),
+                         static_cast<float>(img->width * overall_scale_factor + 0.5),
+                         static_cast<float>(height * overall_scale_factor + 0.5)};
     } else {
         screen_coords = {x * data.global_render_scale,
                          y * data.global_render_scale,

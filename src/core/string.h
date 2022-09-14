@@ -2,6 +2,7 @@
 #define CORE_STRING_H
 
 #include <stdint.h>
+#include <cstddef>
 
 /**
  * @file
@@ -69,6 +70,7 @@ int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack
 int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length);
 
 // Also called: "why the fuck does the standard library not have this already?"
-void strncpy_safe(char *dest, const char *src, size_t destsz);
+// why not use std::string everywere instead of this low lvl c stuff?
+void strncpy_safe(char *dest, const char *src, std::size_t destsz);
 
 #endif // CORE_STRING_H

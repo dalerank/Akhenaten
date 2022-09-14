@@ -300,6 +300,7 @@ static int convert_image_data(buffer *buf, image_t *img, bool convert_fonts) {
     }
 
     img->uncompressed_length /= 2;
+    // TODO function is non void. What should it return?
 }
 
 ///////// IMAGEPAK
