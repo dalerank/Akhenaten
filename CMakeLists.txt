@@ -737,6 +737,12 @@ if(APPLE)
         set(DIRS "${DIRS};${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
     endif()
 
+    # if SDL2_image library is a framework, we need to indicate to CMake
+    # the path to its dependencies (Ogg.framework etc):
+    if(EXISTS "${SDL2_IMAGE_LIBRARY}/Versions/A/Frameworks")
+        set(DIRS "${DIRS};${SDL2_IMAGE_LIBRARY}/Versions/A/Frameworks")
+    endif()
+
     # when installing, "fixup" automatically copies librairies inside the
     # bundle and links the binary against them
     install(CODE "
@@ -844,6 +850,7 @@ if (VITA_BUILD)
 elseif(SWITCH_BUILD)
     target_link_libraries (${SHORT_NAME}
         SDL2_mixer
+        SDL2_image
         SDL2
         EGL
         GLESv2
