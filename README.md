@@ -1,4 +1,4 @@
-# Ozymandias 
+# Ozymandias
 
 This is a fork of the **Julius/Augustus** project with the aim of making it work with _Pharaoh_ instead of _Caesar 3_.
 
@@ -16,8 +16,8 @@ For the official upcoming remaster (unrelated to Ozymandias) called _A New Era_,
 ## Running the game
 
 | Platform       | Latest release | Unstable build |
-|----------------|----------------|----------------|
-| Windows        | -              | -              | 
+| -------------- | -------------- | -------------- |
+| Windows        | -              | -              |
 | Linux AppImage | -              | -              |
 | Mac            | -              | -              |
 
@@ -34,14 +34,18 @@ stored there; also, your game must be patched to last version to run Ozymandias.
 
 ### Windows
 
-- Clone the repo
-- Install [MinGW](https://code.visualstudio.com/docs/cpp/config-mingw). You can for example follow this instructions:
-  - Important here: Choose MinGW64 
-- Install [CMake](https://github.com/Kitware/CMake/releases/download/v3.24.2/cmake-3.24.2-windows-x86_64.zip)
-- Download [SDL2](https://github.com/libsdl-org/SDL/releases/download/release-2.24.0/SDL2-devel-2.24.0-mingw.zip) and extract it to folder ext/SDL2
-- Download [SDL2_mixer](https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.2/SDL2_mixer-devel-2.6.2-mingw.) and extract it to folder ext/SDL2
-- Download [SDL2_image](https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.2/SDL2_mixer-devel-2.6.) and extract it to folder ext/SDL2
-- From root folder execute:
+- Clone the repository
+- Download [SDL2](https://github.com/libsdl-org/SDL/releases/tag/release-2.24.0) and extract it to folder ext/SDL2
+- Download [SDL2_mixer](https://github.com/libsdl-org/SDL_mixer/releases/tag/release-2.6.2) and extract it to folder ext/SDL2
+- Download [SDL2_image](https://github.com/libsdl-org/SDL_image/releases/tag/release-2.6.2) and extract it to folder ext/SDL2
+
+To build with your favorite IDE, just import the cmakelists.txt file as a project and build from there. Otherwise, you can use [MinGW-w64](https://www.mingw-w64.org/downloads/) to build via CLI:
+
+- Install MinGW-w64 (either manually, or via [MSYS2](https://www.msys2.org/))
+- Install [CMake](https://cmake.org/download/#latest)
+
+- From the project's root folder execute, in order:
+  
   ```
   mkdir build
   cd build
@@ -49,13 +53,20 @@ stored there; also, your game must be patched to last version to run Ozymandias.
   mingw32-make
   ```
 
+To run the engine, you'll also need the necessary dynamic libraries in the same folder as the executable, unless the project is set to build with static linkage.
+
+- Navigate to the SDL2, SDL2_mixer and SDL2_image extracted files, and locate the .dll files inside the `bin` folder of the correct architecture (e.g. `SDL2_image-2.6.2/x86_64-w64-mingw32/bin/`)
+
+- Copy the .dll files from each of the above to the `build` folder
 
 ### Linux
 
-Only tested this on Manjaro but under ubuntu similar you should install following packages:
+Only tested on Manjaro, but under Ubuntu or similar you should install the same packages:
 
-- Clone the repo
+- Clone the repository
+
 - Install (You will need to enable AUR on Manjaro):
+  
   - CMake
   - g++
   - sdl2
@@ -63,6 +74,7 @@ Only tested this on Manjaro but under ubuntu similar you should install followin
   - sdl2_image
 
 - From the root folder execute:
+  
   ```
   mkdir build
   cd build
@@ -70,7 +82,8 @@ Only tested this on Manjaro but under ubuntu similar you should install followin
   make
   ```
 
-### Mac
+### MacOS
 
-- Currently no one on mac here but you can try the instructions from Julius. They should be similar beside the additional need for SDL2_Image. https://github.com/bvschaik/julius/wiki/Building-Julius
-- Feel free to add a pull request to add mac instructions here.
+Currently not tested on Mac, but you can try the instructions from Julius. They should be similar besides the additional need for SDL2_image. https://github.com/bvschaik/julius/wiki/Building-Julius
+
+(Feel free to add a pull request to add additional Mac instructions here.)

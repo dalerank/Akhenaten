@@ -33,6 +33,7 @@
 #define HAS_TEXTURE_SCALE_MODE 0
 #endif
 
+// TODO: fix the render geometry functions for newer SDL version
 // Even though geometry rendering is supported since SDL 2.0.18, that version still has some drawing bugs, so we only
 // enable geometry rendering with SDL 2.0.20. Also, the software renderer also has drawing bugs, so it's also disabled.
 //#if SDL_VERSION_ATLEAST(2, 0, 20)
