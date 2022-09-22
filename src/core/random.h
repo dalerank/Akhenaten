@@ -5,9 +5,12 @@
 
 #include "core/buffer.h"
 
-#define MAX_RANDOM 100
+constexpr int MAX_RANDOM = 100;
 
-typedef struct random_data {
+// N.B.: carefulness required as random_data is already defined on Linux systems
+// in the GNU C standard library files (/usr/include/stdlib.h:424:8)!
+// TODO: clean this up eventually, maybe with a namespace or singleton
+typedef struct {
     uint32_t iv1;
     uint32_t iv2;
     int8_t random1_3bit;

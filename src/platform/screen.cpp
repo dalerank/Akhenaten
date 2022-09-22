@@ -89,13 +89,14 @@ int platform_screen_get_scale(void) {
 
 #if !defined(_WIN32) && !defined(__APPLE__)
 static void set_window_icon(void) {
-    SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(platform_icon_get_pixels(), 16, 16, 32, 16 * 4,
-        0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
-    if (!surface) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for icon. Reason: %s", SDL_GetError());
-    }
-    SDL_SetWindowIcon(SDL.window, surface);
-    SDL_FreeSurface(surface);
+    // TODO platform_icon_get_pixels() not defined?
+    // SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(platform_icon_get_pixels(), 16, 16, 32, 16 * 4,
+    //     0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+    // if (!surface) {
+    //     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for icon. Reason: %s", SDL_GetError());
+    // }
+    // SDL_SetWindowIcon(SDL.window, surface);
+    // SDL_FreeSurface(surface);
 }
 #endif
 

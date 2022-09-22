@@ -3,11 +3,11 @@
 
 #include <cstdint>
 
-typedef struct mission_step_t;
-typedef struct mission_choice_branch_t;
+struct mission_step_t;
 
-#define MAX_MISSION_CHOICE_BRANCHES 5
-#define MAX_MISSION_CAMPAIGNS 10
+// TODO: clean up the various engine constants into a single global namespace
+constexpr int MAX_MISSION_CHOICE_BRANCHES = 5;
+constexpr int MAX_MISSION_CAMPAIGNS = 10;
 
 struct mission_choice_branch_t {
     int path_id = -1;

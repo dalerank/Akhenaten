@@ -272,8 +272,11 @@ enum {
 #define GROUP_BUILDING_WALLS  IMAGE_COLLECTION_GENERAL,  138
 #define GROUP_BUILDING_GATEHOUSE  IMAGE_COLLECTION_GENERAL,  161
 #define GROUP_BUILDING_GATEHOUSE_2  IMAGE_COLLECTION_GENERAL,  220
-#define GROUP_BUILDING_TOWER  IMAGE_COLLECTION_GENERAL,  135
+ // Warning already redefined. Is it maybe a good idea to get rid of the defines complete and use constexpr ?
+#define GROUP_BUILDING_TOWER  IMAGE_COLLECTION_GENERAL,  135  
+ // Warning already redefined. Is it maybe a good idea to get rid of the defines complete and use constexpr ?
 #define GROUP_BUILDING_TRANSPORT_WHARF  IMAGE_COLLECTION_GENERAL,  17 // TODO
+ // Warning already redefined. Is it maybe a good idea to get rid of the defines complete and use constexpr ?
 #define GROUP_BUILDING_WARSHIP_WHARF  IMAGE_COLLECTION_GENERAL,  28 // TODO
 #define GROUP_BUILDING_GUILD_CARPENTERS  IMAGE_COLLECTION_GENERAL,  91
 #define GROUP_BUILDING_GUILD_STONEMASONS  IMAGE_COLLECTION_GENERAL,  88

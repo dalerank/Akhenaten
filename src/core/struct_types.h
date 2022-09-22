@@ -12,12 +12,14 @@ struct pixel_coordinate {
     }
     inline pixel_coordinate operator-=(pixel_coordinate rhs) {
         *this = *this - rhs;
+        return *this;
     }
     inline pixel_coordinate operator+(pixel_coordinate rhs) {
         return {x + rhs.x, y + rhs.y};
     }
     inline pixel_coordinate operator+=(pixel_coordinate rhs) {
         *this = *this + rhs;
+        return *this;
     }
     inline bool operator==(pixel_coordinate rhs) {
         return (x == rhs.x && y == rhs.y);

@@ -1,6 +1,5 @@
 #include "io/gamefiles/lang.h"
 #include <game/time.h>
-#include <ios>
 #include <core/random.h>
 #include "data.h"
 #include "event_phrases.h"
@@ -9,11 +8,13 @@
 #include "io/log.h"
 #include "core/string.h"
 #include "io/io_buffer.h"
+#include <ios>
+#include <cstring>
 
-#define MAX_EVENTS 150
-#define NUM_AUTO_PHRASE_VARIANTS 54
-#define NUM_PHRASES 601
-#define MAX_EVENTMSG_TEXT_DATA NUM_PHRASES * 200
+constexpr int MAX_EVENTS = 150;
+constexpr int NUM_AUTO_PHRASE_VARIANTS = 54;
+constexpr int NUM_PHRASES = 601;
+constexpr int MAX_EVENTMSG_TEXT_DATA = NUM_PHRASES * 200;
 
 struct {
     event_ph_t event_list[MAX_EVENTS];

@@ -79,6 +79,7 @@ typedef const char * dir_name;
 #define chdir _chdir
 #elif !defined(__vita__)
 
+#include <cerrno>
 #include <unistd.h>
 
 #endif
@@ -211,7 +212,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
     return fopen(filename, mode);
 }
 
-int platform_file_manager_remove_file(const char *filename) {
+bool platform_file_manager_remove_file(const char *filename) {
     return remove(filename) == 0;
 }
 
