@@ -400,8 +400,7 @@ static const SDL_Color *convert_color(color_t color) {
     return &new_color;
 }
 
-// TODO: Does not compile because of image
-// Also not in header defined?
+// TODO: Does not compile because of image (see the above in line 36)
 // static void draw_texture_raw(const image *img, SDL_Texture *texture,
 //     const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale) {
 //     int texture_width, texture_height;

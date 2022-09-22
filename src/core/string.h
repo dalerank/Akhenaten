@@ -70,7 +70,8 @@ int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack
 int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length);
 
 // Also called: "why the fuck does the standard library not have this already?"
-// why not use std::string everywere instead of this low lvl c stuff?
+// Q.: Why not use std::string everywhere instead of this low level C stuff?
+// A.: Because just like 90% of the rest, it's such big and complicated a refactor that I might as well start from scratch.
 void strncpy_safe(char *dest, const char *src, std::size_t destsz);
 
 #endif // CORE_STRING_H
