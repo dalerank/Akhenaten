@@ -7,9 +7,9 @@
 
 constexpr int MAX_RANDOM = 100;
 
-// TODO does not compile because random data is already defined in 
-// /usr/include/stdlib.h:424:8:
-// Renamed this as a hack. Should it be renamed or ad a namespace ?
+// N.B.: carefulness required as random_data is already defined on Linux systems
+// in the GNU C standard library files (/usr/include/stdlib.h:424:8)!
+// TODO: clean this up eventually, maybe with a namespace or singleton
 typedef struct {
     uint32_t iv1;
     uint32_t iv2;

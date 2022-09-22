@@ -5,6 +5,7 @@
 
 struct mission_step_t;
 
+// TODO: clean up the various engine constants into a single global namespace
 constexpr int MAX_MISSION_CHOICE_BRANCHES = 5;
 constexpr int MAX_MISSION_CAMPAIGNS = 10;
 
