@@ -41,6 +41,25 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 set(CMAKE_CXX_FLAGS "-std=c++0x -Wno-c++11-narrowing -static-libgcc -static-libstdc++" ${CMAKE_CXX_FLAGS})
 set(CMAKE_CXX_STANDARD 14)
 
+set(SDL2_VERSION "2.0.12")
+set(SDL2_DEP_FILENAME "SDL2-devel-${SDL2_VERSION}-VC.zip")
+set(SDL2_UNPACK_DIR "SDL2-${SDL2_VERSION}")
+set(SDL2_DOWNLOAD_URL "http://libsdl.org/release/${SDL2_DEP_FILENAME}")
+set(SDL2_EXT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2")
+set(SDL2_CHECK_PATH "${SDL2_EXT_DIR}/include/SDL.h")
+set(SDL2_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${SDL2_DEP_FILENAME}")
+set(SDL2_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/")
+
+if (NOT EXISTS "${SDL2_CHECK_PATH}")
+    message(${SDL2_CHECK_PATH})
+    file(DOWNLOAD "${SDL2_DOWNLOAD_URL}" "${SDL2_TMP_ZIP_PATH}")
+
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_TMP_ZIP_PATH}
+                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
+    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_UNPACK_DIR}/include DESTINATION ${SDL2_EXT_DIR}/SDL2)
+    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_UNPACK_DIR}/lib DESTINATION ${SDL2_EXT_DIR}/SDL2)
+endif()
+
 #SET_SOURCE_FILES_PROPERTIES(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
 #list(APPEND CMAKE_CXX_SOURCE_FILE_EXTENSIONS c)
 #set(CMAKE_USER_MAKE_RULES_OVERRIDE "CryptoppMakeRulesOverwrite.cppmake")
@@ -65,52 +84,7 @@ set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 0)
 set(PROJECT_VERSION_PATCH 2)
 set(IS_RELEASE_VERSION FALSE)
-
-if(IS_RELEASE_VERSION)
-    set(PROJECT_VERSION_TWEAK 0)
-    set(VERSION_REVISION "")
-elseif (EXISTS "${CMAKE_SOURCE_DIR}/.git")
-    find_package(Git)
-    if(Git_FOUND)
-        execute_process(
-            COMMAND git rev-list --count HEAD ^tags/v${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-            RESULT_VARIABLE TWEAK_RESULT
-            OUTPUT_VARIABLE PROJECT_VERSION_TWEAK
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
-        execute_process(
-            COMMAND git rev-parse --short --verify HEAD
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-            OUTPUT_VARIABLE VERSION_COMMIT_HASH
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
-        execute_process(
-            COMMAND git diff-index --quiet HEAD --
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-            RESULT_VARIABLE VERSION_COMMIT_DIRTY
-        )
-        if(VERSION_COMMIT_DIRTY)
-            set(DIRTY_POSTFIX "-dirty")
-        else()
-            set(DIRTY_POSTFIX "")
-        endif()
-        if(NOT TWEAK_RESULT EQUAL 0)
-            # Happens on a shallow git clone, like Travis does. Append date to version ref.
-            set(PROJECT_VERSION_TWEAK 0)
-            string(TIMESTAMP TODAY "%Y%m%d")
-            set(VERSION_REVISION "-${TODAY}-${VERSION_COMMIT_HASH}${DIRTY_POSTFIX}")
-        else()
-            set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}${DIRTY_POSTFIX}")
-        endif()
-    else()
-        set(PROJECT_VERSION_TWEAK 0)
-        set(VERSION_REVISION " unknown development version")
-    endif()
-else()
-    set(PROJECT_VERSION_TWEAK 0)
-    set(VERSION_REVISION " unknown development version")
-endif()
+set(VERSION_REVISION "")
 
 if(VITA_BUILD)
     string(LENGTH "${PROJECT_VERSION_MAJOR}" NUM_DIGITS)
