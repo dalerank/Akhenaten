@@ -98,9 +98,9 @@ if(NOT APPLE OR NOT EXISTS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h")
 endif()
 
 if(NOT SDL2_MIXER_LIBRARY AND SDL2MIXER_LIBRARY)
-  set(SDL2_MIXER_LIBRARY ${SDL2MIXER_LIBRARY} CACHE FILEPATH "file cache entry
-initialized from old variable name")
+  set(SDL2_MIXER_LIBRARY ${SDL2MIXER_LIBRARY} CACHE FILEPATH "file cache entry initialized from old variable name")
 endif()
+
 find_library(SDL2_MIXER_LIBRARY
   NAMES SDL2_mixer
   HINTS
@@ -110,6 +110,7 @@ find_library(SDL2_MIXER_LIBRARY
   PATHS ${SDL2_SEARCH_PATHS}
 )
 
+message("test ${SDL2_MIXER_INCLUDE_DIR}")
 if(SDL2_MIXER_INCLUDE_DIR AND EXISTS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h")
     file(STRINGS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h" SDL2_MIXER_VERSION_MAJOR_LINE REGEX "^#define[ \t]+SDL_MIXER_MAJOR_VERSION[ \t]+[0-9]+$")
     file(STRINGS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h" SDL2_MIXER_VERSION_MINOR_LINE REGEX "^#define[ \t]+SDL_MIXER_MINOR_VERSION[ \t]+[0-9]+$")
