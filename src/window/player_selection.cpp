@@ -50,13 +50,15 @@ static generic_button buttons[] = {
 #define NUM_FILES_IN_VIEW 12
 #define MAX_FILE_WINDOW_TEXT_WIDTH (18 * INPUT_BOX_BLOCK_SIZE)
 
-static scrollable_list_ui_params ui_params = {
-        .x = 144,
-        .y = 92,
-        .blocks_x = 20,
-        .blocks_y = NUM_FILES_IN_VIEW + 1,
-        .draw_scrollbar_always = true
-};
+static scrollable_list_ui_params ui_params = [] {
+    scrollable_list_ui_params ret;
+    ret.x = 144;
+    ret.y = 92;
+    ret.blocks_x = 20;
+    ret.blocks_y = NUM_FILES_IN_VIEW + 1;
+    ret.draw_scrollbar_always = true;
+    return ret;
+} ();
 static scroll_list_panel *panel = new scroll_list_panel(NUM_FILES_IN_VIEW, button_select_file, button_none, button_double_click, button_none,
                                                         ui_params, true, "Save/", "folders");
 

@@ -142,7 +142,7 @@ uint8_t granary_3quarters_button_text[] = "18";
 uint8_t granary_half_button_text[] = "12";
 uint8_t granary_quarter_button_text[] = "6";
 
-enum {
+enum E_INSTR {
     INSTR_STORAGE_YARD = 0,
     INSTR_GRANARY = 1,
     INSTR_DOCK = 2,
@@ -471,7 +471,9 @@ int window_building_handle_mouse_granary(const mouse *m, building_info_context *
             warehouse_distribution_permissions_buttons, 1, &data.permission_focus_button_id);
     generic_buttons_handle_mouse( m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
             go_to_orders_button, 1, &data.focus_button_id);
+    return 0;
 }
+
 int window_building_handle_mouse_granary_orders(const mouse *m, building_info_context *c) {
     int y_offset = window_building_get_vertical_offset(c, 28 - 15);
     data.resource_focus_button_id = 0;

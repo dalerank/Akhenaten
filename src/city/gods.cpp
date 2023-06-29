@@ -25,6 +25,7 @@
 #include "scenario/invasion.h"
 #include "floods.h"
 #include "ratings.h"
+#include <array>
 
 #define TIE 10
 
@@ -52,6 +53,7 @@ int god_known_status(int god) {
 
 static bool OSIRIS_locusts() {
     // TODO
+    return 0;
 }
 static bool PTAH_warehouse_restock() {
     // fill warehouses with gems, clay, pottery, flax, linen, or jewelry
@@ -229,11 +231,13 @@ static bool PTAH_industry_destruction() {
 static bool SETH_fort_destruction() {
     // TODO
 //            formation_legion_curse();
+    return 0;
 }
 static bool SETH_ships_destruction() {
     // TODO
 //                figure_sink_all_ships();
 //                city_data.religion.neptune_sank_ships = 1;
+    return 0;
 }
 static bool SETH_hailstorm() {
     // TODO
@@ -244,9 +248,11 @@ static bool SETH_hailstorm() {
 //                    city_message_post(true, MESSAGE_CURSE_SETH_NOEFFECT, 0, 0);
 //                    return 0;
 //                }
+    return 0;
 }
 static bool PTAH_frogs() {
     // TODO
+    return 0;
 }
 static bool BAST_refill_houses_and_bazaar() {
     // TODO
@@ -262,6 +268,7 @@ static bool BAST_refill_houses_and_bazaar() {
 //                city_health_change(-20);
 //            city_data.religion.venus_curse_active = true;
 //            city_sentiment_update();
+    return 0;
 }
 
 static void swap(int *A, int *B) {
@@ -426,6 +433,7 @@ static bool BAST_malaria_plague() {
 //            city_sentiment_change_happiness(-5);
 //            city_health_change(-10);
 //            city_sentiment_update();
+    return 0;
 }
 
 static void perform_major_blessing(int god) {
@@ -793,12 +801,18 @@ static void update_moods(int randm_god) {
         if (god->mood > 50)
             god->wrath_bolts = 0;
 
-        if (god->mood <= 10)
-            god->wrath_bolts += ((int[]){1, 1, 2, 4, 5})[difficulty];
-        if (god->mood <= 20)
-            god->wrath_bolts += ((int[]){0, 1, 1, 2, 3})[difficulty];;
-        if (god->mood <= 30)
-            god->wrath_bolts += ((int[]){0, 0, 0, 1, 2})[difficulty];;
+        if (god->mood <= 10) {
+            int difficultyLevels[] = {1, 1, 2, 4, 5};
+            god->wrath_bolts += difficultyLevels[difficulty];
+        }
+        if (god->mood <= 20) {
+            int difficultyLevels[] = {0, 1, 1, 2, 3};
+            god->wrath_bolts += difficultyLevels[difficulty];;
+        }
+        if (god->mood <= 30) {
+            int difficultyLevels[] = {0, 0, 0, 1, 2};
+            god->wrath_bolts += difficultyLevels[difficulty];;
+        }
 
         if (god->wrath_bolts > 50)
             god->wrath_bolts = 50;
@@ -806,12 +820,18 @@ static void update_moods(int randm_god) {
         if (god->mood < 50)
             god->happy_ankhs = 0;
 
-        if (god->mood >= 70)
-            god->happy_ankhs += ((int[]){6, 4, 2, 1, 1})[difficulty];;
-        if (god->mood >= 80)
-            god->happy_ankhs += ((int[]){3, 2, 1, 1, 0})[difficulty];;
-        if (god->mood >= 90)
-            god->happy_ankhs += ((int[]){2, 1, 0, 0, 0})[difficulty];;
+        if (god->mood >= 70) {
+            int difficultyLevels[] = {6, 4, 2, 1, 1};
+            god->happy_ankhs += difficultyLevels[difficulty];
+        }
+        if (god->mood >= 80) {
+            int difficultyLevels[] = {3, 2, 1, 1, 0};
+            god->happy_ankhs += difficultyLevels[difficulty];
+        }
+        if (god->mood >= 90) {
+            int difficultyLevels[] = {2, 1, 0, 0, 0};
+            god->happy_ankhs += difficultyLevels[difficulty];;
+        }
 
         if (god->happy_ankhs > 50)
             god->happy_ankhs = 50;

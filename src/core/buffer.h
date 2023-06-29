@@ -27,7 +27,7 @@ public:
     void clear();
     void fill(uint8_t val);
 
-    int get_offset() const;
+    size_t get_offset() const;
     void set_offset(size_t offset);
     void reset_offset();
     void skip(size_t s);
@@ -54,8 +54,8 @@ public:
     void write_i32(int32_t value);
     void write_raw(const void *value, size_t s);
 
-    size_t from_file(size_t count, FILE *__restrict__ fp);
-    size_t to_file(size_t count, FILE *__restrict__ fp) const;
+    size_t from_file(size_t count, FILE *fp);
+    size_t to_file(size_t count, FILE *fp) const;
 };
 
 void safe_realloc_for_size(buffer **p_buf, int size);

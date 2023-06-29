@@ -30,14 +30,14 @@ enum {
 #define HALF_TILE_HEIGHT_PIXELS 15
 
 //typedef struct image;
-typedef struct {
+struct atlas_data_t {
     SDL_Texture *texture = nullptr;
 //    std::vector<image*> images;
     color_t *TEMP_PIXEL_BUFFER = nullptr;
     int bmp_size;
     int width;
     int height;
-} atlas_data_t;
+};
 
 struct image_t;
 struct image_t {

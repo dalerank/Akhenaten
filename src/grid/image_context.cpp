@@ -393,7 +393,7 @@ static struct terrain_image_context terrain_images_grass_corners[12] = {
 // [4]   [0]
 // [3][2][1]
 
-enum {
+enum E_CONTEXT {
     CONTEXT_WATER,
     CONTEXT_WALL,
     CONTEXT_WALL_GATEHOUSE,

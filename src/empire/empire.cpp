@@ -24,7 +24,7 @@ const static int EMPIRE_HEIGHT[2] = {
         1600,
 };
 
-enum {
+enum E_EMPIRE {
 //    EMPIRE_WIDTH = 2000,
 //    EMPIRE_HEIGHT = 1000,
     EMPIRE_HEADER_SIZE = 1280,

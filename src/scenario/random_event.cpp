@@ -12,7 +12,7 @@
 #include "scenario/data.h"
 #include "scenario/property.h"
 
-enum {
+enum E_EVENT_DK {
     EVENT_ROME_RAISES_WAGES = 1,
     EVENT_ROME_LOWERS_WAGES = 2,
     EVENT_LAND_TRADE_DISRUPTED = 3,

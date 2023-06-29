@@ -20,7 +20,7 @@ static const uint8_t ALL_HOUSES[] = {'A', 'L', 'L', ' ', 'H', 'O', 'U', 'S', 'E'
 //static model_building buildings[400]; // 130 in C3, more in Pharaoh, can't be bothered to make this dynamic
 //static model_house houses[20];
 
-struct {
+static struct data_t {
     model_building buildings[5][400];
     model_house houses[5][20];
 //    int difficulty_level_cached = 0;

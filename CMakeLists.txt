@@ -33,7 +33,9 @@ project(${SHORT_NAME} CXX)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
 #set(CMAKE_RC_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE}")
-set(CMAKE_CXX_FLAGS "-std=c++0x -Wno-c++11-narrowing -static-libgcc -static-libstdc++" ${CMAKE_CXX_FLAGS})
+if (NOT MSVC)
+    set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -static-libgcc -static-libstdc++" ${CMAKE_CXX_FLAGS})
+endif()
 set(CMAKE_CXX_STANDARD 14)
 
 set(SDL2_VERSION "2.0.12")
@@ -46,7 +48,7 @@ set(SDL2_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${SDL2_DEP_FILENAME}")
 set(SDL2_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/")
 
 if (MSVC)
-    set(SDL_EXT_DIR ${SDL2_EXT_DIR})
+    set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext)
 endif()
 
 if (MSVC AND NOT EXISTS "${SDL2_CHECK_PATH}")
@@ -59,6 +61,7 @@ if (MSVC AND NOT EXISTS "${SDL2_CHECK_PATH}")
     file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_UNPACK_DIR}/include DESTINATION ${SDL2_EXT_DIR})
     file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_UNPACK_DIR}/lib DESTINATION ${SDL2_EXT_DIR})
 endif()
+message("Found SDL2 at ${SDL2_LIBRARY}")
 
 set(SDL2_MIXER_VERSION "2.0.4")
 set(SDL2_MIXER_DEP_FILENAME "SDL2_mixer-devel-${SDL2_MIXER_VERSION}-VC.zip")
@@ -668,27 +671,6 @@ set(SOURCE_FILES
 )
 
 SET_SOURCE_FILES_PROPERTIES(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
-
-function(GET_SDL_EXT_DIR result module)
-    if(NOT module STREQUAL "")
-        set(module "_${module}")
-    endif()
-    set(SDL_LOCATION ${PROJECT_SOURCE_DIR}/ext/SDL2)
-    file(GLOB children
-        RELATIVE ${SDL_LOCATION}
-        CONFIGURE_DEPENDS
-        ${SDL_LOCATION}/SDL${module}
-        ${SDL_LOCATION}/SDL2${module}
-        ${SDL_LOCATION}/SDL${module}-*
-        ${SDL_LOCATION}/SDL2${module}-*
-    )
-    foreach(child ${children})
-        if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
-            set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
-            break()
-        endif()
-    endforeach()
-endfunction()
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)

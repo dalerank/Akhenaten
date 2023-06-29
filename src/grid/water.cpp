@@ -88,7 +88,8 @@ bool map_shore_determine_orientation(int x, int y, int size, bool adjust_xy, int
     y--;
 
     // fill in tile cache first
-    int water_tiles[size][size];
+    std::vector<int> water_tiles_data(size*size);
+    int **water_tiles = (int**)water_tiles_data.data();
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
             water_tiles[row][column] = map_terrain_is(MAP_OFFSET(x + column, y + row), shore_terrain);

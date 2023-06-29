@@ -69,7 +69,7 @@ static const struct {
         {100, 0,  0, {FIGURE_ENEMY_CAESAR_LEGIONARY, 0,                             0}, FORMATION_COLUMN} // caesar
 };
 
-enum {
+enum E_ATTACK_TYPE {
     ATTACK_TYPE_BARBARIAN,
     ATTACK_TYPE_CAESAR,
     ATTACK_TYPE_NATIVES

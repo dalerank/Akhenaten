@@ -10,6 +10,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
 
 #ifdef __vita__
 #include <psp2/io/fcntl.h>
@@ -179,7 +180,8 @@ void sound_device_load_formats(void) {
         const char* seperator = ", ";
         const int seperator_length = strlen( seperator );
         const int max_format_length = format_desc_max_chars + seperator_length; // desc + seperator
-        char buf[max_num_formats * max_format_length + 1];
+        std::vector<char> data(max_num_formats * max_format_length + 1);
+        char *buf = data.data();
 
         int buf_pos = 0;
         for (int i = 0; i < max_num_formats; ++i) {

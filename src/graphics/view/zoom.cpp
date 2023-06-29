@@ -5,7 +5,7 @@
 #include "zoom.h"
 #include "lookup.h"
 
-struct {
+static struct data_t {
     float zoom = ZOOM_DEFAULT;
     float target = ZOOM_DEFAULT;
     float delta;

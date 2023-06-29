@@ -8,7 +8,7 @@
 
 #include <cassert>
 
-enum {
+enum E_PK {
     PK_SUCCESS = 0,
     PK_INVALID_WINDOWSIZE = 1,
     PK_LITERAL_ENCODING_UNSUPPORTED = 2,

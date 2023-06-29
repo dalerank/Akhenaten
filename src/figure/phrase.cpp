@@ -91,7 +91,7 @@ static const int int_TO_SOUND_TYPE[2][200] = {
         }
 };
 
-enum {
+enum E_GOD_STATE {
     GOD_STATE_NONE = 0,
     GOD_STATE_VERY_ANGRY = 1,
     GOD_STATE_ANGRY = 2

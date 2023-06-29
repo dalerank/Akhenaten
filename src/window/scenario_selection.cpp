@@ -40,14 +40,16 @@ static image_button start_button =
 // C++11 allows for EITHER complete braced initialization, or partial
 // braced initialization with NO default member values, since they
 // override the default (implicit) constructor.
-static scrollable_list_ui_params ui_params = {
-        .x = 16,
-        .y = 210,
-        .blocks_x = 16,
-        .blocks_y = MAX_SCENARIOS + 1,
-        .scrollbar_margin_x = 10,
+static scrollable_list_ui_params ui_params = [] {
+    scrollable_list_ui_params ret;
+    ret.x = 16;
+    ret.y = 210;
+    ret.blocks_x = 16;
+    ret.blocks_y = MAX_SCENARIOS + 1;
+    ret.scrollbar_margin_x = 10;
+    return ret;
 //        .draw_scrollbar_always = true
-};
+} ();
 static scroll_list_panel *panel = new scroll_list_panel(MAX_SCENARIOS, button_select_item, button_none, button_none, button_none,
                                                         ui_params, true, "Maps/", "map");
 

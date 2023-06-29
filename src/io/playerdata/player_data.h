@@ -1,7 +1,7 @@
 #ifndef OZYMANDIAS_PLAYER_DATA_H
 #define OZYMANDIAS_PLAYER_DATA_H
 
-#include <stdint-gcc.h>
+#include <stdint.h>
 #include "core/game_environment.h"
 
 #define MAX_DAT_ENTRIES 100

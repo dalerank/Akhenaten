@@ -11,7 +11,7 @@
 
 #include "dev/debug.h"
 
-enum {
+enum E_FIGURE {
     FIGURE_COLOR_NONE = 0,
     FIGURE_COLOR_SOLDIER = 1,
     FIGURE_COLOR_ENEMY = 2,

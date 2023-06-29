@@ -16,7 +16,7 @@
 #include "window/editor/map.h"
 #include "window/numeric_input.h"
 
-enum {
+enum E_RATING {
     RATING_CULTURE,
     RATING_PROSPERITY,
     RATING_MONUMENT,

@@ -39,7 +39,9 @@
 #if defined(_WIN32)
 
 #include <string.h>
+#if !defined(_MSC_VER)
 #include <bits/exception_defines.h>
+#endif
 
 #endif
 
@@ -51,7 +53,7 @@
 
 #define INTPTR(d) (*(int*)(d))
 
-enum {
+enum E_USER_EVENT {
     USER_EVENT_QUIT,
     USER_EVENT_RESIZE,
     USER_EVENT_FULLSCREEN,

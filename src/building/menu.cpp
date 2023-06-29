@@ -258,7 +258,7 @@ static void disable_resources() {
 
 #include "scenario/property.h"
 
-enum {
+enum E_GOD {
     GOD_OSIRIS = 1,
     GOD_RA = 2,
     GOD_PTAH = 4,

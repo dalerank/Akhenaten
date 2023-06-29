@@ -32,7 +32,7 @@
 #include "window/speed_options.h"
 #include "graphics/elements/panel.h"
 
-enum {
+enum E_INFO {
     INFO_NONE = 0,
     INFO_FUNDS = 1,
     INFO_POPULATION = 2,

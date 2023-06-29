@@ -79,14 +79,14 @@ public:
     unsigned char house_tax_coverage;
     short formation_id;
     union {
-        struct {
+        struct dock_t {
             short queued_docker_id;
             unsigned char num_ships;
             signed char orientation;
             short docker_ids[3];
             short trade_ship_id;
         } dock;
-        struct {
+        struct market_t {
             short inventory[8];
             short pottery_demand;
             short furniture_demand;
@@ -94,10 +94,10 @@ public:
             short wine_demand;
             unsigned char fetch_inventory_id;
         } market;
-        struct {
+        struct granary_t {
             short resource_stored[16];
         } granary;
-        struct {
+        struct industry_t {
             int unk_2[2];
             short progress;
             int unk_b[12];
@@ -116,7 +116,7 @@ public:
             int unk_12[12];
             unsigned char worker_id;
         } industry;
-        struct {
+        struct entertainment_t {
             unsigned char num_shows;
             unsigned char days1;
             unsigned char days2;

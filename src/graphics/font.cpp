@@ -149,7 +149,7 @@ static const font_definition DEFINITIONS_KOREAN[] = {
         {FONT_SMALL_SHADED, 1206, 0, 6, 0, 11, image_y_offset_korean}
 };
 
-enum {
+enum E_MULTIBYTE {
     MULTIBYTE_NONE = 0,
     MULTIBYTE_TRADITIONAL_CHINESE = 1,
     MULTIBYTE_SIMPLIFIED_CHINESE = 2,

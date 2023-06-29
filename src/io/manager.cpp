@@ -157,9 +157,9 @@ bool FileIOManager::io_failure_cleanup(const char *action, const char *reason) {
     int size_a = strlen(action);
     int size_r = strlen(reason);
     int size = size_f + size_a + size_r - 4 + 1; // remove the size of the format characters, add one character for string termination
-    char text[size];
-    snprintf(text, size, format, action, reason);
-    log_error(text, 0, 0);
+    std::vector<char> text(size);
+    snprintf(text.data(), size, format, action, reason);
+    log_error(text.data(), 0, 0);
     clear();
     return false;
 }

@@ -44,8 +44,6 @@ else()
   set(SDL2_PROCESSOR_ARCH "x86")
 endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-GET_SDL_EXT_DIR(SDL_EXT_DIR "image")
-
 if(MINGW AND DEFINED SDL_EXT_DIR)
     if(SDL2_ARCH_64)
 	  set(SDL_MINGW_EXT_DIR "${SDL_EXT_DIR}/x86_64-w64-mingw32")
@@ -72,8 +70,7 @@ if (VITA)
 endif()
 
 if(NOT SDL2_IMAGE_INCLUDE_DIR AND SDL2IMAGE_INCLUDE_DIR)
-  set(SDL2_IMAGE_INCLUDE_DIR ${SDL2IMAGE_INCLUDE_DIR} CACHE PATH "directory cache
-entry initialized from old variable name")
+  set(SDL2_IMAGE_INCLUDE_DIR ${SDL2IMAGE_INCLUDE_DIR} CACHE PATH "directory cache entry initialized from old variable name")
 endif()
 
 if(NOT SDL2_IMAGE_INCLUDE_DIR AND APPLE)
@@ -102,9 +99,9 @@ if(NOT APPLE OR NOT EXISTS "${SDL2_IMAGE_INCLUDE_DIR}/SDL_image.h")
 endif()
 
 if(NOT SDL2_IMAGE_LIBRARY AND SDL2IMAGE_LIBRARY)
-  set(SDL2_IMAGE_LIBRARY ${SDL2IMAGE_LIBRARY} CACHE FILEPATH "file cache entry
-initialized from old variable name")
+  set(SDL2_IMAGE_LIBRARY ${SDL2IMAGE_LIBRARY} CACHE FILEPATH "file cache entry initialized from old variable name")
 endif()
+
 find_library(SDL2_IMAGE_LIBRARY
   NAMES SDL2_image
   HINTS

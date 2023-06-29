@@ -42,7 +42,7 @@ size_t buffer::size() const {
 bool buffer::at_end() const {
     return index >= size();
 }
-int buffer::get_offset() const {
+size_t buffer::get_offset() const {
     return index;
 }
 void buffer::set_offset(size_t offset) {
@@ -190,7 +190,7 @@ void buffer::skip(size_t s) {
     }
 }
 
-size_t buffer::from_file(size_t count, FILE *__restrict__ fp) {
+size_t buffer::from_file(size_t count, FILE *fp) {
     assert(count <= size());
     size_t result = 0;
     if (count <= size())
@@ -198,7 +198,7 @@ size_t buffer::from_file(size_t count, FILE *__restrict__ fp) {
     return result;
 }
 
-size_t buffer::to_file(size_t count, FILE *__restrict__ fp) const {
+size_t buffer::to_file(size_t count, FILE *fp) const {
     assert(count <= size());
     size_t result = 0;
     if (count <= size() && fp != nullptr)

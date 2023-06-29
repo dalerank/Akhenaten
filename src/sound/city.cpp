@@ -13,7 +13,7 @@
 // for compatibility with the original game:
 #define CITY_CHANNEL_OFFSET 15
 
-enum {
+enum E_SOUND_CHANNEL_CITY {
     SOUND_CHANNEL_CITY_HOUSE_SLUM = 30,
     SOUND_CHANNEL_CITY_HOUSE_POOR = 34,
     SOUND_CHANNEL_CITY_HOUSE_MEDIUM = 38,

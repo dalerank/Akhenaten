@@ -7,7 +7,7 @@
 #include "game/settings.h"
 #include "sound/device.h"
 
-enum {
+enum E_TRACK {
     TRACK_NONE,
     TRACK_MENU,
     TRACK_COMBAT_SHORT,

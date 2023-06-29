@@ -13,7 +13,7 @@
 
 #define MAX_CATS 10
 
-enum {
+enum E_LABOR {
     LABOR_CATEGORY_FOOD_PRODUCTION = 0, // todo: wrong index...
     LABOR_CATEGORY_INDUSTRY_COMMERCE = 1,
     LABOR_CATEGORY_ENTERTAINMENT = 2,

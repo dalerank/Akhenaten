@@ -54,6 +54,7 @@ int get_statue_image_from_value(int type, int combined, int map_orientation) {
 }
 int get_statue_variant_value(int orientation, int variant) {
     int combined = variant * 16 + orientation + 2;
+    return combined;
 }
 
 int get_monument_part_image(int part, int orientation, int level) {

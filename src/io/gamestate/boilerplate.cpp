@@ -70,6 +70,12 @@
 #include "io/io.h"
 #include "chunks.h"
 
+#ifdef _MSC_VER 
+//not #if defined(_WIN32) || defined(_WIN64) because we have strncasecmp in mingw
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
+#endif
+
 static const char MISSION_PACK_FILE[] = "mission1.pak";
 
 void fullpath_saves(char *full, const char *filename) {
@@ -116,7 +122,7 @@ const int GamestateIO::read_file_version(const char *filename, int offset) {
     return small_buffer->read_i32();
 }
 
-enum {
+enum E_LOADED {
     LOADED_NULL = -1,
     LOADED_MISSION = 0,
     LOADED_SAVE = 1,

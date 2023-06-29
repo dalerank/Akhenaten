@@ -3,7 +3,7 @@
 
 #include "grid/random.h"
 
-enum {
+enum E_BIT {
 //    BIT_SIZE1 = 0x00,
 //    BIT_SIZE2 = 0x01,
 //    BIT_SIZE3 = 0x02,

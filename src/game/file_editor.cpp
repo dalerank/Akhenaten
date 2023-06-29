@@ -148,4 +148,5 @@ int game_file_editor_write_scenario(const char *scenario_file) {
     scenario_distant_battle_set_enemy_travel_months();
 
 //    return game_file_io_write_scenario(scenario_file); TODO
+    return 0;
 }

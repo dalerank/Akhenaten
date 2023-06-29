@@ -94,7 +94,7 @@ static const int SHEEP_IMAGE_OFFSETS[] = {
         3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5, 5
 };
 
-enum {
+enum E_HORSE {
     HORSE_CREATED = 0,
     HORSE_RACING = 1,
     HORSE_FINISHED = 2

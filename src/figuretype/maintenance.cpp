@@ -21,7 +21,7 @@
 
 #include "figure/properties.h"
 
-enum {
+enum E_NEARBY {
     NEARBY_ANY,
     NEARBY_ANIMAL,
     NEARBY_HOSTILE

@@ -152,14 +152,22 @@ static int is_advisor_available(int advisor_id) {
             return 0;
         // maybe these are actually stored in the saves?
         // either way, I'll make these hardcoded for the time being.
-        if (scenario_is_mission_rank(2))
-            return ((bool[13]){0,0,0,0,0,1,0,0,1,1,0,0,0})[advisor_id];
-        else if (scenario_is_mission_rank(3))
-            return ((bool[13]){1,0,0,0,0,1,0,0,1,1,0,0,0})[advisor_id];
-        else if (scenario_is_mission_rank(4))
-            return ((bool[13]){1,0,1,0,0,1,1,0,1,1,0,0,0})[advisor_id];
-        else if (scenario_is_mission_rank(5))
-            return ((bool[13]){1,0,1,1,0,1,1,0,1,1,1,1,0})[advisor_id];
+        if (scenario_is_mission_rank(2)) {
+            int advLevels[] = {0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0};
+            return advLevels[advisor_id];
+        }
+        else if (scenario_is_mission_rank(3)) {
+            int advLevels[] = {1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0};
+            return advLevels[advisor_id];
+        }
+        else if (scenario_is_mission_rank(4)) {
+            int advLevels[] = { 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0};
+            return advLevels[advisor_id];
+        }
+        else if (scenario_is_mission_rank(5)) {
+            int advLevels[] = {  1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0 };
+            return advLevels[advisor_id];
+        }
     }
     return 1;
 }

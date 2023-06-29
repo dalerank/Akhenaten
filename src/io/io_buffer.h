@@ -64,7 +64,8 @@ public:
     // writes/reads from the buffer depending on the signature
     // and the selected access type -- must be implemented HERE
     // in the header file, since it's a TEMPLATE function.
-    template <typename T> void bind(bind_signature_e signature, T *ext) {
+    template <typename T>
+    void bind(bind_signature_e signature, T *ext) {
         if (ext == nullptr)
             return;
         switch (signature) {

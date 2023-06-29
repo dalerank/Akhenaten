@@ -31,12 +31,12 @@ static const int SCROLL_STEP[SCROLL_TYPE_MAX][11] = {
         {20, 15, 10, 7,  5,  4,  3,  3, 2, 2, 1}
 };
 
-typedef enum {
+enum key_state {
     KEY_STATE_UNPRESSED = 0,
     KEY_STATE_PRESSED = 1,
     KEY_STATE_HELD = 2,
     KEY_STATE_AXIS = 3
-} key_state;
+} ;
 
 typedef struct {
     key_state state;

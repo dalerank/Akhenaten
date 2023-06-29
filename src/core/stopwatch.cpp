@@ -6,7 +6,7 @@
 
 #define CLAMP(x, upper, lower) (std::min<int>(upper, std::max<int>(x, lower)))
 
-int stopwatch::STAMPS() {
+size_t stopwatch::STAMPS() {
     return stamps.size() - 1;
 }
 void stopwatch::START() {
@@ -22,17 +22,18 @@ void stopwatch::RECORD(std::string str) {
         if (index > 0)
             names.push_back(str);
     }
-    auto array = &stamps.at(index);
-    int a = array->size();
-    array->push_back(std::chrono::high_resolution_clock::now());
-    int b = array->size();
+    auto &array = stamps.at(index);
+    int a = array.size();
+    const auto tp = std::chrono::system_clock::now();
+    array.push_back(tp);
+    int b = array.size();
     index++;
 }
 uint64_t stopwatch::GET(int a, int b) {
     if (stamps.size() == 0)
         return 0;
-    a = CLAMP(a, stamps.size() - 1, 0);
-    b = CLAMP(b, stamps.size() - 1, 0);
+    a = (int)CLAMP(a, stamps.size() - 1, 0);
+    b = (int)CLAMP(b, stamps.size() - 1, 0);
     if (a == b)
         return 0;
 

@@ -6,8 +6,8 @@ static int file_version;
 io_buffer *iob_file_version = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &file_version);
 });
-struct {
-    struct {
+static struct data_t {
+    struct chunks_t {
         uint32_t compressed = 0; // 0, 1
 
         uint8_t unk01 = 0;

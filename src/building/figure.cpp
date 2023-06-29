@@ -155,6 +155,7 @@ figure *building::create_cartpusher(int resource_id, int quantity, int created_a
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
     f->wait_ticks = 30;
+    return f;
 }
 
 int building::worker_percentage() {
@@ -1261,6 +1262,8 @@ bool building::figure_generate() {
                 spawn_figure_magistrate(); break;
         }
     }
+
+    return true;
 }
 
 void building_figure_generate(void) {

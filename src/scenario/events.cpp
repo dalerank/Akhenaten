@@ -16,7 +16,7 @@ constexpr int NUM_AUTO_PHRASE_VARIANTS = 54;
 constexpr int NUM_PHRASES = 601;
 constexpr int MAX_EVENTMSG_TEXT_DATA = NUM_PHRASES * 200;
 
-struct {
+struct data_t {
     event_ph_t event_list[MAX_EVENTS];
     int16_t *num_of_events = nullptr;
     int auto_phrases[NUM_AUTO_PHRASE_VARIANTS][36];

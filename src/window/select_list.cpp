@@ -11,7 +11,7 @@
 
 #define MAX_ITEMS_PER_LIST 20
 
-enum {
+enum E_MODE {
     MODE_TEXT,
     MODE_GROUP,
 };

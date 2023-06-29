@@ -12,7 +12,7 @@ private:
     int repeats = 0;
     std::vector<std::string> names;
 public:
-    int STAMPS();
+    size_t STAMPS();
     void START();
     void RECORD(std::string str = "-");
     uint64_t GET(int a, int b);

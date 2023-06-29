@@ -37,7 +37,7 @@
 #include "building/monuments.h"
 #include "graphics/image_groups.h"
 
-enum {
+enum E_PLACE_RESERVOIR {
     PLACE_RESERVOIR_BLOCKED = -1,
     PLACE_RESERVOIR_NO = 0,
     PLACE_RESERVOIR_YES = 1,
@@ -871,11 +871,15 @@ void BuildPlanner::set_tiles_building(int image_id, int size_xx) {
 }
 void BuildPlanner::set_graphics_array(int *image_set, int size_x, int size_y) {
     init_tiles(size_x, size_y);
-    int (*image_array)[size_y][size_x] = (int(*)[size_y][size_x])image_set;
+    //int (*image_array)[size_y][size_x] = (int(*)[size_y][size_x])image_set;
 
     // do it row by row...
-    for (int row = 0; row < size_y; ++row)
-        set_graphics_row(row, (*image_array)[row], size_x);
+    //for (int row = 0; row < size_y; ++row)
+    //    set_graphics_row(row, (*image_array)[row], size_x);
+
+    for (int row = 0; row < size_y; ++row) {
+        set_graphics_row(row, image_set + (row * size_x), size_x);
+    }
 }
 
 void BuildPlanner::setup_build(int type) { // select building for construction, set up main terrain restrictions/requirements
