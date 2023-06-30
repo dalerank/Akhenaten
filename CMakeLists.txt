@@ -1,34 +1,20 @@
 cmake_minimum_required(VERSION 3.0.2)
 include(CMakeDependentOption)
 
-if(VITA_BUILD AND SWITCH_BUILD)
-    message(FATAL_ERROR "Cannot build with -DVITA_BUILD=ON and -DSWITCH_BUILD=ON at the same time")
-endif()
-
 option(DRAW_FPS "Draw FPS on the top left corner of the window." OFF)
 option(SYSTEM_LIBS "Use system libraries when available." ON)
-cmake_dependent_option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF "NOT MSVC" OFF)
-cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game console." OFF "NOT MSVC; NOT VITA_BUILD" OFF)
-
-if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    if(DEFINED ENV{VITASDK})
-        set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cppmake" CACHE PATH "toolchain file")
-    else()
-        message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
-    endif()
-endif()
-
-if(SWITCH_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    if(DEFINED ENV{DEVKITPRO})
-        set(DEVKITPRO $ENV{DEVKITPRO})
-        set(CMAKE_TOOLCHAIN_FILE "./cmake/switch.cppmake" CACHE PATH "toolchain file")
-    else()
-        message(FATAL_ERROR "Please define DEVKITPRO to point to your SDK path!")
-    endif()
-endif()
 
 set(SHORT_NAME ozymandias)
 project(${SHORT_NAME} CXX)
+message("C++ compiler is ${CMAKE_CXX_COMPILER_ID}" )
+
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+  set(GAME_ARCH_64 TRUE)
+  set(GAME_PROCESSOR_ARCH "x64")
+else()
+  set(GAME_ARCH_64 FALSE)
+  set(GAME_PROCESSOR_ARCH "x86")
+endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
@@ -37,29 +23,33 @@ if (NOT MSVC)
     set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -static-libgcc -static-libstdc++" ${CMAKE_CXX_FLAGS})
 endif()
 set(CMAKE_CXX_STANDARD 14)
+set(GAME_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin_x64")
 
-set(SDL2_VERSION "2.0.12")
+set(SDL2_VERSION "2.28.0")
 set(SDL2_DEP_FILENAME "SDL2-devel-${SDL2_VERSION}-VC.zip")
 set(SDL2_UNPACK_DIR "SDL2-${SDL2_VERSION}")
 set(SDL2_DOWNLOAD_URL "http://libsdl.org/release/${SDL2_DEP_FILENAME}")
-set(SDL2_EXT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2")
-set(SDL2_CHECK_PATH "${SDL2_EXT_DIR}/include/SDL.h")
 set(SDL2_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${SDL2_DEP_FILENAME}")
-set(SDL2_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/")
+set(SDL2_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2")
+set(SDL2_CHECK_PATH "${SDL2_EXTRACT_PATH}/include/SDL.h")
 
 if (MSVC)
     set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext)
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    SET(GAME_BUILD_TYPE "Release")
+else()
+    SET(GAME_BUILD_TYPE "Debug")
+endif()
+
 if (MSVC AND NOT EXISTS "${SDL2_CHECK_PATH}")
     message("Download SDL2 to ${SDL2_TMP_ZIP_PATH}")
     file(DOWNLOAD "${SDL2_DOWNLOAD_URL}" "${SDL2_TMP_ZIP_PATH}")
-
-    message("Unppack SDL2 to ${SDL2_EXT_DIR}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_TMP_ZIP_PATH}
-                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
-    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_UNPACK_DIR}/include DESTINATION ${SDL2_EXT_DIR})
-    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_UNPACK_DIR}/lib DESTINATION ${SDL2_EXT_DIR})
+    message("Unppack SDL2 to ${SDL2_EXTRACT_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
+    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_UNPACK_DIR}/include DESTINATION ${SDL2_EXTRACT_PATH})
+    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_UNPACK_DIR}/lib DESTINATION ${SDL2_EXTRACT_PATH})
 endif()
 message("Found SDL2 at ${SDL2_LIBRARY}")
 
@@ -67,18 +57,16 @@ set(SDL2_MIXER_VERSION "2.0.4")
 set(SDL2_MIXER_DEP_FILENAME "SDL2_mixer-devel-${SDL2_MIXER_VERSION}-VC.zip")
 set(SDL2_MIXER_DOWNLOAD_URL "https://libsdl.org/projects/SDL_mixer/release/${SDL2_MIXER_DEP_FILENAME}")
 set(SDL2_MIXER_UNPACK_DIR "SDL2_mixer-${SDL2_MIXER_VERSION}")
-set(SDL2_MIXER_CHECK_PATH "${SDL2_EXT_DIR}/include/SDL_mixer.h")
+set(SDL2_MIXER_CHECK_PATH "${SDL2_EXTRACT_PATH}/include/SDL_mixer.h")
 set(SDL2_MIXER_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_DEP_FILENAME}")
 
 if (MSVC AND NOT EXISTS "${SDL2_MIXER_CHECK_PATH}")
     message("Download SDL2_mixer to ${SDL2_MIXER_TMP_ZIP_PATH}")
     file(DOWNLOAD "${SDL2_MIXER_DOWNLOAD_URL}" "${SDL2_MIXER_TMP_ZIP_PATH}")
-
-    message("Unppack SDL2_mixer to ${SDL2_EXT_DIR}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_MIXER_TMP_ZIP_PATH}
-                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
-    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_UNPACK_DIR}/include DESTINATION ${SDL2_EXT_DIR})
-    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_UNPACK_DIR}/lib DESTINATION ${SDL2_EXT_DIR})
+    message("Unppack SDL2_mixer to ${SDL2_EXTRACT_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_MIXER_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
+    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_UNPACK_DIR}/include DESTINATION ${SDL2_EXTRACT_PATH})
+    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_UNPACK_DIR}/lib DESTINATION ${SDL2_EXTRACT_PATH})
 endif()
 
 
@@ -86,72 +74,28 @@ set(SDL2_IMAGE_VERSION "2.6.3")
 set(SDL2_IMAGE_DEP_FILENAME "SDL2_image-devel-${SDL2_IMAGE_VERSION}-VC.zip")
 set(SDL2_IMAGE_DOWNLOAD_URL "https://libsdl.org/projects/SDL_image/release/${SDL2_IMAGE_DEP_FILENAME}")
 set(SDL2_IMAGE_UNPACK_DIR "SDL2_image-${SDL2_IMAGE_VERSION}")
-set(SDL2_IMAGE_CHECK_PATH "${SDL2_EXT_DIR}/include/SDL_image.h")
+set(SDL2_IMAGE_CHECK_PATH "${SDL2_EXTRACT_PATH}/include/SDL_image.h")
 set(SDL2_IMAGE_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${SDL2_IMAGE_DEP_FILENAME}")
 
 if (MSVC AND NOT EXISTS "${SDL2_IMAGE_CHECK_PATH}")
     message("Download SDL2_image to ${SDL2_IMAGE_TMP_ZIP_PATH}")
     file(DOWNLOAD "${SDL2_IMAGE_DOWNLOAD_URL}" "${SDL2_IMAGE_TMP_ZIP_PATH}")
-
-    message("Unppack SDL2_image to ${SDL2_EXT_DIR}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_IMAGE_TMP_ZIP_PATH}
-                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
-    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_IMAGE_UNPACK_DIR}/include DESTINATION ${SDL2_EXT_DIR})
-    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_IMAGE_UNPACK_DIR}/lib DESTINATION ${SDL2_EXT_DIR})
+    message("Unppack SDL2_image to ${SDL2_EXTRACT_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_IMAGE_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
+    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_IMAGE_UNPACK_DIR}/include DESTINATION ${SDL2_EXTRACT_PATH})
+    file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_IMAGE_UNPACK_DIR}/lib DESTINATION ${SDL2_EXTRACT_PATH})
 endif()
 
-
-#SET_SOURCE_FILES_PROPERTIES(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
-#list(APPEND CMAKE_CXX_SOURCE_FILE_EXTENSIONS c)
-#set(CMAKE_USER_MAKE_RULES_OVERRIDE "CryptoppMakeRulesOverwrite.cppmake")
-
-#if (CMAKE_VERSION VERSION_LESS 3.1)
-#    if (CMAKE_COMPILER_IS_GNUCC)
-#        set(CMAKE_C_FLAGS "-std=gnu99 ${CMAKE_C_FLAGS}")
-#    endif()
-#else()
-#    set(CMAKE_C_STANDARD 99)
-#endif()
-#
-#if (CMAKE_COMPILER_IS_GNUCC)
-#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration")
-#
-#    if (CMAKE_C_COMPILER_VERSION VERSION_GREATER 5.0)
-#        set(CMAKE_C_FLAGS "-Werror=incompatible-pointer-types -Werror=int-conversion -Wstrict-prototypes ${CMAKE_C_FLAGS}")
-#    endif()
-#endif()
+if (MSVC)
+    file(GLOB SDL2_DLL_PUBLIC_DLL "${SDL2_EXTRACT_PATH}/lib/${GAME_PROCESSOR_ARCH}/*.dll")
+    file(COPY ${SDL2_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
+endif()
 
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 0)
 set(PROJECT_VERSION_PATCH 2)
 set(IS_RELEASE_VERSION FALSE)
 set(VERSION_REVISION "")
-
-if(VITA_BUILD)
-    string(LENGTH "${PROJECT_VERSION_MAJOR}" NUM_DIGITS)
-    if(NUM_DIGITS EQUAL 1)
-        set(VITA_VERSION_MAJOR "0${PROJECT_VERSION_MAJOR}")
-    elseif(NUM_DIGITS EQUAL 2)
-        set(VITA_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
-    else()
-        message(FATAL_ERROR "On Vita, major version number can only have one or two digits, found ${NUM_DIGITS} digits instead")
-    endif()
-
-    string(LENGTH "${PROJECT_VERSION_MINOR}" NUM_DIGITS)
-    if(NUM_DIGITS EQUAL 1)
-        set(VITA_VERSION_MINOR "0${PROJECT_VERSION_MINOR}")
-    elseif(NUM_DIGITS EQUAL 2)
-        set(VITA_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
-    else()
-        message(FATAL_ERROR "On Vita, minor version number can only have one or two digits, found ${NUM_DIGITS} digits instead")
-    endif()
-
-    set(VITA_VERSION "${VITA_VERSION_MAJOR}.${VITA_VERSION_MINOR}")
-endif()
-
-if (SWITCH_BUILD)
-    string(SUBSTRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}" 0 15 SWITCH_VERSION)
-endif()
 
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.cpp.in ${PROJECT_SOURCE_DIR}/src/platform/version.cpp)
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
@@ -221,29 +165,11 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/renderer.cpp
 )
 
-if (VITA_BUILD)
-    set(PLATFORM_FILES
-        ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/cursor.cpp
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/screen.cpp
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.cpp
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_input.cpp
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.cpp
-    )
-elseif (SWITCH_BUILD)
-    set(PLATFORM_FILES
-        ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/cursor.cpp
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/screen.cpp
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_input.cpp
-    )
-else()
-    set(PLATFORM_FILES
-        ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/cursor.cpp
-        ${PROJECT_SOURCE_DIR}/src/platform/screen.cpp
-    )
-endif()
+set(PLATFORM_FILES
+    ${PLATFORM_FILES}
+    ${PROJECT_SOURCE_DIR}/src/platform/cursor.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/screen.cpp
+)
 
 set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/backtrace.cpp
@@ -783,130 +709,35 @@ else()
     endif()
 endif()
 
-if(VITA_BUILD)
-    include_directories(
-        $ENV{VITASDK}/arm-vita-eabi/include
-        ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-elseif (SWITCH_BUILD)
-    include_directories(
-        ${DEVKITPRO}/portlibs/switch/include/SDL2
-        ${DEVKITPRO}/libnx/include
-        ${DEVKITPRO}/portlibs/switch/include
-        ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-endif()
 
 include_directories(ext)
 include_directories(src)
 if(MSVC)
     include_directories(ext/dirent)
+    set_target_properties(${SHORT_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${GAME_WORKING_DIRECTORY}")
 endif()
 
-if (VITA_BUILD)
-    target_link_libraries (${SHORT_NAME}
-        ${SDL2_MIXER_LIBRARY}
-        ${SDL2_LIBRARY}
-        vorbisfile
-        vorbis
-        mikmod
-        mpg123
-        FLAC
-        ogg
-        vita2d
-        m
-        SceAppUtil_stub
-        SceAudio_stub
-        SceCommonDialog_stub
-        SceCtrl_stub
-        SceDisplay_stub
-        SceGxm_stub
-        SceHid_stub
-        SceIofilemgr_stub
-        SceSysmodule_stub
-        SceTouch_stub
-        ScePower_stub
-        ScePgf_stub
-        SceAppMgr_stub
-    )
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__vita__")
-    # this setting enables larger heap memory sizes on Vita, up to ~330 MB
-    # useful for pre-loading videos into memory
-    set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
-    vita_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE UNCOMPRESSED)
-    vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
-        VERSION ${VITA_VERSION}
-        NAME ${SHORT_NAME}
-        FILE res/sce_sys/icon0.png sce_sys/icon0.png
-        FILE res/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
-        FILE res/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
-        FILE res/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
-    )
-elseif(SWITCH_BUILD)
-    target_link_libraries (${SHORT_NAME}
-        SDL2_mixer
-        SDL2_image
-        SDL2
-        EGL
-        GLESv2
-        glapi
-        drm_nouveau
-        vorbisidec
-        modplug
-        mpg123
-        FLAC
-        opusfile
-        opus
-        ogg
-        m
-        z
-        nx
-        stdc++
-    )
-
-    set(FLAGS
-        -D__SWITCH__
-        -Wno-write-strings
-        -march=armv8-a
-        -mtune=cortex-a57
-        -mtp=soft
-        -O2
-        -fPIE
-        -fno-asynchronous-unwind-tables
-        -funroll-loops
-        -fno-unwind-tables
-        -fno-optimize-sibling-calls
-        -mlittle-endian
-        -ffunction-sections
-    )
-
-    foreach(flag ${FLAGS})
-        set(FLAGS_GENERAL "${FLAGS_GENERAL} ${flag}")
-    endforeach(flag ${FLAGS})
-
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${FLAGS_GENERAL} --verbose")
-
-    target_compile_options(${SHORT_NAME} PRIVATE ${FLAGS})
-    add_custom_command(TARGET ${SHORT_NAME}
-        POST_BUILD
-        COMMAND ${DEVKITPRO}/tools/bin/nacptool --create "${SHORT_NAME}" "rsn8887" ${SWITCH_VERSION} ${SHORT_NAME}.nacp
-        COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME} ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switchdata/icon0.jpg --nacp=${SHORT_NAME}.nacp
-    )
-else()
-    if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
-        target_link_libraries(${SHORT_NAME} m)
-    endif()
-    target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY})
-    if(NOT APPLE)
-        install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
-    endif()
-
-    if(UNIX AND NOT APPLE)
-        install(FILES "res/augustus.desktop" DESTINATION "share/applications" RENAME "com.github.keriew.augustus.desktop")
-        install(FILES "res/augustus.metainfo.xml" DESTINATION "share/metainfo" RENAME "com.github.keriew.augustus.metainfo.xml")
-        install(FILES "res/augustus_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "com.github.keriew.augustus.png")
-        install(FILES "res/augustus_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.keriew.augustus.png")
-        install(FILES "res/augustus_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.keriew.augustus.png")
-    endif()
-
+if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
+    target_link_libraries(${SHORT_NAME} m)
 endif()
+target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY})
+if(NOT APPLE)
+    install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
+endif()
+
+if(UNIX AND NOT APPLE)
+    install(FILES "res/augustus.desktop" DESTINATION "share/applications" RENAME "com.github.keriew.augustus.desktop")
+    install(FILES "res/augustus.metainfo.xml" DESTINATION "share/metainfo" RENAME "com.github.keriew.augustus.metainfo.xml")
+    install(FILES "res/augustus_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "com.github.keriew.augustus.png")
+    install(FILES "res/augustus_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.keriew.augustus.png")
+    install(FILES "res/augustus_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.keriew.augustus.png")
+endif()
+
+if (MSVC)
+    ADD_CUSTOM_COMMAND(
+          TARGET ${SHORT_NAME}
+          POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${SHORT_NAME}.exe" "${GAME_WORKING_DIRECTORY}/${SHORT_NAME}.exe"
+     )
+endif()
+

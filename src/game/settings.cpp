@@ -8,11 +8,11 @@
 #include "core/string.h"
 #include "core/game_environment.h"
 
-#define INF_SIZE 560
+#define INF_SIZE 564
 #define MAX_PERSONAL_SAVINGS 100
 //#define MAX_PLAYER_NAME 32
 
-static struct {
+static struct data_t {
     // display settings
     bool fullscreen;
     int window_width;
@@ -127,7 +127,7 @@ void settings_load(void) {
     load_default_settings();
 
     // TODO: load <Pharaoh.inf>
-    int size = io_read_file_into_buffer("c3.inf", NOT_LOCALIZED, data.inf_file, INF_SIZE);
+    int size = io_read_file_into_buffer("pharaoh.inf", NOT_LOCALIZED, data.inf_file, INF_SIZE);
     if (!size)
         return;
     load_settings(data.inf_file);

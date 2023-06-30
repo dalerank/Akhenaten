@@ -3,6 +3,10 @@
 
 #include <stdio.h>
 
+#ifdef _MSC_VER
+#include "windows.h"
+#endif
+
 #define MSG_SIZE 1000
 
 static char log_buffer[MSG_SIZE];
@@ -21,6 +25,10 @@ static const char *build_message(const char *msg, const char *param_str, int par
 
 void log_info(const char *msg, const char *param_str, int param_int) {
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "%s", build_message(msg, param_str, param_int));
+#ifdef _MSC_VER
+    OutputDebugStringA(log_buffer);
+    OutputDebugStringA("\n");
+#endif
 }
 
 void log_error(const char *msg, const char *param_str, int param_int) {
