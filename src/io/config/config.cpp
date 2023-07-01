@@ -7,7 +7,7 @@
 
 #define MAX_LINE 100
 
-static const char *INI_FILENAME = "augustus.ini";
+static const char *INI_FILENAME = "ozymandias.ini";
 
 // Keep this in the same order as the ints in config.h
 static const struct {

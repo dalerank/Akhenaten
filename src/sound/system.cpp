@@ -325,7 +325,7 @@ static void correct_channel_filenames(void) {
             continue;
 
         char *original = channel_filenames[GAME_ENV][i];
-        char str[CHANNEL_FILENAME_MAX];
+        char str[CHANNEL_FILENAME_MAX] = {0};
         switch (GAME_ENV) {
             case ENGINE_ENV_PHARAOH:
                 strncpy(str, "AUDIO/", CHANNEL_FILENAME_MAX);

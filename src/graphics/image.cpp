@@ -3,7 +3,7 @@
 #include "image_groups.h"
 #include "font.h"
 
-static struct {
+struct image_data_t {
     bool fonts_enabled;
     int font_base_offset;
 
@@ -30,7 +30,12 @@ static struct {
     imagepak *font;
 
     color_t *tmp_image_data;
-} data;
+};
+
+image_data_t &image_data() {
+    static image_data_t inst;
+    return inst;
+}
 
 // These functions are actually related to the imagepak class I/O, but it made slightly more
 // sense to me to have here as "core" image struct/class & game graphics related functions.
@@ -42,6 +47,7 @@ bool set_pak_in_collection(int pak_id, imagepak **pak, std::vector<imagepak*> *c
     return true;
 }
 bool image_set_font_pak(encoding_type encoding) {
+    auto &data = image_data();
     // TODO?
     if (encoding == ENCODING_CYRILLIC)
         return false;
@@ -61,15 +67,19 @@ bool image_set_font_pak(encoding_type encoding) {
     }
 }
 bool image_set_enemy_pak(int enemy_id) {
+    auto &data = image_data();
     return set_pak_in_collection(enemy_id, &data.enemy, &data.enemy_paks);
 }
 bool image_set_temple_complex_pak(int temple_id) {
+    auto &data = image_data();
     return set_pak_in_collection(temple_id, &data.temple, &data.temple_paks);
 }
 bool image_set_monument_pak(int monument_id) {
+    auto &data = image_data();
     return set_pak_in_collection(monument_id, &data.monument, &data.monument_paks);
 }
 bool image_load_paks() {
+    auto &data = image_data();
     data.fonts_enabled = false;
     data.font_base_offset = 0;
 
@@ -156,6 +166,7 @@ bool image_load_paks() {
 }
 
 static imagepak *pak_from_collection_id(int collection, int pak_cache_idx) {
+    auto &data = image_data();
     switch (collection) {
         case IMAGE_COLLECTION_UNLOADED:
             return data.unloaded;
@@ -208,6 +219,7 @@ int image_id_from_group(int collection, int group, int pak_cache_idx) {
     return pak->get_global_image_index(group);
 }
 const image_t *image_get(int id, int mode) {
+    auto &data = image_data();
     const image_t *img;
     for (int i = 0; i < data.pak_list.size(); ++i) {
         imagepak *pak = *(data.pak_list.at(i));
@@ -221,6 +233,7 @@ const image_t *image_get(int id, int mode) {
     return nullptr;
 }
 const image_t *image_letter(int letter_id) {
+    auto &data = image_data();
     if (data.fonts_enabled == FULL_CHARSET_IN_FONT)
         return data.font->get_image(data.font_base_offset + letter_id);
     else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET)
@@ -231,6 +244,7 @@ const image_t *image_letter(int letter_id) {
         return nullptr;
 }
 const image_t *image_get_enemy(int id) {
+    auto &data = image_data();
     return data.enemy->get_image(id);
 }
 

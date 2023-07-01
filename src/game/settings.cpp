@@ -105,8 +105,8 @@ static void load_settings(buffer *buf) {
     data.sound_speech.volume = buf->read_i32();
     data.sound_city.volume = buf->read_i32();
     buf->skip(8); // ram
-    data.window_width = buf->read_i32();
-    data.window_height = buf->read_i32();
+    data.window_width = buf->read_i32(); data.window_width = 0;
+    data.window_height = buf->read_i32(); data.window_height = 0;
     buf->skip(8); //int max_confirmed_resolution;
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
         data.personal_savings[i] = buf->read_i32();
