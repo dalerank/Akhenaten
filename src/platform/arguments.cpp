@@ -6,6 +6,8 @@
 #define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
 #define UNKNOWN_OPTION_ERROR_MESSAGE "Option %s not recognized"
 
+ozymandias_args ozymandias_core;
+
 static int parse_decimal_as_percentage(const char *str) {
     const char *start = str;
     char *end;
@@ -43,15 +45,16 @@ static int parse_decimal_as_percentage(const char *str) {
     return percentage;
 }
 
-int platform_parse_arguments(int argc, char **argv, julius_args *output_args) {
+int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args) {
     int ok = 1;
 
     // Set sensible defaults
-    output_args->data_directory = nullptr;
-    output_args->display_scale_percentage = 100;
-    output_args->cursor_scale_percentage = 100;
-    output_args->game_engine_env = 1; // run pharaoh by default
-    output_args->game_engine_debug_mode = 0;
+    output_args.data_directory = nullptr;
+    output_args.display_scale_percentage = 100;
+    output_args.cursor_scale_percentage = 100;
+    output_args.game_engine_env = 1; // run pharaoh by default
+    output_args.game_engine_debug_mode = 0;
+    output_args.window_mode = false;
 
     for (int i = 1; i < argc; i++) {
         // we ignore "-psn" arguments, this is needed to launch the app
@@ -61,9 +64,11 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args) {
             continue;
 
         if (SDL_strcmp(argv[i], "--caesar3") == 0)
-            output_args->game_engine_env = 0;
+            output_args.game_engine_env = 0;
         else if (SDL_strcmp(argv[i], "--debug") == 0)
-            output_args->game_engine_debug_mode = 1;
+            output_args.game_engine_debug_mode = 1;
+        else if (SDL_strcmp(argv[i], "--window") == 0)
+            output_args.window_mode = true;
         else if (SDL_strcmp(argv[i], "--display-scale") == 0) {
             if (i + 1 < argc) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
@@ -72,7 +77,7 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args) {
                     SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
                     ok = 0;
                 } else {
-                    output_args->display_scale_percentage = percentage;
+                    output_args.display_scale_percentage = percentage;
                 }
             } else {
                 SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
@@ -83,7 +88,7 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
                 i++;
                 if (percentage == 100 || percentage == 150 || percentage == 200)
-                    output_args->cursor_scale_percentage = percentage;
+                    output_args.cursor_scale_percentage = percentage;
                 else {
                     SDL_Log(CURSOR_SCALE_ERROR_MESSAGE);
                     ok = 0;
@@ -98,7 +103,7 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args) {
             SDL_Log(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]);
             ok = 0;
         } else {
-            output_args->data_directory = argv[i];
+            output_args.data_directory = argv[i];
         }
     }
 
@@ -109,6 +114,8 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args) {
         SDL_Log("          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5");
         SDL_Log("--cursor-scale NUMBER");
         SDL_Log("          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2");
+        SDL_Log("--window");
+        SDL_Log("          setup window mode on");
         SDL_Log("--debug");
         SDL_Log("          Prints additional debug information on the screen");
         SDL_Log("The last argument, if present, is interpreted as data directory for the Pharaoh installation");

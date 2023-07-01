@@ -12,7 +12,7 @@
 #define MAX_PERSONAL_SAVINGS 100
 //#define MAX_PLAYER_NAME 32
 
-static struct data_t {
+struct settings_data_t {
     // display settings
     bool fullscreen;
     int window_width;
@@ -187,12 +187,12 @@ void setting_window(int *width, int *height) {
     *width = data.window_width;
     *height = data.window_height;
 }
-void setting_set_display(int fullscreen, int width, int height) {
+void setting_set_fullscreen(int fullscreen) {
     data.fullscreen = fullscreen;
-    if (!fullscreen) {
-        data.window_width = width;
-        data.window_height = height;
-    }
+}
+void setting_set_display(int width, int height) {
+    data.window_width = width;
+    data.window_height = height;
 }
 
 static set_sound *get_sound(int type) {

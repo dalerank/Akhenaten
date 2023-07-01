@@ -29,17 +29,18 @@ enum {
     CITIES_NEW_NAMES = 1
 };
 
-typedef struct {
+struct set_sound {
     bool enabled;
     int volume;
-} set_sound;
+};
 
 void settings_load(void);
 void settings_save(void);
 
 int setting_fullscreen(void);
 void setting_window(int *width, int *height);
-void setting_set_display(int fullscreen, int width, int height);
+void setting_set_fullscreen(int fullscreen);
+void setting_set_display(int width, int height);
 
 const set_sound *setting_sound(int type);
 

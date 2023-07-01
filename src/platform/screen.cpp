@@ -15,6 +15,7 @@
 #include "platform/renderer.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
+#include "arguments.h"
 
 #include "SDL.h"
 
@@ -105,6 +106,7 @@ int platform_screen_create(const char *title, int display_scale_percentage) {
 
     int width, height;
     int fullscreen = system_is_fullscreen_only() ? 1 : setting_fullscreen();
+    fullscreen = ozymandias_core.window_mode ? 0 : fullscreen;
     if (fullscreen) {
         SDL_DisplayMode mode;
         SDL_GetDesktopDisplayMode(0, &mode);
@@ -125,8 +127,7 @@ int platform_screen_create(const char *title, int display_scale_percentage) {
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 #endif
 
-    SDL_Log("Creating screen %d x %d, %s, driver: %s", width, height,
-            fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
+    SDL_Log("Creating screen %d x %d, %s, driver: %s", width, height, fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
@@ -185,7 +186,7 @@ int platform_screen_resize(int pixel_width, int pixel_height, int save) {
     int logical_height = scale_pixels_to_logical(pixel_height);
 
     if (save) {
-        setting_set_display(setting_fullscreen(), logical_width, logical_height);
+        setting_set_display(logical_width, logical_height);
     }
 
     if (platform_renderer_create_render_texture(logical_width, logical_height)) {
@@ -235,7 +236,8 @@ void platform_screen_set_fullscreen(void) {
         SDL_SetWindowGrab(SDL.window, SDL_TRUE);
     }
 #endif
-    setting_set_display(1, mode.w, mode.h);
+    setting_set_fullscreen(1);
+    setting_set_display(mode.w, mode.h);
 }
 
 void platform_screen_set_windowed(void) {
@@ -256,7 +258,8 @@ void platform_screen_set_windowed(void) {
     if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE) {
         SDL_SetWindowGrab(SDL.window, SDL_FALSE);
     }
-    setting_set_display(0, pixel_width, pixel_height);
+    setting_set_fullscreen(0);
+    setting_set_display(pixel_width, pixel_height);
 }
 
 void platform_screen_set_window_size(int logical_width, int logical_height) {
@@ -282,7 +285,8 @@ void platform_screen_set_window_size(int logical_width, int logical_height) {
     if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE) {
         SDL_SetWindowGrab(SDL.window, SDL_FALSE);
     }
-    setting_set_display(0, pixel_width, pixel_height);
+    setting_set_fullscreen(0);
+    setting_set_display(pixel_width, pixel_height);
 }
 
 void platform_screen_center_window(void) {

@@ -241,7 +241,8 @@ static int pre_init(const char *custom_data_dir) {
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "'*.eng' or '*_mm.eng' files not found or too large.");
     return 0;
 }
-static void setup(const julius_args *args) {
+
+static void setup(const ozymandias_args &args) {
     // init SDL and some other stuff
     signal(SIGSEGV, handler);
     setup_logging();
@@ -255,8 +256,8 @@ static void setup(const julius_args *args) {
 #endif
 
     // pre-init engine: assert game directory, pref files, etc.
-    init_game_environment(args->game_engine_env, args->game_engine_debug_mode);
-    if (!pre_init(args->data_directory)) {
+    init_game_environment(args.game_engine_env, args.game_engine_debug_mode);
+    if (!pre_init(args.data_directory)) {
         SDL_Log("Exiting: game pre-init failed");
         exit(1);
     }
@@ -265,14 +266,13 @@ static void setup(const julius_args *args) {
     goto skip;
 #endif
     // set up game display
-    char title[100];
+    char title[100] = {0};
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
-    if (!platform_screen_create(title, args->display_scale_percentage)) {
+    if (!platform_screen_create(title, args.display_scale_percentage)) {
         SDL_Log("Exiting: SDL create window failed");
         exit(-2);
     }
-    platform_init_cursors(
-            args->cursor_scale_percentage); // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
+    platform_init_cursors(args.cursor_scale_percentage); // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
 
     skip:
     // init game!
@@ -479,10 +479,9 @@ static void main_loop(void) {
 }
 
 int main(int argc, char **argv) {
-    julius_args args;
-    platform_parse_arguments(argc, argv, &args);
+    platform_parse_arguments(argc, argv, ozymandias_core);
 
-    setup(&args);
+    setup(ozymandias_core);
 
     main_loop();
 
