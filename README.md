@@ -1,5 +1,7 @@
 # Ozymandias
 
+![2023-07-01 13_28_28-Window](https://github.com/dalerank/Ozymandias/assets/918081/6e2358ad-82af-4374-89d1-35d56b917e1e)
+
 This is a fork of the **Julius/Augustus** project with the aim of making it work with _Pharaoh_ instead of _Caesar 3_.
 
 The work is still in progress, so any help or support is appreciated. You can more or less load
