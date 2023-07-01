@@ -149,46 +149,8 @@ set(TINYFD_FILES
 #    ext/SDL_image/IMG_savepng.c
 #)
 
-set(PLATFORM_FILES
-    ${PROJECT_SOURCE_DIR}/src/platform/arguments.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/file_manager.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/julius.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.cpp
-    src/io/log.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/mouse.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/platform.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/prefs.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/sound_device.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/touch.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/version.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/virtual_keyboard.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/renderer.cpp
-)
-
-set(PLATFORM_FILES
-    ${PLATFORM_FILES}
-    ${PROJECT_SOURCE_DIR}/src/platform/cursor.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/screen.cpp
-)
-
-set(CORE_FILES
-    ${PROJECT_SOURCE_DIR}/src/core/backtrace.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/buffer.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/calc.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/encoding.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/encoding/korean.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/encoding/simp_chinese.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/encoding/trad_chinese.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/locale.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/random.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/speed.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/string.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/time.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/zip.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/game_environment.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/stopwatch.cpp
-)
 set(IO_FILES
+    ${PROJECT_SOURCE_DIR}/src/io/log.cpp
     ${PROJECT_SOURCE_DIR}/src/io/dir.cpp
     ${PROJECT_SOURCE_DIR}/src/io/file.cpp
     ${PROJECT_SOURCE_DIR}/src/io/file_formats.cpp
@@ -197,7 +159,7 @@ set(IO_FILES
     ${PROJECT_SOURCE_DIR}/src/io/config/config.cpp
     ${PROJECT_SOURCE_DIR}/src/io/config/hotkeys.cpp
     ${PROJECT_SOURCE_DIR}/src/io/gamestate/chunks.cpp
-    src/io/manager.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/manager.cpp
     ${PROJECT_SOURCE_DIR}/src/io/gamestate/boilerplate.cpp
     ${PROJECT_SOURCE_DIR}/src/io/imagepaks/imagepak.cpp
     ${PROJECT_SOURCE_DIR}/src/io/imagepaks/atlas_packer.cpp
@@ -207,196 +169,7 @@ set(IO_FILES
 #    ${PROJECT_SOURCE_DIR}/src/io/gamefiles/mods.cpp
 #    ${PROJECT_SOURCE_DIR}/src/io/gamefiles/png_read.cpp
 )
-set(BUILDING_FILES
-    ${PROJECT_SOURCE_DIR}/src/building/animation.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/barracks.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/building.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/count.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/destruction.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/dock.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/figure.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/government.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/granary.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/house.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/house_evolution.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/house_population.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/house_service.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/industry.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/list.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/maintenance.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/market.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/menu.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/model.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/properties.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/roadblock.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/rotation.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/storage.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/warehouse.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/monuments.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/construction/build_planner.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/construction/clear.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/construction/routed.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/construction/warnings.cpp
-)
-set(CITY_FILES
-    ${PROJECT_SOURCE_DIR}/src/city/buildings.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/culture.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/data.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/data_private.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/emperor.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/entertainment.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/festival.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/figures.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/finance.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/gods.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/health.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/houses.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/labor.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/map.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/message.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/migration.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/military.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/mission.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/population.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/ratings.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/resource.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/sentiment.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/sound.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/trade.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/victory.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/warning.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/floods.cpp
-)
-set(EMPIRE_FILES
-    ${PROJECT_SOURCE_DIR}/src/empire/city.cpp
-    ${PROJECT_SOURCE_DIR}/src/empire/empire.cpp
-    ${PROJECT_SOURCE_DIR}/src/empire/object.cpp
-    ${PROJECT_SOURCE_DIR}/src/empire/trade_prices.cpp
-    ${PROJECT_SOURCE_DIR}/src/empire/trade_route.cpp
-)
-set(FIGURE_FILES
-    ${PROJECT_SOURCE_DIR}/src/figure/action.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/combat.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/enemy_army.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/figure.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/formation.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/formation_enemy.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/formation_herd.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/formation_layout.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/formation_legion.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/image.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/movement.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/name.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/phrase.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/properties.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/route.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/service.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/trader.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/sound.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/figure_draw.cpp
-)
-set(FIGURETYPE_FILES
-    ${PROJECT_SOURCE_DIR}/src/figuretype/animal.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/cartpusher.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/crime.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/docker.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/editor.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/enemy.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/entertainer.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/maintenance.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/market.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/migrant.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/missile.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/native.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/service.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/soldier.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/trader.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/wall.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/water.cpp
-    ${PROJECT_SOURCE_DIR}/src/figuretype/gatherers.cpp
-)
-set(GAME_FILES
-    ${PROJECT_SOURCE_DIR}/src/game/cheats.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/difficulty.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/file_editor.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/game.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/mission.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/orientation.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/resource.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/settings.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/state.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/tick.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/time.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/tutorial.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/undo.cpp
-)
-set(INPUT_FILES
-    ${PROJECT_SOURCE_DIR}/src/input/cursor.cpp
-    ${PROJECT_SOURCE_DIR}/src/input/hotkey.cpp
-    ${PROJECT_SOURCE_DIR}/src/input/input.cpp
-    ${PROJECT_SOURCE_DIR}/src/input/keyboard.cpp
-    ${PROJECT_SOURCE_DIR}/src/input/keys.cpp
-    ${PROJECT_SOURCE_DIR}/src/input/mouse.cpp
-    ${PROJECT_SOURCE_DIR}/src/input/scroll.cpp
-    ${PROJECT_SOURCE_DIR}/src/input/touch.cpp
-)
-set(GRID_FILES
-    ${PROJECT_SOURCE_DIR}/src/grid/aqueduct.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/bookmark.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/bridge.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/building.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/building_tiles.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/desirability.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/elevation.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/figure.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/grid.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/image.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/image_context.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/natives.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/orientation.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/point.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/property.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/random.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/ring.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/road_access.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/road_aqueduct.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/road_network.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/routing/routing.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/routing/routing_grids.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/routing/queue.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/routing/routing_terrain.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/soldier_strength.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/sprite.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/terrain.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/tiles.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/water.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/water_supply.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/tile_cache.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/floodplain.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/vegetation.cpp
-    ${PROJECT_SOURCE_DIR}/src/grid/moisture.cpp
-)
-set(SCENARIO_FILES
-    ${PROJECT_SOURCE_DIR}/src/scenario/building.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/criteria.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/demand_change.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/distant_battle.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/earthquake.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/editor.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/editor_events.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/editor_map.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/emperor_change.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/empire.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/gladiator_revolt.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/invasion.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/map.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/price_change.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/property.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/random_event.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/request.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/events.cpp
-    ${PROJECT_SOURCE_DIR}/src/scenario/scenario.cpp
-)
+
 set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/image.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/boilerplate.cpp
@@ -407,161 +180,74 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/animation_timers.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/font.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/text.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/elements/lang_text.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/elements/rich_text.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/elements/tooltip.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/elements/warning.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/elements/button.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/elements/arrow_button.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/elements/generic_button.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/elements/image_button.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/elements/panel.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/elements/scrollbar.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/elements/scroll_list_panel.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/view/view.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/view/lookup.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/view/zoom.cpp
 )
-set(SOUND_FILES
-    ${PROJECT_SOURCE_DIR}/src/sound/city.cpp
-    ${PROJECT_SOURCE_DIR}/src/sound/effect.cpp
-    ${PROJECT_SOURCE_DIR}/src/sound/music.cpp
-    ${PROJECT_SOURCE_DIR}/src/sound/speech.cpp
-    ${PROJECT_SOURCE_DIR}/src/sound/system.cpp
-)
-set(WIDGET_FILES
-    ${PROJECT_SOURCE_DIR}/src/widget/city.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/input_box.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/map_editor.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/map_editor_tool.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/minimap.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/top_menu.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/top_menu_editor.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city/tile_draw.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city/figures_cached_draw.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city/bridges.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city/building_ghost.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city/ornaments.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/overlays/city_overlay.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/overlays/city_overlay_risks.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/overlays/city_overlay_education.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/overlays/city_overlay_entertainment.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/overlays/city_overlay_health.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/overlays/city_overlay_other.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/city.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/common.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/editor.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/extra.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/slide.cpp
-)
-set(WINDOW_FILES
-    ${PROJECT_SOURCE_DIR}/src/window/advisors.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/chief.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/education.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/entertainment.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/financial.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/health.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/housing.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/imperial.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/labor.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/military.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/population.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/ratings.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/religion.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/trade.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/monuments.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/build_menu.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/building_info.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/building/common.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/building/culture.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/building/distribution.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/building/figures.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/building/government.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/building/house.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/building/industry.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/building/military.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/building/terrain.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/building/utility.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/allowed_buildings.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/attributes.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/build_menu.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/demand_changes.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_demand_change.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_invasion.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_price_change.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_request.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/empire.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/invasions.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/map.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/price_changes.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/requests.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/special_events.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/start_year.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/starting_conditions.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/editor/win_criteria.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/scenario_selection.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/city.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/config.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/console.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/display_options.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/donate_to_city.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/empire.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/file_dialog.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/gift_to_emperor.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/hold_festival.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/hotkey_config.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/hotkey_editor.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/intermezzo.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/intro_video.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/labor_priority.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/logo.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/main_menu.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/message_dialog.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/message_list.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/mission_briefing.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/mission_end.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/mission_next.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/new_career.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/numeric_input.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/overlay_menu.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/plain_message_dialog.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/popup_dialog.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/resource_settings.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/select_list.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/set_salary.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/sound_options.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/speed_options.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/trade_opened.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/trade_prices.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/victory_video.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/player_selection.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/game_menu.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/records.cpp
-)
-set(DEV_FILES
-    ${PROJECT_SOURCE_DIR}/src/dev/debug.cpp
-)
-set(EDITOR_FILES
-    ${PROJECT_SOURCE_DIR}/src/editor/editor.cpp
-    ${PROJECT_SOURCE_DIR}/src/editor/tool.cpp
-    ${PROJECT_SOURCE_DIR}/src/editor/tool_restriction.cpp
-)
-set(TRANSLATION_FILES
-    ${PROJECT_SOURCE_DIR}/src/translation/english.cpp
-    ${PROJECT_SOURCE_DIR}/src/translation/french.cpp
-    ${PROJECT_SOURCE_DIR}/src/translation/german.cpp
-    ${PROJECT_SOURCE_DIR}/src/translation/italian.cpp
-    ${PROJECT_SOURCE_DIR}/src/translation/korean.cpp
-    ${PROJECT_SOURCE_DIR}/src/translation/polish.cpp
-    ${PROJECT_SOURCE_DIR}/src/translation/portuguese.cpp
-    ${PROJECT_SOURCE_DIR}/src/translation/russian.cpp
-    ${PROJECT_SOURCE_DIR}/src/translation/simplified_chinese.cpp
-    ${PROJECT_SOURCE_DIR}/src/translation/spanish.cpp
-    ${PROJECT_SOURCE_DIR}/src/translation/traditional_chinese.cpp
-    ${PROJECT_SOURCE_DIR}/src/translation/translation.cpp
-)
+
+file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp)
+file(GLOB CORE_FILES ${PROJECT_SOURCE_DIR}/src/core/*.cpp)
+file(GLOB CORE_ENCODING_FILES ${PROJECT_SOURCE_DIR}/src/core/encoding/*.cpp)
+file(GLOB BUILDING_FILES ${PROJECT_SOURCE_DIR}/src/building/*.cpp)
+file(GLOB BUILDING_CONSTRUCTION_FILES ${PROJECT_SOURCE_DIR}/src/building/construction/*.cpp)
+file(GLOB CITY_FILES ${PROJECT_SOURCE_DIR}/src/city/*.cpp)
+file(GLOB EMPIRE_FILES ${PROJECT_SOURCE_DIR}/src/empire/*.cpp)
+file(GLOB FIGURE_FILES ${PROJECT_SOURCE_DIR}/src/figure/*.cpp)
+file(GLOB FIGURETYPE_FILES ${PROJECT_SOURCE_DIR}/src/figuretype/*.cpp)
+file(GLOB GAME_FILES ${PROJECT_SOURCE_DIR}/src/game/*.cpp)
+file(GLOB INPUT_FILES ${PROJECT_SOURCE_DIR}/src/input/*.cpp)
+file(GLOB GRID_FILES ${PROJECT_SOURCE_DIR}/src/grid/*.cpp)
+file(GLOB GRID_ROUTING_FILES ${PROJECT_SOURCE_DIR}/src/grid/routing/*.cpp)
+file(GLOB SCENARIO_FILES ${PROJECT_SOURCE_DIR}/src/scenario/*.cpp)
+file(GLOB GRAPHICS_ELEMENTS_FILES ${PROJECT_SOURCE_DIR}/src/graphics/elements/*.cpp)
+file(GLOB GRAPHICS_VIEW_FILES ${PROJECT_SOURCE_DIR}/src/graphics/view/*.cpp)
+file(GLOB SOUND_FILES ${PROJECT_SOURCE_DIR}/src/sound/*.cpp)
+file(GLOB WIDGET_FILES ${PROJECT_SOURCE_DIR}/src/widget/*.cpp)
+file(GLOB WIDGET_CITY_FILES ${PROJECT_SOURCE_DIR}/src/widget/city/*.cpp)
+file(GLOB WIDGET_OVERLAYS_FILES ${PROJECT_SOURCE_DIR}/src/widget/overlays/*.cpp)
+file(GLOB WIDGET_SIDEBAR_FILES ${PROJECT_SOURCE_DIR}/src/widget/sidebar/*.cpp)
+file(GLOB WINDOW_ADVISOR_FILES ${PROJECT_SOURCE_DIR}/src/window/advisor/*.cpp)
+file(GLOB WINDOW_FILES ${PROJECT_SOURCE_DIR}/src/window/*.cpp)
+file(GLOB WINDOW_EDITOR_FILES ${PROJECT_SOURCE_DIR}/src/window/editor/*.cpp)
+file(GLOB WINDOW_BUILDING_FILES ${PROJECT_SOURCE_DIR}/src/window/building/*.cpp)
+file(GLOB DEV_FILES ${PROJECT_SOURCE_DIR}/src/dev/*.cpp)
+file(GLOB EDITOR_FILES ${PROJECT_SOURCE_DIR}/src/editor/*.cpp)
+file(GLOB TRANSLATION_FILES ${PROJECT_SOURCE_DIR}/src/translation/*.cpp)
+
+set(WIDGET_CITY_FILES ${WIDGET_CITY_FILES}
+    ${PROJECT_SOURCE_DIR}/src/widget/city.cpp)
+
+set(WINDOW_ADVISOR_FILES ${WINDOW_ADVISOR_FILES}
+    ${PROJECT_SOURCE_DIR}/src/window/advisors.cpp)
+
+if(MSVC)
+    source_group("core" FILES ${CORE_FILES})
+    source_group("core/encoding" FILES ${CORE_ENCODING_FILES})
+    source_group("platform" FILES ${PLATFORM_FILES})
+    source_group("building" FILES ${BUILDING_FILES})
+    source_group("building/construction" FILES ${BUILDING_CONSTRUCTION_FILES})
+    source_group("city" FILES ${CITY_FILES})
+    source_group("empire" FILES ${EMPIRE_FILES})
+    source_group("figure" FILES ${FIGURE_FILES})
+    source_group("figuretype" FILES ${FIGURETYPE_FILES})
+    source_group("game" FILES ${GAME_FILES})
+    source_group("input" FILES ${INPUT_FILES})
+    source_group("grid" FILES ${GRID_FILES})
+    source_group("grid/routing" FILES ${GRID_ROUTING_FILES})
+    source_group("scenario" FILES ${SCENARIO_FILES})
+    source_group("graphics/view" FILES ${GRAPHICS_VIEW_FILES})
+    source_group("graphics/elements" FILES ${GRAPHICS_ELEMENTS_FILES})
+    source_group("sound" FILES ${SOUND_FILES})
+    source_group("widgets" FILES ${WIDGET_FILES})
+    source_group("widgets/city" FILES ${WIDGET_CITY_FILES})
+    source_group("widgets/overlays" FILES ${WIDGET_OVERLAYS_FILES})
+    source_group("wdigets/sidebar" FILES ${WIDGET_SIDEBAR_FILES})
+    source_group("window" FILES ${WINDOW_FILES})
+    source_group("window/advisors" FILES ${WINDOW_ADVISOR_FILES})
+    source_group("window/editor" FILES ${WINDOW_EDITOR_FILES})
+    source_group("window/building" FILES ${WINDOW_BUILDING_FILES})
+    source_group("advisor" FILES ${ADVISOR_FILES})
+    source_group("dev" FILES ${DEV_FILES})
+    source_group("editor" FILES ${EDITOR_FILES})
+    source_group("translation" FILES ${TRANSLATION_FILES})
+endif()
 
 set(MACOSX_FILES "")
 if(APPLE)
@@ -589,6 +275,19 @@ set(SOURCE_FILES
     ${EDITOR_FILES}
     ${TRANSLATION_FILES}
     ${TINYFD_FILES}
+    ${ADVISOR_FILES}
+    ${WINDOW_BUILDING_FILES}
+    ${WINDOW_EDITOR_FILES}
+    ${WINDOW_ADVISOR_FILES}
+    ${WIDGET_SIDEBAR_FILES}
+    ${WIDGET_OVERLAYS_FILES}
+    ${WIDGET_CITY_FILES}
+    ${GRAPHICS_VIEW_FILES}
+    ${GRAPHICS_ELEMENTS_FILES}
+    ${BUILDING_CONSTRUCTION_FILES}
+    ${CORE_ENCODING_FILES}
+    ${GRID_FILES}
+    ${GRID_ROUTING_FILES}
 #    ${PROJECT_SOURCE_DIR}/res/augustus.rc
     ${MACOSX_FILES}
 #    ${PNG_FILES}
