@@ -19,6 +19,7 @@
 #include "widget/input_box.h"
 #include "window/mission_next.h"
 #include "player_selection.h"
+#include "game/settings.h"
 
 static void confirm_new_player_name(int param1, int param2);
 static void button_back(int param1, int param2);
@@ -30,13 +31,13 @@ static image_button image_buttons[] = {
 
 static input_box player_name_input = {160, 208, 20, 2, FONT_NORMAL_WHITE_ON_DARK};
 
-static uint8_t player_name[32];
+static uint8_t player_name[MAX_PLAYER_NAME] = {0};
 
 static void init(void) {
     setting_clear_personal_savings();
     scenario_settings_init();
-    encoding_from_utf8("", player_name, 0);
-    input_box_start(&player_name_input, player_name, 32, 1);
+    string_copy(setting_player_name(), player_name, MAX_PLAYER_NAME);
+    input_box_start(&player_name_input, player_name, MAX_PLAYER_NAME, 1);
 }
 
 static void draw_foreground(void) {

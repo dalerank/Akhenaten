@@ -38,15 +38,21 @@ struct settings_data_t {
     bool pyramid_speedup;
     // persistent game state
     int last_advisor;
-    uint8_t player_name[MAX_PLAYER_NAME];
-    char player_name_utf8[MAX_PLAYER_NAME];
+    uint8_t player_name[MAX_PLAYER_NAME] = {0};
+    char player_name_utf8[MAX_PLAYER_NAME] = {0};
     // personal savings
-    int personal_savings[MAX_PERSONAL_SAVINGS];
+    int personal_savings[MAX_PERSONAL_SAVINGS] = {0};
     // file data
     buffer *inf_file = new buffer(INF_SIZE);
-} data;
+};
+
+settings_data_t &settings_data() {
+    static settings_data_t inst;
+    return inst;
+}
 
 static void load_default_settings(void) {
+    auto &data = settings_data();
     data.fullscreen = true;
     data.window_width = 800;
     data.window_height = 600;
@@ -77,6 +83,7 @@ static void load_default_settings(void) {
     setting_clear_personal_savings();
 }
 static void load_settings(buffer *buf) {
+    auto &data = settings_data();
     buf->skip(4);
     data.fullscreen = buf->read_i32();
     buf->skip(3);
@@ -124,6 +131,7 @@ static void load_settings(buffer *buf) {
 }
 
 void settings_load(void) {
+    auto &data = settings_data();
     load_default_settings();
 
     // TODO: load <Pharaoh.inf>
@@ -139,6 +147,7 @@ void settings_load(void) {
     }
 }
 void settings_save(void) {
+    auto &data = settings_data();
     buffer *buf = data.inf_file;
 
     buf->skip(4);
@@ -181,21 +190,26 @@ void settings_save(void) {
     io_write_buffer_to_file("c3.inf", data.inf_file, INF_SIZE);
 }
 int setting_fullscreen(void) {
+    auto &data = settings_data();
     return data.fullscreen;
 }
 void setting_window(int *width, int *height) {
+    auto &data = settings_data();
     *width = data.window_width;
     *height = data.window_height;
 }
 void setting_set_fullscreen(int fullscreen) {
+    auto &data = settings_data();
     data.fullscreen = fullscreen;
 }
 void setting_set_display(int width, int height) {
+    auto &data = settings_data();
     data.window_width = width;
     data.window_height = height;
 }
 
 static set_sound *get_sound(int type) {
+    auto &data = settings_data();
     switch (type) {
         case SOUND_MUSIC:
             return &data.sound_music;
@@ -234,9 +248,11 @@ void setting_reset_sound(int type, int enabled, int volume) {
     sound->volume = calc_bound(volume, 0, 100);
 }
 int setting_game_speed(void) {
+    auto &data = settings_data();
     return data.game_speed;
 }
 void setting_increase_game_speed(void) {
+    auto &data = settings_data();
     if (data.game_speed >= 100) {
         if (data.game_speed < 1000)
             data.game_speed += 100;
@@ -244,6 +260,7 @@ void setting_increase_game_speed(void) {
         data.game_speed = calc_bound(data.game_speed + 10, 10, 100);
 }
 void setting_decrease_game_speed(void) {
+    auto &data = settings_data();
     if (data.game_speed > 100)
         data.game_speed -= 100;
     else
@@ -251,23 +268,29 @@ void setting_decrease_game_speed(void) {
 }
 
 int setting_scroll_speed(void) {
+    auto &data = settings_data();
     return data.scroll_speed;
 }
 void setting_increase_scroll_speed(void) {
+    auto &data = settings_data();
     data.scroll_speed = calc_bound(data.scroll_speed + 10, 0, 100);
 }
 void setting_decrease_scroll_speed(void) {
+    auto &data = settings_data();
     data.scroll_speed = calc_bound(data.scroll_speed - 10, 0, 100);
 }
 void setting_reset_speeds(int game_speed, int scroll_speed) {
+    auto &data = settings_data();
     data.game_speed = game_speed;
     data.scroll_speed = scroll_speed;
 }
 
 int setting_tooltips(void) {
+    auto &data = settings_data();
     return data.tooltips;
 }
 void setting_cycle_tooltips(void) {
+    auto &data = settings_data();
     switch (data.tooltips) {
         case TOOLTIPS_NONE:
             data.tooltips = TOOLTIPS_SOME;
@@ -282,51 +305,65 @@ void setting_cycle_tooltips(void) {
 }
 
 int setting_warnings(void) {
+    auto &data = settings_data();
     return data.warnings;
 }
 void setting_toggle_warnings(void) {
+    auto &data = settings_data();
     data.warnings = data.warnings ? 0 : 1;
 }
 
 int setting_monthly_autosave(void) {
+    auto &data = settings_data();
     return data.monthly_autosave;
 }
 void setting_toggle_monthly_autosave(void) {
+    auto &data = settings_data();
     data.monthly_autosave = data.monthly_autosave ? 0 : 1;
 }
 
 int setting_city_names_style(void) {
+    auto &data = settings_data();
     return data.city_names_style;
 }
 void setting_toggle_city_names_style(void) {
+    auto &data = settings_data();
     data.city_names_style = data.city_names_style ? 0 : 1;
 }
 
 int setting_pyramid_speedup(void) {
+    auto &data = settings_data();
     return data.pyramid_speedup;
 }
 void setting_toggle_pyramid_speedup(void) {
+    auto &data = settings_data();
     data.pyramid_speedup = data.pyramid_speedup ? 0 : 1;
 }
 
 int setting_popup_messages(void) {
+    auto &data = settings_data();
     return data.popup_messages;
 }
 void setting_toggle_popup_messages(int flag) {
+    auto &data = settings_data();
     data.popup_messages ^= flag;
 }
 
 bool setting_gods_enabled(void) {
+    auto &data = settings_data();
     return data.gods_enabled;
 }
 void setting_toggle_gods_enabled(void) {
+    auto &data = settings_data();
     data.gods_enabled = data.gods_enabled ? 0 : 1;
 }
 
 int setting_difficulty(void) {
+    auto &data = settings_data();
     return data.difficulty;
 }
 void setting_increase_difficulty(void) {
+    auto &data = settings_data();
     if (data.difficulty >= DIFFICULTY_VERY_HARD)
         data.difficulty = DIFFICULTY_VERY_HARD;
     else {
@@ -334,6 +371,7 @@ void setting_increase_difficulty(void) {
     }
 }
 void setting_decrease_difficulty(void) {
+    auto &data = settings_data();
     if (data.difficulty <= DIFFICULTY_VERY_EASY)
         data.difficulty = DIFFICULTY_VERY_EASY;
     else {
@@ -342,35 +380,44 @@ void setting_decrease_difficulty(void) {
 }
 
 int setting_victory_video(void) {
+    auto &data = settings_data();
     data.victory_video = data.victory_video ? 0 : 1;
     return data.victory_video;
 }
 
 int setting_last_advisor(void) {
+    auto &data = settings_data();
     return data.last_advisor;
 }
 void setting_set_last_advisor(int advisor) {
+    auto &data = settings_data();
     data.last_advisor = advisor;
 }
 
 const uint8_t *setting_player_name(void) {
+    auto &data = settings_data();
     return data.player_name;
 }
 const char *setting_player_name_utf8(void) {
+    auto &data = settings_data();
     return data.player_name_utf8;
 }
 void setting_set_player_name(const uint8_t *player_name) {
+    auto &data = settings_data();
     string_copy(player_name, data.player_name, MAX_PLAYER_NAME);
     encoding_to_utf8(player_name, data.player_name_utf8, MAX_PLAYER_NAME, 0);
 }
 
 int setting_personal_savings_for_mission(int mission_id) {
+    auto &data = settings_data();
     return data.personal_savings[mission_id];
 }
 void setting_set_personal_savings_for_mission(int mission_id, int savings) {
+    auto &data = settings_data();
     data.personal_savings[mission_id] = savings;
 }
 void setting_clear_personal_savings(void) {
+    auto &data = settings_data();
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
         data.personal_savings[i] = 0;
     }

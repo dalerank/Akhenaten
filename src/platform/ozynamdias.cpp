@@ -39,6 +39,7 @@
 #if defined(_WIN32)
 
 #include <string.h>
+
 #if !defined(_MSC_VER)
 #include <bits/exception_defines.h>
 #endif
