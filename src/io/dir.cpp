@@ -95,8 +95,7 @@ static void move_left(char *str) {
 }
 
 static const char *get_case_corrected_file(const char *dir, const char *filepath) {
-    static char corrected_filename[2 * MAX_FILE_NAME];
-    corrected_filename[2 * MAX_FILE_NAME - 1] = 0;
+    static char corrected_filename[2 * MAX_FILE_NAME] = {0};
 
     size_t dir_len = 0;
     if (dir) {
@@ -115,9 +114,9 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
         return corrected_filename;
     }
 
-    if (!platform_file_manager_should_case_correct_file())
-        return 0;
-
+    if (!platform_file_manager_should_case_correct_file()) {
+        return corrected_filename;
+    }
 
     strncpy(&corrected_filename[dir_len], filepath, 2 * MAX_FILE_NAME - dir_len - 1);
 

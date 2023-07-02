@@ -70,10 +70,14 @@
 #include "io/io.h"
 #include "chunks.h"
 
+
 #ifdef _MSC_VER 
 //not #if defined(_WIN32) || defined(_WIN64) because we have strncasecmp in mingw
 #define strncasecmp _strnicmp
 #define strcasecmp _stricmp
+#include <direct.h>
+#else
+#include <sys/stat.h>
 #endif
 
 static const char MISSION_PACK_FILE[] = "mission1.pak";
@@ -85,7 +89,7 @@ void fullpath_saves(char *full, const char *filename) {
         return;
     }
     strcat(full, "Save/");
-    strcat(full, setting_player_name_utf8());
+    strcat(full, (const char*)setting_player_name());
     strcat(full, "/");
     strcat(full, filename);
 }
@@ -460,17 +464,51 @@ bool GamestateIO::write_mission(const int scenario_id) {
 }
 bool GamestateIO::write_savegame(const char *filename_short) {
     // concatenate string
-    char full[MAX_FILE_NAME];
+    char full[MAX_FILE_NAME] = {0};
     fullpath_saves(full, filename_short);
 
     // write file
     return FILEIO.serialize(filename_short, 0, FILE_FORMAT_SAVE_FILE, 160, file_schema);
 }
+
+static void prepare_savegame_schema(file_format_t file_format, const int file_version) {
+    FILEIO.push_chunk(4, false, "family_index", 0);
+}
+bool GamestateIO::prepare_savegame(const char *filename_short) {
+    // concatenate string
+    char full[MAX_FILE_NAME] = {0};
+    char folders[MAX_FILE_NAME] = {0};
+    fullpath_saves(full, filename_short);
+    fullpath_saves(folders, "");
+
+    char *token = strtok(folders, "/"); // Split the path by '/'
+    char currentPath[256] = {0}; // Store the current path
+
+    while (token != NULL) {
+        strcat(currentPath, token); // Append the current folder to the current path
+        strcat(currentPath, "/");
+
+        // Check if the folder exists, if not create it
+        struct stat st = {0};
+        if (stat(currentPath, &st) == -1) {
+#ifdef _MSC_VER
+            mkdir(currentPath);
+#else
+            mkdir(currentPath, 0x755);
+#endif
+        }
+
+        token = strtok(NULL, "/");
+    }
+
+    // write file
+    return FILEIO.serialize(full, 0, FILE_FORMAT_SAVE_FILE, 160, prepare_savegame_schema);
+}
 bool GamestateIO::write_map(const char *filename_short) {
     return false; //TODO
 
     // concatenate string
-    char full[MAX_FILE_NAME];
+    char full[MAX_FILE_NAME] = {0};
     fullpath_maps(full, filename_short);
 
     // write file
@@ -502,7 +540,7 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
 }
 bool GamestateIO::load_savegame(const char *filename_short, bool start_immediately) {
     // concatenate string
-    char full[MAX_FILE_NAME];
+    char full[MAX_FILE_NAME] = {0};
     fullpath_saves(full, filename_short);
 
     // read file
@@ -521,7 +559,7 @@ bool GamestateIO::load_map(const char *filename_short, bool start_immediately) {
 //    return false; //TODO
 
     // concatenate string
-    char full[MAX_FILE_NAME];
+    char full[MAX_FILE_NAME] = {0};
     fullpath_maps(full, filename_short);
 
     // read file

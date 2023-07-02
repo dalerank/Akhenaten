@@ -59,17 +59,35 @@ static scrollable_list_ui_params ui_params = [] {
     ret.draw_scrollbar_always = true;
     return ret;
 } ();
-static scroll_list_panel *panel = new scroll_list_panel(NUM_FILES_IN_VIEW, button_select_file, button_none, button_double_click, button_none,
-                                                        ui_params, true, "Save/", "folders");
 
-static struct {
+struct window_player_selection_t {
+    scroll_list_panel *panel = nullptr;
+
+    window_player_selection_t() {
+        panel = new scroll_list_panel(NUM_FILES_IN_VIEW, button_select_file, button_none, button_double_click, button_none,
+                                        ui_params, true, "Save/", "folders");
+    }
+};
+
+window_player_selection_t &window_player_selection() {
+    static window_player_selection_t inst;
+    return inst;
+}
+
+struct player_selection_data_t {
     int focus_button_id;
 
     uint8_t selected_player[MAX_PLAYER_NAME];
     char selected_player_utf8[MAX_PLAYER_NAME];
-} data;
+};
+
+player_selection_data_t &player_selection_data() {
+    static player_selection_data_t inst;
+    return inst;
+}
 
 static void set_name(const char *name) {
+    auto &data = player_selection_data();
     strcpy(data.selected_player_utf8, name);
     encoding_from_utf8(data.selected_player_utf8, data.selected_player, MAX_PLAYER_NAME);
 }
@@ -77,23 +95,29 @@ static void clear_selectd_name() {
     set_name("");
 }
 static bool is_selected_name(int index) {
-    return strcmp(data.selected_player_utf8, panel->get_selected_entry_text(FILE_NO_EXT)) == 0;
+    auto &data = player_selection_data();
+    auto &window = window_player_selection();
+    return strcmp(data.selected_player_utf8, window.panel->get_selected_entry_text(FILE_NO_EXT)) == 0;
 }
 static bool is_valid_selected_player() {
+    auto &data = player_selection_data();
+    auto &window = window_player_selection();
     if (strcmp(data.selected_player_utf8, "") == 0)
         return false;
-    if (panel->get_entry_idx(data.selected_player_utf8) > -1)
+    if (window.panel->get_entry_idx(data.selected_player_utf8) > -1)
         return true;
     return false;
 }
 
 void window_player_selection_init() {
-    panel->refresh_file_finder();
+    auto &data = player_selection_data();
+    auto &window = window_player_selection();
+    window.panel->refresh_file_finder();
 
     string_copy(setting_player_name(), data.selected_player, MAX_PLAYER_NAME);
     encoding_to_utf8(data.selected_player, data.selected_player_utf8, MAX_PLAYER_NAME, 0);
 
-    panel->select(data.selected_player_utf8);
+    window.panel->select(data.selected_player_utf8);
 }
 
 static void draw_background(void) {
@@ -101,6 +125,9 @@ static void draw_background(void) {
     ImageDraw::img_background(image_id_from_group(GROUP_PLAYER_SELECTION));
 }
 static void draw_foreground(void) {
+    auto &data = player_selection_data();
+    auto &window = window_player_selection();
+
     graphics_set_to_dialog();
 
     outer_panel_draw(128, 40, 24, 21);
@@ -109,7 +136,7 @@ static void draw_foreground(void) {
     lang_text_draw_centered(292, 3, 160, 60, 304, FONT_LARGE_BLACK_ON_LIGHT);
 
     // family names
-    panel->draw();
+    window.panel->draw();
 
     // buttons
     for (int i = 0; i < 4; i++) {
@@ -126,13 +153,17 @@ static void draw_foreground(void) {
 static void confirm_nothing(bool accepted) {
 }
 static void confirm_delete_player(bool accepted) {
+    auto &data = player_selection_data();
     if (accepted)
         player_data_delete(data.selected_player);
 }
 static void button_select_file(int index, int param2) {
-    if (index >= panel->get_total_entries())
+    auto &data = player_selection_data();
+    auto &window = window_player_selection();
+
+    if (index >= window.panel->get_total_entries())
         return clear_selectd_name();
-    set_name(panel->get_selected_entry_text(FILE_NO_EXT));
+    set_name(window.panel->get_selected_entry_text(FILE_NO_EXT));
     setting_set_player_name(data.selected_player);
 }
 static void button_double_click(int index, int param2) {
@@ -165,11 +196,14 @@ static void on_scroll(void) {
 //    data.message_not_exist_start_time = 0;
 }
 static void handle_input(const mouse *m, const hotkeys *h) {
+    auto &data = player_selection_data();
+    auto &window = window_player_selection();
+
     if (input_go_back_requested(m, h))
         window_main_menu_show(false);
 
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (panel->input_handle(m_dialog))
+    if (window.panel->input_handle(m_dialog))
         return;
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 4, &data.focus_button_id))
         return;

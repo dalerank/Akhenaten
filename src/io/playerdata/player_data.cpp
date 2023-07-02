@@ -2,6 +2,7 @@
 #include "io/io.h"
 #include "core/string.h"
 #include "player_data.h"
+#include "io/gamestate/boilerplate.h"
 
 #define JAS_FILE_SIZE 7600
 #define JAS_CHUNK_SIZE 76
@@ -18,7 +19,7 @@
 
 player_record DUMMY_RECORD;
 
-static struct {
+struct player_data_t {
     // highscores.jas
     player_record highscores[MAX_JAS_ENTRIES];
     int num_highscore_entries;
@@ -33,9 +34,12 @@ static struct {
     int unk00;
     player_record player_scenario_records[MAX_DAT_ENTRIES];
     buffer *dat_file = new buffer(DAT_FILE_SIZE);
-} data;
+};
 
-///
+player_data_t &player_data() {
+    static player_data_t inst;
+    return inst;
+}
 
 uint32_t records_calc_score(float unkn, float funds, float population, float r_culture, float r_prosperity, float r_kingdom, float months, float difficulty) {
     // I have *NO CLUE* how this value works. It's just black magic.
@@ -58,6 +62,7 @@ uint32_t records_calc_score(const player_record *record) {
                               record->difficulty);
 }
 const player_record *highscores_get(int rank) {
+    auto &data = player_data();
     // go through the list of records, return the nth non-empty record
     for (int i = 0; i < MAX_JAS_ENTRIES; ++i) {
         if (data.highscores[i].nonempty)
@@ -69,10 +74,13 @@ const player_record *highscores_get(int rank) {
     return &DUMMY_RECORD; // return empty record when reached the end of the list
 }
 int highscores_count() {
+    auto &data = player_data();
     return data.num_highscore_entries;
 }
 
 static void load_jas_record_chunk(buffer *buf, player_record *record) {
+    auto &data = player_data();
+
     record->score = buf->read_u32();
     record->mission_idx = buf->read_u32();
     buf->read_raw(record->player_name, MAX_PLAYER_NAME);
@@ -94,6 +102,7 @@ static void load_jas_record_chunk(buffer *buf, player_record *record) {
         data.num_highscore_entries++;
 }
 void highscores_load() {
+    auto &data = player_data();
     // highscore.jas
     data.jas_file->clear();
     data.jas_file->reset_offset();
@@ -109,19 +118,23 @@ void highscores_load() {
 ///
 
 const player_record *player_get_scenario_record(int scenario_id) {
+    auto &data = player_data();
     return &data.player_scenario_records[scenario_id];
 }
 const char *player_get_last_autosave() {
+    auto &data = player_data();
     return data.last_autosave_path;
 }
 
 void player_data_new(const uint8_t *player_name) {
-    // TODO
+    GamestateIO::prepare_savegame("family.sav");
 }
 void player_data_delete(const uint8_t *player_name) {
     // TODO
 }
 static void load_unused_dat_chunk(buffer *buf, int index) {
+    auto &data = player_data();
+
     auto chunk = data.unused_data[index];
     chunk.campaign_idx = buf->read_i8();
     chunk.campaign_idx_2 = buf->read_u8();
@@ -151,6 +164,7 @@ static void load_unused_dat_chunk(buffer *buf, int index) {
 
 }
 void player_data_load(const uint8_t *player_name) {
+    auto &data = player_data();
     // <player>.dat
     data.dat_file->clear();
     data.dat_file->reset_offset();
