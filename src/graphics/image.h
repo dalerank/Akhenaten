@@ -39,7 +39,6 @@ struct atlas_data_t {
     int height;
 };
 
-struct image_t;
 struct image_t {
     char *pak_name;
     struct {
@@ -108,6 +107,7 @@ struct image_t {
 
 extern int terrain_ph_offset;
 
+void image_data_init();
 bool image_load_paks();
 bool image_set_font_pak(encoding_type encoding);
 bool image_set_enemy_pak(int enemy_id);

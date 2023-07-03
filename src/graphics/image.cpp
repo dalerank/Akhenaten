@@ -32,10 +32,9 @@ struct image_data_t {
     color_t *tmp_image_data;
 };
 
-image_data_t &image_data() {
-    static image_data_t inst;
-    return inst;
-}
+static image_data_t *g_image_data = nullptr;
+
+image_data_t &image_data() { return *g_image_data; }
 
 // These functions are actually related to the imagepak class I/O, but it made slightly more
 // sense to me to have here as "core" image struct/class & game graphics related functions.
@@ -78,6 +77,10 @@ bool image_set_monument_pak(int monument_id) {
     auto &data = image_data();
     return set_pak_in_collection(monument_id, &data.monument, &data.monument_paks);
 }
+void image_data_init() {
+    g_image_data = new image_data_t;
+}
+
 bool image_load_paks() {
     auto &data = image_data();
     data.fonts_enabled = false;

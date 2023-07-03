@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 
-typedef enum {
+enum font_t {
     FONT_SMALL_PLAIN,
     FONT_NORMAL_BLACK_ON_LIGHT,
     FONT_NORMAL_WHITE_ON_DARK,
@@ -17,9 +17,9 @@ typedef enum {
     FONT_NORMAL_BLACK_ON_DARK,
     FONT_SMALL_SHADED,
     FONT_TYPES_MAX
-} font_t;
+} ;
 
-typedef struct {
+struct font_definition {
     font_t font;
     int image_offset;
     int multibyte_image_offset;
@@ -35,7 +35,7 @@ typedef struct {
     * @return Offset to subtract from y coordinate
     */
     int (*image_y_offset)(uint8_t c, int image_height, int line_height);
-} font_definition;
+} ;
 
 enum {
     NO_EXTRA_FONT = 0,

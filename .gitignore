@@ -47,3 +47,7 @@ doc
 !/tools/*.zip
 !/tools/*.7z
 
+/bin_x64
+/ext/include
+/ext/lib/x64
+/ext/lib/x86
