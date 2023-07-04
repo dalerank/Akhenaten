@@ -5,6 +5,7 @@
 #include "core/zip.h"
 #include "io/log.h"
 #include "core/stopwatch.h"
+#include "io/gamestate/boilerplate.h"
 
 #define COMPRESS_BUFFER_SIZE 3000000
 #define UNCOMPRESSED 0x80000000
@@ -70,6 +71,7 @@ char *fname;
 static void export_unzipped(file_chunk_t *chunk) {
     char *lfile = (char *) malloc(200);
 //    sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex + 1, chunk->buf->size(), fname);
+    GamestateIO::prepare_folders("DEV_TESTING/zip/");
     sprintf(lfile, "DEV_TESTING/zip/%03i_%s", findex + 1, fname);
     FILE *log = fopen(lfile, "wb+");
     if (log)

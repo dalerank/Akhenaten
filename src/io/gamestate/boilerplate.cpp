@@ -474,15 +474,11 @@ bool GamestateIO::write_savegame(const char *filename_short) {
 static void prepare_savegame_schema(file_format_t file_format, const int file_version) {
     FILEIO.push_chunk(4, false, "family_index", 0);
 }
-bool GamestateIO::prepare_savegame(const char *filename_short) {
-    // concatenate string
-    char full[MAX_FILE_NAME] = {0};
-    char folders[MAX_FILE_NAME] = {0};
-    fullpath_saves(full, filename_short);
-    fullpath_saves(folders, "");
-
-    char *token = strtok(folders, "/"); // Split the path by '/'
-    char currentPath[256] = {0}; // Store the current path
+bool GamestateIO::prepare_folders(const char *path) {
+    char fpath[MAX_FILE_NAME] = {0};
+    strcpy(fpath, path);
+    char *token = strtok(fpath, "/"); // Split the path by '/'
+    char currentPath[MAX_FILE_NAME] = {0}; // Store the current path
 
     while (token != NULL) {
         strcat(currentPath, token); // Append the current folder to the current path
@@ -500,7 +496,16 @@ bool GamestateIO::prepare_savegame(const char *filename_short) {
 
         token = strtok(NULL, "/");
     }
+    return true;
+}
+bool GamestateIO::prepare_savegame(const char *filename_short) {
+    // concatenate string
+    char full[MAX_FILE_NAME] = {0};
+    char folders[MAX_FILE_NAME] = {0};
+    fullpath_saves(full, filename_short);
+    fullpath_saves(folders, "");
 
+    prepare_folders(folders);
     // write file
     return FILEIO.serialize(full, 0, FILE_FORMAT_SAVE_FILE, 160, prepare_savegame_schema);
 }

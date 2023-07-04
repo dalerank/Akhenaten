@@ -12,6 +12,7 @@ namespace GamestateIO {
 
     bool write_mission(const int scenario_id);
     bool write_savegame(const char *filename_short);
+    bool prepare_folders(const char *path);
     bool prepare_savegame(const char *filename_short);
     bool write_map(const char *filename_short);
 

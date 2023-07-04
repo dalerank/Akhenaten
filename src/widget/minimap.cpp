@@ -94,7 +94,6 @@ static int is_in_minimap(const mouse *m) {
     return 0;
 }
 bool figure::has_figure_color() {
-    int type = type;
     if (is_legion())
         return FIGURE_COLOR_SOLDIER;
 
