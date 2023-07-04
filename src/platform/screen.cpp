@@ -114,6 +114,11 @@ int platform_screen_create(const char *title, int display_scale_percentage) {
         height = mode.h;
     } else {
         setting_window(&width, &height);
+        if (ozymandias_core.window_width > 0)
+            width = ozymandias_core.window_width;
+        if (ozymandias_core.window_height > 0)
+            height = ozymandias_core.window_height;
+
         width = scale_logical_to_pixels(width);
         height = scale_logical_to_pixels(height);
     }

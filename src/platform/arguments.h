@@ -8,6 +8,7 @@ struct ozymandias_args {
     int game_engine_env;
     int game_engine_debug_mode;
     bool window_mode;
+    int window_width = 0, window_height = 0;
 };
 
 extern ozymandias_args ozymandias_core;

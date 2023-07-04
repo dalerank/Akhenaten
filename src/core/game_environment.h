@@ -1,5 +1,4 @@
-#ifndef AUGUSTUS_GAME_ENVIRONMENT_H
-#define AUGUSTUS_GAME_ENVIRONMENT_H
+#pragma once
 
 enum {
     ENGINE_ENV_C3 = 0,
@@ -39,5 +38,3 @@ extern int DEBUG_MODE;
 void init_game_environment(int env, int mode);
 const char *get_game_title(void);
 const char *get_engine_pref_path(void);
-
-#endif //AUGUSTUS_GAME_ENVIRONMENT_H

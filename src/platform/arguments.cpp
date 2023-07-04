@@ -83,6 +83,14 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
                 SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
+        } else if (SDL_strcmp(argv[i], "--size") == 0) {
+            if (i + 1 < argc) {
+                SDL_sscanf(argv[i + 1], "%dx%d", &output_args.window_width, &output_args.window_height);
+                i++;
+            } else {
+                SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
+                ok = 0;
+            }
         } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
             if (i + 1 < argc) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
