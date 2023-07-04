@@ -572,6 +572,15 @@ void graphics_renderer_interface::draw_image(const image_t *img, float x, float 
     SDL_SetTextureAlphaMod(texture, (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
     SDL_SetTextureBlendMode(texture, premult_alpha);
 
+    /* uncomment here if you want save something from atlases
+    int k = 0;
+    if (k == 1) {
+        char filename[32] = {0};
+        static int index = 0;
+        sprintf(filename, "%u_img.bmp", index);
+        graphics_renderer()->save_texture_to_file(filename, texture);
+    }*/
+
     float texture_coord_correction = 0;
     SDL_Rect texture_coords = {
         static_cast<int>(x_offset + texture_coord_correction), 

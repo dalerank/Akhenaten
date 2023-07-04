@@ -36,21 +36,18 @@ static int convert_uncompressed(buffer *buf, const image_t *img) {
     return pixels_count;
 }
 static int convert_compressed(buffer *buf, int data_length, const image_t *img) {
-    int pixels_count = 0;
+    //int pixels_count = 0;
     auto p_atlas = img->atlas.p_atlas;
     int atlas_dst = (img->atlas.y_offset * p_atlas->width) + img->atlas.x_offset;
     int y = 0;
     int x = 0;
     while (data_length > 0) {
-        int control = buf->read_u8();
-        if (control == 255) {
+        uint8_t control = buf->read_u8();
+        if (control == 0xff) {
             // next byte = transparent pixels to skip
-            int skip = buf->read_u8();
-            y += skip / img->width;
-            x += skip % img->width;
-            if (x >= img->width) {
-                y++;
-                x -= img->width;
+            x += buf->read_u8();
+            while (x >= img->width) {
+                y++; x -= img->width;
             }
             data_length -= 2;
         } else {
@@ -67,7 +64,7 @@ static int convert_compressed(buffer *buf, int data_length, const image_t *img) 
             data_length -= control * 2 + 1;
         }
     }
-    return pixels_count;
+    return 0;// pixels_count;
 }
 
 static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
@@ -517,6 +514,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
         atlas_data.height = i == packer.result.pages_needed - 1 ? packer.result.last_image_height : max_texture_sizes.y;
         atlas_data.bmp_size = atlas_data.width * atlas_data.height;
         atlas_data.TEMP_PIXEL_BUFFER = new color_t[atlas_data.bmp_size];
+        memset(atlas_data.TEMP_PIXEL_BUFFER, 0, atlas_data.bmp_size * sizeof(uint32_t));
         atlas_data.texture = nullptr;
         atlas_pages.push_back(atlas_data);
     }
