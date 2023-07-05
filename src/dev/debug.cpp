@@ -84,6 +84,9 @@ void debug_text(uint8_t* str, int x, int y, int indent, const char *text, int va
     string_from_int(str, value, 0);
     text_draw(str, x + indent, y, FONT_SMALL_OUTLINED, color);
 }
+void debug_text_a(uint8_t* str, int x, int y, int indent, const char *text, color_t color) {
+    text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
+}
 void debug_text_float(uint8_t* str, int x, int y, int indent, const char *text, double value, color_t color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
     string_from_int(str, value, 0);
@@ -602,6 +605,16 @@ void figure::draw_debug() {
     }
 }
 
+const char *get_terrain_type(char* buffer, const char *def, map_point tile) {
+    e_terrain type = map_terrain_get(tile.grid_offset());
+    strcat(buffer, def);
+    if (type & TERRAIN_DUNE) {
+        strcat(buffer, "dune");
+    }
+
+    return buffer;
+}
+
 void draw_debug_ui(int x, int y) {
     uint8_t str[300];
 
@@ -988,12 +1001,15 @@ void draw_debug_ui(int x, int y) {
         debug_text(str, x, y + 185, 50, "offset:", offset.x);
         debug_text(str, x + 40, y + 185, 50, "", offset.y);
         map_point point = screentile_to_mappoint(screen);
-        debug_text(str, x, y + 195, 50, "point:", point.x());
+        debug_text(str, x,      y + 195, 50, "point:", point.x());
         debug_text(str, x + 40, y + 195, 50, "", point.y());
         debug_text(str, x + 80, y + 195, 50, "", point.grid_offset());
+        char type_str[256] = {0};
+        debug_text_a(str, x + 180, y + 195, 50, get_terrain_type(type_str, "type: ", point));
         pixel = mappoint_to_pixel(point);
         debug_text(str, x, y + 205, 50, "pixel:", pixel.x);
         debug_text(str, x + 40, y + 205, 50, "", pixel.y);
+        
 //        if (point.grid_offset() != -1)
 //            debug_draw_tile_box(pixel.x, pixel.y);
 
