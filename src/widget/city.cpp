@@ -32,12 +32,14 @@
 #include "widget/city/figures_cached_draw.h"
 #include "core/stopwatch.h"
 
-static struct {
+struct widget_city_data_t {
     map_point current_tile;
     map_point selected_tile;
     int new_start_grid_offset;
     bool capture_input;
-} data;
+};
+
+widget_city_data_t g_wdiget_city_data;
 
 void set_city_clip_rectangle(void) {
     int x, y, width, height;
@@ -164,6 +166,7 @@ void widget_city_draw_with_overlay(map_point tile) {
 }
 
 void widget_city_draw(void) {
+    auto &data = g_wdiget_city_data;
     update_zoom_level();
     SET_RENDER_SCALE(zoom_get_scale());
     set_city_clip_rectangle();
@@ -175,6 +178,7 @@ void widget_city_draw(void) {
     SET_RENDER_SCALE(1.0f);
 }
 void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord) {
+    auto &data = g_wdiget_city_data;
     set_city_clip_rectangle();
 
     widget_city_draw_without_overlay(figure_id, coord, data.current_tile);
@@ -311,6 +315,7 @@ static bool handle_cancel_construction_button(const touch *t) {
     return true;
 }
 void widget_city_clear_current_tile(void) {
+    auto &data = g_wdiget_city_data;
     data.selected_tile.set(0);
     data.current_tile.set(0);
 //    data.selected_tile.x = -1;
@@ -320,6 +325,7 @@ void widget_city_clear_current_tile(void) {
 }
 
 static void handle_touch_scroll(const touch *t) {
+    auto &data = g_wdiget_city_data;
     if (Planner.build_type) {
         if (t->has_started) {
             int x_offset, y_offset, width, height;
@@ -355,6 +361,7 @@ static void handle_touch_zoom(const touch *first, const touch *last) {
 
 }
 static void handle_first_touch(map_point tile) {
+    auto &data = g_wdiget_city_data;
     const touch *first = get_earliest_touch();
     int type = Planner.build_type;
 
@@ -364,7 +371,7 @@ static void handle_first_touch(map_point tile) {
         if (type == BUILDING_NONE && handle_right_click_allow_building_info(tile)) {
             scroll_drag_end();
             data.capture_input = false;
-            window_building_info_show(tile.grid_offset());
+            window_building_info_show(tile);
             return;
         }
     }
@@ -436,6 +443,7 @@ static void handle_last_touch(void) {
 
 }
 static void handle_touch(void) {
+    auto &data = g_wdiget_city_data;
     const touch *first = get_earliest_touch();
     if (!first->in_use) {
         scroll_restore_margins();
@@ -459,9 +467,11 @@ static void handle_touch(void) {
     Planner.draw_as_constructing = false;
 }
 int widget_city_has_input(void) {
+    auto &data = g_wdiget_city_data;
     return data.capture_input;
 }
 static void handle_mouse(const mouse *m) {
+    auto &data = g_wdiget_city_data;
     data.current_tile = update_city_view_coords({m->x, m->y});
     zoom_map(m);
     Planner.draw_as_constructing = false;
@@ -484,7 +494,7 @@ static void handle_mouse(const mouse *m) {
     if (m->right.went_up) {
         if (!Planner.build_type) {
             if (handle_right_click_allow_building_info(data.current_tile))
-                window_building_info_show(data.current_tile.grid_offset());
+                window_building_info_show(data.current_tile);
         } else
             Planner.construction_cancel();
     }
@@ -525,6 +535,7 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h) {
     }
 }
 void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int legion_formation_id) {
+    auto &data = g_wdiget_city_data;
     data.current_tile = update_city_view_coords({m->x, m->y});
     if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m))
         return;
@@ -554,6 +565,7 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
 }
 
 void widget_city_get_tooltip(tooltip_context *c) {
+    auto &data = g_wdiget_city_data;
     if (setting_tooltips() == TOOLTIPS_NONE)
         return;
     if (!window_is(WINDOW_CITY))

@@ -29,13 +29,13 @@ public:
     // SETTERS / GETTERS
     const int x(int v);
     const int y(int v);
-    const int grid_offset(int v);
+    int grid_offset(int v);
+    int grid_offset();
     const int ABS_X(int v);
     const int ABS_Y(int v);
 
     const int x(void);
     const int y(void);
-    const int grid_offset(void);
     const int ABS_X(void);
     const int ABS_Y(void);
 

@@ -29,7 +29,7 @@ const int map_point::y(int v) {
         set(p_X, v);
     return p_Y;
 }
-const int map_point::grid_offset(int v) {
+int map_point::grid_offset(int v){
     if (v != _INVALID_COORD)
         set(v);
     return p_GRID_OFFSET;
@@ -53,7 +53,7 @@ const int map_point::y(void) {
     self_correct();
     return p_Y;
 }
-const int map_point::grid_offset(void) {
+int map_point::grid_offset() {
     self_correct();
     return p_GRID_OFFSET;
 }

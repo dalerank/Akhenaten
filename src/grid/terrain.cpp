@@ -11,23 +11,33 @@
 #include "scenario/map.h"
 #include "vegetation.h"
 
-static grid_xx terrain_grid = {0, {FS_UINT16, FS_UINT32}};
-static grid_xx terrain_grid_backup = {0, {FS_UINT16, FS_UINT32}};
+grid_xx g_terrain_grid =        {0, 
+                                   { 
+                                     FS_UINT16, // c3
+                                     FS_UINT32  // ph
+                                   }
+                                }; 
+grid_xx g_terrain_grid_backup = {0, 
+                                   {
+                                     FS_UINT16, //c3
+                                     FS_UINT32  //ph
+                                   }
+                                };
 
-bool map_terrain_is(int grid_offset, int terrain) {
-    return map_grid_is_valid_offset(grid_offset) && map_grid_get(&terrain_grid, grid_offset) & terrain;
+bool map_terrain_is(int grid_offset, int terrain_mask) {
+    return map_grid_is_valid_offset(grid_offset) && !!(map_grid_get(&g_terrain_grid, grid_offset) & terrain_mask);
 }
-int map_terrain_get(int grid_offset) {
-    return map_grid_get(&terrain_grid, grid_offset);
+e_terrain map_terrain_get(int grid_offset) {
+    return (e_terrain)map_grid_get(&g_terrain_grid, grid_offset);
 }
 void map_terrain_set(int grid_offset, int terrain) {
-    map_grid_set(&terrain_grid, grid_offset, terrain);
+    map_grid_set(&g_terrain_grid, grid_offset, terrain);
 }
 void map_terrain_add(int grid_offset, int terrain) {
-    map_grid_or(&terrain_grid, grid_offset, terrain);
+    map_grid_or(&g_terrain_grid, grid_offset, terrain);
 }
 void map_terrain_remove(int grid_offset, int terrain) {
-    map_grid_and(&terrain_grid, grid_offset, ~terrain);
+    map_grid_and(&g_terrain_grid, grid_offset, ~terrain);
 }
 void map_terrain_add_in_area(int x_min, int y_min, int x_max, int y_max, int terrain) {
     for (int yy = y_min; yy <= y_max; yy++) {
@@ -57,7 +67,7 @@ void map_terrain_remove_with_radius(int x, int y, int size, int radius, int terr
     }
 }
 void map_terrain_remove_all(int terrain) {
-    map_grid_and_all(&terrain_grid, ~terrain);
+    map_grid_and_all(&g_terrain_grid, ~terrain);
 }
 
 int map_terrain_count_directly_adjacent_with_type(int grid_offset, int terrain) {
@@ -123,7 +133,7 @@ bool map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain) {
 bool map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terrain) {
     for (int yy = y; yy < y + size; yy++) {
         for (int xx = x; xx < x + size; xx++) {
-            if (map_grid_is_inside(xx, yy, 1) && map_grid_get(&terrain_grid, MAP_OFFSET(xx, yy)) & terrain)
+            if (map_grid_is_inside(xx, yy, 1) && map_grid_get(&g_terrain_grid, MAP_OFFSET(xx, yy)) & terrain)
                 return true;
         }
     }
@@ -160,7 +170,7 @@ bool map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius,
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
-            if (grid_offset != except_grid_offset && !map_grid_get(&terrain_grid, grid_offset)) {
+            if (grid_offset != except_grid_offset && !map_grid_get(&g_terrain_grid, grid_offset)) {
                 *x_tile = xx;
                 *y_tile = yy;
                 return true;
@@ -325,13 +335,13 @@ void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation) {
 /////
 
 void map_terrain_backup(void) {
-    map_grid_copy(&terrain_grid, &terrain_grid_backup);
+    map_grid_copy(&g_terrain_grid, &g_terrain_grid_backup);
 }
 void map_terrain_restore(void) {
-    map_grid_copy(&terrain_grid_backup, &terrain_grid);
+    map_grid_copy(&g_terrain_grid_backup, &g_terrain_grid);
 }
 void map_terrain_clear(void) {
-    map_grid_clear(&terrain_grid);
+    map_grid_clear(&g_terrain_grid);
 }
 void map_terrain_init_outside_map(void) {
     int map_width = scenario_map_data()->width;
@@ -344,7 +354,7 @@ void map_terrain_init_outside_map(void) {
         int y_outside_map = y < y_start || y >= y_start + map_height;
         for (int x = 0; x < GRID_LENGTH; x++) {
             if (y_outside_map || x < x_start || x >= x_start + map_width)
-                map_grid_set(&terrain_grid, x + GRID_LENGTH * y, TERRAIN_TREE | TERRAIN_WATER);
+                map_grid_set(&g_terrain_grid, x + GRID_LENGTH * y, TERRAIN_TREE | TERRAIN_WATER);
 
         }
     }
@@ -375,7 +385,6 @@ void build_terrain_caches() {
     return;
 }
 
-
 // unknown data grid
 static grid_xx GRID03_32BIT = {0, {FS_INT8, FS_INT32}}; // ?? routing
 int map_get_UNK03(int grid_offset) {
@@ -389,7 +398,7 @@ int map_get_UNK04(int grid_offset) {
 }
 
 io_buffer *iob_terrain_grid = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &terrain_grid);
+    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_grid);
 });
 io_buffer *iob_GRID03_32BIT = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_GRID, &GRID03_32BIT);

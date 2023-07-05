@@ -3,7 +3,7 @@
 
 #include "core/buffer.h"
 
-enum {
+enum e_terrain {
     TERRAIN_NONE = 0x0,
 
     TERRAIN_TREE = 0x1,
@@ -99,9 +99,9 @@ enum {
             - TERRAIN_FLOODPLAIN,
 };
 
-bool map_terrain_is(int grid_offset, int terrain);
+bool map_terrain_is(int grid_offset, int terrain_mask);
 
-int map_terrain_get(int grid_offset);
+e_terrain map_terrain_get(int grid_offset);
 
 void map_terrain_set(int grid_offset, int terrain);
 

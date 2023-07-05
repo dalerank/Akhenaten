@@ -30,6 +30,7 @@
 #include "grid/road_access.h"
 #include "grid/sprite.h"
 #include "grid/terrain.h"
+#include "grid/point.h"
 #include "window/advisors.h"
 #include "window/city.h"
 #include "window/message_dialog.h"
@@ -251,7 +252,8 @@ int OFFSET(int x, int y) {
     }
 }
 
-static void init(int grid_offset) {
+static void init(map_point tile) {
+    const int grid_offset = tile.grid_offset();
     context.can_play_sound = 1;
     context.storage_show_special_orders = 0;
     context.can_go_to_advisor = 0;
@@ -856,7 +858,7 @@ static void button_mothball(int mothball, int param2) {
     }
 }
 
-void window_building_info_show(int grid_offset) {
+void window_building_info_show(map_point point) {
     window_type window = {
             WINDOW_BUILDING_INFO,
             draw_background,
@@ -864,7 +866,7 @@ void window_building_info_show(int grid_offset) {
             handle_input,
             get_tooltip
     };
-    init(grid_offset);
+    init(point);
     window_show(&window);
 }
 int window_building_info_get_int(void) {

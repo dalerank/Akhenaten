@@ -16,7 +16,7 @@
 #define MAP_X(offset) (GRID_X(offset - scenario_map_data()->start_offset))
 #define MAP_Y(offset) (GRID_Y(offset - scenario_map_data()->start_offset))
 
-enum {
+enum e_grid_data_type {
     FS_NONE = 0,
     FS_UINT8 = 1,
     FS_INT8 = 2,
@@ -36,14 +36,14 @@ static size_t gr_sizes[] = {
         sizeof(int32_t)
 };
 
-typedef struct {
+struct grid_xx {
     int initialized;
-    char datatype[2];
+    e_grid_data_type datatype[2];
     size_t size_field;
     int size_total;
 
     void *items_xx;
-} grid_xx;
+};
 
 void map_grid_init(grid_xx *grid);
 int64_t map_grid_get(grid_xx *grid, uint32_t at);
