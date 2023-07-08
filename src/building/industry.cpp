@@ -84,7 +84,7 @@ int farm_expected_produce(building *b) {
     int modifier = 1;
     if (city_data.religion.osiris_double_farm_yield && building_is_floodplain_farm(b))
         modifier = 2;
-    return (progress / 2.5) * modifier;
+    return int((progress / 2.5f) * modifier);
 }
 
 void building_industry_update_production(void) {

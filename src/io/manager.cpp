@@ -209,7 +209,8 @@ bool FileIOManager::serialize(const char *filename, int offset, file_format_t fo
         // The last piece may be smaller than buf->size
         if (!result) {
             log_error("Unable to write file, write failure.", 0, 0);
-            goto failure;
+            clear();
+            return false;
         }
     }
 
@@ -223,10 +224,6 @@ bool FileIOManager::serialize(const char *filename, int offset, file_format_t fo
             WATCH.STOP());
 
     return true;
-
-failure:
-    clear();
-    return false;
 }
 bool FileIOManager::unserialize(const char *filename, int offset, file_format_t format,
                                 const int(*determine_file_version)(const char *fnm, int ofst),
@@ -244,7 +241,8 @@ bool FileIOManager::unserialize(const char *filename, int offset, file_format_t 
     FILE *fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "rb");
     if (!fp) {
         log_error("Unable to read file, file could not be accessed.", 0, 0);
-        goto failure;
+        clear();
+        return false;
     } else if (file_offset)
         fseek(fp, file_offset, SEEK_SET);
 
@@ -255,7 +253,8 @@ bool FileIOManager::unserialize(const char *filename, int offset, file_format_t 
         file_version = determine_file_version(file_path, offset);
         if (file_version == -1) {
             log_info("Unable to read file, file version/format is invalid.", filename, 0);
-            goto failure;
+            clear();
+            return false;
         }
     }
 
@@ -264,7 +263,8 @@ bool FileIOManager::unserialize(const char *filename, int offset, file_format_t 
         init_schema(file_format, file_version);
     else {
         log_error("Unable to read file, provided schema is invalid.", 0, 0);
-        goto failure;
+        clear();
+        return false;
     }
 
     // read file contents into buffers
@@ -273,23 +273,25 @@ bool FileIOManager::unserialize(const char *filename, int offset, file_format_t 
         findex = i;
         fname = chunk->name;
 
-        auto offs = ftell(fp);
+        long offs = ftell(fp);
 
         bool result = false;
         if (chunk->compressed) {
             result = read_compressed_chunk(fp, chunk->buf, chunk->buf->size());
             if (!result) {
                 log_error("Unable to read file, decompression failed.", 0, 0);
-                goto failure;
+                clear();
+                return false;
             }
         } else {
             int got = chunk->buf->from_file(chunk->buf->size(), fp);
             int exp = chunk->buf->size();
-            result = got == exp;
+            result = (got == exp);
             if (!result) {
                 SDL_Log("Incorrect buffer size, expected %i, found %i", exp, got);
                 log_error("Unable to read file, chunk size incorrect.", 0, 0);
-                goto failure;
+                clear();
+                return false;
             }
         }
 
@@ -315,8 +317,4 @@ bool FileIOManager::unserialize(const char *filename, int offset, file_format_t 
             WATCH.STOP());
 
     return true;
-
-failure:
-    clear();
-    return false;
 }

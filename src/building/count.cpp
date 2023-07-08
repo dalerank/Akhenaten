@@ -171,7 +171,7 @@ void building_count_update(void) {
             case BUILDING_SHRINE_PTAH:
             case BUILDING_SHRINE_SETH:
             case BUILDING_SHRINE_BAST:
-                increase_count(type, b->has_road_access > 0);
+                increase_count(type, b->has_road_access);
                 break;
 
                 // water-side

@@ -3,6 +3,17 @@
 
 #include "core/buffer.h"
 
+class io_image_grid : public io_buffer {
+public:
+    io_image_grid() {
+        inherited = true;
+    }
+    virtual void bind_data() override;
+    uint32_t fix_img_index(uint32_t index) const;
+
+    static io_image_grid &instance();
+};
+
 int map_image_at(int grid_offset);
 void map_image_set(int grid_offset, int image_id);
 

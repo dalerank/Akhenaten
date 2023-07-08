@@ -2,6 +2,7 @@
 #include "graphics/image.h"
 
 #include "grid/grid.h"
+#include "image.h"
 
 grid_xx g_images_grid = {0,
                            {
@@ -17,7 +18,7 @@ grid_xx g_images_grid_backup = {0,
                                };
 
 int map_image_at(int grid_offset) {
-    return map_grid_get(&g_images_grid, grid_offset);
+    return (int)map_grid_get(&g_images_grid, grid_offset);
 }
 void map_image_set(int grid_offset, int image_id) {
     map_grid_set(&g_images_grid, grid_offset, image_id);
@@ -55,10 +56,28 @@ static int image_shift = 0;
 void set_image_grid_correction_shift(int shift) {
     image_shift = shift;
 }
-io_buffer *iob_image_grid = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_images_grid);
+
+uint32_t io_image_grid::fix_img_index(uint32_t index) const {
+    if (index >= 15600 && index <= 15616) {
+        if (index == 15600 || index == 15601) {
+            return 15063;
+        }
+        return 15063 + index - 15602;
+    }
+
+    return index;
+}
+
+void io_image_grid::bind_data() {
+    bind (BIND_SIGNATURE_GRID, &g_images_grid);
     for (int i = 0; i < GRID_SIZE_TOTAL; i++) {
-        auto nv = map_grid_get(&g_images_grid, i) - image_shift;
+        int64_t nv = map_grid_get(&g_images_grid, i) - image_shift;
+        nv = fix_img_index(nv);
         map_grid_set(&g_images_grid, i, nv);
     }
-});
+}
+
+io_image_grid &io_image_grid::instance() {
+    static io_image_grid inst;
+    return inst;
+}

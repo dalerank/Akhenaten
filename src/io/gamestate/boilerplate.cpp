@@ -251,7 +251,7 @@ static void file_schema(file_format_t file_format, const int file_version) {
             FILEIO.push_chunk(4, false, "file_version", iob_file_version);
             FILEIO.push_chunk(6004, false, "chunks_schema", iob_chunks_schema);
 
-            FILEIO.push_chunk(207936, false, "image_grid", iob_image_grid);
+            FILEIO.push_chunk(207936, false, "image_grid", &io_image_grid::instance());
             FILEIO.push_chunk(51984, false, "edge_grid", iob_edge_grid);
             FILEIO.push_chunk(207936, false, "terrain_grid", iob_terrain_grid);
             FILEIO.push_chunk(51984, false, "bitfields_grid", iob_bitfields_grid);
@@ -281,7 +281,7 @@ static void file_schema(file_format_t file_format, const int file_version) {
             FILEIO.push_chunk(4, false, "file_version", iob_file_version);
             FILEIO.push_chunk(6004, false, "chunks_schema", iob_chunks_schema);
 
-            FILEIO.push_chunk(207936, true, "image_grid", iob_image_grid);                         // (228²) * 4 <<
+            FILEIO.push_chunk(207936, true, "image_grid", &io_image_grid::instance());             // (228²) * 4 <<
             FILEIO.push_chunk(51984, true, "edge_grid", iob_edge_grid);                            // (228²) * 1
             FILEIO.push_chunk(103968, true, "building_grid", iob_building_grid);                   // (228²) * 2
             FILEIO.push_chunk(207936, true, "terrain_grid", iob_terrain_grid);                     // (228²) * 4 <<

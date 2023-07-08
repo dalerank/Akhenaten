@@ -18,7 +18,7 @@ bool io_buffer::validate() {
         return false;
     if (access_type != CHUNK_ACCESS_REVOKED)
         return false;
-    if (bind_callback == nullptr)
+    if (bind_callback == nullptr && !inherited)
         return false;
     return true;
 }
@@ -27,7 +27,7 @@ bool io_buffer::io_sync(chunk_buffer_access_e flag) {
     if (!validate())
         return false;
     access_type = flag;
-    bind_callback(this);
+    bind_data();
 //    if (!bind_callback(this))
 //        return false;
     access_type = CHUNK_ACCESS_REVOKED;
@@ -40,6 +40,9 @@ bool io_buffer::write() {
     return io_sync(CHUNK_ACCESS_WRITE);
 }
 
+io_buffer::io_buffer() {
+    bind_callback = nullptr;
+}
 io_buffer::io_buffer(void (*bclb)(io_buffer *)) {
     bind_callback = bclb;
 }

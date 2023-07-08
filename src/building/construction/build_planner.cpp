@@ -1292,19 +1292,19 @@ void BuildPlanner::update_requirements_check() {
             can_place = CAN_NOT_PLACE;
         }
     }
-    if (special_flags & PlannerFlags::IgnoreNearbyEnemy == false) {
+    if (!!(special_flags & PlannerFlags::IgnoreNearbyEnemy) == false) {
         if (has_nearby_enemy(start.x(), start.y(), end.x(), end.y())) {
             immediate_warning_id = WARNING_ENEMY_NEARBY;
             can_place = CAN_NOT_PLACE;
         }
     }
-    if (special_flags & PlannerFlags::Road && additional_req_param1 == true) {
+    if (( !!(special_flags & PlannerFlags::Road) && !!additional_req_param1) == true) {
         if (!map_terrain_is(end.grid_offset(), TERRAIN_ROAD)) {
             immediate_warning_id = additional_req_param2;
             can_place = CAN_NOT_PLACE;
         }
     }
-    if (special_flags & PlannerFlags::Canals && additional_req_param1 == true) {
+    if (( !!(special_flags & PlannerFlags::Canals) && !!additional_req_param1) == true) {
         if (!map_terrain_is(end.grid_offset(), TERRAIN_AQUEDUCT)) {
             immediate_warning_id = additional_req_param2;
             can_place = CAN_NOT_PLACE;

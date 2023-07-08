@@ -215,6 +215,7 @@ bool building::common_spawn_figure_trigger(int min_houses) {
             return true;
         }
     }
+    return false;
 }
 bool building::common_spawn_roamer(int type, int min_houses, int created_action) {
     if (common_spawn_figure_trigger(min_houses)) {

@@ -96,7 +96,7 @@ int building_granary_add_resource(building *granary, int resource, int is_produc
     if (is_produced)
         city_resource_add_produced_to_granary(ONE_LOAD);
 
-    int deliverable_amount = fmin(granary->data.granary.resource_stored[RESOURCE_NONE], amount);
+    int deliverable_amount = std::min<int>(granary->data.granary.resource_stored[RESOURCE_NONE], amount);
     granary->data.granary.resource_stored[resource] += deliverable_amount;
     granary->data.granary.resource_stored[RESOURCE_NONE] -= deliverable_amount;
     return amount - deliverable_amount;

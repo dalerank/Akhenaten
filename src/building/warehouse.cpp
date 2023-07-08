@@ -171,7 +171,7 @@ void building_warehouse_space_set_image(building *space, int resource) {
     else {
         image_id = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_FILLED) +
                    4 * (resource - 1) + resource_image_offset(resource, RESOURCE_IMAGE_STORAGE) +
-                   ceil((float)space->stored_full_amount / 100.0) - 1;
+                   ceil((float)space->stored_full_amount / 100.0f) - 1;
     }
     map_image_set(space->tile.grid_offset(), image_id);
 }

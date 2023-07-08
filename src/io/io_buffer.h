@@ -41,16 +41,23 @@ private:
 
     // manually defined external binding schema
     void (*bind_callback)(io_buffer *io);
+    
 
     // this is the parent of the below READ / WRITE functions, written
     // into a single generalized form.
     bool io_sync(chunk_buffer_access_e flag);
 
+protected:
+    bool inherited = false;
+    virtual void bind_data() {
+        bind_callback(this);
+    }
+
 public:
     int get_size() {
         return size;
     }
-    int get_offset() {
+    size_t get_offset() {
         return p_buf->get_offset();
     }
 
@@ -69,12 +76,12 @@ public:
         if (ext == nullptr)
             return;
         switch (signature) {
-            case BIND_SIGNATURE_INT8: IO_BRANCH(*ext = p_buf->read_i8(), p_buf->write_i8(*ext))
-            case BIND_SIGNATURE_UINT8: IO_BRANCH(*ext = p_buf->read_u8(), p_buf->write_u8(*ext))
-            case BIND_SIGNATURE_INT16: IO_BRANCH(*ext = p_buf->read_i16(), p_buf->write_i16(*ext))
-            case BIND_SIGNATURE_UINT16: IO_BRANCH(*ext = p_buf->read_u16(), p_buf->write_u16(*ext))
-            case BIND_SIGNATURE_INT32: IO_BRANCH(*ext = p_buf->read_i32(), p_buf->write_i32(*ext))
-            case BIND_SIGNATURE_UINT32: IO_BRANCH(*ext = p_buf->read_u32(), p_buf->write_u32(*ext))
+            case BIND_SIGNATURE_INT8: IO_BRANCH(*ext = (T)p_buf->read_i8(), p_buf->write_i8(*ext))
+            case BIND_SIGNATURE_UINT8: IO_BRANCH(*ext = (T)p_buf->read_u8(), p_buf->write_u8(*ext))
+            case BIND_SIGNATURE_INT16: IO_BRANCH(*ext = (T)p_buf->read_i16(), p_buf->write_i16(*ext))
+            case BIND_SIGNATURE_UINT16: IO_BRANCH(*ext = (T)p_buf->read_u16(), p_buf->write_u16(*ext))
+            case BIND_SIGNATURE_INT32: IO_BRANCH(*ext = (T)p_buf->read_i32(), p_buf->write_i32(*ext))
+            case BIND_SIGNATURE_UINT32: IO_BRANCH(*ext = (T)p_buf->read_u32(), p_buf->write_u32(*ext))
         }
     }
     template <typename T> void bind(bind_signature_e signature, T *ext, size_t size) {
@@ -101,6 +108,7 @@ public:
     bool read();
     bool write();
 
+    io_buffer();
     io_buffer(void (*bclb)(io_buffer *io));
     ~io_buffer();
 };
