@@ -15,13 +15,14 @@ enum E_FIGURE {
     FIGURE_COLOR_NONE = 0,
     FIGURE_COLOR_SOLDIER = 1,
     FIGURE_COLOR_ENEMY = 2,
-    FIGURE_COLOR_WOLF = 3
+    FIGURE_COLOR_WOLF = 3,
+    FIGURE_COLOR_ANIMAL = 4
 };
 
 static const color_t ENEMY_COLOR_BY_CLIMATE[] = {
-        COLOR_MINIMAP_ENEMY_CENTRAL,
-        COLOR_MINIMAP_ENEMY_NORTHERN,
-        COLOR_MINIMAP_ENEMY_DESERT
+    COLOR_MINIMAP_ENEMY_CENTRAL,
+    COLOR_MINIMAP_ENEMY_NORTHERN,
+    COLOR_MINIMAP_ENEMY_DESERT
 };
 
 static struct {
@@ -104,8 +105,11 @@ bool figure::has_figure_color() {
         action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
         return FIGURE_COLOR_ENEMY;
     }
-    if (type == FIGURE_WOLF)
-        return FIGURE_COLOR_WOLF;
+    if (type == FIGURE_OSTRICH)
+        return FIGURE_COLOR_ANIMAL;
+
+    //if (type == FIGURE_WOLF)
+    //    return FIGURE_COLOR_WOLF;
 
     return FIGURE_COLOR_NONE;
 }
@@ -118,10 +122,17 @@ static int draw_figure(screen_tile screen, map_point point) {
         return 0;
 
     color_t color = COLOR_MINIMAP_WOLF;
-    if (color_type == FIGURE_COLOR_SOLDIER)
+    switch (color) {
+    case FIGURE_COLOR_SOLDIER:
         color = COLOR_MINIMAP_SOLDIER;
-    else if (color_type == FIGURE_COLOR_ENEMY)
+        break;
+    case FIGURE_COLOR_ENEMY:
         color = data.enemy_color;
+        break;
+    case FIGURE_COLOR_ANIMAL:
+        color = COLOR_MINIMAP_ANIMAL;
+        break;
+    }
 
     graphics_draw_horizontal_line(screen_x, screen_x + 1, screen_y, color);
     return 1;

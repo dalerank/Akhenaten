@@ -9,7 +9,7 @@
 /**
  * Figure types
  */
-typedef enum figure_type {
+enum e_figure_type {
     FIGURE_NONE = 0,
     FIGURE_IMMIGRANT = 1,
     FIGURE_EMIGRANT = 2,
@@ -79,7 +79,7 @@ typedef enum figure_type {
     FIGURE_DELIVERY_BOY = 66,
     FIGURE_SHIPWRECK = 67,
     FIGURE_SHEEP = 68,
-    FIGURE_WOLF = 69, FIGURE_OSTRICH = 69,
+    FIGURE_OSTRICH = 69, //FIGURE_WOLF = 69,
     FIGURE_ZEBRA = 70,
     FIGURE_SPEAR = 71,
     FIGURE_HIPPODROME_HORSES = 72,
@@ -113,9 +113,9 @@ typedef enum figure_type {
     FIGURE_101, // TODO
 
     FIGURE_MAX = 999
-} figure_type;
+};
 
-enum {
+enum e_enemy_type {
     ENEMY_0_BARBARIAN = 0,
     ENEMY_1_NUMIDIAN = 1,
     ENEMY_2_GAUL = 2,
@@ -130,14 +130,14 @@ enum {
     ENEMY_11_CAESAR = 11
 };
 
-typedef enum figure_state {
+enum e_figure_state {
     FIGURE_STATE_NONE = 0,
     FIGURE_STATE_ALIVE = 1,
     FIGURE_STATE_DEAD = 2,
     FIGURE_STATE_DYING = 3,
-} figure_state;
+};
 
-enum {
+enum e_terrain_usage {
     TERRAIN_USAGE_ANY = 0,
     TERRAIN_USAGE_ROADS = 1,
     TERRAIN_USAGE_ENEMY = 2,

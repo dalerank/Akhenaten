@@ -171,10 +171,10 @@ bool figure::has_destination(building *b) {
     return (b == destination());
 }
 
-bool figure::is(figure_type value) {
+bool figure::is(e_figure_type value) {
     return type == value;
 }
-bool figure::is(figure_state value) {
+bool figure::is(e_figure_state value) {
     return state == value;
 }
 

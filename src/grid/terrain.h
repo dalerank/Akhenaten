@@ -97,6 +97,11 @@ enum e_terrain {
             + TERRAIN_GARDEN
             + TERRAIN_GATEHOUSE
             - TERRAIN_FLOODPLAIN,
+
+    TERRAIN_IMPASSABLE_OSTRICH = TERRAIN_IMPASSABLE
+            + TERRAIN_GARDEN
+            + TERRAIN_GATEHOUSE
+            - TERRAIN_FLOODPLAIN,
 };
 
 bool map_terrain_is(int grid_offset, int terrain_mask);

@@ -195,9 +195,9 @@ public:
     bool available() {
         return state == FIGURE_STATE_NONE;
     };
-    bool is(figure_type value);
-    bool is(figure_state value);
-    void set_state(figure_state s) {
+    bool is(e_figure_type value);
+    bool is(e_figure_state value);
+    void set_state(e_figure_state s) {
         state = s;
     };
     void bind(io_buffer *iob);

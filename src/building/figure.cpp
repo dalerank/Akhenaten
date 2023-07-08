@@ -233,7 +233,7 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_ful
     // in the game that allows cartpushers to spawn before the workers disappear!
     if (has_road_access) {
         while (stored_full_amount >= min_carry) {
-            int amounts_to_carry = fmin(stored_full_amount, max_carry);
+            int amounts_to_carry = std::min<int>(stored_full_amount, max_carry);
             if (only_full_loads)
                 amounts_to_carry -= amounts_to_carry % 100; // remove pittance
             create_cartpusher(output_resource_id, amounts_to_carry);
@@ -961,7 +961,7 @@ void building::spawn_figure_hunting_lodge() {
     common_spawn_goods_output_cartpusher();
 }
 
-bool building::can_spawn_gatherer(figure_type ftype, int max_gatherers_per_building, int carry_per_person) {
+bool building::can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person) {
     int gatherers_this_yard = 0;
     bool resource_reachable = false;
     switch (ftype) {

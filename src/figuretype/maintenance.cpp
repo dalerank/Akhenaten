@@ -67,8 +67,8 @@ int figure::is_nearby(int category, int *distance, int max_distance, bool gang_o
                         dist = calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
                     else if (f->is_enemy())
                         dist = 3 * calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
-                    else if (f->type == FIGURE_WOLF)
-                        dist = 4 * calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
+                    //else if (f->type == FIGURE_WOLF)
+                    //    dist = 4 * calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
 //                    else
 //                        continue;
                 }

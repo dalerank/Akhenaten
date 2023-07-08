@@ -46,7 +46,7 @@ struct grid_xx {
 };
 
 void map_grid_init(grid_xx *grid);
-int64_t map_grid_get(grid_xx *grid, uint32_t at);
+int32_t map_grid_get(grid_xx *grid, uint32_t at);
 void map_grid_set(grid_xx *grid, uint32_t at, int64_t value);
 void map_grid_fill(grid_xx *grid, int64_t value);
 void map_grid_clear(grid_xx *grid);

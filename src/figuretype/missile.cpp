@@ -96,7 +96,7 @@ bool figure::is_non_citizen() {
     if (type == FIGURE_INDIGENOUS_NATIVE && action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
         return id;
 
-    if (type == FIGURE_WOLF || type == FIGURE_SHEEP || type == FIGURE_ZEBRA)
+    if (/*type == FIGURE_WOLF*/ type == FIGURE_OSTRICH || type == FIGURE_SHEEP || type == FIGURE_ZEBRA)
         return id;
 
     return 0;

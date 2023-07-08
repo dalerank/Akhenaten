@@ -665,7 +665,8 @@ io_buffer *iob_formations = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_UINT8, &f->months_from_home);
         iob->bind(BIND_SIGNATURE_UINT8, &f->months_very_low_morale);
         iob->bind(BIND_SIGNATURE_UINT8, &f->invasion_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->herd_wolf_spawn_delay);                      // --> 4
+        //iob->bind(BIND_SIGNATURE_UINT8, &f->herd_wolf_spawn_delay);                      // --> 4
+        iob->bind(BIND_SIGNATURE_UINT8, &f->herd_ostrich_spawn_delay);                      // --> 4
         iob->bind(BIND_SIGNATURE_UINT8, &f->herd_direction);                             // 6
         if (GAME_ENV == ENGINE_ENV_PHARAOH)
             iob->bind____skip(6);

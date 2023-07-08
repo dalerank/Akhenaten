@@ -10,9 +10,12 @@ void figure::play_die_sound() {
     int is_soldier = 0;
     int is_citizen = 0;
     switch (f->type) {
-        case FIGURE_WOLF:
-            sound_effect_play(SOUND_EFFECT_WOLF_DIE);
-            break;
+        //case FIGURE_WOLF:
+        //    sound_effect_play(SOUND_EFFECT_WOLF_DIE);
+        //    break;
+        case FIGURE_OSTRICH:
+             sound_effect_play(SOUND_EFFECT_OSTRICH_DIE);
+             break;
         case FIGURE_SHEEP:
             sound_effect_play(SOUND_EFFECT_SHEEP_DIE);
             break;
@@ -129,9 +132,9 @@ void figure::play_hit_sound() {
         case FIGURE_LION_TAMER:
             sound_effect_play(SOUND_EFFECT_LION_ATTACK);
             break;
-        case FIGURE_WOLF:
-            if (city_sound_update_hit_wolf())
-                sound_effect_play(SOUND_EFFECT_WOLF_ATTACK);
+        //case FIGURE_WOLF:
+        //    if (city_sound_update_hit_wolf())
+        //        sound_effect_play(SOUND_EFFECT_WOLF_ATTACK);
 
             break;
         default:

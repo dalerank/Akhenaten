@@ -564,7 +564,7 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end) {
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (config_get(CONFIG_GP_CH_WOLVES_BLOCK)) {
-            if (f->state != FIGURE_STATE_ALIVE || (!f->is_enemy() && f->type != FIGURE_WOLF))
+            if (f->state != FIGURE_STATE_ALIVE || !f->is_enemy())
                 continue;
 
         } else if (f->state != FIGURE_STATE_ALIVE || !f->is_enemy())

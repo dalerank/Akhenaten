@@ -116,7 +116,7 @@ typedef struct {
 
     /* Herd-related */
     int herd_direction;
-    int herd_wolf_spawn_delay;
+    int herd_ostrich_spawn_delay;
 
     struct {
         int layout;

@@ -154,7 +154,11 @@ static void move_animals(const formation *m, int attacking_animals) {
     }
 }
 
-static int can_spawn_wolf(formation *m) {
+static bool can_spawn_ph_wolf(formation *m) {
+    return false;
+}
+
+/*static int can_spawn_wolf(formation *m) {
     if (m->num_figures < m->max_figures && m->figure_type == FIGURE_WOLF) {
         m->herd_wolf_spawn_delay++;
         int delay = 32;
@@ -166,6 +170,18 @@ static int can_spawn_wolf(formation *m) {
         }
     }
     return 0;
+}*/
+
+static bool can_spawn_ostrich(formation *m) {
+    if (m->num_figures < m->max_figures && m->figure_type == FIGURE_OSTRICH) {
+        m->herd_ostrich_spawn_delay++;
+        int delay = 4;
+        if (m->herd_ostrich_spawn_delay > delay) {
+            m->herd_ostrich_spawn_delay = 0;
+            return true;
+        }
+    }
+    return false;
 }
 
 static void set_figures_to_initial(const formation *m) {
@@ -193,7 +209,7 @@ static void set_figures_to_initial(const formation *m) {
 }
 
 static void update_herd_formation(formation *m) {
-    if (can_spawn_wolf(m)) {
+    if (can_spawn_ph_wolf(m)) {
         // spawn new wolf
         if (!map_terrain_is(MAP_OFFSET(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
             figure *wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP_RIGHT);
@@ -202,6 +218,16 @@ static void update_herd_formation(formation *m) {
                 wolf->action_state = 24;
             wolf->formation_id = m->id;
             wolf->wait_ticks = wolf->id & 0x1f;
+        }
+    }
+    if (can_spawn_ostrich(m)) {
+        // spawn new ostrich
+        if (!map_terrain_is(MAP_OFFSET(m->x, m->y), TERRAIN_IMPASSABLE_OSTRICH)) {
+            figure *ostrich = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP_RIGHT);
+            //ostrich->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
+            ostrich->action_state = FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE;
+            ostrich->formation_id = m->id;
+            ostrich->wait_ticks = ostrich->id & 0x1f;
         }
     }
     int attacking_animals = 0;
@@ -235,7 +261,7 @@ static void update_herd_formation(formation *m) {
             allow_negative_desirability = 0;
             attacking_animals = 0;
             break;
-        case FIGURE_WOLF:
+        case FIGURE_OSTRICH:
             roam_distance = 16;
 //            roam_delay = 6;
             roam_delay = 9;
@@ -254,12 +280,21 @@ static void update_herd_formation(formation *m) {
             int x_tile, y_tile;
             if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 set_figures_to_initial(m);
-            if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home, roam_distance, m->herd_direction, &x_tile, &y_tile)) {
+
+            /*if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home, roam_distance, m->herd_direction, &x_tile, &y_tile)) {
                 m->herd_direction = 0;
                 if (formation_enemy_move_formation_to(m, x_tile, y_tile, &x_tile, &y_tile)) {
                     formation_set_destination(m, x_tile, y_tile);
                     if (m->figure_type == FIGURE_WOLF && city_sound_update_march_wolf())
                         sound_effect_play(SOUND_EFFECT_WOLF_HOWL);
+                    move_animals(m, attacking_animals);
+                }
+            }*/
+
+            if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home, roam_distance, m->herd_direction, &x_tile, &y_tile)) {
+                m->herd_direction = 0;
+                if (formation_enemy_move_formation_to(m, x_tile, y_tile, &x_tile, &y_tile)) {
+                    formation_set_destination(m, x_tile, y_tile);
                     move_animals(m, attacking_animals);
                 }
             }

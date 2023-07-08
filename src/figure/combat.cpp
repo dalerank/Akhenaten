@@ -188,7 +188,8 @@ int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, 
             case FIGURE_FISH_GULLS:
             case FIGURE_SHIPWRECK:
             case FIGURE_SHEEP:
-            case FIGURE_WOLF:
+            //case FIGURE_WOLF:
+            case FIGURE_OSTRICH:
             case FIGURE_ZEBRA:
             case FIGURE_SPEAR:
                 continue;
@@ -252,8 +253,8 @@ void figure::hit_opponent() {
     int opponent_defense = opponent_props->defense_value;
 
     // attack modifiers
-    if (type == FIGURE_WOLF)
-        figure_attack = difficulty_adjust_wolf_attack(figure_attack);
+    //if (type == /*FIGURE_WOLF*/)
+    //    figure_attack = difficulty_adjust_wolf_attack(figure_attack);
 
     if (opponent->opponent_id != id && m->figure_type != FIGURE_FORT_LEGIONARY &&
         attack_is_same_direction(attack_direction, opponent->attack_direction)) {

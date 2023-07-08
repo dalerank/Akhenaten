@@ -119,7 +119,8 @@ static void create_herd(int x, int y) {
             num_animals = 10;
             break;
         case CLIMATE_NORTHERN:
-            herd_type = FIGURE_WOLF;
+            //herd_type = FIGURE_WOLF;
+            herd_type = FIGURE_OSTRICH;
             num_animals = 8;
             break;
         case CLIMATE_DESERT:
