@@ -12,7 +12,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/tiles.h"
 
-enum E_EVOLVE{
+enum E_EVOLVE {
     EVOLVE = 1,
     NONE = 0,
     DEVOLVE = -1

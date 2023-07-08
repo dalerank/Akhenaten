@@ -13,7 +13,7 @@ enum {
 };
 
 
-typedef struct floods_data {
+struct floods_data_t {
     int season_initial;
     int duration_initial;
     int quality_initial;
@@ -32,9 +32,9 @@ typedef struct floods_data {
     int state;              // 1 - 6
     int floodplain_width;   // 0 - 30
     bool has_floodplains;   // 0 - 1
-} floods_data_t;
+} ;
 
-const floods_data_t * floodplain_data();
+floods_data_t &floodplain_data();
 
 void floodplains_init();
 

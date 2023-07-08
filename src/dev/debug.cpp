@@ -89,7 +89,7 @@ void debug_text_a(uint8_t* str, int x, int y, int indent, const char *text, colo
 }
 void debug_text_float(uint8_t* str, int x, int y, int indent, const char *text, double value, color_t color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
-    string_from_int(str, value, 0);
+    string_from_int(str, (int)value, 0);
     int l = string_length(str);
     auto p = &str[l];
     string_copy(string_from_ascii("."), p, 2);
@@ -851,7 +851,7 @@ void draw_debug_ui(int x, int y) {
 
     /////// FLOODS
     if (false) {
-        auto floods = floodplain_data();
+        const auto &floods = floodplain_data();
 
         double _c_curr = floods_current_cycle();
         double _c_start = floods_start_cycle();
@@ -899,7 +899,7 @@ void draw_debug_ui(int x, int y) {
         text_draw(dot, x + rc_curr, y + 15, FONT_SMALL_OUTLINED, COLOR_FONT_YELLOW);
         text_draw(string_from_ascii("\'"), x + rc_curr, y + 25, FONT_SMALL_OUTLINED, COLOR_FONT_YELLOW);
         debug_text_float(str, x + rc_curr + 5, y + 25, 0, "", _c_curr); // current cycle
-        debug_text(str, x + rc_curr + 54, y + 25, 5, ":", floods->state); // current cycle
+        debug_text(str, x + rc_curr + 54, y + 25, 5, ":", floods.state); // current cycle
 
         debug_text(str, x, y + 35, 60, "debug:", floods_debug_period());
         debug_text(str, x, y + 45, 60, "ftick:", floods_fticks());
@@ -925,22 +925,22 @@ void draw_debug_ui(int x, int y) {
 
         cl = 100;
         y += 10;
-        debug_text(str, x, y + 105, cl, "season_initial:", floods->season_initial);
-        debug_text(str, x, y + 115, cl, "duration_initial:", floods->duration_initial);
-        debug_text(str, x, y + 125, cl, "quality_initial:", floods->quality_initial);
-        debug_text(str, x, y + 135, cl, "season:", floods->season);
-        debug_text(str, x, y + 145, cl, "duration:", floods->duration);
-        debug_text(str, x, y + 155, cl, "quality:", floods->quality);
-        debug_text(str, x, y + 165, cl, "(unk00):", floods->unk00);
-        debug_text(str, x, y + 175, cl, "quality_next:", floods->quality_next);
-        debug_text(str, x, y + 185, cl, "quality_last:", floods->quality_last);
+        debug_text(str, x, y + 105, cl, "season_initial:", floods.season_initial);
+        debug_text(str, x, y + 115, cl, "duration_initial:", floods.duration_initial);
+        debug_text(str, x, y + 125, cl, "quality_initial:", floods.quality_initial);
+        debug_text(str, x, y + 135, cl, "season:", floods.season);
+        debug_text(str, x, y + 145, cl, "duration:", floods.duration);
+        debug_text(str, x, y + 155, cl, "quality:", floods.quality);
+        debug_text(str, x, y + 165, cl, "(unk00):", floods.unk00);
+        debug_text(str, x, y + 175, cl, "quality_next:", floods.quality_next);
+        debug_text(str, x, y + 185, cl, "quality_last:", floods.quality_last);
 
         cl = 60;
-        debug_text(str, x, y + 205, cl, "progress:", floods->flood_progress); // status 30 (???)
-        debug_text(str, x, y + 215, cl, "(unk01):", floods->unk01); // ???
-        debug_text(str, x, y + 225, cl, "state:", floods->state); // floodplains state
-        debug_text(str, x, y + 235, cl, "width:", floods->floodplain_width); // status 10 (???)
-        debug_text(str, x, y + 245, cl, "hasplains:", floods->has_floodplains); // status 10 (???)
+        debug_text(str, x, y + 205, cl, "progress:", floods.flood_progress); // status 30 (???)
+        debug_text(str, x, y + 215, cl, "(unk01):", floods.unk01); // ???
+        debug_text(str, x, y + 225, cl, "state:", floods.state); // floodplains state
+        debug_text(str, x, y + 235, cl, "width:", floods.floodplain_width); // status 10 (???)
+        debug_text(str, x, y + 245, cl, "hasplains:", floods.has_floodplains); // status 10 (???)
         y += 350;
     }
 

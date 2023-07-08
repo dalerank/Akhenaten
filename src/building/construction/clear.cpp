@@ -18,14 +18,16 @@
 #include "window/popup_dialog.h"
 #include "building/industry.h"
 
-static struct {
+struct clear_confirm_t {
     int x_start;
     int y_start;
     int x_end;
     int y_end;
     int bridge_confirmed;
     int fort_confirmed;
-} confirm;
+};
+
+clear_confirm_t g_clear_confirm;
 
 static building *get_deletable_building(int grid_offset) {
     int building_id = map_building_at(grid_offset);
@@ -44,6 +46,7 @@ static building *get_deletable_building(int grid_offset) {
 }
 
 static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
+    auto &confirm = g_clear_confirm;
     int items_placed = 0;
     game_undo_restore_building_state();
     game_undo_restore_map(0);
@@ -162,6 +165,7 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
 }
 
 static void confirm_delete_fort(bool accepted) {
+    auto &confirm = g_clear_confirm;
     if (accepted)
         confirm.fort_confirmed = 1;
     else
@@ -170,6 +174,7 @@ static void confirm_delete_fort(bool accepted) {
 }
 
 static void confirm_delete_bridge(bool accepted) {
+    auto &confirm = g_clear_confirm;
     if (accepted)
         confirm.bridge_confirmed = 1;
     else
@@ -178,6 +183,7 @@ static void confirm_delete_bridge(bool accepted) {
 }
 
 int building_construction_clear_land(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
+    auto &confirm = g_clear_confirm;
     confirm.fort_confirmed = 0;
     confirm.bridge_confirmed = 0;
     if (measure_only)
