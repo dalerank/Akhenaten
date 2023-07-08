@@ -33,7 +33,6 @@ io_buffer *iob_scenario_mission_id = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT8, &scenario_data.settings.campaign_scenario_id);
 });
 io_buffer *iob_scenario_info = new io_buffer([](io_buffer *iob) {
-
     iob->bind(BIND_SIGNATURE_INT16, &scenario_data.start_year);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT16, &scenario_data.empire.id);

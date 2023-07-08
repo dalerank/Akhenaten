@@ -7,13 +7,13 @@
 #include "io/io_buffer.h"
 #include "io/file_formats.h"
 
-typedef struct {
+struct file_chunk_t {
     bool VALID = false;
     buffer *buf = nullptr;
     io_buffer *iob = nullptr;
     int compressed;
     char name[100];
-} file_chunk_t;
+};
 
 // Robust class system needed for reading/writing savestate files.
 // - contains an internal collection of file pieces that are format-agnostic

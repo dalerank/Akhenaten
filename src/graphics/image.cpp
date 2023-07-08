@@ -118,6 +118,9 @@ bool image_load_paks() {
     // <--- original enemy pak in here                                                                              // 11008 --> 11866
     data.main = new imagepak("Pharaoh_General", 11906 -200);                                // 11906 --> 11866
     data.terrain = new imagepak("Pharaoh_Terrain", 14452 -200);                             // 14252 --> 15767 (+64)
+                                                                                            // system.bmp 0-199
+                                                                                            // land1a.bmp 200-580
+                                                                                            // ladn2a.bmp 581-721
     // <--- original temple complex pak here
     data.sprambient = new imagepak("SprAmbient", 15831);                                    // 15831 --> 18765
     data.font = new imagepak("Pharaoh_Fonts", 18765, false, true);       // 18765 --> 20305

@@ -44,23 +44,23 @@ buffer *FileIOManager::push_chunk(int size, bool compressed, const char *name, i
         file_chunks.push_back(file_chunk_t());
 
     // fill info
-    auto chunk = &file_chunks.at(alloc_index);
-    chunk->compressed = compressed;
-    safe_realloc_for_size(&chunk->buf, size);
-    strncpy(chunk->name, name, 99);
+    file_chunk_t &chunk = file_chunks.at(alloc_index);
+    chunk.compressed = compressed;
+    safe_realloc_for_size(&chunk.buf, size);
+    strncpy(chunk.name, name, 99);
 
     // fill io_buffer content
     if (iob != nullptr) {
-        iob->hook(chunk->buf, size, compressed, name);
-        chunk->iob = iob;
-        chunk->VALID = true;
+        iob->hook(chunk.buf, size, compressed, name);
+        chunk.iob = iob;
+        chunk.VALID = true;
     }
 
     // advance allocator index
     alloc_index++;
 
     // return linked buffer pointer so that it can be assigned for read/write access later
-    return chunk->buf;
+    return chunk.buf;
 }
 const int FileIOManager::num_chunks() {
     return alloc_index;

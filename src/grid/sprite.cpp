@@ -3,34 +3,43 @@
 
 #include "grid/grid.h"
 
-static grid_xx sprite = {0, {FS_UINT8, FS_UINT8}};
-static grid_xx sprite_backup = {0, {FS_UINT8, FS_UINT8}};
+grid_xx g_sprite_grid = {0, 
+                          {
+                             FS_UINT8,      //c3
+                             FS_UINT8       //ph
+                          }
+                        };
+grid_xx g_sprite_grid_backup = {0, 
+                                  {
+                                    FS_UINT8,   //c3
+                                    FS_UINT8    //ph
+                                  }
+                               };
 
 int map_sprite_animation_at(int grid_offset) {
-    return map_grid_get(&sprite, grid_offset);
+    return map_grid_get(&g_sprite_grid, grid_offset);
 }
 void map_sprite_animation_set(int grid_offset, int value) {
-    map_grid_set(&sprite, grid_offset, value);
+    map_grid_set(&g_sprite_grid, grid_offset, value);
 }
 
 void map_sprite_clear_tile(int grid_offset) {
-    map_grid_set(&sprite, grid_offset, 0);
+    map_grid_set(&g_sprite_grid, grid_offset, 0);
 }
 void map_sprite_clear(void) {
-    map_grid_clear(&sprite);
+    map_grid_clear(&g_sprite_grid);
 }
 
 void map_sprite_backup(void) {
-    map_grid_copy(&sprite, &sprite_backup);
+    map_grid_copy(&g_sprite_grid, &g_sprite_grid_backup);
 }
 void map_sprite_restore(void) {
-    map_grid_copy(&sprite_backup, &sprite);
+    map_grid_copy(&g_sprite_grid_backup, &g_sprite_grid);
 }
 
-
 io_buffer *iob_sprite_grid = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &sprite);
+    iob->bind(BIND_SIGNATURE_GRID, &g_sprite_grid);
 });
 io_buffer *iob_sprite_backup_grid = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &sprite_backup);
+    iob->bind(BIND_SIGNATURE_GRID, &g_sprite_grid_backup);
 });
