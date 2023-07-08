@@ -206,10 +206,10 @@ int building_construction_clear_land(bool measure_only, int x_start, int y_start
     confirm.x_end = x_end;
     confirm.y_end = y_end;
     if (ask_confirm_fort) {
-        window_popup_dialog_show(POPUP_DIALOG_DELETE_FORT, confirm_delete_fort, 2);
+        window_popup_dialog_show(POPUP_DIALOG_DELETE_FORT, confirm_delete_fort, e_popup_btns_yesno);
         return -1;
     } else if (ask_confirm_bridge) {
-        window_popup_dialog_show(POPUP_DIALOG_DELETE_BRIDGE, confirm_delete_bridge, 2);
+        window_popup_dialog_show(POPUP_DIALOG_DELETE_BRIDGE, confirm_delete_bridge, e_popup_btns_yesno);
         return -1;
     } else
         return clear_land_confirmed(measure_only, x_start, y_start, x_end, y_end);

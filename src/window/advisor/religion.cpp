@@ -188,7 +188,7 @@ static void confirm_nothing(bool accepted) {
 }
 static void button_hold_festival(int param1, int param2) {
     if (!city_building_has_festival_square())
-        return window_popup_dialog_show(POPUP_DIALOG_NO_FESTIVAL_SQUARE, confirm_nothing, 0);
+        return window_popup_dialog_show(POPUP_DIALOG_NO_FESTIVAL_SQUARE, confirm_nothing, e_popup_btns_ok);
     if (!city_festival_is_planned())
         window_hold_festival_show();
 }

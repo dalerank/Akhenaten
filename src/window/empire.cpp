@@ -191,17 +191,17 @@ static void draw_trade_route(int route_id, int effect) {
             int d_x = nextup_route_point.x - route_point.x;
             int d_y = nextup_route_point.y - route_point.y;
 //            float step_size = 0.5;
-            float len = 0.2 * sqrt(float(d_x * d_x) + float(d_y * d_y));
+            float len = 0.2f * sqrtf(float(d_x * d_x) + float(d_y * d_y));
 
             float scaled_x = (float)d_x / len;
             float scaled_y = (float)d_y / len;
 
             float progress = 1.0;
             while (progress < len) {
-                int disp_x = data.x_draw_offset + route_point.x + scaled_x * progress;
-                int disp_y = data.y_draw_offset + route_point.y + scaled_y * progress;
+                int disp_x = (int)data.x_draw_offset + route_point.x + scaled_x * progress;
+                int disp_y = (int)data.y_draw_offset + route_point.y + scaled_y * progress;
                 ImageDraw::img_generic(image_id, disp_x, disp_y);
-                progress += 1.0;
+                progress += 1.0f;
             }
         }
     }
@@ -896,7 +896,7 @@ static void confirmed_open_trade(bool accepted) {
     }
 }
 static void button_open_trade(int param1, int param2) {
-    window_popup_dialog_show(POPUP_DIALOG_OPEN_TRADE, confirmed_open_trade, 2);
+    window_popup_dialog_show(POPUP_DIALOG_OPEN_TRADE, confirmed_open_trade, e_popup_btns_yesno);
 }
 
 void window_empire_show(void) {

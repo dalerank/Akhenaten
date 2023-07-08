@@ -176,13 +176,13 @@ static void button_click(int param1, int param2) {
             break;
         case 1: // delete player
             if (!is_valid_selected_player())
-                window_popup_dialog_show(POPUP_DIALOG_NO_DYNASTY, confirm_nothing, 1);
+                window_popup_dialog_show(POPUP_DIALOG_NO_DYNASTY, confirm_nothing, e_popup_btns_yes);
             else
-                window_popup_dialog_show(POPUP_DIALOG_DELETE_DYNASTY, confirm_delete_player, 2);
+                window_popup_dialog_show(POPUP_DIALOG_DELETE_DYNASTY, confirm_delete_player, e_popup_btns_yesno);
             break;
         case 2: // proceed with selected player
             if (!is_valid_selected_player())
-                window_popup_dialog_show(POPUP_DIALOG_NO_DYNASTY, confirm_nothing, 1);
+                window_popup_dialog_show(POPUP_DIALOG_NO_DYNASTY, confirm_nothing, e_popup_btns_yes);
             else
                 window_game_menu_show();
             break;

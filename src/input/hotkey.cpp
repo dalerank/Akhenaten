@@ -440,7 +440,7 @@ static void confirm_exit(bool accepted) {
 
 void hotkey_handle_escape(void) {
     video_stop();
-    window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
+    window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, e_popup_btns_yes);
 }
 
 void hotkey_handle_global_keys(void) {

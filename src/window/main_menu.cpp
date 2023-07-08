@@ -125,7 +125,7 @@ static void button_click(int type, int param2) {
             window_config_show();
             break;
         case 6:
-            window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 2);
+            window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, e_popup_btns_yesno);
             break;
     }
 }

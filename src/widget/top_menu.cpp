@@ -30,6 +30,7 @@
 #include "window/popup_dialog.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
+#include "window/main_menu.h"
 #include "graphics/elements/panel.h"
 
 enum E_INFO {
@@ -587,15 +588,17 @@ static void menu_file_delete_game(int param) {
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_DELETE);
 }
 static void menu_file_confirm_exit(bool accepted) {
-    if (accepted)
-        system_exit();
-    else {
+    if (accepted) {
+        //system_exit();
+        clear_state();
+        window_main_menu_show(true);
+    } else {
         window_city_show();
     }
 }
 static void menu_file_exit_game(int param) {
     clear_state();
-    window_popup_dialog_show(POPUP_DIALOG_QUIT, menu_file_confirm_exit, 1);
+    window_popup_dialog_show(POPUP_DIALOG_QUIT, menu_file_confirm_exit, e_popup_btns_yesno);
 }
 
 static void menu_options_display(int param) {

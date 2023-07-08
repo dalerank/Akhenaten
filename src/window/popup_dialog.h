@@ -1,7 +1,7 @@
 #ifndef WINDOW_POPUP_DIALOG_H
 #define WINDOW_POPUP_DIALOG_H
 
-enum {
+enum e_popup_dialog_opt {
     POPUP_DIALOG_NONE = -1,
     POPUP_DIALOG_QUIT = 0,
     POPUP_DIALOG_OPEN_TRADE = 2,
@@ -87,7 +87,13 @@ enum {
     POPUP_DIALOG_NO_MISSIONS_WON_BY_FAMILY = 141,
 };
 
-void window_popup_dialog_show(int type, void (*close_func)(bool accepted), int has_ok_cancel_buttons);
+enum e_popup_dialog_btns {
+    e_popup_btns_ok = 0,
+    e_popup_btns_yes = 1,
+    e_popup_btns_yesno = 2
+};
+
+void window_popup_dialog_show(int type, void (*close_func)(bool accepted), e_popup_dialog_btns has_ok_cancel_buttons);
 
 void window_popup_dialog_show_confirmation(int text_group, int text_id, void (*close_func)(bool accepted));
 
