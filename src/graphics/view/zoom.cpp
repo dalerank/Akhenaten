@@ -5,7 +5,7 @@
 #include "zoom.h"
 #include "lookup.h"
 
-static struct data_t {
+struct zoom_data_t {
     float zoom = ZOOM_DEFAULT;
     float target = ZOOM_DEFAULT;
     float delta;
@@ -16,7 +16,9 @@ static struct data_t {
         int start_zoom;
         int current_zoom;
     } touch;
-} data;
+};
+
+zoom_data_t g_zoom;
 
 static float bound_zoom(float z) {
     if (z < ZOOM_MIN)
@@ -27,6 +29,8 @@ static float bound_zoom(float z) {
 }
 
 static void start_touch(const touch *first, const touch *last, int scale) {
+    auto &data = g_zoom;
+
     data.touch.active = true;
     data.input_offset.x = first->current_point.x;
     data.input_offset.y = first->current_point.y;
@@ -34,6 +38,8 @@ static void start_touch(const touch *first, const touch *last, int scale) {
     data.touch.current_zoom = scale;
 }
 void zoom_update_touch(const touch *first, const touch *last, int scale) {
+    auto &data = g_zoom;
+
     if (!data.touch.active) {
         start_touch(first, last, scale);
         return;
@@ -56,12 +62,14 @@ void zoom_update_touch(const touch *first, const touch *last, int scale) {
     data.touch.current_zoom = calc_percentage(data.touch.start_zoom, finger_distance_percentage);
 }
 void zoom_end_touch(void) {
-    data.touch.active = false;
+    g_zoom.touch.active = false;
 }
 int allowed_zoom_levels[8] = {
         50, 65, 80, 100, 120, 145, 175, 200
 };
 void zoom_map(const mouse *m) {
+    auto &data = g_zoom;
+
     if (data.touch.active || m->is_touch)
         return;
     if (m->middle.went_up && data.input_offset.x == m->x && data.input_offset.y == m->y)
@@ -91,6 +99,8 @@ void zoom_map(const mouse *m) {
     data.input_offset.y = m->y;
 }
 bool zoom_update_value(pixel_coordinate *camera_position) {
+    auto &data = g_zoom;
+
     if (data.zoom == data.target)
         return false;
     auto old_zoom = data.zoom;
@@ -130,20 +140,22 @@ bool zoom_update_value(pixel_coordinate *camera_position) {
 }
 
 float zoom_debug_target() {
-    return data.target;
+    return g_zoom.target;
 }
 float zoom_debug_delta() {
-    return data.delta;
+    return g_zoom.delta;
 }
 
 float zoom_get_scale() {
 //    return (float)(int)(data.zoom + 0.5f) / 100.0f;
-    return 1.0f / (data.zoom / 100.0f);
+    return 1.0f / (g_zoom.zoom / 100.0f);
 }
 float zoom_get_percentage() {
-    return (float)(int)(data.zoom + 0.5f);
+    return (float)(int)(g_zoom.zoom + 0.5f);
 }
 void zoom_set(float z) {
+    auto &data = g_zoom;
+
     z = calc_bound(z, 50, 200);
     data.zoom = z;
     data.target = z;
