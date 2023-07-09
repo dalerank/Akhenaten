@@ -24,7 +24,7 @@ typedef struct {
     bool is_known;
 } god_status;
 
-extern struct city_data_t {
+struct city_data_t {
     struct {
         bool senate_placed;
         int32_t senate_building_id;
@@ -454,8 +454,9 @@ extern struct city_data_t {
         int32_t faction_id;
         int16_t faction_bytes[2];
     } unused;
-} city_data;
+};
 
+extern city_data_t city_data;
 const city_data_t * city_data_struct();
 
 #endif // CITY_DATA_PRIVATE_H

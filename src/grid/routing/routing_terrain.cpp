@@ -64,6 +64,7 @@ static int get_land_type_citizen_building(int grid_offset) {
 //            }
 //            break;
     }
+    return CITIZEN_0_ROAD;
 }
 static int get_land_type_citizen_aqueduct(int grid_offset) {
     return CITIZEN_N3_AQUEDUCT;
@@ -111,6 +112,7 @@ static int get_land_type_noncitizen(int grid_offset) {
             }
             break;
     }
+    return 0;
 }
 
 static int is_surrounded_by_water(int grid_offset) {
@@ -381,6 +383,7 @@ bool map_routing_passable_by_usage(int terrain_usage, int grid_offset) {
         case TERRAIN_USAGE_ANIMAL:
             return map_grid_get(&terrain_land_noncitizen, grid_offset) >= NONCITIZEN_0_PASSABLE;
     }
+    return false;
 }
 
 int map_routing_is_wall_passable(int grid_offset) {

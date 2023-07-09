@@ -22,6 +22,12 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 if (NOT MSVC)
     set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -static-libgcc -static-libstdc++" ${CMAKE_CXX_FLAGS})
 endif()
+
+if (MSVC)
+    add_compile_options(/wd4244)
+    add_compile_options(/MP)
+endif()
+
 set(CMAKE_CXX_STANDARD 14)
 set(GAME_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin_x64")
 

@@ -482,11 +482,13 @@ void figure::action_perform() {
             case 66: delivery_boy_action();             break;
             case 67: shipwreck_action();                break;
             case 68: sheep_action();                    break;
-            case 69:
+            case FIGURE_OSTRICH:
+            {
                 if (GAME_ENV == ENGINE_ENV_C3)
                     wolf_action();
                 else
-                    ostrich_action();                   break;
+                    ostrich_action();
+            } break;
             case 70: zebra_action();                    break; //70
             case 71: spear_action();                    break;
             case 72: hippodrome_horse_action();         break;

@@ -75,6 +75,7 @@ public:
     void bind(bind_signature_e signature, T *ext) {
         if (ext == nullptr)
             return;
+
         switch (signature) {
             case BIND_SIGNATURE_INT8: IO_BRANCH(*ext = (T)p_buf->read_i8(), p_buf->write_i8(*ext))
             case BIND_SIGNATURE_UINT8: IO_BRANCH(*ext = (T)p_buf->read_u8(), p_buf->write_u8(*ext))

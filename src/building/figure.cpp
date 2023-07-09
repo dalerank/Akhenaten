@@ -882,7 +882,7 @@ void building::spawn_figure_warehouse() {
                         break;
                     case WAREHOUSE_TASK_DELIVERING:
                     case WAREHOUSE_TASK_EMPTYING:
-                        amount = fmin(amount, 400);
+                        amount = std::min<int>(amount, 400);
                         f->load_resource(amount, resource);
                         building_warehouse_remove_resource(this, resource, amount);
                         break;
