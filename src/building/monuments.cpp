@@ -123,4 +123,6 @@ building *get_temple_complex_front_facing_part(building *b) {
         case 2:
             return b->main()->next()->next(); // the last part is the oracle
     }
+
+    return nullptr;
 }

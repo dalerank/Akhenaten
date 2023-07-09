@@ -51,7 +51,8 @@ struct image_t {
     int data_length;
     int uncompressed_length;
     int unk00; //
-    int offset_mirror;
+    int offset_mirror = 0;
+    int start_index;
     image_t *mirrored_img = nullptr;
     //
     int width;

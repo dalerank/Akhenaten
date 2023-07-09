@@ -145,7 +145,7 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
     city_view_foreach_valid_map_tile(
             draw_debug_tile,
             draw_debug_figurecaches);
-    city_view_foreach_valid_map_tile(draw_debug_figures);
+    //city_view_foreach_valid_map_tile(draw_debug_figures);
 
     WATCH.STOP();
 //    WATCH.LOG();

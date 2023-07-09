@@ -85,7 +85,7 @@ static const int ADJACENT_OFFSETS_PH[2][4][7] = {
   }
 };
 
-static struct {
+struct draw_context_t {
     time_millis last_water_animation_time;
     int advance_water_animation;
 
@@ -98,8 +98,16 @@ static struct {
     int selected_figure_id;
     int highlighted_formation;
     pixel_coordinate *selected_figure_coord;
-} draw_context;
+};
+
+draw_context_t &get_draw_context() {
+    static draw_context_t data;
+    return data;
+}
+
 void init_draw_context(int selected_figure_id, pixel_coordinate *figure_coord, int highlighted_formation) {
+    auto &draw_context = get_draw_context();
+
     draw_context.advance_water_animation = 0;
     if (!selected_figure_id) {
         time_millis now = time_get_millis();
@@ -234,6 +242,8 @@ static void clip_between_rectangles(int *xOut, int *yOut, int *wOut, int *hOut,
     if (*hOut < 0) *hOut = 0;
 }
 static void draw_cached_figures(pixel_coordinate pixel, map_point point, int mode) {
+    auto &draw_context = get_draw_context();
+
     if (!USE_BLEEDING_CACHE)
         return;
     if (!map_property_is_draw_tile(point.grid_offset()))
@@ -260,11 +270,13 @@ static void draw_cached_figures(pixel_coordinate pixel, map_point point, int mod
     // set rendering clip around the current tile
     if (clip_width == 0 || clip_height == 0)
         return;
+
     graphics_set_clip_rectangle(scale * clip_x, scale * clip_y, scale * clip_width, scale * clip_height);
     const image_t *img = image_get(map_image_at(point.grid_offset()));
     pixel_coordinate tile_z_cross = pixel;
     tile_z_cross += {HALF_TILE_WIDTH_PIXELS, img->isometric_3d_height() - TILE_BLEEDING_Y_BIAS};
     graphics_fill_rect(0, 0, 10000, 10000, 0x22000000); // for debugging
+    
     for (int i = 0; i < cache->num_figures; ++i) {
         int figure_id = cache->figures[i].id;
         figure *f = figure_get(figure_id);
@@ -333,6 +345,8 @@ void draw_debug_figurecaches(pixel_coordinate pixel, map_point point) {
 }
 
 void draw_isometrics(pixel_coordinate pixel, map_point point) {
+    auto &draw_context = get_draw_context();
+
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -405,6 +419,8 @@ void draw_ornaments(pixel_coordinate pixel, map_point point) {
     draw_ornaments_and_animations(pixel, point);
 }
 void draw_figures(pixel_coordinate pixel, map_point point) {
+    auto &draw_context = get_draw_context();
+
     // first, draw from the cache
     draw_cached_figures(pixel, point, 0);
 

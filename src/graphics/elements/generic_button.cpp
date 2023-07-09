@@ -40,6 +40,7 @@ int generic_buttons_handle_mouse(const mouse *m, int x, int y, generic_button *b
         button->right_click_handler(button->parameter1, button->parameter2);
     else
         return 0;
+
     return button_id;
 }
 

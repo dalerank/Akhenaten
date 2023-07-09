@@ -300,7 +300,7 @@ void figure::ostrich_action() {
         case 14: // scared
         case 15: // terrified
         case 18: // roosting
-        case 19: // idle
+        case FIGURE_ACTION_19_ANIMAL_IDLE: // idle
         case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
             wait_ticks--;
 //            if (wait_ticks % 5 == 0 && is_nearby(NEARBY_ANY, 6))

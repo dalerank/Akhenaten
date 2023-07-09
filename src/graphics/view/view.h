@@ -21,7 +21,7 @@ void camera_calc_scroll_limits();
 typedef pixel_coordinate screen_tile;
 typedef pixel_coordinate camera_coordinate;
 
-typedef struct {
+struct view_data_t {
     int screen_width;
     int screen_height;
     bool sidebar_collapsed;
@@ -38,12 +38,12 @@ typedef struct {
         int height_tiles;
     } viewport;
     screen_tile selected_tile;
-} view_data;
+} ;
 
 typedef void (tile_draw_callback)(pixel_coordinate pixel, map_point point);
 typedef void (minimap_draw_callback)(screen_tile screen, map_point point);
 
-view_data *city_view_data_unsafe();
+view_data_t &city_view_data_unsafe();
 
 void city_view_camera_position_refresh();
 

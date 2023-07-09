@@ -952,7 +952,7 @@ void draw_debug_ui(int x, int y) {
         int min_x, max_x, min_y, max_y;
         city_view_get_camera_scrollable_pixel_limits(&min_x, &max_x, &min_y, &max_y);
 
-        view_data* viewdata = city_view_data_unsafe();
+        auto &viewdata = city_view_data_unsafe();
         int real_max_x;
         int real_max_y;
         city_view_get_camera_max_tile(&real_max_x, &real_max_y);
@@ -963,7 +963,7 @@ void draw_debug_ui(int x, int y) {
 
         y += 30;
         debug_text_dual_left(str, x, y - 15, 90, 40, "---min:", min_x, min_y);
-        debug_text_dual_left(str, x, y - 5, 90, 40, "camera:", viewdata->camera.position.x, viewdata->camera.position.y);
+        debug_text_dual_left(str, x, y - 5, 90, 40, "camera:", viewdata.camera.position.x, viewdata.camera.position.y);
         debug_text_dual_left(str, x, y + 5, 90, 40, "---max:", max_x, max_y);
 
         debug_text_dual_left(str, x, y + 25, 90, 40, "---min:", SCROLL_MIN_SCREENTILE_X, SCROLL_MIN_SCREENTILE_Y);
@@ -974,10 +974,8 @@ void draw_debug_ui(int x, int y) {
         debug_text_dual_left(str, x, y + 75, 90, 40, "pixel:", camera_pixels.x, camera_pixels.y);
         debug_text_dual_left(str, x, y + 85, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
 
-        debug_text_dual_left(str, x, y + 105, 90, 40, "v.tiles:", viewdata->viewport.width_pixels / 60,
-                             viewdata->viewport.height_pixels / 30);
-        debug_text_dual_left(str, x, y + 115, 90, 40, "v.pixels:", viewdata->viewport.width_pixels,
-                             viewdata->viewport.height_pixels);
+        debug_text_dual_left(str, x, y + 105, 90, 40, "v.tiles:", viewdata.viewport.width_pixels / 60, viewdata.viewport.height_pixels / 30);
+        debug_text_dual_left(str, x, y + 115, 90, 40, "v.pixels:", viewdata.viewport.width_pixels, viewdata.viewport.height_pixels);
 
         debug_text(str, x, y + 125, 50, "zoom:", zoom_get_percentage());
         debug_text_float(str, x, y + 125, 50 + 40, "", zoom_get_scale());

@@ -42,7 +42,7 @@ bool empire_can_import_resource(int resource, bool check_if_open) {
         if (cities[i].in_use &&
             empire_city_type_can_trade(cities[i].type) &&
             (cities[i].is_open || !check_if_open) &&
-            cities[i].sells_resource[resource] > 0) {
+            cities[i].sells_resource[resource]) {
             return true;
         }
     }
@@ -53,7 +53,7 @@ bool empire_can_export_resource(int resource, bool check_if_open) {
         if (cities[i].in_use &&
             empire_city_type_can_trade(cities[i].type) &&
             (cities[i].is_open || !check_if_open) &&
-            cities[i].buys_resource[resource] > 0) {
+            cities[i].buys_resource[resource]) {
             return true;
         }
     }

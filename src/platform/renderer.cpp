@@ -6,6 +6,7 @@
 //#include "platform/haiku/haiku.h"
 #include "platform/platform.h"
 #include "platform/screen.h"
+#include "platform/arguments.h"
 //#include "platform/switch/switch.h"
 //#include "platform/vita/vita.h"
 #include "graphics/image_groups.h"
@@ -13,6 +14,10 @@
 #include <string.h>
 #include "input/cursor.h"
 #include "SDL_image.h"
+#include "io/log.h"
+
+#include <vector>
+#include <string>
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
 #define USE_YUV_TEXTURES
@@ -572,14 +577,14 @@ void graphics_renderer_interface::draw_image(const image_t *img, float x, float 
     SDL_SetTextureAlphaMod(texture, (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
     SDL_SetTextureBlendMode(texture, premult_alpha);
 
-    /* uncomment here if you want save something from atlases
+    // uncomment here if you want save something from atlases
     int k = 0;
     if (k == 1) {
         char filename[32] = {0};
         static int index = 0;
         sprintf(filename, "%u_img.bmp", index);
         graphics_renderer()->save_texture_to_file(filename, texture);
-    }*/
+    }
 
     float texture_coord_correction = 0;
     SDL_Rect texture_coords = {
@@ -1056,8 +1061,19 @@ bool graphics_renderer_interface::save_texture_to_file(const char *filename, SDL
 int platform_renderer_init(SDL_Window *window) {
 //    free_all_textures();
 
+    SDL_RendererInfo info;
+    std::vector<std::string> drivers;
+    for (int k=0; k < SDL_GetNumRenderDrivers(); k++) {
+        SDL_GetRenderDriverInfo( k, &info );
+        log_info( "SDLGraficEngine: availabe render ", info.name, 0);
+        drivers.push_back(info.name);
+    }
+
+    auto driver_it = std::find_if(drivers.begin(), drivers.end(), [] (const auto &it) { return it == ozymandias_core.driver; });
+    int driver_index = driver_it != drivers.end() ? std::distance(drivers.begin(), driver_it) : -1;
+
     SDL_Log("Creating renderer");
-    data.renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+    data.renderer = SDL_CreateRenderer(window, driver_index, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (!data.renderer) {
         SDL_Log("Unable to create renderer, trying software renderer: %s", SDL_GetError());
         data.renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
@@ -1067,7 +1083,6 @@ int platform_renderer_init(SDL_Window *window) {
         }
     }
 
-    SDL_RendererInfo info;
     SDL_GetRendererInfo(data.renderer, &info);
     SDL_Log("Loaded renderer: %s", info.name);
 

@@ -99,7 +99,7 @@ pixel_coordinate mappoint_to_pixel(map_point point) {
 }
 
 pixel_coordinate pixel_to_viewport_coord(pixel_coordinate pixel) {
-    return pixel - city_view_data_unsafe()->viewport.offset;
+    return pixel - city_view_data_unsafe().viewport.offset;
 }
 camera_coordinate pixel_to_camera_coord(pixel_coordinate pixel, bool relative) {
     // check if within viewport
@@ -114,7 +114,7 @@ camera_coordinate pixel_to_camera_coord(pixel_coordinate pixel, bool relative) {
     pixel.y = calc_adjust_with_percentage(pixel.y, zoom_get_percentage());
 
     if (!relative)
-        pixel += city_view_data_unsafe()->camera.position;
+        pixel += city_view_data_unsafe().camera.position;
     return pixel;
 }
 screen_tile pixel_to_screentile(pixel_coordinate pixel) {

@@ -445,6 +445,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
         img.data_length = pak_buf->read_i32();
         img.uncompressed_length = pak_buf->read_i32();
         img.unk00 = pak_buf->read_i32();
+        img.start_index = starting_index;
         img.offset_mirror = pak_buf->read_i32(); // .sg3 only
         // clamp dimensions so that it's not below zero!
         img.width = pak_buf->read_i16(); img.width = img.width < 0 ? 0 : img.width;

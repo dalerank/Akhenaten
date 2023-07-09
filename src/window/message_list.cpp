@@ -190,23 +190,21 @@ static void handle_input(const mouse *m, const hotkeys *h) {
     data.focus_button_id = 0;
 
     int button_id;
-    int handled = image_buttons_handle_mouse(m_dialog, 16, 32 + 16 * data.height_blocks - 42, &image_button_help, 1,
-                                             &button_id);
+    bool handled = image_buttons_handle_mouse(m_dialog, 16, 32 + 16 * data.height_blocks - 42, &image_button_help, 1, &button_id);
     if (button_id)
         data.focus_button_id = 11;
 
-    handled |= image_buttons_handle_mouse(m_dialog, 16 * data.width_blocks - 38,
-                                          32 + 16 * data.height_blocks - 36, &image_button_close, 1, &button_id);
+    handled |= image_buttons_handle_mouse(m_dialog, 16 * data.width_blocks - 38, 32 + 16 * data.height_blocks - 36, &image_button_close, 1, &button_id);
     if (button_id)
         data.focus_button_id = 12;
 
     if (scrollbar_handle_mouse(&scrollbar, m_dialog))
         data.focus_button_id = 13;
 
-    handled |= generic_buttons_handle_mouse(m_dialog, data.x_text, data.y_text + 4,
-                                            generic_buttons_messages, MAX_MESSAGES, &button_id);
-    if (!data.focus_button_id)
+    handled |= (generic_buttons_handle_mouse(m_dialog, data.x_text, data.y_text + 4, generic_buttons_messages, MAX_MESSAGES, &button_id) != 0);
+    if (!data.focus_button_id) {
         data.focus_button_id = button_id;
+    }
 
     if (button_id && old_button_id != button_id)
         window_invalidate();

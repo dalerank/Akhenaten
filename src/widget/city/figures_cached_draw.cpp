@@ -9,6 +9,7 @@ struct {
     int num_cached_figures;
     int caches_fast_index_lookup[GRID_SIZE_TOTAL];
 } FIGURE_DRAW_CACHE;
+
 void reset_tiledraw_caches() {
     FIGURE_DRAW_CACHE.num_cached_tiles = 0;
     FIGURE_DRAW_CACHE.num_cached_figures = 0;
