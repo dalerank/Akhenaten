@@ -9,7 +9,7 @@
 
 // no idea what these top chunks are for. the game uses the RECORDS table
 // further below to check which missions are unlocked, not these chunks.
-typedef struct {
+struct player_unused_scenario_data {
     int8_t campaign_idx = -1;           // FF           :: xx          >> campaign period number
     uint8_t campaign_idx_2 = 0;         // 00           :: 00          >> 0 if single mission, increasing # if choosable
     uint16_t unk02 = 0;                 // 00 00        :: AC 4F       >> always the same
@@ -37,9 +37,9 @@ typedef struct {
     uint8_t mission_completed = 0;      // 00           :: 00          >> 0 if never completed, 1 if completed before
     uint16_t unk19 = 0;                 // 00 00        :: FB 19       >> always the same
     uint8_t unk20 = 0;                  // 00           :: 00          >> always 0?
-} player_unused_scenario_data;
+} ;
 
-typedef struct {
+struct player_record {
     uint32_t score = 0;
     uint32_t mission_idx = 0;
     uint8_t player_name[MAX_PLAYER_NAME];
@@ -53,8 +53,7 @@ typedef struct {
     uint32_t unk09 = 0;
     bool nonempty = false;
     bool score_is_valid = false;
-
-} player_record;
+} ;
 
 ///
 
