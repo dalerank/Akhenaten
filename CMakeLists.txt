@@ -438,10 +438,9 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if (MSVC)
-    ADD_CUSTOM_COMMAND(
-          TARGET ${SHORT_NAME}
-          POST_BUILD
+    add_custom_target(copy_binary_file
+          ${SHORT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${SHORT_NAME}.exe" "${GAME_WORKING_DIRECTORY}/${SHORT_NAME}.exe"
-     )
+    )
 endif()
 

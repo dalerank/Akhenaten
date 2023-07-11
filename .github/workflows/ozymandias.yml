@@ -11,17 +11,21 @@ jobs:
     name: run on windows
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: ilammy/msvc-dev-cmd@v1.4.1
     - name: update-workspace
       run: |
         update-workspace.bat
         mkdir build
       shell: cmd
-    - name: create-solution
-      run: |
-        cd build
-        cmake -DCMAKE_BUILD_TYPE=Release..
     - name: build-project
       run: |
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cd ..
         cmake --build ./build --target ozymandias --config Release
+        copy ./build/Release/ozymandias.exe ./bin_x64/ozymandias.exe
+    - uses: actions/upload-artifact@v3
+      with:
+        name: windows_build
+        path: bin_x64
