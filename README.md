@@ -38,18 +38,18 @@ stored there; also, your game must be patched to last version to run Ozymandias.
 
 ## Building Ozymandias from source
 
-### Windows
+### Windows + Visual Studio
 
 - Clone the repository
-- Download [SDL2](https://github.com/libsdl-org/SDL/releases/tag/release-2.24.0) and extract it to folder ext/SDL2
-- Download [SDL2_mixer](https://github.com/libsdl-org/SDL_mixer/releases/tag/release-2.6.2) and extract it to folder ext/SDL2
-- Download [SDL2_image](https://github.com/libsdl-org/SDL_image/releases/tag/release-2.6.2) and extract it to folder ext/SDL2
+- Install [CMake](https://cmake.org/download/#latest)
+- run update-workspace.bat, which download all SDL2 dependencies and create VS solution for you
+
+### Windows + Yours IDE
 
 To build with your favorite IDE, just import the cmakelists.txt file as a project and build from there. Otherwise, you can use [MinGW-w64](https://www.mingw-w64.org/downloads/) to build via CLI:
 
-- Install MinGW-w64 (either manually, or via [MSYS2](https://www.msys2.org/))
+- Clone the repository
 - Install [CMake](https://cmake.org/download/#latest)
-
 - From the project's root folder execute, in order:
   
   ```
