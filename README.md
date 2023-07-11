@@ -1,5 +1,9 @@
 # Ozymandias
 
+[![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Matrix/badge.svg)](https://github.com/dalerank/Ozymandias/actions)
+
+[Discord Chat](https://discord.gg/HS4njmBvpb)
+
 ![2023-07-01 13_28_28-Window](https://github.com/dalerank/Ozymandias/assets/918081/6e2358ad-82af-4374-89d1-35d56b917e1e)
 
 This is a fork of the **Julius/Augustus** project with the aim of making it work with _Pharaoh_ instead of _Caesar 3_.
