@@ -2,13 +2,13 @@
 #define PLATFORM_ARGUMENTS_H
 
 struct ozymandias_args {
-    const char *data_directory;
+    char data_directory[256] = {0};
     int display_scale_percentage;
     int cursor_scale_percentage;
     int game_engine_env;
     int game_engine_debug_mode;
     bool window_mode;
-    const char *driver = nullptr;
+    char driver[64] = {0};
     int window_width = 0, window_height = 0;
 };
 

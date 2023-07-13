@@ -156,11 +156,13 @@ enum E_MULTIBYTE {
     MULTIBYTE_KOREAN = 3,
 };
 
-static struct {
+struct font_data_t {
     const int *font_mapping;
     const font_definition *font_definitions;
     int multibyte;
-} data;
+};
+
+static font_data_t g_font_data;
 
 static int image_y_offset_none(uint8_t c, int image_height, int line_height) {
     int offset = image_height - line_height;
@@ -346,6 +348,7 @@ static int image_y_offset_korean(uint8_t c, int image_height, int line_height) {
 }
 
 void font_set_encoding(encoding_type encoding) {
+    auto &data = g_font_data;
     data.multibyte = MULTIBYTE_NONE;
     if (encoding == ENCODING_EASTERN_EUROPE) {
         data.font_mapping = CHAR_TO_FONT_IMAGE_EASTERN;
@@ -372,15 +375,18 @@ void font_set_encoding(encoding_type encoding) {
 }
 
 const font_definition *font_definition_for(font_t font) {
+    auto &data = g_font_data;
     return &data.font_definitions[font];
 }
 
 int font_can_display(const uint8_t *character) {
+    auto &data = g_font_data;
     int dummy;
     return font_letter_id(&data.font_definitions[FONT_NORMAL_BLACK_ON_LIGHT], character, &dummy) >= 0;
 }
 
 int font_letter_id(const font_definition *def, const uint8_t *str, int *num_bytes) {
+    auto &data = g_font_data;
     if (data.multibyte != MULTIBYTE_NONE && *str >= 0x80) {
         *num_bytes = 2;
         if (data.multibyte == MULTIBYTE_TRADITIONAL_CHINESE) {

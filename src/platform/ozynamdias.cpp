@@ -19,12 +19,18 @@
 #include "platform/screen.h"
 #include "platform/touch.h"
 
-#include "tinyfiledialogs/tinyfiledialogs.h"
 #include "renderer.h"
 
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <set>
+#include <string>
+
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_sdlrenderer.h"
+#include "imguifiledialog.h"
 
 #ifdef __SWITCH__
 #include "platform/switch/switch.h"
@@ -50,6 +56,10 @@
 #include "graphics/window.h"
 #include "graphics/boilerplate.h"
 #include "graphics/text.h"
+#endif
+
+#if !SDL_VERSION_ATLEAST(2,0,17)
+#error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
 #endif
 
 #define INTPTR(d) (*(int*)(d))
@@ -131,32 +141,6 @@ void system_set_fullscreen(int fullscreen) {
         system_resize(1200, 800);
 }
 
-#ifdef USE_TINYFILEDIALOGS
-static const char *ask_for_data_dir(int again) {
-    const char *title = get_game_title();
-    const char *form_1 = "Augustus requires the original files from %s to run.\n\nThe selected folder is not a proper %s folder.\n\nPress OK to select another folder or Cancel to exit.";
-    const char *form_2 = "Please select your %s folder";
-
-    // size of buffer is 200 initially - resized to (excess discarded) size of format + size of arg (game title) - 2 (%s) + 1 (null terminator)
-    char *buf = (char *) malloc(200);
-    if (again) {
-        snprintf(buf, strlen(form_1) + 2 * strlen(title) - 3, form_1, title, title);
-        if (!tinyfd_messageBox("Wrong folder selected", buf, "okcancel", "warning",
-                               1)) // hitting cancel will return "0"
-        {
-            free(buf);
-            return NULL;
-        }
-    }
-
-    snprintf(buf, strlen(form_2) + strlen(title) - 1, form_2, title);
-
-    const char *dir = tinyfd_selectFolderDialog(buf, NULL);
-    free(buf);
-    return dir;
-}
-#endif
-
 static int init_sdl(void) {
     SDL_Log("Initializing SDL");
     Uint32 SDL_flags = SDL_INIT_AUDIO;
@@ -189,23 +173,25 @@ int pre_init_dir_attempt(const char *data_dir, const char *lmsg) {
         return 1;
     return 0;
 }
+
 static int pre_init(const char *custom_data_dir) {
     // first attempt loading game from custom path passed as argument...
     if (custom_data_dir) {
-        if (pre_init_dir_attempt(custom_data_dir, "Attempting to load game from %s"))
+        if (pre_init_dir_attempt(custom_data_dir, "Attempting to load game from %s")) {
             return 1;
+        }
+
         SDL_Log("%s: directory not found", custom_data_dir);
         return 0;
     }
 
     // ...then from working directory...
     SDL_Log("Attempting to load game from working directory");
-    if (game_pre_init())
+    if (game_pre_init()) {
         return 1;
-
+    }
 
     // ...then from the executable base path...
-#if SDL_VERSION_ATLEAST(2, 0, 1)
     if (platform_sdl_version_at_least(2, 0, 1)) {
         char *base_path = SDL_GetBasePath();
         if (pre_init_dir_attempt(base_path, "Attempting to load game from base path %s")) {
@@ -213,34 +199,169 @@ static int pre_init(const char *custom_data_dir) {
             return 1;
         }
     }
-#endif
 
-    // ...then finally from the user-defined path (saved in pref file)
-#ifdef USE_TINYFILEDIALOGS
     const char *user_dir = pref_get_gamepath();
-    if (user_dir && pre_init_dir_attempt(user_dir, "Attempting to load game from user pref %s"))
+    if (user_dir && pre_init_dir_attempt(user_dir, "Attempting to load game from user pref %s")) {
         return 1;
-
-    // if the saved path fails, ask the user for one
-    user_dir = ask_for_data_dir(0);
-    while (user_dir) {
-        if (pre_init_dir_attempt(user_dir, "Attempting to load game from user-selected dir %s")) {
-            pref_save_gamepath(user_dir); // save new accepted dir to pref
-            return 1;
-        }
-        user_dir = ask_for_data_dir(
-                1); // if not hitting "cancel" it will continue check the selected path (because the selection fills user_dir)
     }
-#else
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-        "Julius requires the original files from Caesar 3 to run.",
-        "Move the Julius executable to the directory containing an existing "
-        "Caesar 3 installation, or run:\njulius path-to-c3-directory",
-        NULL);
-#endif
 
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "'*.eng' or '*_mm.eng' files not found or too large.");
     return 0;
+}
+
+struct video_mode { 
+    int w, h;
+    std::string str;
+    video_mode(int _w, int _h) : w(_w), h(_h) {
+        char buffer[64] = {0};
+        snprintf(buffer, 64, "%u x %u", _w, _h);
+        str = buffer;
+    }
+    bool operator<(const video_mode &o) const { return ((int64_t(w) << 32) + h) < ((int64_t(o.w) << 32) + o.h); }
+};
+static std::set<video_mode> get_video_modes() {
+    /* Get available fullscreen/hardware modes */
+    int num = SDL_GetNumDisplayModes(0);
+
+    std::set<video_mode> uniqueModes;
+    uniqueModes.insert({1920,1080});
+    uniqueModes.insert({1600,900});
+    uniqueModes.insert({1440,800});
+    uniqueModes.insert({1280,1024});
+    uniqueModes.insert({1280,800});
+    uniqueModes.insert({1024,768});
+    uniqueModes.insert({800,600});
+
+    int maxWidth = 0;
+    for (int i = 0; i < num; ++i) {
+        SDL_DisplayMode mode;
+        if (SDL_GetDisplayMode(0, i, &mode) == 0 && mode.w > 640 ) {
+            maxWidth = std::max( mode.w, maxWidth );
+            if (uniqueModes.count({mode.w, mode.h}) == 0) {
+               
+                uniqueModes.insert(video_mode(mode.w, mode.h));
+            }
+        }
+    }
+
+    return uniqueModes;
+}
+
+static bool show_options_window() {
+    SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+    SDL_Window* platform_window = SDL_CreateWindow("Ozymandias: configuration", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+
+    SDL_Renderer* renderer = SDL_CreateRenderer(platform_window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+    if (renderer == NULL) {
+        SDL_Log("Error creating SDL_Renderer!");
+        exit(-1);
+    }
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+    // Setup Platform/Renderer backends
+    ImGui_ImplSDL2_InitForSDLRenderer(platform_window, renderer);
+    ImGui_ImplSDLRenderer_Init(renderer);
+
+    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+    bool done = false;
+
+    auto video_modes = get_video_modes();
+    ImGuiFileDialog fileDialog;
+    while (!done) {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            ImGui_ImplSDL2_ProcessEvent(&event);
+            if (event.type == SDL_QUIT)
+                done = true;
+            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(platform_window))
+                done = true;
+        }
+
+        // Start the Dear ImGui frame
+        ImGui_ImplSDLRenderer_NewFrame();
+        ImGui_ImplSDL2_NewFrame();
+        ImGui::NewFrame();
+
+        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+        {
+            static float f = 0.0f;
+            static int counter = 0;
+
+            ImVec2 window_size(1280 * 0.75, 720 * 0.75);
+            int platform_window_w, platform_window_h;
+            SDL_GetWindowSize(platform_window, &platform_window_w, &platform_window_h);
+
+            ImGui::SetNextWindowPos({(platform_window_w - window_size.x) / 2, (platform_window_h - window_size.y) / 2});
+            ImGui::SetNextWindowSize(window_size);
+
+            ImGui::Begin("Configuration", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus);
+            ImGui::Text("Game folder:");
+            static char buffer_game_folder[512] = "";
+            ImGui::InputText("default", buffer_game_folder, 64);
+            ImGui::SameLine();
+            if (ImGui::Button("...")) {
+                fileDialog.OpenDialog("Choose Folder", "", nullptr, ".", 1, nullptr, ImGuiFileDialogFlags_Modal);
+            }
+
+            ImVec2 filedialog_size(1280 * 0.5, 720 * 0.5);
+            ImVec2 filedialog_pos{(platform_window_w - filedialog_size.x) / 2, (platform_window_h - filedialog_size.y) / 2};
+            if(fileDialog.Display("Choose Folder", ImGuiWindowFlags_NoCollapse|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize, filedialog_size, filedialog_size, filedialog_pos)) {
+                ImGui::SetWindowFocus();
+                if (fileDialog.IsOk()) {
+                    // Get the selected folder path
+                    strcpy(ozymandias_core.data_directory, fileDialog.GetFilePathName().c_str());
+                    platform_file_manager_set_base_path(ozymandias_core.data_directory);
+                }
+                fileDialog.Close();
+            }
+
+            ImGui::Text("Resolution:");
+            static int item_current_idx = 0;
+            if (ImGui::BeginListBox("##resolution")) {
+                int index = 0;
+                for (auto it = video_modes.begin(); it != video_modes.end(); ++it, ++index) {
+                    const bool is_selected = (item_current_idx == index);
+                    if (ImGui::Selectable(it->str.c_str(), is_selected)) {
+                        item_current_idx = index;
+                        ozymandias_core.window_width = it->w;
+                        ozymandias_core.window_height = it->h;
+                    }
+
+                    if (is_selected) {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndListBox();
+            }
+
+            
+            ImGui::Checkbox("Window mode", &ozymandias_core.window_mode);
+
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImGui::End();
+        }
+
+        // Rendering
+        ImGui::Render();
+        SDL_SetRenderDrawColor(renderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
+        SDL_RenderClear(renderer);
+        ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
+        SDL_RenderPresent(renderer);
+    }
+
+    // Cleanup
+    ImGui_ImplSDLRenderer_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(platform_window);
+
+    return *ozymandias_core.data_directory;
 }
 
 static void setup(const ozymandias_args &args) {
@@ -259,13 +380,21 @@ static void setup(const ozymandias_args &args) {
     // pre-init engine: assert game directory, pref files, etc.
     init_game_environment(args.game_engine_env, args.game_engine_debug_mode);
     if (!pre_init(args.data_directory)) {
-        SDL_Log("Exiting: game pre-init failed");
-        exit(1);
+        SDL_Log("game pre-init failed");
+
+        bool ok = show_options_window();
+
+        if (!ok) {
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+                                     "Warning",
+                                     "Ozymandias requires the original files from Pharaoh to run."
+                                     "Move the Julius executable to the directory containing an existing "
+                                     "Pharaoh installation, or run: ozymandias path/to/directory",
+                                     NULL);
+            exit(1);
+        }
     }
 
-#ifdef DEBUG
-    goto skip;
-#endif
     // set up game display
     char title[100] = {0};
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
@@ -275,7 +404,6 @@ static void setup(const ozymandias_args &args) {
     }
     platform_init_cursors(args.cursor_scale_percentage); // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
 
-    skip:
     // init game!
     time_set_millis(SDL_GetTicks());
     if (!game_init()) {

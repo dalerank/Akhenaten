@@ -11,8 +11,7 @@ This is a fork of the **Julius/Augustus** project with the aim of making it work
 The work is still in progress, so any help or support is appreciated. You can more or less load
 original save games and play the first few missions in the campaign without major issues.
 
-If you're looking for _Caesar 3_'s vanilla experience with modern machine compatibility,
-check out [Julius](https://github.com/bvschaik/julius).<br>
+If you're looking for _Caesar 3_'s vanilla experience with modern machine compatibility, check out [Julius](https://github.com/bvschaik/julius).<br>
 If you want additional features and visual/UI improvements, and don't care about strict
 compatibility with the original save files, check out [Augustus](https://github.com/Keriew/augustus).<br>
 For the original game, check out the page on [Steam](https://store.steampowered.com/app/564530/Pharaoh__Cleopatra/)
@@ -93,3 +92,5 @@ Only tested on Manjaro, but under Ubuntu or similar you should install the same 
 Currently not tested on Mac, but you can try the instructions from Julius. They should be similar besides the additional need for SDL2_image. https://github.com/bvschaik/julius/wiki/Building-Julius
 
 (Feel free to add a pull request to add additional Mac instructions here.)
+
+![Alt](https://repobeats.axiom.co/api/embed/d972b1b3da5423da758f1b4a1396177626bff54b.svg "Repobeats analytics image")

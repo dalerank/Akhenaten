@@ -1,6 +1,7 @@
 #include "arguments.h"
 
 #include "SDL.h"
+#include <memory>
 
 #define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2"
 #define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
@@ -49,7 +50,7 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
     int ok = 1;
 
     // Set sensible defaults
-    output_args.data_directory = nullptr;
+    strnset(output_args.data_directory, 256, 0);
     output_args.display_scale_percentage = 100;
     output_args.cursor_scale_percentage = 100;
     output_args.game_engine_env = 1; // run pharaoh by default
@@ -70,7 +71,7 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
         else if (SDL_strcmp(argv[i], "--window") == 0)
             output_args.window_mode = true;
         else if (SDL_strcmp(argv[i], "--render") == 0) {
-            output_args.driver = argv[i + 1];
+            strcpy(output_args.driver, argv[i + 1]);
             i++;
         } else if (SDL_strcmp(argv[i], "--display-scale") == 0) {
             if (i + 1 < argc) {
@@ -114,7 +115,7 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
             SDL_Log(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]);
             ok = 0;
         } else {
-            output_args.data_directory = argv[i];
+            strcpy(output_args.data_directory, argv[i]);
         }
     }
 

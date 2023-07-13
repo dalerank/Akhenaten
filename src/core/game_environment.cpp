@@ -14,7 +14,7 @@ void init_game_environment(int env, int mode) {
     GAME_ENV = env;
     switch (env) {
         case ENGINE_ENV_PHARAOH:
-            game_name = "Pharaoh";
+            game_name = "Ozymandias";
             pref_filename = "data_dir_pharaoh.txt";
             break;
     }

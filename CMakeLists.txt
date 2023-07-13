@@ -116,10 +116,6 @@ set(EXPAT_FILES
     ext/expat/xmltok.c
 )
 
-set(TINYFD_FILES
-    ext/tinyfiledialogs/tinyfiledialogs.c
-)
-
 #set(PNG_FILES
 #    ext/png/png.c
 #    ext/png/pngerror.c
@@ -215,12 +211,17 @@ file(GLOB WINDOW_BUILDING_FILES ${PROJECT_SOURCE_DIR}/src/window/building/*.cpp)
 file(GLOB DEV_FILES ${PROJECT_SOURCE_DIR}/src/dev/*.cpp)
 file(GLOB EDITOR_FILES ${PROJECT_SOURCE_DIR}/src/editor/*.cpp)
 file(GLOB TRANSLATION_FILES ${PROJECT_SOURCE_DIR}/src/translation/*.cpp)
+file(GLOB IMGUI_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/*.cpp)
+file(GLOB IMGUI_BACKEND_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/backends/*.cpp)
 
 set(WIDGET_CITY_FILES ${WIDGET_CITY_FILES}
     ${PROJECT_SOURCE_DIR}/src/widget/city.cpp)
 
 set(WINDOW_ADVISOR_FILES ${WINDOW_ADVISOR_FILES}
     ${PROJECT_SOURCE_DIR}/src/window/advisors.cpp)
+
+set(IMGUI_FILES ${IMGUI_FILES}
+    ${IMGUI_BACKEND_FILES})
 
 if(MSVC)
     source_group("core" FILES ${CORE_FILES})
@@ -252,6 +253,7 @@ if(MSVC)
     source_group("dev" FILES ${DEV_FILES})
     source_group("editor" FILES ${EDITOR_FILES})
     source_group("translation" FILES ${TRANSLATION_FILES})
+    source_group("imgui" FILES ${IMGUI_FILES})
 endif()
 
 set(MACOSX_FILES "")
@@ -279,7 +281,6 @@ set(SOURCE_FILES
     ${DEV_FILES}
     ${EDITOR_FILES}
     ${TRANSLATION_FILES}
-    ${TINYFD_FILES}
     ${ADVISOR_FILES}
     ${WINDOW_BUILDING_FILES}
     ${WINDOW_EDITOR_FILES}
@@ -293,6 +294,7 @@ set(SOURCE_FILES
     ${CORE_ENCODING_FILES}
     ${GRID_FILES}
     ${GRID_ROUTING_FILES}
+    ${IMGUI_FILES}
 #    ${PROJECT_SOURCE_DIR}/res/augustus.rc
     ${MACOSX_FILES}
 #    ${PNG_FILES}
@@ -378,7 +380,6 @@ endif()
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${SDL2_IMAGE_INCLUDE_DIR})
-#include_directories("LIB/64/include")
 
 if(SYSTEM_LIBS)
     find_package(ZLIB)
@@ -416,6 +417,8 @@ endif()
 
 include_directories(ext)
 include_directories(src)
+include_directories(ext/imgui)
+include_directories(ext/imgui/backends)
 if(MSVC)
     include_directories(ext/dirent)
     set_target_properties(${SHORT_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${GAME_WORKING_DIRECTORY}")
