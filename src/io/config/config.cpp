@@ -67,7 +67,7 @@ static const struct {
 };
 
 static const char *ini_string_keys[] = {
-        "ui_language_dir"
+        "ui_language_dir",
 };
 
 static bool values[CONFIG_MAX_ENTRIES];

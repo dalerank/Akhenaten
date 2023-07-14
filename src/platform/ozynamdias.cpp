@@ -275,10 +275,12 @@ static bool show_options_window() {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             ImGui_ImplSDL2_ProcessEvent(&event);
-            if (event.type == SDL_QUIT)
-                done = true;
-            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(platform_window))
-                done = true;
+            if (event.type == SDL_QUIT) {
+                exit(1);
+            }
+            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(platform_window)) {
+                exit(1);
+            }
         }
 
         // Start the Dear ImGui frame
@@ -295,11 +297,12 @@ static bool show_options_window() {
             int platform_window_w, platform_window_h;
             SDL_GetWindowSize(platform_window, &platform_window_w, &platform_window_h);
 
-            ImGui::SetNextWindowPos({(platform_window_w - window_size.x) / 2, (platform_window_h - window_size.y) / 2});
+            ImVec2 window_pos{(platform_window_w - window_size.x) / 2, (platform_window_h - window_size.y) / 2};
+            ImGui::SetNextWindowPos(window_pos);
             ImGui::SetNextWindowSize(window_size);
 
             ImGui::Begin("Configuration", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus);
-            ImGui::Text("Game folder:");
+            ImGui::Text("Data folder:");
             static char buffer_game_folder[512] = "";
             ImGui::InputText("default", buffer_game_folder, 64);
             ImGui::SameLine();
@@ -314,7 +317,7 @@ static bool show_options_window() {
                 if (fileDialog.IsOk()) {
                     // Get the selected folder path
                     strcpy(ozymandias_core.data_directory, fileDialog.GetFilePathName().c_str());
-                    platform_file_manager_set_base_path(ozymandias_core.data_directory);
+                    //platform_file_manager_set_base_path(ozymandias_core.data_directory);
                 }
                 fileDialog.Close();
             }
@@ -338,10 +341,14 @@ static bool show_options_window() {
                 ImGui::EndListBox();
             }
 
-            
             ImGui::Checkbox("Window mode", &ozymandias_core.window_mode);
 
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImVec2 left_bottom_corner{5, window_size.y - 30};
+            ImGui::SetCursorPos(left_bottom_corner);
+            if (ImGui::Button("RUN GAME")) {
+                done = true;
+            }
+            //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::End();
         }
 
@@ -361,7 +368,7 @@ static bool show_options_window() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(platform_window);
 
-    return *ozymandias_core.data_directory;
+    return pre_init(ozymandias_core.data_directory);
 }
 
 static void setup(const ozymandias_args &args) {
