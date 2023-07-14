@@ -264,7 +264,7 @@ int widget_sidebar_city_handle_mouse(const mouse *m) {
         if (button_id)
             data.focus_tooltip_text_id = button_id + 40;
 
-        handled |= sidebar_extra_handle_mouse(m);
+        handled |= (sidebar_extra_handle_mouse(m) != 0);
     }
     return handled;
 }

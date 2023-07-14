@@ -6,15 +6,15 @@
 #define TOP_MENU_HEIGHT 30
 #define SIDEBAR_EXPANDED_WIDTH 186
 
-typedef struct {
+struct menu_item {
     short text_group;
     short text_number;
     void (*left_click_handler)(int param);
     int parameter;
     int hidden;
-} menu_item;
+};
 
-typedef struct {
+struct menu_bar_item {
     short text_group;
     menu_item *items;
     int num_items;
@@ -22,6 +22,6 @@ typedef struct {
     short x_end;
     int calculated_width_blocks;
     int calculated_height_blocks;
-} menu_bar_item;
+};
 
 #endif // GRAPHICS_MENU_H

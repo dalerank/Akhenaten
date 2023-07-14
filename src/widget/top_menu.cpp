@@ -32,6 +32,9 @@
 #include "window/speed_options.h"
 #include "window/main_menu.h"
 #include "graphics/elements/panel.h"
+#include "dev/debug.h"
+
+#include "core/span.hpp"
 
 enum E_INFO {
     INFO_NONE = 0,
@@ -40,12 +43,19 @@ enum E_INFO {
     INFO_DATE = 3
 };
 
+enum e_menu_index {
+    INDEX_OPTIONS = 1,
+    INDEX_HELP = 2,
+    INDEX_ADVISORS = 3,
+    INDEX_DEBUG = 4
+};
+
 static void menu_file_new_game(int param);
 static void menu_file_replay_map(int param);
 static void menu_file_load_game(int param);
 static void menu_file_save_game(int param);
 static void menu_file_delete_game(int param);
-static void menu_file_exit_game(int param);
+static void menu_file_exit_city(int param);
 
 static void menu_options_display(int param);
 static void menu_options_sound(int param);
@@ -59,6 +69,8 @@ static void menu_help_warnings(int param);
 static void menu_help_about(int param);
 
 static void menu_advisors_go_to(int advisor);
+static void menu_debug_change_opt(int opt);
+static void menu_update_text(menu_bar_item *menu, int index, int text_number);
 
 static menu_item menu_file[] = {
         {1, 1, menu_file_new_game,    0},
@@ -66,7 +78,7 @@ static menu_item menu_file[] = {
         {1, 3, menu_file_load_game,   0},
         {1, 4, menu_file_save_game,   0},
         {1, 6, menu_file_delete_game, 0},
-        {1, 5, menu_file_exit_game,   0},
+        {1, 5, menu_file_exit_city,   0},
 };
 
 static menu_item menu_options[] = {
@@ -85,26 +97,42 @@ static menu_item menu_help[] = {
 };
 
 static menu_item menu_advisors[] = {
-        {4, 1,  menu_advisors_go_to, 1},
-        {4, 2,  menu_advisors_go_to, 2},
-        {4, 3,  menu_advisors_go_to, 3},
-        {4, 4,  menu_advisors_go_to, 4},
-        {4, 5,  menu_advisors_go_to, 5},
-        {4, 6,  menu_advisors_go_to, 6},
-        {4, 7,  menu_advisors_go_to, 7},
-        {4, 8,  menu_advisors_go_to, 8},
-        {4, 9,  menu_advisors_go_to, 9},
-        {4, 10, menu_advisors_go_to, 10},
-        {4, 11, menu_advisors_go_to, 11},
-        {4, 12, menu_advisors_go_to, 12},
+        {4, 1,  menu_advisors_go_to, ADVISOR_LABOR},
+        {4, 2,  menu_advisors_go_to, ADVISOR_MILITARY},
+        {4, 3,  menu_advisors_go_to, ADVISOR_IMPERIAL},
+        {4, 4,  menu_advisors_go_to, ADVISOR_RATINGS},
+        {4, 5,  menu_advisors_go_to, ADVISOR_TRADE},
+        {4, 6,  menu_advisors_go_to, ADVISOR_POPULATION},
+        {4, 7,  menu_advisors_go_to, ADVISOR_HEALTH},
+        {4, 8,  menu_advisors_go_to, ADVISOR_EDUCATION},
+        {4, 9,  menu_advisors_go_to, ADVISOR_ENTERTAINMENT},
+        {4, 10, menu_advisors_go_to, ADVISOR_RELIGION},
+        {4, 11, menu_advisors_go_to, ADVISOR_FINANCIAL},
+        {4, 12, menu_advisors_go_to, ADVISOR_CHIEF},
 };
 
-static menu_bar_item menu[] = {
+static menu_item menu_debug[] = {
+        {5, 1,  menu_debug_change_opt, e_debug_show_pages},
+        {5, 2,  menu_debug_change_opt, e_debug_show_game_time},
+        {5, 3,  menu_debug_change_opt, e_debug_show_build_planner},
+        {5, 4,  menu_debug_change_opt, e_debug_show_religion},
+        {5, 5,  menu_debug_change_opt, e_debug_show_tutorial},
+        {5, 6,  menu_debug_change_opt, e_debug_show_floods},
+        {5, 7,  menu_debug_change_opt, e_debug_show_camera},
+};
+
+menu_bar_item g_top_menu[] = {
         {1, menu_file,     6},
         {2, menu_options,  5},
         {3, menu_help,     4},
         {4, menu_advisors, 12},
+        {5, menu_debug,    7},
 };
+
+static void menu_debug_change_opt(int opt) {
+    g_debug_show_opts[opt] = !g_debug_show_opts[opt];
+    menu_update_text(&g_top_menu[INDEX_DEBUG], opt-1, g_debug_show_opts[opt] ? 51 : 52);
+}
 
 static void button_rotate_reset(int param1, int param2) {
     game_orientation_rotate_north();
@@ -129,10 +157,7 @@ static generic_button orientation_buttons_ph[] = {
         {36-12, 0, 12, 21, button_rotate_right, button_none, 0, 0},
 };
 
-static const int INDEX_OPTIONS = 1;
-static const int INDEX_HELP = 2;
-
-static struct {
+struct top_menu_data_t {
     int offset_funds;
     int offset_population;
     int offset_date;
@@ -141,23 +166,26 @@ static struct {
     int open_sub_menu;
     int focus_menu_id;
     int focus_sub_menu_id;
-} data;
+};
+
+top_menu_data_t g_top_menu_data;
 
 #define TOP_MENU_BASE_X_OFFSET 10
 #define MENU_BASE_TEXT_Y_OFFSET 6
 #define MENU_ITEM_HEIGHT 20
 
-void menu_bar_draw(menu_bar_item *items, int num_items) {
+void menu_bar_draw(std::span<menu_bar_item> &items) {
     short x_offset = TOP_MENU_BASE_X_OFFSET;
-    for (int i = 0; i < num_items; i++) {
-        items[i].x_start = x_offset;
-        x_offset += lang_text_draw(items[i].text_group, 0, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT);
-        items[i].x_end = x_offset;
+    for (auto &item: items) {
+        item.x_start = x_offset;
+        x_offset += lang_text_draw(item.text_group, 0, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT);
+        item.x_end = x_offset;
         x_offset += 32; // spacing
     }
 }
-static int get_menu_bar_item(const mouse *m, menu_bar_item *items, int num_items) {
-    for (int i = 0; i < num_items; i++) {
+
+static int get_menu_bar_item(const mouse *m, std::span<menu_bar_item> &items) {
+    for (int i = 0; i < items.size(); i++) {
         if (items[i].x_start <= m->x &&
             items[i].x_end > m->x &&
             MENU_BASE_TEXT_Y_OFFSET <= m->y &&
@@ -167,8 +195,9 @@ static int get_menu_bar_item(const mouse *m, menu_bar_item *items, int num_items
     }
     return 0;
 }
-int menu_bar_handle_mouse(const mouse *m, menu_bar_item *items, int num_items, int *focus_menu_id) {
-    int menu_id = get_menu_bar_item(m, items, num_items);
+
+static int menu_bar_handle_mouse(const mouse *m, std::span<menu_bar_item> &items, int *focus_menu_id) {
+    int menu_id = get_menu_bar_item(m, items);
     if (focus_menu_id)
         *focus_menu_id = menu_id;
 
@@ -273,13 +302,15 @@ static struct {
 } drawn;
 
 static void clear_state(void) {
+    auto &data = g_top_menu_data;
+
     data.open_sub_menu = 0;
     data.focus_menu_id = 0;
     data.focus_sub_menu_id = 0;
 }
 
 static void set_text_for_autosave(void) {
-    menu_update_text(&menu[INDEX_OPTIONS], 4, setting_monthly_autosave() ? 51 : 52);
+    menu_update_text(&g_top_menu[INDEX_OPTIONS], 4, setting_monthly_autosave() ? 51 : 52);
 }
 static void set_text_for_tooltips(void) {
     int new_text;
@@ -296,14 +327,14 @@ static void set_text_for_tooltips(void) {
         default:
             return;
     }
-    menu_update_text(&menu[INDEX_HELP], 1, new_text);
+    menu_update_text(&g_top_menu[INDEX_HELP], 1, new_text);
 }
 static void set_text_for_warnings(void) {
-    menu_update_text(&menu[INDEX_HELP], 2, setting_warnings() ? 6 : 5);
+    menu_update_text(&g_top_menu[INDEX_HELP], 2, setting_warnings() ? 6 : 5);
 }
 
 static void init(void) {
-    menu[INDEX_OPTIONS].items[0].hidden = system_is_fullscreen_only();
+    g_top_menu[INDEX_OPTIONS].items[0].hidden = system_is_fullscreen_only();
     set_text_for_autosave();
     set_text_for_tooltips();
     set_text_for_warnings();
@@ -314,9 +345,11 @@ static void draw_background(void) {
     window_city_draw();
 }
 static void draw_foreground(void) {
+    auto &data = g_top_menu_data;
     if (!data.open_sub_menu)
         return;
-    menu_draw(&menu[data.open_sub_menu - 1], data.focus_sub_menu_id);
+
+    menu_draw(&g_top_menu[data.open_sub_menu - 1], data.focus_sub_menu_id);
 }
 
 static void handle_input(const mouse *m, const hotkeys *h) {
@@ -368,13 +401,14 @@ static void refresh_background(void) {
     }
 }
 void widget_top_menu_draw(int force) {
+    auto &data = g_top_menu_data;
     if (!force && drawn.treasury == city_finance_treasury() &&
         drawn.population == city_population() &&
         drawn.month == game_time_month())
         return;
 
     refresh_background();
-    menu_bar_draw(menu, 4);
+    menu_bar_draw(make_span(g_top_menu));
 
     color_t treasure_color = COLOR_WHITE;
     int treasury = city_finance_treasury();
@@ -437,6 +471,7 @@ void widget_top_menu_draw(int force) {
 }
 
 static int get_info_id(int mouse_x, int mouse_y) {
+    auto &data = g_top_menu_data;
     if (mouse_y < 4 || mouse_y >= 18)
         return INFO_NONE;
 
@@ -461,17 +496,18 @@ static int get_info_id(int mouse_x, int mouse_y) {
 }
 
 static bool handle_input_submenu(const mouse *m, const hotkeys *h) {
+    auto &data = g_top_menu_data;
     if (m->right.went_up || h->escape_pressed) {
         clear_state();
         window_go_back();
         return true;
     }
-    int menu_id = menu_bar_handle_mouse(m, menu, 4, &data.focus_menu_id);
+    int menu_id = menu_bar_handle_mouse(m, make_span(g_top_menu), &data.focus_menu_id);
     if (menu_id && menu_id != data.open_sub_menu) {
         window_invalidate();
         data.open_sub_menu = menu_id;
     }
-    if (!menu_handle_mouse(m, &menu[data.open_sub_menu - 1], &data.focus_sub_menu_id)) {
+    if (!menu_handle_mouse(m, &g_top_menu[data.open_sub_menu - 1], &data.focus_sub_menu_id)) {
         if (m->left.went_up) {
             clear_state();
             window_go_back();
@@ -494,7 +530,8 @@ static bool handle_right_click(int type) {
     return true;
 }
 static bool handle_mouse_menu(const mouse *m) {
-    int menu_id = menu_bar_handle_mouse(m, menu, 4, &data.focus_menu_id);
+    auto &data = g_top_menu_data;
+    int menu_id = menu_bar_handle_mouse(m, make_span(g_top_menu), &data.focus_menu_id);
     if (menu_id && m->left.went_up) {
         data.open_sub_menu = menu_id;
         top_menu_window_show();
@@ -507,6 +544,7 @@ static bool handle_mouse_menu(const mouse *m) {
 }
 
 bool widget_top_menu_handle_input(const mouse *m, const hotkeys *h) {
+    auto &data = g_top_menu_data;
     int result = 0;
     if (!widget_city_has_input()) {
         int button_id = 0;
@@ -534,6 +572,7 @@ bool widget_top_menu_handle_input(const mouse *m, const hotkeys *h) {
     return result;
 }
 int widget_top_menu_get_tooltip_text(tooltip_context *c) {
+    auto &data = g_top_menu_data;
     if (data.focus_menu_id)
         return 50 + data.focus_menu_id;
 
@@ -596,7 +635,7 @@ static void menu_file_confirm_exit(bool accepted) {
         window_city_show();
     }
 }
-static void menu_file_exit_game(int param) {
+static void menu_file_exit_city(int param) {
     clear_state();
     window_popup_dialog_show(POPUP_DIALOG_QUIT, menu_file_confirm_exit, e_popup_btns_yesno);
 }

@@ -1,7 +1,7 @@
 #ifndef CITY_CONSTANTS_H
 #define CITY_CONSTANTS_H
 
-enum {
+enum e_advisor {
     ADVISOR_NONE = 0,
     ADVISOR_LABOR = 1,
     ADVISOR_MILITARY = 2,

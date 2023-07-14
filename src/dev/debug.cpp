@@ -615,11 +615,14 @@ const char *get_terrain_type(char* buffer, const char *def, map_point tile) {
     return buffer;
 }
 
+bool g_debug_show_opts[e_debug_opt_size] = {0};
+
+
 void draw_debug_ui(int x, int y) {
     uint8_t str[300];
 
     /////// DEBUG PAGES NAME
-    if (true) {
+    if (g_debug_show_opts[e_debug_show_pages]) {
         y += 13;
         int DB1 = abs(debug_range_1) % 7;
         int DB2 = abs(debug_range_2) % 20;
@@ -683,7 +686,7 @@ void draw_debug_ui(int x, int y) {
     }
 
     /////// TIME
-    if (true) {
+    if (g_debug_show_opts[e_debug_show_game_time]) {
         auto time = game_time_struct();
 
         debug_text(str, x, y + 15, 50, "tick:", time->tick);
@@ -700,7 +703,7 @@ void draw_debug_ui(int x, int y) {
     }
 
     /////// BUILD PLANNER
-    if (true) {
+    if (g_debug_show_opts[e_debug_show_build_planner]) {
         int cl = 90;
         debug_text(str, x, y + 15, cl, "type:", Planner.build_type);
         debug_text(str, x, y + 25, cl, "in progress:", Planner.in_progress);
@@ -750,7 +753,7 @@ void draw_debug_ui(int x, int y) {
     }
 
     /////// RELIGION
-    if (false) {
+    if (g_debug_show_opts[e_debug_show_religion]) {
         int cl = 0;
         text_draw((uint8_t *) string_from_ascii("      mood/target  wrath/ankhs   buildings  coverage  festival"), x, y + 15, FONT_SMALL_OUTLINED, COLOR_WHITE);
         y += 15;
@@ -850,7 +853,7 @@ void draw_debug_ui(int x, int y) {
     }
 
     /////// FLOODS
-    if (false) {
+    if (g_debug_show_opts[e_debug_show_floods]) {
         const auto &floods = floodplain_data();
 
         double _c_curr = floods_current_cycle();
@@ -945,7 +948,7 @@ void draw_debug_ui(int x, int y) {
     }
 
     /////// CAMERA
-    if (true) {
+    if (g_debug_show_opts[e_debug_show_camera]) {
         map_point camera_tile = city_view_get_camera_mappoint();
         pixel_coordinate camera_pixels = camera_get_pixel_offset_internal();
 
@@ -1018,7 +1021,8 @@ void draw_debug_ui(int x, int y) {
     }
 
     /////// TUTORIAL
-    if (false) {auto flags = tutorial_flags_struct();
+    if (g_debug_show_opts[e_debug_show_tutorial]) {
+        auto flags = tutorial_flags_struct();
         const char* const flagnames[41] = {
                 "fire",
                 "pop_150",

@@ -11,6 +11,20 @@ extern int debug_range_2;
 extern int debug_range_3;
 extern int debug_range_4;
 
+enum e_debug_show_opt {
+    e_debug_show_pages = 0,
+    e_debug_show_game_time,
+    e_debug_show_build_planner,
+    e_debug_show_religion,
+    e_debug_show_tutorial,
+    e_debug_show_floods,
+    e_debug_show_camera,
+
+    e_debug_opt_size,
+};
+
+extern bool g_debug_show_opts[e_debug_opt_size];
+
 void handle_debug_hotkeys(const hotkeys *h);
 
 void debug_font_test();
