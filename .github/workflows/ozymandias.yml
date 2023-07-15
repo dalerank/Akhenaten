@@ -25,17 +25,11 @@ jobs:
         cd ..
         cmake --build ./build --target ozymandias --config Release
         copy ./build/Release/ozymandias.exe ./bin_x64/ozymandias.exe
+    - name: create-package
+      shell: pwsh
+      run: |
+        Compress-Archive -Path bin_x64/* -Destination windows_build.zip
     - uses: actions/upload-artifact@v3
       with:
         name: windows_build
         path: bin_x64
-    - name: create-package
-      run: |
-        Compress-Archive -Path bin_x64/* -Destination windows_build.zip
-    - name: Upload to gdrive
-      uses: Jumbo810/Upload_Github_Artifacts_TO_GDrive@v1.1.1
-      with:
-        credentials: ${{ secrets.GDRIVE_CREDENTIALS }}
-        filename: "windows_build.zip"
-        parent_folder_id: ${{ secrets.FOLDERID }}
-        target: "windows_build.zip" # optional string

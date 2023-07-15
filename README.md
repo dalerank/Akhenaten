@@ -22,7 +22,7 @@ For the official upcoming remaster (unrelated to Ozymandias) called _A New Era_,
 
 | Platform       | Latest release | Unstable build |
 | -------------- | -------------- | -------------- |
-| Windows        | -              | -              |
+| Windows        | -              | [![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Matrix/badge.svg)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias/master/windows_build.zip)              |
 | Linux AppImage | -              | -              |
 | Mac            | -              | -              |
 
