@@ -30,9 +30,9 @@ static struct {
 } data;
 
 void scenario_earthquake_init(void) {
-    data.game_year = scenario_data.start_year + scenario_data.earthquake.year;
+    data.game_year = g_scenario_data.start_year + g_scenario_data.earthquake.year;
     data.month = 2 + (random_byte() & 7);
-    switch (scenario_data.earthquake.severity) {
+    switch (g_scenario_data.earthquake.severity) {
         default:
             data.max_duration = 0;
             data.max_delay = 0;
@@ -52,8 +52,8 @@ void scenario_earthquake_init(void) {
     }
     data.state = EVENT_STATE_INITIAL;
     for (int i = 0; i < 4; i++) {
-        data.expand[i].x = scenario_data.earthquake_point.x();
-        data.expand[i].y = scenario_data.earthquake_point.y();
+        data.expand[i].x = g_scenario_data.earthquake_point.x();
+        data.expand[i].y = g_scenario_data.earthquake_point.y();
     }
 }
 
@@ -89,8 +89,8 @@ static void advance_earthquake_to_tile(int x, int y) {
 }
 
 void scenario_earthquake_process(void) {
-    if (scenario_data.earthquake.severity == EARTHQUAKE_NONE ||
-        scenario_data.earthquake_point.x() == -1 || scenario_data.earthquake_point.y() == -1)
+    if (g_scenario_data.earthquake.severity == EARTHQUAKE_NONE ||
+        g_scenario_data.earthquake_point.x() == -1 || g_scenario_data.earthquake_point.y() == -1)
         return;
     if (data.state == EVENT_STATE_INITIAL) {
         if (game_time_year() == data.game_year &&
@@ -195,8 +195,8 @@ void scenario_earthquake_process(void) {
                 default:
                     return;
             }
-            int x = calc_bound(data.expand[index].x + dx, 0, scenario_data.map.width - 1);
-            int y = calc_bound(data.expand[index].y + dy, 0, scenario_data.map.height - 1);
+            int x = calc_bound(data.expand[index].x + dx, 0, g_scenario_data.map.width - 1);
+            int y = calc_bound(data.expand[index].y + dy, 0, g_scenario_data.map.height - 1);
             if (can_advance_earthquake_to_tile(x, y)) {
                 data.expand[index].x = x;
                 data.expand[index].y = y;

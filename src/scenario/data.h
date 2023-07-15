@@ -111,7 +111,7 @@ typedef struct {
     int is_rise;
 } demand_change_t;
 
-extern struct scenario_t {
+struct scenario_data_t {
     uint8_t scenario_name[65];
 
     int start_year;
@@ -248,6 +248,7 @@ extern struct scenario_t {
     } monuments;
 
     bool is_saved;
-} scenario_data;
+};
 
+extern scenario_data_t g_scenario_data;
 #endif // SCENARIO_DATA_H

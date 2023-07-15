@@ -3,7 +3,7 @@
 
 #include "core/buffer.h"
 
-typedef struct scenario_data_buffers {
+struct scenario_data_buffers {
     buffer *mission_index = nullptr;
     buffer *map_name = nullptr;
     buffer *map_settings = nullptr;
@@ -36,8 +36,7 @@ typedef struct scenario_data_buffers {
     buffer *events_ph = nullptr;
 
     buffer *monuments = nullptr;
-
-} scenario_data_buffers;
+};
 
 bool scenario_is_saved(void);
 void scenario_settings_init(void);

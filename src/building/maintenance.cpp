@@ -295,23 +295,24 @@ void building_maintenance_check_rome_access(void) {
             map_routing_delete_first_wall_or_aqueduct(entry_point->x(), entry_point->y());
             map_routing_delete_first_wall_or_aqueduct(exit_point->x(), exit_point->y());
             map_routing_calculate_distances(entry_point->x(), entry_point->y());
-
+    
             map_tiles_update_all_walls();
             map_tiles_update_all_aqueducts(0);
             map_tiles_update_all_empty_land();
             map_tiles_update_all_meadow();
-
+    
             map_routing_update_land();
             map_routing_update_walls();
-
+    
             if (map_routing_distance(exit_point->grid_offset())) {
                 city_message_post(true, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
                 game_undo_disable();
                 return;
             }
         }
-        building_destroy_last_placed();
-    } else if (problem_grid_offset) {
+        //building_destroy_last_placed();
+    } //else 
+    if (problem_grid_offset) {
         // parts of city disconnected
         city_warning_show(WARNING_CITY_BOXED_IN);
         city_warning_show(WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH);

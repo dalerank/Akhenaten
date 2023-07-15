@@ -6,21 +6,21 @@
 #include "scenario/data.h"
 
 int scenario_empire_id(void) {
-    return scenario_data.empire.id;
+    return g_scenario_data.empire.id;
 }
 
 int scenario_empire_is_expanded(void) {
-    return scenario_data.empire.is_expanded;
+    return g_scenario_data.empire.is_expanded;
 }
 
 void scenario_empire_process_expansion(void) {
-    if (scenario_data.empire.is_expanded || scenario_data.empire.expansion_year <= 0)
+    if (g_scenario_data.empire.is_expanded || g_scenario_data.empire.expansion_year <= 0)
         return;
-    if (game_time_year() < scenario_data.empire.expansion_year + scenario_data.start_year)
+    if (game_time_year() < g_scenario_data.empire.expansion_year + g_scenario_data.start_year)
         return;
 
     empire_city_expand_empire();
 
-    scenario_data.empire.is_expanded = 1;
+    g_scenario_data.empire.is_expanded = 1;
     city_message_post(true, MESSAGE_EMPIRE_HAS_EXPANDED, 0, 0);
 }

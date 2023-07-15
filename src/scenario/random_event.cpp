@@ -34,7 +34,7 @@ static const int RANDOM_EVENT_PROBABILITY[128] = {
 };
 
 static void raise_wages(void) {
-    if (scenario_data.random_events.raise_wages) {
+    if (g_scenario_data.random_events.raise_wages) {
         if (city_labor_raise_wages_rome())
             city_message_post(true, MESSAGE_ROME_RAISES_WAGES, 0, 0);
 
@@ -42,7 +42,7 @@ static void raise_wages(void) {
 }
 
 static void lower_wages(void) {
-    if (scenario_data.random_events.lower_wages) {
+    if (g_scenario_data.random_events.lower_wages) {
         if (city_labor_lower_wages_rome())
             city_message_post(true, MESSAGE_ROME_LOWERS_WAGES, 0, 0);
 
@@ -50,7 +50,7 @@ static void lower_wages(void) {
 }
 
 static void disrupt_land_trade(void) {
-    if (scenario_data.random_events.land_trade_problem) {
+    if (g_scenario_data.random_events.land_trade_problem) {
         if (city_trade_has_land_trade_route()) {
             city_trade_start_land_trade_problems(48);
             if (scenario_property_climate() == CLIMATE_DESERT)
@@ -63,7 +63,7 @@ static void disrupt_land_trade(void) {
 }
 
 static void disrupt_sea_trade(void) {
-    if (scenario_data.random_events.sea_trade_problem) {
+    if (g_scenario_data.random_events.sea_trade_problem) {
         if (city_trade_has_sea_trade_route()) {
             city_trade_start_sea_trade_problems(48);
             city_message_post(true, MESSAGE_SEA_TRADE_DISRUPTED, 0, 0);
@@ -72,7 +72,7 @@ static void disrupt_sea_trade(void) {
 }
 
 static void contaminate_water(void) {
-    if (scenario_data.random_events.contaminated_water) {
+    if (g_scenario_data.random_events.contaminated_water) {
         if (city_population() > 200) {
             int change;
             int health_rate = city_health();
@@ -90,7 +90,7 @@ static void contaminate_water(void) {
 }
 
 static void destroy_iron_mine(void) {
-    if (scenario_data.random_events.iron_mine_collapse) {
+    if (g_scenario_data.random_events.iron_mine_collapse) {
         if (config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
             if (building_find(BUILDING_LIMESTONE_QUARRY) < MAX_BUILDINGS) {
                 city_finance_process_requests_and_festivals(250);
@@ -106,7 +106,7 @@ static void destroy_iron_mine(void) {
 }
 
 static void destroy_clay_pit(void) {
-    if (scenario_data.random_events.clay_pit_flooded) {
+    if (g_scenario_data.random_events.clay_pit_flooded) {
         if (config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
             if (building_find(BUILDING_CLAY_PIT) < MAX_BUILDINGS) {
                 city_finance_process_requests_and_festivals(250);
