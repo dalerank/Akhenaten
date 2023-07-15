@@ -41,10 +41,12 @@ static image_button image_button_start_mission = {
         0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start, button_none, 1, 0, 1
 };
 
-static struct {
+struct mission_next_t {
     int choice;
     int focus_button;
-} data;
+};
+
+mission_next_t g_mission_next;
 
 static void draw_background(void) {
     int rank = scenario_campaign_rank();
@@ -53,8 +55,8 @@ static void draw_background(void) {
     graphics_set_to_dialog();
     ImageDraw::img_generic(image_id_from_group(GROUP_NEXT_MISSION_SELECT) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
     lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK_ON_LIGHT);
-    if (data.choice)
-        lang_text_draw_multiline(144, 1 + 3 * rank + data.choice, 20, 440, 560, FONT_NORMAL_BLACK_ON_LIGHT);
+    if (g_mission_next.choice)
+        lang_text_draw_multiline(144, 1 + 3 * rank + g_mission_next.choice, 20, 440, 560, FONT_NORMAL_BLACK_ON_LIGHT);
     else {
         lang_text_draw_multiline(144, 0, 20, 440, 560, FONT_NORMAL_BLACK_ON_LIGHT);
     }
@@ -63,7 +65,7 @@ static void draw_background(void) {
 static void draw_foreground(void) {
     graphics_set_to_dialog();
 
-    if (data.choice > 0)
+    if (g_mission_next.choice > 0)
         image_buttons_draw(580, 410, &image_button_start_mission, 1);
 
 
@@ -73,15 +75,15 @@ static void draw_foreground(void) {
     int x_military = CAMPAIGN_SELECTION[rank].x_military - 4;
     int y_military = CAMPAIGN_SELECTION[rank].y_military - 4;
     int image_id = image_id_from_group(GROUP_SELECT_MISSION_BUTTON);
-    if (data.choice == 0) {
-        ImageDraw::img_generic(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
-        ImageDraw::img_generic(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
-    } else if (data.choice == 1) {
-        ImageDraw::img_generic(data.focus_button == 1 ? image_id + 1 : image_id + 2, x_peaceful, y_peaceful);
-        ImageDraw::img_generic(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
+    if (g_mission_next.choice == 0) {
+        ImageDraw::img_generic(g_mission_next.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
+        ImageDraw::img_generic(g_mission_next.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
+    } else if (g_mission_next.choice == 1) {
+        ImageDraw::img_generic(g_mission_next.focus_button == 1 ? image_id + 1 : image_id + 2, x_peaceful, y_peaceful);
+        ImageDraw::img_generic(g_mission_next.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
     } else {
-        ImageDraw::img_generic(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
-        ImageDraw::img_generic(data.focus_button == 2 ? image_id + 1 : image_id + 2, x_military, y_military);
+        ImageDraw::img_generic(g_mission_next.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
+        ImageDraw::img_generic(g_mission_next.focus_button == 2 ? image_id + 1 : image_id + 2, x_military, y_military);
     }
     graphics_reset_dialog();
 }
@@ -97,19 +99,19 @@ static void handle_input(const mouse *m, const hotkeys *h) {
     int y_peaceful = CAMPAIGN_SELECTION[rank].y_peaceful - 4;
     int x_military = CAMPAIGN_SELECTION[rank].x_military - 4;
     int y_military = CAMPAIGN_SELECTION[rank].y_military - 4;
-    data.focus_button = 0;
+    g_mission_next.focus_button = 0;
     if (is_mouse_hit(m_dialog, x_peaceful, y_peaceful, 44))
-        data.focus_button = 1;
+        g_mission_next.focus_button = 1;
 
     if (is_mouse_hit(m_dialog, x_military, y_military, 44))
-        data.focus_button = 2;
+        g_mission_next.focus_button = 2;
 
 
-    if (data.choice > 0) {
+    if (g_mission_next.choice > 0) {
         if (image_buttons_handle_mouse(m_dialog, 580, 410, &image_button_start_mission, 1, 0))
             return;
         if (m_dialog->right.went_up || h->escape_pressed) {
-            data.choice = 0;
+            g_mission_next.choice = 0;
             window_invalidate();
         }
     } else if (h->escape_pressed)
@@ -155,7 +157,7 @@ void window_mission_next_selection_show(void) {
             draw_foreground,
             handle_input
     };
-    data.choice = 0;
-    data.focus_button = 0;
+    g_mission_next.choice = 0;
+    g_mission_next.focus_button = 0;
     window_show(&window);
 }
