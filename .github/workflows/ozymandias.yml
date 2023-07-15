@@ -29,3 +29,13 @@ jobs:
       with:
         name: windows_build
         path: bin_x64
+    - name: create-package
+      run: |
+        Compress-Archive -Path bin_x64/* -Destination windows_build.zip
+    - name: Upload to gdrive
+      uses: Jumbo810/Upload_Github_Artifacts_TO_GDrive@v1.1.1
+      with:
+        credentials: ${{ secrets.GDRIVE_CREDENTIALS }}
+        filename: "windows_build.zip"
+        parent_folder_id: ${{ secrets.FOLDERID }}
+        target: "windows_build.zip" # optional string
