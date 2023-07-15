@@ -19,6 +19,7 @@ enum e_debug_show_opt {
     e_debug_show_tutorial,
     e_debug_show_floods,
     e_debug_show_camera,
+    e_debug_show_tile_cache,
 
     e_debug_opt_size,
 };

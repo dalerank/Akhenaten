@@ -5,8 +5,10 @@
 #include "graphics/color.h"
 
 int lang_text_get_width(int group, int number, font_t font);
+int lang_text_get_width(const char *str, font_t font);
 
 int lang_text_draw(int group, int number, int x_offset, int y_offset, font_t font);
+int lang_text_draw(const char *str, int x_offset, int y_offset, font_t font);
 int lang_text_draw_colored(int group, int number, int x_offset, int y_offset, font_t font, color_t color);
 
 int lang_text_draw_left(int group, int number, int x_offset, int y_offset, font_t font);

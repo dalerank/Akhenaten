@@ -8,9 +8,16 @@ int lang_text_get_width(int group, int number, font_t font) {
     return text_get_width(str, font) + font_definition_for(font)->space_width;
 }
 
+int lang_text_get_width(const char *str, font_t font) {
+    return text_get_width((const uint8_t*)str, font) + font_definition_for(font)->space_width;
+}
+
 int lang_text_draw(int group, int number, int x_offset, int y_offset, font_t font) {
     const uint8_t *str = lang_get_string(group, number);
     return text_draw(str, x_offset, y_offset, font, 0);
+}
+int lang_text_draw(const char *str, int x_offset, int y_offset, font_t font) {
+    return text_draw((const uint8_t*)str, x_offset, y_offset, font, 0);
 }
 int lang_text_draw_colored(int group, int number, int x_offset, int y_offset, font_t font, color_t color) {
     const uint8_t *str = lang_get_string(group, number);

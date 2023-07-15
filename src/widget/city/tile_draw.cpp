@@ -275,7 +275,10 @@ static void draw_cached_figures(pixel_coordinate pixel, map_point point, int mod
     const image_t *img = image_get(map_image_at(point.grid_offset()));
     pixel_coordinate tile_z_cross = pixel;
     tile_z_cross += {HALF_TILE_WIDTH_PIXELS, img->isometric_3d_height() - TILE_BLEEDING_Y_BIAS};
-    graphics_fill_rect(0, 0, 10000, 10000, 0x22000000); // for debugging
+
+    if (g_debug_show_opts[e_debug_show_tile_cache]) {
+        graphics_fill_rect(0, 0, 10000, 10000, 0x22000000); // for debugging
+    }
     
     for (int i = 0; i < cache->num_figures; ++i) {
         int figure_id = cache->figures[i].id;

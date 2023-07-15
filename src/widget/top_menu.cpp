@@ -70,7 +70,8 @@ static void menu_help_about(int param);
 
 static void menu_advisors_go_to(int advisor);
 static void menu_debug_change_opt(int opt);
-static void menu_update_text(menu_bar_item *menu, int index, int text_number);
+static void menu_update_text(menu_bar_item &menu, int index, int text_number);
+static void menu_update_text(menu_bar_item &menu, int index, const char* text);
 
 static menu_item menu_file[] = {
         {1, 1, menu_file_new_game,    0},
@@ -119,6 +120,7 @@ static menu_item menu_debug[] = {
         {5, 5,  menu_debug_change_opt, e_debug_show_tutorial},
         {5, 6,  menu_debug_change_opt, e_debug_show_floods},
         {5, 7,  menu_debug_change_opt, e_debug_show_camera},
+        {5, 8,  menu_debug_change_opt, e_debug_show_tile_cache},
 };
 
 menu_bar_item g_top_menu[] = {
@@ -126,12 +128,26 @@ menu_bar_item g_top_menu[] = {
         {2, menu_options,  5},
         {3, menu_help,     4},
         {4, menu_advisors, 12},
-        {5, menu_debug,    7},
+        {5, menu_debug,    std::size(menu_debug), "Debug"},
 };
+
+static void menu_debug_opt_text(int opt, bool v) {
+    static const char *debug_text[][2] = {
+        { "show_pages ON", "show_pages OFF" },
+        { "show_game_time ON", "show_game_time OFF" },
+        { "show_build_planner ON", "show_build_planner OFF" },
+        { "show_religion ON", "show_religion OFF" },
+        { "show_tutorial ON", "show_tutorial OFF" },
+        { "show_floods ON", "show_floods OFF" },
+        { "show_camera ON", "show_camera OFF" },
+        { "show_tile_cache ON", "show_tile_cache OFF" },
+    };
+    menu_update_text(g_top_menu[INDEX_DEBUG], opt, debug_text[opt][v ? 0 : 1]);
+}
 
 static void menu_debug_change_opt(int opt) {
     g_debug_show_opts[opt] = !g_debug_show_opts[opt];
-    menu_update_text(&g_top_menu[INDEX_DEBUG], opt-1, g_debug_show_opts[opt] ? 51 : 52);
+    menu_debug_opt_text(opt, g_debug_show_opts[opt]);
 }
 
 static void button_rotate_reset(int param1, int param2) {
@@ -178,7 +194,10 @@ void menu_bar_draw(std::span<menu_bar_item> &items) {
     short x_offset = TOP_MENU_BASE_X_OFFSET;
     for (auto &item: items) {
         item.x_start = x_offset;
-        x_offset += lang_text_draw(item.text_group, 0, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT);
+        int text_length = item.text_raw
+                                 ? lang_text_draw(item.text_raw, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT)
+                                 : lang_text_draw(item.text_group, 0, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT);
+        x_offset += text_length;
         item.x_end = x_offset;
         x_offset += 32; // spacing
     }
@@ -204,51 +223,52 @@ static int menu_bar_handle_mouse(const mouse *m, std::span<menu_bar_item> &items
     return menu_id;
 }
 
-static void calculate_menu_dimensions(menu_bar_item *menu) {
+static void calculate_menu_dimensions(menu_bar_item &menu) {
     int max_width = 0;
     int height_pixels = MENU_ITEM_HEIGHT;
-    for (int i = 0; i < menu->num_items; i++) {
-        menu_item *sub = &menu->items[i];
+    for (int i = 0; i < menu.num_items; i++) {
+        menu_item *sub = &menu.items[i];
         if (sub->hidden)
             continue;
 
-        int width_pixels = lang_text_get_width(
-                sub->text_group, sub->text_number, FONT_NORMAL_BLACK_ON_LIGHT);
+        int width_pixels = sub->text_raw
+                                  ? lang_text_get_width(sub->text_raw, FONT_NORMAL_BLACK_ON_LIGHT)
+                                  : lang_text_get_width(sub->text_group, sub->text_number, FONT_NORMAL_BLACK_ON_LIGHT);
+
         if (width_pixels > max_width)
             max_width = width_pixels;
 
         height_pixels += MENU_ITEM_HEIGHT;
     }
     int blocks = (max_width + 8) / 16 + 1; // 1 block padding
-    menu->calculated_width_blocks = blocks < 10 ? 10 : blocks;
-    menu->calculated_height_blocks = height_pixels / 16;
+    menu.calculated_width_blocks = blocks < 10 ? 10 : blocks;
+    menu.calculated_height_blocks = height_pixels / 16;
 }
-void menu_draw(menu_bar_item *menu, int focus_item_id) {
-    if (menu->calculated_width_blocks == 0 || menu->calculated_height_blocks == 0)
+void menu_draw(menu_bar_item &menu, int focus_item_id) {
+    if (menu.calculated_width_blocks == 0 || menu.calculated_height_blocks == 0)
         calculate_menu_dimensions(menu);
 
-    unbordered_panel_draw(menu->x_start, TOP_MENU_HEIGHT,
-                          menu->calculated_width_blocks, menu->calculated_height_blocks);
+    unbordered_panel_draw(menu.x_start, TOP_MENU_HEIGHT, menu.calculated_width_blocks, menu.calculated_height_blocks);
     int y_offset = TOP_MENU_HEIGHT + MENU_BASE_TEXT_Y_OFFSET * 2;
-    for (int i = 0; i < menu->num_items; i++) {
-        menu_item *sub = &menu->items[i];
+    for (int i = 0; i < menu.num_items; i++) {
+        menu_item *sub = &menu.items[i];
         if (sub->hidden)
             continue;
 
         // Set color/font on the menu item mouse hover
         if (i == focus_item_id - 1) {
             if (GAME_ENV == ENGINE_ENV_C3) {
-                graphics_fill_rect(menu->x_start, y_offset - 4,
-                                   16 * menu->calculated_width_blocks, 20, COLOR_BLACK);
-                lang_text_draw_colored(sub->text_group, sub->text_number,
-                                       menu->x_start + 8, y_offset, FONT_SMALL_PLAIN, COLOR_FONT_ORANGE);
+                graphics_fill_rect(menu.x_start, y_offset - 4, 16 * menu.calculated_width_blocks, 20, COLOR_BLACK);
+                lang_text_draw_colored(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_SMALL_PLAIN, COLOR_FONT_ORANGE);
             } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                lang_text_draw(sub->text_group, sub->text_number,
-                               menu->x_start + 8, y_offset, FONT_NORMAL_YELLOW);
+                sub->text_raw
+                        ? lang_text_draw(sub->text_raw, menu.x_start + 8, y_offset, FONT_NORMAL_YELLOW)
+                        : lang_text_draw(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_NORMAL_YELLOW);
             }
         } else {
-            lang_text_draw(sub->text_group, sub->text_number,
-                           menu->x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT);
+            sub->text_raw
+                ? lang_text_draw(sub->text_raw, menu.x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT)
+                : lang_text_draw(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT);
         }
         y_offset += MENU_ITEM_HEIGHT;
     }
@@ -284,22 +304,39 @@ int menu_handle_mouse(const mouse *m, menu_bar_item *menu, int *focus_item_id) {
     return item_id;
 }
 
-void menu_update_text(menu_bar_item *menu, int index, int text_number) {
-    menu->items[index].text_number = text_number;
-    if (menu->calculated_width_blocks > 0) {
-        int item_width = lang_text_get_width(
-                menu->items[index].text_group, text_number, FONT_NORMAL_BLACK_ON_LIGHT);
-        int blocks = (item_width + 8) / 16 + 1;
-        if (blocks > menu->calculated_width_blocks)
-            menu->calculated_width_blocks = blocks;
+void menu_update_text(menu_bar_item &menu, int index, const char *text) {
+    menu.items[index].text_number = 0;
+    menu.items[index].text_group = 0;
+    menu.items[index].text_raw = text;
+    if (menu.calculated_width_blocks == 0)
+        return;
+
+    int item_width = lang_text_get_width(menu.items[index].text_raw, FONT_NORMAL_BLACK_ON_LIGHT);
+    int blocks = (item_width + 8) / 16 + 1;
+    if (blocks > menu.calculated_width_blocks) {
+        menu.calculated_width_blocks = blocks;
     }
 }
 
-static struct {
+void menu_update_text(menu_bar_item &menu, int index, int text_number) {
+    menu.items[index].text_number = text_number;
+    if (menu.calculated_width_blocks == 0)
+        return;
+
+    int item_width = lang_text_get_width(menu.items[index].text_group, text_number, FONT_NORMAL_BLACK_ON_LIGHT);
+    int blocks = (item_width + 8) / 16 + 1;
+    if (blocks > menu.calculated_width_blocks) {
+        menu.calculated_width_blocks = blocks;
+    }
+}
+
+struct top_menu_drawn_t {
     int population;
     int treasury;
     int month;
-} drawn;
+};
+
+top_menu_drawn_t g_top_menu_drawn;
 
 static void clear_state(void) {
     auto &data = g_top_menu_data;
@@ -310,7 +347,7 @@ static void clear_state(void) {
 }
 
 static void set_text_for_autosave(void) {
-    menu_update_text(&g_top_menu[INDEX_OPTIONS], 4, setting_monthly_autosave() ? 51 : 52);
+    menu_update_text(g_top_menu[INDEX_OPTIONS], 4, setting_monthly_autosave() ? 51 : 52);
 }
 static void set_text_for_tooltips(void) {
     int new_text;
@@ -327,17 +364,24 @@ static void set_text_for_tooltips(void) {
         default:
             return;
     }
-    menu_update_text(&g_top_menu[INDEX_HELP], 1, new_text);
+    menu_update_text(g_top_menu[INDEX_HELP], 1, new_text);
 }
 static void set_text_for_warnings(void) {
-    menu_update_text(&g_top_menu[INDEX_HELP], 2, setting_warnings() ? 6 : 5);
+    menu_update_text(g_top_menu[INDEX_HELP], 2, setting_warnings() ? 6 : 5);
+}
+static void set_text_for_debug() {
+    for (int i = 0; i < e_debug_opt_size; ++i) {
+        menu_debug_opt_text(i, g_debug_show_opts[i]);
+    }
 }
 
 static void init(void) {
     g_top_menu[INDEX_OPTIONS].items[0].hidden = system_is_fullscreen_only();
+
     set_text_for_autosave();
     set_text_for_tooltips();
     set_text_for_warnings();
+    set_text_for_debug();
 }
 
 static void draw_background(void) {
@@ -349,7 +393,7 @@ static void draw_foreground(void) {
     if (!data.open_sub_menu)
         return;
 
-    menu_draw(&g_top_menu[data.open_sub_menu - 1], data.focus_sub_menu_id);
+    menu_draw(g_top_menu[data.open_sub_menu - 1], data.focus_sub_menu_id);
 }
 
 static void handle_input(const mouse *m, const hotkeys *h) {
@@ -395,27 +439,36 @@ static void refresh_background(void) {
         block_width = 96;
         int s_end = s_width - 1000 - 24 + city_view_is_sidebar_collapsed() * (162 - 18);
         int s_start = s_end - ceil((float) s_end / (float) block_width) * block_width;
-        for (int i = 0; s_start + i * block_width < s_end; i++)
+
+        for (int i = 0; s_start + i * block_width < s_end; i++) {
             ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
+        }
+
         ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
     }
 }
+
 void widget_top_menu_draw(int force) {
     auto &data = g_top_menu_data;
-    if (!force && drawn.treasury == city_finance_treasury() &&
-        drawn.population == city_population() &&
-        drawn.month == game_time_month())
+    if (!force && g_top_menu_drawn.treasury == city_finance_treasury() &&
+        g_top_menu_drawn.population == city_population() &&
+        g_top_menu_drawn.month == game_time_month()) {
         return;
+    }
 
     refresh_background();
     menu_bar_draw(make_span(g_top_menu));
 
     color_t treasure_color = COLOR_WHITE;
     int treasury = city_finance_treasury();
-    if (treasury < 0)
+    
+    if (treasury < 0) {
         treasure_color = COLOR_FONT_RED;
+    }
+
     font_t treasure_font = treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
     int s_width = screen_width();
+
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         data.offset_funds = s_width - 540;
         data.offset_population = s_width - 400;
@@ -434,6 +487,7 @@ void widget_top_menu_draw(int force) {
             ImageDraw::img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state,
                                    data.offset_rotate, 0);
     }
+
     if (s_width < 800) {
         if (GAME_ENV == ENGINE_ENV_C3) {
             data.offset_funds = 338; // +2
@@ -465,9 +519,10 @@ void widget_top_menu_draw(int force) {
         width = lang_text_draw(6, 1, data.offset_population + 2, 5, FONT_NORMAL_BLACK_ON_LIGHT);
         text_draw_number(city_population(), '@', " ", data.offset_population + 7 + width, 5, FONT_NORMAL_BLACK_ON_LIGHT);
     }
-    drawn.treasury = treasury;
-    drawn.population = city_population();
-    drawn.month = game_time_month();
+
+    g_top_menu_drawn.treasury = treasury;
+    g_top_menu_drawn.population = city_population();
+    g_top_menu_drawn.month = game_time_month();
 }
 
 static int get_info_id(int mouse_x, int mouse_y) {
