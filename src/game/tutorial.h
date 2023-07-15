@@ -9,7 +9,7 @@ typedef enum {
     NOT_AVAILABLE_YET,
 } tutorial_availability;
 
-typedef struct tutorial_flags {
+struct tutorial_flags_t {
     struct {
         int fire;
         int crime;
@@ -59,7 +59,7 @@ typedef struct tutorial_flags {
         bool tut8_start;
 
     } pharaoh;
-} tutorial_flags_t;
+};
 
 const tutorial_flags_t * tutorial_flags_struct();
 

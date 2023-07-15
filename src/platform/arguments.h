@@ -10,6 +10,7 @@ struct ozymandias_args {
     bool window_mode;
     char driver[64] = {0};
     int window_width = 0, window_height = 0;
+    int tutorial_skip = 0;
 };
 
 extern ozymandias_args ozymandias_core;

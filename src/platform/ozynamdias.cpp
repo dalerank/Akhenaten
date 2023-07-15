@@ -317,7 +317,6 @@ static bool show_options_window() {
                 if (fileDialog.IsOk()) {
                     // Get the selected folder path
                     strcpy(ozymandias_core.data_directory, fileDialog.GetFilePathName().c_str());
-                    //platform_file_manager_set_base_path(ozymandias_core.data_directory);
                 }
                 fileDialog.Close();
             }
@@ -342,6 +341,7 @@ static bool show_options_window() {
             }
 
             ImGui::Checkbox("Window mode", &ozymandias_core.window_mode);
+            ImGui::InputInt("Skip Tutorial", &ozymandias_core.tutorial_skip);
 
             ImVec2 left_bottom_corner{5, window_size.y - 30};
             ImGui::SetCursorPos(left_bottom_corner);

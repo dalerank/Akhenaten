@@ -70,7 +70,10 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
             output_args.game_engine_debug_mode = 1;
         else if (SDL_strcmp(argv[i], "--window") == 0)
             output_args.window_mode = true;
-        else if (SDL_strcmp(argv[i], "--render") == 0) {
+        else if (SDL_strcmp(argv[i], "--tutorial_skip") == 0) {
+            sscanf("%d", argv[i + 1], &output_args.tutorial_skip);
+            ++i;
+        }  else if (SDL_strcmp(argv[i], "--render") == 0) {
             strcpy(output_args.driver, argv[i + 1]);
             i++;
         } else if (SDL_strcmp(argv[i], "--display-scale") == 0) {
