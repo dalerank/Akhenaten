@@ -13,6 +13,7 @@
 #include "game/time.h"
 #include "game/undo.h"
 #include "game/orientation.h"
+#include "game/cheats.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/menu.h"
@@ -70,6 +71,7 @@ static void menu_help_about(int param);
 
 static void menu_advisors_go_to(int advisor);
 static void menu_debug_change_opt(int opt);
+static void menu_debug_show_console(int param);
 static void menu_update_text(menu_bar_item &menu, int index, int text_number);
 static void menu_update_text(menu_bar_item &menu, int index, const char* text);
 
@@ -121,6 +123,7 @@ static menu_item menu_debug[] = {
         {5, 6,  menu_debug_change_opt, e_debug_show_floods},
         {5, 7,  menu_debug_change_opt, e_debug_show_camera},
         {5, 8,  menu_debug_change_opt, e_debug_show_tile_cache},
+        {5, 9,  menu_debug_show_console, 0, false, "show console"},
 };
 
 menu_bar_item g_top_menu[] = {
@@ -221,6 +224,10 @@ static int menu_bar_handle_mouse(const mouse *m, std::span<menu_bar_item> &items
         *focus_menu_id = menu_id;
 
     return menu_id;
+}
+
+static void menu_debug_show_console(int param) {
+    game_cheat_console(true);
 }
 
 static void calculate_menu_dimensions(menu_bar_item &menu) {

@@ -45,10 +45,12 @@ static const char *commands[] = {
         "killall"
 };
 
-static struct {
-    int is_cheating;
+struct cheats_data_t {
+    bool is_cheating;
     int tooltip_enabled;
-} data;
+};
+
+cheats_data_t g_cheats_data;
 
 static int parse_word(uint8_t *string, uint8_t *word) {
     int count = 0;
@@ -77,41 +79,42 @@ static int parse_integer(uint8_t *string, int *value) {
 }
 void game_cheat_activate(void) {
     if (window_is(WINDOW_BUILDING_INFO))
-        data.is_cheating = window_building_info_get_int() == BUILDING_WELL;
-    else if (data.is_cheating && window_is(WINDOW_MESSAGE_DIALOG)) {
-        data.is_cheating = 2;
+        g_cheats_data.is_cheating = window_building_info_get_int() == BUILDING_WELL;
+    else if (g_cheats_data.is_cheating && window_is(WINDOW_MESSAGE_DIALOG)) {
+        g_cheats_data.is_cheating = 2;
         scenario_invasion_start_from_cheat();
     } else {
-        data.is_cheating = 0;
+        g_cheats_data.is_cheating = 0;
     }
 }
 
 int game_cheat_tooltip_enabled(void) {
-    return data.tooltip_enabled;
+    return g_cheats_data.tooltip_enabled;
 }
 
 void game_cheat_money(void) {
-    if (data.is_cheating) {
+    if (g_cheats_data.is_cheating) {
         city_finance_process_cheat();
         window_invalidate();
     }
 }
 
 void game_cheat_victory(void) {
-    if (data.is_cheating)
+    if (g_cheats_data.is_cheating)
         city_victory_force_win();
 
 }
 
 void game_cheat_breakpoint() {
-    if (data.is_cheating) {
+    if (g_cheats_data.is_cheating) {
         //
     }
 }
 
 
-void game_cheat_console() {
-    if (data.is_cheating) {
+void game_cheat_console(bool force) {
+    g_cheats_data.is_cheating |= force;
+    if (g_cheats_data.is_cheating) {
         Planner.reset();
         window_city_show();
         window_console_show();
@@ -154,7 +157,7 @@ static void game_cheat_cast_blessing(uint8_t *args) {
 }
 
 static void game_cheat_show_tooltip(uint8_t *args) {
-    parse_integer(args, &data.tooltip_enabled);
+    parse_integer(args, &g_cheats_data.tooltip_enabled);
 
     city_warning_show_console((uint8_t *) "Show tooltip toggled");
 

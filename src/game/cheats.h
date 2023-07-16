@@ -18,7 +18,7 @@ void game_cheat_victory(void);
  */
 void game_cheat_breakpoint(void);
 
-void game_cheat_console(void);
+void game_cheat_console(bool force = false);
 
 void game_cheat_parse_command(uint8_t *command);
 
