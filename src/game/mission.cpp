@@ -9,7 +9,7 @@
 #include "core/game_environment.h"
 #include "io/playerdata/player_data.h"
 
-struct {
+struct mission_data_t {
     uint8_t map_names[300][300];
     int map_name_nums = 0;
 
@@ -18,7 +18,9 @@ struct {
         int num_steps = 0;
     } campaigns[MAX_MISSION_CAMPAIGNS];
     int num_campaigns = 0;
-} data;
+};
+
+mission_data_t g_mission_data;
 
 bool matches_path_id(const mission_step_t *step, int path_id) {
     for (int i = 0; i < MAX_MISSION_CHOICE_BRANCHES; ++i) {
@@ -35,8 +37,8 @@ static mission_step_t *find_next_connected_path_step(const mission_step_t *step,
         if (matches_path_id(next, path_id))
             return next;
         // should we do this? why not...
-        if (next->is_campaign_end && next->campaign_id > -1 && next->campaign_id < data.num_campaigns - 1)
-            return &data.campaigns[next->campaign_id + 1].steps[0];
+        if (next->is_campaign_end && next->campaign_id > -1 && next->campaign_id < g_mission_data.num_campaigns - 1)
+            return &g_mission_data.campaigns[next->campaign_id + 1].steps[0];
         next = next->next_in_list;
     }
     return nullptr;
@@ -51,8 +53,8 @@ static mission_step_t *find_next(const mission_step_t *step, int choice_index = 
     return nullptr; // this should never happen?
 }
 static void find_in_campaigns(int scenario_id, int *campaign_id, int *step_index) {
-    for (int c = 0; c < data.num_campaigns; ++c) {
-        auto campaign = &data.campaigns[c];
+    for (int c = 0; c < g_mission_data.num_campaigns; ++c) {
+        auto campaign = &g_mission_data.campaigns[c];
         for (int i = 0; i < campaign->num_steps; ++i) {
             auto step = &campaign->steps[i];
             if (step->scenario_id == scenario_id) {
@@ -67,17 +69,17 @@ static void find_in_campaigns(int scenario_id, int *campaign_id, int *step_index
     *step_index = -1;
 }
 const uint8_t *game_mission_get_name(int scenario_id) {
-    if (scenario_id >= data.map_name_nums || scenario_id > 299)
-        return data.map_names[0];
-    return data.map_names[scenario_id];
+    if (scenario_id >= g_mission_data.map_name_nums || scenario_id > 299)
+        return g_mission_data.map_names[0];
+    return g_mission_data.map_names[scenario_id];
 }
 const mission_step_t *get_campaign_mission_step_data(int campaign_id, int step_index) {
-    if (campaign_id < -1 || campaign_id >= data.num_campaigns)
+    if (campaign_id < -1 || campaign_id >= g_mission_data.num_campaigns)
         return nullptr;
-    auto campaign = &data.campaigns[campaign_id];
+    auto campaign = &g_mission_data.campaigns[campaign_id];
     if (step_index < -1 || step_index > campaign->num_steps)
         return nullptr;
-    return &data.campaigns[campaign_id].steps[step_index];
+    return &g_mission_data.campaigns[campaign_id].steps[step_index];
 }
 const mission_step_t *get_scenario_step_data(int scenario_id) {
     int campaign_id = -1;
@@ -100,7 +102,7 @@ int get_scenario_campaign_id(int scenario_id) {
 int get_first_mission_in_campaign(int campaign_id) {
     if (campaign_id < CAMPAIGN_PHARAOH_PREDYNASTIC || campaign_id >= CAMPAIGN_MAX)
         return SCENARIO_NULL;
-    auto campaign = &data.campaigns[campaign_id];
+    auto campaign = &g_mission_data.campaigns[campaign_id];
     auto step = &campaign->steps[0];
     while (step->scenario_id == SCENARIO_NULL)
         step = step->next_in_list;
@@ -109,7 +111,7 @@ int get_first_mission_in_campaign(int campaign_id) {
 int get_last_mission_in_campaign(int campaign_id) {
     if (campaign_id < CAMPAIGN_PHARAOH_PREDYNASTIC || campaign_id >= CAMPAIGN_MAX)
         return SCENARIO_NULL;
-    auto campaign = &data.campaigns[campaign_id];
+    auto campaign = &g_mission_data.campaigns[campaign_id];
     return campaign->steps[campaign->num_steps - 1].scenario_id;
 }
 bool game_mission_has_choice(void) {
@@ -244,7 +246,7 @@ bool game_load_campaign_file() {
                 if (index_of_string(ptr, string_from_ascii("MISSION_NAMES"), line_size)) { // scenario names...
                     action = -1;
                 } else { // start of a campaign block
-                    data.num_campaigns++;
+                    g_mission_data.num_campaigns++;
                     action++;
                 }
             } else { // data line
@@ -252,10 +254,10 @@ bool game_load_campaign_file() {
                     buf2.clear();
                     buf2.write_raw(ptr, line_size);
                     buf2.reset_offset();
-                    buf2.read_raw(data.map_names[data_line_idx], line_size);
-                    data.map_name_nums++;
+                    buf2.read_raw(g_mission_data.map_names[data_line_idx], line_size);
+                    g_mission_data.map_name_nums++;
                 } else { // mission data
-                    auto campaign = &data.campaigns[data.num_campaigns - 1];
+                    auto campaign = &g_mission_data.campaigns[g_mission_data.num_campaigns - 1];
                     if (index_of_string(ptr, string_from_ascii("mission"), line_size)) { // mission step data
                         campaign->num_steps++;
                         auto step = &campaign->steps[campaign->num_steps - 1];
@@ -271,8 +273,8 @@ bool game_load_campaign_file() {
                             else
                                 step->path_ids[i] = -1; // just to be safe...
                         }
-                        step->map_name = (const uint8_t*)data.map_names[step->scenario_id];
-                        step->campaign_id = data.num_campaigns - 1;
+                        step->map_name = (const uint8_t*)g_mission_data.map_names[step->scenario_id];
+                        step->campaign_id = g_mission_data.num_campaigns - 1;
                         // first mission rank is always 0
                         if (step->campaign_id == 0 && campaign->num_steps == 1)
                             step->mission_rank = 0;
@@ -280,8 +282,8 @@ bool game_load_campaign_file() {
                         if (campaign->num_steps > 1) { // previous one is the mission immediately preceding this one
                             step->previous_in_list = &campaign->steps[campaign->num_steps - 2];
                             step->previous_in_list->next_in_list = step;
-                        } else if (data.num_campaigns > 1) { // previous one is the last one in PREVIOUS CAMPAIGN
-                            auto prev_campaign = &data.campaigns[data.num_campaigns - 2];
+                        } else if (g_mission_data.num_campaigns > 1) { // previous one is the last one in PREVIOUS CAMPAIGN
+                            auto prev_campaign = &g_mission_data.campaigns[g_mission_data.num_campaigns - 2];
                             step->previous_in_list = &prev_campaign->steps[prev_campaign->num_steps - 1];
                             step->previous_in_list->next_in_list = step;
                         }
@@ -296,8 +298,8 @@ bool game_load_campaign_file() {
                         if (step->scenario_id == -1) { // a choice screen invoked automatically, with no previous scenario
                             step->path_ids[0] = 0;
                         }
-                        if (step->scenario_id == -1 && data.num_campaigns > 1) { // dangling choice screen at the start of a campaign!!
-                            auto prev_campaign = &data.campaigns[data.num_campaigns - 2];
+                        if (step->scenario_id == -1 && g_mission_data.num_campaigns > 1) { // dangling choice screen at the start of a campaign!!
+                            auto prev_campaign = &g_mission_data.campaigns[g_mission_data.num_campaigns - 2];
                             step->previous_in_list = &prev_campaign->steps[prev_campaign->num_steps - 1];
                             step->previous_in_list->next_in_list = step;
                         }
@@ -323,8 +325,8 @@ bool game_load_campaign_file() {
     // GOD, what a MESS!!
 
     // finalize loading, clean up things, generate advanced pointers/helper members etc.
-    for (int c = 0; c < data.num_campaigns; ++c) {
-        auto campaign = &data.campaigns[c];
+    for (int c = 0; c < g_mission_data.num_campaigns; ++c) {
+        auto campaign = &g_mission_data.campaigns[c];
         auto last_step = &campaign->steps[campaign->num_steps - 1];
         last_step->is_campaign_end = true;
         for (int i = 0; i < campaign->num_steps; ++i) {

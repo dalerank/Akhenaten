@@ -124,7 +124,7 @@ static void create_herd(int x, int y) {
             num_animals = 8;
             break;
         case CLIMATE_DESERT:
-            herd_type = FIGURE_ZEBRA;
+            herd_type = FIGURE_OSTRICH; // FIGURE_ZEBRA
             num_animals = 12;
             break;
         default:

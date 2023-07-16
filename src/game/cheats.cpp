@@ -18,31 +18,29 @@
 #include "window/city.h"
 #include "window/console.h"
 
-#define NUMBER_OF_COMMANDS 6
-
 static void game_cheat_add_money(uint8_t *);
 static void game_cheat_start_invasion(uint8_t *);
 static void game_cheat_advance_year(uint8_t *);
 static void game_cheat_cast_blessing(uint8_t *);
 static void game_cheat_show_tooltip(uint8_t *);
 static void game_cheat_kill_all(uint8_t *);
+static void game_cheat_victory(uint8_t *);
 
-static void (*const execute_command[])(uint8_t *args) = {
-        game_cheat_add_money,
-        game_cheat_start_invasion,
-        game_cheat_advance_year,
-        game_cheat_cast_blessing,
-        game_cheat_show_tooltip,
-        game_cheat_kill_all
+using cheat_command = void (uint8_t *args);
+
+struct cheat_command_handle {
+    const char *name;
+    cheat_command *command;
 };
 
-static const char *commands[] = {
-        "addmoney",
-        "startinvasion",
-        "nextyear",
-        "blessing",
-        "showtooltip",
-        "killall"
+static cheat_command_handle g_cheat_commands[] = {
+    { "addmoney", game_cheat_add_money}, 
+    { "startinvasion", game_cheat_start_invasion},
+    { "nextyear", game_cheat_advance_year},
+    { "blessing", game_cheat_cast_blessing},
+    { "showtooltip", game_cheat_show_tooltip},
+    { "killall", game_cheat_kill_all},
+    { "victory", game_cheat_victory}
 };
 
 struct cheats_data_t {
@@ -77,11 +75,12 @@ static int parse_integer(uint8_t *string, int *value) {
     *value = string_to_int(copy);
     return count + 1;
 }
+
 void game_cheat_activate(void) {
     if (window_is(WINDOW_BUILDING_INFO))
         g_cheats_data.is_cheating = window_building_info_get_int() == BUILDING_WELL;
     else if (g_cheats_data.is_cheating && window_is(WINDOW_MESSAGE_DIALOG)) {
-        g_cheats_data.is_cheating = 2;
+        g_cheats_data.is_cheating = true;
         scenario_invasion_start_from_cheat();
     } else {
         g_cheats_data.is_cheating = 0;
@@ -99,10 +98,10 @@ void game_cheat_money(void) {
     }
 }
 
-void game_cheat_victory(void) {
-    if (g_cheats_data.is_cheating)
+void game_cheat_victory(uint8_t *) {
+    if (g_cheats_data.is_cheating) {
         city_victory_force_win();
-
+    }
 }
 
 void game_cheat_breakpoint() {
@@ -110,7 +109,6 @@ void game_cheat_breakpoint() {
         //
     }
 }
-
 
 void game_cheat_console(bool force) {
     g_cheats_data.is_cheating |= force;
@@ -172,9 +170,9 @@ static void game_cheat_kill_all(uint8_t *args) {
 void game_cheat_parse_command(uint8_t *command) {
     uint8_t command_to_call[MAX_COMMAND_SIZE];
     int next_arg = parse_word(command, command_to_call);
-    for (int i = 0; i < NUMBER_OF_COMMANDS; i++) {
-        if (string_compare_case_insensitive((char *) command_to_call, commands[i]) == 0)
-            (*execute_command[i])(command + next_arg);
-
+    for (auto &handle: g_cheat_commands) {
+        if (stricmp((char *)command_to_call, handle.name) == 0) {
+            handle.command(command + next_arg);
+        }
     }
 }

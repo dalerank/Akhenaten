@@ -11,8 +11,6 @@ int game_cheat_tooltip_enabled(void);
 
 void game_cheat_money(void);
 
-void game_cheat_victory(void);
-
 /**
  * Does nothing, just set breakpoint in implementation and call it with alt + b
  */

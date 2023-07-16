@@ -13,28 +13,30 @@
 #include "window/mission_end.h"
 #include "window/victory_dialog.h"
 
-static struct {
-    int state;
-    int force_win;
-} data;
+struct vistory_data_t {
+    e_victory_state state;
+    bool force_win;
+};
+
+vistory_data_t g_vistory_data;
 
 void city_victory_reset(void) {
-    data.state = VICTORY_STATE_NONE;
-    data.force_win = 0;
+    g_vistory_data.state = VICTORY_STATE_NONE;
+    g_vistory_data.force_win = false;
 }
 
 void city_victory_force_win(void) {
-    data.force_win = 1;
+    g_vistory_data.force_win = true;
 }
 
-int city_victory_state(void) {
-    return data.state;
+e_victory_state city_victory_state(void) {
+    return g_vistory_data.state;
 }
 
 #include "buildings.h"
 
-static int determine_victory_state(void) {
-    int state = VICTORY_STATE_WON;
+static e_victory_state determine_victory_state(void) {
+    e_victory_state state = VICTORY_STATE_WON;
     int has_criteria = 0;
 
     if (winning_culture()) {
@@ -136,29 +138,29 @@ static int determine_victory_state(void) {
 void city_victory_check(void) {
     if (scenario_is_open_play())
         return;
-    data.state = determine_victory_state();
+    g_vistory_data.state = determine_victory_state();
 
     if (city_data.mission.has_won)
-        data.state = city_data.mission.continue_months_left <= 0 ? VICTORY_STATE_WON : VICTORY_STATE_NONE;
+        g_vistory_data.state = city_data.mission.continue_months_left <= 0 ? VICTORY_STATE_WON : VICTORY_STATE_NONE;
 
-    if (data.force_win)
-        data.state = VICTORY_STATE_WON;
+    if (g_vistory_data.force_win)
+        g_vistory_data.state = VICTORY_STATE_WON;
 
-    if (data.state != VICTORY_STATE_NONE) {
+    if (g_vistory_data.state != VICTORY_STATE_NONE) {
         Planner.reset();
-        if (data.state == VICTORY_STATE_LOST) {
+        if (g_vistory_data.state == VICTORY_STATE_LOST) {
             if (city_data.mission.fired_message_shown)
                 window_mission_end_show_fired();
             else {
                 city_data.mission.fired_message_shown = 1;
                 city_message_post(true, MESSAGE_FIRED, 0, 0);
             }
-            data.force_win = 0;
-        } else if (data.state == VICTORY_STATE_WON) {
+            g_vistory_data.force_win = 0;
+        } else if (g_vistory_data.state == VICTORY_STATE_WON) {
             sound_music_stop();
             if (city_data.mission.victory_message_shown) {
                 window_mission_end_show_won();
-                data.force_win = 0;
+                g_vistory_data.force_win = 0;
             } else {
                 city_data.mission.victory_message_shown = 1;
                 window_victory_dialog_show();

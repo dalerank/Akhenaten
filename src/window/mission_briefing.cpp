@@ -34,19 +34,21 @@ static image_button image_button_start_mission = {
         0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_mission, button_none, 1, 0, 1
 };
 
-static struct {
+struct mission_briefing_t {
     int is_review;
     int focus_button;
     int campaign_mission_loaded;
-} data;
+};
+
+mission_briefing_t g_mission_briefing_data;
 
 static void init(void) {
-    data.focus_button = 0;
+    g_mission_briefing_data.focus_button = 0;
     rich_text_reset(0);
 
     // load map!
-    if (!data.campaign_mission_loaded) {
-        data.campaign_mission_loaded = 1;
+    if (!g_mission_briefing_data.campaign_mission_loaded) {
+        g_mission_briefing_data.campaign_mission_loaded = 1;
     }
 }
 
@@ -150,7 +152,7 @@ static void draw_foreground(void) {
 
     rich_text_draw_scrollbar();
     image_buttons_draw(516, 426, &image_button_start_mission, 1);
-    if (!data.is_review && game_mission_has_choice())
+    if (!g_mission_briefing_data.is_review && game_mission_has_choice())
         image_buttons_draw(26, 428, &image_button_back, 1);
 
     graphics_reset_dialog();
@@ -161,14 +163,14 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 
     if (image_buttons_handle_mouse(m_dialog, 516, 426, &image_button_start_mission, 1, 0))
         return;
-    if (!data.is_review && game_mission_has_choice()) {
+    if (!g_mission_briefing_data.is_review && game_mission_has_choice()) {
         if (image_buttons_handle_mouse(m_dialog, 26, 428, &image_button_back, 1, 0))
             return;
     }
     rich_text_handle_mouse(m_dialog);
 }
 static void button_back(int param1, int param2) {
-    if (!data.is_review) {
+    if (!g_mission_briefing_data.is_review) {
         sound_speech_stop();
         window_mission_next_selection_show();
     }
@@ -191,12 +193,12 @@ static void show(void) {
     window_show(&window);
 }
 void window_mission_briefing_show(void) {
-    data.is_review = 0;
-    data.campaign_mission_loaded = 0;
+    g_mission_briefing_data.is_review = 0;
+    g_mission_briefing_data.campaign_mission_loaded = 0;
     window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }
 void window_mission_briefing_show_review(void) {
-    data.is_review = 1;
-    data.campaign_mission_loaded = 1;
+    g_mission_briefing_data.is_review = 1;
+    g_mission_briefing_data.campaign_mission_loaded = 1;
     window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }
