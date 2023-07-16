@@ -2169,7 +2169,7 @@ void encoding_simp_chinese_init(void) {
         utf8_to_codepage = (chinese_entry *) malloc(
                 sizeof(chinese_entry) * IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS);
         if (!utf8_to_codepage) {
-            log_error("Unable to allocate memory for Chinese codepage", 0, 0);
+            log_error("Unable to allocate memory for Chinese codepage");
             return;
         }
     }

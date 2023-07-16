@@ -138,7 +138,7 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
             }
             match = callback(name);
         } else if (file_has_extension(name, extension)) {
-            log_error("platform_file_manager_list_directory_contents:", strerror(errno), errno);
+            log_error("platform_file_manager_list_directory_contents: %s %u", strerror(errno), errno);
             match = callback(name);
         }
 
@@ -163,7 +163,7 @@ int platform_file_manager_should_case_correct_file(void) {
 
 int platform_file_manager_set_base_path(const char *path) {
     if (!path) {
-        log_error("set_base_path: path was not set. Ozymandias will probably crash.", 0, 0);
+        log_error("set_base_path: path was not set. Ozymandias will probably crash.");
         return 0;
     }
     return chdir(path) == 0;

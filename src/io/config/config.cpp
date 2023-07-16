@@ -124,7 +124,7 @@ void config_load(void) {
             for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
                 if (strcmp(ini_keys_defaults[i].name, line) == 0) {
                     int value = atoi(&equals[1]);
-                    log_info("Config key", ini_keys_defaults[i].name, value);
+                    log_info("Config key %s [%d]", ini_keys_defaults[i].name, value);
                     values[i] = value;
                     break;
                 }
@@ -132,8 +132,8 @@ void config_load(void) {
             for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
                 if (strcmp(ini_string_keys[i], line) == 0) {
                     const char *value = &equals[1];
-                    log_info("Config key", ini_string_keys[i], 0);
-                    log_info("Config value", value, 0);
+                    log_info("Config key %s", ini_string_keys[i]);
+                    log_info("Config value %s", value);
                     strncpy(string_values[i], value, CONFIG_STRING_VALUE_MAX);
                     break;
                 }
@@ -145,7 +145,7 @@ void config_load(void) {
 void config_save(void) {
     FILE *fp = file_open(INI_FILENAME, "wt");
     if (!fp) {
-        log_error("Unable to write configuration file", INI_FILENAME, 0);
+        log_error("Unable to write configuration file %s", INI_FILENAME);
         return;
     }
     for (int i = 0; i < CONFIG_MAX_ENTRIES; i++)

@@ -66,7 +66,7 @@ static void send_command(int param1, int param2) {
     uint8_t command_copy[MAX_COMMAND_SIZE];
     string_copy(command_input.text, command_copy, MAX_COMMAND_SIZE);
     button_back(0, 0);
-    log_info("Command received: ", (char *) command_copy, 0);
+    log_info("Command received: %s", (char *) command_copy);
     city_warning_show_console(command_copy);
     game_cheat_parse_command(command_copy);
 

@@ -21,7 +21,7 @@ static void set_strings(const translation_string *strings, int num_strings, int 
             continue;
 
         if (is_default)
-            log_info("Translation key not found:", string->string, string->key);
+            log_info("Translation key not found: %s %u", string->string, string->key);
 
         int length_left = BUFFER_SIZE - data.buf_index;
         encoding_from_utf8(string->string, &data.buffer[data.buf_index], length_left);

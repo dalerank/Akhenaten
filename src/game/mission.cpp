@@ -216,7 +216,7 @@ bool game_load_campaign_file() {
     int filesize = 0;
     filesize = io_read_file_into_buffer(filename, NOT_LOCALIZED, &buf, TMP_BUFFER_SIZE);
     if (filesize == 0) {
-        log_error("Campaign file not found", 0, 0);
+        log_error("Campaign file not found");
         return false;
     }
 

@@ -51,7 +51,7 @@ bool model_load_file(const char *filepath, int NUM_BUILDINGS, int NUM_HOUSES, mo
     int filesize = 0;
     filesize = io_read_file_into_buffer(filepath, NOT_LOCALIZED, &buf, TMP_BUFFER_SIZE);
     if (filesize == 0) {
-        log_error("Model file not found", 0, 0);
+        log_error("Model file not found");
         return false;
     }
 
@@ -70,7 +70,7 @@ bool model_load_file(const char *filepath, int NUM_BUILDINGS, int NUM_HOUSES, mo
         }
     } while (brace_index && guard > 0);
     if (num_lines != NUM_BUILDINGS + NUM_HOUSES) {
-        log_error("Model has incorrect no of lines ", 0, num_lines + 1);
+        log_error("Model has incorrect no of lines %u ", num_lines + 1);
         return false;
     }
 

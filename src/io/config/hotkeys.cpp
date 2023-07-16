@@ -278,7 +278,7 @@ void hotkey_config_save(void) {
     hotkey_install_mapping(data.mappings, data.num_mappings);
     FILE *fp = file_open(INI_FILENAME, "wt");
     if (!fp) {
-        log_error("Unable to write hotkey configuration file", INI_FILENAME, 0);
+        log_error("Unable to write hotkey configuration file %s", INI_FILENAME);
         return;
     }
     for (int i = 0; i < data.num_mappings; i++) {

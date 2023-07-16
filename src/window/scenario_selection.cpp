@@ -21,6 +21,7 @@
 #include "graphics/elements/scroll_list_panel.h"
 #include "game/mission.h"
 #include "io/playerdata/player_data.h"
+#include "io/log.h"
 #include <cmath>
 #include "io/manager.h"
 #include "dev/debug.h"
@@ -110,9 +111,13 @@ static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector 
                     for (int i = 0; i < MAX_MANUAL_ENTRIES; ++i) {
                         auto mission_data = get_campaign_mission_step_data(data.campaign_sub_dialog, i);
                         if (mission_data != nullptr && mission_data->scenario_id != -1) {
-                            char name_utf8[MAX_FILE_NAME];
-                            encoding_to_utf8(mission_data->map_name, name_utf8, MAX_FILE_NAME, 0);
-                            panel->add_entry(name_utf8);
+                            char name_utf8[MAX_FILE_NAME] = {0};
+                            if (mission_data && mission_data->map_name) {
+                                encoding_to_utf8(mission_data->map_name, name_utf8, MAX_FILE_NAME, 0);
+                                panel->add_entry(name_utf8);
+                            } else {
+                                log_error("Could not initialize SDL: %s", SDL_GetError());
+                            }
                         }
                     }
                     break;

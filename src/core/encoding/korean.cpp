@@ -2389,7 +2389,7 @@ void encoding_korean_init(void) {
     if (!utf8_to_codepage) {
         utf8_to_codepage = (korean_entry *) malloc(sizeof(korean_entry) * IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS);
         if (!utf8_to_codepage) {
-            log_error("Unable to allocate memory for Korean codepage", 0, 0);
+            log_error("Unable to allocate memory for Korean codepage");
             return;
         }
     }

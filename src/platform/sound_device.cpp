@@ -106,7 +106,7 @@ void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILEN
             num_channels = MAX_CHANNELS;
 
         Mix_AllocateChannels(num_channels);
-        log_info("Loading audio files", 0, 0);
+        log_info("Loading audio files");
         for (int i = 0; i < num_channels; i++) {
             data.channels[i].chunk = 0;
             data.channels[i].filename = filenames[i][0] ? filenames[i] : 0;
@@ -486,7 +486,7 @@ void sound_device_use_custom_music_player(int bitdepth, int num_channels, int ra
     else if (bitdepth == 16)
         format = AUDIO_S16;
     else {
-        log_error("Custom music bitdepth not supported:", 0, bitdepth);
+        log_error("Custom music bitdepth not supported: %u", bitdepth);
         return;
     }
     int device_rate;

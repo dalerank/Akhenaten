@@ -35,9 +35,6 @@ static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {
 
 static time_millis last_update;
 
-static void errlog(const char *msg) {
-    log_error(msg, 0, 0);
-}
 static int is_unpatched(void) {
     const uint8_t *delete_game = lang_get_string(1, 6);
     const uint8_t *option_menu = lang_get_string(2, 0);
@@ -59,15 +56,15 @@ static encoding_type update_encoding(void) {
 static bool reload_language(int is_editor, int reload_images) {
     if (!lang_load(is_editor)) {
         if (is_editor)
-            errlog("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
+            log_error("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
         else
-            errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
+            log_error("'c3.eng' or 'c3_mm.eng' files not found or too large.");
         return false;
     }
     encoding_type encoding = update_encoding();
 
     if (!image_set_font_pak(encoding)) {
-        errlog("unable to load font graphics");
+        log_error("unable to load font graphics");
         return false;
     }
 
@@ -131,12 +128,12 @@ bool game_pre_init(void) {
 bool game_init(void) {
     image_data_init();
     if (!image_load_paks()) {
-        errlog("unable to load main graphics");
+        log_error("unable to load main graphics");
         return false;
     }
     int missing_fonts = 0;
     if (!image_set_font_pak(encoding_get())) {
-        errlog("unable to load font graphics");
+        log_error("unable to load font graphics");
         if (encoding_get() == ENCODING_KOREAN)
             missing_fonts = 1;
         else
@@ -144,21 +141,21 @@ bool game_init(void) {
     }
 
     if (!model_load()) {
-        errlog("unable to load model data");
+        log_error("unable to load model data");
         return false;
     }
 
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         if (!eventmsg_load()) {
-            errlog("unable to load eventmsg.txt");
+            log_error("unable to load eventmsg.txt");
             return false;
         }
         if (!eventmsg_auto_phrases_load()) {
-            errlog("unable to load event auto reason phrases");
+            log_error("unable to load event auto reason phrases");
             return false;
         }
         if (!game_load_campaign_file()) {
-            errlog("unable to load campaign data");
+            log_error("unable to load campaign data");
             return false;
         }
     }

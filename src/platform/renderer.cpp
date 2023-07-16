@@ -1065,7 +1065,7 @@ int platform_renderer_init(SDL_Window *window) {
     std::vector<std::string> drivers;
     for (int k=0; k < SDL_GetNumRenderDrivers(); k++) {
         SDL_GetRenderDriverInfo( k, &info );
-        log_info( "SDLGraficEngine: availabe render ", info.name, 0);
+        log_info( "SDLGraficEngine: availabe render %s", info.name);
         drivers.push_back(info.name);
     }
 

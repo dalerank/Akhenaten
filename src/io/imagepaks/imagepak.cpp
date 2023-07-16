@@ -243,7 +243,7 @@ static buffer *load_external_data(const image_t *img) {
                 img->data_length, img->sgx_data_offset - 1
         );
         if (!size) {
-            log_error("unable to load external image", img->bmp.name, 0);
+            log_error("unable to load external image %s", img->bmp.name);
             return nullptr;
         }
     }

@@ -454,7 +454,7 @@ bool eventmsg_load(void) {
 
     int filesize = io_read_file_into_buffer("eventmsg.txt", NOT_LOCALIZED, &buf, TMP_BUFFER_SIZE);
     if (filesize == 0) {
-        log_error("Eventmsg.txt not found", 0, 0);
+        log_error("Eventmsg.txt not found");
         return false;
     }
 
@@ -473,7 +473,7 @@ bool eventmsg_load(void) {
         }
     } while (line_start_index && guard > 0);
     if (num_lines != NUM_PHRASES) {
-        log_error("Eventmsg.txt has incorrect no of lines ", 0, num_lines + 1);
+        log_error("Eventmsg.txt has incorrect no of lines %u", num_lines + 1);
         return false;
     }
 
@@ -499,7 +499,7 @@ bool eventmsg_load(void) {
         data.eventmsg_line_offsets[i] = offset;
         offset += size;
         if (offset >= MAX_EVENTMSG_TEXT_DATA - 300) {
-            log_error("Eventmsg data size too big to fit container. ", 0, offset);
+            log_error("Eventmsg data size too big to fit container. %u", offset);
             return false;
         }
 
@@ -519,7 +519,7 @@ bool eventmsg_load(void) {
     buf2.reset_offset();
     buf2.read_raw(&data.eventmsg_phrases_data, offset);
 
-    log_info("Event phrases loaded --", "Data size:", offset);
+    log_info("Event phrases loaded -- Data size: %u", offset);
     return true;
 }
 bool eventmsg_auto_phrases_load(void) {
@@ -527,7 +527,7 @@ bool eventmsg_auto_phrases_load(void) {
 
     int filesize = io_read_file_into_buffer("auto reason phrases.txt", NOT_LOCALIZED, &buf, TMP_BUFFER_SIZE);
     if (filesize == 0) {
-        log_error("Event auto phrases file not found", 0, 0);
+        log_error("Event auto phrases file not found");
         return false;
     }
 
@@ -546,7 +546,7 @@ bool eventmsg_auto_phrases_load(void) {
         }
     } while (brace_index && guard > 0);
     if (num_lines != NUM_AUTO_PHRASE_VARIANTS) {
-        log_error("Event auto phrases file has incorrect no of lines ", 0, num_lines + 1);
+        log_error("Event auto phrases file has incorrect no of lines %u", num_lines + 1);
         return false;
     }
 
@@ -560,6 +560,6 @@ bool eventmsg_auto_phrases_load(void) {
             ptr = get_value(ptr, end_ptr, &data.auto_phrases[i][a]);
     }
 
-    log_info("Event auto phrases loaded", 0, 0);
+    log_info("Event auto phrases loaded");
     return true;
 }

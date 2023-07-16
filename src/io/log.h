@@ -1,25 +1,15 @@
-#ifndef CORE_DEBUG_H
-#define CORE_DEBUG_H
-
-/**
- * @file
- * Logging
- */
+#pragma once
 
 /**
  * Logs an info message
  * @param msg Message
- * @param param_str Extra info (string)
- * @param param_int Extra info (integer)
+ * @param va_list
  */
-void log_info(const char *msg, const char *param_str, int param_int);
+void log_info(const char *msg, ...);
 
 /**
  * Logs an error message
  * @param msg Message
- * @param param_str Extra info (string)
- * @param param_int Extra info (integer)
+ * @param va_list
  */
-void log_error(const char *msg, const char *param_str, int param_int);
-
-#endif // CORE_DEBUG_H
+void log_error(const char *msg, ...);
