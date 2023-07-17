@@ -1,6 +1,7 @@
 #include "intermezzo.h"
 
 #include "core/time.h"
+#include "core/game_environment.h"
 #include "graphics/boilerplate.h"
 #include "graphics/boilerplate.h"
 #include "graphics/screen.h"
@@ -63,33 +64,34 @@ static const char SOUND_FILES_WON[][32] = {
 
 static const char SOUND_FILE_LOSE[] = "wavs/lose_game.wav";
 
-static struct {
+struct intermezzo_data_t {
     intermezzo_type type;
     void (*callback)(void);
     time_millis start_time;
-} data;
+};
+
+intermezzo_data_t g_intermezzo_data;
 
 static void init(intermezzo_type type, void (*callback)(void)) {
-    data.type = type;
-    data.callback = callback;
-    data.start_time = time_get_millis();
+    g_intermezzo_data.type = type;
+    g_intermezzo_data.callback = callback;
+    g_intermezzo_data.start_time = time_get_millis();
     sound_music_stop();
     sound_speech_stop();
 
     // play briefing sound by mission number
-    if (data.type == INTERMEZZO_FIRED)
+    if (g_intermezzo_data.type == INTERMEZZO_FIRED)
         sound_speech_play_file(SOUND_FILE_LOSE);
     else if (!scenario_is_custom()) {
         int mission = scenario_campaign_scenario_id();
-        if (data.type == INTERMEZZO_MISSION_BRIEFING)
+        if (g_intermezzo_data.type == INTERMEZZO_MISSION_BRIEFING)
             sound_speech_play_file(SOUND_FILES_BRIEFING[mission]);
-        else if (data.type == INTERMEZZO_WON)
+        else if (g_intermezzo_data.type == INTERMEZZO_WON)
             sound_speech_play_file(SOUND_FILES_WON[mission]);
 
     }
 }
 
-#include "core/game_environment.h"
 
 static void draw_background(void) {
     graphics_clear_screen();
@@ -100,7 +102,7 @@ static void draw_background(void) {
     // draw background by mission
     int mission = scenario_campaign_scenario_id();
     int image_base = image_id_from_group(GROUP_INTERMEZZO_BACKGROUND);
-    if (data.type == INTERMEZZO_MISSION_BRIEFING) {
+    if (g_intermezzo_data.type == INTERMEZZO_MISSION_BRIEFING) {
         if (scenario_is_custom())
             ImageDraw::img_generic(image_base + 1, x_offset, y_offset);
         else {
@@ -109,9 +111,9 @@ static void draw_background(void) {
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 ImageDraw::img_generic(image_base + 1 + (mission >= 20), x_offset, y_offset);
         }
-    } else if (data.type == INTERMEZZO_FIRED)
+    } else if (g_intermezzo_data.type == INTERMEZZO_FIRED)
         ImageDraw::img_generic(image_base, x_offset, y_offset);
-    else if (data.type == INTERMEZZO_WON) {
+    else if (g_intermezzo_data.type == INTERMEZZO_WON) {
         if (scenario_is_custom())
             ImageDraw::img_generic(image_base + 2, x_offset, y_offset);
         else
@@ -125,8 +127,8 @@ static void draw_background(void) {
 static void handle_input(const mouse *m, const hotkeys *h) {
     time_millis current_time = time_get_millis();
     if (m->right.went_up || (m->is_touch && m->left.double_click) ||
-        current_time - data.start_time > DISPLAY_TIME_MILLIS)
-        data.callback();
+        current_time - g_intermezzo_data.start_time > DISPLAY_TIME_MILLIS)
+        g_intermezzo_data.callback();
 
 }
 

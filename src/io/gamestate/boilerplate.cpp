@@ -528,8 +528,7 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
 
     // read file
     pre_load();
-    if (!FILEIO.unserialize(MISSION_PACK_FILE, offset, FILE_FORMAT_MISSION_PAK, GamestateIO::read_file_version,
-                            file_schema))
+    if (!FILEIO.unserialize(MISSION_PACK_FILE, offset, FILE_FORMAT_MISSION_PAK, GamestateIO::read_file_version, file_schema))
         return false;
     last_loaded = LOADED_MISSION;
     scenario_set_campaign_scenario(scenario_id);

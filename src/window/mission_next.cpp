@@ -10,6 +10,8 @@
 #include "scenario/property.h"
 #include "sound/speech.h"
 #include "window/mission_briefing.h"
+#include "window/main_menu.h"
+#include "io/gamestate/boilerplate.h"
 
 static void button_start(int param1, int param2);
 
@@ -148,7 +150,14 @@ static void button_start(int param1, int param2) {
 
 void window_mission_next_selection_show(void) {
     if (!game_mission_has_choice()) {
-        window_mission_briefing_show();
+        int campaign = scenario_campaign_scenario_id();
+        int mission_rank = scenario_campaign_rank();
+        const mission_step_t *mission = get_campaign_mission_step_data(campaign, mission_rank);
+        if (mission) {
+            GamestateIO::load_mission(mission->scenario_id);
+            return;
+        }
+        window_main_menu_show(true);
         return;
     }
     window_type window = {

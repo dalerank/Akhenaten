@@ -690,7 +690,6 @@ static void menu_file_delete_game(int param) {
 }
 static void menu_file_confirm_exit(bool accepted) {
     if (accepted) {
-        //system_exit();
         clear_state();
         window_main_menu_show(true);
     } else {

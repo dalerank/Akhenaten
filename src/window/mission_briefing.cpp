@@ -15,6 +15,7 @@
 #include "graphics/window.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
+#include "scenario/data.h"
 #include "sound/music.h"
 #include "sound/speech.h"
 #include "window/city.h"
@@ -51,8 +52,6 @@ static void init(void) {
         g_mission_briefing_data.campaign_mission_loaded = 1;
     }
 }
-
-#include "scenario/data.h"
 
 static void draw_background(void) {
 //    if (!data.campaign_mission_loaded) {

@@ -2,6 +2,7 @@
 
 #include "core/string.h"
 #include "scenario/data.h"
+#include "game/mission.h"
 
 int scenario_is_custom(void) {
     return g_scenario_data.settings.is_custom;
@@ -21,8 +22,6 @@ int scenario_campaign_scenario_id(void) {
 void scenario_set_campaign_scenario(int scenario_id) {
     g_scenario_data.settings.campaign_scenario_id = scenario_id;
 }
-
-#include "game/mission.h"
 
 bool scenario_is_mission_rank(int rank) {
 //    if (GAME_ENV == ENGINE_ENV_C3)
