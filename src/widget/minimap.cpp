@@ -11,21 +11,13 @@
 
 #include "dev/debug.h"
 
-enum E_FIGURE {
-    FIGURE_COLOR_NONE = 0,
-    FIGURE_COLOR_SOLDIER = 1,
-    FIGURE_COLOR_ENEMY = 2,
-    FIGURE_COLOR_WOLF = 3,
-    FIGURE_COLOR_ANIMAL = 4
-};
-
 static const color_t ENEMY_COLOR_BY_CLIMATE[] = {
     COLOR_MINIMAP_ENEMY_CENTRAL,
     COLOR_MINIMAP_ENEMY_NORTHERN,
     COLOR_MINIMAP_ENEMY_DESERT
 };
 
-static struct {
+struct minimap_data_t {
     int absolute_x;
     int absolute_y;
     int width_tiles;
@@ -43,18 +35,23 @@ static struct {
         map_point tile;
     } mouse;
     int refresh_requested;
-} data;
+};
+
+minimap_data_t g_minimap_data;
 
 void widget_minimap_invalidate(void) {
+    auto &data = g_minimap_data;
     data.refresh_requested = 1;
 }
 static void foreach_map_tile(void(*callback)(screen_tile screen, map_point point)) {
+    auto &data = g_minimap_data;
     city_view_foreach_minimap_tile(data.x_offset, data.y_offset,
                                    data.absolute_x, data.absolute_y,
                                    data.width_tiles, data.height_tiles,
                                    callback);
 }
 static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_tiles) {
+    auto &data = g_minimap_data;
     data.width_tiles = width_tiles;
     data.height_tiles = height_tiles;
     data.x_offset = x_offset;
@@ -88,32 +85,16 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
 }
 
 static int is_in_minimap(const mouse *m) {
+    auto &data = g_minimap_data;
     if (m->x >= data.x_offset && m->x < data.x_offset + data.width &&
         m->y >= data.y_offset && m->y < data.y_offset + data.height) {
         return 1;
     }
     return 0;
 }
-bool figure::has_figure_color() {
-    if (is_legion())
-        return FIGURE_COLOR_SOLDIER;
 
-    if (is_enemy())
-        return FIGURE_COLOR_ENEMY;
-
-    if (type == FIGURE_INDIGENOUS_NATIVE &&
-        action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
-        return FIGURE_COLOR_ENEMY;
-    }
-    if (type == FIGURE_OSTRICH)
-        return FIGURE_COLOR_ANIMAL;
-
-    //if (type == FIGURE_WOLF)
-    //    return FIGURE_COLOR_WOLF;
-
-    return FIGURE_COLOR_NONE;
-}
 static int draw_figure(screen_tile screen, map_point point) {
+    auto &data = g_minimap_data;
     int grid_offset = point.grid_offset();
     int screen_x = screen.x;
     int screen_y = screen.y;
@@ -244,6 +225,7 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
     }
 }
 static void draw_viewport_rectangle(void) {
+    auto &data = g_minimap_data;
     map_point camera_tile = city_view_get_camera_mappoint();
     pixel_coordinate camera_pixels = camera_get_pixel_offset_internal();
     int view_width_tiles, view_height_tiles;
@@ -271,6 +253,7 @@ static void prepare_minimap_cache(int width, int height) {
 //    data.cache = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_MINIMAP, &data.cache_width);
 }
 static void clear_minimap(void) {
+    auto &data = g_minimap_data;
     for (int y = 0; y < data.height; y++) {
         color_t *line = &data.cache[y * data.cache_width];
         for (int x = 0; x < data.cache_width; x++) {
@@ -280,6 +263,7 @@ static void clear_minimap(void) {
 }
 
 static void draw_minimap(void) {
+    auto &data = g_minimap_data;
     graphics_set_clip_rectangle(data.x_offset, data.y_offset, data.width, data.height);
     clear_minimap();
     foreach_map_tile(draw_minimap_tile);
@@ -289,12 +273,14 @@ static void draw_minimap(void) {
     graphics_reset_clip_rectangle();
 }
 static void draw_uncached(int x_offset, int y_offset, int width_tiles, int height_tiles) {
+    auto &data = g_minimap_data;
     data.enemy_color = ENEMY_COLOR_BY_CLIMATE[scenario_property_climate()];
     prepare_minimap_cache(2 * width_tiles, height_tiles);
     set_bounds(x_offset, y_offset, width_tiles, height_tiles);
     draw_minimap();
 }
 void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_tiles, int is_scrolling) {
+    auto &data = g_minimap_data;
     if (width_tiles * 2 != data.width || height_tiles != data.height || x_offset != data.x_offset) {
         draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
         return;
@@ -317,6 +303,7 @@ void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_ti
 }
 
 void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles, int force) {
+    auto &data = g_minimap_data;
     if (data.refresh_requested || scroll_in_progress() || force) {
 //        if (data.refresh_requested) {
             draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
@@ -335,6 +322,7 @@ void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height
 }
 
 static void update_mouse_grid_offset(screen_tile screen, map_point point) {
+    auto &data = g_minimap_data;
     int grid_offset = point.grid_offset();
     int screen_x = screen.x;
     int screen_y = screen.y;
@@ -342,6 +330,7 @@ static void update_mouse_grid_offset(screen_tile screen, map_point point) {
         data.mouse.tile.grid_offset(grid_offset < 0 ? 0 : grid_offset);
 }
 static int get_mouse_grid_offset(const mouse *m) {
+    auto &data = g_minimap_data;
     data.mouse.x = m->x;
     data.mouse.y = m->y;
     data.mouse.tile.set(0);

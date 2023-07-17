@@ -41,7 +41,7 @@ int map_figure_foreach_until(int grid_offset, int test) {
                 case TEST_SEARCH_FIGHTING_ENEMY:
                     result = f->is_fighting_enemy(); break;
                 case TEST_SEARCH_HAS_COLOR:
-                    result = f->has_figure_color(); break;
+                    result = !!f->get_figure_color(); break;
                 default:
                     result = false;
             }

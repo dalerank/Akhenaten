@@ -178,6 +178,26 @@ bool figure::is(e_figure_state value) {
     return state == value;
 }
 
+e_minimap_figure_color figure::get_figure_color() {
+    if (is_legion())
+        return FIGURE_COLOR_SOLDIER;
+
+    if (is_enemy())
+        return FIGURE_COLOR_ENEMY;
+
+    if (type == FIGURE_INDIGENOUS_NATIVE &&
+        action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
+        return FIGURE_COLOR_ENEMY;
+    }
+    if (type == FIGURE_OSTRICH)
+        return FIGURE_COLOR_ANIMAL;
+
+    //if (type == FIGURE_WOLF)
+    //    return FIGURE_COLOR_WOLF;
+
+    return FIGURE_COLOR_NONE;
+}
+
 //bool figure::is_roamer() {
 //    switch (action_state) {
 //        case ACTION_1_ROAMING:

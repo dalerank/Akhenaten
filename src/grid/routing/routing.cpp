@@ -254,6 +254,7 @@ bool figure::is_fighting_friendly() {
 bool figure::is_fighting_enemy() {
     return !is_friendly && action_state == FIGURE_ACTION_150_ATTACK;
 }
+
 static int has_fighting_friendly(int grid_offset) {
     return map_figure_foreach_until(grid_offset, TEST_SEARCH_FIGHTING_FRIENDLY);
 }

@@ -18,6 +18,14 @@ class building;
 
 static int MAX_FIGURES[] = {5000, 2000};
 
+enum e_minimap_figure_color {
+    FIGURE_COLOR_NONE = 0,
+    FIGURE_COLOR_SOLDIER = 1,
+    FIGURE_COLOR_ENEMY = 2,
+    FIGURE_COLOR_WOLF = 3,
+    FIGURE_COLOR_ANIMAL = 4
+};
+
 class figure {
 private:
     unsigned char resource_id;
@@ -181,7 +189,7 @@ public:
     bool is_non_citizen();
     bool is_fighting_friendly(); // routing.c
     bool is_fighting_enemy();
-    bool has_figure_color(); // minimap.c
+    e_minimap_figure_color get_figure_color(); // minimap.c
 
     void kill() {
         if (state != FIGURE_STATE_ALIVE)

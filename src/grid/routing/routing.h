@@ -3,12 +3,12 @@
 
 #include "core/buffer.h"
 
-typedef enum {
+enum routed_int{
     ROUTED_BUILDING_ROAD = 0,
     ROUTED_BUILDING_WALL = 1,
     ROUTED_BUILDING_AQUEDUCT = 2,
     ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC = 4,
-} routed_int;
+};
 
 void map_routing_calculate_distances(int x, int y);
 void map_routing_calculate_distances_water_boat(int x, int y);
