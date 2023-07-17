@@ -38,15 +38,18 @@ static generic_button return_button[] = {
         {0, 0, 288, 32, button_return_to_fort, button_none, 0, 0},
 };
 
-static struct {
+struct military_data_t {
     int focus_button_id;
     int focus_priority_button_id;
     int return_button_id;
     int building_id;
     building_info_context *context_for_callback;
-} data;
+};
+
+military_data_t g_military_data;
 
 static void draw_priority_buttons(int x, int y, int buttons) {
+    auto &data = g_military_data;
     uint8_t permission_selection_text[] = {'x', 0};
     for (int i = 0; i < buttons; i++) {
         int x_adj = x + priority_buttons[i].x;
@@ -97,6 +100,7 @@ void window_building_draw_tower(building_info_context *c) {
 }
 
 void window_building_draw_barracks(building_info_context *c) {
+    auto &data = g_military_data;
     int military_resource = RESOURCE_WEAPONS;
     if (GAME_ENV == ENGINE_ENV_C3) {
         military_resource = RESOURCE_WEAPONS;
@@ -150,8 +154,8 @@ void window_building_draw_barracks_foreground(building_info_context *c) {
 }
 
 int window_building_handle_mouse_barracks(const mouse *m, building_info_context *c) {
-    if (generic_buttons_handle_mouse(m, c->x_offset + 46, c->y_offset + 224, priority_buttons, 2,
-                                     &data.focus_priority_button_id)) {
+    auto &data = g_military_data;
+    if (generic_buttons_handle_mouse(m, c->x_offset + 46, c->y_offset + 224, priority_buttons, 2, &data.focus_priority_button_id)) {
         window_invalidate();
         return 1;
     }
@@ -292,6 +296,7 @@ void window_building_draw_legion_info(building_info_context *c) {
 }
 
 void window_building_draw_legion_info_foreground(building_info_context *c) {
+    auto &data = g_military_data;
     const formation *m = formation_get(c->formation_id);
     if (!m->num_figures)
         return;
@@ -408,6 +413,7 @@ void window_building_draw_legion_info_foreground(building_info_context *c) {
 }
 
 int window_building_handle_mouse_legion_info(const mouse *m, building_info_context *c) {
+    auto &data = g_military_data;
     data.context_for_callback = c;
     int button_id = generic_buttons_handle_mouse(m, c->x_offset, c->y_offset, layout_buttons, 5, &data.focus_button_id);
     if (formation_get(c->formation_id)->figure_type == FIGURE_FORT_LEGIONARY) {
@@ -425,10 +431,12 @@ int window_building_handle_mouse_legion_info(const mouse *m, building_info_conte
 }
 
 int window_building_get_legion_info_tooltip_text(building_info_context *c) {
+    auto &data = g_military_data;
     return data.focus_button_id ? 147 : 0;
 }
 
 static void button_return_to_fort(int param1, int param2) {
+    auto &data = g_military_data;
     formation *m = formation_get(data.context_for_callback->formation_id);
     if (!m->in_distant_battle && m->is_at_fort != 1) {
         formation_legion_return_home(m);
@@ -437,6 +445,7 @@ static void button_return_to_fort(int param1, int param2) {
 }
 
 static void button_layout(int index, int param2) {
+    auto &data = g_military_data;
     formation *m = formation_get(data.context_for_callback->formation_id);
     if (m->in_distant_battle)
         return;
@@ -505,6 +514,7 @@ static void button_layout(int index, int param2) {
 }
 
 static void button_priority(int index, int param2) {
+    auto &data = g_military_data;
     building *barracks = building_get(data.building_id);
     if (index != barracks->subtype.barracks_priority)
         barracks->barracks_toggle_priority();
