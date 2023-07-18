@@ -42,6 +42,7 @@ int figure::create_delivery_boy(int leader_id) {
     boy->set_home(homeID());
     return boy->id;
 }
+
 int figure::take_food_from_granary(building *market, building *granary) {
     int resource;
     switch (collecting_item_id) {
@@ -100,6 +101,7 @@ int figure::take_food_from_granary(building *market, building *granary) {
 
     return 1;
 }
+
 int figure::take_resource_from_warehouse(building *warehouse) {
     int resource;
     if (GAME_ENV == ENGINE_ENV_C3)
@@ -119,31 +121,33 @@ int figure::take_resource_from_warehouse(building *warehouse) {
             default:
                 return 0;
         }
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         switch (collecting_item_id) {
-            case INVENTORY_GOOD1:
-                resource = RESOURCE_POTTERY;
-                break;
-            case INVENTORY_GOOD2:
-                resource = RESOURCE_LUXURY_GOODS;
-                break;
-            case INVENTORY_GOOD3:
-                resource = RESOURCE_LINEN;
-                break;
-            case INVENTORY_GOOD4:
-                resource = RESOURCE_BEER;
-                break;
-            default:
-                return 0;
+        case INVENTORY_GOOD1:
+        resource = RESOURCE_POTTERY;
+        break;
+        case INVENTORY_GOOD2:
+        resource = RESOURCE_LUXURY_GOODS;
+        break;
+        case INVENTORY_GOOD3:
+        resource = RESOURCE_LINEN;
+        break;
+        case INVENTORY_GOOD4:
+        resource = RESOURCE_BEER;
+        break;
+        default:
+        return 0;
         }
+    }
 //    building *warehouse = building_get(warehouse);
     int num_loads;
     int stored = building_warehouse_get_amount(warehouse, resource);
-    if (stored < 2)
+    if (stored < 2) {
         num_loads = stored;
-    else {
+    } else {
         num_loads = 2;
     }
+
     if (num_loads <= 0)
         return 0;
 
@@ -151,11 +155,13 @@ int figure::take_resource_from_warehouse(building *warehouse) {
 
     // create delivery boys
     int boy1 = create_delivery_boy(id);
-    if (num_loads > 1)
+    if (num_loads > 1) {
         create_delivery_boy(boy1);
+    }
 
     return 1;
 }
+
 void figure::delivery_boy_action() {
 //    is_ghost = false;
 //    terrain_usage = TERRAIN_USAGE_ROADS;
@@ -176,12 +182,14 @@ void figure::delivery_boy_action() {
             poof();
         }
 //    }
-    if (leader->is_ghost)
+    if (leader->is_ghost) {
         is_ghost = true;
+    }
 
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_DELIVERY_BOY) + 96 + figure_image_corpse_offset();
-    } else
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_DELIVERY_BOY) + dir + 8 * anim_frame;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_GRANARY_BOY) + 96 + figure_image_corpse_offset();
+    } else {
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_GRANARY_BOY) + dir + 8 * anim_frame;
+    }
 }

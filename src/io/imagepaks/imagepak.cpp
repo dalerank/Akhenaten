@@ -310,7 +310,7 @@ imagepak::imagepak(const char *pak_name, int starting_index, bool SYSTEM_SPRITES
 //    images = nullptr;
 //    image_data = nullptr;
     entries_num = 0;
-    group_image_ids = new uint16_t[300];
+    std::memset(group_image_ids, 0, PAK_GROUPS_MAX * sizeof(uint16_t));
     SHOULD_LOAD_SYSTEM_SPRITES = SYSTEM_SPRITES;
     SHOULD_CONVERT_FONTS = FONTS;
 
@@ -416,8 +416,12 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
         has_system_bmp = true;
 
     // parse bitmap names
-    bmp_names = (char*)malloc(sizeof(char) * (num_bmp_names * PAK_BMP_NAME_SIZE));
-    pak_buf->read_raw(bmp_names, num_bmp_names * PAK_BMP_NAME_SIZE);
+    std::vector<bmp_name> names(num_bmp_names);
+    pak_buf->read_raw(names.data(), num_bmp_names * PAK_BMP_NAME_SIZE);
+    for (int i = 0; i < num_bmp_names; ++i) {
+        strncpy(bmp_names[i].name, names[i].name, PAK_BMP_NAME_SIZE);
+        log_info("%s, %u", bmp_names[i].name, i);
+    }
 
     // (move buffer to the rest of the data)
     if (file_has_extension((const char*)filename_sgx, "sg2"))
@@ -471,7 +475,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
         img.unk11 = pak_buf->read_i8();
         img.unk12 = pak_buf->read_i8();
         img.bmp.group_id = pak_buf->read_u8();
-        img.bmp.name = &bmp_names[img.bmp.group_id * PAK_BMP_NAME_SIZE];
+        img.bmp.name = bmp_names[img.bmp.group_id].name;
         if (img.bmp.group_id != bmp_last_group_id) {
             last_idx_in_bmp = 1; // new bitmap name, reset bitmap grouping index
             bmp_last_group_id = img.bmp.group_id;

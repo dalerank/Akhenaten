@@ -64,7 +64,7 @@ typedef struct {
     char last_loaded_file[MAX_FILE_NAME];
 } file_type_data;
 
-static struct {
+struct file_dialog_data_t {
     time_millis message_not_exist_start_time;
     file_type type;
     file_dialog_type dialog_type;
@@ -73,13 +73,16 @@ static struct {
     file_type_data *file_data;
     uint8_t typed_name[MAX_FILE_NAME];
     char selected_file[MAX_FILE_NAME];
-} data;
+};
+
+file_dialog_data_t g_file_dialog_data;
 
 static file_type_data saved_game_data = {"sav"};
 static file_type_data saved_game_data_expanded = {"svx"};
 static file_type_data map_file_data = {"map"};
 
 static void set_chosen_filename(const char *name) {
+    auto &data = g_file_dialog_data;
     strcpy(data.selected_file, name);
     encoding_from_utf8(data.selected_file, data.typed_name, MAX_PLAYER_NAME);
 }
@@ -87,9 +90,11 @@ static void clear_chosen_filename() {
     set_chosen_filename("");
 }
 static bool is_chosen_filename(int index) {
+    auto &data = g_file_dialog_data;
     return strcmp(data.selected_file, panel->get_selected_entry_text(FILE_NO_EXT)) == 0;
 }
 static bool is_valid_chosen_filename() {
+    auto &data = g_file_dialog_data;
     if (strcmp(data.selected_file, "") == 0)
         return false;
     if (panel->get_entry_idx(data.selected_file) > -1)
@@ -97,6 +102,7 @@ static bool is_valid_chosen_filename() {
     return false;
 }
 static const char *get_chosen_filename(void) {
+    auto &data = g_file_dialog_data;
     // Check if we should work with the selected file
     uint8_t selected_name[MAX_FILE_NAME];
     encoding_from_utf8(data.selected_file, selected_name, MAX_FILE_NAME);
@@ -113,6 +119,7 @@ static const char *get_chosen_filename(void) {
 }
 
 static void init(file_type type, file_dialog_type dialog_type) {
+    auto &data = g_file_dialog_data;
     data.type = type;
     data.file_data = type == FILE_TYPE_SCENARIO ? &map_file_data : &saved_game_data;
 
@@ -148,8 +155,9 @@ static void init(file_type type, file_dialog_type dialog_type) {
 }
 
 static void draw_foreground(void) {
+    auto &data = g_file_dialog_data;
     graphics_set_to_dialog();
-    uint8_t file[MAX_FILE_NAME];
+    uint8_t file[MAX_FILE_NAME] = {0};
 
     outer_panel_draw(128, 40, 24, 21);
     input_box_draw(&file_name_input);
@@ -179,6 +187,7 @@ static void draw_foreground(void) {
 }
 
 static void button_ok_cancel(int is_ok, int param2) {
+    auto &data = g_file_dialog_data;
     if (!is_ok) {
         input_box_stop(&file_name_input);
         window_go_back();
@@ -245,6 +254,7 @@ static void button_ok_cancel(int is_ok, int param2) {
     strncpy(data.file_data->last_loaded_file, get_chosen_filename(), MAX_FILE_NAME - 1);
 }
 static void button_select_file(int index, int param2) {
+    auto &data = g_file_dialog_data;
     if (index >= panel->get_total_entries())
         return clear_chosen_filename();
     set_chosen_filename(panel->get_selected_entry_text(FILE_NO_EXT));
@@ -267,6 +277,7 @@ static void button_select_file(int index, int param2) {
 //    }
 }
 static void button_double_click(int param1, int param2) {
+    auto &data = g_file_dialog_data;
     if (data.dialog_type != FILE_DIALOG_DELETE)
         button_ok_cancel(1, 0);
 }

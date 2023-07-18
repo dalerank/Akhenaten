@@ -13,13 +13,17 @@
 #define PAK_IMAGE_ENTRY_SIZE 64
 #define NAME_SIZE 32
 
+struct bmp_name {
+    char name[PAK_BMP_NAME_SIZE] = {0};
+};
+
 class imagepak {
     int version;
     int entries_num;
     int groups_num;
-    char *bmp_names;
+    bmp_name bmp_names[PAK_GROUPS_MAX];
     int num_bmp_names;
-    uint16_t *group_image_ids;
+    uint16_t group_image_ids[PAK_GROUPS_MAX];
     std::vector<image_t> images_array;
 
     bool SHOULD_LOAD_SYSTEM_SPRITES;
@@ -27,6 +31,7 @@ class imagepak {
 
     bool load_pak(const char *pak_name, int starting_index);
     void cleanup_and_destroy();
+
 public:
     char name[MAX_FILE_NAME];
     std::vector<atlas_data_t> atlas_pages;
