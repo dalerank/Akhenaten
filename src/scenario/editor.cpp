@@ -3,7 +3,7 @@
 #include "io/gamefiles/lang.h"
 #include "core/string.h"
 #include "grid/grid.h"
-#include "scenario/data.h"
+#include "scenario/scenario_data.h"
 #include "scenario/property.h"
 
 #include <string.h>

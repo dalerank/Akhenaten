@@ -10,7 +10,7 @@
 #include "game/resource.h"
 #include "game/time.h"
 #include "game/tutorial.h"
-#include "scenario/data.h"
+#include "scenario/scenario_data.h"
 #include "events.h"
 
 void scenario_request_init(void) {

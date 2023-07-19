@@ -9,7 +9,7 @@
 #include "city/trade.h"
 #include "io/config/config.h"
 #include "core/random.h"
-#include "scenario/data.h"
+#include "scenario/scenario_data.h"
 #include "scenario/property.h"
 
 enum E_EVENT_DK {

@@ -1436,9 +1436,9 @@ void map_tiles_add_entry_exit_flags(void) {
         map_image_set(grid_offset_flag, image_id_from_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + 4 + orientation / 2);
     }
 }
-static void remove_entry_exit_flag(map_point *tile) {
+static void remove_entry_exit_flag(map_point &tile) {
     // re-calculate grid_offset_figure because the stored offset might be invalid
-    map_terrain_remove(MAP_OFFSET(tile->x(), tile->y()), TERRAIN_ROCK);
+    map_terrain_remove(MAP_OFFSET(tile.x(), tile.y()), TERRAIN_ROCK);
 }
 void map_tiles_remove_entry_exit_flags(void) {
     remove_entry_exit_flag(city_map_entry_flag());

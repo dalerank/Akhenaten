@@ -13,7 +13,7 @@
 #include "game/time.h"
 #include "grid/grid.h"
 #include "grid/terrain.h"
-#include "scenario/data.h"
+#include "scenario/scenario_data.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
 

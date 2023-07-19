@@ -268,8 +268,8 @@ static bool generate_trader(int city_id, empire_city *city) {
         // generate caravan and donkeys
         if (!city_trade_has_land_trade_problems()) {
             // caravan head
-            map_point *entry = city_map_entry_point();
-            city->trader_figure_ids[index] = figure_create_trade_caravan(entry->x(), entry->y(), city_id);
+            map_point &entry = city_map_entry_point();
+            city->trader_figure_ids[index] = figure_create_trade_caravan(entry.x(), entry.y(), city_id);
             return true;
         }
     }

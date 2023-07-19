@@ -5,7 +5,7 @@
 #include "building/maintenance.h"
 #include "building/menu.h"
 #include "building/storage.h"
-#include "city/data.h"
+#include "city/city_data.h"
 #include "city/emperor.h"
 #include "city/map.h"
 #include "city/message.h"

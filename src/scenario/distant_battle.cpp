@@ -12,7 +12,7 @@
 #include "empire/type.h"
 #include "figure/formation_legion.h"
 #include "game/time.h"
-#include "scenario/data.h"
+#include "scenario/scenario_data.h"
 
 int scenario_distant_battle_roman_travel_months(void) {
     return g_scenario_data.empire.distant_battle_roman_travel_months;

@@ -2,7 +2,7 @@
 #define SCENARIO_MAP_H
 
 #include "grid/point.h"
-#include "data.h"
+#include "scenario_data.h"
 
 //void scenario_map_init(void);
 

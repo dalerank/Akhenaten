@@ -7,7 +7,7 @@
 #include "empire/trade_route.h"
 #include "game/difficulty.h"
 #include "game/settings.h"
-#include "scenario/data.h"
+#include "scenario/scenario_data.h"
 #include "events.h"
 
 scenario_data_t g_scenario_data;

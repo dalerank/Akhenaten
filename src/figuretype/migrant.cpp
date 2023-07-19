@@ -14,8 +14,8 @@
 #include "graphics/image_groups.h"
 
 void figure_create_immigrant(building *house, int num_people) {
-    map_point *entry = city_map_entry_point();
-    figure *f = figure_create(FIGURE_IMMIGRANT, entry->x(), entry->y(), DIR_0_TOP_RIGHT);
+    map_point &entry = city_map_entry_point();
+    figure *f = figure_create(FIGURE_IMMIGRANT, entry.x(), entry.y(), DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_1_IMMIGRANT_CREATED;
     f->set_immigrant_home(house->id);
     house->set_figure(2, f->id);
@@ -133,8 +133,8 @@ void figure::emigrant_action() {
             break;
         case FIGURE_ACTION_6_EMIGRANT_LEAVING:
         case 10:
-            map_point *exit = city_map_entry_point();
-            do_goto(exit->x(), exit->y(), TERRAIN_USAGE_ANY);
+            map_point &exit = city_map_entry_point();
+            do_goto(exit.x(), exit.y(), TERRAIN_USAGE_ANY);
             break;
     }
     update_direction_and_image();
@@ -169,8 +169,8 @@ void figure::homeless_action() {
             break;
         case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_10_HOMELESS_LEAVING:
-            map_point *exit = city_map_exit_point();
-            do_goto(exit->x(), exit->y(), TERRAIN_USAGE_ANY);
+            map_point &exit = city_map_exit_point();
+            do_goto(exit.x(), exit.y(), TERRAIN_USAGE_ANY);
 
             wait_ticks++;
             if (wait_ticks > 30) {

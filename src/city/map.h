@@ -3,11 +3,11 @@
 
 #include "grid/point.h"
 
-map_point *city_map_entry_point(void);
-map_point *city_map_exit_point(void);
+map_point &city_map_entry_point(void);
+map_point &city_map_exit_point(void);
 
-map_point *city_map_entry_flag(void);
-map_point *city_map_exit_flag(void);
+map_point &city_map_entry_flag(void);
+map_point &city_map_exit_flag(void);
 
 void city_map_set_entry_point(int x, int y);
 void city_map_set_exit_point(int x, int y);

@@ -344,9 +344,9 @@ void figure::go_to_next_warehouse(int x_src, int y_src, int distance_to_entry) {
 //        destination_tile.x() = dst.x();
 //        destination_tile.y() = dst.y();
     } else {
-        map_point *exit = city_map_exit_point();
+        map_point &exit = city_map_exit_point();
         action_state = FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING;
-        destination_tile = *exit;
+        destination_tile = exit;
 //        destination_tile.x() = exit->x();
 //        destination_tile.y() = exit->y();
     }

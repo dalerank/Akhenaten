@@ -3,20 +3,20 @@
 #include "city/data_private.h"
 #include "grid/grid.h"
 
-map_point *city_map_entry_point(void) {
-    return &city_data.map.entry_point;
+map_point &city_map_entry_point(void) {
+    return city_data.map.entry_point;
 }
 
-map_point *city_map_exit_point(void) {
-    return &city_data.map.exit_point;
+map_point &city_map_exit_point(void) {
+    return city_data.map.exit_point;
 }
 
-map_point *city_map_entry_flag(void) {
-    return &city_data.map.entry_flag;
+map_point &city_map_entry_flag(void) {
+    return city_data.map.entry_flag;
 }
 
-map_point *city_map_exit_flag(void) {
-    return &city_data.map.exit_flag;
+map_point &city_map_exit_flag(void) {
+    return city_data.map.exit_flag;
 }
 
 
