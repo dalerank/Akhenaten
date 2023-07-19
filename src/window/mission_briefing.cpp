@@ -15,7 +15,7 @@
 #include "graphics/window.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
-#include "scenario/data.h"
+#include "scenario/scenario_data.h"
 #include "sound/music.h"
 #include "sound/speech.h"
 #include "window/city.h"

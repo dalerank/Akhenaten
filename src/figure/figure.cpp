@@ -13,14 +13,16 @@
 #include <string.h>
 #include "io/io_buffer.h"
 
-static struct {
+struct figure_data_t {
     int created_sequence;
     bool initialized;
     figure *figures[5000];
-} data = {0, false};
+};
+
+figure_data_t g_figure_data = {0, false};
 
 figure *figure_get(int id) {
-    return data.figures[id];
+    return g_figure_data.figures[id];
 }
 figure *figure_create(int type, int x, int y, int dir) {
     int id = 0;
@@ -40,7 +42,7 @@ figure *figure_create(int type, int x, int y, int dir) {
     f->use_cross_country = false;
     f->terrain_usage = -1;
     f->is_friendly = true;
-    f->created_sequence = data.created_sequence++;
+    f->created_sequence = g_figure_data.created_sequence++;
     f->direction = dir;
 //    f->direction = DIR_FIGURE_NONE;
     f->roam_length = 0;
@@ -213,15 +215,16 @@ e_minimap_figure_color figure::get_figure_color() {
 //}
 
 void init_figures() {
-    if (!data.initialized) {
-        for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++)
-            data.figures[i] = new figure(i);
-        data.initialized = true;
+    if (!g_figure_data.initialized) {
+        for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
+            g_figure_data.figures[i] = new figure(i);
+        }
+        g_figure_data.initialized = true;
     }
 }
 void figure_init_scenario(void) {
     init_figures();
-    data.created_sequence = 0;
+    g_figure_data.created_sequence = 0;
 }
 void figure_kill_all() {
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++)
@@ -366,5 +369,5 @@ io_buffer *iob_figures = new io_buffer([](io_buffer *iob) {
     }
 });
 io_buffer *iob_figure_sequence = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_INT32, &data.created_sequence);
+    iob->bind(BIND_SIGNATURE_INT32, &g_figure_data.created_sequence);
 });

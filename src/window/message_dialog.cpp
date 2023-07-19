@@ -1,5 +1,5 @@
 #include <scenario/events.h>
-#include <city/data.h>
+#include <city/city_data.h>
 #include "message_dialog.h"
 
 #include "city/message.h"

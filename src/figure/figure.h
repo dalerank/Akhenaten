@@ -11,12 +11,11 @@
 #include "grid/point.h"
 #include "window/building/common.h"
 #include "widget/city.h"
-
-// partial (forward) declaration for recursive class
-class building;
 #include "building/building.h"
 
-static int MAX_FIGURES[] = {5000, 2000};
+class building;
+
+constexpr int MAX_FIGURES[] = {5000, 2000};
 
 enum e_minimap_figure_color {
     FIGURE_COLOR_NONE = 0,
