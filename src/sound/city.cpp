@@ -5,6 +5,7 @@
 #include "game/settings.h"
 #include "sound/channel.h"
 #include "sound/device.h"
+#include "io/io_buffer.h"
 
 #include <string.h>
 

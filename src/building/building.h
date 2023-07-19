@@ -1,17 +1,15 @@
-#ifndef BUILDING_BUILDING_H
-#define BUILDING_BUILDING_H
-
-//#include "figure/figure.h"
-#include "building/type.h"
-//#include "core/buffer.h"
+#pragma once
 
 #define MAX_BUILDINGS 4000
-
-// partial (forward) declaration for recursive class
-class figure;
-#include "figure/figure.h"
-
 #define MAX_FIGURES_PER_BUILDING 8
+
+#include "building/type.h"
+#include "figure/type.h"
+#include "figure/action.h"
+#include "grid/point.h"
+
+class figure;
+class io_buffer;
 
 class building {
 private:
@@ -354,5 +352,3 @@ void building_update_desirability(void);
 
 int building_mothball_toggle(building *b);
 int building_mothball_set(building *b, int value);
-
-#endif // BUILDING_BUILDING_H

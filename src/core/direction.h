@@ -1,15 +1,6 @@
-#ifndef CORE_DIRECTION_H
-#define CORE_DIRECTION_H
+#pragma once
 
-/**
- * @file
- * Direction
- */
-
-/**
- * Direction constants
- */
-enum {
+enum e_direction {
     DIR_0_TOP_RIGHT = 0,
     DIR_1_RIGHT = 1,
     DIR_2_BOTTOM_RIGHT = 2,
@@ -24,5 +15,3 @@ enum {
     DIR_FIGURE_CAN_NOT_REACH = 10,
     DIR_FIGURE_ATTACK = 11,
 };
-
-#endif // CORE_DIRECTION_H

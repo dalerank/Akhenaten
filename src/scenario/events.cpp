@@ -1,7 +1,6 @@
 #include "io/gamefiles/lang.h"
 #include <game/time.h>
 #include <core/random.h>
-#include "data.h"
 #include "event_phrases.h"
 #include "city/message.h"
 #include "io/io.h"

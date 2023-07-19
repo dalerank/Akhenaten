@@ -1,7 +1,7 @@
 #include "building.h"
 
 #include "building/type.h"
-#include "scenario/data.h"
+#include "scenario/scenario_data.h"
 
 bool scenario_building_allowed(int building_type) {
     if (GAME_ENV == ENGINE_ENV_C3)

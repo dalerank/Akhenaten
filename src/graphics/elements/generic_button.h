@@ -4,7 +4,7 @@
 #include "button.h"
 #include "input/mouse.h"
 
-typedef struct {
+struct generic_button {
     short x;
     short y;
     short width;
@@ -13,7 +13,7 @@ typedef struct {
     void (*right_click_handler)(int param1, int param2);
     int parameter1;
     int parameter2;
-} generic_button;
+} ;
 
 int generic_buttons_handle_mouse(const mouse *m, int x, int y, generic_button *buttons, int num_buttons,
                                  int *focus_button_id);

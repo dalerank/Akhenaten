@@ -3,7 +3,7 @@
 
 #include "core/buffer.h"
 
-typedef struct {
+struct enemy_army {
     int formation_id;
     int layout;
     int home_x;
@@ -13,7 +13,7 @@ typedef struct {
     int destination_building_id;
     int num_legions;
     int ignore_roman_soldiers;
-} enemy_army;
+} ;
 
 void enemy_armies_clear(void);
 

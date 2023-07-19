@@ -5,7 +5,7 @@
 #include "io/config/config.h"
 #include "core/random.h"
 #include "game/time.h"
-#include "scenario/data.h"
+#include "scenario/scenario_data.h"
 
 static struct {
     int game_year;

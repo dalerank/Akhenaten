@@ -1,7 +1,7 @@
 #ifndef MAP_IMAGE_H
 #define MAP_IMAGE_H
 
-#include "core/buffer.h"
+#include "io/io_buffer.h"
 
 class io_image_grid : public io_buffer {
 public:

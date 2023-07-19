@@ -3,9 +3,9 @@
 #include "city/resource.h"
 #include "building/building.h"
 
-#include <string.h>
-#include <window/popup_dialog.h>
-#include <window/city.h>
+#include "window/popup_dialog.h"
+#include "window/city.h"
+#include "io/io_buffer.h"
 
 static const int MAX_STORAGES[2] = {
         1000,

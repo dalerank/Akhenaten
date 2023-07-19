@@ -1,7 +1,7 @@
 #ifndef WINDOW_EDITOR_BUILD_MENU_H
 #define WINDOW_EDITOR_BUILD_MENU_H
 
-enum {
+enum e_editor_build_menu {
     MENU_BRUSH_SIZE = 0,
     MENU_PEOPLE_POINTS = 1,
     MENU_ELEVATION = 2,

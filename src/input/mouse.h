@@ -11,13 +11,13 @@
 /**
  * Mouse button state
  */
-typedef struct {
+struct mouse_button {
     bool is_down; /**< Mouse button is down */
     bool went_down; /**< Mouse button went down during this cycle */
     bool went_up; /**< Mouse button went up during this cycle */
     bool double_click; /**< Mouse double clicked during this cycle */
     int system_change;
-} mouse_button;
+} ;
 
 enum {
     SCROLL_NONE = 0,
@@ -28,7 +28,7 @@ enum {
 /**
  * Mouse state
  */
-typedef struct {
+struct mouse{
     int x; /**< Global position X */
     int y; /**< Global position Y */
     int scrolled; /**< Scroll state (up/down/none) */
@@ -37,7 +37,7 @@ typedef struct {
     mouse_button right; /**< Right mouse button */
     int is_inside_window; /**< Whether the mouse is in the window */
     int is_touch; /**< Whether the mouse is a translated touch event */
-} mouse;
+} ;
 
 /**
  * Gets the mouse state

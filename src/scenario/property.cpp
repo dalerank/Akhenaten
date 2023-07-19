@@ -1,7 +1,7 @@
 #include "property.h"
 
 #include "core/string.h"
-#include "scenario/data.h"
+#include "scenario/scenario_data.h"
 #include "game/mission.h"
 
 int scenario_is_custom(void) {

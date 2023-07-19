@@ -19,6 +19,7 @@
 #include "widget/sidebar/common.h"
 #include "widget/sidebar/extra.h"
 #include "widget/sidebar/slide.h"
+#include "widget/city.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/city.h"

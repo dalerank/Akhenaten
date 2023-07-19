@@ -4,14 +4,14 @@
 #include <core/buffer.h>
 #include <grid/grid.h>
 
-typedef enum {
+enum chunk_buffer_access_e {
     CHUNK_ACCESS_REVOKED,
     //
     CHUNK_ACCESS_READ,
     CHUNK_ACCESS_WRITE,
-} chunk_buffer_access_e;
+} ;
 
-typedef enum {
+enum bind_signature_e {
     BIND_SIGNATURE_NONE,
     BIND_SIGNATURE_SKIP,
     //
@@ -25,7 +25,7 @@ typedef enum {
     BIND_SIGNATURE_RAW,
 
     BIND_SIGNATURE_GRID,
-} bind_signature_e;
+};
 
 #define IO_BRANCH(R, W) if (access_type == CHUNK_ACCESS_READ) R; else if (access_type == CHUNK_ACCESS_WRITE) W; return;
 

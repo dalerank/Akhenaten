@@ -1,3 +1,6 @@
+#include "ornaments.h"
+
+#include "core/direction.h"
 #include "building/building.h"
 #include "grid/property.h"
 #include "grid/image.h"
@@ -14,7 +17,6 @@
 #include "city/buildings.h"
 #include "city/ratings.h"
 #include "city/labor.h"
-#include "ornaments.h"
 
 static bool drawing_building_as_deleted(building *b) {
     b = b->main();

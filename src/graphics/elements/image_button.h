@@ -13,7 +13,7 @@ enum {
     IB_OVERSEER = 8
 };
 
-typedef struct {
+struct image_button {
     short x_offset;
     short y_offset;
     short width;
@@ -32,7 +32,7 @@ typedef struct {
     char floating;
     char focused;
     time_millis pressed_since;
-} image_button;
+} ;
 
 void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons, int starting_button = 0);
 

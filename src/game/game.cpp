@@ -1,7 +1,7 @@
-#include "scenario/events.h"
-#include "window/city.h"
 #include "game.h"
 
+#include "window/city.h"
+#include "scenario/events.h"
 #include "building/construction/build_planner.h"
 #include "building/model.h"
 #include "io/config/config.h"
@@ -10,6 +10,7 @@
 #include "io/gamefiles/lang.h"
 #include "io/log.h"
 #include "core/random.h"
+#include "core/game_environment.h"
 #include "editor/editor.h"
 #include "graphics/animation_timers.h"
 #include "game/file_editor.h"

@@ -3,26 +3,26 @@
 
 #include "graphics/window.h"
 
-typedef enum {
+enum cursor_shape {
     CURSOR_ARROW = 0,
     CURSOR_SHOVEL = 1,
     CURSOR_SWORD = 2,
     CURSOR_MAX,
-} cursor_shape;
+} ;
 
-typedef enum {
+enum cursor_scale {
     CURSOR_SCALE_1 = 0,
     CURSOR_SCALE_1_5 = 1,
     CURSOR_SCALE_2 = 2,
-} cursor_scale;
+} ;
 
-typedef struct {
+struct cursor {
     int hotspot_x;
     int hotspot_y;
     int width;
     int height;
     const char *data;
-} cursor;
+} ;
 
 const cursor *input_cursor_data(cursor_shape cursor_id, cursor_scale scale);
 

@@ -20,7 +20,7 @@ enum {
     COLUMN_COLOR_BLUE = 12,
 };
 
-typedef struct {
+struct city_overlay {
     int type;
     int column_type;
     int (*show_building)(const building *b);
@@ -30,7 +30,7 @@ typedef struct {
     int (*get_tooltip_for_building)(tooltip_context *c, const building *b);
     void (*draw_custom_footprint)(pixel_coordinate pixel, map_point point);
     void (*draw_custom_top)(pixel_coordinate pixel, map_point point);
-} city_overlay;
+} ;
 
 const city_overlay *get_city_overlay(void);
 bool select_city_overlay(void);

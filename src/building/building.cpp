@@ -9,6 +9,7 @@
 #include "figure/formation_legion.h"
 #include "game/resource.h"
 #include "game/undo.h"
+#include "graphics/view/view.h"
 #include "grid/building_tiles.h"
 #include "grid/desirability.h"
 #include "grid/elevation.h"
@@ -17,6 +18,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
+#include "io/io_buffer.h"
 #include "menu.h"
 #include "monuments.h"
 

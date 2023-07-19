@@ -543,8 +543,7 @@ void figure::native_trader_action() {
     } else {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * anim_frame;
     }
-    cart_image_id = image_id_from_group(GROUP_FIGURE_MIGRANT_CART) +
-                    8 + 8 * resource_id; // BUGFIX should be within else statement?
+    cart_image_id = image_id_from_group(GROUP_FIGURE_IMMIGRANT_CART) + 8 + 8 * resource_id; // BUGFIX should be within else statement?
     if (cart_image_id) {
         cart_image_id += dir;
         figure_image_set_cart_offset(dir);

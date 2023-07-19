@@ -1,12 +1,12 @@
 #ifndef MAP_IMAGE_CONTEXT_H
 #define MAP_IMAGE_CONTEXT_H
 
-typedef struct {
+struct terrain_image {
     int is_valid;
     int group_offset;
     int item_offset;
     int aqueduct_offset;
-} terrain_image;
+} ;
 
 void map_image_context_init(void);
 void map_image_context_reset_water(void);

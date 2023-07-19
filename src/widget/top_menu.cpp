@@ -1,8 +1,8 @@
-#include <tgmath.h>
-#include "window/game_menu.h"
-#include "io/manager.h"
 #include "top_menu.h"
 
+#include "widget/city.h"
+#include "window/game_menu.h"
+#include "io/manager.h"
 #include "building/construction/build_planner.h"
 #include "city/finance.h"
 #include "city/population.h"

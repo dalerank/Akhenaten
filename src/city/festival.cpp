@@ -1,6 +1,6 @@
-#include <core/random.h>
 #include "festival.h"
 
+#include "core/random.h"
 #include "building/warehouse.h"
 #include "city/constants.h"
 #include "city/data_private.h"
@@ -9,6 +9,7 @@
 #include "city/sentiment.h"
 #include "io/config/config.h"
 #include "buildings.h"
+#include "figure/figure.h"
 
 bool city_festival_is_planned(void) {
     return city_data.festival.planned.size != FESTIVAL_NONE;

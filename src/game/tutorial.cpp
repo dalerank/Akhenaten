@@ -12,6 +12,7 @@
 #include "scenario/property.h"
 #include "empire/city.h"
 #include "platform/arguments.h"
+#include "io/io_buffer.h"
 
 static tutorial_flags_t g_tutorials_flags;
 

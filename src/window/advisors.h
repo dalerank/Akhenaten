@@ -4,7 +4,7 @@
 #include "city/constants.h"
 #include "input/mouse.h"
 
-typedef struct {
+struct advisor_window_type{
     /**
      * @return height of the advisor in blocks of 16px
      */
@@ -12,7 +12,7 @@ typedef struct {
     void (*draw_foreground)(void);
     int (*handle_mouse)(const mouse *m);
     int (*get_tooltip_text)(void);
-} advisor_window_type;
+} ;
 
 int window_advisors_get_advisor(void);
 

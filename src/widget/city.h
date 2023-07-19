@@ -1,5 +1,4 @@
-#ifndef WIDGET_CITY_H
-#define WIDGET_CITY_H
+#pragma once
 
 #include "graphics/elements/tooltip.h"
 #include "input/hotkey.h"
@@ -20,5 +19,3 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
 void widget_city_get_tooltip(tooltip_context *c);
 
 void widget_city_clear_current_tile(void);
-
-#endif // WIDGET_CITY_H

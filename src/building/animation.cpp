@@ -5,6 +5,7 @@
 #include "core/calc.h"
 #include "graphics/animation_timers.h"
 #include "grid/sprite.h"
+#include "core/game_environment.h"
 
 int generic_sprite_offset(int grid_offset, int max_frames, int anim_speed) {
 //    const image *img = image_get(image_id);

@@ -3,6 +3,7 @@
 
 #include "building/construction/build_planner.h"
 #include "building/model.h"
+#include "core/game_environment.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
@@ -11,6 +12,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "widget/sidebar/city.h"
+#include "widget/city.h"
 #include "window/city.h"
 
 static void button_menu_index(int param1, int param2);

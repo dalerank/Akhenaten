@@ -1,8 +1,9 @@
-#ifndef BUILDING_BARRACKS_H
-#define BUILDING_BARRACKS_H
+#pragma once
 
 #include "building/building.h"
 #include "grid/point.h"
+
+class buffer;
 
 #define MAX_WEAPONS_BARRACKS 4
 
@@ -27,4 +28,3 @@ enum E_BARRACKS_PRIORITY {
     PRIORITY_FORT = 1,
 };
 
-#endif // BUILDING_BARRACKS_H

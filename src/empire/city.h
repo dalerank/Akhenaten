@@ -4,7 +4,7 @@
 #include "core/buffer.h"
 #include "game/resource.h"
 
-typedef struct {
+struct empire_city {
     int in_use; // this can be 2, so it's an int!
     int type;
     int name_id;
@@ -19,7 +19,7 @@ typedef struct {
     int empire_object_id;
     int is_sea_trade;
     int trader_figure_ids[3];
-} empire_city;
+} ;
 
 void empire_city_clear_all(void);
 
