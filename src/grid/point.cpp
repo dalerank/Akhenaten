@@ -156,6 +156,7 @@ bool map_point::operator==(map_point rhs) {
 ///////////////
 
 static map_point last; // cached point for some internal logic uses
+static const map_point map_point_invalid;
 
 void map_point_store_result(int x, int y, map_point *point) {
     point->set(x, y);

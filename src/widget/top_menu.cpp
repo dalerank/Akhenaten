@@ -14,6 +14,7 @@
 #include "game/undo.h"
 #include "game/orientation.h"
 #include "game/cheats.h"
+#include "game/mission.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/menu.h"
@@ -33,6 +34,7 @@
 #include "window/speed_options.h"
 #include "window/main_menu.h"
 #include "graphics/elements/panel.h"
+#include "scenario/property.h"
 #include "dev/debug.h"
 
 #include "core/span.hpp"
@@ -652,13 +654,17 @@ static void replay_map_confirmed(bool confirmed) {
         window_city_show();
         return;
     }
-//    if (scenario_is_custom()) {
-    GamestateIO::load_savegame("autosave_replay.sav");
-    window_city_show();
-//    } else {
-//        city_save_campaign_player_name();
-//        window_mission_briefing_show();
-//    }
+
+    if (scenario_is_custom()) {
+        GamestateIO::load_savegame("autosave_replay.sav");
+        window_city_show();
+    } else {
+        int campaign = scenario_campaign_scenario_id();
+        int mission_rank = scenario_campaign_rank();
+        const mission_step_t *mission = get_campaign_mission_step_data(campaign, mission_rank);
+        clear_state();
+        GamestateIO::load_mission(mission->scenario_id);
+    }
 }
 static void menu_file_new_game(int param) {
     clear_state();

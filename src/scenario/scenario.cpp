@@ -108,8 +108,12 @@ io_buffer *iob_scenario_info = new io_buffer([](io_buffer *iob) {
 
     iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.earthquake_point.private_access(_X));
     iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.earthquake_point.private_access(_Y));
+
+    g_scenario_data.entry_point = map_point_invalid;
     iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.entry_point.private_access(_X));
     iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.entry_point.private_access(_Y));
+
+    g_scenario_data.exit_point = map_point_invalid;
     iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.exit_point.private_access(_X));
     iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.exit_point.private_access(_Y));
 

@@ -11,10 +11,10 @@ enum {
     _ABS_Y = 4
 };
 
-typedef struct {
+struct coords_t {
     int x;
     int y;
-} coords_t;
+} ;
 
 class map_point {
 private:
@@ -63,6 +63,8 @@ public:
     // COMPARISON
     bool operator==(map_point rhs);
 };
+
+extern const map_point map_point_invalid;
 
 /**
  * Stores the X and Y to the passed point.
