@@ -10,10 +10,6 @@ static int show_building_school(const building *b) {
     return b->type == BUILDING_SCHOOL;
 }
 
-static int show_building_library(const building *b) {
-    return b->type == BUILDING_LIBRARY;
-}
-
 static int show_building_academy(const building *b) {
     return b->type == BUILDING_MENU_WATER_CROSSINGS;
 }
@@ -131,19 +127,25 @@ const city_overlay *city_overlay_for_school(void) {
     return &overlay;
 }
 
+struct city_overlay_libraries : public city_overlay {
+    city_overlay_libraries() {
+        type = OVERLAY_LIBRARY;
+        column_type = COLUMN_TYPE_WATER_ACCESS;
+
+        show_figure = show_figure_library;
+        get_column_height = get_column_height_library;
+        get_tooltip_for_building = get_tooltip_library;
+    }
+
+    bool show_building(const building *b) const override {
+        return b->type == BUILDING_LIBRARY;
+    }
+};
+
+city_overlay_libraries g_city_overlay_libraries;
+
 const city_overlay *city_overlay_for_library(void) {
-    static city_overlay overlay = {
-            OVERLAY_LIBRARY,
-            COLUMN_TYPE_WATER_ACCESS,
-            show_building_library,
-            show_figure_library,
-            get_column_height_library,
-            0,
-            get_tooltip_library,
-            0,
-            0
-    };
-    return &overlay;
+    return &g_city_overlay_libraries;
 }
 
 const city_overlay *city_overlay_for_academy(void) {

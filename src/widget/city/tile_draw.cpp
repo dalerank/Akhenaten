@@ -1,14 +1,13 @@
-
-#include "grid/random.h"
-#include "widget/overlays/city_overlay_risks.h"
-#include "dev/debug.h"
 #include "tile_draw.h"
+
+#include "dev/debug.h"
 
 #include "building/construction/build_planner.h"
 #include "io/config/config.h"
 #include "graphics/boilerplate.h"
 #include "grid/building.h"
 #include "grid/figure.h"
+#include "grid/random.h"
 #include "grid/image.h"
 #include "grid/property.h"
 #include "grid/terrain.h"
@@ -16,6 +15,9 @@
 #include "game/state.h"
 #include "ornaments.h"
 #include "figures_cached_draw.h"
+
+#include "widget/overlays/city_overlay.h"
+#include "widget/overlays/city_overlay_risks.h"
 
 static const int ADJACENT_OFFSETS_PH[2][4][7] = {
   {

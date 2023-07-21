@@ -1,7 +1,8 @@
-#include <building/model.h>
 #include "city_overlay_risks.h"
 
 #include "building/industry.h"
+#include "building/model.h"
+#include "city_overlay.h"
 #include "game/state.h"
 #include "graphics/boilerplate.h"
 #include "grid/building.h"

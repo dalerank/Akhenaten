@@ -8,7 +8,7 @@
 #include "widget/overlays/city_overlay_entertainment.h"
 #include "widget/overlays/city_overlay_other.h"
 
-static const city_overlay *overlay = 0;
+const city_overlay *g_city_overlay = 0;
 
 static const city_overlay *set_city_overlay(void) {
     switch (game_state_overlay()) {
@@ -63,31 +63,34 @@ static const city_overlay *set_city_overlay(void) {
     }
 }
 const city_overlay *get_city_overlay(void) {
-    return overlay;
+    return g_city_overlay;
 }
 bool select_city_overlay(void) {
-    if (!overlay || overlay->type != game_state_overlay())
-        overlay = set_city_overlay();
-    return overlay != 0;
+    if (!g_city_overlay || g_city_overlay->type != game_state_overlay())
+        g_city_overlay = set_city_overlay();
+
+    return g_city_overlay != 0;
 }
 
 int widget_city_overlay_get_tooltip_text(tooltip_context *c, int grid_offset) {
-    int overlay_type = overlay->type;
+    int overlay_type = g_city_overlay->type;
     int building_id = map_building_at(grid_offset);
-    if (overlay->get_tooltip_for_building && !building_id)
+    if (g_city_overlay->get_tooltip_for_building && !building_id)
         return 0;
 
-    int overlay_requires_house =
-            overlay_type != OVERLAY_WATER && overlay_type != OVERLAY_FIRE &&
-            overlay_type != OVERLAY_DAMAGE && overlay_type != OVERLAY_NATIVE && overlay_type != OVERLAY_DESIRABILITY;
+    int overlay_requires_house = (overlay_type != OVERLAY_WATER)
+                                    && (overlay_type != OVERLAY_FIRE)
+                                    && (overlay_type != OVERLAY_DAMAGE)
+                                    && (overlay_type != OVERLAY_NATIVE)
+                                    && (overlay_type != OVERLAY_DESIRABILITY);
     building *b = building_get(building_id);
     if (overlay_requires_house && !b->house_size)
         return 0;
 
-    if (overlay->get_tooltip_for_building)
-        return overlay->get_tooltip_for_building(c, b);
-    else if (overlay->get_tooltip_for_grid_offset)
-        return overlay->get_tooltip_for_grid_offset(c, grid_offset);
+    if (g_city_overlay->get_tooltip_for_building)
+        return g_city_overlay->get_tooltip_for_building(c, b);
+    else if (g_city_overlay->get_tooltip_for_grid_offset)
+        return g_city_overlay->get_tooltip_for_grid_offset(c, grid_offset);
 
     return 0;
 }
