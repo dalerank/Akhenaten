@@ -7,3 +7,7 @@ int platform_sdl_version_at_least(int major, int minor, int patch) {
     SDL_GetVersion(&v);
     return SDL_VERSIONNUM(v.major, v.minor, v.patch) >= SDL_VERSIONNUM(major, minor, patch);
 }
+
+const char *platform_name() {
+    return GAME_PLATFORM_NAME;
+}

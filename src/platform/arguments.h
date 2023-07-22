@@ -1,8 +1,8 @@
-#ifndef PLATFORM_ARGUMENTS_H
-#define PLATFORM_ARGUMENTS_H
+#pragma once
 
 struct ozymandias_args {
     char data_directory[256] = {0};
+    char version_str[32] = {0};
     int display_scale_percentage;
     int cursor_scale_percentage;
     int game_engine_env;
@@ -15,5 +15,3 @@ struct ozymandias_args {
 
 extern ozymandias_args ozymandias_core;
 int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args);
-
-#endif // PLATFORM_ARGUMENTS_H

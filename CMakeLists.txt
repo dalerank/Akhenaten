@@ -18,6 +18,9 @@ endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
+# Find revision ID and hash of the sourcetree
+include("${CMAKE_SOURCE_DIR}/cmake/GenerateVersionHPP.cmake")
+
 #set(CMAKE_RC_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE}")
 if (NOT MSVC)
     set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -static-libgcc -static-libstdc++" ${CMAKE_CXX_FLAGS})
@@ -102,7 +105,6 @@ set(PROJECT_VERSION_PATCH 2)
 set(IS_RELEASE_VERSION FALSE)
 set(VERSION_REVISION "")
 
-configure_file(${PROJECT_SOURCE_DIR}/gen/version.cpp.in ${PROJECT_SOURCE_DIR}/src/platform/version.cpp)
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
 

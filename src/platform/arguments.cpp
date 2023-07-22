@@ -1,6 +1,9 @@
 #include "arguments.h"
 
 #include "SDL.h"
+#include "core/version.h"
+#include "platform/platform.h"
+
 #include <memory>
 
 #define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2"
@@ -56,6 +59,8 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
     output_args.game_engine_env = 1; // run pharaoh by default
     output_args.game_engine_debug_mode = 0;
     output_args.window_mode = false;
+
+    snprintf(output_args.version_str, 31, "%u.%u.%u b%u %s", GAME_VERSION_MAJOR, GAME_VERSION_MINOR, GAME_VERSION_REVSN, GAME_BUILD_NUMBER, GAME_PLATFORM_NAME);
 
     for (int i = 1; i < argc; i++) {
         // we ignore "-psn" arguments, this is needed to launch the app

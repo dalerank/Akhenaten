@@ -23,6 +23,7 @@
 #include "window/game_menu.h"
 #include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
+#include "platform/arguments.h"
 #include "records.h"
 
 static void button_click(int type, int param2);
@@ -46,11 +47,10 @@ static generic_button buttons[] = {
 };
 
 static void draw_version_string(void) {
-    uint8_t version_string[100] = "Ramesses v";
+    uint8_t version_string[100] = {0};
+    SDL_snprintf((char*)version_string, 99, "Ramesses v%s", ozymandias_core.version_str);
     int version_prefix_length = string_length(version_string);
     int text_y = screen_height() - 30;
-
-    string_copy(string_from_ascii(system_version()), version_string + version_prefix_length, 99);
 
     int text_width = text_get_width(version_string, FONT_SMALL_PLAIN);
 
@@ -58,8 +58,9 @@ static void draw_version_string(void) {
         graphics_draw_rect(10, text_y, text_width + 14, 20, COLOR_BLACK);
         graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
         text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
-    } else
+    } else {
         text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
+    }
 }
 static void draw_background(void) {
     graphics_clear_screen();
