@@ -2,10 +2,6 @@
 
 #include "game/state.h"
 
-static int show_building_education(const building *b) {
-    return b->type == BUILDING_SCHOOL || b->type == BUILDING_LIBRARY || b->type == BUILDING_MENU_WATER_CROSSINGS;
-}
-
 static int show_building_academy(const building *b) {
     return b->type == BUILDING_MENU_WATER_CROSSINGS;
 }
@@ -93,19 +89,25 @@ static int get_tooltip_academy(tooltip_context *c, const building *b) {
     }
 }
 
+struct city_overlay_education : public city_overlay {
+    city_overlay_education() {
+        type = OVERLAY_EDUCATION;
+        column_type = COLUMN_TYPE_WATER_ACCESS;
+
+        show_figure = show_figure_education;
+        get_column_height = get_column_height_education;
+        get_tooltip_for_building = get_tooltip_education;
+    }
+
+    bool show_building(const building *b) const override {
+        return b->type == BUILDING_SCHOOL || b->type == BUILDING_LIBRARY || b->type == BUILDING_MENU_WATER_CROSSINGS;
+    }
+};
+
+city_overlay_education g_city_overlay_education;
+
 const city_overlay *city_overlay_for_education(void) {
-    static city_overlay overlay = {
-            OVERLAY_EDUCATION,
-            COLUMN_TYPE_WATER_ACCESS,
-            show_building_education,
-            show_figure_education,
-            get_column_height_education,
-            0,
-            get_tooltip_education,
-            0,
-            0
-    };
-    return &overlay;
+    return &g_city_overlay_education;
 }
 
 struct city_overlay_schools : public city_overlay {
