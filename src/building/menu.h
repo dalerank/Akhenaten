@@ -3,7 +3,7 @@
 
 #include "building/type.h"
 
-enum {
+enum e_build_menu {
     BUILD_MENU_VACANT_HOUSE = 0,
     BUILD_MENU_CLEAR_LAND = 1,
     BUILD_MENU_ROAD = 2,
@@ -33,7 +33,7 @@ enum {
     BUILD_MENU_MAX
 };
 
-enum {
+enum e_buildset_tutorial {
     BUILDSET_NORMAL,
     //
     BUILDSET_TUT1_START,

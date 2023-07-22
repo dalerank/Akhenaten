@@ -44,8 +44,9 @@ static void button_mission_briefing(int param1, int param2);
 static void button_rotate_north(int param1, int param2);
 static void button_rotate(int clockwise, int param2);
 
-static image_button buttons_overlays_collapse_sidebar[1] = {
-        {128, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 7, button_collapse_expand, button_none, 0, 0, 1}
+static image_button buttons_overlays_collapse_sidebar[2] = {
+        {128, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 7, button_collapse_expand, button_none, 0, 0, 1},
+        {4,   3, 117, 31, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 0, button_overlay,        button_help, 0, MESSAGE_DIALOG_OVERLAYS, 1}
 };
 
 static image_button button_expand_sidebar[1] = {
@@ -107,15 +108,19 @@ static image_button buttons_top_expanded[3] = {
         {COL4 - 9, ROW4, 43, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 60, button_mission_briefing, button_none, 0, 0, 1},
 };
 
-static struct {
+struct sidebar_data_t {
     int focus_tooltip_text_id;
-} data;
+};
+
+sidebar_data_t g_sidebar_data;
 
 static void draw_overlay_text(int x_offset) {
-    if (game_state_overlay())
+    if (game_state_overlay()) {
         lang_text_draw_centered(14, game_state_overlay(), x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_LIGHT);
-    else
-        lang_text_draw_centered(6, 4, x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_LIGHT);
+    } else {
+        const bool is_button_focused = buttons_overlays_collapse_sidebar[1].focused;
+        lang_text_draw_centered(6, 4, x_offset - 15, 30, 117, is_button_focused ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_BLACK_ON_LIGHT);
+    }
 }
 static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
     int width = SIDEBAR_EXPANDED_WIDTH;
@@ -185,9 +190,10 @@ static void draw_expanded_background(int x_offset) {
     int s_end = 768;
     int s_num = ceil((float) (screen_height() - s_end) / (float) block_height);
     int s_start = s_num * block_height;
-    for (int i = 0; i < s_num; i++)
-        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162,
-                               s_start + i * block_height);
+    for (int i = 0; i < s_num; i++) {
+        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, s_start + i * block_height);
+    }
+    
     ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, 0);
     draw_number_of_messages(x_offset - 26);
 
@@ -237,6 +243,7 @@ int widget_sidebar_city_handle_mouse(const mouse *m) {
 
     bool handled = false;
     int button_id;
+    auto &data = g_sidebar_data;
     data.focus_tooltip_text_id = 0;
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = sidebar_common_get_x_offset_collapsed();
@@ -270,15 +277,14 @@ int widget_sidebar_city_handle_mouse(const mouse *m) {
     return handled;
 }
 int widget_sidebar_city_handle_mouse_build_menu(const mouse *m) {
-    if (city_view_is_sidebar_collapsed())
-        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_collapsed(), 24,
-                                          buttons_build_collapsed, 12, 0);
-    else
-        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24,
-                                          buttons_build_expanded, 15, 0);
+    if (city_view_is_sidebar_collapsed()) {
+        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_collapsed(), 24, buttons_build_collapsed, 12, 0);
+    } else {
+        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build_expanded, 15, 0);
+    }
 }
 int widget_sidebar_city_get_tooltip_text(void) {
-    return data.focus_tooltip_text_id;
+    return g_sidebar_data.focus_tooltip_text_id;
 }
 
 void widget_sidebar_city_release_build_buttons() {
@@ -338,10 +344,9 @@ static void button_rotate_north(int param1, int param2) {
     window_invalidate();
 }
 static void button_rotate(int clockwise, int param2) {
-    if (clockwise)
+    if (clockwise) {
         game_orientation_rotate_right();
-
-    else {
+    } else {
         game_orientation_rotate_left();
     }
     window_invalidate();
