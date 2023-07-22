@@ -347,12 +347,16 @@ struct top_menu_drawn_t {
 
 top_menu_drawn_t g_top_menu_drawn;
 
-static void clear_state(void) {
+void clear_state(void) {
     auto &data = g_top_menu_data;
 
     data.open_sub_menu = 0;
     data.focus_menu_id = 0;
     data.focus_sub_menu_id = 0;
+}
+
+void widget_top_menu_clear_state() {
+    clear_state();
 }
 
 static void set_text_for_autosave(void) {

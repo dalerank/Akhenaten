@@ -59,6 +59,7 @@
 #include "sound/city.h"
 #include "sound/music.h"
 #include "game/mission.h"
+#include "widget/top_menu.h"
 
 #include "building/count.h"
 #include "city/floods.h"
@@ -533,6 +534,8 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
     last_loaded = LOADED_MISSION;
     scenario_set_campaign_scenario(scenario_id);
     post_load();
+
+    widget_top_menu_clear_state();
 
     // finish loading and start
     if (start_immediately) {
