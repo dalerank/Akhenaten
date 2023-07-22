@@ -33,3 +33,10 @@ jobs:
       with:
         name: windows_build
         path: bin_x64
+#   - name: Upload ${{ matrix.preset }} to itch.io 
+#      uses: robpc/itchio-upload-action@v1
+#      with:
+#        path: windows_build.zip
+#        project: ozymandias
+#        channel: windows
+#        api-key: ${{ secrets.ITCHIO }}
