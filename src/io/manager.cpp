@@ -279,7 +279,7 @@ bool FileIOManager::unserialize(const char *filename, int offset, file_format_t 
         if (chunk->compressed) {
             result = read_compressed_chunk(fp, chunk->buf, chunk->buf->size());
             if (!result) {
-                log_error("Unable to read file, decompression failed.");
+                log_error("Unable to read file chunk[%s], decompression failed.", chunk->name);
                 clear();
                 return false;
             }
@@ -297,7 +297,9 @@ bool FileIOManager::unserialize(const char *filename, int offset, file_format_t 
 
         // ******** DEBUGGING ********
         export_unzipped(chunk); // export uncompressed buffer data to zip folder
-        if (true) log_hex(chunk, i, offs, num_chunks()); // print full chunk read log info
+        if (true) {
+            log_hex(chunk, i, offs, num_chunks()); // print full chunk read log info
+        }
         // ***************************
     }
 

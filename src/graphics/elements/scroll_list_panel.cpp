@@ -1,11 +1,14 @@
+#include "scroll_list_panel.h"
+
 #include "io/file.h"
 #include <cstring>
 #include <functional>
 #include "core/string.h"
-#include "scroll_list_panel.h"
 #include "panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+
+#include <cassert>
 
 static char temp_filename_buffer[MAX_FILE_NAME];
 
@@ -42,6 +45,7 @@ int scroll_list_panel::get_total_entries() {
 const char* scroll_list_panel::get_entry_text_by_idx(int index, int filename_syntax) {
     if (index < 0 || index > num_total_entries - 1)
         return "";
+
     if (using_file_finder) {
         switch (filename_syntax) {
             case FILE_FULL_PATH:
@@ -55,9 +59,13 @@ const char* scroll_list_panel::get_entry_text_by_idx(int index, int filename_syn
                 strncpy_safe(temp_filename_buffer, file_finder->files[index], MAX_FILE_NAME);
                 temp_filename_buffer[(int)(strchr(temp_filename_buffer, '.') - (char*)temp_filename_buffer)] = 0;
                 return temp_filename_buffer;
+            default:
+                assert(false, "");
+                return "";
         }
-    } else
+    } else {
         return manual_entry_list[index];
+    }
 }
 const char* scroll_list_panel::get_selected_entry_text(int filename_syntax) {
     return get_entry_text_by_idx(get_selected_entry_idx(), filename_syntax);
@@ -95,18 +103,30 @@ void scroll_list_panel::add_entry(const char *entry_text) {
 }
 void scroll_list_panel::change_file_path(const char *dir, const char *ext) {
     strncpy(files_dir, dir, MAX_FILE_NAME);
-    if (ext != nullptr)
+    if (ext != nullptr) {
         strncpy(files_ext, ext, MAX_FILE_NAME);
+    }
+
     refresh_file_finder();
 }
+
+void scroll_list_panel::append_files_with_extension(const char *dir, const char *extension) {
+    file_finder = dir_append_files_with_extension(dir, extension);
+    num_total_entries = file_finder->num_files;
+    refresh_scrollbar();
+}
+
 void scroll_list_panel::refresh_file_finder() {
-    if (!using_file_finder)
+    if (!using_file_finder) {
         return;
+    }
+
     unfocus();
-    if (strcmp(files_ext, "folders") == 0)
+    if (strcmp(files_ext, "folders") == 0) {
         file_finder = dir_find_all_subdirectories(files_dir);
-    else
+    } else {
         file_finder = dir_find_files_with_extension(files_dir, files_ext);
+    }
     num_total_entries = file_finder->num_files;
     refresh_scrollbar();
 }

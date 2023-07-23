@@ -10,13 +10,16 @@
 
 #define BASE_MAX_FILES 100
 
-static struct {
+struct dir_data_t {
     dir_listing listing;
     int max_files;
     char *cased_filename;
-} data;
+};
+
+dir_data_t g_dir_data;
 
 static void allocate_listing_files(int min, int max) {
+    auto &data = g_dir_data;
     for (int i = min; i < max; i++) {
         data.listing.files[i] = (char *) malloc(MAX_FILE_NAME * sizeof(char));
         data.listing.files[i][0] = 0;
@@ -24,6 +27,7 @@ static void allocate_listing_files(int min, int max) {
 }
 
 static void clear_dir_listing(void) {
+    auto &data = g_dir_data;
     data.listing.num_files = 0;
     if (data.max_files <= 0) {
         data.listing.files = (char **) malloc(BASE_MAX_FILES * sizeof(char *));
@@ -37,6 +41,7 @@ static void clear_dir_listing(void) {
 }
 
 static void expand_dir_listing(void) {
+    auto &data = g_dir_data;
     int old_max_files = data.max_files;
 
     data.max_files = 2 * old_max_files;
@@ -50,6 +55,8 @@ static int compare_lower(const void *va, const void *vb) {
 }
 
 static int add_to_listing(const char *filename) {
+    auto &data = g_dir_data;
+
     if (data.listing.num_files >= data.max_files)
         expand_dir_listing();
 
@@ -60,6 +67,8 @@ static int add_to_listing(const char *filename) {
 }
 
 const dir_listing *dir_find_files_with_extension(const char *dir, const char *extension) {
+    auto &data = g_dir_data;
+
     clear_dir_listing();
     platform_file_manager_list_directory_contents(dir, TYPE_FILE, extension, add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(char *), compare_lower);
@@ -67,6 +76,8 @@ const dir_listing *dir_find_files_with_extension(const char *dir, const char *ex
 }
 
 const dir_listing *dir_find_all_subdirectories(const char *dir) {
+    auto &data = g_dir_data;
+
     clear_dir_listing();
     platform_file_manager_list_directory_contents(dir, TYPE_DIR, 0, add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(char *), compare_lower);
@@ -74,6 +85,8 @@ const dir_listing *dir_find_all_subdirectories(const char *dir) {
 }
 
 static int compare_case(const char *filename) {
+    auto &data = g_dir_data;
+
     if (string_compare_case_insensitive(filename, data.cased_filename) == 0) {
         strcpy(data.cased_filename, filename);
         return LIST_MATCH;
@@ -82,6 +95,8 @@ static int compare_case(const char *filename) {
 }
 
 static int correct_case(const char *dir, char *filename, int type) {
+    auto &data = g_dir_data;
+
     data.cased_filename = filename;
     return platform_file_manager_list_directory_contents(dir, type, 0, compare_case) == LIST_MATCH;
 }
@@ -145,8 +160,10 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
     return 0;
 }
 
-const dir_listing *dir_append_files_with_extension(const char *extension) {
-    platform_file_manager_list_directory_contents(0, TYPE_FILE, extension, add_to_listing);
+const dir_listing *dir_append_files_with_extension(const char *dir, const char *extension) {
+    auto &data = g_dir_data;
+
+    platform_file_manager_list_directory_contents(dir, TYPE_FILE, extension, add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(char *), compare_lower);
     return &data.listing;
 }

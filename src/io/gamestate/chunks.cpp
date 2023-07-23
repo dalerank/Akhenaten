@@ -6,7 +6,7 @@ static int file_version;
 io_buffer *iob_file_version = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &file_version);
 });
-static struct data_t {
+struct chunks_data_t {
     struct chunks_t {
         uint32_t compressed = 0; // 0, 1
 
@@ -21,21 +21,24 @@ static struct data_t {
         uint16_t unk07 = 0; // 0
     } chunks[6000];
     int chunks_in_used = 0;
-} data;
+};
+
+chunks_data_t g_chunks_data;
+
 io_buffer *iob_chunks_schema = new io_buffer([](io_buffer *iob) {
     FILE *debug_file = fopen("DEV_TESTING/CHUNKS_SCHEMA.txt", "wb+");
     char temp_string[200] = "";
-    iob->bind(BIND_SIGNATURE_UINT32, &data.chunks_in_used);
+    iob->bind(BIND_SIGNATURE_UINT32, &g_chunks_data.chunks_in_used);
     if (debug_file) {
-        sprintf(temp_string, "NUMBER OF CHUNKS: %i\n", data.chunks_in_used);
+        sprintf(temp_string, "NUMBER OF CHUNKS: %i\n", g_chunks_data.chunks_in_used);
         fwrite(temp_string, strlen(temp_string), 1, debug_file);
     }
-    for (int i = 0; i < data.chunks_in_used; ++i) {
+    for (int i = 0; i < g_chunks_data.chunks_in_used; ++i) {
         // schema chunk nums found so far:
         //    MAP: 24
         //    SAV: 175
         //    SAV (v.160+): 181
-        auto chunk = &data.chunks[i];
+        auto chunk = &g_chunks_data.chunks[i];
         iob->bind(BIND_SIGNATURE_UINT32, &chunk->compressed);
 
         iob->bind(BIND_SIGNATURE_UINT8, &chunk->unk01);
@@ -69,13 +72,15 @@ io_buffer *iob_junk9a = new io_buffer(default_bind);
 io_buffer *iob_junk9b = new io_buffer(default_bind);
 
 #define MAX_JUNK10_FIELDS 50
-struct {
+struct junk10_t {
     struct {
         bool in_use = false;
         int large_data[56] = {0}; // 55 for versions < 149
         int small_data[11] = {0};
     } fields[MAX_JUNK10_FIELDS];
-} junk10;
+};
+
+junk10_t g_junk10;
 io_buffer *iob_junk10a = new io_buffer([](io_buffer *iob) {
     const int version = FILEIO.get_file_version();
 
@@ -83,7 +88,7 @@ io_buffer *iob_junk10a = new io_buffer([](io_buffer *iob) {
     char temp_string[200] = "";
 
     for (int i = 0; i < MAX_JUNK10_FIELDS; ++i) {
-        auto field = &junk10.fields[i];
+        auto field = &g_junk10.fields[i];
         sprintf(temp_string, "%03i: ", i);
         fwrite(temp_string, strlen(temp_string), 1, debug_file);
         // fill ints / print debug file
@@ -110,7 +115,7 @@ io_buffer *iob_junk10a = new io_buffer([](io_buffer *iob) {
 });
 io_buffer *iob_junk10b = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < MAX_JUNK10_FIELDS; ++i) {
-        auto field = &junk10.fields[i];
+        auto field = &g_junk10.fields[i];
         // fill ints
         for (int j = 0; j < 11; ++j)
             iob->bind(BIND_SIGNATURE_UINT32, &field->small_data[j]);
@@ -120,11 +125,13 @@ io_buffer *iob_junk10c = new io_buffer(default_bind);
 io_buffer *iob_junk10d = new io_buffer(default_bind);
 
 #define MAX_JUNK11_FIELDS 40
-struct {
+struct junk11_t{
     struct {
         int data[32] = {0};
     } fields[MAX_JUNK11_FIELDS];
-} junk11;
+};
+junk11_t g_junk11;
+
 io_buffer *iob_junk11 = new io_buffer([](io_buffer *iob) {
 
     // the first two fields are the Map Editor's cached empire map coordinates....
@@ -135,7 +142,7 @@ io_buffer *iob_junk11 = new io_buffer([](io_buffer *iob) {
     char temp_string[200] = "";
 
     for (int i = 0; i < MAX_JUNK11_FIELDS; ++i) {
-        auto field = &junk11.fields[i];
+        auto field = &g_junk11.fields[i];
         sprintf(temp_string, "%03i: ", i);
         fwrite(temp_string, strlen(temp_string), 1, debug_file);
 

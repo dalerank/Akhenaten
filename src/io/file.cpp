@@ -63,7 +63,18 @@ void file_remove_extension(uint8_t *filename) {
 }
 
 bool file_exists(const char *filename, int localizable) {
-    return NULL != dir_get_file(filename, localizable);
+    const char *path = dir_get_file(filename, localizable);
+    if (!path) {
+        return false;
+    }
+
+    FILE *fp = file_open(path, "rb");
+    if (fp) {
+        file_close(fp);
+        return true;
+    }
+
+    return false;
 }
 bool file_remove(const char *filename) {
     return platform_file_manager_remove_file(filename);

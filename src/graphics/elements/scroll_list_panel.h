@@ -1,10 +1,11 @@
-#ifndef OZYMANDIAS_SCROLL_LIST_PANEL_H
-#define OZYMANDIAS_SCROLL_LIST_PANEL_H
+#pragma once
 
 #include "io/dir.h"
-#include <vector>
+#include "io/file.h"
 #include "graphics/elements/generic_button.h"
 #include "scrollbar.h"
+
+#include <vector>
 
 #define MAX_BUTTONS_IN_SCROLLABLE_LIST 50
 #define MAX_MANUAL_ENTRIES 300
@@ -90,6 +91,7 @@ public:
 //    void remove_entry(const char *entry_text); // TODO: nope.
 //    void remove_entry(int index); // TODO: nope.
     void change_file_path(const char *dir, const char *ext = nullptr);
+    void append_files_with_extension(const char *dir, const char *ext);
     void refresh_file_finder();
     void refresh_scrollbar();
     void clamp_scrollbar_position();
@@ -105,6 +107,3 @@ public:
                       scrollable_list_ui_params params, bool use_file_finder, const char *dir = ".", const char *ext = "");
     ~scroll_list_panel();
 };
-
-
-#endif //OZYMANDIAS_SCROLL_LIST_PANEL_H

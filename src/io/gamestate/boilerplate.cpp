@@ -60,11 +60,12 @@
 #include "sound/music.h"
 #include "game/mission.h"
 #include "widget/top_menu.h"
+#include "window/city.h"
+#include "window/mission_briefing.h"
+#include "window/file_dialog.h"
 
 #include "building/count.h"
 #include "city/floods.h"
-#include "window/mission_briefing.h"
-#include "window/city.h"
 #include "core/stopwatch.h"
 #include "city/culture.h"
 #include "io/manager.h"
@@ -469,12 +470,13 @@ bool GamestateIO::write_savegame(const char *filename_short) {
     fullpath_saves(full, filename_short);
 
     // write file
-    return FILEIO.serialize(filename_short, 0, FILE_FORMAT_SAVE_FILE, 160, file_schema);
+    return FILEIO.serialize(full, 0, FILE_FORMAT_SAVE_FILE, 160, file_schema);
 }
 
 static void prepare_savegame_schema(file_format_t file_format, const int file_version) {
     FILEIO.push_chunk(4, false, "family_index", 0);
 }
+
 bool GamestateIO::prepare_folders(const char *path) {
     char fpath[MAX_FILE_NAME] = {0};
     strcpy(fpath, path);
@@ -541,7 +543,9 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
     if (start_immediately) {
         start_loaded_file();
         // replay mission autosave file
-        GamestateIO::write_savegame("autosave_replay.sav");
+        char filename[MAX_FILE_NAME] = {0};
+        snprintf(filename, MAX_FILE_NAME, "autosave_replay.%s", saved_game_data_expanded.extension);
+        GamestateIO::write_savegame(filename);
     }
     return true;
 }
