@@ -56,9 +56,9 @@ static void draw_won(void) {
 
     inner_panel_draw(64, 184, 32, 7);
 
-    if (scenario_is_custom())
+    if (scenario_is_custom()) {
         lang_text_draw_multiline(147, 20, 80, 192, 488, FONT_NORMAL_WHITE_ON_DARK);
-    else {
+    } else {
         lang_text_draw_multiline(147, scenario_campaign_scenario_id(), 80, 192, 488, FONT_NORMAL_WHITE_ON_DARK);
     }
 

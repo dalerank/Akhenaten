@@ -227,7 +227,7 @@ const set_sound *setting_sound(int type) {
     return get_sound(type);
 }
 
-int setting_sound_is_enabled(int type) {
+bool setting_sound_is_enabled(int type) {
     return get_sound(type)->enabled;
 }
 void setting_toggle_sound_enabled(int type) {

@@ -99,7 +99,7 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
                 {BUILDING_WALL_PH, BUILDING_TOWER_PH, BUILDING_GATEHOUSE_PH, 0},
         }
 };
-static int menu_enabled[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX];
+int g_menu_enabled[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX];
 
 static int changed = 1;
 
@@ -110,14 +110,14 @@ static int changed = 1;
 void building_menu_disable_all() {
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-            menu_enabled[sub][item] = 0;
+            g_menu_enabled[sub][item] = 0;
         }
     }
 }
 void building_menu_enable_all(void) {
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-            menu_enabled[sub][item] = 1;
+            g_menu_enabled[sub][item] = 1;
         }
     }
 }
@@ -128,7 +128,7 @@ int is_building_enabled(int type) {
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
             if (MENU_int[GAME_ENV][sub][item] == type) // found matching menu item!!!
-                return menu_enabled[sub][item];
+                return g_menu_enabled[sub][item];
         }
     }
     return 0;
@@ -139,7 +139,7 @@ static void toggle_building(int type, bool enabled = true) {
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
             if (MENU_int[GAME_ENV][sub][item] == type) // found match!
-                menu_enabled[sub][item] = enabled;
+                g_menu_enabled[sub][item] = enabled;
         }
     }
 
@@ -407,8 +407,9 @@ void building_menu_update(int build_set) {
     // be determined accordingly by the set flags!
     if (build_set == BUILDSET_NORMAL) {
         for (int i = 1; i <= 10; i++)
-            if (scenario_is_mission_rank(i))
+            if (scenario_is_mission_rank(i)) {
                 return tutorial_menu_update(i);
+            }
     }
 
     switch (build_set) {
@@ -616,7 +617,7 @@ void building_menu_update(int build_set) {
 int building_menu_count_items(int submenu) {
     int count = 0;
     for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-        if (menu_enabled[submenu][item] && MENU_int[GAME_ENV][submenu][item] > 0)
+        if (g_menu_enabled[submenu][item] && MENU_int[GAME_ENV][submenu][item] > 0)
             count++;
     }
     return count;
@@ -626,7 +627,7 @@ int building_menu_next_index(int submenu, int current_index) {
         if (MENU_int[GAME_ENV][submenu][i] <= 0)
             return 0;
 
-        if (menu_enabled[submenu][i])
+        if (g_menu_enabled[submenu][i])
             return i;
 
     }

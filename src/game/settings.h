@@ -44,7 +44,7 @@ void setting_set_display(int width, int height);
 
 const set_sound *setting_sound(int type);
 
-int setting_sound_is_enabled(int type);
+bool setting_sound_is_enabled(int type);
 void setting_toggle_sound_enabled(int type);
 void setting_increase_sound_volume(int type);
 void setting_decrease_sound_volume(int type);

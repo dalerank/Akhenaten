@@ -62,15 +62,11 @@ void tutorial_init(void) {
     if (scenario_is_custom())
         return;
 
-    int rank = scenario_campaign_rank();
+    int scenario_id = scenario_campaign_scenario_id();
     bool tut_passed[10];
-     
-    if (ozymandias_core.tutorial_skip > 0)
-        std::fill_n(tut_passed, ozymandias_core.tutorial_skip, 1);
-    
+
     for (int i = 0; i < 10; ++i) {
-        if (i >= rank)
-            tut_passed[i] = false;
+        tut_passed[i] = (i > scenario_id);
     }
 
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
@@ -83,13 +79,14 @@ void tutorial_init(void) {
         g_tutorials_flags.pharaoh.gold_mined_500 = tut_passed[1];
         g_tutorials_flags.pharaoh.temples_built = tut_passed[1];
 
-        g_tutorials_flags.pharaoh.flags[6] = tut_passed[3];
         g_tutorials_flags.pharaoh.figs_800_stored = tut_passed[2];
-        g_tutorials_flags.pharaoh.flags[8] = tut_passed[3];
         g_tutorials_flags.pharaoh.pottery_made = tut_passed[2];
-        g_tutorials_flags.pharaoh.beer_made = tut_passed[3];
-        g_tutorials_flags.pharaoh.spacious_apartment = tut_passed[4];
 
+        g_tutorials_flags.pharaoh.flags[6] = tut_passed[3];
+        g_tutorials_flags.pharaoh.flags[8] = tut_passed[3];
+        g_tutorials_flags.pharaoh.beer_made = tut_passed[3];
+
+        g_tutorials_flags.pharaoh.spacious_apartment = tut_passed[4];
         g_tutorials_flags.pharaoh.papyrus_made = tut_passed[4];
         g_tutorials_flags.pharaoh.bricks_bought = tut_passed[4];
 
@@ -133,8 +130,7 @@ void tutorial_init(void) {
         city_mission_tutorial_set_disease_message_shown(tut_passed[2]);
     }
 
-    if (rank == 0)
-        tutorial_menu_update(1);
+    tutorial_menu_update(scenario_id + 1);
 }
 
 tutorial_availability tutorial_advisor_availability(void) {

@@ -9,7 +9,7 @@
 /**
  * Building types
  */
-enum {
+enum e_building_type {
     BUILDING_NONE = 0,
     BUILDING_MENU_FARMS = 2,
     BUILDING_MENU_RAW_MATERIALS = 3,
