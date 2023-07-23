@@ -165,8 +165,7 @@ bool FileIOManager::io_failure_cleanup(const char *action, const char *reason) {
     clear();
     return false;
 }
-bool FileIOManager::serialize(const char *filename, int offset, file_format_t format, const int version,
-                              void(*init_schema)(file_format_t _format, const int _version)) {
+bool FileIOManager::serialize(const char *filename, int offset, e_file_format format, const int version, void(*init_schema)(e_file_format _format, const int _version)) {
 
     WATCH.START();
 
@@ -225,9 +224,7 @@ bool FileIOManager::serialize(const char *filename, int offset, file_format_t fo
 
     return true;
 }
-bool FileIOManager::unserialize(const char *filename, int offset, file_format_t format,
-                                const int(*determine_file_version)(const char *fnm, int ofst),
-                                void(*init_schema)(file_format_t _format, const int _version)) {
+bool FileIOManager::unserialize(const char *filename, int offset, e_file_format format, const int(*determine_file_version)(const char *fnm, int ofst), void(*init_schema)(e_file_format _format, const int _version)) {
 
     WATCH.START();
 

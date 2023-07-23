@@ -38,7 +38,7 @@ private:
     int file_size = 0;
     int file_offset = 0;
 
-    file_format_t file_format = FILE_FORMAT_NULL;
+    e_file_format file_format = FILE_FORMAT_NULL;
     int file_version;
 
     std::vector<file_chunk_t> file_chunks;
@@ -54,16 +54,13 @@ public:
     const int get_file_version() {
         return file_version;
     }
-    const file_format_t get_file_format() {
+    const e_file_format get_file_format() {
         return file_format;
     }
 
     // write/read internal chunk cache (io_buffer sequence) to/from disk file
-    bool serialize(const char *filename, int offset, file_format_t format, const int version,
-                   void(*init_schema)(file_format_t _format, const int _version));
-    bool unserialize(const char *filename, int offset, file_format_t format,
-                     const int(*determine_file_version)(const char *_filename, int _offset),
-                     void(*init_schema)(file_format_t _format, const int _version));
+    bool serialize(const char *filename, int offset, e_file_format format, const int version, void(*init_schema)(e_file_format _format, const int _version));
+    bool unserialize(const char *filename, int offset, e_file_format format, const int(*determine_file_version)(const char *_filename, int _offset), void(*init_schema)(e_file_format _format, const int _version));
 };
 
 extern FileIOManager FILEIO;

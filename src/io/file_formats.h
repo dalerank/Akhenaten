@@ -1,7 +1,7 @@
 #ifndef OZYMANDIAS_FILE_FORMATS_H
 #define OZYMANDIAS_FILE_FORMATS_H
 
-typedef enum {
+enum e_file_format {
     FILE_FORMAT_NULL,
     //
     FILE_FORMAT_BMP,
@@ -17,8 +17,8 @@ typedef enum {
     //
     FILE_FORMAT_JAS_RECORDS,
     FILE_FORMAT_PLAYER_DATA,
-} file_format_t;
+} ;
 
-file_format_t get_format_from_file(const char *filename);
+e_file_format get_format_from_file(const char *filename);
 
 #endif //OZYMANDIAS_FILE_FORMATS_H

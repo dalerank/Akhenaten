@@ -182,6 +182,7 @@ struct {
         } fields[50];
     } chunks[10];
 } bizarre;
+
 static void record_bizarre_fields(io_buffer *iob, int i) {
     auto chunk = &bizarre.chunks[i];
     char temp_string[200] = "";

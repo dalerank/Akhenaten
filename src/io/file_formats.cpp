@@ -1,7 +1,7 @@
 #include "file_formats.h"
 #include "file.h"
 
-file_format_t get_format_from_file(const char *filename) {
+e_file_format get_format_from_file(const char *filename) {
     if (file_has_extension(filename, "bmp")) return FILE_FORMAT_BMP;
     if (file_has_extension(filename, "png")) return FILE_FORMAT_PNG;
     if (file_has_extension(filename, "jpg") || file_has_extension(filename, "jpeg")) return FILE_FORMAT_JPG;

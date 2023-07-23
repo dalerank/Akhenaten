@@ -959,7 +959,7 @@ SDL_Texture *graphics_renderer_interface::create_texture_from_buffer(color_t *p_
     return texture;
 }
 
-bool graphics_renderer_interface::save_texture_to_file(const char *filename, SDL_Texture *tex, file_format_t file_format) {
+bool graphics_renderer_interface::save_texture_to_file(const char *filename, SDL_Texture *tex, e_file_format file_format) {
     SDL_Texture *ren_tex;
     SDL_Surface *surf;
     int st;

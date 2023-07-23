@@ -74,7 +74,7 @@ public:
 
 //    void (*update_scale_mode)(int city_scale);
 
-    bool save_texture_to_file(const char *filename, SDL_Texture *tex, file_format_t file_format = FILE_FORMAT_BMP);
+    bool save_texture_to_file(const char *filename, SDL_Texture *tex, e_file_format file_format = FILE_FORMAT_BMP);
 };
 graphics_renderer_interface *graphics_renderer(void);
 

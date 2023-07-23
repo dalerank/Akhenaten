@@ -246,7 +246,7 @@ static void post_load() {
 }
 
 // set up list of io_buffer chunks in correct order for specific file format read/write operations
-static void file_schema(file_format_t file_format, const int file_version) {
+static void file_schema(e_file_format file_format, const int file_version) {
     switch (file_format) {
         case FILE_FORMAT_MAP_FILE:
             FILEIO.push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
@@ -473,7 +473,7 @@ bool GamestateIO::write_savegame(const char *filename_short) {
     return FILEIO.serialize(full, 0, FILE_FORMAT_SAVE_FILE, 160, file_schema);
 }
 
-static void prepare_savegame_schema(file_format_t file_format, const int file_version) {
+static void prepare_savegame_schema(e_file_format file_format, const int file_version) {
     FILEIO.push_chunk(4, false, "family_index", 0);
 }
 
