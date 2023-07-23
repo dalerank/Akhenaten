@@ -18,7 +18,7 @@ struct menu_item {
 struct menu_bar_item {
     short text_group;
     menu_item *items;
-    int num_items;
+    size_t num_items;
     const char *text_raw = nullptr;
     short x_start;
     short x_end;

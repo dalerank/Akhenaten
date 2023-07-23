@@ -8,6 +8,8 @@
 #include "figure/action.h"
 #include "grid/point.h"
 
+#include <stdint.h>
+
 class figure;
 class io_buffer;
 
@@ -58,7 +60,7 @@ public:
 //    short figure_id4; // tower ballista or burning ruin prefect
     unsigned short figure_spawn_delay;
     unsigned char figure_roam_direction;
-    bool has_water_access;
+    uint32_t has_water_access;
     int prev_part_building_id;
     int next_part_building_id;
 //    short stored_loads_c3;
@@ -67,7 +69,7 @@ public:
     short num_workers;
     char labor_category;
     unsigned char output_resource_id;
-    bool has_road_access;
+    uint32_t has_road_access;
     unsigned char house_criminal_active;
     short damage_risk;
     short fire_risk;

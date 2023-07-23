@@ -65,6 +65,7 @@ static void menu_options_sound(int param);
 static void menu_options_speed(int param);
 static void menu_options_difficulty(int param);
 static void menu_options_autosave(int param);
+static void menu_options_change_enh(int param);
 
 static void menu_help_help(int param);
 static void menu_help_mouse_help(int param);
@@ -92,6 +93,7 @@ static menu_item menu_options[] = {
         {2,  3,  menu_options_speed,      0},
         {2,  6,  menu_options_difficulty, 0},
         {19, 51, menu_options_autosave,   0},
+        {2,  1,  menu_options_change_enh, 0, false, "Enhanced options"},
 };
 
 static menu_item menu_help[] = {
@@ -730,6 +732,10 @@ static void menu_options_difficulty(int param) {
 static void menu_options_autosave(int param) {
     setting_toggle_monthly_autosave();
     set_text_for_autosave();
+}
+
+static void menu_options_change_enh(int param) {
+
 }
 
 static void menu_help_help(int param) {

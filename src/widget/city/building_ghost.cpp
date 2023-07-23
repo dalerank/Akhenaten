@@ -237,7 +237,7 @@ static void get_building_base_xy(int map_x, int map_y, int building_size, int *x
 }
 static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_tiles) {
     int orientation_index = city_view_orientation() / 2;
-    bool blocked = false;
+    int blocked = 0;
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = grid_offset;// + TILE_GRID_OFFSETS[orientation_index][i];
         switch (GAME_ENV) {
@@ -256,7 +256,7 @@ static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_
             tile_blocked = true;
 
         blocked_tiles[i] = tile_blocked;
-        blocked += tile_blocked;
+        blocked += (tile_blocked ? 1: 0);
     }
     return blocked;
 }

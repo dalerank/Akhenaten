@@ -452,7 +452,7 @@ static void draw_senate_rating_flags(const building *b, int x, int y, color_t co
         ImageDraw::img_generic(image_id + 3, x + 198, y + 27 - city_rating_monument() / 2, color_mask);
         ImageDraw::img_generic(image_id + 4, x + 228, y + 19 - city_rating_kingdom() / 2, color_mask);
         // unemployed
-        image_id = image_id_from_group(GROUP_FIGURE_HOMELESS);
+        image_id = image_id_from_group(GROUP_FIGURE_VAGRANT);
         int unemployment_pct = city_labor_unemployment_percentage_for_senate();
         if (unemployment_pct > 0)
             ImageDraw::img_generic(image_id + 108, x + 80, y, color_mask);
