@@ -187,7 +187,9 @@ static void post_load() {
     // scenario settings
     scenario_set_name(scenario_name());
     city_set_player_name(setting_player_name());
-    scenario_set_campaign_rank(get_scenario_mission_rank(scenario_campaign_scenario_id()));
+    int scenario_id = scenario_campaign_scenario_id();
+    int mission_rank = get_scenario_mission_rank(scenario_id);
+    scenario_set_campaign_rank(mission_rank);
 
     // camera
 //    city_view_camera_position_refresh();

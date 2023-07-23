@@ -132,7 +132,7 @@ static menu_item menu_debug[] = {
 
 menu_bar_item g_top_menu[] = {
         {1, menu_file,     6},
-        {2, menu_options,  5},
+        {2, menu_options,  6},
         {3, menu_help,     4},
         {4, menu_advisors, 12},
         {5, menu_debug,    std::size(menu_debug), "Debug"},
@@ -665,11 +665,9 @@ static void replay_map_confirmed(bool confirmed) {
         GamestateIO::load_savegame("autosave_replay.sav");
         window_city_show();
     } else {
-        int campaign = scenario_campaign_scenario_id();
-        int mission_rank = scenario_campaign_rank();
-        const mission_step_t *mission = get_campaign_mission_step_data(campaign, mission_rank);
+        int scenario_id = scenario_campaign_scenario_id();
         clear_state();
-        GamestateIO::load_mission(mission->scenario_id);
+        GamestateIO::load_mission(scenario_id);
     }
 }
 static void menu_file_new_game(int param) {
