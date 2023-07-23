@@ -1,6 +1,4 @@
-#ifndef OZYMANDIAS_FILE_FORMATS_H
-#define OZYMANDIAS_FILE_FORMATS_H
-
+#pragma once
 enum e_file_format {
     FILE_FORMAT_NULL,
     //
@@ -17,8 +15,8 @@ enum e_file_format {
     //
     FILE_FORMAT_JAS_RECORDS,
     FILE_FORMAT_PLAYER_DATA,
+    //
+    FILE_FORMAT_SAVE_FILE_EXT
 } ;
 
 e_file_format get_format_from_file(const char *filename);
-
-#endif //OZYMANDIAS_FILE_FORMATS_H

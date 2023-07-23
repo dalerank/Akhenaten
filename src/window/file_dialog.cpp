@@ -201,14 +201,16 @@ static void button_ok_cancel(int is_ok, int param2) {
     snprintf(filename, MAX_FILE_NAME, "%s.%s", get_chosen_filename(), saved_game_data.extension);
     fullpath_saves(full, filename);
 
-    if (!file_exists(full, NOT_LOCALIZED)) {
-        snprintf(filename, MAX_FILE_NAME, "%s.%s", get_chosen_filename(), saved_game_data_expanded.extension);
-        fullpath_saves(full, filename);
-    }
+    if (data.dialog_type == FILE_DIALOG_LOAD) {
+        if (!file_exists(full, NOT_LOCALIZED)) {
+            snprintf(filename, MAX_FILE_NAME, "%s.%s", get_chosen_filename(), saved_game_data_expanded.extension);
+            fullpath_saves(full, filename);
+        }
 
-    if (!file_exists(full, NOT_LOCALIZED)) {
-        data.message_not_exist_start_time = time_get_millis();
-        return;
+        if (!file_exists(full, NOT_LOCALIZED)) {
+            data.message_not_exist_start_time = time_get_millis();
+            return;
+        }
     }
 
     if (data.dialog_type != FILE_DIALOG_SAVE && !file_exists(full, NOT_LOCALIZED)) {

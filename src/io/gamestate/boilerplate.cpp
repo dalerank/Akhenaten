@@ -72,6 +72,7 @@
 #include "io/io.h"
 #include "chunks.h"
 
+#include <cassert>
 
 #ifdef _MSC_VER 
 //not #if defined(_WIN32) || defined(_WIN64) because we have strncasecmp in mingw
@@ -95,6 +96,7 @@ void fullpath_saves(char *full, const char *filename) {
     strcat(full, "/");
     strcat(full, filename);
 }
+
 void fullpath_maps(char *full, const char *filename) {
     strcpy(full, "");
     if (strncasecmp(filename, "Maps/", 5) == 0 || strncasecmp(filename, "Maps\\", 5) == 0) {
@@ -457,6 +459,98 @@ static void file_schema(e_file_format file_format, const int file_version) {
 
             }
             break;
+        case FILE_FORMAT_SAVE_FILE_EXT:
+            FILEIO.push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
+            FILEIO.push_chunk(4, false, "file_version", iob_file_version);
+            FILEIO.push_chunk(6004, false, "chunks_schema", iob_chunks_schema);
+            FILEIO.push_chunk(207936, false, "image_grid", &io_image_grid::instance());             // (228²) * 4 <<
+            FILEIO.push_chunk(51984, false, "edge_grid", iob_edge_grid);                            // (228²) * 1
+            FILEIO.push_chunk(103968, false, "building_grid", iob_building_grid);                   // (228²) * 2
+            FILEIO.push_chunk(207936, false, "terrain_grid", iob_terrain_grid);                     // (228²) * 4 <<
+            FILEIO.push_chunk(51984, false, "aqueduct_grid", iob_aqueduct_grid);                    // (228²) * 1
+            FILEIO.push_chunk(103968, false, "figure_grid", iob_figure_grid);                       // (228²) * 2
+            FILEIO.push_chunk(51984, false, "bitfields_grid", iob_bitfields_grid);                  // (228²) * 1
+            FILEIO.push_chunk(51984, false, "sprite_grid", iob_sprite_grid);                        // (228²) * 1
+            FILEIO.push_chunk(51984, false, "random_grid", iob_random_grid);                       // (228²) * 1
+            FILEIO.push_chunk(51984, false, "desirability_grid", iob_desirability_grid);            // (228²) * 1
+            FILEIO.push_chunk(51984, false, "elevation_grid", iob_elevation_grid);                  // (228²) * 1
+            FILEIO.push_chunk(103968, false, "building_damage_grid", iob_damage_grid);              // (228²) * 2 <<
+            FILEIO.push_chunk(51984, false, "aqueduct_backup_grid", iob_aqueduct_backup_grid);      // (228²) * 1
+            FILEIO.push_chunk(51984, false, "sprite_backup_grid", iob_sprite_backup_grid);          // (228²) * 1
+            FILEIO.push_chunk(776000, false, "figures", iob_figures);
+            FILEIO.push_chunk(2000, false, "route_figures", iob_route_figures);
+            FILEIO.push_chunk(500000, false, "route_paths", iob_route_paths);
+            FILEIO.push_chunk(7200, false, "formations", iob_formations);
+            FILEIO.push_chunk(12, false, "formations_info", iob_formations_info);
+            FILEIO.push_chunk(37808, false, "city_data", iob_city_data);
+            FILEIO.push_chunk(72, false, "city_data_extra", iob_city_data_extra);
+            FILEIO.push_chunk(1056000, false, "buildings", iob_buildings);
+            FILEIO.push_chunk(4, false, "city_view_orientation", iob_city_view_orientation); // ok
+            FILEIO.push_chunk(20, false, "game_time", iob_game_time); // ok
+            FILEIO.push_chunk(8, false, "building_extra_highest_id_ever", iob_building_highest_id_ever); // ok
+            FILEIO.push_chunk(8, false, "random_iv", iob_random_iv); // ok
+            FILEIO.push_chunk(8, false, "city_view_camera", iob_city_view_camera); // ok
+            FILEIO.push_chunk(8, false, "city_graph_order", iob_city_graph_order); // I guess ????
+            FILEIO.push_chunk(12, false, "empire_map_params", iob_empire_map_params); // ok ???
+            FILEIO.push_chunk(6466, false, "empire_cities", iob_empire_cities); // 83920 + 7681 --> 91601
+            FILEIO.push_chunk(288, false, "building_count_industry", iob_building_count_industry); // 288 bytes ??????
+            FILEIO.push_chunk(288, false, "trade_prices", iob_trade_prices);
+            FILEIO.push_chunk(84, false, "figure_names", iob_figure_names);
+            FILEIO.push_chunk(1592, false, "scenario_info", iob_scenario_info);
+            FILEIO.push_chunk(4, false, "max_year", iob_max_year);
+            FILEIO.push_chunk(48000, false, "messages", iob_messages); // 94000 + 533 --> 94532 + 4 = 94536
+            FILEIO.push_chunk(182, false, "message_extra", iob_message_extra); // ok
+            FILEIO.push_chunk(8, false, "building_burning_list_info", iob_building_burning_list_info); // ok
+            FILEIO.push_chunk(4, false, "figure_sequence", iob_figure_sequence); // ok
+            FILEIO.push_chunk(12, false, "scenario_carry_settings", iob_scenario_carry_settings); // ok
+            FILEIO.push_chunk(3232, false, "invasion_warnings", iob_invasion_warnings); // 94743 + 31 --> 94774 + 4 = 94778
+            FILEIO.push_chunk(4, false, "scenario_is_custom", iob_scenario_is_custom); // ok
+            FILEIO.push_chunk(8960, false, "city_sounds", iob_city_sounds); // ok
+            FILEIO.push_chunk(4, false, "building_extra_highest_id", iob_building_highest_id); // ok
+            FILEIO.push_chunk(8804, false, "figure_traders", iob_figure_traders); // +4000 ???
+            FILEIO.push_chunk(1000, false, "building_list_burning", iob_building_list_burning); // ok
+            FILEIO.push_chunk(1000, false, "building_list_small", iob_building_list_small); // ok
+            FILEIO.push_chunk(8000, false, "building_list_large", iob_building_list_large); // ok
+            FILEIO.push_chunk(32, false, "junk7a", iob_junk7a); // unknown bytes
+            FILEIO.push_chunk(24, false, "junk7b", iob_junk7b); // unknown bytes
+            FILEIO.push_chunk(39200, false, "building_storages", iob_building_storages); // storage instructions
+            FILEIO.push_chunk(2880, false, "trade_routes_limits", iob_trade_routes_limits); // ok
+            FILEIO.push_chunk(2880, false, "trade_routes_traded", iob_trade_routes_traded); // ok
+            FILEIO.push_chunk(50, false, "junk8", iob_routing_stats); // unknown bytes
+            FILEIO.push_chunk(65, false, "scenario_map_name", iob_scenario_map_name); // ok
+            FILEIO.push_chunk(32, false, "bookmarks", iob_bookmarks); // ok
+            FILEIO.push_chunk(12, false, "junk9a", iob_junk9a); // ok ????
+            FILEIO.push_chunk(396, false, "junk9b", iob_junk9b);
+            FILEIO.push_chunk(51984, false, "soil_fertility_grid", iob_soil_fertility_grid);
+            FILEIO.push_chunk(18600, false, "scenario_events", iob_scenario_events);
+            FILEIO.push_chunk(28, false, "scenario_events_extra", iob_scenario_events_extra);
+            FILEIO.push_chunk(11200, false, "junk10a", iob_junk10a);
+            FILEIO.push_chunk(2200, false, "junk10b", iob_junk10b);
+            FILEIO.push_chunk(16, false, "junk10c", iob_junk10c);
+            FILEIO.push_chunk(8200, false, "junk10d", iob_junk10d);
+            FILEIO.push_chunk(1280, false, "junk11", iob_junk11); // unknown compressed data
+            FILEIO.push_chunk(16200, false, "empire_map_routes", iob_empire_map_routes);
+            FILEIO.push_chunk(51984, false, "vegetation_growth", iob_vegetation_growth); // todo: 1-byte grid
+            FILEIO.push_chunk(20, false, "junk14", iob_junk14);
+            FILEIO.push_chunk(528, false, "bizarre_ordered_fields_1", iob_bizarre_ordered_fields_1);
+            FILEIO.push_chunk(36, false, "floodplain_settings", iob_floodplain_settings); // floodplain_settings
+            FILEIO.push_chunk(207936, false, "GRID03_32BIT", iob_GRID03_32BIT); // todo: 4-byte grid
+            FILEIO.push_chunk(312, false, "bizarre_ordered_fields_4", iob_bizarre_ordered_fields_4); // 71x 4-bytes emptiness
+            FILEIO.push_chunk(64, false, "junk16", iob_junk16); // 71x 4-bytes emptiness
+            FILEIO.push_chunk(41, false, "tutorial_flags_struct", iob_tutorial_flags); // 41 x 1-byte flag fields
+            FILEIO.push_chunk(51984, false, "GRID04_8BIT", iob_GRID04_8BIT);
+            FILEIO.push_chunk(1, false, "junk17", iob_junk17);
+            FILEIO.push_chunk(51984, false, "moisture_grid", iob_moisture_grid);
+            FILEIO.push_chunk(240, false, "bizarre_ordered_fields_2", iob_bizarre_ordered_fields_2);
+            FILEIO.push_chunk(432, false, "bizarre_ordered_fields_3", iob_bizarre_ordered_fields_3);
+            FILEIO.push_chunk(8, false, "junk18", iob_junk18);
+            FILEIO.push_chunk(20, false, "junk19", iob_junk19);
+            FILEIO.push_chunk(648, false, "bizarre_ordered_fields_5", iob_bizarre_ordered_fields_5);
+            FILEIO.push_chunk(648, false, "bizarre_ordered_fields_6", iob_bizarre_ordered_fields_6);
+            FILEIO.push_chunk(360, false, "bizarre_ordered_fields_7", iob_bizarre_ordered_fields_7);
+            FILEIO.push_chunk(1344, false, "bizarre_ordered_fields_8", iob_bizarre_ordered_fields_8);
+            FILEIO.push_chunk(1776, false, "bizarre_ordered_fields_9", iob_bizarre_ordered_fields_9);
+            break;
     }
 }
 
@@ -470,7 +564,9 @@ bool GamestateIO::write_savegame(const char *filename_short) {
     fullpath_saves(full, filename_short);
 
     // write file
-    return FILEIO.serialize(full, 0, FILE_FORMAT_SAVE_FILE, 160, file_schema);
+    e_file_format format = get_format_from_file(filename_short);
+    assert(format == FILE_FORMAT_SAVE_FILE_EXT);
+    return FILEIO.serialize(full, 0, format, 160, file_schema);
 }
 
 static void prepare_savegame_schema(e_file_format file_format, const int file_version) {
@@ -526,13 +622,15 @@ bool GamestateIO::write_map(const char *filename_short) {
 bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
     // get mission pack file offset
     int offset = get_campaign_scenario_offset(scenario_id);
-    if (offset <= 0)
+    if (offset <= 0) {
         return false;
+    }
 
     // read file
     pre_load();
-    if (!FILEIO.unserialize(MISSION_PACK_FILE, offset, FILE_FORMAT_MISSION_PAK, GamestateIO::read_file_version, file_schema))
+    if (!FILEIO.unserialize(MISSION_PACK_FILE, offset, FILE_FORMAT_MISSION_PAK, GamestateIO::read_file_version, file_schema)) {
         return false;
+    }
     last_loaded = LOADED_MISSION;
     scenario_set_campaign_scenario(scenario_id);
     post_load();
@@ -556,7 +654,8 @@ bool GamestateIO::load_savegame(const char *filename_short, bool start_immediate
 
     // read file
     pre_load();
-    if (!FILEIO.unserialize(full, 0, FILE_FORMAT_SAVE_FILE, GamestateIO::read_file_version, file_schema))
+    e_file_format file_format = get_format_from_file(filename_short);
+    if (!FILEIO.unserialize(full, 0, file_format, GamestateIO::read_file_version, file_schema))
         return false;
     last_loaded = LOADED_SAVE;
     post_load();

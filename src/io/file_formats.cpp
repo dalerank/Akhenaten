@@ -1,4 +1,5 @@
 #include "file_formats.h"
+
 #include "file.h"
 
 e_file_format get_format_from_file(const char *filename) {
@@ -15,6 +16,8 @@ e_file_format get_format_from_file(const char *filename) {
 
     if (file_has_extension(filename, "jas")) return FILE_FORMAT_JAS_RECORDS;
     if (file_has_extension(filename, "dat")) return FILE_FORMAT_PLAYER_DATA;
+    if (file_has_extension(filename, "svx")) return FILE_FORMAT_SAVE_FILE_EXT;
+
 
     return FILE_FORMAT_NULL;
 }
