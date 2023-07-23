@@ -294,13 +294,14 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             break;
     }
 
+    constexpr int DEATH_FRAMES = 8;
     switch (action_state) {
         default:
             break;
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
         case 13:
             direction = attack_direction;
-            image_set_animation(GROUP_FIGURE_FIREMAN, 104, 36);
+            image_set_animation(GROUP_FIGURE_FIREMAN, FIGURE_MOVEMENT_96_FRAMES + DEATH_FRAMES, 36);
             break;
     }
 }

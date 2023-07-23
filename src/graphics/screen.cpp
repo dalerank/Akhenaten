@@ -5,20 +5,22 @@
 #include "city/warning.h"
 #include "window.h"
 
-static struct {
+struct screen_data_t {
     int width;
     int height;
     struct {
         int x;
         int y;
     } dialog_offset;
-} data;
+};
+
+screen_data_t g_screen_data;
 
 void screen_set_resolution(int width, int height) {
-    data.width = width;
-    data.height = height;
-    data.dialog_offset.x = (width - 640) / 2;
-    data.dialog_offset.y = (height - 480) / 2;
+    g_screen_data.width = width;
+    g_screen_data.height = height;
+    g_screen_data.dialog_offset.x = (width - 640) / 2;
+    g_screen_data.dialog_offset.y = (height - 480) / 2;
 
     graphics_clear_screen();
     graphics_renderer()->set_clip_rectangle(0, 0, width, height);
@@ -29,15 +31,15 @@ void screen_set_resolution(int width, int height) {
 }
 
 int screen_width(void) {
-    return data.width;
+    return g_screen_data.width;
 }
 int screen_height(void) {
-    return data.height;
+    return g_screen_data.height;
 }
 
 int screen_dialog_offset_x(void) {
-    return data.dialog_offset.x;
+    return g_screen_data.dialog_offset.x;
 }
 int screen_dialog_offset_y(void) {
-    return data.dialog_offset.y;
+    return g_screen_data.dialog_offset.y;
 }
