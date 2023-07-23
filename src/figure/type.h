@@ -79,7 +79,7 @@ enum e_figure_type {
     FIGURE_DELIVERY_BOY = 66,
     FIGURE_SHIPWRECK = 67,
     FIGURE_SHEEP = 68,
-    FIGURE_OSTRICH = 69, //FIGURE_WOLF = 69,
+    FIGURE_OSTRICH = 69,
     FIGURE_ZEBRA = 70,
     FIGURE_SPEAR = 71,
     FIGURE_HIPPODROME_HORSES = 72,
@@ -111,6 +111,8 @@ enum e_figure_type {
     //
     FIGURE_100, // TODO
     FIGURE_101, // TODO
+
+    FIGURE_HYENA = 102, 
 
     FIGURE_MAX = 999
 };

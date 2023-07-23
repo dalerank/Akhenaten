@@ -360,7 +360,7 @@ public:
     void delivery_boy_action();
     void shipwreck_action();
     void sheep_action();
-    void wolf_action(); // C3 only? hyena???
+    void hyena_action();
     void ostrich_action();
     void hippo_action();
     void zebra_action();

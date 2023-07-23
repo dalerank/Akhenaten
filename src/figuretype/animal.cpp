@@ -229,7 +229,7 @@ void figure::sheep_action() {
         image_set_animation(GROUP_FIGURE_SHEEP, 0, 6);
 //        sprite_image_id = image_id_from_group(GROUP_FIGURE_SHEEP) + dir + 8 * anim_frame;
 }
-void figure::wolf_action() {
+void figure::hyena_action() {
     const formation *m = formation_get(formation_id);
     city_figures_add_animal();
     switch (action_state) {
@@ -283,13 +283,13 @@ void figure::wolf_action() {
     }
     int dir = figure_image_direction();
     if (action_state == FIGURE_ACTION_149_CORPSE)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_OSTRICH) + 96 + figure_image_corpse_offset();
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_DEATH) + figure_image_corpse_offset();
     else if (action_state == FIGURE_ACTION_150_ATTACK)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_OSTRICH) + 104 + dir + 8 * (attack_image_offset / 4);
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_ATTACK) + 104 + dir + 8 * (attack_image_offset / 4);
     else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_OSTRICH) + 152 + dir;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_IDLE) + 152 + dir;
     else
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_OSTRICH) + dir + 8 * anim_frame;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_WALK) + dir + 8 * anim_frame;
 }
 void figure::ostrich_action() {
     const formation *m = formation_get(formation_id);
@@ -332,27 +332,29 @@ void figure::ostrich_action() {
     }
     switch (action_state) {
         case ACTION_8_RECALCULATE:
-        case 19: // idle
-            image_set_animation(GROUP_FIGURE_OSTRICH, 224, 8);
+        case FIGURE_ACTION_19_ANIMAL_IDLE: // idle
+            image_set_animation(GROUP_FIGURE_OSTRICH_IDLE, 0, 8);
             break;
-        case 18: // roosting
-            image_set_animation(GROUP_FIGURE_OSTRICH, 160, 8);
+        case ACTION_18_ROOSTING: // roosting
+            image_set_animation(GROUP_FIGURE_OSTRICH_EATING, 0, 7);
             break;
-        case 16: // fleeing
-        case 10: // on the move
-            image_set_animation(GROUP_FIGURE_OSTRICH, 0, 11);
+        case ACTION_16_FLEEING: // fleeing
+            image_set_animation(GROUP_FIGURE_OSTRICH_RUN, 0, 11);
             break;
-        case 15: // terrified
+        case ACTION_10_GOING: // on the move
+            image_set_animation(GROUP_FIGURE_OSTRICH_WALK, 0, 11);
+            break;
+        case ACTION_15_ANIMAL_TERRIFIED: // terrified
         case 14: // scared
-            image_set_animation(GROUP_FIGURE_OSTRICH, 224, 8);
+            image_set_animation(GROUP_FIGURE_OSTRICH_IDLE, 0, 8);
             anim_frame = 0;
             break;
         case FIGURE_ACTION_150_ATTACK: // unused?
-            image_set_animation(GROUP_FIGURE_OSTRICH, 104, 7);
+            image_set_animation(GROUP_FIGURE_OSTRICH_IDLE, 0, 8);
             break;
         default:
             // In any strange situation load eating/roosting animation
-            image_set_animation(GROUP_FIGURE_OSTRICH, 160, 8);
+            image_set_animation(GROUP_FIGURE_OSTRICH_EATING, 0, 7); break;
             break;
     }
 }
