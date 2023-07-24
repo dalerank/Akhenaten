@@ -10,7 +10,7 @@
 #include "core/calc.h"
 #include "gods.h"
 
-static struct {
+struct coverage_data_t {
     int theater;
     int amphitheater;
     int colosseum;
@@ -21,46 +21,48 @@ static struct {
     int library;
     int religion[5];
     int oracle;
-} coverage;
+};
+
+coverage_data_t g_coverage;
 
 int city_culture_coverage_theater(void) {
-    return coverage.theater;
+    return g_coverage.theater;
 }
 
 int city_culture_coverage_amphitheater(void) {
-    return coverage.amphitheater;
+    return g_coverage.amphitheater;
 }
 
 int city_culture_coverage_colosseum(void) {
-    return coverage.colosseum;
+    return g_coverage.colosseum;
 }
 
 int city_culture_coverage_hippodrome(void) {
-    return coverage.hippodrome;
+    return g_coverage.hippodrome;
 }
 
 int city_culture_coverage_average_entertainment(void) {
-    return (coverage.hippodrome + coverage.colosseum + coverage.amphitheater + coverage.theater) / 4;
+    return (g_coverage.hippodrome + g_coverage.colosseum + g_coverage.amphitheater + g_coverage.theater) / 4;
 }
 
 int city_culture_coverage_religion(int god) {
-    return coverage.religion[god];
+    return g_coverage.religion[god];
 }
 
 int city_culture_coverage_school(void) {
-    return coverage.school;
+    return g_coverage.school;
 }
 
 int city_culture_coverage_library(void) {
-    return coverage.library;
+    return g_coverage.library;
 }
 
 int city_culture_coverage_academy(void) {
-    return coverage.academy;
+    return g_coverage.academy;
 }
 
 int city_culture_coverage_hospital(void) {
-    return coverage.hospital;
+    return g_coverage.hospital;
 }
 
 int city_culture_average_education(void) {
@@ -96,6 +98,7 @@ static int god_coverage_total(int god, int temple, int shrine, int complex) {
     }
 }
 void city_culture_update_coverage(void) {
+    auto &coverage = g_coverage;
     int population = city_data.population.population;
 
     // entertainment
@@ -173,6 +176,8 @@ void city_culture_calculate(void) {
 }
 
 void city_culture_save_state(buffer *buf) {
+    auto &coverage = g_coverage;
+
     // Yes, hospital is saved twice
     buf->write_i32(coverage.theater);
     buf->write_i32(coverage.amphitheater);
@@ -190,6 +195,8 @@ void city_culture_save_state(buffer *buf) {
 }
 
 void city_culture_load_state(buffer *buf) {
+    auto &coverage = g_coverage;
+
     // Yes, hospital is saved twice
     coverage.theater = buf->read_i32();
     coverage.amphitheater = buf->read_i32();

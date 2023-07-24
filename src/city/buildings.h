@@ -1,7 +1,8 @@
-#ifndef CITY_BUILDINGS_H
-#define CITY_BUILDINGS_H
+#pragma once
 
-#include "building/building.h"
+#include "grid/point.h"
+
+class building;
 
 bool city_buildings_has_palace(void);
 int city_buildings_get_palace_id();
@@ -62,5 +63,3 @@ void city_buildings_add_temple_complex(building *complex);
 void city_buildings_remove_temple_complex(void);
 
 int city_buildings_unknown_value(void);
-
-#endif // CITY_BUILDINGS_H

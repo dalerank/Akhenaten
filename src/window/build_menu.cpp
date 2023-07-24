@@ -3,6 +3,7 @@
 
 #include "building/construction/build_planner.h"
 #include "building/model.h"
+#include "building/building.h"
 #include "core/game_environment.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/boilerplate.h"

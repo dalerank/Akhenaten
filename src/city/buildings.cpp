@@ -1,5 +1,7 @@
-#include <building/menu.h>
 #include "buildings.h"
+
+#include "building/menu.h"
+#include "building/building.h"
 
 #include "city/data_private.h"
 
