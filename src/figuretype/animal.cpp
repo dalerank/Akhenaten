@@ -134,6 +134,7 @@ static void create_herd(int x, int y) {
     if (formation_id > 0) {
         for (int fig = 0; fig < num_animals; fig++) {
             random_generate_next();
+
             figure *f = figure_create(herd_type, x, y, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             f->formation_id = formation_id;
@@ -146,12 +147,15 @@ void figure_create_herds(void) {
 }
 
 bool figure::herd_roost(int step, int bias, int max_dist) {
-    if (!formation_id)
+    if (!formation_id) {
         return false;
+    }
+
     const formation *m = formation_get(formation_id);
     int dx;
     int dy;
     random_around_point(m->x_home, m->y_home, tile.x(), tile.y(), &dx, &dy, step, bias, max_dist);
+
     int offset = MAP_OFFSET(dx, dy);
     if (!map_terrain_is(offset, TERRAIN_IMPASSABLE_WOLF)) { // todo: fix gardens
         destination_tile.set(dx, dy);
@@ -217,6 +221,7 @@ void figure::sheep_action() {
 
             break;
     }
+
     int dir = figure_image_direction();
     if (action_state == FIGURE_ACTION_149_CORPSE) {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_SHEEP) + 104 + figure_image_corpse_offset();
@@ -232,6 +237,7 @@ void figure::sheep_action() {
 void figure::hyena_action() {
     const formation *m = formation_get(formation_id);
     city_figures_add_animal();
+
     switch (action_state) {
         case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
             wait_ticks++;
@@ -281,15 +287,17 @@ void figure::hyena_action() {
             }
             break;
     }
+
     int dir = figure_image_direction();
-    if (action_state == FIGURE_ACTION_149_CORPSE)
+    if (action_state == FIGURE_ACTION_149_CORPSE) {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_DEATH) + figure_image_corpse_offset();
-    else if (action_state == FIGURE_ACTION_150_ATTACK)
+    } else if (action_state == FIGURE_ACTION_150_ATTACK) {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_ATTACK) + 104 + dir + 8 * (attack_image_offset / 4);
-    else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST)
+    } else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_IDLE) + 152 + dir;
-    else
+    } else {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_WALK) + dir + 8 * anim_frame;
+    }
 }
 void figure::ostrich_action() {
     const formation *m = formation_get(formation_id);
@@ -325,8 +333,7 @@ void figure::ostrich_action() {
 //            if (action_state == 16)
 //                while (destination_x == 0 || destination_y == 0)
 //                    herd_roost(4, 8, 22);
-            if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANIMAL,
-                18 + (random_byte() & 0x1), ACTION_8_RECALCULATE))
+            if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANIMAL, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE))
                 wait_ticks = 50;
             break;
     }
@@ -458,11 +465,11 @@ void figure::zebra_action() {
             break;
     }
     int dir = figure_image_direction();
-    if (action_state == FIGURE_ACTION_149_CORPSE)
+    if (action_state == FIGURE_ACTION_149_CORPSE) {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + 96 + figure_image_corpse_offset();
-    else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST)
+    } else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir;
-    else {
+    } else {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir + 8 * anim_frame;
     }
 }
@@ -651,8 +658,10 @@ void figure::hippodrome_horse_action() {
 //    figure_image_set_cart_offset(f, cart_dir);
 }
 void figure_hippodrome_horse_reroute(void) {
-    if (!city_entertainment_hippodrome_has_race())
+    if (!city_entertainment_hippodrome_has_race()) {
         return;
+    }
+
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (f->state == FIGURE_STATE_ALIVE && f->type == FIGURE_HIPPODROME_HORSES) {
@@ -668,8 +677,10 @@ void figure_hippodrome_horse_reroute(void) {
 void figure::hunter_action() {
     figure *prey = figure_get(target_figure_id);
     int dist = 0;
-    if (target_figure_id)
+    if (target_figure_id) {
         dist = calc_maximum_distance(tile.x(), tile.y(), prey->tile.x(), prey->tile.y());
+    }
+
     switch (action_state) {
         case ACTION_8_RECALCULATE:
         case 14: // spawning
@@ -682,14 +693,15 @@ void figure::hunter_action() {
         case 13: // pitpat
             if (!target_figure_id) return advance_action(8);
             wait_ticks--;
-            if (wait_ticks <= 0)
+            if (wait_ticks <= 0) {
                 advance_action(9);
+            }
             break;
         case 9: // following prey
             if (!target_figure_id) return advance_action(8);
-            if (dist >= 2)
+            if (dist >= 2) {
                 do_goto(prey->tile.x(), prey->tile.y(), TERRAIN_USAGE_ANIMAL, 15, 8);
-            else {
+            } else {
                 wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
                 advance_action(15);
             }
@@ -698,11 +710,13 @@ void figure::hunter_action() {
         case 15: // firing at prey
             wait_ticks--;
             if (wait_ticks <= 0) {
-                if (!target_figure_id) return advance_action(8);
+                if (!target_figure_id) {
+                    return advance_action(8);
+                }
                 wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
-                if (prey->state == FIGURE_STATE_DYING)
+                if (prey->state == FIGURE_STATE_DYING) {
                     advance_action(11);
-                else if (dist >= 2) {
+                } else if (dist >= 2) {
 //                    advance_action(9);
 //                    wait_ticks = 0;
                     wait_ticks = 12;
@@ -714,20 +728,27 @@ void figure::hunter_action() {
             }
             break;
         case 11: // going to pick up prey
-            if (!target_figure_id) return advance_action(8);
-            if (do_goto(prey->tile.x(), prey->tile.y(), TERRAIN_USAGE_ANIMAL, 10, 11))
+            if (!target_figure_id) {
+                return advance_action(8);
+            }
+            
+            if (do_goto(prey->tile.x(), prey->tile.y(), TERRAIN_USAGE_ANIMAL, 10, 11)) {
                 anim_offset = 0;
+            }
             break;
         case 10: // picking up prey
-            if (target_figure_id)
+            if (target_figure_id) {
                 prey->poof();
+            }
             target_figure_id = 0;
-            if (anim_frame >= 17)
+            if (anim_frame >= 17) {
                 advance_action(12);
+            }
             break;
         case 12: // returning with prey
             if (do_returnhome(TERRAIN_USAGE_ANIMAL)) // add game meat to hunting lodge!
                 home()->stored_full_amount += 100;
+
             break;
     }
     switch (action_state) {
@@ -738,6 +759,7 @@ void figure::hunter_action() {
         case 11: // normal walk
             image_set_animation(GROUP_FIGURE_HUNTER, 0, 12);
             break;
+
         case 15: // hunting
             image_set_animation(GROUP_FIGURE_HUNTER, 104, 12);
             break;
@@ -748,6 +770,7 @@ void figure::hunter_action() {
         case 10:
             image_set_animation(GROUP_FIGURE_HUNTER, 392, 18);
             break;
+
         case 12:
             image_set_animation(GROUP_FIGURE_HUNTER, 536, 12);
             break;
