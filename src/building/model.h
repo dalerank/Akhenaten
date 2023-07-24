@@ -1,5 +1,4 @@
-#ifndef BUILDING_MODEL_H
-#define BUILDING_MODEL_H
+#pragma once
 
 #include "building/type.h"
 
@@ -11,7 +10,7 @@
 /**
  * Building model
  */
-typedef struct {
+struct model_building {
     int cost; /**< Cost of structure or of one tile of a structure (for walls) */
     int desirability_value; /**< Initial desirability value */
     int desirability_step; /**< Desirability step (in tiles) */
@@ -21,12 +20,12 @@ typedef struct {
     // pharaoh
     int fire_risk;
     int damage_risk;
-} model_building;
+} ;
 
 /**
  * House model
  */
-typedef struct {
+struct model_house {
     int devolve_desirability; /**< Desirability at which the house devolves */
     int evolve_desirability; /**< Desirability at which the house evolves */
     int entertainment; /**< Entertainment points required */
@@ -52,7 +51,7 @@ typedef struct {
     // pharaoh
     int malaria_risk;
     int disease_risk;
-} model_house;
+} ;
 
 /**
  * Loads the model from file
@@ -73,5 +72,3 @@ const model_building *model_get_building(int type);
  * @return Read-only model
  */
 const model_house *model_get_house(int level);
-
-#endif // BUILDING_MODEL_H

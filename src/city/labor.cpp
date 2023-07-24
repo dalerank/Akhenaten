@@ -376,16 +376,20 @@ static void calculate_workers_needed_per_category(void) {
 
         int category = CATEGORY_FOR_building(b);
         b->labor_category = category;
-        if (building_is_floodplain_farm(b)) // exception for floodplain farms in Pharaoh
+        if (building_is_floodplain_farm(b)) { // exception for floodplain farms in Pharaoh
             b->labor_category = 255;
-        if (!should_have_workers(b, category, 1))
+        }
+
+        if (!should_have_workers(b, category, 1)) {
             continue;
+        }
 
         city_data.labor.categories[category].workers_needed += model_get_building(b->type)->laborers;
         city_data.labor.categories[category].total_houses_covered += b->houses_covered;
         city_data.labor.categories[category].buildings++;
     }
 }
+
 static void set_building_worker_weight(void) {
     int water_per_10k_per_building = calc_percentage(100, city_data.labor.categories[LABOR_CATEGORY_WATER_HEALTH].buildings);
     for (int i = 1; i < MAX_BUILDINGS; i++) {

@@ -20,11 +20,13 @@ static const uint8_t ALL_HOUSES[] = {'A', 'L', 'L', ' ', 'H', 'O', 'U', 'S', 'E'
 //static model_building buildings[400]; // 130 in C3, more in Pharaoh, can't be bothered to make this dynamic
 //static model_house houses[20];
 
-static struct data_t {
+struct model_data_t {
     model_building buildings[5][400];
     model_house houses[5][20];
 //    int difficulty_level_cached = 0;
-} data;
+};
+
+model_data_t g_model_data;
 
 static const uint8_t *skip_non_digits(const uint8_t *str) {
     int safeguard = 0;
@@ -125,6 +127,7 @@ bool model_load_file(const char *filepath, int NUM_BUILDINGS, int NUM_HOUSES, mo
 }
 
 bool model_load(void) {
+    auto &data = g_model_data;
     switch (GAME_ENV) {
         case ENGINE_ENV_PHARAOH: {
             if (!model_load_file("Pharaoh_Model_VeryEasy.txt", 237, 20, data.buildings[0], data.houses[0]))
@@ -148,8 +151,8 @@ const model_building *model_get_building(int type) {
 //    if (type == BUILDING_ROADBLOCK) {
 //        return &MODEL_ROADBLOCK;
 //    }
-    return &data.buildings[setting_difficulty()][type];
+    return &g_model_data.buildings[setting_difficulty()][type];
 }
 const model_house *model_get_house(int level) {
-    return &data.houses[setting_difficulty()][level];
+    return &g_model_data.houses[setting_difficulty()][level];
 }

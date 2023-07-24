@@ -27,10 +27,10 @@
 #include "sound/effect.h"
 #include "model.h"
 
-static int fire_spread_direction = 0;
+int g_fire_spread_direction = 0;
 
 void building_maintenance_update_fire_direction(void) {
-    fire_spread_direction = random_byte() & 7;
+    g_fire_spread_direction = random_byte() & 7;
 }
 void building_maintenance_update_burning_ruins(void) {
     int climate = scenario_property_climate();
@@ -67,13 +67,13 @@ void building_maintenance_update_burning_ruins(void) {
         if ((b->map_random_7bit & 3) != (random_byte() & 3))
             continue;
 
-        int dir1 = fire_spread_direction - 1;
+        int dir1 = g_fire_spread_direction - 1;
         if (dir1 < 0) dir1 = 7;
-        int dir2 = fire_spread_direction + 1;
+        int dir2 = g_fire_spread_direction + 1;
         if (dir2 > 7) dir2 = 0;
 
         int grid_offset = b->tile.grid_offset();
-        int next_building_id = map_building_at(grid_offset + map_grid_direction_delta(fire_spread_direction));
+        int next_building_id = map_building_at(grid_offset + map_grid_direction_delta(g_fire_spread_direction));
         if (next_building_id && !building_get(next_building_id)->fire_proof) {
             building_destroy_by_fire(building_get(next_building_id));
             recalculate_terrain = 1;
