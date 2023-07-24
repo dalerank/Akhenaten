@@ -72,11 +72,7 @@ Only tested on Manjaro, but under Ubuntu or similar you should install the same 
 
 - Install (You will need to enable AUR on Manjaro):
   
-  - CMake
-  - g++
-  - sdl2
-  - sdl2_mixer
-  - sdl2_image
+  - sudo apt install --yes cmake build-essential libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev
 
 - From the root folder execute:
   
