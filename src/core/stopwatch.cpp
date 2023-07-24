@@ -7,7 +7,10 @@
 #include <cstring>
 #include <cmath>
 
-#define CLAMP(x, upper, lower) (std::min<int>(upper, std::max<int>(x, lower)))
+template<typename T>
+const T &clamp(const T &x, const T &upper, const T &lower) {
+    return std::min<int>(upper, std::max<int>(x, lower));
+}
 
 size_t stopwatch::STAMPS() {
     return stamps.size() - 1;
@@ -35,16 +38,17 @@ void stopwatch::RECORD(std::string str) {
 uint64_t stopwatch::GET(int a, int b) {
     if (stamps.size() == 0)
         return 0;
-    a = (int)CLAMP(a, stamps.size() - 1, 0);
-    b = (int)CLAMP(b, stamps.size() - 1, 0);
+
+    a = clamp<int>(a, (int)stamps.size() - 1, 0);
+    b = clamp<int>(b, (int)stamps.size() - 1, 0);
     if (a == b)
         return 0;
 
     uint64_t ms = 0;
     auto arr_a = &stamps.at(a);
     auto arr_b = &stamps.at(b);
-    auto arr_a_size = arr_a->size();
-    auto arr_b_size = arr_b->size();
+    int arr_a_size = (int)arr_a->size();
+    int arr_b_size = (int)arr_b->size();
 
     int repeats_proper = repeats + 1;
     repeats_proper = std::min<int>(repeats_proper, std::min<int>(arr_a_size, arr_b_size));

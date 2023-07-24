@@ -96,7 +96,6 @@ endif()
 
 if (MSVC)
     file(GLOB SDL2_DLL_PUBLIC_DLL "${SDL2_EXTRACT_PATH}/lib/${GAME_PROCESSOR_ARCH}/*.dll")
-    file(COPY ${SDL2_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
 endif()
 
 set(PROJECT_VERSION_MAJOR 0)
@@ -104,6 +103,7 @@ set(PROJECT_VERSION_MINOR 0)
 set(PROJECT_VERSION_PATCH 2)
 set(IS_RELEASE_VERSION FALSE)
 set(VERSION_REVISION "")
+    file(COPY ${SDL2_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
 
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
@@ -429,7 +429,15 @@ endif()
 if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
     target_link_libraries(${SHORT_NAME} m)
 endif()
+
 target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY})
+
+if(MSVC)
+   target_link_libraries(${SHORT_NAME} "winmm")
+   target_link_libraries(${SHORT_NAME} "imagehlp")
+   target_link_libraries(${SHORT_NAME} "shlwapi")
+endif()
+
 if(NOT APPLE)
     install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
 endif()

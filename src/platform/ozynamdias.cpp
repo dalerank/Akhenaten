@@ -1,6 +1,6 @@
 #include "SDL.h"
 
-#include "core/backtrace.h"
+#include "core/stacktrace.h"
 #include "core/encoding.h"
 #include "io/file.h"
 #include "io/log.h"
@@ -72,12 +72,6 @@ enum E_USER_EVENT {
     USER_EVENT_WINDOWED,
     USER_EVENT_CENTER_WINDOW,
 };
-
-static void handler(int sig) {
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Oops, crashed with signal %d :(", sig);
-    backtrace_print();
-    exit(1);
-}
 
 #if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__)
 /* Log to separate file on windows, since we don't have a console there */
@@ -222,6 +216,7 @@ struct video_mode {
     }
     bool operator<(const video_mode &o) const { return ((int64_t(w) << 32) + h) < ((int64_t(o.w) << 32) + o.h); }
 };
+
 static std::set<video_mode> get_video_modes() {
     /* Get available fullscreen/hardware modes */
     int num = SDL_GetNumDisplayModes(0);
@@ -376,7 +371,8 @@ static bool show_options_window() {
 
 static void setup(const ozymandias_args &args) {
     // init SDL and some other stuff
-    signal(SIGSEGV, handler);
+    crashhandler_install();
+
     setup_logging();
     SDL_Log("Ozymandias version %s", system_version());
     if (!init_sdl()) {
@@ -397,8 +393,8 @@ static void setup(const ozymandias_args &args) {
         if (!ok) {
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
                                      "Warning",
-                                     "Ozymandias requires the original files from Pharaoh to run."
-                                     "Move the Julius executable to the directory containing an existing "
+                                     "Ozymandias requires the original files from Pharaoh to run.\n"
+                                     "Move the executable file to the directory containing an existing\n"
                                      "Pharaoh installation, or run: ozymandias path/to/directory",
                                      NULL);
             exit(1);
