@@ -1,5 +1,4 @@
-#ifndef BUILDING_CONSTRUCTION_PLANNER_H
-#define BUILDING_CONSTRUCTION_PLANNER_H
+#pragma once
 
 #include "building/type.h"
 
@@ -34,13 +33,13 @@ enum PlannerFlags {
     Bridge =                1 << 23,
 };
 
-enum {
+enum e_place_action {
     CAN_PLACE = 0,
     CAN_NOT_PLACE = 1,
     CAN_NOT_BUT_GREEN = 2,
 };
 
-extern class BuildPlanner {
+class BuildPlanner {
 private:
     int tile_graphics_array[30][30] = {};
     int tile_sizes_array[30][30] = {};
@@ -131,6 +130,6 @@ public:
     void update(map_point cursor_tile);
     void draw();
     bool place();
-} Planner;
+};
 
-#endif // BUILDING_CONSTRUCTION_PLANNER_H
+extern BuildPlanner Planner;

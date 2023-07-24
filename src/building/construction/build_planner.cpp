@@ -1,9 +1,10 @@
+#include "build_planner.h"
+
 #include "widget/sidebar/city.h"
 #include "figure/formation_herd.h"
 #include "SDL_log.h"
 #include "grid/floodplain.h"
 #include "graphics/view/lookup.h"
-#include "build_planner.h"
 
 #include "clear.h"
 #include "routed.h"

@@ -1,5 +1,4 @@
-#ifndef BUILDING_CONSTRUCTION_CLEAR_H
-#define BUILDING_CONSTRUCTION_CLEAR_H
+#pragma once
 
 /**
  * Clears land
@@ -11,5 +10,3 @@
  * @return Number of tiles cleared
  */
 int building_construction_clear_land(bool measure_only, int x_start, int y_start, int x_end, int y_end);
-
-#endif // BUILDING_CONSTRUCTION_CLEAR_H

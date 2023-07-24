@@ -15,15 +15,15 @@
 #include "grid/terrain.h"
 #include "scenario/property.h"
 
-static bool has_warning = false;
+bool g_has_warning = false;
 
 void building_construction_warning_reset(void) {
-    has_warning = false;
+    g_has_warning = false;
 }
 
 static void show(int warning) {
     city_warning_show(warning);
-    has_warning = true;
+    g_has_warning = true;
 }
 
 static void check_road_access(int type, int x, int y, int size, int orientation) {
@@ -68,7 +68,7 @@ static void check_road_access(int type, int x, int y, int size, int orientation)
 }
 
 static void check_water(int type, int x, int y) {
-    if (!has_warning) {
+    if (!g_has_warning) {
         if (type == BUILDING_MENU_BEAUTIFICATION || type == BUILDING_MENU_MONUMENTS) {
             int grid_offset = MAP_OFFSET(x, y);
             int has_water = 0;
@@ -88,63 +88,63 @@ static void check_water(int type, int x, int y) {
 }
 
 static void check_workers(int type) {
-    if (!has_warning && type != BUILDING_WELL && !building_is_fort(type)) {
+    if (!g_has_warning && type != BUILDING_WELL && !building_is_fort(type)) {
         if (model_get_building(type)->laborers > 0 && city_labor_workers_needed() >= 10)
             show(WARNING_WORKERS_NEEDED);
     }
 }
 
 static void check_market(int type) {
-    if (!has_warning && type == BUILDING_GRANARY) {
+    if (!g_has_warning && type == BUILDING_GRANARY) {
         if (building_count_active(BUILDING_MARKET) <= 0)
             show(WARNING_BUILD_MARKET);
     }
 }
 
 static void check_barracks(int type) {
-    if (!has_warning) {
+    if (!g_has_warning) {
         if (building_is_fort(type) && building_count_active(BUILDING_RECRUITER) <= 0)
             show(WARNING_BUILD_BARRACKS);
     }
 }
 
 static void check_weapons_access(int type) {
-    if (!has_warning && type == BUILDING_RECRUITER) {
+    if (!g_has_warning && type == BUILDING_RECRUITER) {
         if (city_resource_count(RESOURCE_WEAPONS) <= 0)
             show(WARNING_WEAPONS_NEEDED);
     }
 }
 
 static void check_wall(int type, int x, int y, int size) {
-    if (!has_warning && type == BUILDING_TOWER) {
+    if (!g_has_warning && type == BUILDING_TOWER) {
         if (!map_terrain_is_adjacent_to_wall(x, y, size))
             show(WARNING_SENTRIES_NEED_WALL);
     }
 }
 
 static void check_actor_access(int type) {
-    if (!has_warning && type == BUILDING_BOOTH) {
+    if (!g_has_warning && type == BUILDING_BOOTH) {
         if (building_count_active(BUILDING_JUGGLER_SCHOOL) <= 0)
             show(WARNING_BUILD_ACTOR_COLONY);
     }
 }
 
 static void check_gladiator_access(int type) {
-    if (!has_warning && type == BUILDING_BANDSTAND) {
+    if (!g_has_warning && type == BUILDING_BANDSTAND) {
         if (building_count_active(BUILDING_CONSERVATORY) <= 0)
             show(WARNING_BUILD_GLADIATOR_SCHOOL);
     }
 }
 
 static void check_lion_access(int type) {
-    if (!has_warning && type == BUILDING_PAVILLION) {
+    if (!g_has_warning && type == BUILDING_PAVILLION) {
         if (building_count_active(BUILDING_DANCE_SCHOOL) <= 0)
             show(WARNING_BUILD_LION_HOUSE);
     }
 }
 
 static void check_charioteer_access(int type) {
-    if (!has_warning && type == BUILDING_SENET_HOUSE) {
+    if (!g_has_warning && type == BUILDING_SENET_HOUSE) {
         if (building_count_active(BUILDING_CHARIOT_MAKER) <= 0)
             show(WARNING_BUILD_CHARIOT_MAKER);
     }
@@ -250,7 +250,7 @@ void building_construction_warning_generic_checks(int type, int x, int y, int si
 }
 
 void building_construction_warning_check_food_stocks(int type) {
-    if (!has_warning && type == BUILDING_HOUSE_VACANT_LOT) {
+    if (!g_has_warning && type == BUILDING_HOUSE_VACANT_LOT) {
         if (city_population() >= 200 && !scenario_property_rome_supplies_wheat()) {
             if (city_resource_food_percentage_produced() <= 95)
                 show(WARNING_MORE_FOOD_NEEDED);
@@ -259,7 +259,7 @@ void building_construction_warning_check_food_stocks(int type) {
 }
 
 void building_construction_warning_check_reservoir(int type) {
-    if (!has_warning && type == BUILDING_WATER_LIFT) {
+    if (!g_has_warning && type == BUILDING_WATER_LIFT) {
         if (building_count_active(BUILDING_WATER_LIFT))
             show(WARNING_CONNECT_TO_RESERVOIR);
         else
