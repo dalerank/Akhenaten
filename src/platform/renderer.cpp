@@ -18,6 +18,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
 #define USE_YUV_TEXTURES

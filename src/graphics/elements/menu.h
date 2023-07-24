@@ -1,7 +1,7 @@
-#ifndef GRAPHICS_MENU_H
-#define GRAPHICS_MENU_H
+#pragma once
 
 #include "input/mouse.h"
+#include <cstddef>
 
 #define TOP_MENU_HEIGHT 30
 #define SIDEBAR_EXPANDED_WIDTH 186
@@ -25,5 +25,3 @@ struct menu_bar_item {
     int calculated_width_blocks;
     int calculated_height_blocks;
 };
-
-#endif // GRAPHICS_MENU_H

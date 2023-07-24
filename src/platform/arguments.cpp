@@ -53,7 +53,7 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
     int ok = 1;
 
     // Set sensible defaults
-    strnset(output_args.data_directory, 256, 0);
+    memset(output_args.data_directory, 256, 0);
     output_args.display_scale_percentage = 100;
     output_args.cursor_scale_percentage = 100;
     output_args.game_engine_env = 1; // run pharaoh by default

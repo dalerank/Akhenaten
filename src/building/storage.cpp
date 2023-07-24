@@ -7,6 +7,8 @@
 #include "window/city.h"
 #include "io/io_buffer.h"
 
+#include <string.h>
+
 static const int MAX_STORAGES[2] = {
         1000,
         200

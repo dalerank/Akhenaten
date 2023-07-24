@@ -38,6 +38,7 @@
 #include "dev/debug.h"
 
 #include "core/span.hpp"
+#include "core/core_utility.h"
 
 enum E_INFO {
     INFO_NONE = 0,
@@ -197,7 +198,7 @@ top_menu_data_t g_top_menu_data;
 #define MENU_BASE_TEXT_Y_OFFSET 6
 #define MENU_ITEM_HEIGHT 20
 
-void menu_bar_draw(std::span<menu_bar_item> &items) {
+void menu_bar_draw(const std::span<menu_bar_item> &items) {
     short x_offset = TOP_MENU_BASE_X_OFFSET;
     for (auto &item: items) {
         item.x_start = x_offset;
@@ -210,7 +211,7 @@ void menu_bar_draw(std::span<menu_bar_item> &items) {
     }
 }
 
-static int get_menu_bar_item(const mouse *m, std::span<menu_bar_item> &items) {
+static int get_menu_bar_item(const mouse *m, const std::span<menu_bar_item> &items) {
     for (int i = 0; i < items.size(); i++) {
         if (items[i].x_start <= m->x &&
             items[i].x_end > m->x &&
@@ -222,7 +223,7 @@ static int get_menu_bar_item(const mouse *m, std::span<menu_bar_item> &items) {
     return 0;
 }
 
-static int menu_bar_handle_mouse(const mouse *m, std::span<menu_bar_item> &items, int *focus_menu_id) {
+static int menu_bar_handle_mouse(const mouse *m, const std::span<menu_bar_item> &items, int *focus_menu_id) {
     int menu_id = get_menu_bar_item(m, items);
     if (focus_menu_id)
         *focus_menu_id = menu_id;
@@ -476,7 +477,7 @@ void widget_top_menu_draw(int force) {
 
     color_t treasure_color = COLOR_WHITE;
     int treasury = city_finance_treasury();
-    
+
     if (treasury < 0) {
         treasure_color = COLOR_FONT_RED;
     }

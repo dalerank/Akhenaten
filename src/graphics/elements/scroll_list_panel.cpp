@@ -43,8 +43,9 @@ int scroll_list_panel::get_total_entries() {
     return num_total_entries;
 }
 const char* scroll_list_panel::get_entry_text_by_idx(int index, int filename_syntax) {
-    if (index < 0 || index > num_total_entries - 1)
+    if (index < 0 || index > num_total_entries - 1) {
         return "";
+    }
 
     if (using_file_finder) {
         switch (filename_syntax) {
@@ -60,7 +61,7 @@ const char* scroll_list_panel::get_entry_text_by_idx(int index, int filename_syn
                 temp_filename_buffer[(int)(strchr(temp_filename_buffer, '.') - (char*)temp_filename_buffer)] = 0;
                 return temp_filename_buffer;
             default:
-                assert(false, "");
+                assert(false);
                 return "";
         }
     } else {

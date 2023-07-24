@@ -5,13 +5,13 @@
 #include "core/string.h"
 #include "platform/vita/vita.h"
 
-#include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 
 #ifdef _WIN32
 
+#include "dirent_win.h"
 #include <windows.h>
 
 #define fs_dir_type _WDIR
@@ -43,6 +43,7 @@ static wchar_t *utf8_to_wchar(const char *str) {
 }
 
 #else // not _WIN32
+#include <dirent.h>
 #define fs_dir_type DIR
 #define fs_dir_entry struct dirent
 #define fs_dir_open opendir

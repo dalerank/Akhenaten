@@ -1075,7 +1075,7 @@ ImGuiFontStudio is using also ImGuiFileDialog.
 #pragma region CONFIG FILE INCLUSION
 
 #ifndef CUSTOM_IMGUIFILEDIALOG_CONFIG
-#include "ImGuiFileDialogConfig.h"
+#include "imguifiledialogconfig.h"
 #else  // CUSTOM_IMGUIFILEDIALOG_CONFIG
 #include CUSTOM_IMGUIFILEDIALOG_CONFIG
 #endif  // CUSTOM_IMGUIFILEDIALOG_CONFIG

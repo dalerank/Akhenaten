@@ -18,6 +18,12 @@
 #include "window/city.h"
 #include "window/console.h"
 
+#include <string.h>
+
+#ifndef _WIN32
+#define stricmp strcasecmp
+#endif
+
 static void game_cheat_add_money(uint8_t *);
 static void game_cheat_start_invasion(uint8_t *);
 static void game_cheat_advance_year(uint8_t *);
