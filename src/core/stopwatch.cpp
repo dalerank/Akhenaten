@@ -1,7 +1,10 @@
 #include "stopwatch.h"
-#include <algorithm>
-#include <SDL.h>
+
+#include "io/log.h"
+
 #include <cinttypes>
+#include <algorithm>
+#include <cstring>
 #include <cmath>
 
 #define CLAMP(x, upper, lower) (std::min<int>(upper, std::max<int>(x, lower)))
@@ -76,7 +79,6 @@ void stopwatch::LOG() {
         for (int j = 0; j < std::min<int>(2.5 * log(ms + 1), 199); ++j)
             strcat(bar, "!");
         strcat(bar, "\0");
-        SDL_Log("%02i %20s : %4" PRIu64 " %s\n",
-                i, names.at(i).c_str(), ms, bar);
+        log_info("%02i %20s : %4" PRIu64 " %s\n", i, names.at(i).c_str(), ms, bar);
     }
 }

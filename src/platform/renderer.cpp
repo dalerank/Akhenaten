@@ -993,7 +993,7 @@ bool graphics_renderer_interface::save_texture_to_file(const char *filename, SDL
      */
     st = SDL_SetRenderTarget(data.renderer, ren_tex);
     if (st != 0) {
-        SDL_Log("Failed setting render target: %s\n", SDL_GetError());
+        log_info("Failed setting render target: %s\n", SDL_GetError());
         goto cleanup;
     }
 
@@ -1002,27 +1002,27 @@ bool graphics_renderer_interface::save_texture_to_file(const char *filename, SDL
 
     st = SDL_RenderCopy(data.renderer, tex, NULL, NULL);
     if (st != 0) {
-        SDL_Log("Failed copying texture data: %s\n", SDL_GetError());
+        log_info("Failed copying texture data: %s\n", SDL_GetError());
         goto cleanup;
     }
 
     /* Create buffer to hold texture data and load it */
     pixels = malloc(w * h * SDL_BYTESPERPIXEL(format));
     if (!pixels) {
-        SDL_Log("Failed allocating memory\n");
+        log_info("Failed allocating memory\n");
         goto cleanup;
     }
 
     st = SDL_RenderReadPixels(data.renderer, NULL, format, pixels, w * SDL_BYTESPERPIXEL(format));
     if (st != 0) {
-        SDL_Log("Failed reading pixel data: %s\n", SDL_GetError());
+        log_info("Failed reading pixel data: %s\n", SDL_GetError());
         goto cleanup;
     }
 
     /* Copy pixel data over to surface */
     surf = SDL_CreateRGBSurfaceWithFormatFrom(pixels, w, h, SDL_BITSPERPIXEL(format), w * SDL_BYTESPERPIXEL(format), format);
     if (!surf) {
-        SDL_Log("Failed creating new surface: %s\n", SDL_GetError());
+        log_info("Failed creating new surface: %s\n", SDL_GetError());
         goto cleanup;
     }
 
@@ -1042,10 +1042,10 @@ bool graphics_renderer_interface::save_texture_to_file(const char *filename, SDL
             break;
     }
     if (st != 0) {
-        SDL_Log("Failed saving image: %s\n", SDL_GetError());
+        log_info("Failed saving image: %s\n", SDL_GetError());
         goto cleanup; // technically redundant
     } else
-        SDL_Log("Saved texture to %s\n", filename);
+        log_info("Saved texture to %s\n", filename);
 
     cleanup:
     SDL_FreeSurface(surf);
@@ -1073,10 +1073,10 @@ int platform_renderer_init(SDL_Window *window) {
     auto driver_it = std::find_if(drivers.begin(), drivers.end(), [] (const auto &it) { return it == ozymandias_core.driver; });
     int driver_index = driver_it != drivers.end() ? std::distance(drivers.begin(), driver_it) : -1;
 
-    SDL_Log("Creating renderer");
+    log_info("Creating renderer");
     data.renderer = SDL_CreateRenderer(window, driver_index, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (!data.renderer) {
-        SDL_Log("Unable to create renderer, trying software renderer: %s", SDL_GetError());
+        log_info("Unable to create renderer, trying software renderer: %s", SDL_GetError());
         data.renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
         if (!data.renderer) {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create renderer: %s", SDL_GetError());
@@ -1085,7 +1085,7 @@ int platform_renderer_init(SDL_Window *window) {
     }
 
     SDL_GetRendererInfo(data.renderer, &info);
-    SDL_Log("Loaded renderer: %s", info.name);
+    log_info("Loaded renderer: %s", info.name);
 
 #ifdef USE_YUV_TEXTURES
     if (!data.supports_yuv_textures && HAS_YUV_TEXTURES) {
@@ -1164,7 +1164,7 @@ int platform_renderer_create_render_texture(int width, int height) {
         width, height);
 
     if (data.render_texture) {
-        SDL_Log("Render texture created (%d x %d)", width, height);
+        log_info("Render texture created (%d x %d)", width, height);
         SDL_SetRenderTarget(data.renderer, data.render_texture);
         SDL_SetRenderDrawBlendMode(data.renderer, SDL_BLENDMODE_BLEND);
 

@@ -1,11 +1,12 @@
 #include "manager.h"
-#include <string.h>
-#include <cinttypes>
 #include "core/string.h"
 #include "core/zip.h"
 #include "io/log.h"
 #include "core/stopwatch.h"
 #include "io/gamestate/boilerplate.h"
+
+#include <string.h>
+#include <cinttypes>
 
 #define COMPRESS_BUFFER_SIZE 3000000
 #define UNCOMPRESSED 0x80000000
@@ -93,7 +94,7 @@ static void log_hex(file_chunk_t *chunk, int i, int offs, int num_chunks) {
     }
 
     // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
-    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", chunk->compressed ? "(C)" : "---", i + 1, num_chunks,
+    log_info("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", chunk->compressed ? "(C)" : "---", i + 1, num_chunks,
             offs, hexstr, chunk->buf->size(), fname);
 }
 
@@ -115,12 +116,12 @@ static bool read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
         // read into buffer chunk of specified size - the actual "file piece" size is used for the output!
         int csize = fread(compress_buffer, 1, chunk_size, fp);
         if (csize != chunk_size) {
-            SDL_Log("Incorrect chunk size, expected %i, found %i", chunk_size, csize);
+            log_info("Incorrect chunk size, expected %i, found %i", chunk_size, csize);
             return false;
         }
         int bsize = zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size);
         if (bsize != buf->size()) {
-            SDL_Log("Incorrect buffer size, expected %u, found %i", buf->size(), bsize);
+            log_info("Incorrect buffer size, expected %u, found %i", buf->size(), bsize);
             return false;
         }
 //        if (fread(compress_buffer, 1, chunk_size, fp) != chunk_size
@@ -216,7 +217,7 @@ bool FileIOManager::serialize(const char *filename, int offset, e_file_format fo
     // close file handle
     file_close(fp);
 
-    SDL_Log("File write successful: %s %i@ --- VERSION: %i --- %" PRIu64 " milliseconds",
+    log_info("File write successful: %s %i@ --- VERSION: %i --- %" PRIu64 " milliseconds",
             file_path,
             file_offset,
             file_version,
@@ -285,7 +286,7 @@ bool FileIOManager::unserialize(const char *filename, int offset, e_file_format 
             int exp = chunk->buf->size();
             result = (got == exp);
             if (!result) {
-                SDL_Log("Incorrect buffer size, expected %i, found %i", exp, got);
+                log_info("Incorrect buffer size, expected %i, found %i", exp, got);
                 log_error("Unable to read file, chunk size incorrect.");
                 clear();
                 return false;
@@ -309,7 +310,7 @@ bool FileIOManager::unserialize(const char *filename, int offset, e_file_format 
             file_chunks.at(i).iob->read();
     }
 
-    SDL_Log("File read successful: %s %i@ --- VERSION HEADER: %i --- %" PRIu64 " milliseconds",
+    log_info("File read successful: %s %i@ --- VERSION HEADER: %i --- %" PRIu64 " milliseconds",
             file_path,
             file_offset,
             file_version,

@@ -17,6 +17,7 @@ uint8_t *string_copy(const uint8_t *src, uint8_t *dst, int maxlength) {
     *dst = 0;
     return dst;
 }
+
 int string_length(const uint8_t *str) {
     int length = 0;
     while (*str) {
@@ -25,6 +26,7 @@ int string_length(const uint8_t *str) {
     }
     return length;
 }
+
 const uint8_t *string_from_ascii(const char *str, bool extended) {
     const char *s = str;
     while (*s) {

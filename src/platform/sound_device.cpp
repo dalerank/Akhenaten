@@ -133,18 +133,18 @@ void sound_device_open(void) {
         }
         if (0 == SDL_AudioInit(driver_name) &&
             0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
-            SDL_Log("Using audio driver: %s", driver_name);
+            log_info("Using audio driver: %s", driver_name);
             init_channels();
             return;
         } else {
-            SDL_Log("Not using audio driver %s, reason: %s", driver_name, SDL_GetError());
+            log_info("Not using audio driver %s, reason: %s", driver_name, SDL_GetError());
         }
     }
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Sound failed to initialize: %s", Mix_GetError());
     int max = SDL_GetNumAudioDevices(0);
-    SDL_Log("Number of audio devices: %d", max);
+    log_info("Number of audio devices: %d", max);
     for (int i = 0; i < max; i++) {
-        SDL_Log("Audio device: %s", SDL_GetAudioDeviceName(i, 0));
+        log_info("Audio device: %s", SDL_GetAudioDeviceName(i, 0));
     }
 }
 
@@ -203,7 +203,7 @@ void sound_device_load_formats(void) {
         }
         buf[buf_pos] = 0;
 
-        SDL_Log("music formats initialized: %s (%i)", buf, initialized_flags);
+        log_info("music formats initialized: %s (%i)", buf, initialized_flags);
     }
 }
 

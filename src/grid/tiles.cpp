@@ -7,6 +7,7 @@
 #include "graphics/image.h"
 #include "core/game_environment.h"
 #include "grid/aqueduct.h"
+#include "grid/grid.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include <scenario/map.h>
@@ -38,7 +39,6 @@
 static int aqueduct_include_construction = 0;
 
 //#include <chrono>
-#include "SDL_log.h"
 #include "floodplain.h"
 #include "moisture.h"
 #include "vegetation.h"

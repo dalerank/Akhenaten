@@ -1,6 +1,6 @@
 #include "game_environment.h"
 
-#include "SDL.h"
+#include "io/log.h"
 
 #include <assert.h>
 
@@ -18,7 +18,7 @@ void init_game_environment(int env, int mode) {
             pref_filename = "data_dir_pharaoh.txt";
             break;
     }
-    SDL_Log("Engine set to %s", game_name);
+    log_info("Engine set to %s", game_name);
     DEBUG_MODE = mode;
 }
 void assert_env_init(void) {

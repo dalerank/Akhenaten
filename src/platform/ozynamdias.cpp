@@ -3,6 +3,7 @@
 #include "core/backtrace.h"
 #include "core/encoding.h"
 #include "io/file.h"
+#include "io/log.h"
 #include "io/gamefiles/lang.h"
 #include "core/time.h"
 #include "core/game_environment.h"
@@ -166,11 +167,13 @@ static int init_sdl(void) {
     return 1;
 }
 int pre_init_dir_attempt(const char *data_dir, const char *lmsg) {
-    SDL_Log(lmsg, data_dir);
+    log_info(lmsg, data_dir);
     if (!platform_file_manager_set_base_path(data_dir))
-        SDL_Log("%s: directory not found", data_dir);
+        log_info("%s: directory not found", data_dir);
+
     if (game_pre_init())
         return 1;
+
     return 0;
 }
 
@@ -181,12 +184,12 @@ static int pre_init(const char *custom_data_dir) {
             return 1;
         }
 
-        SDL_Log("%s: directory not found", custom_data_dir);
+        log_info("%s: directory not found", custom_data_dir);
         return 0;
     }
 
     // ...then from working directory...
-    SDL_Log("Attempting to load game from working directory");
+    log_info("Attempting to load game from working directory");
     if (game_pre_init()) {
         return 1;
     }
@@ -253,7 +256,7 @@ static bool show_options_window() {
 
     SDL_Renderer* renderer = SDL_CreateRenderer(platform_window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (renderer == NULL) {
-        SDL_Log("Error creating SDL_Renderer!");
+        log_info("Error creating SDL_Renderer!");
         exit(-1);
     }
 
@@ -387,7 +390,7 @@ static void setup(const ozymandias_args &args) {
     // pre-init engine: assert game directory, pref files, etc.
     init_game_environment(args.game_engine_env, args.game_engine_debug_mode);
     if (!pre_init(args.data_directory)) {
-        SDL_Log("game pre-init failed");
+        log_info("game pre-init failed");
 
         bool ok = show_options_window();
 
@@ -406,7 +409,7 @@ static void setup(const ozymandias_args &args) {
     char title[100] = {0};
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
     if (!platform_screen_create(title, args.display_scale_percentage)) {
-        SDL_Log("Exiting: SDL create window failed");
+        log_info("Exiting: SDL create window failed");
         exit(-2);
     }
     platform_init_cursors(args.cursor_scale_percentage); // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
@@ -414,12 +417,12 @@ static void setup(const ozymandias_args &args) {
     // init game!
     time_set_millis(SDL_GetTicks());
     if (!game_init()) {
-        SDL_Log("Exiting: game init failed");
+        log_info("Exiting: game init failed");
         exit(2);
     }
 }
 static void teardown(void) {
-    SDL_Log("Exiting game");
+    log_info("Exiting game");
     game_exit();
     platform_screen_destroy();
     SDL_Quit();
@@ -492,23 +495,23 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active) {
             mouse_set_inside_window(0);
             break;
         case SDL_WINDOWEVENT_SIZE_CHANGED:
-            SDL_Log("Window resized to %d x %d", (int) event->data1, (int) event->data2);
+            log_info("Window resized to %d x %d", (int) event->data1, (int) event->data2);
             platform_screen_resize(event->data1, event->data2, 1);
             break;
         case SDL_WINDOWEVENT_RESIZED:
-            SDL_Log("System resize to %d x %d", (int) event->data1, (int) event->data2);
+            log_info("System resize to %d x %d", (int) event->data1, (int) event->data2);
             break;
         case SDL_WINDOWEVENT_MOVED:
-            SDL_Log("Window move to coordinates x: %d y: %d\n", (int) event->data1, (int) event->data2);
+            log_info("Window move to coordinates x: %d y: %d\n", (int) event->data1, (int) event->data2);
             platform_screen_move(event->data1, event->data2);
             break;
 
         case SDL_WINDOWEVENT_SHOWN:
-            SDL_Log("Window %d shown", (unsigned int) event->windowID);
+            log_info("Window %d shown", (unsigned int) event->windowID);
             *window_active = 1;
             break;
         case SDL_WINDOWEVENT_HIDDEN:
-            SDL_Log("Window %d hidden", (unsigned int) event->windowID);
+            log_info("Window %d hidden", (unsigned int) event->windowID);
             *window_active = 0;
             break;
     }

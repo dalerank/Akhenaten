@@ -1,6 +1,8 @@
 #include "arguments.h"
 
-#include "SDL.h"
+#include <SDL.h>
+
+#include "io/log.h"
 #include "core/version.h"
 #include "platform/platform.h"
 
@@ -86,13 +88,13 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
                 i++;
                 if (percentage < 50 || percentage > 500) {
-                    SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
+                    log_info(DISPLAY_SCALE_ERROR_MESSAGE);
                     ok = 0;
                 } else {
                     output_args.display_scale_percentage = percentage;
                 }
             } else {
-                SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
+                log_info(DISPLAY_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
         } else if (SDL_strcmp(argv[i], "--size") == 0) {
@@ -100,7 +102,7 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
                 SDL_sscanf(argv[i + 1], "%dx%d", &output_args.window_width, &output_args.window_height);
                 i++;
             } else {
-                SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
+                log_info(DISPLAY_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
         } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
@@ -110,17 +112,17 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
                 if (percentage == 100 || percentage == 150 || percentage == 200)
                     output_args.cursor_scale_percentage = percentage;
                 else {
-                    SDL_Log(CURSOR_SCALE_ERROR_MESSAGE);
+                    log_info(CURSOR_SCALE_ERROR_MESSAGE);
                     ok = 0;
                 }
             } else {
-                SDL_Log(CURSOR_SCALE_ERROR_MESSAGE);
+                log_info(CURSOR_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
         } else if (SDL_strcmp(argv[i], "--help") == 0)
             ok = 0;
         else if (SDL_strncmp(argv[i], "--", 2) == 0) {
-            SDL_Log(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]);
+            log_info(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]);
             ok = 0;
         } else {
             strcpy(output_args.data_directory, argv[i]);
@@ -128,17 +130,17 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
     }
 
     if (!ok) {
-        SDL_Log("Usage: ozymandias [ARGS] [DATA_DIR]");
-        SDL_Log("ARGS may be:");
-        SDL_Log("--display-scale NUMBER");
-        SDL_Log("          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5");
-        SDL_Log("--cursor-scale NUMBER");
-        SDL_Log("          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2");
-        SDL_Log("--window");
-        SDL_Log("          setup window mode on");
-        SDL_Log("--debug");
-        SDL_Log("          Prints additional debug information on the screen");
-        SDL_Log("The last argument, if present, is interpreted as data directory for the Pharaoh installation");
+        log_info("Usage: ozymandias [ARGS] [DATA_DIR]");
+        log_info("ARGS may be:");
+        log_info("--display-scale NUMBER");
+        log_info("          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5");
+        log_info("--cursor-scale NUMBER");
+        log_info("          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2");
+        log_info("--window");
+        log_info("          setup window mode on");
+        log_info("--debug");
+        log_info("          Prints additional debug information on the screen");
+        log_info("The last argument, if present, is interpreted as data directory for the Pharaoh installation");
     }
     return ok;
 }

@@ -2,9 +2,9 @@
 
 #include "widget/sidebar/city.h"
 #include "figure/formation_herd.h"
-#include "SDL_log.h"
 #include "grid/floodplain.h"
 #include "graphics/view/lookup.h"
+#include "io/log.h"
 
 #include "clear.h"
 #include "routed.h"
@@ -1776,7 +1776,7 @@ bool BuildPlanner::place() {
         return false;
 
     // for debugging...
-    SDL_Log("Attempting to place at: %03i %03i %06i", x, y, MAP_OFFSET(x, y));
+    log_info("Attempting to place at: %03i %03i %06i", x, y, MAP_OFFSET(x, y));
 
     // Check warnings for placement and create building/update tiles accordingly.
     // Some of the buildings below have specific warning messages (e.g. roadblocks)

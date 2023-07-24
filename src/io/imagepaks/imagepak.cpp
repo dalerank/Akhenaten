@@ -8,7 +8,6 @@
 #include "atlas_packer.h"
 #include "graphics/font.h"
 #include "io/log.h"
-#include "SDL_log.h"
 #include "core/struct_types.h"
 #include "platform/renderer.h"
 
@@ -581,7 +580,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
 
     image_packer_free(&packer);
 
-    SDL_Log("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u), %" PRIu64 " milliseconds.",
+    log_info("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u), %" PRIu64 " milliseconds.",
             filename_sgx,
             entries_num,
             groups_num,

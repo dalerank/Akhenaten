@@ -3,6 +3,7 @@
 //#include "city/view.h"
 #include "core/calc.h"
 #include "io/config/config.h"
+#include "io/log.h"
 #include "graphics/image.h"
 #include "game/settings.h"
 #include "game/system.h"
@@ -132,7 +133,7 @@ int platform_screen_create(const char *title, int display_scale_percentage) {
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 #endif
 
-    SDL_Log("Creating screen %d x %d, %s, driver: %s", width, height, fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
+    log_info("Creating screen %d x %d, %s, driver: %s", width, height, fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
@@ -229,9 +230,9 @@ void platform_screen_set_fullscreen(void) {
     int display = SDL_GetWindowDisplayIndex(SDL.window);
     SDL_DisplayMode mode;
     SDL_GetDesktopDisplayMode(display, &mode);
-    SDL_Log("User to fullscreen %d x %d on display %d", mode.w, mode.h, display);
+    log_info("User to fullscreen %d x %d on display %d", mode.w, mode.h, display);
     if (0 != SDL_SetWindowFullscreen(SDL.window, SDL_WINDOW_FULLSCREEN_DESKTOP)) {
-        SDL_Log("Unable to enter fullscreen: %s", SDL_GetError());
+        log_info("Unable to enter fullscreen: %s", SDL_GetError());
         return;
     }
     SDL_SetWindowDisplayMode(SDL.window, &mode);
@@ -254,7 +255,7 @@ void platform_screen_set_windowed(void) {
     int pixel_width = scale_logical_to_pixels(logical_width);
     int pixel_height = scale_logical_to_pixels(logical_height);
     int display = SDL_GetWindowDisplayIndex(SDL.window);
-    SDL_Log("User to windowed %d x %d on display %d", pixel_width, pixel_height, display);
+    log_info("User to windowed %d x %d on display %d", pixel_width, pixel_height, display);
     SDL_SetWindowFullscreen(SDL.window, 0);
     SDL_SetWindowSize(SDL.window, pixel_width, pixel_height);
     if (window_pos.centered) {
@@ -286,7 +287,7 @@ void platform_screen_set_window_size(int logical_width, int logical_height) {
     if (window_pos.centered) {
         platform_screen_center_window();
     }
-    SDL_Log("User resize to %d x %d on display %d", pixel_width, pixel_height, display);
+    log_info("User resize to %d x %d on display %d", pixel_width, pixel_height, display);
     if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE) {
         SDL_SetWindowGrab(SDL.window, SDL_FALSE);
     }
