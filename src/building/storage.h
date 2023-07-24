@@ -1,5 +1,4 @@
-#ifndef BUILDING_STORAGE_H
-#define BUILDING_STORAGE_H
+#pragma once
 
 #include "building/building.h"
 #include "core/buffer.h"
@@ -10,26 +9,26 @@
  * Building storage functions
  */
 
-enum {
+enum e_building_storage{
     BUILDING_STORAGE_DATA
 };
 
 /**
  * Storage state
  */
-enum {
+enum e_storage_state {
     STORAGE_STATE_PHARAOH_ACCEPT = 0,
     STORAGE_STATE_PHARAOH_REFUSE = 1,
     STORAGE_STATE_PHARAOH_GET = 2,
     STORAGE_STATE_PHARAOH_EMPTY = 3,
 };
 
-enum {
+enum e_bazaar_order {
     BAZAAR_ORDER_STATE_DONT_BUY = 0,
     BAZAAR_ORDER_STATE_BUY = 1,
 };
 
-enum {
+enum e_old_storage_state {
     OLD_STORAGE_STATE_ACCEPTING = 0,
     OLD_STORAGE_STATE_NOT_ACCEPTING = 1,
     OLD_STORAGE_STATE_GETTING = 2,
@@ -41,12 +40,11 @@ enum {
     OLD_STORAGE_STATE_ACCEPTING_3QUARTERS = 8,
 };
 
-enum {
+enum e_building_storage_permission {
     BUILDING_STORAGE_PERMISSION_MARKET = 0,
     BUILDING_STORAGE_PERMISSION_TRADERS = 1,
     BUILDING_STORAGE_PERMISSION_DOCK = 2,
 };
-
 
 /**
  * Building storage struct
@@ -122,5 +120,3 @@ void building_storage_reset_building_ids(void);
 
 void building_storage_set_permission(int p, building *b);
 int building_storage_get_permission(int p, building *b);
-
-#endif // BUILDING_STORAGE_H

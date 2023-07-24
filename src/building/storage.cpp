@@ -20,16 +20,18 @@ struct data_storage {
     building_storage storage;
 };
 
-static struct {
+struct data_storages_t {
     struct data_storage storages[1000];
-} data;
+};
+
+data_storages_t g_dat_storages;
 
 void building_storage_clear_all(void) {
-    memset(data.storages, 0, 1000 * sizeof(struct data_storage));
+    memset(g_dat_storages.storages, 0, 1000 * sizeof(struct data_storage));
 }
 void building_storage_reset_building_ids(void) {
     for (int i = 1; i < MAX_STORAGES[GAME_ENV]; i++) {
-        data.storages[i].building_id = 0;
+        g_dat_storages.storages[i].building_id = 0;
     }
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -39,16 +41,18 @@ void building_storage_reset_building_ids(void) {
 
         if (b->type == BUILDING_GRANARY || b->type == BUILDING_WAREHOUSE) {
             if (b->storage_id) {
-                if (data.storages[b->storage_id].building_id) {
+                if (g_dat_storages.storages[b->storage_id].building_id) {
                     // storage is already connected to a building: corrupt, create new
                     b->storage_id = building_storage_create(b->type);
-                } else
-                    data.storages[b->storage_id].building_id = i;
+                } else {
+                    g_dat_storages.storages[b->storage_id].building_id = i;
+                }
             }
         }
     }
 }
 int building_storage_create(int building_type) {
+    auto &data = g_dat_storages;
     for (int i = 1; i < MAX_STORAGES[GAME_ENV]; i++) {
         if (!data.storages[i].in_use) {
             memset(&data.storages[i], 0, sizeof(struct data_storage));
@@ -87,6 +91,7 @@ int building_storage_create(int building_type) {
     return 0;
 }
 int building_storage_restore(int storage_id) {
+    auto &data = g_dat_storages;
     if (data.storages[storage_id].in_use) {
         return 0;
     }
@@ -94,6 +99,7 @@ int building_storage_restore(int storage_id) {
     return storage_id;
 }
 void building_storage_delete(int storage_id) {
+    auto &data = g_dat_storages;
     data.storages[storage_id].in_use = 0;
 }
 
@@ -101,6 +107,7 @@ building_storage backup_settings;
 static int backup_storage_id = -1;
 static bool has_unsaved_changes = false;
 void backup_storage_settings(int storage_id) {
+    auto &data = g_dat_storages;
     if (backup_storage_id != -1)
         return;
     has_unsaved_changes = false;
@@ -108,6 +115,7 @@ void backup_storage_settings(int storage_id) {
     backup_settings = data.storages[storage_id].storage;
 }
 void restore_storage_settings(bool do_forget_changes) {
+    auto &data = g_dat_storages;
     if (do_forget_changes) {
         if (backup_storage_id == -1)
             return;
@@ -130,14 +138,17 @@ void storage_settings_backup_reset() {
 }
 
 const building_storage *building_storage_get(int storage_id) {
+    auto &data = g_dat_storages;
     return &data.storages[storage_id].storage;
 }
 
 void building_storage_toggle_empty_all(int storage_id) {
+    auto &data = g_dat_storages;
     has_unsaved_changes = true;
     data.storages[storage_id].storage.empty_all = 1 - data.storages[storage_id].storage.empty_all;
 }
 void building_storage_cycle_resource_state(int storage_id, int resource_id, bool backwards) {
+    auto &data = g_dat_storages;
     has_unsaved_changes = true;
     int state = data.storages[storage_id].storage.resource_state[resource_id];
     if (!backwards) {
@@ -164,7 +175,8 @@ void building_storage_cycle_resource_state(int storage_id, int resource_id, bool
 }
 
 void building_storage_set_permission(int p, building *b) {
-    return; // temp - todo: fix buttons
+    auto &data = g_dat_storages;
+
     has_unsaved_changes = true;
     const building_storage *s = building_storage_get(b->storage_id);
     int permission_bit = 1 << p;
@@ -179,6 +191,7 @@ int building_storage_get_permission(int p, building *b) {
 }
 
 void building_storage_increase_decrease_resource_state(int storage_id, int resource_id, bool increase) {
+    auto &data = g_dat_storages;
     int state = data.storages[storage_id].storage.resource_state[resource_id];
     if (state == STORAGE_STATE_PHARAOH_ACCEPT) {
         int max_accept = data.storages[storage_id].storage.resource_max_accept[resource_id];
@@ -226,6 +239,7 @@ void building_storage_increase_decrease_resource_state(int storage_id, int resou
     }
 }
 void building_storage_accept_none(int storage_id) {
+    auto &data = g_dat_storages;
     has_unsaved_changes = true;
     for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++)
         data.storages[storage_id].storage.resource_state[r] = STORAGE_STATE_PHARAOH_REFUSE;
@@ -235,6 +249,7 @@ void building_storage_load_state(buffer *buf) {
    
 }
 io_buffer *iob_building_storages = new io_buffer([](io_buffer *iob) {
+    auto &data = g_dat_storages;
     for (int i = 0; i < MAX_STORAGES[GAME_ENV]; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.storages[i].storage.permissions); // Originally unused
         iob->bind(BIND_SIGNATURE_INT32, &data.storages[i].building_id);

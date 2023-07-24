@@ -1,16 +1,15 @@
-#ifndef BUILDING_WAREHOUSE_H
-#define BUILDING_WAREHOUSE_H
+#pragma once
 
 #include "building/building.h"
 #include "grid/point.h"
 
-enum {
+enum e_warehouse_state {
     WAREHOUSE_ROOM = 0,
     WAREHOUSE_FULL = 1,
     WAREHOUSE_SOME_ROOM = 2
 };
 
-enum {
+enum e_warehouse_task {
     WAREHOUSE_TASK_NONE = -1,
     WAREHOUSE_TASK_GETTING = 0,
     WAREHOUSE_TASK_DELIVERING = 1,
@@ -53,5 +52,3 @@ int building_warehouse_for_storing(building *src, int x, int y, int resource,
 int building_warehouse_for_getting(building *src, int resource, map_point *dst);
 
 int building_warehouse_determine_worker_task(building *warehouse, int *resource, int *amount);
-
-#endif // BUILDING_WAREHOUSE_H
