@@ -28,7 +28,9 @@ jobs:
         mv windows_build.zip all_platforms_build.zip
         zip -u -q "all_platforms_build.zip" "ozymandias.linux"
         current_date=$(date +"%Y_%m_%d")
-        mv all_platforms_build.zip "all_platforms_build_${current_date}.zip"
+        final_filename=all_platforms_build_${current_date}.zip
+        echo "GITHUB_FINAL_FILENAME=${final_filename}" >> $GITHUB_ENV
+        mv all_platforms_build.zip ${final_filename}
     - uses: actions/upload-artifact@v3
       with:
         name: linux_build
@@ -36,7 +38,7 @@ jobs:
     - uses: KikimoraGames/itch-publish@v0.0.3
       with:
         butlerApiKey: ${{ secrets.ITCHIO }}
-        gameData: $final_filename
+        gameData: ${{ env.GITHUB_FINAL_FILENAME }}
         itchUsername: dalerank
         itchGameId: ozymandias
         buildChannel: linux-windows
