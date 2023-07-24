@@ -1,7 +1,6 @@
-#ifndef BUILDING_HOUSE_H
-#define BUILDING_HOUSE_H
+#pragma once
 
-#include "building/building.h"
+class building;
 
 void building_house_change_to(building *house, int type);
 void building_house_change_to_vacant_lot(building *house);
@@ -19,5 +18,3 @@ void building_house_devolve_from_large_villa(building *house);
 void building_house_devolve_from_large_palace(building *house);
 
 void building_house_check_for_corruption(building *house);
-
-#endif // BUILDING_HOUSE_H

@@ -13,32 +13,34 @@ struct record {
     int total;
 };
 
-static struct {
+struct count_data_t {
     struct record buildings[int_MAX];
     struct record industry[RESOURCES_MAX];
-} data;
+};
+
+count_data_t g_count_data;
 
 static void clear_counters(void) {
-    memset(&data, 0, sizeof(data));
+    memset(&g_count_data, 0, sizeof(count_data_t));
 }
 static void increase_count(int type, bool active) {
-    ++data.buildings[type].total;
+    ++g_count_data.buildings[type].total;
     if (active)
-        ++data.buildings[type].active;
+        ++g_count_data.buildings[type].active;
 
 }
 static void increase_industry_count(int resource, bool active) {
-    ++data.industry[resource].total;
+    ++g_count_data.industry[resource].total;
     if (active)
-        ++data.industry[resource].active;
+        ++g_count_data.industry[resource].active;
 
 }
 
 static void limit_hippodrome(void) {
-    if (data.buildings[BUILDING_SENET_HOUSE].total > 1)
-        data.buildings[BUILDING_SENET_HOUSE].total = 1;
-    if (data.buildings[BUILDING_SENET_HOUSE].active > 1)
-        data.buildings[BUILDING_SENET_HOUSE].active = 1;
+    if (g_count_data.buildings[BUILDING_SENET_HOUSE].total > 1)
+        g_count_data.buildings[BUILDING_SENET_HOUSE].total = 1;
+    if (g_count_data.buildings[BUILDING_SENET_HOUSE].active > 1)
+        g_count_data.buildings[BUILDING_SENET_HOUSE].active = 1;
 }
 
 void building_entertainment_update() {
@@ -271,23 +273,23 @@ void building_count_update(void) {
         limit_hippodrome();
 }
 int building_count_active(int type) {
-    return data.buildings[type].active;
+    return g_count_data.buildings[type].active;
 }
 int building_count_total(int type) {
-    return data.buildings[type].total;
+    return g_count_data.buildings[type].total;
 }
 int building_count_industry_active(int resource) {
-    return data.industry[resource].active;
+    return g_count_data.industry[resource].active;
 }
 int building_count_industry_total(int resource) {
-    return data.industry[resource].total;
+    return g_count_data.industry[resource].total;
 }
 
 io_buffer *iob_building_count_industry = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < RESOURCES_MAX; i++)
-        iob->bind(BIND_SIGNATURE_INT32, &data.industry[i].total);
+        iob->bind(BIND_SIGNATURE_INT32, &g_count_data.industry[i].total);
     for (int i = 0; i < RESOURCES_MAX; i++)
-        iob->bind(BIND_SIGNATURE_INT32, &data.industry[i].active);
+        iob->bind(BIND_SIGNATURE_INT32, &g_count_data.industry[i].active);
 
     //    // culture 1
 //    data.buildings[BUILDING_BOOTH].total = culture1->read_i32();

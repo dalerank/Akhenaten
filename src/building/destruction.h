@@ -1,5 +1,4 @@
-#ifndef BUILDING_DESTRUCTION_H
-#define BUILDING_DESTRUCTION_H
+#pragma once
 
 #include "building/building.h"
 
@@ -20,5 +19,3 @@ void building_destroy_last_placed(void);
 void building_destroy_increase_enemy_damage(int grid_offset, int max_damage);
 
 void building_destroy_by_enemy(map_point point);
-
-#endif // BUILDING_DESTRUCTION_H
