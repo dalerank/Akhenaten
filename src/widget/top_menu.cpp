@@ -482,7 +482,7 @@ void widget_top_menu_draw(int force) {
         treasure_color = COLOR_FONT_RED;
     }
 
-    font_t treasure_font = treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+    font_t treasure_font = (treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
     int s_width = screen_width();
 
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {

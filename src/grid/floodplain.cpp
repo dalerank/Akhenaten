@@ -132,6 +132,7 @@ int map_get_fertility(int grid_offset, int tally_type) { // actual percentage in
             return map_grid_get(&terrain_floodplain_max_fertile, grid_offset);
             break;
     }
+    return 0;
 }
 
 static uint8_t map_get_fertility_average(int grid_offset, int x, int y, int size) {

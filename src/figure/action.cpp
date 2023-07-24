@@ -195,8 +195,10 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
 bool figure::do_gotobuilding(building *dest, bool stop_at_road, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
     int x, y;
     set_destination(dest);
-    if (dest->state != BUILDING_STATE_VALID)
+    if (dest->state != BUILDING_STATE_VALID) {
         advance_action(FAIL_ACTION);
+    }
+
     if (stop_at_road) {
         bool found_road = false;
         bool already_there = false;
@@ -250,8 +252,11 @@ bool figure::do_gotobuilding(building *dest, bool stop_at_road, int terrainchoic
             else
                 advance_action(NEXT_ACTION); // don't poof if it's not *requiring* roads, was just looking for one
         }
-    } else
+    } else {
         return do_goto(dest->tile.x(), dest->tile.y(), terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
+    }
+
+    return 0;
 }
 bool figure::do_returnhome(int terrainchoice, short NEXT_ACTION) {
     return do_gotobuilding(home(), true, terrainchoice, NEXT_ACTION);

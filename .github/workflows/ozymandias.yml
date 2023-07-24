@@ -40,3 +40,8 @@ jobs:
 #        project: ozymandias
 #        channel: windows
 #        api-key: ${{ secrets.ITCHIO }}
+  linux:
+    name: run on linux
+    runs-on: ubuntu-20.04
+    - uses: actions/checkout@v3
+    - name: ./update-workspace-linux

@@ -1,6 +1,6 @@
 #pragma once
 
-#if __cplusplus < 201703L
+#if !defined(_MSC_VER) && __cplusplus < 201703L
 namespace std {
 
 template<class _Ty, size_t _Size>

@@ -90,6 +90,7 @@ int get_monument_part_image(int part, int orientation, int level) {
                 level = 5;
             return image_id_from_group(GROUP_MONUMENT_EXTRA_BLOCKS) + orientation + level * 8 + 4;
     }
+    return 0;
 }
 
 int get_temple_complex_part_image(int type, int part, int orientation, int level) {

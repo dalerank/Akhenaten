@@ -581,7 +581,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
 
     image_packer_free(&packer);
 
-    SDL_Log("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%i), %" PRIu64 " milliseconds.",
+    SDL_Log("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u), %" PRIu64 " milliseconds.",
             filename_sgx,
             entries_num,
             groups_num,

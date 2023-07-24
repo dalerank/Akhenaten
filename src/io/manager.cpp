@@ -120,7 +120,7 @@ static bool read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
         }
         int bsize = zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size);
         if (bsize != buf->size()) {
-            SDL_Log("Incorrect buffer size, expected %i, found %i", buf->size(), bsize);
+            SDL_Log("Incorrect buffer size, expected %u, found %i", buf->size(), bsize);
             return false;
         }
 //        if (fread(compress_buffer, 1, chunk_size, fp) != chunk_size
