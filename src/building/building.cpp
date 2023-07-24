@@ -25,7 +25,7 @@
 #include <string.h>
 #include <grid/building.h>
 
-static building all_buildings[5000];
+building g_all_buildings[5000];
 
 static struct {
     int highest_id_in_use;
@@ -45,7 +45,7 @@ int building_find(int type) {
     return MAX_BUILDINGS;
 }
 building *building_get(int id) {
-    return &all_buildings[id];
+    return &g_all_buildings[id];
 }
 
 static void building_new_fill_in_data_for_type(building *b, int type, int x, int y, int orientation) {
@@ -233,14 +233,14 @@ static void building_new_fill_in_data_for_type(building *b, int type, int x, int
 building *building_create(int type, int x, int y, int orientation) {
     building *b = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        if (all_buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
-            b = &all_buildings[i];
+        if (g_all_buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
+            b = &g_all_buildings[i];
             break;
         }
     }
     if (!b) {
         city_warning_show(WARNING_DATA_LIMIT_REACHED);
-        return &all_buildings[0];
+        return &g_all_buildings[0];
     }
     memset(&(b->data), 0, sizeof(b->data));
     building_new_fill_in_data_for_type(b, type, x, y, orientation);
@@ -298,9 +298,9 @@ building *building::main() {
     for (int guard = 0; guard < 99; guard++) {
         if (b->prev_part_building_id <= 0)
             return b;
-        b = &all_buildings[b->prev_part_building_id];
+        b = &g_all_buildings[b->prev_part_building_id];
     }
-    return &all_buildings[0];
+    return &g_all_buildings[0];
 }
 building *building::top_xy() {
     building *b = main();
@@ -364,8 +364,8 @@ void building::clear_related_data() {
 }
 void building_clear_all(void) {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
-        memset(&all_buildings[i], 0, sizeof(building));
-        all_buildings[i].id = i;
+        memset(&g_all_buildings[i], 0, sizeof(building));
+        g_all_buildings[i].id = i;
     }
     extra.highest_id_in_use = 0;
     extra.highest_id_ever = 0;
@@ -658,7 +658,7 @@ int building_get_highest_id(void) {
 void building_update_highest_id(void) {
     extra.highest_id_in_use = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        if (all_buildings[i].state != BUILDING_STATE_UNUSED)
+        if (g_all_buildings[i].state != BUILDING_STATE_UNUSED)
             extra.highest_id_in_use = i;
     }
     if (extra.highest_id_in_use > extra.highest_id_ever)
@@ -670,7 +670,7 @@ void building_update_state(void) {
     bool road_recalc = false;
     bool aqueduct_recalc = false;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = &all_buildings[i];
+        building *b = &g_all_buildings[i];
         if (b->state == BUILDING_STATE_CREATED)
             b->state = BUILDING_STATE_VALID;
 
@@ -707,7 +707,7 @@ void building_update_state(void) {
 }
 void building_update_desirability(void) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = &all_buildings[i];
+        building *b = &g_all_buildings[i];
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
@@ -922,7 +922,7 @@ static void read_type_data(io_buffer *iob, building *b) {
 io_buffer *iob_buildings = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
 //        building_state_load_from_buffer(buf, &all_buildings[i]);
-        auto b = &all_buildings[i];
+        auto b = &g_all_buildings[i];
         int sind = iob->get_offset();
         if (sind ==  640)
             int a = 2134;
@@ -1013,9 +1013,7 @@ io_buffer *iob_buildings = new io_buffer([](io_buffer *iob) {
 //            assert(iob->get_offset() - sind == 264);
         }
 
-
-
-        all_buildings[i].id = i;
+        g_all_buildings[i].id = i;
     }
     extra.created_sequence = 0;
 });

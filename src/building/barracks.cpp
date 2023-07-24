@@ -15,7 +15,7 @@
 
 #define INFINITE 10000
 
-static int tower_sentry_request = 0;
+int g_tower_sentry_request = 0;
 
 int building_get_barracks_for_weapon(int x, int y, int resource, int road_network_id, int distance_from_entry, map_point *dst) {
     if (resource != RESOURCE_WEAPONS)
@@ -134,7 +134,7 @@ int building::barracks_create_soldier() {
     return formation_id ? 1 : 0;
 }
 bool building::barracks_create_tower_sentry() {
-    if (tower_sentry_request <= 0)
+    if (g_tower_sentry_request <= 0)
         return false;
 
     building *tower = 0;
@@ -165,21 +165,21 @@ bool building::barracks_create_tower_sentry() {
 }
 
 void building_barracks_request_tower_sentry() {
-    tower_sentry_request = 2;
+    g_tower_sentry_request = 2;
 }
 void building_barracks_decay_tower_sentry_request() {
-    if (tower_sentry_request > 0)
-        tower_sentry_request--;
+    if (g_tower_sentry_request > 0)
+        g_tower_sentry_request--;
 }
 int building_barracks_has_tower_sentry_request() {
-    return tower_sentry_request;
+    return g_tower_sentry_request;
 }
 
 void building_barracks_save_state(buffer *buf) {
-    buf->write_i32(tower_sentry_request);
+    buf->write_i32(g_tower_sentry_request);
 }
 void building_barracks_load_state(buffer *buf) {
-    tower_sentry_request = buf->read_i32();
+    g_tower_sentry_request = buf->read_i32();
 }
 
 void building::barracks_toggle_priority() {
