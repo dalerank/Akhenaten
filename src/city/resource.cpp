@@ -11,24 +11,26 @@
 #include "scenario/building.h"
 #include "scenario/property.h"
 
-static struct {
+struct available_data_t {
     resources_list resource_list;
     resources_list food_list;
     resources_list market_goods_list;
-} available;
+};
+
+available_data_t g_available_data;
 
 int city_resource_count(int resource) {
     return city_data.resource.stored_in_warehouses[resource];
 }
 
 const resources_list *city_resource_get_available(void) {
-    return &available.resource_list;
+    return &g_available_data.resource_list;
 }
 const resources_list *city_resource_get_available_foods(void) {
-    return &available.food_list;
+    return &g_available_data.food_list;
 }
 const resources_list *city_resource_get_available_market_goods(void) {
-    return &available.market_goods_list;
+    return &g_available_data.market_goods_list;
 }
 
 
@@ -196,28 +198,28 @@ void city_resource_calculate_warehouse_stocks(void) {
 }
 void city_resource_determine_available(void) {
     for (int i = 0; i < RESOURCES_MAX; i++) {
-        available.resource_list.items[i] = 0;
-        available.food_list.items[i] = 0;
+        g_available_data.resource_list.items[i] = 0;
+        g_available_data.food_list.items[i] = 0;
     }
-    available.resource_list.size = 0;
-    available.food_list.size = 0;
-    available.market_goods_list.size = 0;
+    g_available_data.resource_list.size = 0;
+    g_available_data.food_list.size = 0;
+    g_available_data.market_goods_list.size = 0;
 
     for (int i = RESOURCE_MIN_FOOD; i < RESOURCES_FOODS_MAX; i++) {
         if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false)) {
-            available.food_list.items[available.food_list.size++] = i;
-            available.market_goods_list.items[available.market_goods_list.size++] = i;
+            g_available_data.food_list.items[g_available_data.food_list.size++] = i;
+            g_available_data.market_goods_list.items[g_available_data.market_goods_list.size++] = i;
         }
     }
     for (int i = RESOURCE_MIN; i < RESOURCES_MAX; i++) {
         if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false)) {
-            available.resource_list.items[available.resource_list.size++] = i;
+            g_available_data.resource_list.items[g_available_data.resource_list.size++] = i;
             switch (i) {
                 case RESOURCE_POTTERY:
                 case RESOURCE_BEER:
                 case RESOURCE_LINEN:
                 case RESOURCE_LUXURY_GOODS:
-                    available.market_goods_list.items[available.market_goods_list.size++] = i;
+                    g_available_data.market_goods_list.items[g_available_data.market_goods_list.size++] = i;
                     break;
             }
         }

@@ -1,14 +1,13 @@
-#ifndef CITY_RESOURCE_H
-#define CITY_RESOURCE_H
+#pragma once
 
 #include "city/constants.h"
 #include "game/resource.h"
 #include "core/game_environment.h"
 
-typedef struct {
+struct resources_list {
     int size;
     int items[RESOURCES_MAX];
-} resources_list;
+};
 
 int city_resource_count(int resource);
 
@@ -57,5 +56,3 @@ void city_resource_calculate_food_stocks_and_supply_wheat(void);
 //void city_resource_calculate_workshop_stocks(void);
 
 void city_resource_consume_food(void);
-
-#endif // CITY_RESOURCE_H

@@ -17,12 +17,12 @@ struct warning {
     uint8_t text[MAX_TEXT];
 };
 
-static struct warning warnings[MAX_WARNINGS];
+warning g_warnings[MAX_WARNINGS];
 
 static struct warning *new_warning(void) {
     for (int i = 0; i < MAX_WARNINGS; i++) {
-        if (!warnings[i].in_use)
-            return &warnings[i];
+        if (!g_warnings[i].in_use)
+            return &g_warnings[i];
 
     }
     return 0;
@@ -46,7 +46,7 @@ void city_warning_show(int type) {
 
 int city_has_warnings(void) {
     for (int i = 0; i < MAX_WARNINGS; i++) {
-        if (warnings[i].in_use)
+        if (g_warnings[i].in_use)
             return 1;
 
     }
@@ -54,22 +54,22 @@ int city_has_warnings(void) {
 }
 
 const uint8_t *city_warning_get(int id) {
-    if (warnings[id].in_use)
-        return warnings[id].text;
+    if (g_warnings[id].in_use)
+        return g_warnings[id].text;
 
     return 0;
 }
 
 void city_warning_clear_all(void) {
     for (int i = 0; i < MAX_WARNINGS; i++) {
-        warnings[i].in_use = 0;
+        g_warnings[i].in_use = 0;
     }
 }
 
 void city_warning_clear_outdated(void) {
     for (int i = 0; i < MAX_WARNINGS; i++) {
-        if (warnings[i].in_use && time_get_millis() - warnings[i].time > TIMEOUT_MS) {
-            warnings[i].in_use = 0;
+        if (g_warnings[i].in_use && time_get_millis() - g_warnings[i].time > TIMEOUT_MS) {
+            g_warnings[i].in_use = 0;
             window_request_refresh();
         }
     }
