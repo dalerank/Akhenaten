@@ -1,6 +1,6 @@
 # Ozymandias
 
-[![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Matrix/badge.svg)](https://github.com/dalerank/Ozymandias/actions)
+[![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Windows/badge.svg)](https://github.com/dalerank/Ozymandias/actions)
 
 [Discord Chat](https://discord.gg/HS4njmBvpb)
 

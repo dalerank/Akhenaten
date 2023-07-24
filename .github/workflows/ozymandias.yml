@@ -1,4 +1,4 @@
-name: Ozymandias Build Matrix
+name: Ozymandias Build Windows
 
 on:
   push:
@@ -10,14 +10,14 @@ jobs:
   windows:
     name: run on windows
     runs-on: windows-latest
+    #using: 'node16'
     steps:
     - uses: actions/checkout@v3
     - uses: ilammy/msvc-dev-cmd@v1.4.1
     - name: update-workspace
+      shell: pwsh
       run: |
-        update-workspace.bat
         mkdir build
-      shell: cmd
     - name: build-project
       run: |
         cd build
@@ -33,15 +33,3 @@ jobs:
       with:
         name: windows_build
         path: bin_x64
-#   - name: Upload ${{ matrix.preset }} to itch.io 
-#      uses: robpc/itchio-upload-action@v1
-#      with:
-#        path: windows_build.zip
-#        project: ozymandias
-#        channel: windows
-#        api-key: ${{ secrets.ITCHIO }}
-  linux:
-    name: run on linux
-    runs-on: ubuntu-20.04
-    - uses: actions/checkout@v3
-    - name: ./update-workspace-linux
