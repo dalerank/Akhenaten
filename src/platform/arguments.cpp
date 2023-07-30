@@ -1,12 +1,10 @@
 #include "arguments.h"
 
-#include <SDL.h>
-
 #include "io/log.h"
 #include "core/version.h"
 #include "platform/platform.h"
 
-#include <memory>
+#include <SDL.h>
 
 #define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2"
 #define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
@@ -140,7 +138,8 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
         log_info("          setup window mode on");
         log_info("--debug");
         log_info("          Prints additional debug information on the screen");
-        log_info("The last argument, if present, is interpreted as data directory for the Pharaoh installation");
+        log_info("The last argument, if present, is interpreted as data directory of the Pharaoh installation");
     }
+
     return ok;
 }
