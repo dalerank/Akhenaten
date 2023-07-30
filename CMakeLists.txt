@@ -31,7 +31,7 @@ if (MSVC)
     add_compile_options(/MP)
 endif()
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(GAME_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin_x64")
 
 set(SDL2_VERSION "2.28.0")

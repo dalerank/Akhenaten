@@ -5,6 +5,8 @@
 #include "platform/platform.h"
 
 #include <SDL.h>
+#include <cstring>
+#include <filesystem>
 
 #define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2"
 #define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
@@ -125,6 +127,10 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
         } else {
             strcpy(output_args.data_directory, argv[i]);
         }
+    }
+
+    if (std::strlen(output_args.data_directory) == 0) {
+        std::strcpy(output_args.data_directory, std::filesystem::current_path().c_str());
     }
 
     if (!ok) {

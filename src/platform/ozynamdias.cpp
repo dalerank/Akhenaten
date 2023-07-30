@@ -245,7 +245,9 @@ static std::set<video_mode> get_video_modes() {
     return uniqueModes;
 }
 
-static bool show_options_window() {
+/** Show configuration window to override parameters of the startup.
+ */
+static void show_options_window() {
     auto const window_flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
     SDL_Window* platform_window = SDL_CreateWindow("Ozymandias: configuration", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
 
@@ -257,7 +259,6 @@ static bool show_options_window() {
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     // Setup Platform/Renderer backends
     ImGui_ImplSDL2_InitForSDLRenderer(platform_window, renderer);
@@ -340,6 +341,10 @@ static bool show_options_window() {
             if (ImGui::Button("RUN GAME")) {
                 done = true;
             }
+            ImGui::SameLine();
+            if (ImGui::Button("Quit")) {
+                exit(EXIT_SUCCESS);
+            }
             //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::End();
         }
@@ -359,8 +364,6 @@ static bool show_options_window() {
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(platform_window);
-
-    return pre_init(ozymandias_core.data_directory);
 }
 
 static void setup(const ozymandias_args &args) {
@@ -379,20 +382,14 @@ static void setup(const ozymandias_args &args) {
 
     // pre-init engine: assert game directory, pref files, etc.
     init_game_environment(args.game_engine_env, args.game_engine_debug_mode);
-    if (!pre_init(args.data_directory)) {
-        log_info("game pre-init failed");
-
-        bool ok = show_options_window();
-
-        if (!ok) {
-            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-                                     "Warning",
-                                     "Ozymandias requires the original files from Pharaoh to run.\n"
-                                     "Move the executable file to the directory containing an existing\n"
-                                     "Pharaoh installation, or run: ozymandias path/to/directory",
-                                     NULL);
-            exit(1);
-        }
+    while (!pre_init(args.data_directory)) {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+                                 "Warning",
+                                 "Ozymandias requires the original files from Pharaoh to run.\n"
+                                 "Move the executable file to the directory containing an existing\n"
+                                 "Pharaoh installation, or run: ozymandias path/to/directory",
+                                 nullptr);
+        show_options_window();
     }
 
     // set up game display
