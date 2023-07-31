@@ -130,7 +130,7 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
     }
 
     if (std::strlen(output_args.data_directory) == 0) {
-        std::strcpy(output_args.data_directory, std::filesystem::current_path().c_str());
+        std::strcpy(output_args.data_directory, std::filesystem::current_path().string().c_str());
     }
 
     if (!ok) {
