@@ -304,6 +304,7 @@ static void draw_top_water(pixel_coordinate pixel, map_point point) {
     } else if (map_building_at(grid_offset))
         city_with_overlay_draw_building_top(pixel, point);
 }
+
 const city_overlay *city_overlay_for_water(void) {
     static city_overlay overlay = {
             OVERLAY_WATER,
@@ -325,6 +326,7 @@ static int terrain_on_desirability_overlay(void) {
             TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD |
             TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
+
 static int get_desirability_image_offset(int desirability) {
     if (desirability < -10)
         return 0;

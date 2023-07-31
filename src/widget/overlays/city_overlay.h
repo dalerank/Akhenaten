@@ -28,7 +28,7 @@ struct city_overlay {
     int (*get_tooltip_for_grid_offset)(tooltip_context *c, int grid_offset) = 0;
     int (*get_tooltip_for_building)(tooltip_context *c, const building *b) = 0;
     void (*draw_custom_footprint)(pixel_coordinate pixel, map_point point) = 0;
-    void (*draw_custom_top)(pixel_coordinate pixel, map_point point) = 0;
+    void (*draw_custom_top_func)(pixel_coordinate pixel, map_point point) = 0;
 
     city_overlay() {}
     city_overlay(
@@ -49,9 +49,14 @@ struct city_overlay {
         get_tooltip_for_grid_offset = _get_tooltip_for_grid_offset;
         get_tooltip_for_building = _get_tooltip_for_building;
         draw_custom_footprint = _draw_custom_footprint;
-        draw_custom_top = _draw_custom_top;
+        draw_custom_top_func = _draw_custom_top;
     }
 
+    virtual void draw_custom_top(pixel_coordinate pixel, map_point point) const {
+        if (draw_custom_top_func) {
+            draw_custom_top_func(pixel, point);
+        }
+    }
 
     virtual bool show_building(const building *b) const {
        return !!show_building_func(b);

@@ -155,19 +155,6 @@ static int get_tooltip_crime(tooltip_context *c, const building *b) {
     }
 }
 
-static void draw_top_fire(pixel_coordinate pixel, map_point point) {
-    int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
-    if (!map_property_is_draw_tile(grid_offset)) {
-        return;
-    }
-
-    if (map_building_at(grid_offset)) {
-        city_with_overlay_draw_building_top(pixel, point);
-    }
-}
-
 struct city_overlay_fire : public city_overlay {
     city_overlay_fire() {
         type = OVERLAY_FIRE;
@@ -176,7 +163,19 @@ struct city_overlay_fire : public city_overlay {
         show_figure = show_figure_fire;
         get_column_height = get_column_height_fire;
         get_tooltip_for_building = get_tooltip_fire;
-        draw_custom_top = draw_top_fire;
+    }
+
+    void draw_custom_top(pixel_coordinate pixel, map_point point) const override {
+        int grid_offset = point.grid_offset();
+        int x = pixel.x;
+        int y = pixel.y;
+        if (!map_property_is_draw_tile(grid_offset)) {
+            return;
+        }
+
+        if (map_building_at(grid_offset)) {
+            city_with_overlay_draw_building_top(pixel, point);
+        }
     }
 
     bool show_building(const building *b) const override {

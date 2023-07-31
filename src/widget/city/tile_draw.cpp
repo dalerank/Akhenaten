@@ -476,9 +476,7 @@ void draw_isometrics_overlay(pixel_coordinate pixel, map_point point) {
         }
     }
 
-    if (get_city_overlay()->draw_custom_top) {
-        get_city_overlay()->draw_custom_top(pixel, point);
-    }
+    get_city_overlay()->draw_custom_top(pixel, point);
 }
 void draw_ornaments_overlay(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();
