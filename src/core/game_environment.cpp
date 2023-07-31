@@ -2,7 +2,7 @@
 
 #include "io/log.h"
 
-#include <assert.h>
+#include <cassert>
 
 int GAME_ENV = ENGINE_ENV_MAX;
 int DEBUG_MODE = ENGINE_MODE_MAX;
@@ -21,15 +21,15 @@ void init_game_environment(int env, int mode) {
     log_info("Engine set to %s", game_name);
     DEBUG_MODE = mode;
 }
-void assert_env_init(void) {
+void assert_env_init() {
     assert(GAME_ENV < ENGINE_ENV_MAX);
 }
 
-const char *get_game_title(void) {
+const char *get_game_title() {
     assert_env_init();
     return game_name;
 }
-const char *get_engine_pref_path(void) {
+const char *get_engine_pref_path() {
     assert_env_init();
     return pref_filename;
 }

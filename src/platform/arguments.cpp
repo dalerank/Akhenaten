@@ -1,12 +1,12 @@
 #include "arguments.h"
 
-#include <SDL.h>
-
 #include "io/log.h"
 #include "core/version.h"
 #include "platform/platform.h"
 
-#include <memory>
+#include <SDL.h>
+#include <cstring>
+#include <filesystem>
 
 #define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2"
 #define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
@@ -129,6 +129,10 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
         }
     }
 
+    if (std::strlen(output_args.data_directory) == 0) {
+        std::strcpy(output_args.data_directory, std::filesystem::current_path().string().c_str());
+    }
+
     if (!ok) {
         log_info("Usage: ozymandias [ARGS] [DATA_DIR]");
         log_info("ARGS may be:");
@@ -140,7 +144,8 @@ int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args
         log_info("          setup window mode on");
         log_info("--debug");
         log_info("          Prints additional debug information on the screen");
-        log_info("The last argument, if present, is interpreted as data directory for the Pharaoh installation");
+        log_info("The last argument, if present, is interpreted as data directory of the Pharaoh installation");
     }
+
     return ok;
 }

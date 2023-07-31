@@ -245,19 +245,20 @@ static std::set<video_mode> get_video_modes() {
     return uniqueModes;
 }
 
-static bool show_options_window() {
-    SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+/** Show configuration window to override parameters of the startup.
+ */
+static void show_options_window() {
+    auto const window_flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
     SDL_Window* platform_window = SDL_CreateWindow("Ozymandias: configuration", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(platform_window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
-    if (renderer == NULL) {
+    if (renderer == nullptr) {
         log_info("Error creating SDL_Renderer!");
         exit(-1);
     }
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     // Setup Platform/Renderer backends
     ImGui_ImplSDL2_InitForSDLRenderer(platform_window, renderer);
@@ -265,11 +266,10 @@ static bool show_options_window() {
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    bool done = false;
-
     auto video_modes = get_video_modes();
     ImGuiFileDialog fileDialog;
-    while (!done) {
+
+    for (bool done = false; !done;) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             ImGui_ImplSDL2_ProcessEvent(&event);
@@ -288,9 +288,6 @@ static bool show_options_window() {
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
         {
-            static float f = 0.0f;
-            static int counter = 0;
-
             ImVec2 window_size(1280 * 0.75, 720 * 0.75);
             int platform_window_w, platform_window_h;
             SDL_GetWindowSize(platform_window, &platform_window_w, &platform_window_h);
@@ -300,9 +297,8 @@ static bool show_options_window() {
             ImGui::SetNextWindowSize(window_size);
 
             ImGui::Begin("Configuration", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus);
-            ImGui::Text("Data folder:");
-            static char buffer_game_folder[512] = "";
-            ImGui::InputText("default", buffer_game_folder, 64);
+            ImGui::Text("Folder with original game data:");
+            ImGui::InputText("default", ozymandias_core.data_directory, 64);
             ImGui::SameLine();
             if (ImGui::Button("...")) {
                 fileDialog.OpenDialog("Choose Folder", "", nullptr, ".", 1, nullptr, ImGuiFileDialogFlags_Modal);
@@ -313,7 +309,6 @@ static bool show_options_window() {
             if(fileDialog.Display("Choose Folder", ImGuiWindowFlags_NoCollapse|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize, filedialog_size, filedialog_size, filedialog_pos)) {
                 ImGui::SetWindowFocus();
                 if (fileDialog.IsOk()) {
-                    // Get the selected folder path
                     strcpy(ozymandias_core.data_directory, fileDialog.GetFilePathName().c_str());
                 }
                 fileDialog.Close();
@@ -346,6 +341,10 @@ static bool show_options_window() {
             if (ImGui::Button("RUN GAME")) {
                 done = true;
             }
+            ImGui::SameLine();
+            if (ImGui::Button("Quit")) {
+                exit(EXIT_SUCCESS);
+            }
             //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::End();
         }
@@ -365,8 +364,6 @@ static bool show_options_window() {
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(platform_window);
-
-    return pre_init(ozymandias_core.data_directory);
 }
 
 static void setup(const ozymandias_args &args) {
@@ -385,20 +382,14 @@ static void setup(const ozymandias_args &args) {
 
     // pre-init engine: assert game directory, pref files, etc.
     init_game_environment(args.game_engine_env, args.game_engine_debug_mode);
-    if (!pre_init(args.data_directory)) {
-        log_info("game pre-init failed");
-
-        bool ok = show_options_window();
-
-        if (!ok) {
-            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-                                     "Warning",
-                                     "Ozymandias requires the original files from Pharaoh to run.\n"
-                                     "Move the executable file to the directory containing an existing\n"
-                                     "Pharaoh installation, or run: ozymandias path/to/directory",
-                                     NULL);
-            exit(1);
-        }
+    while (!pre_init(args.data_directory)) {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+                                 "Warning",
+                                 "Ozymandias requires the original files from Pharaoh to run.\n"
+                                 "Move the executable file to the directory containing an existing\n"
+                                 "Pharaoh installation, or run: ozymandias path/to/directory",
+                                 nullptr);
+        show_options_window();
     }
 
     // set up game display
