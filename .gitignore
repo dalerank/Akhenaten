@@ -3,6 +3,7 @@
 *.kdev4
 .vs
 .vscode
+.idea
 /CMakeSettings.json
 
 # Generated resources
@@ -19,7 +20,6 @@ cmake-build-*
 /ext/SDL2/**
 *~
 *.swp
-.vscode
 /android
 # Android
 *.iml
@@ -28,7 +28,6 @@ local.properties
 .DS_Store
 /captures
 .externalNativeBuild
-.idea
 .cxx/
 distribution/
 *.log
