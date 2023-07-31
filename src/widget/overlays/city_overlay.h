@@ -1,5 +1,4 @@
-#ifndef WIDGET_CITY_OVERLAY_H
-#define WIDGET_CITY_OVERLAY_H
+#pragma once
 
 #include "building/building.h"
 #include "figure/figure.h"
@@ -65,5 +64,3 @@ int widget_city_overlay_get_tooltip_text(tooltip_context *c, int grid_offset);
 
 void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, int image_offset);
 void city_with_overlay_draw_building_top(pixel_coordinate pixel, map_point point);
-
-#endif // WIDGET_CITY_OVERLAY_H

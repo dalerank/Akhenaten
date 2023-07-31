@@ -1,6 +1,7 @@
-#include <game/state.h>
-#include <grid/building.h>
 #include "city_overlay.h"
+
+#include "game/state.h"
+#include "grid/building.h"
 
 #include "widget/overlays/city_overlay_risks.h"
 #include "widget/overlays/city_overlay_health.h"

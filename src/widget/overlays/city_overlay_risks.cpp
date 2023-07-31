@@ -39,9 +39,6 @@ void overlay_problems_prepare_building(building *b) {
 static int show_building_crime(const building *b) {
     return b->type == BUILDING_POLICE_STATION || b->type == BUILDING_FESTIVAL_SQUARE;
 }
-static int show_building_fire(const building *b) {
-    return b->type == BUILDING_FIREHOUSE || b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_FESTIVAL_SQUARE;
-}
 static int show_building_damage(const building *b) {
     return b->type == BUILDING_ENGINEERS_POST || b->type == BUILDING_FESTIVAL_SQUARE;
 }
@@ -77,10 +74,13 @@ static int show_figure_native(const figure *f) {
 
 static int get_column_height_fire(const building *b) {
     auto model = model_get_building(b->type);
+
     if (b->prev_part_building_id || !model->fire_risk)
         return NO_COLUMN;
+
     return b->fire_risk / 100;
 }
+
 static int get_column_height_damage(const building *b) {
     auto model = model_get_building(b->type);
     if (b->prev_part_building_id || !model->damage_risk)
@@ -155,20 +155,41 @@ static int get_tooltip_crime(tooltip_context *c, const building *b) {
     }
 }
 
-const city_overlay *city_overlay_for_fire(void) {
-    static city_overlay overlay = {
-            OVERLAY_FIRE,
-            COLUMN_TYPE_RISK,
-            show_building_fire, //show_building_fire_crime
-            show_figure_fire,
-            get_column_height_fire,
-            0,
-            get_tooltip_fire,
-            0,
-            0
-    };
-    return &overlay;
+static void draw_top_fire(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
+    if (!map_property_is_draw_tile(grid_offset)) {
+        return;
+    }
+
+    if (map_building_at(grid_offset)) {
+        city_with_overlay_draw_building_top(pixel, point);
+    }
 }
+
+struct city_overlay_fire : public city_overlay {
+    city_overlay_fire() {
+        type = OVERLAY_FIRE;
+        column_type = COLUMN_TYPE_RISK;
+
+        show_figure = show_figure_fire;
+        get_column_height = get_column_height_fire;
+        get_tooltip_for_building = get_tooltip_fire;
+        draw_custom_top = draw_top_fire;
+    }
+
+    bool show_building(const building *b) const override {
+        return b->type == BUILDING_FIREHOUSE || b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_FESTIVAL_SQUARE;
+    }
+};
+
+city_overlay_fire g_city_overlay_fire;
+
+const city_overlay *city_overlay_for_fire(void) {
+    return &g_city_overlay_fire;
+}
+
 const city_overlay *city_overlay_for_damage(void) {
     static city_overlay overlay = {
             OVERLAY_DAMAGE,
@@ -183,6 +204,7 @@ const city_overlay *city_overlay_for_damage(void) {
     };
     return &overlay;
 }
+
 const city_overlay *city_overlay_for_crime(void) {
     static city_overlay overlay = {
             OVERLAY_CRIME,
