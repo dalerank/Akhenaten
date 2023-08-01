@@ -16,7 +16,7 @@ typedef uint32_t color_t;
 #define COLOR_LIGHT_BLUE 0xff48a5ff
 
 #define COLOR_SG2_TRANSPARENT 0xfff700ff
-//#define COLOR_TOOLTIP_TEXT 0xff424242
+// #define COLOR_TOOLTIP_TEXT 0xff424242
 #define COLOR_TOOLTIP_TEXT 0xffffe7d6
 #define COLOR_TOOLTIP_SHADOW 0xff392410
 #define COLOR_TOOLTIP_BORDER 0xff5A1400
@@ -79,20 +79,21 @@ constexpr uint32_t COLOR_MINIMAP_ANIMAL = 0xff00f700;
 #define COLOR_COMPONENT(c, shift) ((c >> shift) & 0xff)
 
 #define COLOR_MIX_ALPHA(alpha_src, alpha_dst) ((alpha_src) + (((alpha_dst) * (0xff - (alpha_src))) >> 8))
-#define COLOR_BLEND_CHANNEL_TO_OPAQUE(src, dst, alpha, channel) \
-        (((((src) & (channel)) * (alpha) + ((dst) & (channel)) * (0xff - (alpha))) >> 8) & (channel))
-#define COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, channel) \
-        ((((((src) & (channel)) * (alpha_src) + ((((dst) & (channel)) * (0xff - (alpha_src))) >> 8) * (alpha_dst))) / (alpha_mix)) & (channel))
+#define COLOR_BLEND_CHANNEL_TO_OPAQUE(src, dst, alpha, channel)                                                        \
+    (((((src) & (channel)) * (alpha) + ((dst) & (channel)) * (0xff - (alpha))) >> 8) & (channel))
+#define COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, channel)                                        \
+    ((((((src) & (channel)) * (alpha_src) + ((((dst) & (channel)) * (0xff - (alpha_src))) >> 8) * (alpha_dst)))        \
+      / (alpha_mix))                                                                                                   \
+     & (channel))
 
-#define COLOR_BLEND_ALPHA_TO_OPAQUE(src, dst, alpha) \
-        (ALPHA_OPAQUE | \
-        COLOR_BLEND_CHANNEL_TO_OPAQUE(src, dst, alpha, COLOR_CHANNEL_RED | COLOR_CHANNEL_BLUE) | \
-        COLOR_BLEND_CHANNEL_TO_OPAQUE(src, dst, alpha, COLOR_CHANNEL_GREEN))
+#define COLOR_BLEND_ALPHA_TO_OPAQUE(src, dst, alpha)                                                                   \
+    (ALPHA_OPAQUE | COLOR_BLEND_CHANNEL_TO_OPAQUE(src, dst, alpha, COLOR_CHANNEL_RED | COLOR_CHANNEL_BLUE)             \
+     | COLOR_BLEND_CHANNEL_TO_OPAQUE(src, dst, alpha, COLOR_CHANNEL_GREEN))
 
-#define COLOR_BLEND_ALPHAS(src, dst, alpha_src, alpha_dst, alpha_mix) \
-        ((alpha_mix) << COLOR_BITSHIFT_ALPHA | \
-        COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_RED) | \
-        COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_GREEN) | \
-        COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_BLUE))
+#define COLOR_BLEND_ALPHAS(src, dst, alpha_src, alpha_dst, alpha_mix)                                                  \
+    ((alpha_mix) << COLOR_BITSHIFT_ALPHA                                                                               \
+     | COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_RED)                               \
+     | COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_GREEN)                             \
+     | COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_BLUE))
 
 #endif // GRAPHICS_COLOR_H

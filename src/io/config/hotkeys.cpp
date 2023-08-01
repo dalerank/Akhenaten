@@ -1,9 +1,9 @@
 #include "hotkeys.h"
 
-#include "io/file.h"
-#include "io/log.h"
 #include "game/system.h"
 #include "input/hotkey.h"
+#include "io/file.h"
+#include "io/log.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -11,82 +11,80 @@
 #define MAX_LINE 100
 #define MAX_MAPPINGS HOTKEY_MAX_ITEMS * 2
 
-static const char *INI_FILENAME = "augustus-hotkeys.ini";
+static const char* INI_FILENAME = "augustus-hotkeys.ini";
 
 // Keep this in the same order as the actions in hotkey_config.h
-static const char *ini_keys[] = {
-        "arrow_up",
-        "arrow_down",
-        "arrow_left",
-        "arrow_right",
-        "toggle_pause",
-        "toggle_overlay",
-        "cycle_legion",
-        "increase_game_speed",
-        "decrease_game_speed",
-        "rotate_map_left",
-        "rotate_map_right",
-        "build_vacant_house",
-        "build_clear_land",
-        "build_road",
-        "build_plaza",
-        "build_gardens",
-        "build_prefecture",
-        "build_engineers_post",
-        "build_doctor",
-        "build_granary",
-        "build_warehouse",
-        "build_market",
-        "build_wall",
-        "build_gatehouse",
-        "build_reservoir",
-        "build_aqueduct",
-        "build_fountain",
-        "build_roadblock",
-        "show_advisor_labor",
-        "show_advisor_military",
-        "show_advisor_imperial",
-        "show_advisor_ratings",
-        "show_advisor_trade",
-        "show_advisor_population",
-        "show_advisor_health",
-        "show_advisor_education",
-        "show_advisor_entertainment",
-        "show_advisor_religion",
-        "show_advisor_financial",
-        "show_advisor_chief",
-        "show_advisor_housing",
-        "show_overlay_water",
-        "show_overlay_fire",
-        "show_overlay_damage",
-        "show_overlay_crime",
-        "show_overlay_problems",
-        "editor_toggle_battle_info",
-        "load_file",
-        "save_file",
-        "rotate_building",
-        "change_building_variant",
-        "go_to_bookmark_1",
-        "go_to_bookmark_2",
-        "go_to_bookmark_3",
-        "go_to_bookmark_4",
-        "set_bookmark_1",
-        "set_bookmark_2",
-        "set_bookmark_3",
-        "set_bookmark_4",
-        "center_screen",
-        "toggle_fullscreen",
-        "resize_to_640",
-        "resize_to_800",
-        "resize_to_1024",
-        "save_screenshot",
-        "save_city_screenshot",
-        //
-        "debug_range1_up",
-        "debug_range1_down",
-        "debug_range2_up",
-        "debug_range2_down"
-};
+static const char* ini_keys[] = {"arrow_up",
+                                 "arrow_down",
+                                 "arrow_left",
+                                 "arrow_right",
+                                 "toggle_pause",
+                                 "toggle_overlay",
+                                 "cycle_legion",
+                                 "increase_game_speed",
+                                 "decrease_game_speed",
+                                 "rotate_map_left",
+                                 "rotate_map_right",
+                                 "build_vacant_house",
+                                 "build_clear_land",
+                                 "build_road",
+                                 "build_plaza",
+                                 "build_gardens",
+                                 "build_prefecture",
+                                 "build_engineers_post",
+                                 "build_doctor",
+                                 "build_granary",
+                                 "build_warehouse",
+                                 "build_market",
+                                 "build_wall",
+                                 "build_gatehouse",
+                                 "build_reservoir",
+                                 "build_aqueduct",
+                                 "build_fountain",
+                                 "build_roadblock",
+                                 "show_advisor_labor",
+                                 "show_advisor_military",
+                                 "show_advisor_imperial",
+                                 "show_advisor_ratings",
+                                 "show_advisor_trade",
+                                 "show_advisor_population",
+                                 "show_advisor_health",
+                                 "show_advisor_education",
+                                 "show_advisor_entertainment",
+                                 "show_advisor_religion",
+                                 "show_advisor_financial",
+                                 "show_advisor_chief",
+                                 "show_advisor_housing",
+                                 "show_overlay_water",
+                                 "show_overlay_fire",
+                                 "show_overlay_damage",
+                                 "show_overlay_crime",
+                                 "show_overlay_problems",
+                                 "editor_toggle_battle_info",
+                                 "load_file",
+                                 "save_file",
+                                 "rotate_building",
+                                 "change_building_variant",
+                                 "go_to_bookmark_1",
+                                 "go_to_bookmark_2",
+                                 "go_to_bookmark_3",
+                                 "go_to_bookmark_4",
+                                 "set_bookmark_1",
+                                 "set_bookmark_2",
+                                 "set_bookmark_3",
+                                 "set_bookmark_4",
+                                 "center_screen",
+                                 "toggle_fullscreen",
+                                 "resize_to_640",
+                                 "resize_to_800",
+                                 "resize_to_1024",
+                                 "save_screenshot",
+                                 "save_city_screenshot",
+                                 //
+                                 "debug_range1_up",
+                                 "debug_range1_down",
+                                 "debug_range2_up",
+                                 "debug_range2_down"};
 
 static struct {
     hotkey_mapping default_mappings[HOTKEY_MAX_ITEMS][2];
@@ -95,7 +93,7 @@ static struct {
 } data;
 
 static void set_mapping(int key, int modifiers, int action) {
-    hotkey_mapping *mapping = &data.default_mappings[action][0];
+    hotkey_mapping* mapping = &data.default_mappings[action][0];
     if (mapping->key)
         mapping = &data.default_mappings[action][1];
 
@@ -106,7 +104,7 @@ static void set_mapping(int key, int modifiers, int action) {
     mapping->action = action;
 }
 
-static void set_layout_mapping(const char *name, int default_key, int modifiers, int action) {
+static void set_layout_mapping(const char* name, int default_key, int modifiers, int action) {
     int key = system_keyboard_key_for_symbol(name);
     if (key == KEY_NONE) {
         log_info("No key found on layout for", name, 0);
@@ -190,7 +188,7 @@ void init_defaults(void) {
     set_mapping(KEY_PAGEDOWN, KEY_MOD_ALT, HOTKEY_DEBUG_2_DOWN);
 }
 
-const hotkey_mapping *hotkey_for_action(int action, int index) {
+const hotkey_mapping* hotkey_for_action(int action, int index) {
     int num = 0;
     for (int i = 0; i < data.num_mappings; i++) {
         if (data.mappings[i].action == action) {
@@ -203,8 +201,8 @@ const hotkey_mapping *hotkey_for_action(int action, int index) {
     return 0;
 }
 
-const hotkey_mapping *hotkey_default_for_action(int action, int index) {
-    if (index < 0 || index >= 2 || (int) action < 0 || action >= HOTKEY_MAX_ITEMS)
+const hotkey_mapping* hotkey_default_for_action(int action, int index) {
+    if (index < 0 || index >= 2 || (int)action < 0 || action >= HOTKEY_MAX_ITEMS)
         return 0;
 
     return &data.default_mappings[action][index];
@@ -214,7 +212,7 @@ void hotkey_config_clear(void) {
     data.num_mappings = 0;
 }
 
-void hotkey_config_add_mapping(const hotkey_mapping *mapping) {
+void hotkey_config_add_mapping(const hotkey_mapping* mapping) {
     if (data.num_mappings < MAX_MAPPINGS) {
         data.mappings[data.num_mappings] = *mapping;
         data.num_mappings++;
@@ -227,30 +225,29 @@ static void load_defaults(void) {
         for (int index = 0; index < 2; index++) {
             if (data.default_mappings[action][index].key)
                 hotkey_config_add_mapping(&data.default_mappings[action][index]);
-
         }
     }
 }
 
 static void load_file(void) {
     hotkey_config_clear();
-    FILE *fp = file_open(INI_FILENAME, "rt");
+    FILE* fp = file_open(INI_FILENAME, "rt");
     if (!fp)
         return;
     char line_buffer[MAX_LINE];
-    char *line;
+    char* line;
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {
         // Remove newline from string
         size_t size = strlen(line);
         while (size > 0 && (line[size - 1] == '\n' || line[size - 1] == '\r')) {
             line[--size] = 0;
         }
-        char *equals = strchr(line, '=');
+        char* equals = strchr(line, '=');
         if (!equals)
             continue;
 
         *equals = 0;
-        char *value = &equals[1];
+        char* value = &equals[1];
         for (int i = 0; i < HOTKEY_MAX_ITEMS; i++) {
             if (strcmp(ini_keys[i], line) == 0) {
                 hotkey_mapping mapping;
@@ -276,13 +273,13 @@ void hotkey_config_load(void) {
 
 void hotkey_config_save(void) {
     hotkey_install_mapping(data.mappings, data.num_mappings);
-    FILE *fp = file_open(INI_FILENAME, "wt");
+    FILE* fp = file_open(INI_FILENAME, "wt");
     if (!fp) {
         log_error("Unable to write hotkey configuration file %s", INI_FILENAME);
         return;
     }
     for (int i = 0; i < data.num_mappings; i++) {
-        const char *key_name = key_combination_name(data.mappings[i].key, data.mappings[i].modifiers);
+        const char* key_name = key_combination_name(data.mappings[i].key, data.mappings[i].modifiers);
         fprintf(fp, "%s=%s\n", ini_keys[data.mappings[i].action], key_name);
     }
     file_close(fp);

@@ -7,8 +7,8 @@
 #include "figure/route.h"
 #include "game/difficulty.h"
 #include "grid/figure.h"
-#include "sound/effect.h"
 #include "grid/point.h"
+#include "sound/effect.h"
 
 int attack_is_same_direction(int dir1, int dir2) {
     if (dir1 == dir2)
@@ -29,7 +29,7 @@ int figure_combat_get_target_for_soldier(int x, int y, int max_distance) {
     int figure_id = 0;
     int min_distance = 10000;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure *f = figure_get(i);
+        figure* f = figure_get(i);
         if (f->is_dead())
             continue;
 
@@ -50,13 +50,12 @@ int figure_combat_get_target_for_soldier(int x, int y, int max_distance) {
         return figure_id;
 
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure *f = figure_get(i);
+        figure* f = figure_get(i);
         if (f->is_dead())
             continue;
 
         if (f->is_enemy() || f->type == FIGURE_RIOTER || f->is_attacking_native())
             return i;
-
     }
     return 0;
 }
@@ -64,27 +63,27 @@ int figure_combat_get_target_for_wolf(int x, int y, int max_distance) {
     int min_figure_id = 0;
     int min_distance = 10000;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure *f = figure_get(i);
+        figure* f = figure_get(i);
         if (f->is_dead() || !f->type) {
             continue;
         }
         switch (f->type) {
-            case FIGURE_EXPLOSION:
-            case FIGURE_FORT_STANDARD:
-            case FIGURE_TRADE_SHIP:
-            case FIGURE_FISHING_BOAT:
-            case FIGURE_MAP_FLAG:
-            case FIGURE_FLOTSAM:
-            case FIGURE_SHIPWRECK:
-            case FIGURE_INDIGENOUS_NATIVE:
-            case FIGURE_TOWER_SENTRY:
-            case FIGURE_NATIVE_TRADER:
-            case FIGURE_ARROW:
-            case FIGURE_JAVELIN:
-            case FIGURE_BOLT:
-            case FIGURE_BALLISTA:
-            case FIGURE_CREATURE:
-                continue;
+        case FIGURE_EXPLOSION:
+        case FIGURE_FORT_STANDARD:
+        case FIGURE_TRADE_SHIP:
+        case FIGURE_FISHING_BOAT:
+        case FIGURE_MAP_FLAG:
+        case FIGURE_FLOTSAM:
+        case FIGURE_SHIPWRECK:
+        case FIGURE_INDIGENOUS_NATIVE:
+        case FIGURE_TOWER_SENTRY:
+        case FIGURE_NATIVE_TRADER:
+        case FIGURE_ARROW:
+        case FIGURE_JAVELIN:
+        case FIGURE_BOLT:
+        case FIGURE_BALLISTA:
+        case FIGURE_CREATURE:
+            continue;
         }
         if (f->is_enemy() || f->is_herd()) {
             continue;
@@ -110,7 +109,7 @@ int figure_combat_get_target_for_enemy(int x, int y) {
     int min_figure_id = 0;
     int min_distance = 10000;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure *f = figure_get(i);
+        figure* f = figure_get(i);
         if (f->is_dead())
             continue;
 
@@ -127,24 +126,23 @@ int figure_combat_get_target_for_enemy(int x, int y) {
 
     // no 'free' soldier found, take first one
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure *f = figure_get(i);
+        figure* f = figure_get(i);
         if (f->is_dead())
             continue;
 
         if (f->is_legion())
             return i;
-
     }
     return 0;
 }
-int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distance, map_point *tile) {
+int figure_combat_get_missile_target_for_soldier(figure* shooter, int max_distance, map_point* tile) {
     int x = shooter->tile.x();
     int y = shooter->tile.y();
 
     int min_distance = max_distance;
-    figure *min_figure = 0;
+    figure* min_figure = 0;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure *f = figure_get(i);
+        figure* f = figure_get(i);
         if (f->is_dead())
             continue;
 
@@ -162,37 +160,37 @@ int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distan
     }
     return 0;
 }
-int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, int attack_citizens, map_point *tile) {
+int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, int attack_citizens, map_point* tile) {
     int x = enemy->tile.x();
     int y = enemy->tile.y();
 
-    figure *min_figure = 0;
+    figure* min_figure = 0;
     int min_distance = max_distance;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure *f = figure_get(i);
+        figure* f = figure_get(i);
         if (f->is_dead() || !f->type)
             continue;
 
         switch (f->type) {
-            case FIGURE_EXPLOSION:
-            case FIGURE_FORT_STANDARD:
-            case FIGURE_MAP_FLAG:
-            case FIGURE_FLOTSAM:
-            case FIGURE_INDIGENOUS_NATIVE:
-            case FIGURE_NATIVE_TRADER:
-            case FIGURE_ARROW:
-            case FIGURE_JAVELIN:
-            case FIGURE_BOLT:
-            case FIGURE_BALLISTA:
-            case FIGURE_CREATURE:
-            case FIGURE_FISH_GULLS:
-            case FIGURE_SHIPWRECK:
-            case FIGURE_SHEEP:
-            //case FIGURE_WOLF:
-            case FIGURE_OSTRICH:
-            case FIGURE_ZEBRA:
-            case FIGURE_SPEAR:
-                continue;
+        case FIGURE_EXPLOSION:
+        case FIGURE_FORT_STANDARD:
+        case FIGURE_MAP_FLAG:
+        case FIGURE_FLOTSAM:
+        case FIGURE_INDIGENOUS_NATIVE:
+        case FIGURE_NATIVE_TRADER:
+        case FIGURE_ARROW:
+        case FIGURE_JAVELIN:
+        case FIGURE_BOLT:
+        case FIGURE_BALLISTA:
+        case FIGURE_CREATURE:
+        case FIGURE_FISH_GULLS:
+        case FIGURE_SHIPWRECK:
+        case FIGURE_SHEEP:
+        // case FIGURE_WOLF:
+        case FIGURE_OSTRICH:
+        case FIGURE_ZEBRA:
+        case FIGURE_SPEAR:
+            continue;
         }
         int distance;
         if (f->is_legion())
@@ -202,7 +200,8 @@ int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, 
         else {
             continue;
         }
-        if (distance < min_distance && figure_movement_can_launch_cross_country_missile(x, y, f->tile.x(), f->tile.y())) {
+        if (distance < min_distance
+            && figure_movement_can_launch_cross_country_missile(x, y, f->tile.x(), f->tile.y())) {
             min_distance = distance;
             min_figure = f;
         }
@@ -237,12 +236,12 @@ void figure::resume_activity_after_attack() {
     route_remove();
 }
 void figure::hit_opponent() {
-    const formation *m = formation_get(formation_id);
-    figure *opponent = figure_get(opponent_id);
-    formation *opponent_formation = formation_get(opponent->formation_id);
+    const formation* m = formation_get(formation_id);
+    figure* opponent = figure_get(opponent_id);
+    formation* opponent_formation = formation_get(opponent->formation_id);
 
-    const figure_properties *props = figure_properties_for_type(type);
-    const figure_properties *opponent_props = figure_properties_for_type(opponent->type);
+    const figure_properties* props = figure_properties_for_type(type);
+    const figure_properties* opponent_props = figure_properties_for_type(opponent->type);
     int cat = opponent_props->category;
     if (cat == FIGURE_CATEGORY_CITIZEN || cat == FIGURE_CATEGORY_CRIMINAL)
         attack_image_offset = 12;
@@ -253,28 +252,28 @@ void figure::hit_opponent() {
     int opponent_defense = opponent_props->defense_value;
 
     // attack modifiers
-    //if (type == /*FIGURE_WOLF*/)
+    // if (type == /*FIGURE_WOLF*/)
     //    figure_attack = difficulty_adjust_wolf_attack(figure_attack);
 
-    if (opponent->opponent_id != id && m->figure_type != FIGURE_FORT_LEGIONARY &&
-        attack_is_same_direction(attack_direction, opponent->attack_direction)) {
+    if (opponent->opponent_id != id && m->figure_type != FIGURE_FORT_LEGIONARY
+        && attack_is_same_direction(attack_direction, opponent->attack_direction)) {
         figure_attack += 4; // attack opponent on the (exposed) back
         sound_effect_play(SOUND_EFFECT_SWORD_SWING);
     }
-    if (m->is_halted && m->figure_type == FIGURE_FORT_LEGIONARY &&
-        attack_is_same_direction(attack_direction, m->direction)) {
+    if (m->is_halted && m->figure_type == FIGURE_FORT_LEGIONARY
+        && attack_is_same_direction(attack_direction, m->direction)) {
         figure_attack += 4; // coordinated formation attack bonus
     }
     // defense modifiers
-    if (opponent_formation->is_halted &&
-        (opponent_formation->figure_type == FIGURE_FORT_LEGIONARY ||
-         opponent_formation->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)) {
+    if (opponent_formation->is_halted
+        && (opponent_formation->figure_type == FIGURE_FORT_LEGIONARY
+            || opponent_formation->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)) {
         if (!attack_is_same_direction(opponent->attack_direction, opponent_formation->direction))
             opponent_defense -= 4; // opponent not attacking in coordinated formation
         else if (opponent_formation->layout == FORMATION_COLUMN)
             opponent_defense += 7;
-        else if (opponent_formation->layout == FORMATION_DOUBLE_LINE_1 ||
-                 opponent_formation->layout == FORMATION_DOUBLE_LINE_2) {
+        else if (opponent_formation->layout == FORMATION_DOUBLE_LINE_1
+                 || opponent_formation->layout == FORMATION_DOUBLE_LINE_2) {
             opponent_defense += 4;
         }
     }
@@ -301,7 +300,7 @@ void figure::figure_combat_handle_attack() {
         return;
     }
     if (num_attackers == 1) {
-        figure *target = figure_get(opponent_id);
+        figure* target = figure_get(opponent_id);
         if (target->is_dead()) {
             resume_activity_after_attack();
             return;
@@ -325,13 +324,12 @@ void figure::figure_combat_handle_attack() {
     attack_image_offset++;
     if (attack_image_offset >= 24)
         hit_opponent();
-
 }
 
 void figure::figure_combat_attack_figure_at(int grid_offset) {
     int figure_category = figure_properties_for_type(type)->category;
-    if (figure_category <= FIGURE_CATEGORY_INACTIVE || figure_category >= FIGURE_CATEGORY_CRIMINAL ||
-        action_state == FIGURE_ACTION_150_ATTACK)
+    if (figure_category <= FIGURE_CATEGORY_INACTIVE || figure_category >= FIGURE_CATEGORY_CRIMINAL
+        || action_state == FIGURE_ACTION_150_ATTACK)
         return;
     int guard = 0;
     int opponent_id = map_figure_at(grid_offset);
@@ -339,7 +337,7 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
         if (++guard >= MAX_FIGURES[GAME_ENV] || opponent_id <= 0)
             break;
 
-        figure *opponent = figure_get(opponent_id);
+        figure* opponent = figure_get(opponent_id);
         if (opponent_id == id) {
             opponent_id = opponent->next_figure;
             continue;
@@ -380,12 +378,13 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
             attacker_id1 = opponent_id;
             num_attackers = 1;
             attack_image_offset = 12;
-            if (opponent->tile.x() != opponent->destination_tile.x() || opponent->tile.y() != opponent->destination_tile.y()) {
-                attack_direction = calc_general_direction(previous_tile.x(), previous_tile.y(),
-                                                          opponent->previous_tile.x(), opponent->previous_tile.y());
+            if (opponent->tile.x() != opponent->destination_tile.x()
+                || opponent->tile.y() != opponent->destination_tile.y()) {
+                attack_direction = calc_general_direction(
+                  previous_tile.x(), previous_tile.y(), opponent->previous_tile.x(), opponent->previous_tile.y());
             } else {
-                attack_direction = calc_general_direction(previous_tile.x(), previous_tile.y(),
-                                                          opponent->tile.x(), opponent->tile.y());
+                attack_direction = calc_general_direction(
+                  previous_tile.x(), previous_tile.y(), opponent->tile.x(), opponent->tile.y());
             }
             if (attack_direction >= 8)
                 attack_direction = 0;
@@ -409,5 +408,3 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
         opponent_id = opponent->next_figure;
     }
 }
-
-

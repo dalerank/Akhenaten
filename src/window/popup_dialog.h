@@ -87,11 +87,7 @@ enum e_popup_dialog_opt {
     POPUP_DIALOG_NO_MISSIONS_WON_BY_FAMILY = 141,
 };
 
-enum e_popup_dialog_btns {
-    e_popup_btns_ok = 0,
-    e_popup_btns_yes = 1,
-    e_popup_btns_yesno = 2
-};
+enum e_popup_dialog_btns { e_popup_btns_ok = 0, e_popup_btns_yes = 1, e_popup_btns_yesno = 2 };
 
 void window_popup_dialog_show(int type, void (*close_func)(bool accepted), e_popup_dialog_btns has_ok_cancel_buttons);
 

@@ -4,7 +4,7 @@
 #include "city/culture.h"
 #include "core/game_environment.h"
 
-static void decay(unsigned char *value) {
+static void decay(unsigned char* value) {
     if (*value > 0)
         *value = *value - 1;
     else {
@@ -14,7 +14,7 @@ static void decay(unsigned char *value) {
 
 void house_service_decay_culture(void) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->house_size)
             continue;
 
@@ -41,10 +41,9 @@ void house_service_decay_culture(void) {
 
 void house_service_decay_tax_collector(void) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_tax_coverage)
             b->house_tax_coverage--;
-
     }
 }
 
@@ -52,23 +51,23 @@ void house_service_decay_tax_collector(void) {
 
 void house_service_decay_houses_covered(void) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_UNUSED) { //b->type != BUILDING_TOWER
+        building* b = building_get(i);
+        if (b->state != BUILDING_STATE_UNUSED) { // b->type != BUILDING_TOWER
             if (b->houses_covered > 0)
                 b->houses_covered--;
-//            if (building_is_farm(b->type) && b->data.industry.labor_days_left > 0)
-//                b->data.industry.labor_days_left--;
-////            else if (b->houses_covered > 0)
-////                b->houses_covered--;
-//
-////            if (b->houses_covered == 255)
-////                b->houses_covered = 0;
-//            if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-//                if (b->data.industry.labor_state == 2)
-//                    b->data.industry.labor_state = 1;
-//                if (b->data.industry.labor_days_left == 0)
-//                    b->data.industry.labor_state = 0;
-//            }
+            //            if (building_is_farm(b->type) && b->data.industry.labor_days_left > 0)
+            //                b->data.industry.labor_days_left--;
+            ////            else if (b->houses_covered > 0)
+            ////                b->houses_covered--;
+            //
+            ////            if (b->houses_covered == 255)
+            ////                b->houses_covered = 0;
+            //            if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            //                if (b->data.industry.labor_state == 2)
+            //                    b->data.industry.labor_state = 1;
+            //                if (b->data.industry.labor_days_left == 0)
+            //                    b->data.industry.labor_state = 0;
+            //            }
         }
     }
 }
@@ -76,7 +75,7 @@ void house_service_decay_houses_covered(void) {
 void house_service_calculate_culture_aggregates(void) {
     int base_entertainment = city_culture_coverage_average_entertainment() / 5;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->house_size)
             continue;
 
@@ -94,11 +93,11 @@ void house_service_calculate_culture_aggregates(void) {
             }
         }
         if (b->data.house.colosseum_gladiator) {
-//            if (b->data.house.magistrate)
-//                b->data.house.entertainment += 25;
-//            else {
-                b->data.house.entertainment += 15;
-//            }
+            //            if (b->data.house.magistrate)
+            //                b->data.house.entertainment += 25;
+            //            else {
+            b->data.house.entertainment += 15;
+            //            }
         }
         if (b->data.house.hippodrome)
             b->data.house.entertainment += 30;
@@ -112,7 +111,6 @@ void house_service_calculate_culture_aggregates(void) {
                 b->data.house.education = 2;
                 if (b->data.house.academy)
                     b->data.house.education = 3;
-
             }
         }
 
@@ -141,6 +139,5 @@ void house_service_calculate_culture_aggregates(void) {
 
         if (b->data.house.hospital)
             ++b->data.house.health;
-
     }
 }

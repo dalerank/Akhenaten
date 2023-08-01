@@ -47,7 +47,7 @@ static void cause_disease(int total_people) {
     tutorial_on_disease();
     // kill people who don't have access to a doctor
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size && b->house_population) {
             if (!b->data.house.clinic) {
                 people_to_kill -= b->house_population;
@@ -59,7 +59,7 @@ static void cause_disease(int total_people) {
     }
     // kill people in tents
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size && b->house_population) {
             if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
                 people_to_kill -= b->house_population;
@@ -71,7 +71,7 @@ static void cause_disease(int total_people) {
     }
     // kill anyone
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size && b->house_population) {
             people_to_kill -= b->house_population;
             building_destroy_by_plague(b);
@@ -90,7 +90,7 @@ void city_health_update(void) {
     int total_population = 0;
     int healthy_population = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->house_size || !b->house_population)
             continue;
 
@@ -109,7 +109,6 @@ void city_health_update(void) {
             }
         } else if (b->house_days_without_food == 0)
             healthy_population += b->house_population / 4;
-
     }
     city_data.health.target_value = calc_percentage(healthy_population, total_population);
     if (city_data.health.value < city_data.health.target_value) {
@@ -121,7 +120,6 @@ void city_health_update(void) {
         city_data.health.value -= 2;
         if (city_data.health.value < city_data.health.target_value)
             city_data.health.value = city_data.health.target_value;
-
     }
     city_data.health.value = calc_bound(city_data.health.value, 0, 100);
 

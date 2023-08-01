@@ -1,8 +1,8 @@
 #include "edit_invasion.h"
 
+#include "graphics/boilerplate.h"
 #include "graphics/elements/button.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/screen.h"
@@ -26,13 +26,13 @@ static void button_delete(int param1, int param2);
 static void button_save(int param1, int param2);
 
 static generic_button buttons[] = {
-        {30,  152, 60,  25, button_year,   button_none},
-        {200, 152, 80,  25, button_amount, button_none},
-        {320, 152, 200, 25, button_type,   button_none},
-        {130, 190, 190, 25, button_from,   button_none},
-        {341, 190, 220, 25, button_attack, button_none},
-        {20,  230, 250, 25, button_delete, button_none},
-        {310, 230, 100, 25, button_save,   button_none},
+  {30, 152, 60, 25, button_year, button_none},
+  {200, 152, 80, 25, button_amount, button_none},
+  {320, 152, 200, 25, button_type, button_none},
+  {130, 190, 190, 25, button_from, button_none},
+  {341, 190, 220, 25, button_attack, button_none},
+  {20, 230, 250, 25, button_delete, button_none},
+  {310, 230, 100, 25, button_save, button_none},
 };
 
 static struct {
@@ -84,12 +84,11 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 7, &data.focus_button_id))
         return;
     if (input_go_back_requested(m, h))
         button_save(0, 0);
-
 }
 
 static void set_year(int value) {
@@ -123,7 +122,6 @@ static void set_from(int value) {
 static void button_from(int param1, int param2) {
     if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE)
         window_select_list_show(screen_dialog_offset_x() + 330, screen_dialog_offset_y() + 50, 35, 9, set_from);
-
 }
 
 static void set_attack(int value) {
@@ -133,7 +131,6 @@ static void set_attack(int value) {
 static void button_attack(int param1, int param2) {
     if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE)
         window_select_list_show(screen_dialog_offset_x() + 120, screen_dialog_offset_y() + 120, 36, 5, set_attack);
-
 }
 
 static void button_delete(int param1, int param2) {
@@ -147,12 +144,7 @@ static void button_save(int param1, int param2) {
 }
 
 void window_editor_edit_invasion_show(int id) {
-    window_type window = {
-            WINDOW_EDITOR_EDIT_INVASION,
-            draw_background,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_EDITOR_EDIT_INVASION, draw_background, draw_foreground, handle_input};
     init(id);
     window_show(&window);
 }

@@ -4,15 +4,11 @@
 /**
  * This code is based on the japacker image packing library, however, unlike japacker (which is public domain),
  * this version of the japacker library is released under aGPL v3.0.
- * 
+ *
  * If you want to use the japacker library, please check its original source at https://github.com/crudelios/japacker.
  */
 
-typedef enum {
-    IMAGE_PACKER_STOP = 0,
-    IMAGE_PACKER_CONTINUE = 1,
-    IMAGE_PACKER_NEW_IMAGE = 2
-} image_packer_fail_policy;
+typedef enum { IMAGE_PACKER_STOP = 0, IMAGE_PACKER_CONTINUE = 1, IMAGE_PACKER_NEW_IMAGE = 2 } image_packer_fail_policy;
 
 typedef enum {
     IMAGE_PACKER_SORT_BY_PERIMETER = 0,
@@ -49,22 +45,22 @@ typedef struct empty_area {
 } empty_area;
 
 typedef struct {
-    image_packer_rect **sorted_rects;
+    image_packer_rect** sorted_rects;
     unsigned int num_rects;
     unsigned int image_width;
     unsigned int image_height;
     struct {
-        struct empty_area *first;
-        struct empty_area *last;
-        struct empty_area *list;
+        struct empty_area* first;
+        struct empty_area* last;
+        struct empty_area* list;
         int index;
         int size;
-        void (*set_comparator)(empty_area *area);
+        void (*set_comparator)(empty_area* area);
     } empty_areas;
 } internal_data_t;
 
 typedef struct {
-    image_packer_rect *rects;
+    image_packer_rect* rects;
     struct {
         int allow_rotation;
         int rects_are_sorted;
@@ -77,7 +73,7 @@ typedef struct {
         unsigned int last_image_width;
         unsigned int last_image_height;
     } result;
-    internal_data_t *internal_data;
+    internal_data_t* internal_data;
 } image_packer;
 
 extern image_packer packer;
@@ -93,7 +89,7 @@ extern image_packer packer;
  * @param height The height of the destination rectangle.
  * @return IMAGE_PACKER_OK on success, or another image_packer_error_type result on error.
  */
-int image_packer_init(image_packer *packer, unsigned int num_rectangles, unsigned int width, unsigned int height);
+int image_packer_init(image_packer* packer, unsigned int num_rectangles, unsigned int width, unsigned int height);
 
 /**
  * @brief Resizes the destination image. Note that this won't automatically repack any rect already packed.
@@ -104,7 +100,7 @@ int image_packer_init(image_packer *packer, unsigned int num_rectangles, unsigne
  * @param image_width The new width of the destination image.
  * @param image_height The new height of the destination image.
  */
-void image_packer_resize_image(image_packer *packer, unsigned int image_width, unsigned int image_height);
+void image_packer_resize_image(image_packer* packer, unsigned int image_width, unsigned int image_height);
 
 /**
  * @brief Packs the rectangles into the destination image.
@@ -119,13 +115,13 @@ void image_packer_resize_image(image_packer *packer, unsigned int image_width, u
  *
  * @param packer The image_packer struct to pack.
  * @return One of image_packer_error_type values on error, or the number of packed rects on success.
-*/
-int image_packer_pack(image_packer *packer);
+ */
+int image_packer_pack(image_packer* packer);
 
 /**
  * @brief Frees the memory associated with an image_packer object.
  * @param packer The object to free.
  */
-void image_packer_free(image_packer *packer);
+void image_packer_free(image_packer* packer);
 
 #endif // CORE_IMAGE_PACKER_H

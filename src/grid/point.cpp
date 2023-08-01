@@ -1,20 +1,20 @@
-#include "scenario/map.h"
 #include "grid.h"
+#include "scenario/map.h"
 
-int *map_point::private_access(int i) {
+int* map_point::private_access(int i) {
     switch (i) {
-        default:
-            return nullptr;
-        case _X:
-            return &p_X;
-        case _Y:
-            return &p_Y;
-        case _GRID_OFFSET:
-            return &p_GRID_OFFSET;
-        case _ABS_X:
-            return &p_ABS_X;
-        case _ABS_Y:
-            return &p_ABS_Y;
+    default:
+        return nullptr;
+    case _X:
+        return &p_X;
+    case _Y:
+        return &p_Y;
+    case _GRID_OFFSET:
+        return &p_GRID_OFFSET;
+    case _ABS_X:
+        return &p_ABS_X;
+    case _ABS_Y:
+        return &p_ABS_Y;
     }
 }
 
@@ -29,7 +29,7 @@ const int map_point::y(int v) {
         set(p_X, v);
     return p_Y;
 }
-int map_point::grid_offset(int v){
+int map_point::grid_offset(int v) {
     if (v != _INVALID_COORD)
         set(v);
     return p_GRID_OFFSET;
@@ -87,14 +87,14 @@ map_point map_point::shifted(int _grid_offset) {
 
 // SET BY CONSTRUCTION
 void map_point::set(int _x, int _y) {
-//    if (_x == _INVALID_COORD || _y == _INVALID_COORD) {
-//        p_GRID_OFFSET = _INVALID_COORD;
-//        p_X = _INVALID_COORD;
-//        p_Y = _INVALID_COORD;
-//        p_ABS_X = _INVALID_COORD;
-//        p_ABS_Y = _INVALID_COORD;
-//        return;
-//    }
+    //    if (_x == _INVALID_COORD || _y == _INVALID_COORD) {
+    //        p_GRID_OFFSET = _INVALID_COORD;
+    //        p_X = _INVALID_COORD;
+    //        p_Y = _INVALID_COORD;
+    //        p_ABS_X = _INVALID_COORD;
+    //        p_ABS_Y = _INVALID_COORD;
+    //        return;
+    //    }
     p_GRID_OFFSET = MAP_OFFSET(_x, _y);
 
     p_X = _x;
@@ -158,17 +158,17 @@ bool map_point::operator==(map_point rhs) {
 static map_point last; // cached point for some internal logic uses
 const map_point map_point_invalid;
 
-void map_point_store_result(int x, int y, map_point *point) {
+void map_point_store_result(int x, int y, map_point* point) {
     point->set(x, y);
     last.set(x, y);
-//    *point = last = map_point(x, y);
-//    point->x = last.x = x;
-//    point->y = last.y = y;
+    //    *point = last = map_point(x, y);
+    //    point->x = last.x = x;
+    //    point->y = last.y = y;
 }
 
-void map_point_get_last_result(map_point *point) {
-//    point->set(last.grid_offset());
+void map_point_get_last_result(map_point* point) {
+    //    point->set(last.grid_offset());
     *point = last;
-//    point->x = last.x;
-//    point->y = last.y;
+    //    point->x = last.x;
+    //    point->y = last.y;
 }

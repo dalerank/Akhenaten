@@ -14,4 +14,4 @@ struct ozymandias_args {
 };
 
 extern ozymandias_args ozymandias_core;
-int platform_parse_arguments(int argc, char **argv, ozymandias_args &output_args);
+int platform_parse_arguments(int argc, char** argv, ozymandias_args& output_args);

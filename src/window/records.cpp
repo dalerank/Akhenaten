@@ -1,16 +1,15 @@
 #include "records.h"
 
 #include "core/game_environment.h"
-#include "io/file.h"
-#include "input/input.h"
-#include "io/playerdata/player_data.h"
-#include "graphics/boilerplate.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
+#include "io/file.h"
+#include "io/playerdata/player_data.h"
 
 static void on_scroll(void);
 
@@ -22,7 +21,7 @@ static void on_scroll(void);
 static scrollbar_type scrollbar = {LIST_X + LIST_WIDTH * 16, LIST_Y - 12, (LIST_MAX_SIZE + 1) * 16, on_scroll};
 
 static struct {
-    const dir_listing *file_list;
+    const dir_listing* file_list;
 } data;
 
 void init() {
@@ -45,7 +44,7 @@ static void draw_foreground(void) {
     // high scores
     font_t font = FONT_SMALL_SHADED;
     for (int i = 0; i < LIST_MAX_SIZE; i++) {
-        const player_record *record = highscores_get(scrollbar.scroll_position + i);
+        const player_record* record = highscores_get(scrollbar.scroll_position + i);
         if (record->nonempty) {
             text_draw_number(record->score, '@', " ", LIST_X + 10, LIST_Y + 16 * i, font);
             text_draw_number(records_calc_score(record), '@', " ", LIST_X + 80, LIST_Y + 16 * i, font);
@@ -59,15 +58,15 @@ static void draw_foreground(void) {
             text_draw_number(record->difficulty, '@', " ", LIST_X + 440, LIST_Y + 16 * i, font);
             text_draw_number(record->unk09, '@', " ", LIST_X + 475, LIST_Y + 16 * i, font);
             if (record->score_is_valid)
-                text_draw((uint8_t *)"V", LIST_X + 510, LIST_Y + 16 * i, font, 0);
+                text_draw((uint8_t*)"V", LIST_X + 510, LIST_Y + 16 * i, font, 0);
             else
-                text_draw((uint8_t *)"-", LIST_X + 510, LIST_Y + 16 * i, font, 0);
+                text_draw((uint8_t*)"-", LIST_X + 510, LIST_Y + 16 * i, font, 0);
         }
 
-//        encoding_from_utf8(data.file_list->files[scrollbar.scroll_position + i], list_name, FILE_NAME_MAX);
-//        font_t font = FONT_NORMAL_BLACK_ON_DARK;
-//        text_ellipsize(list_name, font, MAX_FILE_WINDOW_TEXT_WIDTH);
-//        text_draw(list_name, 160, LIST_Y + 2 + (16 * i), FONT_NORMAL_BLACK_ON_DARK, 0);
+        //        encoding_from_utf8(data.file_list->files[scrollbar.scroll_position + i], list_name, FILE_NAME_MAX);
+        //        font_t font = FONT_NORMAL_BLACK_ON_DARK;
+        //        text_ellipsize(list_name, font, MAX_FILE_WINDOW_TEXT_WIDTH);
+        //        text_draw(list_name, 160, LIST_Y + 2 + (16 * i), FONT_NORMAL_BLACK_ON_DARK, 0);
     }
 
     // bottom text
@@ -79,24 +78,19 @@ static void draw_foreground(void) {
 }
 
 static void on_scroll(void) {
-//    data.message_not_exist_start_time = 0;
+    //    data.message_not_exist_start_time = 0;
 }
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     if (input_go_back_requested(m, h))
         window_go_back();
 
-    const mouse *m_dialog = mouse_in_dialog(m);
+    const mouse* m_dialog = mouse_in_dialog(m);
     if (scrollbar_handle_mouse(&scrollbar, m_dialog))
         return;
 }
 
 void window_records_show(void) {
-    window_type window = {
-            WINDOW_PLAYER_SELECTION,
-            draw_background,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_PLAYER_SELECTION, draw_background, draw_foreground, handle_input};
     init();
     window_show(&window);
 }

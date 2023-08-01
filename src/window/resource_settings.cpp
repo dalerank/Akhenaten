@@ -3,15 +3,14 @@
 #include "building/count.h"
 #include "city/resource.h"
 #include "core/calc.h"
-#include "graphics/image_groups.h"
 #include "empire/city.h"
+#include "graphics/boilerplate.h"
 #include "graphics/elements/arrow_button.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "graphics/image_groups.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -29,35 +28,28 @@ static void button_toggle_trade(int param1, int param2);
 static void button_import_ph(int param1, int param2);
 static void button_export_ph(int param1, int param2);
 
-static image_button resource_image_buttons[] = {
-        {58 - 16,  332, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
-        {558 + 16, 335, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_ok,   button_none, 0, 0, 1}
-};
+static image_button resource_image_buttons[]
+  = {{58 - 16, 332, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
+     {558 + 16, 335, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_ok, button_none, 0, 0, 1}};
 
-static arrow_button resource_arrow_buttons[] = {
-        {314, 215, 17, 24, button_trade_up_down, 1, 0},
-        {338, 215, 15, 24, button_trade_up_down, 0, 0}
-};
-static arrow_button resource_arrow_buttons_import_ph[] = {
-        {264, 215, 17, 24, button_trade_up_down, 1, 0},
-        {288, 215, 15, 24, button_trade_up_down, 0, 0}
-};
-static arrow_button resource_arrow_buttons_export_ph[] = {
-        {264 + 268, 215, 17, 24, button_trade_up_down, 1, 0},
-        {288 + 268, 215, 15, 24, button_trade_up_down, 0, 0}
-};
+static arrow_button resource_arrow_buttons[]
+  = {{314, 215, 17, 24, button_trade_up_down, 1, 0}, {338, 215, 15, 24, button_trade_up_down, 0, 0}};
+static arrow_button resource_arrow_buttons_import_ph[]
+  = {{264, 215, 17, 24, button_trade_up_down, 1, 0}, {288, 215, 15, 24, button_trade_up_down, 0, 0}};
+static arrow_button resource_arrow_buttons_export_ph[]
+  = {{264 + 268, 215, 17, 24, button_trade_up_down, 1, 0}, {288 + 268, 215, 15, 24, button_trade_up_down, 0, 0}};
 
 static generic_button resource_trade_toggle_buttons[] = {
-        {98, 250, 432, 30, button_toggle_industry,  button_none, 0, 0},
-        {98, 288, 432, 50, button_toggle_stockpile, button_none, 0, 0},
-        {98, 212, 432, 30, button_toggle_trade,     button_none, 0, 0},
+  {98, 250, 432, 30, button_toggle_industry, button_none, 0, 0},
+  {98, 288, 432, 50, button_toggle_stockpile, button_none, 0, 0},
+  {98, 212, 432, 30, button_toggle_trade, button_none, 0, 0},
 };
 
 static generic_button resource_trade_ph_buttons[] = {
-        {98, 250, 432, 30, button_toggle_industry,  button_none, 0, 0},
-        {98, 288, 432, 50, button_toggle_stockpile, button_none, 0, 0},
-        {98 - 52, 212, 268, 50, button_import_ph, button_none, 0, 0},
-        {98 + 216, 212, 268, 50, button_export_ph, button_none, 0, 0},
+  {98, 250, 432, 30, button_toggle_industry, button_none, 0, 0},
+  {98, 288, 432, 50, button_toggle_stockpile, button_none, 0, 0},
+  {98 - 52, 212, 268, 50, button_import_ph, button_none, 0, 0},
+  {98 + 216, 212, 268, 50, button_export_ph, button_none, 0, 0},
 };
 
 static struct {
@@ -104,7 +96,8 @@ static void draw_foreground(void) {
             // not mothballed, some working
             int width = text_draw_number(active_buildings, '@', " ", 98, 172, FONT_NORMAL_BLACK_ON_LIGHT);
             width += lang_text_draw(54, 12, 98 + width, 172, FONT_NORMAL_BLACK_ON_LIGHT);
-            width += text_draw_number(total_buildings - active_buildings, '@', " ", 98 + width, 172, FONT_NORMAL_BLACK_ON_LIGHT);
+            width += text_draw_number(
+              total_buildings - active_buildings, '@', " ", 98 + width, 172, FONT_NORMAL_BLACK_ON_LIGHT);
             if (active_buildings == 1)
                 lang_text_draw(54, 13, 98 + width, 172, FONT_NORMAL_BLACK_ON_LIGHT);
             else
@@ -130,19 +123,20 @@ static void draw_foreground(void) {
         else {
             button_border_draw(98, 212, 432, 30, data.focus_button_id == 3);
             switch (trade_status) {
-                case TRADE_STATUS_NONE:
-                    lang_text_draw_centered(54, 18, 114, 221, 400, FONT_NORMAL_BLACK_ON_LIGHT);
-                    break;
-                case TRADE_STATUS_IMPORT:
-                    lang_text_draw_centered(54, 19, 114, 221, 200, FONT_NORMAL_BLACK_ON_LIGHT);
-                    break;
-                case TRADE_STATUS_EXPORT:
-                    lang_text_draw_centered(54, 20, 114, 221, 200, FONT_NORMAL_BLACK_ON_LIGHT);
-                    break;
+            case TRADE_STATUS_NONE:
+                lang_text_draw_centered(54, 18, 114, 221, 400, FONT_NORMAL_BLACK_ON_LIGHT);
+                break;
+            case TRADE_STATUS_IMPORT:
+                lang_text_draw_centered(54, 19, 114, 221, 200, FONT_NORMAL_BLACK_ON_LIGHT);
+                break;
+            case TRADE_STATUS_EXPORT:
+                lang_text_draw_centered(54, 20, 114, 221, 200, FONT_NORMAL_BLACK_ON_LIGHT);
+                break;
             }
         }
         if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT) {
-            lang_text_draw_amount(8, 10, city_resource_trading_amount(data.resource), 386, 221, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_amount(
+              8, 10, city_resource_trading_amount(data.resource), 386, 221, FONT_NORMAL_BLACK_ON_LIGHT);
             arrow_buttons_draw(0, 0, resource_arrow_buttons, 2);
         }
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
@@ -155,51 +149,56 @@ static void draw_foreground(void) {
         // import
         if (!can_import) {
             if (could_import)
-                lang_text_draw_centered(54, 34, btn_imp.x, 221, btn_imp.width, FONT_NORMAL_BLACK_ON_LIGHT); // open trade route to import
+                lang_text_draw_centered(
+                  54, 34, btn_imp.x, 221, btn_imp.width, FONT_NORMAL_BLACK_ON_LIGHT); // open trade route to import
             else
-                lang_text_draw_centered(54, 41, btn_imp.x, 221, btn_imp.width, FONT_NORMAL_BLACK_ON_LIGHT); // no sellers
+                lang_text_draw_centered(
+                  54, 41, btn_imp.x, 221, btn_imp.width, FONT_NORMAL_BLACK_ON_LIGHT); // no sellers
         } else {
             button_border_draw(btn_imp.x, btn_imp.y, btn_imp.width, 30, data.focus_button_id == 3);
             switch (trade_status) {
-                default:
-                    lang_text_draw_centered(54, 39, btn_imp.x, 221, btn_imp.width, FONT_NORMAL_BLACK_ON_LIGHT);
-                    break;
-                case TRADE_STATUS_IMPORT_AS_NEEDED:
-                    lang_text_draw_centered(54, 43, btn_imp.x, 221, btn_imp.width, FONT_NORMAL_BLACK_ON_LIGHT);
-                    break;
-                case TRADE_STATUS_IMPORT: {
-                    int width = 10;
-                    width += lang_text_draw(54, 19, btn_imp.x + width, 221, FONT_NORMAL_BLACK_ON_LIGHT);
-                    text_draw_number(trading_amount, '@', " ", btn_imp.x + width, 221, FONT_NORMAL_BLACK_ON_LIGHT);
-//                    lang_text_draw_amount(8, text_id, trading_amount, btn_imp.x + width, 221, FONT_NORMAL_BLACK);
-                    arrow_buttons_draw(0, 0, resource_arrow_buttons_import_ph, 2);
-                    break;
-                }
+            default:
+                lang_text_draw_centered(54, 39, btn_imp.x, 221, btn_imp.width, FONT_NORMAL_BLACK_ON_LIGHT);
+                break;
+            case TRADE_STATUS_IMPORT_AS_NEEDED:
+                lang_text_draw_centered(54, 43, btn_imp.x, 221, btn_imp.width, FONT_NORMAL_BLACK_ON_LIGHT);
+                break;
+            case TRADE_STATUS_IMPORT: {
+                int width = 10;
+                width += lang_text_draw(54, 19, btn_imp.x + width, 221, FONT_NORMAL_BLACK_ON_LIGHT);
+                text_draw_number(trading_amount, '@', " ", btn_imp.x + width, 221, FONT_NORMAL_BLACK_ON_LIGHT);
+                //                    lang_text_draw_amount(8, text_id, trading_amount, btn_imp.x + width, 221,
+                //                    FONT_NORMAL_BLACK);
+                arrow_buttons_draw(0, 0, resource_arrow_buttons_import_ph, 2);
+                break;
+            }
             }
         }
 
         // export
         if (!can_export) {
             if (could_export)
-                lang_text_draw_centered(54, 35, btn_exp.x, 221, btn_exp.width, FONT_NORMAL_BLACK_ON_LIGHT); // open trade route to import
+                lang_text_draw_centered(
+                  54, 35, btn_exp.x, 221, btn_exp.width, FONT_NORMAL_BLACK_ON_LIGHT); // open trade route to import
             else
-                lang_text_draw_centered(54, 42, btn_exp.x, 221, btn_exp.width, FONT_NORMAL_BLACK_ON_LIGHT); // no sellers
+                lang_text_draw_centered(
+                  54, 42, btn_exp.x, 221, btn_exp.width, FONT_NORMAL_BLACK_ON_LIGHT); // no sellers
         } else {
             button_border_draw(btn_exp.x, btn_exp.y, btn_exp.width, 30, data.focus_button_id == 4);
             switch (trade_status) {
-                default:
-                    lang_text_draw_centered(54, 40, btn_exp.x, 221, btn_exp.width, FONT_NORMAL_BLACK_ON_LIGHT);
-                    break;
-                case TRADE_STATUS_EXPORT_SURPLUS:
-                    lang_text_draw_centered(54, 44, btn_exp.x, 221, btn_exp.width, FONT_NORMAL_BLACK_ON_LIGHT);
-                    break;
-                case TRADE_STATUS_EXPORT: {
-                    int width = 10;
-                    width += lang_text_draw(54, 20, btn_exp.x + width, 221, FONT_NORMAL_BLACK_ON_LIGHT);
-                    text_draw_number(trading_amount, '@', " ", btn_exp.x + width, 221, FONT_NORMAL_BLACK_ON_LIGHT);
-                    arrow_buttons_draw(0, 0, resource_arrow_buttons_export_ph, 2);
-                    break;
-                }
+            default:
+                lang_text_draw_centered(54, 40, btn_exp.x, 221, btn_exp.width, FONT_NORMAL_BLACK_ON_LIGHT);
+                break;
+            case TRADE_STATUS_EXPORT_SURPLUS:
+                lang_text_draw_centered(54, 44, btn_exp.x, 221, btn_exp.width, FONT_NORMAL_BLACK_ON_LIGHT);
+                break;
+            case TRADE_STATUS_EXPORT: {
+                int width = 10;
+                width += lang_text_draw(54, 20, btn_exp.x + width, 221, FONT_NORMAL_BLACK_ON_LIGHT);
+                text_draw_number(trading_amount, '@', " ", btn_exp.x + width, 221, FONT_NORMAL_BLACK_ON_LIGHT);
+                arrow_buttons_draw(0, 0, resource_arrow_buttons_export_ph, 2);
+                break;
+            }
             }
         }
     }
@@ -229,8 +228,8 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
-    const mouse *m_dialog = mouse_in_dialog(m);
+static void handle_input(const mouse* m, const hotkeys* h) {
+    const mouse* m_dialog = mouse_in_dialog(m);
 
     // help / back / ok buttons
     if (image_buttons_handle_mouse(m_dialog, 0, 0, resource_image_buttons, 2, 0))
@@ -273,7 +272,6 @@ static void button_trade_up_down(int is_down, int param2) {
 static void button_toggle_industry(int param1, int param2) {
     if (building_count_industry_total(data.resource) > 0)
         city_resource_toggle_mothballed(data.resource);
-
 }
 static void button_toggle_stockpile(int param1, int param2) {
     city_resource_toggle_stockpiled(data.resource);
@@ -289,12 +287,7 @@ static void button_export_ph(int param1, int param2) {
 }
 
 void window_resource_settings_show(int resource) {
-    window_type window = {
-            WINDOW_RESOURCE_SETTINGS,
-            draw_background,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_RESOURCE_SETTINGS, draw_background, draw_foreground, handle_input};
     init(resource);
     window_show(&window);
 }

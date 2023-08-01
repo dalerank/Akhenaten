@@ -16,4 +16,4 @@ void vegetation_growth_update();
 int gatherers_harvesting_point(int grid_offset);
 bool can_harvest_point(int grid_offset, int max_gatherers = 1);
 
-#endif //OZYMANDIAS_VEGETATION_H
+#endif // OZYMANDIAS_VEGETATION_H

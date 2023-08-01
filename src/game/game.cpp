@@ -1,46 +1,44 @@
 #include "game.h"
 
-#include "window/city.h"
-#include "scenario/events.h"
 #include "building/construction/build_planner.h"
 #include "building/model.h"
-#include "io/config/config.h"
-#include "io/config/hotkeys.h"
-#include "graphics/image.h"
-#include "io/gamefiles/lang.h"
-#include "io/log.h"
-#include "core/random.h"
 #include "core/game_environment.h"
+#include "core/random.h"
 #include "editor/editor.h"
-#include "graphics/animation_timers.h"
 #include "game/file_editor.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/tick.h"
+#include "graphics/animation_timers.h"
 #include "graphics/font.h"
+#include "graphics/image.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
+#include "io/config/config.h"
+#include "io/config/hotkeys.h"
+#include "io/gamefiles/lang.h"
+#include "io/log.h"
+#include "mission.h"
+#include "scenario/events.h"
 #include "scenario/scenario.h"
 #include "sound/city.h"
 #include "sound/system.h"
 #include "translation/translation.h"
+#include "window/city.h"
 #include "window/editor/map.h"
 #include "window/logo.h"
 #include "window/main_menu.h"
-#include "mission.h"
 
-static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {
-        0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
-};
+static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
 
 static time_millis last_update;
 
 static int is_unpatched(void) {
-    const uint8_t *delete_game = lang_get_string(1, 6);
-    const uint8_t *option_menu = lang_get_string(2, 0);
-    const uint8_t *difficulty_option = lang_get_string(2, 6);
-    const uint8_t *help_menu = lang_get_string(3, 0);
+    const uint8_t* delete_game = lang_get_string(1, 6);
+    const uint8_t* option_menu = lang_get_string(2, 0);
+    const uint8_t* difficulty_option = lang_get_string(2, 6);
+    const uint8_t* help_menu = lang_get_string(3, 0);
     // Without patch, the difficulty option string does not exist and
     // getting it "falls through" to the next text group, or, for some
     // languages (pt_BR): delete game falls through to option menu
@@ -79,24 +77,24 @@ static int get_elapsed_ticks(void) {
     int game_speed_index = 0;
     int ticks_per_frame = 1;
     switch (window_get_id()) {
-        default:
+    default:
+        return 0;
+    case WINDOW_CITY:
+    case WINDOW_CITY_MILITARY:
+    case WINDOW_SLIDING_SIDEBAR:
+    case WINDOW_OVERLAY_MENU:
+    case WINDOW_BUILD_MENU:
+        game_speed_index = (100 - setting_game_speed()) / 10;
+        if (game_speed_index >= 10)
             return 0;
-        case WINDOW_CITY:
-        case WINDOW_CITY_MILITARY:
-        case WINDOW_SLIDING_SIDEBAR:
-        case WINDOW_OVERLAY_MENU:
-        case WINDOW_BUILD_MENU:
-            game_speed_index = (100 - setting_game_speed()) / 10;
-            if (game_speed_index >= 10)
-                return 0;
-            else if (game_speed_index < 0) {
-                ticks_per_frame = setting_game_speed() / 100;
-                game_speed_index = 0;
-            }
-            break;
-        case WINDOW_EDITOR_MAP:
-            game_speed_index = 3; // 70%, nice speed for flag animations
-            break;
+        else if (game_speed_index < 0) {
+            ticks_per_frame = setting_game_speed() / 100;
+            game_speed_index = 0;
+        }
+        break;
+    case WINDOW_EDITOR_MAP:
+        game_speed_index = 3; // 70%, nice speed for flag animations
+        break;
     }
     if (Planner.in_progress)
         return 0;
@@ -118,7 +116,7 @@ bool game_pre_init(void) {
         return false;
     update_encoding();
     settings_load(); // c3.inf
-    config_load(); // augustus.ini
+    config_load();   // augustus.ini
     hotkey_config_load();
     scenario_settings_init();
     random_init();
@@ -161,7 +159,7 @@ bool game_init(void) {
         }
     }
 
-//    mods_init();
+    //    mods_init();
     sound_system_init();
     game_state_init();
     window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));

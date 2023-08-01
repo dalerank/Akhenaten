@@ -28,27 +28,27 @@ static void show(int warning) {
 
 static void check_road_access(int type, int x, int y, int size, int orientation) {
     switch (type) {
-        case BUILDING_NONE:
-        case BUILDING_CLEAR_LAND:
-        case BUILDING_ROAD:
-        case BUILDING_IRRIGATION_DITCH:
-        case BUILDING_HOUSE_VACANT_LOT:
-        case BUILDING_SMALL_STATUE:
-        case BUILDING_MEDIUM_STATUE:
-        case BUILDING_LARGE_STATUE:
-//        case BUILDING_MENU_BEAUTIFICATION:
-        case BUILDING_WELL:
-        case BUILDING_WATER_LIFT:
-        case BUILDING_GATEHOUSE:
-        case BUILDING_ROADBLOCK:
-        case BUILDING_TRIUMPHAL_ARCH:
-//        case BUILDING_MENU_FORTS:
-        case BUILDING_FORT_CHARIOTEERS:
-        case BUILDING_FORT_ARCHERS:
-        case BUILDING_FORT_INFANTRY:
-        case BUILDING_TEMPLE_COMPLEX_ALTAR:
-        case BUILDING_TEMPLE_COMPLEX_ORACLE:
-            return;
+    case BUILDING_NONE:
+    case BUILDING_CLEAR_LAND:
+    case BUILDING_ROAD:
+    case BUILDING_IRRIGATION_DITCH:
+    case BUILDING_HOUSE_VACANT_LOT:
+    case BUILDING_SMALL_STATUE:
+    case BUILDING_MEDIUM_STATUE:
+    case BUILDING_LARGE_STATUE:
+        //        case BUILDING_MENU_BEAUTIFICATION:
+    case BUILDING_WELL:
+    case BUILDING_WATER_LIFT:
+    case BUILDING_GATEHOUSE:
+    case BUILDING_ROADBLOCK:
+    case BUILDING_TRIUMPHAL_ARCH:
+        //        case BUILDING_MENU_FORTS:
+    case BUILDING_FORT_CHARIOTEERS:
+    case BUILDING_FORT_ARCHERS:
+    case BUILDING_FORT_INFANTRY:
+    case BUILDING_TEMPLE_COMPLEX_ALTAR:
+    case BUILDING_TEMPLE_COMPLEX_ORACLE:
+        return;
     }
 
     bool has_road = false;
@@ -56,12 +56,12 @@ static void check_road_access(int type, int x, int y, int size, int orientation)
         has_road = true;
     else if (type == BUILDING_WAREHOUSE && map_has_road_access(x, y, 3, 0))
         has_road = true;
-//    else if (type == BUILDING_SENET_HOUSE && map_has_road_access_hippodrome(x, y, 0))
-//        has_road = true;
+    //    else if (type == BUILDING_SENET_HOUSE && map_has_road_access_hippodrome(x, y, 0))
+    //        has_road = true;
     else if (building_is_large_temple(type) && map_has_road_access_temple_complex(x, y, orientation, true, 0))
         has_road = true;
-//    else if (type == BUILDING_ORACLE && map_closest_road_within_radius(x, y, size, 2, 0, 0))
-//        has_road = true;
+    //    else if (type == BUILDING_ORACLE && map_closest_road_within_radius(x, y, size, 2, 0, 0))
+    //        has_road = true;
 
     if (!has_road)
         show(WARNING_ROAD_ACCESS_NEEDED);
@@ -75,9 +75,9 @@ static void check_water(int type, int x, int y) {
             if (map_terrain_is(grid_offset, TERRAIN_GROUNDWATER))
                 has_water = 1;
             else if (type == BUILDING_MENU_MONUMENTS) {
-                if (map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_GROUNDWATER) ||
-                    map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_GROUNDWATER) ||
-                    map_terrain_is(grid_offset + GRID_OFFSET(1, 1), TERRAIN_GROUNDWATER)) {
+                if (map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_GROUNDWATER)
+                    || map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_GROUNDWATER)
+                    || map_terrain_is(grid_offset + GRID_OFFSET(1, 1), TERRAIN_GROUNDWATER)) {
                     has_water = 1;
                 }
             }
@@ -151,8 +151,7 @@ static void check_charioteer_access(int type) {
 }
 
 static void check_iron_access(int type) {
-    if (type == BUILDING_WEAPONS_WORKSHOP &&
-        building_count_industry_active(RESOURCE_COPPER) <= 0) {
+    if (type == BUILDING_WEAPONS_WORKSHOP && building_count_industry_active(RESOURCE_COPPER) <= 0) {
         if (city_resource_count(RESOURCE_WEAPONS) <= 0 && city_resource_count(RESOURCE_COPPER) <= 0) {
             show(WARNING_IRON_NEEDED);
             if (empire_can_produce_resource(RESOURCE_COPPER, true))
@@ -166,8 +165,7 @@ static void check_iron_access(int type) {
 }
 
 static void check_vines_access(int type) {
-    if (type == BUILDING_BEER_WORKSHOP &&
-        building_count_industry_active(RESOURCE_BARLEY) <= 0) {
+    if (type == BUILDING_BEER_WORKSHOP && building_count_industry_active(RESOURCE_BARLEY) <= 0) {
         if (city_resource_count(RESOURCE_BEER) <= 0 && city_resource_count(RESOURCE_BARLEY) <= 0) {
             show(WARNING_VINES_NEEDED);
             if (empire_can_produce_resource(RESOURCE_BARLEY, true))
@@ -181,8 +179,7 @@ static void check_vines_access(int type) {
 }
 
 static void check_olives_access(int type) {
-    if (type == BUILDING_LINEN_WORKSHOP &&
-        building_count_industry_active(RESOURCE_STRAW) <= 0) {
+    if (type == BUILDING_LINEN_WORKSHOP && building_count_industry_active(RESOURCE_STRAW) <= 0) {
         if (city_resource_count(RESOURCE_MEAT) <= 0 && city_resource_count(RESOURCE_STRAW) <= 0) {
             show(WARNING_OLIVES_NEEDED);
             if (empire_can_produce_resource(RESOURCE_STRAW, true))
@@ -196,8 +193,7 @@ static void check_olives_access(int type) {
 }
 
 static void check_timber_access(int type) {
-    if (type == BUILDING_JEWELS_WORKSHOP &&
-        building_count_industry_active(RESOURCE_GEMS) <= 0) {
+    if (type == BUILDING_JEWELS_WORKSHOP && building_count_industry_active(RESOURCE_GEMS) <= 0) {
         if (city_resource_count(RESOURCE_LUXURY_GOODS) <= 0 && city_resource_count(RESOURCE_GEMS) <= 0) {
             show(WARNING_TIMBER_NEEDED);
             if (empire_can_produce_resource(RESOURCE_GEMS, true))
@@ -211,8 +207,7 @@ static void check_timber_access(int type) {
 }
 
 static void check_clay_access(int type) {
-    if (type == BUILDING_POTTERY_WORKSHOP &&
-        building_count_industry_active(RESOURCE_CLAY) <= 0) {
+    if (type == BUILDING_POTTERY_WORKSHOP && building_count_industry_active(RESOURCE_CLAY) <= 0) {
         if (city_resource_count(RESOURCE_POTTERY) <= 0 && city_resource_count(RESOURCE_CLAY) <= 0) {
             show(WARNING_CLAY_NEEDED);
             if (empire_can_produce_resource(RESOURCE_CLAY, true))

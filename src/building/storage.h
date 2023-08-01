@@ -9,9 +9,7 @@
  * Building storage functions
  */
 
-enum e_building_storage{
-    BUILDING_STORAGE_DATA
-};
+enum e_building_storage { BUILDING_STORAGE_DATA };
 
 /**
  * Storage state
@@ -86,7 +84,7 @@ void building_storage_delete(int storage_id);
  * @param storage_id Storage id
  * @return Read-only storage
  */
-const building_storage *building_storage_get(int storage_id);
+const building_storage* building_storage_get(int storage_id);
 
 void backup_storage_settings(int storage_id);
 void restore_storage_settings(bool do_forget_changes);
@@ -118,5 +116,5 @@ void building_storage_toggle_empty_all(int storage_id);
  */
 void building_storage_reset_building_ids(void);
 
-void building_storage_set_permission(int p, building *b);
-int building_storage_get_permission(int p, building *b);
+void building_storage_set_permission(int p, building* b);
+int building_storage_get_permission(int p, building* b);

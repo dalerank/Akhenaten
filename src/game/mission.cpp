@@ -1,13 +1,13 @@
+#include "mission.h"
 #include "io/file.h"
-#include <core/buffer.h>
 #include "io/io.h"
 #include "io/log.h"
+#include <core/buffer.h>
 #include <core/string.h>
-#include "mission.h"
 
-#include "scenario/property.h"
 #include "core/game_environment.h"
 #include "io/playerdata/player_data.h"
+#include "scenario/property.h"
 
 struct mission_data_t {
     uint8_t map_names[300][300];
@@ -22,14 +22,14 @@ struct mission_data_t {
 
 mission_data_t g_mission_data;
 
-bool matches_path_id(const mission_step_t *step, int path_id) {
+bool matches_path_id(const mission_step_t* step, int path_id) {
     for (int i = 0; i < MAX_MISSION_CHOICE_BRANCHES; ++i) {
         if (step->path_ids[i] == path_id)
             return true; // ONLY match with the provided id. the default path id merger (0) is checked MANUALLY!
     }
     return false;
 }
-static mission_step_t *find_next_connected_path_step(const mission_step_t *step, int path_id) {
+static mission_step_t* find_next_connected_path_step(const mission_step_t* step, int path_id) {
     auto next = step->next_in_list;
     while (next != nullptr) {
         if (matches_path_id(next, 0)) // first, check for default path id merging (0)
@@ -43,7 +43,7 @@ static mission_step_t *find_next_connected_path_step(const mission_step_t *step,
     }
     return nullptr;
 }
-static mission_step_t *find_next(const mission_step_t *step, int choice_index = 0) {
+static mission_step_t* find_next(const mission_step_t* step, int choice_index = 0) {
     if (!step->has_choice)
         return find_next_connected_path_step(step, 0);
     else {
@@ -52,7 +52,7 @@ static mission_step_t *find_next(const mission_step_t *step, int choice_index = 
     }
     return nullptr; // this should never happen?
 }
-static void find_in_campaigns(int scenario_id, int *campaign_id, int *step_index) {
+static void find_in_campaigns(int scenario_id, int* campaign_id, int* step_index) {
     for (int c = 0; c < g_mission_data.num_campaigns; ++c) {
         auto campaign = &g_mission_data.campaigns[c];
         for (int i = 0; i < campaign->num_steps; ++i) {
@@ -68,12 +68,12 @@ static void find_in_campaigns(int scenario_id, int *campaign_id, int *step_index
     *campaign_id = -1;
     *step_index = -1;
 }
-const uint8_t *game_mission_get_name(int scenario_id) {
+const uint8_t* game_mission_get_name(int scenario_id) {
     if (scenario_id >= g_mission_data.map_name_nums || scenario_id > 299)
         return g_mission_data.map_names[0];
     return g_mission_data.map_names[scenario_id];
 }
-const mission_step_t *get_campaign_mission_step_data(int campaign_id, int step_index) {
+const mission_step_t* get_campaign_mission_step_data(int campaign_id, int step_index) {
     if (campaign_id < -1 || campaign_id >= g_mission_data.num_campaigns)
         return nullptr;
     auto campaign = &g_mission_data.campaigns[campaign_id];
@@ -81,7 +81,7 @@ const mission_step_t *get_campaign_mission_step_data(int campaign_id, int step_i
         return nullptr;
     return &g_mission_data.campaigns[campaign_id].steps[step_index];
 }
-const mission_step_t *get_scenario_step_data(int scenario_id) {
+const mission_step_t* get_scenario_step_data(int scenario_id) {
     int campaign_id = -1;
     int step_index = -1;
     find_in_campaigns(scenario_id, &campaign_id, &step_index);
@@ -116,46 +116,45 @@ int get_last_mission_in_campaign(int campaign_id) {
 }
 bool game_mission_has_choice(void) {
     return false; // TODO
-//    if (GAME_ENV == ENGINE_ENV_C3)
-//        return RANK_CHOICE_C3[scenario_campaign_rank()];
-//    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-//        int selector = scenario_ph_mission_selector();
-//        return CAN_CHOOSE_NEXT_SCENARIO_PH[selector];
-//    }
+    //    if (GAME_ENV == ENGINE_ENV_C3)
+    //        return RANK_CHOICE_C3[scenario_campaign_rank()];
+    //    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    //        int selector = scenario_ph_mission_selector();
+    //        return CAN_CHOOSE_NEXT_SCENARIO_PH[selector];
+    //    }
 }
 
 bool game_campaign_unlocked(int campaign_id) {
     return game_scenario_unlocked(get_first_mission_in_campaign(campaign_id));
-//    switch (campaign_id) {
-//        // pharaoh
-//        case CAMPAIGN_PHARAOH_ARCHAIC:
-//            return game_scenario_unlocked(SCENARIO_NUBT);
-//        case CAMPAIGN_PHARAOH_PREDYNASTIC:
-//            return game_scenario_unlocked(SCENARIO_NEKHEN);
-//        case CAMPAIGN_PHARAOH_OLD_KINGDOM:
-//            return game_scenario_unlocked(SCENARIO_SELIMA_OASIS);
-//        case CAMPAIGN_PHARAOH_MIDDLE_KINGDOM:
-//            return game_scenario_unlocked(SCENARIO_THINIS_2);
-//        case CAMPAIGN_PHARAOH_NEW_KINGDOM:
-//            return game_scenario_unlocked(SCENARIO_KHMUN);
-//            // cleopatra
-//        case CAMPAIGN_CLEOPATRA_VALLEY_OF_THE_KINGS:
-//            return game_scenario_unlocked(SCENARIO_VALLEY_THUTMOSE);
-//        case CAMPAIGN_CLEOPATRA_RAMSES_II:
-//            return game_scenario_unlocked(SCENARIO_SUMUR);
-//        case CAMPAIGN_CLEOPATRA_ANCIENT_CONQUERORS:
-//            return game_scenario_unlocked(SCENARIO_PI_YER);
-//        case CAMPAIGN_CLEOPATRA_CLEOPATRAS_CAPITAL:
-//            return game_scenario_unlocked(SCENARIO_ALEXANDRIA_1);
-//    }
+    //    switch (campaign_id) {
+    //        // pharaoh
+    //        case CAMPAIGN_PHARAOH_ARCHAIC:
+    //            return game_scenario_unlocked(SCENARIO_NUBT);
+    //        case CAMPAIGN_PHARAOH_PREDYNASTIC:
+    //            return game_scenario_unlocked(SCENARIO_NEKHEN);
+    //        case CAMPAIGN_PHARAOH_OLD_KINGDOM:
+    //            return game_scenario_unlocked(SCENARIO_SELIMA_OASIS);
+    //        case CAMPAIGN_PHARAOH_MIDDLE_KINGDOM:
+    //            return game_scenario_unlocked(SCENARIO_THINIS_2);
+    //        case CAMPAIGN_PHARAOH_NEW_KINGDOM:
+    //            return game_scenario_unlocked(SCENARIO_KHMUN);
+    //            // cleopatra
+    //        case CAMPAIGN_CLEOPATRA_VALLEY_OF_THE_KINGS:
+    //            return game_scenario_unlocked(SCENARIO_VALLEY_THUTMOSE);
+    //        case CAMPAIGN_CLEOPATRA_RAMSES_II:
+    //            return game_scenario_unlocked(SCENARIO_SUMUR);
+    //        case CAMPAIGN_CLEOPATRA_ANCIENT_CONQUERORS:
+    //            return game_scenario_unlocked(SCENARIO_PI_YER);
+    //        case CAMPAIGN_CLEOPATRA_CLEOPATRAS_CAPITAL:
+    //            return game_scenario_unlocked(SCENARIO_ALEXANDRIA_1);
+    //    }
 }
-bool is_step_unlocked(const mission_step_t *step) {
+bool is_step_unlocked(const mission_step_t* step) {
     if (step->requirements[0] == nullptr)
         return true;
     // if otherwise specified, this scenario requires specific ones to unlock;
     // any one of them in the req. group will suffice to unlock the scenario.
     for (int i = 0; i < MAX_MISSION_CHOICE_BRANCHES; ++i) {
-
         auto req = step->requirements[i];
         if (req != nullptr) {
             if (req->scenario_id == SCENARIO_NULL) { // a dangling choice screen: traverse the tree upwards
@@ -173,9 +172,9 @@ bool game_scenario_unlocked(int scenario_id) {
     if (scenario_id < 0 || scenario_id >= SCENARIO_MAX) // invalid mission index
         return false;
     switch (scenario_id) {
-        case SCENARIO_NUBT:
-        case SCENARIO_VALLEY_THUTMOSE:
-            return true; // first mission is always unlocked
+    case SCENARIO_NUBT:
+    case SCENARIO_VALLEY_THUTMOSE:
+        return true; // first mission is always unlocked
     }
     auto step = get_scenario_step_data(scenario_id);
     return is_step_unlocked(step);
@@ -188,8 +187,8 @@ bool game_scenario_beaten(int scenario_id) {
 }
 
 #define TMP_BUFFER_SIZE 10000
-static const uint8_t *CAMPAIGN_FILE_BEGIN = string_from_ascii("\n[MISSION_NAMES]\n");
-static const uint8_t *skip_non_digits(const uint8_t *str) {
+static const uint8_t* CAMPAIGN_FILE_BEGIN = string_from_ascii("\n[MISSION_NAMES]\n");
+static const uint8_t* skip_non_digits(const uint8_t* str) {
     int safeguard = 0;
     while (1) {
         if (++safeguard >= 1000)
@@ -202,17 +201,17 @@ static const uint8_t *skip_non_digits(const uint8_t *str) {
     }
     return str;
 }
-static const uint8_t *get_value(const uint8_t *ptr, const uint8_t *end_ptr, int *value) {
+static const uint8_t* get_value(const uint8_t* ptr, const uint8_t* end_ptr, int* value) {
     ptr = skip_non_digits(ptr);
     *value = string_to_int(ptr);
-    int skip = index_of(ptr, ',', (int) (end_ptr - ptr));
+    int skip = index_of(ptr, ',', (int)(end_ptr - ptr));
     if (skip == 0)
-        skip = index_of(ptr, '\n', (int) (end_ptr - ptr) + 2) - 1;
+        skip = index_of(ptr, '\n', (int)(end_ptr - ptr) + 2) - 1;
     ptr += skip;
     return ptr;
 }
 bool game_load_campaign_file() {
-    const char *filename = "campaign.txt";
+    const char* filename = "campaign.txt";
 
     buffer buf(TMP_BUFFER_SIZE);
     int filesize = 0;
@@ -227,8 +226,8 @@ bool game_load_campaign_file() {
     int num_lines = 0;
     int num_valid_lines = 0;
     int line_end;
-    const uint8_t *haystack = buf.get_data();
-    const uint8_t *ptr = &haystack[0];
+    const uint8_t* haystack = buf.get_data();
+    const uint8_t* ptr = &haystack[0];
     int action = -2;
     int data_line_idx = 0;
     do {
@@ -238,9 +237,9 @@ bool game_load_campaign_file() {
             line_size = filesize - (ptr - haystack);
         else
             line_size -= 2;
-        const uint8_t *endl = ptr + line_size;
+        const uint8_t* endl = ptr + line_size;
         int comment = index_of(ptr, ';', line_size);
-        if (comment != 1 && line_size > 0) { // valid line!
+        if (comment != 1 && line_size > 0) {     // valid line!
             if (index_of(ptr, '[', line_size)) { // braced tag
                 data_line_idx = 0;
                 if (index_of_string(ptr, string_from_ascii("MISSION_NAMES"), line_size)) { // scenario names...
@@ -249,7 +248,7 @@ bool game_load_campaign_file() {
                     g_mission_data.num_campaigns++;
                     action++;
                 }
-            } else { // data line
+            } else {                // data line
                 if (action == -1) { // map names
                     buf2.clear();
                     buf2.write_raw(ptr, line_size);
@@ -267,7 +266,8 @@ bool game_load_campaign_file() {
                         ptr = get_value(ptr, endl, &step->victory_text_id);
                         for (int i = 0; i < MAX_MISSION_CHOICE_BRANCHES; ++i) {
                             // TODO warning: passing NULL to non-pointer argument
-                            bool end_of_line = (index_of(ptr, '\n', line_size) == 1 || index_of(ptr, NULL, line_size) == 1);
+                            bool end_of_line
+                              = (index_of(ptr, '\n', line_size) == 1 || index_of(ptr, NULL, line_size) == 1);
                             if (!end_of_line)
                                 ptr = get_value(ptr, endl, &step->path_ids[i]);
                             else
@@ -282,12 +282,14 @@ bool game_load_campaign_file() {
                         if (campaign->num_steps > 1) { // previous one is the mission immediately preceding this one
                             step->previous_in_list = &campaign->steps[campaign->num_steps - 2];
                             step->previous_in_list->next_in_list = step;
-                        } else if (g_mission_data.num_campaigns > 1) { // previous one is the last one in PREVIOUS CAMPAIGN
+                        } else if (g_mission_data.num_campaigns
+                                   > 1) { // previous one is the last one in PREVIOUS CAMPAIGN
                             auto prev_campaign = &g_mission_data.campaigns[g_mission_data.num_campaigns - 2];
                             step->previous_in_list = &prev_campaign->steps[prev_campaign->num_steps - 1];
                             step->previous_in_list->next_in_list = step;
                         }
-                    } else if (index_of_string(ptr, string_from_ascii("choicescreen"), line_size)) { // choice screen data
+                    } else if (index_of_string(
+                                 ptr, string_from_ascii("choicescreen"), line_size)) { // choice screen data
                         if (campaign->num_steps == 0)
                             campaign->num_steps++;
                         auto step = &campaign->steps[campaign->num_steps - 1];
@@ -295,16 +297,21 @@ bool game_load_campaign_file() {
                         ptr = skip_non_digits(ptr);
                         ptr = get_value(ptr, endl, &step->graphics_id);
                         ptr = get_value(ptr, endl, &step->text_id);
-                        if (step->scenario_id == -1) { // a choice screen invoked automatically, with no previous scenario
+                        if (step->scenario_id
+                            == -1) { // a choice screen invoked automatically, with no previous scenario
                             step->path_ids[0] = 0;
                         }
-                        if (step->scenario_id == -1 && g_mission_data.num_campaigns > 1) { // dangling choice screen at the start of a campaign!!
+                        if (step->scenario_id == -1
+                            && g_mission_data.num_campaigns
+                                 > 1) { // dangling choice screen at the start of a campaign!!
                             auto prev_campaign = &g_mission_data.campaigns[g_mission_data.num_campaigns - 2];
                             step->previous_in_list = &prev_campaign->steps[prev_campaign->num_steps - 1];
                             step->previous_in_list->next_in_list = step;
                         }
                     } else if (index_of_string(ptr, string_from_ascii("choice"), line_size)) { // choice branch data
-                        auto step = &campaign->steps[campaign->num_steps - 1]; // these MUST come after a valid CHOICESCREEN tag.
+                        auto step
+                          = &campaign
+                               ->steps[campaign->num_steps - 1]; // these MUST come after a valid CHOICESCREEN tag.
                         auto branch = &step->branches[step->num_branches];
                         ptr = skip_non_digits(ptr);
                         ptr = get_value(ptr, endl, &branch->path_id);

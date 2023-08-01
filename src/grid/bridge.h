@@ -5,7 +5,7 @@ int map_bridge_building_length(void);
 
 void map_bridge_reset_building_length(void);
 
-int map_bridge_calculate_length_direction(int x, int y, int *length, int *direction);
+int map_bridge_calculate_length_direction(int x, int y, int* length, int* direction);
 
 int map_bridge_get_sprite_id(int index, int length, int direction, bool is_ship_bridge);
 /**

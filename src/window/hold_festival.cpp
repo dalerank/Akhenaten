@@ -4,15 +4,14 @@
 #include "city/festival.h"
 #include "city/finance.h"
 #include "city/gods.h"
-#include "graphics/image_groups.h"
 #include "core/game_environment.h"
 #include "game/resource.h"
+#include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "graphics/image_groups.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "window/advisors.h"
@@ -25,21 +24,21 @@ static void button_close(int param1, int param2);
 static void button_hold_festival(int param1, int param2);
 
 static image_button image_buttons_bottom[] = {
-        {58,  316, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS,            0, button_help,          button_none, 0, 0, 1},
-        {558, 319, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS,            4, button_close,         button_none, 0, 0, 1},
-        {400, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_hold_festival, button_none, 1, 0, 1},
-        {358, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_close,         button_none, 0, 0, 1},
+  {58, 316, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
+  {558, 319, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1},
+  {400, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_hold_festival, button_none, 1, 0, 1},
+  {358, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_close, button_none, 0, 0, 1},
 };
 
 static generic_button buttons_gods_size[] = {
-        {70,  96,  80,  90, button_god,  button_none, 0, 0},
-        {170, 96,  80,  90, button_god,  button_none, 1, 0},
-        {270, 96,  80,  90, button_god,  button_none, 2, 0},
-        {370, 96,  80,  90, button_god,  button_none, 3, 0},
-        {470, 96,  80,  90, button_god,  button_none, 4, 0},
-        {102, 216, 430, 26, button_size, button_none, 1, 0},
-        {102, 246, 430, 26, button_size, button_none, 2, 0},
-        {102, 276, 430, 26, button_size, button_none, 3, 0},
+  {70, 96, 80, 90, button_god, button_none, 0, 0},
+  {170, 96, 80, 90, button_god, button_none, 1, 0},
+  {270, 96, 80, 90, button_god, button_none, 2, 0},
+  {370, 96, 80, 90, button_god, button_none, 3, 0},
+  {470, 96, 80, 90, button_god, button_none, 4, 0},
+  {102, 216, 430, 26, button_size, button_none, 1, 0},
+  {102, 246, 430, 26, button_size, button_none, 2, 0},
+  {102, 276, 430, 26, button_size, button_none, 3, 0},
 };
 
 static int focus_button_id;
@@ -79,7 +78,6 @@ static void draw_buttons(void) {
     } else if (city_festival_out_of_alcohol()) {
         graphics_shade_rect(104, 278, 426, 22, 0);
     }
-
 }
 static void draw_background(void) {
     window_advisors_draw_dialog_background();
@@ -108,8 +106,8 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
-    const mouse *m_dialog = mouse_in_dialog(m);
+static void handle_input(const mouse* m, const hotkeys* h) {
+    const mouse* m_dialog = mouse_in_dialog(m);
     int handled = 0;
     handled |= image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 4, &focus_image_button_id);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, buttons_gods_size, 8, &focus_button_id);
@@ -118,7 +116,6 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 
     if (!handled && input_go_back_requested(m, h))
         window_advisors_show();
-
 }
 
 static void button_god(int god, int param2) {
@@ -144,52 +141,46 @@ static void button_hold_festival(int param1, int param2) {
     window_advisors_show();
 }
 
-static void get_tooltip(tooltip_context *c) {
+static void get_tooltip(tooltip_context* c) {
     if (!focus_image_button_id && (!focus_button_id || focus_button_id > 5))
         return;
     c->type = TOOLTIP_BUTTON;
     // image buttons
     switch (focus_image_button_id) {
-        case 1:
-            c->text_id = 1;
-            break;
-        case 2:
-            c->text_id = 2;
-            break;
-        case 3:
-            c->text_id = 113;
-            break;
-        case 4:
-            c->text_id = 114;
-            break;
+    case 1:
+        c->text_id = 1;
+        break;
+    case 2:
+        c->text_id = 2;
+        break;
+    case 3:
+        c->text_id = 113;
+        break;
+    case 4:
+        c->text_id = 114;
+        break;
     }
     // gods
     switch (focus_button_id) {
-        case 1:
-            c->text_id = 115;
-            break;
-        case 2:
-            c->text_id = 116;
-            break;
-        case 3:
-            c->text_id = 117;
-            break;
-        case 4:
-            c->text_id = 118;
-            break;
-        case 5:
-            c->text_id = 119;
-            break;
+    case 1:
+        c->text_id = 115;
+        break;
+    case 2:
+        c->text_id = 116;
+        break;
+    case 3:
+        c->text_id = 117;
+        break;
+    case 4:
+        c->text_id = 118;
+        break;
+    case 5:
+        c->text_id = 119;
+        break;
     }
 }
 
 void window_hold_festival_show(void) {
-    window_type window = {
-            WINDOW_HOLD_FESTIVAL,
-            draw_background,
-            draw_foreground,
-            handle_input,
-            get_tooltip
-    };
+    window_type window = {WINDOW_HOLD_FESTIVAL, draw_background, draw_foreground, handle_input, get_tooltip};
     window_show(&window);
 }

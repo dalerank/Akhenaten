@@ -36,7 +36,7 @@ void editor_tool_set_with_id(int tool, int id);
 int editor_tool_is_brush(void);
 int editor_tool_brush_size(void);
 void editor_tool_set_brush_size(int size);
-void editor_tool_foreach_brush_tile(void (*callback)(const void *user_data, int dx, int dy), const void *user_data);
+void editor_tool_foreach_brush_tile(void (*callback)(const void* user_data, int dx, int dy), const void* user_data);
 
 int editor_tool_is_updatable(void);
 

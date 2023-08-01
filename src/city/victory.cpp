@@ -6,8 +6,8 @@
 #include "city/figures.h"
 #include "city/finance.h"
 #include "city/message.h"
-#include "io/config/config.h"
 #include "game/time.h"
+#include "io/config/config.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 #include "sound/music.h"
@@ -69,7 +69,7 @@ static e_victory_state determine_victory_state(void) {
         has_criteria = 1;
         int houses_of_required_level = 0;
         for (int i = 0; i < building_get_highest_id(); i++) {
-            building *b = building_get(i);
+            building* b = building_get(i);
             if (b->state == BUILDING_STATE_VALID && b->type == winning_houselevel() + BUILDING_HOUSE_SMALL_TENT)
                 houses_of_required_level++;
         }
@@ -109,26 +109,22 @@ static e_victory_state determine_victory_state(void) {
         if (!has_criteria) {
             if (scenario_criteria_time_limit_enabled() || scenario_criteria_survival_enabled())
                 has_criteria = 1;
-
         }
         if (game_time_year() >= scenario_criteria_max_year()) {
             if (scenario_criteria_time_limit_enabled())
                 state = VICTORY_STATE_LOST;
             else if (scenario_criteria_survival_enabled())
                 state = VICTORY_STATE_WON;
-
         }
     }
 
     if (city_figures_total_invading_enemies() > 2 + city_data.figure.soldiers) {
         if (city_data.population.population < city_data.population.highest_ever / 4)
             state = VICTORY_STATE_LOST;
-
     }
     if (city_figures_total_invading_enemies() > 0) {
         if (city_data.population.population <= 0)
             state = VICTORY_STATE_LOST;
-
     }
     if (!has_criteria)
         state = VICTORY_STATE_NONE;
@@ -173,7 +169,6 @@ void city_victory_check(void) {
 void city_victory_update_months_to_govern(void) {
     if (city_data.mission.has_won)
         city_data.mission.continue_months_left--;
-
 }
 
 void city_victory_continue_governing(int months) {

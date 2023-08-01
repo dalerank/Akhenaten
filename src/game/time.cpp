@@ -1,10 +1,10 @@
-#include <scenario/property.h>
-#include "io/io_buffer.h"
 #include "time.h"
+#include "io/io_buffer.h"
+#include <scenario/property.h>
 
 static time_data_t data;
 
-const time_data_t *game_time_struct() {
+const time_data_t* game_time_struct() {
     return &data;
 }
 
@@ -75,7 +75,7 @@ void game_time_advance_year(void) {
     ++data.year;
 }
 
-io_buffer *iob_game_time = new io_buffer([](io_buffer *iob) {
+io_buffer* iob_game_time = new io_buffer([](io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.tick);
     iob->bind(BIND_SIGNATURE_INT32, &data.day);
     iob->bind(BIND_SIGNATURE_INT32, &data.month);

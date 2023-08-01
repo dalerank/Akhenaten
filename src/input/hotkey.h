@@ -1,8 +1,8 @@
 #ifndef INPUT_HOTKEY_H
 #define INPUT_HOTKEY_H
 
-#include "io/config/hotkeys.h"
 #include "input/keys.h"
+#include "io/config/hotkeys.h"
 
 struct hotkeys {
     // fixed keys with multiple functions
@@ -31,11 +31,11 @@ struct hotkeys {
     int debug_1_down;
     int debug_2_up;
     int debug_2_down;
-} ;
+};
 
-void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings);
+void hotkey_install_mapping(hotkey_mapping* mappings, int num_mappings);
 
-const hotkeys *hotkey_state(void);
+const hotkeys* hotkey_state(void);
 void hotkey_reset_state(void);
 
 void hotkey_key_pressed(int key, int modifiers, int repeat);

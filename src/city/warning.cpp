@@ -1,11 +1,11 @@
 #include "warning.h"
 
-#include "graphics/view/view.h"
-#include "io/gamefiles/lang.h"
 #include "core/string.h"
 #include "core/time.h"
 #include "game/settings.h"
+#include "graphics/view/view.h"
 #include "graphics/window.h"
+#include "io/gamefiles/lang.h"
 
 #define MAX_WARNINGS 5
 #define MAX_TEXT 100
@@ -19,11 +19,10 @@ struct warning {
 
 warning g_warnings[MAX_WARNINGS];
 
-static struct warning *new_warning(void) {
+static struct warning* new_warning(void) {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (!g_warnings[i].in_use)
             return &g_warnings[i];
-
     }
     return 0;
 }
@@ -31,12 +30,12 @@ static struct warning *new_warning(void) {
 void city_warning_show(int type) {
     if (!setting_warnings())
         return;
-    struct warning *w = new_warning();
+    struct warning* w = new_warning();
     if (!w)
         return;
     w->in_use = 1;
     w->time = time_get_millis();
-    const uint8_t *text;
+    const uint8_t* text;
     if (type == WARNING_ORIENTATION)
         text = lang_get_string(17, city_view_orientation());
     else
@@ -48,12 +47,11 @@ int city_has_warnings(void) {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (g_warnings[i].in_use)
             return 1;
-
     }
     return 0;
 }
 
-const uint8_t *city_warning_get(int id) {
+const uint8_t* city_warning_get(int id) {
     if (g_warnings[id].in_use)
         return g_warnings[id].text;
 
@@ -75,8 +73,8 @@ void city_warning_clear_outdated(void) {
     }
 }
 
-void city_warning_show_console(uint8_t *warning_text) {
-    struct warning *w = new_warning();
+void city_warning_show_console(uint8_t* warning_text) {
+    struct warning* w = new_warning();
     if (!w)
         return;
     w->in_use = 1;

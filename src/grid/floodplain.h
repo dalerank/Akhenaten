@@ -1,16 +1,12 @@
 #ifndef OZYMANDIAS_FLOODPLAIN_H
 #define OZYMANDIAS_FLOODPLAIN_H
 
-#include <stdint.h>
 #include "tile_cache.h"
+#include <stdint.h>
 
 #define MAX_FLOODPLAIN_ROWS 30
 
-enum {
-    FERT_NO_MALUS = 0,
-    FERT_WITH_MALUS = 1,
-    FERT_ONLY_MALUS = 2
-};
+enum { FERT_NO_MALUS = 0, FERT_WITH_MALUS = 1, FERT_ONLY_MALUS = 2 };
 
 extern tile_cache floodplain_tiles_cache;
 
@@ -26,4 +22,4 @@ void map_soil_set_depletion(int grid_offset, int malus);
 
 int map_get_UNK04(int grid_offset);
 
-#endif //OZYMANDIAS_FLOODPLAIN_H
+#endif // OZYMANDIAS_FLOODPLAIN_H

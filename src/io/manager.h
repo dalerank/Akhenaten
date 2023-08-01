@@ -1,16 +1,16 @@
 #ifndef OZYMANDIAS_MANAGER_H
 #define OZYMANDIAS_MANAGER_H
 
-#include <vector>
 #include "core/buffer.h"
 #include "io/file.h"
-#include "io/io_buffer.h"
 #include "io/file_formats.h"
+#include "io/io_buffer.h"
+#include <vector>
 
 struct file_chunk_t {
     bool VALID = false;
-    buffer *buf = nullptr;
-    io_buffer *iob = nullptr;
+    buffer* buf = nullptr;
+    io_buffer* iob = nullptr;
     int compressed;
     char name[100];
 };
@@ -45,10 +45,10 @@ private:
     int alloc_index = 0;
 
     void clear();
-    bool io_failure_cleanup(const char *action, const char *reason); // because I'm anal about reusing code...
+    bool io_failure_cleanup(const char* action, const char* reason); // because I'm anal about reusing code...
 public:
     // push parametric chunk onto the schema
-    buffer *push_chunk(int size, bool compressed, const char *name, io_buffer *iob);
+    buffer* push_chunk(int size, bool compressed, const char* name, io_buffer* iob);
 
     const int num_chunks();
     const int get_file_version() {
@@ -59,10 +59,13 @@ public:
     }
 
     // write/read internal chunk cache (io_buffer sequence) to/from disk file
-    bool serialize(const char *filename, int offset, e_file_format format, const int version, void(*init_schema)(e_file_format _format, const int _version));
-    bool unserialize(const char *filename, int offset, e_file_format format, const int(*determine_file_version)(const char *_filename, int _offset), void(*init_schema)(e_file_format _format, const int _version));
+    bool serialize(const char* filename, int offset, e_file_format format, const int version,
+                   void (*init_schema)(e_file_format _format, const int _version));
+    bool unserialize(const char* filename, int offset, e_file_format format,
+                     const int (*determine_file_version)(const char* _filename, int _offset),
+                     void (*init_schema)(e_file_format _format, const int _version));
 };
 
 extern FileIOManager FILEIO;
 
-#endif //OZYMANDIAS_MANAGER_H
+#endif // OZYMANDIAS_MANAGER_H

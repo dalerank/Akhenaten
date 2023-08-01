@@ -1,8 +1,8 @@
 #include "route.h"
 
-#include "grid/routing/routing.h"
-#include "grid/routing/queue.h"
 #include "core/game_environment.h"
+#include "grid/routing/queue.h"
+#include "grid/routing/routing.h"
 
 #define MAX_PATH_LENGTH 500
 #define MAX_ROUTES 3000
@@ -24,7 +24,7 @@ void figure_route_clean(void) {
     for (int i = 0; i < MAX_ROUTES; i++) {
         int figure_id = data.figure_ids[i];
         if (figure_id > 0 && figure_id < MAX_FIGURES[GAME_ENV]) {
-            const figure *f = figure_get(figure_id);
+            const figure* f = figure_get(figure_id);
             if (f->state != FIGURE_STATE_ALIVE || f->routing_path_id != i)
                 data.figure_ids[i] = 0;
         }
@@ -49,50 +49,65 @@ void figure::figure_route_add() {
     if (is_boat) {
         if (is_boat == 2) { // flotsam
             map_routing_calculate_distances_water_flotsam(tile.x(), tile.y());
-            path_length = map_routing_get_path_on_water(data.direction_paths[path_id], destination_tile.x(), destination_tile.y(), 1);
+            path_length = map_routing_get_path_on_water(
+              data.direction_paths[path_id], destination_tile.x(), destination_tile.y(), 1);
         } else {
             map_routing_calculate_distances_water_boat(tile.x(), tile.y());
-            path_length = map_routing_get_path_on_water(data.direction_paths[path_id], destination_tile.x(), destination_tile.y(), 0);
+            path_length = map_routing_get_path_on_water(
+              data.direction_paths[path_id], destination_tile.x(), destination_tile.y(), 0);
         }
     } else {
         // land figure
         int can_travel;
         switch (terrain_usage) {
-            case TERRAIN_USAGE_ENEMY:
-                can_travel = map_routing_noncitizen_can_travel_over_land(tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), destinationID(), 5000);
-                if (!can_travel) {
-                    can_travel = map_routing_noncitizen_can_travel_over_land(tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), 0, 25000);
-                    if (!can_travel)
-                        can_travel = map_routing_noncitizen_can_travel_through_everything(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
-                }
-                break;
-            case TERRAIN_USAGE_WALLS:
-                can_travel = map_routing_can_travel_over_walls(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
-                break;
-            case TERRAIN_USAGE_ANIMAL:
-                can_travel = map_routing_noncitizen_can_travel_over_land(tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), -1, 5000);
-                break;
-            case TERRAIN_USAGE_PREFER_ROADS:
-                can_travel = map_routing_citizen_can_travel_over_road(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+        case TERRAIN_USAGE_ENEMY:
+            can_travel = map_routing_noncitizen_can_travel_over_land(
+              tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), destinationID(), 5000);
+            if (!can_travel) {
+                can_travel = map_routing_noncitizen_can_travel_over_land(
+                  tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), 0, 25000);
                 if (!can_travel)
-                    can_travel = map_routing_citizen_can_travel_over_land(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
-                break;
-            case TERRAIN_USAGE_ROADS:
-                can_travel = map_routing_citizen_can_travel_over_road(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
-                break;
-            default:
-                can_travel = map_routing_citizen_can_travel_over_land(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
-                break;
+                    can_travel = map_routing_noncitizen_can_travel_through_everything(
+                      tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+            }
+            break;
+        case TERRAIN_USAGE_WALLS:
+            can_travel
+              = map_routing_can_travel_over_walls(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+            break;
+        case TERRAIN_USAGE_ANIMAL:
+            can_travel = map_routing_noncitizen_can_travel_over_land(
+              tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), -1, 5000);
+            break;
+        case TERRAIN_USAGE_PREFER_ROADS:
+            can_travel = map_routing_citizen_can_travel_over_road(
+              tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+            if (!can_travel)
+                can_travel = map_routing_citizen_can_travel_over_land(
+                  tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+            break;
+        case TERRAIN_USAGE_ROADS:
+            can_travel = map_routing_citizen_can_travel_over_road(
+              tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+            break;
+        default:
+            can_travel = map_routing_citizen_can_travel_over_land(
+              tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+            break;
         }
         if (can_travel) {
             if (terrain_usage == TERRAIN_USAGE_WALLS) {
-                path_length = map_routing_get_path(data.direction_paths[path_id], tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), 4);
+                path_length = map_routing_get_path(
+                  data.direction_paths[path_id], tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), 4);
                 if (path_length <= 0)
-                    path_length = map_routing_get_path(data.direction_paths[path_id], tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), 8);
+                    path_length = map_routing_get_path(
+                      data.direction_paths[path_id], tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), 8);
             } else if (terrain_usage == TERRAIN_USAGE_ROADS)
-                path_length = map_routing_get_path(data.direction_paths[path_id], tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), 4);
+                path_length = map_routing_get_path(
+                  data.direction_paths[path_id], tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), 4);
             else
-                path_length = map_routing_get_path(data.direction_paths[path_id], tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), 8);
+                path_length = map_routing_get_path(
+                  data.direction_paths[path_id], tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), 8);
         } else // cannot travel
             path_length = 0;
     }
@@ -113,12 +128,12 @@ int figure_route_get_direction(int path_id, int index) {
     return data.direction_paths[path_id][index];
 }
 
-io_buffer *iob_route_figures = new io_buffer([](io_buffer *iob) {
+io_buffer* iob_route_figures = new io_buffer([](io_buffer* iob) {
     for (int i = 0; i < MAX_ROUTES; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &data.figure_ids[i]);
     }
 });
-io_buffer *iob_route_paths = new io_buffer([](io_buffer *iob) {
+io_buffer* iob_route_paths = new io_buffer([](io_buffer* iob) {
     for (int i = 0; i < MAX_ROUTES; i++) {
         iob->bind(BIND_SIGNATURE_RAW, &data.direction_paths[i], MAX_PATH_LENGTH);
     }
@@ -132,41 +147,41 @@ io_buffer *iob_route_paths = new io_buffer([](io_buffer *iob) {
 
 static int direction_path[MAX_PATH_LENGTH];
 
-static void adjust_tile_in_direction(int direction, int *x, int *y, int *grid_offset) {
+static void adjust_tile_in_direction(int direction, int* x, int* y, int* grid_offset) {
     switch (direction) {
-        case DIR_0_TOP_RIGHT:
-            --*y;
-            break;
-        case DIR_1_RIGHT:
-            ++*x;
-            --*y;
-            break;
-        case DIR_2_BOTTOM_RIGHT:
-            ++*x;
-            break;
-        case DIR_3_BOTTOM:
-            ++*x;
-            ++*y;
-            break;
-        case DIR_4_BOTTOM_LEFT:
-            ++*y;
-            break;
-        case DIR_5_LEFT:
-            --*x;
-            ++*y;
-            break;
-        case DIR_6_TOP_LEFT:
-            --*x;
-            break;
-        case DIR_7_TOP:
-            --*x;
-            --*y;
-            break;
+    case DIR_0_TOP_RIGHT:
+        --*y;
+        break;
+    case DIR_1_RIGHT:
+        ++*x;
+        --*y;
+        break;
+    case DIR_2_BOTTOM_RIGHT:
+        ++*x;
+        break;
+    case DIR_3_BOTTOM:
+        ++*x;
+        ++*y;
+        break;
+    case DIR_4_BOTTOM_LEFT:
+        ++*y;
+        break;
+    case DIR_5_LEFT:
+        --*x;
+        ++*y;
+        break;
+    case DIR_6_TOP_LEFT:
+        --*x;
+        break;
+    case DIR_7_TOP:
+        --*x;
+        --*y;
+        break;
     }
     *grid_offset += map_grid_direction_delta(direction);
 }
 
-int map_routing_get_path(uint8_t *path, int src_x, int src_y, int dst_x, int dst_y, int num_directions) {
+int map_routing_get_path(uint8_t* path, int src_x, int src_y, int dst_x, int dst_y, int num_directions) {
     int dst_grid_offset = MAP_OFFSET(dst_x, dst_y);
     int distance = map_routing_distance(dst_grid_offset);
     if (distance <= 0 || distance >= 998)
@@ -211,7 +226,8 @@ int map_routing_get_path(uint8_t *path, int src_x, int src_y, int dst_x, int dst
         path[i] = direction_path[num_tiles - i - 1];
     return num_tiles;
 }
-int map_routing_get_closest_tile_within_range(int src_x, int src_y, int dst_x, int dst_y, int num_directions, int range, int *out_x, int *out_y) {
+int map_routing_get_closest_tile_within_range(int src_x, int src_y, int dst_x, int dst_y, int num_directions, int range,
+                                              int* out_x, int* out_y) {
     int dst_grid_offset = MAP_OFFSET(dst_x, dst_y);
     int distance = map_routing_distance(dst_grid_offset);
     if (distance <= 0 || distance >= 998)
@@ -258,7 +274,7 @@ int map_routing_get_closest_tile_within_range(int src_x, int src_y, int dst_x, i
     }
     return 0;
 }
-int map_routing_get_path_on_water(uint8_t *path, int dst_x, int dst_y, int is_flotsam) {
+int map_routing_get_path_on_water(uint8_t* path, int dst_x, int dst_y, int is_flotsam) {
     int rand = random_byte() & 3;
     int dst_grid_offset = MAP_OFFSET(dst_x, dst_y);
     int distance = map_routing_distance(dst_grid_offset);
@@ -303,7 +319,6 @@ int map_routing_get_path_on_water(uint8_t *path, int dst_x, int dst_y, int is_fl
         last_direction = forward_direction;
         if (num_tiles >= MAX_PATH_LENGTH)
             return 0;
-
     }
     for (int i = 0; i < num_tiles; i++) {
         path[i] = direction_path[num_tiles - i - 1];

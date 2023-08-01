@@ -2,9 +2,9 @@
 
 #include "city/message.h"
 #include "city/ratings.h"
-#include "io/config/config.h"
 #include "core/random.h"
 #include "game/time.h"
+#include "io/config/config.h"
 #include "scenario/scenario_data.h"
 
 static struct {
@@ -33,13 +33,13 @@ void scenario_emperor_change_process(void) {
     }
 }
 
-void scenario_emperor_change_save_state(buffer *time, buffer *state) {
+void scenario_emperor_change_save_state(buffer* time, buffer* state) {
     time->write_i32(data.game_year);
     time->write_i32(data.month);
     state->write_i32(data.state);
 }
 
-void scenario_emperor_change_load_state(buffer *time, buffer *state) {
+void scenario_emperor_change_load_state(buffer* time, buffer* state) {
     data.game_year = time->read_i32();
     data.month = time->read_i32();
     data.state = state->read_i32();

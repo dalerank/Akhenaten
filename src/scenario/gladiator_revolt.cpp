@@ -48,14 +48,14 @@ int scenario_gladiator_revolt_is_finished(void) {
     return data.state == EVENT_STATE_FINISHED;
 }
 
-void scenario_gladiator_revolt_save_state(buffer *buf) {
+void scenario_gladiator_revolt_save_state(buffer* buf) {
     buf->write_i32(data.game_year);
     buf->write_i32(data.month);
     buf->write_i32(data.end_month);
     buf->write_i32(data.state);
 }
 
-void scenario_gladiator_revolt_load_state(buffer *buf) {
+void scenario_gladiator_revolt_load_state(buffer* buf) {
     data.game_year = buf->read_i32();
     data.month = buf->read_i32();
     data.end_month = buf->read_i32();

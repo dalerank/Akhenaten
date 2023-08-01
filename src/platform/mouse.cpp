@@ -1,5 +1,5 @@
-#include "game/system.h"
 #include "input/mouse.h"
+#include "game/system.h"
 #include "platform/screen.h"
 
 #include <SDL_mouse.h>
@@ -10,7 +10,7 @@ static struct {
     int enabled;
 } data;
 
-void system_mouse_get_relative_state(int *x, int *y) {
+void system_mouse_get_relative_state(int* x, int* y) {
     SDL_GetRelativeMouseState(x, y);
 }
 

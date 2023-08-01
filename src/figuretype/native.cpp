@@ -11,70 +11,66 @@
 #include "grid/terrain.h"
 
 void figure::indigenous_native_action() {
-    building *b = home();
-//    terrain_usage = TERRAIN_USAGE_ANY;
-//    use_cross_country = false;
-//    max_roam_length = 800;
-//    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
-//        poof();
+    building* b = home();
+    //    terrain_usage = TERRAIN_USAGE_ANY;
+    //    use_cross_country = false;
+    //    max_roam_length = 800;
+    //    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
+    //        poof();
 
-//    figure_image_increase_offset(12);
+    //    figure_image_increase_offset(12);
     switch (action_state) {
-        case FIGURE_ACTION_156_NATIVE_GOING_TO_MEETING_CENTER:
-            move_ticks(1);
-            if (direction == DIR_FIGURE_NONE) {
-                action_state = FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING;
-                destination_tile = source_tile;
-//                destination_tile.x() = source_tile.x();
-//                destination_tile.y() = source_tile.y();
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
-                poof();
+    case FIGURE_ACTION_156_NATIVE_GOING_TO_MEETING_CENTER:
+        move_ticks(1);
+        if (direction == DIR_FIGURE_NONE) {
+            action_state = FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING;
+            destination_tile = source_tile;
+            //                destination_tile.x() = source_tile.x();
+            //                destination_tile.y() = source_tile.y();
+        } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
+            poof();
 
-            break;
-        case FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING:
-            move_ticks(1);
-            if (direction == DIR_FIGURE_NONE ||
-                direction == DIR_FIGURE_REROUTE ||
-                direction == DIR_FIGURE_CAN_NOT_REACH) {
-                poof();
-            }
-            break;
-        case FIGURE_ACTION_158_NATIVE_CREATED:
-            anim_frame = 0;
-            wait_ticks++;
-            if (wait_ticks > 10 + (id & 3)) {
-                wait_ticks = 0;
-                if (!city_military_is_native_attack_active()) {
-                    int x_tile, y_tile;
-                    building *meeting = building_get(b->subtype.native_meeting_center_id);
-                    if (map_terrain_get_adjacent_road_or_clear_land(meeting->tile.x(), meeting->tile.y(), meeting->size, &x_tile,
-                                                                    &y_tile)) {
-                        action_state = FIGURE_ACTION_156_NATIVE_GOING_TO_MEETING_CENTER;
-                        destination_tile.set(x_tile, y_tile);
-//                        destination_tile.x() = x_tile;
-//                        destination_tile.y() = y_tile;
-                    }
-                } else {
-                    const formation *m = formation_get(0);
-                    action_state = FIGURE_ACTION_159_NATIVE_ATTACKING;
-                    destination_tile.set(m->destination_x, m->destination_y);
-//                    destination_tile.x() = m->destination_x;
-//                    destination_tile.y() = m->destination_y;
-                    set_destination(m->destination_building_id);
+        break;
+    case FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING:
+        move_ticks(1);
+        if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
+            poof();
+        }
+        break;
+    case FIGURE_ACTION_158_NATIVE_CREATED:
+        anim_frame = 0;
+        wait_ticks++;
+        if (wait_ticks > 10 + (id & 3)) {
+            wait_ticks = 0;
+            if (!city_military_is_native_attack_active()) {
+                int x_tile, y_tile;
+                building* meeting = building_get(b->subtype.native_meeting_center_id);
+                if (map_terrain_get_adjacent_road_or_clear_land(
+                      meeting->tile.x(), meeting->tile.y(), meeting->size, &x_tile, &y_tile)) {
+                    action_state = FIGURE_ACTION_156_NATIVE_GOING_TO_MEETING_CENTER;
+                    destination_tile.set(x_tile, y_tile);
+                    //                        destination_tile.x() = x_tile;
+                    //                        destination_tile.y() = y_tile;
                 }
-                route_remove();
+            } else {
+                const formation* m = formation_get(0);
+                action_state = FIGURE_ACTION_159_NATIVE_ATTACKING;
+                destination_tile.set(m->destination_x, m->destination_y);
+                //                    destination_tile.x() = m->destination_x;
+                //                    destination_tile.y() = m->destination_y;
+                set_destination(m->destination_building_id);
             }
-            break;
-        case FIGURE_ACTION_159_NATIVE_ATTACKING:
-            city_figures_add_attacking_native();
-            terrain_usage = TERRAIN_USAGE_ENEMY;
-            move_ticks(1);
-            if (direction == DIR_FIGURE_NONE ||
-                direction == DIR_FIGURE_REROUTE ||
-                direction == DIR_FIGURE_CAN_NOT_REACH) {
-                action_state = FIGURE_ACTION_158_NATIVE_CREATED;
-            }
-            break;
+            route_remove();
+        }
+        break;
+    case FIGURE_ACTION_159_NATIVE_ATTACKING:
+        city_figures_add_attacking_native();
+        terrain_usage = TERRAIN_USAGE_ENEMY;
+        move_ticks(1);
+        if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
+            action_state = FIGURE_ACTION_158_NATIVE_CREATED;
+        }
+        break;
     }
     int dir;
     if (action_state == FIGURE_ACTION_150_ATTACK || direction == DIR_FIGURE_ATTACK)

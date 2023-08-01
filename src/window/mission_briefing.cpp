@@ -1,9 +1,6 @@
 #include "mission_briefing.h"
 
 #include "city/mission.h"
-#include "graphics/image_groups.h"
-#include "io/gamefiles/lang.h"
-#include "io/gamestate/boilerplate.h"
 #include "game/mission.h"
 #include "game/tutorial.h"
 #include "graphics/boilerplate.h"
@@ -11,8 +8,11 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/rich_text.h"
+#include "graphics/image_groups.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "io/gamefiles/lang.h"
+#include "io/gamestate/boilerplate.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 #include "scenario/scenario_data.h"
@@ -28,12 +28,10 @@ static void button_start_mission(int param1, int param2);
 static const int GOAL_OFFSETS_X[] = {32, 288, 32, 288, 32, 288};
 static const int GOAL_OFFSETS_Y[] = {90, 90, 112, 112, 134, 134};
 
-static image_button image_button_back = {
-        0, 0, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1
-};
-static image_button image_button_start_mission = {
-        0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_mission, button_none, 1, 0, 1
-};
+static image_button image_button_back
+  = {0, 0, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1};
+static image_button image_button_start_mission
+  = {0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_mission, button_none, 1, 0, 1};
 
 struct mission_briefing_t {
     int is_review;
@@ -54,27 +52,27 @@ static void init(void) {
 }
 
 static void draw_background(void) {
-//    if (!data.campaign_mission_loaded) {
-//        data.campaign_mission_loaded = 1;
-//        if (!game_file_start_scenario_by_name(scenario_name())) {
-//            window_city_show();
-//            return;
-//        }
-//    }
+    //    if (!data.campaign_mission_loaded) {
+    //        data.campaign_mission_loaded = 1;
+    //        if (!game_file_start_scenario_by_name(scenario_name())) {
+    //            window_city_show();
+    //            return;
+    //        }
+    //    }
 
     window_draw_underlying_window();
 
     graphics_set_to_dialog();
     int text_id = 200 + scenario_campaign_scenario_id();
-    const lang_message *msg = lang_get_message(text_id);
+    const lang_message* msg = lang_get_message(text_id);
 
     outer_panel_draw(16, 32, 38, 27);
     text_draw(msg->title.text, 32, 48, FONT_LARGE_BLACK_ON_LIGHT, 0);
     text_draw(msg->subtitle.text, 32, 78, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     lang_text_draw(62, 7, 376, 433, FONT_NORMAL_BLACK_ON_LIGHT);
-//    if (!data.is_review && game_mission_has_choice())
-//        lang_text_draw(13, 4, 66, 435, FONT_NORMAL_BLACK_ON_LIGHT);
+    //    if (!data.is_review && game_mission_has_choice())
+    //        lang_text_draw(13, 4, 66, 435, FONT_NORMAL_BLACK_ON_LIGHT);
 
     inner_panel_draw(32, 96, 33, 6);
     lang_text_draw(62, 10, 48, 104, FONT_NORMAL_WHITE_ON_DARK);
@@ -157,8 +155,8 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
-    const mouse *m_dialog = mouse_in_dialog(m);
+static void handle_input(const mouse* m, const hotkeys* h) {
+    const mouse* m_dialog = mouse_in_dialog(m);
 
     if (image_buttons_handle_mouse(m_dialog, 516, 426, &image_button_start_mission, 1, 0))
         return;
@@ -182,12 +180,7 @@ static void button_start_mission(int param1, int param2) {
 }
 
 static void show(void) {
-    window_type window = {
-            WINDOW_MISSION_BRIEFING,
-            draw_background,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_MISSION_BRIEFING, draw_background, draw_foreground, handle_input};
     init();
     window_show(&window);
 }

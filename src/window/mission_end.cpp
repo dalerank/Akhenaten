@@ -10,8 +10,8 @@
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/undo.h"
-#include "graphics/elements/generic_button.h"
 #include "graphics/boilerplate.h"
+#include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
@@ -29,7 +29,7 @@
 static void button_fired(int param1, int param2);
 
 static generic_button fired_buttons[] = {
-        {80, 224, 480, 25, button_fired, button_none, 0, 0},
+  {80, 224, 480, 25, button_fired, button_none, 0, 0},
 };
 
 static int focus_button_id;
@@ -62,16 +62,12 @@ static void draw_won(void) {
         lang_text_draw_multiline(147, scenario_campaign_scenario_id(), 80, 192, 488, FONT_NORMAL_WHITE_ON_DARK);
     }
 
-    int left_width = get_max(
-            lang_text_get_width(148, 0, FONT_NORMAL_BLACK_ON_LIGHT),
-            lang_text_get_width(148, 2, FONT_NORMAL_BLACK_ON_LIGHT),
-            lang_text_get_width(148, 4, FONT_NORMAL_BLACK_ON_LIGHT)
-    );
-    int right_width = get_max(
-            lang_text_get_width(148, 1, FONT_NORMAL_BLACK_ON_LIGHT),
-            lang_text_get_width(148, 3, FONT_NORMAL_BLACK_ON_LIGHT),
-            lang_text_get_width(148, 5, FONT_NORMAL_BLACK_ON_LIGHT)
-    );
+    int left_width = get_max(lang_text_get_width(148, 0, FONT_NORMAL_BLACK_ON_LIGHT),
+                             lang_text_get_width(148, 2, FONT_NORMAL_BLACK_ON_LIGHT),
+                             lang_text_get_width(148, 4, FONT_NORMAL_BLACK_ON_LIGHT));
+    int right_width = get_max(lang_text_get_width(148, 1, FONT_NORMAL_BLACK_ON_LIGHT),
+                              lang_text_get_width(148, 3, FONT_NORMAL_BLACK_ON_LIGHT),
+                              lang_text_get_width(148, 5, FONT_NORMAL_BLACK_ON_LIGHT));
     int left_offset = 68;
     int right_offset = left_offset + 10 + 512 * left_width / (left_width + right_width);
     int width = lang_text_draw(148, 0, left_offset, 308, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -131,12 +127,12 @@ static void advance_to_next_mission(void) {
             scenario_set_campaign_rank(2);
         }
     } else {
-//        scenario_set_campaign_mission(game_mission_peaceful());
+        //        scenario_set_campaign_mission(game_mission_peaceful());
         window_mission_next_selection_show();
     }
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     if (city_victory_state() == VICTORY_STATE_WON) {
         if (input_go_back_requested(m, h)) {
             sound_music_stop();
@@ -144,8 +140,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
             advance_to_next_mission();
         }
     } else {
-        generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0,
-                                     fired_buttons, 1, &focus_button_id);
+        generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, fired_buttons, 1, &focus_button_id);
     }
 }
 static void button_fired(int param1, int param2) {
@@ -161,12 +156,7 @@ static void button_fired(int param1, int param2) {
 }
 
 static void show_end_dialog(void) {
-    window_type window = {
-            WINDOW_MISSION_END,
-            draw_background,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_MISSION_END, draw_background, draw_foreground, handle_input};
     window_show(&window);
 }
 static void show_intermezzo(void) {

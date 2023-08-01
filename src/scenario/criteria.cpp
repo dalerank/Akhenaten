@@ -1,7 +1,7 @@
 #include "criteria.h"
 
-#include "scenario/scenario_data.h"
 #include "io/io_buffer.h"
+#include "scenario/scenario_data.h"
 
 static int max_game_year;
 
@@ -56,14 +56,14 @@ int winning_houselevel() {
 
 int scenario_criteria_milestone_year(int percentage) {
     switch (percentage) {
-        case 25:
-            return g_scenario_data.start_year + g_scenario_data.win_criteria.milestone25_year;
-        case 50:
-            return g_scenario_data.start_year + g_scenario_data.win_criteria.milestone50_year;
-        case 75:
-            return g_scenario_data.start_year + g_scenario_data.win_criteria.milestone75_year;
-        default:
-            return 0;
+    case 25:
+        return g_scenario_data.start_year + g_scenario_data.win_criteria.milestone25_year;
+    case 50:
+        return g_scenario_data.start_year + g_scenario_data.win_criteria.milestone50_year;
+    case 75:
+        return g_scenario_data.start_year + g_scenario_data.win_criteria.milestone75_year;
+    default:
+        return 0;
     }
 }
 
@@ -78,6 +78,4 @@ void scenario_criteria_init_max_year(void) {
 int scenario_criteria_max_year(void) {
     return max_game_year;
 }
-io_buffer *iob_max_year = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_UINT32, &max_game_year);
-});
+io_buffer* iob_max_year = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_UINT32, &max_game_year); });

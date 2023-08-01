@@ -1,12 +1,12 @@
 #include "win_criteria.h"
 
+#include "graphics/boilerplate.h"
 #include "graphics/elements/button.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
-#include "graphics/text.h"
 #include "graphics/screen.h"
+#include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "scenario/criteria.h"
@@ -16,12 +16,7 @@
 #include "window/editor/map.h"
 #include "window/numeric_input.h"
 
-enum E_RATING {
-    RATING_CULTURE,
-    RATING_PROSPERITY,
-    RATING_MONUMENT,
-    RATING_KINGDOM
-};
+enum E_RATING { RATING_CULTURE, RATING_PROSPERITY, RATING_MONUMENT, RATING_KINGDOM };
 
 static void button_rating_toggle(int rating, int param2);
 static void button_rating_value(int rating, int param2);
@@ -34,21 +29,21 @@ static void button_population_value(int param1, int param2);
 static void button_open_play_toggle(int param1, int param2);
 
 static generic_button buttons[] = {
-        {316, 132, 80,  30, button_rating_toggle,     button_none, RATING_CULTURE},
-        {416, 132, 180, 30, button_rating_value,      button_none, RATING_CULTURE},
-        {316, 172, 80,  30, button_rating_toggle,     button_none, RATING_PROSPERITY},
-        {416, 172, 180, 30, button_rating_value,      button_none, RATING_PROSPERITY},
-        {316, 212, 80,  30, button_rating_toggle,     button_none, RATING_MONUMENT},
-        {416, 212, 180, 30, button_rating_value,      button_none, RATING_MONUMENT},
-        {316, 252, 80,  30, button_rating_toggle,     button_none, RATING_KINGDOM},
-        {416, 252, 180, 30, button_rating_value,      button_none, RATING_KINGDOM},
-        {316, 292, 80,  30, button_time_limit_toggle, button_none},
-        {416, 292, 180, 30, button_time_limit_years,  button_none},
-        {316, 332, 80,  30, button_survival_toggle,   button_none},
-        {416, 332, 180, 30, button_survival_years,    button_none},
-        {316, 372, 80,  30, button_population_toggle, button_none},
-        {416, 372, 180, 30, button_population_value,  button_none},
-        {316, 92,  80,  30, button_open_play_toggle,  button_none},
+  {316, 132, 80, 30, button_rating_toggle, button_none, RATING_CULTURE},
+  {416, 132, 180, 30, button_rating_value, button_none, RATING_CULTURE},
+  {316, 172, 80, 30, button_rating_toggle, button_none, RATING_PROSPERITY},
+  {416, 172, 180, 30, button_rating_value, button_none, RATING_PROSPERITY},
+  {316, 212, 80, 30, button_rating_toggle, button_none, RATING_MONUMENT},
+  {416, 212, 180, 30, button_rating_value, button_none, RATING_MONUMENT},
+  {316, 252, 80, 30, button_rating_toggle, button_none, RATING_KINGDOM},
+  {416, 252, 180, 30, button_rating_value, button_none, RATING_KINGDOM},
+  {316, 292, 80, 30, button_time_limit_toggle, button_none},
+  {416, 292, 180, 30, button_time_limit_years, button_none},
+  {316, 332, 80, 30, button_survival_toggle, button_none},
+  {416, 332, 180, 30, button_survival_years, button_none},
+  {316, 372, 80, 30, button_population_toggle, button_none},
+  {416, 372, 180, 30, button_population_value, button_none},
+  {316, 92, 80, 30, button_open_play_toggle, button_none},
 };
 
 static int focus_button_id;
@@ -75,15 +70,13 @@ static void draw_foreground(void) {
 
     lang_text_draw(44, 50, 66, 141, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(316, 132, 80, 30, focus_button_id == 1);
-    lang_text_draw_centered(18, is_open_play ? 0 : winning_culture(), 316, 141, 80,
-                            FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(18, is_open_play ? 0 : winning_culture(), 316, 141, 80, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(416, 132, 180, 30, focus_button_id == 2);
     text_draw_number_centered(winning_culture(), 416, 141, 180, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 51, 66, 181, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(316, 172, 80, 30, focus_button_id == 3);
-    lang_text_draw_centered(18, is_open_play ? 0 : winning_prosperity(), 316, 181, 80,
-                            FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(18, is_open_play ? 0 : winning_prosperity(), 316, 181, 80, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(416, 172, 180, 30, focus_button_id == 4);
     text_draw_number_centered(winning_prosperity(), 416, 181, 180, FONT_NORMAL_BLACK_ON_LIGHT);
 
@@ -101,77 +94,78 @@ static void draw_foreground(void) {
 
     lang_text_draw(44, 54, 66, 301, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(316, 292, 80, 30, focus_button_id == 9);
-    lang_text_draw_centered(18, is_open_play ? 0 : scenario_criteria_time_limit_enabled(), 316, 301, 80,
-                            FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(
+      18, is_open_play ? 0 : scenario_criteria_time_limit_enabled(), 316, 301, 80, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(416, 292, 180, 30, focus_button_id == 10);
     int width = text_draw_number(scenario_criteria_time_limit_years(), '+', " ", 436, 301, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(scenario_property_start_year() + scenario_criteria_time_limit_years(), 446 + width, 301,
+    lang_text_draw_year(scenario_property_start_year() + scenario_criteria_time_limit_years(),
+                        446 + width,
+                        301,
                         FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 55, 66, 341, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(316, 332, 80, 30, focus_button_id == 11);
-    lang_text_draw_centered(18, is_open_play ? 0 : scenario_criteria_survival_enabled(), 316, 341, 80,
-                            FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(
+      18, is_open_play ? 0 : scenario_criteria_survival_enabled(), 316, 341, 80, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(416, 332, 180, 30, focus_button_id == 12);
     width = text_draw_number(scenario_criteria_survival_years(), '+', " ", 436, 341, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(scenario_property_start_year() + scenario_criteria_survival_years(), 446 + width, 341,
+    lang_text_draw_year(scenario_property_start_year() + scenario_criteria_survival_years(),
+                        446 + width,
+                        341,
                         FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 56, 66, 381, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(316, 372, 80, 30, focus_button_id == 13);
-    lang_text_draw_centered(18, is_open_play ? 0 : winning_population(), 316, 381, 80,
-                            FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(18, is_open_play ? 0 : winning_population(), 316, 381, 80, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(416, 372, 180, 30, focus_button_id == 14);
     text_draw_number_centered(winning_population(), 416, 381, 180, FONT_NORMAL_BLACK_ON_LIGHT);
 
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 15, &focus_button_id))
         return;
     if (input_go_back_requested(m, h))
         window_editor_attributes_show();
-
 }
 
 static void button_rating_toggle(int rating, int param2) {
     switch (rating) {
-        case RATING_CULTURE:
-            scenario_editor_toggle_culture();
-            break;
-        case RATING_PROSPERITY:
-            scenario_editor_toggle_prosperity();
-            break;
-        case RATING_MONUMENT:
-            scenario_editor_toggle_monument();
-            break;
-        case RATING_KINGDOM:
-            scenario_editor_toggle_kingdom();
-            break;
+    case RATING_CULTURE:
+        scenario_editor_toggle_culture();
+        break;
+    case RATING_PROSPERITY:
+        scenario_editor_toggle_prosperity();
+        break;
+    case RATING_MONUMENT:
+        scenario_editor_toggle_monument();
+        break;
+    case RATING_KINGDOM:
+        scenario_editor_toggle_kingdom();
+        break;
     }
 }
 
 static void button_rating_value(int rating, int param2) {
     void (*callback)(int);
     switch (rating) {
-        case RATING_CULTURE:
-            callback = scenario_editor_set_culture;
-            break;
-        case RATING_PROSPERITY:
-            callback = scenario_editor_set_prosperity;
-            break;
-        case RATING_MONUMENT:
-            callback = scenario_editor_set_monument;
-            break;
-        case RATING_KINGDOM:
-            callback = scenario_editor_set_kingdom;
-            break;
-        default:
-            return;
+    case RATING_CULTURE:
+        callback = scenario_editor_set_culture;
+        break;
+    case RATING_PROSPERITY:
+        callback = scenario_editor_set_prosperity;
+        break;
+    case RATING_MONUMENT:
+        callback = scenario_editor_set_monument;
+        break;
+    case RATING_KINGDOM:
+        callback = scenario_editor_set_kingdom;
+        break;
+    default:
+        return;
     }
-    window_numeric_input_show(screen_dialog_offset_x() + 280, screen_dialog_offset_y() + 100,
-                              3, 100, callback);
+    window_numeric_input_show(screen_dialog_offset_x() + 280, screen_dialog_offset_y() + 100, 3, 100, callback);
 }
 
 static void button_time_limit_toggle(int param1, int param2) {
@@ -179,8 +173,8 @@ static void button_time_limit_toggle(int param1, int param2) {
 }
 
 static void button_time_limit_years(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 280, screen_dialog_offset_y() + 200,
-                              3, 999, scenario_editor_set_time_limit);
+    window_numeric_input_show(
+      screen_dialog_offset_x() + 280, screen_dialog_offset_y() + 200, 3, 999, scenario_editor_set_time_limit);
 }
 
 static void button_survival_toggle(int param1, int param2) {
@@ -188,8 +182,8 @@ static void button_survival_toggle(int param1, int param2) {
 }
 
 static void button_survival_years(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 280, screen_dialog_offset_y() + 200,
-                              3, 999, scenario_editor_set_survival_time);
+    window_numeric_input_show(
+      screen_dialog_offset_x() + 280, screen_dialog_offset_y() + 200, 3, 999, scenario_editor_set_survival_time);
 }
 
 static void button_population_toggle(int param1, int param2) {
@@ -197,8 +191,8 @@ static void button_population_toggle(int param1, int param2) {
 }
 
 static void button_population_value(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 280, screen_dialog_offset_y() + 200,
-                              5, 99999, scenario_editor_set_population);
+    window_numeric_input_show(
+      screen_dialog_offset_x() + 280, screen_dialog_offset_y() + 200, 5, 99999, scenario_editor_set_population);
 }
 
 static void button_open_play_toggle(int param1, int param2) {
@@ -206,11 +200,6 @@ static void button_open_play_toggle(int param1, int param2) {
 }
 
 void window_editor_win_criteria_show(void) {
-    window_type window = {
-            WINDOW_EDITOR_WIN_CRITERIA,
-            draw_background,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_EDITOR_WIN_CRITERIA, draw_background, draw_foreground, handle_input};
     window_show(&window);
 }

@@ -25,9 +25,9 @@ void scenario_request_dispatch(int id);
 
 int scenario_requests_active_count();
 
-const scenario_request *scenario_request_get(int id);
-const scenario_request *scenario_request_get_visible(int index);
+const scenario_request* scenario_request_get(int id);
+const scenario_request* scenario_request_get_visible(int index);
 
-int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request *request));
+int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request* request));
 
 #endif // SCENARIO_REQUEST_H

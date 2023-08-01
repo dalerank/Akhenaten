@@ -2,7 +2,6 @@
 
 #include "empire/trade_prices.h"
 #include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/screen.h"
@@ -32,13 +31,12 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     if (input_go_back_requested(m, h))
         window_advisors_show();
-
 }
 
-static int get_tooltip_resource(tooltip_context *c) {
+static int get_tooltip_resource(tooltip_context* c) {
     int x_base = screen_dialog_offset_x() + 124;
     int y = screen_dialog_offset_y() + 192;
     int x_mouse = c->mouse_x;
@@ -48,12 +46,11 @@ static int get_tooltip_resource(tooltip_context *c) {
         int x = x_base + 30 * i;
         if (x <= x_mouse && x + 24 > x_mouse && y <= y_mouse && y + 24 > y_mouse)
             return i;
-
     }
     return 0;
 }
 
-static void get_tooltip(tooltip_context *c) {
+static void get_tooltip(tooltip_context* c) {
     int resource = get_tooltip_resource(c);
     if (!resource)
         return;
@@ -62,12 +59,6 @@ static void get_tooltip(tooltip_context *c) {
 }
 
 void window_trade_prices_show(void) {
-    window_type window = {
-            WINDOW_TRADE_PRICES,
-            draw_background,
-            0,
-            handle_input,
-            get_tooltip
-    };
+    window_type window = {WINDOW_TRADE_PRICES, draw_background, 0, handle_input, get_tooltip};
     window_show(&window);
 }

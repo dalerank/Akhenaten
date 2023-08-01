@@ -41,12 +41,10 @@ void outer_panel_draw(int x, int y, int width_blocks, int height_blocks) {
             ImageDraw::img_generic(image_base + image_id, x + 16 * xx, y + 16 * yy);
             if (image_x >= 10)
                 image_x = 0;
-
         }
         image_y += y_add;
         if (image_y >= 120)
             image_y = 0;
-
     }
 }
 void unbordered_panel_draw(int x, int y, int width_blocks, int height_blocks) {
@@ -59,12 +57,10 @@ void unbordered_panel_draw(int x, int y, int width_blocks, int height_blocks) {
             ImageDraw::img_generic(image_base + image_id, x + 16 * xx, y + 16 * yy);
             if (image_x >= 10)
                 image_x = 0;
-
         }
         image_y += 12;
         if (image_y >= 120)
             image_y = 0;
-
     }
 }
 void inner_panel_draw(int x, int y, int width_blocks, int height_blocks) {
@@ -106,12 +102,10 @@ void inner_panel_draw(int x, int y, int width_blocks, int height_blocks) {
             ImageDraw::img_generic(image_base + image_id, x + 16 * xx, y + 16 * yy);
             if (image_x >= 5)
                 image_x = 0;
-
         }
         image_y += y_add;
         if (image_y >= 35)
             image_y = 0;
-
     }
 }
 void label_draw(int x, int y, int width_blocks, int type) {

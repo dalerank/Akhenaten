@@ -14,7 +14,7 @@
  * @param output_length IN: available length of the output buffer, OUT: written bytes
  * @return boolean true on success, false on error
  */
-int zip_compress(const void *input_buffer, int input_length, void *output_buffer, int *output_length);
+int zip_compress(const void* input_buffer, int input_length, void* output_buffer, int* output_length);
 
 /**
  * Decompresses the input buffer
@@ -24,6 +24,6 @@ int zip_compress(const void *input_buffer, int input_length, void *output_buffer
  * @param output_length IN: available length of the output buffer, OUT: written bytes
  * @return boolean true on success, false on error
  */
-int zip_decompress(const void *input_buffer, int input_length, void *output_buffer, int *output_length);
+int zip_decompress(const void* input_buffer, int input_length, void* output_buffer, int* output_length);
 
 #endif // CORE_ZIP_H

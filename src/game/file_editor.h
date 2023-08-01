@@ -17,13 +17,13 @@ void game_file_editor_create_scenario(int size);
  * @param scenario_file File to load
  * @return Boolean true on success, false on failure
  */
-int game_file_editor_load_scenario(const char *scenario_file);
+int game_file_editor_load_scenario(const char* scenario_file);
 
 /**
  * Write scenario to disk
  * @param scenario_file File to save tos
  * @return Boolean true on success, false on failure
  */
-int game_file_editor_write_scenario(const char *scenario_file);
+int game_file_editor_write_scenario(const char* scenario_file);
 
 #endif // GAME_FILE_EDITOR_H

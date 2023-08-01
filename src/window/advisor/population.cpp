@@ -1,19 +1,18 @@
 #include "population.h"
 
-#include "io/config/config.h"
 #include "city/finance.h"
 #include "city/migration.h"
 #include "city/population.h"
 #include "city/ratings.h"
 #include "city/resource.h"
 #include "game/time.h"
+#include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "io/config/config.h"
 #include "scenario/property.h"
 #include "translation/translation.h"
 #include "window/advisors.h"
@@ -23,15 +22,13 @@
 
 static void button_graph(int param1, int param2);
 
-static generic_button graph_buttons[] = {
-        {503, 61,  104, 55, button_graph, button_none, 0, 0},
-        {503, 161, 104, 55, button_graph, button_none, 1, 0},
-        {545, 260, 60,  51, button_graph, button_none, 0, 1}
-};
+static generic_button graph_buttons[] = {{503, 61, 104, 55, button_graph, button_none, 0, 0},
+                                         {503, 161, 104, 55, button_graph, button_none, 1, 0},
+                                         {545, 260, 60, 51, button_graph, button_none, 0, 1}};
 
 static int focus_button_id;
 
-static void get_y_axis(int max_value, int *y_max, int *y_shift) {
+static void get_y_axis(int max_value, int* y_max, int* y_shift) {
     if (max_value <= 100) {
         *y_max = 100;
         *y_shift = -1;
@@ -65,7 +62,7 @@ static void get_y_axis(int max_value, int *y_max, int *y_shift) {
     }
 }
 
-static void get_min_max_month_year(int max_months, int *start_month, int *start_year, int *end_month, int *end_year) {
+static void get_min_max_month_year(int max_months, int* start_month, int* start_year, int* end_month, int* end_year) {
     if (city_population_monthly_count() > max_months) {
         *end_month = game_time_month() - 1;
         *end_year = game_time_year();
@@ -109,7 +106,6 @@ static void draw_history_graph(int full_size, int x, int y) {
         int value = city_population_at_month(max_months, m);
         if (value > max_value)
             max_value = value;
-
     }
     int y_max, y_shift;
     get_y_axis(max_value, &y_max, &y_shift);
@@ -141,25 +137,24 @@ static void draw_history_graph(int full_size, int x, int y) {
             }
             if (val > 0) {
                 switch (max_months) {
-                    case 20:
-                        ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * m,
-                                               y + 200 - val);
-                        break;
-                    case 40:
-                        ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 1, x + 10 * m,
-                                               y + 200 - val);
-                        break;
-                    case 100:
-                        ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * m,
-                                               y + 200 - val);
-                        break;
-                    case 200:
-                        ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 3, x + 2 * m,
-                                               y + 200 - val);
-                        break;
-                    default:
-                        graphics_draw_vertical_line(x + m, y + 200 - val, y + 199, COLOR_RED);
-                        break;
+                case 20:
+                    ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * m, y + 200 - val);
+                    break;
+                case 40:
+                    ImageDraw::img_generic(
+                      image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 1, x + 10 * m, y + 200 - val);
+                    break;
+                case 100:
+                    ImageDraw::img_generic(
+                      image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * m, y + 200 - val);
+                    break;
+                case 200:
+                    ImageDraw::img_generic(
+                      image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 3, x + 2 * m, y + 200 - val);
+                    break;
+                default:
+                    graphics_draw_vertical_line(x + m, y + 200 - val, y + 199, COLOR_RED);
+                    break;
                 }
             }
         }
@@ -185,7 +180,6 @@ static void draw_census_graph(int full_size, int x, int y) {
         int value = city_population_at_age(i);
         if (value > max_value)
             max_value = value;
-
     }
     int y_max, y_shift;
     get_y_axis(max_value, &y_max, &y_shift);
@@ -212,7 +206,6 @@ static void draw_census_graph(int full_size, int x, int y) {
             }
             if (val > 0)
                 ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * i, y + 200 - val);
-
         }
         graphics_reset_clip_rectangle();
     } else {
@@ -221,7 +214,6 @@ static void draw_census_graph(int full_size, int x, int y) {
             int val = city_population_at_age(i) >> y_shift;
             if (val > 0)
                 graphics_draw_vertical_line(x + i, y + 50 - val, y + 50, COLOR_RED);
-
         }
     }
 }
@@ -232,7 +224,6 @@ static void draw_society_graph(int full_size, int x, int y) {
         int value = city_population_at_level(i);
         if (value > max_value)
             max_value = value;
-
     }
     int y_max, y_shift;
     get_y_axis(max_value, &y_max, &y_shift);
@@ -258,7 +249,6 @@ static void draw_society_graph(int full_size, int x, int y) {
             }
             if (val > 0)
                 ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * i, y + 200 - val);
-
         }
         graphics_reset_clip_rectangle();
     } else {
@@ -267,7 +257,6 @@ static void draw_society_graph(int full_size, int x, int y) {
             int val = city_population_at_level(i) >> y_shift;
             if (val > 0)
                 graphics_fill_rect(x + 5 * i, y + 50 - val, 4, val + 1, COLOR_RED);
-
         }
     }
 }
@@ -297,7 +286,6 @@ static void print_society_info(void) {
 }
 
 static void print_census_info(void) {
-
     int width;
 
     // Average age
@@ -354,27 +342,27 @@ static void print_history_info(void) {
         lang_text_draw(55, 25, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
         int text_id;
         switch (city_migration_int()) {
-            case NO_IMMIGRATION_LOW_WAGES:
-                text_id = 20;
-                break;
-            case NO_IMMIGRATION_NO_JOBS:
-                text_id = 21;
-                break;
-            case NO_IMMIGRATION_NO_FOOD:
-                text_id = 22;
-                break;
-            case NO_IMMIGRATION_HIGH_TAXES:
-                text_id = 23;
-                break;
-            case NO_IMMIGRATION_MANY_TENTS:
-                text_id = 31;
-                break;
-            case NO_IMMIGRATION_LOW_MOOD:
-                text_id = 32;
-                break;
-            default:
-                text_id = 0;
-                break;
+        case NO_IMMIGRATION_LOW_WAGES:
+            text_id = 20;
+            break;
+        case NO_IMMIGRATION_NO_JOBS:
+            text_id = 21;
+            break;
+        case NO_IMMIGRATION_NO_FOOD:
+            text_id = 22;
+            break;
+        case NO_IMMIGRATION_HIGH_TAXES:
+            text_id = 23;
+            break;
+        case NO_IMMIGRATION_MANY_TENTS:
+            text_id = 31;
+            break;
+        case NO_IMMIGRATION_LOW_MOOD:
+            text_id = 32;
+            break;
+        default:
+            text_id = 0;
+            break;
         }
         if (text_id)
             lang_text_draw(55, text_id, 75, 396, FONT_NORMAL_WHITE_ON_DARK);
@@ -392,7 +380,7 @@ static void print_history_info(void) {
 
 static void draw_housing_button(int full_size, int x, int y) {
     ImageDraw::isometric(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE, 1.0f);
-//    ImageDraw::isometric_top(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE);
+    //    ImageDraw::isometric_top(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE);
 }
 
 static int draw_background(void) {
@@ -424,67 +412,67 @@ static int draw_background(void) {
     void (*info_panel)();
 
     switch (graph_order) {
-        default:
-        case 0:
-            big_text = 6;
-            top_text = 4;
-            bot_text = 5;
-            big_graph = draw_history_graph;
-            top_graph = draw_census_graph;
-            bot_graph = draw_society_graph;
-            housing_button = draw_housing_button;
-            info_panel = print_history_info;
-            break;
-        case 1:
-            big_text = 6;
-            top_text = 5;
-            bot_text = 4;
-            big_graph = draw_history_graph;
-            top_graph = draw_society_graph;
-            bot_graph = draw_census_graph;
-            housing_button = draw_housing_button;
-            info_panel = print_history_info;
-            break;
-        case 2:
-            big_text = 7;
-            top_text = 3;
-            bot_text = 5;
-            big_graph = draw_census_graph;
-            top_graph = draw_history_graph;
-            bot_graph = draw_society_graph;
-            housing_button = draw_housing_button;
-            info_panel = print_census_info;
-            break;
-        case 3:
-            big_text = 7;
-            top_text = 5;
-            bot_text = 3;
-            big_graph = draw_census_graph;
-            top_graph = draw_society_graph;
-            bot_graph = draw_history_graph;
-            housing_button = draw_housing_button;
-            info_panel = print_census_info;
-            break;
-        case 4:
-            big_text = 8;
-            top_text = 3;
-            bot_text = 4;
-            big_graph = draw_society_graph;
-            top_graph = draw_history_graph;
-            bot_graph = draw_census_graph;
-            housing_button = draw_housing_button;
-            info_panel = print_society_info;
-            break;
-        case 5:
-            big_text = 8;
-            top_text = 4;
-            bot_text = 3;
-            big_graph = draw_society_graph;
-            top_graph = draw_census_graph;
-            bot_graph = draw_history_graph;
-            housing_button = draw_housing_button;
-            info_panel = print_society_info;
-            break;
+    default:
+    case 0:
+        big_text = 6;
+        top_text = 4;
+        bot_text = 5;
+        big_graph = draw_history_graph;
+        top_graph = draw_census_graph;
+        bot_graph = draw_society_graph;
+        housing_button = draw_housing_button;
+        info_panel = print_history_info;
+        break;
+    case 1:
+        big_text = 6;
+        top_text = 5;
+        bot_text = 4;
+        big_graph = draw_history_graph;
+        top_graph = draw_society_graph;
+        bot_graph = draw_census_graph;
+        housing_button = draw_housing_button;
+        info_panel = print_history_info;
+        break;
+    case 2:
+        big_text = 7;
+        top_text = 3;
+        bot_text = 5;
+        big_graph = draw_census_graph;
+        top_graph = draw_history_graph;
+        bot_graph = draw_society_graph;
+        housing_button = draw_housing_button;
+        info_panel = print_census_info;
+        break;
+    case 3:
+        big_text = 7;
+        top_text = 5;
+        bot_text = 3;
+        big_graph = draw_census_graph;
+        top_graph = draw_society_graph;
+        bot_graph = draw_history_graph;
+        housing_button = draw_housing_button;
+        info_panel = print_census_info;
+        break;
+    case 4:
+        big_text = 8;
+        top_text = 3;
+        bot_text = 4;
+        big_graph = draw_society_graph;
+        top_graph = draw_history_graph;
+        bot_graph = draw_census_graph;
+        housing_button = draw_housing_button;
+        info_panel = print_society_info;
+        break;
+    case 5:
+        big_text = 8;
+        top_text = 4;
+        bot_text = 3;
+        big_graph = draw_society_graph;
+        top_graph = draw_census_graph;
+        bot_graph = draw_history_graph;
+        housing_button = draw_housing_button;
+        info_panel = print_society_info;
+        break;
     }
 
     text_draw_centered(translation_for(TR_HEADER_HOUSING), 545, 315, 61, FONT_NORMAL_BLACK_ON_LIGHT, 0);
@@ -531,7 +519,7 @@ static void draw_foreground(void) {
     }
 }
 
-static int handle_mouse(const mouse *m) {
+static int handle_mouse(const mouse* m) {
     return generic_buttons_handle_mouse(m, 0, 0, graph_buttons, 3, &focus_button_id);
 }
 
@@ -543,25 +531,25 @@ static void button_graph(int param1, int param2) {
         window_advisors_show_advisor(HOUSING_ADVISOR_ID);
     } else {
         switch (city_population_graph_order()) {
-            default:
-            case 0:
-                new_order = param1 ? 5 : 2;
-                break;
-            case 1:
-                new_order = param1 ? 3 : 4;
-                break;
-            case 2:
-                new_order = param1 ? 4 : 0;
-                break;
-            case 3:
-                new_order = param1 ? 1 : 5;
-                break;
-            case 4:
-                new_order = param1 ? 2 : 1;
-                break;
-            case 5:
-                new_order = param1 ? 0 : 3;
-                break;
+        default:
+        case 0:
+            new_order = param1 ? 5 : 2;
+            break;
+        case 1:
+            new_order = param1 ? 3 : 4;
+            break;
+        case 2:
+            new_order = param1 ? 4 : 0;
+            break;
+        case 3:
+            new_order = param1 ? 1 : 5;
+            break;
+        case 4:
+            new_order = param1 ? 2 : 1;
+            break;
+        case 5:
+            new_order = param1 ? 0 : 3;
+            break;
         }
         city_population_set_graph_order(new_order);
     }
@@ -577,12 +565,7 @@ static int get_tooltip_text(void) {
     }
 }
 
-const advisor_window_type *window_advisor_population(void) {
-    static const advisor_window_type window = {
-            draw_background,
-            draw_foreground,
-            handle_mouse,
-            get_tooltip_text
-    };
+const advisor_window_type* window_advisor_population(void) {
+    static const advisor_window_type window = {draw_background, draw_foreground, handle_mouse, get_tooltip_text};
     return &window;
 }

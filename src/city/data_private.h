@@ -245,7 +245,7 @@ struct city_data_t {
         int32_t culture;
         int32_t prosperity;
         int32_t monument; // peace
-        int32_t kingdom; // favor
+        int32_t kingdom;  // favor
         struct {
             int32_t theater;
             int32_t religion;
@@ -332,8 +332,8 @@ struct city_data_t {
     struct {
         int16_t space_in_warehouses[RESOURCES_MAX];
         int16_t stored_in_warehouses[RESOURCES_MAX];
-//        int32_t space_in_workshops[6];
-//        int32_t stored_in_workshops[6];
+        //        int32_t space_in_workshops[6];
+        //        int32_t stored_in_workshops[6];
         int16_t trade_status[RESOURCES_MAX];
         int16_t trading_amount[RESOURCES_MAX];
         int32_t stockpiled[RESOURCES_MAX];
@@ -341,8 +341,8 @@ struct city_data_t {
         int16_t unk_00[RESOURCES_MAX];
 
         int32_t wine_types_available;
-//        int32_t food_types_available;
-//        int32_t food_types_eaten;
+        //        int32_t food_types_available;
+        //        int32_t food_types_eaten;
         int8_t food_types_available_arr[RESOURCES_FOODS_MAX];
         int8_t food_types_eaten_arr[RESOURCES_FOODS_MAX];
         int8_t food_types_allowed[4];
@@ -457,6 +457,6 @@ struct city_data_t {
 };
 
 extern city_data_t city_data;
-const city_data_t * city_data_struct();
+const city_data_t* city_data_struct();
 
 #endif // CITY_DATA_PRIVATE_H

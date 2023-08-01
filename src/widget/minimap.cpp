@@ -2,20 +2,17 @@
 
 #include "building/building.h"
 #include "graphics/boilerplate.h"
-#include "input/scroll.h"
 #include "grid/figure.h"
 #include "grid/property.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
+#include "input/scroll.h"
 #include "scenario/property.h"
 
 #include "dev/debug.h"
 
-static const color_t ENEMY_COLOR_BY_CLIMATE[] = {
-    COLOR_MINIMAP_ENEMY_CENTRAL,
-    COLOR_MINIMAP_ENEMY_NORTHERN,
-    COLOR_MINIMAP_ENEMY_DESERT
-};
+static const color_t ENEMY_COLOR_BY_CLIMATE[]
+  = {COLOR_MINIMAP_ENEMY_CENTRAL, COLOR_MINIMAP_ENEMY_NORTHERN, COLOR_MINIMAP_ENEMY_DESERT};
 
 struct minimap_data_t {
     int absolute_x;
@@ -28,7 +25,7 @@ struct minimap_data_t {
     int height;
     int cache_width;
     color_t enemy_color;
-    color_t *cache;
+    color_t* cache;
     struct {
         int x;
         int y;
@@ -40,18 +37,16 @@ struct minimap_data_t {
 minimap_data_t g_minimap_data;
 
 void widget_minimap_invalidate(void) {
-    auto &data = g_minimap_data;
+    auto& data = g_minimap_data;
     data.refresh_requested = 1;
 }
-static void foreach_map_tile(void(*callback)(screen_tile screen, map_point point)) {
-    auto &data = g_minimap_data;
-    city_view_foreach_minimap_tile(data.x_offset, data.y_offset,
-                                   data.absolute_x, data.absolute_y,
-                                   data.width_tiles, data.height_tiles,
-                                   callback);
+static void foreach_map_tile(void (*callback)(screen_tile screen, map_point point)) {
+    auto& data = g_minimap_data;
+    city_view_foreach_minimap_tile(
+      data.x_offset, data.y_offset, data.absolute_x, data.absolute_y, data.width_tiles, data.height_tiles, callback);
 }
 static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_tiles) {
-    auto &data = g_minimap_data;
+    auto& data = g_minimap_data;
     data.width_tiles = width_tiles;
     data.height_tiles = height_tiles;
     data.x_offset = x_offset;
@@ -61,7 +56,7 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     data.absolute_x = (GRID_LENGTH - width_tiles) / 2 + 1;
     data.absolute_y = ((2 * GRID_LENGTH) + 1 - height_tiles) / 2;
 
-//    int camera_x, camera_y;
+    //    int camera_x, camera_y;
     map_point camera_tile = city_view_get_camera_mappoint();
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
@@ -71,30 +66,28 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
             data.absolute_x = camera_tile.x();
         else if (camera_tile.x() > width_tiles + data.absolute_x - view_width_tiles)
             data.absolute_x = view_width_tiles + camera_tile.x() - width_tiles;
-
     }
     if ((2 * scenario_map_data()->height - height_tiles) / 2 > 0) {
         if (camera_tile.y() < data.absolute_y)
             data.absolute_y = camera_tile.y();
         else if (camera_tile.y() > height_tiles + data.absolute_y - view_height_tiles)
             data.absolute_y = view_height_tiles + camera_tile.y() - height_tiles;
-
     }
     // ensure even height
     data.absolute_y &= ~1;
 }
 
-static int is_in_minimap(const mouse *m) {
-    auto &data = g_minimap_data;
-    if (m->x >= data.x_offset && m->x < data.x_offset + data.width &&
-        m->y >= data.y_offset && m->y < data.y_offset + data.height) {
+static int is_in_minimap(const mouse* m) {
+    auto& data = g_minimap_data;
+    if (m->x >= data.x_offset && m->x < data.x_offset + data.width && m->y >= data.y_offset
+        && m->y < data.y_offset + data.height) {
         return 1;
     }
     return 0;
 }
 
 static int draw_figure(screen_tile screen, map_point point) {
-    auto &data = g_minimap_data;
+    auto& data = g_minimap_data;
     int grid_offset = point.grid_offset();
     int screen_x = screen.x;
     int screen_y = screen.y;
@@ -135,13 +128,12 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
     if (terrain & TERRAIN_BUILDING) {
         if (building_at(grid_offset)->type == BUILDING_FORT_GROUND)
             terrain = 0;
-
     }
 
     if (terrain & TERRAIN_BUILDING) {
         if (map_property_is_draw_tile(grid_offset)) {
             int image_id;
-            building *b = building_at(grid_offset);
+            building* b = building_at(grid_offset);
             if (b->house_size)
                 image_id = image_id_from_group(GROUP_MINIMAP_HOUSE);
             else if (b->type == BUILDING_WATER_LIFT || b->type == BUILDING_WELL)
@@ -149,8 +141,7 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
             else if (terrain & TERRAIN_ROAD) {
                 if (b->type == BUILDING_ROADBLOCK)
                     image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 5; // black
-            }
-            else if (building_is_food_category(b->type))
+            } else if (building_is_food_category(b->type))
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 160; // green
             else if (building_is_industry(b->type))
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 165; // dark red
@@ -174,19 +165,19 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + debug_range_1;
             auto multi_tile_size = map_property_multi_tile_size(grid_offset);
             switch (multi_tile_size) {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                    ImageDraw::img_generic(image_id + (multi_tile_size - 1), screen_x, screen_y - (multi_tile_size - 1));
-                    break;
-                case 6: // TODO: make a generalized formula?
-                    ImageDraw::img_generic(image_id + 2, screen_x, screen_y - 2);
-                    ImageDraw::img_generic(image_id + 2, screen_x + 3, screen_y - 5);
-                    ImageDraw::img_generic(image_id + 2, screen_x + 6, screen_y - 2);
-                    ImageDraw::img_generic(image_id + 2, screen_x + 3, screen_y + 1);
-                    break;
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                ImageDraw::img_generic(image_id + (multi_tile_size - 1), screen_x, screen_y - (multi_tile_size - 1));
+                break;
+            case 6: // TODO: make a generalized formula?
+                ImageDraw::img_generic(image_id + 2, screen_x, screen_y - 2);
+                ImageDraw::img_generic(image_id + 2, screen_x + 3, screen_y - 5);
+                ImageDraw::img_generic(image_id + 2, screen_x + 6, screen_y - 2);
+                ImageDraw::img_generic(image_id + 2, screen_x + 3, screen_y + 1);
+                break;
             }
         }
     } else {
@@ -225,7 +216,7 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
     }
 }
 static void draw_viewport_rectangle(void) {
-    auto &data = g_minimap_data;
+    auto& data = g_minimap_data;
     map_point camera_tile = city_view_get_camera_mappoint();
     pixel_coordinate camera_pixels = camera_get_pixel_offset_internal();
     int view_width_tiles, view_height_tiles;
@@ -239,23 +230,21 @@ static void draw_viewport_rectangle(void) {
         x_offset -= 2;
 
     int y_offset = data.y_offset + camera_tile.y() - data.absolute_y + 1;
-    graphics_draw_rect(x_offset, y_offset,
-                       view_width_tiles * 2 + 8,
-                       view_height_tiles + 3,
-                       COLOR_MINIMAP_VIEWPORT);
+    graphics_draw_rect(x_offset, y_offset, view_width_tiles * 2 + 8, view_height_tiles + 3, COLOR_MINIMAP_VIEWPORT);
 }
 
 static void prepare_minimap_cache(int width, int height) {
     return;
-//    if (width != data.width || height != data.height || !graphics_renderer()->has_custom_image(CUSTOM_IMAGE_MINIMAP)) {
-//        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_MINIMAP, width, height);
-//    }
-//    data.cache = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_MINIMAP, &data.cache_width);
+    //    if (width != data.width || height != data.height ||
+    //    !graphics_renderer()->has_custom_image(CUSTOM_IMAGE_MINIMAP)) {
+    //        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_MINIMAP, width, height);
+    //    }
+    //    data.cache = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_MINIMAP, &data.cache_width);
 }
 static void clear_minimap(void) {
-    auto &data = g_minimap_data;
+    auto& data = g_minimap_data;
     for (int y = 0; y < data.height; y++) {
-        color_t *line = &data.cache[y * data.cache_width];
+        color_t* line = &data.cache[y * data.cache_width];
         for (int x = 0; x < data.cache_width; x++) {
             line[x] = COLOR_BLACK;
         }
@@ -263,24 +252,24 @@ static void clear_minimap(void) {
 }
 
 static void draw_minimap(void) {
-    auto &data = g_minimap_data;
+    auto& data = g_minimap_data;
     graphics_set_clip_rectangle(data.x_offset, data.y_offset, data.width, data.height);
     clear_minimap();
     foreach_map_tile(draw_minimap_tile);
-//    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
-//    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
+    //    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
+    //    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
 }
 static void draw_uncached(int x_offset, int y_offset, int width_tiles, int height_tiles) {
-    auto &data = g_minimap_data;
+    auto& data = g_minimap_data;
     data.enemy_color = ENEMY_COLOR_BY_CLIMATE[scenario_property_climate()];
     prepare_minimap_cache(2 * width_tiles, height_tiles);
     set_bounds(x_offset, y_offset, width_tiles, height_tiles);
     draw_minimap();
 }
 void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_tiles, int is_scrolling) {
-    auto &data = g_minimap_data;
+    auto& data = g_minimap_data;
     if (width_tiles * 2 != data.width || height_tiles != data.height || x_offset != data.x_offset) {
         draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
         return;
@@ -297,40 +286,40 @@ void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_ti
     }
 
     graphics_set_clip_rectangle(x_offset, y_offset, 2 * width_tiles, height_tiles);
-//    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
+    //    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
 }
 
 void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles, int force) {
-    auto &data = g_minimap_data;
+    auto& data = g_minimap_data;
     if (data.refresh_requested || scroll_in_progress() || force) {
-//        if (data.refresh_requested) {
-            draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
-            data.refresh_requested = 0;
-//        } else {
-//            draw_using_cache(x_offset, y_offset, width_tiles, height_tiles, scroll_in_progress());
-//        }
-//        if (GAME_ENV == ENGINE_ENV_C3) {
-//            graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width_tiles * 2, y_offset - 1,
-//                                          COLOR_MINIMAP_DARK);
-//            graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height_tiles, COLOR_MINIMAP_DARK);
-//            graphics_draw_vertical_line(x_offset - 1 + width_tiles * 2, y_offset, y_offset + height_tiles,
-//                                        COLOR_MINIMAP_LIGHT);
-//        }
+        //        if (data.refresh_requested) {
+        draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
+        data.refresh_requested = 0;
+        //        } else {
+        //            draw_using_cache(x_offset, y_offset, width_tiles, height_tiles, scroll_in_progress());
+        //        }
+        //        if (GAME_ENV == ENGINE_ENV_C3) {
+        //            graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width_tiles * 2, y_offset - 1,
+        //                                          COLOR_MINIMAP_DARK);
+        //            graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height_tiles, COLOR_MINIMAP_DARK);
+        //            graphics_draw_vertical_line(x_offset - 1 + width_tiles * 2, y_offset, y_offset + height_tiles,
+        //                                        COLOR_MINIMAP_LIGHT);
+        //        }
     }
 }
 
 static void update_mouse_grid_offset(screen_tile screen, map_point point) {
-    auto &data = g_minimap_data;
+    auto& data = g_minimap_data;
     int grid_offset = point.grid_offset();
     int screen_x = screen.x;
     int screen_y = screen.y;
     if (data.mouse.y == screen_y && (data.mouse.x == screen_x || data.mouse.x == screen_x + 1))
         data.mouse.tile.grid_offset(grid_offset < 0 ? 0 : grid_offset);
 }
-static int get_mouse_grid_offset(const mouse *m) {
-    auto &data = g_minimap_data;
+static int get_mouse_grid_offset(const mouse* m) {
+    auto& data = g_minimap_data;
     data.mouse.x = m->x;
     data.mouse.y = m->y;
     data.mouse.tile.set(0);
@@ -341,7 +330,7 @@ struct {
     int x = -1;
     int y = -1;
 } mouse_last_coords;
-bool widget_minimap_handle_mouse(const mouse *m) {
+bool widget_minimap_handle_mouse(const mouse* m) {
     if (!is_in_minimap(m) || m->left.went_up || m->right.went_up) {
         mouse_last_coords = {-1, -1};
         return false;
@@ -351,8 +340,7 @@ bool widget_minimap_handle_mouse(const mouse *m) {
     if (m->x != mouse_last_coords.x || m->y != mouse_last_coords.y)
         mouse_is_moving = true;
 
-    if ((m->left.went_down || m->right.went_down)
-    || ((m->left.is_down || m->right.is_down) && mouse_is_moving)) {
+    if ((m->left.went_down || m->right.went_down) || ((m->left.is_down || m->right.is_down) && mouse_is_moving)) {
         int grid_offset = get_mouse_grid_offset(m);
         if (grid_offset > 0) {
             camera_go_to_mappoint(map_point(grid_offset));

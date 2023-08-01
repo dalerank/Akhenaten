@@ -22,7 +22,6 @@ void map_soldier_strength_add(int x, int y, int radius, int amount) {
             if (map_has_figure_at(grid_offset)) {
                 if (figure_get(map_figure_at(grid_offset))->is_legion())
                     map_grid_set(&strength, grid_offset, v + amount + 2);
-
             }
         }
     }
@@ -31,7 +30,7 @@ void map_soldier_strength_add(int x, int y, int radius, int amount) {
 int map_soldier_strength_get(int grid_offset) {
     return map_grid_get(&strength, grid_offset);
 }
-int map_soldier_strength_get_max(int x, int y, int radius, int *out_x, int *out_y) {
+int map_soldier_strength_get_max(int x, int y, int radius, int* out_x, int* out_y) {
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, 1, radius, &x_min, &y_min, &x_max, &y_max);
 

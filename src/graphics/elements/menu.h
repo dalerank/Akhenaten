@@ -12,14 +12,14 @@ struct menu_item {
     void (*left_click_handler)(int param);
     int parameter;
     int hidden;
-    const char *text_raw = nullptr;
+    const char* text_raw = nullptr;
 };
 
 struct menu_bar_item {
     short text_group;
-    menu_item *items;
+    menu_item* items;
     size_t num_items;
-    const char *text_raw = nullptr;
+    const char* text_raw = nullptr;
     short x_start;
     short x_end;
     int calculated_width_blocks;

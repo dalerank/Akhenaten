@@ -3,11 +3,7 @@
 
 #include <stdint.h>
 
-enum {
-    CLIMATE_CENTRAL = 0,
-    CLIMATE_NORTHERN = 1,
-    CLIMATE_DESERT = 2
-};
+enum { CLIMATE_CENTRAL = 0, CLIMATE_NORTHERN = 1, CLIMATE_DESERT = 2 };
 
 int scenario_is_custom(void);
 
@@ -27,9 +23,9 @@ int scenario_starting_kingdom(void);
 
 int scenario_starting_personal_savings(void);
 
-const uint8_t *scenario_name(void);
+const uint8_t* scenario_name(void);
 
-void scenario_set_name(const uint8_t *name);
+void scenario_set_name(const uint8_t* name);
 
 int scenario_is_open_play(void);
 
@@ -47,7 +43,7 @@ int scenario_property_player_rank(void);
 
 int scenario_image_id(void);
 
-const uint8_t *scenario_subtitle(void);
+const uint8_t* scenario_subtitle(void);
 
 int scenario_initial_funds(void);
 

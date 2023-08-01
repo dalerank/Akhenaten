@@ -1,8 +1,8 @@
 #pragma once
 
+#include "graphics/elements/generic_button.h"
 #include "io/dir.h"
 #include "io/file.h"
-#include "graphics/elements/generic_button.h"
 #include "scrollbar.h"
 
 #include <vector>
@@ -15,14 +15,14 @@ struct scrollable_list_ui_params {
     int y = 0;
     int blocks_x = 10;
     int blocks_y = 10;
-    int buttons_size_x = -1;        // default: defined by paneling
+    int buttons_size_x = -1; // default: defined by paneling
     int buttons_size_y = 16;
-    int buttons_margin_x = 2;       // padding of buttons inside the paneling
+    int buttons_margin_x = 2; // padding of buttons inside the paneling
     int buttons_margin_y = 10;
-    int text_padding_x = 6;         // padding of text inside the buttons
+    int text_padding_x = 6; // padding of text inside the buttons
     int text_padding_y = 0;
-    int text_max_width = -1;        // for text ellipsing
-    bool text_centered = false;     // text centered inside padding/button
+    int text_max_width = -1;    // for text ellipsing
+    bool text_centered = false; // text centered inside padding/button
     int scrollbar_margin_x = 0;
     int scrollbar_margin_top = 0;
     int scrollbar_margin_bottom = 0;
@@ -46,7 +46,7 @@ private:
     generic_button list_buttons[MAX_BUTTONS_IN_SCROLLABLE_LIST] = {};
     int num_total_entries = 0;
     int num_buttons;
-    int focus_button_id = 0; // first valid --> 1
+    int focus_button_id = 0;     // first valid --> 1
     int selected_entry_idx = -1; // first valid --> 0
     void (*left_click_callback)(int param1, int param2);
     void (*right_click_callback)(int param1, int param2);
@@ -55,14 +55,14 @@ private:
 
     scrollbar_type scrollbar;
 
-    const dir_listing *file_finder;
+    const dir_listing* file_finder;
     char files_dir[MAX_FILE_NAME];
     char files_ext[MAX_FILE_NAME];
     bool using_file_finder;
 
     char manual_entry_list[MAX_FILE_NAME][MAX_MANUAL_ENTRIES];
 
-    void (*custom_text_render)(int button_index, const uint8_t *text, int x, int y, font_t font);
+    void (*custom_text_render)(int button_index, const uint8_t* text, int x, int y, font_t font);
     bool using_custom_text_render = false;
 
     bool WAS_DRAWN = false; // for frame-ordered caching logic purposes
@@ -82,28 +82,26 @@ public:
     int get_total_entries();
     const char* get_entry_text_by_idx(int index, int filename_syntax);
     const char* get_selected_entry_text(int filename_syntax);
-    int get_entry_idx(const char *button_text);
-    bool has_entry(const char *button_text);
+    int get_entry_idx(const char* button_text);
+    bool has_entry(const char* button_text);
 
     void set_file_finder_usage(bool use);
     void clear_entry_list();
-    void add_entry(const char *entry_text);
-//    void remove_entry(const char *entry_text); // TODO: nope.
-//    void remove_entry(int index); // TODO: nope.
-    void change_file_path(const char *dir, const char *ext = nullptr);
-    void append_files_with_extension(const char *dir, const char *ext);
+    void add_entry(const char* entry_text);
+    //    void remove_entry(const char *entry_text); // TODO: nope.
+    //    void remove_entry(int index); // TODO: nope.
+    void change_file_path(const char* dir, const char* ext = nullptr);
+    void append_files_with_extension(const char* dir, const char* ext);
     void refresh_file_finder();
     void refresh_scrollbar();
     void clamp_scrollbar_position();
 
     void draw();
-    int input_handle(const mouse *m);
+    int input_handle(const mouse* m);
 
-    scroll_list_panel(int n_buttons,
-                      void (*lmb)(int param1, int param2),
-                      void (*rmb)(int param1, int param2),
-                      void (*dmb)(int param1, int param2),
-                      void (*fcc)(int param1, int param2),
-                      scrollable_list_ui_params params, bool use_file_finder, const char *dir = ".", const char *ext = "");
+    scroll_list_panel(int n_buttons, void (*lmb)(int param1, int param2), void (*rmb)(int param1, int param2),
+                      void (*dmb)(int param1, int param2), void (*fcc)(int param1, int param2),
+                      scrollable_list_ui_params params, bool use_file_finder, const char* dir = ".",
+                      const char* ext = "");
     ~scroll_list_panel();
 };

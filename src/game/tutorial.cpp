@@ -6,17 +6,17 @@
 #include "city/mission.h"
 #include "city/population.h"
 #include "city/resource.h"
+#include "empire/city.h"
 #include "game/resource.h"
 #include "game/time.h"
+#include "io/io_buffer.h"
+#include "platform/arguments.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
-#include "empire/city.h"
-#include "platform/arguments.h"
-#include "io/io_buffer.h"
 
 static tutorial_flags_t g_tutorials_flags;
 
-const tutorial_flags_t *tutorial_flags_struct() {
+const tutorial_flags_t* tutorial_flags_struct() {
     return &g_tutorials_flags;
 }
 
@@ -31,7 +31,7 @@ static void set_all_tut_flags_null() {
     g_tutorials_flags.pharaoh.gamemeat_400_stored = 0;
     g_tutorials_flags.pharaoh.collapse = 0;
 
-    // 
+    //
     g_tutorials_flags.pharaoh.gold_mined_500 = 0;
     g_tutorials_flags.pharaoh.temples_built = 0;
 
@@ -141,8 +141,7 @@ tutorial_availability tutorial_advisor_availability(void) {
             return NOT_AVAILABLE_YET;
         else
             return AVAILABLE;
-    }
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         if (scenario_is_mission_rank(1))
             return NOT_AVAILABLE;
         else
@@ -153,10 +152,10 @@ tutorial_availability tutorial_empire_availability(void) {
     if (scenario_is_tutorial_before_mission_5())
         return NOT_AVAILABLE;
     // TODO
-//    else if (!g_tutorials_flags.pharaoh.tut5_can_trade_finally)
-//        return NOT_AVAILABLE_YET;
-//    else
-        return AVAILABLE;
+    //    else if (!g_tutorials_flags.pharaoh.tut5_can_trade_finally)
+    //        return NOT_AVAILABLE_YET;
+    //    else
+    return AVAILABLE;
 }
 
 void tutorial_menu_update(int tut) {
@@ -224,11 +223,10 @@ void tutorial_menu_update(int tut) {
 }
 
 int tutorial_get_population_cap(int current_cap) {
-    return current_cap; //temp
+    return current_cap; // temp
     if (scenario_is_mission_rank(1)) {
-        if (!g_tutorials_flags.tutorial1.fire ||
-            !g_tutorials_flags.tutorial1.collapse ||
-            !g_tutorials_flags.tutorial1.senate_built) {
+        if (!g_tutorials_flags.tutorial1.fire || !g_tutorials_flags.tutorial1.collapse
+            || !g_tutorials_flags.tutorial1.senate_built) {
             return 80;
         }
     } else if (scenario_is_mission_rank(2)) {
@@ -236,7 +234,6 @@ int tutorial_get_population_cap(int current_cap) {
             return 150;
         else if (!g_tutorials_flags.tutorial2.pottery_made)
             return 520;
-
     }
     return current_cap;
 }
@@ -302,7 +299,7 @@ int tutorial_get_immediate_goal_text(void) {
         return 0;
     }
 }
-int tutorial_adjust_request_year(int *year) {
+int tutorial_adjust_request_year(int* year) {
     if (scenario_is_mission_rank(2)) {
         if (!g_tutorials_flags.tutorial2.pottery_made)
             return 0;
@@ -312,13 +309,12 @@ int tutorial_adjust_request_year(int *year) {
     return 1;
 }
 int tutorial_extra_fire_risk(void) {
-    return !g_tutorials_flags.tutorial1.fire &&
-            scenario_is_mission_rank(1); // Fix for extra fire risk in late tutorials
+    return !g_tutorials_flags.tutorial1.fire
+           && scenario_is_mission_rank(1); // Fix for extra fire risk in late tutorials
 }
 int tutorial_extra_damage_risk(void) {
-    return g_tutorials_flags.tutorial1.fire &&
-           !g_tutorials_flags.tutorial1.collapse &&
-            scenario_is_mission_rank(1); // Fix for extra damage risk in late tutorials
+    return g_tutorials_flags.tutorial1.fire && !g_tutorials_flags.tutorial1.collapse
+           && scenario_is_mission_rank(1); // Fix for extra damage risk in late tutorials
 }
 int tutorial_handle_fire(void) {
     if (g_tutorials_flags.tutorial1.fire || g_tutorials_flags.pharaoh.fire)
@@ -384,8 +380,7 @@ void tutorial_on_add_to_warehouse(void) {
         g_tutorials_flags.tutorial2.pottery_made_year = game_time_year();
         building_menu_update(BUILDSET_NORMAL);
         post_message(MESSAGE_TUTORIAL_TRADE);
-    }
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         if (!g_tutorials_flags.pharaoh.pottery_made && city_resource_count(RESOURCE_POTTERY) >= 2) {
             g_tutorials_flags.pharaoh.pottery_made = 1;
             building_menu_update(BUILDSET_TUT3_GARDENS);
@@ -398,7 +393,7 @@ void tutorial_on_add_to_warehouse(void) {
         }
         if (!g_tutorials_flags.pharaoh.papyrus_made && city_resource_count(RESOURCE_PAPYRUS) >= 1) {
             g_tutorials_flags.pharaoh.papyrus_made = 1;
-//            building_menu_update(BUILDSET_TUT5_TRADING);
+            //            building_menu_update(BUILDSET_TUT5_TRADING);
             post_message(MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES);
         }
         if (!g_tutorials_flags.pharaoh.bricks_bought && city_resource_count(RESOURCE_BRICKS) >= 1) {
@@ -512,12 +507,12 @@ void tutorial_on_day_tick(void) {
 void tutorial_on_month_tick(void) {
     if (scenario_is_mission_rank(3)) {
         if (game_time_month() == 5)
-            city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS,
-                                                 1200);
+            city_message_post_with_message_delay(
+              MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS, 1200);
     }
 }
 
-io_buffer *iob_tutorial_flags = new io_buffer([](io_buffer *iob) {
+io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.fire);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.population_150_reached);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.gamemeat_400_stored);

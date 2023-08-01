@@ -12,7 +12,7 @@
  * Gets the version of Julius
  * @return Version number
  */
-const char *system_version(void);
+const char* system_version(void);
 
 /**
  * Resize window
@@ -31,7 +31,7 @@ void system_reload_textures(void);
  * Even though it is set to "void", uses "color_t" format
  * @return true if saving was successful, false otherwise
  */
-int system_save_screen_buffer(void *pixels);
+int system_save_screen_buffer(void* pixels);
 
 /**
  * Center window
@@ -60,21 +60,21 @@ void system_set_cursor(int cursor_id);
  * @param name Name of the key
  * @return Corresponding key, or KEY_NONE if the key does not exist on the layout
  */
-int system_keyboard_key_for_symbol(const char *name);
+int system_keyboard_key_for_symbol(const char* name);
 
 /**
  * Gets the key name for the current keyboard layout
  * @param key Key to get the name for
  * @return Key name, may be empty
  */
-const char *system_keyboard_key_name(int key);
+const char* system_keyboard_key_name(int key);
 
 /**
  * Gets the key modifier name
  * @param modifier Modifier
  * @return Modifier name, may depend on OS
  */
-const char *system_keyboard_key_modifier_name(int modifier);
+const char* system_keyboard_key_modifier_name(int modifier);
 
 /**
  * Sets the position/size of the keyboard input box
@@ -90,7 +90,7 @@ void system_keyboard_set_input_rect(int x, int y, int width, int height);
  * @param text The text to display on the virtual keyboard
  * @param max_length The maximum length of the text
  */
-void system_keyboard_show(const uint8_t *text, int max_length);
+void system_keyboard_show(const uint8_t* text, int max_length);
 
 /**
  * Hide the virtual keyboard
@@ -109,7 +109,7 @@ void system_mouse_set_relative_mode(int enabled);
  * @param x X position of the mouse
  * @param y Y position of the mouse
  */
-void system_mouse_get_relative_state(int *x, int *y);
+void system_mouse_get_relative_state(int* x, int* y);
 
 /**
  * Moves the mouse cursor
@@ -126,7 +126,7 @@ void system_move_mouse_cursor(int delta_x, int delta_y);
  * if the x and y are less than 0 or greater than the width/height, they will be
  * changed to fit in the window
  */
-void system_set_mouse_position(int *x, int *y);
+void system_set_mouse_position(int* x, int* y);
 
 /**
  * Exit the game

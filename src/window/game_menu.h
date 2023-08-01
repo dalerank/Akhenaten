@@ -3,4 +3,4 @@
 
 void window_game_menu_show(void);
 
-#endif //WINDOW_FAMILY_MENU_H
+#endif // WINDOW_FAMILY_MENU_H

@@ -38,7 +38,7 @@ void map_tiles_set_water(int grid_offset);
 void map_advance_floodplain_growth();
 void map_update_floodplain_inundation(int leading_row, int is_flooding, int flooding_ticks);
 
-int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain_image *img);
+int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain_image* img);
 void map_tiles_update_all_aqueducts(int include_construction);
 void map_tiles_update_region_aqueducts(int x_min, int y_min, int x_max, int y_max);
 int map_tiles_set_aqueduct(int x, int y);
@@ -57,7 +57,8 @@ enum {
     CLEAR_LAND_CHECK_FIGURES_ANYWHERE = 2
 };
 
-int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain, int check_figures = CLEAR_LAND_CHECK_FIGURES_ANYWHERE);
+int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain,
+                        int check_figures = CLEAR_LAND_CHECK_FIGURES_ANYWHERE);
 
 void map_tiles_add_entry_exit_flags(void);
 void map_tiles_remove_entry_exit_flags(void);

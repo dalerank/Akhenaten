@@ -1,8 +1,8 @@
-//#ifndef FIGURE_SERVICE_H
-//#define FIGURE_SERVICE_H
+// #ifndef FIGURE_SERVICE_H
+// #define FIGURE_SERVICE_H
 //
-//#include "figure/figure.h"
+// #include "figure/figure.h"
 //
-//int figure_service_provide_coverage();
+// int figure_service_provide_coverage();
 //
-//#endif // FIGURE_SERVICE_H
+// #endif // FIGURE_SERVICE_H

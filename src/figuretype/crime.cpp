@@ -8,7 +8,6 @@
 #include "city/population.h"
 #include "city/ratings.h"
 #include "city/sentiment.h"
-#include "graphics/image.h"
 #include "core/random.h"
 #include "figure/combat.h"
 #include "figure/formation_enemy.h"
@@ -16,17 +15,16 @@
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "game/tutorial.h"
+#include "graphics/image.h"
+#include "graphics/image_groups.h"
 #include "grid/building.h"
 #include "grid/grid.h"
 #include "grid/road_access.h"
 #include "scenario/property.h"
-#include "graphics/image_groups.h"
 
-static const int CRIMINAL_OFFSETS[] = {
-        0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
-};
+static const int CRIMINAL_OFFSETS[] = {0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1};
 
-static void generate_rioter(building *b) {
+static void generate_rioter(building* b) {
     int x_road, y_road;
     if (!map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 4, &x_road, &y_road))
         return;
@@ -50,14 +48,14 @@ static void generate_rioter(building *b) {
     int target_building_id = formation_rioter_get_target_building(&x_target, &y_target);
     for (int i = 0; i < people_in_mob; i++) {
         // TODO: to add correct rioter image
-        figure *f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM_LEFT);
+        figure* f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM_LEFT);
         f->action_state = FIGURE_ACTION_120_RIOTER_CREATED;
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
         if (target_building_id) {
             f->destination_tile.set(x_target, y_target);
-//            f->destination_tile.x() = x_target;
-//            f->destination_tile.y() = y_target;
+            //            f->destination_tile.x() = x_target;
+            //            f->destination_tile.y() = y_target;
             f->set_destination(target_building_id);
         } else {
             f->poof();
@@ -71,13 +69,13 @@ static void generate_rioter(building *b) {
     city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, MAP_OFFSET(x_road, y_road));
 }
 
-static void generate_mugger(building *b) {
+static void generate_mugger(building* b) {
     city_sentiment_add_criminal();
     if (b->house_criminal_active < 2) {
         b->house_criminal_active = 2;
         int x_road, y_road;
         if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
-            figure *f = figure_create(FIGURE_CRIMINAL, x_road, y_road, DIR_4_BOTTOM_LEFT);
+            figure* f = figure_create(FIGURE_CRIMINAL, x_road, y_road, DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
             city_ratings_monument_record_criminal();
             int taxes_this_year = city_finance_overview_this_year()->income.taxes;
@@ -93,13 +91,13 @@ static void generate_mugger(building *b) {
     }
 }
 
-static void generate_protestor(building *b) {
+static void generate_protestor(building* b) {
     city_sentiment_add_protester();
     if (b->house_criminal_active < 1) {
         b->house_criminal_active = 1;
         int x_road, y_road;
         if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
-            figure *f = figure_create(FIGURE_PROTESTER, x_road, y_road, DIR_4_BOTTOM_LEFT);
+            figure* f = figure_create(FIGURE_PROTESTER, x_road, y_road, DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
             city_ratings_monument_record_criminal();
         }
@@ -107,11 +105,11 @@ static void generate_protestor(building *b) {
 }
 
 void figure_generate_criminals(void) {
-    building *min_building = 0;
+    building* min_building = 0;
     int min_happiness = 50;
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size) {
             if (b->sentiment.house_happiness >= 50)
                 b->house_criminal_active = 0;
@@ -132,8 +130,7 @@ void figure_generate_criminals(void) {
                         generate_rioter(min_building);
                     } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                         generate_mugger(min_building);
-                }
-                else if (min_happiness < 30)
+                } else if (min_happiness < 30)
                     generate_mugger(min_building);
                 else if (min_happiness < 50)
                     generate_protestor(min_building);
@@ -155,11 +152,11 @@ void figure_generate_criminals(void) {
 }
 
 void figure::protestor_action() {
-//    terrain_usage = TERRAIN_USAGE_ROADS;
-//    figure_image_increase_offset(64);
-//    cart_image_id = 0;
-//    if (action_state == FIGURE_ACTION_149_CORPSE)
-//        poof();
+    //    terrain_usage = TERRAIN_USAGE_ROADS;
+    //    figure_image_increase_offset(64);
+    //    cart_image_id = 0;
+    //    if (action_state == FIGURE_ACTION_149_CORPSE)
+    //        poof();
 
     wait_ticks++;
     if (wait_ticks > 200) {
@@ -167,16 +164,16 @@ void figure::protestor_action() {
         anim_frame = 0;
     }
     if (action_state == FIGURE_ACTION_149_CORPSE)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset();// + 96;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset(); // + 96;
     else
         sprite_image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + CRIMINAL_OFFSETS[anim_frame / 4] + 104;
 }
 void figure::criminal_action() {
-//    terrain_usage = TERRAIN_USAGE_ROADS;
-//    figure_image_increase_offset(32);
-//    cart_image_id = 0;
-//    if (action_state == FIGURE_ACTION_149_CORPSE)
-//        poof();
+    //    terrain_usage = TERRAIN_USAGE_ROADS;
+    //    figure_image_increase_offset(32);
+    //    cart_image_id = 0;
+    //    if (action_state == FIGURE_ACTION_149_CORPSE)
+    //        poof();
 
     wait_ticks++;
     if (wait_ticks > 200) {
@@ -190,52 +187,51 @@ void figure::criminal_action() {
 }
 void figure::rioter_action() {
     city_figures_add_rioter(!targeted_by_figure_id);
-//    terrain_usage = TERRAIN_USAGE_ENEMY;
-//    max_roam_length = 480;
-//    cart_image_id = 0;
-//    is_ghost = false;
+    //    terrain_usage = TERRAIN_USAGE_ENEMY;
+    //    max_roam_length = 480;
+    //    cart_image_id = 0;
+    //    is_ghost = false;
     switch (action_state) {
-        case FIGURE_ACTION_120_RIOTER_CREATED:
-//            figure_image_increase_offset(32);
-            wait_ticks++;
-            if (wait_ticks >= 160) {
-                action_state = FIGURE_ACTION_121_RIOTER_MOVING;
-                int x_tile, y_tile;
-                int building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
-                if (building_id) {
-                    destination_tile.set(x_tile, y_tile);
-//                    destination_tile.x() = x_tile;
-//                    destination_tile.y() = y_tile;
-                    set_destination(building_id);
-                    route_remove();
-                } else
-                    poof();
-            }
-            break;
-        case FIGURE_ACTION_121_RIOTER_MOVING:
-//            figure_image_increase_offset(12);
-            move_ticks(1);
-            if (direction == DIR_FIGURE_NONE) {
-                int x_tile, y_tile;
-                int building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
-                if (building_id) {
-                    destination_tile.set(x_tile, y_tile);
-//                    destination_tile.x() = x_tile;
-//                    destination_tile.y() = y_tile;
-                    set_destination(building_id);
-                    route_remove();
-                } else {
-                    poof();
-                }
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
-                action_state = FIGURE_ACTION_120_RIOTER_CREATED;
+    case FIGURE_ACTION_120_RIOTER_CREATED:
+        //            figure_image_increase_offset(32);
+        wait_ticks++;
+        if (wait_ticks >= 160) {
+            action_state = FIGURE_ACTION_121_RIOTER_MOVING;
+            int x_tile, y_tile;
+            int building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
+            if (building_id) {
+                destination_tile.set(x_tile, y_tile);
+                //                    destination_tile.x() = x_tile;
+                //                    destination_tile.y() = y_tile;
+                set_destination(building_id);
                 route_remove();
-            } else if (direction == DIR_FIGURE_ATTACK) {
-                if (anim_frame > 12)
-                    anim_frame = 0;
-
+            } else
+                poof();
+        }
+        break;
+    case FIGURE_ACTION_121_RIOTER_MOVING:
+        //            figure_image_increase_offset(12);
+        move_ticks(1);
+        if (direction == DIR_FIGURE_NONE) {
+            int x_tile, y_tile;
+            int building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
+            if (building_id) {
+                destination_tile.set(x_tile, y_tile);
+                //                    destination_tile.x() = x_tile;
+                //                    destination_tile.y() = y_tile;
+                set_destination(building_id);
+                route_remove();
+            } else {
+                poof();
             }
-            break;
+        } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
+            action_state = FIGURE_ACTION_120_RIOTER_CREATED;
+            route_remove();
+        } else if (direction == DIR_FIGURE_ATTACK) {
+            if (anim_frame > 12)
+                anim_frame = 0;
+        }
+        break;
     }
     int dir;
     if (direction == DIR_FIGURE_ATTACK)
@@ -263,14 +259,14 @@ int figure::figure_rioter_collapse_building() {
         if (!map_building_at(grid_offset))
             continue;
 
-        building *b = building_at(grid_offset);
+        building* b = building_at(grid_offset);
         switch (b->type) {
-            case BUILDING_WAREHOUSE_SPACE:
-            case BUILDING_WAREHOUSE:
-            case BUILDING_FORT_GROUND:
-            case BUILDING_MENU_FORTS:
-            case BUILDING_BURNING_RUIN:
-                continue;
+        case BUILDING_WAREHOUSE_SPACE:
+        case BUILDING_WAREHOUSE:
+        case BUILDING_FORT_GROUND:
+        case BUILDING_MENU_FORTS:
+        case BUILDING_BURNING_RUIN:
+            continue;
         }
         if (b->house_size && b->subtype.house_level < HOUSE_SMALL_CASA)
             continue;

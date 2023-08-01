@@ -1,5 +1,5 @@
-#include "city/city_data.h"
 #include "imperial.h"
+#include "city/city_data.h"
 
 #include "city/emperor.h"
 #include "city/finance.h"
@@ -8,8 +8,8 @@
 #include "city/resource.h"
 #include "empire/city.h"
 #include "figure/formation_legion.h"
-#include "graphics/elements/generic_button.h"
 #include "graphics/boilerplate.h"
+#include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
@@ -37,14 +37,14 @@ static void button_gift_to_emperor(int param1, int param2);
 static void button_request(int index, int param2);
 
 static generic_button imperial_buttons[] = {
-        {320, 367, 250, 20, button_donate_to_city,  button_none, 0, 0},
-        {70,  393, 500, 20, button_set_salary,      button_none, 0, 0},
-        {320, 341, 250, 20, button_gift_to_emperor, button_none, 0, 0},
-        {38,  96,  560, 40, button_request,         button_none, 0, 0},
-        {38,  138, 560, 40, button_request,         button_none, 1, 0},
-        {38,  180, 560, 40, button_request,         button_none, 2, 0},
-        {38,  222, 560, 40, button_request,         button_none, 3, 0},
-        {38,  264, 560, 40, button_request,         button_none, 4, 0},
+  {320, 367, 250, 20, button_donate_to_city, button_none, 0, 0},
+  {70, 393, 500, 20, button_set_salary, button_none, 0, 0},
+  {320, 341, 250, 20, button_gift_to_emperor, button_none, 0, 0},
+  {38, 96, 560, 40, button_request, button_none, 0, 0},
+  {38, 138, 560, 40, button_request, button_none, 1, 0},
+  {38, 180, 560, 40, button_request, button_none, 2, 0},
+  {38, 222, 560, 40, button_request, button_none, 3, 0},
+  {38, 264, 560, 40, button_request, button_none, 4, 0},
 };
 
 static int focus_button_id;
@@ -52,8 +52,8 @@ static int selected_request_id;
 
 static int get_request_status(int index) {
     int num_requests = 0;
-    if (city_military_months_until_distant_battle() > 0 &&
-        !city_military_distant_battle_roman_army_is_traveling_forth()) {
+    if (city_military_months_until_distant_battle() > 0
+        && !city_military_distant_battle_roman_army_is_traveling_forth()) {
         num_requests = 1; // if there's an army request, display that first?
         if (index == 0) {
             if (city_military_total_legions() <= 0)
@@ -64,10 +64,10 @@ static int get_request_status(int index) {
                 return STATUS_CONFIRM_SEND_LEGIONS;
         }
     }
-    const scenario_request *request = scenario_request_get_visible(index - num_requests);
+    const scenario_request* request = scenario_request_get_visible(index - num_requests);
     if (request) {
-        if ((request->resource == RESOURCE_DEBEN && GAME_ENV == ENGINE_ENV_C3) ||
-            (request->resource == RESOURCE_DEBEN && GAME_ENV == ENGINE_ENV_PHARAOH)) {
+        if ((request->resource == RESOURCE_DEBEN && GAME_ENV == ENGINE_ENV_C3)
+            || (request->resource == RESOURCE_DEBEN && GAME_ENV == ENGINE_ENV_PHARAOH)) {
             if (city_finance_treasury() <= request->amount)
                 return STATUS_NOT_ENOUGH_RESOURCES;
         } else {
@@ -78,14 +78,19 @@ static int get_request_status(int index) {
     }
     return 0;
 }
-static void draw_request(int index, const scenario_request *request) {
+static void draw_request(int index, const scenario_request* request) {
     if (index >= 5)
         return;
 
     button_border_draw(38, 96 + 42 * index, 560, 42, 0);
     int resource_offset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource_offset, 45, 103 + 42 * index);
-    int width = text_draw_number(stack_proper_quantity(request->amount, request->resource), '@', " ", 65, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
+    int width = text_draw_number(stack_proper_quantity(request->amount, request->resource),
+                                 '@',
+                                 " ",
+                                 65,
+                                 102 + 42 * index,
+                                 FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(23, request->resource, 65 + width, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
 
     width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
@@ -134,13 +139,16 @@ static int draw_background(void) {
     inner_panel_draw(32, 90, 36, 14);
 
     int num_requests = 0;
-    if (city_military_months_until_distant_battle() > 0 &&
-        !city_military_distant_battle_roman_army_is_traveling_forth()) {
+    if (city_military_months_until_distant_battle() > 0
+        && !city_military_distant_battle_roman_army_is_traveling_forth()) {
         // can send to distant battle
         button_border_draw(38, 96, 560, 40, 0);
         ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, 50, 106);
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE_ON_DARK);
-        lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id, 80 + width, 102,
+        lang_text_draw(21,
+                       empire_city_get(city_military_distant_battle_city())->name_id,
+                       80 + width,
+                       102,
                        FONT_NORMAL_WHITE_ON_DARK);
         int strength_text_id;
         int enemy_strength = city_military_distant_battle_enemy_strength();
@@ -152,7 +160,8 @@ static int draw_background(void) {
             strength_text_id = 75;
         }
         width = lang_text_draw(52, strength_text_id, 80, 120, FONT_NORMAL_WHITE_ON_DARK);
-        lang_text_draw_amount(8, 4, city_military_months_until_distant_battle(), 80 + width, 120, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_amount(
+          8, 4, city_military_months_until_distant_battle(), 80 + width, 120, FONT_NORMAL_WHITE_ON_DARK);
         num_requests = 1;
     }
     num_requests = scenario_request_foreach_visible(num_requests, draw_request);
@@ -186,21 +195,20 @@ static void draw_foreground(void) {
             button_border_draw(38, 96 + i * 42, 560, 42, focus_button_id == (4 + i));
     }
 
-//    if (get_request_status(1))
-//        button_border_draw(38, 138, 560, 40, focus_button_id == 5);
-//
-//    if (get_request_status(2))
-//        button_border_draw(38, 180, 560, 40, focus_button_id == 6);
-//
-//    if (get_request_status(3))
-//        button_border_draw(38, 222, 560, 40, focus_button_id == 7);
-//
-//    if (get_request_status(4))
-//        button_border_draw(38, 264, 560, 40, focus_button_id == 8);
-
+    //    if (get_request_status(1))
+    //        button_border_draw(38, 138, 560, 40, focus_button_id == 5);
+    //
+    //    if (get_request_status(2))
+    //        button_border_draw(38, 180, 560, 40, focus_button_id == 6);
+    //
+    //    if (get_request_status(3))
+    //        button_border_draw(38, 222, 560, 40, focus_button_id == 7);
+    //
+    //    if (get_request_status(4))
+    //        button_border_draw(38, 264, 560, 40, focus_button_id == 8);
 }
 
-static int handle_mouse(const mouse *m) {
+static int handle_mouse(const mouse* m) {
     return generic_buttons_handle_mouse(m, 0, 0, imperial_buttons, 8, &focus_button_id);
 }
 
@@ -225,7 +233,6 @@ static void confirm_send_troops(bool accepted) {
 static void confirm_send_goods(bool accepted) {
     if (accepted)
         scenario_request_dispatch(selected_request_id);
-
 }
 static void button_request(int index, int param2) {
     int status = get_request_status(index);
@@ -233,22 +240,22 @@ static void button_request(int index, int param2) {
     if (status) {
         city_military_clear_empire_service_legions();
         switch (status) {
-            case STATUS_NO_LEGIONS_AVAILABLE:
-                window_popup_dialog_show(POPUP_DIALOG_NO_LEGIONS_AVAILABLE, confirm_nothing, e_popup_btns_ok);
-                break;
-            case STATUS_NO_LEGIONS_SELECTED:
-                window_popup_dialog_show(POPUP_DIALOG_NO_LEGIONS_SELECTED, confirm_nothing, e_popup_btns_ok);
-                break;
-            case STATUS_CONFIRM_SEND_LEGIONS:
-                window_popup_dialog_show(POPUP_DIALOG_SEND_TROOPS, confirm_send_troops, e_popup_btns_yesno);
-                break;
-            case STATUS_NOT_ENOUGH_RESOURCES:
-                window_popup_dialog_show(POPUP_DIALOG_NOT_ENOUGH_GOODS, confirm_nothing, e_popup_btns_ok);
-                break;
-            default:
-                selected_request_id = status - 1;
-                window_popup_dialog_show(POPUP_DIALOG_SEND_GOODS, confirm_send_goods, e_popup_btns_yesno);
-                break;
+        case STATUS_NO_LEGIONS_AVAILABLE:
+            window_popup_dialog_show(POPUP_DIALOG_NO_LEGIONS_AVAILABLE, confirm_nothing, e_popup_btns_ok);
+            break;
+        case STATUS_NO_LEGIONS_SELECTED:
+            window_popup_dialog_show(POPUP_DIALOG_NO_LEGIONS_SELECTED, confirm_nothing, e_popup_btns_ok);
+            break;
+        case STATUS_CONFIRM_SEND_LEGIONS:
+            window_popup_dialog_show(POPUP_DIALOG_SEND_TROOPS, confirm_send_troops, e_popup_btns_yesno);
+            break;
+        case STATUS_NOT_ENOUGH_RESOURCES:
+            window_popup_dialog_show(POPUP_DIALOG_NOT_ENOUGH_GOODS, confirm_nothing, e_popup_btns_ok);
+            break;
+        default:
+            selected_request_id = status - 1;
+            window_popup_dialog_show(POPUP_DIALOG_SEND_GOODS, confirm_send_goods, e_popup_btns_yesno);
+            break;
         }
     }
 }
@@ -263,12 +270,7 @@ static int get_tooltip_text(void) {
     }
 }
 
-const advisor_window_type *window_advisor_imperial(void) {
-    static const advisor_window_type window = {
-            draw_background,
-            draw_foreground,
-            handle_mouse,
-            get_tooltip_text
-    };
+const advisor_window_type* window_advisor_imperial(void) {
+    static const advisor_window_type window = {draw_background, draw_foreground, handle_mouse, get_tooltip_text};
     return &window;
 }

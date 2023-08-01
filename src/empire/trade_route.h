@@ -6,11 +6,7 @@
 
 void trade_route_init(int route_id, int resource, int limit);
 
-enum {
-    LIMIT_WITH_BONUS,
-    LIMIT_BASE_ONLY,
-    LIMIT_BONUS_ONLY
-};
+enum { LIMIT_WITH_BONUS, LIMIT_BASE_ONLY, LIMIT_BONUS_ONLY };
 
 int trade_route_limit(int route_id, int resource, int bonus_inclusion = LIMIT_WITH_BONUS);
 int trade_route_traded(int route_id, int resource);

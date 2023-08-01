@@ -52,7 +52,8 @@ enum {
     WARNING_EDITOR_NEED_MAP_EDGE = 58,
     WARNING_EDITOR_NEED_OPEN_WATER = 59,
     WARNING_EDITOR_CANNOT_PLACE = 60,
-    WARNING_EDITOR_NO_EARTHQUAKE_SCHEDULED = 61, WARNING_HERD_BREEDING_GROUNDS = 61,
+    WARNING_EDITOR_NO_EARTHQUAKE_SCHEDULED = 61,
+    WARNING_HERD_BREEDING_GROUNDS = 61,
     WARNING_HOUSE_TOO_FAR_FROM_ROAD = 62,
     WARNING_CITY_BOXED_IN = 63,
     WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH = 64,
@@ -97,11 +98,11 @@ void city_warning_show(int type);
 
 int city_has_warnings(void);
 
-const uint8_t *city_warning_get(int id);
+const uint8_t* city_warning_get(int id);
 
 void city_warning_clear_all(void);
 void city_warning_clear_outdated(void);
 
-void city_warning_show_console(uint8_t *warning_text);
+void city_warning_show_console(uint8_t* warning_text);
 
 #endif // CITY_WARNING_H

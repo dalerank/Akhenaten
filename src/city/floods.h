@@ -20,21 +20,21 @@ struct floods_data_t {
     int season;
     int duration;
     int quality;
-    int unk00;              // 00
+    int unk00; // 00
     int quality_next;
     int quality_last;
     //
     // Pharaoh had a struct containing tile data for the updates.
     // I reimplemented it via other means.
     //
-    int flood_progress;     // 0 - 30
-    int unk01;              // season/floodplain_width -- probably a leftover from a previous flood system
-    int state;              // 1 - 6
-    int floodplain_width;   // 0 - 30
-    bool has_floodplains;   // 0 - 1
-} ;
+    int flood_progress;   // 0 - 30
+    int unk01;            // season/floodplain_width -- probably a leftover from a previous flood system
+    int state;            // 1 - 6
+    int floodplain_width; // 0 - 30
+    bool has_floodplains; // 0 - 1
+};
 
-floods_data_t &floodplain_data();
+floods_data_t& floodplain_data();
 
 void floodplains_init();
 
@@ -57,4 +57,4 @@ int floodplains_expected_month();
 
 void floodplains_tick_update(bool calc_only);
 
-#endif //OZYMANDIAS_FLOODS_H
+#endif // OZYMANDIAS_FLOODS_H

@@ -3,10 +3,11 @@
 #include "city/message.h"
 #include "city/population.h"
 #include "city/ratings.h"
-#include "graphics/image.h"
 #include "figuretype/missile.h"
 #include "figuretype/wall.h"
 #include "game/undo.h"
+#include "graphics/image.h"
+#include "graphics/image_groups.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/grid.h"
@@ -15,12 +16,11 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "sound/effect.h"
-#include "graphics/image_groups.h"
 
-#include <string.h>
 #include <core/random.h>
+#include <string.h>
 
-static void destroy_on_fire(building *b, bool plagued) {
+static void destroy_on_fire(building* b, bool plagued) {
     game_undo_disable();
     b->fire_risk = 0;
     b->damage_risk = 0;
@@ -62,14 +62,15 @@ static void destroy_on_fire(building *b, bool plagued) {
         memset(&b->data, 0, 42);
 
         // FIXME: possible can't render image & fire animation
-        unsigned char random = rand_int % 4; rand_int *= rand_int;
+        unsigned char random = rand_int % 4;
+        rand_int *= rand_int;
         int image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), 1, image_id, TERRAIN_BUILDING);
     }
-    static const int x_tiles[] = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5,
-                                  5, 5, 4, 3, 2, 1, 0};
-    static const int y_tiles[] = {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3,
-                                  4, 5, 5, 5, 5, 5, 5};
+    static const int x_tiles[]
+      = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0};
+    static const int y_tiles[]
+      = {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5};
     for (int tile = 1; tile < num_tiles; tile++) {
         int x = x_tiles[tile] + b->tile.x();
         int y = y_tiles[tile] + b->tile.y();
@@ -77,8 +78,9 @@ static void destroy_on_fire(building *b, bool plagued) {
             continue;
 
         // FIXME: possible can't render image & fire animation
-        building *ruin = building_create(BUILDING_BURNING_RUIN, x, y, 0);
-        unsigned char random = rand_int % 4; rand_int *= rand_int;
+        building* ruin = building_create(BUILDING_BURNING_RUIN, x, y, 0);
+        unsigned char random = rand_int % 4;
+        rand_int *= rand_int;
         int image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         map_building_tiles_add(ruin->id, ruin->tile.x(), ruin->tile.y(), 1, image_id, TERRAIN_BUILDING);
         ruin->fire_duration = (ruin->map_random_7bit & 7) + 1;
@@ -89,8 +91,8 @@ static void destroy_on_fire(building *b, bool plagued) {
     if (waterside_building)
         map_routing_update_water();
 }
-static void destroy_linked_parts(building *b, bool on_fire) {
-    building *part = b;
+static void destroy_linked_parts(building* b, bool on_fire) {
+    building* part = b;
     for (int i = 0; i < 99; i++) {
         if (part->prev_part_building_id <= 0)
             break;
@@ -120,7 +122,7 @@ static void destroy_linked_parts(building *b, bool on_fire) {
     }
 }
 
-void building_destroy_by_collapse(building *b) {
+void building_destroy_by_collapse(building* b) {
     b = b->main();
     b->state = BUILDING_STATE_RUBBLE;
     map_building_tiles_set_rubble(b->id, b->tile.x(), b->tile.y(), b->size);
@@ -128,32 +130,31 @@ void building_destroy_by_collapse(building *b) {
     destroy_linked_parts(b, false);
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
-void building_destroy_by_poof(building *b, bool clouds) {
+void building_destroy_by_poof(building* b, bool clouds) {
     b = b->main();
     if (clouds)
         figure_create_explosion_cloud(b->tile.x(), b->tile.y(), b->size);
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
     do {
         b->state = 0;
-        map_tiles_update_region_empty_land(true,
-                                           b->tile.x(), b->tile.y(),
-                                           b->tile.x() + b->size - 1, b->tile.y() + b->size - 1);
+        map_tiles_update_region_empty_land(
+          true, b->tile.x(), b->tile.y(), b->tile.x() + b->size - 1, b->tile.y() + b->size - 1);
         if (b->next_part_building_id < 1)
             return;
         b = b->next();
     } while (true);
 }
-void building_destroy_by_fire(building *b) {
+void building_destroy_by_fire(building* b) {
     b = b->main();
     destroy_on_fire(b, false);
     destroy_linked_parts(b, true);
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
-void building_destroy_by_plague(building *b) {
+void building_destroy_by_plague(building* b) {
     b = b->main();
     destroy_on_fire(b, true);
 }
-void building_destroy_by_rioter(building *b) {
+void building_destroy_by_rioter(building* b) {
     b = b->main();
     destroy_on_fire(b, false);
 }
@@ -161,7 +162,7 @@ void building_destroy_by_rioter(building *b) {
 int building_destroy_first_of_type(int type) {
     int i = building_find(type);
     if (i < MAX_BUILDINGS) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         int grid_offset = b->tile.grid_offset();
         game_undo_disable();
         b->state = BUILDING_STATE_RUBBLE;
@@ -174,9 +175,9 @@ int building_destroy_first_of_type(int type) {
 }
 void building_destroy_last_placed(void) {
     int highest_sequence = 0;
-    building *last_building = 0;
+    building* last_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_CREATED || b->state == BUILDING_STATE_VALID) {
             if (b->creation_sequence_index > highest_sequence) {
                 highest_sequence = b->creation_sequence_index;
@@ -202,7 +203,7 @@ void building_destroy_by_enemy(map_point point) {
     int y = point.y();
     int building_id = map_building_at(grid_offset);
     if (building_id > 0) {
-        building *b = building_get(building_id);
+        building* b = building_get(building_id);
         if (b->state == BUILDING_STATE_VALID) {
             city_ratings_monument_building_destroyed(b->type);
             building_destroy_by_collapse(b);

@@ -10,7 +10,7 @@ enum e_direction {
     DIR_6_TOP_LEFT = 6,
     DIR_7_TOP = 7,
     DIR_8_NONE = 8,
-    DIR_FIGURE_NONE = 8, //DIR_FIGURE_NONE = 8,
+    DIR_FIGURE_NONE = 8, // DIR_FIGURE_NONE = 8,
     DIR_FIGURE_REROUTE = 9,
     DIR_FIGURE_CAN_NOT_REACH = 10,
     DIR_FIGURE_ATTACK = 11,

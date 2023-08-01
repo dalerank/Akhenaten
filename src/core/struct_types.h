@@ -4,8 +4,12 @@
 struct pixel_coordinate {
     int x = 0;
     int y = 0;
-    pixel_coordinate() {}
-    pixel_coordinate(int _x, int _y) : x(_x), y(_y) {}
+    pixel_coordinate() {
+    }
+    pixel_coordinate(int _x, int _y)
+      : x(_x)
+      , y(_y) {
+    }
 
     inline pixel_coordinate operator-(pixel_coordinate rhs) {
         return {x - rhs.x, y - rhs.y};
@@ -29,4 +33,4 @@ struct pixel_coordinate {
     }
 };
 
-#endif //OZYMANDIAS_STRUCT_TYPES_H
+#endif // OZYMANDIAS_STRUCT_TYPES_H

@@ -1,18 +1,18 @@
 #include "scroll_list_panel.h"
 
-#include "io/file.h"
-#include <cstring>
-#include <functional>
 #include "core/string.h"
-#include "panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "io/file.h"
+#include "panel.h"
+#include <cstring>
+#include <functional>
 
 #include <cassert>
 
 static char temp_filename_buffer[MAX_FILE_NAME];
 
-void scroll_list_panel::select(const char *button_text) {
+void scroll_list_panel::select(const char* button_text) {
     return select_entry(get_entry_idx(button_text));
 }
 void scroll_list_panel::select_by_button_id(int button_id) {
@@ -49,20 +49,20 @@ const char* scroll_list_panel::get_entry_text_by_idx(int index, int filename_syn
 
     if (using_file_finder) {
         switch (filename_syntax) {
-            case FILE_FULL_PATH:
-                snprintf(temp_filename_buffer, MAX_FILE_NAME, "%s%s", files_dir, file_finder->files[index]);
-                return temp_filename_buffer;
-            case FILE_WITH_EXT:
+        case FILE_FULL_PATH:
+            snprintf(temp_filename_buffer, MAX_FILE_NAME, "%s%s", files_dir, file_finder->files[index]);
+            return temp_filename_buffer;
+        case FILE_WITH_EXT:
+            return file_finder->files[index];
+        case FILE_NO_EXT:
+            if (strcmp(files_ext, "folders") == 0)
                 return file_finder->files[index];
-            case FILE_NO_EXT:
-                if (strcmp(files_ext, "folders") == 0)
-                    return file_finder->files[index];
-                strncpy_safe(temp_filename_buffer, file_finder->files[index], MAX_FILE_NAME);
-                temp_filename_buffer[(int)(strchr(temp_filename_buffer, '.') - (char*)temp_filename_buffer)] = 0;
-                return temp_filename_buffer;
-            default:
-                assert(false);
-                return "";
+            strncpy_safe(temp_filename_buffer, file_finder->files[index], MAX_FILE_NAME);
+            temp_filename_buffer[(int)(strchr(temp_filename_buffer, '.') - (char*)temp_filename_buffer)] = 0;
+            return temp_filename_buffer;
+        default:
+            assert(false);
+            return "";
         }
     } else {
         return manual_entry_list[index];
@@ -97,12 +97,12 @@ void scroll_list_panel::clear_entry_list() {
     unselect();
     refresh_scrollbar();
 }
-void scroll_list_panel::add_entry(const char *entry_text) {
+void scroll_list_panel::add_entry(const char* entry_text) {
     strncpy_safe(manual_entry_list[num_total_entries], entry_text, MAX_FILE_NAME);
     num_total_entries++;
     refresh_scrollbar();
 }
-void scroll_list_panel::change_file_path(const char *dir, const char *ext) {
+void scroll_list_panel::change_file_path(const char* dir, const char* ext) {
     strncpy(files_dir, dir, MAX_FILE_NAME);
     if (ext != nullptr) {
         strncpy(files_ext, ext, MAX_FILE_NAME);
@@ -111,7 +111,7 @@ void scroll_list_panel::change_file_path(const char *dir, const char *ext) {
     refresh_file_finder();
 }
 
-void scroll_list_panel::append_files_with_extension(const char *dir, const char *extension) {
+void scroll_list_panel::append_files_with_extension(const char* dir, const char* extension) {
     file_finder = dir_append_files_with_extension(dir, extension);
     num_total_entries = file_finder->num_files;
     refresh_scrollbar();
@@ -133,7 +133,7 @@ void scroll_list_panel::refresh_file_finder() {
 }
 void scroll_list_panel::refresh_scrollbar() {
     scrollbar_init(&scrollbar, 0, num_total_entries - num_buttons);
-//    clamp_scrollbar_position();
+    //    clamp_scrollbar_position();
 }
 void scroll_list_panel::clamp_scrollbar_position() {
     while (scrollbar.scroll_position + num_buttons >= num_total_entries)
@@ -145,7 +145,7 @@ void scroll_list_panel::clamp_scrollbar_position() {
 static void on_scroll(void) {
     window_invalidate();
 }
-int scroll_list_panel::input_handle(const mouse *m) {
+int scroll_list_panel::input_handle(const mouse* m) {
     if (!WAS_DRAWN)
         return 0;
     WAS_DRAWN = false;
@@ -154,7 +154,7 @@ int scroll_list_panel::input_handle(const mouse *m) {
     int last_focused = focus_button_id;
     int handled_button_id = generic_buttons_handle_mouse(m, 0, 0, list_buttons, num_buttons, &focus_button_id);
     if (handled_button_id > 0 && get_focused_entry_idx() < num_total_entries) {
-        generic_button *button = &list_buttons[handled_button_id - 1];
+        generic_button* button = &list_buttons[handled_button_id - 1];
         if (m->left.went_up) {
             select_by_button_id(handled_button_id);
 
@@ -226,12 +226,10 @@ void scroll_list_panel::draw() {
     WAS_DRAWN = true;
 }
 
-scroll_list_panel::scroll_list_panel(int n_buttons,
-                                     void (*lmb)(int param1, int param2),
-                                     void (*rmb)(int param1, int param2),
-                                     void (*dmb)(int param1, int param2),
-                                     void (*fcc)(int param1, int param2),
-                                     scrollable_list_ui_params params, bool use_file_finder, const char *dir, const char *ext) {
+scroll_list_panel::scroll_list_panel(int n_buttons, void (*lmb)(int param1, int param2),
+                                     void (*rmb)(int param1, int param2), void (*dmb)(int param1, int param2),
+                                     void (*fcc)(int param1, int param2), scrollable_list_ui_params params,
+                                     bool use_file_finder, const char* dir, const char* ext) {
     // gather the UI params
     ui_params = params;
     if (ui_params.buttons_size_x == -1)
@@ -253,8 +251,10 @@ scroll_list_panel::scroll_list_panel(int n_buttons,
         list_buttons[i].y = button_pos_y;
         list_buttons[i].width = ui_params.buttons_size_x;
         list_buttons[i].height = ui_params.buttons_size_y;
-        list_buttons[i].left_click_handler = button_none;   // These are fired manually after intercepting the mouse state along
-        list_buttons[i].right_click_handler = button_none;  // with the button id returned by the external input handlers.
+        list_buttons[i].left_click_handler
+          = button_none; // These are fired manually after intercepting the mouse state along
+        list_buttons[i].right_click_handler
+          = button_none; // with the button id returned by the external input handlers.
         list_buttons[i].parameter1 = i;
         list_buttons[i].parameter2 = i;
     }
@@ -274,5 +274,4 @@ scroll_list_panel::scroll_list_panel(int n_buttons,
     change_file_path(dir, ext);
 }
 scroll_list_panel::~scroll_list_panel() {
-
 }

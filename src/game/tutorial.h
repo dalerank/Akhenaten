@@ -45,7 +45,6 @@ struct tutorial_flags_t {
         bool bricks_bought;
 
 
-
         bool tut5_can_trade_finally;
 
         //
@@ -61,7 +60,7 @@ struct tutorial_flags_t {
     } pharaoh;
 };
 
-const tutorial_flags_t * tutorial_flags_struct();
+const tutorial_flags_t* tutorial_flags_struct();
 
 void tutorial_init(void);
 
@@ -73,7 +72,7 @@ void tutorial_menu_update(int tut);
 int tutorial_get_population_cap(int current_cap);
 int tutorial_get_immediate_goal_text(void);
 
-int tutorial_adjust_request_year(int *year);
+int tutorial_adjust_request_year(int* year);
 
 int tutorial_extra_fire_risk(void);
 int tutorial_extra_damage_risk(void);

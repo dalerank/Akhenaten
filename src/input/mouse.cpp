@@ -3,12 +3,7 @@
 #include "core/time.h"
 #include "graphics/screen.h"
 
-enum {
-    SYSTEM_NONE = 0,
-    SYSTEM_UP = 1,
-    SYSTEM_DOWN = 2,
-    SYSTEM_DOUBLE_CLICK = 4
-};
+enum { SYSTEM_NONE = 0, SYSTEM_UP = 1, SYSTEM_DOWN = 2, SYSTEM_DOUBLE_CLICK = 4 };
 
 #define DOUBLE_CLICK_TIME 500
 
@@ -16,11 +11,11 @@ static mouse data;
 static mouse dialog;
 static time_millis last_click;
 
-const mouse *mouse_get(void) {
+const mouse* mouse_get(void) {
     return &data;
 }
 
-static void clear_mouse_button(mouse_button *button) {
+static void clear_mouse_button(mouse_button* button) {
     button->is_down = 0;
     button->went_down = 0;
     button->went_up = 0;
@@ -28,7 +23,7 @@ static void clear_mouse_button(mouse_button *button) {
     button->system_change = SYSTEM_NONE;
 }
 
-void mouse_set_from_touch(const touch *first, const touch *last) {
+void mouse_set_from_touch(const touch* first, const touch* last) {
     data.x = first->current_point.x;
     data.y = first->current_point.y;
     data.scrolled = touch_get_scroll();
@@ -71,8 +66,8 @@ void mouse_set_left_down(int down) {
     data.is_inside_window = 1;
     if (!down) {
         time_millis now = time_get_millis();
-        data.left.system_change |= ((last_click < now) && ((now - last_click) <= DOUBLE_CLICK_TIME))
-                                   ? SYSTEM_DOUBLE_CLICK : SYSTEM_NONE;
+        data.left.system_change
+          |= ((last_click < now) && ((now - last_click) <= DOUBLE_CLICK_TIME)) ? SYSTEM_DOUBLE_CLICK : SYSTEM_NONE;
         last_click = now;
     }
 }
@@ -97,7 +92,7 @@ void mouse_set_inside_window(int inside) {
     data.is_touch = 0;
 }
 
-static void update_button_state(mouse_button *button) {
+static void update_button_state(mouse_button* button) {
     button->went_down = (button->system_change & SYSTEM_DOWN) == SYSTEM_DOWN;
     button->went_up = (button->system_change & SYSTEM_UP) == SYSTEM_UP;
     button->double_click = (button->system_change & SYSTEM_DOUBLE_CLICK) == SYSTEM_DOUBLE_CLICK;
@@ -134,7 +129,7 @@ void mouse_reset_button_state(void) {
     clear_mouse_button(&data.right);
 }
 
-const mouse *mouse_in_dialog(const mouse *m) {
+const mouse* mouse_in_dialog(const mouse* m) {
     dialog.left = m->left;
     dialog.middle = m->middle;
     dialog.right = m->right;

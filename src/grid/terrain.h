@@ -25,83 +25,54 @@ enum e_terrain {
 
     // pharaoh
     TERRAIN_FLOODPLAIN = 0x10000,
-        TERRAIN_UNK_00 = 0x20000,
+    TERRAIN_UNK_00 = 0x20000,
     TERRAIN_MARSHLAND = 0x40000,
-        TERRAIN_UNK_01 = 0x80000,
+    TERRAIN_UNK_01 = 0x80000,
     TERRAIN_ORE = 0x100000,
-        TERRAIN_UNK_02 = 0x200000,
-        TERRAIN_UNK_03 = 0x400000,
-        TERRAIN_UNK_04 = 0x800000,
+    TERRAIN_UNK_02 = 0x200000,
+    TERRAIN_UNK_03 = 0x400000,
+    TERRAIN_UNK_04 = 0x800000,
     TERRAIN_IRRIGATION_RANGE = 0x1000000,
     TERRAIN_DUNE = 0x2000000,
     TERRAIN_DEEPWATER = 0x4000000,
     TERRAIN_SUBMERGED_ROAD = 0x8000000,
-        TERRAIN_UNK_07 = 0x10000000,
-        TERRAIN_UNK_08 = 0x20000000,
-        TERRAIN_UNK_09 = 0x40000000,
-        TERRAIN_UNK_10 = 0x80000000,
+    TERRAIN_UNK_07 = 0x10000000,
+    TERRAIN_UNK_08 = 0x20000000,
+    TERRAIN_UNK_09 = 0x40000000,
+    TERRAIN_UNK_10 = 0x80000000,
 
     // combined
     TERRAIN_ALL = 0xffffffff,
     TERRAIN_WALL_OR_GATEHOUSE = TERRAIN_WALL | TERRAIN_GATEHOUSE,
-    TERRAIN_NOT_CLEAR = TERRAIN_TREE
-            + TERRAIN_ROCK
-            + TERRAIN_WATER
-            + TERRAIN_BUILDING
-            + TERRAIN_SHRUB
-            + TERRAIN_GARDEN
-            + TERRAIN_ROAD
-              // ... //
-            + TERRAIN_AQUEDUCT
-              + TERRAIN_ELEVATION
-              + TERRAIN_ACCESS_RAMP
-              // ... //
-            + TERRAIN_RUBBLE
-              // ... //
-            + TERRAIN_WALL
-              + TERRAIN_GATEHOUSE
-              + TERRAIN_FLOODPLAIN
-              // ... //
-            + TERRAIN_MARSHLAND
-              // ... //
-            + TERRAIN_ORE
-              // ... //
-            + TERRAIN_DUNE
-            + TERRAIN_DEEPWATER
-            + TERRAIN_SUBMERGED_ROAD,
+    TERRAIN_NOT_CLEAR = TERRAIN_TREE + TERRAIN_ROCK + TERRAIN_WATER + TERRAIN_BUILDING + TERRAIN_SHRUB + TERRAIN_GARDEN
+                        + TERRAIN_ROAD
+                        // ... //
+                        + TERRAIN_AQUEDUCT + TERRAIN_ELEVATION
+                        + TERRAIN_ACCESS_RAMP
+                        // ... //
+                        + TERRAIN_RUBBLE
+                        // ... //
+                        + TERRAIN_WALL + TERRAIN_GATEHOUSE
+                        + TERRAIN_FLOODPLAIN
+                        // ... //
+                        + TERRAIN_MARSHLAND
+                        // ... //
+                        + TERRAIN_ORE
+                        // ... //
+                        + TERRAIN_DUNE + TERRAIN_DEEPWATER + TERRAIN_SUBMERGED_ROAD,
 
-    TERRAIN_CLEARABLE = TERRAIN_NOT_CLEAR
-                        - TERRAIN_ROCK
-                        - TERRAIN_WATER
-                        - TERRAIN_ELEVATION
-                        - TERRAIN_FLOODPLAIN
-                        - TERRAIN_MARSHLAND
-                        - TERRAIN_ORE
-            - TERRAIN_DUNE
-            - TERRAIN_DEEPWATER
-            - TERRAIN_SUBMERGED_ROAD,
-//    TERRAIN_NOT_REMOVABLE = TERRAIN_ROCK | TERRAIN_FLOODPLAIN | TERRAIN_DUNE,
+    TERRAIN_CLEARABLE = TERRAIN_NOT_CLEAR - TERRAIN_ROCK - TERRAIN_WATER - TERRAIN_ELEVATION - TERRAIN_FLOODPLAIN
+                        - TERRAIN_MARSHLAND - TERRAIN_ORE - TERRAIN_DUNE - TERRAIN_DEEPWATER - TERRAIN_SUBMERGED_ROAD,
+    //    TERRAIN_NOT_REMOVABLE = TERRAIN_ROCK | TERRAIN_FLOODPLAIN | TERRAIN_DUNE,
 
-    TERRAIN_IMPASSABLE = TERRAIN_NOT_CLEAR
-            - TERRAIN_ROAD
-            - TERRAIN_GATEHOUSE
-            - TERRAIN_DEEPWATER
-            - TERRAIN_SUBMERGED_ROAD,
+    TERRAIN_IMPASSABLE
+    = TERRAIN_NOT_CLEAR - TERRAIN_ROAD - TERRAIN_GATEHOUSE - TERRAIN_DEEPWATER - TERRAIN_SUBMERGED_ROAD,
 
-    TERRAIN_IMPASSABLE_ENEMY = TERRAIN_IMPASSABLE
-            + TERRAIN_GATEHOUSE
-            - TERRAIN_BUILDING
-            - TERRAIN_FLOODPLAIN,
+    TERRAIN_IMPASSABLE_ENEMY = TERRAIN_IMPASSABLE + TERRAIN_GATEHOUSE - TERRAIN_BUILDING - TERRAIN_FLOODPLAIN,
 
-    TERRAIN_IMPASSABLE_WOLF = TERRAIN_IMPASSABLE
-            + TERRAIN_GARDEN
-            + TERRAIN_GATEHOUSE
-            - TERRAIN_FLOODPLAIN,
+    TERRAIN_IMPASSABLE_WOLF = TERRAIN_IMPASSABLE + TERRAIN_GARDEN + TERRAIN_GATEHOUSE - TERRAIN_FLOODPLAIN,
 
-    TERRAIN_IMPASSABLE_OSTRICH = TERRAIN_IMPASSABLE
-            + TERRAIN_GARDEN
-            + TERRAIN_GATEHOUSE
-            - TERRAIN_FLOODPLAIN,
+    TERRAIN_IMPASSABLE_OSTRICH = TERRAIN_IMPASSABLE + TERRAIN_GARDEN + TERRAIN_GATEHOUSE - TERRAIN_FLOODPLAIN,
 };
 
 bool map_terrain_is(int grid_offset, int terrain_mask);
@@ -135,8 +106,8 @@ bool map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terra
 bool map_terrain_exists_tile_in_radius_with_type(int x, int y, int size, int radius, int terrain);
 bool map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int radius, int terrain);
 
-bool map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset,
-                                             int *x_tile, int *y_tile);
+bool map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset, int* x_tile,
+                                             int* y_tile);
 
 bool map_terrain_all_tiles_in_area_are(int x, int y, int size, int terrain);
 
@@ -152,7 +123,7 @@ bool map_terrain_is_adjacent_to_water(int x, int y, int size);
 
 bool map_terrain_is_adjacent_to_open_water(int x, int y, int size);
 
-bool map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int *x_tile, int *y_tile);
+bool map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int* x_tile, int* y_tile);
 
 void map_terrain_add_roadblock_road(int x, int y, int orientation);
 void map_terrain_add_gatehouse_roads(int x, int y, int orientation);

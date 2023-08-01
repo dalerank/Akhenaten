@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-int switch_poll_event(SDL_Event *event);
+int switch_poll_event(SDL_Event* event);
 void switch_handle_analog_sticks(void);
 
 #endif /* SWITCH_INPUT_H */

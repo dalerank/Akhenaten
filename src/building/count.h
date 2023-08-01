@@ -1,8 +1,8 @@
 #ifndef BUILDING_COUNT_H
 #define BUILDING_COUNT_H
 
-#include "core/buffer.h"
 #include "building/type.h"
+#include "core/buffer.h"
 #include "game/resource.h"
 
 /**

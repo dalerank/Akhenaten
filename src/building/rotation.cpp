@@ -1,11 +1,11 @@
 #include "rotation.h"
 
-#include "graphics/view/view.h"
-#include "io/config/config.h"
+#include "building/construction/build_planner.h"
 #include "core/direction.h"
 #include "core/time.h"
+#include "graphics/view/view.h"
 #include "grid/grid.h"
-#include "building/construction/build_planner.h"
+#include "io/config/config.h"
 
 static int rotation = 0;
 static int road_orientation = 1;
@@ -76,7 +76,7 @@ int building_rotation_get_delta_with_rotation(int default_delta) {
     else
         return GRID_OFFSET(0, default_delta);
 }
-void building_rotation_get_offset_with_rotation(int offset, int rot, int *x, int *y) {
+void building_rotation_get_offset_with_rotation(int offset, int rot, int* x, int* y) {
     if (rot == 0) {
         *x = offset;
         *y = 0;
@@ -93,13 +93,13 @@ void building_rotation_get_offset_with_rotation(int offset, int rot, int *x, int
 }
 int building_rotation_get_corner(int rot) {
     switch (rot) {
-        case DIR_2_BOTTOM_RIGHT:
-            return 4; // left corner
-        case DIR_4_BOTTOM_LEFT:
-            return 8; // bottom corner
-        case DIR_6_TOP_LEFT:
-            return 5; // right corner
-        default:
-            return 0; // top corner
+    case DIR_2_BOTTOM_RIGHT:
+        return 4; // left corner
+    case DIR_4_BOTTOM_LEFT:
+        return 8; // bottom corner
+    case DIR_6_TOP_LEFT:
+        return 5; // right corner
+    default:
+        return 0; // top corner
     }
 }

@@ -9,7 +9,7 @@ enum chunk_buffer_access_e {
     //
     CHUNK_ACCESS_READ,
     CHUNK_ACCESS_WRITE,
-} ;
+};
 
 enum bind_signature_e {
     BIND_SIGNATURE_NONE,
@@ -27,7 +27,12 @@ enum bind_signature_e {
     BIND_SIGNATURE_GRID,
 };
 
-#define IO_BRANCH(R, W) if (access_type == CHUNK_ACCESS_READ) R; else if (access_type == CHUNK_ACCESS_WRITE) W; return;
+#define IO_BRANCH(R, W)                                                                                                \
+    if (access_type == CHUNK_ACCESS_READ)                                                                              \
+        R;                                                                                                             \
+    else if (access_type == CHUNK_ACCESS_WRITE)                                                                        \
+        W;                                                                                                             \
+    return;
 
 class io_buffer {
 private:
@@ -36,12 +41,12 @@ private:
     char name[100] = "";
 
     // internal buffer
-    buffer *p_buf = nullptr;
+    buffer* p_buf = nullptr;
     chunk_buffer_access_e access_type = CHUNK_ACCESS_REVOKED;
 
     // manually defined external binding schema
-    void (*bind_callback)(io_buffer *io);
-    
+    void (*bind_callback)(io_buffer* io);
+
 
     // this is the parent of the below READ / WRITE functions, written
     // into a single generalized form.
@@ -62,7 +67,7 @@ public:
     }
 
     // this will HOOK the io_buffer the provided BUFFER
-    void hook(buffer *buf, int _size, bool _compressed, const char *_name);
+    void hook(buffer* buf, int _size, bool _compressed, const char* _name);
 
     // this will CHECK that the buffer is valid and RESET the buffer pointer
     bool validate();
@@ -72,25 +77,32 @@ public:
     // and the selected access type -- must be implemented HERE
     // in the header file, since it's a TEMPLATE function.
     template <typename T>
-    void bind(bind_signature_e signature, T *ext) {
+    void bind(bind_signature_e signature, T* ext) {
         if (ext == nullptr)
             return;
 
         switch (signature) {
-            case BIND_SIGNATURE_INT8: IO_BRANCH(*ext = (T)p_buf->read_i8(), p_buf->write_i8(*ext))
-            case BIND_SIGNATURE_UINT8: IO_BRANCH(*ext = (T)p_buf->read_u8(), p_buf->write_u8(*ext))
-            case BIND_SIGNATURE_INT16: IO_BRANCH(*ext = (T)p_buf->read_i16(), p_buf->write_i16(*ext))
-            case BIND_SIGNATURE_UINT16: IO_BRANCH(*ext = (T)p_buf->read_u16(), p_buf->write_u16(*ext))
-            case BIND_SIGNATURE_INT32: IO_BRANCH(*ext = (T)p_buf->read_i32(), p_buf->write_i32(*ext))
-            case BIND_SIGNATURE_UINT32: IO_BRANCH(*ext = (T)p_buf->read_u32(), p_buf->write_u32(*ext))
+        case BIND_SIGNATURE_INT8:
+            IO_BRANCH(*ext = (T)p_buf->read_i8(), p_buf->write_i8(*ext))
+        case BIND_SIGNATURE_UINT8:
+            IO_BRANCH(*ext = (T)p_buf->read_u8(), p_buf->write_u8(*ext))
+        case BIND_SIGNATURE_INT16:
+            IO_BRANCH(*ext = (T)p_buf->read_i16(), p_buf->write_i16(*ext))
+        case BIND_SIGNATURE_UINT16:
+            IO_BRANCH(*ext = (T)p_buf->read_u16(), p_buf->write_u16(*ext))
+        case BIND_SIGNATURE_INT32:
+            IO_BRANCH(*ext = (T)p_buf->read_i32(), p_buf->write_i32(*ext))
+        case BIND_SIGNATURE_UINT32:
+            IO_BRANCH(*ext = (T)p_buf->read_u32(), p_buf->write_u32(*ext))
         }
     }
-    template <typename T> void bind(bind_signature_e signature, T *ext, size_t size) {
+    template <typename T>
+    void bind(bind_signature_e signature, T* ext, size_t size) {
         if (ext != nullptr && signature == BIND_SIGNATURE_RAW && size > 0) {
-            IO_BRANCH(p_buf->read_raw((uint8_t *)ext, size), p_buf->write_raw((uint8_t *)ext, size))
+            IO_BRANCH(p_buf->read_raw((uint8_t*)ext, size), p_buf->write_raw((uint8_t*)ext, size))
         }
     }
-    void bind(bind_signature_e signature, grid_xx *ext) {
+    void bind(bind_signature_e signature, grid_xx* ext) {
         if (ext != nullptr && signature == BIND_SIGNATURE_GRID) {
             IO_BRANCH(map_grid_load_buffer(ext, p_buf), map_grid_save_buffer(ext, p_buf))
         }
@@ -110,11 +122,11 @@ public:
     bool write();
 
     io_buffer();
-    io_buffer(void (*bclb)(io_buffer *io));
+    io_buffer(void (*bclb)(io_buffer* io));
     ~io_buffer();
 };
 
-void default_bind(io_buffer *iob);
-extern io_buffer *iob_none;
+void default_bind(io_buffer* iob);
+extern io_buffer* iob_none;
 
-#endif //OZYMANDIAS_IO_BUFFER_H
+#endif // OZYMANDIAS_IO_BUFFER_H

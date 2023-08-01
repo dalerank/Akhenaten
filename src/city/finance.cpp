@@ -45,8 +45,8 @@ void city_finance_process_export(int price) {
     city_data.finance.this_year.income.exports += price;
 }
 
-#include "game/tutorial.h"
 #include "buildings.h"
+#include "game/tutorial.h"
 
 void city_finance_process_gold_extraction(int amount) {
     city_data.finance.treasury += amount;
@@ -89,37 +89,21 @@ void city_finance_update_salary(void) {
 }
 
 void city_finance_calculate_totals(void) {
-    finance_overview *this_year = &city_data.finance.this_year;
-    this_year->income.total =
-            this_year->income.donated +
-            this_year->income.taxes +
-            this_year->income.exports +
-            this_year->income.gold_extracted;
+    finance_overview* this_year = &city_data.finance.this_year;
+    this_year->income.total = this_year->income.donated + this_year->income.taxes + this_year->income.exports
+                              + this_year->income.gold_extracted;
 
-    this_year->expenses.total =
-            this_year->expenses.stolen +
-            this_year->expenses.salary +
-            this_year->expenses.interest +
-            this_year->expenses.construction +
-            this_year->expenses.wages +
-            this_year->expenses.imports +
-            this_year->expenses.requests_and_festivals;
+    this_year->expenses.total = this_year->expenses.stolen + this_year->expenses.salary + this_year->expenses.interest
+                                + this_year->expenses.construction + this_year->expenses.wages
+                                + this_year->expenses.imports + this_year->expenses.requests_and_festivals;
 
-    finance_overview *last_year = &city_data.finance.last_year;
-    last_year->income.total =
-            last_year->income.donated +
-            last_year->income.taxes +
-            last_year->income.exports +
-            last_year->income.gold_extracted;
+    finance_overview* last_year = &city_data.finance.last_year;
+    last_year->income.total = last_year->income.donated + last_year->income.taxes + last_year->income.exports
+                              + last_year->income.gold_extracted;
 
-    last_year->expenses.total =
-            last_year->expenses.stolen +
-            last_year->expenses.salary +
-            last_year->expenses.interest +
-            last_year->expenses.construction +
-            last_year->expenses.wages +
-            last_year->expenses.imports +
-            last_year->expenses.requests_and_festivals;
+    last_year->expenses.total = last_year->expenses.stolen + last_year->expenses.salary + last_year->expenses.interest
+                                + last_year->expenses.construction + last_year->expenses.wages
+                                + last_year->expenses.imports + last_year->expenses.requests_and_festivals;
 
     last_year->net_in_out = last_year->income.total - last_year->expenses.total;
     this_year->net_in_out = this_year->income.total - this_year->expenses.total;
@@ -137,11 +121,10 @@ void city_finance_estimate_taxes(void) {
     city_data.taxes.monthly.collected_plebs = 0;
     city_data.taxes.monthly.collected_patricians = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size && b->house_tax_coverage) {
             int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
-            int trm = difficulty_adjust_money(
-                    model_get_house(b->subtype.house_level)->tax_multiplier);
+            int trm = difficulty_adjust_money(model_get_house(b->subtype.house_level)->tax_multiplier);
             if (is_patrician)
                 city_data.taxes.monthly.collected_patricians += b->house_population * trm;
             else {
@@ -149,26 +132,23 @@ void city_finance_estimate_taxes(void) {
             }
         }
     }
-    int monthly_patricians = calc_adjust_with_percentage(
-            city_data.taxes.monthly.collected_patricians / 2,
-            city_data.finance.tax_percentage);
-    int monthly_plebs = calc_adjust_with_percentage(
-            city_data.taxes.monthly.collected_plebs / 2,
-            city_data.finance.tax_percentage);
+    int monthly_patricians
+      = calc_adjust_with_percentage(city_data.taxes.monthly.collected_patricians / 2, city_data.finance.tax_percentage);
+    int monthly_plebs
+      = calc_adjust_with_percentage(city_data.taxes.monthly.collected_plebs / 2, city_data.finance.tax_percentage);
     int estimated_rest_of_year = (12 - game_time_month()) * (monthly_patricians + monthly_plebs);
 
-    city_data.finance.this_year.income.taxes =
-            city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
+    city_data.finance.this_year.income.taxes
+      = city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
     city_data.finance.estimated_tax_income = city_data.finance.this_year.income.taxes + estimated_rest_of_year;
 
     // TODO: fix this calculation
-    int uncollected_patricians = calc_adjust_with_percentage(
-            city_data.taxes.monthly.uncollected_patricians / 2,
-            city_data.finance.tax_percentage);
-    int uncollected_plebs = calc_adjust_with_percentage(
-            city_data.taxes.monthly.uncollected_plebs / 2,
-            city_data.finance.tax_percentage);
-    city_data.finance.estimated_tax_uncollected = (game_time_month()) * (uncollected_patricians + uncollected_plebs) - city_data.finance.this_year.income.taxes;
+    int uncollected_patricians = calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_patricians / 2,
+                                                             city_data.finance.tax_percentage);
+    int uncollected_plebs
+      = calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_plebs / 2, city_data.finance.tax_percentage);
+    city_data.finance.estimated_tax_uncollected
+      = (game_time_month()) * (uncollected_patricians + uncollected_plebs) - city_data.finance.this_year.income.taxes;
 }
 
 static void collect_monthly_taxes(void) {
@@ -185,15 +165,14 @@ static void collect_monthly_taxes(void) {
         city_data.population.at_level[i] = 0;
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->house_size)
             continue;
 
 
         int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
         int population = b->house_population;
-        int trm = difficulty_adjust_money(
-                model_get_house(b->subtype.house_level)->tax_multiplier);
+        int trm = difficulty_adjust_money(model_get_house(b->subtype.house_level)->tax_multiplier);
         city_data.population.at_level[b->subtype.house_level] += population;
 
         int tax = population * trm;
@@ -217,22 +196,18 @@ static void collect_monthly_taxes(void) {
         }
     }
 
-    int collected_patricians = calc_adjust_with_percentage(
-            city_data.taxes.monthly.collected_patricians / 2,
-            city_data.finance.tax_percentage);
-    int collected_plebs = calc_adjust_with_percentage(
-            city_data.taxes.monthly.collected_plebs / 2,
-            city_data.finance.tax_percentage);
+    int collected_patricians
+      = calc_adjust_with_percentage(city_data.taxes.monthly.collected_patricians / 2, city_data.finance.tax_percentage);
+    int collected_plebs
+      = calc_adjust_with_percentage(city_data.taxes.monthly.collected_plebs / 2, city_data.finance.tax_percentage);
     int collected_total = collected_patricians + collected_plebs;
 
     city_data.taxes.yearly.collected_patricians += collected_patricians;
     city_data.taxes.yearly.collected_plebs += collected_plebs;
     city_data.taxes.yearly.uncollected_patricians += calc_adjust_with_percentage(
-            city_data.taxes.monthly.uncollected_patricians / 2,
-            city_data.finance.tax_percentage);
-    city_data.taxes.yearly.uncollected_plebs += calc_adjust_with_percentage(
-            city_data.taxes.monthly.uncollected_plebs / 2,
-            city_data.finance.tax_percentage);
+      city_data.taxes.monthly.uncollected_patricians / 2, city_data.finance.tax_percentage);
+    city_data.taxes.yearly.uncollected_plebs
+      += calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_plebs / 2, city_data.finance.tax_percentage);
 
     city_data.finance.treasury += collected_total;
 
@@ -240,9 +215,8 @@ static void collect_monthly_taxes(void) {
     int total_plebs = city_data.taxes.taxed_plebs + city_data.taxes.untaxed_plebs;
     city_data.taxes.percentage_taxed_patricians = calc_percentage(city_data.taxes.taxed_patricians, total_patricians);
     city_data.taxes.percentage_taxed_plebs = calc_percentage(city_data.taxes.taxed_plebs, total_plebs);
-    city_data.taxes.percentage_taxed_people = calc_percentage(
-            city_data.taxes.taxed_patricians + city_data.taxes.taxed_plebs,
-            total_patricians + total_plebs);
+    city_data.taxes.percentage_taxed_people
+      = calc_percentage(city_data.taxes.taxed_patricians + city_data.taxes.taxed_plebs, total_patricians + total_plebs);
 }
 static void pay_monthly_wages(void) {
     int wages = city_data.labor.wages * city_data.labor.workers_employed / 10 / 12;
@@ -265,8 +239,8 @@ static void pay_monthly_salary(void) {
     }
 }
 static void reset_taxes(void) {
-    city_data.finance.last_year.income.taxes =
-            city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
+    city_data.finance.last_year.income.taxes
+      = city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
     city_data.taxes.yearly.collected_plebs = 0;
     city_data.taxes.yearly.collected_patricians = 0;
     city_data.taxes.yearly.uncollected_plebs = 0;
@@ -274,10 +248,9 @@ static void reset_taxes(void) {
 
     // reset tax income in building list
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size)
             b->tax_income_or_storage = 0;
-
     }
 }
 
@@ -289,8 +262,8 @@ void city_finance_handle_month_change(void) {
 }
 
 static void copy_amounts_to_last_year(void) {
-    finance_overview *last_year = &city_data.finance.last_year;
-    finance_overview *this_year = &city_data.finance.this_year;
+    finance_overview* last_year = &city_data.finance.last_year;
+    finance_overview* this_year = &city_data.finance.this_year;
 
     // wages
     last_year->expenses.wages = city_data.finance.wages_so_far;
@@ -330,21 +303,13 @@ static void copy_amounts_to_last_year(void) {
 }
 
 static void pay_tribute(void) {
-    finance_overview *last_year = &city_data.finance.last_year;
+    finance_overview* last_year = &city_data.finance.last_year;
 
-    int income =
-            last_year->income.donated +
-            last_year->income.taxes +
-            last_year->income.exports +
-            last_year->income.gold_extracted;
-    int expenses =
-            last_year->expenses.stolen +
-            last_year->expenses.salary +
-            last_year->expenses.interest +
-            last_year->expenses.construction +
-            last_year->expenses.wages +
-            last_year->expenses.imports +
-            last_year->expenses.requests_and_festivals;
+    int income = last_year->income.donated + last_year->income.taxes + last_year->income.exports
+                 + last_year->income.gold_extracted;
+    int expenses = last_year->expenses.stolen + last_year->expenses.salary + last_year->expenses.interest
+                   + last_year->expenses.construction + last_year->expenses.wages + last_year->expenses.imports
+                   + last_year->expenses.requests_and_festivals;
 
     city_data.finance.tribute_not_paid_last_year = 0;
     if (city_data.finance.treasury <= 0) {
@@ -381,7 +346,6 @@ static void pay_tribute(void) {
         int pct_profit = calc_adjust_with_percentage(income - expenses, 25);
         if (pct_profit > last_year->expenses.tribute)
             last_year->expenses.tribute = pct_profit;
-
     }
 
     city_data.finance.treasury -= last_year->expenses.tribute;
@@ -398,10 +362,10 @@ void city_finance_handle_year_change(void) {
     pay_tribute();
 }
 
-const finance_overview *city_finance_overview_last_year(void) {
+const finance_overview* city_finance_overview_last_year(void) {
     return &city_data.finance.last_year;
 }
 
-const finance_overview *city_finance_overview_this_year(void) {
+const finance_overview* city_finance_overview_this_year(void) {
     return &city_data.finance.this_year;
 }

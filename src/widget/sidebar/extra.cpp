@@ -3,17 +3,17 @@
 #include "city/labor.h"
 #include "city/population.h"
 #include "city/ratings.h"
-#include "io/config/config.h"
-#include "io/gamefiles/lang.h"
 #include "core/string.h"
-#include "graphics/image.h"
 #include "game/settings.h"
-#include "graphics/elements/arrow_button.h"
 #include "graphics/boilerplate.h"
+#include "graphics/elements/arrow_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/menu.h"
 #include "graphics/elements/panel.h"
+#include "graphics/image.h"
 #include "graphics/text.h"
+#include "io/config/config.h"
+#include "io/gamefiles/lang.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 
@@ -26,8 +26,8 @@
 static void button_game_speed(int is_down, int param2);
 
 static arrow_button arrow_buttons_speed[] = {
-        {11, 30, 17, 24, button_game_speed, 1, 0},
-        {35, 30, 15, 24, button_game_speed, 0, 0},
+  {11, 30, 17, 24, button_game_speed, 1, 0},
+  {35, 30, 15, 24, button_game_speed, 0, 0},
 };
 
 struct extra_objective_t {
@@ -55,7 +55,8 @@ struct extra_data_t {
 extra_data_t g_extra_data;
 
 static int calculate_displayable_info(int info_to_display, int available_height) {
-    if (g_extra_data.is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO) || info_to_display == SIDEBAR_EXTRA_DISPLAY_NONE)
+    if (g_extra_data.is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)
+        || info_to_display == SIDEBAR_EXTRA_DISPLAY_NONE)
         return SIDEBAR_EXTRA_DISPLAY_NONE;
 
     int result = SIDEBAR_EXTRA_DISPLAY_NONE;
@@ -121,9 +122,8 @@ static void set_extra_info_objectives(void) {
 
     if (winning_population())
         g_extra_data.population.target = winning_population();
-
 }
-static int update_extra_info_value(int value, int *field) {
+static int update_extra_info_value(int value, int* field) {
     if (value == *field)
         return 0;
     else {
@@ -138,7 +138,8 @@ static int update_extra_info(int is_background) {
 
     if (g_extra_data.info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
         changed |= update_extra_info_value(city_labor_unemployment_percentage(), &g_extra_data.unemployment_percentage);
-        changed |= update_extra_info_value( city_labor_workers_unemployed() - city_labor_workers_needed(), &g_extra_data.unemployment_amount);
+        changed |= update_extra_info_value(city_labor_workers_unemployed() - city_labor_workers_needed(),
+                                           &g_extra_data.unemployment_amount);
     }
     if (g_extra_data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
         if (is_background)
@@ -155,7 +156,8 @@ static int update_extra_info(int is_background) {
 
 #include "core/game_environment.h"
 
-static int draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, extra_objective_t *obj, int cut_off_at_parenthesis) {
+static int draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, extra_objective_t* obj,
+                                     int cut_off_at_parenthesis) {
     if (cut_off_at_parenthesis) {
         // Exception for Chinese: the string for "population" includes the hotkey " (6)"
         // To fix that: cut the string off at the '('
@@ -177,9 +179,10 @@ static int draw_extra_info_objective(int x_offset, int y_offset, int text_group,
     return EXTRA_INFO_LINE_SPACE * 2;
 }
 static void draw_extra_info_panel(void) {
-    auto &data = g_extra_data;
+    auto& data = g_extra_data;
     graphics_draw_vertical_line(data.x_offset, data.y_offset, data.y_offset + data.height, COLOR_WHITE);
-    graphics_draw_vertical_line(data.x_offset + data.width - 1, data.y_offset, data.y_offset + data.height, COLOR_SIDEBAR);
+    graphics_draw_vertical_line(
+      data.x_offset + data.width - 1, data.y_offset, data.y_offset + data.height, COLOR_SIDEBAR);
     inner_panel_draw(data.x_offset + 1, data.y_offset, data.width / 16, data.height / 16);
 
     int y_current_line = data.y_offset;
@@ -205,8 +208,14 @@ static void draw_extra_info_panel(void) {
             lang_text_draw(68, 135, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE_ON_DARK);
         y_current_line += EXTRA_INFO_LINE_SPACE;
 
-        int text_width = text_draw_percentage(data.unemployment_percentage, data.x_offset + 11, y_current_line, FONT_NORMAL_BLACK_ON_DARK);
-        text_draw_number(data.unemployment_amount, '(', ")", data.x_offset + 11 + text_width, y_current_line, FONT_NORMAL_BLACK_ON_DARK);
+        int text_width = text_draw_percentage(
+          data.unemployment_percentage, data.x_offset + 11, y_current_line, FONT_NORMAL_BLACK_ON_DARK);
+        text_draw_number(data.unemployment_amount,
+                         '(',
+                         ")",
+                         data.x_offset + 11 + text_width,
+                         y_current_line,
+                         FONT_NORMAL_BLACK_ON_DARK);
 
         y_current_line += EXTRA_INFO_VERTICAL_PADDING * 2;
     }
@@ -218,7 +227,8 @@ static void draw_extra_info_panel(void) {
             y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 4, 6, &data.population, 1);
         else if (GAME_ENV == ENGINE_ENV_PHARAOH)
             y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 6, &data.population, 1);
-//            y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 44, 56, &data.population, 1);
+        //            y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 44, 56,
+        //            &data.population, 1);
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 1, &data.culture, 0);
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 2, &data.prosperity, 0);
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 3, &data.monument, 0);
@@ -226,10 +236,11 @@ static void draw_extra_info_panel(void) {
     }
     // todo: extra goal / required households
 }
-int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int available_height, int is_collapsed, int info_to_display) {
-    auto &data = g_extra_data;
-//    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-//        x_offset -= 24;
+int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int available_height, int is_collapsed,
+                                  int info_to_display) {
+    auto& data = g_extra_data;
+    //    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+    //        x_offset -= 24;
     data.is_collapsed = is_collapsed;
     data.x_offset = x_offset;
     data.y_offset = y_offset;
@@ -244,14 +255,14 @@ int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int ava
     return data.height;
 }
 void sidebar_extra_draw_foreground(void) {
-    auto &data = g_extra_data;
+    auto& data = g_extra_data;
     if (update_extra_info(0))
         draw_extra_info_panel(); // Updates displayed speed % after clicking the arrows
     else if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)
         arrow_buttons_draw(data.x_offset, data.y_offset, arrow_buttons_speed, 2);
 }
-int sidebar_extra_handle_mouse(const mouse *m) {
-    auto &data = g_extra_data;
+int sidebar_extra_handle_mouse(const mouse* m) {
+    auto& data = g_extra_data;
     if (!(data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED))
         return 0;
 

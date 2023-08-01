@@ -15,4 +15,4 @@ camera_coordinate pixel_to_camera_coord(pixel_coordinate pixel, bool relative);
 screen_tile pixel_to_screentile(pixel_coordinate pixel);
 
 
-#endif //OZYMANDIAS_LOOKUP_H
+#endif // OZYMANDIAS_LOOKUP_H

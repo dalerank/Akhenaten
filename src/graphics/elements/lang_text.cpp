@@ -1,63 +1,61 @@
 #include "lang_text.h"
 
-#include "io/gamefiles/lang.h"
 #include "graphics/text.h"
+#include "io/gamefiles/lang.h"
 
 int lang_text_get_width(int group, int number, font_t font) {
-    const uint8_t *str = lang_get_string(group, number);
+    const uint8_t* str = lang_get_string(group, number);
     return text_get_width(str, font) + font_definition_for(font)->space_width;
 }
 
-int lang_text_get_width(const char *str, font_t font) {
+int lang_text_get_width(const char* str, font_t font) {
     return text_get_width((const uint8_t*)str, font) + font_definition_for(font)->space_width;
 }
 
 int lang_text_draw(int group, int number, int x_offset, int y_offset, font_t font) {
-    const uint8_t *str = lang_get_string(group, number);
+    const uint8_t* str = lang_get_string(group, number);
     return text_draw(str, x_offset, y_offset, font, 0);
 }
-int lang_text_draw(const char *str, int x_offset, int y_offset, font_t font) {
+int lang_text_draw(const char* str, int x_offset, int y_offset, font_t font) {
     return text_draw((const uint8_t*)str, x_offset, y_offset, font, 0);
 }
 int lang_text_draw_colored(int group, int number, int x_offset, int y_offset, font_t font, color_t color) {
-    const uint8_t *str = lang_get_string(group, number);
+    const uint8_t* str = lang_get_string(group, number);
     return text_draw(str, x_offset, y_offset, font, color);
 }
 
 int lang_text_draw_left(int group, int number, int x_offset, int y_offset, font_t font) {
-    const uint8_t *str = lang_get_string(group, number);
+    const uint8_t* str = lang_get_string(group, number);
     return text_draw(str, x_offset - text_get_width(str, font), y_offset, font, 0);
 }
 int lang_text_draw_left_colored(int group, int number, int x_offset, int y_offset, font_t font, color_t color) {
-    const uint8_t *str = lang_get_string(group, number);
+    const uint8_t* str = lang_get_string(group, number);
     return text_draw(str, x_offset - text_get_width(str, font), y_offset, font, color);
 }
 
 void lang_text_draw_centered(int group, int number, int x_offset, int y_offset, int box_width, font_t font) {
-    const uint8_t *str = lang_get_string(group, number);
+    const uint8_t* str = lang_get_string(group, number);
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 void lang_text_draw_centered_colored(int group, int number, int x_offset, int y_offset, int box_width, font_t font,
                                      color_t color) {
-    const uint8_t *str = lang_get_string(group, number);
+    const uint8_t* str = lang_get_string(group, number);
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
-int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y_offset, font_t font, const char *postfix) {
+int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y_offset, font_t font,
+                          const char* postfix) {
     int amount_offset = 1;
     if (amount == 1 || amount == -1)
         amount_offset = 0;
 
     int desc_offset_x;
     if (amount >= 0) {
-        desc_offset_x = text_draw_number(amount, ' ', postfix,
-                                         x_offset, y_offset, font);
+        desc_offset_x = text_draw_number(amount, ' ', postfix, x_offset, y_offset, font);
     } else {
-        desc_offset_x = text_draw_number(-amount, '-', postfix,
-                                         x_offset, y_offset, font);
+        desc_offset_x = text_draw_number(-amount, '-', postfix, x_offset, y_offset, font);
     }
-    return desc_offset_x + lang_text_draw(group, number + amount_offset,
-                                          x_offset + desc_offset_x, y_offset, font);
+    return desc_offset_x + lang_text_draw(group, number + amount_offset, x_offset + desc_offset_x, y_offset, font);
 }
 int lang_text_draw_year(int year, int x_offset, int y_offset, font_t font) {
     int width = 0;
@@ -90,15 +88,14 @@ void lang_text_draw_month_year_max_width(int month, int year, int x_offset, int 
         negative_padding = (box_width - total_width) / 2;
         if (negative_padding < -2 * (space_width - 2))
             negative_padding = -2 * (space_width - 2);
-
     }
 
     int width = negative_padding + lang_text_draw_colored(25, month, x_offset, y_offset, font, color);
     if (year >= 0) {
         int use_year_ad = locale_year_before_ad();
         if (use_year_ad) {
-            width += negative_padding +
-                     text_draw_number_colored(year, ' ', " ", x_offset + width, y_offset, font, color);
+            width
+              += negative_padding + text_draw_number_colored(year, ' ', " ", x_offset + width, y_offset, font, color);
             lang_text_draw_colored(20, 1, x_offset + width, y_offset, font, color);
         } else {
             width += negative_padding + lang_text_draw_colored(20, 1, x_offset + width, y_offset, font, color);
@@ -111,6 +108,6 @@ void lang_text_draw_month_year_max_width(int month, int year, int x_offset, int 
 }
 
 int lang_text_draw_multiline(int group, int number, int x_offset, int y_offset, int box_width, font_t font) {
-    const uint8_t *str = lang_get_string(group, number);
+    const uint8_t* str = lang_get_string(group, number);
     return text_draw_multiline(str, x_offset, y_offset, box_width, font, 0);
 }

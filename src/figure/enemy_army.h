@@ -13,13 +13,13 @@ struct enemy_army {
     int destination_building_id;
     int num_legions;
     int ignore_roman_soldiers;
-} ;
+};
 
 void enemy_armies_clear(void);
 
-const enemy_army *enemy_army_get(int invasion_id);
+const enemy_army* enemy_army_get(int invasion_id);
 
-enemy_army *enemy_army_get_editable(int invasion_id);
+enemy_army* enemy_army_get_editable(int invasion_id);
 
 void enemy_armies_clear_ignore_roman_soldiers(void);
 
@@ -37,8 +37,8 @@ void enemy_army_calculate_roman_influence(void);
 
 int enemy_army_is_stronger_than_legions(void);
 
-void enemy_armies_save_state(buffer *buf, buffer *totals_buf);
+void enemy_armies_save_state(buffer* buf, buffer* totals_buf);
 
-void enemy_armies_load_state(buffer *buf, buffer *totals_buf);
+void enemy_armies_load_state(buffer* buf, buffer* totals_buf);
 
 #endif // FIGURE_ENEMY_ARMY_H

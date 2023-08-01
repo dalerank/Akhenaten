@@ -2,9 +2,8 @@
 
 #include "city/finance.h"
 #include "core/calc.h"
+#include "graphics/boilerplate.h"
 #include "graphics/elements/arrow_button.h"
-#include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
@@ -14,14 +13,12 @@
 
 static void button_change_taxes(int is_down, int param2);
 
-static arrow_button arrow_buttons_taxes[] = {
-        {180, 75, 17, 24, button_change_taxes, 1, 0},
-        {204, 75, 15, 24, button_change_taxes, 0, 0}
-};
+static arrow_button arrow_buttons_taxes[]
+  = {{180, 75, 17, 24, button_change_taxes, 1, 0}, {204, 75, 15, 24, button_change_taxes, 0, 0}};
 
 static int arrow_button_focus;
 
-static void draw_row(int group, int number, int *y, int value_last_year, int value_this_year) {
+static void draw_row(int group, int number, int* y, int value_last_year, int value_this_year) {
     lang_text_draw(group, number, 80, *y, FONT_NORMAL_BLACK_ON_LIGHT);
     text_draw_number(value_last_year, '@', " ", 290, *y, FONT_NORMAL_BLACK_ON_LIGHT);
     text_draw_number(value_this_year, '@', " ", 430, *y, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -35,8 +32,8 @@ static int draw_background(void) {
     inner_panel_draw(64, 48, 34, 5);
 
     int treasury = city_finance_treasury();
-    const finance_overview *last_year = city_finance_overview_last_year();
-    const finance_overview *this_year = city_finance_overview_this_year();
+    const finance_overview* last_year = city_finance_overview_last_year();
+    const finance_overview* this_year = city_finance_overview_this_year();
 
     int width;
     if (treasury < 0) {
@@ -56,7 +53,8 @@ static int draw_background(void) {
     // percentage taxpayers
     width = text_draw_percentage(city_finance_percentage_taxed_people(), 70, 103, FONT_NORMAL_WHITE_ON_DARK);
     width += lang_text_draw(60, 5, 70 + width, 103, FONT_NORMAL_WHITE_ON_DARK);
-    lang_text_draw_amount(60, 22, city_finance_estimated_tax_uncollected(), 70 + width, 103, FONT_NORMAL_WHITE_ON_DARK, "Db");
+    lang_text_draw_amount(
+      60, 22, city_finance_estimated_tax_uncollected(), 70 + width, 103, FONT_NORMAL_WHITE_ON_DARK, "Db");
 
     // table headers
     lang_text_draw(60, 6, 270, 133, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -109,7 +107,7 @@ static void draw_foreground(void) {
     arrow_buttons_draw(0, 0, arrow_buttons_taxes, 2);
 }
 
-static int handle_mouse(const mouse *m) {
+static int handle_mouse(const mouse* m) {
     return arrow_buttons_handle_mouse(m, 0, 0, arrow_buttons_taxes, 2, &arrow_button_focus);
 }
 
@@ -128,12 +126,7 @@ static int get_tooltip_text(void) {
     }
 }
 
-const advisor_window_type *window_advisor_financial(void) {
-    static const advisor_window_type window = {
-            draw_background,
-            draw_foreground,
-            handle_mouse,
-            get_tooltip_text
-    };
+const advisor_window_type* window_advisor_financial(void) {
+    static const advisor_window_type window = {draw_background, draw_foreground, handle_mouse, get_tooltip_text};
     return &window;
 }

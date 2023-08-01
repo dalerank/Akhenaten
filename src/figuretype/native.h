@@ -1,8 +1,8 @@
-//#ifndef FIGURETYPE_NATIVE_H
-//#define FIGURETYPE_NATIVE_H
+// #ifndef FIGURETYPE_NATIVE_H
+// #define FIGURETYPE_NATIVE_H
 //
-//#include "figure/figure.h"
+// #include "figure/figure.h"
 //
 ////void figure_indigenous_native_action();
 //
-//#endif // FIGURETYPE_NATIVE_H
+// #endif // FIGURETYPE_NATIVE_H

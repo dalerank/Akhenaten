@@ -7,9 +7,9 @@ int game_can_undo(void);
 
 void game_undo_disable(void);
 
-void game_undo_add_building(building *b);
+void game_undo_add_building(building* b);
 
-void game_undo_adjust_building(building *b);
+void game_undo_adjust_building(building* b);
 
 int game_undo_contains_building(int building_id);
 

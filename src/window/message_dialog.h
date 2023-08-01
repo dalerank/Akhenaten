@@ -32,14 +32,14 @@ enum {
 };
 
 typedef struct {
-    const char *tag;
-    const uint8_t *content;
+    const char* tag;
+    const uint8_t* content;
 } text_tag_substitution;
-void text_fill_in_tags(const uint8_t *src, uint8_t *dst, text_tag_substitution *tag_templates, int num_tags);
+void text_fill_in_tags(const uint8_t* src, uint8_t* dst, text_tag_substitution* tag_templates, int num_tags);
 
 void window_message_dialog_show(int text_id, int message_id, void (*background_callback)(void));
 
-void window_message_dialog_show_city_message(int text_id, int message_id, int year, int month,
-                                             int param1, int param2, int message_advisor, int use_popup);
+void window_message_dialog_show_city_message(int text_id, int message_id, int year, int month, int param1, int param2,
+                                             int message_advisor, int use_popup);
 
 #endif // WINDOW_MESSAGE_DIALOG_H

@@ -1,7 +1,7 @@
 #include "select_list.h"
 
-#include "graphics/elements/button.h"
 #include "graphics/color.h"
+#include "graphics/elements/button.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
@@ -19,49 +19,29 @@ enum E_MODE {
 static void select_item(int id, int list_id);
 
 static generic_button buttons_list1[MAX_ITEMS_PER_LIST] = {
-        {5, 8,   190, 18, select_item, button_none, 0,  0},
-        {5, 28,  190, 18, select_item, button_none, 1,  0},
-        {5, 48,  190, 18, select_item, button_none, 2,  0},
-        {5, 68,  190, 18, select_item, button_none, 3,  0},
-        {5, 88,  190, 18, select_item, button_none, 4,  0},
-        {5, 108, 190, 18, select_item, button_none, 5,  0},
-        {5, 128, 190, 18, select_item, button_none, 6,  0},
-        {5, 148, 190, 18, select_item, button_none, 7,  0},
-        {5, 168, 190, 18, select_item, button_none, 8,  0},
-        {5, 188, 190, 18, select_item, button_none, 9,  0},
-        {5, 208, 190, 18, select_item, button_none, 10, 0},
-        {5, 228, 190, 18, select_item, button_none, 11, 0},
-        {5, 248, 190, 18, select_item, button_none, 12, 0},
-        {5, 268, 190, 18, select_item, button_none, 13, 0},
-        {5, 288, 190, 18, select_item, button_none, 14, 0},
-        {5, 308, 190, 18, select_item, button_none, 15, 0},
-        {5, 328, 190, 18, select_item, button_none, 16, 0},
-        {5, 348, 190, 18, select_item, button_none, 17, 0},
-        {5, 368, 190, 18, select_item, button_none, 18, 0},
-        {5, 388, 190, 18, select_item, button_none, 19, 0},
+  {5, 8, 190, 18, select_item, button_none, 0, 0},    {5, 28, 190, 18, select_item, button_none, 1, 0},
+  {5, 48, 190, 18, select_item, button_none, 2, 0},   {5, 68, 190, 18, select_item, button_none, 3, 0},
+  {5, 88, 190, 18, select_item, button_none, 4, 0},   {5, 108, 190, 18, select_item, button_none, 5, 0},
+  {5, 128, 190, 18, select_item, button_none, 6, 0},  {5, 148, 190, 18, select_item, button_none, 7, 0},
+  {5, 168, 190, 18, select_item, button_none, 8, 0},  {5, 188, 190, 18, select_item, button_none, 9, 0},
+  {5, 208, 190, 18, select_item, button_none, 10, 0}, {5, 228, 190, 18, select_item, button_none, 11, 0},
+  {5, 248, 190, 18, select_item, button_none, 12, 0}, {5, 268, 190, 18, select_item, button_none, 13, 0},
+  {5, 288, 190, 18, select_item, button_none, 14, 0}, {5, 308, 190, 18, select_item, button_none, 15, 0},
+  {5, 328, 190, 18, select_item, button_none, 16, 0}, {5, 348, 190, 18, select_item, button_none, 17, 0},
+  {5, 368, 190, 18, select_item, button_none, 18, 0}, {5, 388, 190, 18, select_item, button_none, 19, 0},
 };
 
 static generic_button buttons_list2[MAX_ITEMS_PER_LIST] = {
-        {205, 8,   190, 18, select_item, button_none, 0,  1},
-        {205, 28,  190, 18, select_item, button_none, 1,  1},
-        {205, 48,  190, 18, select_item, button_none, 2,  1},
-        {205, 68,  190, 18, select_item, button_none, 3,  1},
-        {205, 88,  190, 18, select_item, button_none, 4,  1},
-        {205, 108, 190, 18, select_item, button_none, 5,  1},
-        {205, 128, 190, 18, select_item, button_none, 6,  1},
-        {205, 148, 190, 18, select_item, button_none, 7,  1},
-        {205, 168, 190, 18, select_item, button_none, 8,  1},
-        {205, 188, 190, 18, select_item, button_none, 9,  1},
-        {205, 208, 190, 18, select_item, button_none, 10, 1},
-        {205, 228, 190, 18, select_item, button_none, 11, 1},
-        {205, 248, 190, 18, select_item, button_none, 12, 1},
-        {205, 268, 190, 18, select_item, button_none, 13, 1},
-        {205, 288, 190, 18, select_item, button_none, 14, 1},
-        {205, 308, 190, 18, select_item, button_none, 15, 1},
-        {205, 328, 190, 18, select_item, button_none, 16, 1},
-        {205, 348, 190, 18, select_item, button_none, 17, 1},
-        {205, 368, 190, 18, select_item, button_none, 18, 1},
-        {205, 388, 190, 18, select_item, button_none, 19, 1},
+  {205, 8, 190, 18, select_item, button_none, 0, 1},    {205, 28, 190, 18, select_item, button_none, 1, 1},
+  {205, 48, 190, 18, select_item, button_none, 2, 1},   {205, 68, 190, 18, select_item, button_none, 3, 1},
+  {205, 88, 190, 18, select_item, button_none, 4, 1},   {205, 108, 190, 18, select_item, button_none, 5, 1},
+  {205, 128, 190, 18, select_item, button_none, 6, 1},  {205, 148, 190, 18, select_item, button_none, 7, 1},
+  {205, 168, 190, 18, select_item, button_none, 8, 1},  {205, 188, 190, 18, select_item, button_none, 9, 1},
+  {205, 208, 190, 18, select_item, button_none, 10, 1}, {205, 228, 190, 18, select_item, button_none, 11, 1},
+  {205, 248, 190, 18, select_item, button_none, 12, 1}, {205, 268, 190, 18, select_item, button_none, 13, 1},
+  {205, 288, 190, 18, select_item, button_none, 14, 1}, {205, 308, 190, 18, select_item, button_none, 15, 1},
+  {205, 328, 190, 18, select_item, button_none, 16, 1}, {205, 348, 190, 18, select_item, button_none, 17, 1},
+  {205, 368, 190, 18, select_item, button_none, 18, 1}, {205, 388, 190, 18, select_item, button_none, 19, 1},
 };
 
 static struct {
@@ -69,7 +49,7 @@ static struct {
     int y;
     int mode;
     int group;
-    uint8_t **items;
+    uint8_t** items;
     int num_items;
     void (*callback)(int);
     int focus_button_id;
@@ -84,7 +64,7 @@ static void init_group(int x, int y, int group, int num_items, void (*callback)(
     data.callback = callback;
 }
 
-static void init_text(int x, int y, uint8_t **items, int num_items, void (*callback)(int)) {
+static void init_text(int x, int y, uint8_t** items, int num_items, void (*callback)(int)) {
     data.x = x;
     data.y = y;
     data.mode = MODE_TEXT;
@@ -124,7 +104,7 @@ static void draw_foreground(void) {
     }
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     if (data.num_items > MAX_ITEMS_PER_LIST) {
         int items_first = items_in_first_list();
         if (generic_buttons_handle_mouse(m, data.x, data.y, buttons_list1, items_first, &data.focus_button_id))
@@ -140,7 +120,6 @@ static void handle_input(const mouse *m, const hotkeys *h) {
     }
     if (input_go_back_requested(m, h))
         window_go_back();
-
 }
 
 void select_item(int id, int list_id) {
@@ -153,23 +132,13 @@ void select_item(int id, int list_id) {
 }
 
 void window_select_list_show(int x, int y, int group, int num_items, void (*callback)(int)) {
-    window_type window = {
-            WINDOW_SELECT_LIST,
-            window_draw_underlying_window,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_SELECT_LIST, window_draw_underlying_window, draw_foreground, handle_input};
     init_group(x, y, group, num_items, callback);
     window_show(&window);
 }
 
-void window_select_list_show_text(int x, int y, uint8_t **items, int num_items, void (*callback)(int)) {
-    window_type window = {
-            WINDOW_SELECT_LIST,
-            window_draw_underlying_window,
-            draw_foreground,
-            handle_input
-    };
+void window_select_list_show_text(int x, int y, uint8_t** items, int num_items, void (*callback)(int)) {
+    window_type window = {WINDOW_SELECT_LIST, window_draw_underlying_window, draw_foreground, handle_input};
     init_text(x, y, items, num_items, callback);
     window_show(&window);
 }

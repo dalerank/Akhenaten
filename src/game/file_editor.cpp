@@ -6,9 +6,6 @@
 #include "city/city_data.h"
 #include "city/message.h"
 #include "city/victory.h"
-#include "graphics/view/view.h"
-#include "graphics/image.h"
-#include "graphics/image_groups.h"
 #include "empire/empire.h"
 #include "empire/object.h"
 #include "figure/enemy_army.h"
@@ -19,9 +16,12 @@
 #include "figure/trader.h"
 #include "figuretype/editor.h"
 #include "figuretype/water.h"
-#include "graphics/animation_timers.h"
 #include "game/state.h"
 #include "game/time.h"
+#include "graphics/animation_timers.h"
+#include "graphics/image.h"
+#include "graphics/image_groups.h"
+#include "graphics/view/view.h"
 #include "grid/aqueduct.h"
 #include "grid/building.h"
 #include "grid/desirability.h"
@@ -98,9 +98,9 @@ static void create_blank_map(int size) {
 }
 
 static void prepare_map_for_editing(void) {
-//    image_load_main_paks(scenario_property_climate(), 1, 0);
+    //    image_load_main_paks(scenario_property_climate(), 1, 0);
 
-//    empire_load_external_c3(1, scenario_empire_id());
+    //    empire_load_external_c3(1, scenario_empire_id());
     empire_object_init_cities();
 
     figure_init_scenario();
@@ -129,24 +129,22 @@ void game_file_editor_create_scenario(int size) {
     prepare_map_for_editing();
 }
 
-int game_file_editor_load_scenario(const char *scenario_file) {
+int game_file_editor_load_scenario(const char* scenario_file) {
     clear_map_data();
-//    if (!game_file_io_read_scenario(scenario_file)) TODO
-//        return 0;
+    //    if (!game_file_io_read_scenario(scenario_file)) TODO
+    //        return 0;
 
     prepare_map_for_editing();
     return 1;
 }
 
-int game_file_editor_write_scenario(const char *scenario_file) {
-    scenario_editor_set_native_images(
-            image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE),
-            image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE) + 2,
-            image_id_from_group(GROUP_EDITOR_BUILDING_CROPS)
-    );
+int game_file_editor_write_scenario(const char* scenario_file) {
+    scenario_editor_set_native_images(image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE),
+                                      image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE) + 2,
+                                      image_id_from_group(GROUP_EDITOR_BUILDING_CROPS));
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
 
-//    return game_file_io_write_scenario(scenario_file); TODO
+    //    return game_file_io_write_scenario(scenario_file); TODO
     return 0;
 }

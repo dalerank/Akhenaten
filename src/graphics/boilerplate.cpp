@@ -8,8 +8,8 @@
 #endif
 
 #ifdef __vita__
-extern vita2d_texture *tex_buffer_ui;
-extern vita2d_texture * tex_buffer_city;
+extern vita2d_texture* tex_buffer_ui;
+extern vita2d_texture* tex_buffer_city;
 #endif
 
 static void set_translation(int x, int y) {
@@ -78,15 +78,15 @@ void graphics_draw_from_texture(int image_id, int x, int y, int width, int heigh
     graphics_renderer()->draw_saved_texture_to_screen(image_id, x, y, width, height);
 }
 
-//static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
-//        28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0,
-//        0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
-//};
+// static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
+//         28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0,
+//         0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
+// };
 //
-//static const int FOOTPRINT_OFFSET_PER_HEIGHT[] = {
-//        0, 2, 8, 18, 32, 50, 72, 98, 128, 162, 200, 242, 288, 338, 392, 450,
-//        508, 562, 612, 658, 700, 738, 772, 802, 828, 850, 868, 882, 892, 898
-//};
+// static const int FOOTPRINT_OFFSET_PER_HEIGHT[] = {
+//         0, 2, 8, 18, 32, 50, 72, 98, 128, 162, 200, 242, 288, 338, 392, 450,
+//         508, 562, 612, 658, 700, 738, 772, 802, 828, 850, 868, 882, 892, 898
+// };
 
 static int get_visible_footprint_pixels_per_row(int tiles, int width, int height, int row) {
     int base_height = tiles * TILE_HEIGHT_PIXELS;
@@ -99,182 +99,182 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
         return 2 + 4 * (base_height - 1 - footprint_row);
 }
 
-//static void draw_modded_footprint(int image_id, int x, int y, color_t color) {
-//    const image *img = image_get(image_id);
-//    const color_t *data = image_data(image_id);
-//    if (!data)
-//        return;
-//    int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-//    int y_top_offset = img->height - FOOTPRINT_HEIGHT * tiles;
-//    y -= y_top_offset + FOOTPRINT_HALF_HEIGHT * tiles - FOOTPRINT_HALF_HEIGHT;
-//    const clip_info *clip = graphics_get_clip_info(x, y + y_top_offset, img->width,
-//                                                   img->height - y_top_offset);
-//    if (!clip->is_visible)
-//        return;
-//    data += img->width * (clip->clipped_pixels_top + y_top_offset);
-//    for (int _y = clip->clipped_pixels_top + y_top_offset; _y < img->height - clip->clipped_pixels_bottom; _y++) {
-//        int visible_pixels_per_row = get_visible_footprint_pixels_per_row(tiles, img->width, img->height, _y);
-//        int x_start = (img->width - visible_pixels_per_row) / 2;
-//        int x_max = img->width - x_start;
-//        if (x_start < clip->clipped_pixels_left)
-//            x_start = clip->clipped_pixels_left;
+// static void draw_modded_footprint(int image_id, int x, int y, color_t color) {
+//     const image *img = image_get(image_id);
+//     const color_t *data = image_data(image_id);
+//     if (!data)
+//         return;
+//     int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+//     int y_top_offset = img->height - FOOTPRINT_HEIGHT * tiles;
+//     y -= y_top_offset + FOOTPRINT_HALF_HEIGHT * tiles - FOOTPRINT_HALF_HEIGHT;
+//     const clip_info *clip = graphics_get_clip_info(x, y + y_top_offset, img->width,
+//                                                    img->height - y_top_offset);
+//     if (!clip->is_visible)
+//         return;
+//     data += img->width * (clip->clipped_pixels_top + y_top_offset);
+//     for (int _y = clip->clipped_pixels_top + y_top_offset; _y < img->height - clip->clipped_pixels_bottom; _y++) {
+//         int visible_pixels_per_row = get_visible_footprint_pixels_per_row(tiles, img->width, img->height, _y);
+//         int x_start = (img->width - visible_pixels_per_row) / 2;
+//         int x_max = img->width - x_start;
+//         if (x_start < clip->clipped_pixels_left)
+//             x_start = clip->clipped_pixels_left;
 //
-//        if (x_max > img->width - clip->clipped_pixels_right)
-//            x_max = img->width - clip->clipped_pixels_right;
+//         if (x_max > img->width - clip->clipped_pixels_right)
+//             x_max = img->width - clip->clipped_pixels_right;
 //
-//        if (x_start >= x_max) {
-//            data += img->width;
-//            continue;
-//        }
-//        color_t *dst = graphics_get_pixel(x + x_start, y + _y);
-//        data += x_start;
-//        if (color && color != COLOR_MASK_NONE) {
-//            for (int _x = x_start; _x < x_max; _x++, dst++) {
-//                color_t alpha = *data & COLOR_CHANNEL_ALPHA;
-//                if (alpha == ALPHA_OPAQUE)
-//                    *dst = *data & color;
+//         if (x_start >= x_max) {
+//             data += img->width;
+//             continue;
+//         }
+//         color_t *dst = graphics_get_pixel(x + x_start, y + _y);
+//         data += x_start;
+//         if (color && color != COLOR_MASK_NONE) {
+//             for (int _x = x_start; _x < x_max; _x++, dst++) {
+//                 color_t alpha = *data & COLOR_CHANNEL_ALPHA;
+//                 if (alpha == ALPHA_OPAQUE)
+//                     *dst = *data & color;
 //
-//                data++;
-//            }
-//        } else {
-//            for (int _x = x_start; _x < x_max; _x++, dst++) {
-//                color_t alpha = *data & COLOR_CHANNEL_ALPHA;
-//                if (alpha == ALPHA_OPAQUE)
-//                    *dst = *data;
+//                 data++;
+//             }
+//         } else {
+//             for (int _x = x_start; _x < x_max; _x++, dst++) {
+//                 color_t alpha = *data & COLOR_CHANNEL_ALPHA;
+//                 if (alpha == ALPHA_OPAQUE)
+//                     *dst = *data;
 //
-//                data++;
-//            }
-//        }
-//        data += img->width - x_max;
-//    }
-//}
-//static void draw_modded_top(int image_id, int x, int y, color_t color) {
-//    const image *img = image_get(image_id);
-//    const color_t *data = image_data(image_id);
-//    if (!data)
-//        return;
-//    int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-//    int y_top_offset = img->height - FOOTPRINT_HEIGHT * tiles;
-//    y_top_offset += FOOTPRINT_HALF_HEIGHT * tiles - FOOTPRINT_HALF_HEIGHT;
-//    y -= y_top_offset;
-//    int height = img->height - FOOTPRINT_HALF_HEIGHT * tiles;
-//    const clip_info *clip = graphics_get_clip_info(x, y, img->width, height);
-//    if (!clip->is_visible)
-//        return;
-//    data += img->width * clip->clipped_pixels_top;
-//    for (int _y = clip->clipped_pixels_top; _y < height - clip->clipped_pixels_bottom; _y++) {
-//        int visible_pixels_per_row = get_visible_footprint_pixels_per_row(tiles, img->width, img->height, _y);
-//        int half_width = img->width / 2;
-//        int half_visible_pixels = visible_pixels_per_row / 2;
-//        int x_start = clip->clipped_pixels_left;
-//        if (x_start < half_width) {
-//            color_t *dst = graphics_get_pixel(x + x_start, y + _y);
-//            int x_max = half_width - half_visible_pixels;
-//            if (x_start > x_max)
-//                x_start = x_max;
+//                 data++;
+//             }
+//         }
+//         data += img->width - x_max;
+//     }
+// }
+// static void draw_modded_top(int image_id, int x, int y, color_t color) {
+//     const image *img = image_get(image_id);
+//     const color_t *data = image_data(image_id);
+//     if (!data)
+//         return;
+//     int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+//     int y_top_offset = img->height - FOOTPRINT_HEIGHT * tiles;
+//     y_top_offset += FOOTPRINT_HALF_HEIGHT * tiles - FOOTPRINT_HALF_HEIGHT;
+//     y -= y_top_offset;
+//     int height = img->height - FOOTPRINT_HALF_HEIGHT * tiles;
+//     const clip_info *clip = graphics_get_clip_info(x, y, img->width, height);
+//     if (!clip->is_visible)
+//         return;
+//     data += img->width * clip->clipped_pixels_top;
+//     for (int _y = clip->clipped_pixels_top; _y < height - clip->clipped_pixels_bottom; _y++) {
+//         int visible_pixels_per_row = get_visible_footprint_pixels_per_row(tiles, img->width, img->height, _y);
+//         int half_width = img->width / 2;
+//         int half_visible_pixels = visible_pixels_per_row / 2;
+//         int x_start = clip->clipped_pixels_left;
+//         if (x_start < half_width) {
+//             color_t *dst = graphics_get_pixel(x + x_start, y + _y);
+//             int x_max = half_width - half_visible_pixels;
+//             if (x_start > x_max)
+//                 x_start = x_max;
 //
-//            data += x_start;
-//            int half_image_only = 0;
-//            if (img->width - clip->clipped_pixels_right < x_max) {
-//                x_max = img->width - clip->clipped_pixels_right;
-//                half_image_only = 1;
-//            }
-//            if (color && color != COLOR_MASK_NONE) {
-//                for (int _x = x_start; _x < x_max; _x++, dst++) {
-//                    color_t alpha = *data & COLOR_CHANNEL_ALPHA;
-//                    if (alpha == ALPHA_OPAQUE)
-//                        *dst = *data & color;
-//                    else if (alpha != ALPHA_TRANSPARENT)
-//                        *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA) & color;
+//             data += x_start;
+//             int half_image_only = 0;
+//             if (img->width - clip->clipped_pixels_right < x_max) {
+//                 x_max = img->width - clip->clipped_pixels_right;
+//                 half_image_only = 1;
+//             }
+//             if (color && color != COLOR_MASK_NONE) {
+//                 for (int _x = x_start; _x < x_max; _x++, dst++) {
+//                     color_t alpha = *data & COLOR_CHANNEL_ALPHA;
+//                     if (alpha == ALPHA_OPAQUE)
+//                         *dst = *data & color;
+//                     else if (alpha != ALPHA_TRANSPARENT)
+//                         *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA) & color;
 //
-//                    data++;
-//                }
-//            } else {
-//                for (int _x = x_start; _x < x_max; _x++, dst++) {
-//                    color_t alpha = *data & COLOR_CHANNEL_ALPHA;
-//                    if (alpha == ALPHA_OPAQUE)
-//                        *dst = *data;
-//                    else if (alpha != ALPHA_TRANSPARENT)
-//                        *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA);
+//                     data++;
+//                 }
+//             } else {
+//                 for (int _x = x_start; _x < x_max; _x++, dst++) {
+//                     color_t alpha = *data & COLOR_CHANNEL_ALPHA;
+//                     if (alpha == ALPHA_OPAQUE)
+//                         *dst = *data;
+//                     else if (alpha != ALPHA_TRANSPARENT)
+//                         *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA);
 //
-//                    data++;
-//                }
-//            }
-//            if (half_image_only) {
-//                data += clip->clipped_pixels_right;
-//                continue;
-//            }
-//            data += half_width + half_visible_pixels - x_max;
-//            x_start = half_width + half_visible_pixels;
-//        } else {
-//            x_start = half_width + half_visible_pixels;
-//            if (x_start < clip->clipped_pixels_left)
-//                x_start = clip->clipped_pixels_left;
+//                     data++;
+//                 }
+//             }
+//             if (half_image_only) {
+//                 data += clip->clipped_pixels_right;
+//                 continue;
+//             }
+//             data += half_width + half_visible_pixels - x_max;
+//             x_start = half_width + half_visible_pixels;
+//         } else {
+//             x_start = half_width + half_visible_pixels;
+//             if (x_start < clip->clipped_pixels_left)
+//                 x_start = clip->clipped_pixels_left;
 //
-//            data += x_start;
-//        }
-//        int x_max = img->width - clip->clipped_pixels_right;
-//        color_t *dst = graphics_get_pixel(x + x_start, y + _y);
-//        if (color && color != COLOR_MASK_NONE) {
-//            for (int _x = x_start; _x < x_max; _x++, dst++) {
-//                color_t alpha = *data & COLOR_CHANNEL_ALPHA;
-//                if (alpha == ALPHA_OPAQUE)
-//                    *dst = *data & color;
-//                else if (alpha != ALPHA_TRANSPARENT)
-//                    *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA) & color;
+//             data += x_start;
+//         }
+//         int x_max = img->width - clip->clipped_pixels_right;
+//         color_t *dst = graphics_get_pixel(x + x_start, y + _y);
+//         if (color && color != COLOR_MASK_NONE) {
+//             for (int _x = x_start; _x < x_max; _x++, dst++) {
+//                 color_t alpha = *data & COLOR_CHANNEL_ALPHA;
+//                 if (alpha == ALPHA_OPAQUE)
+//                     *dst = *data & color;
+//                 else if (alpha != ALPHA_TRANSPARENT)
+//                     *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA) & color;
 //
-//                data++;
-//            }
-//        } else {
-//            for (int _x = x_start; _x < x_max; _x++, dst++) {
-//                color_t alpha = *data & COLOR_CHANNEL_ALPHA;
-//                if (alpha == ALPHA_OPAQUE)
-//                    *dst = *data;
-//                else if (alpha != ALPHA_TRANSPARENT)
-//                    *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA);
+//                 data++;
+//             }
+//         } else {
+//             for (int _x = x_start; _x < x_max; _x++, dst++) {
+//                 color_t alpha = *data & COLOR_CHANNEL_ALPHA;
+//                 if (alpha == ALPHA_OPAQUE)
+//                     *dst = *data;
+//                 else if (alpha != ALPHA_TRANSPARENT)
+//                     *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA);
 //
-//                data++;
-//            }
-//        }
-//        if (x_start > x_max)
-//            data -= x_start - x_max;
+//                 data++;
+//             }
+//         }
+//         if (x_start > x_max)
+//             data -= x_start - x_max;
 //
-//        data += clip->clipped_pixels_right;
-//    }
-//}
-//static void draw_modded_image(const image *img, const color_t *data, int x, int y, color_t color) {
-//    const clip_info *clip = graphics_get_clip_info(x, y, img->width, img->height);
-//    if (!clip->is_visible)
-//        return;
-//    data += img->width * clip->clipped_pixels_top;
-//    for (int _y = clip->clipped_pixels_top; _y < img->height - clip->clipped_pixels_bottom; _y++) {
-//        data += clip->clipped_pixels_left;
-//        color_t *dst = graphics_get_pixel(x + clip->clipped_pixels_left, y + _y);
-//        int x_max = img->width - clip->clipped_pixels_right;
-//        if (color && color != COLOR_MASK_NONE) {
-//            for (int _x = clip->clipped_pixels_left; _x < x_max; _x++, dst++) {
-//                color_t alpha = *data & COLOR_CHANNEL_ALPHA;
-//                if (alpha == ALPHA_OPAQUE)
-//                    *dst = *data & color;
-//                else if (alpha != ALPHA_TRANSPARENT)
-//                    *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA) & color;
-//                data++;
-//            }
-//        } else {
-//            for (int _x = clip->clipped_pixels_left; _x < x_max; _x++, dst++) {
-//                color_t alpha = *data & COLOR_CHANNEL_ALPHA;
-//                if (alpha == ALPHA_OPAQUE)
-//                    *dst = *data;
-//                else if (alpha != ALPHA_TRANSPARENT)
-//                    *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA);
-//                data++;
-//            }
-//        }
-//        data += clip->clipped_pixels_right;
-//    }
-//}
+//         data += clip->clipped_pixels_right;
+//     }
+// }
+// static void draw_modded_image(const image *img, const color_t *data, int x, int y, color_t color) {
+//     const clip_info *clip = graphics_get_clip_info(x, y, img->width, img->height);
+//     if (!clip->is_visible)
+//         return;
+//     data += img->width * clip->clipped_pixels_top;
+//     for (int _y = clip->clipped_pixels_top; _y < img->height - clip->clipped_pixels_bottom; _y++) {
+//         data += clip->clipped_pixels_left;
+//         color_t *dst = graphics_get_pixel(x + clip->clipped_pixels_left, y + _y);
+//         int x_max = img->width - clip->clipped_pixels_right;
+//         if (color && color != COLOR_MASK_NONE) {
+//             for (int _x = clip->clipped_pixels_left; _x < x_max; _x++, dst++) {
+//                 color_t alpha = *data & COLOR_CHANNEL_ALPHA;
+//                 if (alpha == ALPHA_OPAQUE)
+//                     *dst = *data & color;
+//                 else if (alpha != ALPHA_TRANSPARENT)
+//                     *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA) & color;
+//                 data++;
+//             }
+//         } else {
+//             for (int _x = clip->clipped_pixels_left; _x < x_max; _x++, dst++) {
+//                 color_t alpha = *data & COLOR_CHANNEL_ALPHA;
+//                 if (alpha == ALPHA_OPAQUE)
+//                     *dst = *data;
+//                 else if (alpha != ALPHA_TRANSPARENT)
+//                     *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA);
+//                 data++;
+//             }
+//         }
+//         data += clip->clipped_pixels_right;
+//     }
+// }
 //
-//static void draw_uncompressed(const image *img, const color_t *data, int x, int y, color_t color, draw_type type) {
+// static void draw_uncompressed(const image *img, const color_t *data, int x, int y, color_t color, draw_type type) {
 ////    if (image_is_external(image_id)) {
 ////        image_load_external_data(image_id);
 ////    } else if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
@@ -282,7 +282,7 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
 ////    }
 //    graphics_renderer()->draw_image(img, x, y, color, 1.0f);
 //}
-//static void draw_compressed(const image *img, const color_t *data, int x, int y, int height) {
+// static void draw_compressed(const image *img, const color_t *data, int x, int y, int height) {
 ////    bool mirr = (img->offset_mirror != 0);
 ////    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height, mirr);
 ////    if (!clip->is_visible)
@@ -338,7 +338,8 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
 ////    }
 ////    graphics_renderer()->draw_isometric_top(img, x, y, color, 1.0f);
 //}
-//static void draw_compressed_set(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color) {
+// static void draw_compressed_set(const image *img, const color_t *data, int x_offset, int y_offset, int height,
+// color_t color) {
 ////    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
 ////    if (!clip->is_visible)
 ////        return;
@@ -380,7 +381,8 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
 ////        }
 ////    }
 //}
-//static void draw_compressed_and(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color) {
+// static void draw_compressed_and(const image *img, const color_t *data, int x_offset, int y_offset, int height,
+// color_t color) {
 //    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
 //    if (!clip->is_visible)
 //        return;
@@ -426,7 +428,8 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
 //        }
 //    }
 //}
-//static void draw_compressed_blend(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color) {
+// static void draw_compressed_blend(const image *img, const color_t *data, int x_offset, int y_offset, int height,
+// color_t color) {
 //    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
 //    if (!clip->is_visible)
 //        return;
@@ -468,7 +471,8 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
 //        }
 //    }
 //}
-//static void draw_compressed_blend_alpha(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color) {
+// static void draw_compressed_blend_alpha(const image *img, const color_t *data, int x_offset, int y_offset, int
+// height, color_t color) {
 //    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
 //    if (!clip->is_visible)
 //        return;
@@ -526,7 +530,7 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
 //        }
 //    }
 //}
-//static void draw_footprint_simple(const color_t *src, int x, int y) {
+// static void draw_footprint_simple(const color_t *src, int x, int y) {
 //    memcpy(graphics_get_pixel(x + 28, y + 0), &src[0], 2 * sizeof(color_t));
 //    memcpy(graphics_get_pixel(x + 26, y + 1), &src[2], 6 * sizeof(color_t));
 //    memcpy(graphics_get_pixel(x + 24, y + 2), &src[8], 10 * sizeof(color_t));
@@ -558,7 +562,7 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
 //    memcpy(graphics_get_pixel(x + 26, y + 28), &src[892], 6 * sizeof(color_t));
 //    memcpy(graphics_get_pixel(x + 28, y + 29), &src[898], 2 * sizeof(color_t));
 //}
-//static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset, color_t color_mask) {
+// static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset, color_t color_mask) {
 //    if (!color_mask)
 //        color_mask = COLOR_MASK_NONE;
 //
@@ -618,12 +622,12 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
 //    }
 //}
 
-static const color_t *tile_data(const color_t *data, int index) {
+static const color_t* tile_data(const color_t* data, int index) {
     return &data[900 * index];
 }
 static void draw_footprint_size_any(int image_id, int x, int y, int size, color_t color_mask, float scale) {
-//    const color_t *data = image_data(image_id);
-    const image_t *img = image_get(image_id);
+    //    const color_t *data = image_data(image_id);
+    const image_t* img = image_get(image_id);
 
     // The offsets alternate very annoyingly.
     // The y offsets grow by 15 each "batch"
@@ -633,17 +637,15 @@ static void draw_footprint_size_any(int image_id, int x, int y, int size, color_
     // What an absolute mess!
     int index = 0;
     for (int k = 0; k < (size * 2) - 1; k++) {
-
         int k_limit = k;
         if (k >= size - 1)
             k_limit = 2 * size - 2 - k;
 
         for (int j = -30 * k_limit; j <= 30 * k_limit; j += 60) {
-
             int x_offset = j;
             int y_offset = k * 15;
 
-//            draw_footprint_tile(tile_data(data, index++), x + x_offset, y + y_offset, color_mask);
+            //            draw_footprint_tile(tile_data(data, index++), x + x_offset, y + y_offset, color_mask);
             graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
         }
     }
@@ -653,48 +655,49 @@ static color_t base_color_for_font(font_t font) {
         return COLOR_FONT_PLAIN;
     return COLOR_MASK_NONE;
 }
-static void draw_multibyte_letter(font_t font, const image_t *img, int x, int y, color_t color_mask, float scale) {
-//    switch (font) {
-//        case FONT_NORMAL_WHITE_ON_DARK:
-////            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xff311c10, scale, false);
-//            graphics_renderer()->draw_image(img, x, y, COLOR_WHITE, scale, false);
-//            break;
-//        case FONT_NORMAL_YELLOW:
-////            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffe7cfad, scale, false);
-//            graphics_renderer()->draw_image(img, x, y, 0xff731408, scale, false);
-//            break;
-//        case FONT_NORMAL_BLACK_ON_DARK:
-////            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffe7cfad, scale, false);
-//            graphics_renderer()->draw_image(img, x, y, 0xff311c10, scale, false);
-//            break;
-//        case FONT_SMALL_PLAIN:
-//            if (!color_mask)
-//                color_mask = base_color_for_font(font);
-//            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
-//            break;
-//        case FONT_NORMAL_BLACK_ON_LIGHT:
-//        case FONT_LARGE_BLACK_ON_LIGHT:
-////            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffcead9c, scale, false);
-//            graphics_renderer()->draw_image(img, x, y, COLOR_BLACK, scale, false);
-//            break;
-//        case FONT_SMALL_SHADED:
-//            if (!color_mask)
-//                color_mask = base_color_for_font(font);
-////            graphics_renderer()->draw_image(img, x + 1, y + 1, ALPHA_OPAQUE | COLOR_TOOLTIP_SHADOW, scale, false);
-//            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
-//        default:
-//            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
-//            break;
-//    }
+static void draw_multibyte_letter(font_t font, const image_t* img, int x, int y, color_t color_mask, float scale) {
+    //    switch (font) {
+    //        case FONT_NORMAL_WHITE_ON_DARK:
+    ////            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xff311c10, scale, false);
+    //            graphics_renderer()->draw_image(img, x, y, COLOR_WHITE, scale, false);
+    //            break;
+    //        case FONT_NORMAL_YELLOW:
+    ////            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffe7cfad, scale, false);
+    //            graphics_renderer()->draw_image(img, x, y, 0xff731408, scale, false);
+    //            break;
+    //        case FONT_NORMAL_BLACK_ON_DARK:
+    ////            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffe7cfad, scale, false);
+    //            graphics_renderer()->draw_image(img, x, y, 0xff311c10, scale, false);
+    //            break;
+    //        case FONT_SMALL_PLAIN:
+    //            if (!color_mask)
+    //                color_mask = base_color_for_font(font);
+    //            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
+    //            break;
+    //        case FONT_NORMAL_BLACK_ON_LIGHT:
+    //        case FONT_LARGE_BLACK_ON_LIGHT:
+    ////            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffcead9c, scale, false);
+    //            graphics_renderer()->draw_image(img, x, y, COLOR_BLACK, scale, false);
+    //            break;
+    //        case FONT_SMALL_SHADED:
+    //            if (!color_mask)
+    //                color_mask = base_color_for_font(font);
+    ////            graphics_renderer()->draw_image(img, x + 1, y + 1, ALPHA_OPAQUE | COLOR_TOOLTIP_SHADOW, scale,
+    ///false);
+    //            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
+    //        default:
+    //            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
+    //            break;
+    //    }
 }
 
 void ImageDraw::img_generic(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image_t *img = image_get(image_id);
+    const image_t* img = image_get(image_id);
     graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
 }
 void ImageDraw::img_sprite(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image_t *img = image_get(image_id);
-//    debug_draw_sprite_box(x, y, img, zoom_get_scale());
+    const image_t* img = image_get(image_id);
+    //    debug_draw_sprite_box(x, y, img, zoom_get_scale());
     bool mirrored = (img->offset_mirror != 0);
     if (mirrored) {
         img = img->mirrored_img;
@@ -705,22 +708,22 @@ void ImageDraw::img_sprite(int image_id, int x, int y, color_t color_mask, float
     graphics_renderer()->draw_image(img, x, y, color_mask, scale, mirrored);
 }
 void ImageDraw::img_ornament(int image_id, int base_id, int x, int y, color_t color_mask, float scale) {
-    const image_t *img = image_get(image_id);
-    const image_t *base = image_get(base_id);
+    const image_t* img = image_get(image_id);
+    const image_t* base = image_get(base_id);
     int ydiff = HALF_TILE_HEIGHT_PIXELS * (base->isometric_size() + 1);
     x += base->animation.sprite_x_offset;
     y += base->animation.sprite_y_offset - base->height + ydiff;
-//    y += base->animation.sprite_y_offset - img->isometric_ydiff();
+    //    y += base->animation.sprite_y_offset - img->isometric_ydiff();
     graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
 }
 void ImageDraw::img_from_below(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image_t *img = image_get(image_id);
+    const image_t* img = image_get(image_id);
     graphics_renderer()->draw_image(img, x, y - img->height, color_mask, scale, false);
 }
 void ImageDraw::img_letter(font_t font, int letter_id, int x, int y, color_t color_mask, float scale) {
-    const image_t *img = image_letter(letter_id);
+    const image_t* img = image_letter(letter_id);
     if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
-//        draw_multibyte_letter(font, img, x, y, color_mask, scale);
+        //        draw_multibyte_letter(font, img, x, y, color_mask, scale);
         return;
     }
     if (!color_mask)
@@ -730,28 +733,26 @@ void ImageDraw::img_letter(font_t font, int letter_id, int x, int y, color_t col
     graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
 }
 void ImageDraw::img_background(int image_id, float scale) {
-//    graphics_set_to_dialog();
-//    ImageDraw::img_generic(image_id, 0, 0, COLOR_MASK_NONE, scale);
-//    graphics_reset_dialog();
-    const image_t *img = image_get(image_id);
+    //    graphics_set_to_dialog();
+    //    ImageDraw::img_generic(image_id, 0, 0, COLOR_MASK_NONE, scale);
+    //    graphics_reset_dialog();
+    const image_t* img = image_get(image_id);
     if (scale == -1) {
-//        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
+        //        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
     } else {
-        graphics_renderer()->draw_image(img,
-                                        (screen_width() - img->width) / 2,
-                                        (screen_height() - img->height) / 2,
-                                        COLOR_MASK_NONE, scale, false);
+        graphics_renderer()->draw_image(
+          img, (screen_width() - img->width) / 2, (screen_height() - img->height) / 2, COLOR_MASK_NONE, scale, false);
     }
 }
 void ImageDraw::isometric(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image_t *img = image_get(image_id);
+    const image_t* img = image_get(image_id);
     ImageDraw::img_generic(image_id, x, y, color_mask, scale);
 }
 void ImageDraw::isometric_from_drawtile(int image_id, int x, int y, color_t color_mask) {
-    const image_t *img = image_get(image_id);
-//    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
-//        assets_load_unpacked_asset(image_id);
-//    }
+    const image_t* img = image_get(image_id);
+    //    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
+    //        assets_load_unpacked_asset(image_id);
+    //    }
     y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
     graphics_renderer()->draw_image(img, x, y, color_mask, 1.0f, false);
 }

@@ -1,6 +1,6 @@
+#include "slide.h"
 #include <graphics/boilerplate.h>
 #include <tgmath.h>
-#include "slide.h"
 
 #include "core/speed.h"
 #include "graphics/boilerplate.h"
@@ -35,7 +35,8 @@ static void draw_sliding_foreground(void) {
     }
 
     int x_offset = sidebar_common_get_x_offset_expanded();
-//    graphics_set_clip_rectangle(x_offset, 0, SIDEBAR_EXPANDED_WIDTH, sidebar_common_get_height()); //TOP_MENU_HEIGHT
+    //    graphics_set_clip_rectangle(x_offset, 0, SIDEBAR_EXPANDED_WIDTH, sidebar_common_get_height());
+    //    //TOP_MENU_HEIGHT
 
     int rel_offset = 0;
     if (data.direction == SLIDE_DIRECTION_IN) {
@@ -50,7 +51,7 @@ static void draw_sliding_foreground(void) {
         int block_width = 96;
         int s_end = screen_width() - 1000 - 24 + (rel_offset <= 162 - 18 ? rel_offset : 162 - 18);
 
-        int s_start = s_end - ceil((float) s_end / (float) block_width) * block_width;
+        int s_start = s_end - ceil((float)s_end / (float)block_width) * block_width;
         for (int i = 0; s_start + i * block_width < s_end; i++)
             ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
         ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
@@ -59,7 +60,7 @@ static void draw_sliding_foreground(void) {
     data.back_sidebar_draw();
     data.front_sidebar_draw(x_offset);
 
-//    graphics_reset_clip_rectangle();
+    //    graphics_reset_clip_rectangle();
 }
 
 void sidebar_slide(int direction, back_sidebar_draw_function back_sidebar_callback,
@@ -67,19 +68,15 @@ void sidebar_slide(int direction, back_sidebar_draw_function back_sidebar_callba
     data.direction = direction;
     data.position = 0;
     speed_clear(&data.slide_speed);
-    speed_set_target(&data.slide_speed, SLIDE_SPEED,
-                     direction == SLIDE_DIRECTION_OUT ? SLIDE_ACCELERATION_MILLIS : SPEED_CHANGE_IMMEDIATE, 1);
+    speed_set_target(&data.slide_speed,
+                     SLIDE_SPEED,
+                     direction == SLIDE_DIRECTION_OUT ? SLIDE_ACCELERATION_MILLIS : SPEED_CHANGE_IMMEDIATE,
+                     1);
     data.back_sidebar_draw = back_sidebar_callback;
     data.front_sidebar_draw = front_sidebar_callback;
     data.finished_callback = finished_callback;
     sound_effect_play(SOUND_EFFECT_SIDEBAR);
 
-    window_type window = {
-            WINDOW_SLIDING_SIDEBAR,
-            window_city_draw,
-            draw_sliding_foreground,
-            0,
-            0
-    };
+    window_type window = {WINDOW_SLIDING_SIDEBAR, window_city_draw, draw_sliding_foreground, 0, 0};
     window_show(&window);
 }

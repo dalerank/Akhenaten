@@ -3,10 +3,9 @@
 #include "city/emperor.h"
 #include "core/calc.h"
 #include "game/resource.h"
+#include "graphics/boilerplate.h"
 #include "graphics/elements/arrow_button.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
@@ -20,18 +19,18 @@ static void button_cancel(int param1, int param2);
 static void arrow_button_amount(int is_down, int param2);
 
 static generic_button buttons[] = {
-        {336, 283, 160, 20, button_cancel,     button_none, 0, 0},
-        {144, 283, 160, 20, button_donate,     button_none, 0, 0},
-        {128, 216, 64,  20, button_set_amount, button_none, 0, 0},
-        {208, 216, 64,  20, button_set_amount, button_none, 1, 0},
-        {288, 216, 64,  20, button_set_amount, button_none, 2, 0},
-        {368, 216, 64,  20, button_set_amount, button_none, 3, 0},
-        {448, 216, 64,  20, button_set_amount, button_none, 4, 0},
+  {336, 283, 160, 20, button_cancel, button_none, 0, 0},
+  {144, 283, 160, 20, button_donate, button_none, 0, 0},
+  {128, 216, 64, 20, button_set_amount, button_none, 0, 0},
+  {208, 216, 64, 20, button_set_amount, button_none, 1, 0},
+  {288, 216, 64, 20, button_set_amount, button_none, 2, 0},
+  {368, 216, 64, 20, button_set_amount, button_none, 3, 0},
+  {448, 216, 64, 20, button_set_amount, button_none, 4, 0},
 };
 
 static arrow_button arrow_buttons[] = {
-        {240, 242, 17, 24, arrow_button_amount, 1, 0},
-        {264, 242, 15, 24, arrow_button_amount, 0, 0},
+  {240, 242, 17, 24, arrow_button_amount, 1, 0},
+  {264, 242, 15, 24, arrow_button_amount, 0, 0},
 };
 
 static struct {
@@ -90,38 +89,37 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     data.focus_arrow_button_id = 0;
-    const mouse *m_dialog = mouse_in_dialog(m);
+    const mouse* m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 7, &data.focus_button_id))
         return;
     if (arrow_buttons_handle_mouse(m_dialog, 0, 0, arrow_buttons, 2, &data.focus_arrow_button_id))
         return;
     if (input_go_back_requested(m, h))
         window_advisors_show();
-
 }
 
 static void button_set_amount(int amount_id, int param2) {
     int amount;
     switch (amount_id) {
-        case 0:
-            amount = 0;
-            break;
-        case 1:
-            amount = 500;
-            break;
-        case 2:
-            amount = 2000;
-            break;
-        case 3:
-            amount = 5000;
-            break;
-        case 4:
-            amount = 1000000;
-            break;
-        default:
-            return;
+    case 0:
+        amount = 0;
+        break;
+    case 1:
+        amount = 500;
+        break;
+    case 2:
+        amount = 2000;
+        break;
+    case 3:
+        amount = 5000;
+        break;
+    case 4:
+        amount = 1000000;
+        break;
+    default:
+        return;
     }
     city_emperor_set_donation_amount(amount);
     window_invalidate();
@@ -141,7 +139,7 @@ static void arrow_button_amount(int is_down, int param2) {
     window_invalidate();
 }
 
-static void get_tooltip(tooltip_context *c) {
+static void get_tooltip(tooltip_context* c) {
     if (!data.focus_button_id && !data.focus_arrow_button_id)
         return;
     c->type = TOOLTIP_BUTTON;
@@ -153,17 +151,10 @@ static void get_tooltip(tooltip_context *c) {
         c->text_id = 100;
     else if (data.focus_arrow_button_id)
         c->text_id = 101;
-
 }
 
 void window_donate_to_city_show(void) {
-    window_type window = {
-            WINDOW_DONATE_TO_CITY,
-            draw_background,
-            draw_foreground,
-            handle_input,
-            get_tooltip
-    };
+    window_type window = {WINDOW_DONATE_TO_CITY, draw_background, draw_foreground, handle_input, get_tooltip};
     city_emperor_init_donation_amount();
     window_show(&window);
 }

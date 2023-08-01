@@ -1,10 +1,10 @@
 #include "road_network.h"
 
 #include "city/map.h"
-#include <scenario/map.h>
 #include "grid/grid.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
+#include <scenario/map.h>
 
 #include <string.h>
 
@@ -22,8 +22,8 @@ static struct {
 
 int adjacent_offsets(int i) {
     switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH:
-            return ADJACENT_OFFSETS_PH[i];
+    case ENGINE_ENV_PHARAOH:
+        return ADJACENT_OFFSETS_PH[i];
     }
 }
 
@@ -57,7 +57,6 @@ static int mark_road_network(int grid_offset, uint8_t network_id) {
                         queue.items[queue.tail++] = new_offset;
                         if (queue.tail >= MAX_QUEUE)
                             queue.tail = 0;
-
                     }
                 }
             }
@@ -69,7 +68,6 @@ static int mark_road_network(int grid_offset, uint8_t network_id) {
             next_offset = queue.items[queue.head++];
             if (queue.head >= MAX_QUEUE)
                 queue.head = 0;
-
         }
         grid_offset = next_offset;
     } while (next_offset > -1);

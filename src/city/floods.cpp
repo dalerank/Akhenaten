@@ -1,18 +1,18 @@
-#include "game/time.h"
-#include "grid/tiles.h"
-#include "io/manager.h"
-#include "grid/floodplain.h"
+#include "floods.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "game/time.h"
+#include "grid/floodplain.h"
+#include "grid/tiles.h"
+#include "io/manager.h"
 #include <cmath>
-#include "floods.h"
 
 #include "city/data_private.h"
 #include "message.h"
 
 floods_data_t g_floods_data;
 
-floods_data_t &floodplain_data() {
+floods_data_t& floodplain_data() {
     return g_floods_data;
 }
 
@@ -20,7 +20,7 @@ static int randomizing_int_1 = 0;
 static int randomizing_int_2 = 0;
 
 void floodplains_init() {
-    auto &data = floodplain_data();
+    auto& data = floodplain_data();
     data.flood_progress = 0;
     data.unk01 = 0;
     data.state = FLOOD_STATE_FARMABLE;
@@ -54,17 +54,17 @@ bool tick_is_flood_cycle() {
     return floods_current_subcycle() == 0;
 }
 int floods_start_cycle() {
-    auto &data = floodplain_data();
+    auto& data = floodplain_data();
     double cycles_so_far = CYCLES_IN_A_YEAR * game_time_year_since_start();
     double cycle_start = ((double)data.season * 105.0f) / 100.0f + 15.0f + cycles_so_far - 0.5f;
     return (int)cycle_start;
 }
 int floods_end_cycle() {
-    auto &data = floodplain_data();
+    auto& data = floodplain_data();
     return floods_start_cycle() + data.duration + data.floodplain_width * 2;
 }
 double floods_period_length(bool upcoming) {
-    auto &data = floodplain_data();
+    auto& data = floodplain_data();
     if (upcoming)
         return (float)data.quality_next * (float)data.floodplain_width * 0.01;
     return (float)data.quality_last * (float)data.floodplain_width * 0.01;
@@ -83,25 +83,25 @@ bool cycle_is(int c2, bool relative = true) {
 }
 
 bool floodplains_is(int state) {
-    auto &data = floodplain_data();
+    auto& data = floodplain_data();
     return data.state == state;
 }
 
 void floodplains_adjust_next_quality(int quality) {
-    auto &data = floodplain_data();
+    auto& data = floodplain_data();
     data.quality_next = calc_bound(data.quality_next + quality, 0, 100);
 }
 int floodplains_expected_quality() {
-    auto &data = floodplain_data();
+    auto& data = floodplain_data();
     return data.quality_next;
 }
 int floodplains_expected_month() {
-    auto &data = floodplain_data();
+    auto& data = floodplain_data();
     return (data.season_initial / 15) - 10;
 }
 
 static void cycle_states_recalc() {
-    auto &data = floodplain_data();
+    auto& data = floodplain_data();
     // if no floodplains present, return
     if (!data.has_floodplains) {
         data.state = FLOOD_STATE_FARMABLE;
@@ -175,11 +175,11 @@ static void cycle_states_recalc() {
         data.flood_progress = 30;
 }
 static void update_next_flood_params() {
-    auto &data = floodplain_data();
+    auto& data = floodplain_data();
 
     // update values
-    data.season = data.season_initial;      // reset to initial
-    data.duration = data.duration_initial;  // reset to initial
+    data.season = data.season_initial;     // reset to initial
+    data.duration = data.duration_initial; // reset to initial
 
     data.quality_last = data.quality;
     if (data.quality_last > 100)
@@ -206,7 +206,7 @@ static void update_next_flood_params() {
     data.quality_next = data.quality_next & (data.quality_next < 1) - 1;
 }
 static void post_flood_prediction_message() {
-    auto &data = floodplain_data();
+    auto& data = floodplain_data();
 
     if (data.quality_next == 100)
         city_message_post(true, MESSAGE_FLOOD_PERFECT, 0, 0);
@@ -222,7 +222,7 @@ static void post_flood_prediction_message() {
         city_message_post(true, MESSAGE_FLOOD_FAIL, 0, 0);
 }
 void floodplains_tick_update(bool calc_only) {
-    auto &data = floodplain_data();
+    auto& data = floodplain_data();
 
     cycle_states_recalc();
 
@@ -241,7 +241,7 @@ void floodplains_tick_update(bool calc_only) {
     else if (cycle >= cycle_end - flooding_period && cycle <= cycle_end)
         fticks = (cycle_end - cycle) * 25 - subcycle - 1;
     else
-        fticks = (flooding_period) * 25;
+        fticks = (flooding_period)*25;
 
     if (calc_only)
         return;
@@ -252,16 +252,13 @@ void floodplains_tick_update(bool calc_only) {
             // todo: FUN_00489310();
             // This is where the game sends off the order to farms to drop everything and harvest in the OG game.
             // It has been re-implemented indirectly inside the farms' figure spawn loop.
-        }
-        else if (cycle == cycle_start - 1) {
+        } else if (cycle == cycle_start - 1) {
             if (!calc_only)
                 update_next_flood_params();
-        }
-        else if (cycle == cycle_start + data.floodplain_width) {
+        } else if (cycle == cycle_start + data.floodplain_width) {
             // This is where the fertility gets restored in the OG game.
             // It has been re-implemented differently inside the tile flooding/update procedure.
-        }
-        else if (cycle == cycle_end + 1) {
+        } else if (cycle == cycle_end + 1) {
             // todo: FUN_004be2b0(city_data_ptr)
             // Something to do with figures/boats?
         }
@@ -290,8 +287,8 @@ void floodplains_tick_update(bool calc_only) {
         map_advance_floodplain_growth();
 }
 
-io_buffer *iob_floodplain_settings = new io_buffer([](io_buffer *iob) {
-    auto &data = floodplain_data();
+io_buffer* iob_floodplain_settings = new io_buffer([](io_buffer* iob) {
+    auto& data = floodplain_data();
 
     iob->bind(BIND_SIGNATURE_INT32, &data.season_initial);
     iob->bind(BIND_SIGNATURE_INT32, &data.duration_initial);

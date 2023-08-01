@@ -3,23 +3,15 @@
 
 #include "graphics/color.h"
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 /** Smacker object struct pointer */
-typedef struct smacker_t *smacker;
+typedef struct smacker_t* smacker;
 
-enum {
-    SMACKER_Y_SCALE_NONE = 0,
-    SMACKER_Y_SCALE_INTERLACE = 1,
-    SMACKER_Y_SCALE_DOUBLE = 2
-};
+enum { SMACKER_Y_SCALE_NONE = 0, SMACKER_Y_SCALE_INTERLACE = 1, SMACKER_Y_SCALE_DOUBLE = 2 };
 
-typedef enum {
-    SMACKER_FRAME_ERROR = 0,
-    SMACKER_FRAME_OK = 1,
-    SMACKER_FRAME_DONE = 2
-} smacker_frame_status;
+typedef enum { SMACKER_FRAME_ERROR = 0, SMACKER_FRAME_OK = 1, SMACKER_FRAME_DONE = 2 } smacker_frame_status;
 
 /**
  * Open SMK file from file pointer.
@@ -27,7 +19,7 @@ typedef enum {
  * @param file File
  * @return Smacker object if opening succeeded, otherwise NULL
  */
-smacker smacker_open(FILE *file);
+smacker smacker_open(FILE* file);
 
 /**
  * Close SMK file and clean up memory
@@ -41,7 +33,7 @@ void smacker_close(smacker s);
  * @param frame_count Total number of frames
  * @param usf Microseconds per frame
  */
-void smacker_get_frames_info(const smacker s, int *frame_count, int *usf);
+void smacker_get_frames_info(const smacker s, int* frame_count, int* usf);
 
 /**
  * Get video information
@@ -50,7 +42,7 @@ void smacker_get_frames_info(const smacker s, int *frame_count, int *usf);
  * @param height Unscaled height of the video
  * @param y_scale_mode Scale mode
  */
-void smacker_get_video_info(const smacker s, int *width, int *height, int *y_scale_mode);
+void smacker_get_video_info(const smacker s, int* width, int* height, int* y_scale_mode);
 
 /**
  * Get audio information for specified track
@@ -61,7 +53,7 @@ void smacker_get_video_info(const smacker s, int *width, int *height, int *y_sca
  * @param bitdepth Bit depth: 8 or 16
  * @param audio_rate Rate in Hz, typically 22050 or 44100
  */
-void smacker_get_audio_info(const smacker s, int track, int *enabled, int *channels, int *bitdepth, int *audio_rate);
+void smacker_get_audio_info(const smacker s, int track, int* enabled, int* channels, int* bitdepth, int* audio_rate);
 
 /**
  * Go to first frame and unpack
@@ -82,7 +74,7 @@ smacker_frame_status smacker_next_frame(smacker s);
  * @param s Smacker object
  * @return Pointer to 256 colors
  */
-const color_t *smacker_get_frame_palette(const smacker s);
+const color_t* smacker_get_frame_palette(const smacker s);
 
 /**
  * Get video data for the current frame.
@@ -90,7 +82,7 @@ const color_t *smacker_get_frame_palette(const smacker s);
  * @param s Smacker object
  * @return width * height bytes that refer to a color in the palette
  */
-const uint8_t *smacker_get_frame_video(const smacker s);
+const uint8_t* smacker_get_frame_video(const smacker s);
 
 /**
  * Get length of audio data for the current frame and track
@@ -106,6 +98,6 @@ int smacker_get_frame_audio_size(const smacker s, int track);
  * @param track Audio track (0-6)
  * @return Audio data
  */
-const uint8_t *smacker_get_frame_audio(const smacker s, int track);
+const uint8_t* smacker_get_frame_audio(const smacker s, int track);
 
 #endif // CORE_SMACKER_H

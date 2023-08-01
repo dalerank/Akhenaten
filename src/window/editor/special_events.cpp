@@ -1,8 +1,8 @@
 #include "special_events.h"
 
+#include "graphics/boilerplate.h"
 #include "graphics/elements/button.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/screen.h"
@@ -30,19 +30,19 @@ static void button_iron_mine_toggle(int param1, int param2);
 static void button_clay_pit_toggle(int param1, int param2);
 
 static generic_button buttons[] = {
-        {216, 106, 100, 24, button_earthquake_severity,  button_none},
-        {326, 106, 150, 24, button_earthquake_year,      button_none},
-        {216, 136, 100, 24, button_gladiator_toggle,     button_none},
-        {326, 136, 150, 24, button_gladiator_year,       button_none},
-        {216, 166, 100, 24, button_emperor_toggle,       button_none},
-        {326, 166, 150, 24, button_emperor_year,         button_none},
-        {216, 196, 100, 24, button_sea_trade_toggle,     button_none},
-        {216, 226, 100, 24, button_land_trade_toggle,    button_none},
-        {216, 256, 100, 24, button_raise_wages_toggle,   button_none},
-        {216, 286, 100, 24, button_lower_wages_toggle,   button_none},
-        {216, 316, 100, 24, button_contamination_toggle, button_none},
-        {216, 346, 100, 24, button_iron_mine_toggle,     button_none},
-        {216, 376, 100, 24, button_clay_pit_toggle,      button_none},
+  {216, 106, 100, 24, button_earthquake_severity, button_none},
+  {326, 106, 150, 24, button_earthquake_year, button_none},
+  {216, 136, 100, 24, button_gladiator_toggle, button_none},
+  {326, 136, 150, 24, button_gladiator_year, button_none},
+  {216, 166, 100, 24, button_emperor_toggle, button_none},
+  {326, 166, 150, 24, button_emperor_year, button_none},
+  {216, 196, 100, 24, button_sea_trade_toggle, button_none},
+  {216, 226, 100, 24, button_land_trade_toggle, button_none},
+  {216, 256, 100, 24, button_raise_wages_toggle, button_none},
+  {216, 286, 100, 24, button_lower_wages_toggle, button_none},
+  {216, 316, 100, 24, button_contamination_toggle, button_none},
+  {216, 346, 100, 24, button_iron_mine_toggle, button_none},
+  {216, 376, 100, 24, button_clay_pit_toggle, button_none},
 };
 
 static int focus_button_id;
@@ -71,8 +71,7 @@ static void draw_foreground(void) {
     button_border_draw(326, 106, 150, 24, focus_button_id == 2);
     int width = text_draw_number(scenario_editor_earthquake_year(), '+', " ", 346, 112, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw_year(
-            scenario_property_start_year() + scenario_editor_earthquake_year(),
-            356 + width, 112, FONT_NORMAL_BLACK_ON_LIGHT);
+      scenario_property_start_year() + scenario_editor_earthquake_year(), 356 + width, 112, FONT_NORMAL_BLACK_ON_LIGHT);
 
     // gladiator revolt
     lang_text_draw(38, 2, 36, 142, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -81,9 +80,10 @@ static void draw_foreground(void) {
 
     button_border_draw(326, 136, 150, 24, focus_button_id == 4);
     width = text_draw_number(scenario_editor_gladiator_revolt_year(), '+', " ", 346, 142, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(
-            scenario_property_start_year() + scenario_editor_gladiator_revolt_year(),
-            356 + width, 142, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_year(scenario_property_start_year() + scenario_editor_gladiator_revolt_year(),
+                        356 + width,
+                        142,
+                        FONT_NORMAL_BLACK_ON_LIGHT);
 
     // emperor change
     lang_text_draw(38, 3, 36, 172, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -92,9 +92,10 @@ static void draw_foreground(void) {
 
     button_border_draw(326, 166, 150, 24, focus_button_id == 6);
     width = text_draw_number(scenario_editor_emperor_change_year(), '+', " ", 346, 172, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(
-            scenario_property_start_year() + scenario_editor_emperor_change_year(),
-            356 + width, 172, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_year(scenario_property_start_year() + scenario_editor_emperor_change_year(),
+                        356 + width,
+                        172,
+                        FONT_NORMAL_BLACK_ON_LIGHT);
 
     // random events
     lang_text_draw(38, 4, 36, 202, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -104,7 +105,8 @@ static void draw_foreground(void) {
 
     lang_text_draw(38, 5, 36, 232, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(216, 226, 100, 24, focus_button_id == 8);
-    lang_text_draw_centered(18, scenario_editor_land_trade_problem_enabled(), 216, 232, 100, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(
+      18, scenario_editor_land_trade_problem_enabled(), 216, 232, 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(38, 13, 346, 234, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 6, 36, 262, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -119,12 +121,14 @@ static void draw_foreground(void) {
 
     lang_text_draw(38, 8, 36, 322, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(216, 316, 100, 24, focus_button_id == 11);
-    lang_text_draw_centered(18, scenario_editor_contaminated_water_enabled(), 216, 322, 100, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(
+      18, scenario_editor_contaminated_water_enabled(), 216, 322, 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(38, 13, 346, 324, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 9, 36, 352, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(216, 346, 100, 24, focus_button_id == 12);
-    lang_text_draw_centered(18, scenario_editor_iron_mine_collapse_enabled(), 216, 352, 100, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(
+      18, scenario_editor_iron_mine_collapse_enabled(), 216, 352, 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(38, 13, 346, 354, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 10, 36, 382, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -135,12 +139,11 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 13, &focus_button_id))
         return;
     if (input_go_back_requested(m, h))
         window_editor_attributes_show();
-
 }
 
 static void button_earthquake_severity(int param1, int param2) {
@@ -149,8 +152,8 @@ static void button_earthquake_severity(int param1, int param2) {
 }
 
 static void button_earthquake_year(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 100,
-                              3, 999, scenario_editor_earthquake_set_year);
+    window_numeric_input_show(
+      screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 100, 3, 999, scenario_editor_earthquake_set_year);
 }
 
 static void button_gladiator_toggle(int param1, int param2) {
@@ -159,8 +162,11 @@ static void button_gladiator_toggle(int param1, int param2) {
 }
 
 static void button_gladiator_year(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 100,
-                              3, 999, scenario_editor_gladiator_revolt_set_year);
+    window_numeric_input_show(screen_dialog_offset_x() + 190,
+                              screen_dialog_offset_y() + 100,
+                              3,
+                              999,
+                              scenario_editor_gladiator_revolt_set_year);
 }
 
 static void button_emperor_toggle(int param1, int param2) {
@@ -169,8 +175,8 @@ static void button_emperor_toggle(int param1, int param2) {
 }
 
 static void button_emperor_year(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 100,
-                              3, 999, scenario_editor_emperor_change_set_year);
+    window_numeric_input_show(
+      screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 100, 3, 999, scenario_editor_emperor_change_set_year);
 }
 
 static void button_sea_trade_toggle(int param1, int param2) {
@@ -209,11 +215,6 @@ static void button_clay_pit_toggle(int param1, int param2) {
 }
 
 void window_editor_special_events_show(void) {
-    window_type window = {
-            WINDOW_EDITOR_SPECIAL_EVENTS,
-            draw_background,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_EDITOR_SPECIAL_EVENTS, draw_background, draw_foreground, handle_input};
     window_show(&window);
 }

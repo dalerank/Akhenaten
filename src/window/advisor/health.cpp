@@ -12,18 +12,18 @@
 #define ADVISOR_HEIGHT 18
 
 static int get_health_advice(void) {
-    house_demands *demands = city_houses_demands();
+    house_demands* demands = city_houses_demands();
     switch (demands->health) {
-        case 1:
-            return demands->requiring.bathhouse ? 1 : 0;
-        case 2:
-            return demands->requiring.barber ? 3 : 2;
-        case 3:
-            return demands->requiring.clinic ? 5 : 4;
-        case 4:
-            return 6;
-        default:
-            return 7;
+    case 1:
+        return demands->requiring.bathhouse ? 1 : 0;
+    case 2:
+        return demands->requiring.barber ? 3 : 2;
+    case 3:
+        return demands->requiring.clinic ? 5 : 4;
+    case 4:
+        return 6;
+    default:
+        return 7;
     }
 }
 
@@ -64,8 +64,8 @@ static int draw_background(void) {
     lang_text_draw_amount(8, 30, building_count_total(BUILDING_MORTUARY), 40, 172, FONT_NORMAL_BLACK_ON_DARK);
     text_draw_number_centered(building_count_active(BUILDING_MORTUARY), 150, 172, 100, FONT_NORMAL_BLACK_ON_DARK);
 
-    int width = text_draw_number(1000 * building_count_active(BUILDING_MORTUARY), '@', " ", 280, 172,
-                                 FONT_NORMAL_BLACK_ON_DARK);
+    int width = text_draw_number(
+      1000 * building_count_active(BUILDING_MORTUARY), '@', " ", 280, 172, FONT_NORMAL_BLACK_ON_DARK);
     lang_text_draw(56, 6, 280 + width, 172, FONT_NORMAL_BLACK_ON_DARK);
 
     int pct_hospital = city_culture_coverage_hospital();
@@ -82,12 +82,7 @@ static int draw_background(void) {
     return ADVISOR_HEIGHT;
 }
 
-const advisor_window_type *window_advisor_health(void) {
-    static const advisor_window_type window = {
-            draw_background,
-            0,
-            0,
-            0
-    };
+const advisor_window_type* window_advisor_health(void) {
+    static const advisor_window_type window = {draw_background, 0, 0, 0};
     return &window;
 }

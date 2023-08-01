@@ -15,7 +15,7 @@
  * @param adjust_width_on_no_scroll Whether to expand the text area into the scrollbar area
  * @return Width of the text in blocks
  */
-int rich_text_init(const uint8_t *text, int x_text, int y_text, int width_blocks, int height_blocks,
+int rich_text_init(const uint8_t* text, int x_text, int y_text, int width_blocks, int height_blocks,
                    int adjust_width_on_no_scroll);
 
 /**
@@ -40,7 +40,7 @@ void rich_text_clear_links(void);
  * @param m Mouse state
  * @return ID of the link (>= 0), or -1 if no link was clicked
  */
-int rich_text_get_clicked_link(const mouse *m);
+int rich_text_get_clicked_link(const mouse* m);
 
 /**
  * Draws rich text
@@ -52,8 +52,7 @@ int rich_text_get_clicked_link(const mouse *m);
  * @param measure_only True to only measure text, not draw it
  * @return Total number of lines required for the text
  */
-int rich_text_draw(const uint8_t *text, int x_offset, int y_offset,
-                   int box_width, int height_lines, bool measure_only);
+int rich_text_draw(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, bool measure_only);
 
 /**
  * Draws rich text with specified color
@@ -65,8 +64,8 @@ int rich_text_draw(const uint8_t *text, int x_offset, int y_offset,
  * @param color Color to draw with
  * @return Total number of lines required for the text
  */
-int rich_text_draw_colored(const uint8_t *text, int x_offset, int y_offset,
-                           int box_width, int height_lines, color_t color);
+int rich_text_draw_colored(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines,
+                           color_t color);
 
 /**
  * Draws the scrollbar
@@ -78,7 +77,7 @@ void rich_text_draw_scrollbar(void);
  * @param m Mouse state
  * @return True if any interaction was handled
  */
-int rich_text_handle_mouse(const mouse *m);
+int rich_text_handle_mouse(const mouse* m);
 
 /**
  * Gets scroll position in absolute number of lines

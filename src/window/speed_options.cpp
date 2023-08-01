@@ -1,15 +1,15 @@
 #include "speed_options.h"
 
 #include "game/settings.h"
+#include "graphics/boilerplate.h"
 #include "graphics/elements/arrow_button.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "graphics/image.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "graphics/image.h"
 
 static void button_ok(int param1, int param2);
 static void button_cancel(int param1, int param2);
@@ -18,15 +18,15 @@ static void arrow_button_game(int is_down, int param2);
 static void arrow_button_scroll(int is_down, int param2);
 
 static generic_button buttons[] = {
-        {144, 232, 192, 20, button_ok,     button_none, 1, 0},
-        {144, 262, 192, 20, button_cancel, button_none, 1, 0},
+  {144, 232, 192, 20, button_ok, button_none, 1, 0},
+  {144, 262, 192, 20, button_cancel, button_none, 1, 0},
 };
 
 static arrow_button arrow_buttons[] = {
-        {112, 100, 17, 24, arrow_button_game,   1, 0},
-        {136, 100, 15, 24, arrow_button_game,   0, 0},
-        {112, 136, 17, 24, arrow_button_scroll, 1, 0},
-        {136, 136, 15, 24, arrow_button_scroll, 0, 0},
+  {112, 100, 17, 24, arrow_button_game, 1, 0},
+  {136, 100, 15, 24, arrow_button_game, 0, 0},
+  {112, 136, 17, 24, arrow_button_scroll, 1, 0},
+  {136, 136, 15, 24, arrow_button_scroll, 0, 0},
 };
 
 static struct {
@@ -68,14 +68,13 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
-    const mouse *m_dialog = mouse_in_dialog(m);
-    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 2, &data.focus_button_id) ||
-        arrow_buttons_handle_mouse(m_dialog, 160, 40, arrow_buttons, 4, 0))
+static void handle_input(const mouse* m, const hotkeys* h) {
+    const mouse* m_dialog = mouse_in_dialog(m);
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 2, &data.focus_button_id)
+        || arrow_buttons_handle_mouse(m_dialog, 160, 40, arrow_buttons, 4, 0))
         return;
     if (input_go_back_requested(m, h))
         data.close_callback();
-
 }
 
 static void button_ok(int param1, int param2) {
@@ -104,12 +103,7 @@ static void arrow_button_scroll(int is_down, int param2) {
 }
 
 void window_speed_options_show(void (*close_callback)(void)) {
-    window_type window = {
-            WINDOW_SPEED_OPTIONS,
-            window_draw_underlying_window,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_SPEED_OPTIONS, window_draw_underlying_window, draw_foreground, handle_input};
     init(close_callback);
     window_show(&window);
 }

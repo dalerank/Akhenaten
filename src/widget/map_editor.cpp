@@ -1,23 +1,22 @@
-#include <graphics/view/lookup.h>
 #include "map_editor.h"
+#include <graphics/view/lookup.h>
 
-#include "graphics/view/view.h"
-#include "io/config/config.h"
 #include "editor/tool.h"
 #include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/menu.h"
+#include "graphics/view/view.h"
 #include "graphics/window.h"
-#include "input/scroll.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
 #include "grid/image.h"
 #include "grid/point.h"
 #include "grid/property.h"
+#include "input/scroll.h"
+#include "io/config/config.h"
 #include "sound/city.h"
 #include "sound/effect.h"
-#include "widget/map_editor_tool.h"
 #include "widget/city/tile_draw.h"
+#include "widget/map_editor_tool.h"
 
 static struct {
     map_point current_tile;
@@ -56,7 +55,7 @@ static void draw_flags(pixel_coordinate pixel, map_point point) {
     int y = pixel.y;
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
-        figure *f = figure_get(figure_id);
+        figure* f = figure_get(figure_id);
         if (!f->is_ghost)
             f->city_draw_figure(pixel, 0);
 
@@ -67,11 +66,11 @@ static void draw_flags(pixel_coordinate pixel, map_point point) {
     }
 }
 
-//static void set_city_clip_rectangle(void) {
-//    int x, y, width, height;
-//    city_view_get_viewport(&x, &y, &width, &height);
-//    graphics_set_clip_rectangle(x, y, width, height);
-//}
+// static void set_city_clip_rectangle(void) {
+//     int x, y, width, height;
+//     city_view_get_viewport(&x, &y, &width, &height);
+//     graphics_set_clip_rectangle(x, y, width, height);
+// }
 
 static void update_zoom_level(void) {
     pixel_coordinate offset = camera_get_position();
@@ -87,13 +86,13 @@ void widget_map_editor_draw(void) {
     set_city_clip_rectangle();
 
     init_draw_context();
-//    city_view_foreach_map_tile(draw_buildings);
+    //    city_view_foreach_map_tile(draw_buildings);
     city_view_foreach_valid_map_tile(draw_isometrics);
-//    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
+    //    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
     map_editor_tool_draw(data.current_tile);
 }
 
-static void update_city_view_coords(int x, int y, map_point *tile) {
+static void update_city_view_coords(int x, int y, map_point* tile) {
     screen_tile screen = pixel_to_screentile({x, y});
     if (screen.x != -1 && screen.y != -1) {
         tile->set(screentile_to_mappoint(screen).grid_offset());
@@ -102,7 +101,7 @@ static void update_city_view_coords(int x, int y, map_point *tile) {
         tile->set(0);
 }
 
-static void scroll_map(const mouse *m) {
+static void scroll_map(const mouse* m) {
     pixel_coordinate delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
         camera_scroll(delta.x, delta.y);
@@ -120,7 +119,7 @@ static int input_coords_in_map(int x, int y) {
     return (x >= 0 && x < width && y >= 0 && y < height);
 }
 
-static void handle_touch_scroll(const touch *t) {
+static void handle_touch_scroll(const touch* t) {
     if (editor_tool_is_active()) {
         if (t->has_started) {
             int x_offset, y_offset, width, height;
@@ -147,20 +146,18 @@ static void handle_touch_scroll(const touch *t) {
 
     if (t->has_ended)
         scroll_drag_end();
-
 }
 
-static void handle_touch_zoom(const touch *first, const touch *last) {
+static void handle_touch_zoom(const touch* first, const touch* last) {
     if (touch_not_click(first))
         zoom_update_touch(first, last, zoom_get_percentage());
 
     if (first->has_ended || last->has_ended)
         zoom_end_touch();
-
 }
 
 static void handle_last_touch(void) {
-    const touch *last = get_latest_touch();
+    const touch* last = get_latest_touch();
     if (!last->in_use)
         return;
     if (touch_was_click(last)) {
@@ -169,10 +166,9 @@ static void handle_last_touch(void) {
     }
     if (touch_not_click(last))
         handle_touch_zoom(get_earliest_touch(), last);
-
 }
 
-static bool handle_cancel_construction_button(const touch *t) {
+static bool handle_cancel_construction_button(const touch* t) {
     if (!editor_tool_is_active())
         return false;
 
@@ -181,8 +177,8 @@ static bool handle_cancel_construction_button(const touch *t) {
     int box_size = 5 * 16;
     width -= box_size;
 
-    if (t->current_point.x < width || t->current_point.x >= width + box_size ||
-        t->current_point.y < 24 || t->current_point.y >= 40 + box_size) {
+    if (t->current_point.x < width || t->current_point.x >= width + box_size || t->current_point.y < 24
+        || t->current_point.y >= 40 + box_size) {
         return false;
     }
     editor_tool_deactivate();
@@ -190,7 +186,7 @@ static bool handle_cancel_construction_button(const touch *t) {
 }
 
 static void handle_first_touch(map_point tile) {
-    const touch *first = get_earliest_touch();
+    const touch* first = get_earliest_touch();
 
     if (touch_was_click(first)) {
         if (handle_cancel_construction_button(first))
@@ -212,7 +208,6 @@ static void handle_first_touch(map_point tile) {
             if (first->has_started) {
                 if (data.selected_grid_offset != tile.grid_offset())
                     data.new_start_grid_offset = tile.grid_offset();
-
             }
             if (touch_not_click(first) && data.new_start_grid_offset) {
                 data.new_start_grid_offset = 0;
@@ -248,19 +243,18 @@ static void handle_first_touch(map_point tile) {
         return;
     }
 
-    if (touch_was_click(first) && first->has_ended && data.capture_input &&
-        data.selected_grid_offset == tile.grid_offset()) {
+    if (touch_was_click(first) && first->has_ended && data.capture_input
+        && data.selected_grid_offset == tile.grid_offset()) {
         editor_tool_start_use(tile);
         editor_tool_update_use(tile);
         editor_tool_end_use(tile);
         widget_map_editor_clear_current_tile();
     } else if (first->has_ended)
         data.selected_grid_offset = tile.grid_offset();
-
 }
 
 static void handle_touch(void) {
-    const touch *first = get_earliest_touch();
+    const touch* first = get_earliest_touch();
     if (!first->in_use) {
         scroll_restore_margins();
         return;
@@ -280,10 +274,9 @@ static void handle_touch(void) {
 
     if (first->has_ended)
         data.capture_input = false;
-
 }
 
-void widget_map_editor_handle_input(const mouse *m, const hotkeys *h) {
+void widget_map_editor_handle_input(const mouse* m, const hotkeys* h) {
     scroll_map(m);
 
     if (m->is_touch) {

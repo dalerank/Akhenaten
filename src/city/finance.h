@@ -47,7 +47,7 @@ typedef struct {
         int interest;
         int salary;
         int stolen;
-//        int sundries;
+        //        int sundries;
         int tribute;
         int requests_and_festivals;
         int total;
@@ -56,7 +56,7 @@ typedef struct {
     int balance;
 } finance_overview;
 
-const finance_overview *city_finance_overview_last_year(void);
-const finance_overview *city_finance_overview_this_year(void);
+const finance_overview* city_finance_overview_last_year(void);
+const finance_overview* city_finance_overview_this_year(void);
 
 #endif // CITY_FINANCE_H

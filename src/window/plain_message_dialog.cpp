@@ -1,10 +1,10 @@
 #include "plain_message_dialog.h"
 
-#include "graphics/image_groups.h"
 #include "core/string.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/panel.h"
+#include "graphics/image_groups.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -12,12 +12,12 @@
 static void button_ok(int param1, int param2);
 
 static image_button buttons[] = {
-        {223, 140, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_ok, button_none, 1, 0, 1},
+  {223, 140, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_ok, button_none, 1, 0, 1},
 };
 
 static struct {
-    const uint8_t *title;
-    const uint8_t *message;
+    const uint8_t* title;
+    const uint8_t* message;
 } data;
 
 static int init(int title, int message) {
@@ -48,12 +48,11 @@ static void close(void) {
     window_go_back();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     if (image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 1, 0))
         return;
     if (input_go_back_requested(m, h) || h->enter_pressed)
         close();
-
 }
 
 static void button_ok(int param1, int param2) {
@@ -62,12 +61,7 @@ static void button_ok(int param1, int param2) {
 
 void window_plain_message_dialog_show(int title, int message) {
     if (init(title, message)) {
-        window_type window = {
-                WINDOW_PLAIN_MESSAGE_DIALOG,
-                draw_background,
-                draw_foreground,
-                handle_input
-        };
+        window_type window = {WINDOW_PLAIN_MESSAGE_DIALOG, draw_background, draw_foreground, handle_input};
         window_show(&window);
     }
 }

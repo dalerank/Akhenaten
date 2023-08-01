@@ -1,22 +1,22 @@
 #include "translation.h"
 
 #include "core/encoding.h"
-#include "io/log.h"
 #include "core/string.h"
+#include "io/log.h"
 
 #include <string.h>
 
 #define BUFFER_SIZE 100000
 
 static struct {
-    uint8_t *strings[TRANSLATION_MAX_KEY];
+    uint8_t* strings[TRANSLATION_MAX_KEY];
     uint8_t buffer[BUFFER_SIZE];
     int buf_index;
 } data;
 
-static void set_strings(const translation_string *strings, int num_strings, int is_default) {
+static void set_strings(const translation_string* strings, int num_strings, int is_default) {
     for (int i = 0; i < num_strings; i++) {
-        const translation_string *string = &strings[i];
+        const translation_string* string = &strings[i];
         if (data.strings[string->key])
             continue;
 
@@ -31,46 +31,46 @@ static void set_strings(const translation_string *strings, int num_strings, int 
 }
 
 void translation_load(int language) {
-    const translation_string *strings = NULL;
+    const translation_string* strings = NULL;
     int num_strings = 0;
-    const translation_string *default_strings = NULL;
+    const translation_string* default_strings = NULL;
     int num_default_strings = 0;
     translation_english(&default_strings, &num_default_strings);
 
     switch (language) {
-        case LANGUAGE_ENGLISH:
-            translation_english(&strings, &num_strings);
-            break;
-        case LANGUAGE_FRENCH:
-            translation_french(&strings, &num_strings);
-            break;
-        case LANGUAGE_GERMAN:
-            translation_german(&strings, &num_strings);
-            break;
-        case LANGUAGE_ITALIAN:
-            translation_italian(&strings, &num_strings);
-            break;
-        case LANGUAGE_KOREAN:
-            translation_korean(&strings, &num_strings);
-            break;
-        case LANGUAGE_POLISH:
-            translation_polish(&strings, &num_strings);
-            break;
-        case LANGUAGE_PORTUGUESE:
-            translation_portuguese(&strings, &num_strings);
-            break;
-        case LANGUAGE_RUSSIAN:
-            translation_russian(&strings, &num_strings);
-            break;
-        case LANGUAGE_SPANISH:
-            translation_spanish(&strings, &num_strings);
-            break;
-        case LANGUAGE_SIMPLIFIED_CHINESE:
-            translation_simplified_chinese(&strings, &num_strings);
-            break;
-        case LANGUAGE_TRADITIONAL_CHINESE:
-            translation_traditional_chinese(&strings, &num_strings);
-            break;
+    case LANGUAGE_ENGLISH:
+        translation_english(&strings, &num_strings);
+        break;
+    case LANGUAGE_FRENCH:
+        translation_french(&strings, &num_strings);
+        break;
+    case LANGUAGE_GERMAN:
+        translation_german(&strings, &num_strings);
+        break;
+    case LANGUAGE_ITALIAN:
+        translation_italian(&strings, &num_strings);
+        break;
+    case LANGUAGE_KOREAN:
+        translation_korean(&strings, &num_strings);
+        break;
+    case LANGUAGE_POLISH:
+        translation_polish(&strings, &num_strings);
+        break;
+    case LANGUAGE_PORTUGUESE:
+        translation_portuguese(&strings, &num_strings);
+        break;
+    case LANGUAGE_RUSSIAN:
+        translation_russian(&strings, &num_strings);
+        break;
+    case LANGUAGE_SPANISH:
+        translation_spanish(&strings, &num_strings);
+        break;
+    case LANGUAGE_SIMPLIFIED_CHINESE:
+        translation_simplified_chinese(&strings, &num_strings);
+        break;
+    case LANGUAGE_TRADITIONAL_CHINESE:
+        translation_traditional_chinese(&strings, &num_strings);
+        break;
     }
 
     memset(data.strings, 0, sizeof(data.strings));
@@ -79,6 +79,6 @@ void translation_load(int language) {
     set_strings(default_strings, num_default_strings, 1);
 }
 
-const uint8_t *translation_for(int key) {
+const uint8_t* translation_for(int key) {
     return data.strings[key];
 }

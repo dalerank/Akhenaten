@@ -1,7 +1,7 @@
 #include "ring.h"
 
-#include <scenario/map.h>
 #include "grid/grid.h"
+#include <scenario/map.h>
 
 static struct {
     ring_tile tiles[1080];
@@ -55,10 +55,9 @@ int map_ring_end(int size, int distance) {
 }
 
 int map_ring_is_inside_map(int x, int y) {
-    return x >= -1 && x <= scenario_map_data()->width &&
-           y >= -1 && y <= scenario_map_data()->height;
+    return x >= -1 && x <= scenario_map_data()->width && y >= -1 && y <= scenario_map_data()->height;
 }
 
-const ring_tile *map_ring_tile(int index) {
+const ring_tile* map_ring_tile(int index) {
     return &data.tiles[index];
 }

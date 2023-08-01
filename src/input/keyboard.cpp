@@ -13,7 +13,7 @@ static struct {
     int capture_numeric;
     void (*capture_numeric_callback)(int);
 
-    uint8_t *text;
+    uint8_t* text;
     int cursor_position;
     int length;
     int max_length;
@@ -27,7 +27,7 @@ static struct {
     font_t font;
 } data;
 
-static int get_char_bytes(const uint8_t *str) {
+static int get_char_bytes(const uint8_t* str) {
     return str[0] >= 0x80 && encoding_is_multibyte() ? 2 : 1;
 }
 
@@ -55,9 +55,7 @@ static void include_cursor_in_viewport(void) {
     if (data.cursor_position <= data.viewport_cursor_position) {
         // move toward start
         int maxlen = text_get_max_length_for_width(
-                data.text + data.cursor_position,
-                data.length - data.cursor_position,
-                data.font, data.box_width, 0);
+          data.text + data.cursor_position, data.length - data.cursor_position, data.font, data.box_width, 0);
         if (data.cursor_position + maxlen < data.length) {
             data.viewport_start = data.cursor_position;
             data.viewport_end = data.cursor_position + maxlen;
@@ -68,8 +66,7 @@ static void include_cursor_in_viewport(void) {
     } else {
         // move toward end
         int viewport_length = data.cursor_position + get_current_char_bytes();
-        int maxlen = text_get_max_length_for_width(
-                data.text, viewport_length, data.font, data.box_width, 1);
+        int maxlen = text_get_max_length_for_width(data.text, viewport_length, data.font, data.box_width, 1);
         if (maxlen < viewport_length) {
             data.viewport_start = viewport_length - maxlen;
             data.viewport_end = viewport_length;
@@ -81,8 +78,7 @@ static void include_cursor_in_viewport(void) {
 }
 
 static void update_viewport(int has_changed) {
-    int is_within_viewport = data.cursor_position >= data.viewport_start &&
-                             data.cursor_position < data.viewport_end;
+    int is_within_viewport = data.cursor_position >= data.viewport_start && data.cursor_position < data.viewport_end;
     if (!has_changed && is_within_viewport) {
         // no update necessary
     } else if (data.cursor_position == 0)
@@ -94,7 +90,7 @@ static void update_viewport(int has_changed) {
     data.viewport_cursor_position = data.cursor_position;
 }
 
-void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation, int box_width, font_t font) {
+void keyboard_start_capture(uint8_t* text, int max_length, int allow_punctuation, int box_width, font_t font) {
     data.capture = 1;
     data.text = text;
     data.length = string_length(text);
@@ -171,7 +167,7 @@ void keyboard_return(void) {
     data.accepted = 1;
 }
 
-static void move_left(uint8_t *start, const uint8_t *end) {
+static void move_left(uint8_t* start, const uint8_t* end) {
     while (start < end) {
         start[0] = start[1];
         start++;
@@ -179,7 +175,7 @@ static void move_left(uint8_t *start, const uint8_t *end) {
     *start = 0;
 }
 
-static void move_right(const uint8_t *start, uint8_t *end) {
+static void move_right(const uint8_t* start, uint8_t* end) {
     end[1] = 0;
     while (end > start) {
         end--;
@@ -205,7 +201,7 @@ static void move_cursor_right(void) {
     data.cursor_position += get_current_char_bytes();
 }
 
-static void insert_char(const uint8_t *value, int bytes) {
+static void insert_char(const uint8_t* value, int bytes) {
     if (data.length + bytes == data.max_length)
         return;
     for (int i = 0; i < bytes; i++) {
@@ -224,7 +220,7 @@ static void remove_current_char(void) {
     data.length -= bytes;
 }
 
-static void add_char(const uint8_t *value, int bytes) {
+static void add_char(const uint8_t* value, int bytes) {
     if (data.insert)
         insert_char(value, bytes);
     else {
@@ -286,7 +282,7 @@ void keyboard_end(void) {
     }
 }
 
-static int keyboard_character(uint8_t *text) {
+static int keyboard_character(uint8_t* text) {
     uint8_t c = text[0];
 
     int add = 0;
@@ -312,7 +308,7 @@ static int keyboard_character(uint8_t *text) {
     return bytes;
 }
 
-void keyboard_text(const char *text_utf8) {
+void keyboard_text(const char* text_utf8) {
     if (data.capture_numeric) {
         char c = text_utf8[0];
         if (c >= '0' && c <= '9')

@@ -3,34 +3,34 @@
 #include "building/type.h"
 
 #include "graphics/color.h"
-#include "grid/point.h"
 #include "graphics/view/view.h"
+#include "grid/point.h"
 
 enum PlannerFlags {
-    Groundwater =           1,
-    Water =                 1 << 1,
-    NearbyWater =           1 << 2,
-    ShoreLine =             1 << 3,
-    RiverAccess =           1 << 4,
-    FloodplainShore =       1 << 5,
+    Groundwater = 1,
+    Water = 1 << 1,
+    NearbyWater = 1 << 2,
+    ShoreLine = 1 << 3,
+    RiverAccess = 1 << 4,
+    FloodplainShore = 1 << 5,
     //
-    Meadow =                1 << 6,
-    Trees =                 1 << 7,
-    Rock =                  1 << 8,
-    Ore =                   1 << 9,
-    Road =                  1 << 10,
-    Intersection =          1 << 11,
-    FancyRoad =             1 << 12,
-    Walls =                 1 << 13,
-    Canals =                1 << 14,
+    Meadow = 1 << 6,
+    Trees = 1 << 7,
+    Rock = 1 << 8,
+    Ore = 1 << 9,
+    Road = 1 << 10,
+    Intersection = 1 << 11,
+    FancyRoad = 1 << 12,
+    Walls = 1 << 13,
+    Canals = 1 << 14,
     //
-    TempleUpgrade =         1 << 16,
-    Resources =             1 << 17,
-    IgnoreNearbyEnemy =     1 << 18,
+    TempleUpgrade = 1 << 16,
+    Resources = 1 << 17,
+    IgnoreNearbyEnemy = 1 << 18,
     //
-    Draggable =             1 << 21,
-    Ferry =                 1 << 22,
-    Bridge =                1 << 23,
+    Draggable = 1 << 21,
+    Ferry = 1 << 22,
+    Bridge = 1 << 23,
 };
 
 enum e_place_action {
@@ -62,9 +62,9 @@ private:
     int start_offset_screen_y;
 
     void init_tiles(int size_x, int size_y);
-    void set_graphics_row(int row, int *image_ids, int total);
+    void set_graphics_row(int row, int* image_ids, int total);
     void set_tiles_building(int image_id, int size_xx);
-    void set_graphics_array(int *image_set, int size_x, int size_y);
+    void set_graphics_array(int* image_set, int size_x, int size_y);
 
     void setup_build_flags();
     void setup_build_graphics(); // fills in data automatically
@@ -124,7 +124,7 @@ public:
     void update_orientations(bool check_if_changed = true);
     void construction_record_view_position(pixel_coordinate pixel, map_point point);
 
-    int get_total_drag_size(int *x, int *y);
+    int get_total_drag_size(int* x, int* y);
     bool has_flag_set(int flag, int param1 = -1, int param2 = -1, int param3 = -1);
 
     void update(map_point cursor_tile);

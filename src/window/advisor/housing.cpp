@@ -3,11 +3,10 @@
 #include "city/migration.h"
 #include "city/population.h"
 #include "city/resource.h"
-#include "game/time.h"
 #include "game/resource.h"
+#include "game/time.h"
+#include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
@@ -20,20 +19,20 @@
 
 static void go_back(int param1, int param2);
 
-static generic_button back_button[] = {
-        {545, 260, 60, 51, go_back, button_none, 0, 1}
-};
+static generic_button back_button[] = {{545, 260, 60, 51, go_back, button_none, 0, 1}};
 
 static int focus_button_id;
 
 static void draw_housing_table() {
-    int *housing_type_counts;
-    int *houses_demanding_goods;
+    int* housing_type_counts;
+    int* houses_demanding_goods;
     int width;
     int y_offset = 68;
     int rows = 0;
-    int goods_demand_strings[4] = {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY, TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE,
-                                   TR_ADVISOR_RESIDENCES_DEMANDING_OIL, TR_ADVISOR_RESIDENCES_DEMANDING_WINE};
+    int goods_demand_strings[4] = {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY,
+                                   TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE,
+                                   TR_ADVISOR_RESIDENCES_DEMANDING_OIL,
+                                   TR_ADVISOR_RESIDENCES_DEMANDING_WINE};
     int goods_icons[4] = {RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS, RESOURCE_MEAT, RESOURCE_BEER};
 
     housing_type_counts = calculate_number_of_each_housing_type();
@@ -60,19 +59,22 @@ static void draw_housing_table() {
     text_draw(translation_for(TR_ADVISOR_TOTAL_NUM_HOUSES), 270, y_offset + 180, FONT_NORMAL_BLACK_ON_DARK, 0);
     text_draw_number(calculate_total_housing_buildings(), '@', " ", 450, y_offset + 180, FONT_NORMAL_WHITE_ON_DARK);
 
-    text_draw(translation_for(TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY), 270, y_offset + 200, FONT_NORMAL_BLACK_ON_DARK, 0);
+    text_draw(
+      translation_for(TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY), 270, y_offset + 200, FONT_NORMAL_BLACK_ON_DARK, 0);
     text_draw_number(city_population_open_housing_capacity(), '@', " ", 450, y_offset + 200, FONT_NORMAL_WHITE_ON_DARK);
 
     text_draw(translation_for(TR_ADVISOR_TOTAL_HOUSING_CAPACITY), 270, y_offset + 220, FONT_NORMAL_BLACK_ON_DARK, 0);
-    text_draw_number(city_population_total_housing_capacity(), '@', " ", 450, y_offset + 220, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_number(
+      city_population_total_housing_capacity(), '@', " ", 450, y_offset + 220, FONT_NORMAL_WHITE_ON_DARK);
 
     for (int i = 0; i <= 3; i++) {
-        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + goods_icons[i], 54,
-                               y_offset + 260 + (23 * i));
-        text_draw(translation_for(goods_demand_strings[i]), 90, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT, 0);
-        text_draw_number(houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT);
+        ImageDraw::img_generic(
+          image_id_from_group(GROUP_RESOURCE_ICONS) + goods_icons[i], 54, y_offset + 260 + (23 * i));
+        text_draw(
+          translation_for(goods_demand_strings[i]), 90, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        text_draw_number(
+          houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT);
     }
-
 }
 
 static int draw_background(void) {
@@ -105,10 +107,9 @@ static void draw_foreground(void) {
         button_border_draw(545, 260, 60, 51, 0);
     else if (focus_button_id == 1)
         button_border_draw(545, 260, 60, 51, 1);
-
 }
 
-static int handle_mouse(const mouse *m) {
+static int handle_mouse(const mouse* m) {
     return generic_buttons_handle_mouse(m, 0, 0, back_button, 1, &focus_button_id);
 }
 
@@ -121,12 +122,7 @@ static int get_tooltip_text(void) {
     return 0;
 }
 
-const advisor_window_type *window_advisor_housing(void) {
-    static const advisor_window_type window = {
-            draw_background,
-            draw_foreground,
-            handle_mouse,
-            get_tooltip_text
-    };
+const advisor_window_type* window_advisor_housing(void) {
+    static const advisor_window_type window = {draw_background, draw_foreground, handle_mouse, get_tooltip_text};
     return &window;
 }

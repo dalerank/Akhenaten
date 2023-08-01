@@ -3,7 +3,6 @@
 #include "city/figures.h"
 #include "city/map.h"
 #include "core/calc.h"
-#include "graphics/image.h"
 #include "figure/combat.h"
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
@@ -12,198 +11,46 @@
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "figuretype/missile.h"
+#include "graphics/image.h"
+#include "graphics/image_groups.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
 #include "grid/point.h"
-#include "graphics/image_groups.h"
 
-static const coords_t ALTERNATIVE_POINTS[] = {{-1, -6},
-                                              {0,  -1},
-                                              {1,  -1},
-                                              {1,  0},
-                                              {1,  1},
-                                              {0,  1},
-                                              {-1, 1},
-                                              {-1, 0},
-                                              {-1, -1},
-                                              {0,  -2},
-                                              {1,  -2},
-                                              {2,  -2},
-                                              {2,  -1},
-                                              {2,  0},
-                                              {2,  1},
-                                              {2,  2},
-                                              {1,  2},
-                                              {0,  2},
-                                              {-1, 2},
-                                              {-2, 2},
-                                              {-2, 1},
-                                              {-2, 0},
-                                              {-2, -1},
-                                              {-2, -2},
-                                              {-1, -2},
-                                              {0,  -3},
-                                              {1,  -3},
-                                              {2,  -3},
-                                              {3,  -3},
-                                              {3,  -2},
-                                              {3,  -1},
-                                              {3,  0},
-                                              {3,  1},
-                                              {3,  2},
-                                              {3,  3},
-                                              {2,  3},
-                                              {1,  3},
-                                              {0,  3},
-                                              {-1, 3},
-                                              {-2, 3},
-                                              {-3, 3},
-                                              {-3, 2},
-                                              {-3, 1},
-                                              {-3, 0},
-                                              {-3, -1},
-                                              {-3, -2},
-                                              {-3, -3},
-                                              {-2, -3},
-                                              {-1, -3},
-                                              {0,  -4},
-                                              {1,  -4},
-                                              {2,  -4},
-                                              {3,  -4},
-                                              {4,  -4},
-                                              {4,  -3},
-                                              {4,  -2},
-                                              {4,  -1},
-                                              {4,  0},
-                                              {4,  1},
-                                              {4,  2},
-                                              {4,  3},
-                                              {4,  4},
-                                              {3,  4},
-                                              {2,  4},
-                                              {1,  4},
-                                              {0,  4},
-                                              {-1, 4},
-                                              {-2, 4},
-                                              {-3, 4},
-                                              {-4, 4},
-                                              {-4, 3},
-                                              {-4, 2},
-                                              {-4, 1},
-                                              {-4, 0},
-                                              {-4, -1},
-                                              {-4, -2},
-                                              {-4, -3},
-                                              {-4, -4},
-                                              {-3, -4},
-                                              {-2, -4},
-                                              {-1, -4},
-                                              {0,  -5},
-                                              {1,  -5},
-                                              {2,  -5},
-                                              {3,  -5},
-                                              {4,  -5},
-                                              {5,  -5},
-                                              {5,  -4},
-                                              {5,  -3},
-                                              {5,  -2},
-                                              {5,  -1},
-                                              {5,  0},
-                                              {5,  1},
-                                              {5,  2},
-                                              {5,  3},
-                                              {5,  4},
-                                              {5,  5},
-                                              {4,  5},
-                                              {3,  5},
-                                              {2,  5},
-                                              {1,  5},
-                                              {0,  5},
-                                              {-1, 5},
-                                              {-2, 5},
-                                              {-3, 5},
-                                              {-4, 5},
-                                              {-5, 5},
-                                              {-5, 4},
-                                              {-5, 3},
-                                              {-5, 2},
-                                              {-5, 1},
-                                              {-5, 0},
-                                              {-5, -1},
-                                              {-5, -2},
-                                              {-5, -3},
-                                              {-5, -4},
-                                              {-5, -5},
-                                              {-4, -5},
-                                              {-3, -5},
-                                              {-2, -5},
-                                              {-1, -5},
-                                              {0,  -6},
-                                              {1,  -6},
-                                              {2,  -6},
-                                              {3,  -6},
-                                              {4,  -6},
-                                              {5,  -6},
-                                              {6,  -6},
-                                              {6,  -5},
-                                              {6,  -4},
-                                              {6,  -3},
-                                              {6,  -2},
-                                              {6,  -1},
-                                              {6,  0},
-                                              {6,  1},
-                                              {6,  2},
-                                              {6,  3},
-                                              {6,  4},
-                                              {6,  5},
-                                              {6,  6},
-                                              {5,  6},
-                                              {4,  6},
-                                              {3,  6},
-                                              {2,  6},
-                                              {1,  6},
-                                              {0,  6},
-                                              {-1, 6},
-                                              {-2, 6},
-                                              {-3, 6},
-                                              {-4, 6},
-                                              {-5, 6},
-                                              {-6, 6},
-                                              {-6, 5},
-                                              {-6, 4},
-                                              {-6, 3},
-                                              {-6, 2},
-                                              {-6, 1},
-                                              {-6, 0},
-                                              {-6, -1},
-                                              {-6, -2},
-                                              {-6, -3},
-                                              {-6, -4},
-                                              {-6, -5},
-                                              {-6, -6},
-                                              {-5, -6},
-                                              {-4, -6},
-                                              {-3, -6},
-                                              {-2, -6},
-                                              {-1, -6},
+static const coords_t ALTERNATIVE_POINTS[] = {
+  {-1, -6}, {0, -1}, {1, -1},  {1, 0},   {1, 1},   {0, 1},   {-1, 1},  {-1, 0},  {-1, -1}, {0, -2},  {1, -2},  {2, -2},
+  {2, -1},  {2, 0},  {2, 1},   {2, 2},   {1, 2},   {0, 2},   {-1, 2},  {-2, 2},  {-2, 1},  {-2, 0},  {-2, -1}, {-2, -2},
+  {-1, -2}, {0, -3}, {1, -3},  {2, -3},  {3, -3},  {3, -2},  {3, -1},  {3, 0},   {3, 1},   {3, 2},   {3, 3},   {2, 3},
+  {1, 3},   {0, 3},  {-1, 3},  {-2, 3},  {-3, 3},  {-3, 2},  {-3, 1},  {-3, 0},  {-3, -1}, {-3, -2}, {-3, -3}, {-2, -3},
+  {-1, -3}, {0, -4}, {1, -4},  {2, -4},  {3, -4},  {4, -4},  {4, -3},  {4, -2},  {4, -1},  {4, 0},   {4, 1},   {4, 2},
+  {4, 3},   {4, 4},  {3, 4},   {2, 4},   {1, 4},   {0, 4},   {-1, 4},  {-2, 4},  {-3, 4},  {-4, 4},  {-4, 3},  {-4, 2},
+  {-4, 1},  {-4, 0}, {-4, -1}, {-4, -2}, {-4, -3}, {-4, -4}, {-3, -4}, {-2, -4}, {-1, -4}, {0, -5},  {1, -5},  {2, -5},
+  {3, -5},  {4, -5}, {5, -5},  {5, -4},  {5, -3},  {5, -2},  {5, -1},  {5, 0},   {5, 1},   {5, 2},   {5, 3},   {5, 4},
+  {5, 5},   {4, 5},  {3, 5},   {2, 5},   {1, 5},   {0, 5},   {-1, 5},  {-2, 5},  {-3, 5},  {-4, 5},  {-5, 5},  {-5, 4},
+  {-5, 3},  {-5, 2}, {-5, 1},  {-5, 0},  {-5, -1}, {-5, -2}, {-5, -3}, {-5, -4}, {-5, -5}, {-4, -5}, {-3, -5}, {-2, -5},
+  {-1, -5}, {0, -6}, {1, -6},  {2, -6},  {3, -6},  {4, -6},  {5, -6},  {6, -6},  {6, -5},  {6, -4},  {6, -3},  {6, -2},
+  {6, -1},  {6, 0},  {6, 1},   {6, 2},   {6, 3},   {6, 4},   {6, 5},   {6, 6},   {5, 6},   {4, 6},   {3, 6},   {2, 6},
+  {1, 6},   {0, 6},  {-1, 6},  {-2, 6},  {-3, 6},  {-4, 6},  {-5, 6},  {-6, 6},  {-6, 5},  {-6, 4},  {-6, 3},  {-6, 2},
+  {-6, 1},  {-6, 0}, {-6, -1}, {-6, -2}, {-6, -3}, {-6, -4}, {-6, -5}, {-6, -6}, {-5, -6}, {-4, -6}, {-3, -6}, {-2, -6},
+  {-1, -6},
 };
 
 void figure::military_standard_action() {
-    const formation *m = formation_get(formation_id);
+    const formation* m = formation_get(formation_id);
 
-//    terrain_usage = TERRAIN_USAGE_ANY;
-//    figure_image_increase_offset(16);
+    //    terrain_usage = TERRAIN_USAGE_ANY;
+    //    figure_image_increase_offset(16);
     map_figure_remove();
     if (m->is_at_fort) {
         tile.set(m->x, m->y);
-//        tile.x() = m->x;
-//        tile.y() = m->y;
+        //        tile.x() = m->x;
+        //        tile.y() = m->y;
     } else {
         tile.set(m->standard_x, m->standard_y);
-//        tile.x() = m->standard_x;
-//        tile.y() = m->standard_y;
+        //        tile.x() = m->standard_x;
+        //        tile.y() = m->standard_y;
     }
-//    tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
+    //    tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
     cc_coords.x = 15 * tile.x() + 7;
     cc_coords.y = 15 * tile.y() + 7;
     map_figure_add();
@@ -246,7 +93,7 @@ void figure::javelin_launch_missile() {
             if (tile.x() == -1 || tile.y() == -1)
                 map_point_get_last_result(&tile);
 
-//            figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_JAVELIN);
+            //            figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_JAVELIN);
             missile_fire_at(target_figure_id, FIGURE_JAVELIN);
             formation_record_missile_fired(formation_get(formation_id));
         }
@@ -268,10 +115,10 @@ int figure::find_mop_up_target() {
     if (target_id <= 0) {
         target_id = figure_combat_get_target_for_soldier(tile.x(), tile.y(), 20);
         if (target_id) {
-            figure *target = figure_get(target_id);
+            figure* target = figure_get(target_id);
             destination_tile = target->tile;
-//            destination_tile.x() = target->tile.x();
-//            destination_tile.y() = target->tile.y();
+            //            destination_tile.x() = target->tile.x();
+            //            destination_tile.y() = target->tile.y();
             target_figure_id = target_id;
             target->targeted_by_figure_id = id;
             target_figure_created_sequence = target->created_sequence;
@@ -314,7 +161,7 @@ void figure::update_image_mounted(int dir) {
         image_id = image_id + dir + 8 * anim_frame;
     }
 }
-void figure::update_image_legionary(const formation *m, int dir) {
+void figure::update_image_legionary(const formation* m, int dir) {
     int image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY);
     if (action_state == FIGURE_ACTION_150_ATTACK) {
         if (attack_image_offset < 12)
@@ -334,7 +181,7 @@ void figure::update_image_legionary(const formation *m, int dir) {
         image_id = image_id + dir + 8 * anim_frame;
     }
 }
-void figure::soldier_update_image(const formation *m) {
+void figure::soldier_update_image(const formation* m) {
     int dir;
     if (action_state == FIGURE_ACTION_150_ATTACK)
         dir = attack_direction;
@@ -353,15 +200,14 @@ void figure::soldier_update_image(const formation *m) {
         update_image_mounted(dir);
     else if (type == FIGURE_FORT_LEGIONARY)
         update_image_legionary(m, dir);
-
 }
 
 void figure::soldier_action() {
-    formation *m = formation_get(formation_id);
+    formation* m = formation_get(formation_id);
     city_figures_add_soldier();
-//    terrain_usage = TERRAIN_USAGE_ANY;
-//    figure_image_increase_offset(12);
-//    cart_image_id = 0;
+    //    terrain_usage = TERRAIN_USAGE_ANY;
+    //    figure_image_increase_offset(12);
+    //    cart_image_id = 0;
     if (m->in_use != 1)
         kill();
 
@@ -381,165 +227,165 @@ void figure::soldier_action() {
     formation_position_y.soldier = m->y + formation_layout_position_y(layout, index_in_formation);
 
     switch (action_state) {
-        case FIGURE_ACTION_80_SOLDIER_AT_REST:
-            map_figure_update();
-            wait_ticks = 0;
-            formation_at_rest = 1;
-            anim_frame = 0;
-            if (tile.x() != formation_position_x.soldier || tile.y() != formation_position_y.soldier)
-                action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
+    case FIGURE_ACTION_80_SOLDIER_AT_REST:
+        map_figure_update();
+        wait_ticks = 0;
+        formation_at_rest = 1;
+        anim_frame = 0;
+        if (tile.x() != formation_position_x.soldier || tile.y() != formation_position_y.soldier)
+            action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
 
-            break;
-        case FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT:
-        case FIGURE_ACTION_148_FLEEING:
-            wait_ticks = 0;
-            formation_at_rest = 1;
-            destination_tile.set(formation_position_x.soldier, formation_position_y.soldier);
-//            destination_tile.x() = formation_position_x.soldier;
-//            destination_tile.y() = formation_position_y.soldier;
-//            destination_tile.grid_offset() = MAP_OFFSET(destination_tile.x(), destination_tile.y());
-            move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_NONE)
-                action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
-            else if (direction == DIR_FIGURE_REROUTE)
-                route_remove();
-            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
-                poof();
+        break;
+    case FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT:
+    case FIGURE_ACTION_148_FLEEING:
+        wait_ticks = 0;
+        formation_at_rest = 1;
+        destination_tile.set(formation_position_x.soldier, formation_position_y.soldier);
+        //            destination_tile.x() = formation_position_x.soldier;
+        //            destination_tile.y() = formation_position_y.soldier;
+        //            destination_tile.grid_offset() = MAP_OFFSET(destination_tile.x(), destination_tile.y());
+        move_ticks(speed_factor);
+        if (direction == DIR_FIGURE_NONE)
+            action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
+        else if (direction == DIR_FIGURE_REROUTE)
+            route_remove();
+        else if (direction == DIR_FIGURE_CAN_NOT_REACH)
+            poof();
 
-            break;
-        case FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS:
-            formation_at_rest = 1;
-            destination_tile = source_tile;
-//            destination_tile.x() = source_tile.x();
-//            destination_tile.y() = source_tile.y();
-            move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_CAN_NOT_REACH)
-                poof();
-            else if (direction == DIR_FIGURE_REROUTE)
-                route_remove();
+        break;
+    case FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS:
+        formation_at_rest = 1;
+        destination_tile = source_tile;
+        //            destination_tile.x() = source_tile.x();
+        //            destination_tile.y() = source_tile.y();
+        move_ticks(speed_factor);
+        if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_CAN_NOT_REACH)
+            poof();
+        else if (direction == DIR_FIGURE_REROUTE)
+            route_remove();
 
-            break;
-        case FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD:
-            formation_at_rest = 0;
-            destination_tile.set(m->standard_x + formation_layout_position_x(m->layout, index_in_formation),
-                                 m->standard_y + formation_layout_position_y(m->layout, index_in_formation));
-//            destination_tile.x() = m->standard_x + formation_layout_position_x(m->layout, index_in_formation);
-//            destination_tile.y() = m->standard_y + formation_layout_position_y(m->layout, index_in_formation);
-            if (alternative_location_index) {
-                destination_tile.set(ALTERNATIVE_POINTS[alternative_location_index].x,
-                                     ALTERNATIVE_POINTS[alternative_location_index].y);
-//                destination_tile.x() += ALTERNATIVE_POINTS[alternative_location_index].x;
-//                destination_tile.y() += ALTERNATIVE_POINTS[alternative_location_index].y;
-            }
-//            destination_tile.grid_offset() = MAP_OFFSET(destination_tile.x(), destination_tile.y());
-            move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_NONE) {
-                action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
-                anim_frame = 0;
-            } else if (direction == DIR_FIGURE_REROUTE)
-                route_remove();
-            else if (direction == DIR_FIGURE_CAN_NOT_REACH) {
-                alternative_location_index++;
-                if (alternative_location_index > 168)
-                    poof();
-
-                anim_frame = 0;
-            }
-            break;
-        case FIGURE_ACTION_84_SOLDIER_AT_STANDARD:
-            formation_at_rest = 0;
-            anim_frame = 0;
-            map_figure_update();
-            destination_tile.set(m->standard_x + formation_layout_position_x(m->layout, index_in_formation),
-                                 m->standard_y + formation_layout_position_y(m->layout, index_in_formation));
-//            destination_tile.x() = m->standard_x + formation_layout_position_x(m->layout, index_in_formation);
-//            destination_tile.y() = m->standard_y + formation_layout_position_y(m->layout, index_in_formation);
-            if (alternative_location_index) {
-                destination_tile.set(ALTERNATIVE_POINTS[alternative_location_index].x,
-                                     ALTERNATIVE_POINTS[alternative_location_index].y);
-//                destination_tile.x() += ALTERNATIVE_POINTS[alternative_location_index].x;
-//                destination_tile.y() += ALTERNATIVE_POINTS[alternative_location_index].y;
-            }
-            if (tile.x() != destination_tile.x() || tile.y() != destination_tile.y()) {
-                if (m->missile_fired <= 0 && m->recent_fight <= 0 && m->missile_attack_timeout <= 0) {
-                    action_state = FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD;
-                    alternative_location_index = 0;
-                }
-            }
-            if (action_state != FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD) {
-                if (type == FIGURE_FORT_JAVELIN)
-                    javelin_launch_missile();
-                else if (type == FIGURE_FORT_LEGIONARY)
-                    legionary_attack_adjacent_enemy();
-            }
-            break;
-        case FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY:
-            m->has_military_training = 1;
-            formation_at_rest = 1;
-            move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_NONE)
-                action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
-            else if (direction == DIR_FIGURE_REROUTE)
-                route_remove();
-            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
-                poof();
-
-            break;
-        case FIGURE_ACTION_86_SOLDIER_MOPPING_UP:
-            formation_at_rest = 0;
-            if (find_mop_up_target()) {
-                move_ticks(speed_factor);
-                if (direction == DIR_FIGURE_NONE) {
-                    figure *target = figure_get(target_figure_id);
-                    destination_tile = target->tile;
-//                    destination_tile.x() = target->tile.x();
-//                    destination_tile.y() = target->tile.y();
-                    route_remove();
-                } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
-                    action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
-                    target_figure_id = 0;
-                    anim_frame = 0;
-                }
-            }
-            break;
-        case FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE: {
-            map_point &exit = city_map_exit_point();
-            formation_at_rest = 0;
-            destination_tile = exit;
-//            destination_tile.x() = exit->x();
-//            destination_tile.y() = exit->y();
-            move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_NONE) {
-                action_state = FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
-                route_remove();
-            } else if (direction == DIR_FIGURE_REROUTE)
-                route_remove();
-            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
-                poof();
-
-            break;
+        break;
+    case FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD:
+        formation_at_rest = 0;
+        destination_tile.set(m->standard_x + formation_layout_position_x(m->layout, index_in_formation),
+                             m->standard_y + formation_layout_position_y(m->layout, index_in_formation));
+        //            destination_tile.x() = m->standard_x + formation_layout_position_x(m->layout, index_in_formation);
+        //            destination_tile.y() = m->standard_y + formation_layout_position_y(m->layout, index_in_formation);
+        if (alternative_location_index) {
+            destination_tile.set(ALTERNATIVE_POINTS[alternative_location_index].x,
+                                 ALTERNATIVE_POINTS[alternative_location_index].y);
+            //                destination_tile.x() += ALTERNATIVE_POINTS[alternative_location_index].x;
+            //                destination_tile.y() += ALTERNATIVE_POINTS[alternative_location_index].y;
         }
-        case FIGURE_ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE:
-//            is_ghost = false;
-            wait_ticks = 0;
-            formation_at_rest = 1;
-            destination_tile.set(formation_position_x.soldier, formation_position_y.soldier);
-//            destination_tile.x() = formation_position_x.soldier;
-//            destination_tile.y() = formation_position_y.soldier;
-//            destination_tile.grid_offset() = MAP_OFFSET(destination_tile.x(), destination_tile.y());
-            move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_NONE)
-                action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
-            else if (direction == DIR_FIGURE_REROUTE)
-                route_remove();
-            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
+        //            destination_tile.grid_offset() = MAP_OFFSET(destination_tile.x(), destination_tile.y());
+        move_ticks(speed_factor);
+        if (direction == DIR_FIGURE_NONE) {
+            action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
+            anim_frame = 0;
+        } else if (direction == DIR_FIGURE_REROUTE)
+            route_remove();
+        else if (direction == DIR_FIGURE_CAN_NOT_REACH) {
+            alternative_location_index++;
+            if (alternative_location_index > 168)
                 poof();
 
-            break;
-        case FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE:
-//            is_ghost = true;
-            formation_at_rest = 1;
-            break;
+            anim_frame = 0;
+        }
+        break;
+    case FIGURE_ACTION_84_SOLDIER_AT_STANDARD:
+        formation_at_rest = 0;
+        anim_frame = 0;
+        map_figure_update();
+        destination_tile.set(m->standard_x + formation_layout_position_x(m->layout, index_in_formation),
+                             m->standard_y + formation_layout_position_y(m->layout, index_in_formation));
+        //            destination_tile.x() = m->standard_x + formation_layout_position_x(m->layout, index_in_formation);
+        //            destination_tile.y() = m->standard_y + formation_layout_position_y(m->layout, index_in_formation);
+        if (alternative_location_index) {
+            destination_tile.set(ALTERNATIVE_POINTS[alternative_location_index].x,
+                                 ALTERNATIVE_POINTS[alternative_location_index].y);
+            //                destination_tile.x() += ALTERNATIVE_POINTS[alternative_location_index].x;
+            //                destination_tile.y() += ALTERNATIVE_POINTS[alternative_location_index].y;
+        }
+        if (tile.x() != destination_tile.x() || tile.y() != destination_tile.y()) {
+            if (m->missile_fired <= 0 && m->recent_fight <= 0 && m->missile_attack_timeout <= 0) {
+                action_state = FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD;
+                alternative_location_index = 0;
+            }
+        }
+        if (action_state != FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD) {
+            if (type == FIGURE_FORT_JAVELIN)
+                javelin_launch_missile();
+            else if (type == FIGURE_FORT_LEGIONARY)
+                legionary_attack_adjacent_enemy();
+        }
+        break;
+    case FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY:
+        m->has_military_training = 1;
+        formation_at_rest = 1;
+        move_ticks(speed_factor);
+        if (direction == DIR_FIGURE_NONE)
+            action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
+        else if (direction == DIR_FIGURE_REROUTE)
+            route_remove();
+        else if (direction == DIR_FIGURE_CAN_NOT_REACH)
+            poof();
+
+        break;
+    case FIGURE_ACTION_86_SOLDIER_MOPPING_UP:
+        formation_at_rest = 0;
+        if (find_mop_up_target()) {
+            move_ticks(speed_factor);
+            if (direction == DIR_FIGURE_NONE) {
+                figure* target = figure_get(target_figure_id);
+                destination_tile = target->tile;
+                //                    destination_tile.x() = target->tile.x();
+                //                    destination_tile.y() = target->tile.y();
+                route_remove();
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
+                action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
+                target_figure_id = 0;
+                anim_frame = 0;
+            }
+        }
+        break;
+    case FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE: {
+        map_point& exit = city_map_exit_point();
+        formation_at_rest = 0;
+        destination_tile = exit;
+        //            destination_tile.x() = exit->x();
+        //            destination_tile.y() = exit->y();
+        move_ticks(speed_factor);
+        if (direction == DIR_FIGURE_NONE) {
+            action_state = FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
+            route_remove();
+        } else if (direction == DIR_FIGURE_REROUTE)
+            route_remove();
+        else if (direction == DIR_FIGURE_CAN_NOT_REACH)
+            poof();
+
+        break;
+    }
+    case FIGURE_ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE:
+        //            is_ghost = false;
+        wait_ticks = 0;
+        formation_at_rest = 1;
+        destination_tile.set(formation_position_x.soldier, formation_position_y.soldier);
+        //            destination_tile.x() = formation_position_x.soldier;
+        //            destination_tile.y() = formation_position_y.soldier;
+        //            destination_tile.grid_offset() = MAP_OFFSET(destination_tile.x(), destination_tile.y());
+        move_ticks(speed_factor);
+        if (direction == DIR_FIGURE_NONE)
+            action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
+        else if (direction == DIR_FIGURE_REROUTE)
+            route_remove();
+        else if (direction == DIR_FIGURE_CAN_NOT_REACH)
+            poof();
+
+        break;
+    case FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE:
+        //            is_ghost = true;
+        formation_at_rest = 1;
+        break;
     }
 
     soldier_update_image(m);

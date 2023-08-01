@@ -24,15 +24,9 @@ int map_routing_noncitizen_is_passable(int grid_offset);
 int map_routing_is_destroyable(int grid_offset);
 
 int map_routing_is_wall_passable(int grid_offset);
-int map_routing_wall_tile_in_radius(int x, int y, int radius, int *x_wall, int *y_wall);
+int map_routing_wall_tile_in_radius(int x, int y, int radius, int* x_wall, int* y_wall);
 
-enum {
-    DESTROYABLE_BUILDING,
-    DESTROYABLE_AQUEDUCT_GARDEN,
-    DESTROYABLE_WALL,
-    DESTROYABLE_GATEHOUSE,
-    DESTROYABLE_NONE
-};
+enum { DESTROYABLE_BUILDING, DESTROYABLE_AQUEDUCT_GARDEN, DESTROYABLE_WALL, DESTROYABLE_GATEHOUSE, DESTROYABLE_NONE };
 int map_routing_get_destroyable(int grid_offset);
 
 #endif // MAP_ROUTING_TERRAIN_H

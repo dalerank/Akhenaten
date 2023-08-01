@@ -8,6 +8,6 @@ struct building_properties {
     int image_collection;
     int image_group;
     int image_offset;
-} ;
+};
 
-const building_properties *building_properties_for_type(int type);
+const building_properties* building_properties_for_type(int type);

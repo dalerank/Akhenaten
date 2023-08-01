@@ -1,9 +1,9 @@
+#include "zoom.h"
 #include "core/calc.h"
 #include "graphics/elements/menu.h"
-#include <cmath>
 #include "io/config/config.h"
-#include "zoom.h"
 #include "lookup.h"
+#include <cmath>
 
 struct zoom_data_t {
     float zoom = ZOOM_DEFAULT;
@@ -28,8 +28,8 @@ static float bound_zoom(float z) {
     return z;
 }
 
-static void start_touch(const touch *first, const touch *last, int scale) {
-    auto &data = g_zoom;
+static void start_touch(const touch* first, const touch* last, int scale) {
+    auto& data = g_zoom;
 
     data.touch.active = true;
     data.input_offset.x = first->current_point.x;
@@ -37,8 +37,8 @@ static void start_touch(const touch *first, const touch *last, int scale) {
     data.touch.start_zoom = scale;
     data.touch.current_zoom = scale;
 }
-void zoom_update_touch(const touch *first, const touch *last, int scale) {
-    auto &data = g_zoom;
+void zoom_update_touch(const touch* first, const touch* last, int scale) {
+    auto& data = g_zoom;
 
     if (!data.touch.active) {
         start_touch(first, last, scale);
@@ -48,10 +48,10 @@ void zoom_update_touch(const touch *first, const touch *last, int scale) {
     pixel_coordinate temp;
     temp.x = first->start_point.x - last->start_point.x;
     temp.y = first->start_point.y - last->start_point.y;
-    original_distance = (int) sqrt(temp.x * temp.x + temp.y * temp.y);
+    original_distance = (int)sqrt(temp.x * temp.x + temp.y * temp.y);
     temp.x = first->current_point.x - last->current_point.x;
     temp.y = first->current_point.y - last->current_point.y;
-    current_distance = (int) sqrt(temp.x * temp.x + temp.y * temp.y);
+    current_distance = (int)sqrt(temp.x * temp.x + temp.y * temp.y);
 
     if (!original_distance || !current_distance) {
         data.touch.active = false;
@@ -64,11 +64,9 @@ void zoom_update_touch(const touch *first, const touch *last, int scale) {
 void zoom_end_touch(void) {
     g_zoom.touch.active = false;
 }
-int allowed_zoom_levels[8] = {
-        50, 65, 80, 100, 120, 145, 175, 200
-};
-void zoom_map(const mouse *m) {
-    auto &data = g_zoom;
+int allowed_zoom_levels[8] = {50, 65, 80, 100, 120, 145, 175, 200};
+void zoom_map(const mouse* m) {
+    auto& data = g_zoom;
 
     if (data.touch.active || m->is_touch)
         return;
@@ -94,22 +92,23 @@ void zoom_map(const mouse *m) {
                 data.target = ZOOM_MAX;
         }
     }
-//    data.input_offset = pixel_to_viewport_coord({m->x, m->y});
+    //    data.input_offset = pixel_to_viewport_coord({m->x, m->y});
     data.input_offset.x = m->x;
     data.input_offset.y = m->y;
 }
-bool zoom_update_value(pixel_coordinate *camera_position) {
-    auto &data = g_zoom;
+bool zoom_update_value(pixel_coordinate* camera_position) {
+    auto& data = g_zoom;
 
     if (data.zoom == data.target)
         return false;
     auto old_zoom = data.zoom;
-//    data.delta = (float)(data.target - data.zoom) * ZOOM_LERP_COEFF;
+    //    data.delta = (float)(data.target - data.zoom) * ZOOM_LERP_COEFF;
     if (!data.touch.active)
         data.delta = calc_bound(data.target - data.zoom, -data.zoom_speed, data.zoom_speed);
     else
         data.delta = (float)(data.touch.current_zoom - data.zoom);
-    data.zoom = bound_zoom(data.zoom + data.delta); // todo: bind camera to max window size... or find a way to mask the borders
+    data.zoom
+      = bound_zoom(data.zoom + data.delta); // todo: bind camera to max window size... or find a way to mask the borders
     if (data.zoom == data.target) {
         data.zoom = data.target;
         data.delta = 0.0f;
@@ -147,14 +146,14 @@ float zoom_debug_delta() {
 }
 
 float zoom_get_scale() {
-//    return (float)(int)(data.zoom + 0.5f) / 100.0f;
+    //    return (float)(int)(data.zoom + 0.5f) / 100.0f;
     return 1.0f / (g_zoom.zoom / 100.0f);
 }
 float zoom_get_percentage() {
     return (float)(int)(g_zoom.zoom + 0.5f);
 }
 void zoom_set(float z) {
-    auto &data = g_zoom;
+    auto& data = g_zoom;
 
     z = calc_bound(z, 50, 200);
     data.zoom = z;

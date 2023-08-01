@@ -1,23 +1,22 @@
 #include "map.h"
 
-#include "graphics/view/view.h"
-#include "io/config/config.h"
 #include "editor/editor.h"
 #include "editor/tool.h"
 #include "game/game.h"
+#include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
+#include "graphics/view/view.h"
 #include "graphics/window.h"
+#include "io/config/config.h"
 #include "widget/map_editor.h"
-#include "widget/top_menu_editor.h"
 #include "widget/sidebar/editor.h"
+#include "widget/top_menu_editor.h"
+#include "window/editor/attributes.h"
 #include "window/file_dialog.h"
 #include "window/popup_dialog.h"
-#include "window/editor/attributes.h"
 
 static int city_view_dirty;
 
@@ -51,19 +50,17 @@ static void draw_foreground(void) {
     widget_map_editor_draw();
     if (window_is(WINDOW_EDITOR_MAP))
         draw_cancel_construction();
-
 }
 
-static void handle_hotkeys(const hotkeys *h) {
+static void handle_hotkeys(const hotkeys* h) {
     if (h->load_file)
         window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_LOAD);
 
     if (h->save_file)
         window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
-
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     handle_hotkeys(h);
     if (widget_top_menu_editor_handle_input(m, h))
         return;
@@ -86,11 +83,6 @@ void window_editor_map_draw(void) {
 }
 
 void window_editor_map_show(void) {
-    window_type window = {
-            WINDOW_EDITOR_MAP,
-            draw_background,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_EDITOR_MAP, draw_background, draw_foreground, handle_input};
     window_show(&window);
 }

@@ -1,14 +1,14 @@
+#include "scenario.h"
+#include "io/io_buffer.h"
 #include <city/data_private.h>
 #include <city/gods.h>
-#include "io/io_buffer.h"
-#include "scenario.h"
 
 #include "city/resource.h"
 #include "empire/trade_route.h"
+#include "events.h"
 #include "game/difficulty.h"
 #include "game/settings.h"
 #include "scenario/scenario_data.h"
-#include "events.h"
 
 scenario_data_t g_scenario_data;
 
@@ -25,14 +25,14 @@ void scenario_settings_init(void) {
 }
 void scenario_settings_init_mission(void) {
     g_scenario_data.settings.starting_kingdom = difficulty_starting_kingdom();
-    g_scenario_data.settings.starting_personal_savings = setting_personal_savings_for_mission(g_scenario_data.settings.campaign_mission_rank);
+    g_scenario_data.settings.starting_personal_savings
+      = setting_personal_savings_for_mission(g_scenario_data.settings.campaign_mission_rank);
 }
 
 // fancy lambdas! probably gonna create many problems down the road. :3
-io_buffer *iob_scenario_mission_id = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_INT8, &g_scenario_data.settings.campaign_scenario_id);
-});
-io_buffer *iob_scenario_info = new io_buffer([](io_buffer *iob) {
+io_buffer* iob_scenario_mission_id = new io_buffer(
+  [](io_buffer* iob) { iob->bind(BIND_SIGNATURE_INT8, &g_scenario_data.settings.campaign_scenario_id); });
+io_buffer* iob_scenario_info = new io_buffer([](io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario_data.start_year);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario_data.empire.id);
@@ -96,8 +96,8 @@ io_buffer *iob_scenario_info = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &g_scenario_data.win_criteria.housing_level.enabled);
 
     iob->bind____skip(6); // ???
-//    iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.earthquake.severity);
-//    iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.earthquake.private_access(_Y)ear); // ??
+                          //    iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.earthquake.severity);
+                          //    iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.earthquake.private_access(_Y)ear); // ??
 
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.win_criteria.time_limit.enabled);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.win_criteria.time_limit.years);
@@ -119,7 +119,7 @@ io_buffer *iob_scenario_info = new io_buffer([](io_buffer *iob) {
 
     // junk 4a
     iob->bind____skip(28); // 14 * 2
-    iob->bind____skip(4); // 2 * 2 (58, 64)
+    iob->bind____skip(4);  // 2 * 2 (58, 64)
 
     iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.river_entry_point.private_access(_X));
     iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.river_entry_point.private_access(_Y));
@@ -186,14 +186,12 @@ io_buffer *iob_scenario_info = new io_buffer([](io_buffer *iob) {
 
     g_scenario_data.is_saved = true;
 });
-io_buffer *iob_scenario_carry_settings = new io_buffer([](io_buffer *iob) {
+io_buffer* iob_scenario_carry_settings = new io_buffer([](io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.starting_kingdom);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.starting_personal_savings);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.campaign_mission_rank);
 });
-io_buffer *iob_scenario_is_custom = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.is_custom);
-});
-io_buffer *iob_scenario_map_name = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_RAW, &g_scenario_data.scenario_name, MAX_SCENARIO_NAME);
-});
+io_buffer* iob_scenario_is_custom
+  = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.is_custom); });
+io_buffer* iob_scenario_map_name = new io_buffer(
+  [](io_buffer* iob) { iob->bind(BIND_SIGNATURE_RAW, &g_scenario_data.scenario_name, MAX_SCENARIO_NAME); });

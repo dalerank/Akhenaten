@@ -9,14 +9,13 @@
 #include "graphics/image_groups.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
-#include <scenario/map.h>
 #include "grid/grid.h"
 #include "grid/image.h"
 #include "grid/property.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
 #include "scenario/building.h"
-#include "graphics/image_groups.h"
+#include <scenario/map.h>
 
 static void mark_native_land(int x, int y, int size, int radius) {
     int x_min, y_min, x_max, y_max;
@@ -36,12 +35,8 @@ static int has_building_on_native_land(int x, int y, int size, int radius) {
             int building_id = map_building_at(MAP_OFFSET(xx, yy));
             if (building_id > 0) {
                 int type = building_get(building_id)->type;
-                if (type != BUILDING_MISSION_POST &&
-                    type != BUILDING_NATIVE_HUT &&
-                    type != BUILDING_NATIVE_MEETING &&
-                    type != BUILDING_NATIVE_CROPS &&
-                    type != BUILDING_ROADBLOCK
-                        ) {
+                if (type != BUILDING_MISSION_POST && type != BUILDING_NATIVE_HUT && type != BUILDING_NATIVE_MEETING
+                    && type != BUILDING_NATIVE_CROPS && type != BUILDING_ROADBLOCK) {
                     return 1;
                 }
             }
@@ -54,23 +49,22 @@ static void determine_meeting_center(void) {
     // gather list of meeting centers
     building_list_small_clear();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_NATIVE_MEETING)
             building_list_small_add(i);
-
     }
     int total_meetings = building_list_small_size();
     if (total_meetings <= 0)
         return;
-    const int *meetings = building_list_small_items();
+    const int* meetings = building_list_small_items();
     // determine closest meeting center for hut
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_NATIVE_HUT) {
             int min_dist = 1000;
             int min_meeting_id = 0;
             for (int n = 0; n < total_meetings; n++) {
-                building *meeting = building_get(meetings[n]);
+                building* meeting = building_get(meetings[n]);
                 int dist = calc_maximum_distance(b->tile.x(), b->tile.y(), meeting->tile.x(), meeting->tile.y());
                 if (dist < min_dist) {
                     min_dist = dist;
@@ -113,32 +107,32 @@ void map_natives_init(void) {
             } else if (image_id == image_crops) {
                 type = BUILDING_NATIVE_CROPS;
                 map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_FARMLAND) + random_bit);
-            } else { //unknown building
+            } else { // unknown building
                 map_building_tiles_remove(0, x, y);
                 continue;
             }
-            building *b = building_create(type, x, y, 0);
+            building* b = building_create(type, x, y, 0);
             map_building_set(grid_offset, b->id);
             b->state = BUILDING_STATE_VALID;
             switch (type) {
-                case BUILDING_NATIVE_CROPS:
-                    b->data.industry.progress = random_bit;
-                    break;
-                case BUILDING_NATIVE_MEETING:
-                    b->sentiment.native_anger = 100;
-                    map_building_set(grid_offset + GRID_OFFSET(1, 0), b->id);
-                    map_building_set(grid_offset + GRID_OFFSET(0, 1), b->id);
-                    map_building_set(grid_offset + GRID_OFFSET(1, 1), b->id);
-                    mark_native_land(b->tile.x(), b->tile.y(), 2, 6);
-                    if (!meeting_center_set)
-                        city_buildings_set_main_native_meeting_center(b->tile.x(), b->tile.y());
+            case BUILDING_NATIVE_CROPS:
+                b->data.industry.progress = random_bit;
+                break;
+            case BUILDING_NATIVE_MEETING:
+                b->sentiment.native_anger = 100;
+                map_building_set(grid_offset + GRID_OFFSET(1, 0), b->id);
+                map_building_set(grid_offset + GRID_OFFSET(0, 1), b->id);
+                map_building_set(grid_offset + GRID_OFFSET(1, 1), b->id);
+                mark_native_land(b->tile.x(), b->tile.y(), 2, 6);
+                if (!meeting_center_set)
+                    city_buildings_set_main_native_meeting_center(b->tile.x(), b->tile.y());
 
-                    break;
-                case BUILDING_NATIVE_HUT:
-                    b->sentiment.native_anger = 100;
-                    b->figure_spawn_delay = random_bit;
-                    mark_native_land(b->tile.x(), b->tile.y(), 1, 3);
-                    break;
+                break;
+            case BUILDING_NATIVE_HUT:
+                b->sentiment.native_anger = 100;
+                b->figure_spawn_delay = random_bit;
+                mark_native_land(b->tile.x(), b->tile.y(), 1, 3);
+                break;
             }
         }
     }
@@ -175,11 +169,11 @@ void map_natives_init_editor(void) {
             } else if (image_id == image_crops) {
                 type = BUILDING_NATIVE_CROPS;
                 map_image_set(grid_offset, image_id_from_group(GROUP_EDITOR_BUILDING_CROPS));
-            } else { //unknown building
+            } else { // unknown building
                 map_building_tiles_remove(0, x, y);
                 continue;
             }
-            building *b = building_create(type, x, y, 0);
+            building* b = building_create(type, x, y, 0);
             b->state = BUILDING_STATE_VALID;
             map_building_set(grid_offset, b->id);
             if (type == BUILDING_NATIVE_MEETING) {
@@ -196,7 +190,7 @@ void map_natives_check_land(void) {
     city_military_decrease_native_attack_duration();
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
