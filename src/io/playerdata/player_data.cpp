@@ -129,9 +129,12 @@ const char *player_get_last_autosave() {
 void player_data_new(const uint8_t *player_name) {
     GamestateIO::prepare_savegame("family.sav");
 }
-void player_data_delete(const uint8_t *player_name) {
-    // TODO
+
+
+void player_data_delete(const uint8_t* player_name) {
+    GamestateIO::delete_family((char const*)player_name);
 }
+
 static void load_unused_dat_chunk(buffer *buf, int index) {
     auto &data = player_data();
 

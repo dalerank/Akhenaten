@@ -25,5 +25,12 @@ namespace GamestateIO {
     bool delete_mission(const int scenario_id);
     bool delete_savegame(const char *filename_short);
     bool delete_map(const char *filename_short);
+
+    /**
+     * Delete campaign (aka family) created by user.
+     * @param family_name to be removed
+     * @return true on success
+     */
+    bool delete_family(char const* family_name);
 }
 #endif // GAME_FILE_H
