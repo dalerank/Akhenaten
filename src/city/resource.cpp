@@ -23,13 +23,13 @@ int city_resource_count(int resource) {
     return city_data.resource.stored_in_warehouses[resource];
 }
 
-const resources_list *city_resource_get_available(void) {
+const resources_list* city_resource_get_available(void) {
     return &g_available_data.resource_list;
 }
-const resources_list *city_resource_get_available_foods(void) {
+const resources_list* city_resource_get_available_foods(void) {
     return &g_available_data.food_list;
 }
-const resources_list *city_resource_get_available_market_goods(void) {
+const resources_list* city_resource_get_available_market_goods(void) {
     return &g_available_data.market_goods_list;
 }
 
@@ -73,12 +73,12 @@ void city_resource_cycle_trade_status(int resource) {
     if (city_data.resource.trade_status[resource] > TRADE_STATUS_EXPORT)
         city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
 
-    if (city_data.resource.trade_status[resource] == TRADE_STATUS_IMPORT &&
-        !empire_can_import_resource(resource, true)) {
+    if (city_data.resource.trade_status[resource] == TRADE_STATUS_IMPORT
+        && !empire_can_import_resource(resource, true)) {
         city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT;
     }
-    if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT &&
-        !empire_can_export_resource(resource, true)) {
+    if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT
+        && !empire_can_export_resource(resource, true)) {
         city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
     }
     if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT)
@@ -90,15 +90,15 @@ void city_resource_cycle_trade_import(int resource) {
         return;
 
     switch (city_data.resource.trade_status[resource]) {
-        default:
-            city_data.resource.trade_status[resource] = TRADE_STATUS_IMPORT_AS_NEEDED;
-            break;
-        case TRADE_STATUS_IMPORT_AS_NEEDED:
-            city_data.resource.trade_status[resource] = TRADE_STATUS_IMPORT;
-            break;
-        case TRADE_STATUS_IMPORT:
-            city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
-            break;
+    default:
+        city_data.resource.trade_status[resource] = TRADE_STATUS_IMPORT_AS_NEEDED;
+        break;
+    case TRADE_STATUS_IMPORT_AS_NEEDED:
+        city_data.resource.trade_status[resource] = TRADE_STATUS_IMPORT;
+        break;
+    case TRADE_STATUS_IMPORT:
+        city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
+        break;
     }
 }
 void city_resource_cycle_trade_export(int resource) {
@@ -107,24 +107,25 @@ void city_resource_cycle_trade_export(int resource) {
         return;
 
     switch (city_data.resource.trade_status[resource]) {
-        default:
-            city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT_SURPLUS;
-            city_data.resource.stockpiled[resource] = false;
-            break;
-        case TRADE_STATUS_EXPORT_SURPLUS:
-            city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT;
-            city_data.resource.stockpiled[resource] = false;
-            break;
-        case TRADE_STATUS_EXPORT:
-            city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
-            break;
+    default:
+        city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT_SURPLUS;
+        city_data.resource.stockpiled[resource] = false;
+        break;
+    case TRADE_STATUS_EXPORT_SURPLUS:
+        city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT;
+        city_data.resource.stockpiled[resource] = false;
+        break;
+    case TRADE_STATUS_EXPORT:
+        city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
+        break;
     }
 }
 int city_resource_trading_amount(int resource) {
     return city_data.resource.trading_amount[resource];
 }
 void city_resource_change_trading_amount(int resource, int delta) {
-    city_data.resource.trading_amount[resource] = calc_bound(city_data.resource.trading_amount[resource] + delta, 0, 100);
+    city_data.resource.trading_amount[resource]
+      = calc_bound(city_data.resource.trading_amount[resource] + delta, 0, 100);
 }
 
 int city_resource_is_stockpiled(int resource) {
@@ -168,7 +169,7 @@ void city_resource_calculate_warehouse_stocks(void) {
         city_data.resource.stored_in_warehouses[i] = 0;
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
             b->has_road_access = 0;
             if (map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), b->size, 0))
@@ -178,11 +179,11 @@ void city_resource_calculate_warehouse_stocks(void) {
         }
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE_SPACE)
             continue;
 
-        building *warehouse = b->main();
+        building* warehouse = b->main();
         if (warehouse->has_road_access) {
             b->has_road_access = warehouse->has_road_access;
             if (b->subtype.warehouse_resource_id) {
@@ -215,12 +216,12 @@ void city_resource_determine_available(void) {
         if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false)) {
             g_available_data.resource_list.items[g_available_data.resource_list.size++] = i;
             switch (i) {
-                case RESOURCE_POTTERY:
-                case RESOURCE_BEER:
-                case RESOURCE_LINEN:
-                case RESOURCE_LUXURY_GOODS:
-                    g_available_data.market_goods_list.items[g_available_data.market_goods_list.size++] = i;
-                    break;
+            case RESOURCE_POTTERY:
+            case RESOURCE_BEER:
+            case RESOURCE_LINEN:
+            case RESOURCE_LUXURY_GOODS:
+                g_available_data.market_goods_list.items[g_available_data.market_goods_list.size++] = i;
+                break;
             }
         }
     }
@@ -237,15 +238,15 @@ static void calculate_available_food(void) {
     city_data.resource.granaries.not_operating = 0;
     city_data.resource.granaries.not_operating_with_food = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY)
             continue;
 
         b->has_road_access = 0;
-        if (map_has_road_access(b->tile.x(), b->tile.y(), b->size, 0)) { //map_has_road_access_granary(b->tile.x(), b->tile.y(), 0)
+        if (map_has_road_access(
+              b->tile.x(), b->tile.y(), b->size, 0)) { // map_has_road_access_granary(b->tile.x(), b->tile.y(), 0)
             b->has_road_access = 1;
-            int pct_workers = calc_percentage(
-                    b->num_workers, model_get_building(b->type)->laborers);
+            int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
             if (pct_workers < 100)
                 city_data.resource.granaries.understaffed++;
 
@@ -273,17 +274,15 @@ static void calculate_available_food(void) {
             city_data.resource.food_types_available_num++;
         }
     }
-    city_data.resource.food_needed_per_month =
-            calc_adjust_with_percentage(city_data.population.population, 50);
+    city_data.resource.food_needed_per_month = calc_adjust_with_percentage(city_data.population.population, 50);
     if (city_data.resource.food_needed_per_month > 0) {
-        city_data.resource.food_supply_months =
-                city_data.resource.granary_total_stored / city_data.resource.food_needed_per_month;
+        city_data.resource.food_supply_months
+          = city_data.resource.granary_total_stored / city_data.resource.food_needed_per_month;
     } else {
-        city_data.resource.food_supply_months =
-                city_data.resource.granary_total_stored > 0 ? 1 : 0;
+        city_data.resource.food_supply_months = city_data.resource.granary_total_stored > 0 ? 1 : 0;
     }
     if (scenario_property_rome_supplies_wheat()) {
-//        city_data.resource.food_types_available = 1;
+        //        city_data.resource.food_types_available = 1;
         city_data.resource.food_supply_months = 12;
     }
 }
@@ -291,10 +290,9 @@ void city_resource_calculate_food_stocks_and_supply_wheat(void) {
     calculate_available_food();
     if (scenario_property_rome_supplies_wheat()) {
         for (int i = 1; i < MAX_BUILDINGS; i++) {
-            building *b = building_get(i);
+            building* b = building_get(i);
             if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MARKET)
                 b->data.market.inventory[0] = 200;
-
         }
     }
 }
@@ -305,7 +303,7 @@ void city_resource_consume_food(void) {
     city_data.unused.unknown_00c0 = 0;
     int total_consumed = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size) {
             int num_types = model_get_house(b->subtype.house_level)->food_types;
             int amount_per_type = calc_adjust_with_percentage(b->house_population, 50);
@@ -315,7 +313,7 @@ void city_resource_consume_food(void) {
             b->data.house.num_foods = 0;
             if (scenario_property_rome_supplies_wheat()) {
                 city_data.resource.food_types_eaten_num = 1;
-//                city_data.resource.food_types_available = 1;
+                //                city_data.resource.food_types_available = 1;
                 b->data.house.inventory[0] = amount_per_type;
                 b->data.house.num_foods = 1;
             } else if (num_types > 0) {
@@ -332,7 +330,6 @@ void city_resource_consume_food(void) {
                     }
                     if (b->data.house.num_foods > city_data.resource.food_types_eaten_num)
                         city_data.resource.food_types_eaten_num = b->data.house.num_foods;
-
                 }
             }
         }

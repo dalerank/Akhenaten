@@ -1,7 +1,7 @@
-//#ifndef FIGURETYPE_SERVICE_H
-//#define FIGURETYPE_SERVICE_H
+// #ifndef FIGURETYPE_SERVICE_H
+// #define FIGURETYPE_SERVICE_H
 //
-//#include "figure/figure.h"
+// #include "figure/figure.h"
 //
 ////void figure_priest_action();
 ////
@@ -27,4 +27,4 @@
 ////
 ////void figure_tax_collector_action();
 //
-//#endif // FIGURETYPE_SERVICE_H
+// #endif // FIGURETYPE_SERVICE_H

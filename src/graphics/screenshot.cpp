@@ -1,17 +1,17 @@
 #include "screenshot.h"
 
-#include "graphics/view/view.h"
 #include "core/buffer.h"
+#include "core/game_environment.h"
+#include "game/system.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/menu.h"
+#include "graphics/screen.h"
+#include "graphics/view/view.h"
+#include "graphics/window.h"
+#include "grid/grid.h"
 #include "io/config/config.h"
 #include "io/file.h"
 #include "io/log.h"
-#include "core/game_environment.h"
-#include "game/system.h"
-#include "graphics/screen.h"
-#include "graphics/boilerplate.h"
-#include "graphics/elements/menu.h"
-#include "graphics/window.h"
-#include "grid/grid.h"
 #include "widget/city/tile_draw.h"
 
 #include "png.h"
@@ -26,15 +26,11 @@
 #define IMAGE_HEIGHT_CHUNK TILE_Y_SIZE
 #define IMAGE_BYTES_PER_PIXEL 3
 
-enum {
-    FULL_CITY_SCREENSHOT = 0,
-    DISPLAY_SCREENSHOT = 1,
-    MAX_SCREENSHOT_TYPES = 2
-};
+enum { FULL_CITY_SCREENSHOT = 0, DISPLAY_SCREENSHOT = 1, MAX_SCREENSHOT_TYPES = 2 };
 
 static const char filename_formats[MAX_SCREENSHOT_TYPES][32] = {
-        "full city %Y-%m-%d %H.%M.%S.png",
-        "city %Y-%m-%d %H.%M.%S.png",
+  "full city %Y-%m-%d %H.%M.%S.png",
+  "city %Y-%m-%d %H.%M.%S.png",
 };
 
 static struct {
@@ -44,8 +40,8 @@ static struct {
     int rows_in_memory;
     int current_y;
     int final_y;
-    uint8_t *pixels;
-    FILE *fp;
+    uint8_t* pixels;
+    FILE* fp;
     png_structp png_ptr;
     png_infop info_ptr;
 } image;
@@ -83,7 +79,7 @@ static int image_create(int width, int height, int rows_in_memory) {
     image.height = height;
     image.row_size = width * IMAGE_BYTES_PER_PIXEL;
     image.rows_in_memory = rows_in_memory;
-    image.pixels = (uint8_t *) malloc(image.row_size);
+    image.pixels = (uint8_t*)malloc(image.row_size);
     if (!image.pixels) {
         image_free();
         return 0;
@@ -92,16 +88,16 @@ static int image_create(int width, int height, int rows_in_memory) {
     return 1;
 }
 
-static const char *generate_filename(int city_screenshot) {
+static const char* generate_filename(int city_screenshot) {
     static char filename[FILE_NAME_MAX];
     time_t curtime = time(NULL);
-    struct tm *loctime = localtime(&curtime);
+    struct tm* loctime = localtime(&curtime);
     strftime(filename, FILE_NAME_MAX, filename_formats[city_screenshot], loctime);
     return filename;
 }
 
-int image_begin_io(const char *filename) {
-    FILE *fp = file_open(filename, "wb");
+int image_begin_io(const char* filename) {
+    FILE* fp = file_open(filename, "wb");
     if (!fp) {
         return 0;
     }
@@ -114,8 +110,15 @@ static int image_write_header(void) {
     if (setjmp(png_jmpbuf(image.png_ptr))) {
         return 0;
     }
-    png_set_IHDR(image.png_ptr, image.info_ptr, image.width, image.height, 8, PNG_COLOR_TYPE_RGB,
-                 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+    png_set_IHDR(image.png_ptr,
+                 image.info_ptr,
+                 image.width,
+                 image.height,
+                 8,
+                 PNG_COLOR_TYPE_RGB,
+                 PNG_INTERLACE_NONE,
+                 PNG_COMPRESSION_TYPE_DEFAULT,
+                 PNG_FILTER_TYPE_DEFAULT);
     png_write_info(image.png_ptr, image.info_ptr);
     return 1;
 }
@@ -134,12 +137,12 @@ static int image_request_rows(void) {
     return 0;
 }
 
-static int image_write_rows(const color_t *canvas, int canvas_width) {
+static int image_write_rows(const color_t* canvas, int canvas_width) {
     if (setjmp(png_jmpbuf(image.png_ptr))) {
         return 0;
     }
     for (int y = 0; y < image.rows_in_memory; ++y) {
-        uint8_t *pixel = image.pixels;
+        uint8_t* pixel = image.pixels;
         for (int x = 0; x < image.width; x++) {
             color_t input = canvas[y * canvas_width + x];
             *(pixel + 0) = (uint8_t)((input & 0xff0000) >> 16);
@@ -153,17 +156,17 @@ static int image_write_rows(const color_t *canvas, int canvas_width) {
 }
 
 static int image_write_canvas(void) {
-    const color_t *canvas;
-    color_t *screen_buffer = 0;
+    const color_t* canvas;
+    color_t* screen_buffer = 0;
     if (config_get(CONFIG_UI_ZOOM)) {
-        screen_buffer = (color_t *) malloc(image.width * image.height * sizeof(color_t));
+        screen_buffer = (color_t*)malloc(image.width * image.height * sizeof(color_t));
         if (!system_save_screen_buffer(screen_buffer)) {
             free(screen_buffer);
             return 0;
         }
         canvas = screen_buffer;
     } else {
-        canvas = (const color_t *) graphics_canvas(CANVAS_UI);
+        canvas = (const color_t*)graphics_canvas(CANVAS_UI);
     }
     int current_height = image_set_loop_height_limits(0, image.height);
     int size;
@@ -191,7 +194,7 @@ static void create_window_screenshot(void) {
         return;
     }
 
-    const char *filename = generate_filename(DISPLAY_SCREENSHOT);
+    const char* filename = generate_filename(DISPLAY_SCREENSHOT);
     if (!image_begin_io(filename) || !image_write_header()) {
         log_error("Unable to write screenshot to:", filename, 0);
         image_free();
@@ -224,7 +227,7 @@ static void create_full_city_screenshot(void) {
         log_error("Unable to set memory for full city screenshot", 0, 0);
         return;
     }
-    const char *filename = generate_filename(FULL_CITY_SCREENSHOT);
+    const char* filename = generate_filename(FULL_CITY_SCREENSHOT);
     if (!image_begin_io(filename) || !image_write_header()) {
         log_error("Unable to write screenshot to:", filename, 0);
         image_free();
@@ -249,7 +252,7 @@ static void create_full_city_screenshot(void) {
     int error = 0;
     int current_height = image_set_loop_height_limits(min_height, max_height);
     int size;
-    const color_t *canvas = (color_t *) graphics_canvas(CANVAS_UI) + TOP_MENU_HEIGHT * canvas_width;
+    const color_t* canvas = (color_t*)graphics_canvas(CANVAS_UI) + TOP_MENU_HEIGHT * canvas_width;
     while ((size = image_request_rows())) {
         city_view_set_camera_from_pixel_position(base_width, current_height);
         city_without_overlay_draw(0, 0, &dummy_tile);

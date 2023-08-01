@@ -11,7 +11,6 @@ void city_figures_reset(void) {
     city_data.figure.soldiers = 0;
     if (city_data.figure.security_breach_duration > 0)
         city_data.figure.security_breach_duration--;
-
 }
 
 void city_figures_add_animal(void) {
@@ -35,7 +34,6 @@ void city_figures_add_rioter(int is_attacking) {
     city_data.figure.rioters++;
     if (is_attacking)
         city_data.figure.security_breach_duration = 10;
-
 }
 
 void city_figures_add_soldier(void) {

@@ -32,11 +32,11 @@ int map_figure_at(int grid_offset);
  */
 int map_has_figure_at(int grid_offset);
 
-//void map_figure_add();
+// void map_figure_add();
 //
-//void map_figure_update();
+// void map_figure_update();
 
-//void map_figure *f->map_figure_remove();
+// void map_figure *f->map_figure_remove();
 
 int map_figure_foreach_until(int grid_offset, int test);
 

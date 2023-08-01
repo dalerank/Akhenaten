@@ -1,8 +1,8 @@
 #include "clear.h"
 
 #include "building/building.h"
+#include "building/industry.h"
 #include "city/warning.h"
-#include "io/config/config.h"
 #include "figuretype/migrant.h"
 #include "game/undo.h"
 #include "graphics/window.h"
@@ -15,8 +15,8 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
+#include "io/config/config.h"
 #include "window/popup_dialog.h"
-#include "building/industry.h"
 
 struct clear_confirm_t {
     int x_start;
@@ -29,14 +29,14 @@ struct clear_confirm_t {
 
 clear_confirm_t g_clear_confirm;
 
-static building *get_deletable_building(int grid_offset) {
+static building* get_deletable_building(int grid_offset) {
     int building_id = map_building_at(grid_offset);
     if (!building_id)
         return 0;
 
-    building *b = building_get(building_id)->main();
-    if (b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_NATIVE_CROPS ||
-        b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING) {
+    building* b = building_get(building_id)->main();
+    if (b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_NATIVE_HUT
+        || b->type == BUILDING_NATIVE_MEETING) {
         return 0;
     }
     if (b->state == BUILDING_STATE_DELETED_BY_PLAYER || b->is_deleted)
@@ -46,7 +46,7 @@ static building *get_deletable_building(int grid_offset) {
 }
 
 static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
-    auto &confirm = g_clear_confirm;
+    auto& confirm = g_clear_confirm;
     int items_placed = 0;
     game_undo_restore_building_state();
     game_undo_restore_map(0);
@@ -62,7 +62,7 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
             if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION | TERRAIN_DUNE))
                 continue;
             if (measure_only && visual_feedback_on_delete) {
-                building *b = get_deletable_building(grid_offset);
+                building* b = get_deletable_building(grid_offset);
                 if (map_property_is_deleted(grid_offset) || (b && map_property_is_deleted(b->tile.grid_offset())))
                     continue;
                 map_building_tiles_mark_deleting(grid_offset);
@@ -71,15 +71,15 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
                         items_placed++;
                 } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) { // keep the "bridge is free" bug from C3
                     continue;
-                } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) ||
-                           (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) &&
-                           map_terrain_is(grid_offset, TERRAIN_CLEARABLE) &&
-                           !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)))
+                } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)
+                           || (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
+                               && map_terrain_is(grid_offset, TERRAIN_CLEARABLE)
+                               && !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)))
                     items_placed++;
                 continue;
             }
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-                building *b = get_deletable_building(grid_offset);
+                building* b = get_deletable_building(grid_offset);
                 if (!b)
                     continue;
                 if (b->type == BUILDING_FORT_GROUND || b->type == BUILDING_MENU_FORTS) {
@@ -100,7 +100,7 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
                 }
                 b->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 b->is_deleted = 1;
-                building *space = b;
+                building* space = b;
                 for (int i = 0; i < 99; i++) {
                     if (space->prev_part_building_id <= 0)
                         break;
@@ -165,7 +165,7 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
 }
 
 static void confirm_delete_fort(bool accepted) {
-    auto &confirm = g_clear_confirm;
+    auto& confirm = g_clear_confirm;
     if (accepted)
         confirm.fort_confirmed = 1;
     else
@@ -174,7 +174,7 @@ static void confirm_delete_fort(bool accepted) {
 }
 
 static void confirm_delete_bridge(bool accepted) {
-    auto &confirm = g_clear_confirm;
+    auto& confirm = g_clear_confirm;
     if (accepted)
         confirm.bridge_confirmed = 1;
     else
@@ -183,7 +183,7 @@ static void confirm_delete_bridge(bool accepted) {
 }
 
 int building_construction_clear_land(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
-    auto &confirm = g_clear_confirm;
+    auto& confirm = g_clear_confirm;
     confirm.fort_confirmed = 0;
     confirm.bridge_confirmed = 0;
     if (measure_only)
@@ -199,7 +199,7 @@ int building_construction_clear_land(bool measure_only, int x_start, int y_start
             int grid_offset = MAP_OFFSET(x, y);
             int building_id = map_building_at(grid_offset);
             if (building_id) {
-                building *b = building_get(building_id);
+                building* b = building_get(building_id);
                 if (b->type == BUILDING_MENU_FORTS || b->type == BUILDING_FORT_GROUND)
                     ask_confirm_fort = 1;
             }

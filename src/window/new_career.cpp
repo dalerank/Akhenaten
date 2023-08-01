@@ -1,33 +1,30 @@
+#include "new_career.h"
 #include "io/playerdata/player_data.h"
 #include <core/game_environment.h>
-#include "new_career.h"
 
-#include "graphics/image_groups.h"
-#include "io/gamefiles/lang.h"
 #include "core/string.h"
 #include "game/settings.h"
-#include "graphics/boilerplate.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "graphics/image_groups.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "io/gamefiles/lang.h"
+#include "player_selection.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "widget/input_box.h"
 #include "window/mission_next.h"
-#include "player_selection.h"
-#include "game/settings.h"
 
 static void confirm_new_player_name(int param1, int param2);
 static void button_back(int param1, int param2);
 
-static image_button image_buttons[] = {
-        {0,   2, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON,       8, button_back,   button_none, 0, 0, 1},
-        {305, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, confirm_new_player_name, button_none, 1, 0, 1}
-};
+static image_button image_buttons[]
+  = {{0, 2, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1},
+     {305, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, confirm_new_player_name, button_none, 1, 0, 1}};
 
 static input_box player_name_input = {160, 208, 20, 2, FONT_NORMAL_WHITE_ON_DARK};
 
@@ -71,10 +68,10 @@ static void confirm_new_player_name(int param1, int param2) {
     }
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
-    const mouse *m_dialog = mouse_in_dialog(m);
-    if (input_box_handle_mouse(m_dialog, &player_name_input) ||
-        image_buttons_handle_mouse(m_dialog, 159, 249, image_buttons, 2, 0))
+static void handle_input(const mouse* m, const hotkeys* h) {
+    const mouse* m_dialog = mouse_in_dialog(m);
+    if (input_box_handle_mouse(m_dialog, &player_name_input)
+        || image_buttons_handle_mouse(m_dialog, 159, 249, image_buttons, 2, 0))
         return;
     if (input_box_is_accepted(&player_name_input)) {
         confirm_new_player_name(0, 0);
@@ -85,12 +82,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 }
 
 void window_new_career_show() {
-    window_type window = {
-            WINDOW_NEW_CAREER,
-            window_draw_underlying_window,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_NEW_CAREER, window_draw_underlying_window, draw_foreground, handle_input};
     init();
     window_show(&window);
 }

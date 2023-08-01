@@ -14,16 +14,16 @@ struct mission_choice_branch_t {
     int x;
     int y;
     int text_id;
-    mission_step_t *next_play = nullptr;
+    mission_step_t* next_play = nullptr;
 };
 
 struct mission_step_t {
     int scenario_id = -1;
     int intro_MM = -1;
     int victory_text_id = -1;
-    int path_ids[MAX_MISSION_CHOICE_BRANCHES] = { -1 }; // all elements initialized to -1
-    const uint8_t *map_name;
-    mission_step_t *requirements[MAX_MISSION_CHOICE_BRANCHES];
+    int path_ids[MAX_MISSION_CHOICE_BRANCHES] = {-1}; // all elements initialized to -1
+    const uint8_t* map_name;
+    mission_step_t* requirements[MAX_MISSION_CHOICE_BRANCHES];
 
     // choices
     int graphics_id;
@@ -35,8 +35,8 @@ struct mission_step_t {
     bool is_campaign_end = false;
     int campaign_id = -1;
     int mission_rank = -1;
-    mission_step_t *previous_in_list = nullptr;
-    mission_step_t *next_in_list = nullptr;
+    mission_step_t* previous_in_list = nullptr;
+    mission_step_t* next_in_list = nullptr;
 };
 
 enum {
@@ -126,101 +126,101 @@ enum {
     CAMPAIGN_MAX = MAX_MISSION_CAMPAIGNS
 };
 
-//static const int SCENARIO_LAST_IN_CAMPAIGN[] = {
-//        SCENARIO_PERWADJYT,
-//        SCENARIO_ABEDJU,
-//        SCENARIO_DUNQUL_OASIS,
-//        SCENARIO_BUBASTIS,
-//        SCENARIO_HETEPSENUSRET,
-//        ///
-//        SCENARIO_VALLEY_SETI,
-//        SCENARIO_RAMSES_IN_THE_VALLEY,
-//        SCENARIO_TANIS,
-//        SCENARIO_ACTIUM
-//};
+// static const int SCENARIO_LAST_IN_CAMPAIGN[] = {
+//         SCENARIO_PERWADJYT,
+//         SCENARIO_ABEDJU,
+//         SCENARIO_DUNQUL_OASIS,
+//         SCENARIO_BUBASTIS,
+//         SCENARIO_HETEPSENUSRET,
+//         ///
+//         SCENARIO_VALLEY_SETI,
+//         SCENARIO_RAMSES_IN_THE_VALLEY,
+//         SCENARIO_TANIS,
+//         SCENARIO_ACTIUM
+// };
 
-//static const struct {
-//    int req_beaten[3] = {SCENARIO_NULL, SCENARIO_NULL, SCENARIO_NULL};
-//} SCENARIO_REQUIREMENTS_PH[] = {
-//        {}, // nubt
-//        {}, // thinis
-//        {}, // perwadjyt
-//        //
-//        {}, // nekhen
-//        {}, // men-nefer
-//        {}, // timna
-//        {SCENARIO_TIMNA}, // behdet
-//        {SCENARIO_TIMNA}, // abedju
-//        //
-//        {SCENARIO_BEHDET, SCENARIO_ABEDJU}, // selima oasis
-//        {SCENARIO_BEHDET, SCENARIO_ABEDJU}, // abu
-//        {SCENARIO_SELIMA_OASIS, SCENARIO_ABU}, // saqqara
-//        {SCENARIO_SAQQARA}, // serabit khadim
-//        {SCENARIO_SAQQARA}, // meidum
-//        {SCENARIO_SERABIT_KHADIM, SCENARIO_MEIDUM}, // buhen
-//        {SCENARIO_SERABIT_KHADIM, SCENARIO_MEIDUM}, // south dashur
-//        {SCENARIO_BUHEN, SCENARIO_SOUTH_DASHUR}, // north dashur
-//        {SCENARIO_NORTH_DASHUR}, // iunet
-//        {SCENARIO_NORTH_DASHUR}, // on
-//        {SCENARIO_IUNET, SCENARIO_ON}, // rostja
-//        {SCENARIO_ROSTJA}, // bahariya oasis
-//        {SCENARIO_ROSTJA}, // djedu
-//        {SCENARIO_BAHARIYA_OASIS, SCENARIO_DJEDU}, // dakhla oasis
-//        {SCENARIO_BAHARIYA_OASIS, SCENARIO_DJEDU}, // dunqul oasis
-//        //
-//        {SCENARIO_DAKHLA_OASIS, SCENARIO_DUNQUL_OASIS}, // thinis
-//        {SCENARIO_DAKHLA_OASIS, SCENARIO_DUNQUL_OASIS}, // waset
-//        {SCENARIO_THINIS_2, SCENARIO_WASET}, // kebet
-//        {SCENARIO_THINIS_2, SCENARIO_WASET}, // menat khufu
-//        {SCENARIO_KEBET, SCENARIO_MENAT_KHUFU}, // itjtawy
-//        {SCENARIO_ITJTAWY}, // iken
-//        {SCENARIO_ITJTAWY}, // sawu
-//        {SCENARIO_IKEN, SCENARIO_SAWU}, // heh
-//        {SCENARIO_IKEN, SCENARIO_SAWU}, // bubastis
-//        //
-//        {SCENARIO_HEH, SCENARIO_BUBASTIS}, // khmun
-//        {SCENARIO_HEH, SCENARIO_BUBASTIS}, // sauty
-//        {SCENARIO_KHMUN, SCENARIO_SAUTY}, // byblos
-//        {SCENARIO_KHMUN, SCENARIO_SAUTY}, // baki
-//        {SCENARIO_BYBLOS}, // rowarty
-//        {SCENARIO_BAKI}, // hetepsenusret
+// static const struct {
+//     int req_beaten[3] = {SCENARIO_NULL, SCENARIO_NULL, SCENARIO_NULL};
+// } SCENARIO_REQUIREMENTS_PH[] = {
+//         {}, // nubt
+//         {}, // thinis
+//         {}, // perwadjyt
+//         //
+//         {}, // nekhen
+//         {}, // men-nefer
+//         {}, // timna
+//         {SCENARIO_TIMNA}, // behdet
+//         {SCENARIO_TIMNA}, // abedju
+//         //
+//         {SCENARIO_BEHDET, SCENARIO_ABEDJU}, // selima oasis
+//         {SCENARIO_BEHDET, SCENARIO_ABEDJU}, // abu
+//         {SCENARIO_SELIMA_OASIS, SCENARIO_ABU}, // saqqara
+//         {SCENARIO_SAQQARA}, // serabit khadim
+//         {SCENARIO_SAQQARA}, // meidum
+//         {SCENARIO_SERABIT_KHADIM, SCENARIO_MEIDUM}, // buhen
+//         {SCENARIO_SERABIT_KHADIM, SCENARIO_MEIDUM}, // south dashur
+//         {SCENARIO_BUHEN, SCENARIO_SOUTH_DASHUR}, // north dashur
+//         {SCENARIO_NORTH_DASHUR}, // iunet
+//         {SCENARIO_NORTH_DASHUR}, // on
+//         {SCENARIO_IUNET, SCENARIO_ON}, // rostja
+//         {SCENARIO_ROSTJA}, // bahariya oasis
+//         {SCENARIO_ROSTJA}, // djedu
+//         {SCENARIO_BAHARIYA_OASIS, SCENARIO_DJEDU}, // dakhla oasis
+//         {SCENARIO_BAHARIYA_OASIS, SCENARIO_DJEDU}, // dunqul oasis
+//         //
+//         {SCENARIO_DAKHLA_OASIS, SCENARIO_DUNQUL_OASIS}, // thinis
+//         {SCENARIO_DAKHLA_OASIS, SCENARIO_DUNQUL_OASIS}, // waset
+//         {SCENARIO_THINIS_2, SCENARIO_WASET}, // kebet
+//         {SCENARIO_THINIS_2, SCENARIO_WASET}, // menat khufu
+//         {SCENARIO_KEBET, SCENARIO_MENAT_KHUFU}, // itjtawy
+//         {SCENARIO_ITJTAWY}, // iken
+//         {SCENARIO_ITJTAWY}, // sawu
+//         {SCENARIO_IKEN, SCENARIO_SAWU}, // heh
+//         {SCENARIO_IKEN, SCENARIO_SAWU}, // bubastis
+//         //
+//         {SCENARIO_HEH, SCENARIO_BUBASTIS}, // khmun
+//         {SCENARIO_HEH, SCENARIO_BUBASTIS}, // sauty
+//         {SCENARIO_KHMUN, SCENARIO_SAUTY}, // byblos
+//         {SCENARIO_KHMUN, SCENARIO_SAUTY}, // baki
+//         {SCENARIO_BYBLOS}, // rowarty
+//         {SCENARIO_BAKI}, // hetepsenusret
 //
-//        // cleopatra
-//        {},
-//        {},
-//        {},
-//        //
-//        {},
-//        {},
-//        {},
-//        {},
-//        //
-//        {},
-//        {},
-//        {},
-//        //
-//        {},
-//        {},
-//        {},
-//        {},
-//        {}
-//};
+//         // cleopatra
+//         {},
+//         {},
+//         {},
+//         //
+//         {},
+//         {},
+//         {},
+//         {},
+//         //
+//         {},
+//         {},
+//         {},
+//         //
+//         {},
+//         {},
+//         {},
+//         {},
+//         {}
+// };
 
-//static const int RANK_CHOICE_C3[] = {
-//        0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-//};
+// static const int RANK_CHOICE_C3[] = {
+//         0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+// };
 //// at the end of a mission, do we have a choice in selecting the next map?
 //// 0 = no, 1 = yes
-//static const int CAN_CHOOSE_NEXT_SCENARIO_PH[22] = {
-//        0, 0, 0,
-//        0, 0, 1,
-//        1, 0, 1, 1, 0, 1, 1,
-//        1, 1, 0, 1, 1,
-//        1, 1, 0, 0
-//};
+// static const int CAN_CHOOSE_NEXT_SCENARIO_PH[22] = {
+//         0, 0, 0,
+//         0, 0, 1,
+//         1, 0, 1, 1, 0, 1, 1,
+//         1, 1, 0, 1, 1,
+//         1, 1, 0, 0
+// };
 
 // lookup table converting MISSION RANK to SCENARIO ID.
-//static const struct {
+// static const struct {
 //    int scenario[3] = {SCENARIO_NULL, SCENARIO_NULL, SCENARIO_NULL};
 //} MISSION_RANK_TO_SCENARIO[] = {
 //        {SCENARIO_NUBT}, // <-- no scenario will invoke this rank     0
@@ -254,7 +254,7 @@ enum {
 //        {SCENARIO_HETEPSENUSRET}, //                                 24 <--- GOD.
 //};
 // lookup table converting SCENARIO ID to MISSION RANK.
-//static const int SCENARIO_TO_MISSION_RANK[] = {
+// static const int SCENARIO_TO_MISSION_RANK[] = {
 //        0, 1, 2,
 //        3, 4, 5, 6, 6,
 //        7, 7, 8, 9, 9, 10, 10, 11, 12, 12, 13, 14, 14, 15, 15,
@@ -262,9 +262,9 @@ enum {
 //        21, 21, 22, 22, 23, 24, // <-- the last two are the same "rank" but are unlocked separately!
 //};
 
-const uint8_t *game_mission_get_name(int scenario_id);
-const mission_step_t *get_campaign_mission_step_data(int campaign_id, int step_index);
-const mission_step_t *get_scenario_step_data(int scenario_id);
+const uint8_t* game_mission_get_name(int scenario_id);
+const mission_step_t* get_campaign_mission_step_data(int campaign_id, int step_index);
+const mission_step_t* get_scenario_step_data(int scenario_id);
 
 int get_scenario_mission_rank(int scenario_id);
 int get_scenario_campaign_id(int scenario_id);

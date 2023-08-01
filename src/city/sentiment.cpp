@@ -7,15 +7,12 @@
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
-#include "io/config/config.h"
 #include "game/difficulty.h"
 #include "game/tutorial.h"
+#include "io/config/config.h"
 
-static const int SENTIMENT_PER_TAX_RATE[26] = {
-        3, 2, 2, 2, 1, 1, 1, 0, 0, -1,
-        -2, -2, -3, -3, -3, -5, -5, -5, -5, -6,
-        -6, -6, -6, -6, -6, -6
-};
+static const int SENTIMENT_PER_TAX_RATE[26]
+  = {3, 2, 2, 2, 1, 1, 1, 0, 0, -1, -2, -2, -3, -3, -3, -5, -5, -5, -5, -6, -6, -6, -6, -6, -6, -6};
 
 int city_sentiment(void) {
     return city_data.sentiment.value;
@@ -27,16 +24,15 @@ int city_sentiment_int(void) {
 
 void city_sentiment_change_happiness(int amount) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size)
             b->sentiment.house_happiness = calc_bound(b->sentiment.house_happiness + amount, 0, 100);
-
     }
 }
 
 void city_sentiment_set_max_happiness(int max) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size) {
             if (b->sentiment.house_happiness > max)
                 b->sentiment.house_happiness = max;
@@ -165,7 +161,7 @@ void city_sentiment_update(void) {
     int total_sentiment_penalty_tents = 0;
     int default_sentiment = difficulty_sentiment();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->house_size)
             continue;
 
@@ -238,7 +234,7 @@ void city_sentiment_update(void) {
     int total_sentiment = 0;
     int total_houses = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size && b->house_population) {
             total_houses++;
             total_sentiment += b->sentiment.house_happiness;

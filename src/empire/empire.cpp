@@ -5,36 +5,33 @@
 #include "city/population.h"
 #include "city/resource.h"
 #include "core/calc.h"
-#include "io/log.h"
-#include "io/io.h"
 #include "empire/city.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
+#include "io/io.h"
+#include "io/log.h"
 #include "type.h"
 
-#include <string.h>
 #include "io/io_buffer.h"
+#include <string.h>
 
 const static int EMPIRE_WIDTH[2] = {
-        2000,
-        1200,
+  2000,
+  1200,
 };
 const static int EMPIRE_HEIGHT[2] = {
-        1000,
-        1600,
+  1000,
+  1600,
 };
 
 enum E_EMPIRE {
-//    EMPIRE_WIDTH = 2000,
-//    EMPIRE_HEIGHT = 1000,
+    //    EMPIRE_WIDTH = 2000,
+    //    EMPIRE_HEIGHT = 1000,
     EMPIRE_HEADER_SIZE = 1280,
-//    EMPIRE_DATA_SIZE = 12800
+    //    EMPIRE_DATA_SIZE = 12800
 };
 
-const static int EMPIRE_DATA_SIZE[2] = {
-        12800,
-        15200
-};
+const static int EMPIRE_DATA_SIZE[2] = {12800, 15200};
 
 static struct {
     int initial_scroll_x;
@@ -46,20 +43,17 @@ static struct {
     int viewport_height;
 } data;
 
-const char SCENARIO_FILE[2][2][100] = {
-        {"c32.emp", "c3.emp"},
-        {"", "Pharaoh2.emp"}
-};
+const char SCENARIO_FILE[2][2][100] = {{"c32.emp", "c3.emp"}, {"", "Pharaoh2.emp"}};
 
 bool empire_city_type_can_trade(int type) {
     if (GAME_ENV == ENGINE_ENV_C3) {
         return type == EMPIRE_CITY_PHARAOH;
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         switch (type) {
-            case EMPIRE_CITY_PHARAOH_TRADING:
-            case EMPIRE_CITY_EGYPTIAN_TRADING:
-            case EMPIRE_CITY_FOREIGN_TRADING:
-                return true;
+        case EMPIRE_CITY_PHARAOH_TRADING:
+        case EMPIRE_CITY_EGYPTIAN_TRADING:
+        case EMPIRE_CITY_FOREIGN_TRADING:
+            return true;
         }
     }
     return false;
@@ -74,21 +68,21 @@ static void check_scroll_boundaries(void) {
 }
 
 void empire_load_editor(int empire_id, int viewport_width, int viewport_height) {
-//    empire_load_external_c3(1, empire_id);
-//    empire_object_init_cities();
-//
-//    const empire_object *our_city = empire_object_get_our_city();
-//
-//    data.viewport_width = viewport_width;
-//    data.viewport_height = viewport_height;
-//    if (our_city) {
-//        data.scroll_x = our_city->x - data.viewport_width / 2;
-//        data.scroll_y = our_city->y - data.viewport_height / 2;
-//    } else {
-//        data.scroll_x = data.initial_scroll_x;
-//        data.scroll_y = data.initial_scroll_y;
-//    }
-//    check_scroll_boundaries();
+    //    empire_load_external_c3(1, empire_id);
+    //    empire_object_init_cities();
+    //
+    //    const empire_object *our_city = empire_object_get_our_city();
+    //
+    //    data.viewport_width = viewport_width;
+    //    data.viewport_height = viewport_height;
+    //    if (our_city) {
+    //        data.scroll_x = our_city->x - data.viewport_width / 2;
+    //        data.scroll_y = our_city->y - data.viewport_height / 2;
+    //    } else {
+    //        data.scroll_x = data.initial_scroll_x;
+    //        data.scroll_y = data.initial_scroll_y;
+    //    }
+    //    check_scroll_boundaries();
 }
 void empire_init_scenario(void) {
     data.scroll_x = data.initial_scroll_x;
@@ -104,11 +98,11 @@ void empire_set_viewport(int width, int height) {
     data.viewport_height = height;
     check_scroll_boundaries();
 }
-void empire_get_scroll(int *x_scroll, int *y_scroll) {
+void empire_get_scroll(int* x_scroll, int* y_scroll) {
     *x_scroll = data.scroll_x;
     *y_scroll = data.scroll_y;
 }
-void empire_adjust_scroll(int *x_offset, int *y_offset) {
+void empire_adjust_scroll(int* x_offset, int* y_offset) {
     *x_offset = *x_offset - data.scroll_x;
     *y_offset = *y_offset - data.scroll_y;
 }
@@ -150,7 +144,7 @@ static int get_max_stock_for_population(void) {
 }
 
 bool empire_can_export_resource_to_city(int city_id, int resource) {
-    empire_city *city = empire_city_get(city_id);
+    empire_city* city = empire_city_get(city_id);
     if (city_id && trade_route_limit_reached(city->route_id, resource)) {
         // quota reached
         return false;
@@ -165,7 +159,7 @@ bool empire_can_export_resource_to_city(int city_id, int resource) {
         return false;
 }
 int empire_can_import_resource_from_city(int city_id, int resource) {
-    empire_city *city = empire_city_get(city_id);
+    empire_city* city = empire_city_get(city_id);
     if (!city->sells_resource[resource])
         return 0;
 
@@ -220,7 +214,7 @@ int empire_can_import_resource_from_city(int city_id, int resource) {
     return in_stock < max_in_stock ? 1 : 0;
 }
 
-io_buffer *iob_empire_map_params = new io_buffer([](io_buffer *iob) {
+io_buffer* iob_empire_map_params = new io_buffer([](io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.scroll_x);
     iob->bind(BIND_SIGNATURE_INT32, &data.scroll_y);
     iob->bind(BIND_SIGNATURE_INT32, &data.selected_object);

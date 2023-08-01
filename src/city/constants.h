@@ -46,18 +46,14 @@ enum {
 };
 
 enum {
-    GOD_OSIRIS = 0,     // GOD_CERES = 0,
-    GOD_RA = 1,         // GOD_NEPTUNE = 1,
-    GOD_PTAH = 2,       // GOD_MERCURY = 2,
-    GOD_SETH = 3,       // GOD_MARS = 3,
-    GOD_BAST = 4,       // GOD_VENUS = 4
+    GOD_OSIRIS = 0, // GOD_CERES = 0,
+    GOD_RA = 1,     // GOD_NEPTUNE = 1,
+    GOD_PTAH = 2,   // GOD_MERCURY = 2,
+    GOD_SETH = 3,   // GOD_MARS = 3,
+    GOD_BAST = 4,   // GOD_VENUS = 4
 };
 
-enum {
-    GOD_STATUS_UNKNOWN = 0,
-    GOD_STATUS_KNOWN = 1,
-    GOD_STATUS_PATRON = 2
-};
+enum { GOD_STATUS_UNKNOWN = 0, GOD_STATUS_KNOWN = 1, GOD_STATUS_PATRON = 2 };
 
 enum {
     TRADE_STATUS_NONE = 0,

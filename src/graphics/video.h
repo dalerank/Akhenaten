@@ -6,7 +6,7 @@
  * @param filename Video file
  * @return True if the video could be loaded
  */
-bool video_start(const char *filename);
+bool video_start(const char* filename);
 
 /**
  * Get size of the video
@@ -14,7 +14,7 @@ bool video_start(const char *filename);
  * @param width Out: video width
  * @param height Out: video height
  */
-void video_size(int *width, int *height);
+void video_size(int* width, int* height);
 
 /**
  * Initializes the video subsystem, necessary just before a video is drawn for the first time

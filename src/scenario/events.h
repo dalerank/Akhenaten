@@ -35,11 +35,20 @@ enum {
 };
 
 enum {
-    EVENT_SUBTYPE_GENERIC_REQUEST = 0,          EVENT_SUBTYPE_CITY_FELL_TO_ENEMY = 0,       EVENT_SUBTYPE_MSG_CITY_SAVED = 0,
-    EVENT_SUBTYPE_CITY_ASKS_FOR_TROOPS = 1,     EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED = 1,   EVENT_SUBTYPE_MSG_DISTANT_BATTLE_WON = 1,
-    EVENT_SUBTYPE_DISTANT_BATTLE = 2,           EVENT_SUBTYPE_NEW_TRADE_ROUTE = 2,          EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST = 2,
-    EVENT_SUBTYPE_REQ_FOR_FESTIVAL = 3,         EVENT_SUBTYPE_LOST_TRADE_ROUTE = 3,         EVENT_SUBTYPE_MSG_ACKNOWLEDGEMENT = 3,
-    EVENT_SUBTYPE_CONSTRUCTION_PROJECT = 4,     EVENT_SUBTYPE_CITY_UNDER_SIEGE = 4,
+    EVENT_SUBTYPE_GENERIC_REQUEST = 0,
+    EVENT_SUBTYPE_CITY_FELL_TO_ENEMY = 0,
+    EVENT_SUBTYPE_MSG_CITY_SAVED = 0,
+    EVENT_SUBTYPE_CITY_ASKS_FOR_TROOPS = 1,
+    EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED = 1,
+    EVENT_SUBTYPE_MSG_DISTANT_BATTLE_WON = 1,
+    EVENT_SUBTYPE_DISTANT_BATTLE = 2,
+    EVENT_SUBTYPE_NEW_TRADE_ROUTE = 2,
+    EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST = 2,
+    EVENT_SUBTYPE_REQ_FOR_FESTIVAL = 3,
+    EVENT_SUBTYPE_LOST_TRADE_ROUTE = 3,
+    EVENT_SUBTYPE_MSG_ACKNOWLEDGEMENT = 3,
+    EVENT_SUBTYPE_CONSTRUCTION_PROJECT = 4,
+    EVENT_SUBTYPE_CITY_UNDER_SIEGE = 4,
     EVENT_SUBTYPE_FAMINE = 5,
     EVENT_SUBTYPE_CITY_GENERIC_TROUBLE = 6,
 };
@@ -80,20 +89,21 @@ enum {
 
 enum {
     EVENT_STATE_INITIAL = 0,
-    EVENT_STATE_IN_PROGRESS = 1, EVENT_STATE_OVERDUE = 1,
+    EVENT_STATE_IN_PROGRESS = 1,
+    EVENT_STATE_OVERDUE = 1,
     EVENT_STATE_FINISHED = 2,
     EVENT_STATE_FINISHED_LATE = 3,
     EVENT_STATE_FAILED = 4,
 };
 
 enum {
-    EVENT_VAR_DIRECT_RESULT = 0,        // because
-    EVENT_VAR_INCIDENTALLY = 1,         // (no conjunction)
-    EVENT_VAR_IN_SPITE_OF = 2,          // even though...
-    EVENT_VAR_NO_CAUSE = 3,             // (depends on the message?)
+    EVENT_VAR_DIRECT_RESULT = 0, // because
+    EVENT_VAR_INCIDENTALLY = 1,  // (no conjunction)
+    EVENT_VAR_IN_SPITE_OF = 2,   // even though...
+    EVENT_VAR_NO_CAUSE = 3,      // (depends on the message?)
     EVENT_VAR_CYCLICAL = 4,
     EVENT_VAR_SPECIFIC_AS_NEEDED = 5,
-    EVENT_VAR_AUTO = 6,                 // (automatically set)
+    EVENT_VAR_AUTO = 6, // (automatically set)
 };
 
 enum {
@@ -153,12 +163,12 @@ typedef struct {
 
 const int get_scenario_events_num();
 
-const event_ph_t *get_scenario_event(int id);
-uint8_t *get_eventmsg_text(int group_id, int index);
+const event_ph_t* get_scenario_event(int id);
+uint8_t* get_eventmsg_text(int group_id, int index);
 
 void scenario_event_process();
 
 bool eventmsg_load(void);
 bool eventmsg_auto_phrases_load(void);
 
-#endif //OZYMANDIAS_EVENTS_H
+#endif // OZYMANDIAS_EVENTS_H

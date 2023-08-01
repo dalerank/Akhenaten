@@ -1,12 +1,12 @@
 #include "manager.h"
+#include "core/stopwatch.h"
 #include "core/string.h"
 #include "core/zip.h"
-#include "io/log.h"
-#include "core/stopwatch.h"
 #include "io/gamestate/boilerplate.h"
+#include "io/log.h"
 
-#include <string.h>
 #include <cinttypes>
+#include <string.h>
 
 #define COMPRESS_BUFFER_SIZE 3000000
 #define UNCOMPRESSED 0x80000000
@@ -14,13 +14,13 @@
 #include "SDL.h"
 
 #ifdef _WIN32
-#  ifdef _WIN64
-#    define PRI_SIZET PRIu64
-#  else
-#    define PRI_SIZET PRIu32
-#  endif
+#ifdef _WIN64
+#define PRI_SIZET PRIu64
 #else
-#  define PRI_SIZET "zu"
+#define PRI_SIZET PRIu32
+#endif
+#else
+#define PRI_SIZET "zu"
 #endif
 
 FileIOManager FILEIO;
@@ -39,13 +39,13 @@ void FileIOManager::clear() {
     alloc_index = 0;
 }
 
-buffer *FileIOManager::push_chunk(int size, bool compressed, const char *name, io_buffer *iob) {
+buffer* FileIOManager::push_chunk(int size, bool compressed, const char* name, io_buffer* iob) {
     // add empty piece onto the stack if we're beyond the current capacity
     if (alloc_index >= file_chunks.size())
         file_chunks.push_back(file_chunk_t());
 
     // fill info
-    file_chunk_t &chunk = file_chunks.at(alloc_index);
+    file_chunk_t& chunk = file_chunks.at(alloc_index);
     chunk.compressed = compressed;
     safe_realloc_for_size(&chunk.buf, size);
     strncpy(chunk.name, name, 99);
@@ -68,38 +68,44 @@ const int FileIOManager::num_chunks() {
 }
 
 int findex;
-char *fname;
-static void export_unzipped(file_chunk_t *chunk) {
-    char *lfile = (char *) malloc(200);
-//    sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex + 1, chunk->buf->size(), fname);
+char* fname;
+static void export_unzipped(file_chunk_t* chunk) {
+    char* lfile = (char*)malloc(200);
+    //    sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex + 1, chunk->buf->size(), fname);
     GamestateIO::prepare_folders("DEV_TESTING/zip/");
     sprintf(lfile, "DEV_TESTING/zip/%03i_%s", findex + 1, fname);
-    FILE *log = fopen(lfile, "wb+");
+    FILE* log = fopen(lfile, "wb+");
     if (log)
         fwrite(chunk->buf->get_data(), chunk->buf->size(), 1, log);
     fclose(log);
     free(lfile);
 }
-static void log_hex(file_chunk_t *chunk, int i, int offs, int num_chunks) {
+static void log_hex(file_chunk_t* chunk, int i, int offs, int num_chunks) {
     // log first few bytes of the filepiece
     size_t s = chunk->buf->size() < 16 ? chunk->buf->size() : 16;
     char hexstr[40] = {0};
     for (int b = 0; b < s; b++) {
         char hexcode[3] = {0};
         uint8_t inbyte = chunk->buf->get_value(b);
-        snprintf(hexcode, sizeof(hexcode)/sizeof(hexcode[0]), "%02X", inbyte);
-        strncat(hexstr, hexcode, sizeof(hexcode)/sizeof(hexcode[0]) - 1);
+        snprintf(hexcode, sizeof(hexcode) / sizeof(hexcode[0]), "%02X", inbyte);
+        strncat(hexstr, hexcode, sizeof(hexcode) / sizeof(hexcode[0]) - 1);
         if ((b + 1) % 4 == 0 || (b + 1) == s)
             strncat(hexstr, " ", 2);
     }
 
     // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
-    log_info("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", chunk->compressed ? "(C)" : "---", i + 1, num_chunks,
-            offs, hexstr, chunk->buf->size(), fname);
+    log_info("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s",
+             chunk->compressed ? "(C)" : "---",
+             i + 1,
+             num_chunks,
+             offs,
+             hexstr,
+             chunk->buf->size(),
+             fname);
 }
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
-static bool read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
+static bool read_compressed_chunk(FILE* fp, buffer* buf, int filepiece_size) {
     // check that the stream size isn't above maximum temp buffer
     if (filepiece_size > COMPRESS_BUFFER_SIZE)
         return false;
@@ -109,7 +115,7 @@ static bool read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
     fread(&chunk_size, 4, 1, fp);
 
     // if file signature says "uncompressed" well man, it's uncompressed. read as normal ignoring the directive
-    if ((unsigned int) chunk_size == UNCOMPRESSED) {
+    if ((unsigned int)chunk_size == UNCOMPRESSED) {
         if (buf->from_file(filepiece_size, fp) != filepiece_size)
             return false;
     } else {
@@ -124,27 +130,28 @@ static bool read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
             log_info("Incorrect buffer size, expected %u, found %i", buf->size(), bsize);
             return false;
         }
-//        if (fread(compress_buffer, 1, chunk_size, fp) != chunk_size
-//            || zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size) !=
-//               buf->size())
-//            return 0;
+        //        if (fread(compress_buffer, 1, chunk_size, fp) != chunk_size
+        //            || zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(),
+        //            &filepiece_size) !=
+        //               buf->size())
+        //            return 0;
     }
-//    buf->force_validate_unsafe_pls_use_carefully();
+    //    buf->force_validate_unsafe_pls_use_carefully();
 
     return true;
 }
-static bool write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
+static bool write_compressed_chunk(FILE* fp, buffer* buf, int bytes_to_write) {
     if (bytes_to_write > COMPRESS_BUFFER_SIZE)
         return false;
 
     int output_size = COMPRESS_BUFFER_SIZE;
     if (zip_compress(buf->get_data(), bytes_to_write, compress_buffer, &output_size)) {
-//        write_int32(fp, output_size);
+        //        write_int32(fp, output_size);
         fwrite(&output_size, 4, 1, fp);
         fwrite(compress_buffer, 1, output_size, fp);
     } else {
         // unable to compress: write uncompressed
-//        write_int32(fp, UNCOMPRESSED);
+        //        write_int32(fp, UNCOMPRESSED);
         output_size = UNCOMPRESSED;
         fwrite(&output_size, 4, 1, fp);
         fwrite(buf->get_data(), 1, bytes_to_write, fp);
@@ -154,20 +161,21 @@ static bool write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
 
 static stopwatch WATCH;
 
-bool FileIOManager::io_failure_cleanup(const char *action, const char *reason) {
-    const char *format = "Unable to %s file, %s.";
+bool FileIOManager::io_failure_cleanup(const char* action, const char* reason) {
+    const char* format = "Unable to %s file, %s.";
     int size_f = strlen(format);
     int size_a = strlen(action);
     int size_r = strlen(reason);
-    int size = size_f + size_a + size_r - 4 + 1; // remove the size of the format characters, add one character for string termination
+    int size = size_f + size_a + size_r - 4
+               + 1; // remove the size of the format characters, add one character for string termination
     std::vector<char> text(size);
     snprintf(text.data(), size, format, action, reason);
     log_error(text.data(), 0, 0);
     clear();
     return false;
 }
-bool FileIOManager::serialize(const char *filename, int offset, e_file_format format, const int version, void(*init_schema)(e_file_format _format, const int _version)) {
-
+bool FileIOManager::serialize(const char* filename, int offset, e_file_format format, const int version,
+                              void (*init_schema)(e_file_format _format, const int _version)) {
     WATCH.START();
 
     // first, clear up the manager data and set the new file info
@@ -178,7 +186,7 @@ bool FileIOManager::serialize(const char *filename, int offset, e_file_format fo
     file_version = version;
 
     // open file handle
-    FILE *fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "wb");
+    FILE* fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "wb");
     if (!fp)
         return io_failure_cleanup("write", "file could not be accessed");
     else if (file_offset)
@@ -198,7 +206,7 @@ bool FileIOManager::serialize(const char *filename, int offset, e_file_format fo
 
     // serialize chunks to disk
     for (int i = 0; i < num_chunks(); i++) {
-        file_chunk_t *chunk = &file_chunks.at(i);
+        file_chunk_t* chunk = &file_chunks.at(i);
 
         int result = 0;
         if (chunk->compressed)
@@ -218,15 +226,16 @@ bool FileIOManager::serialize(const char *filename, int offset, e_file_format fo
     file_close(fp);
 
     log_info("File write successful: %s %i@ --- VERSION: %i --- %" PRIu64 " milliseconds",
-            file_path,
-            file_offset,
-            file_version,
-            WATCH.STOP());
+             file_path,
+             file_offset,
+             file_version,
+             WATCH.STOP());
 
     return true;
 }
-bool FileIOManager::unserialize(const char *filename, int offset, e_file_format format, const int(*determine_file_version)(const char *fnm, int ofst), void(*init_schema)(e_file_format _format, const int _version)) {
-
+bool FileIOManager::unserialize(const char* filename, int offset, e_file_format format,
+                                const int (*determine_file_version)(const char* fnm, int ofst),
+                                void (*init_schema)(e_file_format _format, const int _version)) {
     WATCH.START();
 
     // first, clear up the manager data and set the new file info
@@ -236,7 +245,7 @@ bool FileIOManager::unserialize(const char *filename, int offset, e_file_format 
     file_format = format;
 
     // open file handle
-    FILE *fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "rb");
+    FILE* fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "rb");
     if (!fp) {
         log_error("Unable to read file, file could not be accessed.");
         clear();
@@ -267,7 +276,7 @@ bool FileIOManager::unserialize(const char *filename, int offset, e_file_format 
 
     // read file contents into buffers
     for (int i = 0; i < num_chunks(); i++) {
-        file_chunk_t *chunk = &file_chunks.at(i);
+        file_chunk_t* chunk = &file_chunks.at(i);
         findex = i;
         fname = chunk->name;
 
@@ -311,10 +320,10 @@ bool FileIOManager::unserialize(const char *filename, int offset, e_file_format 
     }
 
     log_info("File read successful: %s %i@ --- VERSION HEADER: %i --- %" PRIu64 " milliseconds",
-            file_path,
-            file_offset,
-            file_version,
-            WATCH.STOP());
+             file_path,
+             file_offset,
+             file_version,
+             WATCH.STOP());
 
     return true;
 }

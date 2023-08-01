@@ -11,11 +11,11 @@ struct difficulty_data_t {
 };
 
 static const difficulty_data_t g_difficulty_data[] = {
-        {300, 40,  70, 80}, // very easy
-        {200, 60,  60, 70}, // easy
-        {150, 80,  50, 60}, // normal
-        {100, 100, 50, 50}, // hard
-        {75,  120, 40, 40} // very hard
+  {300, 40, 70, 80},  // very easy
+  {200, 60, 60, 70},  // easy
+  {150, 80, 50, 60},  // normal
+  {100, 100, 50, 50}, // hard
+  {75, 120, 40, 40}   // very hard
 };
 
 int difficulty_starting_kingdom(void) {
@@ -36,13 +36,13 @@ int difficulty_adjust_enemies(int enemies) {
 
 int difficulty_adjust_wolf_attack(int attack) {
     switch (setting_difficulty()) {
-        case DIFFICULTY_VERY_EASY:
-            return 2;
-        case DIFFICULTY_EASY:
-            return 4;
-        case DIFFICULTY_NORMAL:
-            return 6;
-        default:
-            return attack;
+    case DIFFICULTY_VERY_EASY:
+        return 2;
+    case DIFFICULTY_EASY:
+        return 4;
+    case DIFFICULTY_NORMAL:
+        return 6;
+    default:
+        return attack;
     }
 }

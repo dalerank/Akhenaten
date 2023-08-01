@@ -1,7 +1,7 @@
-#include "widget/city/tile_draw.h"
-#include "widget/city/ornaments.h"
-#include "building/monuments.h"
 #include "building_tiles.h"
+#include "building/monuments.h"
+#include "widget/city/ornaments.h"
+#include "widget/city/tile_draw.h"
 
 #include "building/industry.h"
 #include "grid/aqueduct.h"
@@ -15,7 +15,7 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 
-static int north_tile_grid_offset(int x, int y, int *size) {
+static int north_tile_grid_offset(int x, int y, int* size) {
     int grid_offset = MAP_OFFSET(x, y);
     *size = map_property_multi_tile_size(grid_offset);
     for (int i = 0; i < *size && map_property_multi_tile_x(grid_offset); i++)
@@ -24,17 +24,17 @@ static int north_tile_grid_offset(int x, int y, int *size) {
         grid_offset += GRID_OFFSET(0, -1);
     return grid_offset;
 }
-static void adjust_to_absolute_xy(int *x, int *y, int size) {
+static void adjust_to_absolute_xy(int* x, int* y, int size) {
     switch (city_view_orientation()) {
-        case DIR_2_BOTTOM_RIGHT:
-            *x = *x - size + 1;
-            break;
-        case DIR_4_BOTTOM_LEFT:
-            *x = *x - size + 1;
-            // fall-through
-        case DIR_6_TOP_LEFT:
-            *y = *y - size + 1;
-            break;
+    case DIR_2_BOTTOM_RIGHT:
+        *x = *x - size + 1;
+        break;
+    case DIR_4_BOTTOM_LEFT:
+        *x = *x - size + 1;
+        // fall-through
+    case DIR_6_TOP_LEFT:
+        *y = *y - size + 1;
+        break;
     }
 }
 static void set_crop_tile(int building_id, int x, int y, int dx, int dy, int crop_image_id, int growth) {
@@ -53,22 +53,22 @@ static void set_crop_tile(int building_id, int x, int y, int dx, int dy, int cro
 void map_building_tiles_add(int building_id, int x, int y, int size, int image_id, int terrain) {
     int x_leftmost, y_leftmost;
     switch (city_view_orientation()) {
-        case DIR_0_TOP_RIGHT:
-            x_leftmost = 0;
-            y_leftmost = 1;
-            break;
-        case DIR_2_BOTTOM_RIGHT:
-            x_leftmost = y_leftmost = 0;
-            break;
-        case DIR_4_BOTTOM_LEFT:
-            x_leftmost = 1;
-            y_leftmost = 0;
-            break;
-        case DIR_6_TOP_LEFT:
-            x_leftmost = y_leftmost = 1;
-            break;
-        default:
-            return;
+    case DIR_0_TOP_RIGHT:
+        x_leftmost = 0;
+        y_leftmost = 1;
+        break;
+    case DIR_2_BOTTOM_RIGHT:
+        x_leftmost = y_leftmost = 0;
+        break;
+    case DIR_4_BOTTOM_LEFT:
+        x_leftmost = 1;
+        y_leftmost = 0;
+        break;
+    case DIR_6_TOP_LEFT:
+        x_leftmost = y_leftmost = 1;
+        break;
+    default:
+        return;
     }
     if (!map_grid_is_inside(x, y, size))
         return;
@@ -96,24 +96,24 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
         // farmhouse
         int x_leftmost, y_leftmost;
         switch (city_view_orientation()) {
-            case DIR_0_TOP_RIGHT:
-                x_leftmost = 0;
-                y_leftmost = 1;
-                break;
-            case DIR_2_BOTTOM_RIGHT:
-                x_leftmost = 0;
-                y_leftmost = 0;
-                break;
-            case DIR_4_BOTTOM_LEFT:
-                x_leftmost = 1;
-                y_leftmost = 0;
-                break;
-            case DIR_6_TOP_LEFT:
-                x_leftmost = 1;
-                y_leftmost = 1;
-                break;
-            default:
-                return;
+        case DIR_0_TOP_RIGHT:
+            x_leftmost = 0;
+            y_leftmost = 1;
+            break;
+        case DIR_2_BOTTOM_RIGHT:
+            x_leftmost = 0;
+            y_leftmost = 0;
+            break;
+        case DIR_4_BOTTOM_LEFT:
+            x_leftmost = 1;
+            y_leftmost = 0;
+            break;
+        case DIR_6_TOP_LEFT:
+            x_leftmost = 1;
+            y_leftmost = 1;
+            break;
+        default:
+            return;
         }
         for (int dy = 0; dy < 2; dy++) {
             for (int dx = 0; dx < 2; dx++) {
@@ -127,13 +127,12 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
                 map_property_set_multi_tile_xy(grid_offset, dx, dy, dx == x_leftmost && dy == y_leftmost);
             }
         }
-    }
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-//        int image_id = image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
-//        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_FLOODPLAIN))
-//            image_id = image_id_from_group(GROUP_BUILDING_FARMLAND);
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        //        int image_id = image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
+        //        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_FLOODPLAIN))
+        //            image_id = image_id_from_group(GROUP_BUILDING_FARMLAND);
         map_building_tiles_add(building_id, x, y, 3, get_farm_image(MAP_OFFSET(x, y)), TERRAIN_BUILDING);
-//        crop_image_offset += image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH);
+        //        crop_image_offset += image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH);
         return;
     }
     // crop tile 1
@@ -165,48 +164,47 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
     set_crop_tile(building_id, x, y, 2, 0, crop_image_offset, growth);
 }
 
-void map_add_bandstand_tiles(building *b) {
+void map_add_bandstand_tiles(building* b) {
     int b_delta_0_m1 = b->tile.shifted(0, -1).grid_offset();
     int b_delta_0_1 = b->tile.shifted(0, 1).grid_offset();
     int b_delta_1_0 = b->tile.shifted(1, 0).grid_offset();
     int b_delta_m1_0 = b->tile.shifted(-1, 0).grid_offset();
-//    int b_delta_0_m1 = b->tile.grid_offset() - GRID_OFFSET(0, -1);
-//    int b_delta_0_1 = b->tile.grid_offset() - GRID_OFFSET(0, 1);
-//    int b_delta_1_0 = b->tile.grid_offset() - GRID_OFFSET(1, 0);
-//    int b_delta_m1_0 = b->tile.grid_offset() - GRID_OFFSET(-1, 0);
+    //    int b_delta_0_m1 = b->tile.grid_offset() - GRID_OFFSET(0, -1);
+    //    int b_delta_0_1 = b->tile.grid_offset() - GRID_OFFSET(0, 1);
+    //    int b_delta_1_0 = b->tile.grid_offset() - GRID_OFFSET(1, 0);
+    //    int b_delta_m1_0 = b->tile.grid_offset() - GRID_OFFSET(-1, 0);
 
     int offsets_by_orientation[4];
     switch (city_view_orientation()) {
-        case 0: // north
-            offsets_by_orientation[0] = b_delta_0_m1;
-            offsets_by_orientation[1] = b_delta_0_1;
-            offsets_by_orientation[2] = b_delta_1_0;
-            offsets_by_orientation[3] = b_delta_m1_0;
-            break;
-        case 2: // east
-            offsets_by_orientation[3] = b_delta_0_m1;
-            offsets_by_orientation[2] = b_delta_0_1;
-            offsets_by_orientation[0] = b_delta_1_0;
-            offsets_by_orientation[1] = b_delta_m1_0;
-            break;
-        case 4: // south
-            offsets_by_orientation[1] = b_delta_0_m1;
-            offsets_by_orientation[0] = b_delta_0_1;
-            offsets_by_orientation[3] = b_delta_1_0;
-            offsets_by_orientation[2] = b_delta_m1_0;
-            break;
-        case 6: // west
-            offsets_by_orientation[2] = b_delta_0_m1;
-            offsets_by_orientation[3] = b_delta_0_1;
-            offsets_by_orientation[1] = b_delta_1_0;
-            offsets_by_orientation[0] = b_delta_m1_0;
-            break;
+    case 0: // north
+        offsets_by_orientation[0] = b_delta_0_m1;
+        offsets_by_orientation[1] = b_delta_0_1;
+        offsets_by_orientation[2] = b_delta_1_0;
+        offsets_by_orientation[3] = b_delta_m1_0;
+        break;
+    case 2: // east
+        offsets_by_orientation[3] = b_delta_0_m1;
+        offsets_by_orientation[2] = b_delta_0_1;
+        offsets_by_orientation[0] = b_delta_1_0;
+        offsets_by_orientation[1] = b_delta_m1_0;
+        break;
+    case 4: // south
+        offsets_by_orientation[1] = b_delta_0_m1;
+        offsets_by_orientation[0] = b_delta_0_1;
+        offsets_by_orientation[3] = b_delta_1_0;
+        offsets_by_orientation[2] = b_delta_m1_0;
+        break;
+    case 6: // west
+        offsets_by_orientation[2] = b_delta_0_m1;
+        offsets_by_orientation[3] = b_delta_0_1;
+        offsets_by_orientation[1] = b_delta_1_0;
+        offsets_by_orientation[0] = b_delta_m1_0;
+        break;
     }
 
     for (int j = 0; j < 4; ++j) {
         auto neighbor = building_at(offsets_by_orientation[j]);
-        if (neighbor->type == BUILDING_BANDSTAND
-            && neighbor->tile.grid_offset() == offsets_by_orientation[j]
+        if (neighbor->type == BUILDING_BANDSTAND && neighbor->tile.grid_offset() == offsets_by_orientation[j]
             && neighbor->main() == b->main()) {
             map_image_set(neighbor->tile.grid_offset(), image_id_from_group(GROUP_BUILDING_BANDSTAND) + j);
             continue;
@@ -226,38 +224,38 @@ static void set_underlying_venue_plaza_tile(int grid_offset, int building_id, in
 }
 void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int image_id, bool update_only) {
     switch (city_view_orientation()) {
-        case 0: // north
-            for (int dy = 0; dy < size; dy++) {
-                for (int dx = 0; dx < size; dx++) {
-                    int grid_offset = MAP_OFFSET(x + dx, y + dy);
-                    set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
-                }
+    case 0: // north
+        for (int dy = 0; dy < size; dy++) {
+            for (int dx = 0; dx < size; dx++) {
+                int grid_offset = MAP_OFFSET(x + dx, y + dy);
+                set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
             }
-            break;
-        case 2: // east
-            for (int dy = 0; dy < size; dy++) {
-                for (int dx = 0; dx < size; dx++) {
-                    int grid_offset = MAP_OFFSET(x + size - 1 - dy, y + dx);
-                    set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
-                }
+        }
+        break;
+    case 2: // east
+        for (int dy = 0; dy < size; dy++) {
+            for (int dx = 0; dx < size; dx++) {
+                int grid_offset = MAP_OFFSET(x + size - 1 - dy, y + dx);
+                set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
             }
-            break;
-        case 4: // south
-            for (int dy = 0; dy < size; dy++) {
-                for (int dx = 0; dx < size; dx++) {
-                    int grid_offset = MAP_OFFSET(x + size - 1 - dx, y + size - 1 - dy);
-                    set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
-                }
+        }
+        break;
+    case 4: // south
+        for (int dy = 0; dy < size; dy++) {
+            for (int dx = 0; dx < size; dx++) {
+                int grid_offset = MAP_OFFSET(x + size - 1 - dx, y + size - 1 - dy);
+                set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
             }
-            break;
-        case 6: // west
-            for (int dy = 0; dy < size; dy++) {
-                for (int dx = 0; dx < size; dx++) {
-                    int grid_offset = MAP_OFFSET(x + dy, y + size - 1 - dx);
-                    set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
-                }
+        }
+        break;
+    case 6: // west
+        for (int dy = 0; dy < size; dy++) {
+            for (int dx = 0; dx < size; dx++) {
+                int grid_offset = MAP_OFFSET(x + dy, y + size - 1 - dx);
+                set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
             }
-            break;
+        }
+        break;
     }
 }
 
@@ -281,8 +279,8 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
     int smst3 = statue1_image_id + (7 - city_view_orientation() / 2) % 4; // west
 
     // long (1x2) statues
-    int lst0B = statue2_image_id + (8  - city_view_orientation()) % 8; // north
-    int lst0A = statue2_image_id + (9  - city_view_orientation()) % 8;
+    int lst0B = statue2_image_id + (8 - city_view_orientation()) % 8; // north
+    int lst0A = statue2_image_id + (9 - city_view_orientation()) % 8;
     int lst1B = statue2_image_id + (10 - city_view_orientation()) % 8; // east
     int lst1A = statue2_image_id + (11 - city_view_orientation()) % 8;
     int lst2B = statue2_image_id + (12 - city_view_orientation()) % 8; // south
@@ -292,139 +290,148 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
 
     // correct long statues graphics for relative orientation
     switch (city_view_orientation() / 2) {
-        case 1:
-        case 0:
-            lst1A = statue2_image_id + (10 - city_view_orientation()) % 8; // east
-            lst1B = statue2_image_id + (11 - city_view_orientation()) % 8;
-            lst3A = statue2_image_id + (14 - city_view_orientation()) % 8; // west
-            lst3B = statue2_image_id + (15 - city_view_orientation()) % 8;
-            break;
+    case 1:
+    case 0:
+        lst1A = statue2_image_id + (10 - city_view_orientation()) % 8; // east
+        lst1B = statue2_image_id + (11 - city_view_orientation()) % 8;
+        lst3A = statue2_image_id + (14 - city_view_orientation()) % 8; // west
+        lst3B = statue2_image_id + (15 - city_view_orientation()) % 8;
+        break;
     }
     switch (city_view_orientation() / 2) {
-        case 3:
-        case 0:
-            lst0A = statue2_image_id + (8  - city_view_orientation()) % 8; // north
-            lst0B = statue2_image_id + (9  - city_view_orientation()) % 8;
-            lst2A = statue2_image_id + (12 - city_view_orientation()) % 8; // south
-            lst2B = statue2_image_id + (13 - city_view_orientation()) % 8;
-            break;
+    case 3:
+    case 0:
+        lst0A = statue2_image_id + (8 - city_view_orientation()) % 8; // north
+        lst0B = statue2_image_id + (9 - city_view_orientation()) % 8;
+        lst2A = statue2_image_id + (12 - city_view_orientation()) % 8; // south
+        lst2B = statue2_image_id + (13 - city_view_orientation()) % 8;
+        break;
     }
 
     // adjust northern tile offset
     map_point north_tile = {x, y};
     switch (orientation) {
-        case 0: // NE
-            north_tile.shift(-2, -10);
-//            north_tile.x -= 2;
-//            north_tile.y -= 10;
-            break;
-        case 1: // SE
-            north_tile.shift(0, -2);
-//            north_tile.y -= 2;
-            break;
-        case 2: // SW
-            north_tile.shift(-2, 0);
-//            north_tile.x -= 2;
-            break;
-        case 3: // NW
-            north_tile.shift(-10, -2);
-//            north_tile.x -= 10;
-//            north_tile.y -= 2;
-            break;
+    case 0: // NE
+        north_tile.shift(-2, -10);
+        //            north_tile.x -= 2;
+        //            north_tile.y -= 10;
+        break;
+    case 1: // SE
+        north_tile.shift(0, -2);
+        //            north_tile.y -= 2;
+        break;
+    case 2: // SW
+        north_tile.shift(-2, 0);
+        //            north_tile.x -= 2;
+        break;
+    case 3: // NW
+        north_tile.shift(-10, -2);
+        //            north_tile.x -= 10;
+        //            north_tile.y -= 2;
+        break;
     }
 
     // first, add base tiles
     switch (orientation) {
-        case 0: { // NE
-            int TEMPLE_COMPLEX_SCHEME[13][7] = {
-                    {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-                    {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
-                    {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-                    {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
-                    {til_0, til_0, EMPTY, EMPTY, EMPTY, til_0, til_0},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-            };
-            for (int row = 0; row < 13; row++) {
-                for (int column = 0; column < 7; column++)
-                    map_image_set(MAP_OFFSET(north_tile.x() + column, north_tile.y() + row), TEMPLE_COMPLEX_SCHEME[row][column]);
-            }
-            break;
+    case 0: { // NE
+        int TEMPLE_COMPLEX_SCHEME[13][7] = {
+          {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
+          {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
+          {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
+          {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
+          {til_0, til_0, EMPTY, EMPTY, EMPTY, til_0, til_0},
+          {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+          {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+          {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
+          {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+          {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+          {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
+          {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+          {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+        };
+        for (int row = 0; row < 13; row++) {
+            for (int column = 0; column < 7; column++)
+                map_image_set(MAP_OFFSET(north_tile.x() + column, north_tile.y() + row),
+                              TEMPLE_COMPLEX_SCHEME[row][column]);
         }
-        case 1: { // SE
-            int TEMPLE_COMPLEX_SCHEME[7][13] = {
-                    {smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0, til_0, til_2, til_3, til_2, til_3},
-                    {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst2B, lst2B, lst2B},
-                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_0, lst2A, lst2A, lst2A},
-                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_1, til_1, til_1, til_1},
-                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_0, lst0B, lst0B, lst0B},
-                    {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst0A, lst0A, lst0A},
-                    {smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2, til_0, til_2, til_3, til_2, til_3},
-            };
-            for (int row = 0; row < 7; row++) {
-                for (int column = 0; column < 13; column++)
-                    map_image_set(MAP_OFFSET(north_tile.x() + column, north_tile.y() + row), TEMPLE_COMPLEX_SCHEME[row][column]);
-            }
-            break;
+        break;
+    }
+    case 1: { // SE
+        int TEMPLE_COMPLEX_SCHEME[7][13] = {
+          {smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0, til_0, til_2, til_3, til_2, til_3},
+          {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst2B, lst2B, lst2B},
+          {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_0, lst2A, lst2A, lst2A},
+          {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_1, til_1, til_1, til_1},
+          {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_0, lst0B, lst0B, lst0B},
+          {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst0A, lst0A, lst0A},
+          {smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2, til_0, til_2, til_3, til_2, til_3},
+        };
+        for (int row = 0; row < 7; row++) {
+            for (int column = 0; column < 13; column++)
+                map_image_set(MAP_OFFSET(north_tile.x() + column, north_tile.y() + row),
+                              TEMPLE_COMPLEX_SCHEME[row][column]);
         }
-        case 2: { // SW
-            int TEMPLE_COMPLEX_SCHEME[13][7] = {
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {til_0, til_0, EMPTY, EMPTY, EMPTY, til_0, til_0},
-                    {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
-                    {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-                    {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
-                    {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-            };
-            for (int row = 0; row < 13; row++) {
-                for (int column = 0; column < 7; column++)
-                    map_image_set(MAP_OFFSET(north_tile.x() + column, north_tile.y() + row), TEMPLE_COMPLEX_SCHEME[row][column]);
-            }
-            break;
+        break;
+    }
+    case 2: { // SW
+        int TEMPLE_COMPLEX_SCHEME[13][7] = {
+          {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+          {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+          {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
+          {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+          {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+          {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
+          {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+          {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+          {til_0, til_0, EMPTY, EMPTY, EMPTY, til_0, til_0},
+          {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
+          {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
+          {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
+          {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
+        };
+        for (int row = 0; row < 13; row++) {
+            for (int column = 0; column < 7; column++)
+                map_image_set(MAP_OFFSET(north_tile.x() + column, north_tile.y() + row),
+                              TEMPLE_COMPLEX_SCHEME[row][column]);
         }
-        case 3: { // NW
-            int TEMPLE_COMPLEX_SCHEME[7][13] = {
-                    {til_3, til_2, til_3, til_2, til_0, smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0},
-                    {lst2B, lst2B, lst2B, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
-                    {lst2A, lst2A, lst2A, til_0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                    {til_1, til_1, til_1, til_1, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                    {lst0B, lst0B, lst0B, til_0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                    {lst0A, lst0A, lst0A, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
-                    {til_3, til_2, til_3, til_2, til_0, smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2},
-            };
-            for (int row = 0; row < 7; row++) {
-                for (int column = 0; column < 13; column++)
-                    map_image_set(MAP_OFFSET(north_tile.x() + column, north_tile.y() + row), TEMPLE_COMPLEX_SCHEME[row][column]);
-            }
-            break;
+        break;
+    }
+    case 3: { // NW
+        int TEMPLE_COMPLEX_SCHEME[7][13] = {
+          {til_3, til_2, til_3, til_2, til_0, smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0},
+          {lst2B, lst2B, lst2B, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
+          {lst2A, lst2A, lst2A, til_0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+          {til_1, til_1, til_1, til_1, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+          {lst0B, lst0B, lst0B, til_0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+          {lst0A, lst0A, lst0A, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
+          {til_3, til_2, til_3, til_2, til_0, smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2},
+        };
+        for (int row = 0; row < 7; row++) {
+            for (int column = 0; column < 13; column++)
+                map_image_set(MAP_OFFSET(north_tile.x() + column, north_tile.y() + row),
+                              TEMPLE_COMPLEX_SCHEME[row][column]);
         }
+        break;
+    }
     }
 }
-void map_building_tiles_add_temple_complex_parts(building *b) {
+void map_building_tiles_add_temple_complex_parts(building* b) {
     int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
     int orientation_rel = city_view_relative_orientation(orientation);
     int orientation_binary = (1 + orientation_rel) % 2;
-    int part = 0; // default = main
+    int part = 0;                                             // default = main
     if (b->prev_part_building_id && b->next_part_building_id) // the middle part is ALWAYS the altar
         part = 1;
     else if (b == get_temple_complex_front_facing_part(b)) // front facing part (oracle)
         part = 2;
-    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size,
-       get_temple_complex_part_image(b->type, part, orientation_binary, (bool)(b->main()->data.monuments.temple_complex_attachments & part)),
-       TERRAIN_BUILDING);
+    map_building_tiles_add(
+      b->id,
+      b->tile.x(),
+      b->tile.y(),
+      b->size,
+      get_temple_complex_part_image(
+        b->type, part, orientation_binary, (bool)(b->main()->data.monuments.temple_complex_attachments & part)),
+      TERRAIN_BUILDING);
     if (b->next_part_building_id)
         map_building_tiles_add_temple_complex_parts(b->next());
 }
@@ -436,26 +443,26 @@ void map_building_tiles_remove(int building_id, int x, int y) {
     int base_grid_offset = north_tile_grid_offset(x, y, &size);
     if (map_terrain_get(base_grid_offset) == TERRAIN_ROCK)
         return;
-    building *b = building_get(building_id);
+    building* b = building_get(building_id);
     if (building_id && building_is_farm(b->type))
         size = 3;
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         switch (b->type) {
-            case BUILDING_BOOTH:
-                size = 2;
-                base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
-                break;
-            case BUILDING_BANDSTAND:
-                size = 3;
-                base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
-                break;
-            case BUILDING_PAVILLION:
-                size = 4;
-                base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
-                break;
-            case BUILDING_FESTIVAL_SQUARE:
-                size = 5;
-                break;
+        case BUILDING_BOOTH:
+            size = 2;
+            base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
+            break;
+        case BUILDING_BANDSTAND:
+            size = 3;
+            base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
+            break;
+        case BUILDING_PAVILLION:
+            size = 4;
+            base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
+            break;
+        case BUILDING_FESTIVAL_SQUARE:
+            size = 5;
+            break;
         }
     }
     x = MAP_X(base_grid_offset);
@@ -463,8 +470,8 @@ void map_building_tiles_remove(int building_id, int x, int y) {
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = MAP_OFFSET(x + dx, y + dy);
-//            if (building_id && map_building_at(grid_offset) != building_id)
-//                continue;
+            //            if (building_id && map_building_at(grid_offset) != building_id)
+            //                continue;
 
             if (building_id && b->type != BUILDING_BURNING_RUIN)
                 map_set_rubble_building_type(grid_offset, b->type);
@@ -482,8 +489,7 @@ void map_building_tiles_remove(int building_id, int x, int y) {
                 map_tiles_set_water(MAP_OFFSET(x + dx, y + dy));
             } else {
                 map_image_set(grid_offset,
-                              image_id_from_group(GROUP_TERRAIN_UGLY_GRASS) +
-                              (map_random_get(grid_offset) & 7));
+                              image_id_from_group(GROUP_TERRAIN_UGLY_GRASS) + (map_random_get(grid_offset) & 7));
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE - TERRAIN_ROAD);
             }
         }
@@ -495,7 +501,7 @@ void map_building_tiles_remove(int building_id, int x, int y) {
 void map_building_tiles_set_rubble(int building_id, int x, int y, int size) {
     if (!map_grid_is_inside(x, y, size))
         return;
-    building *b = building_get(building_id);
+    building* b = building_get(building_id);
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = MAP_OFFSET(x + dx, y + dy);
@@ -538,7 +544,8 @@ bool map_building_tiles_mark_construction(int x, int y, int size_x, int size_y, 
     for (int dy = 0; dy < size_y; dy++) {
         for (int dx = 0; dx < size_x; dx++) {
             int grid_offset = MAP_OFFSET(x + dx, y + dy);
-            if (map_terrain_is(grid_offset, terrain & TERRAIN_NOT_CLEAR) || map_has_figure_at(grid_offset) || map_terrain_exists_tile_in_radius_with_type(x + dx, y + dy, 1, 1, TERRAIN_FLOODPLAIN))
+            if (map_terrain_is(grid_offset, terrain & TERRAIN_NOT_CLEAR) || map_has_figure_at(grid_offset)
+                || map_terrain_exists_tile_in_radius_with_type(x + dx, y + dy, 1, 1, TERRAIN_FLOODPLAIN))
                 return false;
         }
     }
@@ -546,7 +553,7 @@ bool map_building_tiles_mark_construction(int x, int y, int size_x, int size_y, 
     // update empty land
     // todo: maybe...
     // -----> map_property_is_constructing() <------
-//    map_tiles_update_region_empty_land(x - 2, y - 2, x + size + 2, y + size + 2);
+    //    map_tiles_update_region_empty_land(x - 2, y - 2, x + size + 2, y + size + 2);
 
     // mark as being constructed
     for (int dy = 0; dy < size_y; dy++) {

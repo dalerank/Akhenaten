@@ -1,13 +1,13 @@
 #ifndef SCENARIO_DATA_H
 #define SCENARIO_DATA_H
 
-#include "grid/point.h"
-#include "scenario/types.h"
 #include "core/game_environment.h"
 #include "events.h"
+#include "grid/point.h"
+#include "scenario/types.h"
 
-#include <stdint.h>
 #include <game/resource.h>
+#include <stdint.h>
 
 enum {
     ALLOWED_BUILDING_NONE = 0,
@@ -197,16 +197,16 @@ struct scenario_data_t {
 
     map_data_t map;
 
-//    struct {
-//        int width;
-//        int height;
-//        int grid_start;
-//        int grid_border_size;
-////        map_tile entry_point;
-////        map_tile exit_point;
-////        map_tile entry_flag;
-////        map_tile exit_flag;
-//    } map;
+    //    struct {
+    //        int width;
+    //        int height;
+    //        int grid_start;
+    //        int grid_border_size;
+    ////        map_tile entry_point;
+    ////        map_tile exit_point;
+    ////        map_tile entry_flag;
+    ////        map_tile exit_flag;
+    //    } map;
     int flotsam_enabled;
     map_point entry_point;
     map_point exit_point;

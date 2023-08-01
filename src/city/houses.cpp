@@ -27,7 +27,7 @@ void city_houses_reset_demands(void) {
     city_data.houses.requiring.religion = 0;
 }
 
-house_demands *city_houses_demands(void) {
+house_demands* city_houses_demands(void) {
     return &city_data.houses;
 }
 
@@ -79,5 +79,4 @@ void city_houses_calculate_culture_demands(void) {
     }
     if (city_data.houses.missing.third_religion > max)
         city_data.houses.religion = 3;
-
 }

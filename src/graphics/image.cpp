@@ -1,7 +1,7 @@
 #include "image.h"
-#include "io/imagepaks/imagepak.h"
-#include "image_groups.h"
 #include "font.h"
+#include "image_groups.h"
+#include "io/imagepaks/imagepak.h"
 
 struct image_data_t {
     bool fonts_enabled;
@@ -9,44 +9,46 @@ struct image_data_t {
 
     std::vector<imagepak**> pak_list;
 
-    imagepak *main;
-    imagepak *terrain;
-    imagepak *unloaded;
-    imagepak *sprmain;
-    imagepak *sprambient;
+    imagepak* main;
+    imagepak* terrain;
+    imagepak* unloaded;
+    imagepak* sprmain;
+    imagepak* sprambient;
 
-    imagepak *expansion;
-    imagepak *sprmain2;
+    imagepak* expansion;
+    imagepak* sprmain2;
 
     std::vector<imagepak*> temple_paks;
     std::vector<imagepak*> monument_paks;
     std::vector<imagepak*> enemy_paks;
     std::vector<imagepak*> font_paks;
 
-    imagepak *temple;
-    imagepak *monument;
-    imagepak *enemy;
-    imagepak *empire;
-    imagepak *font;
+    imagepak* temple;
+    imagepak* monument;
+    imagepak* enemy;
+    imagepak* empire;
+    imagepak* font;
 
-    color_t *tmp_image_data;
+    color_t* tmp_image_data;
 };
 
-static image_data_t *g_image_data = nullptr;
+static image_data_t* g_image_data = nullptr;
 
-image_data_t &image_data() { return *g_image_data; }
+image_data_t& image_data() {
+    return *g_image_data;
+}
 
 // These functions are actually related to the imagepak class I/O, but it made slightly more
 // sense to me to have here as "core" image struct/class & game graphics related functions.
 
-bool set_pak_in_collection(int pak_id, imagepak **pak, std::vector<imagepak*> *collection) {
+bool set_pak_in_collection(int pak_id, imagepak** pak, std::vector<imagepak*>* collection) {
     if (pak_id >= collection->size())
         return false;
     *pak = collection->at(pak_id);
     return true;
 }
 bool image_set_font_pak(encoding_type encoding) {
-    auto &data = image_data();
+    auto& data = image_data();
     // TODO?
     if (encoding == ENCODING_CYRILLIC)
         return false;
@@ -57,24 +59,24 @@ bool image_set_font_pak(encoding_type encoding) {
     else if (encoding == ENCODING_KOREAN)
         return false;
     else {
-//        free(data.font);
-//        free(data.font_data);
-//        data.font = 0;
-//        data.font_data = 0;
+        //        free(data.font);
+        //        free(data.font_data);
+        //        data.font = 0;
+        //        data.font_data = 0;
         data.fonts_enabled = NO_EXTRA_FONT;
         return true;
     }
 }
 bool image_set_enemy_pak(int enemy_id) {
-    auto &data = image_data();
+    auto& data = image_data();
     return set_pak_in_collection(enemy_id, &data.enemy, &data.enemy_paks);
 }
 bool image_set_temple_complex_pak(int temple_id) {
-    auto &data = image_data();
+    auto& data = image_data();
     return set_pak_in_collection(temple_id, &data.temple, &data.temple_paks);
 }
 bool image_set_monument_pak(int monument_id) {
-    auto &data = image_data();
+    auto& data = image_data();
     return set_pak_in_collection(monument_id, &data.monument, &data.monument_paks);
 }
 void image_data_init() {
@@ -82,7 +84,7 @@ void image_data_init() {
 }
 
 bool image_load_paks() {
-    auto &data = image_data();
+    auto& data = image_data();
     data.fonts_enabled = false;
     data.font_base_offset = 0;
 
@@ -99,8 +101,8 @@ bool image_load_paks() {
     data.pak_list.push_back(&data.expansion);
     data.pak_list.push_back(&data.monument);
 
-    const char *filename_555;
-    const char *filename_sgx;
+    const char* filename_555;
+    const char* filename_sgx;
 
     // Pharaoh loads every image into a global listed cache; however, some
     // display systems use discordant indexes; The sprites cached in the
@@ -113,21 +115,23 @@ bool image_load_paks() {
     // present on the map, like the Temple Complexes.
     // What an absolute mess!
 
-    data.unloaded = new imagepak("Pharaoh_Unloaded", 0, true);                 // 0     --> 682
-    data.sprmain = new imagepak("SprMain", 700);                                            // 700   --> 11007
-    // <--- original enemy pak in here                                                                              // 11008 --> 11866
-    data.main = new imagepak("Pharaoh_General", 11906 -200);                                // 11906 --> 11866
-    data.terrain = new imagepak("Pharaoh_Terrain", 14452 -200);                             // 14252 --> 15767 (+64)
-                                                                                            // system.bmp 0-199
-                                                                                            // land1a.bmp 200-580
-                                                                                            // ladn2a.bmp 581-721
+    data.unloaded = new imagepak("Pharaoh_Unloaded", 0, true); // 0     --> 682
+    data.sprmain = new imagepak("SprMain", 700);               // 700   --> 11007
+    // <--- original enemy pak in here                                                                              //
+    // 11008 --> 11866
+    data.main = new imagepak("Pharaoh_General", 11906 - 200);    // 11906 --> 11866
+    data.terrain = new imagepak("Pharaoh_Terrain", 14452 - 200); // 14252 --> 15767 (+64)
+                                                                 // system.bmp 0-199
+                                                                 // land1a.bmp 200-580
+                                                                 // ladn2a.bmp 581-721
     // <--- original temple complex pak here
-    data.sprambient = new imagepak("SprAmbient", 15831);                                    // 15831 --> 18765
-    data.font = new imagepak("Pharaoh_Fonts", 18765, false, true);       // 18765 --> 20305
-    data.empire = new imagepak("Empire", 20305);                                            // 20305 --> 20506 (+177)
-    data.sprmain2 = new imagepak("SprMain2", 20683);                                        // 20683 --> 23035
-    data.expansion = new imagepak("Expansion", 23035);                                      // 23035 --> 23935 (-200)
-    // <--- original pyramid pak in here                                                                            // 23735 --> 24163
+    data.sprambient = new imagepak("SprAmbient", 15831);           // 15831 --> 18765
+    data.font = new imagepak("Pharaoh_Fonts", 18765, false, true); // 18765 --> 20305
+    data.empire = new imagepak("Empire", 20305);                   // 20305 --> 20506 (+177)
+    data.sprmain2 = new imagepak("SprMain2", 20683);               // 20683 --> 23035
+    data.expansion = new imagepak("Expansion", 23035);             // 23035 --> 23935 (-200)
+    // <--- original pyramid pak in here                                                                            //
+    // 23735 --> 24163
 
     // the 5 Temple Complex paks.
     data.temple_paks.push_back(new imagepak("Temple_nile", 15591));
@@ -142,22 +146,20 @@ bool image_load_paks() {
     data.monument_paks.push_back(new imagepak("bent_pyramid", 23735));
 
     // the various Enemy paks.
-    static const char* enemy_file_names_ph[14] = {
-            "Assyrian",
-            "Egyptian",
-            "Canaanite",
-            "Enemy_1",
-            "Hittite",
-            "Hyksos",
-            "Kushite",
-            "Libian",
-            "Mitani",
-            "Nubian",
-            "Persian",
-            "Phoenician",
-            "Roman",
-            "SeaPeople"
-    };
+    static const char* enemy_file_names_ph[14] = {"Assyrian",
+                                                  "Egyptian",
+                                                  "Canaanite",
+                                                  "Enemy_1",
+                                                  "Hittite",
+                                                  "Hyksos",
+                                                  "Kushite",
+                                                  "Libian",
+                                                  "Mitani",
+                                                  "Nubian",
+                                                  "Persian",
+                                                  "Phoenician",
+                                                  "Roman",
+                                                  "SeaPeople"};
     for (int i = 0; i < 14; ++i) {
         if (enemy_file_names_ph[i] != "")
             data.enemy_paks.push_back(new imagepak(enemy_file_names_ph[i], 11026));
@@ -171,64 +173,64 @@ bool image_load_paks() {
     return true;
 }
 
-static imagepak *pak_from_collection_id(int collection, int pak_cache_idx) {
-    auto &data = image_data();
+static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
+    auto& data = image_data();
     switch (collection) {
-        case IMAGE_COLLECTION_UNLOADED:
-            return data.unloaded;
-        case IMAGE_COLLECTION_TERRAIN:
-            return data.terrain;
-        case IMAGE_COLLECTION_GENERAL:
-            return data.main;
-        case IMAGE_COLLECTION_SPR_MAIN:
-            return data.sprmain;
-        case IMAGE_COLLECTION_SPR_AMBIENT:
-            return data.sprambient;
-        case IMAGE_COLLECTION_EMPIRE:
-            return data.empire;
-            /////
-        case IMAGE_COLLECTION_FONT:
-            if (pak_cache_idx < 0 || pak_cache_idx >= data.font_paks.size())
-                return data.font;
-            else
-                return data.font_paks.at(pak_cache_idx);
+    case IMAGE_COLLECTION_UNLOADED:
+        return data.unloaded;
+    case IMAGE_COLLECTION_TERRAIN:
+        return data.terrain;
+    case IMAGE_COLLECTION_GENERAL:
+        return data.main;
+    case IMAGE_COLLECTION_SPR_MAIN:
+        return data.sprmain;
+    case IMAGE_COLLECTION_SPR_AMBIENT:
+        return data.sprambient;
+    case IMAGE_COLLECTION_EMPIRE:
+        return data.empire;
+        /////
+    case IMAGE_COLLECTION_FONT:
+        if (pak_cache_idx < 0 || pak_cache_idx >= data.font_paks.size())
             return data.font;
-            /////
-        case IMAGE_COLLECTION_TEMPLE:
-            if (pak_cache_idx < 0 || pak_cache_idx >= data.temple_paks.size())
-                return data.temple;
-            else
-                return data.temple_paks.at(pak_cache_idx);
-        case IMAGE_COLLECTION_MONUMENT:
-            if (pak_cache_idx < 0 || pak_cache_idx >= data.monument_paks.size())
-                return data.monument;
-            else
-                return data.monument_paks.at(pak_cache_idx);
-        case IMAGE_COLLECTION_ENEMY:
-            if (pak_cache_idx < 0 || pak_cache_idx >= data.enemy_paks.size())
-                return data.enemy;
-            else
-                return data.enemy_paks.at(pak_cache_idx);
-            /////
-        case IMAGE_COLLECTION_EXPANSION:
-            return data.expansion;
-        case IMAGE_COLLECTION_EXPANSION_SPR:
-            return data.sprmain2;
-            /////
+        else
+            return data.font_paks.at(pak_cache_idx);
+        return data.font;
+        /////
+    case IMAGE_COLLECTION_TEMPLE:
+        if (pak_cache_idx < 0 || pak_cache_idx >= data.temple_paks.size())
+            return data.temple;
+        else
+            return data.temple_paks.at(pak_cache_idx);
+    case IMAGE_COLLECTION_MONUMENT:
+        if (pak_cache_idx < 0 || pak_cache_idx >= data.monument_paks.size())
+            return data.monument;
+        else
+            return data.monument_paks.at(pak_cache_idx);
+    case IMAGE_COLLECTION_ENEMY:
+        if (pak_cache_idx < 0 || pak_cache_idx >= data.enemy_paks.size())
+            return data.enemy;
+        else
+            return data.enemy_paks.at(pak_cache_idx);
+        /////
+    case IMAGE_COLLECTION_EXPANSION:
+        return data.expansion;
+    case IMAGE_COLLECTION_EXPANSION_SPR:
+        return data.sprmain2;
+        /////
     }
     return nullptr;
 }
 int image_id_from_group(int collection, int group, int pak_cache_idx) {
-    imagepak *pak = pak_from_collection_id(collection, pak_cache_idx);
+    imagepak* pak = pak_from_collection_id(collection, pak_cache_idx);
     if (pak == nullptr)
         return -1;
     return pak->get_global_image_index(group);
 }
-const image_t *image_get(int id, int mode) {
-    auto &data = image_data();
-    const image_t *img;
+const image_t* image_get(int id, int mode) {
+    auto& data = image_data();
+    const image_t* img;
     for (int i = 0; i < data.pak_list.size(); ++i) {
-        imagepak *pak = *(data.pak_list.at(i));
+        imagepak* pak = *(data.pak_list.at(i));
         if (pak == nullptr)
             continue;
         img = (pak)->get_image(id);
@@ -238,8 +240,8 @@ const image_t *image_get(int id, int mode) {
     // default (failure)
     return nullptr;
 }
-const image_t *image_letter(int letter_id) {
-    auto &data = image_data();
+const image_t* image_letter(int letter_id) {
+    auto& data = image_data();
     if (data.fonts_enabled == FULL_CHARSET_IN_FONT)
         return data.font->get_image(data.font_base_offset + letter_id);
     else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET)
@@ -249,8 +251,8 @@ const image_t *image_letter(int letter_id) {
     else
         return nullptr;
 }
-const image_t *image_get_enemy(int id) {
-    auto &data = image_data();
+const image_t* image_get_enemy(int id) {
+    auto& data = image_data();
     return data.enemy->get_image(id);
 }
 

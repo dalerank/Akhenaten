@@ -3,11 +3,7 @@
 
 #include <stdint.h>
 
-enum {
-    TOOLTIPS_NONE = 0,
-    TOOLTIPS_SOME = 1,
-    TOOLTIPS_FULL = 2
-};
+enum { TOOLTIPS_NONE = 0, TOOLTIPS_SOME = 1, TOOLTIPS_FULL = 2 };
 
 enum {
     DIFFICULTY_VERY_EASY = 0,
@@ -24,10 +20,7 @@ enum {
     SOUND_CITY = 4,
 };
 
-enum {
-    CITIES_OLD_NAMES = 0,
-    CITIES_NEW_NAMES = 1
-};
+enum { CITIES_OLD_NAMES = 0, CITIES_NEW_NAMES = 1 };
 
 struct set_sound {
     bool enabled;
@@ -38,11 +31,11 @@ void settings_load(void);
 void settings_save(void);
 
 int setting_fullscreen(void);
-void setting_window(int *width, int *height);
+void setting_window(int* width, int* height);
 void setting_set_fullscreen(int fullscreen);
 void setting_set_display(int width, int height);
 
-const set_sound *setting_sound(int type);
+const set_sound* setting_sound(int type);
 
 bool setting_sound_is_enabled(int type);
 void setting_toggle_sound_enabled(int type);
@@ -89,9 +82,9 @@ int setting_victory_video(void);
 int setting_last_advisor(void);
 void setting_set_last_advisor(int advisor);
 
-const uint8_t *setting_player_name(void);
-const char *setting_player_name_utf8(void);
-void setting_set_player_name(const uint8_t *player_name);
+const uint8_t* setting_player_name(void);
+const char* setting_player_name_utf8(void);
+void setting_set_player_name(const uint8_t* player_name);
 
 int setting_personal_savings_for_mission(int mission_id);
 void setting_set_personal_savings_for_mission(int mission_id, int savings);

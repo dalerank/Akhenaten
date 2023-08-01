@@ -1,16 +1,16 @@
-#include "widget/city/building_ghost.h"
-#include "widget/overlays/city_overlay.h"
+#include "dev/debug.h"
 #include "graphics/boilerplate.h"
 #include "graphics/view/lookup.h"
-#include "dev/debug.h"
 #include "grid/property.h"
+#include "widget/city/building_ghost.h"
+#include "widget/overlays/city_overlay.h"
 
 #include "building/construction/build_planner.h"
 #include "building/properties.h"
 #include "city/finance.h"
 #include "city/warning.h"
 #include "core/calc.h"
-#include "io/config/config.h"
+#include "core/stopwatch.h"
 #include "core/string.h"
 #include "figure/formation_legion.h"
 #include "game/cheats.h"
@@ -18,19 +18,19 @@
 #include "game/state.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "input/scroll.h"
 #include "grid/building.h"
+#include "input/scroll.h"
+#include "io/config/config.h"
+#include "platform/renderer.h"
 #include "scenario/property.h"
 #include "sound/city.h"
-#include "sound/speech.h"
 #include "sound/effect.h"
+#include "sound/speech.h"
+#include "widget/city/figures_cached_draw.h"
 #include "widget/city/tile_draw.h"
 #include "widget/minimap.h"
 #include "window/building_info.h"
 #include "window/city.h"
-#include "platform/renderer.h"
-#include "widget/city/figures_cached_draw.h"
-#include "core/stopwatch.h"
 
 struct widget_city_data_t {
     map_point current_tile;
@@ -47,11 +47,12 @@ void set_city_clip_rectangle(void) {
     graphics_set_clip_rectangle(x, y, width, height);
 
     // TODO?
-//    city_view_foreach_map_tile(draw_outside_map);
-//    int x;
-//    int y;
-//    city_view_get_camera_scrollable_viewspace_clip(&x, &y);
-//    graphics_set_clip_rectangle(x - 30, y, scenario_map_data()->width * 30 - 60, scenario_map_data()->height * 15 - 30);
+    //    city_view_foreach_map_tile(draw_outside_map);
+    //    int x;
+    //    int y;
+    //    city_view_get_camera_scrollable_viewspace_clip(&x, &y);
+    //    graphics_set_clip_rectangle(x - 30, y, scenario_map_data()->width * 30 - 60, scenario_map_data()->height * 15
+    //    - 30);
 }
 
 static void update_zoom_level(void) {
@@ -62,7 +63,7 @@ static void update_zoom_level(void) {
         sound_city_decay_views();
     }
 }
-static void scroll_map(const mouse *m) {
+static void scroll_map(const mouse* m) {
     pixel_coordinate delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
         camera_scroll(delta.x, delta.y);
@@ -97,20 +98,23 @@ static void draw_TEST(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
-    // NO grid_offset outside of the valid map area can be accessed -- the ones passed through here will ALWAYS be set to -1.
-    // so it's impossible to draw outside the map with these!
+    // NO grid_offset outside of the valid map area can be accessed -- the ones passed through here will ALWAYS be set
+    // to -1. so it's impossible to draw outside the map with these!
     if (grid_offset == -1)
         return;
-//    int tx = MAP_X(grid_offset);
-//    int ty = MAP_Y(grid_offset);
-//    if (tx==40 && ty==44)
-//        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_RED);
+    //    int tx = MAP_X(grid_offset);
+    //    int ty = MAP_Y(grid_offset);
+    //    if (tx==40 && ty==44)
+    //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
+    //        COLOR_CHANNEL_RED);
     if (map_grid_inside_map_area(grid_offset, 1))
         return ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN);
-//    if (!map_grid_is_inside(tx, ty, 1))
-//        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_RED);
-//    else
-//        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN);
+    //    if (!map_grid_is_inside(tx, ty, 1))
+    //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
+    //        COLOR_CHANNEL_RED);
+    //    else
+    //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
+    //        COLOR_CHANNEL_GREEN);
 }
 static void draw_tile_boxes(pixel_coordinate pixel, map_point point) {
     if (map_property_is_draw_tile(point.grid_offset())) {
@@ -118,7 +122,7 @@ static void draw_tile_boxes(pixel_coordinate pixel, map_point point) {
         debug_draw_tile_box(pixel.x, pixel.y, tile_size, tile_size);
     }
 };
-void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *figure_coord, map_point tile) {
+void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate* figure_coord, map_point tile) {
     WATCH.REPEAT();
 
     int highlighted_formation = 0;
@@ -132,23 +136,18 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
     city_building_ghost_mark_deleting(tile);
     reset_tiledraw_caches();
     city_view_foreach_valid_map_tile(cache_figures);
-    city_view_foreach_valid_map_tile(
-            draw_isometrics,
-            draw_ornaments,
-            draw_figures);
+    city_view_foreach_valid_map_tile(draw_isometrics, draw_ornaments, draw_figures);
     if (!selected_figure_id) {
         Planner.update(tile);
         Planner.draw();
     }
 
     // finally, draw these on top of everything else
-    city_view_foreach_valid_map_tile(
-            draw_debug_tile,
-            draw_debug_figurecaches);
-    //city_view_foreach_valid_map_tile(draw_debug_figures);
+    city_view_foreach_valid_map_tile(draw_debug_tile, draw_debug_figurecaches);
+    // city_view_foreach_valid_map_tile(draw_debug_figures);
 
     WATCH.STOP();
-//    WATCH.LOG();
+    //    WATCH.LOG();
 }
 void widget_city_draw_with_overlay(map_point tile) {
     if (!select_city_overlay())
@@ -157,16 +156,13 @@ void widget_city_draw_with_overlay(map_point tile) {
     city_building_ghost_mark_deleting(tile);
     reset_tiledraw_caches();
     city_view_foreach_valid_map_tile(cache_figures);
-    city_view_foreach_valid_map_tile(
-            draw_isometrics_overlay,
-            draw_ornaments_overlay,
-            draw_figures_overlay);
+    city_view_foreach_valid_map_tile(draw_isometrics_overlay, draw_ornaments_overlay, draw_figures_overlay);
     Planner.update(tile);
     Planner.draw();
 }
 
 void widget_city_draw(void) {
-    auto &data = g_wdiget_city_data;
+    auto& data = g_wdiget_city_data;
     update_zoom_level();
     SET_RENDER_SCALE(zoom_get_scale());
     set_city_clip_rectangle();
@@ -177,8 +173,8 @@ void widget_city_draw(void) {
     graphics_reset_clip_rectangle();
     SET_RENDER_SCALE(1.0f);
 }
-void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord) {
-    auto &data = g_wdiget_city_data;
+void widget_city_draw_for_figure(int figure_id, pixel_coordinate* coord) {
+    auto& data = g_wdiget_city_data;
     set_city_clip_rectangle();
 
     widget_city_draw_without_overlay(figure_id, coord, data.current_tile);
@@ -247,25 +243,25 @@ static void build_end(void) {
 }
 
 static bool has_confirmed_construction(map_point ghost, map_point point, int range_size) {
-//    map_point point = map_point(tile_offset);
+    //    map_point point = map_point(tile_offset);
     switch (city_view_orientation()) {
-        case DIR_0_TOP_RIGHT:
-            point.shift(-range_size + 1, -range_size + 1);
-        case DIR_2_BOTTOM_RIGHT:
-            point.shift(0, -range_size + 1);
-        case DIR_6_TOP_LEFT:
-            point.shift(-range_size + 1, 0);
+    case DIR_0_TOP_RIGHT:
+        point.shift(-range_size + 1, -range_size + 1);
+    case DIR_2_BOTTOM_RIGHT:
+        point.shift(0, -range_size + 1);
+    case DIR_6_TOP_LEFT:
+        point.shift(-range_size + 1, 0);
     }
-//    tile_offset = point.grid_offset();
+    //    tile_offset = point.grid_offset();
 
-//    int x = map_grid_offset_to_x(tile_offset);
-//    int y = map_grid_offset_to_y(tile_offset);
+    //    int x = map_grid_offset_to_x(tile_offset);
+    //    int y = map_grid_offset_to_y(tile_offset);
     if (ghost.grid_offset() <= 0 || !map_grid_is_inside(point.x(), point.y(), range_size))
         return false;
 
     for (int dy = 0; dy < range_size; dy++) {
         for (int dx = 0; dx < range_size; dx++) {
-            if (ghost == point.shifted(dx, dy)) //tile_offset + GRID_OFFSET(dx, dy)
+            if (ghost == point.shifted(dx, dy)) // tile_offset + GRID_OFFSET(dx, dy)
                 return true;
         }
     }
@@ -298,7 +294,7 @@ static bool handle_legion_click(map_point tile) {
     }
     return false;
 }
-static bool handle_cancel_construction_button(const touch *t) {
+static bool handle_cancel_construction_button(const touch* t) {
     if (!Planner.build_type)
         return false;
 
@@ -307,25 +303,25 @@ static bool handle_cancel_construction_button(const touch *t) {
     int box_size = 5 * 16;
     width -= box_size;
 
-    if (t->current_point.x < width || t->current_point.x >= width + box_size ||
-        t->current_point.y < 24 || t->current_point.y >= 40 + box_size) {
+    if (t->current_point.x < width || t->current_point.x >= width + box_size || t->current_point.y < 24
+        || t->current_point.y >= 40 + box_size) {
         return false;
     }
     Planner.construction_cancel();
     return true;
 }
 void widget_city_clear_current_tile(void) {
-    auto &data = g_wdiget_city_data;
+    auto& data = g_wdiget_city_data;
     data.selected_tile.set(0);
     data.current_tile.set(0);
-//    data.selected_tile.x = -1;
-//    data.selected_tile.y = -1;
-//    data.selected_tile.grid_offset() = 0;
-//    data.current_tile.grid_offset() = 0;
+    //    data.selected_tile.x = -1;
+    //    data.selected_tile.y = -1;
+    //    data.selected_tile.grid_offset() = 0;
+    //    data.current_tile.grid_offset() = 0;
 }
 
-static void handle_touch_scroll(const touch *t) {
-    auto &data = g_wdiget_city_data;
+static void handle_touch_scroll(const touch* t) {
+    auto& data = g_wdiget_city_data;
     if (Planner.build_type) {
         if (t->has_started) {
             int x_offset, y_offset, width, height;
@@ -350,19 +346,17 @@ static void handle_touch_scroll(const touch *t) {
         return;
     if (t->has_ended)
         scroll_drag_end();
-
 }
-static void handle_touch_zoom(const touch *first, const touch *last) {
+static void handle_touch_zoom(const touch* first, const touch* last) {
     if (touch_not_click(first))
         zoom_update_touch(first, last, zoom_get_percentage());
 
     if (first->has_ended || last->has_ended)
         zoom_end_touch();
-
 }
 static void handle_first_touch(map_point tile) {
-    auto &data = g_wdiget_city_data;
-    const touch *first = get_earliest_touch();
+    auto& data = g_wdiget_city_data;
+    const touch* first = get_earliest_touch();
     int type = Planner.build_type;
 
     if (touch_was_click(first)) {
@@ -391,7 +385,6 @@ static void handle_first_touch(map_point tile) {
             if (first->has_started) {
                 if (data.selected_tile.grid_offset() != tile.grid_offset())
                     data.new_start_grid_offset = tile.grid_offset();
-
             }
             if (touch_not_click(first) && data.new_start_grid_offset) {
                 data.new_start_grid_offset = 0;
@@ -420,18 +413,17 @@ static void handle_first_touch(map_point tile) {
     if (type == BUILDING_WAREHOUSE)
         size = 3;
 
-    if (touch_was_click(first) && first->has_ended && data.capture_input &&
-        has_confirmed_construction(data.selected_tile, tile, size)) {
+    if (touch_was_click(first) && first->has_ended && data.capture_input
+        && has_confirmed_construction(data.selected_tile, tile, size)) {
         build_start(data.selected_tile);
         build_move(data.selected_tile);
         build_end();
         widget_city_clear_current_tile();
     } else if (first->has_ended)
         data.selected_tile = tile;
-
 }
 static void handle_last_touch(void) {
-    const touch *last = get_latest_touch();
+    const touch* last = get_latest_touch();
     if (!last->in_use)
         return;
     if (touch_was_click(last)) {
@@ -440,11 +432,10 @@ static void handle_last_touch(void) {
     }
     if (touch_not_click(last))
         handle_touch_zoom(get_earliest_touch(), last);
-
 }
 static void handle_touch(void) {
-    auto &data = g_wdiget_city_data;
-    const touch *first = get_earliest_touch();
+    auto& data = g_wdiget_city_data;
+    const touch* first = get_earliest_touch();
     if (!first->in_use) {
         scroll_restore_margins();
         return;
@@ -467,11 +458,11 @@ static void handle_touch(void) {
     Planner.draw_as_constructing = false;
 }
 int widget_city_has_input(void) {
-    auto &data = g_wdiget_city_data;
+    auto& data = g_wdiget_city_data;
     return data.capture_input;
 }
-static void handle_mouse(const mouse *m) {
-    auto &data = g_wdiget_city_data;
+static void handle_mouse(const mouse* m) {
+    auto& data = g_wdiget_city_data;
     data.current_tile = update_city_view_coords({m->x, m->y});
     zoom_map(m);
     Planner.draw_as_constructing = false;
@@ -507,7 +498,7 @@ static void military_map_click(int legion_formation_id, map_point tile) {
         window_city_show();
         return;
     }
-    formation *m = formation_get(legion_formation_id);
+    formation* m = formation_get(legion_formation_id);
     if (m->in_distant_battle || m->cursed_by_mars)
         return;
     int other_formation_id = formation_legion_at_building(tile.grid_offset());
@@ -519,7 +510,7 @@ static void military_map_click(int legion_formation_id, map_point tile) {
     }
     window_city_show();
 }
-void widget_city_handle_input(const mouse *m, const hotkeys *h) {
+void widget_city_handle_input(const mouse* m, const hotkeys* h) {
     scroll_map(m);
 
     if (m->is_touch)
@@ -534,13 +525,13 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h) {
             hotkey_handle_escape();
     }
 }
-void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int legion_formation_id) {
-    auto &data = g_wdiget_city_data;
+void widget_city_handle_input_military(const mouse* m, const hotkeys* h, int legion_formation_id) {
+    auto& data = g_wdiget_city_data;
     data.current_tile = update_city_view_coords({m->x, m->y});
     if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m))
         return;
     if (m->is_touch) {
-        const touch *t = get_earliest_touch();
+        const touch* t = get_earliest_touch();
         if (!t->in_use)
             return;
         if (t->has_started)
@@ -549,7 +540,6 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
         handle_touch_scroll(t);
         if (t->has_ended)
             data.capture_input = false;
-
     }
     scroll_map(m);
     if (m->right.went_up || h->escape_pressed) {
@@ -558,14 +548,14 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
         window_city_show();
     } else {
         data.current_tile = update_city_view_coords({m->x, m->y});
-        if ((!m->is_touch && m->left.went_down) ||
-            (m->is_touch && m->left.went_up && touch_was_click(get_earliest_touch())))
+        if ((!m->is_touch && m->left.went_down)
+            || (m->is_touch && m->left.went_up && touch_was_click(get_earliest_touch())))
             military_map_click(legion_formation_id, data.current_tile);
     }
 }
 
-void widget_city_get_tooltip(tooltip_context *c) {
-    auto &data = g_wdiget_city_data;
+void widget_city_get_tooltip(tooltip_context* c) {
+    auto& data = g_wdiget_city_data;
     if (setting_tooltips() == TOOLTIPS_NONE)
         return;
     if (!window_is(WINDOW_CITY))
@@ -597,4 +587,3 @@ void widget_city_get_tooltip(tooltip_context *c) {
         }
     }
 }
-

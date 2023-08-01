@@ -1,9 +1,9 @@
 #include "core/string.h"
 
-#include <ctype.h>
 #include <cstring>
+#include <ctype.h>
 
-uint8_t *string_copy(const uint8_t *src, uint8_t *dst, int maxlength) {
+uint8_t* string_copy(const uint8_t* src, uint8_t* dst, int maxlength) {
     int length = 0;
     while (length < maxlength && *src) {
         *dst = *src;
@@ -18,7 +18,7 @@ uint8_t *string_copy(const uint8_t *src, uint8_t *dst, int maxlength) {
     return dst;
 }
 
-int string_length(const uint8_t *str) {
+int string_length(const uint8_t* str) {
     int length = 0;
     while (*str) {
         length++;
@@ -27,18 +27,18 @@ int string_length(const uint8_t *str) {
     return length;
 }
 
-const uint8_t *string_from_ascii(const char *str, bool extended) {
-    const char *s = str;
+const uint8_t* string_from_ascii(const char* str, bool extended) {
+    const char* s = str;
     while (*s) {
         if (*s & 0x80 && !extended)
             return 0;
         s++;
     }
-    return (const uint8_t *) str;
+    return (const uint8_t*)str;
 }
-int string_to_int(const uint8_t *str) {
+int string_to_int(const uint8_t* str) {
     static const int multipliers[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000};
-    const uint8_t *ptr = str;
+    const uint8_t* ptr = str;
     int negative = 0;
     int num_chars = 0;
     if (*ptr == '-') {
@@ -68,7 +68,7 @@ int string_to_int(const uint8_t *str) {
 
     return result;
 }
-int string_from_int(uint8_t *dst, int value, bool force_plus_sign) {
+int string_from_int(uint8_t* dst, int value, bool force_plus_sign) {
     int total_chars = 0;
     if (value >= 0) {
         if (force_plus_sign) {
@@ -108,13 +108,13 @@ int string_from_int(uint8_t *dst, int value, bool force_plus_sign) {
 
     dst[num_digits] = 0;
     while (--num_digits >= 0) {
-        dst[num_digits] = (uint8_t) (value % 10 + '0');
+        dst[num_digits] = (uint8_t)(value % 10 + '0');
         value /= 10;
     }
 
     return total_chars;
 }
-int string_compare_case_insensitive(const char *a, const char *b) {
+int string_compare_case_insensitive(const char* a, const char* b) {
     while (*a && *b) {
         int aa = tolower(*a);
         int bb = tolower(*b);
@@ -132,10 +132,8 @@ int string_compare_case_insensitive(const char *a, const char *b) {
 
     return 0;
 }
-bool string_equals(const uint8_t *a, const uint8_t *b, bool case_sentitive) {
-    while (*a && *b &&
-           ((case_sentitive == 1 && *a == *b) ||
-            (case_sentitive == 0 && tolower(*a) == tolower(*b)))) {
+bool string_equals(const uint8_t* a, const uint8_t* b, bool case_sentitive) {
+    while (*a && *b && ((case_sentitive == 1 && *a == *b) || (case_sentitive == 0 && tolower(*a) == tolower(*b)))) {
         ++a;
         ++b;
     }
@@ -145,14 +143,14 @@ bool string_equals(const uint8_t *a, const uint8_t *b, bool case_sentitive) {
         return false;
 }
 
-bool string_needle_equals(const uint8_t *a, const uint8_t *b, int len) {
+bool string_needle_equals(const uint8_t* a, const uint8_t* b, int len) {
     for (int i = 0; i < len; i++, a++, b++) {
         if (*a != *b)
             return false;
     }
     return true;
 }
-int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length) {
+int index_of_string(const uint8_t* haystack, const uint8_t* needle, int haystack_length) {
     int needle_length = string_length(needle);
     for (int i = 0; i < haystack_length; i++) {
         if (haystack[i] == needle[0] && string_needle_equals(&haystack[i], needle, needle_length))
@@ -160,7 +158,7 @@ int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack
     }
     return 0;
 }
-int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length) {
+int index_of(const uint8_t* haystack, uint8_t needle, int haystack_length) {
     for (int i = 0; i < haystack_length; i++) {
         if (haystack[i] == needle)
             return i + 1;
@@ -168,10 +166,10 @@ int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length) {
     return 0;
 }
 
-void strncpy_safe(char *dest, const char *src, std::size_t destsz) {
-    size_t srcsz = strlen(src);  // crash here if not nul-terminated
+void strncpy_safe(char* dest, const char* src, std::size_t destsz) {
+    size_t srcsz = strlen(src); // crash here if not nul-terminated
     if (srcsz > destsz - 1)
         srcsz = destsz - 1;
-    memmove(dest, src, srcsz);   // memmove is safe if dest and src overlap
+    memmove(dest, src, srcsz); // memmove is safe if dest and src overlap
     dest[srcsz] = '\0';
 }

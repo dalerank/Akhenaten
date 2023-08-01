@@ -5,9 +5,8 @@
 #include "city/ratings.h"
 #include "city/victory.h"
 #include "game/resource.h"
+#include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
@@ -21,25 +20,26 @@ static void button_cancel(int param1, int param2);
 static void button_set_salary(int rank, int param2);
 
 static generic_button buttons[] = {
-        {240, 395, 160, 20, button_cancel,     button_none, 0,  0},
-        {144, 85,  352, 20, button_set_salary, button_none, 0,  0},
-        {144, 105, 352, 20, button_set_salary, button_none, 1,  0},
-        {144, 125, 352, 20, button_set_salary, button_none, 2,  0},
-        {144, 145, 352, 20, button_set_salary, button_none, 3,  0},
-        {144, 165, 352, 20, button_set_salary, button_none, 4,  0},
-        {144, 185, 352, 20, button_set_salary, button_none, 5,  0},
-        {144, 205, 352, 20, button_set_salary, button_none, 6,  0},
-        {144, 225, 352, 20, button_set_salary, button_none, 7,  0},
-        {144, 245, 352, 20, button_set_salary, button_none, 8,  0},
-        {144, 265, 352, 20, button_set_salary, button_none, 9,  0},
-        {144, 285, 352, 20, button_set_salary, button_none, 10, 0},
+  {240, 395, 160, 20, button_cancel, button_none, 0, 0},
+  {144, 85, 352, 20, button_set_salary, button_none, 0, 0},
+  {144, 105, 352, 20, button_set_salary, button_none, 1, 0},
+  {144, 125, 352, 20, button_set_salary, button_none, 2, 0},
+  {144, 145, 352, 20, button_set_salary, button_none, 3, 0},
+  {144, 165, 352, 20, button_set_salary, button_none, 4, 0},
+  {144, 185, 352, 20, button_set_salary, button_none, 5, 0},
+  {144, 205, 352, 20, button_set_salary, button_none, 6, 0},
+  {144, 225, 352, 20, button_set_salary, button_none, 7, 0},
+  {144, 245, 352, 20, button_set_salary, button_none, 8, 0},
+  {144, 265, 352, 20, button_set_salary, button_none, 9, 0},
+  {144, 285, 352, 20, button_set_salary, button_none, 10, 0},
 };
 
 static int focus_button_id;
 
 static int get_dialog_width(void) {
     int dialog_width = 16 + lang_text_get_width(52, 15, FONT_LARGE_BLACK_ON_LIGHT);
-    if (dialog_width < MIN_DIALOG_WIDTH) dialog_width = MIN_DIALOG_WIDTH;
+    if (dialog_width < MIN_DIALOG_WIDTH)
+        dialog_width = MIN_DIALOG_WIDTH;
     if (dialog_width % 16 != 0) {
         // make sure the width is a multiple of 16
         dialog_width += 16 - dialog_width % 16;
@@ -77,7 +77,7 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 12, &focus_button_id))
         return;
     if (input_go_back_requested(m, h))
@@ -98,11 +98,6 @@ static void button_set_salary(int rank, int param2) {
 }
 
 void window_set_salary_show(void) {
-    window_type window = {
-            WINDOW_SET_SALARY,
-            window_advisors_draw_dialog_background,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_SET_SALARY, window_advisors_draw_dialog_background, draw_foreground, handle_input};
     window_show(&window);
 }

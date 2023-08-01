@@ -37,35 +37,35 @@ void scenario_editor_create(int map_size);
 
 void scenario_editor_set_native_images(int image_hut, int image_meeting, int image_crops);
 
-void scenario_editor_request_get(int index, editor_request *request);
+void scenario_editor_request_get(int index, editor_request* request);
 
 void scenario_editor_request_delete(int index);
 
-void scenario_editor_request_save(int index, editor_request *request);
+void scenario_editor_request_save(int index, editor_request* request);
 
-void scenario_editor_invasion_get(int index, editor_invasion *invasion);
+void scenario_editor_invasion_get(int index, editor_invasion* invasion);
 
 void scenario_editor_invasion_delete(int index);
 
-void scenario_editor_invasion_save(int index, editor_invasion *invasion);
+void scenario_editor_invasion_save(int index, editor_invasion* invasion);
 
-void scenario_editor_price_change_get(int index, editor_price_change *price_change);
+void scenario_editor_price_change_get(int index, editor_price_change* price_change);
 
 void scenario_editor_price_change_delete(int index);
 
-void scenario_editor_price_change_save(int index, editor_price_change *price_change);
+void scenario_editor_price_change_save(int index, editor_price_change* price_change);
 
-void scenario_editor_demand_change_get(int index, editor_demand_change *demand_change);
+void scenario_editor_demand_change_get(int index, editor_demand_change* demand_change);
 
 void scenario_editor_demand_change_delete(int index);
 
-void scenario_editor_demand_change_save(int index, editor_demand_change *demand_change);
+void scenario_editor_demand_change_save(int index, editor_demand_change* demand_change);
 
 void scenario_editor_cycle_image(int forward);
 
 void scenario_editor_cycle_climate(void);
 
-void scenario_editor_update_subtitle(const uint8_t *new_description);
+void scenario_editor_update_subtitle(const uint8_t* new_description);
 
 void scenario_editor_set_enemy(int enemy_id);
 

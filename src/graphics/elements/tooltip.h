@@ -5,13 +5,7 @@
 
 #define TOOLTIP_MAX_EXTRA_VALUES 5
 
-enum {
-    TOOLTIP_NONE = 0,
-    TOOLTIP_BUTTON = 1,
-    TOOLTIP_OVERLAY = 2,
-    TOOLTIP_SENATE = 3,
-    TOOLTIP_TILES = 4
-};
+enum { TOOLTIP_NONE = 0, TOOLTIP_BUTTON = 1, TOOLTIP_OVERLAY = 2, TOOLTIP_SENATE = 3, TOOLTIP_TILES = 4 };
 
 typedef struct {
     const int mouse_x;
@@ -28,6 +22,6 @@ typedef struct {
 } tooltip_context;
 
 void tooltip_invalidate(void);
-void tooltip_handle(const mouse *m, void (*func)(tooltip_context *));
+void tooltip_handle(const mouse* m, void (*func)(tooltip_context*));
 
 #endif // GRAPHICS_TOOLTIP_H

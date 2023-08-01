@@ -33,8 +33,7 @@ static void update_status(void) {
         return;
     }
     // war scares immigrants away
-    if (city_figures_total_invading_enemies() > 3 &&
-        city_data.migration.percentage > 0) {
+    if (city_figures_total_invading_enemies() > 3 && city_data.migration.percentage > 0) {
         city_data.migration.percentage = 0;
         return;
     }
@@ -43,8 +42,8 @@ static void update_status(void) {
         if (city_data.migration.emigration_duration)
             city_data.migration.emigration_duration--;
         else {
-            city_data.migration.immigration_amount_per_batch =
-                    calc_adjust_with_percentage(12, city_data.migration.percentage);
+            city_data.migration.immigration_amount_per_batch
+              = calc_adjust_with_percentage(12, city_data.migration.percentage);
             city_data.migration.immigration_duration = 2;
         }
     } else if (city_data.migration.percentage < 0) {
@@ -52,8 +51,8 @@ static void update_status(void) {
         if (city_data.migration.immigration_duration)
             city_data.migration.immigration_duration--;
         else if (city_data.population.population > 100) {
-            city_data.migration.emigration_amount_per_batch =
-                    calc_adjust_with_percentage(12, -city_data.migration.percentage);
+            city_data.migration.emigration_amount_per_batch
+              = calc_adjust_with_percentage(12, -city_data.migration.percentage);
             city_data.migration.emigration_duration = 2;
         }
     }
@@ -80,8 +79,8 @@ static void create_migrants(void) {
         if (city_data.migration.immigration_amount_per_batch >= 4)
             create_immigrants(city_data.migration.immigration_amount_per_batch);
         else if (city_data.migration.immigration_amount_per_batch + city_data.migration.immigration_queue_size >= 4) {
-            create_immigrants(
-                    city_data.migration.immigration_amount_per_batch + city_data.migration.immigration_queue_size);
+            create_immigrants(city_data.migration.immigration_amount_per_batch
+                              + city_data.migration.immigration_queue_size);
             city_data.migration.immigration_queue_size = 0;
         } else // queue them for next round
             city_data.migration.immigration_queue_size += city_data.migration.immigration_amount_per_batch;
@@ -90,11 +89,12 @@ static void create_migrants(void) {
         if (city_data.migration.emigration_amount_per_batch >= 4)
             create_emigrants(city_data.migration.emigration_amount_per_batch);
         else if (city_data.migration.emigration_amount_per_batch + city_data.migration.emigration_queue_size >= 4) {
-            create_emigrants(city_data.migration.emigration_amount_per_batch + city_data.migration.emigration_queue_size);
+            create_emigrants(city_data.migration.emigration_amount_per_batch
+                             + city_data.migration.emigration_queue_size);
             city_data.migration.emigration_queue_size = 0;
             if (!city_data.migration.emigration_message_shown) {
                 city_data.migration.emigration_message_shown = 1;
-//                city_message_post(true, MESSAGE_EMIGRATION, 0, 0);
+                //                city_message_post(true, MESSAGE_EMIGRATION, 0, 0);
             }
         } else // queue them for next round
             city_data.migration.emigration_queue_size += city_data.migration.emigration_amount_per_batch;
@@ -110,24 +110,24 @@ void city_migration_update(void) {
 
 void city_migration_determine_int(void) {
     switch (city_data.sentiment.low_mood_cause) {
-        case int_NO_FOOD:
-            city_data.migration.no_immigration_cause = 2;
-            break;
-        case int_NO_JOBS:
-            city_data.migration.no_immigration_cause = 1;
-            break;
-        case int_HIGH_TAXES:
-            city_data.migration.no_immigration_cause = 3;
-            break;
-        case int_LOW_WAGES:
-            city_data.migration.no_immigration_cause = 0;
-            break;
-        case int_MANY_TENTS:
-            city_data.migration.no_immigration_cause = 4;
-            break;
-        default:
-            city_data.migration.no_immigration_cause = 5;
-            break;
+    case int_NO_FOOD:
+        city_data.migration.no_immigration_cause = 2;
+        break;
+    case int_NO_JOBS:
+        city_data.migration.no_immigration_cause = 1;
+        break;
+    case int_HIGH_TAXES:
+        city_data.migration.no_immigration_cause = 3;
+        break;
+    case int_LOW_WAGES:
+        city_data.migration.no_immigration_cause = 0;
+        break;
+    case int_MANY_TENTS:
+        city_data.migration.no_immigration_cause = 4;
+        break;
+    default:
+        city_data.migration.no_immigration_cause = 5;
+        break;
     }
 }
 

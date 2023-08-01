@@ -1,12 +1,12 @@
-#include "io/file.h"
-#include "io/log.h"
-#include "core/game_environment.h"
-#include "sound/device.h"
-#include "game/settings.h"
 #include "SDL.h"
 #include "SDL_mixer.h"
+#include "core/game_environment.h"
+#include "game/settings.h"
+#include "io/file.h"
+#include "io/log.h"
 #include "platform/platform.h"
 #include "platform/vita/vita.h"
+#include "sound/device.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -31,19 +31,19 @@
 #ifdef __vita__
 static struct {
     char filename[FILE_NAME_MAX];
-    char *buffer;
+    char* buffer;
     int size;
 } vita_music_data;
 #endif
 
 typedef struct {
-    const char *filename;
-    Mix_Chunk *chunk;
+    const char* filename;
+    Mix_Chunk* chunk;
 } sound_channel;
 
 static struct {
     int initialized;
-    Mix_Music *music;
+    Mix_Music* music;
     sound_channel channels[MAX_CHANNELS];
 } data;
 
@@ -55,11 +55,11 @@ struct music_format {
 static struct {
     SDL_AudioFormat format;
 #ifdef USE_SDL_AUDIOSTREAM
-    SDL_AudioStream *stream;
+    SDL_AudioStream* stream;
     int use_audiostream;
 #endif
     SDL_AudioCVT cvt;
-    unsigned char *buffer;
+    unsigned char* buffer;
     int buffer_size;
     int cur_read;
     int cur_write;
@@ -69,14 +69,14 @@ static int percentage_to_volume(int percentage) {
     return percentage * SDL_MIX_MAXVOLUME / 100;
 }
 
-static Mix_Chunk *load_chunk(const char *filename) {
+static Mix_Chunk* load_chunk(const char* filename) {
     if (filename[0]) {
 #ifdef __vita__
-        FILE *fp = file_open(filename, "rb");
+        FILE* fp = file_open(filename, "rb");
         if (!fp)
             return NULL;
 
-        SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
+        SDL_RWops* sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
         return Mix_LoadWAV_RW(sdl_fp, 1);
 #else
         return Mix_LoadWAV(filename);
@@ -86,7 +86,7 @@ static Mix_Chunk *load_chunk(const char *filename) {
     }
 }
 
-static int load_channel(sound_channel *channel) {
+static int load_channel(sound_channel* channel) {
     if (!channel->chunk && channel->filename)
         channel->chunk = load_chunk(channel->filename);
 
@@ -110,7 +110,7 @@ void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILEN
         for (int i = 0; i < num_channels; i++) {
             data.channels[i].chunk = 0;
             data.channels[i].filename = filenames[i][0] ? filenames[i] : 0;
-//            SDL_Log("Channel %i : %s", i, data.channels[i].filename);
+            //            SDL_Log("Channel %i : %s", i, data.channels[i].filename);
         }
     }
 }
@@ -126,13 +126,13 @@ void sound_device_open(void) {
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Sound failed to initialize using default driver: %s", Mix_GetError());
     // Try to work around SDL choosing the wrong driver on Windows sometimes
     for (int i = 0; i < SDL_GetNumAudioDrivers(); i++) {
-        const char *driver_name = SDL_GetAudioDriver(i);
+        const char* driver_name = SDL_GetAudioDriver(i);
         if (SDL_strcmp(driver_name, "disk") == 0 || SDL_strcmp(driver_name, "dummy") == 0) {
             // Skip "write-to-disk" and dummy drivers
             continue;
         }
-        if (0 == SDL_AudioInit(driver_name) &&
-            0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
+        if (0 == SDL_AudioInit(driver_name)
+            && 0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
             log_info("Using audio driver: %s", driver_name);
             init_channels();
             return;
@@ -164,12 +164,16 @@ void sound_device_load_formats(void) {
     }
 
     const int format_desc_max_chars = 4;
-    const music_format formats[] = { { MIX_INIT_FLAC, "FLAC" }, { MIX_INIT_MOD, "MOD" }, { MIX_INIT_MP3, "MP3" },
-        { MIX_INIT_OGG, "OGG" }, { MIX_INIT_MID, "MIDI" }, { MIX_INIT_OPUS, "Opus" } };
+    const music_format formats[] = {{MIX_INIT_FLAC, "FLAC"},
+                                    {MIX_INIT_MOD, "MOD"},
+                                    {MIX_INIT_MP3, "MP3"},
+                                    {MIX_INIT_OGG, "OGG"},
+                                    {MIX_INIT_MID, "MIDI"},
+                                    {MIX_INIT_OPUS, "Opus"}};
     const int max_num_formats = sizeof(formats) / sizeof(formats[0]);
 
     int all_flags = 0;
-    for ( int i = 0; i < max_num_formats; ++i ) {
+    for (int i = 0; i < max_num_formats; ++i) {
         all_flags |= formats[i].flag;
     }
 
@@ -178,10 +182,10 @@ void sound_device_load_formats(void) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not load any music formats: %s", Mix_GetError());
     } else {
         const char* seperator = ", ";
-        const int seperator_length = strlen( seperator );
+        const int seperator_length = strlen(seperator);
         const int max_format_length = format_desc_max_chars + seperator_length; // desc + seperator
         std::vector<char> data(max_num_formats * max_format_length + 1);
-        char *buf = data.data();
+        char* buf = data.data();
 
         int buf_pos = 0;
         for (int i = 0; i < max_num_formats; ++i) {
@@ -222,11 +226,10 @@ void sound_device_set_music_volume(int volume_pct) {
 void sound_device_set_channel_volume(int channel, int volume_pct) {
     if (data.channels[channel].chunk)
         Mix_VolumeChunk(data.channels[channel].chunk, percentage_to_volume(volume_pct));
-
 }
 
 #ifdef __vita__
-static void load_music_for_vita(const char *filename) {
+static void load_music_for_vita(const char* filename) {
     if (vita_music_data.buffer) {
         if (strcmp(filename, vita_music_data.filename) == 0)
             return;
@@ -234,11 +237,11 @@ static void load_music_for_vita(const char *filename) {
         vita_music_data.buffer = 0;
     }
     strncpy(vita_music_data.filename, filename, FILE_NAME_MAX - 1);
-    char *resolved_filename = vita_prepend_path(filename);
+    char* resolved_filename = vita_prepend_path(filename);
     SceUID fd = sceIoOpen(resolved_filename, SCE_O_RDONLY, 0777);
     free(resolved_filename);
     if (fd < 0)
-            return;
+        return;
     vita_music_data.size = sceIoLseek(fd, 0, SCE_SEEK_END);
     sceIoLseek(fd, 0, SCE_SEEK_SET);
     vita_music_data.buffer = malloc(sizeof(char) * vita_music_data.size);
@@ -247,7 +250,7 @@ static void load_music_for_vita(const char *filename) {
 }
 #endif
 
-int sound_device_play_music(const char *filename, int volume_pct) {
+int sound_device_play_music(const char* filename, int volume_pct) {
     if (data.initialized) {
         sound_device_stop_music();
 #ifdef __vita__
@@ -255,19 +258,19 @@ int sound_device_play_music(const char *filename, int volume_pct) {
         if (!vita_music_data.buffer)
             return 0;
 
-        SDL_RWops *sdl_music = SDL_RWFromMem(vita_music_data.buffer, vita_music_data.size);
+        SDL_RWops* sdl_music = SDL_RWFromMem(vita_music_data.buffer, vita_music_data.size);
         data.music = Mix_LoadMUSType_RW(sdl_music, file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
 #else
         data.music = Mix_LoadMUS(filename);
 #endif
         if (!data.music) {
-            SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Error opening music file '%s'. Reason: %s", filename,
-                        Mix_GetError());
+            SDL_LogWarn(
+              SDL_LOG_CATEGORY_APPLICATION, "Error opening music file '%s'. Reason: %s", filename, Mix_GetError());
         } else {
             if (Mix_PlayMusic(data.music, -1) == -1) {
                 data.music = 0;
-                SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Error playing music file '%s'. Reason: %s", filename,
-                            Mix_GetError());
+                SDL_LogWarn(
+                  SDL_LOG_CATEGORY_APPLICATION, "Error playing music file '%s'. Reason: %s", filename, Mix_GetError());
             } else {
                 sound_device_set_music_volume(volume_pct);
             }
@@ -277,7 +280,7 @@ int sound_device_play_music(const char *filename, int volume_pct) {
     return 0;
 }
 
-void sound_device_play_file_on_channel(const char *filename, int channel, int volume_pct) {
+void sound_device_play_file_on_channel(const char* filename, int channel, int volume_pct) {
     if (data.initialized) {
         sound_device_stop_channel(channel);
         data.channels[channel].chunk = load_chunk(filename);
@@ -290,14 +293,13 @@ void sound_device_play_file_on_channel(const char *filename, int channel, int vo
 
 void sound_device_play_channel(int channel, int volume_pct) {
     if (data.initialized) {
-        sound_channel *ch = &data.channels[channel];
+        sound_channel* ch = &data.channels[channel];
         if (load_channel(ch)) {
-
             switch (GAME_ENV) {
-                const char *mp3_track;
-                case ENGINE_ENV_PHARAOH:
-                    sound_device_set_channel_volume(channel, volume_pct * 0.4);
-                    break;
+                const char* mp3_track;
+            case ENGINE_ENV_PHARAOH:
+                sound_device_set_channel_volume(channel, volume_pct * 0.4);
+                break;
             }
             Mix_PlayChannel(channel, ch->chunk, 0);
         }
@@ -306,7 +308,7 @@ void sound_device_play_channel(int channel, int volume_pct) {
 
 void sound_device_play_channel_panned(int channel, int volume_pct, int left_pct, int right_pct) {
     if (data.initialized) {
-        sound_channel *ch = &data.channels[channel];
+        sound_channel* ch = &data.channels[channel];
         if (load_channel(ch)) {
             Mix_SetPanning(channel, left_pct * 255 / 100, right_pct * 255 / 100);
             sound_device_set_channel_volume(channel, volume_pct);
@@ -327,7 +329,7 @@ void sound_device_stop_music(void) {
 
 void sound_device_stop_channel(int channel) {
     if (data.initialized) {
-        sound_channel *ch = &data.channels[channel];
+        sound_channel* ch = &data.channels[channel];
         if (ch->chunk) {
             Mix_HaltChannel(channel);
             Mix_FreeChunk(ch->chunk);
@@ -359,25 +361,21 @@ static int create_custom_audio_stream(SDL_AudioFormat src_format, Uint8 src_chan
 
 #ifdef USE_SDL_AUDIOSTREAM
     if (custom_music.use_audiostream) {
-        custom_music.stream = SDL_NewAudioStream(
-                src_format, src_channels, src_rate,
-                dst_format, dst_channels, dst_rate
-        );
+        custom_music.stream
+          = SDL_NewAudioStream(src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate);
         return custom_music.stream != 0;
     }
 #endif
 
-    int result = SDL_BuildAudioCVT(
-            &custom_music.cvt, src_format, src_channels, src_rate,
-            dst_format, dst_channels, dst_rate
-    );
+    int result
+      = SDL_BuildAudioCVT(&custom_music.cvt, src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate);
     if (result < 0)
         return 0;
 
 
     // Allocate buffer large enough for 2 seconds of 16-bit audio
     custom_music.buffer_size = dst_rate * dst_channels * 2 * 2;
-    custom_music.buffer = (unsigned char *) malloc(custom_music.buffer_size);
+    custom_music.buffer = (unsigned char*)malloc(custom_music.buffer_size);
     if (!custom_music.buffer)
         return 0;
 
@@ -395,7 +393,7 @@ static int custom_audio_stream_active(void) {
     return custom_music.buffer != 0;
 }
 
-static int put_custom_audio_stream(Uint8 *audio_data, int len) {
+static int put_custom_audio_stream(Uint8* audio_data, int len) {
     if (!audio_data || len <= 0 || !custom_audio_stream_active())
         return 0;
 
@@ -407,7 +405,7 @@ static int put_custom_audio_stream(Uint8 *audio_data, int len) {
 #endif
 
     // Convert audio to SDL format
-    custom_music.cvt.buf = (Uint8 *) malloc((size_t) (len * custom_music.cvt.len_mult));
+    custom_music.cvt.buf = (Uint8*)malloc((size_t)(len * custom_music.cvt.len_mult));
     if (!custom_music.cvt.buf)
         return 0;
 
@@ -434,7 +432,7 @@ static int put_custom_audio_stream(Uint8 *audio_data, int len) {
     return 1;
 }
 
-static int get_custom_audio_stream(Uint8 *dst, int len) {
+static int get_custom_audio_stream(Uint8* dst, int len) {
     if (!dst || len <= 0 || !custom_audio_stream_active())
         return 0;
 
@@ -469,7 +467,7 @@ static int get_custom_audio_stream(Uint8 *dst, int len) {
     return bytes_copied;
 }
 
-static void custom_music_callback(void *dummy, Uint8 *stream, int len) {
+static void custom_music_callback(void* dummy, Uint8* stream, int len) {
     int bytes_copied = get_custom_audio_stream(stream, len);
 
     if (bytes_copied < len) {
@@ -478,8 +476,8 @@ static void custom_music_callback(void *dummy, Uint8 *stream, int len) {
     }
 }
 
-void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate,
-                                          const unsigned char *audio_data, int len) {
+void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate, const unsigned char* audio_data,
+                                          int len) {
     SDL_AudioFormat format;
     if (bitdepth == 8)
         format = AUDIO_U8;
@@ -495,10 +493,7 @@ void sound_device_use_custom_music_player(int bitdepth, int num_channels, int ra
     Mix_QuerySpec(&device_rate, &device_format, &device_channels);
     custom_music.format = format;
 
-    int result = create_custom_audio_stream(
-            format, num_channels, rate,
-            device_format, device_channels, device_rate
-    );
+    int result = create_custom_audio_stream(format, num_channels, rate, device_format, device_channels, device_rate);
     if (!result)
         return;
 
@@ -507,17 +502,16 @@ void sound_device_use_custom_music_player(int bitdepth, int num_channels, int ra
     Mix_HookMusic(custom_music_callback, 0);
 }
 
-void sound_device_write_custom_music_data(const unsigned char *audio_data, int len) {
+void sound_device_write_custom_music_data(const unsigned char* audio_data, int len) {
     if (!audio_data || len <= 0 || !custom_audio_stream_active())
         return;
     // Mix audio to sound effect volume
-    Uint8 *mix_buffer = (Uint8 *) malloc(len);
+    Uint8* mix_buffer = (Uint8*)malloc(len);
     if (!mix_buffer)
         return;
     memset(mix_buffer, (custom_music.format == AUDIO_U8) ? 128 : 0, len);
-    SDL_MixAudioFormat(mix_buffer, audio_data,
-                       custom_music.format, len,
-                       percentage_to_volume(setting_sound(SOUND_EFFECTS)->volume));
+    SDL_MixAudioFormat(
+      mix_buffer, audio_data, custom_music.format, len, percentage_to_volume(setting_sound(SOUND_EFFECTS)->volume));
 
     put_custom_audio_stream(mix_buffer, len);
     free(mix_buffer);

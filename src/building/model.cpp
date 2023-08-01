@@ -1,34 +1,34 @@
 #include "building/model.h"
 
+#include "core/game_environment.h"
+#include "core/string.h"
 #include "io/io.h"
 #include "io/log.h"
-#include "core/string.h"
-#include "core/game_environment.h"
 
+#include <game/settings.h>
 #include <stdlib.h>
 #include <string.h>
-#include <game/settings.h>
 
 #define TMP_BUFFER_SIZE 100000
 
-//int NUM_BUILDINGS = 0;
-//int NUM_HOUSES = 0;
+// int NUM_BUILDINGS = 0;
+// int NUM_HOUSES = 0;
 
 static const uint8_t ALL_BUILDINGS[] = {'A', 'L', 'L', ' ', 'B', 'U', 'I', 'L', 'D', 'I', 'N', 'G', 'S', 0};
 static const uint8_t ALL_HOUSES[] = {'A', 'L', 'L', ' ', 'H', 'O', 'U', 'S', 'E', 'S', 0};
 
-//static model_building buildings[400]; // 130 in C3, more in Pharaoh, can't be bothered to make this dynamic
-//static model_house houses[20];
+// static model_building buildings[400]; // 130 in C3, more in Pharaoh, can't be bothered to make this dynamic
+// static model_house houses[20];
 
 struct model_data_t {
     model_building buildings[5][400];
     model_house houses[5][20];
-//    int difficulty_level_cached = 0;
+    //    int difficulty_level_cached = 0;
 };
 
 model_data_t g_model_data;
 
-static const uint8_t *skip_non_digits(const uint8_t *str) {
+static const uint8_t* skip_non_digits(const uint8_t* str) {
     int safeguard = 0;
     while (1) {
         if (++safeguard >= 1000)
@@ -41,14 +41,15 @@ static const uint8_t *skip_non_digits(const uint8_t *str) {
     }
     return str;
 }
-static const uint8_t *get_value(const uint8_t *ptr, const uint8_t *end_ptr, int *value) {
+static const uint8_t* get_value(const uint8_t* ptr, const uint8_t* end_ptr, int* value) {
     ptr = skip_non_digits(ptr);
     *value = string_to_int(ptr);
-    ptr += index_of(ptr, ',', (int) (end_ptr - ptr));
+    ptr += index_of(ptr, ',', (int)(end_ptr - ptr));
     return ptr;
 }
 
-bool model_load_file(const char *filepath, int NUM_BUILDINGS, int NUM_HOUSES, model_building *buildings, model_house *houses) {
+bool model_load_file(const char* filepath, int NUM_BUILDINGS, int NUM_HOUSES, model_building* buildings,
+                     model_house* houses) {
     buffer buf(TMP_BUFFER_SIZE);
     int filesize = 0;
     filesize = io_read_file_into_buffer(filepath, NOT_LOCALIZED, &buf, TMP_BUFFER_SIZE);
@@ -61,8 +62,8 @@ bool model_load_file(const char *filepath, int NUM_BUILDINGS, int NUM_HOUSES, mo
     int num_lines = 0;
     int guard = NUM_BUILDINGS + NUM_HOUSES;
     int brace_index;
-    const uint8_t *haystack = buf.get_data();
-    const uint8_t *ptr = &haystack[index_of_string(haystack, ALL_BUILDINGS, filesize)];
+    const uint8_t* haystack = buf.get_data();
+    const uint8_t* ptr = &haystack[index_of_string(haystack, ALL_BUILDINGS, filesize)];
     do {
         guard--;
         brace_index = index_of(ptr, '{', filesize);
@@ -79,7 +80,7 @@ bool model_load_file(const char *filepath, int NUM_BUILDINGS, int NUM_HOUSES, mo
     // parse buildings data
     int dummy;
     ptr = &haystack[index_of_string(haystack, ALL_BUILDINGS, filesize)];
-    const uint8_t *end_ptr = &haystack[filesize];
+    const uint8_t* end_ptr = &haystack[filesize];
     for (int i = 0; i < NUM_BUILDINGS; i++) {
         ptr += index_of(ptr, '{', filesize);
 
@@ -127,32 +128,32 @@ bool model_load_file(const char *filepath, int NUM_BUILDINGS, int NUM_HOUSES, mo
 }
 
 bool model_load(void) {
-    auto &data = g_model_data;
+    auto& data = g_model_data;
     switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH: {
-            if (!model_load_file("Pharaoh_Model_VeryEasy.txt", 237, 20, data.buildings[0], data.houses[0]))
-                return false;
-            if (!model_load_file("Pharaoh_Model_Easy.txt", 237, 20, data.buildings[1], data.houses[1]))
-                return false;
-            if (!model_load_file("Pharaoh_Model_Normal.txt", 237, 20, data.buildings[2], data.houses[2]))
-                return false;
-            if (!model_load_file("Pharaoh_Model_Hard.txt", 237, 20, data.buildings[3], data.houses[3]))
-                return false;
-            if (!model_load_file("Pharaoh_Model_Impossible.txt", 237, 20, data.buildings[4], data.houses[4]))
-                return false;
-            break;
-        }
+    case ENGINE_ENV_PHARAOH: {
+        if (!model_load_file("Pharaoh_Model_VeryEasy.txt", 237, 20, data.buildings[0], data.houses[0]))
+            return false;
+        if (!model_load_file("Pharaoh_Model_Easy.txt", 237, 20, data.buildings[1], data.houses[1]))
+            return false;
+        if (!model_load_file("Pharaoh_Model_Normal.txt", 237, 20, data.buildings[2], data.houses[2]))
+            return false;
+        if (!model_load_file("Pharaoh_Model_Hard.txt", 237, 20, data.buildings[3], data.houses[3]))
+            return false;
+        if (!model_load_file("Pharaoh_Model_Impossible.txt", 237, 20, data.buildings[4], data.houses[4]))
+            return false;
+        break;
+    }
     }
     return true;
 }
 
-//const model_building MODEL_ROADBLOCK = {40, 0, 0, 0, 0};
-const model_building *model_get_building(int type) {
-//    if (type == BUILDING_ROADBLOCK) {
-//        return &MODEL_ROADBLOCK;
-//    }
+// const model_building MODEL_ROADBLOCK = {40, 0, 0, 0, 0};
+const model_building* model_get_building(int type) {
+    //    if (type == BUILDING_ROADBLOCK) {
+    //        return &MODEL_ROADBLOCK;
+    //    }
     return &g_model_data.buildings[setting_difficulty()][type];
 }
-const model_house *model_get_house(int level) {
+const model_house* model_get_house(int level) {
     return &g_model_data.houses[setting_difficulty()][level];
 }

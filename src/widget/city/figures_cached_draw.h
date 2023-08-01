@@ -17,7 +17,7 @@ typedef struct {
 } tile_figure_draw_cache;
 
 void reset_tiledraw_caches();
-tile_figure_draw_cache *get_figure_cache_for_tile(map_point point);
+tile_figure_draw_cache* get_figure_cache_for_tile(map_point point);
 void cache_figures(pixel_coordinate pixel, map_point point);
 
-#endif //OZYMANDIAS_FIGURES_CACHED_DRAW_H
+#endif // OZYMANDIAS_FIGURES_CACHED_DRAW_H

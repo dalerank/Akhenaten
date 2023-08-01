@@ -43,47 +43,47 @@ void city_entertainment_calculate_shows(void) {
     city_data.entertainment.venue_needing_shows = 0;
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
         switch (b->type) {
-            case BUILDING_BOOTH: // booth
-                if (b->data.entertainment.days1)
-                    city_data.entertainment.theater_shows++;
-                else
-                    city_data.entertainment.theater_no_shows_weighted++;
-                break;
-            case BUILDING_BANDSTAND: // bandstand
-                if (b->data.entertainment.days1)
-                    city_data.entertainment.theater_shows++;
-                else
-                    city_data.entertainment.theater_no_shows_weighted++;
-                if (b->data.entertainment.days2)
-                    city_data.entertainment.amphitheater_shows++;
-                else
-                    city_data.entertainment.amphitheater_no_shows_weighted++;
-                break;
-            case BUILDING_PAVILLION: // pavillion
-                if (b->data.entertainment.days1)
-                    city_data.entertainment.theater_shows++;
-                else
-                    city_data.entertainment.theater_no_shows_weighted++;
-                if (b->data.entertainment.days2)
-                    city_data.entertainment.amphitheater_shows++;
-                else
-                    city_data.entertainment.amphitheater_no_shows_weighted++;
-                if (b->data.entertainment.days3_or_play)
-                    city_data.entertainment.colosseum_shows++;
-                else
-                    city_data.entertainment.colosseum_no_shows_weighted++;
-                break;
-            case BUILDING_SENET_HOUSE:
-                if (b->data.entertainment.days1)
-                    city_data.entertainment.hippodrome_shows++;
-                else
-                    city_data.entertainment.hippodrome_no_shows_weighted += 100;
-                break;
+        case BUILDING_BOOTH: // booth
+            if (b->data.entertainment.days1)
+                city_data.entertainment.theater_shows++;
+            else
+                city_data.entertainment.theater_no_shows_weighted++;
+            break;
+        case BUILDING_BANDSTAND: // bandstand
+            if (b->data.entertainment.days1)
+                city_data.entertainment.theater_shows++;
+            else
+                city_data.entertainment.theater_no_shows_weighted++;
+            if (b->data.entertainment.days2)
+                city_data.entertainment.amphitheater_shows++;
+            else
+                city_data.entertainment.amphitheater_no_shows_weighted++;
+            break;
+        case BUILDING_PAVILLION: // pavillion
+            if (b->data.entertainment.days1)
+                city_data.entertainment.theater_shows++;
+            else
+                city_data.entertainment.theater_no_shows_weighted++;
+            if (b->data.entertainment.days2)
+                city_data.entertainment.amphitheater_shows++;
+            else
+                city_data.entertainment.amphitheater_no_shows_weighted++;
+            if (b->data.entertainment.days3_or_play)
+                city_data.entertainment.colosseum_shows++;
+            else
+                city_data.entertainment.colosseum_no_shows_weighted++;
+            break;
+        case BUILDING_SENET_HOUSE:
+            if (b->data.entertainment.days1)
+                city_data.entertainment.hippodrome_shows++;
+            else
+                city_data.entertainment.hippodrome_no_shows_weighted += 100;
+            break;
         }
     }
     int worst_shows = 0;
@@ -101,7 +101,6 @@ void city_entertainment_calculate_shows(void) {
     }
     if (city_data.entertainment.hippodrome_no_shows_weighted > worst_shows)
         city_data.entertainment.venue_needing_shows = 4;
-
 }
 
 int city_entertainment_show_message_colosseum(void) {

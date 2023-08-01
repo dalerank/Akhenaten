@@ -6,23 +6,23 @@ class building;
 
 bool city_buildings_has_palace(void);
 int city_buildings_get_palace_id();
-void city_buildings_add_palace(building *palace);
-void city_buildings_remove_palace(building *palace);
+void city_buildings_add_palace(building* palace);
+void city_buildings_remove_palace(building* palace);
 
 bool city_buildings_has_mansion(void);
 int city_buildings_get_mansion_id();
-void city_buildings_add_mansion(building *mansion);
-void city_buildings_remove_mansion(building *mansion);
+void city_buildings_add_mansion(building* mansion);
+void city_buildings_remove_mansion(building* mansion);
 
 bool city_buildings_has_recruiter(void);
-void city_buildings_add_recruiter(building *recruiter);
-void city_buildings_remove_recruiter(building *recruiter);
+void city_buildings_add_recruiter(building* recruiter);
+void city_buildings_remove_recruiter(building* recruiter);
 int city_buildings_get_recruiter(void);
 void city_buildings_set_recruiter(int building_id);
 
 bool city_buildings_has_distribution_center(void);
-void city_buildings_add_distribution_center(building *center);
-void city_buildings_remove_distribution_center(building *center);
+void city_buildings_add_distribution_center(building* center);
+void city_buildings_remove_distribution_center(building* center);
 
 int city_buildings_get_trade_center(void);
 void city_buildings_set_trade_center(int building_id);
@@ -54,12 +54,12 @@ void city_buildings_set_mission_post_operational(void);
 
 bool city_building_has_festival_square(void);
 map_point city_building_get_festival_square_position();
-void city_buildings_add_festival_square(building *square);
+void city_buildings_add_festival_square(building* square);
 void city_buildings_remove_festival_square(void);
 
 bool city_buildings_has_temple_complex(void);
 int city_buildings_get_temple_complex(void);
-void city_buildings_add_temple_complex(building *complex);
+void city_buildings_add_temple_complex(building* complex);
 void city_buildings_remove_temple_complex(void);
 
 int city_buildings_unknown_value(void);

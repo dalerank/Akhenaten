@@ -1,14 +1,14 @@
 #include "bridge.h"
 
-#include "graphics/view/view.h"
 #include "core/direction.h"
-#include <scenario/map.h>
+#include "graphics/view/view.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
 #include "grid/property.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/sprite.h"
 #include "grid/terrain.h"
+#include <scenario/map.h>
 
 static struct {
     int end_grid_offset;
@@ -25,7 +25,7 @@ void map_bridge_reset_building_length(void) {
     bridge.length = 0;
 }
 
-int map_bridge_calculate_length_direction(int x, int y, int *length, int *direction) {
+int map_bridge_calculate_length_direction(int x, int y, int* length, int* direction) {
     int grid_offset = MAP_OFFSET(x, y);
     bridge.end_grid_offset = 0;
     bridge.direction_grid_delta = 0;
@@ -78,7 +78,6 @@ int map_bridge_calculate_length_direction(int x, int y, int *length, int *direct
 
         if (map_terrain_count_diagonally_adjacent_with_type(grid_offset, TERRAIN_WATER) != 4)
             break;
-
     }
     // invalid bridge
     *length = bridge.length;
@@ -87,20 +86,20 @@ int map_bridge_calculate_length_direction(int x, int y, int *length, int *direct
 
 static int get_pillar_distance(int length) {
     switch (bridge.length) {
-        case 9:
-        case 10:
-            return 4;
-        case 11:
-        case 12:
-            return 5;
-        case 13:
-        case 14:
-            return 6;
-        case 15:
-        case 16:
-            return 7;
-        default:
-            return 8;
+    case 9:
+    case 10:
+        return 4;
+    case 11:
+    case 12:
+        return 5;
+    case 13:
+    case 14:
+        return 6;
+    case 15:
+    case 16:
+        return 7;
+    default:
+        return 8;
     }
 }
 
@@ -113,26 +112,26 @@ int map_bridge_get_sprite_id(int index, int length, int direction, bool is_ship_
         } else if (index == 0) {
             // ramp at start
             switch (direction) {
-                case DIR_0_TOP_RIGHT:
-                    return 7;
-                case DIR_2_BOTTOM_RIGHT:
-                    return 8;
-                case DIR_4_BOTTOM_LEFT:
-                    return 9;
-                case DIR_6_TOP_LEFT:
-                    return 10;
+            case DIR_0_TOP_RIGHT:
+                return 7;
+            case DIR_2_BOTTOM_RIGHT:
+                return 8;
+            case DIR_4_BOTTOM_LEFT:
+                return 9;
+            case DIR_6_TOP_LEFT:
+                return 10;
             }
         } else if (index == length - 1) {
             // ramp at end
             switch (direction) {
-                case DIR_0_TOP_RIGHT:
-                    return 9;
-                case DIR_2_BOTTOM_RIGHT:
-                    return 10;
-                case DIR_4_BOTTOM_LEFT:
-                    return 7;
-                case DIR_6_TOP_LEFT:
-                    return 8;
+            case DIR_0_TOP_RIGHT:
+                return 9;
+            case DIR_2_BOTTOM_RIGHT:
+                return 10;
+            case DIR_4_BOTTOM_LEFT:
+                return 7;
+            case DIR_6_TOP_LEFT:
+                return 8;
             }
         } else if (index == pillar_distance) {
             if (direction == DIR_0_TOP_RIGHT || direction == DIR_4_BOTTOM_LEFT)
@@ -152,26 +151,26 @@ int map_bridge_get_sprite_id(int index, int length, int direction, bool is_ship_
         if (index == 0) {
             // ramp at start
             switch (direction) {
-                case DIR_0_TOP_RIGHT:
-                    return 1;
-                case DIR_2_BOTTOM_RIGHT:
-                    return 2;
-                case DIR_4_BOTTOM_LEFT:
-                    return 3;
-                case DIR_6_TOP_LEFT:
-                    return 4;
+            case DIR_0_TOP_RIGHT:
+                return 1;
+            case DIR_2_BOTTOM_RIGHT:
+                return 2;
+            case DIR_4_BOTTOM_LEFT:
+                return 3;
+            case DIR_6_TOP_LEFT:
+                return 4;
             }
         } else if (index == length - 1) {
             // ramp at end
             switch (direction) {
-                case DIR_0_TOP_RIGHT:
-                    return 3;
-                case DIR_2_BOTTOM_RIGHT:
-                    return 4;
-                case DIR_4_BOTTOM_LEFT:
-                    return 1;
-                case DIR_6_TOP_LEFT:
-                    return 2;
+            case DIR_0_TOP_RIGHT:
+                return 3;
+            case DIR_2_BOTTOM_RIGHT:
+                return 4;
+            case DIR_4_BOTTOM_LEFT:
+                return 1;
+            case DIR_6_TOP_LEFT:
+                return 2;
             }
         } else {
             // middle part
@@ -300,7 +299,6 @@ int map_bridge_count_figures(int grid_offset) {
         grid_offset += offset_up;
         if (map_has_figure_at(grid_offset))
             figures++;
-
     }
     return figures;
 }
@@ -312,53 +310,53 @@ void map_bridge_update_after_rotate(int counter_clockwise) {
             if (map_is_bridge(grid_offset)) {
                 int new_value;
                 switch (map_sprite_animation_at(grid_offset)) {
-                    case 1:
-                        new_value = counter_clockwise ? 2 : 4;
-                        break;
-                    case 2:
-                        new_value = counter_clockwise ? 3 : 1;
-                        break;
-                    case 3:
-                        new_value = counter_clockwise ? 4 : 2;
-                        break;
-                    case 4:
-                        new_value = counter_clockwise ? 1 : 3;
-                        break;
-                    case 5:
-                        new_value = 6;
-                        break;
-                    case 6:
-                        new_value = 5;
-                        break;
-                    case 7:
-                        new_value = counter_clockwise ? 8 : 10;
-                        break;
-                    case 8:
-                        new_value = counter_clockwise ? 9 : 7;
-                        break;
-                    case 9:
-                        new_value = counter_clockwise ? 10 : 8;
-                        break;
-                    case 10:
-                        new_value = counter_clockwise ? 7 : 9;
-                        break;
-                    case 11:
-                        new_value = 12;
-                        break;
-                    case 12:
-                        new_value = 11;
-                        break;
-                    case 13:
-                        new_value = 13;
-                        break;
-                    case 14:
-                        new_value = 15;
-                        break;
-                    case 15:
-                        new_value = 14;
-                        break;
-                    default:
-                        new_value = map_sprite_animation_at(grid_offset);
+                case 1:
+                    new_value = counter_clockwise ? 2 : 4;
+                    break;
+                case 2:
+                    new_value = counter_clockwise ? 3 : 1;
+                    break;
+                case 3:
+                    new_value = counter_clockwise ? 4 : 2;
+                    break;
+                case 4:
+                    new_value = counter_clockwise ? 1 : 3;
+                    break;
+                case 5:
+                    new_value = 6;
+                    break;
+                case 6:
+                    new_value = 5;
+                    break;
+                case 7:
+                    new_value = counter_clockwise ? 8 : 10;
+                    break;
+                case 8:
+                    new_value = counter_clockwise ? 9 : 7;
+                    break;
+                case 9:
+                    new_value = counter_clockwise ? 10 : 8;
+                    break;
+                case 10:
+                    new_value = counter_clockwise ? 7 : 9;
+                    break;
+                case 11:
+                    new_value = 12;
+                    break;
+                case 12:
+                    new_value = 11;
+                    break;
+                case 13:
+                    new_value = 13;
+                    break;
+                case 14:
+                    new_value = 15;
+                    break;
+                case 15:
+                    new_value = 14;
+                    break;
+                default:
+                    new_value = map_sprite_animation_at(grid_offset);
                 }
                 map_sprite_animation_set(grid_offset, new_value);
             }
@@ -371,27 +369,27 @@ int map_bridge_height(int grid_offset) {
     if (sprite <= 6) {
         // low bridge
         switch (sprite) {
-            case 1:
-            case 4:
-                return 10;
-            case 2:
-            case 3:
-                return 16;
-            default:
-                return 20;
+        case 1:
+        case 4:
+            return 10;
+        case 2:
+        case 3:
+            return 16;
+        default:
+            return 20;
         }
     } else {
         // ship bridge
         switch (sprite) {
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-                return 14;
-            case 13:
-                return 30;
-            default:
-                return 36;
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+            return 14;
+        case 13:
+            return 30;
+        default:
+            return 36;
         }
     }
 }

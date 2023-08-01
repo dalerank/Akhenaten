@@ -1,7 +1,7 @@
 #pragma once
 
 int platform_sdl_version_at_least(int major, int minor, int patch);
-const char *platform_name();
+const char* platform_name();
 
 #if (defined(__WIN32__) || defined(_WIN32)) && !defined(_WIN64)
 #define GAME_PLATFORM_WIN

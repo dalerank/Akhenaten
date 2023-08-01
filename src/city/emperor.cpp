@@ -8,8 +8,8 @@
 #include "figure/formation.h"
 #include "game/difficulty.h"
 #include "game/time.h"
-#include "scenario/property.h"
 #include "scenario/invasion.h"
+#include "scenario/property.h"
 
 const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 
@@ -80,7 +80,6 @@ static void update_debt_state(void) {
             city_data.emperor.months_in_debt = 0;
             if (!city_data.figure.imperial_soldiers)
                 city_ratings_limit_kingdom(10);
-
         }
     }
 }
@@ -99,12 +98,13 @@ static void process_caesar_invasion(void) {
                     city_message_post(true, MESSAGE_CAESAR_ARMY_RETREAT, 0, 0);
                 }
             } else if (city_data.emperor.invasion.duration_day_countdown == 0)
-                city_message_post(true, MESSAGE_CAESAR_ARMY_CONTINUE, 0,
+                city_message_post(true,
+                                  MESSAGE_CAESAR_ARMY_CONTINUE,
+                                  0,
                                   0); // a year has passed (11 months), siege goes on
-
         }
-    } else if (city_data.emperor.invasion.soldiers_killed &&
-               city_data.emperor.invasion.soldiers_killed >= city_data.emperor.invasion.size) {
+    } else if (city_data.emperor.invasion.soldiers_killed
+               && city_data.emperor.invasion.soldiers_killed >= city_data.emperor.invasion.size) {
         // player defeated caesar army
         city_data.emperor.invasion.size = 0;
         city_data.emperor.invasion.soldiers_killed = 0;
@@ -125,7 +125,6 @@ static void process_caesar_invasion(void) {
             city_data.emperor.invasion.days_until_invasion = 192;
             if (city_data.emperor.invasion.warnings_given <= 1)
                 city_message_post(true, MESSAGE_CAESAR_WRATH, 0, 0);
-
         }
     } else {
         city_data.emperor.invasion.days_until_invasion--;
@@ -166,7 +165,6 @@ void city_emperor_init_selected_gift(void) {
 
     if (city_data.emperor.selected_gift_size == GIFT_GENEROUS && !city_emperor_can_send_gift(GIFT_GENEROUS))
         city_data.emperor.selected_gift_size = GIFT_MODEST;
-
 }
 
 int city_emperor_set_gift_size(int size) {
@@ -182,7 +180,7 @@ int city_emperor_selected_gift_size(void) {
     return city_data.emperor.selected_gift_size;
 }
 
-const emperor_gift *city_emperor_get_gift(int size) {
+const emperor_gift* city_emperor_get_gift(int size) {
     return &city_data.emperor.gifts[size];
 }
 
@@ -241,7 +239,6 @@ void city_emperor_send_gift(void) {
             city_ratings_change_kingdom(0);
         else if (size == GIFT_LAVISH)
             city_ratings_change_kingdom(1);
-
     }
 
     city_data.emperor.months_since_gift = 0;
@@ -286,7 +283,6 @@ int city_emperor_rank(void) {
 void city_emperor_init_donation_amount(void) {
     if (city_data.emperor.donate_amount > city_data.emperor.personal_savings)
         city_data.emperor.donate_amount = city_data.emperor.personal_savings;
-
 }
 
 void city_emperor_set_donation_amount(int amount) {

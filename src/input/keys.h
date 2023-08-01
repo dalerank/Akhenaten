@@ -109,10 +109,10 @@ enum {
     KEY_MOD_GUI = 8,
 };
 
-const char *key_combination_name(int key, int modifiers);
+const char* key_combination_name(int key, int modifiers);
 
-int key_combination_from_name(const char *name, int *key, int *modifiers);
+int key_combination_from_name(const char* name, int* key, int* modifiers);
 
-const uint8_t *key_combination_display_name(int key, int modifiers);
+const uint8_t* key_combination_display_name(int key, int modifiers);
 
 #endif // INPUT_KEYS_H

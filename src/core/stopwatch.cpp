@@ -2,13 +2,13 @@
 
 #include "io/log.h"
 
-#include <cinttypes>
 #include <algorithm>
-#include <cstring>
+#include <cinttypes>
 #include <cmath>
+#include <cstring>
 
-template<typename T>
-const T &clamp(const T &x, const T &upper, const T &lower) {
+template <typename T>
+const T& clamp(const T& x, const T& upper, const T& lower) {
     return std::min<int>(upper, std::max<int>(x, lower));
 }
 
@@ -28,7 +28,7 @@ void stopwatch::RECORD(std::string str) {
         if (index > 0)
             names.push_back(str);
     }
-    auto &array = stamps.at(index);
+    auto& array = stamps.at(index);
     int a = array.size();
     const auto tp = std::chrono::system_clock::now();
     array.push_back(tp);

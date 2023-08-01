@@ -12,7 +12,7 @@
 #define ADVISOR_HEIGHT 16
 
 static int get_education_advice(void) {
-    const house_demands *demands = city_houses_demands();
+    const house_demands* demands = city_houses_demands();
     if (demands->education == 1)
         return demands->requiring.school ? 1 : 0;
     else if (demands->education == 2)
@@ -75,7 +75,8 @@ static int draw_background(void) {
     lang_text_draw_amount(8, 18, building_count_total(BUILDING_SCHOOL), 40, 105, FONT_NORMAL_WHITE_ON_DARK);
     text_draw_number_centered(building_count_active(BUILDING_SCHOOL), 150, 105, 100, FONT_NORMAL_WHITE_ON_DARK);
 
-    width = text_draw_number(75 * building_count_active(BUILDING_SCHOOL), '@', " ", 280, 105, FONT_NORMAL_WHITE_ON_DARK);
+    width
+      = text_draw_number(75 * building_count_active(BUILDING_SCHOOL), '@', " ", 280, 105, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(57, 7, 280 + width, 105, FONT_NORMAL_WHITE_ON_DARK);
 
     int pct_school = city_culture_coverage_school();
@@ -88,10 +89,13 @@ static int draw_background(void) {
     }
 
     // academies
-    lang_text_draw_amount(8, 20, building_count_total(BUILDING_MENU_WATER_CROSSINGS), 40, 125, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw_number_centered(building_count_active(BUILDING_MENU_WATER_CROSSINGS), 150, 125, 100, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw_amount(
+      8, 20, building_count_total(BUILDING_MENU_WATER_CROSSINGS), 40, 125, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_number_centered(
+      building_count_active(BUILDING_MENU_WATER_CROSSINGS), 150, 125, 100, FONT_NORMAL_WHITE_ON_DARK);
 
-    width = text_draw_number(100 * building_count_active(BUILDING_MENU_WATER_CROSSINGS), '@', " ", 280, 125, FONT_NORMAL_WHITE_ON_DARK);
+    width = text_draw_number(
+      100 * building_count_active(BUILDING_MENU_WATER_CROSSINGS), '@', " ", 280, 125, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(57, 8, 280 + width, 125, FONT_NORMAL_WHITE_ON_DARK);
 
     int pct_academy = city_culture_coverage_academy();
@@ -107,7 +111,8 @@ static int draw_background(void) {
     lang_text_draw_amount(8, 22, building_count_total(BUILDING_LIBRARY), 40, 145, FONT_NORMAL_WHITE_ON_DARK);
     text_draw_number_centered(building_count_active(BUILDING_LIBRARY), 150, 145, 100, FONT_NORMAL_WHITE_ON_DARK);
 
-    width = text_draw_number(800 * building_count_active(BUILDING_LIBRARY), '@', " ", 280, 145, FONT_NORMAL_WHITE_ON_DARK);
+    width
+      = text_draw_number(800 * building_count_active(BUILDING_LIBRARY), '@', " ", 280, 145, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(57, 9, 280 + width, 145, FONT_NORMAL_WHITE_ON_DARK);
 
     int pct_library = city_culture_coverage_library();
@@ -124,12 +129,7 @@ static int draw_background(void) {
     return ADVISOR_HEIGHT;
 }
 
-const advisor_window_type *window_advisor_education(void) {
-    static const advisor_window_type window = {
-            draw_background,
-            0,
-            0,
-            0
-    };
+const advisor_window_type* window_advisor_education(void) {
+    static const advisor_window_type window = {draw_background, 0, 0, 0};
     return &window;
 }

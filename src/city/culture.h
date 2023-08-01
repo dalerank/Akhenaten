@@ -26,8 +26,8 @@ int city_culture_average_health(void);
 
 void city_culture_calculate(void);
 
-void city_culture_save_state(buffer *buf);
+void city_culture_save_state(buffer* buf);
 
-void city_culture_load_state(buffer *buf);
+void city_culture_load_state(buffer* buf);
 
 #endif // CITY_CULTURE_H

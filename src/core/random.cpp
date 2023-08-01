@@ -1,12 +1,12 @@
 #include "core/random.h"
 
-#include <string.h>
 #include "io/io_buffer.h"
-//#include <cmath>
+#include <string.h>
+// #include <cmath>
 
 static random_data_t data;
 
-const random_data_t * random_data_struct() {
+const random_data_t* random_data_struct() {
     return &data;
 }
 
@@ -68,8 +68,7 @@ int32_t random_from_pool(int index) {
     return data.pool[(data.pool_index + index) % MAX_RANDOM];
 }
 
-void randomize_event_fields(int16_t field[4], int32_t *seed) {
-
+void randomize_event_fields(int16_t field[4], int32_t* seed) {
     // original values
     auto f_fixed = field[1];
     auto f_min = field[2];
@@ -118,9 +117,10 @@ void randomize_event_fields(int16_t field[4], int32_t *seed) {
     field[0] = f_fixed;
 }
 
-void random_around_point(int x_home, int y_home, int x, int y, int *dest_x, int *dest_y, int step, int bias, int max_dist) {
+void random_around_point(int x_home, int y_home, int x, int y, int* dest_x, int* dest_y, int step, int bias,
+                         int max_dist) {
     random_generate_next();
-    int det = 64/step;
+    int det = 64 / step;
     int rand_x = random_byte() / det - step;
     int rand_y = random_byte_alt() / det - step;
     *dest_x = x + rand_x;
@@ -147,7 +147,6 @@ void random_around_point(int x_home, int y_home, int x, int y, int *dest_x, int 
 
 // please email me if you have a better name for this
 bool random_bool_lerp_scalar_int(int minimum, int maximum, int v) {
-
     // let's not make our life harder.
     v -= minimum;
     maximum -= minimum;
@@ -172,7 +171,7 @@ bool random_bool_lerp_scalar_int(int minimum, int maximum, int v) {
         return true;
 }
 
-io_buffer *iob_random_iv = new io_buffer([](io_buffer *iob) {
+io_buffer* iob_random_iv = new io_buffer([](io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT32, &data.iv1);
     iob->bind(BIND_SIGNATURE_UINT32, &data.iv2);
     random_bits_fill();

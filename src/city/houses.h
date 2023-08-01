@@ -33,11 +33,11 @@ struct house_demands {
     int religion;
     int education;
     int entertainment;
-} ;
+};
 
 void city_houses_reset_demands(void);
 
-house_demands *city_houses_demands(void);
+house_demands* city_houses_demands(void);
 
 void city_houses_calculate_culture_demands(void);
 

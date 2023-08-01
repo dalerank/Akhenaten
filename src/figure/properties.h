@@ -23,6 +23,6 @@ typedef struct {
     int missile_delay;
 } figure_properties;
 
-const figure_properties *figure_properties_for_type(int type);
+const figure_properties* figure_properties_for_type(int type);
 
 #endif // FIGURE_PROPERTIES_H

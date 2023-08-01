@@ -11,7 +11,6 @@ void scenario_price_change_init(void) {
         random_generate_next();
         if (g_scenario_data.price_changes[i].year)
             g_scenario_data.price_changes[i].month = (random_byte() & 7) + 2;
-
     }
 }
 
@@ -20,8 +19,8 @@ void scenario_price_change_process(void) {
         if (!g_scenario_data.price_changes[i].year)
             continue;
 
-        if (game_time_year() != g_scenario_data.price_changes[i].year + g_scenario_data.start_year ||
-            game_time_month() != g_scenario_data.price_changes[i].month) {
+        if (game_time_year() != g_scenario_data.price_changes[i].year + g_scenario_data.start_year
+            || game_time_month() != g_scenario_data.price_changes[i].month) {
             continue;
         }
         int amount = g_scenario_data.price_changes[i].amount;
@@ -33,8 +32,6 @@ void scenario_price_change_process(void) {
         } else {
             if (trade_price_change(resource, -amount))
                 city_message_post(true, MESSAGE_PRICE_DECREASED, amount, resource);
-
         }
     }
 }
-

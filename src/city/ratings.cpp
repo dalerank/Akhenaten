@@ -35,16 +35,16 @@ void city_rating_select(int rating) {
 
 int city_rating_selected_explanation(void) {
     switch (city_data.ratings.selected) {
-        case SELECTED_RATING_CULTURE:
-            return city_data.ratings.culture_explanation;
-        case SELECTED_RATING_PROSPERITY:
-            return city_data.ratings.prosperity_explanation;
-        case SELECTED_RATING_MONUMENT:
-            return city_data.ratings.monument_explanation;
-        case SELECTED_RATING_KINGDOM:
-            return city_data.ratings.kingdom_explanation;
-        default:
-            return 0;
+    case SELECTED_RATING_CULTURE:
+        return city_data.ratings.culture_explanation;
+    case SELECTED_RATING_PROSPERITY:
+        return city_data.ratings.prosperity_explanation;
+    case SELECTED_RATING_MONUMENT:
+        return city_data.ratings.monument_explanation;
+    case SELECTED_RATING_KINGDOM:
+        return city_data.ratings.kingdom_explanation;
+    default:
+        return 0;
     }
 }
 
@@ -58,23 +58,22 @@ void city_ratings_reduce_prosperity_after_bailout(void) {
 
 void city_ratings_monument_building_destroyed(int type) {
     switch (type) {
-        case BUILDING_HOUSE_SMALL_TENT:
-        case BUILDING_HOUSE_LARGE_TENT:
-        case BUILDING_POLICE_STATION:
-        case BUILDING_ENGINEERS_POST:
-        case BUILDING_WELL:
-        case BUILDING_MENU_FORTS:
-        case BUILDING_FORT_GROUND:
-        case BUILDING_GATEHOUSE:
-        case BUILDING_TOWER:
-            break;
-        default:
-            city_data.ratings.monument_destroyed_buildings++;
-            break;
+    case BUILDING_HOUSE_SMALL_TENT:
+    case BUILDING_HOUSE_LARGE_TENT:
+    case BUILDING_POLICE_STATION:
+    case BUILDING_ENGINEERS_POST:
+    case BUILDING_WELL:
+    case BUILDING_MENU_FORTS:
+    case BUILDING_FORT_GROUND:
+    case BUILDING_GATEHOUSE:
+    case BUILDING_TOWER:
+        break;
+    default:
+        city_data.ratings.monument_destroyed_buildings++;
+        break;
     }
     if (city_data.ratings.monument_destroyed_buildings >= 12)
         city_data.ratings.monument_destroyed_buildings = 12;
-
 }
 
 void city_ratings_monument_record_criminal(void) {
@@ -102,7 +101,6 @@ void city_ratings_reduce_kingdom_missed_request(int penalty) {
 void city_ratings_limit_kingdom(int max_kingdom) {
     if (city_data.ratings.kingdom > max_kingdom)
         city_data.ratings.kingdom = max_kingdom;
-
 }
 
 static void update_culture_explanation(void) {
@@ -135,8 +133,8 @@ static void update_culture_explanation(void) {
 }
 
 static int has_made_money(void) {
-    return city_data.finance.last_year.expenses.construction + city_data.finance.treasury >
-           city_data.ratings.prosperity_treasury_last_year;
+    return city_data.finance.last_year.expenses.construction + city_data.finance.treasury
+           > city_data.ratings.prosperity_treasury_last_year;
 }
 
 static void update_prosperity_explanation(void) {
@@ -156,8 +154,8 @@ static void update_prosperity_explanation(void) {
         change -= 1;
     }
     // food types: +1 for multiple foods
-//    if (city_data.resource.food_types_eaten >= 2) todo
-//        change += 1;
+    //    if (city_data.resource.food_types_eaten >= 2) todo
+    //        change += 1;
 
     // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
     int avg_wage = city_data.finance.wage_rate_paid_last_year / 12;
@@ -388,8 +386,8 @@ static void update_prosperity_rating(void) {
     }
     city_data.ratings.prosperity_treasury_last_year = city_data.finance.treasury;
     // food types: +1 for multiple foods
-//    if (city_data.resource.food_types_eaten >= 2) todo
-//        change += 1;
+    //    if (city_data.resource.food_types_eaten >= 2) todo
+    //        change += 1;
 
     // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
     int avg_wage = city_data.finance.wage_rate_paid_last_year / 12;
@@ -426,7 +424,7 @@ static void calculate_max_prosperity(void) {
     int points = 0;
     int houses = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state && b->house_size) {
             points += model_get_house(b->subtype.house_level)->prosperity;
             houses++;
@@ -522,29 +520,24 @@ static void update_kingdom_rating(int is_yearly_update) {
         }
         if (milestone_pct) {
             int bonus = 1;
-            if (winning_culture() &&
-                city_data.ratings.culture < calc_adjust_with_percentage(
-                        winning_culture(), milestone_pct)) {
+            if (winning_culture()
+                && city_data.ratings.culture < calc_adjust_with_percentage(winning_culture(), milestone_pct)) {
                 bonus = 0;
             }
-            if (winning_prosperity() &&
-                city_data.ratings.prosperity < calc_adjust_with_percentage(
-                        winning_prosperity(), milestone_pct)) {
+            if (winning_prosperity()
+                && city_data.ratings.prosperity < calc_adjust_with_percentage(winning_prosperity(), milestone_pct)) {
                 bonus = 0;
             }
-            if (winning_monuments() &&
-                    city_data.ratings.monument < calc_adjust_with_percentage(
-                        winning_monuments(), milestone_pct)) {
+            if (winning_monuments()
+                && city_data.ratings.monument < calc_adjust_with_percentage(winning_monuments(), milestone_pct)) {
                 bonus = 0;
             }
-            if (winning_kingdom() &&
-                    city_data.ratings.kingdom < calc_adjust_with_percentage(
-                        winning_kingdom(), milestone_pct)) {
+            if (winning_kingdom()
+                && city_data.ratings.kingdom < calc_adjust_with_percentage(winning_kingdom(), milestone_pct)) {
                 bonus = 0;
             }
-            if (winning_population() &&
-                city_data.population.population < calc_adjust_with_percentage(
-                        winning_population(), milestone_pct)) {
+            if (winning_population()
+                && city_data.population.population < calc_adjust_with_percentage(winning_population(), milestone_pct)) {
                 bonus = 0;
             }
             if (bonus)

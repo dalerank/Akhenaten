@@ -4,33 +4,33 @@
 
 #define GUARD 50000
 
-//static const int ROUTE_OFFSETS[2][8] = {
-//        {-162, 1, 162, -1, -161, 163, 161, -163},
-//        {-228, 1, 228, -1, -227, 229, 227, -229}
-//};
+// static const int ROUTE_OFFSETS[2][8] = {
+//         {-162, 1, 162, -1, -161, 163, 161, -163},
+//         {-228, 1, 228, -1, -227, 229, 227, -229}
+// };
 static int ROUTE_OFFSETS(int i) {
     switch (i) {
-        // perpendiculars
-        case 0:
-            return -GRID_LENGTH;
-        case 1:
-            return 1;
-        case 2:
-            return GRID_LENGTH;
-        case 3:
-            return -1;
-        // diagonals
-        case 4:
-            return -GRID_LENGTH + 1;
-        case 5:
-            return +GRID_LENGTH + 1;
-        case 6:
-            return +GRID_LENGTH - 1;
-        case 7:
-            return -GRID_LENGTH - 1;
-        ///
-        default:
-            return 0;
+    // perpendiculars
+    case 0:
+        return -GRID_LENGTH;
+    case 1:
+        return 1;
+    case 2:
+        return GRID_LENGTH;
+    case 3:
+        return -1;
+    // diagonals
+    case 4:
+        return -GRID_LENGTH + 1;
+    case 5:
+        return +GRID_LENGTH + 1;
+    case 6:
+        return +GRID_LENGTH - 1;
+    case 7:
+        return -GRID_LENGTH - 1;
+    ///
+    default:
+        return 0;
     }
 }
 
@@ -88,7 +88,7 @@ void route_queue_until(int source, bool (*callback)(int next_offset, int distanc
             queue.head = 0;
     }
 }
-bool route_queue_until_found(int source, int *dst_x, int *dst_y, bool (*callback)(int, int)) {
+bool route_queue_until_found(int source, int* dst_x, int* dst_y, bool (*callback)(int, int)) {
     clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
@@ -112,7 +112,7 @@ bool route_queue_until_found(int source, int *dst_x, int *dst_y, bool (*callback
     *dst_y = -1;
     return false;
 }
-bool route_queue_until_terrain(int source, int terrain_type, int *dst_x, int *dst_y, bool (*callback)(int, int, int)) {
+bool route_queue_until_terrain(int source, int terrain_type, int* dst_x, int* dst_y, bool (*callback)(int, int, int)) {
     clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
@@ -147,8 +147,10 @@ void route_queue_max(int source, int dest, int max_tiles, void (*callback)(int, 
     int tiles = 0;
     while (queue.head != queue.tail) {
         int offset = queue.items[queue.head];
-        if (offset == dest) break;
-        if (++tiles > max_tiles) break;
+        if (offset == dest)
+            break;
+        if (++tiles > max_tiles)
+            break;
         int distance = 1 + map_grid_get(&routing_distance, offset);
         for (int i = 0; i < 4; i++) {
             if (valid_offset(offset + ROUTE_OFFSETS(i)))

@@ -2,58 +2,56 @@
 
 #include "game/state.h"
 
-static int show_building_entertainment(const building *b) {
-    return
-            b->type == BUILDING_JUGGLER_SCHOOL || b->type == BUILDING_BOOTH ||
-            b->type == BUILDING_CONSERVATORY || b->type == BUILDING_BANDSTAND ||
-            b->type == BUILDING_DANCE_SCHOOL || b->type == BUILDING_PAVILLION ||
-            b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_SENET_HOUSE;
+static int show_building_entertainment(const building* b) {
+    return b->type == BUILDING_JUGGLER_SCHOOL || b->type == BUILDING_BOOTH || b->type == BUILDING_CONSERVATORY
+           || b->type == BUILDING_BANDSTAND || b->type == BUILDING_DANCE_SCHOOL || b->type == BUILDING_PAVILLION
+           || b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_SENET_HOUSE;
 }
 
-static int show_building_theater(const building *b) {
+static int show_building_theater(const building* b) {
     return b->type == BUILDING_JUGGLER_SCHOOL || b->type == BUILDING_BOOTH;
 }
 
-static int show_building_amphitheater(const building *b) {
+static int show_building_amphitheater(const building* b) {
     return b->type == BUILDING_JUGGLER_SCHOOL || b->type == BUILDING_CONSERVATORY || b->type == BUILDING_BANDSTAND;
 }
 
-static int show_building_colosseum(const building *b) {
+static int show_building_colosseum(const building* b) {
     return b->type == BUILDING_CONSERVATORY || b->type == BUILDING_DANCE_SCHOOL || b->type == BUILDING_PAVILLION;
 }
 
-static int show_building_hippodrome(const building *b) {
+static int show_building_hippodrome(const building* b) {
     return b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_SENET_HOUSE;
 }
 
-static building *get_entertainment_building(const figure *f) {
-    if (f->action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
-        f->action_state == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
+static building* get_entertainment_building(const figure* f) {
+    if (f->action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING
+        || f->action_state == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
         return ((figure*)f)->home();
     } else
-        return ((figure *) f)->destination();
+        return ((figure*)f)->destination();
 }
 
-static int show_figure_entertainment(const figure *f) {
-    return f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR ||
-           f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER;
+static int show_figure_entertainment(const figure* f) {
+    return f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR || f->type == FIGURE_LION_TAMER
+           || f->type == FIGURE_CHARIOTEER;
 }
 
-static int show_figure_theater(const figure *f) {
+static int show_figure_theater(const figure* f) {
     if (f->type == FIGURE_ACTOR)
         return get_entertainment_building(f)->type == BUILDING_BOOTH;
 
     return 0;
 }
 
-static int show_figure_amphitheater(const figure *f) {
+static int show_figure_amphitheater(const figure* f) {
     if (f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR)
         return get_entertainment_building(f)->type == BUILDING_BANDSTAND;
 
     return 0;
 }
 
-static int show_figure_colosseum(const figure *f) {
+static int show_figure_colosseum(const figure* f) {
     if (f->type == FIGURE_GLADIATOR)
         return get_entertainment_building(f)->type == BUILDING_PAVILLION;
     else if (f->type == FIGURE_LION_TAMER)
@@ -62,31 +60,31 @@ static int show_figure_colosseum(const figure *f) {
     return 0;
 }
 
-static int show_figure_hippodrome(const figure *f) {
+static int show_figure_hippodrome(const figure* f) {
     return f->type == FIGURE_CHARIOTEER;
 }
 
-static int get_column_height_entertainment(const building *b) {
+static int get_column_height_entertainment(const building* b) {
     return b->house_size && b->data.house.entertainment ? b->data.house.entertainment / 10 : NO_COLUMN;
 }
 
-static int get_column_height_theater(const building *b) {
+static int get_column_height_theater(const building* b) {
     return b->house_size && b->data.house.theater ? b->data.house.theater / 10 : NO_COLUMN;
 }
 
-static int get_column_height_amphitheater(const building *b) {
+static int get_column_height_amphitheater(const building* b) {
     return b->house_size && b->data.house.amphitheater_actor ? b->data.house.amphitheater_actor / 10 : NO_COLUMN;
 }
 
-static int get_column_height_colosseum(const building *b) {
+static int get_column_height_colosseum(const building* b) {
     return b->house_size && b->data.house.colosseum_gladiator ? b->data.house.colosseum_gladiator / 10 : NO_COLUMN;
 }
 
-static int get_column_height_hippodrome(const building *b) {
+static int get_column_height_hippodrome(const building* b) {
     return b->house_size && b->data.house.hippodrome ? b->data.house.hippodrome / 10 : NO_COLUMN;
 }
 
-static int get_tooltip_entertainment(tooltip_context *c, const building *b) {
+static int get_tooltip_entertainment(tooltip_context* c, const building* b) {
     if (b->data.house.entertainment <= 0)
         return 64;
     else if (b->data.house.entertainment < 10)
@@ -112,7 +110,7 @@ static int get_tooltip_entertainment(tooltip_context *c, const building *b) {
     }
 }
 
-static int get_tooltip_theater(tooltip_context *c, const building *b) {
+static int get_tooltip_theater(tooltip_context* c, const building* b) {
     if (b->data.house.theater <= 0)
         return 75;
     else if (b->data.house.theater >= 80)
@@ -124,7 +122,7 @@ static int get_tooltip_theater(tooltip_context *c, const building *b) {
     }
 }
 
-static int get_tooltip_amphitheater(tooltip_context *c, const building *b) {
+static int get_tooltip_amphitheater(tooltip_context* c, const building* b) {
     if (b->data.house.amphitheater_actor <= 0)
         return 79;
     else if (b->data.house.amphitheater_actor >= 80)
@@ -136,7 +134,7 @@ static int get_tooltip_amphitheater(tooltip_context *c, const building *b) {
     }
 }
 
-static int get_tooltip_colosseum(tooltip_context *c, const building *b) {
+static int get_tooltip_colosseum(tooltip_context* c, const building* b) {
     if (b->data.house.colosseum_gladiator <= 0)
         return 83;
     else if (b->data.house.colosseum_gladiator >= 80)
@@ -148,7 +146,7 @@ static int get_tooltip_colosseum(tooltip_context *c, const building *b) {
     }
 }
 
-static int get_tooltip_hippodrome(tooltip_context *c, const building *b) {
+static int get_tooltip_hippodrome(tooltip_context* c, const building* b) {
     if (b->data.house.hippodrome <= 0)
         return 87;
     else if (b->data.house.hippodrome >= 80)
@@ -160,77 +158,67 @@ static int get_tooltip_hippodrome(tooltip_context *c, const building *b) {
     }
 }
 
-const city_overlay *city_overlay_for_entertainment(void) {
-    static city_overlay overlay = {
-            OVERLAY_ENTERTAINMENT,
-            COLUMN_TYPE_WATER_ACCESS,
-            show_building_entertainment,
-            show_figure_entertainment,
-            get_column_height_entertainment,
-            0,
-            get_tooltip_entertainment,
-            0,
-            0
-    };
+const city_overlay* city_overlay_for_entertainment(void) {
+    static city_overlay overlay = {OVERLAY_ENTERTAINMENT,
+                                   COLUMN_TYPE_WATER_ACCESS,
+                                   show_building_entertainment,
+                                   show_figure_entertainment,
+                                   get_column_height_entertainment,
+                                   0,
+                                   get_tooltip_entertainment,
+                                   0,
+                                   0};
     return &overlay;
 }
 
-const city_overlay *city_overlay_for_theater(void) {
-    static city_overlay overlay = {
-            OVERLAY_THEATER,
-            COLUMN_TYPE_WATER_ACCESS,
-            show_building_theater,
-            show_figure_theater,
-            get_column_height_theater,
-            0,
-            get_tooltip_theater,
-            0,
-            0
-    };
+const city_overlay* city_overlay_for_theater(void) {
+    static city_overlay overlay = {OVERLAY_THEATER,
+                                   COLUMN_TYPE_WATER_ACCESS,
+                                   show_building_theater,
+                                   show_figure_theater,
+                                   get_column_height_theater,
+                                   0,
+                                   get_tooltip_theater,
+                                   0,
+                                   0};
     return &overlay;
 }
 
-const city_overlay *city_overlay_for_amphitheater(void) {
-    static city_overlay overlay = {
-            OVERLAY_AMPHITHEATER,
-            COLUMN_TYPE_WATER_ACCESS,
-            show_building_amphitheater,
-            show_figure_amphitheater,
-            get_column_height_amphitheater,
-            0,
-            get_tooltip_amphitheater,
-            0,
-            0
-    };
+const city_overlay* city_overlay_for_amphitheater(void) {
+    static city_overlay overlay = {OVERLAY_AMPHITHEATER,
+                                   COLUMN_TYPE_WATER_ACCESS,
+                                   show_building_amphitheater,
+                                   show_figure_amphitheater,
+                                   get_column_height_amphitheater,
+                                   0,
+                                   get_tooltip_amphitheater,
+                                   0,
+                                   0};
     return &overlay;
 }
 
-const city_overlay *city_overlay_for_colosseum(void) {
-    static city_overlay overlay = {
-            OVERLAY_COLOSSEUM,
-            COLUMN_TYPE_WATER_ACCESS,
-            show_building_colosseum,
-            show_figure_colosseum,
-            get_column_height_colosseum,
-            0,
-            get_tooltip_colosseum,
-            0,
-            0
-    };
+const city_overlay* city_overlay_for_colosseum(void) {
+    static city_overlay overlay = {OVERLAY_COLOSSEUM,
+                                   COLUMN_TYPE_WATER_ACCESS,
+                                   show_building_colosseum,
+                                   show_figure_colosseum,
+                                   get_column_height_colosseum,
+                                   0,
+                                   get_tooltip_colosseum,
+                                   0,
+                                   0};
     return &overlay;
 }
 
-const city_overlay *city_overlay_for_hippodrome(void) {
-    static city_overlay overlay = {
-            OVERLAY_HIPPODROME,
-            COLUMN_TYPE_WATER_ACCESS,
-            show_building_hippodrome,
-            show_figure_hippodrome,
-            get_column_height_hippodrome,
-            0,
-            get_tooltip_hippodrome,
-            0,
-            0
-    };
+const city_overlay* city_overlay_for_hippodrome(void) {
+    static city_overlay overlay = {OVERLAY_HIPPODROME,
+                                   COLUMN_TYPE_WATER_ACCESS,
+                                   show_building_hippodrome,
+                                   show_figure_hippodrome,
+                                   get_column_height_hippodrome,
+                                   0,
+                                   get_tooltip_hippodrome,
+                                   0,
+                                   0};
     return &overlay;
 }

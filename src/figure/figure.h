@@ -1,17 +1,17 @@
 #ifndef FIGURE_FIGURE_H
 #define FIGURE_FIGURE_H
 
-#include "io/io_buffer.h"
-#include <memory.h>
+#include "building/building.h"
 #include "core/buffer.h"
 #include "core/direction.h"
 #include "figure/action.h"
-#include "figure/type.h"
 #include "figure/formation.h"
+#include "figure/type.h"
 #include "grid/point.h"
-#include "window/building/common.h"
+#include "io/io_buffer.h"
 #include "widget/city.h"
-#include "building/building.h"
+#include "window/building/common.h"
+#include <memory.h>
 
 class building;
 
@@ -28,12 +28,13 @@ enum e_minimap_figure_color {
 class figure {
 private:
     unsigned char resource_id;
-//    unsigned char resource_amount_loads;
+    //    unsigned char resource_amount_loads;
     unsigned short resource_amount_full; // full load counter
 
     short home_building_id;
     short immigrant_home_building_id;
     short destination_building_id;
+
 public:
     int id;
     int sprite_image_id;
@@ -49,7 +50,7 @@ public:
     unsigned char flotsam_visible;
     short next_figure;
     unsigned char type;
-//    unsigned char resource_id;
+    //    unsigned char resource_id;
     bool use_cross_country;
     bool is_friendly;
     unsigned char state;
@@ -62,18 +63,18 @@ public:
     map_point previous_tile;
     map_point source_tile;
     map_point destination_tile;
-//    unsigned char tile_x;
-//    unsigned char tile_y;
-//    unsigned char previous_tile_x;
-//    unsigned char previous_tile_y;
+    //    unsigned char tile_x;
+    //    unsigned char tile_y;
+    //    unsigned char previous_tile_x;
+    //    unsigned char previous_tile_y;
     unsigned char missile_damage;
     unsigned char damage;
-//    int grid_offset_figure;
-//    unsigned char destination_x;
-//    unsigned char destination_y;
-//    int destination_grid_offset; // only used for soldiers
-//    unsigned char source_x;
-//    unsigned char source_y;
+    //    int grid_offset_figure;
+    //    unsigned char destination_x;
+    //    unsigned char destination_y;
+    //    int destination_grid_offset; // only used for soldiers
+    //    unsigned char source_x;
+    //    unsigned char source_y;
     union {
         unsigned char soldier;
         signed char enemy;
@@ -100,20 +101,20 @@ public:
     coords_t cc_coords;
     coords_t cc_destination;
     coords_t cc_delta;
-//    short cross_country_x; // position = 15 * x + offset on tile
-//    short cross_country_y; // position = 15 * y + offset on tile
-//    short cc_destination_x;
-//    short cc_destination_y;
-//    short cc_delta_x;
-//    short cc_delta_y;
+    //    short cross_country_x; // position = 15 * x + offset on tile
+    //    short cross_country_y; // position = 15 * y + offset on tile
+    //    short cc_destination_x;
+    //    short cc_destination_y;
+    //    short cc_delta_x;
+    //    short cc_delta_y;
     short cc_delta_xy;
-//    unsigned char loads_counter;
-//    unsigned short loads_full; // full load counter
+    //    unsigned char loads_counter;
+    //    unsigned short loads_full; // full load counter
     unsigned char cc_direction; // 1 = x, 2 = y
     unsigned char speed_multiplier;
-//    short building_id;
-//    short immigrant_building_id;
-//    short destination_building_id;
+    //    short building_id;
+    //    short immigrant_building_id;
+    //    short destination_building_id;
 
     short formation_id;
     unsigned char index_in_formation;
@@ -126,8 +127,8 @@ public:
     unsigned char attack_image_offset;
     unsigned char wait_ticks_missile;
     coords_t cart_offset;
-//    signed char x_offset_cart;
-//    signed char y_offset_cart;
+    //    signed char x_offset_cart;
+    //    signed char y_offset_cart;
     unsigned char empire_city_id;
     unsigned short trader_amount_bought;
     short name;
@@ -182,9 +183,9 @@ public:
     bool is_enemy();
     bool is_herd();
     bool is_legion();
-    bool is_formation(); // formation_legion.c
+    bool is_formation();        // formation_legion.c
     bool is_attacking_native(); // combat.c
-    bool is_citizen(); // missile.c
+    bool is_citizen();          // missile.c
     bool is_non_citizen();
     bool is_fighting_friendly(); // routing.c
     bool is_fighting_enemy();
@@ -207,13 +208,13 @@ public:
     void set_state(e_figure_state s) {
         state = s;
     };
-    void bind(io_buffer *iob);
+    void bind(io_buffer* iob);
 
     // figure/figure.c
     void figure_delete_UNSAFE();
-    building *home();
-    building *immigrant_home();
-    building *destination();
+    building* home();
+    building* immigrant_home();
+    building* destination();
     const int homeID() const {
         return home_building_id;
     }
@@ -227,17 +228,17 @@ public:
     void set_home(int _id);
     void set_immigrant_home(int _id);
     void set_destination(int _id);
-    void set_home(building *b);
-    void set_immigrant_home(building *b);
-    void set_destination(building *b);
+    void set_home(building* b);
+    void set_immigrant_home(building* b);
+    void set_destination(building* b);
     bool has_home(int _id = -1);
-    bool has_home(building *b);
+    bool has_home(building* b);
     bool has_immigrant_home(int _id = -1);
-    bool has_immigrant_home(building *b);
+    bool has_immigrant_home(building* b);
     bool has_destination(int _id = -1);
-    bool has_destination(building *b);
+    bool has_destination(building* b);
 
-//    bool is_roamer();
+    //    bool is_roamer();
 
     // grid/figure.c
     void map_figure_add();
@@ -257,16 +258,16 @@ public:
 
     // city_figure.c
     void draw_debug();
-    void adjust_pixel_offset(pixel_coordinate *pixel);
-//    void draw_figure(int x, int y, int highlight);
-    void draw_figure_main(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
-    void draw_figure_cart(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
-    void city_draw_figure(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
-//    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
-    void draw_figure_with_cart(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
-//    void draw_hippodrome_horse(int x, int y);
-    void draw_fort_standard(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
-    void draw_map_flag(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
+    void adjust_pixel_offset(pixel_coordinate* pixel);
+    //    void draw_figure(int x, int y, int highlight);
+    void draw_figure_main(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out = nullptr);
+    void draw_figure_cart(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out = nullptr);
+    void city_draw_figure(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out = nullptr);
+    //    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
+    void draw_figure_with_cart(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out = nullptr);
+    //    void draw_hippodrome_horse(int x, int y);
+    void draw_fort_standard(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out = nullptr);
+    void draw_map_flag(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out = nullptr);
 
     // movement.c
     void advance_figure_tick();
@@ -296,26 +297,27 @@ public:
     void advance_action(short NEXT_ACTION);
     bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = ACTION_2_ROAMERS_RETURNING);
     bool do_goto(int x, int y, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
-    bool do_gotobuilding(building *dest, bool stop_at_road = true, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
+    bool do_gotobuilding(building* dest, bool stop_at_road = true, int terrainchoice = TERRAIN_USAGE_ROADS,
+                         short NEXT_ACTION = -1, short FAIL_ACTION = -1);
     bool do_returnhome(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1);
     bool do_exitbuilding(bool invisible, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
-    bool do_enterbuilding(bool invisible, building *b, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
+    bool do_enterbuilding(bool invisible, building* b, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
 
     void immigrant_action();
     void emigrant_action();
     void homeless_action();
     void cartpusher_action();
-//    void labor_seeker_action();
+    //    void labor_seeker_action();
     void explosion_cloud_action();
     void tax_collector_action();
     void engineer_action();
     void warehouseman_action();
-    void prefect_action(); //10
+    void prefect_action(); // 10
     void soldier_action();
     void military_standard_action();
     void entertainer_action();
     void trade_caravan_action();
-    void trade_ship_action(); //20
+    void trade_ship_action(); // 20
     void trade_caravan_donkey_action();
     void protestor_action();
     void criminal_action();
@@ -324,17 +326,17 @@ public:
     void market_trader_action();
     void priest_action();
     void school_child_action();
-//    void teacher_action();
-//    void librarian_action(); //30
-//    void barber_action();
-//    void bathhouse_worker_action();
-//    void doctor_action();
+    //    void teacher_action();
+    //    void librarian_action(); //30
+    //    void barber_action();
+    //    void bathhouse_worker_action();
+    //    void doctor_action();
     void worker_action();
     void editor_flag_action();
     void flotsam_action();
     void docker_action();
     void market_buyer_action();
-//    void patrician_action(); //40
+    //    void patrician_action(); //40
     void indigenous_native_action();
     void tower_sentry_action();
     void enemy43_spear_action();
@@ -344,7 +346,7 @@ public:
     void enemy_elephant_action();
     void enemy_chariot_action();
     void enemy49_fast_sword_action();
-    void enemy50_sword_action(); //50
+    void enemy50_sword_action(); // 50
     void enemy51_spear_action();
     void enemy52_mounted_archer_action();
     void enemy53_axe_action();
@@ -355,7 +357,7 @@ public:
     void javelin_action();
     void bolt_action();
     void ballista_action();
-//    void missionary_action();
+    //    void missionary_action();
     void seagulls_action();
     void delivery_boy_action();
     void shipwreck_action();
@@ -378,13 +380,13 @@ public:
     void update_direction_and_image();
 
     // animal.c
-    int is_nearby(int category, int *distance, int max_distance = 10000, bool gang_on = true);
+    int is_nearby(int category, int* distance, int max_distance = 10000, bool gang_on = true);
     bool herd_roost(int step, int bias, int max_dist);
 
     // docker.c
-    void get_trade_center_location(int *_x, int *_y);
-    int deliver_import_resource(building *dock);
-    int fetch_export_resource(building *dock);
+    void get_trade_center_location(int* _x, int* _y);
+    int deliver_import_resource(building* dock);
+    int fetch_export_resource(building* dock);
 
     // cartpusher.c
     void set_resource(int resource);
@@ -396,7 +398,7 @@ public:
     void determine_deliveryman_destination_food();
     void cart_update_image();
     void determine_granaryman_destination();
-//    void remove_resource_from_warehouse();
+    //    void remove_resource_from_warehouse();
     void determine_warehouseman_destination();
     ////
     void cartpusher_calculate_destination(bool warehouseman);
@@ -405,8 +407,8 @@ public:
 
     // market.c
     int create_delivery_boy(int leader_id);
-    int take_food_from_granary(building *market, building *granary);
-    int take_resource_from_warehouse(building *warehouse);
+    int take_food_from_granary(building* market, building* granary);
+    int take_resource_from_warehouse(building* warehouse);
     void figure_delivery_boy_action();
 
     // trader.c
@@ -414,7 +416,7 @@ public:
     void trader_sell(int amounts);
     int trader_total_bought();
     int trader_total_sold();
-    int get_closest_warehouse(int x, int y, int city_id, int distance_from_entry, map_point *warehouse);
+    int get_closest_warehouse(int x, int y, int city_id, int distance_from_entry, map_point* warehouse);
     void go_to_next_warehouse(int x_src, int y_src, int distance_to_entry);
     int trade_ship_lost_queue();
     int trade_ship_done_trading();
@@ -433,12 +435,12 @@ public:
     int figure_rioter_collapse_building();
 
     // enemy.c
-    void enemy_initial(formation *m);
-    void enemy_marching(const formation *m);
-    void enemy_fighting(const formation *m);
-    void enemy_action(formation *m);
+    void enemy_initial(formation* m);
+    void enemy_marching(const formation* m);
+    void enemy_fighting(const formation* m);
+    void enemy_action(formation* m);
     int get_direction();
-    int get_missile_direction(const formation *m);
+    int get_missile_direction(const formation* m);
 
     // soldier.c
     void javelin_launch_missile();
@@ -446,17 +448,17 @@ public:
     int find_mop_up_target();
     void update_image_javelin(int dir);
     void update_image_mounted(int dir);
-    void update_image_legionary(const formation *m, int dir);
-    void soldier_update_image(const formation *m);
+    void update_image_legionary(const formation* m, int dir);
+    void soldier_update_image(const formation* m);
 
     // combat.c
     void figure_combat_handle_corpse();
     void resume_activity_after_attack();
     void hit_opponent();
     void figure_combat_handle_attack();
-//    int figure_combat_get_target_for_soldier(int x, int y, int max_distance);
-//    int figure_combat_get_target_for_wolf(int x, int y, int max_distance);
-//    int figure_combat_get_target_for_enemy(int x, int y);
+    //    int figure_combat_get_target_for_soldier(int x, int y, int max_distance);
+    //    int figure_combat_get_target_for_wolf(int x, int y, int max_distance);
+    //    int figure_combat_get_target_for_enemy(int x, int y);
     void figure_combat_attack_figure_at(int grid_offset);
 
     // missile.c
@@ -475,23 +477,23 @@ public:
     int figure_phrase_play();
 
     // service.c
-    building *get_entertainment_building();
+    building* get_entertainment_building();
     int figure_service_provide_coverage();
 
     // window/building/figures.c
-    figure *get_head_of_caravan();
-    void draw_trader(building_info_context *c);
-    void draw_enemy(building_info_context *c);
-    void draw_animal(building_info_context *c);
-    void draw_cartpusher(building_info_context *c);
-    void draw_market_buyer(building_info_context *c);
-    void draw_normal_figure(building_info_context *c);
+    figure* get_head_of_caravan();
+    void draw_trader(building_info_context* c);
+    void draw_enemy(building_info_context* c);
+    void draw_animal(building_info_context* c);
+    void draw_cartpusher(building_info_context* c);
+    void draw_market_buyer(building_info_context* c);
+    void draw_normal_figure(building_info_context* c);
 
     // grid/marshland.c
-    bool find_resource_tile(int resource_type, int *out_x, int *out_y);
+    bool find_resource_tile(int resource_type, int* out_x, int* out_y);
 };
 
-figure *figure_get(int id);
+figure* figure_get(int id);
 
 /**
  * Creates a figure
@@ -501,13 +503,13 @@ figure *figure_get(int id);
  * @param dir Direction the figure faces
  * @return Always a figure. If figure->id is zero, it is an invalid one.
  */
-figure *figure_create(int type, int x, int y, int dir);
+figure* figure_create(int type, int x, int y, int dir);
 
-//void figure *f->map_figure_remove();
-//int figure_is_dead(const figure *f);
-//int const figure *f->is_enemy();
-//int const figure *f->is_legion();
-//int const figure *f->is_herd();
+// void figure *f->map_figure_remove();
+// int figure_is_dead(const figure *f);
+// int const figure *f->is_enemy();
+// int const figure *f->is_legion();
+// int const figure *f->is_herd();
 
 void figure_init_scenario(void);
 

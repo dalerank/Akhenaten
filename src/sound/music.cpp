@@ -1,10 +1,10 @@
 #include "music.h"
 
-#include "io/dir.h"
-#include "core/game_environment.h"
 #include "city/figures.h"
 #include "city/population.h"
+#include "core/game_environment.h"
 #include "game/settings.h"
+#include "io/dir.h"
 #include "sound/device.h"
 
 enum E_TRACK {
@@ -60,82 +60,78 @@ static struct {
     int next_check;
 } data = {TRACK_NONE, 0};
 
-static const char c3_wav[][32] = {
-        "",
-        "wavs/setup.wav",
-        "wavs/Combat_Short.wav",
-        "wavs/Combat_Long.wav",
-        "wavs/ROME1.WAV",
-        "wavs/ROME2.WAV",
-        "wavs/ROME3.WAV",
-        "wavs/ROME4.WAV",
-        "wavs/ROME5.WAV"
-};
+static const char c3_wav[][32] = {"",
+                                  "wavs/setup.wav",
+                                  "wavs/Combat_Short.wav",
+                                  "wavs/Combat_Long.wav",
+                                  "wavs/ROME1.WAV",
+                                  "wavs/ROME2.WAV",
+                                  "wavs/ROME3.WAV",
+                                  "wavs/ROME4.WAV",
+                                  "wavs/ROME5.WAV"};
 
-static const char c3_mp3[][32] = {
-        "",
-        "mp3/setup.mp3",
-        "mp3/Combat_Short.mp3",
-        "mp3/Combat_Long.mp3",
-        "mp3/ROME1.mp3",
-        "mp3/ROME2.mp3",
-        "mp3/ROME3.mp3",
-        "mp3/ROME4.mp3",
-        "mp3/ROME5.mp3"
-};
+static const char c3_mp3[][32] = {"",
+                                  "mp3/setup.mp3",
+                                  "mp3/Combat_Short.mp3",
+                                  "mp3/Combat_Long.mp3",
+                                  "mp3/ROME1.mp3",
+                                  "mp3/ROME2.mp3",
+                                  "mp3/ROME3.mp3",
+                                  "mp3/ROME4.mp3",
+                                  "mp3/ROME5.mp3"};
 
 static const char ph_mp3[][32] = {
-        "",
-        "AUDIO/Music/Setup.mp3",
-        "AUDIO/Music/Battle.mp3",
-        "AUDIO/Music/Battle.mp3",
-        "AUDIO/Music/Agbj.mp3", // M
-        "AUDIO/Music/SPS.mp3", // M
-        "AUDIO/Music/sthA.mp3", // M
-        "AUDIO/Music/mAa-jb.mp3", // M
+  "",
+  "AUDIO/Music/Setup.mp3",
+  "AUDIO/Music/Battle.mp3",
+  "AUDIO/Music/Battle.mp3",
+  "AUDIO/Music/Agbj.mp3",   // M
+  "AUDIO/Music/SPS.mp3",    // M
+  "AUDIO/Music/sthA.mp3",   // M
+  "AUDIO/Music/mAa-jb.mp3", // M
 
-        "AUDIO/Music/Hapj-aA.mp3", // A
-        "AUDIO/Music/SSTJ.mp3", // A
-        "AUDIO/Music/DUST.mp3", // A
+  "AUDIO/Music/Hapj-aA.mp3", // A
+  "AUDIO/Music/SSTJ.mp3",    // A
+  "AUDIO/Music/DUST.mp3",    // A
 
-        "AUDIO/Music/Smr.mp3", // M
+  "AUDIO/Music/Smr.mp3", // M
 
-        "AUDIO/Music/ADVENT.mp3", // A-M
-        "AUDIO/Music/ANKH.mp3", // A
-        "AUDIO/Music/jAkb.mp3", // A
+  "AUDIO/Music/ADVENT.mp3", // A-M
+  "AUDIO/Music/ANKH.mp3",   // A
+  "AUDIO/Music/jAkb.mp3",   // A
 
-        "AUDIO/Music/rwD.mp3", // M
-        "AUDIO/Music/M-TWR.mp3", // M
-        "AUDIO/Music/JA.mp3", // M
-        "AUDIO/Music/jrj-Hb-sd.mp3", // M
+  "AUDIO/Music/rwD.mp3",       // M
+  "AUDIO/Music/M-TWR.mp3",     // M
+  "AUDIO/Music/JA.mp3",        // M
+  "AUDIO/Music/jrj-Hb-sd.mp3", // M
 
-        "AUDIO/Music/M-SRF.mp3", // A
-        "AUDIO/Music/WATJ.mp3", // A
-        "AUDIO/Music/WAJ.mp3", // A
-        "AUDIO/Music/OFFERING.mp3", // A
-        "AUDIO/Music/RAIN.mp3", // A
+  "AUDIO/Music/M-SRF.mp3",    // A
+  "AUDIO/Music/WATJ.mp3",     // A
+  "AUDIO/Music/WAJ.mp3",      // A
+  "AUDIO/Music/OFFERING.mp3", // A
+  "AUDIO/Music/RAIN.mp3",     // A
 
-        "AUDIO/Music/KHU.mp3", // M
-        "AUDIO/Music/KHET.mp3", // M
-        "AUDIO/Music/REKHIT.mp3", // M
+  "AUDIO/Music/KHU.mp3",    // M
+  "AUDIO/Music/KHET.mp3",   // M
+  "AUDIO/Music/REKHIT.mp3", // M
 
-        "AUDIO/Music/AMBER.mp3", // A
-        "AUDIO/Music/Dd-m-ann.mp3", // A
+  "AUDIO/Music/AMBER.mp3",    // A
+  "AUDIO/Music/Dd-m-ann.mp3", // A
 
-        "AUDIO/Music/Daq.mp3", // M
+  "AUDIO/Music/Daq.mp3", // M
 
-        "AUDIO/Music/rwDt.mp3", // A
-        "AUDIO/Music/LONGING.mp3", // A
+  "AUDIO/Music/rwDt.mp3",    // A
+  "AUDIO/Music/LONGING.mp3", // A
 
-        "AUDIO/Music/BENNU.mp3", // M
-        "AUDIO/Music/NEFER.mp3", // M
-        "AUDIO/Music/AMAKH.mp3", // M
-        "AUDIO/Music/Geb.mp3", // M
-        "AUDIO/Music/Khepera.mp3", // M
-        "AUDIO/Music/Isis.mp3", // M
-        "AUDIO/Music/Anquet.mp3", // M
-        "AUDIO/Music/Sekhmet.mp3", // M
-        "AUDIO/Music/Ra.mp3" // M
+  "AUDIO/Music/BENNU.mp3",   // M
+  "AUDIO/Music/NEFER.mp3",   // M
+  "AUDIO/Music/AMAKH.mp3",   // M
+  "AUDIO/Music/Geb.mp3",     // M
+  "AUDIO/Music/Khepera.mp3", // M
+  "AUDIO/Music/Isis.mp3",    // M
+  "AUDIO/Music/Anquet.mp3",  // M
+  "AUDIO/Music/Sekhmet.mp3", // M
+  "AUDIO/Music/Ra.mp3"       // M
 };
 
 static void play_track(int track) {
@@ -145,11 +141,11 @@ static void play_track(int track) {
     int volume = setting_sound(SOUND_MUSIC)->volume;
 
     switch (GAME_ENV) {
-        const char *mp3_track;
-        case ENGINE_ENV_PHARAOH:
-            volume = volume * 0.4;
-            sound_device_play_music(dir_get_file(ph_mp3[track], NOT_LOCALIZED), volume);
-            break;
+        const char* mp3_track;
+    case ENGINE_ENV_PHARAOH:
+        volume = volume * 0.4;
+        sound_device_play_music(dir_get_file(ph_mp3[track], NOT_LOCALIZED), volume);
+        break;
     }
     data.current_track = track;
 }
@@ -160,12 +156,10 @@ void sound_music_set_volume(int percentage) {
 void sound_music_play_intro(void) {
     if (setting_sound(SOUND_MUSIC)->enabled)
         play_track(TRACK_MENU);
-
 }
 void sound_music_play_editor(void) {
     if (setting_sound(SOUND_MUSIC)->enabled)
         play_track(TRACK_CITY_1);
-
 }
 void sound_music_update(bool force) {
     if (data.next_check && !force) {

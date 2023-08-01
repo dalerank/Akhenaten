@@ -1,15 +1,15 @@
 #include "festival.h"
 
-#include "core/random.h"
 #include "building/warehouse.h"
+#include "buildings.h"
 #include "city/constants.h"
 #include "city/data_private.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/sentiment.h"
-#include "io/config/config.h"
-#include "buildings.h"
+#include "core/random.h"
 #include "figure/figure.h"
+#include "io/config/config.h"
 
 bool city_festival_is_planned(void) {
     return city_data.festival.planned.size != FESTIVAL_NONE;
@@ -83,34 +83,34 @@ void city_festival_schedule(void) {
 static void throw_party(void) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         for (int i = 1; i < MAX_BUILDINGS; i++) {
-            building *b = building_get(i);
+            building* b = building_get(i);
             if (b->state != BUILDING_STATE_VALID)
                 continue;
-            switch(b->type) {
-                case BUILDING_TEMPLE_OSIRIS:
-                case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-                case BUILDING_TEMPLE_RA:
-                case BUILDING_TEMPLE_COMPLEX_RA:
-                case BUILDING_TEMPLE_PTAH:
-                case BUILDING_TEMPLE_COMPLEX_PTAH:
-                case BUILDING_TEMPLE_SETH:
-                case BUILDING_TEMPLE_COMPLEX_SETH:
-                case BUILDING_TEMPLE_BAST:
-                case BUILDING_TEMPLE_COMPLEX_BAST:
-                case BUILDING_JUGGLER_SCHOOL:
-                case BUILDING_CONSERVATORY:
-                case BUILDING_DANCE_SCHOOL: { // this actually doesn't happen in Pharaoh?
-//                    if (b->has_figure(0))
-//                        b->remove_figure(0);
-                    figure *f = b->create_figure_generic(FIGURE_FESTIVAL_PRIEST, 10, 2, DIR_4_BOTTOM_LEFT);
-                    f->festival_remaining_dances = 10;
+            switch (b->type) {
+            case BUILDING_TEMPLE_OSIRIS:
+            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+            case BUILDING_TEMPLE_RA:
+            case BUILDING_TEMPLE_COMPLEX_RA:
+            case BUILDING_TEMPLE_PTAH:
+            case BUILDING_TEMPLE_COMPLEX_PTAH:
+            case BUILDING_TEMPLE_SETH:
+            case BUILDING_TEMPLE_COMPLEX_SETH:
+            case BUILDING_TEMPLE_BAST:
+            case BUILDING_TEMPLE_COMPLEX_BAST:
+            case BUILDING_JUGGLER_SCHOOL:
+            case BUILDING_CONSERVATORY:
+            case BUILDING_DANCE_SCHOOL: { // this actually doesn't happen in Pharaoh?
+                                          //                    if (b->has_figure(0))
+                                          //                        b->remove_figure(0);
+                figure* f = b->create_figure_generic(FIGURE_FESTIVAL_PRIEST, 10, 2, DIR_4_BOTTOM_LEFT);
+                f->festival_remaining_dances = 10;
 
-                    // choose a random tile on the festival square
-                    map_point festival = city_building_get_festival_square_position();
-                    f->do_goto(festival.x() + 2, festival.y() + 2, TERRAIN_USAGE_ROADS, 10);
+                // choose a random tile on the festival square
+                map_point festival = city_building_get_festival_square_position();
+                f->do_goto(festival.x() + 2, festival.y() + 2, TERRAIN_USAGE_ROADS, 10);
 
-                    break;
-                }
+                break;
+            }
             }
         }
     }
@@ -118,45 +118,45 @@ static void throw_party(void) {
     if (city_data.festival.first_festival_effect_months <= 0) {
         city_data.festival.first_festival_effect_months = 12;
         switch (city_data.festival.planned.size) {
-            case FESTIVAL_SMALL:
-                city_sentiment_change_happiness(7);
-                break;
-            case FESTIVAL_LARGE:
-                city_sentiment_change_happiness(9);
-                break;
-            case FESTIVAL_GRAND:
-                city_sentiment_change_happiness(12);
-                break;
+        case FESTIVAL_SMALL:
+            city_sentiment_change_happiness(7);
+            break;
+        case FESTIVAL_LARGE:
+            city_sentiment_change_happiness(9);
+            break;
+        case FESTIVAL_GRAND:
+            city_sentiment_change_happiness(12);
+            break;
         }
     } else if (city_data.festival.second_festival_effect_months <= 0) {
         city_data.festival.second_festival_effect_months = 12;
         switch (city_data.festival.planned.size) {
-            case FESTIVAL_SMALL:
-                city_sentiment_change_happiness(2);
-                break;
-            case FESTIVAL_LARGE:
-                city_sentiment_change_happiness(3);
-                break;
-            case FESTIVAL_GRAND:
-                city_sentiment_change_happiness(5);
-                break;
+        case FESTIVAL_SMALL:
+            city_sentiment_change_happiness(2);
+            break;
+        case FESTIVAL_LARGE:
+            city_sentiment_change_happiness(3);
+            break;
+        case FESTIVAL_GRAND:
+            city_sentiment_change_happiness(5);
+            break;
         }
     }
     city_data.festival.months_since_festival = 1;
     city_data.religion.gods[city_data.festival.planned.god].months_since_festival = 0;
     switch (city_data.festival.planned.size) {
-        case FESTIVAL_SMALL:
-            city_message_post(true, MESSAGE_SMALL_FESTIVAL, 0, 0);
-            break;
-        case FESTIVAL_LARGE:
-            city_message_post(true, MESSAGE_LARGE_FESTIVAL, 0, 0);
-            break;
-        case FESTIVAL_GRAND:
-            city_message_post(true, MESSAGE_GRAND_FESTIVAL, 0, 0);
-            if (config_get(CONFIG_GP_CH_GRANDFESTIVAL))
-                city_data.religion.gods[city_data.festival.planned.god].blessing_done = 0;
+    case FESTIVAL_SMALL:
+        city_message_post(true, MESSAGE_SMALL_FESTIVAL, 0, 0);
+        break;
+    case FESTIVAL_LARGE:
+        city_message_post(true, MESSAGE_LARGE_FESTIVAL, 0, 0);
+        break;
+    case FESTIVAL_GRAND:
+        city_message_post(true, MESSAGE_GRAND_FESTIVAL, 0, 0);
+        if (config_get(CONFIG_GP_CH_GRANDFESTIVAL))
+            city_data.religion.gods[city_data.festival.planned.god].blessing_done = 0;
 
-            break;
+        break;
     }
     city_data.festival.planned.size = FESTIVAL_NONE;
     city_data.festival.planned.months_to_go = 0;
@@ -200,73 +200,73 @@ void city_festival_calculate_costs(void) {
 #include "graphics/image_groups.h"
 
 void figure::festival_guy_action() {
-    building *b = home();
-    switch(b->type) {
-        case BUILDING_TEMPLE_OSIRIS:
-        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-            image_set_animation(GROUP_PRIEST_OSIRIS);
-            break;
-        case BUILDING_TEMPLE_RA:
-        case BUILDING_TEMPLE_COMPLEX_RA:
-            image_set_animation(GROUP_PRIEST_RA);
-            break;
-        case BUILDING_TEMPLE_PTAH:
-        case BUILDING_TEMPLE_COMPLEX_PTAH:
-            image_set_animation(GROUP_PRIEST_PTAH);
-            break;
-        case BUILDING_TEMPLE_SETH:
-        case BUILDING_TEMPLE_COMPLEX_SETH:
-            image_set_animation(GROUP_PRIEST_SETH);
-            break;
-        case BUILDING_TEMPLE_BAST:
-        case BUILDING_TEMPLE_COMPLEX_BAST:
-            image_set_animation(GROUP_PRIEST_BAST);
-            break;
-        case BUILDING_JUGGLER_SCHOOL:
-            image_set_animation(GROUP_FIGURE_JUGGLER);
-            break;
-        case BUILDING_CONSERVATORY:
-            image_set_animation(GROUP_FIGURE_MUSICIAN);
-            break;
-        case BUILDING_DANCE_SCHOOL:
-            image_set_animation(GROUP_FIGURE_DANCER);
-            break;
+    building* b = home();
+    switch (b->type) {
+    case BUILDING_TEMPLE_OSIRIS:
+    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+        image_set_animation(GROUP_PRIEST_OSIRIS);
+        break;
+    case BUILDING_TEMPLE_RA:
+    case BUILDING_TEMPLE_COMPLEX_RA:
+        image_set_animation(GROUP_PRIEST_RA);
+        break;
+    case BUILDING_TEMPLE_PTAH:
+    case BUILDING_TEMPLE_COMPLEX_PTAH:
+        image_set_animation(GROUP_PRIEST_PTAH);
+        break;
+    case BUILDING_TEMPLE_SETH:
+    case BUILDING_TEMPLE_COMPLEX_SETH:
+        image_set_animation(GROUP_PRIEST_SETH);
+        break;
+    case BUILDING_TEMPLE_BAST:
+    case BUILDING_TEMPLE_COMPLEX_BAST:
+        image_set_animation(GROUP_PRIEST_BAST);
+        break;
+    case BUILDING_JUGGLER_SCHOOL:
+        image_set_animation(GROUP_FIGURE_JUGGLER);
+        break;
+    case BUILDING_CONSERVATORY:
+        image_set_animation(GROUP_FIGURE_MUSICIAN);
+        break;
+    case BUILDING_DANCE_SCHOOL:
+        image_set_animation(GROUP_FIGURE_DANCER);
+        break;
     }
     switch (action_state) {
-        case 9: // is "dancing" on tile
-            festival_remaining_dances--;
-            advance_action(10);
-            break;
-        case 10: // goes to random spot on the square
+    case 9: // is "dancing" on tile
+        festival_remaining_dances--;
+        advance_action(10);
+        break;
+    case 10: // goes to random spot on the square
 
-            // still going to the square center, first
-            if (terrain_usage == TERRAIN_USAGE_ROADS) {
-                if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ROADS, 10))
-                    terrain_usage = TERRAIN_USAGE_ANY;
-            } else {
-//                use_cross_country = true; // todo?
-                if (routing_path_id)
-                    do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANY, 11);
-                else {
-                    if (festival_remaining_dances == 0 || !city_building_has_festival_square())
-                        return poof();
+        // still going to the square center, first
+        if (terrain_usage == TERRAIN_USAGE_ROADS) {
+            if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ROADS, 10))
+                terrain_usage = TERRAIN_USAGE_ANY;
+        } else {
+            //                use_cross_country = true; // todo?
+            if (routing_path_id)
+                do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANY, 11);
+            else {
+                if (festival_remaining_dances == 0 || !city_building_has_festival_square())
+                    return poof();
 
-                    // choose a random tile on the festival square
-                    map_point festival = city_building_get_festival_square_position();
-                    int rand_x, rand_y;
-                    int rand_seed = random_short();
-                    do {
-                        int random_tile = rand_seed % 25;
-                        rand_x = festival.x() + random_tile % 5;
-                        rand_y = festival.y() + random_tile / 5;
-                        rand_seed++;
-                    } while (rand_x == tile.x() && rand_y == tile.y());
-                    do_goto(rand_x, rand_y, TERRAIN_USAGE_ANY, 11);
-                }
+                // choose a random tile on the festival square
+                map_point festival = city_building_get_festival_square_position();
+                int rand_x, rand_y;
+                int rand_seed = random_short();
+                do {
+                    int random_tile = rand_seed % 25;
+                    rand_x = festival.x() + random_tile % 5;
+                    rand_y = festival.y() + random_tile / 5;
+                    rand_seed++;
+                } while (rand_x == tile.x() && rand_y == tile.y());
+                do_goto(rand_x, rand_y, TERRAIN_USAGE_ANY, 11);
             }
-            break;
-        case 11: // reached a random spot on the square, now what?
-            advance_action(9);
-            break;
+        }
+        break;
+    case 11: // reached a random spot on the square, now what?
+        advance_action(9);
+        break;
     }
 }

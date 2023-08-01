@@ -7,7 +7,7 @@
 
 void widget_top_menu_clear_state();
 void widget_top_menu_draw(int force);
-bool widget_top_menu_handle_input(const mouse *m, const hotkeys *h);
-int widget_top_menu_get_tooltip_text(tooltip_context *c);
+bool widget_top_menu_handle_input(const mouse* m, const hotkeys* h);
+int widget_top_menu_get_tooltip_text(tooltip_context* c);
 
 #endif // WINDOW_TOP_MENU_H

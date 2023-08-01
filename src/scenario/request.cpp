@@ -7,11 +7,11 @@
 #include "city/ratings.h"
 #include "city/resource.h"
 #include "core/random.h"
+#include "events.h"
 #include "game/resource.h"
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "scenario/scenario_data.h"
-#include "events.h"
 
 void scenario_request_init(void) {
     for (int i = 0; i < MAX_REQUESTS; i++) {
@@ -64,8 +64,9 @@ void scenario_request_process_C3(void) {
                         city_ratings_reduce_kingdom_missed_request(5);
                     }
                 }
-                if (!g_scenario_data.requests[i].can_comply_dialog_shown &&
-                    city_resource_count(g_scenario_data.requests[i].resource) >= g_scenario_data.requests[i].amount) {
+                if (!g_scenario_data.requests[i].can_comply_dialog_shown
+                    && city_resource_count(g_scenario_data.requests[i].resource)
+                         >= g_scenario_data.requests[i].amount) {
                     g_scenario_data.requests[i].can_comply_dialog_shown = 1;
                     city_message_post(true, MESSAGE_REQUEST_CAN_COMPLY, i, 0);
                 }
@@ -74,8 +75,8 @@ void scenario_request_process_C3(void) {
                 int year = g_scenario_data.start_year;
                 if (!tutorial_adjust_request_year(&year))
                     return;
-                if (game_time_year() == year + g_scenario_data.requests[i].year &&
-                    game_time_month() == g_scenario_data.requests[i].month) {
+                if (game_time_year() == year + g_scenario_data.requests[i].year
+                    && game_time_month() == g_scenario_data.requests[i].month) {
                     g_scenario_data.requests[i].visible = true;
                     if (city_resource_count(g_scenario_data.requests[i].resource) >= g_scenario_data.requests[i].amount)
                         g_scenario_data.requests[i].can_comply_dialog_shown = 1;
@@ -113,16 +114,16 @@ int scenario_requests_active_count() {
     int count = 0;
     if (GAME_ENV == ENGINE_ENV_C3) {
         for (int i = 0; i < MAX_REQUESTS; i++) {
-            if (g_scenario_data.requests[i].resource && g_scenario_data.requests[i].visible &&
-                g_scenario_data.requests[i].state <= 1) {
+            if (g_scenario_data.requests[i].resource && g_scenario_data.requests[i].visible
+                && g_scenario_data.requests[i].state <= 1) {
                 count++;
             }
         }
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         for (int i = 0; i < get_scenario_events_num(); i++) {
-            const event_ph_t *event = get_scenario_event(i);
-            if (event->type == EVENT_TYPE_REQUEST && event->is_active != 0 &&
-                event->event_state <= EVENT_STATE_IN_PROGRESS) {
+            const event_ph_t* event = get_scenario_event(i);
+            if (event->type == EVENT_TYPE_REQUEST && event->is_active != 0
+                && event->event_state <= EVENT_STATE_IN_PROGRESS) {
                 count++;
             }
         }
@@ -130,7 +131,7 @@ int scenario_requests_active_count() {
     return count;
 }
 
-const scenario_request *scenario_request_get(int id) {
+const scenario_request* scenario_request_get(int id) {
     static scenario_request request;
     if (GAME_ENV == ENGINE_ENV_C3) {
         request.id = id;
@@ -148,11 +149,11 @@ const scenario_request *scenario_request_get(int id) {
     }
     return &request;
 }
-const scenario_request *scenario_request_get_visible(int index) {
+const scenario_request* scenario_request_get_visible(int index) {
     if (GAME_ENV == ENGINE_ENV_C3) {
         for (int i = 0; i < MAX_REQUESTS; i++) {
-            if (g_scenario_data.requests[i].resource && g_scenario_data.requests[i].visible &&
-                g_scenario_data.requests[i].state <= 1) {
+            if (g_scenario_data.requests[i].resource && g_scenario_data.requests[i].visible
+                && g_scenario_data.requests[i].state <= 1) {
                 if (index == 0)
                     return scenario_request_get(i);
                 index--; // I have no idea
@@ -161,7 +162,7 @@ const scenario_request *scenario_request_get_visible(int index) {
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         int event_index = -1;
         for (int i = 0; i < MAX_REQUESTS; i++) {
-            const event_ph_t *event;
+            const event_ph_t* event;
             do {
                 event_index++;
                 if (event_index >= get_scenario_events_num())
@@ -179,7 +180,7 @@ const scenario_request *scenario_request_get_visible(int index) {
     return 0;
 }
 
-int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request *request)) {
+int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request* request)) {
     int index = start_index;
     if (GAME_ENV == ENGINE_ENV_C3) {
         for (int i = 0; i < MAX_REQUESTS; i++) {

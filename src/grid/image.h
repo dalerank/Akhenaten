@@ -11,7 +11,7 @@ public:
     virtual void bind_data() override;
     uint32_t fix_img_index(uint32_t index) const;
 
-    static io_image_grid &instance();
+    static io_image_grid& instance();
 };
 
 int map_image_at(int grid_offset);

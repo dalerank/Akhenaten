@@ -1,16 +1,15 @@
 #include "attributes.h"
 
-#include "graphics/image.h"
-#include "graphics/image_groups.h"
 #include "core/string.h"
 #include "game/resource.h"
+#include "graphics/boilerplate.h"
 #include "graphics/elements/arrow_button.h"
 #include "graphics/elements/button.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "graphics/image.h"
+#include "graphics/image_groups.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -46,21 +45,21 @@ static void change_climate(int param1, int param2);
 static void change_image(int forward, int param2);
 
 static generic_button buttons[] = {
-        {212, 76,  250, 30, button_starting_conditions, button_none, 1,  0},
-        {212, 116, 250, 30, change_climate,             button_none, 2,  0},
-        {212, 156, 250, 30, button_requests,            button_none, 3,  0},
-        {212, 196, 250, 30, button_enemy,               button_none, 4,  0},
-        {212, 236, 250, 30, button_invasions,           button_none, 5,  0},
-        {212, 276, 250, 30, button_allowed_buildings,   button_none, 6,  0},
-        {212, 316, 250, 30, button_win_criteria,        button_none, 7,  0},
-        {212, 356, 250, 30, button_special_events,      button_none, 8,  0},
-        {212, 396, 250, 30, button_price_changes,       button_none, 9,  0},
-        {212, 436, 250, 30, button_demand_changes,      button_none, 10, 0},
+  {212, 76, 250, 30, button_starting_conditions, button_none, 1, 0},
+  {212, 116, 250, 30, change_climate, button_none, 2, 0},
+  {212, 156, 250, 30, button_requests, button_none, 3, 0},
+  {212, 196, 250, 30, button_enemy, button_none, 4, 0},
+  {212, 236, 250, 30, button_invasions, button_none, 5, 0},
+  {212, 276, 250, 30, button_allowed_buildings, button_none, 6, 0},
+  {212, 316, 250, 30, button_win_criteria, button_none, 7, 0},
+  {212, 356, 250, 30, button_special_events, button_none, 8, 0},
+  {212, 396, 250, 30, button_price_changes, button_none, 9, 0},
+  {212, 436, 250, 30, button_demand_changes, button_none, 10, 0},
 };
 
 static arrow_button image_arrows[] = {
-        {20, 424, 19, 24, change_image, 0, 0},
-        {44, 424, 21, 24, change_image, 1, 0},
+  {20, 424, 19, 24, change_image, 0, 0},
+  {44, 424, 21, 24, change_image, 1, 0},
 };
 
 static input_box scenario_description_input = {92, 40, 19, 2, FONT_NORMAL_WHITE_ON_DARK};
@@ -161,12 +160,12 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
-    const mouse *m_dialog = mouse_in_dialog(m);
-    if (input_box_handle_mouse(m_dialog, &scenario_description_input) ||
-        generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 10, &data.focus_button_id) ||
-        arrow_buttons_handle_mouse(m_dialog, 0, 0, image_arrows, 2, 0) ||
-        widget_sidebar_editor_handle_mouse_attributes(m))
+static void handle_input(const mouse* m, const hotkeys* h) {
+    const mouse* m_dialog = mouse_in_dialog(m);
+    if (input_box_handle_mouse(m_dialog, &scenario_description_input)
+        || generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 10, &data.focus_button_id)
+        || arrow_buttons_handle_mouse(m_dialog, 0, 0, image_arrows, 2, 0)
+        || widget_sidebar_editor_handle_mouse_attributes(m))
         return;
     if (input_go_back_requested(m, h)) {
         stop(0);
@@ -226,7 +225,7 @@ static void button_demand_changes(int param1, int param2) {
 
 static void change_climate(int param1, int param2) {
     scenario_editor_cycle_climate();
-//    image_load_main_paks(scenario_property_climate(), 1, 0);
+    //    image_load_main_paks(scenario_property_climate(), 1, 0);
     widget_minimap_invalidate();
     window_request_refresh();
 }
@@ -237,12 +236,7 @@ static void change_image(int forward, int param2) {
 }
 
 void window_editor_attributes_show(void) {
-    window_type window = {
-            WINDOW_EDITOR_ATTRIBUTES,
-            draw_background,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_EDITOR_ATTRIBUTES, draw_background, draw_foreground, handle_input};
     start();
     window_show(&window);
 }

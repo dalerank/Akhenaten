@@ -1,6 +1,6 @@
+#include "chief.h"
 #include <city/floods.h>
 #include <scenario/request.h>
-#include "chief.h"
 
 #include "city/figures.h"
 #include "city/finance.h"
@@ -67,27 +67,27 @@ static int draw_background(void) {
     else {
         int text_id;
         switch (city_migration_int()) {
-            case NO_IMMIGRATION_LOW_WAGES:
-                text_id = text_b + 3;
-                break;
-            case NO_IMMIGRATION_NO_JOBS:
-                text_id = text_b + 4;
-                break;
-            case NO_IMMIGRATION_NO_FOOD:
-                text_id = text_b + 5;
-                break;
-            case NO_IMMIGRATION_HIGH_TAXES:
-                text_id = text_b + 6;
-                break;
-            case NO_IMMIGRATION_MANY_TENTS:
-                text_id = text_b + 7;
-                break;
-            case NO_IMMIGRATION_LOW_MOOD:
-                text_id = text_b + 8;
-                break;
-            default:
-                text_id = text_b + 16;
-                break;
+        case NO_IMMIGRATION_LOW_WAGES:
+            text_id = text_b + 3;
+            break;
+        case NO_IMMIGRATION_NO_JOBS:
+            text_id = text_b + 4;
+            break;
+        case NO_IMMIGRATION_NO_FOOD:
+            text_id = text_b + 5;
+            break;
+        case NO_IMMIGRATION_HIGH_TAXES:
+            text_id = text_b + 6;
+            break;
+        case NO_IMMIGRATION_MANY_TENTS:
+            text_id = text_b + 7;
+            break;
+        case NO_IMMIGRATION_LOW_MOOD:
+            text_id = text_b + 8;
+            break;
+        default:
+            text_id = text_b + 16;
+            break;
         }
         if (text_id)
             lang_text_draw(61, text_id, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
@@ -109,8 +109,8 @@ static int draw_background(void) {
         else
             width = lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
         width += text_draw_percentage(pct_unemployment, X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-        text_draw_number(city_labor_workers_unemployed() - needed_workers, '(', ")", X_OFFSET + width, y_line,
-                         FONT_NORMAL_YELLOW);
+        text_draw_number(
+          city_labor_workers_unemployed() - needed_workers, '(', ")", X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
     } else if (needed_workers > 0) {
         if (needed_workers > 75)
             width = lang_text_draw(61, text_b + 4, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
@@ -125,17 +125,18 @@ static int draw_background(void) {
         lang_text_draw(61, text_b + 8, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
     y_line += 20;
 
-//    // housing capacity
-//    imagedrawnamespace::image_draw_namespace::image_draw(image_id_from_group(GROUP_BULLET), 32, y_line + 1);
-//    text_draw(translation_for(TR_HEADER_HOUSING), 52, y_line, FONT_NORMAL_WHITE, 0);
-//
-//    if (!city_population_open_housing_capacity())
-//        width = text_draw(translation_for(TR_ADVISOR_HOUSING_NO_ROOM), X_OFFSET, y_line, FONT_NORMAL_GREEN, 0);
-//    else {
-//        width = text_draw(translation_for(TR_ADVISOR_HOUSING_ROOM), X_OFFSET, y_line, FONT_NORMAL_GREEN, 0);
-//        text_draw_number(city_population_open_housing_capacity(), '@', " ", X_OFFSET + width, y_line, FONT_NORMAL_GREEN);
-//    }
-//    y_line += 20;
+    //    // housing capacity
+    //    imagedrawnamespace::image_draw_namespace::image_draw(image_id_from_group(GROUP_BULLET), 32, y_line + 1);
+    //    text_draw(translation_for(TR_HEADER_HOUSING), 52, y_line, FONT_NORMAL_WHITE, 0);
+    //
+    //    if (!city_population_open_housing_capacity())
+    //        width = text_draw(translation_for(TR_ADVISOR_HOUSING_NO_ROOM), X_OFFSET, y_line, FONT_NORMAL_GREEN, 0);
+    //    else {
+    //        width = text_draw(translation_for(TR_ADVISOR_HOUSING_ROOM), X_OFFSET, y_line, FONT_NORMAL_GREEN, 0);
+    //        text_draw_number(city_population_open_housing_capacity(), '@', " ", X_OFFSET + width, y_line,
+    //        FONT_NORMAL_GREEN);
+    //    }
+    //    y_line += 20;
 
     // food stocks
     text_b = 95;
@@ -144,7 +145,8 @@ static int draw_background(void) {
         lang_text_draw(61, 26, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
     else if (city_resource_food_supply_months() > 0) {
         width = lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw_amount(8, 4, city_resource_food_supply_months(), X_OFFSET + width, y_line, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_amount(
+          8, 4, city_resource_food_supply_months(), X_OFFSET + width, y_line, FONT_NORMAL_BLACK_ON_DARK);
     } else
         lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
     y_line += 20;
@@ -183,32 +185,32 @@ static int draw_background(void) {
         lang_text_draw(61, text_b + health_rate / 10, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
     y_line += 20;
 
-//    // education
-//    house_demands *demands = city_houses_demands();
-//    draw_title(y_line, 8);
-//    if (demands->education == 1)
-//        lang_text_draw(61, 39, X_OFFSET, y_line, FONT_NORMAL_RED);
-//    else if (demands->education == 2)
-//        lang_text_draw(61, 40, X_OFFSET, y_line, FONT_NORMAL_RED);
-//    else if (demands->education == 3)
-//        lang_text_draw(61, 41, X_OFFSET, y_line, FONT_NORMAL_RED);
-//    else
-//        lang_text_draw(61, 42, X_OFFSET, y_line, FONT_NORMAL_GREEN);
-//    y_line += 20;
+    //    // education
+    //    house_demands *demands = city_houses_demands();
+    //    draw_title(y_line, 8);
+    //    if (demands->education == 1)
+    //        lang_text_draw(61, 39, X_OFFSET, y_line, FONT_NORMAL_RED);
+    //    else if (demands->education == 2)
+    //        lang_text_draw(61, 40, X_OFFSET, y_line, FONT_NORMAL_RED);
+    //    else if (demands->education == 3)
+    //        lang_text_draw(61, 41, X_OFFSET, y_line, FONT_NORMAL_RED);
+    //    else
+    //        lang_text_draw(61, 42, X_OFFSET, y_line, FONT_NORMAL_GREEN);
+    //    y_line += 20;
 
     // religion
     text_b = 125;
     draw_title(y_line, 7);
     // todo
-//    house_demands *demands = city_houses_demands();
-//    if (demands->religion == 1)
-//        lang_text_draw(61, 46, X_OFFSET, y_line, FONT_NORMAL_RED);
-//    else if (demands->religion == 2)
-//        lang_text_draw(61, 47, X_OFFSET, y_line, FONT_NORMAL_RED);
-//    else if (demands->religion == 3)
-//        lang_text_draw(61, 48, X_OFFSET, y_line, FONT_NORMAL_RED);
-//    else
-//        lang_text_draw(61, 49, X_OFFSET, y_line, FONT_NORMAL_GREEN);
+    //    house_demands *demands = city_houses_demands();
+    //    if (demands->religion == 1)
+    //        lang_text_draw(61, 46, X_OFFSET, y_line, FONT_NORMAL_RED);
+    //    else if (demands->religion == 2)
+    //        lang_text_draw(61, 47, X_OFFSET, y_line, FONT_NORMAL_RED);
+    //    else if (demands->religion == 3)
+    //        lang_text_draw(61, 48, X_OFFSET, y_line, FONT_NORMAL_RED);
+    //    else
+    //        lang_text_draw(61, 49, X_OFFSET, y_line, FONT_NORMAL_GREEN);
     y_line += 20;
 
     // finance
@@ -222,8 +224,7 @@ static int draw_background(void) {
     } else if (treasury < balance_last_year) { // assets have fallen by ...
         width = lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
         text_draw_money(balance_last_year - treasury, X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-    } else
-    if (city_finance_percentage_taxed_people() < 75) // not collecting many taxes!
+    } else if (city_finance_percentage_taxed_people() < 75) // not collecting many taxes!
         lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
     else // doing about as well as last year
         lang_text_draw(61, text_b + 2, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
@@ -234,25 +235,29 @@ static int draw_background(void) {
     draw_title(y_line, 9);
     if (city_sentiment_criminals() > 10) {
         width = lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        width += text_draw_number(city_finance_overview_this_year()->expenses.stolen, ' ', "", X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
+        width += text_draw_number(
+          city_finance_overview_this_year()->expenses.stolen, ' ', "", X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
         lang_text_draw(61, text_b + 5, X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-    }
-    else if (city_sentiment_criminals() > 7) {
+    } else if (city_sentiment_criminals() > 7) {
         width = lang_text_draw(61, text_b + 1, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        width += text_draw_number(city_finance_overview_this_year()->expenses.stolen, ' ', "", X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
+        width += text_draw_number(
+          city_finance_overview_this_year()->expenses.stolen, ' ', "", X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
         lang_text_draw(61, text_b + 5, X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-    }
-    else if (city_sentiment_criminals() > 5) {
+    } else if (city_sentiment_criminals() > 5) {
         width = lang_text_draw(61, text_b + 2, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        width += text_draw_number(city_finance_overview_this_year()->expenses.stolen, ' ', "", X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
+        width += text_draw_number(
+          city_finance_overview_this_year()->expenses.stolen, ' ', "", X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
         lang_text_draw(61, text_b + 5, X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-    }
-    else if (city_sentiment_criminals() > 2) {
+    } else if (city_sentiment_criminals() > 2) {
         width = lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-        width += text_draw_number(city_finance_overview_this_year()->expenses.stolen, ' ', "", X_OFFSET + width, y_line, FONT_NORMAL_BLACK_ON_DARK);
+        width += text_draw_number(city_finance_overview_this_year()->expenses.stolen,
+                                  ' ',
+                                  "",
+                                  X_OFFSET + width,
+                                  y_line,
+                                  FONT_NORMAL_BLACK_ON_DARK);
         lang_text_draw(61, text_b + 5, X_OFFSET + width, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    }
-    else
+    } else
         lang_text_draw(61, text_b + 4, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
     y_line += 20;
 
@@ -276,15 +281,15 @@ static int draw_background(void) {
         lang_text_draw(61, text_b + 1, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
     y_line += 20;
 
-//    // entertainment
-//    draw_title(y_line, 10);
-//    if (demands->entertainment == 1)
-//        lang_text_draw(61, 43, X_OFFSET, y_line, FONT_NORMAL_RED);
-//    else if (demands->entertainment == 2)
-//        lang_text_draw(61, 44, X_OFFSET, y_line, FONT_NORMAL_RED);
-//    else
-//        lang_text_draw(61, 45, X_OFFSET, y_line, FONT_NORMAL_GREEN);
-//    y_line += 20;
+    //    // entertainment
+    //    draw_title(y_line, 10);
+    //    if (demands->entertainment == 1)
+    //        lang_text_draw(61, 43, X_OFFSET, y_line, FONT_NORMAL_RED);
+    //    else if (demands->entertainment == 2)
+    //        lang_text_draw(61, 44, X_OFFSET, y_line, FONT_NORMAL_RED);
+    //    else
+    //        lang_text_draw(61, 45, X_OFFSET, y_line, FONT_NORMAL_GREEN);
+    //    y_line += 20;
 
     // kingdom
     text_b = 184;
@@ -329,12 +334,7 @@ static int draw_background(void) {
     return ADVISOR_HEIGHT;
 }
 
-const advisor_window_type *window_advisor_chief(void) {
-    static const advisor_window_type window = {
-            draw_background,
-            0,
-            0,
-            0
-    };
+const advisor_window_type* window_advisor_chief(void) {
+    static const advisor_window_type window = {draw_background, 0, 0, 0};
     return &window;
 }

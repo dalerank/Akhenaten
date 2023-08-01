@@ -2,8 +2,8 @@
 
 #include "city/city_data.h"
 #include "city/victory.h"
-#include "graphics/elements/generic_button.h"
 #include "graphics/boilerplate.h"
+#include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
@@ -16,9 +16,9 @@ static void button_accept(int param1, int param2);
 static void button_continue_governing(int months, int param2);
 
 static generic_button victory_buttons[] = {
-        {32, 112, 480, 20, button_accept,             button_none, 0,  0},
-        {32, 144, 480, 20, button_continue_governing, button_none, 24, 0},
-        {32, 176, 480, 20, button_continue_governing, button_none, 60, 0},
+  {32, 112, 480, 20, button_accept, button_none, 0, 0},
+  {32, 144, 480, 20, button_continue_governing, button_none, 24, 0},
+  {32, 176, 480, 20, button_continue_governing, button_none, 60, 0},
 };
 
 static int focus_button_id = 0;
@@ -65,7 +65,7 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     int num_buttons;
     if (scenario_campaign_rank() >= 2 || scenario_is_custom())
         num_buttons = 3;
@@ -87,11 +87,6 @@ static void button_continue_governing(int months, int param2) {
 }
 
 void window_victory_dialog_show(void) {
-    window_type window = {
-            WINDOW_VICTORY_DIALOG,
-            draw_background,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_VICTORY_DIALOG, draw_background, draw_foreground, handle_input};
     window_show(&window);
 }

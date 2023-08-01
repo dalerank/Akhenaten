@@ -1,7 +1,7 @@
-//#ifndef FIGURETYPE_ENEMY_H
-//#define FIGURETYPE_ENEMY_H
+// #ifndef FIGURETYPE_ENEMY_H
+// #define FIGURETYPE_ENEMY_H
 //
-//#include "figure/figure.h"
+// #include "figure/figure.h"
 //
 ////void figure_enemy43_spear_action();
 ////
@@ -29,4 +29,4 @@
 ////
 ////void figure_enemy_caesar_legionary_action();
 //
-//#endif // FIGURETYPE_ENEMY_H
+// #endif // FIGURETYPE_ENEMY_H

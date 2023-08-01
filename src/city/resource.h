@@ -1,8 +1,8 @@
 #pragma once
 
 #include "city/constants.h"
-#include "game/resource.h"
 #include "core/game_environment.h"
+#include "game/resource.h"
 
 struct resources_list {
     int size;
@@ -11,9 +11,9 @@ struct resources_list {
 
 int city_resource_count(int resource);
 
-const resources_list *city_resource_get_available(void);
-const resources_list *city_resource_get_available_foods(void);
-const resources_list *city_resource_get_available_market_goods(void);
+const resources_list* city_resource_get_available(void);
+const resources_list* city_resource_get_available_foods(void);
+const resources_list* city_resource_get_available_market_goods(void);
 
 int city_resource_multiple_wine_available(void);
 
@@ -53,6 +53,6 @@ void city_resource_determine_available(void);
 
 void city_resource_calculate_food_stocks_and_supply_wheat(void);
 
-//void city_resource_calculate_workshop_stocks(void);
+// void city_resource_calculate_workshop_stocks(void);
 
 void city_resource_consume_food(void);

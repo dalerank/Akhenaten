@@ -1,8 +1,8 @@
 #include "file_manager.h"
 
+#include "core/string.h"
 #include "io/file.h"
 #include "io/log.h"
-#include "core/string.h"
 #include "platform/vita/vita.h"
 
 #include <stdlib.h>
@@ -20,24 +20,24 @@
 #define fs_dir_close _wclosedir
 #define fs_dir_read _wreaddir
 #define dir_entry_name(d) wchar_to_utf8(d->d_name)
-typedef const wchar_t *dir_name;
+typedef const wchar_t* dir_name;
 
-static const char *wchar_to_utf8(const wchar_t *str) {
-    static char *filename_buffer = 0;
+static const char* wchar_to_utf8(const wchar_t* str) {
+    static char* filename_buffer = 0;
     static int filename_buffer_size = 0;
     int size_needed = WideCharToMultiByte(CP_UTF8, 0, str, -1, NULL, 0, NULL, NULL);
     if (size_needed > filename_buffer_size) {
         free(filename_buffer);
-        filename_buffer = (char *) malloc(sizeof(char) * size_needed);
+        filename_buffer = (char*)malloc(sizeof(char) * size_needed);
         filename_buffer_size = size_needed;
     }
     WideCharToMultiByte(CP_UTF8, 0, str, -1, filename_buffer, size_needed, NULL, NULL);
     return filename_buffer;
 }
 
-static wchar_t *utf8_to_wchar(const char *str) {
+static wchar_t* utf8_to_wchar(const char* str) {
     int size_needed = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
-    wchar_t *result = (wchar_t *) malloc(sizeof(wchar_t) * size_needed);
+    wchar_t* result = (wchar_t*)malloc(sizeof(wchar_t) * size_needed);
     MultiByteToWideChar(CP_UTF8, 0, str, -1, result, size_needed);
     return result;
 }
@@ -50,7 +50,7 @@ static wchar_t *utf8_to_wchar(const char *str) {
 #define fs_dir_close closedir
 #define fs_dir_read readdir
 #define dir_entry_name(d) ((d)->d_name)
-typedef const char * dir_name;
+typedef const char* dir_name;
 #endif
 
 #ifndef S_ISLNK
@@ -89,7 +89,8 @@ static int is_file(int mode) {
     return S_ISREG(mode) || S_ISLNK(mode);
 }
 
-int platform_file_manager_list_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *)) {
+int platform_file_manager_list_directory_contents(const char* dir, int type, const char* extension,
+                                                  int (*callback)(const char*)) {
     if (type == TYPE_NONE)
         return LIST_ERROR;
 
@@ -101,16 +102,16 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
     else
         current_dir = set_dir_name(dir);
 
-    fs_dir_type *d = fs_dir_open(current_dir);
+    fs_dir_type* d = fs_dir_open(current_dir);
     if (!d)
         return LIST_ERROR;
 
     int match = LIST_NO_MATCH;
-    fs_dir_entry *entry;
+    fs_dir_entry* entry;
     struct stat file_info;
     while ((entry = fs_dir_read(d))) {
-        const char *name = dir_entry_name(entry);
-        const char *fullname;
+        const char* name = dir_entry_name(entry);
+        const char* fullname;
 
         // When the current directory is a folder different than the working directory, stat() fails.
         // Since fstat() doesn't work for some reason and I'm afraid of touching things further,
@@ -124,9 +125,8 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
         }
         if (stat(fullname, &file_info) != -1) {
             int m = file_info.st_mode;
-            if ((!(type & TYPE_FILE) && is_file(m)) ||
-                (!(type & TYPE_DIR) && S_ISDIR(m)) ||
-                S_ISCHR(m) || S_ISBLK(m) || S_ISFIFO(m) || S_ISSOCK(m)) {
+            if ((!(type & TYPE_FILE) && is_file(m)) || (!(type & TYPE_DIR) && S_ISDIR(m)) || S_ISCHR(m) || S_ISBLK(m)
+                || S_ISFIFO(m) || S_ISSOCK(m)) {
                 continue;
             }
             if (is_file(m) && !file_has_extension(name, extension))
@@ -144,7 +144,6 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
 
         if (match == LIST_MATCH)
             break;
-
     }
     fs_dir_close(d);
     if (dir && *dir && strcmp(dir, ".") != 0)
@@ -161,7 +160,7 @@ int platform_file_manager_should_case_correct_file(void) {
 #endif
 }
 
-int platform_file_manager_set_base_path(const char *path) {
+int platform_file_manager_set_base_path(const char* path) {
     if (!path) {
         log_error("set_base_path: path was not set. Ozymandias will probably crash.");
         return 0;
@@ -171,15 +170,15 @@ int platform_file_manager_set_base_path(const char *path) {
 
 #if defined(__vita__)
 
-FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
-    char *resolved_path = vita_prepend_path(filename);
-    FILE *fp = fopen(resolved_path, mode);
+FILE* platform_file_manager_open_file(const char* filename, const char* mode) {
+    char* resolved_path = vita_prepend_path(filename);
+    FILE* fp = fopen(resolved_path, mode);
     free(resolved_path);
     return fp;
 }
 
-int platform_file_manager_remove_file(const char *filename) {
-    char *resolved_path = vita_prepend_path(filename);
+int platform_file_manager_remove_file(const char* filename) {
+    char* resolved_path = vita_prepend_path(filename);
     int result = remove(resolved_path);
     free(resolved_path);
     return result == 0;
@@ -187,11 +186,11 @@ int platform_file_manager_remove_file(const char *filename) {
 
 #elif defined(_WIN32)
 
-FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
-    wchar_t *wfile = utf8_to_wchar(filename);
-    wchar_t *wmode = utf8_to_wchar(mode);
+FILE* platform_file_manager_open_file(const char* filename, const char* mode) {
+    wchar_t* wfile = utf8_to_wchar(filename);
+    wchar_t* wmode = utf8_to_wchar(mode);
 
-    FILE *fp = _wfopen(wfile, wmode);
+    FILE* fp = _wfopen(wfile, wmode);
 
     free(wfile);
     free(wmode);
@@ -199,8 +198,8 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
     return fp;
 }
 
-bool platform_file_manager_remove_file(const char *filename) {
-    wchar_t *wfile = utf8_to_wchar(filename);
+bool platform_file_manager_remove_file(const char* filename) {
+    wchar_t* wfile = utf8_to_wchar(filename);
     int result = _wremove(wfile);
     free(wfile);
     return result == 0;
@@ -208,11 +207,11 @@ bool platform_file_manager_remove_file(const char *filename) {
 
 #else
 
-FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
+FILE* platform_file_manager_open_file(const char* filename, const char* mode) {
     return fopen(filename, mode);
 }
 
-bool platform_file_manager_remove_file(const char *filename) {
+bool platform_file_manager_remove_file(const char* filename) {
     return remove(filename) == 0;
 }
 

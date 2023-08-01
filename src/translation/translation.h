@@ -152,33 +152,33 @@ enum {
 
 typedef struct {
     int key;
-    const char *string;
+    const char* string;
 } translation_string;
 
 void translation_load(int language);
 
-const uint8_t *translation_for(int key);
+const uint8_t* translation_for(int key);
 
-void translation_english(const translation_string **strings, int *num_strings);
+void translation_english(const translation_string** strings, int* num_strings);
 
-void translation_french(const translation_string **strings, int *num_strings);
+void translation_french(const translation_string** strings, int* num_strings);
 
-void translation_german(const translation_string **strings, int *num_strings);
+void translation_german(const translation_string** strings, int* num_strings);
 
-void translation_italian(const translation_string **strings, int *num_strings);
+void translation_italian(const translation_string** strings, int* num_strings);
 
-void translation_korean(const translation_string **strings, int *num_strings);
+void translation_korean(const translation_string** strings, int* num_strings);
 
-void translation_polish(const translation_string **strings, int *num_strings);
+void translation_polish(const translation_string** strings, int* num_strings);
 
-void translation_portuguese(const translation_string **strings, int *num_strings);
+void translation_portuguese(const translation_string** strings, int* num_strings);
 
-void translation_russian(const translation_string **strings, int *num_strings);
+void translation_russian(const translation_string** strings, int* num_strings);
 
-void translation_spanish(const translation_string **strings, int *num_strings);
+void translation_spanish(const translation_string** strings, int* num_strings);
 
-void translation_simplified_chinese(const translation_string **strings, int *num_strings);
+void translation_simplified_chinese(const translation_string** strings, int* num_strings);
 
-void translation_traditional_chinese(const translation_string **strings, int *num_strings);
+void translation_traditional_chinese(const translation_string** strings, int* num_strings);
 
 #endif // TRANSLATION_TRANSLATION_H

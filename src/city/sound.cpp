@@ -2,10 +2,10 @@
 
 #include "city/data_private.h"
 
-static int update_field(int8_t *field, int max_value) {
+static int update_field(int8_t* field, int max_value) {
     (*field)--;
     if (*field <= 0) {
-        *field = (int8_t) max_value;
+        *field = (int8_t)max_value;
         return 1;
     } else {
         return 0;

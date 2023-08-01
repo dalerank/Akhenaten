@@ -1,29 +1,22 @@
 #include "editor.h"
 
-#include "io/gamefiles/lang.h"
 #include "core/string.h"
 #include "grid/grid.h"
-#include "scenario/scenario_data.h"
+#include "io/gamefiles/lang.h"
 #include "scenario/property.h"
+#include "scenario/scenario_data.h"
 
 #include <string.h>
 
 static const struct {
     int width;
     int height;
-} MAP_SIZES[] = {
-        {40,  40},
-        {60,  60},
-        {80,  80},
-        {100, 100},
-        {120, 120},
-        {160, 160}
-};
+} MAP_SIZES[] = {{40, 40}, {60, 60}, {80, 80}, {100, 100}, {120, 120}, {160, 160}};
 
-//static void init_point(map_point *point) {
-//    point->x = -1;
-//    point->y = -1;
-//}
+// static void init_point(map_point *point) {
+//     point->x = -1;
+//     point->y = -1;
+// }
 
 void scenario_editor_create(int map_size) {
     memset(&g_scenario_data, 0, sizeof(g_scenario_data));
@@ -31,8 +24,8 @@ void scenario_editor_create(int map_size) {
     g_scenario_data.map.width = MAP_SIZES[map_size].width;
     g_scenario_data.map.height = MAP_SIZES[map_size].height;
     g_scenario_data.map.border_size = GRID_LENGTH - g_scenario_data.map.width;
-    g_scenario_data.map.start_offset = (GRID_LENGTH - g_scenario_data.map.height) / 2 * GRID_LENGTH +
-                                   (GRID_LENGTH - g_scenario_data.map.width) / 2;
+    g_scenario_data.map.start_offset
+      = (GRID_LENGTH - g_scenario_data.map.height) / 2 * GRID_LENGTH + (GRID_LENGTH - g_scenario_data.map.width) / 2;
 
     string_copy(lang_get_string(44, 37), g_scenario_data.subtitle, MAX_SUBTITLE);
     string_copy(lang_get_string(44, 38), g_scenario_data.brief_description, MAX_BRIEF_DESCRIPTION);
@@ -103,7 +96,7 @@ void scenario_editor_set_native_images(int image_hut, int image_meeting, int ima
     g_scenario_data.native_images.crops = image_crops;
 }
 
-void scenario_editor_request_get(int index, editor_request *request) {
+void scenario_editor_request_get(int index, editor_request* request) {
     request->year = g_scenario_data.requests[index].year;
     request->amount = g_scenario_data.requests[index].amount;
     request->resource = g_scenario_data.requests[index].resource;
@@ -114,8 +107,8 @@ void scenario_editor_request_get(int index, editor_request *request) {
 static void sort_requests(void) {
     for (int i = 0; i < MAX_REQUESTS; i++) {
         for (int j = MAX_REQUESTS - 1; j > 0; j--) {
-            request_t *current = &g_scenario_data.requests[j];
-            request_t *prev = &g_scenario_data.requests[j - 1];
+            request_t* current = &g_scenario_data.requests[j];
+            request_t* prev = &g_scenario_data.requests[j - 1];
             if (current->resource && (!prev->resource || prev->year > current->year)) {
                 request_t tmp = *current;
                 *current = *prev;
@@ -135,7 +128,7 @@ void scenario_editor_request_delete(int index) {
     g_scenario_data.is_saved = 0;
 }
 
-void scenario_editor_request_save(int index, editor_request *request) {
+void scenario_editor_request_save(int index, editor_request* request) {
     g_scenario_data.requests[index].year = request->year;
     g_scenario_data.requests[index].amount = request->amount;
     g_scenario_data.requests[index].resource = request->resource;
@@ -145,7 +138,7 @@ void scenario_editor_request_save(int index, editor_request *request) {
     g_scenario_data.is_saved = 0;
 }
 
-void scenario_editor_invasion_get(int index, editor_invasion *invasion) {
+void scenario_editor_invasion_get(int index, editor_invasion* invasion) {
     invasion->year = g_scenario_data.invasions[index].year;
     invasion->type = g_scenario_data.invasions[index].type;
     invasion->amount = g_scenario_data.invasions[index].amount;
@@ -156,8 +149,8 @@ void scenario_editor_invasion_get(int index, editor_invasion *invasion) {
 static void sort_invasions(void) {
     for (int i = 0; i < MAX_INVASIONS; i++) {
         for (int j = MAX_INVASIONS - 1; j > 0; j--) {
-            invasion_t *current = &g_scenario_data.invasions[j];
-            invasion_t *prev = &g_scenario_data.invasions[j - 1];
+            invasion_t* current = &g_scenario_data.invasions[j];
+            invasion_t* prev = &g_scenario_data.invasions[j - 1];
             if (current->type && (!prev->type || prev->year > current->year)) {
                 invasion_t tmp = *current;
                 *current = *prev;
@@ -177,7 +170,7 @@ void scenario_editor_invasion_delete(int index) {
     g_scenario_data.is_saved = 0;
 }
 
-void scenario_editor_invasion_save(int index, editor_invasion *invasion) {
+void scenario_editor_invasion_save(int index, editor_invasion* invasion) {
     g_scenario_data.invasions[index].year = invasion->type ? invasion->year : 0;
     g_scenario_data.invasions[index].amount = invasion->type ? invasion->amount : 0;
     g_scenario_data.invasions[index].type = invasion->type;
@@ -187,7 +180,7 @@ void scenario_editor_invasion_save(int index, editor_invasion *invasion) {
     g_scenario_data.is_saved = 0;
 }
 
-void scenario_editor_price_change_get(int index, editor_price_change *price_change) {
+void scenario_editor_price_change_get(int index, editor_price_change* price_change) {
     price_change->year = g_scenario_data.price_changes[index].year;
     price_change->resource = g_scenario_data.price_changes[index].resource;
     price_change->amount = g_scenario_data.price_changes[index].amount;
@@ -198,12 +191,11 @@ static void sort_price_changes(void) {
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
         if (!g_scenario_data.price_changes[i].resource)
             g_scenario_data.price_changes[i].year = 0;
-
     }
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
         for (int j = MAX_PRICE_CHANGES - 1; j > 0; j--) {
-            price_change_t *current = &g_scenario_data.price_changes[j];
-            price_change_t *prev = &g_scenario_data.price_changes[j - 1];
+            price_change_t* current = &g_scenario_data.price_changes[j];
+            price_change_t* prev = &g_scenario_data.price_changes[j - 1];
             if (current->year && (!prev->year || prev->year > current->year)) {
                 price_change_t tmp = *current;
                 *current = *prev;
@@ -222,7 +214,7 @@ void scenario_editor_price_change_delete(int index) {
     g_scenario_data.is_saved = 0;
 }
 
-void scenario_editor_price_change_save(int index, editor_price_change *price_change) {
+void scenario_editor_price_change_save(int index, editor_price_change* price_change) {
     g_scenario_data.price_changes[index].year = price_change->year;
     g_scenario_data.price_changes[index].resource = price_change->resource;
     g_scenario_data.price_changes[index].amount = price_change->amount;
@@ -231,7 +223,7 @@ void scenario_editor_price_change_save(int index, editor_price_change *price_cha
     g_scenario_data.is_saved = 0;
 }
 
-void scenario_editor_demand_change_get(int index, editor_demand_change *demand_change) {
+void scenario_editor_demand_change_get(int index, editor_demand_change* demand_change) {
     demand_change->year = g_scenario_data.demand_changes[index].year;
     demand_change->resource = g_scenario_data.demand_changes[index].resource;
     demand_change->route_id = g_scenario_data.demand_changes[index].route_id;
@@ -242,12 +234,11 @@ static void sort_demand_changes(void) {
     for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
         if (!g_scenario_data.demand_changes[i].resource)
             g_scenario_data.demand_changes[i].year = 0;
-
     }
     for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
         for (int j = MAX_DEMAND_CHANGES - 1; j > 0; j--) {
-            demand_change_t *current = &g_scenario_data.demand_changes[j];
-            demand_change_t *prev = &g_scenario_data.demand_changes[j - 1];
+            demand_change_t* current = &g_scenario_data.demand_changes[j];
+            demand_change_t* prev = &g_scenario_data.demand_changes[j - 1];
             if (current->year && (!prev->year || prev->year > current->year)) {
                 demand_change_t tmp = *current;
                 *current = *prev;
@@ -266,7 +257,7 @@ void scenario_editor_demand_change_delete(int index) {
     g_scenario_data.is_saved = 0;
 }
 
-void scenario_editor_demand_change_save(int index, editor_demand_change *demand_change) {
+void scenario_editor_demand_change_save(int index, editor_demand_change* demand_change) {
     g_scenario_data.demand_changes[index].year = demand_change->year;
     g_scenario_data.demand_changes[index].resource = demand_change->resource;
     g_scenario_data.demand_changes[index].route_id = demand_change->route_id;
@@ -292,21 +283,21 @@ void scenario_editor_cycle_image(int forward) {
 
 void scenario_editor_cycle_climate(void) {
     switch (g_scenario_data.climate) {
-        case CLIMATE_CENTRAL:
-            g_scenario_data.climate = CLIMATE_NORTHERN;
-            break;
-        case CLIMATE_NORTHERN:
-            g_scenario_data.climate = CLIMATE_DESERT;
-            break;
-        case CLIMATE_DESERT:
-        default:
-            g_scenario_data.climate = CLIMATE_CENTRAL;
-            break;
+    case CLIMATE_CENTRAL:
+        g_scenario_data.climate = CLIMATE_NORTHERN;
+        break;
+    case CLIMATE_NORTHERN:
+        g_scenario_data.climate = CLIMATE_DESERT;
+        break;
+    case CLIMATE_DESERT:
+    default:
+        g_scenario_data.climate = CLIMATE_CENTRAL;
+        break;
     }
     g_scenario_data.is_saved = 0;
 }
 
-void scenario_editor_update_subtitle(const uint8_t *new_description) {
+void scenario_editor_update_subtitle(const uint8_t* new_description) {
     if (!string_equals(g_scenario_data.subtitle, new_description, 1)) {
         string_copy(new_description, g_scenario_data.subtitle, MAX_SUBTITLE);
         g_scenario_data.is_saved = 0;
@@ -364,30 +355,30 @@ void scenario_editor_toggle_flotsam(void) {
 
 int scenario_editor_milestone_year(int milestone_percentage) {
     switch (milestone_percentage) {
-        case 25:
-            return g_scenario_data.win_criteria.milestone25_year;
-        case 50:
-            return g_scenario_data.win_criteria.milestone50_year;
-        case 75:
-            return g_scenario_data.win_criteria.milestone75_year;
-        default:
-            return 0;
+    case 25:
+        return g_scenario_data.win_criteria.milestone25_year;
+    case 50:
+        return g_scenario_data.win_criteria.milestone50_year;
+    case 75:
+        return g_scenario_data.win_criteria.milestone75_year;
+    default:
+        return 0;
     }
 }
 
 void scenario_editor_set_milestone_year(int milestone_percentage, int year) {
     switch (milestone_percentage) {
-        case 25:
-            g_scenario_data.win_criteria.milestone25_year = year;
-            break;
-        case 50:
-            g_scenario_data.win_criteria.milestone50_year = year;
-            break;
-        case 75:
-            g_scenario_data.win_criteria.milestone75_year = year;
-            break;
-        default:
-            return;
+    case 25:
+        g_scenario_data.win_criteria.milestone25_year = year;
+        break;
+    case 50:
+        g_scenario_data.win_criteria.milestone50_year = year;
+        break;
+    case 75:
+        g_scenario_data.win_criteria.milestone75_year = year;
+        break;
+    default:
+        return;
     }
     g_scenario_data.is_saved = 0;
 }

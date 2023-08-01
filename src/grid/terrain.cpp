@@ -1,28 +1,26 @@
-#include "io/io_buffer.h"
 #include "terrain.h"
+#include "io/io_buffer.h"
 
+#include "city/floods.h"
+#include "core/game_environment.h"
+#include "floodplain.h"
 #include "grid/grid.h"
 #include "grid/ring.h"
 #include "grid/routing/routing.h"
-#include "core/game_environment.h"
-#include "city/floods.h"
-#include "floodplain.h"
-#include "water.h"
 #include "scenario/map.h"
 #include "vegetation.h"
+#include "water.h"
 
-grid_xx g_terrain_grid =        {0, 
-                                   { 
-                                     FS_UINT16, // c3
-                                     FS_UINT32  // ph
-                                   }
-                                }; 
-grid_xx g_terrain_grid_backup = {0, 
-                                   {
-                                     FS_UINT16, //c3
-                                     FS_UINT32  //ph
-                                   }
-                                };
+grid_xx g_terrain_grid = {0,
+                          {
+                            FS_UINT16, // c3
+                            FS_UINT32  // ph
+                          }};
+grid_xx g_terrain_grid_backup = {0,
+                                 {
+                                   FS_UINT16, // c3
+                                   FS_UINT32  // ph
+                                 }};
 
 bool map_terrain_is(int grid_offset, int terrain_mask) {
     return map_grid_is_valid_offset(grid_offset) && !!(map_grid_get(&g_terrain_grid, grid_offset) & terrain_mask);
@@ -104,28 +102,28 @@ int map_terrain_count_diagonally_adjacent_with_type(int grid_offset, int terrain
 }
 
 bool map_terrain_has_adjecent_with_type(int grid_offset, int terrain) {
-    if (map_terrain_is(grid_offset + GRID_OFFSET(-1, -1), terrain) ||
-        map_terrain_is(grid_offset + GRID_OFFSET(0, -1), terrain) ||
-        map_terrain_is(grid_offset + GRID_OFFSET(1, -1), terrain) ||
-        map_terrain_is(grid_offset + GRID_OFFSET(1, 0), terrain) ||
-        map_terrain_is(grid_offset + GRID_OFFSET(1, 1), terrain) ||
-        map_terrain_is(grid_offset + GRID_OFFSET(0, 1), terrain) ||
-        map_terrain_is(grid_offset + GRID_OFFSET(-1, 1), terrain) ||
-        map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), terrain)) {
+    if (map_terrain_is(grid_offset + GRID_OFFSET(-1, -1), terrain)
+        || map_terrain_is(grid_offset + GRID_OFFSET(0, -1), terrain)
+        || map_terrain_is(grid_offset + GRID_OFFSET(1, -1), terrain)
+        || map_terrain_is(grid_offset + GRID_OFFSET(1, 0), terrain)
+        || map_terrain_is(grid_offset + GRID_OFFSET(1, 1), terrain)
+        || map_terrain_is(grid_offset + GRID_OFFSET(0, 1), terrain)
+        || map_terrain_is(grid_offset + GRID_OFFSET(-1, 1), terrain)
+        || map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), terrain)) {
         return true;
     }
     return false;
 }
 bool map_terrain_has_adjacent_x_with_type(int grid_offset, int terrain) {
-    if (map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), terrain) ||
-        map_terrain_is(grid_offset + GRID_OFFSET(1, 0), terrain)) {
+    if (map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), terrain)
+        || map_terrain_is(grid_offset + GRID_OFFSET(1, 0), terrain)) {
         return true;
     }
     return false;
 }
 bool map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain) {
-    if (map_terrain_is(grid_offset + GRID_OFFSET(0, -1), terrain) ||
-        map_terrain_is(grid_offset + GRID_OFFSET(0, 1), terrain)) {
+    if (map_terrain_is(grid_offset + GRID_OFFSET(0, -1), terrain)
+        || map_terrain_is(grid_offset + GRID_OFFSET(0, 1), terrain)) {
         return true;
     }
     return false;
@@ -163,7 +161,8 @@ bool map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int ra
     }
     return false;
 }
-bool map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset, int *x_tile, int *y_tile) {
+bool map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset, int* x_tile,
+                                             int* y_tile) {
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
 
@@ -189,7 +188,7 @@ bool map_terrain_all_tiles_in_area_are(int x, int y, int size, int terrain) {
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = MAP_OFFSET(x + dx, y + dy);
-//            if ((map_terrain_get(grid_offset) & TERRAIN_NOT_CLEAR) != terrain)
+            //            if ((map_terrain_get(grid_offset) & TERRAIN_NOT_CLEAR) != terrain)
             if (!map_terrain_is(grid_offset, terrain))
                 return false;
         }
@@ -214,7 +213,7 @@ bool map_terrain_has_only_rocks_trees_in_ring(int x, int y, int distance) {
     int end = map_ring_end(1, distance);
     int base_offset = MAP_OFFSET(x, y);
     for (int i = start; i < end; i++) {
-        const ring_tile *tile = map_ring_tile(i);
+        const ring_tile* tile = map_ring_tile(i);
         if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
             if (!map_terrain_is(base_offset + tile->grid_offset, TERRAIN_ROCK | TERRAIN_TREE))
                 return false;
@@ -227,7 +226,7 @@ bool map_terrain_has_only_meadow_in_ring(int x, int y, int distance) {
     int end = map_ring_end(1, distance);
     int base_offset = MAP_OFFSET(x, y);
     for (int i = start; i < end; i++) {
-        const ring_tile *tile = map_ring_tile(i);
+        const ring_tile* tile = map_ring_tile(i);
         if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
             if (!map_terrain_is(base_offset + tile->grid_offset, TERRAIN_MEADOW))
                 return false;
@@ -237,7 +236,7 @@ bool map_terrain_has_only_meadow_in_ring(int x, int y, int distance) {
 }
 bool map_terrain_is_adjacent_to_wall(int x, int y, int size) {
     int base_offset = MAP_OFFSET(x, y);
-    for (const int *tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
+    for (const int* tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
         if (map_terrain_is(base_offset + *tile_delta, TERRAIN_WALL))
             return true;
     }
@@ -245,7 +244,7 @@ bool map_terrain_is_adjacent_to_wall(int x, int y, int size) {
 }
 bool map_terrain_is_adjacent_to_water(int x, int y, int size) {
     int base_offset = MAP_OFFSET(x, y);
-    for (const int *tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
+    for (const int* tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
         if (map_terrain_is(base_offset + *tile_delta, TERRAIN_WATER))
             return true;
     }
@@ -253,20 +252,19 @@ bool map_terrain_is_adjacent_to_water(int x, int y, int size) {
 }
 bool map_terrain_is_adjacent_to_open_water(int x, int y, int size) {
     int base_offset = MAP_OFFSET(x, y);
-    for (const int *tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
-        if (map_terrain_is(base_offset + *tile_delta, TERRAIN_WATER) &&
-            map_routing_distance(base_offset + *tile_delta) > 0) {
+    for (const int* tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
+        if (map_terrain_is(base_offset + *tile_delta, TERRAIN_WATER)
+            && map_routing_distance(base_offset + *tile_delta) > 0) {
             return true;
         }
     }
     return false;
 }
-bool map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int *x_tile, int *y_tile) {
+bool map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int* x_tile, int* y_tile) {
     int base_offset = MAP_OFFSET(x, y);
-    for (const int *tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
+    for (const int* tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
-        if (map_terrain_is(grid_offset, TERRAIN_ROAD) ||
-            !map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
+        if (map_terrain_is(grid_offset, TERRAIN_ROAD) || !map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
             *x_tile = MAP_X(grid_offset);
             *y_tile = MAP_Y(grid_offset);
             return true;
@@ -278,7 +276,6 @@ bool map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int *x_
 static void add_road(int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR))
         map_terrain_add(grid_offset, TERRAIN_ROAD);
-
 }
 void map_terrain_add_roadblock_road(int x, int y, int orientation) {
     // roads under roadblock
@@ -346,8 +343,8 @@ void map_terrain_clear(void) {
 void map_terrain_init_outside_map(void) {
     int map_width = scenario_map_data()->width;
     int map_height = scenario_map_data()->height;
-//    int map_width, map_height;
-//    map_grid_size(&map_width, &map_height);
+    //    int map_width, map_height;
+    //    map_grid_size(&map_width, &map_height);
     int y_start = (GRID_LENGTH - map_height) / 2;
     int x_start = (GRID_LENGTH - map_width) / 2;
     for (int y = 0; y < GRID_LENGTH; y++) {
@@ -355,7 +352,6 @@ void map_terrain_init_outside_map(void) {
         for (int x = 0; x < GRID_LENGTH; x++) {
             if (y_outside_map || x < x_start || x >= x_start + map_width)
                 map_grid_set(&g_terrain_grid, x + GRID_LENGTH * y, TERRAIN_TREE | TERRAIN_WATER);
-
         }
     }
 }
@@ -370,16 +366,16 @@ void build_terrain_caches() {
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-//            if (map_grid_inside_map_area(grid_offset)) { // only inside the valid game area!
-                if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER))
-                    river_tiles_cache.add(grid_offset);
-                if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
-                    floodplain_tiles_cache.add(grid_offset);
-                if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND))
-                    marshland_tiles_cache.add(grid_offset);
-                if (map_terrain_is(grid_offset, TERRAIN_TREE))
-                    trees_tiles_cache.add(grid_offset);
-//            }
+            //            if (map_grid_inside_map_area(grid_offset)) { // only inside the valid game area!
+            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER))
+                river_tiles_cache.add(grid_offset);
+            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
+                floodplain_tiles_cache.add(grid_offset);
+            if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND))
+                marshland_tiles_cache.add(grid_offset);
+            if (map_terrain_is(grid_offset, TERRAIN_TREE))
+                trees_tiles_cache.add(grid_offset);
+            //            }
         }
     }
     return;
@@ -397,12 +393,6 @@ int map_get_UNK04(int grid_offset) {
     return map_grid_get(&GRID04_8BIT, grid_offset);
 }
 
-io_buffer *iob_terrain_grid = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_grid);
-});
-io_buffer *iob_GRID03_32BIT = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &GRID03_32BIT);
-});
-io_buffer *iob_GRID04_8BIT = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &GRID04_8BIT);
-});
+io_buffer* iob_terrain_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &g_terrain_grid); });
+io_buffer* iob_GRID03_32BIT = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &GRID03_32BIT); });
+io_buffer* iob_GRID04_8BIT = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &GRID04_8BIT); });

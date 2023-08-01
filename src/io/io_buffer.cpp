@@ -1,8 +1,8 @@
-#include <cassert>
-#include "core/string.h"
 #include "io_buffer.h"
+#include "core/string.h"
+#include <cassert>
 
-void io_buffer::hook(buffer *buf, int _size, bool _compressed, const char *_name) {
+void io_buffer::hook(buffer* buf, int _size, bool _compressed, const char* _name) {
     if (this == nullptr)
         return;
     p_buf = buf;
@@ -28,8 +28,8 @@ bool io_buffer::io_sync(chunk_buffer_access_e flag) {
         return false;
     access_type = flag;
     bind_data();
-//    if (!bind_callback(this))
-//        return false;
+    //    if (!bind_callback(this))
+    //        return false;
     access_type = CHUNK_ACCESS_REVOKED;
     return true;
 }
@@ -43,7 +43,7 @@ bool io_buffer::write() {
 io_buffer::io_buffer() {
     bind_callback = nullptr;
 }
-io_buffer::io_buffer(void (*bclb)(io_buffer *)) {
+io_buffer::io_buffer(void (*bclb)(io_buffer*)) {
     bind_callback = bclb;
 }
 io_buffer::~io_buffer() {
@@ -53,10 +53,10 @@ io_buffer::~io_buffer() {
 
 ////
 
-void default_bind(io_buffer *iob) {
+void default_bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_NONE);
 }
-io_buffer *iob_none = new io_buffer(default_bind);
-io_buffer *iob_ = new io_buffer([](io_buffer *iob) {
+io_buffer* iob_none = new io_buffer(default_bind);
+io_buffer* iob_ = new io_buffer([](io_buffer* iob) {
     //
 });

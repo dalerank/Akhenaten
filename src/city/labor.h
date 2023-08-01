@@ -25,9 +25,9 @@ int city_labor_wages_rome(void);
 int city_labor_raise_wages_rome(void);
 int city_labor_lower_wages_rome(void);
 
-const int CATEGORY_FOR_building(building *b);
+const int CATEGORY_FOR_building(building* b);
 
-const labor_category_data *city_labor_category(int category);
+const labor_category_data* city_labor_category(int category);
 
 void city_labor_calculate_workers(int num_plebs, int num_patricians);
 

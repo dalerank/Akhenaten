@@ -81,8 +81,8 @@ typedef struct {
     window_id id;
     void (*draw_background)(void);
     void (*draw_foreground)(void);
-    void (*handle_input)(const mouse *m, const hotkeys *h);
-    void (*get_tooltip)(tooltip_context *c);
+    void (*handle_input)(const mouse* m, const hotkeys* h);
+    void (*get_tooltip)(tooltip_context* c);
 } window_type;
 
 /**
@@ -107,7 +107,7 @@ void window_draw_underlying_window(void);
 
 int window_is(window_id id);
 
-void window_show(const window_type *window);
+void window_show(const window_type* window);
 
 window_id window_get_id(void);
 

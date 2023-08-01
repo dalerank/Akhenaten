@@ -60,10 +60,7 @@ enum {
     CONFIG_MAX_ENTRIES
 };
 
-enum {
-    CONFIG_STRING_UI_LANGUAGE_DIR,
-    CONFIG_STRING_MAX_ENTRIES
-};
+enum { CONFIG_STRING_UI_LANGUAGE_DIR, CONFIG_STRING_MAX_ENTRIES };
 
 /**
  * Get an integer config value
@@ -84,14 +81,14 @@ void config_set(int key, int value);
  * @param key String key
  * @return Config value, is always non-NULL but may be an empty string
  */
-const char *config_get_string(int key);
+const char* config_get_string(int key);
 
 /**
  * Set a string config value
  * @param key String key
  * @param value Value to set
  */
-void config_set_string(int key, const char *value);
+void config_set_string(int key, const char* value);
 
 /**
  * Set a default config value
@@ -105,7 +102,7 @@ bool config_get_default_value(int key);
  * @param key String key
  * @return Default config value, is always non-NULL but may be an empty string
  */
-const char *config_get_default_string_value(int key);
+const char* config_get_default_string_value(int key);
 
 /**
  * Reset all settings to their defaults

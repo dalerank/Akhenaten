@@ -91,7 +91,7 @@ typedef struct {
  * @param index Index
  * @return Mapping or NULL if not set
  */
-const hotkey_mapping *hotkey_for_action(int action, int index);
+const hotkey_mapping* hotkey_for_action(int action, int index);
 
 /**
  * Get default mapping for action
@@ -99,7 +99,7 @@ const hotkey_mapping *hotkey_for_action(int action, int index);
  * @param index Index, can be 0 or 1
  * @return Mapping, may be an empty mapping. Only returns NULL on invalid input
  */
-const hotkey_mapping *hotkey_default_for_action(int action, int index);
+const hotkey_mapping* hotkey_default_for_action(int action, int index);
 
 /**
  * Clear all hotkey mappings
@@ -110,7 +110,7 @@ void hotkey_config_clear(void);
  * Add a mapping
  * @param mapping Mapping to add
  */
-void hotkey_config_add_mapping(const hotkey_mapping *mapping);
+void hotkey_config_add_mapping(const hotkey_mapping* mapping);
 
 /**
  * Load hotkey config from file and install hotkeys

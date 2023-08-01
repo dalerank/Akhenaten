@@ -4,8 +4,8 @@
 #include "core/buffer.h"
 
 typedef struct time_data {
-    int tick; // 50 ticks in a day
-    int day; // 16 days in a month
+    int tick;  // 50 ticks in a day
+    int day;   // 16 days in a month
     int month; // 12 months in a year
     int year;
     int total_days;
@@ -94,6 +94,6 @@ int game_time_advance_month(void);
  */
 void game_time_advance_year(void);
 
-const time_data_t * game_time_struct();
+const time_data_t* game_time_struct();
 
 #endif // GAME_TIME_H

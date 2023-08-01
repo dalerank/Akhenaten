@@ -1,31 +1,29 @@
-#include <cstring>
-#include <cinttypes>
 #include "imagepak.h"
-#include "core/stopwatch.h"
-#include "core/buffer.h"
-#include "core/string.h"
-#include "io/io.h"
 #include "atlas_packer.h"
-#include "graphics/font.h"
-#include "io/log.h"
+#include "core/buffer.h"
+#include "core/stopwatch.h"
+#include "core/string.h"
 #include "core/struct_types.h"
+#include "graphics/font.h"
+#include "io/io.h"
+#include "io/log.h"
 #include "platform/renderer.h"
+#include <cinttypes>
+#include <cstring>
 
 ///////// IMAGE DATA CONVERSION
 
 static color_t to_32_bit(uint16_t c) {
-    return ALPHA_OPAQUE |
-           ((c & 0x7c00) << 9) | ((c & 0x7000) << 4) |
-           ((c & 0x3e0) << 6) | ((c & 0x380) << 1) |
-           ((c & 0x1f) << 3) | ((c & 0x1c) >> 2);
+    return ALPHA_OPAQUE | ((c & 0x7c00) << 9) | ((c & 0x7000) << 4) | ((c & 0x3e0) << 6) | ((c & 0x380) << 1)
+           | ((c & 0x1f) << 3) | ((c & 0x1c) >> 2);
 }
 
-static int convert_uncompressed(buffer *buf, const image_t *img) {
+static int convert_uncompressed(buffer* buf, const image_t* img) {
     int pixels_count = 0;
     auto p_atlas = img->atlas.p_atlas;
 
     for (int y = 0; y < img->height; y++) {
-        color_t *pixel = &p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset];
+        color_t* pixel = &p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset];
         for (int x = 0; x < img->width; x++) {
             color_t color = to_32_bit(buf->read_u16());
             pixel[x] = color == COLOR_SG2_TRANSPARENT ? ALPHA_TRANSPARENT : color;
@@ -34,8 +32,8 @@ static int convert_uncompressed(buffer *buf, const image_t *img) {
     }
     return pixels_count;
 }
-static int convert_compressed(buffer *buf, int data_length, const image_t *img) {
-    //int pixels_count = 0;
+static int convert_compressed(buffer* buf, int data_length, const image_t* img) {
+    // int pixels_count = 0;
     auto p_atlas = img->atlas.p_atlas;
     int atlas_dst = (img->atlas.y_offset * p_atlas->width) + img->atlas.x_offset;
     int y = 0;
@@ -46,7 +44,8 @@ static int convert_compressed(buffer *buf, int data_length, const image_t *img) 
             // next byte = transparent pixels to skip
             x += buf->read_u8();
             while (x >= img->width) {
-                y++; x -= img->width;
+                y++;
+                x -= img->width;
             }
             data_length -= 2;
         } else {
@@ -63,18 +62,16 @@ static int convert_compressed(buffer *buf, int data_length, const image_t *img) 
             data_length -= control * 2 + 1;
         }
     }
-    return 0;// pixels_count;
+    return 0; // pixels_count;
 }
 
-static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
-        28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0,
-        0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
-};
+static const int FOOTPRINT_X_START_PER_HEIGHT[]
+  = {28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28};
 #define FOOTPRINT_WIDTH 58
 #define FOOTPRINT_HEIGHT 30
 #define FOOTPRINT_HALF_HEIGHT 15
 
-static int convert_footprint_tile(buffer *buf, const image_t *img, int x_offset, int y_offset) {
+static int convert_footprint_tile(buffer* buf, const image_t* img, int x_offset, int y_offset) {
     int pixels_count = 0;
     auto p_atlas = img->atlas.p_atlas;
 
@@ -90,7 +87,7 @@ static int convert_footprint_tile(buffer *buf, const image_t *img, int x_offset,
     }
     return pixels_count;
 }
-static int convert_isometric_footprint(buffer *buf, const image_t *img) {
+static int convert_isometric_footprint(buffer* buf, const image_t* img) {
     int pixels_count = 0;
     auto p_atlas = img->atlas.p_atlas;
 
@@ -122,8 +119,8 @@ static int convert_isometric_footprint(buffer *buf, const image_t *img) {
 static bool is_pixel_transparent(color_t pixel) {
     return (pixel & COLOR_CHANNEL_ALPHA) == ALPHA_TRANSPARENT;
 }
-static void convert_to_plain_white(const image_t *img) {
-    color_t *pixels = img->TEMP_PIXEL_DATA;
+static void convert_to_plain_white(const image_t* img) {
+    color_t* pixels = img->TEMP_PIXEL_DATA;
     int atlas_width = img->atlas.p_atlas->width;
     for (int y = 0; y < img->height; y++) {
         for (int x = 0; x < img->width; x++) {
@@ -133,13 +130,13 @@ static void convert_to_plain_white(const image_t *img) {
         pixels += atlas_width;
     }
 }
-static void add_edge_to_letter(const image_t *img) {
+static void add_edge_to_letter(const image_t* img) {
     int atlas_width = img->atlas.p_atlas->width;
     int oldsize = img->width * img->height;
-    color_t *TEMP_BUFFER = new color_t[oldsize];
+    color_t* TEMP_BUFFER = new color_t[oldsize];
 
     // copy original glyph to the buffer
-    color_t *pixels_row = img->TEMP_PIXEL_DATA;
+    color_t* pixels_row = img->TEMP_PIXEL_DATA;
     auto p_buffer_row = TEMP_BUFFER;
     for (int y = 0; y < img->height; y++) {
         for (int x = 0; x < img->width; x++)
@@ -155,8 +152,8 @@ static void add_edge_to_letter(const image_t *img) {
     for (int y = 0; y < img->height; y++) {
         for (int x = 0; x < img->width; x++) {
             if (!is_pixel_transparent(p_buffer_row[x])) {
-//            if ((p_buffer_row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
-//                pixels[atlas_width * 0 + x + 0] = COLOR_BLACK;
+                //            if ((p_buffer_row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                //                pixels[atlas_width * 0 + x + 0] = COLOR_BLACK;
                 pixels_row[atlas_width * 0 + x + 1] = edge_color;
                 pixels_row[atlas_width * 0 + x + 2] = edge_color;
                 pixels_row[atlas_width * 1 + x + 0] = edge_color;
@@ -177,7 +174,7 @@ static void add_edge_to_letter(const image_t *img) {
     for (int y = 0; y < img->height; y++) {
         for (int x = 0; x < img->width; x++) {
             if (!is_pixel_transparent(p_buffer_row[x]))
-//            if ((p_buffer_row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT)
+                //            if ((p_buffer_row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT)
                 pixels_row[atlas_width * 1 + x + 1] = COLOR_WHITE;
         }
         pixels_row += atlas_width;
@@ -186,12 +183,12 @@ static void add_edge_to_letter(const image_t *img) {
 
     delete TEMP_BUFFER;
 }
-static int convert_font_glyph_to_bigger_space(buffer *buf, const image_t *img) {
+static int convert_font_glyph_to_bigger_space(buffer* buf, const image_t* img) {
     int pixels_count = 0;
     auto p_atlas = img->atlas.p_atlas;
 
     for (int y = 0; y < img->height - 2; y++) {
-        color_t *pixel = &p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset];
+        color_t* pixel = &p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset];
         for (int x = 0; x < img->width - 2; x++) {
             color_t color = to_32_bit(buf->read_u16());
             pixel[x] = color == COLOR_SG2_TRANSPARENT ? ALPHA_TRANSPARENT : color;
@@ -200,15 +197,15 @@ static int convert_font_glyph_to_bigger_space(buffer *buf, const image_t *img) {
     }
     return pixels_count;
 }
-static void create_special_fonts(std::vector<image_t> *images, int start_index) {
+static void create_special_fonts(std::vector<image_t>* images, int start_index) {
     for (int i = font_definition_for(FONT_SMALL_OUTLINED)->image_offset; i < images->size() - start_index; ++i) {
-        const image_t *img = &images->at(i + start_index);
-        image_packer_rect *rect = &packer.rects[i + start_index];
+        const image_t* img = &images->at(i + start_index);
+        image_packer_rect* rect = &packer.rects[i + start_index];
         rect->input.width = img->width + 2;
         rect->input.height = img->height + 2;
     }
 }
-static bool is_font_glyph_in_range(const image_t *img, font_t font_start, font_t font_end) {
+static bool is_font_glyph_in_range(const image_t* img, font_t font_start, font_t font_end) {
     int i = img->sgx_index - 201;
     int starting_offset = font_definition_for(font_start)->image_offset;
     int ending_offset = -1;
@@ -219,8 +216,8 @@ static bool is_font_glyph_in_range(const image_t *img, font_t font_start, font_t
     return false;
 }
 
-static buffer *external_image_buf = nullptr;
-static buffer *load_external_data(const image_t *img) {
+static buffer* external_image_buf = nullptr;
+static buffer* load_external_data(const image_t* img) {
     char filename[MAX_FILE_NAME];
     int size = 0;
     safe_realloc_for_size(&external_image_buf, img->data_length);
@@ -232,15 +229,11 @@ static buffer *load_external_data(const image_t *img) {
 
     // load external file
     size = io_read_file_part_into_buffer(
-            &filename[5], MAY_BE_LOCALIZED, external_image_buf,
-            img->data_length, img->sgx_data_offset - 1
-    );
+      &filename[5], MAY_BE_LOCALIZED, external_image_buf, img->data_length, img->sgx_data_offset - 1);
     if (!size) {
         // try in 555 dir
         size = io_read_file_part_into_buffer(
-                filename, MAY_BE_LOCALIZED, external_image_buf,
-                img->data_length, img->sgx_data_offset - 1
-        );
+          filename, MAY_BE_LOCALIZED, external_image_buf, img->data_length, img->sgx_data_offset - 1);
         if (!size) {
             log_error("unable to load external image %s", img->bmp.name);
             return nullptr;
@@ -248,16 +241,16 @@ static buffer *load_external_data(const image_t *img) {
     }
     return external_image_buf;
 }
-static int isometric_calculate_top_height(const image_t *img) {
+static int isometric_calculate_top_height(const image_t* img) {
     int top_height = img->isometric_top_height();
     int tri_rows = img->height - top_height - HALF_TILE_HEIGHT_PIXELS * img->isometric_size() - 1;
 
-    for (int d = 0; d < tri_rows; ++d) { // diagonals
+    for (int d = 0; d < tri_rows; ++d) {  // diagonals
         for (int y = 0; y < d + 1; ++y) { // steps in the diagonal == y axis, too
             int x = 2 * (d - y);
-            color_t *row = &img->TEMP_PIXEL_DATA[y * img->atlas.p_atlas->width];
-            color_t *x_left = &row[x];
-            color_t *x_right = &row[img->width - x - 2];
+            color_t* row = &img->TEMP_PIXEL_DATA[y * img->atlas.p_atlas->width];
+            color_t* x_left = &row[x];
+            color_t* x_right = &row[img->width - x - 2];
             if (!is_pixel_transparent(x_left[0]) || !is_pixel_transparent(x_left[1])
                 || !is_pixel_transparent(x_right[0]) || !is_pixel_transparent(x_right[1])) {
                 return top_height + tri_rows - d;
@@ -266,12 +259,13 @@ static int isometric_calculate_top_height(const image_t *img) {
     }
     return top_height;
 }
-static int convert_image_data(buffer *buf, image_t *img, bool convert_fonts) {
+static int convert_image_data(buffer* buf, image_t* img, bool convert_fonts) {
     if (img->is_external)
         buf = load_external_data(img);
     if (buf == nullptr)
         return 0;
-    img->TEMP_PIXEL_DATA = &img->atlas.p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset * img->atlas.p_atlas->width) + img->atlas.x_offset];
+    img->TEMP_PIXEL_DATA
+      = &img->atlas.p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset * img->atlas.p_atlas->width) + img->atlas.x_offset];
 
     if (img->type == IMAGE_TYPE_ISOMETRIC) {
         convert_isometric_footprint(buf, img);
@@ -305,9 +299,9 @@ static int convert_image_data(buffer *buf, image_t *img, bool convert_fonts) {
 
 static stopwatch WATCH;
 
-imagepak::imagepak(const char *pak_name, int starting_index, bool SYSTEM_SPRITES, bool FONTS) {
-//    images = nullptr;
-//    image_data = nullptr;
+imagepak::imagepak(const char* pak_name, int starting_index, bool SYSTEM_SPRITES, bool FONTS) {
+    //    images = nullptr;
+    //    image_data = nullptr;
     entries_num = 0;
     std::memset(group_image_ids, 0, PAK_GROUPS_MAX * sizeof(uint16_t));
     SHOULD_LOAD_SYSTEM_SPRITES = SYSTEM_SPRITES;
@@ -329,16 +323,15 @@ void imagepak::cleanup_and_destroy() {
             SDL_DestroyTexture(atlas_data.texture);
         atlas_data.texture = nullptr;
     }
-//    for (int i = 0; i < images_array.size(); ++i) {
-//        auto img = images_array.at(i);
-//        img.TEMP_PIXEL_DATA = nullptr;
-//        img.atlas.p_atlas = nullptr;
-//    }
+    //    for (int i = 0; i < images_array.size(); ++i) {
+    //        auto img = images_array.at(i);
+    //        img.TEMP_PIXEL_DATA = nullptr;
+    //        img.atlas.p_atlas = nullptr;
+    //    }
 }
 
-buffer *pak_buf = new buffer(MAX_FILE_SCRATCH_SIZE);
-bool imagepak::load_pak(const char *pak_name, int starting_index) {
-
+buffer* pak_buf = new buffer(MAX_FILE_SCRATCH_SIZE);
+bool imagepak::load_pak(const char* pak_name, int starting_index) {
     WATCH.START();
 
     // construct proper filepaths
@@ -350,7 +343,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
     str_index += 5;
 
     // copy file name over
-    strncpy_safe((char *)name, pak_name, MAX_FILE_NAME);
+    strncpy_safe((char*)name, pak_name, MAX_FILE_NAME);
     string_copy((const uint8_t*)pak_name, &filename_full[str_index], string_length((const uint8_t*)pak_name) + 1);
     str_index = string_length(filename_full);
 
@@ -380,7 +373,9 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
     version = pak_buf->read_u32();
     int unk02 = pak_buf->read_u32();
     int unk03 = pak_buf->read_u32(); // max num of img entries (225 spaces at the end left unused?)
-    entries_num = pak_buf->read_u32() + 1; // the first entry (id 0) in the pak is always empty, but necessary for the layout to get mapped properly
+    entries_num
+      = pak_buf->read_u32()
+        + 1; // the first entry (id 0) in the pak is always empty, but necessary for the layout to get mapped properly
     num_bmp_names = pak_buf->read_u32();
     int unk06 = pak_buf->read_u32(); // bmp group names minus 1?
     int unk07 = pak_buf->read_u32(); // sum of unk08 and unk09
@@ -451,8 +446,10 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
         img.start_index = starting_index;
         img.offset_mirror = pak_buf->read_i32(); // .sg3 only
         // clamp dimensions so that it's not below zero!
-        img.width = pak_buf->read_i16(); img.width = img.width < 0 ? 0 : img.width;
-        img.height = pak_buf->read_i16(); img.height = img.height < 0 ? 0 : img.height;
+        img.width = pak_buf->read_i16();
+        img.width = img.width < 0 ? 0 : img.width;
+        img.height = pak_buf->read_i16();
+        img.height = img.height < 0 ? 0 : img.height;
         img.unk01 = pak_buf->read_i16();
         img.unk02 = pak_buf->read_i16();
         img.unk03 = pak_buf->read_i16();
@@ -494,10 +491,10 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
         }
 
         if (has_system_bmp && !SHOULD_LOAD_SYSTEM_SPRITES && i < 201) {
-            //continue;
+            // continue;
         } else {
             // record atlas rect sizes in the packer
-            image_packer_rect *rect = &packer.rects[i];
+            image_packer_rect* rect = &packer.rects[i];
             rect->input.width = img.width;
             rect->input.height = img.height;
         }
@@ -532,18 +529,18 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
 
     // finish filling in image and atlas information
     for (int i = 0; i < entries_num; i++) {
-        image_t *img = &images_array.at(i);
+        image_t* img = &images_array.at(i);
         if (has_system_bmp && !SHOULD_LOAD_SYSTEM_SPRITES && i < 201)
             continue;
         if (img->offset_mirror != 0)
             img->mirrored_img = &images_array.at(i + img->offset_mirror);
-        image_packer_rect *rect = &packer.rects[i];
+        image_packer_rect* rect = &packer.rects[i];
         img->atlas.index = rect->output.image_index;
-        atlas_data_t *p_data = &atlas_pages.at(img->atlas.index);
+        atlas_data_t* p_data = &atlas_pages.at(img->atlas.index);
         img->atlas.p_atlas = p_data;
         img->atlas.x_offset = rect->output.x;
         img->atlas.y_offset = rect->output.y;
-//        p_data->images.push_back(img);
+        //        p_data->images.push_back(img);
 
         // load and convert image bitmap data
         pak_buf->set_offset(img->sgx_data_offset);
@@ -552,9 +549,9 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
 
     // create textures from atlas data
     for (int i = 0; i < atlas_pages.size(); ++i) {
-        atlas_data_t *atlas_data = &atlas_pages.at(i);
-        atlas_data->texture = graphics_renderer()->create_texture_from_buffer(atlas_data->TEMP_PIXEL_BUFFER,
-                                                                              atlas_data->width, atlas_data->height);
+        atlas_data_t* atlas_data = &atlas_pages.at(i);
+        atlas_data->texture = graphics_renderer()->create_texture_from_buffer(
+          atlas_data->TEMP_PIXEL_BUFFER, atlas_data->width, atlas_data->height);
         if (atlas_data->texture == nullptr)
             return false;
 
@@ -564,7 +561,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
 
         // ********* DEBUGGING **********
         if (false) {
-            char *lfile = (char *) malloc(200);
+            char* lfile = (char*)malloc(200);
             sprintf(lfile, "DEV_TESTING/tex/%s_%i.bmp", name, i); // TODO: make this a global function
             graphics_renderer()->save_texture_to_file(lfile, atlas_data->texture);
             free(lfile);
@@ -581,13 +578,13 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
     image_packer_free(&packer);
 
     log_info("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u), %" PRIu64 " milliseconds.",
-            filename_sgx,
-            entries_num,
-            groups_num,
-            atlas_pages.at(atlas_pages.size() - 1).width,
-            atlas_pages.at(atlas_pages.size() - 1).height,
-            atlas_pages.size(),
-            WATCH.STOP());
+             filename_sgx,
+             entries_num,
+             groups_num,
+             atlas_pages.at(atlas_pages.size() - 1).width,
+             atlas_pages.at(atlas_pages.size() - 1).height,
+             atlas_pages.size(),
+             WATCH.STOP());
 
     return true;
 }
@@ -601,11 +598,10 @@ int imagepak::get_global_image_index(int group) {
     int image_id = group_image_ids[group];
     return image_id + global_image_index_offset;
 }
-const image_t *imagepak::get_image(int id, bool relative) {
+const image_t* imagepak::get_image(int id, bool relative) {
     if (!relative)
         id -= global_image_index_offset;
     if (id < 0 || id >= entries_num)
         return nullptr;
     return &images_array.at(id);
 }
-

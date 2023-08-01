@@ -2,14 +2,14 @@
 
 #include "city/figures.h"
 #include "city/military.h"
-#include "graphics/view/view.h"
 #include "figure/formation_legion.h"
-#include "graphics/elements/generic_button.h"
 #include "graphics/boilerplate.h"
+#include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/scrollbar.h"
 #include "graphics/text.h"
+#include "graphics/view/view.h"
 #include "graphics/window.h"
 #include "grid/grid.h"
 #include "scenario/invasion.h"
@@ -25,24 +25,24 @@ static void on_scroll(void);
 static scrollbar_type scrollbar = {592, 70, 272, on_scroll};
 
 static generic_button fort_buttons[] = {
-        {384, 83,  30, 30, button_go_to_legion,   button_none, 1, 0},
-        {464, 83,  30, 30, button_return_to_fort, button_none, 1, 0},
-        {544, 83,  30, 30, button_empire_service, button_none, 1, 0},
-        {384, 127, 30, 30, button_go_to_legion,   button_none, 2, 0},
-        {464, 127, 30, 30, button_return_to_fort, button_none, 2, 0},
-        {544, 127, 30, 30, button_empire_service, button_none, 2, 0},
-        {384, 171, 30, 30, button_go_to_legion,   button_none, 3, 0},
-        {464, 171, 30, 30, button_return_to_fort, button_none, 3, 0},
-        {544, 171, 30, 30, button_empire_service, button_none, 3, 0},
-        {384, 215, 30, 30, button_go_to_legion,   button_none, 4, 0},
-        {464, 215, 30, 30, button_return_to_fort, button_none, 4, 0},
-        {544, 215, 30, 30, button_empire_service, button_none, 4, 0},
-        {384, 259, 30, 30, button_go_to_legion,   button_none, 5, 0},
-        {464, 259, 30, 30, button_return_to_fort, button_none, 5, 0},
-        {544, 259, 30, 30, button_empire_service, button_none, 5, 0},
-        {384, 303, 30, 30, button_go_to_legion,   button_none, 6, 0},
-        {464, 303, 30, 30, button_return_to_fort, button_none, 6, 0},
-        {544, 303, 30, 30, button_empire_service, button_none, 6, 0},
+  {384, 83, 30, 30, button_go_to_legion, button_none, 1, 0},
+  {464, 83, 30, 30, button_return_to_fort, button_none, 1, 0},
+  {544, 83, 30, 30, button_empire_service, button_none, 1, 0},
+  {384, 127, 30, 30, button_go_to_legion, button_none, 2, 0},
+  {464, 127, 30, 30, button_return_to_fort, button_none, 2, 0},
+  {544, 127, 30, 30, button_empire_service, button_none, 2, 0},
+  {384, 171, 30, 30, button_go_to_legion, button_none, 3, 0},
+  {464, 171, 30, 30, button_return_to_fort, button_none, 3, 0},
+  {544, 171, 30, 30, button_empire_service, button_none, 3, 0},
+  {384, 215, 30, 30, button_go_to_legion, button_none, 4, 0},
+  {464, 215, 30, 30, button_return_to_fort, button_none, 4, 0},
+  {544, 215, 30, 30, button_empire_service, button_none, 4, 0},
+  {384, 259, 30, 30, button_go_to_legion, button_none, 5, 0},
+  {464, 259, 30, 30, button_return_to_fort, button_none, 5, 0},
+  {544, 259, 30, 30, button_empire_service, button_none, 5, 0},
+  {384, 303, 30, 30, button_go_to_legion, button_none, 6, 0},
+  {464, 303, 30, 30, button_return_to_fort, button_none, 6, 0},
+  {544, 303, 30, 30, button_empire_service, button_none, 6, 0},
 };
 
 static int focus_button_id;
@@ -97,7 +97,8 @@ static int draw_background(void) {
     } else {
         // has forts
         ImageDraw::img_generic(image_id_from_group(GROUP_BULLET), bullet_x, 349);
-        int width = lang_text_draw_amount(8, 46, city_military_total_soldiers(), text_x, 348, FONT_NORMAL_BLACK_ON_LIGHT);
+        int width
+          = lang_text_draw_amount(8, 46, city_military_total_soldiers(), text_x, 348, FONT_NORMAL_BLACK_ON_LIGHT);
         width += lang_text_draw(51, 7, text_x + width, 348, FONT_NORMAL_BLACK_ON_LIGHT);
         lang_text_draw_amount(8, 48, city_military_total_legions(), text_x + width, 348, FONT_NORMAL_BLACK_ON_LIGHT);
 
@@ -114,21 +115,21 @@ static int draw_background(void) {
         return ADVISOR_HEIGHT;
     }
     for (int i = 0; i < 6 && i < num_legions; i++) {
-        const formation *m = formation_get(formation_for_legion(i + 1 + scrollbar.scroll_position));
+        const formation* m = formation_get(formation_for_legion(i + 1 + scrollbar.scroll_position));
         button_border_draw(22, 77 + 44 * i, 560, 40, 0);
         ImageDraw::img_generic(image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id, 32, 82 + 44 * i);
         lang_text_draw(138, m->legion_id, 84, 83 + 44 * i, FONT_NORMAL_WHITE_ON_DARK);
         int width = text_draw_number(m->num_figures, '@', " ", 84, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
         switch (m->figure_type) {
-            case FIGURE_FORT_LEGIONARY:
-                lang_text_draw(138, 33, 84 + width, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
-                break;
-            case FIGURE_FORT_MOUNTED:
-                lang_text_draw(138, 34, 84 + width, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
-                break;
-            case FIGURE_FORT_JAVELIN:
-                lang_text_draw(138, 35, 84 + width, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
-                break;
+        case FIGURE_FORT_LEGIONARY:
+            lang_text_draw(138, 33, 84 + width, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
+            break;
+        case FIGURE_FORT_MOUNTED:
+            lang_text_draw(138, 34, 84 + width, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
+            break;
+        case FIGURE_FORT_JAVELIN:
+            lang_text_draw(138, 35, 84 + width, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
+            break;
         }
         lang_text_draw_centered(138, 37 + m->morale / 5, 224, 91 + 44 * i, 150, FONT_NORMAL_BLACK_ON_DARK);
 
@@ -164,7 +165,7 @@ static void draw_foreground(void) {
     }
 }
 
-static int handle_mouse(const mouse *m) {
+static int handle_mouse(const mouse* m) {
     if (scrollbar_handle_mouse(&scrollbar, m))
         return 1;
 
@@ -172,13 +173,13 @@ static int handle_mouse(const mouse *m) {
 }
 
 static void button_go_to_legion(int legion_id, int param2) {
-    const formation *m = formation_get(formation_for_legion(legion_id + scrollbar.scroll_position));
+    const formation* m = formation_get(formation_for_legion(legion_id + scrollbar.scroll_position));
     camera_go_to_mappoint(map_point(MAP_OFFSET(m->x_home, m->y_home)));
     window_city_show();
 }
 
 static void button_return_to_fort(int legion_id, int param2) {
-    formation *m = formation_get(formation_for_legion(legion_id + scrollbar.scroll_position));
+    formation* m = formation_get(formation_for_legion(legion_id + scrollbar.scroll_position));
     if (!m->in_distant_battle) {
         formation_legion_return_home(m);
         window_invalidate();
@@ -196,13 +197,8 @@ static void on_scroll(void) {
     window_invalidate();
 }
 
-const advisor_window_type *window_advisor_military(void) {
-    static const advisor_window_type window = {
-            draw_background,
-            draw_foreground,
-            handle_mouse,
-            0
-    };
+const advisor_window_type* window_advisor_military(void) {
+    static const advisor_window_type window = {draw_background, draw_foreground, handle_mouse, 0};
     init();
     return &window;
 }

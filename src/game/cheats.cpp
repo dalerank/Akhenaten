@@ -2,8 +2,8 @@
 
 #include "building/construction/build_planner.h"
 #include "building/type.h"
-#include "city/gods.h"
 #include "city/finance.h"
+#include "city/gods.h"
 #include "city/victory.h"
 #include "city/warning.h"
 #include "core/string.h"
@@ -24,30 +24,28 @@
 #define stricmp strcasecmp
 #endif
 
-static void game_cheat_add_money(uint8_t *);
-static void game_cheat_start_invasion(uint8_t *);
-static void game_cheat_advance_year(uint8_t *);
-static void game_cheat_cast_blessing(uint8_t *);
-static void game_cheat_show_tooltip(uint8_t *);
-static void game_cheat_kill_all(uint8_t *);
-static void game_cheat_victory(uint8_t *);
+static void game_cheat_add_money(uint8_t*);
+static void game_cheat_start_invasion(uint8_t*);
+static void game_cheat_advance_year(uint8_t*);
+static void game_cheat_cast_blessing(uint8_t*);
+static void game_cheat_show_tooltip(uint8_t*);
+static void game_cheat_kill_all(uint8_t*);
+static void game_cheat_victory(uint8_t*);
 
-using cheat_command = void (uint8_t *args);
+using cheat_command = void(uint8_t* args);
 
 struct cheat_command_handle {
-    const char *name;
-    cheat_command *command;
+    const char* name;
+    cheat_command* command;
 };
 
-static cheat_command_handle g_cheat_commands[] = {
-    { "addmoney", game_cheat_add_money}, 
-    { "startinvasion", game_cheat_start_invasion},
-    { "nextyear", game_cheat_advance_year},
-    { "blessing", game_cheat_cast_blessing},
-    { "showtooltip", game_cheat_show_tooltip},
-    { "killall", game_cheat_kill_all},
-    { "victory", game_cheat_victory}
-};
+static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_money},
+                                                  {"startinvasion", game_cheat_start_invasion},
+                                                  {"nextyear", game_cheat_advance_year},
+                                                  {"blessing", game_cheat_cast_blessing},
+                                                  {"showtooltip", game_cheat_show_tooltip},
+                                                  {"killall", game_cheat_kill_all},
+                                                  {"victory", game_cheat_victory}};
 
 struct cheats_data_t {
     bool is_cheating;
@@ -56,7 +54,7 @@ struct cheats_data_t {
 
 cheats_data_t g_cheats_data;
 
-static int parse_word(uint8_t *string, uint8_t *word) {
+static int parse_word(uint8_t* string, uint8_t* word) {
     int count = 0;
     while (*string && *string != ' ') {
         *word = *string;
@@ -69,7 +67,7 @@ static int parse_word(uint8_t *string, uint8_t *word) {
 }
 
 // return value is next argument index
-static int parse_integer(uint8_t *string, int *value) {
+static int parse_integer(uint8_t* string, int* value) {
     uint8_t copy[MAX_COMMAND_SIZE];
     int count = 0;
     while (*string && *string != ' ') {
@@ -104,7 +102,7 @@ void game_cheat_money(void) {
     }
 }
 
-void game_cheat_victory(uint8_t *) {
+void game_cheat_victory(uint8_t*) {
     if (g_cheats_data.is_cheating) {
         city_victory_force_win();
     }
@@ -125,16 +123,16 @@ void game_cheat_console(bool force) {
     }
 }
 
-static void game_cheat_add_money(uint8_t *args) {
+static void game_cheat_add_money(uint8_t* args) {
     int money = 0;
     parse_integer(args, &money);
     city_finance_process_console(money);
     window_invalidate();
 
-    city_warning_show_console((uint8_t *) "Added money");
+    city_warning_show_console((uint8_t*)"Added money");
 }
 
-static void game_cheat_start_invasion(uint8_t *args) {
+static void game_cheat_start_invasion(uint8_t* args) {
     int attack_type = 0;
     int size = 0;
     int invasion_point = 0;
@@ -143,41 +141,40 @@ static void game_cheat_start_invasion(uint8_t *args) {
     parse_integer(args + index, &invasion_point);
     scenario_invasion_start_from_console(attack_type, size, invasion_point);
 
-    city_warning_show_console((uint8_t *) "Started invasion");
+    city_warning_show_console((uint8_t*)"Started invasion");
 }
 
-static void game_cheat_advance_year(uint8_t *args) {
+static void game_cheat_advance_year(uint8_t* args) {
     game_tick_cheat_year();
 
-    city_warning_show_console((uint8_t *) "Year advanced");
+    city_warning_show_console((uint8_t*)"Year advanced");
 }
 
-static void game_cheat_cast_blessing(uint8_t *args) {
+static void game_cheat_cast_blessing(uint8_t* args) {
     int god_id = 0;
     parse_integer(args, &god_id);
     city_god_blessing_cheat(god_id);
 
-    city_warning_show_console((uint8_t *) "Casted blessing");
+    city_warning_show_console((uint8_t*)"Casted blessing");
 }
 
-static void game_cheat_show_tooltip(uint8_t *args) {
+static void game_cheat_show_tooltip(uint8_t* args) {
     parse_integer(args, &g_cheats_data.tooltip_enabled);
 
-    city_warning_show_console((uint8_t *) "Show tooltip toggled");
-
+    city_warning_show_console((uint8_t*)"Show tooltip toggled");
 }
 
-static void game_cheat_kill_all(uint8_t *args) {
+static void game_cheat_kill_all(uint8_t* args) {
     figure_kill_all();
-    city_warning_show_console((uint8_t *) "Killed all walkers");
+    city_warning_show_console((uint8_t*)"Killed all walkers");
 }
 
 
-void game_cheat_parse_command(uint8_t *command) {
+void game_cheat_parse_command(uint8_t* command) {
     uint8_t command_to_call[MAX_COMMAND_SIZE];
     int next_arg = parse_word(command, command_to_call);
-    for (auto &handle: g_cheat_commands) {
-        if (stricmp((char *)command_to_call, handle.name) == 0) {
+    for (auto& handle : g_cheat_commands) {
+        if (stricmp((char*)command_to_call, handle.name) == 0) {
             handle.command(command + next_arg);
         }
     }

@@ -1,22 +1,20 @@
 #include "difficulty_options.h"
 
 #include "game/settings.h"
-#include "graphics/elements/arrow_button.h"
 #include "graphics/boilerplate.h"
+#include "graphics/elements/arrow_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "graphics/image.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "graphics/image.h"
 
 static void arrow_button_difficulty(int is_down, int param2);
 static void arrow_button_gods(int param1, int param2);
 
-static arrow_button arrow_buttons[] = {
-        {0,  54,  15, 24, arrow_button_difficulty, 0, 0},
-        {24, 54,  17, 24, arrow_button_difficulty, 1, 0},
-        {24, 102, 21, 24, arrow_button_gods,       2, 0}
-};
+static arrow_button arrow_buttons[] = {{0, 54, 15, 24, arrow_button_difficulty, 0, 0},
+                                       {24, 54, 17, 24, arrow_button_difficulty, 1, 0},
+                                       {24, 102, 21, 24, arrow_button_gods, 2, 0}};
 
 static struct {
     void (*close_callback)(void);
@@ -37,12 +35,11 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     if (arrow_buttons_handle_mouse(mouse_in_dialog(m), 288, 80, arrow_buttons, 3, 0))
         return;
     if (input_go_back_requested(m, h))
         data.close_callback();
-
 }
 
 static void arrow_button_difficulty(int is_down, int param2) {
@@ -58,12 +55,7 @@ static void arrow_button_gods(int param1, int param2) {
 }
 
 void window_difficulty_options_show(void (*close_callback)(void)) {
-    window_type window = {
-            WINDOW_DIFFICULTY_OPTIONS,
-            window_draw_underlying_window,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_DIFFICULTY_OPTIONS, window_draw_underlying_window, draw_foreground, handle_input};
     data.close_callback = close_callback;
     window_show(&window);
 }

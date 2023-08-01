@@ -1,10 +1,7 @@
 #ifndef WIDGET_SIDEBAR_SLIDE_H
 #define WIDGET_SIDEBAR_SLIDE_H
 
-enum {
-    SLIDE_DIRECTION_IN = 0,
-    SLIDE_DIRECTION_OUT = 1
-};
+enum { SLIDE_DIRECTION_IN = 0, SLIDE_DIRECTION_OUT = 1 };
 
 typedef void (*back_sidebar_draw_function)(void);
 typedef back_sidebar_draw_function slide_finished_function;

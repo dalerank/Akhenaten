@@ -3,18 +3,12 @@
 
 #define _INVALID_COORD -1
 
-enum {
-    _X = 0,
-    _Y = 1,
-    _GRID_OFFSET = 2,
-    _ABS_X = 3,
-    _ABS_Y = 4
-};
+enum { _X = 0, _Y = 1, _GRID_OFFSET = 2, _ABS_X = 3, _ABS_Y = 4 };
 
 struct coords_t {
     int x;
     int y;
-} ;
+};
 
 class map_point {
 private:
@@ -50,7 +44,7 @@ public:
     void set(int _grid_offset);
 
     // direct access to private fields, for iob read/write without recalc
-    int *private_access(int i);
+    int* private_access(int i);
 
     // CORRECT BROKEN FIELDS
     bool self_correct();
@@ -76,8 +70,8 @@ extern const map_point map_point_invalid;
  * @param y Y value to store
  * @param point Point structure to store X and Y in
  */
-void map_point_store_result(int x, int y, map_point *point);
+void map_point_store_result(int x, int y, map_point* point);
 
-void map_point_get_last_result(map_point *point);
+void map_point_get_last_result(map_point* point);
 
 #endif // MAP_POINT_H

@@ -2,8 +2,8 @@
 
 #include "game/settings.h"
 #include "game/system.h"
-#include "graphics/elements/generic_button.h"
 #include "graphics/boilerplate.h"
+#include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/window.h"
@@ -14,11 +14,11 @@ static void button_set_resolution(int id, int param2);
 static void button_cancel(int param1, int param2);
 
 static generic_button buttons[] = {
-        {128, 136, 224, 20, button_fullscreen,     button_none, 1, 0},
-        {128, 160, 224, 20, button_set_resolution, button_none, 1, 0},
-        {128, 184, 224, 20, button_set_resolution, button_none, 2, 0},
-        {128, 208, 224, 20, button_set_resolution, button_none, 3, 0},
-        {128, 232, 224, 20, button_cancel,         button_none, 1, 0},
+  {128, 136, 224, 20, button_fullscreen, button_none, 1, 0},
+  {128, 160, 224, 20, button_set_resolution, button_none, 1, 0},
+  {128, 184, 224, 20, button_set_resolution, button_none, 2, 0},
+  {128, 208, 224, 20, button_set_resolution, button_none, 3, 0},
+  {128, 232, 224, 20, button_cancel, button_none, 1, 0},
 };
 
 static struct {
@@ -54,12 +54,11 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 5, &data.focus_button_id))
         return;
     if (input_go_back_requested(m, h))
         data.close_callback();
-
 }
 
 static void button_fullscreen(int param1, int param2) {
@@ -69,15 +68,15 @@ static void button_fullscreen(int param1, int param2) {
 
 static void button_set_resolution(int id, int param2) {
     switch (id) {
-        case 1:
-            system_resize(640, 480);
-            break;
-        case 2:
-            system_resize(800, 600);
-            break;
-        case 3:
-            system_resize(1024, 768);
-            break;
+    case 1:
+        system_resize(640, 480);
+        break;
+    case 2:
+        system_resize(800, 600);
+        break;
+    case 3:
+        system_resize(1024, 768);
+        break;
     }
     data.close_callback();
 }
@@ -87,12 +86,7 @@ static void button_cancel(int param1, int param2) {
 }
 
 void window_display_options_show(void (*close_callback)(void)) {
-    window_type window = {
-            WINDOW_DISPLAY_OPTIONS,
-            window_draw_underlying_window,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_DISPLAY_OPTIONS, window_draw_underlying_window, draw_foreground, handle_input};
     init(close_callback);
     window_show(&window);
 }

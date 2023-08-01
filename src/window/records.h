@@ -3,4 +3,4 @@
 
 void window_records_show(void);
 
-#endif //OZYMANDIAS_RECORDS_H
+#endif // OZYMANDIAS_RECORDS_H

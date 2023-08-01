@@ -34,11 +34,11 @@ void enemy_armies_clear(void) {
     totals.days_since_roman_influence_calculation = 0;
 }
 
-const enemy_army *enemy_army_get(int invasion_id) {
+const enemy_army* enemy_army_get(int invasion_id) {
     return &enemy_armies[invasion_id];
 }
 
-enemy_army *enemy_army_get_editable(int invasion_id) {
+enemy_army* enemy_army_get_editable(int invasion_id) {
     return &enemy_armies[invasion_id];
 }
 
@@ -84,7 +84,7 @@ void enemy_army_calculate_roman_influence(void) {
         return;
     map_soldier_strength_clear();
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        const formation *m = formation_get(i);
+        const formation* m = formation_get(i);
         if (m->in_use != 1 || !m->is_legion)
             continue;
 
@@ -105,7 +105,6 @@ void enemy_army_calculate_roman_influence(void) {
 
         if (m->num_figures > 15)
             map_soldier_strength_add(m->x_home, m->y_home, 2, 1);
-
     }
 }
 
@@ -113,7 +112,7 @@ int enemy_army_is_stronger_than_legions(void) {
     return totals.enemy_strength > 2 * totals.legion_strength;
 }
 
-void enemy_armies_save_state(buffer *buf, buffer *totals_buf) {
+void enemy_armies_save_state(buffer* buf, buffer* totals_buf) {
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
         buf->write_i32(enemy_armies[i].formation_id);
     }
@@ -148,7 +147,7 @@ void enemy_armies_save_state(buffer *buf, buffer *totals_buf) {
     totals_buf->write_i32(totals.days_since_roman_influence_calculation);
 }
 
-void enemy_armies_load_state(buffer *buf, buffer *totals_buf) {
+void enemy_armies_load_state(buffer* buf, buffer* totals_buf) {
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
         enemy_armies[i].formation_id = buf->read_i32();
     }

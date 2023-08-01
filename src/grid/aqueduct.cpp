@@ -30,19 +30,17 @@ void map_aqueduct_remove(int grid_offset) {
 
     if (map_grid_get(&aqueduct, grid_offset + GRID_OFFSET(-1, 0)) == 6)
         map_grid_set(&aqueduct, grid_offset + GRID_OFFSET(-1, 0), 4);
-
 }
 void map_aqueduct_clear(void) {
     map_grid_clear(&aqueduct);
 }
 
-#include <stdlib.h>
 #include "io/io_buffer.h"
+#include <stdlib.h>
 
 void map_aqueduct_backup(void) {
-
-    void *t = malloc(12);
-    uint16_t *x = (uint16_t *) t;
+    void* t = malloc(12);
+    uint16_t* x = (uint16_t*)t;
 
     uint16_t g = x[2];
     x[4] = 1;
@@ -54,9 +52,6 @@ void map_aqueduct_restore(void) {
     map_grid_copy(&aqueduct_backup, &aqueduct);
 }
 
-io_buffer *iob_aqueduct_grid = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &aqueduct);
-});
-io_buffer *iob_aqueduct_backup_grid = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &aqueduct_backup);
-});
+io_buffer* iob_aqueduct_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &aqueduct); });
+io_buffer* iob_aqueduct_backup_grid
+  = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &aqueduct_backup); });

@@ -47,13 +47,13 @@ void empire_object_init_cities(void);
 
 int empire_object_init_distant_battle_travel_months(int object_type);
 
-const full_empire_object *empire_get_full_object(int object_id);
-const empire_object *empire_object_get(int object_id);
-const empire_object *empire_object_get_our_city(void);
+const full_empire_object* empire_get_full_object(int object_id);
+const empire_object* empire_object_get(int object_id);
+const empire_object* empire_object_get_our_city(void);
 
-void empire_object_foreach(void (*callback)(const empire_object *));
+void empire_object_foreach(void (*callback)(const empire_object*));
 
-const empire_object *empire_object_get_battle_icon(int path_id, int year);
+const empire_object* empire_object_get_battle_icon(int path_id, int year);
 
 int empire_object_get_max_invasion_path(void);
 
@@ -64,12 +64,12 @@ void empire_object_set_expanded(int object_id, int new_city_type);
 bool empire_object_city_buys_resource(int object_id, int resource, bool from_raw_object = false);
 bool empire_object_city_sells_resource(int object_id, int resource, bool from_raw_object = false);
 
-int empire_object_update_animation(const empire_object *obj, int image_id);
+int empire_object_update_animation(const empire_object* obj, int image_id);
 
 //////
 
 struct map_route_object {
-    int unk_header[2];      // 05 00 00 00 00 00 00 00
+    int unk_header[2]; // 05 00 00 00 00 00 00 00
     /////
     struct {
         int x;
@@ -77,14 +77,14 @@ struct map_route_object {
         bool is_in_use;
     } points[50];
     int length;
-    int unk_00;             // 00 00 00 00
-    int unk_01;             // FF FF FF FF
+    int unk_00; // 00 00 00 00
+    int unk_01; // FF FF FF FF
     char route_type;
     unsigned char num_points;
     bool in_use;
-    char unk_03;            // 00
+    char unk_03; // 00
 };
 
-map_route_object *empire_get_route_object(int id);
+map_route_object* empire_get_route_object(int id);
 
 #endif // EMPIRE_OBJECT_H

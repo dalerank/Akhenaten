@@ -1,29 +1,29 @@
 #include "platform/screen.h"
 
-//#include "city/view.h"
+// #include "city/view.h"
 #include "core/calc.h"
-#include "io/config/config.h"
-#include "io/log.h"
-#include "graphics/image.h"
 #include "game/settings.h"
 #include "game/system.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/menu.h"
+#include "graphics/image.h"
 #include "graphics/screen.h"
-//#include "platform/android/android.h"
-//#include "platform/haiku/haiku.h"
-//#include "platform/icon.h"
+#include "io/config/config.h"
+#include "io/log.h"
+// #include "platform/android/android.h"
+// #include "platform/haiku/haiku.h"
+// #include "platform/icon.h"
+#include "arguments.h"
 #include "platform/renderer.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
-#include "arguments.h"
 
 #include "SDL.h"
 
 #include <stdlib.h>
 
 static struct {
-    SDL_Window *window;
+    SDL_Window* window;
 } SDL;
 
 static struct {
@@ -70,8 +70,8 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
         SDL_Log("Maximum scale of %i applied", scale_percentage);
     }
 
-    SDL_SetWindowMinimumSize(SDL.window,
-                             scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
+    SDL_SetWindowMinimumSize(
+      SDL.window, scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
 }
 
 #ifdef __ANDROID__
@@ -102,7 +102,7 @@ static void set_window_icon(void) {
 }
 #endif
 
-int platform_screen_create(const char *title, int display_scale_percentage) {
+int platform_screen_create(const char* title, int display_scale_percentage) {
     set_scale_percentage(display_scale_percentage, 0, 0);
 
     int width, height;
@@ -133,7 +133,11 @@ int platform_screen_create(const char *title, int display_scale_percentage) {
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 #endif
 
-    log_info("Creating screen %d x %d, %s, driver: %s", width, height, fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
+    log_info("Creating screen %d x %d, %s, driver: %s",
+             width,
+             height,
+             fullscreen ? "fullscreen" : "windowed",
+             SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
@@ -144,16 +148,14 @@ int platform_screen_create(const char *title, int display_scale_percentage) {
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
 
-    SDL.window = SDL_CreateWindow(title,
-                                  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                  width, height, flags);
+    SDL.window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
 
     if (!SDL.window) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create window: %s", SDL_GetError());
         return 0;
     }
 
-#if !defined(_WIN32) && !defined (__APPLE__)
+#if !defined(_WIN32) && !defined(__APPLE__)
     // Windows and mac don't need setting a window icon. In fact the icon gets blurry if we do
     set_window_icon();
 #endif
@@ -297,8 +299,7 @@ void platform_screen_set_window_size(int logical_width, int logical_height) {
 
 void platform_screen_center_window(void) {
     int display = SDL_GetWindowDisplayIndex(SDL.window);
-    SDL_SetWindowPosition(SDL.window,
-                          SDL_WINDOWPOS_CENTERED_DISPLAY(display), SDL_WINDOWPOS_CENTERED_DISPLAY(display));
+    SDL_SetWindowPosition(SDL.window, SDL_WINDOWPOS_CENTERED_DISPLAY(display), SDL_WINDOWPOS_CENTERED_DISPLAY(display));
     window_pos.centered = 1;
 }
 
@@ -316,11 +317,11 @@ void platform_screen_recreate_texture(void) {
 }
 #endif
 
-void platform_screen_show_error_message_box(const char *title, const char *message) {
+void platform_screen_show_error_message_box(const char* title, const char* message) {
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, SDL.window);
 }
 
-void system_set_mouse_position(int *x, int *y) {
+void system_set_mouse_position(int* x, int* y) {
     *x = calc_bound(*x, 0, screen_width() - 1);
     *y = calc_bound(*y, 0, screen_height() - 1);
     SDL_WarpMouseInWindow(SDL.window, scale_logical_to_pixels(*x), scale_logical_to_pixels(*y));
@@ -334,7 +335,7 @@ int system_is_fullscreen_only(void) {
 #endif
 }
 
-void system_get_max_resolution(int *width, int *height) {
+void system_get_max_resolution(int* width, int* height) {
     SDL_DisplayMode mode;
     int index = SDL_GetWindowDisplayIndex(SDL.window);
     SDL_GetCurrentDisplayMode(index, &mode);
@@ -342,18 +343,19 @@ void system_get_max_resolution(int *width, int *height) {
     *height = scale_pixels_to_logical(mode.h);
 }
 
-//void platform_screen_render(void) {
-//    if (config_get(CONFIG_UI_ZOOM)) {
-//        SDL_RenderClear(SDL.renderer);
-//        city_view_get_scaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
-//                                        &city_texture_position.renderer.w, &city_texture_position.offset.h);
-//        city_view_get_scaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
-//                                      &city_texture_position.offset.w, &city_texture_position.offset.h);
-//        SDL_UpdateTexture(SDL.texture_city, &city_texture_position.offset, graphics_canvas(CANVAS_CITY),
-//                          screen_width() * 4 * 2);
-//        SDL_RenderCopy(SDL.renderer, SDL.texture_city, &city_texture_position.offset, &city_texture_position.renderer);
-//    }
-//    SDL_UpdateTexture(SDL.texture_ui, NULL, graphics_canvas(CANVAS_UI), screen_width() * 4);
-//    SDL_RenderCopy(SDL.renderer, SDL.texture_ui, NULL, NULL);
-//    SDL_RenderPresent(SDL.renderer);
-//}
+// void platform_screen_render(void) {
+//     if (config_get(CONFIG_UI_ZOOM)) {
+//         SDL_RenderClear(SDL.renderer);
+//         city_view_get_scaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
+//                                         &city_texture_position.renderer.w, &city_texture_position.offset.h);
+//         city_view_get_scaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
+//                                       &city_texture_position.offset.w, &city_texture_position.offset.h);
+//         SDL_UpdateTexture(SDL.texture_city, &city_texture_position.offset, graphics_canvas(CANVAS_CITY),
+//                           screen_width() * 4 * 2);
+//         SDL_RenderCopy(SDL.renderer, SDL.texture_city, &city_texture_position.offset,
+//         &city_texture_position.renderer);
+//     }
+//     SDL_UpdateTexture(SDL.texture_ui, NULL, graphics_canvas(CANVAS_UI), screen_width() * 4);
+//     SDL_RenderCopy(SDL.renderer, SDL.texture_ui, NULL, NULL);
+//     SDL_RenderPresent(SDL.renderer);
+// }

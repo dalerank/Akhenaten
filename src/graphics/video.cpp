@@ -1,16 +1,16 @@
 #include "video.h"
 
-#include "io/dir.h"
-#include "io/file.h"
-#include "io/gamefiles/smacker.h"
 #include "core/time.h"
 #include "game/settings.h"
 #include "graphics/boilerplate.h"
+#include "io/dir.h"
+#include "io/file.h"
+#include "io/gamefiles/smacker.h"
 #include "platform/renderer.h"
+#include "screen.h"
 #include "sound/device.h"
 #include "sound/music.h"
 #include "sound/speech.h"
-#include "screen.h"
 
 static struct {
     bool is_playing;
@@ -32,7 +32,7 @@ static struct {
         int rate;
     } audio;
     struct {
-        color_t *pixels;
+        color_t* pixels;
         int width;
     } buffer;
 } data;
@@ -44,12 +44,12 @@ static void close_smk(void) {
     }
 }
 
-static int load_smk(const char *filename) {
-    const char *path = dir_get_file(filename, MAY_BE_LOCALIZED);
+static int load_smk(const char* filename) {
+    const char* path = dir_get_file(filename, MAY_BE_LOCALIZED);
     if (!path)
         return 0;
 
-    FILE *fp = file_open(path, "rb");
+    FILE* fp = file_open(path, "rb");
     data.s = smacker_open(fp);
     if (!data.s) {
         // smacker_open() closes the stream on error: no need to close fp
@@ -91,7 +91,7 @@ static void end_video(void) {
     graphics_renderer()->release_custom_texture_buffer(CUSTOM_IMAGE_VIDEO);
 }
 
-bool video_start(const char *filename) {
+bool video_start(const char* filename) {
     data.is_playing = false;
     data.is_ended = false;
 
@@ -106,7 +106,7 @@ bool video_start(const char *filename) {
         return false;
 }
 
-void video_size(int *width, int *height) {
+void video_size(int* width, int* height) {
     *width = data.video.width;
     *height = data.video.y_scale == SMACKER_Y_SCALE_NONE ? data.video.height : 2 * data.video.height;
 }
@@ -118,9 +118,7 @@ void video_init(void) {
         int audio_len = smacker_get_frame_audio_size(data.s, 0);
         if (audio_len > 0) {
             sound_device_use_custom_music_player(
-                    data.audio.bitdepth, data.audio.channels, data.audio.rate,
-                    smacker_get_frame_audio(data.s, 0), audio_len
-            );
+              data.audio.bitdepth, data.audio.channels, data.audio.rate, smacker_get_frame_audio(data.s, 0), audio_len);
         }
     }
 }
@@ -175,13 +173,13 @@ static int get_next_frame(void) {
     return draw_frame;
 }
 static void update_video_frame(void) {
-    const unsigned char *frame = smacker_get_frame_video(data.s);
-    const uint32_t *pal = smacker_get_frame_palette(data.s);
+    const unsigned char* frame = smacker_get_frame_video(data.s);
+    const uint32_t* pal = smacker_get_frame_palette(data.s);
     if (frame && pal) {
         for (int y = 0; y < data.video.height; y++) {
-            color_t *pixel = &data.buffer.pixels[y * data.buffer.width];
+            color_t* pixel = &data.buffer.pixels[y * data.buffer.width];
             int video_y = data.video.y_scale == SMACKER_Y_SCALE_NONE ? y : y / 2;
-            const unsigned char *line = frame + (video_y * data.video.width);
+            const unsigned char* line = frame + (video_y * data.video.width);
             for (int x = 0; x < data.video.width; x++) {
                 *pixel = ALPHA_OPAQUE | pal[line[x]];
                 ++pixel;
@@ -202,16 +200,16 @@ void video_draw_fullscreen(void) {
 
     int s_width = screen_width();
     int s_height = screen_height();
-    float scale_w = data.video.width / (float) screen_width();
-    float scale_h = data.video.height / (float) screen_height();
+    float scale_w = data.video.width / (float)screen_width();
+    float scale_h = data.video.height / (float)screen_height();
     float scale = scale_w > scale_h ? scale_w : scale_h;
 
     int x = 0;
     int y = 0;
     if (scale == scale_h)
-        x = (int) ((s_width - data.video.width / scale) / 2 * scale);
+        x = (int)((s_width - data.video.width / scale) / 2 * scale);
     if (scale == scale_w)
-        y = (int) ((s_height - data.video.height / scale) / 2 * scale);
+        y = (int)((s_height - data.video.height / scale) / 2 * scale);
 
     graphics_renderer()->draw_custom_texture(CUSTOM_IMAGE_VIDEO, x, y, scale);
 }

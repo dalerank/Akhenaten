@@ -6,12 +6,7 @@
 
 #include "core/time.h"
 
-enum {
-    IB_BUILD = 2,
-    IB_NORMAL = 4,
-    IB_SCROLL = 6,
-    IB_OVERSEER = 8
-};
+enum { IB_BUILD = 2, IB_NORMAL = 4, IB_SCROLL = 6, IB_OVERSEER = 8 };
 
 struct image_button {
     short x_offset;
@@ -32,11 +27,12 @@ struct image_button {
     char floating;
     char focused;
     time_millis pressed_since;
-} ;
+};
 
-void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons, int starting_button = 0);
+void image_buttons_draw(int x, int y, image_button* buttons, int num_buttons, int starting_button = 0);
 
-bool image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *buttons, int num_buttons, int *focus_button_id);
-void image_buttons_release_press(image_button *buttons, int num_buttons);
+bool image_buttons_handle_mouse(const mouse* m, int x, int y, image_button* buttons, int num_buttons,
+                                int* focus_button_id);
+void image_buttons_release_press(image_button* buttons, int num_buttons);
 
 #endif // GRAPHICS_IMAGE_BUTTON_H

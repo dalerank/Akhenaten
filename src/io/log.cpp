@@ -11,7 +11,7 @@
 
 static char log_buffer[MSG_SIZE];
 
-void log_info(const char *msg, ...) {
+void log_info(const char* msg, ...) {
     va_list valist;
     va_start(valist, msg);
 
@@ -27,7 +27,7 @@ void log_info(const char *msg, ...) {
 #endif
 }
 
-void log_error(const char *msg, ...) {
+void log_error(const char* msg, ...) {
     va_list valist;
     va_start(valist, msg);
 

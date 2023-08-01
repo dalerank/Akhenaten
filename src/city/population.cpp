@@ -5,26 +5,22 @@
 #include "building/model.h"
 #include "city/data_private.h"
 #include "core/calc.h"
-#include "io/config/config.h"
 #include "core/random.h"
+#include "io/config/config.h"
 
-static const int BIRTHS_PER_AGE_DECENNIUM[10] = {
-        0, 3, 16, 9, 2, 0, 0, 0, 0, 0
-};
+static const int BIRTHS_PER_AGE_DECENNIUM[10] = {0, 3, 16, 9, 2, 0, 0, 0, 0, 0};
 
-static const int DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[11][10] = {
-        {20, 10, 5, 10, 20, 30, 50, 85, 100, 100},
-        {15, 8,  4, 8,  16, 25, 45, 70, 90,  100},
-        {10, 6,  2, 6,  12, 20, 30, 55, 80,  90},
-        {5,  4,  0, 4,  8,  15, 25, 40, 65,  80},
-        {3,  2,  0, 2,  6,  12, 20, 30, 50,  70},
-        {2,  0,  0, 0,  4,  8,  15, 25, 40,  60},
-        {1,  0,  0, 0,  2,  6,  12, 20, 30,  50},
-        {0,  0,  0, 0,  0,  4,  8,  15, 20,  40},
-        {0,  0,  0, 0,  0,  2,  6,  10, 15,  30},
-        {0,  0,  0, 0,  0,  0,  4,  5,  10,  20},
-        {0,  0,  0, 0,  0,  0,  0,  2,  5,   10}
-};
+static const int DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[11][10] = {{20, 10, 5, 10, 20, 30, 50, 85, 100, 100},
+                                                                {15, 8, 4, 8, 16, 25, 45, 70, 90, 100},
+                                                                {10, 6, 2, 6, 12, 20, 30, 55, 80, 90},
+                                                                {5, 4, 0, 4, 8, 15, 25, 40, 65, 80},
+                                                                {3, 2, 0, 2, 6, 12, 20, 30, 50, 70},
+                                                                {2, 0, 0, 0, 4, 8, 15, 25, 40, 60},
+                                                                {1, 0, 0, 0, 2, 6, 12, 20, 30, 50},
+                                                                {0, 0, 0, 0, 0, 4, 8, 15, 20, 40},
+                                                                {0, 0, 0, 0, 0, 2, 6, 10, 15, 30},
+                                                                {0, 0, 0, 0, 0, 0, 4, 5, 10, 20},
+                                                                {0, 0, 0, 0, 0, 0, 0, 2, 5, 10}};
 
 int city_population(void) {
     return city_data.population.population;
@@ -71,7 +67,6 @@ static void recalculate_population(void) {
     }
     if (city_data.population.population > city_data.population.highest_ever)
         city_data.population.highest_ever = city_data.population.population;
-
 }
 
 static void add_to_census(int num_people) {
@@ -116,7 +111,6 @@ static void remove_from_census(int num_people) {
         age++;
         if (age >= 100)
             age = 0;
-
     }
 }
 
@@ -134,7 +128,6 @@ static void remove_from_census_in_age_decennium(int decennium, int num_people) {
         age++;
         if (age >= 10)
             age = 0;
-
     }
 }
 
@@ -198,16 +191,10 @@ void city_population_remove_for_troop_request(int num_people) {
 
 int city_population_people_of_working_age(void) {
     if (config_get(CONFIG_GP_CH_RETIRE_AT_60)) {
-        return
-                get_people_in_age_decennium(2) +
-                get_people_in_age_decennium(3) +
-                get_people_in_age_decennium(4) +
-                get_people_in_age_decennium(5);
+        return get_people_in_age_decennium(2) + get_people_in_age_decennium(3) + get_people_in_age_decennium(4)
+               + get_people_in_age_decennium(5);
     } else {
-        return
-                get_people_in_age_decennium(2) +
-                get_people_in_age_decennium(3) +
-                get_people_in_age_decennium(4);
+        return get_people_in_age_decennium(2) + get_people_in_age_decennium(3) + get_people_in_age_decennium(4);
     }
 }
 
@@ -314,23 +301,19 @@ static void yearly_recalculate_population(void) {
 int calculate_total_housing_buildings(void) {
     int total = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_UNUSED ||
-            b->state == BUILDING_STATE_UNDO ||
-            b->state == BUILDING_STATE_DELETED_BY_GAME ||
-            b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+        building* b = building_get(i);
+        if (b->state == BUILDING_STATE_UNUSED || b->state == BUILDING_STATE_UNDO
+            || b->state == BUILDING_STATE_DELETED_BY_GAME || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
             continue;
         }
         if (building_is_house(b->type) && b->house_population > 0)
             total += 1;
-
     }
 
     return total;
 }
 
-int *calculate_number_of_each_housing_type(void) {
-
+int* calculate_number_of_each_housing_type(void) {
     static int housing_type_counts[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     for (int i = 0; i <= 19; i++) {
@@ -338,23 +321,20 @@ int *calculate_number_of_each_housing_type(void) {
     }
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_UNUSED ||
-            b->state == BUILDING_STATE_UNDO ||
-            b->state == BUILDING_STATE_DELETED_BY_GAME ||
-            b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+        building* b = building_get(i);
+        if (b->state == BUILDING_STATE_UNUSED || b->state == BUILDING_STATE_UNDO
+            || b->state == BUILDING_STATE_DELETED_BY_GAME || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
             continue;
         }
         if (b->house_size)
             housing_type_counts[b->subtype.house_level] += 1;
-
     }
 
     return housing_type_counts;
 }
 
-int *calculate_houses_demanding_goods(int *housing_type_counts) {
-    const model_house *model;
+int* calculate_houses_demanding_goods(int* housing_type_counts) {
+    const model_house* model;
     static int houses_demanding_goods[4] = {0, 0, 0, 0};
 
     for (int i = 0; i <= 3; i++) {
@@ -377,7 +357,6 @@ int *calculate_houses_demanding_goods(int *housing_type_counts) {
 
         if (model->beer_wine)
             houses_demanding_goods[3] += housing_type_counts[i];
-
     }
 
     return houses_demanding_goods;
@@ -390,11 +369,9 @@ static int calculate_people_per_house_type(void) {
     city_data.population.people_in_large_insula_and_above = 0;
     int total = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_UNUSED ||
-            b->state == BUILDING_STATE_UNDO ||
-            b->state == BUILDING_STATE_DELETED_BY_GAME ||
-            b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+        building* b = building_get(i);
+        if (b->state == BUILDING_STATE_UNUSED || b->state == BUILDING_STATE_UNDO
+            || b->state == BUILDING_STATE_DELETED_BY_GAME || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
             continue;
         }
         if (b->house_size) {
@@ -411,7 +388,6 @@ static int calculate_people_per_house_type(void) {
 
             if (b->subtype.house_level >= HOUSE_SMALL_VILLA)
                 city_data.population.people_in_villas_palaces += pop;
-
         }
     }
     return total;
@@ -434,7 +410,6 @@ void city_population_check_consistency(void) {
     int people_in_houses = calculate_people_per_house_type();
     if (people_in_houses < city_data.population.population)
         remove_from_census(city_data.population.population - people_in_houses);
-
 }
 
 int city_population_graph_order(void) {

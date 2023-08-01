@@ -11,12 +11,7 @@
 /**
  * Type
  */
-enum {
-    TYPE_MANUAL = 0,
-    TYPE_ABOUT = 1,
-    TYPE_MESSAGE = 2,
-    TYPE_MISSION = 3
-};
+enum { TYPE_MANUAL = 0, TYPE_ABOUT = 1, TYPE_MESSAGE = 2, TYPE_MISSION = 3 };
 
 /**
  * Message type
@@ -37,17 +32,17 @@ enum {
  */
 struct lang_message_image {
     int id; /**< ID of the image */
-    int x; /**< X offset */
-    int y; /**< Y offset */
+    int x;  /**< X offset */
+    int y;  /**< Y offset */
 };
 
 /**
  * Message string
  */
 struct lang_message_string {
-    uint8_t *text; /**< Text */
-    int x; /**< X offset */
-    int y; /**< Y offset */
+    uint8_t* text; /**< Text */
+    int x;         /**< X offset */
+    int y;         /**< Y offset */
 };
 
 /**
@@ -73,7 +68,7 @@ typedef struct {
  * @param dir Directory to check
  * @return boolean true if it contains language files, false if not
  */
-bool lang_dir_is_valid(const char *dir);
+bool lang_dir_is_valid(const char* dir);
 
 /**
  * Loads the language files
@@ -88,13 +83,13 @@ bool lang_load(int is_editor);
  * @param index Index within the group
  * @return String
  */
-const uint8_t *lang_get_string(int group, int index);
+const uint8_t* lang_get_string(int group, int index);
 
 /**
  * Gets the message for the specified ID
  * @param id ID of the message
  * @return Message
  */
-const lang_message *lang_get_message(int id);
+const lang_message* lang_get_message(int id);
 
 #endif // CORE_LANG_H

@@ -1,5 +1,5 @@
-#include <grid/road_network.h>
 #include "movement.h"
+#include <grid/road_network.h>
 
 #include "building/building.h"
 #include "building/destruction.h"
@@ -20,41 +20,41 @@
 
 void figure::advance_figure_tick() {
     switch (direction) {
-        case DIR_0_TOP_RIGHT:
-            cc_coords.y--;
-            break;
-        case DIR_1_RIGHT:
-            cc_coords.x++;
-            cc_coords.y--;
-            break;
-        case DIR_2_BOTTOM_RIGHT:
-            cc_coords.x++;
-            break;
-        case DIR_3_BOTTOM:
-            cc_coords.x++;
-            cc_coords.y++;
-            break;
-        case DIR_4_BOTTOM_LEFT:
-            cc_coords.y++;
-            break;
-        case DIR_5_LEFT:
-            cc_coords.x--;
-            cc_coords.y++;
-            break;
-        case DIR_6_TOP_LEFT:
-            cc_coords.x--;
-            break;
-        case DIR_7_TOP:
-            cc_coords.x--;
-            cc_coords.y--;
-            break;
-        default:
-            break;
+    case DIR_0_TOP_RIGHT:
+        cc_coords.y--;
+        break;
+    case DIR_1_RIGHT:
+        cc_coords.x++;
+        cc_coords.y--;
+        break;
+    case DIR_2_BOTTOM_RIGHT:
+        cc_coords.x++;
+        break;
+    case DIR_3_BOTTOM:
+        cc_coords.x++;
+        cc_coords.y++;
+        break;
+    case DIR_4_BOTTOM_LEFT:
+        cc_coords.y++;
+        break;
+    case DIR_5_LEFT:
+        cc_coords.x--;
+        cc_coords.y++;
+        break;
+    case DIR_6_TOP_LEFT:
+        cc_coords.x--;
+        break;
+    case DIR_7_TOP:
+        cc_coords.x--;
+        cc_coords.y--;
+        break;
+    default:
+        break;
     }
     if (height_adjusted_ticks) {
         height_adjusted_ticks--;
         if (height_adjusted_ticks > 0) {
-//            is_ghost = true;
+            //            is_ghost = true;
             if (current_height < target_height)
                 current_height++;
 
@@ -62,12 +62,11 @@ void figure::advance_figure_tick() {
                 current_height--;
 
         } else {
-//            is_ghost = false;
+            //            is_ghost = false;
         }
     } else {
         if (current_height)
             current_height--;
-
     }
 }
 void figure::set_target_height_bridge() {
@@ -76,101 +75,101 @@ void figure::set_target_height_bridge() {
 }
 int figure::get_permission_for_int() {
     switch (type) {
-        case FIGURE_ENGINEER:
-        case FIGURE_PREFECT:
-            return PERMISSION_MAINTENANCE;
-            break;
-        case FIGURE_PRIEST:
-            return PERMISSION_PRIEST;
-            break;
-        case FIGURE_MARKET_TRADER:
-            return PERMISSION_MARKET;
-            break;
-        case FIGURE_GLADIATOR:
-        case FIGURE_CHARIOTEER:
-        case FIGURE_ACTOR:
-        case FIGURE_LION_TAMER:
-            return PERMISSION_ENTERTAINER;
-            break;
-        case FIGURE_SURGEON:
-        case FIGURE_DOCTOR:
-        case FIGURE_BARBER:
-        case FIGURE_BATHHOUSE_WORKER:
-            return PERMISSION_MEDICINE;
-        case FIGURE_SCHOOL_CHILD:
-        case FIGURE_TEACHER:
-        case FIGURE_LIBRARIAN:
-            return PERMISSION_EDUCATION;
-        case FIGURE_TAX_COLLECTOR:
-            return PERMISSION_TAX_COLLECTOR;
-        default:
-            return PERMISSION_NONE;
-            break;
+    case FIGURE_ENGINEER:
+    case FIGURE_PREFECT:
+        return PERMISSION_MAINTENANCE;
+        break;
+    case FIGURE_PRIEST:
+        return PERMISSION_PRIEST;
+        break;
+    case FIGURE_MARKET_TRADER:
+        return PERMISSION_MARKET;
+        break;
+    case FIGURE_GLADIATOR:
+    case FIGURE_CHARIOTEER:
+    case FIGURE_ACTOR:
+    case FIGURE_LION_TAMER:
+        return PERMISSION_ENTERTAINER;
+        break;
+    case FIGURE_SURGEON:
+    case FIGURE_DOCTOR:
+    case FIGURE_BARBER:
+    case FIGURE_BATHHOUSE_WORKER:
+        return PERMISSION_MEDICINE;
+    case FIGURE_SCHOOL_CHILD:
+    case FIGURE_TEACHER:
+    case FIGURE_LIBRARIAN:
+        return PERMISSION_EDUCATION;
+    case FIGURE_TAX_COLLECTOR:
+        return PERMISSION_TAX_COLLECTOR;
+    default:
+        return PERMISSION_NONE;
+        break;
     }
 }
 void figure::move_to_next_tile() {
     map_point old = tile;
-//    int old_x = tile.x();
-//    int old_y = tile.y();
+    //    int old_x = tile.x();
+    //    int old_y = tile.y();
     map_figure_remove(); // is this necessary??? maybe could be refactored in the future...
     switch (direction) {
-        default:
-            return;
-        case DIR_0_TOP_RIGHT:
-            tile.shift(0, -1);
-//            tile.y()--;
-            break;
-        case DIR_1_RIGHT:
-            tile.shift(1, -1);
-//            tile.x()++;
-//            tile.y()--;
-            break;
-        case DIR_2_BOTTOM_RIGHT:
-            tile.shift(1, 0);
-//            tile.x()++;
-            break;
-        case DIR_3_BOTTOM:
-            tile.shift(1, 1);
-//            tile.x()++;
-//            tile.y()++;
-            break;
-        case DIR_4_BOTTOM_LEFT:
-            tile.shift(0, 1);
-//            tile.y()++;
-            break;
-        case DIR_5_LEFT:
-            tile.shift(-1, 1);
-//            tile.x()--;
-//            tile.y()++;
-            break;
-        case DIR_6_TOP_LEFT:
-            tile.shift(-1, 0);
-//            tile.x()--;
-            break;
-        case DIR_7_TOP:
-            tile.shift(-1, -1);
-//            tile.x()--;
-//            tile.y()--;
-            break;
+    default:
+        return;
+    case DIR_0_TOP_RIGHT:
+        tile.shift(0, -1);
+        //            tile.y()--;
+        break;
+    case DIR_1_RIGHT:
+        tile.shift(1, -1);
+        //            tile.x()++;
+        //            tile.y()--;
+        break;
+    case DIR_2_BOTTOM_RIGHT:
+        tile.shift(1, 0);
+        //            tile.x()++;
+        break;
+    case DIR_3_BOTTOM:
+        tile.shift(1, 1);
+        //            tile.x()++;
+        //            tile.y()++;
+        break;
+    case DIR_4_BOTTOM_LEFT:
+        tile.shift(0, 1);
+        //            tile.y()++;
+        break;
+    case DIR_5_LEFT:
+        tile.shift(-1, 1);
+        //            tile.x()--;
+        //            tile.y()++;
+        break;
+    case DIR_6_TOP_LEFT:
+        tile.shift(-1, 0);
+        //            tile.x()--;
+        break;
+    case DIR_7_TOP:
+        tile.shift(-1, -1);
+        //            tile.x()--;
+        //            tile.y()--;
+        break;
     }
-//    tile.grid_offset() += map_grid_direction_delta(direction);
+    //    tile.grid_offset() += map_grid_direction_delta(direction);
     map_figure_add();
-//    if (map_terrain_is(grid_offset_figure, TERRAIN_ROAD)) {
-//        is_on_road = 1;
-//        if (map_terrain_is(grid_offset_figure, TERRAIN_WATER)) { // bridge
-//            set_target_height_bridge();
-//        }
-//    } else {
-//        is_on_road = 0;
-//    }
+    //    if (map_terrain_is(grid_offset_figure, TERRAIN_ROAD)) {
+    //        is_on_road = 1;
+    //        if (map_terrain_is(grid_offset_figure, TERRAIN_WATER)) { // bridge
+    //            set_target_height_bridge();
+    //        }
+    //    } else {
+    //        is_on_road = 0;
+    //    }
     figure_combat_attack_figure_at(tile.grid_offset());
-//    previous_tile.x() = old_x;
-//    previous_tile.y() = old_y;
+    //    previous_tile.x() = old_x;
+    //    previous_tile.y() = old_y;
     previous_tile = old;
 }
 
 void figure::set_next_tile_and_direction() {
-    if (routing_path_id > 0) { // has a path generated for its destination
+    if (routing_path_id > 0) {                               // has a path generated for its destination
         if (routing_path_current_tile < routing_path_length) // advance to next tile in path
             direction = figure_route_get_direction(routing_path_id, routing_path_current_tile);
         else { // at destination!!
@@ -180,7 +179,8 @@ void figure::set_next_tile_and_direction() {
     } else { // no path possible - should be at destination
         direction = calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
         if (direction != DIR_FIGURE_NONE) {
-            if (!roam_wander_freely) // this is because the road network was cutoff from the "randomized direction" target
+            if (!roam_wander_freely) // this is because the road network was cutoff from the "randomized direction"
+                                     // target
                 roam_wander_freely = true;
             else // all other cases
                 direction = DIR_FIGURE_CAN_NOT_REACH;
@@ -193,31 +193,31 @@ void figure::advance_route_tile(int roaming_enabled) {
     int target_grid_offset = tile.grid_offset() + map_grid_direction_delta(direction);
 
     if (is_boat && !map_terrain_is(target_grid_offset, TERRAIN_WATER)) // boats can not travel on land
-            direction = DIR_FIGURE_REROUTE;
+        direction = DIR_FIGURE_REROUTE;
     else if (!map_routing_passable_by_usage(terrain_usage, target_grid_offset))
         direction = DIR_FIGURE_REROUTE;
     else if (terrain_usage == TERRAIN_USAGE_ENEMY) {
-//        if (!map_routing_noncitizen_is_passable(target_grid_offset))
-//            direction = DIR_FIGURE_REROUTE;
+        //        if (!map_routing_noncitizen_is_passable(target_grid_offset))
+        //            direction = DIR_FIGURE_REROUTE;
         if (map_routing_is_destroyable(target_grid_offset)) {
             int cause_damage = 1;
             int max_damage = 0;
             switch (map_routing_get_destroyable(target_grid_offset)) {
-                case DESTROYABLE_BUILDING:
+            case DESTROYABLE_BUILDING:
+                max_damage = 10;
+                break;
+            case DESTROYABLE_AQUEDUCT_GARDEN:
+                if (map_terrain_is(target_grid_offset, TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE))
+                    cause_damage = 0;
+                else
                     max_damage = 10;
-                    break;
-                case DESTROYABLE_AQUEDUCT_GARDEN:
-                    if (map_terrain_is(target_grid_offset, TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE))
-                        cause_damage = 0;
-                    else
-                        max_damage = 10;
-                    break;
-                case DESTROYABLE_WALL:
-                    max_damage = 200;
-                    break;
-                case DESTROYABLE_GATEHOUSE:
-                    max_damage = 150;
-                    break;
+                break;
+            case DESTROYABLE_WALL:
+                max_damage = 200;
+                break;
+            case DESTROYABLE_GATEHOUSE:
+                max_damage = 150;
+                break;
             }
             if (cause_damage) {
                 attack_direction = direction;
@@ -227,15 +227,15 @@ void figure::advance_route_tile(int roaming_enabled) {
             }
         }
     }
-//    else if (terrain_usage == TERRAIN_USAGE_WALLS) {
-//        if (!map_routing_is_wall_passable(target_grid_offset))
-//            direction = DIR_FIGURE_REROUTE;
-//    }
+    //    else if (terrain_usage == TERRAIN_USAGE_WALLS) {
+    //        if (!map_routing_is_wall_passable(target_grid_offset))
+    //            direction = DIR_FIGURE_REROUTE;
+    //    }
     else if (map_terrain_is(target_grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP)) {
         if (map_terrain_is(target_grid_offset, TERRAIN_WATER) && map_terrain_is(target_grid_offset, TERRAIN_FLOODPLAIN))
             direction = DIR_FIGURE_REROUTE;
         else if (roaming_enabled && map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
-            building *b = building_at(target_grid_offset);
+            building* b = building_at(target_grid_offset);
             if (b->type == BUILDING_GATEHOUSE || b->type == BUILDING_ROADBLOCK) {
                 // do not allow roaming through gatehouses or roadblocks
                 if (roaming_enabled)
@@ -245,19 +245,19 @@ void figure::advance_route_tile(int roaming_enabled) {
     } else if (map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
         int type = building_at(target_grid_offset)->type;
         switch (type) {
-//            case BUILDING_WAREHOUSE_SPACE:
-//            case BUILDING_GRANARY:
-            case BUILDING_TRIUMPHAL_ARCH:
-            case BUILDING_FORT_GROUND:
-            case BUILDING_FESTIVAL_SQUARE:
-            case BUILDING_PLAZA:
-                break; // OK to walk
-            default:
-                direction = DIR_FIGURE_REROUTE;
+            //            case BUILDING_WAREHOUSE_SPACE:
+            //            case BUILDING_GRANARY:
+        case BUILDING_TRIUMPHAL_ARCH:
+        case BUILDING_FORT_GROUND:
+        case BUILDING_FESTIVAL_SQUARE:
+        case BUILDING_PLAZA:
+            break; // OK to walk
+        default:
+            direction = DIR_FIGURE_REROUTE;
         }
     }
-//    else if (map_terrain_is(target_grid_offset, TERRAIN_IMPASSABLE))
-//        direction = DIR_FIGURE_REROUTE;
+    //    else if (map_terrain_is(target_grid_offset, TERRAIN_IMPASSABLE))
+    //        direction = DIR_FIGURE_REROUTE;
 }
 void figure::move_ticks(int num_ticks, bool roaming_enabled) {
     while (num_ticks > 0) {
@@ -291,22 +291,22 @@ void figure::init_roaming_from_building(int roam_dir) {
     roam_turn_direction = 2;
 
     // randomize a search area in a general direction to send off roamers to
-    building *b = home();
+    building* b = home();
     int offset_search_x = b->tile.x();
     int offset_search_y = b->tile.y();
     switch (roam_dir) {
-        case DIR_0_TOP_RIGHT:
-            offset_search_y -= 8;
-            break;
-        case DIR_2_BOTTOM_RIGHT:
-            offset_search_x += 8;
-            break;
-        case DIR_4_BOTTOM_LEFT:
-            offset_search_y += 8;
-            break;
-        case DIR_6_TOP_LEFT:
-            offset_search_x -= 8;
-            break;
+    case DIR_0_TOP_RIGHT:
+        offset_search_y -= 8;
+        break;
+    case DIR_2_BOTTOM_RIGHT:
+        offset_search_x += 8;
+        break;
+    case DIR_4_BOTTOM_LEFT:
+        offset_search_y += 8;
+        break;
+    case DIR_6_TOP_LEFT:
+        offset_search_x -= 8;
+        break;
     }
 
     // look for a road within the search area
@@ -317,8 +317,8 @@ void figure::init_roaming_from_building(int roam_dir) {
     int road_network_found = map_road_network_get(MAP_OFFSET(x_road, y_road));
     if (found_road && road_network_original == road_network_found) { // must be in the same network!!
         destination_tile.set(x_road, y_road);
-//        destination_tile.x() = x_road;
-//        destination_tile.y() = y_road;
+        //        destination_tile.x() = x_road;
+        //        destination_tile.y() = y_road;
     } else
         roam_wander_freely = true; // no road found within bounds, roam freely
 }
@@ -339,7 +339,8 @@ void figure::roam_set_direction() {
             }
         }
         dir++;
-        if (dir > 7) dir = 0;
+        if (dir > 7)
+            dir = 0;
         road_offset_dir1++;
     }
     int road_offset_dir2 = 0;
@@ -353,7 +354,8 @@ void figure::roam_set_direction() {
             }
         }
         dir--;
-        if (dir < 0) dir = 7;
+        if (dir < 0)
+            dir = 7;
         road_offset_dir2++;
     }
     if (road_offset_dir1 <= road_offset_dir2) {
@@ -376,7 +378,7 @@ void figure::move_ticks_tower_sentry(int num_ticks) {
     }
 }
 void figure::follow_ticks(int num_ticks) {
-    figure *leader = figure_get(leading_figure_id);
+    figure* leader = figure_get(leading_figure_id);
     if (tile.x() == source_tile.x() && tile.y() == source_tile.y())
         is_ghost = true;
 
@@ -387,7 +389,8 @@ void figure::follow_ticks(int num_ticks) {
             move_to_next_tile();
         if (progress_on_tile >= 15) { // tile center
             figure_service_provide_coverage();
-            int found_dir = calc_general_direction(tile.x(), tile.y(), leader->previous_tile.x(), leader->previous_tile.y());
+            int found_dir
+              = calc_general_direction(tile.x(), tile.y(), leader->previous_tile.x(), leader->previous_tile.y());
             if (found_dir >= 8) {
                 anim_frame = 0;
                 progress_on_tile--;
@@ -404,19 +407,19 @@ void figure::follow_ticks(int num_ticks) {
 void figure::roam_ticks(int num_ticks) {
     route_remove(); // refresh path to check if road network is disconnected
     // TODO: this mess... eventually.
-//    if (!roam_wander_freely) {
-//        move_ticks(num_ticks, true);
-//        if (direction == DIR_FIGURE_AT_DESTINATION)
-//            roam_wander_freely = true;
-//        else if (direction == DIR_FIGURE_REROUTE)
-//            roam_wander_freely = true;
-//
-//        if (roam_wander_freely) { // keep going in same direction until turn
-//            roam_ticks_until_next_turn = 100;
-//            direction = previous_tile_direction;
-//        } else
-//            return;
-//    }
+    //    if (!roam_wander_freely) {
+    //        move_ticks(num_ticks, true);
+    //        if (direction == DIR_FIGURE_AT_DESTINATION)
+    //            roam_wander_freely = true;
+    //        else if (direction == DIR_FIGURE_REROUTE)
+    //            roam_wander_freely = true;
+    //
+    //        if (roam_wander_freely) { // keep going in same direction until turn
+    //            roam_ticks_until_next_turn = 100;
+    //            direction = previous_tile_direction;
+    //        } else
+    //            return;
+    //    }
     // no destination: walk to end of tile and pick a direction
     while (num_ticks > 0) {
         num_ticks--;
@@ -429,8 +432,10 @@ void figure::roam_ticks(int num_ticks) {
             int came_from_direction = (previous_tile_direction + 4) % 8;
             int road_tiles[8];
             int permission = get_permission_for_int();
-            int adjacent_road_tiles = map_get_adjacent_road_tiles_for_roaming(tile.grid_offset(), road_tiles, permission);
-            if (adjacent_road_tiles == 3 && map_get_diagonal_road_tiles_for_roaming(tile.grid_offset(), road_tiles) >= 5) {
+            int adjacent_road_tiles
+              = map_get_adjacent_road_tiles_for_roaming(tile.grid_offset(), road_tiles, permission);
+            if (adjacent_road_tiles == 3
+                && map_get_diagonal_road_tiles_for_roaming(tile.grid_offset(), road_tiles) >= 5) {
                 // go in the straight direction of a double-wide road
                 adjacent_road_tiles = 2;
                 if (came_from_direction == DIR_0_TOP_RIGHT || came_from_direction == DIR_4_BOTTOM_LEFT) {
@@ -444,17 +449,16 @@ void figure::roam_ticks(int num_ticks) {
                         road_tiles[0] = road_tiles[4] = 0;
                     else
                         road_tiles[2] = road_tiles[6] = 0;
-
                 }
             }
-            if (adjacent_road_tiles == 4 && map_get_diagonal_road_tiles_for_roaming(tile.grid_offset(), road_tiles) >= 8) {
+            if (adjacent_road_tiles == 4
+                && map_get_diagonal_road_tiles_for_roaming(tile.grid_offset(), road_tiles) >= 8) {
                 // go straight on when all surrounding tiles are road
                 adjacent_road_tiles = 2;
                 if (came_from_direction == DIR_0_TOP_RIGHT || came_from_direction == DIR_4_BOTTOM_LEFT)
                     road_tiles[2] = road_tiles[6] = 0;
                 else
                     road_tiles[0] = road_tiles[4] = 0;
-
             }
             if (adjacent_road_tiles <= 0) {
                 roam_length = max_roam_length; // end roaming walk
@@ -468,7 +472,7 @@ void figure::roam_ticks(int num_ticks) {
             } else if (adjacent_road_tiles == 2) {
                 if (roam_ticks_until_next_turn == -1) {
                     roam_set_direction();
-//                    came_from_direction = -1; // TODO?
+                    //                    came_from_direction = -1; // TODO?
                 }
                 // 1. continue in the same direction
                 // 2. turn in the direction given by roam_turn_direction
@@ -478,8 +482,10 @@ void figure::roam_ticks(int num_ticks) {
                         break;
 
                     direction += roam_turn_direction;
-                    if (direction > 6) direction = 0;
-                    if (direction < 0) direction = 6;
+                    if (direction > 6)
+                        direction = 0;
+                    if (direction < 0)
+                        direction = 6;
                 } while (dir++ < 4);
             } else { // > 2 road tiles
                 direction = (roam_random_counter + map_random_get(tile.grid_offset())) & 6;
@@ -495,8 +501,10 @@ void figure::roam_ticks(int num_ticks) {
                             break;
 
                         direction += roam_turn_direction;
-                        if (direction > 6) direction = 0;
-                        if (direction < 0) direction = 6;
+                        if (direction > 6)
+                            direction = 0;
+                        if (direction < 0)
+                            direction = 6;
                     } while (dir++ < 4);
                 }
             }
@@ -532,26 +540,26 @@ void figure::set_cross_country_direction(int x_src, int y_src, int x_dst, int y_
         direction = calc_general_direction(x_src, y_src, x_dst, y_dst);
         if (cc_delta.y > 2 * cc_delta.x) {
             switch (direction) {
-                case DIR_1_RIGHT:
-                case DIR_7_TOP:
-                    direction = DIR_0_TOP_RIGHT;
-                    break;
-                case DIR_3_BOTTOM:
-                case DIR_5_LEFT:
-                    direction = DIR_4_BOTTOM_LEFT;
-                    break;
+            case DIR_1_RIGHT:
+            case DIR_7_TOP:
+                direction = DIR_0_TOP_RIGHT;
+                break;
+            case DIR_3_BOTTOM:
+            case DIR_5_LEFT:
+                direction = DIR_4_BOTTOM_LEFT;
+                break;
             }
         }
         if (cc_delta.x > 2 * cc_delta.y) {
             switch (direction) {
-                case DIR_1_RIGHT:
-                case DIR_3_BOTTOM:
-                    direction = DIR_2_BOTTOM_RIGHT;
-                    break;
-                case DIR_5_LEFT:
-                case DIR_7_TOP:
-                    direction = DIR_6_TOP_LEFT;
-                    break;
+            case DIR_1_RIGHT:
+            case DIR_3_BOTTOM:
+                direction = DIR_2_BOTTOM_RIGHT;
+                break;
+            case DIR_5_LEFT:
+            case DIR_7_TOP:
+                direction = DIR_6_TOP_LEFT;
+                break;
             }
         }
     }
@@ -562,10 +570,9 @@ void figure::set_cross_country_direction(int x_src, int y_src, int x_dst, int y_
 }
 void figure::set_cross_country_destination(int x_dst, int y_dst) {
     destination_tile.set(x_dst, y_dst);
-//    destination_tile.x() = x_dst;
-//    destination_tile.y() = y_dst;
-    set_cross_country_direction(cc_coords.x, cc_coords.y,
-                                15 * x_dst, 15 * y_dst, 0);
+    //    destination_tile.x() = x_dst;
+    //    destination_tile.y() = y_dst;
+    set_cross_country_direction(cc_coords.x, cc_coords.y, 15 * x_dst, 15 * y_dst, 0);
 }
 
 void figure::cross_country_update_delta() {
@@ -628,9 +635,9 @@ int figure::move_ticks_cross_country(int num_ticks) {
     }
     map_point old = tile;
     tile.set(cc_coords.x / 15, cc_coords.y / 15);
-//    tile.x() = cc_coords.x / 15;
-//    tile.y() = cc_coords.y / 15;
-//    tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
+    //    tile.x() = cc_coords.x / 15;
+    //    tile.y() = cc_coords.y / 15;
+    //    tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
     if (map_terrain_is(tile.grid_offset(), TERRAIN_BUILDING))
         in_building_wait_ticks = 8;
     else if (in_building_wait_ticks)
@@ -643,7 +650,7 @@ int figure::move_ticks_cross_country(int num_ticks) {
 }
 int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x_dst, int y_dst) {
     int height = 0;
-    figure *f = figure_get(0); // abuse unused figure 0 as scratch
+    figure* f = figure_get(0); // abuse unused figure 0 as scratch
     f->cc_coords.x = 15 * x_src;
     f->cc_coords.y = 15 * y_src;
     if (map_terrain_is(MAP_OFFSET(x_src, y_src), TERRAIN_WALL_OR_GATEHOUSE))
@@ -659,8 +666,8 @@ int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x
             f->cross_country_advance();
         }
         f->tile.set(f->cc_coords.x / 15, f->cc_coords.y / 15);
-//        f->tile.x() = f->cc_coords.x / 15;
-//        f->tile.y() = f->cc_coords.y / 15;
+        //        f->tile.x() = f->cc_coords.x / 15;
+        //        f->tile.y() = f->cc_coords.y / 15;
         if (height)
             height--;
         else {
@@ -670,7 +677,6 @@ int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x
 
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_property_multi_tile_size(grid_offset) > 1)
                 break;
-
         }
     }
     return 0;

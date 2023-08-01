@@ -18,6 +18,6 @@ void game_cheat_breakpoint(void);
 
 void game_cheat_console(bool force = false);
 
-void game_cheat_parse_command(uint8_t *command);
+void game_cheat_parse_command(uint8_t* command);
 
 #endif // GAME_CHEATS_H

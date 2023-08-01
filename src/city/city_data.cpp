@@ -6,11 +6,11 @@
 #include "game/difficulty.h"
 #include "scenario/property.h"
 
-#include <string.h>
 #include "io/io_buffer.h"
 #include <core/string.h>
+#include <string.h>
 
-const city_data_t *city_data_struct() {
+const city_data_t* city_data_struct() {
     return &city_data;
 }
 
@@ -71,36 +71,36 @@ int stack_units_by_resource(int resource) {
     if (GAME_ENV == ENGINE_ENV_C3)
         return RESOURCE_UNIT_PILE;
     switch (resource) {
-        default:
-            return RESOURCE_UNIT_PILE;
-        case RESOURCE_GOLD:
-        case RESOURCE_STONE:
-        case RESOURCE_LIMESTONE:
-        case RESOURCE_GRANITE:
-        case RESOURCE_SANDSTONE:
-        case RESOURCE_MARBLE:
-            return RESOURCE_UNIT_BLOCK;
-        case RESOURCE_WEAPONS:
-            return RESOURCE_UNIT_WEAPON;
-        case RESOURCE_CHARIOTS:
-            return RESOURCE_UNIT_CHARIOT;
+    default:
+        return RESOURCE_UNIT_PILE;
+    case RESOURCE_GOLD:
+    case RESOURCE_STONE:
+    case RESOURCE_LIMESTONE:
+    case RESOURCE_GRANITE:
+    case RESOURCE_SANDSTONE:
+    case RESOURCE_MARBLE:
+        return RESOURCE_UNIT_BLOCK;
+    case RESOURCE_WEAPONS:
+        return RESOURCE_UNIT_WEAPON;
+    case RESOURCE_CHARIOTS:
+        return RESOURCE_UNIT_CHARIOT;
     }
 }
 int stack_proper_quantity(int full, int resource) {
     switch (stack_units_by_resource(resource)) {
-        default: // all other goods are 100 worth of, per pile
-            return full;
-        case RESOURCE_UNIT_BLOCK:
-        case RESOURCE_UNIT_WEAPON:
-        case RESOURCE_UNIT_CHARIOT:
-            return full / 100;
+    default: // all other goods are 100 worth of, per pile
+        return full;
+    case RESOURCE_UNIT_BLOCK:
+    case RESOURCE_UNIT_WEAPON:
+    case RESOURCE_UNIT_CHARIOT:
+        return full / 100;
     }
 }
 
 #include "core/game_environment.h"
 #include "empire/city.h"
 
-io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
+io_buffer* iob_city_data = new io_buffer([](io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_RAW, &city_data.unused.other_player, 18904);
     iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.unknown_00a0);
     iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.unknown_00a1);
@@ -186,12 +186,12 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.mothballed[i + 1]);
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unused_28ca);
 
-//    iob->bind____skip(20);
-//    for (int i = 0; i < RESOURCES_MAX; i++)
-//        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.unk_00[i + 1]);
-//    for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
-//        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.granary_food_stored[i]);
-//    iob->bind____skip(28); // temp
+    //    iob->bind____skip(20);
+    //    for (int i = 0; i < RESOURCES_MAX; i++)
+    //        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.unk_00[i + 1]);
+    //    for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
+    //        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.granary_food_stored[i]);
+    //    iob->bind____skip(28); // temp
 
 
     iob->bind____skip(20);
@@ -357,12 +357,12 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind____skip(5);
     iob->bind____skip(15);
     iob->bind____skip(35);
-//    for (int i = 0; i < MAX_GODS; i++)
-//        city_data.religion.gods[i].unused1 = main->read_i8();
-//    for (int i = 0; i < MAX_GODS; i++)
-//        city_data.religion.gods[i].unused2 = main->read_i8();
-//    for (int i = 0; i < MAX_GODS; i++)
-//        city_data.religion.gods[i].unused3 = main->read_i8();
+    //    for (int i = 0; i < MAX_GODS; i++)
+    //        city_data.religion.gods[i].unused1 = main->read_i8();
+    //    for (int i = 0; i < MAX_GODS; i++)
+    //        city_data.religion.gods[i].unused2 = main->read_i8();
+    //    for (int i = 0; i < MAX_GODS; i++)
+    //        city_data.religion.gods[i].unused3 = main->read_i8();
     for (int i = 0; i < MAX_GODS; i++)
         iob->bind(BIND_SIGNATURE_UINT32, &city_data.religion.gods[i].months_since_festival);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.least_happy_god);
@@ -384,12 +384,12 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind____skip(8);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.player_rank);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.personal_savings); // ok
-//    for (int i = 0; i < 2; i++)
-//        iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
-//    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.income.donated);
-//    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.donated);
-//        for (int i = 0; i < 2; i++)
-//            iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
+                                                                          //    for (int i = 0; i < 2; i++)
+    //        iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
+    //    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.income.donated);
+    //    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.donated);
+    //        for (int i = 0; i < 2; i++)
+    //            iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.income.donated);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.donated);
     for (int i = 0; i < 2; i++)
@@ -408,13 +408,13 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind____skip(2);
     iob->bind____skip(2);
     iob->bind____skip(2);
-//        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.num_sea_routes);
-//        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.num_land_routes);
-//        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.sea_trade_problem_duration);
-//        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.land_trade_problem_duration);
-//        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.working_docks);
-//        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.senate_placed);
-//        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.working_wharfs);
+    //        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.num_sea_routes);
+    //        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.num_land_routes);
+    //        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.sea_trade_problem_duration);
+    //        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.land_trade_problem_duration);
+    //        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.working_docks);
+    //        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.senate_placed);
+    //        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.working_wharfs);
 
     for (int i = 0; i < 2; i++)
         iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.padding_43b2[i]);
@@ -436,7 +436,8 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_43f0);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.mission.has_won);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.mission.continue_months_left);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.mission.continue_months_chosen); // wrong? hmm... 300 became 120? is it the wages?
+    iob->bind(BIND_SIGNATURE_INT32,
+              &city_data.mission.continue_months_chosen); // wrong? hmm... 300 became 120? is it the wages?
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.wage_rate_paid_this_year);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.expenses.tribute); // ok
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.expenses.tribute);
@@ -612,24 +613,24 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.osiris_double_farm_yield);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.osiris_flood_will_destroy_active);
     iob->bind____skip(60);
-//    iob->bind____skip(378);
+    //    iob->bind____skip(378);
 });
-io_buffer *iob_city_data_extra = new io_buffer([](io_buffer *iob) {
+io_buffer* iob_city_data_extra = new io_buffer([](io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.faction_bytes[0]);
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.faction_bytes[1]);
     iob->bind(BIND_SIGNATURE_RAW, &city_data.emperor.player_name_adversary, MAX_PLAYER_NAME);
     iob->bind(BIND_SIGNATURE_RAW, &city_data.emperor.player_name, MAX_PLAYER_NAME);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.faction_id);
 });
-io_buffer *iob_city_graph_order = new io_buffer([](io_buffer *iob) {
+io_buffer* iob_city_graph_order = new io_buffer([](io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.graph_order);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_order);
 });
 
-const uint8_t *city_player_name(void) {
+const uint8_t* city_player_name(void) {
     return city_data.emperor.player_name;
 }
-void city_set_player_name(const uint8_t *name) {
+void city_set_player_name(const uint8_t* name) {
     string_copy(name, city_data.emperor.player_name, MAX_PLAYER_NAME);
 }
 void city_save_campaign_player_name(void) {

@@ -2,23 +2,23 @@
 
 #include "building/building.h"
 #include "building/list.h"
-#include "graphics/image.h"
 #include "core/game_environment.h"
+#include "graphics/image.h"
+#include "graphics/image_groups.h"
 #include "grid/aqueduct.h"
-#include "grid/building_tiles.h"
-#include <scenario/map.h>
-#include "grid/desirability.h"
 #include "grid/building.h"
+#include "grid/building_tiles.h"
+#include "grid/desirability.h"
 #include "grid/grid.h"
 #include "grid/image.h"
 #include "grid/property.h"
 #include "grid/terrain.h"
 #include "scenario/property.h"
 #include "tiles.h"
-#include "graphics/image_groups.h"
-
-#include <string.h>
 #include <scenario/map.h>
+
+#include <scenario/map.h>
+#include <string.h>
 
 #define MAX_QUEUE 1000
 
@@ -29,7 +29,7 @@ static struct {
 } queue;
 
 static void mark_well_access(int well_id, int radius) {
-    building *well = building_get(well_id);
+    building* well = building_get(well_id);
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(well->tile.x(), well->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
 
@@ -38,7 +38,6 @@ static void mark_well_access(int well_id, int radius) {
             int building_id = map_building_at(MAP_OFFSET(xx, yy));
             if (building_id)
                 building_get(building_id)->has_well_access = 1;
-
         }
     }
 }
@@ -46,7 +45,7 @@ static void mark_well_access(int well_id, int radius) {
 void map_water_supply_update_houses(void) {
     building_list_small_clear();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
@@ -55,14 +54,15 @@ void map_water_supply_update_houses(void) {
         else if (b->house_size) {
             b->has_water_access = false;
             b->has_well_access = 0;
-            if (b->data.house.bathhouse || map_terrain_exists_tile_in_area_with_type(
-                    b->tile.x(), b->tile.y(), b->size, TERRAIN_FOUNTAIN_RANGE)) {
+            if (b->data.house.bathhouse
+                || map_terrain_exists_tile_in_area_with_type(
+                  b->tile.x(), b->tile.y(), b->size, TERRAIN_FOUNTAIN_RANGE)) {
                 b->has_water_access = true;
             }
         }
     }
     int total_wells = building_list_small_size();
-    const int *wells = building_list_small_items();
+    const int* wells = building_list_small_items();
     for (int i = 0; i < total_wells; i++) {
         if (GAME_ENV == ENGINE_ENV_C3)
             mark_well_access(wells[i], 2);
@@ -119,7 +119,7 @@ static void fill_canals_from_offset(int grid_offset) {
         for (int i = 0; i < 4; i++) {
             const int ADJACENT_OFFSETS[] = {-GRID_LENGTH, 1, GRID_LENGTH, -1};
             int new_offset = grid_offset + ADJACENT_OFFSETS[i];
-            building *b = building_at(new_offset);
+            building* b = building_at(new_offset);
             if (b->id && b->type == BUILDING_WATER_LIFT) {
                 // check if aqueduct connects to reservoir --> doesn't connect to corner
                 int xy = map_property_multi_tile_xy(new_offset);
@@ -152,9 +152,9 @@ static void fill_canals_from_offset(int grid_offset) {
 
 static int OFFSET(int x, int y) {
     switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH:
-            return GRID_OFFSET(x, y);
-            break;
+    case ENGINE_ENV_PHARAOH:
+        return GRID_OFFSET(x, y);
+        break;
     }
 }
 
@@ -165,23 +165,18 @@ static void update_canals_from_river() {
     }
 }
 static void update_canals_from_water_lifts() {
-
     // cached grid offsets for water lift outputs
-    const int OUTPUT_OFFSETS[4][2] = {
-            { OFFSET(0, 2), OFFSET(1, 2) },
-            { OFFSET(-1, 0), OFFSET(-1, 1) },
-            { OFFSET(0, -1), OFFSET(1, -1) },
-            { OFFSET(2, 0), OFFSET(2, 1) }
-    };
-    const int INPUT_OFFSETS[4][2] = {
-            { OFFSET(0, -1), OFFSET(1, -1) },
-            { OFFSET(2, 0), OFFSET(2, 1) },
-            { OFFSET(0, 2), OFFSET(1, 2) },
-            { OFFSET(-1, 0), OFFSET(-1, 1) }
-    };
+    const int OUTPUT_OFFSETS[4][2] = {{OFFSET(0, 2), OFFSET(1, 2)},
+                                      {OFFSET(-1, 0), OFFSET(-1, 1)},
+                                      {OFFSET(0, -1), OFFSET(1, -1)},
+                                      {OFFSET(2, 0), OFFSET(2, 1)}};
+    const int INPUT_OFFSETS[4][2] = {{OFFSET(0, -1), OFFSET(1, -1)},
+                                     {OFFSET(2, 0), OFFSET(2, 1)},
+                                     {OFFSET(0, 2), OFFSET(1, 2)},
+                                     {OFFSET(-1, 0), OFFSET(-1, 1)}};
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WATER_LIFT) {
             building_list_large_add(i);
 
@@ -216,16 +211,16 @@ void map_update_canals(void) {
 void map_update_wells_range(void) {
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE);
     int total_wells = building_list_small_size();
-    const int *wells = building_list_small_items();
+    const int* wells = building_list_small_items();
     for (int i = 0; i < total_wells; i++) {
-        building *b = building_get(wells[i]);
+        building* b = building_get(wells[i]);
         if (b->type == BUILDING_WELL)
             map_terrain_add_with_radius(b->tile.x(), b->tile.y(), 1, 3, TERRAIN_FOUNTAIN_RANGE);
     }
 }
 
 int map_water_supply_is_well_unnecessary(int well_id, int radius) {
-    building *well = building_get(well_id);
+    building* well = building_get(well_id);
     int num_houses = 0;
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(well->tile.x(), well->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
@@ -234,10 +229,11 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
             int building_id = map_building_at(grid_offset);
-            if (building_id && building_get(building_id)->house_size && !building_get(building_id)->data.house.bathhouse) {
+            if (building_id && building_get(building_id)->house_size
+                && !building_get(building_id)->data.house.bathhouse) {
                 num_houses++;
-//                if (!building_get(building_id)->has_water_access) //todo: water carrier access
-                    return WELL_NECESSARY;
+                //                if (!building_get(building_id)->has_water_access) //todo: water carrier access
+                return WELL_NECESSARY;
             }
         }
     }

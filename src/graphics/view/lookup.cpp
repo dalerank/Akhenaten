@@ -1,44 +1,41 @@
-#include "graphics/elements/menu.h"
-#include "core/calc.h"
-#include "grid/grid.h"
 #include "lookup.h"
+#include "core/calc.h"
+#include "graphics/elements/menu.h"
 #include "graphics/image.h"
+#include "grid/grid.h"
 
 static map_point SCREENTILE_TO_MAPPOINT_LOOKUP[4][500][500];
-static void screentile_calc_params_by_orientation(int city_orientation,
-                                                  pixel_coordinate *start,
-                                                  pixel_coordinate *column_step,
-                                                  pixel_coordinate *row_step) {
+static void screentile_calc_params_by_orientation(int city_orientation, pixel_coordinate* start,
+                                                  pixel_coordinate* column_step, pixel_coordinate* row_step) {
     switch (city_orientation) {
-        default:
-        case 0:
-            *start = {GRID_LENGTH + 2, 1};
-            *column_step = {1, 1};
-            *row_step = {-1, 1};
-            break;
-        case 1:
-            *start = {3, GRID_LENGTH};
-            *column_step = {1, -1};
-            *row_step = {1, 1};
-            break;
-        case 2:
-            *start = {GRID_LENGTH + 2, (2 * GRID_LENGTH) - 1};
-            *column_step = {-1, -1};
-            *row_step = {1, -1};
-            break;
-        case 3:
-            *start = {(2 * GRID_LENGTH) + 1, GRID_LENGTH};
-            *column_step = {-1, 1};
-            *row_step = {-1, -1};
-            break;
+    default:
+    case 0:
+        *start = {GRID_LENGTH + 2, 1};
+        *column_step = {1, 1};
+        *row_step = {-1, 1};
+        break;
+    case 1:
+        *start = {3, GRID_LENGTH};
+        *column_step = {1, -1};
+        *row_step = {1, 1};
+        break;
+    case 2:
+        *start = {GRID_LENGTH + 2, (2 * GRID_LENGTH) - 1};
+        *column_step = {-1, -1};
+        *row_step = {1, -1};
+        break;
+    case 3:
+        *start = {(2 * GRID_LENGTH) + 1, GRID_LENGTH};
+        *column_step = {-1, 1};
+        *row_step = {-1, -1};
+        break;
     }
 }
 static void fill_in_lookup_table_for_orientation(int city_orientation) {
     pixel_coordinate start;
     pixel_coordinate column_step;
     pixel_coordinate row_step;
-    screentile_calc_params_by_orientation(city_orientation,
-                                          &start, &column_step, &row_step);
+    screentile_calc_params_by_orientation(city_orientation, &start, &column_step, &row_step);
 
     for (int y = 0; y < GRID_LENGTH; y++) {
         screen_tile screen = start;
@@ -78,16 +75,13 @@ screen_tile mappoint_to_screentile(map_point point) {
     pixel_coordinate start;
     pixel_coordinate column_step;
     pixel_coordinate row_step;
-    screentile_calc_params_by_orientation(city_view_orientation() / 2,
-                                          &start, &column_step, &row_step);
+    screentile_calc_params_by_orientation(city_view_orientation() / 2, &start, &column_step, &row_step);
 
     int columns = point.x();
     int rows = point.y();
 
-    return {
-            (start.x + (rows * row_step.x) + (columns * column_step.x)) / 2,
-            (start.y + (rows * row_step.y) + (columns * column_step.y))
-    };
+    return {(start.x + (rows * row_step.x) + (columns * column_step.x)) / 2,
+            (start.y + (rows * row_step.y) + (columns * column_step.y))};
 }
 
 static pixel_coordinate MAPPOINT_TO_PIXEL_LOOKUP[GRID_SIZE_TOTAL];
@@ -125,8 +119,7 @@ screen_tile pixel_to_screentile(pixel_coordinate pixel) {
     camera_coordinate coord = pixel_to_camera_coord(pixel, false);
 
     // black magic
-    int odd = (coord.x / HALF_TILE_WIDTH_PIXELS +
-            coord.y / HALF_TILE_HEIGHT_PIXELS) & 1;
+    int odd = (coord.x / HALF_TILE_WIDTH_PIXELS + coord.y / HALF_TILE_HEIGHT_PIXELS) & 1;
     int x_is_odd = (coord.x / HALF_TILE_WIDTH_PIXELS) & 1;
     int y_is_odd = (coord.y / HALF_TILE_HEIGHT_PIXELS) & 1;
     int x_mod = (coord.x % HALF_TILE_WIDTH_PIXELS) / 2;
@@ -145,8 +138,5 @@ screen_tile pixel_to_screentile(pixel_coordinate pixel) {
         else if (x_is_odd && y_is_odd)
             screen_x_offset++;
     }
-    return screen_tile(
-            screen_x_offset,
-            screen_y_offset
-    );
+    return screen_tile(screen_x_offset, screen_y_offset);
 }

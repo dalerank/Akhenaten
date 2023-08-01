@@ -1,14 +1,14 @@
-#include "io/io_buffer.h"
 #include "property.h"
+#include "io/io_buffer.h"
 
 #include "grid/random.h"
 
 enum E_BIT {
-//    BIT_SIZE1 = 0x00,
-//    BIT_SIZE2 = 0x01,
-//    BIT_SIZE3 = 0x02,
-//    BIT_SIZE4 = 0x04,
-//    BIT_SIZE5 = 0x08,
+    //    BIT_SIZE1 = 0x00,
+    //    BIT_SIZE2 = 0x01,
+    //    BIT_SIZE3 = 0x02,
+    //    BIT_SIZE4 = 0x04,
+    //    BIT_SIZE5 = 0x08,
     BIT_SIZES = 0x0f,
     BIT_NO_SIZES = 0xf0,
     BIT_CONSTRUCTION = 0x10,
@@ -85,7 +85,7 @@ int map_property_multi_tile_size(int grid_offset) {
     auto bfield = map_grid_get(&bitfields_grid, grid_offset);
     int field = bfield & BIT_SIZES;
 
-//    if (GAME_ENV == ENGINE_ENV_C3)
+    //    if (GAME_ENV == ENGINE_ENV_C3)
     field += 1;
 
     if (field >= 1 || field <= 6)
@@ -101,8 +101,7 @@ void map_property_set_multi_tile_size(int grid_offset, int size) {
         if (size > 5)
             size = 5;
         map_grid_or(&bitfields_grid, grid_offset, size - 1);
-    }
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         if (size < 1)
             size = 1;
         if (size > 6)
@@ -114,8 +113,8 @@ void map_property_set_multi_tile_size(int grid_offset, int size) {
 void map_property_init_alternate_terrain(void) {
     int map_width = scenario_map_data()->width;
     int map_height = scenario_map_data()->height;
-//    int map_width, map_height;
-//    map_grid_size(&map_width, &map_height);
+    //    int map_width, map_height;
+    //    map_grid_size(&map_width, &map_height);
     for (int y = 0; y < map_height; y++) {
         for (int x = 0; x < map_width; x++) {
             int grid_offset = MAP_OFFSET(x, y);
@@ -176,12 +175,8 @@ void map_property_restore(void) {
     map_grid_copy(&bitfields_backup, &bitfields_grid);
     map_grid_copy(&edge_backup, &edge_grid);
 }
-io_buffer *iob_bitfields_grid = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &bitfields_grid);
-});
-io_buffer *iob_edge_grid = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &edge_grid);
-});
+io_buffer* iob_bitfields_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &bitfields_grid); });
+io_buffer* iob_edge_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &edge_grid); });
 
 uint8_t map_bitfield_get(int grid_offset) {
     return map_grid_get(&bitfields_grid, grid_offset);

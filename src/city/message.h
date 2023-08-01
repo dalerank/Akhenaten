@@ -208,11 +208,11 @@ enum {
     MESSAGE_TUTORIAL_MONUMENTS = 283 - 99,
     MESSAGE_TUTORIAL_FINANCES = 310 - 99,
 
-//    MESSAGE_BLESSING_OSIRIS = 295 - 99,
-//    MESSAGE_BLESSING_RA = 296 - 99,
-//    MESSAGE_BLESSING_PTAH = 297 - 99,
-//    MESSAGE_BLESSING_SETH = 298 - 99,
-//    MESSAGE_BLESSING_BAST = 299 - 99,
+    //    MESSAGE_BLESSING_OSIRIS = 295 - 99,
+    //    MESSAGE_BLESSING_RA = 296 - 99,
+    //    MESSAGE_BLESSING_PTAH = 297 - 99,
+    //    MESSAGE_BLESSING_SETH = 298 - 99,
+    //    MESSAGE_BLESSING_BAST = 299 - 99,
 
     MESSAGE_BLESSING_OSIRIS_FARMS = 295 - 99,
     MESSAGE_BLESSING_OSIRIS_FLOOD = 340 - 99,
@@ -303,7 +303,8 @@ void city_message_init_problem_areas(void);
 void city_message_disable_sound_for_next_message(void);
 void city_message_apply_sound_interval(int category);
 
-void city_message_post_full(bool use_popup, int template_id, int event_id, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2);
+void city_message_post_full(bool use_popup, int template_id, int event_id, int parent_event_id, int title_id,
+                            int body_id, int phrase_id, int param1, int param2);
 void city_message_post(bool use_popup, int message_id, int param1, int param2);
 void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2);
 void city_message_post_with_message_delay(int category, int use_popup, int message_type, int delay);
@@ -321,7 +322,7 @@ void city_message_decrease_delays(void);
 
 int city_message_mark_population_shown(int population);
 
-const city_message *city_message_get(int message_id);
+const city_message* city_message_get(int message_id);
 
 int city_message_set_current(int message_id);
 void city_message_mark_read(int message_id);

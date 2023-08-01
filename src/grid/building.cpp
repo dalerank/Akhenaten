@@ -1,9 +1,9 @@
-#include "io/io_buffer.h"
 #include "building.h"
+#include "io/io_buffer.h"
 
 #include "building/building.h"
-#include "io/config/config.h"
 #include "grid/grid.h"
+#include "io/config/config.h"
 
 static grid_xx buildings_grid = {0, {FS_UINT16, FS_UINT16}};
 static grid_xx damage_grid = {0, {FS_UINT8, FS_UINT16}};
@@ -53,12 +53,8 @@ void map_clear_highlights(void) {
     map_grid_clear(&highlight_grid);
 }
 
-io_buffer *iob_building_grid = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &buildings_grid);
-});
-io_buffer *iob_damage_grid = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &damage_grid);
-});
+io_buffer* iob_building_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &buildings_grid); });
+io_buffer* iob_damage_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &damage_grid); });
 
 int map_building_is_reservoir(int x, int y) {
     if (!map_grid_is_inside(x, y, 3))
@@ -73,7 +69,6 @@ int map_building_is_reservoir(int x, int y) {
         for (int dx = 0; dx < 3; dx++) {
             if (building_id != map_building_at(grid_offset + GRID_OFFSET(dx, dy)))
                 return 0;
-
         }
     }
     return 1;

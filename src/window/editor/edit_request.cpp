@@ -1,9 +1,9 @@
 #include "edit_request.h"
 
 #include "game/resource.h"
+#include "graphics/boilerplate.h"
 #include "graphics/elements/button.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/screen.h"
@@ -25,15 +25,13 @@ static void button_kingdom(int param1, int param2);
 static void button_delete(int param1, int param2);
 static void button_save(int param1, int param2);
 
-static generic_button buttons[] = {
-        {30,  152, 60,  25, button_year,           button_none},
-        {330, 152, 80,  25, button_amount,         button_none},
-        {430, 152, 100, 25, button_resource,       button_none},
-        {70,  190, 140, 25, button_deadline_years, button_none},
-        {400, 190, 80,  25, button_kingdom,          button_none},
-        {10,  234, 250, 25, button_delete,         button_none},
-        {300, 234, 100, 25, button_save,           button_none}
-};
+static generic_button buttons[] = {{30, 152, 60, 25, button_year, button_none},
+                                   {330, 152, 80, 25, button_amount, button_none},
+                                   {430, 152, 100, 25, button_resource, button_none},
+                                   {70, 190, 140, 25, button_deadline_years, button_none},
+                                   {400, 190, 80, 25, button_kingdom, button_none},
+                                   {10, 234, 250, 25, button_delete, button_none},
+                                   {300, 234, 100, 25, button_save, button_none}};
 
 static struct {
     int id;
@@ -84,12 +82,11 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h) {
+static void handle_input(const mouse* m, const hotkeys* h) {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 7, &data.focus_button_id))
         return;
     if (input_go_back_requested(m, h))
         button_save(0, 0);
-
 }
 
 static void set_year(int value) {
@@ -112,16 +109,13 @@ static void button_amount(int param1, int param2) {
         max_digits = 5;
     }
     window_numeric_input_show(
-            screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 50,
-            max_digits, max_amount, set_amount
-    );
+      screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 50, max_digits, max_amount, set_amount);
 }
 
 static void set_resource(int value) {
     data.request.resource = value;
     if (data.request.amount > 999)
         data.request.amount = 999;
-
 }
 
 static void button_resource(int param1, int param2) {
@@ -133,8 +127,8 @@ static void set_deadline_years(int value) {
 }
 
 static void button_deadline_years(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 220, screen_dialog_offset_y() + 100, 3, 999,
-                              set_deadline_years);
+    window_numeric_input_show(
+      screen_dialog_offset_x() + 220, screen_dialog_offset_y() + 100, 3, 999, set_deadline_years);
 }
 
 static void set_kingdom(int value) {
@@ -156,12 +150,7 @@ static void button_save(int param1, int param2) {
 }
 
 void window_editor_edit_request_show(int id) {
-    window_type window = {
-            WINDOW_EDITOR_EDIT_REQUEST,
-            draw_background,
-            draw_foreground,
-            handle_input
-    };
+    window_type window = {WINDOW_EDITOR_EDIT_REQUEST, draw_background, draw_foreground, handle_input};
     init(id);
     window_show(&window);
 }

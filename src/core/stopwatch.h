@@ -2,8 +2,8 @@
 #define OZYMANDIAS_STOPWATCH_H
 
 #include <chrono>
-#include <vector>
 #include <string>
+#include <vector>
 
 class stopwatch {
 private:
@@ -11,6 +11,7 @@ private:
     int index = 0;
     int repeats = 0;
     std::vector<std::string> names;
+
 public:
     size_t STAMPS();
     void START();
@@ -22,4 +23,4 @@ public:
     void LOG();
 };
 
-#endif //OZYMANDIAS_STOPWATCH_H
+#endif // OZYMANDIAS_STOPWATCH_H

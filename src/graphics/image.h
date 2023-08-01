@@ -29,20 +29,20 @@ enum {
 #define HALF_TILE_WIDTH_PIXELS 30
 #define HALF_TILE_HEIGHT_PIXELS 15
 
-//typedef struct image;
+// typedef struct image;
 struct atlas_data_t {
-    SDL_Texture *texture = nullptr;
-//    std::vector<image*> images;
-    color_t *TEMP_PIXEL_BUFFER = nullptr;
+    SDL_Texture* texture = nullptr;
+    //    std::vector<image*> images;
+    color_t* TEMP_PIXEL_BUFFER = nullptr;
     int bmp_size;
     int width;
     int height;
 };
 
 struct image_t {
-    char *pak_name;
+    char* pak_name;
     struct {
-        char *name;
+        char* name;
         int group_id;
         int entry_index;
     } bmp;
@@ -53,7 +53,7 @@ struct image_t {
     int unk00; //
     int offset_mirror = 0;
     int start_index;
-    image_t *mirrored_img = nullptr;
+    image_t* mirrored_img = nullptr;
     //
     int width;
     int height;
@@ -96,10 +96,10 @@ struct image_t {
         int index;
         int x_offset;
         int y_offset;
-        atlas_data_t *p_atlas = nullptr;
+        atlas_data_t* p_atlas = nullptr;
     } atlas;
 
-    color_t *TEMP_PIXEL_DATA = nullptr;
+    color_t* TEMP_PIXEL_DATA = nullptr;
 
     const int isometric_size() const;
     const int isometric_top_height() const;
@@ -117,8 +117,8 @@ bool image_set_monument_pak(int monument_id);
 
 int image_id_from_group(int collection, int group, int pak_cache_idx = -1);
 
-const image_t *image_get(int id, int mode = 0);
-const image_t *image_letter(int letter_id);
-const image_t *image_get_enemy(int id);
+const image_t* image_get(int id, int mode = 0);
+const image_t* image_letter(int letter_id);
+const image_t* image_get_enemy(int id);
 
 #endif // GRAPHICS_IMAGE_H
