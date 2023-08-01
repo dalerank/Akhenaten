@@ -93,7 +93,7 @@ static figure_action_property action_properties_lookup[] = {
 
         // PHARAOH
 
-        {1, TERRAIN_USAGE_ANIMAL,  0,      GROUP_FIGURE_HUNTER},  // 73
+        {1, TERRAIN_USAGE_ANIMAL,  0,      GROUP_FIGURE_HUNTER_OSTRICH_MOVE},  // 73
         {1, TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_HUNTER_ARROW},  // 74
         {1, TERRAIN_USAGE_ANY,     0,      0, 0},  // 75
         {1, TERRAIN_USAGE_ANY,     0,      0, 0},  // 76

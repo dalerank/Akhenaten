@@ -21,6 +21,8 @@
 #include "grid/terrain.h"
 #include "grid/building.h"
 #include "graphics/image_groups.h"
+#include "missile.h"
+#include "figure/properties.h"
 
 static const coords_t SEAGULL_OFFSETS[] = {
         {0,  0},
@@ -110,6 +112,7 @@ static void create_fishing_point(int x, int y) {
 void figure_create_fishing_points(void) {
     scenario_map_foreach_fishing_point(create_fishing_point);
 }
+
 static void create_herd(int x, int y) {
     int herd_type;
     int num_animals;
@@ -142,6 +145,7 @@ static void create_herd(int x, int y) {
         }
     }
 }
+
 void figure_create_herds(void) {
     scenario_map_foreach_herd_point(create_herd);
 }
@@ -169,6 +173,7 @@ bool figure::herd_roost(int step, int bias, int max_dist) {
         return false;
     }
 }
+
 void figure::seagulls_action() {
     terrain_usage = TERRAIN_USAGE_ANY;
     is_ghost = false;
@@ -189,6 +194,7 @@ void figure::seagulls_action() {
 //        sprite_image_id = image_id_from_group(GROUP_FIGURE_SEAGULLS) + 18 + anim_frame / 3;
     }
 }
+
 void figure::sheep_action() {
     const formation *m = formation_get(formation_id);
 //    terrain_usage = TERRAIN_USAGE_ANIMAL;
@@ -234,6 +240,7 @@ void figure::sheep_action() {
         image_set_animation(GROUP_FIGURE_SHEEP, 0, 6);
 //        sprite_image_id = image_id_from_group(GROUP_FIGURE_SHEEP) + dir + 8 * anim_frame;
 }
+
 void figure::hyena_action() {
     const formation *m = formation_get(formation_id);
     city_figures_add_animal();
@@ -299,6 +306,7 @@ void figure::hyena_action() {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_WALK) + dir + 8 * anim_frame;
     }
 }
+
 void figure::ostrich_action() {
     const formation *m = formation_get(formation_id);
     city_figures_add_animal();
@@ -564,6 +572,7 @@ static void set_horse_destination(int state) {
 //        }
 //    }
 }
+
 void figure::hippodrome_horse_action() {
 //    city_entertainment_set_hippodrome_has_race(1);
 //    f->use_cross_country = true;
@@ -657,6 +666,7 @@ void figure::hippodrome_horse_action() {
 //    int cart_dir = (dir + 4) % 8;
 //    figure_image_set_cart_offset(f, cart_dir);
 }
+
 void figure_hippodrome_horse_reroute(void) {
     if (!city_entertainment_hippodrome_has_race()) {
         return;
@@ -670,9 +680,6 @@ void figure_hippodrome_horse_reroute(void) {
         }
     }
 }
-
-#include "missile.h"
-#include "figure/properties.h"
 
 void figure::hunter_action() {
     figure *prey = figure_get(target_figure_id);
@@ -756,23 +763,23 @@ void figure::hunter_action() {
         case 14:
         case 13:
         case 9:
-        case 11: // normal walk
-            image_set_animation(GROUP_FIGURE_HUNTER, 0, 12);
+        case ACTION_11_HUNTER_WALK: // normal walk
+            image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_MOVE, 0, 12);
             break;
 
-        case 15: // hunting
-            image_set_animation(GROUP_FIGURE_HUNTER, 104, 12);
+        case ACTION_15_HUNTER_HUNT: // hunting
+            image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_HUNT, 0, 12);
             break;
 //        case ??: // attacking
 //            image_set_animation(GROUP_FIGURE_HUNTER, 200, 12);
 //        case ??: // attacking w/ prey on his back
 //            image_set_animation(GROUP_FIGURE_HUNTER, 296, 12);
-        case 10:
-            image_set_animation(GROUP_FIGURE_HUNTER, 392, 18);
+        case ACTION_15_HUNTER_PACK:
+            image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_PACK, 0, 18);
             break;
 
-        case 12:
-            image_set_animation(GROUP_FIGURE_HUNTER, 536, 12);
+        case ACTION_15_HUNTER_MOVE_PACKED:
+            image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_MOVE_PACKED, 0, 12);
             break;
     }
 }

@@ -1,5 +1,7 @@
-#include "figuretype/entertainer.h"
 #include "building/figure.h"
+
+#include "figuretype/entertainer.h"
+#include "city/data_private.h"
 
 #include "building/barracks.h"
 #include "building/granary.h"
@@ -122,6 +124,7 @@ figure *building::create_figure_generic(int _type, int created_action, int slot,
     f->set_home(id);
     return f;
 }
+
 figure *building::create_roaming_figure(int _type, int created_action, int slot) {
     figure *f = create_figure_generic(_type, created_action, slot, figure_roam_direction);
     f->set_destination(0);
@@ -920,8 +923,6 @@ void building::spawn_figure_granary() {
         }
     }
 }
-
-#include "city/data_private.h"
 
 bool building::can_spawn_hunter() { // no cache because fuck the system (also I can't find the memory offset for this)
     int hunters_total = 0;
