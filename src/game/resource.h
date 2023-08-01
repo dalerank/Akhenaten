@@ -13,7 +13,7 @@
 #define RESOURCES_MAX 36
 #define RESOURCES_FOODS_MAX 9
 
-enum {
+enum e_resource {
     RESOURCE_NONE = 0,
     RESOURCE_GRAIN = 1,        // RESOURCE_WHEAT = 1,
     RESOURCE_MEAT = 2,         // RESOURCE_VEGETABLES = 2,

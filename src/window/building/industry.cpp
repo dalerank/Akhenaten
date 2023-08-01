@@ -84,15 +84,13 @@ static void draw_farm(building_info_context* c, int help_id, const char* sound_f
         window_building_draw_description_at(c, 16 * c->height_blocks - 136, group_id, 1);
     }
 }
-static void draw_raw_material(building_info_context* c, int help_id, const char* sound_file, int group_id,
-                              int resource) {
+static void draw_raw_material(building_info_context* c, int help_id, const char* sound_file, int group_id, e_resource resource) {
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
-    lang_text_draw_centered(
-      group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
     int pct_done = calc_percentage(b->data.industry.progress, 200);
@@ -275,25 +273,16 @@ void window_building_draw_hunting_lodge(building_info_context* c) {
 }
 
 void window_building_draw_marble_quarry(building_info_context* c) {
-    int output_resource = RESOURCE_MARBLE;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        output_resource = RESOURCE_MARBLE;
-    }
-    draw_raw_material(c, 95, "wavs/quarry.wav", 118, output_resource);
+    draw_raw_material(c, 95, "wavs/quarry.wav", 118, RESOURCE_MARBLE);
 }
 void window_building_draw_iron_mine(building_info_context* c) {
-    int output_resource = RESOURCE_COPPER;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        output_resource = RESOURCE_COPPER;
-    }
-    draw_raw_material(c, 93, "wavs/mine.wav", 119, output_resource);
+    draw_raw_material(c, 93, "wavs/mine.wav", 119, RESOURCE_COPPER);
+}
+void window_building_draw_gold_mine(building_info_context* c) {
+    draw_raw_material(c, 93, "wavs/mine.wav", 119, RESOURCE_GOLD);
 }
 void window_building_draw_timber_yard(building_info_context* c) {
-    int output_resource = RESOURCE_TIMBER;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        output_resource = RESOURCE_GEMS;
-    }
-    draw_raw_material(c, 94, "wavs/timber.wav", 120, output_resource);
+    draw_raw_material(c, 94, "wavs/timber.wav", 120, RESOURCE_TIMBER);
 }
 void window_building_draw_clay_pit(building_info_context* c) {
     draw_raw_material(c, 92, "wavs/clay.wav", 121, RESOURCE_CLAY);

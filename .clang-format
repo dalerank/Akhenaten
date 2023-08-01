@@ -20,7 +20,7 @@ BreakBeforeBraces: Attach
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializersBeforeComma: true
 BreakStringLiterals: true
-ColumnLimit: 120
+ColumnLimit: 0
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ConstructorInitializerIndentWidth: 2
 ContinuationIndentWidth: 2
