@@ -120,11 +120,11 @@ void window_player_selection_init() {
     window.panel->select(data.selected_player_utf8);
 }
 
-static void draw_background(void) {
+static void draw_background() {
     graphics_clear_screen();
     ImageDraw::img_background(image_id_from_group(GROUP_PLAYER_SELECTION));
 }
-static void draw_foreground(void) {
+static void draw_foreground() {
     auto &data = player_selection_data();
     auto &window = window_player_selection();
 
@@ -152,11 +152,15 @@ static void draw_foreground(void) {
 
 static void confirm_nothing(bool accepted) {
 }
+
 static void confirm_delete_player(bool accepted) {
-    auto &data = player_selection_data();
-    if (accepted)
-        player_data_delete(data.selected_player);
+    if (accepted) {
+        player_data_delete(player_selection_data().selected_player);
+
+        window_player_selection().panel->refresh_file_finder();
+    }
 }
+
 static void button_select_file(int index, int param2) {
     auto &data = player_selection_data();
     auto &window = window_player_selection();
@@ -166,19 +170,21 @@ static void button_select_file(int index, int param2) {
     set_name(window.panel->get_selected_entry_text(FILE_NO_EXT));
     setting_set_player_name(data.selected_player);
 }
+
 static void button_double_click(int index, int param2) {
     button_click(2, 0);
 }
+
 static void button_click(int param1, int param2) {
     switch (param1) {
         case 0: // new player
             window_new_career_show();
             break;
         case 1: // delete player
-            if (!is_valid_selected_player())
-                window_popup_dialog_show(POPUP_DIALOG_NO_DYNASTY, confirm_nothing, e_popup_btns_yes);
-            else
+            if (is_valid_selected_player())
                 window_popup_dialog_show(POPUP_DIALOG_DELETE_DYNASTY, confirm_delete_player, e_popup_btns_yesno);
+            else
+                window_popup_dialog_show(POPUP_DIALOG_NO_DYNASTY, confirm_nothing, e_popup_btns_yes);
             break;
         case 2: // proceed with selected player
             if (!is_valid_selected_player())
@@ -195,6 +201,7 @@ static void button_click(int param1, int param2) {
 static void on_scroll(void) {
 //    data.message_not_exist_start_time = 0;
 }
+
 static void handle_input(const mouse *m, const hotkeys *h) {
     auto &data = player_selection_data();
     auto &window = window_player_selection();

@@ -73,6 +73,7 @@
 #include "chunks.h"
 
 #include <cassert>
+#include <filesystem>
 
 #ifdef _MSC_VER 
 //not #if defined(_WIN32) || defined(_WIN64) because we have strncasecmp in mingw
@@ -85,13 +86,19 @@
 
 static const char MISSION_PACK_FILE[] = "mission1.pak";
 
+namespace
+{
+    char const* const SAVE_FOLDER = "Save";
+} // namespace
+
 void fullpath_saves(char *full, const char *filename) {
     strcpy(full, "");
     if (strncasecmp(filename, "Save/", 5) == 0 || strncasecmp(filename, "Save\\", 5) == 0) {
         strcat(full, filename);
         return;
     }
-    strcat(full, "Save/");
+    strcat(full, SAVE_FOLDER);
+    strcat(full, "/");
     strcat(full, (const char*)setting_player_name());
     strcat(full, "/");
     strcat(full, filename);
@@ -599,6 +606,7 @@ bool GamestateIO::prepare_folders(const char *path) {
     }
     return true;
 }
+
 bool GamestateIO::prepare_savegame(const char *filename_short) {
     // concatenate string
     char full[MAX_FILE_NAME] = {0};
@@ -610,6 +618,7 @@ bool GamestateIO::prepare_savegame(const char *filename_short) {
     // write file
     return FILEIO.serialize(full, 0, FILE_FORMAT_SAVE_FILE, 160, prepare_savegame_schema);
 }
+
 bool GamestateIO::write_map(const char *filename_short) {
     return false; //TODO
 
@@ -778,6 +787,13 @@ bool GamestateIO::delete_savegame(const char *filename_short) {
     // delete file
     return file_remove(full);
 }
+
+bool GamestateIO::delete_family(char const* family_name) {
+    const std::string folder_path = std::string(SAVE_FOLDER) + "/" + family_name;
+
+    return std::filesystem::remove_all(folder_path) != -1;
+}
+
 bool GamestateIO::delete_map(const char *filename_short) {
     // concatenate string
     char full[MAX_FILE_NAME];

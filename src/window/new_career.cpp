@@ -33,14 +33,14 @@ static input_box player_name_input = {160, 208, 20, 2, FONT_NORMAL_WHITE_ON_DARK
 
 static uint8_t player_name[MAX_PLAYER_NAME] = {0};
 
-static void init(void) {
+static void init() {
     setting_clear_personal_savings();
     scenario_settings_init();
     string_copy(setting_player_name(), player_name, MAX_PLAYER_NAME);
     input_box_start(&player_name_input, player_name, MAX_PLAYER_NAME, 1);
 }
 
-static void draw_foreground(void) {
+static void draw_foreground() {
     graphics_set_to_dialog();
     outer_panel_draw(128, 160, 24, 8);
     lang_text_draw_centered(31, 0, 128, 172, 384, FONT_LARGE_BLACK_ON_LIGHT);
@@ -83,7 +83,8 @@ static void handle_input(const mouse *m, const hotkeys *h) {
     if (input_go_back_requested(m, h))
         button_back(0, 0);
 }
-void window_new_career_show(void) {
+
+void window_new_career_show() {
     window_type window = {
             WINDOW_NEW_CAREER,
             window_draw_underlying_window,
