@@ -49,9 +49,6 @@ static int show_building_native(const building *b) {
     return b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING || b->type == BUILDING_MISSION_POST;
 }
 
-static int show_figure_fire(const figure *f) {
-    return f->type == FIGURE_PREFECT;
-}
 static int show_figure_damage(const figure *f) {
     return f->type == FIGURE_ENGINEER;
 }
@@ -160,9 +157,12 @@ struct city_overlay_fire : public city_overlay {
         type = OVERLAY_FIRE;
         column_type = COLUMN_TYPE_RISK;
 
-        show_figure = show_figure_fire;
         get_column_height = get_column_height_fire;
         get_tooltip_for_building = get_tooltip_fire;
+    }
+
+    bool show_figure(const figure *f) const override {
+        return f->type == FIGURE_PREFECT;
     }
 
     void draw_custom_top(pixel_coordinate pixel, map_point point) const override {

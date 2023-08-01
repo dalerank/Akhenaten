@@ -87,6 +87,11 @@ static const int ADJACENT_OFFSETS_PH[2][4][7] = {
   }
 };
 
+enum e_figure_draw_mode {
+    e_figure_draw_common = 0,
+    e_figure_draw_overlay = 1
+};
+
 struct draw_context_t {
     time_millis last_water_animation_time;
     int advance_water_animation;
@@ -243,13 +248,16 @@ static void clip_between_rectangles(int *xOut, int *yOut, int *wOut, int *hOut,
     if (*wOut < 0) *wOut = 0;
     if (*hOut < 0) *hOut = 0;
 }
-static void draw_cached_figures(pixel_coordinate pixel, map_point point, int mode) {
+
+static void draw_cached_figures(pixel_coordinate pixel, map_point point, e_figure_draw_mode mode) {
     auto &draw_context = get_draw_context();
 
     if (!USE_BLEEDING_CACHE)
         return;
+
     if (!map_property_is_draw_tile(point.grid_offset()))
         return;
+
     auto cache = get_figure_cache_for_tile(point);
     if (cache == nullptr || cache->num_figures == 0)
         return;
@@ -294,7 +302,7 @@ static void draw_cached_figures(pixel_coordinate pixel, map_point point, int mod
 
         pixel_coordinate ghost_pixel = cache->figures[i].pixel;
         switch (mode) {
-            case 0: // non-overlay
+            case e_figure_draw_common: // non-overlay
                 if (!f->is_ghost) {
                     if (!draw_context.selected_figure_id) {
                         int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
@@ -303,9 +311,9 @@ static void draw_cached_figures(pixel_coordinate pixel, map_point point, int mod
                         f->city_draw_figure(ghost_pixel, 0, draw_context.selected_figure_coord);
                 }
                 break;
-            case 1: // overlay
+            case e_figure_draw_overlay: // overlay
                 if (!f->is_ghost && get_city_overlay()->show_figure(f))
-                    f->city_draw_figure(pixel, 0);
+                    f->city_draw_figure(ghost_pixel, 0);
                 break;
         }
     }
@@ -427,7 +435,7 @@ void draw_figures(pixel_coordinate pixel, map_point point) {
     auto &draw_context = get_draw_context();
 
     // first, draw from the cache
-    draw_cached_figures(pixel, point, 0);
+    draw_cached_figures(pixel, point, e_figure_draw_common);
 
     // secondly, draw figures found on this tile as normal
     int grid_offset = point.grid_offset();
@@ -485,14 +493,16 @@ void draw_ornaments_overlay(pixel_coordinate pixel, map_point point) {
     int b_id = map_building_at(grid_offset);
     if (b_id) {
         const building *b = building_at(grid_offset);
-        if (get_city_overlay()->show_building(b))
+        if (get_city_overlay()->show_building(b)) {
             draw_ornaments(pixel, point);
-    } else
+        }
+    } else {
         draw_ornaments(pixel, point);
+    }
 }
 void draw_figures_overlay(pixel_coordinate pixel, map_point point) {
     // first, draw the cached figures
-    draw_cached_figures(pixel, point, 1);
+    draw_cached_figures(pixel, point, e_figure_draw_overlay);
 
     // secondly, draw the figures normally found on this tile
     int grid_offset = point.grid_offset();

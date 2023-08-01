@@ -90,7 +90,7 @@ struct city_overlay_education : public city_overlay {
         type = OVERLAY_EDUCATION;
         column_type = COLUMN_TYPE_WATER_ACCESS;
 
-        show_figure = show_figure_education;
+        show_figure_func = show_figure_education;
         get_column_height = get_column_height_education;
         get_tooltip_for_building = get_tooltip_education;
     }
@@ -111,7 +111,7 @@ struct city_overlay_schools : public city_overlay {
         type = OVERLAY_SCHOOL;
         column_type = COLUMN_TYPE_WATER_ACCESS;
 
-        show_figure = show_figure_school;
+        show_figure_func = show_figure_school;
         get_column_height = get_column_height_school;
         get_tooltip_for_building = get_tooltip_school;
     }
@@ -132,7 +132,7 @@ struct city_overlay_libraries : public city_overlay {
         type = OVERLAY_LIBRARY;
         column_type = COLUMN_TYPE_WATER_ACCESS;
 
-        show_figure = show_figure_library;
+        show_figure_func = show_figure_library;
         get_column_height = get_column_height_library;
         get_tooltip_for_building = get_tooltip_library;
     }
@@ -153,7 +153,7 @@ struct city_overlay_academy : public city_overlay {
         type = OVERLAY_ACADEMY;
         column_type = COLUMN_TYPE_WATER_ACCESS;
 
-        show_figure = show_figure_academy;
+        show_figure_func = show_figure_academy;
         get_column_height = get_column_height_academy;
         get_tooltip_for_building = get_tooltip_academy;
     }
