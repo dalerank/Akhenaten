@@ -1,5 +1,5 @@
 #include "industry.h"
-#include <grid/floodplain.h>
+
 
 #include "building/building.h"
 #include "city/buildings.h"
@@ -12,6 +12,8 @@
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "grid/terrain.h"
+#include "grid/floodplain.h"
+#include "io/gamefiles/lang.h"
 
 static void draw_farm(building_info_context* c, int help_id, const char* sound_file, int group_id, int resource) {
     c->help_id = help_id;
@@ -279,13 +281,13 @@ void window_building_draw_iron_mine(building_info_context* c) {
     draw_raw_material(c, 93, "wavs/mine.wav", 119, RESOURCE_COPPER);
 }
 void window_building_draw_gold_mine(building_info_context* c) {
-    draw_raw_material(c, 93, "wavs/mine.wav", 119, RESOURCE_GOLD);
+    draw_raw_material(c, 93, "wavs/mine.wav", e_text_info_gold_mine, RESOURCE_GOLD);
 }
 void window_building_draw_timber_yard(building_info_context* c) {
     draw_raw_material(c, 94, "wavs/timber.wav", 120, RESOURCE_TIMBER);
 }
 void window_building_draw_clay_pit(building_info_context* c) {
-    draw_raw_material(c, 92, "wavs/clay.wav", 121, RESOURCE_CLAY);
+    draw_raw_material(c, 92, "wavs/clay.wav", e_text_info_clay_pit, RESOURCE_CLAY);
 }
 // TODO: fix reed gatherer panel
 void window_building_draw_reed_gatherer(building_info_context* c) {

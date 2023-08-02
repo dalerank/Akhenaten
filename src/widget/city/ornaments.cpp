@@ -371,8 +371,7 @@ static void draw_workshop_raw_material_storage(const building* b, int x, int y, 
     int amount = ceil((float)b->stored_full_amount / 100.0) - 1;
     switch (b->type) {
     case BUILDING_HUNTING_LODGE:
-        ImageDraw::img_generic(
-          image_id_from_group(GROUP_RESOURCE_STOCK_GAMEMEAT_5) + amount, x + 61, y + 14, color_mask);
+        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GAMEMEAT_5) + amount, x + 61, y + 14, color_mask);
         break;
     case BUILDING_POTTERY_WORKSHOP:
         //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_CLAY_2) + amount, x + 65, y + 3,

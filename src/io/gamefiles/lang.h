@@ -1,5 +1,4 @@
-#ifndef CORE_LANG_H
-#define CORE_LANG_H
+#pragma once 
 
 #include <stdint.h>
 
@@ -16,7 +15,7 @@ enum { TYPE_MANUAL = 0, TYPE_ABOUT = 1, TYPE_MESSAGE = 2, TYPE_MISSION = 3 };
 /**
  * Message type
  */
-enum {
+enum e_message_type {
     MESSAGE_TYPE_GENERAL = 0,
     MESSAGE_TYPE_DISASTER = 1,
     MESSAGE_TYPE_IMPERIAL = 2,
@@ -48,7 +47,7 @@ struct lang_message_string {
 /**
  * Message
  */
-typedef struct {
+struct lang_message {
     int type;
     int message_type;
     int x;
@@ -61,7 +60,7 @@ typedef struct {
     struct lang_message_string subtitle;
     struct lang_message_string video;
     struct lang_message_string content;
-} lang_message;
+} ;
 
 /**
  * Checks whether the directory contains language files
@@ -92,4 +91,7 @@ const uint8_t* lang_get_string(int group, int index);
  */
 const lang_message* lang_get_message(int id);
 
-#endif // CORE_LANG_H
+enum e_text_info {
+    e_text_info_clay_pit = 121,
+    e_text_info_gold_mine = 162,
+};
