@@ -134,15 +134,18 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     const mouse* m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, MAX_BUTTONS, &focus_button_id))
         return;
+
     if (h->escape_pressed)
         hotkey_handle_escape();
 
     if (h->load_file)
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
 }
+
 void window_main_menu_show(bool restart_music) {
     if (restart_music)
         sound_music_play_intro();
+
     window_type window = {WINDOW_MAIN_MENU, draw_background, draw_foreground, handle_input};
     window_show(&window);
 }

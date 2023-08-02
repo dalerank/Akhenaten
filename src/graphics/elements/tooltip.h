@@ -1,5 +1,4 @@
-#ifndef GRAPHICS_TOOLTIP_H
-#define GRAPHICS_TOOLTIP_H
+#pragma once
 
 #include "input/mouse.h"
 
@@ -7,7 +6,7 @@
 
 enum { TOOLTIP_NONE = 0, TOOLTIP_BUTTON = 1, TOOLTIP_OVERLAY = 2, TOOLTIP_SENATE = 3, TOOLTIP_TILES = 4 };
 
-typedef struct {
+struct tooltip_context {
     const int mouse_x;
     const int mouse_y;
     int type;
@@ -19,9 +18,7 @@ typedef struct {
     int num_extra_values;
     int extra_value_text_groups[TOOLTIP_MAX_EXTRA_VALUES];
     int extra_value_text_ids[TOOLTIP_MAX_EXTRA_VALUES];
-} tooltip_context;
+} ;
 
 void tooltip_invalidate(void);
 void tooltip_handle(const mouse* m, void (*func)(tooltip_context*));
-
-#endif // GRAPHICS_TOOLTIP_H

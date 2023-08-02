@@ -11,6 +11,9 @@
 #include "input/scroll.h"
 #include "window/hotkey_editor.h"
 #include "window/popup_dialog.h"
+#include "window/main_menu.h"
+#include "window/city.h"
+#include "widget/top_menu.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -430,14 +433,18 @@ void hotkey_key_released(int key, int modifiers) {
     }
 }
 
-static void confirm_exit(bool accepted) {
-    if (accepted)
-        system_exit();
+static void confirm_city_exit(bool accepted) {
+    if (accepted) {
+        widget_top_menu_clear_state();
+        window_main_menu_show(true);
+    } else {
+        window_city_show();
+    }
 }
 
 void hotkey_handle_escape(void) {
     video_stop();
-    window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, e_popup_btns_yes);
+    window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_city_exit, e_popup_btns_yesno);
 }
 
 void hotkey_handle_global_keys(void) {

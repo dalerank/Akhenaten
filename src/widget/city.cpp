@@ -519,10 +519,11 @@ void widget_city_handle_input(const mouse* m, const hotkeys* h) {
         handle_mouse(m);
 
     if (h->escape_pressed) {
-        if (Planner.build_type)
+        if (Planner.build_type) {
             Planner.construction_cancel();
-        else
+        } else {
             hotkey_handle_escape();
+        }
     }
 }
 void widget_city_handle_input_military(const mouse* m, const hotkeys* h, int legion_formation_id) {
