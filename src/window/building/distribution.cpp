@@ -1074,8 +1074,7 @@ void window_building_draw_granary_orders_foreground(building_info_context* c) {
     for (int i = 0; i < list->size; i++) {
         int line_y = 20 * i;
         int resource = list->items[i];
-        int image_id
-          = image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+        int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
 
         ImageDraw::img_generic(image_id, c->x_offset + 25, y_offset + 48 + line_y);
         lang_text_draw(23, resource, c->x_offset + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE_ON_DARK);

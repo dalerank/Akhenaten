@@ -33,7 +33,6 @@ const resources_list* city_resource_get_available_market_goods(void) {
     return &g_available_data.market_goods_list;
 }
 
-
 int city_resource_multiple_wine_available(void) {
     return city_data.resource.wine_types_available >= 2;
 }
@@ -77,12 +76,15 @@ void city_resource_cycle_trade_status(int resource) {
         && !empire_can_import_resource(resource, true)) {
         city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT;
     }
+
     if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT
         && !empire_can_export_resource(resource, true)) {
         city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
     }
-    if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT)
+
+    if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT) {
         city_data.resource.stockpiled[resource] = 0;
+    }
 }
 void city_resource_cycle_trade_import(int resource) {
     // no sellers?
@@ -124,8 +126,7 @@ int city_resource_trading_amount(int resource) {
     return city_data.resource.trading_amount[resource];
 }
 void city_resource_change_trading_amount(int resource, int delta) {
-    city_data.resource.trading_amount[resource]
-      = calc_bound(city_data.resource.trading_amount[resource] + delta, 0, 100);
+    city_data.resource.trading_amount[resource] = calc_bound(city_data.resource.trading_amount[resource] + delta, 0, 100);
 }
 
 int city_resource_is_stockpiled(int resource) {
@@ -136,8 +137,7 @@ void city_resource_toggle_stockpiled(int resource) {
         city_data.resource.stockpiled[resource] = 0;
     else {
         city_data.resource.stockpiled[resource] = 1;
-        if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT
-            || city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT_SURPLUS)
+        if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT || city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT_SURPLUS)
             city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
     }
 }
@@ -172,10 +172,11 @@ void city_resource_calculate_warehouse_stocks(void) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
             b->has_road_access = 0;
-            if (map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), b->size, 0))
+            if (map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), b->size, 0)) {
                 b->has_road_access = 1;
-            else if (map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), 3, 0))
+            } else if (map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), 3, 0)) {
                 b->has_road_access = 2;
+            }
         }
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -208,8 +209,13 @@ void city_resource_determine_available(void) {
 
     for (int i = RESOURCE_MIN_FOOD; i < RESOURCES_FOODS_MAX; i++) {
         if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false)) {
-            g_available_data.food_list.items[g_available_data.food_list.size++] = i;
-            g_available_data.market_goods_list.items[g_available_data.market_goods_list.size++] = i;
+            const int food_index = g_available_data.food_list.size;
+            g_available_data.food_list.items[food_index] = i;
+            g_available_data.food_list.size++;
+
+            const int good_index = g_available_data.market_goods_list.size;
+            g_available_data.market_goods_list.items[good_index] = i;
+            g_available_data.market_goods_list.size++;
         }
     }
     for (int i = RESOURCE_MIN; i < RESOURCES_MAX; i++) {
@@ -263,6 +269,7 @@ static void calculate_available_food(void) {
                 city_data.resource.granaries.operating++;
                 for (int r = 0; r < RESOURCES_FOODS_MAX; r++)
                     city_data.resource.granary_food_stored[r] += b->data.granary.resource_stored[r];
+
                 if (amount_stored >= 100)
                     tutorial_on_filled_granary(amount_stored);
             }

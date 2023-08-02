@@ -1,10 +1,9 @@
-#ifndef EMPIRE_OBJECT_H
-#define EMPIRE_OBJECT_H
+#pragma once
 
-#include "core/buffer.h"
 #include "game/resource.h"
+#include "empire/type.h"
 
-typedef struct {
+struct empire_object {
     int id;
     int type;
     int animation_index;
@@ -23,14 +22,14 @@ typedef struct {
     int trade_route_id;
     int invasion_path_id;
     int invasion_years;
-} empire_object;
+} ;
 
 #define EMPIRE_OBJ_MAX_SOLD_RESOURCES 14
 #define EMPIRE_OBJ_MAX_BOUGHT_RESOURCES 8
 
-typedef struct {
+struct full_empire_object {
     int in_use; // this can be 2, so it's an int!
-    int city_type;
+    e_empire_city city_type;
     int city_name_id;
     int trade_route_open;
     int trade_route_cost;
@@ -41,7 +40,7 @@ typedef struct {
     int trade25;
     int trade15;
     empire_object obj;
-} full_empire_object;
+} ;
 
 void empire_object_init_cities(void);
 
@@ -59,7 +58,7 @@ int empire_object_get_max_invasion_path(void);
 
 int empire_object_get_closest(int x, int y);
 
-void empire_object_set_expanded(int object_id, int new_city_type);
+void empire_object_set_expanded(int object_id, e_empire_city new_city_type);
 
 bool empire_object_city_buys_resource(int object_id, int resource, bool from_raw_object = false);
 bool empire_object_city_sells_resource(int object_id, int resource, bool from_raw_object = false);
@@ -86,5 +85,3 @@ struct map_route_object {
 };
 
 map_route_object* empire_get_route_object(int id);
-
-#endif // EMPIRE_OBJECT_H

@@ -1,9 +1,8 @@
 #include "building/figure.h"
-#include "figuretype/entertainer.h"
 
+#include "figuretype/entertainer.h"
 #include "figuretype/entertainer.h"
 #include "city/data_private.h"
-
 #include "building/barracks.h"
 #include "building/granary.h"
 #include "building/industry.h"
@@ -29,10 +28,11 @@
 #include "grid/terrain.h"
 #include "grid/water.h"
 #include "io/config/config.h"
+#include "city/data_private.h"
+#include "city/floods.h"
+#include "core/random.h"
+#include "grid/routing/routing.h"
 
-#include <city/floods.h>
-#include <core/random.h>
-#include <grid/routing/routing.h>
 #include <math.h>
 
 const int generic_delay_table[] = {0, 1, 3, 7, 15, 29, 44};
@@ -691,8 +691,6 @@ void building::spawn_figure_tax_collector() {
     //    }
 }
 
-#include "city/data_private.h"
-
 void building::spawn_figure_industry() {
     check_labor_problem();
     if (has_road_access) {
@@ -905,6 +903,7 @@ void building::spawn_figure_warehouse() {
         }
     }
 }
+
 void building::spawn_figure_granary() {
     check_labor_problem();
     map_point road;

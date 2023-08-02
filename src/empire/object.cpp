@@ -230,7 +230,8 @@ int empire_object_get_closest(int x, int y) {
     }
     return min_obj_id;
 }
-void empire_object_set_expanded(int object_id, int new_city_type) {
+
+void empire_object_set_expanded(int object_id, e_empire_city new_city_type) {
     objects[object_id].city_type = new_city_type;
     if (new_city_type == EMPIRE_CITY_PHARAOH)
         objects[object_id].obj.expanded.image_id = image_id_from_group(GROUP_EMPIRE_CITY_PH_PHARAOH);

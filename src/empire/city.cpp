@@ -17,27 +17,29 @@
 
 const static int MAX_CITIES[2] = {41, 61};
 
-static empire_city cities[61];
+empire_city g_cities[61];
 
 void empire_city_clear_all(void) {
-    memset(cities, 0, sizeof(cities));
+    memset(g_cities, 0, sizeof(g_cities));
 }
 
 empire_city* empire_city_get(int city_id) {
     if (city_id >= 0 && city_id < MAX_CITIES[GAME_ENV])
-        return &cities[city_id];
+        return &g_cities[city_id];
     else
         return 0;
 }
 
 int empire_city_get_route_id(int city_id) {
-    return cities[city_id].route_id;
+    return g_cities[city_id].route_id;
 }
 
 bool empire_can_import_resource(int resource, bool check_if_open) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (cities[i].in_use && empire_city_type_can_trade(cities[i].type) && (cities[i].is_open || !check_if_open)
-            && cities[i].sells_resource[resource]) {
+        if (g_cities[i].in_use 
+            && empire_city_type_can_trade(g_cities[i].type)
+            && (g_cities[i].is_open || !check_if_open)
+            && g_cities[i].sells_resource[resource]) {
             return true;
         }
     }
@@ -45,8 +47,10 @@ bool empire_can_import_resource(int resource, bool check_if_open) {
 }
 bool empire_can_export_resource(int resource, bool check_if_open) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (cities[i].in_use && empire_city_type_can_trade(cities[i].type) && (cities[i].is_open || !check_if_open)
-            && cities[i].buys_resource[resource]) {
+        if (g_cities[i].in_use 
+            && empire_city_type_can_trade(g_cities[i].type)
+            && (g_cities[i].is_open || !check_if_open)
+            && g_cities[i].buys_resource[resource]) {
             return true;
         }
     }
@@ -55,15 +59,14 @@ bool empire_can_export_resource(int resource, bool check_if_open) {
 
 static bool can_produce_resource(int resource) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (cities[i].in_use
-            && ((GAME_ENV == ENGINE_ENV_C3 && cities[i].type == EMPIRE_CITY_PHARAOH_TRADING)
-                || (GAME_ENV == ENGINE_ENV_PHARAOH && cities[i].type == EMPIRE_CITY_OURS))) {
-            if (cities[i].sells_resource[resource] == 1)
+        if (g_cities[i].in_use && (g_cities[i].type == EMPIRE_CITY_OURS)) {
+            if (g_cities[i].sells_resource[resource])
                 return true;
         }
     }
     return false;
 }
+
 static int get_raw_resource(int resource) {
     if (GAME_ENV == ENGINE_ENV_C3)
         switch (resource) {
@@ -123,14 +126,14 @@ bool empire_can_produce_resource(int resource, bool check_if_open) {
 
 int empire_city_get_for_object(int empire_object_id) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (cities[i].in_use && cities[i].empire_object_id == empire_object_id)
+        if (g_cities[i].in_use && g_cities[i].empire_object_id == empire_object_id)
             return i;
     }
     return 0;
 }
 int empire_city_get_for_trade_route(int route_id) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (cities[i].in_use && cities[i].route_id == route_id)
+        if (g_cities[i].in_use && g_cities[i].route_id == route_id)
             return i;
     }
     return -1;
@@ -138,22 +141,22 @@ int empire_city_get_for_trade_route(int route_id) {
 
 bool empire_city_is_trade_route_open(int route_id) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (cities[i].in_use && cities[i].route_id == route_id)
-            return cities[i].is_open; // ? true : false;
+        if (g_cities[i].in_use && g_cities[i].route_id == route_id)
+            return g_cities[i].is_open; // ? true : false;
     }
     return false;
 }
 void empire_city_reset_yearly_trade_amounts(void) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (cities[i].in_use && cities[i].is_open)
-            trade_route_reset_traded(cities[i].route_id);
+        if (g_cities[i].in_use && g_cities[i].is_open)
+            trade_route_reset_traded(g_cities[i].route_id);
     }
 }
 
 int empire_city_count_wine_sources(void) {
     int sources = 0;
     for (int i = 1; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (cities[i].in_use && cities[i].is_open && cities[i].sells_resource[RESOURCE_BEER]) {
+        if (g_cities[i].in_use && g_cities[i].is_open && g_cities[i].sells_resource[RESOURCE_BEER]) {
             sources++;
         }
     }
@@ -163,8 +166,8 @@ int empire_city_count_wine_sources(void) {
 int empire_city_get_vulnerable_roman(void) {
     int city = 0;
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (cities[i].in_use) {
-            if (cities[i].type == EMPIRE_CITY_FOREIGN_TRADING)
+        if (g_cities[i].in_use) {
+            if (g_cities[i].type == EMPIRE_CITY_FOREIGN_TRADING)
                 city = i;
         }
     }
@@ -173,17 +176,17 @@ int empire_city_get_vulnerable_roman(void) {
 
 void empire_city_expand_empire(void) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (!cities[i].in_use)
+        if (!g_cities[i].in_use)
             continue;
 
-        if (cities[i].type == EMPIRE_CITY_EGYPTIAN_TRADING)
-            cities[i].type = EMPIRE_CITY_PHARAOH;
-        else if (cities[i].type == EMPIRE_CITY_FOREIGN)
-            cities[i].type = EMPIRE_CITY_OURS;
-        else {
+        if (g_cities[i].type == EMPIRE_CITY_EGYPTIAN_TRADING) {
+            g_cities[i].type = EMPIRE_CITY_PHARAOH;
+        } else if (g_cities[i].type == EMPIRE_CITY_FOREIGN) {
+            g_cities[i].type = EMPIRE_CITY_OURS;
+        } else {
             continue;
         }
-        empire_object_set_expanded(cities[i].empire_object_id, cities[i].type);
+        empire_object_set_expanded(g_cities[i].empire_object_id, g_cities[i].type);
     }
 }
 
@@ -267,16 +270,16 @@ static bool generate_trader(int city_id, empire_city* city) {
     return false;
 }
 void empire_city_open_trade(int city_id) {
-    empire_city* city = &cities[city_id];
+    empire_city* city = &g_cities[city_id];
     city_finance_process_construction(city->cost_to_open);
     city->is_open = 1;
 }
 void empire_city_generate_trader(void) {
     for (int i = 1; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (!cities[i].in_use || !cities[i].is_open)
+        if (!g_cities[i].in_use || !g_cities[i].is_open)
             continue;
 
-        if (cities[i].is_sea_trade) {
+        if (g_cities[i].is_sea_trade) {
             if (!city_buildings_has_working_dock()) {
                 // delay of 384 = 1 year
                 if (GAME_ENV == ENGINE_ENV_C3)
@@ -293,28 +296,28 @@ void empire_city_generate_trader(void) {
         } else {
             city_trade_add_land_trade_route();
         }
-        if (generate_trader(i, &cities[i]))
+        if (generate_trader(i, &g_cities[i]))
             break;
     }
 }
 void empire_city_remove_trader(int city_id, int figure_id) {
     for (int i = 0; i < 3; i++) {
-        if (cities[city_id].trader_figure_ids[i] == figure_id)
-            cities[city_id].trader_figure_ids[i] = 0;
+        if (g_cities[city_id].trader_figure_ids[i] == figure_id)
+            g_cities[city_id].trader_figure_ids[i] = 0;
     }
 }
 
 void empire_city_set_vulnerable(int city_id) {
-    cities[city_id].type = EMPIRE_CITY_FOREIGN_TRADING;
+    g_cities[city_id].type = EMPIRE_CITY_FOREIGN_TRADING;
 }
 void empire_city_set_foreign(int city_id) {
-    cities[city_id].type = EMPIRE_CITY_EGYPTIAN;
+    g_cities[city_id].type = EMPIRE_CITY_EGYPTIAN;
 }
 
 io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob) {
     //    int last_city = 0;
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        empire_city* city = &cities[i];
+        empire_city* city = &g_cities[i];
         iob->bind(BIND_SIGNATURE_UINT8, &city->in_use);
         iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_UINT8, &city->type);

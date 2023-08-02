@@ -141,7 +141,6 @@ static int get_height_id(void) {
         case BUILDING_WEAPONS_WORKSHOP:
         case BUILDING_JEWELS_WORKSHOP:
         case BUILDING_POTTERY_WORKSHOP:
-        //case BUILDING_GOLD_MINE:
             return 1;
 
         case BUILDING_BOOTH:
@@ -172,10 +171,10 @@ static int get_height_id(void) {
 }
 static void get_tooltip(tooltip_context* c) {
     int text_id = 0, group_id = 0;
-    if (focus_image_button_id)
+    if (focus_image_button_id) {
         text_id = focus_image_button_id;
 
-    else if (focus_generic_button_id) {
+    } else if (focus_generic_button_id) {
         if (building_get(context.building_id)->state == BUILDING_STATE_VALID) {
             text_id = 8;
             group_id = 54;
@@ -183,9 +182,9 @@ static void get_tooltip(tooltip_context* c) {
             text_id = 10;
             group_id = 54;
         }
-    } else if (context.type == BUILDING_INFO_LEGION)
+    } else if (context.type == BUILDING_INFO_LEGION) {
         text_id = window_building_get_legion_info_tooltip_text(&context);
-    else if (context.type == BUILDING_INFO_BUILDING && context.storage_show_special_orders) {
+    } else if (context.type == BUILDING_INFO_BUILDING && context.storage_show_special_orders) {
         switch (building_get(context.building_id)->type) {
         case BUILDING_GRANARY:
             window_building_get_tooltip_granary_orders(&group_id, &text_id);
@@ -195,6 +194,7 @@ static void get_tooltip(tooltip_context* c) {
             break;
         }
     }
+
     if (text_id || group_id) {
         c->type = TOOLTIP_BUTTON;
         c->text_id = text_id;
@@ -261,8 +261,7 @@ static void init(map_point tile) {
     context.building_id = map_building_at(grid_offset);
     context.rubble_building_type = map_rubble_building_type(grid_offset);
     context.has_reservoir_pipes = map_terrain_is(grid_offset, TERRAIN_GROUNDWATER);
-    context.aqueduct_has_water
-      = map_aqueduct_at(grid_offset) && map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT) < 15;
+    context.aqueduct_has_water = map_aqueduct_at(grid_offset) && map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT) < 15;
 
     city_resource_determine_available();
     context.type = BUILDING_INFO_TERRAIN;

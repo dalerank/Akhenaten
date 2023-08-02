@@ -1,5 +1,4 @@
-#ifndef GAME_RESOURCE_H
-#define GAME_RESOURCE_H
+#pragma once
 
 /**
  * @file
@@ -9,9 +8,7 @@
 /**
  * Resource types
  */
-
-#define RESOURCES_MAX 36
-#define RESOURCES_FOODS_MAX 9
+class building;
 
 enum e_resource {
     RESOURCE_NONE = 0,
@@ -23,6 +20,7 @@ enum e_resource {
     RESOURCE_FIGS = 6,         // RESOURCE_MEAT_C3 = 6,
     RESOURCE_FISH = 7,         // RESOURCE_WINE = 7,
     RESOURCE_GAMEMEAT = 8,     // RESOURCE_OIL_C3 = 8,
+    RESOURCES_FOODS_MAX = 9,
     RESOURCE_STRAW = 9,        // RESOURCE_IRON = 9,
     RESOURCE_WEAPONS = 10,     // RESOURCE_TIMBER_C3 = 10,
     RESOURCE_CLAY = 11,
@@ -50,6 +48,7 @@ enum e_resource {
     RESOURCE_PAINT = 33,
     RESOURCE_LAMPS = 34,
     RESOURCE_MARBLE = 35,
+    RESOURCES_MAX = 36,
     //
     RESOURCE_DEBEN = 36,
     RESOURCE_TROOPS = 37,
@@ -58,7 +57,7 @@ enum e_resource {
     RESOURCE_MIN_FOOD = 1,
 };
 
-enum {
+enum e_inventory_good {
     //    INVENTORY_FOOD1 = 0,
     //    INVENTORY_FOOD2 = 1,
     //    INVENTORY_FOOD3 = 2,
@@ -75,7 +74,12 @@ enum {
     INVENTORY_MAX = 8
 };
 
-enum { RESOURCE_UNIT_PILE = 0, RESOURCE_UNIT_BLOCK = 1, RESOURCE_UNIT_WEAPON = 2, RESOURCE_UNIT_CHARIOT = 3 };
+enum e_resource_unit {
+    RESOURCE_UNIT_PILE = 0, 
+    RESOURCE_UNIT_BLOCK = 1,
+    RESOURCE_UNIT_WEAPON = 2,
+    RESOURCE_UNIT_CHARIOT = 3
+};
 
 int ALLOWED_FOODS(int i);
 bool is_food_allowed(int resource);
@@ -129,8 +133,4 @@ int resource_get_icon(int resource, int quantity = 1);
 
 int resource_is_food(int resource);
 
-class building;
-
 bool resource_required_by_workshop(building* b, int resource);
-
-#endif // GAME_RESOURCE_H

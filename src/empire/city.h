@@ -1,12 +1,11 @@
-#ifndef EMPIRE_CITY_H
-#define EMPIRE_CITY_H
+#pragma once
 
-#include "core/buffer.h"
 #include "game/resource.h"
+#include "empire/type.h"
 
 struct empire_city {
     int in_use; // this can be 2, so it's an int!
-    int type;
+    e_empire_city type;
     int name_id;
     int route_id;
     bool is_open;
@@ -56,5 +55,3 @@ void empire_city_open_trade(int city_id);
 void empire_city_generate_trader(void);
 
 void empire_city_remove_trader(int city_id, int figure_id);
-
-#endif // EMPIRE_CITY_H
