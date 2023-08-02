@@ -44,7 +44,6 @@ struct tutorial_flags_t {
         bool papyrus_made;
         bool bricks_bought;
 
-
         bool tut5_can_trade_finally;
 
         //

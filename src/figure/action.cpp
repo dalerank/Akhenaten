@@ -93,34 +93,34 @@ static figure_action_property action_properties_lookup[] = {
 
   // PHARAOH
 
-  {1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HUNTER_OSTRICH_MOVE},         // 73
-  {1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_HUNTER_ARROW},      // 74
-  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                           // 75
-  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                           // 76
-  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                         // 77
-  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                         // 78
-  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                           // 79
-  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                         // 80
-  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                         // 81
-  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                         // 82
-  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                           // 83
-  {1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HIPPO},          // 84 hippo
-  {1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_WORKER_PH},         // 85
-  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                           // 86
-  {1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_WATER_CARRIER}, // 87 water carrier
-  {1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_POLICEMAN},     // 88 policeman
-  {1, TERRAIN_USAGE_ROADS, 800, GROUP_FIGURE_MAGISTRATE},    // 89 magistrate
-  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                           // 90
-  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                           // 91
-  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                           // 92
-  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                           // 93
-  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                           // 94
-  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                           // 95
-  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                           // 96
-  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                         // 97
-  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                         // 98
-  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                           // 99
-  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                         // 100
+  {1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HUNTER_OSTRICH_MOVE}, // 73
+  {1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_HUNTER_ARROW},           // 74
+  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 75
+  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 76
+  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                              // 77
+  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                              // 78
+  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 79
+  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                              // 80
+  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                              // 81
+  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                              // 82
+  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 83
+  {1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HIPPO},               // 84 hippo
+  {1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_WORKER_PH},              // 85
+  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 86
+  {1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_WATER_CARRIER},      // 87 water carrier
+  {1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_POLICEMAN},          // 88 policeman
+  {1, TERRAIN_USAGE_ROADS, 800, GROUP_FIGURE_MAGISTRATE},         // 89 magistrate
+  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 90
+  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 91
+  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 92
+  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 93
+  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 94
+  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 95
+  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 96
+  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                              // 97
+  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                              // 98
+  {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 99
+  {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                              // 100
 };
 
 bool is_coords_within_range(int x, int y, int b_x, int b_y, int size, int radius) {
@@ -191,7 +191,10 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
         advance_action(FAIL_ACTION);
     return false;
 }
-bool figure::do_gotobuilding(building* dest, bool stop_at_road, int terrainchoice, short NEXT_ACTION,
+bool figure::do_gotobuilding(building* dest,
+                             bool stop_at_road,
+                             int terrainchoice,
+                             short NEXT_ACTION,
                              short FAIL_ACTION) {
     int x, y;
     set_destination(dest);
@@ -505,8 +508,8 @@ void figure::action_perform() {
             //            case 31: common_action(12, GROUP_FIGURE_BARBER); break;
             //            case 32: common_action(12, GROUP_FIGURE_BATHHOUSE_WORKER); break;
         case 33: // doctor_action(); break;
-            //            case 34: common_action(12, GROUP_FIGURE_DOCTOR_SURGEON); break;
-            //            case 35: worker_action();                   break;
+                 //            case 34: common_action(12, GROUP_FIGURE_DOCTOR_SURGEON); break;
+                 //            case 35: worker_action();                   break;
         case 36:
             editor_flag_action();
             break;

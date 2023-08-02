@@ -43,8 +43,9 @@ void button_border_draw(int x, int y, int width_pixels, int height_pixels, bool 
                 else if (xx < width_blocks - 1)
                     ImageDraw::img_generic(image_base + 5, draw_offset_x, draw_offset_y - last_block_offset_y);
                 else
-                    ImageDraw::img_generic(
-                      image_base + 4, draw_offset_x - last_block_offset_x, draw_offset_y - last_block_offset_y);
+                    ImageDraw::img_generic(image_base + 4,
+                                           draw_offset_x - last_block_offset_x,
+                                           draw_offset_y - last_block_offset_y);
             }
         }
     }

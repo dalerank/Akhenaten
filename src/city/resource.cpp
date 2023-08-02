@@ -126,7 +126,8 @@ int city_resource_trading_amount(int resource) {
     return city_data.resource.trading_amount[resource];
 }
 void city_resource_change_trading_amount(int resource, int delta) {
-    city_data.resource.trading_amount[resource] = calc_bound(city_data.resource.trading_amount[resource] + delta, 0, 100);
+    city_data.resource.trading_amount[resource]
+      = calc_bound(city_data.resource.trading_amount[resource] + delta, 0, 100);
 }
 
 int city_resource_is_stockpiled(int resource) {
@@ -137,7 +138,8 @@ void city_resource_toggle_stockpiled(int resource) {
         city_data.resource.stockpiled[resource] = 0;
     else {
         city_data.resource.stockpiled[resource] = 1;
-        if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT || city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT_SURPLUS)
+        if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT
+            || city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT_SURPLUS)
             city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
     }
 }

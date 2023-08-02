@@ -191,7 +191,6 @@ void building_warehouse_space_remove_export(building* space, int resource) {
     if (space->stored_full_amount <= 0)
         space->subtype.warehouse_resource_id = RESOURCE_NONE;
 
-
     int price = trade_price_sell(resource);
     city_finance_process_export(price);
 
@@ -343,8 +342,14 @@ int building_warehouses_remove_resource(int resource, int amount) {
     }
     return amount - amount_left;
 }
-int building_warehouse_for_storing(building* src, int x, int y, int resource, int distance_from_entry,
-                                   int road_network_id, int* understaffed, map_point* dst) {
+int building_warehouse_for_storing(building* src,
+                                   int x,
+                                   int y,
+                                   int resource,
+                                   int distance_from_entry,
+                                   int road_network_id,
+                                   int* understaffed,
+                                   map_point* dst) {
     int min_dist = 10000;
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {

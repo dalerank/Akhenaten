@@ -20,5 +20,4 @@ void map_aqueduct_clear(void);
 void map_aqueduct_backup(void);
 void map_aqueduct_restore(void);
 
-
 #endif // MAP_AQUEDUCT_H

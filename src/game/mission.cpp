@@ -288,8 +288,9 @@ bool game_load_campaign_file() {
                             step->previous_in_list = &prev_campaign->steps[prev_campaign->num_steps - 1];
                             step->previous_in_list->next_in_list = step;
                         }
-                    } else if (index_of_string(
-                                 ptr, string_from_ascii("choicescreen"), line_size)) { // choice screen data
+                    } else if (index_of_string(ptr,
+                                               string_from_ascii("choicescreen"),
+                                               line_size)) { // choice screen data
                         if (campaign->num_steps == 0)
                             campaign->num_steps++;
                         auto step = &campaign->steps[campaign->num_steps - 1];

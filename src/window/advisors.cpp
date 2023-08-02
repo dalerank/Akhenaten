@@ -255,7 +255,6 @@ static void init(void) {
     }
 }
 
-
 void window_advisors_draw_dialog_background(void) {
     ImageDraw::img_background(image_id_from_group(GROUP_ADVISOR_BACKGROUND));
     graphics_set_to_dialog();

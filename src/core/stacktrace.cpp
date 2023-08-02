@@ -73,7 +73,6 @@ void crashhandler_install(void) {
     snprintf(crash_info, 256, __VA_ARGS__);                                                                            \
     log_info(crash_info, 0, 0)
 
-
 static const char* print_exception_name(DWORD exception_code) {
     switch (exception_code) {
     case EXCEPTION_ACCESS_VIOLATION:
@@ -203,7 +202,6 @@ static LONG CALLBACK exception_handler(LPEXCEPTION_POINTERS e) {
     // this seems to silently close the application
     return EXCEPTION_EXECUTE_HANDLER;
 }
-
 
 void crashhandler_install(void) {
     SetUnhandledExceptionFilter(exception_handler);

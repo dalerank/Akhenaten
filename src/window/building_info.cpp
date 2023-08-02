@@ -1,10 +1,10 @@
 #include "building_info.h"
 
-#include "building/storage.h"
 #include "building/barracks.h"
 #include "building/building.h"
 #include "building/house_evolution.h"
 #include "building/model.h"
+#include "building/storage.h"
 #include "building/warehouse.h"
 #include "city/map.h"
 #include "city/resource.h"
@@ -52,18 +52,14 @@ static void button_close(int param1, int param2);
 static void button_advisor(int advisor, int param2);
 static void button_mothball(int mothball, int param2);
 
-static image_button image_buttons_help_close[] = {
-  {14, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
-  {424, 3, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1}
-};
+static image_button image_buttons_help_close[]
+  = {{14, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
+     {424, 3, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1}};
 
 static image_button image_buttons_advisor[] = {
-  {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1}
-};
+  {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1}};
 
-static generic_button generic_button_mothball[] = {
-  {400, 3, 24, 24, button_mothball, button_none, 0, 0}
-};
+static generic_button generic_button_mothball[] = {{400, 3, 24, 24, button_mothball, button_none, 0, 0}};
 
 static building_info_context context;
 static int focus_image_button_id;
@@ -261,7 +257,8 @@ static void init(map_point tile) {
     context.building_id = map_building_at(grid_offset);
     context.rubble_building_type = map_rubble_building_type(grid_offset);
     context.has_reservoir_pipes = map_terrain_is(grid_offset, TERRAIN_GROUNDWATER);
-    context.aqueduct_has_water = map_aqueduct_at(grid_offset) && map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT) < 15;
+    context.aqueduct_has_water
+      = map_aqueduct_at(grid_offset) && map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT) < 15;
 
     city_resource_determine_available();
     context.type = BUILDING_INFO_TERRAIN;
@@ -485,8 +482,10 @@ static void init(map_point tile) {
     if (s_width >= 1024 && s_height >= 768) {
         context.x_offset = mouse_get()->x;
         context.y_offset = mouse_get()->y;
-        window_building_set_possible_position(
-          &context.x_offset, &context.y_offset, context.width_blocks, context.height_blocks);
+        window_building_set_possible_position(&context.x_offset,
+                                              &context.y_offset,
+                                              context.width_blocks,
+                                              context.height_blocks);
     } else if (s_height >= 600 && mouse_get()->y <= (s_height - 24) / 2 + 24)
         context.y_offset = s_height - 16 * context.height_blocks - MARGIN_POSITION;
     else
@@ -826,16 +825,21 @@ static void draw_foreground(void) {
                            image_buttons_help_close,
                            2);
     else
-        image_buttons_draw(
-          context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_help_close, 2);
+        image_buttons_draw(context.x_offset,
+                           context.y_offset + 16 * context.height_blocks - 40,
+                           image_buttons_help_close,
+                           2);
     if (context.can_go_to_advisor)
-        image_buttons_draw(
-          context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_advisor, 1);
+        image_buttons_draw(context.x_offset,
+                           context.y_offset + 16 * context.height_blocks - 40,
+                           image_buttons_advisor,
+                           1);
     if (!context.storage_show_special_orders) {
         int workers_needed = model_get_building(building_get(context.building_id)->type)->laborers;
         if (workers_needed)
-            draw_mothball_button(
-              context.x_offset + 400, context.y_offset + 3 + 16 * context.height_blocks - 40, focus_generic_button_id);
+            draw_mothball_button(context.x_offset + 400,
+                                 context.y_offset + 3 + 16 * context.height_blocks - 40,
+                                 focus_generic_button_id);
     }
 }
 
@@ -956,7 +960,7 @@ static void button_mothball(int mothball, int param2) {
     }
 }
 
-void window_building_info_show(const map_point &point) {
+void window_building_info_show(const map_point& point) {
     window_type window = {WINDOW_BUILDING_INFO, draw_background, draw_foreground, handle_input, get_tooltip};
 
     init(point);

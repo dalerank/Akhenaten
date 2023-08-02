@@ -76,7 +76,6 @@ static void draw_foreground(void) {
     if (data.num_digits > 0)
         text_draw_number_centered_colored(data.value, data.x + 16, data.y + 19, 92, FONT_NORMAL_BLUE, COLOR_FONT_RED);
 
-
     draw_number_button(data.x + 21, data.y + 51, 1, data.focus_button_id == 1);
     draw_number_button(data.x + 51, data.y + 51, 2, data.focus_button_id == 2);
     draw_number_button(data.x + 81, data.y + 51, 3, data.focus_button_id == 3);

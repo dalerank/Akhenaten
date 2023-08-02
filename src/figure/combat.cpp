@@ -380,11 +380,15 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
             attack_image_offset = 12;
             if (opponent->tile.x() != opponent->destination_tile.x()
                 || opponent->tile.y() != opponent->destination_tile.y()) {
-                attack_direction = calc_general_direction(
-                  previous_tile.x(), previous_tile.y(), opponent->previous_tile.x(), opponent->previous_tile.y());
+                attack_direction = calc_general_direction(previous_tile.x(),
+                                                          previous_tile.y(),
+                                                          opponent->previous_tile.x(),
+                                                          opponent->previous_tile.y());
             } else {
-                attack_direction = calc_general_direction(
-                  previous_tile.x(), previous_tile.y(), opponent->tile.x(), opponent->tile.y());
+                attack_direction = calc_general_direction(previous_tile.x(),
+                                                          previous_tile.y(),
+                                                          opponent->tile.x(),
+                                                          opponent->tile.y());
             }
             if (attack_direction >= 8)
                 attack_direction = 0;

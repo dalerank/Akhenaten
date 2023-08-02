@@ -11,11 +11,9 @@
 #include "grid/water_supply.h"
 #include "window/building_info.h"
 
-
 static void go_to_orders(int param1, int param2);
 static void toggle_figure_state(int index, int param2);
 static void roadblock_orders(int index, int param2);
-
 
 static struct {
     int focus_button_id;
@@ -371,7 +369,6 @@ static void roadblock_orders(int param1, int param2) {
 static void go_to_orders(int param1, int param2) {
     window_building_info_show_storage_orders();
 }
-
 
 int window_building_handle_mouse_roadblock(const mouse* m, building_info_context* c) {
     return generic_buttons_handle_mouse(

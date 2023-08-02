@@ -25,7 +25,6 @@ typedef struct {
 const dir_listing* dir_find_files_with_extension(const char* dir, const char* extension);
 const dir_listing* dir_append_files_with_extension(const char* dir, const char* extension);
 
-
 /**
  * Finds all subdirectories
  * @return Directory listing

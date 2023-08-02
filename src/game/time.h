@@ -70,7 +70,6 @@ int game_time_tick(void);
 int game_time_absolute_day(bool since_start = false);
 int game_time_absolute_tick(bool since_start = false);
 
-
 /**
  * Increases tick
  * @return True if the tick overflows

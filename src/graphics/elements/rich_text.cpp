@@ -39,7 +39,11 @@ static struct {
     int max_scroll_position;
 } data;
 
-int rich_text_init(const uint8_t* text, int x_text, int y_text, int width_blocks, int height_blocks,
+int rich_text_init(const uint8_t* text,
+                   int x_text,
+                   int y_text,
+                   int width_blocks,
+                   int height_blocks,
                    int adjust_width_on_no_scroll) {
     data.x_text = x_text;
     data.y_text = y_text;
@@ -189,7 +193,6 @@ static void draw_line(const uint8_t* str, int x, int y, color_t color, bool meas
             if (num_link_chars > 0)
                 def = link_font_def;
 
-
             int num_bytes = 1;
             int letter_id = font_letter_id(def, str, &num_bytes);
             if (letter_id < 0)
@@ -217,7 +220,12 @@ static void draw_line(const uint8_t* str, int x, int y, color_t color, bool meas
     }
 }
 
-static int draw_text(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, color_t color,
+static int draw_text(const uint8_t* text,
+                     int x_offset,
+                     int y_offset,
+                     int box_width,
+                     int height_lines,
+                     color_t color,
                      bool measure_only) {
     int image_height_lines = 0;
     int image_id = 0;
@@ -312,8 +320,9 @@ static int draw_text(const uint8_t* text, int x_offset, int y_offset, int box_wi
                         if (line >= scrollbar.scroll_position)
                             ImageDraw::img_generic(image_id, image_offset_x, y + 8);
                         else {
-                            ImageDraw::img_generic(
-                              image_id, image_offset_x, y + 8 - 16 * (scrollbar.scroll_position - line));
+                            ImageDraw::img_generic(image_id,
+                                                   image_offset_x,
+                                                   y + 8 - 16 * (scrollbar.scroll_position - line));
                         }
                     }
                     image_id = 0;
@@ -328,12 +337,20 @@ static int draw_text(const uint8_t* text, int x_offset, int y_offset, int box_wi
     return num_lines;
 }
 
-int rich_text_draw(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines,
+int rich_text_draw(const uint8_t* text,
+                   int x_offset,
+                   int y_offset,
+                   int box_width,
+                   int height_lines,
                    bool measure_only) {
     return draw_text(text, x_offset, y_offset, box_width, height_lines, 0, measure_only);
 }
 
-int rich_text_draw_colored(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines,
+int rich_text_draw_colored(const uint8_t* text,
+                           int x_offset,
+                           int y_offset,
+                           int box_width,
+                           int height_lines,
                            color_t color) {
     return draw_text(text, x_offset, y_offset, box_width, height_lines, color, 0);
 }

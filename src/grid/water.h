@@ -11,8 +11,13 @@ void foreach_river_tile(void (*callback)(int grid_offset));
 
 void map_water_add_building(int building_id, int x, int y, int size, int image_id);
 
-bool map_shore_determine_orientation(int x, int y, int size, bool adjust_xy, int* orientation_absolute,
-                                     bool adjacent = false, int shore_terrain = TERRAIN_WATER);
+bool map_shore_determine_orientation(int x,
+                                     int y,
+                                     int size,
+                                     bool adjust_xy,
+                                     int* orientation_absolute,
+                                     bool adjacent = false,
+                                     int shore_terrain = TERRAIN_WATER);
 
 int map_water_get_wharf_for_new_fishing_boat(figure* boat, map_point* tile);
 int map_water_find_alternative_fishing_boat_tile(figure* boat, map_point* tile);

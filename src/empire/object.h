@@ -1,7 +1,7 @@
 #pragma once
 
-#include "game/resource.h"
 #include "empire/type.h"
+#include "game/resource.h"
 
 struct empire_object {
     int id;
@@ -22,7 +22,7 @@ struct empire_object {
     int trade_route_id;
     int invasion_path_id;
     int invasion_years;
-} ;
+};
 
 #define EMPIRE_OBJ_MAX_SOLD_RESOURCES 14
 #define EMPIRE_OBJ_MAX_BOUGHT_RESOURCES 8
@@ -40,7 +40,7 @@ struct full_empire_object {
     int trade25;
     int trade15;
     empire_object obj;
-} ;
+};
 
 void empire_object_init_cities(void);
 

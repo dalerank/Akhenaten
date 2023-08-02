@@ -180,7 +180,6 @@ static void update_prosperity_explanation(void) {
     if (city_data.entertainment.hippodrome_shows > 0)
         change += 1;
 
-
     int reason;
     if (city_data.ratings.prosperity <= 0 && game_time_year() == scenario_property_start_year())
         reason = 0;
@@ -240,7 +239,6 @@ void city_ratings_update_kingdom_explanation(void) {
 
     } else if (salary_delta > 0)
         city_data.ratings.kingdom_salary_penalty = salary_delta;
-
 
     if (city_data.ratings.kingdom_salary_penalty >= 8)
         city_data.ratings.kingdom_explanation = 1;

@@ -1,7 +1,6 @@
 #include "queue.h"
 #include "routing_grids.h"
 
-
 #define GUARD 50000
 
 // static const int ROUTE_OFFSETS[2][8] = {

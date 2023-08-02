@@ -6,7 +6,6 @@ enum file_dialog_type { FILE_DIALOG_SAVE = 0, FILE_DIALOG_LOAD = 1, FILE_DIALOG_
 
 enum file_type { FILE_TYPE_SAVED_GAME = 0, FILE_TYPE_SCENARIO = 1 };
 
-
 struct file_type_data {
     char extension[4];
     char last_loaded_file[MAX_FILE_NAME];

@@ -22,7 +22,6 @@ void window_building_set_possible_position(int* x_offset, int* y_offset, int wid
     if (*y_offset + dialog_height > screen_height() - MARGIN_POSITION)
         *y_offset -= dialog_height;
 
-
     *y_offset = (*y_offset < MIN_Y_POSITION) ? MIN_Y_POSITION : *y_offset;
 
     if (*x_offset + dialog_width > width)
@@ -50,8 +49,8 @@ int window_building_get_vertical_offset(building_info_context* c, int new_window
     return new_window_y;
 }
 
-static int get_employment_info_text_id(building_info_context* c, building* b, int y_offset,
-                                       int consider_house_covering) {
+static int
+get_employment_info_text_id(building_info_context* c, building* b, int y_offset, int consider_house_covering) {
     int text_id;
     if (b->num_workers >= model_get_building(b->type)->laborers)
         text_id = 0;

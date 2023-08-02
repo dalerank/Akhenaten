@@ -31,7 +31,6 @@ static const int Y_VIEW_OFFSETS[MAX_TILES]
 
 // #define OFFSET(x,y) (x + GRID_SIZE_PH * y)
 
-
 static const int TILE_GRID_OFFSETS_PH[4][MAX_TILES] = {
   {GRID_OFFSET(0, 0), GRID_OFFSET(0, 1), GRID_OFFSET(1, 0), GRID_OFFSET(1, 1), GRID_OFFSET(0, 2),
    GRID_OFFSET(2, 0), GRID_OFFSET(1, 2), GRID_OFFSET(2, 1), GRID_OFFSET(2, 2), GRID_OFFSET(0, 3),
@@ -222,7 +221,8 @@ static void draw_fort(map_point* tile, int x, int y) {
 
     //    int grid_offset_fort = tile->grid_offset;
     int grid_offset_ground
-      = tile->grid_offset(); // + FORT_GROUND_GRID_OFFSETS[building_rotation_get_rotation()][city_view_orientation()/2];
+      = tile->grid_offset(); // +
+                             // FORT_GROUND_GRID_OFFSETS[building_rotation_get_rotation()][city_view_orientation()/2];
     switch (GAME_ENV) {
     case ENGINE_ENV_PHARAOH:
         grid_offset_ground

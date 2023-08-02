@@ -1509,8 +1509,9 @@ static void set_empty_land_pass2(int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR + TERRAIN_MEADOW) && ph_grass >= 0) {
         int image_base = image_id_from_group(GROUP_TERRAIN_GRASS_PH);
         if (ph_grass && ph_grass <= 11)
-            return set_empty_land_image(
-              grid_offset, 1, image_base + ph_grass - 1 + 12 * (map_random_get(grid_offset) % 3));
+            return set_empty_land_image(grid_offset,
+                                        1,
+                                        image_base + ph_grass - 1 + 12 * (map_random_get(grid_offset) % 3));
         else if (ph_grass == 12) {
             // check for non-clear terrain tiles in a radius around it
             int closest_radius_not_fullgrass = 3;
@@ -1527,8 +1528,9 @@ static void set_empty_land_pass2(int grid_offset) {
             case 2: // two tiles of distance
                 return set_empty_land_image(grid_offset, 1, image_base + 60 + (map_random_get(grid_offset) % 12));
             default: // any other distance
-                return set_empty_land_image(
-                  grid_offset, 1, image_base + 48 + (map_random_get(grid_offset) % 12)); // flat tiles
+                return set_empty_land_image(grid_offset,
+                                            1,
+                                            image_base + 48 + (map_random_get(grid_offset) % 12)); // flat tiles
             }
 
         } else if (ph_grass >= 16) { // edges have special ids
@@ -1541,7 +1543,6 @@ static void set_empty_land_pass2(int grid_offset) {
             //            }
             //            else
             //                return set_empty_land_image(grid_offset, 1, image_id_from_group(GROUP_TERRAIN_BLACK));
-
 
             // correct for city orientation the janky, hardcoded, but at least working way
             int tr_offset = ph_grass - 16;

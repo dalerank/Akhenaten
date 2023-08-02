@@ -507,8 +507,10 @@ void tutorial_on_day_tick(void) {
 void tutorial_on_month_tick(void) {
     if (scenario_is_mission_rank(3)) {
         if (game_time_month() == 5)
-            city_message_post_with_message_delay(
-              MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS, 1200);
+            city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3,
+                                                 1,
+                                                 MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS,
+                                                 1200);
     }
 }
 

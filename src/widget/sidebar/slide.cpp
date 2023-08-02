@@ -63,8 +63,10 @@ static void draw_sliding_foreground(void) {
     //    graphics_reset_clip_rectangle();
 }
 
-void sidebar_slide(int direction, back_sidebar_draw_function back_sidebar_callback,
-                   front_sidebar_draw_function front_sidebar_callback, slide_finished_function finished_callback) {
+void sidebar_slide(int direction,
+                   back_sidebar_draw_function back_sidebar_callback,
+                   front_sidebar_draw_function front_sidebar_callback,
+                   slide_finished_function finished_callback) {
     data.direction = direction;
     data.position = 0;
     speed_clear(&data.slide_speed);

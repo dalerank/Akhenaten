@@ -66,7 +66,6 @@ static void draw_foreground(void) {
     if (g_mission_next.choice > 0)
         image_buttons_draw(580, 410, &image_button_start_mission, 1);
 
-
     int rank = scenario_campaign_rank();
     int x_peaceful = CAMPAIGN_SELECTION[rank].x_peaceful - 4;
     int y_peaceful = CAMPAIGN_SELECTION[rank].y_peaceful - 4;
@@ -104,7 +103,6 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     if (is_mouse_hit(m_dialog, x_military, y_military, 44))
         g_mission_next.focus_button = 2;
 
-
     if (g_mission_next.choice > 0) {
         if (image_buttons_handle_mouse(m_dialog, 580, 410, &image_button_start_mission, 1, 0))
             return;
@@ -114,7 +112,6 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         }
     } else if (h->escape_pressed)
         hotkey_handle_escape();
-
 
     if (m_dialog->left.went_up) {
         // TODO

@@ -262,8 +262,10 @@ static void set_enemy_target_building(formation* m) {
     }
     if (best_building) {
         if (best_building->type == BUILDING_WAREHOUSE)
-            formation_set_destination_building(
-              m, best_building->tile.x() + 1, best_building->tile.y(), best_building->id + 1);
+            formation_set_destination_building(m,
+                                               best_building->tile.x() + 1,
+                                               best_building->tile.y(),
+                                               best_building->id + 1);
         else {
             formation_set_destination_building(m, best_building->tile.x(), best_building->tile.y(), best_building->id);
         }

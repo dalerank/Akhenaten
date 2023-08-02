@@ -29,8 +29,11 @@ struct city_overlay {
 
     city_overlay() {
     }
-    city_overlay(int _type, int _column_type, int (*_show_building_func)(const building* b),
-                 int (*_show_figure)(const figure* f), int (*_get_column_height)(const building* b),
+    city_overlay(int _type,
+                 int _column_type,
+                 int (*_show_building_func)(const building* b),
+                 int (*_show_figure)(const figure* f),
+                 int (*_get_column_height)(const building* b),
                  int (*_get_tooltip_for_grid_offset)(tooltip_context* c, int grid_offset),
                  int (*_get_tooltip_for_building)(tooltip_context* c, const building* b),
                  void (*_draw_custom_footprint)(pixel_coordinate pixel, map_point point),

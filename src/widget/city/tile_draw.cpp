@@ -194,8 +194,18 @@ void draw_flattened_footprint_building(const building* b, int x, int y, int imag
 
 #define TILE_BLEEDING_Y_BIAS 8
 static bool USE_BLEEDING_CACHE = true;
-static void clip_between_rectangles(int* xOut, int* yOut, int* wOut, int* hOut, int xA, int yA, int wA, int hA, int xB,
-                                    int yB, int wB, int hB) {
+static void clip_between_rectangles(int* xOut,
+                                    int* yOut,
+                                    int* wOut,
+                                    int* hOut,
+                                    int xA,
+                                    int yA,
+                                    int wA,
+                                    int hA,
+                                    int xB,
+                                    int yB,
+                                    int wB,
+                                    int hB) {
     *xOut = (xA > xB) ? xA : xB;
     *yOut = (yA > yB) ? yA : yB;
     int x_end_A = (xA + wA);
@@ -386,7 +396,6 @@ void draw_isometrics(pixel_coordinate pixel, map_point point) {
         if (map_property_is_constructing(grid_offset))
             image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
 
-
         //        const image_t *img = image_get(image_id);
         //
         //        int tile_size = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
@@ -450,8 +459,10 @@ void draw_isometrics_overlay(pixel_coordinate pixel, map_point point) {
             ImageDraw::isometric_from_drawtile(image_id, x, y, map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
 
         } else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
-            ImageDraw::isometric_from_drawtile(
-              map_image_at(grid_offset), x, y, map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
+            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset),
+                                               x,
+                                               y,
+                                               map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
 
         } else if (terrain & TERRAIN_BUILDING) {
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);

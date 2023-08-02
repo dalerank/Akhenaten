@@ -41,8 +41,14 @@ player_data_t& player_data() {
     return inst;
 }
 
-uint32_t records_calc_score(float unkn, float funds, float population, float r_culture, float r_prosperity,
-                            float r_kingdom, float months, float difficulty) {
+uint32_t records_calc_score(float unkn,
+                            float funds,
+                            float population,
+                            float r_culture,
+                            float r_prosperity,
+                            float r_kingdom,
+                            float months,
+                            float difficulty) {
     // I have *NO CLUE* how this value works. It's just black magic.
     // In missions where it's zero, the formula checks out correctly.
     unkn = 0.0;
@@ -128,7 +134,6 @@ const char* player_get_last_autosave() {
 void player_data_new(const uint8_t* player_name) {
     GamestateIO::prepare_savegame("family.sav");
 }
-
 
 void player_data_delete(const uint8_t* player_name) {
     GamestateIO::delete_family((char const*)player_name);

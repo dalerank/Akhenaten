@@ -1,8 +1,8 @@
 #include "building/figure.h"
 
-#include "figuretype/entertainer.h"
-#include "figuretype/entertainer.h"
 #include "city/data_private.h"
+#include "figuretype/entertainer.h"
+
 #include "building/barracks.h"
 #include "building/granary.h"
 #include "building/industry.h"
@@ -10,10 +10,13 @@
 #include "building/model.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
+#include "city/data_private.h"
 #include "city/entertainment.h"
+#include "city/floods.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
+#include "core/random.h"
 #include "figure/figure.h"
 #include "figure/formation_legion.h"
 #include "figure/movement.h"
@@ -25,13 +28,10 @@
 #include "grid/image.h"
 #include "grid/random.h"
 #include "grid/road_access.h"
+#include "grid/routing/routing.h"
 #include "grid/terrain.h"
 #include "grid/water.h"
 #include "io/config/config.h"
-#include "city/data_private.h"
-#include "city/floods.h"
-#include "core/random.h"
-#include "grid/routing/routing.h"
 
 #include <math.h>
 
@@ -118,8 +118,8 @@ figure* building::create_figure_generic(int _type, int created_action, int slot,
     return f;
 }
 
-figure *building::create_roaming_figure(int _type, int created_action, int slot) {
-    figure *f = create_figure_generic(_type, created_action, slot, figure_roam_direction);
+figure* building::create_roaming_figure(int _type, int created_action, int slot) {
+    figure* f = create_figure_generic(_type, created_action, slot, figure_roam_direction);
 
     f->set_destination(0);
     f->set_immigrant_home(0);
@@ -413,8 +413,10 @@ void building::spawn_figure_market() {
         if (!has_figure_of_type(1, FIGURE_MARKET_BUYER)) {
             building* dest = building_get(building_market_get_storage_destination(this));
             if (dest->id) {
-                figure* f = create_figure_with_destination(
-                  FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, 1);
+                figure* f = create_figure_with_destination(FIGURE_MARKET_BUYER,
+                                                           dest,
+                                                           FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE,
+                                                           1);
                 f->collecting_item_id = data.market.fetch_inventory_id;
             }
         }
@@ -746,7 +748,6 @@ void building::spawn_figure_wharf() {
     //        create_figure_generic(FIGURE_FISHING_BOAT, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
     //    }
     common_spawn_goods_output_cartpusher();
-
 
     //    check_labor_problem();
     //    if (data.industry.fishing_boat_id) {

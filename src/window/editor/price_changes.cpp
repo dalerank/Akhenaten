@@ -69,8 +69,10 @@ static void draw_foreground(void) {
         scenario_editor_price_change_get(i, &price_change);
         if (price_change.year) {
             text_draw_number(price_change.year, '+', " ", x + 10, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
-            lang_text_draw_year(
-              scenario_property_start_year() + price_change.year, x + 65, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_year(scenario_property_start_year() + price_change.year,
+                                x + 65,
+                                y + 6,
+                                FONT_NORMAL_BLACK_ON_LIGHT);
             int offset = price_change.resource + resource_image_offset(price_change.resource, RESOURCE_IMAGE_ICON);
             ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 140, y + 3);
             int width

@@ -247,7 +247,6 @@ void city_emperor_send_gift(void) {
     if (city_data.emperor.gifts[size].id >= 4)
         city_data.emperor.gifts[size].id = 0;
 
-
     city_data.emperor.personal_savings -= cost;
 }
 

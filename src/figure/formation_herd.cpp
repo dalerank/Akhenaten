@@ -48,8 +48,14 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, int* x_t
     return tile_found;
 }
 
-static int get_roaming_destination(int formation_id, int allow_negative_desirability, int x, int y, int distance,
-                                   int direction, int* x_tile, int* y_tile) {
+static int get_roaming_destination(int formation_id,
+                                   int allow_negative_desirability,
+                                   int x,
+                                   int y,
+                                   int distance,
+                                   int direction,
+                                   int* x_tile,
+                                   int* y_tile) {
     int target_direction = (formation_id + random_byte()) & 6;
     if (direction) {
         target_direction = direction;

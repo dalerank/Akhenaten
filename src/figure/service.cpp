@@ -220,7 +220,6 @@ static void distribute_market_resources(building* b, building* market) {
     if (config_get(CONFIG_GP_CH_MORE_STOCKPILE))
         goods_no = 8;
 
-
     if (model->jewelry_furniture) {
         market->data.market.furniture_demand = 10;
         distribute_good(b, market, goods_no * model->jewelry_furniture, INVENTORY_GOOD2);

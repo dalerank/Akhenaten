@@ -169,7 +169,6 @@ static void collect_monthly_taxes(void) {
         if (b->state != BUILDING_STATE_VALID || !b->house_size)
             continue;
 
-
         int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
         int population = b->house_population;
         int trm = difficulty_adjust_money(model_get_house(b->subtype.house_level)->tax_multiplier);
@@ -204,8 +203,9 @@ static void collect_monthly_taxes(void) {
 
     city_data.taxes.yearly.collected_patricians += collected_patricians;
     city_data.taxes.yearly.collected_plebs += collected_plebs;
-    city_data.taxes.yearly.uncollected_patricians += calc_adjust_with_percentage(
-      city_data.taxes.monthly.uncollected_patricians / 2, city_data.finance.tax_percentage);
+    city_data.taxes.yearly.uncollected_patricians
+      += calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_patricians / 2,
+                                     city_data.finance.tax_percentage);
     city_data.taxes.yearly.uncollected_plebs
       += calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_plebs / 2, city_data.finance.tax_percentage);
 

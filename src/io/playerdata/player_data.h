@@ -57,8 +57,14 @@ struct player_record {
 
 ///
 
-uint32_t records_calc_score(float unkn, float funds, float population, float r_culture, float r_prosperity,
-                            float r_kingdom, float months, float difficulty);
+uint32_t records_calc_score(float unkn,
+                            float funds,
+                            float population,
+                            float r_culture,
+                            float r_prosperity,
+                            float r_kingdom,
+                            float months,
+                            float difficulty);
 uint32_t records_calc_score(const player_record* record);
 const player_record* highscores_get(int rank);
 int highscores_count();

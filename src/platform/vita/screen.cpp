@@ -27,12 +27,14 @@ vita2d_texture* tex_buffer_city = NULL;
 static void create_textures(void) {
     SDL_Log("Creating empty textures\n");
     if (!tex_buffer_ui) {
-        tex_buffer_ui = vita2d_create_empty_texture_format(
-          VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ARGB);
+        tex_buffer_ui = vita2d_create_empty_texture_format(VITA_DISPLAY_WIDTH,
+                                                           VITA_DISPLAY_HEIGHT,
+                                                           SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ARGB);
     }
     if (config_get(CONFIG_UI_ZOOM) && !tex_buffer_city) {
-        tex_buffer_city = vita2d_create_empty_texture_format(
-          VITA_DISPLAY_WIDTH * 2, VITA_DISPLAY_HEIGHT * 2, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ARGB);
+        tex_buffer_city = vita2d_create_empty_texture_format(VITA_DISPLAY_WIDTH * 2,
+                                                             VITA_DISPLAY_HEIGHT * 2,
+                                                             SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ARGB);
     }
     SDL_Log("Creating empty textures: done\n");
 }
@@ -46,8 +48,9 @@ int platform_screen_create(const char* title, int display_scale_percentage) {
         my_renderer = SDL_CreateRenderer(my_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     }
     SDL_Log("Creating empty texture\n");
-    tex_buffer = vita2d_create_empty_texture_format(
-      VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB);
+    tex_buffer = vita2d_create_empty_texture_format(VITA_DISPLAY_WIDTH,
+                                                    VITA_DISPLAY_HEIGHT,
+                                                    SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB);
     SDL_Log("Creating empty texture: done\n");
 
     return platform_screen_resize(VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT);
@@ -94,8 +97,10 @@ void platform_screen_render(void) {
     vita2d_start_drawing();
     vita2d_clear_screen();
     if (config_get(CONFIG_UI_ZOOM)) {
-        city_view_get_scaled_viewport(
-          &city_texture_position.x, &city_texture_position.y, &city_texture_position.w, &city_texture_position.h);
+        city_view_get_scaled_viewport(&city_texture_position.x,
+                                      &city_texture_position.y,
+                                      &city_texture_position.w,
+                                      &city_texture_position.h);
         float scale = city_view_get_scale() / 100.0f;
         scale = 1 / scale;
         vita2d_draw_texture_part_scale(tex_buffer_city,
@@ -112,8 +117,9 @@ void platform_screen_render(void) {
 
     const mouse* mouse = mouse_get();
     if (!mouse->is_touch) {
-        vita2d_draw_texture(
-          current_cursor->texture, mouse->x - current_cursor->hotspot_x, mouse->y - current_cursor->hotspot_y);
+        vita2d_draw_texture(current_cursor->texture,
+                            mouse->x - current_cursor->hotspot_x,
+                            mouse->y - current_cursor->hotspot_y);
     }
     vita2d_end_drawing();
     vita2d_wait_rendering_done();

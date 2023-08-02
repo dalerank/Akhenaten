@@ -1,7 +1,7 @@
 #pragma once
 
-#include "game/resource.h"
 #include "empire/type.h"
+#include "game/resource.h"
 
 struct empire_city {
     int in_use; // this can be 2, so it's an int!

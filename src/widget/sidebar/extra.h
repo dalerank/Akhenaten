@@ -14,7 +14,11 @@ enum {
 /**
  * @return The actual height of the extra info
  */
-int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int height, int is_collapsed,
+int sidebar_extra_draw_background(int x_offset,
+                                  int y_offset,
+                                  int width,
+                                  int height,
+                                  int is_collapsed,
                                   int info_to_display);
 void sidebar_extra_draw_foreground(void);
 

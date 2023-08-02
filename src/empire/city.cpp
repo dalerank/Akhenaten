@@ -36,10 +36,8 @@ int empire_city_get_route_id(int city_id) {
 
 bool empire_can_import_resource(int resource, bool check_if_open) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (g_cities[i].in_use 
-            && empire_city_type_can_trade(g_cities[i].type)
-            && (g_cities[i].is_open || !check_if_open)
-            && g_cities[i].sells_resource[resource]) {
+        if (g_cities[i].in_use && empire_city_type_can_trade(g_cities[i].type)
+            && (g_cities[i].is_open || !check_if_open) && g_cities[i].sells_resource[resource]) {
             return true;
         }
     }
@@ -47,10 +45,8 @@ bool empire_can_import_resource(int resource, bool check_if_open) {
 }
 bool empire_can_export_resource(int resource, bool check_if_open) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (g_cities[i].in_use 
-            && empire_city_type_can_trade(g_cities[i].type)
-            && (g_cities[i].is_open || !check_if_open)
-            && g_cities[i].buys_resource[resource]) {
+        if (g_cities[i].in_use && empire_city_type_can_trade(g_cities[i].type)
+            && (g_cities[i].is_open || !check_if_open) && g_cities[i].buys_resource[resource]) {
             return true;
         }
     }
@@ -285,8 +281,10 @@ void empire_city_generate_trader(void) {
                 if (GAME_ENV == ENGINE_ENV_C3)
                     city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK, 384);
                 else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                    city_message_post_with_message_delay(
-                      MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK_PH, 384);
+                    city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK,
+                                                         1,
+                                                         MESSAGE_NO_WORKING_DOCK_PH,
+                                                         384);
                 continue;
             }
             if (!scenario_map_has_river_entry())

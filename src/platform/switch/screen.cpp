@@ -189,8 +189,10 @@ void platform_screen_render(void) {
                                       &city_texture_position.offset.w,
                                       &city_texture_position.offset.h);
         city_texture_position.renderer.w = city_texture_position.renderer.w * 2 + 1;
-        SDL_UpdateTexture(
-          SDL.texture_city, &city_texture_position.offset, graphics_canvas(CANVAS_CITY), screen_width() * 4 * 2);
+        SDL_UpdateTexture(SDL.texture_city,
+                          &city_texture_position.offset,
+                          graphics_canvas(CANVAS_CITY),
+                          screen_width() * 4 * 2);
         SDL_RenderCopy(SDL.renderer, SDL.texture_city, &city_texture_position.offset, &city_texture_position.renderer);
     }
     SDL_UpdateTexture(SDL.texture_ui, NULL, graphics_canvas(CANVAS_UI), screen_width() * 4);

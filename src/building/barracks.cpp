@@ -17,7 +17,11 @@
 
 int g_tower_sentry_request = 0;
 
-int building_get_barracks_for_weapon(int x, int y, int resource, int road_network_id, int distance_from_entry,
+int building_get_barracks_for_weapon(int x,
+                                     int y,
+                                     int resource,
+                                     int road_network_id,
+                                     int distance_from_entry,
                                      map_point* dst) {
     if (resource != RESOURCE_WEAPONS)
         return 0;

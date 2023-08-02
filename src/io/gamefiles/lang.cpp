@@ -3,8 +3,8 @@
 #include "core/buffer.h"
 #include "core/game_environment.h"
 #include "io/file.h"
-#include "io/log.h"
 #include "io/io.h"
+#include "io/log.h"
 #include "translation/translation.h"
 
 #include <cstring>
@@ -45,7 +45,7 @@ struct lang_files_collection {
 };
 
 lang_files_collection lfcs[] = {{"c3.eng", "c3_mm.eng", "c3.rus", "c3_mm.rus", "c3_map.eng", "c3_map_mm.eng"},
-                                
+
                                 {"Pharaoh_Text.eng",
                                  "Pharaoh_MM.eng",
                                  "Pharaoh_Text.rus",

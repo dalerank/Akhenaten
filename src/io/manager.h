@@ -59,9 +59,14 @@ public:
     }
 
     // write/read internal chunk cache (io_buffer sequence) to/from disk file
-    bool serialize(const char* filename, int offset, e_file_format format, const int version,
+    bool serialize(const char* filename,
+                   int offset,
+                   e_file_format format,
+                   const int version,
                    void (*init_schema)(e_file_format _format, const int _version));
-    bool unserialize(const char* filename, int offset, e_file_format format,
+    bool unserialize(const char* filename,
+                     int offset,
+                     e_file_format format,
                      const int (*determine_file_version)(const char* _filename, int _offset),
                      void (*init_schema)(e_file_format _format, const int _version));
 };

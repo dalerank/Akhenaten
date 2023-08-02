@@ -79,7 +79,6 @@ int building_dock_get_free_destination(int ship_id, map_point* tile) {
 
         building* dock = building_get(dock_id);
 
-
         if (!dock->data.dock.trade_ship_id || dock->data.dock.trade_ship_id == ship_id)
             break;
     }

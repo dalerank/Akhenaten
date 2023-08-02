@@ -59,8 +59,10 @@ static void draw_foreground(void) {
         scenario_editor_request_get(i, &request);
         if (request.resource) {
             text_draw_number(request.year, '+', " ", x + 20, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
-            lang_text_draw_year(
-              scenario_property_start_year() + request.year, x + 80, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_year(scenario_property_start_year() + request.year,
+                                x + 80,
+                                y + 6,
+                                FONT_NORMAL_BLACK_ON_LIGHT);
             int width = text_draw_number(request.amount, '@', " ", x + 180, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
             int offset = request.resource + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON);
             ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 190 + width, y + 3);

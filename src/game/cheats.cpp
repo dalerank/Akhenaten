@@ -169,7 +169,6 @@ static void game_cheat_kill_all(uint8_t* args) {
     city_warning_show_console((uint8_t*)"Killed all walkers");
 }
 
-
 void game_cheat_parse_command(uint8_t* command) {
     uint8_t command_to_call[MAX_COMMAND_SIZE];
     int next_arg = parse_word(command, command_to_call);

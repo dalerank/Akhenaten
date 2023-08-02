@@ -99,9 +99,14 @@ public:
     void draw();
     int input_handle(const mouse* m);
 
-    scroll_list_panel(int n_buttons, void (*lmb)(int param1, int param2), void (*rmb)(int param1, int param2),
-                      void (*dmb)(int param1, int param2), void (*fcc)(int param1, int param2),
-                      scrollable_list_ui_params params, bool use_file_finder, const char* dir = ".",
+    scroll_list_panel(int n_buttons,
+                      void (*lmb)(int param1, int param2),
+                      void (*rmb)(int param1, int param2),
+                      void (*dmb)(int param1, int param2),
+                      void (*fcc)(int param1, int param2),
+                      scrollable_list_ui_params params,
+                      bool use_file_finder,
+                      const char* dir = ".",
                       const char* ext = "");
     ~scroll_list_panel();
 };

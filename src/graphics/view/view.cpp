@@ -282,8 +282,10 @@ static void set_viewport(int x_offset, int y_offset, int width, int height) {
 static void set_viewport_with_sidebar(void) {
     auto& data = g_city_view_data;
 
-    return set_viewport(
-      0, TOP_MENU_HEIGHT, data.screen_width - SIDEBAR_EXPANDED_WIDTH + 2, data.screen_height - TOP_MENU_HEIGHT);
+    return set_viewport(0,
+                        TOP_MENU_HEIGHT,
+                        data.screen_width - SIDEBAR_EXPANDED_WIDTH + 2,
+                        data.screen_height - TOP_MENU_HEIGHT);
 }
 static void set_viewport_without_sidebar(void) {
     auto& data = g_city_view_data;
@@ -400,9 +402,12 @@ static pixel_coordinate starting_pixel_coord() {
               + calc_adjust_with_percentage(TOP_MENU_HEIGHT, zoom_get_percentage()); // - pixel_offset_internal().y;
     return pixel - camera_get_pixel_offset_internal();
 }
-void city_view_foreach_valid_map_tile(tile_draw_callback* callback1, tile_draw_callback* callback2,
-                                      tile_draw_callback* callback3, tile_draw_callback* callback4,
-                                      tile_draw_callback* callback5, tile_draw_callback* callback6) {
+void city_view_foreach_valid_map_tile(tile_draw_callback* callback1,
+                                      tile_draw_callback* callback2,
+                                      tile_draw_callback* callback3,
+                                      tile_draw_callback* callback4,
+                                      tile_draw_callback* callback5,
+                                      tile_draw_callback* callback6) {
     auto& data = g_city_view_data;
 
     int odd = 0;
@@ -505,29 +510,34 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, tile
                           point.shifted(offset_south * orientation_x, offset_north * orientation_y),
                           callback);
         for (int tile = 1; tile < ring * 2 + size + 2; ++tile) {
-            do_valid_callback(
-              {pixel.x + x_delta * tile, pixel.y - y_offset * pixel_rotation + y_delta * pixel_rotation * tile},
-              point.shifted((tile + offset_north) * orientation_x, offset_north * orientation_y),
-              callback);
-            do_valid_callback(
-              {pixel.x - x_delta * tile, pixel.y - y_offset * pixel_rotation + y_delta * pixel_rotation * tile},
-              point.shifted(offset_north * orientation_x, (tile + offset_north) * orientation_y),
-              callback);
-            do_valid_callback(
-              {pixel.x + x_delta * tile, pixel.y + y_offset * pixel_rotation - y_delta * pixel_rotation * tile},
-              point.shifted(offset_south * orientation_x, (offset_south - tile) * orientation_y),
-              callback);
-            do_valid_callback(
-              {pixel.x - x_delta * tile, pixel.y + y_offset * pixel_rotation - y_delta * pixel_rotation * tile},
-              point.shifted((offset_south - tile) * orientation_x, offset_south * orientation_y),
-              callback);
+            do_valid_callback({pixel.x + x_delta * tile,
+                               pixel.y - y_offset * pixel_rotation + y_delta * pixel_rotation * tile},
+                              point.shifted((tile + offset_north) * orientation_x, offset_north * orientation_y),
+                              callback);
+            do_valid_callback({pixel.x - x_delta * tile,
+                               pixel.y - y_offset * pixel_rotation + y_delta * pixel_rotation * tile},
+                              point.shifted(offset_north * orientation_x, (tile + offset_north) * orientation_y),
+                              callback);
+            do_valid_callback({pixel.x + x_delta * tile,
+                               pixel.y + y_offset * pixel_rotation - y_delta * pixel_rotation * tile},
+                              point.shifted(offset_south * orientation_x, (offset_south - tile) * orientation_y),
+                              callback);
+            do_valid_callback({pixel.x - x_delta * tile,
+                               pixel.y + y_offset * pixel_rotation - y_delta * pixel_rotation * tile},
+                              point.shifted((offset_south - tile) * orientation_x, offset_south * orientation_y),
+                              callback);
         }
         x_offset += TILE_WIDTH_PIXELS;
         y_offset += TILE_HEIGHT_PIXELS;
     }
 }
-void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles,
-                                    int height_tiles, minimap_draw_callback callback) {
+void city_view_foreach_minimap_tile(int x_offset,
+                                    int y_offset,
+                                    int absolute_x,
+                                    int absolute_y,
+                                    int width_tiles,
+                                    int height_tiles,
+                                    minimap_draw_callback callback) {
     int odd = 0;
     int y_abs = absolute_y - 4;
     int screen_y = y_offset - 4;

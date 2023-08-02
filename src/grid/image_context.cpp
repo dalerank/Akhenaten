@@ -307,7 +307,6 @@ static struct terrain_image_context terrain_images_grass_corners[12] = {
   {{2, 2, 1, 2, 1, 2, 2, 2}, {11, 10, 9, 8}, 0, 1},
 };
 
-
 // [5][6][7]
 // [4]   [0]
 // [3][2][1]

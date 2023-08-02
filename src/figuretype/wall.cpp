@@ -259,7 +259,6 @@ void figure::tower_sentry_action() {
         if (config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))
             terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
 
-
         //            is_ghost = false;
         height_adjusted_ticks = 0;
         move_ticks(1);

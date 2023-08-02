@@ -54,7 +54,6 @@ static int config_change_basic(int key);
 static int config_change_string_basic(int key);
 static int config_change_string_language(int key);
 
-
 static generic_button checkbox_buttons[] = {
   {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO, TR_CONFIG_SHOW_INTRO_VIDEO},
   {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO, TR_CONFIG_SIDEBAR_INFO},
@@ -292,8 +291,9 @@ static void button_reset_defaults(int param1, int param2) {
         data.config_values[i].new_value = config_get_default_value(i);
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
-        strncpy(
-          data.config_string_values[i].new_value, config_get_default_string_value(i), CONFIG_STRING_VALUE_MAX - 1);
+        strncpy(data.config_string_values[i].new_value,
+                config_get_default_string_value(i),
+                CONFIG_STRING_VALUE_MAX - 1);
     }
     set_language(0);
     window_invalidate();

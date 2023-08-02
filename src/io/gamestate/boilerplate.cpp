@@ -275,8 +275,10 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(1280, true, "junk11", iob_junk11);
         FILEIO.push_chunk(file_version < 160 ? 15200 : 19600, true, "empire_map_objects", iob_empire_map_objects);
         FILEIO.push_chunk(16200, true, "empire_map_routes", iob_empire_map_routes);
-        FILEIO.push_chunk(
-          51984, false, "vegetation_growth", iob_vegetation_growth); // not sure what's the point of this in MAP...
+        FILEIO.push_chunk(51984,
+                          false,
+                          "vegetation_growth",
+                          iob_vegetation_growth); // not sure what's the point of this in MAP...
 
         FILEIO.push_chunk(file_version < 147 ? 32 : 36, true, "floodplain_settings", iob_floodplain_settings);
         FILEIO.push_chunk(288, false, "trade_prices", iob_trade_prices);
@@ -384,7 +386,6 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(65, false, "scenario_map_name", iob_scenario_map_name); // ok
         FILEIO.push_chunk(32, false, "bookmarks", iob_bookmarks);                 // ok
 
-
         // 12 bytes     00 00 00 00 ??? 3 x int
         // 396 bytes    00 00 00 00 ??? 99 x int
         FILEIO.push_chunk(12, false, "junk9a", iob_junk9a); // ok ????
@@ -422,13 +423,17 @@ static void file_schema(e_file_format file_format, const int file_version) {
         // 528 bytes    00 00 00 00 ??? 22 x 24-byte chunk
         FILEIO.push_chunk(528, false, "bizarre_ordered_fields_1", iob_bizarre_ordered_fields_1);
 
-        FILEIO.push_chunk(
-          file_version < 147 ? 32 : 36, true, "floodplain_settings", iob_floodplain_settings); // floodplain_settings
-        FILEIO.push_chunk(207936, true, "GRID03_32BIT", iob_GRID03_32BIT);                     // todo: 4-byte grid
+        FILEIO.push_chunk(file_version < 147 ? 32 : 36,
+                          true,
+                          "floodplain_settings",
+                          iob_floodplain_settings);                        // floodplain_settings
+        FILEIO.push_chunk(207936, true, "GRID03_32BIT", iob_GRID03_32BIT); // todo: 4-byte grid
 
         // 312 bytes    2B 00 00 00 ??? 13 x 24-byte chunk
-        FILEIO.push_chunk(
-          312, false, "bizarre_ordered_fields_4", iob_bizarre_ordered_fields_4); // 71x 4-bytes emptiness
+        FILEIO.push_chunk(312,
+                          false,
+                          "bizarre_ordered_fields_4",
+                          iob_bizarre_ordered_fields_4); // 71x 4-bytes emptiness
 
         // 64 bytes     00 00 00 00 ???
         FILEIO.push_chunk(64, false, "junk16", iob_junk16);                        // 71x 4-bytes emptiness
@@ -540,8 +545,10 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(528, false, "bizarre_ordered_fields_1", iob_bizarre_ordered_fields_1);
         FILEIO.push_chunk(36, false, "floodplain_settings", iob_floodplain_settings); // floodplain_settings
         FILEIO.push_chunk(207936, false, "GRID03_32BIT", iob_GRID03_32BIT);           // todo: 4-byte grid
-        FILEIO.push_chunk(
-          312, false, "bizarre_ordered_fields_4", iob_bizarre_ordered_fields_4);   // 71x 4-bytes emptiness
+        FILEIO.push_chunk(312,
+                          false,
+                          "bizarre_ordered_fields_4",
+                          iob_bizarre_ordered_fields_4);                           // 71x 4-bytes emptiness
         FILEIO.push_chunk(64, false, "junk16", iob_junk16);                        // 71x 4-bytes emptiness
         FILEIO.push_chunk(41, false, "tutorial_flags_struct", iob_tutorial_flags); // 41 x 1-byte flag fields
         FILEIO.push_chunk(51984, false, "GRID04_8BIT", iob_GRID04_8BIT);

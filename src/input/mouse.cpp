@@ -79,7 +79,6 @@ void mouse_set_middle_down(int down) {
     last_click = 0;
 }
 
-
 void mouse_set_right_down(int down) {
     data.right.system_change |= down ? SYSTEM_DOWN : SYSTEM_UP;
     data.is_touch = 0;

@@ -244,8 +244,9 @@ static int add_layer_from_image_path(modded_image* img, const char* path, int of
     strncpy(current_layer->modded_image_path, path, path_size);
     strncpy(current_layer->modded_image_path + path_size, ".png", 5);
 
-    if (!png_get_image_size(
-          get_full_image_path(current_layer->modded_image_path), &current_layer->width, &current_layer->height)) {
+    if (!png_get_image_size(get_full_image_path(current_layer->modded_image_path),
+                            &current_layer->width,
+                            &current_layer->height)) {
         log_info("Unable to load image", path, 0);
         unload_layer(current_layer);
         return 0;
@@ -262,8 +263,8 @@ static int add_layer_from_image_path(modded_image* img, const char* path, int of
     return 1;
 }
 
-static int add_layer_from_image_id(modded_image* img, const char* group_id, const char* image_id, int offset_x,
-                                   int offset_y) {
+static int
+add_layer_from_image_id(modded_image* img, const char* group_id, const char* image_id, int offset_x, int offset_y) {
     layer* current_layer = &img->layers[img->num_layers];
     current_layer->width = 0;
     current_layer->height = 0;
@@ -517,8 +518,9 @@ static void XMLCALL xml_end_element(void* unused, const char* name) {
 }
 
 static const char* append_file_to_mods_folder(const char* file_name) {
-    strncpy(
-      &data.xml.file_name[data.xml.file_name_position], file_name, FILE_NAME_MAX - data.xml.file_name_position - 1);
+    strncpy(&data.xml.file_name[data.xml.file_name_position],
+            file_name,
+            FILE_NAME_MAX - data.xml.file_name_position - 1);
     return data.xml.file_name;
 }
 

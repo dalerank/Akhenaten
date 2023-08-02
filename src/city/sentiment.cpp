@@ -230,7 +230,6 @@ void city_sentiment_update(void) {
     if (houses_calculated)
         sentiment_contribution_tents = total_sentiment_penalty_tents / houses_calculated;
 
-
     int total_sentiment = 0;
     int total_houses = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {

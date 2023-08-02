@@ -263,7 +263,6 @@ static void handle_touch(void) {
     if (!editor_tool_is_in_use() || input_coords_in_map(first->current_point.x, first->current_point.y))
         update_city_view_coords(first->current_point.x, first->current_point.y, &data.current_tile);
 
-
     if (first->has_started && input_coords_in_map(first->current_point.x, first->current_point.y)) {
         data.capture_input = true;
         scroll_restore_margins();

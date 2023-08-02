@@ -28,20 +28,22 @@ static void add_desirability_at_distance(int x, int y, int size, int distance, i
         for (int i = start; i < end; i++) {
             const ring_tile* tile = map_ring_tile(i);
             if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
-                map_grid_set(
-                  &desirability_grid,
-                  base_offset + tile->grid_offset,
-                  calc_bound(
-                    map_grid_get(&desirability_grid, base_offset + tile->grid_offset) + desirability, -100, 100));
+                map_grid_set(&desirability_grid,
+                             base_offset + tile->grid_offset,
+                             calc_bound(map_grid_get(&desirability_grid, base_offset + tile->grid_offset)
+                                          + desirability,
+                                        -100,
+                                        100));
             }
         }
     } else {
         for (int i = start; i < end; i++) {
             const ring_tile* tile = map_ring_tile(i);
-            map_grid_set(
-              &desirability_grid,
-              base_offset + tile->grid_offset,
-              calc_bound(map_grid_get(&desirability_grid, base_offset + tile->grid_offset) + desirability, -100, 100));
+            map_grid_set(&desirability_grid,
+                         base_offset + tile->grid_offset,
+                         calc_bound(map_grid_get(&desirability_grid, base_offset + tile->grid_offset) + desirability,
+                                    -100,
+                                    100));
         }
     }
 }

@@ -21,8 +21,12 @@ static struct {
     int through_building_id;
 } state;
 
-static bool can_place_on_crossing_no_neighboring(int grid_offset, int terrain_underneath, int terrain_to_avoid, int d_x,
-                                                 int d_y, bool adjacent) {
+static bool can_place_on_crossing_no_neighboring(int grid_offset,
+                                                 int terrain_underneath,
+                                                 int terrain_to_avoid,
+                                                 int d_x,
+                                                 int d_y,
+                                                 bool adjacent) {
     // this is similar to the way Pharaoh does it... it only allows to build in alternating rows/columns
     // after starting the road placement. not perfect, but it works.
     d_x++;
@@ -384,8 +388,12 @@ static void callback_travel_noncitizen_land(int next_offset, int dist) {
         }
     }
 }
-bool map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y,
-                                                 int only_through_building_id, int max_tiles) {
+bool map_routing_noncitizen_can_travel_over_land(int src_x,
+                                                 int src_y,
+                                                 int dst_x,
+                                                 int dst_y,
+                                                 int only_through_building_id,
+                                                 int max_tiles) {
     int src_offset = MAP_OFFSET(src_x, src_y);
     int dst_offset = MAP_OFFSET(dst_x, dst_y);
     ++stats.total_routes_calculated;

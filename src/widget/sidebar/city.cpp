@@ -429,8 +429,10 @@ static void button_overlay(int param1, int param2) {
 }
 static void button_collapse_expand(int param1, int param2) {
     city_view_start_sidebar_toggle();
-    sidebar_slide(
-      !city_view_is_sidebar_collapsed(), draw_collapsed_background, draw_expanded_background, slide_finished);
+    sidebar_slide(!city_view_is_sidebar_collapsed(),
+                  draw_collapsed_background,
+                  draw_expanded_background,
+                  slide_finished);
 }
 static void button_build(int submenu, int param2) {
     window_build_menu_show(submenu);

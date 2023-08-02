@@ -785,11 +785,9 @@ static smacker_frame_status decode_frame(smacker s) {
     if (frame_id >= s->frames)
         return SMACKER_FRAME_DONE;
 
-
     uint8_t* frame_data = read_frame_data(s, frame_id);
     if (!frame_data)
         return SMACKER_FRAME_ERROR;
-
 
     uint8_t frame_type = s->frame_types[frame_id];
     int data_index = 0;

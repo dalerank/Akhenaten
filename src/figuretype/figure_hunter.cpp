@@ -84,27 +84,27 @@ void figure::hunter_action() {
         break;
     }
     switch (action_state) {
-        case ACTION_8_RECALCULATE:
-        case 14:
-        case 13:
-        case 9:
-        case ACTION_11_HUNTER_WALK: // normal walk
-            image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_MOVE, 0, 12);
-            break;
+    case ACTION_8_RECALCULATE:
+    case 14:
+    case 13:
+    case 9:
+    case ACTION_11_HUNTER_WALK: // normal walk
+        image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_MOVE, 0, 12);
+        break;
 
-        case ACTION_15_HUNTER_HUNT: // hunting
-            image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_HUNT, 0, 12);
-            break;
-//        case ??: // attacking
-//            image_set_animation(GROUP_FIGURE_HUNTER, 200, 12);
-//        case ??: // attacking w/ prey on his back
-//            image_set_animation(GROUP_FIGURE_HUNTER, 296, 12);
-        case ACTION_15_HUNTER_PACK:
-            image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_PACK, 0, 18);
-            break;
+    case ACTION_15_HUNTER_HUNT: // hunting
+        image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_HUNT, 0, 12);
+        break;
+        //        case ??: // attacking
+        //            image_set_animation(GROUP_FIGURE_HUNTER, 200, 12);
+        //        case ??: // attacking w/ prey on his back
+        //            image_set_animation(GROUP_FIGURE_HUNTER, 296, 12);
+    case ACTION_15_HUNTER_PACK:
+        image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_PACK, 0, 18);
+        break;
 
-        case ACTION_15_HUNTER_MOVE_PACKED:
-            image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_MOVE_PACKED, 0, 12);
-            break;
+    case ACTION_15_HUNTER_MOVE_PACKED:
+        image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_MOVE_PACKED, 0, 12);
+        break;
     }
 }

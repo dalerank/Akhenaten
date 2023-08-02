@@ -211,8 +211,8 @@ struct video_mode {
     int w, h;
     std::string str;
     video_mode(int _w, int _h)
-      : w(_w)
-      , h(_h) {
+      : w(_w),
+        h(_h) {
         char buffer[64] = {0};
         snprintf(buffer, 64, "%u x %u", _w, _h);
         str = buffer;

@@ -70,8 +70,10 @@ static void draw_foreground(void) {
 
     button_border_draw(326, 106, 150, 24, focus_button_id == 2);
     int width = text_draw_number(scenario_editor_earthquake_year(), '+', " ", 346, 112, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(
-      scenario_property_start_year() + scenario_editor_earthquake_year(), 356 + width, 112, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_year(scenario_property_start_year() + scenario_editor_earthquake_year(),
+                        356 + width,
+                        112,
+                        FONT_NORMAL_BLACK_ON_LIGHT);
 
     // gladiator revolt
     lang_text_draw(38, 2, 36, 142, FONT_NORMAL_BLACK_ON_LIGHT);

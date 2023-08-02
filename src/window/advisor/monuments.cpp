@@ -136,7 +136,6 @@ static int draw_background(void) {
     if (!num_requests)
         lang_text_draw_multiline(52, 21, 64, 160, 512, FONT_NORMAL_WHITE_ON_DARK);
 
-
     return ADVISOR_HEIGHT;
 }
 

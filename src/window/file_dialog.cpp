@@ -55,9 +55,15 @@ static scrollable_list_ui_params ui_params = [] {
     ret.draw_scrollbar_always = true;
     return ret;
 }();
-static scroll_list_panel* panel
-  = new scroll_list_panel(NUM_FILES_IN_VIEW, button_select_file, button_none, button_double_click, button_none,
-                          ui_params, true, "Save/", "folders");
+static scroll_list_panel* panel = new scroll_list_panel(NUM_FILES_IN_VIEW,
+                                                        button_select_file,
+                                                        button_none,
+                                                        button_double_click,
+                                                        button_none,
+                                                        ui_params,
+                                                        true,
+                                                        "Save/",
+                                                        "folders");
 
 static input_box file_name_input = {144, 80, 20, 2, FONT_NORMAL_WHITE_ON_DARK};
 
@@ -282,7 +288,6 @@ static void button_select_file(int index, int param2) {
     input_box_refresh_text(&file_name_input);
     data.message_not_exist_start_time = 0;
     //    read_file_version(panel->get_selected_entry_text(FILE_FULL_PATH), 4);
-
 
     //    if (index < data.file_list->num_files) {
     //        strncpy(data.selected_file, data.file_list->files[scrollbar.scroll_position + index], FILE_NAME_MAX - 1);

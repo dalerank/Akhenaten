@@ -65,7 +65,6 @@ static void add_fort(int type, building* fort) {
     else if (type == BUILDING_FORT_INFANTRY)
         fort->subtype.fort_figure_type = FIGURE_FORT_MOUNTED;
 
-
     // create parade ground
     const int offsets_x[] = {3, -1, -4, 0};
     const int offsets_y[] = {-1, -4, 0, 3};
@@ -1179,10 +1178,11 @@ void BuildPlanner::setup_build_graphics() {
     case BUILDING_TEMPLE_COMPLEX_ALTAR:
     case BUILDING_TEMPLE_COMPLEX_ORACLE:
         init_tiles(3, 3);
-        set_tiles_building(
-          get_temple_complex_part_image(
-            building_at(end.grid_offset())->main()->type, additional_req_param1, relative_orientation, 1),
-          3);
+        set_tiles_building(get_temple_complex_part_image(building_at(end.grid_offset())->main()->type,
+                                                         additional_req_param1,
+                                                         relative_orientation,
+                                                         1),
+                           3);
         break;
     case BUILDING_WATER_LIFT:
         set_tiles_building(image_id_from_group(props->image_collection, props->image_group) + relative_orientation
@@ -1379,7 +1379,10 @@ void BuildPlanner::update_special_case_orientations_check() {
                 else
                     match = false;
             } else if (map_terrain_exists_tile_in_area_with_type(
-                         end.x(), end.y(), size.x, TERRAIN_FLOODPLAIN)) // correct the ShoreLine check for floodplains!
+                         end.x(),
+                         end.y(),
+                         size.x,
+                         TERRAIN_FLOODPLAIN)) // correct the ShoreLine check for floodplains!
                 match = false;
         }
         dir_relative = city_view_relative_orientation(dir_absolute);

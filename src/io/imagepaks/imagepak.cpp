@@ -550,8 +550,9 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
     // create textures from atlas data
     for (int i = 0; i < atlas_pages.size(); ++i) {
         atlas_data_t* atlas_data = &atlas_pages.at(i);
-        atlas_data->texture = graphics_renderer()->create_texture_from_buffer(
-          atlas_data->TEMP_PIXEL_BUFFER, atlas_data->width, atlas_data->height);
+        atlas_data->texture = graphics_renderer()->create_texture_from_buffer(atlas_data->TEMP_PIXEL_BUFFER,
+                                                                              atlas_data->width,
+                                                                              atlas_data->height);
         if (atlas_data->texture == nullptr)
             return false;
 

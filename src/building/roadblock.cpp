@@ -3,7 +3,6 @@
 #include "building/building.h"
 #include "building/type.h"
 
-
 void building_roadblock_set_permission(int p, building* b) {
     if (b->type == BUILDING_ROADBLOCK) {
         int permission_bit = 1 << p;

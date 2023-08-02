@@ -14,7 +14,6 @@
 #include "scenario/property.h"
 #include "translation/translation.h"
 
-
 #define ADVISOR_HEIGHT 27
 
 static void go_back(int param1, int param2);
@@ -68,8 +67,9 @@ static void draw_housing_table() {
       city_population_total_housing_capacity(), '@', " ", 450, y_offset + 220, FONT_NORMAL_WHITE_ON_DARK);
 
     for (int i = 0; i <= 3; i++) {
-        ImageDraw::img_generic(
-          image_id_from_group(GROUP_RESOURCE_ICONS) + goods_icons[i], 54, y_offset + 260 + (23 * i));
+        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + goods_icons[i],
+                               54,
+                               y_offset + 260 + (23 * i));
         text_draw(
           translation_for(goods_demand_strings[i]), 90, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT, 0);
         text_draw_number(

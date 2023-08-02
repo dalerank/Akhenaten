@@ -51,8 +51,15 @@ static scrollable_list_ui_params ui_params = [] {
     return ret;
     //        .draw_scrollbar_always = true
 }();
-static scroll_list_panel* panel = new scroll_list_panel(MAX_SCENARIOS, button_select_item, button_none, button_none,
-                                                        button_none, ui_params, true, "Maps/", "map");
+static scroll_list_panel* panel = new scroll_list_panel(MAX_SCENARIOS,
+                                                        button_select_item,
+                                                        button_none,
+                                                        button_none,
+                                                        button_none,
+                                                        ui_params,
+                                                        true,
+                                                        "Maps/",
+                                                        "map");
 
 #define CSEL_X 20
 #define CSEL_Y 261
@@ -150,7 +157,12 @@ static int draw_text_line(int* base_group, int* y, int* phrase_group, font_t fon
     int width = lang_text_draw(base_group[0], base_group[1], INFO_X, *y, font) - 5;
     width += lang_text_draw(phrase_group[0], phrase_group[1], INFO_X + width, *y, font);
 }
-static int draw_info_line(int base_group, int base_id, int* y, int value, int special = -1, bool colon = false,
+static int draw_info_line(int base_group,
+                          int base_id,
+                          int* y,
+                          int value,
+                          int special = -1,
+                          bool colon = false,
                           font_t font = FONT_NORMAL_BLACK_ON_DARK) {
     int width = 0;
     if (special != 5) {
@@ -474,8 +486,9 @@ static void button_select_item(int index, int param2) {
         GamestateIO::load_map(panel->get_selected_entry_text(FILE_WITH_EXT), false);
         break;
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        GamestateIO::load_mission(
-          get_first_mission_in_campaign(data.campaign_sub_dialog) + panel->get_selected_entry_idx(), false);
+        GamestateIO::load_mission(get_first_mission_in_campaign(data.campaign_sub_dialog)
+                                    + panel->get_selected_entry_idx(),
+                                  false);
         break;
     }
     window_invalidate();

@@ -48,7 +48,10 @@ static const uint8_t* get_value(const uint8_t* ptr, const uint8_t* end_ptr, int*
     return ptr;
 }
 
-bool model_load_file(const char* filepath, int NUM_BUILDINGS, int NUM_HOUSES, model_building* buildings,
+bool model_load_file(const char* filepath,
+                     int NUM_BUILDINGS,
+                     int NUM_HOUSES,
+                     model_building* buildings,
                      model_house* houses) {
     buffer buf(TMP_BUFFER_SIZE);
     int filesize = 0;
