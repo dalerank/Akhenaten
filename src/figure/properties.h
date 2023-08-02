@@ -1,7 +1,4 @@
-#ifndef FIGURE_PROPERTIES_H
-#define FIGURE_PROPERTIES_H
-
-#include "figure/type.h"
+#pragma once
 
 enum {
     FIGURE_CATEGORY_INACTIVE = 0,
@@ -13,7 +10,7 @@ enum {
     FIGURE_CATEGORY_ANIMAL = 6
 };
 
-typedef struct {
+struct figure_properties {
     int category;
     int max_damage;
     int attack_value;
@@ -21,8 +18,6 @@ typedef struct {
     int missile_defense_value;
     int missile_attack_value;
     int missile_delay;
-} figure_properties;
+};
 
 const figure_properties* figure_properties_for_type(int type);
-
-#endif // FIGURE_PROPERTIES_H
