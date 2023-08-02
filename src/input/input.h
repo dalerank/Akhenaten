@@ -1,9 +1,6 @@
-#ifndef INPUT_INPUT_H
-#define INPUT_INPUT_H
+#pragma once
 
-#include "input/hotkey.h"
-#include "input/mouse.h"
+struct mouse;
+struct hotkeys;
 
 int input_go_back_requested(const mouse* m, const hotkeys* h);
-
-#endif // INPUT_INPUT_H
