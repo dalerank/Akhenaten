@@ -109,7 +109,6 @@ void empire_object_init_cities(void) {
         city->type = obj->city_type;
         city->name_id = obj->city_name_id;
 
-
         city->route_id = obj->obj.trade_route_id;
         city->is_open = obj->trade_route_open;
         city->cost_to_open = obj->trade_route_cost;
@@ -322,7 +321,6 @@ static struct map_route_object route_objects[MAX_ROUTE_OBJECTS];
 map_route_object* empire_get_route_object(int id) {
     return &route_objects[id];
 }
-
 
 io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob) {
     //    if (objects_are_loaded)

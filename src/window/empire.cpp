@@ -241,8 +241,10 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
             int row_offset = TRADE_ROW_SPACING * row_idx(index) + 20;
 
             int trade_max = trade_route_limit(city->route_id, resource);
-            draw_trade_resource(
-              resource, trade_max, x_offset + column_offset + 125, y_offset + INFO_Y_TRADED + row_offset - 5);
+            draw_trade_resource(resource,
+                                trade_max,
+                                x_offset + column_offset + 125,
+                                y_offset + INFO_Y_TRADED + row_offset - 5);
             int trade_now = trade_route_traded(city->route_id, resource);
             if (trade_now > trade_max)
                 trade_max = trade_now;
@@ -272,8 +274,10 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
             int row_offset = TRADE_ROW_SPACING * row_idx(index) + 20;
 
             int trade_max = trade_route_limit(city->route_id, resource);
-            draw_trade_resource(
-              resource, trade_max, x_offset + column_offset + 125, y_offset + INFO_Y_TRADED + row_offset - 5);
+            draw_trade_resource(resource,
+                                trade_max,
+                                x_offset + column_offset + 125,
+                                y_offset + INFO_Y_TRADED + row_offset - 5);
             int trade_now = trade_route_traded(city->route_id, resource);
             if (trade_now > trade_max)
                 trade_max = trade_now;
@@ -303,8 +307,10 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
 
             int trade_max = trade_route_limit(city->route_id, resource);
             trade_max = stack_proper_quantity(trade_max, resource);
-            draw_trade_resource(
-              resource, trade_max, x_offset + spacing + 80, y_offset + INFO_Y_SELLS - TRADE_RESOURCE_OFFSET[GAME_ENV]);
+            draw_trade_resource(resource,
+                                trade_max,
+                                x_offset + spacing + 80,
+                                y_offset + INFO_Y_SELLS - TRADE_RESOURCE_OFFSET[GAME_ENV]);
             spacing += 32;
         }
 
@@ -317,8 +323,10 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
 
             int trade_max = trade_route_limit(city->route_id, resource);
             trade_max = stack_proper_quantity(trade_max, resource);
-            draw_trade_resource(
-              resource, trade_max, x_offset + spacing + 80, y_offset + INFO_Y_BUYS - TRADE_RESOURCE_OFFSET[GAME_ENV]);
+            draw_trade_resource(resource,
+                                trade_max,
+                                x_offset + spacing + 80,
+                                y_offset + INFO_Y_BUYS - TRADE_RESOURCE_OFFSET[GAME_ENV]);
             spacing += 32;
         }
 
@@ -477,7 +485,6 @@ static void draw_empire_object(const empire_object* obj) {
                 }
             }
 
-
             int text_group = 21;
             if (setting_city_names_style() == CITIES_OLD_NAMES)
                 text_group = 195;
@@ -559,8 +566,10 @@ static void draw_invasion_warning(int x, int y, int image_id) {
     ImageDraw::img_generic(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
 }
 static void draw_map(void) {
-    graphics_set_clip_rectangle(
-      data.x_min + 16, data.y_min + 16, data.x_max - data.x_min - 32, data.y_max - data.y_min - 136);
+    graphics_set_clip_rectangle(data.x_min + 16,
+                                data.y_min + 16,
+                                data.x_max - data.x_min - 32,
+                                data.y_max - data.y_min - 136);
 
     empire_set_viewport(data.x_max - data.x_min - 32, data.y_max - data.y_min - 136);
 

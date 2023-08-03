@@ -144,7 +144,6 @@ int city_population_average_age(void) {
     if (!city_data.population.population)
         return 0;
 
-
     int age_sum = 0;
     for (int i = 0; i < 100; i++) {
         age_sum += (city_data.population.at_age[i] * i);
@@ -201,7 +200,6 @@ int city_population_people_of_working_age(void) {
 int city_population_percent_in_workforce(void) {
     if (!city_data.population.population)
         return 0;
-
 
     if (config_get(CONFIG_GP_CH_FIXED_WORKERS))
         return 38;
@@ -346,14 +344,11 @@ int* calculate_houses_demanding_goods(int* housing_type_counts) {
         if (model->pottery)
             houses_demanding_goods[0] += housing_type_counts[i];
 
-
         if (model->jewelry_furniture)
             houses_demanding_goods[1] += housing_type_counts[i];
 
-
         if (model->linen_oil)
             houses_demanding_goods[2] += housing_type_counts[i];
-
 
         if (model->beer_wine)
             houses_demanding_goods[3] += housing_type_counts[i];
@@ -440,14 +435,12 @@ int percentage_city_population_in_tents_shacks(void) {
     if (!city_data.population.population)
         return 0;
 
-
     return calc_percentage(city_data.population.people_in_tents_shacks, city_data.population.population);
 }
 
 int percentage_city_population_in_villas_palaces(void) {
     if (!city_data.population.population)
         return 0;
-
 
     return calc_percentage(city_data.population.people_in_villas_palaces, city_data.population.population);
 }

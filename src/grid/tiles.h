@@ -57,7 +57,10 @@ enum {
     CLEAR_LAND_CHECK_FIGURES_ANYWHERE = 2
 };
 
-int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain,
+int map_tiles_are_clear(int x,
+                        int y,
+                        int size,
+                        int disallowed_terrain,
                         int check_figures = CLEAR_LAND_CHECK_FIGURES_ANYWHERE);
 
 void map_tiles_add_entry_exit_flags(void);

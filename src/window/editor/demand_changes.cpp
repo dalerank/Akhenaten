@@ -68,8 +68,10 @@ static void draw_foreground(void) {
         scenario_editor_demand_change_get(i, &demand_change);
         if (demand_change.year) {
             text_draw_number(demand_change.year, '+', " ", x + 10, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
-            lang_text_draw_year(
-              scenario_property_start_year() + demand_change.year, x + 35, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_year(scenario_property_start_year() + demand_change.year,
+                                x + 35,
+                                y + 6,
+                                FONT_NORMAL_BLACK_ON_LIGHT);
             int offset = demand_change.resource + resource_image_offset(demand_change.resource, RESOURCE_IMAGE_ICON);
             ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 115, y + 3);
             int width = lang_text_draw(44, 97, x + 140, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);

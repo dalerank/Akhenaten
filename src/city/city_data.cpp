@@ -193,7 +193,6 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob) {
     //        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.granary_food_stored[i]);
     //    iob->bind____skip(28); // temp
 
-
     iob->bind____skip(20);
     for (int i = 0; i < RESOURCES_MAX; i++)
         iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.unk_00[i]);

@@ -33,7 +33,10 @@ struct popup_dialog_t {
 
 popup_dialog_t g_popup_dialog;
 
-static int init(int type, int custom_text_group, int custom_text_id, void (*close_func)(bool accepted),
+static int init(int type,
+                int custom_text_group,
+                int custom_text_id,
+                void (*close_func)(bool accepted),
                 e_popup_dialog_btns buttons) {
     auto& data = g_popup_dialog;
     if (window_is(WINDOW_POPUP_DIALOG)) {

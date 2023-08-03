@@ -185,7 +185,6 @@ static void update_next_flood_params() {
     if (data.quality_last > 100)
         data.quality_last = 100; // clamp!
 
-
     // calculate the next flood quality
     int bnd[11] = {2, 3, 5, 10, 15, 30, 15, 10, 5, 3, 2};
     int arr[11] = {100, 80, 60, 40, 20, 0, -20, -40, -60, -80, -100};

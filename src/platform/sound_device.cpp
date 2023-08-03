@@ -264,13 +264,17 @@ int sound_device_play_music(const char* filename, int volume_pct) {
         data.music = Mix_LoadMUS(filename);
 #endif
         if (!data.music) {
-            SDL_LogWarn(
-              SDL_LOG_CATEGORY_APPLICATION, "Error opening music file '%s'. Reason: %s", filename, Mix_GetError());
+            SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
+                        "Error opening music file '%s'. Reason: %s",
+                        filename,
+                        Mix_GetError());
         } else {
             if (Mix_PlayMusic(data.music, -1) == -1) {
                 data.music = 0;
-                SDL_LogWarn(
-                  SDL_LOG_CATEGORY_APPLICATION, "Error playing music file '%s'. Reason: %s", filename, Mix_GetError());
+                SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
+                            "Error playing music file '%s'. Reason: %s",
+                            filename,
+                            Mix_GetError());
             } else {
                 sound_device_set_music_volume(volume_pct);
             }
@@ -355,8 +359,12 @@ static void free_custom_audio_stream(void) {
     }
 }
 
-static int create_custom_audio_stream(SDL_AudioFormat src_format, Uint8 src_channels, int src_rate,
-                                      SDL_AudioFormat dst_format, Uint8 dst_channels, int dst_rate) {
+static int create_custom_audio_stream(SDL_AudioFormat src_format,
+                                      Uint8 src_channels,
+                                      int src_rate,
+                                      SDL_AudioFormat dst_format,
+                                      Uint8 dst_channels,
+                                      int dst_rate) {
     free_custom_audio_stream();
 
 #ifdef USE_SDL_AUDIOSTREAM
@@ -371,7 +379,6 @@ static int create_custom_audio_stream(SDL_AudioFormat src_format, Uint8 src_chan
       = SDL_BuildAudioCVT(&custom_music.cvt, src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate);
     if (result < 0)
         return 0;
-
 
     // Allocate buffer large enough for 2 seconds of 16-bit audio
     custom_music.buffer_size = dst_rate * dst_channels * 2 * 2;
@@ -396,7 +403,6 @@ static int custom_audio_stream_active(void) {
 static int put_custom_audio_stream(Uint8* audio_data, int len) {
     if (!audio_data || len <= 0 || !custom_audio_stream_active())
         return 0;
-
 
 #ifdef USE_SDL_AUDIOSTREAM
     if (custom_music.use_audiostream)
@@ -435,7 +441,6 @@ static int put_custom_audio_stream(Uint8* audio_data, int len) {
 static int get_custom_audio_stream(Uint8* dst, int len) {
     if (!dst || len <= 0 || !custom_audio_stream_active())
         return 0;
-
 
 #ifdef USE_SDL_AUDIOSTREAM
     if (custom_music.use_audiostream)
@@ -476,7 +481,10 @@ static void custom_music_callback(void* dummy, Uint8* stream, int len) {
     }
 }
 
-void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate, const unsigned char* audio_data,
+void sound_device_use_custom_music_player(int bitdepth,
+                                          int num_channels,
+                                          int rate,
+                                          const unsigned char* audio_data,
                                           int len) {
     SDL_AudioFormat format;
     if (bitdepth == 8)

@@ -27,7 +27,13 @@ static bool drawing_building_as_deleted(building* b) {
 
 /////// ANIMATIONS
 
-static void draw_normal_anim(int x, int y, building* b, int grid_offset, int sprite_id, int color_mask, int base_id = 0,
+static void draw_normal_anim(int x,
+                             int y,
+                             building* b,
+                             int grid_offset,
+                             int sprite_id,
+                             int color_mask,
+                             int base_id = 0,
                              int max_frames = 0) {
     if (!base_id)
         base_id = map_image_at(grid_offset);
@@ -256,7 +262,10 @@ void draw_farm_crops(int type, int progress, int grid_offset, int x, int y, colo
     }
 }
 
-static void draw_ph_worker(int direction, int action, int frame_offset, pixel_coordinate coords,
+static void draw_ph_worker(int direction,
+                           int action,
+                           int frame_offset,
+                           pixel_coordinate coords,
                            color_t color_mask = COLOR_MASK_NONE) {
     int action_offset = 0;
     switch (action) {
@@ -347,8 +356,10 @@ static void draw_dock_workers(building* b, int x, int y, color_t color_mask) {
             image_dockers += 2;
 
         const image_t* img = image_get(image_dockers);
-        ImageDraw::img_generic(
-          image_dockers, x + img->animation.sprite_x_offset, y + img->animation.sprite_y_offset, color_mask);
+        ImageDraw::img_generic(image_dockers,
+                               x + img->animation.sprite_x_offset,
+                               y + img->animation.sprite_y_offset,
+                               color_mask);
     }
 }
 
@@ -371,7 +382,10 @@ static void draw_workshop_raw_material_storage(const building* b, int x, int y, 
     int amount = ceil((float)b->stored_full_amount / 100.0) - 1;
     switch (b->type) {
     case BUILDING_HUNTING_LODGE:
-        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GAMEMEAT_5) + amount, x + 61, y + 14, color_mask);
+        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GAMEMEAT_5) + amount,
+                               x + 61,
+                               y + 14,
+                               color_mask);
         break;
     case BUILDING_POTTERY_WORKSHOP:
         //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_CLAY_2) + amount, x + 65, y + 3,
@@ -568,9 +582,9 @@ void draw_ornaments_and_animations(pixel_coordinate pixel, map_point point) {
         //                color_mask);
         ////                const image *img = image_get(image_id_from_group(GROUP_BUILDING_WELL));
         ////                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WELL) + 1, x +
-        ///img->animation.sprite_x_offset, /                                       y + img->animation.sprite_y_offset -
-        ///20, color_mask); /                ImageDraw::img_ornament(image_id_from_group(GROUP_BUILDING_WELL) + 1, x, /
-        ///y - 20, color_mask);
+        /// img->animation.sprite_x_offset, /                                       y + img->animation.sprite_y_offset -
+        /// 20, color_mask); /                ImageDraw::img_ornament(image_id_from_group(GROUP_BUILDING_WELL) + 1, x, /
+        /// y - 20, color_mask);
         //            }
         //            break;
     case BUILDING_BOOTH:

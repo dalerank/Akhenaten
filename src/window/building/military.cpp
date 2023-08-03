@@ -19,7 +19,6 @@ static void button_return_to_fort(int param1, int param2);
 static void button_layout(int index, int param2);
 static void button_priority(int index, int param2);
 
-
 static generic_button layout_buttons[] = {{19, 139, 84, 84, button_layout, button_none, 0, 0},
                                           {104, 139, 84, 84, button_layout, button_none, 1, 0},
                                           {189, 139, 84, 84, button_layout, button_none, 2, 0},
@@ -30,7 +29,6 @@ static generic_button priority_buttons[] = {
   {96, 0, 24, 24, button_priority, button_none, 0, 0},
   {96, 24, 24, 24, button_priority, button_none, 1, 0},
 };
-
 
 static generic_button return_button[] = {
   {0, 0, 288, 32, button_return_to_fort, button_none, 0, 0},
@@ -107,8 +105,9 @@ void window_building_draw_barracks(building_info_context* c) {
     window_building_play_sound(c, "wavs/barracks.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(136, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    ImageDraw::img_generic(
-      image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, c->x_offset + 64, c->y_offset + 38);
+    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource,
+                           c->x_offset + 64,
+                           c->y_offset + 38);
 
     building* b = building_get(c->building_id);
     if (b->stored_full_amount < 100)
@@ -158,7 +157,6 @@ int window_building_handle_mouse_barracks(const mouse* m, building_info_context*
     }
     return 0;
 }
-
 
 void window_building_draw_military_academy(building_info_context* c) {
     c->help_id = 88;
@@ -212,12 +210,14 @@ void window_building_draw_legion_info(building_info_context* c) {
         image_id += 8;
 
     int flag_height = image_get(image_id)->height;
-    ImageDraw::img_generic(
-      image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height);
+    ImageDraw::img_generic(image_id,
+                           c->x_offset + 16 + (40 - image_get(image_id)->width) / 2,
+                           c->y_offset + 16 + icon_height);
     // standard pole and morale ball
     image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
-    ImageDraw::img_generic(
-      image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height + flag_height);
+    ImageDraw::img_generic(image_id,
+                           c->x_offset + 16 + (40 - image_get(image_id)->width) / 2,
+                           c->y_offset + 16 + icon_height + flag_height);
 
     // number of soldiers
     lang_text_draw(138, 23, c->x_offset + 100, c->y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -272,8 +272,9 @@ void window_building_draw_legion_info(building_info_context* c) {
             offsets = OFFSETS_OTHER[index];
         }
         for (int i = 5 - c->formation_types; i < 5; i++) {
-            ImageDraw::img_generic(
-              image_id_from_group(GROUP_FORT_FORMATIONS) + offsets[i], c->x_offset + 21 + 85 * i, c->y_offset + 141);
+            ImageDraw::img_generic(image_id_from_group(GROUP_FORT_FORMATIONS) + offsets[i],
+                                   c->x_offset + 21 + 85 * i,
+                                   c->y_offset + 141);
         }
         window_building_draw_legion_info_foreground(c);
     } else {

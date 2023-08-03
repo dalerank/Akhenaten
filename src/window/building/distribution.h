@@ -12,7 +12,6 @@ void window_building_draw_dock_foreground(building_info_context* c);
 int window_building_handle_mouse_dock(const mouse* m, building_info_context* c);
 int window_building_handle_mouse_dock_orders(const mouse* m, building_info_context* c);
 
-
 void window_building_draw_market(building_info_context* c);
 void window_building_draw_market_foreground(building_info_context* c);
 void window_building_draw_market_orders(building_info_context* c);

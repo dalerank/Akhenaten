@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 #include <stdint.h>
 
@@ -60,7 +60,7 @@ struct lang_message {
     struct lang_message_string subtitle;
     struct lang_message_string video;
     struct lang_message_string content;
-} ;
+};
 
 /**
  * Checks whether the directory contains language files

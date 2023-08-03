@@ -472,7 +472,6 @@ static const SDL_Color* convert_color(color_t color) {
 //         uv, 2 * sizeof(float), 4, indices, sizeof(indices) / sizeof(int), sizeof(int));
 // }
 
-
 // TODO: Does not compile because of image
 // Also not in header defined?
 // static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
@@ -515,9 +514,12 @@ graphics_renderer_interface* graphics_renderer(void) {
     return &data.renderer_interface;
 }
 
-static const SDL_BlendMode premult_alpha
-  = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD,
-                               SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
+static const SDL_BlendMode premult_alpha = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE,
+                                                                      SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
+                                                                      SDL_BLENDOPERATION_ADD,
+                                                                      SDL_BLENDFACTOR_ONE,
+                                                                      SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
+                                                                      SDL_BLENDOPERATION_ADD);
 
 void SET_RENDER_SCALE(float scale) {
     data.global_render_scale = scale;
@@ -535,7 +537,11 @@ static void set_texture_scale_mode(SDL_Texture* texture, float scale_factor) {
     }
 #endif
 }
-void graphics_renderer_interface::draw_image(const image_t* img, float x, float y, color_t color, float scale,
+void graphics_renderer_interface::draw_image(const image_t* img,
+                                             float x,
+                                             float y,
+                                             color_t color,
+                                             float scale,
                                              bool mirrored) {
     if (data.paused || img == nullptr)
         return;
@@ -685,13 +691,19 @@ void graphics_renderer_interface::update_custom_texture(int type) {
     }
     int width, height;
     SDL_QueryTexture(data.custom_textures[type].texture, NULL, NULL, &width, &height);
-    SDL_UpdateTexture(
-      data.custom_textures[type].texture, NULL, data.custom_textures[type].buffer, sizeof(color_t) * width);
+    SDL_UpdateTexture(data.custom_textures[type].texture,
+                      NULL,
+                      data.custom_textures[type].buffer,
+                      sizeof(color_t) * width);
 #endif
 }
-void graphics_renderer_interface::update_custom_texture_yuv(int type, const uint8_t* y_data, int y_width,
-                                                            const uint8_t* cb_data, int cb_width,
-                                                            const uint8_t* cr_data, int cr_width) {
+void graphics_renderer_interface::update_custom_texture_yuv(int type,
+                                                            const uint8_t* y_data,
+                                                            int y_width,
+                                                            const uint8_t* cb_data,
+                                                            int cb_width,
+                                                            const uint8_t* cr_data,
+                                                            int cr_width) {
 #ifdef USE_YUV_TEXTURES
     if (data.paused || !data.supports_yuv_textures || !data.custom_textures[type].texture) {
         return;
@@ -969,7 +981,8 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color_t* p_
     return texture;
 }
 
-bool graphics_renderer_interface::save_texture_to_file(const char* filename, SDL_Texture* tex,
+bool graphics_renderer_interface::save_texture_to_file(const char* filename,
+                                                       SDL_Texture* tex,
                                                        e_file_format file_format) {
     SDL_Texture* ren_tex;
     SDL_Surface* surf;
@@ -1246,7 +1259,10 @@ void platform_renderer_render(void) {
     SDL_RenderPresent(data.renderer);
     SDL_SetRenderTarget(data.renderer, data.render_texture);
 }
-void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color_t* pixels, int hotspot_x,
+void platform_renderer_generate_mouse_cursor_texture(int cursor_id,
+                                                     int size,
+                                                     const color_t* pixels,
+                                                     int hotspot_x,
                                                      int hotspot_y) {
     if (data.paused) {
         return;

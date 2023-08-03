@@ -1,40 +1,38 @@
 Language: Cpp
+Standard: c++20
+
+ColumnLimit: 120
+
 AccessModifierOffset: -4
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
 AlignAfterOpenBracket: Align
-AlignConsecutiveMacros:
-  Enabled: false
-  AcrossEmptyLines: false
-  AcrossComments: false
+AllowAllParametersOfDeclarationOnNextLine: false
 AlignOperands: true
-AlignTrailingComments: true
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: Never
+AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
-AlwaysBreakBeforeMultilineStrings: true
 AlwaysBreakTemplateDeclarations: Yes
 BinPackArguments: false
-BinPackParameters: true
+BinPackParameters: false
 BreakBeforeBinaryOperators: All
 BreakBeforeBraces: Attach
 BreakBeforeTernaryOperators: true
-BreakConstructorInitializersBeforeComma: true
-BreakStringLiterals: true
-ColumnLimit: 0
-ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ConstructorInitializerIndentWidth: 2
 ContinuationIndentWidth: 2
-Cpp11BracedListStyle: true
 DerivePointerAlignment: false
-DisableFormat: false
+FixNamespaceComments: true
 IndentCaseLabels: false
-IndentWidth: 4
 IndentWrappedFunctionNames: false
 KeepEmptyLinesAtTheStartOfBlocks: false
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: None
+PackConstructorInitializers: Never
+PenaltyBreakBeforeFirstCallParameter: 100
 PointerAlignment: Left
-ReflowComments: true
 SortIncludes: CaseSensitive
 SpaceAfterCStyleCast: false
 SpaceAfterTemplateKeyword: true
@@ -46,5 +44,3 @@ SpacesInAngles: false
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
-Standard: c++20
-UseTab: Never

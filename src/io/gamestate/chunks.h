@@ -121,5 +121,4 @@ extern io_buffer* iob_bizarre_ordered_fields_7;
 extern io_buffer* iob_bizarre_ordered_fields_8;
 extern io_buffer* iob_bizarre_ordered_fields_9;
 
-
 #endif // OZYMANDIAS_GAMESTATE_CHUNKS_H

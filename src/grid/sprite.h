@@ -20,5 +20,4 @@ void map_sprite_clear(void);
 void map_sprite_backup(void);
 void map_sprite_restore(void);
 
-
 #endif // MAP_SPRITE_H

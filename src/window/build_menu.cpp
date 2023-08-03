@@ -157,8 +157,10 @@ static void draw_menu_buttons(void) {
         if (data.focus_button_id == i + 1)
             font = FONT_NORMAL_BLACK_ON_DARK;
         item_index = building_menu_next_index(data.selected_submenu, item_index);
-        label_draw(
-          x_offset - label_margin, data.y_offset + 110 + 24 * i, label_width, data.focus_button_id == i + 1 ? 1 : 2);
+        label_draw(x_offset - label_margin,
+                   data.y_offset + 110 + 24 * i,
+                   label_width,
+                   data.focus_button_id == i + 1 ? 1 : 2);
         int type = building_menu_type(data.selected_submenu, item_index);
         if (is_all_button(type))
             lang_text_draw_centered(

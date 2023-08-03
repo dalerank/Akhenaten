@@ -79,7 +79,6 @@ void house_service_calculate_culture_aggregates(void) {
         if (b->state != BUILDING_STATE_VALID || !b->house_size)
             continue;
 
-
         // entertainment
         b->data.house.entertainment = base_entertainment;
         if (b->data.house.theater)
@@ -101,7 +100,6 @@ void house_service_calculate_culture_aggregates(void) {
         }
         if (b->data.house.hippodrome)
             b->data.house.entertainment += 30;
-
 
         // education
         b->data.house.education = 0;
@@ -130,7 +128,6 @@ void house_service_calculate_culture_aggregates(void) {
 
         if (b->data.house.temple_venus)
             ++b->data.house.num_gods;
-
 
         // health
         b->data.house.health = 0;

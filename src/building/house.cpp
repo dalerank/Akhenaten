@@ -43,7 +43,6 @@ static const int HOUSE_TILE_OFFSETS_PH[] = {
   GRID_OFFSET(0, 3) // 4x4
 };
 
-
 static const struct {
     int collection;
     int group;
@@ -163,7 +162,6 @@ static void merge(building* b) {
         + 4;
     if (HOUSE_IMAGE[b->subtype.house_level].offset)
         image_id += 1;
-
 
     map_building_tiles_remove(b->id, b->tile.x(), b->tile.y());
     b->tile.set(g_merge_data.x, g_merge_data.y);

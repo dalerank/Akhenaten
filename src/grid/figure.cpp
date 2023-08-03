@@ -117,14 +117,13 @@ void figure::map_figure_remove() {
         figure* checking = figure_get(on_tile); // traverse through the chain to find this figure...
         while (checking->id && checking->next_figure != id)
             checking = figure_get(checking->next_figure);
-        checking->next_figure
-          = next_figure; // remove from chain, set previous figure to point "next" to the next one in chain (0 is fine)
+        checking->next_figure = next_figure; // remove from chain, set previous figure to point "next" to the next one
+                                             // in chain (0 is fine)
     }
     next_figure = 0;
 }
 void map_figure_clear(void) {
     map_grid_clear(&figures);
 }
-
 
 io_buffer* iob_figure_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &figures); });

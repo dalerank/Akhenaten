@@ -5,8 +5,10 @@
 #include "grid/grid.h"
 
 static map_point SCREENTILE_TO_MAPPOINT_LOOKUP[4][500][500];
-static void screentile_calc_params_by_orientation(int city_orientation, pixel_coordinate* start,
-                                                  pixel_coordinate* column_step, pixel_coordinate* row_step) {
+static void screentile_calc_params_by_orientation(int city_orientation,
+                                                  pixel_coordinate* start,
+                                                  pixel_coordinate* column_step,
+                                                  pixel_coordinate* row_step) {
     switch (city_orientation) {
     default:
     case 0:

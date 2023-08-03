@@ -91,12 +91,16 @@ void scrollbar_draw(scrollbar_type* scrollbar) {
     if (scrollbar->max_scroll_position > 0 || scrollbar->always_visible) {
         if (!scrollbar->thin) {
             image_buttons_draw(scrollbar->x, scrollbar->y, &image_button_scroll_up, 1);
-            image_buttons_draw(
-              scrollbar->x, scrollbar->y + scrollbar->height - SCROLL_BUTTON_HEIGHT, &image_button_scroll_down, 1);
+            image_buttons_draw(scrollbar->x,
+                               scrollbar->y + scrollbar->height - SCROLL_BUTTON_HEIGHT,
+                               &image_button_scroll_down,
+                               1);
         } else {
             image_buttons_draw(scrollbar->x, scrollbar->y, &image_button_scroll_up_thin, 1);
-            image_buttons_draw(
-              scrollbar->x, scrollbar->y + scrollbar->height - SCROLL_BUTTON_HEIGHT, &image_button_scroll_down_thin, 1);
+            image_buttons_draw(scrollbar->x,
+                               scrollbar->y + scrollbar->height - SCROLL_BUTTON_HEIGHT,
+                               &image_button_scroll_down_thin,
+                               1);
         }
         int pct;
         if (scrollbar->scroll_position <= 0)

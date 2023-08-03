@@ -47,7 +47,6 @@ private:
     // manually defined external binding schema
     void (*bind_callback)(io_buffer* io);
 
-
     // this is the parent of the below READ / WRITE functions, written
     // into a single generalized form.
     bool io_sync(chunk_buffer_access_e flag);

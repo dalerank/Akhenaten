@@ -12,7 +12,6 @@ enum {
     FLOOD_STATE_FARMABLE = 6,
 };
 
-
 struct floods_data_t {
     int season_initial;
     int duration_initial;

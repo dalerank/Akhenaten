@@ -11,5 +11,4 @@ int is_good_accepted(int resource, building* market);
 void toggle_good_accepted(int resource, building* market);
 void unaccept_all_goods(building* market);
 
-
 #endif // BUILDING_MARKET_H

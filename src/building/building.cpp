@@ -749,7 +749,6 @@ int building_mothball_set(building* b, int mothball) {
 // iob->bind(BIND_SIGNATURE_INT32, &//    extra.unfixable_houses);
 // }
 
-
 static void read_type_data(io_buffer* iob, building* b) {
     if (building_is_house(b->type)) {
         if (GAME_ENV == ENGINE_ENV_C3) {

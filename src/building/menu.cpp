@@ -743,7 +743,6 @@ void building_menu_update(int build_set) {
     // disable government building tiers depending on mission rank
     enable_correct_palace_tier();
 
-
     // these are always enabled
     toggle_building(BUILDING_HOUSE_VACANT_LOT);
     toggle_building(BUILDING_CLEAR_LAND);

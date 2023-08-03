@@ -195,7 +195,6 @@ int map_bridge_add(int x, int y, bool is_ship_bridge) {
     if (bridge.direction < 0)
         bridge.direction += 8;
 
-
     int grid_offset = MAP_OFFSET(x, y);
     for (int i = 0; i < bridge.length; i++) {
         map_terrain_add(grid_offset, TERRAIN_ROAD);

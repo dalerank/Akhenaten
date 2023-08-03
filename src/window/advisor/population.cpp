@@ -141,16 +141,19 @@ static void draw_history_graph(int full_size, int x, int y) {
                     ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * m, y + 200 - val);
                     break;
                 case 40:
-                    ImageDraw::img_generic(
-                      image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 1, x + 10 * m, y + 200 - val);
+                    ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 1,
+                                           x + 10 * m,
+                                           y + 200 - val);
                     break;
                 case 100:
-                    ImageDraw::img_generic(
-                      image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * m, y + 200 - val);
+                    ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2,
+                                           x + 4 * m,
+                                           y + 200 - val);
                     break;
                 case 200:
-                    ImageDraw::img_generic(
-                      image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 3, x + 2 * m, y + 200 - val);
+                    ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 3,
+                                           x + 2 * m,
+                                           y + 200 - val);
                     break;
                 default:
                     graphics_draw_vertical_line(x + m, y + 200 - val, y + 199, COLOR_RED);
@@ -266,7 +269,6 @@ static void print_society_info(void) {
     int avg_tax_per_house = 0;
     if (calculate_total_housing_buildings() > 0)
         avg_tax_per_house = city_finance_estimated_tax_income() / calculate_total_housing_buildings();
-
 
     // Housing prosperity cap
     width = text_draw(translation_for(TR_ADVISOR_HOUSING_PROSPERITY_RATING), 75, 342, FONT_NORMAL_WHITE_ON_DARK, 0);
@@ -497,7 +499,6 @@ static int draw_background(void) {
 
     return ADVISOR_HEIGHT;
 }
-
 
 static void draw_foreground(void) {
     if (focus_button_id == 0) {

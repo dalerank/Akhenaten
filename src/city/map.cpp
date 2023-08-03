@@ -19,7 +19,6 @@ map_point& city_map_exit_flag(void) {
     return city_data.map.exit_flag;
 }
 
-
 void city_map_set_entry_point(int x, int y) {
     city_data.map.entry_point.set(x, y);
 }

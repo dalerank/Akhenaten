@@ -20,7 +20,6 @@ int building_warehouse_get_amount(building* warehouse, int resource);
 
 int building_warehouse_add_resource(building* b, int resource, int amount);
 
-
 bool building_warehouse_is_accepting(int resource, building* b);
 bool building_warehouse_is_getting(int resource, building* b);
 bool building_warehouse_is_emptying(int resource, building* b);
@@ -41,8 +40,14 @@ void building_warehouses_add_resource(int resource, int amount);
 
 int building_warehouses_remove_resource(int resource, int amount);
 
-int building_warehouse_for_storing(building* src, int x, int y, int resource, int distance_from_entry,
-                                   int road_network_id, int* understaffed, map_point* dst);
+int building_warehouse_for_storing(building* src,
+                                   int x,
+                                   int y,
+                                   int resource,
+                                   int distance_from_entry,
+                                   int road_network_id,
+                                   int* understaffed,
+                                   map_point* dst);
 
 int building_warehouse_for_getting(building* src, int resource, map_point* dst);
 

@@ -89,11 +89,12 @@ static int is_file(int mode) {
     return S_ISREG(mode) || S_ISLNK(mode);
 }
 
-int platform_file_manager_list_directory_contents(const char* dir, int type, const char* extension,
+int platform_file_manager_list_directory_contents(const char* dir,
+                                                  int type,
+                                                  const char* extension,
                                                   int (*callback)(const char*)) {
     if (type == TYPE_NONE)
         return LIST_ERROR;
-
 
     dir_name current_dir;
 

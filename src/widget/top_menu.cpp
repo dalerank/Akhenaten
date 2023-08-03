@@ -473,17 +473,18 @@ void widget_top_menu_draw(int force) {
         data.offset_date = s_width - 150; // 135
         data.offset_rotate = data.offset_date - 50;
 
-
         lang_text_draw_month_year_max_width(
           game_time_month(), game_time_year(), data.offset_date - 2, 5, 110, FONT_NORMAL_BLACK_ON_LIGHT, 0);
         // Orientation icon
         if (orientation_button_pressed) {
-            ImageDraw::img_generic(
-              image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, data.offset_rotate, 0);
+            ImageDraw::img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3,
+                                   data.offset_rotate,
+                                   0);
             orientation_button_pressed--;
         } else
-            ImageDraw::img_generic(
-              image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state, data.offset_rotate, 0);
+            ImageDraw::img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state,
+                                   data.offset_rotate,
+                                   0);
     }
 
     if (s_width < 800) {

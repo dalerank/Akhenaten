@@ -66,7 +66,6 @@ const int map_point::ABS_Y(void) {
     return p_ABS_Y;
 }
 
-
 // MODIFIERS
 void map_point::shift(int _x, int _y) {
     set(p_X + _x, p_Y + _y);

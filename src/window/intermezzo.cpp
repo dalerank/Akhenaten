@@ -54,7 +54,6 @@ static void init(intermezzo_type type, void (*callback)(void)) {
     }
 }
 
-
 static void draw_background(void) {
     graphics_clear_screen();
     graphics_reset_dialog();

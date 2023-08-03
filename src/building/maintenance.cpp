@@ -131,8 +131,10 @@ static void collapse_building(building* b) {
     //    return; // TODO: get fire values and logic working before enabling
     city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
     if (!tutorial_handle_collapse())
-        city_message_post_with_popup_delay(
-          MESSAGE_CAT_COLLAPSE, MESSAGE_COLLAPSED_BUILDING, b->type, b->tile.grid_offset());
+        city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE,
+                                           MESSAGE_COLLAPSED_BUILDING,
+                                           b->type,
+                                           b->tile.grid_offset());
 
     game_undo_disable();
     building_destroy_by_collapse(b);

@@ -21,7 +21,6 @@
 #include "scenario/property.h"
 #include "translation/translation.h"
 
-
 #define ADVISOR_HEIGHT 24
 #define X_OFFSET 185
 

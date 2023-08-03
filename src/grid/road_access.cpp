@@ -276,8 +276,8 @@ static void check_road_to_largest_network_hippodrome(int x, int y, int* min_inde
     }
 }
 
-static void check_min_dist_hippodrome(int base_offset, int x_offset, int* min_dist, int* min_grid_offset,
-                                      int* min_x_offset) {
+static void
+check_min_dist_hippodrome(int base_offset, int x_offset, int* min_dist, int* min_grid_offset, int* min_x_offset) {
     for (const int* tile_delta = map_grid_adjacent_offsets(5); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
         int dist = map_routing_distance(grid_offset);
@@ -363,7 +363,6 @@ int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int* road_tiles, in
 
     return road_tiles[0] + road_tiles[2] + road_tiles[4] + road_tiles[6];
 }
-
 
 int map_get_diagonal_road_tiles_for_roaming(int grid_offset, int* road_tiles) {
     road_tiles[1] = terrain_is_road_like(grid_offset + GRID_OFFSET(1, -1));

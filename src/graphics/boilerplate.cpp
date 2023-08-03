@@ -683,7 +683,7 @@ static void draw_multibyte_letter(font_t font, const image_t* img, int x, int y,
     //            if (!color_mask)
     //                color_mask = base_color_for_font(font);
     ////            graphics_renderer()->draw_image(img, x + 1, y + 1, ALPHA_OPAQUE | COLOR_TOOLTIP_SHADOW, scale,
-    ///false);
+    /// false);
     //            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
     //        default:
     //            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);

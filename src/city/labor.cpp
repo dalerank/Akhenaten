@@ -624,7 +624,6 @@ static void check_employment(void) {
     if (city_data.labor.unemployment_percentage_for_senate > 100)
         city_data.labor.unemployment_percentage_for_senate = 100;
 
-
     // workers needed message
     if (!orig_needed && city_data.labor.workers_needed > 0) {
         if (game_time_year() >= scenario_property_start_year())

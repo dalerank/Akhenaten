@@ -57,7 +57,11 @@ void image_buttons_draw(int x, int y, image_button* buttons, int num_buttons, in
     }
 }
 
-bool image_buttons_handle_mouse(const mouse* m, int x, int y, image_button* buttons, int num_buttons,
+bool image_buttons_handle_mouse(const mouse* m,
+                                int x,
+                                int y,
+                                image_button* buttons,
+                                int num_buttons,
                                 int* focus_button_id) {
     fade_pressed_effect(buttons, num_buttons);
     //    remove_pressed_effect_build(buttons, num_buttons);

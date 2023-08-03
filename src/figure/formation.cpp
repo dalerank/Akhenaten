@@ -112,8 +112,15 @@ int formation_create_herd(int figure_type, int x, int y, int num_animals) {
     return formation_id;
 }
 
-int formation_create_enemy(int figure_type, int x, int y, int layout, int orientation, int enemy_type, int attack_type,
-                           int invasion_id, int invasion_sequence) {
+int formation_create_enemy(int figure_type,
+                           int x,
+                           int y,
+                           int layout,
+                           int orientation,
+                           int enemy_type,
+                           int attack_type,
+                           int invasion_id,
+                           int invasion_sequence) {
     int formation_id = formation_create(figure_type, layout, orientation, x, y);
     if (!formation_id)
         return 0;

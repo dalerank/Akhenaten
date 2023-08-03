@@ -59,7 +59,12 @@ static int blocked_land_terrain(void) {
            | TERRAIN_ROAD | TERRAIN_ELEVATION | TERRAIN_RUBBLE;
 }
 
-bool map_shore_determine_orientation(int x, int y, int size, bool adjust_xy, int* orientation_absolute, bool adjacent,
+bool map_shore_determine_orientation(int x,
+                                     int y,
+                                     int size,
+                                     bool adjust_xy,
+                                     int* orientation_absolute,
+                                     bool adjacent,
                                      int shore_terrain) {
     if (adjust_xy) {
         switch (city_view_orientation()) {

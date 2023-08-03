@@ -149,8 +149,8 @@ static int get_word_width(const uint8_t* str, font_t font, int* out_num_chars) {
     *out_num_chars = num_chars;
     return width;
 }
-unsigned int text_get_max_length_for_width(const uint8_t* str, int length, font_t font, unsigned int requested_width,
-                                           int invert) {
+unsigned int
+text_get_max_length_for_width(const uint8_t* str, int length, font_t font, unsigned int requested_width, int invert) {
     const font_definition* def = font_definition_for(font);
     if (!length)
         length = string_length(str);
@@ -300,7 +300,12 @@ int text_draw_number(int value, char prefix, const char* postfix, int x_offset, 
     number_to_string(str, value, prefix, postfix);
     return text_draw(str, x_offset, y_offset, font, 0);
 }
-int text_draw_number_colored(int value, char prefix, const char* postfix, int x_offset, int y_offset, font_t font,
+int text_draw_number_colored(int value,
+                             char prefix,
+                             const char* postfix,
+                             int x_offset,
+                             int y_offset,
+                             font_t font,
                              color_t color) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, prefix, postfix);
@@ -316,7 +321,11 @@ void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int 
     number_to_string(str, value, prefix, " ");
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
-void text_draw_number_centered_colored(int value, int x_offset, int y_offset, int box_width, font_t font,
+void text_draw_number_centered_colored(int value,
+                                       int x_offset,
+                                       int y_offset,
+                                       int box_width,
+                                       font_t font,
                                        color_t color) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, '@', " ");
@@ -337,15 +346,26 @@ int text_draw_percentage(int value, int x_offset, int y_offset, font_t font) {
     number_to_string(str, value, '@', "%");
     return text_draw(str, x_offset, y_offset, font, 0);
 }
-int text_draw_label_and_number(const char* label, int value, const char* postfix, int x_offset, int y_offset,
-                               font_t font, color_t color) {
+int text_draw_label_and_number(const char* label,
+                               int value,
+                               const char* postfix,
+                               int x_offset,
+                               int y_offset,
+                               font_t font,
+                               color_t color) {
     uint8_t str[2 * NUMBER_BUFFER_LENGTH];
     uint8_t* pos = label ? string_copy((const uint8_t*)label, str, NUMBER_BUFFER_LENGTH) : str;
     number_to_string(pos, value, '@', postfix);
     return text_draw(str, x_offset, y_offset, font, color);
 }
-void text_draw_label_and_number_centered(const char* label, int value, const char* postfix, int x_offset, int y_offset,
-                                         int box_width, font_t font, color_t color) {
+void text_draw_label_and_number_centered(const char* label,
+                                         int value,
+                                         const char* postfix,
+                                         int x_offset,
+                                         int y_offset,
+                                         int box_width,
+                                         font_t font,
+                                         color_t color) {
     uint8_t str[2 * NUMBER_BUFFER_LENGTH];
     uint8_t* pos = label ? string_copy((const uint8_t*)label, str, NUMBER_BUFFER_LENGTH) : str;
     number_to_string(pos, value, '@', postfix);

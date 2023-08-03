@@ -230,9 +230,13 @@ public:
 
     figure* create_figure_generic(int _type, int created_action, int slot, int created_dir);
     figure* create_roaming_figure(int _type, int created_action = FIGURE_ACTION_125_ROAMING, int slot = 0);
-    figure* create_figure_with_destination(int _type, building* destination, int created_action = ACTION_10_GOING,
+    figure* create_figure_with_destination(int _type,
+                                           building* destination,
+                                           int created_action = ACTION_10_GOING,
                                            int slot = 0);
-    figure* create_cartpusher(int resource_id, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL,
+    figure* create_cartpusher(int resource_id,
+                              int quantity,
+                              int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL,
                               int slot = 0);
 
     int worker_percentage();
@@ -241,7 +245,9 @@ public:
     bool common_spawn_figure_trigger(int min_houses);
     void common_spawn_labor_seeker(int min_houses);
     bool common_spawn_roamer(int type, int min_houses, int created_action = FIGURE_ACTION_125_ROAMING);
-    bool common_spawn_goods_output_cartpusher(bool only_one = true, bool only_full_loads = true, int min_carry = 100,
+    bool common_spawn_goods_output_cartpusher(bool only_one = true,
+                                              bool only_full_loads = true,
+                                              int min_carry = 100,
                                               int max_carry = 800);
 
     void spawn_figure_work_camp();

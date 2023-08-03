@@ -114,8 +114,9 @@ void city_culture_update_coverage(void) {
     coverage.religion[GOD_OSIRIS] = top(calc_percentage(
       population,
       god_coverage_total(GOD_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS)));
-    coverage.religion[GOD_RA] = top(calc_percentage(
-      population, god_coverage_total(GOD_RA, BUILDING_SHRINE_RA, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA)));
+    coverage.religion[GOD_RA] = top(
+      calc_percentage(population,
+                      god_coverage_total(GOD_RA, BUILDING_SHRINE_RA, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA)));
     coverage.religion[GOD_PTAH] = top(calc_percentage(
       population,
       god_coverage_total(GOD_PTAH, BUILDING_SHRINE_PTAH, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH)));

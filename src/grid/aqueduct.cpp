@@ -45,7 +45,6 @@ void map_aqueduct_backup(void) {
     uint16_t g = x[2];
     x[4] = 1;
 
-
     map_grid_copy(&aqueduct, &aqueduct_backup);
 }
 void map_aqueduct_restore(void) {

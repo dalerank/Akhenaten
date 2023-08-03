@@ -260,7 +260,6 @@ static building_properties properties[2][400]
        {-1, 1, 0, 0}, // alexandria library
      }};
 
-
 building_properties ROADBLOCK_PROPERTIES = {1, 1, 10000, 0};
 
 const building_properties dummy_property = {0, 0, 0, 0};

@@ -26,7 +26,10 @@ int platform_renderer_init(SDL_Window* window);
 int platform_renderer_create_render_texture(int width, int height);
 int platform_renderer_lost_render_texture(void);
 void platform_renderer_invalidate_target_textures(void);
-void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color_t* pixels, int hotspot_x,
+void platform_renderer_generate_mouse_cursor_texture(int cursor_id,
+                                                     int size,
+                                                     const color_t* pixels,
+                                                     int hotspot_x,
                                                      int hotspot_y);
 void platform_renderer_render(void);
 void platform_renderer_pause(void);
@@ -53,8 +56,13 @@ public:
     color_t* get_custom_texture_buffer(int type, int* actual_texture_width);
     void release_custom_texture_buffer(int type);
     void update_custom_texture(int type);
-    void update_custom_texture_yuv(int type, const uint8_t* y_data, int y_width, const uint8_t* cb_data, int cb_width,
-                                   const uint8_t* cr_data, int cr_width);
+    void update_custom_texture_yuv(int type,
+                                   const uint8_t* y_data,
+                                   int y_width,
+                                   const uint8_t* cb_data,
+                                   int cb_width,
+                                   const uint8_t* cr_data,
+                                   int cr_width);
     void draw_custom_texture(int type, int x, int y, float scale);
     //    int supports_yuv_texture_format(void);
 

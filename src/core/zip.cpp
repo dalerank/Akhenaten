@@ -378,7 +378,8 @@ static void pk_implode_determine_copy(struct pk_comp_buffer* buf, int input_inde
     }
     // never reached
 }
-static int pk_implode_next_copy_is_better(struct pk_comp_buffer* buf, int offset,
+static int pk_implode_next_copy_is_better(struct pk_comp_buffer* buf,
+                                          int offset,
                                           const struct pk_copy_length_offset* current_copy) {
     struct pk_copy_length_offset next_copy;
     pk_implode_determine_copy(buf, offset + 1, &next_copy);
@@ -432,7 +433,6 @@ static void pk_implode_data(struct pk_comp_buffer* buf) {
         if (eof)
             input_end += 516; // eat the 516 leftovers anyway
 
-
         if (has_leftover_data == 0) {
             pk_implode_analyze_input(buf, input_ptr, input_end + 1);
             has_leftover_data++;
@@ -444,7 +444,6 @@ static void pk_implode_data(struct pk_comp_buffer* buf) {
             has_leftover_data++;
         } else if (has_leftover_data == 2)
             pk_implode_analyze_input(buf, input_ptr - buf->dictionary_size, input_end + 1);
-
 
         while (input_ptr < input_end) {
             int write_literal = 0;
@@ -496,8 +495,11 @@ static void pk_implode_data(struct pk_comp_buffer* buf) {
 
     buf->output_func(buf->output_data, buf->output_ptr, buf->token);
 }
-static int pk_implode(pk_input_func* input_func, pk_output_func* output_func, struct pk_comp_buffer* buf,
-                      struct pk_token* token, int dictionary_size) {
+static int pk_implode(pk_input_func* input_func,
+                      pk_output_func* output_func,
+                      struct pk_comp_buffer* buf,
+                      struct pk_token* token,
+                      int dictionary_size) {
     buf->input_func = input_func;
     buf->output_func = output_func;
     buf->dictionary_size = dictionary_size;
@@ -652,7 +654,9 @@ static int pk_explode_data(struct pk_decomp_buffer* buf) {
     buf->output_func(&buf->output_buffer[4096], buf->output_buffer_ptr - 4096, buf->token);
     return token;
 }
-static int pk_explode(pk_input_func* input_func, pk_output_func* output_func, struct pk_decomp_buffer* buf,
+static int pk_explode(pk_input_func* input_func,
+                      pk_output_func* output_func,
+                      struct pk_decomp_buffer* buf,
                       struct pk_token* token) {
     buf->input_func = input_func;
     buf->output_func = output_func;
@@ -676,8 +680,10 @@ static int pk_explode(pk_input_func* input_func, pk_output_func* output_func, st
         return PK_LITERAL_ENCODING_UNSUPPORTED;
 
     // Decode data for copying bytes
-    pk_explode_construct_jump_table(
-      16, pk_copy_length_base_bits, pk_copy_length_base_code, buf->copy_length_jump_table);
+    pk_explode_construct_jump_table(16,
+                                    pk_copy_length_base_bits,
+                                    pk_copy_length_base_code,
+                                    buf->copy_length_jump_table);
     pk_explode_construct_jump_table(64, pk_copy_offset_bits, pk_copy_offset_code, buf->copy_offset_jump_table);
 
     int result = pk_explode_data(buf);
@@ -697,7 +703,6 @@ static int zip_input_func(uint8_t* buffer, int length, struct pk_token* token) {
 
     if (token->input_ptr >= token->input_length)
         return 0;
-
 
     if (token->input_length - token->input_ptr < length)
         length = token->input_length - token->input_ptr;
@@ -731,7 +736,6 @@ int zip_compress(const void* input_buffer, int input_length, void* output_buffer
 
     if (!buf)
         return 0;
-
 
     memset(buf, 0, sizeof(struct pk_comp_buffer));
     memset(&token, 0, sizeof(struct pk_token));

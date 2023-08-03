@@ -79,8 +79,10 @@ int scenario_map_closest_fishing_point(int x, int y, map_point* fish) {
     int min_fish_id = 0;
     for (int i = 0; i < MAX_FISH_POINTS; i++) {
         if (g_scenario_data.fishing_points[i].x() > 0) {
-            int dist = calc_maximum_distance(
-              x, y, g_scenario_data.fishing_points[i].x(), g_scenario_data.fishing_points[i].y());
+            int dist = calc_maximum_distance(x,
+                                             y,
+                                             g_scenario_data.fishing_points[i].x(),
+                                             g_scenario_data.fishing_points[i].y());
             if (dist < min_dist) {
                 min_dist = dist;
                 min_fish_id = i;
@@ -88,8 +90,9 @@ int scenario_map_closest_fishing_point(int x, int y, map_point* fish) {
         }
     }
     if (min_dist < 10000) {
-        map_point_store_result(
-          g_scenario_data.fishing_points[min_fish_id].x(), g_scenario_data.fishing_points[min_fish_id].y(), fish);
+        map_point_store_result(g_scenario_data.fishing_points[min_fish_id].x(),
+                               g_scenario_data.fishing_points[min_fish_id].y(),
+                               fish);
         return 1;
     }
     return 0;

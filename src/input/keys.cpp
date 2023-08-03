@@ -6,14 +6,15 @@
 
 #include <string.h>
 
-static const char* key_names[KEY_MAX_ITEMS] = {
-  "",       "A",      "B",         "C",   "D",      "E",        "F",     "G",    "H",    "I",   "J",   "K",   "L",
-  "M",      "N",      "O",         "P",   "Q",      "R",        "S",     "T",    "U",    "V",   "W",   "X",   "Y",
-  "Z",      "1",      "2",         "3",   "4",      "5",        "6",     "7",    "8",    "9",   "0",   "-",   "=",
-  "Enter",  "Esc",    "Backspace", "Tab", "Space",  "[",        "]",     "\\",   ";",    "'",   "`",   ",",   ".",
-  "/",      "F1",     "F2",        "F3",  "F4",     "F5",       "F6",    "F7",   "F8",   "F9",  "F10", "F11", "F12",
-  "Insert", "Delete", "Home",      "End", "PageUp", "PageDown", "Right", "Left", "Down", "Up",  "Kp1", "Kp2", "Kp3",
-  "Kp4",    "Kp5",    "Kp6",       "Kp7", "Kp8",    "Kp9",      "Kp0",   "Kp.",  "Kp+",  "Kp-", "Kp*", "Kp/", "NonUS"};
+static const char* key_names[KEY_MAX_ITEMS]
+  = {"",     "A",    "B",   "C",     "D",   "E",         "F",      "G",     "H",   "I",      "J",        "K",
+     "L",    "M",    "N",   "O",     "P",   "Q",         "R",      "S",     "T",   "U",      "V",        "W",
+     "X",    "Y",    "Z",   "1",     "2",   "3",         "4",      "5",     "6",   "7",      "8",        "9",
+     "0",    "-",    "=",   "Enter", "Esc", "Backspace", "Tab",    "Space", "[",   "]",      "\\",       ";",
+     "'",    "`",    ",",   ".",     "/",   "F1",        "F2",     "F3",    "F4",  "F5",     "F6",       "F7",
+     "F8",   "F9",   "F10", "F11",   "F12", "Insert",    "Delete", "Home",  "End", "PageUp", "PageDown", "Right",
+     "Left", "Down", "Up",  "Kp1",   "Kp2", "Kp3",       "Kp4",    "Kp5",   "Kp6", "Kp7",    "Kp8",      "Kp9",
+     "Kp0",  "Kp.",  "Kp+", "Kp-",   "Kp*", "Kp/",       "NonUS"};
 
 static const char* key_display_names[KEY_MAX_ITEMS] = {"",
                                                        "A",

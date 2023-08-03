@@ -22,11 +22,11 @@
 #include "scenario/map.h"
 #include "scenario/property.h"
 
-#include "grid/terrain.h"
-#include "grid/building.h"
-#include "graphics/image_groups.h"
-#include "missile.h"
 #include "figure/properties.h"
+#include "graphics/image_groups.h"
+#include "grid/building.h"
+#include "grid/terrain.h"
+#include "missile.h"
 
 static const coords_t SEAGULL_OFFSETS[] = {{0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}};
 
@@ -307,7 +307,7 @@ void figure::ostrich_action() {
         image_set_animation(GROUP_FIGURE_OSTRICH_IDLE, 0, 7);
         break;
     case ACTION_16_FLEEING: // fleeing
-    case ACTION_10_GOING: // on the move
+    case ACTION_10_GOING:   // on the move
         image_set_animation(GROUP_FIGURE_OSTRICH_WALK, 0, 11);
         break;
     case ACTION_15_ANIMAL_TERRIFIED: // terrified

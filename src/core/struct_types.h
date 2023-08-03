@@ -7,8 +7,8 @@ struct pixel_coordinate {
     pixel_coordinate() {
     }
     pixel_coordinate(int _x, int _y)
-      : x(_x)
-      , y(_y) {
+      : x(_x),
+        y(_y) {
     }
 
     inline pixel_coordinate operator-(pixel_coordinate rhs) {

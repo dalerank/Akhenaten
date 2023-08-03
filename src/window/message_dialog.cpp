@@ -239,8 +239,10 @@ static void draw_city_message_text(const lang_message* msg) {
     if (msg->message_type != MESSAGE_TYPE_TUTORIAL) {
         int width
           = lang_text_draw(25, player_message.month, data.x_text + 10, data.y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
-        width += lang_text_draw_year(
-          player_message.year, data.x_text + 12 + width, data.y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+        width += lang_text_draw_year(player_message.year,
+                                     data.x_text + 12 + width,
+                                     data.y_text + 6,
+                                     FONT_NORMAL_WHITE_ON_DARK);
         if (msg->message_type == MESSAGE_TYPE_DISASTER && player_message.param1) {
             if (data.text_id == MESSAGE_DIALOG_THEFT) {
                 // param1 = denarii
@@ -382,8 +384,10 @@ static void draw_content(const lang_message* msg) {
       = rich_text_init(text, data.x_text, data.y_text, msg->width_blocks - 4, data.text_height_blocks, 1);
     // content!
     inner_panel_draw(data.x_text, data.y_text, data.text_width_blocks, data.text_height_blocks);
-    graphics_set_clip_rectangle(
-      data.x_text + 3, data.y_text + 3, 16 * data.text_width_blocks - 6, 16 * data.text_height_blocks - 6);
+    graphics_set_clip_rectangle(data.x_text + 3,
+                                data.y_text + 3,
+                                16 * data.text_width_blocks - 6,
+                                16 * data.text_height_blocks - 6);
     rich_text_clear_links();
 
     if (msg->type == TYPE_MESSAGE)
@@ -531,8 +535,10 @@ static void draw_foreground_normal(void) {
         if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION)
             image_buttons_draw(data.x + 64, data.y_text + 36, &image_button_go_to_problem, 1);
     }
-    image_buttons_draw(
-      data.x + 16 * msg->width_blocks - 38, data.y + 16 * msg->height_blocks - 36, &image_button_close, 1);
+    image_buttons_draw(data.x + 16 * msg->width_blocks - 38,
+                       data.y + 16 * msg->height_blocks - 36,
+                       &image_button_close,
+                       1);
     rich_text_draw_scrollbar();
 }
 static void draw_foreground_video(void) {
@@ -675,8 +681,14 @@ void window_message_dialog_show(int text_id, int message_id, void (*background_c
     init(text_id, message_id, background_callback);
     window_show(&window);
 }
-void window_message_dialog_show_city_message(int text_id, int message_id, int year, int month, int param1, int param2,
-                                             int message_advisor, int use_popup) {
+void window_message_dialog_show_city_message(int text_id,
+                                             int message_id,
+                                             int year,
+                                             int month,
+                                             int param1,
+                                             int param2,
+                                             int message_advisor,
+                                             int use_popup) {
     set_city_message(year, month, param1, param2, message_advisor, use_popup);
     window_message_dialog_show(text_id, message_id, window_city_draw_all);
 }

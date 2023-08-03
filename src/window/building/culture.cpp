@@ -145,7 +145,6 @@ void window_building_draw_theater(building_info_context* c) {
     else if (b->data.entertainment.days1)
         window_building_draw_description(c, 72, 3);
 
-
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 6);
     window_building_draw_employment(c, 138);
     if (b->data.entertainment.days1 > 0) {
@@ -181,7 +180,6 @@ void window_building_draw_amphitheater(building_info_context* c) {
         window_building_draw_description(c, 71, 4);
     else if (b->data.entertainment.days2)
         window_building_draw_description(c, 71, 5);
-
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 7);
     window_building_draw_employment(c, 138);
@@ -229,7 +227,6 @@ void window_building_draw_colosseum(building_info_context* c) {
     else if (b->data.entertainment.days2)
         window_building_draw_description(c, 74, 4);
 
-
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 6);
     window_building_draw_employment(c, 138);
     if (b->data.entertainment.days1 > 0) {
@@ -269,7 +266,6 @@ void window_building_draw_hippodrome(building_info_context* c) {
         window_building_draw_description(c, 73, 2);
     else if (b->data.entertainment.days1)
         window_building_draw_description(c, 73, 3);
-
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 6);
     window_building_draw_employment(c, 138);

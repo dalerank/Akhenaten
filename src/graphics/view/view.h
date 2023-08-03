@@ -86,11 +86,19 @@ bool city_view_is_sidebar_collapsed(void);
 void city_view_start_sidebar_toggle(void);
 void city_view_toggle_sidebar(void);
 
-void city_view_foreach_valid_map_tile(tile_draw_callback* callback1, tile_draw_callback* callback2 = nullptr,
-                                      tile_draw_callback* callback3 = nullptr, tile_draw_callback* callback4 = nullptr,
-                                      tile_draw_callback* callback5 = nullptr, tile_draw_callback* callback6 = nullptr);
+void city_view_foreach_valid_map_tile(tile_draw_callback* callback1,
+                                      tile_draw_callback* callback2 = nullptr,
+                                      tile_draw_callback* callback3 = nullptr,
+                                      tile_draw_callback* callback4 = nullptr,
+                                      tile_draw_callback* callback5 = nullptr,
+                                      tile_draw_callback* callback6 = nullptr);
 void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, tile_draw_callback* callback);
-void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles,
-                                    int height_tiles, minimap_draw_callback callback);
+void city_view_foreach_minimap_tile(int x_offset,
+                                    int y_offset,
+                                    int absolute_x,
+                                    int absolute_y,
+                                    int width_tiles,
+                                    int height_tiles,
+                                    minimap_draw_callback callback);
 
 #endif // CITY_VIEW_H

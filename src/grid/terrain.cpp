@@ -161,7 +161,12 @@ bool map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int ra
     }
     return false;
 }
-bool map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset, int* x_tile,
+bool map_terrain_exists_clear_tile_in_radius(int x,
+                                             int y,
+                                             int size,
+                                             int radius,
+                                             int except_grid_offset,
+                                             int* x_tile,
                                              int* y_tile) {
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);

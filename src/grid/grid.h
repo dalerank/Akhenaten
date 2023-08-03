@@ -66,7 +66,13 @@ int map_grid_direction_delta(int direction);
 void map_grid_bound(int* x, int* y);
 void map_grid_bound_area(int* x_min, int* y_min, int* x_max, int* y_max);
 void map_grid_get_area(int x, int y, int size, int radius, int* x_min, int* y_min, int* x_max, int* y_max);
-void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, int* x_min, int* y_min, int* x_max,
+void map_grid_start_end_to_area(int x_start,
+                                int y_start,
+                                int x_end,
+                                int y_end,
+                                int* x_min,
+                                int* y_min,
+                                int* x_max,
                                 int* y_max);
 int map_grid_is_inside(int x, int y, int size);
 bool map_grid_inside_map_area(int grid_offset, int edge_size = 0);

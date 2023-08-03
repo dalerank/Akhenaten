@@ -18,12 +18,12 @@ void safe_realloc_for_size(buffer** p_buf, int size) {
 }
 
 buffer::buffer()
-  : data{std::vector<uint8_t>()}
-  , index{0} {
+  : data{std::vector<uint8_t>()},
+    index{0} {
 }
 buffer::buffer(size_t s)
-  : data{std::vector<uint8_t>(s)}
-  , index{0} {
+  : data{std::vector<uint8_t>(s)},
+    index{0} {
 }
 
 void buffer::clear() {

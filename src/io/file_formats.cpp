@@ -29,6 +29,5 @@ e_file_format get_format_from_file(const char* filename) {
     if (file_has_extension(filename, "svx"))
         return FILE_FORMAT_SAVE_FILE_EXT;
 
-
     return FILE_FORMAT_NULL;
 }

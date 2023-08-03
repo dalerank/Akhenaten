@@ -424,14 +424,16 @@ void map_building_tiles_add_temple_complex_parts(building* b) {
         part = 1;
     else if (b == get_temple_complex_front_facing_part(b)) // front facing part (oracle)
         part = 2;
-    map_building_tiles_add(
-      b->id,
-      b->tile.x(),
-      b->tile.y(),
-      b->size,
-      get_temple_complex_part_image(
-        b->type, part, orientation_binary, (bool)(b->main()->data.monuments.temple_complex_attachments & part)),
-      TERRAIN_BUILDING);
+    map_building_tiles_add(b->id,
+                           b->tile.x(),
+                           b->tile.y(),
+                           b->size,
+                           get_temple_complex_part_image(b->type,
+                                                         part,
+                                                         orientation_binary,
+                                                         (bool)(b->main()->data.monuments.temple_complex_attachments
+                                                                & part)),
+                           TERRAIN_BUILDING);
     if (b->next_part_building_id)
         map_building_tiles_add_temple_complex_parts(b->next());
 }

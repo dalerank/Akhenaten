@@ -284,8 +284,9 @@ static void map_routing_update_land_noncitizen(void) {
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            map_grid_set(
-              &terrain_land_noncitizen, grid_offset, map_routing_tile_check(ROUTING_TYPE_NONCITIZEN, grid_offset));
+            map_grid_set(&terrain_land_noncitizen,
+                         grid_offset,
+                         map_routing_tile_check(ROUTING_TYPE_NONCITIZEN, grid_offset));
             //            int terrain = map_terrain_get(grid_offset);
             //            if (terrain & TERRAIN_GATEHOUSE) {
             //                map_grid_set(&terrain_land_noncitizen, grid_offset, NONCITIZEN_4_GATEHOUSE);

@@ -24,14 +24,11 @@ static int try_import_resource(building* warehouse, int resource, int city_id) {
     if (warehouse->type != BUILDING_WAREHOUSE)
         return 0;
 
-
     if (building_warehouse_is_not_accepting(resource, warehouse))
         return 0;
 
-
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse))
         return 0;
-
 
     int route_id = empire_city_get_route_id(city_id);
     // try existing storage bay with the same resource
@@ -81,8 +78,13 @@ static int try_export_resource(building* warehouse, int resource, int city_id) {
     return 0;
 }
 
-static int get_closest_warehouse_for_import(int x, int y, int city_id, int distance_from_entry, int road_network_id,
-                                            map_point* warehouse, int* import_resource) {
+static int get_closest_warehouse_for_import(int x,
+                                            int y,
+                                            int city_id,
+                                            int distance_from_entry,
+                                            int road_network_id,
+                                            map_point* warehouse,
+                                            int* import_resource) {
     int importable[16];
     importable[RESOURCE_NONE] = 0;
     for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
@@ -147,8 +149,13 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
     *import_resource = resource;
     return min_building_id;
 }
-static int get_closest_warehouse_for_export(int x, int y, int city_id, int distance_from_entry, int road_network_id,
-                                            map_point* warehouse, int* export_resource) {
+static int get_closest_warehouse_for_export(int x,
+                                            int y,
+                                            int city_id,
+                                            int distance_from_entry,
+                                            int road_network_id,
+                                            map_point* warehouse,
+                                            int* export_resource) {
     int exportable[16];
     exportable[RESOURCE_NONE] = 0;
     for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {

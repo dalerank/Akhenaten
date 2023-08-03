@@ -169,7 +169,6 @@ int empire_can_import_resource_from_city(int city_id, int resource) {
     if (trade_route_limit_reached(city->route_id, resource))
         return 0;
 
-
     int in_stock = city_resource_count(resource);
     int max_in_stock = 0;
     int finished_good = RESOURCE_NONE;

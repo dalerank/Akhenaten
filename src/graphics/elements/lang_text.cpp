@@ -37,13 +37,23 @@ void lang_text_draw_centered(int group, int number, int x_offset, int y_offset, 
     const uint8_t* str = lang_get_string(group, number);
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
-void lang_text_draw_centered_colored(int group, int number, int x_offset, int y_offset, int box_width, font_t font,
+void lang_text_draw_centered_colored(int group,
+                                     int number,
+                                     int x_offset,
+                                     int y_offset,
+                                     int box_width,
+                                     font_t font,
                                      color_t color) {
     const uint8_t* str = lang_get_string(group, number);
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
-int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y_offset, font_t font,
+int lang_text_draw_amount(int group,
+                          int number,
+                          int amount,
+                          int x_offset,
+                          int y_offset,
+                          font_t font,
                           const char* postfix) {
     int amount_offset = 1;
     if (amount == 1 || amount == -1)
@@ -74,7 +84,12 @@ int lang_text_draw_year(int year, int x_offset, int y_offset, font_t font) {
     }
     return width;
 }
-void lang_text_draw_month_year_max_width(int month, int year, int x_offset, int y_offset, int box_width, font_t font,
+void lang_text_draw_month_year_max_width(int month,
+                                         int year,
+                                         int x_offset,
+                                         int y_offset,
+                                         int box_width,
+                                         font_t font,
                                          color_t color) {
     int month_width = lang_text_get_width(25, month, font);
     int ad_bc_width = lang_text_get_width(20, year >= 0 ? 1 : 0, font);

@@ -162,8 +162,15 @@ void city_message_apply_sound_interval(int category) {
     }
 }
 
-void city_message_post_full(bool use_popup, int template_id, int event_id, int parent_event_id, int title_id,
-                            int body_id, int phrase_id, int param1, int param2) {
+void city_message_post_full(bool use_popup,
+                            int template_id,
+                            int event_id,
+                            int parent_event_id,
+                            int title_id,
+                            int body_id,
+                            int phrase_id,
+                            int param1,
+                            int param2) {
     auto& data = g_message_data;
     int id = new_message_id();
     if (id < 0)

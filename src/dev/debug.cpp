@@ -55,7 +55,9 @@ void handle_debug_hotkeys(const hotkeys* h) {
     //        debug_range_1 = 20;
 }
 
-static const uint8_t* font_test_str = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
+static const uint8_t* font_test_str
+  = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/"
+                     ",._äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
 static const uint8_t* font_test_str_ascii
   = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._";
 static const uint8_t* font_test_str_extended
@@ -103,7 +105,14 @@ void debug_text_float(uint8_t* str, int x, int y, int indent, const char* text, 
     string_from_int(&str[l + 1], (double)(value - (double)(int)value) * 100.0f, 0);
     text_draw(str, x + indent, y, FONT_SMALL_OUTLINED, color);
 }
-void debug_text_dual_left(uint8_t* str, int x, int y, int indent, int indent2, const char* text, int value1, int value2,
+void debug_text_dual_left(uint8_t* str,
+                          int x,
+                          int y,
+                          int indent,
+                          int indent2,
+                          const char* text,
+                          int value1,
+                          int value2,
                           color_t color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
     string_from_int(str, value1, 0);
@@ -529,8 +538,9 @@ void figure::draw_debug() {
                     break;
                 }
                 tile_coords = mappoint_to_pixel(map_point(tx, ty));
-                ImageDraw::img_generic(
-                  image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, tile_coords.x, tile_coords.y);
+                ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3,
+                                       tile_coords.x,
+                                       tile_coords.y);
             }
         }
 
@@ -680,7 +690,6 @@ const char* get_terrain_type(char* buffer, const char* def, map_point tile) {
 }
 
 bool g_debug_show_opts[e_debug_opt_size] = {0};
-
 
 void draw_debug_ui(int x, int y) {
     uint8_t str[300];
