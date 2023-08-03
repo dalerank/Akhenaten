@@ -101,7 +101,7 @@ static void button_click(int param1, int param2) {
     switch (param1) {
     case 0: // begin / resume family history
         if (data.to_begin_history) {
-            GamestateIO::load_mission(SCENARIO_NUBT);
+            GamestateIO::load_mission(SCENARIO_NUBT, true);
         } else {
             if (GamestateIO::load_savegame(data.last_autosave)) {
                 graphics_reset_dialog();

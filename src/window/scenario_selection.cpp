@@ -486,9 +486,7 @@ static void button_select_item(int index, int param2) {
         GamestateIO::load_map(panel->get_selected_entry_text(FILE_WITH_EXT), false);
         break;
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        GamestateIO::load_mission(get_first_mission_in_campaign(data.campaign_sub_dialog)
-                                    + panel->get_selected_entry_idx(),
-                                  false);
+        GamestateIO::load_mission(get_first_mission_in_campaign(data.campaign_sub_dialog) + panel->get_selected_entry_idx(), false);
         break;
     }
     window_invalidate();

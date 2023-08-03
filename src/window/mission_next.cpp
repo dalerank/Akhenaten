@@ -147,7 +147,7 @@ void window_mission_next_selection_show(void) {
         int mission_rank = scenario_campaign_rank();
         const mission_step_t* mission = get_campaign_mission_step_data(campaign, mission_rank);
         if (mission) {
-            GamestateIO::load_mission(mission->scenario_id);
+            GamestateIO::load_mission(mission->scenario_id, true);
             return;
         }
         window_main_menu_show(true);

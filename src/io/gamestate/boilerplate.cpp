@@ -637,11 +637,13 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
     // finish loading and start
     if (start_immediately) {
         start_loaded_file();
+
         // replay mission autosave file
         char filename[MAX_FILE_NAME] = {0};
         snprintf(filename, MAX_FILE_NAME, "autosave_replay.%s", saved_game_data_expanded.extension);
         GamestateIO::write_savegame(filename);
     }
+
     return true;
 }
 bool GamestateIO::load_savegame(const char* filename_short, bool start_immediately) {

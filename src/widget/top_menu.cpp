@@ -653,7 +653,7 @@ static void replay_map_confirmed(bool confirmed) {
     } else {
         int scenario_id = scenario_campaign_scenario_id();
         clear_state();
-        GamestateIO::load_mission(scenario_id);
+        GamestateIO::load_mission(scenario_id, true);
     }
 }
 static void menu_file_new_game(int param) {

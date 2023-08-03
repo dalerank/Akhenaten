@@ -22,7 +22,7 @@ void prepare_folders(const char* path);
 bool prepare_savegame(const char* filename_short);
 bool write_map(const char* filename_short);
 
-bool load_mission(const int scenario_id, bool start_immediately = true);
+bool load_mission(const int scenario_id, bool start_immediately);
 bool load_savegame(const char* filename_short, bool start_immediately = true);
 bool load_map(const char* filename_short, bool start_immediately = true);
 
