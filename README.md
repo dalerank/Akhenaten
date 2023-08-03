@@ -89,4 +89,8 @@ Currently not tested on Mac, but you can try the instructions from Julius. They 
 
 (Feel free to add a pull request to add additional Mac instructions here.)
 
+## Contributing
+
+Please use `clang-format-15` before submitting changes by using `./clang-format.sh` on Linux.
+
 ![Alt](https://repobeats.axiom.co/api/embed/d972b1b3da5423da758f1b4a1396177626bff54b.svg "Repobeats analytics image")

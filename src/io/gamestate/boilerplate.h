@@ -12,7 +12,13 @@ const int read_file_version(const char* filename, int offset);
 
 bool write_mission(const int scenario_id);
 bool write_savegame(const char* filename_short);
-bool prepare_folders(const char* path);
+
+/**
+ * Create folders if not exists
+ * Throw exception if path not exists and can not be created
+ * @param path to be created
+ */
+void prepare_folders(const char* path);
 bool prepare_savegame(const char* filename_short);
 bool write_map(const char* filename_short);
 

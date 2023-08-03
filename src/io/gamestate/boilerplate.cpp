@@ -586,29 +586,10 @@ static void prepare_savegame_schema(e_file_format file_format, const int file_ve
     FILEIO.push_chunk(4, false, "family_index", 0);
 }
 
-bool GamestateIO::prepare_folders(const char* path) {
-    char fpath[MAX_FILE_NAME] = {0};
-    strcpy(fpath, path);
-    char* token = strtok(fpath, "/");      // Split the path by '/'
-    char currentPath[MAX_FILE_NAME] = {0}; // Store the current path
-
-    while (token != NULL) {
-        strcat(currentPath, token); // Append the current folder to the current path
-        strcat(currentPath, "/");
-
-        // Check if the folder exists, if not create it
-        struct stat st = {0};
-        if (stat(currentPath, &st) == -1) {
-#ifdef _MSC_VER
-            mkdir(currentPath);
-#else
-            mkdir(currentPath, 0x755);
-#endif
-        }
-
-        token = strtok(NULL, "/");
-    }
-    return true;
+void GamestateIO::prepare_folders(const char* path) {
+    std::error_code err;
+    if (!std::filesystem::create_directories(path, err) && !std::filesystem::exists(path))
+        throw std::runtime_error(err.message());
 }
 
 bool GamestateIO::prepare_savegame(const char* filename_short) {
