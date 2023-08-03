@@ -110,7 +110,7 @@ void empire_object_init_cities(void) {
             obj->obj.trade_route_id = 0;
         if (obj->obj.trade_route_id >= MAX_ROUTES)
             obj->obj.trade_route_id = MAX_ROUTES - 1;
-        empire_city* city = empire_city_get(obj->obj.trade_route_id);
+        empire_city* city = empire_city_get(obj->city_name_id);
         city->in_use = 1;
         city->type = obj->city_type;
         city->name_id = obj->city_name_id;
