@@ -190,25 +190,25 @@ static void create_window_screenshot(void) {
     int height = screen_height();
 
     if (!image_create(width, height, 1)) {
-        log_error("Unable to create memory for screenshot", 0, 0);
+        logs::error("Unable to create memory for screenshot");
         return;
     }
 
     const char* filename = generate_filename(DISPLAY_SCREENSHOT);
     if (!image_begin_io(filename) || !image_write_header()) {
-        log_error("Unable to write screenshot to:", filename, 0);
+        logs::error("Unable to write screenshot to: %s", filename);
         image_free();
         return;
     }
 
     if (!image_write_canvas()) {
-        log_error("Error writing image", 0, 0);
+        logs::error("Error writing image");
         image_free();
         return;
     }
 
     image_finish();
-    log_info("Saved screenshot:", filename, 0);
+    logs::info("Saved screenshot: %s", filename);
     image_free();
 }
 
@@ -224,12 +224,12 @@ static void create_full_city_screenshot(void) {
     int city_height_pixels = scenario_map_data()->height * TILE_Y_SIZE;
 
     if (!image_create(city_width_pixels, city_height_pixels + TILE_Y_SIZE, IMAGE_HEIGHT_CHUNK)) {
-        log_error("Unable to set memory for full city screenshot", 0, 0);
+        logs::error("Unable to set memory for full city screenshot");
         return;
     }
     const char* filename = generate_filename(FULL_CITY_SCREENSHOT);
     if (!image_begin_io(filename) || !image_write_header()) {
-        log_error("Unable to write screenshot to:", filename, 0);
+        logs::error("Unable to write screenshot to: %s", filename);
         image_free();
         return;
     }
@@ -257,7 +257,7 @@ static void create_full_city_screenshot(void) {
         city_view_set_camera_from_pixel_position(base_width, current_height);
         city_without_overlay_draw(0, 0, &dummy_tile);
         if (!image_write_rows(canvas, canvas_width)) {
-            log_error("Error writing image", 0, 0);
+            logs::error("Error writing image");
             error = 1;
             break;
         }
@@ -271,7 +271,7 @@ static void create_full_city_screenshot(void) {
     city_view_set_camera_from_pixel_position(original_camera_pixels.x, original_camera_pixels.y);
     if (!error) {
         image_finish();
-        log_info("Saved full city screenshot:", filename, 0);
+        logs::info("Saved full city screenshot: %s", filename);
     }
     image_free();
 }

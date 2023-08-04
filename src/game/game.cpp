@@ -47,7 +47,7 @@ static int is_unpatched(void) {
 static encoding_type update_encoding(void) {
     int language = locale_determine_language();
     encoding_type encoding = encoding_determine(language);
-    log_info("Detected encoding:", 0, encoding);
+    logs::info("Detected encoding: %i", encoding);
     font_set_encoding(encoding);
     translation_load(language);
     return encoding;
@@ -55,15 +55,15 @@ static encoding_type update_encoding(void) {
 static bool reload_language(int is_editor, int reload_images) {
     if (!lang_load(is_editor)) {
         if (is_editor)
-            log_error("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
+            logs::error("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
         else
-            log_error("'c3.eng' or 'c3_mm.eng' files not found or too large.");
+            logs::error("'c3.eng' or 'c3_mm.eng' files not found or too large.");
         return false;
     }
     encoding_type encoding = update_encoding();
 
     if (!image_set_font_pak(encoding)) {
-        log_error("unable to load font graphics");
+        logs::error("unable to load font graphics");
         return false;
     }
 
@@ -124,15 +124,15 @@ bool game_pre_init(void) {
     game_state_unpause();
     return true;
 }
-bool game_init(void) {
+bool game_init() {
     image_data_init();
     if (!image_load_paks()) {
-        log_error("unable to load main graphics");
+        logs::error("unable to load main graphics");
         return false;
     }
     int missing_fonts = 0;
     if (!image_set_font_pak(encoding_get())) {
-        log_error("unable to load font graphics");
+        logs::error("unable to load font graphics");
         if (encoding_get() == ENCODING_KOREAN)
             missing_fonts = 1;
         else
@@ -140,21 +140,21 @@ bool game_init(void) {
     }
 
     if (!model_load()) {
-        log_error("unable to load model data");
+        logs::error("unable to load model data");
         return false;
     }
 
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         if (!eventmsg_load()) {
-            log_error("unable to load eventmsg.txt");
+            logs::error("unable to load eventmsg.txt");
             return false;
         }
         if (!eventmsg_auto_phrases_load()) {
-            log_error("unable to load event auto reason phrases");
+            logs::error("unable to load event auto reason phrases");
             return false;
         }
         if (!game_load_campaign_file()) {
-            log_error("unable to load campaign data");
+            logs::error("unable to load campaign data");
             return false;
         }
     }
@@ -166,7 +166,7 @@ bool game_init(void) {
 
     return true;
 }
-bool game_init_editor(void) {
+bool game_init_editor() {
     if (!reload_language(1, 0))
         return false;
 
@@ -180,16 +180,16 @@ bool game_init_editor(void) {
     window_editor_map_show();
     return true;
 }
-void game_exit_editor(void) {
+void game_exit_editor() {
     if (!reload_language(0, 0))
         return;
     editor_set_active(0);
     window_main_menu_show(1);
 }
-int game_reload_language(void) {
+int game_reload_language() {
     return reload_language(0, 1);
 }
-void game_run(void) {
+void game_run() {
     game_animation_update();
     int num_ticks = get_elapsed_ticks();
     for (int i = 0; i < num_ticks; i++) {
@@ -201,11 +201,11 @@ void game_run(void) {
     if (window_is(WINDOW_CITY))
         anti_scum_random_15bit();
 }
-void game_draw(void) {
+void game_draw() {
     window_draw(0);
     sound_city_play();
 }
-void game_exit(void) {
+void game_exit() {
     video_shutdown();
     settings_save();
     config_save();

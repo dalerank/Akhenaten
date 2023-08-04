@@ -98,7 +98,7 @@ const char* config_get_default_string_value(int key) {
     return default_string_values[key];
 }
 
-void config_set_defaults(void) {
+void config_set_defaults() {
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         values[i] = ini_keys_defaults[i].enabled;
     }
@@ -106,7 +106,7 @@ void config_set_defaults(void) {
             default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR],
             CONFIG_STRING_VALUE_MAX);
 }
-void config_load(void) {
+void config_load() {
     config_set_defaults();
     FILE* fp = file_open(INI_FILENAME, "rt");
     if (!fp)
@@ -125,7 +125,7 @@ void config_load(void) {
             for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
                 if (strcmp(ini_keys_defaults[i].name, line) == 0) {
                     int value = atoi(&equals[1]);
-                    log_info("Config key %s [%d]", ini_keys_defaults[i].name, value);
+                    logs::info("Config key %s [%d]", ini_keys_defaults[i].name, value);
                     values[i] = value;
                     break;
                 }
@@ -133,8 +133,8 @@ void config_load(void) {
             for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
                 if (strcmp(ini_string_keys[i], line) == 0) {
                     const char* value = &equals[1];
-                    log_info("Config key %s", ini_string_keys[i]);
-                    log_info("Config value %s", value);
+                    logs::info("Config key %s", ini_string_keys[i]);
+                    logs::info("Config value %s", value);
                     strncpy(string_values[i], value, CONFIG_STRING_VALUE_MAX);
                     break;
                 }
@@ -143,10 +143,10 @@ void config_load(void) {
     }
     file_close(fp);
 }
-void config_save(void) {
+void config_save() {
     FILE* fp = file_open(INI_FILENAME, "wt");
     if (!fp) {
-        log_error("Unable to write configuration file %s", INI_FILENAME);
+        logs::error("Unable to write configuration file %s", INI_FILENAME);
         return;
     }
     for (int i = 0; i < CONFIG_MAX_ENTRIES; i++)

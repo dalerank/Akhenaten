@@ -19,7 +19,7 @@
 full_empire_object g_empire_objects[MAX_OBJECTS];
 
 void empire_object_foreach(void (*callback)(const empire_object*)) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use)
             callback(&objects[i].obj);
@@ -27,7 +27,7 @@ void empire_object_foreach(void (*callback)(const empire_object*)) {
 }
 
 static bool is_trade_city(int index) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     if (objects[index].obj.type != EMPIRE_OBJECT_CITY)
         return 0;
 
@@ -36,7 +36,7 @@ static bool is_trade_city(int index) {
             || objects[index].city_type == EMPIRE_CITY_FOREIGN_TRADING);
 }
 static int get_trade_amount_code(int index, int resource) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     if (!is_trade_city(index))
         return 0;
 
@@ -57,7 +57,7 @@ static int get_trade_amount_code(int index, int resource) {
         return objects[index].trade_demand[resource];
 }
 static bool is_sea_trade_route(int route_id) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use && objects[i].obj.trade_route_id == route_id) {
             if (objects[i].obj.type == EMPIRE_OBJECT_SEA_TRADE_ROUTE)
@@ -70,7 +70,7 @@ static bool is_sea_trade_route(int route_id) {
 }
 
 static void fix_image_ids(void) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     int image_id = 0;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use && objects[i].obj.type == EMPIRE_OBJECT_CITY
@@ -98,7 +98,7 @@ static void fix_image_ids(void) {
 // static int objects_are_loaded = 0;
 
 void empire_object_init_cities(void) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     empire_city_clear_all();
     //    int route_index = 1;
     for (int i = 0; i < MAX_OBJECTS; i++) {
@@ -159,7 +159,7 @@ void empire_object_init_cities(void) {
     }
 }
 int empire_object_init_distant_battle_travel_months(int object_type) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     int month = 0;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use && objects[i].obj.type == object_type) {
@@ -171,15 +171,15 @@ int empire_object_init_distant_battle_travel_months(int object_type) {
 }
 
 const full_empire_object* empire_get_full_object(int object_id) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     return &objects[object_id];
 }
 const empire_object* empire_object_get(int object_id) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     return &objects[object_id].obj;
 }
 const empire_object* empire_object_get_our_city(void) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use) {
             const empire_object* obj = &objects[i].obj;
@@ -190,7 +190,7 @@ const empire_object* empire_object_get_our_city(void) {
     return 0;
 }
 const empire_object* empire_object_get_battle_icon(int path_id, int year) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use) {
             empire_object* obj = &objects[i].obj;
@@ -204,7 +204,7 @@ const empire_object* empire_object_get_battle_icon(int path_id, int year) {
 }
 
 int empire_object_get_max_invasion_path(void) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     int max_path = 0;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use && objects[i].obj.type == EMPIRE_OBJECT_BATTLE_ICON) {
@@ -215,7 +215,7 @@ int empire_object_get_max_invasion_path(void) {
     return max_path;
 }
 int empire_object_get_closest(int x, int y) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     int min_dist = 10000;
     int min_obj_id = 0;
     for (int i = 0; i < MAX_OBJECTS && objects[i].in_use; i++) {
@@ -244,7 +244,7 @@ int empire_object_get_closest(int x, int y) {
 }
 
 void empire_object_set_expanded(int object_id, e_empire_city new_city_type) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     objects[object_id].city_type = new_city_type;
     if (new_city_type == EMPIRE_CITY_PHARAOH)
         objects[object_id].obj.expanded.image_id = image_id_from_group(GROUP_EMPIRE_CITY_PH_PHARAOH);
@@ -253,7 +253,7 @@ void empire_object_set_expanded(int object_id, e_empire_city new_city_type) {
 }
 
 bool empire_object_city_buys_resource(int object_id, int resource, bool from_raw_object) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     if (object_id == -1)
         return false;
     if (from_raw_object) {
@@ -269,7 +269,7 @@ bool empire_object_city_buys_resource(int object_id, int resource, bool from_raw
     }
 }
 bool empire_object_city_sells_resource(int object_id, int resource, bool from_raw_object) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     if (object_id == -1)
         return false;
     if (from_raw_object) {
@@ -325,7 +325,7 @@ static int get_animation_offset(int image_id, int current_index) {
     return current_index;
 }
 int empire_object_update_animation(const empire_object* obj, int image_id) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     return objects[obj->id].obj.animation_index = get_animation_offset(image_id, obj->animation_index);
 }
 
@@ -340,7 +340,7 @@ map_route_object* empire_get_route_object(int id) {
 }
 
 io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob) {
-    auto &objects = g_empire_objects;
+    auto& objects = g_empire_objects;
     //    if (objects_are_loaded)
     //        return;
     int last_object_was_used = 1;

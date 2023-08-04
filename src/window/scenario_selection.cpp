@@ -122,7 +122,7 @@ static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector 
                         encoding_to_utf8(mission_data->map_name, name_utf8, MAX_FILE_NAME, 0);
                         panel->add_entry(name_utf8);
                     } else {
-                        log_error("Could not initialize SDL: %s", SDL_GetError());
+                        logs::error("Could not initialize SDL: %s", SDL_GetError());
                     }
                 }
             }
@@ -486,7 +486,9 @@ static void button_select_item(int index, int param2) {
         GamestateIO::load_map(panel->get_selected_entry_text(FILE_WITH_EXT), false);
         break;
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        GamestateIO::load_mission(get_first_mission_in_campaign(data.campaign_sub_dialog) + panel->get_selected_entry_idx(), false);
+        GamestateIO::load_mission(get_first_mission_in_campaign(data.campaign_sub_dialog)
+                                    + panel->get_selected_entry_idx(),
+                                  false);
         break;
     }
     window_invalidate();

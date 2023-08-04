@@ -107,7 +107,7 @@ static void set_mapping(int key, int modifiers, int action) {
 static void set_layout_mapping(const char* name, int default_key, int modifiers, int action) {
     int key = system_keyboard_key_for_symbol(name);
     if (key == KEY_NONE) {
-        log_info("No key found on layout for", name, 0);
+        logs::info("No key found on layout for: %s", name);
         key = default_key;
     }
     set_mapping(key, modifiers, action);
@@ -275,7 +275,7 @@ void hotkey_config_save(void) {
     hotkey_install_mapping(data.mappings, data.num_mappings);
     FILE* fp = file_open(INI_FILENAME, "wt");
     if (!fp) {
-        log_error("Unable to write hotkey configuration file %s", INI_FILENAME);
+        logs::error("Unable to write hotkey configuration file %s", INI_FILENAME);
         return;
     }
     for (int i = 0; i < data.num_mappings; i++) {

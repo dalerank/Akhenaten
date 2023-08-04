@@ -25,31 +25,31 @@ static int load_png(const char* path) {
     png_byte header[8];
     data.fp = fopen(path, "rb");
     if (!data.fp) {
-        log_error("Unable to open png file", path, 0);
+        logs::error("Unable to open png file: %s", path);
         return 0;
     }
     fread(header, 1, 8, data.fp);
     if (png_sig_cmp(header, 0, 8)) {
-        log_error("Invalid png file", path, 0);
+        logs::error("Invalid png file %s", path);
         unload_png();
         return 0;
     }
 
     data.png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
     if (!data.png_ptr) {
-        log_error("Unable to create a png struct", 0, 0);
+        logs::error("Unable to create a png struct");
         unload_png();
         return 0;
     }
     data.info_ptr = png_create_info_struct(data.png_ptr);
     if (!data.info_ptr) {
-        log_error("Unable to create a png struct", 0, 0);
+        logs::error("Unable to create a png struct");
         unload_png();
         return 0;
     }
 
     if (setjmp(png_jmpbuf(data.png_ptr))) {
-        log_error("Unable to read png information", 0, 0);
+        logs::error("Unable to read png information");
         unload_png();
         return 0;
     }
@@ -77,7 +77,7 @@ int png_read(const char* path, uint8_t* pixels) {
         return 0;
     }
     if (setjmp(png_jmpbuf(data.png_ptr))) {
-        log_error("Unable to read png file", 0, 0);
+        logs::error("Unable to read png file");
         unload_png();
         return 0;
     }

@@ -20,10 +20,10 @@
 #include "io/config/config.h"
 #include <city/data_private.h>
 #include <city/floods.h>
+#include <cmath>
 #include <game/time.h>
 #include <grid/floodplain.h>
 #include <grid/grid.h>
-#include <math.h>
 
 static int max_progress(building* b) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH && building_is_farm(b->type))

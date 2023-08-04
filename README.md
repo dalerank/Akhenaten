@@ -93,4 +93,14 @@ Currently not tested on Mac, but you can try the instructions from Julius. They 
 
 Please use `clang-format-15` before submitting changes by using `./clang-format.sh` on Linux.
 
+### Running with different log levels
+
+Use environment variable `SDL_LOG_PRIORITY` for adjustment of logging. For example:
+
+```shell
+SDL_LOG_PRIORITY=debug
+```
+
+By default `info` level is set.
+
 ![Alt](https://repobeats.axiom.co/api/embed/d972b1b3da5423da758f1b4a1396177626bff54b.svg "Repobeats analytics image")

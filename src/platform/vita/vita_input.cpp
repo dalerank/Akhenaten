@@ -1,7 +1,7 @@
 #include "vita_input.h"
 #include "vita.h"
 #include "vita_keyboard.h"
-#include <math.h>
+#include <cmath>
 
 #include "core/calc.h"
 #include "core/encoding.h"

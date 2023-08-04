@@ -8,7 +8,7 @@ enum building_info_type {
     BUILDING_INFO_TERRAIN = 1,
     BUILDING_INFO_BUILDING = 2,
     BUILDING_INFO_LEGION = 4
-} ;
+};
 
 enum terrain_info_type {
     TERRAIN_INFO_NONE = 0,
@@ -39,7 +39,7 @@ enum terrain_info_type {
     TERRAIN_INFO_MUD_WALL = 24,
     TERRAIN_INFO_MEADOWS = 25,
     TERRAIN_INFO_CLIFFS = 26,
-} ;
+};
 
 struct building_info_context {
     int x_offset;
@@ -73,7 +73,7 @@ struct building_info_context {
         int drawn;
         int figure_ids[7];
     } figure;
-} ;
+};
 
 void window_building_set_possible_position(int* x_offset, int* y_offset, int width_blocks, int height_blocks);
 int window_building_get_vertical_offset(building_info_context* c, int new_window_height);

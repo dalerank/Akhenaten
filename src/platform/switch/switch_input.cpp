@@ -1,6 +1,6 @@
 #include "switch_input.h"
 #include "switch.h"
-#include <math.h>
+#include <cmath>
 #include <switch.h>
 
 #include "core/calc.h"

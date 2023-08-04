@@ -39,17 +39,17 @@ static void backtrace_print(void) {
     char** stack = backtrace_symbols(array, size);
 
     for (int i = 0; i < size; i++) {
-        log_info("", stack[i], 0);
+        logs::info(stack[i]);
     }
 }
 #else
 static void backtrace_print(void) {
-    log_info("No stack trace available", 0, 0);
+    logs::info("No stack trace available");
 }
 #endif
 
 static void crash_handler(int sig) {
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Oops, crashed with signal %d :(", sig);
+    logs::error("Oops, crashed with signal %d :(", sig);
     backtrace_print();
     display_crash_message();
     exit(1);
@@ -71,7 +71,7 @@ void crashhandler_install(void) {
 
 #define log_info_sprintf(...)                                                                                          \
     snprintf(crash_info, 256, __VA_ARGS__);                                                                            \
-    log_info(crash_info, 0, 0)
+    logs::info(crash_info)
 
 static const char* print_exception_name(DWORD exception_code) {
     switch (exception_code) {
@@ -176,7 +176,7 @@ static void print_stacktrace(LPEXCEPTION_POINTERS e) {
 /** Called by windows if an exception happens. */
 static LONG CALLBACK exception_handler(LPEXCEPTION_POINTERS e) {
     // Prologue.
-    log_error("Oops, crashed :(", 0, 0);
+    logs::error("Oops, crashed :(", 0, 0);
 
 #ifdef _M_X64
     wchar_t path[MAX_PATH];
@@ -193,7 +193,7 @@ static LONG CALLBACK exception_handler(LPEXCEPTION_POINTERS e) {
     SymCleanup(GetCurrentProcess());
 
 #else
-    log_info("No stack trace available", 0, 0);
+    logs::info("No stack trace available");
 #endif
 
     // Inform user

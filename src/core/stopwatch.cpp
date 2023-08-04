@@ -83,6 +83,6 @@ void stopwatch::LOG() {
         for (int j = 0; j < std::min<int>(2.5 * log(ms + 1), 199); ++j)
             strcat(bar, "!");
         strcat(bar, "\0");
-        log_info("%02i %20s : %4" PRIu64 " %s\n", i, names.at(i).c_str(), ms, bar);
+        logs::info("%02i %20s : %4" PRIu64 " %s\n", i, names.at(i).c_str(), ms, bar);
     }
 }
