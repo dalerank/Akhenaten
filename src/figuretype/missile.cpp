@@ -57,10 +57,10 @@ void figure_create_explosion_cloud(int x, int y, int size) {
     }
 }
 
-void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, int type) {
+void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, e_figure_type type) {
     figure* f = figure_create(type, x, y, DIR_0_TOP_RIGHT);
     if (f->id) {
-        f->missile_damage = type == FIGURE_BOLT ? 60 : 10;
+        f->missile_damage = (type == FIGURE_BOLT ? 60 : 10);
         f->set_home(building_id);
         f->destination_tile.set(x_dst, y_dst);
         //        f->destination_tile.x() = x_dst;
@@ -68,7 +68,7 @@ void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, 
         f->set_cross_country_direction(f->cc_coords.x, f->cc_coords.y, 15 * x_dst, 15 * y_dst, 1);
     }
 }
-void figure::missile_fire_at(int target_id, int missile_type) {
+void figure::missile_fire_at(int target_id, e_figure_type missile_type) {
     figure* f = figure_get(target_id);
     figure_create_missile(id, tile.x(), tile.y(), f->tile.x(), f->tile.y(), missile_type);
 }
@@ -111,16 +111,18 @@ void figure::missile_hit_target(int target_id, int legionary_type) {
     int max_damage = target_props->max_damage;
     int damage_inflicted = figure_properties_for_type(type)->missile_attack_value - target_props->missile_defense_value;
     formation* m = formation_get(target->formation_id);
-    if (damage_inflicted < 0)
+    if (damage_inflicted < 0) {
         damage_inflicted = 0;
+    }
 
-    if (target->type == legionary_type && m->is_halted && m->layout == FORMATION_COLUMN)
+    if (target->type == legionary_type && m->is_halted && m->layout == FORMATION_COLUMN) {
         damage_inflicted = 1;
+    }
 
     int target_damage = damage_inflicted + target->damage;
-    if (target_damage <= max_damage)
+    if (target_damage <= max_damage) {
         target->damage = target_damage;
-    else { // poof target
+    } else { // poof target
         target->damage = max_damage + 1;
         target->kill();
         target->wait_ticks = 0;

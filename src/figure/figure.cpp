@@ -24,7 +24,7 @@ figure_data_t g_figure_data = {0, false};
 figure* figure_get(int id) {
     return g_figure_data.figures[id];
 }
-figure* figure_create(int type, int x, int y, int dir) {
+figure* figure_create(e_figure_type type, int x, int y, int dir) {
     int id = 0;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         if (figure_get(i)->available()) {

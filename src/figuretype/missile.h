@@ -1,7 +1,4 @@
-#ifndef FIGURETYPE_MISSILE_H
-#define FIGURETYPE_MISSILE_H
-
-#include "figure/figure.h"
+#pragma once
 
 void figure_create_explosion_cloud(int x, int y, int size);
 
@@ -17,4 +14,3 @@ void figure_create_explosion_cloud(int x, int y, int size);
 //
 // void figure_bolt_action();
 
-#endif // FIGURETYPE_MISSILE_H

@@ -58,7 +58,7 @@ void figure_create_fishing_points(void) {
 }
 
 static void create_herd(int x, int y) {
-    int herd_type;
+    e_figure_type herd_type;
     int num_animals;
     switch (scenario_property_climate()) {
     case CLIMATE_CENTRAL:

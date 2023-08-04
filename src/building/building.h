@@ -38,7 +38,7 @@ public:
         short warehouse_resource_id;
         //        short workshop_type;
         short orientation;
-        short fort_figure_type;
+        e_figure_type fort_figure_type;
         short native_meeting_center_id;
         short market_goods;
         short roadblock_exceptions;
@@ -225,12 +225,12 @@ public:
     void remove_figure(int i);
     bool has_figure(int i, int figure_id = -1);
     bool has_figure(int i, figure* f);
-    bool has_figure_of_type(int i, int _type);
+    bool has_figure_of_type(int i, e_figure_type _type);
     int get_figure_slot(figure* f);
 
-    figure* create_figure_generic(int _type, int created_action, int slot, int created_dir);
-    figure* create_roaming_figure(int _type, int created_action = FIGURE_ACTION_125_ROAMING, int slot = 0);
-    figure* create_figure_with_destination(int _type,
+    figure* create_figure_generic(e_figure_type _type, int created_action, int slot, int created_dir);
+    figure* create_roaming_figure(e_figure_type _type, int created_action = FIGURE_ACTION_125_ROAMING, int slot = 0);
+    figure* create_figure_with_destination(e_figure_type _type,
                                            building* destination,
                                            int created_action = ACTION_10_GOING,
                                            int slot = 0);
@@ -244,7 +244,7 @@ public:
     void check_labor_problem();
     bool common_spawn_figure_trigger(int min_houses);
     void common_spawn_labor_seeker(int min_houses);
-    bool common_spawn_roamer(int type, int min_houses, int created_action = FIGURE_ACTION_125_ROAMING);
+    bool common_spawn_roamer(e_figure_type type, int min_houses, int created_action = FIGURE_ACTION_125_ROAMING);
     bool common_spawn_goods_output_cartpusher(bool only_one = true,
                                               bool only_full_loads = true,
                                               int min_carry = 100,

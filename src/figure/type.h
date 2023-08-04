@@ -1,15 +1,8 @@
-#ifndef FIGURE_TYPE_H
-#define FIGURE_TYPE_H
+#pragma once
 
-/**
- * @file
- * Figure types.
- */
+#include <cstdint>
 
-/**
- * Figure types
- */
-enum e_figure_type {
+enum e_figure_type : uint16_t {
     FIGURE_NONE = 0,
     FIGURE_IMMIGRANT = 1,
     FIGURE_EMIGRANT = 2,
@@ -118,7 +111,7 @@ enum e_figure_type {
 
     FIGURE_HYENA = 102,
 
-    FIGURE_MAX = 999
+    //FIGURE_MAX = 999
 };
 
 enum e_enemy_type {
@@ -151,5 +144,3 @@ enum e_terrain_usage {
     TERRAIN_USAGE_WALLS = 4,
     TERRAIN_USAGE_ANIMAL = 5,
 };
-
-#endif // FIGURE_TYPE_H

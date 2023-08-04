@@ -29,25 +29,27 @@ static const int ENEMY_ID_TO_ENEMY_TYPE[20]
 
 static const int LOCAL_UPRISING_NUM_ENEMIES[20] = {0, 0, 0, 0, 0, 3, 3, 3, 0, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9};
 
-static const struct {
+ struct enemy_properties_t {
     int pct_type1;
     int pct_type2;
     int pct_type3;
-    int figure_types[3];
+    e_figure_type figure_types[3];
     int formation_layout;
-} ENEMY_PROPERTIES[12] = {
-  {100, 0, 0, {FIGURE_ENEMY49_FAST_SWORD, 0, 0}, FORMATION_ENEMY_MOB},                             // barbarian
-  {40, 60, 0, {FIGURE_ENEMY49_FAST_SWORD, FIGURE_ENEMY51_SPEAR, 0}, FORMATION_ENEMY_MOB},          // numidian
-  {50, 50, 0, {FIGURE_ENEMY50_SWORD, FIGURE_ENEMY53_AXE, 0}, FORMATION_ENEMY_MOB},                 // gaul
-  {80, 20, 0, {FIGURE_ENEMY50_SWORD, FIGURE_ENEMY48_CHARIOT, 0}, FORMATION_ENEMY_MOB},             // celt
-  {50, 50, 0, {FIGURE_ENEMY49_FAST_SWORD, FIGURE_ENEMY52_MOUNTED_ARCHER, 0}, FORMATION_ENEMY_MOB}, // goth
-  {30, 70, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY43_SPEAR, 0}, FORMATION_COLUMN},                  // pergamum
-  {50, 50, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY43_SPEAR, 0}, FORMATION_ENEMY_DOUBLE_LINE},       // seleucid
-  {50, 50, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY43_SPEAR, 0}, FORMATION_ENEMY_DOUBLE_LINE},       // etruscan
-  {80, 20, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY43_SPEAR, 0}, FORMATION_ENEMY_DOUBLE_LINE},       // greek
-  {80, 20, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY46_CAMEL, 0}, FORMATION_ENEMY_WIDE_COLUMN},       // egyptian
-  {90, 10, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY47_ELEPHANT, 0}, FORMATION_ENEMY_WIDE_COLUMN},    // carthaginian
-  {100, 0, 0, {FIGURE_ENEMY_CAESAR_LEGIONARY, 0, 0}, FORMATION_COLUMN}                             // caesar
+};
+
+ static const enemy_properties_t ENEMY_PROPERTIES[12] = {
+  {100, 0, 0, {FIGURE_ENEMY49_FAST_SWORD, FIGURE_NONE, FIGURE_NONE}, FORMATION_ENEMY_MOB},                             // barbarian
+  {40, 60, 0, {FIGURE_ENEMY49_FAST_SWORD, FIGURE_ENEMY51_SPEAR, FIGURE_NONE}, FORMATION_ENEMY_MOB},          // numidian
+  {50, 50, 0, {FIGURE_ENEMY50_SWORD, FIGURE_ENEMY53_AXE, FIGURE_NONE}, FORMATION_ENEMY_MOB},                 // gaul
+  {80, 20, 0, {FIGURE_ENEMY50_SWORD, FIGURE_ENEMY48_CHARIOT, FIGURE_NONE}, FORMATION_ENEMY_MOB},             // celt
+  {50, 50, 0, {FIGURE_ENEMY49_FAST_SWORD, FIGURE_ENEMY52_MOUNTED_ARCHER, FIGURE_NONE}, FORMATION_ENEMY_MOB}, // goth
+  {30, 70, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY43_SPEAR, FIGURE_NONE}, FORMATION_COLUMN},                  // pergamum
+  {50, 50, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY43_SPEAR, FIGURE_NONE}, FORMATION_ENEMY_DOUBLE_LINE},       // seleucid
+  {50, 50, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY43_SPEAR, FIGURE_NONE}, FORMATION_ENEMY_DOUBLE_LINE},       // etruscan
+  {80, 20, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY43_SPEAR, FIGURE_NONE}, FORMATION_ENEMY_DOUBLE_LINE},       // greek
+  {80, 20, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY46_CAMEL, FIGURE_NONE}, FORMATION_ENEMY_WIDE_COLUMN},       // egyptian
+  {90, 10, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY47_ELEPHANT, FIGURE_NONE}, FORMATION_ENEMY_WIDE_COLUMN},    // carthaginian
+  {100, 0, 0, {FIGURE_ENEMY_CAESAR_LEGIONARY, FIGURE_NONE, FIGURE_NONE}, FORMATION_COLUMN}                             // caesar
 };
 
 enum E_ATTACK_TYPE { ATTACK_TYPE_BARBARIAN, ATTACK_TYPE_CAESAR, ATTACK_TYPE_NATIVES };
@@ -261,7 +263,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
         if (formations_per_type[type] <= 0)
             continue;
 
-        int figure_type = ENEMY_PROPERTIES[enemy_type].figure_types[type];
+        e_figure_type figure_type = ENEMY_PROPERTIES[enemy_type].figure_types[type];
         for (int i = 0; i < formations_per_type[type]; i++) {
             int formation_id = formation_create_enemy(figure_type,
                                                       x,

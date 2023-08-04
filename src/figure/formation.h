@@ -64,7 +64,7 @@ typedef struct {
     int months_very_low_morale;
 
     /* Figures */
-    int figure_type;                    /**< Type of figure in this formation */
+    e_figure_type figure_type;          /**< Type of figure in this formation */
     int num_figures;                    /**< Current number of figures in the formation */
     int max_figures;                    /**< Maximum number of figures */
     int figures[MAX_FORMATION_FIGURES]; /**< Figure IDs */
@@ -124,9 +124,9 @@ void formations_clear(void);
 
 void formation_clear(int formation_id);
 
-formation* formation_create_legion(int building_id, int x, int y, int type);
-int formation_create_herd(int figure_type, int x, int y, int num_animals);
-int formation_create_enemy(int figure_type,
+formation* formation_create_legion(int building_id, int x, int y, e_figure_type type);
+int formation_create_herd(e_figure_type figure_type, int x, int y, int num_animals);
+int formation_create_enemy(e_figure_type figure_type,
                            int x,
                            int y,
                            int layout,

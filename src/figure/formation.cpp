@@ -45,7 +45,7 @@ static int get_free_formation(int start_index) {
     return 0;
 }
 
-formation* formation_create_legion(int building_id, int x, int y, int type) {
+formation* formation_create_legion(int building_id, int x, int y, e_figure_type type) {
     int formation_id = get_free_formation(1);
     if (!formation_id)
         return &formations[0];
@@ -74,7 +74,7 @@ formation* formation_create_legion(int building_id, int x, int y, int type) {
     return m;
 }
 
-static int formation_create(int figure_type, int layout, int orientation, int x, int y) {
+static int formation_create(e_figure_type figure_type, int layout, int orientation, int x, int y) {
     int formation_id = get_free_formation(10);
     if (!formation_id)
         return 0;
@@ -100,7 +100,7 @@ static int formation_create(int figure_type, int layout, int orientation, int x,
     return formation_id;
 }
 
-int formation_create_herd(int figure_type, int x, int y, int num_animals) {
+int formation_create_herd(e_figure_type figure_type, int x, int y, int num_animals) {
     int formation_id = formation_create(figure_type, FORMATION_HERD, 0, x, y);
     if (!formation_id)
         return 0;
@@ -112,7 +112,7 @@ int formation_create_herd(int figure_type, int x, int y, int num_animals) {
     return formation_id;
 }
 
-int formation_create_enemy(int figure_type,
+int formation_create_enemy(e_figure_type figure_type,
                            int x,
                            int y,
                            int layout,

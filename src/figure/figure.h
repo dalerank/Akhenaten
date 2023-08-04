@@ -1,5 +1,4 @@
-#ifndef FIGURE_FIGURE_H
-#define FIGURE_FIGURE_H
+#pragma once
 
 #include "building/building.h"
 #include "core/buffer.h"
@@ -49,7 +48,7 @@ public:
     unsigned char alternative_location_index;
     unsigned char flotsam_visible;
     short next_figure;
-    unsigned char type;
+    e_figure_type type;
     //    unsigned char resource_id;
     bool use_cross_country;
     bool is_friendly;
@@ -466,7 +465,7 @@ public:
 
     // missile.c
     void missile_hit_target(int target_id, int legionary_type);
-    void missile_fire_at(int target_id, int missile_type);
+    void missile_fire_at(int target_id, e_figure_type missile_type);
 
     // wall.c
     void tower_sentry_pick_target();
@@ -506,7 +505,7 @@ figure* figure_get(int id);
  * @param dir Direction the figure faces
  * @return Always a figure. If figure->id is zero, it is an invalid one.
  */
-figure* figure_create(int type, int x, int y, int dir);
+figure* figure_create(e_figure_type type, int x, int y, int dir);
 
 // void figure *f->map_figure_remove();
 // int figure_is_dead(const figure *f);
@@ -518,8 +517,4 @@ void figure_init_scenario(void);
 
 void figure_kill_all();
 
-//
-
 int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x_dst, int y_dst);
-
-#endif // FIGURE_FIGURE_H

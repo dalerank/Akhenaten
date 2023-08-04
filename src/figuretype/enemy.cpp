@@ -59,7 +59,7 @@ void figure::enemy_initial(formation* m) {
                 attack_image_offset = 0;
         }
         if (attack_image_offset) {
-            int missile_type;
+            e_figure_type missile_type;
             switch (m->enemy_type) {
             case ENEMY_4_GOTH:
             case ENEMY_5_PERGAMUM:

@@ -91,16 +91,20 @@ bool building::has_figure(int i, int figure_id) {
 bool building::has_figure(int i, figure* f) {
     return has_figure(i, f->id);
 }
-bool building::has_figure_of_type(int i, int _type) {
+bool building::has_figure_of_type(int i, e_figure_type _type) {
     // seatrch through all the figures if index is -1
     if (i == -1) {
         bool has_any = false;
-        for (int i = 0; i < MAX_FIGURES_PER_BUILDING; i++)
-            if (get_figure(i)->type == _type)
+        for (int i = 0; i < MAX_FIGURES_PER_BUILDING; i++) {
+            if (get_figure(i)->type == _type) {
                 has_any = true;
+            }
+        }
+
         return has_any;
-    } else
+    } else {
         return (get_figure(i)->type == _type);
+    }
 }
 int building::get_figure_slot(figure* f) {
     // seatrch through all the slots, check if figure matches
@@ -111,14 +115,14 @@ int building::get_figure_slot(figure* f) {
     return -1;
 }
 
-figure* building::create_figure_generic(int _type, int created_action, int slot, int created_dir) {
+figure* building::create_figure_generic(e_figure_type _type, int created_action, int slot, int created_dir) {
     figure* f = figure_create(_type, road_access.x(), road_access.y(), created_dir);
     f->action_state = created_action;
     f->set_home(id);
     return f;
 }
 
-figure* building::create_roaming_figure(int _type, int created_action, int slot) {
+figure* building::create_roaming_figure(e_figure_type _type, int created_action, int slot) {
     figure* f = create_figure_generic(_type, created_action, slot, figure_roam_direction);
 
     f->set_destination(0);
@@ -134,7 +138,7 @@ figure* building::create_roaming_figure(int _type, int created_action, int slot)
 
     return f;
 }
-figure* building::create_figure_with_destination(int _type, building* destination, int created_action, int slot) {
+figure* building::create_figure_with_destination(e_figure_type _type, building* destination, int created_action, int slot) {
     figure* f = create_figure_generic(_type, created_action, slot, DIR_4_BOTTOM_LEFT);
     f->set_destination(destination->id);
     f->set_immigrant_home(0);
@@ -214,7 +218,7 @@ bool building::common_spawn_figure_trigger(int min_houses) {
     }
     return false;
 }
-bool building::common_spawn_roamer(int type, int min_houses, int created_action) {
+bool building::common_spawn_roamer(e_figure_type type, int min_houses, int created_action) {
     if (common_spawn_figure_trigger(min_houses)) {
         create_roaming_figure(type, created_action);
         return true;
@@ -223,20 +227,25 @@ bool building::common_spawn_roamer(int type, int min_houses, int created_action)
 }
 bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_full_loads, int min_carry, int max_carry) {
     // can only have one?
-    if (only_one && has_figure_of_type(0, FIGURE_CART_PUSHER))
+    if (only_one && has_figure_of_type(0, FIGURE_CART_PUSHER)) {
         return false;
+    }
 
     // no checking for work force? doesn't matter anyways.... there's no instance
     // in the game that allows cartpushers to spawn before the workers disappear!
     if (has_road_access) {
         while (stored_full_amount >= min_carry) {
             int amounts_to_carry = std::min<int>(stored_full_amount, max_carry);
-            if (only_full_loads)
+            if (only_full_loads) {
                 amounts_to_carry -= amounts_to_carry % 100; // remove pittance
+            }
+
             create_cartpusher(output_resource_id, amounts_to_carry);
             stored_full_amount -= amounts_to_carry;
-            if (only_one || stored_full_amount == 0) // done once, or out of goods?
+            if (only_one || stored_full_amount == 0) {
+                // done once, or out of goods? 
                 return true;
+            }
         }
     }
     return false;
