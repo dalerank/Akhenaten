@@ -94,14 +94,14 @@ static void log_hex(file_chunk_t* chunk, int i, int offs, int num_chunks) {
     }
 
     // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
-    log_info("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s",
-             chunk->compressed ? "(C)" : "---",
-             i + 1,
-             num_chunks,
-             offs,
-             hexstr,
-             chunk->buf->size(),
-             fname);
+    logs::info("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s",
+               chunk->compressed ? "(C)" : "---",
+               i + 1,
+               num_chunks,
+               offs,
+               hexstr,
+               chunk->buf->size(),
+               fname);
 }
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
@@ -122,12 +122,12 @@ static bool read_compressed_chunk(FILE* fp, buffer* buf, int filepiece_size) {
         // read into buffer chunk of specified size - the actual "file piece" size is used for the output!
         int csize = fread(compress_buffer, 1, chunk_size, fp);
         if (csize != chunk_size) {
-            log_info("Incorrect chunk size, expected %i, found %i", chunk_size, csize);
+            logs::info("Incorrect chunk size, expected %i, found %i", chunk_size, csize);
             return false;
         }
         int bsize = zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size);
         if (bsize != buf->size()) {
-            log_info("Incorrect buffer size, expected %u, found %i", buf->size(), bsize);
+            logs::info("Incorrect buffer size, expected %u, found %i", buf->size(), bsize);
             return false;
         }
         //        if (fread(compress_buffer, 1, chunk_size, fp) != chunk_size
@@ -170,7 +170,7 @@ bool FileIOManager::io_failure_cleanup(const char* action, const char* reason) {
                + 1; // remove the size of the format characters, add one character for string termination
     std::vector<char> text(size);
     snprintf(text.data(), size, format, action, reason);
-    log_error(text.data(), 0, 0);
+    logs::error(text.data());
     clear();
     return false;
 }
@@ -219,7 +219,7 @@ bool FileIOManager::serialize(const char* filename,
 
         // The last piece may be smaller than buf->size
         if (!result) {
-            log_error("Unable to write file, write failure.");
+            logs::error("Unable to write file, write failure.");
             clear();
             return false;
         }
@@ -228,11 +228,11 @@ bool FileIOManager::serialize(const char* filename,
     // close file handle
     file_close(fp);
 
-    log_info("File write successful: %s %i@ --- VERSION: %i --- %" PRIu64 " milliseconds",
-             file_path,
-             file_offset,
-             file_version,
-             WATCH.STOP());
+    logs::info("File write successful: %s %i@ --- VERSION: %i --- %" PRIu64 " milliseconds",
+               file_path,
+               file_offset,
+               file_version,
+               WATCH.STOP());
 
     return true;
 }
@@ -252,7 +252,7 @@ bool FileIOManager::unserialize(const char* filename,
     // open file handle
     FILE* fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "rb");
     if (!fp) {
-        log_error("Unable to read file, file could not be accessed.");
+        logs::error("Unable to read file, file could not be accessed.");
         clear();
         return false;
     } else if (file_offset)
@@ -264,7 +264,7 @@ bool FileIOManager::unserialize(const char* filename,
     else {
         file_version = determine_file_version(file_path, offset);
         if (file_version == -1) {
-            log_info("Unable to read file %s, file version/format is invalid ", filename);
+            logs::info("Unable to read file %s, file version/format is invalid ", filename);
             clear();
             return false;
         }
@@ -274,7 +274,7 @@ bool FileIOManager::unserialize(const char* filename,
     if (init_schema != nullptr)
         init_schema(file_format, file_version);
     else {
-        log_error("Unable to read file, provided schema is invalid.");
+        logs::error("Unable to read file, provided schema is invalid.");
         clear();
         return false;
     }
@@ -291,7 +291,7 @@ bool FileIOManager::unserialize(const char* filename,
         if (chunk->compressed) {
             result = read_compressed_chunk(fp, chunk->buf, chunk->buf->size());
             if (!result) {
-                log_error("Unable to read file chunk[%s], decompression failed.", chunk->name);
+                logs::error("Unable to read file chunk[%s], decompression failed.", chunk->name);
                 clear();
                 return false;
             }
@@ -300,8 +300,8 @@ bool FileIOManager::unserialize(const char* filename,
             int exp = chunk->buf->size();
             result = (got == exp);
             if (!result) {
-                log_info("Incorrect buffer size, expected %i, found %i", exp, got);
-                log_error("Unable to read file, chunk size incorrect.");
+                logs::info("Incorrect buffer size, expected %i, found %i", exp, got);
+                logs::error("Unable to read file, chunk size incorrect.");
                 clear();
                 return false;
             }
@@ -324,11 +324,11 @@ bool FileIOManager::unserialize(const char* filename,
             file_chunks.at(i).iob->read();
     }
 
-    log_info("File read successful: %s %i@ --- VERSION HEADER: %i --- %" PRIu64 " milliseconds",
-             file_path,
-             file_offset,
-             file_version,
-             WATCH.STOP());
+    logs::info("File read successful: %s %i@ --- VERSION HEADER: %i --- %" PRIu64 " milliseconds",
+               file_path,
+               file_offset,
+               file_version,
+               WATCH.STOP());
 
     return true;
 }

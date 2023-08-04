@@ -142,7 +142,7 @@ static bool load_files(const char* text_filename, const char* message_filename, 
                 auto *ptr = lang_get_string(i, j);
                 if (ptr >= g_lang_data.text_data + next_section)
                     break;
-                log_info("%u-%u:  %s", i, j, ptr);
+                logs::info("%u-%u:  %s", i, j, ptr);
             }
         }
     }*/

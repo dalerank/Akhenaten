@@ -67,7 +67,7 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
     int max_scale_pct = get_max_scale_percentage(pixel_width, pixel_height);
     if (max_scale_pct < scale_percentage) {
         scale_percentage = max_scale_pct;
-        SDL_Log("Maximum scale of %i applied", scale_percentage);
+        logs::info("Maximum scale of %i applied", scale_percentage);
     }
 
     SDL_SetWindowMinimumSize(SDL.window,
@@ -82,7 +82,7 @@ static void set_scale_for_screen(int pixel_width, int pixel_height) {
     if (SDL.window) {
         system_init_cursors(scale_percentage);
     }
-    SDL_Log("Auto-setting scale to %i", scale_percentage);
+    logs::info("Auto-setting scale to %i", scale_percentage);
 }
 #endif
 
@@ -134,11 +134,11 @@ int platform_screen_create(const char* title, int display_scale_percentage) {
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 #endif
 
-    log_info("Creating screen %d x %d, %s, driver: %s",
-             width,
-             height,
-             fullscreen ? "fullscreen" : "windowed",
-             SDL_GetCurrentVideoDriver());
+    logs::info("Creating screen %d x %d, %s, driver: %s",
+               width,
+               height,
+               fullscreen ? "fullscreen" : "windowed",
+               SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
@@ -152,7 +152,7 @@ int platform_screen_create(const char* title, int display_scale_percentage) {
     SDL.window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
 
     if (!SDL.window) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create window: %s", SDL_GetError());
+        logs::error("Unable to create window: %s", SDL_GetError());
         return 0;
     }
 
@@ -233,9 +233,9 @@ void platform_screen_set_fullscreen(void) {
     int display = SDL_GetWindowDisplayIndex(SDL.window);
     SDL_DisplayMode mode;
     SDL_GetDesktopDisplayMode(display, &mode);
-    log_info("User to fullscreen %d x %d on display %d", mode.w, mode.h, display);
+    logs::info("User to fullscreen %d x %d on display %d", mode.w, mode.h, display);
     if (0 != SDL_SetWindowFullscreen(SDL.window, SDL_WINDOW_FULLSCREEN_DESKTOP)) {
-        log_info("Unable to enter fullscreen: %s", SDL_GetError());
+        logs::info("Unable to enter fullscreen: %s", SDL_GetError());
         return;
     }
     SDL_SetWindowDisplayMode(SDL.window, &mode);
@@ -258,7 +258,7 @@ void platform_screen_set_windowed(void) {
     int pixel_width = scale_logical_to_pixels(logical_width);
     int pixel_height = scale_logical_to_pixels(logical_height);
     int display = SDL_GetWindowDisplayIndex(SDL.window);
-    log_info("User to windowed %d x %d on display %d", pixel_width, pixel_height, display);
+    logs::info("User to windowed %d x %d on display %d", pixel_width, pixel_height, display);
     SDL_SetWindowFullscreen(SDL.window, 0);
     SDL_SetWindowSize(SDL.window, pixel_width, pixel_height);
     if (window_pos.centered) {
@@ -290,7 +290,7 @@ void platform_screen_set_window_size(int logical_width, int logical_height) {
     if (window_pos.centered) {
         platform_screen_center_window();
     }
-    log_info("User resize to %d x %d on display %d", pixel_width, pixel_height, display);
+    logs::info("User resize to %d x %d on display %d", pixel_width, pixel_height, display);
     if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE) {
         SDL_SetWindowGrab(SDL.window, SDL_FALSE);
     }

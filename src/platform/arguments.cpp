@@ -45,7 +45,7 @@ static int parse_decimal_as_percentage(const char* str) {
     }
     if (*end) {
         // still some characters left, print out warning
-        SDL_Log("Invalid decimal: %s", str);
+        logs::warn("Invalid decimal: %s", str);
         return -1;
     }
     return percentage;
@@ -95,13 +95,13 @@ int platform_parse_arguments(int argc, char** argv, ozymandias_args& output_args
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
                 i++;
                 if (percentage < 50 || percentage > 500) {
-                    log_info(DISPLAY_SCALE_ERROR_MESSAGE);
+                    logs::info(DISPLAY_SCALE_ERROR_MESSAGE);
                     ok = 0;
                 } else {
                     output_args.display_scale_percentage = percentage;
                 }
             } else {
-                log_info(DISPLAY_SCALE_ERROR_MESSAGE);
+                logs::info(DISPLAY_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
         } else if (SDL_strcmp(argv[i], "--size") == 0) {
@@ -109,7 +109,7 @@ int platform_parse_arguments(int argc, char** argv, ozymandias_args& output_args
                 SDL_sscanf(argv[i + 1], "%dx%d", &output_args.window_width, &output_args.window_height);
                 i++;
             } else {
-                log_info(DISPLAY_SCALE_ERROR_MESSAGE);
+                logs::info(DISPLAY_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
         } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
@@ -119,17 +119,17 @@ int platform_parse_arguments(int argc, char** argv, ozymandias_args& output_args
                 if (percentage == 100 || percentage == 150 || percentage == 200)
                     output_args.cursor_scale_percentage = percentage;
                 else {
-                    log_info(CURSOR_SCALE_ERROR_MESSAGE);
+                    logs::info(CURSOR_SCALE_ERROR_MESSAGE);
                     ok = 0;
                 }
             } else {
-                log_info(CURSOR_SCALE_ERROR_MESSAGE);
+                logs::info(CURSOR_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
         } else if (SDL_strcmp(argv[i], "--help") == 0)
             ok = 0;
         else if (SDL_strncmp(argv[i], "--", 2) == 0) {
-            log_info(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]);
+            logs::info(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]);
             ok = 0;
         } else {
             strcpy(output_args.data_directory, argv[i]);
@@ -141,17 +141,17 @@ int platform_parse_arguments(int argc, char** argv, ozymandias_args& output_args
     }
 
     if (!ok) {
-        log_info("Usage: ozymandias [ARGS] [DATA_DIR]");
-        log_info("ARGS may be:");
-        log_info("--display-scale NUMBER");
-        log_info("          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5");
-        log_info("--cursor-scale NUMBER");
-        log_info("          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2");
-        log_info("--window");
-        log_info("          setup window mode on");
-        log_info("--debug");
-        log_info("          Prints additional debug information on the screen");
-        log_info("The last argument, if present, is interpreted as data directory of the Pharaoh installation");
+        logs::info("Usage: ozymandias [ARGS] [DATA_DIR]");
+        logs::info("ARGS may be:");
+        logs::info("--display-scale NUMBER");
+        logs::info("          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5");
+        logs::info("--cursor-scale NUMBER");
+        logs::info("          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2");
+        logs::info("--window");
+        logs::info("          setup window mode on");
+        logs::info("--debug");
+        logs::info("          Prints additional debug information on the screen");
+        logs::info("The last argument, if present, is interpreted as data directory of the Pharaoh installation");
     }
 
     return ok;

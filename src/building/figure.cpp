@@ -33,7 +33,7 @@
 #include "grid/water.h"
 #include "io/config/config.h"
 
-#include <math.h>
+#include <cmath>
 
 const int generic_delay_table[] = {0, 1, 3, 7, 15, 29, 44};
 

@@ -19,7 +19,7 @@
 #include "scenario/property.h"
 
 #include "io/config/config.h"
-#include <math.h>
+#include <cmath>
 
 int building_warehouse_get_space_info(building* warehouse) {
     int total_amounts = 0;

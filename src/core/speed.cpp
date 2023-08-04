@@ -1,6 +1,6 @@
 #include "speed.h"
 
-#include <math.h>
+#include <cmath>
 
 #define FRAME_TIME 16.67
 

@@ -715,7 +715,7 @@ static void zip_output_func(uint8_t* buffer, int length, struct pk_token* token)
     if (token->stop)
         return;
     if (token->output_ptr >= token->output_length) {
-        log_error("COMP2 Out of buffer space.");
+        logs::error("COMP2 Out of buffer space.");
         token->stop = 1;
         return;
     }
@@ -726,7 +726,7 @@ static void zip_output_func(uint8_t* buffer, int length, struct pk_token* token)
         memcpy(&token->output_data[token->output_ptr], buffer, (size_t)length);
         token->output_ptr += length;
     } else {
-        log_error("COMP1 Corrupt.");
+        logs::error("COMP1 Corrupt.");
         token->stop = 1;
     }
 }
@@ -747,7 +747,7 @@ int zip_compress(const void* input_buffer, int input_length, void* output_buffer
     int ok = 1;
     int pk_error = pk_implode(zip_input_func, zip_output_func, buf, &token, 4096);
     if (pk_error || token.stop) {
-        log_error("COMP Error occurred while compressing.");
+        logs::error("COMP Error occurred while compressing.");
         ok = 0;
     } else {
         //        assert(*output_length == token.output_ptr);
@@ -772,11 +772,9 @@ int zip_decompress(const void* input_buffer, int input_length, void* output_buff
     int ok = 1;
     int pk_error = pk_explode(zip_input_func, zip_output_func, buf, &token);
     if (pk_error || token.stop) {
-        log_error("COMP Error uncompressing.");
+        logs::error("COMP Error uncompressing.");
         ok = 0;
     } else {
-        //        assert(*output_length == token.output_ptr);
-
         *output_length = token.output_ptr;
         ok = *output_length;
     }

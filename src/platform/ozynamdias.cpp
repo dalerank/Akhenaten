@@ -1,5 +1,3 @@
-#include "SDL.h"
-
 #include "core/encoding.h"
 #include "core/game_environment.h"
 #include "core/stacktrace.h"
@@ -21,6 +19,8 @@
 #include "platform/touch.h"
 
 #include "renderer.h"
+
+#include <SDL.h>
 
 #include <set>
 #include <signal.h>
@@ -73,38 +73,6 @@ enum E_USER_EVENT {
     USER_EVENT_CENTER_WINDOW,
 };
 
-#if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__)
-/* Log to separate file on windows, since we don't have a console there */
-static FILE* log_file = 0;
-
-static void write_log(void* userdata, int category, SDL_LogPriority priority, const char* message) {
-    if (log_file) {
-        if (priority == SDL_LOG_PRIORITY_ERROR)
-            fwrite("ERROR: ", sizeof(char), 7, log_file);
-        else {
-            fwrite("INFO: ", sizeof(char), 6, log_file);
-        }
-        fwrite(message, sizeof(char), strlen(message), log_file);
-        fwrite("\n", sizeof(char), 1, log_file);
-        fflush(log_file);
-    }
-}
-static void setup_logging(void) {
-    log_file = file_open("ozymandias-log.txt", "wt");
-    SDL_LogSetOutputFunction(write_log, NULL);
-}
-static void teardown_logging(void) {
-    if (log_file)
-        file_close(log_file);
-}
-
-#else
-static void setup_logging(void) {
-}
-static void teardown_logging(void) {
-}
-#endif
-
 static void post_event(int code) {
     SDL_Event event;
     event.user.type = SDL_USEREVENT;
@@ -112,7 +80,7 @@ static void post_event(int code) {
     SDL_PushEvent(&event);
 }
 
-void system_exit(void) {
+void system_exit() {
     post_event(USER_EVENT_QUIT);
 }
 void system_resize(int width, int height) {
@@ -128,7 +96,7 @@ void system_resize(int width, int height) {
     event.user.data2 = &s_height;
     SDL_PushEvent(&event);
 }
-void system_center(void) {
+void system_center() {
     post_event(USER_EVENT_CENTER_WINDOW);
 }
 void system_set_fullscreen(int fullscreen) {
@@ -137,8 +105,8 @@ void system_set_fullscreen(int fullscreen) {
         system_resize(1200, 800);
 }
 
-static int init_sdl(void) {
-    SDL_Log("Initializing SDL");
+static int init_sdl() {
+    logs::info("Initializing SDL");
     Uint32 SDL_flags = SDL_INIT_AUDIO;
 
     // on Vita, need video init only to enable physical kbd/mouse and touch events
@@ -149,7 +117,7 @@ static int init_sdl(void) {
 #endif
 
     if (SDL_Init(SDL_flags) != 0) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
+        logs::error("Could not initialize SDL: %s", SDL_GetError());
         return 0;
     }
 #if SDL_VERSION_ATLEAST(2, 0, 10)
@@ -158,13 +126,13 @@ static int init_sdl(void) {
 #elif SDL_VERSION_ATLEAST(2, 0, 4)
     SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
 #endif
-    SDL_Log("SDL initialized");
+    logs::info("SDL initialized");
     return 1;
 }
 int pre_init_dir_attempt(const char* data_dir, const char* lmsg) {
-    log_info(lmsg, data_dir);
+    logs::info(lmsg, data_dir);
     if (!platform_file_manager_set_base_path(data_dir))
-        log_info("%s: directory not found", data_dir);
+        logs::info("%s: directory not found", data_dir);
 
     if (game_pre_init())
         return 1;
@@ -179,12 +147,12 @@ static int pre_init(const char* custom_data_dir) {
             return 1;
         }
 
-        log_info("%s: directory not found", custom_data_dir);
+        logs::info("%s: directory not found", custom_data_dir);
         return 0;
     }
 
     // ...then from working directory...
-    log_info("Attempting to load game from working directory");
+    logs::info("Attempting to load game from working directory");
     if (game_pre_init()) {
         return 1;
     }
@@ -203,7 +171,7 @@ static int pre_init(const char* custom_data_dir) {
         return 1;
     }
 
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "'*.eng' or '*_mm.eng' files not found or too large.");
+    logs::error("'*.eng' or '*_mm.eng' files not found or too large.");
     return 0;
 }
 
@@ -259,7 +227,7 @@ static void show_options_window() {
     SDL_Renderer* renderer
       = SDL_CreateRenderer(platform_window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr) {
-        log_info("Error creating SDL_Renderer!");
+        logs::info("Error creating SDL_Renderer!");
         exit(-1);
     }
 
@@ -389,11 +357,11 @@ static void show_options_window() {
 static void setup(const ozymandias_args& args) {
     // init SDL and some other stuff
     crashhandler_install();
+    logs::initialize();
 
-    setup_logging();
-    SDL_Log("Ozymandias version %s", system_version());
+    logs::info("Ozymandias version %s", system_version());
     if (!init_sdl()) {
-        SDL_Log("Exiting: SDL init failed");
+        logs::error("Exiting: SDL init failed");
         exit(-1);
     }
 #ifdef PLATFORM_ENABLE_INIT_CALLBACK
@@ -416,7 +384,7 @@ static void setup(const ozymandias_args& args) {
     char title[100] = {0};
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
     if (!platform_screen_create(title, args.display_scale_percentage)) {
-        log_info("Exiting: SDL create window failed");
+        logs::info("Exiting: SDL create window failed");
         exit(-2);
     }
     platform_init_cursors(args.cursor_scale_percentage); // this has to come after platform_screen_create, otherwise it
@@ -425,16 +393,15 @@ static void setup(const ozymandias_args& args) {
     // init game!
     time_set_millis(SDL_GetTicks());
     if (!game_init()) {
-        log_info("Exiting: game init failed");
+        logs::info("Exiting: game init failed");
         exit(2);
     }
 }
 static void teardown(void) {
-    log_info("Exiting game");
+    logs::info("Exiting game");
     game_exit();
     platform_screen_destroy();
     SDL_Quit();
-    teardown_logging();
 }
 
 #ifdef DRAW_FPS
@@ -504,23 +471,23 @@ static void handle_window_event(SDL_WindowEvent* event, int* window_active) {
         mouse_set_inside_window(0);
         break;
     case SDL_WINDOWEVENT_SIZE_CHANGED:
-        log_info("Window resized to %d x %d", (int)event->data1, (int)event->data2);
+        logs::info("Window resized to %d x %d", (int)event->data1, (int)event->data2);
         platform_screen_resize(event->data1, event->data2, 1);
         break;
     case SDL_WINDOWEVENT_RESIZED:
-        log_info("System resize to %d x %d", (int)event->data1, (int)event->data2);
+        logs::info("System resize to %d x %d", (int)event->data1, (int)event->data2);
         break;
     case SDL_WINDOWEVENT_MOVED:
-        log_info("Window move to coordinates x: %d y: %d\n", (int)event->data1, (int)event->data2);
+        logs::info("Window move to coordinates x: %d y: %d\n", (int)event->data1, (int)event->data2);
         platform_screen_move(event->data1, event->data2);
         break;
 
     case SDL_WINDOWEVENT_SHOWN:
-        log_info("Window %d shown", (unsigned int)event->windowID);
+        logs::info("Window %d shown", (unsigned int)event->windowID);
         *window_active = 1;
         break;
     case SDL_WINDOWEVENT_HIDDEN:
-        log_info("Window %d hidden", (unsigned int)event->windowID);
+        logs::info("Window %d hidden", (unsigned int)event->windowID);
         *window_active = 0;
         break;
     }

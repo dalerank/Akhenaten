@@ -1,6 +1,6 @@
 #include "atlas_packer.h"
 
-#include <math.h>
+#include <cmath>
 #include <stdlib.h>
 #include <string.h>
 

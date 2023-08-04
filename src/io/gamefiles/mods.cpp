@@ -113,7 +113,7 @@ static void load_layer(layer* l) {
     int size = l->width * l->height * sizeof(color_t);
     l->data = (color_t*)malloc(size);
     if (!l->data) {
-        log_error("Problem loading layer", l->modded_image_path, 0);
+        logs::error("Problem loading layer: %s", l->modded_image_path);
         load_dummy_layer(l);
         return;
     }
@@ -121,7 +121,7 @@ static void load_layer(layer* l) {
     if (l->modded_image_path) {
         if (!png_read(get_full_image_path(l->modded_image_path), (uint8_t*)l->data)) {
             free(l->data);
-            log_error("Problem loading layer from file", l->modded_image_path, 0);
+            logs::error("Problem loading layer from file: %s", l->modded_image_path);
             load_dummy_layer(l);
         }
         return;
@@ -132,7 +132,7 @@ static void load_layer(layer* l) {
         // That's a waste of ram, and we're not going to change l->data anyway
         l->data = (color_t*)image_data(l->original_image_id);
         if (!l->data) {
-            log_error("Problem loading layer from image id", 0, l->original_image_id);
+            logs::error("Problem loading layer from image id: %i", l->original_image_id);
             load_dummy_layer(l);
         }
         return;
@@ -182,7 +182,7 @@ static int load_modded_image(modded_image* img) {
     img->data = (color_t*)malloc(img->img.data_length);
     memset(img->data, 0, img->img.data_length);
     if (!img->data) {
-        log_error("Not enough memory to load image", img->id, 0);
+        logs::error("Not enough memory to load image: %s", img->id);
         for (int i = 0; i < img->num_layers; ++i) {
             unload_layer(&img->layers[i]);
         }
@@ -247,7 +247,7 @@ static int add_layer_from_image_path(modded_image* img, const char* path, int of
     if (!png_get_image_size(get_full_image_path(current_layer->modded_image_path),
                             &current_layer->width,
                             &current_layer->height)) {
-        log_info("Unable to load image", path, 0);
+        logs::info("Unable to load image: %s", path);
         unload_layer(current_layer);
         return 0;
     }
@@ -371,7 +371,7 @@ static void xml_start_image_element(const char** attributes) {
     } else if (group) {
         add_layer_from_image_id(img, group, id, 0, 0);
     } else {
-        log_info("Invalid layer for image", img->id, 0);
+        logs::info("Invalid layer for image: %s", img->id);
     }
 }
 
@@ -411,7 +411,7 @@ static void xml_start_layer_element(const char** attributes) {
     } else if (group) {
         add_layer_from_image_id(img, group, id, offset_x, offset_y);
     } else {
-        log_info("Invalid layer for image", img->id, img->num_layers);
+        logs::info("Invalid layer for image (id: %s, layer: %i)", img->id, img->num_layers);
     }
 }
 
@@ -491,13 +491,13 @@ static void XMLCALL xml_start_element(void* unused, const char* name, const char
         return;
     if (data.xml.finished || data.xml.depth == XML_MAX_DEPTH) {
         data.xml.error = 1;
-        log_error("Invalid XML parameter", name, 0);
+        logs::error("Invalid XML parameter: %s", name);
         return;
     }
     int index = get_element_index(name);
     if (index == -1) {
         data.xml.error = 1;
-        log_error("Invalid XML parameter", name, 0);
+        logs::error("Invalid XML parameter: %s", name);
         return;
     }
     (*xml_start_element_callback[data.xml.depth][index])(attributes);
@@ -511,7 +511,7 @@ static void XMLCALL xml_end_element(void* unused, const char* name) {
     int index = get_element_index(name);
     if (index == -1) {
         data.xml.error = 1;
-        log_error("Invalid XML parameter", name, 0);
+        logs::error("Invalid XML parameter: %s", name);
         return;
     }
     (*xml_end_element_callback[data.xml.depth][index])();
@@ -532,12 +532,12 @@ static void clear_xml_info(void) {
 
 static void process_mod_file(const char* xml_file_name) {
     xml_file_name = append_file_to_mods_folder(xml_file_name);
-    log_info("Loading mod file", xml_file_name, 0);
+    logs::info("Loading mod file: %s", xml_file_name);
 
     FILE* xml_file = file_open(xml_file_name, "r");
 
     if (!xml_file) {
-        log_error("Error opening mod file", xml_file_name, 0);
+        logs::error("Error opening mod file: %s", xml_file_name);
         return;
     }
 
@@ -551,7 +551,7 @@ static void process_mod_file(const char* xml_file_name) {
         size_t bytes_read = fread(buffer, 1, XML_BUFFER_SIZE, xml_file);
         done = bytes_read < sizeof(buffer);
         if (XML_Parse(parser, buffer, (int)bytes_read, done) == XML_STATUS_ERROR || data.xml.error) {
-            log_error("Error parsing file", xml_file_name, 0);
+            logs::error("Error parsing file: %s", xml_file_name);
             break;
         }
     } while (!done);

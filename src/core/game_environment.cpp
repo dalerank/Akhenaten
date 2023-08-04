@@ -18,7 +18,7 @@ void init_game_environment(int env, int mode) {
         pref_filename = "data_dir_pharaoh.txt";
         break;
     }
-    log_info("Engine set to %s", game_name);
+    logs::info("Engine set to %s", game_name);
     DEBUG_MODE = mode;
 }
 void assert_env_init() {

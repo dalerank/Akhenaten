@@ -668,7 +668,7 @@ color_t* graphics_renderer_interface::get_custom_texture_buffer(int type, int* a
     Uint32 format;
     SDL_QueryTexture(data.custom_textures[type].texture, &format, NULL, &width, &height);
     if (format == SDL_PIXELFORMAT_YV12) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot get buffer to YUV texture");
+        logs::error("Cannot get buffer to YUV texture");
         return 0;
     }
     data.custom_textures[type].buffer = (color_t*)malloc((size_t)width * height * sizeof(color_t));
@@ -712,7 +712,7 @@ void graphics_renderer_interface::update_custom_texture_yuv(int type,
     Uint32 format;
     SDL_QueryTexture(data.custom_textures[type].texture, &format, NULL, &width, &height);
     if (format != SDL_PIXELFORMAT_YV12) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Texture is not YUV format");
+        logs::error("Texture is not YUV format");
         return;
     }
     SDL_UpdateYUVTexture(
@@ -903,7 +903,7 @@ void load_unpacked_image(const image_t* img, const color_t* pixels) {
                                                     COLOR_CHANNEL_BLUE,
                                                     COLOR_CHANNEL_ALPHA);
     if (!surface) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for texture. Reason: %s", SDL_GetError());
+        logs::error("Unable to create surface for texture. Reason: %s", SDL_GetError());
         return;
     }
     data.unpacked_images[index].last_used = time_get_millis();
@@ -924,7 +924,7 @@ void load_unpacked_image(const image_t* img, const color_t* pixels) {
             }
         }
         if (oldest_texture_index == -1) {
-            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for texture - %s", SDL_GetError());
+            logs::error("Unable to create surface for texture - %s", SDL_GetError());
             SDL_FreeSurface(surface);
             return;
         }
@@ -966,12 +966,12 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color_t* p_
                                                     COLOR_CHANNEL_BLUE,
                                                     COLOR_CHANNEL_ALPHA);
     if (!surface) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for texture. Reason: %s", SDL_GetError());
+        logs::error("Unable to create surface for texture. Reason: %s", SDL_GetError());
         return nullptr;
     }
     SDL_Texture* texture = SDL_CreateTextureFromSurface(data.renderer, surface);
     if (!texture) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create texture. Reason: %s", SDL_GetError());
+        logs::error("Unable to create texture. Reason: %s", SDL_GetError());
         return nullptr;
     }
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
@@ -1000,13 +1000,13 @@ bool graphics_renderer_interface::save_texture_to_file(const char* filename,
     /* Get information about texture we want to save */
     st = SDL_QueryTexture(tex, NULL, NULL, &w, &h);
     if (st != 0) {
-        SDL_Log("Failed querying texture: %s\n", SDL_GetError());
+        logs::info("Failed querying texture: %s\n", SDL_GetError());
         goto cleanup;
     }
 
     ren_tex = SDL_CreateTexture(data.renderer, format, SDL_TEXTUREACCESS_TARGET, w, h);
     if (!ren_tex) {
-        SDL_Log("Failed creating render texture: %s\n", SDL_GetError());
+        logs::info("Failed creating render texture: %s\n", SDL_GetError());
         goto cleanup;
     }
 
@@ -1016,7 +1016,7 @@ bool graphics_renderer_interface::save_texture_to_file(const char* filename,
      */
     st = SDL_SetRenderTarget(data.renderer, ren_tex);
     if (st != 0) {
-        log_info("Failed setting render target: %s\n", SDL_GetError());
+        logs::info("Failed setting render target: %s\n", SDL_GetError());
         goto cleanup;
     }
 
@@ -1025,20 +1025,20 @@ bool graphics_renderer_interface::save_texture_to_file(const char* filename,
 
     st = SDL_RenderCopy(data.renderer, tex, NULL, NULL);
     if (st != 0) {
-        log_info("Failed copying texture data: %s\n", SDL_GetError());
+        logs::info("Failed copying texture data: %s\n", SDL_GetError());
         goto cleanup;
     }
 
     /* Create buffer to hold texture data and load it */
     pixels = malloc(w * h * SDL_BYTESPERPIXEL(format));
     if (!pixels) {
-        log_info("Failed allocating memory\n");
+        logs::info("Failed allocating memory");
         goto cleanup;
     }
 
     st = SDL_RenderReadPixels(data.renderer, NULL, format, pixels, w * SDL_BYTESPERPIXEL(format));
     if (st != 0) {
-        log_info("Failed reading pixel data: %s\n", SDL_GetError());
+        logs::info("Failed reading pixel data: %s\n", SDL_GetError());
         goto cleanup;
     }
 
@@ -1046,7 +1046,7 @@ bool graphics_renderer_interface::save_texture_to_file(const char* filename,
     surf = SDL_CreateRGBSurfaceWithFormatFrom(
       pixels, w, h, SDL_BITSPERPIXEL(format), w * SDL_BYTESPERPIXEL(format), format);
     if (!surf) {
-        log_info("Failed creating new surface: %s\n", SDL_GetError());
+        logs::info("Failed creating new surface: %s\n", SDL_GetError());
         goto cleanup;
     }
 
@@ -1066,10 +1066,10 @@ bool graphics_renderer_interface::save_texture_to_file(const char* filename,
         break;
     }
     if (st != 0) {
-        log_info("Failed saving image: %s\n", SDL_GetError());
+        logs::info("Failed saving image: %s\n", SDL_GetError());
         goto cleanup; // technically redundant
     } else
-        log_info("Saved texture to %s\n", filename);
+        logs::info("Saved texture to %s\n", filename);
 
 cleanup:
     SDL_FreeSurface(surf);
@@ -1090,7 +1090,7 @@ int platform_renderer_init(SDL_Window* window) {
     std::vector<std::string> drivers;
     for (int k = 0; k < SDL_GetNumRenderDrivers(); k++) {
         SDL_GetRenderDriverInfo(k, &info);
-        log_info("SDLGraficEngine: availabe render %s", info.name);
+        logs::info("SDLGraficEngine: availabe render %s", info.name);
         drivers.push_back(info.name);
     }
 
@@ -1098,19 +1098,19 @@ int platform_renderer_init(SDL_Window* window) {
       = std::find_if(drivers.begin(), drivers.end(), [](const auto& it) { return it == ozymandias_core.driver; });
     int driver_index = driver_it != drivers.end() ? std::distance(drivers.begin(), driver_it) : -1;
 
-    log_info("Creating renderer");
+    logs::info("Creating renderer");
     data.renderer = SDL_CreateRenderer(window, driver_index, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (!data.renderer) {
-        log_info("Unable to create renderer, trying software renderer: %s", SDL_GetError());
+        logs::info("Unable to create renderer, trying software renderer: %s", SDL_GetError());
         data.renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
         if (!data.renderer) {
-            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create renderer: %s", SDL_GetError());
+            logs::error("Unable to create renderer: %s", SDL_GetError());
             return 0;
         }
     }
 
     SDL_GetRendererInfo(data.renderer, &info);
-    log_info("Loaded renderer: %s", info.name);
+    logs::info("Loaded renderer: %s", info.name);
 
 #ifdef USE_YUV_TEXTURES
     if (!data.supports_yuv_textures && HAS_YUV_TEXTURES) {
@@ -1188,7 +1188,7 @@ int platform_renderer_create_render_texture(int width, int height) {
       = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, width, height);
 
     if (data.render_texture) {
-        log_info("Render texture created (%d x %d)", width, height);
+        logs::info("Render texture created (%d x %d)", width, height);
         SDL_SetRenderTarget(data.renderer, data.render_texture);
         SDL_SetRenderDrawBlendMode(data.renderer, SDL_BLENDMODE_BLEND);
 
@@ -1210,7 +1210,7 @@ int platform_renderer_create_render_texture(int width, int height) {
 
         return 1;
     } else {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create render texture: %s", SDL_GetError());
+        logs::error("Unable to create render texture: %s", SDL_GetError());
         return 0;
     }
 }

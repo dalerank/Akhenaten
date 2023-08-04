@@ -106,7 +106,7 @@ void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILEN
             num_channels = MAX_CHANNELS;
 
         Mix_AllocateChannels(num_channels);
-        log_info("Loading audio files");
+        logs::info("Loading audio files");
         for (int i = 0; i < num_channels; i++) {
             data.channels[i].chunk = 0;
             data.channels[i].filename = filenames[i][0] ? filenames[i] : 0;
@@ -123,7 +123,7 @@ void sound_device_open(void) {
         init_channels();
         return;
     }
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Sound failed to initialize using default driver: %s", Mix_GetError());
+    logs::error("Sound failed to initialize using default driver: %s", Mix_GetError());
     // Try to work around SDL choosing the wrong driver on Windows sometimes
     for (int i = 0; i < SDL_GetNumAudioDrivers(); i++) {
         const char* driver_name = SDL_GetAudioDriver(i);
@@ -133,18 +133,18 @@ void sound_device_open(void) {
         }
         if (0 == SDL_AudioInit(driver_name)
             && 0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
-            log_info("Using audio driver: %s", driver_name);
+            logs::info("Using audio driver: %s", driver_name);
             init_channels();
             return;
         } else {
-            log_info("Not using audio driver %s, reason: %s", driver_name, SDL_GetError());
+            logs::info("Not using audio driver %s, reason: %s", driver_name, SDL_GetError());
         }
     }
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Sound failed to initialize: %s", Mix_GetError());
+    logs::error("Sound failed to initialize: %s", Mix_GetError());
     int max = SDL_GetNumAudioDevices(0);
-    log_info("Number of audio devices: %d", max);
+    logs::info("Number of audio devices: %d", max);
     for (int i = 0; i < max; i++) {
-        log_info("Audio device: %s", SDL_GetAudioDeviceName(i, 0));
+        logs::info("Audio device: %s", SDL_GetAudioDeviceName(i, 0));
     }
 }
 
@@ -179,7 +179,7 @@ void sound_device_load_formats(void) {
 
     const int initialized_flags = Mix_Init(all_flags);
     if (initialized_flags == 0) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not load any music formats: %s", Mix_GetError());
+        logs::error("Could not load any music formats: %s", Mix_GetError());
     } else {
         const char* seperator = ", ";
         const int seperator_length = strlen(seperator);
@@ -207,7 +207,7 @@ void sound_device_load_formats(void) {
         }
         buf[buf_pos] = 0;
 
-        log_info("music formats initialized: %s (%i)", buf, initialized_flags);
+        logs::info("music formats initialized: %s (%i)", buf, initialized_flags);
     }
 }
 
@@ -264,17 +264,11 @@ int sound_device_play_music(const char* filename, int volume_pct) {
         data.music = Mix_LoadMUS(filename);
 #endif
         if (!data.music) {
-            SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
-                        "Error opening music file '%s'. Reason: %s",
-                        filename,
-                        Mix_GetError());
+            logs::warn("Error opening music file '%s'. Reason: %s", filename, Mix_GetError());
         } else {
             if (Mix_PlayMusic(data.music, -1) == -1) {
                 data.music = 0;
-                SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
-                            "Error playing music file '%s'. Reason: %s",
-                            filename,
-                            Mix_GetError());
+                logs::warn("Error playing music file '%s'. Reason: %s", filename, Mix_GetError());
             } else {
                 sound_device_set_music_volume(volume_pct);
             }
@@ -492,7 +486,7 @@ void sound_device_use_custom_music_player(int bitdepth,
     else if (bitdepth == 16)
         format = AUDIO_S16;
     else {
-        log_error("Custom music bitdepth not supported: %u", bitdepth);
+        logs::error("Custom music bitdepth not supported: %u", bitdepth);
         return;
     }
     int device_rate;

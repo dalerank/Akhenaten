@@ -102,7 +102,7 @@ static void log_language(void) {
         desc = "Unknown";
         break;
     }
-    log_info("Detected language:", desc, 0);
+    logs::info("Detected language: %s", desc);
 }
 int locale_determine_language(void) {
     data.last_determined_language = determine_language();

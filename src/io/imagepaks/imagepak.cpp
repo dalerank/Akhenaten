@@ -235,7 +235,7 @@ static buffer* load_external_data(const image_t* img) {
         size = io_read_file_part_into_buffer(
           filename, MAY_BE_LOCALIZED, external_image_buf, img->data_length, img->sgx_data_offset - 1);
         if (!size) {
-            log_error("unable to load external image %s", img->bmp.name);
+            logs::error("unable to load external image %s", img->bmp.name);
             return nullptr;
         }
     }
@@ -414,7 +414,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
     pak_buf->read_raw(names.data(), num_bmp_names * PAK_BMP_NAME_SIZE);
     for (int i = 0; i < num_bmp_names; ++i) {
         strncpy(bmp_names[i].name, names[i].name, PAK_BMP_NAME_SIZE);
-        log_info("%s, %u", bmp_names[i].name, i);
+        logs::info("%s, %u", bmp_names[i].name, i);
     }
 
     // (move buffer to the rest of the data)
@@ -578,14 +578,14 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
 
     image_packer_free(&packer);
 
-    log_info("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u), %" PRIu64 " milliseconds.",
-             filename_sgx,
-             entries_num,
-             groups_num,
-             atlas_pages.at(atlas_pages.size() - 1).width,
-             atlas_pages.at(atlas_pages.size() - 1).height,
-             atlas_pages.size(),
-             WATCH.STOP());
+    logs::info("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u), %" PRIu64 " milliseconds.",
+               filename_sgx,
+               entries_num,
+               groups_num,
+               atlas_pages.at(atlas_pages.size() - 1).width,
+               atlas_pages.at(atlas_pages.size() - 1).height,
+               atlas_pages.size(),
+               WATCH.STOP());
 
     return true;
 }

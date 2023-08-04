@@ -25,7 +25,7 @@ vita2d_texture* tex_buffer_ui = NULL;
 vita2d_texture* tex_buffer_city = NULL;
 
 static void create_textures(void) {
-    SDL_Log("Creating empty textures\n");
+    logs::info("Creating empty textures");
     if (!tex_buffer_ui) {
         tex_buffer_ui = vita2d_create_empty_texture_format(VITA_DISPLAY_WIDTH,
                                                            VITA_DISPLAY_HEIGHT,
@@ -36,7 +36,7 @@ static void create_textures(void) {
                                                              VITA_DISPLAY_HEIGHT * 2,
                                                              SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ARGB);
     }
-    SDL_Log("Creating empty textures: done\n");
+    logs::info("Creating empty textures: done");
 }
 
 int platform_screen_create(const char* title, int display_scale_percentage) {
@@ -47,11 +47,11 @@ int platform_screen_create(const char* title, int display_scale_percentage) {
     if (!my_renderer) {
         my_renderer = SDL_CreateRenderer(my_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     }
-    SDL_Log("Creating empty texture\n");
+    logs::info("Creating empty texture");
     tex_buffer = vita2d_create_empty_texture_format(VITA_DISPLAY_WIDTH,
                                                     VITA_DISPLAY_HEIGHT,
                                                     SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB);
-    SDL_Log("Creating empty texture: done\n");
+    logs::info("Creating empty texture: done");
 
     return platform_screen_resize(VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT);
 }
@@ -74,19 +74,19 @@ void platform_screen_move(int x, int y) {
 }
 
 void platform_screen_set_fullscreen(void) {
-    SDL_Log("User to fullscreen\n");
+    logs::info("User to fullscreen");
     setting_set_display(1, VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT);
 }
 
 void platform_screen_set_windowed(void) {
     int width, height;
     setting_window(&width, &height);
-    SDL_Log("User to windowed \n");
+    logs::info("User to windowed");
     setting_set_display(0, width, height);
 }
 
 void platform_screen_set_window_size(int width, int height) {
-    SDL_Log("User resize to \n");
+    logs::info("User resize to");
     setting_set_display(0, width, height);
 }
 

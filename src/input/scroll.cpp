@@ -10,7 +10,7 @@
 #include "input/touch.h"
 #include "io/config/config.h"
 
-#include <math.h>
+#include <cmath>
 #include <stdlib.h>
 
 #define MOUSE_BORDER 5
