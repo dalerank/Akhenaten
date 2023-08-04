@@ -1,6 +1,7 @@
 #include "entertainment.h"
 
 #include "building/building.h"
+#include "building/type.h"
 #include "city/data_private.h"
 
 int city_entertainment_theater_shows(void) {

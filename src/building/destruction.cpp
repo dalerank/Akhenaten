@@ -30,7 +30,7 @@ static void destroy_on_fire(building* b, bool plagued) {
     int was_tent = b->house_size && b->subtype.house_level <= HOUSE_LARGE_TENT;
     b->house_population = 0;
     b->house_size = 0;
-    b->output_resource_id = 0;
+    b->output_resource_id = RESOURCE_NONE;
     b->distance_from_entry = 0;
     b->clear_related_data();
 

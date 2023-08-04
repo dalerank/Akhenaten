@@ -22,8 +22,7 @@ static const int FLOTSAM_WAIT_TICKS[]
 
 static const int FLOTSAM_TYPE_0[] = {0, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0};
 static const int FLOTSAM_TYPE_12[] = {0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 3, 2, 1, 0, 0, 1, 1, 2, 2, 1, 1, 0, 0, 0};
-static const int FLOTSAM_TYPE_3[]
-  = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+static const int FLOTSAM_TYPE_3[] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
 void figure_create_flotsam(void) {
     if (!scenario_map_has_river_entry() || !scenario_map_has_river_exit() || !scenario_map_has_flotsam())
@@ -38,7 +37,7 @@ void figure_create_flotsam(void) {
     for (int i = 0; i < 20; i++) {
         figure* f = figure_create(FIGURE_FLOTSAM, river_entry.x(), river_entry.y(), DIR_0_TOP_RIGHT);
         f->action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
-        f->set_resource(FLOTSAM_RESOURCE_IDS[i]);
+        f->set_resource((e_resource)FLOTSAM_RESOURCE_IDS[i]);
         f->wait_ticks = FLOTSAM_WAIT_TICKS[i];
     }
 }

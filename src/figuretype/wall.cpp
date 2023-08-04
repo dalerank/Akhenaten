@@ -1,6 +1,7 @@
 #include "wall.h"
 
 #include "building/building.h"
+#include "building/type.h"
 #include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/enemy_army.h"

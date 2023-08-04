@@ -202,14 +202,14 @@ void city_resource_calculate_warehouse_stocks(void) {
 }
 void city_resource_determine_available(void) {
     for (int i = 0; i < RESOURCES_MAX; i++) {
-        g_available_data.resource_list.items[i] = 0;
-        g_available_data.food_list.items[i] = 0;
+        g_available_data.resource_list.items[i] = RESOURCE_NONE;
+        g_available_data.food_list.items[i] = RESOURCE_NONE;
     }
     g_available_data.resource_list.size = 0;
     g_available_data.food_list.size = 0;
     g_available_data.market_goods_list.size = 0;
 
-    for (int i = RESOURCE_MIN_FOOD; i < RESOURCES_FOODS_MAX; i++) {
+    for (e_resource i = RESOURCE_MIN_FOOD; i < RESOURCES_FOODS_MAX; i = (e_resource)(i+1)) {
         if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false)) {
             const int food_index = g_available_data.food_list.size;
             g_available_data.food_list.items[food_index] = i;
@@ -220,7 +220,7 @@ void city_resource_determine_available(void) {
             g_available_data.market_goods_list.size++;
         }
     }
-    for (int i = RESOURCE_MIN; i < RESOURCES_MAX; i++) {
+    for (e_resource i = RESOURCE_MIN; i < RESOURCES_MAX; i = (e_resource)(i+1)) {
         if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false)) {
             g_available_data.resource_list.items[g_available_data.resource_list.size++] = i;
             switch (i) {

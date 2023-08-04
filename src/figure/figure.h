@@ -26,7 +26,7 @@ enum e_minimap_figure_color {
 
 class figure {
 private:
-    unsigned char resource_id;
+    e_resource resource_id;
     //    unsigned char resource_amount_loads;
     unsigned short resource_amount_full; // full load counter
 
@@ -391,9 +391,9 @@ public:
     int fetch_export_resource(building* dock);
 
     // cartpusher.c
-    void set_resource(int resource);
-    int get_resource() const;
-    void load_resource(int amount, int resource);
+    inline void set_resource(e_resource resource) { resource_id = resource; }
+    e_resource get_resource() const { return resource_id; }
+    void load_resource(int amount, e_resource resource);
     int dump_resource(int amount);
     int get_carrying_amount();
     void determine_deliveryman_destination();

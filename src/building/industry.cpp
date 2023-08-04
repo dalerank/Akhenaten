@@ -1,6 +1,7 @@
 #include "industry.h"
-#include "window/city.h"
 
+#include "window/city.h"
+#include "building/type.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "game/resource.h"

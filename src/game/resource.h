@@ -1,13 +1,5 @@
 #pragma once
 
-/**
- * @file
- * Type definitions for resources
- */
-
-/**
- * Resource types
- */
 class building;
 
 enum e_resource {

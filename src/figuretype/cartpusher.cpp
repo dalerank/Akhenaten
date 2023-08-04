@@ -1,7 +1,7 @@
 #include "cartpusher.h"
-#include <cmath>
 
 #include "building/barracks.h"
+#include "building/type.h"
 #include "building/granary.h"
 #include "building/industry.h"
 #include "building/storage.h"
@@ -17,26 +17,22 @@
 #include "grid/road_network.h"
 #include "grid/routing/routing_terrain.h"
 #include "io/config/config.h"
+#include "city/buildings.h"
+
+#include <cmath>
 
 static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static const int CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
 static const int CART_OFFSET_8_LOADS_FOOD[] = {0, 40, 48, 56, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-#include "city/buildings.h"
-
-void figure::set_resource(int resource) {
-    resource_id = resource;
-}
-int figure::get_resource() const {
-    return resource_id;
-}
-void figure::load_resource(int amount, int resource) {
+void figure::load_resource(int amount, e_resource resource) {
     resource_id = resource;
     resource_amount_full = amount;
     //    resource_amount_loads = amount / 100;
 }
+
 int figure::dump_resource(int amount) {
-    amount = fmin(amount, resource_amount_full);
+    amount = std::min<int>(amount, resource_amount_full);
     resource_amount_full -= amount;
     //    resource_amount_loads -= amount / 100;
 
@@ -45,6 +41,7 @@ int figure::dump_resource(int amount) {
         resource_id = RESOURCE_NONE;
     return resource_amount_full;
 }
+
 int figure::get_carrying_amount() {
     return resource_amount_full;
 }
@@ -166,7 +163,7 @@ void figure::cartpusher_do_retrieve(int ACTION_DONE) {
         switch (dest->type) {
         case BUILDING_WAREHOUSE:
         case BUILDING_WAREHOUSE_SPACE: {
-            int home_accepting_quantity = building_warehouse_get_accepting_amount(collecting_item_id, home());
+            int home_accepting_quantity = building_warehouse_get_accepting_amount((e_resource)collecting_item_id, home());
             int carry_amount_goal_max = fmin(100, home_accepting_quantity);
             int load_single_turn = 1;
 
@@ -179,18 +176,19 @@ void figure::cartpusher_do_retrieve(int ACTION_DONE) {
             // grab goods, quantity & max load changed by above settings;
             // if load is finished, go back home - otherwise, recalculate
             if (get_carrying_amount() < carry_amount_goal_max) {
-                if (building_warehouse_remove_resource(destination(), collecting_item_id, load_single_turn) == 0) {
-                    load_resource(load_single_turn * 100, collecting_item_id);
+                if (building_warehouse_remove_resource(destination(), (e_resource)collecting_item_id, load_single_turn) == 0) {
+                    load_resource(load_single_turn * 100, (e_resource)collecting_item_id);
                     if (get_carrying_amount() >= carry_amount_goal_max)
                         advance_action(ACTION_DONE);
-                } else
+                } else {
                     advance_action(ACTION_8_RECALCULATE);
+                }
             }
             break;
         }
         case BUILDING_GRANARY: {
-            int resource;
-            int loads = building_granary_remove_for_getting_deliveryman(destination(), home(), &resource);
+            e_resource resource;
+            int loads = building_granary_remove_for_getting_deliveryman(destination(), home(), resource);
             load_resource(loads * 100, resource);
             advance_action(FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD);
             break;
@@ -404,7 +402,7 @@ void figure::determine_warehouseman_destination() {
 
     ////// getting resources!
     if (!resource_id) {
-        set_destination(building_warehouse_for_getting(home(), collecting_item_id, &dst));
+        set_destination(building_warehouse_for_getting(home(), (e_resource)collecting_item_id, &dst));
         if (has_destination()) {
             advance_action(FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE);
             terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
@@ -416,16 +414,16 @@ void figure::determine_warehouseman_destination() {
 
     ////// delivering resource!
     // priority 1: weapons to barracks
-    set_destination(building_get_barracks_for_weapon(
-      tile.x(), tile.y(), resource_id, road_network_id, warehouse->distance_from_entry, &dst));
-    if (has_destination())
+    set_destination(building_get_barracks_for_weapon(tile.x(), tile.y(), resource_id, road_network_id, warehouse->distance_from_entry, &dst));
+    if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+    }
 
     // priority 2: raw materials to workshop
-    set_destination(building_get_workshop_for_raw_material_with_room(
-      tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, &dst));
-    if (has_destination())
+    set_destination(building_get_workshop_for_raw_material_with_room( tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, &dst));
+    if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+    }
 
     // priority 3: food to granary
     set_destination(building_granary_for_storing(
@@ -434,16 +432,16 @@ void figure::determine_warehouseman_destination() {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
 
     // priority 4: food to getting granary
-    set_destination(building_getting_granary_for_storing(
-      tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, &dst));
-    if (has_destination())
+    set_destination(building_getting_granary_for_storing(tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, &dst));
+    if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+    }
 
     // priority 5: resource to other warehouse
-    set_destination(building_warehouse_for_storing(
-      home(), tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, 0, &dst));
-    if (has_destination())
+    set_destination(building_warehouse_for_storing(home(), tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, 0, &dst));
+    if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+    }
     //    int empty_warehouse = building_storage_get(home()->storage_id)->empty_all; // deliver to another warehouse
     //    because this one is being emptied if (has_destination() && empty_warehouse) {
     //        if (homeID() == destinationID())

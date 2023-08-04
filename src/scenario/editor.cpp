@@ -121,7 +121,7 @@ static void sort_requests(void) {
 void scenario_editor_request_delete(int index) {
     g_scenario_data.requests[index].year = 0;
     g_scenario_data.requests[index].amount = 0;
-    g_scenario_data.requests[index].resource = 0;
+    g_scenario_data.requests[index].resource = RESOURCE_NONE;
     g_scenario_data.requests[index].deadline_years = 5;
     g_scenario_data.requests[index].kingdom = 8;
     sort_requests();
@@ -297,9 +297,9 @@ void scenario_editor_cycle_climate(void) {
     g_scenario_data.is_saved = 0;
 }
 
-void scenario_editor_update_subtitle(const uint8_t* new_description) {
-    if (!string_equals(g_scenario_data.subtitle, new_description, 1)) {
-        string_copy(new_description, g_scenario_data.subtitle, MAX_SUBTITLE);
+void scenario_editor_update_subtitle(const char* new_description) {
+    if (!string_equals(g_scenario_data.subtitle, (const uint8_t*)new_description, 1)) {
+        string_copy((const uint8_t*)new_description, g_scenario_data.subtitle, MAX_SUBTITLE);
         g_scenario_data.is_saved = 0;
     }
 }

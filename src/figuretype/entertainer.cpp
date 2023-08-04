@@ -1,6 +1,7 @@
 #include "entertainer.h"
 
 #include "building/building.h"
+#include "building/type.h"
 #include "building/list.h"
 #include "core/calc.h"
 #include "figure/combat.h"

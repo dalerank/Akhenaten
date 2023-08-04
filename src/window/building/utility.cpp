@@ -1,6 +1,7 @@
 #include "utility.h"
 
 #include "building/building.h"
+#include "building/type.h"
 #include "building/roadblock.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"

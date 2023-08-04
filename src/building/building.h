@@ -3,10 +3,10 @@
 #define MAX_BUILDINGS 4000
 #define MAX_FIGURES_PER_BUILDING 8
 
-#include "building/type.h"
 #include "figure/action.h"
 #include "figure/type.h"
 #include "grid/point.h"
+#include "game/resource.h"
 
 #include <stdint.h>
 
@@ -35,7 +35,7 @@ public:
     short type;
     union {
         short house_level;
-        short warehouse_resource_id;
+        e_resource warehouse_resource_id;
         //        short workshop_type;
         short orientation;
         e_figure_type fort_figure_type;
@@ -68,7 +68,7 @@ public:
     bool has_well_access;
     short num_workers;
     char labor_category;
-    unsigned char output_resource_id;
+    e_resource output_resource_id;
     uint32_t has_road_access;
     unsigned char house_criminal_active;
     short damage_risk;
@@ -92,7 +92,7 @@ public:
             short furniture_demand;
             short oil_demand;
             short wine_demand;
-            unsigned char fetch_inventory_id;
+            short fetch_inventory_id;
         } market;
         struct granary_t {
             short resource_stored[16];
@@ -234,7 +234,7 @@ public:
                                            building* destination,
                                            int created_action = ACTION_10_GOING,
                                            int slot = 0);
-    figure* create_cartpusher(int resource_id,
+    figure* create_cartpusher(e_resource resource_id,
                               int quantity,
                               int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL,
                               int slot = 0);

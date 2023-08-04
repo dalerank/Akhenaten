@@ -6,7 +6,7 @@
 
 struct resources_list {
     int size;
-    int items[RESOURCES_MAX];
+    e_resource items[RESOURCES_MAX];
 };
 
 int city_resource_count(int resource);

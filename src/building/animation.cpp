@@ -1,4 +1,6 @@
 #include "animation.h"
+
+#include "building/type.h"
 #include "grid/water_supply.h"
 
 #include "building/industry.h"

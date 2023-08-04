@@ -112,8 +112,8 @@ static void button_amount(int param1, int param2) {
       screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 50, max_digits, max_amount, set_amount);
 }
 
-static void set_resource(int value) {
-    data.request.resource = value;
+static void set_resource(int resource) {
+    data.request.resource = (e_resource)resource;
     if (data.request.amount > 999)
         data.request.amount = 999;
 }

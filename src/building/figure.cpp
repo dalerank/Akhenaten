@@ -146,7 +146,7 @@ figure* building::create_figure_with_destination(e_figure_type _type, building* 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
     return f;
 }
-figure* building::create_cartpusher(int resource_id, int quantity, int created_action, int slot) {
+figure* building::create_cartpusher(e_resource resource_id, int quantity, int created_action, int slot) {
     // TODO: industry cartpushers do not spawn in the correct place?
 
     figure* f = create_figure_generic(FIGURE_CART_PUSHER, created_action, slot, DIR_4_BOTTOM_LEFT);
@@ -872,9 +872,9 @@ void building::spawn_figure_warehouse() {
     }
     if (has_road_access) {
         common_spawn_labor_seeker(100);
-        int resource = 0;
+        e_resource resource = RESOURCE_NONE;
         int amount = 0;
-        int task = building_warehouse_determine_worker_task(this, &resource, &amount);
+        int task = building_warehouse_determine_worker_task(this, resource, amount);
         if (task != WAREHOUSE_TASK_NONE && amount > 0) {
             // assume amount has been set to more than one.
             //            if (true) // TODO: multiple loads setting?????
@@ -921,11 +921,11 @@ void building::spawn_figure_granary() {
         common_spawn_labor_seeker(100);
         if (has_figure_of_type(0, FIGURE_WAREHOUSEMAN))
             return;
-        int task = building_granary_determine_worker_task(this);
-        if (task != GRANARY_TASK_NONE) {
+        auto task = building_granary_determine_worker_task(this);
+        if (task.status != GRANARY_TASK_NONE) {
             figure* f = figure_create(FIGURE_WAREHOUSEMAN, road.x(), road.y(), DIR_4_BOTTOM_LEFT);
             f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
-            f->load_resource(0, task);
+            f->load_resource(0, task.resource);
             set_figure(0, f->id);
             f->set_home(id);
         }

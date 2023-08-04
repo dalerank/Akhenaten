@@ -1786,8 +1786,9 @@ void BuildPlanner::construction_finalize() { // confirm final placement
         map_tiles_update_area_walls(end.x(), end.y(), 5);
 
     // consume resources for specific buildings (e.g. marble, granite)
-    if (special_flags & PlannerFlags::Resources)
-        building_warehouses_remove_resource(additional_req_param1, additional_req_param2);
+    if (special_flags & PlannerFlags::Resources) {
+        building_warehouses_remove_resource((e_resource)additional_req_param1, additional_req_param2);
+    }
 
     // finally, go over the rest of the stuff for all building types
     formation_move_herds_away(end.x(), end.y());

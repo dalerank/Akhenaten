@@ -1,6 +1,7 @@
 #include "formation_enemy.h"
 
 #include "building/building.h"
+#include "building/type.h"
 #include "city/buildings.h"
 #include "city/figures.h"
 #include "city/gods.h"

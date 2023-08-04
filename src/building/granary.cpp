@@ -131,12 +131,12 @@ int building_granary_remove_resource(building* granary, int resource, int amount
     return amount - removed;
 }
 
-int building_granary_remove_for_getting_deliveryman(building* src, building* dst, int* resource) {
+int building_granary_remove_for_getting_deliveryman(building* src, building* dst, e_resource& resource) {
     const building_storage* s_src = building_storage_get(src->storage_id);
     const building_storage* s_dst = building_storage_get(dst->storage_id);
 
     int max_amount = 0;
-    int max_resource = 0;
+    e_resource max_resource = RESOURCE_NONE;
     if (building_granary_is_getting(RESOURCE_GRAIN, dst) && !building_granary_is_gettable(RESOURCE_GRAIN, src)) {
         if (src->data.granary.resource_stored[RESOURCE_GRAIN] > max_amount) {
             max_amount = src->data.granary.resource_stored[RESOURCE_GRAIN];
@@ -174,44 +174,49 @@ int building_granary_remove_for_getting_deliveryman(building* src, building* dst
         max_amount = dst->data.granary.resource_stored[RESOURCE_NONE];
 
     building_granary_remove_resource(src, max_resource, max_amount);
-    *resource = max_resource;
+    resource = max_resource;
     //    if (GAME_ENV = ENGINE_ENV_PHARAOH)
     //        return max_amount;
     return max_amount / UNITS_PER_LOAD;
 }
 
-int building_granary_determine_worker_task(building* granary) {
+granary_task_status building_granary_determine_worker_task(building* granary) {
     int pct_workers = calc_percentage(granary->num_workers, model_get_building(granary->type)->laborers);
-    if (pct_workers < 50)
-        return GRANARY_TASK_NONE;
+    if (pct_workers < 50) {
+        return {GRANARY_TASK_NONE, RESOURCE_NONE};
+    }
 
     const building_storage* s = building_storage_get(granary->storage_id);
     if (s->empty_all) {
         // bring food to another granary
-        for (int i = RESOURCE_MIN_FOOD; i < RESOURCES_FOODS_MAX; i++) {
-            if (granary->data.granary.resource_stored[i])
-                return i;
+        for (e_resource res = RESOURCE_MIN_FOOD; res < RESOURCES_FOODS_MAX; res = (e_resource)(res+1)) {
+            if (granary->data.granary.resource_stored[res])
+                return {GRANARY_TASK_GETTING, res};
         }
-        return GRANARY_TASK_NONE;
+        return {GRANARY_TASK_NONE, RESOURCE_NONE};
     }
-    if (granary->data.granary.resource_stored[RESOURCE_NONE] <= 0)
-        return GRANARY_TASK_NONE; // granary full, nothing to get
 
-    if (building_granary_is_getting(RESOURCE_GRAIN, granary) && g_non_getting_granaries.total_storage_wheat > ONE_LOAD)
-        return GRANARY_TASK_GETTING;
+    if (granary->data.granary.resource_stored[RESOURCE_NONE] <= 0) {
+        return {GRANARY_TASK_NONE, RESOURCE_NONE}; // granary full, nothing to get
+    }
 
-    if (building_granary_is_getting(RESOURCE_MEAT, granary)
-        && g_non_getting_granaries.total_storage_vegetables > ONE_LOAD)
-        return GRANARY_TASK_GETTING;
+    if (building_granary_is_getting(RESOURCE_GRAIN, granary) && g_non_getting_granaries.total_storage_wheat > ONE_LOAD) {
+        return {GRANARY_TASK_GETTING, RESOURCE_GRAIN};
+    }
 
-    if (building_granary_is_getting(RESOURCE_LETTUCE, granary)
-        && g_non_getting_granaries.total_storage_fruit > ONE_LOAD)
-        return GRANARY_TASK_GETTING;
+    if (building_granary_is_getting(RESOURCE_MEAT, granary) && g_non_getting_granaries.total_storage_vegetables > ONE_LOAD) {
+        return {GRANARY_TASK_GETTING, RESOURCE_MEAT};
+    }
 
-    if (building_granary_is_getting(RESOURCE_FIGS, granary) && g_non_getting_granaries.total_storage_meat > ONE_LOAD)
-        return GRANARY_TASK_GETTING;
+    if (building_granary_is_getting(RESOURCE_LETTUCE, granary) && g_non_getting_granaries.total_storage_fruit > ONE_LOAD) {
+        return {GRANARY_TASK_GETTING, RESOURCE_LETTUCE};
+    }
 
-    return GRANARY_TASK_NONE;
+    if (building_granary_is_getting(RESOURCE_FIGS, granary) && g_non_getting_granaries.total_storage_meat > ONE_LOAD) {
+        return {GRANARY_TASK_GETTING, RESOURCE_FIGS};
+    }
+
+    return {GRANARY_TASK_NONE, RESOURCE_NONE};
 }
 
 void building_granaries_calculate_stocks(void) {
@@ -469,7 +474,7 @@ void building_granary_warehouse_curse(int big) {
 
         int total_stored = 0;
         if (b->type == BUILDING_WAREHOUSE) {
-            for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+            for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r+1)) {
                 total_stored += building_warehouse_get_amount(b, r);
             }
         } else if (b->type == BUILDING_GRANARY) {

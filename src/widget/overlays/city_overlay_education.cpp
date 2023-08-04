@@ -1,6 +1,7 @@
 #include "city_overlay_education.h"
 
 #include "game/state.h"
+#include "building/type.h"
 
 static int show_figure_education(const figure* f) {
     return f->type == FIGURE_SCHOOL_CHILD || f->type == FIGURE_LIBRARIAN || f->type == FIGURE_TEACHER;

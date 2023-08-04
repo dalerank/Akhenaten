@@ -1,6 +1,7 @@
 #include "dock.h"
 
 #include "building/market.h"
+#include "building/type.h"
 #include "city/buildings.h"
 #include "city/resource.h"
 #include "empire/city.h"

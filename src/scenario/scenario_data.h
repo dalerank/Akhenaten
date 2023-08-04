@@ -73,9 +73,9 @@ struct map_data_t {
     int border_size = -1;
 };
 
-typedef struct {
+struct request_t {
     int year;
-    int resource;
+    e_resource resource;
     int amount;
     int deadline_years;
     int can_comply_dialog_shown;
@@ -84,32 +84,32 @@ typedef struct {
     int state;
     bool visible;
     int months_to_comply;
-} request_t;
+} ;
 
-typedef struct {
+struct invasion_t {
     int year;
     int type;
     int amount;
     int from;
     int attack_type;
     int month;
-} invasion_t;
+} ;
 
-typedef struct {
+struct price_change_t {
     int year;
     int month;
     int resource;
     int amount;
     int is_rise;
-} price_change_t;
+} ;
 
-typedef struct {
+struct demand_change_t {
     int year;
     int month;
     int resource;
     int route_id;
     int is_rise;
-} demand_change_t;
+} ;
 
 struct scenario_data_t {
     uint8_t scenario_name[65];

@@ -86,7 +86,7 @@ static void stop(int paused) {
         input_box_stop(&scenario_description_input);
     }
     data.is_paused = paused;
-    scenario_editor_update_subtitle(data.subtitle);
+    scenario_editor_update_subtitle((const char*)data.subtitle);
 }
 
 static void draw_background(void) {

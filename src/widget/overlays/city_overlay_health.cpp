@@ -1,6 +1,7 @@
 #include "city_overlay_health.h"
 
 #include "game/state.h"
+#include "building/type.h"
 
 static int show_building_barber(const building* b) {
     return b->type == BUILDING_DENTIST;

@@ -1,6 +1,7 @@
 #include "health.h"
 
 #include "building/building.h"
+#include "building/type.h"
 #include "building/destruction.h"
 #include "city/data_private.h"
 #include "city/message.h"

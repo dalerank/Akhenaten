@@ -1,6 +1,7 @@
 #include "random_event.h"
 
 #include "building/destruction.h"
+#include "building/type.h"
 #include "city/finance.h"
 #include "city/health.h"
 #include "city/labor.h"

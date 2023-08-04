@@ -1,6 +1,7 @@
 #include "minimap.h"
 
 #include "building/building.h"
+#include "building/type.h"
 #include "graphics/boilerplate.h"
 #include "grid/figure.h"
 #include "grid/property.h"

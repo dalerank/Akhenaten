@@ -1,8 +1,10 @@
 #include "distribution.h"
+
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/scrollbar.h"
 
 #include "building/building.h"
+#include "building/type.h"
 #include "building/market.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
@@ -821,21 +823,25 @@ void window_building_draw_market(building_info_context* c) {
             ImageDraw::img_generic(image_id + food1, c->x_offset + 32, c->y_offset + Y_FOODS);
             text_draw_number(b->data.market.inventory[0], '@', " ", c->x_offset + 64, c->y_offset + Y_FOODS + 4, font);
         }
+
         if (food2) {
             font = is_good_accepted(1, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
             ImageDraw::img_generic(image_id + food2, c->x_offset + 142, c->y_offset + Y_FOODS);
             text_draw_number(b->data.market.inventory[1], '@', " ", c->x_offset + 174, c->y_offset + Y_FOODS + 4, font);
         }
+
         if (food3) {
             font = is_good_accepted(2, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
             ImageDraw::img_generic(image_id + food3, c->x_offset + 252, c->y_offset + Y_FOODS);
             text_draw_number(b->data.market.inventory[2], '@', " ", c->x_offset + 284, c->y_offset + Y_FOODS + 4, font);
         }
+
         if (food4) {
             font = is_good_accepted(3, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
             ImageDraw::img_generic(image_id + food4, c->x_offset + 362, c->y_offset + Y_FOODS);
             text_draw_number(b->data.market.inventory[3], '@', " ", c->x_offset + 394, c->y_offset + Y_FOODS + 4, font);
         }
+
         // good stocks
         font = is_good_accepted(INVENTORY_GOOD1, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
         ImageDraw::img_generic(image_id + INV_RESOURCES[0], c->x_offset + 32, c->y_offset + Y_GOODS);
@@ -1203,7 +1209,7 @@ void window_building_draw_warehouse(building_info_context* c) {
     if (GAME_ENV == ENGINE_ENV_C3) {
         const resources_list* list = city_resource_get_available();
         for (int i = 0; i < list->size; i++) {
-            int resource = list->items[i];
+            e_resource resource = list->items[i];
             int x, y;
             if (i < 5) { // column 1
                 x = c->x_offset + 20;
@@ -1229,7 +1235,7 @@ void window_building_draw_warehouse(building_info_context* c) {
 
         const resources_list* list = city_resource_get_available();
         for (int i = 0; i < list->size; i++) {
-            int resource = list->items[i];
+            e_resource resource = list->items[i];
             int loads = building_warehouse_get_amount(b, resource);
             if (loads) {
                 int amount = stack_proper_quantity(loads, resource);

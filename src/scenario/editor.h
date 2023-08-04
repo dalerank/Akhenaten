@@ -1,37 +1,36 @@
-#ifndef SCENARIO_EDITOR_H
-#define SCENARIO_EDITOR_H
+#pragma once
 
-#include <stdint.h>
+#include "game/resource.h"
 
-typedef struct {
+struct editor_request {
     int year;
-    int resource;
+    e_resource resource;
     int amount;
     int deadline_years;
     int kingdom;
-} editor_request;
+} ;
 
-typedef struct {
+struct editor_invasion {
     int year;
     int type;
     int amount;
     int from;
     int attack_type;
-} editor_invasion;
+} ;
 
-typedef struct {
+struct editor_price_change {
     int year;
     int resource;
     int amount;
     int is_rise;
-} editor_price_change;
+} ;
 
-typedef struct {
+struct editor_demand_change {
     int year;
     int resource;
     int route_id;
     int is_rise;
-} editor_demand_change;
+} ;
 
 void scenario_editor_create(int map_size);
 
@@ -65,7 +64,7 @@ void scenario_editor_cycle_image(int forward);
 
 void scenario_editor_cycle_climate(void);
 
-void scenario_editor_update_subtitle(const uint8_t* new_description);
+void scenario_editor_update_subtitle(const char* new_description);
 
 void scenario_editor_set_enemy(int enemy_id);
 
@@ -120,5 +119,3 @@ void scenario_editor_set_time_limit(int years);
 void scenario_editor_toggle_survival_time(void);
 
 void scenario_editor_set_survival_time(int years);
-
-#endif // SCENARIO_EDITOR_H

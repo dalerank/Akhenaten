@@ -57,8 +57,7 @@ static bool OSIRIS_locusts() {
 }
 static bool PTAH_warehouse_restock() {
     // fill warehouses with gems, clay, pottery, flax, linen, or jewelry
-    int resources[6]
-      = {RESOURCE_GEMS, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
+    e_resource resources[6] = {RESOURCE_GEMS, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
 
     building* chosen_yard = nullptr;
     int lowest_stock_found = 10000;
@@ -77,7 +76,7 @@ static bool PTAH_warehouse_restock() {
         }
     }
 
-    int chosen_resource = 0;
+    e_resource chosen_resource = RESOURCE_NONE;
     int lowest_resource_found = 10000;
     if (lowest_stock_found > 0 && chosen_yard != nullptr) {
         for (int i = 0; i < 6; ++i) {
@@ -142,8 +141,9 @@ static bool PTAH_warehouse_destruction() {
             continue;
 
         int total_stored = 0;
-        for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++)
+        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r+1))
             total_stored += building_warehouse_get_amount(b, r);
+
         if (total_stored > max_stored) {
             max_stored = total_stored;
             max_building = b;
