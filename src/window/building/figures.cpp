@@ -35,11 +35,13 @@ static generic_button figure_buttons[] = {
   {386, 46, 50, 50, select_figure, button_none, 6, 0},
 };
 
-static struct {
+struct building_figures_data_t {
     int figure_images[7];
     int focus_button_id;
     building_info_context* context_for_callback;
-} data;
+} ;
+
+building_figures_data_t g_building_figures_data;
 
 static int big_people_image(int type) {
     int result = 0;
@@ -427,7 +429,7 @@ void window_building_draw_figure_list(building_info_context* c) {
     else {
         for (int i = 0; i < c->figure.count; i++) {
             button_border_draw(c->x_offset + 60 * i + 25, c->y_offset + 45, 52, 52, i == c->figure.selected_index);
-            graphics_draw_from_texture(data.figure_images[i], c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48);
+            graphics_draw_from_texture(g_building_figures_data.figure_images[i], c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48);
             //            graphics_draw_from_buffer(c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48,
             //            data.figure_images[i]);
         }
@@ -451,6 +453,7 @@ static void draw_figure_in_city(int figure_id, pixel_coordinate* coord) {
 }
 
 void window_building_prepare_figure_list(building_info_context* c) {
+    auto &data = g_building_figures_data;
     if (c->figure.count > 0) {
         pixel_coordinate coord = {0, 0};
         for (int i = 0; i < c->figure.count; i++) {
@@ -470,14 +473,15 @@ void window_building_prepare_figure_list(building_info_context* c) {
 }
 
 int window_building_handle_mouse_figure_list(const mouse* m, building_info_context* c) {
+    auto &data = g_building_figures_data;
     data.context_for_callback = c;
-    int button_id = generic_buttons_handle_mouse(
-      m, c->x_offset, c->y_offset, figure_buttons, c->figure.count, &data.focus_button_id);
+    int button_id = generic_buttons_handle_mouse(m, c->x_offset, c->y_offset, figure_buttons, c->figure.count, &data.focus_button_id);
     data.context_for_callback = 0;
     return button_id;
 }
 
 static void select_figure(int index, int param2) {
+    auto &data = g_building_figures_data;
     data.context_for_callback->figure.selected_index = index;
     window_building_play_figure_phrase(data.context_for_callback);
     window_invalidate();
