@@ -2,6 +2,7 @@
 #define PLATFORM_FILE_MANAGER_H
 
 #include <stdio.h>
+#include <string_view>
 
 enum { TYPE_NONE = 0, TYPE_DIR = 1, TYPE_FILE = 2, TYPE_ANY = 3 };
 
@@ -12,7 +13,7 @@ enum { LIST_ERROR = 0, LIST_NO_MATCH = 1, LIST_CONTINUE = 1, LIST_MATCH = 2 };
  * @param path The path to be set as the base
  * @return true if the base path was correctly set, false otherwise
  */
-int platform_file_manager_set_base_path(const char* path);
+int platform_file_manager_set_base_path(std::string_view path);
 
 /**
  * Gets the contents of a directory by the specified extension

@@ -138,7 +138,8 @@ figure* building::create_roaming_figure(e_figure_type _type, int created_action,
 
     return f;
 }
-figure* building::create_figure_with_destination(e_figure_type _type, building* destination, int created_action, int slot) {
+figure*
+building::create_figure_with_destination(e_figure_type _type, building* destination, int created_action, int slot) {
     figure* f = create_figure_generic(_type, created_action, slot, DIR_4_BOTTOM_LEFT);
     f->set_destination(destination->id);
     f->set_immigrant_home(0);
@@ -243,7 +244,7 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_ful
             create_cartpusher(output_resource_id, amounts_to_carry);
             stored_full_amount -= amounts_to_carry;
             if (only_one || stored_full_amount == 0) {
-                // done once, or out of goods? 
+                // done once, or out of goods?
                 return true;
             }
         }

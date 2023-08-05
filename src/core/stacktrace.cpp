@@ -10,7 +10,7 @@
 #define HAS_STACK_TRACE
 #endif
 
-static void display_crash_message(void) {
+static void display_crash_message() {
     platform_screen_show_error_message_box(
       "Ozzy has crashed :(",
       "There was an unrecoverable error, which will now close.\n"

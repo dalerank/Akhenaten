@@ -91,7 +91,7 @@ int platform_screen_get_scale(void) {
 }
 
 #if !defined(_WIN32) && !defined(__APPLE__)
-static void set_window_icon(void) {
+static void set_window_icon() {
     // TODO platform_icon_get_pixels() not defined?
     // SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(platform_icon_get_pixels(), 16, 16, 32, 16 * 4,
     //     0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
@@ -103,24 +103,23 @@ static void set_window_icon(void) {
 }
 #endif
 
-int platform_screen_create(const char* title, int display_scale_percentage) {
+int platform_screen_create(char const* title,
+                           std::string renderer,
+                           bool fullscreen,
+                           int display_scale_percentage,
+                           int width,
+                           int height) {
     set_scale_percentage(display_scale_percentage, 0, 0);
 
-    int width, height;
-    int fullscreen = system_is_fullscreen_only() ? 1 : setting_fullscreen();
-    fullscreen = ozymandias_core.window_mode ? 0 : fullscreen;
+    // int fullscreen = system_is_fullscreen_only() ? 1 : setting_fullscreen();
+    // fullscreen = ozymandias_core.window_mode ? 0 : fullscreen;
     if (fullscreen) {
         SDL_DisplayMode mode;
         SDL_GetDesktopDisplayMode(0, &mode);
         width = mode.w;
         height = mode.h;
     } else {
-        setting_window(&width, &height);
-        if (ozymandias_core.window_width > 0)
-            width = ozymandias_core.window_width;
-        if (ozymandias_core.window_height > 0)
-            height = ozymandias_core.window_height;
-
+        // setting_window(&width, &height); // TODO: // WTF, do we need this ????
         width = scale_logical_to_pixels(width);
         height = scale_logical_to_pixels(height);
     }
@@ -165,7 +164,7 @@ int platform_screen_create(const char* title, int display_scale_percentage) {
         SDL_GetWindowSize(SDL.window, &width, &height);
     }
 
-    if (!platform_renderer_init(SDL.window)) {
+    if (!platform_renderer_init(SDL.window, renderer)) {
         return 0;
     }
 

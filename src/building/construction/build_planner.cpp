@@ -154,7 +154,8 @@ static void add_temple_complex(building* b, int orientation) {
       = add_temple_complex_element(b->tile.x() + 2 * offset.x(), b->tile.y() + 2 * offset.y(), orientation, altar);
 }
 
-static void latch_on_venue(e_building_type type, building* main, int dx, int dy, int orientation, bool main_venue = false) {
+static void
+latch_on_venue(e_building_type type, building* main, int dx, int dy, int orientation, bool main_venue = false) {
     map_point point = main->tile.shifted(dx, dy);
     //    int x = main->tile.x() + dx;
     //    int y = main->tile.y() + dy;
@@ -910,7 +911,8 @@ void BuildPlanner::set_graphics_array(int* image_set, int size_x, int size_y) {
     }
 }
 
-void BuildPlanner::setup_build(e_building_type type) { // select building for construction, set up main terrain restrictions/requirements
+void BuildPlanner::setup_build(
+  e_building_type type) { // select building for construction, set up main terrain restrictions/requirements
 
     // initial data
     reset();

@@ -46,7 +46,7 @@ int building_id_first(e_building_type type) {
     return MAX_BUILDINGS;
 }
 
-building *building_first(e_building_type type) {
+building* building_first(e_building_type type) {
     for (int i = 1; i < MAX_BUILDINGS; ++i) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == type)
@@ -55,7 +55,7 @@ building *building_first(e_building_type type) {
     return nullptr;
 }
 
-building *building_next(int i, e_building_type type) {
+building* building_next(int i, e_building_type type) {
     for (; i < MAX_BUILDINGS; ++i) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == type)
@@ -663,7 +663,7 @@ int building_get_highest_id(void) {
     return building_extra_data.highest_id_in_use;
 }
 void building_update_highest_id(void) {
-    auto &extra = building_extra_data;
+    auto& extra = building_extra_data;
 
     building_extra_data.highest_id_in_use = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -1026,9 +1026,8 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob) {
     building_extra_data.created_sequence = 0;
 });
 
-io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob) {
-    iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_in_use);
-});
+io_buffer* iob_building_highest_id
+  = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_in_use); });
 
 io_buffer* iob_building_highest_id_ever = new io_buffer([](io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_ever);

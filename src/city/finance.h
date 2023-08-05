@@ -57,7 +57,7 @@ struct finance_overview {
     } expenses;
     int net_in_out;
     int balance;
-} ;
+};
 
 const finance_overview* city_finance_overview_last_year(void);
 const finance_overview* city_finance_overview_this_year(void);

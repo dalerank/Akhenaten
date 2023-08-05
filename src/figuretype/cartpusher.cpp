@@ -1,11 +1,12 @@
 #include "cartpusher.h"
 
 #include "building/barracks.h"
-#include "building/type.h"
 #include "building/granary.h"
 #include "building/industry.h"
 #include "building/storage.h"
+#include "building/type.h"
 #include "building/warehouse.h"
+#include "city/buildings.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "figure/combat.h"
@@ -17,7 +18,6 @@
 #include "grid/road_network.h"
 #include "grid/routing/routing_terrain.h"
 #include "io/config/config.h"
-#include "city/buildings.h"
 
 #include "city/finance.h"
 
@@ -177,7 +177,8 @@ void figure::cartpusher_do_retrieve(int ACTION_DONE) {
         switch (dest->type) {
         case BUILDING_WAREHOUSE:
         case BUILDING_WAREHOUSE_SPACE: {
-            int home_accepting_quantity = building_warehouse_get_accepting_amount((e_resource)collecting_item_id, home());
+            int home_accepting_quantity
+              = building_warehouse_get_accepting_amount((e_resource)collecting_item_id, home());
             int carry_amount_goal_max = fmin(100, home_accepting_quantity);
             int load_single_turn = 1;
 
@@ -190,7 +191,8 @@ void figure::cartpusher_do_retrieve(int ACTION_DONE) {
             // grab goods, quantity & max load changed by above settings;
             // if load is finished, go back home - otherwise, recalculate
             if (get_carrying_amount() < carry_amount_goal_max) {
-                if (building_warehouse_remove_resource(destination(), (e_resource)collecting_item_id, load_single_turn) == 0) {
+                if (building_warehouse_remove_resource(destination(), (e_resource)collecting_item_id, load_single_turn)
+                    == 0) {
                     load_resource(load_single_turn * 100, (e_resource)collecting_item_id);
                     if (get_carrying_amount() >= carry_amount_goal_max)
                         advance_action(ACTION_DONE);
@@ -210,7 +212,6 @@ void figure::cartpusher_do_retrieve(int ACTION_DONE) {
         }
     }
 }
-
 
 
 void figure::determine_granaryman_destination() {
@@ -272,13 +273,15 @@ void figure::determine_warehouseman_destination() {
 
     ////// delivering resource!
     // priority 1: weapons to barracks
-    set_destination(building_get_barracks_for_weapon(tile.x(), tile.y(), resource_id, road_network_id, warehouse->distance_from_entry, &dst));
+    set_destination(building_get_barracks_for_weapon(
+      tile.x(), tile.y(), resource_id, road_network_id, warehouse->distance_from_entry, &dst));
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
 
     // priority 2: raw materials to workshop
-    set_destination(building_get_workshop_for_raw_material_with_room( tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, &dst));
+    set_destination(building_get_workshop_for_raw_material_with_room(
+      tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, &dst));
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
@@ -290,13 +293,15 @@ void figure::determine_warehouseman_destination() {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
 
     // priority 4: food to getting granary
-    set_destination(building_getting_granary_for_storing(tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, &dst));
+    set_destination(building_getting_granary_for_storing(
+      tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, &dst));
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
 
     // priority 5: resource to other warehouse
-    set_destination(building_warehouse_for_storing(home(), tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, 0, &dst));
+    set_destination(building_warehouse_for_storing(
+      home(), tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, 0, &dst));
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }

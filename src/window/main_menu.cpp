@@ -14,6 +14,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "platform/arguments.h"
+#include "platform/version.hpp"
 #include "records.h"
 #include "sound/music.h"
 #include "window/config.h"
@@ -45,23 +46,24 @@ static generic_button buttons[] = {
   {BUTTONS_X, BUTTONS_Y + 40 * 3, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 6, 0},
 };
 
-static void draw_version_string(void) {
-    uint8_t version_string[100] = {0};
-    SDL_snprintf((char*)version_string, 99, "Ramesses v%s", ozymandias_core.version_str);
-    int version_prefix_length = string_length(version_string);
+static void draw_version_string() {
+    std::string version = get_version();
     int text_y = screen_height() - 30;
 
-    int text_width = text_get_width(version_string, FONT_SMALL_PLAIN);
+    // TODO: drop casts here and handle string as UTF8
+    int text_width = text_get_width((const uint8_t*)version.c_str(), FONT_SMALL_PLAIN);
 
     if (text_y <= 500 && (screen_width() - 640) / 2 < text_width + 18) {
         graphics_draw_rect(10, text_y, text_width + 14, 20, COLOR_BLACK);
         graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
-        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
+        // TODO: drop casts here and handle string as UTF8
+        text_draw((const uint8_t*)version.c_str(), 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
     } else {
-        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
+        // TODO: drop casts here and handle string as UTF8
+        text_draw((const uint8_t*)version.c_str(), 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
     }
 }
-static void draw_background(void) {
+static void draw_background() {
     graphics_clear_screen();
     ImageDraw::img_background(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND));
     if (window_is(WINDOW_MAIN_MENU))

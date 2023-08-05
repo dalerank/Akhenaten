@@ -34,7 +34,7 @@ static void init(void (*close_callback)(void)) {
 }
 
 static void draw_foreground(void) {
-    auto &data = g_display_options_data;
+    auto& data = g_display_options_data;
     graphics_set_to_dialog();
 
     outer_panel_draw(96, 80, 18, 12);
@@ -90,12 +90,7 @@ static void button_cancel(int param1, int param2) {
 }
 
 void window_display_options_show(void (*close_callback)(void)) {
-    window_type window = {
-        WINDOW_DISPLAY_OPTIONS,
-        window_draw_underlying_window,
-        draw_foreground,
-        handle_input
-    };
+    window_type window = {WINDOW_DISPLAY_OPTIONS, window_draw_underlying_window, draw_foreground, handle_input};
     init(close_callback);
     window_show(&window);
 }

@@ -1,10 +1,10 @@
 #pragma once
 
+#include "building/type.h"
 #include "figure/action.h"
 #include "figure/type.h"
-#include "grid/point.h"
 #include "game/resource.h"
-#include "building/type.h"
+#include "grid/point.h"
 
 #include <stdint.h>
 
@@ -313,15 +313,19 @@ public:
 };
 
 int building_id_first(e_building_type type);
-building *building_first(e_building_type type);
+building* building_first(e_building_type type);
 
-building *building_next(int id, e_building_type type);
+building* building_next(int id, e_building_type type);
 building* building_get(int id);
-inline building *building_begin() { return building_get(1); }
-inline building *building_end() { return building_get(MAX_BUILDINGS); }
+inline building* building_begin() {
+    return building_get(1);
+}
+inline building* building_end() {
+    return building_get(MAX_BUILDINGS);
+}
 
-template<typename T>
-inline building *building_first(T pred) {
+template <typename T>
+inline building* building_first(T pred) {
     for (auto it = building_begin(), end = building_end(); it != end; ++it) {
         if (it->state == BUILDING_STATE_VALID && pred(*it)) {
             return it;

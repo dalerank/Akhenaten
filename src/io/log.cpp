@@ -15,7 +15,7 @@ const std::unordered_map<std::string, SDL_LogPriority> PRIORITY_DICT = {{"verbos
 
 const std::unordered_map<SDL_LogPriority, char const*> PRIORITY_PREFIX = {{SDL_LOG_PRIORITY_VERBOSE, ""},
                                                                           {SDL_LOG_PRIORITY_DEBUG, "debug: "},
-                                                                          {SDL_LOG_PRIORITY_INFO, "info: "},
+                                                                          {SDL_LOG_PRIORITY_INFO, ""},
                                                                           {SDL_LOG_PRIORITY_WARN, "warn: "},
                                                                           {SDL_LOG_PRIORITY_ERROR, "error: "},
                                                                           {SDL_LOG_PRIORITY_CRITICAL, "critical: "}};

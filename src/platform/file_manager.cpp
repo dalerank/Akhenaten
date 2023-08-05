@@ -161,12 +161,8 @@ int platform_file_manager_should_case_correct_file(void) {
 #endif
 }
 
-int platform_file_manager_set_base_path(const char* path) {
-    if (!path) {
-        logs::error("set_base_path: path was not set. Ozymandias will probably crash.");
-        return 0;
-    }
-    return chdir(path) == 0;
+int platform_file_manager_set_base_path(std::string_view path) {
+    return chdir(path.data()) == 0;
 }
 
 #if defined(__vita__)

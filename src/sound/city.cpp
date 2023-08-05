@@ -1,7 +1,7 @@
 #include "city.h"
 
-#include "city/figures.h"
 #include "building/type.h"
+#include "city/figures.h"
 #include "core/time.h"
 #include "game/settings.h"
 #include "io/io_buffer.h"

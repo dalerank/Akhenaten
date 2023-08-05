@@ -25,8 +25,7 @@ enum { ENGINE_MODE_RELEASE = 0, ENGINE_MODE_DEBUG = 1, ENGINE_MODE_MAX = 2 };
 #define MAX_BRIEF_DESCRIPTION 522
 
 extern int GAME_ENV;
-extern int DEBUG_MODE;
 
-void init_game_environment(int env, int mode);
+void init_game_environment(int env);
 const char* get_game_title();
 const char* get_engine_pref_path();

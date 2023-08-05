@@ -111,7 +111,7 @@ enum e_figure_type : uint16_t {
 
     FIGURE_HYENA = 102,
 
-    //FIGURE_MAX = 999
+    // FIGURE_MAX = 999
 };
 
 enum e_enemy_type {

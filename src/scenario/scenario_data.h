@@ -84,7 +84,7 @@ struct request_t {
     int state;
     bool visible;
     int months_to_comply;
-} ;
+};
 
 struct invasion_t {
     int year;
@@ -93,7 +93,7 @@ struct invasion_t {
     int from;
     int attack_type;
     int month;
-} ;
+};
 
 struct price_change_t {
     int year;
@@ -101,7 +101,7 @@ struct price_change_t {
     int resource;
     int amount;
     int is_rise;
-} ;
+};
 
 struct demand_change_t {
     int year;
@@ -109,7 +109,7 @@ struct demand_change_t {
     int resource;
     int route_id;
     int is_rise;
-} ;
+};
 
 struct scenario_data_t {
     uint8_t scenario_name[65];

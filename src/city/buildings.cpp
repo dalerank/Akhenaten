@@ -22,7 +22,7 @@ void city_buildings_add_palace(building* palace) {
 }
 
 void city_buildings_remove_palace(building* palace) {
-    building *next_palace = building_first([] (auto &b) { return b.is_administration(); });
+    building* next_palace = building_first([](auto& b) { return b.is_administration(); });
     city_data.building.palace_point.set(next_palace ? next_palace->tile.grid_offset() : 0);
     city_data.building.palace_building_id = next_palace ? next_palace->id : 0;
     city_data.building.palace_placed = !!next_palace;

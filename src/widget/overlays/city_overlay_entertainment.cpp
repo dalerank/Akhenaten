@@ -1,7 +1,7 @@
 #include "city_overlay_entertainment.h"
 
-#include "game/state.h"
 #include "building/type.h"
+#include "game/state.h"
 
 static int show_building_entertainment(const building* b) {
     return b->type == BUILDING_JUGGLER_SCHOOL || b->type == BUILDING_BOOTH || b->type == BUILDING_CONSERVATORY

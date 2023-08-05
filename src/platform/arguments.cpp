@@ -1,18 +1,28 @@
 #include "arguments.h"
 
-#include "core/version.h"
 #include "io/log.h"
-#include "platform/platform.h"
 
-#include <SDL.h>
-#include <cstring>
 #include <filesystem>
 
 #define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2"
 #define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
 #define UNKNOWN_OPTION_ERROR_MESSAGE "Option %s not recognized"
 
-ozymandias_args ozymandias_core;
+namespace {
+/// Create formatted string
+/// NOTE: (use C++20 as soon as it will be available to get rid of this)
+template <typename... Args>
+auto string_format(char const* format, Args... args) {
+    const int string_size = std::snprintf(nullptr, 0, format, args...) + 1; // With space for '\0'
+
+    if (string_size <= 0)
+        throw std::runtime_error("Error during string formatting.");
+
+    std::unique_ptr<char[]> buf(new char[string_size]);
+    std::snprintf(buf.get(), string_size, format, args...);
+    return std::string(buf.get(), buf.get() + string_size - 1); // Without '\0'
+}
+} // namespace
 
 static int parse_decimal_as_percentage(const char* str) {
     const char* start = str;
@@ -51,108 +61,124 @@ static int parse_decimal_as_percentage(const char* str) {
     return percentage;
 }
 
-int platform_parse_arguments(int argc, char** argv, ozymandias_args& output_args) {
-    int ok = 1;
+Arguments::Arguments(int argc, char** argv)
+  : data_directory_(std::filesystem::current_path().string()) {
+    // TODO: load from settings file
+    parse_cli_(argc, argv);
+}
 
-    // Set sensible defaults
-    memset(output_args.data_directory, 256, 0);
-    output_args.display_scale_percentage = 100;
-    output_args.cursor_scale_percentage = 100;
-    output_args.game_engine_env = 1; // run pharaoh by default
-    output_args.game_engine_debug_mode = 0;
-    output_args.window_mode = false;
+char const* Arguments::usage() {
+    return "Usage: ozymandias [ARGS] [DATA_DIR]\n"
+           "\n"
+           "ARGS may be:\n"
+           "  --display-scale NUMBER\n"
+           "          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5\n"
+           "  --cursor-scale NUMBER\n"
+           "          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2\n"
+           "  --render\n"
+           "          use specific renderer\n"
+           "  --size\n"
+           "          window size. Example: 800x600\n"
+           "  --window\n"
+           "          enable window mode\n"
+           "\n"
+           "The last argument, if present, is interpreted as data directory of the Pharaoh installation";
+}
 
-    snprintf(output_args.version_str,
-             31,
-             "%u.%u.%u b%u %s",
-             GAME_VERSION_MAJOR,
-             GAME_VERSION_MINOR,
-             GAME_VERSION_REVSN,
-             GAME_BUILD_NUMBER,
-             GAME_PLATFORM_NAME);
+bool Arguments::is_fullscreen() const {
+    return !window_mode_;
+}
 
+bool Arguments::is_window_mode() const {
+    return window_mode_;
+}
+
+int Arguments::get_display_scale_percentage() const {
+    return display_scale_percentage_;
+}
+
+int Arguments::get_cursor_scale_percentage() const {
+    return cursor_scale_percentage_;
+}
+
+std::string Arguments::get_renderer() const {
+    return renderer_;
+}
+
+std::string Arguments::get_data_directory() const {
+    return data_directory_;
+}
+
+void Arguments::set_data_directory(std::string value) {
+    data_directory_ = std::move(value);
+}
+
+int Arguments::get_window_width() const {
+    return window_width_;
+}
+
+void Arguments::set_window_width(int value) {
+    window_width_ = value;
+}
+
+int Arguments::get_window_height() const {
+    return window_height_;
+}
+
+void Arguments::set_window_height(int value) {
+    window_height_ = value;
+}
+
+void Arguments::parse_cli_(int argc, char** argv) {
     for (int i = 1; i < argc; i++) {
-        // we ignore "-psn" arguments, this is needed to launch the app
+        // ignore "-psn" arguments, this is needed to launch the app
         // from the Finder on macOS.
         // https://hg.libsdl.org/SDL/file/c005c49beaa9/test/testdropfile.c#l47
-        if (SDL_strncmp(argv[i], "-psn", 4) == 0)
+        if (SDL_strcmp(argv[i], "-psn") == 0)
             continue;
-
-        if (SDL_strcmp(argv[i], "--caesar3") == 0)
-            output_args.game_engine_env = 0;
-        else if (SDL_strcmp(argv[i], "--debug") == 0)
-            output_args.game_engine_debug_mode = 1;
         else if (SDL_strcmp(argv[i], "--window") == 0)
-            output_args.window_mode = true;
-        else if (SDL_strcmp(argv[i], "--tutorial_skip") == 0) {
-            sscanf("%d", argv[i + 1], &output_args.tutorial_skip);
-            ++i;
-        } else if (SDL_strcmp(argv[i], "--render") == 0) {
-            strcpy(output_args.driver, argv[i + 1]);
-            i++;
+            window_mode_ = true;
+        else if (SDL_strcmp(argv[i], "--render") == 0) {
+            if (i + 1 < argc) {
+                renderer_ = argv[i + 1];
+                ++i;
+            } else
+                throw CliParseError(DISPLAY_SCALE_ERROR_MESSAGE);
         } else if (SDL_strcmp(argv[i], "--display-scale") == 0) {
             if (i + 1 < argc) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
-                i++;
-                if (percentage < 50 || percentage > 500) {
-                    logs::info(DISPLAY_SCALE_ERROR_MESSAGE);
-                    ok = 0;
-                } else {
-                    output_args.display_scale_percentage = percentage;
-                }
-            } else {
-                logs::info(DISPLAY_SCALE_ERROR_MESSAGE);
-                ok = 0;
-            }
+                ++i;
+
+                if (percentage < 50 || percentage > 500)
+                    throw CliParseError(DISPLAY_SCALE_ERROR_MESSAGE);
+                else
+                    display_scale_percentage_ = percentage;
+            } else
+                throw CliParseError(DISPLAY_SCALE_ERROR_MESSAGE);
         } else if (SDL_strcmp(argv[i], "--size") == 0) {
             if (i + 1 < argc) {
-                SDL_sscanf(argv[i + 1], "%dx%d", &output_args.window_width, &output_args.window_height);
-                i++;
-            } else {
-                logs::info(DISPLAY_SCALE_ERROR_MESSAGE);
-                ok = 0;
-            }
+                SDL_sscanf(argv[i + 1], "%dx%d", &window_width_, &window_height_);
+                ++i;
+            } else
+                throw CliParseError(DISPLAY_SCALE_ERROR_MESSAGE);
         } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
             if (i + 1 < argc) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
-                i++;
+                ++i;
+
                 if (percentage == 100 || percentage == 150 || percentage == 200)
-                    output_args.cursor_scale_percentage = percentage;
-                else {
-                    logs::info(CURSOR_SCALE_ERROR_MESSAGE);
-                    ok = 0;
-                }
-            } else {
-                logs::info(CURSOR_SCALE_ERROR_MESSAGE);
-                ok = 0;
-            }
+                    cursor_scale_percentage_ = percentage;
+                else
+                    throw CliParseError(CURSOR_SCALE_ERROR_MESSAGE);
+            } else
+                throw CliParseError(CURSOR_SCALE_ERROR_MESSAGE);
         } else if (SDL_strcmp(argv[i], "--help") == 0)
-            ok = 0;
+            throw CliHelpRequested();
         else if (SDL_strncmp(argv[i], "--", 2) == 0) {
-            logs::info(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]);
-            ok = 0;
+            throw CliParseError(string_format(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));
         } else {
-            strcpy(output_args.data_directory, argv[i]);
+            // TODO: ???? check that there are no other arguments after
+            data_directory_ = argv[i];
         }
     }
-
-    if (std::strlen(output_args.data_directory) == 0) {
-        std::strcpy(output_args.data_directory, std::filesystem::current_path().string().c_str());
-    }
-
-    if (!ok) {
-        logs::info("Usage: ozymandias [ARGS] [DATA_DIR]");
-        logs::info("ARGS may be:");
-        logs::info("--display-scale NUMBER");
-        logs::info("          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5");
-        logs::info("--cursor-scale NUMBER");
-        logs::info("          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2");
-        logs::info("--window");
-        logs::info("          setup window mode on");
-        logs::info("--debug");
-        logs::info("          Prints additional debug information on the screen");
-        logs::info("The last argument, if present, is interpreted as data directory of the Pharaoh installation");
-    }
-
-    return ok;
 }

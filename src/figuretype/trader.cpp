@@ -1,9 +1,9 @@
 #include "trader.h"
 
 #include "building/building.h"
-#include "building/type.h"
 #include "building/dock.h"
 #include "building/storage.h"
+#include "building/type.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
 #include "city/finance.h"
@@ -98,7 +98,7 @@ bool figure_trade_caravan_can_sell(figure* trader, building* warehouse, int city
         return false;
 
     int num_importable = 0;
-    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r+1)) {
+    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
         if (!building_warehouse_is_not_accepting(r, warehouse)) {
             if (empire_can_import_resource_from_city(city_id, r))
                 num_importable++;
@@ -284,7 +284,7 @@ int figure::get_closest_warehouse(int x, int y, int city_id, int distance_from_e
 
         const building_storage* s = building_storage_get(b->storage_id);
         int num_imports_for_warehouse = 0;
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r+1)) {
+        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
             if (!building_warehouse_is_not_accepting(r, b) && empire_can_import_resource_from_city(city_id, r))
                 num_imports_for_warehouse++;
         }

@@ -67,7 +67,7 @@ struct file_dialog_data_t {
     file_type_data* file_data;
     uint8_t typed_name[MAX_FILE_NAME];
     char selected_file[MAX_FILE_NAME];
-    scroll_list_panel *panel = nullptr;
+    scroll_list_panel* panel = nullptr;
 };
 
 file_dialog_data_t g_file_dialog_data;
@@ -164,7 +164,8 @@ static void draw_foreground(void) {
     input_box_draw(&file_name_input);
 
     // title
-    if (data.message_not_exist_start_time && time_get_millis() - data.message_not_exist_start_time < NOT_EXIST_MESSAGE_TIMEOUT) {
+    if (data.message_not_exist_start_time
+        && time_get_millis() - data.message_not_exist_start_time < NOT_EXIST_MESSAGE_TIMEOUT) {
         lang_text_draw_centered(43, 2, 160, 50, 304, FONT_LARGE_BLACK_ON_LIGHT);
     } else if (data.dialog_type == FILE_DIALOG_DELETE) {
         lang_text_draw_centered(43, 6, 160, 50, 304, FONT_LARGE_BLACK_ON_LIGHT);
@@ -319,22 +320,17 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 void window_file_dialog_show(file_type type, file_dialog_type dialog_type) {
     if (!g_file_dialog_data.panel) {
         g_file_dialog_data.panel = new scroll_list_panel(NUM_FILES_IN_VIEW,
-                                          button_select_file,
-                                          button_none,
-                                          button_double_click,
-                                          button_none,
-                                          ui_params,
-                                          true,
-                                          "Save/",
-                                          "folders");
+                                                         button_select_file,
+                                                         button_none,
+                                                         button_double_click,
+                                                         button_none,
+                                                         ui_params,
+                                                         true,
+                                                         "Save/",
+                                                         "folders");
     }
 
-    window_type window = {
-        WINDOW_FILE_DIALOG,
-        window_draw_underlying_window,
-        draw_foreground,
-        handle_input
-    };
+    window_type window = {WINDOW_FILE_DIALOG, window_draw_underlying_window, draw_foreground, handle_input};
     init(type, dialog_type);
     window_show(&window);
 }
