@@ -6,26 +6,6 @@
 
 class Arguments {
 public:
-    /// Exception thrown when CLI arguments cannot be parsed.
-    class CliParseError : public std::runtime_error {
-    public:
-        explicit CliParseError(char const* description)
-          : std::runtime_error(description) {
-        }
-
-        explicit CliParseError(std::string const& description)
-          : std::runtime_error(description) {
-        }
-    };
-
-    /// Exception thrown when --help was requested.
-    class CliHelpRequested : public std::runtime_error {
-    public:
-        CliHelpRequested()
-          : std::runtime_error("Help was requested.") {
-        }
-    };
-
     Arguments(int argc, char** argv);
 
     static char const* usage();

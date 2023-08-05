@@ -599,29 +599,10 @@ static void main_loop() {
 int main(int argc, char** argv) {
     logs::initialize();
 
-    try {
-        Arguments arguments(argc, argv);
-
-        setup(arguments);
-        main_loop();
-        teardown();
-    } catch (Arguments::CliHelpRequested const&) {
-        auto usage = Arguments::usage();
-        logs::info(usage);
-        show_usage();
-        return EXIT_SUCCESS;
-    } catch (Arguments::CliParseError const& e) {
-        auto usage = Arguments::usage();
-        logs::info(usage);
-        logs::critical(e.what());
-        show_usage();
-        platform_screen_show_error_message_box("ARGUMENTS ERROR", e.what());
-        return EXIT_FAILURE;
-    } catch (std::runtime_error const& e) {
-        logs::critical(e.what());
-        platform_screen_show_error_message_box("CRASH", e.what());
-        throw;
-    }
+    Arguments arguments(argc, argv);
+    setup(arguments);
+    main_loop();
+    teardown();
 
     return EXIT_SUCCESS;
 }

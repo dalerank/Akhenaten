@@ -13,6 +13,7 @@
 #include "city/mission.h"
 #include "city/resource.h"
 #include "city/victory.h"
+#include "core/application.h"
 #include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "figure/enemy_army.h"
@@ -589,7 +590,7 @@ static void prepare_savegame_schema(e_file_format file_format, const int file_ve
 void GamestateIO::prepare_folders(const char* path) {
     std::error_code err;
     if (!std::filesystem::create_directories(path, err) && !std::filesystem::exists(path))
-        throw std::runtime_error(err.message());
+        app::terminate(err.message());
 }
 
 bool GamestateIO::prepare_savegame(const char* filename_short) {

@@ -1,5 +1,7 @@
 #include "io/log.h"
 
+#include "core/application.h"
+
 #include <algorithm>
 #include <iostream>
 #include <unordered_map>
@@ -26,7 +28,7 @@ char const* get_prefix_of(SDL_LogPriority priority) {
         return it->second;
     }
 
-    throw std::runtime_error("Unknown SDL_LogPriority level");
+    app::terminate("Unknown SDL_LogPriority level");
 }
 
 SDL_LogPriority get_log_priority() {
