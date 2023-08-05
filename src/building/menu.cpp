@@ -769,8 +769,9 @@ int building_menu_next_index(int submenu, int current_index) {
     }
     return 0;
 }
-int building_menu_type(int submenu, int item) {
-    return MENU_int[GAME_ENV][submenu][item];
+
+e_building_type building_menu_type(int submenu, int item) {
+    return (e_building_type)MENU_int[GAME_ENV][submenu][item];
 }
 
 int building_menu_has_changed(void) {

@@ -312,7 +312,7 @@ static void place_flag_with_id(map_point tile, void (*update)(int id, int x, int
 static void place_building(map_point tile) {
     int image_id;
     int size;
-    int type;
+    e_building_type type;
     switch (data.type) {
     case TOOL_NATIVE_HUT:
         type = BUILDING_NATIVE_HUT;

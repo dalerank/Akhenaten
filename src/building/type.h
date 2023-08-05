@@ -231,7 +231,7 @@ enum {
     HOUSE_LUXURY_PALACE = 19,
 };
 
-enum {
+enum e_building_state {
     BUILDING_STATE_UNUSED = 0,
     BUILDING_STATE_VALID = 1,
     BUILDING_STATE_UNDO = 2,

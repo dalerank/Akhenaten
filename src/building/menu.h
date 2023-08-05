@@ -87,7 +87,7 @@ int building_menu_count_items(int submenu);
 
 int building_menu_next_index(int submenu, int current_index);
 
-int building_menu_type(int submenu, int item);
+e_building_type building_menu_type(int submenu, int item);
 
 void building_menu_update_monuments();
 void building_menu_update_temple_complexes();

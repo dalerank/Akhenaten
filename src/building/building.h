@@ -7,6 +7,7 @@
 #include "figure/type.h"
 #include "grid/point.h"
 #include "game/resource.h"
+#include "building/type.h"
 
 #include <stdint.h>
 
@@ -22,7 +23,7 @@ private:
     short figure_ids_array[MAX_FIGURES_PER_BUILDING]; // oh boy!
 public:
     int id;
-    unsigned char state;
+    e_building_state state;
     unsigned char faction_id;
     unsigned char unknown_value;
     unsigned char size;
@@ -32,7 +33,7 @@ public:
     //    unsigned char x;
     //    unsigned char y;
     //    unsigned short grid_offset;
-    short type;
+    e_building_type type;
     union {
         short house_level;
         e_resource warehouse_resource_id;
@@ -191,7 +192,7 @@ public:
     bool is_workshop();
     bool is_extractor();
     bool is_monument();
-    bool is_senate();
+    bool is_palace();
     bool is_tax_collector();
     bool is_governor_palace();
     bool is_temple();
@@ -310,9 +311,11 @@ public:
     int barracks_get_priority();
 };
 
-int building_find(int type);
+int building_id_first(e_building_type type);
+building *building_first(e_building_type type);
+building *building_next(int id, e_building_type type);
 building* building_get(int id);
-building* building_create(int type, int x, int y, int orientation);
+building* building_create(e_building_type type, int x, int y, int orientation);
 
 building* building_at(int grid_offset);
 building* building_at(int x, int y);
@@ -333,7 +336,8 @@ bool building_is_workshop(int type);
 bool building_is_extractor(int type);
 bool building_is_harvester(int type);
 bool building_is_monument(int type);
-bool building_is_senate(int type);
+bool building_is_administration(int type);
+bool building_is_palace(int type);
 bool building_is_tax_collector(int type);
 bool building_is_governor_palace(int type);
 bool building_is_temple(int type);
@@ -348,7 +352,6 @@ bool building_is_industry_type(const building* b);
 bool building_is_industry(int type);
 bool building_is_food_category(int type);
 bool building_is_infrastructure(int type);
-bool building_is_administration(int type);
 bool building_is_religion(int type);
 bool building_is_entertainment(int type);
 bool building_is_culture(int type);

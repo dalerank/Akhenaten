@@ -210,7 +210,7 @@ static void button_menu_index(int param1, int param2) {
 static void button_menu_item(int item) {
     widget_city_clear_current_tile();
 
-    int type = building_menu_type(data.selected_submenu, item);
+    e_building_type type = building_menu_type(data.selected_submenu, item);
     Planner.setup_build(type);
 
     if (set_submenu_for_type(type)) {

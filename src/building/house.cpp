@@ -93,7 +93,7 @@ static void create_vacant_lot(int x, int y, int image_id) {
     map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), 1, image_id, TERRAIN_BUILDING);
 }
 
-void building_house_change_to(building* house, int type) {
+void building_house_change_to(building* house, e_building_type type) {
     tutorial_on_house_evolve(type - BUILDING_HOUSE_VACANT_LOT);
     house->type = type;
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
@@ -280,7 +280,7 @@ static int house_image_group(int level) {
     return image_id_from_group(HOUSE_IMAGE[level].collection, HOUSE_IMAGE[level].group) + HOUSE_IMAGE[level].offset;
 }
 
-static void create_house_tile(int type, int x, int y, int image_id, int population, const int* inventory) {
+static void create_house_tile(e_building_type type, int x, int y, int image_id, int population, const int* inventory) {
     building* house = building_create(type, x, y, 0);
     house->house_population = population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -295,7 +295,7 @@ static void create_house_tile(int type, int x, int y, int image_id, int populati
                            TERRAIN_BUILDING);
 }
 
-static void split_size2(building* house, int new_type) {
+static void split_size2(building* house, e_building_type new_type) {
     int inventory_per_tile[INVENTORY_MAX];
     int inventory_remainder[INVENTORY_MAX];
     for (int i = 0; i < INVENTORY_MAX; i++) {

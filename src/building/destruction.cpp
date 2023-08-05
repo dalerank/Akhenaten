@@ -91,6 +91,7 @@ static void destroy_on_fire(building* b, bool plagued) {
     if (waterside_building)
         map_routing_update_water();
 }
+
 static void destroy_linked_parts(building* b, bool on_fire) {
     building* part = b;
     for (int i = 0; i < 99; i++) {
@@ -130,13 +131,17 @@ void building_destroy_by_collapse(building* b) {
     destroy_linked_parts(b, false);
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
+
 void building_destroy_by_poof(building* b, bool clouds) {
     b = b->main();
-    if (clouds)
+    if (clouds) {
         figure_create_explosion_cloud(b->tile.x(), b->tile.y(), b->size);
+    }
+
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
+
     do {
-        b->state = 0;
+        b->state = BUILDING_STATE_UNUSED;
         map_tiles_update_region_empty_land(
           true, b->tile.x(), b->tile.y(), b->tile.x() + b->size - 1, b->tile.y() + b->size - 1);
         if (b->next_part_building_id < 1)
@@ -144,23 +149,26 @@ void building_destroy_by_poof(building* b, bool clouds) {
         b = b->next();
     } while (true);
 }
+
 void building_destroy_by_fire(building* b) {
     b = b->main();
     destroy_on_fire(b, false);
     destroy_linked_parts(b, true);
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
+
 void building_destroy_by_plague(building* b) {
     b = b->main();
     destroy_on_fire(b, true);
 }
+
 void building_destroy_by_rioter(building* b) {
     b = b->main();
     destroy_on_fire(b, false);
 }
 
-int building_destroy_first_of_type(int type) {
-    int i = building_find(type);
+int building_destroy_first_of_type(e_building_type type) {
+    int i = building_id_first(type);
     if (i < MAX_BUILDINGS) {
         building* b = building_get(i);
         int grid_offset = b->tile.grid_offset();
@@ -173,6 +181,7 @@ int building_destroy_first_of_type(int type) {
     }
     return 0;
 }
+
 void building_destroy_last_placed(void) {
     int highest_sequence = 0;
     building* last_building = 0;
@@ -192,11 +201,13 @@ void building_destroy_last_placed(void) {
         map_routing_update_land();
     }
 }
+
 void building_destroy_increase_enemy_damage(int grid_offset, int max_damage) {
     if (map_building_damage_increase(grid_offset) > max_damage) {
         building_destroy_by_enemy(map_point(grid_offset));
     }
 }
+
 void building_destroy_by_enemy(map_point point) {
     int grid_offset = point.grid_offset();
     int x = point.x();

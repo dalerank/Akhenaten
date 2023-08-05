@@ -27,15 +27,17 @@
 
 building g_all_buildings[5000];
 
-static struct {
+struct building_extra_data_t {
     int highest_id_in_use;
     int highest_id_ever;
     int created_sequence;
     //    int incorrect_houses;
     //    int unfixable_houses;
-} extra = {0, 0, 0};
+};
 
-int building_find(int type) {
+building_extra_data_t building_extra_data = {0, 0, 0};
+
+int building_id_first(e_building_type type) {
     for (int i = 1; i < MAX_BUILDINGS; ++i) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == type)
@@ -43,18 +45,37 @@ int building_find(int type) {
     }
     return MAX_BUILDINGS;
 }
+
+building *building_first(e_building_type type) {
+    for (int i = 1; i < MAX_BUILDINGS; ++i) {
+        building* b = building_get(i);
+        if (b->state == BUILDING_STATE_VALID && b->type == type)
+            return b;
+    }
+    return nullptr;
+}
+
+building *building_next(int i, e_building_type type) {
+    for (; i < MAX_BUILDINGS; ++i) {
+        building* b = building_get(i);
+        if (b->state == BUILDING_STATE_VALID && b->type == type)
+            return b;
+    }
+    return nullptr;
+}
+
 building* building_get(int id) {
     return &g_all_buildings[id];
 }
 
-static void building_new_fill_in_data_for_type(building* b, int type, int x, int y, int orientation) {
+static void building_new_fill_in_data_for_type(building* b, e_building_type type, int x, int y, int orientation) {
     const building_properties* props = building_properties_for_type(type);
     b->state = BUILDING_STATE_CREATED;
     b->faction_id = 1;
     b->unknown_value = city_buildings_unknown_value();
     b->type = type;
     b->size = props->size;
-    b->creation_sequence_index = extra.created_sequence++;
+    b->creation_sequence_index = building_extra_data.created_sequence++;
     b->sentiment.house_happiness = 50;
     b->distance_from_entry = 0;
 
@@ -231,7 +252,7 @@ static void building_new_fill_in_data_for_type(building* b, int type, int x, int
         break;
     }
 }
-building* building_create(int type, int x, int y, int orientation) {
+building* building_create(e_building_type type, int x, int y, int orientation) {
     building* b = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         if (g_all_buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
@@ -334,7 +355,7 @@ void building::clear_related_data() {
     if (storage_id)
         building_storage_delete(storage_id);
 
-    if (is_senate())
+    if (is_palace())
         city_buildings_remove_palace(this);
 
     if (is_governor_palace())
@@ -363,14 +384,15 @@ void building::clear_related_data() {
     if (type == BUILDING_FESTIVAL_SQUARE)
         city_buildings_remove_festival_square();
 }
+
 void building_clear_all(void) {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         memset(&g_all_buildings[i], 0, sizeof(building));
         g_all_buildings[i].id = i;
     }
-    extra.highest_id_in_use = 0;
-    extra.highest_id_ever = 0;
-    extra.created_sequence = 0;
+    building_extra_data.highest_id_in_use = 0;
+    building_extra_data.highest_id_ever = 0;
+    building_extra_data.created_sequence = 0;
     //    extra.incorrect_houses = 0;
     //    extra.unfixable_houses = 0;
 }
@@ -406,8 +428,8 @@ bool building::is_extractor() {
 bool building::is_monument() {
     return building_is_monument(type);
 }
-bool building::is_senate() {
-    return building_is_senate(type);
+bool building::is_palace() {
+    return building_is_palace(type);
 }
 bool building::is_tax_collector() {
     return building_is_tax_collector(type);
@@ -511,9 +533,8 @@ bool building_is_monument(int type) {
         return false;
     }
 }
-bool building_is_senate(int type) {
-    return ((type >= BUILDING_SENATE && type <= BUILDING_TAX_COLLECTOR_UPGRADED)
-            || (type >= BUILDING_VILLAGE_PALACE && type <= BUILDING_CITY_PALACE));
+bool building_is_palace(int type) {
+    return (type >= BUILDING_VILLAGE_PALACE && type <= BUILDING_CITY_PALACE);
 }
 bool building_is_tax_collector(int type) {
     return (type >= BUILDING_TAX_COLLECTOR && type <= BUILDING_TAX_COLLECTOR_UPGRADED);
@@ -581,10 +602,12 @@ bool building_is_infrastructure(int type) {
     return false;
 }
 bool building_is_administration(int type) {
-    if (building_is_senate(type) || building_is_tax_collector(type) || building_is_governor_palace(type))
+    if (building_is_palace(type) || building_is_tax_collector(type) || building_is_governor_palace(type))
         return true;
+
     if (type == BUILDING_COURTHOUSE)
         return true;
+
     return false;
 }
 bool building_is_religion(int type) {
@@ -637,10 +660,12 @@ bool building_is_draggable(int type) {
 }
 
 int building_get_highest_id(void) {
-    return extra.highest_id_in_use;
+    return building_extra_data.highest_id_in_use;
 }
 void building_update_highest_id(void) {
-    extra.highest_id_in_use = 0;
+    auto &extra = building_extra_data;
+
+    building_extra_data.highest_id_in_use = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         if (g_all_buildings[i].state != BUILDING_STATE_UNUSED)
             extra.highest_id_in_use = i;
@@ -998,12 +1023,15 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob) {
 
         g_all_buildings[i].id = i;
     }
-    extra.created_sequence = 0;
+    building_extra_data.created_sequence = 0;
 });
-io_buffer* iob_building_highest_id
-  = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_INT32, &extra.highest_id_in_use); });
+
+io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob) {
+    iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_in_use);
+});
+
 io_buffer* iob_building_highest_id_ever = new io_buffer([](io_buffer* iob) {
-    iob->bind(BIND_SIGNATURE_INT32, &extra.highest_id_ever);
+    iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_ever);
     iob->bind____skip(4);
     //    highest_id_ever->skip(4);
 });

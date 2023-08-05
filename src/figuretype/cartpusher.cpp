@@ -476,8 +476,8 @@ void figure::cartpusher_action() {
     case ACTION_10_DELIVERING_FOOD:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_13_UNLOADING2, ACTION_8_RECALCULATE);
         break;
-    case 11: // delivering gold
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, 14, ACTION_8_RECALCULATE);
+    case ACTION_11_DELIVERING_GOLD:
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_14_UNLOADING_GOLD, ACTION_8_RECALCULATE);
         break;
     case FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
         do_gotobuilding(

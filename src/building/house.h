@@ -1,8 +1,10 @@
 #pragma once
 
+#include "building/type.h"
+
 class building;
 
-void building_house_change_to(building* house, int type);
+void building_house_change_to(building* house, e_building_type type);
 void building_house_change_to_vacant_lot(building* house);
 
 void building_house_merge(building* house);

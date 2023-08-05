@@ -6,30 +6,30 @@
 #include "city/data_private.h"
 
 bool city_buildings_has_palace(void) {
-    return city_data.building.senate_placed;
+    return city_data.building.palace_placed;
 }
 int city_buildings_get_palace_id(void) {
     if (!city_buildings_has_palace())
         return 0;
-    return city_data.building.senate_building_id;
+    return city_data.building.palace_building_id;
 }
 void city_buildings_add_palace(building* palace) {
-    city_data.building.senate_placed = 1;
-    if (!city_data.building.senate.grid_offset()) {
-        city_data.building.senate_building_id = palace->id;
-        city_data.building.senate.set(palace->tile.grid_offset());
+    city_data.building.palace_placed = true;
+    if (!city_data.building.palace_point.grid_offset()) {
+        city_data.building.palace_building_id = palace->id;
+        city_data.building.palace_point.set(palace->tile.grid_offset());
         //        city_data.building.senate.x() = palace->x;
         //        city_data.building.senate.y = palace->y;
         //        city_data.building.senate.grid_offset() = palace->grid_offset;
     }
 }
 void city_buildings_remove_palace(building* palace) {
-    if (palace->tile.grid_offset() == city_data.building.senate.grid_offset()) {
-        city_data.building.senate.set(0);
+    if (palace->tile.grid_offset() == city_data.building.palace_point.grid_offset()) {
+        city_data.building.palace_point.set(0);
         //        city_data.building.senate.grid_offset() = 0;
         //        city_data.building.senate.x() = 0;
         //        city_data.building.senate.y = 0;
-        city_data.building.senate_placed = 0;
+        city_data.building.palace_placed = false;
     }
 }
 

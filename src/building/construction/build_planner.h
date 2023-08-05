@@ -86,7 +86,7 @@ private:
     /////
 
 public:
-    int build_type;
+    e_building_type build_type;
     bool in_progress;
     bool draw_as_constructing;
     map_point start;
@@ -112,7 +112,7 @@ public:
     int can_be_placed();
 
     void reset();
-    void setup_build(int type);
+    void setup_build(e_building_type type);
 
     void construction_start(map_point tile);
     void construction_update(map_point tile);

@@ -1178,7 +1178,7 @@ bool building::figure_generate() {
         spawn_figure_industry();
     else if (is_tax_collector())
         spawn_figure_tax_collector();
-    else if (is_senate())
+    else if (is_administration())
         common_spawn_figure_trigger(50);
     else if (is_temple() || is_large_temple())
         spawn_figure_temple();

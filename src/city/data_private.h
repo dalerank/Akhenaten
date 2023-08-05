@@ -26,9 +26,9 @@ typedef struct {
 
 struct city_data_t {
     struct {
-        bool senate_placed;
-        int32_t senate_building_id;
-        map_point senate;
+        bool palace_placed;
+        int32_t palace_building_id;
+        map_point palace_point;
 
         bool festival_square_placed;
         int32_t festival_building_id;
