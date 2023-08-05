@@ -167,19 +167,23 @@ int building_market_get_storage_destination(building* market) {
     }
 
     // then prefer resource if we don't have it
-    if (!market->data.market.inventory[INVENTORY_GOOD1] && resources[INVENTORY_GOOD1].num_buildings && is_good_accepted(INVENTORY_GOOD1, market)) {
+    if (!market->data.market.inventory[INVENTORY_GOOD1] && resources[INVENTORY_GOOD1].num_buildings
+        && is_good_accepted(INVENTORY_GOOD1, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_GOOD1;
         return resources[INVENTORY_GOOD1].building_id;
 
-    } else if (!market->data.market.inventory[INVENTORY_GOOD2] && resources[INVENTORY_GOOD2].num_buildings && is_good_accepted(INVENTORY_GOOD2, market)) {
+    } else if (!market->data.market.inventory[INVENTORY_GOOD2] && resources[INVENTORY_GOOD2].num_buildings
+               && is_good_accepted(INVENTORY_GOOD2, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_GOOD2;
         return resources[INVENTORY_GOOD2].building_id;
 
-    } else if (!market->data.market.inventory[INVENTORY_GOOD3] && resources[INVENTORY_GOOD3].num_buildings && is_good_accepted(INVENTORY_GOOD3, market)) {
+    } else if (!market->data.market.inventory[INVENTORY_GOOD3] && resources[INVENTORY_GOOD3].num_buildings
+               && is_good_accepted(INVENTORY_GOOD3, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_GOOD3;
         return resources[INVENTORY_GOOD3].building_id;
 
-    } else if (!market->data.market.inventory[INVENTORY_GOOD4] && resources[INVENTORY_GOOD4].num_buildings && is_good_accepted(INVENTORY_GOOD4, market)) {
+    } else if (!market->data.market.inventory[INVENTORY_GOOD4] && resources[INVENTORY_GOOD4].num_buildings
+               && is_good_accepted(INVENTORY_GOOD4, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_GOOD4;
         return resources[INVENTORY_GOOD4].building_id;
     }
@@ -207,22 +211,26 @@ int building_market_get_storage_destination(building* market) {
         fetch_inventory = 3;
     }
 
-    if (resources[INVENTORY_GOOD1].num_buildings && market->data.market.inventory[INVENTORY_GOOD1] < min_stock && is_good_accepted(INVENTORY_GOOD1, market)) {
+    if (resources[INVENTORY_GOOD1].num_buildings && market->data.market.inventory[INVENTORY_GOOD1] < min_stock
+        && is_good_accepted(INVENTORY_GOOD1, market)) {
         min_stock = market->data.market.inventory[INVENTORY_GOOD1];
         fetch_inventory = INVENTORY_GOOD1;
     }
 
-    if (resources[INVENTORY_GOOD2].num_buildings && market->data.market.inventory[INVENTORY_GOOD2] < min_stock && is_good_accepted(INVENTORY_GOOD2, market)) {
+    if (resources[INVENTORY_GOOD2].num_buildings && market->data.market.inventory[INVENTORY_GOOD2] < min_stock
+        && is_good_accepted(INVENTORY_GOOD2, market)) {
         min_stock = market->data.market.inventory[INVENTORY_GOOD2];
         fetch_inventory = INVENTORY_GOOD2;
     }
 
-    if (resources[INVENTORY_GOOD3].num_buildings && market->data.market.inventory[INVENTORY_GOOD3] < min_stock && is_good_accepted(INVENTORY_GOOD3, market)) {
+    if (resources[INVENTORY_GOOD3].num_buildings && market->data.market.inventory[INVENTORY_GOOD3] < min_stock
+        && is_good_accepted(INVENTORY_GOOD3, market)) {
         min_stock = market->data.market.inventory[INVENTORY_GOOD3];
         fetch_inventory = INVENTORY_GOOD3;
     }
 
-    if (resources[INVENTORY_GOOD4].num_buildings && market->data.market.inventory[INVENTORY_GOOD4] < min_stock && is_good_accepted(INVENTORY_GOOD4, market)) {
+    if (resources[INVENTORY_GOOD4].num_buildings && market->data.market.inventory[INVENTORY_GOOD4] < min_stock
+        && is_good_accepted(INVENTORY_GOOD4, market)) {
         fetch_inventory = INVENTORY_GOOD4;
     }
 

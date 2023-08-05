@@ -1,7 +1,7 @@
 #include "action.h"
 
-#include "grid/terrain.h"
 #include "building/type.h"
+#include "grid/terrain.h"
 
 #include "city/entertainment.h"
 #include "city/figures.h"
@@ -663,7 +663,7 @@ void figure::action_perform() {
     }
 }
 
-void figure_action_handle(void) {
+void figure_action_handle() {
     //    return;
     city_figures_reset();
     city_entertainment_set_hippodrome_has_race(0);

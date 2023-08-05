@@ -5,11 +5,10 @@
 #include <cassert>
 
 int GAME_ENV = ENGINE_ENV_MAX;
-int DEBUG_MODE = ENGINE_MODE_MAX;
 const char* game_name;
 const char* pref_filename;
 
-void init_game_environment(int env, int mode) {
+void init_game_environment(int env) {
     assert(env != ENGINE_ENV_MAX);
     GAME_ENV = env;
     switch (env) {
@@ -19,7 +18,6 @@ void init_game_environment(int env, int mode) {
         break;
     }
     logs::info("Engine set to %s", game_name);
-    DEBUG_MODE = mode;
 }
 void assert_env_init() {
     assert(GAME_ENV < ENGINE_ENV_MAX);

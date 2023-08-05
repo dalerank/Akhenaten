@@ -288,7 +288,8 @@ int building_warehouse_get_accepting_amount(e_resource resource, building* b) {
     }
 }
 
-static int warehouse_is_this_space_the_best(building* space, int x, int y, e_resource resource, int distance_from_entry) {
+static int
+warehouse_is_this_space_the_best(building* space, int x, int y, e_resource resource, int distance_from_entry) {
     building* b = space->main();
 
     // check storage settings first
@@ -530,7 +531,7 @@ int building_warehouse_determine_worker_task(building* warehouse, e_resource& re
     building* space;
 
     // get resources
-    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r+1)) {
+    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
         if (!building_warehouse_is_getting(r, warehouse) || city_resource_is_stockpiled(r))
             continue;
         int total_stored = 0; // total amounts of resource in warehouse!
@@ -639,7 +640,7 @@ int building_warehouse_determine_worker_task(building* warehouse, e_resource& re
         }
     }
     // emptying resource
-    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r+1)) {
+    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
         if (!building_warehouse_is_emptying(r, warehouse))
             continue;
 

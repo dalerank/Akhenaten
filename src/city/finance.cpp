@@ -2,11 +2,11 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "buildings.h"
 #include "city/data_private.h"
 #include "core/calc.h"
 #include "game/difficulty.h"
 #include "game/time.h"
-#include "buildings.h"
 #include "game/tutorial.h"
 
 int city_finance_treasury(void) {

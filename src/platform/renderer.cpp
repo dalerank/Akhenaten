@@ -1083,7 +1083,7 @@ cleanup:
 
 /////////
 
-int platform_renderer_init(SDL_Window* window) {
+int platform_renderer_init(SDL_Window* window, std::string renderer) {
     //    free_all_textures();
 
     SDL_RendererInfo info;
@@ -1095,7 +1095,7 @@ int platform_renderer_init(SDL_Window* window) {
     }
 
     auto driver_it
-      = std::find_if(drivers.begin(), drivers.end(), [](const auto& it) { return it == ozymandias_core.driver; });
+      = std::find_if(drivers.begin(), drivers.end(), [&renderer](const auto& it) { return it == renderer; });
     int driver_index = driver_it != drivers.end() ? std::distance(drivers.begin(), driver_it) : -1;
 
     logs::info("Creating renderer");

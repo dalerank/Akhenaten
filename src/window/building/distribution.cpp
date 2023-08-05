@@ -4,9 +4,9 @@
 #include "graphics/elements/scrollbar.h"
 
 #include "building/building.h"
-#include "building/type.h"
 #include "building/market.h"
 #include "building/storage.h"
+#include "building/type.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
 #include "city/resource.h"

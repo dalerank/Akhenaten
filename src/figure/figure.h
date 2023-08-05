@@ -391,8 +391,12 @@ public:
     int fetch_export_resource(building* dock);
 
     // cartpusher.c
-    inline void set_resource(e_resource resource) { resource_id = resource; }
-    e_resource get_resource() const { return resource_id; }
+    inline void set_resource(e_resource resource) {
+        resource_id = resource;
+    }
+    e_resource get_resource() const {
+        return resource_id;
+    }
     void load_resource(int amount, e_resource resource);
     int dump_resource(int amount);
     int get_carrying_amount();

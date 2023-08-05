@@ -189,7 +189,7 @@ granary_task_status building_granary_determine_worker_task(building* granary) {
     const building_storage* s = building_storage_get(granary->storage_id);
     if (s->empty_all) {
         // bring food to another granary
-        for (e_resource res = RESOURCE_MIN_FOOD; res < RESOURCES_FOODS_MAX; res = (e_resource)(res+1)) {
+        for (e_resource res = RESOURCE_MIN_FOOD; res < RESOURCES_FOODS_MAX; res = (e_resource)(res + 1)) {
             if (granary->data.granary.resource_stored[res])
                 return {GRANARY_TASK_GETTING, res};
         }
@@ -200,15 +200,18 @@ granary_task_status building_granary_determine_worker_task(building* granary) {
         return {GRANARY_TASK_NONE, RESOURCE_NONE}; // granary full, nothing to get
     }
 
-    if (building_granary_is_getting(RESOURCE_GRAIN, granary) && g_non_getting_granaries.total_storage_wheat > ONE_LOAD) {
+    if (building_granary_is_getting(RESOURCE_GRAIN, granary)
+        && g_non_getting_granaries.total_storage_wheat > ONE_LOAD) {
         return {GRANARY_TASK_GETTING, RESOURCE_GRAIN};
     }
 
-    if (building_granary_is_getting(RESOURCE_MEAT, granary) && g_non_getting_granaries.total_storage_vegetables > ONE_LOAD) {
+    if (building_granary_is_getting(RESOURCE_MEAT, granary)
+        && g_non_getting_granaries.total_storage_vegetables > ONE_LOAD) {
         return {GRANARY_TASK_GETTING, RESOURCE_MEAT};
     }
 
-    if (building_granary_is_getting(RESOURCE_LETTUCE, granary) && g_non_getting_granaries.total_storage_fruit > ONE_LOAD) {
+    if (building_granary_is_getting(RESOURCE_LETTUCE, granary)
+        && g_non_getting_granaries.total_storage_fruit > ONE_LOAD) {
         return {GRANARY_TASK_GETTING, RESOURCE_LETTUCE};
     }
 
@@ -474,7 +477,7 @@ void building_granary_warehouse_curse(int big) {
 
         int total_stored = 0;
         if (b->type == BUILDING_WAREHOUSE) {
-            for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r+1)) {
+            for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
                 total_stored += building_warehouse_get_amount(b, r);
             }
         } else if (b->type == BUILDING_GRANARY) {

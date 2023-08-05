@@ -1,8 +1,8 @@
 #include "docker.h"
 
 #include "building/building.h"
-#include "building/type.h"
 #include "building/storage.h"
+#include "building/type.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
 #include "city/trade.h"
@@ -167,7 +167,7 @@ static int get_closest_warehouse_for_export(int x,
     for (int i = RESOURCE_MIN; i < RESOURCES_MAX && !exportable[resource]; i++) {
         resource = city_trade_next_docker_export_resource();
     }
-    
+
     if (!exportable[resource]) {
         return 0;
     }
@@ -243,7 +243,8 @@ int figure::deliver_import_resource(building* dock) {
     get_trade_center_location(&x, &y);
     map_point tile;
     e_resource resource;
-    int warehouse_id = get_closest_warehouse_for_import(x, y, ship->empire_city_id, dock->distance_from_entry, dock->road_network_id, &tile, resource);
+    int warehouse_id = get_closest_warehouse_for_import(
+      x, y, ship->empire_city_id, dock->distance_from_entry, dock->road_network_id, &tile, resource);
     if (!warehouse_id)
         return 0;
 
@@ -270,7 +271,8 @@ int figure::fetch_export_resource(building* dock) {
     get_trade_center_location(&x, &y);
     map_point tile;
     e_resource resource;
-    int warehouse_id = get_closest_warehouse_for_export(x, y, ship->empire_city_id, dock->distance_from_entry, dock->road_network_id, &tile, resource);
+    int warehouse_id = get_closest_warehouse_for_export(
+      x, y, ship->empire_city_id, dock->distance_from_entry, dock->road_network_id, &tile, resource);
 
     if (!warehouse_id)
         return 0;

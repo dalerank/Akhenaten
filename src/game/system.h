@@ -1,5 +1,4 @@
-#ifndef GAME_SYSTEM_H
-#define GAME_SYSTEM_H
+#pragma once
 
 #include "input/keys.h"
 
@@ -7,12 +6,6 @@
  * @file
  * Functions that should implemented by the underlying system
  */
-
-/**
- * Gets the version of Julius
- * @return Version number
- */
-const char* system_version(void);
 
 /**
  * Resize window
@@ -132,5 +125,3 @@ void system_set_mouse_position(int* x, int* y);
  * Exit the game
  */
 void system_exit(void);
-
-#endif // GAME_SYSTEM_H

@@ -214,6 +214,7 @@ file(GLOB DEV_FILES ${PROJECT_SOURCE_DIR}/src/dev/*.cpp)
 file(GLOB EDITOR_FILES ${PROJECT_SOURCE_DIR}/src/editor/*.cpp)
 file(GLOB TRANSLATION_FILES ${PROJECT_SOURCE_DIR}/src/translation/*.cpp)
 file(GLOB IMGUI_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/*.cpp)
+file(GLOB IMGUI_CPP_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/misc/cpp/*.cpp)
 file(GLOB IMGUI_BACKEND_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/backends/*.cpp)
 
 set(WIDGET_CITY_FILES ${WIDGET_CITY_FILES}
@@ -223,6 +224,7 @@ set(WINDOW_ADVISOR_FILES ${WINDOW_ADVISOR_FILES}
     ${PROJECT_SOURCE_DIR}/src/window/advisors.cpp)
 
 set(IMGUI_FILES ${IMGUI_FILES}
+    ${IMGUI_CPP_FILES}
     ${IMGUI_BACKEND_FILES})
 
 if(MSVC)

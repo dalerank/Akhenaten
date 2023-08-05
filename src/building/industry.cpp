@@ -1,6 +1,5 @@
 #include "industry.h"
 
-#include "window/city.h"
 #include "building/type.h"
 #include "city/resource.h"
 #include "core/calc.h"
@@ -9,6 +8,7 @@
 #include "grid/building_tiles.h"
 #include "grid/road_access.h"
 #include "scenario/property.h"
+#include "window/city.h"
 
 #define MAX_PROGRESS_RAW 200
 #define MAX_PROGRESS_WORKSHOP 400

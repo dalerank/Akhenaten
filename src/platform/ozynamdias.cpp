@@ -17,6 +17,7 @@
 #include "platform/prefs.h"
 #include "platform/screen.h"
 #include "platform/touch.h"
+#include "platform/version.hpp"
 
 #include "renderer.h"
 
@@ -32,6 +33,7 @@
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_sdlrenderer.h"
 #include "imguifiledialog.h"
+#include "misc/cpp/imgui_stdlib.h"
 
 #ifdef __SWITCH__
 #include "platform/switch/switch.h"
@@ -64,6 +66,12 @@
 #endif
 
 #define INTPTR(d) (*(int*)(d))
+
+namespace {
+void show_usage() {
+    platform_screen_show_error_message_box("Command line interface", Arguments::usage());
+}
+} // namespace
 
 enum E_USER_EVENT {
     USER_EVENT_QUIT,
@@ -129,8 +137,8 @@ static int init_sdl() {
     logs::info("SDL initialized");
     return 1;
 }
-int pre_init_dir_attempt(const char* data_dir, const char* lmsg) {
-    logs::info(lmsg, data_dir);
+int pre_init_dir_attempt(std::string_view data_dir, const char* lmsg) {
+    logs::info(lmsg, data_dir.data()); // TODO: get rid of data ???
     if (!platform_file_manager_set_base_path(data_dir))
         logs::info("%s: directory not found", data_dir);
 
@@ -140,39 +148,30 @@ int pre_init_dir_attempt(const char* data_dir, const char* lmsg) {
     return 0;
 }
 
-static int pre_init(const char* custom_data_dir) {
-    // first attempt loading game from custom path passed as argument...
-    if (custom_data_dir) {
-        if (pre_init_dir_attempt(custom_data_dir, "Attempting to load game from %s")) {
-            return 1;
-        }
+static bool pre_init(std::string_view custom_data_dir) {
+    if (pre_init_dir_attempt(custom_data_dir, "Attempting to load game from %s"))
+        return true;
 
-        logs::info("%s: directory not found", custom_data_dir);
-        return 0;
-    }
-
-    // ...then from working directory...
     logs::info("Attempting to load game from working directory");
-    if (game_pre_init()) {
-        return 1;
-    }
+    if (game_pre_init())
+        return true;
 
     // ...then from the executable base path...
     if (platform_sdl_version_at_least(2, 0, 1)) {
         char* base_path = SDL_GetBasePath();
         if (pre_init_dir_attempt(base_path, "Attempting to load game from base path %s")) {
             SDL_free(base_path);
-            return 1;
+            return true;
         }
     }
 
     const char* user_dir = pref_get_gamepath();
     if (user_dir && pre_init_dir_attempt(user_dir, "Attempting to load game from user pref %s")) {
-        return 1;
+        return true;
     }
 
     logs::error("'*.eng' or '*_mm.eng' files not found or too large.");
-    return 0;
+    return false;
 }
 
 struct video_mode {
@@ -219,7 +218,7 @@ static std::set<video_mode> get_video_modes() {
 
 /** Show configuration window to override parameters of the startup.
  */
-static void show_options_window() {
+static void show_options_window(Arguments& args) {
     auto const window_flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
     SDL_Window* platform_window = SDL_CreateWindow(
       "Ozymandias: configuration", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
@@ -263,6 +262,7 @@ static void show_options_window() {
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
         {
+            auto data_directory = args.get_data_directory();
             ImVec2 window_size(1280 * 0.75, 720 * 0.75);
             int platform_window_w, platform_window_h;
             SDL_GetWindowSize(platform_window, &platform_window_w, &platform_window_h);
@@ -276,7 +276,7 @@ static void show_options_window() {
                          ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse
                            | ImGuiWindowFlags_NoBringToFrontOnFocus);
             ImGui::Text("Folder with original game data:");
-            ImGui::InputText("default", ozymandias_core.data_directory, 64);
+            ImGui::InputText("default", &data_directory);
             ImGui::SameLine();
             if (ImGui::Button("...")) {
                 fileDialog.OpenDialog("Choose Folder", "", nullptr, ".", 1, nullptr, ImGuiFileDialogFlags_Modal);
@@ -292,7 +292,7 @@ static void show_options_window() {
                                    filedialog_pos)) {
                 ImGui::SetWindowFocus();
                 if (fileDialog.IsOk()) {
-                    strcpy(ozymandias_core.data_directory, fileDialog.GetFilePathName().c_str());
+                    args.set_data_directory(fileDialog.GetFilePathName());
                 }
                 fileDialog.Close();
             }
@@ -305,8 +305,8 @@ static void show_options_window() {
                     const bool is_selected = (item_current_idx == index);
                     if (ImGui::Selectable(it->str.c_str(), is_selected)) {
                         item_current_idx = index;
-                        ozymandias_core.window_width = it->w;
-                        ozymandias_core.window_height = it->h;
+                        args.set_window_width(it->w);
+                        args.set_window_height(it->h);
                     }
 
                     if (is_selected) {
@@ -316,8 +316,8 @@ static void show_options_window() {
                 ImGui::EndListBox();
             }
 
-            ImGui::Checkbox("Window mode", &ozymandias_core.window_mode);
-            ImGui::InputInt("Skip Tutorial", &ozymandias_core.tutorial_skip);
+            // TODO: USE THIS BUTTON:
+            // ImGui::Checkbox("Window mode", &args.is_window_mode());
 
             ImVec2 left_bottom_corner{5, window_size.y - 30};
             ImGui::SetCursorPos(left_bottom_corner);
@@ -354,12 +354,10 @@ static void show_options_window() {
     SDL_DestroyWindow(platform_window);
 }
 
-static void setup(const ozymandias_args& args) {
-    // init SDL and some other stuff
+static void setup(Arguments& args) {
     crashhandler_install();
-    logs::initialize();
 
-    logs::info("Ozymandias version %s", system_version());
+    logs::info("Ozymandias version %s", get_version().c_str());
     if (!init_sdl()) {
         logs::error("Exiting: SDL init failed");
         exit(-1);
@@ -369,26 +367,31 @@ static void setup(const ozymandias_args& args) {
 #endif
 
     // pre-init engine: assert game directory, pref files, etc.
-    init_game_environment(args.game_engine_env, args.game_engine_debug_mode);
-    while (!pre_init(args.data_directory)) {
+    init_game_environment(ENGINE_ENV_PHARAOH);
+    while (!pre_init(args.get_data_directory())) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
                                  "Warning",
                                  "Ozymandias requires the original files from Pharaoh to run.\n"
                                  "Move the executable file to the directory containing an existing\n"
                                  "Pharaoh installation, or run: ozymandias path/to/directory",
                                  nullptr);
-        show_options_window();
+        show_options_window(args);
     }
 
     // set up game display
     char title[100] = {0};
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
-    if (!platform_screen_create(title, args.display_scale_percentage)) {
+    if (!platform_screen_create(title,
+                                args.get_renderer(),
+                                args.is_fullscreen(),
+                                args.get_display_scale_percentage(),
+                                args.get_window_width(),
+                                args.get_window_height())) {
         logs::info("Exiting: SDL create window failed");
         exit(-2);
     }
-    platform_init_cursors(args.cursor_scale_percentage); // this has to come after platform_screen_create, otherwise it
-                                                         // fails on Nintendo Switch
+    platform_init_cursors(args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
+                                                               // otherwise it fails on Nintendo Switch
 
     // init game!
     time_set_millis(SDL_GetTicks());
@@ -562,7 +565,7 @@ static void handle_event(SDL_Event* event, int* active, int* quit) {
         break;
     }
 }
-static void main_loop(void) {
+static void main_loop() {
     mouse_set_inside_window(1);
 
     run_and_draw();
@@ -594,12 +597,31 @@ static void main_loop(void) {
 }
 
 int main(int argc, char** argv) {
-    platform_parse_arguments(argc, argv, ozymandias_core);
+    logs::initialize();
 
-    setup(ozymandias_core);
+    try {
+        Arguments arguments(argc, argv);
 
-    main_loop();
+        setup(arguments);
+        main_loop();
+        teardown();
+    } catch (Arguments::CliHelpRequested const&) {
+        auto usage = Arguments::usage();
+        logs::info(usage);
+        show_usage();
+        return EXIT_SUCCESS;
+    } catch (Arguments::CliParseError const& e) {
+        auto usage = Arguments::usage();
+        logs::info(usage);
+        logs::critical(e.what());
+        show_usage();
+        platform_screen_show_error_message_box("ARGUMENTS ERROR", e.what());
+        return EXIT_FAILURE;
+    } catch (std::runtime_error const& e) {
+        logs::critical(e.what());
+        platform_screen_show_error_message_box("CRASH", e.what());
+        throw;
+    }
 
-    teardown();
-    return 0;
+    return EXIT_SUCCESS;
 }

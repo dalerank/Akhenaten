@@ -8,7 +8,7 @@ struct editor_request {
     int amount;
     int deadline_years;
     int kingdom;
-} ;
+};
 
 struct editor_invasion {
     int year;
@@ -16,21 +16,21 @@ struct editor_invasion {
     int amount;
     int from;
     int attack_type;
-} ;
+};
 
 struct editor_price_change {
     int year;
     int resource;
     int amount;
     int is_rise;
-} ;
+};
 
 struct editor_demand_change {
     int year;
     int resource;
     int route_id;
     int is_rise;
-} ;
+};
 
 void scenario_editor_create(int map_size);
 
