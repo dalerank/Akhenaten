@@ -23,12 +23,13 @@ include("${CMAKE_SOURCE_DIR}/cmake/GenerateVersionHPP.cmake")
 
 #set(CMAKE_RC_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE}")
 if (NOT MSVC)
-    set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -static-libgcc -static-libstdc++" ${CMAKE_CXX_FLAGS})
+    set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -static-libgcc -static-libstdc++ -fno-exceptions ${CMAKE_CXX_FLAGS}")
 endif()
 
 if (MSVC)
     add_compile_options(/wd4244)
     add_compile_options(/MP)
+    add_compile_options(/EHsc)
 endif()
 
 set(CMAKE_CXX_STANDARD 17)

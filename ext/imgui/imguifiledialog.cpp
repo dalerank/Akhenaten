@@ -863,13 +863,9 @@ void IGFD::FilterInfos::addCollectionFilter(const std::string& vFilter, const bo
             count_dots = _count_dots;
         }
     } else {
-        try {
-            auto rx = std::regex(vFilter);
-            filters.try_add(vFilter);
-            filters_regex.emplace_back(rx);
-        } catch (std::exception&) {
-            assert(0);  // YOUR REGEX FILTER IS INVALID
-        }
+        auto rx = std::regex(vFilter);
+        filters.try_add(vFilter);
+        filters_regex.emplace_back(rx);
     }
 }
 
