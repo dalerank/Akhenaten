@@ -404,8 +404,8 @@ void tutorial_on_add_to_warehouse(void) {
     }
 }
 void tutorial_on_gold_extracted() {
-    if (!g_tutorials_flags.pharaoh.gold_mined_500) {
-        g_tutorials_flags.pharaoh.gold_mined_500 = 1;
+    if (scenario_is_mission_rank(2) && !g_tutorials_flags.pharaoh.gold_mined_500) {
+        g_tutorials_flags.pharaoh.gold_mined_500 = true;
         building_menu_update(BUILDSET_TUT2_GODS);
         post_message(MESSAGE_TUTORIAL_GODS_OF_EGYPT);
     }

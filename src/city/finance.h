@@ -1,5 +1,8 @@
-#ifndef CITY_FINANCE_H
-#define CITY_FINANCE_H
+#pragma once
+
+#include <cstdint>
+
+constexpr uint32_t MAX_HOUSE_LEVELS = 20;
 
 int city_finance_treasury(void);
 int city_finance_out_of_money(void);
@@ -32,7 +35,7 @@ void city_finance_estimate_taxes(void);
 void city_finance_handle_month_change(void);
 void city_finance_handle_year_change(void);
 
-typedef struct {
+struct finance_overview {
     struct {
         int taxes;
         int exports;
@@ -54,9 +57,7 @@ typedef struct {
     } expenses;
     int net_in_out;
     int balance;
-} finance_overview;
+} ;
 
 const finance_overview* city_finance_overview_last_year(void);
 const finance_overview* city_finance_overview_this_year(void);
-
-#endif // CITY_FINANCE_H

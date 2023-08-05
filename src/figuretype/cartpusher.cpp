@@ -112,40 +112,50 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
 
             switch (dest->type) {
             case BUILDING_GRANARY:
-                if (building_granary_add_resource(dest, resource_id, 0, amount_single_turn) != -1)
+                if (building_granary_add_resource(dest, resource_id, 0, amount_single_turn) != -1) {
                     dump_resource(amount_single_turn);
-                else
+                } else {
                     return advance_action(ACTION_8_RECALCULATE);
+                }
                 break;
+
             case BUILDING_RECRUITER:
                 for (int i = 0; i < times; i++) { // do one by one...
                     dest->barracks_add_weapon();
                     dump_resource(amount_single_turn); // assume barracks will ALWAYS accept a weapon
                 }
+                break;
+
             case BUILDING_WAREHOUSE:
             case BUILDING_WAREHOUSE_SPACE:
                 for (int i = 0; i < times; i++) { // do one by one...
                     int amount_refused = building_warehouse_add_resource(dest, resource_id, amount_single_turn);
-                    if (amount_refused != -1)
+                    if (amount_refused != -1) {
                         dump_resource(amount_single_turn - amount_refused);
-                    else
+                    } else {
                         return advance_action(ACTION_8_RECALCULATE);
+                    }
                 }
                 break;
+
             case BUILDING_VILLAGE_PALACE:
             case BUILDING_TOWN_PALACE:
             case BUILDING_CITY_PALACE:
                 city_finance_process_gold_extraction(amount_single_turn);
+                dump_resource(amount_single_turn);
                 break;
+
             default:                              // workshop
                 for (int i = 0; i < times; i++) { // do one by one...
                     if (dest->stored_full_amount < 200) {
                         building_workshop_add_raw_material(dest, 100);
                         dump_resource(100);
-                        if (i + 1 == times)
+                        if (i + 1 == times) {
                             advance_action(ACTION_DONE);
-                    } else
+                        }
+                    } else {
                         return advance_action(ACTION_8_RECALCULATE);
+                    }
                 }
                 advance_action(ACTION_8_RECALCULATE);
                 break;
@@ -153,8 +163,9 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
         }
 
         // am I done?
-        if (resource == RESOURCE_NONE || carrying <= 0)
+        if (resource == RESOURCE_NONE || carrying <= 0) {
             return advance_action(ACTION_DONE);
+        }
     }
 }
 
