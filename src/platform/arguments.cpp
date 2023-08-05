@@ -1,5 +1,6 @@
 #include "arguments.h"
 
+#include "core/application.h"
 #include "io/log.h"
 
 #include <filesystem>
@@ -16,7 +17,7 @@ auto string_format(char const* format, Args... args) {
     const int string_size = std::snprintf(nullptr, 0, format, args...) + 1; // With space for '\0'
 
     if (string_size <= 0)
-        throw std::runtime_error("Error during string formatting.");
+        app::terminate("Error during string formatting.");
 
     std::unique_ptr<char[]> buf(new char[string_size]);
     std::snprintf(buf.get(), string_size, format, args...);
@@ -143,24 +144,24 @@ void Arguments::parse_cli_(int argc, char** argv) {
                 renderer_ = argv[i + 1];
                 ++i;
             } else
-                throw CliParseError(DISPLAY_SCALE_ERROR_MESSAGE);
+                app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
         } else if (SDL_strcmp(argv[i], "--display-scale") == 0) {
             if (i + 1 < argc) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
                 ++i;
 
                 if (percentage < 50 || percentage > 500)
-                    throw CliParseError(DISPLAY_SCALE_ERROR_MESSAGE);
+                    app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
                 else
                     display_scale_percentage_ = percentage;
             } else
-                throw CliParseError(DISPLAY_SCALE_ERROR_MESSAGE);
+                app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
         } else if (SDL_strcmp(argv[i], "--size") == 0) {
             if (i + 1 < argc) {
                 SDL_sscanf(argv[i + 1], "%dx%d", &window_width_, &window_height_);
                 ++i;
             } else
-                throw CliParseError(DISPLAY_SCALE_ERROR_MESSAGE);
+                app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
         } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
             if (i + 1 < argc) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
@@ -169,13 +170,13 @@ void Arguments::parse_cli_(int argc, char** argv) {
                 if (percentage == 100 || percentage == 150 || percentage == 200)
                     cursor_scale_percentage_ = percentage;
                 else
-                    throw CliParseError(CURSOR_SCALE_ERROR_MESSAGE);
+                    app::terminate(CURSOR_SCALE_ERROR_MESSAGE);
             } else
-                throw CliParseError(CURSOR_SCALE_ERROR_MESSAGE);
+                app::terminate(CURSOR_SCALE_ERROR_MESSAGE);
         } else if (SDL_strcmp(argv[i], "--help") == 0)
-            throw CliHelpRequested();
+            app::terminate(usage());
         else if (SDL_strncmp(argv[i], "--", 2) == 0) {
-            throw CliParseError(string_format(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));
+            app::terminate(string_format(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));
         } else {
             // TODO: ???? check that there are no other arguments after
             data_directory_ = argv[i];
