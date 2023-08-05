@@ -1,11 +1,10 @@
-#ifndef GAME_SETTINGS_H
-#define GAME_SETTINGS_H
+#pragma once
 
 #include <stdint.h>
 
 enum { TOOLTIPS_NONE = 0, TOOLTIPS_SOME = 1, TOOLTIPS_FULL = 2 };
 
-enum {
+enum e_difficulty {
     DIFFICULTY_VERY_EASY = 0,
     DIFFICULTY_EASY = 1,
     DIFFICULTY_NORMAL = 2,
@@ -13,7 +12,7 @@ enum {
     DIFFICULTY_VERY_HARD = 4
 };
 
-enum {
+enum e_sound_type {
     SOUND_MUSIC = 1,
     SOUND_SPEECH = 2,
     SOUND_EFFECTS = 3,
@@ -27,11 +26,15 @@ struct set_sound {
     int volume;
 };
 
+struct display_size {
+    int w, h;
+};
+
 void settings_load(void);
 void settings_save(void);
 
 int setting_fullscreen(void);
-void setting_window(int* width, int* height);
+display_size setting_display_size();
 void setting_set_fullscreen(int fullscreen);
 void setting_set_display(int width, int height);
 
@@ -89,5 +92,3 @@ void setting_set_player_name(const uint8_t* player_name);
 int setting_personal_savings_for_mission(int mission_id);
 void setting_set_personal_savings_for_mission(int mission_id, int savings);
 void setting_clear_personal_savings(void);
-
-#endif // GAME_SETTINGS_H

@@ -18,7 +18,7 @@
 
 #include <algorithm>
 #include <string>
-#include <vector>
+#include <set>
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
 #define USE_YUV_TEXTURES
@@ -197,6 +197,39 @@ void graphics_renderer_interface::reset_clip_rectangle(void) {
 pixel_coordinate graphics_renderer_interface::get_max_image_size() {
     return {data.max_texture_size.width, data.max_texture_size.height};
 }
+
+std::vector<video_mode> get_video_modes() {
+    /* Get available fullscreen/hardware modes */
+    int num = SDL_GetNumDisplayModes(0);
+
+    std::set<video_mode> uniqueModes;
+    uniqueModes.insert({1920, 1080});
+    uniqueModes.insert({1600, 900});
+    uniqueModes.insert({1440, 800});
+    uniqueModes.insert({1280, 1024});
+    uniqueModes.insert({1280, 800});
+    uniqueModes.insert({1024, 768});
+    uniqueModes.insert({800, 600});
+
+    int maxWidth = 0;
+    for (int i = 0; i < num; ++i) {
+        SDL_DisplayMode mode;
+        if (SDL_GetDisplayMode(0, i, &mode) == 0 && mode.w > 640) {
+            maxWidth = std::max(mode.w, maxWidth);
+            if (uniqueModes.count({mode.w, mode.h}) == 0) {
+                uniqueModes.insert(video_mode(mode.w, mode.h));
+            }
+        }
+    }
+
+    std::vector<video_mode> modes;
+    modes.resize(uniqueModes.size());
+    std::copy(uniqueModes.begin(), uniqueModes.end(), modes.begin());
+    std::sort(modes.begin(), modes.end());
+
+    return modes;
+}
+
 
 // static void free_atlas_data_buffers(imagepak *pak)
 //{
@@ -521,7 +554,7 @@ static const SDL_BlendMode premult_alpha = SDL_ComposeCustomBlendMode(SDL_BLENDF
                                                                       SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
                                                                       SDL_BLENDOPERATION_ADD);
 
-void SET_RENDER_SCALE(float scale) {
+void set_render_scale(float scale) {
     data.global_render_scale = scale;
 }
 
@@ -1094,8 +1127,7 @@ int platform_renderer_init(SDL_Window* window, std::string renderer) {
         drivers.push_back(info.name);
     }
 
-    auto driver_it
-      = std::find_if(drivers.begin(), drivers.end(), [&renderer](const auto& it) { return it == renderer; });
+    auto driver_it = std::find(drivers.begin(), drivers.end(), renderer);
     int driver_index = driver_it != drivers.end() ? std::distance(drivers.begin(), driver_it) : -1;
 
     logs::info("Creating renderer");

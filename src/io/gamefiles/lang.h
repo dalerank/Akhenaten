@@ -92,6 +92,8 @@ const uint8_t* lang_get_string(int group, int index);
 const lang_message* lang_get_message(int id);
 
 enum e_text_info {
+    e_text_display_options = 42,
+    e_text_saving_dialog = 43,
     e_text_info_clay_pit = 121,
     e_text_info_gold_mine = 162,
 };

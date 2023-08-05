@@ -220,12 +220,17 @@ void text_ellipsize(uint8_t* str, font_t font, int requested_width) {
 }
 
 int text_draw(const uint8_t* str, int x, int y, font_t font, color_t color) {
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         y = y - 3;
+    }
 
     const font_definition* def = font_definition_for(font);
 
     int length = string_length(str);
+    if (!length) {
+        return 0;
+    }
+
     if (input_cursor.capture) {
         str += input_cursor.text_offset_start;
         length = input_cursor.text_offset_end - input_cursor.text_offset_start;
@@ -238,9 +243,10 @@ int text_draw(const uint8_t* str, int x, int y, font_t font, color_t color) {
         if (*str >= ' ') {
             int letter_id = font_letter_id(def, str, &num_bytes);
             int width;
-            if (*str == ' ' || *str == '_' || letter_id < 0)
+
+            if (*str == ' ' || *str == '_' || letter_id < 0) {
                 width = def->space_width;
-            else {
+            } else {
                 const image_t* img = image_letter(letter_id);
                 if (img != nullptr) {
                     int height = def->image_y_offset(*str, img->height, def->line_height);
@@ -248,6 +254,7 @@ int text_draw(const uint8_t* str, int x, int y, font_t font, color_t color) {
                     width = def->letter_spacing + img->width;
                 }
             }
+
             if (input_cursor.capture && input_cursor.position == input_cursor.cursor_position) {
                 if (!input_cursor.seen) {
                     input_cursor.width = width;
@@ -272,8 +279,9 @@ int text_draw(const uint8_t* str, int x, int y, font_t font, color_t color) {
 }
 void text_draw_centered(const uint8_t* str, int x, int y, int box_width, font_t font, color_t color) {
     int offset = (box_width - text_get_width(str, font)) / 2;
-    if (offset < 0)
+    if (offset < 0) {
         offset = 0;
+    }
 
     text_draw(str, offset + x, y, font, color);
 }

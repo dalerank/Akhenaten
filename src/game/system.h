@@ -2,17 +2,12 @@
 
 #include "input/keys.h"
 
+struct display_size;
+
 /**
  * @file
  * Functions that should implemented by the underlying system
  */
-
-/**
- * Resize window
- * @param width New width
- * @param height New height
- */
-void system_resize(int width, int height);
 
 /**
  * Reload game textures
@@ -36,11 +31,6 @@ void system_center(void);
  * @return true when only fullscreen can be used, false otherwise
  */
 int system_is_fullscreen_only(void);
-
-/**
- * Set fullscreen on/off
- */
-void system_set_fullscreen(int fullscreen);
 
 /**
  * Set cursor to the specified cursor in @link input/cursor.h @endlink

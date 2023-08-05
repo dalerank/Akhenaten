@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <stdint.h>
 
+#include "bstring.h"
+
 /**
  * @file
  * String conversion functions.

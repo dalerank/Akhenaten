@@ -1,9 +1,11 @@
+
 #include "core/encoding.h"
 #include "core/game_environment.h"
 #include "core/stacktrace.h"
 #include "core/time.h"
 #include "game/game.h"
 #include "game/system.h"
+#include "game/settings.h"
 #include "input/mouse.h"
 #include "input/touch.h"
 #include "io/file.h"
@@ -18,6 +20,7 @@
 #include "platform/screen.h"
 #include "platform/touch.h"
 #include "platform/version.hpp"
+#include "core/app.h"
 
 #include "renderer.h"
 
@@ -72,45 +75,12 @@ void show_usage() {
     platform_screen_show_error_message_box("Command line interface", Arguments::usage());
 }
 } // namespace
-
-enum E_USER_EVENT {
-    USER_EVENT_QUIT,
-    USER_EVENT_RESIZE,
-    USER_EVENT_FULLSCREEN,
-    USER_EVENT_WINDOWED,
-    USER_EVENT_CENTER_WINDOW,
-};
-
-static void post_event(int code) {
-    SDL_Event event;
-    event.user.type = SDL_USEREVENT;
-    event.user.code = code;
-    SDL_PushEvent(&event);
-}
-
 void system_exit() {
-    post_event(USER_EVENT_QUIT);
+    app_post_event(USER_EVENT_QUIT);
 }
-void system_resize(int width, int height) {
-    static int s_width;
-    static int s_height;
 
-    s_width = width;
-    s_height = height;
-    SDL_Event event;
-    event.user.type = SDL_USEREVENT;
-    event.user.code = USER_EVENT_RESIZE;
-    event.user.data1 = &s_width;
-    event.user.data2 = &s_height;
-    SDL_PushEvent(&event);
-}
 void system_center() {
-    post_event(USER_EVENT_CENTER_WINDOW);
-}
-void system_set_fullscreen(int fullscreen) {
-    post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
-    if (fullscreen == 0)
-        system_resize(1200, 800);
+    app_post_event(USER_EVENT_CENTER_WINDOW);
 }
 
 static int init_sdl() {
@@ -172,48 +142,6 @@ static bool pre_init(std::string_view custom_data_dir) {
 
     logs::error("'*.eng' or '*_mm.eng' files not found or too large.");
     return false;
-}
-
-struct video_mode {
-    int w, h;
-    std::string str;
-    video_mode(int _w, int _h)
-      : w(_w),
-        h(_h) {
-        char buffer[64] = {0};
-        snprintf(buffer, 64, "%u x %u", _w, _h);
-        str = buffer;
-    }
-    bool operator<(const video_mode& o) const {
-        return ((int64_t(w) << 32) + h) < ((int64_t(o.w) << 32) + o.h);
-    }
-};
-
-static std::set<video_mode> get_video_modes() {
-    /* Get available fullscreen/hardware modes */
-    int num = SDL_GetNumDisplayModes(0);
-
-    std::set<video_mode> uniqueModes;
-    uniqueModes.insert({1920, 1080});
-    uniqueModes.insert({1600, 900});
-    uniqueModes.insert({1440, 800});
-    uniqueModes.insert({1280, 1024});
-    uniqueModes.insert({1280, 800});
-    uniqueModes.insert({1024, 768});
-    uniqueModes.insert({800, 600});
-
-    int maxWidth = 0;
-    for (int i = 0; i < num; ++i) {
-        SDL_DisplayMode mode;
-        if (SDL_GetDisplayMode(0, i, &mode) == 0 && mode.w > 640) {
-            maxWidth = std::max(mode.w, maxWidth);
-            if (uniqueModes.count({mode.w, mode.h}) == 0) {
-                uniqueModes.insert(video_mode(mode.w, mode.h));
-            }
-        }
-    }
-
-    return uniqueModes;
 }
 
 /** Show configuration window to override parameters of the startup.

@@ -196,10 +196,9 @@ int setting_fullscreen(void) {
     auto& data = settings_data();
     return data.fullscreen;
 }
-void setting_window(int* width, int* height) {
+display_size setting_display_size() {
     auto& data = settings_data();
-    *width = data.window_width;
-    *height = data.window_height;
+    return {data.window_width, data.window_height};
 }
 void setting_set_fullscreen(int fullscreen) {
     auto& data = settings_data();

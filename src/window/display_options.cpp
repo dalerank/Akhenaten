@@ -1,5 +1,6 @@
 #include "display_options.h"
 
+#include "core/app.h"
 #include "game/settings.h"
 #include "game/system.h"
 #include "graphics/boilerplate.h"
@@ -61,25 +62,26 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 5, &g_display_options_data.focus_button_id))
         return;
 
-    if (input_go_back_requested(m, h))
+    if (input_go_back_requested(m, h)) {
         g_display_options_data.close_callback();
+    }
 }
 
 static void button_fullscreen(int param1, int param2) {
-    system_set_fullscreen(!setting_fullscreen());
+    app_fullscreen(!setting_fullscreen());
     g_display_options_data.close_callback();
 }
 
 static void button_set_resolution(int id, int param2) {
     switch (id) {
     case 1:
-        system_resize(640, 480);
+        app_window_resize({640, 480});
         break;
     case 2:
-        system_resize(800, 600);
+        app_window_resize({800, 600});
         break;
     case 3:
-        system_resize(1024, 768);
+        app_window_resize({1024, 768});
         break;
     }
     g_display_options_data.close_callback();

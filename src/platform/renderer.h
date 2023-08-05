@@ -1,18 +1,18 @@
-#ifndef PLATFORM_RENDERER_H
-#define PLATFORM_RENDERER_H
+#pragma once
 
 #include "graphics/color.h"
 
 #include "SDL.h"
 #include "core/struct_types.h"
+#include "core/string.h"
 #include "graphics/image.h"
 #include "io/file.h"
 #include "io/file_formats.h"
 
+#include <vector>
 #include <string>
 
-
-enum {
+enum e_custome_image_type {
     CUSTOM_IMAGE_NONE = 0,
     CUSTOM_IMAGE_EXTERNAL = 1,
     CUSTOM_IMAGE_MINIMAP = 2,
@@ -38,6 +38,22 @@ void platform_renderer_render(void);
 void platform_renderer_pause(void);
 void platform_renderer_resume(void);
 void platform_renderer_destroy(void);
+
+struct video_mode {
+    int w, h;
+    bstring64 str;
+    inline video_mode() : w(0), h(0) {}
+    inline video_mode(int _w, int _h)
+        : w(_w),
+        h(_h) {
+        char buffer[64] = {0};
+        snprintf(buffer, 64, "%u x %u", _w, _h);
+        str = buffer;
+    }
+    inline bool operator<(const video_mode& o) const {
+        return ((int64_t(w) << 32) + h) < ((int64_t(o.w) << 32) + o.h);
+    }
+};
 
 class graphics_renderer_interface {
 public:
@@ -85,8 +101,8 @@ public:
 
     bool save_texture_to_file(const char* filename, SDL_Texture* tex, e_file_format file_format = FILE_FORMAT_BMP);
 };
-graphics_renderer_interface* graphics_renderer(void);
 
-void SET_RENDER_SCALE(float scale);
+graphics_renderer_interface* graphics_renderer();
 
-#endif // PLATFORM_RENDERER_H
+void set_render_scale(float scale);
+std::vector<video_mode> get_video_modes();

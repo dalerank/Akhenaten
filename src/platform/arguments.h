@@ -3,7 +3,6 @@
 #include <stdexcept>
 #include <string>
 
-
 class Arguments {
 public:
     Arguments(int argc, char** argv);

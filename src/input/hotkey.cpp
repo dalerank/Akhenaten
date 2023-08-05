@@ -14,6 +14,7 @@
 #include "window/hotkey_editor.h"
 #include "window/main_menu.h"
 #include "window/popup_dialog.h"
+#include "core/app.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -31,15 +32,14 @@ typedef struct {
     int key;
 } arrow_definition;
 
-typedef struct {
+struct global_hotkeys {
     int center_screen;
     int toggle_fullscreen;
-    int resize_to;
     int save_screenshot;
     int save_city_screenshot;
-} global_hotkeys;
+} ;
 
-static struct {
+struct hotkey_data_t {
     global_hotkeys global_hotkey_state;
     hotkeys hotkey_state;
 
@@ -203,18 +203,6 @@ static void add_definition(const hotkey_mapping* mapping) {
         break;
     case HOTKEY_TOGGLE_FULLSCREEN:
         def->action = &data.global_hotkey_state.toggle_fullscreen;
-        break;
-    case HOTKEY_RESIZE_TO_640:
-        def->action = &data.global_hotkey_state.resize_to;
-        def->value = 640;
-        break;
-    case HOTKEY_RESIZE_TO_800:
-        def->action = &data.global_hotkey_state.resize_to;
-        def->value = 800;
-        break;
-    case HOTKEY_RESIZE_TO_1024:
-        def->action = &data.global_hotkey_state.resize_to;
-        def->value = 1024;
         break;
     case HOTKEY_SAVE_SCREENSHOT:
         def->action = &data.global_hotkey_state.save_screenshot;
@@ -447,25 +435,12 @@ void hotkey_handle_escape(void) {
     window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_city_exit, e_popup_btns_yesno);
 }
 
-void hotkey_handle_global_keys(void) {
+void hotkey_handle_global_keys() {
     if (data.global_hotkey_state.center_screen)
         system_center();
 
-    if (data.global_hotkey_state.resize_to) {
-        switch (data.global_hotkey_state.resize_to) {
-        case 640:
-            system_resize(640, 480);
-            break;
-        case 800:
-            system_resize(800, 600);
-            break;
-        case 1024:
-            system_resize(1024, 768);
-            break;
-        }
-    }
     if (data.global_hotkey_state.toggle_fullscreen)
-        system_set_fullscreen(!setting_fullscreen());
+        app_fullscreen(!setting_fullscreen());
 
     //    if (data.global_hotkey_state.save_screenshot) {
     //        graphics_save_screenshot(0);

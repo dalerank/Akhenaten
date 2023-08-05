@@ -13,10 +13,11 @@ extern vita2d_texture* tex_buffer_city;
 #endif
 
 static void set_translation(int x, int y) {
-    if (x != 0 || y != 0)
+    if (x != 0 || y != 0) {
         graphics_renderer()->set_viewport(x, y, screen_width() - x, screen_height() - y);
-    else
+    } else {
         graphics_renderer()->reset_viewport();
+    }
 }
 
 void graphics_set_to_dialog(void) {

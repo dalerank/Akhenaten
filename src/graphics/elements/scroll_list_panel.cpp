@@ -72,12 +72,10 @@ const char* scroll_list_panel::get_selected_entry_text(int filename_syntax) {
     return get_entry_text_by_idx(get_selected_entry_idx(), filename_syntax);
 }
 int scroll_list_panel::get_entry_idx(const char* button_text) {
-    if (using_file_finder) {
-        for (int i = 0; i < num_total_entries; ++i) {
-            auto txt = get_entry_text_by_idx(i, FILE_NO_EXT);
-            if (strcmp(txt, button_text) == 0)
-                return i;
-        }
+    for (int i = 0; i < num_total_entries; ++i) {
+        auto txt = get_entry_text_by_idx(i, FILE_NO_EXT);
+        if (strcmp(txt, button_text) == 0)
+            return i;
     }
     return -1;
 }
@@ -148,9 +146,11 @@ static void on_scroll(void) {
 int scroll_list_panel::input_handle(const mouse* m) {
     if (!WAS_DRAWN)
         return 0;
+
     WAS_DRAWN = false;
     if (scrollbar_handle_mouse(&scrollbar, m))
         return 0;
+
     int last_focused = focus_button_id;
     int handled_button_id = generic_buttons_handle_mouse(m, 0, 0, list_buttons, num_buttons, &focus_button_id);
     if (handled_button_id > 0 && get_focused_entry_idx() < num_total_entries) {
@@ -239,6 +239,7 @@ scroll_list_panel::scroll_list_panel(int n_buttons,
     ui_params = params;
     if (ui_params.buttons_size_x == -1)
         ui_params.buttons_size_x = ui_params.blocks_x * DEFAULT_BLOCK_SIZE - ui_params.buttons_margin_x - 2;
+
     if (ui_params.text_max_width == -1)
         ui_params.text_max_width = ui_params.buttons_size_x - ui_params.text_padding_x;
 
@@ -278,5 +279,6 @@ scroll_list_panel::scroll_list_panel(int n_buttons,
     using_file_finder = use_file_finder;
     change_file_path(dir, ext);
 }
+
 scroll_list_panel::~scroll_list_panel() {
 }

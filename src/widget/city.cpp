@@ -164,14 +164,14 @@ void widget_city_draw_with_overlay(map_point tile) {
 void widget_city_draw(void) {
     auto& data = g_wdiget_city_data;
     update_zoom_level();
-    SET_RENDER_SCALE(zoom_get_scale());
+    set_render_scale(zoom_get_scale());
     set_city_clip_rectangle();
     if (game_state_overlay())
         widget_city_draw_with_overlay(data.current_tile);
     else
         widget_city_draw_without_overlay(0, 0, data.current_tile);
     graphics_reset_clip_rectangle();
-    SET_RENDER_SCALE(1.0f);
+    set_render_scale(1.0f);
 }
 void widget_city_draw_for_figure(int figure_id, pixel_coordinate* coord) {
     auto& data = g_wdiget_city_data;

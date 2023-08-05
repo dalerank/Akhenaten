@@ -111,17 +111,22 @@ int platform_screen_create(char const* title,
                            int height) {
     set_scale_percentage(display_scale_percentage, 0, 0);
 
-    // int fullscreen = system_is_fullscreen_only() ? 1 : setting_fullscreen();
-    // fullscreen = ozymandias_core.window_mode ? 0 : fullscreen;
+    display_size wsize;
+    fullscreen = system_is_fullscreen_only() ? 1 : setting_fullscreen();
+    //fullscreen = ozymandias_core.window_mode ? 0 : fullscreen;
     if (fullscreen) {
         SDL_DisplayMode mode;
         SDL_GetDesktopDisplayMode(0, &mode);
-        width = mode.w;
-        height = mode.h;
+        wsize = {mode.w, mode.h};
     } else {
-        // setting_window(&width, &height); // TODO: // WTF, do we need this ????
-        width = scale_logical_to_pixels(width);
-        height = scale_logical_to_pixels(height);
+        wsize = setting_display_size();
+        if (width > 0)
+            wsize.w = width;
+        if (height > 0)
+            wsize.h = height;
+
+        wsize.w = scale_logical_to_pixels(wsize.w);
+        wsize.h = scale_logical_to_pixels(wsize.h);
     }
 
     platform_screen_destroy();
@@ -133,9 +138,7 @@ int platform_screen_create(char const* title,
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 #endif
 
-    logs::info("Creating screen %d x %d, %s, driver: %s",
-               width,
-               height,
+    logs::info("Creating screen %d x %d, %s, driver: %s", wsize.w, wsize.h,
                fullscreen ? "fullscreen" : "windowed",
                SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
@@ -148,7 +151,7 @@ int platform_screen_create(char const* title,
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
 
-    SDL.window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
+    SDL.window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, wsize.w, wsize.h, flags);
 
     if (!SDL.window) {
         logs::error("Unable to create window: %s", SDL_GetError());
@@ -161,7 +164,7 @@ int platform_screen_create(char const* title,
 #endif
 
     if (system_is_fullscreen_only()) {
-        SDL_GetWindowSize(SDL.window, &width, &height);
+        SDL_GetWindowSize(SDL.window, &wsize.w, &wsize.h);
     }
 
     if (!platform_renderer_init(SDL.window, renderer)) {
@@ -173,8 +176,8 @@ int platform_screen_create(char const* title,
         SDL_SetWindowGrab(SDL.window, SDL_TRUE);
     }
 #endif
-    set_scale_percentage(display_scale_percentage, width, height);
-    return platform_screen_resize(width, height, 1);
+    set_scale_percentage(display_scale_percentage, wsize.w, wsize.h);
+    return platform_screen_resize(wsize.w, wsize.h, 1);
 }
 
 void platform_screen_destroy(void) {
@@ -252,10 +255,9 @@ void platform_screen_set_windowed(void) {
     if (system_is_fullscreen_only()) {
         return;
     }
-    int logical_width, logical_height;
-    setting_window(&logical_width, &logical_height);
-    int pixel_width = scale_logical_to_pixels(logical_width);
-    int pixel_height = scale_logical_to_pixels(logical_height);
+    auto wsize = setting_display_size();
+    int pixel_width = scale_logical_to_pixels(wsize.w);
+    int pixel_height = scale_logical_to_pixels(wsize.h);
     int display = SDL_GetWindowDisplayIndex(SDL.window);
     logs::info("User to windowed %d x %d on display %d", pixel_width, pixel_height, display);
     SDL_SetWindowFullscreen(SDL.window, 0);

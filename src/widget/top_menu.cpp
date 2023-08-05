@@ -36,6 +36,7 @@
 #include "window/popup_dialog.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
+#include "window/hotkey_config.h"
 
 #include "core/core_utility.h"
 #include "core/span.hpp"
@@ -56,6 +57,7 @@ static void menu_options_sound(int param);
 static void menu_options_speed(int param);
 static void menu_options_difficulty(int param);
 static void menu_options_autosave(int param);
+static void menu_options_hotkeys(int param);
 static void menu_options_change_enh(int param);
 
 static void menu_help_help(int param);
@@ -84,6 +86,7 @@ static menu_item menu_options[] = {
   {2, 3, menu_options_speed, 0},
   {2, 6, menu_options_difficulty, 0},
   {19, 51, menu_options_autosave, 0},
+  {2, 1, menu_options_hotkeys, 0, false, "Hotkeys options"},
   {2, 1, menu_options_change_enh, 0, false, "Enhanced options"},
 };
 
@@ -122,10 +125,10 @@ static menu_item menu_debug[] = {
 };
 
 menu_bar_item g_top_menu[] = {
-  {1, menu_file, 6},
-  {2, menu_options, 6},
-  {3, menu_help, 4},
-  {4, menu_advisors, 12},
+  {1, menu_file, std::size(menu_file)},
+  {2, menu_options, std::size(menu_options)},
+  {3, menu_help, std::size(menu_help)},
+  {4, menu_advisors, std::size(menu_advisors)},
   {5, menu_debug, std::size(menu_debug), "Debug"},
 };
 
@@ -699,7 +702,7 @@ static void menu_file_exit_city(int param) {
 
 static void menu_options_display(int param) {
     clear_state();
-    window_display_options_show(window_city_show);
+    window_display_options_ext_show(window_city_show);
 }
 static void menu_options_sound(int param) {
     clear_state();
@@ -719,6 +722,10 @@ static void menu_options_autosave(int param) {
 }
 
 static void menu_options_change_enh(int param) {
+}
+
+static void menu_options_hotkeys(int param) {
+    window_hotkey_config_show();
 }
 
 static void menu_help_help(int param) {
