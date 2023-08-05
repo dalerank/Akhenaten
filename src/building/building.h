@@ -1,8 +1,5 @@
 #pragma once
 
-#define MAX_BUILDINGS 4000
-#define MAX_FIGURES_PER_BUILDING 8
-
 #include "figure/action.h"
 #include "figure/type.h"
 #include "grid/point.h"
@@ -14,6 +11,9 @@
 class figure;
 class io_buffer;
 
+constexpr uint32_t MAX_BUILDINGS = 4000;
+constexpr uint32_t MAX_FIGURES_PER_BUILDING = 8;
+
 class building {
 private:
     //    short figure_id;
@@ -21,6 +21,7 @@ private:
     //    short immigrant_figure_id;
     //    short figure_id4; // tower ballista or burning ruin prefect
     short figure_ids_array[MAX_FIGURES_PER_BUILDING]; // oh boy!
+
 public:
     int id;
     e_building_state state;
@@ -313,8 +314,22 @@ public:
 
 int building_id_first(e_building_type type);
 building *building_first(e_building_type type);
+
 building *building_next(int id, e_building_type type);
 building* building_get(int id);
+inline building *building_begin() { return building_get(1); }
+inline building *building_end() { return building_get(MAX_BUILDINGS); }
+
+template<typename T>
+inline building *building_first(T pred) {
+    for (auto it = building_begin(), end = building_end(); it != end; ++it) {
+        if (it->state == BUILDING_STATE_VALID && pred(*it)) {
+            return it;
+        }
+    }
+    return nullptr;
+}
+
 building* building_create(e_building_type type, int x, int y, int orientation);
 
 building* building_at(int grid_offset);
