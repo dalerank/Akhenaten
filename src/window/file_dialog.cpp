@@ -55,15 +55,6 @@ static scrollable_list_ui_params ui_params = [] {
     ret.draw_scrollbar_always = true;
     return ret;
 }();
-static scroll_list_panel* panel = new scroll_list_panel(NUM_FILES_IN_VIEW,
-                                                        button_select_file,
-                                                        button_none,
-                                                        button_double_click,
-                                                        button_none,
-                                                        ui_params,
-                                                        true,
-                                                        "Save/",
-                                                        "folders");
 
 static input_box file_name_input = {144, 80, 20, 2, FONT_NORMAL_WHITE_ON_DARK};
 
@@ -76,6 +67,7 @@ struct file_dialog_data_t {
     file_type_data* file_data;
     uint8_t typed_name[MAX_FILE_NAME];
     char selected_file[MAX_FILE_NAME];
+    scroll_list_panel *panel = nullptr;
 };
 
 file_dialog_data_t g_file_dialog_data;
@@ -94,13 +86,13 @@ static void clear_chosen_filename() {
 }
 static bool is_chosen_filename(int index) {
     auto& data = g_file_dialog_data;
-    return strcmp(data.selected_file, panel->get_selected_entry_text(FILE_NO_EXT)) == 0;
+    return strcmp(data.selected_file, data.panel->get_selected_entry_text(FILE_NO_EXT)) == 0;
 }
 static bool is_valid_chosen_filename() {
     auto& data = g_file_dialog_data;
     if (strcmp(data.selected_file, "") == 0)
         return false;
-    if (panel->get_entry_idx(data.selected_file) > -1)
+    if (data.panel->get_entry_idx(data.selected_file) > -1)
         return true;
     return false;
 }
@@ -145,13 +137,13 @@ static void init(file_type type, file_dialog_type dialog_type) {
         strcat(folder_name, (const char*)setting_player_name());
         strcat(folder_name, "/");
         if (type == FILE_TYPE_SCENARIO) {
-            panel->change_file_path("Maps/", map_file_data.extension);
+            data.panel->change_file_path("Maps/", map_file_data.extension);
         } else {
             if (data.dialog_type == FILE_DIALOG_LOAD) {
-                panel->change_file_path(folder_name, data.file_data->extension);
-                panel->append_files_with_extension(folder_name, saved_game_data_expanded.extension); // TODO?
+                data.panel->change_file_path(folder_name, data.file_data->extension);
+                data.panel->append_files_with_extension(folder_name, saved_game_data_expanded.extension); // TODO?
             } else if (data.dialog_type == FILE_DIALOG_SAVE) {
-                panel->change_file_path(folder_name, saved_game_data_expanded.extension);
+                data.panel->change_file_path(folder_name, saved_game_data_expanded.extension);
             } else {
                 assert(false);
             }
@@ -172,8 +164,7 @@ static void draw_foreground(void) {
     input_box_draw(&file_name_input);
 
     // title
-    if (data.message_not_exist_start_time
-        && time_get_millis() - data.message_not_exist_start_time < NOT_EXIST_MESSAGE_TIMEOUT) {
+    if (data.message_not_exist_start_time && time_get_millis() - data.message_not_exist_start_time < NOT_EXIST_MESSAGE_TIMEOUT) {
         lang_text_draw_centered(43, 2, 160, 50, 304, FONT_LARGE_BLACK_ON_LIGHT);
     } else if (data.dialog_type == FILE_DIALOG_DELETE) {
         lang_text_draw_centered(43, 6, 160, 50, 304, FONT_LARGE_BLACK_ON_LIGHT);
@@ -183,7 +174,7 @@ static void draw_foreground(void) {
     }
     lang_text_draw(43, 5, 224, 342, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    panel->draw();
+    data.panel->draw();
 
     image_buttons_draw(0, 0, image_buttons, 2);
 
@@ -268,7 +259,7 @@ static void button_ok_cancel(int is_ok, int param2) {
             dir_find_files_with_extension(".", data.file_data->extension);
             dir_append_files_with_extension(".", saved_game_data_expanded.extension);
 
-            panel->clamp_scrollbar_position();
+            data.panel->clamp_scrollbar_position();
             //            if (scrollbar.scroll_position + NUM_FILES_IN_VIEW >= data.file_list->num_files)
             //                --scrollbar.scroll_position;
             //
@@ -281,9 +272,11 @@ static void button_ok_cancel(int is_ok, int param2) {
 }
 static void button_select_file(int index, int param2) {
     auto& data = g_file_dialog_data;
-    if (index >= panel->get_total_entries())
+    if (index >= data.panel->get_total_entries()) {
         return clear_chosen_filename();
-    set_chosen_filename(panel->get_selected_entry_text(FILE_NO_EXT));
+    }
+
+    set_chosen_filename(data.panel->get_selected_entry_text(FILE_NO_EXT));
     //    setting_set_player_name(data.selected_player);
     input_box_refresh_text(&file_name_input);
     data.message_not_exist_start_time = 0;
@@ -301,27 +294,47 @@ static void button_select_file(int index, int param2) {
     //    }
 }
 static void button_double_click(int param1, int param2) {
-    auto& data = g_file_dialog_data;
-    if (data.dialog_type != FILE_DIALOG_DELETE)
+    if (g_file_dialog_data.dialog_type != FILE_DIALOG_DELETE)
         button_ok_cancel(1, 0);
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto& data = g_file_dialog_data;
     if (input_go_back_requested(m, h)) {
         input_box_stop(&file_name_input);
         window_go_back();
     }
+
     if (input_box_is_accepted(&file_name_input)) {
         button_ok_cancel(1, 0);
         return;
     }
+
     const mouse* m_dialog = mouse_in_dialog(m);
-    if (input_box_handle_mouse(m_dialog, &file_name_input) || panel->input_handle(m_dialog)
-        || image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 2, 0))
+    if (input_box_handle_mouse(m_dialog, &file_name_input) || data.panel->input_handle(m_dialog)
+        || image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 2, 0)) {
         return;
+    }
 }
 void window_file_dialog_show(file_type type, file_dialog_type dialog_type) {
-    window_type window = {WINDOW_FILE_DIALOG, window_draw_underlying_window, draw_foreground, handle_input};
+    if (!g_file_dialog_data.panel) {
+        g_file_dialog_data.panel = new scroll_list_panel(NUM_FILES_IN_VIEW,
+                                          button_select_file,
+                                          button_none,
+                                          button_double_click,
+                                          button_none,
+                                          ui_params,
+                                          true,
+                                          "Save/",
+                                          "folders");
+    }
+
+    window_type window = {
+        WINDOW_FILE_DIALOG,
+        window_draw_underlying_window,
+        draw_foreground,
+        handle_input
+    };
     init(type, dialog_type);
     window_show(&window);
 }
