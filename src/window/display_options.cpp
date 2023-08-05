@@ -21,17 +21,20 @@ static generic_button buttons[] = {
   {128, 232, 224, 20, button_cancel, button_none, 1, 0},
 };
 
-static struct {
+struct display_options_data_t {
     int focus_button_id;
     void (*close_callback)(void);
-} data;
+};
+
+display_options_data_t g_display_options_data;
 
 static void init(void (*close_callback)(void)) {
-    data.focus_button_id = 0;
-    data.close_callback = close_callback;
+    g_display_options_data.focus_button_id = 0;
+    g_display_options_data.close_callback = close_callback;
 }
 
 static void draw_foreground(void) {
+    auto &data = g_display_options_data;
     graphics_set_to_dialog();
 
     outer_panel_draw(96, 80, 18, 12);
@@ -55,15 +58,16 @@ static void draw_foreground(void) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
-    if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 5, &data.focus_button_id))
+    if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 5, &g_display_options_data.focus_button_id))
         return;
+
     if (input_go_back_requested(m, h))
-        data.close_callback();
+        g_display_options_data.close_callback();
 }
 
 static void button_fullscreen(int param1, int param2) {
     system_set_fullscreen(!setting_fullscreen());
-    data.close_callback();
+    g_display_options_data.close_callback();
 }
 
 static void button_set_resolution(int id, int param2) {
@@ -78,15 +82,20 @@ static void button_set_resolution(int id, int param2) {
         system_resize(1024, 768);
         break;
     }
-    data.close_callback();
+    g_display_options_data.close_callback();
 }
 
 static void button_cancel(int param1, int param2) {
-    data.close_callback();
+    g_display_options_data.close_callback();
 }
 
 void window_display_options_show(void (*close_callback)(void)) {
-    window_type window = {WINDOW_DISPLAY_OPTIONS, window_draw_underlying_window, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_DISPLAY_OPTIONS,
+        window_draw_underlying_window,
+        draw_foreground,
+        handle_input
+    };
     init(close_callback);
     window_show(&window);
 }
