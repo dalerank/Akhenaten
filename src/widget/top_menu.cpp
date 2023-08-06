@@ -37,6 +37,7 @@
 #include "window/sound_options.h"
 #include "window/speed_options.h"
 #include "window/hotkey_config.h"
+#include "window/config.h"
 
 #include "core/core_utility.h"
 #include "core/span.hpp"
@@ -721,11 +722,16 @@ static void menu_options_autosave(int param) {
     set_text_for_autosave();
 }
 
+static void menu_options_change_enh_back() {
+
+}
+
 static void menu_options_change_enh(int param) {
+    window_config_show(menu_options_change_enh_back);
 }
 
 static void menu_options_hotkeys(int param) {
-    window_hotkey_config_show();
+    window_hotkey_config_show(menu_options_change_enh_back);
 }
 
 static void menu_help_help(int param) {

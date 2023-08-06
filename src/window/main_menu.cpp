@@ -66,32 +66,32 @@ static void draw_version_string() {
 static void draw_background() {
     graphics_clear_screen();
     ImageDraw::img_background(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND));
-    if (window_is(WINDOW_MAIN_MENU))
+    if (window_is(WINDOW_MAIN_MENU)) {
         draw_version_string();
+    }
 }
 static void draw_foreground(void) {
     graphics_set_to_dialog();
 
-    switch (GAME_ENV) {
-    case ENGINE_ENV_PHARAOH: {
-        int groups[6][2] = {
-          {30, 0},
-          {30, 5}, //{1, 3},
-                   //                    {30, 3},
-                   //                    {9,  8},
-          {2, 0},
-          {30, 4},
-        };
-        for (int i = 0; i < 4; i++) {
-            large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
-            lang_text_draw_centered(
-              groups[i][0], groups[i][1], BUTTONS_X, BUTTONS_Y + 40 * i + 6, BUTTONS_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT);
-        }
-        break;
-    }
+    int groups[6][2] = {
+        {30, 0},
+        {30, 5}, //{1, 3},
+                //                    {30, 3},
+                //                    {9,  8},
+        {2, 0},
+        {30, 4},
+    };
+    for (int i = 0; i < 4; i++) {
+        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
+        lang_text_draw_centered(
+            groups[i][0], groups[i][1], BUTTONS_X, BUTTONS_Y + 40 * i + 6, BUTTONS_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     graphics_reset_dialog();
+}
+
+static void window_config_show_back() {
+
 }
 
 static void confirm_exit(bool accepted) {
@@ -101,31 +101,29 @@ static void confirm_exit(bool accepted) {
 static void button_click(int type, int param2) {
     switch (type) {
     case 1:
-        switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH:
-            window_player_selection_show();
-            break;
-        }
+        window_player_selection_show();
         break;
+
     case 2:
-        switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH:
-            window_records_show(); // TODO
-            break;
-        }
+        window_records_show(); // TODO
         break;
+
     case 3:
         window_scenario_selection_show(MAP_SELECTION_CUSTOM);
         break;
+
     case 4:
-        if (!editor_is_present() || !game_init_editor())
+        if (!editor_is_present() || !game_init_editor()) {
             window_plain_message_dialog_show(TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
-        else
+        } else {
             sound_music_play_editor();
+        }
         break;
+
     case 5:
-        window_config_show();
+        window_config_show(window_config_show_back);
         break;
+
     case 6:
         window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, e_popup_btns_yesno);
         break;

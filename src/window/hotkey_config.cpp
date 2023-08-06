@@ -12,7 +12,6 @@
 #include "graphics/window.h"
 #include "io/config/hotkeys.h"
 #include "translation/translation.h"
-#include "window/config.h"
 #include "window/hotkey_editor.h"
 
 #define HOTKEY_HEADER -1
@@ -30,12 +29,13 @@ static void button_close(int save, int param2);
 
 static scrollbar_type scrollbar = {580, 72, 352, on_scroll};
 
-typedef struct {
+struct hotkey_widget {
     int action;
     int name_translation;
     int name_text_group;
     int name_text_id;
-} hotkey_widget;
+    void (*close_callback)(void);
+};
 
 static hotkey_widget hotkey_widgets[] = {
   {HOTKEY_HEADER, TR_HOTKEY_HEADER_ARROWS},
@@ -157,14 +157,20 @@ static generic_button bottom_buttons[] = {
 
 static int bottom_button_texts[] = {TR_BUTTON_RESET_DEFAULTS, TR_BUTTON_CANCEL, TR_BUTTON_OK};
 
-static struct {
+struct hotkeys_window_data_t {
     int focus_button;
     int bottom_focus_button;
     hotkey_mapping mappings[HOTKEY_MAX_ITEMS][2];
-} data;
+    void (*close_callback)(void);
+};
 
-static void init(void) {
-    scrollbar_init(&scrollbar, 0, sizeof(hotkey_widgets) / sizeof(hotkey_widget) - NUM_VISIBLE_OPTIONS);
+hotkeys_window_data_t g_hotkeys_window_data;
+
+static void init(void (*close_callback)(void)) {
+    auto &data = g_hotkeys_window_data;
+    data.close_callback = close_callback;
+
+    scrollbar_init(&scrollbar, 0, std::size(hotkey_widgets) - NUM_VISIBLE_OPTIONS);
 
     for (int i = 0; i < HOTKEY_MAX_ITEMS; i++) {
         hotkey_mapping empty = {KEY_NONE, KEY_MOD_NONE, i};
@@ -177,7 +183,8 @@ static void init(void) {
     }
 }
 
-static void draw_background(void) {
+static void draw_background() {
+    auto &data = g_hotkeys_window_data;
     graphics_clear_screen();
 
     ImageDraw::img_background(image_id_from_group(GROUP_CONFIG_BACKGROUND));
@@ -242,7 +249,8 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground() {
+    auto &data = g_hotkeys_window_data;
     graphics_set_to_dialog();
 
     scrollbar_draw(&scrollbar);
@@ -268,6 +276,7 @@ static void draw_foreground(void) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto &data = g_hotkeys_window_data;
     const mouse* m_dialog = mouse_in_dialog(m);
     if (scrollbar_handle_mouse(&scrollbar, m_dialog))
         return;
@@ -277,23 +286,30 @@ static void handle_input(const mouse* m, const hotkeys* h) {
       |= generic_buttons_handle_mouse(m_dialog, 0, 0, hotkey_buttons, NUM_VISIBLE_OPTIONS * 2, &data.focus_button);
     mouse_button
       |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
-    if (!mouse_button && (m->right.went_up || h->escape_pressed))
-        window_config_show();
+
+    if (!mouse_button && (m->right.went_up || h->escape_pressed)) {
+        data.close_callback();
+        window_go_back();
+    }
 }
 
 static void set_hotkey(int action, int index, int key, int modifiers) {
+    auto &data = g_hotkeys_window_data;
     data.mappings[action][index].key = key;
     data.mappings[action][index].modifiers = modifiers;
 }
 
 static void button_hotkey(int row, int is_alternative) {
     hotkey_widget* widget = &hotkey_widgets[row + scrollbar.scroll_position];
-    if (widget->action == HOTKEY_HEADER)
+    if (widget->action == HOTKEY_HEADER) {
         return;
+    }
+
     window_hotkey_editor_show(widget->action, is_alternative, set_hotkey);
 }
 
 static void button_reset_defaults(int param1, int param2) {
+    auto &data = g_hotkeys_window_data;
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
         for (int index = 0; index < 2; index++) {
             data.mappings[action][index] = *hotkey_default_for_action(action, index);
@@ -307,10 +323,12 @@ static void on_scroll(void) {
 }
 
 static void button_close(int save, int param2) {
+    auto &data = g_hotkeys_window_data;
     if (!save) {
         window_go_back();
         return;
     }
+
     hotkey_config_clear();
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
         for (int index = 0; index < 2; index++) {
@@ -318,12 +336,13 @@ static void button_close(int save, int param2) {
                 hotkey_config_add_mapping(&data.mappings[action][index]);
         }
     }
+
     hotkey_config_save();
     window_go_back();
 }
 
-void window_hotkey_config_show(void) {
+void window_hotkey_config_show(void (*close_callback)(void)) {
     window_type window = {WINDOW_HOTKEY_CONFIG, draw_background, draw_foreground, handle_input};
-    init();
+    init(close_callback);
     window_show(&window);
 }
