@@ -23,7 +23,7 @@ static translation_string all_strings[]
      {TR_BUTTON_CANCEL, "Cancelar"},
      {TR_BUTTON_RESET_DEFAULTS, "Redefinir padrões"},
      {TR_BUTTON_CONFIGURE_HOTKEYS, "Configurar atalhos"},
-     {TR_CONFIG_TITLE, "Opções de Configurações do Julius"},
+     {TR_CONFIG_TITLE, "Opções de Configurações"},
      {TR_CONFIG_LANGUAGE_LABEL, "Idioma:"},
      {TR_CONFIG_LANGUAGE_DEFAULT, "(padrão)"},
      {TR_CONFIG_HEADER_UI_CHANGES, "Mudanças de interface"},
@@ -40,7 +40,7 @@ static translation_string all_strings[]
      {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Consertar falha dos 'fantasmas' de 100 anos"},
      {TR_CONFIG_FIX_EDITOR_EVENTS, "Consertar falha na mudança de Imperador e tempo de sobrevivência"},
 
-     {TR_HOTKEY_TITLE, "Configurações de teclas de atalho do Julius"},
+     {TR_HOTKEY_TITLE, "Configurações de teclas de atalho"},
      {TR_HOTKEY_LABEL, "Teclas de atalho"},
      {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternativa"},
      {TR_HOTKEY_HEADER_ARROWS, "Teclas de seta"},

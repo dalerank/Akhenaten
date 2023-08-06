@@ -263,7 +263,7 @@ endif()
 
 set(MACOSX_FILES "")
 if(APPLE)
-    #set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/augustus.icns)
+    set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/ozymandias.icns)
 endif()
 
 set(SOURCE_FILES
@@ -300,7 +300,7 @@ set(SOURCE_FILES
     ${GRID_FILES}
     ${GRID_ROUTING_FILES}
     ${IMGUI_FILES}
-#    ${PROJECT_SOURCE_DIR}/res/augustus.rc
+    ${PROJECT_SOURCE_DIR}/res/ozymandias.rc
     ${MACOSX_FILES}
 #    ${PNG_FILES}
 #    ${SDL_IMAGE_FILES}
@@ -321,27 +321,27 @@ endif()
 
 if(APPLE)
     # generating a macOS icns file (see https://stackoverflow.cppom/a/20703594)
-    add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/augustus.icns
-        COMMAND mkdir -p augustus.iconset
-        COMMAND sips -z 16 16    augustus_256.png --out augustus.iconset/icon_16x16.png
-        COMMAND sips -z 32 32    augustus_256.png --out augustus.iconset/icon_16x16@2x.png
-        COMMAND sips -z 32 32    augustus_256.png --out augustus.iconset/icon_32x32.png
-        COMMAND sips -z 64 64    augustus_256.png --out augustus.iconset/icon_32x32@2x.png
-        COMMAND sips -z 128 128  augustus_256.png --out augustus.iconset/icon_128x128.png
-        COMMAND sips -z 256 256  augustus_256.png --out augustus.iconset/icon_128x128@2x.png
-        COMMAND sips -z 256 256  augustus_256.png --out augustus.iconset/icon_256x256.png
-        COMMAND sips -z 512 512  augustus_512.png --out augustus.iconset/icon_256x256@2x.png
-        COMMAND iconutil -c icns augustus.iconset
-        COMMAND rm -R augustus.iconset
+    add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/ozymandias.icns
+        COMMAND mkdir -p ozymandias.iconset
+        COMMAND sips -z 16 16    ozymandias_256.png --out ozymandias.iconset/icon_16x16.png
+        COMMAND sips -z 32 32    ozymandias_256.png --out ozymandias.iconset/icon_16x16@2x.png
+        COMMAND sips -z 32 32    ozymandias_256.png --out ozymandias.iconset/icon_32x32.png
+        COMMAND sips -z 64 64    ozymandias_256.png --out ozymandias.iconset/icon_32x32@2x.png
+        COMMAND sips -z 128 128  ozymandias_256.png --out ozymandias.iconset/icon_128x128.png
+        COMMAND sips -z 256 256  ozymandias_256.png --out ozymandias.iconset/icon_128x128@2x.png
+        COMMAND sips -z 256 256  ozymandias_256.png --out ozymandias.iconset/icon_256x256.png
+        COMMAND iconutil -c icns ozymandias.iconset
+        COMMAND rm -R ozymandias.iconset
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/res)
-    set_source_files_properties(${PROJECT_SOURCE_DIR}/res/augustus.icns PROPERTIES
+
+    set_source_files_properties(${PROJECT_SOURCE_DIR}/res/ozymandias.icns PROPERTIES
         MACOSX_PACKAGE_LOCATION "Resources")
 
     # setting variables that will populate Info.plist
-    set(MACOSX_BUNDLE_GUI_IDENTIFIER "nl.biancavanschaik.julius")
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER "mt.dalerank.ozymandias")
     set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OS X deployment version" FORCE)
-    set(MACOSX_BUNDLE_ICON_FILE "augustus.icns")
+    set(MACOSX_BUNDLE_ICON_FILE "ozymandias.icns")
     set(MACOSX_BUNDLE_BUNDLE_VERSION
         "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}")
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
@@ -446,11 +446,11 @@ if(NOT APPLE)
 endif()
 
 if(UNIX AND NOT APPLE)
-    install(FILES "res/augustus.desktop" DESTINATION "share/applications" RENAME "com.github.keriew.augustus.desktop")
-    install(FILES "res/augustus.metainfo.xml" DESTINATION "share/metainfo" RENAME "com.github.keriew.augustus.metainfo.xml")
-    install(FILES "res/augustus_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "com.github.keriew.augustus.png")
-    install(FILES "res/augustus_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.keriew.augustus.png")
-    install(FILES "res/augustus_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.keriew.augustus.png")
+    install(FILES "res/ozymandias.desktop" DESTINATION "share/applications" RENAME "com.github.dalerank.ozymandias.desktop")
+    install(FILES "res/ozymandias.metainfo.xml" DESTINATION "share/metainfo" RENAME "com.github.dalerank.ozymandias.metainfo.xml")
+    install(FILES "res/ozymandias_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "com.github.dalerank.ozymandias.png")
+    install(FILES "res/ozymandias_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.dalerank.ozymandias.png")
+    install(FILES "res/ozymandias_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.dalerank.ozymandias.png")
 endif()
 
 if (MSVC)

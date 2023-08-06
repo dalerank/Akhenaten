@@ -116,7 +116,7 @@ bool game_pre_init(void) {
         return false;
     update_encoding();
     settings_load(); // c3.inf
-    config_load();   // augustus.ini
+    config_load();   // ozymandias.ini
     hotkey_config_load();
     scenario_settings_init();
     random_init();

@@ -5,13 +5,13 @@ build_dir="$(pwd)/build"
 VERSION=$(cat res/version.txt)
 if [[ ! -z "$TRAVIS_TAG" ]]
 then
-  REPO=Augustus
+  REPO=Ozymandias
 elif [[ "$TRAVIS_BRANCH" == "master" ]]
 then
-  REPO=Augustus-unstable
+  REPO=Ozymandias-unstable
 elif [[ "$TRAVIS_BRANCH" =~ ^feature/ ]]
 then
-  REPO=Augustus-branches
+  REPO=Ozymandias-branches
   VERSION=${TRAVIS_BRANCH##feature/}-$VERSION
 else
   echo "Unknown branch type $TRAVIS_BRANCH - skipping deploy to Bintray"
@@ -27,7 +27,7 @@ cat > "bintray.json" <<EOF
     "repo": "$REPO",
     "name": "linux",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/Keriew/julius.git"
+    "vcs_url": "https://github.com/dalerank/ozymandias.git"
   },
 
   "version": {
@@ -38,8 +38,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/augustus.zip",
-      "uploadPattern": "augustus-$VERSION-linux-x86_64.zip"
+      "includePattern": "${build_dir}/Ozymandias.zip",
+      "uploadPattern": "Ozymandias-$VERSION-linux-x86_64.zip"
     }
   ],
 
@@ -56,7 +56,7 @@ cat > "bintray.json" <<EOF
     "repo": "$REPO",
     "name": "linux",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/Keriew/augustus.git"
+    "vcs_url": "https://github.com/dalerank/ozymandias.git"
   },
 
   "version": {
@@ -67,8 +67,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/augustus.AppImage",
-      "uploadPattern": "augustus-$VERSION-linux.AppImage"
+      "includePattern": "${build_dir}/ozymandias.AppImage",
+      "uploadPattern": "ozymandias-$VERSION-linux.AppImage"
     }
   ],
 
@@ -84,7 +84,7 @@ cat > "bintray.json" <<EOF
     "repo": "$REPO",
     "name": "mac",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/Keriew/augustus.git"
+    "vcs_url": "https://github.com/dalerank/ozymandias.git"
   },
 
   "version": {
@@ -95,8 +95,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/augustus.dmg",
-      "uploadPattern": "augustus-$VERSION-mac.dmg",
+      "includePattern": "${build_dir}/ozymandias.dmg",
+      "uploadPattern": "ozymandias-$VERSION-mac.dmg",
       "listInDownloads": true
     }
   ],
@@ -113,7 +113,7 @@ cat > "bintray.json" <<EOF
     "repo": "$REPO",
     "name": "vita",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/Keriew/augustus.git"
+    "vcs_url": "https://github.com/dalerank/ozymandias.git"
   },
 
   "version": {
@@ -124,8 +124,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/augustus.vpk",
-      "uploadPattern": "augustus-$VERSION-vita.vpk",
+      "includePattern": "${build_dir}/ozymandias.vpk",
+      "uploadPattern": "ozymandias-$VERSION-vita.vpk",
       "listInDownloads": true
     }
   ],
@@ -142,7 +142,7 @@ cat > "bintray.json" <<EOF
     "repo": "$REPO",
     "name": "switch",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/Keriew/augustus.git"
+    "vcs_url": "https://github.com/dalerank/ozymandias.git"
   },
 
   "version": {
@@ -153,8 +153,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/augustus.zip",
-      "uploadPattern": "augustus-$VERSION-switch.zip",
+      "includePattern": "${build_dir}/ozymandias.zip",
+      "uploadPattern": "ozymandias-$VERSION-switch.zip",
       "listInDownloads": true
     }
   ],
