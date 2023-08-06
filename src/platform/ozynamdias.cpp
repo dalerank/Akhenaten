@@ -233,8 +233,7 @@ static void show_options_window(Arguments& args) {
                     const bool is_selected = (item_current_idx == index);
                     if (ImGui::Selectable(it->str.c_str(), is_selected)) {
                         item_current_idx = index;
-                        args.set_window_width(it->w);
-                        args.set_window_height(it->h);
+                        args.set_window_size({it->w, it->h});
                     }
 
                     if (is_selected) {
@@ -311,10 +310,9 @@ static void setup(Arguments& args) {
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
     if (!platform_screen_create(title,
                                 args.get_renderer(),
-                                args.is_fullscreen(),
+                                args.get_fullscreen(),
                                 args.get_display_scale_percentage(),
-                                args.get_window_width(),
-                                args.get_window_height())) {
+                                args.get_window_size())) {
         logs::info("Exiting: SDL create window failed");
         exit(-2);
     }

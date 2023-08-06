@@ -105,25 +105,23 @@ static void set_window_icon() {
 
 int platform_screen_create(char const* title,
                            std::string renderer,
-                           bool fullscreen,
+                           int fullscreen,
                            int display_scale_percentage,
-                           int width,
-                           int height) {
+                           display_size screen_size) {
     set_scale_percentage(display_scale_percentage, 0, 0);
 
     display_size wsize;
-    fullscreen = system_is_fullscreen_only() ? 1 : setting_fullscreen();
-    //fullscreen = ozymandias_core.window_mode ? 0 : fullscreen;
+    if (fullscreen < 0) {
+        fullscreen = system_is_fullscreen_only() ? true : setting_fullscreen();
+    }
     if (fullscreen) {
         SDL_DisplayMode mode;
         SDL_GetDesktopDisplayMode(0, &mode);
         wsize = {mode.w, mode.h};
     } else {
         wsize = setting_display_size();
-        if (width > 0)
-            wsize.w = width;
-        if (height > 0)
-            wsize.h = height;
+        wsize.w = std::max<int>(wsize.w, screen_size.w);
+        wsize.h = std::max<int>(wsize.h, screen_size.h);
 
         wsize.w = scale_logical_to_pixels(wsize.w);
         wsize.h = scale_logical_to_pixels(wsize.h);

@@ -86,12 +86,12 @@ char const* Arguments::usage() {
            "The last argument, if present, is interpreted as data directory of the Pharaoh installation";
 }
 
-bool Arguments::is_fullscreen() const {
-    return !window_mode_;
+int Arguments::get_fullscreen() const {
+    return window_mode_ >= 0 ? 0 : 1;
 }
 
-bool Arguments::is_window_mode() const {
-    return window_mode_;
+int Arguments::get_window_mode() const {
+    return window_mode_ >= 0 ? 1 : 0;
 }
 
 int Arguments::get_display_scale_percentage() const {
@@ -114,20 +114,12 @@ void Arguments::set_data_directory(std::string value) {
     data_directory_ = std::move(value);
 }
 
-int Arguments::get_window_width() const {
-    return window_width_;
+display_size Arguments::get_window_size() const {
+    return window_size_;
 }
 
-void Arguments::set_window_width(int value) {
-    window_width_ = value;
-}
-
-int Arguments::get_window_height() const {
-    return window_height_;
-}
-
-void Arguments::set_window_height(int value) {
-    window_height_ = value;
+void Arguments::set_window_size(display_size value) {
+    window_size_ = value;
 }
 
 void Arguments::parse_cli_(int argc, char** argv) {
@@ -158,7 +150,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
                 app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
         } else if (SDL_strcmp(argv[i], "--size") == 0) {
             if (i + 1 < argc) {
-                SDL_sscanf(argv[i + 1], "%dx%d", &window_width_, &window_height_);
+                SDL_sscanf(argv[i + 1], "%dx%d", &window_size_.w, &window_size_.h);
                 ++i;
             } else
                 app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);

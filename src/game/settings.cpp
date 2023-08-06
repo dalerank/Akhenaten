@@ -192,7 +192,7 @@ void settings_save(void) {
 
     io_write_buffer_to_file("c3.inf", data.inf_file, INF_SIZE);
 }
-int setting_fullscreen(void) {
+int setting_fullscreen() {
     auto& data = settings_data();
     return data.fullscreen;
 }
