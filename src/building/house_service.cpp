@@ -32,11 +32,11 @@ void house_service_decay_culture(void) {
         decay(&b->data.house.clinic);
         decay(&b->data.house.bathhouse);
         decay(&b->data.house.hospital);
-        decay(&b->data.house.temple_ceres);
-        decay(&b->data.house.temple_neptune);
-        decay(&b->data.house.temple_mercury);
-        decay(&b->data.house.temple_mars);
-        decay(&b->data.house.temple_venus);
+        decay(&b->data.house.temple_osiris);
+        decay(&b->data.house.temple_ra);
+        decay(&b->data.house.temple_ptah);
+        decay(&b->data.house.temple_seth);
+        decay(&b->data.house.temple_bast);
     }
 }
 
@@ -115,19 +115,19 @@ void house_service_calculate_culture_aggregates(void) {
 
         // religion
         b->data.house.num_gods = 0;
-        if (b->data.house.temple_ceres)
+        if (b->data.house.temple_osiris)
             ++b->data.house.num_gods;
 
-        if (b->data.house.temple_neptune)
+        if (b->data.house.temple_ra)
             ++b->data.house.num_gods;
 
-        if (b->data.house.temple_mercury)
+        if (b->data.house.temple_ptah)
             ++b->data.house.num_gods;
 
-        if (b->data.house.temple_mars)
+        if (b->data.house.temple_seth)
             ++b->data.house.num_gods;
 
-        if (b->data.house.temple_venus)
+        if (b->data.house.temple_bast)
             ++b->data.house.num_gods;
 
         // health

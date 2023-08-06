@@ -801,11 +801,11 @@ static void read_type_data(io_buffer* iob, building* b) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.clinic);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.bathhouse);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.hospital);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_ceres);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_neptune);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_mercury);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_mars);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_venus);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_osiris);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_ra);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_ptah);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_seth);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_bast);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.no_space_to_expand);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.num_foods);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.entertainment);

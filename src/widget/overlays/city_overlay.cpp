@@ -8,6 +8,7 @@
 #include "widget/overlays/city_overlay_health.h"
 #include "widget/overlays/city_overlay_other.h"
 #include "widget/overlays/city_overlay_risks.h"
+#include "widget/overlays/city_overlay_religion.h"
 
 const city_overlay* g_city_overlay = 0;
 
@@ -51,6 +52,8 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_hospital();
     case OVERLAY_RELIGION:
         return city_overlay_for_religion();
+    case OVERLAY_RELIGION_BAST:
+        return city_overlay_for_religion_bast();
     case OVERLAY_TAX_INCOME:
         return city_overlay_for_tax_income();
     case OVERLAY_FOOD_STOCKS:
@@ -63,9 +66,11 @@ static const city_overlay* set_city_overlay(void) {
         return 0;
     }
 }
+
 const city_overlay* get_city_overlay(void) {
     return g_city_overlay;
 }
+
 bool select_city_overlay(void) {
     if (!g_city_overlay || g_city_overlay->type != game_state_overlay())
         g_city_overlay = set_city_overlay();

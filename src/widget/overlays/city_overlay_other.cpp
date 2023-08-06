@@ -1,12 +1,15 @@
 #include "city_overlay_other.h"
 
 #include "building/model.h"
+#include "building/building.h"
+#include "figure/figure.h"
 #include "city/constants.h"
 #include "city/finance.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "game/state.h"
 #include "graphics/boilerplate.h"
+#include "graphics/elements/tooltip.h"
 #include "grid/building.h"
 #include "grid/desirability.h"
 #include "grid/image.h"
@@ -14,14 +17,8 @@
 #include "grid/random.h"
 #include "grid/terrain.h"
 #include "io/config/config.h"
+#include "widget/overlays/city_overlay.h"
 
-static int show_building_religion(const building* b) {
-    return b->type == BUILDING_ORACLE || b->type == BUILDING_TEMPLE_OSIRIS || b->type == BUILDING_TEMPLE_RA
-           || b->type == BUILDING_TEMPLE_PTAH || b->type == BUILDING_TEMPLE_SETH || b->type == BUILDING_TEMPLE_BAST
-           || b->type == BUILDING_TEMPLE_COMPLEX_OSIRIS || b->type == BUILDING_TEMPLE_COMPLEX_RA
-           || b->type == BUILDING_TEMPLE_COMPLEX_PTAH || b->type == BUILDING_TEMPLE_COMPLEX_SETH
-           || b->type == BUILDING_TEMPLE_COMPLEX_BAST;
-}
 static int show_building_food_stocks(const building* b) {
     return b->type == BUILDING_MARKET || b->type == BUILDING_FISHING_WHARF || b->type == BUILDING_GRANARY;
 }
@@ -36,9 +33,6 @@ static int show_building_desirability(const building* b) {
     return 0;
 }
 
-static int show_figure_religion(const figure* f) {
-    return f->type == FIGURE_PRIEST;
-}
 static int show_figure_food_stocks(const figure* f) {
     if (f->type == FIGURE_MARKET_BUYER || f->type == FIGURE_MARKET_TRADER || f->type == FIGURE_DELIVERY_BOY
         || f->type == FIGURE_FISHING_BOAT) {
@@ -58,9 +52,6 @@ static int show_figure_none(const figure* f) {
     return 0;
 }
 
-static int get_column_height_religion(const building* b) {
-    return b->house_size && b->data.house.num_gods ? b->data.house.num_gods * 17 / 10 : NO_COLUMN;
-}
 static int get_column_height_food_stocks(const building* b) {
     if (b->house_size && model_get_house(b->subtype.house_level)->food_types) {
         int pop = b->house_population;
@@ -92,46 +83,6 @@ static int get_column_height_none(const building* b) {
     return NO_COLUMN;
 }
 
-static void add_god(tooltip_context* c, int god_id) {
-    int index = c->num_extra_values;
-    c->extra_value_text_groups[index] = 59;
-    c->extra_value_text_ids[index] = 11 + god_id;
-    c->num_extra_values++;
-}
-
-static int get_tooltip_religion(tooltip_context* c, const building* b) {
-    if (b->data.house.num_gods < 5) {
-        if (b->data.house.temple_ceres)
-            add_god(c, GOD_OSIRIS);
-
-        if (b->data.house.temple_neptune)
-            add_god(c, GOD_RA);
-
-        if (b->data.house.temple_mercury)
-            add_god(c, GOD_PTAH);
-
-        if (b->data.house.temple_mars)
-            add_god(c, GOD_SETH);
-
-        if (b->data.house.temple_venus)
-            add_god(c, GOD_BAST);
-    }
-    if (b->data.house.num_gods <= 0)
-        return 12;
-    else if (b->data.house.num_gods == 1)
-        return 13;
-    else if (b->data.house.num_gods == 2)
-        return 14;
-    else if (b->data.house.num_gods == 3)
-        return 15;
-    else if (b->data.house.num_gods == 4)
-        return 16;
-    else if (b->data.house.num_gods == 5)
-        return 17;
-    else {
-        return 18; // >5 gods, shouldn't happen...
-    }
-}
 static int get_tooltip_food_stocks(tooltip_context* c, const building* b) {
     if (b->house_population <= 0)
         return 0;
@@ -179,6 +130,7 @@ static int get_tooltip_water(tooltip_context* c, int grid_offset) {
 
     return 0;
 }
+
 static int get_tooltip_desirability(tooltip_context* c, int grid_offset) {
     int desirability = map_desirability_get(grid_offset);
     if (desirability < 0)
@@ -190,18 +142,6 @@ static int get_tooltip_desirability(tooltip_context* c, int grid_offset) {
     }
 }
 
-const city_overlay* city_overlay_for_religion(void) {
-    static city_overlay overlay = {OVERLAY_RELIGION,
-                                   COLUMN_TYPE_WATER_ACCESS,
-                                   show_building_religion,
-                                   show_figure_religion,
-                                   get_column_height_religion,
-                                   0,
-                                   get_tooltip_religion,
-                                   0,
-                                   0};
-    return &overlay;
-}
 const city_overlay* city_overlay_for_food_stocks(void) {
     static city_overlay overlay = {OVERLAY_FOOD_STOCKS,
                                    COLUMN_TYPE_RISK,

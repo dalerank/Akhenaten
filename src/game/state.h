@@ -1,7 +1,7 @@
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
 
-enum {
+enum e_overlay {
     OVERLAY_NONE = 0,
     OVERLAY_WATER = 2,
     OVERLAY_RELIGION = 4,
@@ -26,7 +26,8 @@ enum {
     OVERLAY_DESIRABILITY = 26,
     OVERLAY_WORKERS_UNUSED = 27,
     OVERLAY_NATIVE = 28,
-    OVERLAY_PROBLEMS = 29
+    OVERLAY_PROBLEMS = 29,
+    OVERLAY_RELIGION_BAST = 30,
 };
 
 void game_state_init(void);
