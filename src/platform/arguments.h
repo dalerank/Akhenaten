@@ -11,14 +11,20 @@ public:
 
     static char const* usage();
 
-    [[nodiscard]] int get_fullscreen() const;
-    [[nodiscard]] int get_window_mode() const;
+    [[nodiscard]] bool is_fullscreen() const;
+    void set_fullscreen();
+
+    [[nodiscard]] bool is_window_mode() const;
+    void set_window_mode();
 
     [[nodiscard]] int get_display_scale_percentage() const;
+    void set_display_scale_percentage(int value);
 
     [[nodiscard]] int get_cursor_scale_percentage() const;
+    void set_cursor_scale_percentage(int value);
 
     [[nodiscard]] std::string get_renderer() const;
+    void set_renderer(std::string value);
 
     [[nodiscard]] std::string get_data_directory() const;
     void set_data_directory(std::string value);
@@ -27,13 +33,23 @@ public:
     void set_window_size(display_size value);
 
 private:
-    std::string version_;
     std::string data_directory_;
     std::string renderer_;
     int display_scale_percentage_ = 100;
     int cursor_scale_percentage_ = 100;
     display_size window_size_ = {800, 600};
-    int window_mode_ = -1;
+    bool window_mode_ = false;
 
+    /// apply parameters from command line
     void parse_cli_(int argc, char** argv);
 };
+
+namespace arguments {
+
+/// Load configuration from the file (if exists)
+void load(Arguments& arguments);
+
+/// Store configuration to the file system
+void store(Arguments const& arguments);
+
+} // namespace arguments

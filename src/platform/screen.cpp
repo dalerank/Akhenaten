@@ -105,15 +105,16 @@ static void set_window_icon() {
 
 int platform_screen_create(char const* title,
                            std::string renderer,
-                           int fullscreen,
+                           bool fullscreen,
                            int display_scale_percentage,
                            display_size screen_size) {
     set_scale_percentage(display_scale_percentage, 0, 0);
 
     display_size wsize;
-    if (fullscreen < 0) {
-        fullscreen = system_is_fullscreen_only() ? true : setting_fullscreen();
+    if (!fullscreen && system_is_fullscreen_only()) {
+        fullscreen = true;
     }
+
     if (fullscreen) {
         SDL_DisplayMode mode;
         SDL_GetDesktopDisplayMode(0, &mode);
