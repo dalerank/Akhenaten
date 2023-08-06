@@ -263,7 +263,9 @@ endif()
 
 set(MACOSX_FILES "")
 if(APPLE)
-    set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/ozymandias.icns)
+    set(RC_FILES ${PROJECT_SOURCE_DIR}/res/ozymandias.icns)
+elseif(MSVC)
+    #set(RC_FILES ${PROJECT_SOURCE_DIR}/res/ozymandias.rc)
 endif()
 
 set(SOURCE_FILES
@@ -300,14 +302,14 @@ set(SOURCE_FILES
     ${GRID_FILES}
     ${GRID_ROUTING_FILES}
     ${IMGUI_FILES}
-    ${PROJECT_SOURCE_DIR}/res/ozymandias.rc
     ${MACOSX_FILES}
+    ${RC_FILES}
 #    ${PNG_FILES}
 #    ${SDL_IMAGE_FILES}
 #    ${ZLIB_FILES}
 )
 
-SET_SOURCE_FILES_PROPERTIES(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
+set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
