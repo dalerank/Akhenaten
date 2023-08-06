@@ -70,17 +70,12 @@ Only tested on Manjaro, but under Ubuntu or similar you should install the same 
 
 - Clone the repository
 
-- Install (You will need to enable AUR on Manjaro):
-  
-  - sudo apt install --yes cmake build-essential libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev
-
 - From the root folder execute:
   
   ```
-  mkdir build
-  cd build
-  cmake ..
-  make
+  $ ./update-workspace-linux.sh
+  $ cmake --build ./build --target clean
+  $ cmake --build ./build
   ```
 
 ### MacOS
