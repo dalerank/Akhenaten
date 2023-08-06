@@ -172,8 +172,8 @@ static generic_button bottom_buttons[]
      {520, 436, 100, 30, button_close, button_none, 1, TR_BUTTON_OK},
      {20, 436, 180, 30, button_hotkeys, button_none, 0, TR_BUTTON_CONFIGURE_HOTKEYS}};
 
-static generic_button page_buttons[] = {{20, 410, 25, 25, button_page, button_none, 0, TR_BUTTON_PREV},
-                                        {160, 410, 25, 25, button_page, button_none, 1, TR_BUTTON_NEXT}};
+static generic_button page_buttons[] = {{20, 16, 25, 25, button_page, button_none, 0, TR_BUTTON_PREV},
+                                        {50, 16, 25, 25, button_page, button_none, 1, TR_BUTTON_NEXT}};
 
 static int page_names[]
   = {TR_CONFIG_HEADER_UI_CHANGES, TR_CONFIG_HEADER_GAMEPLAY_CHANGES, TR_CONFIG_HEADER_GAMEPLAY_CHANGES};
