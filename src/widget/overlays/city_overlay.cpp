@@ -52,6 +52,14 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_hospital();
     case OVERLAY_RELIGION:
         return city_overlay_for_religion();
+    case OVERLAY_RELIGION_OSIRIS:
+        return city_overlay_for_religion_osiris();
+    case OVERLAY_RELIGION_RA:
+        return city_overlay_for_religion_ra();
+    case OVERLAY_RELIGION_PTAH:
+        return city_overlay_for_religion_ptah();
+    case OVERLAY_RELIGION_SETH:
+        return city_overlay_for_religion_seth();
     case OVERLAY_RELIGION_BAST:
         return city_overlay_for_religion_bast();
     case OVERLAY_TAX_INCOME:
