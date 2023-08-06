@@ -1,7 +1,11 @@
 #pragma once
 
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include <cassert>
+#include <algorithm>
+#include <cctype>
 
 template <size_t _size>
 class bstring {
@@ -17,7 +21,7 @@ class bstring {
   };
 
  public:
-  explicit inline bstring(int n, int radix = 10) { ::itoa(n, radix); }
+  explicit inline bstring(int n) { ::snprintf(_data, _size, "%d", n); }
   inline const char* c_str() const { return _data; }
   inline char* data() { return _data; }
   inline bstring() { _data[0] = 0; }
@@ -106,30 +110,30 @@ class bstring {
 
   inline ref append(const char* s) {
     size_t size = this->len();
-    pstr dest = _data + size;
+    char* dest = _data + size;
     size_t remain = _size - size;
    	snprintf(dest, remain, s);
     return *this;
   }
   inline ref append(char s) {
     size_t size = this->len();
-    pstr dest = _data + size;
+    char* dest = _data + size;
     size_t remain = _size - size;
     if (remain > 0) {
-    	strcat(dest, remain, s);
+    	::strncat(dest, remain, s);
     	*(dest+1) = '\0';
     }
 
     return *this;
   }
-  inline ref itoa(int n, int radix = 10) {
-    ::itoa(n, _data, radix);
+  inline ref itoa(int n) {
+    ::snprintf(_data, _size, "%d", n);
     return *this;
   }
   inline int atoi() { return ::atoi(_data); }
   inline float atof() { return ::atof(_data); }
 
-  inline int64_t atoi64() { return ::_atoi64(_data); }
+  inline int64_t atoi64() { return ::strtoll(_data); }
 
   template<typename ... Args>
   inline ref printf(const char* fmt, Args&&... args) {
@@ -138,6 +142,7 @@ class bstring {
     return *this;
   }
   inline ref tolower() {
+    char* str = _data;
     while (*str) {
       *str = std::tolower(*str);
       ++str;
@@ -145,6 +150,7 @@ class bstring {
     return *this;
   }
   inline ref toupper() {
+    char* str = _data;
     while (*str) {
       *str = std::toupper(*str);
       ++str;
@@ -152,7 +158,7 @@ class bstring {
     return *this;
   }
   inline ref trim() {
-    char* end = std::remove_if(str, str + std::strlen(str), ::isspace);
+    char* end = std::remove_if(_data, _data + len(), ::isspace);
     *end = '\0';
 
     return *this;
@@ -163,31 +169,25 @@ class bstring {
   inline bool ends_with(const char* s) const { return sz_ends_with(_data, s); }
 
   inline ref replace(const char x, const char y) {
-    std::replace_if(
-        str, str + std::strlen(str),
-        [oldSymbol](char c) { return c == oldSymbol; }, newSymbol);
-
+    std::replace_if(_data, _data + len(), [x](char c) { return c == x; }, y);
     return *this;
   }
-  inline ref replace_str(const char* src, const char* to,
-                         const char* from = nullptr) {
-    const size_t originalLen = std::strlen(originalString);
-    const size_t substringLen = std::strlen(substringToReplace);
-    const size_t replacementLen = std::strlen(replacement);
+  inline ref replace_str(const char* subst, const char* repl) {
+    const size_t _len = len();
+    const size_t subst_len = ::strlen(subst);
+    const size_t repl_len = ::strlen(repl);
 
-    char* foundPosition =
-        std::search(originalString, originalString + originalLen,
-                    substringToReplace, substringToReplace + substringLen);
+    char* found_pos = std::search(_data, _data + len(), subst, subst + subst_len);
 
-    while (foundPosition != originalString + originalLen) {
-      ptrdiff_t sizeDiff = replacementLen - substringLen;
-      std::memmove(
-          foundPosition + replacementLen, foundPosition + substringLen,
-          originalString + originalLen - (foundPosition + substringLen) + 1);
-      std::memcpy(foundPosition, replacement, replacementLen);
-      foundPosition = std::search(
-          foundPosition + replacementLen, originalString + originalLen,
-          substringToReplace, substringToReplace + substringLen);
+    while (found_pos != _data + _len) {
+      ptrdiff_t sizeDiff = repl_len - subst_len;
+      ::memmove(
+          found_pos + repl_len, found_pos + subst_len,
+          _data + _len - (found_pos + subst_len) + 1);
+      ::memcpy(found_pos, repl, repl_len);
+      found_pos = std::search(
+          found_pos + repl_len, _data + _len,
+          subst, subst + subst_len);
     }
     return *this;
   }
