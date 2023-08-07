@@ -4,7 +4,8 @@
 
 [Discord Chat](https://discord.gg/HS4njmBvpb)
 
-![2023-07-01 13_28_28-Window](https://github.com/dalerank/Ozymandias/assets/918081/6e2358ad-82af-4374-89d1-35d56b917e1e)
+![2023-08-06_21_29_36-ozymandias](https://github.com/dalerank/Ozymandias/assets/918081/f009ec60-47d6-49e5-811c-2ed72f12ab7c)
+
 
 This is a fork of the **Julius/Augustus** project with the aim of making it work with _Pharaoh_ instead of _Caesar 3_.
 
