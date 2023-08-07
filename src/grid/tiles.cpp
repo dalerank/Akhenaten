@@ -1568,7 +1568,11 @@ static void set_empty_land_pass2(int grid_offset) {
     }
 }
 
-void map_tiles_update_all_empty_land(void) {
+void map_tiles_update_all_cleared_land() {
+    foreach_map_tile(clear_empty_land_image);
+}
+
+void map_tiles_update_all_empty_land() {
     //foreach_map_tile(clear_empty_land_image);
     foreach_map_tile(set_empty_land_pass1);
     foreach_map_tile(set_empty_land_pass2);
