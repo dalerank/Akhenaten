@@ -130,7 +130,7 @@ public:
             unsigned short ph_unk02_u8;
         } entertainment;
         struct {
-            short foods_ph[8];
+            short foods[8];
             short inventory[8];
             unsigned char theater;
             unsigned char amphitheater_actor;

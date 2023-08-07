@@ -1,6 +1,6 @@
 #include "house.h"
-#include <game/tutorial.h>
 
+#include "game/tutorial.h"
 #include "core/game_environment.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -595,6 +595,7 @@ void building_house_devolve_from_large_palace(building* house) {
                       population_per_tile,
                       inventory_per_tile);
 }
+
 void building_house_check_for_corruption(building* house) {
     house->data.house.no_space_to_expand = 0;
 
