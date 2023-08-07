@@ -123,8 +123,9 @@ void building_house_change_to_vacant_lot(building* house) {
         create_vacant_lot(house->tile.x() + 1, house->tile.y(), image_id);
         create_vacant_lot(house->tile.x(), house->tile.y() + 1, image_id);
         create_vacant_lot(house->tile.x() + 1, house->tile.y() + 1, image_id);
-    } else
+    } else {
         map_image_set(house->tile.grid_offset(), image_id);
+    }
 }
 
 static void prepare_for_merge(int building_id, int num_tiles) {
