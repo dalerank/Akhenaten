@@ -372,11 +372,11 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
     data.focus_tooltip_text_id = 0;
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = sidebar_common_get_x_offset_collapsed();
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, 1, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, std::size(button_expand_sidebar), &button_id);
         if (button_id)
             data.focus_tooltip_text_id = 12;
 
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, 12, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, std::size(buttons_build_collapsed), &button_id);
         if (button_id)
             data.focus_tooltip_text_id = button_id + 19;
 
@@ -385,30 +385,36 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
             return true;
 
         int x_offset = sidebar_common_get_x_offset_expanded();
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, 2, &button_id);
-        if (button_id)
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, std::size(buttons_overlays_collapse_sidebar), &button_id);
+        if (button_id) {
             data.focus_tooltip_text_id = button_id + 9;
+        }
 
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, 15, &button_id);
-        if (button_id)
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, std::size(buttons_top_expanded), &button_id);
+        if (button_id) {
             data.focus_tooltip_text_id = button_id + 19;
+        }
 
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded, 6, &button_id);
-        if (button_id)
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded, std::size(buttons_top_expanded), &button_id);
+        if (button_id) {
             data.focus_tooltip_text_id = button_id + 40;
+        }
 
         handled |= (sidebar_extra_handle_mouse(m) != 0);
     }
     return handled;
 }
+
 int widget_sidebar_city_handle_mouse_build_menu(const mouse* m) {
     if (city_view_is_sidebar_collapsed()) {
-        return image_buttons_handle_mouse(
-          m, sidebar_common_get_x_offset_collapsed(), 24, buttons_build_collapsed, 12, 0);
+        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_collapsed(), 24,
+                                            buttons_build_collapsed, std::size(buttons_build_collapsed), 0);
     } else {
-        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build_expanded, 15, 0);
+        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24,
+                                            buttons_build_expanded, std::size(buttons_build_expanded), 0);
     }
 }
+
 int widget_sidebar_city_get_tooltip_text(void) {
     return g_sidebar_data.focus_tooltip_text_id;
 }
