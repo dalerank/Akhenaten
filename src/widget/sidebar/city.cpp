@@ -390,7 +390,7 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
             data.focus_tooltip_text_id = button_id + 9;
         }
 
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, std::size(buttons_top_expanded), &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, std::size(buttons_build_expanded), &button_id);
         if (button_id) {
             data.focus_tooltip_text_id = button_id + 19;
         }
