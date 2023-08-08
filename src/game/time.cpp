@@ -2,44 +2,46 @@
 #include "io/io_buffer.h"
 #include <scenario/property.h>
 
-static time_data_t data;
+static game_time g_game_time;
 
-const time_data_t* game_time_struct() {
-    return &data;
+constexpr int max_game_tick = 50;
+
+const game_time& gametime() {
+    return g_game_time;
 }
 
 void game_time_init(int year) {
-    data.tick = 0;
-    data.day = 0;
-    data.month = 0;
-    data.total_days = 0;
-    data.year = year;
+    g_game_time.tick = 0;
+    g_game_time.day = 0;
+    g_game_time.month = 0;
+    g_game_time.total_days = 0;
+    g_game_time.year = year;
 }
 
 int game_time_tick(void) {
-    return data.tick;
+    return g_game_time.tick;
 }
 int game_time_day(void) {
-    return data.day;
+    return g_game_time.day;
 }
 int game_time_month(void) {
-    return data.month;
+    return g_game_time.month;
 }
 int game_time_year(void) {
-    return data.year;
+    return g_game_time.year;
 }
 int game_time_year_since_start(void) {
-    return data.year - scenario_property_start_year();
+    return g_game_time.year - scenario_property_start_year();
 }
 
 int game_time_absolute_day(bool since_start) {
-    int days = data.month * 16 + data.day;
+    int days = g_game_time.month * 16 + g_game_time.day;
     if (since_start)
         days += 192 * game_time_year_since_start();
     return days;
 }
 int game_time_absolute_tick(bool since_start) {
-    int ticks = game_time_absolute_day() * 51 + data.tick;
+    int ticks = game_time_absolute_day() * 51 + g_game_time.tick;
     if (since_start)
         ticks += 9792 * game_time_year_since_start();
     return ticks;
@@ -48,37 +50,35 @@ int game_time_absolute_tick(bool since_start) {
 #include "core/game_environment.h"
 
 int game_time_advance_tick(void) {
-    if (++data.tick >= 50) {
-        if (GAME_ENV == ENGINE_ENV_PHARAOH && data.tick == 50)
-            return 0;
-        data.tick = 0;
+    if (++g_game_time.tick >= max_game_tick) {
+        g_game_time.tick = 0;
         return 1;
     }
     return 0;
 }
 int game_time_advance_day(void) {
-    data.total_days++;
-    if (++data.day >= 16) {
-        data.day = 0;
+    g_game_time.total_days++;
+    if (++g_game_time.day >= 16) {
+        g_game_time.day = 0;
         return 1;
     }
     return 0;
 }
 int game_time_advance_month(void) {
-    if (++data.month >= 12) {
-        data.month = 0;
+    if (++g_game_time.month >= 12) {
+        g_game_time.month = 0;
         return 1;
     }
     return 0;
 }
 void game_time_advance_year(void) {
-    ++data.year;
+    ++g_game_time.year;
 }
 
 io_buffer* iob_game_time = new io_buffer([](io_buffer* iob) {
-    iob->bind(BIND_SIGNATURE_INT32, &data.tick);
-    iob->bind(BIND_SIGNATURE_INT32, &data.day);
-    iob->bind(BIND_SIGNATURE_INT32, &data.month);
-    iob->bind(BIND_SIGNATURE_INT32, &data.year);
-    iob->bind(BIND_SIGNATURE_INT32, &data.total_days);
+    iob->bind(BIND_SIGNATURE_INT32, &g_game_time.tick);
+    iob->bind(BIND_SIGNATURE_INT32, &g_game_time.day);
+    iob->bind(BIND_SIGNATURE_INT32, &g_game_time.month);
+    iob->bind(BIND_SIGNATURE_INT32, &g_game_time.year);
+    iob->bind(BIND_SIGNATURE_INT32, &g_game_time.total_days);
 });

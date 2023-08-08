@@ -950,8 +950,9 @@ static void set_water_image(int grid_offset) {
         }
     }
     if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)
-        && map_terrain_exists_tile_in_radius_with_exact(x, y, 1, 1, TERRAIN_GROUNDWATER))
+        && map_terrain_exists_tile_in_radius_with_exact(x, y, 1, 1, TERRAIN_GROUNDWATER)) {
         return;
+    }
     map_image_set(grid_offset, image_id);
     map_property_set_multi_tile_size(grid_offset, 1);
     map_property_mark_draw_tile(grid_offset);
@@ -1567,8 +1568,12 @@ static void set_empty_land_pass2(int grid_offset) {
     }
 }
 
-void map_tiles_update_all_empty_land(void) {
+void map_tiles_update_all_cleared_land() {
     foreach_map_tile(clear_empty_land_image);
+}
+
+void map_tiles_update_all_empty_land() {
+    //foreach_map_tile(clear_empty_land_image);
     foreach_map_tile(set_empty_land_pass1);
     foreach_map_tile(set_empty_land_pass2);
     foreach_map_tile(set_floodplain_edge_3x3_tiles);

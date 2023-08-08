@@ -22,7 +22,8 @@ void map_tiles_update_all_roads(void);
 void map_tiles_update_area_roads(int x, int y, int size);
 int map_tiles_set_road(int x, int y);
 
-void map_tiles_update_all_empty_land(void);
+void map_tiles_update_all_cleared_land();
+void map_tiles_update_all_empty_land();
 void map_tiles_update_region_empty_land(bool clear, int x_min, int y_min, int x_max, int y_max);
 
 void map_tiles_update_all_meadow(void);

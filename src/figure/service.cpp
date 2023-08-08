@@ -101,20 +101,20 @@ static void hippodrome_coverage(building* b) {
 static void magistrate_coverage(building* b) {
     b->data.house.magistrate = MAX_COVERAGE;
 }
-static void religion_coverage_ceres(building* b) {
-    b->data.house.temple_ceres = MAX_COVERAGE;
+static void religion_coverage_osiris(building* b) {
+    b->data.house.temple_osiris = MAX_COVERAGE;
 }
-static void religion_coverage_neptune(building* b) {
-    b->data.house.temple_neptune = MAX_COVERAGE;
+static void religion_coverage_ra(building* b) {
+    b->data.house.temple_ra = MAX_COVERAGE;
 }
-static void religion_coverage_mercury(building* b) {
-    b->data.house.temple_mercury = MAX_COVERAGE;
+static void religion_coverage_ptah(building* b) {
+    b->data.house.temple_ptah = MAX_COVERAGE;
 }
-static void religion_coverage_mars(building* b) {
-    b->data.house.temple_mars = MAX_COVERAGE;
+static void religion_coverage_seth(building* b) {
+    b->data.house.temple_seth = MAX_COVERAGE;
 }
-static void religion_coverage_venus(building* b) {
-    b->data.house.temple_venus = MAX_COVERAGE;
+static void religion_coverage_bast(building* b) {
+    b->data.house.temple_bast = MAX_COVERAGE;
 }
 static void school_coverage(building* b) {
     b->data.house.school = MAX_COVERAGE;
@@ -320,23 +320,23 @@ int figure::figure_service_provide_coverage() {
         switch (home()->type) {
         case BUILDING_TEMPLE_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-            houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_ceres);
+            houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_osiris);
             break;
         case BUILDING_TEMPLE_RA:
         case BUILDING_TEMPLE_COMPLEX_RA:
-            houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_neptune);
+            houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_ra);
             break;
         case BUILDING_TEMPLE_PTAH:
         case BUILDING_TEMPLE_COMPLEX_PTAH:
-            houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_mercury);
+            houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_ptah);
             break;
         case BUILDING_TEMPLE_SETH:
         case BUILDING_TEMPLE_COMPLEX_SETH:
-            houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_mars);
+            houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_seth);
             break;
         case BUILDING_TEMPLE_BAST:
         case BUILDING_TEMPLE_COMPLEX_BAST:
-            houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_venus);
+            houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_bast);
             break;
         default:
             break;

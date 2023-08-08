@@ -84,7 +84,7 @@ static figure_action_property action_properties_lookup[] = {
   {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                       // FIGURE_CREATURE = 63,
   {1, TERRAIN_USAGE_ROADS, 192, GROUP_FIGURE_MISSIONARY},                // FIGURE_MISSIONARY = 64,
   {1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_SEAGULLS},                      // FIGURE_FISH_GULLS = 65,
-  {1, TERRAIN_USAGE_ROADS, 0, 0, 0 /*GROUP_FIGURE_DELIVERY_BOY*/},       // FIGURE_DELIVERY_BOY = 66,
+  {1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_GRANARY_BOY},                 // FIGURE_DELIVERY_BOY = 66,
   {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                       // FIGURE_SHIPWRECK = 67,
   {2, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_SHEEP},                      // FIGURE_SHEEP = 68,
   {2, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_OSTRICH_WALK},               // FIGURE_OSTRICH = 69,
@@ -591,7 +591,7 @@ void figure::action_perform() {
         case 65:
             seagulls_action();
             break;
-        case 66:
+        case FIGURE_DELIVERY_BOY:
             delivery_boy_action();
             break;
         case 67:

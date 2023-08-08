@@ -7,11 +7,13 @@
 #include "grid/building.h"
 #include "grid/ring.h"
 
-static struct {
+struct state_data_t {
     bool paused;
     int current_overlay;
     int previous_overlay;
-} data = {false, OVERLAY_NONE, OVERLAY_NONE};
+};
+
+state_data_t g_state_data = {false, OVERLAY_NONE, OVERLAY_NONE};
 
 void game_state_init(void) {
     city_victory_reset();
@@ -25,33 +27,33 @@ void game_state_init(void) {
     city_warning_clear_all();
 }
 bool game_state_is_paused(void) {
-    return data.paused;
+    return g_state_data.paused;
 }
 void game_state_unpause(void) {
-    data.paused = 0;
+    g_state_data.paused = 0;
 }
 void game_state_toggle_paused(void) {
-    data.paused = data.paused ? 0 : 1;
+    g_state_data.paused = g_state_data.paused ? 0 : 1;
 }
 int game_state_overlay(void) {
-    return data.current_overlay;
+    return g_state_data.current_overlay;
 }
 void game_state_reset_overlay(void) {
-    data.current_overlay = OVERLAY_NONE;
-    data.previous_overlay = OVERLAY_NONE;
+    g_state_data.current_overlay = OVERLAY_NONE;
+    g_state_data.previous_overlay = OVERLAY_NONE;
 }
 void game_state_toggle_overlay(void) {
-    int tmp = data.previous_overlay;
-    data.previous_overlay = data.current_overlay;
-    data.current_overlay = tmp;
+    int tmp = g_state_data.previous_overlay;
+    g_state_data.previous_overlay = g_state_data.current_overlay;
+    g_state_data.current_overlay = tmp;
     map_clear_highlights();
 }
 void game_state_set_overlay(int overlay) {
-    if (overlay == OVERLAY_NONE)
-        data.previous_overlay = data.current_overlay;
-    else {
-        data.previous_overlay = OVERLAY_NONE;
+    if (overlay == OVERLAY_NONE) {
+        g_state_data.previous_overlay = g_state_data.current_overlay;
+    } else {
+        g_state_data.previous_overlay = OVERLAY_NONE;
     }
-    data.current_overlay = overlay;
+    g_state_data.current_overlay = overlay;
     map_clear_highlights();
 }

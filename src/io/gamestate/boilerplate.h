@@ -2,6 +2,16 @@
 #define GAME_FILE_H
 
 #include <string.h>
+#include <cstdint>
+
+// file versions found so far:
+//  144 (Bridges.map only)
+//  146 (NAFTA.map and Warfare.map only)
+//  147 (most of the older campaign scenarios)
+//  149 (later campaign scenarios and maps)
+//  150 (later campaign scenarios and maps)
+//  160 (post-Cleopatra campaign scenarios, patched Bubastis scenario)
+constexpr uint32_t current_save_version = 160;
 
 void fullpath_saves(char* full, const char* filename);
 void fullpath_maps(char* full, const char* filename);

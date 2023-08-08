@@ -130,7 +130,7 @@ public:
             unsigned short ph_unk02_u8;
         } entertainment;
         struct {
-            short foods_ph[8];
+            short foods[8];
             short inventory[8];
             unsigned char theater;
             unsigned char amphitheater_actor;
@@ -145,11 +145,11 @@ public:
             unsigned char clinic;
             unsigned char bathhouse;
             unsigned char hospital;
-            unsigned char temple_ceres;
-            unsigned char temple_neptune;
-            unsigned char temple_mercury;
-            unsigned char temple_mars;
-            unsigned char temple_venus;
+            unsigned char temple_osiris;
+            unsigned char temple_ra;
+            unsigned char temple_ptah;
+            unsigned char temple_seth;
+            unsigned char temple_bast;
             unsigned char no_space_to_expand;
             unsigned char num_foods;
             unsigned char entertainment;

@@ -45,7 +45,7 @@ enum {
     FESTIVAL_BAST_SPECIAL = 4,
 };
 
-enum {
+enum e_god {
     GOD_OSIRIS = 0, // GOD_CERES = 0,
     GOD_RA = 1,     // GOD_NEPTUNE = 1,
     GOD_PTAH = 2,   // GOD_MERCURY = 2,

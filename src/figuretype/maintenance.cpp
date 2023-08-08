@@ -145,7 +145,7 @@ bool figure::fight_enemy(int category, int max_distance) {
     }
     return false;
 }
-bool figure::fight_fire() {
+bool figure::fireman_fight_fire() {
     if (building_list_burning_size() <= 0)
         return false;
 
@@ -180,25 +180,29 @@ bool figure::fight_fire() {
     }
     return false;
 }
-void figure::extinguish_fire() {
+void figure::fireman_extinguish_fire() {
     building* burn = destination();
     int distance = calc_maximum_distance(tile.x(), tile.y(), burn->tile.x(), burn->tile.y());
     if ((burn->state == BUILDING_STATE_VALID || burn->state == BUILDING_STATE_MOTHBALLED)
         && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
         burn->fire_duration = 32;
         sound_effect_play(SOUND_EFFECT_FIRE_SPLASH);
-    } else
+    } else {
         wait_ticks = 1;
+    }
     attack_direction = calc_general_direction(tile.x(), tile.y(), burn->tile.x(), burn->tile.y());
-    if (attack_direction >= 8)
-        attack_direction = 0;
+    attack_direction = attack_direction % 8;
 
     wait_ticks--;
     if (wait_ticks <= 0) {
         wait_ticks_missile = 20;
         advance_action(FIGURE_ACTION_73_PREFECT_RETURNING);
-        if (!fight_fire()) // in Pharaoh, firemen teleport back instantly.
-            poof();
+
+        if (!config_get(CONFIG_GP_CH_FIREMAN_RETUNING)) {
+            if (!fireman_fight_fire()) {
+                poof();
+            }
+        }
     }
 }
 int figure::target_is_alive() {
@@ -233,11 +237,7 @@ void figure::engineer_action() {
     }
 }
 void figure::prefect_action() { // doubles as fireman! not as policeman!!!
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        if (!fight_enemy(2, 22))
-            fight_fire();
-    } else
-        fight_fire();
+    fireman_fight_fire();
 
     building* b = home();
     switch (action_state) {
@@ -263,7 +263,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
         break;
     case FIGURE_ACTION_75_PREFECT_AT_FIRE:
     case 13:
-        extinguish_fire();
+        fireman_extinguish_fire();
         break;
     case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
         terrain_usage = TERRAIN_USAGE_ANY;

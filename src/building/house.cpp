@@ -1,6 +1,6 @@
 #include "house.h"
-#include <game/tutorial.h>
 
+#include "game/tutorial.h"
 #include "core/game_environment.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -123,8 +123,9 @@ void building_house_change_to_vacant_lot(building* house) {
         create_vacant_lot(house->tile.x() + 1, house->tile.y(), image_id);
         create_vacant_lot(house->tile.x(), house->tile.y() + 1, image_id);
         create_vacant_lot(house->tile.x() + 1, house->tile.y() + 1, image_id);
-    } else
+    } else {
         map_image_set(house->tile.grid_offset(), image_id);
+    }
 }
 
 static void prepare_for_merge(int building_id, int num_tiles) {
@@ -594,6 +595,7 @@ void building_house_devolve_from_large_palace(building* house) {
                       population_per_tile,
                       inventory_per_tile);
 }
+
 void building_house_check_for_corruption(building* house) {
     house->data.house.no_space_to_expand = 0;
 

@@ -1,5 +1,6 @@
 #include "house.h"
 
+#include "common.h"
 #include "building/building.h"
 #include "building/model.h"
 #include "city/finance.h"

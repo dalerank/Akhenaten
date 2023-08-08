@@ -39,9 +39,7 @@ void overlay_problems_prepare_building(building* b) {
 static int show_building_crime(const building* b) {
     return b->type == BUILDING_POLICE_STATION || b->type == BUILDING_FESTIVAL_SQUARE;
 }
-static int show_building_damage(const building* b) {
-    return b->type == BUILDING_ENGINEERS_POST || b->type == BUILDING_FESTIVAL_SQUARE;
-}
+
 static int show_building_problems(const building* b) {
     return b->show_on_problem_overlay;
 }
@@ -49,9 +47,6 @@ static int show_building_native(const building* b) {
     return b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING || b->type == BUILDING_MISSION_POST;
 }
 
-static int show_figure_damage(const figure* f) {
-    return f->type == FIGURE_ENGINEER;
-}
 static int show_figure_crime(const figure* f) {
     return f->type == FIGURE_POLICEMAN || f->type == FIGURE_PROTESTER || f->type == FIGURE_CRIMINAL
            || f->type == FIGURE_RIOTER;
@@ -185,21 +180,43 @@ struct city_overlay_fire : public city_overlay {
 
 city_overlay_fire g_city_overlay_fire;
 
-const city_overlay* city_overlay_for_fire(void) {
-    return &g_city_overlay_fire;
-}
+const city_overlay *city_overlay_for_fire(void) { return &g_city_overlay_fire; }
+
+struct city_overlay_damage : public city_overlay {
+    city_overlay_damage() {
+        type = OVERLAY_DAMAGE;
+        column_type = COLUMN_TYPE_RISK;
+
+        get_column_height = get_column_height_damage;
+        get_tooltip_for_building = get_tooltip_damage;
+    }
+
+    bool show_figure(const figure* f) const override {
+        return f->type == FIGURE_ENGINEER;
+    }
+
+    void draw_custom_top(pixel_coordinate pixel, map_point point) const override {
+        int grid_offset = point.grid_offset();
+        int x = pixel.x;
+        int y = pixel.y;
+        if (!map_property_is_draw_tile(grid_offset)) {
+            return;
+        }
+
+        if (map_building_at(grid_offset)) {
+            city_with_overlay_draw_building_top(pixel, point);
+        }
+    }
+
+    bool show_building(const building* b) const override {
+        return b->type == BUILDING_ENGINEERS_POST || b->type == BUILDING_FESTIVAL_SQUARE;
+    }
+};
+
+city_overlay_damage g_city_overlay_damage;
 
 const city_overlay* city_overlay_for_damage(void) {
-    static city_overlay overlay = {OVERLAY_DAMAGE,
-                                   COLUMN_TYPE_RISK,
-                                   show_building_damage,
-                                   show_figure_damage,
-                                   get_column_height_damage,
-                                   0,
-                                   get_tooltip_damage,
-                                   0,
-                                   0};
-    return &overlay;
+    return &g_city_overlay_damage;
 }
 
 const city_overlay* city_overlay_for_crime(void) {

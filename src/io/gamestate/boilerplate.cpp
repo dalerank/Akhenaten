@@ -123,14 +123,6 @@ const int GamestateIO::get_campaign_scenario_offset(int scenario_id) {
     return small_buffer->read_i32();
 }
 const int GamestateIO::read_file_version(const char* filename, int offset) {
-    // file versions found so far:
-    //  144 (Bridges.map only)
-    //  146 (NAFTA.map and Warfare.map only)
-    //  147 (most of the older campaign scenarios)
-    //  149 (later campaign scenarios and maps)
-    //  150 (later campaign scenarios and maps)
-    //  160 (post-Cleopatra campaign scenarios, patched Bubastis scenario)
-
     small_buffer->clear();
     if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, small_buffer, 4, offset + 4))
         return -1;
@@ -697,6 +689,7 @@ void GamestateIO::start_loaded_file() {
         map_tiles_update_all_earthquake();
         map_tiles_update_all_rocks();
         map_tiles_add_entry_exit_flags();
+        map_tiles_update_all_cleared_land();
         map_tiles_update_all_empty_land();
         map_tiles_update_all_meadow();
         map_tiles_update_all_roads();

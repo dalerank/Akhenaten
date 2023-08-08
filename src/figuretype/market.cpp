@@ -169,7 +169,7 @@ void figure::delivery_boy_action() {
 
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_GRANARY_BOY) + 96 + figure_image_corpse_offset();
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_GRANARY_BOY_DEATH) + figure_image_corpse_offset();
     } else {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_GRANARY_BOY) + dir + 8 * anim_frame;
     }

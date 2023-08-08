@@ -10,10 +10,12 @@
 static const char* INI_FILENAME = "ozymandias.ini";
 
 // Keep this in the same order as the ints in config.h
-static const struct {
-    const char* name;
+struct enhanced_option_t {
+    const char *name;
     const bool enabled;
-} ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
+};
+
+enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
   {"gameplay_fix_immigration", true},
   {"gameplay_fix_100y_ghosts", true},
   {"gameplay_fix_editor_events", true},
@@ -64,6 +66,7 @@ static const struct {
   {"gameplay_change_multiple_monuments", false},
   {"gameplay_change_soil_depletion", true},
   {"gameplay_change_multiple_gatherers", false},
+  {"#gameplay_change_fireman_returning", true},
 };
 
 static const char* ini_string_keys[] = {

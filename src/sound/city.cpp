@@ -1,6 +1,7 @@
 #include "city.h"
 
 #include "building/type.h"
+#include "building/building.h"
 #include "city/figures.h"
 #include "core/time.h"
 #include "game/settings.h"

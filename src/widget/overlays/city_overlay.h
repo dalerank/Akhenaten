@@ -4,7 +4,7 @@
 #include "figure/figure.h"
 #include "graphics/elements/tooltip.h"
 
-#define NO_COLUMN -1
+constexpr int NO_COLUMN = -1;
 
 enum e_column_type { COLUMN_TYPE_RISK, COLUMN_TYPE_WATER_ACCESS };
 

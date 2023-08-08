@@ -12,7 +12,9 @@
 #define GRID_OFFSET(abs_x, abs_y) ((abs_x) + GRID_LENGTH * (abs_y))
 #define GRID_X(offset) ((offset) % GRID_LENGTH)
 #define GRID_Y(offset) ((offset) / GRID_LENGTH)
-#define MAP_OFFSET(map_x, map_y) (scenario_map_data()->start_offset + GRID_OFFSET(map_x, map_y))
+inline uint32_t MAP_OFFSET(uint32_t map_x, uint32_t map_y) { 
+    return scenario_map_data()->start_offset + GRID_OFFSET(map_x, map_y);
+}
 #define MAP_X(offset) (GRID_X(offset - scenario_map_data()->start_offset))
 #define MAP_Y(offset) (GRID_Y(offset - scenario_map_data()->start_offset))
 

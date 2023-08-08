@@ -776,18 +776,16 @@ int building_mothball_set(building* b, int mothball) {
 
 static void read_type_data(io_buffer* iob, building* b) {
     if (building_is_house(b->type)) {
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            for (int i = 0; i < INVENTORY_MAX; i++)
-                iob->bind(BIND_SIGNATURE_INT16, &b->data.house.inventory[i]);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            for (int i = 0; i < 9; i++)
-                iob->bind(BIND_SIGNATURE_INT16, &b->data.house.foods_ph[i]);
-            for (int i = 0; i < 4; i++) {
-                int food_n = ALLOWED_FOODS(i);
-                b->data.house.inventory[i] = b->data.house.foods_ph[food_n];
-                iob->bind(BIND_SIGNATURE_INT16, &b->data.house.inventory[i + 4]);
-            }
+        for (e_resource e = RESOURCE_NONE; e < RESOURCES_FOODS_MAX; ++e) {
+            iob->bind(BIND_SIGNATURE_INT16, &b->data.house.foods[e]);
         }
+
+        for (int i = 0; i < 4; i++) {
+            int good_n = ALLOWED_FOODS(i);
+            b->data.house.inventory[i] = b->data.house.inventory[good_n];
+            iob->bind(BIND_SIGNATURE_INT16, &b->data.house.inventory[i + 4]);
+        }
+
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.theater);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.amphitheater_actor);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.amphitheater_gladiator);
@@ -801,11 +799,11 @@ static void read_type_data(io_buffer* iob, building* b) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.clinic);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.bathhouse);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.hospital);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_ceres);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_neptune);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_mercury);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_mars);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_venus);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_osiris);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_ra);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_ptah);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_seth);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_bast);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.no_space_to_expand);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.num_foods);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.entertainment);
@@ -814,45 +812,33 @@ static void read_type_data(io_buffer* iob, building* b) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.num_gods);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.devolve_delay);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.evolve_text_id);
+
     } else if (b->type == BUILDING_MARKET) {
         iob->bind____skip(2);
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            for (int i = 0; i < INVENTORY_MAX; i++)
-                iob->bind(BIND_SIGNATURE_INT16, &b->data.market.inventory[i]);
-            iob->bind(BIND_SIGNATURE_INT16, &b->data.market.pottery_demand);
-            iob->bind(BIND_SIGNATURE_INT16, &b->data.market.furniture_demand);
-            iob->bind(BIND_SIGNATURE_INT16, &b->data.market.oil_demand);
-            iob->bind(BIND_SIGNATURE_INT16, &b->data.market.wine_demand);
-            iob->bind____skip(6);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.market.fetch_inventory_id);
-            iob->bind____skip(9);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            //            iob->bind____skip(8);
-            iob->bind(BIND_SIGNATURE_INT16, &b->data.market.pottery_demand);
-            iob->bind(BIND_SIGNATURE_INT16, &b->data.market.furniture_demand);
-            iob->bind(BIND_SIGNATURE_INT16, &b->data.market.oil_demand);
-            iob->bind(BIND_SIGNATURE_INT16, &b->data.market.wine_demand);
-            for (int i = 0; i < INVENTORY_MAX; i++)
-                iob->bind(BIND_SIGNATURE_INT32, &b->data.market.inventory[i]);
-            //            iob->bind____skip(6);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.market.fetch_inventory_id);
-            iob->bind____skip(7);
-            //            iob->bind____skip(6);
-            //            iob->bind(BIND_SIGNATURE_UINT8, &b->data.market.fetch_inventory_id);
-            //            iob->bind____skip(9);
+        //            iob->bind____skip(8);
+        iob->bind(BIND_SIGNATURE_INT16, &b->data.market.pottery_demand);
+        iob->bind(BIND_SIGNATURE_INT16, &b->data.market.furniture_demand);
+        iob->bind(BIND_SIGNATURE_INT16, &b->data.market.oil_demand);
+        iob->bind(BIND_SIGNATURE_INT16, &b->data.market.wine_demand);
+        for (int i = 0; i < INVENTORY_MAX; i++) {
+            iob->bind(BIND_SIGNATURE_INT32, &b->data.market.inventory[i]);
         }
+        //            iob->bind____skip(6);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.market.fetch_inventory_id);
+        iob->bind____skip(7);
+        //            iob->bind____skip(6);
+        //            iob->bind(BIND_SIGNATURE_UINT8, &b->data.market.fetch_inventory_id);
+        //            iob->bind____skip(9);
     } else if (b->type == BUILDING_GRANARY) {
         iob->bind____skip(2);
-        if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            iob->bind____skip(2);
+        iob->bind____skip(2);
+
         for (int i = 0; i < RESOURCES_MAX; i++) {
             iob->bind(BIND_SIGNATURE_INT16, &b->data.granary.resource_stored[i]);
             b->data.granary.resource_stored[i] = (b->data.granary.resource_stored[i] / 100) * 100; // todo
         }
-        if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            iob->bind____skip(6);
-        else
-            iob->bind____skip(8);
+        iob->bind____skip(6);
+ 
     } else if (b->type == BUILDING_DOCK) {
         iob->bind(BIND_SIGNATURE_INT16, &b->data.dock.queued_docker_id);
         iob->bind____skip(25);
@@ -860,21 +846,25 @@ static void read_type_data(io_buffer* iob, building* b) {
         iob->bind____skip(2);
         iob->bind(BIND_SIGNATURE_INT8, &b->data.dock.orientation);
         iob->bind____skip(3);
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++) {
             iob->bind(BIND_SIGNATURE_INT16, &b->data.dock.docker_ids[i]);
+        }
         iob->bind(BIND_SIGNATURE_INT16, &b->data.dock.trade_ship_id);
+
     } else if (building_is_industry_type(b)) {
-        if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            for (int i = 0; i < 2; i++)
-                iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_2[i]);
+        for (int i = 0; i < 2; i++) {
+            iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_2[i]);
+        }
         //            iob->bind____skip(2);
         iob->bind(BIND_SIGNATURE_INT16, &b->data.industry.progress);
-        for (int i = 0; i < 12; i++)
+        for (int i = 0; i < 12; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_b[i]);
+        }
         //        iob->bind____skip(12);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.has_fish);
-        for (int i = 0; i < 14; i++)
+        for (int i = 0; i < 14; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_c[i]);
+        }
         //        iob->bind____skip(14);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.blessing_days_left);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.orientation);
@@ -882,46 +872,45 @@ static void read_type_data(io_buffer* iob, building* b) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_1);
         //        iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.curse_days_left);
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 6; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_6[i]);
+        }
         //        iob->bind____skip(6);
         iob->bind(BIND_SIGNATURE_INT16, &b->data.industry.fishing_boat_id);
-        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            for (int i = 0; i < 40; i++)
-                iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_40[i]);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.labor_state);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.labor_days_left);
-            for (int i = 0; i < 12; i++)
-                iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_12[i]);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.worker_id);
+
+        for (int i = 0; i < 40; i++) {
+            iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_40[i]);
         }
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.labor_state);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.labor_days_left);
+        for (int i = 0; i < 12; i++) {
+            iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_12[i]);
+        }
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.worker_id);
+
     } else if (building_is_statue(b->type) || building_is_large_temple(b->type)) {
         iob->bind____skip(87);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.temple_complex_attachments);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.variant);
+
     } else if (b->type == BUILDING_WATER_LIFT || b->type == BUILDING_FERRY) {
         iob->bind____skip(88);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.orientation);
+
     } else {
         iob->bind____skip(26);
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.num_shows);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days1);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days2);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days3_or_play);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            iob->bind____skip(58);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.num_shows);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days1);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days2);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days3_or_play);
-            iob->bind____skip(20);
-            iob->bind(BIND_SIGNATURE_UINT32, &b->data.entertainment.ph_unk00_u32); //  5 for latched booth??
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.ph_unk01_u8);   // 50 ???
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.ph_unk02_u8);   //  2 for latched booth??
-            iob->bind____skip(12);
-            iob->bind(BIND_SIGNATURE_INT32, &b->data.entertainment.booth_corner_grid_offset);
-        }
+        iob->bind____skip(58);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.num_shows);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days1);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days2);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days3_or_play);
+        iob->bind____skip(20);
+        iob->bind(BIND_SIGNATURE_UINT32, &b->data.entertainment.ph_unk00_u32); //  5 for latched booth??
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.ph_unk01_u8);   // 50 ???
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.ph_unk02_u8);   //  2 for latched booth??
+        iob->bind____skip(12);
+        iob->bind(BIND_SIGNATURE_INT32, &b->data.entertainment.booth_corner_grid_offset);
+
     }
 }
 
@@ -932,6 +921,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob) {
         int sind = iob->get_offset();
         if (sind == 640)
             int a = 2134;
+
         iob->bind(BIND_SIGNATURE_UINT8, &b->state);
         iob->bind(BIND_SIGNATURE_UINT8, &b->faction_id);
         iob->bind(BIND_SIGNATURE_UINT8, &b->unknown_value);
@@ -954,13 +944,8 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob) {
         iob->bind(BIND_SIGNATURE_INT16, &b->house_highest_population);
 
         iob->bind(BIND_SIGNATURE_INT16, &b->house_unreachable_ticks);
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            iob->bind(BIND_SIGNATURE_UINT8, b->road_access.private_access(_X));
-            iob->bind(BIND_SIGNATURE_UINT8, b->road_access.private_access(_Y));
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            iob->bind(BIND_SIGNATURE_UINT16, b->road_access.private_access(_X));
-            iob->bind(BIND_SIGNATURE_UINT16, b->road_access.private_access(_Y));
-        }
+        iob->bind(BIND_SIGNATURE_UINT16, b->road_access.private_access(_X));
+        iob->bind(BIND_SIGNATURE_UINT16, b->road_access.private_access(_Y));
         //        b->set_figure(0, buf->read_u16());
         //        b->set_figure(1, buf->read_u16());
         //        b->set_figure(2, buf->read_u16());
@@ -997,8 +982,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob) {
         read_type_data(iob, b); // 42 bytes for C3, 102 for PH
 
         int currind = iob->get_offset() - sind;
-        if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            iob->bind____skip(184 - currind);
+        iob->bind____skip(184 - currind);
 
         iob->bind(BIND_SIGNATURE_INT32, &b->tax_income_or_storage);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_days_without_food);
@@ -1016,18 +1000,16 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob) {
 
         // 68 additional bytes
 
-        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            iob->bind____skip(68); // temp for debugging
+        iob->bind____skip(68); // temp for debugging
                                    //            assert(iob->get_offset() - sind == 264);
-        }
-
         g_all_buildings[i].id = i;
     }
     building_extra_data.created_sequence = 0;
 });
 
-io_buffer* iob_building_highest_id
-  = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_in_use); });
+io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob) {
+    iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_in_use);
+});
 
 io_buffer* iob_building_highest_id_ever = new io_buffer([](io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_ever);

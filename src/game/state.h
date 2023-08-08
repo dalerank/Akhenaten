@@ -1,7 +1,6 @@
-#ifndef GAME_STATE_H
-#define GAME_STATE_H
+#pragma once
 
-enum {
+enum e_overlay {
     OVERLAY_NONE = 0,
     OVERLAY_WATER = 2,
     OVERLAY_RELIGION = 4,
@@ -26,7 +25,12 @@ enum {
     OVERLAY_DESIRABILITY = 26,
     OVERLAY_WORKERS_UNUSED = 27,
     OVERLAY_NATIVE = 28,
-    OVERLAY_PROBLEMS = 29
+    OVERLAY_PROBLEMS = 29,
+    OVERLAY_RELIGION_OSIRIS = 30,
+    OVERLAY_RELIGION_RA = 31,
+    OVERLAY_RELIGION_PTAH = 32,
+    OVERLAY_RELIGION_SETH = 33,
+    OVERLAY_RELIGION_BAST = 34,
 };
 
 void game_state_init(void);
@@ -44,5 +48,3 @@ void game_state_reset_overlay(void);
 void game_state_toggle_overlay(void);
 
 void game_state_set_overlay(int overlay);
-
-#endif // GAME_STATE_H

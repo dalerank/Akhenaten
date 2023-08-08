@@ -433,8 +433,8 @@ public:
 
     // maintenance.c
     bool fight_enemy(int category, int max_distance);
-    bool fight_fire();
-    void extinguish_fire();
+    bool fireman_fight_fire();
+    void fireman_extinguish_fire();
     int target_is_alive();
 
     // crime.c

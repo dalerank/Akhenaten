@@ -37,6 +37,7 @@
 #include "window/sound_options.h"
 #include "window/speed_options.h"
 #include "window/hotkey_config.h"
+#include "window/config.h"
 
 #include "core/core_utility.h"
 #include "core/span.hpp"
@@ -644,12 +645,13 @@ int widget_top_menu_get_tooltip_text(tooltip_context* c) {
     return 0;
 }
 
-static void replay_map_confirmed(bool confirmed) {
+static void replay_map_handle(bool confirmed) {
     if (!confirmed) {
         window_city_show();
         return;
     }
 
+    Planner.reset();
     if (scenario_is_custom()) {
         GamestateIO::load_savegame("autosave_replay.sav");
         window_city_show();
@@ -659,17 +661,27 @@ static void replay_map_confirmed(bool confirmed) {
         GamestateIO::load_mission(scenario_id, true);
     }
 }
-static void menu_file_new_game(int param) {
-    clear_state();
+
+static void menu_file_new_game_handle(bool confirmed) {
+    if (!confirmed) {
+        window_city_show();
+        return;
+    }
+
     Planner.reset();
     game_undo_disable();
     game_state_reset_overlay();
     window_game_menu_show();
 }
+
+static void menu_file_new_game(int param) {
+    clear_state();
+    window_popup_dialog_show(POPUP_DIALOG_QUIT, menu_file_new_game_handle, e_popup_btns_yesno);
+}
+
 static void menu_file_replay_map(int param) {
     clear_state();
-    Planner.reset();
-    window_popup_dialog_show_confirmation(1, 2, replay_map_confirmed);
+    window_popup_dialog_show_confirmation(1, 2, replay_map_handle);
 }
 static void menu_file_load_game(int param) {
     clear_state();
@@ -721,11 +733,16 @@ static void menu_options_autosave(int param) {
     set_text_for_autosave();
 }
 
+static void menu_options_change_enh_back() {
+
+}
+
 static void menu_options_change_enh(int param) {
+    window_config_show(menu_options_change_enh_back);
 }
 
 static void menu_options_hotkeys(int param) {
-    window_hotkey_config_show();
+    window_hotkey_config_show(menu_options_change_enh_back);
 }
 
 static void menu_help_help(int param) {

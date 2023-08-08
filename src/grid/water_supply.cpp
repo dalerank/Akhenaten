@@ -15,18 +15,21 @@
 #include "grid/terrain.h"
 #include "scenario/property.h"
 #include "tiles.h"
-#include <scenario/map.h>
+#include "core/svector.h"
+#include "scenario/map.h"
 
 #include <scenario/map.h>
 #include <string.h>
 
 #define MAX_QUEUE 1000
 
-static struct {
+struct water_supply_queue_t {
     int items[MAX_QUEUE];
     int head;
     int tail;
-} queue;
+};
+
+water_supply_queue_t g_water_supply_queue;
 
 static void mark_well_access(int well_id, int radius) {
     building* well = building_get(well_id);
@@ -36,38 +39,39 @@ static void mark_well_access(int well_id, int radius) {
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int building_id = map_building_at(MAP_OFFSET(xx, yy));
-            if (building_id)
-                building_get(building_id)->has_well_access = 1;
+
+            if (building_id) {
+                building_get(building_id)->has_well_access = true;
+            }
         }
     }
 }
 
-void map_water_supply_update_houses(void) {
+void map_water_supply_update_houses() {
     building_list_small_clear();
+
+    svector<int, 512> wells;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
+
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
-        if (b->type == BUILDING_WELL)
-            building_list_small_add(i);
-        else if (b->house_size) {
+        if (b->type == BUILDING_WELL) {
+            wells.push_back(i);
+        } else if (b->house_size) {
             b->has_water_access = false;
             b->has_well_access = 0;
-            if (b->data.house.bathhouse
-                || map_terrain_exists_tile_in_area_with_type(
-                  b->tile.x(), b->tile.y(), b->size, TERRAIN_FOUNTAIN_RANGE)) {
+            if (b->data.house.bathhouse 
+                || map_terrain_exists_tile_in_area_with_type(b->tile.x(), b->tile.y(),
+                                                              b->size, TERRAIN_FOUNTAIN_RANGE)) {
                 b->has_water_access = true;
             }
         }
     }
-    int total_wells = building_list_small_size();
-    const int* wells = building_list_small_items();
-    for (int i = 0; i < total_wells; i++) {
-        if (GAME_ENV == ENGINE_ENV_C3)
-            mark_well_access(wells[i], 2);
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            mark_well_access(wells[i], 1);
+
+    for (const auto &w: wells) {
+        mark_well_access(w, 1);
     }
 }
 
@@ -101,7 +105,7 @@ static void canals_empty_all(void) {
 static void fill_canals_from_offset(int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) || map_terrain_is(grid_offset, TERRAIN_WATER))
         return;
-    memset(&queue, 0, sizeof(queue));
+    memset(&g_water_supply_queue, 0, sizeof(g_water_supply_queue));
     int guard = 0;
     int next_offset;
     int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + IMAGE_CANAL_FULL_OFFSET;
@@ -132,19 +136,20 @@ static void fill_canals_from_offset(int grid_offset) {
                     if (next_offset == -1)
                         next_offset = new_offset;
                     else {
-                        queue.items[queue.tail++] = new_offset;
-                        if (queue.tail >= MAX_QUEUE)
-                            queue.tail = 0;
+                        g_water_supply_queue.items[g_water_supply_queue.tail++] = new_offset;
+                        if (g_water_supply_queue.tail >= MAX_QUEUE)
+                            g_water_supply_queue.tail = 0;
                     }
                 }
             }
         }
         if (next_offset == -1) {
-            if (queue.head == queue.tail)
+            if (g_water_supply_queue.head == g_water_supply_queue.tail)
                 return;
-            next_offset = queue.items[queue.head++];
-            if (queue.head >= MAX_QUEUE)
-                queue.head = 0;
+
+            next_offset = g_water_supply_queue.items[g_water_supply_queue.head++];
+            if (g_water_supply_queue.head >= MAX_QUEUE)
+                g_water_supply_queue.head = 0;
         }
         grid_offset = next_offset;
     } while (next_offset > -1);

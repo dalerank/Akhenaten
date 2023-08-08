@@ -1,5 +1,4 @@
-#ifndef INPUT_HOTKEY_H
-#define INPUT_HOTKEY_H
+#pragma once
 
 #include "input/keys.h"
 #include "io/config/hotkeys.h"
@@ -44,5 +43,3 @@ void hotkey_key_released(int key, int modifiers);
 void hotkey_handle_escape(void);
 
 void hotkey_handle_global_keys(void);
-
-#endif // INPUT_HOTKEY_H

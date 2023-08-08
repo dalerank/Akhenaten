@@ -1,5 +1,4 @@
-#ifndef BUILDING_INDUSTRY_H
-#define BUILDING_INDUSTRY_H
+#pragma once
 
 #include "building/building.h"
 #include "graphics/boilerplate.h"
@@ -38,5 +37,3 @@ int building_get_workshop_for_raw_material_with_room(int x,
                                                      int distance_from_entry,
                                                      int road_network_id,
                                                      map_point* dst);
-
-#endif // BUILDING_INDUSTRY_H
