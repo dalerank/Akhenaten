@@ -71,6 +71,8 @@ public:
 public:
     constexpr iterator begin() const noexcept;
     constexpr iterator end() const noexcept;
+    constexpr iterator begin() noexcept;
+    constexpr iterator end() noexcept;
     constexpr reverse_iterator rbegin() const noexcept;
     constexpr reverse_iterator rend() const noexcept;
 
@@ -84,6 +86,11 @@ private:
 template <typename T, std::size_t N>
 inline constexpr auto make_span(T (&arr)[N]) {
     return std::span<T>(arr);
+}
+
+template <typename T>
+inline constexpr auto make_span(T *arr, size_t N) {
+    return std::span<T>(arr, N);
 }
 
 template <typename T>
@@ -132,6 +139,16 @@ inline constexpr typename std::span<T>::iterator std::span<T>::begin() const noe
 
 template <typename T>
 inline constexpr typename std::span<T>::iterator std::span<T>::end() const noexcept {
+    return iterator{data() + size()};
+}
+
+template <typename T>
+inline constexpr typename std::span<T>::iterator std::span<T>::begin() noexcept {
+    return iterator{data()};
+}
+
+template <typename T>
+inline constexpr typename std::span<T>::iterator std::span<T>::end() noexcept {
     return iterator{data() + size()};
 }
 

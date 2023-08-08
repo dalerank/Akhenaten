@@ -225,7 +225,7 @@ int empire_can_import_resource_from_city(int city_id, int resource) {
     return in_stock < max_in_stock ? 1 : 0;
 }
 
-io_buffer* iob_empire_map_params = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_empire_map_params = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_empire_map_data;
     iob->bind(BIND_SIGNATURE_INT32, &data.scroll_x);
     iob->bind(BIND_SIGNATURE_INT32, &data.scroll_y);

@@ -48,8 +48,6 @@ static void mark_well_access(int well_id, int radius) {
 }
 
 void map_water_supply_update_houses() {
-    building_list_small_clear();
-
     svector<int, 512> wells;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);

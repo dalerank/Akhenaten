@@ -64,7 +64,7 @@ int trader_has_traded_max(int trader_id) {
     return data.traders[trader_id].bought_amount >= 1200 || data.traders[trader_id].sold_amount >= 1200;
 }
 
-io_buffer* iob_figure_traders = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_figure_traders = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < MAX_TRADERS; i++) {
         struct trader* t = &data.traders[i];
         iob->bind(BIND_SIGNATURE_INT32, &t->bought_amount);

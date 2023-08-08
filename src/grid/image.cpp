@@ -66,7 +66,7 @@ uint32_t io_image_grid::fix_img_index(uint32_t index) const {
     return index;
 }
 
-void io_image_grid::bind_data() {
+void io_image_grid::bind_data(size_t version) {
     bind(BIND_SIGNATURE_GRID, &g_images_grid);
     for (int i = 0; i < GRID_SIZE_TOTAL; i++) {
         int64_t nv = map_grid_get(&g_images_grid, i) - image_shift;

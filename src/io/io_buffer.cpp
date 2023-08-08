@@ -1,5 +1,8 @@
 #include "io_buffer.h"
 #include "core/string.h"
+
+#include "gamestate/boilerplate.h"
+
 #include <cassert>
 
 void io_buffer::hook(buffer* buf, int _size, bool _compressed, const char* _name) {
@@ -23,27 +26,27 @@ bool io_buffer::validate() {
     return true;
 }
 
-bool io_buffer::io_sync(chunk_buffer_access_e flag) {
+bool io_buffer::io_sync(chunk_buffer_access_e flag, size_t version) {
     if (!validate())
         return false;
     access_type = flag;
-    bind_data();
+    bind_data(version);
     //    if (!bind_callback(this))
     //        return false;
     access_type = CHUNK_ACCESS_REVOKED;
     return true;
 }
-bool io_buffer::read() {
-    return io_sync(CHUNK_ACCESS_READ);
+bool io_buffer::read(size_t version) {
+    return io_sync(CHUNK_ACCESS_READ, version);
 }
 bool io_buffer::write() {
-    return io_sync(CHUNK_ACCESS_WRITE);
+    return io_sync(CHUNK_ACCESS_WRITE, latest_save_version);
 }
 
 io_buffer::io_buffer() {
     bind_callback = nullptr;
 }
-io_buffer::io_buffer(void (*bclb)(io_buffer*)) {
+io_buffer::io_buffer(io_buffer_bind bclb) {
     bind_callback = bclb;
 }
 io_buffer::~io_buffer() {
@@ -53,10 +56,10 @@ io_buffer::~io_buffer() {
 
 ////
 
-void default_bind(io_buffer* iob) {
+void default_bind(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_NONE);
 }
 io_buffer* iob_none = new io_buffer(default_bind);
-io_buffer* iob_ = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_ = new io_buffer([](io_buffer* iob, size_t version) {
     //
 });

@@ -229,6 +229,7 @@ void figure_kill_all() {
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++)
         figure_get(i)->poof();
 }
+
 void figure::bind(io_buffer* iob) {
     figure* f = this;
     iob->bind(BIND_SIGNATURE_UINT8, &f->alternative_location_index);
@@ -360,12 +361,15 @@ void figure::bind(io_buffer* iob) {
         iob->bind____skip(2);
     }
 }
-io_buffer* iob_figures = new io_buffer([](io_buffer* iob) {
+
+io_buffer* iob_figures = new io_buffer([](io_buffer* iob, size_t version) {
     init_figures();
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure_get(i)->bind(iob); // doing this because some members are PRIVATE.
         figure_get(i)->id = i;
     }
 });
-io_buffer* iob_figure_sequence
-  = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_INT32, &g_figure_data.created_sequence); });
+
+io_buffer* iob_figure_sequence = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_INT32, &g_figure_data.created_sequence);
+});

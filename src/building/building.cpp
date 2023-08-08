@@ -21,11 +21,15 @@
 #include "io/io_buffer.h"
 #include "menu.h"
 #include "monuments.h"
+#include "grid/building.h"
+#include "core/svector.h"
 
-#include <grid/building.h>
 #include <string.h>
 
-building g_all_buildings[5000];
+svector<building, 5000> g_all_buildings;
+std::span<building> g_city_buildings = make_span(g_all_buildings.begin(), g_all_buildings.size());
+
+std::span<building> &city_buildings() { return g_city_buildings; }
 
 struct building_extra_data_t {
     int highest_id_in_use;
@@ -443,7 +447,7 @@ bool building::is_temple() {
 bool building::is_large_temple() {
     return building_is_large_temple(type);
 }
-bool building::is_shrine() {
+bool building::is_shrine() const {
     return building_is_shrine(type);
 }
 bool building::is_guild() {
@@ -774,7 +778,7 @@ int building_mothball_set(building* b, int mothball) {
 // iob->bind(BIND_SIGNATURE_INT32, &//    extra.unfixable_houses);
 // }
 
-static void read_type_data(io_buffer* iob, building* b) {
+static void read_type_data(io_buffer* iob, building* b, size_t version) {
     if (building_is_house(b->type)) {
         for (e_resource e = RESOURCE_NONE; e < RESOURCES_FOODS_MAX; ++e) {
             iob->bind(BIND_SIGNATURE_INT16, &b->data.house.foods[e]);
@@ -812,6 +816,12 @@ static void read_type_data(io_buffer* iob, building* b) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.num_gods);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.devolve_delay);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.evolve_text_id);
+
+        if (version <= 160) {
+            b->data.house.shrine_access = 0;
+        } else {
+            iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.shrine_access);
+        }
 
     } else if (b->type == BUILDING_MARKET) {
         iob->bind____skip(2);
@@ -914,7 +924,7 @@ static void read_type_data(io_buffer* iob, building* b) {
     }
 }
 
-io_buffer* iob_buildings = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         //        building_state_load_from_buffer(buf, &all_buildings[i]);
         auto b = &g_all_buildings[i];
@@ -979,7 +989,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob) {
         iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_INT16, &b->formation_id);
 
-        read_type_data(iob, b); // 42 bytes for C3, 102 for PH
+        read_type_data(iob, b, version); // 42 bytes for C3, 102 for PH
 
         int currind = iob->get_offset() - sind;
         iob->bind____skip(184 - currind);
@@ -1007,11 +1017,11 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob) {
     building_extra_data.created_sequence = 0;
 });
 
-io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_in_use);
 });
 
-io_buffer* iob_building_highest_id_ever = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_building_highest_id_ever = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_ever);
     iob->bind____skip(4);
     //    highest_id_ever->skip(4);

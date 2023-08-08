@@ -1,9 +1,16 @@
 #include "chunks.h"
+
 #include "io/manager.h"
+#include "boilerplate.h"
+
 #include <cstring>
 
 static int file_version;
-io_buffer* iob_file_version = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_INT32, &file_version); });
+io_buffer* iob_file_version = new io_buffer([](io_buffer* iob, size_t version) {
+    file_version = latest_save_version;
+    iob->bind(BIND_SIGNATURE_INT32, &file_version);
+});
+
 struct chunks_data_t {
     struct chunks_t {
         uint32_t compressed = 0; // 0, 1
@@ -23,7 +30,7 @@ struct chunks_data_t {
 
 chunks_data_t g_chunks_data;
 
-io_buffer* iob_chunks_schema = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_chunks_schema = new io_buffer([](io_buffer* iob, size_t version) {
     FILE* debug_file = fopen("DEV_TESTING/CHUNKS_SCHEMA.txt", "wb+");
     char temp_string[200] = "";
     iob->bind(BIND_SIGNATURE_UINT32, &g_chunks_data.chunks_in_used);
@@ -85,8 +92,8 @@ struct junk10_t {
 };
 
 junk10_t g_junk10;
-io_buffer* iob_junk10a = new io_buffer([](io_buffer* iob) {
-    const int version = FILEIO.get_file_version();
+io_buffer* iob_junk10a = new io_buffer([](io_buffer* iob, size_t version) {
+    const int r_version = FILEIO.get_file_version();
 
     FILE* debug_file = fopen("DEV_TESTING/JUNK10.txt", "wb+");
     char temp_string[200] = "";
@@ -120,7 +127,8 @@ io_buffer* iob_junk10a = new io_buffer([](io_buffer* iob) {
     }
     fclose(debug_file);
 });
-io_buffer* iob_junk10b = new io_buffer([](io_buffer* iob) {
+
+io_buffer* iob_junk10b = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < MAX_JUNK10_FIELDS; ++i) {
         auto field = &g_junk10.fields[i];
         // fill ints
@@ -128,6 +136,7 @@ io_buffer* iob_junk10b = new io_buffer([](io_buffer* iob) {
             iob->bind(BIND_SIGNATURE_UINT32, &field->small_data[j]);
     }
 });
+
 io_buffer* iob_junk10c = new io_buffer(default_bind);
 io_buffer* iob_junk10d = new io_buffer(default_bind);
 
@@ -139,7 +148,7 @@ struct junk11_t {
 };
 junk11_t g_junk11;
 
-io_buffer* iob_junk11 = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_junk11 = new io_buffer([](io_buffer* iob, size_t version) {
     // the first two fields are the Map Editor's cached empire map coordinates....
     // I have absolutely no idea about the need for this, or any of the rest.
     // the third field is set to "1" when "Edit objects" is active in the editor.
@@ -225,7 +234,7 @@ static void record_bizarre_fields(io_buffer* iob, int i) {
         fwrite(temp_string, strlen(temp_string), 1, bizarre.debug_file);
     }
 }
-static void bizarre_ordered_fields_bind(io_buffer* iob) {
+static void bizarre_ordered_fields_bind(io_buffer* iob, size_t version) {
     if (iob == iob_bizarre_ordered_fields_1) {
         bizarre.current_chunk = 0;
         bizarre.debug_file = fopen("DEV_TESTING/BIZARRE.txt", "wb+");

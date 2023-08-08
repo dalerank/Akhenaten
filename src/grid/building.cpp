@@ -53,8 +53,13 @@ void map_clear_highlights(void) {
     map_grid_clear(&highlight_grid);
 }
 
-io_buffer* iob_building_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &buildings_grid); });
-io_buffer* iob_damage_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &damage_grid); });
+io_buffer* iob_building_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &buildings_grid);
+});
+
+io_buffer* iob_damage_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &damage_grid);
+});
 
 int map_building_is_reservoir(int x, int y) {
     if (!map_grid_is_inside(x, y, 3))

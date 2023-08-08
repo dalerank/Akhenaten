@@ -438,7 +438,7 @@ void scenario_invasion_start_from_console(int attack_type, int size, int invasio
     }
 }
 
-io_buffer* iob_invasion_warnings = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_invasion_warnings = new io_buffer([](io_buffer* iob, size_t version) {
     //    data.last_internal_invasion_id = invasion_id->read_u16();
 
     //    for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {

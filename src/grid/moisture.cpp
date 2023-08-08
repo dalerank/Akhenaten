@@ -33,4 +33,6 @@ uint8_t map_grasslevel_get(int grid_offset) {
 //     return true;
 // }
 
-io_buffer* iob_moisture_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &terrain_moisture); });
+io_buffer* iob_moisture_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &terrain_moisture);
+});

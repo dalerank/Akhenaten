@@ -173,7 +173,7 @@ int figure_name_get(int type, int enemy) {
     }
 }
 
-io_buffer* iob_figure_names = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_figure_names = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.citizen_male);
     iob->bind(BIND_SIGNATURE_INT32, &data.patrician);
     iob->bind(BIND_SIGNATURE_INT32, &data.citizen_female);

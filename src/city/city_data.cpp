@@ -100,7 +100,7 @@ int stack_proper_quantity(int full, int resource) {
 #include "core/game_environment.h"
 #include "empire/city.h"
 
-io_buffer* iob_city_data = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_RAW, &city_data.unused.other_player, 18904);
     iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.unknown_00a0);
     iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.unknown_00a1);
@@ -614,14 +614,14 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob) {
     iob->bind____skip(60);
     //    iob->bind____skip(378);
 });
-io_buffer* iob_city_data_extra = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_city_data_extra = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.faction_bytes[0]);
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.faction_bytes[1]);
     iob->bind(BIND_SIGNATURE_RAW, &city_data.emperor.player_name_adversary, MAX_PLAYER_NAME);
     iob->bind(BIND_SIGNATURE_RAW, &city_data.emperor.player_name, MAX_PLAYER_NAME);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.faction_id);
 });
-io_buffer* iob_city_graph_order = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_city_graph_order = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.graph_order);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_order);
 });

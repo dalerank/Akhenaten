@@ -8,7 +8,7 @@ public:
     io_image_grid() {
         inherited = true;
     }
-    virtual void bind_data() override;
+    virtual void bind_data(size_t version) override;
     uint32_t fix_img_index(uint32_t index) const;
 
     static io_image_grid& instance();

@@ -34,6 +34,9 @@ enum bind_signature_e {
         W;                                                                                                             \
     return;
 
+class io_buffer;
+using io_buffer_bind = void(io_buffer *io, size_t version);
+
 class io_buffer {
 private:
     int size = 0;
@@ -45,16 +48,16 @@ private:
     chunk_buffer_access_e access_type = CHUNK_ACCESS_REVOKED;
 
     // manually defined external binding schema
-    void (*bind_callback)(io_buffer* io);
+    io_buffer_bind *bind_callback;
 
     // this is the parent of the below READ / WRITE functions, written
     // into a single generalized form.
-    bool io_sync(chunk_buffer_access_e flag);
+    bool io_sync(chunk_buffer_access_e flag, size_t version);
 
 protected:
     bool inherited = false;
-    virtual void bind_data() {
-        bind_callback(this);
+    virtual void bind_data(size_t version) {
+        bind_callback(this, version);
     }
 
 public:
@@ -117,15 +120,15 @@ public:
     // these will VALIDATE the buffer, set the ACCESS FLAG, then fire the external CALLBACK
     // which will BIND (access) every data field following a manually defined external SCHEMA,
     // then set the ACCESS FLAG back to "REVOKED".
-    bool read();
+    bool read(size_t version);
     bool write();
 
     io_buffer();
-    io_buffer(void (*bclb)(io_buffer* io));
+    io_buffer(io_buffer_bind bclb);
     ~io_buffer();
 };
 
-void default_bind(io_buffer* iob);
+void default_bind(io_buffer* iob, size_t version);
 extern io_buffer* iob_none;
 
 #endif // OZYMANDIAS_IO_BUFFER_H

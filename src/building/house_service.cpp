@@ -130,6 +130,10 @@ void house_service_calculate_culture_aggregates(void) {
         if (b->data.house.temple_bast)
             ++b->data.house.num_gods;
 
+        if (b->data.house.num_gods == 0 && b->data.house.shrine_access) {
+            b->data.house.num_gods = 1;
+        }
+
         // health
         b->data.house.health = 0;
         if (b->data.house.clinic)

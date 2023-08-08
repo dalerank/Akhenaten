@@ -178,7 +178,7 @@ bool random_bool_lerp_scalar_int(int minimum, int maximum, int v) {
         return true;
 }
 
-io_buffer* iob_random_iv = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_random_iv = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT32, &data.iv1);
     iob->bind(BIND_SIGNATURE_UINT32, &data.iv2);
     random_bits_fill();

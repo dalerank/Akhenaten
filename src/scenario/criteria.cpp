@@ -78,4 +78,7 @@ void scenario_criteria_init_max_year(void) {
 int scenario_criteria_max_year(void) {
     return max_game_year;
 }
-io_buffer* iob_max_year = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_UINT32, &max_game_year); });
+
+io_buffer* iob_max_year = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_UINT32, &max_game_year);
+});
