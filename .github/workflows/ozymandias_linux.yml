@@ -3,8 +3,6 @@ name: Ozymandias Build Linux
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
   build:
@@ -35,10 +33,3 @@ jobs:
       with:
         name: linux_build
         path: build
-    - uses: KikimoraGames/itch-publish@v0.0.3
-      with:
-        butlerApiKey: ${{ secrets.ITCHIO }}
-        gameData: ${{ env.GITHUB_FINAL_FILENAME }}
-        itchUsername: dalerank
-        itchGameId: ozymandias
-        buildChannel: linux-windows
