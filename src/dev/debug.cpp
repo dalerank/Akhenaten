@@ -803,16 +803,16 @@ void draw_debug_ui(int x, int y) {
 
     /////// TIME
     if (g_debug_show_opts[e_debug_show_game_time]) {
-        auto time = game_time_struct();
+        const auto &time = gametime();
 
-        debug_text(str, x, y + 15, 50, "tick:", time->tick);
+        debug_text(str, x, y + 15, 50, "tick:", time.tick);
         debug_text(str, x + 80, y + 15, 50, "iscycle:", tick_is_flood_cycle());
         debug_text(str, x, y + 25, 50, "cycle:", floods_current_cycle());
         debug_text(str, x + 90, y + 25, 60, "frame:", floods_current_subcycle());
 
-        debug_text(str, x, y + 35, 50, "day:", time->day);
-        debug_text(str, x, y + 45, 50, "month:", time->month);
-        debug_text(str, x, y + 55, 50, "year:", time->year);
+        debug_text(str, x, y + 35, 50, "day:", time.day);
+        debug_text(str, x, y + 45, 50, "month:", time.month);
+        debug_text(str, x, y + 55, 50, "year:", time.year);
         debug_text(str, x, y + 65, 60, "abs. tick:", game_time_absolute_tick()); // absolute tick of the year
         debug_text(str, x, y + 75, 60, "abs. day:", game_time_absolute_day());   // absolute day of the year
         y += 80;

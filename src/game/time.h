@@ -1,17 +1,16 @@
-#ifndef GAME_TIME_H
-#define GAME_TIME_H
+#pragma once
 
 #include "core/buffer.h"
 
-typedef struct time_data {
+struct game_time {
     int tick;  // 50 ticks in a day
     int day;   // 16 days in a month
     int month; // 12 months in a year
     int year;
     int total_days;
-} time_data_t;
+};
 
-enum {
+enum e_month {
     MONTH_JANUARY = 0,
     MONTH_FEBRUARY = 1,
     MONTH_MARCH = 2,
@@ -93,6 +92,4 @@ int game_time_advance_month(void);
  */
 void game_time_advance_year(void);
 
-const time_data_t* game_time_struct();
-
-#endif // GAME_TIME_H
+const game_time& gametime();
