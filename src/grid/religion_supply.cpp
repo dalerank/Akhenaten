@@ -13,8 +13,9 @@ static void mark_shrine_access(building *shrine, int radius) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int building_id = map_building_at(MAP_OFFSET(xx, yy));
 
-            if (building_id) {
-                building_get(building_id)->has_well_access = true;
+            building* b = building_get(building_id);
+            if (b->house_size) {
+                b->data.house.shrine_access = true;
             }
         }
     }
@@ -35,6 +36,6 @@ void map_religion_supply_update_houses() {
     }
 
     for (auto &s: shrines) {
-        mark_shrine_access(s, 1);
+        mark_shrine_access(s, 3);
     }
 }

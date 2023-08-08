@@ -26,8 +26,8 @@
 
 #include <string.h>
 
-svector<building, 5000> g_all_buildings;
-std::span<building> g_city_buildings = make_span(g_all_buildings.begin(), g_all_buildings.size());
+building g_all_buildings[5000];
+std::span<building> g_city_buildings = make_span(g_all_buildings, 5000);
 
 std::span<building> &city_buildings() { return g_city_buildings; }
 
