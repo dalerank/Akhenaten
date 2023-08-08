@@ -23,7 +23,6 @@
 #include "window/select_list.h"
 #include <string.h>
 
-#define NUM_CHECKBOXES 37
 #define CONFIG_PAGES 3
 #define MAX_LANGUAGE_DIRS 20
 
@@ -40,7 +39,7 @@
 #define ITEM_Y_OFFSET 60
 #define ITEM_HEIGHT 24
 
-static int options_per_page[CONFIG_PAGES] = {11, 14, 12};
+static int options_per_page[CONFIG_PAGES] = {11, 14, 13};
 
 static void toggle_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
@@ -153,14 +152,12 @@ static generic_button checkbox_buttons[] = {
    button_none,
    CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT,
    TR_CONFIG_NOT_ACCEPTING_WAREHOUSES},
-  {20,
-   336,
-   20,
-   20,
-   toggle_switch,
-   button_none,
+  
+  {20, 336, 20, 20, toggle_switch, button_none,
    CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS,
    TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS},
+ 
+  {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIREMAN_RETUNING, TR_CONFIG_FIREMAN_RETURNING},
 };
 
 static generic_button language_button
@@ -383,11 +380,11 @@ static void init(void (*close_callback)()) {
     data.page = 0;
     data.starting_option = 0;
     data.close_callback = close_callback;
-    for (int i = 0; i < NUM_CHECKBOXES; i++) {
+    for (int i = 0; i < std::size(checkbox_buttons); i++) {
         int key = checkbox_buttons[i].parameter1;
-        data.config_values[i].original_value = config_get(i);
-        data.config_values[i].new_value = config_get(i);
-        data.config_values[i].change_action = config_change_basic;
+        data.config_values[key].original_value = config_get(key);
+        data.config_values[key].new_value = config_get(key);
+        data.config_values[key].change_action = config_change_basic;
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
         const char* value = config_get_string(i);
@@ -489,7 +486,7 @@ static void draw_foreground() {
         button_border_draw(btn->x, btn->y, btn->width, btn->height, data.focus_button == value + 1);
     }
 
-    for (int i = 0; i < sizeof(bottom_buttons) / sizeof(*bottom_buttons); i++) {
+    for (int i = 0; i < std::size(bottom_buttons); i++) {
         button_border_draw(bottom_buttons[i].x,
                            bottom_buttons[i].y,
                            bottom_buttons[i].width,
@@ -497,7 +494,7 @@ static void draw_foreground() {
                            data.bottom_focus_button == i + 1);
     }
 
-    for (int i = 0; i < sizeof(page_buttons) / sizeof(*page_buttons); i++) {
+    for (int i = 0; i < std::size(page_buttons); i++) {
         button_border_draw(page_buttons[i].x,
                            page_buttons[i].y,
                            page_buttons[i].width,
