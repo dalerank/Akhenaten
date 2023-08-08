@@ -10,7 +10,7 @@
 static const char* INI_FILENAME = "ozymandias.ini";
 
 // Keep this in the same order as the ints in config.h
-const struct enhanced_option_t {
+struct enhanced_option_t {
     const char *name;
     const bool enabled;
 };
