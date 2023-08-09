@@ -2,7 +2,6 @@
 
 #include "core/time.h"
 #include "game/state.h"
-#include "io/gamefiles/lang.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
@@ -10,6 +9,7 @@
 #include "graphics/view/view.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "io/gamefiles/lang.h"
 #include "window/city.h"
 
 static void button_menu_item(int index, int param2);
@@ -50,7 +50,13 @@ static const int SUBMENU_ID_TO_OVERLAY[7][8] = {
   {OVERLAY_EDUCATION, OVERLAY_SCHOOL, OVERLAY_LIBRARY, OVERLAY_ACADEMY, 0},
   {OVERLAY_BARBER, OVERLAY_BATHHOUSE, OVERLAY_CLINIC, OVERLAY_HOSPITAL, 0},
   {OVERLAY_TAX_INCOME, OVERLAY_FOOD_STOCKS, OVERLAY_DESIRABILITY, 0},
-  {OVERLAY_RELIGION, OVERLAY_RELIGION_OSIRIS, OVERLAY_RELIGION_RA, OVERLAY_RELIGION_PTAH, OVERLAY_RELIGION_SETH, OVERLAY_RELIGION_BAST, 0},
+  {OVERLAY_RELIGION,
+   OVERLAY_RELIGION_OSIRIS,
+   OVERLAY_RELIGION_RA,
+   OVERLAY_RELIGION_PTAH,
+   OVERLAY_RELIGION_SETH,
+   OVERLAY_RELIGION_BAST,
+   0},
 };
 
 struct overlay_menu_data_t {
@@ -68,7 +74,7 @@ struct overlay_menu_data_t {
 overlay_menu_data_t g_overlay_menu_data;
 
 static void init(void) {
-    auto &data = g_overlay_menu_data;
+    auto& data = g_overlay_menu_data;
     data.selected_submenu = 0;
     data.num_submenu_items = 0;
 }
@@ -83,19 +89,24 @@ static int get_sidebar_x_offset(void) {
     return view_x + view_width;
 }
 
-static const char *get_overlay_text(int group, int index) {
+static const char* get_overlay_text(int group, int index) {
     switch (index) {
-    case OVERLAY_RELIGION_OSIRIS: return "Osiris";
-    case OVERLAY_RELIGION_RA: return "Ra";
-    case OVERLAY_RELIGION_PTAH: return "Ptah";
-    case OVERLAY_RELIGION_SETH: return "Seth";
-    case OVERLAY_RELIGION_BAST: return "Bast";
+    case OVERLAY_RELIGION_OSIRIS:
+        return "Osiris";
+    case OVERLAY_RELIGION_RA:
+        return "Ra";
+    case OVERLAY_RELIGION_PTAH:
+        return "Ptah";
+    case OVERLAY_RELIGION_SETH:
+        return "Seth";
+    case OVERLAY_RELIGION_BAST:
+        return "Bast";
     }
     return (const char*)lang_get_string(group, index);
 }
 
 static void draw_foreground(void) {
-    auto &data = g_overlay_menu_data;
+    auto& data = g_overlay_menu_data;
     window_city_draw();
     int x_offset = get_sidebar_x_offset();
     for (int i = 0; i < 8; i++) {
@@ -110,12 +121,9 @@ static void draw_foreground(void) {
                        10,
                        data.submenu_focus_button_id == i + 1 ? 1 : 2);
 
-            const char *text = get_overlay_text(e_text_overlay_menu, SUBMENU_ID_TO_OVERLAY[data.selected_submenu][i]);
-            lang_text_draw_centered(text,
-                                    x_offset - 348,
-                                    77 + 24 * (i + data.selected_menu),
-                                    160,
-                                    FONT_NORMAL_BLACK_ON_DARK);
+            const char* text = get_overlay_text(e_text_overlay_menu, SUBMENU_ID_TO_OVERLAY[data.selected_submenu][i]);
+            lang_text_draw_centered(
+              text, x_offset - 348, 77 + 24 * (i + data.selected_menu), 160, FONT_NORMAL_BLACK_ON_DARK);
         }
     }
 }
@@ -129,7 +137,7 @@ static int count_submenu_items(int submenu_id) {
 }
 
 static void open_submenu(int index, int keep_open) {
-    auto &data = g_overlay_menu_data;
+    auto& data = g_overlay_menu_data;
     data.keep_submenu_open = keep_open;
     data.selected_menu = index;
     data.selected_submenu = MENU_ID_TO_SUBMENU_ID[index];
@@ -138,7 +146,7 @@ static void open_submenu(int index, int keep_open) {
 }
 
 static void close_submenu(void) {
-    auto &data = g_overlay_menu_data;
+    auto& data = g_overlay_menu_data;
     data.keep_submenu_open = 0;
     data.selected_menu = 0;
     data.selected_submenu = 0;
@@ -147,7 +155,7 @@ static void close_submenu(void) {
 }
 
 static void handle_submenu_focus(void) {
-    auto &data = g_overlay_menu_data;
+    auto& data = g_overlay_menu_data;
     if (data.menu_focus_button_id || data.submenu_focus_button_id) {
         data.submenu_focus_time = time_get_millis();
         if (data.menu_focus_button_id) {
@@ -159,7 +167,7 @@ static void handle_submenu_focus(void) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
-    auto &data = g_overlay_menu_data;
+    auto& data = g_overlay_menu_data;
     int x_offset = get_sidebar_x_offset();
     int handled = 0;
     handled |= generic_buttons_handle_mouse(m, x_offset - 170, 72, menu_buttons, 8, &data.menu_focus_button_id);
@@ -185,7 +193,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void button_menu_item(int index, int param2) {
-    auto &data = g_overlay_menu_data;
+    auto& data = g_overlay_menu_data;
     if (MENU_ID_TO_SUBMENU_ID[index] == 0) {
         game_state_set_overlay(MENU_ID_TO_OVERLAY[index]);
         close_submenu();
@@ -200,7 +208,7 @@ static void button_menu_item(int index, int param2) {
 }
 
 static void button_submenu_item(int index, int param2) {
-    auto &data = g_overlay_menu_data;
+    auto& data = g_overlay_menu_data;
     int overlay = SUBMENU_ID_TO_OVERLAY[data.selected_submenu][index];
     if (overlay) {
         game_state_set_overlay(overlay);

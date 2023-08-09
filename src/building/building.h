@@ -1,11 +1,11 @@
 #pragma once
 
 #include "building/type.h"
+#include "core/span.hpp"
 #include "figure/action.h"
 #include "figure/type.h"
 #include "game/resource.h"
 #include "grid/point.h"
-#include "core/span.hpp"
 
 #include <stdint.h>
 
@@ -388,4 +388,4 @@ void building_update_desirability(void);
 int building_mothball_toggle(building* b);
 int building_mothball_set(building* b, int value);
 
-std::span<building> &city_buildings();
+std::span<building>& city_buildings();

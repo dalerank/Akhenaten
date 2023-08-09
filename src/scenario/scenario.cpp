@@ -195,9 +195,8 @@ io_buffer* iob_scenario_carry_settings = new io_buffer([](io_buffer* iob, size_t
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.campaign_mission_rank);
 });
 
-io_buffer* iob_scenario_is_custom = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.is_custom);
-});
+io_buffer* iob_scenario_is_custom = new io_buffer(
+  [](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.is_custom); });
 
 io_buffer* iob_scenario_map_name = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_RAW, &g_scenario_data.scenario_name, MAX_SCENARIO_NAME);

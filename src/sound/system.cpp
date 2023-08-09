@@ -359,4 +359,3 @@ void sound_system_shutdown(void) {
     // even though Mix_CloseAudio's docs say that afterwards "the SDL_mixer functions should not be used".
     sound_device_unload_formats();
 }
-

@@ -89,7 +89,7 @@ inline constexpr auto make_span(T (&arr)[N]) {
 }
 
 template <typename T>
-inline constexpr auto make_span(T *arr, size_t N) {
+inline constexpr auto make_span(T* arr, size_t N) {
     return std::span<T>(arr, N);
 }
 

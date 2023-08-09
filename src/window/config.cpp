@@ -152,11 +152,16 @@ static generic_button checkbox_buttons[] = {
    button_none,
    CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT,
    TR_CONFIG_NOT_ACCEPTING_WAREHOUSES},
-  
-  {20, 336, 20, 20, toggle_switch, button_none,
+
+  {20,
+   336,
+   20,
+   20,
+   toggle_switch,
+   button_none,
    CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS,
    TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS},
- 
+
   {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIREMAN_RETUNING, TR_CONFIG_FIREMAN_RETURNING},
 };
 
@@ -206,7 +211,7 @@ struct window_config_ext_data_t {
 window_config_ext_data_t g_window_config_ext_data;
 
 static void set_language(int index) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     const char* dir = index == 0 ? "" : data.language_options_utf8[index];
     strncpy(data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].new_value, dir, CONFIG_STRING_VALUE_MAX - 1);
 
@@ -214,7 +219,7 @@ static void set_language(int index) {
 }
 
 static void cancel_values(void) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
         data.config_values[i].new_value = data.config_values[i].original_value;
     }
@@ -225,21 +230,21 @@ static void cancel_values(void) {
     }
 }
 static int config_changed(int key) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     return data.config_values[key].original_value != data.config_values[key].new_value;
 }
 static int config_string_changed(int key) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     return strcmp(data.config_string_values[key].original_value, data.config_string_values[key].new_value) != 0;
 }
 static int config_change_basic(int key) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     config_set(key, data.config_values[key].new_value);
     data.config_values[key].original_value = data.config_values[key].new_value;
     return 1;
 }
 static int config_change_string_basic(int key) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     config_set_string(key, data.config_string_values[key].new_value);
     strncpy(data.config_string_values[key].original_value,
             data.config_string_values[key].new_value,
@@ -252,7 +257,7 @@ static int config_change_string_basic(int key) {
 //    return 1;
 //}
 static int config_change_string_language(int key) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].new_value);
     if (!game_reload_language()) {
         // Notify user that language dir is invalid and revert to previously selected
@@ -268,7 +273,7 @@ static int config_change_string_language(int key) {
 }
 
 static int apply_changed_configs(void) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         if (config_changed(i)) {
             if (!data.config_values[i].change_action(i))
@@ -285,7 +290,6 @@ static int apply_changed_configs(void) {
 }
 
 static void button_hotkeys_goback() {
-
 }
 
 static void button_hotkeys(int param1, int param2) {
@@ -293,7 +297,7 @@ static void button_hotkeys(int param1, int param2) {
 }
 
 static void button_language_select(int param1, int param2) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     window_select_list_show_text(screen_dialog_offset_x() + language_button.x + language_button.width - 10,
                                  screen_dialog_offset_y() + 45,
                                  data.language_options,
@@ -301,7 +305,7 @@ static void button_language_select(int param1, int param2) {
                                  set_language);
 }
 static void button_reset_defaults(int param1, int param2) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
 
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         data.config_values[i].new_value = config_get_default_value(i);
@@ -326,7 +330,7 @@ static void button_close(int save, int param2) {
     }
 }
 static void button_page(int param1, int param2) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     if (param1) {
         data.page++;
         if (data.page >= CONFIG_PAGES)
@@ -347,20 +351,22 @@ static void button_page(int param1, int param2) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     const mouse* m_dialog = mouse_in_dialog(m);
     int mouse_button = 0;
-    mouse_button |= generic_buttons_min_handle_mouse(m_dialog, 0, 0,
+    mouse_button |= generic_buttons_min_handle_mouse(m_dialog,
+                                                     0,
+                                                     0,
                                                      checkbox_buttons,
                                                      data.starting_option + options_per_page[data.page],
                                                      &data.focus_button,
                                                      data.starting_option);
-    mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0,
-                                                 bottom_buttons, std::size(bottom_buttons), &data.bottom_focus_button);
-    mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0, 
-                                                 page_buttons, std::size(page_buttons), &data.page_focus_button);
+    mouse_button |= generic_buttons_handle_mouse(
+      m_dialog, 0, 0, bottom_buttons, std::size(bottom_buttons), &data.bottom_focus_button);
+    mouse_button
+      |= generic_buttons_handle_mouse(m_dialog, 0, 0, page_buttons, std::size(page_buttons), &data.page_focus_button);
     mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
-    
+
     if (!mouse_button && (m->right.went_up || h->escape_pressed)) {
         if (data.close_callback) {
             data.close_callback();
@@ -369,14 +375,14 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 static void toggle_switch(int key, int param2) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     data.config_values[key].new_value = 1 - data.config_values[key].new_value;
 
     window_invalidate();
 }
 
 static void init(void (*close_callback)()) {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     data.page = 0;
     data.starting_option = 0;
     data.close_callback = close_callback;
@@ -412,7 +418,7 @@ static void init(void (*close_callback)()) {
     }
 }
 static void draw_background() {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     graphics_clear_screen();
 
     ImageDraw::img_background(image_id_from_group(GROUP_CONFIG_BACKGROUND));
@@ -477,7 +483,7 @@ static void draw_background() {
     graphics_reset_dialog();
 }
 static void draw_foreground() {
-    auto &data = g_window_config_ext_data;
+    auto& data = g_window_config_ext_data;
     graphics_set_to_dialog();
 
     for (int i = 0; i < options_per_page[data.page]; i++) {

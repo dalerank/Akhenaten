@@ -35,10 +35,8 @@ void map_sprite_restore(void) {
     map_grid_copy(&g_sprite_grid_backup, &g_sprite_grid);
 }
 
-io_buffer* iob_sprite_grid = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_sprite_grid);
-});
+io_buffer* iob_sprite_grid
+  = new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &g_sprite_grid); });
 
-io_buffer* iob_sprite_backup_grid = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_sprite_grid_backup);
-});
+io_buffer* iob_sprite_backup_grid
+  = new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &g_sprite_grid_backup); });

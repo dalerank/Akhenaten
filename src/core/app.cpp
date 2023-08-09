@@ -3,7 +3,7 @@
 #include "game/settings.h"
 #include <SDL.h>
 
-void app_window_resize(const display_size &wsize) {
+void app_window_resize(const display_size& wsize) {
     static int s_width;
     static int s_height;
 

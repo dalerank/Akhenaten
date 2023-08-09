@@ -169,6 +169,5 @@ void map_soil_set_depletion(int grid_offset, int malus) {
     map_grid_set(&terrain_floodplain_fertility, grid_offset, max(3, min(99, new_fert)));
 }
 
-io_buffer* iob_soil_fertility_grid = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &terrain_floodplain_fertility);
-});
+io_buffer* iob_soil_fertility_grid = new io_buffer(
+  [](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &terrain_floodplain_fertility); });

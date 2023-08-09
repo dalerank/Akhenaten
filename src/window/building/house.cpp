@@ -1,9 +1,9 @@
 #include "house.h"
 
-#include "common.h"
 #include "building/building.h"
 #include "building/model.h"
 #include "city/finance.h"
+#include "common.h"
 #include "core/calc.h"
 #include "core/game_environment.h"
 #include "game/resource.h"

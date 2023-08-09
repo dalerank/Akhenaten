@@ -148,6 +148,5 @@ int map_desirability_get_max(int x, int y, int size) {
     return max;
 }
 
-io_buffer* iob_desirability_grid = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &desirability_grid);
-});
+io_buffer* iob_desirability_grid
+  = new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &desirability_grid); });

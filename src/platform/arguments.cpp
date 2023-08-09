@@ -21,15 +21,15 @@ enum class argument_type {
     WINDOW_HEIGHT,
 };
 
-const std::unordered_map<std::string, argument_type> argument_types{
-  {"data_directory", argument_type::DATA_DIRECTORY},
-  {"window_mode", argument_type::WINDOW_MODE},
-  {"renderer", argument_type::RENDERER},
-  {"display_scale_percentage", argument_type::DISPLAY_SCALE_PERCENTAGE},
-  {"cursor_scale_percentage", argument_type::CURSOR_SCALE_PERCENTAGE},
-  {"window_width", argument_type::WINDOW_WIDTH},
-  {"window_height", argument_type::WINDOW_HEIGHT}
-};
+const std::unordered_map<std::string, argument_type> argument_types{{"data_directory", argument_type::DATA_DIRECTORY},
+                                                                    {"window_mode", argument_type::WINDOW_MODE},
+                                                                    {"renderer", argument_type::RENDERER},
+                                                                    {"display_scale_percentage",
+                                                                     argument_type::DISPLAY_SCALE_PERCENTAGE},
+                                                                    {"cursor_scale_percentage",
+                                                                     argument_type::CURSOR_SCALE_PERCENTAGE},
+                                                                    {"window_width", argument_type::WINDOW_WIDTH},
+                                                                    {"window_height", argument_type::WINDOW_HEIGHT}};
 
 void set_value(Arguments& arguments, argument_type type, std::string&& value) {
     switch (type) {
@@ -261,8 +261,7 @@ void load(Arguments& arguments) {
         logs::info("Configuration file was not found.");
     else {
         std::string line;
-        while (std::getline(input, line))
-        {
+        while (std::getline(input, line)) {
             auto pos = line.find('=');
             if (pos == std::string::npos)
                 continue;

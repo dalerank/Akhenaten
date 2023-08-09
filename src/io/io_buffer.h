@@ -35,7 +35,7 @@ enum bind_signature_e {
     return;
 
 class io_buffer;
-using io_buffer_bind = void(io_buffer *io, size_t version);
+using io_buffer_bind = void(io_buffer* io, size_t version);
 
 class io_buffer {
 private:
@@ -48,7 +48,7 @@ private:
     chunk_buffer_access_e access_type = CHUNK_ACCESS_REVOKED;
 
     // manually defined external binding schema
-    io_buffer_bind *bind_callback;
+    io_buffer_bind* bind_callback;
 
     // this is the parent of the below READ / WRITE functions, written
     // into a single generalized form.

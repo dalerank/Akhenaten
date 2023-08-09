@@ -65,11 +65,11 @@ int building_determine_worker_needed() {
 
 static const float produce_uptick_per_day = 103.5f * 20.0f / 128.0f / 100.0f; // don't ask
 
-float get_farm_produce_uptick_per_day(building *b) {
+float get_farm_produce_uptick_per_day(building* b) {
     return produce_uptick_per_day;
 }
 
-float get_produce_uptick_per_day(building *b) {
+float get_produce_uptick_per_day(building* b) {
     switch (b->type) {
     case BUILDING_GOLD_MINE:
         return b->num_workers / 10.f;
@@ -223,10 +223,10 @@ void building_industry_update_wheat_production(void) {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->output_resource_id)
             continue;
-    
+
         if (b->houses_covered <= 0 || b->num_workers <= 0)
             continue;
-        
+
         if (b->type == BUILDING_BARLEY_FARM && !b->data.industry.curse_days_left) {
             b->data.industry.progress += b->num_workers;
             if (b->data.industry.blessing_days_left)
@@ -362,8 +362,8 @@ int building_get_workshop_for_raw_material_with_room(int x,
 
         if (resource_required_by_workshop(b, resource) && b->road_network_id == road_network_id
             && b->stored_full_amount < 200) {
-            int dist = calc_distance_with_penalty(b->tile.x(), b->tile.y(), x, y,
-                                                    distance_from_entry, b->distance_from_entry);
+            int dist
+              = calc_distance_with_penalty(b->tile.x(), b->tile.y(), x, y, distance_from_entry, b->distance_from_entry);
             if (b->stored_full_amount > 0) {
                 dist += 20;
             }
@@ -379,7 +379,7 @@ int building_get_workshop_for_raw_material_with_room(int x,
         map_point_store_result(min_building->road_access.x(), min_building->road_access.y(), dst);
         return min_building->id;
     }
-    
+
     return 0;
 }
 int building_get_workshop_for_raw_material(int x,
@@ -412,7 +412,7 @@ int building_get_workshop_for_raw_material(int x,
             }
         }
     }
- 
+
     if (min_building) {
         map_point_store_result(min_building->road_access.x(), min_building->road_access.y(), dst);
         return min_building->id;

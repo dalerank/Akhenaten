@@ -180,7 +180,9 @@ struct city_overlay_fire : public city_overlay {
 
 city_overlay_fire g_city_overlay_fire;
 
-const city_overlay *city_overlay_for_fire(void) { return &g_city_overlay_fire; }
+const city_overlay* city_overlay_for_fire(void) {
+    return &g_city_overlay_fire;
+}
 
 struct city_overlay_damage : public city_overlay {
     city_overlay_damage() {

@@ -121,8 +121,14 @@ enum {
 
 int resource_image_offset(int resource, int type);
 
-inline e_resource &resourse_next(e_resource &e) { ((int &)e)++; return e; }
-inline e_resource &operator++(e_resource& e) { ((int &)e)++; return e; };
+inline e_resource& resourse_next(e_resource& e) {
+    ((int&)e)++;
+    return e;
+}
+inline e_resource& operator++(e_resource& e) {
+    ((int&)e)++;
+    return e;
+};
 
 int resource_get_icon(int resource, int quantity = 1);
 
