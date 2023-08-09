@@ -15,7 +15,7 @@ public:
     void set_fullscreen();
 
     [[nodiscard]] bool is_window_mode() const;
-    void set_window_mode();
+    void set_window_mode(bool flag = true);
 
     [[nodiscard]] int get_display_scale_percentage() const;
     void set_display_scale_percentage(int value);

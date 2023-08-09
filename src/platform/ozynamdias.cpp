@@ -169,6 +169,7 @@ static void show_options_window(Arguments& args) {
 
     auto video_modes = get_video_modes();
     ImGuiFileDialog fileDialog;
+    bool store_configuration = false;
 
     for (bool done = false; !done;) {
         SDL_Event event;
@@ -188,7 +189,7 @@ static void show_options_window(Arguments& args) {
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
 
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+        // Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
             auto data_directory = args.get_data_directory();
             ImVec2 window_size(1280 * 0.75, 720 * 0.75);
@@ -243,8 +244,12 @@ static void show_options_window(Arguments& args) {
                 ImGui::EndListBox();
             }
 
-            // TODO: USE THIS BUTTON:
-            // ImGui::Checkbox("Window mode", &args.is_window_mode());
+            bool is_window_mode = args.is_window_mode();
+            if (ImGui::Checkbox("Window mode", &is_window_mode)) {
+                args.set_window_mode(is_window_mode);
+            }
+
+            ImGui::Checkbox("Store configuration (to skip this dialog for the next time)", &store_configuration);
 
             ImVec2 left_bottom_corner{5, window_size.y - 30};
             ImGui::SetCursorPos(left_bottom_corner);
@@ -259,6 +264,9 @@ static void show_options_window(Arguments& args) {
             // ImGui::GetIO().Framerate);
             ImGui::End();
         }
+
+        if (store_configuration)
+            arguments::store(args);
 
         // Rendering
         ImGui::Render();
@@ -303,7 +311,6 @@ static void setup(Arguments& args) {
                                  "Pharaoh installation, or run: ozymandias path/to/directory",
                                  nullptr);
         show_options_window(args);
-        arguments::store(args);
     }
 
     // set up game display

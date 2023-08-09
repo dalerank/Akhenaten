@@ -11,6 +11,8 @@
 #define UNKNOWN_OPTION_ERROR_MESSAGE "Option %s not recognized"
 
 namespace {
+char const* const ARGUMENTS_FILE_NAME = "ozymandias.cfg";
+
 enum class argument_type {
     DATA_DIRECTORY,
     WINDOW_MODE,
@@ -154,8 +156,8 @@ bool Arguments::is_window_mode() const {
     return window_mode_;
 }
 
-void Arguments::set_window_mode() {
-    window_mode_ = true;
+void Arguments::set_window_mode(bool flag) {
+    window_mode_ = flag;
 }
 
 int Arguments::get_display_scale_percentage() const {
@@ -255,7 +257,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
 namespace arguments {
 
 void load(Arguments& arguments) {
-    std::ifstream input("ozynamdias.cfg", std::ios::in);
+    std::ifstream input(ARGUMENTS_FILE_NAME, std::ios::in);
 
     if (!input.is_open())
         logs::info("Configuration file was not found.");
@@ -279,7 +281,7 @@ void load(Arguments& arguments) {
 }
 
 void store(Arguments const& arguments) {
-    std::ofstream output("ozynamdias.cfg", std::ios::trunc | std::ios::out);
+    std::ofstream output(ARGUMENTS_FILE_NAME, std::ios::trunc | std::ios::out);
 
     output << "data_directory" << '=' << arguments.get_data_directory() << '\n';
     output << "window_mode" << '=' << arguments.is_window_mode() << '\n';
