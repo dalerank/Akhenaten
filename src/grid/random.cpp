@@ -23,4 +23,6 @@ int map_random_get(int grid_offset) {
     return map_grid_get(&random_xx, grid_offset);
 }
 
-io_buffer* iob_random_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &random_xx); });
+io_buffer* iob_random_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &random_xx);
+});

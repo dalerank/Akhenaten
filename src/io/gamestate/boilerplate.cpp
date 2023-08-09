@@ -572,7 +572,7 @@ bool GamestateIO::write_savegame(const char* filename_short) {
     // write file
     e_file_format format = get_format_from_file(filename_short);
     assert(format == FILE_FORMAT_SAVE_FILE_EXT);
-    return FILEIO.serialize(full, 0, format, 160, file_schema);
+    return FILEIO.serialize(full, 0, format, latest_save_version, file_schema);
 }
 
 static void prepare_savegame_schema(e_file_format file_format, const int file_version) {

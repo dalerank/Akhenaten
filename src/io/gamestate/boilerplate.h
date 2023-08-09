@@ -11,7 +11,7 @@
 //  149 (later campaign scenarios and maps)
 //  150 (later campaign scenarios and maps)
 //  160 (post-Cleopatra campaign scenarios, patched Bubastis scenario)
-constexpr uint32_t current_save_version = 160;
+constexpr uint32_t latest_save_version = 161;
 
 void fullpath_saves(char* full, const char* filename);
 void fullpath_maps(char* full, const char* filename);

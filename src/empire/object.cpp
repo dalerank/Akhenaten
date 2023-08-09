@@ -339,7 +339,7 @@ map_route_object* empire_get_route_object(int id) {
     return &route_objects[id];
 }
 
-io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t version) {
     auto& objects = g_empire_objects;
     //    if (objects_are_loaded)
     //        return;
@@ -395,7 +395,7 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob) {
             full->in_use = last_object_was_used;
     }
 });
-io_buffer* iob_empire_map_routes = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_empire_map_routes = new io_buffer([](io_buffer* iob, size_t version) {
     for (int id = 0; id < MAX_ROUTE_OBJECTS; id++) {
         map_route_object* obj = &route_objects[id];
 

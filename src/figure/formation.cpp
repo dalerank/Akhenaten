@@ -561,7 +561,7 @@ void formation_update_all(bool second_time) {
     formation_herd_update();
 }
 
-io_buffer* iob_formations = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < MAX_FORMATIONS; i++) {
         formation* f = &formations[i];
         f->id = i;                                   // 10
@@ -663,7 +663,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob) {
         iob->bind(BIND_SIGNATURE_INT16, &f->invasion_sequence);
     }
 });
-io_buffer* iob_formations_info = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_formations_info = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.id_last_in_use);
     iob->bind(BIND_SIGNATURE_INT32, &data.id_last_formation);
     iob->bind(BIND_SIGNATURE_INT32, &data.num_formations);

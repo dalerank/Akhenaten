@@ -364,7 +364,7 @@ void city_view_toggle_sidebar(void) {
     camera_validate_position();
 }
 
-io_buffer* iob_city_view_orientation = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_city_view_orientation = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_city_view_data;
 
     iob->bind(BIND_SIGNATURE_INT32, &data.orientation);
@@ -374,7 +374,8 @@ io_buffer* iob_city_view_orientation = new io_buffer([](io_buffer* iob) {
     else
         data.orientation = 0;
 });
-io_buffer* iob_city_view_camera = new io_buffer([](io_buffer* iob) {
+
+io_buffer* iob_city_view_camera = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_city_view_data;
 
     iob->bind(BIND_SIGNATURE_INT32, &data.camera.tile_internal.x);

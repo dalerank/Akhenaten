@@ -312,7 +312,7 @@ void empire_city_set_foreign(int city_id) {
     g_cities[city_id].type = EMPIRE_CITY_EGYPTIAN;
 }
 
-io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) {
     //    int last_city = 0;
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
         empire_city* city = &g_cities[i];

@@ -75,7 +75,7 @@ void game_time_advance_year(void) {
     ++g_game_time.year;
 }
 
-io_buffer* iob_game_time = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_game_time = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &g_game_time.tick);
     iob->bind(BIND_SIGNATURE_INT32, &g_game_time.day);
     iob->bind(BIND_SIGNATURE_INT32, &g_game_time.month);

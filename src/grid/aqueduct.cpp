@@ -51,6 +51,10 @@ void map_aqueduct_restore(void) {
     map_grid_copy(&aqueduct_backup, &aqueduct);
 }
 
-io_buffer* iob_aqueduct_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &aqueduct); });
-io_buffer* iob_aqueduct_backup_grid
-  = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &aqueduct_backup); });
+io_buffer* iob_aqueduct_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &aqueduct);
+});
+
+io_buffer* iob_aqueduct_backup_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &aqueduct_backup);
+});

@@ -45,6 +45,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/tiles.h"
 #include "grid/water_supply.h"
+#include "grid/religion_supply.h"
 #include "io/gamestate/boilerplate.h"
 #include "scenario/demand_change.h"
 #include "scenario/distant_battle.h"
@@ -204,6 +205,7 @@ static void advance_tick(void) {
         break;
     case 28:
         map_water_supply_update_houses();
+        map_religion_supply_update_houses();
         break;
     case 29:
         formation_update_all(true);

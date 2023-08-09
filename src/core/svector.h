@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cassert>
+#include <cstddef>
+#include <algorithm>
 
 template <typename T, size_t Capacity>
 struct svector {

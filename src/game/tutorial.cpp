@@ -514,7 +514,7 @@ void tutorial_on_month_tick(void) {
     }
 }
 
-io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.fire);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.population_150_reached);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.gamemeat_400_stored);

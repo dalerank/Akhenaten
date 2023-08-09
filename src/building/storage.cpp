@@ -245,7 +245,7 @@ void building_storage_accept_none(int storage_id) {
 
 void building_storage_load_state(buffer* buf) {
 }
-io_buffer* iob_building_storages = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_building_storages = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_dat_storages;
     for (int i = 0; i < MAX_STORAGES[GAME_ENV]; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.storages[i].storage.permissions); // Originally unused

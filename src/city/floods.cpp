@@ -286,7 +286,7 @@ void floodplains_tick_update(bool calc_only) {
         map_advance_floodplain_growth();
 }
 
-io_buffer* iob_floodplain_settings = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_floodplain_settings = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = floodplain_data();
 
     iob->bind(BIND_SIGNATURE_INT32, &data.season_initial);

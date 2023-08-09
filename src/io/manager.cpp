@@ -236,6 +236,7 @@ bool FileIOManager::serialize(const char* filename,
 
     return true;
 }
+
 bool FileIOManager::unserialize(const char* filename,
                                 int offset,
                                 e_file_format format,
@@ -321,7 +322,7 @@ bool FileIOManager::unserialize(const char* filename,
     // load GAME STATE from buffers
     for (int i = 0; i < num_chunks(); ++i) {
         if (file_chunks.at(i).VALID)
-            file_chunks.at(i).iob->read();
+            file_chunks.at(i).iob->read(file_version);
     }
 
     logs::info("File read successful: %s %i@ --- VERSION HEADER: %i --- %" PRIu64 " milliseconds",

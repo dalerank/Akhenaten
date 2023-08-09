@@ -32,7 +32,7 @@ bool map_bookmark_go_to(int number) {
     return false;
 }
 
-io_buffer* iob_bookmarks = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_bookmarks = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < MAX_BOOKMARKS; i++) {
         iob->bind(BIND_SIGNATURE_INT32, bookmarks[i].private_access(_X));
         iob->bind(BIND_SIGNATURE_INT32, bookmarks[i].private_access(_Y));

@@ -315,7 +315,7 @@ void sound_city_play(void) {
     channels[max_sound_id].times_played++;
 }
 
-io_buffer* iob_city_sounds = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_city_sounds = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < MAX_CHANNELS; i++) {
         city_channel* ch = &channels[i];
         iob->bind(BIND_SIGNATURE_INT32, &ch->available);

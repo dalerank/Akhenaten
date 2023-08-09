@@ -94,22 +94,22 @@ const int* building_list_burning_items(void) {
     return data.burning.items;
 }
 
-io_buffer* iob_building_list_small = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_building_list_small = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_list_data;
     for (int i = 0; i < MAX_SMALL; i++)
         iob->bind(BIND_SIGNATURE_INT16, &data.small.items[i]);
 });
-io_buffer* iob_building_list_large = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_building_list_large = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_list_data;
     for (int i = 0; i < MAX_LARGE; i++)
         iob->bind(BIND_SIGNATURE_INT16, &data.large.items[i]);
 });
-io_buffer* iob_building_list_burning = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_building_list_burning = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_list_data;
     for (int i = 0; i < MAX_BURNING; i++)
         iob->bind(BIND_SIGNATURE_INT16, &data.burning.items[i]);
 });
-io_buffer* iob_building_burning_list_info = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_building_burning_list_info = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_list_data;
     iob->bind(BIND_SIGNATURE_INT32, &data.burning.total);
     iob->bind(BIND_SIGNATURE_INT32, &data.burning.size);

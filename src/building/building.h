@@ -5,6 +5,7 @@
 #include "figure/type.h"
 #include "game/resource.h"
 #include "grid/point.h"
+#include "core/span.hpp"
 
 #include <stdint.h>
 
@@ -156,6 +157,7 @@ public:
             unsigned char education;
             unsigned char health;
             unsigned char num_gods;
+            unsigned char shrine_access;
             unsigned char devolve_delay;
             unsigned char evolve_text_id;
         } house;
@@ -198,7 +200,7 @@ public:
     bool is_governor_palace();
     bool is_temple();
     bool is_large_temple();
-    bool is_shrine();
+    bool is_shrine() const;
     bool is_guild();
     bool is_beautification();
     bool is_water_crossing();
@@ -385,3 +387,5 @@ void building_update_desirability(void);
 
 int building_mothball_toggle(building* b);
 int building_mothball_set(building* b, int value);
+
+std::span<building> &city_buildings();

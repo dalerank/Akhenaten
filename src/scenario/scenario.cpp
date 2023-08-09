@@ -30,9 +30,11 @@ void scenario_settings_init_mission(void) {
 }
 
 // fancy lambdas! probably gonna create many problems down the road. :3
-io_buffer* iob_scenario_mission_id = new io_buffer(
-  [](io_buffer* iob) { iob->bind(BIND_SIGNATURE_INT8, &g_scenario_data.settings.campaign_scenario_id); });
-io_buffer* iob_scenario_info = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_scenario_mission_id = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_INT8, &g_scenario_data.settings.campaign_scenario_id);
+});
+
+io_buffer* iob_scenario_info = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario_data.start_year);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario_data.empire.id);
@@ -186,12 +188,17 @@ io_buffer* iob_scenario_info = new io_buffer([](io_buffer* iob) {
 
     g_scenario_data.is_saved = true;
 });
-io_buffer* iob_scenario_carry_settings = new io_buffer([](io_buffer* iob) {
+
+io_buffer* iob_scenario_carry_settings = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.starting_kingdom);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.starting_personal_savings);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.campaign_mission_rank);
 });
-io_buffer* iob_scenario_is_custom
-  = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.is_custom); });
-io_buffer* iob_scenario_map_name = new io_buffer(
-  [](io_buffer* iob) { iob->bind(BIND_SIGNATURE_RAW, &g_scenario_data.scenario_name, MAX_SCENARIO_NAME); });
+
+io_buffer* iob_scenario_is_custom = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.is_custom);
+});
+
+io_buffer* iob_scenario_map_name = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_RAW, &g_scenario_data.scenario_name, MAX_SCENARIO_NAME);
+});

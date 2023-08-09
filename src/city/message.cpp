@@ -559,7 +559,7 @@ void city_message_set_scroll_position(int scroll_position) {
     data.scroll_position = scroll_position;
 }
 
-io_buffer* iob_messages = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_messages = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_message_data;
     for (int i = 0; i < MAX_MESSAGES; i++) {
         city_message* msg = &data.messages[i];
@@ -607,7 +607,7 @@ io_buffer* iob_messages = new io_buffer([](io_buffer* iob) {
     }
 });
 
-io_buffer* iob_message_extra = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_message_extra = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_message_data;
     iob->bind(BIND_SIGNATURE_INT32, &data.next_message_sequence);
     iob->bind(BIND_SIGNATURE_INT32, &data.total_messages);

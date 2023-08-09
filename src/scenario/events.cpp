@@ -341,7 +341,7 @@ void scenario_event_process() {
 
 ///////
 
-io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_events_data;
     // the first event's header always contains the total number of events
     data.num_of_events = &(data.event_list[0].num_total_header);
@@ -412,7 +412,8 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob) {
         iob->bind(BIND_SIGNATURE_INT16, &event->__unk22);
     }
 });
-io_buffer* iob_scenario_events_extra = new io_buffer([](io_buffer* iob) {
+
+io_buffer* iob_scenario_events_extra = new io_buffer([](io_buffer* iob, size_t version) {
     // TODO ????????
 });
 

@@ -433,7 +433,7 @@ int map_citizen_grid(int grid_offset) {
     return map_grid_get(&terrain_land_citizen, grid_offset);
 }
 
-io_buffer* iob_routing_stats = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_routing_stats = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(4);
     iob->bind____skip(4); // resets to zero at the start of a new scenario
     iob->bind____skip(4); // unused counter

@@ -39,4 +39,6 @@ void map_elevation_remove_cliffs(void) {
     }
 }
 
-io_buffer* iob_elevation_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &elevation); });
+io_buffer* iob_elevation_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &elevation);
+});

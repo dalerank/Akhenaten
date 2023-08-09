@@ -126,4 +126,6 @@ void map_figure_clear(void) {
     map_grid_clear(&figures);
 }
 
-io_buffer* iob_figure_grid = new io_buffer([](io_buffer* iob) { iob->bind(BIND_SIGNATURE_GRID, &figures); });
+io_buffer* iob_figure_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &figures);
+});

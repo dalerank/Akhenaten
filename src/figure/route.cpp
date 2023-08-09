@@ -142,12 +142,12 @@ int figure_route_get_direction(int path_id, int index) {
     return data.direction_paths[path_id][index];
 }
 
-io_buffer* iob_route_figures = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_route_figures = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < MAX_ROUTES; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &data.figure_ids[i]);
     }
 });
-io_buffer* iob_route_paths = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_route_paths = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < MAX_ROUTES; i++) {
         iob->bind(BIND_SIGNATURE_RAW, &data.direction_paths[i], MAX_PATH_LENGTH);
     }

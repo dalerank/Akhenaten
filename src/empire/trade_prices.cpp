@@ -83,7 +83,7 @@ int trade_price_sell(int resource, int bonus_inclusion) {
     }
 }
 
-io_buffer* iob_trade_prices = new io_buffer([](io_buffer* iob) {
+io_buffer* iob_trade_prices = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < RESOURCES_MAX; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &prices[i].buy);
         iob->bind(BIND_SIGNATURE_INT32, &prices[i].sell);
