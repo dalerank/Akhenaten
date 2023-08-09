@@ -1,11 +1,11 @@
 #include "city_overlay_other.h"
 
-#include "building/model.h"
 #include "building/building.h"
-#include "figure/figure.h"
+#include "building/model.h"
 #include "city/constants.h"
 #include "city/finance.h"
 #include "core/calc.h"
+#include "figure/figure.h"
 #include "game/resource.h"
 #include "game/state.h"
 #include "graphics/boilerplate.h"
@@ -26,10 +26,8 @@ static int show_building_tax_income(const building* b) {
     return b->type == BUILDING_TAX_COLLECTOR || b->type == BUILDING_SENATE_UPGRADED;
 }
 static int show_building_water(const building* b) {
-    return b->type == BUILDING_WELL 
-            || b->type == BUILDING_MENU_BEAUTIFICATION
-            || b->type == BUILDING_WATER_LIFT
-            || b->type == BUILDING_WATER_SUPPLY;
+    return b->type == BUILDING_WELL || b->type == BUILDING_MENU_BEAUTIFICATION || b->type == BUILDING_WATER_LIFT
+           || b->type == BUILDING_WATER_SUPPLY;
 }
 static int show_building_desirability(const building* b) {
     return 0;

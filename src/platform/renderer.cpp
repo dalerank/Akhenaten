@@ -17,8 +17,8 @@
 #include <string.h>
 
 #include <algorithm>
-#include <string>
 #include <set>
+#include <string>
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
 #define USE_YUV_TEXTURES

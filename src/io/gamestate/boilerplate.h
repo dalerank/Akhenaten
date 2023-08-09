@@ -1,8 +1,8 @@
 #ifndef GAME_FILE_H
 #define GAME_FILE_H
 
-#include <string.h>
 #include <cstdint>
+#include <string.h>
 
 // file versions found so far:
 //  144 (Bridges.map only)

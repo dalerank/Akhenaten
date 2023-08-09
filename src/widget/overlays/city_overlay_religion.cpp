@@ -1,10 +1,10 @@
 #include "city_overlay_religion.h"
 
-#include "widget/overlays/city_overlay.h"
+#include "city/constants.h"
 #include "game/state.h"
 #include "grid/building.h"
 #include "grid/property.h"
-#include "city/constants.h"
+#include "widget/overlays/city_overlay.h"
 
 #include <algorithm>
 #include <array>
@@ -104,8 +104,8 @@ struct city_overlay_religion_god : public city_overlay {
         return f->type == FIGURE_PRIEST;
     }
 
-    template<typename ... Args>
-    void assign_btypes(Args...args) {
+    template <typename... Args>
+    void assign_btypes(Args... args) {
         auto tmp = {args...};
         std::copy(std::begin(tmp), std::end(tmp), std::begin(btypes));
     }
@@ -121,7 +121,7 @@ struct city_overlay_religion_god : public city_overlay {
         }
     }
 
-    bool show_building(const building *b) const override {
+    bool show_building(const building* b) const override {
         return std::find(btypes.begin(), btypes.end(), b->type) != btypes.end();
     }
 };
@@ -167,8 +167,18 @@ city_overlay_religion_ptah g_city_overlay_religion_ptah;
 city_overlay_religion_seth g_city_overlay_religion_seth;
 city_overlay_religion_bast g_city_overlay_religion_bast;
 
-const city_overlay* city_overlay_for_religion_osiris() { return &g_city_overlay_religion_osiris; }
-const city_overlay* city_overlay_for_religion_ra() { return &g_city_overlay_religion_ra; }
-const city_overlay* city_overlay_for_religion_ptah() { return &g_city_overlay_religion_ptah; }
-const city_overlay* city_overlay_for_religion_seth() { return &g_city_overlay_religion_seth; }
-const city_overlay* city_overlay_for_religion_bast() { return &g_city_overlay_religion_bast; }
+const city_overlay* city_overlay_for_religion_osiris() {
+    return &g_city_overlay_religion_osiris;
+}
+const city_overlay* city_overlay_for_religion_ra() {
+    return &g_city_overlay_religion_ra;
+}
+const city_overlay* city_overlay_for_religion_ptah() {
+    return &g_city_overlay_religion_ptah;
+}
+const city_overlay* city_overlay_for_religion_seth() {
+    return &g_city_overlay_religion_seth;
+}
+const city_overlay* city_overlay_for_religion_bast() {
+    return &g_city_overlay_religion_bast;
+}

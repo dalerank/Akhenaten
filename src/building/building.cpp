@@ -6,10 +6,12 @@
 #include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
+#include "core/svector.h"
 #include "figure/formation_legion.h"
 #include "game/resource.h"
 #include "game/undo.h"
 #include "graphics/view/view.h"
+#include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/desirability.h"
 #include "grid/elevation.h"
@@ -21,15 +23,15 @@
 #include "io/io_buffer.h"
 #include "menu.h"
 #include "monuments.h"
-#include "grid/building.h"
-#include "core/svector.h"
 
 #include <string.h>
 
 building g_all_buildings[5000];
 std::span<building> g_city_buildings = make_span(g_all_buildings, 5000);
 
-std::span<building> &city_buildings() { return g_city_buildings; }
+std::span<building>& city_buildings() {
+    return g_city_buildings;
+}
 
 struct building_extra_data_t {
     int highest_id_in_use;
@@ -848,7 +850,7 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
             b->data.granary.resource_stored[i] = (b->data.granary.resource_stored[i] / 100) * 100; // todo
         }
         iob->bind____skip(6);
- 
+
     } else if (b->type == BUILDING_DOCK) {
         iob->bind(BIND_SIGNATURE_INT16, &b->data.dock.queued_docker_id);
         iob->bind____skip(25);
@@ -920,7 +922,6 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.ph_unk02_u8);   //  2 for latched booth??
         iob->bind____skip(12);
         iob->bind(BIND_SIGNATURE_INT32, &b->data.entertainment.booth_corner_grid_offset);
-
     }
 }
 
@@ -1011,15 +1012,14 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         // 68 additional bytes
 
         iob->bind____skip(68); // temp for debugging
-                                   //            assert(iob->get_offset() - sind == 264);
+                               //            assert(iob->get_offset() - sind == 264);
         g_all_buildings[i].id = i;
     }
     building_extra_data.created_sequence = 0;
 });
 
-io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_in_use);
-});
+io_buffer* iob_building_highest_id = new io_buffer(
+  [](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_in_use); });
 
 io_buffer* iob_building_highest_id_ever = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_ever);

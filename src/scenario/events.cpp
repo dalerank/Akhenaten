@@ -45,7 +45,7 @@ static void update_randomized_values(event_ph_t* event) {
 }
 
 event_ph_t* create_scenario_event(const event_ph_t* donor) {
-    auto &data = g_events_data;
+    auto& data = g_events_data;
     if (*data.num_of_events < MAX_EVENTS) {
         (*data.num_of_events)++;
         int event_id = *data.num_of_events - 1;
@@ -93,7 +93,7 @@ static int get_auto_reason_phrase_id(int param_1, int param_2) {
     return g_events_data.auto_phrases[param_1][param_2];
 }
 uint8_t* get_eventmsg_text(int group_id, int index) {
-    auto &data = g_events_data;
+    auto& data = g_events_data;
     int eventmsg_id = data.eventmsg_group_offsets[group_id] + index;
     return &data.eventmsg_phrases_data[data.eventmsg_line_offsets[eventmsg_id]];
 }
@@ -103,7 +103,7 @@ static void event_process(int id,
                           int chain_action_parent,
                           int caller_event_id = -1,
                           int caller_event_var = EVENT_VAR_AUTO) {
-    auto &data = g_events_data;
+    auto& data = g_events_data;
     if (!is_valid_event_index(id))
         return;
 
@@ -326,7 +326,7 @@ static void event_process(int id,
         event->event_state = EVENT_TRIGGER_ALREADY_FIRED;
 }
 void scenario_event_process() {
-    auto &data = g_events_data;
+    auto& data = g_events_data;
     // main event update loop
     for (int i = 0; i < *data.num_of_events; i++)
         event_process(i, false, -1);
@@ -342,7 +342,7 @@ void scenario_event_process() {
 ///////
 
 io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version) {
-    auto &data = g_events_data;
+    auto& data = g_events_data;
     // the first event's header always contains the total number of events
     data.num_of_events = &(data.event_list[0].num_total_header);
 
@@ -506,7 +506,7 @@ static bool is_line_standalone_group(const uint8_t* start_of_line, int size) {
     //    return true;
 }
 bool eventmsg_load() {
-    auto &data = g_events_data;
+    auto& data = g_events_data;
     buffer buf(TMP_BUFFER_SIZE);
 
     int filesize = io_read_file_into_buffer("eventmsg.txt", NOT_LOCALIZED, &buf, TMP_BUFFER_SIZE);
@@ -580,7 +580,7 @@ bool eventmsg_load() {
     return true;
 }
 bool eventmsg_auto_phrases_load(void) {
-    auto &data = g_events_data;
+    auto& data = g_events_data;
     buffer buf(TMP_BUFFER_SIZE);
 
     int filesize = io_read_file_into_buffer("auto reason phrases.txt", NOT_LOCALIZED, &buf, TMP_BUFFER_SIZE);

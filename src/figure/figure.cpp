@@ -370,6 +370,5 @@ io_buffer* iob_figures = new io_buffer([](io_buffer* iob, size_t version) {
     }
 });
 
-io_buffer* iob_figure_sequence = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_INT32, &g_figure_data.created_sequence);
-});
+io_buffer* iob_figure_sequence = new io_buffer(
+  [](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_INT32, &g_figure_data.created_sequence); });

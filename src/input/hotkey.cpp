@@ -2,6 +2,7 @@
 
 #include "building/type.h"
 #include "city/constants.h"
+#include "core/app.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
@@ -14,7 +15,6 @@
 #include "window/hotkey_editor.h"
 #include "window/main_menu.h"
 #include "window/popup_dialog.h"
-#include "core/app.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -25,19 +25,19 @@ struct hotkey_definition {
     int key;
     int modifiers;
     int repeatable;
-} ;
+};
 
 struct arrow_definition {
     void (*action)(int is_down);
     int key;
-} ;
+};
 
 struct global_hotkeys {
     int center_screen;
     int toggle_fullscreen;
     int save_screenshot;
     int save_city_screenshot;
-} ;
+};
 
 struct hotkey_data_t {
     global_hotkeys global_hotkey_state;
@@ -52,7 +52,7 @@ struct hotkey_data_t {
 hotkey_data_t g_hotkey_data;
 
 static void add_definition(const hotkey_mapping* mapping) {
-    auto &data = g_hotkey_data;
+    auto& data = g_hotkey_data;
     hotkey_definition* def = &data.definitions[data.num_definitions];
     def->key = mapping->key;
     def->modifiers = mapping->modifiers;
@@ -305,7 +305,7 @@ static void add_definition(const hotkey_mapping* mapping) {
 }
 
 static void add_arrow(const hotkey_mapping* mapping) {
-    auto &data = g_hotkey_data;
+    auto& data = g_hotkey_data;
     arrow_definition* arrow = &data.arrows[data.num_arrows];
     arrow->key = mapping->key;
     switch (mapping->action) {
@@ -330,7 +330,7 @@ static void add_arrow(const hotkey_mapping* mapping) {
 }
 
 static int allocate_mapping_memory(int total_definitions, int total_arrows) {
-    auto &data = g_hotkey_data;
+    auto& data = g_hotkey_data;
     free(data.definitions);
     free(data.arrows);
     data.num_definitions = 0;
@@ -346,7 +346,7 @@ static int allocate_mapping_memory(int total_definitions, int total_arrows) {
 }
 
 void hotkey_install_mapping(hotkey_mapping* mappings, int num_mappings) {
-    auto &data = g_hotkey_data;
+    auto& data = g_hotkey_data;
     int total_definitions = 2; // Enter and ESC are fixed hotkeys
     int total_arrows = 0;
     for (int i = 0; i < num_mappings; i++) {
@@ -390,13 +390,13 @@ const hotkeys* hotkey_state(void) {
 }
 
 void hotkey_reset_state(void) {
-    auto &data = g_hotkey_data;
+    auto& data = g_hotkey_data;
     memset(&data.hotkey_state, 0, sizeof(data.hotkey_state));
     memset(&data.global_hotkey_state, 0, sizeof(data.global_hotkey_state));
 }
 
 void hotkey_key_pressed(int key, int modifiers, int repeat) {
-    auto &data = g_hotkey_data;
+    auto& data = g_hotkey_data;
     if (window_is(WINDOW_HOTKEY_EDITOR)) {
         window_hotkey_editor_key_pressed(key, modifiers);
         return;
@@ -416,7 +416,7 @@ void hotkey_key_pressed(int key, int modifiers, int repeat) {
 }
 
 void hotkey_key_released(int key, int modifiers) {
-    auto &data = g_hotkey_data;
+    auto& data = g_hotkey_data;
     if (window_is(WINDOW_HOTKEY_EDITOR)) {
         window_hotkey_editor_key_released(key, modifiers);
         return;
@@ -445,7 +445,7 @@ void hotkey_handle_escape(void) {
 }
 
 void hotkey_handle_global_keys() {
-    auto &data = g_hotkey_data;
+    auto& data = g_hotkey_data;
     if (data.global_hotkey_state.center_screen)
         system_center();
 

@@ -1,11 +1,12 @@
 
+#include "core/app.h"
 #include "core/encoding.h"
 #include "core/game_environment.h"
 #include "core/stacktrace.h"
 #include "core/time.h"
 #include "game/game.h"
-#include "game/system.h"
 #include "game/settings.h"
+#include "game/system.h"
 #include "input/mouse.h"
 #include "input/touch.h"
 #include "io/file.h"
@@ -20,7 +21,6 @@
 #include "platform/screen.h"
 #include "platform/touch.h"
 #include "platform/version.hpp"
-#include "core/app.h"
 
 #include "renderer.h"
 

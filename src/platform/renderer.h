@@ -3,14 +3,14 @@
 #include "graphics/color.h"
 
 #include "SDL.h"
-#include "core/struct_types.h"
 #include "core/string.h"
+#include "core/struct_types.h"
 #include "graphics/image.h"
 #include "io/file.h"
 #include "io/file_formats.h"
 
-#include <vector>
 #include <string>
+#include <vector>
 
 enum e_custome_image_type {
     CUSTOM_IMAGE_NONE = 0,
@@ -42,9 +42,12 @@ void platform_renderer_destroy(void);
 struct video_mode {
     int w, h;
     bstring64 str;
-    inline video_mode() : w(0), h(0) {}
+    inline video_mode()
+      : w(0),
+        h(0) {
+    }
     inline video_mode(int _w, int _h)
-        : w(_w),
+      : w(_w),
         h(_h) {
         char buffer[64] = {0};
         snprintf(buffer, 64, "%u x %u", _w, _h);

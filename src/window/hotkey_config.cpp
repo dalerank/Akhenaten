@@ -167,7 +167,7 @@ struct hotkeys_window_data_t {
 hotkeys_window_data_t g_hotkeys_window_data;
 
 static void init(void (*close_callback)(void)) {
-    auto &data = g_hotkeys_window_data;
+    auto& data = g_hotkeys_window_data;
     data.close_callback = close_callback;
 
     scrollbar_init(&scrollbar, 0, std::size(hotkey_widgets) - NUM_VISIBLE_OPTIONS);
@@ -184,7 +184,7 @@ static void init(void (*close_callback)(void)) {
 }
 
 static void draw_background() {
-    auto &data = g_hotkeys_window_data;
+    auto& data = g_hotkeys_window_data;
     graphics_clear_screen();
 
     ImageDraw::img_background(image_id_from_group(GROUP_CONFIG_BACKGROUND));
@@ -250,7 +250,7 @@ static void draw_background() {
 }
 
 static void draw_foreground() {
-    auto &data = g_hotkeys_window_data;
+    auto& data = g_hotkeys_window_data;
     graphics_set_to_dialog();
 
     scrollbar_draw(&scrollbar);
@@ -276,7 +276,7 @@ static void draw_foreground() {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
-    auto &data = g_hotkeys_window_data;
+    auto& data = g_hotkeys_window_data;
     const mouse* m_dialog = mouse_in_dialog(m);
     if (scrollbar_handle_mouse(&scrollbar, m_dialog))
         return;
@@ -294,7 +294,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void set_hotkey(int action, int index, int key, int modifiers) {
-    auto &data = g_hotkeys_window_data;
+    auto& data = g_hotkeys_window_data;
     data.mappings[action][index].key = key;
     data.mappings[action][index].modifiers = modifiers;
 }
@@ -309,7 +309,7 @@ static void button_hotkey(int row, int is_alternative) {
 }
 
 static void button_reset_defaults(int param1, int param2) {
-    auto &data = g_hotkeys_window_data;
+    auto& data = g_hotkeys_window_data;
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
         for (int index = 0; index < 2; index++) {
             data.mappings[action][index] = *hotkey_default_for_action(action, index);
@@ -323,7 +323,7 @@ static void on_scroll(void) {
 }
 
 static void button_close(int save, int param2) {
-    auto &data = g_hotkeys_window_data;
+    auto& data = g_hotkeys_window_data;
     if (!save) {
         window_go_back();
         return;

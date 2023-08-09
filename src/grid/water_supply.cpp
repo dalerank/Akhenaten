@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/list.h"
 #include "core/game_environment.h"
+#include "core/svector.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "grid/aqueduct.h"
@@ -13,10 +14,9 @@
 #include "grid/image.h"
 #include "grid/property.h"
 #include "grid/terrain.h"
+#include "scenario/map.h"
 #include "scenario/property.h"
 #include "tiles.h"
-#include "core/svector.h"
-#include "scenario/map.h"
 
 #include <scenario/map.h>
 #include <string.h>
@@ -60,15 +60,15 @@ void map_water_supply_update_houses() {
         } else if (b->house_size) {
             b->has_water_access = false;
             b->has_well_access = 0;
-            if (b->data.house.bathhouse 
-                || map_terrain_exists_tile_in_area_with_type(b->tile.x(), b->tile.y(),
-                                                              b->size, TERRAIN_FOUNTAIN_RANGE)) {
+            if (b->data.house.bathhouse
+                || map_terrain_exists_tile_in_area_with_type(
+                  b->tile.x(), b->tile.y(), b->size, TERRAIN_FOUNTAIN_RANGE)) {
                 b->has_water_access = true;
             }
         }
     }
 
-    for (const auto &w: wells) {
+    for (const auto& w : wells) {
         mark_well_access(w, 1);
     }
 }

@@ -175,9 +175,9 @@ void init_defaults(void) {
     set_mapping(KEY_F5, KEY_MOD_NONE, HOTKEY_CENTER_WINDOW);
     set_mapping(KEY_F6, KEY_MOD_NONE, HOTKEY_TOGGLE_FULLSCREEN);
     set_mapping(KEY_ENTER, KEY_MOD_ALT, HOTKEY_TOGGLE_FULLSCREEN);
-    //set_mapping(KEY_F7, KEY_MOD_NONE, HOTKEY_RESIZE_TO);
-    //set_mapping(KEY_F8, KEY_MOD_NONE, HOTKEY_RESIZE_TO_PREV);
-    //set_mapping(KEY_F9, KEY_MOD_NONE, HOTKEY_RESIZE_TO_NEXT);
+    // set_mapping(KEY_F7, KEY_MOD_NONE, HOTKEY_RESIZE_TO);
+    // set_mapping(KEY_F8, KEY_MOD_NONE, HOTKEY_RESIZE_TO_PREV);
+    // set_mapping(KEY_F9, KEY_MOD_NONE, HOTKEY_RESIZE_TO_NEXT);
     set_mapping(KEY_F12, KEY_MOD_NONE, HOTKEY_SAVE_SCREENSHOT);
     set_mapping(KEY_F12, KEY_MOD_ALT, HOTKEY_SAVE_SCREENSHOT); // mac specific
     set_mapping(KEY_F12, KEY_MOD_CTRL, HOTKEY_SAVE_CITY_SCREENSHOT);

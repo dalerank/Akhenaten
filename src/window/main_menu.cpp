@@ -74,24 +74,23 @@ static void draw_foreground(void) {
     graphics_set_to_dialog();
 
     int groups[6][2] = {
-        {30, 0},
-        {30, 5}, //{1, 3},
-                //                    {30, 3},
-                //                    {9,  8},
-        {2, 0},
-        {30, 4},
+      {30, 0},
+      {30, 5}, //{1, 3},
+               //                    {30, 3},
+               //                    {9,  8},
+      {2, 0},
+      {30, 4},
     };
     for (int i = 0; i < 4; i++) {
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
         lang_text_draw_centered(
-            groups[i][0], groups[i][1], BUTTONS_X, BUTTONS_Y + 40 * i + 6, BUTTONS_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT);
+          groups[i][0], groups[i][1], BUTTONS_X, BUTTONS_Y + 40 * i + 6, BUTTONS_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     graphics_reset_dialog();
 }
 
 static void window_config_show_back() {
-
 }
 
 static void confirm_exit(bool accepted) {

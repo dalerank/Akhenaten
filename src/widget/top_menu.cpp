@@ -27,17 +27,17 @@
 #include "widget/city.h"
 #include "window/advisors.h"
 #include "window/city.h"
+#include "window/config.h"
 #include "window/difficulty_options.h"
 #include "window/display_options.h"
 #include "window/file_dialog.h"
 #include "window/game_menu.h"
+#include "window/hotkey_config.h"
 #include "window/main_menu.h"
 #include "window/message_dialog.h"
 #include "window/popup_dialog.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
-#include "window/hotkey_config.h"
-#include "window/config.h"
 
 #include "core/core_utility.h"
 #include "core/span.hpp"
@@ -734,7 +734,6 @@ static void menu_options_autosave(int param) {
 }
 
 static void menu_options_change_enh_back() {
-
 }
 
 static void menu_options_change_enh(int param) {

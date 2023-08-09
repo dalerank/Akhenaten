@@ -1,8 +1,8 @@
 #include "house.h"
 
-#include "game/tutorial.h"
 #include "core/game_environment.h"
 #include "game/resource.h"
+#include "game/tutorial.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "grid/building.h"

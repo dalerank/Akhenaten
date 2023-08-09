@@ -38,7 +38,7 @@ void lang_text_draw_centered(int group, int number, int x_offset, int y_offset, 
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 
-void lang_text_draw_centered(const char *text, int x_offset, int y_offset, int box_width, font_t font) {
+void lang_text_draw_centered(const char* text, int x_offset, int y_offset, int box_width, font_t font) {
     text_draw_centered((const uint8_t*)text, x_offset, y_offset, box_width, font, 0);
 }
 

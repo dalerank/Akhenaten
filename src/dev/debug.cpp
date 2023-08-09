@@ -803,7 +803,7 @@ void draw_debug_ui(int x, int y) {
 
     /////// TIME
     if (g_debug_show_opts[e_debug_show_game_time]) {
-        const auto &time = gametime();
+        const auto& time = gametime();
 
         debug_text(str, x, y + 15, 50, "tick:", time.tick);
         debug_text(str, x + 80, y + 15, 50, "iscycle:", tick_is_flood_cycle());

@@ -137,7 +137,9 @@ int platform_screen_create(char const* title,
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 #endif
 
-    logs::info("Creating screen %d x %d, %s, driver: %s", wsize.w, wsize.h,
+    logs::info("Creating screen %d x %d, %s, driver: %s",
+               wsize.w,
+               wsize.h,
                fullscreen ? "fullscreen" : "windowed",
                SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;

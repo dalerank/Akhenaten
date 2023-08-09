@@ -53,9 +53,8 @@ void vegetation_growth_update() {
         vegetation_tile_update(marshland_tiles_cache.at(i));
 }
 
-io_buffer* iob_vegetation_growth = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &terrain_vegetation_growth);
-});
+io_buffer* iob_vegetation_growth
+  = new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &terrain_vegetation_growth); });
 
 int gatherers_harvesting_point(int grid_offset) {
     // check if there's any figure already gathering at the spot
