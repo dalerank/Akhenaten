@@ -303,6 +303,7 @@ static void setup(Arguments& args) {
                                  "Pharaoh installation, or run: ozymandias path/to/directory",
                                  nullptr);
         show_options_window(args);
+        arguments::store(args);
     }
 
     // set up game display
@@ -310,7 +311,7 @@ static void setup(Arguments& args) {
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
     if (!platform_screen_create(title,
                                 args.get_renderer(),
-                                args.get_fullscreen(),
+                                args.is_fullscreen(),
                                 args.get_display_scale_percentage(),
                                 args.get_window_size())) {
         logs::info("Exiting: SDL create window failed");

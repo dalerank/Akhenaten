@@ -4,12 +4,68 @@
 #include "io/log.h"
 
 #include <filesystem>
+#include <unordered_map>
 
 #define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2"
 #define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
 #define UNKNOWN_OPTION_ERROR_MESSAGE "Option %s not recognized"
 
 namespace {
+enum class argument_type {
+    DATA_DIRECTORY,
+    WINDOW_MODE,
+    RENDERER,
+    DISPLAY_SCALE_PERCENTAGE,
+    CURSOR_SCALE_PERCENTAGE,
+    WINDOW_WIDTH,
+    WINDOW_HEIGHT,
+};
+
+const std::unordered_map<std::string, argument_type> argument_types{
+  {"data_directory", argument_type::DATA_DIRECTORY},
+  {"window_mode", argument_type::WINDOW_MODE},
+  {"renderer", argument_type::RENDERER},
+  {"display_scale_percentage", argument_type::DISPLAY_SCALE_PERCENTAGE},
+  {"cursor_scale_percentage", argument_type::CURSOR_SCALE_PERCENTAGE},
+  {"window_width", argument_type::WINDOW_WIDTH},
+  {"window_height", argument_type::WINDOW_HEIGHT}
+};
+
+void set_value(Arguments& arguments, argument_type type, std::string&& value) {
+    switch (type) {
+    case argument_type::DATA_DIRECTORY:
+        arguments.set_data_directory(value);
+        break;
+    case argument_type::WINDOW_MODE:
+        if (value == "1")
+            arguments.set_window_mode();
+        else
+            arguments.set_fullscreen();
+        break;
+    case argument_type::RENDERER:
+        arguments.set_renderer(value);
+        break;
+    case argument_type::DISPLAY_SCALE_PERCENTAGE:
+        arguments.set_display_scale_percentage(std::stoi(value));
+        break;
+    case argument_type::CURSOR_SCALE_PERCENTAGE:
+        arguments.set_cursor_scale_percentage(std::stoi(value));
+        break;
+    case argument_type::WINDOW_WIDTH: {
+        auto v = arguments.get_window_size();
+        v.w = std::stoi(value);
+        arguments.set_window_size(v);
+        break;
+    }
+    case argument_type::WINDOW_HEIGHT: {
+        auto v = arguments.get_window_size();
+        v.h = std::stoi(value);
+        arguments.set_window_size(v);
+        break;
+    }
+    };
+}
+
 /// Create formatted string
 /// NOTE: (use C++20 as soon as it will be available to get rid of this)
 template <typename... Args>
@@ -64,7 +120,7 @@ static int parse_decimal_as_percentage(const char* str) {
 
 Arguments::Arguments(int argc, char** argv)
   : data_directory_(std::filesystem::current_path().string()) {
-    // TODO: load from settings file
+    arguments::load(*this);
     parse_cli_(argc, argv);
 }
 
@@ -86,24 +142,50 @@ char const* Arguments::usage() {
            "The last argument, if present, is interpreted as data directory of the Pharaoh installation";
 }
 
-int Arguments::get_fullscreen() const {
-    return window_mode_ >= 0 ? 0 : 1;
+bool Arguments::is_fullscreen() const {
+    return !window_mode_;
 }
 
-int Arguments::get_window_mode() const {
-    return window_mode_ >= 0 ? 1 : 0;
+void Arguments::set_fullscreen() {
+    window_mode_ = false;
+}
+
+bool Arguments::is_window_mode() const {
+    return window_mode_;
+}
+
+void Arguments::set_window_mode() {
+    window_mode_ = true;
 }
 
 int Arguments::get_display_scale_percentage() const {
     return display_scale_percentage_;
 }
 
+void Arguments::set_display_scale_percentage(int value) {
+    if (value < 50 || value > 500)
+        app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+
+    display_scale_percentage_ = value;
+}
+
 int Arguments::get_cursor_scale_percentage() const {
     return cursor_scale_percentage_;
 }
 
+void Arguments::set_cursor_scale_percentage(int value) {
+    if (value != 100 && value != 150 && value != 200)
+        app::terminate(CURSOR_SCALE_ERROR_MESSAGE);
+
+    cursor_scale_percentage_ = value;
+}
+
 std::string Arguments::get_renderer() const {
     return renderer_;
+}
+
+void Arguments::set_renderer(std::string value) {
+    renderer_ = std::move(value);
 }
 
 std::string Arguments::get_data_directory() const {
@@ -142,10 +224,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
                 ++i;
 
-                if (percentage < 50 || percentage > 500)
-                    app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
-                else
-                    display_scale_percentage_ = percentage;
+                set_display_scale_percentage(percentage);
             } else
                 app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
         } else if (SDL_strcmp(argv[i], "--size") == 0) {
@@ -159,10 +238,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
                 ++i;
 
-                if (percentage == 100 || percentage == 150 || percentage == 200)
-                    cursor_scale_percentage_ = percentage;
-                else
-                    app::terminate(CURSOR_SCALE_ERROR_MESSAGE);
+                set_cursor_scale_percentage(percentage);
             } else
                 app::terminate(CURSOR_SCALE_ERROR_MESSAGE);
         } else if (SDL_strcmp(argv[i], "--help") == 0)
@@ -175,3 +251,44 @@ void Arguments::parse_cli_(int argc, char** argv) {
         }
     }
 }
+
+namespace arguments {
+
+void load(Arguments& arguments) {
+    std::ifstream input("ozynamdias.cfg", std::ios::in);
+
+    if (!input.is_open())
+        logs::info("Configuration file was not found.");
+    else {
+        std::string line;
+        while (std::getline(input, line))
+        {
+            auto pos = line.find('=');
+            if (pos == std::string::npos)
+                continue;
+
+            auto const key = line.substr(0, pos);
+            auto const it = argument_types.find(key);
+            if (it == argument_types.end()) {
+                logs::warn("Unknown argument key: %s", key.c_str());
+                continue;
+            }
+
+            set_value(arguments, it->second, line.substr(pos + 1));
+        }
+    }
+}
+
+void store(Arguments const& arguments) {
+    std::ofstream output("ozynamdias.cfg", std::ios::trunc | std::ios::out);
+
+    output << "data_directory" << '=' << arguments.get_data_directory() << '\n';
+    output << "window_mode" << '=' << arguments.is_window_mode() << '\n';
+    output << "renderer" << '=' << arguments.get_renderer() << '\n';
+    output << "display_scale_percentage" << '=' << arguments.get_display_scale_percentage() << '\n';
+    output << "cursor_scale_percentage" << '=' << arguments.get_cursor_scale_percentage() << '\n';
+    output << "window_width" << '=' << arguments.get_window_size().w << '\n';
+    output << "window_height" << '=' << arguments.get_window_size().h << '\n';
+}
+
+} // namespace arguments

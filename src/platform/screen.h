@@ -7,7 +7,7 @@
 
 int platform_screen_create(char const* title,
                            std::string renderer,
-                           int fullscreen,
+                           bool fullscreen,
                            int display_scale_percentage,
                            display_size screen_size);
 void platform_screen_destroy();
