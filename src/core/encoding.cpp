@@ -8,18 +8,18 @@
 
 #define HIGH_CHAR_COUNT 128
 
-typedef struct {
+struct letter_code {
     uint8_t internal_value;
     int bytes;
     uint8_t utf8_value[3];
     int bytes_decomposed;
     uint8_t utf8_decomposed[4];
-} letter_code;
+};
 
-typedef struct {
+struct from_utf8_lookup {
     uint32_t utf8;
     const letter_code* code;
-} from_utf8_lookup;
+};
 
 static const letter_code HIGH_TO_UTF8_DEFAULT[HIGH_CHAR_COUNT] = {
   {0x80, 3, {0xe2, 0x82, 0xac}},

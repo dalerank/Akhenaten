@@ -23,9 +23,11 @@ static const uint8_t NEW_GAME_TRADITIONAL_CHINESE[] = {0x83, 0x80, 0x20, 0x84, 0
 static const uint8_t NEW_GAME_SIMPLIFIED_CHINESE[] = {0x82, 0x80, 0x20, 0x83, 0x80, 0x20, 0x84, 0x80, 0};
 static const uint8_t NEW_GAME_KOREAN[] = {0xbb, 0xf5, 0x20, 0xb0, 0xd4, 0xc0, 0xd3, 0};
 
-static struct {
+struct locale_data_t {
     int last_determined_language;
-} data;
+};
+
+locale_data_t g_locale_data;
 
 static int determine_language(void) {
     // Dirty way to check the language, but there's not really another way:
@@ -60,6 +62,7 @@ static int determine_language(void) {
     }
 }
 static void log_language(void) {
+    auto &data = g_locale_data;
     const char* desc;
     switch (data.last_determined_language) {
     case LANGUAGE_ENGLISH:
@@ -105,16 +108,16 @@ static void log_language(void) {
     logs::info("Detected language: %s", desc);
 }
 int locale_determine_language(void) {
-    data.last_determined_language = determine_language();
+    g_locale_data.last_determined_language = determine_language();
     log_language();
-    return data.last_determined_language;
+    return g_locale_data.last_determined_language;
 }
 int locale_year_before_ad(void) {
     // In all languages it's "200 AD" except for English
-    return data.last_determined_language != LANGUAGE_ENGLISH;
+    return g_locale_data.last_determined_language != LANGUAGE_ENGLISH;
 }
 int locale_translate_rank_autosaves(void) {
-    switch (data.last_determined_language) {
+    switch (g_locale_data.last_determined_language) {
     case LANGUAGE_ENGLISH:
     case LANGUAGE_FRENCH:
     case LANGUAGE_GERMAN:
