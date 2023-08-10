@@ -7,10 +7,12 @@
 #include "game/game.h"
 #include "game/settings.h"
 #include "game/system.h"
+#include "graphics/screen.h"
 #include "input/mouse.h"
 #include "input/touch.h"
 #include "io/file.h"
 #include "io/gamefiles/lang.h"
+#include "io/config/config.h"
 #include "io/log.h"
 #include "platform/arguments.h"
 #include "platform/cursor.h"
@@ -58,11 +60,9 @@
 
 #endif
 
-#ifdef DRAW_FPS
 #include "graphics/boilerplate.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#endif
 
 #if !SDL_VERSION_ATLEAST(2, 0, 17)
 #error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
@@ -341,12 +341,13 @@ static void teardown(void) {
     SDL_Quit();
 }
 
-#ifdef DRAW_FPS
-static struct {
+struct fps_data_t {
     int frame_count;
     int last_fps;
     Uint32 last_update_time;
-} fps = {0, 0, 0};
+};
+
+fps_data_t g_fps = {0, 0, 0};
 
 static void run_and_draw(void) {
     time_millis time_before_run = SDL_GetTicks();
@@ -357,35 +358,27 @@ static void run_and_draw(void) {
     game_draw();
     Uint32 time_after_draw = SDL_GetTicks();
 
-    fps.frame_count++;
-    if (time_after_draw - fps.last_update_time > 1000) {
-        fps.last_fps = fps.frame_count;
-        fps.last_update_time = time_after_draw;
-        fps.frame_count = 0;
+    g_fps.frame_count++;
+    if (time_after_draw - g_fps.last_update_time > 1000) {
+        g_fps.last_fps = g_fps.frame_count;
+        g_fps.last_update_time = time_after_draw;
+        g_fps.frame_count = 0;
     }
-    if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY) || window_is(WINDOW_SLIDING_SIDEBAR)) {
-        int y_offset = 24;
+
+    if (config_get(CONFIG_UI_DRAW_FPS) && (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY) || window_is(WINDOW_SLIDING_SIDEBAR))) {
+        int y_offset = screen_height() - 24;
         int y_offset_text = y_offset + 5;
-        graphics_fill_rect(0, y_offset, 100, 20, COLOR_WHITE);
-        text_draw_number_colored(fps.last_fps, 'f', "", 5, y_offset_text, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
-        text_draw_number_colored(
-          time_between_run_and_draw - time_before_run, 'g', "", 40, y_offset_text, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
-        text_draw_number_colored(
-          time_after_draw - time_between_run_and_draw, 'd', "", 70, y_offset_text, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
+ 
+        text_draw_number_colored(g_fps.last_fps, 
+                                    'f', "", 5, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
+        text_draw_number_colored(time_between_run_and_draw - time_before_run, 
+                                    'g', "", 40, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
+        text_draw_number_colored(time_after_draw - time_between_run_and_draw,
+                                    'd', "", 70, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
     }
-
-    platform_screen_render();
-}
-#else
-static void run_and_draw(void) {
-    time_set_millis(SDL_GetTicks());
-
-    game_run();
-    game_draw();
 
     platform_renderer_render();
 }
-#endif
 
 static void handle_mouse_button(SDL_MouseButtonEvent* event, int is_down) {
     if (!SDL_GetRelativeMouseMode())

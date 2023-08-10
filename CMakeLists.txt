@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 include(CMakeDependentOption)
 
-option(DRAW_FPS "Draw FPS on the top left corner of the window." OFF)
 option(SYSTEM_LIBS "Use system libraries when available." ON)
 
 set(SHORT_NAME ozymandias)
@@ -108,10 +107,6 @@ set(VERSION_REVISION "")
 
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
-
-if(DRAW_FPS)
-  add_definitions(-DDRAW_FPS)
-endif()
 
 set(EXPAT_FILES
     ext/expat/xmlparse.c
