@@ -562,7 +562,7 @@ static generic_button warehouse_order_buttons[] = {
   {314, 5 * 16, 20, 20, warehouse_orders, button_none, 2, 0}, //
 };
 
-static struct {
+struct window_building_distribution_t {
     int focus_button_id;
     int orders_focus_button_id;
     int resource_focus_button_id;
@@ -571,7 +571,9 @@ static struct {
     int incr_arrow_focus_button_id;
     int building_id;
     int partial_resource_focus_button_id;
-} data = {0, 0, 0, 0, 0, 0};
+};
+
+window_building_distribution_t g_window_building_distribution = {0, 0, 0, 0, 0, 0};
 
 uint8_t warehouse_full_button_text[] = "32";
 uint8_t warehouse_3quarters_button_text[] = "24";
@@ -661,6 +663,7 @@ static void draw_accept_none_button(int x, int y, int focused) {
     text_draw_centered(refuse_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 }
 static void draw_permissions_buttons(int x, int y, int buttons) {
+    auto &data = g_window_building_distribution;
     return; // temp - todo: fix buttons
     uint8_t permission_button_text[] = {'x', 0};
     int offsets[] = {96, 132, 96};
@@ -674,10 +677,12 @@ static void draw_permissions_buttons(int x, int y, int buttons) {
 }
 
 int window_building_handle_mouse_dock(const mouse* m, building_info_context* c) {
+    auto &data = g_window_building_distribution;
     return generic_buttons_handle_mouse(
       m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34, go_to_orders_button, 1, &data.focus_button_id);
 }
 int window_building_handle_mouse_dock_orders(const mouse* m, building_info_context* c) {
+    auto &data = g_window_building_distribution;
     int y_offset = window_building_get_vertical_offset(c, 28);
 
     data.building_id = c->building_id;
@@ -724,6 +729,7 @@ void window_building_draw_dock(building_info_context* c) {
     window_building_draw_employment(c, 142);
 }
 void window_building_draw_dock_foreground(building_info_context* c) {
+    auto &data = g_window_building_distribution;
     button_border_draw(c->x_offset + 80,
                        c->y_offset + 16 * c->height_blocks - 34,
                        16 * (c->width_blocks - 10),
@@ -744,6 +750,7 @@ void window_building_draw_dock_orders(building_info_context* c) {
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
 }
 void window_building_draw_dock_orders_foreground(building_info_context* c) {
+    auto &data = g_window_building_distribution;
     int y_offset = window_building_get_vertical_offset(c, 28);
     int line_x = c->x_offset + 215;
 
@@ -771,10 +778,12 @@ void window_building_draw_dock_orders_foreground(building_info_context* c) {
 #define Y_GOODS Y_FOODS + 20 // 174 //274
 
 void window_building_handle_mouse_market(const mouse* m, building_info_context* c) {
+    auto &data = g_window_building_distribution;
     generic_buttons_handle_mouse(
       m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34, go_to_orders_button, 1, &data.focus_button_id);
 }
 void window_building_handle_mouse_market_orders(const mouse* m, building_info_context* c) {
+    auto &data = g_window_building_distribution;
     int y_offset = window_building_get_vertical_offset(c, 28 - 11);
     data.resource_focus_button_id = 0;
 
@@ -867,6 +876,7 @@ void window_building_draw_market(building_info_context* c) {
     window_building_draw_employment(c, 142);
 }
 void window_building_draw_market_foreground(building_info_context* c) {
+    auto &data = g_window_building_distribution;
     button_border_draw(c->x_offset + 80,
                        c->y_offset + 16 * c->height_blocks - 34,
                        16 * (c->width_blocks - 10),
@@ -887,6 +897,7 @@ void window_building_draw_market_orders(building_info_context* c) {
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21 - 10);
 }
 void window_building_draw_market_orders_foreground(building_info_context* c) {
+    auto &data = g_window_building_distribution;
     window_building_draw_market_orders(c);
     int line_x = c->x_offset + 215;
     int y_offset = window_building_get_vertical_offset(c, 28 - 11);
@@ -927,6 +938,7 @@ void window_building_draw_market_orders_foreground(building_info_context* c) {
 }
 
 int window_building_handle_mouse_granary(const mouse* m, building_info_context* c) {
+    auto &data = g_window_building_distribution;
     data.building_id = c->building_id;
     generic_buttons_handle_mouse(m,
                                  c->x_offset + 58,
@@ -940,6 +952,7 @@ int window_building_handle_mouse_granary(const mouse* m, building_info_context* 
 }
 
 int window_building_handle_mouse_granary_orders(const mouse* m, building_info_context* c) {
+    auto &data = g_window_building_distribution;
     int y_offset = window_building_get_vertical_offset(c, 28 - 15);
     data.resource_focus_button_id = 0;
 
@@ -970,6 +983,7 @@ int window_building_handle_mouse_granary_orders(const mouse* m, building_info_co
           m, c->x_offset + 80, y_offset + 404, granary_order_buttons, 2, &data.orders_focus_button_id);
 }
 void window_building_draw_granary(building_info_context* c) {
+    auto &data = g_window_building_distribution;
     c->help_id = 3;
     data.building_id = c->building_id;
     window_building_play_sound(c, "wavs/granary.wav");
@@ -1052,6 +1066,7 @@ void window_building_draw_granary(building_info_context* c) {
     //               c->y_offset + 19 * c->height_blocks - 93);
 }
 void window_building_draw_granary_foreground(building_info_context* c) {
+    auto &data = g_window_building_distribution;
     button_border_draw(c->x_offset + 80,
                        c->y_offset + 16 * c->height_blocks - 34,
                        16 * (c->width_blocks - 10),
@@ -1073,6 +1088,7 @@ void window_building_draw_granary_orders(building_info_context* c) {
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21 - 15);
 }
 void window_building_draw_granary_orders_foreground(building_info_context* c) {
+    auto &data = g_window_building_distribution;
     window_building_draw_granary_orders(c);
     int line_x = c->x_offset + 215;
     int y_offset = window_building_get_vertical_offset(c, 28 - 15);
@@ -1134,6 +1150,7 @@ void window_building_draw_granary_orders_foreground(building_info_context* c) {
     }
 }
 void window_building_get_tooltip_granary_orders(int* group_id, int* text_id) {
+    auto &data = g_window_building_distribution;
     if (data.orders_focus_button_id == 2) {
         *group_id = 143;
         *text_id = 1;
@@ -1146,6 +1163,7 @@ static void on_scroll(void) {
 static scrollbar_type scrollbar = {590, 52, 336, on_scroll};
 
 int window_building_handle_mouse_warehouse(const mouse* m, building_info_context* c) {
+    auto &data = g_window_building_distribution;
     data.building_id = c->building_id;
     if (generic_buttons_handle_mouse(m,
                                      c->x_offset + 80,
@@ -1162,6 +1180,7 @@ int window_building_handle_mouse_warehouse(const mouse* m, building_info_context
     return 0;
 }
 int window_building_handle_mouse_warehouse_orders(const mouse* m, building_info_context* c) {
+    auto &data = g_window_building_distribution;
     int y_offset = window_building_get_vertical_offset(c, 28 + 5);
     data.resource_focus_button_id = 0;
 
@@ -1198,6 +1217,7 @@ int window_building_handle_mouse_warehouse_orders(const mouse* m, building_info_
           m, c->x_offset + 80, y_offset + 404, warehouse_order_buttons, 2, &data.orders_focus_button_id);
 }
 void window_building_draw_warehouse(building_info_context* c) {
+    auto &data = g_window_building_distribution;
     c->help_id = 4;
     window_building_play_sound(c, "wavs/warehouse.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -1291,6 +1311,7 @@ void window_building_draw_warehouse(building_info_context* c) {
     //               c->y_offset + 16 * c->height_blocks - 110);
 }
 void window_building_draw_warehouse_foreground(building_info_context* c) {
+    auto &data = g_window_building_distribution;
     button_border_draw(c->x_offset + 80,
                        c->y_offset + 16 * c->height_blocks - 34,
                        16 * (c->width_blocks - 10),
@@ -1314,6 +1335,7 @@ void window_building_draw_warehouse_orders(building_info_context* c) {
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21 + 5);
 }
 void window_building_draw_warehouse_orders_foreground(building_info_context* c) {
+    auto &data = g_window_building_distribution;
     window_building_draw_warehouse_orders(c);
     int y_offset = window_building_get_vertical_offset(c, 28 + 5);
     int line_x = c->x_offset + 215;
@@ -1389,6 +1411,7 @@ void window_building_draw_warehouse_orders_foreground(building_info_context* c) 
     }
 }
 void window_building_get_tooltip_warehouse_orders(int* group_id, int* text_id) {
+    auto &data = g_window_building_distribution;
     if (GAME_ENV == ENGINE_ENV_C3) {
         if (data.orders_focus_button_id == 3) {
             *group_id = 15;
@@ -1410,11 +1433,13 @@ static void go_to_orders(int param1, int param2) {
     window_building_info_show_storage_orders();
 }
 static void storage_toggle_permissions(int index, int param2) {
+    auto &data = g_window_building_distribution;
     building* b = building_get(data.building_id);
     building_storage_set_permission(index - 1, b);
     //    window_invalidate();
 }
 static void toggle_resource_state(int index, int param2) {
+    auto &data = g_window_building_distribution;
     building* b = building_get(data.building_id);
     int resource;
     if (b->type == BUILDING_MARKET || b->type == BUILDING_DOCK)
@@ -1429,6 +1454,7 @@ static void toggle_resource_state(int index, int param2) {
     //    window_invalidate();
 }
 static void toggle_resource_state_backwards(int index, int param2) {
+    auto &data = g_window_building_distribution;
     building* b = building_get(data.building_id);
     int resource;
     if (b->type == BUILDING_MARKET || b->type == BUILDING_DOCK)
@@ -1443,6 +1469,7 @@ static void toggle_resource_state_backwards(int index, int param2) {
     //    window_invalidate();
 }
 static void order_quantity_increase_decrease(int index, int param2) {
+    auto &data = g_window_building_distribution;
     building* b = building_get(data.building_id);
     int resource;
     if (b->type == BUILDING_MARKET || b->type == BUILDING_DOCK)
@@ -1458,6 +1485,7 @@ static void order_quantity_increase_decrease(int index, int param2) {
 }
 
 static void market_orders(int index, int param2) {
+    auto &data = g_window_building_distribution;
     building* b = building_get(data.building_id);
     if (index == 0)
         unaccept_all_goods(b);
@@ -1465,6 +1493,7 @@ static void market_orders(int index, int param2) {
     //    window_invalidate();
 }
 static void granary_orders(int index, int param2) {
+    auto &data = g_window_building_distribution;
     int storage_id = building_get(data.building_id)->storage_id;
     if (index == 0)
         building_storage_toggle_empty_all(storage_id);
@@ -1474,6 +1503,7 @@ static void granary_orders(int index, int param2) {
     //    window_invalidate();
 }
 static void warehouse_orders(int index, int param2) {
+    auto &data = g_window_building_distribution;
     if (index == 0) {
         int storage_id = building_get(data.building_id)->storage_id;
         building_storage_toggle_empty_all(storage_id);
