@@ -258,10 +258,12 @@ const int CATEGORY_FOR_building(building* b) {
     }
 }
 
-static struct {
+struct labor_priority_t {
     int category;
     int workers;
-} DEFAULT_PRIORITY[MAX_CATS] = {
+};
+
+labor_priority_t DEFAULT_PRIORITY[MAX_CATS] = {
   {LABOR_CATEGORY_INFRASTRUCTURE, 3},
   {LABOR_CATEGORY_WATER_HEALTH, 1},
   {LABOR_CATEGORY_GOVERNMENT, 3},

@@ -43,12 +43,14 @@ static const int HOUSE_TILE_OFFSETS_PH[] = {
   GRID_OFFSET(0, 3) // 4x4
 };
 
-static const struct {
+struct house_image_t {
     int collection;
     int group;
     int offset;
     int num_types;
-} HOUSE_IMAGE[20] = {
+};
+
+const house_image_t HOUSE_IMAGE[20] = {
   {GROUP_BUILDING_HOUSE_TENT, 0, 2},     {GROUP_BUILDING_HOUSE_TENT, 2, 2},     {GROUP_BUILDING_HOUSE_SHACK, 0, 2},
   {GROUP_BUILDING_HOUSE_SHACK, 2, 2},    {GROUP_BUILDING_HOUSE_HOVEL, 0, 2},    {GROUP_BUILDING_HOUSE_HOVEL, 2, 2},
   {GROUP_BUILDING_HOUSE_CASA, 0, 2},     {GROUP_BUILDING_HOUSE_CASA, 2, 2},     {GROUP_BUILDING_HOUSE_INSULA_1, 0, 2},
