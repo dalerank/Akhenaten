@@ -6,12 +6,21 @@
 #include <filesystem>
 #include <unordered_map>
 
+#if defined(_WIN32) || defined(_WIN64)
+// TODO: placeholder for windows (config folder path)
+#else // Linux
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#endif
+
 #define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2"
 #define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
 #define UNKNOWN_OPTION_ERROR_MESSAGE "Option %s not recognized"
 
 namespace {
-char const* const ARGUMENTS_FILE_NAME = "ozymandias.cfg";
+
+char const* const CFG_FILE_NAME = "ozymandias.cfg";
 
 enum class argument_type {
     DATA_DIRECTORY,
@@ -81,6 +90,21 @@ auto string_format(char const* format, Args... args) {
     std::snprintf(buf.get(), string_size, format, args...);
     return std::string(buf.get(), buf.get() + string_size - 1); // Without '\0'
 }
+
+std::string get_configuration_path() {
+#if defined(_WIN32) || defined(_WIN64)
+    // TODO: placeholder for windows
+#else // Linux
+    struct passwd* pw = getpwuid(getuid());
+    std::string folder_path = std::string(pw->pw_dir) + "/.config/";
+    if (std::filesystem::exists(folder_path))
+        return folder_path + CFG_FILE_NAME;
+#endif
+    logs::warn("Home folder to keep configuration file was not found");
+
+    return CFG_FILE_NAME;
+}
+
 } // namespace
 
 static int parse_decimal_as_percentage(const char* str) {
@@ -257,7 +281,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
 namespace arguments {
 
 void load(Arguments& arguments) {
-    std::ifstream input(ARGUMENTS_FILE_NAME, std::ios::in);
+    std::ifstream input(get_configuration_path(), std::ios::in);
 
     if (!input.is_open())
         logs::info("Configuration file was not found.");
@@ -281,7 +305,7 @@ void load(Arguments& arguments) {
 }
 
 void store(Arguments const& arguments) {
-    std::ofstream output(ARGUMENTS_FILE_NAME, std::ios::trunc | std::ios::out);
+    std::ofstream output(get_configuration_path(), std::ios::trunc | std::ios::out);
 
     output << "data_directory" << '=' << arguments.get_data_directory() << '\n';
     output << "window_mode" << '=' << arguments.is_window_mode() << '\n';
