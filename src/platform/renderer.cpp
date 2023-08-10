@@ -66,7 +66,7 @@
 #define MAX_TEXTURE_SIZE 2048
 #endif
 
-typedef struct buffer_texture {
+struct buffer_texture {
     SDL_Texture* texture;
     int id;
     int width;
@@ -74,9 +74,9 @@ typedef struct buffer_texture {
     int tex_width;
     int tex_height;
     struct buffer_texture* next;
-} buffer_texture;
+};
 
-static struct {
+struct renderer_data_t {
     SDL_Renderer* renderer;
     SDL_Texture* render_texture;
     int is_software_renderer;
@@ -112,9 +112,13 @@ static struct {
     int supports_yuv_textures;
 
     float global_render_scale = 1.0f;
-} data;
+};
+
+
+renderer_data_t g_renderer_data;
 
 static int save_screen_buffer(color_t* pixels, int x, int y, int width, int height, int row_width) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return 0;
     }
@@ -124,6 +128,7 @@ static int save_screen_buffer(color_t* pixels, int x, int y, int width, int heig
 }
 
 void graphics_renderer_interface::draw_line(int x_start, int x_end, int y_start, int y_end, color_t color) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return;
     }
@@ -135,6 +140,7 @@ void graphics_renderer_interface::draw_line(int x_start, int x_end, int y_start,
     SDL_RenderDrawLine(data.renderer, x_start, y_start, x_end, y_end);
 }
 void graphics_renderer_interface::draw_rect(int x, int y, int width, int height, color_t color) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return;
     }
@@ -147,6 +153,7 @@ void graphics_renderer_interface::draw_rect(int x, int y, int width, int height,
     SDL_RenderDrawRect(data.renderer, &rect);
 }
 void graphics_renderer_interface::fill_rect(int x, int y, int width, int height, color_t color) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return;
     }
@@ -160,6 +167,7 @@ void graphics_renderer_interface::fill_rect(int x, int y, int width, int height,
 }
 
 void graphics_renderer_interface::clear_screen(void) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return;
     }
@@ -167,6 +175,7 @@ void graphics_renderer_interface::clear_screen(void) {
     SDL_RenderClear(data.renderer);
 }
 void graphics_renderer_interface::set_viewport(int x, int y, int width, int height) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return;
     }
@@ -174,6 +183,7 @@ void graphics_renderer_interface::set_viewport(int x, int y, int width, int heig
     SDL_RenderSetViewport(data.renderer, &viewport);
 }
 void graphics_renderer_interface::reset_viewport(void) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return;
     }
@@ -181,6 +191,7 @@ void graphics_renderer_interface::reset_viewport(void) {
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
 void graphics_renderer_interface::set_clip_rectangle(int x, int y, int width, int height) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return;
     }
@@ -188,6 +199,7 @@ void graphics_renderer_interface::set_clip_rectangle(int x, int y, int width, in
     SDL_RenderSetClipRect(data.renderer, &clip);
 }
 void graphics_renderer_interface::reset_clip_rectangle(void) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return;
     }
@@ -195,6 +207,7 @@ void graphics_renderer_interface::reset_clip_rectangle(void) {
 }
 
 pixel_coordinate graphics_renderer_interface::get_max_image_size() {
+    auto &data = g_renderer_data;
     return {data.max_texture_size.width, data.max_texture_size.height};
 }
 
@@ -544,6 +557,7 @@ static const SDL_Color* convert_color(color_t color) {
 #endif
 
 graphics_renderer_interface* graphics_renderer(void) {
+    auto &data = g_renderer_data;
     return &data.renderer_interface;
 }
 
@@ -555,10 +569,12 @@ static const SDL_BlendMode premult_alpha = SDL_ComposeCustomBlendMode(SDL_BLENDF
                                                                       SDL_BLENDOPERATION_ADD);
 
 void set_render_scale(float scale) {
+    auto &data = g_renderer_data;
     data.global_render_scale = scale;
 }
 
 static void set_texture_scale_mode(SDL_Texture* texture, float scale_factor) {
+    auto &data = g_renderer_data;
 #ifdef USE_TEXTURE_SCALE_MODE
     if (!data.paused && HAS_TEXTURE_SCALE_MODE) {
         SDL_ScaleMode current_scale_mode;
@@ -576,6 +592,7 @@ void graphics_renderer_interface::draw_image(const image_t* img,
                                              color_t color,
                                              float scale,
                                              bool mirrored) {
+    auto &data = g_renderer_data;
     if (data.paused || img == nullptr)
         return;
     if (!color)
@@ -664,6 +681,7 @@ void graphics_renderer_interface::draw_image(const image_t* img,
 }
 
 void graphics_renderer_interface::create_custom_texture(int type, int width, int height) {
+    auto &data = g_renderer_data;
     if (data.custom_textures[type].texture) {
         SDL_DestroyTexture(data.custom_textures[type].texture);
         data.custom_textures[type].texture = 0;
@@ -684,6 +702,7 @@ void graphics_renderer_interface::create_custom_texture(int type, int width, int
     SDL_SetTextureBlendMode(data.custom_textures[type].texture, SDL_BLENDMODE_BLEND);
 }
 color_t* graphics_renderer_interface::get_custom_texture_buffer(int type, int* actual_texture_width) {
+    auto &data = g_renderer_data;
     if (data.paused || !data.custom_textures[type].texture) {
         return 0;
     }
@@ -712,12 +731,14 @@ color_t* graphics_renderer_interface::get_custom_texture_buffer(int type, int* a
     return data.custom_textures[type].buffer;
 }
 void graphics_renderer_interface::release_custom_texture_buffer(int type) {
+    auto &data = g_renderer_data;
 #ifndef __vita__
     free(data.custom_textures[type].buffer);
     data.custom_textures[type].buffer = 0;
 #endif
 }
 void graphics_renderer_interface::update_custom_texture(int type) {
+    auto &data = g_renderer_data;
 #ifndef __vita__
     if (data.paused || !data.custom_textures[type].texture || !data.custom_textures[type].buffer) {
         return;
@@ -737,6 +758,7 @@ void graphics_renderer_interface::update_custom_texture_yuv(int type,
                                                             int cb_width,
                                                             const uint8_t* cr_data,
                                                             int cr_width) {
+    auto &data = g_renderer_data;
 #ifdef USE_YUV_TEXTURES
     if (data.paused || !data.supports_yuv_textures || !data.custom_textures[type].texture) {
         return;
@@ -753,6 +775,7 @@ void graphics_renderer_interface::update_custom_texture_yuv(int type,
 #endif
 }
 static buffer_texture* get_saved_texture_info(int texture_id) {
+    auto &data = g_renderer_data;
     if (!texture_id || !data.texture_buffers.first) {
         return 0;
     }
@@ -764,6 +787,7 @@ static buffer_texture* get_saved_texture_info(int texture_id) {
     return 0;
 }
 int graphics_renderer_interface::save_texture_from_screen(int texture_id, int x, int y, int width, int height) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return 0;
     }
@@ -837,6 +861,7 @@ int graphics_renderer_interface::save_texture_from_screen(int texture_id, int x,
     return texture_info->id;
 }
 void graphics_renderer_interface::draw_saved_texture_to_screen(int texture_id, int x, int y, int width, int height) {
+    auto &data = g_renderer_data;
     buffer_texture* texture_info = get_saved_texture_info(texture_id);
     if (!texture_info) {
         return;
@@ -846,6 +871,7 @@ void graphics_renderer_interface::draw_saved_texture_to_screen(int texture_id, i
     SDL_RenderCopy(data.renderer, texture_info->texture, &src_coords, &dst_coords);
 }
 static void create_blend_texture(int type) {
+    auto &data = g_renderer_data;
     SDL_Texture* texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, 58, 30);
     if (!texture) {
         return;
@@ -890,6 +916,7 @@ static void create_blend_texture(int type) {
     //    data.custom_textures[type].img.atlas.bitflags = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | type;
 }
 void graphics_renderer_interface::draw_custom_texture(int type, int x, int y, float scale) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return;
     }
@@ -901,10 +928,12 @@ void graphics_renderer_interface::draw_custom_texture(int type, int x, int y, fl
     //    draw_texture(&data.custom_textures[type].img, x, y, 0, scale);
 }
 int graphics_renderer_interface::has_custom_texture(int type) {
+    auto &data = g_renderer_data;
     return data.custom_textures[type].texture != 0;
 }
 
 void load_unpacked_image(const image_t* img, const color_t* pixels) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return;
     }
@@ -980,6 +1009,7 @@ void load_unpacked_image(const image_t* img, const color_t* pixels) {
 // }
 
 SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color_t* p_data, int width, int height) {
+    auto &data = g_renderer_data;
     if (p_data == nullptr)
         return nullptr;
 #ifdef __VITA__
@@ -1017,6 +1047,7 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color_t* p_
 bool graphics_renderer_interface::save_texture_to_file(const char* filename,
                                                        SDL_Texture* tex,
                                                        e_file_format file_format) {
+    auto &data = g_renderer_data;
     SDL_Texture* ren_tex;
     SDL_Surface* surf;
     int st;
@@ -1117,6 +1148,7 @@ cleanup:
 /////////
 
 int platform_renderer_init(SDL_Window* window, std::string renderer) {
+    auto &data = g_renderer_data;
     //    free_all_textures();
 
     SDL_RendererInfo info;
@@ -1185,6 +1217,7 @@ int platform_renderer_init(SDL_Window* window, std::string renderer) {
 }
 
 static void destroy_render_texture(void) {
+    auto &data = g_renderer_data;
     if (data.render_texture) {
         SDL_DestroyTexture(data.render_texture);
         data.render_texture = 0;
@@ -1192,6 +1225,7 @@ static void destroy_render_texture(void) {
 }
 
 int platform_renderer_create_render_texture(int width, int height) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return 1;
     }
@@ -1247,9 +1281,11 @@ int platform_renderer_create_render_texture(int width, int height) {
     }
 }
 int platform_renderer_lost_render_texture(void) {
+    auto &data = g_renderer_data;
     return !data.render_texture && data.renderer;
 }
 void platform_renderer_invalidate_target_textures(void) {
+    auto &data = g_renderer_data;
     if (data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture) {
         SDL_DestroyTexture(data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture);
         data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture = 0;
@@ -1280,6 +1316,7 @@ static void draw_software_mouse_cursor(void) {
 #endif
 
 void platform_renderer_render(void) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return;
     }
@@ -1296,6 +1333,7 @@ void platform_renderer_generate_mouse_cursor_texture(int cursor_id,
                                                      const color_t* pixels,
                                                      int hotspot_x,
                                                      int hotspot_y) {
+    auto &data = g_renderer_data;
     if (data.paused) {
         return;
     }
@@ -1316,15 +1354,18 @@ void platform_renderer_generate_mouse_cursor_texture(int cursor_id,
 }
 
 void platform_renderer_pause(void) {
+    auto &data = g_renderer_data;
     SDL_SetRenderTarget(data.renderer, NULL);
     data.paused = 1;
 }
 void platform_renderer_resume(void) {
+    auto &data = g_renderer_data;
     data.paused = 0;
     platform_renderer_create_render_texture(screen_width(), screen_height());
     SDL_SetRenderTarget(data.renderer, data.render_texture);
 }
 void platform_renderer_destroy(void) {
+    auto &data = g_renderer_data;
     destroy_render_texture();
     if (data.renderer) {
         SDL_DestroyRenderer(data.renderer);
