@@ -70,6 +70,7 @@ static translation_string all_strings[]
      {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Warehouses don't accept anything when built"},
      {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Houses don't expand into gardens"},
      {TR_CONFIG_FIREMAN_RETURNING, "Fireman returning after fight fire"},
+     {TR_CONFIG_DRAW_FPS, "Draw FPS"},
      {TR_HOTKEY_TITLE, "Hotkeys configuration"},
      {TR_HOTKEY_LABEL, "Hotkey"},
      {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},

@@ -67,21 +67,22 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
   {"gameplay_change_soil_depletion", true},
   {"gameplay_change_multiple_gatherers", false},
   {"#gameplay_change_fireman_returning", true},
+  {"#ui_draw_fps", true},
 };
 
 static const char* ini_string_keys[] = {
   "ui_language_dir",
 };
 
-static bool values[CONFIG_MAX_ENTRIES];
+bool g_ozzy_config[CONFIG_MAX_ENTRIES];
 static char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 static char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
 int config_get(int key) {
-    return values[key];
+    return g_ozzy_config[key];
 }
 void config_set(int key, int value) {
-    values[key] = value;
+    g_ozzy_config[key] = value;
 }
 
 const char* config_get_string(int key) {
@@ -103,7 +104,7 @@ const char* config_get_default_string_value(int key) {
 
 void config_set_defaults() {
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
-        values[i] = ini_keys_defaults[i].enabled;
+        g_ozzy_config[i] = ini_keys_defaults[i].enabled;
     }
     strncpy(string_values[CONFIG_STRING_UI_LANGUAGE_DIR],
             default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR],
@@ -129,7 +130,7 @@ void config_load() {
                 if (strcmp(ini_keys_defaults[i].name, line) == 0) {
                     int value = atoi(&equals[1]);
                     logs::info("Config key %s [%d]", ini_keys_defaults[i].name, value);
-                    values[i] = value;
+                    g_ozzy_config[i] = value;
                     break;
                 }
             }
@@ -152,9 +153,12 @@ void config_save() {
         logs::error("Unable to write configuration file %s", INI_FILENAME);
         return;
     }
-    for (int i = 0; i < CONFIG_MAX_ENTRIES; i++)
-        fprintf(fp, "%s=%d\n", ini_keys_defaults[i].name, values[i]);
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++)
+    for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
+        fprintf(fp, "%s=%d\n", ini_keys_defaults[i].name, g_ozzy_config[i]);
+    }
+
+    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
         fprintf(fp, "%s=%s\n", ini_string_keys[i], string_values[i]);
+    }
     file_close(fp);
 }
