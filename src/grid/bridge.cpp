@@ -10,27 +10,29 @@
 #include "grid/terrain.h"
 #include <scenario/map.h>
 
-static struct {
+struct grid_bridge_t {
     int end_grid_offset;
     int length;
     int direction;
     int direction_grid_delta;
-} bridge;
+};
+
+grid_bridge_t g_bridge;
 
 int map_bridge_building_length(void) {
-    return bridge.length;
+    return g_bridge.length;
 }
 
 void map_bridge_reset_building_length(void) {
-    bridge.length = 0;
+    g_bridge.length = 0;
 }
 
 int map_bridge_calculate_length_direction(int x, int y, int* length, int* direction) {
     int grid_offset = MAP_OFFSET(x, y);
-    bridge.end_grid_offset = 0;
-    bridge.direction_grid_delta = 0;
-    bridge.length = *length = 0;
-    bridge.direction = *direction = 0;
+    g_bridge.end_grid_offset = 0;
+    g_bridge.direction_grid_delta = 0;
+    g_bridge.length = *length = 0;
+    g_bridge.direction = *direction = 0;
 
     if (!map_terrain_is(grid_offset, TERRAIN_WATER))
         return 0;
@@ -42,36 +44,36 @@ int map_bridge_calculate_length_direction(int x, int y, int* length, int* direct
         return 0;
 
     if (!map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_WATER)) {
-        bridge.direction_grid_delta = GRID_OFFSET(0, 1);
-        bridge.direction = DIR_4_BOTTOM_LEFT;
+        g_bridge.direction_grid_delta = GRID_OFFSET(0, 1);
+        g_bridge.direction = DIR_4_BOTTOM_LEFT;
     } else if (!map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_WATER)) {
-        bridge.direction_grid_delta = GRID_OFFSET(-1, 0);
-        bridge.direction = DIR_6_TOP_LEFT;
+        g_bridge.direction_grid_delta = GRID_OFFSET(-1, 0);
+        g_bridge.direction = DIR_6_TOP_LEFT;
     } else if (!map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_WATER)) {
-        bridge.direction_grid_delta = GRID_OFFSET(0, -1);
-        bridge.direction = DIR_0_TOP_RIGHT;
+        g_bridge.direction_grid_delta = GRID_OFFSET(0, -1);
+        g_bridge.direction = DIR_0_TOP_RIGHT;
     } else if (!map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_WATER)) {
-        bridge.direction_grid_delta = GRID_OFFSET(1, 0);
-        bridge.direction = DIR_2_BOTTOM_RIGHT;
+        g_bridge.direction_grid_delta = GRID_OFFSET(1, 0);
+        g_bridge.direction = DIR_2_BOTTOM_RIGHT;
     } else {
         return 0;
     }
-    *direction = bridge.direction;
-    bridge.length = 1;
+    *direction = g_bridge.direction;
+    g_bridge.length = 1;
     for (int i = 0; i < 40; i++) {
-        grid_offset += bridge.direction_grid_delta;
-        bridge.length++;
-        int next_offset = grid_offset + bridge.direction_grid_delta;
+        grid_offset += g_bridge.direction_grid_delta;
+        g_bridge.length++;
+        int next_offset = grid_offset + g_bridge.direction_grid_delta;
         if (map_terrain_is(next_offset, TERRAIN_TREE))
             break;
 
         if (!map_terrain_is(next_offset, TERRAIN_WATER)) {
-            bridge.end_grid_offset = grid_offset;
+            g_bridge.end_grid_offset = grid_offset;
             if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) != 3)
-                bridge.end_grid_offset = 0;
+                g_bridge.end_grid_offset = 0;
 
-            *length = bridge.length;
-            return bridge.end_grid_offset;
+            *length = g_bridge.length;
+            return g_bridge.end_grid_offset;
         }
         if (map_terrain_is(next_offset, TERRAIN_ROAD | TERRAIN_BUILDING))
             break;
@@ -80,12 +82,12 @@ int map_bridge_calculate_length_direction(int x, int y, int* length, int* direct
             break;
     }
     // invalid bridge
-    *length = bridge.length;
+    *length = g_bridge.length;
     return 0;
 }
 
 static int get_pillar_distance(int length) {
-    switch (bridge.length) {
+    switch (g_bridge.length) {
     case 9:
     case 10:
         return 4;
@@ -186,27 +188,27 @@ int map_bridge_get_sprite_id(int index, int length, int direction, bool is_ship_
 
 int map_bridge_add(int x, int y, bool is_ship_bridge) {
     int min_length = is_ship_bridge ? 5 : 2;
-    if (bridge.end_grid_offset <= 0 || bridge.length < min_length) {
-        bridge.length = 0;
-        return bridge.length;
+    if (g_bridge.end_grid_offset <= 0 || g_bridge.length < min_length) {
+        g_bridge.length = 0;
+        return g_bridge.length;
     }
 
-    bridge.direction -= city_view_orientation();
-    if (bridge.direction < 0)
-        bridge.direction += 8;
+    g_bridge.direction -= city_view_orientation();
+    if (g_bridge.direction < 0)
+        g_bridge.direction += 8;
 
     int grid_offset = MAP_OFFSET(x, y);
-    for (int i = 0; i < bridge.length; i++) {
+    for (int i = 0; i < g_bridge.length; i++) {
         map_terrain_add(grid_offset, TERRAIN_ROAD);
-        int value = map_bridge_get_sprite_id(i, bridge.length, bridge.direction, is_ship_bridge);
+        int value = map_bridge_get_sprite_id(i, g_bridge.length, g_bridge.direction, is_ship_bridge);
         map_sprite_animation_set(grid_offset, value);
-        grid_offset += bridge.direction_grid_delta;
+        grid_offset += g_bridge.direction_grid_delta;
     }
 
     map_routing_update_land();
     map_routing_update_water();
 
-    return bridge.length;
+    return g_bridge.length;
 }
 
 int map_is_bridge(int grid_offset) {

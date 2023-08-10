@@ -327,10 +327,12 @@ enum E_CONTEXT {
     CONTEXT_MAX_ITEMS
 };
 
-static struct {
+struct image_context_t {
     struct terrain_image_context* context;
     int size;
-} context_pointers[] = {{terrain_images_water, 48},
+};
+
+image_context_t g_context_pointers[] = {{terrain_images_water, 48},
                         {terrain_images_wall, 48},
                         {terrain_images_wall_gatehouse, 10},
                         {terrain_images_elevation, 14},
@@ -349,14 +351,14 @@ static void clear_current_offset(struct terrain_image_context* items, int num_it
 }
 void map_image_context_init(void) {
     for (int i = 0; i < CONTEXT_MAX_ITEMS; i++) {
-        clear_current_offset(context_pointers[i].context, context_pointers[i].size);
+        clear_current_offset(g_context_pointers[i].context, g_context_pointers[i].size);
     }
 }
 void map_image_context_reset_water(void) {
-    clear_current_offset(context_pointers[CONTEXT_WATER].context, context_pointers[CONTEXT_WATER].size);
+    clear_current_offset(g_context_pointers[CONTEXT_WATER].context, g_context_pointers[CONTEXT_WATER].size);
 }
 void map_image_context_reset_elevation(void) {
-    clear_current_offset(context_pointers[CONTEXT_ELEVATION].context, context_pointers[CONTEXT_ELEVATION].size);
+    clear_current_offset(g_context_pointers[CONTEXT_ELEVATION].context, g_context_pointers[CONTEXT_ELEVATION].size);
 }
 
 static bool context_matches_tiles(const struct terrain_image_context* context, const int tiles[MAX_TILES]) {
@@ -386,8 +388,8 @@ static const terrain_image* get_image(int group, int tiles[MAX_TILES]) {
     static terrain_image result;
 
     result.is_valid = 0;
-    struct terrain_image_context* context = context_pointers[group].context;
-    int size = context_pointers[group].size;
+    struct terrain_image_context* context = g_context_pointers[group].context;
+    int size = g_context_pointers[group].size;
     for (int i = 0; i < size; i++) {
         if (context_matches_tiles(&context[i], tiles)) {
             context[i].current_item_offset++;
