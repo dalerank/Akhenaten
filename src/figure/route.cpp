@@ -4,15 +4,24 @@
 #include "grid/routing/queue.h"
 #include "grid/routing/routing.h"
 
+#include "core/calc.h"
+#include "core/random.h"
+#include "grid/grid.h"
+#include "grid/random.h"
+#include "grid/routing/routing.h"
+
 #define MAX_PATH_LENGTH 500
 #define MAX_ROUTES 3000
 
-static struct {
+struct figure_route_data_t {
     int figure_ids[MAX_ROUTES];
     uint8_t direction_paths[MAX_ROUTES][MAX_PATH_LENGTH];
-} data;
+};
+
+figure_route_data_t g_figure_route_data;
 
 void figure_route_clear_all(void) {
+    auto &data = g_figure_route_data;
     for (int i = 0; i < MAX_ROUTES; i++) {
         data.figure_ids[i] = 0;
         for (int j = 0; j < MAX_PATH_LENGTH; j++) {
@@ -21,6 +30,7 @@ void figure_route_clear_all(void) {
     }
 }
 void figure_route_clean(void) {
+    auto &data = g_figure_route_data;
     for (int i = 0; i < MAX_ROUTES; i++) {
         int figure_id = data.figure_ids[i];
         if (figure_id > 0 && figure_id < MAX_FIGURES[GAME_ENV]) {
@@ -31,6 +41,7 @@ void figure_route_clean(void) {
     }
 }
 static int get_first_available(void) {
+    auto &data = g_figure_route_data;
     for (int i = 1; i < MAX_ROUTES; i++) {
         if (data.figure_ids[i] == 0)
             return i;
@@ -39,6 +50,7 @@ static int get_first_available(void) {
 }
 
 void figure::figure_route_add() {
+    auto &data = g_figure_route_data;
     routing_path_id = 0;
     routing_path_current_tile = 0;
     routing_path_length = 0;
@@ -132,6 +144,7 @@ void figure::figure_route_add() {
     }
 }
 void figure::route_remove() {
+    auto &data = g_figure_route_data;
     if (routing_path_id > 0) {
         if (data.figure_ids[routing_path_id] == id)
             data.figure_ids[routing_path_id] = 0;
@@ -139,27 +152,24 @@ void figure::route_remove() {
     }
 }
 int figure_route_get_direction(int path_id, int index) {
+    auto &data = g_figure_route_data;
     return data.direction_paths[path_id][index];
 }
 
 io_buffer* iob_route_figures = new io_buffer([](io_buffer* iob, size_t version) {
+    auto &data = g_figure_route_data;
     for (int i = 0; i < MAX_ROUTES; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &data.figure_ids[i]);
     }
 });
 io_buffer* iob_route_paths = new io_buffer([](io_buffer* iob, size_t version) {
+    auto &data = g_figure_route_data;
     for (int i = 0; i < MAX_ROUTES; i++) {
         iob->bind(BIND_SIGNATURE_RAW, &data.direction_paths[i], MAX_PATH_LENGTH);
     }
 });
 
-#include "core/calc.h"
-#include "core/random.h"
-#include "grid/grid.h"
-#include "grid/random.h"
-#include "grid/routing/routing.h"
-
-static int direction_path[MAX_PATH_LENGTH];
+int g_direction_path[MAX_PATH_LENGTH];
 
 static void adjust_tile_in_direction(int direction, int* x, int* y, int* grid_offset) {
     switch (direction) {
@@ -231,13 +241,13 @@ int map_routing_get_path(uint8_t* path, int src_x, int src_y, int dst_x, int dst
             return 0;
         adjust_tile_in_direction(direction, &x, &y, &grid_offset);
         int forward_direction = (direction + 4) % 8;
-        direction_path[num_tiles++] = forward_direction;
+        g_direction_path[num_tiles++] = forward_direction;
         last_direction = forward_direction;
         if (num_tiles >= MAX_PATH_LENGTH)
             return 0;
     }
     for (int i = 0; i < num_tiles; i++)
-        path[i] = direction_path[num_tiles - i - 1];
+        path[i] = g_direction_path[num_tiles - i - 1];
     return num_tiles;
 }
 int map_routing_get_closest_tile_within_range(int src_x,
@@ -287,7 +297,7 @@ int map_routing_get_closest_tile_within_range(int src_x,
             return 0;
         adjust_tile_in_direction(direction, &x, &y, &grid_offset);
         int forward_direction = (direction + 4) % 8;
-        direction_path[num_tiles++] = forward_direction;
+        g_direction_path[num_tiles++] = forward_direction;
         last_direction = forward_direction;
         if (num_tiles >= MAX_PATH_LENGTH)
             return 0;
@@ -334,13 +344,13 @@ int map_routing_get_path_on_water(uint8_t* path, int dst_x, int dst_y, int is_fl
 
         adjust_tile_in_direction(direction, &x, &y, &grid_offset);
         int forward_direction = (direction + 4) % 8;
-        direction_path[num_tiles++] = forward_direction;
+        g_direction_path[num_tiles++] = forward_direction;
         last_direction = forward_direction;
         if (num_tiles >= MAX_PATH_LENGTH)
             return 0;
     }
     for (int i = 0; i < num_tiles; i++) {
-        path[i] = direction_path[num_tiles - i - 1];
+        path[i] = g_direction_path[num_tiles - i - 1];
     }
     return num_tiles;
 }

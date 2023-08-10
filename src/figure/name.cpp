@@ -3,7 +3,7 @@
 
 #include "core/random.h"
 
-static struct {
+struct figure_name_data_t {
     int32_t citizen_male;
     int32_t patrician;
     int32_t citizen_female;
@@ -25,7 +25,9 @@ static struct {
     int32_t ship;
     int32_t warship;
     int32_t enemy_warship;
-} data;
+};
+
+figure_name_data_t g_figure_name_data;
 
 static int32_t init_name(void) {
     random_generate_next();
@@ -33,6 +35,7 @@ static int32_t init_name(void) {
 }
 
 void figure_name_init(void) {
+    auto &data = g_figure_name_data;
     data.citizen_male = init_name();
     data.patrician = init_name();
     data.citizen_female = init_name();
@@ -66,6 +69,7 @@ static int get_next_name(int32_t* field, int offset, int max) {
 }
 
 int figure_name_get(int type, int enemy) {
+    auto &data = g_figure_name_data;
     switch (type) {
     case FIGURE_TAX_COLLECTOR:
         return get_next_name(&data.tax_collector, 132, 32);
@@ -174,6 +178,7 @@ int figure_name_get(int type, int enemy) {
 }
 
 io_buffer* iob_figure_names = new io_buffer([](io_buffer* iob, size_t version) {
+    auto &data = g_figure_name_data;
     iob->bind(BIND_SIGNATURE_INT32, &data.citizen_male);
     iob->bind(BIND_SIGNATURE_INT32, &data.patrician);
     iob->bind(BIND_SIGNATURE_INT32, &data.citizen_female);

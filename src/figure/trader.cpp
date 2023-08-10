@@ -18,16 +18,20 @@ struct trader {
     uint16_t sold_resources[RESOURCES_MAX];
 };
 
-static struct {
+struct figure_trader_data_t {
     struct trader traders[MAX_TRADERS];
     int next_index;
-} data;
+};
+
+figure_trader_data_t g_figure_trader_data;
 
 void traders_clear(void) {
+    auto &data = g_figure_trader_data;
     memset(&data, 0, sizeof(data));
 }
 
 int trader_create(void) {
+    auto &data = g_figure_trader_data;
     int trader_id = data.next_index++;
     if (data.next_index >= MAX_TRADERS)
         data.next_index = 0;
@@ -37,34 +41,41 @@ int trader_create(void) {
 }
 
 void trader_record_bought_resource(int trader_id, int resource) {
+    auto &data = g_figure_trader_data;
     data.traders[trader_id].bought_amount += 100;
     data.traders[trader_id].bought_resources[resource] += 100;
     data.traders[trader_id].bought_value += trade_price_sell(resource);
 }
 
 void trader_record_sold_resource(int trader_id, int resource) {
+    auto &data = g_figure_trader_data;
     data.traders[trader_id].sold_amount += 100;
     data.traders[trader_id].sold_resources[resource] += 100;
     data.traders[trader_id].sold_value += trade_price_buy(resource);
 }
 
 int trader_bought_resources(int trader_id, int resource) {
+    auto &data = g_figure_trader_data;
     return data.traders[trader_id].bought_resources[resource];
 }
 
 int trader_sold_resources(int trader_id, int resource) {
+    auto &data = g_figure_trader_data;
     return data.traders[trader_id].sold_resources[resource];
 }
 
 int trader_has_traded(int trader_id) {
+    auto &data = g_figure_trader_data;
     return data.traders[trader_id].bought_amount || data.traders[trader_id].sold_amount;
 }
 
 int trader_has_traded_max(int trader_id) {
+    auto &data = g_figure_trader_data;
     return data.traders[trader_id].bought_amount >= 1200 || data.traders[trader_id].sold_amount >= 1200;
 }
 
 io_buffer* iob_figure_traders = new io_buffer([](io_buffer* iob, size_t version) {
+    auto &data = g_figure_trader_data;
     for (int i = 0; i < MAX_TRADERS; i++) {
         struct trader* t = &data.traders[i];
         iob->bind(BIND_SIGNATURE_INT32, &t->bought_amount);
