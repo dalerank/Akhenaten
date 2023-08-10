@@ -12,13 +12,15 @@
 
 enum E_EMULATED_MOUSE { EMULATED_MOUSE_CLICK_NONE = 0, EMULATED_MOUSE_CLICK_LEFT = 1, EMULATED_MOUSE_CLICK_RIGHT = 2 };
 
-static struct {
+struct touch_data_t {
     touch finger[MAX_ACTIVE_TOUCHES + 1];
     touch old_touch;
     int last_scroll_position;
     int mode;
     int touchpad_mode_click_type;
-} data;
+};
+
+touch_data_t g_touch_data;
 
 static int start_delayed(const touch* t) {
     return (t->has_started && !t->has_moved && !t->has_ended
@@ -26,6 +28,7 @@ static int start_delayed(const touch* t) {
 }
 
 const touch* get_earliest_touch(void) {
+    auto &data = g_touch_data;
     time_millis timestamp = -1;
     int touch_index = MAX_ACTIVE_TOUCHES;
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
@@ -38,6 +41,7 @@ const touch* get_earliest_touch(void) {
 }
 
 const touch* get_latest_touch(void) {
+    auto &data = g_touch_data;
     int active_touches = 0;
     time_millis timestamp = 0;
     int touch_index = MAX_ACTIVE_TOUCHES;
@@ -54,6 +58,7 @@ const touch* get_latest_touch(void) {
 }
 
 int get_total_active_touches(void) {
+    auto &data = g_touch_data;
     int active_touches = 0;
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
         if (data.finger[i].in_use)
@@ -72,6 +77,7 @@ int touch_was_click(const touch* t) {
 }
 
 int touch_was_double_click(const touch* t) {
+    auto &data = g_touch_data;
     return (touch_was_click(t) && touch_was_click(&data.old_touch) && (t->start_time > data.old_touch.last_change_time)
             && (t->start_time - data.old_touch.last_change_time) < CLICK_TIME);
 }
@@ -90,6 +96,7 @@ int touch_is_scroll(void) {
 }
 
 int touch_get_scroll(void) {
+    auto &data = g_touch_data;
     const touch* first = get_earliest_touch();
     const touch* last = get_latest_touch();
     if (!touch_is_scroll() || !first->has_moved || !last->has_moved)
@@ -112,6 +119,7 @@ int touch_get_scroll(void) {
 }
 
 static int get_unused_touch_index(void) {
+    auto &data = g_touch_data;
     int i = 0;
     while (i < MAX_ACTIVE_TOUCHES) {
         if (!data.finger[i].in_use)
@@ -123,6 +131,7 @@ static int get_unused_touch_index(void) {
 }
 
 int touch_create(pixel_coordinate start_coords, time_millis start_time) {
+    auto &data = g_touch_data;
     int index = get_unused_touch_index();
     if (index != MAX_ACTIVE_TOUCHES) {
         touch* t = &data.finger[index];
@@ -142,10 +151,12 @@ int touch_create(pixel_coordinate start_coords, time_millis start_time) {
 }
 
 int touch_in_use(int index) {
+    auto &data = g_touch_data;
     return index >= 0 && index < MAX_ACTIVE_TOUCHES && data.finger[index].in_use;
 }
 
 void touch_move(int index, pixel_coordinate current_coords, time_millis current_time) {
+    auto &data = g_touch_data;
     if (index < 0 || index >= MAX_ACTIVE_TOUCHES || !data.finger[index].in_use)
         return;
     touch* t = &data.finger[index];
@@ -157,6 +168,7 @@ void touch_move(int index, pixel_coordinate current_coords, time_millis current_
 }
 
 void touch_end(int index, time_millis current_time) {
+    auto &data = g_touch_data;
     if (index < 0 || index >= MAX_ACTIVE_TOUCHES || !data.finger[index].in_use)
         return;
     touch* t = &data.finger[index];
@@ -167,6 +179,7 @@ void touch_end(int index, time_millis current_time) {
 }
 
 void reset_touches(int reset_old_touch) {
+    auto &data = g_touch_data;
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
         touch* t = &data.finger[i];
         if (!t->in_use)
@@ -196,6 +209,7 @@ void reset_touches(int reset_old_touch) {
 }
 
 static bool any_touch_went_up(void) {
+    auto &data = g_touch_data;
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
         if (data.finger[i].has_ended)
             return true;
@@ -204,6 +218,7 @@ static bool any_touch_went_up(void) {
 }
 
 static bool handle_emulated_mouse_clicks(void) {
+    auto &data = g_touch_data;
     mouse_reset_scroll();
     switch (data.touchpad_mode_click_type) {
     case EMULATED_MOUSE_CLICK_LEFT:
@@ -222,6 +237,7 @@ static bool handle_emulated_mouse_clicks(void) {
 }
 
 static void handle_mouse_touchpad(void) {
+    auto &data = g_touch_data;
     if (handle_emulated_mouse_clicks())
         return;
 
@@ -260,6 +276,7 @@ static void handle_mouse_direct(void) {
 }
 
 int touch_to_mouse(void) {
+    auto &data = g_touch_data;
     const touch* first = get_earliest_touch();
     if (!first->in_use) {
         if (mouse_get()->is_touch) {
@@ -286,9 +303,11 @@ int touch_to_mouse(void) {
 }
 
 void touch_set_mode(int mode) {
+    auto &data = g_touch_data;
     data.mode = mode;
 }
 
 void touch_cycle_mode(void) {
+    auto &data = g_touch_data;
     data.mode = (data.mode + 1) % TOUCH_MODE_MAX;
 }
