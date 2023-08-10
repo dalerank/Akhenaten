@@ -1,0 +1,27 @@
+name: Ozymandias Build Mac
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    name: run on mac
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: update-workspace
+      run: |
+        ./update-workspace-mac.sh
+    - name: build-project
+      run: |
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cd ..
+        cmake --build ./build
+        cp ./build/ozymandias ./ozymandias.macos
+    - uses: actions/upload-artifact@v3
+      with:
+        name: macos_build
+        path: build

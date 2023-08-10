@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: run on linux
+    name: run content
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
