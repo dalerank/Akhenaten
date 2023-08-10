@@ -33,11 +33,13 @@ static int ROUTE_OFFSETS(int i) {
     }
 }
 
-static struct {
+struct grid_rounting_t {
     int head;
     int tail;
     int items[MAX_QUEUE];
-} queue;
+};
+
+grid_rounting_t g_grid_rounting;
 
 void clear_distances(void) {
     map_grid_clear(&routing_distance);
@@ -49,11 +51,12 @@ int valid_offset(int grid_offset) {
 
 void enqueue(int offset, int distance) {
     map_grid_set(&routing_distance, offset, distance);
-    queue.items[queue.tail++] = offset;
-    if (queue.tail >= MAX_QUEUE)
-        queue.tail = 0;
+    g_grid_rounting.items[g_grid_rounting.tail++] = offset;
+    if (g_grid_rounting.tail >= MAX_QUEUE)
+        g_grid_rounting.tail = 0;
 }
 void route_queue(int source, int dest, void (*callback)(int next_offset, int distance)) {
+    auto &queue = g_grid_rounting;
     clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
@@ -71,6 +74,7 @@ void route_queue(int source, int dest, void (*callback)(int next_offset, int dis
     }
 }
 void route_queue_until(int source, bool (*callback)(int next_offset, int distance)) {
+    auto &queue = g_grid_rounting;
     clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
@@ -88,6 +92,7 @@ void route_queue_until(int source, bool (*callback)(int next_offset, int distanc
     }
 }
 bool route_queue_until_found(int source, int* dst_x, int* dst_y, bool (*callback)(int, int)) {
+    auto &queue = g_grid_rounting;
     clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
@@ -112,6 +117,7 @@ bool route_queue_until_found(int source, int* dst_x, int* dst_y, bool (*callback
     return false;
 }
 bool route_queue_until_terrain(int source, int terrain_type, int* dst_x, int* dst_y, bool (*callback)(int, int, int)) {
+    auto &queue = g_grid_rounting;
     clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
@@ -140,6 +146,7 @@ bool route_queue_until_terrain(int source, int terrain_type, int* dst_x, int* ds
     return false;
 }
 void route_queue_max(int source, int dest, int max_tiles, void (*callback)(int, int)) {
+    auto &queue = g_grid_rounting;
     clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
@@ -160,6 +167,7 @@ void route_queue_max(int source, int dest, int max_tiles, void (*callback)(int, 
     }
 }
 void route_queue_boat(int source, void (*callback)(int, int)) {
+    auto &queue = g_grid_rounting;
     clear_distances();
     map_grid_clear(&water_drag);
     queue.head = queue.tail = 0;
@@ -189,6 +197,7 @@ void route_queue_boat(int source, void (*callback)(int, int)) {
     }
 }
 void route_queue_dir8(int source, void (*callback)(int, int)) {
+    auto &queue = g_grid_rounting;
     clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
@@ -208,12 +217,14 @@ void route_queue_dir8(int source, void (*callback)(int, int)) {
 }
 
 bool queue_has(int offset) {
+    auto &queue = g_grid_rounting;
     for (int i = 0; i < MAX_QUEUE; i++)
         if (queue.items[i] == offset)
             return true;
     return false;
 }
 int queue_get(int i) {
+    auto &queue = g_grid_rounting;
     if (i < 0 || i >= MAX_QUEUE)
         return -1;
     return queue.items[i];

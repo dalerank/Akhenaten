@@ -14,11 +14,13 @@ static const int ADJACENT_OFFSETS_PH[] = {-GRID_LENGTH, 1, GRID_LENGTH, -1};
 
 static grid_xx network = {0, {FS_UINT8, FS_UINT8}};
 
-static struct {
+struct grid_road_network_t {
     int items[MAX_QUEUE];
     int head;
     int tail;
-} queue;
+};
+
+grid_road_network_t grid_road_network;
 
 int adjacent_offsets(int i) {
     switch (GAME_ENV) {
@@ -35,7 +37,7 @@ int map_road_network_get(int grid_offset) {
 }
 
 static int mark_road_network(int grid_offset, uint8_t network_id) {
-    memset(&queue, 0, sizeof(queue));
+    memset(&grid_road_network, 0, sizeof(grid_road_network));
     int guard = 0;
     int next_offset;
     int size = 1;
@@ -54,20 +56,20 @@ static int mark_road_network(int grid_offset, uint8_t network_id) {
                     if (next_offset == -1)
                         next_offset = new_offset;
                     else {
-                        queue.items[queue.tail++] = new_offset;
-                        if (queue.tail >= MAX_QUEUE)
-                            queue.tail = 0;
+                        grid_road_network.items[grid_road_network.tail++] = new_offset;
+                        if (grid_road_network.tail >= MAX_QUEUE)
+                            grid_road_network.tail = 0;
                     }
                 }
             }
         }
         if (next_offset == -1) {
-            if (queue.head == queue.tail)
+            if (grid_road_network.head == grid_road_network.tail)
                 return size;
 
-            next_offset = queue.items[queue.head++];
-            if (queue.head >= MAX_QUEUE)
-                queue.head = 0;
+            next_offset = grid_road_network.items[grid_road_network.head++];
+            if (grid_road_network.head >= MAX_QUEUE)
+                grid_road_network.head = 0;
         }
         grid_offset = next_offset;
     } while (next_offset > -1);

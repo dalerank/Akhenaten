@@ -1,14 +1,17 @@
 #include "ring.h"
 
 #include "grid/grid.h"
-#include <scenario/map.h>
+#include "scenario/map.h"
 
-static struct {
+struct grid_ring_t {
     ring_tile tiles[1080];
     int index[6][7];
-} data;
+};
+
+grid_ring_t g_grid_ring_data;
 
 void map_ring_init(void) {
+    auto &data = g_grid_ring_data;
     int index = 0;
     int x, y;
     for (int size = 1; size <= 5; size++) {
@@ -47,6 +50,7 @@ void map_ring_init(void) {
 }
 
 int map_ring_start(int size, int distance) {
+    auto &data = g_grid_ring_data;
     return data.index[size][distance];
 }
 
@@ -59,5 +63,6 @@ int map_ring_is_inside_map(int x, int y) {
 }
 
 const ring_tile* map_ring_tile(int index) {
+    auto &data = g_grid_ring_data;
     return &data.tiles[index];
 }
