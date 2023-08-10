@@ -86,13 +86,16 @@ static const char* ini_keys[] = {"arrow_up",
                                  "debug_range2_up",
                                  "debug_range2_down"};
 
-static struct {
+struct config_hotkeys_data_t {
     hotkey_mapping default_mappings[HOTKEY_MAX_ITEMS][2];
     hotkey_mapping mappings[MAX_MAPPINGS];
     int num_mappings;
-} data;
+};
+
+config_hotkeys_data_t g_config_hotkeys_data;
 
 static void set_mapping(int key, int modifiers, int action) {
+    auto &data = g_config_hotkeys_data;
     hotkey_mapping* mapping = &data.default_mappings[action][0];
     if (mapping->key)
         mapping = &data.default_mappings[action][1];
@@ -114,6 +117,7 @@ static void set_layout_mapping(const char* name, int default_key, int modifiers,
 }
 
 void init_defaults(void) {
+    auto &data = g_config_hotkeys_data;
     memset(data.default_mappings, 0, sizeof(data.default_mappings));
     set_mapping(KEY_UP, KEY_MOD_NONE, HOTKEY_ARROW_UP);
     set_mapping(KEY_DOWN, KEY_MOD_NONE, HOTKEY_ARROW_DOWN);
@@ -189,6 +193,7 @@ void init_defaults(void) {
 }
 
 const hotkey_mapping* hotkey_for_action(int action, int index) {
+    auto &data = g_config_hotkeys_data;
     int num = 0;
     for (int i = 0; i < data.num_mappings; i++) {
         if (data.mappings[i].action == action) {
@@ -202,6 +207,7 @@ const hotkey_mapping* hotkey_for_action(int action, int index) {
 }
 
 const hotkey_mapping* hotkey_default_for_action(int action, int index) {
+    auto &data = g_config_hotkeys_data;
     if (index < 0 || index >= 2 || (int)action < 0 || action >= HOTKEY_MAX_ITEMS)
         return 0;
 
@@ -209,10 +215,12 @@ const hotkey_mapping* hotkey_default_for_action(int action, int index) {
 }
 
 void hotkey_config_clear(void) {
+    auto &data = g_config_hotkeys_data;
     data.num_mappings = 0;
 }
 
 void hotkey_config_add_mapping(const hotkey_mapping* mapping) {
+    auto &data = g_config_hotkeys_data;
     if (data.num_mappings < MAX_MAPPINGS) {
         data.mappings[data.num_mappings] = *mapping;
         data.num_mappings++;
@@ -220,6 +228,7 @@ void hotkey_config_add_mapping(const hotkey_mapping* mapping) {
 }
 
 static void load_defaults(void) {
+    auto &data = g_config_hotkeys_data;
     hotkey_config_clear();
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
         for (int index = 0; index < 2; index++) {
@@ -263,6 +272,7 @@ static void load_file(void) {
 }
 
 void hotkey_config_load(void) {
+    auto &data = g_config_hotkeys_data;
     init_defaults();
     load_file();
     if (data.num_mappings == 0)
@@ -272,6 +282,7 @@ void hotkey_config_load(void) {
 }
 
 void hotkey_config_save(void) {
+    auto &data = g_config_hotkeys_data;
     hotkey_install_mapping(data.mappings, data.num_mappings);
     FILE* fp = file_open(INI_FILENAME, "wt");
     if (!fp) {
