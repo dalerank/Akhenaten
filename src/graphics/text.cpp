@@ -10,7 +10,7 @@
 
 static uint8_t tmp_line[200];
 
-static struct {
+struct input_cursor_t {
     int capture;
     int seen;
     int position;
@@ -22,7 +22,9 @@ static struct {
     int y_offset;
     int text_offset_start;
     int text_offset_end;
-} input_cursor;
+};
+
+input_cursor_t input_cursor;
 
 static struct {
     const uint8_t string[ELLIPSIS_LENGTH];

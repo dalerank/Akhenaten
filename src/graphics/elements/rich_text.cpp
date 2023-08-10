@@ -15,13 +15,15 @@ static void on_scroll(void);
 
 static scrollbar_type scrollbar = {0, 0, 0, on_scroll};
 
-static struct {
+struct rich_text_link_t {
     int message_id;
     int x_min;
     int y_min;
     int x_max;
     int y_max;
-} links[MAX_LINKS];
+};
+
+rich_text_link_t g_rich_text_links[MAX_LINKS];
 
 static int num_links;
 static const font_definition* normal_font_def;
@@ -29,7 +31,7 @@ static const font_definition* link_font_def;
 
 static uint8_t tmp_line[200];
 
-static struct {
+struct rich_text_data_t {
     int x_text;
     int y_text;
     int text_width_blocks;
@@ -37,7 +39,9 @@ static struct {
     int text_height_lines;
     int num_lines;
     int max_scroll_position;
-} data;
+};
+
+rich_text_data_t g_rich_text_data;
 
 int rich_text_init(const uint8_t* text,
                    int x_text,
@@ -45,6 +49,7 @@ int rich_text_init(const uint8_t* text,
                    int width_blocks,
                    int height_blocks,
                    int adjust_width_on_no_scroll) {
+    auto &data = g_rich_text_data;
     data.x_text = x_text;
     data.y_text = y_text;
     if (!data.num_lines) {
@@ -72,12 +77,14 @@ void rich_text_set_fonts(font_t normal_font, font_t link_font) {
 }
 
 void rich_text_reset(int scroll_position) {
+    auto &data = g_rich_text_data;
     scrollbar_reset(&scrollbar, scroll_position);
     data.num_lines = 0;
     rich_text_clear_links();
 }
 
 void rich_text_clear_links(void) {
+    auto &links = g_rich_text_links;
     for (int i = 0; i < MAX_LINKS; i++) {
         links[i].message_id = 0;
         links[i].x_min = 0;
@@ -89,6 +96,7 @@ void rich_text_clear_links(void) {
 }
 
 int rich_text_get_clicked_link(const mouse* m) {
+    auto &links = g_rich_text_links;
     if (m->left.went_up) {
         for (int i = 0; i < num_links; i++) {
             if (m->x >= links[i].x_min && m->x <= links[i].x_max && m->y >= links[i].y_min && m->y <= links[i].y_max) {
@@ -100,6 +108,7 @@ int rich_text_get_clicked_link(const mouse* m) {
 }
 
 static void add_link(int message_id, int x_start, int x_end, int y) {
+    auto &links = g_rich_text_links;
     if (num_links < MAX_LINKS) {
         links[num_links].message_id = message_id;
         links[num_links].x_min = x_start - 2;

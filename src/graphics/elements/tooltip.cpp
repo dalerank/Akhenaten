@@ -24,14 +24,16 @@ static const time_millis TOOLTIP_DELAY_MILLIS = 150;
 
 static time_millis last_update = 0;
 static uint8_t overlay_string[OVERLAY_TEXT_MAX];
-static struct {
+struct button_tooltip_data_t {
     bool is_active;
     int x;
     int y;
     int width;
     int height;
     int buffer_id;
-} button_tooltip_info;
+};
+
+button_tooltip_data_t button_tooltip_info;
 
 static void reset_timer(void) {
     last_update = time_get_millis();
