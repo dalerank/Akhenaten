@@ -24,7 +24,7 @@
 
 #define MAX_UNDO_BUILDINGS 500
 
-static struct {
+struct undo_data_t {
     int available;
     int ready;
     int timeout_ticks;
@@ -34,15 +34,20 @@ static struct {
     building buildings[MAX_UNDO_BUILDINGS];
     int newhouses_offsets[MAX_UNDO_BUILDINGS];
     int newhouses_num;
-} data;
+};
+
+undo_data_t g_undo_data;
 
 int game_can_undo(void) {
+    auto &data = g_undo_data;
     return data.ready && data.available;
 }
 void game_undo_disable(void) {
+    auto &data = g_undo_data;
     data.available = 0;
 }
 void game_undo_add_building(building* b) {
+    auto &data = g_undo_data;
     if (b->id <= 0)
         return;
     data.num_buildings = 0;
@@ -65,6 +70,7 @@ void game_undo_add_building(building* b) {
     }
 }
 void game_undo_adjust_building(building* b) {
+    auto &data = g_undo_data;
     for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
         if (data.buildings[i].id == b->id) {
             // found! update the building now
@@ -73,6 +79,7 @@ void game_undo_adjust_building(building* b) {
     }
 }
 int game_undo_contains_building(int building_id) {
+    auto &data = g_undo_data;
     if (building_id <= 0 || !game_can_undo())
         return 0;
     if (data.num_buildings <= 0)
@@ -85,11 +92,13 @@ int game_undo_contains_building(int building_id) {
 }
 
 static void clear_buildings(void) {
+    auto &data = g_undo_data;
     data.num_buildings = 0;
     memset(data.buildings, 0, MAX_UNDO_BUILDINGS * sizeof(building));
 }
 
 int game_undo_start_build(int type) {
+    auto &data = g_undo_data;
     data.ready = 0;
     data.available = 1;
     data.timeout_ticks = 0;
@@ -115,6 +124,7 @@ int game_undo_start_build(int type) {
     return 1;
 }
 void game_undo_restore_building_state(void) {
+    auto &data = g_undo_data;
     for (int i = 0; i < data.num_buildings; i++) {
         if (data.buildings[i].id) {
             building* b = building_get(data.buildings[i].id);
@@ -148,6 +158,7 @@ void game_undo_restore_map(int include_properties) {
     restore_map_images();
 }
 void game_undo_finish_build(int cost) {
+    auto &data = g_undo_data;
     data.ready = 1;
     data.timeout_ticks = 500;
     data.building_cost = cost;
@@ -222,6 +233,7 @@ static void add_building_to_terrain(building* b) {
 }
 
 static void restore_housing(building* b) {
+    auto &data = g_undo_data;
     int size = b->house_size;
     for (int x = b->tile.x(); x < b->tile.x() + size; x++)
         for (int y = b->tile.y(); y < b->tile.y() + size; y++) {
@@ -244,6 +256,7 @@ static void restore_housing(building* b) {
 }
 
 void game_undo_perform(void) {
+    auto &data = g_undo_data;
     if (!game_can_undo())
         return;
     data.available = 0;
@@ -322,6 +335,7 @@ void game_undo_perform(void) {
     }
 }
 void game_undo_reduce_time_available(void) {
+    auto &data = g_undo_data;
     if (!game_can_undo())
         return;
     if (data.timeout_ticks <= 0 || scenario_earthquake_is_in_progress()) {
