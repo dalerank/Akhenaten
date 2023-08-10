@@ -82,7 +82,7 @@ enum E_SOUND_CHANNEL_CITY {
     SOUND_CHANNEL_CITY_MISSION_POST = 133,
 };
 
-typedef struct {
+struct city_channel{
     int in_use;
     int available;
     int total_views;
@@ -93,7 +93,7 @@ typedef struct {
     time_millis last_played_time;
     time_millis delay_millis;
     int should_play;
-} city_channel;
+};
 
 static city_channel channels[MAX_CHANNELS];
 
