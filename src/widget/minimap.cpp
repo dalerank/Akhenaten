@@ -140,30 +140,35 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
             else if (b->type == BUILDING_WATER_LIFT || b->type == BUILDING_WELL)
                 image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT);
             else if (terrain & TERRAIN_ROAD) {
-                if (b->type == BUILDING_ROADBLOCK)
+                if (b->type == BUILDING_ROADBLOCK) {
                     image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 5; // black
-            } else if (building_is_food_category(b->type))
+                } else if (building_is_entertainment(b->type)) {
+                    image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 170; // bright teal
+                }
+            } else if (building_is_food_category(b->type)) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 160; // green
-            else if (building_is_industry(b->type))
+            } else if (building_is_industry(b->type)) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 165; // dark red
-            else if (building_is_entertainment(b->type))
+            } else if (building_is_entertainment(b->type)) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 170; // bright teal
-            else if (building_is_religion(b->type))
+            } else if (building_is_religion(b->type)) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 175; // purple
-            else if (building_is_culture(b->type))
+            } else if (building_is_culture(b->type)) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 180; // light yellow
-            else if (building_is_infrastructure(b->type))
+            } else if (building_is_infrastructure(b->type)) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 190; // bright blue
-            else if (building_is_administration(b->type))
+            } else if (building_is_administration(b->type)) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 195; // lilac
-            else if (building_is_military(b->type))
+            } else if (building_is_military(b->type)) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 200; // orange
-            else if (building_is_beautification(b->type))
+            } else if (building_is_beautification(b->type)) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 205; // spent teal
-            else if (building_is_monument(b->type))
+            } else if (building_is_monument(b->type)) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 210; // dark grey
-            else
+            } else {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + debug_range_1;
+            }
+
             auto multi_tile_size = map_property_multi_tile_size(grid_offset);
             switch (multi_tile_size) {
             case 1:
