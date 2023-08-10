@@ -31,20 +31,20 @@ static const int SCROLL_STEP[SCROLL_TYPE_MAX][11]
 
 enum key_state { KEY_STATE_UNPRESSED = 0, KEY_STATE_PRESSED = 1, KEY_STATE_HELD = 2, KEY_STATE_AXIS = 3 };
 
-typedef struct {
+struct scroll_key_t {
     key_state state;
     int value;
     time_millis last_change;
-} key;
+};
 
-static struct {
+struct input_scroll_data_t {
     int is_scrolling;
     int constant_input;
     struct {
-        key up;
-        key down;
-        key left;
-        key right;
+        scroll_key_t up;
+        scroll_key_t down;
+        scroll_key_t left;
+        scroll_key_t right;
     } arrow_key;
     struct {
         int active;
@@ -69,9 +69,12 @@ static struct {
         int width;
         int height;
     } limits;
-} data;
+};
+
+input_scroll_data_t g_input_scroll_data;
 
 static void clear_scroll_speed(void) {
+    auto &data = g_input_scroll_data;
     speed_clear(&data.speed.x);
     speed_clear(&data.speed.y);
     data.speed.decaying = 0;
@@ -79,7 +82,7 @@ static void clear_scroll_speed(void) {
     data.y_align_direction = SPEED_DIRECTION_STOPPED;
 }
 
-static int get_arrow_key_value(key* arrow) {
+static int get_arrow_key_value(scroll_key_t* arrow) {
     if (arrow->state == KEY_STATE_AXIS)
         return arrow->value;
 
@@ -95,7 +98,7 @@ static int get_arrow_key_value(key* arrow) {
 
     return 0;
 }
-float get_normalized_arrow_key_value(key* arrow) {
+float get_normalized_arrow_key_value(scroll_key_t* arrow) {
     int value = get_arrow_key_value(arrow);
     if (value == SCROLL_KEY_PRESSED)
         return 1.0f;
@@ -104,10 +107,10 @@ float get_normalized_arrow_key_value(key* arrow) {
         return fminf(arrow->value / SCROLL_KEY_MAX_VALUE, 1.0f);
     }
 }
-static int is_arrow_active(const key* arrow) {
+static int is_arrow_active(const scroll_key_t* arrow) {
     return arrow->value != 0;
 }
-static void restart_active_arrow(key* arrow, const key* exception) {
+static void restart_active_arrow(scroll_key_t* arrow, const scroll_key_t* exception) {
     if (arrow == exception)
         return;
     if (arrow->state != KEY_STATE_UNPRESSED && arrow->state != KEY_STATE_AXIS) {
@@ -115,7 +118,8 @@ static void restart_active_arrow(key* arrow, const key* exception) {
         arrow->last_change = time_get_millis();
     }
 }
-static void restart_all_active_arrows_except(const key* arrow) {
+static void restart_all_active_arrows_except(const scroll_key_t* arrow) {
+    auto &data = g_input_scroll_data;
     clear_scroll_speed();
     restart_active_arrow(&data.arrow_key.up, arrow);
     restart_active_arrow(&data.arrow_key.down, arrow);
@@ -131,7 +135,7 @@ static key_state get_key_state_for_value(int value) {
 
     return KEY_STATE_AXIS;
 }
-static void set_arrow_key(key* arrow, int value) {
+static void set_arrow_key(scroll_key_t* arrow, int value) {
     key_state state = get_key_state_for_value(value);
     if (state != KEY_STATE_AXIS && state != KEY_STATE_UNPRESSED && arrow->state != KEY_STATE_UNPRESSED)
         return;
@@ -146,15 +150,18 @@ static void set_arrow_key(key* arrow, int value) {
 }
 
 int scroll_in_progress(void) {
+    auto &data = g_input_scroll_data;
     return data.is_scrolling || data.drag.active;
 }
 static int get_scroll_speed_factor(void) {
     return calc_bound((100 - setting_scroll_speed()) / 10, 0, 10);
 }
 int scroll_is_smooth(void) {
+    auto &data = g_input_scroll_data;
     return config_get(CONFIG_UI_SMOOTH_SCROLLING) || data.drag.active || data.speed.decaying;
 }
 static int should_scroll(void) {
+    auto &data = g_input_scroll_data;
     time_millis current_time = time_get_millis();
     time_millis diff = current_time - data.last_time;
     unsigned int scroll_delay = get_scroll_speed_factor();
@@ -199,6 +206,7 @@ static int direction_from_sides(int top, int left, int bottom, int right) {
 }
 
 void scroll_set_custom_margins(int x, int y, int width, int height) {
+    auto &data = g_input_scroll_data;
     data.limits.active = 1;
     data.limits.x = x;
     data.limits.y = y;
@@ -206,10 +214,12 @@ void scroll_set_custom_margins(int x, int y, int width, int height) {
     data.limits.height = height;
 }
 void scroll_restore_margins(void) {
+    auto &data = g_input_scroll_data;
     data.limits.active = 0;
 }
 
 void scroll_drag_start(int is_touch) {
+    auto &data = g_input_scroll_data;
     if (data.drag.active)
         return;
     data.drag.active = 1;
@@ -222,6 +232,7 @@ void scroll_drag_start(int is_touch) {
     clear_scroll_speed();
 }
 static int set_scroll_speed_from_drag(bool keep_delta) {
+    auto &data = g_input_scroll_data;
     if (!data.drag.active)
         return 0;
     int delta_x = 0;
@@ -255,6 +266,7 @@ static int set_scroll_speed_from_drag(bool keep_delta) {
     return 1;
 }
 int scroll_drag_end(void) {
+    auto &data = g_input_scroll_data;
     if (!data.drag.active)
         return 0;
     int has_scrolled = data.drag.has_started;
@@ -277,7 +289,8 @@ int scroll_drag_end(void) {
     return has_scrolled;
 }
 
-static int set_arrow_input(key* arrow, const key* opposite_arrow, float* modifier) {
+static int set_arrow_input(scroll_key_t* arrow, const scroll_key_t* opposite_arrow, float* modifier) {
+    auto &data = g_input_scroll_data;
     if (get_arrow_key_value(arrow) && (!opposite_arrow || !is_arrow_active(opposite_arrow))) {
         if (arrow->state == KEY_STATE_AXIS) {
             data.constant_input = 1;
@@ -288,6 +301,7 @@ static int set_arrow_input(key* arrow, const key* opposite_arrow, float* modifie
     return 0;
 }
 static int get_direction(const mouse* m) {
+    auto &data = g_input_scroll_data;
     int is_inside_window = m->is_inside_window;
     int width = screen_width();
     int height = screen_height();
@@ -376,6 +390,7 @@ static int get_alignment_delta(int direction, int camera_max_offset, int camera_
 }
 
 static bool set_scroll_speed_from_input(const mouse* m, scroll_type type) {
+    auto &data = g_input_scroll_data;
     if (set_scroll_speed_from_drag(config_get(CONFIG_UI_SCROLL_KEEP_INERTIA) ? true : false))
         return true;
 
@@ -433,6 +448,7 @@ static bool set_scroll_speed_from_input(const mouse* m, scroll_type type) {
 }
 
 int scroll_get_delta(const mouse* m, pixel_coordinate* delta, scroll_type type) {
+    auto &data = g_input_scroll_data;
     data.is_scrolling = set_scroll_speed_from_input(m, type);
     delta->x = speed_get_delta(&data.speed.x);
     delta->y = speed_get_delta(&data.speed.y);
@@ -444,6 +460,7 @@ int scroll_get_delta(const mouse* m, pixel_coordinate* delta, scroll_type type) 
 }
 
 void scroll_stop(void) {
+    auto &data = g_input_scroll_data;
     clear_scroll_speed();
     system_mouse_set_relative_mode(0);
     data.is_scrolling = 0;
@@ -452,14 +469,18 @@ void scroll_stop(void) {
     data.limits.active = 0;
 }
 void scroll_arrow_left(int value) {
+    auto &data = g_input_scroll_data;
     set_arrow_key(&data.arrow_key.left, value);
 }
 void scroll_arrow_right(int value) {
+    auto &data = g_input_scroll_data;
     set_arrow_key(&data.arrow_key.right, value);
 }
 void scroll_arrow_up(int value) {
+    auto &data = g_input_scroll_data;
     set_arrow_key(&data.arrow_key.up, value);
 }
 void scroll_arrow_down(int value) {
+    auto &data = g_input_scroll_data;
     set_arrow_key(&data.arrow_key.down, value);
 }

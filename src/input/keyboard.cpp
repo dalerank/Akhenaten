@@ -5,7 +5,7 @@
 #include "game/system.h"
 #include "graphics/text.h"
 
-static struct {
+struct input_keyboard_data_t {
     int insert;
     int capture;
     bool accepted;
@@ -25,22 +25,27 @@ static struct {
 
     int box_width;
     font_t font;
-} data;
+};
+
+input_keyboard_data_t g_input_keyboard_data;
 
 static int get_char_bytes(const uint8_t* str) {
     return str[0] >= 0x80 && encoding_is_multibyte() ? 2 : 1;
 }
 
 static int get_current_char_bytes(void) {
+    auto &data = g_input_keyboard_data;
     return get_char_bytes(&data.text[data.cursor_position]);
 }
 
 static void set_viewport_to_start(void) {
+    auto &data = g_input_keyboard_data;
     data.viewport_start = 0;
     data.viewport_end = text_get_max_length_for_width(data.text, data.length, data.font, data.box_width, 0);
 }
 
 static void set_viewport_to_end(void) {
+    auto &data = g_input_keyboard_data;
     data.viewport_end = data.length;
     int maxlen = text_get_max_length_for_width(data.text, data.length, data.font, data.box_width, 1);
     data.viewport_start = data.length - maxlen;
@@ -48,6 +53,7 @@ static void set_viewport_to_end(void) {
 
 static void include_cursor_in_viewport(void) {
     // first check if we can keep the viewport
+    auto &data = g_input_keyboard_data;
     int new_start = data.viewport_start;
     int new_end = text_get_max_length_for_width(data.text, data.length - new_start, data.font, data.box_width, 0);
     if (data.cursor_position >= new_start && data.cursor_position < new_end && new_start + new_end < data.length)
@@ -78,6 +84,7 @@ static void include_cursor_in_viewport(void) {
 }
 
 static void update_viewport(int has_changed) {
+    auto &data = g_input_keyboard_data;
     int is_within_viewport = data.cursor_position >= data.viewport_start && data.cursor_position < data.viewport_end;
     if (!has_changed && is_within_viewport) {
         // no update necessary
@@ -91,6 +98,7 @@ static void update_viewport(int has_changed) {
 }
 
 void keyboard_start_capture(uint8_t* text, int max_length, int allow_punctuation, int box_width, font_t font) {
+    auto &data = g_input_keyboard_data;
     data.capture = 1;
     data.text = text;
     data.length = string_length(text);
@@ -104,21 +112,25 @@ void keyboard_start_capture(uint8_t* text, int max_length, int allow_punctuation
 }
 
 void keyboard_refresh(void) {
+    auto &data = g_input_keyboard_data;
     data.length = string_length(data.text);
     data.cursor_position = data.length;
     update_viewport(1);
 }
 
 void keyboard_resume_capture(void) {
+    auto &data = g_input_keyboard_data;
     data.capture = 1;
 }
 
 void keyboard_pause_capture(void) {
+    auto &data = g_input_keyboard_data;
     data.capture = 0;
     system_keyboard_hide();
 }
 
 void keyboard_stop_capture(void) {
+    auto &data = g_input_keyboard_data;
     data.capture = 0;
     data.text = 0;
     data.cursor_position = 0;
@@ -129,16 +141,19 @@ void keyboard_stop_capture(void) {
 }
 
 void keyboard_start_capture_numeric(void (*callback)(int)) {
+    auto &data = g_input_keyboard_data;
     data.capture_numeric = 1;
     data.capture_numeric_callback = callback;
 }
 
 void keyboard_stop_capture_numeric(void) {
+    auto &data = g_input_keyboard_data;
     data.capture_numeric = 0;
     data.capture_numeric_callback = 0;
 }
 
 int keyboard_input_is_accepted(void) {
+    auto &data = g_input_keyboard_data;
     if (data.accepted) {
         data.accepted = 0;
         return 1;
@@ -148,22 +163,27 @@ int keyboard_input_is_accepted(void) {
 }
 
 int keyboard_is_insert(void) {
+    auto &data = g_input_keyboard_data;
     return data.insert;
 }
 
 int keyboard_cursor_position(void) {
+    auto &data = g_input_keyboard_data;
     return data.cursor_position - data.viewport_start;
 }
 
 int keyboard_offset_start(void) {
+    auto &data = g_input_keyboard_data;
     return data.viewport_start;
 }
 
 int keyboard_offset_end(void) {
+    auto &data = g_input_keyboard_data;
     return data.viewport_end;
 }
 
 void keyboard_return(void) {
+    auto &data = g_input_keyboard_data;
     data.accepted = 1;
 }
 
@@ -184,6 +204,7 @@ static void move_right(const uint8_t* start, uint8_t* end) {
 }
 
 static void move_cursor_left(void) {
+    auto &data = g_input_keyboard_data;
     if (encoding_is_multibyte()) {
         int i = 0;
         int bytes = 0;
@@ -198,10 +219,12 @@ static void move_cursor_left(void) {
 }
 
 static void move_cursor_right(void) {
+    auto &data = g_input_keyboard_data;
     data.cursor_position += get_current_char_bytes();
 }
 
 static void insert_char(const uint8_t* value, int bytes) {
+    auto &data = g_input_keyboard_data;
     if (data.length + bytes == data.max_length)
         return;
     for (int i = 0; i < bytes; i++) {
@@ -213,6 +236,7 @@ static void insert_char(const uint8_t* value, int bytes) {
 }
 
 static void remove_current_char(void) {
+    auto &data = g_input_keyboard_data;
     int bytes = get_current_char_bytes();
     for (int i = 0; i < bytes; i++) {
         move_left(&data.text[data.cursor_position], &data.text[data.length]);
@@ -221,6 +245,7 @@ static void remove_current_char(void) {
 }
 
 static void add_char(const uint8_t* value, int bytes) {
+    auto &data = g_input_keyboard_data;
     if (data.insert)
         insert_char(value, bytes);
     else {
@@ -232,6 +257,7 @@ static void add_char(const uint8_t* value, int bytes) {
 }
 
 void keyboard_backspace(void) {
+    auto &data = g_input_keyboard_data;
     if (data.capture && data.cursor_position > 0) {
         move_cursor_left();
         remove_current_char();
@@ -240,6 +266,7 @@ void keyboard_backspace(void) {
 }
 
 void keyboard_delete(void) {
+    auto &data = g_input_keyboard_data;
     if (data.capture && data.cursor_position < data.length) {
         remove_current_char();
         update_viewport(1);
@@ -247,10 +274,12 @@ void keyboard_delete(void) {
 }
 
 void keyboard_insert(void) {
+    auto &data = g_input_keyboard_data;
     data.insert ^= 1;
 }
 
 void keyboard_left(void) {
+    auto &data = g_input_keyboard_data;
     if (data.capture) {
         if (data.cursor_position > 0) {
             move_cursor_left();
@@ -260,6 +289,7 @@ void keyboard_left(void) {
 }
 
 void keyboard_right(void) {
+    auto &data = g_input_keyboard_data;
     if (data.capture) {
         if (data.cursor_position < data.length) {
             move_cursor_right();
@@ -269,6 +299,7 @@ void keyboard_right(void) {
 }
 
 void keyboard_home(void) {
+    auto &data = g_input_keyboard_data;
     if (data.capture) {
         data.cursor_position = 0;
         update_viewport(0);
@@ -276,6 +307,7 @@ void keyboard_home(void) {
 }
 
 void keyboard_end(void) {
+    auto &data = g_input_keyboard_data;
     if (data.capture) {
         data.cursor_position = data.length;
         update_viewport(0);
@@ -283,6 +315,7 @@ void keyboard_end(void) {
 }
 
 static int keyboard_character(uint8_t* text) {
+    auto &data = g_input_keyboard_data;
     uint8_t c = text[0];
 
     int add = 0;
@@ -309,6 +342,7 @@ static int keyboard_character(uint8_t* text) {
 }
 
 void keyboard_text(const char* text_utf8) {
+    auto &data = g_input_keyboard_data;
     if (data.capture_numeric) {
         char c = text_utf8[0];
         if (c >= '0' && c <= '9')

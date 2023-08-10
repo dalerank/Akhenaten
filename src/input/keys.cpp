@@ -108,13 +108,18 @@ static const char* key_display_names[KEY_MAX_ITEMS] = {"",
                                                        "Keypad /",
                                                        "NonUS"};
 
-typedef struct {
+struct modifier_name{
     int modifier;
     const char* name;
-} modifier_name;
+};
 
-static const modifier_name modifier_names[]
-  = {{KEY_MOD_CTRL, "Ctrl"}, {KEY_MOD_ALT, "Alt"}, {KEY_MOD_GUI, "Gui"}, {KEY_MOD_SHIFT, "Shift"}, {KEY_MOD_NONE}};
+static const modifier_name modifier_names[] = {
+    {KEY_MOD_CTRL, "Ctrl"},
+    {KEY_MOD_ALT, "Alt"},
+    {KEY_MOD_GUI, "Gui"},
+    {KEY_MOD_SHIFT, "Shift"},
+    {KEY_MOD_NONE}
+};
 
 const char* key_combination_name(int key, int modifiers) {
     static char name[100];
