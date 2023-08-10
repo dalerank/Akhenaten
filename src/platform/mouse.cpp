@@ -4,17 +4,20 @@
 
 #include <SDL_mouse.h>
 
-static struct {
+struct mouse_data_t {
     int x;
     int y;
     int enabled;
-} data;
+};
+
+mouse_data_t g_mouse_data;
 
 void system_mouse_get_relative_state(int* x, int* y) {
     SDL_GetRelativeMouseState(x, y);
 }
 
 void system_mouse_set_relative_mode(int enabled) {
+    auto &data = g_mouse_data;
     if (enabled == data.enabled)
         return;
     if (enabled) {

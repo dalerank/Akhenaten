@@ -26,11 +26,13 @@ static struct {
     SDL_Window* window;
 } SDL;
 
-static struct {
+struct window_pos_t {
     int x;
     int y;
     int centered;
-} window_pos = {0, 0, 1};
+};
+
+window_pos_t g_window_pos = {0, 0, 1};
 
 static struct {
     const int WIDTH;
@@ -225,14 +227,14 @@ int system_get_max_display_scale(void) {
 
 void platform_screen_move(int x, int y) {
     if (!setting_fullscreen()) {
-        window_pos.x = x;
-        window_pos.y = y;
-        window_pos.centered = 0;
+        g_window_pos.x = x;
+        g_window_pos.y = y;
+        g_window_pos.centered = 0;
     }
 }
 
 void platform_screen_set_fullscreen(void) {
-    SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
+    SDL_GetWindowPosition(SDL.window, &g_window_pos.x, &g_window_pos.y);
     int display = SDL_GetWindowDisplayIndex(SDL.window);
     SDL_DisplayMode mode;
     SDL_GetDesktopDisplayMode(display, &mode);
@@ -263,7 +265,7 @@ void platform_screen_set_windowed(void) {
     logs::info("User to windowed %d x %d on display %d", pixel_width, pixel_height, display);
     SDL_SetWindowFullscreen(SDL.window, 0);
     SDL_SetWindowSize(SDL.window, pixel_width, pixel_height);
-    if (window_pos.centered) {
+    if (g_window_pos.centered) {
         platform_screen_center_window();
     }
     if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE) {
@@ -283,13 +285,13 @@ void platform_screen_set_window_size(int logical_width, int logical_height) {
     if (setting_fullscreen()) {
         SDL_SetWindowFullscreen(SDL.window, 0);
     } else {
-        SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
+        SDL_GetWindowPosition(SDL.window, &g_window_pos.x, &g_window_pos.y);
     }
     if (SDL_GetWindowFlags(SDL.window) & SDL_WINDOW_MAXIMIZED) {
         SDL_RestoreWindow(SDL.window);
     }
     SDL_SetWindowSize(SDL.window, pixel_width, pixel_height);
-    if (window_pos.centered) {
+    if (g_window_pos.centered) {
         platform_screen_center_window();
     }
     logs::info("User resize to %d x %d on display %d", pixel_width, pixel_height, display);
@@ -303,7 +305,7 @@ void platform_screen_set_window_size(int logical_width, int logical_height) {
 void platform_screen_center_window(void) {
     int display = SDL_GetWindowDisplayIndex(SDL.window);
     SDL_SetWindowPosition(SDL.window, SDL_WINDOWPOS_CENTERED_DISPLAY(display), SDL_WINDOWPOS_CENTERED_DISPLAY(display));
-    window_pos.centered = 1;
+    g_window_pos.centered = 1;
 }
 
 #ifdef _WIN32

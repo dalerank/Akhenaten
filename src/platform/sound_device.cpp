@@ -36,23 +36,25 @@ static struct {
 } vita_music_data;
 #endif
 
-typedef struct {
+struct sound_channel {
     const char* filename;
     Mix_Chunk* chunk;
-} sound_channel;
+};
 
-static struct {
+struct sound_device_data_t {
     int initialized;
     Mix_Music* music;
     sound_channel channels[MAX_CHANNELS];
-} data;
+};
+
+sound_device_data_t g_sound_device_data;
 
 struct music_format {
     const int flag;
     const char* desc;
 };
 
-static struct {
+struct custom_music_t {
     SDL_AudioFormat format;
 #ifdef USE_SDL_AUDIOSTREAM
     SDL_AudioStream* stream;
@@ -63,7 +65,9 @@ static struct {
     int buffer_size;
     int cur_read;
     int cur_write;
-} custom_music;
+};
+
+custom_music_t g_custom_music;
 
 static int percentage_to_volume(int percentage) {
     return percentage * SDL_MIX_MAXVOLUME / 100;
@@ -94,6 +98,7 @@ static int load_channel(sound_channel* channel) {
 }
 
 static void init_channels(void) {
+    auto &data = g_sound_device_data;
     data.initialized = 1;
     for (int i = 0; i < MAX_CHANNELS; i++) {
         data.channels[i].chunk = 0;
@@ -101,6 +106,7 @@ static void init_channels(void) {
 }
 
 void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILENAME_MAX]) {
+    auto &data = g_sound_device_data;
     if (data.initialized) {
         if (num_channels > MAX_CHANNELS)
             num_channels = MAX_CHANNELS;
@@ -117,7 +123,7 @@ void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILEN
 
 void sound_device_open(void) {
 #ifdef USE_SDL_AUDIOSTREAM
-    custom_music.use_audiostream = HAS_AUDIOSTREAM();
+    g_custom_music.use_audiostream = HAS_AUDIOSTREAM();
 #endif
     if (0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
         init_channels();
@@ -149,6 +155,7 @@ void sound_device_open(void) {
 }
 
 void sound_device_close(void) {
+    auto &data = g_sound_device_data;
     if (data.initialized) {
         for (int i = 0; i < MAX_CHANNELS; i++) {
             sound_device_stop_channel(i);
@@ -159,6 +166,7 @@ void sound_device_close(void) {
 }
 
 void sound_device_load_formats(void) {
+    auto &data = g_sound_device_data;
     if (!data.initialized) {
         return;
     }
@@ -216,6 +224,7 @@ void sound_device_unload_formats(void) {
 }
 
 int sound_device_is_channel_playing(int channel) {
+    auto &data = g_sound_device_data;
     return data.channels[channel].chunk && Mix_Playing(channel);
 }
 
@@ -224,6 +233,7 @@ void sound_device_set_music_volume(int volume_pct) {
 }
 
 void sound_device_set_channel_volume(int channel, int volume_pct) {
+    auto &data = g_sound_device_data;
     if (data.channels[channel].chunk)
         Mix_VolumeChunk(data.channels[channel].chunk, percentage_to_volume(volume_pct));
 }
@@ -251,6 +261,7 @@ static void load_music_for_vita(const char* filename) {
 #endif
 
 int sound_device_play_music(const char* filename, int volume_pct) {
+    auto &data = g_sound_device_data;
     if (data.initialized) {
         sound_device_stop_music();
 #ifdef __vita__
@@ -279,6 +290,7 @@ int sound_device_play_music(const char* filename, int volume_pct) {
 }
 
 void sound_device_play_file_on_channel(const char* filename, int channel, int volume_pct) {
+    auto &data = g_sound_device_data;
     if (data.initialized) {
         sound_device_stop_channel(channel);
         data.channels[channel].chunk = load_chunk(filename);
@@ -290,6 +302,7 @@ void sound_device_play_file_on_channel(const char* filename, int channel, int vo
 }
 
 void sound_device_play_channel(int channel, int volume_pct) {
+    auto &data = g_sound_device_data;
     if (data.initialized) {
         sound_channel* ch = &data.channels[channel];
         if (load_channel(ch)) {
@@ -305,6 +318,7 @@ void sound_device_play_channel(int channel, int volume_pct) {
 }
 
 void sound_device_play_channel_panned(int channel, int volume_pct, int left_pct, int right_pct) {
+    auto &data = g_sound_device_data;
     if (data.initialized) {
         sound_channel* ch = &data.channels[channel];
         if (load_channel(ch)) {
@@ -316,6 +330,7 @@ void sound_device_play_channel_panned(int channel, int volume_pct, int left_pct,
 }
 
 void sound_device_stop_music(void) {
+    auto &data = g_sound_device_data;
     if (data.initialized) {
         if (data.music) {
             Mix_HaltMusic();
@@ -326,6 +341,7 @@ void sound_device_stop_music(void) {
 }
 
 void sound_device_stop_channel(int channel) {
+    auto &data = g_sound_device_data;
     if (data.initialized) {
         sound_channel* ch = &data.channels[channel];
         if (ch->chunk) {
@@ -337,6 +353,7 @@ void sound_device_stop_channel(int channel) {
 }
 
 static void free_custom_audio_stream(void) {
+    auto &custom_music = g_custom_music;
 #ifdef USE_SDL_AUDIOSTREAM
     if (custom_music.use_audiostream) {
         if (custom_music.stream) {
@@ -359,6 +376,7 @@ static int create_custom_audio_stream(SDL_AudioFormat src_format,
                                       SDL_AudioFormat dst_format,
                                       Uint8 dst_channels,
                                       int dst_rate) {
+    auto &custom_music = g_custom_music;
     free_custom_audio_stream();
 
 #ifdef USE_SDL_AUDIOSTREAM
@@ -386,6 +404,7 @@ static int create_custom_audio_stream(SDL_AudioFormat src_format,
 }
 
 static int custom_audio_stream_active(void) {
+    auto &custom_music = g_custom_music;
 #ifdef USE_SDL_AUDIOSTREAM
     if (custom_music.use_audiostream)
         return custom_music.stream != 0;
@@ -395,6 +414,7 @@ static int custom_audio_stream_active(void) {
 }
 
 static int put_custom_audio_stream(Uint8* audio_data, int len) {
+    auto &custom_music = g_custom_music;
     if (!audio_data || len <= 0 || !custom_audio_stream_active())
         return 0;
 
@@ -433,6 +453,7 @@ static int put_custom_audio_stream(Uint8* audio_data, int len) {
 }
 
 static int get_custom_audio_stream(Uint8* dst, int len) {
+    auto &custom_music = g_custom_music;
     if (!dst || len <= 0 || !custom_audio_stream_active())
         return 0;
 
@@ -480,6 +501,7 @@ void sound_device_use_custom_music_player(int bitdepth,
                                           int rate,
                                           const unsigned char* audio_data,
                                           int len) {
+    auto &custom_music = g_custom_music;
     SDL_AudioFormat format;
     if (bitdepth == 8)
         format = AUDIO_U8;
@@ -505,6 +527,7 @@ void sound_device_use_custom_music_player(int bitdepth,
 }
 
 void sound_device_write_custom_music_data(const unsigned char* audio_data, int len) {
+    auto &custom_music = g_custom_music;
     if (!audio_data || len <= 0 || !custom_audio_stream_active())
         return;
     // Mix audio to sound effect volume
