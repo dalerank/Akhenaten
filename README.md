@@ -99,4 +99,18 @@ SDL_LOG_PRIORITY=debug
 
 By default `info` level is set.
 
+### Running with tracy
+
+Run profiler:
+
+```shell
+cd ext/tracy/profiler/build/unix && make && ./Tracy-release
+```
+
+Build & run with tracy enabled:
+
+```shell
+cmake -DUSE_FUTURE_TRACY=ON .. && make ozymandias && ./ozymandias
+```
+
 ![Alt](https://repobeats.axiom.co/api/embed/d972b1b3da5423da758f1b4a1396177626bff54b.svg "Repobeats analytics image")
