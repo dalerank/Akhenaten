@@ -19,7 +19,7 @@ jobs:
         export CXX=/usr/local/opt/llvm/bin/clang++
         export CXXFLAGS=-stdlib=libc++
         sudo chmod +x update-workspace-mac.sh
-        sudo ./update-workspace-mac.sh
+        ./update-workspace-mac.sh
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release ..
         cd ..
