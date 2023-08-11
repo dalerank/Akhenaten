@@ -20,8 +20,6 @@ jobs:
         export CXXFLAGS=-stdlib=libc++
         sudo chmod +x update-workspace-mac.sh
         sudo ./update-workspace-mac.sh
-    - name: build-project
-      run: |
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release ..
         cd ..
