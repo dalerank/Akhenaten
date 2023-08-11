@@ -98,28 +98,28 @@ public:
         return *this;
     }
     inline ref cat(const char* s) {
-        strcat(_data, _size, s);
+        snprintf(_data, _size, "%s%s", _data, s);
         return *this;
     }
     inline ref cat(const char* s1, const char* s2) {
-        strcat(_data, _size, s1, s2);
+        snprintf(_data, _size, "%s%s%s", _data, s1, s2);
         return *this;
     }
     inline ref cat(const char* s1, const char* s2, const char* s3) {
-        strcat(_data, _size, s1, s2, s3);
+        snprintf(_data, _size, "%s%s%s%s", _data, s1, s2, s3);
         return *this;
     }
     inline ref cat(const char* s1, const char* s2, const char* s3, const char* s4) {
-        strcat(_data, _size, s1, s2, s3, s4);
+        snprintf(_data, _size, "%s%s%s%s%s", _data, s1, s2, s3, s4);
         return *this;
     }
     inline ref cat(const char* s1, const char* s2, const char* s3, const char* s4, const char* s5) {
-        strcat(_data, _size, s1, s2, s3, s4, s5);
+        snprintf(_data, _size, "%s%s%s%s%s%s", _data, s1, s2, s3, s4, s5);
         return *this;
     }
 
     inline ref ncat(const char* s, size_t cnt) {
-        strncat(_data, _size, s, cnt);
+        ::strncat(_data, s, cnt);
         return *this;
     }
 
@@ -135,7 +135,7 @@ public:
         char* dest = _data + size;
         size_t remain = _size - size;
         if (remain > 0) {
-            ::strncat(dest, remain, s);
+            *dest = s;
             *(dest + 1) = '\0';
         }
 

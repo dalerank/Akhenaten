@@ -100,7 +100,7 @@ inline constexpr typename std::span<T>::reference std::span<T>::front() const no
 
 template <typename T>
 inline constexpr typename std::span<T>::reference std::span<T>::back() const noexcept {
-    return data()[m_storage.size() - 1];
+    return data()[size() - 1];
 }
 
 template <typename T>

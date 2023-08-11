@@ -11,7 +11,11 @@
 // #include "platform/vita/vita.h"
 #include "graphics/image_groups.h"
 
-#include "SDL_image.h"
+#ifdef __APPLE__
+#include <SDL2_image/SDL_image.h>
+#else
+#include <SDL_image.h>
+#endif
 #include "input/cursor.h"
 #include "io/log.h"
 #include <string.h>

@@ -34,5 +34,5 @@ then
   hdiutil detach "$VOLUME"
 fi
 
-cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_BUILD_TYPE=Release .. -G "Unix Makefiles"
 cd ..

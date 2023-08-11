@@ -1,5 +1,11 @@
-#include "SDL.h"
-#include "SDL_mixer.h"
+#include <SDL.h>
+
+#ifdef __APPLE__
+#include <SDL2_mixer/SDL_mixer.h>
+#else
+#include <SDL_mixer.h>
+#endif
+
 #include "core/game_environment.h"
 #include "game/settings.h"
 #include "io/file.h"

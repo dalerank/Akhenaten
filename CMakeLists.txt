@@ -21,7 +21,11 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 include("${CMAKE_SOURCE_DIR}/cmake/GenerateVersionHPP.cmake")
 
 #set(CMAKE_RC_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE}")
-if (NOT MSVC)
+if (MSVC)
+
+elseif (APPLE)
+    set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -Wno-deprecated-declarations -Wno-switch --std=c++17 -stdlib=libc++ -fno-exceptions ${CMAKE_CXX_FLAGS}")
+elseif()
     set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -static-libgcc -static-libstdc++ -fno-exceptions ${CMAKE_CXX_FLAGS}")
 endif()
 
@@ -32,6 +36,7 @@ if (MSVC)
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(GAME_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin_x64")
 
 set(SDL2_VERSION "2.28.0")
@@ -264,7 +269,7 @@ endif()
 
 set(MACOSX_FILES "")
 if(APPLE)
-    set(RC_FILES ${PROJECT_SOURCE_DIR}/res/ozymandias.icns)
+    #set(RC_FILES ${PROJECT_SOURCE_DIR}/res/ozymandias.icns)
 elseif(MSVC)
     #set(RC_FILES ${PROJECT_SOURCE_DIR}/res/ozymandias.rc)
 endif()
