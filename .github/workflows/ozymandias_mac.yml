@@ -23,7 +23,6 @@ jobs:
         sudo ./update-workspace-mac.sh
     - name: build-project
       run: |
-        mkdir build
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release ..
         cd ..
