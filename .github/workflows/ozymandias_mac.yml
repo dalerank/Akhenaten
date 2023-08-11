@@ -23,7 +23,7 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release ..
         cd ..
-        cmake --build ./build
+        sudo cmake --build ./build
     - uses: actions/upload-artifact@v3
       with:
         name: macos_build
