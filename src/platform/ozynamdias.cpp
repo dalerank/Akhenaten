@@ -68,6 +68,8 @@
 #error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
 #endif
 
+#include "tracy/Tracy.hpp"
+
 #define INTPTR(d) (*(int*)(d))
 
 namespace {
@@ -524,6 +526,7 @@ static void main_loop() {
 }
 
 int main(int argc, char** argv) {
+    ZoneScoped;
     logs::initialize();
 
     Arguments arguments(argc, argv);

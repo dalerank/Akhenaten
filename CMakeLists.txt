@@ -213,6 +213,12 @@ file(GLOB IMGUI_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/*.cpp)
 file(GLOB IMGUI_CPP_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/misc/cpp/*.cpp)
 file(GLOB IMGUI_BACKEND_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/backends/*.cpp)
 
+if (USE_FUTURE_TRACY)
+    add_definitions(-DTRACY_ENABLE=ON)
+    set(TRACY_FILES ${PROJECT_SOURCE_DIR}/ext/tracy/public/TracyClient.cpp)
+endif ()
+include_directories(${PROJECT_SOURCE_DIR}/ext/tracy/public/)
+
 set(WIDGET_CITY_FILES ${WIDGET_CITY_FILES}
     ${PROJECT_SOURCE_DIR}/src/widget/city.cpp)
 
@@ -299,6 +305,7 @@ set(SOURCE_FILES
     ${IMGUI_FILES}
     ${MACOSX_FILES}
     ${RC_FILES}
+    ${TRACY_FILES}
 #    ${PNG_FILES}
 #    ${SDL_IMAGE_FILES}
 #    ${ZLIB_FILES}
