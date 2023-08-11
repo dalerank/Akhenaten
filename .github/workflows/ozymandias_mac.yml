@@ -10,10 +10,15 @@ jobs:
   build:
     name: run on mac
     runs-on: macos-latest
+    env:
+      CC: /usr/local/opt/llvm/bin/clang
+      CXX: /usr/local/opt/llvm/bin/clang++
+      CXXFLAGS: -stdlib=libc++
     steps:
     - uses: actions/checkout@v3
     - name: update-workspace
       run: |
+        brew install llvm@15
         sudo chmod +x update-workspace-mac.sh
         sudo ./update-workspace-mac.sh
     - name: build-project
@@ -23,7 +28,6 @@ jobs:
         cmake -DCMAKE_BUILD_TYPE=Release ..
         cd ..
         cmake --build ./build
-        cp ./build/ozymandias ./ozymandias.macos
     - uses: actions/upload-artifact@v3
       with:
         name: macos_build
