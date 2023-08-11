@@ -1,34 +1,35 @@
-#!/usr/bin/env bash
+#!/bin/zsh
 
 mkdir -p ~/Library/Frameworks
 mkdir build
 cd build
-local FILENAME=SDL2-2.28.0.dmg
+mkdir tmp
+FILENAME=SDL2-2.28.0.dmg
 if [ ! -f "tmp/$FILENAME" ]
 then
-  curl -o "https://libsdl.org/release/$FILENAME" "tmp/$FILENAME"
-  local VOLUME=$(hdiutil attach "tmp/$FILENAME" | grep -o '/Volumes/.*')
-  echo "Installing framework:" "/Volumes/SDL2"/*.framework
+  curl "https://libsdl.org/release/$FILENAME" --output "tmp/$FILENAME"
+  VOLUME=$(hdiutil attach "tmp/$FILENAME" | grep -o '/Volumes/.*')
+  echo "Installing framework: /Volumes/SDL2/*.framework"
   cp -rp "$VOLUME"/*.framework ~/Library/Frameworks
   hdiutil detach "$VOLUME"
 fi
 
-local FILENAME_MIXER=SDL2_mixer-2.0.4.dmg
+FILENAME_MIXER=SDL2_mixer-2.0.4.dmg
 if [ ! -f "tmp/$FILENAME_MIXER" ]
 then
-  curl -o "https://libsdl.org/projects/SDL_mixer/release/$FILENAME_MIXER" "tmp/$FILENAME_MIXER"
-  local VOLUME=$(hdiutil attach "tmp/$FILENAME_MIXER" | grep -o '/Volumes/.*')
+  curl "https://libsdl.org/projects/SDL_mixer/release/$FILENAME_MIXER" --output "tmp/$FILENAME_MIXER"
+  VOLUME=$(hdiutil attach "tmp/$FILENAME_MIXER" | grep -o '/Volumes/.*')
   echo "Installing framework:" "/Volumes/SDL2_mixer"/*.framework
   cp -rp "$VOLUME"/*.framework ~/Library/Frameworks
   hdiutil detach "$VOLUME"
 fi
 
-local FILENAME_IMAGE=SDL2_image-2.6.3.dmg
+FILENAME_IMAGE=SDL2_image-2.6.3.dmg
 if [ ! -f "tmp/$FILENAME_IMAGE" ]
 then
-  curl -o "https://libsdl.org/projects/SDL_mixer/release/$FILENAME_IMAGE" "tmp/$FILENAME_IMAGE"
-  local VOLUME=$(hdiutil attach "tmp/$FILENAME_IMAGE" | grep -o '/Volumes/.*')
-  echo "Installing framework:" "/Volumes/SDL2_mixer"/*.framework
+  curl "https://libsdl.org/projects/SDL_image/release/$FILENAME_IMAGE" --output "tmp/$FILENAME_IMAGE"
+  VOLUME=$(hdiutil attach "tmp/$FILENAME_IMAGE" | grep -o '/Volumes/.*')
+  echo "Installing framework:" "/Volumes/SDL2_image"/*.framework
   cp -rp "$VOLUME"/*.framework ~/Library/Frameworks
   hdiutil detach "$VOLUME"
 fi
