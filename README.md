@@ -38,12 +38,6 @@ stored there; also, your game must be patched to last version to run Ozymandias.
 
 ## Building Ozymandias from source
 
-Clone repository with submodules:
-
-```shell
-git clone --recurse-submodules git@github.com:dalerank/Ozymandias.git
-```
-
 ### Windows + Visual Studio
 
 - Clone the repository
@@ -106,12 +100,6 @@ SDL_LOG_PRIORITY=debug
 By default `info` level is set.
 
 ### Running with tracy
-
-Tracy was added as submodule, so need to pull it first (if not cloned correctly before):
-
-```shell
-git submodule update --init --recursive
-```
 
 Run profiler:
 
