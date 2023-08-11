@@ -54,11 +54,8 @@ endif()
 # Create the actual revision file from the above params
 message("Generate version.h with ${rev_number}")
 
-if (NOT APPLE)
-#strange erron on gtihub actions
 configure_file(
   "${CMAKE_SOURCE_DIR}/cmake/version.hpp.in.cmake"
   "${CMAKE_SOURCE_DIR}/src/core/version.h"
   @ONLY
 )
-endif()
