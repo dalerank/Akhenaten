@@ -10,15 +10,14 @@ jobs:
   build:
     name: run on mac
     runs-on: macos-latest
-    env:
-      CC: /usr/local/opt/llvm/bin/clang
-      CXX: /usr/local/opt/llvm/bin/clang++
-      CXXFLAGS: -stdlib=libc++
     steps:
     - uses: actions/checkout@v3
     - name: update-workspace
       run: |
         brew install llvm@15
+        export CC=/usr/local/opt/llvm/bin/clang
+        export CXX=/usr/local/opt/llvm/bin/clang++
+        export CXXFLAGS=-stdlib=libc++
         sudo chmod +x update-workspace-mac.sh
         sudo ./update-workspace-mac.sh
     - name: build-project
