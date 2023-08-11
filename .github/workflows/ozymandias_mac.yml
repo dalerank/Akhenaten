@@ -15,8 +15,9 @@ jobs:
     - name: update-workspace
       run: |
         brew install llvm@15
-        export CC=/usr/local/opt/llvm/bin/clang
-        export CXX=/usr/local/opt/llvm/bin/clang++
+        brew list llvm@15
+        export CC=/usr/local/Cellar/llvm@15/bin/clang
+        export CXX=/usr/local/Cellar/llvm@15/bin/clang++
         export CXXFLAGS=-stdlib=libc++
         sudo chmod +x update-workspace-mac.sh
         ./update-workspace-mac.sh
