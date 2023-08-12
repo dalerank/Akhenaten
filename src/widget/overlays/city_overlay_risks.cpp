@@ -1,8 +1,9 @@
 #include "city_overlay_risks.h"
 
+#include "city_overlay.h"
+
 #include "building/industry.h"
 #include "building/model.h"
-#include "city_overlay.h"
 #include "game/state.h"
 #include "graphics/boilerplate.h"
 #include "grid/building.h"
@@ -36,10 +37,6 @@ void overlay_problems_prepare_building(building* b) {
         b->show_on_problem_overlay = 1;
 }
 
-static int show_building_crime(const building* b) {
-    return b->type == BUILDING_POLICE_STATION || b->type == BUILDING_FESTIVAL_SQUARE;
-}
-
 static int show_building_problems(const building* b) {
     return b->show_on_problem_overlay;
 }
@@ -47,10 +44,6 @@ static int show_building_native(const building* b) {
     return b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING || b->type == BUILDING_MISSION_POST;
 }
 
-static int show_figure_crime(const figure* f) {
-    return f->type == FIGURE_POLICEMAN || f->type == FIGURE_PROTESTER || f->type == FIGURE_CRIMINAL
-           || f->type == FIGURE_RIOTER;
-}
 static int show_figure_problems(const figure* f) {
     if (f->type == FIGURE_LABOR_SEEKER)
         return ((figure*)f)->home()->show_on_problem_overlay;
@@ -79,25 +72,7 @@ static int get_column_height_damage(const building* b) {
         return NO_COLUMN;
     return b->damage_risk / 100;
 }
-static int get_column_height_crime(const building* b) {
-    if (b->house_size) {
-        int happiness = b->sentiment.house_happiness;
-        //        return (50 - happiness) / 5;
-        if (happiness <= 0)
-            return 10;
-        else if (happiness <= 10)
-            return 8;
-        else if (happiness <= 20)
-            return 6;
-        else if (happiness <= 30)
-            return 4;
-        else if (happiness <= 40)
-            return 2;
-        else if (happiness < 50)
-            return 1;
-    }
-    return NO_COLUMN;
-}
+
 static int get_column_height_none(const building* b) {
     return NO_COLUMN;
 }
@@ -129,21 +104,6 @@ static int get_tooltip_damage(tooltip_context* c, const building* b) {
         return 56;
     else {
         return 57;
-    }
-}
-static int get_tooltip_crime(tooltip_context* c, const building* b) {
-    if (b->sentiment.house_happiness <= 0)
-        return 63;
-    else if (b->sentiment.house_happiness <= 10)
-        return 62;
-    else if (b->sentiment.house_happiness <= 20)
-        return 61;
-    else if (b->sentiment.house_happiness <= 30)
-        return 60;
-    else if (b->sentiment.house_happiness < 50)
-        return 59;
-    else {
-        return 58;
     }
 }
 
@@ -221,18 +181,6 @@ const city_overlay* city_overlay_for_damage(void) {
     return &g_city_overlay_damage;
 }
 
-const city_overlay* city_overlay_for_crime(void) {
-    static city_overlay overlay = {OVERLAY_CRIME,
-                                   COLUMN_TYPE_RISK,
-                                   show_building_crime, // show_building_fire_crime
-                                   show_figure_crime,
-                                   get_column_height_crime,
-                                   0,
-                                   get_tooltip_crime,
-                                   0,
-                                   0};
-    return &overlay;
-}
 const city_overlay* city_overlay_for_problems(void) {
     static city_overlay overlay = {OVERLAY_PROBLEMS,
                                    COLUMN_TYPE_RISK,

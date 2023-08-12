@@ -153,7 +153,12 @@ void window_mission_next_selection_show(void) {
         window_main_menu_show(true);
         return;
     }
-    window_type window = {WINDOW_MISSION_SELECTION, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_MISSION_SELECTION,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     g_mission_next.choice = 0;
     g_mission_next.focus_button = 0;
     window_show(&window);

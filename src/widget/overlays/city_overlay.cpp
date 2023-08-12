@@ -9,6 +9,7 @@
 #include "widget/overlays/city_overlay_other.h"
 #include "widget/overlays/city_overlay_religion.h"
 #include "widget/overlays/city_overlay_risks.h"
+#include "widget/overlays/city_overlay_criminal.h"
 
 const city_overlay* g_city_overlay = 0;
 
