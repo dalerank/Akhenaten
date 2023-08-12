@@ -15,7 +15,6 @@ jobs:
     - name: update-workspace
       run: |
         brew install llvm@15
-        brew list llvm@15
         export CC=/usr/local/opt/llvm@15/bin/clang
         export CXX=/usr/local/opt/llvm@15/bin/clang++
         export CXXFLAGS=-stdlib=libc++
@@ -24,8 +23,10 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release ..
         cd ..
-        cmake --build ./build
+        cmake --build ./build -j6
+        mkdir macos_build
+        copy ./build/ozymandias.app ./macos_build/ozymandias.app
     - uses: actions/upload-artifact@v3
       with:
         name: macos_build
-        path: build
+        path: macos_build
