@@ -3,7 +3,15 @@
 
 int city_sentiment(void);
 
-int city_sentiment_int(void);
+int city_sentiment_low_mood_cause();
+
+bool city_can_create_mugger();
+bool city_can_create_protestor();
+
+void city_set_can_create_mugger(bool v);
+void city_set_can_create_protestor(bool v);
+
+bool city_set_can_create_mugger();
 
 void city_sentiment_change_happiness(int amount);
 

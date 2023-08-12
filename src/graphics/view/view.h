@@ -47,7 +47,8 @@ view_data_t& city_view_data_unsafe();
 
 void city_view_camera_position_refresh();
 
-void city_view_init(void);
+void city_view_init();
+void city_settings_init();
 
 int city_view_orientation(void);
 int city_view_relative_orientation(int orientation);

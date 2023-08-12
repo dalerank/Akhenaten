@@ -190,10 +190,12 @@ static void init(int text_id, int message_id, void (*background_callback)(void))
                 data.phrase_template = get_eventmsg_text(city_msg->eventmsg_phrase_id, 0);
                 eventmsg_template_combine(data.phrase_template, data.phrase_text, true);
                 eventmsg_template_combine(data.body_template, data.body_text, false);
-            } else
+            } else {
                 data.is_eventmsg = false;
-        } else
+            }
+        } else {
             data.is_eventmsg = false;
+        }
     }
 
     data.text_id = text_id;
@@ -266,7 +268,7 @@ static void draw_city_message_text(const lang_message* msg) {
         break;
 
     case MESSAGE_TYPE_EMIGRATION: {
-        int city_sentiment = city_sentiment_int();
+        int city_sentiment = city_sentiment_low_mood_cause();
         if (city_sentiment >= 1 && city_sentiment <= 5) {
             int max_width = 16 * (data.text_width_blocks - 1) - 64;
             lang_text_draw_multiline(

@@ -1,13 +1,17 @@
 #include "view.h"
-#include "io/io_buffer.h"
+
 #include <cmath>
 
+#include "io/io_buffer.h"
 #include "core/calc.h"
 #include "graphics/elements/menu.h"
 #include "graphics/image.h"
 #include "grid/image.h"
 #include "lookup.h"
+
 #include "widget/minimap.h"
+#include "city/sentiment.h"
+#include "scenario/property.h"
 
 ///////
 view_data_t g_city_view_data;
@@ -18,11 +22,15 @@ view_data_t& city_view_data_unsafe() {
 
 ///////
 
-void city_view_init(void) {
+void city_view_init() {
     calculate_screentile_lookup_tables();
     camera_calc_scroll_limits();
     zoom_set(100.0f);
     widget_minimap_invalidate();
+}
+void city_settings_init() {
+    city_set_can_create_mugger(scenario_campaign_scenario_id() > 0);
+    city_set_can_create_protestor(scenario_campaign_scenario_id() > 1);
 }
 int city_view_orientation(void) {
     return g_city_view_data.orientation;

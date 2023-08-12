@@ -4,7 +4,7 @@
 
 constexpr uint32_t MAX_HOUSE_LEVELS = 20;
 
-int city_finance_treasury(void);
+int city_finance_treasury();
 int city_finance_out_of_money(void);
 
 int city_finance_tax_percentage(void);

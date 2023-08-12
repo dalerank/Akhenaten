@@ -165,7 +165,7 @@ static int house_seeker_phrase() {
     //    return 7 + f->phrase_sequence_exact;
 }
 static int emigrant_phrase(void) {
-    switch (city_sentiment_int()) {
+    switch (city_sentiment_low_mood_cause()) {
     case int_NO_JOBS:
         return 7;
     case int_NO_FOOD:

@@ -18,9 +18,20 @@ int city_sentiment(void) {
     return city_data.sentiment.value;
 }
 
-int city_sentiment_int(void) {
+bool city_can_create_mugger() {
+    return city_data.sentiment.can_create_mugger;
+}
+
+bool city_can_create_protestor() {
+    return city_data.sentiment.can_create_protestor;
+}
+
+int city_sentiment_low_mood_cause(void) {
     return city_data.sentiment.low_mood_cause;
 }
+
+void city_set_can_create_mugger(bool v) { city_data.sentiment.can_create_mugger = v; }
+void city_set_can_create_protestor(bool v) { city_data.sentiment.can_create_protestor = v; }
 
 void city_sentiment_change_happiness(int amount) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {

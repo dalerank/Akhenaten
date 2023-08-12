@@ -6,6 +6,10 @@
 #include <iostream>
 #include <unordered_map>
 
+#ifdef __WINDOWS__
+#include <Windows.h>
+#endif
+
 namespace {
 
 const std::unordered_map<std::string, SDL_LogPriority> PRIORITY_DICT = {{"verbose", SDL_LOG_PRIORITY_VERBOSE},
@@ -78,6 +82,12 @@ void Logger::write(void* /* userdata */, int /* category */, SDL_LogPriority pri
 
 void Logger::write_to_file_(char const* prefix, char const* message) {
     file_stream_ << prefix << message << std::endl;
+
+#ifdef __WINDOWS__
+    OutputDebugStringA(prefix);
+    OutputDebugStringA(message);
+    OutputDebugStringA("\n");
+#endif
 }
 
 void Logger::write_to_output_(char const* prefix, char const* message) {

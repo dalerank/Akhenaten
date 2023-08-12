@@ -71,21 +71,34 @@ static void generate_rioter(building* b) {
 
 static void generate_mugger(building* b) {
     city_sentiment_add_criminal();
-    if (b->house_criminal_active < 2) {
-        b->house_criminal_active = 2;
+    if (b->house_criminal_active > 60 && city_can_create_mugger()) {
+        b->house_criminal_active -= 60;
         int x_road, y_road;
         if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
             figure* f = figure_create(FIGURE_CRIMINAL, x_road, y_road, DIR_4_BOTTOM_LEFT);
+
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
             city_ratings_monument_record_criminal();
             int taxes_this_year = city_finance_overview_this_year()->income.taxes;
             if (taxes_this_year > 20) {
                 int money_stolen = taxes_this_year / 4;
-                if (money_stolen > 400)
+                if (money_stolen > 400) {
                     money_stolen = 400 - random_byte() / 2;
+                }
 
-                city_message_post(true, MESSAGE_THEFT, money_stolen, f->tile.grid_offset());
+                city_message_post(true, MESSAGE_TUTORIAL_CRIME, money_stolen, f->tile.grid_offset());
                 city_finance_process_stolen(money_stolen);
+            } else {
+                int treasury = city_finance_treasury();
+                int money_stolen = 0;
+                if (treasury > 0) {
+                    money_stolen = (random_byte() / 2) % 100;
+                }
+
+                if (money_stolen > 0) {
+                    city_message_post(true, MESSAGE_TUTORIAL_CRIME, money_stolen, f->tile.grid_offset());
+                    city_finance_process_stolen(money_stolen);
+                }
             }
         }
     }
@@ -93,8 +106,8 @@ static void generate_mugger(building* b) {
 
 static void generate_protestor(building* b) {
     city_sentiment_add_protester();
-    if (b->house_criminal_active < 1) {
-        b->house_criminal_active = 1;
+    if (b->house_criminal_active > 30 && city_can_create_protestor()) {
+        b->house_criminal_active -= 30;
         int x_road, y_road;
         if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
             figure* f = figure_create(FIGURE_PROTESTER, x_road, y_road, DIR_4_BOTTOM_LEFT);
@@ -105,47 +118,51 @@ static void generate_protestor(building* b) {
 }
 
 void figure_generate_criminals(void) {
-    building* min_building = 0;
+    building* min_building = nullptr;
     int min_happiness = 50;
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size) {
-            if (b->sentiment.house_happiness >= 50)
+            if (b->sentiment.house_happiness >= 50) {
                 b->house_criminal_active = 0;
-            else if (b->sentiment.house_happiness < min_happiness) {
+            } else if (b->sentiment.house_happiness < min_happiness) {
                 min_happiness = b->sentiment.house_happiness;
+                b->house_criminal_active += std::max(0, 100 - b->sentiment.house_happiness) / 10;
                 min_building = b;
             }
         }
     }
+
     if (min_building) {
-        if (scenario_is_mission_rank(1) || scenario_is_mission_rank(2))
-            return;
         int sentiment = city_sentiment();
+
         if (sentiment < 30) {
             if (random_byte() >= sentiment + 50) {
                 if (min_happiness <= 10) {
-                    if (GAME_ENV == ENGINE_ENV_C3) { // Temporary disable rioters in Egypt
-                        generate_rioter(min_building);
-                    } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                        generate_mugger(min_building);
-                } else if (min_happiness < 30)
+                    // if (GAME_ENV == ENGINE_ENV_C3) { // Temporary disable rioters in Egypt
+                    //     generate_rioter(min_building);
+                    // } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                     generate_mugger(min_building);
-                else if (min_happiness < 50)
+                } else if (min_happiness < 30) {
+                    generate_mugger(min_building);
+                } else if (min_happiness < 50) {
                     generate_protestor(min_building);
+                }
             }
         } else if (sentiment < 60) {
             if (random_byte() >= sentiment + 40) {
-                if (min_happiness < 30)
+                if (min_happiness < 30) {
                     generate_mugger(min_building);
-                else if (min_happiness < 50)
+                } else if (min_happiness < 50) {
                     generate_protestor(min_building);
+                }
             }
         } else {
             if (random_byte() >= sentiment + 20) {
-                if (min_happiness < 50)
+                if (min_happiness < 50) {
                     generate_protestor(min_building);
+                }
             }
         }
     }

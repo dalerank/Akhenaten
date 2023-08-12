@@ -111,12 +111,22 @@ static void parse_MM_file(buffer* buf) {
         m->subtitle.text = get_message_text(buf->read_i32());
         m->content.text = get_message_text(buf->read_i32());
     }
-    switch (GAME_ENV) {
-    case ENGINE_ENV_PHARAOH:
-        buf->set_offset(80024);
-        buf->read_raw(&g_lang_data.message_data, MESSAGE_DATA_SIZE);
-        break;
-    }
+
+    buf->set_offset(80024);
+    buf->read_raw(&g_lang_data.message_data, MESSAGE_DATA_SIZE);
+
+    /* uncomment this code that display text data*/
+    //for (int i = 0; i < MAX_TEXT_ENTRIES; i++) {
+    //    //if (g_lang_data.message_entries[i].title) {
+    //        const char* title = (const char*)g_lang_data.message_entries[i + 1].title.text;
+    //        const char* content = (const char*)g_lang_data.message_entries[i + 1].content.text;
+    //        if (!title || !*title) {
+    //            continue;
+    //        }
+    //        logs::info("%u: title: %s", i, title);
+    //        logs::info("%u: content: %s", i, content);
+    //    //}
+    //}
 }
 
 static bool load_files(const char* text_filename, const char* message_filename, int localizable) {

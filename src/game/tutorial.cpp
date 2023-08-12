@@ -13,6 +13,7 @@
 #include "platform/arguments.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
+#include "city/sentiment.h"
 
 static tutorial_flags_t g_tutorials_flags;
 
@@ -31,10 +32,11 @@ static void set_all_tut_flags_null() {
     g_tutorials_flags.pharaoh.gamemeat_400_stored = 0;
     g_tutorials_flags.pharaoh.collapse = 0;
 
-    //
+    // tutorial 2
     g_tutorials_flags.pharaoh.gold_mined_500 = 0;
     g_tutorials_flags.pharaoh.temples_built = 0;
 
+    // tutorial 3
     g_tutorials_flags.pharaoh.figs_800_stored = 0;
 
     g_tutorials_flags.pharaoh.pottery_made = 0;
