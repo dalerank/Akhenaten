@@ -7,10 +7,9 @@
 #include <unordered_map>
 
 #if defined(_WIN32) || defined(_WIN64)
-// TODO: placeholder for windows (config folder path)
+#include <ShlObj.h>
 #else // Linux
 #include <unistd.h>
-#include <sys/types.h>
 #include <pwd.h>
 #endif
 
@@ -93,7 +92,13 @@ auto string_format(char const* format, Args... args) {
 
 std::string get_configuration_path() {
 #if defined(_WIN32) || defined(_WIN64)
-    // TODO: placeholder for windows
+    TCHAR app_data_path[MAX_PATH];
+
+    if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, app_data_path))) {
+        return std::string(app_data_path) + '/' + CFG_FILE_NAME;
+    }
+
+    logs::error("Failed to retrieve AppData path.");
 #else // Linux
     struct passwd* pw = getpwuid(getuid());
     std::string folder_path = std::string(pw->pw_dir) + "/.config/";
