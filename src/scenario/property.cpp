@@ -16,7 +16,7 @@ int scenario_campaign_rank(void) {
 void scenario_set_campaign_rank(int rank) {
     g_scenario_data.settings.campaign_mission_rank = rank;
 }
-int scenario_campaign_scenario_id(void) {
+int scenario_campaign_scenario_id() {
     return g_scenario_data.settings.campaign_scenario_id;
 }
 void scenario_set_campaign_scenario(int scenario_id) {

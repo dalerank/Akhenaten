@@ -143,11 +143,11 @@ static void button_start(int param1, int param2) {
 
 void window_mission_next_selection_show(void) {
     if (!game_mission_has_choice()) {
-        int campaign = scenario_campaign_scenario_id();
-        int mission_rank = scenario_campaign_rank();
-        const mission_step_t* mission = get_campaign_mission_step_data(campaign, mission_rank);
-        if (mission) {
-            GamestateIO::load_mission(mission->scenario_id, true);
+        int scenario_id = scenario_campaign_scenario_id();
+        const mission_step_t* current_mission = get_scenario_step_data(scenario_id);
+        const mission_step_t* next_mision = get_scenario_step_data(scenario_id + 1);
+        if (current_mission->campaign_id == next_mision->campaign_id) {
+            GamestateIO::load_mission(scenario_id + 1, true);
             return;
         }
         window_main_menu_show(true);
