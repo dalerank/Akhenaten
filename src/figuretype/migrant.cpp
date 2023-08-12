@@ -155,8 +155,9 @@ void figure::homeless_action() {
                     advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
                 } else
                     poof();
-            } else
+            } else {
                 advance_action(FIGURE_ACTION_10_HOMELESS_LEAVING);
+            }
         }
         break;
     case FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE:

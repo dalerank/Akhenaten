@@ -183,8 +183,7 @@ void figure::entertainer_action() {
             if (dst_building_id) { // todo: summarize
                 building* b_dst = building_get(dst_building_id);
                 int x_road, y_road;
-                if (map_closest_road_within_radius(
-                      b_dst->tile.x(), b_dst->tile.y(), b_dst->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b_dst->tile.x(), b_dst->tile.y(), b_dst->size, 2, &x_road, &y_road)) {
                     set_destination(dst_building_id);
                     action_state = FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE;
                     destination_tile.set(x_road, y_road);

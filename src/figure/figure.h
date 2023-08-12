@@ -322,7 +322,7 @@ public:
     void trade_ship_action(); // 20
     void trade_caravan_donkey_action();
     void protestor_action();
-    void criminal_action();
+    void mugger_action();
     void rioter_action();
     void fishing_boat_action();
     void market_trader_action();

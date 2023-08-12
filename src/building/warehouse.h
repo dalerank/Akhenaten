@@ -43,8 +43,7 @@ void building_warehouses_add_resource(e_resource resource, int amount);
 int building_warehouses_remove_resource(e_resource resource, int amount);
 
 int building_warehouse_for_storing(building* src,
-                                   int x,
-                                   int y,
+                                   int x, int y,
                                    e_resource resource,
                                    int distance_from_entry,
                                    int road_network_id,
