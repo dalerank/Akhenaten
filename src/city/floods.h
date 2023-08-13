@@ -1,9 +1,8 @@
-#ifndef OZYMANDIAS_FLOODS_H
-#define OZYMANDIAS_FLOODS_H
+#pragma once
 
 #include "core/buffer.h"
 
-enum {
+enum e_flood_state {
     FLOOD_STATE_IMMINENT = 1,
     FLOOD_STATE_FLOODING = 2,
     FLOOD_STATE_INUNDATED = 3,
@@ -55,5 +54,3 @@ int floodplains_expected_quality();
 int floodplains_expected_month();
 
 void floodplains_tick_update(bool calc_only);
-
-#endif // OZYMANDIAS_FLOODS_H

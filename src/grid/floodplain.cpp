@@ -1,34 +1,39 @@
 #include "floodplain.h"
+
 #include "building_tiles.h"
 #include "io/config/config.h"
 #include "scenario/map.h"
 #include "terrain.h"
 #include "water.h"
+
 #include <cstdint>
+#include <algorithm>
 
 tile_cache floodplain_tiles_cache;
 tile_cache floodplain_tiles_caches_by_row[MAX_FLOODPLAIN_ROWS + 1];
 
 void foreach_floodplain_row(int row, void (*callback)(int grid_offset, int order)) {
-    if (row < 0 || row > MAX_FLOODPLAIN_ROWS)
+    if (row < 0 || row > MAX_FLOODPLAIN_ROWS) {
         return;
-    auto cache = floodplain_tiles_caches_by_row[row];
+    }
+
+    auto &cache = floodplain_tiles_caches_by_row[row];
     for (int i = 0; i < cache.size(); i++) {
         int grid_offset = cache.at(i);
         callback(grid_offset, row);
     }
 }
 
-static grid_xx terrain_floodplain_row = {0, {FS_UINT8, FS_UINT8}};
-static grid_xx terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
-static grid_xx terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
-static grid_xx terrain_floodplain_max_fertile = {0, {FS_UINT8, FS_UINT8}};
+grid_xx g_terrain_floodplain_row = {0, {FS_UINT8, FS_UINT8}};
+grid_xx g_terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
+grid_xx g_terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
+grid_xx g_terrain_floodplain_max_fertile = {0, {FS_UINT8, FS_UINT8}};
 
 int map_floodplain_rebuild_rows() {
     // reset all to zero
-    map_grid_fill(&terrain_floodplain_row, -1);
-    map_grid_fill(&terrain_floodplain_growth, 0);
-    map_grid_fill(&terrain_floodplain_max_fertile, 0);
+    map_grid_fill(&g_terrain_floodplain_row, -1);
+    map_grid_fill(&g_terrain_floodplain_growth, 0);
+    map_grid_fill(&g_terrain_floodplain_max_fertile, 0);
     for (int row = 0; row < MAX_FLOODPLAIN_ROWS; row++)
         floodplain_tiles_caches_by_row[row].clear();
 
@@ -66,10 +71,10 @@ int map_floodplain_rebuild_rows() {
                             && map_get_floodplain_row(grid_offset) == -1) {
                             // set fertility data
                             int tile_fert = 99 - ((99.0f / 30.0f) * (float)(row + 1));
-                            map_grid_set(&terrain_floodplain_max_fertile, grid_offset, tile_fert);
+                            map_grid_set(&g_terrain_floodplain_max_fertile, grid_offset, tile_fert);
 
                             // set the shore order cache
-                            map_grid_set(&terrain_floodplain_row, grid_offset, row + 1);
+                            map_grid_set(&g_terrain_floodplain_row, grid_offset, row + 1);
                             floodplain_tiles_caches_by_row[row + 1].add(grid_offset);
 
                             // advance counter
@@ -90,8 +95,9 @@ int map_floodplain_rebuild_rows() {
     // if past 29, fill in all the rest with the same order
     for (int i = 0; i < floodplain_tiles_cache.size(); i++) {
         int grid_offset = floodplain_tiles_cache.at(i);
+
         if (map_get_floodplain_row(grid_offset) == -1) {
-            map_grid_set(&terrain_floodplain_row, grid_offset, MAX_FLOODPLAIN_ROWS);
+            map_grid_set(&g_terrain_floodplain_row, grid_offset, MAX_FLOODPLAIN_ROWS);
             floodplain_tiles_caches_by_row[MAX_FLOODPLAIN_ROWS].add(grid_offset);
         }
     }
@@ -99,31 +105,25 @@ int map_floodplain_rebuild_rows() {
     return MAX_FLOODPLAIN_ROWS;
 }
 
-#ifndef min
-#define min(a, b) (((a) < (b)) ? (a) : (b))
-#endif
-
-#ifndef max
-#define max(a, b) (((a) > (b)) ? (a) : (b))
-#endif
-
 int8_t map_get_floodplain_row(int grid_offset) {
-    return map_grid_get(&terrain_floodplain_row, grid_offset);
+    return map_grid_get(&g_terrain_floodplain_row, grid_offset);
 }
+
 uint8_t map_get_floodplain_growth(int grid_offset) {
-    return map_grid_get(&terrain_floodplain_growth, grid_offset);
+    return map_grid_get(&g_terrain_floodplain_growth, grid_offset);
 }
+
 int map_get_fertility(int grid_offset, int tally_type) { // actual percentage integer [0-99]
     switch (tally_type) {
     case FERT_WITH_MALUS:
-        return map_grid_get(&terrain_floodplain_fertility, grid_offset);
+        return map_grid_get(&g_terrain_floodplain_fertility, grid_offset);
         break;
     case FERT_ONLY_MALUS:
-        return map_grid_get(&terrain_floodplain_fertility, grid_offset)
-               - map_grid_get(&terrain_floodplain_max_fertile, grid_offset);
+        return map_grid_get(&g_terrain_floodplain_fertility, grid_offset)
+               - map_grid_get(&g_terrain_floodplain_max_fertile, grid_offset);
         break;
     case FERT_NO_MALUS:
-        return map_grid_get(&terrain_floodplain_max_fertile, grid_offset);
+        return map_grid_get(&g_terrain_floodplain_max_fertile, grid_offset);
         break;
     }
     return 0;
@@ -147,27 +147,34 @@ static uint8_t map_get_fertility_average(int grid_offset, int x, int y, int size
     }
     return fert_total / (size * size);
 }
+
 uint8_t map_get_fertility_for_farm(int grid_offset) {
     int x = MAP_X(grid_offset);
     int y = MAP_Y(grid_offset);
     bool is_irrigated = false;
-    if (config_get(CONFIG_GP_FIX_IRRIGATION_RANGE))
+    if (config_get(CONFIG_GP_FIX_IRRIGATION_RANGE)) {
         is_irrigated = map_terrain_exists_tile_in_area_with_type(x, y, 3, TERRAIN_IRRIGATION_RANGE);
-    else
+    } else {
         is_irrigated = map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_IRRIGATION_RANGE);
+    }
     int irrigation_bonus = 40;
+
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
         irrigation_bonus = 20;
-    return min(2 + map_get_fertility_average(grid_offset, x, y, 3) + is_irrigated * irrigation_bonus, 99);
-}
-void map_set_floodplain_growth(int grid_offset, int growth) {
-    if (growth >= 0 && growth < 6)
-        map_grid_set(&terrain_floodplain_growth, grid_offset, growth);
-}
-void map_soil_set_depletion(int grid_offset, int malus) {
-    int new_fert = map_get_fertility(grid_offset, FERT_NO_MALUS) + malus;
-    map_grid_set(&terrain_floodplain_fertility, grid_offset, max(3, min(99, new_fert)));
+
+    return std::min(2 + map_get_fertility_average(grid_offset, x, y, 3) + is_irrigated * irrigation_bonus, 99);
 }
 
-io_buffer* iob_soil_fertility_grid = new io_buffer(
-  [](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &terrain_floodplain_fertility); });
+void map_set_floodplain_growth(int grid_offset, int growth) {
+    if (growth >= 0 && growth < 6)
+        map_grid_set(&g_terrain_floodplain_growth, grid_offset, growth);
+}
+
+void map_soil_set_depletion(int grid_offset, int malus) {
+    int new_fert = map_get_fertility(grid_offset, FERT_NO_MALUS) + malus;
+    map_grid_set(&g_terrain_floodplain_fertility, grid_offset, std::clamp(new_fert, 3, 99));
+}
+
+io_buffer* iob_soil_fertility_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_floodplain_fertility);
+});

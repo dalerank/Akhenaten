@@ -1,14 +1,15 @@
 #include "floods.h"
+
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/time.h"
 #include "grid/floodplain.h"
 #include "grid/tiles.h"
 #include "io/manager.h"
-#include <cmath>
-
 #include "city/data_private.h"
 #include "message.h"
+
+#include <cmath>
 
 floods_data_t g_floods_data;
 
@@ -16,6 +17,7 @@ floods_data_t& floodplain_data() {
     return g_floods_data;
 }
 
+static int flood_multiplier_grow = 20;
 static int randomizing_int_1 = 0;
 static int randomizing_int_2 = 0;
 
@@ -282,8 +284,9 @@ void floodplains_tick_update(bool calc_only) {
     }
 
     // update grass growth
-    if (subcycle % 5 == 0 && (cycle < cycle_start - 27 || cycle >= cycle_end - 24))
+    if (subcycle % flood_multiplier_grow == 0 && (cycle < cycle_start - 27 || cycle >= cycle_end - 24)) {
         map_advance_floodplain_growth();
+    }
 }
 
 io_buffer* iob_floodplain_settings = new io_buffer([](io_buffer* iob, size_t version) {
