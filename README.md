@@ -83,9 +83,17 @@ Only tested on Manjaro, but under Ubuntu or similar you should install the same 
 
 ### MacOS
 
-Currently not tested on Mac, but you can try the instructions from Julius. They should be similar besides the additional need for SDL2_image. https://github.com/bvschaik/julius/wiki/Building-Julius
+Only tested on Manjaro, but under Ubuntu or similar you should install the same packages:
 
-(Feel free to add a pull request to add additional Mac instructions here.)
+- Clone the repository
+
+- From the root folder execute:
+  
+  ```
+  $ ./update-workspace-mac.sh
+  $ cmake --build ./build --target clean
+  $ cmake --build ./build
+  ```
 
 ## Contributing
 
