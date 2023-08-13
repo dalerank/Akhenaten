@@ -245,7 +245,7 @@ static int CATEGORY_FOR_int_arr_PH[] = {
 #include "building/industry.h"
 #include "grid/terrain.h"
 
-const int CATEGORY_FOR_building(building* b) {
+int category_for_building(building* b) {
     int type = b->type;
     if (type < 0 || type >= 240 - 1)
         type = 0;
@@ -377,7 +377,7 @@ static void calculate_workers_needed_per_category(void) {
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
-        int category = CATEGORY_FOR_building(b);
+        int category = category_for_building(b);
         b->labor_category = category;
         if (building_is_floodplain_farm(b)) { // exception for floodplain farms in Pharaoh
             b->labor_category = 255;
@@ -401,7 +401,7 @@ static void set_building_worker_weight(void) {
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
-        int cat = CATEGORY_FOR_building(b);
+        int cat = category_for_building(b);
         if (cat == LABOR_CATEGORY_WATER_HEALTH)
             b->percentage_houses_covered = water_per_10k_per_building;
         else if (cat >= 0) {
@@ -505,7 +505,7 @@ static void allocate_workers_to_water(void) {
             building_id = 1;
 
         building* b = building_get(building_id);
-        if (b->state != BUILDING_STATE_VALID || CATEGORY_FOR_building(b) != LABOR_CATEGORY_WATER_HEALTH)
+        if (b->state != BUILDING_STATE_VALID || category_for_building(b) != LABOR_CATEGORY_WATER_HEALTH)
             continue;
 
         b->num_workers = 0;
@@ -540,7 +540,7 @@ static void allocate_workers_to_non_water_buildings(void) {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
-        int cat = CATEGORY_FOR_building(b);
+        int cat = category_for_building(b);
         if (GAME_ENV == ENGINE_ENV_C3 && cat == LABOR_CATEGORY_WATER_HEALTH)
             continue;
         if (building_is_floodplain_farm(b)) {
@@ -583,7 +583,7 @@ static void allocate_workers_to_non_water_buildings(void) {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
-        int cat = CATEGORY_FOR_building(b);
+        int cat = category_for_building(b);
         if (cat < 0)
             continue;
         if (GAME_ENV == ENGINE_ENV_C3)

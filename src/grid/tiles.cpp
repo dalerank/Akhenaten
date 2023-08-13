@@ -872,9 +872,7 @@ void map_tiles_update_region_meadow(int x_min, int y_min, int x_max, int y_max) 
 }
 
 static void update_marshland_image(int grid_offset) {
-    if (map_terrain_is(grid_offset,
-                       TERRAIN_MARSHLAND)) { // there's no way to build anything on reed tiles, so... it's fine?
-
+    if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND)) { // there's no way to build anything on reed tiles, so... it's fine?
         const terrain_image* img = map_image_context_get_reeds_transition(grid_offset);
         int image_id = image_id_from_group(GROUP_TERRAIN_REEDS) + 8 + img->group_offset + img->item_offset;
 
@@ -888,10 +886,11 @@ static void update_marshland_image(int grid_offset) {
     }
 }
 void map_tiles_update_vegetation(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND))
+    if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND)) {
         return update_marshland_image(grid_offset);
-    else if (map_terrain_is(grid_offset, TERRAIN_TREE))
+    } else if (map_terrain_is(grid_offset, TERRAIN_TREE)) {
         return update_tree_image(grid_offset);
+    }
 }
 void map_tiles_update_all_vegetation_tiles() {
     foreach_marshland_tile(update_marshland_image);

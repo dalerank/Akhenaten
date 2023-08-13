@@ -342,7 +342,7 @@ void draw_debug_tile(pixel_coordinate pixel, map_point point) {
     case 11: // LABOR
         if (b_id && map_property_is_draw_tile(grid_offset)
             && (b->labor_category != -1 || building_is_floodplain_farm(b))) {
-            if (b->labor_category != CATEGORY_FOR_building(b))
+            if (b->labor_category != category_for_building(b))
                 debug_text(str, x0, y + 10, 10, "!!", b->labor_category, COLOR_RED); // incorrect category??
             else
                 debug_text(str, x0, y + 10, 0, "", b->labor_category, COLOR_WHITE);

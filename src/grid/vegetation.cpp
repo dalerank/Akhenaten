@@ -24,13 +24,13 @@ void foreach_tree_tile(void (*callback)(int grid_offset)) {
         callback(trees_tiles_cache.at(i));
 }
 
-static grid_xx terrain_vegetation_growth = {0, {FS_UINT8, FS_UINT8}};
+grid_xx g_terrain_vegetation_growth = {0, {FS_UINT8, FS_UINT8}};
 
 int map_get_vegetation_growth(int grid_offset) {
-    return map_grid_get(&terrain_vegetation_growth, grid_offset);
+    return map_grid_get(&g_terrain_vegetation_growth, grid_offset);
 }
 void vegetation_deplete(int grid_offset) {
-    map_grid_set(&terrain_vegetation_growth, grid_offset, 0);
+    map_grid_set(&g_terrain_vegetation_growth, grid_offset, 0);
     map_tiles_update_vegetation(grid_offset);
 }
 static void vegetation_tile_update(int grid_offset) {
@@ -41,7 +41,8 @@ static void vegetation_tile_update(int grid_offset) {
         growth += r;
         if (growth > 255)
             growth -= 255;
-        map_grid_set(&terrain_vegetation_growth, grid_offset, growth);
+
+        map_grid_set(&g_terrain_vegetation_growth, grid_offset, growth);
         if (growth == 255)
             map_tiles_update_vegetation(grid_offset);
     }
@@ -49,12 +50,14 @@ static void vegetation_tile_update(int grid_offset) {
 void vegetation_growth_update() {
     for (int i = 0; i < trees_tiles_cache.size(); ++i)
         vegetation_tile_update(trees_tiles_cache.at(i));
+
     for (int i = 0; i < marshland_tiles_cache.size(); ++i)
         vegetation_tile_update(marshland_tiles_cache.at(i));
 }
 
-io_buffer* iob_vegetation_growth
-  = new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &terrain_vegetation_growth); });
+io_buffer* iob_vegetation_growth = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_vegetation_growth);
+});
 
 int gatherers_harvesting_point(int grid_offset) {
     // check if there's any figure already gathering at the spot
@@ -62,21 +65,25 @@ int gatherers_harvesting_point(int grid_offset) {
     int gatherers_present = 0;
     while (figure_id) {
         figure* f = figure_get(figure_id);
-        if (f->action_state == 10) // someone is already gathering at this spot!
+        if (f->action_state == 10) { // someone is already gathering at this spot!
             gatherers_present++;
+        }
+
         figure_id = f->next_figure;
     }
     return gatherers_present;
 }
 bool can_harvest_point(int grid_offset, int max_gatherers) {
     // check if harvestable
-    if (map_get_vegetation_growth(grid_offset) != 255)
+    if (map_get_vegetation_growth(grid_offset) != 255) {
         return false;
+    }
 
     // check if there's any figure already gathering at the spot
-    if (!config_get(CONFIG_GP_CH_MULTIPLE_GATHERERS))
+    if (!config_get(CONFIG_GP_CH_MULTIPLE_GATHERERS)) {
         if (gatherers_harvesting_point(grid_offset) >= max_gatherers)
             return false;
+    }
 
     return true;
 }
