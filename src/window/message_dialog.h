@@ -1,10 +1,8 @@
-#ifndef WINDOW_MESSAGE_DIALOG_H
-#define WINDOW_MESSAGE_DIALOG_H
+#pragma once
 
-#include <core/string.h>
-#include <cstring>
+#include "core/string.h"
 
-enum {
+enum e_message_dialog_type {
     MESSAGE_DIALOG_ABOUT = 0,
     MESSAGE_DIALOG_HELP = 10,
     MESSAGE_DIALOG_TOP_FUNDS = 15,
@@ -31,10 +29,10 @@ enum {
     MESSAGE_DIALOG_EDITOR_HELP = 332,
 };
 
-typedef struct {
+struct text_tag_substitution {
     const char* tag;
     const uint8_t* content;
-} text_tag_substitution;
+} ;
 
 void text_fill_in_tags(const uint8_t* src, uint8_t* dst, text_tag_substitution* tag_templates, int num_tags);
 
@@ -48,5 +46,3 @@ void window_message_dialog_show_city_message(int text_id,
                                              int param2,
                                              int message_advisor,
                                              int use_popup);
-
-#endif // WINDOW_MESSAGE_DIALOG_H
