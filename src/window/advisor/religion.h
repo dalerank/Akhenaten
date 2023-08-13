@@ -1,8 +1,5 @@
-#ifndef WINDOW_ADVISOR_RELIGION_H
-#define WINDOW_ADVISOR_RELIGION_H
+#pragma once
 
-#include "window/advisors.h"
+struct advisor_window_type;
 
-const advisor_window_type* window_advisor_religion(void);
-
-#endif // WINDOW_ADVISOR_RELIGION_H
+const advisor_window_type* window_advisor_religion();

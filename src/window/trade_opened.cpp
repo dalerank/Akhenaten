@@ -10,6 +10,7 @@
 #include "input/input.h"
 #include "window/advisors.h"
 #include "window/empire.h"
+#include "city/constants.h"
 
 static void button_advisor(int advisor, int param2);
 static void button_close(int param1, int param2);

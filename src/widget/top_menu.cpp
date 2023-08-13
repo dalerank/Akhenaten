@@ -2,6 +2,7 @@
 
 #include "building/construction/build_planner.h"
 #include "city/finance.h"
+#include "city/constants.h"
 #include "city/population.h"
 #include "dev/debug.h"
 #include "game/cheats.h"

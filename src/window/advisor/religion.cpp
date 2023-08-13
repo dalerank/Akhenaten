@@ -1,9 +1,12 @@
 #include "religion.h"
-#include <building/menu.h>
-#include <city/buildings.h>
-#include <game/time.h>
-#include <scenario/building.h>
-#include <window/popup_dialog.h>
+
+
+#include "city/constants.h"
+#include "building/menu.h"
+#include "city/buildings.h"
+#include "game/time.h"
+#include "scenario/building.h"
+#include "window/popup_dialog.h"
 
 #include "building/count.h"
 #include "city/festival.h"
@@ -15,6 +18,8 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
+
+#include "window/advisors.h"
 #include "window/hold_festival.h"
 
 static void button_hold_festival(int param1, int param2);

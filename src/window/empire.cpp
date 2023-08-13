@@ -1,10 +1,11 @@
 #include "empire.h"
+
 #include <cmath>
-#include <scenario/property.h>
 
 #include "building/menu.h"
 #include "city/military.h"
 #include "city/warning.h"
+#include "city/constants.h"
 #include "core/game_environment.h"
 #include "empire/city.h"
 #include "empire/empire.h"
@@ -25,6 +26,7 @@
 #include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
+#include "scenario/property.h"
 #include "window/advisors.h"
 #include "window/city.h"
 #include "window/message_dialog.h"

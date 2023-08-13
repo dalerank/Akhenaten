@@ -16,6 +16,7 @@
 #include "window/advisors.h"
 
 #include "graphics/view/lookup.h"
+#include "city/constants.h"
 
 #define OVERLAY_TEXT_MAX 1000
 

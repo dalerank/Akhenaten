@@ -1,10 +1,16 @@
 #pragma once
 
-#include "input/mouse.h"
+struct mouse;
 
 #define TOOLTIP_MAX_EXTRA_VALUES 5
 
-enum { TOOLTIP_NONE = 0, TOOLTIP_BUTTON = 1, TOOLTIP_OVERLAY = 2, TOOLTIP_SENATE = 3, TOOLTIP_TILES = 4 };
+enum e_tooltip_mode { 
+    TOOLTIP_NONE = 0,
+    TOOLTIP_BUTTON = 1,
+    TOOLTIP_OVERLAY = 2,
+    TOOLTIP_SENATE = 3,
+    TOOLTIP_TILES = 4
+};
 
 struct tooltip_context {
     const int mouse_x;

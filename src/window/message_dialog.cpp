@@ -1,8 +1,9 @@
 #include "message_dialog.h"
-#include <city/city_data.h>
-#include <scenario/events.h>
+
 
 #include "city/message.h"
+#include "city/city_data.h"
+#include "city/constants.h"
 #include "city/sentiment.h"
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -20,6 +21,7 @@
 #include "input/scroll.h"
 #include "io/gamefiles/lang.h"
 #include "scenario/property.h"
+#include "scenario/events.h"
 #include "scenario/request.h"
 #include "window/advisors.h"
 #include "window/city.h"

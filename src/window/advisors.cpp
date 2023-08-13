@@ -1,6 +1,6 @@
 #include "advisors.h"
-#include <scenario/property.h>
 
+#include "scenario/property.h"
 #include "city/constants.h"
 #include "city/culture.h"
 #include "city/finance.h"
@@ -58,6 +58,7 @@ static generic_button advisor_buttons_C3[] = {
   {540, 1, 40, 40, button_change_advisor, button_none, ADVISOR_CHIEF, 0},
   {588, 1, 40, 40, button_change_advisor, button_none, 0, 0},
 };
+
 static image_button advisor_buttons_PH[] = {
   {12, 1, 33, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 0, button_change_advisor, button_none, ADVISOR_LABOR, 0},
   {52, 1, 39, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 4, button_change_advisor, button_none, ADVISOR_MILITARY, 0},
