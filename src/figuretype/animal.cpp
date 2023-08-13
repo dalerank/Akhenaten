@@ -269,8 +269,9 @@ void figure::ostrich_action() {
         wait_ticks--;
         //            if (wait_ticks % 5 == 0 && is_nearby(NEARBY_ANY, 6))
         //                advance_action(ACTION_16_FLEEING);
-        if (wait_ticks <= 0)
+        if (wait_ticks <= 0) {
             advance_action(ACTION_8_RECALCULATE);
+        }
         break;
     case 199:
     case ACTION_8_RECALCULATE:
@@ -279,8 +280,9 @@ void figure::ostrich_action() {
             if (herd_roost(4, 8, 32)) {
                 wait_ticks = 0;
                 advance_action(ACTION_10_GOING);
-            } else
+            } else {
                 wait_ticks = 5;
+            }
         }
         break;
     case ACTION_16_FLEEING: // fleeing
@@ -289,12 +291,9 @@ void figure::ostrich_action() {
         //            if (action_state == 16)
         //                while (destination_x == 0 || destination_y == 0)
         //                    herd_roost(4, 8, 22);
-        if (do_goto(destination_tile.x(),
-                    destination_tile.y(),
-                    TERRAIN_USAGE_ANIMAL,
-                    18 + (random_byte() & 0x1),
-                    ACTION_8_RECALCULATE))
+        if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANIMAL, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
             wait_ticks = 50;
+        }
         break;
     }
 
@@ -304,7 +303,7 @@ void figure::ostrich_action() {
         image_set_animation(GROUP_FIGURE_OSTRICH_IDLE, 0, 8);
         break;
     case ACTION_18_ROOSTING: // roosting
-        image_set_animation(GROUP_FIGURE_OSTRICH_IDLE, 0, 7);
+        image_set_animation(GROUP_FIGURE_OSTRICH_IDLE, 0, 8);
         break;
     case ACTION_16_FLEEING: // fleeing
     case ACTION_10_GOING:   // on the move
@@ -334,65 +333,66 @@ void figure::hippo_action() {
     city_figures_add_animal();
 
     switch (action_state) {
-    case 24: // spawning
+    case FIGURE_ACTION_24_HIPPO_CREATED: // spawning
     case 14: // scared
     case 15: // terrified
     case 18: // roosting
-    case 19: // idle
+    case FIGURE_ACTION_19_HIPPO_IDLE: // idle
     case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
         wait_ticks--;
         //            if (wait_ticks % 5 == 0 && is_nearby(NEARBY_ANY, 6))
         //                advance_action(ACTION_16_FLEEING);
-        if (wait_ticks <= 0)
+        if (wait_ticks <= 0) {
             advance_action(ACTION_8_RECALCULATE);
+        }
         break;
     case 199:
     case ACTION_8_RECALCULATE:
         wait_ticks--;
         if (wait_ticks <= 0) {
-            if (herd_roost(4, 8, 32)) {
+            if (herd_roost(/*step*/4, /*bias*/8, /*max_dist*/32)) {
                 wait_ticks = 0;
-                advance_action(ACTION_10_GOING);
-            } else
+                advance_action(FIGURE_ACTION_10_HIPPO_MOVING);
+            } else {
                 wait_ticks = 5;
+            }
         }
         break;
     case 16: // fleeing
-    case ACTION_10_GOING:
+    case FIGURE_ACTION_10_HIPPO_MOVING:
     case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
         //            if (action_state == 16)
         //                while (destination_x == 0 || destination_y == 0)
         //                    herd_roost(4, 8, 22);
-        if (do_goto(destination_tile.x(),
-                    destination_tile.y(),
-                    TERRAIN_USAGE_ANIMAL,
-                    18 + (random_byte() & 0x1),
-                    ACTION_8_RECALCULATE))
+        if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANIMAL, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
             wait_ticks = 50;
+         }
         break;
     }
     switch (action_state) {
     case ACTION_8_RECALCULATE:
-    case 19: // idle
-        image_set_animation(GROUP_FIGURE_HIPPO, 104, 7);
+    case FIGURE_ACTION_19_HIPPO_IDLE: // idle
+        image_set_animation(GROUP_FIGURE_HIPPO_EATING, 0, 7);
         break;
     case 18: // roosting
-        image_set_animation(GROUP_FIGURE_HIPPO, 448, 8);
+        image_set_animation(GROUP_FIGURE_HIPPO_EATING, 0, 7);
         break;
     case 16: // fleeing
-    case 10: // on the move
-        image_set_animation(GROUP_FIGURE_HIPPO, 0, 11);
+    case FIGURE_ACTION_10_HIPPO_MOVING: // on the move
+        image_set_animation(GROUP_FIGURE_HIPPO_WALK, 0, 11);
         break;
     case 15: // terrified
     case 14: // scared
-        image_set_animation(GROUP_FIGURE_HIPPO, 0, 11);
+        image_set_animation(GROUP_FIGURE_HIPPO_EATING, 0, 7);
         anim_frame = 0;
         break;
+    case FIGURE_ACTION_149_CORPSE:
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_HIPPO_DEATH);
     case FIGURE_ACTION_150_ATTACK: // unused?
-        image_set_animation(GROUP_FIGURE_HIPPO, 104, 7);
+        image_set_animation(GROUP_FIGURE_HIPPO_ATTACK, 0, 8);
         break;
     default:
-        image_set_animation(GROUP_FIGURE_HIPPO, 0, 11);
+        image_set_animation(GROUP_FIGURE_HIPPO_EATING, 0, 7);
         break;
     }
 }

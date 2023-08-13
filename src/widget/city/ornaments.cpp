@@ -128,11 +128,9 @@ static void draw_entertainment_shows_c3(building* b, int x, int y, color_t color
 static void draw_entertainment_show_jugglers(building* b, int x, int y, color_t color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days1) {
-        draw_normal_anim(x + 30,
-                         y + 15,
-                         b,
-                         b->tile.grid_offset(),
-                         image_id_from_group(GROUP_JUGGLERS_SHOW) - 1,
+        draw_normal_anim(x + 30, y + 15,
+                         b, b->tile.grid_offset(),
+                         image_id_from_group(GROUP_DANCERS_SHOW) - 1,
                          color_mask,
                          image_id_from_group(GROUP_BUILDING_BOOTH));
     }
@@ -143,21 +141,17 @@ static void draw_entertainment_shows_musicians(building* b, int x, int y, int di
         building* next_tile = b->next();
         switch (direction) {
         case 0:
-            draw_normal_anim(x + 20,
-                             y + 12,
-                             b,
-                             b->tile.grid_offset(),
-                             image_id_from_group(GROUP_MUSICIANS_SHOW) - 1,
+            draw_normal_anim(x + 20, y + 12,
+                             b, b->tile.grid_offset(),
+                             image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1,
                              color_mask,
                              image_id_from_group(GROUP_BUILDING_BANDSTAND),
                              12);
             break;
         case 1:
-            draw_normal_anim(x + 48,
-                             y + 12,
-                             b,
-                             b->tile.grid_offset(),
-                             image_id_from_group(GROUP_MUSICIANS_SHOW) - 1 + 12,
+            draw_normal_anim(x + 48, y + 12,
+                             b, b->tile.grid_offset(),
+                             image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1 + 12,
                              color_mask,
                              image_id_from_group(GROUP_BUILDING_BANDSTAND),
                              12);
@@ -592,18 +586,18 @@ void draw_ornaments_and_animations(pixel_coordinate pixel, map_point point) {
             draw_entertainment_show_jugglers(b, x, y, color_mask);
         break;
     case BUILDING_BANDSTAND:
-        if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1)
+        if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1) {
             draw_entertainment_shows_musicians(b, x, y, 0, color_mask);
-        else if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BANDSTAND) + 2)
+        } else if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BANDSTAND) + 2) {
             draw_entertainment_shows_musicians(b, x, y, 1, color_mask);
+        }
         break;
     case BUILDING_PAVILLION:
         if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_PAVILLION))
             draw_entertainment_shows_dancers(b, x, y, color_mask);
         break;
     case BUILDING_CONSERVATORY:
-        draw_normal_anim(
-          x + 82, y + 14, b, grid_offset, image_id_from_group(GROUP_MUSICIANS_SHOW) - 1 + 12, color_mask);
+        draw_normal_anim(x + 82, y + 14, b, grid_offset, image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1 + 12, color_mask);
         break;
     case BUILDING_DANCE_SCHOOL:
         draw_normal_anim(x + 104, y, b, grid_offset, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask);

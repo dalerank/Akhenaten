@@ -105,7 +105,7 @@ static figure_action_property action_properties_lookup[] = {
   {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                              // 81
   {1, TERRAIN_USAGE_ROADS, 0, 0, 0},                              // 82
   {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 83
-  {1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HIPPO},               // 84 hippo
+  {1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HIPPO_WALK},          // 84 hippo
   {1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_WORKER_PH},              // 85
   {1, TERRAIN_USAGE_ANY, 0, 0, 0},                                // 86
   {1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_WATER_CARRIER},      // 87 water carrier
@@ -622,7 +622,7 @@ void figure::action_perform() {
         case 75:
             gatherer_action();
             break; // wood cutters
-        case 84:
+        case FIGURE_HIPPO:
             hippo_action();
             break;
         case 85:

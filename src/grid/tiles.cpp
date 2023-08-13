@@ -1095,8 +1095,9 @@ void map_advance_floodplain_growth() {
     foreach_floodplain_row(24 + floodplain_growth_advance, advance_floodplain_growth_tile);
 
     floodplain_growth_advance++;
-    if (floodplain_growth_advance >= 12)
+    if (floodplain_growth_advance >= 12) {
         floodplain_growth_advance = 0;
+    }
 }
 
 int floodplain_is_flooding = 0;
