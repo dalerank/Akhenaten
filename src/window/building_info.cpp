@@ -949,7 +949,7 @@ static void button_close(int param1, int param2) {
     }
 }
 static void button_advisor(int advisor, int param2) {
-    window_advisors_show_advisor(advisor);
+    window_advisors_show_advisor((e_advisor)advisor);
 }
 static void button_mothball(int mothball, int param2) {
     building* b = building_get(context.building_id);

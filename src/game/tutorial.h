@@ -1,13 +1,13 @@
-#ifndef GAME_TUTORIAL_H
-#define GAME_TUTORIAL_H
+#pragma once 
 
 #include "core/buffer.h"
+#include "city/constants.h"
 
-typedef enum {
+enum tutorial_availability {
     AVAILABLE,
     NOT_AVAILABLE,
     NOT_AVAILABLE_YET,
-} tutorial_availability;
+};
 
 struct tutorial_flags_t {
     struct {
@@ -63,7 +63,7 @@ const tutorial_flags_t* tutorial_flags_struct();
 
 void tutorial_init(void);
 
-tutorial_availability tutorial_advisor_availability(void);
+tutorial_availability tutorial_advisor_availability(e_advisor advisor, int tutorial);
 tutorial_availability tutorial_empire_availability(void);
 
 void tutorial_menu_update(int tut);
@@ -91,5 +91,3 @@ void tutorial_starting_message();
 
 void tutorial_on_day_tick(void);
 void tutorial_on_month_tick(void);
-
-#endif // GAME_TUTORIAL_H

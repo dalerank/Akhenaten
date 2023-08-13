@@ -53,7 +53,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void button_advisor(int advisor, int param2) {
-    window_advisors_show_advisor(advisor);
+    window_advisors_show_advisor((e_advisor)advisor);
 }
 
 static void button_close(int param1, int param2) {

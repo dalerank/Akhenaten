@@ -1,5 +1,7 @@
 #pragma once
 
+#include "city/constants.h"
+
 struct mouse;
 
 struct advisor_window_type {
@@ -20,4 +22,4 @@ void window_advisors_show(void);
 
 void window_advisors_show_checked(void);
 
-int window_advisors_show_advisor(int advisor);
+int window_advisors_show_advisor(e_advisor advisor);

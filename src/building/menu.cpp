@@ -5,6 +5,7 @@
 #include "game/tutorial.h"
 #include "io/config/config.h"
 #include "scenario/building.h"
+#include "scenario/property.h"
 
 #define BUILD_MENU_ITEM_MAX 30
 
@@ -394,16 +395,6 @@ static void disable_resources() {
         disable_crafted_if_unavailable(BUILDING_LAMP_WORKSHOP, RESOURCE_LAMPS);
     }
 }
-
-#include "scenario/property.h"
-
-enum E_GOD {
-    GOD_OSIRIS = 1,
-    GOD_RA = 2,
-    GOD_PTAH = 4,
-    GOD_SETH = 8,
-    GOD_BAST = 16,
-};
 
 static void enable_correct_palace_tier() {
     int rank = scenario_property_player_rank();

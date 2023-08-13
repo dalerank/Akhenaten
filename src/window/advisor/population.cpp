@@ -18,7 +18,6 @@
 #include "window/advisors.h"
 
 #define ADVISOR_HEIGHT 27
-#define HOUSING_ADVISOR_ID 19
 
 static void button_graph(int param1, int param2);
 
@@ -529,7 +528,7 @@ static void button_graph(int param1, int param2) {
 
     if (param2) {
         // go to housing advisor
-        window_advisors_show_advisor(HOUSING_ADVISOR_ID);
+        window_advisors_show_advisor(ADVISOR_HOUSING);
     } else {
         switch (city_population_graph_order()) {
         default:

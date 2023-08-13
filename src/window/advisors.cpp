@@ -304,7 +304,7 @@ static void handle_hotkeys(const hotkeys* h) {
         if (current_advisor == h->show_advisor)
             window_city_show();
         else {
-            window_advisors_show_advisor(h->show_advisor);
+            window_advisors_show_advisor((e_advisor)h->show_advisor);
         }
     }
 }
@@ -382,16 +382,17 @@ void window_advisors_show(void) {
     init();
     window_show(&window);
 }
-void window_advisors_show_checked(void) {
-    tutorial_availability avail = tutorial_advisor_availability();
+void window_advisors_show_checked() {
+    tutorial_availability avail = tutorial_advisor_availability(ADVISOR_LABOR, scenario_campaign_scenario_id() + 1);
     if (avail == AVAILABLE) {
         set_advisor(setting_last_advisor());
         window_advisors_show();
-    } else
+    } else {
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
+    }
 }
-int window_advisors_show_advisor(int advisor) {
-    tutorial_availability avail = tutorial_advisor_availability();
+int window_advisors_show_advisor(e_advisor advisor) {
+    tutorial_availability avail = tutorial_advisor_availability(advisor, scenario_campaign_scenario_id() + 1);
     if (avail == NOT_AVAILABLE || avail == NOT_AVAILABLE_YET) {
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
         return 0;

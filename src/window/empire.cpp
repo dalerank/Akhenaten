@@ -926,7 +926,7 @@ static void button_return_to_city(int param1, int param2) {
     window_city_show();
 }
 static void button_advisor(int advisor, int param2) {
-    window_advisors_show_advisor(advisor);
+    window_advisors_show_advisor((e_advisor)advisor);
 }
 static void button_show_resource_window(int resource, int param2) {
     window_resource_settings_show(resource);

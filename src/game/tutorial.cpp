@@ -15,6 +15,8 @@
 #include "scenario/property.h"
 #include "city/sentiment.h"
 
+#include <algorithm>
+
 static tutorial_flags_t g_tutorials_flags;
 
 const tutorial_flags_t* tutorial_flags_struct() {
@@ -135,22 +137,20 @@ void tutorial_init(void) {
     tutorial_menu_update(scenario_id + 1);
 }
 
-tutorial_availability tutorial_advisor_availability(void) {
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        if (scenario_is_mission_rank(1))
-            return NOT_AVAILABLE;
-        else if (scenario_is_mission_rank(2) && !g_tutorials_flags.tutorial2.population_250_reached)
-            return NOT_AVAILABLE_YET;
-        else
-            return AVAILABLE;
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (scenario_is_mission_rank(1))
-            return NOT_AVAILABLE;
-        else
-            return AVAILABLE;
+tutorial_availability tutorial_advisor_availability(e_advisor advisor, int tutorial) {
+    switch (tutorial) {
+    case 1:
+        return NOT_AVAILABLE;
+    case 2:
+    {
+        auto advisors = {ADVISOR_TRADE};
+        return (std::find(advisors.begin(), advisors.end(), advisor) != advisors.end() ? AVAILABLE : NOT_AVAILABLE);
+    }
+    default:
+    return AVAILABLE;
     }
 }
-tutorial_availability tutorial_empire_availability(void) {
+tutorial_availability tutorial_empire_availability() {
     if (scenario_is_tutorial_before_mission_5())
         return NOT_AVAILABLE;
     // TODO

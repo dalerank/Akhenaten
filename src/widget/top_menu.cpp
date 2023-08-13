@@ -767,5 +767,5 @@ static void menu_help_about(int param) {
 static void menu_advisors_go_to(int advisor) {
     clear_state();
     window_go_back();
-    window_advisors_show_advisor(advisor);
+    window_advisors_show_advisor((e_advisor)advisor);
 }

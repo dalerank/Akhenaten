@@ -658,7 +658,7 @@ static void button_help(int param1, int param2) {
 }
 static void button_advisor(int advisor, int param2) {
     cleanup();
-    if (!window_advisors_show_advisor(advisor))
+    if (!window_advisors_show_advisor((e_advisor)advisor))
         window_city_show();
 }
 static void button_go_to_problem(int param1, int param2) {

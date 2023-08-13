@@ -114,7 +114,7 @@ static int handle_mouse(const mouse* m) {
 }
 
 static void go_back(int param1, int param2) {
-    window_advisors_show_advisor(6);
+    window_advisors_show_advisor(ADVISOR_POPULATION);
     window_invalidate();
 }
 

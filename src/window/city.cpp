@@ -170,7 +170,7 @@ static void handle_hotkeys(const hotkeys* h) {
         window_invalidate();
     }
     if (h->show_advisor)
-        window_advisors_show_advisor(h->show_advisor);
+        window_advisors_show_advisor((e_advisor)h->show_advisor);
 
     if (h->cycle_legion)
         cycle_legion();
