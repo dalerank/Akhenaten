@@ -143,7 +143,7 @@ tutorial_availability tutorial_advisor_availability(e_advisor advisor, int tutor
         return NOT_AVAILABLE;
     case 2:
     {
-        auto advisors = {ADVISOR_TRADE};
+        auto advisors = {ADVISOR_TRADE, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION};
         return (std::find(advisors.begin(), advisors.end(), advisor) != advisors.end() ? AVAILABLE : NOT_AVAILABLE);
     }
     default:
