@@ -94,7 +94,7 @@ void figure_create_herds(void) {
     scenario_map_foreach_herd_point(create_herd);
 }
 
-bool figure::herd_roost(int step, int bias, int max_dist) {
+bool figure::herd_roost(int step, int bias, int max_dist, int terrain_mask) {
     if (!formation_id) {
         return false;
     }
@@ -105,7 +105,7 @@ bool figure::herd_roost(int step, int bias, int max_dist) {
     random_around_point(m->x_home, m->y_home, tile.x(), tile.y(), &dx, &dy, step, bias, max_dist);
 
     int offset = MAP_OFFSET(dx, dy);
-    if (!map_terrain_is(offset, TERRAIN_IMPASSABLE_WOLF)) { // todo: fix gardens
+    if (!map_terrain_is(offset, terrain_mask)) { // todo: fix gardens
         destination_tile.set(dx, dy);
         //        destination_tile.x() = dx;
         //        destination_tile.y() = dy;
@@ -277,7 +277,7 @@ void figure::ostrich_action() {
     case ACTION_8_RECALCULATE:
         wait_ticks--;
         if (wait_ticks <= 0) {
-            if (herd_roost(4, 8, 32)) {
+            if (herd_roost(4, 8, 32, TERRAIN_IMPASSABLE_OSTRICH)) {
                 wait_ticks = 0;
                 advance_action(ACTION_10_GOING);
             } else {
@@ -332,6 +332,8 @@ void figure::hippo_action() {
     const formation* m = formation_get(formation_id);
     city_figures_add_animal();
 
+    allow_move_type = EMOVE_HIPPO;
+
     switch (action_state) {
     case FIGURE_ACTION_24_HIPPO_CREATED: // spawning
     case 14: // scared
@@ -350,9 +352,10 @@ void figure::hippo_action() {
     case ACTION_8_RECALCULATE:
         wait_ticks--;
         if (wait_ticks <= 0) {
-            if (herd_roost(/*step*/4, /*bias*/8, /*max_dist*/32)) {
+            if (herd_roost(/*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_HIPPO)) {
                 wait_ticks = 0;
                 advance_action(FIGURE_ACTION_10_HIPPO_MOVING);
+                do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE);
             } else {
                 wait_ticks = 5;
             }
@@ -364,33 +367,41 @@ void figure::hippo_action() {
         //            if (action_state == 16)
         //                while (destination_x == 0 || destination_y == 0)
         //                    herd_roost(4, 8, 22);
-        if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANIMAL, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
+        if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
             wait_ticks = 50;
-         }
+        }
         break;
     }
+
     switch (action_state) {
     case ACTION_8_RECALCULATE:
     case FIGURE_ACTION_19_HIPPO_IDLE: // idle
         image_set_animation(GROUP_FIGURE_HIPPO_EATING, 0, 7);
         break;
+
     case 18: // roosting
         image_set_animation(GROUP_FIGURE_HIPPO_EATING, 0, 7);
         break;
+
     case 16: // fleeing
     case FIGURE_ACTION_10_HIPPO_MOVING: // on the move
         image_set_animation(GROUP_FIGURE_HIPPO_WALK, 0, 11);
         break;
+
     case 15: // terrified
     case 14: // scared
         image_set_animation(GROUP_FIGURE_HIPPO_EATING, 0, 7);
         anim_frame = 0;
         break;
+
     case FIGURE_ACTION_149_CORPSE:
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_HIPPO_DEATH);
+        //sprite_image_id = image_id_from_group(GROUP_FIGURE_HIPPO_DEATH);
+        break;
+
     case FIGURE_ACTION_150_ATTACK: // unused?
         image_set_animation(GROUP_FIGURE_HIPPO_ATTACK, 0, 8);
         break;
+
     default:
         image_set_animation(GROUP_FIGURE_HIPPO_EATING, 0, 7);
         break;

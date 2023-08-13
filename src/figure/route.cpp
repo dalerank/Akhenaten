@@ -58,8 +58,8 @@ void figure::figure_route_add() {
     if (!path_id)
         return;
     int path_length;
-    if (is_boat) {
-        if (is_boat == 2) { // flotsam
+    if (can_move_by_water()) {
+        if (allow_move_type == EMOVE_FLOTSAM) { // flotsam
             map_routing_calculate_distances_water_flotsam(tile.x(), tile.y());
             path_length = map_routing_get_path_on_water(data.direction_paths[path_id],
                                                         destination_tile.x(),

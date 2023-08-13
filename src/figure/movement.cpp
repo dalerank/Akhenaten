@@ -192,11 +192,12 @@ void figure::advance_route_tile(int roaming_enabled) {
         return;
     int target_grid_offset = tile.grid_offset() + map_grid_direction_delta(direction);
 
-    if (is_boat && !map_terrain_is(target_grid_offset, TERRAIN_WATER)) // boats can not travel on land
+    const bool is_boat = (allow_move_type == EMOVE_BOAT);
+    if (is_boat && !map_terrain_is(target_grid_offset, TERRAIN_WATER)) { // boats can not travel on land
         direction = DIR_FIGURE_REROUTE;
-    else if (!map_routing_passable_by_usage(terrain_usage, target_grid_offset))
+    } else if (!map_routing_passable_by_usage(terrain_usage, target_grid_offset)) {
         direction = DIR_FIGURE_REROUTE;
-    else if (terrain_usage == TERRAIN_USAGE_ENEMY) {
+    } else if (terrain_usage == TERRAIN_USAGE_ENEMY) {
         //        if (!map_routing_noncitizen_is_passable(target_grid_offset))
         //            direction = DIR_FIGURE_REROUTE;
         if (map_routing_is_destroyable(target_grid_offset)) {

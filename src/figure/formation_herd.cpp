@@ -118,7 +118,7 @@ static int get_roaming_destination(int formation_id,
     return 0;
 }
 
-static void move_animals(const formation* m, int attacking_animals) {
+static void move_animals(const formation* m, int attacking_animals, int terrain_mask) {
     for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
         if (m->figures[i] <= 0)
             continue;
@@ -134,7 +134,7 @@ static void move_animals(const formation* m, int attacking_animals) {
                 if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                     f->destination_tile.set(0, 0);
                     //                    while (f->destination_x == 0 || f->destination_y == 0)
-                    f->herd_roost(4, 8, 22);
+                    f->herd_roost(4, 8, 22, terrain_mask);
                     if (f->destination_tile.x() != 0 && f->destination_tile.y() != 0)
                         f->advance_action(16);
                 } else {
@@ -251,24 +251,28 @@ static void update_herd_formation(formation* m) {
     int roam_distance;
     int roam_delay;
     int allow_negative_desirability;
+    int terrain_mask = TERRAIN_IMPASSABLE_WOLF;
     switch (m->figure_type) {
     case FIGURE_SHEEP:
         roam_distance = 8;
         roam_delay = 20;
         allow_negative_desirability = 0;
         attacking_animals = 0;
+        terrain_mask = TERRAIN_IMPASSABLE_WOLF;
         break;
     case FIGURE_ZEBRA:
         roam_distance = 20;
         roam_delay = 4;
         allow_negative_desirability = 0;
         attacking_animals = 0;
+        terrain_mask = TERRAIN_IMPASSABLE_WOLF;
         break;
     case FIGURE_OSTRICH:
         roam_distance = 16;
         //            roam_delay = 6;
         roam_delay = 9;
         allow_negative_desirability = 1;
+        terrain_mask = TERRAIN_IMPASSABLE_OSTRICH;
         break;
     default:
         return;
@@ -278,7 +282,7 @@ static void update_herd_formation(formation* m) {
         m->wait_ticks = 0;
         if (attacking_animals) {
             formation_set_destination(m, m->x_home, m->y_home);
-            move_animals(m, attacking_animals);
+            move_animals(m, attacking_animals, terrain_mask);
         } else {
             int x_tile, y_tile;
             if (GAME_ENV == ENGINE_ENV_PHARAOH)
@@ -303,7 +307,7 @@ static void update_herd_formation(formation* m) {
                 m->herd_direction = 0;
                 if (formation_enemy_move_formation_to(m, x_tile, y_tile, &x_tile, &y_tile)) {
                     formation_set_destination(m, x_tile, y_tile);
-                    move_animals(m, attacking_animals);
+                    move_animals(m, attacking_animals, terrain_mask);
                 }
             }
         }

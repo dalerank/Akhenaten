@@ -24,6 +24,13 @@ enum e_minimap_figure_color {
     FIGURE_COLOR_ANIMAL = 4
 };
 
+enum e_move_type : uint8_t {
+    EMOVE_TERRAIN = 0,
+    EMOVE_BOAT = 1,
+    EMOVE_FLOTSAM = 2,
+    EMOVE_HIPPO = 3,
+};
+
 class figure {
 private:
     e_resource resource_id;
@@ -132,7 +139,7 @@ public:
     unsigned short trader_amount_bought;
     short name;
     char terrain_usage;
-    unsigned char is_boat; // 1 for boat, 2 for flotsam
+    e_move_type allow_move_type;
     unsigned char height_adjusted_ticks;
     unsigned char current_height;
     unsigned char target_height;
@@ -196,6 +203,11 @@ public:
         set_state(FIGURE_STATE_DYING);
         action_state = FIGURE_ACTION_149_CORPSE;
     };
+
+    bool is_boat();
+    bool can_move_by_water();
+    bool can_move_by_terrain();
+
     void poof() {
         set_state(FIGURE_STATE_DEAD);
     };
@@ -383,7 +395,7 @@ public:
 
     // animal.c
     int is_nearby(int category, int* distance, int max_distance = 10000, bool gang_on = true);
-    bool herd_roost(int step, int bias, int max_dist);
+    bool herd_roost(int step, int bias, int max_dist, int terrain_mask);
 
     // docker.c
     void get_trade_center_location(int* _x, int* _y);

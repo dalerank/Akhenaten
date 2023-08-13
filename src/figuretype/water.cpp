@@ -62,7 +62,7 @@ void figure_sink_all_ships(void) {
 }
 
 void figure::flotsam_action() {
-    is_boat = 2;
+    allow_move_type = EMOVE_FLOTSAM;
     if (!scenario_map_has_river_exit())
         return;
     //    is_ghost = false;
@@ -149,7 +149,7 @@ void figure::flotsam_action() {
 void figure::shipwreck_action() {
     //    is_ghost = false;
     height_adjusted_ticks = 0;
-    is_boat = 1;
+    allow_move_type = EMOVE_BOAT;
     //    figure_image_increase_offset(128);
     if (wait_ticks < 1000) {
         map_figure_remove();
@@ -195,7 +195,7 @@ void figure::fishing_boat_action() {
         }
     }
     //    is_ghost = false;
-    is_boat = 1;
+    allow_move_type = EMOVE_BOAT;
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
     switch (action_state) {

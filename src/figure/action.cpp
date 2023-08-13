@@ -9,6 +9,8 @@
 #include "graphics/image_groups.h"
 #include "grid/road_access.h"
 
+#include <algorithm>
+
 struct figure_action_property {
     char speed_mult;
     char terrain_usage;
@@ -414,10 +416,16 @@ void figure::action_perform() {
         } else {
             if (outside_road_ticks < 255)
                 outside_road_ticks++;
-            if (!is_boat && map_terrain_is(tile.grid_offset(), TERRAIN_WATER))
+
+            const bool tile_is_water = map_terrain_is(tile.grid_offset(), TERRAIN_WATER);
+            if (!can_move_by_water() && tile_is_water) {
                 kill();
-            if (is_boat && !map_terrain_is(tile.grid_offset(), TERRAIN_WATER))
+            }
+
+            if (!can_move_by_terrain() && !tile_is_water) {
                 kill();
+            }
+
             if (terrain_usage == TERRAIN_USAGE_ROADS) { // walkers outside of roads for too long?
                 if (destination_tile.x() && destination_tile.y()
                     && outside_road_ticks > 100) // dudes with destination have a bit of lee way

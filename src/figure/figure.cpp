@@ -111,6 +111,19 @@ void figure::figure_delete_UNSAFE() {
 bool figure::is_dead() {
     return state != FIGURE_STATE_ALIVE || action_state == FIGURE_ACTION_149_CORPSE;
 }
+
+bool figure::is_boat() {
+    return  (allow_move_type == EMOVE_BOAT || allow_move_type == EMOVE_FLOTSAM);
+}
+
+bool figure::can_move_by_water() {
+    return (allow_move_type == EMOVE_BOAT || allow_move_type == EMOVE_FLOTSAM || allow_move_type == EMOVE_HIPPO);
+}
+
+bool figure::can_move_by_terrain() {
+    return (allow_move_type == EMOVE_TERRAIN || allow_move_type == EMOVE_HIPPO);
+}
+
 bool figure::is_enemy() {
     return type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY_CAESAR_LEGIONARY;
 }
@@ -314,7 +327,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->trader_amount_bought);
     iob->bind(BIND_SIGNATURE_INT16, &f->name); // 6
     iob->bind(BIND_SIGNATURE_UINT8, &f->terrain_usage);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->is_boat);
+    iob->bind(BIND_SIGNATURE_UINT8, &f->allow_move_type);
     iob->bind(BIND_SIGNATURE_UINT16, &f->resource_amount_full); // 4772 >>>> 112 (resource amount! 2-bytes)
     iob->bind(BIND_SIGNATURE_UINT8, &f->height_adjusted_ticks);
     iob->bind(BIND_SIGNATURE_UINT8, &f->current_height);

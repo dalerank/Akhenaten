@@ -553,7 +553,7 @@ void figure::native_trader_action() {
 }
 void figure::trade_ship_action() {
     //    is_ghost = false;
-    is_boat = 1;
+    allow_move_type = EMOVE_BOAT;
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
     switch (action_state) {
