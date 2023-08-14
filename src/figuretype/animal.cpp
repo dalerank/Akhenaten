@@ -333,6 +333,7 @@ void figure::hippo_action() {
     city_figures_add_animal();
 
     allow_move_type = EMOVE_HIPPO;
+    roam_wander_freely = false;
 
     switch (action_state) {
     case FIGURE_ACTION_24_HIPPO_CREATED: // spawning
