@@ -104,9 +104,9 @@ public:
     unsigned char roam_random_counter;
     signed char roam_turn_direction;
     signed char roam_ticks_until_next_turn;
-    coords_t cc_coords;
-    coords_t cc_destination;
-    coords_t cc_delta;
+    tile_coord cc_coords;
+    tile_coord cc_destination;
+    tile_coord cc_delta;
     //    short cross_country_x; // position = 15 * x + offset on tile
     //    short cross_country_y; // position = 15 * y + offset on tile
     //    short cc_destination_x;
@@ -132,7 +132,7 @@ public:
     short leading_figure_id;
     unsigned char attack_image_offset;
     unsigned char wait_ticks_missile;
-    coords_t cart_offset;
+    tile_coord cart_offset;
     //    signed char x_offset_cart;
     //    signed char y_offset_cart;
     unsigned char empire_city_id;

@@ -199,12 +199,13 @@ static void draw_warehouse(int x, int y) {
 static void draw_farm(int type, int x, int y, int grid_offset) {
     int image_id = get_farm_image(grid_offset);
     draw_building(image_id, x, y);
+    
     // fields
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 4; i < 9; i++)
-            ImageDraw::isometric(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        draw_farm_crops(type, 0, grid_offset, x - 60, y + 30, COLOR_MASK_GREEN);
+    //if (GAME_ENV == ENGINE_ENV_C3) {
+    //    for (int i = 4; i < 9; i++)
+    //        ImageDraw::isometric(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
+    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+     draw_farm_crops(type, 0, grid_offset, x - 60, y + 30, COLOR_MASK_GREEN);
 }
 static void draw_fort(map_point* tile, int x, int y) {
     bool fully_blocked = false;
