@@ -725,7 +725,7 @@ static void determine_selected_object(const mouse* m) {
     window_invalidate();
 }
 static void handle_input(const mouse* m, const hotkeys* h) {
-    pixel_coordinate position;
+    vec2i position;
     if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE))
         empire_scroll_map(position.x, position.y);
 

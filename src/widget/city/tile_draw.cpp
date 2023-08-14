@@ -67,7 +67,7 @@ struct draw_context_t {
 
     int selected_figure_id;
     int highlighted_formation;
-    pixel_coordinate* selected_figure_coord;
+    vec2i* selected_figure_coord;
 };
 
 draw_context_t& get_draw_context() {
@@ -75,7 +75,7 @@ draw_context_t& get_draw_context() {
     return data;
 }
 
-void init_draw_context(int selected_figure_id, pixel_coordinate* figure_coord, int highlighted_formation) {
+void init_draw_context(int selected_figure_id, vec2i* figure_coord, int highlighted_formation) {
     auto& draw_context = get_draw_context();
 
     draw_context.advance_water_animation = 0;
@@ -222,7 +222,7 @@ static void clip_between_rectangles(int* xOut,
         *hOut = 0;
 }
 
-static void draw_cached_figures(pixel_coordinate pixel, map_point point, e_figure_draw_mode mode) {
+static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode mode) {
     auto& draw_context = get_draw_context();
 
     if (!USE_BLEEDING_CACHE)
@@ -263,7 +263,7 @@ static void draw_cached_figures(pixel_coordinate pixel, map_point point, e_figur
 
     graphics_set_clip_rectangle(scale * clip_x, scale * clip_y, scale * clip_width, scale * clip_height);
     const image_t* img = image_get(map_image_at(point.grid_offset()));
-    pixel_coordinate tile_z_cross = pixel;
+    vec2i tile_z_cross = pixel;
     tile_z_cross += {HALF_TILE_WIDTH_PIXELS, img->isometric_3d_height() - TILE_BLEEDING_Y_BIAS};
 
     if (g_debug_show_opts[e_debug_show_tile_cache]) {
@@ -275,12 +275,12 @@ static void draw_cached_figures(pixel_coordinate pixel, map_point point, e_figur
         figure* f = figure_get(figure_id);
 
         auto cc_offsets = f->tile_pixel_coords();
-        pixel_coordinate tile_center = {HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS};
+        vec2i tile_center = {HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS};
         auto pivot = cache->figures[i].pixel + cc_offsets + tile_center;
         if (tile_z_cross.y > pivot.y)
             continue;
 
-        pixel_coordinate ghost_pixel = cache->figures[i].pixel;
+        vec2i ghost_pixel = cache->figures[i].pixel;
         switch (mode) {
         case e_figure_draw_common: // non-overlay
             if (!f->is_ghost) {
@@ -300,7 +300,7 @@ static void draw_cached_figures(pixel_coordinate pixel, map_point point, e_figur
     // reset rendering clip
     set_city_clip_rectangle();
 }
-void draw_debug_figurecaches(pixel_coordinate pixel, map_point point) {
+void draw_debug_figurecaches(vec2i pixel, map_point point) {
     return;
     if (!USE_BLEEDING_CACHE)
         return;
@@ -319,7 +319,7 @@ void draw_debug_figurecaches(pixel_coordinate pixel, map_point point) {
     debug_draw_tile_top_bb(pixel.x, pixel.y, height, COLOR_RED);
     debug_draw_tile_box(pixel.x, pixel.y, COLOR_NULL, COLOR_RED);
 
-    pixel_coordinate tile_z_cross = pixel;
+    vec2i tile_z_cross = pixel;
     tile_z_cross += {HALF_TILE_WIDTH_PIXELS, img->isometric_3d_height() - TILE_BLEEDING_Y_BIAS};
     debug_draw_line_with_contour((pixel.x + 16) * zoom_get_scale(),
                                  (pixel.x + TILE_WIDTH_PIXELS - 16) * zoom_get_scale(),
@@ -330,7 +330,7 @@ void draw_debug_figurecaches(pixel_coordinate pixel, map_point point) {
     for (int i = 0; i < cache->num_figures; ++i) {
         auto f = figure_get(cache->figures[i].id);
         auto cc_offsets = f->tile_pixel_coords();
-        pixel_coordinate tile_center = {HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS};
+        vec2i tile_center = {HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS};
         auto pivot = cache->figures[i].pixel + cc_offsets + tile_center;
         debug_draw_crosshair(pivot.x * zoom_get_scale(), pivot.y * zoom_get_scale());
 
@@ -342,7 +342,7 @@ void draw_debug_figurecaches(pixel_coordinate pixel, map_point point) {
     }
 }
 
-void draw_isometrics(pixel_coordinate pixel, map_point point) {
+void draw_isometrics(vec2i pixel, map_point point) {
     auto& draw_context = get_draw_context();
 
     int grid_offset = point.grid_offset();
@@ -411,12 +411,12 @@ void draw_isometrics(pixel_coordinate pixel, map_point point) {
         //        }
     }
 }
-void draw_ornaments(pixel_coordinate pixel, map_point point) {
+void draw_ornaments(vec2i pixel, map_point point) {
     // defined separately in ornaments.cpp
     // cuz it's too much stuff.
     draw_ornaments_and_animations(pixel, point);
 }
-void draw_figures(pixel_coordinate pixel, map_point point) {
+void draw_figures(vec2i pixel, map_point point) {
     auto& draw_context = get_draw_context();
 
     // first, draw from the cache
@@ -441,7 +441,7 @@ void draw_figures(pixel_coordinate pixel, map_point point) {
     }
 }
 
-void draw_isometrics_overlay(pixel_coordinate pixel, map_point point) {
+void draw_isometrics_overlay(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -474,7 +474,7 @@ void draw_isometrics_overlay(pixel_coordinate pixel, map_point point) {
 
     get_city_overlay()->draw_custom_top(pixel, point);
 }
-void draw_ornaments_overlay(pixel_coordinate pixel, map_point point) {
+void draw_ornaments_overlay(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -488,7 +488,7 @@ void draw_ornaments_overlay(pixel_coordinate pixel, map_point point) {
         draw_ornaments(pixel, point);
     }
 }
-void draw_figures_overlay(pixel_coordinate pixel, map_point point) {
+void draw_figures_overlay(vec2i pixel, map_point point) {
     // first, draw the cached figures
     draw_cached_figures(pixel, point, e_figure_draw_overlay);
 
@@ -570,7 +570,7 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
     }
 }
 
-void city_with_overlay_draw_building_top(pixel_coordinate pixel, map_point point) {
+void city_with_overlay_draw_building_top(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;

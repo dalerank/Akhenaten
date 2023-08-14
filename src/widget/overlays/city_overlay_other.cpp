@@ -181,7 +181,7 @@ static int terrain_on_water_overlay(void) {
            | TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_DUNE
            | TERRAIN_MARSHLAND;
 }
-static void draw_footprint_water(pixel_coordinate pixel, map_point point) {
+static void draw_footprint_water(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -216,7 +216,7 @@ static void draw_footprint_water(pixel_coordinate pixel, map_point point) {
         }
     }
 }
-static void draw_top_water(pixel_coordinate pixel, map_point point) {
+static void draw_top_water(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -274,7 +274,7 @@ static int get_desirability_image_offset(int desirability) {
     else
         return 9;
 }
-static void draw_footprint_desirability(pixel_coordinate pixel, map_point point) {
+static void draw_footprint_desirability(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;

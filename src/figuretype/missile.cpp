@@ -17,7 +17,7 @@ static const int CLOUD_CC_OFFSETS[] = {0, 7, 14, 7, 14, 7};
 
 static const int CLOUD_SPEED[] = {1, 2, 1, 3, 2, 1, 3, 2, 1, 1, 2, 1, 2, 1, 3, 1};
 
-static const tile_coord CLOUD_DIRECTION[] = {{0, -6},
+static const tile2i CLOUD_DIRECTION[] = {{0, -6},
                                            {-2, -5},
                                            {-4, -4},
                                            {-5, -2},

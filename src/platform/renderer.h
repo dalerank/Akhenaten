@@ -4,7 +4,7 @@
 
 #include "SDL.h"
 #include "core/string.h"
-#include "core/struct_types.h"
+#include "core/vec2i.h"
 #include "graphics/image.h"
 #include "io/file.h"
 #include "io/file_formats.h"
@@ -92,7 +92,7 @@ public:
     void draw_saved_texture_to_screen(int image_id, int x, int y, int width, int height);
     //    int save_screen_buffer(color_t *pixels, int x, int y, int width, int height, int row_width);
 
-    pixel_coordinate get_max_image_size();
+    vec2i get_max_image_size();
 
     SDL_Texture* create_texture_from_buffer(color_t* p_data, int width, int height);
 

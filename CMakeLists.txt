@@ -186,8 +186,8 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/text.cpp
 )
 
-file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp)
-file(GLOB CORE_FILES ${PROJECT_SOURCE_DIR}/src/core/*.cpp)
+file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp ${PROJECT_SOURCE_DIR}/src/platform/*.h)
+file(GLOB CORE_FILES ${PROJECT_SOURCE_DIR}/src/core/*.cpp ${PROJECT_SOURCE_DIR}/src/core/*.h)
 file(GLOB CORE_ENCODING_FILES ${PROJECT_SOURCE_DIR}/src/core/encoding/*.cpp)
 file(GLOB BUILDING_FILES ${PROJECT_SOURCE_DIR}/src/building/*.cpp)
 file(GLOB BUILDING_CONSTRUCTION_FILES ${PROJECT_SOURCE_DIR}/src/building/construction/*.cpp)

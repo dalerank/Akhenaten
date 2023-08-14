@@ -210,7 +210,7 @@ void graphics_renderer_interface::reset_clip_rectangle(void) {
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
 
-pixel_coordinate graphics_renderer_interface::get_max_image_size() {
+vec2i graphics_renderer_interface::get_max_image_size() {
     auto &data = g_renderer_data;
     return {data.max_texture_size.width, data.max_texture_size.height};
 }

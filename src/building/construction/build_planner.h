@@ -47,7 +47,7 @@ private:
     int tiles_blocked_total = 0;
 
     map_point tile_coord_cache[30][30];
-    pixel_coordinate pixel_coords_cache[30][30];
+    vec2i pixel_coords_cache[30][30];
 
     long long special_flags = 0;
     int additional_req_param1 = -1;
@@ -122,7 +122,7 @@ public:
     void add_building_tiles_from_list(int building_id, bool graphics_only);
 
     void update_orientations(bool check_if_changed = true);
-    void construction_record_view_position(pixel_coordinate pixel, map_point point);
+    void construction_record_view_position(vec2i pixel, map_point point);
 
     int get_total_drag_size(int* x, int* y);
     bool has_flag_set(int flag, int param1 = -1, int param2 = -1, int param3 = -1);

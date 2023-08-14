@@ -32,7 +32,7 @@ static void cc_coords_to_pixel_offset(int cross_country_x, int cross_country_y, 
         *pixel_y = dir == DIR_6_TOP_LEFT ? base_pixel_y : -base_pixel_y;
     }
 }
-pixel_coordinate figure::tile_pixel_coords() {
+vec2i figure::tile_pixel_coords() {
     int x;
     int y;
     if (!use_cross_country) {

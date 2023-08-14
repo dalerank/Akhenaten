@@ -120,7 +120,7 @@ struct city_overlay_fire : public city_overlay {
         return f->type == FIGURE_PREFECT;
     }
 
-    void draw_custom_top(pixel_coordinate pixel, map_point point) const override {
+    void draw_custom_top(vec2i pixel, map_point point) const override {
         int grid_offset = point.grid_offset();
         int x = pixel.x;
         int y = pixel.y;
@@ -157,7 +157,7 @@ struct city_overlay_damage : public city_overlay {
         return f->type == FIGURE_ENGINEER;
     }
 
-    void draw_custom_top(pixel_coordinate pixel, map_point point) const override {
+    void draw_custom_top(vec2i pixel, map_point point) const override {
         int grid_offset = point.grid_offset();
         int x = pixel.x;
         int y = pixel.y;
@@ -198,7 +198,7 @@ static int terrain_on_native_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION
            | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
-static void draw_footprint_native(pixel_coordinate pixel, map_point point) {
+static void draw_footprint_native(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -224,7 +224,7 @@ static void draw_footprint_native(pixel_coordinate pixel, map_point point) {
         }
     }
 }
-static void draw_top_native(pixel_coordinate pixel, map_point point) {
+static void draw_top_native(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;

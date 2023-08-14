@@ -3,7 +3,7 @@
 #include "core/buffer.h"
 #include "core/stopwatch.h"
 #include "core/string.h"
-#include "core/struct_types.h"
+#include "core/vec2i.h"
 #include "graphics/font.h"
 #include "io/io.h"
 #include "io/log.h"
@@ -424,7 +424,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
         pak_buf->set_offset(PAK_HEADER_SIZE_BASE + (200 * PAK_BMP_NAME_SIZE)); // sg3 = 40680 bytes
 
     // prepare atlas packer & renderer
-    pixel_coordinate max_texture_sizes = graphics_renderer()->get_max_image_size();
+    vec2i max_texture_sizes = graphics_renderer()->get_max_image_size();
     if (image_packer_init(&packer, entries_num, max_texture_sizes.x, max_texture_sizes.y) != IMAGE_PACKER_OK)
         return false;
     packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;

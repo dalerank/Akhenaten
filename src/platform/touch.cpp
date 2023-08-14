@@ -11,8 +11,8 @@ static SDL_FingerID touch_id[MAX_ACTIVE_TOUCHES];
 static SDL_TouchID trackpad_id;
 #endif
 
-static pixel_coordinate get_touch_coordinates(float x, float y) {
-    pixel_coordinate coords;
+static vec2i get_touch_coordinates(float x, float y) {
+    vec2i coords;
     coords.x = (int)(x * screen_width());
     coords.y = (int)(y * screen_height());
     return coords;

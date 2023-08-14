@@ -160,21 +160,21 @@ map_point city_view_get_camera_mappoint() {
 
     return map_point(data.camera.tile_internal.x, data.camera.tile_internal.y);
 }
-pixel_coordinate camera_get_position() {
+vec2i camera_get_position() {
     auto& data = g_city_view_data;
 
     return data.camera.position;
 }
-pixel_coordinate camera_get_pixel_offset_internal() {
+vec2i camera_get_pixel_offset_internal() {
     auto& data = g_city_view_data;
 
-    pixel_coordinate pixel_offset_internal;
+    vec2i pixel_offset_internal;
     pixel_offset_internal.x = data.camera.position.x % TILE_WIDTH_PIXELS;
     pixel_offset_internal.y = data.camera.position.y % TILE_HEIGHT_PIXELS;
     return pixel_offset_internal;
 }
 
-void camera_go_to_pixel(pixel_coordinate pixel, bool validate) {
+void camera_go_to_pixel(vec2i pixel, bool validate) {
     auto& data = g_city_view_data;
 
     data.camera.position = pixel;
@@ -276,7 +276,7 @@ static void set_viewport(int x_offset, int y_offset, int width, int height) {
     auto zoom = zoom_get_percentage();
     //    width = calc_adjust_with_percentage(width, zoom);
     //    height = calc_adjust_with_percentage(height, zoom);
-    data.viewport.offset = pixel_coordinate(x_offset, y_offset);
+    data.viewport.offset = vec2i(x_offset, y_offset);
     //    data.viewport.width_pixels = width - calc_adjust_with_percentage(2, data.scale);
     data.viewport.width_pixels = width - 2;
     data.viewport.height_pixels = height;
@@ -338,7 +338,7 @@ void city_view_get_viewport_size_tiles(int* width, int* height) {
     *height = data.viewport.height_tiles;
 }
 
-bool pixel_is_inside_viewport(pixel_coordinate pixel) {
+bool pixel_is_inside_viewport(vec2i pixel) {
     auto& data = g_city_view_data;
 
     if (pixel.x < data.viewport.offset.x || pixel.x >= data.viewport.offset.x + data.viewport.width_pixels
@@ -400,10 +400,10 @@ static screen_tile starting_tile() {
     screen.y = data.camera.tile_internal.y - 8;
     return screen;
 }
-static pixel_coordinate starting_pixel_coord() {
+static vec2i starting_pixel_coord() {
     auto& data = g_city_view_data;
 
-    pixel_coordinate pixel;
+    vec2i pixel;
     pixel.x = -(4 * TILE_WIDTH_PIXELS); // - pixel_offset_internal().x;
     pixel.y = data.viewport.offset.y - 11 * HALF_TILE_HEIGHT_PIXELS
               + calc_adjust_with_percentage(TOP_MENU_HEIGHT, zoom_get_percentage()); // - pixel_offset_internal().y;
@@ -420,8 +420,8 @@ void city_view_foreach_valid_map_tile(tile_draw_callback* callback1,
     int odd = 0;
     screen_tile screen_0 = starting_tile();
     screen_tile screen = screen_0;
-    pixel_coordinate pixel_0 = starting_pixel_coord();
-    pixel_coordinate pixel = pixel_0;
+    vec2i pixel_0 = starting_pixel_coord();
+    vec2i pixel = pixel_0;
     for (int y = 0; y < data.viewport.height_tiles + 21; y++) {
         if (screen.y >= 0 && screen.y < (2 * GRID_LENGTH) + 1) {
             screen.x = screen_0.x;
@@ -459,7 +459,7 @@ void city_view_foreach_valid_map_tile(tile_draw_callback* callback1,
     }
 }
 
-static void do_valid_callback(pixel_coordinate pixel, map_point point, tile_draw_callback* callback) {
+static void do_valid_callback(vec2i pixel, map_point point, tile_draw_callback* callback) {
     if (point.grid_offset() >= 0 && map_image_at(point.grid_offset()) >= 6)
         callback(pixel, point);
 }
@@ -468,7 +468,7 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, tile
     auto& data = g_city_view_data;
 
     screen_tile screen = mappoint_to_screentile(map_point(grid_offset));
-    pixel_coordinate pixel;
+    vec2i pixel;
     pixel.x = (screen.x - data.camera.tile_internal.x) * TILE_WIDTH_PIXELS - (screen.y & 1) * HALF_TILE_WIDTH_PIXELS
               + data.viewport.offset.x;
     pixel.y = (screen.y - data.camera.tile_internal.y - 1) * HALF_TILE_HEIGHT_PIXELS + data.viewport.offset.y;

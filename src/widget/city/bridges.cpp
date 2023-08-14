@@ -5,7 +5,7 @@
 #include "grid/sprite.h"
 #include "grid/terrain.h"
 
-void city_draw_bridge(pixel_coordinate pixel, map_point point) {
+void city_draw_bridge(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;

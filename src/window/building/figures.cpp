@@ -439,7 +439,7 @@ void window_building_draw_figure_list(building_info_context* c) {
     c->figure.drawn = 1;
 }
 
-static void draw_figure_in_city(int figure_id, pixel_coordinate* coord) {
+static void draw_figure_in_city(int figure_id, vec2i* coord) {
     map_point camera_tile = city_view_get_camera_mappoint();
 
     int grid_offset = figure_get(figure_id)->tile.grid_offset();
@@ -456,7 +456,7 @@ static void draw_figure_in_city(int figure_id, pixel_coordinate* coord) {
 void window_building_prepare_figure_list(building_info_context* c) {
     auto& data = g_building_figures_data;
     if (c->figure.count > 0) {
-        pixel_coordinate coord = {0, 0};
+        vec2i coord = {0, 0};
         for (int i = 0; i < c->figure.count; i++) {
             draw_figure_in_city(c->figure.figure_ids[i], &coord);
             data.figure_images[i] = graphics_save_to_texture(data.figure_images[i], coord.x, coord.y, 48, 48);

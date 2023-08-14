@@ -8,7 +8,7 @@
 #include "graphics/text.h"
 #include "image.h"
 
-void figure::draw_fort_standard(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out) {
+void figure::draw_fort_standard(vec2i pixel, int highlight, vec2i* coord_out) {
     if (!formation_get(formation_id)->in_distant_battle) {
         // base
         ImageDraw::img_generic(sprite_image_id, pixel.x, pixel.y);
@@ -21,7 +21,7 @@ void figure::draw_fort_standard(pixel_coordinate pixel, int highlight, pixel_coo
         ImageDraw::img_generic(icon_image_id, pixel.x, pixel.y - image_get(icon_image_id)->height - flag_height);
     }
 }
-void figure::draw_map_flag(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out) {
+void figure::draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out) {
     // base
     ImageDraw::img_generic(sprite_image_id, pixel.x, pixel.y);
     // flag
@@ -40,7 +40,7 @@ void figure::draw_map_flag(pixel_coordinate pixel, int highlight, pixel_coordina
         text_draw_number_colored(number, '@', " ", pixel.x + 6, pixel.y + 7, FONT_SMALL_PLAIN, COLOR_WHITE);
 }
 
-void figure::adjust_pixel_offset(pixel_coordinate* pixel) {
+void figure::adjust_pixel_offset(vec2i* pixel) {
     // determining x/y offset on tile
     int x_offset = 0;
     int y_offset = 0;
@@ -108,7 +108,7 @@ void figure::adjust_pixel_offset(pixel_coordinate* pixel) {
     //    *x += x_offset - img->sprite_offset_x;
     //    *y += y_offset - img->sprite_offset_y;
 }
-void figure::draw_figure_main(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out) {
+void figure::draw_figure_main(vec2i pixel, int highlight, vec2i* coord_out) {
     int x_correction = 0;
     int y_correction = 3;
 
@@ -126,11 +126,11 @@ void figure::draw_figure_main(pixel_coordinate pixel, int highlight, pixel_coord
     const image_t* img = is_enemy_image ? image_get_enemy(sprite_image_id) : image_get(sprite_image_id);
     ImageDraw::img_sprite(sprite_image_id, pixel.x + x_correction, pixel.y + y_correction, COLOR_MASK_NONE);
 }
-void figure::draw_figure_cart(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out) {
+void figure::draw_figure_cart(vec2i pixel, int highlight, vec2i* coord_out) {
     const image_t* img = image_get(cart_image_id);
     ImageDraw::img_sprite(cart_image_id, pixel.x + cart_offset.x, pixel.y + cart_offset.y - 7);
 }
-void figure::draw_figure_with_cart(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out) {
+void figure::draw_figure_with_cart(vec2i pixel, int highlight, vec2i* coord_out) {
     draw_figure_cart(pixel, highlight, coord_out);
     draw_figure_main(pixel, highlight, coord_out);
     return; // pharaoh doesn't draw carts on top - to rework maybe later..?
@@ -143,7 +143,7 @@ void figure::draw_figure_with_cart(pixel_coordinate pixel, int highlight, pixel_
         draw_figure_main(pixel, highlight, coord_out);
     }
 }
-void figure::city_draw_figure(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out) {
+void figure::city_draw_figure(vec2i pixel, int highlight, vec2i* coord_out) {
     // This is to update the sprite's direction when rotating the city view.
     // Unfortunately, because the only thing we have at the time of file loading is
     // the raw sprite image id, it doesn't work if we haven't performed at least a

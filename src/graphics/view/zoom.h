@@ -12,7 +12,7 @@
 void zoom_map(const mouse* m);
 void zoom_update_touch(const touch* first, const touch* last, int scale);
 void zoom_end_touch(void);
-bool zoom_update_value(pixel_coordinate* camera_position);
+bool zoom_update_value(vec2i* camera_position);
 
 float zoom_debug_target();
 float zoom_debug_delta();

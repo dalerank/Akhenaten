@@ -56,7 +56,7 @@ void set_city_clip_rectangle(void) {
 }
 
 static void update_zoom_level(void) {
-    pixel_coordinate offset = camera_get_position();
+    vec2i offset = camera_get_position();
     if (zoom_update_value(&offset)) {
         city_view_refresh_viewport();
         camera_go_to_pixel(offset, true);
@@ -64,13 +64,13 @@ static void update_zoom_level(void) {
     }
 }
 static void scroll_map(const mouse* m) {
-    pixel_coordinate delta;
+    vec2i delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
         camera_scroll(delta.x, delta.y);
         sound_city_decay_views();
     }
 }
-static map_point update_city_view_coords(pixel_coordinate pixel) {
+static map_point update_city_view_coords(vec2i pixel) {
     if (!pixel_is_inside_viewport(pixel))
         return map_point(0);
     else {
@@ -94,7 +94,7 @@ static int input_coords_in_city(int x, int y) {
 
 stopwatch WATCH;
 
-static void draw_TEST(pixel_coordinate pixel, map_point point) {
+static void draw_TEST(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -116,13 +116,13 @@ static void draw_TEST(pixel_coordinate pixel, map_point point) {
     //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
     //        COLOR_CHANNEL_GREEN);
 }
-static void draw_tile_boxes(pixel_coordinate pixel, map_point point) {
+static void draw_tile_boxes(vec2i pixel, map_point point) {
     if (map_property_is_draw_tile(point.grid_offset())) {
         int tile_size = map_property_multi_tile_size(point.grid_offset());
         debug_draw_tile_box(pixel.x, pixel.y, tile_size, tile_size);
     }
 };
-void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate* figure_coord, map_point tile) {
+void widget_city_draw_without_overlay(int selected_figure_id, vec2i* figure_coord, map_point tile) {
     WATCH.REPEAT();
 
     int highlighted_formation = 0;
@@ -173,7 +173,7 @@ void widget_city_draw(void) {
     graphics_reset_clip_rectangle();
     set_render_scale(1.0f);
 }
-void widget_city_draw_for_figure(int figure_id, pixel_coordinate* coord) {
+void widget_city_draw_for_figure(int figure_id, vec2i* coord) {
     auto& data = g_wdiget_city_data;
     set_city_clip_rectangle();
 

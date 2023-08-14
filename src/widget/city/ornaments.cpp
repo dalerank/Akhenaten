@@ -176,7 +176,7 @@ static const int FARM_TILE_OFFSETS_FLOODPLAIN[9][2]
   = {{60, 0}, {90, 15}, {120, 30}, {30, 15}, {60, 30}, {90, 45}, {0, 30}, {30, 45}, {60, 60}};
 static const int FARM_TILE_OFFSETS_MEADOW[5][2] = {{0, 30}, {30, 45}, {60, 60}, {90, 45}, {120, 30}};
 
-static pixel_coordinate farm_tile_coords(int x, int y, int tile_x, int tile_y) {
+static vec2i farm_tile_coords(int x, int y, int tile_x, int tile_y) {
     int tile_id = 3 * abs(tile_y) + abs(tile_x);
     return {x + FARM_TILE_OFFSETS_FLOODPLAIN[tile_id][0], y + FARM_TILE_OFFSETS_FLOODPLAIN[tile_id][1]};
 }
@@ -259,7 +259,7 @@ void draw_farm_crops(int type, int progress, int grid_offset, int x, int y, colo
 static void draw_ph_worker(int direction,
                            int action,
                            int frame_offset,
-                           pixel_coordinate coords,
+                           vec2i coords,
                            color_t color_mask = COLOR_MASK_NONE) {
     int action_offset = 0;
     switch (action) {
@@ -461,7 +461,7 @@ static void draw_warehouse_ornaments(const building* b, int x, int y, color_t co
     if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
         ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
 }
-static void draw_hippodrome_ornaments(pixel_coordinate pixel, map_point point) {
+static void draw_hippodrome_ornaments(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -503,7 +503,7 @@ static void draw_senate_rating_flags(const building* b, int x, int y, color_t co
     }
 }
 
-void draw_ornaments_and_animations(pixel_coordinate pixel, map_point point) {
+void draw_ornaments_and_animations(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;

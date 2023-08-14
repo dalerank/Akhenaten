@@ -60,7 +60,7 @@ struct city_overlay_crime : public city_overlay {
             || f->type == FIGURE_RIOTER;
     }
 
-    void draw_custom_top(pixel_coordinate pixel, map_point point) const override {
+    void draw_custom_top(vec2i pixel, map_point point) const override {
         int grid_offset = point.grid_offset();
         int x = pixel.x;
         int y = pixel.y;

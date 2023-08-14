@@ -104,9 +104,9 @@ public:
     unsigned char roam_random_counter;
     signed char roam_turn_direction;
     signed char roam_ticks_until_next_turn;
-    tile_coord cc_coords;
-    tile_coord cc_destination;
-    tile_coord cc_delta;
+    tile2i cc_coords;
+    tile2i cc_destination;
+    tile2i cc_delta;
     //    short cross_country_x; // position = 15 * x + offset on tile
     //    short cross_country_y; // position = 15 * y + offset on tile
     //    short cc_destination_x;
@@ -132,7 +132,7 @@ public:
     short leading_figure_id;
     unsigned char attack_image_offset;
     unsigned char wait_ticks_missile;
-    tile_coord cart_offset;
+    vec2i cart_offset;
     //    signed char x_offset_cart;
     //    signed char y_offset_cart;
     unsigned char empire_city_id;
@@ -265,20 +265,20 @@ public:
     int figure_image_corpse_offset();
     int figure_image_missile_launcher_offset();
     int figure_image_direction();
-    pixel_coordinate tile_pixel_coords();
+    vec2i tile_pixel_coords();
 
     // city_figure.c
     void draw_debug();
-    void adjust_pixel_offset(pixel_coordinate* pixel);
+    void adjust_pixel_offset(vec2i* pixel);
     //    void draw_figure(int x, int y, int highlight);
-    void draw_figure_main(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out = nullptr);
-    void draw_figure_cart(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out = nullptr);
-    void city_draw_figure(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out = nullptr);
+    void draw_figure_main(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
+    void draw_figure_cart(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
+    void city_draw_figure(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
     //    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
-    void draw_figure_with_cart(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out = nullptr);
+    void draw_figure_with_cart(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
     //    void draw_hippodrome_horse(int x, int y);
-    void draw_fort_standard(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out = nullptr);
-    void draw_map_flag(pixel_coordinate pixel, int highlight, pixel_coordinate* coord_out = nullptr);
+    void draw_fort_standard(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
+    void draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
 
     // movement.c
     void advance_figure_tick();

@@ -49,7 +49,7 @@ static void init_draw_context(void) {
     draw_context.image_id_deepwater_last = 89 + draw_context.image_id_deepwater_first;
 }
 
-static void draw_flags(pixel_coordinate pixel, map_point point) {
+static void draw_flags(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -73,7 +73,7 @@ static void draw_flags(pixel_coordinate pixel, map_point point) {
 // }
 
 static void update_zoom_level(void) {
-    pixel_coordinate offset = camera_get_position();
+    vec2i offset = camera_get_position();
     if (zoom_update_value(&offset)) {
         city_view_refresh_viewport();
         camera_go_to_pixel(offset, true);
@@ -102,7 +102,7 @@ static void update_city_view_coords(int x, int y, map_point* tile) {
 }
 
 static void scroll_map(const mouse* m) {
-    pixel_coordinate delta;
+    vec2i delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
         camera_scroll(delta.x, delta.y);
         sound_city_decay_views();

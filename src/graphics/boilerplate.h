@@ -1,10 +1,10 @@
-#ifndef GRAPHICS_BOILERPLATE_H
-#define GRAPHICS_BOILERPLATE_H
+#pragma once
 
 #include "graphics/color.h"
 #include "graphics/font.h"
 #include "image.h"
 #include "image_groups.h"
+#include "core/vec2i.h"
 
 void graphics_set_to_dialog(void);
 void graphics_in_dialog_with_size(int width, int height);
@@ -34,8 +34,8 @@ void img_ornament(int image_id, int base_id, int x, int y, color_t color_mask = 
 void img_from_below(int image_id, int x, int y, color_t color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void img_letter(font_t font, int letter_id, int x, int y, color_t color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void img_background(int image_id, float scale = 1.0f);
+void isometric(int image_id, vec2i pos, color_t color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void isometric(int image_id, int x, int y, color_t color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void isometric_from_drawtile(int image_id, int x, int y, color_t color_mask = COLOR_MASK_NONE);
 } // namespace ImageDraw
 
-#endif // GRAPHICS_BOILERPLATE_H

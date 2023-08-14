@@ -56,7 +56,7 @@ static map_point tile_get_drawtile(map_point point) {
     }
     return point;
 }
-static void record_figure_over_tile(figure* f, pixel_coordinate pixel, map_point point) {
+static void record_figure_over_tile(figure* f, vec2i pixel, map_point point) {
     //    point = tile_get_drawtile(point);
     int grid_offset = point.grid_offset();
     int figure_id = f->id;
@@ -85,7 +85,7 @@ static void record_figure_over_tile(figure* f, pixel_coordinate pixel, map_point
     cache->figures[i].pixel = pixel;
     FIGURE_DRAW_CACHE.num_cached_figures++;
 }
-static void cache_figure(figure* f, pixel_coordinate pixel) {
+static void cache_figure(figure* f, vec2i pixel) {
     map_point point = f->tile;
     record_figure_over_tile(f, pixel, point.shifted(0, -1));
     record_figure_over_tile(f, pixel, point.shifted(1, -1));
@@ -141,7 +141,7 @@ static void cache_figure(figure* f, pixel_coordinate pixel) {
     //    }
     //    record_figure_over_tile(f, pixel, f->previous_tile);
 }
-void cache_figures(pixel_coordinate pixel, map_point point) {
+void cache_figures(vec2i pixel, map_point point) {
     int figure_id = map_figure_at(point.grid_offset());
     while (figure_id) {
         figure* f = figure_get(figure_id);

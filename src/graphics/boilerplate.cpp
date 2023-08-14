@@ -745,10 +745,17 @@ void ImageDraw::img_background(int image_id, float scale) {
           img, (screen_width() - img->width) / 2, (screen_height() - img->height) / 2, COLOR_MASK_NONE, scale, false);
     }
 }
+
+void ImageDraw::isometric(int image_id, vec2i pos, color_t color_mask, float scale) {
+    const image_t* img = image_get(image_id);
+    ImageDraw::img_generic(image_id, pos.x, pos.y, color_mask, scale);
+}
+
 void ImageDraw::isometric(int image_id, int x, int y, color_t color_mask, float scale) {
     const image_t* img = image_get(image_id);
     ImageDraw::img_generic(image_id, x, y, color_mask, scale);
 }
+
 void ImageDraw::isometric_from_drawtile(int image_id, int x, int y, color_t color_mask) {
     const image_t* img = image_get(image_id);
     //    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {

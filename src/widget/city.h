@@ -8,7 +8,7 @@
 void set_city_clip_rectangle(void);
 
 void widget_city_draw(void);
-void widget_city_draw_for_figure(int figure_id, pixel_coordinate* coord);
+void widget_city_draw_for_figure(int figure_id, vec2i* coord);
 
 bool widget_city_draw_construction_cost_and_size(void);
 

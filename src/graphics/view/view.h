@@ -18,8 +18,8 @@ extern int SCROLL_MAX_SCREENTILE_X;
 extern int SCROLL_MAX_SCREENTILE_Y;
 void camera_calc_scroll_limits();
 
-typedef pixel_coordinate screen_tile;
-typedef pixel_coordinate camera_coordinate;
+typedef vec2i screen_tile;
+typedef vec2i camera_coordinate;
 
 struct view_data_t {
     int screen_width;
@@ -31,7 +31,7 @@ struct view_data_t {
         camera_coordinate position;
     } camera;
     struct {
-        pixel_coordinate offset;
+        vec2i offset;
         int width_pixels;
         int height_pixels;
         int width_tiles;
@@ -40,7 +40,7 @@ struct view_data_t {
     screen_tile selected_tile;
 };
 
-typedef void(tile_draw_callback)(pixel_coordinate pixel, map_point point);
+typedef void(tile_draw_callback)(vec2i pixel, map_point point);
 typedef void(minimap_draw_callback)(screen_tile screen, map_point point);
 
 view_data_t& city_view_data_unsafe();
@@ -57,14 +57,14 @@ void city_view_reset_orientation(void);
 
 screen_tile city_view_get_camera_screentile();
 map_point city_view_get_camera_mappoint();
-pixel_coordinate camera_get_position();
-pixel_coordinate camera_get_pixel_offset_internal();
+vec2i camera_get_position();
+vec2i camera_get_pixel_offset_internal();
 void city_view_get_camera_max_tile(int* x, int* y);
 void city_view_get_camera_max_pixel_offset(int* x, int* y);
 void city_view_get_camera_scrollable_pixel_limits(int* min_x, int* max_x, int* min_y, int* max_y);
 void city_view_get_camera_scrollable_viewspace_clip(int* x, int* y);
 
-void camera_go_to_pixel(pixel_coordinate pixel, bool validate);
+void camera_go_to_pixel(vec2i pixel, bool validate);
 void camera_go_to_corner_tile(screen_tile screen, bool validate);
 void camera_go_to_screen_tile(screen_tile screen, bool validate);
 void camera_go_to_mappoint(map_point point);
@@ -82,7 +82,7 @@ void city_view_set_viewport(int screen_width, int screen_height);
 void city_view_get_viewport(int* x, int* y, int* width, int* height);
 void city_view_get_viewport_size_tiles(int* width, int* height);
 
-bool pixel_is_inside_viewport(pixel_coordinate pixel);
+bool pixel_is_inside_viewport(vec2i pixel);
 bool city_view_is_sidebar_collapsed(void);
 void city_view_start_sidebar_toggle(void);
 void city_view_toggle_sidebar(void);

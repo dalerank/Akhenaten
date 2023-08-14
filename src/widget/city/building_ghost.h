@@ -2,7 +2,8 @@
 
 #include "graphics/color.h"
 #include "grid/point.h"
+#include "core/vec2i.h"
 
-void draw_building(int image_id, int x, int y, color_t color_mask = COLOR_MASK_GREEN);
+void draw_building(int image_id, vec2i tile, color_t color_mask = COLOR_MASK_GREEN);
 
 bool city_building_ghost_mark_deleting(map_point tile);

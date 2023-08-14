@@ -26,8 +26,7 @@
 
 static const int DIRECTION_X[] = {0, 1, 1, 1, 0, -1, -1, -1, 0};
 static const int DIRECTION_Y[] = {-1, -1, 0, 1, 1, 1, 0, -1, 0};
-static const int SCROLL_STEP[SCROLL_TYPE_MAX][11]
-  = {{60, 44, 30, 20, 16, 12, 10, 8, 6, 4, 2}, {20, 15, 10, 7, 5, 4, 3, 3, 2, 2, 1}};
+static const int SCROLL_STEP[SCROLL_TYPE_MAX][11] = {{60, 44, 30, 20, 16, 12, 10, 8, 6, 4, 2}, {20, 15, 10, 7, 5, 4, 3, 3, 2, 2, 1}};
 
 enum key_state { KEY_STATE_UNPRESSED = 0, KEY_STATE_PRESSED = 1, KEY_STATE_HELD = 2, KEY_STATE_AXIS = 3 };
 
@@ -50,7 +49,7 @@ struct input_scroll_data_t {
         int active;
         int is_touch;
         int has_started;
-        pixel_coordinate delta;
+        vec2i delta;
     } drag;
     struct {
         speed_type x;
@@ -414,7 +413,7 @@ static bool set_scroll_speed_from_input(const mouse* m, scroll_type type) {
         int align_x = 0;
         int align_y = 0;
         if (type == SCROLL_TYPE_CITY) {
-            pixel_coordinate camera_pixels = camera_get_pixel_offset_internal();
+            vec2i camera_pixels = camera_get_pixel_offset_internal();
             align_x = get_alignment_delta(dir_x, TILE_X_PIXELS, camera_pixels.x);
             align_y = get_alignment_delta(dir_y, TILE_Y_PIXELS, camera_pixels.y);
         }
@@ -447,7 +446,7 @@ static bool set_scroll_speed_from_input(const mouse* m, scroll_type type) {
     return true;
 }
 
-int scroll_get_delta(const mouse* m, pixel_coordinate* delta, scroll_type type) {
+int scroll_get_delta(const mouse* m, vec2i* delta, scroll_type type) {
     auto &data = g_input_scroll_data;
     data.is_scrolling = set_scroll_speed_from_input(m, type);
     delta->x = speed_get_delta(&data.speed.x);

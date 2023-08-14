@@ -6,9 +6,9 @@
 
 static map_point SCREENTILE_TO_MAPPOINT_LOOKUP[4][500][500];
 static void screentile_calc_params_by_orientation(int city_orientation,
-                                                  pixel_coordinate* start,
-                                                  pixel_coordinate* column_step,
-                                                  pixel_coordinate* row_step) {
+                                                  vec2i* start,
+                                                  vec2i* column_step,
+                                                  vec2i* row_step) {
     switch (city_orientation) {
     default:
     case 0:
@@ -34,9 +34,9 @@ static void screentile_calc_params_by_orientation(int city_orientation,
     }
 }
 static void fill_in_lookup_table_for_orientation(int city_orientation) {
-    pixel_coordinate start;
-    pixel_coordinate column_step;
-    pixel_coordinate row_step;
+    vec2i start;
+    vec2i column_step;
+    vec2i row_step;
     screentile_calc_params_by_orientation(city_orientation, &start, &column_step, &row_step);
 
     for (int y = 0; y < GRID_LENGTH; y++) {
@@ -74,9 +74,9 @@ screen_tile mappoint_to_screentile(map_point point) {
     if (!map_grid_inside_map_area(point.grid_offset()))
         return {-1, -1};
 
-    pixel_coordinate start;
-    pixel_coordinate column_step;
-    pixel_coordinate row_step;
+    vec2i start;
+    vec2i column_step;
+    vec2i row_step;
     screentile_calc_params_by_orientation(city_view_orientation() / 2, &start, &column_step, &row_step);
 
     int columns = point.x();
@@ -86,18 +86,18 @@ screen_tile mappoint_to_screentile(map_point point) {
             (start.y + (rows * row_step.y) + (columns * column_step.y))};
 }
 
-static pixel_coordinate MAPPOINT_TO_PIXEL_LOOKUP[GRID_SIZE_TOTAL];
-void record_mappoint_pixelcoord(map_point point, pixel_coordinate pixel) {
+static vec2i MAPPOINT_TO_PIXEL_LOOKUP[GRID_SIZE_TOTAL];
+void record_mappoint_pixelcoord(map_point point, vec2i pixel) {
     MAPPOINT_TO_PIXEL_LOOKUP[point.grid_offset()] = {pixel.x, pixel.y};
 }
-pixel_coordinate mappoint_to_pixel(map_point point) {
+vec2i mappoint_to_pixel(map_point point) {
     return MAPPOINT_TO_PIXEL_LOOKUP[point.grid_offset()];
 }
 
-pixel_coordinate pixel_to_viewport_coord(pixel_coordinate pixel) {
+vec2i pixel_to_viewport_coord(vec2i pixel) {
     return pixel - city_view_data_unsafe().viewport.offset;
 }
-camera_coordinate pixel_to_camera_coord(pixel_coordinate pixel, bool relative) {
+camera_coordinate pixel_to_camera_coord(vec2i pixel, bool relative) {
     // check if within viewport
     if (!pixel_is_inside_viewport(pixel))
         return {-1, -1};
@@ -113,7 +113,7 @@ camera_coordinate pixel_to_camera_coord(pixel_coordinate pixel, bool relative) {
         pixel += city_view_data_unsafe().camera.position;
     return pixel;
 }
-screen_tile pixel_to_screentile(pixel_coordinate pixel) {
+screen_tile pixel_to_screentile(vec2i pixel) {
     if (!pixel_is_inside_viewport(pixel))
         return {-1, -1};
 

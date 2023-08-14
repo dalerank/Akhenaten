@@ -201,7 +201,7 @@ static int north_tile_grid_offset(int x, int y) {
         grid_offset += GRID_OFFSET(0, -1);
     return grid_offset;
 }
-void draw_debug_tile(pixel_coordinate pixel, map_point point) {
+void draw_debug_tile(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -226,7 +226,7 @@ void draw_debug_tile(pixel_coordinate pixel, map_point point) {
         break;
     case 1: // BUILDING IDS
         if (b_id && b->tile.grid_offset() == grid_offset)
-            draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, x - 15, y, COLOR_MASK_GREEN);
+            draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, {x - 15, y}, COLOR_MASK_GREEN);
         if (b_id && map_property_is_draw_tile(grid_offset)) { // b->tile.grid_offset() == grid_offset
             bool red = !map_terrain_is(grid_offset, TERRAIN_BUILDING);
             debug_text(str, x0, y + 0, 0, "", b_id, red ? COLOR_LIGHT_RED : COLOR_WHITE);
@@ -252,8 +252,7 @@ void draw_debug_tile(pixel_coordinate pixel, map_point point) {
             if (b->has_road_access) {
                 auto tile_coords = mappoint_to_pixel(b->road_access);
                 draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23,
-                              tile_coords.x,
-                              tile_coords.y,
+                              tile_coords,
                               COLOR_MASK_GREEN);
             }
         }
@@ -376,7 +375,7 @@ void draw_debug_tile(pixel_coordinate pixel, map_point point) {
     case 12: // SPRITE FRAMES
 
         if (grid_offset == MAP_OFFSET(b->tile.x(), b->tile.y()))
-            draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, x - 15, y, COLOR_MASK_GREEN);
+            draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, {x - 15, y}, COLOR_MASK_GREEN);
         if (grid_offset == north_tile_grid_offset(b->tile.x(), b->tile.y()))
             ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, x - 15, y, COLOR_MASK_RED);
         d = map_sprite_animation_at(grid_offset);
@@ -440,7 +439,7 @@ void draw_debug_tile(pixel_coordinate pixel, map_point point) {
         break;
     }
 }
-void draw_debug_figures(pixel_coordinate pixel, map_point point) {
+void draw_debug_figures(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -464,7 +463,7 @@ void figure::draw_debug() {
     building* bdest = destination();
 
     uint8_t str[10];
-    pixel_coordinate pixel;
+    vec2i pixel;
     pixel = mappoint_to_pixel(map_point(tile.x(), tile.y()));
     adjust_pixel_offset(&pixel);
     pixel.x -= 10;
@@ -480,7 +479,7 @@ void figure::draw_debug() {
         debug_text(str, pixel.x, pixel.y + 30, indent, "", wait_ticks, COLOR_WHITE);
         debug_text(str, pixel.x, pixel.y + 40, indent, "", roam_length, COLOR_WHITE);
         if (true) {
-            pixel_coordinate tp = mappoint_to_pixel(tile);
+            vec2i tp = mappoint_to_pixel(tile);
             if (tile.grid_offset() != -1)
                 debug_draw_tile_box(tp.x, tp.y, COLOR_LIGHT_BLUE, COLOR_GREEN);
         }
@@ -494,14 +493,14 @@ void figure::draw_debug() {
     case 2: // ROUTING
         // draw path
         if (routing_path_id) { //&& (roam_length == max_roam_length || roam_length == 0)
-            auto tile_coords = mappoint_to_pixel(map_point(destination()->tile.x(), destination()->tile.y()));
-            draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, tile_coords.x, tile_coords.y);
-            tile_coords = mappoint_to_pixel(map_point(destination_tile.x(), destination_tile.y()));
-            draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 20, tile_coords.x, tile_coords.y);
+            vec2i coords = mappoint_to_pixel(map_point(destination()->tile.x(), destination()->tile.y()));
+            draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, coords);
+            coords = mappoint_to_pixel(map_point(destination_tile.x(), destination_tile.y()));
+            draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords);
             int tx = tile.x();
             int ty = tile.y();
-            tile_coords = mappoint_to_pixel(map_point(tx, ty));
-            ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, tile_coords.x, tile_coords.y);
+            coords = mappoint_to_pixel(map_point(tx, ty));
+            ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
             int starting_tile_index = routing_path_current_tile;
             if (progress_on_tile >= 0 && progress_on_tile < 8) // adjust half-tile offset
                 starting_tile_index--;
@@ -537,10 +536,8 @@ void figure::draw_debug() {
                     ty--;
                     break;
                 }
-                tile_coords = mappoint_to_pixel(map_point(tx, ty));
-                ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3,
-                                       tile_coords.x,
-                                       tile_coords.y);
+                coords = mappoint_to_pixel(map_point(tx, ty));
+                ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
             }
         }
 
@@ -646,7 +643,7 @@ void figure::draw_debug() {
         break;
     case 6: // CROSS-COUNTRY MOVEMENT
         if (use_cross_country) {
-            pixel_coordinate tp;
+            vec2i tp;
             if (tile.grid_offset() != -1) {
                 tp = mappoint_to_pixel(tile);
                 debug_draw_tile_box(tp.x, tp.y, COLOR_NULL, COLOR_GREEN);
@@ -1099,7 +1096,7 @@ void draw_debug_ui(int x, int y) {
     /////// CAMERA
     if (g_debug_show_opts[e_debug_show_camera]) {
         map_point camera_tile = city_view_get_camera_mappoint();
-        pixel_coordinate camera_pixels = camera_get_pixel_offset_internal();
+        vec2i camera_pixels = camera_get_pixel_offset_internal();
 
         int min_x, max_x, min_y, max_y;
         city_view_get_camera_scrollable_pixel_limits(&min_x, &max_x, &min_y, &max_y);
@@ -1143,10 +1140,10 @@ void draw_debug_ui(int x, int y) {
         debug_text_float(str, x, y + 135, 50, "target:", zoom_debug_target());
         debug_text_float(str, x + 100, y + 135, 50, "delta:", zoom_debug_delta());
 
-        pixel_coordinate pixel = {mouse_get()->x, mouse_get()->y};
+        vec2i pixel = {mouse_get()->x, mouse_get()->y};
         debug_text(str, x, y + 145, 50, "mouse:", pixel.x);
         debug_text(str, x + 40, y + 145, 50, "", pixel.y);
-        pixel_coordinate viewp = pixel_to_viewport_coord(pixel);
+        vec2i viewp = pixel_to_viewport_coord(pixel);
         debug_text(str, x, y + 155, 50, "viewp:", viewp.x);
         debug_text(str, x + 40, y + 155, 50, "", viewp.y);
         camera_coordinate coord = pixel_to_camera_coord(pixel, false);
@@ -1155,7 +1152,7 @@ void draw_debug_ui(int x, int y) {
         screen_tile screen = pixel_to_screentile(pixel);
         debug_text(str, x, y + 175, 50, "tile:", screen.x);
         debug_text(str, x + 40, y + 175, 50, "", screen.y);
-        pixel_coordinate offset = {coord.x % TILE_WIDTH_PIXELS, coord.y % TILE_HEIGHT_PIXELS};
+        vec2i offset = {coord.x % TILE_WIDTH_PIXELS, coord.y % TILE_HEIGHT_PIXELS};
         debug_text(str, x, y + 185, 50, "offset:", offset.x);
         debug_text(str, x + 40, y + 185, 50, "", offset.y);
         map_point point = screentile_to_mappoint(screen);

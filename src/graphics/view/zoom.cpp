@@ -10,7 +10,7 @@ struct zoom_data_t {
     float target = ZOOM_DEFAULT;
     float delta;
     float zoom_speed = 20.0f; // TODO: settings
-    pixel_coordinate input_offset;
+    vec2i input_offset;
     struct {
         bool active;
         int start_zoom;
@@ -32,8 +32,7 @@ static void start_touch(const touch* first, const touch* last, int scale) {
     auto& data = g_zoom;
 
     data.touch.active = true;
-    data.input_offset.x = first->current_point.x;
-    data.input_offset.y = first->current_point.y;
+    data.input_offset = first->current_point;
     data.touch.start_zoom = scale;
     data.touch.current_zoom = scale;
 }
@@ -45,7 +44,7 @@ void zoom_update_touch(const touch* first, const touch* last, int scale) {
         return;
     }
     int original_distance, current_distance;
-    pixel_coordinate temp;
+    vec2i temp;
     temp.x = first->start_point.x - last->start_point.x;
     temp.y = first->start_point.y - last->start_point.y;
     original_distance = (int)sqrt(temp.x * temp.x + temp.y * temp.y);
@@ -96,7 +95,7 @@ void zoom_map(const mouse* m) {
     data.input_offset.x = m->x;
     data.input_offset.y = m->y;
 }
-bool zoom_update_value(pixel_coordinate* camera_position) {
+bool zoom_update_value(vec2i* camera_position) {
     auto& data = g_zoom;
 
     if (data.zoom == data.target)
@@ -115,7 +114,7 @@ bool zoom_update_value(pixel_coordinate* camera_position) {
     }
 
     // re-center camera around the input point
-    pixel_coordinate old_offset, new_offset;
+    vec2i old_offset, new_offset;
     old_offset.x = calc_adjust_with_percentage(data.input_offset.x, old_zoom);
     old_offset.y = calc_adjust_with_percentage(data.input_offset.y, old_zoom);
 

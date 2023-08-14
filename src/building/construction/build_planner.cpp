@@ -1465,7 +1465,7 @@ void BuildPlanner::update_unique_only_one_check() {
     }
 }
 void BuildPlanner::update_coord_caches() {
-    pixel_coordinate view_tile = mappoint_to_pixel(end);
+    vec2i view_tile = mappoint_to_pixel(end);
     if (view_tile.x == 0 && view_tile.y == 0)
         // this prevents graphics from being drawn on the top left corner
         // of the screen when the current "end" tile isn't valid.
@@ -1558,7 +1558,7 @@ void BuildPlanner::update_orientations(bool check_if_changed) {
     setup_build_graphics(); // reload graphics, tiles, etc.
     update_coord_caches();  // refresh caches
 }
-void BuildPlanner::construction_record_view_position(pixel_coordinate pixel, map_point point) {
+void BuildPlanner::construction_record_view_position(vec2i pixel, map_point point) {
     if (point == start) {
         start_offset_screen_x = pixel.x;
         start_offset_screen_y = pixel.y;

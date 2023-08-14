@@ -24,8 +24,8 @@ struct city_overlay {
     int (*get_column_height)(const building* b) = 0;
     int (*get_tooltip_for_grid_offset)(tooltip_context* c, int grid_offset) = 0;
     int (*get_tooltip_for_building)(tooltip_context* c, const building* b) = 0;
-    void (*draw_custom_footprint)(pixel_coordinate pixel, map_point point) = 0;
-    void (*draw_custom_top_func)(pixel_coordinate pixel, map_point point) = 0;
+    void (*draw_custom_footprint)(vec2i pixel, map_point point) = 0;
+    void (*draw_custom_top_func)(vec2i pixel, map_point point) = 0;
 
     city_overlay() {
     }
@@ -36,8 +36,8 @@ struct city_overlay {
                  int (*_get_column_height)(const building* b),
                  int (*_get_tooltip_for_grid_offset)(tooltip_context* c, int grid_offset),
                  int (*_get_tooltip_for_building)(tooltip_context* c, const building* b),
-                 void (*_draw_custom_footprint)(pixel_coordinate pixel, map_point point),
-                 void (*_draw_custom_top)(pixel_coordinate pixel, map_point point)) {
+                 void (*_draw_custom_footprint)(vec2i pixel, map_point point),
+                 void (*_draw_custom_top)(vec2i pixel, map_point point)) {
         type = _type;
         column_type = _column_type;
         show_building_func = _show_building_func;
@@ -57,7 +57,7 @@ struct city_overlay {
         return false;
     }
 
-    virtual void draw_custom_top(pixel_coordinate pixel, map_point point) const {
+    virtual void draw_custom_top(vec2i pixel, map_point point) const {
         if (draw_custom_top_func) {
             draw_custom_top_func(pixel, point);
         }
@@ -73,4 +73,4 @@ bool select_city_overlay(void);
 int widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset);
 
 void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, int image_offset);
-void city_with_overlay_draw_building_top(pixel_coordinate pixel, map_point point);
+void city_with_overlay_draw_building_top(vec2i pixel, map_point point);
