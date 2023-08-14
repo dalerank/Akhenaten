@@ -138,17 +138,19 @@ void tutorial_init(void) {
 }
 
 tutorial_availability tutorial_advisor_availability(e_advisor advisor, int tutorial) {
+    auto is_available = [advisor] (const std::initializer_list<e_advisor> &advisors) {
+        return (std::find(advisors.begin(), advisors.end(), advisor) != advisors.end())
+                      ? AVAILABLE 
+                      : NOT_AVAILABLE;
+    };
+
     switch (tutorial) {
-    case 1:
-        return NOT_AVAILABLE;
-    case 2:
-    {
-        auto advisors = {ADVISOR_TRADE, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION};
-        return (std::find(advisors.begin(), advisors.end(), advisor) != advisors.end() ? AVAILABLE : NOT_AVAILABLE);
+    case 1: return NOT_AVAILABLE;
+    case 2: return is_available({ADVISOR_TRADE, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION});
+    case 3: return is_available({ADVISOR_LABOR, ADVISOR_TRADE, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION});
     }
-    default:
+
     return AVAILABLE;
-    }
 }
 tutorial_availability tutorial_empire_availability() {
     if (scenario_is_tutorial_before_mission_5())
