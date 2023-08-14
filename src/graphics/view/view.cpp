@@ -61,10 +61,10 @@ int SCROLL_MIN_SCREENTILE_Y = 0;
 int SCROLL_MAX_SCREENTILE_X = 0;
 int SCROLL_MAX_SCREENTILE_Y = 0;
 void camera_calc_scroll_limits() {
-    SCROLL_MIN_SCREENTILE_X = (GRID_LENGTH - (scenario_map_data()->width / 2) + 4) / 2;
-    SCROLL_MIN_SCREENTILE_Y = ((2 * GRID_LENGTH) - scenario_map_data()->height) / 2 + 1;
-    SCROLL_MAX_SCREENTILE_X = GRID_LENGTH - SCROLL_MIN_SCREENTILE_X + 1;
-    SCROLL_MAX_SCREENTILE_Y = (2 * GRID_LENGTH) - SCROLL_MIN_SCREENTILE_Y - 3;
+    SCROLL_MIN_SCREENTILE_X = (GRID_LENGTH - (scenario_map_data()->width / 2) + 2) / 2;
+    SCROLL_MIN_SCREENTILE_Y = ((2 * GRID_LENGTH) - scenario_map_data()->height) / 2;
+    SCROLL_MAX_SCREENTILE_X = GRID_LENGTH - SCROLL_MIN_SCREENTILE_X + 2;
+    SCROLL_MAX_SCREENTILE_Y = (2 * GRID_LENGTH) - SCROLL_MIN_SCREENTILE_Y;
 }
 
 void city_view_get_camera_max_tile(int* x, int* y) {
@@ -90,8 +90,6 @@ void city_view_get_camera_scrollable_pixel_limits(int* min_x, int* max_x, int* m
     *min_x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
     *max_x = SCROLL_MAX_SCREENTILE_X * TILE_WIDTH_PIXELS
              - calc_adjust_with_percentage(data.viewport.width_pixels, zoom_get_percentage());
-    //    *min_y = (SCROLL_MIN_SCREENTILE_Y + 4) * HALF_TILE_HEIGHT_PIXELS -
-    //    calc_adjust_with_percentage(TILE_HEIGHT_PIXELS, zoom_get_percentage());
     *min_y = SCROLL_MIN_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS;
     *max_y = SCROLL_MAX_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS
              - calc_adjust_with_percentage(data.viewport.height_pixels, zoom_get_percentage());
