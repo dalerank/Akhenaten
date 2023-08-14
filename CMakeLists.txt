@@ -186,8 +186,8 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/text.cpp
 )
 
-file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp ${PROJECT_SOURCE_DIR}/src/platform/*.h)
-file(GLOB CORE_FILES ${PROJECT_SOURCE_DIR}/src/core/*.cpp ${PROJECT_SOURCE_DIR}/src/core/*.h)
+file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp)
+file(GLOB CORE_FILES ${PROJECT_SOURCE_DIR}/src/core/*.cpp)
 file(GLOB CORE_ENCODING_FILES ${PROJECT_SOURCE_DIR}/src/core/encoding/*.cpp)
 file(GLOB BUILDING_FILES ${PROJECT_SOURCE_DIR}/src/building/*.cpp)
 file(GLOB BUILDING_CONSTRUCTION_FILES ${PROJECT_SOURCE_DIR}/src/building/construction/*.cpp)
@@ -235,9 +235,15 @@ set(IMGUI_FILES ${IMGUI_FILES}
     ${IMGUI_BACKEND_FILES})
 
 if(MSVC)
+    file(GLOB CORE_HEADERS ${PROJECT_SOURCE_DIR}/src/core/*.h)
+    file(GLOB PLATFORM_HEADERS ${PROJECT_SOURCE_DIR}/src/platform/*.h)
+
+    set(CORE_FILES ${CORE_FILES} ${CORE_HEADERS})
+    set(PLATFORM_FILES ${PLATFORM_FILES} ${PLATFORM_HEADERS})
+
     source_group("core" FILES ${CORE_FILES})
     source_group("core/encoding" FILES ${CORE_ENCODING_FILES})
-    source_group("platform" FILES ${PLATFORM_FILES})
+    source_group("platform" FILES ${PLATFORM_FILES} )
     source_group("building" FILES ${BUILDING_FILES})
     source_group("building/construction" FILES ${BUILDING_CONSTRUCTION_FILES})
     source_group("city" FILES ${CITY_FILES})
