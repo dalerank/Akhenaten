@@ -21,7 +21,7 @@ struct image_button {
     void (*right_click_handler)(int param1, int param2);
     int parameter1;
     int parameter2;
-    char enabled;
+    bool enabled;
     // state
     char pressed;
     char floating;
