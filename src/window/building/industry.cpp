@@ -248,15 +248,13 @@ void window_building_draw_hunting_lodge(building_info_context* c) {
       group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_GAMEMEAT,
-                           c->x_offset + 32,
-                           c->y_offset + 56);
+    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_GAMEMEAT, c->x_offset + 32, c->y_offset + 56);
     int width = lang_text_draw(group_id, 13, c->x_offset + 60, c->y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    if (b->stored_full_amount < 100)
+    if (b->stored_full_amount < 100) {
         lang_text_draw_amount(8, 10, 0, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    else
-        lang_text_draw_amount(
-          8, 10, b->stored_full_amount, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
+    } else {
+        lang_text_draw_amount(8, 10, b->stored_full_amount, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
+    }
 
     if (!c->has_road_access)
         window_building_draw_description_at(c, 86, 69, 25);

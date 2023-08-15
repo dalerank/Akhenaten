@@ -18,8 +18,7 @@ void foreach_floodplain_row(int row, void (*callback)(int grid_offset, int order
     }
 
     auto &cache = floodplain_tiles_caches_by_row[row];
-    for (int i = 0; i < cache.size(); i++) {
-        int grid_offset = cache.at(i);
+    for (const auto &grid_offset: cache) {
         callback(grid_offset, row);
     }
 }
@@ -32,10 +31,11 @@ grid_xx g_terrain_floodplain_max_fertile = {0, {FS_UINT8, FS_UINT8}};
 int map_floodplain_rebuild_rows() {
     // reset all to zero
     map_grid_fill(&g_terrain_floodplain_row, -1);
-    map_grid_fill(&g_terrain_floodplain_growth, 0);
     map_grid_fill(&g_terrain_floodplain_max_fertile, 0);
-    for (int row = 0; row < MAX_FLOODPLAIN_ROWS; row++)
+
+    for (int row = 0; row < MAX_FLOODPLAIN_ROWS; row++) {
         floodplain_tiles_caches_by_row[row].clear();
+    }
 
     // fill in shore order data
     for (int row = -1; row < MAX_FLOODPLAIN_ROWS - 1; row++) {
@@ -75,7 +75,7 @@ int map_floodplain_rebuild_rows() {
 
                             // set the shore order cache
                             map_grid_set(&g_terrain_floodplain_row, grid_offset, row + 1);
-                            floodplain_tiles_caches_by_row[row + 1].add(grid_offset);
+                            floodplain_tiles_caches_by_row[row + 1].push_back(grid_offset);
 
                             // advance counter
                             found_floodplain_tiles_in_row++;
@@ -98,7 +98,7 @@ int map_floodplain_rebuild_rows() {
 
         if (map_get_floodplain_row(grid_offset) == -1) {
             map_grid_set(&g_terrain_floodplain_row, grid_offset, MAX_FLOODPLAIN_ROWS);
-            floodplain_tiles_caches_by_row[MAX_FLOODPLAIN_ROWS].add(grid_offset);
+            floodplain_tiles_caches_by_row[MAX_FLOODPLAIN_ROWS].push_back(grid_offset);
         }
     }
 
@@ -113,15 +113,21 @@ uint8_t map_get_floodplain_growth(int grid_offset) {
     return map_grid_get(&g_terrain_floodplain_growth, grid_offset);
 }
 
+void map_clear_floodplain_growth() {
+    map_grid_fill(&g_terrain_floodplain_growth, 0);
+}
+
 int map_get_fertility(int grid_offset, int tally_type) { // actual percentage integer [0-99]
     switch (tally_type) {
     case FERT_WITH_MALUS:
         return map_grid_get(&g_terrain_floodplain_fertility, grid_offset);
         break;
+
     case FERT_ONLY_MALUS:
         return map_grid_get(&g_terrain_floodplain_fertility, grid_offset)
                - map_grid_get(&g_terrain_floodplain_max_fertile, grid_offset);
         break;
+
     case FERT_NO_MALUS:
         return map_grid_get(&g_terrain_floodplain_max_fertile, grid_offset);
         break;
@@ -159,15 +165,17 @@ uint8_t map_get_fertility_for_farm(int grid_offset) {
     }
     int irrigation_bonus = 40;
 
-    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
+    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         irrigation_bonus = 20;
+    }
 
     return std::min(2 + map_get_fertility_average(grid_offset, x, y, 3) + is_irrigated * irrigation_bonus, 99);
 }
 
 void map_set_floodplain_growth(int grid_offset, int growth) {
-    if (growth >= 0 && growth < 6)
+    if (growth >= 0 && growth < 6) {
         map_grid_set(&g_terrain_floodplain_growth, grid_offset, growth);
+    }
 }
 
 void map_soil_set_depletion(int grid_offset, int malus) {
@@ -177,4 +185,8 @@ void map_soil_set_depletion(int grid_offset, int malus) {
 
 io_buffer* iob_soil_fertility_grid = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_terrain_floodplain_fertility);
+});
+
+io_buffer* iob_terrain_floodplain_growth = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_floodplain_growth);
 });

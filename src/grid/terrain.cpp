@@ -372,14 +372,21 @@ void build_terrain_caches() {
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             //            if (map_grid_inside_map_area(grid_offset)) { // only inside the valid game area!
-            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER))
-                river_tiles_cache.add(grid_offset);
-            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
-                floodplain_tiles_cache.add(grid_offset);
-            if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND))
-                marshland_tiles_cache.add(grid_offset);
-            if (map_terrain_is(grid_offset, TERRAIN_TREE))
-                trees_tiles_cache.add(grid_offset);
+            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER)) {
+                river_tiles_cache.push_back(grid_offset);
+            }
+            
+            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+                floodplain_tiles_cache.push_back(grid_offset);
+            }
+
+            if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND)) {
+                marshland_tiles_cache.push_back(grid_offset);
+            }
+
+            if (map_terrain_is(grid_offset, TERRAIN_TREE)) {
+                trees_tiles_cache.push_back(grid_offset);
+            }
             //            }
         }
     }

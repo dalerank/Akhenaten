@@ -1,18 +1,6 @@
-#ifndef OZYMANDIAS_TILE_CACHE_H
-#define OZYMANDIAS_TILE_CACHE_H
+#pragma once
 
 #include "grid.h"
+#include "core/svector.h"
 
-class tile_cache {
-private:
-    int pCache[GRID_SIZE_TOTAL];
-    int pSize = 0;
-
-public:
-    void clear();
-    void add(int grid_offset);
-    int at(int i);
-    const int size();
-};
-
-#endif // OZYMANDIAS_TILE_CACHE_H
+using tile_cache = svector<int, GRID_SIZE_TOTAL>;

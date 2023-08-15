@@ -1774,17 +1774,22 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
     // update terrain data for certain special cases
     if (special_flags & PlannerFlags::Meadow) {
-        for (int y = end.y(); y < end.y() + size.y; y++)
-            for (int x = end.x(); x < end.x() + size.x; x++)
+        for (int y = end.y(); y < end.y() + size.y; y++) {
+            for (int x = end.x(); x < end.x() + size.x; x++) {
                 map_set_floodplain_growth(MAP_OFFSET(x, y), 0);
+            }
+        }
     }
+
     if (special_flags & PlannerFlags::Road) {
         map_terrain_add_in_area(end.x(), end.y(), end.x() + size.x - 1, end.y() + size.y - 1, TERRAIN_ROAD);
         map_tiles_update_area_roads(end.x(), end.y(), 5);
         map_tiles_update_all_plazas();
     }
-    if (special_flags & PlannerFlags::Walls)
+
+    if (special_flags & PlannerFlags::Walls) {
         map_tiles_update_area_walls(end.x(), end.y(), 5);
+    }
 
     // consume resources for specific buildings (e.g. marble, granite)
     if (special_flags & PlannerFlags::Resources) {

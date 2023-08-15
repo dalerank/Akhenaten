@@ -11,7 +11,9 @@
 //  149 (later campaign scenarios and maps)
 //  150 (later campaign scenarios and maps)
 //  160 (post-Cleopatra campaign scenarios, patched Bubastis scenario)
-constexpr uint32_t latest_save_version = 161;
+//  161 ozymandias: save foods in houses
+//  162 ozymandias: save g_terrain_floodplain_growth
+constexpr uint32_t latest_save_version = 162;
 
 void fullpath_saves(char* full, const char* filename);
 void fullpath_maps(char* full, const char* filename);

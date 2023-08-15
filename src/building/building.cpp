@@ -503,9 +503,7 @@ bool building_is_farm(int type) {
            || type == BUILDING_HENNA_FARM;
 }
 bool building_is_floodplain_farm(building* b) {
-    return (GAME_ENV == ENGINE_ENV_PHARAOH && building_is_farm(b->type)
-            && map_terrain_is(b->tile.grid_offset(),
-                              TERRAIN_FLOODPLAIN)); // b->data.industry.labor_state >= 1 // b->labor_category == 255
+    return (building_is_farm(b->type) && map_terrain_is(b->tile.grid_offset(), TERRAIN_FLOODPLAIN)); // b->data.industry.labor_state >= 1 // b->labor_category == 255
 }
 bool building_is_workshop(int type) {
     return (type >= BUILDING_BEER_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
