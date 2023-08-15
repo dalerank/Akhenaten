@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/type.h"
+#include "core/profiler.h"
 #include "graphics/boilerplate.h"
 #include "grid/figure.h"
 #include "grid/property.h"
@@ -298,6 +299,7 @@ void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_ti
 }
 
 void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles, int force) {
+    OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded/Minimap");
     auto& data = g_minimap_data;
     if (data.refresh_requested || scroll_in_progress() || force) {
         //        if (data.refresh_requested) {

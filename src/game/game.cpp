@@ -4,12 +4,14 @@
 #include "building/model.h"
 #include "core/game_environment.h"
 #include "core/random.h"
+#include "core/profiler.h"
 #include "editor/editor.h"
 #include "game/file_editor.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/tick.h"
 #include "graphics/animation_timers.h"
+#include "graphics/elements/warning.h"
 #include "graphics/font.h"
 #include "graphics/image.h"
 #include "graphics/video.h"
@@ -190,21 +192,52 @@ int game_reload_language() {
     return reload_language(0, 1);
 }
 void game_run() {
+    OZZY_PROFILER_SECTION("Game/Run");
     game_animation_update();
+
     int num_ticks = get_elapsed_ticks();
     for (int i = 0; i < num_ticks; i++) {
         game_tick_run();
 
         if (window_is_invalid())
             break;
+    
     }
-    if (window_is(WINDOW_CITY))
+
+    if (window_is(WINDOW_CITY)) {
         anti_scum_random_15bit();
+    }
 }
-void game_draw() {
-    window_draw(0);
+void game_draw_frame() {
+    OZZY_PROFILER_SECTION("Render/Frame");
+    window_draw(false);
+}
+
+void game_sound_frame() {
+    OZZY_PROFILER_SECTION("Sound/Frame");
     sound_city_play();
 }
+
+void game_handle_input_frame() {
+    OZZY_PROFILER_SECTION("Input/Frame/Current");
+    const mouse *m = mouse_get();
+    const hotkeys *h = hotkey_state();
+
+    window_type* w = window_current();
+    w->handle_input(m, h);
+    tooltip_handle(m, w->get_tooltip);
+}
+
+void game_draw_frame_warning() {
+    OZZY_PROFILER_SECTION("Render/Frame/Warning");
+    warning_draw();
+}
+
+void game_handle_input_after() {
+    OZZY_PROFILER_SECTION("Input/Frame/After");
+    window_update_input_after();
+}
+
 void game_exit() {
     video_shutdown();
     settings_save();

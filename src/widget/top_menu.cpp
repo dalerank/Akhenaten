@@ -4,6 +4,7 @@
 #include "city/finance.h"
 #include "city/constants.h"
 #include "city/population.h"
+#include "core/profiler.h"
 #include "dev/debug.h"
 #include "game/cheats.h"
 #include "game/mission.h"
@@ -453,6 +454,7 @@ static void refresh_background(void) {
 }
 
 void widget_top_menu_draw(int force) {
+    OZZY_PROFILER_SECTION("Render/Frame/Window/City/Topmenu");
     auto& data = g_top_menu_data;
     if (!force && g_top_menu_drawn.treasury == city_finance_treasury()
         && g_top_menu_drawn.population == city_population() && g_top_menu_drawn.month == game_time_month()) {

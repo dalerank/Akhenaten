@@ -11,7 +11,11 @@ int game_reload_language(void);
 
 void game_run(void);
 
-void game_draw(void);
+void game_draw_frame();
+void game_sound_frame();
+void game_handle_input_frame();
+void game_draw_frame_warning();
+void game_handle_input_after();
 
 void game_exit_editor(void);
 

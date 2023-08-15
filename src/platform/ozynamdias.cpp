@@ -4,6 +4,7 @@
 #include "core/game_environment.h"
 #include "core/stacktrace.h"
 #include "core/time.h"
+#include "core/profiler.h"
 #include "game/game.h"
 #include "game/settings.h"
 #include "game/system.h"
@@ -67,8 +68,6 @@
 #if !SDL_VERSION_ATLEAST(2, 0, 17)
 #error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
 #endif
-
-#include "tracy/Tracy.hpp"
 
 #define INTPTR(d) (*(int*)(d))
 
@@ -352,12 +351,18 @@ struct fps_data_t {
 fps_data_t g_fps = {0, 0, 0};
 
 static void run_and_draw(void) {
+    OZZY_PROFILER_FRAME();
     time_millis time_before_run = SDL_GetTicks();
     time_set_millis(time_before_run);
 
     game_run();
     Uint32 time_between_run_and_draw = SDL_GetTicks();
-    game_draw();
+
+    game_draw_frame();
+    game_sound_frame();
+    game_handle_input_frame();
+    game_draw_frame_warning();
+    game_handle_input_after();
     Uint32 time_after_draw = SDL_GetTicks();
 
     g_fps.frame_count++;
@@ -526,7 +531,6 @@ static void main_loop() {
 }
 
 int main(int argc, char** argv) {
-    ZoneScoped;
     logs::initialize();
 
     Arguments arguments(argc, argv);

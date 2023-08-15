@@ -102,6 +102,9 @@ void window_request_refresh(void);
 int window_is_invalid(void);
 
 void window_draw(int force);
+void window_update_input_after();
+
+window_type *window_current();
 
 void window_draw_underlying_window(void);
 

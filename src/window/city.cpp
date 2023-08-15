@@ -1,11 +1,12 @@
 #include "city.h"
-#include "widget/overlays/city_overlay.h"
 
+#include "widget/overlays/city_overlay.h"
 #include "building/construction/build_planner.h"
 #include "building/rotation.h"
 #include "city/message.h"
 #include "city/victory.h"
 #include "city/warning.h"
+#include "core/profiler.h"
 #include "dev/debug.h"
 #include "game/orientation.h"
 #include "game/settings.h"
@@ -34,7 +35,8 @@ static int center_in_city(int element_width_pixels) {
     return x + margin;
 }
 
-static void draw_background(void) {
+static void window_city_draw_background(void) {
+    OZZY_PROFILER_SECTION("Render/Frame/Window/City/Bakground");
     widget_sidebar_city_draw_background();
     widget_top_menu_draw(1);
 }
@@ -242,23 +244,23 @@ static void get_tooltip(tooltip_context* c) {
 }
 
 void window_city_draw_all(void) {
-    draw_background();
+    window_city_draw_background();
     draw_foreground();
 }
 void window_city_draw_panels(void) {
-    draw_background();
+    window_city_draw_background();
 }
 void window_city_draw(void) {
     widget_city_draw();
 }
 void window_city_show(void) {
-    window_type window = {WINDOW_CITY, draw_background, draw_foreground, handle_input, get_tooltip};
+    window_type window = {WINDOW_CITY, window_city_draw_background, draw_foreground, handle_input, get_tooltip};
     window_show(&window);
     city_has_loaded = false;
 }
 void window_city_military_show(int legion_formation_id) {
     selected_legion_formation_id = legion_formation_id;
     window_type window
-      = {WINDOW_CITY_MILITARY, draw_background, draw_foreground_military, handle_input_military, get_tooltip};
+      = {WINDOW_CITY_MILITARY, window_city_draw_background, draw_foreground_military, handle_input_military, get_tooltip};
     window_show(&window);
 }

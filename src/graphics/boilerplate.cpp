@@ -2,6 +2,7 @@
 
 #include "graphics/screen.h"
 #include "platform/renderer.h"
+#include "core/profiler.h"
 
 #ifdef __vita__
 #include <vita2d.h>
@@ -38,6 +39,7 @@ void graphics_reset_clip_rectangle(void) {
 }
 
 void graphics_clear_screen(void) {
+    OZZY_PROFILER_SECTION("Render/Frame/Clear Screen");
     graphics_renderer()->clear_screen();
 }
 

@@ -1,5 +1,6 @@
 #include "window.h"
 
+#include "core/profiler.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/warning.h"
 #include "input/cursor.h"
@@ -84,12 +85,13 @@ void window_go_back(void) {
     window_invalidate();
 }
 static void update_input_before(void) {
-    if (!touch_to_mouse())
+    if (!touch_to_mouse()) {
         mouse_determine_button_state(); // touch overrides mouse
+    }
 
     hotkey_handle_global_keys();
 }
-static void update_input_after(void) {
+void window_update_input_after() {
     auto& data = g_window;
     reset_touches(0);
     mouse_reset_scroll();
@@ -102,21 +104,27 @@ void window_draw(int force) {
     update_input_before();
     window_type* w = data.current_window;
     if (force || data.refresh_on_draw) {
+        OZZY_PROFILER_SECTION("Render/Frame/Refresh");
         graphics_clear_screen();
         tooltip_invalidate();
-        w->draw_background();
+        {
+            OZZY_PROFILER_SECTION("Render/Frame/Window/Background");
+            w->draw_background();
+        }
         data.refresh_on_draw = 0;
         data.refresh_immediate = 0;
     }
-    w->draw_foreground();
 
-    const mouse* m = mouse_get();
-    const hotkeys* h = hotkey_state();
-    w->handle_input(m, h);
-    tooltip_handle(m, w->get_tooltip);
-    warning_draw();
-    update_input_after();
+    {
+        OZZY_PROFILER_SECTION("Render/Frame/Foreground");
+        w->draw_foreground();
+    }
 }
+
+window_type *window_current() {
+    return g_window.current_window;
+}
+
 void window_draw_underlying_window(void) {
     auto& data = g_window;
     if (data.underlying_windows_redrawing < MAX_QUEUE) {
