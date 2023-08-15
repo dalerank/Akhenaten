@@ -152,11 +152,11 @@ static const advisor_window_type* (*sub_advisors[])(void) = {
   window_advisor_chief,
   window_advisor_monuments,
   // sub-advisors begin here
-  0,
-  0,
-  0,
-  0,
-  0,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   window_advisor_housing // population sub-advisor
 };
 
@@ -183,17 +183,17 @@ static const int ADVISOR_TO_MESSAGE_TEXT[] = {
   MESSAGE_DIALOG_ADVISOR_POPULATION,
 };
 
-static const advisor_window_type* current_advisor_window = 0;
+static const advisor_window_type* current_advisor_window = nullptr;
 static int current_advisor = ADVISOR_NONE;
 
 static int focus_button_id;
 static int advisor_height;
 
-static void set_advisor_window(void) {
+static void set_advisor_window() {
     if (sub_advisors[current_advisor])
         current_advisor_window = sub_advisors[current_advisor]();
     else
-        current_advisor_window = 0;
+        current_advisor_window = nullptr;
 }
 static void set_advisor(int advisor) {
     current_advisor = advisor;
@@ -203,32 +203,32 @@ static void set_advisor(int advisor) {
         advisor_buttons_PH[advisor - 1].pressed = 1; // set button active when coming back to menu
 }
 
-static int is_advisor_available(int advisor_id) {
+static bool is_advisor_available(int advisor_id) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         if (advisor_id == 13) // last button is always enabled
-            return 1;
+            return true;
         if (advisor_id < 0 || advisor_id > 12) // out of range
-            return 0;
+            return false;
         // maybe these are actually stored in the saves?
         // either way, I'll make these hardcoded for the time being.
         if (scenario_is_mission_rank(2)) {
-            int advLevels[] = {0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0};
+            bool advLevels[] = {false, false, false, false, false, true, false, false, true, true, false, false, false};
             return advLevels[advisor_id];
         } else if (scenario_is_mission_rank(3)) {
-            int advLevels[] = {1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0};
+            bool advLevels[] = {true, false, false, false, false, true, false, false, true, true, false, false, false};
             return advLevels[advisor_id];
         } else if (scenario_is_mission_rank(4)) {
-            int advLevels[] = {1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0};
+            bool advLevels[] = {true, false, true, false, false, true, true, false, true, true, false, false, false};
             return advLevels[advisor_id];
         } else if (scenario_is_mission_rank(5)) {
-            int advLevels[] = {1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0};
+            bool advLevels[] = {true, false, true, true, false, true, true, false, true, true, true, true, false};
             return advLevels[advisor_id];
         }
     }
-    return 1;
+    return true;
 }
 
-static void init(void) {
+static void init() {
     city_labor_allocate_workers();
 
     city_finance_estimate_taxes();
@@ -252,7 +252,7 @@ static void init(void) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         for (int i = 0; i < 13; i++)
             advisor_buttons_PH[i].enabled = is_advisor_available(i);
-        advisor_buttons_PH[13].enabled = 1;
+        advisor_buttons_PH[13].enabled = true;
     }
 }
 
