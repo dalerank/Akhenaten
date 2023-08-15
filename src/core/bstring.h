@@ -231,11 +231,19 @@ public:
         ::strncpy(_data, other._data, _size);
     }
     inline void operator=(const char* s) {
-        assert(s);
-        ::strncpy(_data, s, _size);
+        ::snprintf(_data, _size, "%s", s ? s : "null");
+    }
+    inline void operator=(const uint8_t* s) {
+        ::snprintf(_data, _size, "%s",  s ? (const char*)s : "null");
     }
     inline bool operator==(const_ref other) const {
         return equals(other);
+    }
+    inline operator const uint8_t *() const {
+        return (const uint8_t *)_data;
+    }
+    inline operator uint8_t *() {
+        return (uint8_t *)_data;
     }
     inline bool operator==(const char* s) const {
         assert(s);

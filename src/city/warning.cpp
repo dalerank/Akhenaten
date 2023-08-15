@@ -8,13 +8,12 @@
 #include "io/gamefiles/lang.h"
 
 #define MAX_WARNINGS 5
-#define MAX_TEXT 100
 #define TIMEOUT_MS 15000
 
 struct warning {
     int in_use;
     time_millis time;
-    uint8_t text[MAX_TEXT];
+    bstring128 text;
 };
 
 warning g_warnings[MAX_WARNINGS];
@@ -28,19 +27,23 @@ static struct warning* new_warning(void) {
 }
 
 void city_warning_show(int type) {
-    if (!setting_warnings())
+    if (!setting_warnings()) {
         return;
-    struct warning* w = new_warning();
-    if (!w)
+    }
+    warning* w = new_warning();
+    if (!w) {
         return;
+    }
     w->in_use = 1;
     w->time = time_get_millis();
+
     const uint8_t* text;
-    if (type == WARNING_ORIENTATION)
+    if (type == WARNING_ORIENTATION) {
         text = lang_get_string(17, city_view_orientation());
-    else
+    } else {
         text = lang_get_string(19, type - 2);
-    string_copy(text, w->text, MAX_TEXT);
+    }
+    w->text = text;
 }
 
 int city_has_warnings(void) {
@@ -53,7 +56,7 @@ int city_has_warnings(void) {
 
 const uint8_t* city_warning_get(int id) {
     if (g_warnings[id].in_use)
-        return g_warnings[id].text;
+        return (const uint8_t*)g_warnings[id].text.data();
 
     return 0;
 }
@@ -75,9 +78,10 @@ void city_warning_clear_outdated(void) {
 
 void city_warning_show_console(uint8_t* warning_text) {
     struct warning* w = new_warning();
-    if (!w)
+    if (!w) {
         return;
+    }
     w->in_use = 1;
     w->time = time_get_millis();
-    string_copy(warning_text, w->text, MAX_TEXT);
+    w->text = warning_text;
 }

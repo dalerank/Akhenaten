@@ -30,8 +30,6 @@
 #include "window/editor/win_criteria.h"
 #include "window/select_list.h"
 
-#define BRIEF_DESC_LENGTH 64
-
 static void button_starting_conditions(int param1, int param2);
 static void button_requests(int param1, int param2);
 static void button_enemy(int param1, int param2);
@@ -66,7 +64,7 @@ static input_box scenario_description_input = {92, 40, 19, 2, FONT_NORMAL_WHITE_
 
 static struct {
     int is_paused;
-    uint8_t subtitle[BRIEF_DESC_LENGTH];
+    bstring64 subtitle;
     int focus_button_id;
 } data;
 
@@ -74,8 +72,8 @@ static void start(void) {
     if (data.is_paused)
         input_box_resume(&scenario_description_input);
     else {
-        string_copy(scenario_subtitle(), data.subtitle, BRIEF_DESC_LENGTH);
-        input_box_start(&scenario_description_input, data.subtitle, BRIEF_DESC_LENGTH, 1);
+        data.subtitle = scenario_subtitle();
+        input_box_start(&scenario_description_input, data.subtitle, data.subtitle.capacity, 1);
     }
 }
 
