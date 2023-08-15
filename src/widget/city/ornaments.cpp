@@ -234,14 +234,14 @@ int get_crops_image(int type, int growth) {
     }
     return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
 }
-void draw_farm_crops(int type, int progress, int grid_offset, int x, int y, color_t color_mask) {
+void draw_farm_crops(int type, int progress, int grid_offset, vec2i tile, color_t color_mask) {
     int image_crops = get_crops_image(type, 0);
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) { // on floodplains - all
         for (int i = 0; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i * 200) / 100));
             ImageDraw::img_from_below(image_crops + growth_offset,
-                                      x + FARM_TILE_OFFSETS_FLOODPLAIN[i][0],
-                                      y + FARM_TILE_OFFSETS_FLOODPLAIN[i][1],
+                                      tile.x + FARM_TILE_OFFSETS_FLOODPLAIN[i][0],
+                                      tile.y + FARM_TILE_OFFSETS_FLOODPLAIN[i][1],
                                       color_mask);
         }
     } else { // on dry meadows
@@ -249,8 +249,8 @@ void draw_farm_crops(int type, int progress, int grid_offset, int x, int y, colo
             int growth_offset = fmin(5, fmax(0, (progress - i * 400) / 100));
 
             ImageDraw::img_from_below(image_crops + growth_offset,
-                                      x + FARM_TILE_OFFSETS_MEADOW[i][0],
-                                      y + FARM_TILE_OFFSETS_MEADOW[i][1],
+                                      tile.x + FARM_TILE_OFFSETS_MEADOW[i][0],
+                                      tile.y + FARM_TILE_OFFSETS_MEADOW[i][1],
                                       color_mask);
         }
     }
@@ -503,10 +503,10 @@ static void draw_senate_rating_flags(const building* b, int x, int y, color_t co
     }
 }
 
-void draw_ornaments_and_animations(vec2i pixel, map_point point) {
+void draw_ornaments_and_animations(vec2i tile, map_point point) {
     int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
+    int x = tile.x;
+    int y = tile.y;
     // tile must contain image draw data
     if (!map_property_is_draw_tile(grid_offset))
         return;
@@ -547,7 +547,7 @@ void draw_ornaments_and_animations(vec2i pixel, map_point point) {
     case BUILDING_FLAX_FARM:
     case BUILDING_HENNA_FARM:
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            draw_farm_crops(b->type, b->data.industry.progress, b->tile.grid_offset(), x, y, color_mask);
+            draw_farm_crops(b->type, b->data.industry.progress, b->tile.grid_offset(), tile, color_mask);
             draw_farm_workers(b, grid_offset, x, y);
         }
         break;
