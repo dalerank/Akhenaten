@@ -211,7 +211,7 @@ void building_maintenance_check_fire_collapse(void) {
         map_routing_update_land();
 }
 void building_maintenance_check_rome_access(void) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Maintenace Check Rome Access");
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access");
     map_point& entry_point = city_map_entry_point();
     map_routing_calculate_distances(entry_point.x(), entry_point.y());
     int problem_grid_offset = 0;
@@ -221,6 +221,7 @@ void building_maintenance_check_rome_access(void) {
             continue;
 
         if (b->house_size) {
+            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/House");
             int x_road, y_road;
             if (!map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
                 // no road: eject people
@@ -236,10 +237,10 @@ void building_maintenance_check_rome_access(void) {
                 }
             } else if (map_routing_distance(MAP_OFFSET(x_road, y_road))) {
                 // reachable from rome
+                OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/House/map_routing_distance");
                 b->distance_from_entry = map_routing_distance(MAP_OFFSET(x_road, y_road));
                 b->house_unreachable_ticks = 0;
-            } else if (map_closest_reachable_road_within_radius(
-                         b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+            } else if (map_closest_reachable_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
                 b->distance_from_entry = map_routing_distance(MAP_OFFSET(x_road, y_road));
                 b->house_unreachable_ticks = 0;
             } else {
@@ -255,13 +256,13 @@ void building_maintenance_check_rome_access(void) {
                 }
             }
         } else if (b->type == BUILDING_WAREHOUSE) {
+            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Warehouse");
             if (!city_buildings_get_trade_center())
                 city_buildings_set_trade_center(i);
 
             b->distance_from_entry = 0;
             int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network_rotation(
-              b->subtype.orientation, b->tile.x(), b->tile.y(), 3, &x_road, &y_road);
+            int road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), 3, &x_road, &y_road);
             if (road_grid_offset >= 0) {
                 b->road_network_id = map_road_network_get(road_grid_offset);
                 b->distance_from_entry = map_routing_distance(road_grid_offset);
@@ -269,12 +270,14 @@ void building_maintenance_check_rome_access(void) {
                 b->road_access.y(y_road);
             }
         } else if (b->type == BUILDING_WAREHOUSE_SPACE) {
+            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Warehouse Space");
             b->distance_from_entry = 0;
             building* main_building = b->main();
             b->road_network_id = main_building->road_network_id;
             b->distance_from_entry = main_building->distance_from_entry;
             b->road_access = main_building->road_access;
         } else if (b->type == BUILDING_SENET_HOUSE) {
+            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Senet");
             b->distance_from_entry = 0;
             int x_road, y_road;
             int road_grid_offset = map_road_to_largest_network_hippodrome(b->tile.x(), b->tile.y(), &x_road, &y_road);
@@ -285,6 +288,7 @@ void building_maintenance_check_rome_access(void) {
                 b->road_access.y(y_road);
             }
         } else { // other building
+            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Other");
             b->distance_from_entry = 0;
             int x_road, y_road;
             int road_grid_offset = map_road_to_largest_network(b->tile.x(), b->tile.y(), b->size, &x_road, &y_road);
@@ -296,32 +300,36 @@ void building_maintenance_check_rome_access(void) {
             }
         }
     }
-    map_point& exit_point = city_map_exit_point();
-    if (!map_routing_distance(exit_point.grid_offset())) {
-        // no route through city
-        if (city_population() <= 0)
-            return;
-        for (int i = 0; i < 15; i++) {
-            map_routing_delete_first_wall_or_aqueduct(entry_point.x(), entry_point.y());
-            map_routing_delete_first_wall_or_aqueduct(exit_point.x(), exit_point.y());
-            map_routing_calculate_distances(entry_point.x(), entry_point.y());
-
-            map_tiles_update_all_walls();
-            map_tiles_update_all_aqueducts(0);
-            map_tiles_update_all_empty_land();
-            map_tiles_update_all_meadow();
-
-            map_routing_update_land();
-            map_routing_update_walls();
-
-            if (map_routing_distance(exit_point.grid_offset())) {
-                city_message_post(true, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
-                game_undo_disable();
-                return;
-            }
-        }
-        // building_destroy_last_placed();
+    
+    {
+        OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Exit Check");
+        map_point& exit_point = city_map_exit_point();
+        //if (!map_routing_distance(exit_point.grid_offset())) {
+        //    // no route through city
+        //    if (city_population() <= 0) {
+        //        return;
+        //    }
+        //    map_routing_delete_first_wall_or_aqueduct(entry_point.x(), entry_point.y());
+        //    map_routing_delete_first_wall_or_aqueduct(exit_point.x(), exit_point.y());
+        //    map_routing_calculate_distances(entry_point.x(), entry_point.y());
+        //    
+        //    map_tiles_update_all_walls();
+        //    map_tiles_update_all_aqueducts(0);
+        //    map_tiles_update_all_empty_land();
+        //    map_tiles_update_all_meadow();
+        //    
+        //    map_routing_update_land();
+        //    map_routing_update_walls();
+        //    
+        //    if (map_routing_distance(exit_point.grid_offset())) {
+        //        city_message_post(true, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
+        //        game_undo_disable();
+        //        return;
+        //    }
+        //    // building_destroy_last_placed();
+        //}
     } // else
+
     if (problem_grid_offset) {
         // parts of city disconnected
         city_warning_show(WARNING_CITY_BOXED_IN);

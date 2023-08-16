@@ -5,6 +5,7 @@
 #include "city/figures.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "core/profiler.h"
 #include "figure/combat.h"
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
@@ -95,6 +96,7 @@ void figure_create_herds(void) {
 }
 
 bool figure::herd_roost(int step, int bias, int max_dist, int terrain_mask) {
+    OZZY_PROFILER_SECTION("Figure/Herd Rooost");
     if (!formation_id) {
         return false;
     }
@@ -329,6 +331,7 @@ void figure::ostrich_action() {
 
 // TODO: Rewrite hippo action & add correct animations
 void figure::hippo_action() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Hippo");
     const formation* m = formation_get(formation_id);
     city_figures_add_animal();
 

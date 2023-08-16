@@ -4,6 +4,7 @@
 #include "building/roadblock.h"
 #include "building/rotation.h"
 #include "city/map.h"
+#include "core/profiler.h"
 #include "grid/building.h"
 #include "grid/grid.h"
 #include "grid/property.h"
@@ -152,6 +153,7 @@ bool map_has_road_access_temple_complex(int x, int y, int orientation, bool from
 }
 
 static bool road_within_radius(int x, int y, int size, int radius, int* x_road, int* y_road) {
+    OZZY_PROFILER_SECTION("road_within_radius");
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
 
@@ -173,6 +175,7 @@ static bool road_within_radius(int x, int y, int size, int radius, int* x_road, 
 }
 
 bool map_closest_road_within_radius(int x, int y, int size, int radius, int* x_road, int* y_road) {
+    OZZY_PROFILER_SECTION("map_closest_road_within_radius");
     for (int r = 1; r <= radius; r++) {
         if (road_within_radius(x, y, size, r, x_road, y_road))
             return true;
@@ -181,6 +184,7 @@ bool map_closest_road_within_radius(int x, int y, int size, int radius, int* x_r
 }
 
 static int reachable_road_within_radius(int x, int y, int size, int radius, int* x_road, int* y_road) {
+    OZZY_PROFILER_SECTION("reachable_road_within_radius");
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
 
@@ -202,6 +206,7 @@ static int reachable_road_within_radius(int x, int y, int size, int radius, int*
 }
 
 int map_closest_reachable_road_within_radius(int x, int y, int size, int radius, int* x_road, int* y_road) {
+    OZZY_PROFILER_SECTION("map_closest_reachable_road_within_radius");
     for (int r = 1; r <= radius; r++) {
         if (reachable_road_within_radius(x, y, size, r, x_road, y_road))
             return 1;

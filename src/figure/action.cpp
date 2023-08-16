@@ -135,6 +135,7 @@ bool is_coords_within_range(int x, int y, int b_x, int b_y, int size, int radius
 
     if (x >= min_x && x <= max_x && y >= min_y && y <= max_y)
         return true;
+
     return false;
 }
 
@@ -161,25 +162,29 @@ bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
     return false;
 }
 bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
+    OZZY_PROFILER_SECTION("Figure/Goto");
     terrain_usage = terrainchoice;
-    if (use_cross_country)
+    if (use_cross_country) {
         terrain_usage = TERRAIN_USAGE_ANY;
+    }
 
     // refresh routing if destination is different
-    if (destination_tile.x() != x || destination_tile.y() != y)
+    if (destination_tile.x() != x || destination_tile.y() != y) {
+        OZZY_PROFILER_SECTION("Figure/Goto/Route remove (no dest)");
         route_remove();
+    }
 
     // set up destination and move!!!
     if (use_cross_country) {
+        OZZY_PROFILER_SECTION("Figure/Goto/CrossCountry");
         set_cross_country_destination(x, y);
         if (move_ticks_cross_country(1) == 1) {
             advance_action(NEXT_ACTION);
             return true;
         }
     } else {
+        OZZY_PROFILER_SECTION("Figure/Goto/MoveTicks");
         destination_tile.set(x, y);
-        //        destination_x = x;
-        //        destination_y = y;
         move_ticks(speed_multiplier);
     }
 
@@ -189,10 +194,16 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
         direction = previous_tile_direction;
         return true;
     }
-    if (direction == DIR_FIGURE_REROUTE)
+
+    if (direction == DIR_FIGURE_REROUTE) {
+        OZZY_PROFILER_SECTION("Figure/Goto/Route Remove (reroute)");
         route_remove();
-    if (direction == DIR_FIGURE_CAN_NOT_REACH)
+    }
+
+    if (direction == DIR_FIGURE_CAN_NOT_REACH) {
         advance_action(FAIL_ACTION);
+    }
+
     return false;
 }
 bool figure::do_gotobuilding(building* dest,
@@ -213,10 +224,14 @@ bool figure::do_gotobuilding(building* dest,
         // correct road lookup for warehouse tiles range
         if (dest->type == BUILDING_WAREHOUSE || dest->type == BUILDING_WAREHOUSE_SPACE) {
             building* main = dest->main();
-            if (terrainchoice == TERRAIN_USAGE_ROADS)
+            if (terrainchoice == TERRAIN_USAGE_ROADS) {
                 found_road = map_closest_reachable_road_within_radius(main->tile.x(), main->tile.y(), 3, 1, &x, &y);
-            if (!found_road)
+            }
+
+            if (!found_road) {
                 found_road = map_closest_road_within_radius(main->tile.x(), main->tile.y(), 3, 1, &x, &y);
+            }
+
             if (found_road && is_coords_within_range(tile.x(), tile.y(), main->tile.x(), main->tile.y(), 3, 1)) {
                 x = tile.x();
                 y = tile.y();
@@ -235,17 +250,17 @@ bool figure::do_gotobuilding(building* dest,
                 x = main->road_access.x();
                 y = main->road_access.y();
             } else {
-                if (terrainchoice == TERRAIN_USAGE_ROADS)
-                    found_road
-                      = map_closest_reachable_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 1, &x, &y);
+                if (terrainchoice == TERRAIN_USAGE_ROADS) {
+                    found_road = map_closest_reachable_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 1, &x, &y);
+                }
+
                 if (!found_road) {
                     if (building_is_house(dest->type) || dest->type == BUILDING_BURNING_RUIN)
-                        found_road
-                          = map_closest_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 2, &x, &y);
+                        found_road = map_closest_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 2, &x, &y);
                     else
-                        found_road
-                          = map_closest_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 1, &x, &y);
+                        found_road = map_closest_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 1, &x, &y);
                 }
+
                 if (found_road
                     && is_coords_within_range(tile.x(), tile.y(), dest->tile.x(), dest->tile.y(), dest->size, 1)) {
                     x = tile.x();
@@ -264,8 +279,7 @@ bool figure::do_gotobuilding(building* dest,
                 advance_action(NEXT_ACTION); // don't poof if it's not *requiring* roads, was just looking for one
         }
     } else {
-        return do_goto(
-          dest->tile.x(), dest->tile.y(), terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
+        return do_goto(dest->tile.x(), dest->tile.y(), terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
     }
 
     return 0;

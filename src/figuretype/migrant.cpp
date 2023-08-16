@@ -111,7 +111,7 @@ void figure::immigrant_action() {
     case FIGURE_ACTION_2_IMMIGRANT_ARRIVING:
     case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE: // arriving
         {
-            OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant/Goto");
+            OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant/Goto Building");
             do_gotobuilding(home, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE);
         }
         break;

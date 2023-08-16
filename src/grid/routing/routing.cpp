@@ -1,10 +1,11 @@
 #include "routing.h"
 #include <cmath>
-#include <figure/formation_herd.h>
-#include <grid/vegetation.h>
 
+#include "figure/formation_herd.h"
+#include "grid/vegetation.h"
 #include "building/building.h"
 #include "core/game_environment.h"
+#include "core/profiler.h"
 #include "grid/building.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
@@ -69,6 +70,7 @@ static bool can_place_on_crossing_no_neighboring(int grid_offset,
 }
 
 static void callback_calc_distance(int next_offset, int dist) {
+    OZZY_PROFILER_SECTION("callback_calc_distance");
     if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD)
         enqueue(next_offset, dist);
 }
