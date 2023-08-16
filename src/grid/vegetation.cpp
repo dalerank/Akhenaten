@@ -1,4 +1,5 @@
 #include "vegetation.h"
+
 #include "figure.h"
 #include "grid.h"
 #include "grid/routing/routing.h"
@@ -6,11 +7,12 @@
 #include "io/io_buffer.h"
 #include "terrain.h"
 #include "tiles.h"
-#include <core/calc.h>
-#include <core/random.h>
-#include <figure/figure.h>
-#include <game/resource.h>
-#include <grid/routing/queue.h>
+#include "core/calc.h"
+#include "core/profiler.h"
+#include "core/random.h"
+#include "figure/figure.h"
+#include "game/resource.h"
+#include "grid/routing/queue.h"
 
 tile_cache marshland_tiles_cache;
 tile_cache trees_tiles_cache;
@@ -48,6 +50,7 @@ static void vegetation_tile_update(int grid_offset) {
     }
 }
 void vegetation_growth_update() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Vegetation Groth Update");
     for (int i = 0; i < trees_tiles_cache.size(); ++i)
         vegetation_tile_update(trees_tiles_cache.at(i));
 

@@ -4,6 +4,7 @@
 #include "building/list.h"
 #include "core/game_environment.h"
 #include "core/svector.h"
+#include "core/profiler.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "grid/aqueduct.h"
@@ -15,10 +16,10 @@
 #include "grid/property.h"
 #include "grid/terrain.h"
 #include "scenario/map.h"
+#include "scenario/map.h"
 #include "scenario/property.h"
 #include "tiles.h"
 
-#include <scenario/map.h>
 #include <string.h>
 
 #define MAX_QUEUE 1000
@@ -48,6 +49,7 @@ static void mark_well_access(int well_id, int radius) {
 }
 
 void map_water_supply_update_houses() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Water Supply Update");
     svector<int, 512> wells;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
@@ -202,6 +204,7 @@ static void update_canals_from_water_lifts() {
     }
 }
 void map_update_canals(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Canals Update");
     // first, reset all canals
     map_terrain_remove_all(TERRAIN_IRRIGATION_RANGE);
     canals_empty_all();
@@ -212,6 +215,7 @@ void map_update_canals(void) {
     update_canals_from_water_lifts();
 }
 void map_update_wells_range(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Wells Range Update");
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE);
     int total_wells = building_list_small_size();
     const int* wells = building_list_small_items();

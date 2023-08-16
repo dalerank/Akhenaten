@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "core/svector.h"
+#include "core/profiler.h"
 #include "grid/building.h"
 #include "grid/grid.h"
 
@@ -23,6 +24,7 @@ static void mark_shrine_access(building* shrine, int radius) {
 
 
 void map_religion_supply_update_houses() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Religion Supply Update");
     svector<building*, 512> shrines;
     for (auto& b : city_buildings()) {
         if (b.state != BUILDING_STATE_VALID)

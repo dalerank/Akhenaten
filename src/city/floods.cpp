@@ -1,6 +1,7 @@
 #include "floods.h"
 
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "core/random.h"
 #include "game/time.h"
 #include "grid/floodplain.h"
@@ -223,6 +224,7 @@ static void post_flood_prediction_message() {
         city_message_post(true, MESSAGE_FLOOD_FAIL, 0, 0);
 }
 void floodplains_tick_update(bool calc_only) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Floodplains Update");
     auto& data = floodplain_data();
 
     cycle_states_recalc();

@@ -1,9 +1,9 @@
 #include "tick.h"
-#include "io/manager.h"
-#include <city/floods.h>
-#include <grid/vegetation.h>
-#include <scenario/events.h>
 
+#include "io/manager.h"
+#include "city/floods.h"
+#include "grid/vegetation.h"
+#include "scenario/events.h"
 #include "building/count.h"
 #include "building/dock.h"
 #include "building/figure.h"
@@ -31,6 +31,7 @@
 #include "city/trade.h"
 #include "city/victory.h"
 #include "core/random.h"
+#include "core/profiler.h"
 #include "editor/editor.h"
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -117,6 +118,7 @@ static void advance_month(void) {
 }
 
 static void advance_day(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Advance Day");
     //    map_advance_floodplain_growth();
 
     if (game_time_advance_day())
@@ -131,8 +133,7 @@ static void advance_day(void) {
 static void advance_tick(void) {
     tutorial_starting_message();
 
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        floodplains_tick_update(false);
+    floodplains_tick_update(false);
 
     // NB: these ticks are noop:
     // 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
@@ -272,6 +273,7 @@ static void advance_tick(void) {
 }
 
 void game_tick_run(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick");
     if (editor_is_active()) {
         random_generate_next(); // update random to randomize native huts
         figure_action_handle(); // just update the flag figures

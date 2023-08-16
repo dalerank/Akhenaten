@@ -7,6 +7,7 @@
 #include "city/message.h"
 #include "city/resource.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "core/game_environment.h"
 #include "grid/routing/routing_terrain.h"
 #include "io/config/config.h"
@@ -223,6 +224,7 @@ granary_task_status building_granary_determine_worker_task(building* granary) {
 }
 
 void building_granaries_calculate_stocks(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Granaries Calculate Stocks");
     g_non_getting_granaries.num_items = 0;
     for (int i = 0; i < MAX_GRANARIES; i++) {
         g_non_getting_granaries.building_ids[i] = 0;

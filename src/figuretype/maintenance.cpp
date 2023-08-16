@@ -6,6 +6,7 @@
 #include "building/maintenance.h"
 #include "city/figures.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "figure/combat.h"
 #include "figure/enemy_army.h"
 #include "figure/image.h"
@@ -15,10 +16,8 @@
 #include "grid/building.h"
 #include "grid/road_access.h"
 #include "sound/effect.h"
-
 #include "core/game_environment.h"
 #include "graphics/image_groups.h"
-
 #include "figure/properties.h"
 
 enum E_NEARBY { NEARBY_ANY, NEARBY_ANIMAL, NEARBY_HOSTILE };
@@ -217,6 +216,7 @@ int figure::target_is_alive() {
 }
 
 void figure::engineer_action() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Engineer");
     //    building *b = building_get(building_id);
     switch (action_state) {
     case FIGURE_ACTION_60_ENGINEER_CREATED:

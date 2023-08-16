@@ -5,6 +5,7 @@
 #include "city/buildings.h"
 #include "city/military.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "grid/building.h"
@@ -15,7 +16,7 @@
 #include "grid/random.h"
 #include "grid/terrain.h"
 #include "scenario/building.h"
-#include <scenario/map.h>
+#include "scenario/map.h"
 
 static void mark_native_land(int x, int y, int size, int radius) {
     int x_min, y_min, x_max, y_max;
@@ -184,6 +185,7 @@ void map_natives_init_editor(void) {
 }
 
 void map_natives_check_land(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Map Natives Update");
     map_property_clear_all_native_land();
     city_military_decrease_native_attack_duration();
 

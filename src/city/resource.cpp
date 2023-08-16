@@ -5,6 +5,7 @@
 #include "building/model.h"
 #include "city/data_private.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "empire/city.h"
 #include "game/tutorial.h"
 #include "grid/road_access.h"
@@ -166,6 +167,7 @@ void city_resource_remove_from_warehouse(int resource, int amount) {
 }
 
 void city_resource_calculate_warehouse_stocks(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Warehouse Stocks Update");
     for (int i = 0; i < RESOURCES_MAX; i++) {
         city_data.resource.space_in_warehouses[i] = 0;
         city_data.resource.stored_in_warehouses[i] = 0;
@@ -296,6 +298,7 @@ static void calculate_available_food(void) {
     }
 }
 void city_resource_calculate_food_stocks_and_supply_wheat(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Food Stocks Update");
     calculate_available_food();
     if (scenario_property_rome_supplies_wheat()) {
         for (int i = 1; i < MAX_BUILDINGS; i++) {

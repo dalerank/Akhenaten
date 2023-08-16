@@ -3,10 +3,12 @@
 #include "building/count.h"
 #include "city/constants.h"
 #include "city/data_private.h"
+#include "core/profiler.h"
 #include "empire/city.h"
 #include "io/config/config.h"
 
 void city_trade_update(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Trade Update");
     city_data.trade.num_sea_routes = 0;
     city_data.trade.num_land_routes = 0;
     // Wine types

@@ -1,10 +1,11 @@
 #include "road_network.h"
 
 #include "city/map.h"
+#include "core/profiler.h"
 #include "grid/grid.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
-#include <scenario/map.h>
+#include "scenario/map.h"
 
 #include <string.h>
 
@@ -77,6 +78,7 @@ static int mark_road_network(int grid_offset, uint8_t network_id) {
 }
 
 void map_road_network_update(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Road Network Update");
     city_map_clear_largest_road_networks();
     map_grid_clear(&network);
     int network_id = 1;

@@ -6,6 +6,7 @@
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "core/random.h"
 #include "game/time.h"
 #include "io/config/config.h"
@@ -13,7 +14,7 @@
 
 #define MAX_CATS 10
 
-enum E_LABOR {
+enum e_labor {
     LABOR_CATEGORY_FOOD_PRODUCTION = 0, // todo: wrong index...
     LABOR_CATEGORY_INDUSTRY_COMMERCE = 1,
     LABOR_CATEGORY_ENTERTAINMENT = 2,
@@ -637,6 +638,7 @@ void city_labor_allocate_workers(void) {
     allocate_workers_to_buildings();
 }
 void city_labor_update(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Labor Update");
     calculate_workers_needed_per_category();
     check_employment();
     allocate_workers_to_buildings();

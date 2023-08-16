@@ -199,9 +199,9 @@ void game_run() {
     for (int i = 0; i < num_ticks; i++) {
         game_tick_run();
 
-        if (window_is_invalid())
+        if (window_is_invalid()) {
             break;
-    
+        }
     }
 
     if (window_is(WINDOW_CITY)) {

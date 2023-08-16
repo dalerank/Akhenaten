@@ -5,6 +5,7 @@
 #include "city/map.h"
 #include "city/population.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
@@ -95,30 +96,40 @@ static void add_house_population(building* house, int num_people) {
 }
 
 void figure::immigrant_action() {
-    building* b = immigrant_home();
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant");
+    building* home = immigrant_home();
     switch (action_state) {
     case FIGURE_ACTION_1_IMMIGRANT_CREATED:
     case ACTION_8_RECALCULATE:
         //            is_ghost = true;
         anim_frame = 0;
         wait_ticks--;
-        if (wait_ticks <= 0)
+        if (wait_ticks <= 0) {
             advance_action(FIGURE_ACTION_2_IMMIGRANT_ARRIVING);
+        }
         break;
     case FIGURE_ACTION_2_IMMIGRANT_ARRIVING:
     case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE: // arriving
-        do_gotobuilding(immigrant_home(), true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE);
+        {
+            OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant/Goto");
+            do_gotobuilding(home, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE);
+        }
         break;
     case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
-    case 10:
-        if (do_enterbuilding(false, immigrant_home()))
-            add_house_population(b, migrant_num_people);
+    case FIGURE_ACTION_10_HOMELESS_ENTERING_HOUSE:
+        if (do_enterbuilding(false, home)) {
+            add_house_population(home, migrant_num_people);
+        }
         //            is_ghost = in_building_wait_ticks ? 1 : 0;
         break;
     }
-    update_direction_and_image();
+    {
+        OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant/Update Image");
+        update_direction_and_image();
+    }
 }
 void figure::emigrant_action() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Emigrant");
     switch (action_state) {
     case FIGURE_ACTION_4_EMIGRANT_CREATED:
         //            is_ghost = true;
@@ -140,6 +151,7 @@ void figure::emigrant_action() {
     update_direction_and_image();
 }
 void figure::homeless_action() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Homeless");
     switch (action_state) {
     case FIGURE_ACTION_7_HOMELESS_CREATED:
         anim_frame = 0;

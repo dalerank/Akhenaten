@@ -2,8 +2,10 @@
 
 #include "building/building.h"
 #include "building/type.h"
+#include "building/industry.h"
 #include "city/culture.h"
 #include "core/game_environment.h"
+#include "core/profiler.h"
 
 static void decay(unsigned char* value) {
     if (*value > 0)
@@ -14,6 +16,7 @@ static void decay(unsigned char* value) {
 }
 
 void house_service_decay_culture(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/House Decay Culture");
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->house_size)
@@ -41,6 +44,7 @@ void house_service_decay_culture(void) {
 }
 
 void house_service_decay_tax_collector(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Tax Collector Update");
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_tax_coverage)
@@ -48,9 +52,8 @@ void house_service_decay_tax_collector(void) {
     }
 }
 
-#include "building/industry.h"
-
 void house_service_decay_houses_covered(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/House Service Decay Update");
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_UNUSED) { // b->type != BUILDING_TOWER
@@ -74,6 +77,7 @@ void house_service_decay_houses_covered(void) {
 }
 
 void house_service_calculate_culture_aggregates(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/House Aggreate Culture");
     int base_entertainment = city_culture_coverage_average_entertainment() / 5;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);

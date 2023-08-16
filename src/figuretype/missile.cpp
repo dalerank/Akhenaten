@@ -4,6 +4,7 @@
 #include "figure/movement.h"
 #include "figure/properties.h"
 #include "figure/sound.h"
+#include "core/profiler.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
@@ -136,6 +137,7 @@ void figure::missile_hit_target(int target_id, int legionary_type) {
 }
 
 void figure::explosion_cloud_action() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Explode Cloud");
     use_cross_country = true;
     progress_on_tile++;
     if (progress_on_tile > 44)

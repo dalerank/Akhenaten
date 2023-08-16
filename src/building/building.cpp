@@ -7,6 +7,7 @@
 #include "city/population.h"
 #include "city/warning.h"
 #include "core/svector.h"
+#include "core/profiler.h"
 #include "figure/formation_legion.h"
 #include "game/resource.h"
 #include "game/undo.h"
@@ -667,6 +668,7 @@ int building_get_highest_id(void) {
     return building_extra_data.highest_id_in_use;
 }
 void building_update_highest_id(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Update Highest Id");
     auto& extra = building_extra_data;
 
     building_extra_data.highest_id_in_use = 0;
@@ -678,6 +680,7 @@ void building_update_highest_id(void) {
         extra.highest_id_ever = extra.highest_id_in_use;
 }
 void building_update_state(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Building State Update");
     bool land_recalc = false;
     bool wall_recalc = false;
     bool road_recalc = false;
@@ -719,6 +722,7 @@ void building_update_state(void) {
         map_tiles_update_all_roads();
 }
 void building_update_desirability(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Building Update Desirability");
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = &g_all_buildings[i];
         if (b->state != BUILDING_STATE_VALID)

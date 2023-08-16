@@ -1,5 +1,4 @@
-#ifndef FIGURE_FORMATION_H
-#define FIGURE_FORMATION_H
+#pragma once
 
 #include "core/buffer.h"
 #include "core/game_environment.h"
@@ -179,5 +178,3 @@ void formation_move_herds_away(int x, int y);
 void formation_calculate_figures(void);
 
 void formation_update_all(bool second_time);
-
-#endif // FIGURE_FORMATION_H

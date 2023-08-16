@@ -1,30 +1,31 @@
 #include "gods.h"
-#include <building/destruction.h>
-#include <building/warehouse.h>
-#include <game/tutorial.h>
-#include <grid/routing/routing_terrain.h>
-#include <sound/effect.h>
 
 #include "building/count.h"
+#include "building/destruction.h"
 #include "building/granary.h"
 #include "building/industry.h"
+#include "building/warehouse.h"
 #include "city/culture.h"
 #include "city/data_private.h"
 #include "city/health.h"
 #include "city/message.h"
 #include "city/sentiment.h"
 #include "city/trade.h"
+#include "core/profiler.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/formation_legion.h"
 #include "figuretype/water.h"
 #include "floods.h"
 #include "game/settings.h"
+#include "game/tutorial.h"
 #include "game/time.h"
+#include "grid/routing/routing_terrain.h"
 #include "io/config/config.h"
 #include "ratings.h"
 #include "scenario/invasion.h"
 #include "scenario/property.h"
+#include "sound/effect.h"
 #include <array>
 
 #define TIE 10
@@ -859,6 +860,7 @@ static void update_monthly_data(int randm_god) {
         city_data.religion.ra_no_traders_months_left--;
 }
 void city_gods_update(bool mood_calc_only) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Gods Update");
     calculate_mood_targets();
 
     if (!mood_calc_only && setting_gods_enabled()) {

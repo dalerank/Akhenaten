@@ -11,6 +11,7 @@
 #include "city/warning.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "core/profiler.h"
 #include "figuretype/migrant.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
@@ -33,6 +34,7 @@ void building_maintenance_update_fire_direction(void) {
     g_fire_spread_direction = random_byte() & 7;
 }
 void building_maintenance_update_burning_ruins(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Burning Ruins Update");
     int climate = scenario_property_climate();
     int recalculate_terrain = 0;
     building_list_burning_clear();
@@ -149,6 +151,7 @@ static void fire_building(building* b) {
 }
 
 void building_maintenance_check_fire_collapse(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Fire Collapse Update");
     city_sentiment_reset_protesters_criminals();
 
     int climate = scenario_property_climate();
@@ -208,6 +211,7 @@ void building_maintenance_check_fire_collapse(void) {
         map_routing_update_land();
 }
 void building_maintenance_check_rome_access(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Maintenace Check Rome Access");
     map_point& entry_point = city_map_entry_point();
     map_routing_calculate_distances(entry_point.x(), entry_point.y());
     int problem_grid_offset = 0;

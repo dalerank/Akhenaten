@@ -3,28 +3,28 @@
 #include "building/type.h"
 #include "city/resource.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "grid/building_tiles.h"
 #include "grid/road_access.h"
 #include "scenario/property.h"
 #include "window/city.h"
+#include "graphics/image_groups.h"
+#include "grid/terrain.h"
+#include "io/config/config.h"
+#include "city/data_private.h"
+#include "city/floods.h"
+#include "game/time.h"
+#include "grid/floodplain.h"
+#include "grid/grid.h"
+
+#include <cmath>
 
 #define MAX_PROGRESS_RAW 200
 #define MAX_PROGRESS_WORKSHOP 400
 #define MAX_PROGRESS_FARM_PH 2000
 #define INFINITE 10000
-
-#include "graphics/image_groups.h"
-#include "grid/terrain.h"
-
-#include "io/config/config.h"
-#include <city/data_private.h>
-#include <city/floods.h>
-#include <cmath>
-#include <game/time.h>
-#include <grid/floodplain.h>
-#include <grid/grid.h>
 
 static int max_progress(building* b) {
     if (building_is_farm(b->type))
@@ -111,6 +111,7 @@ int farm_expected_produce(building* b) {
 }
 
 void building_industry_update_production(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Industry Update");
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
 
@@ -153,6 +154,7 @@ void building_industry_update_production(void) {
     }
 }
 void building_industry_update_farms(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Farms Update");
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->output_resource_id) {
@@ -216,6 +218,7 @@ void building_industry_update_farms(void) {
     city_data.religion.osiris_double_farm_yield = false;
 }
 void building_industry_update_wheat_production(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Wheat Production Update");
     if (scenario_property_climate() == CLIMATE_NORTHERN)
         return;
 

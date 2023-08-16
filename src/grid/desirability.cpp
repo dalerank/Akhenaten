@@ -1,14 +1,15 @@
 #include "desirability.h"
-#include "io/io_buffer.h"
 
 #include "building/building.h"
 #include "building/model.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "grid/grid.h"
 #include "grid/property.h"
 #include "grid/ring.h"
 #include "grid/terrain.h"
-#include <scenario/map.h>
+#include "io/io_buffer.h"
+#include "scenario/map.h"
 
 static grid_xx desirability_grid = {0, {FS_INT8, FS_INT8}};
 
@@ -126,6 +127,7 @@ void map_desirability_clear(void) {
     map_grid_clear(&desirability_grid);
 }
 void map_desirability_update(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Desirability Update");
     map_desirability_clear();
     update_buildings();
     update_terrain();

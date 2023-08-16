@@ -6,6 +6,7 @@
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
+#include "core/profiler.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "grid/building.h"
@@ -62,6 +63,7 @@ void figure::market_trader_action() {
     }
 }
 void figure::tax_collector_action() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Tax Collector");
     building* b = home();
     switch (action_state) {
     case FIGURE_ACTION_40_TAX_COLLECTOR_CREATED:

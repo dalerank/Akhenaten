@@ -15,6 +15,7 @@
 #include "city/floods.h"
 #include "city/message.h"
 #include "city/population.h"
+#include "core/profiler.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/figure.h"
@@ -1316,6 +1317,7 @@ bool building::figure_generate() {
 }
 
 void building_figure_generate(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Generate");
     building_barracks_decay_tower_sentry_request();
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {

@@ -11,6 +11,7 @@
 #include "city/sentiment.h"
 #include "city/map.h"
 #include "core/random.h"
+#include "core/profiler.h"
 #include "figure/combat.h"
 #include "figure/formation_enemy.h"
 #include "figure/image.h"
@@ -123,6 +124,7 @@ static void generate_protestor(building* b) {
 }
 
 void figure_generate_criminals(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Generate Criminals");
     building* min_building = nullptr;
     int min_happiness = 50;
     int max_id = building_get_highest_id();

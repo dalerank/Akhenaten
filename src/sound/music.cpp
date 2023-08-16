@@ -3,11 +3,12 @@
 #include "city/figures.h"
 #include "city/population.h"
 #include "core/game_environment.h"
+#include "core/profiler.h"
 #include "game/settings.h"
 #include "io/dir.h"
 #include "sound/device.h"
 
-enum E_TRACK {
+enum e_track {
     TRACK_NONE,
     TRACK_MENU,
     TRACK_COMBAT_SHORT,
@@ -162,6 +163,7 @@ void sound_music_play_editor(void) {
         play_track(TRACK_CITY_1);
 }
 void sound_music_update(bool force) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Music Update");
     if (data.next_check && !force) {
         --data.next_check;
         return;

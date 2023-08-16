@@ -9,6 +9,7 @@
 #include "city/buildings.h"
 #include "city/resource.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
@@ -326,6 +327,7 @@ void figure::determine_warehouseman_destination() {
 }
 
 void figure::cartpusher_action() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Cartpusher");
     building* b = home();
     int road_network_id = map_road_network_get(tile.grid_offset());
     switch (action_state) {
@@ -377,6 +379,7 @@ void figure::cartpusher_action() {
     //    cart_update_image();
 }
 void figure::warehouseman_action() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Warehouse Man");
     int road_network_id = map_road_network_get(tile.grid_offset());
     switch (action_state) {
     case ACTION_8_RECALCULATE:

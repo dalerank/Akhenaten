@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "city/buildings.h"
 #include "city/health.h"
+#include "core/profiler.h"
 #include "core/game_environment.h"
 #include "figure/figure.h"
 
@@ -42,6 +43,7 @@ static void limit_hippodrome(void) {
 }
 
 void building_entertainment_update() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Entertainment Update");
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || b->house_size)
@@ -79,6 +81,7 @@ void building_entertainment_update() {
     }
 }
 void building_count_update(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Buildin Count Update");
     clear_counters();
     city_buildings_reset_dock_wharf_counters();
     city_health_reset_hospital_workers();

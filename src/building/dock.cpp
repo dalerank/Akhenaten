@@ -4,6 +4,7 @@
 #include "building/type.h"
 #include "city/buildings.h"
 #include "city/resource.h"
+#include "core/profiler.h"
 #include "empire/city.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
@@ -26,6 +27,7 @@ int building_dock_count_idle_dockers(const building* dock) {
 }
 
 void building_dock_update_open_water_access(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Oper Water Access Update");
     map_point river_entry = scenario_map_river_entry();
     map_routing_calculate_distances_water_boat(river_entry.x(), river_entry.y());
     for (int i = 1; i < MAX_BUILDINGS; i++) {

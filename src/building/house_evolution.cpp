@@ -5,6 +5,7 @@
 #include "city/houses.h"
 #include "city/resource.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "game/resource.h"
 #include "game/time.h"
 #include "grid/building.h"
@@ -421,6 +422,7 @@ static int (*evolve_callback[])(building*, house_demands*)
      evolve_grand_villa,  evolve_small_palace, evolve_medium_palace, evolve_large_palace, evolve_luxury_palace};
 
 void building_house_process_evolve_and_consume_goods(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Process'n'Consume Goods");
     city_houses_reset_demands();
     house_demands* demands = city_houses_demands();
     int has_expanded = 0;

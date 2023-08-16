@@ -5,6 +5,7 @@
 #include "city/message.h"
 #include "city/ratings.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "figure/formation.h"
 #include "game/difficulty.h"
 #include "game/time.h"
@@ -153,10 +154,11 @@ static void process_caesar_invasion(void) {
 }
 
 void city_emperor_update(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Emperor Update");
     update_debt_state();
-    if (GAME_ENV == ENGINE_ENV_C3) { // Temporary disable Caesar invasion in Egypt
-        process_caesar_invasion();
-    }
+    //if (GAME_ENV == ENGINE_ENV_C3) { // Temporary disable Caesar invasion in Egypt
+    //    process_caesar_invasion();
+    //}
 }
 
 void city_emperor_init_selected_gift(void) {

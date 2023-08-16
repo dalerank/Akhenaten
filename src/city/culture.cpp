@@ -8,6 +8,7 @@
 #include "city/festival.h"
 #include "city/population.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "gods.h"
 
 struct coverage_data_t {
@@ -96,6 +97,7 @@ static int god_coverage_total(int god, int temple, int shrine, int complex) {
     }
 }
 void city_culture_update_coverage(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Culture Update");
     auto& coverage = g_coverage;
     int population = city_data.population.population;
 
@@ -145,6 +147,7 @@ void city_culture_update_coverage(void) {
 }
 
 void city_culture_calculate(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Culture Calculate");
     city_data.culture.average_entertainment = 0;
     city_data.culture.average_religion = 0;
     city_data.culture.average_education = 0;

@@ -5,6 +5,7 @@
 
 #include "city/entertainment.h"
 #include "city/figures.h"
+#include "core/profiler.h"
 #include "figure/figure.h"
 #include "graphics/image_groups.h"
 #include "grid/road_access.h"
@@ -288,8 +289,10 @@ bool figure::do_enterbuilding(bool invisible, building* b, short NEXT_ACTION, sh
 
 void figure::action_perform() {
     //    return;
-    if (action_state < 0)
+    if (action_state < 0) {
         set_state(FIGURE_STATE_DEAD);
+    }
+
     if (state) {
         if (targeted_by_figure_id) {
             figure* attacker = figure_get(targeted_by_figure_id);
@@ -672,9 +675,10 @@ void figure::action_perform() {
 }
 
 void figure_action_handle() {
-    //    return;
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Action");
     city_figures_reset();
     city_entertainment_set_hippodrome_has_race(0);
-    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++)
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure_get(i)->action_perform();
+    }
 }

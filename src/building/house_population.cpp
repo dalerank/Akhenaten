@@ -8,6 +8,7 @@
 #include "city/migration.h"
 #include "city/population.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "core/game_environment.h"
 #include "figuretype/migrant.h"
 
@@ -65,6 +66,7 @@ static void fill_building_list_with_houses(void) {
 }
 
 void house_population_update_room(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/House Population Update");
     city_population_clear_capacity();
 
     fill_building_list_with_houses();
@@ -175,6 +177,7 @@ static void calculate_working_population(void) {
 }
 
 void house_population_update_migration(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/House Migration Update");
     city_migration_update();
 
     city_population_yearly_update();
@@ -210,6 +213,7 @@ void house_population_update_migration(void) {
 }
 
 void house_population_evict_overcrowded(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/House Overcrown Update");
     int size = building_list_large_size();
     const int* items = building_list_large_items();
     for (int i = 0; i < size; i++) {
