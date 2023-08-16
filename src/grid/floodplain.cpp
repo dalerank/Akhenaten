@@ -3,6 +3,7 @@
 #include "building_tiles.h"
 #include "io/config/config.h"
 #include "scenario/map.h"
+#include "grid/tiles.h"
 #include "terrain.h"
 #include "water.h"
 
@@ -67,7 +68,8 @@ int map_floodplain_rebuild_rows() {
                 for (int yy = y_min; yy <= y_max; yy++) {
                     for (int xx = x_min; xx <= x_max; xx++) {
                         // do only on floodplain tiles that haven't been calculated / cached yet
-                        if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && map_grid_is_valid_offset(grid_offset)
+                        if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) 
+                            && map_grid_is_valid_offset(grid_offset)
                             && map_get_floodplain_row(grid_offset) == -1) {
                             // set fertility data
                             int tile_fert = 99 - ((99.0f / 30.0f) * (float)(row + 1));
@@ -115,6 +117,15 @@ uint8_t map_get_floodplain_growth(int grid_offset) {
 
 void map_clear_floodplain_growth() {
     map_grid_fill(&g_terrain_floodplain_growth, 0);
+}
+
+void map_tiles_update_floodplain_images() {
+    auto callback = [] (int grid_offset, int order) { map_refresh_river_image_at(grid_offset); };
+    for (int i = 0; i < 12; ++i) {
+        foreach_floodplain_row(0 + i, callback);
+        foreach_floodplain_row(12 + i, callback);
+        foreach_floodplain_row(24 + i, callback);
+    }
 }
 
 int map_get_fertility(int grid_offset, int tally_type) { // actual percentage integer [0-99]

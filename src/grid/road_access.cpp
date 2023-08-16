@@ -163,10 +163,12 @@ static bool road_within_radius(int x, int y, int size, int radius, int* x_road, 
                 // Don't spawn walkers on roadblocks
                 if (building_at(xx, yy)->type == BUILDING_ROADBLOCK)
                     continue;
+
                 if (x_road && y_road) {
                     *x_road = xx;
                     *y_road = yy;
                 }
+
                 return true;
             }
         }
@@ -332,12 +334,13 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
         return 0;
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         building* b = building_at(grid_offset);
-        if (b->type == BUILDING_GATEHOUSE)
+        if (b->type == BUILDING_GATEHOUSE) {
             is_road = 0;
 
-        else if (b->type == BUILDING_ROADBLOCK) {
-            if (!building_roadblock_get_permission(perm, b))
+        } else if (b->type == BUILDING_ROADBLOCK) {
+            if (!building_roadblock_get_permission(perm, b)) {
                 is_road = 0;
+            }
 
         } else if (b->type == BUILDING_GRANARY) {
             if (map_routing_citizen_is_road(grid_offset)) {

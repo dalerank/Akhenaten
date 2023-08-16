@@ -743,13 +743,14 @@ void GamestateIO::start_loaded_file() {
     // river / garden tiles refresh
     build_terrain_caches();
     floodplains_init();
+    map_tiles_update_floodplain_images();
     map_tiles_river_refresh_entire();
     map_tiles_determine_gardens();
     map_tiles_update_all_vegetation_tiles();
 
-    if (last_loaded == LOADED_MISSION)
+    if (last_loaded == LOADED_MISSION) {
         window_mission_briefing_show();
-    else {
+    } else {
         game_state_unpause();
         window_city_show();
     }

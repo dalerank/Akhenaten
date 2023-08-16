@@ -19,6 +19,7 @@ int8_t map_get_floodplain_row(int grid_offset);
 
 uint8_t map_get_floodplain_growth(int grid_offset);
 void map_clear_floodplain_growth();
+void map_tiles_update_floodplain_images();
 int map_get_fertility(int grid_offset, int tally_type);
 uint8_t map_get_fertility_for_farm(int grid_offset);
 void map_set_floodplain_growth(int grid_offset, int growth);
