@@ -98,7 +98,9 @@ float get_produce_uptick_per_day(building* b) {
 //     }
 // }
 int farm_expected_produce(building* b) {
-    int progress = b->data.industry.progress;
+    int progress = b->data.industry.ready_production > 0
+                        ? b->data.industry.ready_production
+                        : b->data.industry.progress;
     if (!config_get(CONFIG_GP_FIX_FARM_PRODUCE_QUANTITY))
         progress = (progress / 20) * 20;
     // In OG Pharaoh, the progress value gets counted as if it was rounded

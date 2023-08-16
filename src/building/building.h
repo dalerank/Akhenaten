@@ -101,7 +101,7 @@ public:
             short resource_stored[16];
         } granary;
         struct industry_t {
-            int unk_2[2];
+            short ready_production;
             short progress;
             int unk_b[12];
             unsigned char has_fish;

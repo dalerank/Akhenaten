@@ -1163,12 +1163,17 @@ static void floodplain_update_inundation_row(int grid_offset, int order) {
             if (b_id && b->state == BUILDING_STATE_VALID && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
                 // check if any other tile of the farm is still submerged
                 bool still_flooded = false;
-                for (int _y = b->tile.y(); _y < b->tile.y() + b->size; _y++)
-                    for (int _x = b->tile.x(); _x < b->tile.x() + b->size; _x++)
-                        if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER))
+                for (int _y = b->tile.y(); _y < b->tile.y() + b->size; _y++) {
+                    for (int _x = b->tile.x(); _x < b->tile.x() + b->size; _x++) {
+                        if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER)) {
                             still_flooded = true;
-                if (!still_flooded)
+                        }
+                    }
+                }
+
+                if (!still_flooded) {
                     map_building_tiles_add_farm(b_id, b->tile.x(), b->tile.y(), 0, 0);
+                }
             }
 
             // resurface roads

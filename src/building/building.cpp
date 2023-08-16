@@ -866,10 +866,7 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &b->data.dock.trade_ship_id);
 
     } else if (building_is_industry_type(b)) {
-        for (int i = 0; i < 2; i++) {
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_2[i]);
-        }
-        //            iob->bind____skip(2);
+        iob->bind(BIND_SIGNATURE_INT16, &b->data.industry.ready_production);
         iob->bind(BIND_SIGNATURE_INT16, &b->data.industry.progress);
         for (int i = 0; i < 12; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_b[i]);

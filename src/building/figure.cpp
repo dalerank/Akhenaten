@@ -735,10 +735,11 @@ void building::spawn_figure_farm_harvests() {
         // still displays with the harvesting animation.
         if (has_figure_of_type(0, FIGURE_CART_PUSHER))
             return;
-        if (has_road_access && data.industry.progress > 0) {
+        if (has_road_access && data.industry.ready_production > 0) {
             create_cartpusher(output_resource_id, farm_expected_produce(this));
             building_farm_deplete_soil(this);
             data.industry.progress = 0;
+            data.industry.ready_production = 0;
             data.industry.worker_id = 0;
             data.industry.labor_state = 0;
             data.industry.labor_days_left = 0;
