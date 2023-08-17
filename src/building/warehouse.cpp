@@ -522,6 +522,7 @@ static int contains_non_stockpiled_food(building* space, const int* resources) {
     }
     return 0;
 }
+
 int building_warehouse_determine_worker_task(building* warehouse, e_resource& resource, int& amount) {
     // check workers - if less than enough, no task will be done today.
     int pct_workers = calc_percentage(warehouse->num_workers, model_get_building(warehouse->type)->laborers);

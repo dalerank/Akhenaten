@@ -279,21 +279,25 @@ building* building_create(e_building_type type, int x, int y, int orientation) {
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
 }
+
 building* building_at(int x, int y) {
     return building_get(map_building_at(MAP_OFFSET(x, y)));
 }
+
 building* building_at(map_point point) {
     return building_get(map_building_at(point.grid_offset()));
 }
+
 bool building_exists_at(int grid_offset, building* b) {
     b = nullptr;
     int b_id = map_building_at(grid_offset);
     if (b_id > 0) {
         b = building_get(b_id);
-        if (b->state > BUILDING_STATE_UNUSED)
+        if (b->state > BUILDING_STATE_UNUSED) {
             return true;
-        else
+        } else {
             b = nullptr;
+        }
     }
     return false;
 }
@@ -309,6 +313,7 @@ bool building_exists_at(int x, int y, building* b) {
     }
     return false;
 }
+
 bool building_exists_at(map_point point, building* b) {
     b = nullptr;
     int b_id = map_building_at(point.grid_offset());
@@ -322,6 +327,9 @@ bool building_exists_at(map_point point, building* b) {
     return false;
 }
 
+building::building() {
+}
+
 building* building::main() {
     building* b = this;
     for (int guard = 0; guard < 99; guard++) {
@@ -331,6 +339,7 @@ building* building::main() {
     }
     return &g_all_buildings[0];
 }
+
 building* building::top_xy() {
     building* b = main();
     int x = b->tile.x();
@@ -896,9 +905,10 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         }
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.labor_state);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.labor_days_left);
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 10; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_12[i]);
         }
+        iob->bind(BIND_SIGNATURE_UINT16, &b->data.industry.work_camp_id);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.worker_id);
 
     } else if (building_is_statue(b->type) || building_is_large_temple(b->type)) {

@@ -164,6 +164,7 @@ figure* building::create_cartpusher(e_resource resource_id, int quantity, int cr
 int building::worker_percentage() {
     return calc_percentage(num_workers, model_get_building(type)->laborers);
 }
+
 int building::figure_spawn_timer() {
     int pct_workers = worker_percentage();
     if (pct_workers >= 100)
@@ -255,9 +256,11 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_ful
 
 void building::spawn_figure_work_camp() {
     if (common_spawn_figure_trigger(100)) {
-        building* dest = building_get(building_determine_worker_needed());
-        figure* f = create_figure_with_destination(FIGURE_WORKER_PH, dest);
-        dest->data.industry.worker_id = f->id;
+        building* dest = building_determine_worker_needed();
+        if (dest) {
+            figure *f = create_figure_with_destination(FIGURE_WORKER_PH, dest);
+            dest->data.industry.worker_id = f->id;
+        }
     }
 }
 
@@ -736,13 +739,16 @@ void building::spawn_figure_farm_harvests() {
         if (has_figure_of_type(0, FIGURE_CART_PUSHER))
             return;
 
-        if (has_road_access && data.industry.ready_production > 0
-            && data.industry.progress <= 0) {
+        if (has_road_access 
+                && data.industry.ready_production > 0 
+                && data.industry.progress <= 0) {
             create_cartpusher(output_resource_id, farm_expected_produce(this));
             building_farm_deplete_soil(this);
+
             data.industry.progress = 0;
             data.industry.ready_production = 0;
             data.industry.worker_id = 0;
+            data.industry.work_camp_id = 0;
             data.industry.labor_state = LABOR_STATE_NONE;
             data.industry.labor_days_left = 0;
             num_workers = 0;

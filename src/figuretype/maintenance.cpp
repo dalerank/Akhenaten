@@ -543,9 +543,9 @@ void figure::worker_action() {
     terrain_usage = TERRAIN_USAGE_ROADS;
     use_cross_country = false;
     max_roam_length = 384;
-    building* b = home();
+    building* bhome = home();
     building* b_dest = destination();
-    if (b->state != BUILDING_STATE_VALID
+    if (bhome->state != BUILDING_STATE_VALID
         || b_dest->state != BUILDING_STATE_VALID
         || b_dest->data.industry.worker_id != id) {
         poof();
@@ -558,6 +558,7 @@ void figure::worker_action() {
         if (do_gotobuilding(destination())) {
             if (building_is_farm(b_dest->type)) {
                 b_dest->num_workers = 10;
+                b_dest->data.industry.work_camp_id = bhome->id;
                 b_dest->data.industry.worker_id = 0;
                 b_dest->data.industry.labor_state = LABOR_STATE_JUST_ENTERED;
                 b_dest->data.industry.labor_days_left = 96;

@@ -8,7 +8,7 @@
 // int get_crops_image(int type, int growth);
 // void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_t color_mask);
 
-int building_determine_worker_needed();
+building* building_determine_worker_needed();
 
 int farm_expected_produce(building* b);
 

@@ -48,8 +48,9 @@ int generic_sprite_offset(int grid_offset, int max_frames, int anim_speed) {
 }
 
 int building_animation_offset(building* b, int image_id, int grid_offset, int max_frames) {
-    if (building_is_workshop(b->type) && (b->stored_full_amount <= 0 || b->num_workers <= 0))
+    if (building_is_workshop(b->type) && (b->stored_full_amount <= 0 || b->num_workers <= 0)) {
         return 0;
+    }
 
     switch (b->type) {
     case BUILDING_BURNING_RUIN:
@@ -62,11 +63,10 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
             return 0;
         break;
     case BUILDING_WATER_LIFT:
-        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            if (b->num_workers <= 0)
-                return 0;
-            else if (!b->has_water_access)
-                return 0;
+        if (b->num_workers <= 0) {
+           return 0;
+        } else if (!b->has_water_access) {
+            return 0;
         }
         break;
     case BUILDING_WELL:

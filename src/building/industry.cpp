@@ -48,7 +48,7 @@ static void update_farm_image(building* b) {
                                     b->data.industry.progress);
 }
 
-int building_determine_worker_needed() {
+building* building_determine_worker_needed() {
     for (building *it = building_begin(), *end = building_end(); it != end; ++it) {
         if (it->state != BUILDING_STATE_VALID) {
             continue;
@@ -56,14 +56,14 @@ int building_determine_worker_needed() {
 
         if (floodplains_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(it)) {
             if (!it->data.industry.worker_id && it->data.industry.labor_days_left <= 47 && !it->num_workers) {
-                return std::distance(it, building_begin());
+                return it;
             }
         } else if (building_is_monument(it->type)) {
             // todo
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 static const float produce_uptick_per_day = 103.5f * 20.0f / 128.0f / 100.0f; // don't ask
@@ -210,18 +210,13 @@ void building_industry_update_farms(void) {
 
         // clamp progress
         int max = max_progress(b);
-        if (b->data.industry.progress > max) {
-            b->data.industry.progress = max;
-        }
-
-        if (b->data.industry.progress < 0) {
-            b->data.industry.progress = 0;
-        }
+        b->data.industry.progress = std::clamp<int>(b->data.industry.progress, 0, max);
 
         update_farm_image(b);
     }
     city_data.religion.osiris_double_farm_yield = false;
 }
+
 void building_industry_update_wheat_production(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Wheat Production Update");
     if (scenario_property_climate() == CLIMATE_NORTHERN)

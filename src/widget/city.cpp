@@ -484,10 +484,12 @@ static void handle_mouse(const mouse* m) {
 
     if (m->right.went_up) {
         if (!Planner.build_type) {
-            if (handle_right_click_allow_building_info(data.current_tile))
+            if (handle_right_click_allow_building_info(data.current_tile)) {
                 window_building_info_show(data.current_tile);
-        } else
+            }
+        } else {
             Planner.construction_cancel();
+        }
     }
 
     if (m->middle.went_up)

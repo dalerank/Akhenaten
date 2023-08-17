@@ -122,7 +122,8 @@ public:
             int unk_40[40];
             e_labor_state labor_state;
             unsigned char labor_days_left;
-            int unk_12[12];
+            int unk_12[10];
+            unsigned short work_camp_id;
             unsigned char worker_id;
         } industry;
         struct entertainment_t {
@@ -188,6 +189,7 @@ public:
     ////
 
     // building.c
+    building();
     building* main();
     building* next();
     building* top_xy();
