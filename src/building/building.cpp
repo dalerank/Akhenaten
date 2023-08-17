@@ -758,8 +758,9 @@ int building_mothball_toggle(building* b) {
     if (b->state == BUILDING_STATE_VALID) {
         b->state = BUILDING_STATE_MOTHBALLED;
         b->num_workers = 0;
-    } else if (b->state == BUILDING_STATE_MOTHBALLED)
+    } else if (b->state == BUILDING_STATE_MOTHBALLED) {
         b->state = BUILDING_STATE_VALID;
+    }
 
     return b->state;
 }
@@ -769,8 +770,9 @@ int building_mothball_set(building* b, int mothball) {
             b->state = BUILDING_STATE_MOTHBALLED;
             b->num_workers = 0;
         }
-    } else if (b->state == BUILDING_STATE_MOTHBALLED)
+    } else if (b->state == BUILDING_STATE_MOTHBALLED) {
         b->state = BUILDING_STATE_VALID;
+    }
 
     return b->state;
 }

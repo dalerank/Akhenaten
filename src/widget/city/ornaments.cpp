@@ -257,20 +257,26 @@ void draw_farm_crops(int type, int progress, int grid_offset, vec2i tile, color_
     }
 }
 
-static void draw_ph_worker(int direction,
+enum e_farm_worker_state {
+    FARM_WORKER_TILING,
+    FARM_WORKER_SEEDING,
+    FARM_WORKER_HARVESTING
+};
+
+static void draw_farm_worker(int direction,
                            int action,
                            int frame_offset,
                            vec2i coords,
                            color_t color_mask = COLOR_MASK_NONE) {
     int action_offset = 0;
     switch (action) {
-    case 0: // tiling
+    case FARM_WORKER_TILING: // tiling
         action_offset = 104;
         break;
-    case 1: // seeding
+    case FARM_WORKER_SEEDING: // seeding
         action_offset = 208;
         break;
-    case 2: // harvesting
+    case FARM_WORKER_HARVESTING: // harvesting
         coords.y += 10;
         action_offset = 312;
         break;
@@ -297,60 +303,60 @@ static void draw_farm_workers(building* b, int grid_offset, vec2i pos) {
             //draw_ph_worker(d, 2, animation_offset, coords);
             if (b->data.industry.progress > 0) {
                 if (b->data.industry.progress < 200)
-                    draw_ph_worker(d, 2, animation_offset, farm_tile_coords(pos, 1, 0));
+                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 1, 0));
                 else if (b->data.industry.progress < 400)
-                    draw_ph_worker(d, 2, animation_offset, farm_tile_coords(pos, 2, 0));
+                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 2, 0));
                 else if (b->data.industry.progress < 600)
-                    draw_ph_worker(d, 2, animation_offset, farm_tile_coords(pos, 0, 1));
+                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 0, 1));
                 else if (b->data.industry.progress < 900)
-                    draw_ph_worker(d, 2, animation_offset, farm_tile_coords(pos, 1, 1));
+                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 1, 1));
                 else if (b->data.industry.progress < 1100)
-                    draw_ph_worker(d, 2, animation_offset, farm_tile_coords(pos, 2, 1));
+                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 2, 1));
                 else if (b->data.industry.progress < 1400)
-                    draw_ph_worker(d, 2, animation_offset, farm_tile_coords(pos, 0, 2));
+                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 0, 2));
                 else if (b->data.industry.progress < 1700)
-                    draw_ph_worker(d, 2, animation_offset, farm_tile_coords(pos, 1, 2));
+                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 1, 2));
                 else if (b->data.industry.progress < 2000)
-                    draw_ph_worker(d, 2, animation_offset, farm_tile_coords(pos, 2, 2));
+                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 2, 2));
 
-                b->data.industry.progress -= (b->num_workers / 10);
-                b->data.industry.ready_production += (b->num_workers / 10);
+                b->data.industry.progress -= (b->num_workers / 2);
+                b->data.industry.ready_production += (b->num_workers / 2);
             }
         } else {
             animation_offset = generic_sprite_offset(grid_offset, 13, 1);
             if (b->data.industry.progress < 400)
-                draw_ph_worker(game_time_absolute_tick() % 128 / 16, 1, animation_offset, farm_tile_coords(pos, 1, 1));
+                draw_farm_worker(game_time_absolute_tick() % 128 / 16, 1, animation_offset, farm_tile_coords(pos, 1, 1));
             else if (b->data.industry.progress < 450)
-                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(pos, 1, 0));
+                draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 1, 0));
             else if (b->data.industry.progress < 700)
-                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 0));
+                draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 0));
             else if (b->data.industry.progress < 900)
-                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(pos, 0, 1));
+                draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 0, 1));
             else if (b->data.industry.progress < 1100)
-                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(pos, 1, 1));
+                draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 1, 1));
             else if (b->data.industry.progress < 1350)
-                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 1));
+                draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 1));
             else if (b->data.industry.progress < 1550)
-                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(pos, 0, 2));
+                draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 0, 2));
             else if (b->data.industry.progress < 1800)
-                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(pos, 1, 2));
+                draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 1, 2));
             else if (b->data.industry.progress < 2000)
-                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 2));
+                draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 2));
         }
     } else {
         animation_offset = generic_sprite_offset(grid_offset, 13, 1);
         if (b->data.industry.progress < 100)
-            draw_ph_worker(game_time_absolute_tick() % 128 / 16, 1, animation_offset, farm_tile_coords(pos, 1, 1));
+            draw_farm_worker(game_time_absolute_tick() % 128 / 16, 1, animation_offset, farm_tile_coords(pos, 1, 1));
         else if (b->data.industry.progress < 400)
-            draw_ph_worker(d, 0, animation_offset, farm_tile_coords(pos, 0, 2));
+            draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 0, 2));
         else if (b->data.industry.progress < 800)
-            draw_ph_worker(d, 0, animation_offset, farm_tile_coords(pos, 1, 2));
+            draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 1, 2));
         else if (b->data.industry.progress < 1200)
-            draw_ph_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 2));
+            draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 2));
         else if (b->data.industry.progress < 1600)
-            draw_ph_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 1));
+            draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 1));
         else if (b->data.industry.progress < 2000)
-            draw_ph_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 0));
+            draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 0));
     }
 }
 

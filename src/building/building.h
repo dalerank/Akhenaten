@@ -15,6 +15,12 @@ class io_buffer;
 constexpr uint32_t MAX_BUILDINGS = 4000;
 constexpr uint32_t MAX_FIGURES_PER_BUILDING = 8;
 
+enum e_labor_state {
+    LABOR_STATE_NONE,
+    LABOR_STATE_PRESENT,
+    LABOR_STATE_JUST_ENTERED
+};
+
 class building {
 private:
     //    short figure_id;
@@ -114,7 +120,7 @@ public:
             int unk_6[6];
             short fishing_boat_id;
             int unk_40[40];
-            unsigned char labor_state; // 0 = no laborers; 1 = present; 2 = just entered;
+            e_labor_state labor_state;
             unsigned char labor_days_left;
             int unk_12[12];
             unsigned char worker_id;

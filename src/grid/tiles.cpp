@@ -1137,7 +1137,7 @@ static void floodplain_update_inundation_row(int grid_offset, int order) {
                         }
                 } else { // hide building by unsetting the TERRAIN_BUILDING bitflag
                     b->data.industry.progress = 0;
-                    b->data.industry.labor_state = 0;
+                    b->data.industry.labor_state = LABOR_STATE_NONE;
                     b->data.industry.labor_days_left = 0;
                     for (int _y = b->tile.y(); _y < b->tile.y() + b->size; _y++)
                         for (int _x = b->tile.x(); _x < b->tile.x() + b->size; _x++) {

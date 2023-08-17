@@ -545,9 +545,12 @@ void figure::worker_action() {
     max_roam_length = 384;
     building* b = home();
     building* b_dest = destination();
-    if (b->state != BUILDING_STATE_VALID || b_dest->state != BUILDING_STATE_VALID
-        || b_dest->data.industry.worker_id != id)
+    if (b->state != BUILDING_STATE_VALID
+        || b_dest->state != BUILDING_STATE_VALID
+        || b_dest->data.industry.worker_id != id) {
         poof();
+    }
+
     switch (action_state) {
     case 9:
         break;
@@ -556,7 +559,7 @@ void figure::worker_action() {
             if (building_is_farm(b_dest->type)) {
                 b_dest->num_workers = 10;
                 b_dest->data.industry.worker_id = 0;
-                b_dest->data.industry.labor_state = 2;
+                b_dest->data.industry.labor_state = LABOR_STATE_JUST_ENTERED;
                 b_dest->data.industry.labor_days_left = 96;
             } else if (b_dest->type == BUILDING_PYRAMID) {
                 // todo: MONUMENTSSSS

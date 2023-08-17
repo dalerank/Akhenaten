@@ -483,6 +483,7 @@ static void allocate_workers_to_categories(void) {
     city_data.labor.unemployment_percentage
       = calc_percentage(city_data.labor.workers_unemployed, city_data.labor.workers_available);
 }
+
 static void allocate_workers_to_water(void) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         return;
@@ -512,16 +513,17 @@ static void allocate_workers_to_water(void) {
         b->num_workers = 0;
         if (b->percentage_houses_covered > 0) {
             if (percentage_not_filled > 0) {
-                if (buildings_to_skip)
+                if (buildings_to_skip) {
                     --buildings_to_skip;
-                else if (start_building_id)
+                } else if (start_building_id) {
                     b->num_workers = workers_per_building;
-                else {
+                } else {
                     start_building_id = building_id;
                     b->num_workers = workers_per_building;
                 }
-            } else
+            } else {
                 b->num_workers = model_get_building(b->type)->laborers;
+            }
         }
     }
     if (!start_building_id) {
@@ -537,36 +539,46 @@ static void allocate_workers_to_non_water_buildings(void) {
         category_workers_needed[i]
           = city_data.labor.categories[i].workers_allocated < city_data.labor.categories[i].workers_needed ? 1 : 0;
     }
+
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID)
+        if (b->state != BUILDING_STATE_VALID) {
             continue;
+        }
+
         int cat = category_for_building(b);
-        if (GAME_ENV == ENGINE_ENV_C3 && cat == LABOR_CATEGORY_WATER_HEALTH)
-            continue;
+        //if (GAME_ENV == ENGINE_ENV_C3 && cat == LABOR_CATEGORY_WATER_HEALTH) 
+        //   continue;
+
         if (building_is_floodplain_farm(b)) {
-            if (b->data.industry.labor_state <= 0)
+            if (b->data.industry.labor_state <= 0) {
                 b->num_workers = 0;
+            }
+
             continue; // water is handled by allocate_workers_to_water(void) in C3
         } else {
-            if (b->houses_covered <= 0)
+            if (b->houses_covered <= 0) {
                 b->num_workers = 0;
+            }
         }
-        if (!should_have_workers(b, cat, 0))
+
+        if (!should_have_workers(b, cat, 0)) {
             continue;
+        }
+
         if (b->percentage_houses_covered > 0) {
             int required_workers = model_get_building(b->type)->laborers;
             if (category_workers_needed[cat]) {
-                int num_workers = calc_adjust_with_percentage(city_data.labor.categories[cat].workers_allocated,
-                                                              b->percentage_houses_covered)
-                                  / 100;
-                if (num_workers > required_workers)
+                int num_workers = calc_adjust_with_percentage(city_data.labor.categories[cat].workers_allocated, b->percentage_houses_covered) / 100;
+                if (num_workers > required_workers) {
                     num_workers = required_workers;
+                }
 
                 b->num_workers = num_workers;
                 category_workers_allocated[cat] += num_workers;
-            } else
+            } else {
                 b->num_workers = required_workers;
+            }
         }
     }
     for (int i = 0; i < MAX_CATS; i++) {

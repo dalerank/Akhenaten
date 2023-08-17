@@ -49,18 +49,21 @@ static void update_farm_image(building* b) {
 }
 
 int building_determine_worker_needed() {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID)
+    for (building *it = building_begin(), *end = building_end(); it != end; ++it) {
+        if (it->state != BUILDING_STATE_VALID) {
             continue;
-        if (floodplains_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(b) && !b->data.industry.worker_id
-            && b->data.industry.labor_days_left <= 47)
-            return i;
-        else if (building_is_monument(b->type)) {
+        }
+
+        if (floodplains_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(it)) {
+            if (!it->data.industry.worker_id && it->data.industry.labor_days_left <= 47 && !it->num_workers) {
+                return std::distance(it, building_begin());
+            }
+        } else if (building_is_monument(it->type)) {
             // todo
         }
     }
-    return 0; // temp
+
+    return 0;
 }
 
 static const float produce_uptick_per_day = 103.5f * 20.0f / 128.0f / 100.0f; // don't ask
@@ -187,12 +190,12 @@ void building_industry_update_farms(void) {
                 b->data.industry.progress += progress_step;
             }
             // update labor state
-            if (b->data.industry.labor_state == 2) {
-                b->data.industry.labor_state = 1;
+            if (b->data.industry.labor_state == LABOR_STATE_JUST_ENTERED) {
+                b->data.industry.labor_state = LABOR_STATE_PRESENT;
             }
 
             if (b->data.industry.labor_days_left == 0) {
-                b->data.industry.labor_state = 0;
+                b->data.industry.labor_state = LABOR_STATE_NONE;
             }
 
             if (b->data.industry.labor_days_left > 0) {

@@ -650,7 +650,7 @@ void figure::action_perform() {
         case FIGURE_HIPPO:
             hippo_action();
             break;
-        case 85:
+        case FIGURE_WORKER_PH:
             worker_action();
             break;
         case 87:
