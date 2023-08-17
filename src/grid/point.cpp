@@ -45,11 +45,11 @@ const int map_point::ABS_Y(int v) {
     return p_ABS_Y;
 }
 
-const int map_point::x(void) {
+int map_point::x() {
     self_correct();
     return p_X;
 }
-const int map_point::y(void) {
+int map_point::y() {
     self_correct();
     return p_Y;
 }

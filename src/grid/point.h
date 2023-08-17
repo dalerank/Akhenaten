@@ -4,6 +4,8 @@
 
 enum { _X = 0, _Y = 1, _GRID_OFFSET = 2, _ABS_X = 3, _ABS_Y = 4 };
 
+#include <cmath>
+
 struct tile2i {
     int x, y;
 };
@@ -26,10 +28,12 @@ public:
     const int ABS_X(int v);
     const int ABS_Y(int v);
 
-    const int x(void);
-    const int y(void);
+    int x();
+    int y();
     const int ABS_X(void);
     const int ABS_Y(void);
+
+    inline int dist(map_point o) { return std::sqrtf(std::powf(x() - o.x(), 2) + std::powf(y() - o.y(), 2)); }
 
     // MODIFIERS
     void shift(int _x, int _y);
