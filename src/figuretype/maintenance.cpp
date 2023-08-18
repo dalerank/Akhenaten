@@ -1,6 +1,6 @@
 #include "maintenance.h"
-#include "io/config/config.h"
 
+#include "io/config/config.h"
 #include "building/building.h"
 #include "building/list.h"
 #include "building/maintenance.h"
@@ -19,6 +19,8 @@
 #include "core/game_environment.h"
 #include "graphics/image_groups.h"
 #include "figure/properties.h"
+
+#include <algorithm>
 
 enum E_NEARBY { NEARBY_ANY, NEARBY_ANIMAL, NEARBY_HOSTILE };
 

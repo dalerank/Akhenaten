@@ -10,6 +10,20 @@ struct labor_category_data {
     int total_houses_covered;
 } ;
 
+enum e_labor_category {
+    LABOR_CATEGORY_NONE = -1,
+    LABOR_CATEGORY_FOOD_PRODUCTION = 0, // todo: wrong index...
+    LABOR_CATEGORY_INDUSTRY_COMMERCE = 1,
+    LABOR_CATEGORY_ENTERTAINMENT = 2,
+    LABOR_CATEGORY_RELIGION = 3,
+    LABOR_CATEGORY_EDUCATION = 4,
+    LABOR_CATEGORY_WATER_HEALTH = 5,
+    LABOR_CATEGORY_INFRASTRUCTURE = 6,
+    LABOR_CATEGORY_GOVERNMENT = 7,
+    LABOR_CATEGORY_MILITARY = 8,
+    LABOR_CATEGORY_SIZE = 10,
+};
+
 int city_labor_unemployment_percentage(void);
 int city_labor_unemployment_percentage_for_senate(void);
 
@@ -24,7 +38,7 @@ int city_labor_wages_rome(void);
 int city_labor_raise_wages_rome(void);
 int city_labor_lower_wages_rome(void);
 
-int category_for_building(building* b);
+e_labor_category category_for_building(building* b);
 
 const labor_category_data* city_labor_category(int category);
 
