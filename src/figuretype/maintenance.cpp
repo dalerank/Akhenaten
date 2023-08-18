@@ -19,6 +19,7 @@
 #include "core/game_environment.h"
 #include "graphics/image_groups.h"
 #include "figure/properties.h"
+#include "building/industry.h"
 
 #include <algorithm>
 
@@ -539,8 +540,6 @@ void figure::water_carrier_action() {
 //    }
 //}
 
-#include "building/industry.h"
-
 void figure::worker_action() {
     terrain_usage = TERRAIN_USAGE_ROADS;
     use_cross_country = false;
@@ -559,7 +558,7 @@ void figure::worker_action() {
     case 10:
         if (do_gotobuilding(destination())) {
             if (building_is_farm(b_dest->type)) {
-                b_dest->num_workers = std::clamp<int>((1.f - bhome->tile.dist(b_dest->tile) / 10.f) * 12, 2, 10);
+                b_dest->num_workers = std::clamp<int>((1.f - bhome->tile.dist(b_dest->tile) / 20.f) * 12, 2, 10);
                 b_dest->data.industry.work_camp_id = bhome->id;
                 b_dest->data.industry.worker_id = 0;
                 b_dest->data.industry.labor_state = LABOR_STATE_JUST_ENTERED;

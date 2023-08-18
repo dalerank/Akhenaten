@@ -14,6 +14,8 @@
 #include "building/industry.h"
 #include "grid/terrain.h"
 
+#include <algorithm>
+
 static int CATEGORY_FOR_int_arr[] = {
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10

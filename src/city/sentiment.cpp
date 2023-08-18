@@ -7,12 +7,12 @@
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "game/difficulty.h"
 #include "game/tutorial.h"
 #include "io/config/config.h"
 
-static const int SENTIMENT_PER_TAX_RATE[26]
-  = {3, 2, 2, 2, 1, 1, 1, 0, 0, -1, -2, -2, -3, -3, -3, -5, -5, -5, -5, -6, -6, -6, -6, -6, -6, -6};
+static const int SENTIMENT_PER_TAX_RATE[26] = {3, 2, 2, 2, 1, 1, 1, 0, 0, -1, -2, -2, -3, -3, -3, -5, -5, -5, -5, -6, -6, -6, -6, -6, -6, -6};
 
 int city_sentiment(void) {
     return city_data.sentiment.value;
@@ -159,6 +159,7 @@ static int get_sentiment_contribution_employment(void) {
 }
 
 void city_sentiment_update(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Sentiment Update");
     city_population_check_consistency();
 
     int sentiment_contribution_taxes = SENTIMENT_PER_TAX_RATE[city_data.finance.tax_percentage];

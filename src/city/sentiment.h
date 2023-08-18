@@ -1,5 +1,4 @@
-#ifndef CITY_SENTIMENT_H
-#define CITY_SENTIMENT_H
+#pragma once
 
 int city_sentiment(void);
 
@@ -26,5 +25,3 @@ int city_sentiment_protesters(void);
 int city_sentiment_criminals(void);
 
 void city_sentiment_update(void);
-
-#endif // CITY_SENTIMENT_H
