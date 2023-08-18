@@ -111,6 +111,13 @@ By default `info` level is set.
 
 ### Running with tracy
 
+Enable tracy submodule:
+
+```shell
+git submodule init
+git submodule update
+```
+
 Run profiler:
 
 ```shell
