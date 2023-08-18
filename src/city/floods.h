@@ -27,7 +27,7 @@ struct floods_data_t {
     //
     int flood_progress;   // 0 - 30
     int unk01;            // season/floodplain_width -- probably a leftover from a previous flood system
-    int state;            // 1 - 6
+    e_flood_state state;
     int floodplain_width; // 0 - 30
     bool has_floodplains; // 0 - 1
 };

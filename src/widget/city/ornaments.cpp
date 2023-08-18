@@ -185,6 +185,10 @@ int get_farm_image(int grid_offset) {
         int base = image_id_from_group(GROUP_BUILDING_FARMLAND);
         int fert_average = map_get_fertility_for_farm(grid_offset);
         int fertility_index = 0;
+        if (floodplain_data().state == FLOOD_STATE_FLOODING) {
+            return base + 0;
+        }
+
         if (fert_average < 13)
             fertility_index = 0;
         else if (fert_average < 25)
@@ -201,9 +205,11 @@ int get_farm_image(int grid_offset) {
             fertility_index = 6;
         else
             fertility_index = 7;
+
         return base + fertility_index;
-    } else
+    } else {
         return image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
+    }
 }
 
 int get_crops_image(e_building_type type, int growth) {
