@@ -11,6 +11,8 @@
 #include "game/time.h"
 #include "io/config/config.h"
 #include "scenario/property.h"
+#include "building/industry.h"
+#include "grid/terrain.h"
 
 #define MAX_CATS 10
 
@@ -52,7 +54,8 @@ static int CATEGORY_FOR_int_arr[] = {
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 220
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 230
 };
-static int CATEGORY_FOR_int_arr_PH[] = {
+
+static int category_for_int_arr_ph[] = {
   // houses
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10
@@ -243,20 +246,15 @@ static int CATEGORY_FOR_int_arr_PH[] = {
   -1, // grand r. tomb
 };
 
-#include "building/industry.h"
-#include "grid/terrain.h"
-
 int category_for_building(building* b) {
     int type = b->type;
     if (type < 0 || type >= 240 - 1)
         type = 0;
-    if (GAME_ENV == ENGINE_ENV_C3)
-        return CATEGORY_FOR_int_arr[type];
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (map_terrain_is(b->tile.grid_offset(), TERRAIN_FLOODPLAIN) && building_is_farm(type))
-            return -1;
-        return CATEGORY_FOR_int_arr_PH[type];
-    }
+    
+    if (map_terrain_is(b->tile.grid_offset(), TERRAIN_FLOODPLAIN) && building_is_farm(type))
+        return -1;
+
+    return category_for_int_arr_ph[type];
 }
 
 struct labor_priority_t {
@@ -279,6 +277,7 @@ labor_priority_t DEFAULT_PRIORITY[MAX_CATS] = {
 const labor_category_data* city_labor_category(int category) {
     return &city_data.labor.categories[category];
 }
+
 static int is_industry_disabled(building* b) {
     if (b->type < BUILDING_BARLEY_FARM || b->type > BUILDING_POTTERY_WORKSHOP)
         return 0;
