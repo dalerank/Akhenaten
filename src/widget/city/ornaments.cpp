@@ -206,7 +206,7 @@ int get_farm_image(int grid_offset) {
         return image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
 }
 
-int get_crops_image(int type, int growth) {
+int get_crops_image(e_building_type type, int growth) {
     int base = 0;
     //if (GAME_ENV == ENGINE_ENV_C3) {
     //    base = image_id_from_group(GROUP_BUILDING_FARMLAND);
@@ -235,7 +235,7 @@ int get_crops_image(int type, int growth) {
     return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
 }
 
-void draw_farm_crops(int type, int progress, int grid_offset, vec2i tile, color_t color_mask) {
+void draw_farm_crops(e_building_type type, int progress, int grid_offset, vec2i tile, color_t color_mask) {
     int image_crops = get_crops_image(type, 0);
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) { // on floodplains - all
         for (int i = 0; i < 9; i++) {
