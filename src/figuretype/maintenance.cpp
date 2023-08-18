@@ -557,7 +557,7 @@ void figure::worker_action() {
     case 10:
         if (do_gotobuilding(destination())) {
             if (building_is_farm(b_dest->type)) {
-                b_dest->num_workers = std::max<int>(0, (1.f - bhome->tile.dist(b_dest->tile) / 10.f) * 10);
+                b_dest->num_workers = std::clamp<int>((1.f - bhome->tile.dist(b_dest->tile) / 10.f) * 12, 2, 10);
                 b_dest->data.industry.work_camp_id = bhome->id;
                 b_dest->data.industry.worker_id = 0;
                 b_dest->data.industry.labor_state = LABOR_STATE_JUST_ENTERED;
