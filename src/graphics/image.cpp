@@ -101,9 +101,6 @@ bool image_load_paks() {
     data.pak_list.push_back(&data.expansion);
     data.pak_list.push_back(&data.monument);
 
-    const char* filename_555;
-    const char* filename_sgx;
-
     // Pharaoh loads every image into a global listed cache; however, some
     // display systems use discordant indexes; The sprites cached in the
     // save files, for examples, appear to start at 700 while the terrain

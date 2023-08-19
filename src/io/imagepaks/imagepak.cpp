@@ -4,6 +4,7 @@
 #include "core/stopwatch.h"
 #include "core/string.h"
 #include "core/vec2i.h"
+#include "core/profiler.h"
 #include "graphics/font.h"
 #include "io/io.h"
 #include "io/log.h"
@@ -332,30 +333,16 @@ void imagepak::cleanup_and_destroy() {
 
 buffer* pak_buf = new buffer(MAX_FILE_SCRATCH_SIZE);
 bool imagepak::load_pak(const char* pak_name, int starting_index) {
+    OZZY_PROFILER_SECTION("Game/Loading/Resources/ImagePack");
     WATCH.START();
 
     // construct proper filepaths
-    int str_index = 0;
-    uint8_t filename_full[MAX_FILE_NAME];
-
-    // add "data/" if loading paks in Pharaoh
-    string_copy(string_from_ascii("data/"), filename_full, 6);
-    str_index += 5;
-
-    // copy file name over
-    strncpy_safe((char*)name, pak_name, MAX_FILE_NAME);
-    string_copy((const uint8_t*)pak_name, &filename_full[str_index], string_length((const uint8_t*)pak_name) + 1);
-    str_index = string_length(filename_full);
+    name = pak_name;
+    bstring512 filename_full("data/", pak_name);
 
     // split in .555 and .sg3 filename strings
-    uint8_t filename_555[MAX_FILE_NAME];
-    uint8_t filename_sgx[MAX_FILE_NAME];
-    string_copy(filename_full, filename_555, str_index + 1);
-    string_copy(filename_full, filename_sgx, str_index + 1);
-
-    // add extension
-    string_copy(string_from_ascii(".555"), &filename_555[str_index], 5);
-    string_copy(string_from_ascii(".sg3"), &filename_sgx[str_index], 5);
+    bstring512 filename_555(filename_full, ".555");
+    bstring512 filename_sgx(filename_full, ".sg3");
 
     // *********** PAK_FILE.SGX ************
 
@@ -406,22 +393,25 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
 
     // determine if and when to load SYSTEM.BMP sprites
     bool has_system_bmp = false;
-    if (groups_num > 0 && group_image_ids[0] == 0)
+    if (groups_num > 0 && group_image_ids[0] == 0) {
         has_system_bmp = true;
+    }
 
     // parse bitmap names
-    std::vector<bmp_name> names(num_bmp_names);
-    pak_buf->read_raw(names.data(), num_bmp_names * PAK_BMP_NAME_SIZE);
+    using bmp_name_data = char[bmp_name::capacity];
+    std::vector<bmp_name_data> names(num_bmp_names);
+    pak_buf->read_raw(names.data(), num_bmp_names * bmp_name::capacity);
     for (int i = 0; i < num_bmp_names; ++i) {
-        strncpy(bmp_names[i].name, names[i].name, PAK_BMP_NAME_SIZE);
-        logs::info("%s, %u", bmp_names[i].name, i);
+        bmp_names[i] = names[i];
+        logs::info("%s, %u", bmp_names[i].c_str(), i);
     }
 
     // (move buffer to the rest of the data)
-    if (file_has_extension((const char*)filename_sgx, "sg2"))
-        pak_buf->set_offset(PAK_HEADER_SIZE_BASE + (100 * PAK_BMP_NAME_SIZE)); // sg2 = 20680 bytes
-    else
-        pak_buf->set_offset(PAK_HEADER_SIZE_BASE + (200 * PAK_BMP_NAME_SIZE)); // sg3 = 40680 bytes
+    if (file_has_extension((const char *)filename_sgx, "sg2")) {
+        pak_buf->set_offset(PAK_HEADER_SIZE_BASE + (100 * bmp_name::capacity)); // sg2 = 20680 bytes
+    } else {
+        pak_buf->set_offset(PAK_HEADER_SIZE_BASE + (200 * bmp_name::capacity)); // sg3 = 40680 bytes
+    }
 
     // prepare atlas packer & renderer
     vec2i max_texture_sizes = graphics_renderer()->get_max_image_size();
@@ -471,7 +461,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
         img.unk11 = pak_buf->read_i8();
         img.unk12 = pak_buf->read_i8();
         img.bmp.group_id = pak_buf->read_u8();
-        img.bmp.name = bmp_names[img.bmp.group_id].name;
+        img.bmp.name = bmp_names[img.bmp.group_id];
         if (img.bmp.group_id != bmp_last_group_id) {
             last_idx_in_bmp = 1; // new bitmap name, reset bitmap grouping index
             bmp_last_group_id = img.bmp.group_id;
