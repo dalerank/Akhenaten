@@ -189,17 +189,18 @@ static void draw_fountain_range(vec2i pixel, map_point point) {
 }
 
 static void draw_storage_yard(vec2i tile) {
-    int image_id_space = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
     int global_rotation = building_rotation_global_rotation();
     int index_rotation = building_rotation_get_storage_fort_orientation(global_rotation);
     int corner = building_rotation_get_corner(index_rotation);
     vec2i corner_offset{-5, -45};
     vec2i place_offset{0, -15};
 
+    int image_id_hut = image_id_from_group(GROUP_BUILDING_STORAGE_YARD);
+    int image_id_space = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
-            draw_building(image_id_from_group(GROUP_BUILDING_WAREHOUSE), tile + VIEW_OFFSETS[i]);
-            ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17,
+            draw_building(image_id_hut, tile + VIEW_OFFSETS[i]);
+            ImageDraw::img_generic(image_id_hut + 17,
                                    tile.x + VIEW_OFFSETS[i].x + corner_offset.x,
                                    tile.y + VIEW_OFFSETS[i].y + corner_offset.y,
                                    COLOR_MASK_GREEN);

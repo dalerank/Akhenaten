@@ -353,31 +353,32 @@ static void add_entertainment_venue(building* b, int orientation) {
     }
 }
 
-static building* add_warehouse_space(int x, int y, building* prev) {
+static building* add_storageyard_space(int x, int y, building* prev) {
     building* b = building_create(BUILDING_STORAGE_YARD_SPACE, x, y, 0);
     game_undo_add_building(b);
     b->prev_part_building_id = prev->id;
     prev->next_part_building_id = b->id;
-    map_building_tiles_add(
-      b->id, x, y, 1, image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY), TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, x, y, 1, image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY), TERRAIN_BUILDING);
     return b;
 }
-static void add_warehouse(building* b) {
+
+static void add_storageyard(building* b) {
     int x_offset[9] = {0, 0, 1, 1, 0, 2, 1, 2, 2};
     int y_offset[9] = {0, 1, 0, 1, 2, 0, 2, 1, 2};
     int global_rotation = building_rotation_global_rotation();
     int corner = building_rotation_get_corner(2 * global_rotation);
 
     b->storage_id = building_storage_create(BUILDING_STORAGE_YARD);
-    if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT))
+    if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
         building_storage_accept_none(b->storage_id);
+    }
 
     b->prev_part_building_id = 0;
     map_building_tiles_add(b->id,
                            b->tile.x() + x_offset[corner],
                            b->tile.y() + y_offset[corner],
                            1,
-                           image_id_from_group(GROUP_BUILDING_WAREHOUSE),
+                           image_id_from_group(GROUP_BUILDING_STORAGE_YARD),
                            TERRAIN_BUILDING);
 
     building* prev = b;
@@ -385,7 +386,7 @@ static void add_warehouse(building* b) {
         if (i == corner) {
             continue;
         }
-        prev = add_warehouse_space(b->tile.x() + x_offset[i], b->tile.y() + y_offset[i], prev);
+        prev = add_storageyard_space(b->tile.x() + x_offset[i], b->tile.y() + y_offset[i], prev);
     }
     // adjust BUILDING_WAREHOUSE
     b->tile.set(b->tile.x() + x_offset[corner], b->tile.y() + y_offset[corner]);
@@ -568,7 +569,7 @@ static void add_building(building* b, int orientation, int variant) {
         Planner.reset();
         break;
     case BUILDING_STORAGE_YARD:
-        add_warehouse(b);
+        add_storageyard(b);
         break;
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_ARCHERS:

@@ -170,9 +170,9 @@ void building_warehouse_remove_resource_curse(building* warehouse, int amount) {
 void building_warehouse_space_set_image(building* space, e_resource resource) {
     int image_id;
     if (space->stored_full_amount <= 0)
-        image_id = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
+        image_id = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
     else {
-        image_id = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_FILLED) + 4 * (resource - 1)
+        image_id = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_FILLED) + 4 * (resource - 1)
                    + resource_image_offset(resource, RESOURCE_IMAGE_STORAGE)
                    + (int)ceil((float)space->stored_full_amount / 100.0f) - 1;
     }

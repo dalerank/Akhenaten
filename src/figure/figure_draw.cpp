@@ -160,7 +160,7 @@ void figure::city_draw_figure(vec2i pixel, int highlight, vec2i* coord_out) {
     if (cart_image_id) {
         switch (type) {
         case FIGURE_CART_PUSHER:
-        case FIGURE_WAREHOUSEMAN:
+        case FIGURE_STORAGE_YARD_DELIVERCART:
             //            case FIGURE_LION_TAMER:
         case FIGURE_DOCKER:
         case FIGURE_NATIVE_TRADER:

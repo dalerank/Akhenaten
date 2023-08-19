@@ -103,7 +103,7 @@ static building_properties properties[2][400]
        {3, 0, 0, 0},                         // temple complex ^^^^
        {2, 0, GROUP_BUILDING_MARKET},        // bazaar
        {4, 0, GROUP_BUILDING_GRANARY},       // granary
-       {1, 1, GROUP_BUILDING_WAREHOUSE},     // storageyard (hut)
+       {1, 1, GROUP_BUILDING_STORAGE_YARD},  // storageyard (hut)
        {1, 1, 0, 0},                         // storageyard (space tile)
        {3, 0, GROUP_BUILDING_SHIPYARD},      // shipwright
        {3, 0, GROUP_BUILDING_DOCK},          // dock

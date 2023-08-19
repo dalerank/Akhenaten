@@ -483,10 +483,10 @@ static void draw_granary_stores(const building* b, int x, int y, color color_mas
         }
     }
 }
-static void draw_warehouse_ornaments(const building* b, int x, int y, color color_mask) {
-    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 5, y - 42, color_mask);
-    if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
-        ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
+static void draw_storageyard_ornaments(const building* b, int x, int y, color color_mask) {
+    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_STORAGE_YARD) + 17, x - 5, y - 42, color_mask);
+    //if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
+    //    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
 }
 static void draw_hippodrome_ornaments(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
@@ -558,7 +558,7 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
         draw_normal_anim(x + 114, y + 2, b, grid_offset, image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, color_mask);
         break;
     case BUILDING_STORAGE_YARD:
-        draw_warehouse_ornaments(b, x, y, color_mask);
+        draw_storageyard_ornaments(b, x, y, color_mask);
         draw_normal_anim(x + 21, y + 24, b, grid_offset, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
         ImageDraw::img_generic(image_id + 17, x - 5, y - 42, color_mask);
         break;
