@@ -165,6 +165,23 @@ static uint8_t map_get_fertility_average(int grid_offset, int x, int y, int size
     return fert_total / (size * size);
 }
 
+void map_update_area_fertility(int grid_offset, int x, int y, int size, int delta) {
+    // returns average of fertility in square starting on the top-left corner
+    int x_min = x;
+    int y_min = y;
+    int x_max = x_min + size - 1;
+    int y_max = y_min + size - 1;
+
+    map_grid_bound_area(&x_min, &y_min, &x_max, &y_max);
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            map_update_tile_fertility(grid_offset, delta);
+            ++grid_offset;
+        }
+        grid_offset += GRID_LENGTH - (x_max - x_min + 1);
+    }
+}
+
 uint8_t map_get_fertility_for_farm(int grid_offset) {
     int x = MAP_X(grid_offset);
     int y = MAP_Y(grid_offset);
@@ -187,6 +204,11 @@ void map_set_floodplain_growth(int grid_offset, int growth) {
     if (growth >= 0 && growth < 6) {
         map_grid_set(&g_terrain_floodplain_growth, grid_offset, growth);
     }
+}
+
+void map_update_tile_fertility(int grid_offset, int delta) {
+    int new_fert = map_get_fertility(grid_offset, FERT_WITH_MALUS) + delta;
+    map_grid_set(&g_terrain_floodplain_fertility, grid_offset, std::clamp(new_fert, 3, 99));
 }
 
 void map_soil_set_depletion(int grid_offset, int malus) {

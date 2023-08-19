@@ -110,8 +110,10 @@ int farm_expected_produce(building* b) {
     // down to the lowest 20 points. No idea why! But here's as an option.
 
     int modifier = 1;
-    if (city_data.religion.osiris_double_farm_yield && building_is_floodplain_farm(b))
+    if (city_data.religion.osiris_double_farm_yield && building_is_floodplain_farm(b)) {
         modifier = 2;
+    }
+
     return int((progress / 2.5f) * modifier);
 }
 
@@ -299,6 +301,7 @@ bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
     } else {
         if (game_time_day() < 2 && farm_harvesting_month_for_produce(resource_id, game_time_month()))
             return true;
+
         return false;
     }
 }

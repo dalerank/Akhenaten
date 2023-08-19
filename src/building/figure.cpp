@@ -32,6 +32,7 @@
 #include "grid/routing/routing.h"
 #include "grid/terrain.h"
 #include "grid/water.h"
+#include "grid/floodplain.h"
 #include "io/config/config.h"
 
 #include <cmath>
@@ -741,9 +742,11 @@ void building::spawn_figure_farm_harvests() {
         if (has_figure_of_type(0, FIGURE_CART_PUSHER))
             return;
 
-        if (has_road_access 
-                && data.industry.ready_production > 0 
-                && data.industry.progress <= 0) {
+        if (has_road_access && data.industry.progress > 0) {
+            int grid_offset = tile.grid_offset();
+            int farm_fertility = map_get_fertility_for_farm(grid_offset);
+
+            data.industry.ready_production = data.industry.progress * farm_fertility / 100;
             create_cartpusher(output_resource_id, farm_expected_produce(this));
             building_farm_deplete_soil(this);
 
