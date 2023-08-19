@@ -553,7 +553,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
         // ********* DEBUGGING **********
         if (false) {
             char* lfile = (char*)malloc(200);
-            sprintf(lfile, "DEV_TESTING/tex/%s_%i.bmp", name, i); // TODO: make this a global function
+            sprintf(lfile, "DEV_TESTING/tex/%s_%i.bmp", name.c_str(), i); // TODO: make this a global function
             graphics_renderer()->save_texture_to_file(lfile, atlas_data->texture);
             free(lfile);
         }
