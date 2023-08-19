@@ -143,15 +143,17 @@ static int get_tooltip_desirability(tooltip_context* c, int grid_offset) {
 }
 
 const city_overlay* city_overlay_for_food_stocks(void) {
-    static city_overlay overlay = {OVERLAY_FOOD_STOCKS,
-                                   COLUMN_TYPE_RISK,
-                                   show_building_food_stocks,
-                                   show_figure_food_stocks,
-                                   get_column_height_food_stocks,
-                                   0,
-                                   get_tooltip_food_stocks,
-                                   0,
-                                   0};
+    static city_overlay overlay = {
+        OVERLAY_FOOD_STOCKS,
+        COLUMN_TYPE_RISK,
+        show_building_food_stocks,
+        show_figure_food_stocks,
+        get_column_height_food_stocks,
+        0,
+        get_tooltip_food_stocks,
+        0,
+        0
+    };
     return &overlay;
 }
 const city_overlay* city_overlay_for_tax_income(void) {

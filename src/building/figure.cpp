@@ -747,8 +747,10 @@ void building::spawn_figure_farm_harvests() {
             int farm_fertility = map_get_fertility_for_farm(grid_offset);
 
             data.industry.ready_production = data.industry.progress * farm_fertility / 100;
-            create_cartpusher(output_resource_id, farm_expected_produce(this));
+            figure *f = create_cartpusher(output_resource_id, farm_expected_produce(this));
             building_farm_deplete_soil(this);
+
+            f->sender_building_id = this->id;
 
             data.industry.progress = 0;
             data.industry.ready_production = 0;

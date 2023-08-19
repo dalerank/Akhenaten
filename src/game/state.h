@@ -31,6 +31,7 @@ enum e_overlay {
     OVERLAY_RELIGION_PTAH = 32,
     OVERLAY_RELIGION_SETH = 33,
     OVERLAY_RELIGION_BAST = 34,
+    OVERLAY_FERTILITY = 35,
 };
 
 void game_state_init(void);

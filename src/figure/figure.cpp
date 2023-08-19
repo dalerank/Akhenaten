@@ -350,29 +350,27 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT16, &f->attacker_id1);
     iob->bind(BIND_SIGNATURE_INT16, &f->attacker_id2);
     iob->bind(BIND_SIGNATURE_INT16, &f->opponent_id);
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        //        iob->bind____skip(239);
-        iob->bind____skip(7);
-        iob->bind(BIND_SIGNATURE_INT16, &f->unk_ph1_269);                       // 269
-        iob->bind(BIND_SIGNATURE_INT16, &f->unk_ph2_00);                        // 0
-        iob->bind(BIND_SIGNATURE_INT32, &f->market_lady_resource_image_offset); // 03 00 00 00
-        iob->bind____skip(12);                                                  // FF FF FF FF FF ...
-        iob->bind(BIND_SIGNATURE_INT16, &f->market_lady_returning_home_id);     // 26
-        iob->bind____skip(14);                                                  // 00 00 00 00 00 00 00 ...
-        iob->bind(BIND_SIGNATURE_INT16, &f->market_lady_bought_amount);         // 200
-        iob->bind____skip(115);
-        iob->bind(BIND_SIGNATURE_INT8, &f->unk_ph3_6);     // 6
-        iob->bind(BIND_SIGNATURE_INT16, &f->unk_ph4_ffff); // -1
-        iob->bind____skip(48);
-        iob->bind(BIND_SIGNATURE_INT8, &f->festival_remaining_dances);
-        iob->bind____skip(27);
+    //        iob->bind____skip(239);
+    iob->bind____skip(7);
+    iob->bind(BIND_SIGNATURE_INT16, &f->unk_ph1_269);                       // 269
+    iob->bind(BIND_SIGNATURE_UINT16, &f->sender_building_id);                        // 0
+    iob->bind(BIND_SIGNATURE_INT32, &f->market_lady_resource_image_offset); // 03 00 00 00
+    iob->bind____skip(12);                                                  // FF FF FF FF FF ...
+    iob->bind(BIND_SIGNATURE_INT16, &f->market_lady_returning_home_id);     // 26
+    iob->bind____skip(14);                                                  // 00 00 00 00 00 00 00 ...
+    iob->bind(BIND_SIGNATURE_INT16, &f->market_lady_bought_amount);         // 200
+    iob->bind____skip(115);
+    iob->bind(BIND_SIGNATURE_INT8, &f->unk_ph3_6);     // 6
+    iob->bind(BIND_SIGNATURE_INT16, &f->unk_ph4_ffff); // -1
+    iob->bind____skip(48);
+    iob->bind(BIND_SIGNATURE_INT8, &f->festival_remaining_dances);
+    iob->bind____skip(27);
 
-        f->cart_image_id -= 18;
-        iob->bind(BIND_SIGNATURE_INT16, &f->cart_image_id);
-        f->cart_image_id += 18;
+    f->cart_image_id -= 18;
+    iob->bind(BIND_SIGNATURE_INT16, &f->cart_image_id);
+    f->cart_image_id += 18;
 
-        iob->bind____skip(2);
-    }
+    iob->bind____skip(2);
 }
 
 io_buffer* iob_figures = new io_buffer([](io_buffer* iob, size_t version) {

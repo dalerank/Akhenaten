@@ -164,7 +164,7 @@ public:
 
     // 7 bytes 00 00 00 00 00 00 00
     short unk_ph1_269;
-    short unk_ph2_00;
+    unsigned short sender_building_id;
     short market_lady_resource_image_offset;
     // 12 bytes FFFF FFFF FFFF FFFF FFFF FFFF
     short market_lady_returning_home_id;
