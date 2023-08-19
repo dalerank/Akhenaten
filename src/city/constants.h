@@ -53,7 +53,21 @@ enum e_god {
     GOD_BAST = 4,   // GOD_VENUS = 4
 };
 
-enum { GOD_STATUS_UNKNOWN = 0, GOD_STATUS_KNOWN = 1, GOD_STATUS_PATRON = 2 };
+template<typename ...Args>
+inline int make_gods_mask(Args... args) {
+    auto gods = {args...};
+    int mask = 0;
+    for (const auto &g : gods) { mask |= (1 << g); }
+    return mask;
+}
+
+inline bool is_god_available(int mask, e_god g) { int god_mask = (1 << g); return ((mask & god_mask) == god_mask); }
+
+enum {
+    GOD_STATUS_UNKNOWN = 0,
+    GOD_STATUS_KNOWN = 1,
+    GOD_STATUS_PATRON = 2
+};
 
 enum {
     TRADE_STATUS_NONE = 0,
