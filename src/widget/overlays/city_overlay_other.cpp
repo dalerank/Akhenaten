@@ -226,7 +226,7 @@ static void draw_top_water(vec2i pixel, map_point point) {
         return;
     if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
         if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            color_t color_mask = 0;
+            color color_mask = 0;
             if (map_property_is_deleted(grid_offset) && map_property_multi_tile_size(grid_offset) == 1)
                 color_mask = COLOR_MASK_RED;
             //            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask,
@@ -280,7 +280,7 @@ static void draw_footprint_desirability(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
-    color_t color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
+    color color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
     if (map_terrain_is(grid_offset, terrain_on_desirability_overlay())
         && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
@@ -304,7 +304,7 @@ static void draw_footprint_desirability(vec2i pixel, map_point point) {
 //     int grid_offset = point.grid_offset();
 //     int x = pixel.x;
 //     int y = pixel.y;
-//     color_t color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
+//     color color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
 //     if (map_terrain_is(grid_offset, terrain_on_desirability_overlay()) &&
 //         !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
 //         // display normal tile

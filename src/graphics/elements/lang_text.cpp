@@ -19,7 +19,7 @@ int lang_text_draw(int group, int number, int x_offset, int y_offset, font_t fon
 int lang_text_draw(const char* str, int x_offset, int y_offset, font_t font) {
     return text_draw((const uint8_t*)str, x_offset, y_offset, font, 0);
 }
-int lang_text_draw_colored(int group, int number, int x_offset, int y_offset, font_t font, color_t color) {
+int lang_text_draw_colored(int group, int number, int x_offset, int y_offset, font_t font, color color) {
     const uint8_t* str = lang_get_string(group, number);
     return text_draw(str, x_offset, y_offset, font, color);
 }
@@ -28,7 +28,7 @@ int lang_text_draw_left(int group, int number, int x_offset, int y_offset, font_
     const uint8_t* str = lang_get_string(group, number);
     return text_draw(str, x_offset - text_get_width(str, font), y_offset, font, 0);
 }
-int lang_text_draw_left_colored(int group, int number, int x_offset, int y_offset, font_t font, color_t color) {
+int lang_text_draw_left_colored(int group, int number, int x_offset, int y_offset, font_t font, color color) {
     const uint8_t* str = lang_get_string(group, number);
     return text_draw(str, x_offset - text_get_width(str, font), y_offset, font, color);
 }
@@ -48,7 +48,7 @@ void lang_text_draw_centered_colored(int group,
                                      int y_offset,
                                      int box_width,
                                      font_t font,
-                                     color_t color) {
+                                     color color) {
     const uint8_t* str = lang_get_string(group, number);
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
@@ -95,7 +95,7 @@ void lang_text_draw_month_year_max_width(int month,
                                          int y_offset,
                                          int box_width,
                                          font_t font,
-                                         color_t color) {
+                                         color color) {
     int month_width = lang_text_get_width(25, month, font);
     int ad_bc_width = lang_text_get_width(20, year >= 0 ? 1 : 0, font);
     int space_width = font_definition_for(font)->space_width;

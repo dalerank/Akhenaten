@@ -140,7 +140,7 @@ const int TRADE_RESOURCE_OFFSET[2] = {9, 3};
 #define TRADE_ROW_SPACING 20
 
 // static int fade_in_out = 1;
-// static color_t fade_in_out_color = 0xff000000;
+// static color fade_in_out_color = 0xff000000;
 
 static void draw_trade_route(int route_id, int effect) {
     map_route_object* obj = empire_get_route_object(route_id);
@@ -689,9 +689,9 @@ static void draw_foreground(void) {
     //    fade_in_out++;
     //    float v = 0.5 * (1.0 + sin(0.35 * (float)fade_in_out));
     //    int mm = int(v * 0xff);
-    //    color_t r = mm * 0x00010000;
-    //    color_t g = mm * 0x00000100;
-    //    color_t b = mm * 0x00000001;
+    //    color r = mm * 0x00010000;
+    //    color g = mm * 0x00000100;
+    //    color b = mm * 0x00000001;
     //    fade_in_out_color = 0xff000000 + r + g + b;
 
     ////////

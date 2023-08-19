@@ -35,7 +35,7 @@ static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH]
     {{"src", "group", "image", "x", "y"},                 // layer
      {"frames", "speed", "reversible", "x", "y"}}         // animation
 };
-static color_t DUMMY_IMAGE_DATA = COLOR_BLACK;
+static color DUMMY_IMAGE_DATA = COLOR_BLACK;
 
 static void xml_start_mod_element(const char** attributes);
 static void xml_start_image_element(const char** attributes);
@@ -59,7 +59,7 @@ typedef struct {
     int y_offset;
     int width;
     int height;
-    color_t* data;
+    color* data;
 } layer;
 
 typedef struct {
@@ -69,7 +69,7 @@ typedef struct {
     layer layers[MAX_LAYERS];
     int num_layers;
     image img;
-    color_t* data;
+    color* data;
 } modded_image;
 
 typedef struct {
@@ -110,8 +110,8 @@ static void load_dummy_layer(layer* l) {
 }
 
 static void load_layer(layer* l) {
-    int size = l->width * l->height * sizeof(color_t);
-    l->data = (color_t*)malloc(size);
+    int size = l->width * l->height * sizeof(color);
+    l->data = (color*)malloc(size);
     if (!l->data) {
         logs::error("Problem loading layer: %s", l->modded_image_path);
         load_dummy_layer(l);
@@ -130,7 +130,7 @@ static void load_layer(layer* l) {
     if (layer_image->draw.type == IMAGE_TYPE_MOD) {
         // Ugly const removal. The only other way would be to memcpy the image data.
         // That's a waste of ram, and we're not going to change l->data anyway
-        l->data = (color_t*)image_data(l->original_image_id);
+        l->data = (color*)image_data(l->original_image_id);
         if (!l->data) {
             logs::error("Problem loading layer from image id: %i", l->original_image_id);
             load_dummy_layer(l);
@@ -161,7 +161,7 @@ static void unload_layer(layer* l) {
     l->data = 0;
 }
 
-static color_t layer_get_color_for_image_position(layer* l, int x, int y) {
+static color layer_get_color_for_image_position(layer* l, int x, int y) {
     x -= l->x_offset;
     y -= l->y_offset;
     if (x < 0 || x >= l->width || y < 0 || y >= l->height) {
@@ -179,7 +179,7 @@ static int load_modded_image(modded_image* img) {
         load_layer(&img->layers[i]);
     }
 
-    img->data = (color_t*)malloc(img->img.data_length);
+    img->data = (color*)malloc(img->img.data_length);
     memset(img->data, 0, img->img.data_length);
     if (!img->data) {
         logs::error("Not enough memory to load image: %s", img->id);
@@ -190,27 +190,27 @@ static int load_modded_image(modded_image* img) {
         return 0;
     }
     for (int y = 0; y < img->img.height; ++y) {
-        color_t* pixel = &img->data[y * img->img.width];
+        color* pixel = &img->data[y * img->img.width];
         for (int x = 0; x < img->img.width; ++x) {
             for (int l = img->num_layers - 1; l >= 0; --l) {
-                color_t image_pixel_alpha = *pixel & COLOR_CHANNEL_ALPHA;
+                color image_pixel_alpha = *pixel & COLOR_CHANNEL_ALPHA;
                 if (image_pixel_alpha == ALPHA_OPAQUE) {
                     break;
                 }
-                color_t layer_pixel = layer_get_color_for_image_position(&img->layers[l], x, y);
-                color_t layer_pixel_alpha = layer_pixel & COLOR_CHANNEL_ALPHA;
+                color layer_pixel = layer_get_color_for_image_position(&img->layers[l], x, y);
+                color layer_pixel_alpha = layer_pixel & COLOR_CHANNEL_ALPHA;
                 if (layer_pixel_alpha == ALPHA_TRANSPARENT) {
                     continue;
                 }
                 if (image_pixel_alpha == ALPHA_TRANSPARENT) {
                     *pixel = layer_pixel;
                 } else if (layer_pixel_alpha == ALPHA_OPAQUE) {
-                    color_t alpha = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
+                    color alpha = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
                     *pixel = COLOR_BLEND_ALPHA_TO_OPAQUE(*pixel, layer_pixel, alpha);
                 } else {
-                    color_t alpha_src = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
-                    color_t alpha_dst = layer_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
-                    color_t alpha_mix = COLOR_MIX_ALPHA(alpha_src, alpha_dst);
+                    color alpha_src = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
+                    color alpha_dst = layer_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
+                    color alpha_mix = COLOR_MIX_ALPHA(alpha_src, alpha_dst);
                     *pixel = COLOR_BLEND_ALPHAS(*pixel, layer_pixel, alpha_src, alpha_dst, alpha_mix);
                 }
             }
@@ -455,7 +455,7 @@ static void xml_end_mod_element(void) {
 
 static void xml_end_image_element(void) {
     image* img = &data.xml.current_image->img;
-    img->data_length = img->width * img->height * sizeof(color_t);
+    img->data_length = img->width * img->height * sizeof(color);
     img->uncompressed_length = img->data_length;
     if (!data.xml.current_image->num_layers || !img->data_length)
         return;
@@ -634,7 +634,7 @@ const image* mods_get_image(int image_id) {
     return &img->img;
 }
 
-const color_t* mods_get_image_data(int image_id) {
+const color* mods_get_image_data(int image_id) {
     modded_image* img = &data.images[image_id - get_main_entries_num()];
     if (!img->active) {
         return image_data(0);

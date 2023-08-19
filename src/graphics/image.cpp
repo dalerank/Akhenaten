@@ -29,7 +29,7 @@ struct image_data_t {
     imagepak* empire;
     imagepak* font;
 
-    color_t* tmp_image_data;
+    color* tmp_image_data;
 };
 
 static image_data_t* g_image_data = nullptr;

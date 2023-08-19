@@ -73,7 +73,7 @@ struct city_overlay_fertility : public city_overlay {
         int grid_offset = point.grid_offset();
         int x = pixel.x;
         int y = pixel.y;
-        color_t color_mask = 0;
+        color color_mask = 0;
         if (map_terrain_is(grid_offset, terrain_on_fertility_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
             // display normal tile
             //if (map_property_is_draw_tile(grid_offset)) {

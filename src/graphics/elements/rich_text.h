@@ -73,7 +73,7 @@ int rich_text_draw_colored(const uint8_t* text,
                            int y_offset,
                            int box_width,
                            int height_lines,
-                           color_t color);
+                           color color);
 
 /**
  * Draws the scrollbar

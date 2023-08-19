@@ -163,7 +163,7 @@ static int is_blocked_for_building(int grid_offset, int num_tiles, int* blocked_
     return blocked;
 }
 
-static void draw_flat_tile(int x, int y, color_t color_mask) {
+static void draw_flat_tile(int x, int y, color color_mask) {
     ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
 }
 
@@ -178,7 +178,7 @@ static void draw_partially_blocked(int x, int y, int fully_blocked, int num_tile
     }
 }
 
-void draw_building(int image_id, vec2i tile, color_t color_mask) {
+void draw_building(int image_id, vec2i tile, color color_mask) {
     ImageDraw::isometric(image_id, tile, color_mask);
 }
 
@@ -591,7 +591,7 @@ bool city_building_ghost_mark_deleting(map_point tile) {
     map_building_tiles_mark_deleting(tile.grid_offset());
     return true;
 }
-void BuildPlanner::draw_flat_tile(int x, int y, color_t color_mask) {
+void BuildPlanner::draw_flat_tile(int x, int y, color color_mask) {
     ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
 }
 void BuildPlanner::draw_blueprints(bool fully_blocked) {

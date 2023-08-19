@@ -21,7 +21,7 @@ static void offset_to_view_offset(int dx, int dy, int* view_dx, int* view_dy) {
     *view_dy = (dx + dy) * 15;
 }
 
-static void draw_flat_tile(int x, int y, color_t color_mask) {
+static void draw_flat_tile(int x, int y, color color_mask) {
     if (color_mask == COLOR_MASK_GREEN && scenario_property_climate() != CLIMATE_DESERT)
         ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED),
                                x,

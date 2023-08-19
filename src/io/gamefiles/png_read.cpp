@@ -95,7 +95,7 @@ int png_read(const char* path, uint8_t* pixels) {
     int height = png_get_image_height(data.png_ptr, data.info_ptr);
     png_bytep* row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
     for (int y = 0; y < height; ++y) {
-        row_pointers[y] = pixels + y * width * sizeof(color_t);
+        row_pointers[y] = pixels + y * width * sizeof(color);
     }
 
     png_read_image(data.png_ptr, row_pointers);

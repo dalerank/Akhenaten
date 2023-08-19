@@ -15,14 +15,14 @@ void city_draw_bridge(vec2i pixel, map_point point) {
     }
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
         return;
-    color_t color_mask = 0;
+    color color_mask = 0;
     if (map_property_is_deleted(grid_offset))
         color_mask = COLOR_MASK_RED;
 
     city_draw_bridge_tile(x, y, map_sprite_animation_at(grid_offset) + 1, color_mask);
 }
 
-void city_draw_bridge_tile(int x, int y, int bridge_sprite_id, color_t color_mask) {
+void city_draw_bridge_tile(int x, int y, int bridge_sprite_id, color color_mask) {
     int image_id = image_id_from_group(GROUP_BUILDING_BRIDGE);
     switch (bridge_sprite_id) {
     case 1:

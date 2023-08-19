@@ -45,7 +45,7 @@ static void draw_normal_anim(int x,
     else
         ImageDraw::img_sprite(sprite_id + animation_offset, x, y, color_mask);
 }
-static void draw_water_lift_anim(building* b, int x, int y, color_t color_mask) {
+static void draw_water_lift_anim(building* b, int x, int y, color color_mask) {
     int orientation_rel = city_view_relative_orientation(b->data.industry.orientation);
     int anim_offset = 13 * orientation_rel;
     x += 53;
@@ -110,7 +110,7 @@ static void draw_gatehouse_anim(int x, int y, building* b) {
         }
     }
 }
-static void draw_entertainment_shows_c3(building* b, int x, int y, color_t color_mask) {
+static void draw_entertainment_shows_c3(building* b, int x, int y, color color_mask) {
     //    if (b->type == BUILDING_AMPHITHEATER && b->num_workers > 0)
     //        ImageDraw::img_generic(image_id_from_group(GROUP_DANCERS_SHOW), x + 36, y - 47, color_mask);
     //
@@ -125,7 +125,7 @@ static void draw_entertainment_shows_c3(building* b, int x, int y, color_t color
     //        draw_hippodrome_spectators(b, x, y, color_mask);
 }
 
-static void draw_entertainment_show_jugglers(building* b, int x, int y, color_t color_mask) {
+static void draw_entertainment_show_jugglers(building* b, int x, int y, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days1) {
         draw_normal_anim(x + 30, y + 15,
@@ -135,7 +135,7 @@ static void draw_entertainment_show_jugglers(building* b, int x, int y, color_t 
                          image_id_from_group(GROUP_BUILDING_BOOTH));
     }
 }
-static void draw_entertainment_shows_musicians(building* b, int x, int y, int direction, color_t color_mask) {
+static void draw_entertainment_shows_musicians(building* b, int x, int y, int direction, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days2) {
         building* next_tile = b->next();
@@ -159,7 +159,7 @@ static void draw_entertainment_shows_musicians(building* b, int x, int y, int di
         }
     }
 }
-static void draw_entertainment_shows_dancers(building* b, int x, int y, color_t color_mask) {
+static void draw_entertainment_shows_dancers(building* b, int x, int y, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days3_or_play) {
         draw_normal_anim(x + 64,
@@ -238,7 +238,7 @@ int get_crops_image(e_building_type type, int growth) {
     return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
 }
 
-void draw_farm_crops(e_building_type type, int progress, int grid_offset, vec2i tile, color_t color_mask) {
+void draw_farm_crops(e_building_type type, int progress, int grid_offset, vec2i tile, color color_mask) {
     int image_crops = get_crops_image(type, 0);
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) { // on floodplains - all
         for (int i = 0; i < 9; i++) {
@@ -270,7 +270,7 @@ static void draw_farm_worker(int direction,
                            int action,
                            int frame_offset,
                            vec2i coords,
-                           color_t color_mask = COLOR_MASK_NONE) {
+                           color color_mask = COLOR_MASK_NONE) {
     int action_offset = 0;
     switch (action) {
     case FARM_WORKER_TILING: // tiling
@@ -357,7 +357,7 @@ static void draw_farm_workers(building* b, int grid_offset, vec2i pos) {
     }
 }
 
-static void draw_dock_workers(building* b, int x, int y, color_t color_mask) {
+static void draw_dock_workers(building* b, int x, int y, color color_mask) {
     int num_dockers = building_dock_count_idle_dockers(b);
     if (num_dockers > 0) {
         int image_dock = map_image_at(b->tile.grid_offset());
@@ -397,7 +397,7 @@ static const int granary_offsets_ph[][2] = {
   {37, 35},
 };
 
-static void draw_workshop_raw_material_storage(const building* b, int x, int y, color_t color_mask) {
+static void draw_workshop_raw_material_storage(const building* b, int x, int y, color color_mask) {
     if (b->stored_full_amount <= 0)
         return;
     int amount = ceil((float)b->stored_full_amount / 100.0) - 1;
@@ -448,7 +448,7 @@ static void draw_workshop_raw_material_storage(const building* b, int x, int y, 
         break;
     }
 }
-static void draw_granary_stores(const building* b, int x, int y, color_t color_mask) {
+static void draw_granary_stores(const building* b, int x, int y, color color_mask) {
     if (GAME_ENV == ENGINE_ENV_C3) {
         ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 1, x, y + 60, color_mask);
         if (b->data.granary.resource_stored[RESOURCE_NONE] < 2400)
@@ -483,7 +483,7 @@ static void draw_granary_stores(const building* b, int x, int y, color_t color_m
         }
     }
 }
-static void draw_warehouse_ornaments(const building* b, int x, int y, color_t color_mask) {
+static void draw_warehouse_ornaments(const building* b, int x, int y, color color_mask) {
     ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 5, y - 42, color_mask);
     if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
         ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
@@ -502,7 +502,7 @@ static void draw_hippodrome_ornaments(vec2i pixel, map_point point) {
                                drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0);
     }
 }
-static void draw_senate_rating_flags(const building* b, int x, int y, color_t color_mask) {
+static void draw_senate_rating_flags(const building* b, int x, int y, color color_mask) {
     if (b->type == BUILDING_SENATE_UPGRADED) {
         // rating flags
         int image_id = image_id_from_group(GROUP_BUILDING_SENATE);

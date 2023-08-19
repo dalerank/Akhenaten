@@ -14,7 +14,7 @@
 
 ///////// IMAGE DATA CONVERSION
 
-static color_t to_32_bit(uint16_t c) {
+static color to_32_bit(uint16_t c) {
     return ALPHA_OPAQUE | ((c & 0x7c00) << 9) | ((c & 0x7000) << 4) | ((c & 0x3e0) << 6) | ((c & 0x380) << 1)
            | ((c & 0x1f) << 3) | ((c & 0x1c) >> 2);
 }
@@ -24,9 +24,9 @@ static int convert_uncompressed(buffer* buf, const image_t* img) {
     auto p_atlas = img->atlas.p_atlas;
 
     for (int y = 0; y < img->height; y++) {
-        color_t* pixel = &p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset];
+        color* pixel = &p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset];
         for (int x = 0; x < img->width; x++) {
-            color_t color = to_32_bit(buf->read_u16());
+            color color = to_32_bit(buf->read_u16());
             pixel[x] = color == COLOR_SG2_TRANSPARENT ? ALPHA_TRANSPARENT : color;
             pixels_count++;
         }
@@ -117,11 +117,11 @@ static int convert_isometric_footprint(buffer* buf, const image_t* img) {
     return pixels_count;
 }
 
-static bool is_pixel_transparent(color_t pixel) {
+static bool is_pixel_transparent(color pixel) {
     return (pixel & COLOR_CHANNEL_ALPHA) == ALPHA_TRANSPARENT;
 }
 static void convert_to_plain_white(const image_t* img) {
-    color_t* pixels = img->TEMP_PIXEL_DATA;
+    color* pixels = img->TEMP_PIXEL_DATA;
     int atlas_width = img->atlas.p_atlas->width;
     for (int y = 0; y < img->height; y++) {
         for (int x = 0; x < img->width; x++) {
@@ -134,10 +134,10 @@ static void convert_to_plain_white(const image_t* img) {
 static void add_edge_to_letter(const image_t* img) {
     int atlas_width = img->atlas.p_atlas->width;
     int oldsize = img->width * img->height;
-    color_t* TEMP_BUFFER = new color_t[oldsize];
+    color* TEMP_BUFFER = new color[oldsize];
 
     // copy original glyph to the buffer
-    color_t* pixels_row = img->TEMP_PIXEL_DATA;
+    color* pixels_row = img->TEMP_PIXEL_DATA;
     auto p_buffer_row = TEMP_BUFFER;
     for (int y = 0; y < img->height; y++) {
         for (int x = 0; x < img->width; x++)
@@ -189,9 +189,9 @@ static int convert_font_glyph_to_bigger_space(buffer* buf, const image_t* img) {
     auto p_atlas = img->atlas.p_atlas;
 
     for (int y = 0; y < img->height - 2; y++) {
-        color_t* pixel = &p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset];
+        color* pixel = &p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset];
         for (int x = 0; x < img->width - 2; x++) {
-            color_t color = to_32_bit(buf->read_u16());
+            color color = to_32_bit(buf->read_u16());
             pixel[x] = color == COLOR_SG2_TRANSPARENT ? ALPHA_TRANSPARENT : color;
             pixels_count++;
         }
@@ -249,9 +249,9 @@ static int isometric_calculate_top_height(const image_t* img) {
     for (int d = 0; d < tri_rows; ++d) {  // diagonals
         for (int y = 0; y < d + 1; ++y) { // steps in the diagonal == y axis, too
             int x = 2 * (d - y);
-            color_t* row = &img->TEMP_PIXEL_DATA[y * img->atlas.p_atlas->width];
-            color_t* x_left = &row[x];
-            color_t* x_right = &row[img->width - x - 2];
+            color* row = &img->TEMP_PIXEL_DATA[y * img->atlas.p_atlas->width];
+            color* x_left = &row[x];
+            color* x_right = &row[img->width - x - 2];
             if (!is_pixel_transparent(x_left[0]) || !is_pixel_transparent(x_left[1])
                 || !is_pixel_transparent(x_right[0]) || !is_pixel_transparent(x_right[1])) {
                 return top_height + tri_rows - d;
@@ -504,7 +504,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
         atlas_data.width = i == packer.result.pages_needed - 1 ? packer.result.last_image_width : max_texture_sizes.x;
         atlas_data.height = i == packer.result.pages_needed - 1 ? packer.result.last_image_height : max_texture_sizes.y;
         atlas_data.bmp_size = atlas_data.width * atlas_data.height;
-        atlas_data.TEMP_PIXEL_BUFFER = new color_t[atlas_data.bmp_size];
+        atlas_data.TEMP_PIXEL_BUFFER = new color[atlas_data.bmp_size];
         memset(atlas_data.TEMP_PIXEL_BUFFER, 0, atlas_data.bmp_size * sizeof(uint32_t));
         atlas_data.texture = nullptr;
         atlas_pages.push_back(atlas_data);

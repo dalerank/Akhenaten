@@ -464,7 +464,7 @@ void widget_top_menu_draw(int force) {
     refresh_background();
     menu_bar_draw(make_span(g_top_menu));
 
-    color_t treasure_color = COLOR_WHITE;
+    color treasure_color = COLOR_WHITE;
     int treasury = city_finance_treasury();
 
     if (treasury < 0) {

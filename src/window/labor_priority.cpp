@@ -74,7 +74,7 @@ static void draw_background(void) {
 static void draw_foreground(void) {
     graphics_set_to_dialog();
 
-    color_t color;
+    color color;
     for (int i = 0; i < 9; i++) {
         color = COLOR_BLACK;
         if (i == data.focus_button_id - 2)

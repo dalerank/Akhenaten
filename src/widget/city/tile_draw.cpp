@@ -164,7 +164,7 @@ static bool is_drawable_farm_corner(int grid_offset) {
     return false;
 }
 
-void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int image_offset, color_t color_mask) {
+void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int image_offset, color color_mask) {
     int image_base = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT) + image_offset;
 
     for (int xx = 0; xx < size_x; xx++) {
@@ -186,7 +186,7 @@ void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int 
         }
     }
 }
-void draw_flattened_footprint_building(const building* b, int x, int y, int image_offset, color_t color_mask) {
+void draw_flattened_footprint_building(const building* b, int x, int y, int image_offset, color color_mask) {
     return (draw_flattened_footprint_anysize(x, y, b->size, b->size, image_offset, color_mask));
 }
 
@@ -356,7 +356,7 @@ void draw_isometrics(vec2i pixel, map_point point) {
     if (map_property_is_draw_tile(grid_offset)) {
         // Valid grid_offset_figure and leftmost tile -> draw
         int building_id = map_building_at(grid_offset);
-        color_t color_mask = COLOR_MASK_NONE;
+        color color_mask = COLOR_MASK_NONE;
         bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == point);
         if (deletion_tool || map_property_is_deleted(point.grid_offset()))
             color_mask = COLOR_MASK_RED;

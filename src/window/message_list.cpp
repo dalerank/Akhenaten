@@ -121,7 +121,7 @@ static void draw_messages(int total_messages) {
             int o = -100;
             int oo = 45;
             font_t f = FONT_NORMAL_BLUE;
-            color_t c = COLOR_WHITE;
+            color c = COLOR_WHITE;
             uint8_t str[10];
 
             o += oo;

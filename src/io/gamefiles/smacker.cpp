@@ -662,7 +662,7 @@ static int decode_audio_track(smacker s, int track, uint8_t* data, int length) {
 }
 
 static int decode_palette(smacker s, uint8_t* data, int length) {
-    color_t new_palette[MAX_PALETTE];
+    color new_palette[MAX_PALETTE];
     int index = 0;
     int color_index = 0;
     while (index < length && color_index < MAX_PALETTE) {
@@ -696,7 +696,7 @@ static int decode_palette(smacker s, uint8_t* data, int length) {
             index += 3;
         }
     }
-    memcpy(s->frame_data.palette, new_palette, sizeof(color_t) * MAX_PALETTE);
+    memcpy(s->frame_data.palette, new_palette, sizeof(color) * MAX_PALETTE);
     return 1;
 }
 
@@ -829,7 +829,7 @@ smacker_frame_status smacker_next_frame(smacker s) {
 
 // Smacker get frame data functions
 
-const uint32_t* smacker_get_frame_palette(const smacker s) {
+const color* smacker_get_frame_palette(const smacker s) {
     return s->frame_data.palette;
 }
 

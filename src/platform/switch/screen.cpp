@@ -229,6 +229,6 @@ void system_reload_textures(void) {
 }
 
 int system_save_screen_buffer(void* pixels) {
-    return SDL_RenderReadPixels(SDL.renderer, NULL, SDL_PIXELFORMAT_ARGB8888, pixels, screen_width() * sizeof(color_t))
+    return SDL_RenderReadPixels(SDL.renderer, NULL, SDL_PIXELFORMAT_ARGB8888, pixels, screen_width() * sizeof(color))
            == 0;
 }

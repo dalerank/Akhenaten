@@ -16,7 +16,7 @@ void system_reload_textures(void);
 
 /**
  * Saves the screen buffer to memory
- * Even though it is set to "void", uses "color_t" format
+ * Even though it is set to "void", uses "color" format
  * @return true if saving was successful, false otherwise
  */
 int system_save_screen_buffer(void* pixels);

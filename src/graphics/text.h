@@ -15,9 +15,9 @@ unsigned int
 text_get_max_length_for_width(const uint8_t* str, int length, font_t font, unsigned int requested_width, int invert);
 void text_ellipsize(uint8_t* str, font_t font, int requested_width);
 
-int text_draw(const uint8_t* str, int x, int y, font_t font, color_t color);
-void text_draw_centered(const uint8_t* str, int x, int y, int box_width, font_t font, color_t color);
-int text_draw_left(uint8_t* str, int x, int y, font_t font, color_t color);
+int text_draw(const uint8_t* str, int x, int y, font_t font, color color);
+void text_draw_centered(const uint8_t* str, int x, int y, int box_width, font_t font, color color);
+int text_draw_left(uint8_t* str, int x, int y, font_t font, color color);
 
 int text_draw_number(int value, char prefix, const char* postfix, int x_offset, int y_offset, font_t font);
 int text_draw_number_colored(int value,
@@ -26,7 +26,7 @@ int text_draw_number_colored(int value,
                              int x_offset,
                              int y_offset,
                              font_t font,
-                             color_t color);
+                             color color);
 int text_draw_money(int value, int x_offset, int y_offset, font_t font);
 int text_draw_percentage(int value, int x_offset, int y_offset, font_t font);
 
@@ -36,7 +36,7 @@ int text_draw_label_and_number(const char* label,
                                int x_offset,
                                int y_offset,
                                font_t font,
-                               color_t color);
+                               color color);
 void text_draw_label_and_number_centered(const char* label,
                                          int value,
                                          const char* postfix,
@@ -44,7 +44,7 @@ void text_draw_label_and_number_centered(const char* label,
                                          int y_offset,
                                          int box_width,
                                          font_t font,
-                                         color_t color);
+                                         color color);
 
 void text_draw_number_centered(int value, int x_offset, int y_offset, int box_width, font_t font);
 void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int y_offset, int box_width, font_t font);
@@ -53,7 +53,7 @@ void text_draw_number_centered_colored(int value,
                                        int y_offset,
                                        int box_width,
                                        font_t font,
-                                       color_t color);
+                                       color color);
 
 int text_draw_multiline(const uint8_t* str, int x_offset, int y_offset, int box_width, font_t font, uint32_t color);
 /**
