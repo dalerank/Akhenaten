@@ -68,17 +68,18 @@ static void add_fort(int type, building* fort) {
     // create parade ground
     const int offsets_x[] = {3, -1, -4, 0};
     const int offsets_y[] = {-1, -4, 0, 3};
+    int global_rotation = building_rotation_global_rotation();
     building* ground = building_create(BUILDING_FORT_GROUND,
-                                       fort->tile.x() + offsets_x[building_rotation_get_rotation()],
-                                       fort->tile.y() + offsets_y[building_rotation_get_rotation()],
+                                       fort->tile.x() + offsets_x[global_rotation],
+                                       fort->tile.y() + offsets_y[global_rotation],
                                        0);
     game_undo_add_building(ground);
     ground->prev_part_building_id = fort->id;
     fort->next_part_building_id = ground->id;
     ground->next_part_building_id = 0;
     map_building_tiles_add(ground->id,
-                           fort->tile.x() + offsets_x[building_rotation_get_rotation()],
-                           fort->tile.y() + offsets_y[building_rotation_get_rotation()],
+                           fort->tile.x() + offsets_x[global_rotation],
+                           fort->tile.y() + offsets_y[global_rotation],
                            4,
                            image_id_from_group(GROUP_BUILDING_FORT) + 1,
                            TERRAIN_BUILDING);
@@ -364,7 +365,8 @@ static building* add_warehouse_space(int x, int y, building* prev) {
 static void add_warehouse(building* b) {
     int x_offset[9] = {0, 0, 1, 1, 0, 2, 1, 2, 2};
     int y_offset[9] = {0, 1, 0, 1, 2, 0, 2, 1, 2};
-    int corner = building_rotation_get_corner(2 * building_rotation_get_rotation());
+    int global_rotation = building_rotation_global_rotation();
+    int corner = building_rotation_get_corner(2 * global_rotation);
 
     b->storage_id = building_storage_create(BUILDING_STORAGE_YARD);
     if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT))
@@ -1533,11 +1535,12 @@ void BuildPlanner::update_coord_caches() {
 void BuildPlanner::update_orientations(bool check_if_changed) {
     int prev_orientation = relative_orientation;
     int prev_variant = variant;
+    int global_rotation = building_rotation_global_rotation();
     switch (build_type) {
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
-        relative_orientation = building_rotation_get_rotation() + 1;
+        relative_orientation = global_rotation + 1;
         variant = building_rotation_get_building_variant();
         break;
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
@@ -1545,7 +1548,7 @@ void BuildPlanner::update_orientations(bool check_if_changed) {
     case BUILDING_TEMPLE_COMPLEX_PTAH:
     case BUILDING_TEMPLE_COMPLEX_SETH:
     case BUILDING_TEMPLE_COMPLEX_BAST: // CHANGE: in the original game, only two orientations are allowed
-        relative_orientation = building_rotation_get_rotation() + 1;
+        relative_orientation = global_rotation + 1;
         variant = 0;
         break;
     }
@@ -1703,14 +1706,14 @@ void BuildPlanner::construction_update(map_point tile) {
     }
     if (items_placed >= 0)
         current_cost *= items_placed;
+    
     total_cost = current_cost;
-
+    int global_rotation = building_rotation_global_rotation();
     if (building_is_fort(build_type)) {
         if (formation_get_num_legions_cached() < 6) {
-            if (map_building_tiles_are_clear(x, y, 3, TERRAIN_ALL)
-                && map_building_tiles_are_clear(
-                  x + FORT_X_OFFSET[building_rotation_get_rotation()][city_view_orientation() / 2],
-                  y + FORT_Y_OFFSET[building_rotation_get_rotation()][city_view_orientation() / 2],
+            if (map_building_tiles_are_clear(x, y, 3, TERRAIN_ALL) && map_building_tiles_are_clear(
+                  x + FORT_X_OFFSET[global_rotation][city_view_orientation() / 2],
+                  y + FORT_Y_OFFSET[global_rotation][city_view_orientation() / 2],
                   4,
                   TERRAIN_ALL)) {
                 mark_construction(x, y, 3, 3, TERRAIN_ALL, false);

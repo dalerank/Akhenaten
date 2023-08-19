@@ -7,20 +7,21 @@
 #include "grid/grid.h"
 #include "io/config/config.h"
 
-static int rotation = 0;
+int g_global_rotation = 0;
 static int road_orientation = 1;
 static int variant = 0;
 static time_millis road_last_update = 0;
 
 static void rotate(void) {
-    rotation++;
-    if (rotation > 3)
-        rotation = 0;
+    g_global_rotation++;
+    if (g_global_rotation > 3)
+        g_global_rotation = 0;
 }
 
-int building_rotation_get_rotation(void) {
-    return rotation;
+int building_rotation_global_rotation(void) {
+    return g_global_rotation;
 }
+
 void building_rotation_rotate_by_hotkey(void) {
     if (config_get(CONFIG_UI_ROTATE_MANUALLY)) {
         rotate();
@@ -35,14 +36,14 @@ void building_rotation_variant_by_hotkey(void) {
     Planner.update_orientations();
 }
 void building_rotation_reset_rotation(void) {
-    rotation = 0;
+    g_global_rotation = 0;
     variant = 0;
     Planner.update_orientations();
 }
 
 void building_rotation_force_two_orientations(void) { // for composite buildings like hippodrome
-    if (rotation == 1 || rotation == 2)
-        rotation = 3;
+    if (g_global_rotation == 1 || g_global_rotation == 2)
+        g_global_rotation = 3;
 }
 
 void building_rotation_update_road_orientation(void) {
@@ -63,15 +64,16 @@ int building_rotation_get_building_variant(void) {
     return variant;
 }
 
-int building_rotation_get_building_orientation(int building_rotation) {
+int building_rotation_get_storage_fort_orientation(int building_rotation) {
     return (2 * building_rotation + city_view_orientation()) % 8;
 }
+
 int building_rotation_get_delta_with_rotation(int default_delta) {
-    if (rotation == 0) {
+    if (g_global_rotation == 0) {
         return GRID_OFFSET(default_delta, 0);
-    } else if (rotation == 1)
+    } else if (g_global_rotation == 1)
         return GRID_OFFSET(0, -default_delta);
-    else if (rotation == 2)
+    else if (g_global_rotation == 2)
         return GRID_OFFSET(-default_delta, 0);
     else
         return GRID_OFFSET(0, default_delta);

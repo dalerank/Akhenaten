@@ -186,21 +186,27 @@ static void draw_fountain_range(vec2i pixel, map_point point) {
     ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE, zoom_get_scale());
 }
 
-static void draw_warehouse(int x, int y) {
+static void draw_storage_yard(vec2i tile) {
     int image_id_space = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
-    int corner = building_rotation_get_corner(building_rotation_get_building_orientation(building_rotation_get_rotation()));
+    int global_rotation = building_rotation_global_rotation();
+    int index_rotation = building_rotation_get_storage_fort_orientation(global_rotation);
+    int corner = building_rotation_get_corner(index_rotation);
+    vec2i corner_offset{-5, -45};
+    vec2i place_offset{0, -15};
+
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
-            draw_building(image_id_from_group(GROUP_BUILDING_WAREHOUSE), vec2i(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]));
+            draw_building(image_id_from_group(GROUP_BUILDING_WAREHOUSE), tile + vec2i(X_VIEW_OFFSETS[i], Y_VIEW_OFFSETS[i]));
             ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17,
-                                   x + X_VIEW_OFFSETS[i] - 5,
-                                   y + Y_VIEW_OFFSETS[i] - 42,
+                                   tile.x + X_VIEW_OFFSETS[i] + corner_offset.x,
+                                   tile.y + Y_VIEW_OFFSETS[i] + corner_offset.y,
                                    COLOR_MASK_GREEN);
         } else {
-            draw_building(image_id_space, {x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]});
+            draw_building(image_id_space, tile + vec2i(X_VIEW_OFFSETS[i] + place_offset.x, Y_VIEW_OFFSETS[i] + place_offset.y));
         }
     }
 }
+
 static void draw_farm(e_building_type type, vec2i tile, int grid_offset) {
     int image_id = get_farm_image(grid_offset);
     draw_building(image_id, tile + vec2i{-60, 0});
@@ -226,8 +232,8 @@ static void draw_fort(map_point* tile, int x, int y) {
     num_tiles_ground *= num_tiles_ground;
 
     //    int grid_offset_fort = tile->grid_offset;
-    int grid_offset_ground = tile->grid_offset()
-                               + FORT_GROUND_GRID_OFFSETS_PH[building_rotation_get_rotation()][city_view_orientation() / 2];
+    int global_rotation = building_rotation_global_rotation();
+    int grid_offset_ground = tile->grid_offset() + FORT_GROUND_GRID_OFFSETS_PH[global_rotation][city_view_orientation() / 2];
 
     int blocked_tiles_fort[MAX_TILES];
     int blocked_tiles_ground[MAX_TILES];
@@ -235,7 +241,7 @@ static void draw_fort(map_point* tile, int x, int y) {
     blocked += is_blocked_for_building(tile->grid_offset(), num_tiles_fort, blocked_tiles_fort);
     blocked += is_blocked_for_building(grid_offset_ground, num_tiles_ground, blocked_tiles_ground);
 
-    int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
+    int orientation_index = building_rotation_get_storage_fort_orientation(global_rotation) / 2;
     int x_ground = x + FORT_GROUND_X_VIEW_OFFSETS[orientation_index];
     int y_ground = y + FORT_GROUND_Y_VIEW_OFFSETS[orientation_index];
 
@@ -614,6 +620,7 @@ void BuildPlanner::draw_graphics() {
     case BUILDING_ROAD:
         return draw_road(end, pixel.x, pixel.y);
         break;
+
     case BUILDING_IRRIGATION_DITCH:
         return draw_aqueduct(end, pixel.x, pixel.y);
         break;
@@ -621,14 +628,16 @@ void BuildPlanner::draw_graphics() {
         //            return draw_walls((const map_tile*)&end, end_coord.x, end_coord.y);
         //            break;
     case BUILDING_STORAGE_YARD:
-        return draw_warehouse(pixel.x, pixel.y);
+        return draw_storage_yard(pixel);
         break;
+
     case BUILDING_BOOTH:
     case BUILDING_BANDSTAND:
     case BUILDING_PAVILLION:
     case BUILDING_FESTIVAL_SQUARE:
         draw_entertainment_venue(end, pixel.x, pixel.y, build_type);
         break;
+
     case BUILDING_BARLEY_FARM:
     case BUILDING_FLAX_FARM:
     case BUILDING_GRAIN_FARM:
@@ -639,6 +648,7 @@ void BuildPlanner::draw_graphics() {
     case BUILDING_HENNA_FARM:
         draw_farm(build_type, pixel, end.grid_offset());
         break;
+
     case BUILDING_WELL:
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE))
             city_view_foreach_tile_in_range(end.grid_offset(), 1, 2, draw_fountain_range);
