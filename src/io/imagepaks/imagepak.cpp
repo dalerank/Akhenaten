@@ -569,7 +569,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
     image_packer_free(&packer);
 
     logs::info("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u), %" PRIu64 " milliseconds.",
-               filename_sgx,
+               filename_sgx.c_str(),
                entries_num,
                groups_num,
                atlas_pages.at(atlas_pages.size() - 1).width,
