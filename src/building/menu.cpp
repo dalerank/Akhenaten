@@ -60,7 +60,7 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_MENU_GUILDS,
      BUILDING_MARKET,
      BUILDING_GRANARY,
-     BUILDING_WAREHOUSE,
+     BUILDING_STORAGE_YARD,
      0},
     {BUILDING_BARLEY_FARM,
      BUILDING_FLAX_FARM,
@@ -220,7 +220,7 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_HUNTING_LODGE,
      BUILDING_WORK_CAMP},
     // distribution structures
-    {BUILDING_GRANARY, BUILDING_MARKET, BUILDING_WAREHOUSE, BUILDING_DOCK, 0},
+    {BUILDING_GRANARY, BUILDING_MARKET, BUILDING_STORAGE_YARD, BUILDING_DOCK, 0},
     // shrines
     {BUILDING_SHRINE_OSIRIS, BUILDING_SHRINE_RA, BUILDING_SHRINE_PTAH, BUILDING_SHRINE_SETH, BUILDING_SHRINE_BAST, 0},
     // monuments
@@ -626,7 +626,7 @@ void building_menu_update(int build_set) {
     case BUILDSET_TUT2_AFTER_450:
         toggle_building(BUILDING_MENU_RAW_MATERIALS);
         toggle_building(BUILDING_MENU_GUILDS);
-        toggle_building(BUILDING_WAREHOUSE);
+        toggle_building(BUILDING_STORAGE_YARD);
         toggle_building(BUILDING_TAX_COLLECTOR);
         toggle_building(BUILDING_BOOTH);
         toggle_building(BUILDING_JUGGLER_SCHOOL);
@@ -652,7 +652,7 @@ void building_menu_update(int build_set) {
     case BUILDSET_TUT3_INDUSTRY:
         toggle_building(BUILDING_CLAY_PIT);
         toggle_building(BUILDING_POTTERY_WORKSHOP);
-        toggle_building(BUILDING_WAREHOUSE);
+        toggle_building(BUILDING_STORAGE_YARD);
         break;
 
     case BUILDSET_TUT3_GARDENS:
@@ -700,7 +700,7 @@ void building_menu_update(int build_set) {
 
         toggle_building(BUILDING_MARKET);
         toggle_building(BUILDING_GRANARY);
-        toggle_building(BUILDING_WAREHOUSE);
+        toggle_building(BUILDING_STORAGE_YARD);
 
         toggle_building(BUILDING_CHICKPEAS_FARM);
         toggle_building(BUILDING_BARLEY_FARM);

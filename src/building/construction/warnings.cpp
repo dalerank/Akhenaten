@@ -54,7 +54,7 @@ static void check_road_access(int type, int x, int y, int size, int orientation)
     bool has_road = false;
     if (map_has_road_access(x, y, size, 0))
         has_road = true;
-    else if (type == BUILDING_WAREHOUSE && map_has_road_access(x, y, 3, 0))
+    else if (type == BUILDING_STORAGE_YARD && map_has_road_access(x, y, 3, 0))
         has_road = true;
     //    else if (type == BUILDING_SENET_HOUSE && map_has_road_access_hippodrome(x, y, 0))
     //        has_road = true;

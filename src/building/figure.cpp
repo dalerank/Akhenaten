@@ -8,7 +8,7 @@
 #include "building/industry.h"
 #include "building/market.h"
 #include "building/model.h"
-#include "building/warehouse.h"
+#include "building/storage_yard.h"
 #include "city/buildings.h"
 #include "city/data_private.h"
 #include "city/entertainment.h"
@@ -1156,7 +1156,7 @@ void building::update_road_access() {
     // update building road access
     //    map_point road;
     switch (type) {
-    case BUILDING_WAREHOUSE:
+    case BUILDING_STORAGE_YARD:
         has_road_access = map_has_road_access(tile.x(), tile.y(), 3, &road_access);
         break;
     case BUILDING_BURNING_RUIN:
@@ -1203,7 +1203,7 @@ bool building::figure_generate() {
     else {
         // single building type
         switch (type) {
-        case BUILDING_WAREHOUSE:
+        case BUILDING_STORAGE_YARD:
             spawn_figure_warehouse();
             break;
         case BUILDING_GRANARY:
@@ -1341,8 +1341,9 @@ void building_figure_generate(void) {
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
-        if (b->type == BUILDING_WAREHOUSE_SPACE || (b->type == BUILDING_SENET_HOUSE && b->prev_part_building_id))
+        if (b->type == BUILDING_STORAGE_YARD_SPACE || (b->type == BUILDING_SENET_HOUSE && b->prev_part_building_id)) {
             continue;
+        }
 
         b->update_road_access();
         b->figure_generate();

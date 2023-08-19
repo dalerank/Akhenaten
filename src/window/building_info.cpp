@@ -5,7 +5,7 @@
 #include "building/house_evolution.h"
 #include "building/model.h"
 #include "building/storage.h"
-#include "building/warehouse.h"
+#include "building/storage_yard.h"
 #include "city/map.h"
 #include "city/resource.h"
 #include "core/calc.h"
@@ -185,7 +185,7 @@ static void get_tooltip(tooltip_context* c) {
         case BUILDING_GRANARY:
             window_building_get_tooltip_granary_orders(&group_id, &text_id);
             break;
-        case BUILDING_WAREHOUSE:
+        case BUILDING_STORAGE_YARD:
             window_building_get_tooltip_warehouse_orders(&group_id, &text_id);
             break;
         }
@@ -328,7 +328,7 @@ static void init(map_point tile) {
         case BUILDING_MENU_FORTS:
             context.formation_id = b->formation_id;
             break;
-        case BUILDING_WAREHOUSE_SPACE:
+        case BUILDING_STORAGE_YARD_SPACE:
         case BUILDING_SENET_HOUSE:
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:
@@ -580,7 +580,7 @@ static void draw_background(void) {
                 else
                     window_building_draw_granary(&context);
                 break;
-            case BUILDING_WAREHOUSE:
+            case BUILDING_STORAGE_YARD:
                 if (context.storage_show_special_orders)
                     window_building_draw_warehouse_orders(&context);
                 else
@@ -787,7 +787,7 @@ static void draw_foreground(void) {
             else
                 window_building_draw_granary_foreground(&context);
             break;
-        case BUILDING_WAREHOUSE:
+        case BUILDING_STORAGE_YARD:
             if (context.storage_show_special_orders)
                 window_building_draw_warehouse_orders_foreground(&context);
             else
@@ -880,7 +880,7 @@ static int handle_specific_building_info_mouse(const mouse* m) {
             else
                 return window_building_handle_mouse_granary(m, &context);
             break;
-        case BUILDING_WAREHOUSE:
+        case BUILDING_STORAGE_YARD:
             if (context.storage_show_special_orders)
                 return window_building_handle_mouse_warehouse_orders(m, &context);
             else

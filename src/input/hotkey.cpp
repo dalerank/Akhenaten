@@ -245,9 +245,9 @@ static void add_definition(const hotkey_mapping* mapping) {
         def->action = &data.hotkey_state.building;
         def->value = BUILDING_GRANARY;
         break;
-    case HOTKEY_BUILD_WAREHOUSE:
+    case BUILDING_STORAGE_YARD:
         def->action = &data.hotkey_state.building;
-        def->value = BUILDING_WAREHOUSE;
+        def->value = BUILDING_STORAGE_YARD;
         break;
     case HOTKEY_BUILD_MARKET:
         def->action = &data.hotkey_state.building;

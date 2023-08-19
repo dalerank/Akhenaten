@@ -410,7 +410,7 @@ static void handle_first_touch(map_point tile) {
     }
 
     int size = building_properties_for_type(type)->size;
-    if (type == BUILDING_WAREHOUSE)
+    if (type == BUILDING_STORAGE_YARD)
         size = 3;
 
     if (touch_was_click(first) && first->has_ended && data.capture_input

@@ -222,7 +222,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_MARKET: // Set it as accepting all goods
         b->subtype.market_goods = 0x0000;
         break;
-    case BUILDING_WAREHOUSE:
+    case BUILDING_STORAGE_YARD:
         b->subtype.orientation = building_rotation_get_rotation();
         break;
     case BUILDING_SMALL_STATUE:
@@ -595,7 +595,7 @@ bool building_is_industry(int type) {
         return true;
     if (type == BUILDING_DOCK || type == BUILDING_SHIPYARD)
         return true;
-    if (type == BUILDING_WAREHOUSE || type == BUILDING_WAREHOUSE_SPACE)
+    if (type == BUILDING_STORAGE_YARD || type == BUILDING_STORAGE_YARD_SPACE)
         return true;
     return false;
 }

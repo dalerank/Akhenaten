@@ -172,9 +172,10 @@ void city_resource_calculate_warehouse_stocks(void) {
         city_data.resource.space_in_warehouses[i] = 0;
         city_data.resource.stored_in_warehouses[i] = 0;
     }
+
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
+        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_STORAGE_YARD) {
             b->has_road_access = 0;
             if (map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), b->size, 0)) {
                 b->has_road_access = 1;
@@ -183,9 +184,10 @@ void city_resource_calculate_warehouse_stocks(void) {
             }
         }
     }
+
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE_SPACE)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_YARD_SPACE)
             continue;
 
         building* warehouse = b->main();

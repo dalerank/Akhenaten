@@ -5,7 +5,7 @@
 #include "building/industry.h"
 #include "building/storage.h"
 #include "building/type.h"
-#include "building/warehouse.h"
+#include "building/storage_yard.h"
 #include "city/buildings.h"
 #include "city/resource.h"
 #include "core/calc.h"
@@ -90,8 +90,8 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
 
             int accepting = 0;
             switch (dest->type) {
-            case BUILDING_WAREHOUSE:
-            case BUILDING_WAREHOUSE_SPACE:
+            case BUILDING_STORAGE_YARD:
+            case BUILDING_STORAGE_YARD_SPACE:
                 accepting = building_warehouse_get_accepting_amount(resource_id, dest);
                 break;
             default:
@@ -127,8 +127,8 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
                 }
                 break;
 
-            case BUILDING_WAREHOUSE:
-            case BUILDING_WAREHOUSE_SPACE:
+            case BUILDING_STORAGE_YARD:
+            case BUILDING_STORAGE_YARD_SPACE:
                 for (int i = 0; i < times; i++) { // do one by one...
                     int amount_refused = building_warehouse_add_resource(dest, resource_id, amount_single_turn);
                     if (amount_refused != -1) {
@@ -176,8 +176,8 @@ void figure::cartpusher_do_retrieve(int ACTION_DONE) {
     if (wait_ticks > 4) {
         building* dest = destination();
         switch (dest->type) {
-        case BUILDING_WAREHOUSE:
-        case BUILDING_WAREHOUSE_SPACE: {
+        case BUILDING_STORAGE_YARD:
+        case BUILDING_STORAGE_YARD_SPACE: {
             int home_accepting_quantity
               = building_warehouse_get_accepting_amount((e_resource)collecting_item_id, home());
             int carry_amount_goal_max = fmin(100, home_accepting_quantity);

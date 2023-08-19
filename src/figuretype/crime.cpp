@@ -343,8 +343,8 @@ int figure::figure_rioter_collapse_building() {
 
         building* b = building_at(grid_offset);
         switch (b->type) {
-        case BUILDING_WAREHOUSE_SPACE:
-        case BUILDING_WAREHOUSE:
+        case BUILDING_STORAGE_YARD_SPACE:
+        case BUILDING_STORAGE_YARD:
         case BUILDING_FORT_GROUND:
         case BUILDING_MENU_FORTS:
         case BUILDING_BURNING_RUIN:

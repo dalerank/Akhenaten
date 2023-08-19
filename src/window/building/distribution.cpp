@@ -7,7 +7,7 @@
 #include "building/market.h"
 #include "building/storage.h"
 #include "building/type.h"
-#include "building/warehouse.h"
+#include "building/storage_yard.h"
 #include "city/buildings.h"
 #include "city/resource.h"
 #include "figure/figure.h"
@@ -584,7 +584,7 @@ uint8_t granary_3quarters_button_text[] = "18";
 uint8_t granary_half_button_text[] = "12";
 uint8_t granary_quarter_button_text[] = "6";
 
-enum E_INSTR {
+enum e_instr {
     INSTR_STORAGE_YARD = 0,
     INSTR_GRANARY = 1,
     INSTR_DOCK = 2,
@@ -1445,7 +1445,7 @@ static void toggle_resource_state(int index, int param2) {
     if (b->type == BUILDING_MARKET || b->type == BUILDING_DOCK)
         toggle_good_accepted(index - 1, b);
     else {
-        if (b->type == BUILDING_WAREHOUSE)
+        if (b->type == BUILDING_STORAGE_YARD)
             resource = city_resource_get_available()->items[index - 1];
         else
             resource = city_resource_get_available_foods()->items[index - 1];
@@ -1460,7 +1460,7 @@ static void toggle_resource_state_backwards(int index, int param2) {
     if (b->type == BUILDING_MARKET || b->type == BUILDING_DOCK)
         toggle_good_accepted(index - 1, b);
     else {
-        if (b->type == BUILDING_WAREHOUSE)
+        if (b->type == BUILDING_STORAGE_YARD)
             resource = city_resource_get_available()->items[index - 1];
         else
             resource = city_resource_get_available_foods()->items[index - 1];
@@ -1475,7 +1475,7 @@ static void order_quantity_increase_decrease(int index, int param2) {
     if (b->type == BUILDING_MARKET || b->type == BUILDING_DOCK)
         return;
     else {
-        if (b->type == BUILDING_WAREHOUSE)
+        if (b->type == BUILDING_STORAGE_YARD)
             resource = city_resource_get_available()->items[index - 1];
         else
             resource = city_resource_get_available_foods()->items[index - 1];

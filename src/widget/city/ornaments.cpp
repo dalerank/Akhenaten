@@ -540,7 +540,7 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
 
     int image_id = map_image_at(grid_offset);
     building* b = building_at(grid_offset);
-    if (b->type == BUILDING_WAREHOUSE && b->state == BUILDING_STATE_CREATED)
+    if (b->type == BUILDING_STORAGE_YARD && b->state == BUILDING_STATE_CREATED)
         ImageDraw::img_generic(image_id + 17, x - 5, y - 42);
     if (b->type == 0 || b->state == BUILDING_STATE_UNUSED)
         return;
@@ -557,7 +557,7 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
         draw_granary_stores(b, x, y, color_mask);
         draw_normal_anim(x + 114, y + 2, b, grid_offset, image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, color_mask);
         break;
-    case BUILDING_WAREHOUSE:
+    case BUILDING_STORAGE_YARD:
         draw_warehouse_ornaments(b, x, y, color_mask);
         draw_normal_anim(x + 21, y + 24, b, grid_offset, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
         ImageDraw::img_generic(image_id + 17, x - 5, y - 42, color_mask);

@@ -13,7 +13,7 @@
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/storage.h"
-#include "building/warehouse.h"
+#include "building/storage_yard.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/resource.h"
@@ -353,7 +353,7 @@ static void add_entertainment_venue(building* b, int orientation) {
 }
 
 static building* add_warehouse_space(int x, int y, building* prev) {
-    building* b = building_create(BUILDING_WAREHOUSE_SPACE, x, y, 0);
+    building* b = building_create(BUILDING_STORAGE_YARD_SPACE, x, y, 0);
     game_undo_add_building(b);
     b->prev_part_building_id = prev->id;
     prev->next_part_building_id = b->id;
@@ -366,7 +366,7 @@ static void add_warehouse(building* b) {
     int y_offset[9] = {0, 1, 0, 1, 2, 0, 2, 1, 2};
     int corner = building_rotation_get_corner(2 * building_rotation_get_rotation());
 
-    b->storage_id = building_storage_create(BUILDING_WAREHOUSE);
+    b->storage_id = building_storage_create(BUILDING_STORAGE_YARD);
     if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT))
         building_storage_accept_none(b->storage_id);
 
@@ -565,7 +565,7 @@ static void add_building(building* b, int orientation, int variant) {
         building_menu_update(BUILDSET_NORMAL);
         Planner.reset();
         break;
-    case BUILDING_WAREHOUSE:
+    case BUILDING_STORAGE_YARD:
         add_warehouse(b);
         break;
     case BUILDING_FORT_CHARIOTEERS:
@@ -712,7 +712,7 @@ static bool place_building(e_building_type type, int x, int y, int orientation, 
     int size = building_properties_for_type(type)->size;
     int check_figures = 2;
     switch (type) { // special cases
-    case BUILDING_WAREHOUSE:
+    case BUILDING_STORAGE_YARD:
         size = 3;
         break;
     case BUILDING_BOOTH:
@@ -1208,7 +1208,7 @@ void BuildPlanner::setup_build_graphics() {
     case BUILDING_LARGE_STATUE:
         set_tiles_building(get_statue_image(build_type, relative_orientation, variant), props->size);
         break;
-    case BUILDING_WAREHOUSE:
+    case BUILDING_STORAGE_YARD:
         set_tiles_building(image_id_from_group(props->image_collection, props->image_group), 3);
         break;
     case BUILDING_BOOTH:
@@ -1672,7 +1672,7 @@ void BuildPlanner::construction_update(map_point tile) {
     case BUILDING_TRIUMPHAL_ARCH:
         mark_construction(x, y, 3, 3, ~TERRAIN_ROAD, false);
         break;
-    case BUILDING_WAREHOUSE:
+    case BUILDING_STORAGE_YARD:
         mark_construction(x, y, 3, 3, TERRAIN_ALL, false);
         break;
     case BUILDING_WATER_LIFT:

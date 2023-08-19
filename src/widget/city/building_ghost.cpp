@@ -620,7 +620,7 @@ void BuildPlanner::draw_graphics() {
         //        case BUILDING_WALL_PH:
         //            return draw_walls((const map_tile*)&end, end_coord.x, end_coord.y);
         //            break;
-    case BUILDING_WAREHOUSE:
+    case BUILDING_STORAGE_YARD:
         return draw_warehouse(pixel.x, pixel.y);
         break;
     case BUILDING_BOOTH:

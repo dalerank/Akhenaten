@@ -2,7 +2,7 @@
 
 #include "building/granary.h"
 #include "building/industry.h"
-#include "building/warehouse.h"
+#include "building/storage_yard.h"
 #include "city/buildings.h"
 #include "city/resource.h"
 #include "core/calc.h"

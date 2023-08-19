@@ -112,4 +112,4 @@ void building_storage_toggle_empty_all(int storage_id);
 void building_storage_reset_building_ids(void);
 
 void building_storage_set_permission(int p, building* b);
-int building_storage_get_permission(int p, building* b);
+bool building_storage_get_permission(int p, building* b);
