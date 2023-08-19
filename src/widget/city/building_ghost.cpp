@@ -24,8 +24,11 @@
 
 #define MAX_TILES 25
 
-static const int X_VIEW_OFFSETS[MAX_TILES] = {0, -30, 30, 0, -60, 60, -30, 30, 0, -90, 90, -60, 60, -30, 30, 0, -120, 120, -90, 90, -60, 60, -30, 30, 0};
-static const int Y_VIEW_OFFSETS[MAX_TILES] = {0, 15, 15, 30, 30, 30, 45, 45, 60, 45, 45, 60, 60, 75, 75, 90, 60, 60, 75, 75, 90, 90, 105, 105, 120};
+const vec2i VIEW_OFFSETS[MAX_TILES] = {          {0, 0},
+                                       {-30,15}, {30, 15}, {0,30},
+                             {-60,30}, {60, 30}, {-30,45}, {30, 45}, {0,  60},
+                  {-90, 45}, {90, 45}, {-60,60}, {60, 60}, {-30,75}, {30, 75},  {0, 90},
+       {-120,60}, {120, 60}, {-90,75}, {90, 75}, {-60,90}, {60, 90}, {-30,105}, {30,105}, {0,120}};
 
 // #define OFFSET(x,y) (x + GRID_SIZE_PH * y)
 
@@ -167,14 +170,13 @@ static void draw_flat_tile(int x, int y, color color_mask) {
     ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
 }
 
-static void draw_partially_blocked(int x, int y, int fully_blocked, int num_tiles, int* blocked_tiles) {
+static void draw_partially_blocked(vec2i tile, int fully_blocked, int num_tiles, int* blocked_tiles) {
     for (int i = 0; i < num_tiles; i++) {
-        int x_offset = x + X_VIEW_OFFSETS[i];
-        int y_offset = y + Y_VIEW_OFFSETS[i];
+        vec2i offset = tile + VIEW_OFFSETS[i];
         if (fully_blocked || blocked_tiles[i])
-            draw_flat_tile(x_offset, y_offset, COLOR_MASK_RED);
+            draw_flat_tile(offset.x, offset.y, COLOR_MASK_RED);
         else
-            draw_flat_tile(x_offset, y_offset, COLOR_MASK_GREEN);
+            draw_flat_tile(offset.x, offset.y, COLOR_MASK_GREEN);
     }
 }
 
@@ -196,13 +198,13 @@ static void draw_storage_yard(vec2i tile) {
 
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
-            draw_building(image_id_from_group(GROUP_BUILDING_WAREHOUSE), tile + vec2i(X_VIEW_OFFSETS[i], Y_VIEW_OFFSETS[i]));
+            draw_building(image_id_from_group(GROUP_BUILDING_WAREHOUSE), tile + VIEW_OFFSETS[i]);
             ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17,
-                                   tile.x + X_VIEW_OFFSETS[i] + corner_offset.x,
-                                   tile.y + Y_VIEW_OFFSETS[i] + corner_offset.y,
+                                   tile.x + VIEW_OFFSETS[i].x + corner_offset.x,
+                                   tile.y + VIEW_OFFSETS[i].y + corner_offset.y,
                                    COLOR_MASK_GREEN);
         } else {
-            draw_building(image_id_space, tile + vec2i(X_VIEW_OFFSETS[i] + place_offset.x, Y_VIEW_OFFSETS[i] + place_offset.y));
+            draw_building(image_id_space, tile + VIEW_OFFSETS[i] + place_offset);
         }
     }
 }
@@ -218,7 +220,7 @@ static void draw_farm(e_building_type type, vec2i tile, int grid_offset) {
     //} else if (GAME_ENV == ENGINE_ENV_PHARAOH)
     draw_farm_crops(type, 0, grid_offset, tile + vec2i{-60, 30}, COLOR_MASK_GREEN);
 }
-static void draw_fort(map_point* tile, int x, int y) {
+static void draw_fort(map_point* tile, vec2i pos) {
     bool fully_blocked = false;
     bool blocked = false;
     if (formation_get_num_legions_cached() >= formation_get_max_legions() || city_finance_out_of_money()) {
@@ -242,22 +244,21 @@ static void draw_fort(map_point* tile, int x, int y) {
     blocked += is_blocked_for_building(grid_offset_ground, num_tiles_ground, blocked_tiles_ground);
 
     int orientation_index = building_rotation_get_storage_fort_orientation(global_rotation) / 2;
-    int x_ground = x + FORT_GROUND_X_VIEW_OFFSETS[orientation_index];
-    int y_ground = y + FORT_GROUND_Y_VIEW_OFFSETS[orientation_index];
+    vec2i ground = pos + vec2i(FORT_GROUND_X_VIEW_OFFSETS[orientation_index], FORT_GROUND_Y_VIEW_OFFSETS[orientation_index]);
 
     if (blocked) {
-        draw_partially_blocked(x, y, fully_blocked, num_tiles_fort, blocked_tiles_fort);
-        draw_partially_blocked(x_ground, y_ground, fully_blocked, num_tiles_ground, blocked_tiles_ground);
+        draw_partially_blocked(pos, fully_blocked, num_tiles_fort, blocked_tiles_fort);
+        draw_partially_blocked(ground, fully_blocked, num_tiles_ground, blocked_tiles_ground);
     } else {
         int image_id = image_id_from_group(GROUP_BUILDING_FORT);
         if (orientation_index == 0 || orientation_index == 3) {
             // draw fort first, then ground
-            draw_building(image_id, {x, y});
-            draw_building(image_id + 1, {x_ground, y_ground});
+            draw_building(image_id, pos);
+            draw_building(image_id + 1, ground);
         } else {
             // draw ground first, then fort
-            draw_building(image_id + 1, {x_ground, y_ground});
-            draw_building(image_id, {x, y});
+            draw_building(image_id + 1, ground);
+            draw_building(image_id, pos);
         }
     }
 }
@@ -265,8 +266,9 @@ static void draw_fort(map_point* tile, int x, int y) {
 static void draw_aqueduct(map_point tile, int x, int y) {
     int grid_offset = tile.grid_offset();
     bool blocked = false;
-    if (!map_can_place_initial_road_or_aqueduct(grid_offset, true))
+    if (!map_can_place_initial_road_or_aqueduct(grid_offset, true)) {
         blocked = true;
+    }
     if (Planner.in_progress) {   // already dragging aqueduct
         if (!Planner.total_cost) // ???
             blocked = true;
@@ -452,7 +454,7 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
 
     if (can_build != 1) { // no can place
         for (int i = 0; i < size * size; i++)
-            draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
+            draw_flat_tile(x + VIEW_OFFSETS[i].x, y + VIEW_OFFSETS[i].y, COLOR_MASK_RED);
     } else { // can place (theoretically)
         if (type == BUILDING_FESTIVAL_SQUARE && city_building_has_festival_square()) {
             for (int i = 0; i < size * size; i++)

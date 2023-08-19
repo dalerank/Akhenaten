@@ -30,7 +30,7 @@ static figure_action_property action_properties_lookup[] = {
   {1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_EXPLOSION},                     // FIGURE_EXPLOSION = 6,
   {1, TERRAIN_USAGE_ROADS, 512, GROUP_FIGURE_TAX_COLLECTOR},             // FIGURE_TAX_COLLECTOR = 7,
   {1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_ENGINEER},                  // FIGURE_ENGINEER = 8,
-  {1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_IMMIGRANT},                   // FIGURE_WAREHOUSEMAN = 9,
+  {1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_CARTPUSHER},                  // FIGURE_WAREHOUSEMAN = 9,
   {1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_FIREMAN},                   // FIGURE_PREFECT = 10,
   {1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_ARCHER_PH},                     // FIGURE_FORT_JAVELIN = 11,
   {1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_CHARIOTEER_PH},                 // FIGURE_FORT_MOUNTED = 12,
@@ -383,7 +383,7 @@ void figure::action_perform() {
                 && (b->state != BUILDING_STATE_VALID || (!b->has_figure(0, id) && !b->has_figure(1, id))))
                 poof();
             break;
-        case FIGURE_WAREHOUSEMAN:
+        case FIGURE_STORAGE_YARD_DELIVERCART:
             if (has_destination())
                 break;
             if (b->state != BUILDING_STATE_VALID || (!b->has_figure(0, id) && !b->has_figure(1, id)))

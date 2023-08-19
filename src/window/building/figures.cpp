@@ -414,7 +414,7 @@ static void draw_figure_info(building_info_context* c, int figure_id) {
         f->draw_enemy(c);
     else if (type == FIGURE_FISHING_BOAT || type == FIGURE_SHIPWRECK || f->is_herd())
         f->draw_animal(c);
-    else if (type == FIGURE_CART_PUSHER || type == FIGURE_WAREHOUSEMAN || type == FIGURE_DOCKER)
+    else if (type == FIGURE_CART_PUSHER || type == FIGURE_STORAGE_YARD_DELIVERCART || type == FIGURE_DOCKER)
         f->draw_cartpusher(c);
     else if (type == FIGURE_MARKET_BUYER)
         f->draw_market_buyer(c);
