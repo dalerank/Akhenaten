@@ -9,6 +9,8 @@
 #include "io/io.h"
 #include "io/log.h"
 #include "platform/renderer.h"
+
+#include <array>
 #include <cinttypes>
 #include <cstring>
 
@@ -398,11 +400,11 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
     }
 
     // parse bitmap names
-    using bmp_name_data = char[bmp_name::capacity];
+    using bmp_name_data = std::array<char, 200>;
     std::vector<bmp_name_data> names(num_bmp_names);
     pak_buf->read_raw(names.data(), num_bmp_names * bmp_name::capacity);
     for (int i = 0; i < num_bmp_names; ++i) {
-        bmp_names[i] = names[i];
+        bmp_names[i] = names[i].data();
         logs::info("%s, %u", bmp_names[i].c_str(), i);
     }
 
