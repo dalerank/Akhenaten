@@ -10,6 +10,7 @@
 #include "widget/overlays/city_overlay_religion.h"
 #include "widget/overlays/city_overlay_risks.h"
 #include "widget/overlays/city_overlay_criminal.h"
+#include "widget/overlays/city_overlay_fertility.h"
 
 const city_overlay* g_city_overlay = 0;
 
@@ -71,6 +72,8 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_water();
     case OVERLAY_DESIRABILITY:
         return city_overlay_for_desirability();
+    case OVERLAY_FERTILITY:
+        return city_overlay_for_fertility();
     default:
         return 0;
     }

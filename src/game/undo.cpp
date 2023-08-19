@@ -3,7 +3,7 @@
 #include "building/industry.h"
 #include "building/properties.h"
 #include "building/storage.h"
-#include "building/warehouse.h"
+#include "building/storage_yard.h"
 #include "city/finance.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -269,7 +269,7 @@ void game_undo_perform(void) {
                     restore_housing(&data.buildings[i]);
                 else {
                     memcpy(b, &data.buildings[i], sizeof(building));
-                    if (b->type == BUILDING_WAREHOUSE || b->type == BUILDING_GRANARY) {
+                    if (b->type == BUILDING_STORAGE_YARD || b->type == BUILDING_GRANARY) {
                         if (!building_storage_restore(b->storage_id))
                             building_storage_reset_building_ids();
                     }

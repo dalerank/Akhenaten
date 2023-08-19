@@ -232,7 +232,7 @@ static void draw_top_native(vec2i pixel, map_point point) {
         return;
     if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
         if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            color_t color_mask = 0;
+            color color_mask = 0;
             if (map_property_is_deleted(grid_offset) && map_property_multi_tile_size(grid_offset) == 1)
                 color_mask = COLOR_MASK_RED;
 

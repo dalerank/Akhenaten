@@ -137,14 +137,14 @@ static int image_request_rows(void) {
     return 0;
 }
 
-static int image_write_rows(const color_t* canvas, int canvas_width) {
+static int image_write_rows(const color* canvas, int canvas_width) {
     if (setjmp(png_jmpbuf(image.png_ptr))) {
         return 0;
     }
     for (int y = 0; y < image.rows_in_memory; ++y) {
         uint8_t* pixel = image.pixels;
         for (int x = 0; x < image.width; x++) {
-            color_t input = canvas[y * canvas_width + x];
+            color input = canvas[y * canvas_width + x];
             *(pixel + 0) = (uint8_t)((input & 0xff0000) >> 16);
             *(pixel + 1) = (uint8_t)((input & 0x00ff00) >> 8);
             *(pixel + 2) = (uint8_t)((input & 0x0000ff) >> 0);
@@ -156,17 +156,17 @@ static int image_write_rows(const color_t* canvas, int canvas_width) {
 }
 
 static int image_write_canvas(void) {
-    const color_t* canvas;
-    color_t* screen_buffer = 0;
+    const color* canvas;
+    color* screen_buffer = 0;
     if (config_get(CONFIG_UI_ZOOM)) {
-        screen_buffer = (color_t*)malloc(image.width * image.height * sizeof(color_t));
+        screen_buffer = (color*)malloc(image.width * image.height * sizeof(color));
         if (!system_save_screen_buffer(screen_buffer)) {
             free(screen_buffer);
             return 0;
         }
         canvas = screen_buffer;
     } else {
-        canvas = (const color_t*)graphics_canvas(CANVAS_UI);
+        canvas = (const color*)graphics_canvas(CANVAS_UI);
     }
     int current_height = image_set_loop_height_limits(0, image.height);
     int size;
@@ -252,7 +252,7 @@ static void create_full_city_screenshot(void) {
     int error = 0;
     int current_height = image_set_loop_height_limits(min_height, max_height);
     int size;
-    const color_t* canvas = (color_t*)graphics_canvas(CANVAS_UI) + TOP_MENU_HEIGHT * canvas_width;
+    const color* canvas = (color*)graphics_canvas(CANVAS_UI) + TOP_MENU_HEIGHT * canvas_width;
     while ((size = image_request_rows())) {
         city_view_set_camera_from_pixel_position(base_width, current_height);
         city_without_overlay_draw(0, 0, &dummy_tile);

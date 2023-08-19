@@ -95,7 +95,7 @@ struct renderer_data_t {
 
     struct {
         SDL_Texture* texture;
-        color_t* buffer;
+        color* buffer;
         image_t img;
     } custom_textures[CUSTOM_IMAGE_MAX];
     struct {
@@ -121,17 +121,17 @@ struct renderer_data_t {
 
 renderer_data_t g_renderer_data;
 
-static int save_screen_buffer(color_t* pixels, int x, int y, int width, int height, int row_width) {
+static int save_screen_buffer(color* pixels, int x, int y, int width, int height, int row_width) {
     auto &data = g_renderer_data;
     if (data.paused) {
         return 0;
     }
     SDL_Rect rect = {x, y, width, height};
-    return SDL_RenderReadPixels(data.renderer, &rect, SDL_PIXELFORMAT_ARGB8888, pixels, row_width * sizeof(color_t))
+    return SDL_RenderReadPixels(data.renderer, &rect, SDL_PIXELFORMAT_ARGB8888, pixels, row_width * sizeof(color))
            == 0;
 }
 
-void graphics_renderer_interface::draw_line(int x_start, int x_end, int y_start, int y_end, color_t color) {
+void graphics_renderer_interface::draw_line(int x_start, int x_end, int y_start, int y_end, color color) {
     auto &data = g_renderer_data;
     if (data.paused) {
         return;
@@ -143,7 +143,7 @@ void graphics_renderer_interface::draw_line(int x_start, int x_end, int y_start,
                            (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
     SDL_RenderDrawLine(data.renderer, x_start, y_start, x_end, y_end);
 }
-void graphics_renderer_interface::draw_rect(int x, int y, int width, int height, color_t color) {
+void graphics_renderer_interface::draw_rect(int x, int y, int width, int height, color color) {
     auto &data = g_renderer_data;
     if (data.paused) {
         return;
@@ -156,7 +156,7 @@ void graphics_renderer_interface::draw_rect(int x, int y, int width, int height,
     SDL_Rect rect = {x, y, width + 1, height + 1};
     SDL_RenderDrawRect(data.renderer, &rect);
 }
-void graphics_renderer_interface::fill_rect(int x, int y, int width, int height, color_t color) {
+void graphics_renderer_interface::fill_rect(int x, int y, int width, int height, color color) {
     auto &data = g_renderer_data;
     if (data.paused) {
         return;
@@ -294,7 +294,7 @@ std::vector<video_mode> get_video_modes() {
 //     atlas_data->num_images = num_images;
 //     atlas_data->image_widths = (int*)malloc(sizeof(int) * num_images);
 //     atlas_data->image_heights = (int*)malloc(sizeof(int) * num_images);
-//     atlas_data->buffers = (color_t **)malloc(sizeof(color_t *) * num_images);
+//     atlas_data->buffers = (color **)malloc(sizeof(color *) * num_images);
 //     if (!atlas_data->image_widths || !atlas_data->image_heights || !atlas_data->buffers) {
 //         reset_atlas_data(type);
 //         return 0;
@@ -320,7 +320,7 @@ std::vector<video_mode> get_video_modes() {
 //         }
 //         SDL_Log("Texture created");
 //         SDL_LockTexture(list[i], NULL, (void **) &atlas_data->buffers[i], &atlas_data->image_widths[i]);
-//         atlas_data->image_widths[i] /= sizeof(color_t);
+//         atlas_data->image_widths[i] /= sizeof(color);
 //         SDL_SetTextureBlendMode(list[i], SDL_BLENDMODE_BLEND);
 //     }
 //     data.texture_lists[type] = list;
@@ -328,8 +328,8 @@ std::vector<video_mode> get_video_modes() {
 //     for (int i = 0; i < num_images; i++) {
 //         atlas_data->image_widths[i] = i == num_images - 1 ? last_width : data.max_texture_size.width;
 //         atlas_data->image_heights[i] = i == num_images - 1 ? last_height : data.max_texture_size.height;
-//         int size = atlas_data->image_widths[i] * atlas_data->image_heights[i] * sizeof(color_t);
-//         atlas_data->buffers[i] = (color_t *)malloc(size);
+//         int size = atlas_data->image_widths[i] * atlas_data->image_heights[i] * sizeof(color);
+//         atlas_data->buffers[i] = (color *)malloc(size);
 //         if (!atlas_data->buffers[i]) {
 //             reset_atlas_data(type);
 //             return 0;
@@ -363,7 +363,7 @@ std::vector<video_mode> get_video_modes() {
 //         SDL_Log("Creating atlas texture with size %dx%d", atlas_data->image_widths[i], atlas_data->image_heights[i]);
 //         SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *) atlas_data->buffers[i],
 //             atlas_data->image_widths[i], atlas_data->image_heights[i],
-//             32, atlas_data->image_widths[i] * sizeof(color_t),
+//             32, atlas_data->image_widths[i] * sizeof(color),
 //             COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);
 //         if (!surface) {
 //             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for texture. Reason: %s",
@@ -447,7 +447,7 @@ std::vector<video_mode> get_video_modes() {
 // }
 
 #ifdef USE_RENDER_GEOMETRY
-static const SDL_Color* convert_color(color_t color) {
+static const SDL_Color* convert_color(color color) {
     static SDL_Color new_color;
     new_color.a = (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA;
     new_color.r = (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED;
@@ -458,7 +458,7 @@ static const SDL_Color* convert_color(color_t color) {
 
 // TODO: Does not compile because of image (see the above in line 36)
 // static void draw_texture_raw(const image *img, SDL_Texture *texture,
-//     const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale) {
+//     const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color color, float scale) {
 //     int texture_width, texture_height;
 //     SDL_QueryTexture(texture, 0, 0, &texture_width, &texture_height);
 
@@ -483,7 +483,7 @@ static const SDL_Color* convert_color(color_t color) {
 // TODO: Does not compile because of image
 // Also not in header defined?
 // static void draw_isometric_footprint_raw(const image *img, SDL_Texture *texture,
-//     const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale) {
+//     const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color color, float scale) {
 //     int tiles = (img->width + 2) / 60;
 //     int width = tiles * 60 - 2;
 //     int half_width = tiles * 30 - 1;
@@ -525,7 +525,7 @@ static const SDL_Color* convert_color(color_t color) {
 // TODO: Does not compile because of image
 // Also not in header defined?
 // static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
-//     const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale) {
+//     const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color color, float scale) {
 //     int tiles = (img->width + 2) / 60;
 //     int half_width = tiles * 30 - 1;
 //     int half_height = tiles * 15;
@@ -593,7 +593,7 @@ static void set_texture_scale_mode(SDL_Texture* texture, float scale_factor) {
 void graphics_renderer_interface::draw_image(const image_t* img,
                                              float x,
                                              float y,
-                                             color_t color,
+                                             color color,
                                              float scale,
                                              bool mirrored) {
     auto &data = g_renderer_data;
@@ -705,7 +705,7 @@ void graphics_renderer_interface::create_custom_texture(int type, int width, int
     //    data.custom_textures[type].img.atlas.id = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | type;
     SDL_SetTextureBlendMode(data.custom_textures[type].texture, SDL_BLENDMODE_BLEND);
 }
-color_t* graphics_renderer_interface::get_custom_texture_buffer(int type, int* actual_texture_width) {
+color* graphics_renderer_interface::get_custom_texture_buffer(int type, int* actual_texture_width) {
     auto &data = g_renderer_data;
     if (data.paused || !data.custom_textures[type].texture) {
         return 0;
@@ -715,7 +715,7 @@ color_t* graphics_renderer_interface::get_custom_texture_buffer(int type, int* a
     int pitch;
     SDL_LockTexture(data.custom_textures[type].texture, NULL, (void**)&data.custom_textures[type].buffer, &pitch);
     if (actual_texture_width) {
-        *actual_texture_width = pitch / sizeof(color_t);
+        *actual_texture_width = pitch / sizeof(color);
     }
     SDL_UnlockTexture(data.custom_textures[type].texture);
 #else
@@ -727,7 +727,7 @@ color_t* graphics_renderer_interface::get_custom_texture_buffer(int type, int* a
         logs::error("Cannot get buffer to YUV texture");
         return 0;
     }
-    data.custom_textures[type].buffer = (color_t*)malloc((size_t)width * height * sizeof(color_t));
+    data.custom_textures[type].buffer = (color*)malloc((size_t)width * height * sizeof(color));
     if (actual_texture_width) {
         *actual_texture_width = width;
     }
@@ -752,7 +752,7 @@ void graphics_renderer_interface::update_custom_texture(int type) {
     SDL_UpdateTexture(data.custom_textures[type].texture,
                       NULL,
                       data.custom_textures[type].buffer,
-                      sizeof(color_t) * width);
+                      sizeof(color) * width);
 #endif
 }
 void graphics_renderer_interface::update_custom_texture_yuv(int type,
@@ -894,7 +894,7 @@ static void create_blend_texture(int type) {
     SDL_RenderSetClipRect(data.renderer, &rect);
     SDL_RenderSetViewport(data.renderer, &rect);
     SDL_SetRenderDrawColor(data.renderer, 0xff, 0xff, 0xff, 0xff);
-    color_t color = type == CUSTOM_IMAGE_RED_FOOTPRINT ? COLOR_MASK_RED : COLOR_MASK_GREEN;
+    color color = type == CUSTOM_IMAGE_RED_FOOTPRINT ? COLOR_MASK_RED : COLOR_MASK_GREEN;
     SDL_RenderClear(data.renderer);
     SDL_SetTextureBlendMode(flat_tile, SDL_BLENDMODE_BLEND);
 
@@ -936,7 +936,7 @@ int graphics_renderer_interface::has_custom_texture(int type) {
     return data.custom_textures[type].texture != 0;
 }
 
-void load_unpacked_image(const image_t* img, const color_t* pixels) {
+void load_unpacked_image(const image_t* img, const color* pixels) {
     auto &data = g_renderer_data;
     if (data.paused) {
         return;
@@ -963,7 +963,7 @@ void load_unpacked_image(const image_t* img, const color_t* pixels) {
                                                     img->width,
                                                     img->height,
                                                     32,
-                                                    img->width * sizeof(color_t),
+                                                    img->width * sizeof(color),
                                                     COLOR_CHANNEL_RED,
                                                     COLOR_CHANNEL_GREEN,
                                                     COLOR_CHANNEL_BLUE,
@@ -1012,7 +1012,7 @@ void load_unpacked_image(const image_t* img, const color_t* pixels) {
 //     return data.supports_yuv_textures;
 // }
 
-SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color_t* p_data, int width, int height) {
+SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color* p_data, int width, int height) {
     auto &data = g_renderer_data;
     if (p_data == nullptr)
         return nullptr;
@@ -1027,7 +1027,7 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color_t* p_
                                                     width,
                                                     height,
                                                     32,
-                                                    width * sizeof(color_t),
+                                                    width * sizeof(color),
                                                     COLOR_CHANNEL_RED,
                                                     COLOR_CHANNEL_GREEN,
                                                     COLOR_CHANNEL_BLUE,
@@ -1334,7 +1334,7 @@ void platform_renderer_render(void) {
 }
 void platform_renderer_generate_mouse_cursor_texture(int cursor_id,
                                                      int size,
-                                                     const color_t* pixels,
+                                                     const color* pixels,
                                                      int hotspot_x,
                                                      int hotspot_y) {
     auto &data = g_renderer_data;
@@ -1350,7 +1350,7 @@ void platform_renderer_generate_mouse_cursor_texture(int cursor_id,
     if (!data.cursors[cursor_id].texture) {
         return;
     }
-    SDL_UpdateTexture(data.cursors[cursor_id].texture, NULL, pixels, size * sizeof(color_t));
+    SDL_UpdateTexture(data.cursors[cursor_id].texture, NULL, pixels, size * sizeof(color));
     data.cursors[cursor_id].hotspot.x = hotspot_x;
     data.cursors[cursor_id].hotspot.y = hotspot_y;
     data.cursors[cursor_id].size = size;

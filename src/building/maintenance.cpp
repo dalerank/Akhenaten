@@ -255,7 +255,7 @@ void building_maintenance_check_rome_access(void) {
                     b->state = BUILDING_STATE_UNDO;
                 }
             }
-        } else if (b->type == BUILDING_WAREHOUSE) {
+        } else if (b->type == BUILDING_STORAGE_YARD) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Warehouse");
             if (!city_buildings_get_trade_center())
                 city_buildings_set_trade_center(i);
@@ -269,7 +269,7 @@ void building_maintenance_check_rome_access(void) {
                 b->road_access.x(x_road);
                 b->road_access.y(y_road);
             }
-        } else if (b->type == BUILDING_WAREHOUSE_SPACE) {
+        } else if (b->type == BUILDING_STORAGE_YARD_SPACE) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Warehouse Space");
             b->distance_from_entry = 0;
             building* main_building = b->main();

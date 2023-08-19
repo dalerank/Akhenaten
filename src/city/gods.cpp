@@ -4,7 +4,7 @@
 #include "building/destruction.h"
 #include "building/granary.h"
 #include "building/industry.h"
-#include "building/warehouse.h"
+#include "building/storage_yard.h"
 #include "city/culture.h"
 #include "city/data_private.h"
 #include "city/health.h"
@@ -67,7 +67,7 @@ static bool PTAH_warehouse_restock() {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
-        if (b->type != BUILDING_WAREHOUSE && b->type != 193)
+        if (b->type != BUILDING_STORAGE_YARD && b->type != 193)
             continue;
         int total_stored = 0;
         for (int j = 0; j < 6; ++j)
@@ -139,7 +139,7 @@ static bool PTAH_warehouse_destruction() {
     building* max_building = nullptr;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_YARD)
             continue;
 
         int total_stored = 0;

@@ -61,7 +61,7 @@ static void close(void) {
 }
 
 static void draw_number_button(int x, int y, int number, int is_selected) {
-    color_t color = is_selected ? COLOR_FONT_BLUE : COLOR_BLACK;
+    color color = is_selected ? COLOR_FONT_BLUE : COLOR_BLACK;
     graphics_draw_rect(x, y, 25, 25, color);
     uint8_t number_string[2];
     number_string[0] = '0' + number;

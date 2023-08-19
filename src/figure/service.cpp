@@ -138,7 +138,7 @@ static void water_supply_coverage(building* b) {
     b->data.house.bathhouse = MAX_COVERAGE;
 }
 static void engineer_coverage(building* b, int* max_damage_seen) {
-    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_WAREHOUSE_SPACE)
+    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_YARD_SPACE)
         b = b->main();
 
     if (b->damage_risk > *max_damage_seen)
@@ -147,7 +147,7 @@ static void engineer_coverage(building* b, int* max_damage_seen) {
     b->damage_risk = 0;
 }
 static void prefect_coverage(building* b, int* min_happiness_seen) {
-    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_WAREHOUSE_SPACE)
+    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_YARD_SPACE)
         b = b->main();
 
     b->fire_risk = 0;

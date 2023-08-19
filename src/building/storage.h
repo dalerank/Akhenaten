@@ -4,11 +4,6 @@
 #include "core/buffer.h"
 #include "game/resource.h"
 
-/**
- * @file
- * Building storage functions
- */
-
 enum e_building_storage { BUILDING_STORAGE_DATA };
 
 /**
@@ -47,13 +42,13 @@ enum e_building_storage_permission {
 /**
  * Building storage struct
  */
-typedef struct {
+struct building_storage {
     int empty_all;
     int resource_state[RESOURCES_MAX];
     int resource_max_accept[RESOURCES_MAX];
     int resource_max_get[RESOURCES_MAX];
     int permissions;
-} building_storage;
+} ;
 
 /**
  * Clear and reset all building storages
@@ -117,4 +112,4 @@ void building_storage_toggle_empty_all(int storage_id);
 void building_storage_reset_building_ids(void);
 
 void building_storage_set_permission(int p, building* b);
-int building_storage_get_permission(int p, building* b);
+bool building_storage_get_permission(int p, building* b);

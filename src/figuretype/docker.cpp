@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "building/storage.h"
 #include "building/type.h"
-#include "building/warehouse.h"
+#include "building/storage_yard.h"
 #include "city/buildings.h"
 #include "city/trade.h"
 #include "core/calc.h"
@@ -22,7 +22,7 @@
 
 static int try_import_resource(building* warehouse, e_resource resource, int city_id) {
     //    building *warehouse = building_get(b);
-    if (warehouse->type != BUILDING_WAREHOUSE)
+    if (warehouse->type != BUILDING_STORAGE_YARD)
         return 0;
 
     if (building_warehouse_is_not_accepting(resource, warehouse))
@@ -61,7 +61,7 @@ static int try_import_resource(building* warehouse, e_resource resource, int cit
 }
 static int try_export_resource(building* warehouse, e_resource resource, int city_id) {
     //    building *warehouse = building_get(b);
-    if (warehouse->type != BUILDING_WAREHOUSE)
+    if (warehouse->type != BUILDING_STORAGE_YARD)
         return 0;
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse))
         return 0;
@@ -102,7 +102,7 @@ static int get_closest_warehouse_for_import(int x,
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_YARD)
             continue;
 
         if (!b->has_road_access || b->distance_from_entry <= 0)
@@ -176,7 +176,7 @@ static int get_closest_warehouse_for_export(int x,
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_YARD)
             continue;
 
         if (!b->has_road_access || b->distance_from_entry <= 0)

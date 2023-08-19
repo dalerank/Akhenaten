@@ -28,6 +28,7 @@ static translation_string all_strings[]
      {TR_CONFIG_LANGUAGE_DEFAULT, "(Standard)"},
      {TR_CONFIG_HEADER_UI_CHANGES, "Benutzeroberfläche ändern"},
      {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Spielablauf ändern"},
+     {TR_CONFIG_HEADER_GODS_CHANGES, "Gods changes"},
      {TR_CONFIG_SHOW_INTRO_VIDEO, "Intro-Videos abspielen"},
      {TR_CONFIG_SIDEBAR_INFO, "Aktiviere zusätzliche Informationen im rechtsseitigen Bedienfeld"},
      {TR_CONFIG_SMOOTH_SCROLLING, "Aktiviere sanftes Scrollen"},

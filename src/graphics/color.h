@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-typedef uint32_t color_t;
+typedef uint32_t color;
 
 #define COLOR_BLACK 0xff000000
 #define COLOR_BLUE 0xff0055ff

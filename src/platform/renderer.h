@@ -31,7 +31,7 @@ int platform_renderer_lost_render_texture(void);
 void platform_renderer_invalidate_target_textures(void);
 void platform_renderer_generate_mouse_cursor_texture(int cursor_id,
                                                      int size,
-                                                     const color_t* pixels,
+                                                     const color* pixels,
                                                      int hotspot_x,
                                                      int hotspot_y);
 void platform_renderer_render(void);
@@ -66,16 +66,16 @@ public:
     void set_clip_rectangle(int x, int y, int width, int height);
     void reset_clip_rectangle();
 
-    void draw_line(int x_start, int x_end, int y_start, int y_end, color_t color);
-    void draw_rect(int x, int y, int width, int height, color_t color);
-    void fill_rect(int x, int y, int width, int height, color_t color);
+    void draw_line(int x_start, int x_end, int y_start, int y_end, color color);
+    void draw_rect(int x, int y, int width, int height, color color);
+    void fill_rect(int x, int y, int width, int height, color color);
 
-    void draw_image(const image_t* img, float x, float y, color_t color, float scale, bool mirrored);
-    //    void draw_isometric_top(const image_t *img, int x, int y, color_t color, float scale);
+    void draw_image(const image_t* img, float x, float y, color color, float scale, bool mirrored);
+    //    void draw_isometric_top(const image_t *img, int x, int y, color color, float scale);
 
     void create_custom_texture(int type, int width, int height);
     int has_custom_texture(int type);
-    color_t* get_custom_texture_buffer(int type, int* actual_texture_width);
+    color* get_custom_texture_buffer(int type, int* actual_texture_width);
     void release_custom_texture_buffer(int type);
     void update_custom_texture(int type);
     void update_custom_texture_yuv(int type,
@@ -90,13 +90,13 @@ public:
 
     int save_texture_from_screen(int image_id, int x, int y, int width, int height);
     void draw_saved_texture_to_screen(int image_id, int x, int y, int width, int height);
-    //    int save_screen_buffer(color_t *pixels, int x, int y, int width, int height, int row_width);
+    //    int save_screen_buffer(color *pixels, int x, int y, int width, int height, int row_width);
 
     vec2i get_max_image_size();
 
-    SDL_Texture* create_texture_from_buffer(color_t* p_data, int width, int height);
+    SDL_Texture* create_texture_from_buffer(color* p_data, int width, int height);
 
-    //    void load_unpacked_image(const image *img, const color_t *pixels);
+    //    void load_unpacked_image(const image *img, const color *pixels);
     //    bool should_pack_image(int width, int height);
     //    bool isometric_images_are_joined(void);
 

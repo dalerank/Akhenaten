@@ -74,7 +74,7 @@ smacker_frame_status smacker_next_frame(smacker s);
  * @param s Smacker object
  * @return Pointer to 256 colors
  */
-const color_t* smacker_get_frame_palette(const smacker s);
+const color* smacker_get_frame_palette(const smacker s);
 
 /**
  * Get video data for the current frame.

@@ -32,7 +32,7 @@ static struct {
         int rate;
     } audio;
     struct {
-        color_t* pixels;
+        color* pixels;
         int width;
     } buffer;
 } data;
@@ -177,7 +177,7 @@ static void update_video_frame(void) {
     const uint32_t* pal = smacker_get_frame_palette(data.s);
     if (frame && pal) {
         for (int y = 0; y < data.video.height; y++) {
-            color_t* pixel = &data.buffer.pixels[y * data.buffer.width];
+            color* pixel = &data.buffer.pixels[y * data.buffer.width];
             int video_y = data.video.y_scale == SMACKER_Y_SCALE_NONE ? y : y / 2;
             const unsigned char* line = frame + (video_y * data.video.width);
             for (int x = 0; x < data.video.width; x++) {

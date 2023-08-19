@@ -22,7 +22,7 @@
 
 static const int ENEMY_ATTACK_PRIORITY[4][100] = {
   {BUILDING_GRANARY,
-   BUILDING_WAREHOUSE,
+  BUILDING_STORAGE_YARD,
    BUILDING_MARKET,
    BUILDING_BARLEY_FARM,
    BUILDING_FLAX_FARM,
@@ -199,7 +199,7 @@ int formation_rioter_get_target_building(int* x_tile, int* y_tile) {
     if (!best_building)
         return 0;
 
-    if (best_building->type == BUILDING_WAREHOUSE) {
+    if (best_building->type == BUILDING_STORAGE_YARD) {
         *x_tile = best_building->tile.x() + 1;
         *y_tile = best_building->tile.y();
         return best_building->id + 1;
@@ -262,7 +262,7 @@ static void set_enemy_target_building(formation* m) {
         }
     }
     if (best_building) {
-        if (best_building->type == BUILDING_WAREHOUSE)
+        if (best_building->type == BUILDING_STORAGE_YARD)
             formation_set_destination_building(m,
                                                best_building->tile.x() + 1,
                                                best_building->tile.y(),
@@ -287,7 +287,7 @@ static void set_native_target_building(formation* m) {
         case BUILDING_NATIVE_HUT:
         case BUILDING_NATIVE_CROPS:
         case BUILDING_NATIVE_MEETING:
-        case BUILDING_WAREHOUSE:
+        case BUILDING_STORAGE_YARD:
         case BUILDING_MENU_FORTS:
         case BUILDING_ROADBLOCK:
             break;

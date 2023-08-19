@@ -2,7 +2,7 @@
 
 #include "building/storage.h"
 #include "building/type.h"
-#include "building/warehouse.h"
+#include "building/storage_yard.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "game/resource.h"
@@ -88,7 +88,7 @@ int building_market_get_storage_destination(building* market) {
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
-        if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE)
+        if (b->type != BUILDING_GRANARY && b->type != BUILDING_STORAGE_YARD)
             continue;
 
         if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != market->road_network_id) {
@@ -111,7 +111,7 @@ int building_market_get_storage_destination(building* market) {
             update_food_resource(&resources[2], ALLOWED_FOODS(2), b, distance);
             update_food_resource(&resources[3], ALLOWED_FOODS(3), b, distance);
 
-        } else if (b->type == BUILDING_WAREHOUSE) {
+        } else if (b->type == BUILDING_STORAGE_YARD) {
             // goods
             update_good_resource(&resources[INVENTORY_GOOD1], RESOURCE_POTTERY, b, distance);
             update_good_resource(&resources[INVENTORY_GOOD2], RESOURCE_LUXURY_GOODS, b, distance);

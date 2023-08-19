@@ -4,7 +4,7 @@
 #include "building/dock.h"
 #include "building/storage.h"
 #include "building/type.h"
-#include "building/warehouse.h"
+#include "building/storage_yard.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/map.h"
@@ -64,7 +64,7 @@ int figure_create_trade_ship(int x, int y, int city_id) {
     return ship->id;
 }
 bool figure_trade_caravan_can_buy(figure* trader, building* warehouse, int city_id) {
-    if (warehouse->type != BUILDING_WAREHOUSE)
+    if (warehouse->type != BUILDING_STORAGE_YARD)
         return false;
 
     if (trader->trader_total_bought() >= 800)
@@ -84,7 +84,7 @@ bool figure_trade_caravan_can_buy(figure* trader, building* warehouse, int city_
     return false;
 }
 bool figure_trade_caravan_can_sell(figure* trader, building* warehouse, int city_id) {
-    if (warehouse->type != BUILDING_WAREHOUSE)
+    if (warehouse->type != BUILDING_STORAGE_YARD)
         return false;
 
     if (trader->trader_total_sold() >= 800)
@@ -141,7 +141,7 @@ bool figure_trade_caravan_can_sell(figure* trader, building* warehouse, int city
     return false;
 }
 static int trader_get_buy_resource(building* warehouse, int city_id) {
-    if (warehouse->type != BUILDING_WAREHOUSE)
+    if (warehouse->type != BUILDING_STORAGE_YARD)
         return RESOURCE_NONE;
 
     building* space = warehouse;
@@ -170,7 +170,7 @@ static int trader_get_buy_resource(building* warehouse, int city_id) {
 }
 static int trader_get_sell_resource(building* warehouse, int city_id) {
     //    building *warehouse = building_get(warehouse);
-    if (warehouse->type != BUILDING_WAREHOUSE)
+    if (warehouse->type != BUILDING_STORAGE_YARD)
         return 0;
 
     e_resource resource_to_import = city_trade_current_caravan_import_resource();
@@ -273,7 +273,7 @@ int figure::get_closest_warehouse(int x, int y, int city_id, int distance_from_e
     building* min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_YARD)
             continue;
 
         if (!b->has_road_access || b->distance_from_entry <= 0)

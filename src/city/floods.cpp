@@ -1,5 +1,6 @@
 #include "floods.h"
 
+#include "building/building.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/random.h"
@@ -103,8 +104,28 @@ int floodplains_expected_month() {
     return (data.season_initial / 15) - 10;
 }
 
+static void floodplains_reset_farms() {
+    for (building *it = building_begin(), *end = building_end(); it != end; ++it) {
+        if (it->state != BUILDING_STATE_VALID) {
+            continue;
+        }
+
+        if (!building_is_floodplain_farm(it)) {
+            continue;
+        }
+
+        it->data.industry.progress = 0;
+        it->data.industry.ready_production = 0;
+        it->data.industry.worker_id = 0;
+        it->data.industry.work_camp_id = 0;
+        it->data.industry.labor_state = LABOR_STATE_NONE;
+        it->data.industry.labor_days_left = 0;
+        it->num_workers = 0;
+    }
+}
+
 static void cycle_states_recalc() {
-    auto& data = floodplain_data();
+    auto &data = floodplain_data();
     // if no floodplains present, return
     if (!data.has_floodplains) {
         data.state = FLOOD_STATE_FARMABLE;
@@ -166,16 +187,18 @@ static void cycle_states_recalc() {
         // contracting done, resting
         data.state = FLOOD_STATE_RESTING;
         data.flood_progress = 30;
-    } else {
+    } else if (data.state != FLOOD_STATE_FARMABLE) {
         // flooding over, farmlands available again
+        floodplains_reset_farms();
         data.state = FLOOD_STATE_FARMABLE;
     }
 
     // clamp flood progress
-    if (data.flood_progress < 0)
+    if (data.flood_progress < 0) {
         data.flood_progress = 0;
-    else if (data.flood_progress > 30)
+    } else if (data.flood_progress > 30) {
         data.flood_progress = 30;
+    }
 }
 static void update_next_flood_params() {
     auto& data = floodplain_data();
@@ -185,8 +208,9 @@ static void update_next_flood_params() {
     data.duration = data.duration_initial; // reset to initial
 
     data.quality_last = data.quality;
-    if (data.quality_last > 100)
+    if (data.quality_last > 100) {
         data.quality_last = 100; // clamp!
+    }
 
     // calculate the next flood quality
     int bnd[11] = {2, 3, 5, 10, 15, 30, 15, 10, 5, 3, 2};
@@ -203,25 +227,27 @@ static void update_next_flood_params() {
         }
     }
     data.quality_next += quality_randm;
-    if (data.quality_next > 99)
+    if (data.quality_next > 99) {
         data.quality_next = 100;
+    }
     data.quality_next = data.quality_next & (data.quality_next < 1) - 1;
 }
 static void post_flood_prediction_message() {
     auto& data = floodplain_data();
 
-    if (data.quality_next == 100)
+    if (data.quality_next == 100) {
         city_message_post(true, MESSAGE_FLOOD_PERFECT, 0, 0);
-    else if (data.quality_next >= 75)
+    } else if (data.quality_next >= 75) {
         city_message_post(true, MESSAGE_FLOOD_EXCELLENT, 0, 0);
-    else if (data.quality_next >= 50)
+    } else if (data.quality_next >= 50) {
         city_message_post(true, MESSAGE_FLOOD_GOOD, 0, 0);
-    else if (data.quality_next >= 25)
+    } else if (data.quality_next >= 25) {
         city_message_post(true, MESSAGE_FLOOD_MEDIOCRE, 0, 0);
-    else if (data.quality_next > 0)
+    } else if (data.quality_next > 0) {
         city_message_post(true, MESSAGE_FLOOD_POOR, 0, 0);
-    else
+    } else {
         city_message_post(true, MESSAGE_FLOOD_FAIL, 0, 0);
+    }
 }
 void floodplains_tick_update(bool calc_only) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Floodplains Update");

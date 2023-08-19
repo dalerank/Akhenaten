@@ -12,24 +12,25 @@
 
 static const int MAX_STORAGES[2] = {1000, 200};
 
-struct data_storage {
+struct storage_t {
     int in_use;
     int building_id;
     building_storage storage;
 };
 
-struct data_storages_t {
-    struct data_storage storages[1000];
+struct storages_t {
+    struct storage_t storages[1000];
 };
 
-data_storages_t g_dat_storages;
+storages_t g_storages;
 
 void building_storage_clear_all(void) {
-    memset(g_dat_storages.storages, 0, 1000 * sizeof(struct data_storage));
+    memset(g_storages.storages, 0, 1000 * sizeof(storage_t));
 }
+
 void building_storage_reset_building_ids(void) {
     for (int i = 1; i < MAX_STORAGES[GAME_ENV]; i++) {
-        g_dat_storages.storages[i].building_id = 0;
+        g_storages.storages[i].building_id = 0;
     }
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -37,23 +38,24 @@ void building_storage_reset_building_ids(void) {
         if (b->state == BUILDING_STATE_UNUSED)
             continue;
 
-        if (b->type == BUILDING_GRANARY || b->type == BUILDING_WAREHOUSE) {
+        if (b->type == BUILDING_GRANARY || b->type == BUILDING_STORAGE_YARD) {
             if (b->storage_id) {
-                if (g_dat_storages.storages[b->storage_id].building_id) {
+                if (g_storages.storages[b->storage_id].building_id) {
                     // storage is already connected to a building: corrupt, create new
                     b->storage_id = building_storage_create(b->type);
                 } else {
-                    g_dat_storages.storages[b->storage_id].building_id = i;
+                    g_storages.storages[b->storage_id].building_id = i;
                 }
             }
         }
     }
 }
+
 int building_storage_create(int building_type) {
-    auto& data = g_dat_storages;
+    auto& data = g_storages;
     for (int i = 1; i < MAX_STORAGES[GAME_ENV]; i++) {
         if (!data.storages[i].in_use) {
-            memset(&data.storages[i], 0, sizeof(struct data_storage));
+            memset(&data.storages[i], 0, sizeof(storage_t));
             data.storages[i].in_use = 1;
 
             // default settings for Pharaoh
@@ -67,8 +69,8 @@ int building_storage_create(int building_type) {
                 for (int r = 0; r < list->size; r++) {
                     int resource = list->items[r];
                     switch (building_type) {
-                    case BUILDING_WAREHOUSE:
-                    case BUILDING_WAREHOUSE_SPACE:
+                    case BUILDING_STORAGE_YARD:
+                    case BUILDING_STORAGE_YARD_SPACE:
                         if (resource < 9)
                             data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_REFUSE;
                         else
@@ -88,32 +90,36 @@ int building_storage_create(int building_type) {
     }
     return 0;
 }
+
 int building_storage_restore(int storage_id) {
-    auto& data = g_dat_storages;
+    auto& data = g_storages;
     if (data.storages[storage_id].in_use) {
         return 0;
     }
     data.storages[storage_id].in_use = 1;
     return storage_id;
 }
+
 void building_storage_delete(int storage_id) {
-    auto& data = g_dat_storages;
+    auto& data = g_storages;
     data.storages[storage_id].in_use = 0;
 }
 
 building_storage backup_settings;
 static int backup_storage_id = -1;
 static bool has_unsaved_changes = false;
+
 void backup_storage_settings(int storage_id) {
-    auto& data = g_dat_storages;
+    auto& data = g_storages;
     if (backup_storage_id != -1)
         return;
     has_unsaved_changes = false;
     backup_storage_id = storage_id;
     backup_settings = data.storages[storage_id].storage;
 }
+
 void restore_storage_settings(bool do_forget_changes) {
-    auto& data = g_dat_storages;
+    auto& data = g_storages;
     if (do_forget_changes) {
         if (backup_storage_id == -1)
             return;
@@ -122,6 +128,7 @@ void restore_storage_settings(bool do_forget_changes) {
         window_city_show();
     }
 }
+
 void storage_settings_backup_check() {
     if (has_unsaved_changes)
         window_popup_dialog_show_confirmation(5, 23, restore_storage_settings);
@@ -130,23 +137,25 @@ void storage_settings_backup_check() {
         window_city_show();
     }
 }
+
 void storage_settings_backup_reset() {
     has_unsaved_changes = false;
     backup_storage_id = -1;
 }
 
 const building_storage* building_storage_get(int storage_id) {
-    auto& data = g_dat_storages;
+    auto& data = g_storages;
     return &data.storages[storage_id].storage;
 }
 
 void building_storage_toggle_empty_all(int storage_id) {
-    auto& data = g_dat_storages;
+    auto& data = g_storages;
     has_unsaved_changes = true;
     data.storages[storage_id].storage.empty_all = 1 - data.storages[storage_id].storage.empty_all;
 }
+
 void building_storage_cycle_resource_state(int storage_id, int resource_id, bool backwards) {
-    auto& data = g_dat_storages;
+    auto& data = g_storages;
     has_unsaved_changes = true;
     int state = data.storages[storage_id].storage.resource_state[resource_id];
     if (!backwards) {
@@ -173,7 +182,7 @@ void building_storage_cycle_resource_state(int storage_id, int resource_id, bool
 }
 
 void building_storage_set_permission(int p, building* b) {
-    auto& data = g_dat_storages;
+    auto& data = g_storages;
 
     has_unsaved_changes = true;
     const building_storage* s = building_storage_get(b->storage_id);
@@ -182,14 +191,15 @@ void building_storage_set_permission(int p, building* b) {
     perms ^= permission_bit;
     data.storages[b->storage_id].storage.permissions = perms;
 }
-int building_storage_get_permission(int p, building* b) {
+
+bool building_storage_get_permission(int p, building* b) {
     const building_storage* s = building_storage_get(b->storage_id);
     int permission_bit = 1 << p;
     return !(s->permissions & permission_bit);
 }
 
 void building_storage_increase_decrease_resource_state(int storage_id, int resource_id, bool increase) {
-    auto& data = g_dat_storages;
+    auto& data = g_storages;
     int state = data.storages[storage_id].storage.resource_state[resource_id];
     if (state == STORAGE_STATE_PHARAOH_ACCEPT) {
         int max_accept = data.storages[storage_id].storage.resource_max_accept[resource_id];
@@ -231,34 +241,43 @@ void building_storage_increase_decrease_resource_state(int storage_id, int resou
             else if (max_get == 1600)
                 max_get = 800;
         }
+
         data.storages[storage_id].storage.resource_max_get[resource_id] = max_get;
         if (old != max_get)
             has_unsaved_changes = true;
     }
 }
+
 void building_storage_accept_none(int storage_id) {
-    auto& data = g_dat_storages;
+    auto& data = g_storages;
     has_unsaved_changes = true;
-    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++)
+    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         data.storages[storage_id].storage.resource_state[r] = STORAGE_STATE_PHARAOH_REFUSE;
+    }
 }
 
 void building_storage_load_state(buffer* buf) {
 }
+
 io_buffer* iob_building_storages = new io_buffer([](io_buffer* iob, size_t version) {
-    auto& data = g_dat_storages;
+    auto& data = g_storages;
     for (int i = 0; i < MAX_STORAGES[GAME_ENV]; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.storages[i].storage.permissions); // Originally unused
         iob->bind(BIND_SIGNATURE_INT32, &data.storages[i].building_id);
         iob->bind(BIND_SIGNATURE_UINT8, &data.storages[i].in_use);
         iob->bind(BIND_SIGNATURE_UINT8, &data.storages[i].storage.empty_all);
-        for (int r = 0; r < RESOURCES_MAX; r++)
+        for (int r = 0; r < RESOURCES_MAX; r++) {
             iob->bind(BIND_SIGNATURE_UINT8, &data.storages[i].storage.resource_state[r]);
+        }
+
         iob->bind____skip(6); // unused resource states
-        for (int r = 0; r < RESOURCES_MAX; r++)
+        for (int r = 0; r < RESOURCES_MAX; r++) {
             iob->bind(BIND_SIGNATURE_UINT16, &data.storages[i].storage.resource_max_accept[r]);
-        for (int r = 0; r < RESOURCES_MAX; r++)
+        }
+
+        for (int r = 0; r < RESOURCES_MAX; r++) {
             iob->bind(BIND_SIGNATURE_UINT16, &data.storages[i].storage.resource_max_get[r]);
+        }
         //        iob->bind____skip(144); // ?????
     }
 });

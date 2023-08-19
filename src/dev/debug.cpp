@@ -88,15 +88,15 @@ void debug_font_test() {
     debug_font_line(&y, FONT_SMALL_SHADED);
 }
 
-void debug_text(uint8_t* str, int x, int y, int indent, const char* text, int value, color_t color) {
+void debug_text(uint8_t* str, int x, int y, int indent, const char* text, int value, color color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
     string_from_int(str, value, 0);
     text_draw(str, x + indent, y, FONT_SMALL_OUTLINED, color);
 }
-void debug_text_a(uint8_t* str, int x, int y, int indent, const char* text, color_t color) {
+void debug_text_a(uint8_t* str, int x, int y, int indent, const char* text, color color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
 }
-void debug_text_float(uint8_t* str, int x, int y, int indent, const char* text, double value, color_t color) {
+void debug_text_float(uint8_t* str, int x, int y, int indent, const char* text, double value, color color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
     string_from_int(str, (int)value, 0);
     int l = string_length(str);
@@ -113,7 +113,7 @@ void debug_text_dual_left(uint8_t* str,
                           const char* text,
                           int value1,
                           int value2,
-                          color_t color) {
+                          color color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
     string_from_int(str, value1, 0);
     text_draw_left(str, x + indent, y, FONT_SMALL_OUTLINED, color);
@@ -121,14 +121,14 @@ void debug_text_dual_left(uint8_t* str,
     text_draw_left(str, x + indent + indent2, y, FONT_SMALL_OUTLINED, color);
 }
 
-void debug_draw_line_with_contour(int x_start, int x_end, int y_start, int y_end, color_t col) {
+void debug_draw_line_with_contour(int x_start, int x_end, int y_start, int y_end, color col) {
     graphics_renderer()->draw_line(x_start - 1, x_end - 1, y_start, y_end, COLOR_BLACK);
     graphics_renderer()->draw_line(x_start + 1, x_end + 1, y_start, y_end, COLOR_BLACK);
     graphics_renderer()->draw_line(x_start, x_end, y_start - 1, y_end - 1, COLOR_BLACK);
     graphics_renderer()->draw_line(x_start, x_end, y_start + 1, y_end + 1, COLOR_BLACK);
     graphics_renderer()->draw_line(x_start, x_end, y_start, y_end, col);
 }
-void debug_draw_rect_with_contour(int x, int y, int w, int h, color_t col) {
+void debug_draw_rect_with_contour(int x, int y, int w, int h, color col) {
     graphics_renderer()->draw_rect(x - 1, y - 1, w, h, COLOR_BLACK);
     graphics_renderer()->draw_rect(x + 1, y + 1, w, h, COLOR_BLACK);
     graphics_renderer()->draw_rect(x, y, w - 1, h - 1, COLOR_BLACK);
@@ -140,13 +140,13 @@ void debug_draw_crosshair(int x, int y) {
     graphics_renderer()->draw_line(x, x + 10, y, y, COLOR_GREEN);
     graphics_renderer()->draw_line(x, x, y, y + 10, COLOR_RED);
 }
-void debug_draw_sprite_box(int x, int y, const image_t* img, float scale, color_t color_mask) {
+void debug_draw_sprite_box(int x, int y, const image_t* img, float scale, color color_mask) {
     int x2 = x - img->animation.sprite_x_offset;
     int y2 = y - img->animation.sprite_y_offset;
     graphics_renderer()->draw_rect(x2 * scale, y2 * scale, img->width * scale, img->height * scale, color_mask);
     debug_draw_crosshair((x2 + img->animation.sprite_x_offset) * scale, (y2 + img->animation.sprite_y_offset) * scale);
 }
-void debug_draw_tile_box(int x, int y, color_t rect, color_t bb, int tile_size_x, int tile_size_y) {
+void debug_draw_tile_box(int x, int y, color rect, color bb, int tile_size_x, int tile_size_y) {
     float scale = zoom_get_scale();
 
     int left_x = x;
@@ -171,7 +171,7 @@ void debug_draw_tile_box(int x, int y, color_t rect, color_t bb, int tile_size_x
         graphics_renderer()->draw_line(bottom_x * scale, left_x * scale, bottom_y * scale, left_y * scale, bb);
     }
 }
-void debug_draw_tile_top_bb(int x, int y, int height, color_t color, int size) {
+void debug_draw_tile_top_bb(int x, int y, int height, color color, int size) {
     float scale = zoom_get_scale();
 
     int left_x = x;
@@ -225,8 +225,10 @@ void draw_debug_tile(vec2i pixel, map_point point) {
     default:
         break;
     case 1: // BUILDING IDS
-        if (b_id && b->tile.grid_offset() == grid_offset)
+        if (b_id && b->tile.grid_offset() == grid_offset) {
             draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, {x - 15, y}, COLOR_MASK_GREEN);
+        }
+
         if (b_id && map_property_is_draw_tile(grid_offset)) { // b->tile.grid_offset() == grid_offset
             bool red = !map_terrain_is(grid_offset, TERRAIN_BUILDING);
             debug_text(str, x0, y + 0, 0, "", b_id, red ? COLOR_LIGHT_RED : COLOR_WHITE);
@@ -469,7 +471,7 @@ void figure::draw_debug() {
     pixel.x -= 10;
     pixel.y -= 80;
     int indent = 0;
-    color_t col = COLOR_WHITE;
+    color col = COLOR_WHITE;
 
     switch (DB1) {
     case 1: // ACTION & STATE IDS
@@ -697,7 +699,7 @@ void draw_debug_ui(int x, int y) {
         int DB1 = abs(debug_range_1) % 7;
         int DB2 = abs(debug_range_2) % 20;
 
-        color_t col = COLOR_GREEN;
+        color col = COLOR_GREEN;
 
         string_from_int(str, DB1);
         text_draw(str, x, y, FONT_SMALL_OUTLINED, col);
@@ -838,7 +840,7 @@ void draw_debug_ui(int x, int y) {
 
         //        screen_tile screen_start2 = attempt_mappoint_to_screen(Planner.start);
         //        screen_tile screen_end2 = attempt_mappoint_to_screen(Planner.end);
-        //        color_t col = (screen_start != screen_start2) ? COLOR_LIGHT_RED : COLOR_LIGHT_GREEN;
+        //        color col = (screen_start != screen_start2) ? COLOR_LIGHT_RED : COLOR_LIGHT_GREEN;
         //        draw_debug_line(str, x + 300, y + 65, 60, "direct:", screen_start2.x, col); draw_debug_line(str, x +
         //        300 + 40, y + 65, 60, "", screen_start2.y, col); col = (screen_end != screen_end2) ? COLOR_LIGHT_RED :
         //        COLOR_LIGHT_GREEN; draw_debug_line(str, x + 300, y + 75, 60, "direct:", screen_end2.x, col);

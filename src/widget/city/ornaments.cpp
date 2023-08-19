@@ -45,7 +45,7 @@ static void draw_normal_anim(int x,
     else
         ImageDraw::img_sprite(sprite_id + animation_offset, x, y, color_mask);
 }
-static void draw_water_lift_anim(building* b, int x, int y, color_t color_mask) {
+static void draw_water_lift_anim(building* b, int x, int y, color color_mask) {
     int orientation_rel = city_view_relative_orientation(b->data.industry.orientation);
     int anim_offset = 13 * orientation_rel;
     x += 53;
@@ -110,7 +110,7 @@ static void draw_gatehouse_anim(int x, int y, building* b) {
         }
     }
 }
-static void draw_entertainment_shows_c3(building* b, int x, int y, color_t color_mask) {
+static void draw_entertainment_shows_c3(building* b, int x, int y, color color_mask) {
     //    if (b->type == BUILDING_AMPHITHEATER && b->num_workers > 0)
     //        ImageDraw::img_generic(image_id_from_group(GROUP_DANCERS_SHOW), x + 36, y - 47, color_mask);
     //
@@ -125,7 +125,7 @@ static void draw_entertainment_shows_c3(building* b, int x, int y, color_t color
     //        draw_hippodrome_spectators(b, x, y, color_mask);
 }
 
-static void draw_entertainment_show_jugglers(building* b, int x, int y, color_t color_mask) {
+static void draw_entertainment_show_jugglers(building* b, int x, int y, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days1) {
         draw_normal_anim(x + 30, y + 15,
@@ -135,7 +135,7 @@ static void draw_entertainment_show_jugglers(building* b, int x, int y, color_t 
                          image_id_from_group(GROUP_BUILDING_BOOTH));
     }
 }
-static void draw_entertainment_shows_musicians(building* b, int x, int y, int direction, color_t color_mask) {
+static void draw_entertainment_shows_musicians(building* b, int x, int y, int direction, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days2) {
         building* next_tile = b->next();
@@ -159,7 +159,7 @@ static void draw_entertainment_shows_musicians(building* b, int x, int y, int di
         }
     }
 }
-static void draw_entertainment_shows_dancers(building* b, int x, int y, color_t color_mask) {
+static void draw_entertainment_shows_dancers(building* b, int x, int y, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days3_or_play) {
         draw_normal_anim(x + 64,
@@ -185,6 +185,7 @@ int get_farm_image(int grid_offset) {
         int base = image_id_from_group(GROUP_BUILDING_FARMLAND);
         int fert_average = map_get_fertility_for_farm(grid_offset);
         int fertility_index = 0;
+
         if (fert_average < 13)
             fertility_index = 0;
         else if (fert_average < 25)
@@ -201,12 +202,14 @@ int get_farm_image(int grid_offset) {
             fertility_index = 6;
         else
             fertility_index = 7;
+
         return base + fertility_index;
-    } else
+    } else {
         return image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
+    }
 }
 
-int get_crops_image(int type, int growth) {
+int get_crops_image(e_building_type type, int growth) {
     int base = 0;
     //if (GAME_ENV == ENGINE_ENV_C3) {
     //    base = image_id_from_group(GROUP_BUILDING_FARMLAND);
@@ -235,7 +238,7 @@ int get_crops_image(int type, int growth) {
     return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
 }
 
-void draw_farm_crops(int type, int progress, int grid_offset, vec2i tile, color_t color_mask) {
+void draw_farm_crops(e_building_type type, int progress, int grid_offset, vec2i tile, color color_mask) {
     int image_crops = get_crops_image(type, 0);
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) { // on floodplains - all
         for (int i = 0; i < 9; i++) {
@@ -267,7 +270,7 @@ static void draw_farm_worker(int direction,
                            int action,
                            int frame_offset,
                            vec2i coords,
-                           color_t color_mask = COLOR_MASK_NONE) {
+                           color color_mask = COLOR_MASK_NONE) {
     int action_offset = 0;
     switch (action) {
     case FARM_WORKER_TILING: // tiling
@@ -296,52 +299,46 @@ static void draw_farm_workers(building* b, int grid_offset, vec2i pos) {
     int d = random_seed % 8;
     if (building_is_floodplain_farm(b)) {
         if (floodplains_is(FLOOD_STATE_IMMINENT)) {
-            animation_offset = generic_sprite_offset(grid_offset, 15, 1);
             //int random_x = random_seed % 3;
             //int random_y = int(1234.567f * random_seed) % 3;
             //auto coords = farm_tile_coords(x, y, random_x, random_y);
             //draw_ph_worker(d, 2, animation_offset, coords);
-            if (b->data.industry.progress > 0) {
-                if (b->data.industry.progress < 200)
-                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 1, 0));
-                else if (b->data.industry.progress < 400)
-                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 2, 0));
-                else if (b->data.industry.progress < 600)
-                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 0, 1));
-                else if (b->data.industry.progress < 900)
-                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 1, 1));
-                else if (b->data.industry.progress < 1100)
-                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 2, 1));
-                else if (b->data.industry.progress < 1400)
-                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 0, 2));
-                else if (b->data.industry.progress < 1700)
-                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 1, 2));
-                else if (b->data.industry.progress < 2000)
-                    draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 2, 2));
-
-                b->data.industry.progress -= (b->num_workers / 2);
-                b->data.industry.ready_production += (b->num_workers / 2);
-            }
         } else {
             animation_offset = generic_sprite_offset(grid_offset, 13, 1);
             if (b->data.industry.progress < 400)
                 draw_farm_worker(game_time_absolute_tick() % 128 / 16, 1, animation_offset, farm_tile_coords(pos, 1, 1));
-            else if (b->data.industry.progress < 450)
+            else if (b->data.industry.progress < 500)
                 draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 1, 0));
-            else if (b->data.industry.progress < 700)
+            else if (b->data.industry.progress < 600)
                 draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 0));
-            else if (b->data.industry.progress < 900)
+            else if (b->data.industry.progress < 700)
                 draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 0, 1));
-            else if (b->data.industry.progress < 1100)
+            else if (b->data.industry.progress < 800)
                 draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 1, 1));
-            else if (b->data.industry.progress < 1350)
+            else if (b->data.industry.progress < 900)
                 draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 1));
-            else if (b->data.industry.progress < 1550)
+            else if (b->data.industry.progress < 1000)
                 draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 0, 2));
-            else if (b->data.industry.progress < 1800)
+            else if (b->data.industry.progress < 1100)
                 draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 1, 2));
-            else if (b->data.industry.progress < 2000)
+            else if (b->data.industry.progress < 1200)
                 draw_farm_worker(d, 0, animation_offset, farm_tile_coords(pos, 2, 2));
+            else if (b->data.industry.progress < 1300)
+                draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 1, 0));
+            else if (b->data.industry.progress < 1400)
+                draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 2, 0));
+            else if (b->data.industry.progress < 1500)
+                draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 0, 1));
+            else if (b->data.industry.progress < 1600)
+                draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 1, 1));
+            else if (b->data.industry.progress < 1700)
+                draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 2, 1));
+            else if (b->data.industry.progress < 1800)
+                draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 0, 2));
+            else if (b->data.industry.progress < 1900)
+                draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 1, 2));
+            else if (b->data.industry.progress < 2000)
+                draw_farm_worker(d, 2, animation_offset, farm_tile_coords(pos, 2, 2));
         }
     } else {
         animation_offset = generic_sprite_offset(grid_offset, 13, 1);
@@ -360,7 +357,7 @@ static void draw_farm_workers(building* b, int grid_offset, vec2i pos) {
     }
 }
 
-static void draw_dock_workers(building* b, int x, int y, color_t color_mask) {
+static void draw_dock_workers(building* b, int x, int y, color color_mask) {
     int num_dockers = building_dock_count_idle_dockers(b);
     if (num_dockers > 0) {
         int image_dock = map_image_at(b->tile.grid_offset());
@@ -400,7 +397,7 @@ static const int granary_offsets_ph[][2] = {
   {37, 35},
 };
 
-static void draw_workshop_raw_material_storage(const building* b, int x, int y, color_t color_mask) {
+static void draw_workshop_raw_material_storage(const building* b, int x, int y, color color_mask) {
     if (b->stored_full_amount <= 0)
         return;
     int amount = ceil((float)b->stored_full_amount / 100.0) - 1;
@@ -451,7 +448,7 @@ static void draw_workshop_raw_material_storage(const building* b, int x, int y, 
         break;
     }
 }
-static void draw_granary_stores(const building* b, int x, int y, color_t color_mask) {
+static void draw_granary_stores(const building* b, int x, int y, color color_mask) {
     if (GAME_ENV == ENGINE_ENV_C3) {
         ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 1, x, y + 60, color_mask);
         if (b->data.granary.resource_stored[RESOURCE_NONE] < 2400)
@@ -486,7 +483,7 @@ static void draw_granary_stores(const building* b, int x, int y, color_t color_m
         }
     }
 }
-static void draw_warehouse_ornaments(const building* b, int x, int y, color_t color_mask) {
+static void draw_warehouse_ornaments(const building* b, int x, int y, color color_mask) {
     ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 5, y - 42, color_mask);
     if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
         ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
@@ -505,7 +502,7 @@ static void draw_hippodrome_ornaments(vec2i pixel, map_point point) {
                                drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0);
     }
 }
-static void draw_senate_rating_flags(const building* b, int x, int y, color_t color_mask) {
+static void draw_senate_rating_flags(const building* b, int x, int y, color color_mask) {
     if (b->type == BUILDING_SENATE_UPGRADED) {
         // rating flags
         int image_id = image_id_from_group(GROUP_BUILDING_SENATE);
@@ -543,7 +540,7 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
 
     int image_id = map_image_at(grid_offset);
     building* b = building_at(grid_offset);
-    if (b->type == BUILDING_WAREHOUSE && b->state == BUILDING_STATE_CREATED)
+    if (b->type == BUILDING_STORAGE_YARD && b->state == BUILDING_STATE_CREATED)
         ImageDraw::img_generic(image_id + 17, x - 5, y - 42);
     if (b->type == 0 || b->state == BUILDING_STATE_UNUSED)
         return;
@@ -560,7 +557,7 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
         draw_granary_stores(b, x, y, color_mask);
         draw_normal_anim(x + 114, y + 2, b, grid_offset, image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, color_mask);
         break;
-    case BUILDING_WAREHOUSE:
+    case BUILDING_STORAGE_YARD:
         draw_warehouse_ornaments(b, x, y, color_mask);
         draw_normal_anim(x + 21, y + 24, b, grid_offset, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
         ImageDraw::img_generic(image_id + 17, x - 5, y - 42, color_mask);

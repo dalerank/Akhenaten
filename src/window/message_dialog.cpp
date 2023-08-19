@@ -455,10 +455,8 @@ static void draw_background_video(void) {
     data.text_width_blocks = msg->width_blocks - 4;
     if (small_font) {
         // Draw in black and then white to create shadow effect
-        rich_text_draw_colored(
-          msg->content.text, data.x + 16 + 1, y_base + 24 + 1, 384, data.text_height_blocks - 1, COLOR_BLACK);
-        rich_text_draw_colored(
-          msg->content.text, data.x + 16, y_base + 24, 384, data.text_height_blocks - 1, COLOR_WHITE);
+        rich_text_draw_colored(msg->content.text, data.x + 16 + 1, y_base + 24 + 1, 384, data.text_height_blocks - 1, COLOR_BLACK);
+        rich_text_draw_colored(msg->content.text, data.x + 16, y_base + 24, 384, data.text_height_blocks - 1, COLOR_WHITE);
     } else {
         rich_text_draw(msg->content.text, data.x + 16, y_base + 24, 384, data.text_height_blocks - 1, 0);
     }

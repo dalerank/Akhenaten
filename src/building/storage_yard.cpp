@@ -1,4 +1,4 @@
-#include "warehouse.h"
+#include "storage_yard.h"
 
 #include "building/barracks.h"
 #include "building/count.h"
@@ -69,7 +69,7 @@ int building_warehouse_add_resource(building* b, e_resource resource, int amount
         look_for_space = true;
     else if (b->stored_full_amount >= 400)
         look_for_space = true;
-    else if (b->type == BUILDING_WAREHOUSE)
+    else if (b->type == BUILDING_STORAGE_YARD)
         look_for_space = true;
 
     // repeat until no space left... easier than calculating all amounts by hand.
@@ -113,7 +113,7 @@ int building_warehouse_add_resource(building* b, e_resource resource, int amount
 }
 int building_warehouse_remove_resource(building* warehouse, e_resource resource, int amount) {
     // returns amount still needing removal
-    if (warehouse->type != BUILDING_WAREHOUSE)
+    if (warehouse->type != BUILDING_STORAGE_YARD)
         return amount;
 
     building* space = warehouse;
@@ -143,7 +143,7 @@ int building_warehouse_remove_resource(building* warehouse, e_resource resource,
     return amount;
 }
 void building_warehouse_remove_resource_curse(building* warehouse, int amount) {
-    if (warehouse->type != BUILDING_WAREHOUSE)
+    if (warehouse->type != BUILDING_STORAGE_YARD)
         return;
     building* space = warehouse;
     for (int i = 0; i < 8 && amount > 0; i++) {
@@ -210,7 +210,7 @@ void building_warehouses_add_resource(e_resource resource, int amount) {
             building_id = 1;
 
         building* b = building_get(building_id);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
+        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_STORAGE_YARD) {
             city_resource_set_last_used_warehouse(building_id);
             while (amount && building_warehouse_add_resource(b, resource, 100))
                 amount--;
@@ -334,7 +334,7 @@ int building_warehouses_remove_resource(e_resource resource, int amount) {
         }
 
         building* b = building_get(building_id);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
+        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_STORAGE_YARD) {
             if (!building_warehouse_is_getting(resource, b)) {
                 city_resource_set_last_used_warehouse(building_id);
                 amount_left = building_warehouse_remove_resource(b, resource, amount_left);
@@ -349,7 +349,7 @@ int building_warehouses_remove_resource(e_resource resource, int amount) {
         }
 
         building* b = building_get(building_id);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
+        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_STORAGE_YARD) {
             city_resource_set_last_used_warehouse(building_id);
             amount_left = building_warehouse_remove_resource(b, resource, amount_left);
         }
@@ -368,7 +368,7 @@ int building_warehouse_for_storing(building* src,
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE_SPACE)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_YARD_SPACE)
             continue;
 
         if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id)
@@ -411,7 +411,7 @@ int building_warehouse_for_getting(building* src, e_resource resource, map_point
     building* min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_YARD)
             continue;
 
         if (i == src->id)

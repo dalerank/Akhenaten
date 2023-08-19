@@ -68,6 +68,12 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
   {"gameplay_change_multiple_gatherers", false},
   {"#gameplay_change_fireman_returning", true},
   {"#ui_draw_fps", true},
+
+  {"#god_osiris_disabled", false},
+  {"#god_ra_disabled", false},
+  {"#god_ptah_disabled", false},
+  {"#god_seth_disabled", false},
+  {"#god_bast_disabled", false},
 };
 
 static const char* ini_string_keys[] = {

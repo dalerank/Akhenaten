@@ -203,7 +203,7 @@ bool widget_city_draw_construction_cost_and_size(void) {
     y = calc_adjust_with_percentage(y, inverted_scale);
 
     if (cost) {
-        color_t color;
+        color color;
         if (cost <= city_finance_treasury()) // Color blind friendly
             color = scenario_property_climate() == CLIMATE_DESERT ? COLOR_FONT_ORANGE : COLOR_FONT_ORANGE_LIGHT;
         else
@@ -410,7 +410,7 @@ static void handle_first_touch(map_point tile) {
     }
 
     int size = building_properties_for_type(type)->size;
-    if (type == BUILDING_WAREHOUSE)
+    if (type == BUILDING_STORAGE_YARD)
         size = 3;
 
     if (touch_was_click(first) && first->has_ended && data.capture_input

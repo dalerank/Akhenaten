@@ -24,9 +24,8 @@ static void draw_farm(building_info_context* c, int help_id, const char* sound_f
       group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
-    int pct_grown = calc_percentage(b->data.industry.progress, 200);
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        pct_grown = calc_percentage(b->data.industry.progress, 2000);
+    //int pct_grown = calc_percentage(b->data.industry.progress, 200);
+    int pct_grown = calc_percentage(b->data.industry.progress, 2000);
     int width = lang_text_draw(group_id, 2, c->x_offset + 32, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
     width += text_draw_percentage(pct_grown, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
     width += lang_text_draw(group_id, 3, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -34,8 +33,7 @@ static void draw_farm(building_info_context* c, int help_id, const char* sound_f
     // fertility
     int pct_fertility = map_get_fertility_for_farm(b->tile.grid_offset());
     width += lang_text_draw(group_id, 12, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    width
-      += text_draw_percentage(pct_fertility, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
+    width += text_draw_percentage(pct_fertility, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(group_id, 13, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
 
     if (!c->has_road_access)

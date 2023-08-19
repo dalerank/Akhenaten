@@ -1,21 +1,18 @@
-#ifndef OZYMANDIAS_IMAGEPAK_H
-#define OZYMANDIAS_IMAGEPAK_H
+#pragma once
 
 #include "graphics/image.h"
 #include "io/file.h"
+#include "core/bstring.h"
+
 #include <vector>
 
 #define PAK_HEADER_INFO_BYTES 80
-#define PAK_BMP_NAME_SIZE 200
 #define PAK_GROUPS_MAX 300
 #define PAK_HEADER_SIZE_BASE PAK_HEADER_INFO_BYTES + (PAK_GROUPS_MAX * 2) // total = 680 bytes
 
 #define PAK_IMAGE_ENTRY_SIZE 64
-#define NAME_SIZE 32
 
-struct bmp_name {
-    char name[PAK_BMP_NAME_SIZE] = {0};
-};
+using bmp_name = bstring<200>;
 
 class imagepak {
     int version;
@@ -33,7 +30,7 @@ class imagepak {
     void cleanup_and_destroy();
 
 public:
-    char name[MAX_FILE_NAME];
+    bstring512 name;
     std::vector<atlas_data_t> atlas_pages;
 
     int global_image_index_offset = 0;
@@ -45,5 +42,3 @@ public:
     int get_global_image_index(int group);
     const image_t* get_image(int id, bool relative = false);
 };
-
-#endif // OZYMANDIAS_IMAGEPAK_H

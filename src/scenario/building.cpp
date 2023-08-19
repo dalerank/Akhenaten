@@ -101,8 +101,8 @@ bool scenario_building_allowed(int building_type) {
             return g_scenario_data.allowed_buildings[ALLOWED_BUILDING_MARKET];
         case BUILDING_GRANARY:
             return g_scenario_data.allowed_buildings[ALLOWED_BUILDING_GRANARY];
-        case BUILDING_WAREHOUSE:
-            return g_scenario_data.allowed_buildings[ALLOWED_BUILDING_WAREHOUSE];
+        case BUILDING_STORAGE_YARD:
+            return g_scenario_data.allowed_buildings[ALLOWED_BUILDING_STORAGE_YARD];
         case BUILDING_LOW_BRIDGE:
         case BUILDING_SHIP_BRIDGE:
             return g_scenario_data.allowed_buildings[ALLOWED_BUILDING_BRIDGE];
@@ -123,7 +123,7 @@ bool scenario_building_allowed(int building_type) {
             return g_scenario_data.allowed_buildings[7];
         case BUILDING_MARKET:
             return g_scenario_data.allowed_buildings[8];
-        case BUILDING_WAREHOUSE:
+        case BUILDING_STORAGE_YARD:
             return g_scenario_data.allowed_buildings[9];
         case BUILDING_DOCK:
             return g_scenario_data.allowed_buildings[10];

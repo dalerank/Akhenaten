@@ -1,6 +1,6 @@
 #include "request.h"
 
-#include "building/warehouse.h"
+#include "building/storage_yard.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/population.h"

@@ -13,7 +13,7 @@
 
 #include "dev/debug.h"
 
-static const color_t ENEMY_COLOR_BY_CLIMATE[]
+static const color ENEMY_COLOR_BY_CLIMATE[]
   = {COLOR_MINIMAP_ENEMY_CENTRAL, COLOR_MINIMAP_ENEMY_NORTHERN, COLOR_MINIMAP_ENEMY_DESERT};
 
 struct minimap_data_t {
@@ -26,8 +26,8 @@ struct minimap_data_t {
     int width;
     int height;
     int cache_width;
-    color_t enemy_color;
-    color_t* cache;
+    color enemy_color;
+    color* cache;
     struct {
         int x;
         int y;
@@ -93,11 +93,11 @@ static int draw_figure(screen_tile screen, map_point point) {
     int grid_offset = point.grid_offset();
     int screen_x = screen.x;
     int screen_y = screen.y;
-    int color_type = map_figure_foreach_until(grid_offset, TEST_SEARCH_HAS_COLOR);
-    if (color_type == FIGURE_COLOR_NONE)
+    int colorype = map_figure_foreach_until(grid_offset, TEST_SEARCH_HAS_COLOR);
+    if (colorype == FIGURE_COLOR_NONE)
         return 0;
 
-    color_t color = COLOR_MINIMAP_WOLF;
+    color color = COLOR_MINIMAP_WOLF;
     switch (color) {
     case FIGURE_COLOR_SOLDIER:
         color = COLOR_MINIMAP_SOLDIER;
@@ -251,7 +251,7 @@ static void prepare_minimap_cache(int width, int height) {
 static void clear_minimap(void) {
     auto& data = g_minimap_data;
     for (int y = 0; y < data.height; y++) {
-        color_t* line = &data.cache[y * data.cache_width];
+        color* line = &data.cache[y * data.cache_width];
         for (int x = 0; x < data.cache_width; x++) {
             line[x] = COLOR_BLACK;
         }

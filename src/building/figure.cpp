@@ -8,7 +8,7 @@
 #include "building/industry.h"
 #include "building/market.h"
 #include "building/model.h"
-#include "building/warehouse.h"
+#include "building/storage_yard.h"
 #include "city/buildings.h"
 #include "city/data_private.h"
 #include "city/entertainment.h"
@@ -32,6 +32,7 @@
 #include "grid/routing/routing.h"
 #include "grid/terrain.h"
 #include "grid/water.h"
+#include "grid/floodplain.h"
 #include "io/config/config.h"
 
 #include <cmath>
@@ -723,11 +724,13 @@ void building::spawn_figure_farms() {
     bool is_floodplain = building_is_floodplain_farm(this);
     if (!is_floodplain && has_road_access) { // only for meadow farms
         common_spawn_labor_seeker(50);
-        if (building_farm_time_to_deliver(false, output_resource_id)) // UGH!!
+        if (building_farm_time_to_deliver(false, output_resource_id)) { // UGH!!
             spawn_figure_farm_harvests();
+        }
     } else if (is_floodplain) {
-        if (building_farm_time_to_deliver(true))
+        if (building_farm_time_to_deliver(true)) {
             spawn_figure_farm_harvests();
+        }
     }
 }
 void building::spawn_figure_farm_harvests() {
@@ -739,11 +742,15 @@ void building::spawn_figure_farm_harvests() {
         if (has_figure_of_type(0, FIGURE_CART_PUSHER))
             return;
 
-        if (has_road_access 
-                && data.industry.ready_production > 0 
-                && data.industry.progress <= 0) {
-            create_cartpusher(output_resource_id, farm_expected_produce(this));
+        if (has_road_access && data.industry.progress > 0) {
+            int grid_offset = tile.grid_offset();
+            int farm_fertility = map_get_fertility_for_farm(grid_offset);
+
+            data.industry.ready_production = data.industry.progress * farm_fertility / 100;
+            figure *f = create_cartpusher(output_resource_id, farm_expected_produce(this));
             building_farm_deplete_soil(this);
+
+            f->sender_building_id = this->id;
 
             data.industry.progress = 0;
             data.industry.ready_production = 0;
@@ -1149,7 +1156,7 @@ void building::update_road_access() {
     // update building road access
     //    map_point road;
     switch (type) {
-    case BUILDING_WAREHOUSE:
+    case BUILDING_STORAGE_YARD:
         has_road_access = map_has_road_access(tile.x(), tile.y(), 3, &road_access);
         break;
     case BUILDING_BURNING_RUIN:
@@ -1196,7 +1203,7 @@ bool building::figure_generate() {
     else {
         // single building type
         switch (type) {
-        case BUILDING_WAREHOUSE:
+        case BUILDING_STORAGE_YARD:
             spawn_figure_warehouse();
             break;
         case BUILDING_GRANARY:
@@ -1334,8 +1341,9 @@ void building_figure_generate(void) {
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
-        if (b->type == BUILDING_WAREHOUSE_SPACE || (b->type == BUILDING_SENET_HOUSE && b->prev_part_building_id))
+        if (b->type == BUILDING_STORAGE_YARD_SPACE || (b->type == BUILDING_SENET_HOUSE && b->prev_part_building_id)) {
             continue;
+        }
 
         b->update_road_access();
         b->figure_generate();

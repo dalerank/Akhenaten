@@ -163,47 +163,25 @@ tutorial_availability tutorial_empire_availability() {
 }
 
 void tutorial_menu_update(int tut) {
-    if (GAME_ENV == ENGINE_ENV_C3) {
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         if (tut == 1) {
             building_menu_update(BUILDSET_TUT1_START);
-            if (g_tutorials_flags.tutorial1.fire || g_tutorials_flags.tutorial1.crime)
-                building_menu_update(BUILDSET_TUT1_FIRE_C3);
-            if (g_tutorials_flags.tutorial1.collapse)
-                building_menu_update(BUILDSET_TUT1_COLLAPSE_C3);
+            
+            if (g_tutorials_flags.pharaoh.population_150_reached)  building_menu_update(BUILDSET_TUT1_FOOD);
+            if (g_tutorials_flags.pharaoh.fire) building_menu_update(BUILDSET_TUT1_FIRE_PH);
+            if (g_tutorials_flags.pharaoh.collapse) building_menu_update(BUILDSET_TUT1_COLLAPSE_PH);
+            if (g_tutorials_flags.pharaoh.gamemeat_400_stored) building_menu_update(BUILDSET_TUT1_WATER);
         } else if (tut == 2) {
             building_menu_update(BUILDSET_TUT2_START);
-            if (g_tutorials_flags.tutorial2.granary_built)
-                building_menu_update(BUILDSET_TUT2_UP_TO_250);
-            if (g_tutorials_flags.tutorial2.population_250_reached)
-                building_menu_update(BUILDSET_TUT2_UP_TO_450);
-            if (g_tutorials_flags.tutorial2.population_450_reached)
-                building_menu_update(BUILDSET_TUT2_AFTER_450);
-        }
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (tut == 1) {
-            building_menu_update(BUILDSET_TUT1_START);
-            if (g_tutorials_flags.pharaoh.population_150_reached)
-                building_menu_update(BUILDSET_TUT1_FOOD);
-            if (g_tutorials_flags.pharaoh.fire)
-                building_menu_update(BUILDSET_TUT1_FIRE_PH);
-            if (g_tutorials_flags.pharaoh.collapse)
-                building_menu_update(BUILDSET_TUT1_COLLAPSE_PH);
-            if (g_tutorials_flags.pharaoh.gamemeat_400_stored)
-                building_menu_update(BUILDSET_TUT1_WATER);
-        } else if (tut == 2) {
-            building_menu_update(BUILDSET_TUT2_START);
-            if (g_tutorials_flags.pharaoh.gold_mined_500)
-                building_menu_update(BUILDSET_TUT2_GODS);
-            if (g_tutorials_flags.pharaoh.temples_built)
-                building_menu_update(BUILDSET_TUT2_ENTERTAINMENT);
+
+            if (g_tutorials_flags.pharaoh.gold_mined_500) building_menu_update(BUILDSET_TUT2_GODS);
+            if (g_tutorials_flags.pharaoh.temples_built) building_menu_update(BUILDSET_TUT2_ENTERTAINMENT);
         } else if (tut == 3) {
             building_menu_update(BUILDSET_TUT3_START);
-            if (g_tutorials_flags.pharaoh.figs_800_stored)
-                building_menu_update(BUILDSET_TUT3_INDUSTRY);
-            if (g_tutorials_flags.pharaoh.pottery_made)
-                building_menu_update(BUILDSET_TUT3_INDUSTRY);
-            if (g_tutorials_flags.pharaoh.disease)
-                building_menu_update(BUILDSET_TUT3_HEALTH);
+            
+            if (g_tutorials_flags.pharaoh.figs_800_stored) building_menu_update(BUILDSET_TUT3_INDUSTRY);
+            if (g_tutorials_flags.pharaoh.pottery_made) building_menu_update(BUILDSET_TUT3_INDUSTRY);
+            if (g_tutorials_flags.pharaoh.disease) building_menu_update(BUILDSET_TUT3_HEALTH);
         } else if (tut == 4) {
             building_menu_update(BUILDSET_TUT4_START);
             if (g_tutorials_flags.pharaoh.beer_made)

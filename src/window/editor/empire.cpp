@@ -114,7 +114,7 @@ static void draw_background(void) {
     draw_paneling();
 }
 
-static void draw_shadowed_number(int value, int x, int y, color_t color) {
+static void draw_shadowed_number(int value, int x, int y, color color) {
     return;
     //    text_draw_number_colored(value, '@', " ", x + 1, y - 1, FONT_SMALL_PLAIN, COLOR_BLACK);
     //    text_draw_number_colored(value, '@', " ", x, y, FONT_SMALL_PLAIN, color);
