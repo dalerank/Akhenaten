@@ -427,15 +427,15 @@ int formation_add_figure(int formation_id, int figure_id, int deployed, int dama
     return 0; // shouldn't happen
 }
 
-void formation_move_herds_away(int x, int y) {
+void formation_move_herds_away(map_point tile) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* f = &formations[i];
         if (f->in_use != 1 || f->is_legion || !f->is_herd || f->num_figures <= 0)
             continue;
 
-        if (calc_maximum_distance(x, y, f->x_home, f->y_home) <= 6) {
+        if (calc_maximum_distance(tile, vec2i(f->x_home, f->y_home)) <= 6) {
             formations[i].wait_ticks = 50;
-            formations[i].herd_direction = calc_general_direction(x, y, f->x_home, f->y_home);
+            formations[i].herd_direction = calc_general_direction(tile.x(), tile.y(), f->x_home, f->y_home);
         }
     }
 }

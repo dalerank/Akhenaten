@@ -280,8 +280,7 @@ void building::spawn_figure_police() {
 
 void building::spawn_figure_juggler() {
     if (common_spawn_figure_trigger(50)) {
-        building* dest = building_get(determine_venue_destination(
-          road_access.x(), road_access.y(), BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH));
+        building* dest = building_get(determine_venue_destination(road_access, BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH));
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             if (dest->id > 0)
                 create_figure_with_destination(FIGURE_JUGGLER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
@@ -291,8 +290,7 @@ void building::spawn_figure_juggler() {
 }
 void building::spawn_figure_musician() {
     if (common_spawn_figure_trigger(50)) {
-        building* dest = building_get(
-          determine_venue_destination(road_access.x(), road_access.y(), BUILDING_PAVILLION, BUILDING_BANDSTAND, 0));
+        building* dest = building_get(determine_venue_destination(road_access, BUILDING_PAVILLION, BUILDING_BANDSTAND, 0));
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             if (dest->id > 0)
                 create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
@@ -303,7 +301,7 @@ void building::spawn_figure_musician() {
 void building::spawn_figure_dancer() {
     if (common_spawn_figure_trigger(50)) {
         building* dest
-          = building_get(determine_venue_destination(road_access.x(), road_access.y(), BUILDING_PAVILLION, 0, 0));
+          = building_get(determine_venue_destination(road_access, BUILDING_PAVILLION, 0, 0));
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             if (dest->id > 0)
                 create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);

@@ -15,8 +15,8 @@
 #include "grid/road_network.h"
 #include "scenario/gladiator_revolt.h"
 
-int determine_venue_destination(int x, int y, int type1, int type2, int type3) {
-    int road_network = map_road_network_get(MAP_OFFSET(x, y));
+int determine_venue_destination(map_point tile, int type1, int type2, int type3) {
+    int road_network = map_road_network_get(MAP_OFFSET(tile.x(), tile.y()));
 
     building_list_small_clear();
 
@@ -52,7 +52,7 @@ int determine_venue_destination(int x, int y, int type1, int type2, int type3) {
             days_left = b->data.entertainment.days2;
         else
             days_left = b->data.entertainment.days1;
-        int dist = days_left + calc_maximum_distance(x, y, b->tile.x(), b->tile.y());
+        int dist = days_left + calc_maximum_distance(tile, b->tile);
         if (dist < min_distance) {
             min_distance = dist;
             min_building_id = venues[i];
@@ -166,18 +166,16 @@ void figure::entertainer_action() {
             int dst_building_id = 0;
             switch (type) {
             case FIGURE_ACTOR:
-                dst_building_id = determine_venue_destination(
-                  tile.x(), tile.y(), BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION);
+                dst_building_id = determine_venue_destination(tile, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION);
                 break;
             case FIGURE_GLADIATOR:
-                dst_building_id
-                  = determine_venue_destination(tile.x(), tile.y(), BUILDING_BANDSTAND, BUILDING_PAVILLION, 0);
+                dst_building_id = determine_venue_destination(tile, BUILDING_BANDSTAND, BUILDING_PAVILLION, 0);
                 break;
             case FIGURE_LION_TAMER: // dancer
-                dst_building_id = determine_venue_destination(tile.x(), tile.y(), BUILDING_PAVILLION, 0, 0);
+                dst_building_id = determine_venue_destination(tile, BUILDING_PAVILLION, 0, 0);
                 break;
             case FIGURE_CHARIOTEER:
-                dst_building_id = determine_venue_destination(tile.x(), tile.y(), BUILDING_SENET_HOUSE, 0, 0);
+                dst_building_id = determine_venue_destination(tile, BUILDING_SENET_HOUSE, 0, 0);
                 break;
             }
             if (dst_building_id) { // todo: summarize

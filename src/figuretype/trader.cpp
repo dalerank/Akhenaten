@@ -246,7 +246,7 @@ int figure_trade_ship_is_trading(figure* ship) {
     return TRADE_SHIP_NONE;
 }
 
-int figure::get_closest_storageyard(int x, int y, int city_id, int distance_from_entry, map_point* warehouse) {
+int figure::get_closest_storageyard(map_point tile, int city_id, int distance_from_entry, map_point* warehouse) {
     int exportable[RESOURCES_MAX];
     int importable[RESOURCES_MAX];
     exportable[RESOURCE_NONE] = 0;
@@ -313,8 +313,7 @@ int figure::get_closest_storageyard(int x, int y, int city_id, int distance_from
             }
         }
         if (distance_penalty < 32) {
-            int distance
-              = calc_distance_with_penalty(b->tile.x(), b->tile.y(), x, y, distance_from_entry, b->distance_from_entry);
+            int distance = calc_distance_with_penalty(b->tile, tile, distance_from_entry, b->distance_from_entry);
             distance += distance_penalty;
             if (distance < min_distance) {
                 min_distance = distance;
@@ -332,9 +331,9 @@ int figure::get_closest_storageyard(int x, int y, int city_id, int distance_from
 
     return min_building->id;
 }
-void figure::go_to_next_storageyard(int x_src, int y_src, int distance_to_entry) {
+void figure::go_to_next_storageyard(map_point src_tile, int distance_to_entry) {
     map_point dst;
-    int warehouse_id = get_closest_storageyard(x_src, y_src, empire_city_id, distance_to_entry, &dst);
+    int warehouse_id = get_closest_storageyard(src_tile, empire_city_id, distance_to_entry, &dst);
     if (warehouse_id && warehouse_id != destinationID()) {
         set_destination(warehouse_id);
         action_state = FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING;
@@ -385,17 +384,15 @@ void figure::trade_caravan_action() {
         wait_ticks++;
         if (wait_ticks > 20) {
             wait_ticks = 0;
-            int x_base, y_base;
+            map_point base_tile;
             int trade_center_id = city_buildings_get_trade_center();
             if (trade_center_id) {
                 building* trade_center = building_get(trade_center_id);
-                x_base = trade_center->tile.x();
-                y_base = trade_center->tile.y();
+                base_tile = trade_center->tile;
             } else {
-                x_base = tile.x();
-                y_base = tile.y();
+                base_tile = tile;
             }
-            go_to_next_storageyard(x_base, y_base, 0);
+            go_to_next_storageyard(base_tile, 0);
         }
         anim_frame = 0;
         break;
@@ -435,7 +432,7 @@ void figure::trade_caravan_action() {
                 move_on++;
             }
             if (move_on == 2) {
-                go_to_next_storageyard(tile.x(), tile.y(), -1);
+                go_to_next_storageyard(tile, -1);
             }
         }
         anim_frame = 0;
@@ -497,7 +494,7 @@ void figure::native_trader_action() {
         if (wait_ticks > 10) {
             wait_ticks = 0;
             map_point tile;
-            int building_id = get_closest_storageyard(tile.x(), tile.y(), 0, -1, &tile);
+            int building_id = get_closest_storageyard(tile, 0, -1, &tile);
             if (building_id) {
                 action_state = FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE;
                 set_destination(building_id);
@@ -520,7 +517,7 @@ void figure::native_trader_action() {
                 trader_amount_bought += 3;
             } else {
                 map_point tile;
-                int building_id = get_closest_storageyard(tile.x(), tile.y(), 0, -1, &tile);
+                int building_id = get_closest_storageyard(tile, 0, -1, &tile);
                 if (building_id) {
                     action_state = FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE;
                     set_destination(building_id);

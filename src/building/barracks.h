@@ -7,8 +7,7 @@ class buffer;
 
 #define MAX_WEAPONS_BARRACKS 4
 
-int building_get_barracks_for_weapon(int x,
-                                     int y,
+int building_get_barracks_for_weapon(map_point tile,
                                      int resource,
                                      int road_network_id,
                                      int distance_from_entry,

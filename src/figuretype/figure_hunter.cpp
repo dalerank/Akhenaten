@@ -8,7 +8,7 @@ void figure::hunter_action() {
     figure* prey = figure_get(target_figure_id);
     int dist = 0;
     if (target_figure_id) {
-        dist = calc_maximum_distance(tile.x(), tile.y(), prey->tile.x(), prey->tile.y());
+        dist = calc_maximum_distance(tile, prey->tile);
     }
 
     switch (action_state) {

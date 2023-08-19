@@ -25,7 +25,7 @@ int attack_is_same_direction(int dir1, int dir2) {
     return 0;
 }
 
-int figure_combat_get_target_for_soldier(int x, int y, int max_distance) {
+int figure_combat_get_target_for_soldier(map_point tile, int max_distance) {
     int figure_id = 0;
     int min_distance = 10000;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -34,7 +34,7 @@ int figure_combat_get_target_for_soldier(int x, int y, int max_distance) {
             continue;
 
         if (f->is_enemy() || f->type == FIGURE_RIOTER || f->is_attacking_native()) {
-            int distance = calc_maximum_distance(x, y, f->tile.x(), f->tile.y());
+            int distance = calc_maximum_distance(tile, f->tile);
             if (distance <= max_distance) {
                 if (f->targeted_by_figure_id)
                     distance *= 2; // penalty
@@ -59,7 +59,7 @@ int figure_combat_get_target_for_soldier(int x, int y, int max_distance) {
     }
     return 0;
 }
-int figure_combat_get_target_for_wolf(int x, int y, int max_distance) {
+int figure_combat_get_target_for_wolf(map_point tile, int max_distance) {
     int min_figure_id = 0;
     int min_distance = 10000;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -91,7 +91,7 @@ int figure_combat_get_target_for_wolf(int x, int y, int max_distance) {
         if (f->is_legion() && f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {
             continue;
         }
-        int distance = calc_maximum_distance(x, y, f->tile.x(), f->tile.y());
+        int distance = calc_maximum_distance(tile, f->tile);
         if (f->targeted_by_figure_id) {
             distance *= 2;
         }
@@ -105,7 +105,7 @@ int figure_combat_get_target_for_wolf(int x, int y, int max_distance) {
     }
     return 0;
 }
-int figure_combat_get_target_for_enemy(int x, int y) {
+int figure_combat_get_target_for_enemy(map_point tile) {
     int min_figure_id = 0;
     int min_distance = 10000;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -114,7 +114,7 @@ int figure_combat_get_target_for_enemy(int x, int y) {
             continue;
 
         if (!f->targeted_by_figure_id && f->is_legion()) {
-            int distance = calc_maximum_distance(x, y, f->tile.x(), f->tile.y());
+            int distance = calc_maximum_distance(tile, f->tile);
             if (distance < min_distance) {
                 min_distance = distance;
                 min_figure_id = i;
@@ -136,9 +136,6 @@ int figure_combat_get_target_for_enemy(int x, int y) {
     return 0;
 }
 int figure_combat_get_missile_target_for_soldier(figure* shooter, int max_distance, map_point* tile) {
-    int x = shooter->tile.x();
-    int y = shooter->tile.y();
-
     int min_distance = max_distance;
     figure* min_figure = 0;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -147,8 +144,8 @@ int figure_combat_get_missile_target_for_soldier(figure* shooter, int max_distan
             continue;
 
         if (f->is_enemy() || f->is_herd() || f->is_attacking_native()) {
-            int distance = calc_maximum_distance(x, y, x, y);
-            if (distance < min_distance && figure_movement_can_launch_cross_country_missile(x, y, x, y)) {
+            int distance = calc_maximum_distance(shooter->tile, f->tile);
+            if (distance < min_distance && figure_movement_can_launch_cross_country_missile(shooter->tile, f->tile)) {
                 min_distance = distance;
                 min_figure = f;
             }
@@ -161,9 +158,6 @@ int figure_combat_get_missile_target_for_soldier(figure* shooter, int max_distan
     return 0;
 }
 int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, int attack_citizens, map_point* tile) {
-    int x = enemy->tile.x();
-    int y = enemy->tile.y();
-
     figure* min_figure = 0;
     int min_distance = max_distance;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -194,14 +188,14 @@ int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, 
         }
         int distance;
         if (f->is_legion())
-            distance = calc_maximum_distance(x, y, f->tile.x(), f->tile.y());
+            distance = calc_maximum_distance(enemy->tile, f->tile);
         else if (attack_citizens && f->is_friendly)
-            distance = calc_maximum_distance(x, y, f->tile.x(), f->tile.y()) + 5;
+            distance = calc_maximum_distance(enemy->tile, f->tile) + 5;
         else {
             continue;
         }
         if (distance < min_distance
-            && figure_movement_can_launch_cross_country_missile(x, y, f->tile.x(), f->tile.y())) {
+            && figure_movement_can_launch_cross_country_missile(enemy->tile, f->tile)) {
             min_distance = distance;
             min_figure = f;
         }

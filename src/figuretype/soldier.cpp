@@ -113,7 +113,7 @@ int figure::find_mop_up_target() {
         target_id = 0;
     }
     if (target_id <= 0) {
-        target_id = figure_combat_get_target_for_soldier(tile.x(), tile.y(), 20);
+        target_id = figure_combat_get_target_for_soldier(tile, 20);
         if (target_id) {
             figure* target = figure_get(target_id);
             destination_tile = target->tile;

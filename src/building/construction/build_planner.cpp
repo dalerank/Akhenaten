@@ -1801,7 +1801,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     }
 
     // finally, go over the rest of the stuff for all building types
-    formation_move_herds_away(end.x(), end.y());
+    formation_move_herds_away(end);
     city_finance_process_construction(total_cost);
     game_undo_finish_build(total_cost);
     map_tiles_update_region_empty_land(false, start.x() - 2, start.y() - 2, end.x() + size.x + 2, end.y() + size.y + 2);

@@ -747,7 +747,7 @@ int building_house_determine_worst_desirability_building(building* house) {
                     // simplified desirability calculation
                     int step_size = model_get_building(b->type)->desirability_step_size;
                     int range = model_get_building(b->type)->desirability_range;
-                    int dist = calc_maximum_distance(x, y, house->tile.x(), house->tile.y());
+                    int dist = calc_maximum_distance(vec2i(x, y), house->tile);
                     if (dist <= range) {
                         while (--dist > 1) {
                             des += step_size;

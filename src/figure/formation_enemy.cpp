@@ -225,7 +225,7 @@ static void set_enemy_target_building(formation* m) {
 
         for (int n = 0; n < 100 && n <= best_type_index && ENEMY_ATTACK_PRIORITY[attack][n]; n++) {
             if (b->type == ENEMY_ATTACK_PRIORITY[attack][n]) {
-                int distance = calc_maximum_distance(m->x_home, m->y_home, b->tile.x(), b->tile.y());
+                int distance = calc_maximum_distance(vec2i(m->x_home, m->y_home), b->tile);
                 if (n < best_type_index) {
                     best_type_index = n;
                     best_building = b;
@@ -247,7 +247,7 @@ static void set_enemy_target_building(formation* m) {
 
             for (int n = 0; n < 100 && n <= best_type_index && RIOTER_ATTACK_PRIORITY[n]; n++) {
                 if (b->type == RIOTER_ATTACK_PRIORITY[n]) {
-                    int distance = calc_maximum_distance(m->x_home, m->y_home, b->tile.x(), b->tile.y());
+                    int distance = calc_maximum_distance(vec2i(m->x_home, m->y_home), b->tile);
                     if (n < best_type_index) {
                         best_type_index = n;
                         best_building = b;
@@ -292,7 +292,7 @@ static void set_native_target_building(formation* m) {
         case BUILDING_ROADBLOCK:
             break;
         default: {
-            int distance = calc_maximum_distance(meeting.x(), meeting.y(), b->tile.x(), b->tile.y());
+            int distance = calc_maximum_distance(meeting, b->tile);
             if (distance < min_distance) {
                 min_building = b;
                 min_distance = distance;
@@ -300,8 +300,10 @@ static void set_native_target_building(formation* m) {
         }
         }
     }
-    if (min_building)
+
+    if (min_building) {
         formation_set_destination_building(m, min_building->tile.x(), min_building->tile.y(), min_building->id);
+    }
 }
 
 static void approach_target(formation* m) {

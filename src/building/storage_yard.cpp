@@ -10,6 +10,7 @@
 #include "city/military.h"
 #include "city/resource.h"
 #include "core/calc.h"
+#include "core/vec2i.h"
 #include "empire/trade_prices.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"
@@ -289,7 +290,7 @@ int building_storageyard_get_accepting_amount(e_resource resource, building* b) 
     }
 }
 
-static int storageyard_is_this_space_the_best(building* space, int x, int y, e_resource resource, int distance_from_entry) {
+static int storageyard_is_this_space_the_best(building* space, map_point tile, e_resource resource, int distance_from_entry) {
     building* b = space->main();
 
     // check storage settings first
@@ -302,8 +303,7 @@ static int storageyard_is_this_space_the_best(building* space, int x, int y, e_r
         check = check->next();
         if (check->subtype.warehouse_resource_id == resource && check->stored_full_amount < 400) {
             if (check == space)
-                return calc_distance_with_penalty(
-                  space->tile.x(), space->tile.y(), x, y, distance_from_entry, space->distance_from_entry);
+                return calc_distance_with_penalty(space->tile, tile, distance_from_entry, space->distance_from_entry);
             else
                 return 0;
         }
@@ -314,8 +314,7 @@ static int storageyard_is_this_space_the_best(building* space, int x, int y, e_r
         check = check->next();
         if (check->subtype.warehouse_resource_id == RESOURCE_NONE) { // empty warehouse space
             if (check == space)
-                return calc_distance_with_penalty(
-                  space->tile.x(), space->tile.y(), x, y, distance_from_entry, space->distance_from_entry);
+                return calc_distance_with_penalty(space->tile, tile, distance_from_entry, space->distance_from_entry);
             else
                 return 0;
         }
@@ -356,9 +355,9 @@ int building_storageyard_remove_resource(e_resource resource, int amount) {
     }
     return amount - amount_left;
 }
+
 int building_storageyard_for_storing(building* src,
-                                   int x,
-                                   int y,
+                                   map_point tile,
                                    e_resource resource,
                                    int distance_from_entry,
                                    int road_network_id,
@@ -391,7 +390,7 @@ int building_storageyard_for_storing(building* src,
                 continue;
             }
         }
-        int dist = storageyard_is_this_space_the_best(b, x, y, resource, distance_from_entry);
+        int dist = storageyard_is_this_space_the_best(b, tile, resource, distance_from_entry);
         if (dist > 0 && dist < min_dist) {
             min_dist = dist;
             min_building_id = i;
@@ -429,8 +428,7 @@ int building_storageyard_for_getting(building* src, e_resource resource, map_poi
             }
         }
         if (amounts_stored > 0 && !building_storageyard_is_gettable(resource, b)) {
-            int dist = calc_distance_with_penalty(
-              b->tile.x(), b->tile.y(), src->tile.x(), src->tile.y(), src->distance_from_entry, b->distance_from_entry);
+            int dist = calc_distance_with_penalty(b->tile, src->tile, src->distance_from_entry, b->distance_from_entry);
             dist -= 4 * (amounts_stored / 100);
             if (dist < min_dist) {
                 min_dist = dist;
@@ -574,8 +572,7 @@ int building_storageyard_determine_worker_task(building* warehouse, e_resource& 
     // deliver weapons to barracks
     if (building_count_active(BUILDING_RECRUITER) > 0 && city_military_has_legionary_legions()
         && !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
-        building* barracks = building_get(building_get_barracks_for_weapon(warehouse->tile.x(),
-                                                                           warehouse->tile.y(),
+        building* barracks = building_get(building_get_barracks_for_weapon(warehouse->tile,
                                                                            RESOURCE_WEAPONS,
                                                                            warehouse->road_network_id,
                                                                            warehouse->distance_from_entry,

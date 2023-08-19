@@ -1,7 +1,8 @@
-#ifndef CORE_CALC_H
-#define CORE_CALC_H
+#pragma once
 
 #include "core/direction.h"
+#include "core/vec2i.h"
+#include "grid/point.h"
 
 #include <stdint.h>
 
@@ -32,11 +33,30 @@ int calc_percentage(int value, int total);
  */
 int calc_total_distance(int x1, int y1, int x2, int y2);
 
+inline int get_delta(int value1, int value2) {
+    if (value1 <= value2)
+        return value2 - value1;
+    else {
+        return value1 - value2;
+    }
+}
+
+inline int point_get_x(map_point p) { return p.x(); }
+inline int point_get_x(vec2i p) { return p.x; }
+
+inline int point_get_y(map_point p) { return p.y(); }
+inline int point_get_y(vec2i p) { return p.y; }
 /**
  * Gets maximum distance
  * @return max(dx, dy)
  */
-int calc_maximum_distance(int x1, int y1, int x2, int y2);
+template<typename _T1, typename _T2>
+inline int calc_maximum_distance(_T1 from, _T2 to) {
+    int distance_x = get_delta(point_get_x(from), point_get_x(to));
+    int distance_y = get_delta(point_get_y(from), point_get_x(to));
+
+    return (distance_x >= distance_y) ? distance_x : distance_y;
+}
 
 /**
  * Gets minimum distance
@@ -48,7 +68,21 @@ int calc_minimum_distance(int x1, int y1, int x2, int y2);
  * Gets maximum distance with penalty applied
  * @return max(dx, dy) + difference between dist_to_entry
  */
-int calc_distance_with_penalty(int x1, int y1, int x2, int y2, int dist_to_entry1, int dist_to_entry2);
+template<typename _T1, typename _T2>
+inline int calc_distance_with_penalty(_T1 from, _T2 to, int dist_to_entry1, int dist_to_entry2) {
+    int penalty;
+    if (dist_to_entry1 > dist_to_entry2)
+        penalty = dist_to_entry1 - dist_to_entry2;
+    else {
+        penalty = dist_to_entry2 - dist_to_entry1;
+    }
+
+    if (dist_to_entry1 == -1) {
+        penalty = 0;
+    }
+
+    return penalty + calc_maximum_distance(from, to);
+}
 
 /**
  * Gets the general direction from 'from' to 'to'
@@ -109,5 +143,3 @@ int calc_absolute_increment(int value, int step, int max);
  * @return Value decremented by step
  */
 int calc_absolute_decrement(int value, int step);
-
-#endif // CORE_CALC_H

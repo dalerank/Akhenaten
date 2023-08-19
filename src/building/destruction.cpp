@@ -221,7 +221,7 @@ void building_destroy_by_enemy(map_point point) {
         }
     } else {
         if (map_terrain_is(grid_offset, TERRAIN_WALL))
-            figure_kill_tower_sentries_at(x, y);
+            figure_kill_tower_sentries_at(point);
 
         map_building_tiles_set_rubble(0, x, y, 1);
     }

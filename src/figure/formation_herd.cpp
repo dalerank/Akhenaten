@@ -129,7 +129,7 @@ static void move_animals(const formation* m, int attacking_animals, int terrain_
         if (GAME_ENV == ENGINE_ENV_C3)
             f->wait_ticks = 401;
         if (attacking_animals) {
-            int target_id = figure_combat_get_target_for_wolf(f->tile.x(), f->tile.y(), 6);
+            int target_id = figure_combat_get_target_for_wolf(f->tile, 6);
             if (target_id) {
                 if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                     f->destination_tile.set(0, 0);

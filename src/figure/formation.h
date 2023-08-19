@@ -3,6 +3,7 @@
 #include "core/buffer.h"
 #include "core/game_environment.h"
 #include "figure/type.h"
+#include "grid/point.h"
 
 // #define MAX_FORMATIONS 250
 
@@ -173,7 +174,7 @@ void formation_set_home(formation* m, int x, int y);
 void formation_clear_figures(void);
 int formation_add_figure(int formation_id, int figure_id, int deployed, int damage, int max_damage);
 
-void formation_move_herds_away(int x, int y);
+void formation_move_herds_away(map_point tile);
 
 void formation_calculate_figures(void);
 

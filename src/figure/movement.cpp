@@ -649,15 +649,15 @@ int figure::move_ticks_cross_country(int num_ticks) {
         previous_tile = old;
     return is_at_destination;
 }
-int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x_dst, int y_dst) {
+int figure_movement_can_launch_cross_country_missile(map_point src, map_point dst) {
     int height = 0;
     figure* f = figure_get(0); // abuse unused figure 0 as scratch
-    f->cc_coords.x = 15 * x_src;
-    f->cc_coords.y = 15 * y_src;
-    if (map_terrain_is(MAP_OFFSET(x_src, y_src), TERRAIN_WALL_OR_GATEHOUSE))
+    f->cc_coords.x = 15 * src.x();
+    f->cc_coords.y = 15 * src.y();
+    if (map_terrain_is(MAP_OFFSET(src.x(), src.y()), TERRAIN_WALL_OR_GATEHOUSE))
         height = 6;
 
-    f->set_cross_country_direction(15 * x_src, 15 * y_src, 15 * x_dst, 15 * y_dst, 0);
+    f->set_cross_country_direction(15 * src.x(), 15 * src.y(), 15 * dst.x(), 15 * dst.y(), 0);
 
     for (int guard = 0; guard < 1000; guard++) {
         for (int i = 0; i < 8; i++) {

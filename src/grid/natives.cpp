@@ -66,7 +66,7 @@ static void determine_meeting_center(void) {
             int min_meeting_id = 0;
             for (int n = 0; n < total_meetings; n++) {
                 building* meeting = building_get(meetings[n]);
-                int dist = calc_maximum_distance(b->tile.x(), b->tile.y(), meeting->tile.x(), meeting->tile.y());
+                int dist = calc_maximum_distance(b->tile, meeting->tile);
                 if (dist < min_dist) {
                     min_dist = dist;
                     min_meeting_id = meetings[n];

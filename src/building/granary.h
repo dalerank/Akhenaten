@@ -29,8 +29,7 @@ granary_task_status building_granary_determine_worker_task(building* granary);
 
 void building_granaries_calculate_stocks(void);
 
-int building_granary_for_storing(int x,
-                                 int y,
+int building_granary_for_storing(map_point tile,
                                  int resource,
                                  int distance_from_entry,
                                  int road_network_id,
@@ -38,8 +37,7 @@ int building_granary_for_storing(int x,
                                  int* understaffed,
                                  map_point* dst);
 
-int building_getting_granary_for_storing(int x,
-                                         int y,
+int building_getting_granary_for_storing(map_point tile,
                                          int resource,
                                          int distance_from_entry,
                                          int road_network_id,

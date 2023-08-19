@@ -268,8 +268,7 @@ void building_granaries_calculate_stocks(void) {
     }
 }
 
-int building_granary_for_storing(int x,
-                                 int y,
+int building_granary_for_storing(map_point tile,
                                  int resource,
                                  int distance_from_entry,
                                  int road_network_id,
@@ -314,8 +313,7 @@ int building_granary_for_storing(int x,
 
         if (b->data.granary.resource_stored[RESOURCE_NONE] >= ONE_LOAD) {
             // there is room
-            int dist = calc_distance_with_penalty(
-              b->tile.x() + 1, b->tile.y() + 1, x, y, distance_from_entry, b->distance_from_entry);
+            int dist = calc_distance_with_penalty(vec2i(b->tile.x() + 1, b->tile.y() + 1), tile, distance_from_entry, b->distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building_id = i;
@@ -328,8 +326,7 @@ int building_granary_for_storing(int x,
     return min_building_id;
 }
 
-int building_getting_granary_for_storing(int x,
-                                         int y,
+int building_getting_granary_for_storing(map_point tile,
                                          int resource,
                                          int distance_from_entry,
                                          int road_network_id,
@@ -363,8 +360,7 @@ int building_getting_granary_for_storing(int x,
 
         if (b->data.granary.resource_stored[RESOURCE_NONE] > ONE_LOAD) {
             // there is room
-            int dist = calc_distance_with_penalty(
-              b->tile.x() + 1, b->tile.y() + 1, x, y, distance_from_entry, b->distance_from_entry);
+            int dist = calc_distance_with_penalty(vec2i(b->tile.x() + 1, b->tile.y() + 1), tile, distance_from_entry, b->distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building_id = i;
@@ -416,10 +412,8 @@ int building_granary_for_getting(building* src, map_point* dst) {
             amount_gettable += b->data.granary.resource_stored[RESOURCE_FIGS];
         }
         if (amount_gettable > 0) {
-            int dist = calc_distance_with_penalty(b->tile.x() + 1,
-                                                  b->tile.y() + 1,
-                                                  src->tile.x() + 1,
-                                                  src->tile.y() + 1,
+            int dist = calc_distance_with_penalty(vec2i(b->tile.x() + 1, b->tile.y() + 1),
+                                                  vec2i(src->tile.x() + 1, src->tile.y() + 1),
                                                   src->distance_from_entry,
                                                   b->distance_from_entry);
             if (amount_gettable <= 400)

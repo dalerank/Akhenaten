@@ -277,10 +277,10 @@ void figure::fishing_boat_action() {
             wait_ticks++;
             if (wait_ticks >= max_wait_ticks) {
                 wait_ticks = 0;
-                map_point tile;
-                if (scenario_map_closest_fishing_point(tile.x(), tile.y(), &tile)) {
+                map_point fish;
+                if (scenario_map_closest_fishing_point(tile, &fish)) {
                     action_state = FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH;
-                    destination_tile = tile;
+                    destination_tile = fish;
                     //                        destination_tile.x() = tile.x();
                     //                        destination_tile.y() = tile.y();
                     route_remove();

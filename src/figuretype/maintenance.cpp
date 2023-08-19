@@ -54,18 +54,18 @@ int figure::is_nearby(int category, int* distance, int max_distance, bool gang_o
 
         // pass on to inner distance check
         if (category_check) {
-            int dist = calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
+            int dist = calc_maximum_distance(tile, f->tile);
             if (dist <= max_distance) {
                 if (f->targeted_by_figure_id)
                     dist *= 2; // penalty
                 if (category == NEARBY_HOSTILE) {
                     if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR)
-                        dist = calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
+                        dist = calc_maximum_distance(tile, f->tile);
                     else if (f->type == FIGURE_INDIGENOUS_NATIVE
                              && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
-                        dist = calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
+                        dist = calc_maximum_distance(tile, f->tile);
                     else if (f->is_enemy())
-                        dist = 3 * calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
+                        dist = 3 * calc_maximum_distance(tile, f->tile);
                     // else if (f->type == FIGURE_WOLF)
                     //     dist = 4 * calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
                     //                    else
@@ -167,7 +167,7 @@ bool figure::fireman_fight_fire() {
         return false;
 
     int distance;
-    int ruin_id = building_maintenance_get_closest_burning_ruin(tile.x(), tile.y(), &distance);
+    int ruin_id = building_maintenance_get_closest_burning_ruin(tile, &distance);
     if (ruin_id > 0 && distance <= 25) {
         building* ruin = building_get(ruin_id);
         wait_ticks_missile = 0;
@@ -184,7 +184,7 @@ bool figure::fireman_fight_fire() {
 }
 void figure::fireman_extinguish_fire() {
     building* burn = destination();
-    int distance = calc_maximum_distance(tile.x(), tile.y(), burn->tile.x(), burn->tile.y());
+    int distance = calc_maximum_distance(tile, burn->tile);
     if ((burn->state == BUILDING_STATE_VALID || burn->state == BUILDING_STATE_MOTHBALLED)
         && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
         burn->fire_duration = 32;

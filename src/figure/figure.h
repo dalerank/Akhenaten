@@ -434,8 +434,8 @@ public:
     void trader_sell(int amounts);
     int trader_total_bought();
     int trader_total_sold();
-    int get_closest_storageyard(int x, int y, int city_id, int distance_from_entry, map_point* storageyard);
-    void go_to_next_storageyard(int x_src, int y_src, int distance_to_entry);
+    int get_closest_storageyard(map_point tile, int city_id, int distance_from_entry, map_point* storageyard);
+    void go_to_next_storageyard(map_point src_tile, int distance_to_entry);
     int trade_ship_lost_queue();
     int trade_ship_done_trading();
 
@@ -533,4 +533,4 @@ void figure_init_scenario(void);
 
 void figure_kill_all();
 
-int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x_dst, int y_dst);
+int figure_movement_can_launch_cross_country_missile(map_point src, map_point dst);

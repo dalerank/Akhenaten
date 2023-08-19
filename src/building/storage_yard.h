@@ -43,7 +43,7 @@ void building_storageyards_add_resource(e_resource resource, int amount);
 int building_storageyard_remove_resource(e_resource resource, int amount);
 
 int building_storageyard_for_storing(building* src,
-                                   int x, int y,
+                                   map_point tile,
                                    e_resource resource,
                                    int distance_from_entry,
                                    int road_network_id,

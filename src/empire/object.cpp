@@ -214,7 +214,8 @@ int empire_object_get_max_invasion_path(void) {
     }
     return max_path;
 }
-int empire_object_get_closest(int x, int y) {
+
+int empire_object_get_closest(vec2i pos) {
     auto& objects = g_empire_objects;
     int min_dist = 10000;
     int min_obj_id = 0;
@@ -228,13 +229,13 @@ int empire_object_get_closest(int x, int y) {
             obj_x = obj->x;
             obj_y = obj->y;
         }
-        if (obj_x - 8 > x || obj_x + obj->width + 8 <= x)
+        if (obj_x - 8 > pos.x || obj_x + obj->width + 8 <= pos.x)
             continue;
 
-        if (obj_y - 8 > y || obj_y + obj->height + 8 <= y)
+        if (obj_y - 8 > pos.y || obj_y + obj->height + 8 <= pos.y)
             continue;
 
-        int dist = calc_maximum_distance(x, y, obj_x + obj->width / 2, obj_y + obj->height / 2);
+        int dist = calc_maximum_distance(pos, vec2i(obj_x + obj->width / 2, obj_y + obj->height / 2));
         if (dist < min_dist) {
             min_dist = dist;
             min_obj_id = i + 1;

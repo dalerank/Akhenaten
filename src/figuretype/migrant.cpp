@@ -54,7 +54,7 @@ void figure::update_direction_and_image() {
         figure_image_set_cart_offset((dir + 4) % 8);
     }
 }
-static int closest_house_with_room(int x, int y) {
+static int closest_house_with_room(map_point tile) {
     int min_dist = 1000;
     int min_building_id = 0;
     int max_id = building_get_highest_id();
@@ -63,7 +63,7 @@ static int closest_house_with_room(int x, int y) {
         if (b->state == BUILDING_STATE_VALID && b->house_size && b->distance_from_entry > 0
             && b->house_population_room > 0) {
             if (!b->has_figure(2)) {
-                int dist = calc_maximum_distance(x, y, b->tile.x(), b->tile.y());
+                int dist = calc_maximum_distance(tile, b->tile);
                 if (dist < min_dist) {
                     min_dist = dist;
                     min_building_id = i;
@@ -157,7 +157,7 @@ void figure::homeless_action() {
         anim_frame = 0;
         wait_ticks++;
         if (wait_ticks > 51) {
-            int building_id = closest_house_with_room(tile.x(), tile.y());
+            int building_id = closest_house_with_room(tile);
             if (building_id) {
                 building* b = building_get(building_id);
                 int x_road, y_road;
@@ -188,7 +188,7 @@ void figure::homeless_action() {
         wait_ticks++;
         if (wait_ticks > 30) {
             wait_ticks = 0;
-            int building_id = closest_house_with_room(tile.x(), tile.y());
+            int building_id = closest_house_with_room(tile);
             if (building_id > 0) {
                 building* b = building_get(building_id);
                 int x_road, y_road;

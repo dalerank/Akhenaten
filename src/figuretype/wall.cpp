@@ -342,11 +342,11 @@ void figure_tower_sentry_reroute(void) {
     }
 }
 
-void figure_kill_tower_sentries_at(int x, int y) {
+void figure_kill_tower_sentries_at(map_point tile) {
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure* f = figure_get(i);
         if (!f->is_dead() && f->type == FIGURE_TOWER_SENTRY) {
-            if (calc_maximum_distance(f->tile.x(), f->tile.y(), x, y) <= 1)
+            if (calc_maximum_distance(f->tile, tile) <= 1)
                 f->poof();
         }
     }

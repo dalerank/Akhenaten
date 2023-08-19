@@ -128,7 +128,7 @@ void figure::enemy_fighting(const formation* m) {
         target_id = 0;
     }
     if (target_id <= 0) {
-        target_id = figure_combat_get_target_for_enemy(tile.x(), tile.y());
+        target_id = figure_combat_get_target_for_enemy(tile);
         if (target_id) {
             figure* target = figure_get(target_id);
             destination_tile = target->tile;

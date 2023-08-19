@@ -233,21 +233,19 @@ void figure::determine_granaryman_destination() {
     }
     // delivering resource
     // priority 1: another granary
-    set_destination(building_granary_for_storing(
-      tile.x(), tile.y(), resource_id, granary->distance_from_entry, road_network_id, 0, 0, &dst));
+    set_destination(building_granary_for_storing(tile, resource_id, granary->distance_from_entry, road_network_id, 0, 0, &dst));
     if (has_destination()) {
         building_granary_remove_resource(granary, resource_id, 100);
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
     // priority 2: warehouse
-    set_destination(building_storageyard_for_storing(0, tile.x(), tile.y(), resource_id, granary->distance_from_entry, road_network_id, 0, &dst));
+    set_destination(building_storageyard_for_storing(0, tile, resource_id, granary->distance_from_entry, road_network_id, 0, &dst));
     if (has_destination()) {
         building_granary_remove_resource(granary, resource_id, 100);
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
     // priority 3: granary even though resource is on stockpile
-    set_destination(building_granary_for_storing(
-      tile.x(), tile.y(), resource_id, granary->distance_from_entry, road_network_id, 1, 0, &dst));
+    set_destination(building_granary_for_storing(tile, resource_id, granary->distance_from_entry, road_network_id, 1, 0, &dst));
     if (has_destination()) {
         building_granary_remove_resource(granary, resource_id, 100);
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
@@ -273,35 +271,30 @@ void figure::determine_storageyard_cart_destination() {
 
     ////// delivering resource!
     // priority 1: weapons to barracks
-    set_destination(building_get_barracks_for_weapon(
-      tile.x(), tile.y(), resource_id, road_network_id, warehouse->distance_from_entry, &dst));
+    set_destination(building_get_barracks_for_weapon(tile, resource_id, road_network_id, warehouse->distance_from_entry, &dst));
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
 
     // priority 2: raw materials to workshop
-    set_destination(building_get_workshop_for_raw_material_with_room(
-      tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, &dst));
+    set_destination(building_get_workshop_for_raw_material_with_room(tile, resource_id, warehouse->distance_from_entry, road_network_id, &dst));
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
 
     // priority 3: food to granary
-    set_destination(building_granary_for_storing(
-      tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, 0, 0, &dst));
+    set_destination(building_granary_for_storing(tile, resource_id, warehouse->distance_from_entry, road_network_id, 0, 0, &dst));
     if (has_destination())
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
 
     // priority 4: food to getting granary
-    set_destination(building_getting_granary_for_storing(
-      tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, &dst));
+    set_destination(building_getting_granary_for_storing(tile, resource_id, warehouse->distance_from_entry, road_network_id, &dst));
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
 
     // priority 5: resource to other warehouse
-    set_destination(building_storageyard_for_storing(
-      home(), tile.x(), tile.y(), resource_id, warehouse->distance_from_entry, road_network_id, 0, &dst));
+    set_destination(building_storageyard_for_storing(home(), tile, resource_id, warehouse->distance_from_entry, road_network_id, 0, &dst));
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }

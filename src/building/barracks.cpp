@@ -17,8 +17,7 @@
 
 int g_tower_sentry_request = 0;
 
-int building_get_barracks_for_weapon(int x,
-                                     int y,
+int building_get_barracks_for_weapon(map_point tile,
                                      int resource,
                                      int road_network_id,
                                      int distance_from_entry,
@@ -45,8 +44,7 @@ int building_get_barracks_for_weapon(int x,
         if (b->stored_full_amount >= MAX_WEAPONS_BARRACKS * 100)
             continue;
 
-        int dist
-          = calc_distance_with_penalty(b->tile.x(), b->tile.y(), x, y, distance_from_entry, b->distance_from_entry);
+        int dist = calc_distance_with_penalty(b->tile, tile, distance_from_entry, b->distance_from_entry);
         dist += 8 * b->stored_full_amount / 100;
         if (dist < min_dist) {
             min_dist = dist;
@@ -83,7 +81,7 @@ static int get_closest_legion_needing_soldiers(building* barracks) {
             continue;
 
         building* fort = building_get(m->building_id);
-        int dist = calc_maximum_distance(barracks->tile.x(), barracks->tile.y(), fort->tile.x(), fort->tile.y());
+        int dist = calc_maximum_distance(barracks->tile, fort->tile);
         if (m->legion_recruit_type > recruit_type || (m->legion_recruit_type == recruit_type && dist < min_distance)) {
             recruit_type = m->legion_recruit_type;
             min_formation_id = m->id;
@@ -99,7 +97,7 @@ static int get_closest_military_academy(building* fort) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MILITARY_ACADEMY
             && b->num_workers >= model_get_building(BUILDING_MILITARY_ACADEMY)->laborers) {
-            int dist = calc_maximum_distance(fort->tile.x(), fort->tile.y(), b->tile.x(), b->tile.y());
+            int dist = calc_maximum_distance(fort->tile, b->tile);
             if (dist < min_distance) {
                 min_distance = dist;
                 min_building_id = i;

@@ -139,7 +139,7 @@ void empire_select_object(int x, int y) {
     int map_x = x + data.scroll_x;
     int map_y = y + data.scroll_y;
 
-    data.selected_object = empire_object_get_closest(map_x, map_y);
+    data.selected_object = empire_object_get_closest(vec2i(map_x, map_y));
 }
 
 static int get_max_stock_for_population(void) {

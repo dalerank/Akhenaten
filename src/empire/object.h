@@ -1,6 +1,7 @@
 #pragma once
 
 #include "empire/type.h"
+#include "core/vec2i.h"
 #include "game/resource.h"
 
 struct empire_object {
@@ -56,7 +57,7 @@ const empire_object* empire_object_get_battle_icon(int path_id, int year);
 
 int empire_object_get_max_invasion_path(void);
 
-int empire_object_get_closest(int x, int y);
+int empire_object_get_closest(vec2i pos);
 
 void empire_object_set_expanded(int object_id, e_empire_city new_city_type);
 

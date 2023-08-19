@@ -1,10 +1,5 @@
-#ifndef FIGURETYPE_ENTERTAINER_H
-#define FIGURETYPE_ENTERTAINER_H
+#pragma once
 
-// #include "figure/figure.h"
+#include "grid/point.h"
 
-int determine_venue_destination(int x, int y, int type1, int type2, int type3);
-
-// void figure_entertainer_action();
-
-#endif // FIGURETYPE_ENTERTAINER_H
+int determine_venue_destination(map_point tile, int type1, int type2, int type3);

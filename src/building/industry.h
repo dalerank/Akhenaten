@@ -25,14 +25,12 @@ void building_farm_deplete_soil(building* b);
 
 void building_workshop_add_raw_material(building* b, int amount);
 
-int building_get_workshop_for_raw_material(int x,
-                                           int y,
+int building_get_workshop_for_raw_material(map_point tile,
                                            int resource,
                                            int distance_from_entry,
                                            int road_network_id,
                                            map_point* dst);
-int building_get_workshop_for_raw_material_with_room(int x,
-                                                     int y,
+int building_get_workshop_for_raw_material_with_room(map_point tile,
                                                      int resource,
                                                      int distance_from_entry,
                                                      int road_network_id,
