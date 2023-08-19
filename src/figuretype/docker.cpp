@@ -25,7 +25,7 @@ static int try_import_resource(building* warehouse, e_resource resource, int cit
     if (warehouse->type != BUILDING_STORAGE_YARD)
         return 0;
 
-    if (building_warehouse_is_not_accepting(resource, warehouse))
+    if (building_storageyard_is_not_accepting(resource, warehouse))
         return 0;
 
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse))
@@ -40,7 +40,7 @@ static int try_import_resource(building* warehouse, e_resource resource, int cit
             if (space->stored_full_amount && space->stored_full_amount < 400
                 && space->subtype.warehouse_resource_id == resource) {
                 trade_route_increase_traded(route_id, resource);
-                building_warehouse_space_add_import(space, resource);
+                building_storageyard_space_add_import(space, resource);
                 return 1;
             }
         }
@@ -52,7 +52,7 @@ static int try_import_resource(building* warehouse, e_resource resource, int cit
         if (space->id > 0) {
             if (space->subtype.warehouse_resource_id == RESOURCE_NONE) {
                 trade_route_increase_traded(route_id, resource);
-                building_warehouse_space_add_import(space, resource);
+                building_storageyard_space_add_import(space, resource);
                 return 1;
             }
         }
@@ -71,7 +71,7 @@ static int try_export_resource(building* warehouse, e_resource resource, int cit
         if (space->id > 0) {
             if (space->stored_full_amount && space->subtype.warehouse_resource_id == resource) {
                 trade_route_increase_traded(empire_city_get_route_id(city_id), resource);
-                building_warehouse_space_remove_export(space, resource);
+                building_storageyard_space_remove_export(space, resource);
                 return 1;
             }
         }
@@ -115,7 +115,7 @@ static int get_closest_warehouse_for_import(int x,
             continue;
 
         const building_storage* storage = building_storage_get(b->storage_id);
-        if (!building_warehouse_is_not_accepting(resource, b) && !storage->empty_all) {
+        if (!building_storageyard_is_not_accepting(resource, b) && !storage->empty_all) {
             int distance_penalty = 32;
             building* space = b;
             for (int s = 0; s < 8; s++) {

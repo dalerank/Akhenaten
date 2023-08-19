@@ -388,7 +388,7 @@ static void add_storageyard(building* b) {
         }
         prev = add_storageyard_space(b->tile.x() + x_offset[i], b->tile.y() + y_offset[i], prev);
     }
-    // adjust BUILDING_WAREHOUSE
+
     b->tile.set(b->tile.x() + x_offset[corner], b->tile.y() + y_offset[corner]);
     //    b->tile.x() = b->tile.x() + x_offset[corner];
     //    b->tile.y() = b->tile.y() + y_offset[corner];
@@ -1797,7 +1797,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
     // consume resources for specific buildings (e.g. marble, granite)
     if (special_flags & PlannerFlags::Resources) {
-        building_warehouses_remove_resource((e_resource)additional_req_param1, additional_req_param2);
+        building_storageyard_remove_resource((e_resource)additional_req_param1, additional_req_param2);
     }
 
     // finally, go over the rest of the stuff for all building types

@@ -101,13 +101,14 @@ void scenario_request_dispatch(int id) {
     g_scenario_data.requests[id].months_to_comply = (random_byte() & 3) + 1;
     g_scenario_data.requests[id].visible = 0;
     int amount = g_scenario_data.requests[id].amount;
-    if (g_scenario_data.requests[id].resource == RESOURCE_DEBEN)
+    if (g_scenario_data.requests[id].resource == RESOURCE_DEBEN) {
         city_finance_process_requests_and_festivals(amount);
-    else if (g_scenario_data.requests[id].resource == RESOURCE_TROOPS) {
+    } else if (g_scenario_data.requests[id].resource == RESOURCE_TROOPS) {
         city_population_remove_for_troop_request(amount);
-        building_warehouses_remove_resource(RESOURCE_WEAPONS, amount);
-    } else
-        building_warehouses_remove_resource(g_scenario_data.requests[id].resource, amount);
+        building_storageyard_remove_resource(RESOURCE_WEAPONS, amount);
+    } else {
+        building_storageyard_remove_resource(g_scenario_data.requests[id].resource, amount);
+    }
 }
 
 int scenario_requests_active_count() {

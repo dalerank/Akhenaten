@@ -19,7 +19,7 @@ void figure::market_buyer_action() {
     case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
         if (do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_146_MARKET_BUYER_RETURNING)) {
             if (collecting_item_id > 3) {
-                if (!take_resource_from_warehouse(destination()))
+                if (!take_resource_from_storageyard(destination()))
                     poof();
             } else {
                 if (!take_food_from_granary(home(), destination()))
@@ -102,7 +102,7 @@ int figure::take_food_from_granary(building* market, building* granary) {
     return 1;
 }
 
-int figure::take_resource_from_warehouse(building* warehouse) {
+int figure::take_resource_from_storageyard(building* warehouse) {
     e_resource resource;
     switch (collecting_item_id) {
     case INVENTORY_GOOD1:
@@ -122,7 +122,7 @@ int figure::take_resource_from_warehouse(building* warehouse) {
     }
     //    building *warehouse = building_get(warehouse);
     int num_loads;
-    int stored = building_warehouse_get_amount(warehouse, resource);
+    int stored = building_storageyard_get_amount(warehouse, resource);
     if (stored < 2) {
         num_loads = stored;
     } else {
@@ -132,7 +132,7 @@ int figure::take_resource_from_warehouse(building* warehouse) {
     if (num_loads <= 0)
         return 0;
 
-    building_warehouse_remove_resource(warehouse, resource, num_loads);
+    building_storageyard_remove_resource(warehouse, resource, num_loads);
 
     // create delivery boys
     int boy1 = create_delivery_boy(id);

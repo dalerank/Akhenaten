@@ -208,7 +208,7 @@ static void post_load() {
     // TODO: can't find cache in Pharaoh's save file format?
     building_count_update();
     building_granaries_calculate_stocks();
-    city_resource_calculate_warehouse_stocks();
+    city_resource_calculate_storageyard_stocks();
     city_resource_determine_available();
     for (int i = 0; i < building_get_highest_id(); i++) {
         building* b = building_get(i);

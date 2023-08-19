@@ -51,7 +51,7 @@ static void update_food_resource(struct resource_data* data, int resource, const
 }
 
 static void update_good_resource(struct resource_data* data, e_resource resource, building* b, int distance) {
-    if (!city_resource_is_stockpiled(resource) && building_warehouse_get_amount(b, resource) > 0) {
+    if (!city_resource_is_stockpiled(resource) && building_storageyard_get_amount(b, resource) > 0) {
         data->num_buildings++;
 
         if (distance < data->distance) {

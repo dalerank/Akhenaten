@@ -170,7 +170,7 @@ static void advance_tick(void) {
         house_service_decay_houses_covered();
         break;
     case 16:
-        city_resource_calculate_warehouse_stocks();
+        city_resource_calculate_storageyard_stocks();
         break;
     case 17:
         city_resource_calculate_food_stocks_and_supply_wheat();

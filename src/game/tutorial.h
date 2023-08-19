@@ -82,7 +82,7 @@ int tutorial_handle_collapse(void);
 void tutorial_on_crime(void);
 void tutorial_on_disease(void);
 void tutorial_on_filled_granary(int quantity);
-void tutorial_on_add_to_warehouse(void);
+void tutorial_on_add_to_storageyard(void);
 void tutorial_on_gold_extracted();
 void tutorial_on_religion();
 void tutorial_on_house_evolve(int level);

@@ -296,7 +296,7 @@ public:
     void spawn_figure_wharf();
     void spawn_figure_shipyard();
     void spawn_figure_dock();
-    void spawn_figure_warehouse();
+    void spawn_figure_storageyard();
     void spawn_figure_granary();
     void spawn_figure_hunting_lodge();
     void spawn_figure_reed_gatherers();

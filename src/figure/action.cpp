@@ -479,7 +479,7 @@ void figure::action_perform() {
             engineer_action();
             break;
         case 9:
-            warehouseman_action();
+            storageyard_cart_action();
             break; // warehouseman_action !!!!
         case 10:
             prefect_action();

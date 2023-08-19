@@ -39,7 +39,7 @@ void figure::determine_deliveryman_destination() {
     }
 
     // priority 1: warehouse if resource is on stockpile
-    int warehouse_id = building_warehouse_for_storing(0, tile.x(), tile.y(),
+    int warehouse_id = building_storageyard_for_storing(0, tile.x(), tile.y(),
                                                       resource_id, warehouse->distance_from_entry, road_network_id,
                                                       &understaffed_storages, &dst);
     set_destination(warehouse_id);
@@ -85,7 +85,7 @@ void figure::determine_deliveryman_destination() {
     }
 
     // priority 4: warehouse
-    set_destination(building_warehouse_for_storing(0,
+    set_destination(building_storageyard_for_storing(0,
                                                    tile.x(),
                                                    tile.y(),
                                                    resource_id,
@@ -153,7 +153,7 @@ void figure::determine_deliveryman_destination_food() {
         return advance_action(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY);
     }
     // priority 2: warehouse
-    dst_building_id = building_warehouse_for_storing(0, tile.x(), tile.y(),
+    dst_building_id = building_storageyard_for_storing(0, tile.x(), tile.y(),
                                                      resource_id, b->distance_from_entry, road_network_id, 0, &dst);
     if (dst_building_id) {
         set_destination(dst_building_id);

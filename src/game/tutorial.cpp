@@ -356,7 +356,7 @@ void tutorial_on_filled_granary(int quantity) {
         }
     }
 }
-void tutorial_on_add_to_warehouse(void) {
+void tutorial_on_add_to_storageyard(void) {
     if (!g_tutorials_flags.tutorial2.pottery_made && city_resource_count(RESOURCE_POTTERY) >= 1) {
         g_tutorials_flags.tutorial2.pottery_made = 1;
         g_tutorials_flags.tutorial2.pottery_made_year = game_time_year();

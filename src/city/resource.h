@@ -25,8 +25,8 @@ int city_resource_food_percentage_produced(void);
 
 int city_resource_operating_granaries(void);
 
-int city_resource_last_used_warehouse(void);
-void city_resource_set_last_used_warehouse(int warehouse_id);
+int city_resource_last_used_storageyard(void);
+void city_resource_set_last_used_storageyard(int warehouse_id);
 
 int city_int(int resource);
 void city_resource_cycle_trade_status(int resource);
@@ -45,9 +45,9 @@ void city_resource_toggle_mothballed(int resource);
 void city_resource_add_produced_to_granary(int amount);
 void city_resource_remove_from_granary(int food, int amount);
 
-void city_resource_add_to_warehouse(int resource, int amount);
-void city_resource_remove_from_warehouse(int resource, int amount);
-void city_resource_calculate_warehouse_stocks(void);
+void city_resource_add_to_storageyard(int resource, int amount);
+void city_resource_remove_from_storageyard(int resource, int amount);
+void city_resource_calculate_storageyard_stocks(void);
 
 void city_resource_determine_available(void);
 

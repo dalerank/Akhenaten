@@ -880,7 +880,7 @@ void building::spawn_figure_dock() {
     //        }
     //    }
 }
-void building::spawn_figure_warehouse() {
+void building::spawn_figure_storageyard() {
     check_labor_problem();
     building* space = this;
     for (int i = 0; i < 8; i++) {
@@ -892,8 +892,8 @@ void building::spawn_figure_warehouse() {
         common_spawn_labor_seeker(100);
         e_resource resource = RESOURCE_NONE;
         int amount = 0;
-        int task = building_warehouse_determine_worker_task(this, resource, amount);
-        if (task != WAREHOUSE_TASK_NONE && amount > 0) {
+        int task = building_storageyard_determine_worker_task(this, resource, amount);
+        if (task != STORAGEYARD_TASK_NONE && amount > 0) {
             // assume amount has been set to more than one.
             //            if (true) // TODO: multiple loads setting?????
             //                amount = 1;
@@ -903,22 +903,22 @@ void building::spawn_figure_warehouse() {
                 f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 
                 switch (task) {
-                case WAREHOUSE_TASK_GETTING:
-                case WAREHOUSE_TASK_GETTING_MOAR:
+                case STORAGEYARD_TASK_GETTING:
+                case STORAGEYARD_TASK_GETTING_MOAR:
                     f->load_resource(0, RESOURCE_NONE);
                     f->collecting_item_id = resource;
                     break;
-                case WAREHOUSE_TASK_DELIVERING:
-                case WAREHOUSE_TASK_EMPTYING:
+                case STORAGEYARD_TASK_DELIVERING:
+                case STORAGEYARD_TASK_EMPTYING:
                     amount = std::min<int>(amount, 400);
                     f->load_resource(amount, resource);
-                    building_warehouse_remove_resource(this, resource, amount);
+                    building_storageyard_remove_resource(this, resource, amount);
                     break;
                 }
                 set_figure(0, f->id);
                 f->set_home(id);
 
-            } else if (task == WAREHOUSE_TASK_GETTING_MOAR && !has_figure_of_type(1, FIGURE_STORAGE_YARD_DELIVERCART)) {
+            } else if (task == STORAGEYARD_TASK_GETTING_MOAR && !has_figure_of_type(1, FIGURE_STORAGE_YARD_DELIVERCART)) {
                 figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access.x(), road_access.y(), DIR_4_BOTTOM_LEFT);
                 f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 
@@ -1205,7 +1205,7 @@ bool building::figure_generate() {
         // single building type
         switch (type) {
         case BUILDING_STORAGE_YARD:
-            spawn_figure_warehouse();
+            spawn_figure_storageyard();
             break;
         case BUILDING_GRANARY:
             spawn_figure_granary();

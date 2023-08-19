@@ -71,7 +71,7 @@ static bool PTAH_warehouse_restock() {
             continue;
         int total_stored = 0;
         for (int j = 0; j < 6; ++j)
-            total_stored += building_warehouse_get_amount(b, resources[j]);
+            total_stored += building_storageyard_get_amount(b, resources[j]);
         if (total_stored > 0 && total_stored < lowest_stock_found) {
             lowest_stock_found = total_stored;
             chosen_yard = b;
@@ -82,15 +82,15 @@ static bool PTAH_warehouse_restock() {
     int lowest_resource_found = 10000;
     if (lowest_stock_found > 0 && chosen_yard != nullptr) {
         for (int i = 0; i < 6; ++i) {
-            int stored = building_warehouse_get_amount(chosen_yard, resources[i]);
+            int stored = building_storageyard_get_amount(chosen_yard, resources[i]);
             if (stored > 0 && stored < lowest_resource_found) {
                 lowest_resource_found = stored;
                 chosen_resource = resources[i];
             }
         }
         if (chosen_resource > 0) {
-            building_warehouse_add_resource(chosen_yard, chosen_resource, 999999); // because I'm lazy.
-            if (building_warehouse_get_amount(chosen_yard, chosen_resource) == lowest_resource_found)
+            building_storageyard_add_resource(chosen_yard, chosen_resource, 999999); // because I'm lazy.
+            if (building_storageyard_get_amount(chosen_yard, chosen_resource) == lowest_resource_found)
                 return false;
             else
                 return true;
@@ -144,7 +144,7 @@ static bool PTAH_warehouse_destruction() {
 
         int total_stored = 0;
         for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1))
-            total_stored += building_warehouse_get_amount(b, r);
+            total_stored += building_storageyard_get_amount(b, r);
 
         if (total_stored > max_stored) {
             max_stored = total_stored;

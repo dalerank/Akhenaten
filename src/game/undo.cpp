@@ -307,7 +307,7 @@ void game_undo_perform(void) {
                 building* b = building_get(data.buildings[i].id);
                 if (b->type == BUILDING_ORACLE
                     || (b->type >= BUILDING_TEMPLE_COMPLEX_OSIRIS && b->type <= BUILDING_TEMPLE_COMPLEX_BAST))
-                    building_warehouses_add_resource(RESOURCE_MARBLE, 2);
+                    building_storageyards_add_resource(RESOURCE_MARBLE, 2);
 
                 b->state = BUILDING_STATE_UNDO;
             }

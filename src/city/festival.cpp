@@ -74,10 +74,7 @@ void city_festival_schedule(void) {
     city_finance_process_requests_and_festivals(cost);
 
     if (city_data.festival.selected.size == FESTIVAL_GRAND) {
-        if (GAME_ENV == ENGINE_ENV_C3)
-            building_warehouses_remove_resource(RESOURCE_BEER, city_data.festival.grand_alcohol);
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            building_warehouses_remove_resource(RESOURCE_BEER, city_data.festival.grand_alcohol);
+        building_storageyard_remove_resource(RESOURCE_BEER, city_data.festival.grand_alcohol);
     }
 }
 

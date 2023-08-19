@@ -1226,29 +1226,29 @@ void window_building_draw_warehouse(building_info_context* c) {
     data.building_id = c->building_id;
     if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        const resources_list* list = city_resource_get_available();
-        for (int i = 0; i < list->size; i++) {
-            e_resource resource = list->items[i];
-            int x, y;
-            if (i < 5) { // column 1
-                x = c->x_offset + 20;
-                y = c->y_offset + 24 * i + 36;
-            } else if (i < 10) { // column 2
-                x = c->x_offset + 170;
-                y = c->y_offset + 24 * (i - 5) + 36;
-            } else { // column 3
-                x = c->x_offset + 320;
-                y = c->y_offset + 24 * (i - 10) + 36;
-            }
-            int amount = building_warehouse_get_amount(b, resource);
-            int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource
-                           + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-            ImageDraw::img_generic(image_id, x, y);
-            int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_SMALL_PLAIN);
-            lang_text_draw(23, resource, x + 24 + width, y + 7, FONT_SMALL_PLAIN);
-        }
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    //if (GAME_ENV == ENGINE_ENV_C3) {
+    //    const resources_list* list = city_resource_get_available();
+    //    for (int i = 0; i < list->size; i++) {
+    //        e_resource resource = list->items[i];
+    //        int x, y;
+    //        if (i < 5) { // column 1
+    //            x = c->x_offset + 20;
+    //            y = c->y_offset + 24 * i + 36;
+    //        } else if (i < 10) { // column 2
+    //            x = c->x_offset + 170;
+    //            y = c->y_offset + 24 * (i - 5) + 36;
+    //        } else { // column 3
+    //            x = c->x_offset + 320;
+    //            y = c->y_offset + 24 * (i - 10) + 36;
+    //        }
+    //        int amount = building_storageyard_get_amount(b, resource);
+    //        int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+    //        ImageDraw::img_generic(image_id, x, y);
+    //        int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_SMALL_PLAIN);
+    //        lang_text_draw(23, resource, x + 24 + width, y + 7, FONT_SMALL_PLAIN);
+    //    }
+    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) 
+    {
         int x = c->x_offset + 20;
         int y = c->y_offset + 45;
         int lines = 0;
@@ -1256,11 +1256,10 @@ void window_building_draw_warehouse(building_info_context* c) {
         const resources_list* list = city_resource_get_available();
         for (int i = 0; i < list->size; i++) {
             e_resource resource = list->items[i];
-            int loads = building_warehouse_get_amount(b, resource);
+            int loads = building_storageyard_get_amount(b, resource);
             if (loads) {
                 int amount = stack_proper_quantity(loads, resource);
-                int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource
-                               + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+                int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
                 ImageDraw::img_generic(image_id, x, y);
                 int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_NORMAL_BLACK_ON_LIGHT);
                 lang_text_draw(23, resource, x + 24 + width, y + 7, FONT_NORMAL_BLACK_ON_LIGHT);

@@ -57,10 +57,10 @@ int city_resource_food_percentage_produced(void) {
 int city_resource_operating_granaries(void) {
     return city_data.resource.granaries.operating;
 }
-int city_resource_last_used_warehouse(void) {
+int city_resource_last_used_storageyard(void) {
     return city_data.resource.last_used_warehouse;
 }
-void city_resource_set_last_used_warehouse(int warehouse_id) {
+void city_resource_set_last_used_storageyard(int warehouse_id) {
     city_data.resource.last_used_warehouse = warehouse_id;
 }
 
@@ -157,16 +157,16 @@ void city_resource_add_produced_to_granary(int amount) {
 void city_resource_remove_from_granary(int food, int amount) {
     city_data.resource.granary_food_stored[food] -= amount;
 }
-void city_resource_add_to_warehouse(int resource, int amount) {
+void city_resource_add_to_storageyard(int resource, int amount) {
     city_data.resource.space_in_warehouses[resource] -= amount;
     city_data.resource.stored_in_warehouses[resource] += amount;
 }
-void city_resource_remove_from_warehouse(int resource, int amount) {
+void city_resource_remove_from_storageyard(int resource, int amount) {
     city_data.resource.space_in_warehouses[resource] += amount;
     city_data.resource.stored_in_warehouses[resource] -= amount;
 }
 
-void city_resource_calculate_warehouse_stocks(void) {
+void city_resource_calculate_storageyard_stocks(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Warehouse Stocks Update");
     for (int i = 0; i < RESOURCES_MAX; i++) {
         city_data.resource.space_in_warehouses[i] = 0;

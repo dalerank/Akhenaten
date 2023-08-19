@@ -469,7 +469,7 @@ void building_granary_bless(void) {
     }
 }
 
-void building_granary_warehouse_curse(int big) {
+void building_granary_storageyard_curse(int big) {
     int max_stored = 0;
     building* max_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -480,7 +480,7 @@ void building_granary_warehouse_curse(int big) {
         int total_stored = 0;
         if (b->type == BUILDING_STORAGE_YARD) {
             for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
-                total_stored += building_warehouse_get_amount(b, r);
+                total_stored += building_storageyard_get_amount(b, r);
             }
         } else if (b->type == BUILDING_GRANARY) {
             for (int r = RESOURCE_MIN_FOOD; r < RESOURCES_FOODS_MAX; r++) {
@@ -495,17 +495,18 @@ void building_granary_warehouse_curse(int big) {
             max_building = b;
         }
     }
-    if (!max_building)
+    if (!max_building) {
         return;
+    }
     if (big) {
         city_message_disable_sound_for_next_message();
         city_message_post(false, MESSAGE_FIRE, max_building->type, max_building->tile.grid_offset());
         building_destroy_by_fire(max_building);
         map_routing_update_land();
     } else {
-        if (max_building->type == BUILDING_STORAGE_YARD)
-            building_warehouse_remove_resource_curse(max_building, CURSE_LOADS);
-        else if (max_building->type == BUILDING_GRANARY) {
+        if (max_building->type == BUILDING_STORAGE_YARD) {
+            building_storageyard_remove_resource_curse(max_building, CURSE_LOADS);
+        } else if (max_building->type == BUILDING_GRANARY) {
             int amount = building_granary_remove_resource(max_building, RESOURCE_GRAIN, CURSE_LOADS * UNITS_PER_LOAD);
             amount = building_granary_remove_resource(max_building, RESOURCE_MEAT, amount);
             amount = building_granary_remove_resource(max_building, RESOURCE_LETTUCE, amount);

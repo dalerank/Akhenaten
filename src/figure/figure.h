@@ -325,7 +325,7 @@ public:
     void explosion_cloud_action();
     void tax_collector_action();
     void engineer_action();
-    void warehouseman_action();
+    void storageyard_cart_action();
     void prefect_action(); // 10
     void soldier_action();
     void military_standard_action();
@@ -417,16 +417,16 @@ public:
     void cart_update_image();
     void determine_granaryman_destination();
     //    void remove_resource_from_warehouse();
-    void determine_warehouseman_destination();
+    void determine_storageyard_cart_destination();
     ////
-    void cartpusher_calculate_destination(bool warehouseman);
-    void cartpusher_do_deliver(bool warehouseman, int ACTION_DONE);
+    void cartpusher_calculate_destination(bool storageyard_cart);
+    void cartpusher_do_deliver(bool storageyard_cart, int ACTION_DONE);
     void cartpusher_do_retrieve(int ACTION_DONE);
 
     // market.c
     int create_delivery_boy(int leader_id);
     int take_food_from_granary(building* market, building* granary);
-    int take_resource_from_warehouse(building* warehouse);
+    int take_resource_from_storageyard(building* warehouse);
     void figure_delivery_boy_action();
 
     // trader.c
@@ -434,8 +434,8 @@ public:
     void trader_sell(int amounts);
     int trader_total_bought();
     int trader_total_sold();
-    int get_closest_warehouse(int x, int y, int city_id, int distance_from_entry, map_point* warehouse);
-    void go_to_next_warehouse(int x_src, int y_src, int distance_to_entry);
+    int get_closest_storageyard(int x, int y, int city_id, int distance_from_entry, map_point* storageyard);
+    void go_to_next_storageyard(int x_src, int y_src, int distance_to_entry);
     int trade_ship_lost_queue();
     int trade_ship_done_trading();
 
