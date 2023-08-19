@@ -25,6 +25,7 @@ static translation_string all_strings[]
      {TR_CONFIG_PAGE_LABEL, "Страница"},
      {TR_CONFIG_HEADER_UI_CHANGES, "Изменения пользовательского интерфейса"},
      {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Изменения игрового процесса"},
+     {TR_CONFIG_HEADER_GODS_CHANGES, "Изменения логики богов"},
      {TR_CONFIG_SHOW_INTRO_VIDEO, "Проигрывать вступительные видеоролики"},
      {TR_CONFIG_SIDEBAR_INFO, "Дополнительная информация на панели управления"},
      {TR_CONFIG_SMOOTH_SCROLLING, "Включить плавную прокрутку карты"},

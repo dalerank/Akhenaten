@@ -465,34 +465,38 @@ static void enable_entertainment(int level) {
         toggle_building(BUILDING_SENET_HOUSE);
     }
 }
+
+struct god_buildings_alias {
+    e_god god;
+    e_building_type types[2];
+};
+
+god_buildings_alias god_buildings_aliases[] = {
+    {GOD_OSIRIS,    {BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS}},
+    {GOD_RA,        {BUILDING_TEMPLE_RA, BUILDING_SHRINE_RA}},
+    {GOD_PTAH,      {BUILDING_TEMPLE_PTAH, BUILDING_SHRINE_PTAH}},
+    {GOD_SETH,      {BUILDING_TEMPLE_SETH, BUILDING_SHRINE_SETH}},
+    {GOD_BAST,      {BUILDING_TEMPLE_BAST, BUILDING_SHRINE_BAST}}
+};
+
 template<typename ... Args>
 static void enable_gods(Args... args) {
     int mask = make_gods_mask(args...);
+    int gods[] = {args...};
 
     toggle_building(BUILDING_FESTIVAL_SQUARE);
-    if (is_god_available(mask, GOD_OSIRIS)) {
-        toggle_building(BUILDING_TEMPLE_OSIRIS);
-        toggle_building(BUILDING_SHRINE_OSIRIS);
+    for (auto &g : gods) {
+        auto &buildings = god_buildings_aliases[g].types;
+        for (auto &b : buildings) {
+            toggle_building(b);
+        }
     }
+}
 
-    if (is_god_available(mask, GOD_RA)) {
-        toggle_building(BUILDING_TEMPLE_RA);
-        toggle_building(BUILDING_SHRINE_RA);
-    }
-
-    if (is_god_available(mask, GOD_PTAH)) {
-        toggle_building(BUILDING_TEMPLE_PTAH);
-        toggle_building(BUILDING_SHRINE_PTAH);
-    }
-
-    if (is_god_available(mask, GOD_SETH)) {
-        toggle_building(BUILDING_TEMPLE_SETH);
-        toggle_building(BUILDING_SHRINE_SETH);
-    }
-
-    if (is_god_available(mask, GOD_BAST)) {
-        toggle_building(BUILDING_TEMPLE_BAST);
-        toggle_building(BUILDING_SHRINE_BAST);
+void building_menu_update_gods_available(e_god god, bool available) {
+    auto &buildings = god_buildings_aliases[god].types;
+    for (auto &b : buildings) {
+        toggle_building(b, available);
     }
 }
 

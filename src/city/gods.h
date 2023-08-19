@@ -7,7 +7,7 @@ void city_gods_reset(void);
 
 int god_known_status(int god);
 
-enum {
+enum e_god_event {
     GOD_EVENT_MAJOR_BLESSING = 1,
     GOD_EVENT_MINOR_BLESSING = 2,
     GOD_EVENT_MAJOR_CURSE = 3,

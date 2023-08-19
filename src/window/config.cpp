@@ -1,7 +1,9 @@
 #include "config.h"
 
+#include "building/menu.h"
 #include "core/game_environment.h"
 #include "core/string.h"
+#include "city/gods.h"
 #include "game/game.h"
 #include "game/system.h"
 #include "graphics/boilerplate.h"
@@ -21,9 +23,10 @@
 #include "window/hotkey_config.h"
 #include "window/plain_message_dialog.h"
 #include "window/select_list.h"
+
 #include <string.h>
 
-#define CONFIG_PAGES 3
+#define CONFIG_PAGES 4
 #define MAX_LANGUAGE_DIRS 20
 
 #define FIRST_BUTTON_Y 72
@@ -39,9 +42,10 @@
 #define ITEM_Y_OFFSET 60
 #define ITEM_HEIGHT 24
 
-static int options_per_page[CONFIG_PAGES] = {12, 14, 13};
+static int options_per_page[CONFIG_PAGES] = {12, 14, 13, 5};
 
 static void toggle_switch(int id, int param2);
+static void toggle_god_disabled(int id, int param2);
 static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
 static void button_hotkeys(int param1, int param2);
@@ -80,93 +84,43 @@ static generic_button checkbox_buttons[] = {
   {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MORE_STOCKPILE, TR_CONFIG_MORE_STOCKPILE},
   {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NO_BUYER_DISTRIBUTION, TR_CONFIG_NO_BUYER_DISTRIBUTION},
   {20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS, TR_CONFIG_FIX_EDITOR_EVENTS},
-  {20,
-   72,
-   20,
-   20,
-   toggle_switch,
-   button_none,
-   CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS,
-   TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS},
-  {20,
-   96,
-   20,
-   20,
-   toggle_switch,
-   button_none,
-   CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD,
-   TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD},
+  {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS, TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS},
+  {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD, TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD},
   {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANARIES_GET_DOUBLE, TR_CONFIG_GRANARIES_GET_DOUBLE},
-  {20,
-   144,
-   20,
-   20,
-   toggle_switch,
-   button_none,
-   CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD,
-   TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD},
+  {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD, TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD},
   {20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FARMS_DELIVER_CLOSE, TR_CONFIG_FARMS_DELIVER_CLOSE},
-  {20,
-   192,
-   20,
-   20,
-   toggle_switch,
-   button_none,
-   CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES,
-   TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES},
+  {20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES, TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES},
   {20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ALL_HOUSES_MERGE, TR_CONFIG_ALL_HOUSES_MERGE},
-  {20,
-   240,
-   20,
-   20,
-   toggle_switch,
-   button_none,
-   CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE,
-   TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE},
-  {20,
-   264,
-   20,
-   20,
-   toggle_switch,
-   button_none,
-   CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY,
-   TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY},
+  {20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE},
+  {20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY, TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY},
   {20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MULTIPLE_BARRACKS, TR_CONFIG_MULTIPLE_BARRACKS},
-  {20,
-   312,
-   20,
-   20,
-   toggle_switch,
-   button_none,
-   CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT,
-   TR_CONFIG_NOT_ACCEPTING_WAREHOUSES},
-
-  {20,
-   336,
-   20,
-   20,
-   toggle_switch,
-   button_none,
-   CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS,
-   TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS},
-
+  {20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT, TR_CONFIG_NOT_ACCEPTING_WAREHOUSES},
+  {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS, TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS},
   {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIREMAN_RETUNING, TR_CONFIG_FIREMAN_RETURNING},
+
+  // GODS
+  {20, 72, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_OSIRIS_DISABLED, TR_CONFIG_GOD_OSIRIS_DISABLED},
+  {20, 96, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_RA_DISABLED, TR_CONFIG_GOD_RA_DISABLED},
+  {20, 120, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_PTAH_DISABLED, TR_CONFIG_GOD_PTAH_DISABLED},
+  {20, 144, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_SETH_DISABLED, TR_CONFIG_GOD_SETH_DISABLED},
+  {20, 168, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_BAST_DISABLED, TR_CONFIG_GOD_BAST_DISABLED},
 };
 
-static generic_button language_button
-  = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
+static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
-static generic_button bottom_buttons[]
-  = {{250, 436, 150, 30, button_reset_defaults, button_none, 0, TR_BUTTON_RESET_DEFAULTS},
-     {410, 436, 100, 30, button_close, button_none, 0, TR_BUTTON_CANCEL},
-     {520, 436, 100, 30, button_close, button_none, 1, TR_BUTTON_OK},
-     {20, 436, 180, 30, button_hotkeys, button_none, 0, TR_BUTTON_CONFIGURE_HOTKEYS}};
+static generic_button bottom_buttons[]= {
+  {250, 436, 150, 30, button_reset_defaults, button_none, 0, TR_BUTTON_RESET_DEFAULTS},
+  {410, 436, 100, 30, button_close, button_none, 0, TR_BUTTON_CANCEL},
+  {520, 436, 100, 30, button_close, button_none, 1, TR_BUTTON_OK},
+  {20, 436, 180, 30, button_hotkeys, button_none, 0, TR_BUTTON_CONFIGURE_HOTKEYS}
+};
 
-static generic_button page_buttons[] = {{20, 16, 25, 25, button_page, button_none, 0, TR_BUTTON_PREV},
-                                        {50, 16, 25, 25, button_page, button_none, 1, TR_BUTTON_NEXT}};
+static generic_button page_buttons[] = {
+  {20, 16, 25, 25, button_page, button_none, 0, TR_BUTTON_PREV},
+  {50, 16, 25, 25, button_page, button_none, 1, TR_BUTTON_NEXT}
+};
 
-static int page_names[]
-  = {TR_CONFIG_HEADER_UI_CHANGES, TR_CONFIG_HEADER_GAMEPLAY_CHANGES, TR_CONFIG_HEADER_GAMEPLAY_CHANGES};
+static int page_names[] = {TR_CONFIG_HEADER_UI_CHANGES, TR_CONFIG_HEADER_GAMEPLAY_CHANGES, TR_CONFIG_HEADER_GAMEPLAY_CHANGES, TR_CONFIG_HEADER_GODS_CHANGES};
 
 struct window_config_ext_data_t {
     int focus_button;
@@ -341,18 +295,11 @@ static void button_page(int param1, int param2) {
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto& data = g_window_config_ext_data;
     const mouse* m_dialog = mouse_in_dialog(m);
-    int mouse_button = 0;
-    mouse_button |= generic_buttons_min_handle_mouse(m_dialog,
-                                                     0,
-                                                     0,
-                                                     checkbox_buttons,
-                                                     data.starting_option + options_per_page[data.page],
-                                                     &data.focus_button,
-                                                     data.starting_option);
-    mouse_button |= generic_buttons_handle_mouse(
-      m_dialog, 0, 0, bottom_buttons, std::size(bottom_buttons), &data.bottom_focus_button);
-    mouse_button
-      |= generic_buttons_handle_mouse(m_dialog, 0, 0, page_buttons, std::size(page_buttons), &data.page_focus_button);
+    bool mouse_button = false;
+
+    mouse_button |= generic_buttons_min_handle_mouse(m_dialog, 0, 0, checkbox_buttons, data.starting_option + options_per_page[data.page], &data.focus_button, data.starting_option);
+    mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, std::size(bottom_buttons), &data.bottom_focus_button);
+    mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0, page_buttons, std::size(page_buttons), &data.page_focus_button);
     mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
 
     if (!mouse_button && (m->right.went_up || h->escape_pressed)) {
@@ -362,6 +309,17 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         window_go_back();
     }
 }
+
+static void toggle_god_disabled(int key, int param2) {
+    auto& data = g_window_config_ext_data;
+    data.config_values[key].new_value = 1 - data.config_values[key].new_value;
+
+    e_god god = (e_god)(key - CONFIG_GP_CH_GOD_OSIRIS_DISABLED);
+    building_menu_update_gods_available(god, !data.config_values[key].new_value);
+
+    window_invalidate();
+}
+
 static void toggle_switch(int key, int param2) {
     auto& data = g_window_config_ext_data;
     data.config_values[key].new_value = 1 - data.config_values[key].new_value;
@@ -433,11 +391,12 @@ static void draw_background() {
     for (int i = 0; i < options_per_page[data.page]; i++) {
         int value = i + data.starting_option;
         generic_button* btn = &checkbox_buttons[value];
-        if (data.config_values[btn->parameter1].new_value)
+        if (data.config_values[btn->parameter1].new_value) {
             text_draw(string_from_ascii("x"), btn->x + 6, btn->y + 3, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        }
     }
 
-    for (int i = 0; i < sizeof(bottom_buttons) / sizeof(*bottom_buttons); i++) {
+    for (int i = 0; i < std::size(bottom_buttons); i++) {
         text_draw_centered(translation_for(bottom_buttons[i].parameter2),
                            bottom_buttons[i].x,
                            bottom_buttons[i].y + 9,
@@ -445,7 +404,8 @@ static void draw_background() {
                            FONT_NORMAL_BLACK_ON_LIGHT,
                            0);
     }
-    for (int i = 0; i < sizeof(page_buttons) / sizeof(*page_buttons); i++) {
+    
+    for (int i = 0; i < std::size(page_buttons); i++) {
         text_draw_centered(translation_for(page_buttons[i].parameter2),
                            page_buttons[i].x,
                            page_buttons[i].y + 6,

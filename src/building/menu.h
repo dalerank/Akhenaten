@@ -1,7 +1,7 @@
-#ifndef BUILDING_MENU_H
-#define BUILDING_MENU_H
+#pragma once
 
 #include "building/type.h"
+#include "city/constants.h"
 
 enum e_build_menu {
     BUILD_MENU_VACANT_HOUSE = 0,
@@ -91,6 +91,7 @@ e_building_type building_menu_type(int submenu, int item);
 
 void building_menu_update_monuments();
 void building_menu_update_temple_complexes();
+void building_menu_update_gods_available(e_god god, bool available);
 
 /**
  * Checks whether the building menu has changed.
@@ -98,5 +99,3 @@ void building_menu_update_temple_complexes();
  * @return True if the building menu has changed
  */
 int building_menu_has_changed(void);
-
-#endif // BUILDING_MENU_H
