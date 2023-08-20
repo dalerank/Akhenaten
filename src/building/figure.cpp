@@ -708,14 +708,18 @@ void building::spawn_figure_tax_collector() {
 
 void building::spawn_figure_industry() {
     check_labor_problem();
-    if (has_road_access) {
-        common_spawn_labor_seeker(50);
-        if (has_figure_of_type(0, FIGURE_CART_PUSHER))
-            return;
-        if (building_industry_has_produced_resource(this)) {
-            building_industry_start_new_production(this);
-            create_cartpusher(output_resource_id, 100);
-        }
+    if (!has_road_access) {
+        return;
+    }
+
+    common_spawn_labor_seeker(50);
+    if (has_figure_of_type(0, FIGURE_CART_PUSHER)) {
+        return;
+    }
+
+    if (building_industry_has_produced_resource(this)) {
+        building_industry_start_new_production(this);
+        create_cartpusher(output_resource_id, 100);
     }
 }
 void building::spawn_figure_farms() {

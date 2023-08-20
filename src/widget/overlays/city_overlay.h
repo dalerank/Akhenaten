@@ -16,6 +16,9 @@ enum e_column_color {
     COLUMN_COLOR_BLUE = 12,
 };
 
+inline bool show_figure_none(const figure *f) { return false; }
+inline int get_column_height_none(const building* b) { return NO_COLUMN; }
+
 struct city_overlay {
     int type = -1;
     int column_type = -1;

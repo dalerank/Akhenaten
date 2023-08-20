@@ -73,10 +73,6 @@ static int get_column_height_damage(const building* b) {
     return b->damage_risk / 100;
 }
 
-static int get_column_height_none(const building* b) {
-    return NO_COLUMN;
-}
-
 static int get_tooltip_fire(tooltip_context* c, const building* b) {
     if (b->fire_risk <= 0)
         return 46;

@@ -11,6 +11,7 @@
 #include "widget/overlays/city_overlay_risks.h"
 #include "widget/overlays/city_overlay_criminal.h"
 #include "widget/overlays/city_overlay_fertility.h"
+#include "widget/overlays/city_overlay_desirability.h"
 
 const city_overlay* g_city_overlay = 0;
 

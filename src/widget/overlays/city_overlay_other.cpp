@@ -29,16 +29,14 @@ static int show_building_water(const building* b) {
     return b->type == BUILDING_WELL || b->type == BUILDING_MENU_BEAUTIFICATION || b->type == BUILDING_WATER_LIFT
            || b->type == BUILDING_WATER_SUPPLY;
 }
-static int show_building_desirability(const building* b) {
-    return 0;
-}
 
 static int show_figure_food_stocks(const figure* f) {
     if (f->type == FIGURE_MARKET_BUYER || f->type == FIGURE_MARKET_TRADER || f->type == FIGURE_DELIVERY_BOY
         || f->type == FIGURE_FISHING_BOAT) {
         return 1;
-    } else if (f->type == FIGURE_CART_PUSHER)
+    } else if (f->type == FIGURE_CART_PUSHER) {
         return resource_is_food(f->get_resource());
+    }
 
     return 0;
 }
@@ -47,9 +45,6 @@ static int show_figure_tax_income(const figure* f) {
 }
 static int show_figure_water(const figure* f) {
     return f->type == FIGURE_WATER_CARRIER;
-}
-static int show_figure_none(const figure* f) {
-    return 0;
 }
 
 static int get_column_height_food_stocks(const building* b) {
@@ -78,9 +73,6 @@ static int get_column_height_tax_income(const building* b) {
 }
 static int get_column_height_water(const building* b) {
     return b->house_size ? b->data.house.bathhouse * 17 / 10 : NO_COLUMN;
-}
-static int get_column_height_none(const building* b) {
-    return NO_COLUMN;
 }
 
 static int get_tooltip_food_stocks(tooltip_context* c, const building* b) {
@@ -131,17 +123,6 @@ static int get_tooltip_water(tooltip_context* c, int grid_offset) {
     return 0;
 }
 
-static int get_tooltip_desirability(tooltip_context* c, int grid_offset) {
-    int desirability = map_desirability_get(grid_offset);
-    if (desirability < 0)
-        return 91;
-    else if (desirability == 0)
-        return 92;
-    else {
-        return 93;
-    }
-}
-
 const city_overlay* city_overlay_for_food_stocks(void) {
     static city_overlay overlay = {
         OVERLAY_FOOD_STOCKS,
@@ -167,15 +148,6 @@ const city_overlay* city_overlay_for_tax_income(void) {
                                    0,
                                    0};
     return &overlay;
-}
-
-static int has_deleted_building(int grid_offset) {
-    if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
-        return 0;
-
-    building* b = building_at(grid_offset);
-    b = b->main();
-    return b->id && (b->is_deleted || map_property_is_deleted(b->tile.grid_offset()));
 }
 
 static int terrain_on_water_overlay(void) {
@@ -246,97 +218,5 @@ const city_overlay* city_overlay_for_water(void) {
                                    0,
                                    draw_footprint_water,
                                    draw_top_water};
-    return &overlay;
-}
-
-static int terrain_on_desirability_overlay(void) {
-    return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD
-           | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
-}
-
-static int get_desirability_image_offset(int desirability) {
-    if (desirability < -10)
-        return 0;
-    else if (desirability < -5)
-        return 1;
-    else if (desirability < 0)
-        return 2;
-    else if (desirability == 1)
-        return 3;
-    else if (desirability < 5)
-        return 4;
-    else if (desirability < 10)
-        return 5;
-    else if (desirability < 15)
-        return 6;
-    else if (desirability < 20)
-        return 7;
-    else if (desirability < 25)
-        return 8;
-    else
-        return 9;
-}
-static void draw_footprint_desirability(vec2i pixel, map_point point) {
-    int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
-    color color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
-    if (map_terrain_is(grid_offset, terrain_on_desirability_overlay())
-        && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        // display normal tile
-        if (map_property_is_draw_tile(grid_offset))
-            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
-
-    } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
-        // display empty land/groundwater
-        int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-        ImageDraw::isometric_from_drawtile(image_id, x, y, color_mask);
-    } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_desirability_get(grid_offset)) {
-        if (has_deleted_building(grid_offset))
-            color_mask = COLOR_MASK_RED;
-
-        int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
-        ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
-    } else
-        ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
-}
-// static void draw_top_desirability(pixel_coordinate pixel, map_point point) {
-//     int grid_offset = point.grid_offset();
-//     int x = pixel.x;
-//     int y = pixel.y;
-//     color color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
-//     if (map_terrain_is(grid_offset, terrain_on_desirability_overlay()) &&
-//         !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-//         // display normal tile
-//         if (map_property_is_draw_tile(grid_offset))
-//             ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask,
-//             city_view_get_scale_float());
-//
-//     } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
-//         // groundwater, no top needed
-//     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_desirability_get(grid_offset)) {
-//         if (has_deleted_building(grid_offset))
-//             color_mask = COLOR_MASK_RED;
-//
-//         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
-//         ImageDraw::isometric_top_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y,
-//                                                color_mask, city_view_get_scale_float());
-//     } else
-//         ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask,
-//         city_view_get_scale_float());
-// }
-const city_overlay* city_overlay_for_desirability(void) {
-    static city_overlay overlay = {
-      OVERLAY_DESIRABILITY,
-      COLUMN_TYPE_WATER_ACCESS,
-      show_building_desirability,
-      show_figure_none,
-      get_column_height_none,
-      get_tooltip_desirability,
-      0,
-      draw_footprint_desirability,
-      nullptr
-      //            draw_top_desirability
-    };
     return &overlay;
 }

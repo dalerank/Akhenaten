@@ -32,6 +32,7 @@ static int get_tooltip_fertility(tooltip_context* c, const building* b) {
             return 58;
         }
     }
+    return 58;
 }
 
 static int get_column_height_fertility_none(const building* b) {

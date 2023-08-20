@@ -149,6 +149,8 @@ static const char* get_overlay_text(int group, int index) {
         return "Native";
     case OVERLAY_FERTILITY:
         return "Fertility";
+    case OVERLAY_DESIRABILITY:
+        return "Desirability";
     }
     return (const char*)lang_get_string(group, index);
 }
