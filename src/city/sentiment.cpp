@@ -10,6 +10,7 @@
 #include "core/profiler.h"
 #include "game/difficulty.h"
 #include "game/tutorial.h"
+#include "game/time.h"
 #include "io/config/config.h"
 
 static const int SENTIMENT_PER_TAX_RATE[26] = {3, 2, 2, 2, 1, 1, 1, 0, 0, -1, -2, -2, -3, -3, -3, -5, -5, -5, -5, -6, -6, -6, -6, -6, -6, -6};
@@ -32,6 +33,15 @@ int city_sentiment_low_mood_cause(void) {
 
 void city_set_can_create_mugger(bool v) { city_data.sentiment.can_create_mugger = v; }
 void city_set_can_create_protestor(bool v) { city_data.sentiment.can_create_protestor = v; }
+
+void city_show_message_criminal(int message_id, int money_stolen, int tile_offset) {
+    bool show_popup_message = false;
+    if (city_data.sentiment.last_mugger_message <= 0) {
+        city_data.sentiment.last_mugger_message = 90;
+        show_popup_message = true;
+    }
+    city_message_post(show_popup_message, MESSAGE_TUTORIAL_CRIME, money_stolen, tile_offset);
+}
 
 void city_sentiment_change_happiness(int amount) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -158,7 +168,29 @@ static int get_sentiment_contribution_employment(void) {
     }
 }
 
-void city_sentiment_update(void) {
+void city_sentiment_update_day() {
+    city_data.sentiment.last_mugger_message = std::max<short>(0, city_data.sentiment.last_mugger_message--);
+
+    if (game_time_day() % 8 == 0) {
+        city_sentiment_update();
+    }
+}
+
+void city_criminals_update_day() {
+    for (building* b = building_begin(); b != building_end(); ++b) {
+        if (b->state == BUILDING_STATE_VALID && b->house_size) {
+            if (b->sentiment.house_happiness >= 50) {
+                int delta = (b->sentiment.house_happiness - 50) / 25;
+                b->house_criminal_active -= std::max<int>(0, b->house_criminal_active - delta);
+            } else if (b->sentiment.house_happiness < 50) {
+                int delta = (100 - b->sentiment.house_happiness) / 10;
+                b->house_criminal_active = std::min<int>(b->house_criminal_active + delta, 100);
+            }
+        }
+    }
+}
+
+void city_sentiment_update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Sentiment Update");
     city_population_check_consistency();
 

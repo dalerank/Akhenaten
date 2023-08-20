@@ -117,15 +117,15 @@ static void advance_month(void) {
     }
 }
 
-static void advance_day(void) {
+static void advance_day() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Advance Day");
     //    map_advance_floodplain_growth();
 
     if (game_time_advance_day())
         advance_month();
 
-    if (game_time_day() % 8 == 0)
-        city_sentiment_update();
+    city_sentiment_update_day();
+    city_criminals_update_day();
 
     tutorial_on_day_tick();
 }
@@ -268,8 +268,10 @@ static void advance_tick(void) {
     case 50:
         break;
     }
-    if (game_time_advance_tick())
+
+    if (game_time_advance_tick()) {
         advance_day();
+    }
 }
 
 void game_tick_run(void) {

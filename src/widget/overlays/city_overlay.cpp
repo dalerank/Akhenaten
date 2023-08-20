@@ -13,6 +13,7 @@
 #include "widget/overlays/city_overlay_fertility.h"
 #include "widget/overlays/city_overlay_desirability.h"
 #include "widget/overlays/city_overlay_bazaar_access.h"
+#include "widget/overlays/city_overlay_fire.h"
 
 const city_overlay* g_city_overlay = 0;
 

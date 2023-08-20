@@ -174,7 +174,8 @@ void game_cheat_parse_command(uint8_t* command) {
     int next_arg = parse_word(command, command_to_call);
     for (auto& handle : g_cheat_commands) {
         if (stricmp((char*)command_to_call, handle.name) == 0) {
-            handle.command(command + next_arg);
+            uint8_t *args = next_arg >= strlen((const char *)handle.name) ? (command + next_arg) : nullptr;
+            handle.command(args);
         }
     }
 }

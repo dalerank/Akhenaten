@@ -237,6 +237,7 @@ struct city_data_t {
         int32_t criminals; // muggers+rioters
         int can_create_mugger;
         int can_create_protestor;
+        short last_mugger_message;
     } sentiment;
     struct {
         int32_t num_hospital_workers;

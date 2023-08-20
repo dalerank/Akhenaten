@@ -157,6 +157,7 @@ const model_building* model_get_building(int type) {
     //    }
     return &g_model_data.buildings[setting_difficulty()][type];
 }
+
 const model_house* model_get_house(int level) {
     return &g_model_data.houses[setting_difficulty()][level];
 }

@@ -61,8 +61,8 @@ static void button_back(int param1, int param2) {
 }
 
 static void send_command(int param1, int param2) {
-    uint8_t command_copy[MAX_COMMAND_SIZE];
-    string_copy(command_input.text, command_copy, MAX_COMMAND_SIZE);
+    bstring64 command_copy;
+    command_copy = command_input.text;
     button_back(0, 0);
     logs::info("Command received: %s", (char*)command_copy);
     city_warning_show_console(command_copy);

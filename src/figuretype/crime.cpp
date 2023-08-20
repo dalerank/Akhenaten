@@ -92,8 +92,8 @@ static void generate_mugger(building* b) {
                     money_stolen = 400 - random_byte() / 2;
                 }
 
-                city_message_post(true, MESSAGE_TUTORIAL_CRIME, money_stolen, f->tile.grid_offset());
-                city_finance_process_stolen(money_stolen);
+                city_show_message_criminal(MESSAGE_TUTORIAL_CRIME, money_stolen, f->tile.grid_offset());
+                city_finance_process_stolen(money_stolen);              
             } else {
                 int treasury = city_finance_treasury();
                 int money_stolen = 0;
@@ -102,7 +102,7 @@ static void generate_mugger(building* b) {
                 }
 
                 if (money_stolen > 0) {
-                    city_message_post(true, MESSAGE_TUTORIAL_CRIME, money_stolen, f->tile.grid_offset());
+                    city_show_message_criminal(MESSAGE_TUTORIAL_CRIME, money_stolen, f->tile.grid_offset());
                     city_finance_process_stolen(money_stolen);
                 }
             }
@@ -135,7 +135,6 @@ void figure_generate_criminals(void) {
                 b->house_criminal_active = 0;
             } else if (b->sentiment.house_happiness < min_happiness) {
                 min_happiness = b->sentiment.house_happiness;
-                b->house_criminal_active += std::max(0, 100 - b->sentiment.house_happiness) / 10;
                 min_building = b;
             }
         }

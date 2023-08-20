@@ -36,8 +36,10 @@ static int get_tooltip_bazaar_access(tooltip_context* c, const building* b) {
 }
 
 static int get_column_height_bazaar_access(const building* b) {
-    if (b->house_population <= 0)
+    if (b->house_population <= 0) {
         return NO_COLUMN;
+    }
+
     return std::clamp<int>(b->data.house.bazaar_access / 10, 0, 8);
 }
 
