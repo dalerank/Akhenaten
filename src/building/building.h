@@ -328,12 +328,22 @@ building* building_first(e_building_type type);
 
 building* building_next(int id, e_building_type type);
 building* building_get(int id);
+
 inline building* building_begin() {
     return building_get(1);
 }
+
 inline building* building_end() {
     return building_get(MAX_BUILDINGS);
 }
+
+template<typename T>
+void building_for_each(T func) {
+    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
+        func(*it);
+    }
+}
+
 
 template <typename T>
 inline building* building_first(T pred) {

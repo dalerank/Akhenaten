@@ -885,11 +885,13 @@ void building::spawn_figure_dock() {
 void building::spawn_figure_storageyard() {
     check_labor_problem();
     building* space = this;
+    
     for (int i = 0; i < 8; i++) {
         space = space->next();
         if (space->id)
             space->show_on_problem_overlay = show_on_problem_overlay;
     }
+
     if (has_road_access) {
         common_spawn_labor_seeker(100);
         e_resource resource = RESOURCE_NONE;

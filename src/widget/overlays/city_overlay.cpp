@@ -88,7 +88,7 @@ const city_overlay* get_city_overlay(void) {
     return g_city_overlay;
 }
 
-bool select_city_overlay(void) {
+bool select_city_overlay() {
     if (!g_city_overlay || g_city_overlay->type != game_state_overlay())
         g_city_overlay = set_city_overlay();
 
