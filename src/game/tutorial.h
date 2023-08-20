@@ -11,11 +11,12 @@ enum tutorial_availability {
 
 struct tutorial_flags_t {
     struct {
-        int fire;
-        int crime;
-        int collapse;
-        int senate_built;
-    } tutorial1;
+        bool fire;
+        bool population_150_reached;
+        bool gamemeat_400_stored;
+        bool collapse;
+    } tutorial_1;
+
     struct {
         int granary_built;
         int population_250_reached;
@@ -26,13 +27,11 @@ struct tutorial_flags_t {
     struct {
         int disease;
     } tutorial3;
+
     struct {
         bool flags[41];
         //
-        bool fire;
-        bool population_150_reached;
-        bool gamemeat_400_stored;
-        bool collapse;
+        bool crime;
         bool disease;
         bool gold_mined_500;
         bool temples_built;

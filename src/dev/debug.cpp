@@ -1227,16 +1227,16 @@ void draw_debug_ui(int x, int y) {
             int f = flags->pharaoh.flags[i];
             switch (i) {
             case 0:
-                f = flags->pharaoh.fire;
+                f = flags->tutorial_1.fire;
                 break;
             case 1:
-                f = flags->pharaoh.population_150_reached;
+                f = flags->tutorial_1.population_150_reached;
                 break;
             case 2:
-                f = flags->pharaoh.gamemeat_400_stored;
+                f = flags->tutorial_1.gamemeat_400_stored;
                 break;
             case 3:
-                f = flags->pharaoh.collapse;
+                f = flags->tutorial_1.collapse;
                 break;
             case 4:
                 f = flags->pharaoh.gold_mined_500;
