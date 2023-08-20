@@ -53,6 +53,7 @@ void figure::priest_action() {
         break;
     }
 }
+
 void figure::market_trader_action() {
     building* market = home();
     if (action_state == FIGURE_ACTION_125_ROAMING) {
@@ -62,6 +63,7 @@ void figure::market_trader_action() {
             roam_length = max_roam_length;
     }
 }
+
 void figure::tax_collector_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Tax Collector");
     building* b = home();

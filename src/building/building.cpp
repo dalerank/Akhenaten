@@ -817,11 +817,11 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.devolve_delay);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.evolve_text_id);
 
-        if (version <= 160) {
-            b->data.house.shrine_access = 0;
-        } else {
-            iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.shrine_access);
-        }
+        if (version <= 160) { b->data.house.shrine_access = 0; } 
+        else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.shrine_access); }
+
+        if (version <= 162) { b->data.house.bazaar_access = 0; } 
+        else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.bazaar_access); }
 
     } else if (b->type == BUILDING_MARKET) {
         iob->bind____skip(2);

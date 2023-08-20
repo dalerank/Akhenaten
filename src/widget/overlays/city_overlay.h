@@ -6,7 +6,11 @@
 
 constexpr int NO_COLUMN = -1;
 
-enum e_column_type { COLUMN_TYPE_RISK, COLUMN_TYPE_WATER_ACCESS };
+enum e_column_type {
+    COLUMN_TYPE_RISK,
+    COLUMN_TYPE_POSITIVE,
+    COLUMN_TYPE_WATER_ACCESS
+};
 
 enum e_column_color {
     COLUMN_COLOR_PLAIN = 0,

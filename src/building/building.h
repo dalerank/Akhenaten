@@ -167,6 +167,7 @@ public:
             unsigned char shrine_access;
             unsigned char devolve_delay;
             unsigned char evolve_text_id;
+            unsigned char bazaar_access;
         } house;
         struct {
             unsigned char variant;

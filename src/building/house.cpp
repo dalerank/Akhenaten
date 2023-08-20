@@ -465,10 +465,12 @@ void building_house_devolve_from_large_insula(building* house) {
 void building_house_devolve_from_large_villa(building* house) {
     int inventory_per_tile[INVENTORY_MAX];
     int inventory_remainder[INVENTORY_MAX];
+
     for (int i = 0; i < INVENTORY_MAX; i++) {
         inventory_per_tile[i] = house->data.house.inventory[i] / 6;
         inventory_remainder[i] = house->data.house.inventory[i] % 6;
     }
+
     int population_per_tile = house->house_population / 6;
     int population_remainder = house->house_population % 6;
 

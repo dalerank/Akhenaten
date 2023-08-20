@@ -520,6 +520,11 @@ static void draw_overlay_column(int x, int y, int height, int column_style) {
         else
             image_id += COLUMN_COLOR_RED;
         break;
+
+    case COLUMN_TYPE_POSITIVE:
+        image_id += COLUMN_COLOR_BLUE;
+        break;
+
     case COLUMN_TYPE_WATER_ACCESS:
         image_id += COLUMN_COLOR_BLUE;
         break;

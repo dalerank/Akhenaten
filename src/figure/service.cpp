@@ -10,7 +10,7 @@
 
 #define MAX_COVERAGE 96
 
-static int provide_culture(int x, int y, void (*callback)(building*)) {
+static int provide_service(int x, int y, void (*callback)(building*)) {
     int serviced = 0;
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
@@ -29,6 +29,11 @@ static int provide_culture(int x, int y, void (*callback)(building*)) {
     }
     return serviced;
 }
+
+static int provide_culture(int x, int y, void (*callback)(building*)) {
+    return provide_service(x, y, callback);
+}
+
 static int provide_entertainment(int x, int y, int shows, void (*callback)(building*, int)) {
     int serviced = 0;
     int x_min, y_min, x_max, y_max;
@@ -136,6 +141,9 @@ static void hospital_coverage(building* b) {
 }
 static void water_supply_coverage(building* b) {
     b->data.house.bathhouse = MAX_COVERAGE;
+}
+static void bazaar_coverage(building* b) {
+    b->data.house.bazaar_access = MAX_COVERAGE;
 }
 static void engineer_coverage(building* b, int* max_damage_seen) {
     if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_YARD_SPACE)
@@ -284,6 +292,7 @@ int figure::figure_service_provide_coverage() {
     }
     case FIGURE_MARKET_TRADER:
         houses_serviced = provide_market_goods(home(), tile.x(), tile.y());
+        provide_service(tile.x(), tile.y(), bazaar_coverage);
         break;
     case FIGURE_MARKET_BUYER:
         if (!config_get(CONFIG_GP_CH_NO_BUYER_DISTRIBUTION))

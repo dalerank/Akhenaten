@@ -39,8 +39,10 @@ int building_market_get_max_goods_stock(building* market) {
 }
 
 static void update_food_resource(struct resource_data* data, int resource, const building* b, int distance) {
-    if (!resource)
+    if (!resource) {
         return;
+    }
+
     if (b->data.granary.resource_stored[resource] > 100) {
         data->num_buildings++;
         if (distance < data->distance) {
@@ -76,13 +78,14 @@ void unaccept_all_goods(building* market) {
 }
 
 int building_market_get_storage_destination(building* market) {
-    struct resource_data resources[INVENTORY_MAX];
+    resource_data resources[INVENTORY_MAX];
 
     for (int i = 0; i < INVENTORY_MAX; i++) {
         resources[i].building_id = 0;
         resources[i].num_buildings = 0;
         resources[i].distance = 40;
     }
+
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)

@@ -26,8 +26,7 @@ static int show_building_tax_income(const building* b) {
     return b->type == BUILDING_TAX_COLLECTOR || b->type == BUILDING_SENATE_UPGRADED;
 }
 static int show_building_water(const building* b) {
-    return b->type == BUILDING_WELL || b->type == BUILDING_MENU_BEAUTIFICATION || b->type == BUILDING_WATER_LIFT
-           || b->type == BUILDING_WATER_SUPPLY;
+    return b->type == BUILDING_WELL || b->type == BUILDING_MENU_BEAUTIFICATION || b->type == BUILDING_WATER_LIFT || b->type == BUILDING_WATER_SUPPLY;
 }
 
 static int show_figure_food_stocks(const figure* f) {
@@ -76,24 +75,26 @@ static int get_column_height_water(const building* b) {
 }
 
 static int get_tooltip_food_stocks(tooltip_context* c, const building* b) {
-    if (b->house_population <= 0)
+    if (b->house_population <= 0) {
         return 0;
+    }
 
-    if (!model_get_house(b->subtype.house_level)->food_types)
+    if (!model_get_house(b->subtype.house_level)->food_types) {
         return 104;
-    else {
+    } else {
         int stocks_present = 0;
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
             stocks_present += b->data.house.inventory[i];
         }
+
         int stocks_per_pop = calc_percentage(stocks_present, b->house_population);
-        if (stocks_per_pop <= 0)
+        if (stocks_per_pop <= 0) {
             return 4;
-        else if (stocks_per_pop < 100)
+        } else if (stocks_per_pop < 100) {
             return 5;
-        else if (stocks_per_pop <= 200)
+        } else if (stocks_per_pop <= 200) {
             return 6;
-        else {
+        } else {
             return 7;
         }
     }
@@ -104,21 +105,22 @@ static int get_tooltip_tax_income(tooltip_context* c, const building* b) {
         c->has_numeric_prefix = 1;
         c->numeric_prefix = denarii;
         return 45;
-    } else if (b->house_tax_coverage > 0)
+    } else if (b->house_tax_coverage > 0) {
         return 44;
-    else {
+    } else {
         return 43;
     }
 }
 static int get_tooltip_water(tooltip_context* c, int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_GROUNDWATER)) {
-        if (map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE))
+        if (map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE)) {
             return 2;
-        else {
+        } else {
             return 1;
         }
-    } else if (map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE))
+    } else if (map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE)) {
         return 3;
+    }
 
     return 0;
 }

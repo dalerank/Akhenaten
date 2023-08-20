@@ -40,6 +40,7 @@ void house_service_decay_culture(void) {
         decay(&b->data.house.temple_ptah);
         decay(&b->data.house.temple_seth);
         decay(&b->data.house.temple_bast);
+        decay(&b->data.house.bazaar_access);
     }
 }
 

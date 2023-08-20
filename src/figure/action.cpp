@@ -367,8 +367,9 @@ void figure::action_perform() {
         case FIGURE_BARBER:
         case FIGURE_WATER_CARRIER:
         case FIGURE_PRIEST:
-            if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id))
+            if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id)) {
                 poof();
+            }
             break;
         case FIGURE_HUNTER:
         case FIGURE_REED_GATHERER:
@@ -519,7 +520,7 @@ void figure::action_perform() {
         case 25:
             fishing_boat_action();
             break;
-        case 26:
+        case FIGURE_MARKET_TRADER:
             market_trader_action();
             break;
         case 27:

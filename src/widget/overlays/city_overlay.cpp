@@ -12,6 +12,7 @@
 #include "widget/overlays/city_overlay_criminal.h"
 #include "widget/overlays/city_overlay_fertility.h"
 #include "widget/overlays/city_overlay_desirability.h"
+#include "widget/overlays/city_overlay_bazaar_access.h"
 
 const city_overlay* g_city_overlay = 0;
 
@@ -75,6 +76,8 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_desirability();
     case OVERLAY_FERTILITY:
         return city_overlay_for_fertility();
+    case OVERLAY_BAZAAR_ACCESS:
+        return city_overlay_for_bazaar_access();
     default:
         return 0;
     }
