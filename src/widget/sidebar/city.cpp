@@ -45,80 +45,26 @@ static void button_mission_briefing(int param1, int param2);
 static void button_rotate_north(int param1, int param2);
 static void button_rotate(int clockwise, int param2);
 
-static image_button buttons_overlays_collapse_sidebar[2]
-  = {{128, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 7, button_collapse_expand, button_none, 0, 0, 1},
-     {4,
-      3,
-      117,
-      31,
-      IB_NORMAL,
-      GROUP_SIDEBAR_UPPER_BUTTONS,
-      0,
-      button_overlay,
-      button_help,
-      0,
-      MESSAGE_DIALOG_OVERLAYS,
-      1}};
+static image_button buttons_overlays_collapse_sidebar[2] = {
+    {128, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 7, button_collapse_expand, button_none, 0, 0, 1},
+    {4, 3, 117, 31, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 0, button_overlay, button_help, 0, MESSAGE_DIALOG_OVERLAYS, 1}
+};
 
-static image_button button_expand_sidebar[1]
-  = {{8, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 10, button_collapse_expand, button_none, 0, 0, 1}};
+static image_button button_expand_sidebar[1] = {
+    {8, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 10, button_collapse_expand, button_none, 0, 0, 1}
+};
 
 #define CL_ROW0 21 // 22
 
 static image_button buttons_build_collapsed[12] = {
   {9, CL_ROW0, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 90, button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
   {9, CL_ROW0 + 36, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 94, button_build, button_none, BUILD_MENU_ROAD, 0, 1},
-  {9,
-   CL_ROW0 + 71,
-   36,
-   48,
-   IB_BUILD,
-   GROUP_SIDEBAR_BUTTONS,
-   98,
-   button_build,
-   button_none,
-   BUILD_MENU_CLEAR_LAND,
-   0,
-   1},
+  {9, CL_ROW0 + 71, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 98, button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
   {9, CL_ROW0 + 108, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 102, button_build, button_none, BUILD_MENU_FOOD, 0, 1},
-  {9,
-   CL_ROW0 + 142,
-   36,
-   48,
-   IB_BUILD,
-   GROUP_SIDEBAR_BUTTONS,
-   106,
-   button_build,
-   button_none,
-   BUILD_MENU_INDUSTRY,
-   0,
-   1},
-  {9,
-   CL_ROW0 + 177,
-   36,
-   48,
-   IB_BUILD,
-   GROUP_SIDEBAR_BUTTONS,
-   110,
-   button_build,
-   button_none,
-   BUILD_MENU_DISTRIBUTION,
-   0,
-   1},
-  {9,
-   CL_ROW0 + 212,
-   36,
-   48,
-   IB_BUILD,
-   GROUP_SIDEBAR_BUTTONS,
-   114,
-   button_build,
-   button_none,
-   BUILD_MENU_ENTERTAINMENT,
-   0,
-   1},
-  {9,
-   CL_ROW0 + 245,
+  {9, CL_ROW0 + 142, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 106, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
+  {9, CL_ROW0 + 177, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 110, button_build, button_none, BUILD_MENU_DISTRIBUTION, 0, 1},
+  {9, CL_ROW0 + 212, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 114, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
+  {9, CL_ROW0 + 245,
    36,
    48,
    IB_BUILD,

@@ -151,6 +151,10 @@ static const char* get_overlay_text(int group, int index) {
         return "Fertility";
     case OVERLAY_DESIRABILITY:
         return "Desirability";
+    case OVERLAY_TAX_INCOME:
+        return "Tax income";
+    case OVERLAY_FOOD_STOCKS:
+        return "Food stocks";
     }
     return (const char*)lang_get_string(group, index);
 }
