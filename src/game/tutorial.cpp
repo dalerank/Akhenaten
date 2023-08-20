@@ -182,6 +182,7 @@ void tutorial_menu_update(int tut) {
             if (g_tutorials_flags.pharaoh.figs_800_stored) building_menu_update(BUILDSET_TUT3_INDUSTRY);
             if (g_tutorials_flags.pharaoh.pottery_made) building_menu_update(BUILDSET_TUT3_INDUSTRY);
             if (g_tutorials_flags.pharaoh.disease) building_menu_update(BUILDSET_TUT3_HEALTH);
+            if (g_tutorials_flags.pharaoh.pottery_made) building_menu_update(BUILDSET_TUT3_GARDENS);
         } else if (tut == 4) {
             building_menu_update(BUILDSET_TUT4_START);
             if (g_tutorials_flags.pharaoh.beer_made)
@@ -356,33 +357,28 @@ void tutorial_on_filled_granary(int quantity) {
         }
     }
 }
-void tutorial_on_add_to_storageyard(void) {
+void tutorial_on_add_to_storageyard() {
     if (!g_tutorials_flags.tutorial2.pottery_made && city_resource_count(RESOURCE_POTTERY) >= 1) {
         g_tutorials_flags.tutorial2.pottery_made = 1;
         g_tutorials_flags.tutorial2.pottery_made_year = game_time_year();
         building_menu_update(BUILDSET_NORMAL);
         post_message(MESSAGE_TUTORIAL_TRADE);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (!g_tutorials_flags.pharaoh.pottery_made && city_resource_count(RESOURCE_POTTERY) >= 2) {
-            g_tutorials_flags.pharaoh.pottery_made = 1;
-            building_menu_update(BUILDSET_TUT3_GARDENS);
-            post_message(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES);
-        }
-        if (!g_tutorials_flags.pharaoh.beer_made && city_resource_count(RESOURCE_BEER) >= 3) {
-            g_tutorials_flags.pharaoh.beer_made = 1;
-            building_menu_update(BUILDSET_TUT4_FINANCE);
-            post_message(MESSAGE_TUTORIAL_FINANCES);
-        }
-        if (!g_tutorials_flags.pharaoh.papyrus_made && city_resource_count(RESOURCE_PAPYRUS) >= 1) {
-            g_tutorials_flags.pharaoh.papyrus_made = 1;
-            //            building_menu_update(BUILDSET_TUT5_TRADING);
-            post_message(MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES);
-        }
-        if (!g_tutorials_flags.pharaoh.bricks_bought && city_resource_count(RESOURCE_BRICKS) >= 1) {
-            g_tutorials_flags.pharaoh.bricks_bought = 1;
-            building_menu_update(BUILDSET_TUT5_MONUMENTS);
-            post_message(MESSAGE_TUTORIAL_MONUMENTS);
-        }
+    } else if (!g_tutorials_flags.pharaoh.pottery_made && city_resource_count(RESOURCE_POTTERY) >= 2) {
+        g_tutorials_flags.pharaoh.pottery_made = 1;
+        building_menu_update(BUILDSET_TUT3_GARDENS);
+        post_message(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES);
+    } else if (!g_tutorials_flags.pharaoh.beer_made && city_resource_count(RESOURCE_BEER) >= 3) {
+        g_tutorials_flags.pharaoh.beer_made = 1;
+        building_menu_update(BUILDSET_TUT4_FINANCE);
+        post_message(MESSAGE_TUTORIAL_FINANCES);
+    } if (!g_tutorials_flags.pharaoh.papyrus_made && city_resource_count(RESOURCE_PAPYRUS) >= 1) {
+        g_tutorials_flags.pharaoh.papyrus_made = 1;
+        //            building_menu_update(BUILDSET_TUT5_TRADING);
+        post_message(MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES);
+    } if (!g_tutorials_flags.pharaoh.bricks_bought && city_resource_count(RESOURCE_BRICKS) >= 1) {
+        g_tutorials_flags.pharaoh.bricks_bought = 1;
+        building_menu_update(BUILDSET_TUT5_MONUMENTS);
+        post_message(MESSAGE_TUTORIAL_MONUMENTS);
     }
 }
 void tutorial_on_gold_extracted() {
