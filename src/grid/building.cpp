@@ -13,6 +13,9 @@ static grid_xx highlight_grid = {0, {FS_UINT8, FS_UINT8}};
 int map_building_at(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) ? map_grid_get(&buildings_grid, grid_offset) : 0;
 }
+int map_building_at(map_point tile) {
+    return map_grid_is_valid_offset(tile.grid_offset()) ? map_grid_get(&buildings_grid, tile.grid_offset()) : 0;
+}
 void map_building_set(int grid_offset, int building_id) {
     map_grid_set(&buildings_grid, grid_offset, building_id);
 }
@@ -26,10 +29,9 @@ void map_highlight_clear(int grid_offset) {
     map_grid_set(&highlight_grid, grid_offset, 0);
 }
 int map_is_highlighted(int grid_offset) {
-    if (config_get(CONFIG_UI_WALKER_WAYPOINTS))
+    if (config_get(CONFIG_UI_WALKER_WAYPOINTS)) {
         return map_grid_get(&highlight_grid, grid_offset);
-
-    else {
+    } else {
         return 0;
     }
 }

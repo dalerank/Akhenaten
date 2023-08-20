@@ -299,22 +299,9 @@ bool building_exists_at(int grid_offset, building* b) {
     }
     return false;
 }
-bool building_exists_at(int x, int y, building* b) {
+bool building_exists_at(map_point tile, building* b) {
     b = nullptr;
-    int b_id = map_building_at(MAP_OFFSET(x, y));
-    if (b_id > 0) {
-        b = building_get(b_id);
-        if (b->state > BUILDING_STATE_UNUSED)
-            return true;
-        else
-            b = nullptr;
-    }
-    return false;
-}
-
-bool building_exists_at(map_point point, building* b) {
-    b = nullptr;
-    int b_id = map_building_at(point.grid_offset());
+    int b_id = map_building_at(tile);
     if (b_id > 0) {
         b = building_get(b_id);
         if (b->state > BUILDING_STATE_UNUSED)

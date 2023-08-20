@@ -1,8 +1,8 @@
-#ifndef MAP_GRID_H
-#define MAP_GRID_H
+#pragma once
 
 #include "core/buffer.h"
 #include "core/game_environment.h"
+#include "point.h"
 #include "scenario/map.h"
 
 #include <stdint.h>
@@ -12,11 +12,16 @@
 #define GRID_OFFSET(abs_x, abs_y) ((abs_x) + GRID_LENGTH * (abs_y))
 #define GRID_X(offset) ((offset) % GRID_LENGTH)
 #define GRID_Y(offset) ((offset) / GRID_LENGTH)
+#define MAP_X(offset) (GRID_X(offset - scenario_map_data()->start_offset))
+#define MAP_Y(offset) (GRID_Y(offset - scenario_map_data()->start_offset))
+
 inline uint32_t MAP_OFFSET(uint32_t map_x, uint32_t map_y) {
     return scenario_map_data()->start_offset + GRID_OFFSET(map_x, map_y);
 }
-#define MAP_X(offset) (GRID_X(offset - scenario_map_data()->start_offset))
-#define MAP_Y(offset) (GRID_Y(offset - scenario_map_data()->start_offset))
+
+inline uint32_t MAP_OFFSET(map_point point) {
+    return scenario_map_data()->start_offset + GRID_OFFSET(point.x(), point.y());
+}
 
 enum e_grid_data_type {
     FS_NONE = 0,
@@ -89,5 +94,3 @@ void map_grid_save_state_u16(const uint16_t* grid, buffer* buf);
 void map_grid_load_state_u8(uint8_t* grid, buffer* buf);
 void map_grid_load_state_i8(int8_t* grid, buffer* buf);
 void map_grid_load_state_u16(uint16_t* grid, buffer* buf);
-
-#endif // MAP_GRID_H
