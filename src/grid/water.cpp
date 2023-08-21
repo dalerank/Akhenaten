@@ -10,11 +10,15 @@
 #include "grid/property.h"
 #include "grid/terrain.h"
 
+#include <array>
+
 tile_cache river_tiles_cache;
+tile_cache river_shoreline_tiles_cache;
 
 void foreach_river_tile(void (*callback)(int grid_offset)) {
-    for (int i = 0; i < river_tiles_cache.size(); i++)
-        callback(river_tiles_cache.at(i));
+    for (const auto &tile: river_tiles_cache) {
+        callback(tile);
+    }
 }
 
 void map_water_add_building(int building_id, int x, int y, int size, int image_id) {
@@ -91,11 +95,17 @@ bool map_shore_determine_orientation(int x,
     y--;
 
     // fill in tile cache first
-    std::vector<int> water_tiles_data(size * size);
-    int** water_tiles = (int**)water_tiles_data.data();
+    struct water_tiles_t {
+        int *_data;
+        int _size;
+        water_tiles_t(int size) : _size(size) { _data = (int*)_alloca(size * size * sizeof(int)); }
+        int &at(int row, int column) { return _data[row * _size + column]; }
+    } water_tiles(size);
+
+    auto water_tile = [water_tiles] (int row, int column) { };
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
-            water_tiles[row][column] = map_terrain_is(MAP_OFFSET(x + column, y + row), shore_terrain);
+            water_tiles.at(row, column) = map_terrain_is(MAP_OFFSET(x + column, y + row), shore_terrain);
         }
     }
 
@@ -103,10 +113,8 @@ bool map_shore_determine_orientation(int x,
     bool matches = true;
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
-            if ((water_tiles[row][column] == true && row > (!adjacent)
-                 && (column > 0 && column < size - 1 && row < size - 1))
-                || (water_tiles[row][column] == false && row <= (!adjacent)
-                    && (column >= adjacent && column <= size - (1 + adjacent))))
+            if ((water_tiles.at(row, column) == true && row > (!adjacent) && (column > 0 && column < size - 1 && row < size - 1))
+                || (water_tiles.at(row, column) == false && row <= (!adjacent) && (column >= adjacent && column <= size - (1 + adjacent))))
                 matches = false;
         }
     }
@@ -119,10 +127,8 @@ bool map_shore_determine_orientation(int x,
     matches = true;
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
-            if ((water_tiles[row][column] == true && column < size - (1 + !adjacent)
-                 && (row > 0 && row < size - 1 && column > 0))
-                || (water_tiles[row][column] == false && column >= size - (1 + !adjacent)
-                    && (row >= adjacent && row <= size - (1 + adjacent))))
+            if ((water_tiles.at(row, column) == true && column < size - (1 + !adjacent) && (row > 0 && row < size - 1 && column > 0))
+                || (water_tiles.at(row, column) == false && column >= size - (1 + !adjacent) && (row >= adjacent && row <= size - (1 + adjacent))))
                 matches = false;
         }
     }
@@ -135,10 +141,8 @@ bool map_shore_determine_orientation(int x,
     matches = true;
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
-            if ((water_tiles[row][column] == true && row < size - (1 + !adjacent)
-                 && (column > 0 && column < size - 1 && row > 0))
-                || (water_tiles[row][column] == false && row >= size - (1 + !adjacent)
-                    && (column >= adjacent && column <= size - (1 + adjacent))))
+            if ((water_tiles.at(row, column) == true && row < size - (1 + !adjacent) && (column > 0 && column < size - 1 && row > 0))
+                || (water_tiles.at(row, column) == false && row >= size - (1 + !adjacent) && (column >= adjacent && column <= size - (1 + adjacent))))
                 matches = false;
         }
     }
@@ -151,10 +155,8 @@ bool map_shore_determine_orientation(int x,
     matches = true;
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
-            if ((water_tiles[row][column] == true && column > (!adjacent)
-                 && (row > 0 && row < size - 1 && column < size - 1))
-                || (water_tiles[row][column] == false && column <= (!adjacent)
-                    && (row >= adjacent && row <= size - (1 + adjacent))))
+            if ((water_tiles.at(row, column) == true && column > (!adjacent) && (row > 0 && row < size - 1 && column < size - 1))
+                || (water_tiles.at(row, column) == false && column <= (!adjacent) && (row >= adjacent && row <= size - (1 + adjacent))))
                 matches = false;
         }
     }
