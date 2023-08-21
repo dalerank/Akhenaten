@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "core/direction.h"
+#include "core/profiler.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
@@ -175,24 +176,23 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
     case ROUTING_TYPE_CITIZEN:
         //            if (!map_tile_inside_map_area(x, y))
         //                return CITIZEN_N1_BLOCKED;
-        if (terrain & TERRAIN_ROAD && !(terrain & TERRAIN_WATER))
+        if (terrain & TERRAIN_ROAD && !(terrain & TERRAIN_WATER)) {
             return CITIZEN_0_ROAD;
-        else if (terrain
-                 & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN | TERRAIN_MARSHLAND | TERRAIN_FLOODPLAIN
-                    | TERRAIN_TREE)) // TODO?
+        } else if (terrain & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN | TERRAIN_MARSHLAND | TERRAIN_FLOODPLAIN | TERRAIN_TREE)) {// TODO?
             return CITIZEN_2_PASSABLE_TERRAIN;
-        else if (terrain & (TERRAIN_BUILDING | TERRAIN_GATEHOUSE)) {
+        } else if (terrain & (TERRAIN_BUILDING | TERRAIN_GATEHOUSE)) {
             if (fix_incorrect_buildings(grid_offset))
                 return CITIZEN_4_CLEAR_TERRAIN;
             else
                 return get_land_type_citizen_building(grid_offset);
-        } else if (terrain & TERRAIN_AQUEDUCT)
+        } else if (terrain & TERRAIN_AQUEDUCT) {
             return get_land_type_citizen_aqueduct(grid_offset);
-        else if (terrain & TERRAIN_NOT_CLEAR)
+        } else if (terrain & TERRAIN_NOT_CLEAR) {
             return CITIZEN_N1_BLOCKED;
-        else
+        } else {
             return CITIZEN_4_CLEAR_TERRAIN;
-        ////////////////
+        }
+
     case ROUTING_TYPE_NONCITIZEN:
         if (terrain & TERRAIN_GATEHOUSE)
             return NONCITIZEN_4_GATEHOUSE;
@@ -210,7 +210,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
             return NONCITIZEN_N1_BLOCKED;
         else
             return NONCITIZEN_0_PASSABLE;
-        ////////////////
+
     case ROUTING_TYPE_WATER:
         if (terrain & TERRAIN_WATER && is_surrounded_by_water(grid_offset)) {
             if (x > 0 && x < scenario_map_data()->width - 1 && y > 0 && y < scenario_map_data()->height - 1) {
@@ -225,25 +225,29 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
                 }
             } else
                 return WATER_N2_MAP_EDGE;
-        } else
+        } else {
             return WATER_N1_BLOCKED;
-        ////////////////
+        }
+
     case ROUTING_TYPE_WALLS:
         if (terrain & TERRAIN_WALL) {
             if (count_adjacent_wall_tiles(grid_offset) == 3)
                 return WALL_0_PASSABLE;
             else
                 return WALL_N1_BLOCKED;
-        } else if (map_terrain_is(grid_offset, TERRAIN_GATEHOUSE))
+        } else if (map_terrain_is(grid_offset, TERRAIN_GATEHOUSE)) {
             return WALL_0_PASSABLE;
-        else
+        } else {
             return WALL_N1_BLOCKED;
+        }
     }
+
     // fallback case
     return NO_VALID_ROUTING_CHECK_RESULT;
 }
 
 void map_routing_update_land_citizen(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Routing/Update land/Citizen");
     map_grid_fill(&terrain_land_citizen, -1);
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
@@ -280,13 +284,12 @@ void map_routing_update_land_citizen(void) {
     }
 }
 static void map_routing_update_land_noncitizen(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Routing/Update land/Noncitizen");
     map_grid_fill(&terrain_land_noncitizen, -1);
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            map_grid_set(&terrain_land_noncitizen,
-                         grid_offset,
-                         map_routing_tile_check(ROUTING_TYPE_NONCITIZEN, grid_offset));
+            map_grid_set(&terrain_land_noncitizen, grid_offset, map_routing_tile_check(ROUTING_TYPE_NONCITIZEN, grid_offset));
             //            int terrain = map_terrain_get(grid_offset);
             //            if (terrain & TERRAIN_GATEHOUSE) {
             //                map_grid_set(&terrain_land_noncitizen, grid_offset, NONCITIZEN_4_GATEHOUSE);
@@ -309,10 +312,16 @@ static void map_routing_update_land_noncitizen(void) {
         }
     }
 }
-void map_routing_update_land(void) {
+void map_routing_update_land() {
+    OZZY_PROFILER_SECTION("Game/Run/Routing/Update land");
     map_routing_update_land_citizen();
     map_routing_update_land_noncitizen();
 }
+
+void map_routing_update_ferry_routes() {
+
+}
+
 void map_routing_update_water(void) {
     map_grid_fill(&terrain_water, -1);
     int grid_offset = scenario_map_data()->start_offset;

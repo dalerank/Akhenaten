@@ -14,6 +14,7 @@
 #include "widget/overlays/city_overlay_desirability.h"
 #include "widget/overlays/city_overlay_bazaar_access.h"
 #include "widget/overlays/city_overlay_fire.h"
+#include "widget/overlays/city_overlay_routing.h"
 
 const city_overlay* g_city_overlay = 0;
 
@@ -79,6 +80,8 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_fertility();
     case OVERLAY_BAZAAR_ACCESS:
         return city_overlay_for_bazaar_access();
+    case OVERLAY_ROUTING:
+        return city_overlay_for_routing();
     default:
         return 0;
     }

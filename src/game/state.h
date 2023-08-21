@@ -34,6 +34,7 @@ enum e_overlay {
     OVERLAY_FERTILITY = 35,
     OVERLAY_MORTUARY = 36,
     OVERLAY_BAZAAR_ACCESS = 37,
+    OVERLAY_ROUTING = 38,
 };
 
 void game_state_init(void);

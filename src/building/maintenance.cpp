@@ -212,8 +212,8 @@ void building_maintenance_check_fire_collapse(void) {
 }
 void building_maintenance_check_rome_access(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access");
-    map_point& entry_point = city_map_entry_point();
-    map_routing_calculate_distances(entry_point.x(), entry_point.y());
+    //map_point& entry_point = city_map_entry_point();
+    //map_routing_calculate_distances(entry_point.x(), entry_point.y());
     int problem_grid_offset = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
@@ -257,8 +257,9 @@ void building_maintenance_check_rome_access(void) {
             }
         } else if (b->type == BUILDING_STORAGE_YARD) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Storageyard");
-            if (!city_buildings_get_trade_center())
+            if (!city_buildings_get_trade_center()) {
                 city_buildings_set_trade_center(i);
+            }
 
             b->distance_from_entry = 0;
             int x_road, y_road;
@@ -276,6 +277,7 @@ void building_maintenance_check_rome_access(void) {
             b->road_network_id = main_building->road_network_id;
             b->distance_from_entry = main_building->distance_from_entry;
             b->road_access = main_building->road_access;
+
         } else if (b->type == BUILDING_SENET_HOUSE) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Senet");
             b->distance_from_entry = 0;

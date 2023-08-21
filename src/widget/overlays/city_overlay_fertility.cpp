@@ -50,8 +50,8 @@ static int get_fertility_image_offset(int fertilty) {
 
 struct city_overlay_fertility : public city_overlay {
     city_overlay_fertility() {
-        type = OVERLAY_CRIME;
-        column_type = COLUMN_TYPE_RISK;
+        type = OVERLAY_FERTILITY;
+        column_type = COLUMN_TYPE_POSITIVE;
 
         get_column_height = get_column_height_fertility_none;
         get_tooltip_for_building = get_tooltip_fertility;   

@@ -1738,6 +1738,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     // final generic building warnings - these are in another file
     // TODO: bring these warnings over.
     building_construction_warning_generic_checks(build_type, end.x(), end.y(), size.x, relative_orientation);
+    bool should_recalc_ferry_routes = false;
 
     // update city building info with newly created
     // building for special/unique constructions
@@ -1767,6 +1768,9 @@ void BuildPlanner::construction_finalize() { // confirm final placement
         break;
     case BUILDING_RECRUITER:
         city_buildings_add_recruiter(last_created_building);
+        break;
+    case BUILDING_FERRY:
+        should_recalc_ferry_routes = true;
         break;
     }
 
@@ -1801,6 +1805,10 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     map_tiles_update_region_empty_land(false, start.x() - 2, start.y() - 2, end.x() + size.x + 2, end.y() + size.y + 2);
     map_routing_update_land();
     map_routing_update_walls();
+
+    if (should_recalc_ferry_routes) {
+        map_routing_update_ferry_routes();
+    }
 }
 
 //////////////////////

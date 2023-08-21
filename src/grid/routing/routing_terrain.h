@@ -1,5 +1,4 @@
-#ifndef MAP_ROUTING_TERRAIN_H
-#define MAP_ROUTING_TERRAIN_H
+#pragma once
 
 enum {
     ROUTING_TYPE_CITIZEN,
@@ -9,10 +8,11 @@ enum {
 };
 
 void map_routing_update_all(void);
-void map_routing_update_land(void);
+void map_routing_update_land();
 void map_routing_update_land_citizen(void);
 void map_routing_update_water(void);
 void map_routing_update_walls(void);
+void map_routing_update_ferry_routes();
 
 bool map_routing_passable_by_usage(int terrain_usage, int grid_offset);
 
@@ -28,5 +28,3 @@ int map_routing_wall_tile_in_radius(int x, int y, int radius, int* x_wall, int* 
 
 enum { DESTROYABLE_BUILDING, DESTROYABLE_AQUEDUCT_GARDEN, DESTROYABLE_WALL, DESTROYABLE_GATEHOUSE, DESTROYABLE_NONE };
 int map_routing_get_destroyable(int grid_offset);
-
-#endif // MAP_ROUTING_TERRAIN_H

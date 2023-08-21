@@ -649,7 +649,7 @@ void figure::action_perform() {
             gatherer_action();
             break; // wood cutters
         case FIGURE_HIPPO:
-            hippo_action();
+            //hippo_action();
             break;
         case FIGURE_WORKER_PH:
             worker_action();

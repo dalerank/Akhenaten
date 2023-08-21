@@ -62,6 +62,7 @@ static const int submenu_id_to_overlay[7][8] = {
    OVERLAY_CRIME,
    OVERLAY_NATIVE,
    OVERLAY_PROBLEMS,
+   OVERLAY_ROUTING,
    0},
   
   { // Entertainment
@@ -86,7 +87,7 @@ static const int submenu_id_to_overlay[7][8] = {
    OVERLAY_HOSPITAL,
    0},
   
-  { // Finance
+  { // Administration
    OVERLAY_TAX_INCOME,
    OVERLAY_FOOD_STOCKS,
    OVERLAY_BAZAAR_ACCESS,
@@ -158,6 +159,8 @@ static const char* get_overlay_text(int group, int index) {
         return "Food stocks";
     case OVERLAY_BAZAAR_ACCESS:
         return "Bazaar access";
+    case OVERLAY_ROUTING:
+        return "Routing";
     }
     return (const char*)lang_get_string(group, index);
 }
