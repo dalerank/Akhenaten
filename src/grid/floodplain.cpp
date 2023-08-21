@@ -43,19 +43,17 @@ int map_floodplain_rebuild_rows() {
         int found_floodplain_tiles_in_row = 0;
 
         // go through every river tile
-        for (int i = 0; i < river_tiles_cache.size(); i++) {
+        foreach_river_tile([&] (auto &tile_offset) {
             // get current river tile's grid offset and coords
-            int tile_offset = river_tiles_cache.at(i);
             int tile_x = MAP_X(tile_offset);
             int tile_y = MAP_Y(tile_offset);
 
-            bool is_vergin_water = (row == -1 && map_terrain_is(tile_offset, TERRAIN_WATER)
-                                    && !map_terrain_is(tile_offset, TERRAIN_FLOODPLAIN));
-            bool is_vergin_floodplain = (row > -1 && map_terrain_is(tile_offset, TERRAIN_FLOODPLAIN)
-                                         && map_get_floodplain_row(tile_offset) == row);
+            bool is_vergin_water = (row == -1 && map_terrain_is(tile_offset, TERRAIN_WATER) && !map_terrain_is(tile_offset, TERRAIN_FLOODPLAIN));
+            bool is_vergin_floodplain = (row > -1 && map_terrain_is(tile_offset, TERRAIN_FLOODPLAIN) && map_get_floodplain_row(tile_offset) == row);
 
-            if (is_vergin_water            // loop through every virgin water tile
-                || is_vergin_floodplain) { // or, through every floodplain tile of the previous round
+            // loop through every virgin water tile or, 
+            // through every floodplain tile of the previous round
+            if (is_vergin_water || is_vergin_floodplain) { 
 
                 // loop through for a 3x3 area around the tile
                 int x_min = tile_x - 1;
@@ -68,7 +66,7 @@ int map_floodplain_rebuild_rows() {
                 for (int yy = y_min; yy <= y_max; yy++) {
                     for (int xx = x_min; xx <= x_max; xx++) {
                         // do only on floodplain tiles that haven't been calculated / cached yet
-                        if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) 
+                        if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)
                             && map_grid_is_valid_offset(grid_offset)
                             && map_get_floodplain_row(grid_offset) == -1) {
                             // set fertility data
@@ -87,11 +85,12 @@ int map_floodplain_rebuild_rows() {
                     grid_offset += GRID_LENGTH - (x_max - x_min + 1);
                 }
             }
-        }
+        });
 
         // no more shore tiles, return!
-        if (found_floodplain_tiles_in_row == 0)
+        if (found_floodplain_tiles_in_row == 0) {
             return std::min(row + 2, MAX_FLOODPLAIN_ROWS);
+        }
     }
 
     // if past 29, fill in all the rest with the same order

@@ -81,6 +81,7 @@ void map_grid_start_end_to_area(int x_start,
                                 int* y_min,
                                 int* x_max,
                                 int* y_max);
+int map_grid_is_inside(map_point tile, int size);
 int map_grid_is_inside(int x, int y, int size);
 bool map_grid_inside_map_area(int grid_offset, int edge_size = 0);
 // bool map_grid_inside_map_area(int x, int y, int edge_size = 0);

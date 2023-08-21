@@ -298,10 +298,15 @@ void map_grid_start_end_to_area(int x_start,
     }
     map_grid_bound_area(x_min, y_min, x_max, y_max);
 }
+
+int map_grid_is_inside(map_point tile, int size) {
+    return map_grid_is_inside(tile.x(), tile.y(), size);
+}
+
 int map_grid_is_inside(int x, int y, int size) {
-    if (GAME_ENV == ENGINE_ENV_C3)
-        return x >= 0 && x + size <= scenario_map_data()->width && y >= 0 && y + size <= scenario_map_data()->height;
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+   //if (GAME_ENV == ENGINE_ENV_C3)
+   //    return x >= 0 && x + size <= scenario_map_data()->width && y >= 0 && y + size <= scenario_map_data()->height;
+   //else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         // todo? it's not really making anything go haywire at the moment.
 
         //        int start_x = map_grid_offset_to_x(2 * scenario_map_data()->start_offset);
@@ -318,14 +323,14 @@ int map_grid_is_inside(int x, int y, int size) {
         //            return 1;
         //        return 0;
 
-        int min_x = 0;
-        int max_x = scenario_map_data()->width;
-        int min_y = 0;
-        int max_y = scenario_map_data()->height;
+    int min_x = 0;
+    int max_x = scenario_map_data()->width;
+    int min_y = 0;
+    int max_y = scenario_map_data()->height;
 
-        return x >= min_x && x + size <= max_x && y >= min_y && y + size <= max_y;
-    }
+    return x >= min_x && x + size <= max_x && y >= min_y && y + size <= max_y;
 }
+
 bool map_grid_inside_map_area(int grid_offset, int edge_size) {
     int x = GRID_X(grid_offset);
     int y = GRID_Y(grid_offset);

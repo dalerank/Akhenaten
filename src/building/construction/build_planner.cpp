@@ -1364,33 +1364,28 @@ void BuildPlanner::update_requirements_check() {
     }
 }
 void BuildPlanner::update_special_case_orientations_check() {
-    int dir_absolute, dir_relative;
+    int dir_relative;
 
     // for special buildings that require oriented terrain
     if (special_flags & PlannerFlags::ShoreLine) {
-        bool match = map_shore_determine_orientation(end.x(), end.y(), additional_req_param1, true, &dir_absolute);
+        shore_orientation result = map_shore_determine_orientation(end, additional_req_param1, true);
         if (special_flags & PlannerFlags::FloodplainShore) {
             // in original Pharaoh, this actually is allowed to be built over the EDGE CORNERS.
             // it looks off, but it's legit!
             variant = 0;
-            if (!match) {
-                match = map_shore_determine_orientation(
-                  end.x(), end.y(), additional_req_param1, true, &dir_absolute, true, TERRAIN_FLOODPLAIN);
-                if (match
-                    && !map_terrain_exists_tile_in_area_with_type(
-                      end.x(), end.y(), size.x, TERRAIN_WATER)) // correct for water
+            if (!result.match) {
+                result = map_shore_determine_orientation(end, additional_req_param1, true, true, TERRAIN_FLOODPLAIN);
+                if (result.match && !map_terrain_exists_tile_in_area_with_type(end.x(), end.y(), size.x, TERRAIN_WATER)) { // correct for water
                     variant = 1;
-                else
-                    match = false;
-            } else if (map_terrain_exists_tile_in_area_with_type(
-                         end.x(),
-                         end.y(),
-                         size.x,
-                         TERRAIN_FLOODPLAIN)) // correct the ShoreLine check for floodplains!
-                match = false;
+                } else {
+                    result.match = false;
+                }
+            } else if (map_terrain_exists_tile_in_area_with_type(end.x(), end.y(), size.x, TERRAIN_FLOODPLAIN)) { // correct the ShoreLine check for floodplains!
+                result.match = false;
+            }
         }
-        dir_relative = city_view_relative_orientation(dir_absolute);
-        if (!match) {
+        dir_relative = city_view_relative_orientation(result.orientation_absolute);
+        if (!result.match) {
             immediate_warning_id = WARNING_SHORE_NEEDED;
             can_place = CAN_NOT_PLACE;
         } else if (relative_orientation != dir_relative) {
@@ -1409,6 +1404,7 @@ void BuildPlanner::update_special_case_orientations_check() {
             update_orientations(false);
         }
     }
+
     if (special_flags & PlannerFlags::TempleUpgrade) {
         building* target = building_at(end.grid_offset())->main();
         if (!building_at(end.grid_offset()) || !building_is_large_temple(target->type)) {
@@ -1418,7 +1414,7 @@ void BuildPlanner::update_special_case_orientations_check() {
             immediate_warning_id = WARNING_TEMPLE_UPGRADE_ONLY_ONE;
             can_place = CAN_NOT_PLACE;
         } else {
-            dir_absolute = (5 - (target->data.monuments.variant / 2)) % 4;
+            int dir_absolute = (5 - (target->data.monuments.variant / 2)) % 4;
             dir_relative = city_view_relative_orientation(dir_absolute);
             relative_orientation = (1 + dir_relative) % 2;
             end = temple_complex_part_target(target, additional_req_param1);
@@ -1686,10 +1682,7 @@ void BuildPlanner::construction_update(map_point tile) {
     case BUILDING_DOCK:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_FERRY:
-        if (map_shore_determine_orientation(end.x(), end.y(), additional_req_param1, true, nullptr))
-            draw_as_constructing = true;
-        else
-            draw_as_constructing = false;
+        draw_as_constructing = map_shore_determine_orientation(end, additional_req_param1, true).match;
         break;
     default:
         if (special_flags & PlannerFlags::Meadow || special_flags & PlannerFlags::Rock
@@ -1699,10 +1692,11 @@ void BuildPlanner::construction_update(map_point tile) {
             || special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Intersection) {
             // never draw as constructing
         } else {
-            if ((city_view_orientation() / 2) % 2 == 0)
+            if ((city_view_orientation() / 2) % 2 == 0) {
                 mark_construction(north_tile.x(), north_tile.y(), size.x, size.y, TERRAIN_ALL, true);
-            else
+            } else {
                 mark_construction(north_tile.x(), north_tile.y(), size.y, size.x, TERRAIN_ALL, true);
+            }
         }
     }
     if (items_placed >= 0)

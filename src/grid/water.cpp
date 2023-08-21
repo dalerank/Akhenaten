@@ -13,13 +13,31 @@
 #include <array>
 
 tile_cache river_tiles_cache;
-tile_cache river_shoreline_tiles_cache;
 
 void foreach_river_tile(void (*callback)(int grid_offset)) {
     for (const auto &tile: river_tiles_cache) {
         callback(tile);
     }
 }
+
+tile_cache &river_tiles() { return river_tiles_cache; }
+
+void map_water_cache_river_tiles() {
+    river_tiles_cache.clear();
+
+    int grid_offset = scenario_map_data()->start_offset;
+    int map_height = scenario_map_data()->height;
+    int border_size = scenario_map_data()->border_size;
+    int map_width = scenario_map_data()->width;
+    for (int y = 0; y < map_height; y++, grid_offset += border_size) {
+        for (int x = 0; x < map_width; x++, grid_offset++) {
+            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER)) {
+                river_tiles_cache.push_back(grid_offset);
+            }
+        }
+    }
+}
+
 
 void map_water_add_building(int building_id, int x, int y, int size, int image_id) {
     if (!map_grid_is_inside(x, y, size))
@@ -63,13 +81,10 @@ static int blocked_land_terrain(void) {
            | TERRAIN_ROAD | TERRAIN_ELEVATION | TERRAIN_RUBBLE;
 }
 
-bool map_shore_determine_orientation(int x,
-                                     int y,
-                                     int size,
-                                     bool adjust_xy,
-                                     int* orientation_absolute,
-                                     bool adjacent,
-                                     int shore_terrain) {
+shore_orientation map_shore_determine_orientation(map_point tile, int size, bool adjust_xy, bool adjacent, int shore_terrain) {
+    int x = tile.x();
+    int y = tile.y();
+
     if (adjust_xy) {
         switch (city_view_orientation()) {
         case DIR_0_TOP_RIGHT:
@@ -87,7 +102,7 @@ bool map_shore_determine_orientation(int x,
         }
     }
     if (!map_grid_is_inside(x, y, size))
-        return false;
+        return {false, 0};
 
     // actually... check also the bordering blocks on each side.
     size += 2;
@@ -98,7 +113,7 @@ bool map_shore_determine_orientation(int x,
     struct water_tiles_t {
         int *_data;
         int _size;
-        water_tiles_t(int size) : _size(size) { _data = (int*)_alloca(size * size * sizeof(int)); }
+        water_tiles_t(int size) : _size(size) { _data = (int*)alloca(size * size * sizeof(int)); }
         int &at(int row, int column) { return _data[row * _size + column]; }
     } water_tiles(size);
 
@@ -118,9 +133,8 @@ bool map_shore_determine_orientation(int x,
                 matches = false;
         }
     }
-    if (matches && orientation_absolute) {
-        *orientation_absolute = 0;
-        return true;
+    if (matches) {
+        return {true, 0};
     }
 
     // check -- east
@@ -132,9 +146,8 @@ bool map_shore_determine_orientation(int x,
                 matches = false;
         }
     }
-    if (matches && orientation_absolute) {
-        *orientation_absolute = 1;
-        return true;
+    if (matches) {
+        return {true, 1};
     }
 
     // check -- south
@@ -146,9 +159,8 @@ bool map_shore_determine_orientation(int x,
                 matches = false;
         }
     }
-    if (matches && orientation_absolute) {
-        *orientation_absolute = 2;
-        return true;
+    if (matches) {
+        return {true, 2};
     }
 
     // check -- west
@@ -160,13 +172,12 @@ bool map_shore_determine_orientation(int x,
                 matches = false;
         }
     }
-    if (matches && orientation_absolute) {
-        *orientation_absolute = 3;
-        return true;
+    if (matches) {
+        return {true, 3};
     }
 
     // no match.
-    return false;
+    return {false, 0};
 }
 
 int map_water_get_wharf_for_new_fishing_boat(figure* boat, map_point* tile) {

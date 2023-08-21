@@ -1,27 +1,32 @@
-#ifndef MAP_WATER_H
-#define MAP_WATER_H
+#pragma once
 
 #include "figure/figure.h"
 #include "grid/point.h"
 #include "terrain.h"
 #include "tile_cache.h"
 
-extern tile_cache river_tiles_cache;
+tile_cache &river_tiles();
 void foreach_river_tile(void (*callback)(int grid_offset));
+
+template<typename T>
+void foreach_river_tile(T func) {
+    for (auto &tile : river_tiles()) {
+        func(tile);
+    }
+}
 
 void map_water_add_building(int building_id, int x, int y, int size, int image_id);
 
-bool map_shore_determine_orientation(int x,
-                                     int y,
-                                     int size,
-                                     bool adjust_xy,
-                                     int* orientation_absolute,
-                                     bool adjacent = false,
-                                     int shore_terrain = TERRAIN_WATER);
+void map_water_cache_river_tiles();
+
+struct shore_orientation {
+    bool match;
+    int orientation_absolute;
+};
+
+shore_orientation map_shore_determine_orientation(map_point tile, int size, bool adjust_xy, bool adjacent = false, int shore_terrain = TERRAIN_WATER);
 
 int map_water_get_wharf_for_new_fishing_boat(figure* boat, map_point* tile);
 int map_water_find_alternative_fishing_boat_tile(figure* boat, map_point* tile);
 int map_water_find_shipwreck_tile(figure* wreck, map_point* tile);
 int map_water_can_spawn_fishing_boat(int x, int y, int size, map_point* tile);
-
-#endif // MAP_WATER_H
