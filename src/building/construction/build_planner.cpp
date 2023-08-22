@@ -615,7 +615,7 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end) {
 
 static int place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
     int x_min, x_max, y_min, y_max;
-    map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
+    map_grid_start_end_to_area(map_point(x_start, y_start), map_point(x_end, y_end), &x_min, &y_min, &x_max, &y_max);
 
     int needs_road_warning = 0;
     int items_placed = 0;
@@ -658,9 +658,9 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
     }
     return items_placed;
 }
-static int place_plaza(int x_start, int y_start, int x_end, int y_end) {
+static int place_plaza(map_point start, map_point end) {
     int x_min, y_min, x_max, y_max;
-    map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
+    map_grid_start_end_to_area(start, end, &x_min, &y_min, &x_max, &y_max);
     game_undo_restore_map(1);
 
     int items_placed = 0;
@@ -687,7 +687,7 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end) {
     game_undo_restore_map(1);
 
     int x_min, y_min, x_max, y_max;
-    map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
+    map_grid_start_end_to_area(map_point(x_start, y_start), map_point(x_end, y_end), &x_min, &y_min, &x_max, &y_max);
 
     int items_placed = 0;
     for (int y = y_min; y <= y_max; y++) {
@@ -1629,8 +1629,8 @@ void BuildPlanner::construction_update(map_point tile) {
     end = tile;
     if (end == map_point(-1, -1))
         return;
-    int x = end.x();
-    int y = end.y();
+    const int x = end.x();
+    const int y = end.y();
     if (!build_type || city_finance_out_of_money()) {
         total_cost = 0;
         return;
@@ -1650,7 +1650,7 @@ void BuildPlanner::construction_update(map_point tile) {
         items_placed = building_construction_place_road(true, start.x(), start.y(), x, y);
         break;
     case BUILDING_PLAZA:
-        items_placed = place_plaza(start.x(), start.y(), x, y);
+        items_placed = place_plaza(start, end);
         break;
     case BUILDING_GARDENS:
         items_placed = place_garden(start.x(), start.y(), x, y);
@@ -1859,7 +1859,7 @@ bool BuildPlanner::place() {
         placement_cost *= building_construction_place_road(false, start.x(), start.y(), end.x(), end.y());
         break;
     case BUILDING_PLAZA:
-        placement_cost *= place_plaza(start.x(), start.y(), end.x(), end.y());
+        placement_cost *= place_plaza(start, end);
         break;
     case BUILDING_GARDENS:
         placement_cost *= place_garden(start.x(), start.y(), end.x(), end.y());
