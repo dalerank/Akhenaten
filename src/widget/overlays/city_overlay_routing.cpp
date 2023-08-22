@@ -36,7 +36,7 @@ static int get_tooltip_routing(tooltip_context* c, const building* b) {
 
 static int terrain_on_routing_overlay() {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER 
-            | TERRAIN_ROAD | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP 
+            | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP 
             | TERRAIN_RUBBLE | TERRAIN_AQUEDUCT | TERRAIN_WALL;
 }
 
@@ -69,18 +69,31 @@ struct city_overlay_routing : public city_overlay {
         if (map_terrain_is(grid_offset, terrain_on_routing_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING) ) {
             ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
         } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_terrain_is(grid_offset, TERRAIN_WATER)) {
-            int offset = 2;
             building *b = building_at(grid_offset);
+            int offset = 2;
             if (b && !building_on_routing_overlay(b->type)) {
                 ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
             }
         } else {
-            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
+            bool drawn = false;
+            building *b = building_at(grid_offset);
+            bool road = map_terrain_is(grid_offset, TERRAIN_ROAD);
+            bool building_road = b && b->type == BUILDING_ROAD;
+
+            if (road || building_road) {
+                int offset = 6;
+                drawn = true;
+                ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
+            }
+            
+            if (!drawn) {
+                ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
+            }
         }
     }
 
     bool show_building(const building* b) const override {
-        return b->type == BUILDING_FERRY;
+        return b->type == BUILDING_FERRY || b->type == BUILDING_PLAZA;
     }
 };
 
