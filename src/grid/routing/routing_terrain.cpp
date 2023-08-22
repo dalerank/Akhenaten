@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "core/direction.h"
 #include "core/profiler.h"
+#include "core/svector.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
@@ -13,7 +14,7 @@
 #include "grid/sprite.h"
 #include "grid/terrain.h"
 #include "routing_grids.h"
-#include <scenario/map.h>
+#include "scenario/map.h"
 
 static int get_land_type_citizen_building(int grid_offset) {
     building* b = building_at(grid_offset);
@@ -319,7 +320,16 @@ void map_routing_update_land() {
 }
 
 void map_routing_update_ferry_routes() {
+    svector<building *, 64> ferries;
+    for (auto it = building_begin(); it != building_end(); ++it) {
+        if (it->type == BUILDING_FERRY) ferries.push_back(it);
+    }
 
+    for (auto f1 = ferries.begin(); f1 != ferries.end(); ++f1) {
+        for (auto f2 = f1 + 1; f2 != ferries.end(); ++f2) {
+
+        }
+    }
 }
 
 void map_routing_update_water(void) {

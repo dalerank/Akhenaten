@@ -658,6 +658,22 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
     }
     return items_placed;
 }
+
+static int place_ferry(map_point start, int size) {
+    int x_min, y_min, x_max, y_max;
+    map_grid_start_end_to_area(start, map_point(start.x() + size, start.y() + size), &x_min, &y_min, &x_max, &y_max);
+    game_undo_restore_map(1);
+
+    int items_placed = 0;
+    for (int y = y_min; y <= y_max; y++) {
+        for (int x = x_min; x <= x_max; x++) {
+            int grid_offset = MAP_OFFSET(x, y);
+            map_terrain_add(grid_offset, TERRAIN_ROAD);
+        }
+    }
+    return items_placed;
+}
+
 static int place_plaza(map_point start, map_point end) {
     int x_min, y_min, x_max, y_max;
     map_grid_start_end_to_area(start, end, &x_min, &y_min, &x_max, &y_max);
@@ -1684,6 +1700,7 @@ void BuildPlanner::construction_update(map_point tile) {
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_FERRY:
         draw_as_constructing = map_shore_determine_orientation(end, additional_req_param1, true).match;
+        place_ferry(start, 2);
         break;
     default:
         if (special_flags & PlannerFlags::Meadow || special_flags & PlannerFlags::Rock
