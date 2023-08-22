@@ -63,8 +63,8 @@ struct message_dialog_data_t {
     uint8_t* phrase_template;
     bstring256 phrase_text;
 
-    void (*background_callback)(void);
-    int show_video;
+    void (*background_callback)();
+    bool show_video;
 
     int x;
     int y;
@@ -105,7 +105,7 @@ void text_fill_in_tags(const uint8_t* src, uint8_t* dst, text_tag_substitution* 
 
         if ((char)*curr_byte == '[') { // found an opening bracket
             uint8_t* tag_end_ptr = curr_byte + index_of(curr_byte, ']', 200);
-            int size = tag_end_ptr - curr_byte - 1;
+            int size = static_cast<int>(tag_end_ptr - curr_byte - 1);
 
             // needs to go over all the possible tags...
             for (int i = 0; i < num_tags; ++i)
@@ -165,12 +165,13 @@ static void set_city_message(int year, int month, int param1, int param2, int me
     g_player_message_data.message_advisor = message_advisor;
     g_player_message_data.use_popup = use_popup;
 }
-static void init(int text_id, int message_id, void (*background_callback)(void)) {
+
+static void init(int text_id, int message_id, void (*background_callback)()) {
     auto &data = g_message_dialog_data;
     scroll_drag_end();
-    for (int i = 0; i < MAX_HISTORY; i++) {
-        data.history[i].text_id = 0;
-        data.history[i].scroll_position = 0;
+    for (auto& item : data.history) {
+        item.text_id = 0;
+        item.scroll_position = 0;
     }
     data.num_history = 0;
     rich_text_reset(0);
@@ -197,14 +198,13 @@ static void init(int text_id, int message_id, void (*background_callback)(void))
     data.text_id = text_id;
     data.background_callback = background_callback;
     const lang_message* msg = lang_get_message(text_id);
-    if (g_player_message_data.use_popup != 1)
-        data.show_video = 0;
-    else if (msg->video.text && video_start((char*)msg->video.text))
-        data.show_video = 1;
-    else
-        data.show_video = 0;
-    if (data.show_video)
+
+    if (g_player_message_data.use_popup == 1 && msg->video.text && video_start((char*)msg->video.text)) {
+        data.show_video = true;
         video_init();
+    }
+    else
+        data.show_video = false;
 }
 static int resource_image(int resource) {
     int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource;
@@ -482,7 +482,7 @@ static void draw_background_video(void) {
 
     draw_foreground_video();
 }
-static void draw_background(void) {
+static void draw_background() {
     auto &data = g_message_dialog_data;
     if (data.background_callback)
         data.background_callback();
@@ -492,13 +492,13 @@ static void draw_background(void) {
     graphics_set_to_dialog();
     if (data.show_video)
         draw_background_video();
-    else {
+    else
         draw_background_normal();
-    }
+
     graphics_reset_dialog();
 }
 
-static image_button* get_advisor_button(void) {
+static image_button* get_advisor_button() {
     switch (g_player_message_data.message_advisor) {
     case MESSAGE_ADVISOR_LABOR:
         return &image_button_labor;
@@ -519,7 +519,7 @@ static image_button* get_advisor_button(void) {
     }
 }
 
-static void draw_foreground_normal(void) {
+static void draw_foreground_normal() {
     auto &data = g_message_dialog_data;
     const lang_message* msg = lang_get_message(data.text_id);
 
@@ -539,7 +539,8 @@ static void draw_foreground_normal(void) {
                        1);
     rich_text_draw_scrollbar();
 }
-static void draw_foreground_video(void) {
+
+static void draw_foreground_video() {
     auto &data = g_message_dialog_data;
     video_draw(data.x + 8, data.y + 8);
     image_buttons_draw(data.x + 16, data.y + 408, get_advisor_button(), 1);
@@ -548,14 +549,15 @@ static void draw_foreground_video(void) {
     if (is_problem_message(msg))
         image_buttons_draw(data.x + 48, data.y + 407, &image_button_go_to_problem, 1);
 }
-static void draw_foreground(void) {
+
+static void draw_foreground() {
     auto &data = g_message_dialog_data;
     graphics_set_to_dialog();
     if (data.show_video)
         draw_foreground_video();
-    else {
+    else
         draw_foreground_normal();
-    }
+
     graphics_reset_dialog();
 }
 
@@ -627,15 +629,15 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         button_close(0, 0);
 }
 
-static void cleanup(void) {
+static void cleanup() {
     auto &data = g_message_dialog_data;
     if (data.show_video) {
         video_stop();
-        data.show_video = 0;
+        data.show_video = false;
     }
     g_player_message_data.message_advisor = 0;
 }
-static void button_back(int param1, int param2) {
+static void button_back(int /* param1 */, int /* param2 */) {
     auto &data = g_message_dialog_data;
     if (data.num_history > 0) {
         data.num_history--;
