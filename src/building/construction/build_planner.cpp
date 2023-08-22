@@ -683,11 +683,12 @@ static int place_plaza(map_point start, map_point end) {
     map_tiles_update_all_plazas();
     return items_placed;
 }
-static int place_garden(int x_start, int y_start, int x_end, int y_end) {
+
+static int place_garden(map_point start, map_point end) {
     game_undo_restore_map(1);
 
     int x_min, y_min, x_max, y_max;
-    map_grid_start_end_to_area(map_point(x_start, y_start), map_point(x_end, y_end), &x_min, &y_min, &x_max, &y_max);
+    map_grid_start_end_to_area(start, end, &x_min, &y_min, &x_max, &y_max);
 
     int items_placed = 0;
     for (int y = y_min; y <= y_max; y++) {
@@ -1653,7 +1654,7 @@ void BuildPlanner::construction_update(map_point tile) {
         items_placed = place_plaza(start, end);
         break;
     case BUILDING_GARDENS:
-        items_placed = place_garden(start.x(), start.y(), x, y);
+        items_placed = place_garden(start, end);
         break;
     case BUILDING_IRRIGATION_DITCH:
         items_placed = building_construction_place_aqueduct(true, start.x(), start.y(), x, y);
@@ -1862,7 +1863,7 @@ bool BuildPlanner::place() {
         placement_cost *= place_plaza(start, end);
         break;
     case BUILDING_GARDENS:
-        placement_cost *= place_garden(start.x(), start.y(), end.x(), end.y());
+        placement_cost *= place_garden(start, end);
         map_routing_update_land();
         break;
     case BUILDING_LOW_BRIDGE:
