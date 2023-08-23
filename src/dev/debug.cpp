@@ -679,7 +679,7 @@ void figure::draw_debug() {
 }
 
 const char* get_terrain_type(char* buffer, const char* def, map_point tile) {
-    e_terrain type = map_terrain_get(tile.grid_offset());
+    int type = map_terrain_get(tile.grid_offset());
     strcat(buffer, def);
     if (type & TERRAIN_DUNE) {
         strcat(buffer, "dune");

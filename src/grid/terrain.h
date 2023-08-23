@@ -77,7 +77,7 @@ enum e_terrain {
 
 bool map_terrain_is(int grid_offset, int terrain_mask);
 
-e_terrain map_terrain_get(int grid_offset);
+int map_terrain_get(int grid_offset);
 
 void map_terrain_set(int grid_offset, int terrain);
 

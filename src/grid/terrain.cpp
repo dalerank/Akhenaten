@@ -25,8 +25,8 @@ grid_xx g_terrain_grid_backup = {0,
 bool map_terrain_is(int grid_offset, int terrain_mask) {
     return map_grid_is_valid_offset(grid_offset) && !!(map_grid_get(&g_terrain_grid, grid_offset) & terrain_mask);
 }
-e_terrain map_terrain_get(int grid_offset) {
-    return (e_terrain)map_grid_get(&g_terrain_grid, grid_offset);
+int map_terrain_get(int grid_offset) {
+    return map_grid_get(&g_terrain_grid, grid_offset);
 }
 void map_terrain_set(int grid_offset, int terrain) {
     map_grid_set(&g_terrain_grid, grid_offset, terrain);
