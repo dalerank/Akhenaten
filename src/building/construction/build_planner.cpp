@@ -398,6 +398,11 @@ static void add_storageyard(building* b) {
     prev->next_part_building_id = 0;
 }
 
+static int place_ferry(building *b, int size) {
+    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), size, image_id_from_group(GROUP_BUILDING_FERRY), TERRAIN_BUILDING|TERRAIN_ROAD);
+    return 1;
+}
+
 static void add_building_tiles_image(building* b, int image_id) {
     map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size, image_id, TERRAIN_BUILDING);
 }
@@ -528,33 +533,30 @@ static void add_building(building* b, int orientation, int variant) {
     case BUILDING_TRANSPORT_WHARF:
     case BUILDING_SHIPYARD:
     case BUILDING_WARSHIP_WHARF:
-    case BUILDING_FERRY:
     case BUILDING_DOCK: {
         auto props = building_properties_for_type(b->type);
-        map_water_add_building(b->id,
-                               b->tile.x(),
-                               b->tile.y(),
-                               props->size,
+        map_water_add_building(b->id, b->tile.x(), b->tile.y(), props->size,
                                image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
+        break;
+    }
+
+    case BUILDING_FERRY: {
+        auto props = building_properties_for_type(b->type);
+        map_water_add_building(b->id, b->tile.x(), b->tile.y(), props->size, image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
+        place_ferry(b, props->size);
         break;
     }
         // defense
     case BUILDING_TOWER:
         map_terrain_remove_with_radius(b->tile.x(), b->tile.y(), 2, 0, TERRAIN_WALL);
-        map_building_tiles_add(b->id,
-                               b->tile.x(),
-                               b->tile.y(),
-                               b->size,
+        map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size,
                                image_id_from_group(GROUP_BUILDING_TOWER),
                                TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
         map_tiles_update_area_walls(b->tile.x(), b->tile.y(), 5);
         break;
     case BUILDING_GATEHOUSE_PH:
     case BUILDING_GATEHOUSE:
-        map_building_tiles_add(b->id,
-                               b->tile.x(),
-                               b->tile.y(),
-                               b->size,
+        map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size,
                                image_id_from_group(GROUP_BUILDING_TOWER) + orientation,
                                TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
         //            map_orientation_update_buildings();
@@ -655,21 +657,6 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
 
         map_routing_update_land();
         window_invalidate();
-    }
-    return items_placed;
-}
-
-static int place_ferry(map_point start, int size) {
-    int x_min, y_min, x_max, y_max;
-    map_grid_start_end_to_area(start, map_point(start.x() + size, start.y() + size), &x_min, &y_min, &x_max, &y_max);
-    game_undo_restore_map(1);
-
-    int items_placed = 0;
-    for (int y = y_min; y <= y_max; y++) {
-        for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = MAP_OFFSET(x, y);
-            map_terrain_add(grid_offset, TERRAIN_ROAD);
-        }
     }
     return items_placed;
 }
@@ -1700,7 +1687,6 @@ void BuildPlanner::construction_update(map_point tile) {
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_FERRY:
         draw_as_constructing = map_shore_determine_orientation(end, additional_req_param1, true).match;
-        place_ferry(start, 2);
         break;
     default:
         if (special_flags & PlannerFlags::Meadow || special_flags & PlannerFlags::Rock
