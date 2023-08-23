@@ -35,7 +35,7 @@ enum {
 extern grid_xx routing_distance;
 extern grid_xx water_drag;
 
-extern grid_xx terrain_land_citizen;
+extern grid_xx routing_land_citizen;
 extern grid_xx terrain_land_noncitizen;
 extern grid_xx routing_tiles_water;
 extern grid_xx routing_tiles_walls;

@@ -72,7 +72,7 @@ static bool can_place_on_crossing_no_neighboring(int grid_offset,
 
 static void callback_calc_distance(int next_offset, int dist) {
     OZZY_PROFILER_SECTION("callback_calc_distance");
-    if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD)
+    if (map_grid_get(&routing_land_citizen, next_offset) >= CITIZEN_0_ROAD)
         enqueue(next_offset, dist);
 }
 void map_routing_calculate_distances(int x, int y) {
@@ -111,14 +111,14 @@ void map_routing_calculate_distances_water_flotsam(int x, int y) {
         route_queue_dir8(grid_offset, callback_calc_distance_water_flotsam);
 }
 static void callback_calc_distance_build_wall(int next_offset, int dist) {
-    if (map_grid_get(&terrain_land_citizen, next_offset) == CITIZEN_4_CLEAR_TERRAIN)
+    if (map_grid_get(&routing_land_citizen, next_offset) == CITIZEN_4_CLEAR_TERRAIN)
         enqueue(next_offset, dist);
 }
 static void callback_calc_distance_build_road(int next_offset, int dist) {
     bool blocked = false;
     int d_x = MAP_X(next_offset) - MAP_X(queue_get(0));
     int d_y = MAP_Y(next_offset) - MAP_Y(queue_get(0));
-    switch (map_grid_get(&terrain_land_citizen, next_offset)) {
+    switch (map_grid_get(&routing_land_citizen, next_offset)) {
     case CITIZEN_N3_AQUEDUCT:
         if (!map_can_place_road_under_aqueduct(next_offset))
             blocked = true;
@@ -149,7 +149,7 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
     bool blocked = false;
     int d_x = MAP_X(next_offset) - MAP_X(queue_get(0));
     int d_y = MAP_Y(next_offset) - MAP_Y(queue_get(0));
-    switch (map_grid_get(&terrain_land_citizen, next_offset)) {
+    switch (map_grid_get(&routing_land_citizen, next_offset)) {
     case CITIZEN_0_ROAD: // rubble, garden, access ramp
         if (!map_can_place_aqueduct_on_road(next_offset))
             blocked = true;
@@ -173,7 +173,7 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
         enqueue(next_offset, dist);
 }
 bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
-    switch (map_grid_get(&terrain_land_citizen, grid_offset)) {
+    switch (map_grid_get(&routing_land_citizen, grid_offset)) {
     case CITIZEN_N1_BLOCKED:
         // not open land, can only if:
         // - aqueduct should be placed, and:
@@ -250,7 +250,7 @@ bool map_routing_calculate_distances_for_building(routed_int type, int x, int y)
     return true;
 }
 static bool callback_delete_wall_aqueduct(int next_offset, int dist) {
-    if (map_grid_get(&terrain_land_citizen, next_offset) < CITIZEN_0_ROAD) {
+    if (map_grid_get(&routing_land_citizen, next_offset) < CITIZEN_0_ROAD) {
         if (map_terrain_is(next_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
             map_terrain_remove(next_offset, TERRAIN_CLEARABLE);
             return true;
@@ -279,7 +279,7 @@ static int has_fighting_enemy(int grid_offset) {
 }
 
 static bool callback_travel_found_terrain(int next_offset, int dist, int terrain_type) {
-    if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset)) {
+    if (map_grid_get(&routing_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset)) {
         enqueue(next_offset, dist);
         if (map_terrain_is(next_offset, terrain_type))
             return true;
@@ -293,7 +293,7 @@ bool map_routing_citizen_found_terrain(int src_x, int src_y, int* dst_x, int* ds
     return found;
 }
 static bool callback_travel_found_reeds(int next_offset, int dist) {
-    if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset)) {
+    if (map_grid_get(&routing_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset)) {
         enqueue(next_offset, dist);
         if (map_terrain_is(next_offset, TERRAIN_MARSHLAND)) {
             int t_x = MAP_X(next_offset);
@@ -313,7 +313,7 @@ bool map_routing_citizen_found_reeds(int src_x, int src_y, int* dst_x, int* dst_
     return found;
 }
 static bool callback_travel_found_timber(int next_offset, int dist) {
-    if ((map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD
+    if ((map_grid_get(&routing_land_citizen, next_offset) >= CITIZEN_0_ROAD
          || map_terrain_is(next_offset, TERRAIN_TREE))
         && !has_fighting_friendly(next_offset)) {
         enqueue(next_offset, dist);
@@ -331,7 +331,7 @@ bool map_routing_citizen_found_timber(int src_x, int src_y, int* dst_x, int* dst
 }
 
 static void callback_travel_citizen_land(int next_offset, int dist) {
-    if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset))
+    if (map_grid_get(&routing_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset))
         enqueue(next_offset, dist);
 }
 bool map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y) {
@@ -342,8 +342,8 @@ bool map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, i
     return map_grid_get(&routing_distance, dst_offset) != 0;
 }
 static void callback_travel_citizen_road(int next_offset, int dist) {
-    if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD
-        && map_grid_get(&terrain_land_citizen, next_offset) < CITIZEN_2_PASSABLE_TERRAIN) {
+    if (map_grid_get(&routing_land_citizen, next_offset) >= CITIZEN_0_ROAD
+        && map_grid_get(&routing_land_citizen, next_offset) < CITIZEN_2_PASSABLE_TERRAIN) {
         enqueue(next_offset, dist);
     }
 }
@@ -355,8 +355,8 @@ bool map_routing_citizen_can_travel_over_road(int src_x, int src_y, int dst_x, i
     return map_grid_get(&routing_distance, dst_offset) != 0;
 }
 static void callback_travel_citizen_road_garden(int next_offset, int dist) {
-    if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD
-        && map_grid_get(&terrain_land_citizen, next_offset) <= CITIZEN_2_PASSABLE_TERRAIN) {
+    if (map_grid_get(&routing_land_citizen, next_offset) >= CITIZEN_0_ROAD
+        && map_grid_get(&routing_land_citizen, next_offset) <= CITIZEN_2_PASSABLE_TERRAIN) {
         enqueue(next_offset, dist);
     }
 }
@@ -440,7 +440,7 @@ int map_routing_distance(int grid_offset) {
     return map_grid_get(&routing_distance, grid_offset);
 }
 int map_citizen_grid(int grid_offset) {
-    return map_grid_get(&terrain_land_citizen, grid_offset);
+    return map_grid_get(&routing_land_citizen, grid_offset);
 }
 
 io_buffer* iob_routing_stats = new io_buffer([](io_buffer* iob, size_t version) {
