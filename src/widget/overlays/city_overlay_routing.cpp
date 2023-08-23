@@ -35,7 +35,7 @@ static int get_tooltip_routing(tooltip_context* c, const building* b) {
 }
 
 static int terrain_on_routing_overlay() {
-    return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER 
+    return TERRAIN_TREE | TERRAIN_ROCK
             | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP 
             | TERRAIN_RUBBLE | TERRAIN_AQUEDUCT | TERRAIN_WALL;
 }
@@ -67,10 +67,21 @@ struct city_overlay_routing : public city_overlay {
         int y = pixel.y;
         color color_mask = 0;
         bool drawn = false;
+        int image_id = image_id_from_group(GROUP_TERRAIN_DESIRABILITY);
         if (map_terrain_is(grid_offset, terrain_on_routing_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING) ) {
             drawn = true;
             ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
-        } 
+        }
+
+        if (!drawn && map_terrain_is(grid_offset, TERRAIN_WATER)) {
+             drawn = true;
+            if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+                int offset = 5;
+                ImageDraw::isometric_from_drawtile(image_id + offset, x, y, color_mask);
+            } else {
+                ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
+            }
+        }
         
         if (!drawn) {
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_terrain_is(grid_offset, TERRAIN_WATER)) {
@@ -78,7 +89,7 @@ struct city_overlay_routing : public city_overlay {
                 int offset = 2;
 
                 if (b && !building_on_routing_overlay(b->type)) {
-                    ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
+                    ImageDraw::isometric_from_drawtile(image_id + offset, x, y, color_mask);
                     drawn = true;
                 }
             }
@@ -92,7 +103,7 @@ struct city_overlay_routing : public city_overlay {
             if (road || building_road) {
                 int offset = 5;
                 drawn = true;
-                ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
+                ImageDraw::isometric_from_drawtile(image_id + offset, x, y, color_mask);
             }
         }
 

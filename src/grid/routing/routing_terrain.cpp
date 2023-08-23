@@ -335,20 +335,20 @@ ferry_points get_ferry_points(building *b) {
     map_point tile = b->tile;
     switch (b->data.industry.orientation) {
     case 0:
-        result.point_a = {tile.x()+1, tile.y()};
-        result.point_b = {tile.x()+1, tile.y()+1};
+        result.point_a = {tile.x()+1, tile.y()-1};
+        result.point_b = {tile.x(), tile.y()-1};
         break;
     case 1:
-        result.point_a = {tile.x(), tile.y() + 2};
-        result.point_b = {tile.x() - 1, tile.y() + 2};
+        result.point_a = {tile.x() + 2, tile.y() + 1};
+        result.point_b = {tile.x() + 2, tile.y() + 2};
         break;
     case 2:
-        result.point_a = {tile.x()-2, tile.y()};
-        result.point_b = {tile.x()-2, tile.y()+1};
+        result.point_a = {tile.x(), tile.y() + 2};
+        result.point_b = {tile.x()+1, tile.y() + 2};
         break;
     case 3:
-        result.point_a = {tile.x()-1, tile.y()-1};
-        result.point_b = {tile.x(), tile.y()-1};
+        result.point_a = {tile.x()-1, tile.y()};
+        result.point_b = {tile.x()-1, tile.y()-1};
         break;
     }
 
@@ -368,7 +368,9 @@ void map_routing_update_ferry_routes() {
             ferry_points fpoints_end = get_ferry_points(*f2);
 
             map_terrain_add(fpoints_begin.point_a.grid_offset(), TERRAIN_ROAD);
+            map_terrain_add(fpoints_begin.point_b.grid_offset(), TERRAIN_ROAD);
             map_terrain_add(fpoints_end.point_a.grid_offset(), TERRAIN_ROAD);
+            map_terrain_add(fpoints_end.point_b.grid_offset(), TERRAIN_ROAD);
             //map_routing_calculate_distances_water_boat(fpoints_begin.point_a.x(), fpoints_begin.point_a.y());
             //int path_length = map_routing_get_path_on_water(path_data.data(), fpoints_end.point_a.x(), fpoints_end.point_a.y(), false);
             //
