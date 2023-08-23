@@ -119,31 +119,32 @@ void map_orientation_update_buildings(void) {
         case BUILDING_SHIPYARD:
             image_offset = city_view_relative_orientation(b->data.industry.orientation);
             image_id = image_id_from_group(GROUP_BUILDING_SHIPYARD) + image_offset;
-            map_water_add_building(i, b->tile.x(), b->tile.y(), 2, image_id);
+            map_water_add_building(i, b->tile, 2, image_id);
             break;
         case BUILDING_FISHING_WHARF:
             image_offset = city_view_relative_orientation(b->data.industry.orientation);
             image_id = image_id_from_group(GROUP_BUILDING_FISHING_WHARF) + image_offset;
-            map_water_add_building(i, b->tile.x(), b->tile.y(), 2, image_id);
+            map_water_add_building(i, b->tile, 2, image_id);
             break;
         case BUILDING_FERRY:
             image_offset = city_view_relative_orientation(b->data.industry.orientation);
             image_id = image_id_from_group(GROUP_BUILDING_FERRY) + image_offset;
-            map_water_add_building(i, b->tile.x(), b->tile.y(), 2, image_id);
+            map_water_add_building(i, b->tile, 2, image_id);
             break;
         case BUILDING_DOCK:
             image_offset = city_view_relative_orientation(b->data.dock.orientation);
             image_id = image_id_from_group(GROUP_BUILDING_DOCK) + image_offset;
-            map_water_add_building(i, b->tile.x(), b->tile.y(), 3, image_id);
+            map_water_add_building(i, b->tile, 3, image_id);
             break;
         case BUILDING_WATER_LIFT:
             image_offset = city_view_relative_orientation(b->data.industry.orientation);
-            if (!map_terrain_exists_tile_in_radius_with_type(b->tile.x(), b->tile.y(), 2, 1, TERRAIN_WATER))
+            if (!map_terrain_exists_tile_in_radius_with_type(b->tile.x(), b->tile.y(), 2, 1, TERRAIN_WATER)) {
                 image_offset += 4;
-            else if (map_terrain_exists_tile_in_radius_with_type(b->tile.x(), b->tile.y(), 2, 1, TERRAIN_FLOODPLAIN))
+            } else if (map_terrain_exists_tile_in_radius_with_type(b->tile.x(), b->tile.y(), 2, 1, TERRAIN_FLOODPLAIN)) {
                 image_offset += 8;
+            }
             image_id = image_id_from_group(GROUP_BUILDING_WATER_LIFT) + image_offset;
-            map_water_add_building(i, b->tile.x(), b->tile.y(), 2, image_id);
+            map_water_add_building(i, b->tile, 2, image_id);
             break;
         case BUILDING_BOOTH:
         case BUILDING_BANDSTAND:

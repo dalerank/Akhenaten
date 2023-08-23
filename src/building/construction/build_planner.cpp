@@ -521,12 +521,7 @@ static void add_building(building* b, int orientation, int variant) {
 
     case BUILDING_WATER_LIFT: {
         auto props = building_properties_for_type(b->type);
-        map_water_add_building(b->id,
-                               b->tile.x(),
-                               b->tile.y(),
-                               props->size,
-                               image_id_from_group(props->image_collection, props->image_group) + orientation_rel
-                                 + 4 * variant);
+        map_water_add_building(b->id, b->tile, props->size, image_id_from_group(props->image_collection, props->image_group) + orientation_rel + 4 * variant);
         break;
     }
     case BUILDING_FISHING_WHARF:
@@ -535,14 +530,13 @@ static void add_building(building* b, int orientation, int variant) {
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_DOCK: {
         auto props = building_properties_for_type(b->type);
-        map_water_add_building(b->id, b->tile.x(), b->tile.y(), props->size,
-                               image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
+        map_water_add_building(b->id, b->tile, props->size, image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
         break;
     }
 
     case BUILDING_FERRY: {
         auto props = building_properties_for_type(b->type);
-        map_water_add_building(b->id, b->tile.x(), b->tile.y(), props->size, image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
+        map_water_add_building(b->id, b->tile, props->size, image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
         place_ferry(b, props->size, image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
         break;
     }

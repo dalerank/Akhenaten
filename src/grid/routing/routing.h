@@ -1,5 +1,4 @@
-#ifndef MAP_ROUTING_H
-#define MAP_ROUTING_H
+#pragma once
 
 #include "core/buffer.h"
 
@@ -35,5 +34,3 @@ bool map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x
 bool map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, int dst_x, int dst_y);
 
 void map_routing_block(int x, int y, int size);
-
-#endif // MAP_ROUTING_H

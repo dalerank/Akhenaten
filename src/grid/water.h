@@ -15,7 +15,7 @@ void foreach_river_tile(T func) {
     }
 }
 
-void map_water_add_building(int building_id, int x, int y, int size, int image_id);
+void map_water_add_building(int building_id, map_point tile, int size, int image_id);
 
 void map_water_cache_river_tiles();
 

@@ -1,5 +1,4 @@
-#ifndef MAP_ROUTING_DATA_H
-#define MAP_ROUTING_DATA_H
+#pragma once
 
 #include "grid/grid.h"
 
@@ -39,5 +38,3 @@ extern grid_xx routing_land_citizen;
 extern grid_xx routing_land_noncitizen;
 extern grid_xx routing_tiles_water;
 extern grid_xx routing_tiles_walls;
-
-#endif // MAP_ROUTING_DATA_H
