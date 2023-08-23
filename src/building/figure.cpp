@@ -410,11 +410,9 @@ void building::set_market_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
     if (map_desirability_get(tile.grid_offset()) <= 30) {
-        map_building_tiles_add(
-          id, tile.x(), tile.y(), size, image_id_from_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
+        map_building_tiles_add(id, tile.x(), tile.y(), size, image_id_from_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
     } else {
-        map_building_tiles_add(
-          id, tile.x(), tile.y(), size, image_id_from_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
+        map_building_tiles_add(id, tile.x(), tile.y(), size, image_id_from_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
     }
 }
 void building::spawn_figure_market() {

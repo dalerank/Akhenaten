@@ -96,8 +96,7 @@ void map_orientation_update_buildings(void) {
                     image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 1;
                 }
             }
-            map_building_tiles_add(
-              i, b->tile.x(), b->tile.y(), b->size, image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
+            map_building_tiles_add(i, b->tile.x(), b->tile.y(), b->size, image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
             map_terrain_add_gatehouse_roads(b->tile.x(), b->tile.y(), 0);
             break;
         case BUILDING_TRIUMPHAL_ARCH:

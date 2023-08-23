@@ -473,9 +473,9 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES]) {
             if (b->type == BUILDING_GATEHOUSE && b->subtype.orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
                 tiles[i] = 1;
             }
-        } else if (map_terrain_is(offset, TERRAIN_ACCESS_RAMP))
+        } else if (map_terrain_is(offset, TERRAIN_ACCESS_RAMP)) {
             tiles[i] = 1;
-        else if (map_terrain_is(offset, TERRAIN_BUILDING)) {
+        } else if (map_terrain_is(offset, TERRAIN_BUILDING)) {
             building* b = building_at(offset);
             if (b->type == BUILDING_GRANARY) {
                 tiles[i] = (offset == b->tile.grid_offset() + GRID_OFFSET(1, 0)) ? 1 : 0;

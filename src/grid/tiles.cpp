@@ -779,15 +779,21 @@ int map_tiles_is_paved_road(int grid_offset) {
     return 0;
 }
 static void set_road_image(int grid_offset) {
-    if (!map_terrain_is(grid_offset, TERRAIN_ROAD) || map_terrain_is(grid_offset, TERRAIN_WATER)
-        || map_terrain_is(grid_offset, TERRAIN_BUILDING))
+    if (!map_terrain_is(grid_offset, TERRAIN_ROAD)
+        || map_terrain_is(grid_offset, TERRAIN_WATER)
+        || map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         return;
+    }
+
     if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
         set_aqueduct_image(grid_offset);
         return;
     }
-    if (map_property_is_plaza_or_earthquake(grid_offset))
+
+    if (map_property_is_plaza_or_earthquake(grid_offset)) {
         return;
+    }
+
     if (map_tiles_is_paved_road(grid_offset)) {
         const terrain_image* img = map_image_context_get_paved_road(grid_offset);
         map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_ROAD) + img->group_offset + img->item_offset);

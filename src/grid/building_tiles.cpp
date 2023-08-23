@@ -448,25 +448,25 @@ void map_building_tiles_remove(int building_id, int x, int y) {
     building* b = building_get(building_id);
     if (building_id && building_is_farm(b->type))
         size = 3;
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        switch (b->type) {
-        case BUILDING_BOOTH:
-            size = 2;
-            base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
-            break;
-        case BUILDING_BANDSTAND:
-            size = 3;
-            base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
-            break;
-        case BUILDING_PAVILLION:
-            size = 4;
-            base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
-            break;
-        case BUILDING_FESTIVAL_SQUARE:
-            size = 5;
-            break;
-        }
+
+    switch (b->type) {
+    case BUILDING_BOOTH:
+        size = 2;
+        base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
+        break;
+    case BUILDING_BANDSTAND:
+        size = 3;
+        base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
+        break;
+    case BUILDING_PAVILLION:
+        size = 4;
+        base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
+        break;
+    case BUILDING_FESTIVAL_SQUARE:
+        size = 5;
+        break;
     }
+
     x = MAP_X(base_grid_offset);
     y = MAP_Y(base_grid_offset);
     for (int dy = 0; dy < size; dy++) {
