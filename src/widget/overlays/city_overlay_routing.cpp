@@ -41,7 +41,7 @@ static int terrain_on_routing_overlay() {
 }
 
 static bool building_on_routing_overlay(e_building_type type) {
-    return type == BUILDING_FERRY || type == BUILDING_PLAZA || type == BUILDING_BOOTH;
+    return type == BUILDING_FERRY || type == BUILDING_PLAZA || type == BUILDING_BOOTH || type == BUILDING_ROAD;
 }
 
 struct city_overlay_routing : public city_overlay {
@@ -66,35 +66,43 @@ struct city_overlay_routing : public city_overlay {
         int x = pixel.x;
         int y = pixel.y;
         color color_mask = 0;
+        bool drawn = false;
         if (map_terrain_is(grid_offset, terrain_on_routing_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING) ) {
+            drawn = true;
             ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
-        } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_terrain_is(grid_offset, TERRAIN_WATER)) {
-            building *b = building_at(grid_offset);
-            int offset = 2;
+        } 
+        
+        if (!drawn) {
+            if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_terrain_is(grid_offset, TERRAIN_WATER)) {
+                building *b = building_at(grid_offset);
+                int offset = 2;
 
-            if (b && !building_on_routing_overlay(b->type)) {
-                ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
+                if (b && !building_on_routing_overlay(b->type)) {
+                    ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
+                    drawn = true;
+                }
             }
-        } else {
-            bool drawn = false;
-            building *b = building_at(grid_offset);
+        }
+        
+        building *b = building_at(grid_offset);
+        if (!drawn) {
             bool road = map_terrain_is(grid_offset, TERRAIN_ROAD);
-            bool building_road = b && b->type == BUILDING_ROAD;
+            bool building_road = b && building_on_routing_overlay(b->type);
 
             if (road || building_road) {
                 int offset = 5;
                 drawn = true;
                 ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
             }
-            
-            if (!drawn) {
-                ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
-            }
+        }
+
+        if (!drawn) {
+            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
         }
     }
 
     bool show_building(const building* b) const override {
-        return b->type == BUILDING_FERRY || b->type == BUILDING_PLAZA || b->type == BUILDING_BOOTH;
+        return /*b->type == BUILDING_FERRY ||*/ b->type == BUILDING_PLAZA || b->type == BUILDING_BOOTH;
     }
 };
 
