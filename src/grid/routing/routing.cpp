@@ -382,9 +382,9 @@ bool map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_
 }
 static void callback_travel_noncitizen_land_through_building(int next_offset, int dist) {
     if (!has_fighting_enemy(next_offset)) {
-        if (map_grid_get(&terrain_land_noncitizen, next_offset) == NONCITIZEN_0_PASSABLE
-            || map_grid_get(&terrain_land_noncitizen, next_offset) == NONCITIZEN_2_CLEARABLE
-            || (map_grid_get(&terrain_land_noncitizen, next_offset) == NONCITIZEN_1_BUILDING
+        if (map_grid_get(&routing_land_noncitizen, next_offset) == NONCITIZEN_0_PASSABLE
+            || map_grid_get(&routing_land_noncitizen, next_offset) == NONCITIZEN_2_CLEARABLE
+            || (map_grid_get(&routing_land_noncitizen, next_offset) == NONCITIZEN_1_BUILDING
                 && map_building_at(next_offset) == g_routing_state_data.through_building_id)) {
             enqueue(next_offset, dist);
         }
@@ -392,8 +392,8 @@ static void callback_travel_noncitizen_land_through_building(int next_offset, in
 }
 static void callback_travel_noncitizen_land(int next_offset, int dist) {
     if (!has_fighting_enemy(next_offset)) {
-        if (map_grid_get(&terrain_land_noncitizen, next_offset) >= NONCITIZEN_0_PASSABLE
-            && map_grid_get(&terrain_land_noncitizen, next_offset) < NONCITIZEN_5_FORT) {
+        if (map_grid_get(&routing_land_noncitizen, next_offset) >= NONCITIZEN_0_PASSABLE
+            && map_grid_get(&routing_land_noncitizen, next_offset) < NONCITIZEN_5_FORT) {
             enqueue(next_offset, dist);
         }
     }
@@ -416,7 +416,7 @@ bool map_routing_noncitizen_can_travel_over_land(int src_x,
     return map_grid_get(&routing_distance, dst_offset) != 0;
 }
 static void callback_travel_noncitizen_through_everything(int next_offset, int dist) {
-    if (map_grid_get(&terrain_land_noncitizen, next_offset) >= NONCITIZEN_0_PASSABLE)
+    if (map_grid_get(&routing_land_noncitizen, next_offset) >= NONCITIZEN_0_PASSABLE)
         enqueue(next_offset, dist);
 }
 bool map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, int dst_x, int dst_y) {

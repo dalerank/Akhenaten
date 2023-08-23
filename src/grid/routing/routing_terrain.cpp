@@ -288,11 +288,11 @@ void map_routing_update_land_citizen(void) {
 }
 static void map_routing_update_land_noncitizen(void) {
     OZZY_PROFILER_SECTION("Game/Run/Routing/Update land/Noncitizen");
-    map_grid_fill(&terrain_land_noncitizen, -1);
+    map_grid_fill(&routing_land_noncitizen, -1);
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            map_grid_set(&terrain_land_noncitizen, grid_offset, map_routing_tile_check(ROUTING_TYPE_NONCITIZEN, grid_offset));
+            map_grid_set(&routing_land_noncitizen, grid_offset, map_routing_tile_check(ROUTING_TYPE_NONCITIZEN, grid_offset));
             //            int terrain = map_terrain_get(grid_offset);
             //            if (terrain & TERRAIN_GATEHOUSE) {
             //                map_grid_set(&terrain_land_noncitizen, grid_offset, NONCITIZEN_4_GATEHOUSE);
@@ -457,13 +457,13 @@ bool map_routing_passable_by_usage(int terrain_usage, int grid_offset) {
     case TERRAIN_USAGE_ROADS:
         return map_grid_get(&routing_land_citizen, grid_offset) == CITIZEN_0_ROAD;
     case TERRAIN_USAGE_ENEMY:
-        return map_grid_get(&terrain_land_noncitizen, grid_offset) >= NONCITIZEN_0_PASSABLE;
+        return map_grid_get(&routing_land_noncitizen, grid_offset) >= NONCITIZEN_0_PASSABLE;
     case TERRAIN_USAGE_PREFER_ROADS:
         return map_grid_get(&routing_land_citizen, grid_offset) >= CITIZEN_0_ROAD;
     case TERRAIN_USAGE_WALLS:
         return map_grid_get(&routing_tiles_walls, grid_offset) == WALL_0_PASSABLE;
     case TERRAIN_USAGE_ANIMAL:
-        return map_grid_get(&terrain_land_noncitizen, grid_offset) >= NONCITIZEN_0_PASSABLE;
+        return map_grid_get(&routing_land_noncitizen, grid_offset) >= NONCITIZEN_0_PASSABLE;
     }
     return false;
 }
@@ -505,14 +505,14 @@ int map_routing_citizen_is_passable_terrain(int grid_offset) {
     return map_grid_get(&routing_land_citizen, grid_offset) == CITIZEN_2_PASSABLE_TERRAIN;
 }
 int map_routing_noncitizen_is_passable(int grid_offset) {
-    return map_grid_get(&terrain_land_noncitizen, grid_offset) >= NONCITIZEN_0_PASSABLE;
+    return map_grid_get(&routing_land_noncitizen, grid_offset) >= NONCITIZEN_0_PASSABLE;
 }
 int map_routing_is_destroyable(int grid_offset) {
-    return map_grid_get(&terrain_land_noncitizen, grid_offset) > NONCITIZEN_0_PASSABLE
-           && map_grid_get(&terrain_land_noncitizen, grid_offset) != NONCITIZEN_5_FORT;
+    return map_grid_get(&routing_land_noncitizen, grid_offset) > NONCITIZEN_0_PASSABLE
+           && map_grid_get(&routing_land_noncitizen, grid_offset) != NONCITIZEN_5_FORT;
 }
 int map_routing_get_destroyable(int grid_offset) {
-    switch (map_grid_get(&terrain_land_noncitizen, grid_offset)) {
+    switch (map_grid_get(&routing_land_noncitizen, grid_offset)) {
     case NONCITIZEN_1_BUILDING:
         return DESTROYABLE_BUILDING;
     case NONCITIZEN_2_CLEARABLE:
