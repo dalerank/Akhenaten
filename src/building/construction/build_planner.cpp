@@ -398,8 +398,8 @@ static void add_storageyard(building* b) {
     prev->next_part_building_id = 0;
 }
 
-static int place_ferry(building *b, int size) {
-    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), size, image_id_from_group(GROUP_BUILDING_FERRY), TERRAIN_BUILDING|TERRAIN_ROAD);
+static int place_ferry(building *b, int size, int image_id) {
+    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), size, image_id, TERRAIN_BUILDING|TERRAIN_ROAD);
     return 1;
 }
 
@@ -543,7 +543,7 @@ static void add_building(building* b, int orientation, int variant) {
     case BUILDING_FERRY: {
         auto props = building_properties_for_type(b->type);
         map_water_add_building(b->id, b->tile.x(), b->tile.y(), props->size, image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
-        place_ferry(b, props->size);
+        place_ferry(b, props->size, image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
         break;
     }
         // defense

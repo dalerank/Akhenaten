@@ -681,9 +681,28 @@ void figure::draw_debug() {
 const char* get_terrain_type(char* buffer, const char* def, map_point tile) {
     int type = map_terrain_get(tile.grid_offset());
     strcat(buffer, def);
-    if (type & TERRAIN_DUNE) {
-        strcat(buffer, "dune");
+    if (type & TERRAIN_DUNE) strcat(buffer, "dune,");
+    if (type & TERRAIN_TREE) strcat(buffer, "tree,");
+    if (type & TERRAIN_ROCK) strcat(buffer, "rock,");
+    if (type & TERRAIN_WATER) strcat(buffer, "water,");
+    if (type & TERRAIN_BUILDING) {
+        bstring32 bstr;
+        building *b = building_get(map_building_at(tile));
+        bstr.printf("bld:%d,", b ? b->type : -1);
+        strcat(buffer, bstr.c_str());
     }
+    if (type & TERRAIN_SHRUB) strcat(buffer, "shrub,");
+    if (type & TERRAIN_GARDEN) strcat(buffer, "garden,");
+    if (type & TERRAIN_ROAD) strcat(buffer, "road,");
+    if (type & TERRAIN_GROUNDWATER) strcat(buffer, "grdwater,");
+    if (type & TERRAIN_AQUEDUCT) strcat(buffer, "aqudct,");
+    if (type & TERRAIN_ELEVATION) strcat(buffer, "elevat,");
+    if (type & TERRAIN_ACCESS_RAMP) strcat(buffer, "accramp,");
+    if (type & TERRAIN_MEADOW) strcat(buffer, "meadow,");
+    if (type & TERRAIN_RUBBLE) strcat(buffer, "rubble,");
+    if (type & TERRAIN_FOUNTAIN_RANGE) strcat(buffer, "fountain,");
+    if (type & TERRAIN_WALL) strcat(buffer, "wall,");
+    if (type & TERRAIN_GATEHOUSE) strcat(buffer, "gate,");
 
     return buffer;
 }
