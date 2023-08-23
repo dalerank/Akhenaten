@@ -422,11 +422,11 @@ void map_routing_update_water(void) {
     }
 }
 void map_routing_update_walls(void) {
-    map_grid_fill(&terrain_walls, -1);
+    map_grid_fill(&routing_tiles_walls, -1);
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            map_grid_set(&terrain_walls, grid_offset, map_routing_tile_check(ROUTING_TYPE_WALLS, grid_offset));
+            map_grid_set(&routing_tiles_walls, grid_offset, map_routing_tile_check(ROUTING_TYPE_WALLS, grid_offset));
             //            if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
             //                if (count_adjacent_wall_tiles(grid_offset) == 3) {
             //                    map_grid_set(&terrain_walls, grid_offset, WALL_0_PASSABLE);
@@ -461,7 +461,7 @@ bool map_routing_passable_by_usage(int terrain_usage, int grid_offset) {
     case TERRAIN_USAGE_PREFER_ROADS:
         return map_grid_get(&terrain_land_citizen, grid_offset) >= CITIZEN_0_ROAD;
     case TERRAIN_USAGE_WALLS:
-        return map_grid_get(&terrain_walls, grid_offset) == WALL_0_PASSABLE;
+        return map_grid_get(&routing_tiles_walls, grid_offset) == WALL_0_PASSABLE;
     case TERRAIN_USAGE_ANIMAL:
         return map_grid_get(&terrain_land_noncitizen, grid_offset) >= NONCITIZEN_0_PASSABLE;
     }
@@ -469,7 +469,7 @@ bool map_routing_passable_by_usage(int terrain_usage, int grid_offset) {
 }
 
 int map_routing_is_wall_passable(int grid_offset) {
-    return map_grid_get(&terrain_walls, grid_offset) == WALL_0_PASSABLE;
+    return map_grid_get(&routing_tiles_walls, grid_offset) == WALL_0_PASSABLE;
 }
 static int wall_tile_in_radius(int x, int y, int radius, int* x_wall, int* y_wall) {
     int size = 1;

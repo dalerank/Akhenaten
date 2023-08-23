@@ -368,8 +368,8 @@ bool map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int d
     return map_grid_get(&routing_distance, dst_offset) != 0;
 }
 static void callback_travel_walls(int next_offset, int dist) {
-    if (map_grid_get(&terrain_walls, next_offset) >= WALL_0_PASSABLE
-        && map_grid_get(&terrain_walls, next_offset) <= 2) {
+    if (map_grid_get(&routing_tiles_walls, next_offset) >= WALL_0_PASSABLE
+        && map_grid_get(&routing_tiles_walls, next_offset) <= 2) {
         enqueue(next_offset, dist);
     }
 }
