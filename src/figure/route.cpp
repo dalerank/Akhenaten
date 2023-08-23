@@ -10,7 +10,6 @@
 #include "grid/random.h"
 #include "grid/routing/routing.h"
 
-#define MAX_PATH_LENGTH 500
 #define MAX_ROUTES 3000
 
 struct figure_route_data_t {
@@ -40,7 +39,7 @@ void figure_route_clean(void) {
         }
     }
 }
-static int get_first_available(void) {
+int map_routing_get_first_available_id() {
     auto &data = g_figure_route_data;
     for (int i = 1; i < MAX_ROUTES; i++) {
         if (data.figure_ids[i] == 0)
@@ -54,7 +53,7 @@ void figure::figure_route_add() {
     routing_path_id = 0;
     routing_path_current_tile = 0;
     routing_path_length = 0;
-    int path_id = get_first_available();
+    int path_id = map_routing_get_first_available_id();
     if (!path_id)
         return;
     int path_length;
@@ -145,7 +144,7 @@ io_buffer* iob_route_paths = new io_buffer([](io_buffer* iob, size_t version) {
 
 int g_direction_path[MAX_PATH_LENGTH];
 
-static void adjust_tile_in_direction(int direction, int* x, int* y, int* grid_offset) {
+void map_routing_adjust_tile_in_direction(int direction, int* x, int* y, int* grid_offset) {
     switch (direction) {
     case DIR_0_TOP_RIGHT:
         --*y;
@@ -213,15 +212,19 @@ int map_routing_get_path(uint8_t* path, int src_x, int src_y, int dst_x, int dst
         }
         if (direction == -1)
             return 0;
-        adjust_tile_in_direction(direction, &x, &y, &grid_offset);
+
+        map_routing_adjust_tile_in_direction(direction, &x, &y, &grid_offset);
         int forward_direction = (direction + 4) % 8;
         g_direction_path[num_tiles++] = forward_direction;
         last_direction = forward_direction;
         if (num_tiles >= MAX_PATH_LENGTH)
             return 0;
     }
-    for (int i = 0; i < num_tiles; i++)
+
+    for (int i = 0; i < num_tiles; i++) {
         path[i] = g_direction_path[num_tiles - i - 1];
+    }
+
     return num_tiles;
 }
 int map_routing_get_closest_tile_within_range(int src_x,
@@ -269,7 +272,8 @@ int map_routing_get_closest_tile_within_range(int src_x,
         }
         if (direction == -1)
             return 0;
-        adjust_tile_in_direction(direction, &x, &y, &grid_offset);
+
+        map_routing_adjust_tile_in_direction(direction, &x, &y, &grid_offset);
         int forward_direction = (direction + 4) % 8;
         g_direction_path[num_tiles++] = forward_direction;
         last_direction = forward_direction;
@@ -316,7 +320,7 @@ int map_routing_get_path_on_water(uint8_t* path, int dst_x, int dst_y, bool is_f
         if (direction == -1)
             return 0;
 
-        adjust_tile_in_direction(direction, &x, &y, &grid_offset);
+        map_routing_adjust_tile_in_direction(direction, &x, &y, &grid_offset);
         int forward_direction = (direction + 4) % 8;
         g_direction_path[num_tiles++] = forward_direction;
         last_direction = forward_direction;
