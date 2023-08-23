@@ -970,16 +970,20 @@ static void set_deepwater_image(int grid_offset) {
     map_property_mark_draw_tile(grid_offset);
 }
 static void set_river_image(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_WATER) && !map_terrain_is(grid_offset, TERRAIN_BUILDING))
+    if (map_terrain_is(grid_offset, TERRAIN_WATER) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         set_water_image(grid_offset);
-    if (map_terrain_is(grid_offset, TERRAIN_DEEPWATER))
+    }
+
+    if (map_terrain_is(grid_offset, TERRAIN_DEEPWATER)) {
         set_deepwater_image(grid_offset);
+    }
 }
 static void set_floodplain_edges_image(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)
-        || (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)
-            && !map_terrain_is(grid_offset, TERRAIN_WATER))) // non-flooded floodplain, skip
+        || (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER))) { // non-flooded floodplain, skip
         return;
+    }
+
     int image_id = 0;
     if (!map_terrain_is(grid_offset, TERRAIN_WATER)) { // NOT floodplain, but not water either -- dry land shoreline
         if (map_terrain_is(grid_offset, TERRAIN_ROAD))

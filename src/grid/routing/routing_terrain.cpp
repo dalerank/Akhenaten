@@ -371,31 +371,32 @@ void map_routing_update_ferry_routes() {
             map_terrain_add(fpoints_begin.point_b.grid_offset(), TERRAIN_ROAD);
             map_terrain_add(fpoints_end.point_a.grid_offset(), TERRAIN_ROAD);
             map_terrain_add(fpoints_end.point_b.grid_offset(), TERRAIN_ROAD);
-            //map_routing_calculate_distances_water_boat(fpoints_begin.point_a.x(), fpoints_begin.point_a.y());
-            //int path_length = map_routing_get_path_on_water(path_data.data(), fpoints_end.point_a.x(), fpoints_end.point_a.y(), false);
-            //
-            //if (path_length > 0) {
-            //    auto path = make_span(path_data.data(), path_length);
-            //
-            //    int x = fpoints_begin.point_a.x();
-            //    int y = fpoints_begin.point_a.y();
-            //    int grid_offset = fpoints_begin.point_a.grid_offset();
-            //    int image_id = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
-            //    for (const auto &dir : path) {
-            //        map_image_set(grid_offset, image_id);
-            //        map_routing_adjust_tile_in_direction(dir, &x, &y, &grid_offset);
-            //    }
-            //}
+            
+            map_routing_calculate_distances_water_boat(fpoints_begin.point_a.x(), fpoints_begin.point_a.y());
+            int path_length = map_routing_get_path_on_water(path_data.data(), fpoints_end.point_a.x(), fpoints_end.point_a.y(), false);
+            
+            if (path_length > 0) {
+                auto path = make_span(path_data.data(), path_length);
+            
+                int x = fpoints_begin.point_a.x();
+                int y = fpoints_begin.point_a.y();
+                int grid_offset = fpoints_begin.point_a.grid_offset();
+                int image_id = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
+                for (const auto &dir : path) {
+                    map_image_set(grid_offset, image_id);
+                    map_routing_adjust_tile_in_direction(dir, &x, &y, &grid_offset);
+                }
+            }
         }
     }
 }
 
 void map_routing_update_water(void) {
-    map_grid_fill(&terrain_water, -1);
+    map_grid_fill(&routing_tiles_water, -1);
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            map_grid_set(&terrain_water, grid_offset, map_routing_tile_check(ROUTING_TYPE_WATER, grid_offset));
+            map_grid_set(&routing_tiles_water, grid_offset, map_routing_tile_check(ROUTING_TYPE_WATER, grid_offset));
             //            if (map_terrain_is(grid_offset, TERRAIN_WATER) && is_surrounded_by_water(grid_offset)) {
             //                if (x > 0 && x < scenario_map_data()->width - 1 &&
             //                    y > 0 && y < scenario_map_data()->height - 1) {
@@ -425,7 +426,7 @@ void map_routing_update_walls(void) {
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            map_grid_set(&terrain_water, grid_offset, map_routing_tile_check(ROUTING_TYPE_WALLS, grid_offset));
+            map_grid_set(&terrain_walls, grid_offset, map_routing_tile_check(ROUTING_TYPE_WALLS, grid_offset));
             //            if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
             //                if (count_adjacent_wall_tiles(grid_offset) == 3) {
             //                    map_grid_set(&terrain_walls, grid_offset, WALL_0_PASSABLE);

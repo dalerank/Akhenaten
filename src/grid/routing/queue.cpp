@@ -44,6 +44,7 @@ grid_rounting_t g_grid_rounting;
 void clear_distances(void) {
     map_grid_clear(&routing_distance);
 }
+
 int valid_offset(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) && map_grid_get(&routing_distance, grid_offset) == 0
            && map_grid_inside_map_area(grid_offset, 1);
@@ -178,7 +179,7 @@ void route_queue_boat(int source, void (*callback)(int, int)) {
         if (++tiles > GUARD)
             break;
 
-        int drag = map_grid_get(&terrain_water, offset) == WATER_N2_MAP_EDGE ? 4 : 0;
+        int drag = map_grid_get(&routing_tiles_water, offset) == WATER_N2_MAP_EDGE ? 4 : 0;
         int v = map_grid_get(&water_drag, offset);
         if (drag && v < drag) {
             queue.items[queue.tail++] = offset;

@@ -1,5 +1,4 @@
 #include "routing.h"
-#include <cmath>
 
 #include "figure/formation_herd.h"
 #include "grid/vegetation.h"
@@ -13,6 +12,8 @@
 #include "grid/terrain.h"
 #include "queue.h"
 #include "routing_grids.h"
+
+#include <cmath>
 
 struct routing_stats_t {
     int total_routes_calculated;
@@ -79,10 +80,10 @@ void map_routing_calculate_distances(int x, int y) {
     route_queue(MAP_OFFSET(x, y), -1, callback_calc_distance);
 }
 static void callback_calc_distance_water_boat(int next_offset, int dist) {
-    if (map_grid_get(&terrain_water, next_offset) != WATER_N1_BLOCKED
-        && map_grid_get(&terrain_water, next_offset) != WATER_N3_LOW_BRIDGE) {
+    if (map_grid_get(&routing_tiles_water, next_offset) != WATER_N1_BLOCKED
+        && map_grid_get(&routing_tiles_water, next_offset) != WATER_N3_LOW_BRIDGE) {
         enqueue(next_offset, dist);
-        if (map_grid_get(&terrain_water, next_offset) == WATER_N2_MAP_EDGE) {
+        if (map_grid_get(&routing_tiles_water, next_offset) == WATER_N2_MAP_EDGE) {
             int v = map_grid_get(&routing_distance, next_offset);
             //            safe_i16(&routing_distance)->items[next_offset] += 4;
             map_grid_set(&routing_distance, next_offset, v + 4);
@@ -91,18 +92,20 @@ static void callback_calc_distance_water_boat(int next_offset, int dist) {
 }
 void map_routing_calculate_distances_water_boat(int x, int y) {
     int grid_offset = MAP_OFFSET(x, y);
-    if (map_grid_get(&terrain_water, grid_offset) == WATER_N1_BLOCKED)
+    if (map_grid_get(&routing_tiles_water, grid_offset) == WATER_N1_BLOCKED) {
         clear_distances();
-    else
+    } else {
         route_queue_boat(grid_offset, callback_calc_distance_water_boat);
+    }
 }
 static void callback_calc_distance_water_flotsam(int next_offset, int dist) {
-    if (map_grid_get(&terrain_water, next_offset) != WATER_N1_BLOCKED)
+    if (map_grid_get(&routing_tiles_water, next_offset) != WATER_N1_BLOCKED) {
         enqueue(next_offset, dist);
+    }
 }
 void map_routing_calculate_distances_water_flotsam(int x, int y) {
     int grid_offset = MAP_OFFSET(x, y);
-    if (map_grid_get(&terrain_water, grid_offset) == WATER_N1_BLOCKED)
+    if (map_grid_get(&routing_tiles_water, grid_offset) == WATER_N1_BLOCKED)
         clear_distances();
     else
         route_queue_dir8(grid_offset, callback_calc_distance_water_flotsam);
