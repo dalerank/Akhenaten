@@ -380,7 +380,7 @@ private:
     }
 
     void assign_impl_ilist(std::initializer_list<T> l) {
-        assert(l.size() < Capacity);
+        assert(l.size() <= Capacity);
 
         for (auto&& i : l) {
             push_back(i);

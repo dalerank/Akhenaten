@@ -361,31 +361,43 @@ void map_routing_update_ferry_routes() {
         if (it->type == BUILDING_FERRY) ferries.push_back(it);
     }
 
-    std::array<uint8_t, 500> path_data;
+    using path_points = std::pair<map_point, map_point>;
+
+    auto mark_path = [] (path_points &ppoints) {
+        std::array<uint8_t, 500> path_data;
+        map_routing_calculate_distances_water_boat(ppoints.first.x(), ppoints.first.y());
+        int path_length = map_routing_get_path_on_water(path_data.data(), ppoints.second.x(), ppoints.second.y(), false);
+
+        map_terrain_add(ppoints.first.grid_offset(), TERRAIN_ROAD);
+        map_terrain_add(ppoints.second.grid_offset(), TERRAIN_ROAD);
+        if (path_length > 0) {
+            auto path = make_span(path_data.data(), path_length);
+
+            int x = ppoints.first.x();
+            int y = ppoints.first.y();
+            int grid_offset = ppoints.first.grid_offset();
+            int image_id = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
+            for (const auto &dir : path) {
+                map_terrain_add(grid_offset, TERRAIN_ROAD);
+                map_routing_adjust_tile_in_direction(dir, &x, &y, &grid_offset);
+            }
+        }
+    };
+
     for (auto f1 = ferries.begin(); f1 != ferries.end(); ++f1) {
         for (auto f2 = f1 + 1; f2 != ferries.end(); ++f2) {
             ferry_points fpoints_begin = get_ferry_points(*f1);
             ferry_points fpoints_end = get_ferry_points(*f2);
 
-            map_terrain_add(fpoints_begin.point_a.grid_offset(), TERRAIN_ROAD);
-            map_terrain_add(fpoints_begin.point_b.grid_offset(), TERRAIN_ROAD);
-            map_terrain_add(fpoints_end.point_a.grid_offset(), TERRAIN_ROAD);
-            map_terrain_add(fpoints_end.point_b.grid_offset(), TERRAIN_ROAD);
-            
-            map_routing_calculate_distances_water_boat(fpoints_begin.point_a.x(), fpoints_begin.point_a.y());
-            int path_length = map_routing_get_path_on_water(path_data.data(), fpoints_end.point_a.x(), fpoints_end.point_a.y(), false);
-            
-            if (path_length > 0) {
-                auto path = make_span(path_data.data(), path_length);
-            
-                int x = fpoints_begin.point_a.x();
-                int y = fpoints_begin.point_a.y();
-                int grid_offset = fpoints_begin.point_a.grid_offset();
-                int image_id = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
-                for (const auto &dir : path) {
-                    map_image_set(grid_offset, image_id);
-                    map_routing_adjust_tile_in_direction(dir, &x, &y, &grid_offset);
-                }
+            svector<path_points, 4> possible_paths = {
+                {fpoints_begin.point_a, fpoints_end.point_a},
+                {fpoints_begin.point_a, fpoints_end.point_b},
+                {fpoints_begin.point_b, fpoints_end.point_a},
+                {fpoints_begin.point_b, fpoints_end.point_b},
+            };
+
+            for (auto &path : possible_paths) {
+                mark_path(path);
             }
         }
     }
