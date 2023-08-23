@@ -14,7 +14,9 @@
 #include "grid/sprite.h"
 #include "grid/terrain.h"
 #include "routing_grids.h"
+#include "routing.h"
 #include "scenario/map.h"
+#include "figure/route.h"
 
 static int get_land_type_citizen_building(int grid_offset) {
     building* b = building_at(grid_offset);
@@ -319,15 +321,66 @@ void map_routing_update_land() {
     map_routing_update_land_noncitizen();
 }
 
+struct ferry_points {
+    map_point point_a = {-1, -1};
+    map_point point_b = {-1, -1};
+};
+
+ferry_points get_ferry_points(building *b) {
+    if (b->type != BUILDING_FERRY) {
+        return {{-1, -1}, {-1, -1}};
+    }
+
+    ferry_points result;
+    map_point tile = b->tile;
+    switch (b->data.industry.orientation) {
+    case 0:
+        result.point_a = {tile.x()+1, tile.y()};
+        result.point_b = {tile.x()+1, tile.y()+1};
+        break;
+    case 1:
+        result.point_a = {tile.x(), tile.y() + 2};
+        result.point_b = {tile.x() - 1, tile.y() + 2};
+        break;
+    case 2:
+        result.point_a = {tile.x()-2, tile.y()};
+        result.point_b = {tile.x()-2, tile.y()+1};
+        break;
+    case 3:
+        result.point_a = {tile.x()-1, tile.y()-1};
+        result.point_b = {tile.x(), tile.y()-1};
+        break;
+    }
+
+    return result;
+}
+
 void map_routing_update_ferry_routes() {
     svector<building *, 64> ferries;
     for (auto it = building_begin(); it != building_end(); ++it) {
         if (it->type == BUILDING_FERRY) ferries.push_back(it);
     }
 
+    std::array<uint8_t, 500> path_data;
     for (auto f1 = ferries.begin(); f1 != ferries.end(); ++f1) {
         for (auto f2 = f1 + 1; f2 != ferries.end(); ++f2) {
+            ferry_points fpoints_begin = get_ferry_points(*f1);
+            ferry_points fpoints_end = get_ferry_points(*f2);
+            map_routing_calculate_distances_water_boat(fpoints_begin.point_a.x(), fpoints_begin.point_a.y());
+            int path_length = map_routing_get_path_on_water(path_data.data(), fpoints_end.point_a.x(), fpoints_end.point_a.y(), false);
 
+            if (path_length > 0) {
+                auto path = make_span(path_data.data(), path_length);
+
+                int x = fpoints_begin.point_a.x();
+                int y = fpoints_begin.point_a.y();
+                int grid_offset = fpoints_begin.point_a.grid_offset();
+                int image_id = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
+                for (const auto &dir : path) {
+                    map_image_set(grid_offset, image_id);
+                    map_routing_adjust_tile_in_direction(dir, &x, &y, &grid_offset);
+                }
+            }
         }
     }
 }
