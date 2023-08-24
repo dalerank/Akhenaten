@@ -8,6 +8,7 @@
 #include "figure/combat.h"
 #include "figure/route.h"
 #include "game/time.h"
+#include "graphics/image_groups.h"
 #include "grid/bridge.h"
 #include "grid/building.h"
 #include "grid/figure.h"
@@ -163,6 +164,12 @@ void figure::move_to_next_tile() {
     //        is_on_road = 0;
     //    }
     figure_combat_attack_figure_at(tile.grid_offset());
+
+    switch (type) {
+    case FIGURE_IMMIGRANT: 
+        terrain_type = map_terrain_is(tile.grid_offset(), TERRAIN_WATER) ? TERRAIN_WATER : TERRAIN_NONE;
+        break;
+    }
     //    previous_tile.x() = old_x;
     //    previous_tile.y() = old_y;
     previous_tile = old;
@@ -252,6 +259,8 @@ void figure::advance_route_tile(int roaming_enabled) {
         case BUILDING_FORT_GROUND:
         case BUILDING_FESTIVAL_SQUARE:
         case BUILDING_PLAZA:
+        case BUILDING_FERRY:
+            //
             break; // OK to walk
         default:
             direction = DIR_FIGURE_REROUTE;
@@ -264,23 +273,31 @@ void figure::move_ticks(int num_ticks, bool roaming_enabled) {
     while (num_ticks > 0) {
         num_ticks--;
         progress_on_tile++;
-        if (progress_on_tile == 8) // tile edge reached
+        if (progress_on_tile == 8) { // tile edge reached
             move_to_next_tile();
+        }
+
         if (progress_on_tile >= 15) { // tile center
             figure_service_provide_coverage();
 
             // update route
-            if (routing_path_id <= 0)
+            if (routing_path_id <= 0) {
                 figure_route_add();
+            }
+
             set_next_tile_and_direction();
             advance_route_tile(roaming_enabled);
-            if (direction >= 8)
+            if (direction >= 8) {
                 break;
+            }
             routing_path_current_tile++;
             previous_tile_direction = direction;
         }
-        if (progress_on_tile > 14) // wrap around
+
+        if (progress_on_tile > 14) { // wrap around
             progress_on_tile = 0;
+        }
+
         advance_figure_tick();
     }
 }
