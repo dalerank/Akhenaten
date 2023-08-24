@@ -22,7 +22,7 @@ struct figure_action_property {
 
 static figure_action_property action_properties_lookup[] = {
   {0, 0, 0, 0, 0},                                                       // FIGURE_NONE = 0,
-  {1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_MIGRANT},                    // FIGURE_IMMIGRANT = 1,
+  {1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_IMMIGRANT},                  // FIGURE_IMMIGRANT = 1,
   {1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_VAGRANT},                    // FIGURE_EMIGRANT = 2,
   {1, TERRAIN_USAGE_PREFER_ROADS, 0, GROUP_FIGURE_VAGRANT},              // FIGURE_HOMELESS = 3,
   {1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_CARTPUSHER},                  // FIGURE_CART_PUSHER = 4,
@@ -344,8 +344,12 @@ void figure::action_perform() {
             //                    poof();
             //                if (!b_imm->has_figure(2, id))
             //                    poof();
-            if (b_imm->type == BUILDING_BURNING_RUIN)
+            if (b_imm->type == BUILDING_BURNING_RUIN) {
                 poof();
+            }
+            if (terrain_type == TERRAIN_WATER) {
+                image_set_animation(GROUP_FIGURE_FERRY_BOAT, 0, 4, 4);
+            }
             break;
         case FIGURE_ENGINEER:
         case FIGURE_PREFECT:
@@ -457,10 +461,10 @@ void figure::action_perform() {
         ////////////
 
         switch (type) {
-        case 1:
+        case FIGURE_IMMIGRANT:
             immigrant_action();
             break;
-        case 2:
+        case FIGURE_EMIGRANT:
             emigrant_action();
             break;
         case 3:
@@ -681,8 +685,9 @@ void figure::action_perform() {
             return figure_delete_UNSAFE();
 
         // poof if LOST
-        if (direction == DIR_FIGURE_CAN_NOT_REACH)
+        if (direction == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
+        }
 
         // advance sprite offset
         figure_image_update(false);
