@@ -399,7 +399,7 @@ static void add_storageyard(building* b) {
 }
 
 static int place_ferry(building *b, int size, int image_id) {
-    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), size, image_id, TERRAIN_BUILDING|TERRAIN_ROAD);
+    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), size, image_id, TERRAIN_BUILDING|TERRAIN_ROAD|TERRAIN_FERRY_ROUTE);
     return 1;
 }
 

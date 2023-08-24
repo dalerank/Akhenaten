@@ -179,15 +179,18 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
     case ROUTING_TYPE_CITIZEN:
         //            if (!map_tile_inside_map_area(x, y))
         //                return CITIZEN_N1_BLOCKED;
-        if (terrain & TERRAIN_ROAD && !(terrain & TERRAIN_WATER)) {
+        if (!!(terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_WATER)) {
             return CITIZEN_0_ROAD;
+        } else if (!!(terrain & TERRAIN_FERRY_ROUTE) && !!(terrain & TERRAIN_WATER)) {
+            return CITIZEN_2_PASSABLE_TERRAIN;
         } else if (terrain & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN | TERRAIN_MARSHLAND | TERRAIN_FLOODPLAIN | TERRAIN_TREE)) {// TODO?
             return CITIZEN_2_PASSABLE_TERRAIN;
         } else if (terrain & (TERRAIN_BUILDING | TERRAIN_GATEHOUSE)) {
-            if (fix_incorrect_buildings(grid_offset))
+            if (fix_incorrect_buildings(grid_offset)) {
                 return CITIZEN_4_CLEAR_TERRAIN;
-            else
+            } else {
                 return get_land_type_citizen_building(grid_offset);
+            }
         } else if (terrain & TERRAIN_AQUEDUCT) {
             return get_land_type_citizen_aqueduct(grid_offset);
         } else if (terrain & TERRAIN_NOT_CLEAR) {
@@ -368,8 +371,8 @@ void map_routing_update_ferry_routes() {
         map_routing_calculate_distances_water_boat(ppoints.first.x(), ppoints.first.y());
         int path_length = map_routing_get_path_on_water(path_data.data(), ppoints.second.x(), ppoints.second.y(), false);
 
-        map_terrain_add(ppoints.first.grid_offset(), TERRAIN_ROAD);
-        map_terrain_add(ppoints.second.grid_offset(), TERRAIN_ROAD);
+        map_terrain_add(ppoints.first.grid_offset(), TERRAIN_FERRY_ROUTE);
+        map_terrain_add(ppoints.second.grid_offset(), TERRAIN_FERRY_ROUTE);
         if (path_length > 0) {
             auto path = make_span(path_data.data(), path_length);
 
@@ -378,7 +381,7 @@ void map_routing_update_ferry_routes() {
             int grid_offset = ppoints.first.grid_offset();
             int image_id = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
             for (const auto &dir : path) {
-                map_terrain_add(grid_offset, TERRAIN_ROAD);
+                map_terrain_add(grid_offset, TERRAIN_FERRY_ROUTE);
                 map_routing_adjust_tile_in_direction(dir, &x, &y, &grid_offset);
             }
         }
