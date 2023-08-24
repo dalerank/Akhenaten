@@ -43,7 +43,7 @@ int map_floodplain_rebuild_rows() {
         int found_floodplain_tiles_in_row = 0;
 
         // go through every river tile
-        foreach_river_tile([&] (auto &tile_offset) {
+        foreach_river_tile([&] (int tile_offset) {
             // get current river tile's grid offset and coords
             int tile_x = MAP_X(tile_offset);
             int tile_y = MAP_Y(tile_offset);

@@ -959,7 +959,7 @@ bool building::can_spawn_hunter() { // no cache because fuck the system (also I 
     int huntables = city_data.figure.animals;
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure* f = figure_get(i);
-        if (f->is(FIGURE_HUNTER)) { // figure with type on map
+        if (f->has_type(FIGURE_HUNTER)) { // figure with type on map
             hunters_total++;
             if (f->has_home(this)) // belongs to this building
                 hunters_this_lodge++;
@@ -1007,7 +1007,7 @@ bool building::can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_bui
     }
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure* f = figure_get(i);
-        if (f->is(ftype)) {        // figure with type on map
+        if (f->has_type(ftype)) {        // figure with type on map
             if (f->has_home(this)) // belongs to this building
                 gatherers_this_yard++;
         }

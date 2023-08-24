@@ -124,6 +124,10 @@ bool figure::can_move_by_terrain() {
     return (allow_move_type == EMOVE_TERRAIN || allow_move_type == EMOVE_HIPPO);
 }
 
+void figure::poof() {
+    set_state(FIGURE_STATE_DEAD);
+}
+
 bool figure::is_enemy() {
     return type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY_CAESAR_LEGIONARY;
 }
@@ -184,13 +188,6 @@ bool figure::has_destination(int _id) {
 }
 bool figure::has_destination(building* b) {
     return (b == destination());
-}
-
-bool figure::is(e_figure_type value) {
-    return type == value;
-}
-bool figure::is(e_figure_state value) {
-    return state == value;
 }
 
 e_minimap_figure_color figure::get_figure_color() {
@@ -284,7 +281,8 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT16, f->source_tile.private_access(_Y));
     iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_x.soldier);
     iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_y.soldier);
-    iob->bind(BIND_SIGNATURE_INT16, &f->__unused_24);               // 0
+    iob->bind(BIND_SIGNATURE_INT8, &f->terrain_type);               // 0
+    iob->bind(BIND_SIGNATURE_INT8, &f->__unused_24);
     iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks);                // 0
     iob->bind(BIND_SIGNATURE_UINT8, &f->action_state);              // 9
     iob->bind(BIND_SIGNATURE_UINT8, &f->progress_on_tile);          // 11

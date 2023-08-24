@@ -89,7 +89,8 @@ public:
         unsigned char soldier;
         signed char enemy;
     } formation_position_y;
-    short __unused_24;
+    unsigned char terrain_type;
+    unsigned char __unused_24;
     short wait_ticks;
     short action_state;
     unsigned char progress_on_tile;
@@ -208,17 +209,12 @@ public:
     bool can_move_by_water();
     bool can_move_by_terrain();
 
-    void poof() {
-        set_state(FIGURE_STATE_DEAD);
-    };
-    bool available() {
-        return state == FIGURE_STATE_NONE;
-    };
-    bool is(e_figure_type value);
-    bool is(e_figure_state value);
-    void set_state(e_figure_state s) {
-        state = s;
-    };
+    void poof();
+    inline bool available() { return state == FIGURE_STATE_NONE; };
+    inline bool has_type(e_figure_type value) { return type == value; }
+    inline bool has_state(e_figure_state value) { return state == value; }
+
+    inline void set_state(e_figure_state s) { state = s; };
     void bind(io_buffer* iob);
 
     // figure/figure.c
@@ -391,6 +387,7 @@ public:
     void festival_guy_action();
 
     // migrant.c
+    void update_migrant_direction_and_image();
     void update_direction_and_image();
 
     // animal.c
