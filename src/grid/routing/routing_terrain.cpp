@@ -13,6 +13,7 @@
 #include "grid/random.h"
 #include "grid/sprite.h"
 #include "grid/terrain.h"
+#include "grid/water.h"
 #include "routing_grids.h"
 #include "routing.h"
 #include "scenario/map.h"
@@ -359,6 +360,12 @@ ferry_points get_ferry_points(building *b) {
 }
 
 void map_routing_update_ferry_routes() {
+    foreach_river_tile([] (int offset) {
+        if (map_terrain_is(offset, TERRAIN_WATER)) {
+            map_terrain_remove(offset, TERRAIN_FERRY_ROUTE);
+        }
+    });
+
     svector<building *, 64> ferries;
     for (auto it = building_begin(); it != building_end(); ++it) {
         if (it->type == BUILDING_FERRY) ferries.push_back(it);
@@ -461,6 +468,7 @@ void map_routing_update_all(void) {
     map_routing_update_land();
     map_routing_update_water();
     map_routing_update_walls();
+    map_routing_update_ferry_routes();
 }
 
 /////////////
