@@ -105,14 +105,16 @@ static void callback_calc_distance_water_flotsam(int next_offset, int dist) {
 }
 void map_routing_calculate_distances_water_flotsam(int x, int y) {
     int grid_offset = MAP_OFFSET(x, y);
-    if (map_grid_get(&routing_tiles_water, grid_offset) == WATER_N1_BLOCKED)
+    if (map_grid_get(&routing_tiles_water, grid_offset) == WATER_N1_BLOCKED) {
         clear_distances();
-    else
+    } else {
         route_queue_dir8(grid_offset, callback_calc_distance_water_flotsam);
+    }
 }
 static void callback_calc_distance_build_wall(int next_offset, int dist) {
-    if (map_grid_get(&routing_land_citizen, next_offset) == CITIZEN_4_CLEAR_TERRAIN)
+    if (map_grid_get(&routing_land_citizen, next_offset) == CITIZEN_4_CLEAR_TERRAIN) {
         enqueue(next_offset, dist);
+    }
 }
 static void callback_calc_distance_build_road(int next_offset, int dist) {
     bool blocked = false;
