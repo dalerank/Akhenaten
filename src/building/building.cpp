@@ -678,6 +678,7 @@ void building_update_state(void) {
     bool land_recalc = false;
     bool wall_recalc = false;
     bool road_recalc = false;
+    bool water_routes_recalc = false;
     bool aqueduct_recalc = false;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = &g_all_buildings[i];
@@ -689,10 +690,13 @@ void building_update_state(void) {
                 if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
                     wall_recalc = true;
                     road_recalc = true;
-                } else if (b->type == BUILDING_WATER_LIFT)
+                } else if (b->type == BUILDING_WATER_LIFT) {
                     aqueduct_recalc = true;
-                else if (b->type == BUILDING_GRANARY)
+                } else if (b->type == BUILDING_GRANARY) {
                     road_recalc = true;
+                } else if (b->type == BUILDING_FERRY) {
+                    water_routes_recalc = true;
+                }
 
                 map_building_tiles_remove(i, b->tile.x(), b->tile.y());
                 road_recalc = true; // always recalc underlying road tiles
@@ -702,18 +706,30 @@ void building_update_state(void) {
                 if (b->house_size)
                     city_population_remove_home_removed(b->house_population);
                 building_delete_UNSAFE(b);
-            } else if (b->state == BUILDING_STATE_DELETED_BY_GAME)
+            } else if (b->state == BUILDING_STATE_DELETED_BY_GAME) {
                 building_delete_UNSAFE(b);
+            } 
         }
     }
-    if (wall_recalc)
+    if (wall_recalc) {
         map_tiles_update_all_walls();
-    if (aqueduct_recalc)
+    }
+
+    if (aqueduct_recalc) {
         map_tiles_update_all_aqueducts(0);
-    if (land_recalc)
+    }
+
+    if (land_recalc) {
         map_routing_update_land();
-    if (road_recalc)
+    }
+
+    if (road_recalc) {
         map_tiles_update_all_roads();
+    }
+
+    if (water_routes_recalc) {
+        map_routing_update_ferry_routes();
+    }
 }
 void building_update_desirability(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Building Update Desirability");
