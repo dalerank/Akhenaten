@@ -1,5 +1,4 @@
-#ifndef MAP_TERRAIN_H
-#define MAP_TERRAIN_H
+#pragma once
 
 #include "core/buffer.h"
 
@@ -142,5 +141,3 @@ void map_terrain_init_outside_map(void);
 void build_terrain_caches();
 
 int map_get_UNK03(int grid_offset);
-
-#endif // MAP_TERRAIN_H

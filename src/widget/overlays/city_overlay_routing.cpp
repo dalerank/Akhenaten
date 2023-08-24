@@ -75,7 +75,10 @@ struct city_overlay_routing : public city_overlay {
 
         if (!drawn && map_terrain_is(grid_offset, TERRAIN_WATER)) {
              drawn = true;
-            if (map_terrain_is(grid_offset, TERRAIN_FERRY_ROUTE) || map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+            if (map_terrain_is(grid_offset, TERRAIN_FERRY_ROUTE)) {
+                int offset = 4;
+                ImageDraw::isometric_from_drawtile(image_id + offset, x, y, color_mask);
+            } else if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
                 int offset = 5;
                 ImageDraw::isometric_from_drawtile(image_id + offset, x, y, color_mask);
             } else {
