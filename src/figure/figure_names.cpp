@@ -1,4 +1,4 @@
-#include "figure/name.h"
+#include "figure/figure_names.h"
 #include "io/io_buffer.h"
 
 #include "core/random.h"
@@ -34,7 +34,7 @@ static int32_t init_name(void) {
     return random_byte() & 0xf;
 }
 
-void figure_name_init(void) {
+void figure_name_init() {
     auto &data = g_figure_name_data;
     data.citizen_male = init_name();
     data.patrician = init_name();

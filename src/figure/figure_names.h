@@ -1,18 +1,12 @@
-#ifndef FIGURE_NAME_H
-#define FIGURE_NAME_H
+#pragma once
 
 #include "core/buffer.h"
 #include "figure/type.h"
 
 /**
- * @file
- * Figure name generation
- */
-
-/**
  * Initializes the figure name generator.
  */
-void figure_name_init(void);
+void figure_name_init();
 
 /**
  * Determines a new name for the figure type
@@ -21,5 +15,3 @@ void figure_name_init(void);
  * @return Name ID
  */
 int figure_name_get(int type, int enemy);
-
-#endif // FIGURE_NAME_H

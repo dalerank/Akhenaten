@@ -11,7 +11,7 @@
 #include "figure/enemy_army.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
-#include "figure/name.h"
+#include "figure/figure_names.h"
 #include "figure/route.h"
 #include "figure/trader.h"
 #include "figuretype/editor.h"

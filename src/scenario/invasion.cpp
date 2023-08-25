@@ -8,7 +8,7 @@
 #include "empire/object.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
-#include "figure/name.h"
+#include "figure/figure_names.h"
 #include "game/difficulty.h"
 #include "game/time.h"
 #include "grid/grid.h"
