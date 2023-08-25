@@ -99,7 +99,7 @@ static int prepare_to_move(formation* m) {
 }
 
 void formation_legion_move_to(formation* m, int x, int y) {
-    map_routing_calculate_distances(m->x_home, m->y_home);
+    map_routing_calculate_distances(map_point(m->x_home, m->y_home));
     if (map_routing_distance(MAP_OFFSET(x, y)) <= 0)
         return; // unable to route there
 
@@ -129,7 +129,7 @@ void formation_legion_move_to(formation* m, int x, int y) {
 }
 
 void formation_legion_return_home(formation* m) {
-    map_routing_calculate_distances(m->x_home, m->y_home);
+    map_routing_calculate_distances(map_point(m->x_home, m->y_home));
     if (map_routing_distance(MAP_OFFSET(m->x, m->y)) <= 0)
         return; // unable to route home
 

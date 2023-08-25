@@ -77,10 +77,12 @@ static void callback_calc_distance(int next_offset, int dist) {
     if (map_grid_get(&routing_land_citizen, next_offset) >= CITIZEN_0_ROAD)
         enqueue(next_offset, dist);
 }
-void map_routing_calculate_distances(int x, int y) {
+
+void map_routing_calculate_distances(map_point tile) {
     ++g_routing_stats.total_routes_calculated;
-    route_queue(MAP_OFFSET(x, y), -1, callback_calc_distance);
+    route_queue(tile.grid_offset(), -1, callback_calc_distance);
 }
+
 static void callback_calc_distance_water_boat(int next_offset, int dist) {
     if (map_grid_get(&routing_tiles_water, next_offset) != WATER_N1_BLOCKED
         && map_grid_get(&routing_tiles_water, next_offset) != WATER_N3_LOW_BRIDGE) {

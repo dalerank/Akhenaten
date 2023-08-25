@@ -213,7 +213,7 @@ void building_maintenance_check_fire_collapse(void) {
 void building_maintenance_check_rome_access(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access");
     map_point& entry_point = city_map_entry_point();
-    map_routing_calculate_distances(entry_point.x(), entry_point.y());
+    map_routing_calculate_distances(entry_point);
     int problem_grid_offset = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);

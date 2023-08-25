@@ -1,5 +1,4 @@
-#ifndef MAP_ROUTING_QUEUE_H
-#define MAP_ROUTING_QUEUE_H
+#pragma once
 
 #include "grid/grid.h"
 
@@ -19,5 +18,3 @@ void route_queue_dir8(int source, void (*callback)(int, int));
 
 bool queue_has(int offset);
 int queue_get(int i);
-
-#endif // MAP_ROUTING_QUEUE_H

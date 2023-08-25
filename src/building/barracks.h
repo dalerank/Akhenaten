@@ -27,7 +27,7 @@ void building_barracks_load_state(buffer* buf);
 // void building_barracks_toggle_priority(building *barracks);
 // int building_barracks_get_priority(building *barracks);
 
-enum E_BARRACKS_PRIORITY {
+enum e_barracks_priority {
     PRIORITY_TOWER = 0,
     PRIORITY_FORT = 1,
 };

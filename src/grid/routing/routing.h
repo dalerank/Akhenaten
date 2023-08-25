@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/buffer.h"
+#include "grid/point.h"
 
 class building;
 
@@ -11,7 +12,7 @@ enum routed_int {
     ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC = 4,
 };
 
-void map_routing_calculate_distances(int x, int y);
+void map_routing_calculate_distances(map_point tile);
 void map_routing_calculate_distances_water_boat(int x, int y);
 void map_routing_calculate_distances_water_flotsam(int x, int y);
 
