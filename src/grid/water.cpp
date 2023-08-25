@@ -38,7 +38,7 @@ void map_water_cache_river_tiles() {
     }
 }
 
-void map_water_add_building(int building_id, map_point tile, int size, int image_id) {
+void map_water_add_building(int building_id, map_point tile, int size, int image_id, int ext_terrain_flags) {
     if (!map_grid_is_inside(tile, size)) {
         return;
     }
@@ -63,7 +63,7 @@ void map_water_add_building(int building_id, map_point tile, int size, int image
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = MAP_OFFSET(tile.x() + dx, tile.y() + dy);
-            map_terrain_add(grid_offset, TERRAIN_BUILDING);
+            map_terrain_add(grid_offset, TERRAIN_BUILDING|ext_terrain_flags);
             if (!map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 map_terrain_add(grid_offset, TERRAIN_BUILDING);
