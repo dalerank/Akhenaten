@@ -1,9 +1,9 @@
 #pragma once
 
-#include <string>
+#include "core/bstring.h"
 
 /**
  * Gets the version of application
  * @return Version number
  */
-[[nodiscard]] std::string get_version();
+[[nodiscard]] bstring64 get_version();

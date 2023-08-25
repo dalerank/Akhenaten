@@ -10,57 +10,33 @@ void initialize();
 
 // Note: to handle format-security warnings
 template <class Arg, class... Args>
-static void critical(char const* format, Arg arg, Args... args) {
+inline void critical(char const* format, Arg arg, Args... args) {
     SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, format, arg, args...);
 }
 
-static void critical(char const* message) {
-    SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
+template <class... Args>
+inline void error(char const* format, Args... args) {
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, format, args...);
 }
 
-template <class Arg, class... Args>
-static void error(char const* format, Arg arg, Args... args) {
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, format, arg, args...);
+template <class... Args>
+inline void warn(char const* format, Args... args) {
+    SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, format, args...);
 }
 
-static void error(char const* message) {
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
+template <class... Args>
+inline void info(char const* format, Args... args) {
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, format, args...);
 }
 
-template <class Arg, class... Args>
-static void warn(char const* format, Arg arg, Args... args) {
-    SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, format, arg, args...);
+template <class... Args>
+inline void debug(char const* format, Args... args) {
+    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, format, args...);
 }
 
-static void warn(char const* message) {
-    SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
-}
-
-template <class Arg, class... Args>
-static void info(char const* format, Arg arg, Args... args) {
-    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, format, arg, args...);
-}
-
-static void info(char const* message) {
-    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
-}
-
-template <class Arg, class... Args>
-static void debug(char const* format, Arg arg, Args... args) {
-    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, format, arg, args...);
-}
-
-static void debug(char const* message) {
-    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
-}
-
-template <class Arg, class... Args>
-static void verbose(char const* format, Arg arg, Args... args) {
-    SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, format, arg, args...);
-}
-
-static void verbose(char const* message) {
-    SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
+template <class... Args>
+static void verbose(char const* format, Args... args) {
+    SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, format, args...);
 }
 
 } // namespace logs
