@@ -704,6 +704,7 @@ const char* get_terrain_type(char* buffer, const char* def, map_point tile) {
     if (type & TERRAIN_WALL) strcat(buffer, "wall,");
     if (type & TERRAIN_GATEHOUSE) strcat(buffer, "gate,");
     if (type & TERRAIN_FLOODPLAIN) strcat(buffer, "fldplain,");
+    if (type & TERRAIN_FERRY_ROUTE) strcat(buffer, "froute,");
 
     return buffer;
 }

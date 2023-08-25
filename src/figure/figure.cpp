@@ -9,6 +9,7 @@
 #include "figure/trader.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
+#include "grid/terrain.h"
 
 #include "io/io_buffer.h"
 #include <string.h>
@@ -117,6 +118,13 @@ bool figure::is_boat() {
 }
 
 bool figure::can_move_by_water() {
+    switch (type) {
+    case FIGURE_IMMIGRANT:
+        return map_terrain_is(tile.grid_offset(), TERRAIN_FERRY_ROUTE);
+    
+    case FIGURE_HIPPO:
+        return !map_terrain_is(tile.grid_offset(), TERRAIN_DEEPWATER);
+    }
     return (allow_move_type == EMOVE_BOAT || allow_move_type == EMOVE_FLOTSAM || allow_move_type == EMOVE_HIPPO);
 }
 

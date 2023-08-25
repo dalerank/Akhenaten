@@ -26,6 +26,7 @@ static int get_land_type_citizen_building(int grid_offset) {
         return CITIZEN_N1_BLOCKED;
         //        case BUILDING_WAREHOUSE:
     case BUILDING_GATEHOUSE:
+    case BUILDING_FERRY:
         return CITIZEN_0_ROAD;
     case BUILDING_ROADBLOCK:
         return CITIZEN_0_ROAD;
@@ -361,7 +362,9 @@ ferry_points get_ferry_points(building *b) {
 
 void map_routing_update_ferry_routes() {
     foreach_river_tile([] (int offset) {
-        if (map_terrain_is(offset, TERRAIN_WATER)) {
+        if (map_terrain_is(offset, TERRAIN_WATER)
+            && map_terrain_is(offset, TERRAIN_FERRY_ROUTE)
+            && !map_terrain_is(offset, TERRAIN_BUILDING)) {
             map_terrain_remove(offset, TERRAIN_FERRY_ROUTE);
         }
     });
@@ -468,7 +471,6 @@ void map_routing_update_all(void) {
     map_routing_update_land();
     map_routing_update_water();
     map_routing_update_walls();
-    map_routing_update_ferry_routes();
 }
 
 /////////////

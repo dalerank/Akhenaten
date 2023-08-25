@@ -734,14 +734,17 @@ void GamestateIO::start_loaded_file() {
     city_settings_init();
     map_orientation_update_buildings();
 
+    // river / garden tiles refresh
+    build_terrain_caches();
+
     // routing
     map_routing_update_all();
     figure_route_clean();
     map_road_network_update();
+    map_routing_update_ferry_routes();
     building_maintenance_check_rome_access();
 
-    // river / garden tiles refresh
-    build_terrain_caches();
+    // tiles
     floodplains_init();
     map_tiles_update_floodplain_images();
     map_tiles_river_refresh_entire();
