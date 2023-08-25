@@ -326,40 +326,6 @@ void map_routing_update_land() {
     map_routing_update_land_noncitizen();
 }
 
-struct ferry_points {
-    map_point point_a = {-1, -1};
-    map_point point_b = {-1, -1};
-};
-
-ferry_points get_ferry_points(building *b) {
-    if (b->type != BUILDING_FERRY) {
-        return {{-1, -1}, {-1, -1}};
-    }
-
-    ferry_points result;
-    map_point tile = b->tile;
-    switch (b->data.industry.orientation) {
-    case 0:
-        result.point_a = {tile.x()+1, tile.y()-1};
-        result.point_b = {tile.x(), tile.y()-1};
-        break;
-    case 1:
-        result.point_a = {tile.x() + 2, tile.y() + 1};
-        result.point_b = {tile.x() + 2, tile.y() + 2};
-        break;
-    case 2:
-        result.point_a = {tile.x(), tile.y() + 2};
-        result.point_b = {tile.x()+1, tile.y() + 2};
-        break;
-    case 3:
-        result.point_a = {tile.x()-1, tile.y()};
-        result.point_b = {tile.x()-1, tile.y()-1};
-        break;
-    }
-
-    return result;
-}
-
 void map_routing_update_ferry_routes() {
     foreach_river_tile([] (int offset) {
         if (map_terrain_is(offset, TERRAIN_WATER)
@@ -370,12 +336,9 @@ void map_routing_update_ferry_routes() {
     });
 
     svector<building *, 64> ferries;
-    for (auto it = building_begin(); it != building_end(); ++it) {
-        if (it->type == BUILDING_FERRY) ferries.push_back(it);
-    }
+    buildings_get(BUILDING_FERRY, ferries);
 
     using path_points = std::pair<map_point, map_point>;
-
     auto mark_path = [] (path_points &ppoints) {
         std::array<uint8_t, 500> path_data;
         map_routing_calculate_distances_water_boat(ppoints.first.x(), ppoints.first.y());

@@ -1,6 +1,7 @@
 #include "routing.h"
 
 #include "figure/formation_herd.h"
+#include "figure/route.h"
 #include "grid/vegetation.h"
 #include "building/building.h"
 #include "core/game_environment.h"
@@ -10,6 +11,7 @@
 #include "grid/grid.h"
 #include "grid/road_aqueduct.h"
 #include "grid/terrain.h"
+#include "grid/water.h"
 #include "queue.h"
 #include "routing_grids.h"
 
@@ -227,7 +229,22 @@ bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
 }
 
 bool map_routing_ferry_has_routes(building *b) {
-    return true;
+    svector<building *, 64> ferries;
+    buildings_get(BUILDING_FERRY, ferries);
+
+    for (auto f1 = ferries.begin(); f1 != ferries.end(); ++f1) {
+        ferry_points fpoints_begin = get_ferry_points(*f1);
+        ferry_points fpoints_end = get_ferry_points(b);
+
+        std::array<uint8_t, 500> path_data;
+        map_routing_calculate_distances_water_boat(fpoints_begin.point_a.x(), fpoints_begin.point_a.y());
+        int path_length = map_routing_get_path_on_water(path_data.data(), fpoints_end.point_a.x(), fpoints_end.point_a.y(), false);
+
+        if (path_length > 0) {
+            return true;
+        }
+    }
+    return false;
 }
 
 

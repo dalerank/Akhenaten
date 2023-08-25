@@ -15,6 +15,13 @@ void foreach_river_tile(T func) {
     }
 }
 
+struct ferry_points {
+    map_point point_a = {-1, -1};
+    map_point point_b = {-1, -1};
+};
+
+ferry_points get_ferry_points(building *b);
+
 void map_water_add_building(int building_id, map_point tile, int size, int image_id, int ext_terrain_flags = 0);
 
 void map_water_cache_river_tiles();

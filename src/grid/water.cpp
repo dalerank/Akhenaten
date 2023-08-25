@@ -38,6 +38,35 @@ void map_water_cache_river_tiles() {
     }
 }
 
+ferry_points get_ferry_points(building *b) {
+    if (b->type != BUILDING_FERRY) {
+        return {{-1, -1},{-1, -1}};
+    }
+
+    ferry_points result;
+    map_point tile = b->tile;
+    switch (b->data.industry.orientation) {
+    case 0:
+    result.point_a = {tile.x() + 1, tile.y() - 1};
+    result.point_b = {tile.x(), tile.y() - 1};
+    break;
+    case 1:
+    result.point_a = {tile.x() + 2, tile.y() + 1};
+    result.point_b = {tile.x() + 2, tile.y() + 2};
+    break;
+    case 2:
+    result.point_a = {tile.x(), tile.y() + 2};
+    result.point_b = {tile.x() + 1, tile.y() + 2};
+    break;
+    case 3:
+    result.point_a = {tile.x() - 1, tile.y()};
+    result.point_b = {tile.x() - 1, tile.y() - 1};
+    break;
+    }
+
+    return result;
+}
+
 void map_water_add_building(int building_id, map_point tile, int size, int image_id, int ext_terrain_flags) {
     if (!map_grid_is_inside(tile, size)) {
         return;

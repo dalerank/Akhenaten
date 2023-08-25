@@ -344,6 +344,12 @@ void building_for_each(T func) {
     }
 }
 
+template<typename Array>
+void buildings_get(e_building_type type, Array &arr) {
+    for (auto it = building_begin(); it != building_end(); ++it) {
+        if (it->type == type) arr.push_back(it);
+    }
+}
 
 template <typename T>
 inline building* building_first(T pred) {

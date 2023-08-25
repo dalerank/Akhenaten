@@ -80,7 +80,7 @@ void window_building_draw_ferry(building_info_context* c) {
     building *ferry = building_get(c->building_id);
     if (!map_routing_ferry_has_routes(ferry)) {
         window_building_draw_description_at(c, 16 * c->height_blocks - 158, e_text_ferry_landing, e_text_ferry_landing_no_routes);
-    } else if (ferry->has_road_access) {
+    } else if (!ferry->has_road_access) {
         window_building_draw_description_at(c, 16 * c->height_blocks - 158, e_text_ferry_landing, e_text_ferry_landing_no_roads);
     } else if (ferry->num_workers <= 0) {
         window_building_draw_description_at(c, 16 * c->height_blocks - 158, e_text_ferry_landing, e_text_ferry_landing_no_workers);
