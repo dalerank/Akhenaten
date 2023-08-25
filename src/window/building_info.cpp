@@ -733,6 +733,9 @@ static void draw_background(void) {
                 else
                     window_building_draw_roadblock(&context);
                 break;
+            case BUILDING_FERRY:
+                window_building_draw_ferry(&context);
+                break;
             case BUILDING_GATEHOUSE:
                 window_building_draw_gatehouse(&context);
                 break;

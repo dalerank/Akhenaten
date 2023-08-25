@@ -225,6 +225,12 @@ bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
         return false;
     return true;
 }
+
+bool map_routing_ferry_has_routes(building *b) {
+    return true;
+}
+
+
 bool map_routing_calculate_distances_for_building(routed_int type, int x, int y) {
     clear_distances();
     int source_offset = MAP_OFFSET(x, y);

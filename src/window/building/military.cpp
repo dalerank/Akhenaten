@@ -1,4 +1,5 @@
 #include "military.h"
+
 #include "building/barracks.h"
 #include "building/building.h"
 #include "building/count.h"
@@ -11,19 +12,24 @@
 #include "graphics/text.h"
 #include "graphics/view/view.h"
 #include "graphics/window.h"
+#include "grid/routing/routing.h"
 #include "io/log.h"
+#include "io/gamefiles/lang.h"
 #include "sound/speech.h"
 #include "window/city.h"
+#include "window/building/common.h"
 
 static void button_return_to_fort(int param1, int param2);
 static void button_layout(int index, int param2);
 static void button_priority(int index, int param2);
 
-static generic_button layout_buttons[] = {{19, 139, 84, 84, button_layout, button_none, 0, 0},
-                                          {104, 139, 84, 84, button_layout, button_none, 1, 0},
-                                          {189, 139, 84, 84, button_layout, button_none, 2, 0},
-                                          {274, 139, 84, 84, button_layout, button_none, 3, 0},
-                                          {359, 139, 84, 84, button_layout, button_none, 4, 0}};
+static generic_button layout_buttons[] = {
+    {19, 139, 84, 84, button_layout, button_none, 0, 0},
+    {104, 139, 84, 84, button_layout, button_none, 1, 0},
+    {189, 139, 84, 84, button_layout, button_none, 2, 0},
+    {274, 139, 84, 84, button_layout, button_none, 3, 0},
+    {359, 139, 84, 84, button_layout, button_none, 4, 0}
+};
 
 static generic_button priority_buttons[] = {
   {96, 0, 24, 24, button_priority, button_none, 0, 0},
@@ -66,11 +72,26 @@ void window_building_draw_wall(building_info_context* c) {
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 139, 1);
 }
 
+void window_building_draw_ferry(building_info_context* c) {
+    c->help_id = 85;
+    window_building_play_sound(c, "wavs/gatehouse.wav");
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(e_text_ferry_landing, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    building *ferry = building_get(c->building_id);
+    if (!map_routing_ferry_has_routes(ferry)) {
+        window_building_draw_description_at(c, 16 * c->height_blocks - 158, e_text_ferry_landing, e_text_ferry_landing_no_routes);
+    } else if (ferry->has_road_access) {
+        window_building_draw_description_at(c, 16 * c->height_blocks - 158, e_text_ferry_landing, e_text_ferry_landing_no_roads);
+    } else if (ferry->num_workers <= 0) {
+        window_building_draw_description_at(c, 16 * c->height_blocks - 158, e_text_ferry_landing, e_text_ferry_landing_no_workers);
+    }
+}
+
 void window_building_draw_gatehouse(building_info_context* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/gatehouse.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(90, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(e_text_gate_house, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 90, 1);
 }
 
@@ -78,7 +99,7 @@ void window_building_draw_tower(building_info_context* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/tower.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(91, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(e_text_tower, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
     if (!c->has_road_access)
@@ -192,8 +213,7 @@ void window_building_draw_legion_info(building_info_context* c) {
     const formation* m = formation_get(c->formation_id);
     c->help_id = 87;
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(
-      138, m->legion_id, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(138, m->legion_id, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     // standard icon at the top
     int image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
@@ -403,17 +423,8 @@ void window_building_draw_legion_info_foreground(building_info_context* c) {
       138, text_id, c->x_offset + 24, c->y_offset + 252, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
 
     if (!m->is_at_fort) {
-        button_border_draw(c->x_offset + 16 * (c->width_blocks - 18) / 2,
-                           c->y_offset + 16 * c->height_blocks - 48,
-                           288,
-                           32,
-                           data.return_button_id == 1);
-        lang_text_draw_centered(138,
-                                58,
-                                c->x_offset + 16 * (c->width_blocks - 18) / 2,
-                                c->y_offset + 16 * c->height_blocks - 39,
-                                288,
-                                FONT_NORMAL_BLACK_ON_LIGHT);
+        button_border_draw(c->x_offset + 16 * (c->width_blocks - 18) / 2, c->y_offset + 16 * c->height_blocks - 48, 288, 32, data.return_button_id == 1);
+        lang_text_draw_centered(138, 58, c->x_offset + 16 * (c->width_blocks - 18) / 2, c->y_offset + 16 * c->height_blocks - 39, 288, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
 
