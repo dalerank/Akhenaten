@@ -87,14 +87,10 @@ static void draw_foreground() {
         lang_text_draw_centered(293, 7, buttons[0].x, buttons[0].y + 6, buttons[0].width, FONT_NORMAL_BLACK_ON_LIGHT);
     else
         lang_text_draw_centered(293, 0, buttons[0].x, buttons[0].y + 6, buttons[0].width, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_centered(
-      293, 6, buttons[1].x, buttons[1].y + 6, buttons[1].width, FONT_NORMAL_BLACK_ON_LIGHT); // explore history
-    lang_text_draw_centered(
-      293, 2, buttons[2].x, buttons[2].y + 6, buttons[2].width, FONT_NORMAL_BLACK_ON_LIGHT); // load save
-    lang_text_draw_centered(
-      293, 3, buttons[3].x, buttons[3].y + 6, buttons[3].width, FONT_NORMAL_BLACK_ON_LIGHT); // custom missions
-    lang_text_draw_centered(
-      293, 4, buttons[4].x, buttons[4].y + 6, buttons[4].width, FONT_NORMAL_BLACK_ON_LIGHT); // back
+    lang_text_draw_centered(293, 6, buttons[1].x, buttons[1].y + 6, buttons[1].width, FONT_NORMAL_BLACK_ON_LIGHT); // explore history
+    lang_text_draw_centered(293, 2, buttons[2].x, buttons[2].y + 6, buttons[2].width, FONT_NORMAL_BLACK_ON_LIGHT); // load save
+    lang_text_draw_centered(293, 3, buttons[3].x, buttons[3].y + 6, buttons[3].width, FONT_NORMAL_BLACK_ON_LIGHT); // custom missions
+    lang_text_draw_centered(293, 4, buttons[4].x, buttons[4].y + 6, buttons[4].width, FONT_NORMAL_BLACK_ON_LIGHT); // back
 }
 
 static void button_click(int param1, int param2) {

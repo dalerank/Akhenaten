@@ -126,8 +126,7 @@ void window_building_draw_courthouse(building_info_context* c) {
     c->help_id = 76;
     window_building_play_sound(c, "wavs/forum.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(
-      LANG_GROUP_ID, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(LANG_GROUP_ID, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
 

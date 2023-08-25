@@ -51,12 +51,9 @@ static void draw_rating(int id, int value, int open_play, int goal) {
                        rating_buttons[id].width,
                        rating_buttons[id].height,
                        focus_button_id == SELECTED_RATING_CULTURE);
-    lang_text_draw_centered(
-      53, 1 + id, rating_buttons[id].x, rating_buttons[id].y + 8, rating_buttons[id].width, FONT_NORMAL_BLACK_ON_LIGHT);
-    text_draw_number_centered(
-      value, rating_buttons[id].x, rating_buttons[id].y + 21, rating_buttons[id].width, FONT_LARGE_BLACK_ON_LIGHT);
-    int width = text_draw_number(
-      enabled ? goal : 0, '@', " ", rating_buttons[id].x + 5, rating_buttons[id].y + 45, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(53, 1 + id, rating_buttons[id].x, rating_buttons[id].y + 8, rating_buttons[id].width, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number_centered(value, rating_buttons[id].x, rating_buttons[id].y + 21, rating_buttons[id].width, FONT_LARGE_BLACK_ON_LIGHT);
+    int width = text_draw_number(enabled ? goal : 0, '@', " ", rating_buttons[id].x + 5, rating_buttons[id].y + 45, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(53, 5, rating_buttons[id].x + 5 + width, rating_buttons[id].y + 45, FONT_NORMAL_BLACK_ON_LIGHT);
     int has_reached = !enabled || value >= goal;
     draw_rating_column(rating_buttons[id].x + 30, rating_buttons[id].y, value, has_reached);
@@ -66,9 +63,9 @@ static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
     int width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
-    if (!winning_population() || scenario_is_open_play())
+    if (!winning_population() || scenario_is_open_play()) {
         lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
-    else {
+    } else {
         width += lang_text_draw(53, 6, 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
         text_draw_number(winning_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
     }

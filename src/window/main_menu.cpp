@@ -83,8 +83,7 @@ static void draw_foreground(void) {
     };
     for (int i = 0; i < 4; i++) {
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
-        lang_text_draw_centered(
-          groups[i][0], groups[i][1], BUTTONS_X, BUTTONS_Y + 40 * i + 6, BUTTONS_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_centered(groups[i][0], groups[i][1], BUTTONS_X, BUTTONS_Y + 40 * i + 6, BUTTONS_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     graphics_reset_dialog();

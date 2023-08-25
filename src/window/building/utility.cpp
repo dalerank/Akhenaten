@@ -78,8 +78,7 @@ void window_building_draw_firehouse(building_info_context* c) {
     c->help_id = 81;                                      // TODO: change to firehouse
     window_building_play_sound(c, "wavs/prefecture.wav"); // TODO: change to firehouse
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(
-      LANG_GROUP_ID, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(LANG_GROUP_ID, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
     if (!c->has_road_access)
@@ -149,17 +148,8 @@ void window_building_draw_roadblock(building_info_context* c) {
     window_building_draw_description(c, 28, 116);
 }
 void window_building_draw_roadblock_foreground(building_info_context* c) {
-    button_border_draw(c->x_offset + 80,
-                       c->y_offset + 16 * c->height_blocks - 34,
-                       16 * (c->width_blocks - 10),
-                       20,
-                       data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(98,
-                            5,
-                            c->x_offset + 80,
-                            c->y_offset + 16 * c->height_blocks - 30,
-                            16 * (c->width_blocks - 10),
-                            FONT_NORMAL_BLACK_ON_LIGHT);
+    button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34, 16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 void window_building_draw_roadblock_orders(building_info_context* c) {
     c->help_id = 3;
@@ -342,8 +332,7 @@ static void draw_native(building_info_context* c, int group_id) {
     c->help_id = 0;
     window_building_play_sound(c, "wavs/empty_land.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(
-      group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 106, group_id, 1);
 }
 

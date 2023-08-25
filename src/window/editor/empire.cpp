@@ -250,8 +250,7 @@ static void draw_panel_buttons(const empire_city* city) {
     if (city)
         draw_city_info(city);
     else {
-        lang_text_draw_centered(
-          150, scenario_empire_id(), data.x_min, data.y_max - 85, data.x_max - data.x_min, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_centered(150, scenario_empire_id(), data.x_min, data.y_max - 85, data.x_max - data.x_min, FONT_NORMAL_BLACK_ON_DARK);
     }
     lang_text_draw(151, scenario_empire_id(), data.x_min + 220, data.y_max - 45, FONT_NORMAL_BLACK_ON_DARK);
 

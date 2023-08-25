@@ -88,22 +88,10 @@ static void draw_foreground(void) {
     draw_number_button(data.x + 21, data.y + 141, 0, data.focus_button_id == 10);
 
     graphics_draw_rect(data.x + 51, data.y + 141, 55, 25, data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
-    lang_text_draw_centered_colored(44,
-                                    16,
-                                    data.x + 51,
-                                    data.y + 147,
-                                    55,
-                                    FONT_SMALL_PLAIN,
-                                    data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
+    lang_text_draw_centered_colored(44,16,data.x + 51, data.y + 147, 55, FONT_SMALL_PLAIN, data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
 
     graphics_draw_rect(data.x + 21, data.y + 171, 85, 25, data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
-    lang_text_draw_centered_colored(44,
-                                    17,
-                                    data.x + 21,
-                                    data.y + 177,
-                                    85,
-                                    FONT_SMALL_PLAIN,
-                                    data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
+    lang_text_draw_centered_colored(44, 17, data.x + 21, data.y + 177, 85, FONT_SMALL_PLAIN, data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {

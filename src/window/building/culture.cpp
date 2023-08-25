@@ -9,14 +9,13 @@ static void draw_culture_info(building_info_context* c, int help_id, const char*
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(
-      group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
-    if (!c->has_road_access)
+    if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    else if (building_get(c->building_id)->num_workers <= 0)
+    } else if (building_get(c->building_id)->num_workers <= 0) {
         window_building_draw_description(c, group_id, 2);
-    else {
+    } else {
         window_building_draw_description(c, group_id, 3);
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
@@ -65,29 +64,29 @@ static void draw_temple(building_info_context* c, const char* sound_file, int gr
     c->help_id = 67;
     window_building_play_sound(c, sound_file);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(
-      group_id, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 56, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 62);
-    if (c->has_road_access)
+    if (c->has_road_access) {
         ImageDraw::img_generic(image_offset + image_id_from_group(GROUP_PANEL_WINDOWS),
                                c->x_offset + 190,
                                c->y_offset + 16 * c->height_blocks - 118);
-    else
+    } else {
         window_building_draw_description_at(c, 16 * c->height_blocks - 128, 69, 25);
+    }
 }
 static void draw_shrine(building_info_context* c, const char* sound_file, int text_id, int image_offset) {
     c->help_id = 67;
     window_building_play_sound(c, sound_file);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(
-      161, text_id, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    if (c->has_road_access)
+    lang_text_draw_centered(161, text_id, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    if (c->has_road_access) {
         ImageDraw::img_generic(image_offset + image_id_from_group(GROUP_PANEL_WINDOWS),
                                c->x_offset + 190,
                                c->y_offset + 16 * c->height_blocks - 148);
-    else
+    } else {
         window_building_draw_description_at(c, 16 * c->height_blocks - 128, 69, 25);
+    }
 }
 
 void window_building_draw_temple_ceres(building_info_context* c) {
@@ -287,21 +286,20 @@ static void draw_entertainment_school(building_info_context* c, const char* soun
     window_building_play_sound(c, sound_file);
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(
-      group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    if (!c->has_road_access)
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    else if (building_get(c->building_id)->num_workers <= 0)
+    } else if (building_get(c->building_id)->num_workers <= 0) {
         window_building_draw_description(c, group_id, 7);
-    else if (c->worker_percentage >= 100)
+    } else if (c->worker_percentage >= 100) {
         window_building_draw_description(c, group_id, 2);
-    else if (c->worker_percentage >= 75)
+    } else if (c->worker_percentage >= 75) {
         window_building_draw_description(c, group_id, 3);
-    else if (c->worker_percentage >= 50)
+    } else if (c->worker_percentage >= 50) {
         window_building_draw_description(c, group_id, 4);
-    else if (c->worker_percentage >= 25)
+    } else if (c->worker_percentage >= 25) {
         window_building_draw_description(c, group_id, 5);
-    else {
+    } else {
         window_building_draw_description(c, group_id, 6);
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
@@ -328,6 +326,5 @@ void window_building_draw_festival_square(building_info_context* c) {
     window_building_play_sound(c, "wavs/prefecture.wav"); // TODO: change to festival square
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(
-      group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 }

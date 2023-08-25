@@ -185,8 +185,7 @@ static void draw_overlay_text(int x_offset) {
         lang_text_draw_centered(14, game_state_overlay(), x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
         const bool is_button_focused = buttons_overlays_collapse_sidebar[1].focused;
-        lang_text_draw_centered(
-          6, 4, x_offset - 15, 30, 117, is_button_focused ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_centered(6, 4, x_offset - 15, 30, 117, is_button_focused ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
 static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {

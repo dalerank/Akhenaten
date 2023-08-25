@@ -107,8 +107,7 @@ static void draw_foreground(void) {
 
     lang_text_draw(38, 5, 36, 232, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(216, 226, 100, 24, focus_button_id == 8);
-    lang_text_draw_centered(
-      18, scenario_editor_land_trade_problem_enabled(), 216, 232, 100, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(18, scenario_editor_land_trade_problem_enabled(), 216, 232, 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(38, 13, 346, 234, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 6, 36, 262, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -123,14 +122,12 @@ static void draw_foreground(void) {
 
     lang_text_draw(38, 8, 36, 322, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(216, 316, 100, 24, focus_button_id == 11);
-    lang_text_draw_centered(
-      18, scenario_editor_contaminated_water_enabled(), 216, 322, 100, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(18, scenario_editor_contaminated_water_enabled(), 216, 322, 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(38, 13, 346, 324, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 9, 36, 352, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(216, 346, 100, 24, focus_button_id == 12);
-    lang_text_draw_centered(
-      18, scenario_editor_iron_mine_collapse_enabled(), 216, 352, 100, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(18, scenario_editor_iron_mine_collapse_enabled(), 216, 352, 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(38, 13, 346, 354, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 10, 36, 382, FONT_NORMAL_BLACK_ON_LIGHT);

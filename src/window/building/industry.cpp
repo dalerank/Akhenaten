@@ -20,8 +20,7 @@ static void draw_farm(building_info_context* c, int help_id, const char* sound_f
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
-    lang_text_draw_centered(
-      group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
     //int pct_grown = calc_percentage(b->data.industry.progress, 200);
@@ -90,8 +89,7 @@ draw_raw_material(building_info_context* c, int help_id, const char* sound_file,
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
-    lang_text_draw_centered(
-      group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
     int pct_done = calc_percentage(b->data.industry.progress, 200);
@@ -133,8 +131,7 @@ static void draw_workshop(building_info_context* c,
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
-    lang_text_draw_centered(
-      group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
     int pct_done = calc_percentage(b->data.industry.progress, 400);
@@ -142,15 +139,12 @@ static void draw_workshop(building_info_context* c,
     width += text_draw_percentage(pct_done, c->x_offset + 32 + width, c->y_offset + 40, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(group_id, 3, c->x_offset + 32 + width, c->y_offset + 40, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + input_resource,
-                           c->x_offset + 32,
-                           c->y_offset + 56);
+    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + input_resource, c->x_offset + 32, c->y_offset + 56);
     width = lang_text_draw(group_id, 12, c->x_offset + 60, c->y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
     if (b->stored_full_amount < 100)
         lang_text_draw_amount(8, 10, 0, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
     else
-        lang_text_draw_amount(
-          8, 10, b->stored_full_amount, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_amount(8, 10, b->stored_full_amount, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
 
     if (!c->has_road_access)
         window_building_draw_description_at(c, 86, 69, 25);
@@ -424,8 +418,7 @@ void window_building_draw_work_camp(building_info_context* c) {
     c->help_id = 81;
     window_building_play_sound(c, "wavs/prefecture.wav"); // TODO: change to work_camp
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(
-      group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
 

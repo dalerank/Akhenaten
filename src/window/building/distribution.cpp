@@ -730,17 +730,8 @@ void window_building_draw_dock(building_info_context* c) {
 }
 void window_building_draw_dock_foreground(building_info_context* c) {
     auto &data = g_window_building_distribution;
-    button_border_draw(c->x_offset + 80,
-                       c->y_offset + 16 * c->height_blocks - 34,
-                       16 * (c->width_blocks - 10),
-                       20,
-                       data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(98,
-                            5,
-                            c->x_offset + 80,
-                            c->y_offset + 16 * c->height_blocks - 30,
-                            16 * (c->width_blocks - 10),
-                            FONT_NORMAL_BLACK_ON_LIGHT);
+    button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34, 16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 void window_building_draw_dock_orders(building_info_context* c) {
     c->help_id = 83;
@@ -877,17 +868,8 @@ void window_building_draw_market(building_info_context* c) {
 }
 void window_building_draw_market_foreground(building_info_context* c) {
     auto &data = g_window_building_distribution;
-    button_border_draw(c->x_offset + 80,
-                       c->y_offset + 16 * c->height_blocks - 34,
-                       16 * (c->width_blocks - 10),
-                       20,
-                       data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(98,
-                            5,
-                            c->x_offset + 80,
-                            c->y_offset + 16 * c->height_blocks - 30,
-                            16 * (c->width_blocks - 10),
-                            FONT_NORMAL_BLACK_ON_LIGHT);
+    button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34, 16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 void window_building_draw_market_orders(building_info_context* c) {
     c->help_id = 2;
@@ -1067,17 +1049,8 @@ void window_building_draw_granary(building_info_context* c) {
 }
 void window_building_draw_granary_foreground(building_info_context* c) {
     auto &data = g_window_building_distribution;
-    button_border_draw(c->x_offset + 80,
-                       c->y_offset + 16 * c->height_blocks - 34,
-                       16 * (c->width_blocks - 10),
-                       20,
-                       data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(98,
-                            5,
-                            c->x_offset + 80,
-                            c->y_offset + 16 * c->height_blocks - 30,
-                            16 * (c->width_blocks - 10),
-                            FONT_NORMAL_BLACK_ON_LIGHT);
+    button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34, 16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
     draw_permissions_buttons(c->x_offset + 58, c->y_offset + 19 * c->height_blocks - 82, 1);
 }
 void window_building_draw_granary_orders(building_info_context* c) {
@@ -1129,24 +1102,18 @@ void window_building_draw_granary_orders_foreground(building_info_context* c) {
                        16 * (c->width_blocks - 10),
                        20,
                        data.orders_focus_button_id == 1 ? 1 : 0);
-    if (storage->empty_all)
-        lang_text_draw_centered(
-          98, 8, c->x_offset + 80, y_offset + 408 - 15 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
-    else
-        lang_text_draw_centered(
-          98, 7, c->x_offset + 80, y_offset + 408 - 15 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    if (storage->empty_all) {
+        lang_text_draw_centered(98, 8, c->x_offset + 80, y_offset + 408 - 15 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    } else {
+        lang_text_draw_centered(98, 7, c->x_offset + 80, y_offset + 408 - 15 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    }
 
     // accept none button
     if (GAME_ENV == ENGINE_ENV_C3) {
         draw_accept_none_button(c->x_offset + 394, y_offset + 404 - 15 * 16, data.orders_focus_button_id == 3);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        button_border_draw(c->x_offset + 80,
-                           y_offset + 382 - 15 * 16,
-                           16 * (c->width_blocks - 10),
-                           20,
-                           data.orders_focus_button_id == 2 ? 1 : 0);
-        lang_text_draw_centered(
-          99, 7, c->x_offset + 80, y_offset + 386 - 15 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+        button_border_draw(c->x_offset + 80, y_offset + 382 - 15 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 2 ? 1 : 0);
+        lang_text_draw_centered(99, 7, c->x_offset + 80, y_offset + 386 - 15 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
 void window_building_get_tooltip_granary_orders(int* group_id, int* text_id) {
@@ -1311,17 +1278,8 @@ void window_building_draw_warehouse(building_info_context* c) {
 }
 void window_building_draw_warehouse_foreground(building_info_context* c) {
     auto &data = g_window_building_distribution;
-    button_border_draw(c->x_offset + 80,
-                       c->y_offset + 16 * c->height_blocks - 34,
-                       16 * (c->width_blocks - 10),
-                       20,
-                       data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(99,
-                            2,
-                            c->x_offset + 80,
-                            c->y_offset + 16 * c->height_blocks - 30,
-                            16 * (c->width_blocks - 10),
-                            FONT_NORMAL_BLACK_ON_LIGHT);
+    button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34, 16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(99, 2, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30, 16 * (c->width_blocks - 10),FONT_NORMAL_BLACK_ON_LIGHT);
 
     // temp - todo: fix buttons
     //    draw_permissions_buttons(c->x_offset + 64, c->y_offset + 16 * c->height_blocks - 75, 3);
@@ -1375,38 +1333,23 @@ void window_building_draw_warehouse_orders_foreground(building_info_context* c) 
                        16 * (c->width_blocks - 10),
                        20,
                        data.orders_focus_button_id == 1 ? 1 : 0);
-    if (storage->empty_all)
-        lang_text_draw_centered(
-          99, 5, c->x_offset + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
-    else
-        lang_text_draw_centered(
-          99, 4, c->x_offset + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    if (storage->empty_all) {
+        lang_text_draw_centered(99, 5, c->x_offset + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    } else {
+        lang_text_draw_centered(99, 4, c->x_offset + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    }
 
     // trade center
     if (GAME_ENV == ENGINE_ENV_C3) {
-        button_border_draw(c->x_offset + 80,
-                           y_offset + 382 + 5 * 16,
-                           16 * (c->width_blocks - 10),
-                           20,
-                           data.orders_focus_button_id == 2 ? 1 : 0);
+        button_border_draw(c->x_offset + 80, y_offset + 382 + 5 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 2 ? 1 : 0);
         int is_trade_center = c->building_id == city_buildings_get_trade_center();
-        lang_text_draw_centered(99,
-                                is_trade_center ? 11 : 12,
-                                c->x_offset + 80,
-                                y_offset + 386 + 5 * 16,
-                                16 * (c->width_blocks - 10),
-                                FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_centered(99, is_trade_center ? 11 : 12, c->x_offset + 80, y_offset + 386 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
         // accept none button
         draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 3);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         // accept none button
-        button_border_draw(c->x_offset + 80,
-                           y_offset + 382 + 5 * 16,
-                           16 * (c->width_blocks - 10),
-                           20,
-                           data.orders_focus_button_id == 2 ? 1 : 0);
-        lang_text_draw_centered(
-          99, 7, c->x_offset + 80, y_offset + 386 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+        button_border_draw(c->x_offset + 80, y_offset + 382 + 5 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 2 ? 1 : 0);
+        lang_text_draw_centered(99, 7, c->x_offset + 80, y_offset + 386 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
 void window_building_get_tooltip_warehouse_orders(int* group_id, int* text_id) {

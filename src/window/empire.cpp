@@ -435,11 +435,9 @@ static void draw_object_info(void) {
         }
     } else {
         if (GAME_ENV == ENGINE_ENV_C3)
-            lang_text_draw_centered(
-              47, 8, data.x_min, data.y_max - 48, data.x_max - data.x_min, FONT_OBJECT_INFO[GAME_ENV]);
+            lang_text_draw_centered(47, 8, data.x_min, data.y_max - 48, data.x_max - data.x_min, FONT_OBJECT_INFO[GAME_ENV]);
         else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            lang_text_draw_centered(
-              47, 9, data.x_min, data.y_max - 68, data.x_max - data.x_min, FONT_OBJECT_INFO[GAME_ENV]);
+            lang_text_draw_centered(47, 9, data.x_min, data.y_max - 68, data.x_max - data.x_min, FONT_OBJECT_INFO[GAME_ENV]);
     }
 }
 static void draw_empire_object(const empire_object* obj) {
@@ -593,29 +591,14 @@ static void draw_city_name(const empire_city* city) {
         ImageDraw::img_generic(image_base + 7, data.x_max - 84, data.y_max - 199);
         ImageDraw::img_generic(image_base + 8, (data.x_min + data.x_max - 332) / 2, data.y_max - 181);
         if (city) {
-            lang_text_draw_centered(21,
-                                    city->name_id,
-                                    (data.x_min + data.x_max - 332) / 2 + 64,
-                                    data.y_max - 118,
-                                    268,
-                                    FONT_LARGE_BLACK_ON_LIGHT);
+            lang_text_draw_centered(21, city->name_id, (data.x_min + data.x_max - 332) / 2 + 64, data.y_max - 118, 268, FONT_LARGE_BLACK_ON_LIGHT);
         }
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         if (city) {
             if (setting_city_names_style() == CITIES_OLD_NAMES)
-                lang_text_draw_centered(195,
-                                        city->name_id,
-                                        (data.x_min + data.x_max - 332) / 2 + 32,
-                                        data.y_max - INFO_Y_CITY_NAME,
-                                        268,
-                                        FONT_LARGE_BLACK_ON_LIGHT);
+                lang_text_draw_centered(195, city->name_id, (data.x_min + data.x_max - 332) / 2 + 32, data.y_max - INFO_Y_CITY_NAME, 268, FONT_LARGE_BLACK_ON_LIGHT);
             else
-                lang_text_draw_centered(21,
-                                        city->name_id,
-                                        (data.x_min + data.x_max - 332) / 2 + 32,
-                                        data.y_max - INFO_Y_CITY_NAME,
-                                        268,
-                                        FONT_LARGE_BLACK_ON_LIGHT);
+                lang_text_draw_centered(21, city->name_id, (data.x_min + data.x_max - 332) / 2 + 32, data.y_max - INFO_Y_CITY_NAME, 268,FONT_LARGE_BLACK_ON_LIGHT);
         }
     }
 }
