@@ -6,9 +6,11 @@
 #include "city/data_private.h"
 #include "city/entertainment.h"
 #include "city/festival.h"
+#include "city/constants.h"
 #include "city/population.h"
 #include "core/calc.h"
 #include "core/profiler.h"
+#include "core/buffer.h"
 #include "gods.h"
 
 struct coverage_data_t {
