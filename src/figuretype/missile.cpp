@@ -41,7 +41,7 @@ void figure_create_explosion_cloud(int x, int y, int size) {
     int tile_offset = CLOUD_TILE_OFFSETS[size];
     int cc_offset = CLOUD_CC_OFFSETS[size];
     for (int i = 0; i < 16; i++) {
-        figure* f = figure_create(FIGURE_EXPLOSION, x + tile_offset, y + tile_offset, DIR_0_TOP_RIGHT);
+        figure* f = figure_create(FIGURE_EXPLOSION, map_point(x + tile_offset, y + tile_offset), DIR_0_TOP_RIGHT);
         if (f->id) {
             f->cc_coords.x += cc_offset;
             f->cc_coords.y += cc_offset;
@@ -59,7 +59,7 @@ void figure_create_explosion_cloud(int x, int y, int size) {
 }
 
 void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, e_figure_type type) {
-    figure* f = figure_create(type, x, y, DIR_0_TOP_RIGHT);
+    figure* f = figure_create(type, map_point(x, y), DIR_0_TOP_RIGHT);
     if (f->id) {
         f->missile_damage = (type == FIGURE_BOLT ? 60 : 10);
         f->set_home(building_id);

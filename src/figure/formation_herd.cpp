@@ -215,7 +215,7 @@ static void update_herd_formation(formation* m) {
     if (can_spawn_ph_wolf(m)) {
         // spawn new wolf
         if (!map_terrain_is(MAP_OFFSET(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
-            figure* wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP_RIGHT);
+            figure* wolf = figure_create(m->figure_type, map_point(m->x, m->y), DIR_0_TOP_RIGHT);
             wolf->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 wolf->action_state = 24;
@@ -226,7 +226,7 @@ static void update_herd_formation(formation* m) {
     if (can_spawn_ostrich(m)) {
         // spawn new ostrich
         if (!map_terrain_is(MAP_OFFSET(m->x, m->y), TERRAIN_IMPASSABLE_OSTRICH)) {
-            figure* ostrich = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP_RIGHT);
+            figure* ostrich = figure_create(m->figure_type, map_point(m->x, m->y), DIR_0_TOP_RIGHT);
             // ostrich->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             ostrich->action_state = FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE;
             ostrich->formation_id = m->id;

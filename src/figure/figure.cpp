@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "city/emperor.h"
 #include "core/random.h"
+#include "core/svector.h"
 #include "empire/city.h"
 #include "figure/figure_names.h"
 #include "figure/route.h"
@@ -10,33 +11,33 @@
 #include "grid/figure.h"
 #include "grid/grid.h"
 #include "grid/terrain.h"
-
 #include "io/io_buffer.h"
+
 #include <string.h>
 
 struct figure_data_t {
     int created_sequence;
     bool initialized;
-    figure* figures[5000];
+    svector<figure*, 5000> figures;
 };
 
 figure_data_t g_figure_data = {0, false};
 
-figure* figure_get(int id) {
+figure *figure_get(int id) {
     return g_figure_data.figures[id];
 }
-figure* figure_create(e_figure_type type, int x, int y, int dir) {
-    int id = 0;
-    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
-        if (figure_get(i)->available()) {
-            id = i;
-            break;
-        }
-    }
-    if (!id)
-        return figure_get(0);
 
-    figure* f = figure_get(id);
+figure *figure_take_from_pool () {
+    auto it = std::find_if(g_figure_data.figures.begin() + 1, g_figure_data.figures.end(), [] (auto &f) { return f->available(); });
+    return it != g_figure_data.figures.end() ? *it : nullptr;
+}
+
+figure* figure_create(e_figure_type type, map_point tile, int dir) {
+    figure *f = figure_take_from_pool();
+    if (!f) {
+        return figure_get(0);
+    }
+
     f->state = FIGURE_STATE_ALIVE;
     f->faction_id = 1;
     f->type = type;
@@ -47,23 +48,28 @@ figure* figure_create(e_figure_type type, int x, int y, int dir) {
     f->direction = dir;
     //    f->direction = DIR_FIGURE_NONE;
     f->roam_length = 0;
-    f->source_tile = f->destination_tile = f->previous_tile = f->tile = map_point(x, y);
+    f->source_tile = tile;
+    f->destination_tile = tile;
+    f->previous_tile = tile;
+    f->tile = tile;
     f->destination_tile.set(0, 0);
     //    f->source_x = f->destination_x = f->previous_tile_x = f->tile_x = x;
     //    f->source_y = f->destination_y = f->previous_tile_y = f->tile_y = y;
     //    f->destination_x = 0;
     //    f->destination_y = 0;
     //    f->grid_offset_figure = MAP_OFFSET(x, y);
-    f->cc_coords.x = 15 * x;
-    f->cc_coords.y = 15 * y;
+    f->cc_coords.x = 15 * tile.x();
+    f->cc_coords.y = 15 * tile.y();
     //    f->cross_country_x = 15 * x;
     //    f->cross_country_y = 15 * y;
     f->progress_on_tile = 14;
     f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
     f->name = figure_name_get(type, 0);
     f->map_figure_add();
-    if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_SHIP)
+
+    if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_SHIP) {
         f->trader_id = trader_create();
+    }
 
     return f;
 }
@@ -234,7 +240,7 @@ e_minimap_figure_color figure::get_figure_color() {
 void init_figures() {
     if (!g_figure_data.initialized) {
         for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
-            g_figure_data.figures[i] = new figure(i);
+            g_figure_data.figures.push_back(new figure(i));
         }
         g_figure_data.initialized = true;
     }
@@ -260,10 +266,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT16, &f->sprite_image_id);
     f->sprite_image_id += 18;
 
-    if (GAME_ENV == ENGINE_ENV_C3)
-        iob->bind(BIND_SIGNATURE_INT16, &f->cart_image_id);
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        iob->bind____skip(2);
+    iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT16, &f->next_figure);
     iob->bind(BIND_SIGNATURE_UINT8, &f->type);
     iob->bind(BIND_SIGNATURE_UINT8, &f->resource_id);

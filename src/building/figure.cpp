@@ -118,7 +118,7 @@ int building::get_figure_slot(figure* f) {
 }
 
 figure* building::create_figure_generic(e_figure_type _type, int created_action, int slot, int created_dir) {
-    figure* f = figure_create(_type, road_access.x(), road_access.y(), created_dir);
+    figure* f = figure_create(_type, road_access, created_dir);
     f->action_state = created_action;
     f->set_home(id);
     return f;
@@ -519,23 +519,23 @@ void building::spawn_figure_school() {
         if (figure_spawn_delay > spawn_delay) {
             figure_spawn_delay = 0;
 
-            figure* child1 = figure_create(FIGURE_SCHOOL_CHILD, road.x(), road.y(), DIR_0_TOP_RIGHT);
+            figure* child1 = figure_create(FIGURE_SCHOOL_CHILD, road, DIR_0_TOP_RIGHT);
             child1->action_state = FIGURE_ACTION_125_ROAMING;
             child1->set_home(id);
             set_figure(0, child1->id); // first "child" (teacher) is the coupled figure to the school building
             child1->init_roaming_from_building(0);
 
-            figure* child2 = figure_create(FIGURE_SCHOOL_CHILD, road.x(), road.y(), DIR_0_TOP_RIGHT);
+            figure* child2 = figure_create(FIGURE_SCHOOL_CHILD, road, DIR_0_TOP_RIGHT);
             child2->action_state = FIGURE_ACTION_125_ROAMING;
             child1->set_home(id);
             child2->init_roaming_from_building(0);
 
-            figure* child3 = figure_create(FIGURE_SCHOOL_CHILD, road.x(), road.y(), DIR_0_TOP_RIGHT);
+            figure* child3 = figure_create(FIGURE_SCHOOL_CHILD, road, DIR_0_TOP_RIGHT);
             child3->action_state = FIGURE_ACTION_125_ROAMING;
             child1->set_home(id);
             child3->init_roaming_from_building(0);
 
-            figure* child4 = figure_create(FIGURE_SCHOOL_CHILD, road.x(), road.y(), DIR_0_TOP_RIGHT);
+            figure* child4 = figure_create(FIGURE_SCHOOL_CHILD, road, DIR_0_TOP_RIGHT);
             child4->action_state = FIGURE_ACTION_125_ROAMING;
             child1->set_home(id);
             child4->init_roaming_from_building(0);
@@ -901,7 +901,7 @@ void building::spawn_figure_storageyard() {
             //                amount = 1;
 
             if (!has_figure(0)) {
-                figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access.x(), road_access.y(), DIR_4_BOTTOM_LEFT);
+                figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access, DIR_4_BOTTOM_LEFT);
                 f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 
                 switch (task) {
@@ -921,7 +921,7 @@ void building::spawn_figure_storageyard() {
                 f->set_home(id);
 
             } else if (task == STORAGEYARD_TASK_GETTING_MOAR && !has_figure_of_type(1, FIGURE_STORAGE_YARD_DELIVERCART)) {
-                figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access.x(), road_access.y(), DIR_4_BOTTOM_LEFT);
+                figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access, DIR_4_BOTTOM_LEFT);
                 f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 
                 f->load_resource(0, RESOURCE_NONE);
@@ -939,12 +939,14 @@ void building::spawn_figure_granary() {
     map_point road;
     if (map_has_road_access(tile.x(), tile.y(), size, &road)) { // map_has_road_access_granary(x, y, &road)
         common_spawn_labor_seeker(100);
+
         if (has_figure_of_type(0, FIGURE_STORAGE_YARD_DELIVERCART)) {
             return;
         }
+
         auto task = building_granary_determine_worker_task(this);
         if (task.status != GRANARY_TASK_NONE) {
-            figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road.x(), road.y(), DIR_4_BOTTOM_LEFT);
+            figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road, DIR_4_BOTTOM_LEFT);
             f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
             f->load_resource(0, task.resource);
             set_figure(0, f->id);

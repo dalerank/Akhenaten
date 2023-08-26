@@ -48,7 +48,7 @@ enum E_HORSE { HORSE_CREATED = 0, HORSE_RACING = 1, HORSE_FINISHED = 2 };
 
 static void create_fishing_point(int x, int y) {
     random_generate_next();
-    figure* fish = figure_create(FIGURE_FISH_GULLS, x, y, DIR_0_TOP_RIGHT);
+    figure* fish = figure_create(FIGURE_FISH_GULLS, map_point(x, y), DIR_0_TOP_RIGHT);
     fish->anim_frame = random_byte() & 0x1f;
     fish->progress_on_tile = random_byte() & 7;
     fish->set_cross_country_direction(
@@ -83,7 +83,7 @@ static void create_herd(int x, int y) {
         for (int fig = 0; fig < num_animals; fig++) {
             random_generate_next();
 
-            figure* f = figure_create(herd_type, x, y, DIR_0_TOP_RIGHT);
+            figure* f = figure_create(herd_type, map_point(x, y), DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             f->formation_id = formation_id;
             f->wait_ticks = f->id & 0x1f;

@@ -681,7 +681,7 @@ void building_menu_update(int build_set) {
         toggle_building(BUILDING_MARKET);
         toggle_building(BUILDING_GRANARY);
         building_menu_update(BUILDSET_TUT3_INDUSTRY);
-        toggle_building(BUILDING_LOW_BRIDGE);
+        //toggle_building(BUILDING_LOW_BRIDGE);
         enable_gods(GOD_OSIRIS, GOD_RA, GOD_BAST);
         toggle_building(BUILDING_BEER_WORKSHOP);
         break;

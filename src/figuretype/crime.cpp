@@ -53,7 +53,7 @@ static void generate_rioter(building* b) {
     int target_building_id = formation_rioter_get_target_building(&x_target, &y_target);
     for (int i = 0; i < people_in_mob; i++) {
         // TODO: to add correct rioter image
-        figure* f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM_LEFT);
+        figure* f = figure_create(FIGURE_RIOTER, map_point(x_road, y_road), DIR_4_BOTTOM_LEFT);
         f->advance_action(FIGURE_ACTION_120_RIOTER_CREATED);
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
@@ -80,7 +80,7 @@ static void generate_mugger(building* b) {
         b->house_criminal_active -= 60;
         int x_road, y_road;
         if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
-            figure* f = figure_create(FIGURE_CRIMINAL, x_road, y_road, DIR_4_BOTTOM_LEFT);
+            figure* f = figure_create(FIGURE_CRIMINAL, map_point(x_road, y_road), DIR_4_BOTTOM_LEFT);
             f->advance_action(FIGURE_ACTION_120_MUGGER_CREATED);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
 
@@ -116,7 +116,7 @@ static void generate_protestor(building* b) {
         b->house_criminal_active -= 30;
         int x_road, y_road;
         if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
-            figure* f = figure_create(FIGURE_PROTESTER, x_road, y_road, DIR_4_BOTTOM_LEFT);
+            figure* f = figure_create(FIGURE_PROTESTER, map_point(x_road, y_road), DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
             city_ratings_monument_record_criminal();
         }

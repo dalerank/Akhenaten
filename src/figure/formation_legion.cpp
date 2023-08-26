@@ -20,7 +20,7 @@ int formation_legion_create_for_fort(building* fort) {
     if (!m->id)
         return 0;
 
-    figure* standard = figure_create(FIGURE_FORT_STANDARD, 0, 0, DIR_0_TOP_RIGHT);
+    figure* standard = figure_create(FIGURE_FORT_STANDARD, map_point(0, 0), DIR_0_TOP_RIGHT);
     standard->set_home(fort->id);
     standard->formation_id = m->id;
     m->standard_figure_id = standard->id;
