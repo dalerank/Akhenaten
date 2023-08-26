@@ -71,6 +71,7 @@ static translation_string all_strings[]
      {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Warehouses don't accept anything when built"},
      {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Houses don't expand into gardens"},
      {TR_CONFIG_FIREMAN_RETURNING, "Fireman returning after fight fire"},
+     {TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY, "Cart speed depends from quantity resource"},
      {TR_CONFIG_GOD_OSIRIS_DISABLED, "Osiris disabled"},
      {TR_CONFIG_GOD_RA_DISABLED, "Ra disabled"},
      {TR_CONFIG_GOD_PTAH_DISABLED, "Ptah disabled"},

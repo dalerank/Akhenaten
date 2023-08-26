@@ -158,7 +158,9 @@ figure* building::create_cartpusher(e_resource resource_id, int quantity, int cr
     f->set_immigrant_home(0);
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
-    f->progress_inside_speed = std::clamp(quantity / 400, 0, 2);
+    if (config_get(CONFIG_GP_CH_CART_SPEED_QUANTITY)) {
+        f->progress_inside_speed = std::clamp(quantity / 400, 0, 2);
+    }
     f->wait_ticks = 30;
     return f;
 }
