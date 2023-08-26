@@ -130,7 +130,7 @@ static void draw_entertainment_shows_c3(building* b, int x, int y, color color_m
 static void draw_entertainment_show_jugglers(building* b, int x, int y, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days1) {
-        draw_normal_anim(x + 30, y + 15, b, b->tile.grid_offset(), image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BOOTH));
+        draw_normal_anim(x + 30, y + 15, b, b->tile.grid_offset(), image_id_from_group(GROUP_JUGGLERS_SHOW_ALONE) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BOOTH));
     }
 }
 
