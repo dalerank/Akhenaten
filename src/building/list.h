@@ -1,7 +1,6 @@
-#ifndef BUILDING_LIST_H
-#define BUILDING_LIST_H
+#pragma once
 
-#include "core/buffer.h"
+#include "core/span.hpp"
 
 /**
  * @file
@@ -59,8 +58,4 @@ void building_list_burning_clear(void);
 
 void building_list_burning_add(int building_id);
 
-int building_list_burning_size(void);
-
-const int* building_list_burning_items(void);
-
-#endif // BUILDING_LIST_H
+std::span<int> building_list_burning_items();

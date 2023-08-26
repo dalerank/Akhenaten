@@ -282,6 +282,7 @@ int map_routing_get_closest_tile_within_range(int src_x,
     }
     return 0;
 }
+
 int map_routing_get_path_on_water(uint8_t* path, int dst_x, int dst_y, bool is_flotsam) {
     int rand = random_byte() & 3;
     int dst_grid_offset = MAP_OFFSET(dst_x, dst_y);

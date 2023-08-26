@@ -1,6 +1,8 @@
 #include "list.h"
 
 #include "io/io_buffer.h"
+#include "core/buffer.h"
+
 #include <string.h>
 
 #define MAX_SMALL 2500
@@ -84,31 +86,32 @@ void building_list_burning_add(int building_id) {
         data.burning.size = MAX_BURNING - 1;
 }
 
-int building_list_burning_size(void) {
+std::span<int> building_list_burning_items() {
     auto& data = g_list_data;
-    return data.burning.size;
-}
-
-const int* building_list_burning_items(void) {
-    auto& data = g_list_data;
-    return data.burning.items;
+    return make_span(data.burning.items, data.burning.size);
 }
 
 io_buffer* iob_building_list_small = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_list_data;
-    for (int i = 0; i < MAX_SMALL; i++)
+    for (int i = 0; i < MAX_SMALL; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &data.small.items[i]);
+    }
 });
+
 io_buffer* iob_building_list_large = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_list_data;
-    for (int i = 0; i < MAX_LARGE; i++)
+    for (int i = 0; i < MAX_LARGE; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &data.large.items[i]);
+    }
 });
+
 io_buffer* iob_building_list_burning = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_list_data;
-    for (int i = 0; i < MAX_BURNING; i++)
+    for (int i = 0; i < MAX_BURNING; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &data.burning.items[i]);
+    }
 });
+
 io_buffer* iob_building_burning_list_info = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_list_data;
     iob->bind(BIND_SIGNATURE_INT32, &data.burning.total);

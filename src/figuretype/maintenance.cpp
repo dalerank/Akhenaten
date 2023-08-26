@@ -148,8 +148,9 @@ bool figure::fight_enemy(int category, int max_distance) {
     return false;
 }
 bool figure::fireman_fight_fire() {
-    if (building_list_burning_size() <= 0)
+    if (building_list_burning_items().size() <= 0) {
         return false;
+    }
 
     switch (action_state) {
     case FIGURE_ACTION_150_ATTACK:
@@ -173,8 +174,6 @@ bool figure::fireman_fight_fire() {
         wait_ticks_missile = 0;
         advance_action(FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE);
         destination_tile = ruin->road_access;
-        //        destination_tile.x() = ruin->road_access.x();
-        //        destination_tile.y() = ruin->road_access.y();
         set_destination(ruin_id);
         route_remove();
         ruin->set_figure(3, id);
@@ -261,7 +260,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
         break;
     case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
     case 12:
-        if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ENEMY, FIGURE_ACTION_75_PREFECT_AT_FIRE))
+        if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_75_PREFECT_AT_FIRE))
             wait_ticks = 50;
         break;
     case FIGURE_ACTION_75_PREFECT_AT_FIRE:

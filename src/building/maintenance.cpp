@@ -13,6 +13,7 @@
 #include "core/random.h"
 #include "core/profiler.h"
 #include "figuretype/migrant.h"
+#include "figure/route.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
 #include "grid/building.h"
@@ -98,30 +99,31 @@ void building_maintenance_update_burning_ruins(void) {
     if (recalculate_terrain)
         map_routing_update_land();
 }
+
 int building_maintenance_get_closest_burning_ruin(map_point tile, int* distance) {
     int min_free_building_id = 0;
     int min_occupied_building_id = 0;
     int min_occupied_dist = *distance = 10000;
 
-    const int* burning = building_list_burning_items();
-    int burning_size = building_list_burning_size();
-    for (int i = 0; i < burning_size; i++) {
-        int building_id = burning[i];
+    std::span<int> burning_ruins = building_list_burning_items();
+    for (const auto &building_id: burning_ruins) {
         building* b = building_get(building_id);
         if ((b->state == BUILDING_STATE_VALID || b->state == BUILDING_STATE_MOTHBALLED)
             && b->type == BUILDING_BURNING_RUIN && !b->ruin_has_plague && b->distance_from_entry) {
+
             int dist = calc_maximum_distance(tile, b->tile);
             if (b->has_figure(3)) {
                 if (dist < min_occupied_dist) {
                     min_occupied_dist = dist;
                     min_occupied_building_id = building_id;
                 }
-            } else if (dist < *distance && b->has_road_access) {
+            } else if (dist < *distance) {
                 *distance = dist;
                 min_free_building_id = building_id;
             }
         }
     }
+
     if (!min_free_building_id && min_occupied_dist <= 2) {
         min_free_building_id = min_occupied_building_id;
         *distance = 2;
@@ -132,11 +134,12 @@ int building_maintenance_get_closest_burning_ruin(map_point tile, int* distance)
 static void collapse_building(building* b) {
     //    return; // TODO: get fire values and logic working before enabling
     city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
-    if (!tutorial_handle_collapse())
+    if (!tutorial_handle_collapse()) {
         city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE,
                                            MESSAGE_COLLAPSED_BUILDING,
                                            b->type,
                                            b->tile.grid_offset());
+    }
 
     game_undo_disable();
     building_destroy_by_collapse(b);
@@ -144,8 +147,9 @@ static void collapse_building(building* b) {
 static void fire_building(building* b) {
     //    return; // TODO: get fire values and logic working before enabling
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
-    if (!tutorial_handle_fire())
+    if (!tutorial_handle_fire()) {
         city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->tile.grid_offset());
+    }
 
     building_destroy_by_fire(b);
 }
@@ -163,6 +167,7 @@ void building_maintenance_check_fire_collapse(void) {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || b->fire_proof)
             continue;
+
         if (b->type == BUILDING_SENET_HOUSE && b->prev_part_building_id)
             continue;
 
