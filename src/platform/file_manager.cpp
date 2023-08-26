@@ -139,7 +139,7 @@ int platform_file_manager_list_directory_contents(const char* dir,
             }
             match = callback(name);
         } else if (file_has_extension(name, extension)) {
-            logs::error("platform_file_manager_list_directory_contents: %s %u", strerror(errno), errno);
+            logs::error("[%s.%s] platform_file_manager_list_directory_contents: %s %u", name, extension, strerror(errno), errno);
             match = callback(name);
         }
 

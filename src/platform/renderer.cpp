@@ -1254,8 +1254,7 @@ int platform_renderer_create_render_texture(int width, int height) {
     SDL_SetRenderTarget(data.renderer, NULL);
     SDL_RenderSetLogicalSize(data.renderer, width, height);
 
-    data.render_texture
-      = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, width, height);
+    data.render_texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, width, height);
 
     if (data.render_texture) {
         logs::info("Render texture created (%d x %d)", width, height);
