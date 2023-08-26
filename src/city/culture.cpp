@@ -107,10 +107,11 @@ void city_culture_update_coverage(void) {
     coverage.theater = top(calc_percentage(400 * building_count_active(BUILDING_BOOTH), population));
     coverage.amphitheater = top(calc_percentage(700 * building_count_active(BUILDING_BANDSTAND), population));
     coverage.colosseum = top(calc_percentage(1200 * building_count_active(BUILDING_PAVILLION), population));
-    if (building_count_active(BUILDING_SENET_HOUSE) <= 0)
+    if (building_count_active(BUILDING_SENET_HOUSE) <= 0) {
         coverage.hippodrome = 0;
-    else
+    } else {
         coverage.hippodrome = 100;
+    }
 
     // religion
     //    int oracles = building_count_total(BUILDING_ORACLE);

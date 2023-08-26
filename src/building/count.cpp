@@ -61,6 +61,7 @@ void building_entertainment_update() {
             is_entertainment_venue = 1;
             break;
         }
+
         if (is_entertainment_venue) {
             // update number of shows
             int shows = 0;
@@ -68,14 +69,17 @@ void building_entertainment_update() {
                 --b->data.entertainment.days1;
                 ++shows;
             }
+
             if (b->data.entertainment.days2 > 0) {
                 --b->data.entertainment.days2;
                 ++shows;
             }
+
             if (type != BUILDING_BOOTH && b->data.entertainment.days3_or_play > 0) {
                 --b->data.entertainment.days3_or_play;
                 ++shows;
             }
+
             b->data.entertainment.num_shows = shows;
         }
     }

@@ -206,10 +206,13 @@ static void add_building_to_terrain(building* b) {
         b = building_get(b->prev_part_building_id);
     switch (b->type) {
     case BUILDING_BOOTH:
-        for (int dy = 0; dy < 2; dy++)
-            for (int dx = 0; dx < 2; dx++)
-                if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+        for (int dy = 0; dy < 2; dy++) {
+            for (int dx = 0; dx < 2; dx++) {
+                if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0) {
                     map_building_set(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), b->id);
+                }
+            }
+        }
         break;
     case BUILDING_BANDSTAND:
         for (int dy = 0; dy < 3; dy++)

@@ -89,6 +89,7 @@ static void draw_fort_anim(int x, int y, building* b) {
                                    drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0);
     }
 }
+
 static void draw_gatehouse_anim(int x, int y, building* b) {
     int xy = map_property_multi_tile_xy(b->tile.grid_offset());
     int orientation = city_view_orientation();
@@ -110,6 +111,7 @@ static void draw_gatehouse_anim(int x, int y, building* b) {
         }
     }
 }
+
 static void draw_entertainment_shows_c3(building* b, int x, int y, color color_mask) {
     //    if (b->type == BUILDING_AMPHITHEATER && b->num_workers > 0)
     //        ImageDraw::img_generic(image_id_from_group(GROUP_DANCERS_SHOW), x + 36, y - 47, color_mask);
@@ -128,47 +130,29 @@ static void draw_entertainment_shows_c3(building* b, int x, int y, color color_m
 static void draw_entertainment_show_jugglers(building* b, int x, int y, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days1) {
-        draw_normal_anim(x + 30, y + 15,
-                         b, b->tile.grid_offset(),
-                         image_id_from_group(GROUP_DANCERS_SHOW) - 1,
-                         color_mask,
-                         image_id_from_group(GROUP_BUILDING_BOOTH));
+        draw_normal_anim(x + 30, y + 15, b, b->tile.grid_offset(), image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BOOTH));
     }
 }
+
 static void draw_entertainment_shows_musicians(building* b, int x, int y, int direction, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days2) {
         building* next_tile = b->next();
         switch (direction) {
         case 0:
-            draw_normal_anim(x + 20, y + 12,
-                             b, b->tile.grid_offset(),
-                             image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1,
-                             color_mask,
-                             image_id_from_group(GROUP_BUILDING_BANDSTAND),
-                             12);
+            draw_normal_anim(x + 20, y + 12, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
             break;
         case 1:
-            draw_normal_anim(x + 48, y + 12,
-                             b, b->tile.grid_offset(),
-                             image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1 + 12,
-                             color_mask,
-                             image_id_from_group(GROUP_BUILDING_BANDSTAND),
-                             12);
+            draw_normal_anim(x + 48, y + 12, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1 + 12, color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
             break;
         }
     }
 }
+
 static void draw_entertainment_shows_dancers(building* b, int x, int y, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days3_or_play) {
-        draw_normal_anim(x + 64,
-                         y,
-                         b,
-                         b->tile.grid_offset(),
-                         image_id_from_group(GROUP_DANCERS_SHOW) - 1,
-                         color_mask,
-                         image_id_from_group(GROUP_BUILDING_PAVILLION));
+        draw_normal_anim(x + 64, y, b, b->tile.grid_offset(), image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask, image_id_from_group(GROUP_BUILDING_PAVILLION));
     }
 }
 

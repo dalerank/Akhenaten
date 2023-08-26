@@ -124,8 +124,9 @@ static void check_wall(int type, int x, int y, int size) {
 
 static void check_actor_access(int type) {
     if (!g_has_warning && type == BUILDING_BOOTH) {
-        if (building_count_active(BUILDING_JUGGLER_SCHOOL) <= 0)
+        if (building_count_active(BUILDING_JUGGLER_SCHOOL) <= 0) {
             show(WARNING_BUILD_ACTOR_COLONY);
+        }
     }
 }
 

@@ -191,20 +191,23 @@ latch_on_venue(e_building_type type, building* main, int dx, int dy, int orienta
     case BUILDING_GARDENS:
         map_tiles_update_all_gardens();
         break;
+
     case BUILDING_BOOTH:
         map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BOOTH));
         break;
+
     case BUILDING_BANDSTAND:
         map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BANDSTAND) + orientation);
-        if (orientation == 1)
+        if (orientation == 1) {
             latch_on_venue(BUILDING_BANDSTAND, main, dx, dy + 1, 0);
-        else if (orientation == 2)
+        } else if (orientation == 2) {
             latch_on_venue(BUILDING_BANDSTAND, main, dx + 1, dy, 3);
+        }
         map_add_bandstand_tiles(this_venue);
         break;
+
     case BUILDING_PAVILLION:
-        map_building_tiles_add(
-          this_venue->id, point.x(), point.y(), 2, image_id_from_group(GROUP_BUILDING_PAVILLION), TERRAIN_BUILDING);
+        map_building_tiles_add(this_venue->id, point.x(), point.y(), 2, image_id_from_group(GROUP_BUILDING_PAVILLION), TERRAIN_BUILDING);
         break;
     }
 }
@@ -215,29 +218,38 @@ static void add_entertainment_venue(building* b, int orientation) {
     case BUILDING_BOOTH:
         size = 2;
         break;
+
     case BUILDING_BANDSTAND:
         size = 3;
         break;
+
     case BUILDING_PAVILLION:
         size = 4;
         break;
+
     case BUILDING_FESTIVAL_SQUARE:
         size = 5;
         break;
     }
-    if (!map_grid_is_inside(b->tile.x(), b->tile.y(), size))
+
+    if (!map_grid_is_inside(b->tile.x(), b->tile.y(), size)) {
         return;
+    }
+
     int image_id = 0;
     switch (b->type) {
     case BUILDING_BOOTH:
         image_id = image_id_from_group(GROUP_BOOTH_SQUARE);
         break;
+
     case BUILDING_BANDSTAND:
         image_id = image_id_from_group(GROUP_BANDSTAND_SQUARE);
         break;
+
     case BUILDING_PAVILLION:
         image_id = image_id_from_group(GROUP_PAVILLION_SQUARE);
         break;
+
     case BUILDING_FESTIVAL_SQUARE:
         image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE);
         break;

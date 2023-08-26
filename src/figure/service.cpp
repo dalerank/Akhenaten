@@ -356,11 +356,10 @@ int figure::figure_service_provide_coverage() {
         break;
     case FIGURE_ACTOR:
         b = get_entertainment_building();
-        if (b->type == BUILDING_BOOTH)
+        if (b->type == BUILDING_BOOTH) {
             houses_serviced = provide_culture(tile.x(), tile.y(), theater_coverage);
-        else if (b->type == BUILDING_BANDSTAND) {
-            houses_serviced
-              = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days1 ? 2 : 1, amphitheater_coverage);
+        } else if (b->type == BUILDING_BANDSTAND) {
+            houses_serviced = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days1 ? 2 : 1, amphitheater_coverage);
         }
         break;
     case FIGURE_GLADIATOR:

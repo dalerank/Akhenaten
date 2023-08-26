@@ -67,8 +67,9 @@ void figure::entertainer_update_shows() {
     case FIGURE_JUGGLER:
         if (b->type == BUILDING_BOOTH) { // update show index for booths
             b->data.entertainment.days3_or_play++;
-            if (b->data.entertainment.days3_or_play >= 5)
+            if (b->data.entertainment.days3_or_play >= 5) {
                 b->data.entertainment.days3_or_play = 0;
+            }
         }
         b->data.entertainment.days1 = 32;
         break;
