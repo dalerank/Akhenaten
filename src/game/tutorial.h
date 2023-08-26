@@ -18,26 +18,31 @@ struct tutorial_flags_t {
     } tutorial_1;
 
     struct {
-        int granary_built;
-        int population_250_reached;
-        int population_450_reached;
-        int pottery_made;
-        int pottery_made_year;
-    } tutorial2;
+        bool population_250_reached;
+        bool population_450_reached;
+        bool granary_built;
+        bool gold_mined_500;
+        bool temples_built;
+        bool crime;
+    } tutorial_2;
+
     struct {
-        int disease;
-    } tutorial3;
+        bool figs_800_stored;
+        bool pottery_made;
+        bool disease;
+        int pottery_made_year;
+    } tutorial_3;
+
+    struct {
+        bool beer_made;
+
+    } tutorial_4;
 
     struct {
         bool flags[41];
         //
         bool crime;
-        bool disease;
-        bool gold_mined_500;
-        bool temples_built;
-        bool figs_800_stored;
-        bool pottery_made;
-        bool beer_made;
+
         bool spacious_apartment;
 
         bool papyrus_made;

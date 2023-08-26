@@ -669,7 +669,7 @@ void update_curses_and_blessings(int randm_god, int FORCE_EVENT) {
 
 static void calculate_mood_targets() {
     // fix god moods to 30 if campaign has not unlocked them yet
-    if (scenario_is_custom() == 0 && tutorial_flags_struct()->pharaoh.gold_mined_500 == 0) {
+    if (scenario_is_custom() == 0 && tutorial_flags_struct()->tutorial_2.gold_mined_500 == 0) {
         for (int i = 0; i < MAX_GODS; i++) {
             city_data.religion.gods[i].target_mood = 30;
             city_data.religion.gods[i].mood = 30;

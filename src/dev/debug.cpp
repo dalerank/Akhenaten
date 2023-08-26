@@ -1200,124 +1200,76 @@ void draw_debug_ui(int x, int y) {
     /////// TUTORIAL
     if (g_debug_show_opts[e_debug_show_tutorial]) {
         auto flags = tutorial_flags_struct();
-        const char* const flagnames[41] = {
-          "fire",
-          "pop_150",
-          "meat_400",
-          "collapse",
-          "gold_500",
-          "temples_done",
-          "disease",
-          "figs_800",
-          "???",
-          "pottery_200",
-          "beer_300",
-          "",
-          "",
-          "",
-          "",
-          "tut1 start",
-          "tut2 start",
-          "tut3 start",
-          "tut4 start",
-          "tut5 start",
-          "tut6 start",
-          "tut7 start",
-          "tut8 start",
-          "",
-          "",
-          "",
-          ////////////
-          "// bazaar",
-          "// pottery",
-          "",
-          "",
-          "// tut4 ???",
-          "// tut5 ???",
-          "",
-          "// water supply",
-          "// tut4 ???",
-          "",
-          "// entertainment",
-          "// temples",
-          "// taxes",
-          "// mansion",
-          "",
-        };
+        struct tutopt { const char *optname; bool value; };
         for (int i = 0; i < 41; i++) {
-            int f = flags->pharaoh.flags[i];
+            tutopt f{"", flags->pharaoh.flags[i]};
             switch (i) {
             case 0:
-                f = flags->tutorial_1.fire;
+                f = { "1:fire", flags->tutorial_1.fire };
                 break;
             case 1:
-                f = flags->tutorial_1.population_150_reached;
+                f = { "1:pop_150", flags->tutorial_1.population_150_reached };
                 break;
             case 2:
-                f = flags->tutorial_1.gamemeat_400_stored;
+                f = { "1:meat_400", flags->tutorial_1.gamemeat_400_stored };
                 break;
             case 3:
-                f = flags->tutorial_1.collapse;
+                f = { "1:collapse", flags->tutorial_1.collapse };
                 break;
             case 4:
-                f = flags->pharaoh.gold_mined_500;
+                f = { "2:gold_500", flags->tutorial_2.gold_mined_500 };
                 break;
             case 5:
-                f = flags->pharaoh.temples_built;
+                f = { "2:temples_done", flags->tutorial_2.temples_built };
                 break;
-                //            case 6: ??? crime?
+            case 6:
+                f = { "2:crime", flags->tutorial_2.crime };
+                break;
             case 7:
-                f = flags->pharaoh.figs_800_stored;
+                f = { "3:figs_800", flags->tutorial_3.figs_800_stored };
                 break;
             case 8:
-                f = flags->pharaoh.disease;
+                f = { "3:pottery_200", flags->tutorial_3.pottery_made };
                 break;
             case 9:
-                f = flags->pharaoh.pottery_made;
+                f = { "4:disease", flags->tutorial_3.disease };
                 break;
             case 10:
-                f = flags->pharaoh.beer_made;
+                f = { "4:beer_300", flags->tutorial_4.beer_made };
                 break;
             case 11:
-                f = flags->pharaoh.spacious_apartment;
+                f = { "4:apartment", flags->pharaoh.spacious_apartment };
                 break;
-                //
             case 15:
-                f = flags->pharaoh.tut1_start;
+                f = { "tut1 start", flags->pharaoh.tut1_start };
                 break;
             case 16:
-                f = flags->pharaoh.tut2_start;
+                f = { "tut2 start", flags->pharaoh.tut2_start };
                 break;
             case 17:
-                f = flags->pharaoh.tut3_start;
+                f = { "tut3 start", flags->pharaoh.tut3_start };
                 break;
             case 18:
-                f = flags->pharaoh.tut4_start;
+                f = { "tut4 start", flags->pharaoh.tut4_start };
                 break;
             case 19:
-                f = flags->pharaoh.tut5_start;
+                f = { "tut5 start", flags->pharaoh.tut5_start };
                 break;
             case 20:
-                f = flags->pharaoh.tut6_start;
+                f = { "tut6 start", flags->pharaoh.tut6_start };
                 break;
             case 21:
-                f = flags->pharaoh.tut7_start;
+                f = { "tut7 start", flags->pharaoh.tut7_start };
                 break;
             case 22:
-                f = flags->pharaoh.tut8_start;
+                f = { "tut8 start" , flags->pharaoh.tut8_start };
                 break;
             }
 
-            int color = COLOR_WHITE;
-            if (f)
-                color = COLOR_GREEN;
-            string_from_int(str, i, 0);
-            text_draw(str, x + 3, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
+            int color = f.value ? COLOR_GREEN : COLOR_WHITE;
+            text_draw((uint8_t*)string_from_ascii(f.optname), x + 3, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
             text_draw((uint8_t*)string_from_ascii(":"), x + 3 + 20, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
-            string_from_int(str, f, 0);
-            text_draw(str, x + 3 + 30, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
-            text_draw(
-              (uint8_t*)string_from_ascii(flagnames[i]), x + 3 + 45, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
+            text_draw((uint8_t*)string_from_ascii(f.value ? "yes" : "no"), x + 3 + 45, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
         }
     }
 }
