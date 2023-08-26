@@ -63,6 +63,8 @@ figure* figure_create(e_figure_type type, map_point tile, int dir) {
     //    f->cross_country_x = 15 * x;
     //    f->cross_country_y = 15 * y;
     f->progress_on_tile = 14;
+    f->progress_inside = 0;
+    f->progress_inside_speed = 0;
     f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
     f->name = figure_name_get(type, 0);
     f->map_figure_add();
@@ -293,7 +295,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_x.soldier);
     iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_y.soldier);
     iob->bind(BIND_SIGNATURE_INT8, &f->terrain_type);               // 0
-    iob->bind(BIND_SIGNATURE_INT8, &f->__unused_24);
+    iob->bind(BIND_SIGNATURE_UINT8, &f->progress_inside_speed);
     iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks);                // 0
     iob->bind(BIND_SIGNATURE_UINT8, &f->action_state);              // 9
     iob->bind(BIND_SIGNATURE_UINT8, &f->progress_on_tile);          // 11
@@ -346,7 +348,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_exact);
     iob->bind(BIND_SIGNATURE_INT8, &f->phrase_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_city);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->__unused_6f);
+    iob->bind(BIND_SIGNATURE_INT8, &f->progress_inside);
     iob->bind(BIND_SIGNATURE_UINT8, &f->trader_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->wait_ticks_next_target);
     iob->bind(BIND_SIGNATURE_INT16, &f->target_figure_id);

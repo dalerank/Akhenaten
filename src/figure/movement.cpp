@@ -1,6 +1,6 @@
 #include "movement.h"
-#include <grid/road_network.h>
 
+#include "grid/road_network.h"
 #include "building/building.h"
 #include "building/destruction.h"
 #include "building/roadblock.h"
@@ -18,6 +18,8 @@
 #include "grid/road_access.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
+
+#include <algorithm>
 
 void figure::advance_figure_tick() {
     switch (direction) {
@@ -272,6 +274,17 @@ void figure::advance_route_tile(int roaming_enabled) {
 void figure::move_ticks(int num_ticks, bool roaming_enabled) {
     while (num_ticks > 0) {
         num_ticks--;
+
+        if (progress_inside_speed > 0) {
+            progress_inside--;
+            if (progress_inside >= 0) {
+                continue;
+            }
+            if (progress_inside < 0) {
+                progress_inside = progress_inside_speed;
+            }
+        }
+
         progress_on_tile++;
         if (progress_on_tile == 8) { // tile edge reached
             move_to_next_tile();
@@ -396,19 +409,21 @@ void figure::move_ticks_tower_sentry(int num_ticks) {
     }
 }
 void figure::follow_ticks(int num_ticks) {
-    figure* leader = figure_get(leading_figure_id);
-    if (tile.x() == source_tile.x() && tile.y() == source_tile.y())
+    figure *leader = figure_get(leading_figure_id);
+    if (tile.x() == source_tile.x() && tile.y() == source_tile.y()) {
         is_ghost = true;
+    }
 
     while (num_ticks > 0) {
         num_ticks--;
         progress_on_tile++;
-        if (progress_on_tile == 8) // tile edge reached
+        if (progress_on_tile == 8) { // tile edge reached
             move_to_next_tile();
+        }
+
         if (progress_on_tile >= 15) { // tile center
             figure_service_provide_coverage();
-            int found_dir
-              = calc_general_direction(tile.x(), tile.y(), leader->previous_tile.x(), leader->previous_tile.y());
+            int found_dir = calc_general_direction(tile.x(), tile.y(), leader->previous_tile.x(), leader->previous_tile.y());
             if (found_dir >= 8) {
                 anim_frame = 0;
                 progress_on_tile--;
@@ -417,8 +432,11 @@ void figure::follow_ticks(int num_ticks) {
             previous_tile_direction = direction;
             direction = found_dir;
         }
-        if (progress_on_tile > 14) // wrap around
+
+        if (progress_on_tile > 14) { // wrap around
             progress_on_tile = 0;
+        }
+
         advance_figure_tick();
     }
 }

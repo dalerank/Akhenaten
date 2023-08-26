@@ -90,9 +90,10 @@ public:
         signed char enemy;
     } formation_position_y;
     unsigned char terrain_type;
-    unsigned char __unused_24;
     short wait_ticks;
     short action_state;
+    unsigned char progress_inside_speed;
+    char progress_inside;
     unsigned char progress_on_tile;
     short routing_path_id;
     short routing_path_current_tile;
@@ -151,7 +152,6 @@ public:
     unsigned char phrase_sequence_city;
     unsigned char trader_id;
     unsigned char wait_ticks_next_target;
-    unsigned char __unused_6f;
     short target_figure_id;
     short targeted_by_figure_id;
     unsigned short created_sequence;
