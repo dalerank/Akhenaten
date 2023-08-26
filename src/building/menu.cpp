@@ -443,24 +443,29 @@ static void enable_common_municipal(int level) {
     else if (level >= 1)
         toggle_building(BUILDING_VILLAGE_PALACE);
 }
+
 static void enable_common_health() {
     toggle_building(BUILDING_WATER_SUPPLY);
     toggle_building(BUILDING_APOTHECARY);
     toggle_building(BUILDING_PHYSICIAN);
 }
+
 static void enable_entertainment(int level) {
     if (level >= 1) {
         toggle_building(BUILDING_BOOTH);
         toggle_building(BUILDING_JUGGLER_SCHOOL);
     }
+
     if (level >= 2) {
         toggle_building(BUILDING_BANDSTAND);
         toggle_building(BUILDING_CONSERVATORY);
     }
+
     if (level >= 3) {
         toggle_building(BUILDING_PAVILLION);
         toggle_building(BUILDING_DANCE_SCHOOL);
     }
+
     if (level >= 4) {
         toggle_building(BUILDING_SENET_HOUSE);
     }
@@ -677,13 +682,15 @@ void building_menu_update(int build_set) {
         toggle_building(BUILDING_GRANARY);
         building_menu_update(BUILDSET_TUT3_INDUSTRY);
         toggle_building(BUILDING_LOW_BRIDGE);
-        enable_gods(GOD_OSIRIS + GOD_RA + GOD_BAST);
+        enable_gods(GOD_OSIRIS, GOD_RA, GOD_BAST);
         toggle_building(BUILDING_BEER_WORKSHOP);
         break;
+
     case BUILDSET_TUT4_FINANCE:
         toggle_building(BUILDING_TAX_COLLECTOR);
         toggle_building(BUILDING_PERSONAL_MANSION);
         break;
+
     case BUILDSET_TUT5_START:
         building_menu_disable_all();
         enable_common_municipal(1);
@@ -692,7 +699,7 @@ void building_menu_update(int build_set) {
         toggle_building(BUILDING_PERSONAL_MANSION);
         enable_common_health();
         enable_entertainment(2);
-        enable_gods(GOD_OSIRIS + GOD_RA + GOD_BAST);
+        enable_gods(GOD_OSIRIS, GOD_RA, GOD_BAST);
 
         toggle_building(BUILDING_CLAY_PIT);
         toggle_building(BUILDING_POTTERY_WORKSHOP);
@@ -706,6 +713,7 @@ void building_menu_update(int build_set) {
         toggle_building(BUILDING_BARLEY_FARM);
         toggle_building(BUILDING_WORK_CAMP);
         break;
+
     case BUILDSET_TUT5_EDUCATION:
         toggle_building(BUILDING_REED_GATHERER);
         toggle_building(BUILDING_PAPYRUS_WORKSHOP);
