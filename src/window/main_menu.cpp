@@ -47,7 +47,7 @@ static generic_button buttons[] = {
 };
 
 static void draw_version_string() {
-    std::string version = get_version();
+    static bstring64 version = get_version();
     int text_y = screen_height() - 30;
 
     // TODO: drop casts here and handle string as UTF8
