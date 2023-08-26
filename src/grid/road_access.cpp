@@ -26,13 +26,15 @@ static bool road_tile_valid_access(int grid_offset) {
     return false;
 }
 
-static void find_minimum_road_tile_xy(int x, int y, int sizex, int sizey, int* min_value, int* min_grid_offset) {
+void map_road_find_minimum_tile_xy(int x, int y, int sizex, int sizey, int* min_value, int* min_grid_offset) {
     int base_offset = MAP_OFFSET(x, y);
-    for (const int* tile_delta = map_grid_adjacent_offsets_xy(sizex, sizey); *tile_delta; tile_delta++) {
+    const int *tile_delta = map_grid_adjacent_offsets_xy(sizex, sizey);
+    for (; *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
 
         if (!road_tile_valid_access(grid_offset))
             continue;
+
         int road_index = city_map_road_network_index(map_road_network_get(grid_offset));
         if (road_index < *min_value) {
             *min_value = road_index;
@@ -76,7 +78,7 @@ bool map_has_road_access_rotation(int rotation, int x, int y, int size, map_poin
     }
     int min_value = 12;
     int min_grid_offset = MAP_OFFSET(x, y);
-    find_minimum_road_tile_xy(x, y, size, size, &min_value, &min_grid_offset);
+    map_road_find_minimum_tile_xy(x, y, size, size, &min_value, &min_grid_offset);
     if (min_value < 12) {
         if (road)
             map_point_store_result(MAP_X(min_grid_offset), MAP_Y(min_grid_offset), road);
@@ -143,10 +145,11 @@ bool map_has_road_access_temple_complex(int x, int y, int orientation, bool from
 
     int min_value = 12;
     int min_grid_offset = MAP_OFFSET(x, y);
-    find_minimum_road_tile_xy(x, y, sizex, sizey, &min_value, &min_grid_offset);
+    map_road_find_minimum_tile_xy(x, y, sizex, sizey, &min_value, &min_grid_offset);
     if (min_value < 12) {
-        if (road)
+        if (road) {
             map_point_store_result(MAP_X(min_grid_offset), MAP_Y(min_grid_offset), road);
+        }
         return true;
     }
     return false;

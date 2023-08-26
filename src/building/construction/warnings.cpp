@@ -58,7 +58,7 @@ static void check_road_access(int type, int x, int y, int size, int orientation)
         has_road = true;
     //    else if (type == BUILDING_SENET_HOUSE && map_has_road_access_hippodrome(x, y, 0))
     //        has_road = true;
-    else if (building_is_large_temple(type) && map_has_road_access_temple_complex(x, y, orientation, true, 0))
+    else if (building_is_large_temple(type) && map_has_road_access_temple_complex(x, y, orientation, true, nullptr))
         has_road = true;
     //    else if (type == BUILDING_ORACLE && map_closest_road_within_radius(x, y, size, 2, 0, 0))
     //        has_road = true;
