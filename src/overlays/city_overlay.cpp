@@ -17,6 +17,7 @@
 #include "overlays/city_overlay_routing.h"
 #include "overlays/city_overlay_physician.h"
 #include "overlays/city_overlay_apothecary.h"
+#include "overlays/city_overlay_dentist.h"
 
 const city_overlay* g_city_overlay = 0;
 
