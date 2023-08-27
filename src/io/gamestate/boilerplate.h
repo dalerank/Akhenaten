@@ -14,7 +14,9 @@
 //  161 ozymandias: save foods in houses
 //  162 ozymandias: save g_terrain_floodplain_growth
 //  163 ozymandias: save bazaar_days in house
-constexpr uint32_t latest_save_version = 163;
+//  164 ozymandias: save water_supply in house
+//  165 ozymandias: save house health option
+constexpr uint32_t latest_save_version = 165;
 
 void fullpath_saves(char* full, const char* filename);
 void fullpath_maps(char* full, const char* filename);

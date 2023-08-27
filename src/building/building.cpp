@@ -839,6 +839,9 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         if (version <= 162) { b->data.house.bazaar_access = 0; } 
         else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.bazaar_access); }
 
+        if (version <= 163) { b->data.house.water_supply = 0; } 
+        else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.water_supply); }
+
     } else if (b->type == BUILDING_MARKET) {
         iob->bind____skip(2);
         //            iob->bind____skip(8);
@@ -979,11 +982,12 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->figure_roam_direction);
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_water_access);
 
-        iob->bind____skip(2); // something related to fire/collapse risk...?
+        iob->bind(BIND_SIGNATURE_UINT8, &b->common_health);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->malaria_risk);
         iob->bind(BIND_SIGNATURE_INT16, &b->prev_part_building_id);
         iob->bind(BIND_SIGNATURE_INT16, &b->next_part_building_id);
         iob->bind(BIND_SIGNATURE_UINT16, &b->stored_full_amount);
-        iob->bind____skip(1);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->disease_days);
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_well_access);
 
         iob->bind(BIND_SIGNATURE_INT16, &b->num_workers);
@@ -999,8 +1003,8 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
 
         iob->bind(BIND_SIGNATURE_UINT8, &b->map_random_7bit); // 20 (workcamp 1)
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_tax_coverage);
-        iob->bind____skip(1);
-        iob->bind(BIND_SIGNATURE_INT16, &b->formation_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->health_proof);
+        iob->bind(BIND_SIGNATURE_INT16, &b->formation_id); 
 
         read_type_data(iob, b, version); // 42 bytes for C3, 102 for PH
 
@@ -1016,9 +1020,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->is_adjacent_to_water);
 
         iob->bind(BIND_SIGNATURE_UINT8, &b->storage_id);
-        iob->bind(
-          BIND_SIGNATURE_INT8,
-          &b->sentiment.house_happiness); // which union field we use does not matter // 90 for house, 50 for wells
+        iob->bind(BIND_SIGNATURE_INT8, &b->sentiment.house_happiness); // which union field we use does not matter // 90 for house, 50 for wells
         iob->bind(BIND_SIGNATURE_UINT8, &b->show_on_problem_overlay); // 4
 
         // 68 additional bytes
@@ -1026,12 +1028,20 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind____skip(68); // temp for debugging
                                //            assert(iob->get_offset() - sind == 264);
         g_all_buildings[i].id = i;
+
+        if (version <= 164) { 
+            b->common_health = 100;
+            b->malaria_risk = 0;
+            b->disease_days = 0;
+            b->health_proof = 0;
+        }
     }
     building_extra_data.created_sequence = 0;
 });
 
-io_buffer* iob_building_highest_id = new io_buffer(
-  [](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_in_use); });
+io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_in_use);
+});
 
 io_buffer* iob_building_highest_id_ever = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_ever);

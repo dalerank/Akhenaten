@@ -86,9 +86,11 @@ public:
     unsigned char house_criminal_active;
     unsigned char disease_days;
     unsigned char common_health;
+    unsigned char malaria_risk;
     short damage_risk;
     short fire_risk;
     short fire_duration;
+    unsigned char health_proof;
     unsigned char fire_proof; // cannot catch fire or collapse
     unsigned char map_random_7bit;
     unsigned char house_tax_coverage;
@@ -232,12 +234,10 @@ public:
 
     void clear_related_data();
 
-    // figure.c
-    //    bool has_road_access;
-
     const int get_figureID(int i) const {
         return figure_ids_array[i];
     };
+
     figure* get_figure(int i);
     void bind_iob_figures(io_buffer* iob);
     void set_figure(int i, int figure_id = -1);
@@ -250,14 +250,8 @@ public:
 
     figure* create_figure_generic(e_figure_type _type, int created_action, int slot, int created_dir);
     figure* create_roaming_figure(e_figure_type _type, int created_action = FIGURE_ACTION_125_ROAMING, int slot = BUILDING_SLOT_SERVICE);
-    figure* create_figure_with_destination(e_figure_type _type,
-                                           building* destination,
-                                           int created_action = ACTION_10_GOING,
-                                           int slot = 0);
-    figure* create_cartpusher(e_resource resource_id,
-                              int quantity,
-                              int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL,
-                              int slot = 0);
+    figure* create_figure_with_destination(e_figure_type _type, building* destination, int created_action = ACTION_10_GOING, int slot = BUILDING_SLOT_SERVICE);
+    figure* create_cartpusher(e_resource resource_id, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, int slot = BUILDING_SLOT_SERVICE);
 
     int worker_percentage();
     int figure_spawn_timer();
@@ -265,10 +259,7 @@ public:
     bool common_spawn_figure_trigger(int min_houses);
     void common_spawn_labor_seeker(int min_houses);
     bool common_spawn_roamer(e_figure_type type, int min_houses, int created_action = FIGURE_ACTION_125_ROAMING);
-    bool common_spawn_goods_output_cartpusher(bool only_one = true,
-                                              bool only_full_loads = true,
-                                              int min_carry = 100,
-                                              int max_carry = 800);
+    bool common_spawn_goods_output_cartpusher(bool only_one = true, bool only_full_loads = true, int min_carry = 100, int max_carry = 800);
 
     void spawn_figure_work_camp();
     bool spawn_patrician(bool spawned);
