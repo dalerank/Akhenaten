@@ -1,4 +1,4 @@
-#include "city_overlay_barber.h"
+#include "city_overlay_apothecary.h"
 
 #include "city_overlay.h"
 #include "city/constants.h"
@@ -7,11 +7,11 @@
 #include "building/building.h"
 #include "graphics/elements/tooltip.h"
 
-static int get_column_height_barber(const building* b) {
+static int get_column_height_apothecary(const building* b) {
     return b->house_size && b->data.house.barber ? b->data.house.barber / 10 : NO_COLUMN;
 }
 
-static int get_tooltip_barber(tooltip_context* c, const building* b) {
+static int get_tooltip_apothecary(tooltip_context* c, const building* b) {
     if (b->data.house.barber <= 0)
         return 31;
     else if (b->data.house.barber >= 80)
@@ -23,13 +23,13 @@ static int get_tooltip_barber(tooltip_context* c, const building* b) {
     }
 }
 
-struct city_overlay_barber : public city_overlay {
-    city_overlay_barber() {
-        type = OVERLAY_BARBER;
+struct city_overlay_apothecary : public city_overlay {
+    city_overlay_apothecary() {
+        type = OVERLAY_APOTHECARY;
         column_type = COLUMN_TYPE_POSITIVE;
 
-        get_column_height = get_column_height_barber;
-        get_tooltip_for_building = get_tooltip_barber;
+        get_column_height = get_column_height_apothecary;
+        get_tooltip_for_building = get_tooltip_apothecary;
     }
 
     bool show_figure(const figure* f) const override {
@@ -54,8 +54,8 @@ struct city_overlay_barber : public city_overlay {
     }
 };
 
-city_overlay_barber g_city_overlay_barber;
+city_overlay_apothecary g_city_overlay_apothecary;
 
-const city_overlay* city_overlay_for_barber(void) {
-    return &g_city_overlay_barber;
+const city_overlay* city_overlay_for_apothecary(void) {
+    return &g_city_overlay_apothecary;
 }
