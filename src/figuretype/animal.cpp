@@ -319,7 +319,9 @@ void figure::ostrich_action() {
     case FIGURE_ACTION_149_CORPSE:
         sprite_image_id = image_id_from_group(GROUP_FIGURE_OSTRICH_DEATH);
         break;
-    case FIGURE_ACTION_150_ATTACK: // unused?
+    case FIGURE_ACTION_150_ATTACK:
+        // TODO: dalerank ostrich want to attack anybody
+        advance_action(ACTION_8_RECALCULATE);
         image_set_animation(GROUP_FIGURE_OSTRICH_ATTACK, 0, 8);
         break;
     default:
