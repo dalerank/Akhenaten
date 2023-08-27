@@ -21,6 +21,10 @@ enum e_labor_state {
     LABOR_STATE_JUST_ENTERED
 };
 
+enum e_building_slot {
+    BUILDING_SLOT_SERVICE = 0
+};
+
 class building {
 private:
     //    short figure_id;
@@ -243,7 +247,7 @@ public:
     int get_figure_slot(figure* f);
 
     figure* create_figure_generic(e_figure_type _type, int created_action, int slot, int created_dir);
-    figure* create_roaming_figure(e_figure_type _type, int created_action = FIGURE_ACTION_125_ROAMING, int slot = 0);
+    figure* create_roaming_figure(e_figure_type _type, int created_action = FIGURE_ACTION_125_ROAMING, int slot = BUILDING_SLOT_SERVICE);
     figure* create_figure_with_destination(e_figure_type _type,
                                            building* destination,
                                            int created_action = ACTION_10_GOING,
