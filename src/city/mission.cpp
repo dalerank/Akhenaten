@@ -26,8 +26,9 @@ int city_mission_tutorial_show_disease_message(void) {
     if (!city_data.mission.tutorial_disease_message_shown) {
         city_data.mission.tutorial_disease_message_shown = 1;
         return 1;
-    } else
+    } else {
         return 0;
+    }
 }
 
 void city_mission_tutorial_add_senate(void) {

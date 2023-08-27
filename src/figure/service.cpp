@@ -328,7 +328,7 @@ int figure::figure_service_provide_coverage() {
         houses_serviced = provide_culture(tile.x(), tile.y(), physician_coverage);
         break;
     case FIGURE_WATER_CARRIER:
-        houses_serviced = provide_culture(tile.x(), tile.y(), water_supply_coverage);
+        houses_serviced = provide_service(tile.x(), tile.y(), water_supply_coverage);
         break;
     case FIGURE_MISSIONARY:
         houses_serviced = provide_missionary_coverage(tile.x(), tile.y());

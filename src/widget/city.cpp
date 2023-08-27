@@ -21,6 +21,7 @@
 #include "grid/building.h"
 #include "input/scroll.h"
 #include "io/config/config.h"
+#include "io/gamefiles/lang.h"
 #include "platform/renderer.h"
 #include "scenario/property.h"
 #include "sound/city.h"
@@ -582,7 +583,7 @@ void widget_city_get_tooltip(tooltip_context* c) {
     }
     // overlay tooltips
     if (overlay != OVERLAY_NONE) {
-        c->text_group = 66;
+        c->text_group = e_text_tooltip;
         c->text_id = widget_city_overlay_get_tooltip_text(c, grid_offset);
         if (c->text_id) {
             c->type = TOOLTIP_OVERLAY;

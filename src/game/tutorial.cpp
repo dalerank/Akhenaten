@@ -87,7 +87,6 @@ void tutorial_init(void) {
     g_tutorials_flags.tutorial_3.pottery_made = tut_passed[2];
     g_tutorials_flags.tutorial_3.figs_800_stored = tut_passed[2];
     g_tutorials_flags.tutorial_3.disease = tut_passed[2];
-
     // tut4
     g_tutorials_flags.tutorial_4.beer_made = tut_passed[3];
 
@@ -327,7 +326,7 @@ void tutorial_on_crime(void) {
     }
 }
 void tutorial_on_disease(void) {
-    g_tutorials_flags.tutorial_3.disease = 1;
+    g_tutorials_flags.tutorial_3.disease = true;
 }
 void tutorial_on_filled_granary(int quantity) {
     if (scenario_is_mission_rank(1) && !g_tutorials_flags.tutorial_1.gamemeat_400_stored && quantity >= 400) {
