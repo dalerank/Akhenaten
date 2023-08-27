@@ -25,7 +25,7 @@
 
 #include "building/construction/build_planner.h"
 #include "building/count.h"
-#include "city/culture.h"
+#include "city/coverage.h"
 #include "city/floods.h"
 #include "city/gods.h"
 #include "core/random.h"

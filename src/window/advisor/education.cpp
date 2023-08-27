@@ -1,7 +1,7 @@
 #include "education.h"
 
 #include "building/count.h"
-#include "city/culture.h"
+#include "city/coverage.h"
 #include "city/houses.h"
 #include "city/population.h"
 #include "graphics/boilerplate.h"

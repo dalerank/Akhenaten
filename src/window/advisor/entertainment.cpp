@@ -3,7 +3,7 @@
 #include <scenario/building.h>
 
 #include "building/count.h"
-#include "city/culture.h"
+#include "city/coverage.h"
 #include "city/entertainment.h"
 #include "city/festival.h"
 #include "city/gods.h"

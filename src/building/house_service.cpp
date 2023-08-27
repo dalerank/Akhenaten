@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "building/type.h"
 #include "building/industry.h"
-#include "city/culture.h"
+#include "city/coverage.h"
 #include "core/game_environment.h"
 #include "core/profiler.h"
 

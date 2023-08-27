@@ -2,7 +2,7 @@
 
 #include "scenario/property.h"
 #include "city/constants.h"
-#include "city/culture.h"
+#include "city/coverage.h"
 #include "city/finance.h"
 #include "city/houses.h"
 #include "city/labor.h"

@@ -68,7 +68,7 @@
 
 #include "building/count.h"
 #include "chunks.h"
-#include "city/culture.h"
+#include "city/coverage.h"
 #include "city/floods.h"
 #include "core/stopwatch.h"
 #include "io/io.h"

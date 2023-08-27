@@ -5,7 +5,7 @@
 #include "building/granary.h"
 #include "building/industry.h"
 #include "building/storage_yard.h"
-#include "city/culture.h"
+#include "city/coverage.h"
 #include "city/data_private.h"
 #include "city/health.h"
 #include "city/message.h"
