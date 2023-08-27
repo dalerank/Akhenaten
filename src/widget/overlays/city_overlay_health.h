@@ -1,14 +1,9 @@
-#ifndef WIGET_CITY_OVERLAY_HEALTH_H
-#define WIGET_CITY_OVERLAY_HEALTH_H
+#pragma once
 
-#include "city_overlay.h"
+struct city_overlay;
 
 const city_overlay* city_overlay_for_bathhouse(void);
-
-const city_overlay* city_overlay_for_barber(void);
 
 const city_overlay* city_overlay_for_clinic(void);
 
 const city_overlay* city_overlay_for_hospital(void);
-
-#endif // WIGET_CITY_OVERLAY_HEALTH_H

@@ -1,11 +1,7 @@
 #include "city_overlay_health.h"
 
 #include "building/type.h"
-#include "game/state.h"
-
-static int show_building_barber(const building* b) {
-    return b->type == BUILDING_DENTIST;
-}
+#include "city_overlay.h"
 
 static int show_building_bathhouse(const building* b) {
     return b->type == BUILDING_MENU_MONUMENTS;
@@ -17,10 +13,6 @@ static int show_building_clinic(const building* b) {
 
 static int show_building_hospital(const building* b) {
     return b->type == BUILDING_MORTUARY;
-}
-
-static int show_figure_barber(const figure* f) {
-    return f->type == FIGURE_BARBER;
 }
 
 static int show_figure_bathhouse(const figure* f) {
@@ -35,10 +27,6 @@ static int show_figure_hospital(const figure* f) {
     return f->type == FIGURE_SURGEON;
 }
 
-static int get_column_height_barber(const building* b) {
-    return b->house_size && b->data.house.barber ? b->data.house.barber / 10 : NO_COLUMN;
-}
-
 static int get_column_height_bathhouse(const building* b) {
     return b->house_size && b->data.house.bathhouse ? b->data.house.bathhouse / 10 : NO_COLUMN;
 }
@@ -49,18 +37,6 @@ static int get_column_height_clinic(const building* b) {
 
 static int get_column_height_hospital(const building* b) {
     return b->house_size && b->data.house.hospital ? b->data.house.hospital / 10 : NO_COLUMN;
-}
-
-static int get_tooltip_barber(tooltip_context* c, const building* b) {
-    if (b->data.house.barber <= 0)
-        return 31;
-    else if (b->data.house.barber >= 80)
-        return 32;
-    else if (b->data.house.barber < 20)
-        return 33;
-    else {
-        return 34;
-    }
 }
 
 static int get_tooltip_bathhouse(tooltip_context* c, const building* b) {
@@ -97,19 +73,6 @@ static int get_tooltip_hospital(tooltip_context* c, const building* b) {
     else {
         return 42;
     }
-}
-
-const city_overlay* city_overlay_for_barber(void) {
-    static city_overlay overlay = {OVERLAY_BARBER,
-                                   COLUMN_TYPE_WATER_ACCESS,
-                                   show_building_barber,
-                                   show_figure_barber,
-                                   get_column_height_barber,
-                                   0,
-                                   get_tooltip_barber,
-                                   0,
-                                   0};
-    return &overlay;
 }
 
 const city_overlay* city_overlay_for_bathhouse(void) {
