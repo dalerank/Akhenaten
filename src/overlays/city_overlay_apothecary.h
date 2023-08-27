@@ -2,4 +2,4 @@
 
 struct city_overlay;
 
-const city_overlay* city_overlay_for_barber(void);
+const city_overlay* city_overlay_for_apothecary(void);

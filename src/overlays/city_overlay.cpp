@@ -50,8 +50,8 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_library();
     case OVERLAY_ACADEMY:
         return city_overlay_for_academy();
-    case OVERLAY_BARBER:
-        return city_overlay_for_barber();
+    case OVERLAY_APOTHECARY:
+        return city_overlay_for_apothecary();
     case OVERLAY_BATHHOUSE:
         return city_overlay_for_bathhouse();
     case OVERLAY_PHYSICIAN:
