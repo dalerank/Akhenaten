@@ -52,7 +52,7 @@ struct city_overlay_apothecary : public city_overlay {
     }
 
     bool show_building(const building *b) const override {
-        return b->type == BUILDING_DENTIST;
+        return b->type == BUILDING_APOTHECARY;
     }
 };
 
