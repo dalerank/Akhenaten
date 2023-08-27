@@ -31,11 +31,10 @@ struct model_house {
     int entertainment;        /**< Entertainment points required */
     int water;                /**< Water required: 1 = well, 2 = fountain */
     int religion;             /**< Number of gods required */
-    int education;  /**< Education required: 1 = school or library, 2 = school and library, 3 = school, library and
-                       academy */
+    int education;  /**< Education required: 1 = school or library, 2 = school and library, 3 = school, library and academy */
     int food;       /**< Food required (boolean) */
-    int dentist;    /**< Barber required (boolean) */
-    int physician;  /**< Bathhouse required (boolean) */
+    int dentist;    /**< dentist required (boolean) */
+    int physician;  /**< physician required (boolean) */
     int health;     /**< Health required: 1 = doctor or hospital, 2 = doctor and hospital */
     int food_types; /**< Number of food types required */
     int pottery;    /**< Pottery required */

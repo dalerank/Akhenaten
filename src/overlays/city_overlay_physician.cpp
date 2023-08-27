@@ -1,11 +1,11 @@
-#include "city_overlay_clinic.h"
+#include "city_overlay_physician.h"
 
 #include "city_overlay.h"
 #include "grid/property.h"
 #include "grid/building.h"
 #include "graphics/elements/tooltip.h"
 
-static int get_column_height_clinic(const building* b) {
+static int get_column_height_physician(const building* b) {
     return b->house_size && b->subtype.house_level
              ? b->data.house.clinic
                 ? b->data.house.clinic / 10
@@ -13,7 +13,7 @@ static int get_column_height_clinic(const building* b) {
              : NO_COLUMN;
 }
 
-static int get_tooltip_clinic(tooltip_context* c, const building* b) {
+static int get_tooltip_physician(tooltip_context* c, const building* b) {
     if (b->data.house.clinic <= 0)
         return 35;
     else if (b->data.house.clinic >= 80)
@@ -25,13 +25,13 @@ static int get_tooltip_clinic(tooltip_context* c, const building* b) {
     }
 }
 
-struct city_overlay_clinic : public city_overlay {
-    city_overlay_clinic() {
-        type = OVERLAY_CLINIC;
+struct city_overlay_physician : public city_overlay {
+    city_overlay_physician() {
+        type = OVERLAY_PHYSICIAN;
         column_type = COLUMN_TYPE_POSITIVE;
 
-        get_column_height = get_column_height_clinic;
-        get_tooltip_for_building = get_tooltip_clinic;
+        get_column_height = get_column_height_physician;
+        get_tooltip_for_building = get_tooltip_physician;
     }
 
     bool show_figure(const figure* f) const override {
@@ -52,12 +52,12 @@ struct city_overlay_clinic : public city_overlay {
     }
 
     bool show_building(const building *b) const override {
-        return b->type == BUILDING_APOTHECARY;
+        return b->type == BUILDING_PHYSICIAN;
     }
 };
 
-city_overlay_clinic g_city_overlay_clinic;
+city_overlay_physician g_city_overlay_physician;
 
-const city_overlay* city_overlay_for_clinic(void) {
-    return &g_city_overlay_clinic;
+const city_overlay* city_overlay_for_physician(void) {
+    return &g_city_overlay_physician;
 }

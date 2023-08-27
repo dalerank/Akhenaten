@@ -15,7 +15,7 @@
 #include "overlays/city_overlay_bazaar_access.h"
 #include "overlays/city_overlay_fire.h"
 #include "overlays/city_overlay_routing.h"
-#include "overlays/city_overlay_clinic.h"
+#include "overlays/city_overlay_physician.h"
 #include "overlays/city_overlay_barber.h"
 
 const city_overlay* g_city_overlay = 0;
@@ -54,8 +54,8 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_barber();
     case OVERLAY_BATHHOUSE:
         return city_overlay_for_bathhouse();
-    case OVERLAY_CLINIC:
-        return city_overlay_for_clinic();
+    case OVERLAY_PHYSICIAN:
+        return city_overlay_for_physician();
     case OVERLAY_HOSPITAL:
         return city_overlay_for_hospital();
     case OVERLAY_RELIGION:

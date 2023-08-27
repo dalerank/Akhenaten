@@ -84,7 +84,7 @@ static const int submenu_id_to_overlay[7][8] = {
   { // Health 
    OVERLAY_BARBER,
    OVERLAY_BATHHOUSE,
-   OVERLAY_CLINIC,
+   OVERLAY_PHYSICIAN,
    OVERLAY_HOSPITAL,
    0},
   
