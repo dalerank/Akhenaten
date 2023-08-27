@@ -94,36 +94,39 @@ static int has_required_goods_and_services(building* house, int for_upgrade, hou
     } else if (religion > 0)
         ++demands->requiring.religion;
 
-    // mortuary
-    int barber = model->dentist;
-    if (house->data.house.barber < barber) {
-        ++demands->missing.barber;
+    // dentist
+    int dentist = model->dentist;
+    if (house->data.house.dentist < dentist) {
+        ++demands->missing.dentist;
         return 0;
     }
-    if (barber == 1)
-        ++demands->requiring.barber;
+    if (dentist == 1) {
+        ++demands->requiring.dentist;
+    }
 
-    // magistrate
+    // physician
     int magistrate = model->physician;
     if (house->data.house.magistrate < magistrate) {
         ++demands->missing.magistrate;
         return 0;
     }
-    if (magistrate == 1)
+    if (magistrate == 1) {
         ++demands->requiring.magistrate;
+    }
 
     // health
-    int health = model->health;
-    if (house->data.house.health < health) {
-        if (health < 2)
-            ++demands->missing.clinic;
+    int health_need = model->health;
+    if (house->data.house.health < health_need) {
+        if (health_need < 2)
+            ++demands->missing.dentist;
         else {
-            ++demands->missing.hospital;
+            ++demands->missing.physician;
         }
         return 0;
     }
-    if (health >= 1)
-        ++demands->requiring.clinic;
+    if (health_need >= 1) {
+        ++demands->requiring.physician;
+    }
 
     // food types
     int foodtypes_required = model->food_types;
@@ -457,7 +460,7 @@ void building_house_determine_evolve_text(building* house, int worst_desirabilit
         house->data.house.evolve_text_id = 1;
         return;
     }
-    if (water == 2 && (!house->has_water_access || !house->data.house.bathhouse)) {
+    if (water == 2 && (!house->has_water_access || !house->data.house.water_supply)) {
         house->data.house.evolve_text_id = 2;
         return;
     }
@@ -541,19 +544,21 @@ void building_house_determine_evolve_text(building* house, int worst_desirabilit
             return;
         }
     }
+
     // mortuary
-    if (house->data.house.barber < model->dentist) {
+    if (house->data.house.dentist < model->dentist) {
         house->data.house.evolve_text_id = 23;
         return;
     }
+
     // health
-    int health = model->health;
-    if (house->data.house.health < health) {
-        if (health == 1)
+    int health_need = model->health;
+    if (house->data.house.health < health_need) {
+        if (health_need == 1) {
             house->data.house.evolve_text_id = 24;
-        else if (house->data.house.clinic)
+        } else if (house->data.house.mortuary) {
             house->data.house.evolve_text_id = 25;
-        else {
+        } else {
             house->data.house.evolve_text_id = 26;
         }
         return;
@@ -680,17 +685,19 @@ void building_house_determine_evolve_text(building* house, int worst_desirabilit
             return;
         }
     }
-    // mortuary
-    if (house->data.house.barber < model->dentist) {
+
+    // dentist
+    if (house->data.house.dentist < model->dentist) {
         house->data.house.evolve_text_id = 53;
         return;
     }
+
     // health
-    health = model->health;
-    if (house->data.house.health < health) {
-        if (health == 1)
+    int model_health_need = model->health;
+    if (house->data.house.health < model_health_need) {
+        if (model_health_need == 1)
             house->data.house.evolve_text_id = 54;
-        else if (house->data.house.clinic)
+        else if (house->data.house.dentist)
             house->data.house.evolve_text_id = 55;
         else {
             house->data.house.evolve_text_id = 56;

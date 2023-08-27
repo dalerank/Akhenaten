@@ -130,17 +130,20 @@ static void academy_coverage(building* b) {
 static void library_coverage(building* b) {
     b->data.house.library = MAX_COVERAGE;
 }
-static void barber_coverage(building* b) {
-    b->data.house.barber = MAX_COVERAGE;
+static void apothecary_coverage(building* b) {
+    b->data.house.apothecary = MAX_COVERAGE;
 }
-static void clinic_coverage(building* b) {
-    b->data.house.clinic = MAX_COVERAGE;
+static void dentist_coverage(building* b) {
+    b->data.house.dentist = MAX_COVERAGE;
 }
-static void hospital_coverage(building* b) {
-    b->data.house.hospital = MAX_COVERAGE;
+static void mortuary_coverage(building* b) {
+    b->data.house.mortuary = MAX_COVERAGE;
+}
+static void physician_coverage(building* b) {
+    b->data.house.physician = MAX_COVERAGE;
 }
 static void water_supply_coverage(building* b) {
-    b->data.house.bathhouse = MAX_COVERAGE;
+    b->data.house.water_supply = MAX_COVERAGE;
 }
 static void bazaar_coverage(building* b) {
     b->data.house.bazaar_access = MAX_COVERAGE;
@@ -312,14 +315,17 @@ int figure::figure_service_provide_coverage() {
     case FIGURE_LIBRARIAN:
         houses_serviced = provide_culture(tile.x(), tile.y(), library_coverage);
         break;
-    case FIGURE_BARBER:
-        houses_serviced = provide_culture(tile.x(), tile.y(), barber_coverage);
+    case FIGURE_APOTHECARY:
+        houses_serviced = provide_culture(tile.x(), tile.y(), apothecary_coverage);
         break;
-    case FIGURE_DOCTOR:
-        houses_serviced = provide_culture(tile.x(), tile.y(), clinic_coverage);
+    case FIGURE_DENTIST:
+        houses_serviced = provide_culture(tile.x(), tile.y(), dentist_coverage);
         break;
-    case FIGURE_SURGEON:
-        houses_serviced = provide_culture(tile.x(), tile.y(), hospital_coverage);
+    case FIGURE_MORTUARY_WORKER:
+        houses_serviced = provide_culture(tile.x(), tile.y(), mortuary_coverage);
+        break;
+    case FIGURE_PHYSICIAN:
+        houses_serviced = provide_culture(tile.x(), tile.y(), physician_coverage);
         break;
     case FIGURE_WATER_CARRIER:
         houses_serviced = provide_culture(tile.x(), tile.y(), water_supply_coverage);

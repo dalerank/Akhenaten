@@ -365,11 +365,11 @@ void figure::action_perform() {
             //            case FIGURE_GLADIATOR:
             //            case FIGURE_LION_TAMER:
             //            case FIGURE_CHARIOTEER:
-        case FIGURE_BATHHOUSE_WORKER:
-        case FIGURE_DOCTOR:
-        case FIGURE_SURGEON:
-        case FIGURE_BARBER:
         case FIGURE_WATER_CARRIER:
+        case FIGURE_APOTHECARY:
+        case FIGURE_DENTIST:
+        case FIGURE_MORTUARY_WORKER:
+        case FIGURE_PHYSICIAN:
         case FIGURE_PRIEST:
             if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id)) {
                 poof();

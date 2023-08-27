@@ -8,15 +8,17 @@
 #include "graphics/elements/tooltip.h"
 
 static int get_column_height_apothecary(const building* b) {
-    return b->house_size && b->data.house.barber ? b->data.house.barber / 10 : NO_COLUMN;
+    return b->house_size && b->subtype.house_level > 0
+                    ? b->data.house.apothecary / 10 
+                    : NO_COLUMN;
 }
 
 static int get_tooltip_apothecary(tooltip_context* c, const building* b) {
-    if (b->data.house.barber <= 0)
+    if (b->data.house.apothecary <= 0)
         return 31;
-    else if (b->data.house.barber >= 80)
+    else if (b->data.house.apothecary >= 80)
         return 32;
-    else if (b->data.house.barber < 20)
+    else if (b->data.house.apothecary < 20)
         return 33;
     else {
         return 34;
@@ -33,7 +35,7 @@ struct city_overlay_apothecary : public city_overlay {
     }
 
     bool show_figure(const figure* f) const override {
-        return f->type == FIGURE_BARBER;
+        return f->type == FIGURE_APOTHECARY;
     }
 
     void draw_custom_top(vec2i pixel, map_point point) const override {

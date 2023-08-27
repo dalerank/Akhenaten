@@ -815,10 +815,10 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.school);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.library);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.academy);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.barber);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.clinic);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.bathhouse);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.hospital);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.apothecary);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.dentist);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.mortuary);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.physician);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_osiris);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_ra);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.temple_ptah);

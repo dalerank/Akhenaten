@@ -82,10 +82,11 @@ static const int submenu_id_to_overlay[7][8] = {
    0},
   
   { // Health 
+   // OVERLAY_HEALTH,
    OVERLAY_APOTHECARY,
-   OVERLAY_BATHHOUSE,
+   OVERLAY_DENTIST,
+   OVERLAY_MORTUARY,
    OVERLAY_PHYSICIAN,
-   OVERLAY_HOSPITAL,
    0},
   
   { // Administration
@@ -164,8 +165,8 @@ static const char* get_overlay_text(int group, int index) {
         return "Routing";
     case OVERLAY_APOTHECARY: 
         return "Apothecary";
-    case OVERLAY_BATHHOUSE:
-        return "Baths";
+    case OVERLAY_DENTIST:
+        return "Dentist";
     }
     return (const char*)lang_get_string(group, index);
 }

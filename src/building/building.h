@@ -149,10 +149,10 @@ public:
             unsigned char school;
             unsigned char library;
             unsigned char academy;
-            unsigned char barber;
-            unsigned char clinic;
-            unsigned char bathhouse;
-            unsigned char hospital;
+            unsigned char apothecary;
+            unsigned char dentist;
+            unsigned char mortuary;
+            unsigned char physician;
             unsigned char temple_osiris;
             unsigned char temple_ra;
             unsigned char temple_ptah;
@@ -168,6 +168,7 @@ public:
             unsigned char devolve_delay;
             unsigned char evolve_text_id;
             unsigned char bazaar_access;
+            unsigned char water_supply;
         } house;
         struct {
             unsigned char variant;
@@ -278,12 +279,11 @@ public:
     void set_market_graphic();
     void spawn_figure_market();
     void set_bathhouse_graphic();
-    void spawn_figure_bathhouse();
     void spawn_figure_school();
     void spawn_figure_library();
-    void spawn_figure_barber();
-    void spawn_figure_doctor();
-    void spawn_figure_hospital();
+    void spawn_figure_apothecary();
+    void spawn_figure_dentist();
+    void spawn_figure_mortuary();
     void spawn_figure_physician();
     void spawn_figure_magistrate();
     void spawn_figure_temple();

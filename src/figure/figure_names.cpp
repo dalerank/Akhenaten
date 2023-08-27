@@ -103,12 +103,12 @@ int figure_name_get(int type, int enemy) {
 
     case FIGURE_MARKET_TRADER:
     case FIGURE_MARKET_BUYER:
-    case FIGURE_BATHHOUSE_WORKER:
         return get_next_name(&data.citizen_female, 99, 32);
 
     case FIGURE_SCHOOL_CHILD:
     case FIGURE_DELIVERY_BOY:
-    case FIGURE_BARBER:
+    case FIGURE_APOTHECARY:
+    case FIGURE_WATER_CARRIER:
     case FIGURE_WORKER:
     default:
         return get_next_name(&data.citizen_male, 1, 64);
@@ -117,8 +117,8 @@ int figure_name_get(int type, int enemy) {
     case FIGURE_TEACHER:
     case FIGURE_MISSIONARY:
     case FIGURE_LIBRARIAN:
-    case FIGURE_DOCTOR:
-    case FIGURE_SURGEON:
+    case FIGURE_MORTUARY_WORKER:
+    case FIGURE_PHYSICIAN:
     case FIGURE_PATRICIAN:
         return get_next_name(&data.patrician, 66, 32);
 

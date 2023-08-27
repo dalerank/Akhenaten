@@ -62,6 +62,7 @@ static int get_column_height_food_stocks(const building* b) {
     }
     return NO_COLUMN;
 }
+
 static int get_column_height_tax_income(const building* b) {
     if (b->house_size) {
         int pct = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
@@ -70,8 +71,9 @@ static int get_column_height_tax_income(const building* b) {
     }
     return NO_COLUMN;
 }
+
 static int get_column_height_water(const building* b) {
-    return b->house_size ? b->data.house.bathhouse * 17 / 10 : NO_COLUMN;
+    return b->house_size ? b->data.house.water_supply * 17 / 10 : NO_COLUMN;
 }
 
 static int get_tooltip_food_stocks(tooltip_context* c, const building* b) {
@@ -99,6 +101,7 @@ static int get_tooltip_food_stocks(tooltip_context* c, const building* b) {
         }
     }
 }
+
 static int get_tooltip_tax_income(tooltip_context* c, const building* b) {
     int denarii = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
     if (denarii > 0) {
@@ -111,6 +114,7 @@ static int get_tooltip_tax_income(tooltip_context* c, const building* b) {
         return 43;
     }
 }
+
 static int get_tooltip_water(tooltip_context* c, int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_GROUNDWATER)) {
         if (map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE)) {

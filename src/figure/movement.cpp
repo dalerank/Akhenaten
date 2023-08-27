@@ -83,29 +83,36 @@ int figure::get_permission_for_int() {
     case FIGURE_PREFECT:
         return PERMISSION_MAINTENANCE;
         break;
+
     case FIGURE_PRIEST:
         return PERMISSION_PRIEST;
         break;
+
     case FIGURE_MARKET_TRADER:
         return PERMISSION_MARKET;
         break;
+
     case FIGURE_GLADIATOR:
     case FIGURE_CHARIOTEER:
     case FIGURE_ACTOR:
     case FIGURE_LION_TAMER:
         return PERMISSION_ENTERTAINER;
         break;
-    case FIGURE_SURGEON:
-    case FIGURE_DOCTOR:
-    case FIGURE_BARBER:
-    case FIGURE_BATHHOUSE_WORKER:
+
+    case FIGURE_PHYSICIAN:
+    case FIGURE_MORTUARY_WORKER:
+    case FIGURE_DENTIST:
+    case FIGURE_APOTHECARY:
         return PERMISSION_MEDICINE;
+
     case FIGURE_SCHOOL_CHILD:
     case FIGURE_TEACHER:
     case FIGURE_LIBRARIAN:
         return PERMISSION_EDUCATION;
+
     case FIGURE_TAX_COLLECTOR:
         return PERMISSION_TAX_COLLECTOR;
+
     default:
         return PERMISSION_NONE;
         break;

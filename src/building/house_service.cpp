@@ -31,10 +31,10 @@ void house_service_decay_culture(void) {
         decay(&b->data.house.school);
         decay(&b->data.house.library);
         decay(&b->data.house.academy);
-        decay(&b->data.house.barber);
-        decay(&b->data.house.clinic);
-        decay(&b->data.house.bathhouse);
-        decay(&b->data.house.hospital);
+        decay(&b->data.house.apothecary);
+        decay(&b->data.house.dentist);
+        decay(&b->data.house.mortuary);
+        decay(&b->data.house.physician);
         decay(&b->data.house.temple_osiris);
         decay(&b->data.house.temple_ra);
         decay(&b->data.house.temple_ptah);
@@ -141,10 +141,10 @@ void house_service_calculate_culture_aggregates(void) {
 
         // health
         b->data.house.health = 0;
-        if (b->data.house.clinic)
+        if (b->data.house.apothecary)
             ++b->data.house.health;
 
-        if (b->data.house.hospital)
+        if (b->data.house.physician)
             ++b->data.house.health;
     }
 }

@@ -15,11 +15,11 @@ static int get_health_advice(void) {
     house_demands* demands = city_houses_demands();
     switch (demands->health) {
     case 1:
-        return demands->requiring.bathhouse ? 1 : 0;
+        return demands->requiring.water_supply ? 1 : 0;
     case 2:
-        return demands->requiring.barber ? 3 : 2;
+        return demands->requiring.dentist ? 3 : 2;
     case 3:
-        return demands->requiring.clinic ? 5 : 4;
+        return demands->requiring.physician ? 5 : 4;
     case 4:
         return 6;
     default:
@@ -32,10 +32,11 @@ static int draw_background(void) {
     ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
 
     lang_text_draw(56, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
-    if (city_population() >= 200)
+    if (city_population() >= 200) {
         lang_text_draw_multiline(56, city_health() / 10 + 16, 60, 46, 512, FONT_NORMAL_BLACK_ON_LIGHT);
-    else
+    } else {
         lang_text_draw_multiline(56, 15, 60, 46, 512, FONT_NORMAL_BLACK_ON_LIGHT);
+    }
     lang_text_draw(56, 3, 180, 94, FONT_SMALL_PLAIN);
     lang_text_draw(56, 4, 290, 94, FONT_SMALL_PLAIN);
     lang_text_draw_centered(56, 5, 440, 94, 160, FONT_SMALL_PLAIN);

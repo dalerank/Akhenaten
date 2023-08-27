@@ -485,29 +485,7 @@ void building::set_bathhouse_graphic() {
         }
     }
 }
-void building::spawn_figure_bathhouse() {
-    if (!has_water_access)
-        show_on_problem_overlay = 2;
-    common_spawn_roamer(FIGURE_BATHHOUSE_WORKER, 50);
-    //    check_labor_problem();
-    //    if (!has_water_access)
-    //        show_on_problem_overlay = 2;
-    //
-    //    if (has_figure_of_type(FIGURE_BATHHOUSE_WORKER))
-    //        return;
-    //    map_point road;
-    //    if (map_has_road_access(x, y, size, &road) && has_water_access) {
-    //        spawn_labor_seeker(50);
-    //        int spawn_delay = default_spawn_delay();
-    //        if (!spawn_delay)
-    //            return;
-    //        figure_spawn_delay++;
-    //        if (figure_spawn_delay > spawn_delay) {
-    //            figure_spawn_delay = 0;
-    //            create_roaming_figure(road.x, road.y, FIGURE_BATHHOUSE_WORKER);
-    //        }
-    //    }
-}
+
 void building::spawn_figure_school() {
     check_labor_problem();
     if (has_figure_of_type(0, FIGURE_SCHOOL_CHILD))
@@ -563,8 +541,8 @@ void building::spawn_figure_library() {
     //        }
     //    }
 }
-void building::spawn_figure_barber() {
-    common_spawn_roamer(FIGURE_BARBER, 50);
+void building::spawn_figure_mortuary() {
+    common_spawn_roamer(FIGURE_MORTUARY_WORKER, 50);
     //    check_labor_problem();
     //    if (has_figure_of_type(FIGURE_BARBER))
     //        return;
@@ -581,8 +559,8 @@ void building::spawn_figure_barber() {
     //        }
     //    }
 }
-void building::spawn_figure_doctor() {
-    common_spawn_roamer(FIGURE_DOCTOR, 50);
+void building::spawn_figure_apothecary() {
+    common_spawn_roamer(FIGURE_APOTHECARY, 50);
     //    check_labor_problem();
     //    if (has_figure_of_type(FIGURE_DOCTOR))
     //        return;
@@ -599,11 +577,11 @@ void building::spawn_figure_doctor() {
     //        }
     //    }
 }
-void building::spawn_figure_hospital() {
-    common_spawn_roamer(FIGURE_SURGEON, 50);
+void building::spawn_figure_dentist() {
+    common_spawn_roamer(FIGURE_DENTIST, 50);
 }
 void building::spawn_figure_physician() {
-    common_spawn_roamer(FIGURE_BATHHOUSE_WORKER, 50);
+    common_spawn_roamer(FIGURE_PHYSICIAN, 50);
 }
 void building::spawn_figure_magistrate() {
     common_spawn_roamer(FIGURE_MAGISTRATE, 50);
@@ -625,6 +603,10 @@ void building::set_water_supply_graphic() {
     }
 }
 void building::spawn_figure_watersupply() {
+    if (!has_water_access) {
+        show_on_problem_overlay = 2;
+    }
+
     common_spawn_roamer(FIGURE_WATER_CARRIER, 50);
     //    set_water_supply_graphic();
 
@@ -1259,12 +1241,6 @@ bool building::figure_generate() {
         case BUILDING_MARKET:
             spawn_figure_market();
             break;
-        case BUILDING_PHYSICIAN:
-            spawn_figure_physician();
-            break;
-        case BUILDING_MENU_MONUMENTS:
-            spawn_figure_bathhouse();
-            break;
         case BUILDING_SCHOOL:
             spawn_figure_school();
             break;
@@ -1274,14 +1250,17 @@ bool building::figure_generate() {
         case BUILDING_WATER_LIFT:
             common_spawn_figure_trigger(50);
             break;
-        case BUILDING_DENTIST:
-            spawn_figure_barber();
-            break;
         case BUILDING_APOTHECARY:
-            spawn_figure_doctor();
+            spawn_figure_apothecary();
+            break;
+        case BUILDING_DENTIST:
+            spawn_figure_dentist();
             break;
         case BUILDING_MORTUARY:
-            spawn_figure_hospital();
+            spawn_figure_mortuary();
+            break;
+        case BUILDING_PHYSICIAN:
+            spawn_figure_physician();
             break;
             //            case BUILDING_MISSION_POST:
             //                spawn_figure_mission_post(); break;

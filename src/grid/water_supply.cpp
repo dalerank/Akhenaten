@@ -62,9 +62,8 @@ void map_water_supply_update_houses() {
         } else if (b->house_size) {
             b->has_water_access = false;
             b->has_well_access = 0;
-            if (b->data.house.bathhouse
-                || map_terrain_exists_tile_in_area_with_type(
-                  b->tile.x(), b->tile.y(), b->size, TERRAIN_FOUNTAIN_RANGE)) {
+            if (b->data.house.water_supply
+                || map_terrain_exists_tile_in_area_with_type(b->tile.x(), b->tile.y(), b->size, TERRAIN_FOUNTAIN_RANGE)) {
                 b->has_water_access = true;
             }
         }
@@ -169,6 +168,7 @@ static void update_canals_from_river() {
         fill_canals_from_offset(grid_offset);
     }
 }
+
 static void update_canals_from_water_lifts() {
     // cached grid offsets for water lift outputs
     const int OUTPUT_OFFSETS[4][2] = {{OFFSET(0, 2), OFFSET(1, 2)},
@@ -203,6 +203,7 @@ static void update_canals_from_water_lifts() {
         }
     }
 }
+
 void map_update_canals(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Canals Update");
     // first, reset all canals
@@ -214,6 +215,7 @@ void map_update_canals(void) {
     update_canals_from_river();
     update_canals_from_water_lifts();
 }
+
 void map_update_wells_range(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Wells Range Update");
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE);
@@ -236,8 +238,7 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
             int building_id = map_building_at(grid_offset);
-            if (building_id && building_get(building_id)->house_size
-                && !building_get(building_id)->data.house.bathhouse) {
+            if (building_id && building_get(building_id)->house_size && !building_get(building_id)->data.house.water_supply) {
                 num_houses++;
                 //                if (!building_get(building_id)->has_water_access) //todo: water carrier access
                 return WELL_NECESSARY;

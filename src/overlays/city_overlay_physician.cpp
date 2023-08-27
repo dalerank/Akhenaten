@@ -7,18 +7,18 @@
 
 static int get_column_height_physician(const building* b) {
     return b->house_size && b->subtype.house_level
-             ? b->data.house.clinic
-                ? b->data.house.clinic / 10
+             ? b->data.house.physician
+                ? b->data.house.physician / 10
                 : 1
              : NO_COLUMN;
 }
 
 static int get_tooltip_physician(tooltip_context* c, const building* b) {
-    if (b->data.house.clinic <= 0)
+    if (b->data.house.physician <= 0)
         return 35;
-    else if (b->data.house.clinic >= 80)
+    else if (b->data.house.physician >= 80)
         return 36;
-    else if (b->data.house.clinic >= 20)
+    else if (b->data.house.physician >= 20)
         return 37;
     else {
         return 38;
@@ -35,7 +35,7 @@ struct city_overlay_physician : public city_overlay {
     }
 
     bool show_figure(const figure* f) const override {
-        return f->type == FIGURE_DOCTOR;
+        return f->type == FIGURE_PHYSICIAN;
     }
 
     void draw_custom_top(vec2i pixel, map_point point) const override {

@@ -52,12 +52,12 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_academy();
     case OVERLAY_APOTHECARY:
         return city_overlay_for_apothecary();
-    case OVERLAY_BATHHOUSE:
-        return city_overlay_for_bathhouse();
+    case OVERLAY_DENTIST:
+        return city_overlay_for_dentist();
     case OVERLAY_PHYSICIAN:
         return city_overlay_for_physician();
-    case OVERLAY_HOSPITAL:
-        return city_overlay_for_hospital();
+    case OVERLAY_MORTUARY:
+        return city_overlay_for_mortuary();
     case OVERLAY_RELIGION:
         return city_overlay_for_religion();
     case OVERLAY_RELIGION_OSIRIS:

@@ -12,18 +12,18 @@ void city_houses_reset_demands(void) {
     city_data.houses.missing.religion = 0;
     city_data.houses.missing.second_religion = 0;
     city_data.houses.missing.third_religion = 0;
-    city_data.houses.missing.barber = 0;
-    city_data.houses.missing.bathhouse = 0;
-    city_data.houses.missing.clinic = 0;
-    city_data.houses.missing.hospital = 0;
+    city_data.houses.missing.apothecary = 0;
+    city_data.houses.missing.dentist = 0;
+    city_data.houses.missing.mortuary = 0;
+    city_data.houses.missing.physician = 0;
     city_data.houses.missing.food = 0;
     // NB: second_wine purposely not cleared
 
     city_data.houses.requiring.school = 0;
     city_data.houses.requiring.library = 0;
-    city_data.houses.requiring.barber = 0;
-    city_data.houses.requiring.bathhouse = 0;
-    city_data.houses.requiring.clinic = 0;
+    city_data.houses.requiring.dentist = 0;
+    city_data.houses.requiring.physician = 0;
+    city_data.houses.requiring.water_supply = 0;
     city_data.houses.requiring.religion = 0;
 }
 
@@ -35,20 +35,24 @@ void city_houses_calculate_culture_demands(void) {
     // health
     city_data.houses.health = 0;
     int max = 0;
-    if (city_data.houses.missing.bathhouse > max) {
+    if (city_data.houses.missing.water_supply > max) {
         city_data.houses.health = 1;
-        max = city_data.houses.missing.bathhouse;
+        max = city_data.houses.missing.water_supply;
     }
-    if (city_data.houses.missing.barber > max) {
+
+    if (city_data.houses.missing.apothecary > max) {
         city_data.houses.health = 2;
-        max = city_data.houses.missing.barber;
+        max = city_data.houses.missing.apothecary;
     }
-    if (city_data.houses.missing.clinic > max) {
+
+    if (city_data.houses.missing.dentist > max) {
         city_data.houses.health = 3;
-        max = city_data.houses.missing.clinic;
+        max = city_data.houses.missing.dentist;
     }
-    if (city_data.houses.missing.hospital > max)
+
+    if (city_data.houses.missing.physician > max) {
         city_data.houses.health = 4;
+    }
 
     // education
     city_data.houses.education = 0;
