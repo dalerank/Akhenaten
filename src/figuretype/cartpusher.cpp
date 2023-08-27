@@ -84,9 +84,10 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
         e_resource resource = get_resource();
 
         // carrying nothing? done!
-        if (resource == RESOURCE_NONE || carrying <= 0)
+        if (resource == RESOURCE_NONE || carrying <= 0) {
+            progress_inside_speed = 0;
             return advance_action(ACTION_DONE);
-        else {
+        } else {
             building* dest = destination();
 
             int accepting = 0;
@@ -362,10 +363,11 @@ void figure::cartpusher_action() {
         // the CARTPUSHER figure will never be retrieving goods to carry back.
         // that's job for the WAREHOUSEMAN figure!
         // so there is no need for `cartpusher_do_deliver` action.
-        if (building_is_floodplain_farm(b)) // do not return to floodplain farms
+        if (building_is_floodplain_farm(b)) { // do not return to floodplain farms
             poof();
-        else
+        } else {
             do_returnhome();
+        }
         break;
     }
     //    cart_update_image();
