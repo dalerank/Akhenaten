@@ -3,7 +3,7 @@
 #include "city/victory.h"
 #include "city/warning.h"
 #include "core/random.h"
-#include "widget/overlays/city_overlay.h"
+#include "overlays/city_overlay.h"
 #include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/ring.h"

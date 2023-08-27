@@ -17,7 +17,7 @@
 #include "grid/random.h"
 #include "grid/terrain.h"
 #include "io/config/config.h"
-#include "widget/overlays/city_overlay.h"
+#include "overlays/city_overlay.h"
 
 static int show_building_food_stocks(const building* b) {
     return b->type == BUILDING_MARKET || b->type == BUILDING_FISHING_WHARF || b->type == BUILDING_GRANARY;

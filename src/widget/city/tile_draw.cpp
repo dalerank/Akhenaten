@@ -16,8 +16,8 @@
 #include "ornaments.h"
 #include "sound/city.h"
 
-#include "widget/overlays/city_overlay.h"
-#include "widget/overlays/city_overlay_risks.h"
+#include "overlays/city_overlay.h"
+#include "overlays/city_overlay_risks.h"
 
 static const int ADJACENT_OFFSETS_PH[2][4][7]
   = {{{GRID_OFFSET(-1, 0), GRID_OFFSET(-1, -1), GRID_OFFSET(-1, -2), GRID_OFFSET(0, -2), GRID_OFFSET(1, -2)},

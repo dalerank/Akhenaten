@@ -205,7 +205,7 @@ file(GLOB GRAPHICS_VIEW_FILES ${PROJECT_SOURCE_DIR}/src/graphics/view/*.cpp)
 file(GLOB SOUND_FILES ${PROJECT_SOURCE_DIR}/src/sound/*.cpp)
 file(GLOB WIDGET_FILES ${PROJECT_SOURCE_DIR}/src/widget/*.cpp)
 file(GLOB WIDGET_CITY_FILES ${PROJECT_SOURCE_DIR}/src/widget/city/*.cpp)
-file(GLOB WIDGET_OVERLAYS_FILES ${PROJECT_SOURCE_DIR}/src/widget/overlays/*.cpp)
+file(GLOB OVERLAYS_FILES ${PROJECT_SOURCE_DIR}/src/overlays/*.cpp)
 file(GLOB WIDGET_SIDEBAR_FILES ${PROJECT_SOURCE_DIR}/src/widget/sidebar/*.cpp)
 file(GLOB WINDOW_ADVISOR_FILES ${PROJECT_SOURCE_DIR}/src/window/advisor/*.cpp)
 file(GLOB WINDOW_FILES ${PROJECT_SOURCE_DIR}/src/window/*.cpp)
@@ -278,7 +278,7 @@ if(MSVC)
     source_group("sound" FILES ${SOUND_FILES})
     source_group("widgets" FILES ${WIDGET_FILES})
     source_group("widgets/city" FILES ${WIDGET_CITY_FILES})
-    source_group("widgets/overlays" FILES ${WIDGET_OVERLAYS_FILES})
+    source_group("overlays" FILES ${OVERLAYS_FILES})
     source_group("widgets/sidebar" FILES ${WIDGET_SIDEBAR_FILES})
     source_group("window" FILES ${WINDOW_FILES})
     source_group("window/advisors" FILES ${WINDOW_ADVISOR_FILES})
@@ -323,7 +323,7 @@ set(SOURCE_FILES
     ${WINDOW_EDITOR_FILES}
     ${WINDOW_ADVISOR_FILES}
     ${WIDGET_SIDEBAR_FILES}
-    ${WIDGET_OVERLAYS_FILES}
+    ${OVERLAYS_FILES}
     ${WIDGET_CITY_FILES}
     ${GRAPHICS_VIEW_FILES}
     ${GRAPHICS_ELEMENTS_FILES}

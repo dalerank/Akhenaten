@@ -3,7 +3,7 @@
 #include "building/type.h"
 #include "city/constants.h"
 #include "core/app.h"
-#include "widget/overlays/city_overlay.h"
+#include "overlays/city_overlay.h"
 #include "game/state.h"
 #include "game/system.h"
 #include "game/settings.h"

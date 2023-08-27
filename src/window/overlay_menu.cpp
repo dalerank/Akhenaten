@@ -2,7 +2,7 @@
 
 #include "core/time.h"
 #include "game/state.h"
-#include "widget/overlays/city_overlay.h"
+#include "overlays/city_overlay.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"

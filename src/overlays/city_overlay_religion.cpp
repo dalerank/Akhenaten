@@ -4,7 +4,7 @@
 #include "game/state.h"
 #include "grid/building.h"
 #include "grid/property.h"
-#include "widget/overlays/city_overlay.h"
+#include "overlays/city_overlay.h"
 
 #include <algorithm>
 #include <array>

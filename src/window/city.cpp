@@ -1,6 +1,6 @@
 #include "city.h"
 
-#include "widget/overlays/city_overlay.h"
+#include "overlays/city_overlay.h"
 #include "building/construction/build_planner.h"
 #include "building/rotation.h"
 #include "city/message.h"
