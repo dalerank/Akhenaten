@@ -3,6 +3,7 @@
 #include "city/victory.h"
 #include "city/warning.h"
 #include "core/random.h"
+#include "widget/overlays/city_overlay.h"
 #include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/ring.h"
@@ -26,28 +27,35 @@ void game_state_init(void) {
 
     city_warning_clear_all();
 }
+
 bool game_state_is_paused(void) {
     return g_state_data.paused;
 }
+
 void game_state_unpause(void) {
     g_state_data.paused = 0;
 }
+
 void game_state_toggle_paused(void) {
     g_state_data.paused = g_state_data.paused ? 0 : 1;
 }
+
 int game_state_overlay(void) {
     return g_state_data.current_overlay;
 }
+
 void game_state_reset_overlay(void) {
     g_state_data.current_overlay = OVERLAY_NONE;
     g_state_data.previous_overlay = OVERLAY_NONE;
 }
+
 void game_state_toggle_overlay(void) {
-    int tmp = g_state_data.previous_overlay;
+    int previous_overlay = g_state_data.previous_overlay;
     g_state_data.previous_overlay = g_state_data.current_overlay;
-    g_state_data.current_overlay = tmp;
+    g_state_data.current_overlay = previous_overlay;
     map_clear_highlights();
 }
+
 void game_state_set_overlay(int overlay) {
     if (overlay == OVERLAY_NONE) {
         g_state_data.previous_overlay = g_state_data.current_overlay;

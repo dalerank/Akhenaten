@@ -2,6 +2,7 @@
 
 #include "core/time.h"
 #include "game/state.h"
+#include "widget/overlays/city_overlay.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
@@ -80,7 +81,7 @@ static const int submenu_id_to_overlay[7][8] = {
    OVERLAY_ACADEMY,
    0},
   
-  { // Services 
+  { // Health 
    OVERLAY_BARBER,
    OVERLAY_BATHHOUSE,
    OVERLAY_CLINIC,
@@ -161,6 +162,10 @@ static const char* get_overlay_text(int group, int index) {
         return "Bazaar access";
     case OVERLAY_ROUTING:
         return "Routing";
+    case OVERLAY_BARBER: 
+        return "Barber";
+    case OVERLAY_BATHHOUSE:
+        return "Baths";
     }
     return (const char*)lang_get_string(group, index);
 }
