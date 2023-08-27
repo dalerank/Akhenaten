@@ -4,6 +4,7 @@
 #include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "io/gamefiles/lang.h"
 
 static void draw_culture_info(building_info_context* c, int help_id, const char* sound_file, int group_id) {
     c->help_id = help_id;
@@ -22,34 +23,39 @@ static void draw_culture_info(building_info_context* c, int help_id, const char*
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_clinic(building_info_context* c) {
-    draw_culture_info(c, 65, "wavs/clinic.wav", 81);
+void window_building_draw_apothecary(building_info_context* c) {
+    draw_culture_info(c, 63, "wavs/apothecary.wav", 84);
 }
-void window_building_draw_hospital(building_info_context* c) {
-    draw_culture_info(c, 66, "wavs/hospital.wav", 82);
+void window_building_draw_dentist(building_info_context* c) {
+    draw_culture_info(c, 65, "wavs/dentist.wav", 81);
 }
-void window_building_draw_bathhouse(building_info_context* c) {
+void window_building_draw_mortuary(building_info_context* c) {
+    draw_culture_info(c, 66, "wavs/mortuary.wav", 82);
+}
+void window_building_draw_physician(building_info_context *c) {
     c->help_id = 64;
-    window_building_play_sound(c, "wavs/baths.wav");
+    window_building_play_sound(c, "wavs/physician.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(83, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(e_text_building_physician, e_text_title, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
-    building* b = building_get(c->building_id);
-    if (!b->has_water_access)
-        window_building_draw_description(c, 83, 4);
-    else if (!c->has_road_access)
-        window_building_draw_description(c, 69, 25);
-    else if (b->num_workers <= 0)
-        window_building_draw_description(c, 83, 2);
-    else {
-        window_building_draw_description(c, 83, 3);
+    building *b = building_get(c->building_id);
+    //if (!b->has_water_access)
+    //    window_building_draw_description(c, 83, 4);
+
+    if (b->has_figure_of_type(-1, FIGURE_PHYSICIAN)) {
+        window_building_draw_description(c, e_text_building_physician, e_text_figure_on_patrol);
+    } else if (!c->has_road_access) {
+        window_building_draw_description(c, e_text_building, e_text_building_no_roads);
+    } else if (b->num_workers <= 0) {
+        window_building_draw_description(c, e_text_building_physician, e_text_no_workers);
+    } else {
+        window_building_draw_description(c, e_text_building_physician, e_text_works_fine);
     }
+
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
 }
-void window_building_draw_barber(building_info_context* c) {
-    draw_culture_info(c, 63, "wavs/mortuary.wav", 84);
-}
+
 void window_building_draw_school(building_info_context* c) {
     draw_culture_info(c, 68, "wavs/school.wav", 85);
 }

@@ -1,12 +1,12 @@
-#ifndef WINDOW_BUILDING_CULTURE_H
-#define WINDOW_BUILDING_CULTURE_H
+#pragma once
 
 #include "common.h"
 
-void window_building_draw_clinic(building_info_context* c);
-void window_building_draw_hospital(building_info_context* c);
-void window_building_draw_bathhouse(building_info_context* c);
-void window_building_draw_barber(building_info_context* c);
+void window_building_draw_apothecary(building_info_context* c);
+void window_building_draw_dentist(building_info_context* c);
+void window_building_draw_mortuary(building_info_context* c);
+void window_building_draw_physician(building_info_context* c);
+
 void window_building_draw_school(building_info_context* c);
 void window_building_draw_academy(building_info_context* c);
 void window_building_draw_library(building_info_context* c);
@@ -36,5 +36,3 @@ void window_building_draw_lion_house(building_info_context* c);
 void window_building_draw_chariot_maker(building_info_context* c);
 
 void window_building_draw_festival_square(building_info_context* c);
-
-#endif // WINDOW_BUILDING_CULTURE_H

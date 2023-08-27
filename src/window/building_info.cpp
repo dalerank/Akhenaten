@@ -611,17 +611,16 @@ static void draw_background(void) {
                 window_building_draw_chariot_maker(&context);
                 break;
             case BUILDING_APOTHECARY:
-                window_building_draw_clinic(&context);
+                window_building_draw_apothecary(&context);
                 break;
             case BUILDING_MORTUARY:
-                window_building_draw_hospital(&context);
+                window_building_draw_mortuary(&context);
                 break;
             case BUILDING_PHYSICIAN:
-            case BUILDING_MENU_MONUMENTS:
-                window_building_draw_bathhouse(&context);
+                window_building_draw_physician(&context);
                 break;
             case BUILDING_DENTIST:
-                window_building_draw_barber(&context);
+                window_building_draw_dentist(&context);
                 break;
             case BUILDING_SCHOOL:
                 window_building_draw_school(&context);

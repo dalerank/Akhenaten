@@ -92,11 +92,18 @@ const uint8_t* lang_get_string(int group, int index);
 const lang_message* lang_get_message(int id);
 
 enum e_text_info {
+    e_text_title = 0,
+    e_text_figure_on_patrol = 1,
+    e_text_no_workers = 2,
+    e_text_works_fine = 3,
     e_text_overlay_menu = 14,
     e_text_display_options = 42,
     e_text_saving_dialog = 43,
+    e_text_building_physician = 83,
     e_text_gate_house = 90,
     e_text_tower = 91,
+    e_text_building = 69,
+    e_text_building_no_roads = 25,
     e_text_info_clay_pit = 121,
     e_text_ferry_landing = 159,
     e_text_ferry_landing_no_routes = 1,
