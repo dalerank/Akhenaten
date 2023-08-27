@@ -7,10 +7,6 @@ static int show_building_bathhouse(const building* b) {
     return b->type == BUILDING_MENU_MONUMENTS;
 }
 
-static int show_building_clinic(const building* b) {
-    return b->type == BUILDING_APOTHECARY;
-}
-
 static int show_building_hospital(const building* b) {
     return b->type == BUILDING_MORTUARY;
 }
@@ -19,20 +15,12 @@ static int show_figure_bathhouse(const figure* f) {
     return f->type == FIGURE_BATHHOUSE_WORKER;
 }
 
-static int show_figure_clinic(const figure* f) {
-    return f->type == FIGURE_DOCTOR;
-}
-
 static int show_figure_hospital(const figure* f) {
     return f->type == FIGURE_SURGEON;
 }
 
 static int get_column_height_bathhouse(const building* b) {
     return b->house_size && b->data.house.bathhouse ? b->data.house.bathhouse / 10 : NO_COLUMN;
-}
-
-static int get_column_height_clinic(const building* b) {
-    return b->house_size && b->data.house.clinic ? b->data.house.clinic / 10 : NO_COLUMN;
 }
 
 static int get_column_height_hospital(const building* b) {
@@ -48,18 +36,6 @@ static int get_tooltip_bathhouse(tooltip_context* c, const building* b) {
         return 10;
     else {
         return 11;
-    }
-}
-
-static int get_tooltip_clinic(tooltip_context* c, const building* b) {
-    if (b->data.house.clinic <= 0)
-        return 35;
-    else if (b->data.house.clinic >= 80)
-        return 36;
-    else if (b->data.house.clinic >= 20)
-        return 37;
-    else {
-        return 38;
     }
 }
 
@@ -83,19 +59,6 @@ const city_overlay* city_overlay_for_bathhouse(void) {
                                    get_column_height_bathhouse,
                                    0,
                                    get_tooltip_bathhouse,
-                                   0,
-                                   0};
-    return &overlay;
-}
-
-const city_overlay* city_overlay_for_clinic(void) {
-    static city_overlay overlay = {OVERLAY_CLINIC,
-                                   COLUMN_TYPE_WATER_ACCESS,
-                                   show_building_clinic,
-                                   show_figure_clinic,
-                                   get_column_height_clinic,
-                                   0,
-                                   get_tooltip_clinic,
                                    0,
                                    0};
     return &overlay;

@@ -15,6 +15,7 @@
 #include "overlays/city_overlay_bazaar_access.h"
 #include "overlays/city_overlay_fire.h"
 #include "overlays/city_overlay_routing.h"
+#include "overlays/city_overlay_clinic.h"
 #include "overlays/city_overlay_barber.h"
 
 const city_overlay* g_city_overlay = 0;
