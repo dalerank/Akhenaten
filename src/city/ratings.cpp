@@ -110,24 +110,29 @@ static void update_culture_explanation(void) {
         min_percentage = city_data.culture.religion_coverage;
         reason = 4;
     }
+
     int pct_theater = city_culture_coverage_theater();
     if (pct_theater < min_percentage) {
         min_percentage = pct_theater;
         reason = 5;
     }
+
     int pct_library = city_culture_coverage_library();
     if (pct_library < min_percentage) {
         min_percentage = pct_library;
         reason = 2;
     }
+    
     int pct_school = city_culture_coverage_school();
     if (pct_school < min_percentage) {
         min_percentage = pct_school;
         reason = 1;
     }
+
     int pct_academy = city_culture_coverage_academy();
-    if (pct_academy < min_percentage)
+    if (pct_academy < min_percentage) {
         reason = 3;
+    }
 
     city_data.ratings.culture_explanation = reason;
 }

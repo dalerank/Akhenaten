@@ -2,7 +2,8 @@
 
 class buffer;
 
-void city_culture_update_coverage(void);
+void city_culture_update_coverage();
+void city_health_update_coverage();
 
 int city_culture_coverage_theater(void);
 int city_culture_coverage_amphitheater(void);
@@ -14,9 +15,10 @@ int city_culture_coverage_religion(int god);
 
 int city_culture_coverage_school(void);
 int city_culture_coverage_library(void);
-int city_culture_coverage_academy(void);
+int city_culture_coverage_academy();
 
-int city_culture_coverage_hospital(void);
+int city_health_coverage_mortuary(void);
+int city_health_coverage_physician(void);
 
 int city_culture_average_education(void);
 int city_culture_average_entertainment(void);
@@ -24,6 +26,5 @@ int city_culture_average_health(void);
 
 void city_culture_calculate(void);
 
-void city_culture_save_state(buffer* buf);
-
-void city_culture_load_state(buffer* buf);
+void city_coverage_save_state(buffer* buf);
+void city_coverage_load_state(buffer* buf);

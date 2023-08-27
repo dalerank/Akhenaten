@@ -224,6 +224,7 @@ static void advance_tick(void) {
         building_count_update();
         building_entertainment_update();
         city_culture_update_coverage();
+        city_health_update_coverage();
         building_industry_update_farms();
         break;
     case 34:

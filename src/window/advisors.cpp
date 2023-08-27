@@ -241,6 +241,7 @@ static void init() {
 
     city_houses_calculate_culture_demands();
     city_culture_update_coverage();
+    city_health_update_coverage();
 
     city_resource_calculate_food_stocks_and_supply_wheat();
     formation_calculate_figures();
@@ -249,11 +250,11 @@ static void init() {
 
     set_advisor_window();
 
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        for (int i = 0; i < 13; i++)
-            advisor_buttons_PH[i].enabled = is_advisor_available(i);
-        advisor_buttons_PH[13].enabled = true;
+    
+    for (int i = 0; i < 13; i++) {
+        advisor_buttons_PH[i].enabled = is_advisor_available(i);
     }
+    advisor_buttons_PH[13].enabled = true;
 }
 
 void window_advisors_draw_dialog_background(void) {
