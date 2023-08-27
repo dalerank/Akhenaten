@@ -18,6 +18,8 @@
 #include "overlays/city_overlay_physician.h"
 #include "overlays/city_overlay_apothecary.h"
 #include "overlays/city_overlay_dentist.h"
+#include "overlays/city_overlay_mortuary.h"
+#include "overlays/city_overlay_health.h"
 
 const city_overlay* g_city_overlay = 0;
 
@@ -85,6 +87,8 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_bazaar_access();
     case OVERLAY_ROUTING:
         return city_overlay_for_routing();
+    case OVERLAY_HEALTH:
+        return city_overlay_for_health();
     default:
         return 0;
     }
@@ -95,8 +99,9 @@ const city_overlay* get_city_overlay(void) {
 }
 
 bool select_city_overlay() {
-    if (!g_city_overlay || g_city_overlay->type != game_state_overlay())
+    if (!g_city_overlay || g_city_overlay->type != game_state_overlay()) {
         g_city_overlay = set_city_overlay();
+    }
 
     return g_city_overlay != 0;
 }
@@ -109,8 +114,8 @@ int widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset) {
     }
 
     int overlay_requires_house = (overlay_type != OVERLAY_WATER) && (overlay_type != OVERLAY_FIRE)
-                                 && (overlay_type != OVERLAY_DAMAGE) && (overlay_type != OVERLAY_NATIVE)
-                                 && (overlay_type != OVERLAY_DESIRABILITY);
+                                    && (overlay_type != OVERLAY_DAMAGE) && (overlay_type != OVERLAY_NATIVE)
+                                    && (overlay_type != OVERLAY_DESIRABILITY);
     building* b = building_get(building_id);
     if (overlay_requires_house && !b->house_size) {
         return 0;

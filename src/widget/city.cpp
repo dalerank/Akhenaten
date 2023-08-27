@@ -1,10 +1,10 @@
 #include "dev/debug.h"
+
 #include "graphics/boilerplate.h"
 #include "graphics/view/lookup.h"
 #include "grid/property.h"
 #include "widget/city/building_ghost.h"
 #include "overlays/city_overlay.h"
-
 #include "building/construction/build_planner.h"
 #include "building/properties.h"
 #include "city/finance.h"

@@ -20,30 +20,38 @@ void city_health_change(int amount) {
 
 static void cause_disease(int total_people) {
     return; // todo: temp
-    if (city_data.health.value >= 40)
+    if (city_data.health.value >= 40) {
         return;
+    }
+
     int chance_value = random_byte() & 0x3f;
     if (city_data.religion.venus_curse_active) {
         // force plague
         chance_value = 0;
         city_data.religion.venus_curse_active = false;
     }
-    if (chance_value > 40 - city_data.health.value)
+
+    if (chance_value > 40 - city_data.health.value) {
         return;
+    }
 
     int sick_people = calc_adjust_with_percentage(total_people, 7 + (random_byte() & 3));
-    if (sick_people <= 0)
+    if (sick_people <= 0) {
         return;
+    }
+
     city_health_change(10);
     int people_to_kill = sick_people - city_data.health.num_hospital_workers;
     if (people_to_kill <= 0) {
         city_message_post(true, MESSAGE_HEALTH_ILLNESS, 0, 0);
         return;
     }
-    if (city_data.health.num_hospital_workers > 0)
+
+    if (city_data.health.num_hospital_workers > 0) {
         city_message_post(true, MESSAGE_HEALTH_DISEASE, 0, 0);
-    else
+    } else {
         city_message_post(true, MESSAGE_HEALTH_PESTILENCE, 0, 0);
+    }
 
     tutorial_on_disease();
 
@@ -54,8 +62,9 @@ static void cause_disease(int total_people) {
             if (!(b->data.house.apothecary || b->data.house.physician)) {
                 people_to_kill -= b->house_population;
                 building_destroy_by_plague(b);
-                if (people_to_kill <= 0)
+                if (people_to_kill <= 0) {
                     return;
+                }
             }
         }
     }
@@ -67,19 +76,22 @@ static void cause_disease(int total_people) {
             if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
                 people_to_kill -= b->house_population;
                 building_destroy_by_plague(b);
-                if (people_to_kill <= 0)
+                if (people_to_kill <= 0) {
                     return;
+                }
             }
         }
     }
+
     // kill anyone
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size && b->house_population) {
             people_to_kill -= b->house_population;
             building_destroy_by_plague(b);
-            if (people_to_kill <= 0)
+            if (people_to_kill <= 0) {
                 return;
+            }
         }
     }
 }
