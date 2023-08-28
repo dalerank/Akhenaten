@@ -82,7 +82,7 @@ enum e_figure_type : uint16_t {
 
     // pharaoh
 
-    FIGURE_HUNTER = 73,
+    FIGURE_OSTRICH_HUNTER = 73,
     FIGURE_HUNTER_ARROW = 74,
     FIGURE_LUMBERJACK = 75,
     //

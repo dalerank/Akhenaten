@@ -938,19 +938,23 @@ void building::spawn_figure_granary() {
     }
 }
 
-bool building::can_spawn_hunter() { // no cache because fuck the system (also I can't find the memory offset for this)
+bool building::can_spawn_ostrich_hunter() { // no cache because fuck the system (also I can't find the memory offset for this)
     int hunters_total = 0;
     int hunters_this_lodge = 0;
     int huntables = city_data.figure.animals;
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure* f = figure_get(i);
-        if (f->has_type(FIGURE_HUNTER)) { // figure with type on map
+        if (f->has_type(FIGURE_OSTRICH_HUNTER)) { // figure with type on map
             hunters_total++;
-            if (f->has_home(this)) // belongs to this building
+
+            if (f->has_home(this)) { // belongs to this building
                 hunters_this_lodge++;
+            }
         }
-        if (hunters_total >= huntables)
+
+        if (hunters_total >= huntables) {
             break;
+        }
     }
     // max 3 per building
     // can not have more hunters than preys on map
@@ -966,12 +970,14 @@ void building::spawn_figure_hunting_lodge() {
         common_spawn_labor_seeker(100);
         int pct_workers = worker_percentage();
         int spawn_delay = figure_spawn_timer();
-        if (spawn_delay == -1)
+        if (spawn_delay == -1) {
             return;
+        }
+
         figure_spawn_delay++;
-        if (figure_spawn_delay > spawn_delay && can_spawn_hunter()) {
+        if (figure_spawn_delay > spawn_delay && can_spawn_ostrich_hunter()) {
             figure_spawn_delay = 0;
-            create_figure_generic(FIGURE_HUNTER, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
+            create_figure_generic(FIGURE_OSTRICH_HUNTER, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
         }
     }
     common_spawn_goods_output_cartpusher();

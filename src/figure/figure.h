@@ -379,7 +379,7 @@ public:
     void spear_action();
     void hippodrome_horse_action();
     // pharaoh
-    void hunter_action();
+    void ostrich_hunter_action();
     void gatherer_action();
     void policeman_action();
     void magistrate_action();

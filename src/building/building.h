@@ -304,7 +304,7 @@ public:
     void spawn_figure_tower();
     void spawn_figure_barracks();
 
-    bool can_spawn_hunter();
+    bool can_spawn_ostrich_hunter();
     bool can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person);
     bool can_spawn_woodcutter();
 

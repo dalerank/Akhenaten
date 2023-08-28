@@ -4,7 +4,7 @@
 #include "figure/properties.h"
 #include "graphics/image_groups.h"
 
-void figure::hunter_action() {
+void figure::ostrich_hunter_action() {
     figure* prey = figure_get(target_figure_id);
     int dist = 0;
     if (target_figure_id) {
