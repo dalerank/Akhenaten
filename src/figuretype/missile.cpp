@@ -140,8 +140,9 @@ void figure::explosion_cloud_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Explode Cloud");
     use_cross_country = true;
     progress_on_tile++;
-    if (progress_on_tile > 44)
+    if (progress_on_tile > 44) {
         poof();
+    }
 
     move_ticks_cross_country(speed_multiplier);
     if (progress_on_tile < 48) {
@@ -198,8 +199,9 @@ void figure::javelin_action() {
 void figure::bolt_action() {
     use_cross_country = true;
     progress_on_tile++;
-    if (progress_on_tile > 120)
+    if (progress_on_tile > 120) {
         poof();
+    }
 
     int should_die = move_ticks_cross_country(4);
     int target_id = get_non_citizen_on_tile(tile.grid_offset());

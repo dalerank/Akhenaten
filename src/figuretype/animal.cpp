@@ -126,11 +126,12 @@ void figure::seagulls_action() {
     use_cross_country = true;
     if (!(anim_frame & 3) && move_ticks_cross_country(1)) {
         progress_on_tile++;
-        if (progress_on_tile > 14) // wrap around
+        if (progress_on_tile > 14) { // wrap around
             progress_on_tile = 0;
-        set_cross_country_destination(source_tile.x() + SEAGULL_OFFSETS[progress_on_tile].x,
-                                      source_tile.y() + SEAGULL_OFFSETS[progress_on_tile].y);
+        }
+        set_cross_country_destination(source_tile.x() + SEAGULL_OFFSETS[progress_on_tile].x, source_tile.y() + SEAGULL_OFFSETS[progress_on_tile].y);
     }
+
     if (id & 1) {
         image_set_animation(GROUP_FIGURE_SEAGULLS, 0, 54, 3);
         //        figure_image_increase_offset(54);

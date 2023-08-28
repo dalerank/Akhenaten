@@ -11,83 +11,104 @@ void figure::ostrich_hunter_action() {
         dist = calc_maximum_distance(tile, prey->tile);
     }
 
+    if (tile == previous_tile) {
+        movement_ticks_watchdog++;
+    } else {
+        movement_ticks_watchdog = 0;
+    }
+
+    if (movement_ticks_watchdog > 240) {
+        advance_action(ACTION_8_RECALCULATE);
+    }
+
     switch (action_state) {
     case ACTION_8_RECALCULATE:
-    case 14: // spawning
+    //case ACTION_14_RETURNING_WITH_FOOD: // spawning
         target_figure_id = is_nearby(1, &dist, 10000, false);
         if (target_figure_id) {
             figure_get(target_figure_id)->targeted_by_figure_id = id;
-            advance_action(9);
+            advance_action(ACTION_9_CHASE_PREY);
         }
         break;
-    case 13: // pitpat
-        if (!target_figure_id)
-            return advance_action(8);
+
+    case ACTION_13_WAIT_FOR_ACTION: // pitpat
+        if (!target_figure_id) {
+            return advance_action(ACTION_8_RECALCULATE);
+        }
+
         wait_ticks--;
         if (wait_ticks <= 0) {
-            advance_action(9);
+            advance_action(ACTION_9_CHASE_PREY);
         }
         break;
-    case 9: // following prey
-        if (!target_figure_id)
-            return advance_action(8);
+
+    case ACTION_9_CHASE_PREY: // following prey
+        if (!target_figure_id) {
+            return advance_action(ACTION_8_RECALCULATE);
+        }
+
         if (dist >= 2) {
-            do_goto(prey->tile.x(), prey->tile.y(), TERRAIN_USAGE_ANIMAL, 15, 8);
+            do_goto(prey->tile.x(), prey->tile.y(), TERRAIN_USAGE_ANIMAL, 15, ACTION_8_RECALCULATE);
         } else {
             wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
-            advance_action(15);
+            advance_action(ACTION_15_HUNTER_HUNT);
         }
         break;
-        //        case ??: // attacking enemy
-    case 15: // firing at prey
+
+    case ACTION_15_HUNTER_HUNT: // firing at prey
         wait_ticks--;
         if (wait_ticks <= 0) {
             if (!target_figure_id) {
-                return advance_action(8);
+                return advance_action(ACTION_8_RECALCULATE);
             }
             wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
             if (prey->state == FIGURE_STATE_DYING) {
-                advance_action(11);
+                advance_action(ACTION_11_HUNTER_WALK);
             } else if (dist >= 2) {
                 //                    advance_action(9);
                 //                    wait_ticks = 0;
                 wait_ticks = 12;
-                advance_action(13);
+                advance_action(ACTION_13_WAIT_FOR_ACTION);
             } else {
                 direction = calc_missile_shooter_direction(tile.x(), tile.y(), prey->tile.x(), prey->tile.y());
                 missile_fire_at(target_figure_id, FIGURE_HUNTER_ARROW);
             }
         }
         break;
-    case 11: // going to pick up prey
+
+    case ACTION_11_GOING_TO_PICKUP_POINT: // going to pick up prey
         if (!target_figure_id) {
-            return advance_action(8);
+            return advance_action(ACTION_8_RECALCULATE);
         }
 
-        if (do_goto(prey->tile.x(), prey->tile.y(), TERRAIN_USAGE_ANIMAL, 10, 11)) {
+        if (do_goto(prey->tile.x(), prey->tile.y(), TERRAIN_USAGE_ANIMAL, ACTION_10_PICKUP_ANIMAL, ACTION_11_GOING_TO_PICKUP_POINT)) {
             anim_offset = 0;
         }
         break;
-    case 10: // picking up prey
+
+    case ACTION_10_PICKUP_ANIMAL: // picking up prey
         if (target_figure_id) {
             prey->poof();
         }
         target_figure_id = 0;
         if (anim_frame >= 17) {
-            advance_action(12);
+            advance_action(ACTION_12_GOING_HOME_AND_UNLOAD);
         }
         break;
-    case 12:                                     // returning with prey
-        if (do_returnhome(TERRAIN_USAGE_ANIMAL)) // add game meat to hunting lodge!
+
+    case ACTION_12_GOING_HOME_AND_UNLOAD:                                     // returning with prey
+        if (do_returnhome(TERRAIN_USAGE_ANIMAL)) { // add game meat to hunting lodge!
             home()->stored_full_amount += 100;
+        }
 
         break;
     }
+
     switch (action_state) {
     case ACTION_8_RECALCULATE:
-    case 14:
-    case 13:
-    case 9:
+    case ACTION_14_RETURNING_WITH_FOOD:
+    case ACTION_13_WAIT_FOR_ACTION:
+    case ACTION_9_CHASE_PREY:
     case ACTION_11_HUNTER_WALK: // normal walk
         image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_MOVE, 0, 12);
         break;
