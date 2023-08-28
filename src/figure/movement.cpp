@@ -299,6 +299,7 @@ void figure::move_ticks(int num_ticks, bool roaming_enabled) {
         }
 
         if (progress_on_tile >= 15) { // tile center
+            progress_on_tile = std::clamp<unsigned char>(progress_on_tile, 0, 15);
             figure_service_provide_coverage();
 
             // update route
@@ -315,10 +316,9 @@ void figure::move_ticks(int num_ticks, bool roaming_enabled) {
             previous_tile_direction = direction;
         }
 
-        if (progress_on_tile > 14) { // wrap around
+        if (progress_on_tile > 14) {
             progress_on_tile = 0;
         }
-
         advance_figure_tick();
     }
 }

@@ -425,12 +425,7 @@ static void callback_travel_noncitizen_land(int next_offset, int dist) {
         }
     }
 }
-bool map_routing_noncitizen_can_travel_over_land(int src_x,
-                                                 int src_y,
-                                                 int dst_x,
-                                                 int dst_y,
-                                                 int only_through_building_id,
-                                                 int max_tiles) {
+bool map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y, int only_through_building_id, int max_tiles) {
     int src_offset = MAP_OFFSET(src_x, src_y);
     int dst_offset = MAP_OFFSET(dst_x, dst_y);
     ++g_routing_stats.total_routes_calculated;
@@ -438,8 +433,9 @@ bool map_routing_noncitizen_can_travel_over_land(int src_x,
     if (only_through_building_id) {
         g_routing_state_data.through_building_id = only_through_building_id;
         route_queue(src_offset, dst_offset, callback_travel_noncitizen_land_through_building);
-    } else
+    } else {
         route_queue_max(src_offset, dst_offset, max_tiles, callback_travel_noncitizen_land);
+    }
     return map_grid_get(&routing_distance, dst_offset) != 0;
 }
 static void callback_travel_noncitizen_through_everything(int next_offset, int dist) {

@@ -107,16 +107,6 @@ static int get_land_type_noncitizen(int grid_offset) {
         return NONCITIZEN_N1_BLOCKED;
     case BUILDING_MENU_FORTS:
         return NONCITIZEN_5_FORT;
-    case BUILDING_GRANARY:
-        switch (map_property_multi_tile_xy(grid_offset)) {
-        case EDGE_X1Y0:
-        case EDGE_X0Y1:
-        case EDGE_X1Y1:
-        case EDGE_X2Y1:
-        case EDGE_X1Y2:
-            return NONCITIZEN_0_PASSABLE;
-        }
-        break;
     }
     return 0;
 }
