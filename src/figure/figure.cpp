@@ -62,7 +62,7 @@ figure* figure_create(e_figure_type type, map_point tile, int dir) {
     f->cc_coords.y = 15 * tile.y();
     //    f->cross_country_x = 15 * x;
     //    f->cross_country_y = 15 * y;
-    f->progress_on_tile = 14;
+    f->progress_on_tile = 8;
     f->progress_inside = 0;
     f->progress_inside_speed = 0;
     f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
@@ -328,7 +328,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->migrant_num_people);
     iob->bind(BIND_SIGNATURE_UINT8, &f->is_ghost);
     iob->bind(BIND_SIGNATURE_UINT8, &f->min_max_seen);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->__unused_57);
+    iob->bind(BIND_SIGNATURE_UINT8, &f->movement_ticks_watchdog);
     iob->bind(BIND_SIGNATURE_INT16, &f->leading_figure_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->attack_image_offset);
     iob->bind(BIND_SIGNATURE_UINT8, &f->wait_ticks_missile);

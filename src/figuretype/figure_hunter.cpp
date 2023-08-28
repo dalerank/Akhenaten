@@ -17,7 +17,9 @@ void figure::ostrich_hunter_action() {
         movement_ticks_watchdog = 0;
     }
 
-    if (movement_ticks_watchdog > 240) {
+    if (movement_ticks_watchdog > 60) {
+        movement_ticks_watchdog = 0;
+        route_remove();
         advance_action(ACTION_8_RECALCULATE);
     }
 
