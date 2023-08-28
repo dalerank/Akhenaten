@@ -73,13 +73,14 @@ void figure::tax_collector_action() {
         anim_frame = 0;
         wait_ticks--;
         if (wait_ticks <= 0) {
-            int x_road, y_road;
-            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+            map_point road_tile;
+            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
                 action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
-                set_cross_country_destination(x_road, y_road);
+                set_cross_country_destination(road_tile.x(), road_tile.y());
                 roam_length = 0;
-            } else
+            } else {
                 poof();
+            }
         }
         break;
     case FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING:
@@ -101,12 +102,10 @@ void figure::tax_collector_action() {
         //            is_ghost = false;
         roam_length++;
         if (roam_length >= max_roam_length) {
-            int x_road, y_road;
-            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+            map_point road_tile;
+            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
                 action_state = FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING;
-                destination_tile.set(x_road, y_road);
-                //                    destination_tile.x() = x_road;
-                //                    destination_tile.y() = y_road;
+                destination_tile = road_tile;
             } else {
                 poof();
             }

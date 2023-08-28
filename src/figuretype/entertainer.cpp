@@ -142,24 +142,28 @@ void figure::entertainer_action() {
         figure_combat_handle_attack();
         //            figure_image_increase_offset(32);
         break;
+
     case FIGURE_ACTION_149_CORPSE:
         figure_combat_handle_corpse();
         break;
+
     case FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED:
         //            is_ghost = true;
         anim_frame = 0;
         wait_ticks_missile = 0;
         wait_ticks--;
         if (wait_ticks <= 0) { // todo: summarize
-            int x_road, y_road;
-            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+            map_point road_tile;
+            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
                 action_state = FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL;
-                set_cross_country_destination(x_road, y_road);
+                set_cross_country_destination(road_tile.x(), road_tile.y());
                 roam_length = 0;
-            } else
+            } else {
                 poof();
+            }
         }
         break;
+
     case FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL:
         use_cross_country = true;
         //            is_ghost = true;
@@ -181,16 +185,15 @@ void figure::entertainer_action() {
             }
             if (dst_building_id) { // todo: summarize
                 building* b_dst = building_get(dst_building_id);
-                int x_road, y_road;
-                if (map_closest_road_within_radius(b_dst->tile.x(), b_dst->tile.y(), b_dst->size, 2, &x_road, &y_road)) {
+                map_point road_tile;
+                if (map_closest_road_within_radius(b_dst->tile.x(), b_dst->tile.y(), b_dst->size, 2, road_tile)) {
                     set_destination(dst_building_id);
                     action_state = FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE;
-                    destination_tile.set(x_road, y_road);
-                    //                        destination_tile.x() = x_road;
-                    //                        destination_tile.y() = y_road;
+                    destination_tile = road_tile;
                     roam_length = 0;
-                } else
+                } else {
                     poof();
+                }
             } else
                 poof();
         }

@@ -270,16 +270,15 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
     case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
         terrain_usage = TERRAIN_USAGE_ANY;
         if (!target_is_alive()) {
-            int x_road, y_road;
-            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+            map_point road_tile;
+            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
                 action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
-                destination_tile.set(x_road, y_road);
-                //                    destination_tile.x() = x_road;
-                //                    destination_tile.y() = y_road;
+                destination_tile = road_tile;
                 route_remove();
                 roam_length = 0;
-            } else
+            } else {
                 poof();
+            }
         }
         move_ticks(1);
         if (direction == DIR_FIGURE_NONE) {
@@ -314,13 +313,14 @@ void figure::policeman_action() {
         anim_frame = 0;
         wait_ticks--;
         if (wait_ticks <= 0) {
-            int x_road, y_road;
-            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+            map_point road_tile;
+            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
                 action_state = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
-                set_cross_country_destination(x_road, y_road);
+                set_cross_country_destination(road_tile.x(), road_tile.y());
                 roam_length = 0;
-            } else
+            } else {
                 poof();
+            }
         }
         break;
     case 9:
@@ -343,15 +343,14 @@ void figure::policeman_action() {
         //            is_ghost = false;
         roam_length++;
         if (roam_length >= max_roam_length) {
-            int x_road, y_road;
-            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+            map_point road_tile;
+            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
                 action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
-                destination_tile.set(x_road, y_road);
-                //                    destination_tile.x() = x_road;
-                //                    destination_tile.y() = y_road;
+                destination_tile = road_tile;
                 route_remove();
-            } else
+            } else {
                 poof();
+            }
         }
         roam_ticks(1);
         break;
@@ -368,16 +367,15 @@ void figure::policeman_action() {
     case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
         terrain_usage = TERRAIN_USAGE_ANY;
         if (!target_is_alive()) {
-            int x_road, y_road;
-            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+            map_point road_tile;
+            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
                 action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
-                destination_tile.set(x_road, y_road);
-                //                    destination_tile.x() = x_road;
-                //                    destination_tile.y() = y_road;
+                destination_tile = road_tile;
                 route_remove();
                 roam_length = 0;
-            } else
+            } else {
                 poof();
+            }
         }
         move_ticks(1);
         if (direction == DIR_FIGURE_NONE) {

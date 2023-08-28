@@ -50,7 +50,7 @@ void figure::ostrich_hunter_action() {
         }
 
         if (dist >= 2) {
-            do_goto(prey->tile.x(), prey->tile.y(), TERRAIN_USAGE_ANIMAL, 15, ACTION_8_RECALCULATE);
+            do_goto(prey->tile.x(), prey->tile.y(), TERRAIN_USAGE_ANIMAL, ACTION_15_HUNTER_HUNT, ACTION_8_RECALCULATE);
         } else {
             wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
             advance_action(ACTION_15_HUNTER_HUNT);

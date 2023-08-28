@@ -155,7 +155,7 @@ bool map_has_road_access_temple_complex(int x, int y, int orientation, bool from
     return false;
 }
 
-static bool road_within_radius(int x, int y, int size, int radius, int* x_road, int* y_road) {
+bool map_road_within_radius(int x, int y, int size, int radius, map_point &road_tile) {
     OZZY_PROFILER_SECTION("road_within_radius");
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
@@ -167,11 +167,7 @@ static bool road_within_radius(int x, int y, int size, int radius, int* x_road, 
                 if (building_at(xx, yy)->type == BUILDING_ROADBLOCK)
                     continue;
 
-                if (x_road && y_road) {
-                    *x_road = xx;
-                    *y_road = yy;
-                }
-
+                road_tile.set(xx, yy);
                 return true;
             }
         }
@@ -179,16 +175,16 @@ static bool road_within_radius(int x, int y, int size, int radius, int* x_road, 
     return false;
 }
 
-bool map_closest_road_within_radius(int x, int y, int size, int radius, int* x_road, int* y_road) {
+bool map_closest_road_within_radius(int x, int y, int size, int radius, map_point &road_tile) {
     OZZY_PROFILER_SECTION("map_closest_road_within_radius");
     for (int r = 1; r <= radius; r++) {
-        if (road_within_radius(x, y, size, r, x_road, y_road))
+        if (map_road_within_radius(x, y, size, r, road_tile))
             return true;
     }
     return false;
 }
 
-static int reachable_road_within_radius(int x, int y, int size, int radius, int* x_road, int* y_road) {
+bool map_reachable_road_within_radius(int x, int y, int size, int radius, map_point &road_tile) {
     OZZY_PROFILER_SECTION("reachable_road_within_radius");
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
@@ -198,26 +194,24 @@ static int reachable_road_within_radius(int x, int y, int size, int radius, int*
             int grid_offset = MAP_OFFSET(xx, yy);
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
                 if (map_routing_distance(grid_offset) > 0) {
-                    if (x_road && y_road) {
-                        *x_road = xx;
-                        *y_road = yy;
-                    }
-                    return 1;
+                    road_tile = {xx, yy};
+                    return true;
                 }
             }
         }
     }
-    return 0;
+    return false;
 }
 
-int map_closest_reachable_road_within_radius(int x, int y, int size, int radius, int* x_road, int* y_road) {
+bool map_closest_reachable_road_within_radius(int x, int y, int size, int radius, map_point &road_tile) {
     OZZY_PROFILER_SECTION("map_closest_reachable_road_within_radius");
     for (int r = 1; r <= radius; r++) {
-        if (reachable_road_within_radius(x, y, size, r, x_road, y_road))
-            return 1;
+        if (map_reachable_road_within_radius(x, y, size, r, road_tile))
+            return true;
     }
-    return 0;
+    return false;
 }
+
 int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, int* x_road, int* y_road) {
     switch (rotation) {
     case 1:

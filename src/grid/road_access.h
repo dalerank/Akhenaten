@@ -16,9 +16,10 @@ bool map_has_road_access_temple_complex(int x, int y, int orientation, bool from
 
 // int map_has_road_access_granary(int x, int y, map_point *road);
 
-bool map_closest_road_within_radius(int x, int y, int size, int radius, int* x_road, int* y_road);
+bool map_closest_road_within_radius(int x, int y, int size, int radius, map_point &road_tile);
 
-int map_closest_reachable_road_within_radius(int x, int y, int size, int radius, int* x_road, int* y_road);
+bool map_closest_reachable_road_within_radius(int x, int y, int size, int radius, map_point &road_tile);
+bool map_reachable_road_within_radius(int x, int y, int size, int radius, map_point &road_tile);
 
 int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, int* x_road, int* y_road);
 
@@ -34,3 +35,4 @@ int map_has_adjacent_road_tiles(int grid_offset);
 
 int map_has_adjacent_granary_road(int grid_offset);
 void map_road_find_minimum_tile_xy(int x, int y, int sizex, int sizey, int *min_value, int *min_grid_offset);
+bool map_road_within_radius(int x, int y, int size, int radius, map_point &road_tile);

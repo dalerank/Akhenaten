@@ -28,8 +28,8 @@
 static const int CRIMINAL_OFFSETS[] = {0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1};
 
 static void generate_rioter(building* b) {
-    int x_road, y_road;
-    if (!map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 4, &x_road, &y_road)) {
+    map_point road_tile;
+    if (!map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 4, road_tile)) {
         return;
     }
 
@@ -53,7 +53,7 @@ static void generate_rioter(building* b) {
     int target_building_id = formation_rioter_get_target_building(&x_target, &y_target);
     for (int i = 0; i < people_in_mob; i++) {
         // TODO: to add correct rioter image
-        figure* f = figure_create(FIGURE_RIOTER, map_point(x_road, y_road), DIR_4_BOTTOM_LEFT);
+        figure* f = figure_create(FIGURE_RIOTER, road_tile, DIR_4_BOTTOM_LEFT);
         f->advance_action(FIGURE_ACTION_120_RIOTER_CREATED);
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
@@ -71,16 +71,16 @@ static void generate_rioter(building* b) {
     city_sentiment_change_happiness(20);
     tutorial_on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
-    city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, MAP_OFFSET(x_road, y_road));
+    city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, road_tile.grid_offset());
 }
 
 static void generate_mugger(building* b) {
     city_sentiment_add_criminal();
     if (b->house_criminal_active > 60 && city_can_create_mugger()) {
         b->house_criminal_active -= 60;
-        int x_road, y_road;
-        if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
-            figure* f = figure_create(FIGURE_CRIMINAL, map_point(x_road, y_road), DIR_4_BOTTOM_LEFT);
+        map_point road_tile;
+        if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
+            figure* f = figure_create(FIGURE_CRIMINAL, road_tile, DIR_4_BOTTOM_LEFT);
             f->advance_action(FIGURE_ACTION_120_MUGGER_CREATED);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
 
@@ -114,9 +114,9 @@ static void generate_protestor(building* b) {
     city_sentiment_add_protester();
     if (b->house_criminal_active > 30 && city_can_create_protestor()) {
         b->house_criminal_active -= 30;
-        int x_road, y_road;
-        if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
-            figure* f = figure_create(FIGURE_PROTESTER, map_point(x_road, y_road), DIR_4_BOTTOM_LEFT);
+        map_point road_tile;
+        if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
+            figure* f = figure_create(FIGURE_PROTESTER, road_tile, DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
             city_ratings_monument_record_criminal();
         }
@@ -206,9 +206,9 @@ void figure::mugger_action() {
         wait_ticks = 0;
         int senate_id = city_buildings_get_palace_id();
         building* b_dst = building_get(senate_id);
-        int x_road, y_road;
-        if (map_closest_road_within_radius(b_dst->tile.x(), b_dst->tile.y(), b_dst->size, 2, &x_road, &y_road)) {
-            destination_tile.set(x_road, y_road);
+        map_point road_tile;
+        if (map_closest_road_within_radius(b_dst->tile.x(), b_dst->tile.y(), b_dst->size, 2, road_tile)) {
+            destination_tile = road_tile;
             set_destination(senate_id);
             advance_action(FIGURE_ACTION_121_MUGGER_MOVING);
             route_remove();

@@ -215,6 +215,7 @@ void building_maintenance_check_fire_collapse(void) {
     if (recalculate_terrain)
         map_routing_update_land();
 }
+
 void building_maintenance_check_rome_access(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access");
     map_point& entry_point = city_map_entry_point();
@@ -227,8 +228,8 @@ void building_maintenance_check_rome_access(void) {
 
         if (b->house_size) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/House");
-            int x_road, y_road;
-            if (!map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+            map_point road_tile;
+            if (!map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
                 // no road: eject people
                 b->distance_from_entry = 0;
                 b->house_unreachable_ticks++;
@@ -240,13 +241,13 @@ void building_maintenance_check_rome_access(void) {
                     }
                     b->state = BUILDING_STATE_UNDO;
                 }
-            } else if (map_routing_distance(MAP_OFFSET(x_road, y_road))) {
+            } else if (map_routing_distance(road_tile.grid_offset())) {
                 // reachable from rome
                 OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/House/map_routing_distance");
-                b->distance_from_entry = map_routing_distance(MAP_OFFSET(x_road, y_road));
+                b->distance_from_entry = map_routing_distance(road_tile.grid_offset());
                 b->house_unreachable_ticks = 0;
-            } else if (map_closest_reachable_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
-                b->distance_from_entry = map_routing_distance(MAP_OFFSET(x_road, y_road));
+            } else if (map_closest_reachable_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
+                b->distance_from_entry = map_routing_distance(road_tile.grid_offset());
                 b->house_unreachable_ticks = 0;
             } else {
                 // no reachable road in radius

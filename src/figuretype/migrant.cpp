@@ -161,13 +161,14 @@ void figure::homeless_action() {
             int building_id = closest_house_with_room(tile);
             if (building_id) {
                 building* b = building_get(building_id);
-                int x_road, y_road;
-                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+                map_point road_tile;
+                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
                     b->set_figure(2, id);
                     set_immigrant_home(building_id);
                     advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
-                } else
+                } else {
                     poof();
+                }
             } else {
                 advance_action(FIGURE_ACTION_10_HOMELESS_LEAVING);
             }
@@ -192,8 +193,8 @@ void figure::homeless_action() {
             int building_id = closest_house_with_room(tile);
             if (building_id > 0) {
                 building* b = building_get(building_id);
-                int x_road, y_road;
-                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+                map_point road_tile;
+                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
                     b->set_figure(2, id);
                     set_immigrant_home(building_id);
                     advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);

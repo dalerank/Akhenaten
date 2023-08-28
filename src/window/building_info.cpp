@@ -206,36 +206,40 @@ static int center_in_city(int element_width_pixels) {
     return x + margin;
 }
 
-void highlight_waypoints(building* b) // highlight the 4 routing tiles for roams from this building
-{
+void highlight_waypoints(building* b) { // highlight the 4 routing tiles for roams from this building
     map_clear_highlights();
     if (b->type == BUILDING_MENU_FORTS || b->house_size) { // building doesn't send roamers
         return;
     }
-    int hx, hy, roadx, roady;
+    int hx, hy;
+    map_point road_tile;
     hx = b->tile.x();
     hy = b->tile.y() - 8;
     map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady))
-        map_highlight_set(MAP_OFFSET(roadx, roady));
+    if (map_closest_road_within_radius(hx, hy, 1, 6, road_tile)) {
+        map_highlight_set(road_tile.grid_offset());
+    }
 
     hx = b->tile.x() + 8;
     hy = b->tile.y();
     map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady))
-        map_highlight_set(MAP_OFFSET(roadx, roady));
+    if (map_closest_road_within_radius(hx, hy, 1, 6, road_tile)) {
+        map_highlight_set(road_tile.grid_offset());
+    }
 
     hx = b->tile.x();
     hy = b->tile.y() + 8;
     map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady))
-        map_highlight_set(MAP_OFFSET(roadx, roady));
+    if (map_closest_road_within_radius(hx, hy, 1, 6, road_tile)) {
+        map_highlight_set(road_tile.grid_offset());
+    }
 
     hx = b->tile.x() - 8;
     hy = b->tile.y();
     map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady))
-        map_highlight_set(MAP_OFFSET(roadx, roady));
+    if (map_closest_road_within_radius(hx, hy, 1, 6, road_tile)) {
+        map_highlight_set(road_tile.grid_offset());
+    }
 
     window_invalidate();
 }
@@ -257,8 +261,7 @@ static void init(map_point tile) {
     context.building_id = map_building_at(grid_offset);
     context.rubble_building_type = map_rubble_building_type(grid_offset);
     context.has_reservoir_pipes = map_terrain_is(grid_offset, TERRAIN_GROUNDWATER);
-    context.aqueduct_has_water
-      = map_aqueduct_at(grid_offset) && map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT) < 15;
+    context.aqueduct_has_water = map_aqueduct_at(grid_offset) && map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT) < 15;
 
     city_resource_determine_available();
     context.type = BUILDING_INFO_TERRAIN;

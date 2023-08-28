@@ -206,12 +206,8 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
 
     return false;
 }
-bool figure::do_gotobuilding(building* dest,
-                             bool stop_at_road,
-                             int terrainchoice,
-                             short NEXT_ACTION,
-                             short FAIL_ACTION) {
-    int x, y;
+bool figure::do_gotobuilding(building* dest, bool stop_at_road, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
+    map_point finish_tile;
     set_destination(dest);
     if (dest->state != BUILDING_STATE_VALID) {
         advance_action(FAIL_ACTION);
@@ -225,58 +221,55 @@ bool figure::do_gotobuilding(building* dest,
         if (dest->type == BUILDING_STORAGE_YARD || dest->type == BUILDING_STORAGE_YARD_SPACE) {
             building* main = dest->main();
             if (terrainchoice == TERRAIN_USAGE_ROADS) {
-                found_road = map_closest_reachable_road_within_radius(main->tile.x(), main->tile.y(), 3, 1, &x, &y);
+                found_road = map_closest_reachable_road_within_radius(main->tile.x(), main->tile.y(), 3, 1, finish_tile);
             }
 
             if (!found_road) {
-                found_road = map_closest_road_within_radius(main->tile.x(), main->tile.y(), 3, 1, &x, &y);
+                found_road = map_closest_road_within_radius(main->tile.x(), main->tile.y(), 3, 1, finish_tile);
             }
 
             if (found_road && is_coords_within_range(tile.x(), tile.y(), main->tile.x(), main->tile.y(), 3, 1)) {
-                x = tile.x();
-                y = tile.y();
+                finish_tile = tile;
             }
         } else if (building_is_large_temple(dest->type)) { // TODO: proper return home for temple complexes
             building* main = dest->main();
             if (main->has_road_access) {
                 found_road = true;
-                x = main->road_access.x();
-                y = main->road_access.y();
+                finish_tile = main->road_access;
             }
         } else {
             building* main = dest->main();
             if (main->has_road_access) {
                 found_road = true;
-                x = main->road_access.x();
-                y = main->road_access.y();
+                finish_tile = main->road_access;
             } else {
                 if (terrainchoice == TERRAIN_USAGE_ROADS) {
-                    found_road = map_closest_reachable_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 1, &x, &y);
+                    found_road = map_closest_reachable_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 1, finish_tile);
                 }
 
                 if (!found_road) {
-                    if (building_is_house(dest->type) || dest->type == BUILDING_BURNING_RUIN)
-                        found_road = map_closest_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 2, &x, &y);
-                    else
-                        found_road = map_closest_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 1, &x, &y);
+                    if (building_is_house(dest->type) || dest->type == BUILDING_BURNING_RUIN) {
+                        found_road = map_closest_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 2, finish_tile);
+                    } else {
+                        found_road = map_closest_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 1, finish_tile);
+                    }
                 }
 
-                if (found_road
-                    && is_coords_within_range(tile.x(), tile.y(), dest->tile.x(), dest->tile.y(), dest->size, 1)) {
-                    x = tile.x();
-                    y = tile.y();
+                if (found_road && is_coords_within_range(tile.x(), tile.y(), dest->tile.x(), dest->tile.y(), dest->size, 1)) {
+                    finish_tile = tile;
                 }
             }
         }
         // found any road...?
         if (found_road) {
             //            destination_tile.set(x, y);
-            return do_goto(x, y, terrainchoice, NEXT_ACTION, FAIL_ACTION);
+            return do_goto(finish_tile.x(), finish_tile.y(), terrainchoice, NEXT_ACTION, FAIL_ACTION);
         } else {
-            if (terrainchoice == TERRAIN_USAGE_ROADS && !use_cross_country)
+            if (terrainchoice == TERRAIN_USAGE_ROADS && !use_cross_country) {
                 advance_action(FAIL_ACTION); // poof dude!!!
-            else
+            } else {
                 advance_action(NEXT_ACTION); // don't poof if it's not *requiring* roads, was just looking for one
+            }
         }
     } else {
         return do_goto(dest->tile.x(), dest->tile.y(), terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
