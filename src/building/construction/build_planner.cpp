@@ -156,8 +156,9 @@ static void latch_on_venue(e_building_type type, building* main, int dx, int dy,
     //    int grid_offset = MAP_OFFSET(x, y);
     building* this_venue = main;
     if (main_venue) { // this is the main venue building!!
-        if (type != main->type)
+        if (type != main->type) {
             return; // hmmm, this shouldn't happen
+        }
         main->tile = point;
         //        main->tile.x() += dx;
         //        main->tile.y() += dy;
@@ -186,8 +187,9 @@ static void latch_on_venue(e_building_type type, building* main, int dx, int dy,
         map_tiles_update_all_gardens();
         break;
 
-    case BUILDING_BOOTH:
-        map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BOOTH));
+    case BUILDING_BOOTH: {
+            map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BOOTH));
+        }
         break;
 
     case BUILDING_BANDSTAND:
@@ -256,21 +258,21 @@ static void add_entertainment_venue(building* b, int orientation) {
     // add additional building parts, update graphics accordingly
     switch (b->type) {
     case BUILDING_BOOTH:
-        switch (orientation / 2) {
+        switch (orientation) {
         case 0:
-            latch_on_venue(BUILDING_BOOTH, b, 0, 0, 0, true);
+            latch_on_venue(BUILDING_BOOTH, b, 0, 0, orientation, true);
             break;
 
         case 1:
-            latch_on_venue(BUILDING_BOOTH, b, 1, 0, 0, true);
+            latch_on_venue(BUILDING_BOOTH, b, 1, 0, orientation, true);
             break;
 
         case 2:
-            latch_on_venue(BUILDING_BOOTH, b, 1, 1, 0, true);
+            latch_on_venue(BUILDING_BOOTH, b, 1, 1, orientation, true);
             break;
 
         case 3:
-            latch_on_venue(BUILDING_BOOTH, b, 0, 1, 0, true);
+            latch_on_venue(BUILDING_BOOTH, b, 0, 1, orientation, true);
             break;
         }
         break;
@@ -1483,13 +1485,13 @@ void BuildPlanner::update_special_case_orientations_check() {
         }
     }
     if (special_flags & PlannerFlags::Intersection) {
-        bool match
-          = map_orientation_for_venue_with_map_orientation(end.x(), end.y(), additional_req_param1, &dir_relative);
+        bool match = map_orientation_for_venue_with_map_orientation(end.x(), end.y(), additional_req_param1, &dir_relative);
+        int city_direction = dir_relative / 2;
         if (!match) {
             immediate_warning_id = additional_req_param2;
             can_place = CAN_NOT_PLACE;
-        } else if (relative_orientation != dir_relative) {
-            relative_orientation = dir_relative;
+        } else if (relative_orientation != city_direction) {
+            relative_orientation = city_direction;
             update_orientations(false);
         }
     }

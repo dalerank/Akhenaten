@@ -8,6 +8,7 @@
 #include "figuretype/animal.h"
 #include "figuretype/wall.h"
 #include "game/undo.h"
+#include "io/log.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
@@ -176,12 +177,7 @@ void map_orientation_update_buildings(void) {
                     plaza_image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE);
                     break;
                 }
-                map_add_venue_plaza_tiles(b->id,
-                                          size,
-                                          MAP_X(b->data.entertainment.booth_corner_grid_offset),
-                                          MAP_Y(b->data.entertainment.booth_corner_grid_offset),
-                                          plaza_image_id,
-                                          true);
+                map_add_venue_plaza_tiles(b->id, size, MAP_X(b->data.entertainment.booth_corner_grid_offset), MAP_Y(b->data.entertainment.booth_corner_grid_offset), plaza_image_id, true);
             }
             // additionally, correct bandstand graphics
             if (b->type == BUILDING_BANDSTAND)
@@ -353,8 +349,7 @@ bool map_orientation_for_venue(int x, int y, int mode, int* building_orientation
 
     // check the final count and return orientation
     for (int orientation_check = 0; orientation_check < 8; orientation_check++)
-        if (num_correct_road_tiles[orientation_check]
-            == (mode + 2) * (mode + 2)) { // check if the num of correct tiles is ALL of them (n x n)
+        if (num_correct_road_tiles[orientation_check] == (mode + 2) * (mode + 2)) { // check if the num of correct tiles is ALL of them (n x n)
             if (mode == 0) {
                 int offset_1 = 0;
                 int offset_2 = 0;
