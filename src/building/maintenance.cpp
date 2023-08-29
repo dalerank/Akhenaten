@@ -165,11 +165,13 @@ void building_maintenance_check_fire_collapse(void) {
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->fire_proof)
+        if (b->state != BUILDING_STATE_VALID || b->fire_proof) {
             continue;
+        }
 
-        if (b->type == BUILDING_SENET_HOUSE && b->prev_part_building_id)
+        if (b->type == BUILDING_SENET_HOUSE && b->prev_part_building_id) {
             continue;
+        }
 
         const model_building* model = model_get_building(b->type);
 

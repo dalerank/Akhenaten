@@ -39,9 +39,9 @@ static void destroy_on_fire(building* b, bool plagued) {
         waterside_building = 1;
 
     int num_tiles;
-    if (b->size >= 2 && b->size <= 5)
+    if (b->size >= 2 && b->size <= 5) {
         num_tiles = b->size * b->size;
-    else {
+    } else {
         if (b->house_size > 1)
             num_tiles = b->house_size * b->house_size;
         else
@@ -49,9 +49,9 @@ static void destroy_on_fire(building* b, bool plagued) {
     }
     map_building_tiles_remove(b->id, b->tile.x(), b->tile.y());
     unsigned int rand_int = random_short();
-    if (map_terrain_is(b->tile.grid_offset(), TERRAIN_WATER))
+    if (map_terrain_is(b->tile.grid_offset(), TERRAIN_WATER)) {
         b->state = BUILDING_STATE_DELETED_BY_GAME;
-    else {
+    } else {
         b->type = BUILDING_BURNING_RUIN;
         b->remove_figure(3);
         b->tax_income_or_storage = 0;
@@ -67,10 +67,8 @@ static void destroy_on_fire(building* b, bool plagued) {
         int image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), 1, image_id, TERRAIN_BUILDING);
     }
-    static const int x_tiles[]
-      = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0};
-    static const int y_tiles[]
-      = {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5};
+    static const int x_tiles[] = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0};
+    static const int y_tiles[] = {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5};
     for (int tile = 1; tile < num_tiles; tile++) {
         int x = x_tiles[tile] + b->tile.x();
         int y = y_tiles[tile] + b->tile.y();
@@ -88,21 +86,24 @@ static void destroy_on_fire(building* b, bool plagued) {
         ruin->fire_proof = 1;
         ruin->ruin_has_plague = plagued;
     }
-    if (waterside_building)
+
+    if (waterside_building) {
         map_routing_update_water();
+    }
 }
 
 static void destroy_linked_parts(building* b, bool on_fire) {
     building* part = b;
     for (int i = 0; i < 99; i++) {
-        if (part->prev_part_building_id <= 0)
+        if (part->prev_part_building_id <= 0) {
             break;
+        }
 
         int part_id = part->prev_part_building_id;
         part = building_get(part_id);
-        if (on_fire)
+        if (on_fire) {
             destroy_on_fire(part, false);
-        else {
+        } else {
             map_building_tiles_set_rubble(part_id, part->tile.x(), part->tile.y(), part->size);
             part->state = BUILDING_STATE_RUBBLE;
         }
@@ -111,12 +112,13 @@ static void destroy_linked_parts(building* b, bool on_fire) {
     part = b;
     for (int i = 0; i < 99; i++) {
         part = part->next();
-        if (part->id <= 0)
+        if (part->id <= 0) {
             break;
+        }
 
-        if (on_fire)
+        if (on_fire) {
             destroy_on_fire(part, false);
-        else {
+        } else {
             map_building_tiles_set_rubble(part->id, part->tile.x(), part->tile.y(), part->size);
             part->state = BUILDING_STATE_RUBBLE;
         }
@@ -144,8 +146,10 @@ void building_destroy_by_poof(building* b, bool clouds) {
         b->state = BUILDING_STATE_UNUSED;
         map_tiles_update_region_empty_land(
           true, b->tile.x(), b->tile.y(), b->tile.x() + b->size - 1, b->tile.y() + b->size - 1);
-        if (b->next_part_building_id < 1)
+        if (b->next_part_building_id < 1) {
             return;
+        }
+
         b = b->next();
     } while (true);
 }
@@ -220,8 +224,9 @@ void building_destroy_by_enemy(map_point point) {
             building_destroy_by_collapse(b);
         }
     } else {
-        if (map_terrain_is(grid_offset, TERRAIN_WALL))
+        if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
             figure_kill_tower_sentries_at(point);
+        }
 
         map_building_tiles_set_rubble(0, x, y, 1);
     }
