@@ -97,34 +97,40 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
 
     // house size
     b->house_size = 0;
-    if (type >= BUILDING_HOUSE_SMALL_TENT && type <= BUILDING_HOUSE_MEDIUM_INSULA)
+    if (type >= BUILDING_HOUSE_SMALL_TENT && type <= BUILDING_HOUSE_MEDIUM_INSULA) {
         b->house_size = 1;
-    else if (type >= BUILDING_HOUSE_LARGE_INSULA && type <= BUILDING_HOUSE_MEDIUM_VILLA)
+    } else if (type >= BUILDING_HOUSE_LARGE_INSULA && type <= BUILDING_HOUSE_MEDIUM_VILLA) {
         b->house_size = 2;
-    else if (type >= BUILDING_HOUSE_LARGE_VILLA && type <= BUILDING_HOUSE_MEDIUM_PALACE)
+    } else if (type >= BUILDING_HOUSE_LARGE_VILLA && type <= BUILDING_HOUSE_MEDIUM_PALACE) {
         b->house_size = 3;
-    else if (type >= BUILDING_HOUSE_LARGE_PALACE && type <= BUILDING_HOUSE_LUXURY_PALACE)
+    } else if (type >= BUILDING_HOUSE_LARGE_PALACE && type <= BUILDING_HOUSE_LUXURY_PALACE) {
         b->house_size = 4;
+    }
 
     // subtype
-    if (b->is_house())
+    if (b->is_house()) {
         b->subtype.house_level = type - BUILDING_HOUSE_VACANT_LOT;
-    else
+    } else {
         b->subtype.house_level = 0;
+    }
 
     // unique data
     switch (type) {
     case BUILDING_BARLEY_FARM:
         b->output_resource_id = RESOURCE_BARLEY;
+        b->fire_proof = 1;
         break;
     case BUILDING_FLAX_FARM:
         b->output_resource_id = RESOURCE_FLAX;
+        b->fire_proof = 1;
         break;
     case BUILDING_GRAIN_FARM:
         b->output_resource_id = RESOURCE_GRAIN;
+        b->fire_proof = 1;
         break;
     case BUILDING_LETTUCE_FARM:
         b->output_resource_id = RESOURCE_LETTUCE;
+        b->fire_proof = 1;
         break;
     case BUILDING_POMEGRANATES_FARM:
         b->output_resource_id = RESOURCE_POMEGRANATES;
@@ -182,6 +188,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         break;
     case BUILDING_FIGS_FARM:
         b->output_resource_id = RESOURCE_FIGS;
+        b->fire_proof = 1;
         break;
     case BUILDING_PAPYRUS_WORKSHOP:
         b->output_resource_id = RESOURCE_PAPYRUS;
