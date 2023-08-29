@@ -71,6 +71,7 @@ void map_orientation_change(int counter_clockwise) {
     figure_hippodrome_horse_reroute();
     Planner.update_orientations(false);
 }
+
 void map_orientation_update_buildings(void) {
     int map_orientation = city_view_orientation();
     int orientation_is_top_bottom = map_orientation == DIR_0_TOP_RIGHT || map_orientation == DIR_4_BOTTOM_LEFT;
@@ -159,14 +160,17 @@ void map_orientation_update_buildings(void) {
                     size = 2;
                     plaza_image_id = image_id_from_group(GROUP_BOOTH_SQUARE);
                     break;
+
                 case BUILDING_BANDSTAND:
                     size = 3;
                     plaza_image_id = image_id_from_group(GROUP_BANDSTAND_SQUARE);
                     break;
+
                 case BUILDING_PAVILLION:
                     size = 4;
                     plaza_image_id = image_id_from_group(GROUP_PAVILLION_SQUARE);
                     break;
+
                 case BUILDING_FESTIVAL_SQUARE:
                     size = 5;
                     plaza_image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE);

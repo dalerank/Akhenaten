@@ -624,12 +624,18 @@ bool building_is_religion(int type) {
     return false;
 }
 bool building_is_entertainment(int type) {
-    if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_PAVILLION)
+    if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_PAVILLION) {
         return true;
-    if (type == BUILDING_JUGGLER_SCHOOL || type == BUILDING_CONSERVATORY || type == BUILDING_DANCE_SCHOOL)
+    }
+
+    if (type == BUILDING_JUGGLER_SCHOOL || type == BUILDING_CONSERVATORY || type == BUILDING_DANCE_SCHOOL) {
         return true;
-    if (type == BUILDING_SENET_HOUSE || type == BUILDING_ZOO)
+    }
+
+    if (type == BUILDING_SENET_HOUSE || type == BUILDING_ZOO) {
         return true;
+    }
+
     return false;
 }
 bool building_is_culture(int type) {

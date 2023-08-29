@@ -106,15 +106,18 @@ void building_count_update(void) {
         case BUILDING_BOOTH:
             increase_count(type, b->num_workers > 0);
             break;
+
         case BUILDING_BANDSTAND:
             increase_count(type, b->num_workers > 0);
             increase_count(BUILDING_BOOTH, b->num_workers > 0);
             break;
+
         case BUILDING_PAVILLION:
             increase_count(type, b->num_workers > 0);
             increase_count(BUILDING_BANDSTAND, b->num_workers > 0);
             increase_count(BUILDING_BOOTH, b->num_workers > 0);
             break;
+
         case BUILDING_SENET_HOUSE:
             increase_count(type, b->num_workers > 0);
             break;

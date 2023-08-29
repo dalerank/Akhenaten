@@ -227,6 +227,7 @@ void sound_city_mark_building_view(building* b, int direction) {
     ++channels[channel].total_views;
     ++channels[channel].direction_views[direction];
 }
+
 void sound_city_decay_views(void) {
     for (int i = 0; i < MAX_CHANNELS; i++) {
         for (int d = 0; d < 5; d++)
