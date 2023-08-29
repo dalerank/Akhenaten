@@ -26,7 +26,7 @@
 
 #include <string.h>
 
-#define CONFIG_PAGES 4
+constexpr uint32_t CONFIG_PAGES = 5;
 #define MAX_LANGUAGE_DIRS 20
 
 #define FIRST_BUTTON_Y 72
@@ -42,7 +42,7 @@
 #define ITEM_Y_OFFSET 60
 #define ITEM_HEIGHT 24
 
-static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 5};
+static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 1, 5};
 
 static void toggle_switch(int id, int param2);
 static void toggle_god_disabled(int id, int param2);
@@ -100,6 +100,9 @@ static generic_button checkbox_buttons[] = {
   {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIREMAN_RETUNING, TR_CONFIG_FIREMAN_RETURNING},
   {20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CART_SPEED_QUANTITY, TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY},
 
+  //
+  {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CITIZEN_ROAD_OFFSET, TR_CONFIG_CH_CITIZEN_ROAD_OFFSET},
+
   // GODS
   {20, 72, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_OSIRIS_DISABLED, TR_CONFIG_GOD_OSIRIS_DISABLED},
   {20, 96, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_RA_DISABLED, TR_CONFIG_GOD_RA_DISABLED},
@@ -122,7 +125,13 @@ static generic_button page_buttons[] = {
   {50, 16, 25, 25, button_page, button_none, 1, TR_BUTTON_NEXT}
 };
 
-static int page_names[] = {TR_CONFIG_HEADER_UI_CHANGES, TR_CONFIG_HEADER_GAMEPLAY_CHANGES, TR_CONFIG_HEADER_GAMEPLAY_CHANGES, TR_CONFIG_HEADER_GODS_CHANGES};
+static int page_names[] = {
+    TR_CONFIG_HEADER_UI_CHANGES,
+    TR_CONFIG_HEADER_GAMEPLAY_CHANGES,
+    TR_CONFIG_HEADER_GAMEPLAY_CHANGES,
+    TR_CONFIG_HEADER_GAMEPLAY_CHANGES,
+    TR_CONFIG_HEADER_GODS_CHANGES
+};
 
 struct window_config_ext_data_t {
     int focus_button;

@@ -66,9 +66,10 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
   {"gameplay_change_multiple_monuments", false},
   {"gameplay_change_soil_depletion", true},
   {"gameplay_change_multiple_gatherers", false},
-  {"#gameplay_change_fireman_returning", true},
-  {"#ui_draw_fps", true},
-  {"#gameplay_change_cart_speed_depends_quntity", true},
+  {"gameplay_change_fireman_returning", true},
+  {"ui_draw_fps", true},
+  {"gameplay_change_cart_speed_depends_quntity", true},
+  {"gameplay_change_citizen_road_offset", true},
 
   {"#god_osiris_disabled", false},
   {"#god_ra_disabled", false},

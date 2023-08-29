@@ -1,12 +1,18 @@
 #include "core/string.h"
+
 #include "dev/debug.h"
 #include "graphics/view/lookup.h"
-
+#include "io/config/config.h"
 #include "figuretype/editor.h"
 #include "formation.h"
 #include "graphics/boilerplate.h"
 #include "graphics/text.h"
 #include "image.h"
+
+static const vec2i crowd_offsets[] = {
+    {0, 0}, {4, 0}, {4, 4}, {-4, 8}, {-4, -4}, {0, -8}, {8, 0}, {0, 8}, {-8, 0}, {4, -8}, {-4, 8}, {8, 4}, {-8, -4}, {8,-4}, {-8,4}, {4,8}, {-4, -8}, {0,-12}, {12,0}, {0, 12}, {-12, 0}
+};
+static const int crowd_offsets_size = std::size(crowd_offsets);
 
 void figure::draw_fort_standard(vec2i pixel, int highlight, vec2i* coord_out) {
     if (!formation_get(formation_id)->in_distant_battle) {
@@ -16,8 +22,7 @@ void figure::draw_fort_standard(vec2i pixel, int highlight, vec2i* coord_out) {
         int flag_height = image_get(cart_image_id)->height;
         ImageDraw::img_generic(cart_image_id, pixel.x, pixel.y - flag_height);
         // top icon
-        int icon_image_id
-          = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + formation_get(formation_id)->legion_id;
+        int icon_image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + formation_get(formation_id)->legion_id;
         ImageDraw::img_generic(icon_image_id, pixel.x, pixel.y - image_get(icon_image_id)->height - flag_height);
     }
 }
@@ -29,15 +34,17 @@ void figure::draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out) {
     // flag number
     int number = 0;
     int id = resource_id;
-    if (id >= MAP_FLAG_INVASION_MIN && id < MAP_FLAG_INVASION_MAX)
+    if (id >= MAP_FLAG_INVASION_MIN && id < MAP_FLAG_INVASION_MAX) {
         number = id - MAP_FLAG_INVASION_MIN + 1;
-    else if (id >= MAP_FLAG_FISHING_MIN && id < MAP_FLAG_FISHING_MAX)
+    } else if (id >= MAP_FLAG_FISHING_MIN && id < MAP_FLAG_FISHING_MAX) {
         number = id - MAP_FLAG_FISHING_MIN + 1;
-    else if (id >= MAP_FLAG_HERD_MIN && id < MAP_FLAG_HERD_MAX)
+    } else if (id >= MAP_FLAG_HERD_MIN && id < MAP_FLAG_HERD_MAX) {
         number = id - MAP_FLAG_HERD_MIN + 1;
+    }
 
-    if (number > 0)
+    if (number > 0) {
         text_draw_number_colored(number, '@', " ", pixel.x + 6, pixel.y + 7, FONT_SMALL_PLAIN, COLOR_WHITE);
+    }
 }
 
 void figure::adjust_pixel_offset(vec2i* pixel) {
@@ -99,6 +106,12 @@ void figure::adjust_pixel_offset(vec2i* pixel) {
             break;
         }
         y_offset -= current_height;
+    }
+
+    if (config_get(CONFIG_GP_CH_CITIZEN_ROAD_OFFSET) && id && type != FIGURE_BALLISTA) {
+        // an attempt to not let people walk through each other
+        x_offset += crowd_offsets[id % crowd_offsets_size].x;
+        y_offset += crowd_offsets[id % crowd_offsets_size].y;
     }
 
     pixel->x += x_offset + 29;

@@ -1,5 +1,4 @@
-#ifndef CORE_CONFIG_H
-#define CORE_CONFIG_H
+#pragma once
 
 #define CONFIG_STRING_VALUE_MAX 64
 
@@ -57,6 +56,7 @@ enum {
     CONFIG_GP_CH_FIREMAN_RETUNING,
     CONFIG_UI_DRAW_FPS,
     CONFIG_GP_CH_CART_SPEED_QUANTITY,
+    CONFIG_GP_CH_CITIZEN_ROAD_OFFSET,
 
     CONFIG_GP_CH_GOD_OSIRIS_DISABLED,
     CONFIG_GP_CH_GOD_RA_DISABLED,
@@ -127,5 +127,3 @@ void config_load(void);
  * Save config to file
  */
 void config_save(void);
-
-#endif // CORE_CONFIG_H

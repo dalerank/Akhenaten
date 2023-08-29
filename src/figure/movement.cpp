@@ -356,8 +356,6 @@ void figure::init_roaming_from_building(int roam_dir) {
     int road_network_found = map_road_network_get(MAP_OFFSET(road_tile.x(), road_tile.y()));
     if (found_road && road_network_original == road_network_found) { // must be in the same network!!
         destination_tile = road_tile;
-        //        destination_tile.x() = x_road;
-        //        destination_tile.y() = y_road;
     } else {
         roam_wander_freely = true; // no road found within bounds, roam freely
     }
