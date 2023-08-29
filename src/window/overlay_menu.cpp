@@ -28,6 +28,7 @@ static generic_button menu_buttons[] = {
   {0, 192, 160, 24, button_menu_item, button_none, 8, 0},
   {0, 216, 160, 24, button_menu_item, button_none, 9, 0},
 };
+
 static generic_button submenu_buttons[] = {
   {0, 0, 160, 24, button_submenu_item, button_none, 0, 0},
   {0, 24, 160, 24, button_submenu_item, button_none, 1, 0},
@@ -68,7 +69,7 @@ static const int submenu_id_to_overlay[7][8] = {
   
   { // Entertainment
    OVERLAY_ENTERTAINMENT,
-   OVERLAY_THEATER,
+   OVERLAY_BOOTH,
    OVERLAY_AMPHITHEATER,
    OVERLAY_COLOSSEUM,
    OVERLAY_HIPPODROME,

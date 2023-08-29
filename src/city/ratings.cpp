@@ -111,9 +111,9 @@ static void update_culture_explanation(void) {
         reason = 4;
     }
 
-    int pct_theater = city_culture_coverage_theater();
-    if (pct_theater < min_percentage) {
-        min_percentage = pct_theater;
+    int pct_booth = city_culture_coverage_booth();
+    if (pct_booth < min_percentage) {
+        min_percentage = pct_booth;
         reason = 5;
     }
 
@@ -286,37 +286,39 @@ void city_ratings_update_explanations(void) {
 static void update_culture_rating(void) {
     city_data.ratings.culture = 0;
     city_data.ratings.culture_explanation = 0;
-    if (city_data.population.population <= 0)
-        return;
 
-    int pct_theater = city_culture_coverage_theater();
-    if (pct_theater >= 100)
-        city_data.ratings.culture_points.theater = 25;
-    else if (pct_theater > 85)
-        city_data.ratings.culture_points.theater = 18;
-    else if (pct_theater > 70)
-        city_data.ratings.culture_points.theater = 12;
-    else if (pct_theater > 50)
-        city_data.ratings.culture_points.theater = 8;
-    else if (pct_theater > 30)
-        city_data.ratings.culture_points.theater = 3;
-    else {
-        city_data.ratings.culture_points.theater = 0;
+    if (city_data.population.population <= 0) {
+        return;
     }
-    city_data.ratings.culture += city_data.ratings.culture_points.theater;
+
+    int pct_booth = city_culture_coverage_booth();
+    if (pct_booth >= 100) {
+        city_data.ratings.culture_points.entertainment = 25;
+    } else if (pct_booth > 85) {
+        city_data.ratings.culture_points.entertainment = 18;
+    } else if (pct_booth > 70) {
+        city_data.ratings.culture_points.entertainment = 12;
+    } else if (pct_booth > 50) {
+        city_data.ratings.culture_points.entertainment = 8;
+    } else if (pct_booth > 30) {
+        city_data.ratings.culture_points.entertainment = 3;
+    } else {
+        city_data.ratings.culture_points.entertainment = 0;
+    }
+    city_data.ratings.culture += city_data.ratings.culture_points.entertainment;
 
     int pct_religion = city_data.culture.religion_coverage;
-    if (pct_religion >= 100)
+    if (pct_religion >= 100) {
         city_data.ratings.culture_points.religion = 30;
-    else if (pct_religion > 85)
+    } else if (pct_religion > 85) {
         city_data.ratings.culture_points.religion = 22;
-    else if (pct_religion > 70)
+    } else if (pct_religion > 70) {
         city_data.ratings.culture_points.religion = 14;
-    else if (pct_religion > 50)
+    } else if (pct_religion > 50) {
         city_data.ratings.culture_points.religion = 9;
-    else if (pct_religion > 30)
+    } else if (pct_religion > 30) {
         city_data.ratings.culture_points.religion = 3;
-    else {
+    } else {
         city_data.ratings.culture_points.religion = 0;
     }
     city_data.ratings.culture += city_data.ratings.culture_points.religion;

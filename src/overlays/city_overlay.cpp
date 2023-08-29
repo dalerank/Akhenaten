@@ -20,6 +20,7 @@
 #include "overlays/city_overlay_dentist.h"
 #include "overlays/city_overlay_mortuary.h"
 #include "overlays/city_overlay_health.h"
+#include "overlays/city_overlay_juggler.h"
 
 const city_overlay* g_city_overlay = 0;
 
@@ -37,8 +38,8 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_native();
     case OVERLAY_ENTERTAINMENT:
         return city_overlay_for_entertainment();
-    case OVERLAY_THEATER:
-        return city_overlay_for_theater();
+    case OVERLAY_BOOTH:
+        return city_overlay_for_booth();
     case OVERLAY_AMPHITHEATER:
         return city_overlay_for_amphitheater();
     case OVERLAY_COLOSSEUM:

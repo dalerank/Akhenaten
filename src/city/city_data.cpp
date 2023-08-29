@@ -303,7 +303,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.kingdom);
     iob->bind____skip(8);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.prosperity_treasury_last_year);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.culture_points.theater);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.culture_points.entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.culture_points.religion);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.culture_points.school);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.culture_points.library);

@@ -250,7 +250,7 @@ struct city_data_t {
         int32_t monument; // peace
         int32_t kingdom;  // favor
         struct {
-            int32_t theater;
+            int32_t entertainment;
             int32_t religion;
             int32_t school;
             int32_t library;

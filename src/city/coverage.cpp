@@ -14,7 +14,7 @@
 #include "gods.h"
 
 struct coverage_data_t {
-    int theater;
+    int booth;
     int amphitheater;
     int colosseum;
     int hippodrome;
@@ -29,8 +29,8 @@ struct coverage_data_t {
 
 coverage_data_t g_coverage;
 
-int city_culture_coverage_theater(void) {
-    return g_coverage.theater;
+int city_culture_coverage_booth(void) {
+    return g_coverage.booth;
 }
 
 int city_culture_coverage_amphitheater(void) {
@@ -46,7 +46,7 @@ int city_culture_coverage_hippodrome(void) {
 }
 
 int city_culture_coverage_average_entertainment(void) {
-    return (g_coverage.hippodrome + g_coverage.colosseum + g_coverage.amphitheater + g_coverage.theater) / 4;
+    return (g_coverage.hippodrome + g_coverage.colosseum + g_coverage.amphitheater + g_coverage.booth) / 4;
 }
 
 int city_culture_coverage_religion(int god) {
@@ -110,7 +110,7 @@ void city_culture_update_coverage() {
     int population = city_data.population.population;
 
     // entertainment
-    coverage.theater = top(calc_percentage(400 * building_count_active(BUILDING_BOOTH), population));
+    coverage.booth = top(calc_percentage(400 * building_count_active(BUILDING_BOOTH), population));
     coverage.amphitheater = top(calc_percentage(700 * building_count_active(BUILDING_BANDSTAND), population));
     coverage.colosseum = top(calc_percentage(1200 * building_count_active(BUILDING_PAVILLION), population));
 
@@ -185,7 +185,7 @@ void city_coverage_save_state(buffer* buf) {
     auto& coverage = g_coverage;
 
     // Yes, hospital is saved twice
-    buf->write_i32(coverage.theater);
+    buf->write_i32(coverage.booth);
     buf->write_i32(coverage.amphitheater);
     buf->write_i32(coverage.colosseum);
     buf->write_i32(coverage.physician);
@@ -206,7 +206,7 @@ void city_coverage_load_state(buffer* buf) {
     auto& coverage = g_coverage;
 
     // Yes, hospital is saved twice
-    coverage.theater = buf->read_i32();
+    coverage.booth = buf->read_i32();
     coverage.amphitheater = buf->read_i32();
     coverage.colosseum = buf->read_i32();
     coverage.physician = buf->read_i32();

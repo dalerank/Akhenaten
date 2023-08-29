@@ -87,22 +87,27 @@ static int provide_service(int x, int y, int* data, void (*callback)(building*, 
     return serviced;
 }
 
-static void theater_coverage(building* b) {
-    b->data.house.theater = MAX_COVERAGE;
+static void juggler_coverage(building* b) {
+    b->data.house.juggler = MAX_COVERAGE;
 }
+
 static void amphitheater_coverage(building* b, int shows) {
     b->data.house.amphitheater_actor = MAX_COVERAGE;
-    if (shows == 2)
+    if (shows == 2) {
         b->data.house.amphitheater_gladiator = MAX_COVERAGE;
+    }
 }
+
 static void colosseum_coverage(building* b, int shows) {
     b->data.house.colosseum_gladiator = MAX_COVERAGE;
     //    if (shows == 2)
     //        b->data.house.magistrate = MAX_COVERAGE;
 }
+
 static void hippodrome_coverage(building* b) {
     b->data.house.hippodrome = MAX_COVERAGE;
 }
+
 static void magistrate_coverage(building* b) {
     b->data.house.magistrate = MAX_COVERAGE;
 }
@@ -360,10 +365,10 @@ int figure::figure_service_provide_coverage() {
             break;
         }
         break;
-    case FIGURE_ACTOR:
+    case FIGURE_JUGGLER:
         b = get_entertainment_building();
         if (b->type == BUILDING_BOOTH) {
-            houses_serviced = provide_culture(tile.x(), tile.y(), theater_coverage);
+            houses_serviced = provide_culture(tile.x(), tile.y(), juggler_coverage);
         } else if (b->type == BUILDING_BANDSTAND) {
             houses_serviced = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days1 ? 2 : 1, amphitheater_coverage);
         }

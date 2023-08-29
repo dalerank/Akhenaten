@@ -73,10 +73,12 @@ void figure::advance_figure_tick() {
             current_height--;
     }
 }
+
 void figure::set_target_height_bridge() {
     height_adjusted_ticks = 18;
     target_height = map_bridge_height(tile.grid_offset());
 }
+
 int figure::get_permission_for_int() {
     switch (type) {
     case FIGURE_ENGINEER:
@@ -94,7 +96,7 @@ int figure::get_permission_for_int() {
 
     case FIGURE_GLADIATOR:
     case FIGURE_CHARIOTEER:
-    case FIGURE_ACTOR:
+    case FIGURE_JUGGLER:
     case FIGURE_LION_TAMER:
         return PERMISSION_ENTERTAINER;
         break;

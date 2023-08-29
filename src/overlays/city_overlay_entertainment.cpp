@@ -9,12 +9,8 @@ static int show_building_entertainment(const building* b) {
            || b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_SENET_HOUSE;
 }
 
-static int show_building_theater(const building* b) {
-    return b->type == BUILDING_JUGGLER_SCHOOL || b->type == BUILDING_BOOTH;
-}
-
 static int show_building_amphitheater(const building* b) {
-    return b->type == BUILDING_JUGGLER_SCHOOL || b->type == BUILDING_CONSERVATORY || b->type == BUILDING_BANDSTAND;
+    return b->type == BUILDING_CONSERVATORY || b->type == BUILDING_BANDSTAND;
 }
 
 static int show_building_colosseum(const building* b) {
@@ -34,20 +30,13 @@ static building* get_entertainment_building(const figure* f) {
 }
 
 static int show_figure_entertainment(const figure* f) {
-    return f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR || f->type == FIGURE_LION_TAMER
-           || f->type == FIGURE_CHARIOTEER;
-}
-
-static int show_figure_theater(const figure* f) {
-    if (f->type == FIGURE_ACTOR)
-        return get_entertainment_building(f)->type == BUILDING_BOOTH;
-
-    return 0;
+    return f->type == FIGURE_JUGGLER || f->type == FIGURE_GLADIATOR || f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER;
 }
 
 static int show_figure_amphitheater(const figure* f) {
-    if (f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR)
+    if (f->type == FIGURE_JUGGLER || f->type == FIGURE_GLADIATOR) {
         return get_entertainment_building(f)->type == BUILDING_BANDSTAND;
+    }
 
     return 0;
 }
@@ -67,10 +56,6 @@ static int show_figure_hippodrome(const figure* f) {
 
 static int get_column_height_entertainment(const building* b) {
     return b->house_size && b->data.house.entertainment ? b->data.house.entertainment / 10 : NO_COLUMN;
-}
-
-static int get_column_height_theater(const building* b) {
-    return b->house_size && b->data.house.theater ? b->data.house.theater / 10 : NO_COLUMN;
 }
 
 static int get_column_height_amphitheater(const building* b) {
@@ -108,18 +93,6 @@ static int get_tooltip_entertainment(tooltip_context* c, const building* b) {
         return 73;
     else {
         return 74;
-    }
-}
-
-static int get_tooltip_theater(tooltip_context* c, const building* b) {
-    if (b->data.house.theater <= 0)
-        return 75;
-    else if (b->data.house.theater >= 80)
-        return 76;
-    else if (b->data.house.theater >= 20)
-        return 77;
-    else {
-        return 78;
     }
 }
 
@@ -167,19 +140,6 @@ const city_overlay* city_overlay_for_entertainment(void) {
                                    get_column_height_entertainment,
                                    0,
                                    get_tooltip_entertainment,
-                                   0,
-                                   0};
-    return &overlay;
-}
-
-const city_overlay* city_overlay_for_theater(void) {
-    static city_overlay overlay = {OVERLAY_THEATER,
-                                   COLUMN_TYPE_WATER_ACCESS,
-                                   show_building_theater,
-                                   show_figure_theater,
-                                   get_column_height_theater,
-                                   0,
-                                   get_tooltip_theater,
                                    0,
                                    0};
     return &overlay;

@@ -93,14 +93,16 @@ void figure::entertainer_update_image() {
         return;
     }
     int image_id;
-    if (type == FIGURE_ACTOR)
+    if (type == FIGURE_JUGGLER) {
         image_id = image_id_from_group(GROUP_FIGURE_JUGGLER);
-    else if (type == FIGURE_GLADIATOR)
+    } else if (type == FIGURE_GLADIATOR) {
         image_id = image_id_from_group(GROUP_FIGURE_MUSICIAN);
-    else if (type == FIGURE_LION_TAMER) {
+    } else if (type == FIGURE_LION_TAMER) {
         image_id = image_id_from_group(GROUP_FIGURE_DANCER);
-        if (wait_ticks_missile >= 96)
+        if (wait_ticks_missile >= 96) {
             image_id = image_id_from_group(GROUP_FIGURE_DANCER_WHIP);
+        }
+
         cart_image_id = image_id_from_group(GROUP_FIGURE_LION);
     } else
         return;
@@ -170,15 +172,18 @@ void figure::entertainer_action() {
         if (move_ticks_cross_country(1) == 1) {
             int dst_building_id = 0;
             switch (type) {
-            case FIGURE_ACTOR:
+            case FIGURE_JUGGLER:
                 dst_building_id = determine_venue_destination(tile, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION);
                 break;
+
             case FIGURE_GLADIATOR:
                 dst_building_id = determine_venue_destination(tile, BUILDING_BANDSTAND, BUILDING_PAVILLION, 0);
                 break;
+
             case FIGURE_LION_TAMER: // dancer
                 dst_building_id = determine_venue_destination(tile, BUILDING_PAVILLION, 0, 0);
                 break;
+
             case FIGURE_CHARIOTEER:
                 dst_building_id = determine_venue_destination(tile, BUILDING_SENET_HOUSE, 0, 0);
                 break;

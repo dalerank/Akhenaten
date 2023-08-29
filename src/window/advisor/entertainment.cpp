@@ -124,26 +124,10 @@ static int draw_background(void) {
     // theaters, jugglers
     int y_offset = 77;
     int y_dist = 23;
-    draw_entertainer(
-      0, y_offset, BUILDING_BOOTH, city_entertainment_theater_shows(), city_culture_coverage_theater(), 400);
-    draw_entertainer(1,
-                     y_offset + y_dist,
-                     BUILDING_BANDSTAND,
-                     city_entertainment_amphitheater_shows(),
-                     city_culture_coverage_amphitheater(),
-                     700);
-    draw_entertainer(2,
-                     y_offset + y_dist * 2,
-                     BUILDING_PAVILLION,
-                     city_entertainment_colosseum_shows(),
-                     city_culture_coverage_colosseum(),
-                     1200);
-    draw_entertainer(3,
-                     y_offset + y_dist * 3,
-                     BUILDING_SENET_HOUSE,
-                     city_entertainment_hippodrome_shows(),
-                     city_culture_coverage_hippodrome(),
-                     0);
+    draw_entertainer(0, y_offset, BUILDING_BOOTH, city_entertainment_theater_shows(), city_culture_coverage_booth(), 400);
+    draw_entertainer(1, y_offset + y_dist, BUILDING_BANDSTAND, city_entertainment_amphitheater_shows(), city_culture_coverage_amphitheater(), 700);
+    draw_entertainer(2, y_offset + y_dist * 2, BUILDING_PAVILLION, city_entertainment_colosseum_shows(), city_culture_coverage_colosseum(), 1200);
+    draw_entertainer(3, y_offset + y_dist * 3, BUILDING_SENET_HOUSE, city_entertainment_hippodrome_shows(), city_culture_coverage_hippodrome(), 0);
     draw_entertainer(9, y_offset + y_dist * 4, BUILDING_ZOO, 0, 0, 0);
 
     lang_text_draw_multiline(58, 7 + get_entertainment_advice(), 60, 208, 512, FONT_NORMAL_BLACK_ON_LIGHT);

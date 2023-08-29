@@ -81,7 +81,7 @@ int figure_name_get(int type, int enemy) {
     case FIGURE_TOWER_SENTRY:
         return get_next_name(&data.prefect, 198, 32);
 
-    case FIGURE_ACTOR:
+    case FIGURE_JUGGLER:
         return get_next_name(&data.actor, 330, 32);
 
     case FIGURE_GLADIATOR:

@@ -5,7 +5,7 @@ class buffer;
 void city_culture_update_coverage();
 void city_health_update_coverage();
 
-int city_culture_coverage_theater(void);
+int city_culture_coverage_booth();
 int city_culture_coverage_amphitheater(void);
 int city_culture_coverage_colosseum(void);
 int city_culture_coverage_hippodrome(void);
