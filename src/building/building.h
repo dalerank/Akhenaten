@@ -22,7 +22,10 @@ enum e_labor_state {
 };
 
 enum e_building_slot {
-    BUILDING_SLOT_SERVICE = 0
+    BUILDING_SLOT_SERVICE = 0,
+    BUILDING_SLOT_CARTPUSHER = 1,
+    BUILDING_SLOT_LABOR_SEEKER = 2,
+    BUILDING_SLOT_HUNTER = 3,
 };
 
 class building {
@@ -254,6 +257,7 @@ public:
     figure* create_cartpusher(e_resource resource_id, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, int slot = BUILDING_SLOT_SERVICE);
 
     int worker_percentage();
+    int figure_hunting_longe_spawn_timer();
     int figure_spawn_timer();
     void check_labor_problem();
     bool common_spawn_figure_trigger(int min_houses);
