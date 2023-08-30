@@ -436,12 +436,9 @@ static void enable_common_municipal(int level) {
     toggle_building(BUILDING_FIREHOUSE);
     toggle_building(BUILDING_ENGINEERS_POST);
     toggle_building(BUILDING_POLICE_STATION);
-    if (level >= 3)
-        toggle_building(BUILDING_CITY_PALACE);
-    else if (level >= 2)
-        toggle_building(BUILDING_TOWN_PALACE);
-    else if (level >= 1)
-        toggle_building(BUILDING_VILLAGE_PALACE);
+    if (level >= 3) toggle_building(BUILDING_CITY_PALACE);
+    else if (level >= 2) toggle_building(BUILDING_TOWN_PALACE);
+    else if (level >= 1) toggle_building(BUILDING_VILLAGE_PALACE);
 }
 
 static void enable_common_health() {
@@ -680,6 +677,7 @@ void building_menu_update(int build_set) {
         enable_entertainment(2);
         toggle_building(BUILDING_MARKET);
         toggle_building(BUILDING_GRANARY);
+        toggle_building(BUILDING_FERRY);
         building_menu_update(BUILDSET_TUT3_INDUSTRY);
         //toggle_building(BUILDING_LOW_BRIDGE);
         enable_gods(GOD_OSIRIS, GOD_RA, GOD_BAST);

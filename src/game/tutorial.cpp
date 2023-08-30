@@ -170,17 +170,12 @@ void tutorial_menu_update(int tut) {
     } else if (tut == 4) {
         building_menu_update(BUILDSET_TUT4_START);
 
-        if (g_tutorials_flags.tutorial_4.beer_made) {
-            building_menu_update(BUILDSET_TUT4_FINANCE);
-        }
+        if (g_tutorials_flags.tutorial_4.beer_made) building_menu_update(BUILDSET_TUT4_FINANCE);
     } else if (tut == 5) {
         building_menu_update(BUILDSET_TUT5_START);
-        if (g_tutorials_flags.pharaoh.spacious_apartment)
-            building_menu_update(BUILDSET_TUT5_EDUCATION);
-        if (g_tutorials_flags.pharaoh.papyrus_made)
-            building_menu_update(BUILDSET_TUT5_TRADING);
-        if (g_tutorials_flags.pharaoh.bricks_bought)
-            building_menu_update(BUILDING_MENU_MONUMENTS);
+        if (g_tutorials_flags.pharaoh.spacious_apartment) building_menu_update(BUILDSET_TUT5_EDUCATION);
+        if (g_tutorials_flags.pharaoh.papyrus_made) building_menu_update(BUILDSET_TUT5_TRADING);
+        if (g_tutorials_flags.pharaoh.bricks_bought) building_menu_update(BUILDING_MENU_MONUMENTS);
     } else if (tut == 6) {
         building_menu_update(BUILDSET_TUT6_START);
     } else if (tut == 7) {
