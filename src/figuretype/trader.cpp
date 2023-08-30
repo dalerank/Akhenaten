@@ -439,7 +439,7 @@ void figure::trade_caravan_action() {
         break;
     case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
     case 11:
-        do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_PREFER_ROADS);
+        do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS);
         break;
     }
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);

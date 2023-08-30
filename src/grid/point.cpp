@@ -147,11 +147,6 @@ map_point::map_point(int _x, int _y) {
     set(_x, _y);
 }
 
-// COMPARISON
-bool map_point::operator==(map_point rhs) {
-    return p_GRID_OFFSET == rhs.p_GRID_OFFSET;
-}
-
 ///////////////
 
 static map_point last; // cached point for some internal logic uses

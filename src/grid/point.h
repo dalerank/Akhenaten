@@ -57,7 +57,8 @@ public:
     map_point(int _x, int _y);
 
     // COMPARISON
-    bool operator==(map_point rhs);
+    inline bool operator==(map_point rhs) { return p_GRID_OFFSET == rhs.p_GRID_OFFSET; }
+    inline bool operator!=(map_point rhs) { return p_GRID_OFFSET != rhs.p_GRID_OFFSET; }
 };
 
 extern const map_point map_point_invalid;

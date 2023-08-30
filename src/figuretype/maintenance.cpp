@@ -259,7 +259,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
         break;
     case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
     case 12:
-        if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_75_PREFECT_AT_FIRE))
+        if (do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_75_PREFECT_AT_FIRE))
             wait_ticks = 50;
         break;
     case FIGURE_ACTION_75_PREFECT_AT_FIRE:

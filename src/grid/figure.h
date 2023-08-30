@@ -1,5 +1,4 @@
-#ifndef MAP_FIGURE_H
-#define MAP_FIGURE_H
+#pragma once
 
 #include "core/buffer.h"
 #include "figure/figure.h"
@@ -15,7 +14,6 @@ enum {
     TEST_SEARCH_FIGHTING_FRIENDLY,
     TEST_SEARCH_FIGHTING_ENEMY,
     TEST_SEARCH_HAS_COLOR,
-
 };
 
 /**
@@ -44,5 +42,3 @@ int map_figure_foreach_until(int grid_offset, int test);
  * Clears the map
  */
 void map_figure_clear(void);
-
-#endif // MAP_FIGURE_H

@@ -28,7 +28,7 @@ figure *figure_get(int id) {
 }
 
 std::span<figure *> figures() {
-    return make_span(g_figure_data.figures.begin(), 5000);
+    return make_span(g_figure_data.figures.begin(), g_figure_data.figures.size());
 }
 
 figure *figure_take_from_pool () {

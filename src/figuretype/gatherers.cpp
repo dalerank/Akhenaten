@@ -1,4 +1,5 @@
 #include "figure/figure.h"
+
 #include "graphics/image_groups.h"
 #include "grid/vegetation.h"
 #include "io/config/config.h"
@@ -23,14 +24,14 @@ void figure::gatherer_action() {
             }
             if (found_resource) {
                 anim_offset = 0;
-                do_goto(x, y, TERRAIN_USAGE_PREFER_ROADS);
+                do_goto(map_point(x, y), TERRAIN_USAGE_PREFER_ROADS);
                 advance_action(9);
             } else
                 poof();
         }
         break;
     case 9: // go to gathering place
-        if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_PREFER_ROADS)) {
+        if (do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS)) {
             if (!can_harvest_point(MAP_OFFSET(destination_tile.x(), destination_tile.y()))) {
                 wait_ticks = 0;
                 advance_action(8);

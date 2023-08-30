@@ -222,7 +222,7 @@ void figure::mugger_action() {
     {
         wait_ticks = 0;
         map_point &exit = city_map_exit_point();
-        if (do_goto(exit.x(), exit.y(), TERRAIN_USAGE_ANY)) {
+        if (do_goto(exit, TERRAIN_USAGE_ANY)) {
             poof();
         }
     }

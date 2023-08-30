@@ -294,7 +294,7 @@ void figure::ostrich_action() {
         //            if (action_state == 16)
         //                while (destination_x == 0 || destination_y == 0)
         //                    herd_roost(4, 8, 22);
-        if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANIMAL, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
+        if (do_goto(destination_tile, TERRAIN_USAGE_ANIMAL, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
             wait_ticks = 50;
         }
         break;
@@ -362,7 +362,7 @@ void figure::hippo_action() {
             if (herd_roost(/*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_HIPPO)) {
                 wait_ticks = 0;
                 advance_action(FIGURE_ACTION_10_HIPPO_MOVING);
-                do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE);
+                do_goto(destination_tile, TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE);
             } else {
                 wait_ticks = 5;
             }
@@ -374,7 +374,7 @@ void figure::hippo_action() {
         //            if (action_state == 16)
         //                while (destination_x == 0 || destination_y == 0)
         //                    herd_roost(4, 8, 22);
-        if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
+        if (do_goto(destination_tile, TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
             wait_ticks = 50;
         }
         break;

@@ -303,7 +303,7 @@ public:
     void action_perform();
     void advance_action(short NEXT_ACTION);
     bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = ACTION_2_ROAMERS_RETURNING);
-    bool do_goto(int x, int y, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
+    bool do_goto(map_point dest, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
     bool do_gotobuilding(building* dest,
                          bool stop_at_road = true,
                          int terrainchoice = TERRAIN_USAGE_ROADS,

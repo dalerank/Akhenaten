@@ -49,7 +49,7 @@ void figure::ostrich_hunter_action() {
         break;
 
     case ACTION_16_HUNTER_INVESTIGATE:
-        do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANIMAL, ACTION_8_RECALCULATE, ACTION_8_RECALCULATE);
+        do_goto(destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_8_RECALCULATE, ACTION_8_RECALCULATE);
         if (direction == DIR_FIGURE_CAN_NOT_REACH) {
             direction = DIR_0_TOP_RIGHT;
             advance_action(ACTION_8_RECALCULATE);
@@ -73,7 +73,7 @@ void figure::ostrich_hunter_action() {
         }
 
         if (dist >= 2) {
-            do_goto(prey->tile.x(), prey->tile.y(), TERRAIN_USAGE_ANIMAL, ACTION_15_HUNTER_HUNT, ACTION_8_RECALCULATE);
+            do_goto(prey->tile, TERRAIN_USAGE_ANIMAL, ACTION_15_HUNTER_HUNT, ACTION_8_RECALCULATE);
         } else {
             wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
             advance_action(ACTION_15_HUNTER_HUNT);
@@ -106,7 +106,7 @@ void figure::ostrich_hunter_action() {
             return advance_action(ACTION_8_RECALCULATE);
         }
 
-        if (do_goto(prey->tile.x(), prey->tile.y(), TERRAIN_USAGE_ANIMAL, ACTION_10_PICKUP_ANIMAL, ACTION_11_GOING_TO_PICKUP_POINT)) {
+        if (do_goto(prey->tile, TERRAIN_USAGE_ANIMAL, ACTION_10_PICKUP_ANIMAL, ACTION_11_GOING_TO_PICKUP_POINT)) {
             anim_offset = 0;
         }
         break;

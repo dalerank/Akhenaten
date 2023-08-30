@@ -105,7 +105,8 @@ static void throw_party(void) {
 
                 // choose a random tile on the festival square
                 map_point festival = city_building_get_festival_square_position();
-                f->do_goto(festival.x() + 2, festival.y() + 2, TERRAIN_USAGE_ROADS, 10);
+                festival.shift(2, 2);
+                f->do_goto(festival, TERRAIN_USAGE_ROADS, 10);
 
                 break;
             }
@@ -239,12 +240,12 @@ void figure::festival_guy_action() {
 
         // still going to the square center, first
         if (terrain_usage == TERRAIN_USAGE_ROADS) {
-            if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ROADS, 10))
+            if (do_goto(destination_tile, TERRAIN_USAGE_ROADS, 10))
                 terrain_usage = TERRAIN_USAGE_ANY;
         } else {
             //                use_cross_country = true; // todo?
             if (routing_path_id)
-                do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANY, 11);
+                do_goto(destination_tile, TERRAIN_USAGE_ANY, 11);
             else {
                 if (festival_remaining_dances == 0 || !city_building_has_festival_square())
                     return poof();
@@ -259,7 +260,8 @@ void figure::festival_guy_action() {
                     rand_y = festival.y() + random_tile / 5;
                     rand_seed++;
                 } while (rand_x == tile.x() && rand_y == tile.y());
-                do_goto(rand_x, rand_y, TERRAIN_USAGE_ANY, 11);
+
+                do_goto(map_point(rand_x, rand_y), TERRAIN_USAGE_ANY, 11);
             }
         }
         break;

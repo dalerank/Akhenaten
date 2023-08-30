@@ -146,7 +146,7 @@ void figure::emigrant_action() {
     case FIGURE_ACTION_6_EMIGRANT_LEAVING:
     case 10:
         map_point& exit = city_map_entry_point();
-        do_goto(exit.x(), exit.y(), TERRAIN_USAGE_ANY);
+        do_goto(exit, TERRAIN_USAGE_ANY);
         break;
     }
     update_direction_and_image();
@@ -185,7 +185,7 @@ void figure::homeless_action() {
     case ACTION_11_RETURNING_EMPTY:
     case FIGURE_ACTION_10_HOMELESS_LEAVING:
         map_point& exit = city_map_exit_point();
-        do_goto(exit.x(), exit.y(), TERRAIN_USAGE_ANY);
+        do_goto(exit, TERRAIN_USAGE_ANY);
 
         wait_ticks++;
         if (wait_ticks > 30) {

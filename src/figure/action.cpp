@@ -161,7 +161,8 @@ bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
         roam_ticks(speed_multiplier);
     return false;
 }
-bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
+
+bool figure::do_goto(map_point dest, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
     OZZY_PROFILER_SECTION("Figure/Goto");
     terrain_usage = terrainchoice;
     if (use_cross_country) {
@@ -169,7 +170,7 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
     }
 
     // refresh routing if destination is different
-    if (destination_tile.x() != x || destination_tile.y() != y) {
+    if (destination_tile != dest) {
         OZZY_PROFILER_SECTION("Figure/Goto/Route remove (no dest)");
         route_remove();
     }
@@ -177,14 +178,14 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
     // set up destination and move!!!
     if (use_cross_country) {
         OZZY_PROFILER_SECTION("Figure/Goto/CrossCountry");
-        set_cross_country_destination(x, y);
+        set_cross_country_destination(dest.x(), dest.y());
         if (move_ticks_cross_country(1) == 1) {
             advance_action(NEXT_ACTION);
             return true;
         }
     } else {
         OZZY_PROFILER_SECTION("Figure/Goto/MoveTicks");
-        destination_tile.set(x, y);
+        destination_tile = dest;
         move_ticks(speed_multiplier);
     }
 
@@ -263,7 +264,7 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, int terrainchoic
         // found any road...?
         if (found_road) {
             //            destination_tile.set(x, y);
-            return do_goto(finish_tile.x(), finish_tile.y(), terrainchoice, NEXT_ACTION, FAIL_ACTION);
+            return do_goto(finish_tile, terrainchoice, NEXT_ACTION, FAIL_ACTION);
         } else {
             if (terrainchoice == TERRAIN_USAGE_ROADS && !use_cross_country) {
                 advance_action(FAIL_ACTION); // poof dude!!!
@@ -272,7 +273,7 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, int terrainchoic
             }
         }
     } else {
-        return do_goto(dest->tile.x(), dest->tile.y(), terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
+        return do_goto(dest->tile, terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
     }
 
     return 0;
@@ -700,7 +701,8 @@ void figure_action_handle() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Action");
     city_figures_reset();
     city_entertainment_set_hippodrome_has_race(0);
-    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure_get(i)->action_perform();
+
+    for (auto &figure: figures()) {
+        figure->action_perform();
     }
 }
