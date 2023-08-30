@@ -23,8 +23,6 @@
 
 #include <algorithm>
 
-enum E_NEARBY { NEARBY_ANY, NEARBY_ANIMAL, NEARBY_HOSTILE };
-
 int figure::is_nearby(int category, int* distance, int max_distance, bool gang_on) {
     int figure_id = 0;
     int lowest_distance = max_distance;
@@ -32,6 +30,7 @@ int figure::is_nearby(int category, int* distance, int max_distance, bool gang_o
         figure* f = figure_get(i);
         if (f->is_dead())
             continue;
+
         if (!gang_on && f->targeted_by_figure_id)
             continue;
 

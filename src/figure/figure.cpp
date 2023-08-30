@@ -27,6 +27,10 @@ figure *figure_get(int id) {
     return g_figure_data.figures[id];
 }
 
+std::span<figure *> figures() {
+    return make_span(g_figure_data.figures.begin(), 5000);
+}
+
 figure *figure_take_from_pool () {
     auto it = std::find_if(g_figure_data.figures.begin() + 1, g_figure_data.figures.end(), [] (auto &f) { return f->available(); });
     return it != g_figure_data.figures.end() ? *it : nullptr;

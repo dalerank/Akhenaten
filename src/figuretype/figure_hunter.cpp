@@ -3,6 +3,8 @@
 #include "core/calc.h"
 #include "figure/properties.h"
 #include "graphics/image_groups.h"
+#include "figuretype/maintenance.h"
+#include "core/random.h"
 
 void figure::ostrich_hunter_action() {
     figure* prey = figure_get(target_figure_id);
@@ -26,10 +28,31 @@ void figure::ostrich_hunter_action() {
     switch (action_state) {
     case ACTION_8_RECALCULATE:
     //case ACTION_14_RETURNING_WITH_FOOD: // spawning
-        target_figure_id = is_nearby(1, &dist, 10000, false);
+        target_figure_id = is_nearby(NEARBY_ANIMAL, &dist, 10000, false);
         if (target_figure_id) {
             figure_get(target_figure_id)->targeted_by_figure_id = id;
             advance_action(ACTION_9_CHASE_PREY);
+        } else {
+            advance_action(ACTION_16_HUNTER_INVESTIGATE);
+            map_point base_tile;
+            int figure_id = is_nearby(NEARBY_ANIMAL, &dist, 10000, /*gang*/true);
+            if (figure_id) {
+                base_tile = figure_get(figure_id)->tile;
+            } else {
+                base_tile = home()->tile;
+            }
+            int dx;
+            int dy;
+            random_around_point(base_tile.x(), base_tile.y(), tile.x(), tile.y(), &dx, &dy, /*step*/4, /*bias*/8, /*max_dist*/32);
+            destination_tile = map_point(dx, dy);
+        }
+        break;
+
+    case ACTION_16_HUNTER_INVESTIGATE:
+        do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANIMAL, ACTION_8_RECALCULATE, ACTION_8_RECALCULATE);
+        if (direction == DIR_FIGURE_CAN_NOT_REACH) {
+            direction = DIR_0_TOP_RIGHT;
+            advance_action(ACTION_8_RECALCULATE);
         }
         break;
 
@@ -107,12 +130,15 @@ void figure::ostrich_hunter_action() {
     }
 
     switch (action_state) {
-    case ACTION_8_RECALCULATE:
     case ACTION_14_RETURNING_WITH_FOOD:
-    case ACTION_13_WAIT_FOR_ACTION:
     case ACTION_9_CHASE_PREY:
     case ACTION_11_HUNTER_WALK: // normal walk
         image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_MOVE, 0, 12);
+        break;
+
+    case ACTION_8_RECALCULATE:
+    case ACTION_13_WAIT_FOR_ACTION:
+        image_set_animation(GROUP_FIGURE_HUNTER_OSTRICH_FIGHT, 0, 12);
         break;
 
     case ACTION_15_HUNTER_HUNT: // hunting

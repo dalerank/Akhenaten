@@ -2,21 +2,21 @@
 
 #include "grid/grid.h"
 
-static grid_xx figures = {0, {FS_UINT16, FS_UINT16}};
+static grid_xx grid_figures = {0, {FS_UINT16, FS_UINT16}};
 
 int map_has_figure_at(int grid_offset) {
-    return map_grid_is_valid_offset(grid_offset) && map_grid_get(&figures, grid_offset) > 0;
+    return map_grid_is_valid_offset(grid_offset) && map_grid_get(&grid_figures, grid_offset) > 0;
 }
 int map_figure_at(int grid_offset) {
-    return map_grid_is_valid_offset(grid_offset) ? map_grid_get(&figures, grid_offset) : 0;
+    return map_grid_is_valid_offset(grid_offset) ? map_grid_get(&grid_figures, grid_offset) : 0;
 }
 
 #include "io/io_buffer.h"
 #include <assert.h>
 
 int map_figure_foreach_until(int grid_offset, int test) {
-    if (map_grid_get(&figures, grid_offset) > 0) {
-        int figure_id = map_grid_get(&figures, grid_offset);
+    if (map_grid_get(&grid_figures, grid_offset) > 0) {
+        int figure_id = map_grid_get(&grid_figures, grid_offset);
         while (figure_id) {
             figure* f = figure_get(figure_id);
 
@@ -72,7 +72,7 @@ void figure::map_figure_add() {
 
     // check for figures on new tile, update "next_figure" pointers accordingly
     next_figure = 0;
-    int on_tile = map_grid_get(&figures, tile.grid_offset());
+    int on_tile = map_grid_get(&grid_figures, tile.grid_offset());
     if (on_tile) {
         figure* checking = figure_get(on_tile); // get first figure (head) on the new tile, if any is present
                                                 //        assert(checking->id != f->id); // hmmmm that'd be wrong
@@ -87,14 +87,14 @@ void figure::map_figure_add() {
         // last figure in the chain!
         checking->next_figure = id;
     } else
-        map_grid_set(&figures, tile.grid_offset(), id);
+        map_grid_set(&grid_figures, tile.grid_offset(), id);
 }
 void figure::map_figure_update() { // useless - but used temporarily for checking if figures are correct!
     if (!map_grid_is_valid_offset(tile.grid_offset()))
         return;
 
     // traverse through chain of figures on this tile
-    int on_tile = map_grid_get(&figures, tile.grid_offset());
+    int on_tile = map_grid_get(&grid_figures, tile.grid_offset());
     figure* checking = figure_get(on_tile);
     while (checking->id) {
         assert(checking->tile.grid_offset() == tile.grid_offset());
@@ -102,17 +102,15 @@ void figure::map_figure_update() { // useless - but used temporarily for checkin
     }
 }
 void figure::map_figure_remove() {
-    if (!map_grid_is_valid_offset(tile.grid_offset()) || !map_grid_get(&figures, tile.grid_offset())) {
+    if (!map_grid_is_valid_offset(tile.grid_offset()) || !map_grid_get(&grid_figures, tile.grid_offset())) {
         next_figure = 0;
         return;
     }
 
     // check for figures on new tile, update "next_figure" pointers accordingly
-    int on_tile = map_grid_get(&figures, tile.grid_offset());
+    int on_tile = map_grid_get(&grid_figures, tile.grid_offset());
     if (on_tile == id) // figure is the first (head) on its tile!
-        map_grid_set(&figures,
-                     tile.grid_offset(),
-                     next_figure); // remove from chain, set the head as the next one in chain (0 is fine)
+        map_grid_set(&grid_figures, tile.grid_offset(), next_figure); // remove from chain, set the head as the next one in chain (0 is fine)
     else {
         figure* checking = figure_get(on_tile); // traverse through the chain to find this figure...
         while (checking->id && checking->next_figure != id)
@@ -123,8 +121,9 @@ void figure::map_figure_remove() {
     next_figure = 0;
 }
 void map_figure_clear(void) {
-    map_grid_clear(&figures);
+    map_grid_clear(&grid_figures);
 }
 
-io_buffer* iob_figure_grid
-  = new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &figures); });
+io_buffer* iob_figure_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &grid_figures);
+});

@@ -509,6 +509,7 @@ public:
 };
 
 figure* figure_get(int id);
+std::span<figure*> figures();
 
 /**
  * Creates a figure
