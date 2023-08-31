@@ -45,15 +45,15 @@ void city_show_message_criminal(int message_id, int money_stolen, int tile_offse
 }
 
 void city_sentiment_change_happiness(int amount) {
-    building_for_each([amount] (building &b) {
-        if (b.state == BUILDING_STATE_VALID && b.house_size)
+    buildings_valid_do([amount] (building &b) {
+        if (b.house_size)
             b.sentiment.house_happiness = calc_bound(b.sentiment.house_happiness + amount, 0, 100);
     });
 }
 
 void city_sentiment_set_max_happiness(int max) {
-    building_for_each([max] (building &b) {
-        if (b.state == BUILDING_STATE_VALID && b.house_size) {
+    buildings_valid_do([max] (building &b) {
+        if (b.house_size) {
             b.sentiment.house_happiness = std::min<int>(b.sentiment.house_happiness, max);
             b.sentiment.house_happiness = calc_bound(b.sentiment.house_happiness, 0, 100);
         }
@@ -174,8 +174,8 @@ void city_sentiment_update_day() {
 }
 
 void city_criminals_update_day() {
-    building_for_each([] (building &b) {
-        if (b.state == BUILDING_STATE_VALID && b.house_size) {
+    buildings_valid_do([] (building &b) {
+        if (b.house_size) {
             if (b.sentiment.house_happiness >= 50) {
                 int delta = (b.sentiment.house_happiness - 50) / 25;
                 b.house_criminal_active -= std::max<int>(0, b.house_criminal_active - delta);
@@ -277,8 +277,8 @@ void city_sentiment_update() {
 
     int total_sentiment = 0;
     int total_houses = 0;
-    building_for_each([&total_houses, &total_sentiment] (building &b) {
-        if (b.state == BUILDING_STATE_VALID && b.house_size && b.house_population) {
+    buildings_valid_do([&total_houses, &total_sentiment] (building &b) {
+        if (b.house_size && b.house_population) {
             total_houses++;
             total_sentiment += b.sentiment.house_happiness;
         }

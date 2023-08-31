@@ -120,7 +120,8 @@ public:
         struct industry_t {
             short ready_production;
             short progress;
-            int unk_b[12];
+            bool spawned_worker_this_month;
+            int unk_b[11];
             unsigned char has_fish;
             int unk_c[14];
             unsigned char blessing_days_left;
@@ -314,6 +315,7 @@ public:
 
     void update_native_crop_progress();
     void update_road_access();
+    void update_month();
     bool figure_generate();
 
     // barracks.c
@@ -339,9 +341,11 @@ inline building* building_end() {
 }
 
 template<typename T>
-void building_for_each(T func) {
+void buildings_valid_do(T func) {
     for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
-        func(*it);
+        if (it->state == BUILDING_STATE_VALID) {
+            func(*it);
+        }
     }
 }
 

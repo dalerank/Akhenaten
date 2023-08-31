@@ -191,16 +191,17 @@ void building_maintenance_check_fire_collapse(void) {
         int random_building = (i + map_random_get(b->tile.grid_offset())) & 7;
         if (random_building == random_global) {
             b->fire_risk += model->fire_risk;
-            if (!b->house_size)
+            if (!b->house_size) {
                 b->fire_risk += 50;
-            else if (b->house_population <= 0)
+            } else if (b->house_population <= 0) {
                 b->fire_risk = 0;
-            else if (b->subtype.house_level <= HOUSE_LARGE_SHACK)
+            } else if (b->subtype.house_level <= HOUSE_LARGE_SHACK) {
                 b->fire_risk += 100;
-            else if (b->subtype.house_level <= HOUSE_GRAND_INSULA)
+            } else if (b->subtype.house_level <= HOUSE_GRAND_INSULA) {
                 b->fire_risk += 50;
-            else
+            } else {
                 b->fire_risk += 20;
+            }
 
             if (tutorial_extra_fire_risk())
                 b->fire_risk += 50;

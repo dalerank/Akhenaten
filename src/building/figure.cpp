@@ -280,21 +280,30 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_ful
 }
 
 void building::spawn_figure_work_camp() {
-    if (common_spawn_figure_trigger(100)) {
-        building* dest = building_determine_worker_needed();
-        if (dest) {
-            figure *f = create_figure_with_destination(FIGURE_WORKER_PH, dest);
-            dest->data.industry.worker_id = f->id;
-        }
+    if (!common_spawn_figure_trigger(100)) {
+        return;
+    }
+
+    if (config_get(CONFIG_GP_CH_WORK_CAMP_ONE_WORKER_PER_MONTH) && data.industry.spawned_worker_this_month) {
+        return;
+    }
+
+    building* dest = building_determine_worker_needed();
+    if (dest) {
+        figure *f = create_figure_with_destination(FIGURE_WORKER_PH, dest, 10, BUILDING_SLOT_SERVICE);
+        dest->data.industry.worker_id = f->id;
+        data.industry.spawned_worker_this_month = true;
     }
 }
 
 bool building::spawn_patrician(bool spawned) {
     return common_spawn_roamer(FIGURE_PATRICIAN, 50);
 }
+
 void building::spawn_figure_engineers_post() {
     common_spawn_roamer(FIGURE_ENGINEER, 50, FIGURE_ACTION_60_ENGINEER_CREATED);
 }
+
 void building::spawn_figure_firehouse() {
     common_spawn_roamer(FIGURE_PREFECT, 50, FIGURE_ACTION_70_PREFECT_CREATED);
 }
@@ -1158,6 +1167,14 @@ void building::update_native_crop_progress() {
         data.industry.progress = 0;
 
     map_image_set(tile.grid_offset(), image_id_from_group(GROUP_BUILDING_FARMLAND) + data.industry.progress);
+}
+
+void building::update_month() {
+    switch (type) {
+    case BUILDING_WORK_CAMP:
+        data.industry.spawned_worker_this_month = false;
+        break;
+    }
 }
 
 void building::update_road_access() {

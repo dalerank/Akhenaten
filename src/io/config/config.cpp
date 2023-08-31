@@ -70,6 +70,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
   {"ui_draw_fps", true},
   {"gameplay_change_cart_speed_depends_quntity", true},
   {"gameplay_change_citizen_road_offset", true},
+  {"gameplay_change_work_camp_one_worker_per_month", true},
 
   {"#god_osiris_disabled", false},
   {"#god_ra_disabled", false},

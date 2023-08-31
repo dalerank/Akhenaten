@@ -55,4 +55,5 @@ void city_resource_calculate_food_stocks_and_supply_wheat(void);
 
 // void city_resource_calculate_workshop_stocks(void);
 
-void city_resource_consume_food(void);
+void city_resource_consume_food();
+void city_buildings_update_month();

@@ -80,15 +80,15 @@ static void advance_month(void) {
     city_finance_handle_month_change();
     city_resource_consume_food();
     scenario_distant_battle_process();
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        scenario_invasion_process();
-        scenario_request_process_C3();
-        scenario_demand_change_process();
-        scenario_price_change_process();
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) { // Pharaoh uses its own event system
-        random_generate_next();                  // TODO: find out the source / reason for this
-        scenario_event_process();
-    }
+    //if (GAME_ENV == ENGINE_ENV_C3) {
+    //    scenario_invasion_process();
+    //    scenario_request_process_C3();
+    //    scenario_demand_change_process();
+    //    scenario_price_change_process();
+    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) { // Pharaoh uses its own event system
+    random_generate_next();                  // TODO: find out the source / reason for this
+    scenario_event_process();
+    
     city_victory_update_months_to_govern();
     formation_update_monthly_morale_at_rest();
     city_message_decrease_delays();
@@ -98,15 +98,19 @@ static void advance_month(void) {
     map_routing_update_land_citizen();
     //    city_message_sort_and_compact();
 
-    if (game_time_advance_month())
+    if (game_time_advance_month()) {
         advance_year();
-    else
+    } else {
         city_ratings_update(0);
+    }
 
     city_population_record_monthly();
     city_festival_update();
-    if (GAME_ENV == ENGINE_ENV_C3)
-        tutorial_on_month_tick();
+    city_buildings_update_month();
+    
+    //if (GAME_ENV == ENGINE_ENV_C3)
+    //    tutorial_on_month_tick();
+
     if (setting_monthly_autosave()) {
         //        if (0)
         //            SaveFileIO::write_savegame("autosave.sav");
@@ -121,8 +125,9 @@ static void advance_day() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Advance Day");
     //    map_advance_floodplain_growth();
 
-    if (game_time_advance_day())
+    if (game_time_advance_day()) {
         advance_month();
+    }
 
     city_sentiment_update_day();
     city_criminals_update_day();
