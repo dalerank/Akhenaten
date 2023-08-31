@@ -167,10 +167,11 @@ void widget_city_draw(void) {
     update_zoom_level();
     set_render_scale(zoom_get_scale());
     set_city_clip_rectangle();
-    if (game_state_overlay())
+    if (game_state_overlay()) {
         widget_city_draw_with_overlay(data.current_tile);
-    else
+    } else {
         widget_city_draw_without_overlay(0, 0, data.current_tile);
+    }
     graphics_reset_clip_rectangle();
     set_render_scale(1.0f);
 }

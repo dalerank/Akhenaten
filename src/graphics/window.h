@@ -79,22 +79,24 @@ typedef enum {
 
 typedef struct {
     window_id id;
-    void (*draw_background)(void);
-    void (*draw_foreground)(void);
+    void (*draw_background)();
+    void (*draw_foreground)();
     void (*handle_input)(const mouse* m, const hotkeys* h);
     void (*get_tooltip)(tooltip_context* c);
+    void (*draw_refresh)() = nullptr;
 } window_type;
 
 /**
  * Invalidates the window immediately, indicating that the current game state
  * requires a redraw before continuing
  */
-void window_invalidate(void);
+void window_invalidate();
+void window_request_refresh_background();
 
 /**
  * Request a (soft) refresh of the window; does not invalidate the game state
  */
-void window_request_refresh(void);
+void window_request_refresh();
 
 /**
  * Returns whether the window has been invalidated using `window_invalidate`

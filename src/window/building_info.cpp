@@ -70,7 +70,7 @@ static generic_button generic_button_figures[] = {
     {400, 3, 24, 24, button_debugpath, button_none, 0, 0}
 };
 
-static building_info_context context;
+static building_info_context g_building_info_context;
 struct focus_button_id {
     int image_button_id = 0;
     int generic_button_id = 0;
@@ -80,6 +80,7 @@ struct focus_button_id {
 focus_button_id g_building_info_focus;
 
 static int get_height_id(void) {
+    auto &context = g_building_info_context;
     if (context.type == BUILDING_INFO_TERRAIN) {
         switch (context.terrain_type) {
         case TERRAIN_INFO_AQUEDUCT:
@@ -180,6 +181,7 @@ static int get_height_id(void) {
     return 0;
 }
 static void get_tooltip(tooltip_context* c) {
+    auto &context = g_building_info_context;
     int text_id = 0, group_id = 0;
     if (g_building_info_focus.image_button_id) {
         text_id = g_building_info_focus.image_button_id;
@@ -213,6 +215,7 @@ static void get_tooltip(tooltip_context* c) {
         if (group_id) {
             c->text_group = group_id;
         }
+        window_request_refresh_background();
     }
 }
 
@@ -271,8 +274,9 @@ int OFFSET(int x, int y) {
 }
 
 static void init(map_point tile) {
+    auto &context = g_building_info_context;
     const int grid_offset = tile.grid_offset();
-    context.can_play_sound = 1;
+    context.can_play_sound = true;
     context.storage_show_special_orders = 0;
     context.can_go_to_advisor = 0;
     context.building_id = map_building_at(grid_offset);
@@ -515,15 +519,16 @@ static void init(map_point tile) {
 }
 
 static void draw_mothball_button(int x, int y, int focused) {
-    uint8_t working_text[] = {'x', 0};
+    auto &context = g_building_info_context;
     button_border_draw(x, y, 20, 20, focused ? 1 : 0);
     building* b = building_get(context.building_id);
     if (b->state == BUILDING_STATE_VALID) {
-        text_draw_centered(working_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        text_draw_centered((uint8_t*)"x", x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
 }
 
 static void draw_debugpath_button(int x, int y, int focused) {
+    auto &context = g_building_info_context;
     button_border_draw(x, y, 20, 20, focused ? 1 : 0);
     figure* f = figure_get(context.figure.figure_ids[0]);
     if (f->draw_debug_mode) {
@@ -531,9 +536,8 @@ static void draw_debugpath_button(int x, int y, int focused) {
     }
 }
 
-static void draw_background(void) {
-    window_city_draw_panels();
-    window_city_draw();
+static void draw_refresh_background() {
+    auto &context = g_building_info_context;
     if (context.type == BUILDING_INFO_NONE)
         window_building_draw_no_people(&context);
     else if (context.type == BUILDING_INFO_TERRAIN)
@@ -544,268 +548,268 @@ static void draw_background(void) {
         else
             switch (building_get(context.building_id)->type) {
             case BUILDING_BARLEY_FARM:
-                window_building_draw_wheat_farm(&context);
-                break;
+            window_building_draw_wheat_farm(&context);
+            break;
             case BUILDING_FLAX_FARM:
-                window_building_draw_vegetable_farm(&context);
-                break;
+            window_building_draw_vegetable_farm(&context);
+            break;
             case BUILDING_GRAIN_FARM:
-                window_building_draw_fruit_farm(&context);
-                break;
+            window_building_draw_fruit_farm(&context);
+            break;
             case BUILDING_LETTUCE_FARM:
-                window_building_draw_olive_farm(&context);
-                break;
+            window_building_draw_olive_farm(&context);
+            break;
             case BUILDING_POMEGRANATES_FARM:
-                window_building_draw_vines_farm(&context);
-                break;
+            window_building_draw_vines_farm(&context);
+            break;
             case BUILDING_CHICKPEAS_FARM:
-                window_building_draw_pig_farm(&context);
-                break;
+            window_building_draw_pig_farm(&context);
+            break;
             case BUILDING_FIGS_FARM:
-                window_building_draw_fig_farm(&context);
-                break;
+            window_building_draw_fig_farm(&context);
+            break;
             case BUILDING_HENNA_FARM:
-                window_building_draw_henna_farm(&context);
-                break;
+            window_building_draw_henna_farm(&context);
+            break;
             case BUILDING_HUNTING_LODGE:
-                window_building_draw_hunting_lodge(&context);
-                break;
+            window_building_draw_hunting_lodge(&context);
+            break;
             case BUILDING_STONE_QUARRY:
-                window_building_draw_marble_quarry(&context);
-                break;
+            window_building_draw_marble_quarry(&context);
+            break;
             case BUILDING_LIMESTONE_QUARRY:
-                window_building_draw_iron_mine(&context);
-                break;
+            window_building_draw_iron_mine(&context);
+            break;
             case BUILDING_WOOD_CUTTERS:
-                window_building_draw_timber_yard(&context);
-                break;
+            window_building_draw_timber_yard(&context);
+            break;
             case BUILDING_CLAY_PIT:
-                window_building_draw_clay_pit(&context);
-                break;
+            window_building_draw_clay_pit(&context);
+            break;
             case BUILDING_GOLD_MINE:
-                window_building_draw_gold_mine(&context);
-                break;
+            window_building_draw_gold_mine(&context);
+            break;
             case BUILDING_BEER_WORKSHOP:
-                window_building_draw_wine_workshop(&context);
-                break;
+            window_building_draw_wine_workshop(&context);
+            break;
             case BUILDING_LINEN_WORKSHOP:
-                window_building_draw_oil_workshop(&context);
-                break;
+            window_building_draw_oil_workshop(&context);
+            break;
             case BUILDING_WEAPONS_WORKSHOP:
-                window_building_draw_weapons_workshop(&context);
-                break;
+            window_building_draw_weapons_workshop(&context);
+            break;
             case BUILDING_JEWELS_WORKSHOP:
-                window_building_draw_furniture_workshop(&context);
-                break;
+            window_building_draw_furniture_workshop(&context);
+            break;
             case BUILDING_POTTERY_WORKSHOP:
-                window_building_draw_pottery_workshop(&context);
-                break;
+            window_building_draw_pottery_workshop(&context);
+            break;
             case BUILDING_MARKET:
-                if (context.storage_show_special_orders)
-                    window_building_draw_market_orders(&context);
-                else
-                    window_building_draw_market(&context);
-                break;
+            if (context.storage_show_special_orders)
+                window_building_draw_market_orders(&context);
+            else
+                window_building_draw_market(&context);
+            break;
             case BUILDING_GRANARY:
-                if (context.storage_show_special_orders)
-                    window_building_draw_granary_orders(&context);
-                else
-                    window_building_draw_granary(&context);
-                break;
+            if (context.storage_show_special_orders)
+                window_building_draw_granary_orders(&context);
+            else
+                window_building_draw_granary(&context);
+            break;
             case BUILDING_STORAGE_YARD:
-                if (context.storage_show_special_orders)
-                    window_building_draw_warehouse_orders(&context);
-                else
-                    window_building_draw_warehouse(&context);
-                break;
+            if (context.storage_show_special_orders)
+                window_building_draw_warehouse_orders(&context);
+            else
+                window_building_draw_warehouse(&context);
+            break;
             case BUILDING_BANDSTAND:
-                window_building_draw_amphitheater(&context);
-                break;
+            window_building_draw_amphitheater(&context);
+            break;
             case BUILDING_BOOTH:
-                window_building_draw_theater(&context);
-                break;
+            window_building_draw_theater(&context);
+            break;
             case BUILDING_SENET_HOUSE:
-                window_building_draw_hippodrome(&context);
-                break;
+            window_building_draw_hippodrome(&context);
+            break;
             case BUILDING_PAVILLION:
-                window_building_draw_colosseum(&context);
-                break;
+            window_building_draw_colosseum(&context);
+            break;
             case BUILDING_CONSERVATORY:
-                window_building_draw_gladiator_school(&context);
-                break;
+            window_building_draw_gladiator_school(&context);
+            break;
             case BUILDING_DANCE_SCHOOL:
-                window_building_draw_lion_house(&context);
-                break;
+            window_building_draw_lion_house(&context);
+            break;
             case BUILDING_JUGGLER_SCHOOL:
-                window_building_draw_actor_colony(&context);
-                break;
+            window_building_draw_actor_colony(&context);
+            break;
             case BUILDING_CHARIOT_MAKER:
-                window_building_draw_chariot_maker(&context);
-                break;
+            window_building_draw_chariot_maker(&context);
+            break;
             case BUILDING_APOTHECARY:
-                window_building_draw_apothecary(&context);
-                break;
+            window_building_draw_apothecary(&context);
+            break;
             case BUILDING_MORTUARY:
-                window_building_draw_mortuary(&context);
-                break;
+            window_building_draw_mortuary(&context);
+            break;
             case BUILDING_PHYSICIAN:
-                window_building_draw_physician(&context);
-                break;
+            window_building_draw_physician(&context);
+            break;
             case BUILDING_DENTIST:
-                window_building_draw_dentist(&context);
-                break;
+            window_building_draw_dentist(&context);
+            break;
             case BUILDING_SCHOOL:
-                window_building_draw_school(&context);
-                break;
+            window_building_draw_school(&context);
+            break;
             case BUILDING_MENU_WATER_CROSSINGS:
-                window_building_draw_academy(&context);
-                break;
+            window_building_draw_academy(&context);
+            break;
             case BUILDING_LIBRARY:
-                window_building_draw_library(&context);
-                break;
+            window_building_draw_library(&context);
+            break;
             case BUILDING_TEMPLE_OSIRIS:
             case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-                window_building_draw_temple_ceres(&context);
-                break;
+            window_building_draw_temple_ceres(&context);
+            break;
             case BUILDING_TEMPLE_RA:
             case BUILDING_TEMPLE_COMPLEX_RA:
-                window_building_draw_temple_neptune(&context);
-                break;
+            window_building_draw_temple_neptune(&context);
+            break;
             case BUILDING_TEMPLE_PTAH:
             case BUILDING_TEMPLE_COMPLEX_PTAH:
-                window_building_draw_temple_mercury(&context);
-                break;
+            window_building_draw_temple_mercury(&context);
+            break;
             case BUILDING_TEMPLE_SETH:
             case BUILDING_TEMPLE_COMPLEX_SETH:
-                window_building_draw_temple_mars(&context);
-                break;
+            window_building_draw_temple_mars(&context);
+            break;
             case BUILDING_TEMPLE_BAST:
             case BUILDING_TEMPLE_COMPLEX_BAST:
-                window_building_draw_temple_venus(&context);
-                break;
+            window_building_draw_temple_venus(&context);
+            break;
             case BUILDING_SHRINE_OSIRIS:
-                window_building_draw_shrine_osiris(&context);
-                break;
+            window_building_draw_shrine_osiris(&context);
+            break;
             case BUILDING_SHRINE_RA:
-                window_building_draw_shrine_ra(&context);
-                break;
+            window_building_draw_shrine_ra(&context);
+            break;
             case BUILDING_SHRINE_PTAH:
-                window_building_draw_shrine_ptah(&context);
-                break;
+            window_building_draw_shrine_ptah(&context);
+            break;
             case BUILDING_SHRINE_SETH:
-                window_building_draw_shrine_seth(&context);
-                break;
+            window_building_draw_shrine_seth(&context);
+            break;
             case BUILDING_SHRINE_BAST:
-                window_building_draw_shrine_bast(&context);
-                break;
+            window_building_draw_shrine_bast(&context);
+            break;
             case BUILDING_ORACLE:
-                window_building_draw_oracle(&context);
-                break;
+            window_building_draw_oracle(&context);
+            break;
             case BUILDING_PERSONAL_MANSION:
             case BUILDING_FAMILY_MANSION:
             case BUILDING_DYNASTY_MANSION:
-                window_building_draw_governor_home(&context);
-                break;
+            window_building_draw_governor_home(&context);
+            break;
             case BUILDING_TAX_COLLECTOR:
             case BUILDING_TAX_COLLECTOR_UPGRADED:
-                window_building_draw_forum(&context);
-                break;
+            window_building_draw_forum(&context);
+            break;
             case BUILDING_COURTHOUSE:
-                window_building_draw_courthouse(&context);
-                break;
+            window_building_draw_courthouse(&context);
+            break;
             case BUILDING_SENATE:
             case BUILDING_SENATE_UPGRADED:
             case BUILDING_VILLAGE_PALACE:
             case BUILDING_TOWN_PALACE:
             case BUILDING_CITY_PALACE:
-                window_building_draw_senate(&context);
-                break;
+            window_building_draw_senate(&context);
+            break;
             case BUILDING_ENGINEERS_POST:
-                window_building_draw_engineers_post(&context);
-                break;
+            window_building_draw_engineers_post(&context);
+            break;
             case BUILDING_SHIPYARD:
-                window_building_draw_shipyard(&context);
-                break;
+            window_building_draw_shipyard(&context);
+            break;
             case BUILDING_DOCK:
-                if (context.storage_show_special_orders)
-                    window_building_draw_dock_orders(&context);
-                else
-                    window_building_draw_dock(&context);
-                break;
+            if (context.storage_show_special_orders)
+                window_building_draw_dock_orders(&context);
+            else
+                window_building_draw_dock(&context);
+            break;
             case BUILDING_FISHING_WHARF:
-                window_building_draw_wharf(&context);
-                break;
+            window_building_draw_wharf(&context);
+            break;
             case BUILDING_WATER_LIFT:
-                window_building_draw_water_lift(&context);
-                break;
+            window_building_draw_water_lift(&context);
+            break;
             case BUILDING_MENU_BEAUTIFICATION:
-                window_building_draw_fountain(&context);
-                break;
+            window_building_draw_fountain(&context);
+            break;
             case BUILDING_WATER_SUPPLY:
-                window_building_draw_water_supply(&context);
-                break;
+            window_building_draw_water_supply(&context);
+            break;
             case BUILDING_WELL:
-                window_building_draw_well(&context);
-                break;
+            window_building_draw_well(&context);
+            break;
             case BUILDING_SMALL_STATUE:
             case BUILDING_MEDIUM_STATUE:
             case BUILDING_LARGE_STATUE:
-                window_building_draw_statue(&context);
-                break;
+            window_building_draw_statue(&context);
+            break;
             case BUILDING_TRIUMPHAL_ARCH:
-                window_building_draw_triumphal_arch(&context);
-                break;
+            window_building_draw_triumphal_arch(&context);
+            break;
             case BUILDING_POLICE_STATION:
-                window_building_draw_prefect(&context);
-                break;
+            window_building_draw_prefect(&context);
+            break;
             case BUILDING_ROADBLOCK:
-                if (context.storage_show_special_orders)
-                    window_building_draw_roadblock_orders(&context);
-                else
-                    window_building_draw_roadblock(&context);
-                break;
+            if (context.storage_show_special_orders)
+                window_building_draw_roadblock_orders(&context);
+            else
+                window_building_draw_roadblock(&context);
+            break;
             case BUILDING_FERRY:
-                window_building_draw_ferry(&context);
-                break;
+            window_building_draw_ferry(&context);
+            break;
             case BUILDING_GATEHOUSE:
-                window_building_draw_gatehouse(&context);
-                break;
+            window_building_draw_gatehouse(&context);
+            break;
             case BUILDING_TOWER:
-                window_building_draw_tower(&context);
-                break;
+            window_building_draw_tower(&context);
+            break;
             case BUILDING_MILITARY_ACADEMY:
-                window_building_draw_military_academy(&context);
-                break;
+            window_building_draw_military_academy(&context);
+            break;
             case BUILDING_RECRUITER:
-                window_building_draw_barracks(&context);
-                break;
+            window_building_draw_barracks(&context);
+            break;
             case BUILDING_MENU_FORTS:
-                window_building_draw_fort(&context);
-                break;
+            window_building_draw_fort(&context);
+            break;
             case BUILDING_BURNING_RUIN:
-                window_building_draw_burning_ruin(&context);
-                break;
+            window_building_draw_burning_ruin(&context);
+            break;
             case BUILDING_NATIVE_HUT:
-                window_building_draw_native_hut(&context);
-                break;
+            window_building_draw_native_hut(&context);
+            break;
             case BUILDING_NATIVE_MEETING:
-                window_building_draw_native_meeting(&context);
-                break;
+            window_building_draw_native_meeting(&context);
+            break;
             case BUILDING_NATIVE_CROPS:
-                window_building_draw_native_crops(&context);
-                break;
+            window_building_draw_native_crops(&context);
+            break;
             case BUILDING_MISSION_POST:
-                window_building_draw_mission_post(&context);
-                break;
+            window_building_draw_mission_post(&context);
+            break;
             case BUILDING_FIREHOUSE:
-                window_building_draw_firehouse(&context);
-                break;
+            window_building_draw_firehouse(&context);
+            break;
             case BUILDING_WORK_CAMP:
-                window_building_draw_work_camp(&context);
-                break;
+            window_building_draw_work_camp(&context);
+            break;
             case BUILDING_FESTIVAL_SQUARE:
-                window_building_draw_festival_square(&context);
-                break;
+            window_building_draw_festival_square(&context);
+            break;
             }
 
     } else if (context.type == BUILDING_INFO_LEGION) {
@@ -813,7 +817,15 @@ static void draw_background(void) {
     }
 }
 
+static void draw_background() {
+    auto &context = g_building_info_context;
+    window_city_draw_panels();
+    window_city_draw();
+    draw_refresh_background();
+}
+
 static void draw_foreground() {
+    auto &context = g_building_info_context;
     // building-specific buttons
     if (context.type == BUILDING_INFO_BUILDING) {
         switch (building_get(context.building_id)->type) {
@@ -880,6 +892,7 @@ static void draw_foreground() {
 }
 
 static int handle_specific_building_info_mouse(const mouse* m) {
+    auto &context = g_building_info_context;
     // building-specific buttons
     if (context.type == BUILDING_INFO_NONE)
         return 0;
@@ -927,6 +940,7 @@ static int handle_specific_building_info_mouse(const mouse* m) {
     return 0;
 }
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto &context = g_building_info_context;
     bool button_id = 0;
     // general buttons
     if (context.storage_show_special_orders) {
@@ -959,6 +973,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void button_help(int param1, int param2) {
+    auto &context = g_building_info_context;
     if (context.help_id > 0) {
         window_message_dialog_show(context.help_id, -1, window_city_draw_all);
     } else {
@@ -968,6 +983,7 @@ static void button_help(int param1, int param2) {
 }
 
 static void button_close(int param1, int param2) {
+    auto &context = g_building_info_context;
     if (context.storage_show_special_orders) {
         context.storage_show_special_orders = 0;
         storage_settings_backup_reset();
@@ -982,6 +998,7 @@ static void button_advisor(int advisor, int param2) {
 }
 
 static void button_mothball(int mothball, int param2) {
+    auto &context = g_building_info_context;
     building* b = building_get(context.building_id);
     int workers_needed = model_get_building(b->type)->laborers;
     if (workers_needed) {
@@ -991,19 +1008,28 @@ static void button_mothball(int mothball, int param2) {
 }
 
 static void button_debugpath(int debug, int param2) {
+    auto &context = g_building_info_context;
     figure* f = figure_get(context.figure.figure_ids[0]);
     f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
     window_invalidate();
 }
 
 void window_building_info_show(const map_point& point) {
-    window_type window = {WINDOW_BUILDING_INFO, draw_background, draw_foreground, handle_input, get_tooltip};
+    window_type window = {
+        WINDOW_BUILDING_INFO,
+        draw_background,
+        draw_foreground,
+        handle_input,
+        get_tooltip,
+        draw_refresh_background
+    };
 
     init(point);
     window_show(&window);
 }
 
 int window_building_info_get_int(void) {
+    auto &context = g_building_info_context;
     if (context.type == BUILDING_INFO_BUILDING) {
         return building_get(context.building_id)->type;
     }
@@ -1011,6 +1037,7 @@ int window_building_info_get_int(void) {
     return BUILDING_NONE;
 }
 void window_building_info_show_storage_orders(void) {
+    auto &context = g_building_info_context;
     context.storage_show_special_orders = 1;
     window_invalidate();
 }

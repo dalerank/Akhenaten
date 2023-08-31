@@ -49,7 +49,7 @@ struct building_info_context {
     int height_blocks;
     int height_blocks_submenu;
     int help_id;
-    int can_play_sound;
+    bool can_play_sound;
     int building_id;
     int has_road_access;
     int worker_percentage;

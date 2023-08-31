@@ -12,8 +12,9 @@ struct window_data_t {
     window_type window_queue[MAX_QUEUE];
     int queue_index;
     window_type* current_window;
-    int refresh_immediate;
-    int refresh_on_draw;
+    bool refresh_immediate;
+    bool refresh_on_draw;
+    bool refresh_background;
     int underlying_windows_redrawing;
 };
 
@@ -41,18 +42,25 @@ static void decrease_queue_index(void) {
         data.queue_index = MAX_QUEUE - 1;
 }
 
-void window_invalidate(void) {
+void window_invalidate() {
     auto& data = g_window;
-    data.refresh_immediate = 1;
-    data.refresh_on_draw = 1;
+    data.refresh_immediate = true;
+    data.refresh_on_draw = true;
 }
+
+void window_request_refresh_background() {
+    auto& data = g_window;
+    data.refresh_background = true;
+}
+
 int window_is_invalid(void) {
     auto& data = g_window;
     return data.refresh_immediate;
 }
+
 void window_request_refresh(void) {
     auto& data = g_window;
-    data.refresh_on_draw = 1;
+    data.refresh_on_draw = true;
 }
 int window_is(window_id id) {
     auto& data = g_window;
@@ -111,8 +119,17 @@ void window_draw(int force) {
             OZZY_PROFILER_SECTION("Render/Frame/Window/Background");
             w->draw_background();
         }
-        data.refresh_on_draw = 0;
-        data.refresh_immediate = 0;
+        data.refresh_on_draw = false;
+        data.refresh_immediate = false;
+        data.refresh_background = false;
+    }
+
+    if (data.refresh_background) {
+        if (w->draw_refresh) {
+            w->draw_refresh();
+        }
+
+        data.refresh_background = false;
     }
 
     {
