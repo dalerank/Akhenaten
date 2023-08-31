@@ -820,8 +820,8 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         }
 
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.juggler);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.amphitheater_actor);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.amphitheater_gladiator);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.bandstand_juggler);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.bandstand_musician);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.colosseum_gladiator);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.magistrate);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.hippodrome);

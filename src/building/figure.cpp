@@ -324,22 +324,21 @@ void building::spawn_figure_juggler() {
 void building::spawn_figure_musician() {
     if (common_spawn_figure_trigger(50)) {
         building* dest = building_get(determine_venue_destination(road_access, BUILDING_PAVILLION, BUILDING_BANDSTAND, 0));
-        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            if (dest->id > 0)
-                create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-        } else
-            common_spawn_roamer(FIGURE_GLADIATOR, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
+        if (dest->id > 0) {
+            create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+        } else {
+            common_spawn_roamer(FIGURE_MUSICIAN, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
+        }
     }
 }
 void building::spawn_figure_dancer() {
     if (common_spawn_figure_trigger(50)) {
-        building* dest
-          = building_get(determine_venue_destination(road_access, BUILDING_PAVILLION, 0, 0));
-        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            if (dest->id > 0)
-                create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-        } else
+        building* dest= building_get(determine_venue_destination(road_access, BUILDING_PAVILLION, 0, 0));
+        if (dest->id > 0) {
+            create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+        } else {
             common_spawn_roamer(FIGURE_LION_TAMER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
+        }
     }
 }
 

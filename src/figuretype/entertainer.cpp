@@ -95,7 +95,7 @@ void figure::entertainer_update_image() {
     int image_id;
     if (type == FIGURE_JUGGLER) {
         image_id = image_id_from_group(GROUP_FIGURE_JUGGLER);
-    } else if (type == FIGURE_GLADIATOR) {
+    } else if (type == FIGURE_MUSICIAN) {
         image_id = image_id_from_group(GROUP_FIGURE_MUSICIAN);
     } else if (type == FIGURE_LION_TAMER) {
         image_id = image_id_from_group(GROUP_FIGURE_DANCER);
@@ -107,7 +107,7 @@ void figure::entertainer_update_image() {
     } else
         return;
     if (action_state == FIGURE_ACTION_150_ATTACK) {
-        if (type == FIGURE_GLADIATOR)
+        if (type == FIGURE_MUSICIAN)
             image_id = image_id + 104 + dir + 8 * (anim_frame / 2);
         else
             image_id = image_id + dir;
@@ -121,23 +121,24 @@ void figure::entertainer_update_image() {
         figure_image_set_cart_offset(dir);
     }
 }
+
 void figure::entertainer_action() {
     wait_ticks_missile++;
     if (wait_ticks_missile >= 120)
         wait_ticks_missile = 0;
 
     building* b = home();
-    if (scenario_gladiator_revolt_is_in_progress() && type == FIGURE_GLADIATOR) {
-        if (action_state == FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE
-            || action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING
-            || action_state == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
-            type = FIGURE_ENEMY54_GLADIATOR;
-            route_remove();
-            roam_length = 0;
-            action_state = FIGURE_ACTION_158_NATIVE_CREATED;
-            return;
-        }
-    }
+    //if (scenario_gladiator_revolt_is_in_progress() && type == FIGURE_GLADIATOR) {
+    //    if (action_state == FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE
+    //        || action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING
+    //        || action_state == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
+    //        type = FIGURE_ENEMY54_GLADIATOR;
+    //        route_remove();
+    //        roam_length = 0;
+    //        action_state = FIGURE_ACTION_158_NATIVE_CREATED;
+    //        return;
+    //    }
+    //}
     int speed_factor = type == FIGURE_CHARIOTEER ? 2 : 1;
     switch (action_state) {
     case FIGURE_ACTION_150_ATTACK:
@@ -176,7 +177,7 @@ void figure::entertainer_action() {
                 dst_building_id = determine_venue_destination(tile, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION);
                 break;
 
-            case FIGURE_GLADIATOR:
+            case FIGURE_MUSICIAN:
                 dst_building_id = determine_venue_destination(tile, BUILDING_BANDSTAND, BUILDING_PAVILLION, 0);
                 break;
 

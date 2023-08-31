@@ -62,14 +62,17 @@ void window_request_refresh(void) {
     auto& data = g_window;
     data.refresh_on_draw = true;
 }
-int window_is(window_id id) {
+
+int window_is(e_window_id id) {
     auto& data = g_window;
     return data.current_window->id == id;
 }
-window_id window_get_id(void) {
+
+e_window_id window_get_id(void) {
     auto& data = g_window;
     return data.current_window->id;
 }
+
 void window_show(const window_type* window) {
     auto& data = g_window;
     // push window into queue of screens to render

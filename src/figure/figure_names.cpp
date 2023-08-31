@@ -13,8 +13,8 @@ struct figure_name_data_t {
     int32_t javelin_thrower;
     int32_t cavalry;
     int32_t legionary;
-    int32_t actor;
-    int32_t gladiator;
+    int32_t juggler;
+    int32_t musician;
     int32_t lion_tamer;
     int32_t charioteer;
     int32_t barbarian;
@@ -45,8 +45,8 @@ void figure_name_init() {
     data.javelin_thrower = init_name();
     data.cavalry = init_name();
     data.legionary = init_name();
-    data.actor = init_name();
-    data.gladiator = init_name();
+    data.juggler = init_name();
+    data.musician = init_name();
     data.lion_tamer = init_name();
     data.charioteer = init_name();
     data.barbarian = init_name();
@@ -82,10 +82,10 @@ int figure_name_get(int type, int enemy) {
         return get_next_name(&data.prefect, 198, 32);
 
     case FIGURE_JUGGLER:
-        return get_next_name(&data.actor, 330, 32);
+        return get_next_name(&data.juggler, 330, 32);
 
-    case FIGURE_GLADIATOR:
-        return get_next_name(&data.gladiator, 363, 32);
+    case FIGURE_MUSICIAN:
+        return get_next_name(&data.musician, 363, 32);
 
     case FIGURE_LION_TAMER:
         return get_next_name(&data.lion_tamer, 396, 16);
@@ -188,8 +188,8 @@ io_buffer* iob_figure_names = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.javelin_thrower);
     iob->bind(BIND_SIGNATURE_INT32, &data.cavalry);
     iob->bind(BIND_SIGNATURE_INT32, &data.legionary);
-    iob->bind(BIND_SIGNATURE_INT32, &data.actor);
-    iob->bind(BIND_SIGNATURE_INT32, &data.gladiator);
+    iob->bind(BIND_SIGNATURE_INT32, &data.juggler);
+    iob->bind(BIND_SIGNATURE_INT32, &data.musician);
     iob->bind(BIND_SIGNATURE_INT32, &data.lion_tamer);
     iob->bind(BIND_SIGNATURE_INT32, &data.charioteer);
     iob->bind(BIND_SIGNATURE_INT32, &data.barbarian);

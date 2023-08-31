@@ -40,8 +40,8 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_entertainment();
     case OVERLAY_BOOTH:
         return city_overlay_for_booth();
-    case OVERLAY_AMPHITHEATER:
-        return city_overlay_for_amphitheater();
+    case OVERLAY_BANDSTAND:
+        return city_overlay_for_bandstand();
     case OVERLAY_COLOSSEUM:
         return city_overlay_for_colosseum();
     case OVERLAY_HIPPODROME:

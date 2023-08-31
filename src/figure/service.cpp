@@ -91,10 +91,10 @@ static void juggler_coverage(building* b) {
     b->data.house.juggler = MAX_COVERAGE;
 }
 
-static void amphitheater_coverage(building* b, int shows) {
-    b->data.house.amphitheater_actor = MAX_COVERAGE;
+static void bandstand_coverage(building* b, int shows) {
+    b->data.house.bandstand_juggler = MAX_COVERAGE;
     if (shows == 2) {
-        b->data.house.amphitheater_gladiator = MAX_COVERAGE;
+        b->data.house.bandstand_musician = MAX_COVERAGE;
     }
 }
 
@@ -370,17 +370,15 @@ int figure::figure_service_provide_coverage() {
         if (b->type == BUILDING_BOOTH) {
             houses_serviced = provide_culture(tile.x(), tile.y(), juggler_coverage);
         } else if (b->type == BUILDING_BANDSTAND) {
-            houses_serviced = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days1 ? 2 : 1, amphitheater_coverage);
+            houses_serviced = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days1 ? 2 : 1, bandstand_coverage);
         }
         break;
-    case FIGURE_GLADIATOR:
+    case FIGURE_MUSICIAN:
         b = get_entertainment_building();
         if (b->type == BUILDING_BANDSTAND) {
-            houses_serviced
-              = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days2 ? 2 : 1, amphitheater_coverage);
+            houses_serviced = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days2 ? 2 : 1, bandstand_coverage);
         } else if (b->type == BUILDING_PAVILLION) {
-            houses_serviced
-              = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days1 ? 2 : 1, colosseum_coverage);
+            houses_serviced = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days1 ? 2 : 1, colosseum_coverage);
         }
         break;
     case FIGURE_LION_TAMER:

@@ -6,7 +6,13 @@
 #include "graphics/elements/tooltip.h"
 
 static int get_column_height_juggler(const building* b) {
-    return b->house_size && b->data.house.juggler ? b->data.house.juggler / 10 : NO_COLUMN;
+    if (b->house_size) {
+        if (b->data.house.juggler || b->data.house.bandstand_juggler) {
+            return std::max<int>(b->data.house.juggler, b->data.house.bandstand_juggler) / 10;
+        }
+    }
+    
+    return NO_COLUMN;
 }
 
 static int get_tooltip_juggler(tooltip_context* c, const building* b) {

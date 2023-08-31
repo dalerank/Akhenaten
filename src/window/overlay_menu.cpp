@@ -70,7 +70,7 @@ static const int submenu_id_to_overlay[7][8] = {
   { // Entertainment
    OVERLAY_ENTERTAINMENT,
    OVERLAY_BOOTH,
-   OVERLAY_AMPHITHEATER,
+   OVERLAY_BANDSTAND,
    OVERLAY_COLOSSEUM,
    OVERLAY_HIPPODROME,
    0},

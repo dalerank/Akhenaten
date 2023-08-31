@@ -94,7 +94,7 @@ int figure::get_permission_for_int() {
         return PERMISSION_MARKET;
         break;
 
-    case FIGURE_GLADIATOR:
+    case FIGURE_MUSICIAN:
     case FIGURE_CHARIOTEER:
     case FIGURE_JUGGLER:
     case FIGURE_LION_TAMER:

@@ -43,7 +43,6 @@ void figure::play_die_sound() {
     case FIGURE_FORT_JAVELIN:
     case FIGURE_FORT_MOUNTED:
     case FIGURE_FORT_LEGIONARY:
-    case FIGURE_GLADIATOR:
     case FIGURE_INDIGENOUS_NATIVE:
     case FIGURE_TOWER_SENTRY:
     case FIGURE_ENEMY43_SPEAR:

@@ -2,6 +2,7 @@
 
 #include "building/type.h"
 #include "game/state.h"
+#include "city_overlay.h"
 
 static int show_building_entertainment(const building* b) {
     return b->type == BUILDING_JUGGLER_SCHOOL || b->type == BUILDING_BOOTH || b->type == BUILDING_CONSERVATORY
@@ -9,7 +10,7 @@ static int show_building_entertainment(const building* b) {
            || b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_SENET_HOUSE;
 }
 
-static int show_building_amphitheater(const building* b) {
+static int show_building_bandstand(const building* b) {
     return b->type == BUILDING_CONSERVATORY || b->type == BUILDING_BANDSTAND;
 }
 
@@ -30,11 +31,11 @@ static building* get_entertainment_building(const figure* f) {
 }
 
 static int show_figure_entertainment(const figure* f) {
-    return f->type == FIGURE_JUGGLER || f->type == FIGURE_GLADIATOR || f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER;
+    return f->type == FIGURE_JUGGLER || f->type == FIGURE_MUSICIAN || f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER;
 }
 
-static int show_figure_amphitheater(const figure* f) {
-    if (f->type == FIGURE_JUGGLER || f->type == FIGURE_GLADIATOR) {
+static int show_figure_bandstand(const figure* f) {
+    if (f->type == FIGURE_MUSICIAN) {
         return get_entertainment_building(f)->type == BUILDING_BANDSTAND;
     }
 
@@ -42,7 +43,7 @@ static int show_figure_amphitheater(const figure* f) {
 }
 
 static int show_figure_colosseum(const figure* f) {
-    if (f->type == FIGURE_GLADIATOR)
+    if (f->type == FIGURE_MUSICIAN)
         return get_entertainment_building(f)->type == BUILDING_PAVILLION;
     else if (f->type == FIGURE_LION_TAMER)
         return 1;
@@ -58,8 +59,14 @@ static int get_column_height_entertainment(const building* b) {
     return b->house_size && b->data.house.entertainment ? b->data.house.entertainment / 10 : NO_COLUMN;
 }
 
-static int get_column_height_amphitheater(const building* b) {
-    return b->house_size && b->data.house.amphitheater_actor ? b->data.house.amphitheater_actor / 10 : NO_COLUMN;
+static int get_column_height_bandstand(const building* b) {
+    if (b->house_size) {
+        if (b->data.house.bandstand_musician) {
+            return b->data.house.bandstand_musician / 10;
+        }
+    }
+    
+    return NO_COLUMN;
 }
 
 static int get_column_height_colosseum(const building* b) {
@@ -96,12 +103,12 @@ static int get_tooltip_entertainment(tooltip_context* c, const building* b) {
     }
 }
 
-static int get_tooltip_amphitheater(tooltip_context* c, const building* b) {
-    if (b->data.house.amphitheater_actor <= 0)
+static int get_tooltip_bandstand(tooltip_context* c, const building* b) {
+    if (b->data.house.bandstand_musician <= 0)
         return 79;
-    else if (b->data.house.amphitheater_actor >= 80)
+    else if (b->data.house.bandstand_musician >= 80)
         return 80;
-    else if (b->data.house.amphitheater_actor >= 20)
+    else if (b->data.house.bandstand_musician >= 20)
         return 81;
     else {
         return 82;
@@ -145,14 +152,14 @@ const city_overlay* city_overlay_for_entertainment(void) {
     return &overlay;
 }
 
-const city_overlay* city_overlay_for_amphitheater(void) {
-    static city_overlay overlay = {OVERLAY_AMPHITHEATER,
+const city_overlay* city_overlay_for_bandstand(void) {
+    static city_overlay overlay = {OVERLAY_BANDSTAND,
                                    COLUMN_TYPE_WATER_ACCESS,
-                                   show_building_amphitheater,
-                                   show_figure_amphitheater,
-                                   get_column_height_amphitheater,
+                                   show_building_bandstand,
+                                   show_figure_bandstand,
+                                   get_column_height_bandstand,
                                    0,
-                                   get_tooltip_amphitheater,
+                                   get_tooltip_bandstand,
                                    0,
                                    0};
     return &overlay;

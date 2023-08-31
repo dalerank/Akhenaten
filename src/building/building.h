@@ -153,8 +153,8 @@ public:
             short foods[8];
             short inventory[8];
             unsigned char juggler;
-            unsigned char amphitheater_actor;
-            unsigned char amphitheater_gladiator;
+            unsigned char bandstand_juggler;
+            unsigned char bandstand_musician;
             unsigned char colosseum_gladiator;
             unsigned char magistrate; // colosseum_lion
             unsigned char hippodrome;

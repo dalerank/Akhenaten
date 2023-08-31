@@ -122,7 +122,7 @@ static void check_wall(int type, int x, int y, int size) {
     }
 }
 
-static void check_actor_access(int type) {
+static void check_juggler_access(int type) {
     if (!g_has_warning && type == BUILDING_BOOTH) {
         if (building_count_active(BUILDING_JUGGLER_SCHOOL) <= 0) {
             show(WARNING_BUILD_ACTOR_COLONY);
@@ -130,7 +130,7 @@ static void check_actor_access(int type) {
     }
 }
 
-static void check_gladiator_access(int type) {
+static void check_musician_access(int type) {
     if (!g_has_warning && type == BUILDING_BANDSTAND) {
         if (building_count_active(BUILDING_CONSERVATORY) <= 0)
             show(WARNING_BUILD_GLADIATOR_SCHOOL);
@@ -225,8 +225,8 @@ void building_construction_warning_generic_checks(int type, int x, int y, int si
     building_construction_warning_check_food_stocks(type);
     check_workers(type);
     check_market(type);
-    check_actor_access(type);
-    check_gladiator_access(type);
+    check_juggler_access(type);
+    check_musician_access(type);
     check_lion_access(type);
     check_charioteer_access(type);
 
