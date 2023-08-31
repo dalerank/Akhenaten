@@ -394,12 +394,7 @@ void figure::draw_normal_figure(building_info_context* c) {
     lang_text_draw(64, type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
 
     if (c->figure.phrase_id >= 0) {
-        lang_text_draw_multiline(130,
-                                 21 * c->figure.sound_id + c->figure.phrase_id + 1,
-                                 c->x_offset + 90,
-                                 c->y_offset + 160,
-                                 16 * (c->width_blocks - 8),
-                                 FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1, c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 8), FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 

@@ -66,6 +66,7 @@ struct building_info_context {
     int rubble_building_type;
     int storage_show_special_orders;
     struct {
+        int draw_debug_path;
         int sound_id;
         int phrase_id;
         int selected_index;

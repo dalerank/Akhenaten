@@ -26,5 +26,5 @@ struct tooltip_context {
     int extra_value_text_ids[TOOLTIP_MAX_EXTRA_VALUES];
 };
 
-void tooltip_invalidate(void);
+void tooltip_invalidate();
 void tooltip_handle(const mouse* m, void (*func)(tooltip_context*));

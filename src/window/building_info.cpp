@@ -51,19 +51,33 @@ static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_advisor(int advisor, int param2);
 static void button_mothball(int mothball, int param2);
+static void button_debugpath(int debug, int param2);
 
-static image_button image_buttons_help_close[]
-  = {{14, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
-     {424, 3, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1}};
+static image_button image_buttons_help_close[] = {
+  {14, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
+  {424, 3, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1}
+};
 
 static image_button image_buttons_advisor[] = {
-  {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1}};
+  {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1}
+};
 
-static generic_button generic_button_mothball[] = {{400, 3, 24, 24, button_mothball, button_none, 0, 0}};
+static generic_button generic_button_mothball[] = {
+    {400, 3, 24, 24, button_mothball, button_none, 0, 0}
+};
+
+static generic_button generic_button_figures[] = {
+    {400, 3, 24, 24, button_debugpath, button_none, 0, 0}
+};
 
 static building_info_context context;
-static int focus_image_button_id;
-static int focus_generic_button_id;
+struct focus_button_id {
+    int image_button_id = 0;
+    int generic_button_id = 0;
+    int debug_path_id = 0;
+};
+
+focus_button_id g_building_info_focus;
 
 static int get_height_id(void) {
     if (context.type == BUILDING_INFO_TERRAIN) {
@@ -167,10 +181,10 @@ static int get_height_id(void) {
 }
 static void get_tooltip(tooltip_context* c) {
     int text_id = 0, group_id = 0;
-    if (focus_image_button_id) {
-        text_id = focus_image_button_id;
+    if (g_building_info_focus.image_button_id) {
+        text_id = g_building_info_focus.image_button_id;
 
-    } else if (focus_generic_button_id) {
+    } else if (g_building_info_focus.generic_button_id) {
         if (building_get(context.building_id)->state == BUILDING_STATE_VALID) {
             text_id = 8;
             group_id = 54;
@@ -178,6 +192,8 @@ static void get_tooltip(tooltip_context* c) {
             text_id = 10;
             group_id = 54;
         }
+    } else if (g_building_info_focus.debug_path_id) {
+        ;
     } else if (context.type == BUILDING_INFO_LEGION) {
         text_id = window_building_get_legion_info_tooltip_text(&context);
     } else if (context.type == BUILDING_INFO_BUILDING && context.storage_show_special_orders) {
@@ -194,8 +210,9 @@ static void get_tooltip(tooltip_context* c) {
     if (text_id || group_id) {
         c->type = TOOLTIP_BUTTON;
         c->text_id = text_id;
-        if (group_id)
+        if (group_id) {
             c->text_group = group_id;
+        }
     }
 }
 
@@ -266,6 +283,7 @@ static void init(map_point tile) {
     city_resource_determine_available();
     context.type = BUILDING_INFO_TERRAIN;
     context.figure.drawn = 0;
+    context.figure.draw_debug_path = 0;
     if (!context.building_id && map_sprite_animation_at(grid_offset) > 0) {
         if (map_terrain_is(grid_offset, TERRAIN_WATER))
             context.terrain_type = TERRAIN_INFO_BRIDGE;
@@ -489,19 +507,30 @@ static void init(map_point tile) {
                                               &context.y_offset,
                                               context.width_blocks,
                                               context.height_blocks);
-    } else if (s_height >= 600 && mouse_get()->y <= (s_height - 24) / 2 + 24)
+    } else if (s_height >= 600 && mouse_get()->y <= (s_height - 24) / 2 + 24) {
         context.y_offset = s_height - 16 * context.height_blocks - MARGIN_POSITION;
-    else
+    } else {
         context.y_offset = MIN_Y_POSITION;
+    }
 }
 
 static void draw_mothball_button(int x, int y, int focused) {
     uint8_t working_text[] = {'x', 0};
     button_border_draw(x, y, 20, 20, focused ? 1 : 0);
     building* b = building_get(context.building_id);
-    if (b->state == BUILDING_STATE_VALID)
+    if (b->state == BUILDING_STATE_VALID) {
         text_draw_centered(working_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    }
 }
+
+static void draw_debugpath_button(int x, int y, int focused) {
+    button_border_draw(x, y, 20, 20, focused ? 1 : 0);
+    figure* f = figure_get(context.figure.figure_ids[0]);
+    if (f->draw_debug_mode) {
+        text_draw_centered((uint8_t *)"p", x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    }
+}
+
 static void draw_background(void) {
     window_city_draw_panels();
     window_city_draw();
@@ -779,18 +808,21 @@ static void draw_background(void) {
                 break;
             }
 
-    } else if (context.type == BUILDING_INFO_LEGION)
+    } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info(&context);
+    }
 }
-static void draw_foreground(void) {
+
+static void draw_foreground() {
     // building-specific buttons
     if (context.type == BUILDING_INFO_BUILDING) {
         switch (building_get(context.building_id)->type) {
         case BUILDING_GRANARY:
-            if (context.storage_show_special_orders)
+            if (context.storage_show_special_orders) {
                 window_building_draw_granary_orders_foreground(&context);
-            else
+            } else {
                 window_building_draw_granary_foreground(&context);
+            }
             break;
         case BUILDING_STORAGE_YARD:
             if (context.storage_show_special_orders)
@@ -820,31 +852,30 @@ static void draw_foreground(void) {
             window_building_draw_barracks_foreground(&context);
             break;
         }
-    } else if (context.type == BUILDING_INFO_LEGION)
+    } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info_foreground(&context);
+    }
 
     // general buttons
-    if (context.storage_show_special_orders)
-        image_buttons_draw(context.x_offset,
-                           context.y_offset_submenu + 16 * context.height_blocks_submenu - 40,
-                           image_buttons_help_close,
-                           2);
-    else
-        image_buttons_draw(context.x_offset,
-                           context.y_offset + 16 * context.height_blocks - 40,
-                           image_buttons_help_close,
-                           2);
-    if (context.can_go_to_advisor)
-        image_buttons_draw(context.x_offset,
-                           context.y_offset + 16 * context.height_blocks - 40,
-                           image_buttons_advisor,
-                           1);
+    if (context.storage_show_special_orders) {
+        image_buttons_draw(context.x_offset, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40, image_buttons_help_close, 2);
+    } else {
+        image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_help_close, 2);
+    }
+
+    if (context.can_go_to_advisor) {
+        image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_advisor, 1);
+    }
+
     if (!context.storage_show_special_orders) {
         int workers_needed = model_get_building(building_get(context.building_id)->type)->laborers;
-        if (workers_needed)
-            draw_mothball_button(context.x_offset + 400,
-                                 context.y_offset + 3 + 16 * context.height_blocks - 40,
-                                 focus_generic_button_id);
+        if (workers_needed) {
+            draw_mothball_button(context.x_offset + 400, context.y_offset + 3 + 16 * context.height_blocks - 40, g_building_info_focus.generic_button_id);
+        }
+    }
+
+    if (context.figure.draw_debug_path) {
+        draw_debugpath_button(context.x_offset + 400, context.y_offset + 3 + 16 * context.height_blocks - 40, g_building_info_focus.debug_path_id);
     }
 }
 
@@ -900,39 +931,30 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     // general buttons
     if (context.storage_show_special_orders) {
         //        int y_offset = window_building_get_vertical_offset(&context, 28 + 5);
-        button_id |= image_buttons_handle_mouse(m,
-                                                context.x_offset,
-                                                context.y_offset_submenu + 16 * context.height_blocks_submenu - 40,
-                                                image_buttons_help_close,
-                                                2,
-                                                &focus_image_button_id);
+        button_id |= image_buttons_handle_mouse(m, context.x_offset, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40, image_buttons_help_close, 2, &g_building_info_focus.image_button_id);
     } else {
-        button_id |= image_buttons_handle_mouse(m,
-                                                context.x_offset,
-                                                context.y_offset + 16 * context.height_blocks - 40,
-                                                image_buttons_help_close,
-                                                2,
-                                                &focus_image_button_id);
-        button_id = generic_buttons_handle_mouse(m,
-                                                 context.x_offset,
-                                                 context.y_offset + 16 * context.height_blocks - 40,
-                                                 generic_button_mothball,
-                                                 1,
-                                                 &focus_generic_button_id);
-    }
-    if (context.can_go_to_advisor) {
-        button_id |= image_buttons_handle_mouse(
-          m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_advisor, 1, 0);
+        button_id |= image_buttons_handle_mouse(m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_help_close, 2, &g_building_info_focus.image_button_id);
+        button_id |= generic_buttons_handle_mouse(m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, generic_button_mothball, 1, &g_building_info_focus.generic_button_id);
     }
 
-    if (!button_id)
+    if (context.can_go_to_advisor) {
+        button_id |= image_buttons_handle_mouse(m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_advisor, 1, 0);
+    }
+
+    if (!button_id) {
         button_id |= !!handle_specific_building_info_mouse(m);
+    }
+
+    if (context.figure.draw_debug_path) {
+        button_id |= generic_buttons_handle_mouse(m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, generic_button_figures, 1, &g_building_info_focus.debug_path_id);
+    }
 
     if (!button_id && input_go_back_requested(m, h)) {
-        if (context.storage_show_special_orders)
+        if (context.storage_show_special_orders) {
             storage_settings_backup_check();
-        else
+        } else {
             window_city_show();
+        }
     }
 }
 
@@ -944,6 +966,7 @@ static void button_help(int param1, int param2) {
     }
     window_invalidate();
 }
+
 static void button_close(int param1, int param2) {
     if (context.storage_show_special_orders) {
         context.storage_show_special_orders = 0;
@@ -953,9 +976,11 @@ static void button_close(int param1, int param2) {
         window_city_show();
     }
 }
+
 static void button_advisor(int advisor, int param2) {
     window_advisors_show_advisor((e_advisor)advisor);
 }
+
 static void button_mothball(int mothball, int param2) {
     building* b = building_get(context.building_id);
     int workers_needed = model_get_building(b->type)->laborers;
@@ -965,15 +990,23 @@ static void button_mothball(int mothball, int param2) {
     }
 }
 
+static void button_debugpath(int debug, int param2) {
+    figure* f = figure_get(context.figure.figure_ids[0]);
+    f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
+    window_invalidate();
+}
+
 void window_building_info_show(const map_point& point) {
     window_type window = {WINDOW_BUILDING_INFO, draw_background, draw_foreground, handle_input, get_tooltip};
 
     init(point);
     window_show(&window);
 }
+
 int window_building_info_get_int(void) {
-    if (context.type == BUILDING_INFO_BUILDING)
+    if (context.type == BUILDING_INFO_BUILDING) {
         return building_get(context.building_id)->type;
+    }
 
     return BUILDING_NONE;
 }

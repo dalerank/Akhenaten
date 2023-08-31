@@ -15,18 +15,7 @@ struct generic_button {
     int parameter2;
 };
 
-int generic_buttons_handle_mouse(const mouse* m,
-                                 int x,
-                                 int y,
-                                 generic_button* buttons,
-                                 int num_buttons,
-                                 int* focus_button_id);
-int generic_buttons_min_handle_mouse(const mouse* m,
-                                     int x,
-                                     int y,
-                                     generic_button* buttons,
-                                     int num_buttons,
-                                     int* focus_button_id,
-                                     int minimum_button);
+int generic_buttons_handle_mouse(const mouse* m, int x, int y, generic_button* buttons, int num_buttons, int* focus_button_id);
+int generic_buttons_min_handle_mouse(const mouse* m, int x, int y, generic_button* buttons, int num_buttons, int* focus_button_id, int minimum_button);
 
 #endif // GRAPHICS_CUSTOM_BUTTON_H

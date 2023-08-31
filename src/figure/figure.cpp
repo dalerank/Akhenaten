@@ -375,7 +375,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind____skip(14);                                                  // 00 00 00 00 00 00 00 ...
     iob->bind(BIND_SIGNATURE_INT16, &f->market_lady_bought_amount);         // 200
     iob->bind____skip(115);
-    iob->bind(BIND_SIGNATURE_INT8, &f->unk_ph3_6);     // 6
+    iob->bind(BIND_SIGNATURE_UINT8, &f->draw_debug_mode);     // 6
     iob->bind(BIND_SIGNATURE_INT16, &f->unk_ph4_ffff); // -1
     iob->bind____skip(48);
     iob->bind(BIND_SIGNATURE_INT8, &f->festival_remaining_dances);
@@ -386,6 +386,8 @@ void figure::bind(io_buffer* iob) {
     f->cart_image_id += 18;
 
     iob->bind____skip(2);
+
+    draw_debug_mode = 0;
 }
 
 io_buffer* iob_figures = new io_buffer([](io_buffer* iob, size_t version) {

@@ -31,6 +31,10 @@ enum e_move_type : uint8_t {
     EMOVE_HIPPO = 3,
 };
 
+enum e_figure_draw_debug_mode {
+    FIGURE_DRAW_DEBUG_ROUTING = 2
+};
+
 class figure {
 private:
     e_resource resource_id;
@@ -172,7 +176,7 @@ public:
     // 14 bytes 00 00 00 00 00 00 00 ...
     short market_lady_bought_amount;
     // 115 bytes
-    char unk_ph3_6;
+    unsigned char draw_debug_mode;
     short unk_ph4_ffff;
     char festival_remaining_dances;
 
@@ -304,11 +308,7 @@ public:
     void advance_action(short NEXT_ACTION);
     bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = ACTION_2_ROAMERS_RETURNING);
     bool do_goto(map_point dest, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
-    bool do_gotobuilding(building* dest,
-                         bool stop_at_road = true,
-                         int terrainchoice = TERRAIN_USAGE_ROADS,
-                         short NEXT_ACTION = -1,
-                         short FAIL_ACTION = -1);
+    bool do_gotobuilding(building* dest, bool stop_at_road = true, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
     bool do_returnhome(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1);
     bool do_exitbuilding(bool invisible, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
     bool do_enterbuilding(bool invisible, building* b, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
