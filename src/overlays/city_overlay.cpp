@@ -21,6 +21,7 @@
 #include "overlays/city_overlay_mortuary.h"
 #include "overlays/city_overlay_health.h"
 #include "overlays/city_overlay_juggler.h"
+#include "overlays/city_overlay_bandstand.h"
 
 const city_overlay* g_city_overlay = 0;
 

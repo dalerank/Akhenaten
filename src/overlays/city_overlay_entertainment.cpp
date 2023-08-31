@@ -10,10 +10,6 @@ static int show_building_entertainment(const building* b) {
            || b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_SENET_HOUSE;
 }
 
-static int show_building_bandstand(const building* b) {
-    return b->type == BUILDING_CONSERVATORY || b->type == BUILDING_BANDSTAND;
-}
-
 static int show_building_colosseum(const building* b) {
     return b->type == BUILDING_CONSERVATORY || b->type == BUILDING_DANCE_SCHOOL || b->type == BUILDING_PAVILLION;
 }
@@ -22,29 +18,13 @@ static int show_building_hippodrome(const building* b) {
     return b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_SENET_HOUSE;
 }
 
-static building* get_entertainment_building(const figure* f) {
-    if (f->action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING
-        || f->action_state == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
-        return ((figure*)f)->home();
-    } else
-        return ((figure*)f)->destination();
-}
-
 static int show_figure_entertainment(const figure* f) {
     return f->type == FIGURE_JUGGLER || f->type == FIGURE_MUSICIAN || f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER;
 }
 
-static int show_figure_bandstand(const figure* f) {
-    if (f->type == FIGURE_MUSICIAN) {
-        return get_entertainment_building(f)->type == BUILDING_BANDSTAND;
-    }
-
-    return 0;
-}
-
 static int show_figure_colosseum(const figure* f) {
     if (f->type == FIGURE_MUSICIAN)
-        return get_entertainment_building(f)->type == BUILDING_PAVILLION;
+        return ((figure*)f)->get_entertainment_building()->type == BUILDING_PAVILLION;
     else if (f->type == FIGURE_LION_TAMER)
         return 1;
 
@@ -57,16 +37,6 @@ static int show_figure_hippodrome(const figure* f) {
 
 static int get_column_height_entertainment(const building* b) {
     return b->house_size && b->data.house.entertainment ? b->data.house.entertainment / 10 : NO_COLUMN;
-}
-
-static int get_column_height_bandstand(const building* b) {
-    if (b->house_size) {
-        if (b->data.house.bandstand_musician) {
-            return b->data.house.bandstand_musician / 10;
-        }
-    }
-    
-    return NO_COLUMN;
 }
 
 static int get_column_height_colosseum(const building* b) {
@@ -103,18 +73,6 @@ static int get_tooltip_entertainment(tooltip_context* c, const building* b) {
     }
 }
 
-static int get_tooltip_bandstand(tooltip_context* c, const building* b) {
-    if (b->data.house.bandstand_musician <= 0)
-        return 79;
-    else if (b->data.house.bandstand_musician >= 80)
-        return 80;
-    else if (b->data.house.bandstand_musician >= 20)
-        return 81;
-    else {
-        return 82;
-    }
-}
-
 static int get_tooltip_colosseum(tooltip_context* c, const building* b) {
     if (b->data.house.colosseum_gladiator <= 0)
         return 83;
@@ -147,19 +105,6 @@ const city_overlay* city_overlay_for_entertainment(void) {
                                    get_column_height_entertainment,
                                    0,
                                    get_tooltip_entertainment,
-                                   0,
-                                   0};
-    return &overlay;
-}
-
-const city_overlay* city_overlay_for_bandstand(void) {
-    static city_overlay overlay = {OVERLAY_BANDSTAND,
-                                   COLUMN_TYPE_WATER_ACCESS,
-                                   show_building_bandstand,
-                                   show_figure_bandstand,
-                                   get_column_height_bandstand,
-                                   0,
-                                   get_tooltip_bandstand,
                                    0,
                                    0};
     return &overlay;
