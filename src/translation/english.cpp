@@ -74,6 +74,7 @@ static translation_string all_strings[]
      {TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY, "Cart speed depends from quantity resource"},
      {TR_CONFIG_CH_CITIZEN_ROAD_OFFSET, "Use different offsets for citizens in road"},
      {TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH, "Work camp spawn one worker per month"},
+     {TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED, "Clay pit fire risk reduced"},
      {TR_CONFIG_GOD_OSIRIS_DISABLED, "Osiris disabled"},
      {TR_CONFIG_GOD_RA_DISABLED, "Ra disabled"},
      {TR_CONFIG_GOD_PTAH_DISABLED, "Ptah disabled"},

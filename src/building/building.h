@@ -317,6 +317,7 @@ public:
     void update_road_access();
     void update_month();
     bool figure_generate();
+    int get_fire_risk(int value);
 
     // barracks.c
     void barracks_add_weapon();

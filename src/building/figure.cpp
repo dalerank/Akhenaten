@@ -1207,6 +1207,7 @@ void building::update_road_access() {
     //    road_access.x() = road.x;
     //    road_access.y() = road.y;
 }
+
 bool building::figure_generate() {
     show_on_problem_overlay = 0;
 
@@ -1352,6 +1353,16 @@ bool building::figure_generate() {
     }
 
     return true;
+}
+
+int building::get_fire_risk(int value) {
+    switch (type) {
+    case BUILDING_CLAY_PIT:
+        if (config_get(CONFIG_GP_CH_CLAY_PIT_FIRE_RISK_REDUCED))
+            return value / 2;
+    }
+
+    return value;
 }
 
 void building_figure_generate(void) {

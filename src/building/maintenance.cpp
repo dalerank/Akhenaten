@@ -144,6 +144,7 @@ static void collapse_building(building* b) {
     game_undo_disable();
     building_destroy_by_collapse(b);
 }
+
 static void fire_building(building* b) {
     //    return; // TODO: get fire values and logic working before enabling
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
@@ -177,8 +178,9 @@ void building_maintenance_check_fire_collapse(void) {
 
         /////// COLLAPSE
         int damage_risk_increase = model->damage_risk;
-        if (tutorial_extra_damage_risk())
+        if (tutorial_extra_damage_risk()) {
             damage_risk_increase += 5;
+        }
 
         b->damage_risk += damage_risk_increase;
         if (b->damage_risk > 1000) {
@@ -191,20 +193,25 @@ void building_maintenance_check_fire_collapse(void) {
         int random_building = (i + map_random_get(b->tile.grid_offset())) & 7;
         if (random_building == random_global) {
             b->fire_risk += model->fire_risk;
+            int expected_fire_risk = 0;
             if (!b->house_size) {
-                b->fire_risk += 50;
+                expected_fire_risk += 50;
             } else if (b->house_population <= 0) {
-                b->fire_risk = 0;
+                expected_fire_risk = 0;
             } else if (b->subtype.house_level <= HOUSE_LARGE_SHACK) {
-                b->fire_risk += 100;
+                expected_fire_risk += 100;
             } else if (b->subtype.house_level <= HOUSE_GRAND_INSULA) {
-                b->fire_risk += 50;
+                expected_fire_risk += 50;
             } else {
-                b->fire_risk += 20;
+                expected_fire_risk += 20;
             }
 
-            if (tutorial_extra_fire_risk())
-                b->fire_risk += 50;
+            if (tutorial_extra_fire_risk()) {
+                expected_fire_risk += 50;
+            }
+
+            expected_fire_risk = b->get_fire_risk(expected_fire_risk);
+            b->fire_risk += expected_fire_risk;
             //            if (climate == CLIMATE_NORTHERN)
             //                b->fire_risk = 0;
             //            else if (climate == CLIMATE_DESERT)
@@ -215,8 +222,10 @@ void building_maintenance_check_fire_collapse(void) {
             recalculate_terrain = 1;
         }
     }
-    if (recalculate_terrain)
+
+    if (recalculate_terrain) {
         map_routing_update_land();
+    }
 }
 
 void building_maintenance_check_rome_access(void) {
