@@ -278,7 +278,7 @@ static void add_entertainment_venue(building* b, int orientation) {
         break;
 
     case BUILDING_BANDSTAND:
-        switch (orientation / 2) {
+        switch (orientation) {
         case 0:
             latch_on_venue(BUILDING_GARDENS, b, 2, 1, 0);
             latch_on_venue(BUILDING_BANDSTAND, b, 0, 0, 1, true);
