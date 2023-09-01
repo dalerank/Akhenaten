@@ -12,6 +12,10 @@ static int get_column_height_fire(const building* b) {
     if (b->prev_part_building_id || !model->fire_risk)
         return NO_COLUMN;
 
+    if (b->type == BUILDING_HOUSE_VACANT_LOT) {
+        return NO_COLUMN;
+    }
+
     return b->fire_risk / 100;
 }
 
