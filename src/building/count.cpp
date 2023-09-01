@@ -327,6 +327,7 @@ int building_count_industry_total(int resource) {
 io_buffer* iob_building_count_industry = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < RESOURCES_MAX; i++)
         iob->bind(BIND_SIGNATURE_INT32, &g_count_data.industry[i].total);
+
     for (int i = 0; i < RESOURCES_MAX; i++)
         iob->bind(BIND_SIGNATURE_INT32, &g_count_data.industry[i].active);
 

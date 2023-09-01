@@ -24,15 +24,25 @@ static int get_land_type_citizen_building(int grid_offset) {
     switch (b->type) {
     default:
         return CITIZEN_N1_BLOCKED;
-        //        case BUILDING_WAREHOUSE:
+
     case BUILDING_GATEHOUSE:
     case BUILDING_FERRY:
         return CITIZEN_0_ROAD;
+
     case BUILDING_ROADBLOCK:
         return CITIZEN_0_ROAD;
+
     case BUILDING_FORT_GROUND:
     case BUILDING_FESTIVAL_SQUARE:
         return CITIZEN_2_PASSABLE_TERRAIN;
+
+    case BUILDING_BANDSTAND:
+    case BUILDING_BOOTH:
+        if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+            return CITIZEN_0_ROAD;
+        }
+        return CITIZEN_N1_BLOCKED;
+
     case BUILDING_TRIUMPHAL_ARCH:
         if (b->subtype.orientation == 3) {
             switch (map_property_multi_tile_xy(grid_offset)) {

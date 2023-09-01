@@ -616,6 +616,7 @@ bool building_is_administration(int type) {
 
     return false;
 }
+
 bool building_is_religion(int type) {
     if (building_is_temple(type) || building_is_large_temple(type) || building_is_shrine(type))
         return true;
@@ -623,6 +624,7 @@ bool building_is_religion(int type) {
         return true;
     return false;
 }
+
 bool building_is_entertainment(int type) {
     if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_PAVILLION) {
         return true;
@@ -638,6 +640,7 @@ bool building_is_entertainment(int type) {
 
     return false;
 }
+
 bool building_is_culture(int type) {
     if (type == BUILDING_SCHOOL || type == BUILDING_LIBRARY || type == BUILDING_MENU_WATER_CROSSINGS)
         return true;

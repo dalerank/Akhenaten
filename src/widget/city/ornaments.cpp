@@ -519,36 +519,46 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
     int x = tile.x;
     int y = tile.y;
     // tile must contain image draw data
-    if (!map_property_is_draw_tile(grid_offset))
+    if (!map_property_is_draw_tile(grid_offset)) {
         return;
+    }
 
     int image_id = map_image_at(grid_offset);
     building* b = building_at(grid_offset);
-    if (b->type == BUILDING_STORAGE_YARD && b->state == BUILDING_STATE_CREATED)
+    if (b->type == BUILDING_STORAGE_YARD && b->state == BUILDING_STATE_CREATED) {
         ImageDraw::img_generic(image_id + 17, x - 5, y - 42);
-    if (b->type == 0 || b->state == BUILDING_STATE_UNUSED)
+    }
+
+    if (b->type == 0 || b->state == BUILDING_STATE_UNUSED) {
         return;
+    }
+
     // draw in red if necessary
     int color_mask = 0;
-    if (drawing_building_as_deleted(b) || map_property_is_deleted(grid_offset))
+    if (drawing_building_as_deleted(b) || map_property_is_deleted(grid_offset)) {
         color_mask = COLOR_MASK_RED;
+    }
 
     switch (b->type) {
     case BUILDING_BURNING_RUIN:
         draw_normal_anim(x, y, b, grid_offset, image_id, color_mask);
         break;
+
     case BUILDING_GRANARY:
         draw_granary_stores(b, x, y, color_mask);
         draw_normal_anim(x + 114, y + 2, b, grid_offset, image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, color_mask);
         break;
+
     case BUILDING_STORAGE_YARD:
         draw_storageyard_ornaments(b, x, y, color_mask);
         draw_normal_anim(x + 21, y + 24, b, grid_offset, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
         ImageDraw::img_generic(image_id + 17, x - 5, y - 42, color_mask);
         break;
+
     case BUILDING_DOCK:
         draw_dock_workers(b, x, y, color_mask);
         break;
+
     case BUILDING_GRAIN_FARM:
     case BUILDING_LETTUCE_FARM:
     case BUILDING_CHICKPEAS_FARM:
@@ -561,28 +571,34 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
             draw_farm_workers(b, grid_offset, tile);
         }
         break;
+
     case BUILDING_FIGS_FARM:
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
             draw_farm_crops(b->type, b->data.industry.progress, b->tile.grid_offset(), tile, color_mask);
             draw_farm_workers(b, grid_offset, tile);
         }
         break;
+
     case BUILDING_WATER_LIFT:
         draw_water_lift_anim(b, x, y, color_mask);
         break;
+
     case BUILDING_GOLD_MINE:
     case BUILDING_COPPER_MINE:
     case BUILDING_GEMSTONE_MINE:
         draw_normal_anim(x + 54, y + 15, b, grid_offset, image_id_from_group(GROUP_MINES) - 1, color_mask);
         break;
+
     case BUILDING_STONE_QUARRY:
     case BUILDING_LIMESTONE_QUARRY:
     case BUILDING_GRANITE_QUARRY:
     case BUILDING_SANDSTONE_QUARRY:
         break; // todo
+
     case BUILDING_MENU_FORTS:
         draw_fort_anim(x, y, b);
         break;
+
     case BUILDING_GATEHOUSE:
         draw_gatehouse_anim(x, y, b);
         break;
@@ -598,9 +614,11 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
         //            }
         //            break;
     case BUILDING_BOOTH:
-        if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BOOTH))
+        if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BOOTH)) {
             draw_entertainment_show_jugglers(b, x, y, color_mask);
+        }
         break;
+
     case BUILDING_BANDSTAND:
         if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1) {
             draw_entertainment_shows_musicians(b, x, y, 0, color_mask);
@@ -608,20 +626,26 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
             draw_entertainment_shows_musicians(b, x, y, 1, color_mask);
         }
         break;
+
     case BUILDING_PAVILLION:
-        if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_PAVILLION))
+        if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_PAVILLION)) {
             draw_entertainment_shows_dancers(b, x, y, color_mask);
+        }
         break;
+
     case BUILDING_CONSERVATORY:
-        draw_normal_anim(x + 82, y + 14, b, grid_offset, image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1 + 12, color_mask);
+        draw_normal_anim(x + 82, y + 14, b, grid_offset, image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask);
         break;
+
     case BUILDING_DANCE_SCHOOL:
         draw_normal_anim(x + 104, y, b, grid_offset, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask);
         break;
+
     default:
         draw_normal_anim(x, y, b, grid_offset, image_id, color_mask);
-        if (b->ruin_has_plague)
+        if (b->ruin_has_plague) {
             ImageDraw::img_generic(image_id_from_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask);
+        }
         break;
     }
 

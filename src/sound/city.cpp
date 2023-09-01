@@ -208,14 +208,17 @@ void sound_city_set_volume(int percentage) {
     for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++)
         sound_device_set_channel_volume(i, percentage);
 }
+
 void sound_city_mark_building_view(building* b, int direction) {
     if (b->state == BUILDING_STATE_UNUSED)
         return;
+
     int type = b->type;
     assert(type <= 236);
     int channel = int_TO_CHANNEL_ID[type];
     if (!channel)
         return;
+
     if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_CONSERVATORY
         || type == BUILDING_SENET_HOUSE) {
         // entertainment is shut off when caesar invades

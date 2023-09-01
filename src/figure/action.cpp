@@ -276,7 +276,7 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, int terrainchoic
         return do_goto(dest->tile, terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
     }
 
-    return 0;
+    return false;
 }
 bool figure::do_returnhome(int terrainchoice, short NEXT_ACTION) {
     return do_gotobuilding(home(), true, terrainchoice, NEXT_ACTION);

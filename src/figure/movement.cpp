@@ -272,6 +272,8 @@ void figure::advance_route_tile(int roaming_enabled) {
         case BUILDING_FESTIVAL_SQUARE:
         case BUILDING_PLAZA:
         case BUILDING_FERRY:
+        case BUILDING_BOOTH:
+        case BUILDING_BANDSTAND:
             //
             break; // OK to walk
         default:

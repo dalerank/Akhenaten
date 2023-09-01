@@ -2,6 +2,7 @@
 
 #include "graphics/image_groups.h"
 #include "grid/road_access.h"
+#include "core/calc.h"
 
 void figure::fireman_action() { // doubles as fireman! not as policeman!!!
     fireman_fight_fire();
@@ -10,12 +11,6 @@ void figure::fireman_action() { // doubles as fireman! not as policeman!!!
         movement_ticks_watchdog++;
     } else {
         movement_ticks_watchdog = 0;
-    }
-
-    if (movement_ticks_watchdog > 60) {
-        movement_ticks_watchdog = 0;
-        route_remove();
-        advance_action(ACTION_11_RETURNING_FROM_PATROL);
     }
 
     building* b = home();
@@ -46,13 +41,31 @@ void figure::fireman_action() { // doubles as fireman! not as policeman!!!
         }
 
         if (direction == DIR_FIGURE_REROUTE) {
-            building *b = destination();
-            if (!b || b->state == BUILDING_STATE_UNUSED || b->type != BUILDING_BURNING_RUIN) {
+            movement_ticks_watchdog++;
+            int next_direction = calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+            int dir_grid_offset = tile.grid_offset() + map_grid_direction_delta(next_direction);
+            building *next_tile_b = building_at(dir_grid_offset);
+            building *next_b = destination();
+            auto clear_ruin_destination = [&] { if (next_b && next_b->type == BUILDING_BURNING_RUIN) { next_b->set_figure(3, 0); }};
+            if (next_tile_b && next_tile_b->type == BUILDING_BURNING_RUIN) {
+                clear_ruin_destination();
+                set_destination(next_tile_b);
+                advance_action(FIGURE_ACTION_75_FIREMAN_AT_FIRE);
+            }
+            
+            if (!next_b || next_b->state == BUILDING_STATE_UNUSED || next_b->type != BUILDING_BURNING_RUIN) {
+                clear_ruin_destination();
                 bool has_fire_around = fireman_fight_fire();
                 if (!has_fire_around) {
                     advance_action(ACTION_11_RETURNING_FROM_PATROL);
                 }
             }
+
+            if (movement_ticks_watchdog > 10) {
+                movement_ticks_watchdog = 0;
+                clear_ruin_destination();
+                route_remove();
+                advance_action(ACTION_11_RETURNING_FROM_PATROL);
         }
         break;
 

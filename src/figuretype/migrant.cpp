@@ -99,6 +99,19 @@ static void add_house_population(building* house, int num_people) {
 void figure::immigrant_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant");
     building* home = immigrant_home();
+
+    if (tile == previous_tile) {
+        movement_ticks_watchdog++;
+    } else {
+        movement_ticks_watchdog = 0;
+    }
+
+    if (movement_ticks_watchdog > 60) {
+        movement_ticks_watchdog = 0;
+        route_remove();
+        advance_action(ACTION_8_RECALCULATE);
+    }
+
     switch (action_state) {
     case FIGURE_ACTION_1_IMMIGRANT_CREATED:
     case ACTION_8_RECALCULATE:
@@ -129,6 +142,7 @@ void figure::immigrant_action() {
         update_direction_and_image();
     }
 }
+
 void figure::emigrant_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Emigrant");
     switch (action_state) {
@@ -136,21 +150,25 @@ void figure::emigrant_action() {
         //            is_ghost = true;
         anim_frame = 0;
         wait_ticks++;
-        if (wait_ticks >= 5)
+        if (wait_ticks >= 5) {
             advance_action(FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE);
+        }
         break;
+
     case FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE:
         do_exitbuilding(false, FIGURE_ACTION_6_EMIGRANT_LEAVING);
         //            is_ghost = in_building_wait_ticks ? 1 : 0;
         break;
+
     case FIGURE_ACTION_6_EMIGRANT_LEAVING:
     case 10:
-        map_point& exit = city_map_entry_point();
+        map_point& exit = city_map_exit_point();
         do_goto(exit, TERRAIN_USAGE_ANY);
         break;
     }
     update_direction_and_image();
 }
+
 void figure::homeless_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Homeless");
     switch (action_state) {

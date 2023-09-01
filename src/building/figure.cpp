@@ -1237,36 +1237,17 @@ bool building::figure_generate() {
         case BUILDING_TOWER:
             spawn_figure_tower();
             break;
-        case BUILDING_ENGINEERS_POST:
-            spawn_figure_engineers_post();
-            break;
-        case BUILDING_POLICE_STATION:
-            if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                spawn_figure_police();
-            else
-                spawn_figure_firehouse();
-            break;
-        case BUILDING_FIREHOUSE:
-            spawn_figure_firehouse();
-            break;
-        case BUILDING_WATER_SUPPLY:
-            spawn_figure_watersupply();
-            break;
-        case BUILDING_JUGGLER_SCHOOL:
-            spawn_figure_juggler();
-            break;
-        case BUILDING_CONSERVATORY:
-            spawn_figure_musician();
-            break;
-        case BUILDING_DANCE_SCHOOL:
-            spawn_figure_dancer();
-            break;
-        case BUILDING_BANDSTAND:
-            spawn_figure_bandstand();
-            break;
-        case BUILDING_BOOTH:
-            spawn_figure_booth();
-            break;
+
+        case BUILDING_ENGINEERS_POST: spawn_figure_engineers_post(); break;
+        case BUILDING_POLICE_STATION: spawn_figure_police(); break;
+        case BUILDING_FIREHOUSE: spawn_figure_firehouse(); break;
+        case BUILDING_WATER_SUPPLY: spawn_figure_watersupply(); break;
+        case BUILDING_JUGGLER_SCHOOL: spawn_figure_juggler(); break;
+        case BUILDING_CONSERVATORY: spawn_figure_musician(); break;
+        case BUILDING_DANCE_SCHOOL: spawn_figure_dancer(); break;
+        case BUILDING_BANDSTAND: spawn_figure_bandstand(); break;
+        case BUILDING_BOOTH: spawn_figure_booth(); break;
+
         case BUILDING_SENET_HOUSE:
             spawn_figure_senet();
             break;
