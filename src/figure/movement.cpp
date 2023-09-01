@@ -82,7 +82,7 @@ void figure::set_target_height_bridge() {
 int figure::get_permission_for_int() {
     switch (type) {
     case FIGURE_ENGINEER:
-    case FIGURE_PREFECT:
+    case FIGURE_FIREMAN:
         return PERMISSION_MAINTENANCE;
         break;
 

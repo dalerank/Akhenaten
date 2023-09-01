@@ -400,7 +400,7 @@ int figure::figure_service_provide_coverage() {
             min_max_seen -= 10;
         break;
     }
-    case FIGURE_PREFECT: {
+    case FIGURE_FIREMAN: {
         int min_happiness = 100;
         houses_serviced = provide_service(tile.x(), tile.y(), &min_happiness, prefect_coverage);
         min_max_seen = min_happiness;

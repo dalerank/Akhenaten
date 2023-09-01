@@ -202,8 +202,10 @@ bool figure::has_immigrant_home(building* b) {
     return (b == immigrant_home());
 }
 bool figure::has_destination(int _id) {
-    if (_id == -1)
+    if (_id == -1) {
         return (destination_building_id != 0);
+    }
+
     return (destination_building_id == _id);
 }
 bool figure::has_destination(building* b) {
@@ -211,17 +213,21 @@ bool figure::has_destination(building* b) {
 }
 
 e_minimap_figure_color figure::get_figure_color() {
-    if (is_legion())
+    if (is_legion()) {
         return FIGURE_COLOR_SOLDIER;
+    }
 
-    if (is_enemy())
+    if (is_enemy()) {
         return FIGURE_COLOR_ENEMY;
+    }
 
     if (type == FIGURE_INDIGENOUS_NATIVE && action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
         return FIGURE_COLOR_ENEMY;
     }
-    if (type == FIGURE_OSTRICH)
+
+    if (type == FIGURE_OSTRICH) {
         return FIGURE_COLOR_ANIMAL;
+    }
 
     // if (type == FIGURE_WOLF)
     //     return FIGURE_COLOR_WOLF;

@@ -44,7 +44,7 @@ struct city_overlay_fire : public city_overlay {
     }
 
     bool show_figure(const figure* f) const override {
-        return f->type == FIGURE_PREFECT;
+        return f->type == FIGURE_FIREMAN;
     }
 
     void draw_custom_top(vec2i pixel, map_point point) const override {

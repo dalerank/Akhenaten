@@ -305,10 +305,10 @@ void building::spawn_figure_engineers_post() {
 }
 
 void building::spawn_figure_firehouse() {
-    common_spawn_roamer(FIGURE_PREFECT, 50, FIGURE_ACTION_70_PREFECT_CREATED);
+    common_spawn_roamer(FIGURE_FIREMAN, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
 }
 void building::spawn_figure_police() {
-    common_spawn_roamer(FIGURE_POLICEMAN, 50, FIGURE_ACTION_70_PREFECT_CREATED);
+    common_spawn_roamer(FIGURE_POLICEMAN, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
 }
 
 void building::spawn_figure_juggler() {

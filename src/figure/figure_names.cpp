@@ -9,7 +9,7 @@ struct figure_name_data_t {
     int32_t citizen_female;
     int32_t tax_collector;
     int32_t engineer;
-    int32_t prefect;
+    int32_t fireman;
     int32_t javelin_thrower;
     int32_t cavalry;
     int32_t legionary;
@@ -41,7 +41,7 @@ void figure_name_init() {
     data.citizen_female = init_name();
     data.tax_collector = init_name();
     data.engineer = init_name();
-    data.prefect = init_name();
+    data.fireman = init_name();
     data.javelin_thrower = init_name();
     data.cavalry = init_name();
     data.legionary = init_name();
@@ -77,9 +77,9 @@ int figure_name_get(int type, int enemy) {
     case FIGURE_ENGINEER:
         return get_next_name(&data.engineer, 165, 32);
 
-    case FIGURE_PREFECT:
+    case FIGURE_FIREMAN:
     case FIGURE_TOWER_SENTRY:
-        return get_next_name(&data.prefect, 198, 32);
+        return get_next_name(&data.fireman, 198, 32);
 
     case FIGURE_JUGGLER:
         return get_next_name(&data.juggler, 330, 32);
@@ -162,7 +162,7 @@ int figure_name_get(int type, int enemy) {
             return get_next_name(&data.enemy_arabian, 529, 32);
 
         case ENEMY_7_ETRUSCAN:
-            return get_next_name(&data.prefect, 198, 32);
+            return get_next_name(&data.fireman, 198, 32);
 
         default:
             return get_next_name(&data.barbarian, 430, 32);
@@ -184,7 +184,7 @@ io_buffer* iob_figure_names = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.citizen_female);
     iob->bind(BIND_SIGNATURE_INT32, &data.tax_collector);
     iob->bind(BIND_SIGNATURE_INT32, &data.engineer);
-    iob->bind(BIND_SIGNATURE_INT32, &data.prefect);
+    iob->bind(BIND_SIGNATURE_INT32, &data.fireman);
     iob->bind(BIND_SIGNATURE_INT32, &data.javelin_thrower);
     iob->bind(BIND_SIGNATURE_INT32, &data.cavalry);
     iob->bind(BIND_SIGNATURE_INT32, &data.legionary);

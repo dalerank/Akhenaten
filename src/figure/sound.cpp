@@ -16,30 +16,37 @@ void figure::play_die_sound() {
     case FIGURE_OSTRICH:
         sound_effect_play(SOUND_EFFECT_OSTRICH_DIE);
         break;
+
     case FIGURE_SHEEP:
         sound_effect_play(SOUND_EFFECT_SHEEP_DIE);
         break;
+
     case FIGURE_ZEBRA:
         sound_effect_play(SOUND_EFFECT_ZEBRA_DIE);
         break;
+
     case FIGURE_LION_TAMER:
         sound_effect_play(SOUND_EFFECT_LION_DIE);
         break;
+
     case FIGURE_ENEMY48_CHARIOT:
     case FIGURE_ENEMY52_MOUNTED_ARCHER:
         sound_effect_play(SOUND_EFFECT_HORSE2);
         break;
+
     case FIGURE_ENEMY46_CAMEL:
         sound_effect_play(SOUND_EFFECT_CAMEL);
         break;
+
     case FIGURE_ENEMY47_ELEPHANT:
         sound_effect_play(SOUND_EFFECT_ELEPHANT_DIE);
         break;
+
     case FIGURE_NATIVE_TRADER:
     case FIGURE_TRADE_CARAVAN:
     case FIGURE_TRADE_CARAVAN_DONKEY:
         break;
-    case FIGURE_PREFECT:
+
     case FIGURE_FORT_JAVELIN:
     case FIGURE_FORT_MOUNTED:
     case FIGURE_FORT_LEGIONARY:
@@ -58,6 +65,7 @@ void figure::play_die_sound() {
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
         is_soldier = 1;
         break;
+
     default:
         is_citizen = 1;
         break;

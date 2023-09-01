@@ -322,7 +322,7 @@ public:
     void tax_collector_action();
     void engineer_action();
     void storageyard_cart_action();
-    void prefect_action(); // 10
+    void fireman_action(); // 10
     void soldier_action();
     void military_standard_action();
     void entertainer_action();
@@ -441,7 +441,7 @@ public:
     void entertainer_update_image();
 
     // maintenance.c
-    bool fight_enemy(int category, int max_distance);
+    bool policeman_fight_enemy(int category, int max_distance);
     bool fireman_fight_fire();
     void fireman_extinguish_fire();
     int target_is_alive();

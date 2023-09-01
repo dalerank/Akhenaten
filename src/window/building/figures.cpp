@@ -383,11 +383,13 @@ void figure::draw_market_buyer(building_info_context* c) {
                                  FONT_NORMAL_BLACK_ON_DARK);
     }
 }
+
 void figure::draw_normal_figure(building_info_context* c) {
     int image_id = big_people_image(type);
-    if (action_state == FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE || action_state == FIGURE_ACTION_75_PREFECT_AT_FIRE) {
+    if (action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE || action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
         image_id = image_id_from_group(GROUP_PORTRAITS) + 18;
     }
+
     ImageDraw::img_generic(image_id, c->x_offset + 28, c->y_offset + 112);
 
     lang_text_draw(name_group_id(), name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BLACK_ON_DARK);

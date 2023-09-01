@@ -346,7 +346,7 @@ void figure::action_perform() {
             }
             break;
         case FIGURE_ENGINEER:
-        case FIGURE_PREFECT:
+        case FIGURE_FIREMAN:
         case FIGURE_POLICEMAN:
         case FIGURE_MAGISTRATE:
         case FIGURE_WORKER:
@@ -490,9 +490,11 @@ void figure::action_perform() {
         case 9:
             storageyard_cart_action();
             break; // warehouseman_action !!!!
-        case 10:
-            prefect_action();
+
+        case FIGURE_FIREMAN:
+            fireman_action();
             break; // 10
+
         case 11:   // soldier_action();                  break;
         case 12:   // soldier_action();                  break;
         case 13:
