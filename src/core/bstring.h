@@ -65,7 +65,7 @@ public:
         concat(s1, s2, s3, s4, s5, s6, s7);
     }
     inline ref concat(const char* s1) {
-        strncpy(_data, _size, s1);
+        snprintf(_data, _size, "%s", s1);
         return *this;
     }
     inline ref concat(const char* s1, const char* s2) {

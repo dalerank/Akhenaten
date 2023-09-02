@@ -75,7 +75,11 @@ float get_farm_produce_uptick_per_day(building* b) {
 float get_produce_uptick_per_day(building* b) {
     switch (b->type) {
     case BUILDING_GOLD_MINE:
-        return b->num_workers / 10.f;
+        if (config_get(CONFIG_GP_CH_GOLDMINE_TWICE_PRODUCTION)) {
+            return b->num_workers / 5.f;
+        } else {
+            return b->num_workers / 10.f;
+        }
         break;
 
     case BUILDING_STONE_QUARRY:

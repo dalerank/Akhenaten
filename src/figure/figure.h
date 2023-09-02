@@ -533,7 +533,7 @@ void figure_kill_all();
 
 template<typename ... Args>
 bool figure_type_none_of(figure *f, Args ... args) {
-    e_figure_type types[] = {args...};
+    int types[] = {args...};
     return (std::find(std::begin(types), std::end(types), f->type) == std::end(types));
 }
 
