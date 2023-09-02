@@ -10,6 +10,8 @@
 #include "io/io_buffer.h"
 #include "widget/city.h"
 #include "window/building/common.h"
+
+#include <algorithm>
 #include <memory.h>
 
 class building;
