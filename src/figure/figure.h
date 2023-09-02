@@ -531,4 +531,10 @@ void figure_init_scenario(void);
 
 void figure_kill_all();
 
+template<typename ... Args>
+bool figure_type_none_of(figure *f, Args ... args) {
+    e_figure_type types[] = {args...};
+    return (std::find(std::begin(types), std::end(types), f->type) == std::end(types));
+}
+
 int figure_movement_can_launch_cross_country_missile(map_point src, map_point dst);
