@@ -66,6 +66,7 @@ void figure::fireman_action() { // doubles as fireman! not as policeman!!!
                 clear_ruin_destination();
                 route_remove();
                 advance_action(ACTION_11_RETURNING_FROM_PATROL);
+            }
         }
         break;
 
