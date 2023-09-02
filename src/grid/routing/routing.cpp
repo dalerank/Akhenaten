@@ -128,7 +128,7 @@ static void callback_calc_distance_build_road(int next_offset, int dist) {
     case CITIZEN_N3_AQUEDUCT:
         if (!map_can_place_road_under_aqueduct(next_offset))
             blocked = true;
-        if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_AQUEDUCT, TERRAIN_ROAD, d_x, d_y, false))
+        if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_CANAL, TERRAIN_ROAD, d_x, d_y, false))
             blocked = true;
         break;
     case CITIZEN_2_PASSABLE_TERRAIN: // rubble, garden, access ramp
@@ -159,7 +159,7 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
     case CITIZEN_0_ROAD: // rubble, garden, access ramp
         if (!map_can_place_aqueduct_on_road(next_offset))
             blocked = true;
-        if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_ROAD, TERRAIN_AQUEDUCT, d_x, d_y, false))
+        if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_ROAD, TERRAIN_CANAL, d_x, d_y, false))
             blocked = true;
         break;
     case CITIZEN_2_PASSABLE_TERRAIN: // rubble, garden, access ramp
@@ -195,7 +195,7 @@ bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
         if (is_aqueduct) {
             if (!map_can_place_aqueduct_on_road(grid_offset))
                 return false;
-            if (!can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_ROAD, TERRAIN_AQUEDUCT, 0, 0, false))
+            if (!can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_ROAD, TERRAIN_CANAL, 0, 0, false))
                 return false;
         }
         break;
@@ -203,7 +203,7 @@ bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
         if (!is_aqueduct) {
             if (!map_can_place_road_under_aqueduct(grid_offset))
                 return false;
-            if (!can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_AQUEDUCT, TERRAIN_ROAD, 0, 0, false))
+            if (!can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_CANAL, TERRAIN_ROAD, 0, 0, false))
                 return false;
         }
         break;
@@ -258,7 +258,7 @@ bool map_routing_calculate_distances_for_building(routed_int type, int x, int y)
     case ROUTED_BUILDING_ROAD:
         if (!map_can_place_initial_road_or_aqueduct(source_offset, false))
             return false;
-        if (map_terrain_is(source_offset, TERRAIN_AQUEDUCT) && !map_can_place_road_under_aqueduct(source_offset))
+        if (map_terrain_is(source_offset, TERRAIN_CANAL) && !map_can_place_road_under_aqueduct(source_offset))
             return false;
         route_queue(source_offset, -1, callback_calc_distance_build_road);
         break;
@@ -276,16 +276,19 @@ bool map_routing_calculate_distances_for_building(routed_int type, int x, int y)
     ++g_routing_stats.total_routes_calculated;
     return true;
 }
+
 static bool callback_delete_wall_aqueduct(int next_offset, int dist) {
     if (map_grid_get(&routing_land_citizen, next_offset) < CITIZEN_0_ROAD) {
-        if (map_terrain_is(next_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
+        if (map_terrain_is(next_offset, TERRAIN_CANAL | TERRAIN_WALL)) {
             map_terrain_remove(next_offset, TERRAIN_CLEARABLE);
             return true;
         }
-    } else
+    } else {
         enqueue(next_offset, dist);
+    }
     return false;
 }
+
 void map_routing_delete_first_wall_or_aqueduct(int x, int y) {
     ++g_routing_stats.total_routes_calculated;
     route_queue_until(MAP_OFFSET(x, y), callback_delete_wall_aqueduct);

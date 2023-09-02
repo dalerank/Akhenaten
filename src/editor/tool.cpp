@@ -357,7 +357,7 @@ static void update_terrain_after_elevation_changes(void) {
 static void place_access_ramp(map_point tile) {
     int orientation = 0;
     if (editor_tool_can_place_access_ramp(tile, &orientation)) {
-        int terrain_mask = ~(TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_GARDEN | TERRAIN_AQUEDUCT);
+        int terrain_mask = ~(TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_GARDEN | TERRAIN_CANAL);
         for (int dy = 0; dy < 2; dy++) {
             for (int dx = 0; dx < 2; dx++) {
                 int grid_offset = tile.grid_offset() + GRID_OFFSET(dx, dy);

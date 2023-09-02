@@ -516,7 +516,7 @@ const terrain_image* map_image_context_get_aqueduct(int grid_offset) {
     int has_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
     for (int i = 0; i < MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
-        if (map_terrain_is(offset, TERRAIN_AQUEDUCT)) {
+        if (map_terrain_is(offset, TERRAIN_CANAL)) {
             if (has_road) {
                 if (!map_terrain_is(offset, TERRAIN_ROAD))
                     tiles[i] = 1;

@@ -29,12 +29,9 @@
 
 // #define OFFSET(x,y) (x + GRID_SIZE_PH * y)
 
-#define FORBIDDEN_TERRAIN_MEADOW                                                                                       \
-    (TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING     \
-     | TERRAIN_GARDEN)
+#define FORBIDDEN_TERRAIN_MEADOW (TERRAIN_CANAL | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
 
-#define FORBIDDEN_TERRAIN_RUBBLE                                                                                       \
-    (TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
+#define FORBIDDEN_TERRAIN_RUBBLE (TERRAIN_CANAL | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
 
 static int aqueduct_include_construction = 0;
 
@@ -732,7 +729,7 @@ int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain
     return image_id_from_group(GROUP_BUILDING_AQUEDUCT) + water_offset + floodplains_offset + image_offset;
 }
 static void set_aqueduct_image(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
+    if (map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
         const terrain_image* img = map_image_context_get_aqueduct(grid_offset);
         bool is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
         if (is_road)
@@ -759,9 +756,12 @@ void map_tiles_update_region_aqueducts(int x_min, int y_min, int x_max, int y_ma
 int map_tiles_set_aqueduct(int x, int y) {
     int grid_offset = MAP_OFFSET(x, y);
     int tile_set = 0;
-    if (!map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
+    
+    if (!map_terrain_is(grid_offset, TERRAIN_CANAL)) {
         tile_set = 1;
-    map_terrain_add(grid_offset, TERRAIN_AQUEDUCT);
+    }
+
+    map_terrain_add(grid_offset, TERRAIN_CANAL);
     map_property_clear_constructing(grid_offset);
 
     foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_aqueduct_image);
@@ -785,7 +785,7 @@ static void set_road_image(int grid_offset) {
         return;
     }
 
-    if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
+    if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
         set_aqueduct_image(grid_offset);
         return;
     }
@@ -1014,9 +1014,11 @@ static void set_floodplain_edges_image(int grid_offset) {
     }
 }
 static void set_floodplain_land_tiles_image(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER)
-        && !map_terrain_is(grid_offset, TERRAIN_BUILDING) && !map_terrain_is(grid_offset, TERRAIN_ROAD)
-        && !map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
+    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)
+        && !map_terrain_is(grid_offset, TERRAIN_WATER)
+        && !map_terrain_is(grid_offset, TERRAIN_BUILDING) 
+        && !map_terrain_is(grid_offset, TERRAIN_ROAD)
+        && !map_terrain_is(grid_offset, TERRAIN_CANAL)) {
         int growth = map_get_floodplain_growth(grid_offset);
         int image_id = image_id_from_group(GROUP_TERRAIN_FLOODPLAIN) + growth;
         int fertility_index = 0;
@@ -1085,7 +1087,7 @@ void map_tiles_set_water(int grid_offset) { // todo: broken
 int floodplain_growth_advance = 0;
 static void advance_floodplain_growth_tile(int grid_offset, int order) {
     if (map_terrain_is(grid_offset, TERRAIN_WATER) || map_terrain_is(grid_offset, TERRAIN_BUILDING)
-        || map_terrain_is(grid_offset, TERRAIN_ROAD) || map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
+        || map_terrain_is(grid_offset, TERRAIN_ROAD) || map_terrain_is(grid_offset, TERRAIN_CANAL)) {
         map_set_floodplain_growth(grid_offset, 0);
         set_floodplain_land_tiles_image(grid_offset);
         map_refresh_river_image_at(grid_offset);

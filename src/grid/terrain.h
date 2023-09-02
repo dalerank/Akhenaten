@@ -13,7 +13,7 @@ enum e_terrain {
     TERRAIN_GARDEN = 0x20,
     TERRAIN_ROAD = 0x40,
     TERRAIN_GROUNDWATER = 0x80,
-    TERRAIN_AQUEDUCT = 0x100,
+    TERRAIN_CANAL = 0x100,
     TERRAIN_ELEVATION = 0x200,
     TERRAIN_ACCESS_RAMP = 0x400,
     TERRAIN_MEADOW = 0x800,
@@ -46,7 +46,7 @@ enum e_terrain {
     TERRAIN_NOT_CLEAR = TERRAIN_TREE + TERRAIN_ROCK + TERRAIN_WATER + TERRAIN_BUILDING + TERRAIN_SHRUB + TERRAIN_GARDEN
                         + TERRAIN_ROAD
                         // ... //
-                        + TERRAIN_AQUEDUCT + TERRAIN_ELEVATION
+                        + TERRAIN_CANAL + TERRAIN_ELEVATION
                         + TERRAIN_ACCESS_RAMP
                         // ... //
                         + TERRAIN_RUBBLE

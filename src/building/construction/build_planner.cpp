@@ -711,7 +711,7 @@ static int place_plaza(map_point start, map_point end) {
         for (int x = x_min; x <= x_max; x++) {
             int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)
-                && !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_AQUEDUCT)
+                && !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_CANAL)
                 && map_tiles_is_paved_road(grid_offset)) {
                 if (!map_property_is_plaza_or_earthquake(grid_offset))
                     items_placed++;
@@ -1332,18 +1332,29 @@ void BuildPlanner::update_obstructions_check() {
             unsigned int restricted_terrain = TERRAIN_ALL;
 
             // special cases
-            if (special_flags & PlannerFlags::Meadow || special_flags & PlannerFlags::FloodplainShore
-                || special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Canals)
+            if (special_flags & PlannerFlags::Meadow
+                || special_flags & PlannerFlags::FloodplainShore
+                || special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Canals) {
                 restricted_terrain -= TERRAIN_FLOODPLAIN;
-            if (special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Intersection
-                || special_flags & PlannerFlags::Canals)
+            }
+
+            if (special_flags & PlannerFlags::Road
+                || special_flags & PlannerFlags::Intersection
+                || special_flags & PlannerFlags::Canals) {
                 restricted_terrain -= TERRAIN_ROAD;
-            if (special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Canals)
-                restricted_terrain -= TERRAIN_AQUEDUCT;
-            if (special_flags & PlannerFlags::Water || special_flags & PlannerFlags::ShoreLine)
+            }
+
+            if (special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Canals) {
+                restricted_terrain -= TERRAIN_CANAL;
+            }
+
+            if (special_flags & PlannerFlags::Water || special_flags & PlannerFlags::ShoreLine) {
                 restricted_terrain -= TERRAIN_WATER;
-            if (special_flags & PlannerFlags::TempleUpgrade) // special case
+            }
+
+            if (special_flags & PlannerFlags::TempleUpgrade) { // special case
                 return;
+            }
 
             tile_blocked_array[row][column] = false;
             if (!map_grid_is_inside(current_tile.x(), current_tile.y(), 1)
@@ -1353,6 +1364,7 @@ void BuildPlanner::update_obstructions_check() {
             }
         }
     }
+
     if (tiles_blocked_total > 0) {
         immediate_warning_id = WARNING_CLEAR_LAND_NEEDED;
         can_place = CAN_NOT_BUT_GREEN;
@@ -1381,6 +1393,7 @@ void BuildPlanner::update_requirements_check() {
             can_place = CAN_NOT_BUT_GREEN;
         }
     }
+
     if (special_flags & PlannerFlags::Groundwater) {
         if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 0, TERRAIN_GROUNDWATER)) {
             immediate_warning_id = WARNING_GROUNDWATER_NEEDED;
@@ -1394,6 +1407,7 @@ void BuildPlanner::update_requirements_check() {
             can_place = CAN_NOT_PLACE;
         }
     }
+
     if (special_flags & PlannerFlags::Meadow) {
         if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 1, TERRAIN_MEADOW)
             && !map_terrain_all_tiles_in_radius_are(end.x(), end.y(), size.x, 0, TERRAIN_FLOODPLAIN)) {
@@ -1401,30 +1415,35 @@ void BuildPlanner::update_requirements_check() {
             can_place = CAN_NOT_PLACE;
         }
     }
+
     if (special_flags & PlannerFlags::Rock) {
         if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 1, TERRAIN_ROCK)) {
             immediate_warning_id = WARNING_ROCK_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
+
     if (special_flags & PlannerFlags::Ore) {
         if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 1, TERRAIN_ORE)) {
             immediate_warning_id = WARNING_ROCK_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
+
     if (special_flags & PlannerFlags::Trees) {
         if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 1, TERRAIN_SHRUB | TERRAIN_TREE)) {
             immediate_warning_id = WARNING_TREE_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
+
     if (special_flags & PlannerFlags::Walls) {
         if (!map_terrain_all_tiles_in_radius_are(end.x(), end.y(), size.x, 0, TERRAIN_WALL)) {
             immediate_warning_id = WARNING_WALL_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
+
     if (!!(special_flags & PlannerFlags::IgnoreNearbyEnemy) == false) {
         if (has_nearby_enemy(start.x(), start.y(), end.x(), end.y())) {
             immediate_warning_id = WARNING_ENEMY_NEARBY;
@@ -1437,17 +1456,20 @@ void BuildPlanner::update_requirements_check() {
             can_place = CAN_NOT_PLACE;
         }
     }
+
     if ((!!(special_flags & PlannerFlags::Canals) && !!additional_req_param1) == true) {
-        if (!map_terrain_is(end.grid_offset(), TERRAIN_AQUEDUCT)) {
+        if (!map_terrain_is(end.grid_offset(), TERRAIN_CANAL)) {
             immediate_warning_id = additional_req_param2;
             can_place = CAN_NOT_PLACE;
         }
     }
+
     if (special_flags & PlannerFlags::FancyRoad) {
         if (!map_tiles_is_paved_road(end.grid_offset())) {
             can_place = CAN_NOT_PLACE;
         }
     }
+
     if (special_flags & PlannerFlags::RiverAccess) {
         if (!building_dock_is_connected_to_open_water(end.x(), end.y())) {
             immediate_warning_id = WARNING_DOCK_OPEN_WATER_NEEDED;

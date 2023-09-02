@@ -206,7 +206,7 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
             image_id = image_id_from_group(GROUP_MINIMAP_ROCK) + (rand & 3);
         else if (terrain & TERRAIN_ROAD)
             image_id = image_id_from_group(GROUP_MINIMAP_ROAD);
-        else if (terrain & TERRAIN_AQUEDUCT)
+        else if (terrain & TERRAIN_CANAL)
             image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT);
         else if (terrain & TERRAIN_WALL)
             image_id = image_id_from_group(GROUP_MINIMAP_WALL);

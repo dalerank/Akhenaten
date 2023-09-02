@@ -71,7 +71,7 @@ static void draw_footprint_desirability(vec2i pixel, map_point point) {
         if (map_property_is_draw_tile(grid_offset))
             ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
 
-    } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
+    } else if (map_terrain_is(grid_offset, TERRAIN_CANAL | TERRAIN_WALL)) {
         // display empty land/groundwater
         int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
         ImageDraw::isometric_from_drawtile(image_id, x, y, color_mask);

@@ -35,9 +35,7 @@ static int get_tooltip_routing(tooltip_context* c, const building* b) {
 }
 
 static int terrain_on_routing_overlay() {
-    return TERRAIN_TREE | TERRAIN_ROCK
-            | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP 
-            | TERRAIN_RUBBLE | TERRAIN_AQUEDUCT | TERRAIN_WALL;
+    return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP  | TERRAIN_RUBBLE | TERRAIN_CANAL | TERRAIN_WALL;
 }
 
 static bool building_on_routing_overlay(e_building_type type) {

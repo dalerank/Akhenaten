@@ -453,7 +453,7 @@ void draw_isometrics_overlay(vec2i pixel, map_point point) {
         get_city_overlay()->draw_custom_footprint(pixel, point);
     } else if (map_property_is_draw_tile(grid_offset)) {
         int terrain = map_terrain_get(grid_offset);
-        if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
+        if (terrain & (TERRAIN_CANAL | TERRAIN_WALL)) {
             // display groundwater
             int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
             ImageDraw::isometric_from_drawtile(image_id, x, y, map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);

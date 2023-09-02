@@ -332,7 +332,7 @@ static void init(map_point tile) {
         context.terrain_type = TERRAIN_INFO_GARDEN;
     } else if ((map_terrain_get(grid_offset) & (TERRAIN_ROAD | TERRAIN_BUILDING)) == TERRAIN_ROAD) {
         context.terrain_type = TERRAIN_INFO_ROAD;
-    } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
+    } else if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
         context.terrain_type = TERRAIN_INFO_AQUEDUCT;
     } else if (map_terrain_is(grid_offset, TERRAIN_RUBBLE)) {
         context.terrain_type = TERRAIN_INFO_RUBBLE;

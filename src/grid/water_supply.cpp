@@ -85,7 +85,7 @@ static void canals_empty_all(void) {
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
+            if (map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 map_aqueduct_set(grid_offset, 0);
                 int image_id = map_image_at(grid_offset);
                 if (image_id < image_without_water)
@@ -102,8 +102,10 @@ static void canals_empty_all(void) {
 }
 
 static void fill_canals_from_offset(int grid_offset) {
-    if (!map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) || map_terrain_is(grid_offset, TERRAIN_WATER))
+    if (!map_terrain_is(grid_offset, TERRAIN_CANAL) || map_terrain_is(grid_offset, TERRAIN_WATER)) {
         return;
+    }
+
     memset(&g_water_supply_queue, 0, sizeof(g_water_supply_queue));
     int guard = 0;
     int next_offset;
@@ -130,7 +132,7 @@ static void fill_canals_from_offset(int grid_offset) {
                     if (!b->has_water_access)
                         b->has_water_access = 2;
                 }
-            } else if (map_terrain_is(new_offset, TERRAIN_AQUEDUCT)) {
+            } else if (map_terrain_is(new_offset, TERRAIN_CANAL)) {
                 if (!map_aqueduct_at(new_offset)) {
                     if (next_offset == -1)
                         next_offset = new_offset;

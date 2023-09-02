@@ -251,15 +251,17 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
     }
     // check terrain
     int grid_offset = MAP_OFFSET(x, y);
-    if (map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_TREE))
+    if (map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_TREE)) {
         return -1;
+    }
 
     if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
         if (!map_terrain_is(grid_offset, TERRAIN_ROAD)) { // bridge
             return -1;
         }
-    } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING | TERRAIN_AQUEDUCT | TERRAIN_GATEHOUSE | TERRAIN_WALL))
+    } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING | TERRAIN_CANAL | TERRAIN_GATEHOUSE | TERRAIN_WALL)) {
         building_destroy_by_enemy(map_point(grid_offset));
+    }
 
     // spawn the lot!
     int seq = 0;

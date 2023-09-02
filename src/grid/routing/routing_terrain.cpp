@@ -193,7 +193,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
             } else {
                 return get_land_type_citizen_building(grid_offset);
             }
-        } else if (terrain & TERRAIN_AQUEDUCT) {
+        } else if (terrain & TERRAIN_CANAL) {
             return get_land_type_citizen_aqueduct(grid_offset);
         } else if (terrain & TERRAIN_NOT_CLEAR) {
             return CITIZEN_N1_BLOCKED;
@@ -210,7 +210,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
             return NONCITIZEN_2_CLEARABLE;
         else if (terrain & TERRAIN_BUILDING)
             return get_land_type_noncitizen(grid_offset);
-        else if (terrain & TERRAIN_AQUEDUCT)
+        else if (terrain & TERRAIN_CANAL)
             return NONCITIZEN_2_CLEARABLE;
         else if (terrain & TERRAIN_WALL)
             return NONCITIZEN_3_WALL;

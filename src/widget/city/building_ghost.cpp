@@ -297,22 +297,21 @@ static void draw_road(map_point tile, int x, int y) {
     int grid_offset = tile.grid_offset();
     bool blocked = false;
     int image_id = 0;
-    if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
+    if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
         image_id = image_id_from_group(GROUP_BUILDING_AQUEDUCT);
-        if (map_can_place_road_under_aqueduct(grid_offset))
+        if (map_can_place_road_under_aqueduct(grid_offset)) {
             image_id += map_get_aqueduct_with_road_image(grid_offset);
-        else
+        } else {
             blocked = true;
+        }
     } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR - TERRAIN_FLOODPLAIN)) {
         blocked = true;
     } else {
-        if (GAME_ENV == ENGINE_ENV_C3)
-            image_id = image_id_from_group(GROUP_TERRAIN_ROAD);
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            image_id = image_id_from_group(GROUP_TERRAIN_DIRT_ROAD);
-        if (!map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD)
-            && map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD))
+        image_id = image_id_from_group(GROUP_TERRAIN_DIRT_ROAD);
+        if (!map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD) && map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD)) {
             image_id++;
+        }
+
         if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
             if (map_terrain_is(grid_offset, TERRAIN_WATER)) // inundated floodplains
                 blocked = true;
@@ -332,6 +331,7 @@ static void draw_road(map_point tile, int x, int y) {
             }
         }
     }
+
     if (city_finance_out_of_money()) {
         blocked = true;
     }

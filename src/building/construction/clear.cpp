@@ -71,7 +71,7 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
                         items_placed++;
                 } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) { // keep the "bridge is free" bug from C3
                     continue;
-                } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)
+                } else if (map_terrain_is(grid_offset, TERRAIN_CANAL)
                            || (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
                                && map_terrain_is(grid_offset, TERRAIN_CLEARABLE)
                                && !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)))
@@ -116,7 +116,7 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
                     game_undo_add_building(space);
                     space->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 }
-            } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
+            } else if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 items_placed++;
                 map_aqueduct_remove(grid_offset);

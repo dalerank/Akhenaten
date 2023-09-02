@@ -327,7 +327,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
                     debug_text(str, x, y + 10, 0, "", d, 0xffaa0000);
             }
         }
-        if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
+        if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
             int a = map_aqueduct_at(grid_offset);
             if (map_terrain_is(grid_offset, TERRAIN_WATER))
                 debug_text(str, x, y + 10, 0, "", a, 0xff557777);
@@ -630,16 +630,16 @@ const char* get_terrain_type(char* buffer, const char* def, map_point tile) {
     if (type & TERRAIN_GARDEN) strcat(buffer, "garden,");
     if (type & TERRAIN_ROAD) strcat(buffer, "road,");
     if (type & TERRAIN_GROUNDWATER) strcat(buffer, "grdwater,");
-    if (type & TERRAIN_AQUEDUCT) strcat(buffer, "aqudct,");
+    if (type & TERRAIN_CANAL) strcat(buffer, "canal,");
     if (type & TERRAIN_ELEVATION) strcat(buffer, "elevat,");
-    if (type & TERRAIN_ACCESS_RAMP) strcat(buffer, "accramp,");
+    if (type & TERRAIN_ACCESS_RAMP) strcat(buffer, "ramp,");
     if (type & TERRAIN_MEADOW) strcat(buffer, "meadow,");
     if (type & TERRAIN_RUBBLE) strcat(buffer, "rubble,");
     if (type & TERRAIN_FOUNTAIN_RANGE) strcat(buffer, "fountain,");
     if (type & TERRAIN_WALL) strcat(buffer, "wall,");
     if (type & TERRAIN_GATEHOUSE) strcat(buffer, "gate,");
-    if (type & TERRAIN_FLOODPLAIN) strcat(buffer, "fldplain,");
-    if (type & TERRAIN_FERRY_ROUTE) strcat(buffer, "froute,");
+    if (type & TERRAIN_FLOODPLAIN) strcat(buffer, "flood,");
+    if (type & TERRAIN_FERRY_ROUTE) strcat(buffer, "wtrroute,");
 
     return buffer;
 }
