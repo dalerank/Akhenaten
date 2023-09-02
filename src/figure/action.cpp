@@ -133,8 +133,9 @@ bool is_coords_within_range(int x, int y, int b_x, int b_y, int size, int radius
     int max_x = b_x + size - 1 + radius;
     int max_y = b_y + size - 1 + radius;
 
-    if (x >= min_x && x <= max_x && y >= min_y && y <= max_y)
+    if (x >= min_x && x <= max_x && y >= min_y && y <= max_y) {
         return true;
+    }
 
     return false;
 }
@@ -150,15 +151,14 @@ bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
     roam_length++;
     if (roam_length >= max_roam_length) { // roam over, return home
         destination_tile.set(0);
-        //        destination_x = 0;
-        //        destination_y = 0;
         roam_length = 0;
         set_destination(0);
         route_remove();
         advance_action(NEXT_ACTION);
         return true;
-    } else
+    } else {
         roam_ticks(speed_multiplier);
+    }
     return false;
 }
 
@@ -345,6 +345,7 @@ void figure::action_perform() {
                 image_set_animation(GROUP_FIGURE_FERRY_BOAT, 0, 4, 4);
             }
             break;
+
         case FIGURE_ENGINEER:
         case FIGURE_FIREMAN:
         case FIGURE_POLICEMAN:
@@ -355,10 +356,6 @@ void figure::action_perform() {
         case FIGURE_TAX_COLLECTOR:
         case FIGURE_TOWER_SENTRY:
         case FIGURE_MISSIONARY:
-            //            case FIGURE_ACTOR:
-            //            case FIGURE_GLADIATOR:
-            //            case FIGURE_LION_TAMER:
-            //            case FIGURE_CHARIOTEER:
         case FIGURE_WATER_CARRIER:
         case FIGURE_APOTHECARY:
         case FIGURE_DENTIST:
@@ -392,17 +389,20 @@ void figure::action_perform() {
                 poof();
             }
             break;
+
         case FIGURE_STORAGE_YARD_DELIVERCART:
             if (has_destination())
                 break;
             if (b->state != BUILDING_STATE_VALID || (!b->has_figure(0, id) && !b->has_figure(1, id)))
                 poof();
             break;
+
         case FIGURE_LABOR_SEEKER:
             //            case FIGURE_MARKET_BUYER:
             if (b->state != BUILDING_STATE_VALID) //  || !b->has_figure(1, id)
                 poof();
             break;
+
         case FIGURE_DELIVERY_BOY:
         case FIGURE_TRADE_CARAVAN_DONKEY:
             if (leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE)
@@ -417,19 +417,24 @@ void figure::action_perform() {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack();
             break;
+
         case FIGURE_ACTION_149_CORPSE:
             figure_combat_handle_corpse();
             break;
+
         case FIGURE_ACTION_125_ROAMING:
         case ACTION_1_ROAMING:
-            if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS)
+            if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS) {
                 break;
+            }
             do_roam();
             break;
+
         case FIGURE_ACTION_126_ROAMER_RETURNING:
         case ACTION_2_ROAMERS_RETURNING:
-            if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS)
+            if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS) {
                 break;
+            }
             do_returnhome();
             break;
         }
@@ -666,7 +671,7 @@ void figure::action_perform() {
         case 87:
             water_carrier_action();
             break;
-        case 88:
+        case FIGURE_POLICEMAN:
             policeman_action();
             break;
         case 89:

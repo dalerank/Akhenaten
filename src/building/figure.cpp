@@ -138,8 +138,9 @@ figure* building::create_roaming_figure(e_figure_type _type, int created_action,
 
     // update building to have a different roamer direction for next time
     figure_roam_direction += 2;
-    if (figure_roam_direction > 6)
+    if (figure_roam_direction > 6) {
         figure_roam_direction = 0;
+    }
 
     return f;
 }

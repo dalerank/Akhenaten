@@ -364,6 +364,7 @@ void figure::init_roaming_from_building(int roam_dir) {
         roam_wander_freely = true; // no road found within bounds, roam freely
     }
 }
+
 void figure::roam_set_direction() {
     int grid_offset = MAP_OFFSET(tile.x(), tile.y());
     int direction = calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
