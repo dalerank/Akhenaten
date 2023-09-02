@@ -335,9 +335,7 @@ int formation_enemy_move_formation_to(const formation* m, int x, int y, int* x_t
     int figure_offsets[50];
     figure_offsets[0] = 0;
     for (int i = 1; i < m->num_figures; i++) {
-        figure_offsets[i]
-          = MAP_OFFSET(formation_layout_position_x(m->layout, i), formation_layout_position_y(m->layout, i))
-            - base_offset;
+        figure_offsets[i] = MAP_OFFSET(formation_layout_position_x(m->layout, i), formation_layout_position_y(m->layout, i)) - base_offset;
     }
     map_routing_noncitizen_can_travel_over_land(x, y, -1, -1, 0, 600);
     for (int r = 0; r <= 10; r++) {

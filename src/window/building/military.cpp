@@ -59,8 +59,9 @@ static void draw_priority_buttons(int x, int y, int buttons) {
         building* barracks = building_get(data.building_id);
         int priority = barracks->barracks_get_priority();
         button_border_draw(x_adj, y_adj, 20, 20, data.focus_priority_button_id == i + 1 ? 1 : 0);
-        if (priority == i)
+        if (priority == i) {
             text_draw_centered(permission_selection_text, x_adj + 1, y_adj + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        }
     }
 }
 
@@ -126,16 +127,13 @@ void window_building_draw_barracks(building_info_context* c) {
     window_building_play_sound(c, "wavs/barracks.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(136, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource,
-                           c->x_offset + 64,
-                           c->y_offset + 38);
+    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, c->x_offset + 64, c->y_offset + 38);
 
     building* b = building_get(c->building_id);
     if (b->stored_full_amount < 100)
         lang_text_draw_amount(8, 10, 0, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
     else
-        lang_text_draw_amount(
-          8, 10, b->stored_full_amount, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_amount(8, 10, b->stored_full_amount, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
 
     if (!c->has_road_access)
         window_building_draw_description_at(c, 70, 69, 25);
@@ -171,8 +169,7 @@ void window_building_draw_barracks_foreground(building_info_context* c) {
 
 int window_building_handle_mouse_barracks(const mouse* m, building_info_context* c) {
     auto& data = g_military_data;
-    if (generic_buttons_handle_mouse(
-          m, c->x_offset + 46, c->y_offset + 224, priority_buttons, 2, &data.focus_priority_button_id)) {
+    if (generic_buttons_handle_mouse(m, c->x_offset + 46, c->y_offset + 224, priority_buttons, 2, &data.focus_priority_button_id)) {
         window_invalidate();
         return 1;
     }
@@ -221,23 +218,20 @@ void window_building_draw_legion_info(building_info_context* c) {
     ImageDraw::img_generic(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16);
     // standard flag
     image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS);
-    if (m->figure_type == FIGURE_FORT_JAVELIN)
+    if (m->figure_type == FIGURE_FORT_JAVELIN) {
         image_id += 9;
-    else if (m->figure_type == FIGURE_FORT_MOUNTED)
+    } else if (m->figure_type == FIGURE_FORT_MOUNTED) {
         image_id += 18;
+    }
 
     if (m->is_halted)
         image_id += 8;
 
     int flag_height = image_get(image_id)->height;
-    ImageDraw::img_generic(image_id,
-                           c->x_offset + 16 + (40 - image_get(image_id)->width) / 2,
-                           c->y_offset + 16 + icon_height);
+    ImageDraw::img_generic(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height);
     // standard pole and morale ball
     image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
-    ImageDraw::img_generic(image_id,
-                           c->x_offset + 16 + (40 - image_get(image_id)->width) / 2,
-                           c->y_offset + 16 + icon_height + flag_height);
+    ImageDraw::img_generic(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height + flag_height);
 
     // number of soldiers
     lang_text_draw(138, 23, c->x_offset + 100, c->y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
