@@ -32,7 +32,7 @@ void map_image_restore_at(int grid_offset) {
     map_grid_set(&g_images_grid, grid_offset, map_grid_get(&g_images_grid_backup, grid_offset));
 }
 
-void map_image_fix_icoreect_tiles() {
+void map_image_fix_icorrect_tiles() {
     io_image_grid::instance().fix_incorrect_tiles_img();
 }
 
