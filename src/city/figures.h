@@ -11,7 +11,7 @@ void city_figures_add_rioter(int is_attacking);
 void city_figures_add_soldier(void);
 void city_figures_set_gladiator_revolt(void);
 
-int city_figures_animals(void);
+bool city_has_animals(void);
 int city_figures_attacking_natives(void);
 int city_figures_imperial_soldiers(void);
 int city_figures_enemies(void);

@@ -394,14 +394,23 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     //            iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.income.donated);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.donated);
-    for (int i = 0; i < 2; i++)
+    
+    for (int i = 0; i < 2; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
-    for (int i = 0; i < 10; i++)
+    }
+    
+    for (int i = 0; i < 10; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &city_data.building.working_dock_ids[i]);
+    }
+
     iob->bind(BIND_SIGNATURE_INT16, &city_data.building.temple_complex_placed);
-    iob->bind(BIND_SIGNATURE_INT16, &city_data.figure.animals);
-    for (int i = 0; i < 3; i++)
+    iob->bind(BIND_SIGNATURE_UINT8, &city_data.env.has_animals);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_data.figure.animals_number);
+
+    for (int i = 0; i < 3; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unknown_439c[i]);
+    }
+
     iob->bind____skip(2);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT16, &city_data.building.palace_placed);
