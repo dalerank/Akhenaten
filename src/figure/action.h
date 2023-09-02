@@ -183,6 +183,7 @@ enum e_figure_action {
     //    ACTION_22,
     //    ACTION_23,
     //    ACTION_24_SPAWNING = 24,
+    ACTION_24_ANIMAL_SPAWNED = 24,
     //    ACTION_25,
     //    ACTION_26,
     //    ACTION_27,

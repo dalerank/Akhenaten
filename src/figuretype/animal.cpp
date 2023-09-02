@@ -31,18 +31,21 @@
 
 static const vec2i SEAGULL_OFFSETS[] = {{0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}};
 
-static const vec2i HORSE_DESTINATION_1[]
-  = {{2, 1},  {3, 1},  {4, 1},  {5, 1}, {6, 1}, {7, 1}, {8, 1}, {9, 1}, {10, 1}, {11, 1}, {12, 2},
-     {12, 3}, {11, 3}, {10, 3}, {9, 3}, {8, 3}, {7, 3}, {6, 3}, {5, 3}, {4, 3},  {3, 3},  {2, 2}};
-static const vec2i HORSE_DESTINATION_2[]
-  = {{12, 3}, {11, 3}, {10, 3}, {9, 3}, {8, 3}, {7, 3}, {6, 3}, {5, 3}, {4, 3},  {3, 3},  {2, 2},
-     {2, 1},  {3, 1},  {4, 1},  {5, 1}, {6, 1}, {7, 1}, {8, 1}, {9, 1}, {10, 1}, {11, 1}, {12, 2}};
+static const vec2i HORSE_DESTINATION_1[] = {
+    {2, 1},  {3, 1},  {4, 1},  {5, 1}, {6, 1}, {7, 1}, {8, 1}, {9, 1}, {10, 1}, {11, 1}, {12, 2},
+    {12, 3}, {11, 3}, {10, 3}, {9, 3}, {8, 3}, {7, 3}, {6, 3}, {5, 3}, {4, 3},  {3, 3},  {2, 2}
+};
+static const vec2i HORSE_DESTINATION_2[] = {
+    {12, 3}, {11, 3}, {10, 3}, {9, 3}, {8, 3}, {7, 3}, {6, 3}, {5, 3}, {4, 3},  {3, 3},  {2, 2},
+    {2, 1},  {3, 1},  {4, 1},  {5, 1}, {6, 1}, {7, 1}, {8, 1}, {9, 1}, {10, 1}, {11, 1}, {12, 2}
+};
 
-static const int SHEEP_IMAGE_OFFSETS[]
-  = {0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,  3,  3,  3,  3,  3,  3,  3,
-     3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5, 5, -1, -1, -1, -1, -1, -1, -1, -1,
-     0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,  3,  3,  3,  3,  3,  3,  3,
-     3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,  3,  3,  3,  4,  4,  5,  5};
+static const int SHEEP_IMAGE_OFFSETS[] = {
+    0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,  3,  3,  3,  3,  3,  3,  3,
+    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5, 5, -1, -1, -1, -1, -1, -1, -1, -1,
+    0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,  3,  3,  3,  3,  3,  3,  3,
+    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,  3,  3,  3,  4,  4,  5,  5
+};
 
 enum E_HORSE { HORSE_CREATED = 0, HORSE_RACING = 1, HORSE_FINISHED = 2 };
 
@@ -66,18 +69,22 @@ static void create_herd(int x, int y) {
         herd_type = FIGURE_SHEEP;
         num_animals = 10;
         break;
+
     case CLIMATE_NORTHERN:
         // herd_type = FIGURE_WOLF;
         herd_type = FIGURE_OSTRICH;
         num_animals = 8;
         break;
+
     case CLIMATE_DESERT:
         herd_type = FIGURE_OSTRICH; // FIGURE_ZEBRA
         num_animals = 12;
         break;
+
     default:
         return;
     }
+
     int formation_id = formation_create_herd(herd_type, x, y, num_animals);
     if (formation_id > 0) {
         for (int fig = 0; fig < num_animals; fig++) {
@@ -109,13 +116,9 @@ bool figure::herd_roost(int step, int bias, int max_dist, int terrain_mask) {
     int offset = MAP_OFFSET(dx, dy);
     if (!map_terrain_is(offset, terrain_mask)) { // todo: fix gardens
         destination_tile.set(dx, dy);
-        //        destination_tile.x() = dx;
-        //        destination_tile.y() = dy;
         return true;
     } else {
         destination_tile.set(0, 0);
-        //        destination_tile.x() = 0;
-        //        destination_tile.y() = 0;
         return false;
     }
 }
@@ -209,6 +212,7 @@ void figure::hyena_action() {
             roam_length = 0;
         }
         break;
+
     case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
         move_ticks(2);
         if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_CAN_NOT_REACH) {
@@ -218,6 +222,7 @@ void figure::hyena_action() {
         } else if (direction == DIR_FIGURE_REROUTE)
             route_remove();
         break;
+
     case FIGURE_ACTION_199_WOLF_ATTACKING:
         move_ticks(2);
         if (direction == DIR_FIGURE_NONE) {
@@ -255,80 +260,6 @@ void figure::hyena_action() {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_IDLE) + 152 + dir;
     } else {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_WALK) + dir + 8 * anim_frame;
-    }
-}
-
-void figure::ostrich_action() {
-    const formation* m = formation_get(formation_id);
-    city_figures_add_animal();
-
-    switch (action_state) {
-    case 24:                           // spawning
-    case 14:                           // scared
-    case ACTION_15_ANIMAL_TERRIFIED:   // terrified
-    case ACTION_18_ROOSTING:           // roosting
-    case FIGURE_ACTION_19_ANIMAL_IDLE: // idle
-    case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
-        wait_ticks--;
-        //            if (wait_ticks % 5 == 0 && is_nearby(NEARBY_ANY, 6))
-        //                advance_action(ACTION_16_FLEEING);
-        if (wait_ticks <= 0) {
-            advance_action(ACTION_8_RECALCULATE);
-        }
-        break;
-    case 199:
-    case ACTION_8_RECALCULATE:
-        wait_ticks--;
-        if (wait_ticks <= 0) {
-            if (herd_roost(4, 8, 32, TERRAIN_IMPASSABLE_OSTRICH)) {
-                wait_ticks = 0;
-                advance_action(ACTION_10_GOING);
-            } else {
-                wait_ticks = 5;
-            }
-        }
-        break;
-    case ACTION_16_FLEEING: // fleeing
-    case ACTION_10_GOING:
-    case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
-        //            if (action_state == 16)
-        //                while (destination_x == 0 || destination_y == 0)
-        //                    herd_roost(4, 8, 22);
-        if (do_goto(destination_tile, TERRAIN_USAGE_ANIMAL, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
-            wait_ticks = 50;
-        }
-        break;
-    }
-
-    switch (action_state) {
-    case ACTION_8_RECALCULATE:
-    case FIGURE_ACTION_19_ANIMAL_IDLE: // idle
-        image_set_animation(GROUP_FIGURE_OSTRICH_IDLE, 0, 8);
-        break;
-    case ACTION_18_ROOSTING: // roosting
-        image_set_animation(GROUP_FIGURE_OSTRICH_IDLE, 0, 8);
-        break;
-    case ACTION_16_FLEEING: // fleeing
-    case ACTION_10_GOING:   // on the move
-        image_set_animation(GROUP_FIGURE_OSTRICH_WALK, 0, 11);
-        break;
-    case ACTION_15_ANIMAL_TERRIFIED: // terrified
-    case 14:                         // scared
-        image_set_animation(GROUP_FIGURE_OSTRICH_IDLE, 0, 8);
-        anim_frame = 0;
-        break;
-    case FIGURE_ACTION_149_CORPSE:
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_OSTRICH_DEATH);
-        break;
-    case FIGURE_ACTION_150_ATTACK:
-        // TODO: dalerank ostrich want to attack anybody
-        advance_action(ACTION_8_RECALCULATE);
-        image_set_animation(GROUP_FIGURE_OSTRICH_ATTACK, 0, 8);
-        break;
-    default:
-        // In any strange situation load eating/roosting animation
-        image_set_animation(GROUP_FIGURE_OSTRICH_EATING, 0, 7);
-        break;
     }
 }
 
