@@ -292,7 +292,7 @@ void game_tick_run(void) {
     advance_tick();
     figure_action_handle();
     scenario_earthquake_process();
-    scenario_gladiator_revolt_process();
+    //scenario_gladiator_revolt_process();
     scenario_emperor_change_process();
     city_victory_check();
 }

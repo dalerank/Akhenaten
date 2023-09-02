@@ -7,12 +7,6 @@
 void figure::fireman_action() { // doubles as fireman! not as policeman!!!
     fireman_fight_fire();
 
-    if (tile == previous_tile) {
-        movement_ticks_watchdog++;
-    } else {
-        movement_ticks_watchdog = 0;
-    }
-
     building* b = home();
     switch (action_state) {
     case FIGURE_ACTION_70_FIREMAN_CREATED:
