@@ -2,9 +2,29 @@
 
 #include "core/calc.h"
 #include "figure/properties.h"
+#include "grid/figure.h"
 #include "graphics/image_groups.h"
 #include "figuretype/maintenance.h"
 #include "core/random.h"
+
+static void scared_animals_in_area(map_point center, int size) {
+    int x_min, x_max, y_min, y_max;
+    map_point start = center.shifted(-size, -size);
+    map_point stop = center.shifted(size, size);
+    map_grid_start_end_to_area(start, stop, &x_min, &y_min, &x_max, &y_max);
+
+    int needs_road_warning = 0;
+    int items_placed = 0;
+    for (int y = y_min; y <= y_max; y++) {
+        for (int x = x_min; x <= x_max; x++) {
+            int grid_offset = MAP_OFFSET(x, y);
+            figure *f = map_figure_get(grid_offset);
+            if (f && f->type == FIGURE_OSTRICH) {
+                f->advance_action(ACTION_8_RECALCULATE);
+            }
+        }
+    }
+}
 
 void figure::ostrich_hunter_action() {
     figure* prey = figure_get(target_figure_id);
@@ -89,9 +109,8 @@ void figure::ostrich_hunter_action() {
             wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
             if (prey->state == FIGURE_STATE_DYING) {
                 advance_action(ACTION_11_HUNTER_WALK);
+                scared_animals_in_area(prey->tile, /*dist*/16);
             } else if (dist >= 2) {
-                //                    advance_action(9);
-                //                    wait_ticks = 0;
                 wait_ticks = 12;
                 advance_action(ACTION_13_WAIT_FOR_ACTION);
             } else {
@@ -115,6 +134,7 @@ void figure::ostrich_hunter_action() {
         if (target_figure_id) {
             prey->poof();
         }
+
         target_figure_id = 0;
         if (anim_frame >= 17) {
             advance_action(ACTION_12_GOING_HOME_AND_UNLOAD);
