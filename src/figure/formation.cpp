@@ -15,18 +15,21 @@
 
 #include <string.h>
 
-static formation formations[250];
+formation g_formations[250];
 
-static struct {
+struct formation_data_t {
     int id_last_in_use;
     int id_last_formation;
     int num_formations;
-} data;
+};
+
+formation_data_t g_formation_data;
 
 void formations_clear(void) {
+    auto &data = g_formation_data;
     for (int i = 0; i < MAX_FORMATIONS; i++) {
-        memset(&formations[i], 0, sizeof(formation));
-        formations[i].id = i;
+        memset(&g_formations[i], 0, sizeof(formation));
+        g_formations[i].id = i;
     }
     data.id_last_in_use = 0;
     data.id_last_formation = 0;
@@ -34,24 +37,27 @@ void formations_clear(void) {
 }
 
 void formation_clear(int formation_id) {
-    memset(&formations[formation_id], 0, sizeof(formation));
-    formations[formation_id].id = formation_id;
+    memset(&g_formations[formation_id], 0, sizeof(formation));
+    g_formations[formation_id].id = formation_id;
 }
 
 static int get_free_formation(int start_index) {
     for (int i = start_index; i < MAX_FORMATIONS; i++) {
-        if (!formations[i].in_use)
+        if (!g_formations[i].in_use) {
             return i;
+        }
     }
     return 0;
 }
 
 formation* formation_create_legion(int building_id, int x, int y, e_figure_type type) {
+    auto &data = g_formation_data;
+
     int formation_id = get_free_formation(1);
     if (!formation_id)
-        return &formations[0];
+        return &g_formations[0];
 
-    formation* m = &formations[formation_id];
+    formation* m = &g_formations[formation_id];
     m->faction_id = 1;
     m->in_use = 1;
     m->is_legion = 1;
@@ -80,7 +86,7 @@ static int formation_create(e_figure_type figure_type, int layout, int orientati
     if (!formation_id)
         return 0;
 
-    formation* f = &formations[formation_id];
+    formation* f = &g_formations[formation_id];
     f->faction_id = 0;
     f->x = x;
     f->y = y;
@@ -106,7 +112,7 @@ int formation_create_herd(e_figure_type figure_type, int x, int y, int num_anima
     if (!formation_id)
         return 0;
 
-    formation* f = &formations[formation_id];
+    formation* f = &g_formations[formation_id];
     f->is_herd = 1;
     f->wait_ticks = 24;
     f->max_figures = num_animals;
@@ -126,7 +132,7 @@ int formation_create_enemy(e_figure_type figure_type,
     if (!formation_id)
         return 0;
 
-    formation* f = &formations[formation_id];
+    formation* f = &g_formations[formation_id];
     f->attack_type = attack_type;
     f->orientation = orientation;
     f->enemy_type = enemy_type;
@@ -136,11 +142,11 @@ int formation_create_enemy(e_figure_type figure_type,
 }
 
 formation* formation_get(int formation_id) {
-    return &formations[formation_id];
+    return &g_formations[formation_id];
 }
 
 void formation_toggle_empire_service(int formation_id) {
-    formations[formation_id].empire_service = formations[formation_id].empire_service ? 0 : 1;
+    g_formations[formation_id].empire_service = g_formations[formation_id].empire_service ? 0 : 1;
 }
 
 void formation_record_missile_fired(formation* m) {
@@ -158,7 +164,7 @@ void formation_record_fight(formation* m) {
 
 int formation_grid_offset_for_invasion(int invasion_sequence) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* m = &formations[i];
+        formation* m = &g_formations[i];
         if (m->in_use == 1 && !m->is_legion && !m->is_herd && m->invasion_sequence == invasion_sequence) {
             if (m->x_home > 0 || m->y_home > 0)
                 return MAP_OFFSET(m->x_home, m->y_home);
@@ -172,15 +178,15 @@ int formation_grid_offset_for_invasion(int invasion_sequence) {
 
 void formation_caesar_pause(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use == 1 && formations[i].figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)
-            formations[i].wait_ticks = 20;
+        if (g_formations[i].in_use == 1 && g_formations[i].figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)
+            g_formations[i].wait_ticks = 20;
     }
 }
 
 void formation_caesar_retreat(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use == 1 && formations[i].figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)
-            formations[i].months_low_morale = 1;
+        if (g_formations[i].in_use == 1 && g_formations[i].figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)
+            g_formations[i].months_low_morale = 1;
     }
 }
 
@@ -189,10 +195,11 @@ int formation_has_low_morale(formation* m) {
 }
 
 int formation_get_num_legions_cached(void) {
-    return data.num_formations;
+    return g_formation_data.num_formations;
 }
 
 void formation_calculate_legion_totals(void) {
+    auto &data = g_formation_data;
     data.id_last_formation = 0;
     data.num_formations = 0;
     city_military_clear_legionary_legions();
@@ -217,7 +224,7 @@ void formation_calculate_legion_totals(void) {
 int formation_get_num_legions(void) {
     int total = 0;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use && formations[i].is_legion)
+        if (g_formations[i].in_use && g_formations[i].is_legion)
             total++;
     }
     return total;
@@ -234,7 +241,7 @@ int formation_get_max_legions(void) {
 int formation_for_legion(int legion_index) {
     int index = 1;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use && formations[i].is_legion) {
+        if (g_formations[i].in_use && g_formations[i].is_legion) {
             if (index++ == legion_index)
                 return i;
         }
@@ -293,7 +300,7 @@ void formation_update_morale_after_death(formation* m) {
 
 static void change_all_morale(int legion, int enemy) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* m = &formations[i];
+        formation* m = &g_formations[i];
         if (m->in_use && !m->is_herd) {
             if (m->is_legion)
                 formation_change_morale(m, legion);
@@ -306,7 +313,7 @@ static void change_all_morale(int legion, int enemy) {
 
 void formation_update_monthly_morale_deployed(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* f = &formations[i];
+        formation* f = &g_formations[i];
         if (f->in_use != 1 || f->is_herd)
             continue;
 
@@ -334,7 +341,7 @@ void formation_update_monthly_morale_deployed(void) {
 
 void formation_update_monthly_morale_at_rest(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* m = &formations[i];
+        formation* m = &g_formations[i];
         if (m->in_use != 1 || m->is_herd)
             continue;
 
@@ -399,7 +406,7 @@ void formation_set_home(formation* m, int x, int y) {
 
 void formation_clear_figures(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* f = &formations[i];
+        formation* f = &g_formations[i];
         for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
             f->figures[fig] = 0;
         }
@@ -411,7 +418,7 @@ void formation_clear_figures(void) {
 }
 
 int formation_add_figure(int formation_id, int figure_id, int deployed, int damage, int max_damage) {
-    formation* f = &formations[formation_id];
+    formation* f = &g_formations[formation_id];
     f->num_figures++;
     f->total_damage += damage;
     f->max_total_damage += max_damage;
@@ -429,13 +436,13 @@ int formation_add_figure(int formation_id, int figure_id, int deployed, int dama
 
 void formation_move_herds_away(map_point tile) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* f = &formations[i];
+        formation* f = &g_formations[i];
         if (f->in_use != 1 || f->is_legion || !f->is_herd || f->num_figures <= 0)
             continue;
 
         if (calc_maximum_distance(tile, vec2i(f->x_home, f->y_home)) <= 6) {
-            formations[i].wait_ticks = 50;
-            formations[i].herd_direction = calc_general_direction(tile.x(), tile.y(), f->x_home, f->y_home);
+            g_formations[i].wait_ticks = 50;
+            g_formations[i].herd_direction = calc_general_direction(tile.x(), tile.y(), f->x_home, f->y_home);
         }
     }
 }
@@ -496,7 +503,7 @@ void formation_calculate_figures(void) {
 }
 
 static void update_direction(int formation_id, int first_figure_direction) {
-    formation* f = &formations[formation_id];
+    formation* f = &g_formations[formation_id];
     if (f->unknown_fired)
         f->unknown_fired--;
     else if (f->missile_fired)
@@ -535,7 +542,7 @@ static void update_direction(int formation_id, int first_figure_direction) {
 
 static void update_directions(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* m = &formations[i];
+        formation* m = &g_formations[i];
         if (m->in_use && !m->is_herd)
             update_direction(m->id, figure_get(m->figures[0])->direction);
     }
@@ -543,8 +550,8 @@ static void update_directions(void) {
 
 static void set_legion_max_figures(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use && formations[i].is_legion)
-            formations[i].max_figures = 16;
+        if (g_formations[i].in_use && g_formations[i].is_legion)
+            g_formations[i].max_figures = 16;
     }
 }
 
@@ -565,7 +572,7 @@ void formation_update_all(bool second_time) {
 
 io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < MAX_FORMATIONS; i++) {
-        formation* f = &formations[i];
+        formation* f = &g_formations[i];
         f->id = i;                                   // 10
         iob->bind(BIND_SIGNATURE_UINT8, &f->in_use); // 1
         iob->bind(BIND_SIGNATURE_UINT8, &f->faction_id);
@@ -573,31 +580,24 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &f->is_at_fort);
         iob->bind(BIND_SIGNATURE_INT16, &f->figure_type); // 69
         iob->bind(BIND_SIGNATURE_INT16, &f->building_id);
+
         for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++)
             iob->bind(BIND_SIGNATURE_INT16, &f->figures[fig]);
+
         iob->bind(BIND_SIGNATURE_UINT8, &f->num_figures); // --> 3
         iob->bind(BIND_SIGNATURE_UINT8, &f->max_figures); // 7
         iob->bind(BIND_SIGNATURE_INT16, &f->layout);      // 9
         iob->bind(BIND_SIGNATURE_INT16, &f->morale);      // 100
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            iob->bind(BIND_SIGNATURE_UINT8, &f->x_home);
-            iob->bind(BIND_SIGNATURE_UINT8, &f->y_home);
-            iob->bind(BIND_SIGNATURE_UINT8, &f->standard_x);
-            iob->bind(BIND_SIGNATURE_UINT8, &f->standard_y);
-            iob->bind(BIND_SIGNATURE_UINT8, &f->x);
-            iob->bind(BIND_SIGNATURE_UINT8, &f->y);
-            iob->bind(BIND_SIGNATURE_UINT8, &f->destination_x);
-            iob->bind(BIND_SIGNATURE_UINT8, &f->destination_y);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            iob->bind(BIND_SIGNATURE_UINT16, &f->x_home);        // 44
-            iob->bind(BIND_SIGNATURE_UINT16, &f->y_home);        // 58
-            iob->bind(BIND_SIGNATURE_UINT16, &f->standard_x);    //
-            iob->bind(BIND_SIGNATURE_UINT16, &f->standard_y);    //
-            iob->bind(BIND_SIGNATURE_UINT16, &f->x);             // 44
-            iob->bind(BIND_SIGNATURE_UINT16, &f->y);             // 58
-            iob->bind(BIND_SIGNATURE_UINT16, &f->destination_x); // 49
-            iob->bind(BIND_SIGNATURE_UINT16, &f->destination_y); // 49
-        }
+
+        iob->bind(BIND_SIGNATURE_UINT16, &f->x_home);        // 44
+        iob->bind(BIND_SIGNATURE_UINT16, &f->y_home);        // 58
+        iob->bind(BIND_SIGNATURE_UINT16, &f->standard_x);    //
+        iob->bind(BIND_SIGNATURE_UINT16, &f->standard_y);    //
+        iob->bind(BIND_SIGNATURE_UINT16, &f->x);             // 44
+        iob->bind(BIND_SIGNATURE_UINT16, &f->y);             // 58
+        iob->bind(BIND_SIGNATURE_UINT16, &f->destination_x); // 49
+        iob->bind(BIND_SIGNATURE_UINT16, &f->destination_y); // 49
+        
         iob->bind(BIND_SIGNATURE_INT16, &f->destination_building_id);
         iob->bind(BIND_SIGNATURE_INT16, &f->standard_figure_id);
         iob->bind(BIND_SIGNATURE_UINT8, &f->is_legion);
@@ -605,32 +605,23 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &f->attack_type);
         iob->bind(BIND_SIGNATURE_INT16, &f->legion_recruit_type);
         iob->bind(BIND_SIGNATURE_INT16, &f->has_military_training);
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            iob->bind(BIND_SIGNATURE_INT16, &f->total_damage);     //     vv 6 hp per ostich?
-            iob->bind(BIND_SIGNATURE_INT16, &f->max_total_damage); // --> 18
-            iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks);       // 50
-            iob->bind(BIND_SIGNATURE_INT16, &f->recent_fight);
-            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_advance);
-            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_regroup); // --> 8 --> 0 ??????
-            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_halt);
-            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_legion_index);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            iob->bind____skip(2);                                  //     vv 6 hp per ostich?
-            iob->bind(BIND_SIGNATURE_INT16, &f->total_damage);     // --> 18
-            iob->bind(BIND_SIGNATURE_INT16, &f->max_total_damage); // 50
-            iob->bind(BIND_SIGNATURE_INT16, &f->recent_fight);
-            iob->bind____skip(2);
-            iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks); // --> 8 --> 0 ??????
-            iob->bind____skip(4);
-            //            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_advance);
-            //            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_regroup);
-            //            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_halt);
-            //            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_legion_index);
-            f->enemy_state.duration_advance = 0;
-            f->enemy_state.duration_regroup = 0;
-            f->enemy_state.duration_halt = 0;
-            f->enemy_legion_index = 0;
-        }
+
+        iob->bind____skip(2);                                  //     vv 6 hp per ostich?
+        iob->bind(BIND_SIGNATURE_INT16, &f->total_damage);     // --> 18
+        iob->bind(BIND_SIGNATURE_INT16, &f->max_total_damage); // 50
+        iob->bind(BIND_SIGNATURE_INT16, &f->recent_fight);
+        iob->bind____skip(2);
+        iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks); // --> 8 --> 0 ??????
+        iob->bind____skip(4);
+        //            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_advance);
+        //            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_regroup);
+        //            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_halt);
+        //            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_legion_index);
+        f->enemy_state.duration_advance = 0;
+        f->enemy_state.duration_regroup = 0;
+        f->enemy_state.duration_halt = 0;
+        f->enemy_legion_index = 0;
+
         iob->bind(BIND_SIGNATURE_INT16, &f->is_halted);
         iob->bind(BIND_SIGNATURE_INT16, &f->missile_fired);
         iob->bind(BIND_SIGNATURE_INT16, &f->missile_attack_timeout);
@@ -644,13 +635,8 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &f->is_herd); // 2
         iob->bind(BIND_SIGNATURE_UINT8, &f->enemy_type);
         iob->bind(BIND_SIGNATURE_UINT8, &f->direction);
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            iob->bind(BIND_SIGNATURE_UINT8, &f->prev.x_home);
-            iob->bind(BIND_SIGNATURE_UINT8, &f->prev.y_home);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            iob->bind(BIND_SIGNATURE_UINT16, &f->prev.x_home);
-            iob->bind(BIND_SIGNATURE_UINT16, &f->prev.y_home);
-        }
+        iob->bind(BIND_SIGNATURE_UINT16, &f->prev.x_home);
+        iob->bind(BIND_SIGNATURE_UINT16, &f->prev.y_home);
         iob->bind(BIND_SIGNATURE_UINT8, &f->unknown_fired);
         iob->bind(BIND_SIGNATURE_UINT8, &f->orientation);
         iob->bind(BIND_SIGNATURE_UINT8, &f->months_from_home);
@@ -659,13 +645,17 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         // iob->bind(BIND_SIGNATURE_UINT8, &f->herd_wolf_spawn_delay);                      // --> 4
         iob->bind(BIND_SIGNATURE_UINT8, &f->herd_ostrich_spawn_delay); // --> 4
         iob->bind(BIND_SIGNATURE_UINT8, &f->herd_direction);           // 6
-        if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            iob->bind____skip(6);
+        iob->bind____skip(6);
         iob->bind____skip(17);
         iob->bind(BIND_SIGNATURE_INT16, &f->invasion_sequence);
+
+        if (!f->x_home && !f->y_home && f->is_herd) {
+            memset(f, 0, sizeof(formation));
+        }
     }
 });
 io_buffer* iob_formations_info = new io_buffer([](io_buffer* iob, size_t version) {
+    auto &data = g_formation_data;
     iob->bind(BIND_SIGNATURE_INT32, &data.id_last_in_use);
     iob->bind(BIND_SIGNATURE_INT32, &data.id_last_formation);
     iob->bind(BIND_SIGNATURE_INT32, &data.num_formations);
