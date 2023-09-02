@@ -1,16 +1,13 @@
-#ifndef CORE_RANDOM_H
-#define CORE_RANDOM_H
+#pragma once
 
 #include <stdint.h>
-
-#include "core/buffer.h"
 
 constexpr int MAX_RANDOM = 100;
 
 // N.B.: carefulness required as random_data is already defined on Linux systems
 // in the GNU C standard library files (/usr/include/stdlib.h:424:8)!
 // TODO: clean this up eventually, maybe with a namespace or singleton
-typedef struct {
+struct random_data_t {
     uint32_t iv1;
     uint32_t iv2;
     int8_t random1_3bit;
@@ -21,7 +18,7 @@ typedef struct {
     int16_t random2_15bit;
     int pool_index;
     int32_t pool[MAX_RANDOM];
-} random_data_t;
+} ;
 
 const random_data_t* random_data_struct();
 
@@ -74,21 +71,9 @@ int32_t random_from_pool(int index);
 
 void randomize_event_fields(int16_t field[4], int32_t* seed);
 
-void random_around_point(int x_home,
-                         int y_home,
-                         int x,
-                         int y,
-                         int* dest_x,
-                         int* dest_y,
-                         int step,
-                         int bias,
-                         int max_dist);
+void random_around_point(int x_home, int y_home, int x, int y, int* dest_x, int* dest_y, int step, int bias, int max_dist);
 
 bool random_bool_lerp_scalar_int(int minimum, int maximum, int v);
 
-/////
-
 uint16_t anti_scum_random_15bit(bool update = true);
 bool anti_scum_random_bool();
-
-#endif // CORE_RANDOM_H
