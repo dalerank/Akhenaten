@@ -61,12 +61,15 @@ void building::set_figure(int i, int figure_id) {
 
     figure_ids_array[i] = figure_id;
 }
+
 void building::set_figure(int i, figure* f) {
     set_figure(i, f ? f->id : 0);
 }
+
 void building::remove_figure(int i) {
     set_figure(i, 0);
 }
+
 bool building::has_figure(int i, int figure_id) {
     // seatrch through all the figures if index is -1
     if (i == -1) {
@@ -307,6 +310,7 @@ void building::spawn_figure_engineers_post() {
 void building::spawn_figure_firehouse() {
     common_spawn_roamer(FIGURE_FIREMAN, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
 }
+
 void building::spawn_figure_police() {
     common_spawn_roamer(FIGURE_POLICEMAN, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
 }
@@ -321,6 +325,7 @@ void building::spawn_figure_juggler() {
         }
     }
 }
+
 void building::spawn_figure_musician() {
     if (common_spawn_figure_trigger(50)) {
         building* dest = building_get(determine_venue_destination(road_access, BUILDING_PAVILLION, BUILDING_BANDSTAND, 0));
@@ -331,6 +336,7 @@ void building::spawn_figure_musician() {
         }
     }
 }
+
 void building::spawn_figure_dancer() {
     if (common_spawn_figure_trigger(50)) {
         building* dest= building_get(determine_venue_destination(road_access, BUILDING_PAVILLION, 0, 0));
@@ -442,9 +448,9 @@ void building::set_market_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
     if (map_desirability_get(tile.grid_offset()) <= 30) {
-        map_building_tiles_add(id, tile.x(), tile.y(), size, image_id_from_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
+        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
     } else {
-        map_building_tiles_add(id, tile.x(), tile.y(), size, image_id_from_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
+        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
     }
 }
 void building::spawn_figure_market() {
@@ -484,33 +490,19 @@ void building::spawn_figure_market() {
 void building::set_bathhouse_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
-    if (map_terrain_exists_tile_in_area_with_type(tile.x(), tile.y(), size, TERRAIN_GROUNDWATER))
-        has_water_access = true;
-    else
-        has_water_access = false;
+    has_water_access = map_terrain_exists_tile_in_area_with_type(tile.x(), tile.y(), size, TERRAIN_GROUNDWATER);
+
     if (has_water_access && num_workers) {
         if (map_desirability_get(tile.grid_offset()) <= 30) {
-            map_building_tiles_add(
-              id, tile.x(), tile.y(), size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
+            map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
         } else {
-            map_building_tiles_add(id,
-                                   tile.x(),
-                                   tile.y(),
-                                   size,
-                                   image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER),
-                                   TERRAIN_BUILDING);
+            map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
         }
     } else {
         if (map_desirability_get(tile.grid_offset()) <= 30) {
-            map_building_tiles_add(
-              id, tile.x(), tile.y(), size, image_id_from_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
+            map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
         } else {
-            map_building_tiles_add(id,
-                                   tile.x(),
-                                   tile.y(),
-                                   size,
-                                   image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER),
-                                   TERRAIN_BUILDING);
+            map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
         }
     }
 }
@@ -623,10 +615,11 @@ void building::spawn_figure_temple() {
 void building::set_water_supply_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
+
     if (map_desirability_get(tile.grid_offset()) <= 30) {
-        map_building_tiles_add(id, tile.x(), tile.y(), size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
+        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
     } else {
-        map_building_tiles_add(id, tile.x(), tile.y(), size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY) + 2, TERRAIN_BUILDING);
+        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY) + 2, TERRAIN_BUILDING);
     }
 }
 void building::spawn_figure_watersupply() {
@@ -672,11 +665,9 @@ void building::set_senate_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
     if (map_desirability_get(tile.grid_offset()) <= 30) {
-        map_building_tiles_add(
-          id, tile.x(), tile.y(), size, image_id_from_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
+        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
     } else {
-        map_building_tiles_add(
-          id, tile.x(), tile.y(), size, image_id_from_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
+        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
     }
 }
 void building::spawn_figure_tax_collector() {

@@ -98,7 +98,7 @@ void map_orientation_update_buildings(void) {
                     image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 1;
                 }
             }
-            map_building_tiles_add(i, b->tile.x(), b->tile.y(), b->size, image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
+            map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
             map_terrain_add_gatehouse_roads(b->tile.x(), b->tile.y(), 0);
             break;
         case BUILDING_TRIUMPHAL_ARCH:
@@ -115,7 +115,7 @@ void map_orientation_update_buildings(void) {
                     image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
                 }
             }
-            map_building_tiles_add(i, b->tile.x(), b->tile.y(), b->size, image_id, TERRAIN_BUILDING);
+            map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_BUILDING);
             map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), b->subtype.orientation);
             break;
         case BUILDING_SHIPYARD:
@@ -186,12 +186,10 @@ void map_orientation_update_buildings(void) {
         case BUILDING_LARGE_STATUE:
         case BUILDING_MEDIUM_STATUE:
         case BUILDING_SMALL_STATUE:
-            map_building_tiles_add(i,
-                                   b->tile.x(),
-                                   b->tile.y(),
-                                   b->size,
-                                   get_statue_image_from_value(b->type, b->data.monuments.variant, map_orientation),
-                                   TERRAIN_BUILDING);
+            {
+                int image_id = get_statue_image_from_value(b->type, b->data.monuments.variant, map_orientation);
+                map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_BUILDING);
+            }
             break;
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:

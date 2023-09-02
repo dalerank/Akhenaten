@@ -50,7 +50,7 @@ static void set_crop_tile(int building_id, int x, int y, int dx, int dy, int cro
         ImageDraw::isometric(crop_image_id + (growth < 4 ? growth : 4), MAP_X(grid_offset), MAP_Y(grid_offset));
 }
 
-void map_building_tiles_add(int building_id, int x, int y, int size, int image_id, int terrain) {
+void map_building_tiles_add(int building_id, map_point tile, int size, int image_id, int terrain) {
     int x_leftmost, y_leftmost;
     switch (city_view_orientation()) {
     case DIR_0_TOP_RIGHT:
@@ -70,14 +70,16 @@ void map_building_tiles_add(int building_id, int x, int y, int size, int image_i
     default:
         return;
     }
-    if (!map_grid_is_inside(x, y, size))
+
+    if (!map_grid_is_inside(tile, size)) {
         return;
+    }
 
     int x_proper = x_leftmost * (size - 1);
     int y_proper = y_leftmost * (size - 1);
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            int grid_offset = MAP_OFFSET(x + dx, y + dy);
+            int grid_offset = tile.shifted(dx, dy).grid_offset();
             map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
             map_terrain_add(grid_offset, terrain);
             map_building_set(grid_offset, building_id);
@@ -131,7 +133,7 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
         //        int image_id = image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
         //        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_FLOODPLAIN))
         //            image_id = image_id_from_group(GROUP_BUILDING_FARMLAND);
-        map_building_tiles_add(building_id, x, y, 3, get_farm_image(MAP_OFFSET(x, y)), TERRAIN_BUILDING);
+        map_building_tiles_add(building_id, map_point(x, y), 3, get_farm_image(MAP_OFFSET(x, y)), TERRAIN_BUILDING);
         //        crop_image_offset += image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH);
         return;
     }
@@ -424,18 +426,12 @@ void map_building_tiles_add_temple_complex_parts(building* b) {
         part = 1;
     else if (b == get_temple_complex_front_facing_part(b)) // front facing part (oracle)
         part = 2;
-    map_building_tiles_add(b->id,
-                           b->tile.x(),
-                           b->tile.y(),
-                           b->size,
-                           get_temple_complex_part_image(b->type,
-                                                         part,
-                                                         orientation_binary,
-                                                         (bool)(b->main()->data.monuments.temple_complex_attachments
-                                                                & part)),
-                           TERRAIN_BUILDING);
-    if (b->next_part_building_id)
+
+    int image_id = get_temple_complex_part_image(b->type, part, orientation_binary, (bool)(b->main()->data.monuments.temple_complex_attachments & part));
+    map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
+    if (b->next_part_building_id) {
         map_building_tiles_add_temple_complex_parts(b->next());
+    }
 }
 
 void map_building_tiles_remove(int building_id, int x, int y) {

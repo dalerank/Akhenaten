@@ -196,9 +196,10 @@ static void add_building_to_terrain(building* b) {
     } else if (b->house_size) {
     } else {
         int size = building_properties_for_type(b->type)->size;
-        map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), size, 0, 0);
-        if (b->type == BUILDING_FISHING_WHARF)
+        map_building_tiles_add(b->id, b->tile, size, 0, 0);
+        if (b->type == BUILDING_FISHING_WHARF) {
             b->data.industry.fishing_boat_id = 0;
+        }
     }
     b->state = BUILDING_STATE_VALID;
 
@@ -328,8 +329,7 @@ void game_undo_perform(void) {
 
         building* new_b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y, 0);
         if (new_b->id > 0)
-            map_building_tiles_add(
-              new_b->id, x, y, 1, image_id_from_group(GROUP_BUILDING_HOUSE_TENT), TERRAIN_BUILDING);
+            map_building_tiles_add(new_b->id, map_point(x, y), 1, image_id_from_group(GROUP_BUILDING_HOUSE_TENT), TERRAIN_BUILDING);
 
         map_image_set(grid_offset, vacant_lot_image);
         //        map_property_mark_draw_tile(grid_offset);

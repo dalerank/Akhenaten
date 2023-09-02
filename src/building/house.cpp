@@ -92,15 +92,14 @@ static void create_vacant_lot(int x, int y, int image_id) {
     building* b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y, 0);
     b->house_population = 0;
     b->distance_from_entry = 0;
-    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), 1, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->tile, 1, image_id, TERRAIN_BUILDING);
 }
 
 void building_house_change_to(building* house, e_building_type type) {
     tutorial_on_house_evolve(type - BUILDING_HOUSE_VACANT_LOT);
     house->type = type;
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
-    int image_id = image_id_from_group(HOUSE_IMAGE[house->subtype.house_level].collection,
-                                       HOUSE_IMAGE[house->subtype.house_level].group);
+    int image_id = image_id_from_group(HOUSE_IMAGE[house->subtype.house_level].collection, HOUSE_IMAGE[house->subtype.house_level].group);
     if (house->house_is_merged) {
         image_id += 4;
         if (HOUSE_IMAGE[house->subtype.house_level].offset)
@@ -110,7 +109,7 @@ void building_house_change_to(building* house, e_building_type type) {
         image_id += HOUSE_IMAGE[house->subtype.house_level].offset;
         image_id += map_random_get(house->tile.grid_offset()) & (HOUSE_IMAGE[house->subtype.house_level].num_types - 1);
     }
-    map_building_tiles_add(house->id, house->tile.x(), house->tile.y(), house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->tile, house->size, image_id, TERRAIN_BUILDING);
 }
 void building_house_change_to_vacant_lot(building* house) {
     house->type = BUILDING_HOUSE_VACANT_LOT;
@@ -120,7 +119,7 @@ void building_house_change_to_vacant_lot(building* house) {
         map_building_tiles_remove(house->id, house->tile.x(), house->tile.y());
         house->house_is_merged = 0;
         house->size = house->house_size = 1;
-        map_building_tiles_add(house->id, house->tile.x(), house->tile.y(), 1, image_id, TERRAIN_BUILDING);
+        map_building_tiles_add(house->id, house->tile, 1, image_id, TERRAIN_BUILDING);
 
         create_vacant_lot(house->tile.x() + 1, house->tile.y(), image_id);
         create_vacant_lot(house->tile.x(), house->tile.y() + 1, image_id);
@@ -172,7 +171,7 @@ static void merge(building* b) {
     //    b->tile.y() = merge_data.y;
     //    b->tile.grid_offset() = MAP_OFFSET(b->tile.x(), b->tile.y());
     b->house_is_merged = 1;
-    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), 2, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->tile, 2, image_id, TERRAIN_BUILDING);
 }
 
 void building_house_merge(building* house) {
@@ -290,12 +289,7 @@ static void create_house_tile(e_building_type type, int x, int y, int image_id, 
         house->data.house.inventory[i] = inventory[i];
     }
     house->distance_from_entry = 0;
-    map_building_tiles_add(house->id,
-                           house->tile.x(),
-                           house->tile.y(),
-                           1,
-                           image_id + (map_random_get(house->tile.grid_offset()) & 1),
-                           TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->tile, 1, image_id + (map_random_get(house->tile.grid_offset()) & 1), TERRAIN_BUILDING);
 }
 
 static void split_size2(building* house, e_building_type new_type) {
@@ -322,12 +316,7 @@ static void split_size2(building* house, e_building_type new_type) {
     house->distance_from_entry = 0;
 
     int image_id = house_image_group(house->subtype.house_level);
-    map_building_tiles_add(house->id,
-                           house->tile.x(),
-                           house->tile.y(),
-                           house->size,
-                           image_id + (map_random_get(house->tile.grid_offset()) & 1),
-                           TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->tile, house->size, image_id + (map_random_get(house->tile.grid_offset()) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
     create_house_tile(
@@ -361,26 +350,15 @@ static void split_size3(building* house) {
     house->distance_from_entry = 0;
 
     int image_id = house_image_group(house->subtype.house_level);
-    map_building_tiles_add(house->id,
-                           house->tile.x(),
-                           house->tile.y(),
-                           house->size,
-                           image_id + (map_random_get(house->tile.grid_offset()) & 1),
-                           TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->tile, house->size, image_id + (map_random_get(house->tile.grid_offset()) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
-    create_house_tile(
-      house->type, house->tile.x(), house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(
-      house->type, house->tile.x() + 1, house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(
-      house->type, house->tile.x() + 2, house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(
-      house->type, house->tile.x(), house->tile.y() + 2, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(
-      house->type, house->tile.x() + 1, house->tile.y() + 2, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(
-      house->type, house->tile.x() + 2, house->tile.y() + 2, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(house->type, house->tile.x(), house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(house->type, house->tile.x() + 1, house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(house->type, house->tile.x() + 2, house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(house->type, house->tile.x(), house->tile.y() + 2, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(house->type, house->tile.x() + 1, house->tile.y() + 2, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(house->type, house->tile.x() + 2, house->tile.y() + 2, image_id, population_per_tile, inventory_per_tile);
 }
 static void split(building* house, int num_tiles) {
     int grid_offset = MAP_OFFSET(g_merge_data.x, g_merge_data.y);
@@ -419,7 +397,7 @@ void building_house_expand_to_large_insula(building* house) {
     //    house->tile.x() = merge_data.x;
     //    house->tile.y() = merge_data.y;
     //    house->tile.grid_offset() = MAP_OFFSET(house->tile.x(), house->tile.y());
-    map_building_tiles_add(house->id, house->tile.x(), house->tile.y(), house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->tile, house->size, image_id, TERRAIN_BUILDING);
 }
 void building_house_expand_to_large_villa(building* house) {
     split(house, 9);
@@ -438,7 +416,7 @@ void building_house_expand_to_large_villa(building* house) {
     //    house->tile.x() = merge_data.x;
     //    house->tile.y() = merge_data.y;
     //    house->tile.grid_offset() = MAP_OFFSET(house->tile.x(), house->tile.y());
-    map_building_tiles_add(house->id, house->tile.x(), house->tile.y(), house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->tile, house->size, image_id, TERRAIN_BUILDING);
 }
 void building_house_expand_to_large_palace(building* house) {
     split(house, 16);
@@ -457,11 +435,13 @@ void building_house_expand_to_large_palace(building* house) {
     //    house->tile.x() = merge_data.x;
     //    house->tile.y() = merge_data.y;
     //    house->tile.grid_offset() = MAP_OFFSET(house->tile.x(), house->tile.y());
-    map_building_tiles_add(house->id, house->tile.x(), house->tile.y(), house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->tile, house->size, image_id, TERRAIN_BUILDING);
 }
+
 void building_house_devolve_from_large_insula(building* house) {
     split_size2(house, BUILDING_HOUSE_MEDIUM_INSULA);
 }
+
 void building_house_devolve_from_large_villa(building* house) {
     int inventory_per_tile[INVENTORY_MAX];
     int inventory_remainder[INVENTORY_MAX];
@@ -488,46 +468,17 @@ void building_house_devolve_from_large_villa(building* house) {
     house->distance_from_entry = 0;
 
     int image_id = house_image_group(house->subtype.house_level);
-    map_building_tiles_add(house->id,
-                           house->tile.x(),
-                           house->tile.y(),
-                           house->size,
-                           image_id + (map_random_get(house->tile.grid_offset()) & 1),
-                           TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->tile, house->size, image_id + (map_random_get(house->tile.grid_offset()) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
     image_id = house_image_group(HOUSE_MEDIUM_INSULA);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
-                      house->tile.x() + 2,
-                      house->tile.y(),
-                      image_id,
-                      population_per_tile,
-                      inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
-                      house->tile.x() + 2,
-                      house->tile.y() + 1,
-                      image_id,
-                      population_per_tile,
-                      inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
-                      house->tile.x(),
-                      house->tile.y() + 2,
-                      image_id,
-                      population_per_tile,
-                      inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
-                      house->tile.x() + 1,
-                      house->tile.y() + 2,
-                      image_id,
-                      population_per_tile,
-                      inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
-                      house->tile.x() + 2,
-                      house->tile.y() + 2,
-                      image_id,
-                      population_per_tile,
-                      inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 2, house->tile.y(), image_id, population_per_tile,inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 2, house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x(), house->tile.y() + 2, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 1, house->tile.y() + 2, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 2, house->tile.y() + 2, image_id, population_per_tile, inventory_per_tile);
 }
+
 void building_house_devolve_from_large_palace(building* house) {
     int inventory_per_tile[INVENTORY_MAX];
     int inventory_remainder[INVENTORY_MAX];
@@ -552,52 +503,17 @@ void building_house_devolve_from_large_palace(building* house) {
     house->distance_from_entry = 0;
 
     int image_id = house_image_group(house->subtype.house_level);
-    map_building_tiles_add(house->id, house->tile.x(), house->tile.y(), house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->tile, house->size, image_id, TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
     image_id = house_image_group(HOUSE_MEDIUM_INSULA);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
-                      house->tile.x() + 3,
-                      house->tile.y(),
-                      image_id,
-                      population_per_tile,
-                      inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
-                      house->tile.x() + 3,
-                      house->tile.y() + 1,
-                      image_id,
-                      population_per_tile,
-                      inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
-                      house->tile.x() + 3,
-                      house->tile.y() + 2,
-                      image_id,
-                      population_per_tile,
-                      inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
-                      house->tile.x(),
-                      house->tile.y() + 3,
-                      image_id,
-                      population_per_tile,
-                      inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
-                      house->tile.x() + 1,
-                      house->tile.y() + 3,
-                      image_id,
-                      population_per_tile,
-                      inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
-                      house->tile.x() + 2,
-                      house->tile.y() + 3,
-                      image_id,
-                      population_per_tile,
-                      inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
-                      house->tile.x() + 3,
-                      house->tile.y() + 3,
-                      image_id,
-                      population_per_tile,
-                      inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 3, house->tile.y(), image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 3, house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 3, house->tile.y() + 2, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x(), house->tile.y() + 3, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 1, house->tile.y() + 3, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 2, house->tile.y() + 3, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 3, house->tile.y() + 3, image_id, population_per_tile, inventory_per_tile);
 }
 
 void building_house_check_for_corruption(building* house) {
@@ -615,8 +531,7 @@ void building_house_check_for_corruption(building* house) {
         for (int y = 0; y < map_height; y++) {
             for (int x = 0; x < map_width; x++) {
                 int grid_offset = MAP_OFFSET(x, y); // get offset of current tile (global map tile offset)
-                if (map_building_at(grid_offset)
-                    == house->id) { // does this tile belong to the house I'm searching for??
+                if (map_building_at(grid_offset) == house->id) { // does this tile belong to the house I'm searching for??
                     house->tile.set(grid_offset);
                     //                    house->tile.grid_offset() = grid_offset; // set house offset to this tile's
                     //                    offset (i.e. lowest x & y; north-west corner) house->tile.x() =

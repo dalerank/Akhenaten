@@ -137,21 +137,23 @@ static void set_rock_image(int grid_offset) {
                     image_id += image_id_from_group(GROUP_TERRAIN_ELEVATION_ROCK);
                 else
                     image_id += image_id_from_group(GROUP_TERRAIN_ROCK);
-                map_building_tiles_add(0, x, y, 3, image_id, TERRAIN_ROCK);
-            } else if (map_terrain_all_tiles_in_area_are(x, y, 2, TERRAIN_ROCK)
-                       && terrain_no_image_at(grid_offset, 2)) { // 2-tile large rock
+
+                map_building_tiles_add(0, map_point(x, y), 3, image_id, TERRAIN_ROCK);
+            } else if (map_terrain_all_tiles_in_area_are(x, y, 2, TERRAIN_ROCK) && terrain_no_image_at(grid_offset, 2)) { // 2-tile large rock
                 int image_id = 8 + (map_random_get(grid_offset) & 3);
                 if (map_terrain_exists_tile_in_radius_with_type(x, y, 2, 4, TERRAIN_ELEVATION))
                     image_id += image_id_from_group(GROUP_TERRAIN_ELEVATION_ROCK);
                 else
                     image_id += image_id_from_group(GROUP_TERRAIN_ROCK);
-                map_building_tiles_add(0, x, y, 2, image_id, TERRAIN_ROCK);
+
+                map_building_tiles_add(0, map_point(x, y), 2, image_id, TERRAIN_ROCK);
             } else { // 1-tile large rock
                 int image_id = map_random_get(grid_offset) & 7;
                 if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 4, TERRAIN_ELEVATION))
                     image_id += image_id_from_group(GROUP_TERRAIN_ELEVATION_ROCK);
                 else
                     image_id += image_id_from_group(GROUP_TERRAIN_ROCK);
+
                 map_image_set(grid_offset, image_id);
             }
         }
@@ -169,15 +171,14 @@ static void set_ore_rock_image(int grid_offset) {
                 //                    image_id += image_id_from_group(GROUP_TERRAIN_ELEVATION_ROCK);
                 //                else
                 image_id += image_id_from_group(GROUP_TERRAIN_ORE_ROCK);
-                map_building_tiles_add(0, x, y, 3, image_id, TERRAIN_ORE);
-            } else if (map_terrain_all_tiles_in_area_are(x, y, 2, TERRAIN_ORE)
-                       && terrain_no_image_at(grid_offset, 2)) { // 2-tile large rock
+                map_building_tiles_add(0, map_point(x, y), 3, image_id, TERRAIN_ORE);
+            } else if (map_terrain_all_tiles_in_area_are(x, y, 2, TERRAIN_ORE) && terrain_no_image_at(grid_offset, 2)) { // 2-tile large rock
                 int image_id = 8 + (map_random_get(grid_offset) & 3);
                 //                if (map_terrain_exists_tile_in_radius_with_type(x, y, 2, 4, TERRAIN_ELEVATION))
                 //                    image_id += image_id_from_group(GROUP_TERRAIN_ELEVATION_ROCK);
                 //                else
                 image_id += image_id_from_group(GROUP_TERRAIN_ORE_ROCK);
-                map_building_tiles_add(0, x, y, 2, image_id, TERRAIN_ORE);
+                map_building_tiles_add(0, map_point(x, y), 2, image_id, TERRAIN_ORE);
             } else if (map_terrain_is(grid_offset, TERRAIN_ORE)) { // 1-tile large rock
                 int image_id = map_random_get(grid_offset) & 7;
                 //                if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 4, TERRAIN_ELEVATION))
@@ -292,7 +293,7 @@ static void set_garden_image(int grid_offset) {
                     image_id += 4;
                     break;
                 }
-                map_building_tiles_add(0, x, y, 2, image_id, TERRAIN_GARDEN);
+                map_building_tiles_add(0, map_point(x, y), 2, image_id, TERRAIN_GARDEN);
             } else {
                 if (y & 1) {
                     switch (x & 3) {
@@ -356,9 +357,9 @@ static int is_tile_plaza(int grid_offset) {
     return 0;
 }
 static int is_two_tile_square_plaza(int grid_offset) {
-    return is_tile_plaza(grid_offset + GRID_OFFSET(1, 0)) && is_tile_plaza(grid_offset + GRID_OFFSET(0, 1))
-           && is_tile_plaza(grid_offset + GRID_OFFSET(1, 1));
+    return is_tile_plaza(grid_offset + GRID_OFFSET(1, 0)) && is_tile_plaza(grid_offset + GRID_OFFSET(0, 1)) && is_tile_plaza(grid_offset + GRID_OFFSET(1, 1));
 }
+
 static void set_plaza_image(int grid_offset) {
     int x = MAP_X(grid_offset);
     int y = MAP_Y(grid_offset);
@@ -371,7 +372,7 @@ static void set_plaza_image(int grid_offset) {
             else {
                 image_id += 6;
             }
-            map_building_tiles_add(0, x, y, 2, image_id, TERRAIN_ROAD);
+            map_building_tiles_add(0, map_point(x, y), 2, image_id, TERRAIN_ROAD);
         } else {
             // single tile plaza
             switch ((x & 1) + (y & 1)) {
@@ -1341,18 +1342,17 @@ static void set_elevation_image(int grid_offset) {
             map_terrain_remove(grid_offset, TERRAIN_ACCESS_RAMP);
             map_property_set_multi_tile_size(grid_offset, 1);
             map_property_mark_draw_tile(grid_offset);
-            if (map_elevation_at(grid_offset))
+            if (map_elevation_at(grid_offset)) {
                 map_terrain_add(grid_offset, TERRAIN_ELEVATION);
-            else {
+            } else {
                 map_terrain_remove(grid_offset, TERRAIN_ELEVATION);
-                map_image_set(grid_offset,
-                              image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7));
+                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7));
             }
         } else {
-            map_building_tiles_add(
-              0, x, y, 2, image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + image_offset, TERRAIN_ACCESS_RAMP);
+            map_building_tiles_add(0, map_point(x, y), 2, image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + image_offset, TERRAIN_ACCESS_RAMP);
         }
     }
+
     if (map_elevation_at(grid_offset) && !map_terrain_is(grid_offset, TERRAIN_ACCESS_RAMP)) {
         const terrain_image* img = map_image_context_get_elevation(grid_offset, map_elevation_at(grid_offset));
         if (img->group_offset == 44) {
@@ -1361,28 +1361,22 @@ static void set_elevation_image(int grid_offset) {
             if (!(terrain & TERRAIN_BUILDING)) {
                 map_property_set_multi_tile_xy(grid_offset, 0, 0, 1);
                 if (terrain & TERRAIN_SHRUB) {
-                    map_image_set(grid_offset,
-                                  image_id_from_group(GROUP_TERRAIN_SHRUB) + (map_random_get(grid_offset) & 7));
+                    map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_SHRUB) + (map_random_get(grid_offset) & 7));
                 } else if (terrain & TERRAIN_TREE) {
-                    map_image_set(grid_offset,
-                                  image_id_from_group(GROUP_TERRAIN_TREE) + (map_random_get(grid_offset) & 7));
+                    map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_TREE) + (map_random_get(grid_offset) & 7));
                 } else if (terrain & TERRAIN_ROAD)
                     map_tiles_set_road(x, y);
                 //                else if (terrain & TERRAIN_AQUEDUCT)
                 //                    set_elevation_aqueduct_image(grid_offset);
                 else if (terrain & TERRAIN_MEADOW)
-                    map_image_set(grid_offset,
-                                  image_id_from_group(GROUP_TERRAIN_MEADOW_STATIC_OUTER)
-                                    + (map_random_get(grid_offset) & 3));
+                    map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_MEADOW_STATIC_OUTER) + (map_random_get(grid_offset) & 3));
                 else
-                    map_image_set(grid_offset,
-                                  image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7));
+                    map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7));
             }
         } else {
             map_property_set_multi_tile_xy(grid_offset, 0, 0, 1);
             map_terrain_add(grid_offset, TERRAIN_ELEVATION);
-            map_image_set(grid_offset,
-                          image_id_from_group(GROUP_TERRAIN_ELEVATION) + img->group_offset + img->item_offset);
+            map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_ELEVATION) + img->group_offset + img->item_offset);
         }
     }
 }

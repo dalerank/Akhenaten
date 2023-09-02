@@ -335,10 +335,11 @@ static void place_building(map_point tile) {
 
     if (editor_tool_can_place_building(tile, size * size, 0)) {
         building* b = building_create(type, tile.x(), tile.y(), 0);
-        map_building_tiles_add(b->id, tile.x(), tile.y(), size, image_id, TERRAIN_BUILDING);
+        map_building_tiles_add(b->id, tile, size, image_id, TERRAIN_BUILDING);
         scenario_editor_updated_terrain();
-    } else
+    } else {
         city_warning_show(WARNING_EDITOR_CANNOT_PLACE);
+    }
 }
 
 static void update_terrain_after_elevation_changes(void) {
@@ -364,8 +365,7 @@ static void place_access_ramp(map_point tile) {
                 map_terrain_set(grid_offset, map_terrain_get(grid_offset) & terrain_mask);
             }
         }
-        map_building_tiles_add(
-          0, tile.x(), tile.y(), 2, image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation, TERRAIN_ACCESS_RAMP);
+        map_building_tiles_add(0, tile, 2, image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation, TERRAIN_ACCESS_RAMP);
 
         update_terrain_after_elevation_changes();
         scenario_editor_updated_terrain();

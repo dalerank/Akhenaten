@@ -57,7 +57,7 @@ const int CROPS_OFFSETS[2] = {5, 6};
 
 static void add_fort(int type, building* fort) {
     fort->prev_part_building_id = 0;
-    map_building_tiles_add(fort->id, fort->tile.x(), fort->tile.y(), fort->size, image_id_from_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
+    map_building_tiles_add(fort->id, fort->tile, fort->size, image_id_from_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
 
     if (type == BUILDING_FORT_CHARIOTEERS) {
         fort->subtype.fort_figure_type = FIGURE_FORT_LEGIONARY;
@@ -76,7 +76,8 @@ static void add_fort(int type, building* fort) {
     ground->prev_part_building_id = fort->id;
     fort->next_part_building_id = ground->id;
     ground->next_part_building_id = 0;
-    map_building_tiles_add(ground->id, fort->tile.x() + offsets_x[global_rotation], fort->tile.y() + offsets_y[global_rotation], 4, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
+    map_point fort_tile_add = fort->tile.shifted(offsets_x[global_rotation], offsets_y[global_rotation]);
+    map_building_tiles_add(ground->id, fort_tile_add, 4, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 
     fort->formation_id = formation_legion_create_for_fort(fort);
     ground->formation_id = fort->formation_id;
@@ -103,9 +104,10 @@ void BuildPlanner::add_building_tiles_from_list(int building_id, bool graphics_o
                 tile.shift(-size + 1, -size + 1);
                 break;
             }
+
             if (image_id > 0 && size > 0) {
                 if (!graphics_only) {
-                    map_building_tiles_add(building_id, tile.x(), tile.y(), size, image_id, TERRAIN_BUILDING);
+                    map_building_tiles_add(building_id, tile, size, image_id, TERRAIN_BUILDING);
                 } else {
                     map_image_set(tile.grid_offset(), image_id);
                 }
@@ -124,7 +126,7 @@ static building* add_temple_complex_element(int x, int y, int orientation, build
     b->prev_part_building_id = prev->id;
     prev->next_part_building_id = b->id;
     int image_id = map_image_at(MAP_OFFSET(x, y));
-    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), 3, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->tile, 3, image_id, TERRAIN_BUILDING);
 
     return b;
 }
@@ -204,7 +206,7 @@ static void latch_on_venue(e_building_type type, building* main, int dx, int dy,
         break;
 
     case BUILDING_PAVILLION:
-        map_building_tiles_add(this_venue->id, point.x(), point.y(), 2, image_id_from_group(GROUP_BUILDING_PAVILLION), TERRAIN_BUILDING);
+        map_building_tiles_add(this_venue->id, point, 2, image_id_from_group(GROUP_BUILDING_PAVILLION), TERRAIN_BUILDING);
         break;
     }
 }
@@ -383,7 +385,7 @@ static building* add_storageyard_space(int x, int y, building* prev) {
     game_undo_add_building(b);
     b->prev_part_building_id = prev->id;
     prev->next_part_building_id = b->id;
-    map_building_tiles_add(b->id, x, y, 1, image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY), TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, map_point(x, y), 1, image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY), TERRAIN_BUILDING);
     return b;
 }
 
@@ -399,7 +401,8 @@ static void add_storageyard(building* b) {
     }
 
     b->prev_part_building_id = 0;
-    map_building_tiles_add(b->id, b->tile.x() + x_offset[corner], b->tile.y() + y_offset[corner], 1, image_id_from_group(GROUP_BUILDING_STORAGE_YARD), TERRAIN_BUILDING);
+    map_point shifted_tile = b->tile.shifted(x_offset[corner], y_offset[corner]);
+    map_building_tiles_add(b->id, shifted_tile, 1, image_id_from_group(GROUP_BUILDING_STORAGE_YARD), TERRAIN_BUILDING);
 
     building* prev = b;
     for (int i = 0; i < 9; i++) {
@@ -419,12 +422,12 @@ static void add_storageyard(building* b) {
 }
 
 static int place_ferry(building *b, int size, int image_id) {
-    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), size, image_id, TERRAIN_BUILDING|TERRAIN_ROAD|TERRAIN_FERRY_ROUTE);
+    map_building_tiles_add(b->id, b->tile, size, image_id, TERRAIN_BUILDING|TERRAIN_ROAD|TERRAIN_FERRY_ROUTE);
     return 1;
 }
 
 static void add_building_tiles_image(building* b, int image_id) {
-    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
 }
 static void add_building(building* b, int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
@@ -589,13 +592,13 @@ static void add_building(building* b, int orientation, int variant) {
         // defense
     case BUILDING_TOWER:
         map_terrain_remove_with_radius(b->tile.x(), b->tile.y(), 2, 0, TERRAIN_WALL);
-        map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size, image_id_from_group(GROUP_BUILDING_TOWER), TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
+        map_building_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_TOWER), TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
         map_tiles_update_area_walls(b->tile.x(), b->tile.y(), 5);
         break;
 
     case BUILDING_GATEHOUSE_PH:
     case BUILDING_GATEHOUSE:
-        map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size, image_id_from_group(GROUP_BUILDING_TOWER) + orientation, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
+        map_building_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_TOWER) + orientation, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
         //            map_orientation_update_buildings();
         map_terrain_add_gatehouse_roads(b->tile.x(), b->tile.y(), orientation);
         break;
@@ -682,10 +685,10 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
                     game_undo_add_building(b);
                     if (b->id > 0) {
                         items_placed++;
-                        map_building_tiles_add(
-                          b->id, x, y, 1, image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT), TERRAIN_BUILDING);
-                        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_ROAD))
+                        map_building_tiles_add(b->id, map_point(x, y), 1, image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT), TERRAIN_BUILDING);
+                        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_ROAD)) {
                             needs_road_warning = 1;
+                        }
                     }
                 }
             }
