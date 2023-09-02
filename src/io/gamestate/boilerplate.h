@@ -1,8 +1,7 @@
-#ifndef GAME_FILE_H
-#define GAME_FILE_H
+#pragma once
 
 #include <cstdint>
-#include <string.h>
+#include "core/bstring.h"
 
 // file versions found so far:
 //  144 (Bridges.map only)
@@ -18,7 +17,7 @@
 //  165 ozymandias: save house health option
 constexpr uint32_t latest_save_version = 165;
 
-void fullpath_saves(char* full, const char* filename);
+bstring256 fullpath_saves(const char* filename);
 void fullpath_maps(char* full, const char* filename);
 
 namespace GamestateIO {
@@ -54,4 +53,3 @@ bool delete_map(const char* filename_short);
  */
 bool delete_family(char const* family_name);
 } // namespace GamestateIO
-#endif // GAME_FILE_H

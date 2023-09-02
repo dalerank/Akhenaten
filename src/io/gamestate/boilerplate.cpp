@@ -13,6 +13,7 @@
 #include "city/mission.h"
 #include "city/resource.h"
 #include "city/victory.h"
+#include "core/bstring.h"
 #include "core/application.h"
 #include "empire/empire.h"
 #include "empire/trade_prices.h"
@@ -92,17 +93,12 @@ namespace {
 char const* const SAVE_FOLDER = "Save";
 } // namespace
 
-void fullpath_saves(char* full, const char* filename) {
-    strcpy(full, "");
+bstring256 fullpath_saves(const char* filename) {
     if (strncasecmp(filename, "Save/", 5) == 0 || strncasecmp(filename, "Save\\", 5) == 0) {
-        strcat(full, filename);
-        return;
+        return bstring256(filename);
     }
-    strcat(full, SAVE_FOLDER);
-    strcat(full, "/");
-    strcat(full, (const char*)setting_player_name());
-    strcat(full, "/");
-    strcat(full, filename);
+
+    return bstring256(SAVE_FOLDER, "/", (const char*)setting_player_name(), "/", filename);
 }
 
 void fullpath_maps(char* full, const char* filename) {
@@ -568,9 +564,7 @@ bool GamestateIO::write_mission(const int scenario_id) {
     return false;
 }
 bool GamestateIO::write_savegame(const char* filename_short) {
-    // concatenate string
-    char full[MAX_FILE_NAME] = {0};
-    fullpath_saves(full, filename_short);
+    bstring256 full = fullpath_saves(filename_short);
 
     // write file
     e_file_format format = get_format_from_file(filename_short);
@@ -590,10 +584,8 @@ void GamestateIO::prepare_folders(const char* path) {
 
 bool GamestateIO::prepare_savegame(const char* filename_short) {
     // concatenate string
-    char full[MAX_FILE_NAME] = {0};
-    char folders[MAX_FILE_NAME] = {0};
-    fullpath_saves(full, filename_short);
-    fullpath_saves(folders, "");
+    bstring256 full = fullpath_saves(filename_short);
+    bstring256 folders = fullpath_saves("");
 
     prepare_folders(folders);
     // write file
@@ -635,8 +627,7 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
         start_loaded_file();
 
         // replay mission autosave file
-        char filename[MAX_FILE_NAME] = {0};
-        snprintf(filename, MAX_FILE_NAME, "autosave_replay.%s", saved_game_data_expanded.extension);
+        bstring256 filename("autosave_replay.", saved_game_data_expanded.extension);
         GamestateIO::write_savegame(filename);
     }
 
@@ -644,14 +635,15 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
 }
 bool GamestateIO::load_savegame(const char* filename_short, bool start_immediately) {
     // concatenate string
-    char full[MAX_FILE_NAME] = {0};
-    fullpath_saves(full, filename_short);
+    bstring256 full = fullpath_saves(filename_short);
 
     // read file
     pre_load();
     e_file_format file_format = get_format_from_file(filename_short);
-    if (!FILEIO.unserialize(full, 0, file_format, GamestateIO::read_file_version, file_schema))
+    if (!FILEIO.unserialize(full, 0, file_format, GamestateIO::read_file_version, file_schema)) {
         return false;
+    }
+
     last_loaded = LOADED_SAVE;
     post_load();
 
@@ -770,8 +762,7 @@ bool GamestateIO::delete_mission(const int scenario_id) {
 }
 bool GamestateIO::delete_savegame(const char* filename_short) {
     // concatenate string
-    char full[MAX_FILE_NAME];
-    fullpath_saves(full, filename_short);
+    bstring256 full = fullpath_saves(filename_short);
 
     // delete file
     return file_remove(full);

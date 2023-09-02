@@ -32,6 +32,7 @@
 #include "city/victory.h"
 #include "core/random.h"
 #include "core/profiler.h"
+#include "core/bstring.h"
 #include "editor/editor.h"
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -60,6 +61,7 @@
 #include "scenario/request.h"
 #include "sound/music.h"
 #include "widget/minimap.h"
+#include "window/file_dialog.h"
 
 static void advance_year(void) {
     scenario_empire_process_expansion();
@@ -112,12 +114,8 @@ static void advance_month(void) {
     //    tutorial_on_month_tick();
 
     if (setting_monthly_autosave()) {
-        //        if (0)
-        //            SaveFileIO::write_savegame("autosave.sav");
-        //        if (1)
-        //            SaveFileIO::write_savegame("autosave_history.sav");
-        //        if (2)
-        //            SaveFileIO::write_savegame("autosave_replay.sav");
+        bstring256 autosave_file("autosave_month.", saved_game_data_expanded.extension);
+        GamestateIO::write_savegame(autosave_file);
     }
 }
 

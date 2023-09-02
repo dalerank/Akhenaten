@@ -195,15 +195,13 @@ static void button_ok_cancel(int is_ok, int param2) {
         return;
     }
 
-    char filename[MAX_FILE_NAME] = "";
-    char full[MAX_FILE_NAME] = "";
-    snprintf(filename, MAX_FILE_NAME, "%s.%s", get_chosen_filename(), saved_game_data.extension);
-    fullpath_saves(full, filename);
+    bstring256 filename(get_chosen_filename(), ".", saved_game_data.extension);
+    bstring256 full = fullpath_saves(filename);
 
     if (data.dialog_type == FILE_DIALOG_LOAD) {
         if (!file_exists(full, NOT_LOCALIZED)) {
-            snprintf(filename, MAX_FILE_NAME, "%s.%s", get_chosen_filename(), saved_game_data_expanded.extension);
-            fullpath_saves(full, filename);
+            filename = bstring256(get_chosen_filename(), ".", saved_game_data_expanded.extension);
+            full = fullpath_saves(filename);
         }
 
         if (!file_exists(full, NOT_LOCALIZED)) {
@@ -216,6 +214,7 @@ static void button_ok_cancel(int is_ok, int param2) {
         data.message_not_exist_start_time = time_get_millis();
         return;
     }
+
     if (data.dialog_type == FILE_DIALOG_LOAD) {
         if (data.type == FILE_TYPE_SAVED_GAME) {
             if (GamestateIO::load_savegame(full)) {
