@@ -7,8 +7,11 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "grid/grid.h"
+#include "grid/figure.h"
 #include "grid/random.h"
 #include "grid/routing/routing.h"
+
+#include <assert.h>
 
 #define MAX_ROUTES 3000
 
@@ -46,6 +49,68 @@ int map_routing_get_first_available_id() {
             return i;
     }
     return 0;
+}
+
+void figure::map_figure_add() {
+    if (!map_grid_is_valid_offset(tile.grid_offset())) {
+        return;
+    }
+
+    // check for figures on new tile, update "next_figure" pointers accordingly
+    next_figure = 0;
+    int on_tile = map_figure_id_get(tile);
+    if (on_tile) {
+        figure* checking = figure_get(on_tile); // get first figure (head) on the new tile, if any is present
+                                                //        assert(checking->id != f->id); // hmmmm that'd be wrong
+
+                                                // traverse through chain
+        while (checking->next_figure) {
+            if (checking->next_figure == id) // this figure is already in the chain on this tile!!
+                return;
+
+            checking = figure_get(checking->next_figure); // else, traverse chain of figures as normal...
+        }
+
+        // last figure in the chain!
+        checking->next_figure = id;
+    } else {
+        map_figure_set(tile, id);
+    }
+}
+
+void figure::map_figure_update() { // useless - but used temporarily for checking if figures are correct!
+    if (!map_grid_is_valid_offset(tile.grid_offset())) {
+        return;
+    }
+
+    // traverse through chain of figures on this tile
+    int on_tile = map_figure_id_get(tile);
+    figure* checking = figure_get(on_tile);
+    while (checking->id) {
+        assert(checking->tile.grid_offset() == tile.grid_offset());
+        checking = figure_get(checking->next_figure);
+    }
+}
+
+void figure::map_figure_remove() {
+    if (!map_has_figure_at(tile)) {
+        next_figure = 0;
+        return;
+    }
+
+    // check for figures on new tile, update "next_figure" pointers accordingly
+    int on_tile = map_figure_id_get(tile);
+    if (on_tile == id) { // figure is the first (head) on its tile!
+        map_figure_set(tile, next_figure); // remove from chain, set the head as the next one in chain (0 is fine)
+    } else {
+        figure* checking = figure_get(on_tile); // traverse through the chain to find this figure...
+        while (checking->id && checking->next_figure != id) {
+            checking = figure_get(checking->next_figure);
+        }
+        checking->next_figure = next_figure; // remove from chain, set previous figure to point "next" to the next one
+                                             // in chain (0 is fine)
+    }
+    next_figure = 0;
 }
 
 void figure::figure_route_add() {
@@ -116,6 +181,7 @@ void figure::figure_route_add() {
         routing_path_length = path_length;
     }
 }
+
 void figure::route_remove() {
     auto &data = g_figure_route_data;
     if (routing_path_id > 0) {

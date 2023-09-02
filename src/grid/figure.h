@@ -24,6 +24,10 @@ enum {
 int map_figure_id_get(int grid_offset);
 inline int map_figure_id_get(map_point tile) { return map_figure_id_get(tile.grid_offset());  }
 
+figure *map_figure_get(int grid_offset);
+
+void map_figure_set(int grid_offset, int id);
+inline void map_figure_set(map_point tile, int id) { map_figure_set(tile.grid_offset(), id); }
 /**
  * Returns whether there is a figure at the given offset
  * @param grid_offset Map offset
