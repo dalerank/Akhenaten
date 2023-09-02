@@ -4,6 +4,7 @@
 #include "core/game_environment.h"
 #include "core/string.h"
 #include "city/gods.h"
+#include "city/data_private.h"
 #include "game/game.h"
 #include "game/system.h"
 #include "graphics/boilerplate.h"
@@ -42,10 +43,11 @@ constexpr uint32_t CONFIG_PAGES = 5;
 #define ITEM_Y_OFFSET 60
 #define ITEM_HEIGHT 24
 
-static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 3, 5};
+static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 4, 5};
 
 static void toggle_switch(int id, int param2);
 static void toggle_god_disabled(int id, int param2);
+static void toggle_city_animals_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
 static void button_hotkeys(int param1, int param2);
@@ -104,6 +106,7 @@ static generic_button checkbox_buttons[] = {
   {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CITIZEN_ROAD_OFFSET, TR_CONFIG_CH_CITIZEN_ROAD_OFFSET},
   {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WORK_CAMP_ONE_WORKER_PER_MONTH, TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH},
   {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CLAY_PIT_FIRE_RISK_REDUCED, TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED},
+  {20, 144, 20, 20, toggle_city_animals_switch, button_none, CONFIG_GP_CH_CITY_HAS_ANIMALS, TR_CONFIG_CITY_HAS_ANIMALS},
 
   // GODS
   {20, 72, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_OSIRIS_DISABLED, TR_CONFIG_GOD_OSIRIS_DISABLED},
@@ -333,6 +336,11 @@ static void toggle_god_disabled(int key, int param2) {
     window_invalidate();
 }
 
+static void toggle_city_animals_switch(int key, int param2) {
+    city_data.env.has_animals = !city_data.env.has_animals;
+    window_invalidate();
+}
+
 static void toggle_switch(int key, int param2) {
     auto& data = g_window_config_ext_data;
     data.config_values[key].new_value = 1 - data.config_values[key].new_value;
@@ -376,6 +384,16 @@ static void init(void (*close_callback)()) {
         }
     }
 }
+
+static bool is_config_option_enabled(int option) {
+    auto& data = g_window_config_ext_data;
+    switch (option) {
+    case CONFIG_GP_CH_CITY_HAS_ANIMALS: return city_data.env.has_animals;
+    }
+
+    return data.config_values[option].new_value;
+}
+
 static void draw_background() {
     auto& data = g_window_config_ext_data;
     graphics_clear_screen();
@@ -387,44 +405,26 @@ static void draw_background() {
     text_draw_centered(translation_for(page_names[data.page]), 16, 16, 608, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
     text_draw(translation_for(TR_CONFIG_LANGUAGE_LABEL), 20, 56, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    text_draw_centered(data.language_options[data.selected_language_option],
-                       language_button.x,
-                       language_button.y + 6,
-                       language_button.width,
-                       FONT_NORMAL_BLACK_ON_LIGHT,
-                       0);
+    text_draw_centered(data.language_options[data.selected_language_option], language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     for (int i = 0; i < options_per_page[data.page]; i++) {
-        text_draw(translation_for(checkbox_buttons[data.starting_option + i].parameter2),
-                  44,
-                  FIRST_BUTTON_Y + BUTTON_SPACING * i + TEXT_Y_OFFSET,
-                  FONT_NORMAL_BLACK_ON_LIGHT,
-                  0);
+        text_draw(translation_for(checkbox_buttons[data.starting_option + i].parameter2), 44, FIRST_BUTTON_Y + BUTTON_SPACING * i + TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
+
     for (int i = 0; i < options_per_page[data.page]; i++) {
         int value = i + data.starting_option;
-        generic_button* btn = &checkbox_buttons[value];
-        if (data.config_values[btn->parameter1].new_value) {
-            text_draw(string_from_ascii("x"), btn->x + 6, btn->y + 3, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        generic_button &btn = checkbox_buttons[value];
+        if (is_config_option_enabled(btn.parameter1)) {
+            text_draw(string_from_ascii("x"), btn.x + 6, btn.y + 3, FONT_NORMAL_BLACK_ON_LIGHT, 0);
         }
     }
 
     for (int i = 0; i < std::size(bottom_buttons); i++) {
-        text_draw_centered(translation_for(bottom_buttons[i].parameter2),
-                           bottom_buttons[i].x,
-                           bottom_buttons[i].y + 9,
-                           bottom_buttons[i].width,
-                           FONT_NORMAL_BLACK_ON_LIGHT,
-                           0);
+        text_draw_centered(translation_for(bottom_buttons[i].parameter2), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
     
     for (int i = 0; i < std::size(page_buttons); i++) {
-        text_draw_centered(translation_for(page_buttons[i].parameter2),
-                           page_buttons[i].x,
-                           page_buttons[i].y + 6,
-                           page_buttons[i].width,
-                           FONT_NORMAL_BLACK_ON_LIGHT,
-                           0);
+        text_draw_centered(translation_for(page_buttons[i].parameter2), page_buttons[i].x, page_buttons[i].y + 6, page_buttons[i].width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
 
     if (GAME_ENV == ENGINE_ENV_C3) { // TODO: temporary fix to mitigate translation exception
