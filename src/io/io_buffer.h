@@ -61,12 +61,9 @@ protected:
     }
 
 public:
-    int get_size() {
-        return size;
-    }
-    size_t get_offset() {
-        return p_buf->get_offset();
-    }
+    inline int get_size() { return size; }
+    inline bool is_read_access() const { return access_type == CHUNK_ACCESS_READ; }
+    inline size_t get_offset() { return p_buf->get_offset(); }
 
     // this will HOOK the io_buffer the provided BUFFER
     void hook(buffer* buf, int _size, bool _compressed, const char* _name);

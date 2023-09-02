@@ -32,6 +32,10 @@ void map_image_restore_at(int grid_offset) {
     map_grid_set(&g_images_grid, grid_offset, map_grid_get(&g_images_grid_backup, grid_offset));
 }
 
+void map_image_fix_icoreect_tiles() {
+    io_image_grid::instance().fix_incorrect_tiles_img();
+}
+
 void map_image_clear(void) {
     map_grid_clear(&g_images_grid);
 }
@@ -55,7 +59,7 @@ void set_image_grid_correction_shift(int shift) {
     image_shift = shift;
 }
 
-uint32_t io_image_grid::fix_img_index(uint32_t index) const {
+uint32_t io_image_grid::fix_img_index(int grid_offset, uint32_t index) const {
     if (index >= 15600 && index <= 15616) {
         if (index == 15600 || index == 15601) {
             return 15063;
@@ -66,13 +70,16 @@ uint32_t io_image_grid::fix_img_index(uint32_t index) const {
     return index;
 }
 
+void io_image_grid::fix_incorrect_tiles_img() {
+    for (int grid_offset = 0; grid_offset < GRID_SIZE_TOTAL; grid_offset++) {
+        int64_t nv = map_grid_get(&g_images_grid, grid_offset) - image_shift;
+        nv = fix_img_index(grid_offset, nv);
+        map_grid_set(&g_images_grid, grid_offset, nv);
+    }
+}
+
 void io_image_grid::bind_data(size_t version) {
     bind(BIND_SIGNATURE_GRID, &g_images_grid);
-    for (int i = 0; i < GRID_SIZE_TOTAL; i++) {
-        int64_t nv = map_grid_get(&g_images_grid, i) - image_shift;
-        nv = fix_img_index(nv);
-        map_grid_set(&g_images_grid, i, nv);
-    }
 }
 
 io_image_grid& io_image_grid::instance() {

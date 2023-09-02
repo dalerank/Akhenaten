@@ -1,5 +1,4 @@
-#ifndef MAP_IMAGE_H
-#define MAP_IMAGE_H
+#pragma once
 
 #include "io/io_buffer.h"
 
@@ -9,7 +8,8 @@ public:
         inherited = true;
     }
     virtual void bind_data(size_t version) override;
-    uint32_t fix_img_index(uint32_t index) const;
+    uint32_t fix_img_index(int grid_offset, uint32_t index) const;
+    void fix_incorrect_tiles_img();
 
     static io_image_grid& instance();
 };
@@ -20,10 +20,9 @@ void map_image_set(int grid_offset, int image_id);
 void map_image_backup(void);
 void map_image_restore(void);
 void map_image_restore_at(int grid_offset);
+void map_image_fix_icorrect_tiles();
 
 void map_image_clear(void);
 void map_image_init_edges(void);
 
 void set_image_grid_correction_shift(int shift);
-
-#endif // MAP_IMAGE_H

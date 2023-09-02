@@ -204,6 +204,9 @@ static void post_load() {
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
 
+    //map
+    map_image_fix_icorrect_tiles();
+
     // building counts / storage
     // TODO: can't find cache in Pharaoh's save file format?
     building_count_update();
