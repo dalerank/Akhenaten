@@ -600,21 +600,21 @@ bool city_building_ghost_mark_deleting(map_point tile) {
     map_building_tiles_mark_deleting(tile.grid_offset());
     return true;
 }
-void BuildPlanner::draw_flat_tile(int x, int y, color color_mask) {
-    ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
+
+void BuildPlanner::draw_flat_tile(vec2i pos, color color_mask) {
+    ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos.x, pos.y, color_mask);
 }
+
 void BuildPlanner::draw_blueprints(bool fully_blocked) {
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
-            // draw tile!
             vec2i current_coord = pixel_coords_cache[row][column];
-            if (tile_blocked_array[row][column] || fully_blocked)
-                draw_flat_tile(current_coord.x, current_coord.y, COLOR_MASK_RED);
-            else
-                draw_flat_tile(current_coord.x, current_coord.y, COLOR_MASK_GREEN);
+            color color_mask = (tile_blocked_array[row][column] || fully_blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30;
+            draw_flat_tile(current_coord, color_mask);
         }
     }
 }
+
 void BuildPlanner::draw_graphics() {
     // TODO: bring these all over the unified system
     // special graphics buildings

@@ -352,16 +352,18 @@ int formation_enemy_move_formation_to(const formation* m, int x, int y, int* x_t
                         can_move = 0;
                         break;
                     }
+
                     if (map_terrain_is(grid_offset, TERRAIN_IMPASSABLE_ENEMY)) {
                         can_move = 0;
                         break;
                     }
+
                     if (map_routing_distance(grid_offset) <= 0) {
                         can_move = 0;
                         break;
                     }
-                    if (map_has_figure_at(grid_offset)
-                        && figure_get(map_figure_at(grid_offset))->formation_id != m->id) {
+
+                    if (map_has_figure_at(grid_offset) && figure_get(map_figure_id_get(grid_offset))->formation_id != m->id) {
                         can_move = 0;
                         break;
                     }

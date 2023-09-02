@@ -64,7 +64,7 @@ io_buffer* iob_vegetation_growth = new io_buffer([](io_buffer* iob, size_t versi
 
 int gatherers_harvesting_point(int grid_offset) {
     // check if there's any figure already gathering at the spot
-    int figure_id = map_figure_at(grid_offset);
+    int figure_id = map_figure_id_get(grid_offset);
     int gatherers_present = 0;
     while (figure_id) {
         figure* f = figure_get(figure_id);

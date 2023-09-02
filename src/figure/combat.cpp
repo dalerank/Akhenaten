@@ -322,12 +322,16 @@ void figure::figure_combat_handle_attack() {
 
 void figure::figure_combat_attack_figure_at(int grid_offset) {
     int figure_category = figure_properties_for_type(type)->category;
-    if (figure_category <= FIGURE_CATEGORY_INACTIVE || figure_category >= FIGURE_CATEGORY_CRIMINAL
-        || action_state == FIGURE_ACTION_150_ATTACK)
+    
+    if (figure_category <= FIGURE_CATEGORY_INACTIVE
+        || figure_category >= FIGURE_CATEGORY_CRIMINAL
+        || action_state == FIGURE_ACTION_150_ATTACK) {
         return;
+    }
+
     int guard = 0;
-    int opponent_id = map_figure_at(grid_offset);
-    while (1) {
+    int opponent_id = map_figure_id_get(grid_offset);
+    for (;;) {
         if (++guard >= MAX_FIGURES[GAME_ENV] || opponent_id <= 0)
             break;
 

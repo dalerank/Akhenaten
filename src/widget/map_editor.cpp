@@ -50,19 +50,18 @@ static void init_draw_context(void) {
 }
 
 static void draw_flags(vec2i pixel, map_point point) {
-    int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
-    int figure_id = map_figure_at(grid_offset);
+    int figure_id = map_figure_id_get(point);
     while (figure_id) {
         figure* f = figure_get(figure_id);
-        if (!f->is_ghost)
+        if (!f->is_ghost) {
             f->city_draw_figure(pixel, 0);
+        }
 
-        if (figure_id != f->next_figure)
+        if (figure_id != f->next_figure) {
             figure_id = f->next_figure;
-        else
+        } else {
             figure_id = 0;
+        }
     }
 }
 

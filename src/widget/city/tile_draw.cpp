@@ -424,7 +424,7 @@ void draw_figures(vec2i pixel, map_point point) {
 
     // secondly, draw figures found on this tile as normal
     int grid_offset = point.grid_offset();
-    int figure_id = map_figure_at(grid_offset);
+    int figure_id = map_figure_id_get(grid_offset);
     while (figure_id) {
         figure* f = figure_get(figure_id);
         if (!f->is_ghost) {
@@ -494,7 +494,7 @@ void draw_figures_overlay(vec2i pixel, map_point point) {
 
     // secondly, draw the figures normally found on this tile
     int grid_offset = point.grid_offset();
-    int figure_id = map_figure_at(grid_offset);
+    int figure_id = map_figure_id_get(grid_offset);
     while (figure_id) {
         figure* f = figure_get(figure_id);
         if (!f->is_ghost && get_city_overlay()->show_figure(f))

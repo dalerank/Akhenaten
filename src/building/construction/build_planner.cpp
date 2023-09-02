@@ -34,6 +34,7 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "grid/water.h"
+#include "grid/figure.h"
 #include "io/config/config.h"
 #include "routed.h"
 #include "warnings.h"
@@ -1279,11 +1280,13 @@ void BuildPlanner::setup_build_graphics() {
                                                          1),
                            3);
         break;
+
     case BUILDING_WATER_LIFT:
         set_tiles_building(image_id_from_group(props->image_collection, props->image_group) + relative_orientation
                              + variant * 4,
                            props->size);
         break;
+
     case BUILDING_FISHING_WHARF:
     case BUILDING_DOCK:
     case BUILDING_SHIPYARD:
@@ -1293,30 +1296,38 @@ void BuildPlanner::setup_build_graphics() {
         set_tiles_building(image_id_from_group(props->image_collection, props->image_group) + relative_orientation,
                            props->size);
         break;
+
     case BUILDING_LOW_BRIDGE:
     case BUILDING_SHIP_BRIDGE:
         // TODO
         break;
+
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
         set_tiles_building(get_statue_image(build_type, relative_orientation, variant), props->size);
         break;
+
     case BUILDING_STORAGE_YARD:
         set_tiles_building(image_id_from_group(props->image_collection, props->image_group), 3);
         break;
+
     case BUILDING_BOOTH:
         init_tiles(2, 2); // TODO
         break;
+
     case BUILDING_BANDSTAND:
         init_tiles(3, 3); // TODO
         break;
+
     case BUILDING_PAVILLION:
         init_tiles(4, 4); // TODO
         break;
+
     case BUILDING_FESTIVAL_SQUARE:
         init_tiles(5, 5); // TODO
         break;
+
     default: // regular buildings
         set_tiles_building(image_id_from_group(props->image_collection, props->image_group), props->size);
         break;
@@ -1358,7 +1369,8 @@ void BuildPlanner::update_obstructions_check() {
 
             tile_blocked_array[row][column] = false;
             if (!map_grid_is_inside(current_tile.x(), current_tile.y(), 1)
-                || map_terrain_is(current_tile.grid_offset(), restricted_terrain & TERRAIN_NOT_CLEAR)) {
+                || map_terrain_is(current_tile, restricted_terrain & TERRAIN_NOT_CLEAR)
+                || map_has_figure_at(current_tile)) {
                 tile_blocked_array[row][column] = true;
                 tiles_blocked_total++;
             }

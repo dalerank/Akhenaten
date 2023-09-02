@@ -445,7 +445,7 @@ void draw_debug_figures(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
-    int figure_id = map_figure_at(grid_offset);
+    int figure_id = map_figure_id_get(grid_offset);
     while (figure_id) {
         figure* f = figure_get(figure_id);
         f->draw_debug();

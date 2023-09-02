@@ -142,7 +142,8 @@ static void cache_figure(figure* f, vec2i pixel) {
     //    record_figure_over_tile(f, pixel, f->previous_tile);
 }
 void cache_figures(vec2i pixel, map_point point) {
-    int figure_id = map_figure_at(point.grid_offset());
+    int figure_id = map_figure_id_get(point.grid_offset());
+
     while (figure_id) {
         figure* f = figure_get(figure_id);
         if (!f->is_ghost || f->height_adjusted_ticks)

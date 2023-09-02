@@ -427,7 +427,7 @@ static void init(map_point tile) {
                                   OFFSET(-1, 1),
                                   OFFSET(1, 1)};
     for (int i = 0; i < 9 && context.figure.count < 7; i++) {
-        int figure_id = map_figure_at(grid_offset + FIGURE_OFFSETS[i]);
+        int figure_id = map_figure_id_get(grid_offset + FIGURE_OFFSETS[i]);
         while (figure_id > 0 && context.figure.count < 7) {
             figure* f = figure_get(figure_id);
             if (f->state != FIGURE_STATE_DEAD && f->action_state != FIGURE_ACTION_149_CORPSE) {
