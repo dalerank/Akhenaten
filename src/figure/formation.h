@@ -36,16 +36,16 @@ enum {
     FORMATION_ENEMY12 = 12,
 };
 
-typedef struct {
+struct formation_state{
     int duration_halt;
     int duration_advance;
     int duration_regroup;
-} formation_state;
+} ;
 
 /**
  * Formation data
  */
-typedef struct {
+struct formation {
     int id;         /**< ID of the formation */
     int faction_id; /**< 1 = player, 0 = everyone else */
 
@@ -118,7 +118,7 @@ typedef struct {
         int x_home;
         int y_home;
     } prev;
-} formation;
+};
 
 void formations_clear(void);
 

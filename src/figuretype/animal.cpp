@@ -111,7 +111,7 @@ bool figure::herd_roost(int step, int bias, int max_dist, int terrain_mask) {
     const formation* m = formation_get(formation_id);
     int dx;
     int dy;
-    random_around_point(m->x_home, m->y_home, tile.x(), tile.y(), &dx, &dy, step, bias, max_dist);
+    random_around_point(map_point(m->x_home, m->y_home), tile.x(), tile.y(), &dx, &dy, step, bias, max_dist);
 
     int offset = MAP_OFFSET(dx, dy);
     if (!map_terrain_is(offset, terrain_mask)) { // todo: fix gardens

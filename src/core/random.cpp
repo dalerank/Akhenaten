@@ -4,19 +4,22 @@
 #include <string.h>
 // #include <cmath>
 
-static random_data_t data;
+static random_data_t g_random_data;
+static uint32_t anti_scum_seed = 0;
 
 const random_data_t* random_data_struct() {
-    return &data;
+    return &g_random_data;
 }
 
-void random_init(void) {
+void random_init() {
+    auto &data = g_random_data;
     memset(&data, 0, sizeof(data));
     data.iv1 = 0x54657687;
     data.iv2 = 0x72641663;
 }
 
 static void random_bits_fill() {
+    auto &data = g_random_data;
     data.random1_3bit = data.iv1 & 0x7;
     data.random1_7bit = data.iv1 & 0x7f;
     data.random1_15bit = data.iv1 & 0x7fff;
@@ -24,7 +27,8 @@ static void random_bits_fill() {
     data.random2_7bit = data.iv2 & 0x7f;
     data.random2_15bit = data.iv2 & 0x7fff;
 }
-void random_generate_next(void) {
+void random_generate_next() {
+    auto &data = g_random_data;
     data.pool[data.pool_index++] = data.random1_7bit;
     if (data.pool_index >= MAX_RANDOM)
         data.pool_index = 0;
@@ -43,6 +47,7 @@ void random_generate_next(void) {
 }
 
 void random_generate_pool(void) {
+    auto &data = g_random_data;
     data.pool_index = 0;
     for (int i = 0; i < MAX_RANDOM; i++) {
         random_generate_next();
@@ -50,22 +55,23 @@ void random_generate_pool(void) {
 }
 
 void random_TEMP_SET_DEBUG(uint32_t iv1, uint32_t iv2) {
+    auto &data = g_random_data;
     data.iv1 = iv1;
     data.iv2 = iv2;
     random_bits_fill();
 }
 
 int8_t random_byte(void) {
-    return data.random1_7bit;
+    return g_random_data.random1_7bit;
 }
 int8_t random_byte_alt(void) {
-    return data.random2_7bit;
+    return g_random_data.random2_7bit;
 }
 int16_t random_short(void) {
-    return data.random1_15bit;
+    return g_random_data.random1_15bit;
 }
 int32_t random_from_pool(int index) {
-    return data.pool[(data.pool_index + index) % MAX_RANDOM];
+    return g_random_data.pool[(g_random_data.pool_index + index) % MAX_RANDOM];
 }
 
 void randomize_event_fields(int16_t field[4], int32_t* seed) {
@@ -87,7 +93,7 @@ void randomize_event_fields(int16_t field[4], int32_t* seed) {
 
     // second operation
     random_generate_next();
-    unsigned long long random_broche = data.random1_15bit; //_DAT_00d3a360
+    unsigned long long random_broche = g_random_data.random1_15bit; //_DAT_00d3a360
     if (f_fixed < 0) {
         int field_range = f_max - f_min;
         *seed = (uint32_t)(random_broche / field_range);
@@ -117,30 +123,33 @@ void randomize_event_fields(int16_t field[4], int32_t* seed) {
     field[0] = f_fixed;
 }
 
-void random_around_point(int x_home, int y_home, int x, int y, int* dest_x, int* dest_y, int step, int bias, int max_dist) {
+void random_around_point(map_point tile, int x, int y, int* dest_x, int* dest_y, int step, int bias, int max_dist) {
     random_generate_next();
     int det = 64 / step;
     int rand_x = random_byte() / det - step;
     int rand_y = random_byte_alt() / det - step;
     *dest_x = x + rand_x;
     *dest_y = y + rand_y;
-    int dist_x = (x_home - *dest_x);
-    int dist_y = (y_home - *dest_y);
+    int dist_x = (tile.x() - *dest_x);
+    int dist_y = (tile.y() - *dest_y);
     if (bias <= 1)
         bias = 1;
     *dest_x += dist_x / bias;
     *dest_y += dist_y / bias;
     if (max_dist > 0) {
-        dist_x = (x_home - *dest_x);
-        dist_y = (y_home - *dest_y);
+        dist_x = (tile.x() - *dest_x);
+        dist_y = (tile.y() - *dest_y);
         if (dist_x > max_dist)
-            *dest_x = x_home + max_dist;
+            *dest_x = tile.x() + max_dist;
+
         if (dist_x < -max_dist)
-            *dest_x = x_home - max_dist;
+            *dest_x = tile.x() - max_dist;
+
         if (dist_y > max_dist)
-            *dest_y = y_home + max_dist;
+            *dest_y = tile.y() + max_dist;
+
         if (dist_y < -max_dist)
-            *dest_y = y_home - max_dist;
+            *dest_y = tile.y() - max_dist;
     }
 }
 
@@ -171,14 +180,11 @@ bool random_bool_lerp_scalar_int(int minimum, int maximum, int v) {
 }
 
 io_buffer* iob_random_iv = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_UINT32, &data.iv1);
-    iob->bind(BIND_SIGNATURE_UINT32, &data.iv2);
+    iob->bind(BIND_SIGNATURE_UINT32, &g_random_data.iv1);
+    iob->bind(BIND_SIGNATURE_UINT32, &g_random_data.iv2);
     random_bits_fill();
 });
 
-/////////
-
-static uint32_t anti_scum_seed = 0;
 // used in OG Pharaoh to get non-deterministic random values
 uint16_t anti_scum_random_15bit(bool update) {
     if (update) {
@@ -187,6 +193,7 @@ uint16_t anti_scum_random_15bit(bool update) {
     } else
         return anti_scum_seed;
 }
+
 bool anti_scum_random_bool() {
     int randm = anti_scum_random_15bit();
     randm = randm & 0x80000001;
