@@ -34,7 +34,7 @@ struct city_overlay_pavilion : public city_overlay {
     bool show_figure(const figure* f) const override {
         if (f->type == FIGURE_MUSICIAN) {
             return ((figure *)f)->get_entertainment_building()->type == BUILDING_PAVILLION;
-        } else if (f->type == FIGURE_LION_TAMER) {
+        } else if (f->type == FIGURE_DANCER) {
             return 1;
         }
 

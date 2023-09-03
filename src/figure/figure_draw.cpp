@@ -156,6 +156,7 @@ void figure::draw_figure_with_cart(vec2i pixel, int highlight, vec2i* coord_out)
         draw_figure_main(pixel, highlight, coord_out);
     }
 }
+
 void figure::city_draw_figure(vec2i pixel, int highlight, vec2i* coord_out) {
     // This is to update the sprite's direction when rotating the city view.
     // Unfortunately, because the only thing we have at the time of file loading is

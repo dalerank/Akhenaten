@@ -92,20 +92,23 @@ void figure::entertainer_update_image() {
             sprite_image_id = image_id_from_group(GROUP_FIGURE_CHARIOTEER) + dir + 8 * anim_frame;
         return;
     }
+    
     int image_id;
     if (type == FIGURE_JUGGLER) {
         image_id = image_id_from_group(GROUP_FIGURE_JUGGLER);
     } else if (type == FIGURE_MUSICIAN) {
         image_id = image_id_from_group(GROUP_FIGURE_MUSICIAN);
-    } else if (type == FIGURE_LION_TAMER) {
+    } else if (type == FIGURE_DANCER) {
         image_id = image_id_from_group(GROUP_FIGURE_DANCER);
         if (wait_ticks_missile >= 96) {
             image_id = image_id_from_group(GROUP_FIGURE_DANCER_WHIP);
         }
 
         cart_image_id = image_id_from_group(GROUP_FIGURE_LION);
-    } else
+    } else {
         return;
+    }
+
     if (action_state == FIGURE_ACTION_150_ATTACK) {
         if (type == FIGURE_MUSICIAN)
             image_id = image_id + 104 + dir + 8 * (anim_frame / 2);
@@ -169,7 +172,6 @@ void figure::entertainer_action() {
 
     case FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL:
         use_cross_country = true;
-        //            is_ghost = true;
         if (move_ticks_cross_country(1) == 1) {
             int dst_building_id = 0;
             switch (type) {
@@ -181,7 +183,7 @@ void figure::entertainer_action() {
                 dst_building_id = determine_venue_destination(tile, BUILDING_BANDSTAND, BUILDING_PAVILLION, 0);
                 break;
 
-            case FIGURE_LION_TAMER: // dancer
+            case FIGURE_DANCER:
                 dst_building_id = determine_venue_destination(tile, BUILDING_PAVILLION, 0, 0);
                 break;
 
@@ -189,6 +191,7 @@ void figure::entertainer_action() {
                 dst_building_id = determine_venue_destination(tile, BUILDING_SENET_HOUSE, 0, 0);
                 break;
             }
+
             if (dst_building_id) { // todo: summarize
                 building* b_dst = building_get(dst_building_id);
                 map_point road_tile;
@@ -203,28 +206,33 @@ void figure::entertainer_action() {
             } else
                 poof();
         }
-        //            is_ghost = true;
         break;
-        //        case 95:
+
     case 10:
     case FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE:
         //            is_ghost = false;
         roam_length++;
-        if (roam_length >= 3200)
+        if (roam_length >= 3200) {
             poof();
-        if (do_gotobuilding(destination()))
+        }
+
+        if (do_gotobuilding(destination())) {
             entertainer_update_shows();
+        }
         break;
+
     case 12:
         //        case ACTION_10_DELIVERING_FOOD:
     case FIGURE_ACTION_94_ENTERTAINER_ROAMING:
         do_roam();
         break;
+
     case ACTION_11_RETURNING_EMPTY:
     case ACTION_13_RETURNING_TO_VENUE:
         //        case FIGURE_ACTION_95_ENTERTAINER_RETURNING:
         do_returnhome();
         break;
     }
+
     entertainer_update_image();
 }

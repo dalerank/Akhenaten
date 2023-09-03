@@ -15,7 +15,7 @@ static int show_building_hippodrome(const building* b) {
 }
 
 static int show_figure_entertainment(const figure* f) {
-    return f->type == FIGURE_JUGGLER || f->type == FIGURE_MUSICIAN || f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER;
+    return f->type == FIGURE_JUGGLER || f->type == FIGURE_MUSICIAN || f->type == FIGURE_DANCER || f->type == FIGURE_CHARIOTEER;
 }
 
 static int show_figure_hippodrome(const figure* f) {

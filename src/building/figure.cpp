@@ -344,7 +344,7 @@ void building::spawn_figure_dancer() {
         if (dest->id > 0) {
             create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
         } else {
-            common_spawn_roamer(FIGURE_LION_TAMER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
+            common_spawn_roamer(FIGURE_DANCER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
         }
     }
 }

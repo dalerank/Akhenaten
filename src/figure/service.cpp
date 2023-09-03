@@ -381,10 +381,9 @@ int figure::figure_service_provide_coverage() {
             houses_serviced = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days1 ? 2 : 1, colosseum_coverage);
         }
         break;
-    case FIGURE_LION_TAMER:
+    case FIGURE_DANCER:
         b = get_entertainment_building();
-        houses_serviced
-          = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days2 ? 2 : 1, colosseum_coverage);
+        houses_serviced = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days2 ? 2 : 1, colosseum_coverage);
         break;
     case FIGURE_CHARIOTEER:
         houses_serviced = provide_culture(tile.x(), tile.y(), hippodrome_coverage);

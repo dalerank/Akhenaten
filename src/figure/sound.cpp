@@ -25,8 +25,8 @@ void figure::play_die_sound() {
         sound_effect_play(SOUND_EFFECT_ZEBRA_DIE);
         break;
 
-    case FIGURE_LION_TAMER:
-        sound_effect_play(SOUND_EFFECT_LION_DIE);
+    case FIGURE_DANCER:
+        sound_effect_play(SOUND_EFFECT_DANCER_DIE);
         break;
 
     case FIGURE_ENEMY48_CHARIOT:
@@ -84,6 +84,7 @@ void figure::play_die_sound() {
             sound_speech_play_file("wavs/barbarian_war_cry.wav");
     }
 }
+
 void figure::play_hit_sound() {
     figure* f = this;
     switch (type) {
@@ -135,9 +136,10 @@ void figure::play_hit_sound() {
             sound_effect_play(SOUND_EFFECT_ELEPHANT_HIT);
         }
         break;
-    case FIGURE_LION_TAMER:
-        sound_effect_play(SOUND_EFFECT_LION_ATTACK);
-        break;
+        // case FIGURE_DANCER:
+        // sound_effect_play(SOUND_EFFECT_LION_ATTACK);
+        // break;
+        // 
         // case FIGURE_WOLF:
         //     if (city_sound_update_hit_wolf())
         //         sound_effect_play(SOUND_EFFECT_WOLF_ATTACK);
