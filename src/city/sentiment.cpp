@@ -13,6 +13,8 @@
 #include "game/time.h"
 #include "io/config/config.h"
 
+#include <algorithm>
+
 static const int SENTIMENT_PER_TAX_RATE[26] = {3, 2, 2, 2, 1, 1, 1, 0, 0, -1, -2, -2, -3, -3, -3, -5, -5, -5, -5, -6, -6, -6, -6, -6, -6, -6};
 
 int city_sentiment(void) {

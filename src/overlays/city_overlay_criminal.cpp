@@ -23,15 +23,15 @@ static int get_tooltip_crime(tooltip_context* c, const building* b) {
         return 63;
     }
 
-    if (b->house_criminal_active <= 0)
+    if (b->house_criminal_active >= 80)
         return 63;
-    else if (b->house_criminal_active <= 10)
+    else if (b->house_criminal_active >= 60)
         return 62;
-    else if (b->house_criminal_active <= 20)
+    else if (b->house_criminal_active >= 40)
         return 61;
-    else if (b->house_criminal_active <= 30)
+    else if (b->house_criminal_active >= 30)
         return 60;
-    else if (b->house_criminal_active < 50)
+    else if (b->house_criminal_active >= 20)
         return 59;
     else {
         return 58;
