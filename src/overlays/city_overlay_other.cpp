@@ -22,9 +22,11 @@
 static int show_building_food_stocks(const building* b) {
     return b->type == BUILDING_MARKET || b->type == BUILDING_FISHING_WHARF || b->type == BUILDING_GRANARY;
 }
+
 static int show_building_tax_income(const building* b) {
-    return b->type == BUILDING_TAX_COLLECTOR || b->type == BUILDING_SENATE_UPGRADED;
+    return b->type == BUILDING_TAX_COLLECTOR || ((building*)b)->is_palace();
 }
+
 static int show_building_water(const building* b) {
     return b->type == BUILDING_WELL || b->type == BUILDING_MENU_BEAUTIFICATION || b->type == BUILDING_WATER_LIFT || b->type == BUILDING_WATER_SUPPLY;
 }
@@ -39,9 +41,11 @@ static int show_figure_food_stocks(const figure* f) {
 
     return 0;
 }
+
 static int show_figure_tax_income(const figure* f) {
     return f->type == FIGURE_TAX_COLLECTOR;
 }
+
 static int show_figure_water(const figure* f) {
     return f->type == FIGURE_WATER_CARRIER;
 }
@@ -143,6 +147,7 @@ const city_overlay* city_overlay_for_food_stocks(void) {
     };
     return &overlay;
 }
+
 const city_overlay* city_overlay_for_tax_income(void) {
     static city_overlay overlay = {OVERLAY_TAX_INCOME,
                                    COLUMN_TYPE_WATER_ACCESS,
@@ -161,6 +166,7 @@ static int terrain_on_water_overlay(void) {
            | TERRAIN_CANAL | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_DUNE
            | TERRAIN_MARSHLAND;
 }
+
 static void draw_footprint_water(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
@@ -196,6 +202,7 @@ static void draw_footprint_water(vec2i pixel, map_point point) {
         }
     }
 }
+
 static void draw_top_water(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;

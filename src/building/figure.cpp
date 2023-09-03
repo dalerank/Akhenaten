@@ -663,7 +663,7 @@ void building::spawn_figure_watersupply() {
     //    }
 }
 
-void building::set_senate_graphic() {
+void building::set_greate_palace_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
     if (map_desirability_get(tile.grid_offset()) <= 30) {
@@ -672,9 +672,11 @@ void building::set_senate_graphic() {
         map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
     }
 }
+
 void building::spawn_figure_tax_collector() {
-    if (type == BUILDING_SENATE_UPGRADED)
-        set_senate_graphic();
+    if (type == BUILDING_GREATE_PALACE_UPGRADED) {
+        set_greate_palace_graphic();
+    }
 
     common_spawn_roamer(FIGURE_TAX_COLLECTOR, 50);
 
@@ -1204,21 +1206,21 @@ bool building::figure_generate() {
     show_on_problem_overlay = 0;
 
     bool patrician_generated = false;
-    if (type >= BUILDING_HOUSE_SMALL_VILLA && type <= BUILDING_HOUSE_LUXURY_PALACE)
+    if (type >= BUILDING_HOUSE_SMALL_VILLA && type <= BUILDING_HOUSE_LUXURY_PALACE) {
         patrician_generated = spawn_patrician(patrician_generated);
-    else if (type == BUILDING_REED_GATHERER)
+    } else if (type == BUILDING_REED_GATHERER) {
         spawn_figure_reed_gatherers();
-    else if (type == BUILDING_WOOD_CUTTERS)
+    } else if (type == BUILDING_WOOD_CUTTERS) {
         spawn_figure_wood_cutters();
-    else if (is_workshop() || is_extractor()) // farms are handled by a separate cycle in Pharaoh!
+    } else if (is_workshop() || is_extractor()) {// farms are handled by a separate cycle in Pharaoh!
         spawn_figure_industry();
-    else if (is_tax_collector())
+    } else if (is_tax_collector()) {
         spawn_figure_tax_collector();
-    else if (is_administration())
+    } else if (is_administration()) {
         common_spawn_figure_trigger(50);
-    else if (is_temple() || is_large_temple())
+    } else if (is_temple() || is_large_temple()) {
         spawn_figure_temple();
-    else {
+    } else {
         // single building type
         switch (type) {
         case BUILDING_STORAGE_YARD:

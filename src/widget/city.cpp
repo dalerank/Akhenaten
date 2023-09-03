@@ -32,6 +32,7 @@
 #include "widget/minimap.h"
 #include "window/building_info.h"
 #include "window/city.h"
+#include "building/building.h"
 
 struct widget_city_data_t {
     map_point current_tile;
@@ -561,13 +562,19 @@ void widget_city_handle_input_military(const mouse* m, const hotkeys* h, int leg
 
 void widget_city_get_tooltip(tooltip_context* c) {
     auto& data = g_wdiget_city_data;
-    if (setting_tooltips() == TOOLTIPS_NONE)
+    if (setting_tooltips() == TOOLTIPS_NONE) {
         return;
-    if (!window_is(WINDOW_CITY))
+    }
+
+    if (!window_is(WINDOW_CITY)) {
         return;
+    }
+
     int grid_offset = data.current_tile.grid_offset();
-    if (grid_offset == 0)
+    if (grid_offset == 0) {
         return;
+    }
+
     int building_id = map_building_at(grid_offset);
     int overlay = game_state_overlay();
     // cheat tooltips
@@ -576,12 +583,14 @@ void widget_city_get_tooltip(tooltip_context* c) {
         c->high_priority = 1;
         return;
     }
+
     // regular tooltips
-    if (overlay == OVERLAY_NONE && building_id && building_get(building_id)->type == BUILDING_SENATE_UPGRADED) {
+    if (overlay == OVERLAY_NONE && building_id && building_get(building_id)->is_palace()) {
         c->type = TOOLTIP_SENATE;
         c->high_priority = 1;
         return;
     }
+
     // overlay tooltips
     if (overlay != OVERLAY_NONE) {
         c->text_group = e_text_tooltip;

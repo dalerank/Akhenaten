@@ -535,6 +535,7 @@ bool building_is_monument(int type) {
     case BUILDING_GRAND_ROYAL_TOMB:
     case BUILDING_SUN_TEMPLE:
         return true;
+
     default:
         return false;
     }
@@ -542,18 +543,23 @@ bool building_is_monument(int type) {
 bool building_is_palace(int type) {
     return (type >= BUILDING_VILLAGE_PALACE && type <= BUILDING_CITY_PALACE);
 }
+
 bool building_is_tax_collector(int type) {
     return (type >= BUILDING_TAX_COLLECTOR && type <= BUILDING_TAX_COLLECTOR_UPGRADED);
 }
+
 bool building_is_governor_palace(int type) {
     return (type >= BUILDING_PERSONAL_MANSION && type <= BUILDING_DYNASTY_MANSION);
 }
+
 bool building_is_temple(int type) {
     return (type >= BUILDING_TEMPLE_OSIRIS && type <= BUILDING_TEMPLE_BAST);
 }
+
 bool building_is_large_temple(int type) {
     return (type >= BUILDING_TEMPLE_COMPLEX_OSIRIS && type <= BUILDING_TEMPLE_COMPLEX_BAST);
 }
+
 bool building_is_shrine(int type) {
     return (type >= BUILDING_SHRINE_OSIRIS && type <= BUILDING_SHRINE_BAST);
 }

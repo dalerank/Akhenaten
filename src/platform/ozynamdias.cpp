@@ -1,4 +1,3 @@
-
 #include "core/app.h"
 #include "core/encoding.h"
 #include "core/game_environment.h"
@@ -187,6 +186,7 @@ static void show_options_window(Arguments& args) {
             if (event.type == SDL_QUIT) {
                 exit(1);
             }
+
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE
                 && event.window.windowID == SDL_GetWindowID(platform_window)) {
                 exit(1);

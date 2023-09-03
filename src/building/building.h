@@ -292,7 +292,7 @@ public:
     void spawn_figure_temple();
     void set_water_supply_graphic();
     void spawn_figure_watersupply();
-    void set_senate_graphic();
+    void set_greate_palace_graphic();
     void spawn_figure_tax_collector();
     void spawn_figure_industry();
     void spawn_figure_farms();

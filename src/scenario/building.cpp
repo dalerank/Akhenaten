@@ -52,7 +52,8 @@ bool scenario_building_allowed(int building_type) {
             return g_scenario_data.allowed_buildings[ALLOWED_BUILDING_CHARIOT_MAKER];
         case BUILDING_TAX_COLLECTOR:
             return g_scenario_data.allowed_buildings[ALLOWED_BUILDING_FORUM];
-        case BUILDING_SENATE_UPGRADED:
+        case BUILDING_GREATE_PALACE:
+        case BUILDING_GREATE_PALACE_UPGRADED:
             return g_scenario_data.allowed_buildings[ALLOWED_BUILDING_SENATE];
         case BUILDING_PERSONAL_MANSION:
         case BUILDING_FAMILY_MANSION:

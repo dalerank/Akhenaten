@@ -157,8 +157,8 @@ static int get_height_id(void) {
         case BUILDING_BOOTH:
         case BUILDING_SENET_HOUSE:
         case BUILDING_PAVILLION:
-        case BUILDING_SENATE:
-        case BUILDING_SENATE_UPGRADED:
+        case BUILDING_GREATE_PALACE:
+        case BUILDING_GREATE_PALACE_UPGRADED:
         case BUILDING_MENU_BEAUTIFICATION:
             return 2;
 
@@ -288,29 +288,37 @@ static void init(map_point tile) {
     context.figure.drawn = 0;
     context.figure.draw_debug_path = 0;
     if (!context.building_id && map_sprite_animation_at(grid_offset) > 0) {
-        if (map_terrain_is(grid_offset, TERRAIN_WATER))
+        if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
             context.terrain_type = TERRAIN_INFO_BRIDGE;
-        else
+        } else {
             context.terrain_type = TERRAIN_INFO_EMPTY;
-    } else if (map_property_is_plaza_or_earthquake(grid_offset)) {
-        if (map_terrain_is(grid_offset, TERRAIN_ROAD))
-            context.terrain_type = TERRAIN_INFO_PLAZA;
+        }
 
-        if (map_terrain_is(grid_offset, TERRAIN_ROCK))
+    } else if (map_property_is_plaza_or_earthquake(grid_offset)) {
+        if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+            context.terrain_type = TERRAIN_INFO_PLAZA;
+        }
+
+        if (map_terrain_is(grid_offset, TERRAIN_ROCK)) {
             context.terrain_type = TERRAIN_INFO_EARTHQUAKE;
+        }
 
     } else if (map_terrain_is(grid_offset, TERRAIN_TREE)) {
         context.terrain_type = TERRAIN_INFO_TREE;
+
     } else if (!context.building_id && map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
             context.terrain_type = TERRAIN_INFO_FLOODPLAIN_SUBMERGED;
         } else {
             context.terrain_type = TERRAIN_INFO_FLOODPLAIN;
         }
+
     } else if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND)) {
         context.terrain_type = TERRAIN_INFO_MARSHLAND;
+
     } else if (map_terrain_is(grid_offset, TERRAIN_DUNE)) {
         context.terrain_type = TERRAIN_INFO_DUNES;
+
     } else if (map_terrain_is(grid_offset, TERRAIN_ROCK)) {
         if (grid_offset == city_map_entry_flag().grid_offset()) {
             context.terrain_type = TERRAIN_INFO_ENTRY_FLAG;
@@ -325,20 +333,28 @@ static void init(map_point tile) {
         }
     } else if ((map_terrain_get(grid_offset) & (TERRAIN_WATER | TERRAIN_BUILDING)) == TERRAIN_WATER) {
         context.terrain_type = TERRAIN_INFO_WATER;
+
     } else if (map_terrain_is(grid_offset, TERRAIN_SHRUB)) {
         context.terrain_type = TERRAIN_INFO_SHRUB;
+
     } else if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
         context.terrain_type = TERRAIN_INFO_GARDEN;
+
     } else if ((map_terrain_get(grid_offset) & (TERRAIN_ROAD | TERRAIN_BUILDING)) == TERRAIN_ROAD) {
         context.terrain_type = TERRAIN_INFO_ROAD;
+
     } else if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
         context.terrain_type = TERRAIN_INFO_AQUEDUCT;
+
     } else if (map_terrain_is(grid_offset, TERRAIN_RUBBLE)) {
         context.terrain_type = TERRAIN_INFO_RUBBLE;
+
     } else if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
         context.terrain_type = TERRAIN_INFO_WALL;
+
     } else if (!context.building_id) {
         context.terrain_type = TERRAIN_INFO_EMPTY;
+
     } else {
         building* b = building_get(context.building_id);
         context.type = BUILDING_INFO_BUILDING;
@@ -649,8 +665,8 @@ static void draw_refresh_background() {
 
             case BUILDING_COURTHOUSE: window_building_draw_courthouse(&context); break;
 
-            case BUILDING_SENATE:
-            case BUILDING_SENATE_UPGRADED:
+            case BUILDING_GREATE_PALACE:
+            case BUILDING_GREATE_PALACE_UPGRADED:
             case BUILDING_VILLAGE_PALACE:
             case BUILDING_TOWN_PALACE:
             case BUILDING_CITY_PALACE:

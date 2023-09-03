@@ -28,7 +28,7 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_CHARIOT_MAKER,
      0},
     {BUILDING_TAX_COLLECTOR,
-     BUILDING_SENATE_UPGRADED,
+     BUILDING_GREATE_PALACE,
      BUILDING_PERSONAL_MANSION,
      BUILDING_FAMILY_MANSION,
      BUILDING_DYNASTY_MANSION,
@@ -580,7 +580,7 @@ void building_menu_update(int build_set) {
 
     case BUILDSET_TUT1_COLLAPSE_C3:
         toggle_building(BUILDING_ENGINEERS_POST);
-        toggle_building(BUILDING_SENATE_UPGRADED);
+        toggle_building(BUILDING_GREATE_PALACE);
         toggle_building(BUILDING_ROADBLOCK);
         break;
 

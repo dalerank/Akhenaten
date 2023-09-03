@@ -8,9 +8,11 @@
 
 void building_government_distribute_treasury(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Distribute Treasury");
-    int units = 5 * building_count_active(BUILDING_SENATE) + 1 * building_count_active(BUILDING_TAX_COLLECTOR)
-                + 8 * building_count_active(BUILDING_SENATE_UPGRADED)
+    
+    int units = 5 * building_count_active(BUILDING_GREATE_PALACE) + 1 * building_count_active(BUILDING_TAX_COLLECTOR)
+                + 8 * building_count_active(BUILDING_GREATE_PALACE_UPGRADED)
                 + 2 * building_count_active(BUILDING_TAX_COLLECTOR_UPGRADED);
+
     int amount_per_unit;
     int remainder;
     int treasury = city_finance_treasury();
@@ -33,30 +35,33 @@ void building_government_distribute_treasury(void) {
 
         switch (b->type) {
         // ordered based on importance: most important gets the remainder
-        case BUILDING_SENATE_UPGRADED:
+        case BUILDING_GREATE_PALACE_UPGRADED:
             b->tax_income_or_storage = 8 * amount_per_unit + remainder;
             remainder = 0;
             break;
-        case BUILDING_SENATE:
-            if (remainder && !building_count_active(BUILDING_SENATE_UPGRADED)) {
+
+        case BUILDING_GREATE_PALACE:
+            if (remainder && !building_count_active(BUILDING_GREATE_PALACE_UPGRADED)) {
                 b->tax_income_or_storage = 5 * amount_per_unit + remainder;
                 remainder = 0;
             } else {
                 b->tax_income_or_storage = 5 * amount_per_unit;
             }
             break;
+
         case BUILDING_TAX_COLLECTOR_UPGRADED:
             if (remainder
-                && !(building_count_active(BUILDING_SENATE_UPGRADED) || building_count_active(BUILDING_SENATE))) {
+                && !(building_count_active(BUILDING_GREATE_PALACE_UPGRADED) || building_count_active(BUILDING_GREATE_PALACE))) {
                 b->tax_income_or_storage = 2 * amount_per_unit + remainder;
                 remainder = 0;
             } else {
                 b->tax_income_or_storage = 2 * amount_per_unit;
             }
             break;
+
         case BUILDING_TAX_COLLECTOR:
             if (remainder
-                && !(building_count_active(BUILDING_SENATE_UPGRADED) || building_count_active(BUILDING_SENATE)
+                && !(building_count_active(BUILDING_GREATE_PALACE_UPGRADED) || building_count_active(BUILDING_GREATE_PALACE)
                      || building_count_active(BUILDING_TAX_COLLECTOR_UPGRADED))) {
                 b->tax_income_or_storage = amount_per_unit + remainder;
                 remainder = 0;
