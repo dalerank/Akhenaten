@@ -176,14 +176,15 @@ void city_sentiment_update_day() {
 void city_criminals_update_day() {
     buildings_valid_do([] (building &b) {
         if (b.house_size) {
+            int delta;
             if (b.sentiment.house_happiness >= 50) {
-                int delta = (b.sentiment.house_happiness - 50) / 25;
-                b.house_criminal_active -= std::max<int>(0, b.house_criminal_active - delta);
-
+                delta = (b.sentiment.house_happiness - 50) / 30;
             } else if (b.sentiment.house_happiness < 50) {
-                int delta = (100 - b.sentiment.house_happiness) / 10;
-                b.house_criminal_active = std::min<int>(b.house_criminal_active + delta, 100);
+                delta = -std::max<int>((50 - b.sentiment.house_happiness) / 10, 0);
             }
+
+            b.house_criminal_active += delta;
+            b.house_criminal_active = std::clamp<int>(b.house_criminal_active, 0, 100);
         }
     });
 }

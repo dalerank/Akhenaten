@@ -86,7 +86,7 @@ public:
     char labor_category;
     e_resource output_resource_id;
     uint32_t has_road_access;
-    unsigned char house_criminal_active;
+    short house_criminal_active;
     unsigned char disease_days;
     unsigned char common_health;
     unsigned char malaria_risk;

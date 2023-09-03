@@ -11,35 +11,27 @@
 
 
 static int get_column_height_crime(const building* b) {
-    if (b->house_size) {
-        int happiness = b->sentiment.house_happiness;
-        //        return (50 - happiness) / 5;
-        if (happiness <= 0)
-            return 10;
-        else if (happiness <= 10)
-            return 8;
-        else if (happiness <= 20)
-            return 6;
-        else if (happiness <= 30)
-            return 4;
-        else if (happiness <= 40)
-            return 2;
-        else if (happiness < 50)
-            return 1;
+    if (b->house_size && b->house_population > 0) {
+        int crime = b->house_criminal_active;
+        return crime / 10;
     }
     return NO_COLUMN;
 }
 
 static int get_tooltip_crime(tooltip_context* c, const building* b) {
-    if (b->sentiment.house_happiness <= 0)
+    if (b->house_population <= 0) {
         return 63;
-    else if (b->sentiment.house_happiness <= 10)
+    }
+
+    if (b->house_criminal_active <= 0)
+        return 63;
+    else if (b->house_criminal_active <= 10)
         return 62;
-    else if (b->sentiment.house_happiness <= 20)
+    else if (b->house_criminal_active <= 20)
         return 61;
-    else if (b->sentiment.house_happiness <= 30)
+    else if (b->house_criminal_active <= 30)
         return 60;
-    else if (b->sentiment.house_happiness < 50)
+    else if (b->house_criminal_active < 50)
         return 59;
     else {
         return 58;
@@ -62,8 +54,6 @@ struct city_overlay_crime : public city_overlay {
 
     void draw_custom_top(vec2i pixel, map_point point) const override {
         int grid_offset = point.grid_offset();
-        int x = pixel.x;
-        int y = pixel.y;
         if (!map_property_is_draw_tile(grid_offset)) {
             return;
         }

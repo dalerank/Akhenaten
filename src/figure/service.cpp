@@ -171,8 +171,8 @@ static void prefect_coverage(building* b, int* min_happiness_seen) {
         *min_happiness_seen = b->sentiment.house_happiness;
 }
 static void policeman_coverage(building* b, int *max_anger_seen) {
-    b->house_criminal_active -= 10;
-    b->house_criminal_active = std::max<uint8_t>(0, b->house_criminal_active);
+    b->house_criminal_active -= 1;
+    b->house_criminal_active = std::max<int>(0, b->house_criminal_active);
 
     if (b->house_criminal_active > *max_anger_seen) {
         *max_anger_seen = b->house_criminal_active;
