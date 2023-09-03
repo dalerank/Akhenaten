@@ -96,19 +96,19 @@ static void draw_shrine(building_info_context* c, const char* sound_file, int te
     }
 }
 
-void window_building_draw_temple_ceres(building_info_context* c) {
+void window_building_draw_temple_osiris(building_info_context* c) {
     draw_temple(c, "wavs/temple_farm.wav", 92, 21);
 }
-void window_building_draw_temple_neptune(building_info_context* c) {
+void window_building_draw_temple_ra(building_info_context* c) {
     draw_temple(c, "wavs/temple_ship.wav", 93, 22);
 }
-void window_building_draw_temple_mercury(building_info_context* c) {
+void window_building_draw_temple_ptah(building_info_context* c) {
     draw_temple(c, "wavs/temple_comm.wav", 94, 23);
 }
-void window_building_draw_temple_mars(building_info_context* c) {
+void window_building_draw_temple_seth(building_info_context* c) {
     draw_temple(c, "wavs/temple_war.wav", 95, 24);
 }
-void window_building_draw_temple_venus(building_info_context* c) {
+void window_building_draw_temple_bast(building_info_context* c) {
     draw_temple(c, "wavs/temple_love.wav", 96, 25);
 }
 
@@ -136,7 +136,7 @@ void window_building_draw_oracle(building_info_context* c) {
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 110, 1);
 }
 
-void window_building_draw_theater(building_info_context* c) {
+void window_building_draw_booth(building_info_context* c) {
     c->help_id = 71;
     window_building_play_sound(c, "wavs/theatre.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -162,7 +162,7 @@ void window_building_draw_theater(building_info_context* c) {
         lang_text_draw(72, 5, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
-void window_building_draw_amphitheater(building_info_context* c) {
+void window_building_draw_bandstand(building_info_context* c) {
     c->help_id = 72;
     // The file name has a typo
     window_building_play_sound(c, "wavs/ampitheatre.wav");
@@ -198,7 +198,7 @@ void window_building_draw_amphitheater(building_info_context* c) {
         lang_text_draw(71, 9, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
-void window_building_draw_colosseum(building_info_context* c) {
+void window_building_draw_pavilion(building_info_context* c) {
     c->help_id = 73;
     window_building_play_sound(c, "wavs/colloseum.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -233,7 +233,7 @@ void window_building_draw_colosseum(building_info_context* c) {
         lang_text_draw(74, 9, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
-void window_building_draw_hippodrome(building_info_context* c) {
+void window_building_draw_senet_house(building_info_context* c) {
     c->help_id = 74;
     window_building_play_sound(c, "wavs/hippodrome.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -283,15 +283,18 @@ static void draw_entertainment_school(building_info_context* c, const char* soun
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_actor_colony(building_info_context* c) {
+void window_building_draw_juggler_school(building_info_context* c) {
     draw_entertainment_school(c, "wavs/art_pit.wav", 77);
 }
-void window_building_draw_gladiator_school(building_info_context* c) {
+
+void window_building_draw_conservatory(building_info_context* c) {
     draw_entertainment_school(c, "wavs/glad_pit.wav", 75);
 }
-void window_building_draw_lion_house(building_info_context* c) {
+
+void window_building_draw_dancer_school(building_info_context* c) {
     draw_entertainment_school(c, "wavs/lion_pit.wav", 76);
 }
+
 void window_building_draw_chariot_maker(building_info_context* c) {
     draw_entertainment_school(c, "wavs/char_pit.wav", 78);
 }

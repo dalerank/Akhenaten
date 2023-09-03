@@ -11,11 +11,11 @@ void window_building_draw_school(building_info_context* c);
 void window_building_draw_academy(building_info_context* c);
 void window_building_draw_library(building_info_context* c);
 
-void window_building_draw_temple_ceres(building_info_context* c);
-void window_building_draw_temple_neptune(building_info_context* c);
-void window_building_draw_temple_mercury(building_info_context* c);
-void window_building_draw_temple_mars(building_info_context* c);
-void window_building_draw_temple_venus(building_info_context* c);
+void window_building_draw_temple_osiris(building_info_context* c);
+void window_building_draw_temple_ra(building_info_context* c);
+void window_building_draw_temple_ptah(building_info_context* c);
+void window_building_draw_temple_seth(building_info_context* c);
+void window_building_draw_temple_bast(building_info_context* c);
 
 void window_building_draw_shrine_osiris(building_info_context* c);
 void window_building_draw_shrine_ra(building_info_context* c);
@@ -25,14 +25,14 @@ void window_building_draw_shrine_bast(building_info_context* c);
 
 void window_building_draw_oracle(building_info_context* c);
 
-void window_building_draw_theater(building_info_context* c);
-void window_building_draw_amphitheater(building_info_context* c);
-void window_building_draw_colosseum(building_info_context* c);
-void window_building_draw_hippodrome(building_info_context* c);
+void window_building_draw_booth(building_info_context* c);
+void window_building_draw_bandstand(building_info_context* c);
+void window_building_draw_pavilion(building_info_context* c);
+void window_building_draw_senet_house(building_info_context* c);
 
-void window_building_draw_actor_colony(building_info_context* c);
-void window_building_draw_gladiator_school(building_info_context* c);
-void window_building_draw_lion_house(building_info_context* c);
+void window_building_draw_juggler_school(building_info_context* c);
+void window_building_draw_conservatory(building_info_context* c);
+void window_building_draw_dancer_school(building_info_context* c);
 void window_building_draw_chariot_maker(building_info_context* c);
 
 void window_building_draw_festival_square(building_info_context* c);

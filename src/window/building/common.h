@@ -62,7 +62,7 @@ struct building_info_context {
     int warehouse_space_text;
     building_info_type type;
     terrain_info_type terrain_type;
-    int can_go_to_advisor;
+    bool can_go_to_advisor;
     int rubble_building_type;
     int storage_show_special_orders;
     struct {

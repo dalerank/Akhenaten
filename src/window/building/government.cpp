@@ -1,25 +1,23 @@
 #include "government.h"
 
 #include "building/building.h"
+#include "io/gamefiles/lang.h"
 #include "game/resource.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "window/building/figures.h"
 
-void window_building_draw_forum(building_info_context* c) {
-    c->help_id = 76;
+void window_building_draw_tax_collector(building_info_context* c) {
+    c->help_id = e_text_building_tax_collector;
     window_building_play_sound(c, "wavs/forum.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(106, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_DEBEN,
-                           c->x_offset + 16,
-                           c->y_offset + 36);
+    ImageDraw::img_generic(image_id_resource_icon(RESOURCE_DEBEN), c->x_offset + 16, c->y_offset + 36);
 
     building* b = building_get(c->building_id);
     int width = lang_text_draw(106, 2, c->x_offset + 44, c->y_offset + 43, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_amount(
-      8, 0, b->tax_income_or_storage, c->x_offset + 44 + width, c->y_offset + 43, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_amount(8, 0, b->tax_income_or_storage, c->x_offset + 44 + width, c->y_offset + 43, FONT_NORMAL_BLACK_ON_LIGHT);
 
     if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);
@@ -41,20 +39,19 @@ void window_building_draw_forum(building_info_context* c) {
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_senate(building_info_context* c) {
-    c->can_go_to_advisor = 1;
-    c->help_id = 77;
+void window_building_draw_palace(building_info_context* c) {
+    c->can_go_to_advisor = true;
+    c->help_id = e_text_building_palace;
+
     window_building_play_sound(c, "wavs/senate.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(105, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_DEBEN,
-                           c->x_offset + 16,
-                           c->y_offset + 36);
+
+    ImageDraw::img_generic(image_id_resource_icon(RESOURCE_DEBEN), c->x_offset + 16, c->y_offset + 36);
 
     building* b = building_get(c->building_id);
     int width = lang_text_draw(105, 2, c->x_offset + 44, c->y_offset + 43, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_amount(
-      8, 0, b->tax_income_or_storage, c->x_offset + 44 + width, c->y_offset + 43, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_amount(8, 0, b->tax_income_or_storage, c->x_offset + 44 + width, c->y_offset + 43, FONT_NORMAL_BLACK_ON_LIGHT);
 
     if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);

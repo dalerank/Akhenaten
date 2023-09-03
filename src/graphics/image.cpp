@@ -217,12 +217,18 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
     }
     return nullptr;
 }
+
+int image_id_resource_icon(int resource) {
+    return image_id_from_group(GROUP_RESOURCE_ICONS) + resource;
+}
+
 int image_id_from_group(int collection, int group, int pak_cache_idx) {
     imagepak* pak = pak_from_collection_id(collection, pak_cache_idx);
     if (pak == nullptr)
         return -1;
     return pak->get_global_image_index(group);
 }
+
 const image_t* image_get(int id, int mode) {
     auto& data = image_data();
     const image_t* img;

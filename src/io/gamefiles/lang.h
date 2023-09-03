@@ -101,6 +101,8 @@ enum e_text_info {
     e_text_saving_dialog = 43,
     e_text_tooltip = 66,
     e_text_building = 69,
+    e_text_building_tax_collector = 76,
+    e_text_building_palace = 77,
     e_text_building_apothecary = 81,
     e_text_building_mortuary = 82,
     e_text_building_physician = 83,
