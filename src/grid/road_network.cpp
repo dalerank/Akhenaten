@@ -30,9 +30,10 @@ int adjacent_offsets(int i) {
     }
 }
 
-void map_road_network_clear(void) {
+void map_road_network_clear() {
     map_grid_clear(&network);
 }
+
 int map_road_network_get(int grid_offset) {
     return map_grid_get(&network, grid_offset);
 }

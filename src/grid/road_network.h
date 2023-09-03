@@ -1,10 +1,11 @@
-#ifndef MAP_ROAD_NETWORK_H
-#define MAP_ROAD_NETWORK_H
+#pragma once
 
-void map_road_network_clear(void);
+#include "grid/point.h"
+
+void map_road_network_clear();
 
 int map_road_network_get(int grid_offset);
 
-void map_road_network_update(void);
+inline int map_road_network_get(map_point tile) { return map_road_network_get(tile.grid_offset()); }
 
-#endif // MAP_ROAD_NETWORK_H
+void map_road_network_update();

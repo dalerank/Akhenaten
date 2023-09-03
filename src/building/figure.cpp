@@ -318,7 +318,8 @@ void building::spawn_figure_police() {
 
 void building::spawn_figure_juggler() {
     if (common_spawn_figure_trigger(50)) {
-        building* dest = building_get(determine_venue_destination(road_access, BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH));
+        int venue_destination = determine_venue_destination(road_access, BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH);
+        building* dest = building_get(venue_destination);
         if (dest->id > 0) {
             create_figure_with_destination(FIGURE_JUGGLER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
         } else {

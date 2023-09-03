@@ -8,6 +8,7 @@
 #include "grid/point.h"
 
 #include <stdint.h>
+#include <algorithm>
 
 class figure;
 class io_buffer;
@@ -348,6 +349,18 @@ void buildings_valid_do(T func) {
             func(*it);
         }
     }
+}
+
+template<typename ... Args>
+bool building_type_any_of(building &b, Args ... args) {
+    int types[] = {args...};
+    return (std::find(std::begin(types), std::end(types), b.type) != std::end(types));
+}
+
+template<typename ... Args>
+bool building_type_none_of(building &b, Args ... args) {
+    int types[] = {args...};
+    return (std::find(std::begin(types), std::end(types), b.type) == std::end(types));
 }
 
 template<typename Array>

@@ -14,50 +14,53 @@
 #include "grid/road_access.h"
 #include "grid/road_network.h"
 #include "scenario/gladiator_revolt.h"
+#include "core/svector.h"
 
 int determine_venue_destination(map_point tile, int type1, int type2, int type3) {
-    int road_network = map_road_network_get(MAP_OFFSET(tile.x(), tile.y()));
+    int road_network = map_road_network_get(tile);
 
-    building_list_small_clear();
-
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID)
-            continue;
-
-        if (b->type != type1 && b->type != type2 && b->type != type3)
-            continue;
-
-        if (b->distance_from_entry && b->road_network_id == road_network) {
-            if (!b->is_main()) // only send directly to the main building
-                continue;
-            building_list_small_add(i);
+    svector<building *, 128> venues;
+    buildings_valid_do([&] (building &b) {
+        if (building_type_none_of(b, type1, type2, type3)) {
+            return;
         }
-    }
-    int total_venues = building_list_small_size();
-    if (total_venues <= 0)
-        return 0;
 
-    const int* venues = building_list_small_items();
+        if (b.distance_from_entry && b.road_network_id == road_network) {
+            if (!b.is_main()) { // only send directly to the main building
+                return;
+            }
+            venues.push_back(&b);
+        }
+    });
+
+    if (venues.empty()) {
+        return 0;
+    }
+
     int min_building_id = 0;
     int min_distance = 10000;
-    for (int i = 0; i < total_venues; i++) {
-        building* b = building_get(venues[i])->main();
-        if (!b->num_workers)
+    for (building *v: venues) {
+        building* b = v->main();
+        if (!b->num_workers) {
             continue;
+        }
+
         int days_left;
-        if (type3)
+        if (type3) {
             days_left = b->data.entertainment.days3_or_play;
-        else if (type2)
+        } else if (type2) {
             days_left = b->data.entertainment.days2;
-        else
+        } else {
             days_left = b->data.entertainment.days1;
+        }
         int dist = days_left + calc_maximum_distance(tile, b->tile);
+
         if (dist < min_distance) {
             min_distance = dist;
-            min_building_id = venues[i];
+            min_building_id = v->id;
         }
     }
+
     return min_building_id;
 }
 
@@ -81,6 +84,7 @@ void figure::entertainer_update_shows() {
         break;
     }
 }
+
 void figure::entertainer_update_image() {
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
 

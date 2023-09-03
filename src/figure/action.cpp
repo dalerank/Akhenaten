@@ -696,7 +696,7 @@ void figure::action_perform() {
 
         // poof if LOST
         if (direction == DIR_FIGURE_CAN_NOT_REACH) {
-            if (figure_type_none_of(this, FIGURE_ARROW, FIGURE_HUNTER_ARROW, FIGURE_BOLT)) {
+            if (figure_type_none_of(*this, FIGURE_ARROW, FIGURE_HUNTER_ARROW, FIGURE_BOLT)) {
                 poof();
             }
         }
