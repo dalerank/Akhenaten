@@ -22,6 +22,7 @@
 #include "overlays/city_overlay_health.h"
 #include "overlays/city_overlay_juggler.h"
 #include "overlays/city_overlay_bandstand.h"
+#include "overlays/city_overlay_pavilion.h"
 
 const city_overlay* g_city_overlay = 0;
 
@@ -43,8 +44,8 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_booth();
     case OVERLAY_BANDSTAND:
         return city_overlay_for_bandstand();
-    case OVERLAY_COLOSSEUM:
-        return city_overlay_for_colosseum();
+    case OVERLAY_PAVILION:
+        return city_overlay_for_pavilion();
     case OVERLAY_HIPPODROME:
         return city_overlay_for_hippodrome();
     case OVERLAY_EDUCATION:

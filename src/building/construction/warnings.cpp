@@ -137,10 +137,10 @@ static void check_musician_access(int type) {
     }
 }
 
-static void check_lion_access(int type) {
+static void check_dancers_access(int type) {
     if (!g_has_warning && type == BUILDING_PAVILLION) {
         if (building_count_active(BUILDING_DANCE_SCHOOL) <= 0)
-            show(WARNING_BUILD_LION_HOUSE);
+            show(WARNING_BUILD_DANCERS_SCHOOL);
     }
 }
 
@@ -227,7 +227,7 @@ void building_construction_warning_generic_checks(int type, int x, int y, int si
     check_market(type);
     check_juggler_access(type);
     check_musician_access(type);
-    check_lion_access(type);
+    check_dancers_access(type);
     check_charioteer_access(type);
 
     check_barracks(type);

@@ -71,7 +71,7 @@ static const int submenu_id_to_overlay[7][8] = {
    OVERLAY_ENTERTAINMENT,
    OVERLAY_BOOTH,
    OVERLAY_BANDSTAND,
-   OVERLAY_COLOSSEUM,
+   OVERLAY_PAVILION,
    OVERLAY_HIPPODROME,
    0},
 

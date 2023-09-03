@@ -30,7 +30,7 @@ enum e_overlay {
     OVERLAY_ENTERTAINMENT = 11,
     OVERLAY_BOOTH = 12,
     OVERLAY_BANDSTAND = 13,
-    OVERLAY_COLOSSEUM = 14,
+    OVERLAY_PAVILION = 14,
     OVERLAY_HIPPODROME = 15,
     OVERLAY_EDUCATION = 16,
     OVERLAY_SCHOOL = 17,
@@ -71,8 +71,7 @@ struct city_overlay {
     void (*draw_custom_footprint)(vec2i pixel, map_point point) = 0;
     void (*draw_custom_top_func)(vec2i pixel, map_point point) = 0;
 
-    city_overlay() {
-    }
+    city_overlay() {}
     city_overlay(int _type,
                  int _column_type,
                  int (*_show_building_func)(const building* b),
