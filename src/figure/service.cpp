@@ -175,7 +175,7 @@ static void policeman_coverage(building* b, int* max_anger_seen) {
     b->house_criminal_active = std::max<uint8_t>(0, b->house_criminal_active);
 
     if (b->sentiment.native_anger > *max_anger_seen) {
-        *max_anger_seen = b->damage_risk;
+        *max_anger_seen = b->sentiment.native_anger;
     }
 }
 static void tax_collector_coverage(building* b, int* max_tax_multiplier) {
