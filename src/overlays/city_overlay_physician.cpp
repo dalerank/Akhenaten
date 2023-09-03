@@ -40,8 +40,6 @@ struct city_overlay_physician : public city_overlay {
 
     void draw_custom_top(vec2i pixel, map_point point) const override {
         int grid_offset = point.grid_offset();
-        int x = pixel.x;
-        int y = pixel.y;
         if (!map_property_is_draw_tile(grid_offset)) {
             return;
         }

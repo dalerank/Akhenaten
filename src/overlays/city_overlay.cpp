@@ -23,6 +23,7 @@
 #include "overlays/city_overlay_juggler.h"
 #include "overlays/city_overlay_bandstand.h"
 #include "overlays/city_overlay_pavilion.h"
+#include "overlays/city_overlay_water.h"
 
 const city_overlay* g_city_overlay = 0;
 

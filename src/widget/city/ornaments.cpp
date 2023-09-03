@@ -472,10 +472,11 @@ static void draw_hippodrome_ornaments(vec2i pixel, map_point point) {
         ImageDraw::img_generic(image_id + 1, x + img->animation.sprite_x_offset, y + img->animation.sprite_y_offset - img->height + 90, drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0);
     }
 }
-static void draw_senate_rating_flags(const building* b, int x, int y, color color_mask) {
+
+static void draw_palace_rating_flags(const building* b, int x, int y, color color_mask) {
     if (b->type == BUILDING_GREATE_PALACE || b->type == BUILDING_GREATE_PALACE_UPGRADED) {
         // rating flags
-        int image_id = image_id_from_group(GROUP_BUILDING_SENATE);
+        int image_id = image_id_from_group(GROUP_BUILDING_PALACE);
         ImageDraw::img_generic(image_id + 1, x + 138, y + 44 - city_rating_culture() / 2, color_mask);
         ImageDraw::img_generic(image_id + 2, x + 168, y + 36 - city_rating_prosperity() / 2, color_mask);
         ImageDraw::img_generic(image_id + 3, x + 198, y + 27 - city_rating_monument() / 2, color_mask);
@@ -636,7 +637,7 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
     }
 
     // specific buildings
-    draw_senate_rating_flags(b, x, y, color_mask);
+    draw_palace_rating_flags(b, x, y, color_mask);
     draw_workshop_raw_material_storage(b, x, y, color_mask);
     //    draw_hippodrome_ornaments(pixel, point);
 }
