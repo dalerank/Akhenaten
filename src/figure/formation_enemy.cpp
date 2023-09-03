@@ -31,7 +31,9 @@ static const int ENEMY_ATTACK_PRIORITY[4][100] = {
    BUILDING_POMEGRANATES_FARM,
    BUILDING_CHICKPEAS_FARM,
    0},
-  {BUILDING_SENATE_UPGRADED, BUILDING_SENATE, BUILDING_TAX_COLLECTOR_UPGRADED, BUILDING_TAX_COLLECTOR, 0},
+
+  {BUILDING_GREATE_PALACE_UPGRADED, BUILDING_GREATE_PALACE, BUILDING_TAX_COLLECTOR_UPGRADED, BUILDING_TAX_COLLECTOR, 0},
+
   {BUILDING_DYNASTY_MANSION,    BUILDING_FAMILY_MANSION,      BUILDING_PERSONAL_MANSION,   BUILDING_HOUSE_LUXURY_PALACE,
    BUILDING_HOUSE_LARGE_PALACE, BUILDING_HOUSE_MEDIUM_PALACE, BUILDING_HOUSE_SMALL_PALACE, BUILDING_HOUSE_GRAND_VILLA,
    BUILDING_HOUSE_LARGE_VILLA,  BUILDING_HOUSE_MEDIUM_VILLA,  BUILDING_HOUSE_SMALL_VILLA,  BUILDING_HOUSE_GRAND_INSULA,
@@ -40,14 +42,15 @@ static const int ENEMY_ATTACK_PRIORITY[4][100] = {
    BUILDING_HOUSE_SMALL_SHACK,  BUILDING_HOUSE_LARGE_TENT,    BUILDING_HOUSE_SMALL_TENT,   0},
   {BUILDING_MILITARY_ACADEMY, BUILDING_POLICE_STATION, 0}};
 
-static const int RIOTER_ATTACK_PRIORITY[100]
-  = {79,  78,  77,  29, 28,  27,  26,  25,  85,  84,  32, 33, 98, 65, 66,  67,  68,  69,  87,  86, 30,
-     31,  47,  52,  46, 48,  53,  51,  24,  23,  22,  21, 20, 46, 48, 114, 113, 112, 111, 110, 71, 72,
-     70,  74,  75,  76, 60,  61,  62,  63,  64,  34,  36, 37, 35, 94, 19,  18,  17,  16,  15,  49, 106,
-     107, 109, 108, 90, 100, 101, 102, 103, 104, 105, 55, 81, 91, 92, 14,  13,  12,  11,  10,  0};
+static const int RIOTER_ATTACK_PRIORITY[100] = {
+    79,  78,  77,  29, 28,  27,  26,  25,  85,  84,  32, 33, 98, 65, 66,  67,  68,  69,  87,  86, 30,
+    31,  47,  52,  46, 48,  53,  51,  24,  23,  22,  21, 20, 46, 48, 114, 113, 112, 111, 110, 71, 72,
+    70,  74,  75,  76, 60,  61,  62,  63,  64,  34,  36, 37, 35, 94, 19,  18,  17,  16,  15,  49, 106,
+    107, 109, 108, 90, 100, 101, 102, 103, 104, 105, 55, 81, 91, 92, 14,  13,  12,  11,  10,  0
+};
 
-static const int LAYOUT_ORIENTATION_OFFSETS[13][4][40]
-  = {{
+static const int LAYOUT_ORIENTATION_OFFSETS[13][4][40]= {
+      {
        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0,
         0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0},
        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0,
@@ -176,7 +179,8 @@ static const int LAYOUT_ORIENTATION_OFFSETS[13][4][40]
         0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0,  0, 0,  0, 0, 0, 0, 0, 0},
        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0,  0,  0,  0, 0, 0, 0, 0, 0, 0},
-     }};
+     }
+};
 
 int formation_rioter_get_target_building(int* x_tile, int* y_tile) {
     int best_type_index = 100;
