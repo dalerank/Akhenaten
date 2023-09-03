@@ -8,16 +8,25 @@
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"
 
-static void init(void) {
+#include <cmath>
+
+
+static void init() {
     sound_music_play_intro();
 }
 
-static void draw_logo(void) {
+static void draw_logo_background() {
     graphics_clear_screen();
 
     ImageDraw::img_background(image_id_from_group(GROUP_LOGO));
+}
+
+static void draw_logo_foreground() {
+    static int logo_tick_count = 0;
     graphics_set_to_dialog();
-    lang_text_draw_centered_colored(13, 7, 160, 462, 320, FONT_SMALL_PLAIN, COLOR_WHITE);
+    int current_color = 128 + std::cos(logo_tick_count * 0.03f) * 128;
+    logo_tick_count++;
+    lang_text_draw_centered_colored(13, 7, 160, 462, 320, FONT_SMALL_PLAIN, (0xff000000 + (current_color << 16) + (current_color << 8) + current_color));
     graphics_reset_dialog();
 }
 
@@ -33,7 +42,13 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 void window_logo_show(int show_patch_message) {
-    window_type window = {WINDOW_LOGO, draw_logo, 0, handle_input};
+    window_type window = {
+        WINDOW_LOGO,
+        draw_logo_background,
+        draw_logo_foreground,
+        handle_input
+    };
+
     init(); // play menu track
     window_show(&window);
 

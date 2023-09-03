@@ -43,24 +43,12 @@ void lang_text_draw_centered(const char* text, int x_offset, int y_offset, int b
     text_draw_centered((const uint8_t*)text, x_offset, y_offset, box_width, font, 0);
 }
 
-void lang_text_draw_centered_colored(int group,
-                                     int number,
-                                     int x_offset,
-                                     int y_offset,
-                                     int box_width,
-                                     font_t font,
-                                     color color) {
+void lang_text_draw_centered_colored(int group, int number, int x_offset, int y_offset, int box_width, font_t font, color color) {
     const uint8_t* str = lang_get_string(group, number);
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
-int lang_text_draw_amount(int group,
-                          int number,
-                          int amount,
-                          int x_offset,
-                          int y_offset,
-                          font_t font,
-                          const char* postfix) {
+int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y_offset, font_t font, const char* postfix) {
     int amount_offset = 1;
     if (amount == 1 || amount == -1)
         amount_offset = 0;

@@ -1,5 +1,4 @@
-#ifndef GRAPHICS_COLOR_H
-#define GRAPHICS_COLOR_H
+#pragma once
 
 #include <stdint.h>
 
@@ -97,5 +96,3 @@ constexpr uint32_t COLOR_MINIMAP_ANIMAL = 0xff00f700;
      | COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_RED)                               \
      | COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_GREEN)                             \
      | COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_BLUE))
-
-#endif // GRAPHICS_COLOR_H
