@@ -72,10 +72,13 @@
 #define INTPTR(d) (*(int*)(d))
 
 namespace {
+
 void show_usage() {
     platform_screen_show_error_message_box("Command line interface", Arguments::usage());
 }
+
 } // namespace
+
 void system_exit() {
     app_post_event(USER_EVENT_QUIT);
 }
@@ -108,24 +111,29 @@ static int init_sdl() {
     logs::info("SDL initialized");
     return 1;
 }
+
 int pre_init_dir_attempt(std::string_view data_dir, const char* lmsg) {
     logs::info(lmsg, data_dir.data()); // TODO: get rid of data ???
-    if (!platform_file_manager_set_base_path(data_dir))
+    if (!platform_file_manager_set_base_path(data_dir)) {
         logs::info("%s: directory not found", data_dir);
+    }
 
-    if (game_pre_init())
+    if (game_pre_init()) {
         return 1;
+    }
 
     return 0;
 }
 
 static bool pre_init(std::string_view custom_data_dir) {
-    if (pre_init_dir_attempt(custom_data_dir, "Attempting to load game from %s"))
+    if (pre_init_dir_attempt(custom_data_dir, "Attempting to load game from %s")) {
         return true;
+    }
 
     logs::info("Attempting to load game from working directory");
-    if (game_pre_init())
+    if (game_pre_init()) {
         return true;
+    }
 
     // ...then from the executable base path...
     if (platform_sdl_version_at_least(2, 0, 1)) {

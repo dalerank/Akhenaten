@@ -114,8 +114,9 @@ static void init_channels(void) {
 void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILENAME_MAX]) {
     auto &data = g_sound_device_data;
     if (data.initialized) {
-        if (num_channels > MAX_CHANNELS)
+        if (num_channels > MAX_CHANNELS) {
             num_channels = MAX_CHANNELS;
+        }
 
         Mix_AllocateChannels(num_channels);
         logs::info("Loading audio files");
@@ -143,6 +144,7 @@ void sound_device_open(void) {
             // Skip "write-to-disk" and dummy drivers
             continue;
         }
+
         if (0 == SDL_AudioInit(driver_name)
             && 0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
             logs::info("Using audio driver: %s", driver_name);
@@ -152,9 +154,11 @@ void sound_device_open(void) {
             logs::info("Not using audio driver %s, reason: %s", driver_name, SDL_GetError());
         }
     }
+
     logs::error("Sound failed to initialize: %s", Mix_GetError());
     int max = SDL_GetNumAudioDevices(0);
     logs::info("Number of audio devices: %d", max);
+
     for (int i = 0; i < max; i++) {
         logs::info("Audio device: %s", SDL_GetAudioDeviceName(i, 0));
     }
@@ -376,12 +380,7 @@ static void free_custom_audio_stream(void) {
     }
 }
 
-static int create_custom_audio_stream(SDL_AudioFormat src_format,
-                                      Uint8 src_channels,
-                                      int src_rate,
-                                      SDL_AudioFormat dst_format,
-                                      Uint8 dst_channels,
-                                      int dst_rate) {
+static int create_custom_audio_stream(SDL_AudioFormat src_format, Uint8 src_channels, int src_rate, SDL_AudioFormat dst_format, Uint8 dst_channels, int dst_rate) {
     auto &custom_music = g_custom_music;
     free_custom_audio_stream();
 
@@ -541,8 +540,7 @@ void sound_device_write_custom_music_data(const unsigned char* audio_data, int l
     if (!mix_buffer)
         return;
     memset(mix_buffer, (custom_music.format == AUDIO_U8) ? 128 : 0, len);
-    SDL_MixAudioFormat(
-      mix_buffer, audio_data, custom_music.format, len, percentage_to_volume(setting_sound(SOUND_EFFECTS)->volume));
+    SDL_MixAudioFormat(mix_buffer, audio_data, custom_music.format, len, percentage_to_volume(setting_sound(SOUND_EFFECTS)->volume));
 
     put_custom_audio_stream(mix_buffer, len);
     free(mix_buffer);

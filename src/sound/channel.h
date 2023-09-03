@@ -1,11 +1,12 @@
-#ifndef SOUND_CHANNEL_H
-#define SOUND_CHANNEL_H
+#pragma once
 
-enum {
+enum e_sound_channel {
     SOUND_CHANNEL_SPEECH = 0,
 
+    SOUND_MUSIC_AMBIENT = 1,
+
     // user interface effects
-    SOUND_CHANNEL_EFFECTS_MIN = 1,
+    SOUND_CHANNEL_EFFECTS_MIN = 2,
     SOUND_CHANNEL_EFFECTS_MAX = 44,
 
     // city sounds (from buildings)
@@ -14,5 +15,3 @@ enum {
 
     SOUND_CHANNEL_MAX = SOUND_CHANNEL_CITY_MAX + 1
 };
-
-#endif // SOUND_CHANNEL_H

@@ -8,58 +8,12 @@
 #include "io/dir.h"
 #include "sound/device.h"
 
-enum e_track {
-    TRACK_NONE,
-    TRACK_MENU,
-    TRACK_COMBAT_SHORT,
-    TRACK_COMBAT_LONG,
-    TRACK_CITY_1,
-    TRACK_CITY_2,
-    TRACK_CITY_3,
-    TRACK_CITY_4,
-    TRACK_CITY_5,
-    TRACK_CITY_6,
-    TRACK_CITY_7,
-    TRACK_CITY_8,
-    TRACK_CITY_9,
-    TRACK_CITY_10,
-    TRACK_CITY_11,
-    TRACK_CITY_12,
-    TRACK_CITY_13,
-    TRACK_CITY_14,
-    TRACK_CITY_15,
-    TRACK_CITY_16,
-    TRACK_CITY_17,
-    TRACK_CITY_18,
-    TRACK_CITY_19,
-    TRACK_CITY_20,
-    TRACK_CITY_21,
-    TRACK_CITY_22,
-    TRACK_CITY_23,
-    TRACK_CITY_24,
-    TRACK_CITY_25,
-    TRACK_CITY_26,
-    TRACK_CITY_27,
-    TRACK_CITY_28,
-    TRACK_CITY_29,
-    TRACK_CITY_30,
-    TRACK_CITY_31,
-    TRACK_CITY_32,
-    TRACK_CITY_33,
-    TRACK_CITY_34,
-    TRACK_CITY_35,
-    TRACK_CITY_36,
-    TRACK_CITY_37,
-    TRACK_CITY_38,
-    TRACK_CITY_39,
-    TRACK_CITY_40,
-    TRACK_MAX
-};
-
-static struct {
+struct music_data_t {
     int current_track;
     int next_check;
-} data = {TRACK_NONE, 0};
+};
+
+music_data_t g_music_data = {TRACK_NONE, 0};
 
 static const char c3_wav[][32] = {"",
                                   "wavs/setup.wav",
@@ -135,68 +89,79 @@ static const char ph_mp3[][32] = {
   "AUDIO/Music/Ra.mp3"       // M
 };
 
-static void play_track(int track) {
+void sound_music_play_track(int track) {
     sound_device_stop_music();
-    if (track <= TRACK_NONE || track >= TRACK_MAX)
+
+    if (track <= TRACK_NONE || track >= TRACK_MAX) {
         return;
+    }
+
     int volume = setting_sound(SOUND_MUSIC)->volume;
 
-    switch (GAME_ENV) {
-        const char* mp3_track;
-    case ENGINE_ENV_PHARAOH:
-        volume = volume * 0.4;
-        sound_device_play_music(dir_get_file(ph_mp3[track], NOT_LOCALIZED), volume);
-        break;
-    }
-    data.current_track = track;
+    volume = volume * 0.4;
+    const char *music = dir_get_case_corrected_file(0, ph_mp3[track]);
+    sound_device_play_music(music, volume);
+
+    g_music_data.current_track = track;
 }
 
 void sound_music_set_volume(int percentage) {
     sound_device_set_music_volume(percentage);
 }
-void sound_music_play_intro(void) {
-    if (setting_sound(SOUND_MUSIC)->enabled)
-        play_track(TRACK_MENU);
+
+void sound_music_play_intro() {
+    if (setting_sound(SOUND_MUSIC)->enabled) {
+        sound_music_play_track(TRACK_MENU);
+    }
 }
-void sound_music_play_editor(void) {
-    if (setting_sound(SOUND_MUSIC)->enabled)
-        play_track(TRACK_CITY_1);
+
+void sound_music_play_editor() {
+    if (setting_sound(SOUND_MUSIC)->enabled) {
+        sound_music_play_track(TRACK_CITY_1);
+    }
 }
+
 void sound_music_update(bool force) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Music Update");
-    if (data.next_check && !force) {
-        --data.next_check;
+    if (g_music_data.next_check && !force) {
+        --g_music_data.next_check;
         return;
     }
-    if (!setting_sound(SOUND_MUSIC)->enabled)
+
+    if (!setting_sound(SOUND_MUSIC)->enabled) {
         return;
+    }
+
     int track;
     int population = city_population();
     int total_enemies = city_figures_total_invading_enemies();
-    if (total_enemies >= 32)
+
+    if (total_enemies >= 32) {
         track = TRACK_COMBAT_LONG;
-    else if (total_enemies > 0)
+    } else if (total_enemies > 0) {
         track = TRACK_COMBAT_SHORT;
-    else if (population < 1000)
+    } else if (population < 1000) {
         track = TRACK_CITY_1;
-    else if (population < 2000)
+    } else if (population < 2000) {
         track = TRACK_CITY_2;
-    else if (population < 5000)
+    } else if (population < 5000) {
         track = TRACK_CITY_3;
-    else if (population < 7000)
+    } else if (population < 7000) {
         track = TRACK_CITY_4;
-    else {
+    } else {
         track = TRACK_CITY_5;
     }
 
-    if (track == data.current_track)
+    if (track == g_music_data.current_track) {
         return;
+    }
 
-    play_track(track);
-    data.next_check = 10;
+    sound_music_play_track(track);
+    g_music_data.next_check = 10;
 }
+
 void sound_music_stop(void) {
     sound_device_stop_music();
-    data.current_track = TRACK_NONE;
-    data.next_check = 0;
+    g_music_data.current_track = TRACK_NONE;
+    g_music_data.next_check = 0;
 }

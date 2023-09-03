@@ -4,6 +4,7 @@
 #include "io/file.h"
 #include "io/log.h"
 #include "platform/vita/vita.h"
+#include "platform.h"
 
 #include <stdlib.h>
 #include <string.h>

@@ -141,8 +141,9 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 void window_main_menu_show(bool restart_music) {
-    if (restart_music)
+    if (restart_music) {
         sound_music_play_intro();
+    }
 
     window_type window = {WINDOW_MAIN_MENU, draw_background, draw_foreground, handle_input};
     window_show(&window);
