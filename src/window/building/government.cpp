@@ -10,7 +10,7 @@
 
 void window_building_draw_tax_collector(building_info_context* c) {
     c->help_id = e_text_building_tax_collector;
-    window_building_play_sound(c, "wavs/forum.wav");
+    window_building_play_sound(c, "wavs/taxfarm.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(106, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     ImageDraw::img_generic(image_id_resource_icon(RESOURCE_DEBEN), c->x_offset + 16, c->y_offset + 36);
@@ -43,7 +43,7 @@ void window_building_draw_palace(building_info_context* c) {
     c->can_go_to_advisor = true;
     c->help_id = e_text_building_palace;
 
-    window_building_play_sound(c, "wavs/senate.wav");
+    window_building_play_sound(c, "wavs/palace.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(105, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 

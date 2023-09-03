@@ -109,7 +109,7 @@ static void move_left(char* str) {
     *str = 0;
 }
 
-static const char* get_case_corrected_file(const char* dir, const char* filepath) {
+const char* dir_get_case_corrected_file(const char* dir, const char* filepath) {
     static char corrected_filename[2 * MAX_FILE_NAME] = {0};
 
     size_t dir_len = 0;
@@ -171,7 +171,7 @@ const char* dir_get_file(const char* filepath, int localizable) {
     if (localizable != NOT_LOCALIZED) {
         const char* custom_dir = config_get_string(CONFIG_STRING_UI_LANGUAGE_DIR);
         if (*custom_dir) {
-            const char* path = get_case_corrected_file(custom_dir, filepath);
+            const char* path = dir_get_case_corrected_file(custom_dir, filepath);
             if (path)
                 return path;
             else if (localizable == MUST_BE_LOCALIZED)
@@ -179,5 +179,5 @@ const char* dir_get_file(const char* filepath, int localizable) {
         }
     }
 
-    return get_case_corrected_file(0, filepath);
+    return dir_get_case_corrected_file(0, filepath);
 }

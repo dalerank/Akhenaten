@@ -1,5 +1,4 @@
-#ifndef CORE_DIR_H
-#define CORE_DIR_H
+#pragma once
 
 /**
  * @file
@@ -38,5 +37,4 @@ const dir_listing* dir_find_all_subdirectories(const char* dir = 0);
  * @return Corrected file, or NULL if the file was not found
  */
 const char* dir_get_file(const char* filepath, int localizable);
-
-#endif // CORE_DIR_H
+const char *dir_get_case_corrected_file(const char *dir, const char *filepath);
