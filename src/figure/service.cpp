@@ -170,12 +170,12 @@ static void prefect_coverage(building* b, int* min_happiness_seen) {
     if (b->sentiment.house_happiness < *min_happiness_seen)
         *min_happiness_seen = b->sentiment.house_happiness;
 }
-static void policeman_coverage(building* b, int* max_anger_seen) {
+static void policeman_coverage(building* b, int *max_anger_seen) {
     b->house_criminal_active -= 10;
     b->house_criminal_active = std::max<uint8_t>(0, b->house_criminal_active);
 
-    if (b->sentiment.native_anger > *max_anger_seen) {
-        *max_anger_seen = b->sentiment.native_anger;
+    if (b->house_criminal_active > *max_anger_seen) {
+        *max_anger_seen = b->house_criminal_active;
     }
 }
 static void tax_collector_coverage(building* b, int* max_tax_multiplier) {
@@ -412,16 +412,19 @@ int figure::figure_service_provide_coverage() {
         break;
     case FIGURE_POLICEMAN:
     case FIGURE_MAGISTRATE:
-        int max_anger = 0;
-        houses_serviced = provide_service(tile.x(), tile.y(), &max_anger, policeman_coverage);
-        if (type == FIGURE_MAGISTRATE)
+        int max_criminal_active = 0;
+        houses_serviced = provide_service(tile.x(), tile.y(), &max_criminal_active, policeman_coverage);
+        if (type == FIGURE_MAGISTRATE) {
             houses_serviced = provide_culture(tile.x(), tile.y(), magistrate_coverage);
-        if (max_anger > min_max_seen)
-            min_max_seen = max_anger;
+        }
+
+        if (max_criminal_active > min_max_seen)
+            min_max_seen = max_criminal_active;
         else if (min_max_seen <= 10)
             min_max_seen = 0;
         else
             min_max_seen -= 10;
+
         break;
     }
     if (has_home()) {
