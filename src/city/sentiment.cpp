@@ -179,6 +179,7 @@ void city_criminals_update_day() {
             if (b.sentiment.house_happiness >= 50) {
                 int delta = (b.sentiment.house_happiness - 50) / 25;
                 b.house_criminal_active -= std::max<int>(0, b.house_criminal_active - delta);
+
             } else if (b.sentiment.house_happiness < 50) {
                 int delta = (100 - b.sentiment.house_happiness) / 10;
                 b.house_criminal_active = std::min<int>(b.house_criminal_active + delta, 100);

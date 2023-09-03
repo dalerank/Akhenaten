@@ -9,6 +9,7 @@
 #include "game/orientation.h"
 #include "game/state.h"
 #include "game/undo.h"
+#include "io/gamefiles/lang.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
@@ -64,54 +65,11 @@ static image_button buttons_build_collapsed[12] = {
   {9, CL_ROW0 + 142, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 106, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
   {9, CL_ROW0 + 177, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 110, button_build, button_none, BUILD_MENU_DISTRIBUTION, 0, 1},
   {9, CL_ROW0 + 212, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 114, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
-  {9, CL_ROW0 + 245,
-   36,
-   48,
-   IB_BUILD,
-   GROUP_SIDEBAR_BUTTONS,
-   118,
-   button_build,
-   button_none,
-   BUILD_MENU_RELIGION,
-   0,
-   1},
-  {9,
-   CL_ROW0 + 281,
-   36,
-   48,
-   IB_BUILD,
-   GROUP_SIDEBAR_BUTTONS,
-   122,
-   button_build,
-   button_none,
-   BUILD_MENU_EDUCATION,
-   0,
-   1},
+  {9, CL_ROW0 + 245, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 118, button_build, button_none, BUILD_MENU_RELIGION, 0, 1},
+  {9, CL_ROW0 + 281, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 122, button_build, button_none, BUILD_MENU_EDUCATION, 0, 1},
   {9, CL_ROW0 + 317, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 126, button_build, button_none, BUILD_MENU_HEALTH, 0, 1},
-  {9,
-   CL_ROW0 + 353,
-   36,
-   48,
-   IB_BUILD,
-   GROUP_SIDEBAR_BUTTONS,
-   130,
-   button_build,
-   button_none,
-   BUILD_MENU_ADMINISTRATION,
-   0,
-   1},
-  {9,
-   CL_ROW0 + 385,
-   36,
-   48,
-   IB_BUILD,
-   GROUP_SIDEBAR_BUTTONS,
-   134,
-   button_build,
-   button_none,
-   BUILD_MENU_SECURITY,
-   0,
-   1},
+  {9, CL_ROW0 + 353, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 130, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
+  {9, CL_ROW0 + 385, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 134, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
 };
 
 #define COL1 9
@@ -142,35 +100,13 @@ static image_button buttons_build_expanded[15] = {
   {COL4, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 44, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
 
   {COL1, ROW4, 35, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
-  {COL2,
-   ROW4,
-   38,
-   45,
-   IB_NORMAL,
-   GROUP_SIDEBAR_BUTTONS,
-   52,
-   button_messages,
-   button_help,
-   0,
-   MESSAGE_DIALOG_MESSAGES,
-   1},
+  {COL2, ROW4, 38, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 52, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
   {COL3, ROW4, 28, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_go_to_problem, button_none, 0, 0, 1},
 };
 
 static image_button buttons_top_expanded[3] = {
   {COL1 + 7, 143, 60, 36, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 64, button_advisors, button_none, 0, 0, 1},
-  {COL3 + 4,
-   143,
-   62,
-   36,
-   IB_NORMAL,
-   GROUP_SIDEBAR_BUTTONS,
-   68,
-   button_empire,
-   button_help,
-   0,
-   MESSAGE_DIALOG_EMPIRE_MAP,
-   1},
+  {COL3 + 4, 143, 62, 36, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 68, button_empire, button_help, 0, MESSAGE_DIALOG_EMPIRE_MAP, 1},
   {COL4 - 9, ROW4, 43, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 60, button_mission_briefing, button_none, 0, 0, 1},
 };
 
@@ -182,7 +118,8 @@ sidebar_data_t g_sidebar_data;
 
 static void draw_overlay_text(int x_offset) {
     if (game_state_overlay()) {
-        lang_text_draw_centered(14, game_state_overlay(), x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_LIGHT);
+        const char *overlay_text = game_state_overlay_text(game_state_overlay());
+        lang_text_draw_centered(overlay_text, x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
         const bool is_button_focused = buttons_overlays_collapse_sidebar[1].focused;
         lang_text_draw_centered(6, 4, x_offset - 15, 30, 117, is_button_focused ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_BLACK_ON_LIGHT);
@@ -193,15 +130,9 @@ static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
     if (is_collapsed)
         width = SIDEBAR_COLLAPSED_WIDTH;
     int available_height = sidebar_common_get_height() - SIDEBAR_MAIN_SECTION_HEIGHT;
-    int extra_height = sidebar_extra_draw_background(x_offset,
-                                                     SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT,
-                                                     162,
-                                                     available_height,
-                                                     is_collapsed,
-                                                     SIDEBAR_EXTRA_DISPLAY_ALL);
+    int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT, 162, available_height, is_collapsed, SIDEBAR_EXTRA_DISPLAY_ALL);
     sidebar_extra_draw_foreground();
-    int relief_y_offset
-      = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT + extra_height; // + (GAME_ENV == ENGINE_ENV_PHARAOH) * 6;
+    int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT + extra_height; // + (GAME_ENV == ENGINE_ENV_PHARAOH) * 6;
     sidebar_common_draw_relief(x_offset, relief_y_offset, GROUP_SIDE_PANEL, is_collapsed);
 }
 static void draw_number_of_messages(int x_offset) {
@@ -245,10 +176,7 @@ static void refresh_build_menu_buttons(void) {
 }
 static void draw_collapsed_background(void) {
     int x_offset = sidebar_common_get_x_offset_collapsed();
-    if (GAME_ENV == ENGINE_ENV_C3)
-        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT);
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT);
+    ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT);
     draw_buttons_collapsed(x_offset);
     draw_sidebar_remainder(x_offset, true);
 }
@@ -320,13 +248,11 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
     data.focus_tooltip_text_id = 0;
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = sidebar_common_get_x_offset_collapsed();
-        handled |= image_buttons_handle_mouse(
-          m, x_offset, 24, button_expand_sidebar, std::size(button_expand_sidebar), &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, std::size(button_expand_sidebar), &button_id);
         if (button_id)
             data.focus_tooltip_text_id = 12;
 
-        handled |= image_buttons_handle_mouse(
-          m, x_offset, 24, buttons_build_collapsed, std::size(buttons_build_collapsed), &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, std::size(buttons_build_collapsed), &button_id);
         if (button_id)
             data.focus_tooltip_text_id = button_id + 19;
 
@@ -335,20 +261,17 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
             return true;
 
         int x_offset = sidebar_common_get_x_offset_expanded();
-        handled |= image_buttons_handle_mouse(
-          m, x_offset, 24, buttons_overlays_collapse_sidebar, std::size(buttons_overlays_collapse_sidebar), &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, std::size(buttons_overlays_collapse_sidebar), &button_id);
         if (button_id) {
             data.focus_tooltip_text_id = button_id + 9;
         }
 
-        handled |= image_buttons_handle_mouse(
-          m, x_offset, 24, buttons_build_expanded, std::size(buttons_build_expanded), &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, std::size(buttons_build_expanded), &button_id);
         if (button_id) {
             data.focus_tooltip_text_id = button_id + 19;
         }
 
-        handled |= image_buttons_handle_mouse(
-          m, x_offset, 24, buttons_top_expanded, std::size(buttons_top_expanded), &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded, std::size(buttons_top_expanded), &button_id);
         if (button_id) {
             data.focus_tooltip_text_id = button_id + 40;
         }
@@ -360,12 +283,7 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
 
 int widget_sidebar_city_handle_mouse_build_menu(const mouse* m) {
     if (city_view_is_sidebar_collapsed()) {
-        return image_buttons_handle_mouse(m,
-                                          sidebar_common_get_x_offset_collapsed(),
-                                          24,
-                                          buttons_build_collapsed,
-                                          std::size(buttons_build_collapsed),
-                                          0);
+        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_collapsed(), 24, buttons_build_collapsed, std::size(buttons_build_collapsed), 0);
     } else {
         return image_buttons_handle_mouse(
           m, sidebar_common_get_x_offset_expanded(), 24, buttons_build_expanded, std::size(buttons_build_expanded), 0);
@@ -392,10 +310,7 @@ static void button_overlay(int param1, int param2) {
 }
 static void button_collapse_expand(int param1, int param2) {
     city_view_start_sidebar_toggle();
-    sidebar_slide(!city_view_is_sidebar_collapsed(),
-                  draw_collapsed_background,
-                  draw_expanded_background,
-                  slide_finished);
+    sidebar_slide(!city_view_is_sidebar_collapsed(), draw_collapsed_background, draw_expanded_background, slide_finished);
 }
 static void button_build(int submenu, int param2) {
     window_build_menu_show(submenu);
