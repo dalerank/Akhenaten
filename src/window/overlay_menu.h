@@ -1,6 +1,4 @@
-#ifndef WINDOW_OVERLAY_MENU_H
-#define WINDOW_OVERLAY_MENU_H
+#pragma once
 
 void window_overlay_menu_show(void);
-
-#endif // WINDOW_OVERLAY_MENU_H
+const char *game_state_overlay_text(int index);

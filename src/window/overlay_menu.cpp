@@ -138,7 +138,7 @@ static int get_sidebar_x_offset(void) {
     return view_x + view_width;
 }
 
-static const char* get_overlay_text(int group, int index) {
+const char* game_state_overlay_text(int index) {
     switch (index) {
     case OVERLAY_RELIGION_OSIRIS:
         return "Osiris";
@@ -171,7 +171,8 @@ static const char* get_overlay_text(int group, int index) {
     case OVERLAY_DENTIST:
         return "Dentist";
     }
-    return (const char*)lang_get_string(group, index);
+
+    return (const char*)lang_get_string(e_text_overlay_menu, index);
 }
 
 static void draw_foreground(void) {
@@ -187,7 +188,7 @@ static void draw_foreground(void) {
         for (int i = 0; i < data.num_submenu_items; i++) {
             label_draw(x_offset - 348, 74 + 24 * (i + data.selected_menu), 10, data.submenu_focus_button_id == i + 1 ? 1 : 2);
 
-            const char* text = get_overlay_text(e_text_overlay_menu, submenu_id_to_overlay[data.selected_submenu][i]);
+            const char* text = game_state_overlay_text(submenu_id_to_overlay[data.selected_submenu][i]);
             lang_text_draw_centered(text, x_offset - 348, 77 + 24 * (i + data.selected_menu), 160, FONT_NORMAL_BLACK_ON_DARK);
         }
     }
