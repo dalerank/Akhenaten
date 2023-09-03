@@ -2,8 +2,13 @@
 
 #include "core/application.h"
 
+#include <cpptrace/cpptrace.hpp>
+
 #include <algorithm>
+#include <csignal>
+#include <iomanip>
 #include <iostream>
+#include <string>
 #include <unordered_map>
 
 #ifdef __WINDOWS__
@@ -53,11 +58,51 @@ SDL_LogPriority get_log_priority() {
     return SDL_LOG_PRIORITY_INFO;
 }
 
+void sig_handler(int /* signal */) {
+    auto const trace = cpptrace::generate_trace();
+    std::ostringstream output_stream;
+
+    auto const frame_number_width = std::to_string(static_cast<int>(trace.size()) - 1).length();
+    std::size_t counter = 0;
+
+    output_stream << "Stack Trace:";
+    for (auto const& frame: trace)
+    {
+        output_stream
+            << "\n#"
+            << std::setw(static_cast<int>(frame_number_width))
+            << std::left
+            << counter++
+            << std::right
+            << " "
+            << std::hex
+            << "0x"
+            << std::setw(2 * sizeof(uintptr_t))
+            << std::setfill('0')
+            << frame.address
+            << std::dec
+            << std::setfill(' ')
+            << " in "
+            << frame.symbol
+            << " at "
+            << frame.filename
+            << ":"
+            << frame.line
+            << (frame.col > 0 ? ":" + std::to_string(frame.col): "");
+    }
+
+    logs::critical(output_stream.str().c_str());
+    exit(EXIT_FAILURE);
+}
+
 } // namespace
 
 namespace logs {
 
 void initialize() {
+    signal(SIGSEGV, sig_handler);
+    signal(SIGABRT, sig_handler);
+
     SDL_LogSetOutputFunction(Logger::write, nullptr);
     SDL_LogSetAllPriority(get_log_priority());
 }

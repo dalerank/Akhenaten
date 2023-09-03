@@ -9,9 +9,9 @@ namespace logs {
 void initialize();
 
 // Note: to handle format-security warnings
-template <class Arg, class... Args>
-inline void critical(char const* format, Arg arg, Args... args) {
-    SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, format, arg, args...);
+template <class... Args>
+inline void critical(char const* format, Args... args) {
+    SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, format, args...);
 }
 
 template <class... Args>
