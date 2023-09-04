@@ -6,6 +6,8 @@
 [![Linux](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685605-8ce46564-04e7-45a7-afa4-0ffe32335dd8.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_linux/master/linux_build.zip)
 [![Mac](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685850-a5f39f18-0220-411b-bb70-9bdbc9d48311.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_mac/master/macos_build.zip)
 
+![2023-08-19 21_17_32-Window](https://github.com/dalerank/Ozymandias/assets/918081/dd616847-9f79-4a01-84fb-800f1cfa2c99)
+
 This is a fork of the **Julius/Augustus** project with the aim of making it work with _Pharaoh_ instead of _Caesar 3_.
 
 The work is still in progress, so any help or support is appreciated. You can more or less load
