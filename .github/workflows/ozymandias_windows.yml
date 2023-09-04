@@ -20,10 +20,10 @@ jobs:
     - name: build-project
       run: |
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
         cd ..
-        cmake --build ./build --target ozymandias --config Release
-        copy ./build/Release/ozymandias.exe ./bin_x64/ozymandias.exe
+        cmake --build ./build --target ozymandias --config RelWithDebInfo
+        copy ./build/RelWithDebInfo/ozymandias.exe ./bin_x64/ozymandias.exe
     - name: create-package
       shell: pwsh
       run: |

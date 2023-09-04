@@ -21,7 +21,7 @@ jobs:
         sudo chmod +x update-workspace-mac.sh
         ./update-workspace-mac.sh
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
         cd ..
         cmake --build ./build -j6
         mkdir macos_build

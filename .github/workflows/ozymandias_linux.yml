@@ -21,7 +21,7 @@ jobs:
         mkdir build
         mkdir linux_build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
         cd ..
         cmake --build ./build
         cp ./build/ozymandias ./linux_build/ozymandias.linux
