@@ -57,6 +57,7 @@ static void create_fishing_point(int x, int y) {
     fish->set_cross_country_direction(
       fish->cc_coords.x, fish->cc_coords.y, 15 * fish->destination_tile.x(), 15 * fish->destination_tile.y(), 0);
 }
+
 void figure_create_fishing_points(void) {
     scenario_map_foreach_fishing_point(create_fishing_point);
 }
@@ -117,6 +118,7 @@ bool figure::herd_roost(int step, int bias, int max_dist, int terrain_mask) {
     if (!map_terrain_is(offset, terrain_mask)) { // todo: fix gardens
         destination_tile.set(dx, dy);
         return true;
+
     } else {
         destination_tile.set(0, 0);
         return false;
@@ -168,6 +170,7 @@ void figure::sheep_action() {
             roam_length = 0;
         }
         break;
+
     case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
         move_ticks(1);
         if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_CAN_NOT_REACH) {
@@ -184,13 +187,14 @@ void figure::sheep_action() {
     if (action_state == FIGURE_ACTION_149_CORPSE) {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_SHEEP) + 104 + figure_image_corpse_offset();
     } else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
-        if (id & 3)
-            sprite_image_id
-              = image_id_from_group(GROUP_FIGURE_SHEEP) + 48 + dir + 8 * SHEEP_IMAGE_OFFSETS[wait_ticks & 0x3f];
-        else
+        if (id & 3) {
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_SHEEP) + 48 + dir + 8 * SHEEP_IMAGE_OFFSETS[wait_ticks & 0x3f];
+        } else {
             sprite_image_id = image_id_from_group(GROUP_FIGURE_SHEEP) + 96 + dir;
-    } else
+        }
+    } else {
         image_set_animation(GROUP_FIGURE_SHEEP, 0, 6);
+    }
     //        sprite_image_id = image_id_from_group(GROUP_FIGURE_SHEEP) + dir + 8 * anim_frame;
 }
 
@@ -219,8 +223,9 @@ void figure::hyena_action() {
             direction = previous_tile_direction;
             action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             wait_ticks = id & 0x1f;
-        } else if (direction == DIR_FIGURE_REROUTE)
+        } else if (direction == DIR_FIGURE_REROUTE) {
             route_remove();
+        }
         break;
 
     case FIGURE_ACTION_199_WOLF_ATTACKING:
@@ -241,9 +246,11 @@ void figure::hyena_action() {
                 action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
                 wait_ticks = id & 0x1f;
             }
-        } else if (direction == DIR_FIGURE_REROUTE)
+
+        } else if (direction == DIR_FIGURE_REROUTE) {
             route_remove();
-        else if (direction == DIR_FIGURE_CAN_NOT_REACH) {
+
+        } else if (direction == DIR_FIGURE_CAN_NOT_REACH) {
             direction = previous_tile_direction;
             action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             wait_ticks = id & 0x1f;
@@ -286,6 +293,7 @@ void figure::hippo_action() {
             advance_action(ACTION_8_RECALCULATE);
         }
         break;
+
     case 199:
     case ACTION_8_RECALCULATE:
         wait_ticks--;
@@ -299,6 +307,7 @@ void figure::hippo_action() {
             }
         }
         break;
+
     case 16: // fleeing
     case FIGURE_ACTION_10_HIPPO_MOVING:
     case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
@@ -368,14 +377,17 @@ void figure::zebra_action() {
             roam_length = 0;
         }
         break;
+
     case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
         move_ticks(2);
         if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_CAN_NOT_REACH) {
             direction = previous_tile_direction;
             action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             wait_ticks = id & 0x1f;
-        } else if (direction == DIR_FIGURE_REROUTE)
+
+        } else if (direction == DIR_FIGURE_REROUTE) {
             route_remove();
+        }
 
         break;
     }

@@ -2,7 +2,6 @@
 
 #include "core/application.h"
 
-#include <cpptrace/cpptrace.hpp>
 
 #include <algorithm>
 #include <csignal>
@@ -11,25 +10,33 @@
 #include <sstream>
 #include <unordered_map>
 
+#ifdef CPPTRACE_ENABLED
+#include <cpptrace/cpptrace.hpp>
+#endif // CPPTRACE_ENABLED
+
 #ifdef __WINDOWS__
 #include <Windows.h>
 #endif
 
 namespace {
 
-const std::unordered_map<std::string, SDL_LogPriority> PRIORITY_DICT = {{"verbose", SDL_LOG_PRIORITY_VERBOSE},
-                                                                        {"debug", SDL_LOG_PRIORITY_DEBUG},
-                                                                        {"info", SDL_LOG_PRIORITY_INFO},
-                                                                        {"warn", SDL_LOG_PRIORITY_WARN},
-                                                                        {"error", SDL_LOG_PRIORITY_ERROR},
-                                                                        {"critical", SDL_LOG_PRIORITY_CRITICAL}};
+const std::unordered_map<std::string, SDL_LogPriority> PRIORITY_DICT = {
+    {"verbose", SDL_LOG_PRIORITY_VERBOSE},
+    {"debug", SDL_LOG_PRIORITY_DEBUG},
+    {"info", SDL_LOG_PRIORITY_INFO},
+    {"warn", SDL_LOG_PRIORITY_WARN},
+    {"error", SDL_LOG_PRIORITY_ERROR},
+    {"critical", SDL_LOG_PRIORITY_CRITICAL}
+};
 
-const std::unordered_map<SDL_LogPriority, char const*> PRIORITY_PREFIX = {{SDL_LOG_PRIORITY_VERBOSE, ""},
-                                                                          {SDL_LOG_PRIORITY_DEBUG, "debug: "},
-                                                                          {SDL_LOG_PRIORITY_INFO, ""},
-                                                                          {SDL_LOG_PRIORITY_WARN, "warn: "},
-                                                                          {SDL_LOG_PRIORITY_ERROR, "error: "},
-                                                                          {SDL_LOG_PRIORITY_CRITICAL, "critical: "}};
+const std::unordered_map<SDL_LogPriority, char const*> PRIORITY_PREFIX = {
+    {SDL_LOG_PRIORITY_VERBOSE, ""},
+    {SDL_LOG_PRIORITY_DEBUG, "debug: "},
+    {SDL_LOG_PRIORITY_INFO, ""},
+    {SDL_LOG_PRIORITY_WARN, "warn: "},
+    {SDL_LOG_PRIORITY_ERROR, "error: "},
+    {SDL_LOG_PRIORITY_CRITICAL, "critical: "}
+};
 
 char const* get_prefix_of(SDL_LogPriority priority) {
     auto it = PRIORITY_PREFIX.find(priority);
@@ -59,6 +66,7 @@ SDL_LogPriority get_log_priority() {
 }
 
 void sig_handler(int /* signal */) {
+#ifdef CPPTRACE_ENABLED
     auto const trace = cpptrace::generate_trace();
     std::ostringstream output_stream;
 
@@ -92,6 +100,7 @@ void sig_handler(int /* signal */) {
     }
 
     logs::critical(output_stream.str().c_str());
+#endif // CPPTRACE_ENABLED
     exit(EXIT_FAILURE);
 }
 

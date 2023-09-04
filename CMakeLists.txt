@@ -2,17 +2,6 @@ cmake_minimum_required(VERSION 3.0.2)
 include(CMakeDependentOption)
 
 #
-# CppTrace
-#
-include(FetchContent)
-FetchContent_Declare(
-        cpptrace
-        GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
-        GIT_TAG        v0.1.1 # <HASH or TAG>
-)
-FetchContent_MakeAvailable(cpptrace)
-
-#
 # Ozymandias
 #
 option(SYSTEM_LIBS "Use system libraries when available." ON)
@@ -92,7 +81,6 @@ if (MSVC AND NOT EXISTS "${SDL2_MIXER_CHECK_PATH}")
     file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_UNPACK_DIR}/lib DESTINATION ${SDL2_EXTRACT_PATH})
 endif()
 
-
 set(SDL2_IMAGE_VERSION "2.6.3")
 set(SDL2_IMAGE_DEP_FILENAME "SDL2_image-devel-${SDL2_IMAGE_VERSION}-VC.zip")
 set(SDL2_IMAGE_DOWNLOAD_URL "https://libsdl.org/projects/SDL_image/release/${SDL2_IMAGE_DEP_FILENAME}")
@@ -109,6 +97,16 @@ if (MSVC AND NOT EXISTS "${SDL2_IMAGE_CHECK_PATH}")
     file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_IMAGE_UNPACK_DIR}/lib DESTINATION ${SDL2_EXTRACT_PATH})
 endif()
 
+set(CPPTRACE_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/cpptrace")
+set(CPPTRACE_CHECK_PATH "${CPPTRACE_EXT_PATH}/include/cpptrace/cpptrace.hpp")
+
+if (MSVC AND EXISTS "${CPPTRACE_CHECK_PATH}")
+    add_definitions(-DCPPTRACE_ENABLED=ON)
+    include_directories(${PROJECT_SOURCE_DIR}/ext/cpptrace/include)
+    set(CPPTRACE_LIBRARY cpptrace)
+    add_subdirectory(ext/cpptrace)
+endif()
+
 if (MSVC)
     file(GLOB SDL2_DLL_PUBLIC_DLL "${SDL2_EXTRACT_PATH}/lib/${GAME_PROCESSOR_ARCH}/*.dll")
 endif()
@@ -118,7 +116,8 @@ set(PROJECT_VERSION_MINOR 0)
 set(PROJECT_VERSION_PATCH 2)
 set(IS_RELEASE_VERSION FALSE)
 set(VERSION_REVISION "")
-    file(COPY ${SDL2_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
+
+file(COPY ${SDL2_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
 
 #configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
 #configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
@@ -228,11 +227,14 @@ file(GLOB IMGUI_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/*.cpp)
 file(GLOB IMGUI_CPP_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/misc/cpp/*.cpp)
 file(GLOB IMGUI_BACKEND_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/backends/*.cpp)
 
-if (USE_FUTURE_TRACY)
+set(TRACY_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/tracy")
+set(TRACY_CHECK_PATH "${TRACY_EXT_PATH}/public/TracyClient.cpp")
+
+if (MSVC AND EXISTS "${TRACY_CHECK_PATH}")
     add_definitions(-DTRACY_ENABLE=ON)
     set(TRACY_FILES ${PROJECT_SOURCE_DIR}/ext/tracy/public/TracyClient.cpp)
+    include_directories(${PROJECT_SOURCE_DIR}/ext/tracy/public/)
 endif ()
-include_directories(${PROJECT_SOURCE_DIR}/ext/tracy/public/)
 
 set(WIDGET_CITY_FILES ${WIDGET_CITY_FILES}
     ${PROJECT_SOURCE_DIR}/src/widget/city.cpp)
@@ -240,9 +242,7 @@ set(WIDGET_CITY_FILES ${WIDGET_CITY_FILES}
 set(WINDOW_ADVISOR_FILES ${WINDOW_ADVISOR_FILES}
     ${PROJECT_SOURCE_DIR}/src/window/advisors.cpp)
 
-set(IMGUI_FILES ${IMGUI_FILES}
-    ${IMGUI_CPP_FILES}
-    ${IMGUI_BACKEND_FILES})
+set(IMGUI_FILES ${IMGUI_FILES} ${IMGUI_CPP_FILES} ${IMGUI_BACKEND_FILES})
 
 if(MSVC)
     file(GLOB CORE_HEADERS ${PROJECT_SOURCE_DIR}/src/core/*.h)
@@ -502,7 +502,7 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${SHORT_NAME} m)
 endif()
 
-target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY} cpptrace)
+target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${CPPTRACE_LIBRARY})
 
 if(MSVC)
    target_link_libraries(${SHORT_NAME} "winmm")
@@ -523,9 +523,18 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if (MSVC)
-    add_custom_target(copy_binary_file
-          ${SHORT_NAME} POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${SHORT_NAME}.exe" "${GAME_WORKING_DIRECTORY}/${SHORT_NAME}.exe"
+    set(BINARY_FILES
+        "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${SHORT_NAME}.exe"
+        "${CMAKE_BINARY_DIR}/ext/cpptrace/${GAME_BUILD_TYPE}/cpptrace.dll"
     )
+
+    foreach( file_i ${BINARY_FILES})
+        add_custom_command(
+            TARGET ${SHORT_NAME}
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND}
+            ARGS -E copy ${file_i} "${GAME_WORKING_DIRECTORY}"
+        )
+    endforeach( file_i )
 endif()
 

@@ -50,6 +50,5 @@ doc
 /ext/include
 /ext/lib/x64
 /ext/lib/x86
-/ext/tracy/profiler/build/win32/glfw/CMake
-/ext/tracy/profiler/build/win32/glfw
-/ext/tracy/profiler/build/win32
+/ext/tracy
+/ext/cpptrace
