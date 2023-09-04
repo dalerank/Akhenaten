@@ -5,11 +5,9 @@
 #include "core/time.h"
 #include "core/profiler.h"
 #include "game/game.h"
-#include "game/settings.h"
 #include "game/system.h"
 #include "graphics/screen.h"
 #include "input/mouse.h"
-#include "input/touch.h"
 #include "io/file.h"
 #include "io/gamefiles/lang.h"
 #include "io/config/config.h"
@@ -23,16 +21,11 @@
 #include "platform/screen.h"
 #include "platform/touch.h"
 #include "platform/version.hpp"
-
 #include "renderer.h"
 
 #include <SDL.h>
 
 #include <set>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string>
 
 #include "imgui.h"
 #include "imgui_impl_sdl.h"

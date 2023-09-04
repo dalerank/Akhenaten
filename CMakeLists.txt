@@ -1,6 +1,20 @@
 cmake_minimum_required(VERSION 3.0.2)
 include(CMakeDependentOption)
 
+#
+# CppTrace
+#
+include(FetchContent)
+FetchContent_Declare(
+        cpptrace
+        GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
+        GIT_TAG        v0.1.1 # <HASH or TAG>
+)
+FetchContent_MakeAvailable(cpptrace)
+
+#
+# Ozymandias
+#
 option(SYSTEM_LIBS "Use system libraries when available." ON)
 
 set(SHORT_NAME ozymandias)
@@ -22,17 +36,13 @@ include("${CMAKE_SOURCE_DIR}/cmake/GenerateVersionHPP.cmake")
 
 #set(CMAKE_RC_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE}")
 if (MSVC)
-
-elseif (APPLE)
-    set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -Wno-deprecated-declarations -Wno-switch --std=c++17 -stdlib=libc++ -fno-exceptions ${CMAKE_CXX_FLAGS}")
-elseif()
-    set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -static-libgcc -static-libstdc++ -fno-exceptions ${CMAKE_CXX_FLAGS}")
-endif()
-
-if (MSVC)
     add_compile_options(/wd4244)
     add_compile_options(/MP)
     add_compile_options(/EHsc)
+elseif (APPLE)
+    set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -Wno-deprecated-declarations -Wno-switch --std=c++17 -fno-exceptions -stdlib=libc++ ${CMAKE_CXX_FLAGS}")
+elseif()
+    set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -fno-exceptions -static-libgcc -static-libstdc++ ${CMAKE_CXX_FLAGS}")
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
@@ -488,7 +498,7 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${SHORT_NAME} m)
 endif()
 
-target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY})
+target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY} cpptrace)
 
 if(MSVC)
    target_link_libraries(${SHORT_NAME} "winmm")
