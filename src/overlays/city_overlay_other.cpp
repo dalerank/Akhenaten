@@ -124,14 +124,16 @@ const city_overlay* city_overlay_for_food_stocks(void) {
 }
 
 const city_overlay* city_overlay_for_tax_income(void) {
-    static city_overlay overlay = {OVERLAY_TAX_INCOME,
-                                   COLUMN_TYPE_WATER_ACCESS,
-                                   show_building_tax_income,
-                                   show_figure_tax_income,
-                                   get_column_height_tax_income,
-                                   0,
-                                   get_tooltip_tax_income,
-                                   0,
-                                   0};
+    static city_overlay overlay = {
+        OVERLAY_TAX_INCOME,
+        COLUMN_TYPE_WATER_ACCESS,
+        show_building_tax_income,
+        show_figure_tax_income,
+        get_column_height_tax_income,
+        0,
+        get_tooltip_tax_income,
+        0,
+        0
+    };
     return &overlay;
 }
