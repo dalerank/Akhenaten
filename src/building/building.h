@@ -281,7 +281,7 @@ public:
     void spawn_figure_pavillion();
     void set_market_graphic();
     void spawn_figure_market();
-    void set_bathhouse_graphic();
+    void set_water_supply_graphic();
     void spawn_figure_school();
     void spawn_figure_library();
     void spawn_figure_apothecary();
@@ -290,7 +290,6 @@ public:
     void spawn_figure_physician();
     void spawn_figure_magistrate();
     void spawn_figure_temple();
-    void set_water_supply_graphic();
     void spawn_figure_watersupply();
     void set_greate_palace_graphic();
     void spawn_figure_tax_collector();

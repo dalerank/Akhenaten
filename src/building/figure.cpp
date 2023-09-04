@@ -455,6 +455,7 @@ void building::set_market_graphic() {
         map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
     }
 }
+
 void building::spawn_figure_market() {
     set_market_graphic();
     check_labor_problem();
@@ -464,10 +465,7 @@ void building::spawn_figure_market() {
         if (!has_figure_of_type(1, FIGURE_MARKET_BUYER)) {
             building* dest = building_get(building_market_get_storage_destination(this));
             if (dest->id) {
-                figure* f = create_figure_with_destination(FIGURE_MARKET_BUYER,
-                                                           dest,
-                                                           FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE,
-                                                           1);
+                figure* f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, 1);
                 f->collecting_item_id = data.market.fetch_inventory_id;
             }
         }
@@ -485,26 +483,6 @@ void building::spawn_figure_market() {
                     return;
                 }
             }
-        }
-    }
-}
-
-void building::set_bathhouse_graphic() {
-    if (state != BUILDING_STATE_VALID)
-        return;
-    has_water_access = map_terrain_exists_tile_in_area_with_type(tile.x(), tile.y(), size, TERRAIN_GROUNDWATER);
-
-    if (has_water_access && num_workers) {
-        if (map_desirability_get(tile.grid_offset()) <= 30) {
-            map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
-        } else {
-            map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
-        }
-    } else {
-        if (map_desirability_get(tile.grid_offset()) <= 30) {
-            map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
-        } else {
-            map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
         }
     }
 }
@@ -614,16 +592,41 @@ void building::spawn_figure_temple() {
         common_spawn_roamer(FIGURE_PRIEST, 50);
 }
 
+//void building::set_water_supply_graphic() {
+//    if (state != BUILDING_STATE_VALID) {
+//        return;
+//    }
+//
+//    has_water_access = map_terrain_exists_tile_in_area_with_type(tile.x(), tile.y(), size, TERRAIN_GROUNDWATER);
+//
+//    if (map_desirability_get(tile.grid_offset()) <= 30) {
+//        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
+//    } else {
+//        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY) + 2, TERRAIN_BUILDING);
+//    }
+//}
+
 void building::set_water_supply_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
+ 
+    has_water_access = map_terrain_exists_tile_in_area_with_type(tile.x(), tile.y(), size, TERRAIN_GROUNDWATER);
 
-    if (map_desirability_get(tile.grid_offset()) <= 30) {
-        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
+    if (has_water_access && num_workers) {
+        if (map_desirability_get(tile.grid_offset()) <= 30) {
+            map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
+        } else {
+            map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
+        }
     } else {
-        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY) + 2, TERRAIN_BUILDING);
+        if (map_desirability_get(tile.grid_offset()) <= 30) {
+            map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
+        } else {
+            map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
+        }
     }
 }
+
 void building::spawn_figure_watersupply() {
     if (!has_water_access) {
         show_on_problem_overlay = 2;

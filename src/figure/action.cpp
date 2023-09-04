@@ -405,10 +405,12 @@ void figure::action_perform() {
 
         case FIGURE_DELIVERY_BOY:
         case FIGURE_TRADE_CARAVAN_DONKEY:
-            if (leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE)
+            if (leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE) {
                 poof();
-            if (leader->is_ghost)
+            }
+            if (leader->is_ghost) {
                 is_ghost = true;
+            }
             break;
         }
 
@@ -632,9 +634,11 @@ void figure::action_perform() {
         case 65:
             seagulls_action();
             break;
+
         case FIGURE_DELIVERY_BOY:
             delivery_boy_action();
             break;
+
         case 67:
             shipwreck_action();
             break;

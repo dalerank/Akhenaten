@@ -84,6 +84,7 @@ static int market_trader_phrase() {
     //    }
     return 0;
 }
+
 static int market_buyer_phrase() {
     //    if (action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE)
     //        return 7;
@@ -94,6 +95,7 @@ static int market_buyer_phrase() {
     //    }
     return 0;
 }
+
 static int cart_pusher_phrase() {
     //    if (action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL) {
     //        if (min_max_seen == 2)

@@ -425,7 +425,7 @@ public:
     // market.c
     int create_delivery_boy(int leader_id);
     int take_food_from_granary(building* market, building* granary);
-    int take_resource_from_storageyard(building* warehouse);
+    bool take_resource_from_storageyard(building* warehouse);
     void figure_delivery_boy_action();
 
     // trader.c

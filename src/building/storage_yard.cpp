@@ -112,6 +112,7 @@ int building_storageyard_add_resource(building* b, e_resource resource, int amou
     }
     return amount_left;
 }
+
 int building_storageyard_remove_resource(building* storageyard, e_resource resource, int amount) {
     // returns amount still needing removal
     if (storageyard->type != BUILDING_STORAGE_YARD)
@@ -133,6 +134,7 @@ int building_storageyard_remove_resource(building* storageyard, e_resource resou
             city_resource_remove_from_storageyard(resource, amount);
             space->stored_full_amount -= amount;
             amount = 0;
+
         } else {
             city_resource_remove_from_storageyard(resource, space->stored_full_amount);
             amount -= space->stored_full_amount;

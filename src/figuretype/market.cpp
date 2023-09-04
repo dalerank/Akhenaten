@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/granary.h"
 #include "building/storage.h"
+#include "io/log.h"
 #include "building/storage_yard.h"
 #include "figure/combat.h"
 #include "figure/image.h"
@@ -19,18 +20,24 @@ void figure::market_buyer_action() {
     case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
         if (do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_146_MARKET_BUYER_RETURNING)) {
             if (collecting_item_id > 3) {
-                if (!take_resource_from_storageyard(destination()))
+                if (!take_resource_from_storageyard(destination())) {
                     poof();
+                }
+
             } else {
-                if (!take_food_from_granary(home(), destination()))
+                if (!take_food_from_granary(home(), destination())) {
                     poof();
+                }
             }
         }
         break;
+
     case 9:
     case ACTION_11_RETURNING_EMPTY:
     case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
-        do_returnhome();
+        if (do_returnhome()) {
+            logs::info("stop");
+        }
         break;
     }
 }
@@ -49,15 +56,18 @@ int figure::take_food_from_granary(building* market, building* granary) {
     case 0:
         resource = ALLOWED_FOODS(0);
         break;
+
     case 1:
         resource = ALLOWED_FOODS(1);
         break;
     case 2:
         resource = ALLOWED_FOODS(2);
         break;
+
     case 3:
         resource = ALLOWED_FOODS(3);
         break;
+
     default:
         return 0;
     }
@@ -102,45 +112,44 @@ int figure::take_food_from_granary(building* market, building* granary) {
     return 1;
 }
 
-int figure::take_resource_from_storageyard(building* warehouse) {
+bool figure::take_resource_from_storageyard(building* warehouse) {
     e_resource resource;
     switch (collecting_item_id) {
     case INVENTORY_GOOD1:
         resource = RESOURCE_POTTERY;
         break;
+
     case INVENTORY_GOOD2:
         resource = RESOURCE_LUXURY_GOODS;
         break;
     case INVENTORY_GOOD3:
         resource = RESOURCE_LINEN;
         break;
+
     case INVENTORY_GOOD4:
         resource = RESOURCE_BEER;
         break;
+
     default:
-        return 0;
+        return false;
     }
     //    building *warehouse = building_get(warehouse);
-    int num_loads;
     int stored = building_storageyard_get_amount(warehouse, resource);
-    if (stored < 2) {
-        num_loads = stored;
-    } else {
-        num_loads = 2;
-    }
+    int num_loads = std::min<int>(stored, 200);
 
-    if (num_loads <= 0)
-        return 0;
+    if (num_loads <= 0) {
+        return false;
+    }
 
     building_storageyard_remove_resource(warehouse, resource, num_loads);
 
     // create delivery boys
     int boy1 = create_delivery_boy(id);
-    if (num_loads > 1) {
+    if (num_loads > 100) {
         create_delivery_boy(boy1);
     }
 
-    return 1;
+    return true;
 }
 
 void figure::delivery_boy_action() {
@@ -154,10 +163,11 @@ void figure::delivery_boy_action() {
     //        poof();
     //    else {
     if (leader->state == FIGURE_STATE_ALIVE) {
-        if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY)
+        if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY) {
             follow_ticks(1);
-        else
+        } else {
             poof();
+        }
     } else { // leader arrived at market, drop resource at market
         home()->data.market.inventory[collecting_item_id] += 100;
         poof();

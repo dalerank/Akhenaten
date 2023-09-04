@@ -353,6 +353,7 @@ void figure::draw_cartpusher(building_info_context* c) {
     //        }
     //    }
 }
+
 void figure::draw_market_buyer(building_info_context* c) {
     ImageDraw::img_generic(big_people_image(type), c->x_offset + 28, c->y_offset + 112);
 
@@ -362,25 +363,15 @@ void figure::draw_market_buyer(building_info_context* c) {
     if (action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
         width += lang_text_draw(129, 17, c->x_offset + 90 + width, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
         int resource = inventory_to_resource_id(collecting_item_id);
-        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource
-                                 + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
-                               c->x_offset + 90 + width,
-                               c->y_offset + 135);
+        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->x_offset + 90 + width, c->y_offset + 135);
     } else if (action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
         width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
         int resource = inventory_to_resource_id(collecting_item_id);
-        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource
-                                 + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
-                               c->x_offset + 90 + width,
-                               c->y_offset + 135);
+        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->x_offset + 90 + width, c->y_offset + 135);
     }
+
     if (c->figure.phrase_id >= 0) {
-        lang_text_draw_multiline(130,
-                                 21 * c->figure.sound_id + c->figure.phrase_id + 1,
-                                 c->x_offset + 90,
-                                 c->y_offset + 160,
-                                 16 * (c->width_blocks - 8),
-                                 FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1, c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 8), FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 
