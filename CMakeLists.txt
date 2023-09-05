@@ -124,10 +124,7 @@ set(VERSION_REVISION "")
 
 file(COPY ${SDL2_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
 
-#configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
-#configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
-
-#add_subdirectory(ext/png)
+add_subdirectory(ext/png)
 add_subdirectory(ext/zlib)
 add_subdirectory(ext/expat)
 
@@ -410,6 +407,7 @@ include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${SDL2_IMAGE_INCLUDE_DIR})
 include_directories(${EXTZLIB_INCLUDE_DIR})
 include_directories(${EXTEXPAT_INCLUDE_DIR})
+include_directories(${EXTPNG_INCLUDE_DIR})
 
 include_directories(ext)
 include_directories(src)
@@ -422,15 +420,6 @@ if(SYSTEM_LIBS)
     find_package(EXPAT)
 endif()
 
-if(PNG_FOUND)
-    include_directories(${PNG_INCLUDE_DIRS})
-    target_link_libraries(${GAME} ${PNG_LIBRARIES})
-#else()
-#    include_directories("ext/png")
-#    target_sources(${GAME} PRIVATE "${PNG_FILES}")
-endif()
-
-
 if(MSVC)
     include_directories(ext/dirent)
     set_target_properties(${GAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${GAME_WORKING_DIRECTORY}")
@@ -440,7 +429,10 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
-target_link_libraries (${GAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${CPPTRACE_LIBRARY} ${EXTZLIB_LIBRARY} ${EXTEXPAT_LIBRARY})
+target_link_libraries (${GAME}
+                        ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY}
+                        ${EXTZLIB_LIBRARY} ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY}
+                        ${CPPTRACE_LIBRARY})
 
 if(MSVC)
    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
