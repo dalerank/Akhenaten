@@ -5,6 +5,7 @@ include(CMakeDependentOption)
 # Ozymandias
 #
 option(SYSTEM_LIBS "Use system libraries when available." ON)
+set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
 set(GAME ozymandias)
 project(${GAME} CXX)
@@ -30,7 +31,7 @@ if (MSVC)
     add_compile_options(/EHsc)
 elseif (APPLE)
     set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -Wno-deprecated-declarations -Wno-switch --std=c++17 -fno-exceptions -stdlib=libc++ ${CMAKE_CXX_FLAGS}")
-elseif()
+else()
     set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -fno-exceptions -static-libgcc -static-libstdc++ ${CMAKE_CXX_FLAGS}")
 endif()
 
@@ -132,23 +133,7 @@ set(EXPAT_FILES
     ext/expat/xmltok.c
 )
 
-#set(PNG_FILES
-#    ext/png/png.c
-#    ext/png/pngerror.c
-#    ext/png/pngget.c
-#    ext/png/pngmem.c
-#    ext/png/pngpread.c
-#    ext/png/pngread.c
-#    ext/png/pngrio.c
-#    ext/png/pngrtran.c
-#    ext/png/pngrutil.c
-#    ext/png/pngset.c
-#    ext/png/pngtrans.c
-#    ext/png/pngwio.c
-#    ext/png/pngwrite.c
-#    ext/png/pngwtran.c
-#    ext/png/pngwutil.c
-#)
+#add_subdirectory(ext/png)
 
 #set(ZLIB_FILES
 #    ext/zlib/adler32.c
@@ -394,13 +379,13 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_image REQUIRED)
 
-#if (CMAKE_BUILD_PLATFORM STREQUAL "Android")
-#    add_library(${GAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})
-#elseif()
+if (CMAKE_BUILD_PLATFORM STREQUAL "Android")
+    add_library(${GAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})
+else()
     add_executable(${GAME} WIN32 ${SOURCE_FILES})
-#endif()
+endif()
 
-if(MSVC)
+if (MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 endif()
 
@@ -519,9 +504,14 @@ endif()
 target_link_libraries (${GAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${CPPTRACE_LIBRARY})
 
 if(MSVC)
-   target_link_libraries(${GAME} "winmm")
-   target_link_libraries(${GAME} "imagehlp")
-   target_link_libraries(${GAME} "shlwapi")
+   target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
+endif()
+
+if (CMAKE_BUILD_PLATFORM STREQUAL "Android")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPNG_ARM_NEON_OPT=0 -D_BSD_SOURCE")
+    find_library(log-lib log)
+    find_library(android-lib android)
+    target_link_libraries(${GAME} ${log-lib} ${android-lib})
 endif()
 
 if(NOT APPLE)
