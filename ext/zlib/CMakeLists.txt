@@ -1,0 +1,11 @@
+project(extzlib)
+
+file(GLOB PNG_FILES "*.c")
+
+add_library(${PROJECT_NAME} STATIC ${PNG_FILES})
+
+set(EXTZLIB_INCLUDE_DIR ${PROJECT_SOURCE_DIR}
+    CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
+
+set(EXTZLIB_LIBRARY ${PROJECT_NAME}
+    CACHE INTERNAL "${PROJECT_NAME}: Library Name" FORCE)

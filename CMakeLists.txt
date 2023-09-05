@@ -135,16 +135,7 @@ set(EXPAT_FILES
 
 #add_subdirectory(ext/png)
 
-#set(ZLIB_FILES
-#    ext/zlib/adler32.c
-#    ext/zlib/crc32.c
-#    ext/zlib/deflate.c
-#    ext/zlib/inffast.c
-#    ext/zlib/inflate.c
-#    ext/zlib/inftrees.c
-#    ext/zlib/trees.c
-#    ext/zlib/zutil.c
-#)
+add_subdirectory(ext/zlib)
 
 #set(SDL_IMAGE_FILES
 ##    ext/SDL_image/IMG_savejpg.c
@@ -454,19 +445,12 @@ endif()
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${SDL2_IMAGE_INCLUDE_DIR})
+include_directories(${EXTZLIB_INCLUDE_DIR})
 
 if(SYSTEM_LIBS)
     find_package(ZLIB)
     find_package(PNG)
     find_package(EXPAT)
-endif()
-
-if(ZLIB_FOUND)
-    include_directories(${ZLIB_INCLUDE_DIRS})
-    target_link_libraries(${GAME} ${ZLIB_LIBRARIES})
-else()
-    include_directories("ext/zlib")
-    target_sources(${GAME} PRIVATE "${ZLIB_FILES}")
 endif()
 
 if(PNG_FOUND)
@@ -501,7 +485,7 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
-target_link_libraries (${GAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${CPPTRACE_LIBRARY})
+target_link_libraries (${GAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${CPPTRACE_LIBRARY} ${EXTZLIB_LIBRARY})
 
 if(MSVC)
    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
