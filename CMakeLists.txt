@@ -6,8 +6,8 @@ include(CMakeDependentOption)
 #
 option(SYSTEM_LIBS "Use system libraries when available." ON)
 
-set(SHORT_NAME ozymandias)
-project(${SHORT_NAME} CXX)
+set(GAME ozymandias)
+project(${GAME} CXX)
 message("C++ compiler is ${CMAKE_CXX_COMPILER_ID}" )
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -231,6 +231,14 @@ file(GLOB IMGUI_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/*.cpp)
 file(GLOB IMGUI_CPP_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/misc/cpp/*.cpp)
 file(GLOB IMGUI_BACKEND_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/backends/*.cpp)
 
+if (CMAKE_BUILD_PLATFORM STREQUAL "Android")
+    file(GLOB ANDROID_BACKEND_FILES ${PROJECT_SOURCE_DIR}/src/platform/android/*.cpp)
+    set(PLATFORM_FILES ${PLATFORM_FILES} ${ANDROID_BACKEND_FILES})
+    set(SDL2_ANDROID_HOOK ${SDL_EXT_DIR}/src/main/android/SDL_android_main.c)
+    # set(SDL2_LIBRARY SDL2::SDL2)
+    # set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
+endif()
+
 set(TRACY_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/tracy")
 set(TRACY_CHECK_PATH "${TRACY_EXT_PATH}/public/TracyClient.cpp")
 
@@ -386,7 +394,11 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_image REQUIRED)
 
-add_executable(${SHORT_NAME} WIN32 ${SOURCE_FILES})
+#if (CMAKE_BUILD_PLATFORM STREQUAL "Android")
+#    add_library(${GAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})
+#elseif()
+    add_executable(${GAME} WIN32 ${SOURCE_FILES})
+#endif()
 
 if(MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
@@ -419,7 +431,7 @@ if(APPLE)
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
 
-    set_target_properties(${SHORT_NAME} PROPERTIES
+    set_target_properties(${GAME} PROPERTIES
         MACOSX_BUNDLE TRUE
         MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/Info.plist.in")
 
@@ -466,31 +478,30 @@ endif()
 
 if(ZLIB_FOUND)
     include_directories(${ZLIB_INCLUDE_DIRS})
-    target_link_libraries(${SHORT_NAME} ${ZLIB_LIBRARIES})
+    target_link_libraries(${GAME} ${ZLIB_LIBRARIES})
 else()
     include_directories("ext/zlib")
-    target_sources(${SHORT_NAME} PRIVATE "${ZLIB_FILES}")
+    target_sources(${GAME} PRIVATE "${ZLIB_FILES}")
 endif()
 
 if(PNG_FOUND)
     include_directories(${PNG_INCLUDE_DIRS})
-    target_link_libraries(${SHORT_NAME} ${PNG_LIBRARIES})
+    target_link_libraries(${GAME} ${PNG_LIBRARIES})
 #else()
 #    include_directories("ext/png")
-#    target_sources(${SHORT_NAME} PRIVATE "${PNG_FILES}")
+#    target_sources(${GAME} PRIVATE "${PNG_FILES}")
 endif()
 
 if(EXPAT_FOUND)
     include_directories(${EXPAT_INCLUDE_DIRS})
-    target_link_libraries(${SHORT_NAME} ${EXPAT_LIBRARIES})
+    target_link_libraries(${GAME} ${EXPAT_LIBRARIES})
 else()
     include_directories("ext/expat")
-    target_sources(${SHORT_NAME} PRIVATE "${EXPAT_FILES}")
+    target_sources(${GAME} PRIVATE "${EXPAT_FILES}")
     if(NOT WIN32)
         add_compile_definitions(XML_DEV_URANDOM)
     endif()
 endif()
-
 
 include_directories(ext)
 include_directories(src)
@@ -498,23 +509,23 @@ include_directories(ext/imgui)
 include_directories(ext/imgui/backends)
 if(MSVC)
     include_directories(ext/dirent)
-    set_target_properties(${SHORT_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${GAME_WORKING_DIRECTORY}")
+    set_target_properties(${GAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${GAME_WORKING_DIRECTORY}")
 endif()
 
 if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
-    target_link_libraries(${SHORT_NAME} m)
+    target_link_libraries(${GAME} m)
 endif()
 
-target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${CPPTRACE_LIBRARY})
+target_link_libraries (${GAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${CPPTRACE_LIBRARY})
 
 if(MSVC)
-   target_link_libraries(${SHORT_NAME} "winmm")
-   target_link_libraries(${SHORT_NAME} "imagehlp")
-   target_link_libraries(${SHORT_NAME} "shlwapi")
+   target_link_libraries(${GAME} "winmm")
+   target_link_libraries(${GAME} "imagehlp")
+   target_link_libraries(${GAME} "shlwapi")
 endif()
 
 if(NOT APPLE)
-    install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
+    install(TARGETS ${GAME} RUNTIME DESTINATION bin)
 endif()
 
 if(UNIX AND NOT APPLE)
@@ -526,7 +537,7 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if (MSVC)
-    set(BINARY_FILES "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${SHORT_NAME}.exe")
+    set(BINARY_FILES "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.exe")
 
     if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
         set(BINARY_FILES ${BINARY_FILES} "${CMAKE_BINARY_DIR}/ext/cpptrace/${GAME_BUILD_TYPE}/cpptrace.dll")
@@ -534,7 +545,7 @@ if (MSVC)
 
     foreach( file_i ${BINARY_FILES})
         add_custom_command(
-            TARGET ${SHORT_NAME}
+            TARGET ${GAME}
             POST_BUILD
             COMMAND ${CMAKE_COMMAND}
             ARGS -E copy ${file_i} "${GAME_WORKING_DIRECTORY}"
