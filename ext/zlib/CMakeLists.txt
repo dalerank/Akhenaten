@@ -1,8 +1,8 @@
 project(extzlib)
 
-file(GLOB PNG_FILES "*.c")
+file(GLOB ZLIB_FILES "*.c")
 
-add_library(${PROJECT_NAME} STATIC ${PNG_FILES})
+add_library(${PROJECT_NAME} STATIC ${ZLIB_FILES})
 
 set(EXTZLIB_INCLUDE_DIR ${PROJECT_SOURCE_DIR}
     CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)

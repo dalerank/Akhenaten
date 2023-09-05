@@ -136,6 +136,7 @@ set(EXPAT_FILES
 #add_subdirectory(ext/png)
 
 add_subdirectory(ext/zlib)
+add_subdirectory(ext/expat)
 
 #set(SDL_IMAGE_FILES
 ##    ext/SDL_image/IMG_savejpg.c
@@ -446,6 +447,12 @@ include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${SDL2_IMAGE_INCLUDE_DIR})
 include_directories(${EXTZLIB_INCLUDE_DIR})
+include_directories(${EXTEXPAT_INCLUDE_DIR})
+
+include_directories(ext)
+include_directories(src)
+include_directories(ext/imgui)
+include_directories(ext/imgui/backends)
 
 if(SYSTEM_LIBS)
     find_package(ZLIB)
@@ -461,21 +468,7 @@ if(PNG_FOUND)
 #    target_sources(${GAME} PRIVATE "${PNG_FILES}")
 endif()
 
-if(EXPAT_FOUND)
-    include_directories(${EXPAT_INCLUDE_DIRS})
-    target_link_libraries(${GAME} ${EXPAT_LIBRARIES})
-else()
-    include_directories("ext/expat")
-    target_sources(${GAME} PRIVATE "${EXPAT_FILES}")
-    if(NOT WIN32)
-        add_compile_definitions(XML_DEV_URANDOM)
-    endif()
-endif()
 
-include_directories(ext)
-include_directories(src)
-include_directories(ext/imgui)
-include_directories(ext/imgui/backends)
 if(MSVC)
     include_directories(ext/dirent)
     set_target_properties(${GAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${GAME_WORKING_DIRECTORY}")
@@ -485,7 +478,7 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
-target_link_libraries (${GAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${CPPTRACE_LIBRARY} ${EXTZLIB_LIBRARY})
+target_link_libraries (${GAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${CPPTRACE_LIBRARY} ${EXTZLIB_LIBRARY} ${EXTEXPAT_LIBRARY})
 
 if(MSVC)
    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
