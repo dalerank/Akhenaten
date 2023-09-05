@@ -1,5 +1,6 @@
 #include "screenshot.h"
 
+#if 0
 #include "core/buffer.h"
 #include "core/game_environment.h"
 #include "game/system.h"
@@ -283,3 +284,4 @@ void graphics_save_screenshot(int full_city) {
         create_window_screenshot();
     }
 }
+#endif

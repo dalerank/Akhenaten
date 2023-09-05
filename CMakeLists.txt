@@ -138,32 +138,6 @@ set(EXPAT_FILES
 add_subdirectory(ext/zlib)
 add_subdirectory(ext/expat)
 
-#set(SDL_IMAGE_FILES
-##    ext/SDL_image/IMG_savejpg.c
-#    ext/SDL_image/IMG_savepng.c
-#)
-
-set(IO_FILES
-    ${PROJECT_SOURCE_DIR}/src/io/log.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/dir.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/file.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/file_formats.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/io.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/io_buffer.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/config/config.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/config/hotkeys.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/gamestate/chunks.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/manager.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/gamestate/boilerplate.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/imagepaks/imagepak.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/imagepaks/atlas_packer.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/playerdata/player_data.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/gamefiles/lang.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/gamefiles/smacker.cpp
-#    ${PROJECT_SOURCE_DIR}/src/io/gamefiles/mods.cpp
-#    ${PROJECT_SOURCE_DIR}/src/io/gamefiles/png_read.cpp
-)
-
 file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp)
 file(GLOB CORE_FILES ${PROJECT_SOURCE_DIR}/src/core/*.cpp)
 file(GLOB CORE_ENCODING_FILES ${PROJECT_SOURCE_DIR}/src/core/encoding/*.cpp)
@@ -196,6 +170,12 @@ file(GLOB IMGUI_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/*.cpp)
 file(GLOB IMGUI_CPP_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/misc/cpp/*.cpp)
 file(GLOB IMGUI_BACKEND_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/backends/*.cpp)
 file(GLOB GRAPHICS_FILES ${PROJECT_SOURCE_DIR}/src/graphics/*.cpp)
+file(GLOB IO_FILES ${PROJECT_SOURCE_DIR}/src/io/*.cpp)
+file(GLOB IO_CONFIG_FILES ${PROJECT_SOURCE_DIR}/src/io/config/*.cpp)
+file(GLOB IO_GAMEFILES_FILES ${PROJECT_SOURCE_DIR}/src/io/gamefiles/*.cpp)
+file(GLOB IO_GAMESTATE_FILES ${PROJECT_SOURCE_DIR}/src/io/gamestate/*.cpp)
+file(GLOB IO_IMAGEPAKS_FILES ${PROJECT_SOURCE_DIR}/src/io/imagepaks/*.cpp)
+file(GLOB IO_PLAYERDATA_FILES ${PROJECT_SOURCE_DIR}/src/io/playerdata/*.cpp)
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "Android")
     file(GLOB ANDROID_BACKEND_FILES ${PROJECT_SOURCE_DIR}/src/platform/android/*.cpp)
@@ -303,6 +283,7 @@ if(MSVC)
     source_group("editor" FILES ${EDITOR_FILES})
     source_group("translation" FILES ${TRANSLATION_FILES})
     source_group("imgui" FILES ${IMGUI_FILES})
+    source_group("io" FILES ${IO_FILES})
 endif()
 
 set(MACOSX_FILES "")
@@ -316,6 +297,11 @@ set(SOURCE_FILES
     ${PLATFORM_FILES}
     ${CORE_FILES}
     ${IO_FILES}
+    ${IO_CONFIG_FILES}
+    ${IO_GAMEFILES_FILES}
+    ${IO_GAMESTATE_FILES}
+    ${IO_IMAGEPAKS_FILES}
+    ${IO_PLAYERDATA_FILES}
     ${BUILDING_FILES}
     ${CITY_FILES}
     ${EMPIRE_FILES}
