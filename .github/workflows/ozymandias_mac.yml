@@ -20,6 +20,7 @@ jobs:
         export CXXFLAGS=-stdlib=libc++
         sudo chmod +x update-workspace-mac.sh
         ./update-workspace-mac.sh
+        git clone https://github.com/jeremy-rifkin/cpptrace.git ext/cpptrace
         cd build
         cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
         cd ..
