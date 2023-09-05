@@ -127,14 +127,7 @@ file(COPY ${SDL2_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
 #configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
 #configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
 
-set(EXPAT_FILES
-    ext/expat/xmlparse.c
-    ext/expat/xmlrole.c
-    ext/expat/xmltok.c
-)
-
 #add_subdirectory(ext/png)
-
 add_subdirectory(ext/zlib)
 add_subdirectory(ext/expat)
 
@@ -193,12 +186,6 @@ if (MSVC AND EXISTS "${TRACY_CHECK_PATH}")
     set(TRACY_FILES ${PROJECT_SOURCE_DIR}/ext/tracy/public/TracyClient.cpp)
     include_directories(${PROJECT_SOURCE_DIR}/ext/tracy/public/)
 endif ()
-
-set(WIDGET_CITY_FILES ${WIDGET_CITY_FILES}
-    ${PROJECT_SOURCE_DIR}/src/widget/city.cpp)
-
-set(WINDOW_ADVISOR_FILES ${WINDOW_ADVISOR_FILES}
-    ${PROJECT_SOURCE_DIR}/src/window/advisors.cpp)
 
 set(IMGUI_FILES ${IMGUI_FILES} ${IMGUI_CPP_FILES} ${IMGUI_BACKEND_FILES})
 
