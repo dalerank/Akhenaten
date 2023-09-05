@@ -36,6 +36,8 @@
 #include "io/config/config.h"
 
 #include <cmath>
+#include <algorithm>
+#include <numeric>
 
 const int generic_delay_table[] = {0, 1, 3, 7, 15, 29, 44};
 
@@ -473,9 +475,8 @@ void building::spawn_figure_market() {
         // market trader
         int spawn_delay = figure_spawn_timer();
         if (!has_figure_of_type(0, FIGURE_MARKET_TRADER)) {
-            if (data.market.inventory[0] > 0 || data.market.inventory[1] > 0 || data.market.inventory[2] > 0
-                || data.market.inventory[3] > 0 || data.market.inventory[4] > 0 || data.market.inventory[5] > 0
-                || data.market.inventory[6] > 0) { // do not spawn trader if bazaar is 100% empty!
+            int bazar_inventory = std::accumulate(data.market.inventory, data.market.inventory + 7, 0);
+            if (bazar_inventory > 0) { // do not spawn trader if bazaar is 100% empty!
                 figure_spawn_delay++;
                 if (figure_spawn_delay > spawn_delay) {
                     figure_spawn_delay = 0;
