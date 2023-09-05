@@ -164,18 +164,6 @@ set(IO_FILES
 #    ${PROJECT_SOURCE_DIR}/src/io/gamefiles/png_read.cpp
 )
 
-set(GRAPHICS_FILES
-    ${PROJECT_SOURCE_DIR}/src/graphics/image.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/boilerplate.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/screen.cpp
-    #    ${PROJECT_SOURCE_DIR}/src/graphics/screenshot.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/window.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/video.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/animation_timers.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/font.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/text.cpp
-)
-
 file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp)
 file(GLOB CORE_FILES ${PROJECT_SOURCE_DIR}/src/core/*.cpp)
 file(GLOB CORE_ENCODING_FILES ${PROJECT_SOURCE_DIR}/src/core/encoding/*.cpp)
@@ -207,6 +195,7 @@ file(GLOB TRANSLATION_FILES ${PROJECT_SOURCE_DIR}/src/translation/*.cpp)
 file(GLOB IMGUI_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/*.cpp)
 file(GLOB IMGUI_CPP_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/misc/cpp/*.cpp)
 file(GLOB IMGUI_BACKEND_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/backends/*.cpp)
+file(GLOB GRAPHICS_FILES ${PROJECT_SOURCE_DIR}/src/graphics/*.cpp)
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "Android")
     file(GLOB ANDROID_BACKEND_FILES ${PROJECT_SOURCE_DIR}/src/platform/android/*.cpp)
