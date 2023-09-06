@@ -11,5 +11,5 @@ enum e_user_event {
 };
 
 void app_window_resize(const display_size& wsize);
-void app_fullscreen(int fullscreen);
+void app_fullscreen(bool fullscreen);
 void app_post_event(int code);

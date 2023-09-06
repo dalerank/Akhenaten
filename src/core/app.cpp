@@ -17,9 +17,9 @@ void app_window_resize(const display_size& wsize) {
     SDL_PushEvent(&event);
 }
 
-void app_fullscreen(int fullscreen) {
+void app_fullscreen(bool fullscreen) {
     app_post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
-    if (fullscreen == 0) {
+    if (!fullscreen) {
         app_window_resize({1200, 800});
     }
 }
