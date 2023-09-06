@@ -16,7 +16,7 @@ jobs:
     - name: update-workspace
       shell: pwsh
       run: |
-        git clone https://github.com/jeremy-rifkin/cpptrace.git ext/cpptrace
+        git submodule init && git submodule update ext/cpptrace
         mkdir build
     - name: build-project
       run: |
