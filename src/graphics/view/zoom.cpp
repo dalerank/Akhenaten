@@ -148,10 +148,12 @@ float zoom_get_scale() {
     //    return (float)(int)(data.zoom + 0.5f) / 100.0f;
     return 1.0f / (g_zoom.zoom / 100.0f);
 }
+
 float zoom_get_percentage() {
     return (float)(int)(g_zoom.zoom + 0.5f);
 }
-void zoom_set(float z) {
+
+void zoom_set_scale(float z) {
     auto& data = g_zoom;
 
     z = calc_bound(z, 50, 200);

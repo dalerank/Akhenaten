@@ -1,7 +1,8 @@
 #include "grid.h"
 
 #include <string.h>
-// #include <scenario/map.h>
+
+#include "scenario/scenario_data.h"
 
 static const int DIRECTION_DELTA_PH[] = {-GRID_OFFSET(0, 1),
                                          GRID_OFFSET(1, -1),
@@ -241,6 +242,14 @@ int map_grid_direction_delta(int direction) {
     } else
         return 0;
 }
+
+int map_grid_width() {
+    return scenario_map_data()->width;
+}
+int map_grid_height() {
+    return scenario_map_data()->height;
+}
+
 void map_grid_bound(int* x, int* y) {
     if (*x < 0)
         *x = 0;
@@ -276,12 +285,7 @@ void map_grid_get_area(int x, int y, int size, int radius, int* x_min, int* y_mi
     map_grid_bound_area(x_min, y_min, x_max, y_max);
 }
 
-void map_grid_start_end_to_area(map_point start,
-                                map_point end,
-                                int* x_min,
-                                int* y_min,
-                                int* x_max,
-                                int* y_max) {
+void map_grid_start_end_to_area(map_point start, map_point end, int* x_min, int* y_min, int* x_max, int* y_max) {
     if (start.x() < end.x()) {
         *x_min = start.x();
         *x_max = end.x();

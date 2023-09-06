@@ -61,6 +61,7 @@ vec2i camera_get_position();
 vec2i camera_get_pixel_offset_internal();
 void city_view_get_camera_max_tile(int* x, int* y);
 void city_view_get_camera_max_pixel_offset(int* x, int* y);
+void city_view_get_camera_in_pixels(int *x, int *y);
 void city_view_get_camera_scrollable_pixel_limits(int* min_x, int* max_x, int* min_y, int* max_y);
 void city_view_get_camera_scrollable_viewspace_clip(int* x, int* y);
 
@@ -94,12 +95,6 @@ void city_view_foreach_valid_map_tile(tile_draw_callback* callback1,
                                       tile_draw_callback* callback5 = nullptr,
                                       tile_draw_callback* callback6 = nullptr);
 void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, tile_draw_callback* callback);
-void city_view_foreach_minimap_tile(int x_offset,
-                                    int y_offset,
-                                    int absolute_x,
-                                    int absolute_y,
-                                    int width_tiles,
-                                    int height_tiles,
-                                    minimap_draw_callback callback);
+void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles, int height_tiles, minimap_draw_callback callback);
 
 #endif // CITY_VIEW_H

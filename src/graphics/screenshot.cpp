@@ -1,19 +1,23 @@
 #include "screenshot.h"
 
-#if 0
+#include "city/warning.h"
 #include "core/buffer.h"
-#include "core/game_environment.h"
-#include "game/system.h"
-#include "graphics/boilerplate.h"
-#include "graphics/elements/menu.h"
-#include "graphics/screen.h"
-#include "graphics/view/view.h"
-#include "graphics/window.h"
-#include "grid/grid.h"
+#include "color.h"
 #include "io/config/config.h"
 #include "io/file.h"
 #include "io/log.h"
-#include "widget/city/tile_draw.h"
+#include "core/string.h"
+#include "grid/grid.h"
+#include "platform/renderer.h"
+#include "graphics/screen.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/menu.h"
+#include "graphics/screen.h"
+#include "graphics/window.h"
+#include "graphics/view/view.h"
+#include "scenario/scenario.h"
+#include "widget/minimap.h"
+#include "widget/city.h"
 
 #include "png.h"
 
@@ -24,15 +28,9 @@
 
 #define TILE_X_SIZE 60
 #define TILE_Y_SIZE 30
-#define IMAGE_HEIGHT_CHUNK TILE_Y_SIZE
+#define IMAGE_HEIGHT_CHUNK (TILE_Y_SIZE * 15)
 #define IMAGE_BYTES_PER_PIXEL 3
-
-enum { FULL_CITY_SCREENSHOT = 0, DISPLAY_SCREENSHOT = 1, MAX_SCREENSHOT_TYPES = 2 };
-
-static const char filename_formats[MAX_SCREENSHOT_TYPES][32] = {
-  "full city %Y-%m-%d %H.%M.%S.png",
-  "city %Y-%m-%d %H.%M.%S.png",
-};
+#define MINIMAP_SCALE 2.0f
 
 static struct {
     int width;
@@ -41,161 +39,193 @@ static struct {
     int rows_in_memory;
     int current_y;
     int final_y;
-    uint8_t* pixels;
-    FILE* fp;
+    int alpha_channel;
+    uint8_t *pixels;
+    FILE *fp;
     png_structp png_ptr;
     png_infop info_ptr;
-} image;
+} screenshot;
 
-static void image_free(void) {
-    image.width = 0;
-    image.height = 0;
-    image.row_size = 0;
-    image.rows_in_memory = 0;
-    free(image.pixels);
-    image.pixels = 0;
-    if (image.fp) {
-        file_close(image.fp);
-        image.fp = 0;
+static void image_free(void)
+{
+    screenshot.width = 0;
+    screenshot.height = 0;
+    screenshot.row_size = 0;
+    screenshot.rows_in_memory = 0;
+    free(screenshot.pixels);
+    screenshot.pixels = 0;
+    if (screenshot.fp) {
+        file_close(screenshot.fp);
+        screenshot.fp = 0;
     }
-    png_destroy_write_struct(&image.png_ptr, &image.info_ptr);
+    png_destroy_write_struct(&screenshot.png_ptr, &screenshot.info_ptr);
 }
 
-static int image_create(int width, int height, int rows_in_memory) {
+static int image_create(int width, int height, int has_alpha_channel, int rows_in_memory)
+{
     image_free();
     if (!width || !height || !rows_in_memory) {
         return 0;
     }
-    image.png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-    if (!image.png_ptr) {
+    screenshot.png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
+    if (!screenshot.png_ptr) {
         return 0;
     }
-    image.info_ptr = png_create_info_struct(image.png_ptr);
-    if (!image.info_ptr) {
+    screenshot.info_ptr = png_create_info_struct(screenshot.png_ptr);
+    if (!screenshot.info_ptr) {
         image_free();
         return 0;
     }
-    png_set_compression_level(image.png_ptr, 3);
-    image.width = width;
-    image.height = height;
-    image.row_size = width * IMAGE_BYTES_PER_PIXEL;
-    image.rows_in_memory = rows_in_memory;
-    image.pixels = (uint8_t*)malloc(image.row_size);
-    if (!image.pixels) {
+    png_set_compression_level(screenshot.png_ptr, 3);
+    screenshot.alpha_channel = has_alpha_channel;
+    screenshot.width = width;
+    screenshot.height = height;
+    screenshot.row_size = width * IMAGE_BYTES_PER_PIXEL;
+    if (screenshot.alpha_channel) {
+        screenshot.row_size += width;
+    }
+    screenshot.rows_in_memory = rows_in_memory;
+    screenshot.pixels = (uint8_t *) malloc(screenshot.row_size);
+    if (!screenshot.pixels) {
         image_free();
         return 0;
     }
-    memset(image.pixels, 0, image.row_size);
+    memset(screenshot.pixels, 0, screenshot.row_size);
     return 1;
 }
 
-static const char* generate_filename(int city_screenshot) {
-    static char filename[FILE_NAME_MAX];
+static const char *generate_filename(screenshot_type type) {
+    static bstring256 filename;
     time_t curtime = time(NULL);
-    struct tm* loctime = localtime(&curtime);
-    strftime(filename, FILE_NAME_MAX, filename_formats[city_screenshot], loctime);
+    struct tm *loctime = localtime(&curtime);
+    switch (type) {
+    case SCREENSHOT_FULL_CITY:
+    strftime(filename, bstring256::capacity, "full city %Y-%m-%d %H.%M.%S.png", loctime);
+    break;
+    case SCREENSHOT_MINIMAP:
+    strftime(filename, bstring256::capacity, "minimap %Y-%m-%d %H.%M.%S.png", loctime);
+    break;
+    case SCREENSHOT_DISPLAY:
+    default:
+    strftime(filename, bstring256::capacity, "city %Y-%m-%d %H.%M.%S.png", loctime);
+    break;
+    }    
     return filename;
 }
 
-int image_begin_io(const char* filename) {
-    FILE* fp = file_open(filename, "wb");
+static int image_begin_io(const char *filename)
+{
+    FILE *fp = file_open(filename, "wb");
     if (!fp) {
         return 0;
     }
-    image.fp = fp;
-    png_init_io(image.png_ptr, fp);
+    screenshot.fp = fp;
+    png_init_io(screenshot.png_ptr, fp);
     return 1;
 }
 
-static int image_write_header(void) {
-    if (setjmp(png_jmpbuf(image.png_ptr))) {
+static int image_write_header(void)
+{
+    if (setjmp(png_jmpbuf(screenshot.png_ptr))) {
         return 0;
     }
-    png_set_IHDR(image.png_ptr,
-                 image.info_ptr,
-                 image.width,
-                 image.height,
-                 8,
-                 PNG_COLOR_TYPE_RGB,
-                 PNG_INTERLACE_NONE,
-                 PNG_COMPRESSION_TYPE_DEFAULT,
-                 PNG_FILTER_TYPE_DEFAULT);
-    png_write_info(image.png_ptr, image.info_ptr);
+    int color_type = screenshot.alpha_channel ? PNG_COLOR_TYPE_RGBA : PNG_COLOR_TYPE_RGB;
+    png_set_IHDR(screenshot.png_ptr, screenshot.info_ptr, screenshot.width, screenshot.height, 8, color_type,
+                 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+    png_write_info(screenshot.png_ptr, screenshot.info_ptr);
     return 1;
 }
 
-static int image_set_loop_height_limits(int min, int max) {
-    image.current_y = min;
-    image.final_y = max;
-    return image.current_y;
+static int image_set_loop_height_limits(int min, int max)
+{
+    screenshot.current_y = min;
+    screenshot.final_y = max;
+    return screenshot.current_y;
 }
 
-static int image_request_rows(void) {
-    if (image.current_y != image.final_y) {
-        image.current_y += image.rows_in_memory;
-        return image.rows_in_memory;
+static int image_request_rows(void)
+{
+    if (screenshot.current_y < screenshot.final_y) {
+        screenshot.current_y += screenshot.rows_in_memory;
+        return screenshot.rows_in_memory;
     }
     return 0;
 }
 
-static int image_write_rows(const color* canvas, int canvas_width) {
-    if (setjmp(png_jmpbuf(image.png_ptr))) {
+static int image_write_rows(const color *canvas, int canvas_width)
+{
+    if (setjmp(png_jmpbuf(screenshot.png_ptr))) {
         return 0;
     }
-    for (int y = 0; y < image.rows_in_memory; ++y) {
-        uint8_t* pixel = image.pixels;
-        for (int x = 0; x < image.width; x++) {
-            color input = canvas[y * canvas_width + x];
-            *(pixel + 0) = (uint8_t)((input & 0xff0000) >> 16);
-            *(pixel + 1) = (uint8_t)((input & 0x00ff00) >> 8);
-            *(pixel + 2) = (uint8_t)((input & 0x0000ff) >> 0);
-            pixel += 3;
+    for (int y = 0; y < screenshot.rows_in_memory; ++y) {
+        uint8_t *pixel = screenshot.pixels;
+        if (screenshot.alpha_channel) {
+            for (int x = 0; x < screenshot.width; x++) {
+                color input = canvas[y * canvas_width + x];
+                *(pixel + 0) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_RED);
+                *(pixel + 1) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_GREEN);
+                *(pixel + 2) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_BLUE);
+                *(pixel + 3) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_ALPHA);
+                pixel += IMAGE_BYTES_PER_PIXEL + 1;
+            }
+        } else {
+            for (int x = 0; x < screenshot.width; x++) {
+                color input = canvas[y * canvas_width + x];
+                *(pixel + 0) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_RED);
+                *(pixel + 1) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_GREEN);
+                *(pixel + 2) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_BLUE);
+                pixel += IMAGE_BYTES_PER_PIXEL;
+            }
         }
-        png_write_row(image.png_ptr, image.pixels);
+        png_write_row(screenshot.png_ptr, screenshot.pixels);
     }
     return 1;
 }
 
 static int image_write_canvas(void) {
-    const color* canvas;
-    color* screen_buffer = 0;
-    if (config_get(CONFIG_UI_ZOOM)) {
-        screen_buffer = (color*)malloc(image.width * image.height * sizeof(color));
-        if (!system_save_screen_buffer(screen_buffer)) {
-            free(screen_buffer);
-            return 0;
-        }
-        canvas = screen_buffer;
-    } else {
-        canvas = (const color*)graphics_canvas(CANVAS_UI);
+    const color *canvas;
+    color *pixels = 0;
+    pixels = (color *)malloc(sizeof(color) * screenshot.width * screenshot.height);
+    if (!graphics_renderer()->save_screen_buffer(pixels, 0, 0, screen_width(), screen_height(), screen_width())) {
+        free(pixels);
+        return 0;
     }
-    int current_height = image_set_loop_height_limits(0, image.height);
+    canvas = pixels;
+    int current_height = image_set_loop_height_limits(0, screenshot.height);
     int size;
-    while ((size = image_request_rows())) {
-        if (!image_write_rows(canvas + current_height * image.width, image.width)) {
-            free(screen_buffer);
+    while ((size = image_request_rows()) != 0) {
+        if (!image_write_rows(canvas + current_height * screenshot.width, screenshot.width)) {
+            free(pixels);
             return 0;
         }
         current_height += size;
     }
-    free(screen_buffer);
+    free(pixels);
     return 1;
 }
 
-static void image_finish(void) {
-    png_write_end(image.png_ptr, image.info_ptr);
+static void image_finish(void)
+{
+    png_write_end(screenshot.png_ptr, screenshot.info_ptr);
 }
 
-static void create_window_screenshot(void) {
+static void show_saved_notice(const char *filename) {
+    bstring256 notice_text( "Screenshot saved to ", filename);
+
+    city_warning_show_custom(notice_text);
+}
+
+static void create_window_screenshot(void)
+{
     int width = screen_width();
     int height = screen_height();
 
-    if (!image_create(width, height, 1)) {
+    if (!image_create(width, height, 0, 1)) {
         logs::error("Unable to create memory for screenshot");
         return;
     }
 
-    const char* filename = generate_filename(DISPLAY_SCREENSHOT);
+    const char *filename = generate_filename(SCREENSHOT_DISPLAY);
     if (!image_begin_io(filename) || !image_write_header()) {
         logs::error("Unable to write screenshot to: %s", filename);
         image_free();
@@ -210,78 +240,145 @@ static void create_window_screenshot(void) {
 
     image_finish();
     logs::info("Saved screenshot: %s", filename);
+    show_saved_notice(filename);
     image_free();
 }
 
 static void create_full_city_screenshot(void) {
-    if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY))
-        return;
-    pixel_offset original_camera_pixels;
-    city_view_get_camera_in_pixels(&original_camera_pixels.x, &original_camera_pixels.y);
-    int width = screen_width();
-    int height = screen_height();
-
-    int city_width_pixels = scenario_map_data()->width * TILE_X_SIZE;
-    int city_height_pixels = scenario_map_data()->height * TILE_Y_SIZE;
-
-    if (!image_create(city_width_pixels, city_height_pixels + TILE_Y_SIZE, IMAGE_HEIGHT_CHUNK)) {
-        logs::error("Unable to set memory for full city screenshot");
+    if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY)) {
         return;
     }
-    const char* filename = generate_filename(FULL_CITY_SCREENSHOT);
+    vec2i original_camera_pixels;
+    city_view_get_camera_in_pixels(&original_camera_pixels.x, &original_camera_pixels.y);
+
+    int city_width_pixels = map_grid_width() * TILE_X_SIZE;
+    int city_height_pixels = map_grid_height() * TILE_Y_SIZE;
+
+    if (!image_create(city_width_pixels, city_height_pixels + TILE_Y_SIZE, 0, IMAGE_HEIGHT_CHUNK)) {
+        logs::error("Unable to set memory for full city screenshot", 0, 0);
+        return;
+    }
+    const char *filename = generate_filename(SCREENSHOT_FULL_CITY);
     if (!image_begin_io(filename) || !image_write_header()) {
-        logs::error("Unable to write screenshot to: %s", filename);
+        logs::error("Unable to write screenshot to:", filename, 0);
         image_free();
         return;
     }
 
-    int canvas_width = city_width_pixels + (city_view_is_sidebar_collapsed() ? 40 : 160);
-    int zoom_active = config_get(CONFIG_UI_ZOOM);
-    int old_scale = 100;
-    if (zoom_active) {
-        old_scale = city_view_get_scale();
-        city_view_set_scale(100);
-        config_set(CONFIG_UI_ZOOM, 0);
+    color *canvas = (color*)malloc(sizeof(color) * city_width_pixels * IMAGE_HEIGHT_CHUNK);
+    if (!canvas) {
+        image_free();
+        return;
     }
-    screen_set_resolution(canvas_width, TOP_MENU_HEIGHT + IMAGE_HEIGHT_CHUNK);
-    graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, city_width_pixels, IMAGE_HEIGHT_CHUNK);
+    memset(canvas, 0, sizeof(color) * city_width_pixels * IMAGE_HEIGHT_CHUNK);
 
-    int base_width = (GRID_SIZE_PH * TILE_X_SIZE - city_width_pixels) / 2 + TILE_X_SIZE;
-    int max_height = (GRID_SIZE_PH * TILE_Y_SIZE + city_height_pixels) / 2;
+    int canvas_width = 8 * TILE_X_SIZE;
+    int old_scale = zoom_get_scale();
+
+    //int draw_cloud_shadows = config_get(CONFIG_UI_DRAW_CLOUD_SHADOWS);
+    //config_set(CONFIG_UI_DRAW_CLOUD_SHADOWS, 0);
+
+    int min_width = (GRID_LENGTH * TILE_X_SIZE - city_width_pixels) / 2 + TILE_X_SIZE;
+    int max_height = (GRID_LENGTH * TILE_Y_SIZE + city_height_pixels) / 2;
     int min_height = max_height - city_height_pixels - TILE_Y_SIZE;
-    map_tile dummy_tile = {0, 0, 0};
+    map_point dummy_tile(0, 0);
     int error = 0;
-    int current_height = image_set_loop_height_limits(min_height, max_height);
+    int base_height = image_set_loop_height_limits(min_height, max_height);
     int size;
-    const color* canvas = (color*)graphics_canvas(CANVAS_UI) + TOP_MENU_HEIGHT * canvas_width;
-    while ((size = image_request_rows())) {
-        city_view_set_camera_from_pixel_position(base_width, current_height);
-        city_without_overlay_draw(0, 0, &dummy_tile);
-        if (!image_write_rows(canvas, canvas_width)) {
-            logs::error("Error writing image");
+    zoom_set_scale(100);
+    graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, canvas_width, IMAGE_HEIGHT_CHUNK);
+    int viewport_x, viewport_y, viewport_width, viewport_height;
+    city_view_get_viewport(&viewport_x, &viewport_y, &viewport_width, &viewport_height);
+    city_view_set_viewport(canvas_width + (city_view_is_sidebar_collapsed() ? 42 : 162),
+                           IMAGE_HEIGHT_CHUNK + TOP_MENU_HEIGHT);
+    int current_height = base_height;
+    while ((size = image_request_rows()) != 0) {
+        int y_offset = current_height + IMAGE_HEIGHT_CHUNK > max_height ?
+            IMAGE_HEIGHT_CHUNK - (max_height - current_height) - TILE_Y_SIZE: 0;
+        for (int width = 0; width < city_width_pixels; width += canvas_width) {
+            int image_section_width = canvas_width;
+            int x_offset = 0;
+            if (canvas_width + width > city_width_pixels) {
+                image_section_width = city_width_pixels - width;
+                x_offset = canvas_width - image_section_width - TILE_X_SIZE * 2;
+            }
+            camera_go_to_pixel({min_width + width, current_height}, true);
+            widget_city_draw_without_overlay(0, 0, dummy_tile);
+            graphics_renderer()->save_screen_buffer(&canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset,
+                                                    image_section_width, IMAGE_HEIGHT_CHUNK - y_offset, city_width_pixels);
+        }
+        if (!image_write_rows(canvas, city_width_pixels)) {
+            logs::error("Error writing image", 0, 0);
             error = 1;
             break;
         }
-        current_height += size;
+        current_height += IMAGE_HEIGHT_CHUNK;
     }
-    if (zoom_active) {
-        config_set(CONFIG_UI_ZOOM, 1);
-        city_view_set_scale(old_scale);
-    }
-    screen_set_resolution(width, height);
-    city_view_set_camera_from_pixel_position(original_camera_pixels.x, original_camera_pixels.y);
+    city_view_set_viewport(viewport_width + (city_view_is_sidebar_collapsed() ? 42 : 162), viewport_height + TOP_MENU_HEIGHT);
+    zoom_set_scale(old_scale);
+    //config_set(CONFIG_UI_DRAW_CLOUD_SHADOWS, draw_cloud_shadows);
+    graphics_reset_clip_rectangle();
+    camera_go_to_pixel(original_camera_pixels, true);
     if (!error) {
         image_finish();
         logs::info("Saved full city screenshot: %s", filename);
+        show_saved_notice(filename);
     }
     image_free();
+    window_invalidate();
 }
 
-void graphics_save_screenshot(int full_city) {
-    if (full_city) {
+static void create_minimap_screenshot(void)
+{
+    if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY)) {
+        return;
+    }
+
+    int width_pixels = map_grid_width() * (int) MINIMAP_SCALE * 2;
+    int height_pixels = map_grid_height() * (int) MINIMAP_SCALE * 2;
+
+    if (!image_create(width_pixels, height_pixels, 1, height_pixels)) {
+        logs::error("Unable to set memory for minimap screenshot", 0, 0);
+        return;
+    }
+    const char *filename = generate_filename(SCREENSHOT_MINIMAP);
+    if (!image_begin_io(filename) || !image_write_header()) {
+        logs::error("Unable to write screenshot to:", filename, 0);
+        image_free();
+        return;
+    }
+
+    color *canvas = (color*)malloc(sizeof(color) * width_pixels * height_pixels);
+    if (!canvas) {
+        image_free();
+        return;
+    }
+    memset(canvas, 0, sizeof(color) * width_pixels * height_pixels);
+    widget_minimap_draw(0, 0, width_pixels, height_pixels, 1);
+    graphics_clear_screen();
+    graphics_renderer()->draw_custom_texture(CUSTOM_IMAGE_MINIMAP, 0, 0, 1 / MINIMAP_SCALE);
+    graphics_renderer()->save_screen_buffer(canvas, 0, 0, width_pixels, height_pixels, width_pixels);
+    if (image_write_rows(canvas, width_pixels)) {
+        image_finish();
+        logs::info("Saved city map screenshot:", filename, 0);
+        show_saved_notice(filename);
+    }
+    image_free();
+    window_invalidate();
+}
+
+void graphics_save_screenshot(screenshot_type type)
+{
+    switch (type) {
+    case SCREENSHOT_FULL_CITY:
         create_full_city_screenshot();
-    } else {
+        return;
+    case SCREENSHOT_MINIMAP:
+        create_minimap_screenshot();
+        return;
+    case SCREENSHOT_DISPLAY:
+    default:
         create_window_screenshot();
+        return;
     }
 }
-#endif

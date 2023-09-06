@@ -447,16 +447,17 @@ void hotkey_handle_escape(void) {
 
 void hotkey_handle_global_keys() {
     auto& data = g_hotkey_data;
-    if (data.global_hotkey_state.center_screen)
+    if (data.global_hotkey_state.center_screen) {
         system_center();
+    }
 
-    if (data.global_hotkey_state.toggle_fullscreen)
+    if (data.global_hotkey_state.toggle_fullscreen) {
         app_fullscreen(!setting_fullscreen());
+    }
 
-    //    if (data.global_hotkey_state.save_screenshot) {
-    //        graphics_save_screenshot(0);
-    //    }
-    //    if (data.global_hotkey_state.save_city_screenshot) {
-    //        graphics_save_screenshot(1);
-    //    }
+    if (data.global_hotkey_state.save_screenshot) {
+        graphics_save_screenshot(SCREENSHOT_DISPLAY);
+    } else if (data.global_hotkey_state.save_city_screenshot) {
+        graphics_save_screenshot(SCREENSHOT_FULL_CITY);
+    }
 }

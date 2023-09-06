@@ -9,6 +9,7 @@ void set_city_clip_rectangle(void);
 
 void widget_city_draw(void);
 void widget_city_draw_for_figure(int figure_id, vec2i* coord);
+void widget_city_draw_without_overlay(int selected_figure_id, vec2i *figure_coord, map_point tile);
 
 bool widget_city_draw_construction_cost_and_size(void);
 

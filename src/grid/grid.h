@@ -69,8 +69,8 @@ bool map_grid_is_valid_offset(int grid_offset);
 
 int map_grid_direction_delta(int direction);
 // void map_grid_size(int *width, int *height);
-// int map_grid_width(void);
-// int map_grid_height(void);
+int map_grid_width();
+int map_grid_height();
 void map_grid_bound(int* x, int* y);
 void map_grid_bound_area(int* x_min, int* y_min, int* x_max, int* y_max);
 void map_grid_get_area(int x, int y, int size, int radius, int* x_min, int* y_min, int* x_max, int* y_max);

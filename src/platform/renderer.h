@@ -71,36 +71,22 @@ public:
     void fill_rect(int x, int y, int width, int height, color color);
 
     void draw_image(const image_t* img, float x, float y, color color, float scale, bool mirrored);
-    //    void draw_isometric_top(const image_t *img, int x, int y, color color, float scale);
+    int save_screen_buffer(color *pixels, int x, int y, int width, int height, int row_width);
 
     void create_custom_texture(int type, int width, int height);
     int has_custom_texture(int type);
     color* get_custom_texture_buffer(int type, int* actual_texture_width);
     void release_custom_texture_buffer(int type);
     void update_custom_texture(int type);
-    void update_custom_texture_yuv(int type,
-                                   const uint8_t* y_data,
-                                   int y_width,
-                                   const uint8_t* cb_data,
-                                   int cb_width,
-                                   const uint8_t* cr_data,
-                                   int cr_width);
+    void update_custom_texture_yuv(int type, const uint8_t* y_data, int y_width, const uint8_t* cb_data, int cb_width, const uint8_t* cr_data, int cr_width);
     void draw_custom_texture(int type, int x, int y, float scale);
-    //    int supports_yuv_texture_format(void);
 
     int save_texture_from_screen(int image_id, int x, int y, int width, int height);
     void draw_saved_texture_to_screen(int image_id, int x, int y, int width, int height);
-    //    int save_screen_buffer(color *pixels, int x, int y, int width, int height, int row_width);
 
     vec2i get_max_image_size();
 
     SDL_Texture* create_texture_from_buffer(color* p_data, int width, int height);
-
-    //    void load_unpacked_image(const image *img, const color *pixels);
-    //    bool should_pack_image(int width, int height);
-    //    bool isometric_images_are_joined(void);
-
-    //    void (*update_scale_mode)(int city_scale);
 
     bool save_texture_to_file(const char* filename, SDL_Texture* tex, e_file_format file_format = FILE_FORMAT_BMP);
 };
