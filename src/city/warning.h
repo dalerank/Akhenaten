@@ -95,6 +95,7 @@ enum {
 };
 
 void city_warning_show(int type);
+void city_warning_show_custom(const char *text);
 
 int city_has_warnings(void);
 

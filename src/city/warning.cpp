@@ -26,7 +26,7 @@ static struct warning* new_warning(void) {
     return 0;
 }
 
-void city_warning_show(int type) {
+void city_warning_show_custom(const char *text) {
     if (!setting_warnings()) {
         return;
     }
@@ -37,13 +37,17 @@ void city_warning_show(int type) {
     w->in_use = 1;
     w->time = time_get_millis();
 
+    w->text = text;
+}
+
+void city_warning_show(int type) {
     const uint8_t* text;
     if (type == WARNING_ORIENTATION) {
         text = lang_get_string(17, city_view_orientation());
     } else {
         text = lang_get_string(19, type - 2);
     }
-    w->text = text;
+    city_warning_show_custom((const char*)text);
 }
 
 int city_has_warnings(void) {
