@@ -180,6 +180,7 @@ static void draw_collapsed_background(void) {
     draw_buttons_collapsed(x_offset);
     draw_sidebar_remainder(x_offset, true);
 }
+
 static void draw_expanded_background(int x_offset) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded");
     ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT);

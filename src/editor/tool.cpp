@@ -21,9 +21,7 @@
 #include "scenario/editor_map.h"
 #include "widget/minimap.h"
 
-#define TERRAIN_PAINT_MASK                                                                                             \
-    ~(TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD   \
-      | TERRAIN_MEADOW)
+#define TERRAIN_PAINT_MASK ~(TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW)
 
 static struct {
     int active = 0;

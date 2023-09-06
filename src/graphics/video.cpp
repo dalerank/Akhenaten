@@ -192,8 +192,10 @@ static void update_video_frame(void) {
 void video_draw(int x_offset, int y_offset) {
     if (get_next_frame())
         update_video_frame();
+
     graphics_renderer()->draw_custom_texture(CUSTOM_IMAGE_VIDEO, x_offset, y_offset, 1.0f);
 }
+
 void video_draw_fullscreen(void) {
     if (get_next_frame())
         update_video_frame();

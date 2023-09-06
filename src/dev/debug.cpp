@@ -55,13 +55,10 @@ void handle_debug_hotkeys(const hotkeys* h) {
     //        debug_range_1 = 20;
 }
 
-static const uint8_t* font_test_str
-  = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/"
-                     ",._äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
-static const uint8_t* font_test_str_ascii
-  = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._";
-static const uint8_t* font_test_str_extended
-  = (uint8_t*)(char*)"äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
+static const uint8_t* font_test_str = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/"
+                                                        ",._äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
+static const uint8_t* font_test_str_ascii = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._";
+static const uint8_t* font_test_str_extended = (uint8_t*)(char*)"äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
 
 static void debug_font_line(int* y, font_t font) {
     int line_height = font_definition_for(font)->line_height;
@@ -93,9 +90,11 @@ void debug_text(uint8_t* str, int x, int y, int indent, const char* text, int va
     string_from_int(str, value, 0);
     text_draw(str, x + indent, y, FONT_SMALL_OUTLINED, color);
 }
+
 void debug_text_a(uint8_t* str, int x, int y, int indent, const char* text, color color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
 }
+
 void debug_text_float(uint8_t* str, int x, int y, int indent, const char* text, double value, color color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
     string_from_int(str, (int)value, 0);
@@ -105,15 +104,8 @@ void debug_text_float(uint8_t* str, int x, int y, int indent, const char* text, 
     string_from_int(&str[l + 1], (double)(value - (double)(int)value) * 100.0f, 0);
     text_draw(str, x + indent, y, FONT_SMALL_OUTLINED, color);
 }
-void debug_text_dual_left(uint8_t* str,
-                          int x,
-                          int y,
-                          int indent,
-                          int indent2,
-                          const char* text,
-                          int value1,
-                          int value2,
-                          color color) {
+
+void debug_text_dual_left(uint8_t* str, int x, int y, int indent, int indent2, const char* text, int value1, int value2, color color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
     string_from_int(str, value1, 0);
     text_draw_left(str, x + indent, y, FONT_SMALL_OUTLINED, color);
@@ -128,6 +120,7 @@ void debug_draw_line_with_contour(int x_start, int x_end, int y_start, int y_end
     graphics_renderer()->draw_line(x_start, x_end, y_start + 1, y_end + 1, COLOR_BLACK);
     graphics_renderer()->draw_line(x_start, x_end, y_start, y_end, col);
 }
+
 void debug_draw_rect_with_contour(int x, int y, int w, int h, color col) {
     graphics_renderer()->draw_rect(x - 1, y - 1, w, h, COLOR_BLACK);
     graphics_renderer()->draw_rect(x + 1, y + 1, w, h, COLOR_BLACK);
@@ -140,12 +133,14 @@ void debug_draw_crosshair(int x, int y) {
     graphics_renderer()->draw_line(x, x + 10, y, y, COLOR_GREEN);
     graphics_renderer()->draw_line(x, x, y, y + 10, COLOR_RED);
 }
+
 void debug_draw_sprite_box(int x, int y, const image_t* img, float scale, color color_mask) {
     int x2 = x - img->animation.sprite_x_offset;
     int y2 = y - img->animation.sprite_y_offset;
     graphics_renderer()->draw_rect(x2 * scale, y2 * scale, img->width * scale, img->height * scale, color_mask);
     debug_draw_crosshair((x2 + img->animation.sprite_x_offset) * scale, (y2 + img->animation.sprite_y_offset) * scale);
 }
+
 void debug_draw_tile_box(int x, int y, color rect, color bb, int tile_size_x, int tile_size_y) {
     float scale = zoom_get_scale();
 
@@ -161,9 +156,10 @@ void debug_draw_tile_box(int x, int y, color rect, color bb, int tile_size_x, in
     int bottom_x = left_x + (tile_size_x * HALF_TILE_WIDTH_PIXELS);
     int bottom_y = left_y + (tile_size_x * HALF_TILE_HEIGHT_PIXELS);
 
-    if (rect != COLOR_NULL)
-        graphics_renderer()->draw_rect(
-          x * scale, y * scale, TILE_WIDTH_PIXELS * scale, TILE_HEIGHT_PIXELS * scale, rect);
+    if (rect != COLOR_NULL) {
+        graphics_renderer()->draw_rect(x * scale, y * scale, TILE_WIDTH_PIXELS * scale, TILE_HEIGHT_PIXELS * scale, rect);
+    }
+
     if (bb != COLOR_NULL) {
         graphics_renderer()->draw_line(left_x * scale, top_x * scale, left_y * scale, top_y * scale, bb);
         graphics_renderer()->draw_line(top_x * scale, right_x * scale, top_y * scale, right_y * scale, bb);
@@ -201,6 +197,7 @@ static int north_tile_grid_offset(int x, int y) {
         grid_offset += GRID_OFFSET(0, -1);
     return grid_offset;
 }
+
 void draw_debug_tile(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;

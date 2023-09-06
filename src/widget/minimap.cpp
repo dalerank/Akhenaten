@@ -13,8 +13,7 @@
 
 #include "dev/debug.h"
 
-static const color ENEMY_COLOR_BY_CLIMATE[]
-  = {COLOR_MINIMAP_ENEMY_CENTRAL, COLOR_MINIMAP_ENEMY_NORTHERN, COLOR_MINIMAP_ENEMY_DESERT};
+static const color ENEMY_COLOR_BY_CLIMATE[] = {COLOR_MINIMAP_ENEMY_CENTRAL, COLOR_MINIMAP_ENEMY_NORTHERN, COLOR_MINIMAP_ENEMY_DESERT};
 
 struct minimap_data_t {
     int absolute_x;
@@ -262,7 +261,7 @@ static void clear_minimap(void) {
     }
 }
 
-static void draw_minimap(void) {
+void draw_minimap() {
     auto& data = g_minimap_data;
     graphics_set_clip_rectangle(data.x_offset, data.y_offset, data.width, data.height);
     clear_minimap();
@@ -272,6 +271,7 @@ static void draw_minimap(void) {
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
 }
+
 static void draw_uncached(int x_offset, int y_offset, int width_tiles, int height_tiles) {
     auto& data = g_minimap_data;
     data.enemy_color = ENEMY_COLOR_BY_CLIMATE[scenario_property_climate()];
@@ -279,6 +279,7 @@ static void draw_uncached(int x_offset, int y_offset, int width_tiles, int heigh
     set_bounds(x_offset, y_offset, width_tiles, height_tiles);
     draw_minimap();
 }
+
 void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_tiles, int is_scrolling) {
     auto& data = g_minimap_data;
     if (width_tiles * 2 != data.width || height_tiles != data.height || x_offset != data.x_offset) {
