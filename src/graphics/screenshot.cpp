@@ -100,14 +100,14 @@ static const char *generate_filename(screenshot_type type) {
     struct tm *loctime = localtime(&curtime);
     switch (type) {
     case SCREENSHOT_FULL_CITY:
-    strftime(filename, bstring256::capacity, "full city %Y-%m-%d %H.%M.%S.png", loctime);
+    strftime(filename, bstring256::capacity, "full_city_%Y_%m_%d_%H_%M_%S.png", loctime);
     break;
     case SCREENSHOT_MINIMAP:
-    strftime(filename, bstring256::capacity, "minimap %Y-%m-%d %H.%M.%S.png", loctime);
+    strftime(filename, bstring256::capacity, "minimap_%Y_%m_%d_%H_%M_%S.png", loctime);
     break;
     case SCREENSHOT_DISPLAY:
     default:
-    strftime(filename, bstring256::capacity, "city %Y-%m-%d %H.%M.%S.png", loctime);
+    strftime(filename, bstring256::capacity, "city_%Y_%m_%d_%H_%M_%S.png", loctime);
     break;
     }    
     return filename;
@@ -204,8 +204,7 @@ static int image_write_canvas(void) {
     return 1;
 }
 
-static void image_finish(void)
-{
+static void image_finish(void) {
     png_write_end(screenshot.png_ptr, screenshot.info_ptr);
 }
 
@@ -215,8 +214,7 @@ static void show_saved_notice(const char *filename) {
     city_warning_show_custom(notice_text);
 }
 
-static void create_window_screenshot(void)
-{
+static void create_window_screenshot(void) {
     int width = screen_width();
     int height = screen_height();
 
@@ -258,6 +256,7 @@ static void create_full_city_screenshot(void) {
         logs::error("Unable to set memory for full city screenshot", 0, 0);
         return;
     }
+
     const char *filename = generate_filename(SCREENSHOT_FULL_CITY);
     if (!image_begin_io(filename) || !image_write_header()) {
         logs::error("Unable to write screenshot to:", filename, 0);
@@ -275,9 +274,6 @@ static void create_full_city_screenshot(void) {
     int canvas_width = 8 * TILE_X_SIZE;
     int old_scale = zoom_get_scale();
 
-    //int draw_cloud_shadows = config_get(CONFIG_UI_DRAW_CLOUD_SHADOWS);
-    //config_set(CONFIG_UI_DRAW_CLOUD_SHADOWS, 0);
-
     int min_width = (GRID_LENGTH * TILE_X_SIZE - city_width_pixels) / 2 + TILE_X_SIZE;
     int max_height = (GRID_LENGTH * TILE_Y_SIZE + city_height_pixels) / 2;
     int min_height = max_height - city_height_pixels - TILE_Y_SIZE;
@@ -289,12 +285,11 @@ static void create_full_city_screenshot(void) {
     graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, canvas_width, IMAGE_HEIGHT_CHUNK);
     int viewport_x, viewport_y, viewport_width, viewport_height;
     city_view_get_viewport(&viewport_x, &viewport_y, &viewport_width, &viewport_height);
-    city_view_set_viewport(canvas_width + (city_view_is_sidebar_collapsed() ? 42 : 162),
-                           IMAGE_HEIGHT_CHUNK + TOP_MENU_HEIGHT);
+    city_view_set_viewport(canvas_width + (city_view_is_sidebar_collapsed() ? 42 : 162), IMAGE_HEIGHT_CHUNK + TOP_MENU_HEIGHT);
     int current_height = base_height;
     while ((size = image_request_rows()) != 0) {
-        int y_offset = current_height + IMAGE_HEIGHT_CHUNK > max_height ?
-            IMAGE_HEIGHT_CHUNK - (max_height - current_height) - TILE_Y_SIZE: 0;
+        int y_offset = current_height + IMAGE_HEIGHT_CHUNK > max_height ? IMAGE_HEIGHT_CHUNK - (max_height - current_height) - TILE_Y_SIZE: 0;
+
         for (int width = 0; width < city_width_pixels; width += canvas_width) {
             int image_section_width = canvas_width;
             int x_offset = 0;
@@ -302,11 +297,12 @@ static void create_full_city_screenshot(void) {
                 image_section_width = city_width_pixels - width;
                 x_offset = canvas_width - image_section_width - TILE_X_SIZE * 2;
             }
+
             camera_go_to_pixel({min_width + width, current_height}, true);
             widget_city_draw_without_overlay(0, 0, dummy_tile);
-            graphics_renderer()->save_screen_buffer(&canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset,
-                                                    image_section_width, IMAGE_HEIGHT_CHUNK - y_offset, city_width_pixels);
+            graphics_renderer()->save_screen_buffer(&canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, IMAGE_HEIGHT_CHUNK - y_offset, city_width_pixels);
         }
+
         if (!image_write_rows(canvas, city_width_pixels)) {
             logs::error("Error writing image", 0, 0);
             error = 1;
@@ -314,16 +310,19 @@ static void create_full_city_screenshot(void) {
         }
         current_height += IMAGE_HEIGHT_CHUNK;
     }
+
     city_view_set_viewport(viewport_width + (city_view_is_sidebar_collapsed() ? 42 : 162), viewport_height + TOP_MENU_HEIGHT);
     zoom_set_scale(old_scale);
-    //config_set(CONFIG_UI_DRAW_CLOUD_SHADOWS, draw_cloud_shadows);
+
     graphics_reset_clip_rectangle();
     camera_go_to_pixel(original_camera_pixels, true);
+    
     if (!error) {
         image_finish();
         logs::info("Saved full city screenshot: %s", filename);
         show_saved_notice(filename);
     }
+    
     image_free();
     window_invalidate();
 }
