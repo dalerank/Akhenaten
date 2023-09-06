@@ -540,13 +540,7 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, tile
         y_offset += TILE_HEIGHT_PIXELS;
     }
 }
-void city_view_foreach_minimap_tile(int x_offset,
-                                    int y_offset,
-                                    int absolute_x,
-                                    int absolute_y,
-                                    int width_tiles,
-                                    int height_tiles,
-                                    minimap_draw_callback callback) {
+void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles, int height_tiles, minimap_draw_callback callback) {
     int odd = 0;
     int y_abs = absolute_y - 4;
     int screen_y = y_offset - 4;

@@ -43,8 +43,7 @@ void widget_minimap_invalidate(void) {
 }
 static void foreach_map_tile(void (*callback)(screen_tile screen, map_point point)) {
     auto& data = g_minimap_data;
-    city_view_foreach_minimap_tile(
-      data.x_offset, data.y_offset, data.absolute_x, data.absolute_y, data.width_tiles, data.height_tiles, callback);
+    city_view_foreach_minimap_tile(data.x_offset, data.y_offset, data.absolute_x, data.absolute_y, data.width_tiles, data.height_tiles, callback);
 }
 static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_tiles) {
     auto& data = g_minimap_data;
