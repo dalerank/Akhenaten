@@ -4,7 +4,6 @@ include(CMakeDependentOption)
 #
 # Ozymandias
 #
-option(SYSTEM_LIBS "Use system libraries when available." ON)
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
 set(GAME ozymandias)
@@ -413,12 +412,6 @@ include_directories(ext)
 include_directories(src)
 include_directories(ext/imgui)
 include_directories(ext/imgui/backends)
-
-if(SYSTEM_LIBS)
-    find_package(ZLIB)
-    find_package(PNG)
-    find_package(EXPAT)
-endif()
 
 if(MSVC)
     include_directories(ext/dirent)
