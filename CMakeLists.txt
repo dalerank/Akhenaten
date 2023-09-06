@@ -2,6 +2,22 @@ cmake_minimum_required(VERSION 3.0.2)
 include(CMakeDependentOption)
 
 #
+# CppTrace
+#
+
+if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CPPTRACE_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/cpptrace")
+    set(CPPTRACE_CHECK_PATH "${CPPTRACE_EXT_PATH}/include/cpptrace/cpptrace.hpp")
+
+    if (EXISTS "${CPPTRACE_CHECK_PATH}")
+        add_definitions(-DCPPTRACE_ENABLED=ON)
+        include_directories(${PROJECT_SOURCE_DIR}/ext/cpptrace/include)
+        set(CPPTRACE_LIBRARY cpptrace)
+        add_subdirectory(ext/cpptrace)
+    endif()
+endif()
+
+#
 # Ozymandias
 #
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
@@ -23,7 +39,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 # Find revision ID and hash of the sourcetree
 include("${CMAKE_SOURCE_DIR}/cmake/GenerateVersionHPP.cmake")
 
-#set(CMAKE_RC_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE}")
 if (MSVC)
     add_compile_options(/wd4244)
     add_compile_options(/MP)
@@ -97,18 +112,6 @@ if (MSVC AND NOT EXISTS "${SDL2_IMAGE_CHECK_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_IMAGE_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
     file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_IMAGE_UNPACK_DIR}/include DESTINATION ${SDL2_EXTRACT_PATH})
     file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_IMAGE_UNPACK_DIR}/lib DESTINATION ${SDL2_EXTRACT_PATH})
-endif()
-
-set(CPPTRACE_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/cpptrace")
-set(CPPTRACE_CHECK_PATH "${CPPTRACE_EXT_PATH}/include/cpptrace/cpptrace.hpp")
-
-if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
-    if (MSVC AND EXISTS "${CPPTRACE_CHECK_PATH}")
-        add_definitions(-DCPPTRACE_ENABLED=ON)
-        include_directories(${PROJECT_SOURCE_DIR}/ext/cpptrace/include)
-        set(CPPTRACE_LIBRARY cpptrace)
-        add_subdirectory(ext/cpptrace)
-    endif()
 endif()
 
 if (MSVC)

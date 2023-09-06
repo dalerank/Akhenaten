@@ -96,9 +96,18 @@ Only tested on Manjaro, but under Ubuntu or similar you should install the same 
   $ cmake --build ./build
   ```
 
-## Contributing
+## Existing build options
 
-Please use `clang-format-15` before submitting changes by using `./clang-format.sh` on Linux.
+### Building with logging stack trace on crash
+
+Checkout `cpptrace` submodule:
+
+```shell
+git submodule init
+git submodule update ext/cpptrace
+```
+
+Build in Debug mode.
 
 ### Running with different log levels
 
@@ -116,7 +125,7 @@ Enable tracy submodule:
 
 ```shell
 git submodule init
-git submodule update
+git submodule update ext/tracy
 ```
 
 Run profiler:

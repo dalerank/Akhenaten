@@ -5,13 +5,14 @@
 
 #include <algorithm>
 #include <csignal>
-#include <iomanip>
 #include <iostream>
-#include <sstream>
 #include <unordered_map>
 
 #ifdef CPPTRACE_ENABLED
 #include <cpptrace/cpptrace.hpp>
+
+#include <iomanip>
+#include <sstream>
 #endif // CPPTRACE_ENABLED
 
 #ifdef __WINDOWS__
