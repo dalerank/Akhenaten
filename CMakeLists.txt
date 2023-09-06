@@ -124,7 +124,6 @@ set(VERSION_REVISION "")
 file(COPY ${SDL2_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
 
 add_subdirectory(ext/png)
-add_subdirectory(ext/zlib)
 add_subdirectory(ext/expat)
 
 file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp)
@@ -404,7 +403,6 @@ endif()
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${SDL2_IMAGE_INCLUDE_DIR})
-include_directories(${EXTZLIB_INCLUDE_DIR})
 include_directories(${EXTEXPAT_INCLUDE_DIR})
 include_directories(${EXTPNG_INCLUDE_DIR})
 
@@ -424,8 +422,7 @@ endif()
 
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY}
-                        ${EXTZLIB_LIBRARY} ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY}
-                        ${CPPTRACE_LIBRARY})
+                        ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY})
 
 if(MSVC)
    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
