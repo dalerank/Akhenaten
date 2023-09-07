@@ -36,9 +36,6 @@ endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
-# Find revision ID and hash of the sourcetree
-include("${CMAKE_SOURCE_DIR}/cmake/GenerateVersionHPP.cmake")
-
 if (MSVC)
     add_compile_options(/wd4244)
     add_compile_options(/MP)
@@ -184,6 +181,18 @@ if (MSVC AND EXISTS "${TRACY_CHECK_PATH}")
     set(TRACY_FILES ${PROJECT_SOURCE_DIR}/ext/tracy/public/TracyClient.cpp)
     include_directories(${PROJECT_SOURCE_DIR}/ext/tracy/public/)
 endif ()
+
+# Find revision ID and hash of the sourcetree
+execute_process(
+    COMMAND git rev-list HEAD --count
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    OUTPUT_VARIABLE GAME_BUILD_NUMBER
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+)
+
+add_definitions(-DGAME_BUILD_NUMBER=${GAME_BUILD_NUMBER})
+message("GAME_BUILD_NUMBER now is ${GAME_BUILD_NUMBER}")
 
 set(IMGUI_FILES ${IMGUI_FILES} ${IMGUI_CPP_FILES} ${IMGUI_BACKEND_FILES})
 
