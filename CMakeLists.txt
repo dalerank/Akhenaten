@@ -453,10 +453,6 @@ endif()
 if (MSVC)
     set(BINARY_FILES "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.exe")
 
-    if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(BINARY_FILES ${BINARY_FILES} "${CMAKE_BINARY_DIR}/ext/cpptrace/${GAME_BUILD_TYPE}/cpptrace.dll")
-    endif()
-
     foreach( file_i ${BINARY_FILES})
         add_custom_command(
             TARGET ${GAME}
