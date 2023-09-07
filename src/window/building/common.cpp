@@ -14,18 +14,17 @@
 void window_building_set_possible_position(int* x_offset, int* y_offset, int width_blocks, int height_blocks) {
     int dialog_width = 16 * width_blocks;
     int dialog_height = 16 * height_blocks;
-    int stub;
-    int width;
-    city_view_get_viewport(&stub, &stub, &width, &stub);
-    width -= MARGIN_POSITION;
+    vec2i view_pos, view_size;
+    city_view_get_viewport(view_pos, view_size);
+    view_size.x -= MARGIN_POSITION;
 
     if (*y_offset + dialog_height > screen_height() - MARGIN_POSITION)
         *y_offset -= dialog_height;
 
     *y_offset = (*y_offset < MIN_Y_POSITION) ? MIN_Y_POSITION : *y_offset;
 
-    if (*x_offset + dialog_width > width)
-        *x_offset = width - dialog_width;
+    if (*x_offset + dialog_width > view_size.x)
+        *x_offset = view_size.x - dialog_width;
 }
 int window_building_get_vertical_offset(building_info_context* c, int new_window_height) {
     new_window_height = new_window_height * 16;

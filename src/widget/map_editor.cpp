@@ -109,21 +109,21 @@ static void scroll_map(const mouse* m) {
 }
 
 static int input_coords_in_map(int x, int y) {
-    int x_offset, y_offset, width, height;
-    city_view_get_viewport(&x_offset, &y_offset, &width, &height);
+    vec2i view_pos, view_size;
+    city_view_get_viewport(view_pos, view_size);
 
-    x -= x_offset;
-    y -= y_offset;
+    x -= view_pos.x;
+    y -= view_pos.y;
 
-    return (x >= 0 && x < width && y >= 0 && y < height);
+    return (x >= 0 && x < view_size.x && y >= 0 && y < view_size.y);
 }
 
 static void handle_touch_scroll(const touch* t) {
     if (editor_tool_is_active()) {
         if (t->has_started) {
-            int x_offset, y_offset, width, height;
-            city_view_get_viewport(&x_offset, &y_offset, &width, &height);
-            scroll_set_custom_margins(x_offset, y_offset, width, height);
+            vec2i view_pos, view_size;
+            city_view_get_viewport(view_pos, view_size);
+            scroll_set_custom_margins(view_pos.x, view_pos.y, view_size.x, view_size.y);
         }
         if (t->has_ended)
             scroll_restore_margins();
@@ -171,12 +171,13 @@ static bool handle_cancel_construction_button(const touch* t) {
     if (!editor_tool_is_active())
         return false;
 
-    int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
-    int box_size = 5 * 16;
-    width -= box_size;
+    vec2i view_pos, view_size;
+    city_view_get_viewport(view_pos, view_size);
 
-    if (t->current_point.x < width || t->current_point.x >= width + box_size || t->current_point.y < 24
+    int box_size = 5 * 16;
+    view_size.x -= box_size;
+
+    if (t->current_point.x < view_size.x || t->current_point.x >= view_size.x + box_size || t->current_point.y < 24
         || t->current_point.y >= 40 + box_size) {
         return false;
     }

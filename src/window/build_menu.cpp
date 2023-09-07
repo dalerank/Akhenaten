@@ -81,9 +81,10 @@ static bool init(int submenu) {
 }
 
 static int get_sidebar_x_offset(void) {
-    int view_x, view_y, view_width, view_height;
-    city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
-    return view_x + view_width;
+    vec2i view_pos, view_size;
+    city_view_get_viewport(view_pos, view_size);
+
+    return view_pos.x + view_size.x;
 }
 static int is_all_button(int type) {
     return (type == BUILDING_MENU_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES)

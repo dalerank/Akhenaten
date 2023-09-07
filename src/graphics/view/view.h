@@ -32,8 +32,7 @@ struct view_data_t {
     } camera;
     struct {
         vec2i offset;
-        int width_pixels;
-        int height_pixels;
+        vec2i size_pixels;
         int width_tiles;
         int height_tiles;
     } viewport;
@@ -61,9 +60,9 @@ vec2i camera_get_position();
 vec2i camera_get_pixel_offset_internal();
 void city_view_get_camera_max_tile(int* x, int* y);
 void city_view_get_camera_max_pixel_offset(int* x, int* y);
-void city_view_get_camera_in_pixels(int *x, int *y);
-void city_view_get_camera_scrollable_pixel_limits(int* min_x, int* max_x, int* min_y, int* max_y);
-void city_view_get_camera_scrollable_viewspace_clip(int* x, int* y);
+vec2i city_view_get_camera_in_pixels();
+void city_view_get_camera_scrollable_pixel_limits(vec2i &min_pos, vec2i &max_pos);
+void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip);
 
 void camera_go_to_pixel(vec2i pixel, bool validate);
 void camera_go_to_corner_tile(screen_tile screen, bool validate);
@@ -80,7 +79,7 @@ void city_view_rotate_right(void);
 void city_view_refresh_viewport();
 
 void city_view_set_viewport(int screen_width, int screen_height);
-void city_view_get_viewport(int* x, int* y, int* width, int* height);
+void city_view_get_viewport(vec2i &pos, vec2i &size);
 void city_view_get_viewport_size_tiles(int* width, int* height);
 
 bool pixel_is_inside_viewport(vec2i pixel);
@@ -94,6 +93,7 @@ void city_view_foreach_valid_map_tile(tile_draw_callback* callback1,
                                       tile_draw_callback* callback4 = nullptr,
                                       tile_draw_callback* callback5 = nullptr,
                                       tile_draw_callback* callback6 = nullptr);
+
 void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, tile_draw_callback* callback);
 void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles, int height_tiles, minimap_draw_callback callback);
 

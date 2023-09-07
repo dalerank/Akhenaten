@@ -10,6 +10,7 @@
 #include "lookup.h"
 
 #include "widget/minimap.h"
+#include "widget/sidebar/common.h"
 #include "city/sentiment.h"
 #include "scenario/property.h"
 
@@ -67,8 +68,8 @@ void camera_calc_scroll_limits() {
 void city_view_get_camera_max_tile(int* x, int* y) {
     auto& data = g_city_view_data;
 
-    int tx = (int)(data.viewport.width_pixels / (TILE_WIDTH_PIXELS * zoom_get_scale()));
-    int ty = (int)(2 * data.viewport.height_pixels / (TILE_HEIGHT_PIXELS * zoom_get_scale()));
+    int tx = (int)(data.viewport.size_pixels.x / (TILE_WIDTH_PIXELS * zoom_get_scale()));
+    int ty = (int)(2 * data.viewport.size_pixels.y / (TILE_HEIGHT_PIXELS * zoom_get_scale()));
 
     *x = SCROLL_MAX_SCREENTILE_X - tx;
     *y = (SCROLL_MAX_SCREENTILE_Y - ty) & ~1;
@@ -77,26 +78,27 @@ void city_view_get_camera_max_tile(int* x, int* y) {
 void city_view_get_camera_max_pixel_offset(int* x, int* y) {
     auto& data = g_city_view_data;
 
-    *x = TILE_WIDTH_PIXELS - (data.viewport.width_pixels % TILE_WIDTH_PIXELS);
-    *y = TILE_HEIGHT_PIXELS - (data.viewport.height_pixels % TILE_HEIGHT_PIXELS);
+    *x = TILE_WIDTH_PIXELS - (data.viewport.size_pixels.x % TILE_WIDTH_PIXELS);
+    *y = TILE_HEIGHT_PIXELS - (data.viewport.size_pixels.y % TILE_HEIGHT_PIXELS);
 }
 
-void city_view_get_camera_in_pixels(int *x, int *y) {
+vec2i city_view_get_camera_in_pixels() {
     auto& data = g_city_view_data;
 
-    *x = data.camera.tile_internal.x * TILE_WIDTH_PIXELS + data.camera.position.x;
-    *y = data.camera.tile_internal.y * HALF_TILE_HEIGHT_PIXELS + data.camera.position.y;
+    return {data.camera.tile_internal.x * TILE_WIDTH_PIXELS + data.camera.position.x,
+            data.camera.tile_internal.y * HALF_TILE_HEIGHT_PIXELS + data.camera.position.y};
 }
 
-void city_view_get_camera_scrollable_pixel_limits(int* min_x, int* max_x, int* min_y, int* max_y) {
+void city_view_get_camera_scrollable_pixel_limits(vec2i &min_pos, vec2i &max_pos) {
     auto& data = g_city_view_data;
 
-    *min_x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
-    *max_x = SCROLL_MAX_SCREENTILE_X * TILE_WIDTH_PIXELS - calc_adjust_with_percentage(data.viewport.width_pixels, zoom_get_percentage());
-    *min_y = SCROLL_MIN_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS;
-    *max_y = SCROLL_MAX_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS - calc_adjust_with_percentage(data.viewport.height_pixels, zoom_get_percentage());
+    min_pos.x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
+    min_pos.y = SCROLL_MIN_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS;
+    max_pos.x = SCROLL_MAX_SCREENTILE_X * TILE_WIDTH_PIXELS - calc_adjust_with_percentage(data.viewport.size_pixels.x, zoom_get_percentage());
+    max_pos.y = SCROLL_MAX_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS - calc_adjust_with_percentage(data.viewport.size_pixels.y, zoom_get_percentage());
 }
-void city_view_get_camera_scrollable_viewspace_clip(int* x, int* y) {
+
+void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip) {
     auto& data = g_city_view_data;
 
     int min_x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
@@ -106,40 +108,37 @@ void city_view_get_camera_scrollable_viewspace_clip(int* x, int* y) {
     //
     //    *x = (int)((float)(min_x - data.camera.position.x) * scale);
     //    *y = (int)((float)(min_y - data.camera.position.y) * scale);
-    *x = (min_x - data.camera.position.x);
-    *y = (min_y - data.camera.position.y);
+    clip.x = (min_x - data.camera.position.x);
+    clip.y = (min_y - data.camera.position.y);
 }
 
 static void camera_validate_position(void) {
     auto& data = g_city_view_data;
 
-    int min_x;
-    int max_x;
-    int min_y;
-    int max_y;
-    city_view_get_camera_scrollable_pixel_limits(&min_x, &max_x, &min_y, &max_y);
+    vec2i min_pos, max_pos;
+    city_view_get_camera_scrollable_pixel_limits(min_pos, max_pos);
 
     // if MAX and MIN limits are the same (map is too zoomed out for the borders) kinda do an average
-    if (max_x <= min_x) {
-        int corr_x = (min_x - max_x) / 2;
-        min_x -= corr_x;
-        max_x += corr_x;
+    if (max_pos.x <= min_pos.x) {
+        int corr_x = (min_pos.x - max_pos.x) / 2;
+        min_pos.x -= corr_x;
+        max_pos.x += corr_x;
     }
-    if (max_y <= min_y) {
-        int corr_y = (min_y - max_y) / 2;
-        min_y -= corr_y;
-        max_y += corr_y;
+    if (max_pos.y <= min_pos.y) {
+        int corr_y = (min_pos.y - max_pos.y) / 2;
+        min_pos.y -= corr_y;
+        max_pos.y += corr_y;
     }
 
-    if (data.camera.position.x < min_x)
-        data.camera.position.x = min_x;
-    if (data.camera.position.x > max_x)
-        data.camera.position.x = max_x;
+    if (data.camera.position.x < min_pos.x)
+        data.camera.position.x = min_pos.x;
+    if (data.camera.position.x > max_pos.x)
+        data.camera.position.x = max_pos.x;
 
-    if (data.camera.position.y < min_y)
-        data.camera.position.y = min_y;
-    if (data.camera.position.y > max_y)
-        data.camera.position.y = max_y;
+    if (data.camera.position.y < min_pos.y)
+        data.camera.position.y = min_pos.y;
+    if (data.camera.position.y > max_pos.y)
+        data.camera.position.y = max_pos.y;
 
     data.camera.tile_internal.x = data.camera.position.x / TILE_WIDTH_PIXELS;
     data.camera.tile_internal.y = data.camera.position.y / HALF_TILE_HEIGHT_PIXELS;
@@ -180,9 +179,11 @@ void camera_go_to_pixel(vec2i pixel, bool validate) {
     auto& data = g_city_view_data;
 
     data.camera.position = pixel;
-    if (validate)
+    if (validate) {
         camera_validate_position();
+    }
 }
+
 void camera_go_to_corner_tile(screen_tile screen, bool validate) {
     int x = screen.x * TILE_WIDTH_PIXELS;
     int y = screen.y * HALF_TILE_HEIGHT_PIXELS;
@@ -280,59 +281,61 @@ static void set_viewport(int x_offset, int y_offset, int width, int height) {
     //    height = calc_adjust_with_percentage(height, zoom);
     data.viewport.offset = vec2i(x_offset, y_offset);
     //    data.viewport.width_pixels = width - calc_adjust_with_percentage(2, data.scale);
-    data.viewport.width_pixels = width - 2;
-    data.viewport.height_pixels = height;
+    data.viewport.size_pixels.x = width - 2;
+    data.viewport.size_pixels.y = height;
     //    data.viewport.width_tiles = width / TILE_WIDTH_PIXELS;
     //    data.viewport.height_tiles = height / HALF_TILE_HEIGHT_PIXELS;
     data.viewport.width_tiles = calc_adjust_with_percentage(width, zoom) / TILE_WIDTH_PIXELS;
     data.viewport.height_tiles = calc_adjust_with_percentage(height, zoom) / HALF_TILE_HEIGHT_PIXELS;
 }
+
 static void set_viewport_with_sidebar(void) {
     auto& data = g_city_view_data;
 
-    return set_viewport(0,
-                        TOP_MENU_HEIGHT,
-                        data.screen_width - SIDEBAR_EXPANDED_WIDTH + 2,
-                        data.screen_height - TOP_MENU_HEIGHT);
+    return set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - SIDEBAR_EXPANDED_WIDTH + 2, data.screen_height - TOP_MENU_HEIGHT);
 }
+
 static void set_viewport_without_sidebar(void) {
     auto& data = g_city_view_data;
 
-    set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - 40, data.screen_height - TOP_MENU_HEIGHT);
+    set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - SIDEBAR_COLLAPSED_WIDTH + 2, data.screen_height - TOP_MENU_HEIGHT);
 }
+
 void city_view_refresh_viewport() {
     auto& data = g_city_view_data;
 
-    if (data.sidebar_collapsed)
+    if (data.sidebar_collapsed) {
         set_viewport_without_sidebar();
-    else
+    } else {
         set_viewport_with_sidebar();
+    }
     //    data.camera.pixel.x = 0;
     //    data.camera.pixel.y = 0;
     //    adjust_camera_position_for_pixels();
     camera_validate_position();
 }
+
 void city_view_set_viewport(int screen_width, int screen_height) {
     auto& data = g_city_view_data;
 
     data.screen_width = screen_width;
     data.screen_height = screen_height;
-    if (data.sidebar_collapsed)
+    if (data.sidebar_collapsed) {
         set_viewport_without_sidebar();
-    else
+    } else {
         set_viewport_with_sidebar();
+    }
     //    adjust_camera_position_for_pixels();
     camera_validate_position();
 }
 
-void city_view_get_viewport(int* x, int* y, int* width, int* height) {
+void city_view_get_viewport(vec2i &pos, vec2i &size) {
     auto& data = g_city_view_data;
 
-    *x = data.viewport.offset.x;
-    *y = data.viewport.offset.y;
-    *width = data.viewport.width_pixels;
-    *height = data.viewport.height_pixels;
+    pos = data.viewport.offset;
+    size = data.viewport.size_pixels;
 }
+
 void city_view_get_viewport_size_tiles(int* width, int* height) {
     auto& data = g_city_view_data;
 
@@ -343,8 +346,8 @@ void city_view_get_viewport_size_tiles(int* width, int* height) {
 bool pixel_is_inside_viewport(vec2i pixel) {
     auto& data = g_city_view_data;
 
-    if (pixel.x < data.viewport.offset.x || pixel.x >= data.viewport.offset.x + data.viewport.width_pixels
-        || pixel.y < data.viewport.offset.y || pixel.y >= data.viewport.offset.y + data.viewport.height_pixels) {
+    if (pixel.x < data.viewport.offset.x || pixel.x >= data.viewport.offset.x + data.viewport.size_pixels.x
+        || pixel.y < data.viewport.offset.y || pixel.y >= data.viewport.offset.y + data.viewport.size_pixels.y) {
         return false;
     }
     return true;

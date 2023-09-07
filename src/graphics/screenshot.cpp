@@ -17,6 +17,7 @@
 #include "graphics/view/view.h"
 #include "scenario/scenario.h"
 #include "widget/minimap.h"
+#include "widget/sidebar/common.h"
 #include "widget/city.h"
 
 #include "png.h"
@@ -100,21 +101,22 @@ static const char *generate_filename(screenshot_type type) {
     struct tm *loctime = localtime(&curtime);
     switch (type) {
     case SCREENSHOT_FULL_CITY:
-    strftime(filename, bstring256::capacity, "full_city_%Y_%m_%d_%H_%M_%S.png", loctime);
-    break;
+        strftime(filename, bstring256::capacity, "full_city_%Y_%m_%d_%H_%M_%S.png", loctime);
+        break;
+
     case SCREENSHOT_MINIMAP:
-    strftime(filename, bstring256::capacity, "minimap_%Y_%m_%d_%H_%M_%S.png", loctime);
-    break;
+        strftime(filename, bstring256::capacity, "minimap_%Y_%m_%d_%H_%M_%S.png", loctime);
+        break;
+
     case SCREENSHOT_DISPLAY:
     default:
-    strftime(filename, bstring256::capacity, "city_%Y_%m_%d_%H_%M_%S.png", loctime);
-    break;
+        strftime(filename, bstring256::capacity, "city_%Y_%m_%d_%H_%M_%S.png", loctime);
+        break;
     }    
     return filename;
 }
 
-static int image_begin_io(const char *filename)
-{
+static int image_begin_io(const char *filename) {
     FILE *fp = file_open(filename, "wb");
     if (!fp) {
         return 0;
@@ -124,8 +126,7 @@ static int image_begin_io(const char *filename)
     return 1;
 }
 
-static int image_write_header(void)
-{
+static int image_write_header(void) {
     if (setjmp(png_jmpbuf(screenshot.png_ptr))) {
         return 0;
     }
@@ -136,15 +137,13 @@ static int image_write_header(void)
     return 1;
 }
 
-static int image_set_loop_height_limits(int min, int max)
-{
+static int image_set_loop_height_limits(int min, int max) {
     screenshot.current_y = min;
     screenshot.final_y = max;
     return screenshot.current_y;
 }
 
-static int image_request_rows(void)
-{
+static int image_request_rows(void) {
     if (screenshot.current_y < screenshot.final_y) {
         screenshot.current_y += screenshot.rows_in_memory;
         return screenshot.rows_in_memory;
@@ -152,8 +151,7 @@ static int image_request_rows(void)
     return 0;
 }
 
-static int image_write_rows(const color *canvas, int canvas_width)
-{
+static int image_write_rows(const color *canvas, int canvas_width) {
     if (setjmp(png_jmpbuf(screenshot.png_ptr))) {
         return 0;
     }
@@ -246,11 +244,17 @@ static void create_full_city_screenshot(void) {
     if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY)) {
         return;
     }
-    vec2i original_camera_pixels;
-    city_view_get_camera_in_pixels(&original_camera_pixels.x, &original_camera_pixels.y);
+    vec2i original_camera_pixels = camera_get_position();
 
-    int city_width_pixels = map_grid_width() * TILE_X_SIZE;
-    int city_height_pixels = map_grid_height() * TILE_Y_SIZE;
+    vec2i min_pos, max_pos;
+    city_view_get_camera_scrollable_pixel_limits(min_pos, max_pos);
+
+    vec2i view_pos, view_size;
+    city_view_get_viewport(view_pos, view_size);
+    
+
+    int city_width_pixels = max_pos.x + view_size.x - min_pos.x;
+    int city_height_pixels = max_pos.y + view_size.y - min_pos.y;
 
     if (!image_create(city_width_pixels, city_height_pixels + TILE_Y_SIZE, 0, IMAGE_HEIGHT_CHUNK)) {
         logs::error("Unable to set memory for full city screenshot", 0, 0);
@@ -272,23 +276,21 @@ static void create_full_city_screenshot(void) {
     memset(canvas, 0, sizeof(color) * city_width_pixels * IMAGE_HEIGHT_CHUNK);
 
     int canvas_width = 8 * TILE_X_SIZE;
-    int old_scale = zoom_get_scale();
+    int old_scale = zoom_get_scale() * 100;
 
-    int min_width = (GRID_LENGTH * TILE_X_SIZE - city_width_pixels) / 2 + TILE_X_SIZE;
-    int max_height = (GRID_LENGTH * TILE_Y_SIZE + city_height_pixels) / 2;
-    int min_height = max_height - city_height_pixels - TILE_Y_SIZE;
     map_point dummy_tile(0, 0);
     int error = 0;
-    int base_height = image_set_loop_height_limits(min_height, max_height);
+    int base_height = image_set_loop_height_limits(min_pos.y, max_pos.y + view_size.y);
     int size;
     zoom_set_scale(100);
     graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, canvas_width, IMAGE_HEIGHT_CHUNK);
-    int viewport_x, viewport_y, viewport_width, viewport_height;
-    city_view_get_viewport(&viewport_x, &viewport_y, &viewport_width, &viewport_height);
-    city_view_set_viewport(canvas_width + (city_view_is_sidebar_collapsed() ? 42 : 162), IMAGE_HEIGHT_CHUNK + TOP_MENU_HEIGHT);
+    
+    vec2i viewport_offset, viewport_size;
+    city_view_get_viewport(viewport_offset, viewport_size);
+    city_view_set_viewport(canvas_width + (city_view_is_sidebar_collapsed() ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH), IMAGE_HEIGHT_CHUNK + TOP_MENU_HEIGHT);
     int current_height = base_height;
     while ((size = image_request_rows()) != 0) {
-        int y_offset = current_height + IMAGE_HEIGHT_CHUNK > max_height ? IMAGE_HEIGHT_CHUNK - (max_height - current_height) - TILE_Y_SIZE: 0;
+        int y_offset = current_height + IMAGE_HEIGHT_CHUNK > max_pos.y ? IMAGE_HEIGHT_CHUNK - (max_pos.y - current_height) - TILE_Y_SIZE * 2 - TOP_MENU_HEIGHT : 0;
 
         for (int width = 0; width < city_width_pixels; width += canvas_width) {
             int image_section_width = canvas_width;
@@ -298,7 +300,7 @@ static void create_full_city_screenshot(void) {
                 x_offset = canvas_width - image_section_width - TILE_X_SIZE * 2;
             }
 
-            camera_go_to_pixel({min_width + width, current_height}, true);
+            camera_go_to_pixel({min_pos.x + width, current_height}, true);
             widget_city_draw_without_overlay(0, 0, dummy_tile);
             graphics_renderer()->save_screen_buffer(&canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, IMAGE_HEIGHT_CHUNK - y_offset, city_width_pixels);
         }
@@ -311,7 +313,7 @@ static void create_full_city_screenshot(void) {
         current_height += IMAGE_HEIGHT_CHUNK;
     }
 
-    city_view_set_viewport(viewport_width + (city_view_is_sidebar_collapsed() ? 42 : 162), viewport_height + TOP_MENU_HEIGHT);
+    city_view_set_viewport(viewport_size.x + (city_view_is_sidebar_collapsed() ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH), viewport_size.y + TOP_MENU_HEIGHT);
     zoom_set_scale(old_scale);
 
     graphics_reset_clip_rectangle();

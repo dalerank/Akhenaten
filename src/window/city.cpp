@@ -29,10 +29,10 @@
 static int selected_legion_formation_id;
 
 static int center_in_city(int element_width_pixels) {
-    int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
-    int margin = (width - element_width_pixels) / 2;
-    return x + margin;
+    vec2i view_pos, view_size;
+    city_view_get_viewport(view_pos, view_size);
+    int margin = (view_size.x - element_width_pixels) / 2;
+    return view_pos.x + margin;
 }
 
 static void window_city_draw_background(void) {
@@ -76,11 +76,11 @@ static void draw_paused_and_time_left(void) {
 static void draw_cancel_construction(void) {
     if (!mouse_get()->is_touch || !Planner.build_type)
         return;
-    int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
-    width -= 4 * 16;
-    inner_panel_draw(width - 4, 40, 3, 2);
-    ImageDraw::img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
+    vec2i view_pos, view_size;
+    city_view_get_viewport(view_pos, view_size);
+    view_size.x -= 4 * 16;
+    inner_panel_draw(view_size.x - 4, 40, 3, 2);
+    ImageDraw::img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, view_size.x, 44);
     //    city_view_dirty = 1;
 }
 static void draw_foreground(void) {

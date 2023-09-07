@@ -44,9 +44,9 @@ struct widget_city_data_t {
 widget_city_data_t g_wdiget_city_data;
 
 void set_city_clip_rectangle(void) {
-    int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
-    graphics_set_clip_rectangle(x, y, width, height);
+    vec2i view_pos, view_size;
+    city_view_get_viewport(view_pos, view_size);
+    graphics_set_clip_rectangle(view_pos.x, view_pos.y, view_size.x, view_size.y);
 
     // TODO?
     //    city_view_foreach_map_tile(draw_outside_map);
@@ -85,13 +85,13 @@ static map_point update_city_view_coords(vec2i pixel) {
     }
 }
 static int input_coords_in_city(int x, int y) {
-    int x_offset, y_offset, width, height;
-    city_view_get_viewport(&x_offset, &y_offset, &width, &height);
+    vec2i view_pos, view_size;
+    city_view_get_viewport(view_pos, view_size);
 
-    x -= x_offset;
-    y -= y_offset;
+    x -= view_pos.x;
+    y -= view_pos.y;
 
-    return (x >= 0 && x < width && y >= 0 && y < height);
+    return (x >= 0 && x < view_size.x && y >= 0 && y < view_size.y);
 }
 
 stopwatch WATCH;
@@ -301,12 +301,12 @@ static bool handle_cancel_construction_button(const touch* t) {
     if (!Planner.build_type)
         return false;
 
-    int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
+    vec2i view_pos, view_size;
+    city_view_get_viewport(view_pos, view_size);
     int box_size = 5 * 16;
-    width -= box_size;
+    view_size.x -= box_size;
 
-    if (t->current_point.x < width || t->current_point.x >= width + box_size || t->current_point.y < 24
+    if (t->current_point.x < view_size.x || t->current_point.x >= view_size.x + box_size || t->current_point.y < 24
         || t->current_point.y >= 40 + box_size) {
         return false;
     }
@@ -327,9 +327,9 @@ static void handle_touch_scroll(const touch* t) {
     auto& data = g_wdiget_city_data;
     if (Planner.build_type) {
         if (t->has_started) {
-            int x_offset, y_offset, width, height;
-            city_view_get_viewport(&x_offset, &y_offset, &width, &height);
-            scroll_set_custom_margins(x_offset, y_offset, width, height);
+            vec2i view_pos, view_size;
+            city_view_get_viewport(view_pos, view_size);
+            scroll_set_custom_margins(view_pos.x, view_pos.y, view_size.x, view_size.y);
         }
         if (t->has_ended)
             scroll_restore_margins();

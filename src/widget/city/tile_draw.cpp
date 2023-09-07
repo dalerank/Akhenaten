@@ -237,8 +237,8 @@ static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode
 
     // city zoom & viewport params
     float scale = zoom_get_scale();
-    int viewport_x, viewport_y, viewport_width, viewport_height;
-    city_view_get_viewport(&viewport_x, &viewport_y, &viewport_width, &viewport_height);
+    vec2i viewport_pos, viewport_size;
+    city_view_get_viewport(viewport_pos, viewport_size);
 
     // record tile's rendering coords
     int clip_x, clip_y, clip_width, clip_height;
@@ -252,10 +252,10 @@ static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode
                             pixel.y - (size - 1) * HALF_TILE_HEIGHT_PIXELS - 30,
                             size * TILE_WIDTH_PIXELS,
                             size * TILE_HEIGHT_PIXELS + 30,
-                            viewport_x / scale,
-                            viewport_y / scale,
-                            viewport_width / scale,
-                            viewport_height / scale);
+                            viewport_pos.x / scale,
+                            viewport_pos.y / scale,
+                            viewport_size.x / scale,
+                            viewport_size.y / scale);
 
     // set rendering clip around the current tile
     if (clip_width == 0 || clip_height == 0)
@@ -365,14 +365,15 @@ void draw_isometrics(vec2i pixel, map_point point) {
             if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b))
                 color_mask = COLOR_MASK_RED;
 
-            int view_x, view_y, view_width, view_height;
-            city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
-            if (x < view_x + 100)
+            vec2i view_pos, view_size;
+            city_view_get_viewport(view_pos, view_size);
+            if (x < view_pos.x + 100) {
                 sound_city_mark_building_view(b, SOUND_DIRECTION_LEFT);
-            else if (x > view_x + view_width - 100)
+            } else if (x > view_pos.x + view_size.x - 100) {
                 sound_city_mark_building_view(b, SOUND_DIRECTION_RIGHT);
-            else
+            } else {
                 sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
+            }
         }
         if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
             building* b = building_get(0); // abuse empty building

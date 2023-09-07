@@ -86,9 +86,9 @@ static void draw_background(void) {
 }
 
 static int get_sidebar_x_offset(void) {
-    int view_x, view_y, view_width, view_height;
-    city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
-    return view_x + view_width;
+    vec2i view_pos, view_size;
+    city_view_get_viewport(view_pos, view_size);
+    return view_pos.x + view_size.x;
 }
 
 static void draw_menu_buttons(void) {

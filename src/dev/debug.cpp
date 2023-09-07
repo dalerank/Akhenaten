@@ -1053,8 +1053,8 @@ void draw_debug_ui(int x, int y) {
         map_point camera_tile = city_view_get_camera_mappoint();
         vec2i camera_pixels = camera_get_pixel_offset_internal();
 
-        int min_x, max_x, min_y, max_y;
-        city_view_get_camera_scrollable_pixel_limits(&min_x, &max_x, &min_y, &max_y);
+        vec2i min_pos, max_pos;
+        city_view_get_camera_scrollable_pixel_limits(min_pos, max_pos);
 
         auto& viewdata = city_view_data_unsafe();
         int real_max_x;
@@ -1066,9 +1066,9 @@ void draw_debug_ui(int x, int y) {
         city_view_get_camera_max_pixel_offset(&max_x_pixel_offset, &max_y_pixel_offset);
 
         y += 30;
-        debug_text_dual_left(str, x, y - 15, 90, 40, "---min:", min_x, min_y);
+        debug_text_dual_left(str, x, y - 15, 90, 40, "---min:", min_pos.x, min_pos.y);
         debug_text_dual_left(str, x, y - 5, 90, 40, "camera:", viewdata.camera.position.x, viewdata.camera.position.y);
-        debug_text_dual_left(str, x, y + 5, 90, 40, "---max:", max_x, max_y);
+        debug_text_dual_left(str, x, y + 5, 90, 40, "---max:", max_pos.x, max_pos.y);
 
         debug_text_dual_left(str, x, y + 25, 90, 40, "---min:", SCROLL_MIN_SCREENTILE_X, SCROLL_MIN_SCREENTILE_Y);
         debug_text_dual_left(str, x, y + 35, 90, 40, "tile:", camera_tile.x(), camera_tile.y());
@@ -1078,16 +1078,8 @@ void draw_debug_ui(int x, int y) {
         debug_text_dual_left(str, x, y + 75, 90, 40, "pixel:", camera_pixels.x, camera_pixels.y);
         debug_text_dual_left(str, x, y + 85, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
 
-        debug_text_dual_left(str,
-                             x,
-                             y + 105,
-                             90,
-                             40,
-                             "v.tiles:",
-                             viewdata.viewport.width_pixels / 60,
-                             viewdata.viewport.height_pixels / 30);
-        debug_text_dual_left(
-          str, x, y + 115, 90, 40, "v.pixels:", viewdata.viewport.width_pixels, viewdata.viewport.height_pixels);
+        debug_text_dual_left(str, x, y + 105, 90, 40, "v.tiles:", viewdata.viewport.size_pixels.x / 60, viewdata.viewport.size_pixels.y / 30);
+        debug_text_dual_left(str, x, y + 115, 90, 40, "v.pixels:", viewdata.viewport.size_pixels.y, viewdata.viewport.size_pixels.y);
 
         debug_text(str, x, y + 125, 50, "zoom:", zoom_get_percentage());
         debug_text_float(str, x, y + 125, 50 + 40, "", zoom_get_scale());
@@ -1098,22 +1090,28 @@ void draw_debug_ui(int x, int y) {
         vec2i pixel = {mouse_get()->x, mouse_get()->y};
         debug_text(str, x, y + 145, 50, "mouse:", pixel.x);
         debug_text(str, x + 40, y + 145, 50, "", pixel.y);
+
         vec2i viewp = pixel_to_viewport_coord(pixel);
         debug_text(str, x, y + 155, 50, "viewp:", viewp.x);
         debug_text(str, x + 40, y + 155, 50, "", viewp.y);
+
         camera_coordinate coord = pixel_to_camera_coord(pixel, false);
         debug_text(str, x, y + 165, 50, "coord:", coord.x);
         debug_text(str, x + 40, y + 165, 50, "", coord.y);
+
         screen_tile screen = pixel_to_screentile(pixel);
         debug_text(str, x, y + 175, 50, "tile:", screen.x);
         debug_text(str, x + 40, y + 175, 50, "", screen.y);
+
         vec2i offset = {coord.x % TILE_WIDTH_PIXELS, coord.y % TILE_HEIGHT_PIXELS};
         debug_text(str, x, y + 185, 50, "offset:", offset.x);
         debug_text(str, x + 40, y + 185, 50, "", offset.y);
+
         map_point point = screentile_to_mappoint(screen);
         debug_text(str, x, y + 195, 50, "point:", point.x());
         debug_text(str, x + 40, y + 195, 50, "", point.y());
         debug_text(str, x + 80, y + 195, 50, "", point.grid_offset());
+
         char type_str[256] = {0};
         debug_text_a(str, x + 180, y + 195, 50, get_terrain_type(type_str, "type: ", point));
         pixel = mappoint_to_pixel(point);

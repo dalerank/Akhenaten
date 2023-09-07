@@ -224,10 +224,10 @@ static void get_tooltip(tooltip_context* c) {
 }
 
 static int center_in_city(int element_width_pixels) {
-    int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
-    int margin = (width - element_width_pixels) / 2;
-    return x + margin;
+    vec2i view_pos, view_size;
+    city_view_get_viewport(view_pos, view_size);
+    int margin = (view_size.x - element_width_pixels) / 2;
+    return view_pos.x + margin;
 }
 
 void highlight_waypoints(building* b) { // highlight the 4 routing tiles for roams from this building

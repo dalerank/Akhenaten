@@ -29,11 +29,11 @@ static void draw_background(void) {
 static void draw_cancel_construction(void) {
     if (!mouse_get()->is_touch || !editor_tool_is_active())
         return;
-    int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
-    width -= 4 * 16;
-    inner_panel_draw(width - 4, 40, 3, 2);
-    ImageDraw::img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
+    vec2i view_pos, view_size;
+    city_view_get_viewport(view_pos, view_size);
+    view_size.x -= 4 * 16;
+    inner_panel_draw(view_size.x - 4, 40, 3, 2);
+    ImageDraw::img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, view_size.x, 44);
     city_view_dirty = 1;
 }
 
