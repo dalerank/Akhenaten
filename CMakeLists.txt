@@ -184,7 +184,7 @@ endif ()
 
 # Find revision ID and hash of the sourcetree
 execute_process(
-    COMMAND git rev-list HEAD --count
+    COMMAND git rev-list --count --all
     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     OUTPUT_VARIABLE GAME_BUILD_NUMBER
     OUTPUT_STRIP_TRAILING_WHITESPACE
