@@ -63,7 +63,7 @@ static const int submenu_id_to_overlay[7][8] = {
    OVERLAY_DAMAGE,
    OVERLAY_CRIME,
    OVERLAY_NATIVE,
-   OVERLAY_PROBLEMS,
+   OVERLAY_LABOR,
    OVERLAY_ROUTING,
    0},
   

@@ -55,6 +55,7 @@ enum e_overlay {
     OVERLAY_BAZAAR_ACCESS = 36,
     OVERLAY_ROUTING = 37,
     OVERLAY_HEALTH = 38,
+    OVERLAY_LABOR = 39,
 };
 
 inline bool show_figure_none(const figure *f) { return false; }
