@@ -14,9 +14,17 @@ inline void critical(char const* format, Args... args) {
     SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, format, args...);
 }
 
+inline void critical(char const* msg) {
+    SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "%s", msg);
+}
+
 template <class... Args>
 inline void error(char const* format, Args... args) {
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, format, args...);
+}
+
+inline void error(char const* msg) {
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", msg);
 }
 
 template <class... Args>
@@ -24,9 +32,17 @@ inline void warn(char const* format, Args... args) {
     SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, format, args...);
 }
 
+inline void warn(char const* msg) {
+    SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "%s", msg);
+}
+
 template <class... Args>
 inline void info(char const* format, Args... args) {
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, format, args...);
+}
+
+inline void info(char const* msg) {
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "%s", msg);
 }
 
 template <class... Args>
@@ -34,9 +50,17 @@ inline void debug(char const* format, Args... args) {
     SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, format, args...);
 }
 
+inline void debug(char const* msg) {
+    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s", msg);
+}
+
 template <class... Args>
-static void verbose(char const* format, Args... args) {
+inline void verbose(char const* format, Args... args) {
     SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, format, args...);
+}
+
+inline void verbose(char const* msg) {
+    SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "%s", msg);
 }
 
 } // namespace logs

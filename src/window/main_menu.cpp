@@ -1,26 +1,21 @@
 #include "main_menu.h"
 
-#include "core/game_environment.h"
-#include "core/string.h"
 #include "editor/editor.h"
 #include "game/game.h"
 #include "game/system.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
-#include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "platform/arguments.h"
+#include "io/log.h"
 #include "platform/version.hpp"
 #include "records.h"
 #include "sound/music.h"
 #include "window/config.h"
 #include "window/file_dialog.h"
-#include "window/game_menu.h"
-#include "window/new_career.h"
 #include "window/plain_message_dialog.h"
 #include "window/player_selection.h"
 #include "window/popup_dialog.h"
@@ -28,7 +23,7 @@
 
 static void button_click(int type, int param2);
 
-#define MAX_BUTTONS 6
+#define MAX_BUTTONS 4
 
 static int focus_button_id;
 
@@ -40,10 +35,8 @@ static int focus_button_id;
 static generic_button buttons[] = {
   {BUTTONS_X, BUTTONS_Y + 40 * 0, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 1, 0},
   {BUTTONS_X, BUTTONS_Y + 40 * 1, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 2, 0},
-  //        {BUTTONS_X, BUTTONS_Y + 40 * 2, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 3, 0},
-  //        {BUTTONS_X, BUTTONS_Y + 40 * 3, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 4, 0},
-  {BUTTONS_X, BUTTONS_Y + 40 * 2, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 5, 0},
-  {BUTTONS_X, BUTTONS_Y + 40 * 3, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 6, 0},
+  {BUTTONS_X, BUTTONS_Y + 40 * 2, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 3, 0},
+  {BUTTONS_X, BUTTONS_Y + 40 * 3, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 4, 0},
 };
 
 static void draw_version_string() {
@@ -106,25 +99,27 @@ static void button_click(int type, int param2) {
         window_records_show(); // TODO
         break;
 
+//    case 3:
+//        window_scenario_selection_show(MAP_SELECTION_CUSTOM);
+//        break;
+//
+//    case 4:
+//        if (!editor_is_present() || !game_init_editor()) {
+//            window_plain_message_dialog_show(TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
+//        } else {
+//            sound_music_play_editor();
+//        }
+//        break;
+
     case 3:
-        window_scenario_selection_show(MAP_SELECTION_CUSTOM);
-        break;
-
-    case 4:
-        if (!editor_is_present() || !game_init_editor()) {
-            window_plain_message_dialog_show(TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
-        } else {
-            sound_music_play_editor();
-        }
-        break;
-
-    case 5:
         window_config_show(window_config_show_back);
         break;
 
-    case 6:
+    case 4:
         window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, e_popup_btns_yesno);
         break;
+    default:
+        logs::error("Unknown button index");
     }
 }
 
