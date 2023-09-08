@@ -25,6 +25,7 @@
 #include "overlays/city_overlay_pavilion.h"
 #include "overlays/city_overlay_water.h"
 #include "overlays/city_overlay_damage.h"
+#include "overlays/city_overlay_labor.h"
 
 const city_overlay* g_city_overlay = 0;
 
@@ -94,6 +95,8 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_routing();
     case OVERLAY_HEALTH:
         return city_overlay_for_health();
+    case OVERLAY_LABOR:
+        return city_overlay_for_labor();
     default:
         return 0;
     }

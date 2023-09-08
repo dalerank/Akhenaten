@@ -61,21 +61,22 @@ static int show_figure_native(const figure* f) {
 }
 
 const city_overlay* city_overlay_for_problems(void) {
-    static city_overlay overlay = {OVERLAY_PROBLEMS,
-                                   COLUMN_TYPE_RISK,
-                                   show_building_problems,
-                                   show_figure_problems,
-                                   get_column_height_none,
-                                   0,
-                                   0,
-                                   0,
-                                   0};
+    static city_overlay overlay = {
+        OVERLAY_PROBLEMS,
+        COLUMN_TYPE_RISK,
+        show_building_problems,
+        show_figure_problems,
+        get_column_height_none,
+        0,
+        0,
+        0,
+        0
+    };
     return &overlay;
 }
 
 static int terrain_on_native_overlay(void) {
-    return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION
-           | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
+    return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
 
 static void draw_footprint_native(vec2i pixel, map_point point) {
@@ -124,14 +125,16 @@ static void draw_top_native(vec2i pixel, map_point point) {
 }
 
 const city_overlay* city_overlay_for_native(void) {
-    static city_overlay overlay = {OVERLAY_NATIVE,
-                                   COLUMN_TYPE_RISK,
-                                   show_building_native,
-                                   show_figure_native,
-                                   get_column_height_none,
-                                   0,
-                                   0,
-                                   draw_footprint_native,
-                                   draw_top_native};
+    static city_overlay overlay = {
+        OVERLAY_NATIVE,
+        COLUMN_TYPE_RISK,
+        show_building_native,
+        show_figure_native,
+        get_column_height_none,
+        0,
+        0,
+        draw_footprint_native,
+        draw_top_native
+    };
     return &overlay;
 }

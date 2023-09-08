@@ -63,6 +63,7 @@ static const int submenu_id_to_overlay[7][8] = {
    OVERLAY_DAMAGE,
    OVERLAY_CRIME,
    OVERLAY_NATIVE,
+   OVERLAY_PROBLEMS,
    OVERLAY_LABOR,
    OVERLAY_ROUTING,
    0},
@@ -171,6 +172,10 @@ const char* game_state_overlay_text(int index) {
         return "Apothecary";
     case OVERLAY_DENTIST:
         return "Dentist";
+    case OVERLAY_PROBLEMS:
+        return "Problems";
+    case OVERLAY_LABOR:
+        return "Labor";
     }
 
     return (const char*)lang_get_string(e_text_overlay_menu, index);
