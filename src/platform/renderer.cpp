@@ -923,10 +923,7 @@ cleanup:
 
 /////////
 
-int platform_renderer_init(SDL_Window* window, std::string renderer) {
-    auto &data = g_renderer_data;
-    //    free_all_textures();
-
+std::vector<std::string> get_video_drivers() {
     SDL_RendererInfo info;
     std::vector<std::string> drivers;
     for (int k = 0; k < SDL_GetNumRenderDrivers(); k++) {
@@ -934,6 +931,14 @@ int platform_renderer_init(SDL_Window* window, std::string renderer) {
         logs::info("SDLGraficEngine: availabe render %s", info.name);
         drivers.push_back(info.name);
     }
+
+    return drivers;
+}
+
+int platform_renderer_init(SDL_Window* window, std::string renderer) {
+    auto &data = g_renderer_data;
+
+    auto drivers = get_video_drivers();
 
     auto driver_it = std::find(drivers.begin(), drivers.end(), renderer);
     int driver_index = driver_it != drivers.end() ? std::distance(drivers.begin(), driver_it) : -1;
@@ -949,6 +954,7 @@ int platform_renderer_init(SDL_Window* window, std::string renderer) {
         }
     }
 
+    SDL_RendererInfo info;
     SDL_GetRendererInfo(data.renderer, &info);
     logs::info("Loaded renderer: %s", info.name);
 

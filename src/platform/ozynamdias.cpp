@@ -168,7 +168,6 @@ static void show_options_window(Arguments& args) {
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    auto video_modes = get_video_modes();
     ImGuiFileDialog fileDialog;
     bool store_configuration = false;
 
@@ -202,10 +201,7 @@ static void show_options_window(Arguments& args) {
             ImGui::SetNextWindowPos(window_pos);
             ImGui::SetNextWindowSize(window_size);
 
-            ImGui::Begin("Configuration",
-                         nullptr,
-                         ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse
-                           | ImGuiWindowFlags_NoBringToFrontOnFocus);
+            ImGui::Begin("Configuration", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus);
             ImGui::Text("Folder with original game data:");
             ImGui::InputText("default", &data_directory);
             ImGui::SameLine();
@@ -214,13 +210,8 @@ static void show_options_window(Arguments& args) {
             }
 
             ImVec2 filedialog_size(1280 * 0.5, 720 * 0.5);
-            ImVec2 filedialog_pos{(platform_window_w - filedialog_size.x) / 2,
-                                  (platform_window_h - filedialog_size.y) / 2};
-            if (fileDialog.Display("Choose Folder",
-                                   ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize,
-                                   filedialog_size,
-                                   filedialog_size,
-                                   filedialog_pos)) {
+            ImVec2 filedialog_pos{(platform_window_w - filedialog_size.x) / 2, (platform_window_h - filedialog_size.y) / 2};
+            if (fileDialog.Display("Choose Folder", ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize, filedialog_size, filedialog_size, filedialog_pos)) {
                 ImGui::SetWindowFocus();
                 if (fileDialog.IsOk()) {
                     args.set_data_directory(fileDialog.GetFilePathName());
@@ -228,23 +219,26 @@ static void show_options_window(Arguments& args) {
                 fileDialog.Close();
             }
 
+            ImGui::BeginChild("RenderSection");
+            ImVec2 size_window = ImGui::GetWindowSize();
+            { ImGui::BeginChild("ResolitionSection", ImVec2(size_window.x / 2, size_window.y / 2));
             ImGui::Text("Resolution:");
-            static int item_current_idx = 0;
-            if (ImGui::BeginListBox("##resolution")) {
-                int index = 0;
-                for (auto it = video_modes.begin(); it != video_modes.end(); ++it, ++index) {
-                    const bool is_selected = (item_current_idx == index);
-                    if (ImGui::Selectable(it->str.c_str(), is_selected)) {
-                        item_current_idx = index;
-                        args.set_window_size({it->w, it->h});
-                    }
-
-                    if (is_selected) {
-                        ImGui::SetItemDefaultFocus();
-                    }
+            static int item_mode_current_idx = 0;
+            auto video_modes = get_video_modes();
+            ImGui::BeginListBox("##resolution");
+            int index = 0;
+            for (auto it = video_modes.begin(); it != video_modes.end(); ++it, ++index) {
+                const bool is_selected = (item_mode_current_idx == index);
+                if (ImGui::Selectable(it->str.c_str(), is_selected)) {
+                    item_mode_current_idx = index;
+                    args.set_window_size({it->w, it->h});
                 }
-                ImGui::EndListBox();
+
+                if (is_selected) {
+                    ImGui::SetItemDefaultFocus();
+                }
             }
+            ImGui::EndListBox();
 
             bool is_window_mode = args.is_window_mode();
             if (ImGui::Checkbox("Window mode", &is_window_mode)) {
@@ -253,15 +247,41 @@ static void show_options_window(Arguments& args) {
 
             ImGui::Checkbox("Store configuration (to skip this dialog for the next time)", &store_configuration);
 
+            ImGui::EndChild();} // ResolitionSection
+            ImGui::SameLine();
+            {ImGui::BeginChild("DriverSection");
+            ImGui::Text("Driver:");
+            static int item_driver_current_idx = 0;
+            auto video_drivers = get_video_drivers();
+            ImGui::BeginListBox("##drivers");
+            int index = 0;
+            for (auto it = video_drivers.begin(); it != video_drivers.end(); ++it, ++index) {
+                const bool is_selected = (item_driver_current_idx == index);
+                if (ImGui::Selectable(it->c_str(), is_selected)) {
+                    item_driver_current_idx = index;
+                    args.set_renderer(*it);
+                }
+
+                if (is_selected) {
+                    ImGui::SetItemDefaultFocus();
+                }
+            }
+            ImGui::EndListBox();
+            ImGui::EndChild();} // DriverSection
+
+            ImGui::EndChild(); // RenderSection
+
             ImVec2 left_bottom_corner{5, window_size.y - 30};
             ImGui::SetCursorPos(left_bottom_corner);
-            if (ImGui::Button("RUN GAME")) {
-                done = true;
-            }
-            ImGui::SameLine();
-            if (ImGui::Button("Quit")) {
-                exit(EXIT_SUCCESS);
-            }
+            {ImGui::BeginChild("StartSection");
+                if (ImGui::Button("RUN GAME")) {
+                    done = true;
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Quit")) {
+                    exit(EXIT_SUCCESS);
+                }
+            ImGui::EndChild();}
             // ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
             // ImGui::GetIO().Framerate);
             ImGui::End();
