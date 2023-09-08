@@ -181,6 +181,11 @@ void camera_go_to_pixel(vec2i pixel, bool validate) {
     data.camera.position = pixel;
     if (validate) {
         camera_validate_position();
+    } else {
+        data.camera.tile_internal.x = data.camera.position.x / TILE_WIDTH_PIXELS;
+        data.camera.tile_internal.y = data.camera.position.y / HALF_TILE_HEIGHT_PIXELS;
+
+        data.camera.tile_internal.y &= ~1;
     }
 }
 

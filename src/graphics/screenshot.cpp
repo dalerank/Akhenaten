@@ -251,10 +251,11 @@ static void create_full_city_screenshot(void) {
 
     vec2i view_pos, view_size;
     city_view_get_viewport(view_pos, view_size);
-    
 
-    int city_width_pixels = max_pos.x + view_size.x - min_pos.x;
-    int city_height_pixels = max_pos.y + view_size.y - min_pos.y;
+    max_pos += view_size;
+
+    int city_width_pixels = max_pos.x - min_pos.x;
+    int city_height_pixels = max_pos.y - min_pos.y;
 
     if (!image_create(city_width_pixels, city_height_pixels + TILE_Y_SIZE, 0, IMAGE_HEIGHT_CHUNK)) {
         logs::error("Unable to set memory for full city screenshot", 0, 0);
@@ -280,7 +281,7 @@ static void create_full_city_screenshot(void) {
 
     map_point dummy_tile(0, 0);
     int error = 0;
-    int base_height = image_set_loop_height_limits(min_pos.y, max_pos.y + view_size.y);
+    int base_height = image_set_loop_height_limits(min_pos.y, max_pos.y);
     int size;
     zoom_set_scale(100);
     graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, canvas_width, IMAGE_HEIGHT_CHUNK);
@@ -290,7 +291,7 @@ static void create_full_city_screenshot(void) {
     city_view_set_viewport(canvas_width + (city_view_is_sidebar_collapsed() ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH), IMAGE_HEIGHT_CHUNK + TOP_MENU_HEIGHT);
     int current_height = base_height;
     while ((size = image_request_rows()) != 0) {
-        int y_offset = current_height + IMAGE_HEIGHT_CHUNK > max_pos.y ? IMAGE_HEIGHT_CHUNK - (max_pos.y - current_height) - TILE_Y_SIZE * 2 - TOP_MENU_HEIGHT : 0;
+        int y_offset = (current_height + IMAGE_HEIGHT_CHUNK > max_pos.y) ? IMAGE_HEIGHT_CHUNK - (max_pos.y - current_height) - TILE_Y_SIZE : 0;
 
         for (int width = 0; width < city_width_pixels; width += canvas_width) {
             int image_section_width = canvas_width;
@@ -300,7 +301,7 @@ static void create_full_city_screenshot(void) {
                 x_offset = canvas_width - image_section_width - TILE_X_SIZE * 2;
             }
 
-            camera_go_to_pixel({min_pos.x + width, current_height}, true);
+            camera_go_to_pixel({min_pos.x + width, current_height}, false);
             widget_city_draw_without_overlay(0, 0, dummy_tile);
             graphics_renderer()->save_screen_buffer(&canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, IMAGE_HEIGHT_CHUNK - y_offset, city_width_pixels);
         }

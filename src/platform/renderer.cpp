@@ -118,7 +118,6 @@ struct renderer_data_t {
     float global_render_scale = 1.0f;
 };
 
-
 renderer_data_t g_renderer_data;
 
 int graphics_renderer_interface::save_screen_buffer(color* pixels, int x, int y, int width, int height, int row_width) {
@@ -143,6 +142,7 @@ void graphics_renderer_interface::draw_line(int x_start, int x_end, int y_start,
                            (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
     SDL_RenderDrawLine(data.renderer, x_start, y_start, x_end, y_end);
 }
+
 void graphics_renderer_interface::draw_rect(int x, int y, int width, int height, color color) {
     auto &data = g_renderer_data;
     if (data.paused) {
@@ -156,6 +156,7 @@ void graphics_renderer_interface::draw_rect(int x, int y, int width, int height,
     SDL_Rect rect = {x, y, width + 1, height + 1};
     SDL_RenderDrawRect(data.renderer, &rect);
 }
+
 void graphics_renderer_interface::fill_rect(int x, int y, int width, int height, color color) {
     auto &data = g_renderer_data;
     if (data.paused) {
@@ -178,6 +179,7 @@ void graphics_renderer_interface::clear_screen(void) {
     SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0xff);
     SDL_RenderClear(data.renderer);
 }
+
 void graphics_renderer_interface::set_viewport(int x, int y, int width, int height) {
     auto &data = g_renderer_data;
     if (data.paused) {
@@ -186,6 +188,7 @@ void graphics_renderer_interface::set_viewport(int x, int y, int width, int heig
     SDL_Rect viewport = {x, y, width, height};
     SDL_RenderSetViewport(data.renderer, &viewport);
 }
+
 void graphics_renderer_interface::reset_viewport(void) {
     auto &data = g_renderer_data;
     if (data.paused) {
@@ -194,6 +197,7 @@ void graphics_renderer_interface::reset_viewport(void) {
     SDL_RenderSetViewport(data.renderer, NULL);
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
+
 void graphics_renderer_interface::set_clip_rectangle(int x, int y, int width, int height) {
     auto &data = g_renderer_data;
     if (data.paused) {
@@ -202,6 +206,7 @@ void graphics_renderer_interface::set_clip_rectangle(int x, int y, int width, in
     SDL_Rect clip = {x, y, width, height};
     SDL_RenderSetClipRect(data.renderer, &clip);
 }
+
 void graphics_renderer_interface::reset_clip_rectangle(void) {
     auto &data = g_renderer_data;
     if (data.paused) {
@@ -247,7 +252,6 @@ std::vector<video_mode> get_video_modes() {
     return modes;
 }
 
-
 graphics_renderer_interface* graphics_renderer(void) {
     auto &data = g_renderer_data;
     return &data.renderer_interface;
@@ -278,6 +282,7 @@ static void set_texture_scale_mode(SDL_Texture* texture, float scale_factor) {
     }
 #endif
 }
+
 void graphics_renderer_interface::draw_image(const image_t* img, float x, float y, color color, float scale, bool mirrored) {
     auto &data = g_renderer_data;
     if (data.paused || img == nullptr)
