@@ -36,6 +36,9 @@ int screen_width(void) {
 int screen_height(void) {
     return g_screen_data.height;
 }
+vec2i screen_size() {
+    return {g_screen_data.width, g_screen_data.height};
+}
 
 int screen_dialog_offset_x(void) {
     return g_screen_data.dialog_offset.x;
