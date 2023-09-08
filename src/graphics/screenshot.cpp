@@ -62,10 +62,10 @@ static void image_free(void)
     png_destroy_write_struct(&screenshot.png_ptr, &screenshot.info_ptr);
 }
 
-static int image_create(int width, int height, int has_alpha_channel, int rows_in_memory)
+static int image_create(vec2i size, int has_alpha_channel, int rows_in_memory)
 {
     image_free();
-    if (!width || !height || !rows_in_memory) {
+    if (!size.x || !size.y || !rows_in_memory) {
         return 0;
     }
     screenshot.png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
@@ -79,11 +79,11 @@ static int image_create(int width, int height, int has_alpha_channel, int rows_i
     }
     png_set_compression_level(screenshot.png_ptr, 3);
     screenshot.alpha_channel = has_alpha_channel;
-    screenshot.width = width;
-    screenshot.height = height;
-    screenshot.row_size = width * IMAGE_BYTES_PER_PIXEL;
+    screenshot.width = size.x;
+    screenshot.height = size.y;
+    screenshot.row_size = size.x * IMAGE_BYTES_PER_PIXEL;
     if (screenshot.alpha_channel) {
-        screenshot.row_size += width;
+        screenshot.row_size += size.x;
     }
     screenshot.rows_in_memory = rows_in_memory;
     screenshot.pixels = (uint8_t *) malloc(screenshot.row_size);
@@ -213,10 +213,7 @@ static void show_saved_notice(const char *filename) {
 }
 
 static void create_window_screenshot(void) {
-    int width = screen_width();
-    int height = screen_height();
-
-    if (!image_create(width, height, 0, 1)) {
+    if (!image_create(screen_size(), 0, 1)) {
         logs::error("Unable to create memory for screenshot");
         return;
     }
@@ -254,10 +251,12 @@ static void create_full_city_screenshot(void) {
 
     max_pos += view_size;
 
-    int city_width_pixels = max_pos.x - min_pos.x;
-    int city_height_pixels = max_pos.y - min_pos.y;
+    vec2i city_canvas_pixels = max_pos - min_pos;
 
-    if (!image_create(city_width_pixels, city_height_pixels + TILE_Y_SIZE, 0, IMAGE_HEIGHT_CHUNK)) {
+    int canvas_width = city_canvas_pixels.x / 5;
+    int canvas_height = city_canvas_pixels.y / 5;
+
+    if (!image_create(city_canvas_pixels, 0, canvas_height)) {
         logs::error("Unable to set memory for full city screenshot", 0, 0);
         return;
     }
@@ -269,14 +268,13 @@ static void create_full_city_screenshot(void) {
         return;
     }
 
-    color *canvas = (color*)malloc(sizeof(color) * city_width_pixels * IMAGE_HEIGHT_CHUNK);
+    color *canvas = (color*)malloc(sizeof(color) * city_canvas_pixels.x * canvas_height);
     if (!canvas) {
         image_free();
         return;
     }
-    memset(canvas, 0, sizeof(color) * city_width_pixels * IMAGE_HEIGHT_CHUNK);
+    memset(canvas, 0, sizeof(color) * city_canvas_pixels.x * canvas_height);
 
-    int canvas_width = 8 * TILE_X_SIZE;
     int old_scale = zoom_get_scale() * 100;
 
     map_point dummy_tile(0, 0);
@@ -284,34 +282,34 @@ static void create_full_city_screenshot(void) {
     int base_height = image_set_loop_height_limits(min_pos.y, max_pos.y);
     int size;
     zoom_set_scale(100);
-    graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, canvas_width, IMAGE_HEIGHT_CHUNK);
+    graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, canvas_width, canvas_height);
     
     vec2i viewport_offset, viewport_size;
     city_view_get_viewport(viewport_offset, viewport_size);
-    city_view_set_viewport(canvas_width + (city_view_is_sidebar_collapsed() ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH), IMAGE_HEIGHT_CHUNK + TOP_MENU_HEIGHT);
+    city_view_set_viewport(canvas_width + (city_view_is_sidebar_collapsed() ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH), canvas_height + TOP_MENU_HEIGHT);
     int current_height = base_height;
     while ((size = image_request_rows()) != 0) {
-        int y_offset = (current_height + IMAGE_HEIGHT_CHUNK > max_pos.y) ? IMAGE_HEIGHT_CHUNK - (max_pos.y - current_height) - TILE_Y_SIZE : 0;
+        int y_offset = (current_height + canvas_height > max_pos.y) ? canvas_height - (max_pos.y - current_height) - TILE_Y_SIZE : 0;
 
-        for (int width = 0; width < city_width_pixels; width += canvas_width) {
+        for (int width = 0; width < city_canvas_pixels.x; width += canvas_width) {
             int image_section_width = canvas_width;
             int x_offset = 0;
-            if (canvas_width + width > city_width_pixels) {
-                image_section_width = city_width_pixels - width;
+            if (canvas_width + width > city_canvas_pixels.x) {
+                image_section_width = city_canvas_pixels.x - width;
                 x_offset = canvas_width - image_section_width - TILE_X_SIZE * 2;
             }
 
             camera_go_to_pixel({min_pos.x + width, current_height}, false);
             widget_city_draw_without_overlay(0, 0, dummy_tile);
-            graphics_renderer()->save_screen_buffer(&canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, IMAGE_HEIGHT_CHUNK - y_offset, city_width_pixels);
+            graphics_renderer()->save_screen_buffer(&canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
         }
 
-        if (!image_write_rows(canvas, city_width_pixels)) {
+        if (!image_write_rows(canvas, city_canvas_pixels.x)) {
             logs::error("Error writing image", 0, 0);
             error = 1;
             break;
         }
-        current_height += IMAGE_HEIGHT_CHUNK;
+        current_height += canvas_height;
     }
 
     city_view_set_viewport(viewport_size.x + (city_view_is_sidebar_collapsed() ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH), viewport_size.y + TOP_MENU_HEIGHT);
@@ -330,8 +328,7 @@ static void create_full_city_screenshot(void) {
     window_invalidate();
 }
 
-static void create_minimap_screenshot(void)
-{
+static void create_minimap_screenshot() {
     if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY)) {
         return;
     }
@@ -339,7 +336,7 @@ static void create_minimap_screenshot(void)
     int width_pixels = map_grid_width() * (int) MINIMAP_SCALE * 2;
     int height_pixels = map_grid_height() * (int) MINIMAP_SCALE * 2;
 
-    if (!image_create(width_pixels, height_pixels, 1, height_pixels)) {
+    if (!image_create({width_pixels, height_pixels}, 1, height_pixels)) {
         logs::error("Unable to set memory for minimap screenshot", 0, 0);
         return;
     }
