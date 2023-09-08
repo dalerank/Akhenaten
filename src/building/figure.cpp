@@ -212,22 +212,26 @@ void building::check_labor_problem() {
     if ((houses_covered <= 0 && labor_category != 255) || (labor_category == 255 && num_workers <= 0))
         show_on_problem_overlay = 2;
 }
+
 void building::common_spawn_labor_seeker(int min_houses) {
     if (city_population() <= 0)
         return;
+
     if (config_get(CONFIG_GP_CH_GLOBAL_LABOUR)) {
         // If it can access Rome
         if (distance_from_entry)
             houses_covered = 2 * min_houses;
         else
             houses_covered = 0;
+
         if (houses_covered >= 300)
             houses_covered = 300;
     } else if (houses_covered <= min_houses) {
-        if (has_figure(1)) // no figure slot available!
+        if (has_figure(1)) { // no figure slot available!
             return;
-        else
+        } else {
             create_roaming_figure(FIGURE_LABOR_SEEKER, FIGURE_ACTION_125_ROAMING, true);
+        }
     }
 }
 bool building::common_spawn_figure_trigger(int min_houses) {
