@@ -843,8 +843,9 @@ static void update_monthly_data(int randm_god) {
         city_data.religion.angry_message_delay = 20;
         if (min_happiness < 10)
             city_message_post(false, MESSAGE_GODS_WRATHFUL, 0, 0);
-        else if (GAME_ENV == ENGINE_ENV_C3)
-            city_message_post(false, MESSAGE_GODS_UNHAPPY, 0, 0);
+
+        //else if (GAME_ENV == ENGINE_ENV_C3)
+        //    city_message_post(false, MESSAGE_GODS_UNHAPPY, 0, 0);
     }
 
     // update status effects with limited durations

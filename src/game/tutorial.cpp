@@ -290,13 +290,8 @@ int tutorial_handle_fire(void) {
         return 0;
 
     g_tutorials_flags.tutorial_1.fire = 1;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        building_menu_update(BUILDSET_TUT1_FIRE_C3);
-        post_message(MESSAGE_TUTORIAL_FIRE);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        building_menu_update(BUILDSET_TUT1_FIRE_PH);
-        post_message(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE);
-    }
+    building_menu_update(BUILDSET_TUT1_FIRE_PH);
+    post_message(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE);
     return 1;
 }
 int tutorial_handle_collapse(void) {
@@ -304,13 +299,8 @@ int tutorial_handle_collapse(void) {
         return 0;
 
     g_tutorials_flags.tutorial_1.collapse = 1;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        building_menu_update(BUILDSET_TUT1_COLLAPSE_C3);
-        post_message(MESSAGE_TUTORIAL_COLLAPSE);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        building_menu_update(BUILDSET_TUT1_COLLAPSE_PH);
-        post_message(MESSAGE_TUTORIAL_COLLAPSED_BUILDING);
-    }
+    building_menu_update(BUILDSET_TUT1_COLLAPSE_PH);
+    post_message(MESSAGE_TUTORIAL_COLLAPSED_BUILDING);
     return 1;
 }
 

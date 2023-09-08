@@ -64,46 +64,30 @@ static bool can_produce_resource(int resource) {
 }
 
 static int get_raw_resource(int resource) {
-    if (GAME_ENV == ENGINE_ENV_C3)
-        switch (resource) {
-        case RESOURCE_POTTERY:
-            return RESOURCE_CLAY;
-        case RESOURCE_LUXURY_GOODS:
-            return RESOURCE_GEMS;
-        case RESOURCE_MEAT:
-            return RESOURCE_STRAW;
-        case RESOURCE_BEER:
-            return RESOURCE_BARLEY;
-        case RESOURCE_WEAPONS:
-            return RESOURCE_COPPER;
-        default:
-            return resource;
-        }
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        switch (resource) {
-        case RESOURCE_STRAW:
-            return RESOURCE_GRAIN;
-        case RESOURCE_POTTERY:
-            return RESOURCE_CLAY;
-        case RESOURCE_LUXURY_GOODS:
-            return RESOURCE_GEMS;
-        case RESOURCE_LINEN:
-            return RESOURCE_FLAX;
-        case RESOURCE_BEER:
-            return RESOURCE_BARLEY;
-        case RESOURCE_WEAPONS:
-            return RESOURCE_COPPER;
-        case RESOURCE_PAPYRUS:
-            return RESOURCE_REEDS;
-        case RESOURCE_CHARIOTS:
-            return RESOURCE_TIMBER;
-        case RESOURCE_PAINT:
-            return RESOURCE_HENNA;
-        case RESOURCE_LAMPS:
-            return RESOURCE_OIL;
-        default:
-            return resource;
-        }
+    switch (resource) {
+    case RESOURCE_STRAW:
+        return RESOURCE_GRAIN;
+    case RESOURCE_POTTERY:
+        return RESOURCE_CLAY;
+    case RESOURCE_LUXURY_GOODS:
+        return RESOURCE_GEMS;
+    case RESOURCE_LINEN:
+        return RESOURCE_FLAX;
+    case RESOURCE_BEER:
+        return RESOURCE_BARLEY;
+    case RESOURCE_WEAPONS:
+        return RESOURCE_COPPER;
+    case RESOURCE_PAPYRUS:
+        return RESOURCE_REEDS;
+    case RESOURCE_CHARIOTS:
+        return RESOURCE_TIMBER;
+    case RESOURCE_PAINT:
+        return RESOURCE_HENNA;
+    case RESOURCE_LAMPS:
+        return RESOURCE_OIL;
+    default:
+        return resource;
+    }
 }
 
 bool empire_can_produce_resource(int resource, bool check_if_open) {
@@ -278,17 +262,16 @@ void empire_city_generate_trader(void) {
         if (g_cities[i].is_sea_trade) {
             if (!city_buildings_has_working_dock()) {
                 // delay of 384 = 1 year
-                if (GAME_ENV == ENGINE_ENV_C3)
-                    city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK, 384);
-                else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                    city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK,
-                                                         1,
-                                                         MESSAGE_NO_WORKING_DOCK_PH,
-                                                         384);
+                //if (GAME_ENV == ENGINE_ENV_C3)
+                //    city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK, 384);
+                //else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+                city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK_PH, 384);
                 continue;
             }
-            if (!scenario_map_has_river_entry())
+
+            if (!scenario_map_has_river_entry()) {
                 continue;
+            }
 
             city_trade_add_sea_trade_route();
         } else {

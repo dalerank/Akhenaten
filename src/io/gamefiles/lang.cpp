@@ -181,12 +181,12 @@ bool lang_load(int is_editor) {
 
 const uint8_t* lang_get_string(int group, int index) {
     // Add new strings
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        if ((group == 28) && (index == 115))
-            return translation_for(TR_BUILDING_ROADBLOCK);
-        if ((group == 28) && (index == 116))
-            return translation_for(TR_BUILDING_ROADBLOCK_DESC);
-    }
+    //if (GAME_ENV == ENGINE_ENV_C3) {
+    //    if ((group == 28) && (index == 115))
+    //        return translation_for(TR_BUILDING_ROADBLOCK);
+    //    if ((group == 28) && (index == 116))
+    //        return translation_for(TR_BUILDING_ROADBLOCK_DESC);
+    //}
 
     int32_t string_offset = g_lang_data.text_entries[group].offset;
     const uint8_t* str = &g_lang_data.text_data[string_offset];

@@ -48,16 +48,13 @@ empire_map_data_t g_empire_map_data;
 const char SCENARIO_FILE[2][2][100] = {{"c32.emp", "c3.emp"}, {"", "Pharaoh2.emp"}};
 
 bool empire_city_type_can_trade(int type) {
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        return type == EMPIRE_CITY_PHARAOH;
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        switch (type) {
-        case EMPIRE_CITY_PHARAOH_TRADING:
-        case EMPIRE_CITY_EGYPTIAN_TRADING:
-        case EMPIRE_CITY_FOREIGN_TRADING:
-            return true;
-        }
+    switch (type) {
+    case EMPIRE_CITY_PHARAOH_TRADING:
+    case EMPIRE_CITY_EGYPTIAN_TRADING:
+    case EMPIRE_CITY_FOREIGN_TRADING:
+        return true;
     }
+    
     return false;
 }
 

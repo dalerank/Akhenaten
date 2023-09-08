@@ -68,11 +68,10 @@ void set_allowed_food(int i, int resource) {
 }
 
 int stack_units_by_resource(int resource) {
-    if (GAME_ENV == ENGINE_ENV_C3)
-        return RESOURCE_UNIT_PILE;
     switch (resource) {
     default:
         return RESOURCE_UNIT_PILE;
+
     case RESOURCE_GOLD:
     case RESOURCE_STONE:
     case RESOURCE_LIMESTONE:
@@ -80,8 +79,10 @@ int stack_units_by_resource(int resource) {
     case RESOURCE_SANDSTONE:
     case RESOURCE_MARBLE:
         return RESOURCE_UNIT_BLOCK;
+
     case RESOURCE_WEAPONS:
         return RESOURCE_UNIT_WEAPON;
+
     case RESOURCE_CHARIOTS:
         return RESOURCE_UNIT_CHARIOT;
     }

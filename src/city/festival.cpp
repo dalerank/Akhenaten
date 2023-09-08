@@ -181,12 +181,7 @@ void city_festival_calculate_costs(void) {
     city_data.festival.grand_alcohol = city_data.population.population / 500 + 1;
     city_data.festival.not_enough_alcohol = 0;
 
-    int32_t alcohol_resource = 0;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        alcohol_resource = RESOURCE_BEER;
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        alcohol_resource = RESOURCE_BEER;
-    }
+    int32_t alcohol_resource = RESOURCE_BEER;
 
     if (city_data.resource.stored_in_warehouses[alcohol_resource] < city_data.festival.grand_alcohol) {
         city_data.festival.not_enough_alcohol = 1;

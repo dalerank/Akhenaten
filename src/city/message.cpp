@@ -344,12 +344,12 @@ void city_message_sort_and_compact(void) {
 }
 
 int city_message_get_text_id(int message_id) {
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        if (message_id > 50)
-            return message_id + 199;
-        else
-            return message_id + 99;
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+    // if (GAME_ENV == ENGINE_ENV_C3) {
+    //    if (message_id > 50)
+    //        return message_id + 199;
+    //    else
+    //        return message_id + 99;
+    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH)
         return message_id;
 }
 int city_message_get_advisor(int message_type) {
@@ -563,13 +563,14 @@ io_buffer* iob_messages = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_message_data;
     for (int i = 0; i < MAX_MESSAGES; i++) {
         city_message* msg = &data.messages[i];
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            iob->bind(BIND_SIGNATURE_INT32, &msg->param1);
-            iob->bind(BIND_SIGNATURE_INT16, &msg->year);
-            iob->bind(BIND_SIGNATURE_INT16, &msg->param2);
-            //            iob->bind(BIND_SIGNATURE_INT16, &msg->message_id);
-            //            msg->message_id = city_message_get_text_id(msg->message_id);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        //if (GAME_ENV == ENGINE_ENV_C3) {
+        //    iob->bind(BIND_SIGNATURE_INT32, &msg->param1);
+        //    iob->bind(BIND_SIGNATURE_INT16, &msg->year);
+        //    iob->bind(BIND_SIGNATURE_INT16, &msg->param2);
+        //    //            iob->bind(BIND_SIGNATURE_INT16, &msg->message_id);
+        //    //            msg->message_id = city_message_get_text_id(msg->message_id);
+        //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) 
+        {
             iob->bind(BIND_SIGNATURE_INT32, &msg->param1);
             iob->bind(BIND_SIGNATURE_INT32, &msg->param2);
             iob->bind(BIND_SIGNATURE_INT16, &msg->year);
@@ -580,9 +581,7 @@ io_buffer* iob_messages = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &msg->sequence);
         iob->bind(BIND_SIGNATURE_UINT8, &msg->is_read);
         iob->bind(BIND_SIGNATURE_UINT8, &msg->month);
-        if (GAME_ENV == ENGINE_ENV_C3)
-            iob->bind____skip(2);
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        {
             iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_body_id);  // FF FF
             iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_title_id); // FF FF
             iob->bind(BIND_SIGNATURE_INT16, &msg->unk_02);            // FF FF

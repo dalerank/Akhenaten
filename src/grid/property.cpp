@@ -90,6 +90,7 @@ int map_property_multi_tile_size(int grid_offset) {
 
     if (field >= 1 || field <= 6)
         return field;
+
     return 1;
 }
 void map_property_set_multi_tile_size(int grid_offset, int size) {

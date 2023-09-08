@@ -363,10 +363,12 @@ static bool should_have_workers(building* b, int category, int check_access) {
         if (is_industry_disabled(b))
             return false;
     }
+
     // engineering and water are always covered in C3
-    if (GAME_ENV == ENGINE_ENV_C3
-        && (category == LABOR_CATEGORY_INFRASTRUCTURE || category == LABOR_CATEGORY_WATER_HEALTH))
-        return true;
+    //if (GAME_ENV == ENGINE_ENV_C3
+    //    && (category == LABOR_CATEGORY_INFRASTRUCTURE || category == LABOR_CATEGORY_WATER_HEALTH))
+    //    return true;
+
     if (check_access)
         return b->houses_covered > 0 ? 1 : 0;
     return true;
@@ -604,11 +606,10 @@ static void allocate_workers_to_non_water_buildings(void) {
         e_labor_category cat = category_for_building(b);
         if (cat < 0)
             continue;
-        if (GAME_ENV == ENGINE_ENV_C3)
-            if (cat == LABOR_CATEGORY_WATER_HEALTH || cat == LABOR_CATEGORY_MILITARY)
-                continue;
+
         if (!should_have_workers(b, cat, 0))
             continue;
+
         if (b->percentage_houses_covered > 0 && category_workers_needed[cat]) {
             int required_workers = model_get_building(b->type)->laborers;
             if (b->num_workers < required_workers) {
