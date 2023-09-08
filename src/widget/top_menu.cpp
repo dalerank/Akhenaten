@@ -22,6 +22,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
+#include "graphics/screenshot.h"
 #include "graphics/window.h"
 #include "io/gamestate/boilerplate.h"
 #include "io/manager.h"
@@ -70,6 +71,8 @@ static void menu_help_about(int param);
 
 static void menu_advisors_go_to(int advisor);
 static void menu_debug_change_opt(int opt);
+static void menu_debug_screenshot(int opt);
+static void menu_debug_full_screenshot(int opt);
 static void menu_debug_show_console(int param);
 static void menu_update_text(menu_bar_item& menu, int index, int text_number);
 static void menu_update_text(menu_bar_item& menu, int index, const char* text);
@@ -124,7 +127,9 @@ static menu_item menu_debug[] = {
   {5, 6, menu_debug_change_opt, e_debug_show_floods},
   {5, 7, menu_debug_change_opt, e_debug_show_camera},
   {5, 8, menu_debug_change_opt, e_debug_show_tile_cache},
-  {5, 9, menu_debug_show_console, 0, false, "show console"},
+  {5, 9, menu_debug_show_console, 0, false, "Show console"},
+  {5, 10, menu_debug_screenshot, 0, false, "Screenshot"},
+  {5, 11, menu_debug_full_screenshot, 0, false, "Full Screenshot"},
 };
 
 menu_bar_item g_top_menu[] = {
@@ -152,6 +157,20 @@ static void menu_debug_opt_text(int opt, bool v) {
 static void menu_debug_change_opt(int opt) {
     g_debug_show_opts[opt] = !g_debug_show_opts[opt];
     menu_debug_opt_text(opt, g_debug_show_opts[opt]);
+}
+
+static void menu_debug_screenshot(int opt) {
+    widget_top_menu_clear_state();
+    window_go_back();
+    window_invalidate();
+    graphics_save_screenshot(SCREENSHOT_DISPLAY);
+}
+
+static void menu_debug_full_screenshot(int opt) {
+    widget_top_menu_clear_state();
+    window_go_back();
+    window_invalidate();
+    graphics_save_screenshot(SCREENSHOT_FULL_CITY);
 }
 
 static void button_rotate_reset(int param1, int param2) {
@@ -198,10 +217,9 @@ void menu_bar_draw(const std::span<menu_bar_item>& items) {
     short x_offset = TOP_MENU_BASE_X_OFFSET;
     for (auto& item : items) {
         item.x_start = x_offset;
-        int text_length
-          = item.text_raw
-              ? lang_text_draw(item.text_raw, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT)
-              : lang_text_draw(item.text_group, 0, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT);
+        int text_length = item.text_raw
+                                ? lang_text_draw(item.text_raw, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT)
+                                : lang_text_draw(item.text_group, 0, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT);
         x_offset += text_length;
         item.x_end = x_offset;
         x_offset += 32; // spacing
@@ -344,16 +362,12 @@ struct top_menu_drawn_t {
 
 top_menu_drawn_t g_top_menu_drawn;
 
-void clear_state(void) {
+void widget_top_menu_clear_state() {
     auto& data = g_top_menu_data;
 
     data.open_sub_menu = 0;
     data.focus_menu_id = 0;
     data.focus_sub_menu_id = 0;
-}
-
-void widget_top_menu_clear_state() {
-    clear_state();
 }
 
 static void set_text_for_autosave(void) {
@@ -400,8 +414,9 @@ static void draw_background(void) {
 }
 static void draw_foreground(void) {
     auto& data = g_top_menu_data;
-    if (!data.open_sub_menu)
+    if (!data.open_sub_menu) {
         return;
+    }
 
     menu_draw(g_top_menu[data.open_sub_menu - 1], data.focus_sub_menu_id);
 }
@@ -411,7 +426,12 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void top_menu_window_show(void) {
-    window_type window = {WINDOW_TOP_MENU, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_TOP_MENU,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     init();
     window_show(&window);
 }
@@ -561,7 +581,7 @@ static int get_info_id(int mouse_x, int mouse_y) {
 static bool handle_input_submenu(const mouse* m, const hotkeys* h) {
     auto& data = g_top_menu_data;
     if (m->right.went_up || h->escape_pressed) {
-        clear_state();
+        widget_top_menu_clear_state();
         window_go_back();
         return true;
     }
@@ -570,9 +590,10 @@ static bool handle_input_submenu(const mouse* m, const hotkeys* h) {
         window_invalidate();
         data.open_sub_menu = menu_id;
     }
+
     if (!menu_handle_mouse(m, &g_top_menu[data.open_sub_menu - 1], &data.focus_sub_menu_id)) {
         if (m->left.went_up) {
-            clear_state();
+            widget_top_menu_clear_state();
             window_go_back();
             return true;
         }
@@ -583,12 +604,13 @@ static bool handle_right_click(int type) {
     if (type == INFO_NONE)
         return false;
 
-    if (type == INFO_FUNDS)
+    if (type == INFO_FUNDS) {
         window_message_dialog_show(MESSAGE_DIALOG_TOP_FUNDS, -1, window_city_draw_all);
-    else if (type == INFO_POPULATION)
+    } else if (type == INFO_POPULATION) {
         window_message_dialog_show(MESSAGE_DIALOG_TOP_POPULATION, -1, window_city_draw_all);
-    else if (type == INFO_DATE)
+    } else if (type == INFO_DATE) {
         window_message_dialog_show(MESSAGE_DIALOG_TOP_DATE, -1, window_city_draw_all);
+    }
 
     return true;
 }
@@ -600,8 +622,10 @@ static bool handle_mouse_menu(const mouse* m) {
         top_menu_window_show();
         return true;
     }
-    if (m->right.went_up)
+
+    if (m->right.went_up) {
         return handle_right_click(get_info_id(m->x, m->y));
+    }
 
     return false;
 }
@@ -660,7 +684,7 @@ static void replay_map_handle(bool confirmed) {
         window_city_show();
     } else {
         int scenario_id = scenario_campaign_scenario_id();
-        clear_state();
+        widget_top_menu_clear_state();
         GamestateIO::load_mission(scenario_id, true);
     }
 }
@@ -678,57 +702,57 @@ static void menu_file_new_game_handle(bool confirmed) {
 }
 
 static void menu_file_new_game(int param) {
-    clear_state();
+    widget_top_menu_clear_state();
     window_popup_dialog_show(POPUP_DIALOG_QUIT, menu_file_new_game_handle, e_popup_btns_yesno);
 }
 
 static void menu_file_replay_map(int param) {
-    clear_state();
+    widget_top_menu_clear_state();
     window_popup_dialog_show_confirmation(1, 2, replay_map_handle);
 }
 static void menu_file_load_game(int param) {
-    clear_state();
+    widget_top_menu_clear_state();
     Planner.reset();
     window_city_show();
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
 }
 static void menu_file_save_game(int param) {
-    clear_state();
+    widget_top_menu_clear_state();
     window_city_show();
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
 }
 static void menu_file_delete_game(int param) {
-    clear_state();
+    widget_top_menu_clear_state();
     window_city_show();
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_DELETE);
 }
 static void menu_file_confirm_exit(bool accepted) {
     if (accepted) {
-        clear_state();
+        widget_top_menu_clear_state();
         window_main_menu_show(true);
     } else {
         window_city_show();
     }
 }
 static void menu_file_exit_city(int param) {
-    clear_state();
+    widget_top_menu_clear_state();
     window_popup_dialog_show(POPUP_DIALOG_QUIT, menu_file_confirm_exit, e_popup_btns_yesno);
 }
 
 static void menu_options_display(int param) {
-    clear_state();
+    widget_top_menu_clear_state();
     window_display_options_ext_show(window_city_show);
 }
 static void menu_options_sound(int param) {
-    clear_state();
+    widget_top_menu_clear_state();
     window_sound_options_show(window_city_show);
 }
 static void menu_options_speed(int param) {
-    clear_state();
+    widget_top_menu_clear_state();
     window_speed_options_show(window_city_show);
 }
 static void menu_options_difficulty(int param) {
-    clear_state();
+    widget_top_menu_clear_state();
     window_difficulty_options_show(window_city_show);
 }
 static void menu_options_autosave(int param) {
@@ -748,7 +772,7 @@ static void menu_options_hotkeys(int param) {
 }
 
 static void menu_help_help(int param) {
-    clear_state();
+    widget_top_menu_clear_state();
     window_go_back();
     window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
 }
@@ -761,13 +785,13 @@ static void menu_help_warnings(int param) {
     set_text_for_warnings();
 }
 static void menu_help_about(int param) {
-    clear_state();
+    widget_top_menu_clear_state();
     window_go_back();
     window_message_dialog_show(MESSAGE_DIALOG_ABOUT, -1, window_city_draw_all);
 }
 
 static void menu_advisors_go_to(int advisor) {
-    clear_state();
+    widget_top_menu_clear_state();
     window_go_back();
     window_advisors_show_advisor((e_advisor)advisor);
 }
