@@ -70,14 +70,17 @@ const player_record* highscores_get(int rank) {
     auto& data = player_data();
     // go through the list of records, return the nth non-empty record
     for (int i = 0; i < MAX_JAS_ENTRIES; ++i) {
-        if (data.highscores[i].nonempty)
-            if (rank > 0)
+        if (data.highscores[i].nonempty) {
+            if (rank > 0) {
                 rank--;
-            else
+            } else {
                 return &data.highscores[i];
+            }
+        }
     }
     return &DUMMY_RECORD; // return empty record when reached the end of the list
 }
+
 int highscores_count() {
     auto& data = player_data();
     return data.num_highscore_entries;
@@ -169,6 +172,7 @@ static void load_unused_dat_chunk(buffer* buf, int index) {
     chunk.unk19 = buf->read_u16();
     chunk.unk20 = buf->read_u8();
 }
+
 void player_data_load(const uint8_t* player_name) {
     auto& data = player_data();
     // <player>.dat
@@ -193,7 +197,7 @@ void player_data_load(const uint8_t* player_name) {
         strncpy_safe(data.last_autosave_path, proper_path_syntax, MAX_AUTOSAVE_PATH);
     else
         strncpy_safe(data.last_autosave_path, "", MAX_AUTOSAVE_PATH);
-    data.unk00 == data.dat_file->read_i32();  // unknown 32-bit field (0)
+    data.unk00 = data.dat_file->read_i32();  // unknown 32-bit field (0)
     for (int i = 0; i < MAX_DAT_ENTRIES; ++i) // scenario records
         load_jas_record_chunk(data.dat_file, &data.player_scenario_records[i]);
 }

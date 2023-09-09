@@ -48,20 +48,23 @@ static int is_clear(int grid_offset, int size, int allowed_terrain, bool check_i
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = MAP_OFFSET(x + dx, y + dy);
-            if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR & allowed_terrain))
+            if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR & allowed_terrain)) {
                 return 0;
-            else if (check_figures && map_has_figure_at(grid_offset)) {
+            } else if (check_figures && map_has_figure_at(grid_offset)) {
                 // check for figures in the way?
-                if (check_figures = CLEAR_LAND_CHECK_FIGURES_ANYWHERE)
+                if (check_figures == CLEAR_LAND_CHECK_FIGURES_ANYWHERE) {
                     return 0;
-                else if (check_figures == CLEAR_LAND_CHECK_FIGURES_OUTSIDE_ROAD
-                         && !map_terrain_is(grid_offset, TERRAIN_ROAD))
+                } else if (check_figures == CLEAR_LAND_CHECK_FIGURES_OUTSIDE_ROAD && !map_terrain_is(grid_offset, TERRAIN_ROAD)) {
                     return 0;
-            } else if (check_image && map_image_at(grid_offset))
+                }
+            } else if (check_image && map_image_at(grid_offset)) {
                 return 0;
+            }
+
             if (allowed_terrain & TERRAIN_FLOODPLAIN) {
-                if (map_terrain_exists_tile_in_radius_with_type(x + dx, y + dy, 1, 1, TERRAIN_FLOODPLAIN))
+                if (map_terrain_exists_tile_in_radius_with_type(x + dx, y + dy, 1, 1, TERRAIN_FLOODPLAIN)) {
                     return 0;
+                }
             }
         }
     }

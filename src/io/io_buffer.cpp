@@ -8,6 +8,7 @@
 void io_buffer::hook(buffer* buf, int _size, bool _compressed, const char* _name) {
     if (this == nullptr)
         return;
+
     p_buf = buf;
     size = _size;
     compressed = _compressed;

@@ -1804,6 +1804,7 @@ void BuildPlanner::construction_update(map_point tile) {
     case BUILDING_STORAGE_YARD:
         mark_construction(x, y, 3, 3, TERRAIN_ALL, false);
         break;
+
     case BUILDING_WATER_LIFT:
     case BUILDING_FISHING_WHARF:
     case BUILDING_TRANSPORT_WHARF:
