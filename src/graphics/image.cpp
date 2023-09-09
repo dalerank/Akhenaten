@@ -157,9 +157,8 @@ bool image_load_paks() {
                                                   "Phoenician",
                                                   "Roman",
                                                   "SeaPeople"};
-    for (int i = 0; i < 14; ++i) {
-        if (enemy_file_names_ph[i] != "")
-            data.enemy_paks.push_back(new imagepak(enemy_file_names_ph[i], 11026));
+    for (const auto &path: enemy_file_names_ph) {
+        data.enemy_paks.push_back(new imagepak(path, 11026));
     }
 
     // (set the first in the bunch as active initially, just for defaults)
