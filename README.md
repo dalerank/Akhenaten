@@ -2,7 +2,7 @@
 
 [![Discord](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263684745-bcca8b70-13c4-48d8-8e91-4b0be8a440e6.png)](https://discord.gg/HS4njmBvpb)
 [![Download](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685010-cd624917-786d-487b-89c0-298bc694f3f2.png)](https://dalerank.itch.io/ozymandias)
-[![Windows](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685266-d429392e-a91e-4233-b496-3863e50af5f6.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias/master/windows_build.zip)
+[![Windows](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685266-d429392e-a91e-4233-b496-3863e50af5f6.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_windows/master/windows_build.zip)
 [![Linux](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685605-8ce46564-04e7-45a7-afa4-0ffe32335dd8.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_linux/master/linux_build.zip)
 [![Mac](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685850-a5f39f18-0220-411b-bb70-9bdbc9d48311.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_mac/master/macos_build.zip)
 
