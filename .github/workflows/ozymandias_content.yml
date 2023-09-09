@@ -15,11 +15,12 @@ jobs:
     - name: update-workspace
       run: |
         sudo apt -qq update
-        sudo apt install --yes cmake build-essential libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev
+        sudo apt install --yes cmake build-essential libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev unzip
     - name: build-project
       run: |
         git clone https://github.com/jeremy-rifkin/cpptrace.git etc/cpptrace
         mkdir build
+        mkdir artifacts
         cd build
         cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
         cd ..
@@ -32,10 +33,11 @@ jobs:
         final_filename=all_platforms_build_${current_date}.zip
         echo "GITHUB_FINAL_FILENAME=${final_filename}" >> $GITHUB_ENV
         mv all_platforms_build.zip ${final_filename}
+        unzip ${final_filename} -d artifacts
     - uses: actions/upload-artifact@v3
       with:
-        name: linux_build
-        path: build
+        name: linux_windows_build
+        path: artifacts
     - uses: KikimoraGames/itch-publish@v0.0.3
       with:
         butlerApiKey: ${{ secrets.ITCHIO }}
