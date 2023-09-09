@@ -13,8 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 
 public class DirectorySelectionActivity extends AppCompatActivity {
     private static final String ARG_SKIP_INSTRUCTIONS = "arg_skip_instructions";
-    private static final int RW_FLAGS_PERMISSION = Intent.FLAG_GRANT_READ_URI_PERMISSION
-            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+    private static final int RW_FLAGS_PERMISSION = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 
     public static Intent newIntent(Context context, boolean skipInstructions) {
         Intent intent = new Intent(context, DirectorySelectionActivity.class);

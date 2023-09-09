@@ -70,7 +70,7 @@ android {
     ndkVersion "25.2.9519653"
 
     defaultConfig {
-        applicationId "com.github.Dalerank.ozymandias"
+        applicationId "com.github.dalerank.ozymandias"
         minSdkVersion 21
         targetSdkVersion 33
 
@@ -139,7 +139,7 @@ android {
             path "../../CMakeLists.txt"
         }
     }
-    namespace 'com.github.Dalerank.ozymandias'
+    namespace 'com.github.dalerank.ozymandias'
 }
 
 /** play {
