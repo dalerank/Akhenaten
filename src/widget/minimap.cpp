@@ -28,6 +28,7 @@ struct minimap_data_t {
     color enemy_color;
     color* cache;
     vec2i rel_mouse;
+    vec2i mouse_last_coords;
     int refresh_requested;
 };
 
@@ -329,19 +330,15 @@ static vec2i get_mouse_relative_pos(const mouse* m, float &xx, float &yy) {
     return data.rel_mouse;
 }
 
-struct {
-    int x = -1;
-    int y = -1;
-} mouse_last_coords;
-
 bool widget_minimap_handle_mouse(const mouse* m) {
+    auto& data = g_minimap_data;
     if (!is_in_minimap(m) || m->left.went_up || m->right.went_up) {
-        mouse_last_coords = {-1, -1};
+        data.mouse_last_coords = {-1, -1};
         return false;
     }
 
     bool mouse_is_moving = false;
-    if (m->x != mouse_last_coords.x || m->y != mouse_last_coords.y) {
+    if (m->x != data.mouse_last_coords.x || m->y != data.mouse_last_coords.y) {
         mouse_is_moving = true;
     }
 
@@ -361,7 +358,7 @@ bool widget_minimap_handle_mouse(const mouse* m) {
 
             camera_go_to_pixel(min_pos + map_pos - view_size / 2, true);
             widget_minimap_invalidate();
-            mouse_last_coords = {m->x, m->y};
+            data.mouse_last_coords = {m->x, m->y};
             return true;
         }
     }
