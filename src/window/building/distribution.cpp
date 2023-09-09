@@ -1168,20 +1168,17 @@ int window_building_handle_mouse_warehouse_orders(const mouse* m, building_info_
 
     // resources
     int num_resources = city_resource_get_available()->size;
-    if (num_resources > 20)
+    if (num_resources > 20) {
         num_resources = 20;
+    }
     data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(
-          m, c->x_offset + 205, y_offset + 46, orders_resource_buttons, num_resources, &data.resource_focus_button_id))
+
+    if (generic_buttons_handle_mouse(m, c->x_offset + 205, y_offset + 46, orders_resource_buttons, num_resources, &data.resource_focus_button_id)) {
         return 1;
+    }
 
     // extra instructions
-    if (GAME_ENV == ENGINE_ENV_C3)
-        return generic_buttons_handle_mouse(
-          m, c->x_offset + 80, y_offset + 404, warehouse_order_buttons, 3, &data.orders_focus_button_id);
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        return generic_buttons_handle_mouse(
-          m, c->x_offset + 80, y_offset + 404, warehouse_order_buttons, 2, &data.orders_focus_button_id);
+    return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, warehouse_order_buttons, 2, &data.orders_focus_button_id);
 }
 void window_building_draw_warehouse(building_info_context* c) {
     auto &data = g_window_building_distribution;
