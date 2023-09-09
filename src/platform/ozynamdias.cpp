@@ -281,6 +281,8 @@ static void show_options_window(Arguments& args) {
                 if (ImGui::Button("Quit")) {
                     exit(EXIT_SUCCESS);
                 }
+                ImGui::SameLine();
+                ImGui::Text(get_version());
             ImGui::EndChild();}
             // ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
             // ImGui::GetIO().Framerate);
