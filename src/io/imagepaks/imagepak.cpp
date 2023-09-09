@@ -184,7 +184,7 @@ static void add_edge_to_letter(const image_t* img) {
         p_buffer_row += img->width;
     }
 
-    delete TEMP_BUFFER;
+    delete [] TEMP_BUFFER;
 }
 static int convert_font_glyph_to_bigger_space(buffer* buf, const image_t* img) {
     int pixels_count = 0;
@@ -262,11 +262,13 @@ static int isometric_calculate_top_height(const image_t* img) {
     }
     return top_height;
 }
-static int convert_image_data(buffer* buf, image_t* img, bool convert_fonts) {
+static bool convert_image_data(buffer* buf, image_t* img, bool convert_fonts) {
     if (img->is_external)
         buf = load_external_data(img);
+
     if (buf == nullptr)
-        return 0;
+        return false;
+
     img->TEMP_PIXEL_DATA
       = &img->atlas.p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset * img->atlas.p_atlas->width) + img->atlas.x_offset];
 
@@ -293,7 +295,7 @@ static int convert_image_data(buffer* buf, image_t* img, bool convert_fonts) {
     }
 
     img->uncompressed_length /= 2;
-    // TODO function is non void. What should it return?
+    return true;
 }
 
 ///////// IMAGEPAK
@@ -536,7 +538,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
 
         // load and convert image bitmap data
         pak_buf->set_offset(img->sgx_data_offset);
-        int r = convert_image_data(pak_buf, img, SHOULD_CONVERT_FONTS);
+        convert_image_data(pak_buf, img, SHOULD_CONVERT_FONTS);
     }
 
     // create textures from atlas data
