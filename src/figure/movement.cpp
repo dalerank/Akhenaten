@@ -275,6 +275,7 @@ void figure::advance_route_tile(int roaming_enabled) {
         case BUILDING_BOOTH:
         case BUILDING_BANDSTAND:
         case BUILDING_FIGS_FARM:
+        case BUILDING_GRAIN_FARM:
             //
             break; // OK to walk
         default:

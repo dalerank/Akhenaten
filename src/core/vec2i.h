@@ -15,6 +15,9 @@ struct vec2i {
         *this = *this - rhs;
         return *this;
     }
+    inline vec2i operator/(float v) {
+        return vec2i(this->x / v, this->y / v);
+    }
     inline vec2i operator+(vec2i rhs) {
         return {x + rhs.x, y + rhs.y};
     }

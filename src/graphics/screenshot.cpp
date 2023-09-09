@@ -62,8 +62,7 @@ static void image_free(void)
     png_destroy_write_struct(&screenshot.png_ptr, &screenshot.info_ptr);
 }
 
-static int image_create(vec2i size, int has_alpha_channel, int rows_in_memory)
-{
+static int image_create(vec2i size, int has_alpha_channel, int rows_in_memory) {
     image_free();
     if (!size.x || !size.y || !rows_in_memory) {
         return 0;

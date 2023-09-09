@@ -202,13 +202,13 @@ void camera_go_to_screen_tile(screen_tile screen, bool validate) {
     camera_go_to_pixel({x, y}, validate);
 }
 void camera_go_to_mappoint(map_point point) {
-    camera_go_to_pixel(mappoint_to_pixel(point), true);
-    //    int tile_x, tile_y;
-    //    screen_tile screen = mappoint_to_screentile(point);
-    //    screen.x -= data.viewport.width_tiles / 2;
-    //    screen.y -= data.viewport.height_tiles / 2;
-    //    screen.y &= ~1;
-    //    camera_go_to_corner_tile(screen, true);
+    //camera_go_to_pixel(mappoint_to_pixel(point), true);
+    auto& data = g_city_view_data;
+        screen_tile screen = mappoint_to_screentile(point);
+        screen.x -= data.viewport.width_tiles / 2;
+        screen.y -= data.viewport.height_tiles / 2;
+        screen.y &= ~1;
+        camera_go_to_corner_tile(screen, true);
 }
 void camera_scroll(int x, int y) {
     auto& data = g_city_view_data;

@@ -27,11 +27,7 @@ struct minimap_data_t {
     int cache_width;
     color enemy_color;
     color* cache;
-    struct {
-        int x;
-        int y;
-        map_point tile;
-    } mouse;
+    vec2i rel_mouse;
     int refresh_requested;
 };
 
@@ -45,6 +41,7 @@ static void foreach_map_tile(void (*callback)(screen_tile screen, map_point poin
     auto& data = g_minimap_data;
     city_view_foreach_minimap_tile(data.x_offset, data.y_offset, data.absolute_x, data.absolute_y, data.width_tiles, data.height_tiles, callback);
 }
+
 static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_tiles) {
     auto& data = g_minimap_data;
     data.width_tiles = width_tiles;
@@ -322,26 +319,21 @@ void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height
     }
 }
 
-static void update_mouse_grid_offset(screen_tile screen, map_point point) {
+static vec2i get_mouse_relative_pos(const mouse* m, float &xx, float &yy) {
     auto& data = g_minimap_data;
-    int grid_offset = point.grid_offset();
-    int screen_x = screen.x;
-    int screen_y = screen.y;
-    if (data.mouse.y == screen_y && (data.mouse.x == screen_x || data.mouse.x == screen_x + 1))
-        data.mouse.tile.grid_offset(grid_offset < 0 ? 0 : grid_offset);
+
+    data.rel_mouse = {m->x - data.x_offset, m->y - data.y_offset};
+    xx = data.rel_mouse.x / (float)data.width;
+    yy = data.rel_mouse.y / (float)data.height;
+
+    return data.rel_mouse;
 }
-static int get_mouse_grid_offset(const mouse* m) {
-    auto& data = g_minimap_data;
-    data.mouse.x = m->x;
-    data.mouse.y = m->y;
-    data.mouse.tile.set(0);
-    foreach_map_tile(update_mouse_grid_offset);
-    return data.mouse.tile.grid_offset();
-}
+
 struct {
     int x = -1;
     int y = -1;
 } mouse_last_coords;
+
 bool widget_minimap_handle_mouse(const mouse* m) {
     if (!is_in_minimap(m) || m->left.went_up || m->right.went_up) {
         mouse_last_coords = {-1, -1};
@@ -349,13 +341,25 @@ bool widget_minimap_handle_mouse(const mouse* m) {
     }
 
     bool mouse_is_moving = false;
-    if (m->x != mouse_last_coords.x || m->y != mouse_last_coords.y)
+    if (m->x != mouse_last_coords.x || m->y != mouse_last_coords.y) {
         mouse_is_moving = true;
+    }
 
     if ((m->left.went_down || m->right.went_down) || ((m->left.is_down || m->right.is_down) && mouse_is_moving)) {
-        int grid_offset = get_mouse_grid_offset(m);
-        if (grid_offset > 0) {
-            camera_go_to_mappoint(map_point(grid_offset));
+        float xx, yy;
+        vec2i relative = get_mouse_relative_pos(m, xx, yy);
+        if (relative.x > 0 && relative.y > 0) {
+            vec2i min_pos, max_pos;
+            vec2i view_pos, view_size;
+
+            city_view_get_camera_scrollable_pixel_limits(min_pos, max_pos);
+            city_view_get_viewport(view_pos, view_size);
+
+            max_pos += view_size;
+            vec2i city_canvas_pixels = max_pos - min_pos;
+            vec2i map_pos(city_canvas_pixels.x * xx, city_canvas_pixels.y * yy);
+
+            camera_go_to_pixel(min_pos + map_pos - view_size / 2, true);
             widget_minimap_invalidate();
             mouse_last_coords = {m->x, m->y};
             return true;
