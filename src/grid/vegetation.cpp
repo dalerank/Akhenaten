@@ -97,4 +97,6 @@ bool figure::find_resource_tile(int resource_type, int* out_x, int* out_y) {
     case RESOURCE_TIMBER:
         return map_routing_citizen_found_timber(tile.x(), tile.y(), out_x, out_y);
     }
+
+    return false;
 }
