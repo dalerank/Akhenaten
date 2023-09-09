@@ -235,12 +235,10 @@ bool map_grid_is_valid_offset(int grid_offset) {
 
 int map_grid_direction_delta(int direction) {
     if (direction >= 0 && direction < 8) {
-        switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH:
-            return DIRECTION_DELTA_PH[direction];
-        }
-    } else
-        return 0;
+        return DIRECTION_DELTA_PH[direction];
+    }
+
+    return 0;
 }
 
 int map_grid_width() {

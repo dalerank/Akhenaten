@@ -24,10 +24,7 @@ struct grid_road_network_t {
 grid_road_network_t grid_road_network;
 
 int adjacent_offsets(int i) {
-    switch (GAME_ENV) {
-    case ENGINE_ENV_PHARAOH:
-        return ADJACENT_OFFSETS_PH[i];
-    }
+    return ADJACENT_OFFSETS_PH[i];
 }
 
 void map_road_network_clear() {

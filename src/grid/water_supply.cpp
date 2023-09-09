@@ -157,11 +157,7 @@ static void fill_canals_from_offset(int grid_offset) {
 }
 
 static int OFFSET(int x, int y) {
-    switch (GAME_ENV) {
-    case ENGINE_ENV_PHARAOH:
-        return GRID_OFFSET(x, y);
-        break;
-    }
+    return GRID_OFFSET(x, y);
 }
 
 static void update_canals_from_river() {
