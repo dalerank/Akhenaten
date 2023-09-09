@@ -170,11 +170,15 @@ file(GLOB IO_IMAGEPAKS_FILES ${PROJECT_SOURCE_DIR}/src/io/imagepaks/*.cpp)
 file(GLOB IO_PLAYERDATA_FILES ${PROJECT_SOURCE_DIR}/src/io/playerdata/*.cpp)
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "android")
+    add_definitions(-DANDROID_BUILD=ON)
     file(GLOB ANDROID_BACKEND_FILES ${PROJECT_SOURCE_DIR}/src/platform/android/*.cpp)
     set(PLATFORM_FILES ${PLATFORM_FILES} ${ANDROID_BACKEND_FILES})
-    set(SDL2_ANDROID_HOOK ${SDL_EXT_DIR}/src/main/android/SDL_android_main.c)
-    # set(SDL2_LIBRARY SDL2::SDL2)
-    # set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
+
+    set(CMAKE_CXX_FLAGS "-Wno-format-security ${CMAKE_CXX_FLAGS}")
+    set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ext/png" APPEND PROPERTY COMPILE_DEFINITIONS "PNG_ARM_NEON_IMPLEMENTATION=0")
+    set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ext/png" APPEND PROPERTY COMPILE_DEFINITIONS "PNG_ARM_NEON_OPT=0")
+    
+    # set(SDL2_ANDROID_HOOK ${SDL_EXT_DIR}/src/main/android/SDL_android_main.c)
 endif()
 
 set(TRACY_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/tracy")
@@ -346,9 +350,15 @@ set(SOURCE_FILES
 
 set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
 
-find_package(SDL2 REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-find_package(SDL2_image REQUIRED)
+if (CMAKE_BUILD_PLATFORM STREQUAL "android")
+    find_package(SDL2 REQUIRED CONFIG)
+    set(SDL2_LIBRARY SDL2::SDL2)
+    set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
+else()
+    find_package(SDL2 REQUIRED)
+    find_package(SDL2_mixer REQUIRED)
+    find_package(SDL2_image REQUIRED)
+endif()
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "android")
     add_library(${GAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})

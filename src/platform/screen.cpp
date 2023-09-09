@@ -10,9 +10,7 @@
 #include "graphics/screen.h"
 #include "io/config/config.h"
 #include "io/log.h"
-// #include "platform/android/android.h"
-// #include "platform/haiku/haiku.h"
-// #include "platform/icon.h"
+#include "platform/android/android.h"
 #include "arguments.h"
 #include "platform/renderer.h"
 #include "platform/switch/switch.h"
@@ -80,9 +78,9 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
 #ifdef __ANDROID__
 static void set_scale_for_screen(int pixel_width, int pixel_height) {
     set_scale_percentage(android_get_screen_density() * 100, pixel_width, pixel_height);
-    config_set(CONFIG_SCREEN_CURSOR_SCALE, scale_percentage);
+    //config_set(CONFIG_SCREEN_CURSOR_SCALE, scale_percentage);
     if (SDL.window) {
-        system_init_cursors(scale_percentage);
+        //system_init_cursors(scale_percentage);
     }
     logs::info("Auto-setting scale to %i", scale_percentage);
 }

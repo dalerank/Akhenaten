@@ -24,7 +24,7 @@ static void display_crash_message() {
       "Thanks!\n");
 }
 
-#if defined(__GNUC__) && !defined(_WIN32)
+#if defined(__GNUC__) && !defined(_WIN32) && !defined(ANDROID_BUILD)
 
 #include <signal.h>
 

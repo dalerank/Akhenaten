@@ -5,15 +5,22 @@
  * Directory-related functions.
  */
 
-enum { NOT_LOCALIZED = 0, MAY_BE_LOCALIZED = 1, MUST_BE_LOCALIZED = 2 };
+#define ASSETS_DIR_NAME "assets"
+#define ASSETS_DIRECTORY "***" ASSETS_DIR_NAME "***"
+
+enum {
+    NOT_LOCALIZED = 0,
+    MAY_BE_LOCALIZED = 1,
+    MUST_BE_LOCALIZED = 2
+};
 
 /**
  * Directory listing
  */
-typedef struct {
+struct dir_listing {
     char** files;  /**< Filenames in UTF-8 encoding */
     int num_files; /**< Number of files in the list */
-} dir_listing;
+};
 
 /**
  * Finds files with the given extension

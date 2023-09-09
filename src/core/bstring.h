@@ -128,7 +128,7 @@ public:
         size_t size = this->len();
         char* dest = _data + size;
         size_t remain = _size - size;
-        snprintf(dest, remain, s);
+        snprintf(dest, remain, "%s", s);
         return *this;
     }
     inline ref append(char s) {

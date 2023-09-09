@@ -11,11 +11,14 @@
 // #include "platform/vita/vita.h"
 #include "graphics/image_groups.h"
 
-#ifdef __APPLE__
-#include <SDL2_image/SDL_image.h>
+#if defined(__APPLE__)
+  #include <SDL2_image/SDL_image.h>
+#elif defined(ANDROID_BUILD)
+  // nothing
 #else
-#include <SDL_image.h>
+  #include <SDL_image.h>
 #endif
+
 #include "input/cursor.h"
 #include "io/log.h"
 #include <string.h>
@@ -895,12 +898,15 @@ bool graphics_renderer_interface::save_texture_to_file(const char* filename,
     case FILE_FORMAT_BMP:
         st = SDL_SaveBMP(surf, filename);
         break;
+
+#ifndef ANDROID_BUILD
     case FILE_FORMAT_PNG:
         st = IMG_SavePNG(surf, filename);
         break;
     case FILE_FORMAT_JPG:
         st = IMG_SaveJPG(surf, filename, 60);
         break;
+#endif // 
     default:
         st = -1;
         break;

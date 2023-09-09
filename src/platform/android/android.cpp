@@ -1,7 +1,8 @@
 #include "android.h"
 
-#include "core/dir.h"
-#include "core/file.h"
+#include "core/bstring.h"
+#include "io/dir.h"
+#include "io/file.h"
 #include "platform/android/asset_handler.h"
 #include "platform/android/jni.h"
 #include "platform/file_manager.h"
@@ -11,32 +12,31 @@
 #include <string.h>
 
 static int has_directory;
-static char path[FILE_NAME_MAX];
+static bstring256 path;
 
-static const char *get_c3_path(void)
+static const char *get_pharaoh_path(void)
 {
     jni_function_handler handler;
-    if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "getC3Path", "()Ljava/lang/String;", &handler)) {
+    if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "getPharaohPath", "()Ljava/lang/String;", &handler)) {
         jni_destroy_function_handler(&handler);
         return NULL;
     }
 
-    jobject result = (*handler.env)->CallStaticObjectMethod(handler.env, handler.class, handler.method);
-    const char *temp_path = (*handler.env)->GetStringUTFChars(handler.env, (jstring) result, NULL);
-    strncpy(path, temp_path, FILE_NAME_MAX - 1);
-    (*handler.env)->ReleaseStringUTFChars(handler.env, (jstring) result, temp_path);
-    (*handler.env)->DeleteLocalRef(handler.env, result);
+    jobject result = handler.env->CallStaticObjectMethod(handler.nclass, handler.method);
+    const char *temp_path = handler.env->GetStringUTFChars((jstring) result, NULL);
+    path = temp_path;
+    handler.env->ReleaseStringUTFChars((jstring) result, temp_path);
+    handler.env->DeleteLocalRef(result);
     jni_destroy_function_handler(&handler);
 
-    return *path ? path : NULL;
+    return !path.empty() ? path.c_str() : nullptr;
 }
 
-const char *android_show_c3_path_dialog(int again)
+const char *android_show_pharaoh_path_dialog(int again)
 {
     jni_function_handler handler;
-    if (jni_get_method_handler(CLASS_AUGUSTUS_ACTIVITY, "showDirectorySelection", "(Z)V", &handler)) {
-        (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method,
-            again ? JNI_TRUE : JNI_FALSE);
+    if (jni_get_method_handler(CLASS_OZYAMADIAS_ACTIVITY, "showDirectorySelection", "(Z)V", &handler)) {
+        handler.env->CallVoidMethod(handler.activity, handler.method, again ? JNI_TRUE : JNI_FALSE);
     }
     jni_destroy_function_handler(&handler);
 
@@ -46,15 +46,15 @@ const char *android_show_c3_path_dialog(int again)
         SDL_WaitEventTimeout(NULL, 2000);
     }
 
-    return get_c3_path();
+    return get_pharaoh_path();
 }
 
-float android_get_screen_density(void)
+float android_get_screen_density()
 {
     jni_function_handler handler;
     float result = 1.0f;
-    if (jni_get_method_handler(CLASS_AUGUSTUS_ACTIVITY, "getScreenDensity", "()F", &handler)) {
-        result = (float) (*handler.env)->CallFloatMethod(handler.env, handler.activity, handler.method);
+    if (jni_get_method_handler(CLASS_OZYAMADIAS_ACTIVITY, "getScreenDensity", "()F", &handler)) {
+        result = (float) handler.env->CallFloatMethod(handler.activity, handler.method);
     }
     jni_destroy_function_handler(&handler);
     return result;
@@ -65,16 +65,15 @@ int android_get_file_descriptor(const char *filename, const char *mode)
     int result = 0;
     jni_function_handler handler;
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "openFileDescriptor",
-        "(L" CLASS_AUGUSTUS_ACTIVITY ";Ljava/lang/String;Ljava/lang/String;)I", &handler)) {
+        "(L" CLASS_OZYAMADIAS_ACTIVITY ";Ljava/lang/String;Ljava/lang/String;)I", &handler)) {
         jni_destroy_function_handler(&handler);
         return 0;
     }
-    jstring jfilename = (*handler.env)->NewStringUTF(handler.env, filename);
-    jstring jmode = (*handler.env)->NewStringUTF(handler.env, mode);
-    result = (int) (*handler.env)->CallStaticIntMethod(
-        handler.env, handler.class, handler.method, handler.activity, jfilename, jmode);
-    (*handler.env)->DeleteLocalRef(handler.env, jfilename);
-    (*handler.env)->DeleteLocalRef(handler.env, jmode);
+    jstring jfilename = handler.env->NewStringUTF(filename);
+    jstring jmode = handler.env->NewStringUTF(mode);
+    result = (int) handler.env->CallStaticIntMethod(handler.nclass, handler.method, handler.activity, jfilename, jmode);
+    handler.env->DeleteLocalRef(jfilename);
+    handler.env->DeleteLocalRef(jmode);
     jni_destroy_function_handler(&handler);
 
     return result;
@@ -93,9 +92,9 @@ int android_set_base_path(const char *path)
         jni_destroy_function_handler(&handler);
         return 0;
     }
-    jstring jpath = (*handler.env)->NewStringUTF(handler.env, path);
-    result = (int) (*handler.env)->CallStaticIntMethod(handler.env, handler.class, handler.method, jpath);
-    (*handler.env)->DeleteLocalRef(handler.env, jpath);
+    jstring jpath = handler.env->NewStringUTF(path);
+    result = (int) handler.env->CallStaticIntMethod(handler.nclass, handler.method, jpath);
+    handler.env->DeleteLocalRef(jpath);
     jni_destroy_function_handler(&handler);
 
     return result;
@@ -111,7 +110,7 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
     jni_function_handler get_last_modified_time;
 
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "getDirectoryFileList",
-        "(L" CLASS_AUGUSTUS_ACTIVITY ";Ljava/lang/String;ILjava/lang/String;)[L" CLASS_FILE_MANAGER "$FileInfo;",
+        "(L" CLASS_OZYAMADIAS_ACTIVITY ";Ljava/lang/String;ILjava/lang/String;)[L" CLASS_FILE_MANAGER "$FileInfo;",
         &handler)) {
         jni_destroy_function_handler(&handler);
         return LIST_ERROR;
@@ -128,29 +127,27 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
         return LIST_ERROR;
     }
 
-    jstring jdir = (*handler.env)->NewStringUTF(handler.env, dir);
-    jstring jextension = (*handler.env)->NewStringUTF(handler.env, extension);
-    jobjectArray result = (jobjectArray) (*handler.env)->CallStaticObjectMethod(
-        handler.env, handler.class, handler.method, handler.activity, jdir, type, jextension);
-    (*handler.env)->DeleteLocalRef(handler.env, jdir);
-    (*handler.env)->DeleteLocalRef(handler.env, jextension);
+    jstring jdir = handler.env->NewStringUTF(dir);
+    jstring jextension = handler.env->NewStringUTF(extension);
+    jobjectArray result = (jobjectArray) handler.env->CallStaticObjectMethod(handler.nclass, handler.method, handler.activity, jdir, type, jextension);
+    handler.env->DeleteLocalRef(jdir);
+    handler.env->DeleteLocalRef(jextension);
     int match = LIST_NO_MATCH;
-    int len = (*handler.env)->GetArrayLength(handler.env, result);
+    int len = handler.env->GetArrayLength(result);
     for (int i = 0; i < len; ++i) {
-        jobject jfile_info = (jobject) (*handler.env)->GetObjectArrayElement(handler.env, result, i);
-        jstring jfilename = (jstring) (*handler.env)->CallObjectMethod(handler.env, jfile_info, get_name.method);
-        const char *filename = (*handler.env)->GetStringUTFChars(handler.env, jfilename, NULL);
-        long last_modified = (long) (*handler.env)->CallLongMethod(handler.env, jfile_info,
-            get_last_modified_time.method);
+        jobject jfile_info = (jobject) handler.env->GetObjectArrayElement(result, i);
+        jstring jfilename = (jstring) handler.env->CallObjectMethod(jfile_info, get_name.method);
+        const char *filename = handler.env->GetStringUTFChars(jfilename, NULL);
+        long last_modified = (long) handler.env->CallLongMethod(jfile_info, get_last_modified_time.method);
         match = callback(filename, last_modified);
-        (*handler.env)->ReleaseStringUTFChars(handler.env, (jstring) jfilename, filename);
-        (*handler.env)->DeleteLocalRef(handler.env, jfilename);
-        (*handler.env)->DeleteLocalRef(handler.env, jfile_info);
+        handler.env->ReleaseStringUTFChars((jstring) jfilename, filename);
+        handler.env->DeleteLocalRef(jfilename);
+        handler.env->DeleteLocalRef(jfile_info);
         if (match == LIST_MATCH) {
             break;
         }
     }
-    (*handler.env)->DeleteLocalRef(handler.env, result);
+    handler.env->DeleteLocalRef(result);
     jni_destroy_function_handler(&get_last_modified_time);
     jni_destroy_function_handler(&get_name);
     jni_destroy_function_handler(&handler);
@@ -162,20 +159,19 @@ int android_remove_file(const char *filename)
     int result = 0;
     jni_function_handler handler;
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "deleteFile",
-        "(Lcom/github/Keriew/augustus/AugustusMainActivity;Ljava/lang/String;)Z", &handler)) {
+        "(Lcom/github/dalerank/ozymandias/OzymandiasMainActivity;Ljava/lang/String;)Z", &handler)) {
         jni_destroy_function_handler(&handler);
         return 0;
     }
-    jstring jfilename = (*handler.env)->NewStringUTF(handler.env, filename);
-    result = (int) (*handler.env)->CallStaticBooleanMethod(
-        handler.env, handler.class, handler.method, handler.activity, jfilename);
-    (*handler.env)->DeleteLocalRef(handler.env, jfilename);
+    jstring jfilename = handler.env->NewStringUTF(filename);
+    result = (int) handler.env->CallStaticBooleanMethod(handler.nclass, handler.method, handler.activity, jfilename);
+    handler.env->DeleteLocalRef(jfilename);
     jni_destroy_function_handler(&handler);
 
     return result;
 }
 
-JNIEXPORT void JNICALL Java_com_github_Keriew_augustus_AugustusMainActivity_gotDirectory(JNIEnv *env, jobject thiz)
+JNIEXPORT void JNICALL Java_com_github_dalerank_ozymandias_OzymandiasMainActivity_gotDirectory(JNIEnv *env, jobject thiz)
 {
     has_directory = 1;
 }

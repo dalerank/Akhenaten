@@ -18,7 +18,7 @@ public class FileManager {
     private static final int FILE_TYPE_FILE = 2;
 
     @SuppressWarnings("unused")
-    public static String getC3Path() {
+    public static String getPharaohPath() {
         return baseUri.toString();
     }
 

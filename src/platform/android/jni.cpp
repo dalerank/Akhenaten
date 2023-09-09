@@ -4,7 +4,7 @@
 
 int jni_init_function_handler(const char *class_name, jni_function_handler *handler)
 {
-    handler->env = SDL_AndroidGetJNIEnv();
+    handler->env = (JNIEnv *)SDL_AndroidGetJNIEnv();
     if (handler->env == NULL) {
         SDL_Log("Problem setting up JNI environment");
         return 0;
@@ -15,11 +15,11 @@ int jni_init_function_handler(const char *class_name, jni_function_handler *hand
         return 0;
     }
     if(class_name) {
-        handler->class = (*handler->env)->FindClass(handler->env, class_name);
+        handler->nclass = handler->env->FindClass(class_name);
     } else {
-        handler->class = (*handler->env)->GetObjectClass(handler->env, handler->activity);
+        handler->nclass = handler->env->GetObjectClass(handler->activity);
     }
-    if (handler->class == NULL) {
+    if (handler->nclass == NULL) {
         SDL_Log("Problem loading class '%s'.", class_name);
         return 0;
     }
@@ -32,7 +32,7 @@ int jni_get_static_method_handler(
     if (!jni_init_function_handler(class_name, handler)) {
         return 0;
     }
-    handler->method = (*handler->env)->GetStaticMethodID(handler->env, handler->class, method_name, method_signature);
+    handler->method = handler->env->GetStaticMethodID(handler->nclass, method_name, method_signature);
     if (handler->method == NULL) {
         SDL_Log("Problem loading static method '%s' from class '%s'.", method_name, class_name);
         return 0;
@@ -46,7 +46,7 @@ int jni_get_method_handler(
     if (!jni_init_function_handler(class_name, handler)) {
         return 0;
     }
-    handler->method = (*handler->env)->GetMethodID(handler->env, handler->class, method_name, method_signature);
+    handler->method = handler->env->GetMethodID(handler->nclass, method_name, method_signature);
     if (handler->method == NULL) {
         SDL_Log("Problem loading method '%s' from class '%s'.", method_name, class_name);
         return 0;
@@ -61,14 +61,14 @@ void jni_destroy_function_handler(jni_function_handler *handler)
     }
     if (handler->env) {
         if (handler->activity) {
-            (*handler->env)->DeleteLocalRef(handler->env, handler->activity);
+            handler->env->DeleteLocalRef(handler->activity);
         }
-        if (handler->class) {
-            (*handler->env)->DeleteLocalRef(handler->env, handler->class);
+        if (handler->nclass) {
+            handler->env->DeleteLocalRef(handler->nclass);
         }
     }
     handler->env = NULL;
-    handler->class = NULL;
+    handler->nclass = NULL;
     handler->activity = NULL;
     handler->method = NULL;
 }

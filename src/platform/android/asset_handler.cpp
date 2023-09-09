@@ -1,7 +1,7 @@
 #include "asset_handler.h"
 
-#include "assets/assets.h"
-#include "core/file.h"
+#include "core/bstring.h"
+#include "io/file.h"
 #include "platform/android/android.h"
 #include "platform/android/jni.h"
 #include "platform/file_manager.h"
@@ -29,11 +29,11 @@ static int assets_directory_found(const char *dummy, long unused)
 
 static void determine_assets_location(void)
 {
-    if (android_get_directory_contents(ASSETS_DIR_NAME, TYPE_DIR, "images", assets_directory_found) == LIST_MATCH) {
+    //if (android_get_directory_contents(ASSETS_DIR_NAME, TYPE_DIR, "images", assets_directory_found) == LIST_MATCH) {
         assets_location = ASSETS_LOCATION_DIRECTORY;
-    } else {
-        assets_location = ASSETS_LOCATION_APK;
-    }
+    //} else {
+    //   assets_location = ASSETS_LOCATION_APK;
+    //}
 }
 
 static AAssetManager *get_asset_manager(void)
@@ -43,11 +43,11 @@ static AAssetManager *get_asset_manager(void)
     }
     jni_function_handler handler;
     if (jni_get_method_handler(0, "getAssets", "()Landroid/content/res/AssetManager;", &handler)) {
-        jobject local_asset_manager = (jobject) (*handler.env)->CallObjectMethod(handler.env, handler.activity, handler.method);
-        java_asset_manager = (jobject) (*handler.env)->NewGlobalRef(handler.env, local_asset_manager);
+        jobject local_asset_manager = (jobject) handler.env->CallObjectMethod(handler.activity, handler.method);
+        java_asset_manager = (jobject) handler.env->NewGlobalRef(local_asset_manager);
         asset_manager = AAssetManager_fromJava(handler.env, java_asset_manager);
         if (!asset_manager) {
-            (*handler.env)->DeleteGlobalRef(handler.env, java_asset_manager);
+            handler.env->DeleteGlobalRef(java_asset_manager);
         }
     }
     jni_destroy_function_handler(&handler);
@@ -74,28 +74,26 @@ static int asset_close(void *asset)
 
 void *asset_handler_open_asset(const char *asset_name, const char *mode)
 {
-    static char location[FILE_NAME_MAX];
-    static int assets_dir_length;
-    if (!assets_dir_length) {
-        assets_dir_length = strlen(ASSETS_DIR_NAME) + 1;
-        strncpy(location, ASSETS_DIR_NAME, FILE_NAME_MAX);
-        location[assets_dir_length - 1] = '/';
-    }
+    static bstring256 location;
+    location = bstring256(ASSETS_DIR_NAME, "/");
 
     switch (assets_location) {
-        case ASSETS_LOCATION_DIRECTORY:
-            strncpy(location + assets_dir_length, asset_name, FILE_NAME_MAX - assets_dir_length - 1);
+        case ASSETS_LOCATION_DIRECTORY: {
+            location.append(asset_name);
             int fd = android_get_file_descriptor(location, mode);
             if (!fd) {
                 return 0;
             }
             return fdopen(fd, mode);
-        case ASSETS_LOCATION_APK:
+        }
+        case ASSETS_LOCATION_APK: {
             if (!get_asset_manager()) {
                 return 0;
             }
-            AAsset *asset = AAssetManager_open(get_asset_manager(), asset_name, AASSET_MODE_STREAMING);
+            AAsset *asset = AAssetManager_open(get_asset_manager(), asset_name,
+                                               AASSET_MODE_STREAMING);
             return asset ? funopen(asset, asset_read, 0, asset_seek, asset_close) : 0;
+        }
         default:
             return 0;
     }
@@ -111,8 +109,7 @@ int asset_handler_get_directory_contents(const char *dir_name, int type,
         determine_assets_location();
     }
     if (assets_location == ASSETS_LOCATION_DIRECTORY) {
-        char full_path[FILE_NAME_MAX];
-        snprintf(full_path, FILE_NAME_MAX, "%s/%s", ASSETS_DIR_NAME, dir_name);
+        bstring256 full_path(ASSETS_DIR_NAME, "/", dir_name);
         return android_get_directory_contents(full_path, type, extension, callback);
     }
     AAssetManager *manager = get_asset_manager();
@@ -123,7 +120,7 @@ int asset_handler_get_directory_contents(const char *dir_name, int type,
     int match = LIST_NO_MATCH;
     const char *asset_name = 0;
     while ((asset_name = AAssetDir_getNextFileName(dir))) {
-        char *asset_extension = strrchr(asset_name, '.');
+        const char *asset_extension = strrchr(asset_name, '.');
         if (asset_extension && strcmp(asset_extension + 1, extension) == 0) {
             match = callback(asset_name, 0);
         }
@@ -135,11 +132,11 @@ int asset_handler_get_directory_contents(const char *dir_name, int type,
     return match;
 }
 
-JNIEXPORT void JNICALL Java_com_github_Keriew_augustus_AugustusMainActivity_releaseAssetManager(JNIEnv *env, jobject thiz)
+JNIEXPORT void JNICALL Java_com_github_dalerank_ozymandias_OzymandiasMainActivity_releaseAssetManager(JNIEnv *env, jobject thiz)
 {
     if (asset_manager) {
-        JNIEnv *env = SDL_AndroidGetJNIEnv();
-        (*env)->DeleteGlobalRef(env, java_asset_manager);
+        JNIEnv *env = (JNIEnv *)SDL_AndroidGetJNIEnv();
+        env->DeleteGlobalRef(java_asset_manager);
         asset_manager = 0;
     }
 }
