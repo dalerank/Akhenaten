@@ -1,26 +1,30 @@
 cmake_minimum_required(VERSION 3.0.2)
 include(CMakeDependentOption)
 
+set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 #
 # CppTrace
 #
 
-if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(CPPTRACE_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/cpptrace")
-    set(CPPTRACE_CHECK_PATH "${CPPTRACE_EXT_PATH}/include/cpptrace/cpptrace.hpp")
+if(CMAKE_BUILD_PLATFORM STREQUAL "android")
+    # no cpptrace for android, baa...
+else()
+    if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(CPPTRACE_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/cpptrace")
+        set(CPPTRACE_CHECK_PATH "${CPPTRACE_EXT_PATH}/include/cpptrace/cpptrace.hpp")
 
-    if (EXISTS "${CPPTRACE_CHECK_PATH}")
-        add_definitions(-DCPPTRACE_ENABLED=ON)
-        include_directories(${PROJECT_SOURCE_DIR}/ext/cpptrace/include)
-        set(CPPTRACE_LIBRARY cpptrace)
-        add_subdirectory(ext/cpptrace)
+        if (EXISTS "${CPPTRACE_CHECK_PATH}")
+            add_definitions(-DCPPTRACE_ENABLED=ON)
+            include_directories(${PROJECT_SOURCE_DIR}/ext/cpptrace/include)
+            set(CPPTRACE_LIBRARY cpptrace)
+            add_subdirectory(ext/cpptrace)
+        endif()
     endif()
 endif()
 
 #
 # Ozymandias
 #
-set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
 set(GAME ozymandias)
 project(${GAME} CXX)
@@ -165,7 +169,7 @@ file(GLOB IO_GAMESTATE_FILES ${PROJECT_SOURCE_DIR}/src/io/gamestate/*.cpp)
 file(GLOB IO_IMAGEPAKS_FILES ${PROJECT_SOURCE_DIR}/src/io/imagepaks/*.cpp)
 file(GLOB IO_PLAYERDATA_FILES ${PROJECT_SOURCE_DIR}/src/io/playerdata/*.cpp)
 
-if (CMAKE_BUILD_PLATFORM STREQUAL "Android")
+if (CMAKE_BUILD_PLATFORM STREQUAL "android")
     file(GLOB ANDROID_BACKEND_FILES ${PROJECT_SOURCE_DIR}/src/platform/android/*.cpp)
     set(PLATFORM_FILES ${PLATFORM_FILES} ${ANDROID_BACKEND_FILES})
     set(SDL2_ANDROID_HOOK ${SDL_EXT_DIR}/src/main/android/SDL_android_main.c)
@@ -223,6 +227,7 @@ if(MSVC)
     file(GLOB DEV_HEADERS ${PROJECT_SOURCE_DIR}/src/dev/*.h)
     file(GLOB EDITOR_HEADERS ${PROJECT_SOURCE_DIR}/src/editor/*.h)
     file(GLOB TRANSLATION_HEADERS ${PROJECT_SOURCE_DIR}/src/translation/*.h)
+    file(GLOB IMGUI_HEADERS ${PROJECT_SOURCE_DIR}/ext/imgui/*.h)
 
     set(CORE_FILES ${CORE_FILES} ${CORE_HEADERS})
     set(PLATFORM_FILES ${PLATFORM_FILES} ${PLATFORM_HEADERS})
@@ -250,6 +255,7 @@ if(MSVC)
     set(DEV_FILES ${DEV_FILES} ${DEV_HEADERS})
     set(EDITOR_FILES ${EDITOR_FILES} ${EDITOR_HEADERS})
     set(TRANSLATION_FILES ${TRANSLATION_FILES} ${TRANSLATION_HEADERS})
+    set(IMGUI_FILES ${IMGUI_FILES} ${IMGUI_HEADERS})
 
     source_group("core" FILES ${CORE_FILES})
     source_group("core/encoding" FILES ${CORE_ENCODING_FILES})
@@ -344,7 +350,7 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_image REQUIRED)
 
-if (CMAKE_BUILD_PLATFORM STREQUAL "Android")
+if (CMAKE_BUILD_PLATFORM STREQUAL "android")
     add_library(${GAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})
 else()
     add_executable(${GAME} WIN32 ${SOURCE_FILES})
@@ -444,7 +450,7 @@ if(MSVC)
    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
 endif()
 
-if (CMAKE_BUILD_PLATFORM STREQUAL "Android")
+if (CMAKE_BUILD_PLATFORM STREQUAL "android")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPNG_ARM_NEON_OPT=0 -D_BSD_SOURCE")
     find_library(log-lib log)
     find_library(android-lib android)
