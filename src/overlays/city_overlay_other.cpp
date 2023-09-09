@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "building/model.h"
 #include "city/constants.h"
-#include "city/finance.h"
+
 #include "core/calc.h"
 #include "figure/figure.h"
 #include "game/resource.h"
@@ -23,9 +23,6 @@ static int show_building_food_stocks(const building* b) {
     return b->type == BUILDING_MARKET || b->type == BUILDING_FISHING_WHARF || b->type == BUILDING_GRANARY;
 }
 
-static int show_building_tax_income(const building* b) {
-    return b->type == BUILDING_TAX_COLLECTOR || ((building*)b)->is_palace();
-}
 
 static int show_figure_food_stocks(const figure* f) {
     if (f->type == FIGURE_MARKET_BUYER || f->type == FIGURE_MARKET_TRADER || f->type == FIGURE_DELIVERY_BOY
@@ -36,10 +33,6 @@ static int show_figure_food_stocks(const figure* f) {
     }
 
     return 0;
-}
-
-static int show_figure_tax_income(const figure* f) {
-    return f->type == FIGURE_TAX_COLLECTOR;
 }
 
 static int get_column_height_food_stocks(const building* b) {
@@ -55,15 +48,6 @@ static int get_column_height_food_stocks(const building* b) {
             return 5;
         else if (pct_stocks <= 200)
             return 1;
-    }
-    return NO_COLUMN;
-}
-
-static int get_column_height_tax_income(const building* b) {
-    if (b->house_size) {
-        int pct = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
-        if (pct > 0)
-            return pct / 25;
     }
     return NO_COLUMN;
 }
@@ -94,20 +78,6 @@ static int get_tooltip_food_stocks(tooltip_context* c, const building* b) {
     }
 }
 
-static int get_tooltip_tax_income(tooltip_context* c, const building* b) {
-    int denarii = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
-    if (denarii > 0) {
-        c->has_numeric_prefix = 1;
-        c->numeric_prefix = denarii;
-        return 45;
-    } else if (b->house_tax_coverage > 0) {
-        return 44;
-    } else {
-        return 43;
-    }
-}
-
-
 const city_overlay* city_overlay_for_food_stocks(void) {
     static city_overlay overlay = {
         OVERLAY_FOOD_STOCKS,
@@ -117,21 +87,6 @@ const city_overlay* city_overlay_for_food_stocks(void) {
         get_column_height_food_stocks,
         0,
         get_tooltip_food_stocks,
-        0,
-        0
-    };
-    return &overlay;
-}
-
-const city_overlay* city_overlay_for_tax_income(void) {
-    static city_overlay overlay = {
-        OVERLAY_TAX_INCOME,
-        COLUMN_TYPE_WATER_ACCESS,
-        show_building_tax_income,
-        show_figure_tax_income,
-        get_column_height_tax_income,
-        0,
-        get_tooltip_tax_income,
         0,
         0
     };

@@ -26,6 +26,7 @@
 #include "overlays/city_overlay_water.h"
 #include "overlays/city_overlay_damage.h"
 #include "overlays/city_overlay_labor.h"
+#include "overlays/city_overlay_tax_income.h"
 
 const city_overlay* g_city_overlay = 0;
 
