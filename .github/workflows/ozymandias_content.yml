@@ -28,7 +28,7 @@ jobs:
         cp ./build/ozymandias ./artifacts/ozymandias.linux
         zip -r linux_build.zip ./artifacts
         wget https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_windows/master/windows_build.zip
-        upzip windows_build.zip -d artifacts
+        unzip windows_build.zip -d artifacts
     - uses: actions/upload-artifact@v3
       with:
         name: linux_windows_build
