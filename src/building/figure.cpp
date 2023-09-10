@@ -270,7 +270,7 @@ bool building::common_spawn_roamer(e_figure_type type, int min_houses, int creat
 
 bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_full_loads, int min_carry, int max_carry) {
     // can only have one?
-    if (only_one && has_figure_of_type(0, FIGURE_CART_PUSHER)) {
+    if (only_one && has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
         return false;
     }
 
@@ -735,7 +735,7 @@ void building::spawn_figure_industry() {
     }
 
     common_spawn_labor_seeker(50);
-    if (has_figure_of_type(0, FIGURE_CART_PUSHER)) {
+    if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
         return;
     }
 
@@ -763,7 +763,7 @@ void building::spawn_figure_farm_harvests() {
         // from the previous harvest is still alive. The farm will get "stuck"
         // and remain in active production till flooded, though the farm worker
         // still displays with the harvesting animation.
-        if (has_figure_of_type(0, FIGURE_CART_PUSHER))
+        if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER))
             return;
 
         if (has_road_access && data.industry.progress > 0) {
@@ -786,8 +786,9 @@ void building::spawn_figure_farm_harvests() {
         }
     } else { // meadow farms
         if (has_road_access) {
-            if (has_figure_of_type(0, FIGURE_CART_PUSHER))
+            if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
                 return;
+            }
             create_cartpusher(output_resource_id, farm_expected_produce(this));
             building_industry_start_new_production(this);
         }
@@ -1184,6 +1185,24 @@ void building::update_month() {
     switch (type) {
     case BUILDING_WORK_CAMP:
         data.industry.spawned_worker_this_month = false;
+        break;
+
+    case BUILDING_TAX_COLLECTOR:
+    case BUILDING_TAX_COLLECTOR_UPGRADED:
+        if (!config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
+            break;
+        }
+
+        if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
+            break;
+        }
+
+        if (has_road_access && deben_storage > 100) {
+            int may_send = std::min<int>((deben_storage / 100) * 100, 400);
+            figure *f = create_cartpusher(RESOURCE_GOLD, may_send, FIGURE_ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
+            deben_storage -= may_send;
+            f->sender_building_id = this->id;
+        }
         break;
     }
 }

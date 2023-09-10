@@ -57,7 +57,7 @@ struct city_overlay_tax_income : public city_overlay {
     }
 
     bool show_building(const building *b) const override {
-        return b->type == BUILDING_TAX_COLLECTOR || ((building*)b)->is_palace();
+        return b->type == BUILDING_TAX_COLLECTOR || b->type == BUILDING_TAX_COLLECTOR_UPGRADED || ((building*)b)->is_palace();
     }
 };
 

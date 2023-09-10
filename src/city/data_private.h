@@ -142,24 +142,24 @@ struct city_data_t {
         int32_t wage_rate_paid_last_year;
     } finance;
     struct {
-        int32_t taxed_plebs;
-        int32_t taxed_patricians;
-        int32_t untaxed_plebs;
-        int32_t untaxed_patricians;
-        int32_t percentage_taxed_plebs;
-        int32_t percentage_taxed_patricians;
+        int32_t taxed_citizens;
+        int32_t taxed_nobles;
+        int32_t untaxed_citizens;
+        int32_t untaxed_nobles;
+        int32_t percentage_taxed_citizens;
+        int32_t percentage_taxed_nobles;
         int32_t percentage_taxed_people;
         struct {
-            int32_t collected_plebs;
-            int32_t collected_patricians;
-            int32_t uncollected_plebs;
-            int32_t uncollected_patricians;
+            int32_t collected_citizens;
+            int32_t collected_nobles;
+            int32_t uncollected_citizens;
+            int32_t uncollected_nobles;
         } yearly;
         struct {
-            int32_t collected_plebs;
-            int32_t collected_patricians;
-            int32_t uncollected_plebs;
-            int32_t uncollected_patricians;
+            int32_t collected_citizens;
+            int32_t collected_nobles;
+            int32_t uncollected_citizens;
+            int32_t uncollected_nobles;
         } monthly;
     } taxes;
     struct {
