@@ -156,6 +156,7 @@ static void engineer_coverage(building* b, figure *f, int* max_damage_seen) {
 
     b->damage_risk = 0;
 }
+
 static void prefect_coverage(building* b, figure *f, int* min_happiness_seen) {
     if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_YARD_SPACE)
         b = b->main();
@@ -164,6 +165,7 @@ static void prefect_coverage(building* b, figure *f, int* min_happiness_seen) {
     if (b->sentiment.house_happiness < *min_happiness_seen)
         *min_happiness_seen = b->sentiment.house_happiness;
 }
+
 static void policeman_coverage(building* b, figure *f, int *max_anger_seen) {
     b->house_criminal_active -= 1;
     b->house_criminal_active = std::max<int>(0, b->house_criminal_active);
@@ -172,15 +174,19 @@ static void policeman_coverage(building* b, figure *f, int *max_anger_seen) {
         *max_anger_seen = b->house_criminal_active;
     }
 }
+
 static void tax_collector_coverage(building* b, figure *f, int* max_tax_multiplier) {
     if (b->house_size && b->house_population > 0) {
         int tax_multiplier = model_get_house(b->subtype.house_level)->tax_multiplier;
-        if (tax_multiplier > *max_tax_multiplier)
+        if (tax_multiplier > *max_tax_multiplier) {
             *max_tax_multiplier = tax_multiplier;
+        }
 
+        b->tax_collector_id = f->home()->id;
         b->house_tax_coverage = 50;
     }
 }
+
 static void labor_seeker_coverage(building* b, figure *f, int*) {
     // nothing here, the labor seeker works simply via the `houses_covered` variable
 }

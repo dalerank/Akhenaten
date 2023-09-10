@@ -27,8 +27,9 @@
 #define INFINITE 10000
 
 static int max_progress(building* b) {
-    if (building_is_farm(b->type))
+    if (building_is_farm(b->type)) {
         return MAX_PROGRESS_FARM_PH;
+    }
 
     return building_is_workshop(b->type) ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
 }
@@ -41,12 +42,10 @@ static void update_farm_image(building* b) {
                 if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER))
                     is_flooded = true;
     }
-    if (!is_flooded)
-        map_building_tiles_add_farm(b->id,
-                                    b->tile.x(),
-                                    b->tile.y(),
-                                    image_id_from_group(GROUP_BUILDING_FARMLAND) + 5 * (b->output_resource_id - 1),
-                                    b->data.industry.progress);
+
+    if (!is_flooded) {
+        map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), image_id_from_group(GROUP_BUILDING_FARMLAND) + 5 * (b->output_resource_id - 1), b->data.industry.progress);
+    }
 }
 
 building* building_determine_worker_needed() {
@@ -165,6 +164,7 @@ void building_industry_update_production(void) {
         }
     }
 }
+
 void building_industry_update_farms(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Farms Update");
     for (int i = 1; i < MAX_BUILDINGS; i++) {
