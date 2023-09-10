@@ -125,11 +125,12 @@ void city_finance_estimate_taxes(void) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size && b->house_tax_coverage) {
-            int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
+            int is_nobles = (b->subtype.house_level >= HOUSE_SMALL_VILLA);
             int level_tax_rate_multiplier = difficulty_adjust_money(model_get_house(b->subtype.house_level)->tax_multiplier);
-            if (is_patrician)
+
+            if (is_nobles) {
                 city_data.taxes.monthly.collected_patricians += b->house_population * level_tax_rate_multiplier;
-            else {
+            } else {
                 city_data.taxes.monthly.collected_plebs += b->house_population * level_tax_rate_multiplier;
             }
         }
@@ -166,14 +167,14 @@ static void collect_monthly_taxes(void) {
         if (b->state != BUILDING_STATE_VALID || !b->house_size)
             continue;
 
-        int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
+        int is_nobles = b->subtype.house_level >= HOUSE_SMALL_VILLA;
         int population = b->house_population;
         int trm = difficulty_adjust_money(model_get_house(b->subtype.house_level)->tax_multiplier);
         city_data.population.at_level[b->subtype.house_level] += population;
 
         int tax = population * trm;
         if (b->house_tax_coverage) {
-            if (is_patrician) {
+            if (is_nobles) {
                 city_data.taxes.taxed_patricians += population;
                 city_data.taxes.monthly.collected_patricians += tax;
             } else {
@@ -182,7 +183,7 @@ static void collect_monthly_taxes(void) {
             }
             b->tax_income_or_storage += tax;
         } else {
-            if (is_patrician) {
+            if (is_nobles) {
                 city_data.taxes.untaxed_patricians += population;
                 city_data.taxes.monthly.uncollected_patricians += tax;
             } else {
@@ -216,6 +217,7 @@ static void pay_monthly_wages(void) {
     city_data.finance.wages_so_far += wages;
     city_data.finance.wage_rate_paid_this_year += city_data.labor.wages;
 }
+
 static void pay_monthly_interest(void) {
     if (city_data.finance.treasury < 0) {
         int interest = calc_adjust_with_percentage(-city_data.finance.treasury, 10) / 12;
@@ -223,6 +225,7 @@ static void pay_monthly_interest(void) {
         city_data.finance.interest_so_far += interest;
     }
 }
+
 static void pay_monthly_salary(void) {
     if (!city_finance_out_of_money() && city_buildings_has_mansion()) {
         city_data.finance.salary_so_far += city_data.emperor.salary_amount;
@@ -230,6 +233,7 @@ static void pay_monthly_salary(void) {
         city_data.finance.treasury -= city_data.emperor.salary_amount;
     }
 }
+
 static void reset_taxes(void) {
     city_data.finance.last_year.income.taxes = city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
     city_data.taxes.yearly.collected_plebs = 0;
