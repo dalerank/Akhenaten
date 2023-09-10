@@ -232,7 +232,7 @@ bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
 
 bool map_routing_ferry_has_routes(building *b) {
     svector<building *, 64> ferries;
-    buildings_get(BUILDING_FERRY, ferries);
+    buildings_get(ferries, BUILDING_FERRY);
 
     for (auto f1 = ferries.begin(); f1 != ferries.end(); ++f1) {
         ferry_points fpoints_begin = get_ferry_points(*f1);

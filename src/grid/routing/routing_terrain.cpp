@@ -336,7 +336,7 @@ void map_routing_update_ferry_routes() {
     });
 
     svector<building *, 64> ferries;
-    buildings_get(BUILDING_FERRY, ferries);
+    buildings_get(ferries, BUILDING_FERRY);
 
     using path_points = std::pair<map_point, map_point>;
     auto mark_path = [] (path_points &ppoints) {

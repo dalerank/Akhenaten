@@ -99,6 +99,7 @@ public:
     unsigned char fire_proof; // cannot catch fire or collapse
     unsigned char map_random_7bit;
     unsigned char house_tax_coverage;
+    unsigned short tax_collector_id;
     short formation_id;
     union {
         struct dock_t {
@@ -201,6 +202,7 @@ public:
         signed char native_anger;
     } sentiment;
     unsigned char show_on_problem_overlay;
+    unsigned short deben_storage;
 
     ////
 
@@ -257,7 +259,7 @@ public:
     figure* create_figure_generic(e_figure_type _type, int created_action, int slot, int created_dir);
     figure* create_roaming_figure(e_figure_type _type, int created_action = FIGURE_ACTION_125_ROAMING, int slot = BUILDING_SLOT_SERVICE);
     figure* create_figure_with_destination(e_figure_type _type, building* destination, int created_action = ACTION_10_GOING, int slot = BUILDING_SLOT_SERVICE);
-    figure* create_cartpusher(e_resource resource_id, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, int slot = BUILDING_SLOT_SERVICE);
+    figure* create_cartpusher(e_resource resource_id, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, int slot = BUILDING_SLOT_CARTPUSHER);
 
     int worker_percentage();
     int figure_hunting_longe_spawn_timer();
@@ -363,10 +365,15 @@ bool building_type_none_of(building &b, Args ... args) {
     return (std::find(std::begin(types), std::end(types), b.type) == std::end(types));
 }
 
-template<typename Array>
-void buildings_get(e_building_type type, Array &arr) {
-    for (auto it = building_begin(); it != building_end(); ++it) {
-        if (it->type == type) arr.push_back(it);
+template<typename Array, typename ... Args>
+void buildings_get(Array &arr, Args ... args) {
+    int types[] = {args...};
+    for (const auto &type : types) {
+        for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
+            if (it->type == type) {
+                arr.push_back(it);
+            }
+        }
     }
 }
 
