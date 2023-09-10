@@ -352,7 +352,7 @@ static void create_minimap_screenshot() {
         return;
     }
     memset(canvas, 0, sizeof(color) * width_pixels * height_pixels);
-    widget_minimap_draw(0, 0, width_pixels, height_pixels, 1);
+    widget_minimap_draw({0, 0}, width_pixels, height_pixels, 1);
     graphics_clear_screen();
     graphics_renderer()->draw_custom_texture(CUSTOM_IMAGE_MINIMAP, 0, 0, 1 / MINIMAP_SCALE);
     graphics_renderer()->save_screen_buffer(canvas, 0, 0, width_pixels, height_pixels, width_pixels);

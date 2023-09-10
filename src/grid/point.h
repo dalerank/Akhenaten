@@ -6,10 +6,6 @@ enum { _X = 0, _Y = 1, _GRID_OFFSET = 2, _ABS_X = 3, _ABS_Y = 4 };
 
 #include <cmath>
 
-struct tile2i {
-    int x, y;
-};
-
 class map_point {
 private:
     // by and large, X/Y coords in the game logic are RELATIVE TO MAP AREA / STARTING OFFSET.
@@ -23,6 +19,7 @@ public:
     // SETTERS / GETTERS
     const int x(int v);
     const int y(int v);
+
     int grid_offset(int v);
     int grid_offset();
     const int ABS_X(int v);
@@ -47,6 +44,8 @@ public:
 
     // direct access to private fields, for iob read/write without recalc
     int* private_access(int i);
+    void set_x(int v) { set(v, y()); }
+    void set_y(int v) { set(x(), v); }
 
     // CORRECT BROKEN FIELDS
     bool self_correct();
@@ -61,6 +60,7 @@ public:
     inline bool operator!=(map_point rhs) { return p_GRID_OFFSET != rhs.p_GRID_OFFSET; }
 };
 
+using tile2i = map_point;
 extern const map_point map_point_invalid;
 
 /**

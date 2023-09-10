@@ -16,13 +16,10 @@
 static const color ENEMY_COLOR_BY_CLIMATE[] = {COLOR_MINIMAP_ENEMY_CENTRAL, COLOR_MINIMAP_ENEMY_NORTHERN, COLOR_MINIMAP_ENEMY_DESERT};
 
 struct minimap_data_t {
-    int absolute_x;
-    int absolute_y;
-    int width_tiles;
-    int height_tiles;
+    tile2i absolute_tile;
+    tile2i size_tiles;
     vec2i screen_offset;
-    int width;
-    int height;
+    vec2i size;
     int cache_width;
     color enemy_color;
     color* cache;
@@ -39,18 +36,15 @@ void widget_minimap_invalidate(void) {
 }
 static void foreach_map_tile(void (*callback)(screen_tile screen, map_point point)) {
     auto& data = g_minimap_data;
-    city_view_foreach_minimap_tile(data.screen_offset.x, data.screen_offset.y, data.absolute_x, data.absolute_y, data.width_tiles, data.height_tiles, callback);
+    city_view_foreach_minimap_tile(data.screen_offset.x, data.screen_offset.y, data.absolute_tile.x(), data.absolute_tile.y(), data.size_tiles.x(), data.size_tiles.y(), callback);
 }
 
-static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_tiles) {
+static void set_bounds(vec2i offset, int width_tiles, int height_tiles) {
     auto& data = g_minimap_data;
-    data.width_tiles = width_tiles;
-    data.height_tiles = height_tiles;
-    data.screen_offset = {x_offset, y_offset};
-    data.width = 2 * width_tiles;
-    data.height = height_tiles;
-    data.absolute_x = (GRID_LENGTH - width_tiles) / 2 + 1;
-    data.absolute_y = ((2 * GRID_LENGTH) + 1 - height_tiles) / 2;
+    data.size_tiles = {width_tiles, height_tiles};
+    data.screen_offset = offset;
+    data.size = {2 * width_tiles, height_tiles};
+    data.absolute_tile = tile2i((GRID_LENGTH - width_tiles) / 2 + 1, ((2 * GRID_LENGTH) + 1 - height_tiles) / 2);
 
     //    int camera_x, camera_y;
     map_point camera_tile = city_view_get_camera_mappoint();
@@ -58,27 +52,30 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
     if ((scenario_map_data()->width - width_tiles) / 2 > 0) {
-        if (camera_tile.x() < data.absolute_x)
-            data.absolute_x = camera_tile.x();
-        else if (camera_tile.x() > width_tiles + data.absolute_x - view_width_tiles)
-            data.absolute_x = view_width_tiles + camera_tile.x() - width_tiles;
+        if (camera_tile.x() < data.absolute_tile.x()) {
+            data.absolute_tile.set_x(camera_tile.x());
+        } else if (camera_tile.x() > width_tiles + data.absolute_tile.x() - view_width_tiles) {
+            data.absolute_tile.set_x(view_width_tiles + camera_tile.x() - width_tiles);
+        }
     }
+
     if ((2 * scenario_map_data()->height - height_tiles) / 2 > 0) {
-        if (camera_tile.y() < data.absolute_y)
-            data.absolute_y = camera_tile.y();
-        else if (camera_tile.y() > height_tiles + data.absolute_y - view_height_tiles)
-            data.absolute_y = view_height_tiles + camera_tile.y() - height_tiles;
+        if (camera_tile.y() < data.absolute_tile.y()) {
+            data.absolute_tile.set_y(camera_tile.y());
+        } else if (camera_tile.y() > height_tiles + data.absolute_tile.y() - view_height_tiles) {
+            data.absolute_tile.set_y(view_height_tiles + camera_tile.y() - height_tiles);
+        }
     }
     // ensure even height
-    data.absolute_y &= ~1;
+    data.absolute_tile.set_y( data.absolute_tile.y() & ~1 );
 }
 
 static int is_in_minimap(const mouse* m) {
     auto& data = g_minimap_data;
     if (m->x >= data.screen_offset.x 
-        && m->x < data.screen_offset.x + data.width 
+        && m->x < data.screen_offset.x + data.size.x 
         && m->y >= data.screen_offset.y
-        && m->y < data.screen_offset.y + data.height) {
+        && m->y < data.screen_offset.y + data.size.y) {
         return 1;
     }
     return 0;
@@ -229,13 +226,14 @@ static void draw_viewport_rectangle(void) {
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
-    int x_offset = data.screen_offset.x + 2 * (camera_tile.x() - data.absolute_x) - 2 + camera_pixels.x / 30;
+    int x_offset = data.screen_offset.x + 2 * (camera_tile.x() - data.absolute_tile.x()) - 2 + camera_pixels.x / 30;
     x_offset = std::max(x_offset, data.screen_offset.x);
 
-    if (x_offset + 2 * view_width_tiles + 4 > data.screen_offset.x + data.width_tiles)
+    if (x_offset + 2 * view_width_tiles + 4 > data.screen_offset.x + data.size_tiles.x()) {
         x_offset -= 2;
+    }
 
-    int y_offset = data.screen_offset.y + camera_tile.y() - data.absolute_y + 1;
+    int y_offset = data.screen_offset.y + camera_tile.y() - data.absolute_tile.y() + 1;
     graphics_draw_rect(x_offset, y_offset, view_width_tiles * 2 + 8, view_height_tiles + 3, COLOR_MINIMAP_VIEWPORT);
 }
 
@@ -249,7 +247,7 @@ static void prepare_minimap_cache(int width, int height) {
 }
 static void clear_minimap(void) {
     auto& data = g_minimap_data;
-    for (int y = 0; y < data.height; y++) {
+    for (int y = 0; y < data.size.y; y++) {
         color* line = &data.cache[y * data.cache_width];
         for (int x = 0; x < data.cache_width; x++) {
             line[x] = COLOR_BLACK;
@@ -259,7 +257,7 @@ static void clear_minimap(void) {
 
 void draw_minimap() {
     auto& data = g_minimap_data;
-    graphics_set_clip_rectangle(data.screen_offset.x, data.screen_offset.y, data.width, data.height);
+    graphics_set_clip_rectangle(data.screen_offset.x, data.screen_offset.y, data.size.x, data.size.y);
     clear_minimap();
     foreach_map_tile(draw_minimap_tile);
     //    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
@@ -268,43 +266,43 @@ void draw_minimap() {
     graphics_reset_clip_rectangle();
 }
 
-static void draw_uncached(int x_offset, int y_offset, int width_tiles, int height_tiles) {
+static void draw_uncached(vec2i offset, int width_tiles, int height_tiles) {
     auto& data = g_minimap_data;
     data.enemy_color = ENEMY_COLOR_BY_CLIMATE[scenario_property_climate()];
     prepare_minimap_cache(2 * width_tiles, height_tiles);
-    set_bounds(x_offset, y_offset, width_tiles, height_tiles);
+    set_bounds(offset, width_tiles, height_tiles);
     draw_minimap();
 }
 
-void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_tiles, int is_scrolling) {
+void draw_using_cache(vec2i offset, int width_tiles, int height_tiles, int is_scrolling) {
     auto& data = g_minimap_data;
-    if (width_tiles * 2 != data.width || height_tiles != data.height || x_offset != data.screen_offset.x) {
-        draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
+    if (width_tiles * 2 != data.size.x || height_tiles != data.size.y || offset.x != data.screen_offset.x) {
+        draw_uncached(offset, width_tiles, height_tiles);
         return;
     }
 
     if (is_scrolling) {
-        int old_absolute_x = data.absolute_x;
-        int old_absolute_y = data.absolute_y;
-        set_bounds(x_offset, y_offset, width_tiles, height_tiles);
-        if (data.absolute_x != old_absolute_x || data.absolute_y != old_absolute_y) {
+        tile2i old_absolute = data.absolute_tile;
+        set_bounds(offset, width_tiles, height_tiles);
+
+        if (data.absolute_tile != old_absolute) {
             draw_minimap();
             return;
         }
     }
 
-    graphics_set_clip_rectangle(x_offset, y_offset, 2 * width_tiles, height_tiles);
+    graphics_set_clip_rectangle(offset.x, offset.y, 2 * width_tiles, height_tiles);
     //    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
 }
 
-void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles, int force) {
+void widget_minimap_draw(vec2i offset, int width_tiles, int height_tiles, int force) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded/Minimap");
     auto& data = g_minimap_data;
     if (data.refresh_requested || scroll_in_progress() || force) {
         //        if (data.refresh_requested) {
-        draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
+        draw_uncached(offset, width_tiles, height_tiles);
         data.refresh_requested = 0;
         //        } else {
         //            draw_using_cache(x_offset, y_offset, width_tiles, height_tiles, scroll_in_progress());
@@ -323,8 +321,8 @@ static vec2i get_mouse_relative_pos(const mouse* m, float &xx, float &yy) {
     auto& data = g_minimap_data;
 
     data.rel_mouse = {m->x - data.screen_offset.x, m->y - data.screen_offset.y};
-    xx = data.rel_mouse.x / (float)data.width;
-    yy = data.rel_mouse.y / (float)data.height;
+    xx = data.rel_mouse.x / (float)data.size.x;
+    yy = data.rel_mouse.y / (float)data.size.y;
 
     return data.rel_mouse;
 }

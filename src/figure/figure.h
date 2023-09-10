@@ -112,9 +112,9 @@ public:
     unsigned char roam_random_counter;
     signed char roam_turn_direction;
     signed char roam_ticks_until_next_turn;
-    tile2i cc_coords;
-    tile2i cc_destination;
-    tile2i cc_delta;
+    vec2i cc_coords;
+    vec2i cc_destination;
+    vec2i cc_delta;
     //    short cross_country_x; // position = 15 * x + offset on tile
     //    short cross_country_y; // position = 15 * y + offset on tile
     //    short cc_destination_x;

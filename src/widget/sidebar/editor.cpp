@@ -199,14 +199,14 @@ void widget_sidebar_editor_draw_background(void) {
     int x_offset = sidebar_common_get_x_offset_expanded();
     ImageDraw::img_generic(image_base, x_offset, TOP_MENU_HEIGHT);
     draw_buttons();
-    widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
+    widget_minimap_draw({x_offset + 8, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
     draw_status();
     sidebar_common_draw_relief(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT, GROUP_EDITOR_SIDE_PANEL, 0);
 }
 
 void widget_sidebar_editor_draw_foreground(void) {
     draw_buttons();
-    widget_minimap_draw(sidebar_common_get_x_offset_expanded() + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
+    widget_minimap_draw({sidebar_common_get_x_offset_expanded() + 8, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
 }
 
 int widget_sidebar_editor_handle_mouse(const mouse* m) {

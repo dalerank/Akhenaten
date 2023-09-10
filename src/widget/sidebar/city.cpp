@@ -185,7 +185,7 @@ static void draw_expanded_background(int x_offset) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded");
     ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT);
     ImageDraw::img_generic(window_build_menu_image(), x_offset + 11, 181 + TOP_MENU_HEIGHT);
-    widget_minimap_draw(x_offset + 12, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
+    widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 
     // extra bar spacing on the right
     int block_height = 702;
@@ -224,10 +224,10 @@ void widget_sidebar_city_draw_foreground(void) {
         draw_overlay_text(x_offset + 4);
 
         if (GAME_ENV == ENGINE_ENV_C3) {
-            widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
+            widget_minimap_draw({x_offset + 8, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
             draw_number_of_messages(x_offset);
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            widget_minimap_draw(x_offset + 12, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
+            widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
             draw_number_of_messages(x_offset - 26);
         }
     }
@@ -237,7 +237,7 @@ void widget_sidebar_city_draw_foreground(void) {
     draw_debug_ui(10, 30);
 }
 void widget_sidebar_city_draw_foreground_military(void) {
-    widget_minimap_draw(sidebar_common_get_x_offset_expanded() + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
+    widget_minimap_draw({sidebar_common_get_x_offset_expanded() + 8, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 }
 int widget_sidebar_city_handle_mouse(const mouse* m) {
     if (widget_city_has_input())
