@@ -20,8 +20,7 @@ struct minimap_data_t {
     int absolute_y;
     int width_tiles;
     int height_tiles;
-    int x_offset;
-    int y_offset;
+    vec2i screen_offset;
     int width;
     int height;
     int cache_width;
@@ -40,15 +39,14 @@ void widget_minimap_invalidate(void) {
 }
 static void foreach_map_tile(void (*callback)(screen_tile screen, map_point point)) {
     auto& data = g_minimap_data;
-    city_view_foreach_minimap_tile(data.x_offset, data.y_offset, data.absolute_x, data.absolute_y, data.width_tiles, data.height_tiles, callback);
+    city_view_foreach_minimap_tile(data.screen_offset.x, data.screen_offset.y, data.absolute_x, data.absolute_y, data.width_tiles, data.height_tiles, callback);
 }
 
 static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_tiles) {
     auto& data = g_minimap_data;
     data.width_tiles = width_tiles;
     data.height_tiles = height_tiles;
-    data.x_offset = x_offset;
-    data.y_offset = y_offset;
+    data.screen_offset = {x_offset, y_offset};
     data.width = 2 * width_tiles;
     data.height = height_tiles;
     data.absolute_x = (GRID_LENGTH - width_tiles) / 2 + 1;
@@ -77,8 +75,10 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
 
 static int is_in_minimap(const mouse* m) {
     auto& data = g_minimap_data;
-    if (m->x >= data.x_offset && m->x < data.x_offset + data.width && m->y >= data.y_offset
-        && m->y < data.y_offset + data.height) {
+    if (m->x >= data.screen_offset.x 
+        && m->x < data.screen_offset.x + data.width 
+        && m->y >= data.screen_offset.y
+        && m->y < data.screen_offset.y + data.height) {
         return 1;
     }
     return 0;
@@ -229,14 +229,13 @@ static void draw_viewport_rectangle(void) {
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
-    int x_offset = data.x_offset + 2 * (camera_tile.x() - data.absolute_x) - 2 + camera_pixels.x / 30;
-    if (x_offset < data.x_offset)
-        x_offset = data.x_offset;
+    int x_offset = data.screen_offset.x + 2 * (camera_tile.x() - data.absolute_x) - 2 + camera_pixels.x / 30;
+    x_offset = std::max(x_offset, data.screen_offset.x);
 
-    if (x_offset + 2 * view_width_tiles + 4 > data.x_offset + data.width_tiles)
+    if (x_offset + 2 * view_width_tiles + 4 > data.screen_offset.x + data.width_tiles)
         x_offset -= 2;
 
-    int y_offset = data.y_offset + camera_tile.y() - data.absolute_y + 1;
+    int y_offset = data.screen_offset.y + camera_tile.y() - data.absolute_y + 1;
     graphics_draw_rect(x_offset, y_offset, view_width_tiles * 2 + 8, view_height_tiles + 3, COLOR_MINIMAP_VIEWPORT);
 }
 
@@ -260,7 +259,7 @@ static void clear_minimap(void) {
 
 void draw_minimap() {
     auto& data = g_minimap_data;
-    graphics_set_clip_rectangle(data.x_offset, data.y_offset, data.width, data.height);
+    graphics_set_clip_rectangle(data.screen_offset.x, data.screen_offset.y, data.width, data.height);
     clear_minimap();
     foreach_map_tile(draw_minimap_tile);
     //    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
@@ -279,7 +278,7 @@ static void draw_uncached(int x_offset, int y_offset, int width_tiles, int heigh
 
 void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_tiles, int is_scrolling) {
     auto& data = g_minimap_data;
-    if (width_tiles * 2 != data.width || height_tiles != data.height || x_offset != data.x_offset) {
+    if (width_tiles * 2 != data.width || height_tiles != data.height || x_offset != data.screen_offset.x) {
         draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
         return;
     }
@@ -323,7 +322,7 @@ void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height
 static vec2i get_mouse_relative_pos(const mouse* m, float &xx, float &yy) {
     auto& data = g_minimap_data;
 
-    data.rel_mouse = {m->x - data.x_offset, m->y - data.y_offset};
+    data.rel_mouse = {m->x - data.screen_offset.x, m->y - data.screen_offset.y};
     xx = data.rel_mouse.x / (float)data.width;
     yy = data.rel_mouse.y / (float)data.height;
 
