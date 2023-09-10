@@ -160,6 +160,7 @@ static void collect_monthly_taxes(void) {
     for (int i = 0; i < MAX_HOUSE_LEVELS; i++) {
         city_data.population.at_level[i] = 0;
     }
+
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->house_size)
@@ -191,19 +192,14 @@ static void collect_monthly_taxes(void) {
         }
     }
 
-    int collected_patricians
-      = calc_adjust_with_percentage(city_data.taxes.monthly.collected_patricians / 2, city_data.finance.tax_percentage);
-    int collected_plebs
-      = calc_adjust_with_percentage(city_data.taxes.monthly.collected_plebs / 2, city_data.finance.tax_percentage);
+    int collected_patricians = calc_adjust_with_percentage(city_data.taxes.monthly.collected_patricians / 2, city_data.finance.tax_percentage);
+    int collected_plebs = calc_adjust_with_percentage(city_data.taxes.monthly.collected_plebs / 2, city_data.finance.tax_percentage);
     int collected_total = collected_patricians + collected_plebs;
 
     city_data.taxes.yearly.collected_patricians += collected_patricians;
     city_data.taxes.yearly.collected_plebs += collected_plebs;
-    city_data.taxes.yearly.uncollected_patricians
-      += calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_patricians / 2,
-                                     city_data.finance.tax_percentage);
-    city_data.taxes.yearly.uncollected_plebs
-      += calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_plebs / 2, city_data.finance.tax_percentage);
+    city_data.taxes.yearly.uncollected_patricians += calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_patricians / 2, city_data.finance.tax_percentage);
+    city_data.taxes.yearly.uncollected_plebs += calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_plebs / 2, city_data.finance.tax_percentage);
 
     city_data.finance.treasury += collected_total;
 
@@ -211,9 +207,9 @@ static void collect_monthly_taxes(void) {
     int total_plebs = city_data.taxes.taxed_plebs + city_data.taxes.untaxed_plebs;
     city_data.taxes.percentage_taxed_patricians = calc_percentage(city_data.taxes.taxed_patricians, total_patricians);
     city_data.taxes.percentage_taxed_plebs = calc_percentage(city_data.taxes.taxed_plebs, total_plebs);
-    city_data.taxes.percentage_taxed_people
-      = calc_percentage(city_data.taxes.taxed_patricians + city_data.taxes.taxed_plebs, total_patricians + total_plebs);
+    city_data.taxes.percentage_taxed_people = calc_percentage(city_data.taxes.taxed_patricians + city_data.taxes.taxed_plebs, total_patricians + total_plebs);
 }
+
 static void pay_monthly_wages(void) {
     int wages = city_data.labor.wages * city_data.labor.workers_employed / 10 / 12;
     city_data.finance.treasury -= wages;
@@ -235,8 +231,7 @@ static void pay_monthly_salary(void) {
     }
 }
 static void reset_taxes(void) {
-    city_data.finance.last_year.income.taxes
-      = city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
+    city_data.finance.last_year.income.taxes = city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
     city_data.taxes.yearly.collected_plebs = 0;
     city_data.taxes.yearly.collected_patricians = 0;
     city_data.taxes.yearly.uncollected_plebs = 0;
@@ -301,8 +296,7 @@ static void copy_amounts_to_last_year(void) {
 static void pay_tribute(void) {
     finance_overview* last_year = &city_data.finance.last_year;
 
-    int income = last_year->income.donated + last_year->income.taxes + last_year->income.exports
-                 + last_year->income.gold_extracted;
+    int income = last_year->income.donated + last_year->income.taxes + last_year->income.exports + last_year->income.gold_extracted;
     int expenses = last_year->expenses.stolen + last_year->expenses.salary + last_year->expenses.interest
                    + last_year->expenses.construction + last_year->expenses.wages + last_year->expenses.imports
                    + last_year->expenses.requests_and_festivals;

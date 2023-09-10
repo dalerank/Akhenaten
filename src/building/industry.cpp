@@ -32,6 +32,7 @@ static int max_progress(building* b) {
 
     return building_is_workshop(b->type) ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
 }
+
 static void update_farm_image(building* b) {
     bool is_flooded = false;
     if (building_is_floodplain_farm(b)) {
