@@ -1,6 +1,5 @@
 #include "city_overlay_dentist.h"
 
-#include "building/type.h"
 #include "city_overlay.h"
 #include "city/constants.h"
 #include "grid/property.h"

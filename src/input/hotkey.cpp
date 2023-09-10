@@ -1,6 +1,5 @@
 #include "hotkey.h"
 
-#include "building/type.h"
 #include "city/constants.h"
 #include "core/app.h"
 #include "overlays/city_overlay.h"

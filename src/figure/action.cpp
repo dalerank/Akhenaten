@@ -1,6 +1,5 @@
 #include "action.h"
 
-#include "building/type.h"
 #include "grid/terrain.h"
 
 #include "city/entertainment.h"

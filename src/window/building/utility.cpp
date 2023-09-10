@@ -2,7 +2,6 @@
 
 #include "building/building.h"
 #include "building/roadblock.h"
-#include "building/type.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"

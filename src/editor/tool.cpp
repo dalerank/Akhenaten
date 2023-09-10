@@ -1,7 +1,6 @@
 #include "tool.h"
 
 #include "building/construction/routed.h"
-#include "building/type.h"
 #include "city/warning.h"
 #include "core/random.h"
 #include "editor/tool_restriction.h"
