@@ -1,6 +1,6 @@
 #pragma once
 
-#include "building/type.h"
+#include "building/building_type.h"
 #include "city/constants.h"
 
 enum e_build_menu {

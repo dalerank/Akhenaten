@@ -1,7 +1,6 @@
 #pragma once
 
-#include "building/type.h"
-#include "core/buffer.h"
+#include "building/building_type.h"
 #include "grid/point.h"
 
 /**
@@ -10,7 +9,7 @@
  * @return Building ID of building at offset, 0 means no building
  */
 int map_building_at(int grid_offset);
-int map_building_at(map_point tile);
+int map_building_at(tile2i tile);
 
 void map_building_set(int grid_offset, int building_id);
 

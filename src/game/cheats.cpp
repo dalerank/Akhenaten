@@ -1,7 +1,7 @@
 #include "cheats.h"
 
 #include "building/construction/build_planner.h"
-#include "building/type.h"
+#include "building/building_type.h"
 #include "city/finance.h"
 #include "city/gods.h"
 #include "city/victory.h"

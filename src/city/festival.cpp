@@ -1,6 +1,6 @@
 #include "festival.h"
 
-#include "building/type.h"
+#include "building/building_type.h"
 #include "building/storage_yard.h"
 #include "buildings.h"
 #include "city/constants.h"

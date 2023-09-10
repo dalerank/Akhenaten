@@ -1,7 +1,7 @@
 #include "dock.h"
 
 #include "building/market.h"
-#include "building/type.h"
+#include "building/building_type.h"
 #include "city/buildings.h"
 #include "city/resource.h"
 #include "core/profiler.h"

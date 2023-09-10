@@ -1,14 +1,10 @@
-#ifndef int_H
-#define int_H
+#pragma once
 
 /**
  * @file
  * Type definitions for buildings
  */
 
-/**
- * Building types
- */
 enum e_building_type {
     BUILDING_NONE = 0,
     BUILDING_MENU_FARMS = 2,
@@ -20,7 +16,7 @@ enum e_building_type {
     BUILDING_IRRIGATION_DITCH = 8,
     BUILDING_CLEAR_LAND = 9,
     BUILDING_HOUSE_VACANT_LOT = 10,
-    BUILDING_HOUSE_SMALL_TENT = 10,
+    BUILDING_HOUSE_SMALL_HUT = 10,
     BUILDING_HOUSE_LARGE_TENT = 11,
     BUILDING_HOUSE_SMALL_SHACK = 12,
     BUILDING_HOUSE_LARGE_SHACK = 13,
@@ -202,44 +198,5 @@ enum e_building_type {
     BUILDING_LARGE_ROYAL_TOMB = 235,
     BUILDING_GRAND_ROYAL_TOMB = 236,
     //
-    int_MAX
+    BUILDING_MAX
 };
-
-/**
- * House levels
- */
-enum {
-    HOUSE_SMALL_TENT = 0,
-    HOUSE_LARGE_TENT = 1,
-    HOUSE_SMALL_SHACK = 2,
-    HOUSE_LARGE_SHACK = 3,
-    HOUSE_SMALL_HOVEL = 4,
-    HOUSE_LARGE_HOVEL = 5,
-    HOUSE_SMALL_CASA = 6,
-    HOUSE_LARGE_CASA = 7,
-    HOUSE_SMALL_INSULA = 8,
-    HOUSE_MEDIUM_INSULA = 9,
-    HOUSE_LARGE_INSULA = 10,
-    HOUSE_GRAND_INSULA = 11,
-    HOUSE_SMALL_VILLA = 12,
-    HOUSE_MEDIUM_VILLA = 13,
-    HOUSE_LARGE_VILLA = 14,
-    HOUSE_GRAND_VILLA = 15,
-    HOUSE_SMALL_PALACE = 16,
-    HOUSE_MEDIUM_PALACE = 17,
-    HOUSE_LARGE_PALACE = 18,
-    HOUSE_LUXURY_PALACE = 19,
-};
-
-enum e_building_state {
-    BUILDING_STATE_UNUSED = 0,
-    BUILDING_STATE_VALID = 1,
-    BUILDING_STATE_UNDO = 2,
-    BUILDING_STATE_CREATED = 3,
-    BUILDING_STATE_RUBBLE = 4,
-    BUILDING_STATE_DELETED_BY_GAME = 5, // used for earthquakes, fires, house mergers
-    BUILDING_STATE_DELETED_BY_PLAYER = 6,
-    BUILDING_STATE_MOTHBALLED = 7
-};
-
-#endif // int_H

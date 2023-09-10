@@ -74,6 +74,9 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
   {"gameplay_change_fire_risk_clay_pit_reduced", true},
   {"gameplay_change_has_animals", true},
   {"gameplay_change_goldmine_twice_production", true},
+  {"gameplay_change_new_tax_collection_system", false},
+
+  ///
 
   {"#god_osiris_disabled", false},
   {"#god_ra_disabled", false},

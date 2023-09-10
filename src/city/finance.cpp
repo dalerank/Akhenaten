@@ -1,6 +1,7 @@
 #include "finance.h"
 
 #include "building/building.h"
+#include "building/house.h"
 #include "building/model.h"
 #include "buildings.h"
 #include "city/data_private.h"
@@ -117,6 +118,7 @@ void city_finance_estimate_wages(void) {
     city_data.finance.this_year.expenses.wages = city_data.finance.wages_so_far;
     city_data.finance.estimated_wages = (12 - game_time_month()) * monthly_wages + city_data.finance.wages_so_far;
 }
+
 void city_finance_estimate_taxes(void) {
     city_data.taxes.monthly.collected_plebs = 0;
     city_data.taxes.monthly.collected_patricians = 0;
@@ -124,31 +126,25 @@ void city_finance_estimate_taxes(void) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size && b->house_tax_coverage) {
             int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
-            int trm = difficulty_adjust_money(model_get_house(b->subtype.house_level)->tax_multiplier);
+            int level_tax_rate_multiplier = difficulty_adjust_money(model_get_house(b->subtype.house_level)->tax_multiplier);
             if (is_patrician)
-                city_data.taxes.monthly.collected_patricians += b->house_population * trm;
+                city_data.taxes.monthly.collected_patricians += b->house_population * level_tax_rate_multiplier;
             else {
-                city_data.taxes.monthly.collected_plebs += b->house_population * trm;
+                city_data.taxes.monthly.collected_plebs += b->house_population * level_tax_rate_multiplier;
             }
         }
     }
-    int monthly_patricians
-      = calc_adjust_with_percentage(city_data.taxes.monthly.collected_patricians / 2, city_data.finance.tax_percentage);
-    int monthly_plebs
-      = calc_adjust_with_percentage(city_data.taxes.monthly.collected_plebs / 2, city_data.finance.tax_percentage);
+    int monthly_patricians = calc_adjust_with_percentage(city_data.taxes.monthly.collected_patricians / 2, city_data.finance.tax_percentage);
+    int monthly_plebs = calc_adjust_with_percentage(city_data.taxes.monthly.collected_plebs / 2, city_data.finance.tax_percentage);
     int estimated_rest_of_year = (12 - game_time_month()) * (monthly_patricians + monthly_plebs);
 
-    city_data.finance.this_year.income.taxes
-      = city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
+    city_data.finance.this_year.income.taxes = city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
     city_data.finance.estimated_tax_income = city_data.finance.this_year.income.taxes + estimated_rest_of_year;
 
     // TODO: fix this calculation
-    int uncollected_patricians = calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_patricians / 2,
-                                                             city_data.finance.tax_percentage);
-    int uncollected_plebs
-      = calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_plebs / 2, city_data.finance.tax_percentage);
-    city_data.finance.estimated_tax_uncollected
-      = (game_time_month()) * (uncollected_patricians + uncollected_plebs) - city_data.finance.this_year.income.taxes;
+    int uncollected_patricians = calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_patricians / 2, city_data.finance.tax_percentage);
+    int uncollected_plebs = calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_plebs / 2, city_data.finance.tax_percentage);
+    city_data.finance.estimated_tax_uncollected = (game_time_month()) * (uncollected_patricians + uncollected_plebs) - city_data.finance.this_year.income.taxes;
 }
 
 static void collect_monthly_taxes(void) {

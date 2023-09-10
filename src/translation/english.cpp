@@ -77,6 +77,7 @@ static translation_string all_strings[]
      {TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED, "Clay pit fire risk reduced"},
      {TR_CONFIG_CITY_HAS_ANIMALS, "City has animals" },
      {TR_CONFIG_GOLDMINE_TWICE_PRODUCTION, "Goldmine twice production"},
+     {TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM, "New tax collection system"},
      {TR_CONFIG_GOD_OSIRIS_DISABLED, "Osiris disabled"},
      {TR_CONFIG_GOD_RA_DISABLED, "Ra disabled"},
      {TR_CONFIG_GOD_PTAH_DISABLED, "Ptah disabled"},

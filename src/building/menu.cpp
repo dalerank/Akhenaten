@@ -731,18 +731,18 @@ void building_menu_update(int build_set) {
         break;
     case BUILDSET_TUT7_START:
         building_menu_disable_all();
-        for (int i = 0; i < int_MAX; i++)
+        for (int i = 0; i < BUILDING_MAX; i++)
             enable_if_allowed(i);
         // todo
         break;
     case BUILDSET_TUT8_START:
         building_menu_disable_all();
-        for (int i = 0; i < int_MAX; i++)
+        for (int i = 0; i < BUILDING_MAX; i++)
             enable_if_allowed(i);
         // todo
         break;
     default:
-        for (int i = 0; i < int_MAX; i++)
+        for (int i = 0; i < BUILDING_MAX; i++)
             enable_if_allowed(i);
 
         // enable monuments!

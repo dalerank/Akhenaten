@@ -1,6 +1,6 @@
 #include "industry.h"
 
-#include "building/type.h"
+#include "building/building_type.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/profiler.h"

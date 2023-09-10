@@ -1,6 +1,7 @@
 #include "crime.h"
 
 #include "building/building.h"
+#include "building/house.h"
 #include "building/destruction.h"
 #include "city/buildings.h"
 #include "city/figures.h"

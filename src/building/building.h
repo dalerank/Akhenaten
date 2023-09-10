@@ -1,6 +1,7 @@
 #pragma once
 
-#include "building/type.h"
+#include "building/building_type.h"
+#include "building/building_state.h"
 #include "core/span.hpp"
 #include "figure/action.h"
 #include "figure/type.h"

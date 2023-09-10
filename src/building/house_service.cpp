@@ -1,7 +1,6 @@
 #include "house_service.h"
 
 #include "building/building.h"
-#include "building/type.h"
 #include "building/industry.h"
 #include "city/coverage.h"
 #include "core/game_environment.h"

@@ -88,7 +88,7 @@ static void add_house_population(building* house, int num_people) {
         num_people = room;
 
     if (!house->house_population)
-        building_house_change_to(house, BUILDING_HOUSE_SMALL_TENT);
+        building_house_change_to(house, BUILDING_HOUSE_SMALL_HUT);
 
     house->house_population += num_people;
     house->house_population_room = max_people - house->house_population;

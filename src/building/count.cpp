@@ -15,7 +15,7 @@ struct record {
 };
 
 struct count_data_t {
-    struct record buildings[int_MAX];
+    struct record buildings[BUILDING_MAX];
     struct record industry[RESOURCES_MAX];
 };
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "building/building.h"
-#include "building/type.h"
 
 void building_destroy_by_collapse(building* b);
 

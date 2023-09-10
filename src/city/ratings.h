@@ -1,9 +1,8 @@
-#ifndef CITY_RATINGS_H
-#define CITY_RATINGS_H
+#pragma once
 
-#include "building/type.h"
+#include "building/building_type.h"
 
-enum {
+enum e_selected_rating {
     SELECTED_RATING_NONE = 0,
     SELECTED_RATING_CULTURE = 1,
     SELECTED_RATING_PROSPERITY = 2,
@@ -43,5 +42,3 @@ void city_ratings_update_explanations(void);
 void city_ratings_update(int is_yearly_update);
 
 int city_ratings_prosperity_max(void);
-
-#endif // CITY_RATINGS_H

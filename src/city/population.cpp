@@ -1,6 +1,7 @@
 #include "population.h"
 
 #include "building/building.h"
+#include "building/house.h"
 #include "building/house_population.h"
 #include "building/model.h"
 #include "city/data_private.h"

@@ -1,7 +1,6 @@
-#ifndef BUILDING_COUNT_H
-#define BUILDING_COUNT_H
+#pragma once
 
-#include "building/type.h"
+#include "building/building_type.h"
 #include "core/buffer.h"
 #include "game/resource.h"
 
@@ -43,5 +42,3 @@ int building_count_industry_active(int resource);
  * @return Total number of buildings
  */
 int building_count_industry_total(int resource);
-
-#endif // BUILDING_COUNT_H

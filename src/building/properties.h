@@ -1,6 +1,6 @@
 #pragma once
 
-#include "building/type.h"
+#include "building/building_type.h"
 
 struct building_properties {
     int size;

@@ -1,6 +1,7 @@
 #include "maintenance.h"
 
 #include "building/building.h"
+#include "building/house.h"
 #include "building/destruction.h"
 #include "building/list.h"
 #include "city/buildings.h"
@@ -34,6 +35,7 @@ int g_fire_spread_direction = 0;
 void building_maintenance_update_fire_direction(void) {
     g_fire_spread_direction = random_byte() & 7;
 }
+
 void building_maintenance_update_burning_ruins(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Burning Ruins Update");
     int climate = scenario_property_climate();

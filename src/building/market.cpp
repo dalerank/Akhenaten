@@ -1,7 +1,7 @@
 #include "market.h"
 
 #include "building/storage.h"
-#include "building/type.h"
+#include "building/building_type.h"
 #include "building/storage_yard.h"
 #include "city/resource.h"
 #include "core/calc.h"

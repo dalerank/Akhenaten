@@ -1,7 +1,6 @@
 #include "monuments.h"
 
-#include "building.h"
-#include "building/type.h"
+#include "building/building.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"

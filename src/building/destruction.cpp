@@ -1,5 +1,6 @@
 #include "destruction.h"
 
+#include "building/house.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "city/ratings.h"

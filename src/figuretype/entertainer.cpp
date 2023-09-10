@@ -2,7 +2,6 @@
 
 #include "building/building.h"
 #include "building/list.h"
-#include "building/type.h"
 #include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/image.h"

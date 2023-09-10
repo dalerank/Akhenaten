@@ -1,7 +1,6 @@
 #pragma once
 
-#include "building/type.h"
-
+#include "building/building_type.h"
 #include "graphics/color.h"
 #include "graphics/view/view.h"
 #include "grid/point.h"

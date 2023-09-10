@@ -1,6 +1,6 @@
 #include "building.h"
 
-#include "building/type.h"
+#include "building/building_type.h"
 #include "scenario/scenario_data.h"
 
 bool scenario_building_allowed(int building_type) {

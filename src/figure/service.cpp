@@ -1,6 +1,7 @@
 #include "service.h"
 
 #include "building/building.h"
+#include "building/house.h"
 #include "building/model.h"
 #include "figuretype/crime.h"
 #include "game/resource.h"

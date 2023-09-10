@@ -2,6 +2,7 @@
 
 #include "building/properties.h"
 #include "building/rotation.h"
+#include "building/building_type.h"
 #include "building/storage.h"
 #include "city/buildings.h"
 #include "city/population.h"
@@ -97,7 +98,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
 
     // house size
     b->house_size = 0;
-    if (type >= BUILDING_HOUSE_SMALL_TENT && type <= BUILDING_HOUSE_MEDIUM_INSULA) {
+    if (type >= BUILDING_HOUSE_SMALL_HUT && type <= BUILDING_HOUSE_MEDIUM_INSULA) {
         b->house_size = 1;
     } else if (type >= BUILDING_HOUSE_LARGE_INSULA && type <= BUILDING_HOUSE_MEDIUM_VILLA) {
         b->house_size = 2;

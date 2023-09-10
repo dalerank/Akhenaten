@@ -194,7 +194,7 @@ static int evolve_large_tent(building* house, house_demands* demands) {
             if (status == EVOLVE)
                 building_house_change_to(house, BUILDING_HOUSE_SMALL_SHACK);
             else if (status == DEVOLVE)
-                building_house_change_to(house, BUILDING_HOUSE_SMALL_TENT);
+                building_house_change_to(house, BUILDING_HOUSE_SMALL_HUT);
         }
     }
     return 0;

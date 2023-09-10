@@ -2,7 +2,6 @@
 
 #include "building/building.h"
 #include "building/storage.h"
-#include "building/type.h"
 #include "building/storage_yard.h"
 #include "city/buildings.h"
 #include "city/trade.h"
