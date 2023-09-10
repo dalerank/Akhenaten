@@ -3,6 +3,7 @@
 #include <cstdint>
 
 constexpr uint32_t MAX_HOUSE_LEVELS = 20;
+class figure;
 
 int city_finance_treasury();
 int city_finance_out_of_money(void);
@@ -17,7 +18,7 @@ int city_finance_estimated_wages(void);
 
 void city_finance_process_import(int price);
 void city_finance_process_export(int price);
-void city_finance_process_gold_extraction(int amount);
+void city_finance_process_gold_extraction(int amount, figure *f);
 void city_finance_process_cheat(void);
 void city_finance_process_console(int amount);
 void city_finance_process_stolen(int stolen);

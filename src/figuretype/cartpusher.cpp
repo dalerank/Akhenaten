@@ -144,7 +144,7 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
             case BUILDING_VILLAGE_PALACE:
             case BUILDING_TOWN_PALACE:
             case BUILDING_CITY_PALACE:
-                city_finance_process_gold_extraction(amount_single_turn);
+                city_finance_process_gold_extraction(amount_single_turn, this);
                 dump_resource(amount_single_turn);
                 break;
 
@@ -338,16 +338,13 @@ void figure::cartpusher_action() {
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_14_UNLOADING_GOLD, ACTION_8_RECALCULATE);
         break;
     case FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
-        do_gotobuilding(
-          destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE, ACTION_8_RECALCULATE);
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE, ACTION_8_RECALCULATE);
         break;
     case FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY:
-        do_gotobuilding(
-          destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY, ACTION_8_RECALCULATE);
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY, ACTION_8_RECALCULATE);
         break;
     case FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP:
-        do_gotobuilding(
-          destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP, ACTION_8_RECALCULATE);
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP, ACTION_8_RECALCULATE);
         break;
     case 12: // storage yard
     case 13: // granary
