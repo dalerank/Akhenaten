@@ -1,5 +1,4 @@
-#ifndef CITY_CONSTANTS_H
-#define CITY_CONSTANTS_H
+#pragma once
 
 enum e_advisor {
     ADVISOR_NONE = 0,
@@ -45,30 +44,6 @@ enum {
     FESTIVAL_BAST_SPECIAL = 4,
 };
 
-enum e_god {
-    GOD_OSIRIS = 0, // GOD_CERES = 0,
-    GOD_RA = 1,     // GOD_NEPTUNE = 1,
-    GOD_PTAH = 2,   // GOD_MERCURY = 2,
-    GOD_SETH = 3,   // GOD_MARS = 3,
-    GOD_BAST = 4,   // GOD_VENUS = 4
-};
-
-template<typename ...Args>
-inline int make_gods_mask(Args... args) {
-    auto gods = {args...};
-    int mask = 0;
-    for (const auto &g : gods) { mask |= (1 << g); }
-    return mask;
-}
-
-inline bool is_god_available(int mask, e_god g) { int god_mask = (1 << g); return ((mask & god_mask) == god_mask); }
-
-enum {
-    GOD_STATUS_UNKNOWN = 0,
-    GOD_STATUS_KNOWN = 1,
-    GOD_STATUS_PATRON = 2
-};
-
 enum {
     TRADE_STATUS_NONE = 0,
     TRADE_STATUS_IMPORT = 1,
@@ -82,5 +57,3 @@ enum e_availability {
     NOT_AVAILABLE = 0,
     AVAILABLE = 1,
 };
-
-#endif // CITY_CONSTANTS_H

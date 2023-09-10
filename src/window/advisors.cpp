@@ -132,10 +132,6 @@ static void set_advisor(int advisor) {
 }
 
 static bool is_advisor_available(int btn_id) {
-    if (btn_id == 13) {// last button is always enabled
-        return true;
-    }
-
     return (mission_advisor_availability((e_advisor)btn_id, scenario_campaign_scenario_id() + 1) == AVAILABLE);
 }
 
@@ -270,7 +266,7 @@ static void get_tooltip(tooltip_context* c) {
             c->text_id = 1; // help button
         else {
             c->text_id = 70 + data.focus_button_id;
-            if (!is_advisor_available(data.focus_button_id - 1))
+            if (!advisor_buttons[data.focus_button_id - 1].enabled)
                 c->type = TOOLTIP_NONE;
         }
         return;

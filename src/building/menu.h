@@ -2,6 +2,7 @@
 
 #include "building/building_type.h"
 #include "city/constants.h"
+#include "city/gods.h"
 
 enum e_build_menu {
     BUILD_MENU_VACANT_HOUSE = 0,

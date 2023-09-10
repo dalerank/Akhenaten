@@ -1,7 +1,31 @@
-#ifndef CITY_GODS_H
-#define CITY_GODS_H
+#pragma once
 
-#define MAX_GODS 5
+#include <cstdint>
+
+enum e_god {
+    GOD_OSIRIS = 0, // GOD_CERES = 0,
+    GOD_RA = 1,     // GOD_NEPTUNE = 1,
+    GOD_PTAH = 2,   // GOD_MERCURY = 2,
+    GOD_SETH = 3,   // GOD_MARS = 3,
+    GOD_BAST = 4,   // GOD_VENUS = 4
+};
+constexpr uint32_t MAX_GODS = 5;
+
+template<typename ...Args>
+inline int make_gods_mask(Args... args) {
+    auto gods = {args...};
+    int mask = 0;
+    for (const auto &g : gods) { mask |= (1 << g); }
+    return mask;
+}
+
+inline bool is_god_available(int mask, e_god g) { int god_mask = (1 << g); return ((mask & god_mask) == god_mask); }
+
+enum {
+    GOD_STATUS_UNKNOWN = 0,
+    GOD_STATUS_KNOWN = 1,
+    GOD_STATUS_PATRON = 2
+};
 
 void city_gods_reset(void);
 
@@ -34,5 +58,3 @@ void city_god_spirit_of_mars_mark_used(void);
 int city_god_neptune_create_shipwreck_flotsam(void);
 
 void city_god_blessing_cheat(int god_id);
-
-#endif // CITY_GODS_H

@@ -5,6 +5,7 @@
 #include "grid/building.h"
 #include "grid/property.h"
 #include "overlays/city_overlay.h"
+#include "city/gods.h"
 
 #include <algorithm>
 #include <array>
