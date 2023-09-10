@@ -469,46 +469,53 @@ void figure::roam_ticks(int num_ticks) {
     while (num_ticks > 0) {
         num_ticks--;
         progress_on_tile++;
-        if (progress_on_tile == 8) // tile edge reached
+        if (progress_on_tile == 8) {// tile edge reached
             move_to_next_tile();
+        }
+
         if (progress_on_tile >= 15) { // tile center
-            if (figure_service_provide_coverage())
+            if (figure_service_provide_coverage()) {
                 return;
+            }
+
             int came_from_direction = (previous_tile_direction + 4) % 8;
             int road_tiles[8];
             int permission = get_permission_for_int();
-            int adjacent_road_tiles
-              = map_get_adjacent_road_tiles_for_roaming(tile.grid_offset(), road_tiles, permission);
-            if (adjacent_road_tiles == 3
-                && map_get_diagonal_road_tiles_for_roaming(tile.grid_offset(), road_tiles) >= 5) {
+            int adjacent_road_tiles = map_get_adjacent_road_tiles_for_roaming(tile.grid_offset(), road_tiles, permission);
+            if (adjacent_road_tiles == 3 && map_get_diagonal_road_tiles_for_roaming(tile.grid_offset(), road_tiles) >= 5) {
                 // go in the straight direction of a double-wide road
                 adjacent_road_tiles = 2;
                 if (came_from_direction == DIR_0_TOP_RIGHT || came_from_direction == DIR_4_BOTTOM_LEFT) {
-                    if (road_tiles[0] && road_tiles[4])
+                    if (road_tiles[0] && road_tiles[4]) {
                         road_tiles[2] = road_tiles[6] = 0;
-                    else
+                    } else {
                         road_tiles[0] = road_tiles[4] = 0;
+                    }
 
                 } else {
-                    if (road_tiles[2] && road_tiles[6])
+                    if (road_tiles[2] && road_tiles[6]) {
                         road_tiles[0] = road_tiles[4] = 0;
-                    else
+                    } else {
                         road_tiles[2] = road_tiles[6] = 0;
+                    }
                 }
             }
-            if (adjacent_road_tiles == 4
-                && map_get_diagonal_road_tiles_for_roaming(tile.grid_offset(), road_tiles) >= 8) {
+
+            if (adjacent_road_tiles == 4 && map_get_diagonal_road_tiles_for_roaming(tile.grid_offset(), road_tiles) >= 8) {
                 // go straight on when all surrounding tiles are road
                 adjacent_road_tiles = 2;
-                if (came_from_direction == DIR_0_TOP_RIGHT || came_from_direction == DIR_4_BOTTOM_LEFT)
+                if (came_from_direction == DIR_0_TOP_RIGHT || came_from_direction == DIR_4_BOTTOM_LEFT) {
                     road_tiles[2] = road_tiles[6] = 0;
-                else
+                } else {
                     road_tiles[0] = road_tiles[4] = 0;
+                }
             }
+
             if (adjacent_road_tiles <= 0) {
                 roam_length = max_roam_length; // end roaming walk
                 return;
             }
+            
             if (adjacent_road_tiles == 1) {
                 int dir = 0;
                 do {
@@ -523,14 +530,17 @@ void figure::roam_ticks(int num_ticks) {
                 // 2. turn in the direction given by roam_turn_direction
                 int dir = 0;
                 do {
-                    if (road_tiles[direction] && direction != came_from_direction)
+                    if (road_tiles[direction] && direction != came_from_direction) {
                         break;
+                    }
 
                     direction += roam_turn_direction;
-                    if (direction > 6)
+                    if (direction > 6) {
                         direction = 0;
-                    if (direction < 0)
+                    }
+                    if (direction < 0) {
                         direction = 6;
+                    }
                 } while (dir++ < 4);
             } else { // > 2 road tiles
                 direction = (roam_random_counter + map_random_get(tile.grid_offset())) & 6;
@@ -561,12 +571,14 @@ void figure::roam_ticks(int num_ticks) {
         advance_figure_tick();
     }
 }
+
 void figure::advance_attack() {
     if (progress_on_tile <= 5) {
         progress_on_tile++;
         advance_figure_tick();
     }
 }
+
 void figure::set_cross_country_direction(int x_src, int y_src, int x_dst, int y_dst, int is_missile) {
     // all x/y are in 1/15th of a tile
     cc_destination.x = x_dst;
