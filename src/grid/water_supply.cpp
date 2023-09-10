@@ -35,7 +35,7 @@ water_supply_queue_t g_water_supply_queue;
 static void mark_well_access(int well_id, int radius) {
     building* well = building_get(well_id);
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(well->tile.x(), well->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(well->tile, 1, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
@@ -230,7 +230,7 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius) {
     building* well = building_get(well_id);
     int num_houses = 0;
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(well->tile.x(), well->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(well->tile, 1, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {

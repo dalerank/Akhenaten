@@ -343,7 +343,7 @@ int formation_enemy_move_formation_to(const formation* m, int x, int y, int* x_t
     map_routing_noncitizen_can_travel_over_land(x, y, -1, -1, 0, 600);
     for (int r = 0; r <= 10; r++) {
         int x_min, y_min, x_max, y_max;
-        map_grid_get_area(x, y, 1, r, &x_min, &y_min, &x_max, &y_max);
+        map_grid_get_area(tile2i(x, y), 1, r, &x_min, &y_min, &x_max, &y_max);
         for (int yy = y_min; yy <= y_max; yy++) {
             for (int xx = x_min; xx <= x_max; xx++) {
                 int can_move = 1;

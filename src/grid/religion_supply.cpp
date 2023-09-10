@@ -8,7 +8,7 @@
 
 static void mark_shrine_access(building* shrine, int radius) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(shrine->tile.x(), shrine->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(shrine->tile, 1, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {

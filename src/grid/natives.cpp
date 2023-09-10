@@ -20,7 +20,7 @@
 
 static void mark_native_land(int x, int y, int size, int radius) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             map_property_mark_native_land(MAP_OFFSET(xx, yy));
@@ -30,7 +30,7 @@ static void mark_native_land(int x, int y, int size, int radius) {
 
 static int has_building_on_native_land(int x, int y, int size, int radius) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int building_id = map_building_at(MAP_OFFSET(xx, yy));

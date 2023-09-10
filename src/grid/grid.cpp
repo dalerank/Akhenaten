@@ -275,15 +275,15 @@ void map_grid_bound_area(int* x_min, int* y_min, int* x_max, int* y_max) {
         *y_max = scenario_map_data()->height - 1;
 }
 
-void map_grid_get_area(int x, int y, int size, int radius, int* x_min, int* y_min, int* x_max, int* y_max) {
-    *x_min = x - radius;
-    *y_min = y - radius;
-    *x_max = x + size + radius - 1;
-    *y_max = y + size + radius - 1;
+void map_grid_get_area(tile2i tile, int size, int radius, int* x_min, int* y_min, int* x_max, int* y_max) {
+    *x_min = tile.x() - radius;
+    *y_min = tile.y() - radius;
+    *x_max = tile.x() + size + radius - 1;
+    *y_max = tile.y() + size + radius - 1;
     map_grid_bound_area(x_min, y_min, x_max, y_max);
 }
 
-void map_grid_start_end_to_area(map_point start, map_point end, int* x_min, int* y_min, int* x_max, int* y_max) {
+void map_grid_start_end_to_area(tile2i start, tile2i end, int* x_min, int* y_min, int* x_max, int* y_max) {
     if (start.x() < end.x()) {
         *x_min = start.x();
         *x_max = end.x();

@@ -736,7 +736,7 @@ int building_house_determine_worst_desirability_building(building* house) {
     int lowest_desirability = 0;
     int lowest_building_id = 0;
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(house->tile.x(), house->tile.y(), 1, 6, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(house->tile, 1, 6, &x_min, &y_min, &x_max, &y_max);
 
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {

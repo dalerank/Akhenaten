@@ -462,7 +462,7 @@ int map_routing_is_wall_passable(int grid_offset) {
 static int wall_tile_in_radius(int x, int y, int radius, int* x_wall, int* y_wall) {
     int size = 1;
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {

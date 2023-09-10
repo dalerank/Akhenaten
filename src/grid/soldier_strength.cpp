@@ -12,7 +12,7 @@ void map_soldier_strength_clear(void) {
 }
 void map_soldier_strength_add(int x, int y, int radius, int amount) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), 1, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
@@ -32,7 +32,7 @@ int map_soldier_strength_get(int grid_offset) {
 }
 int map_soldier_strength_get_max(int x, int y, int radius, int* out_x, int* out_y) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), 1, radius, &x_min, &y_min, &x_max, &y_max);
 
     int max_value = 0;
     int max_tile_x = 0, max_tile_y = 0;

@@ -158,7 +158,7 @@ bool map_has_road_access_temple_complex(int x, int y, int orientation, bool from
 bool map_road_within_radius(int x, int y, int size, int radius, map_point &road_tile) {
     OZZY_PROFILER_SECTION("road_within_radius");
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
@@ -187,7 +187,7 @@ bool map_closest_road_within_radius(int x, int y, int size, int radius, map_poin
 bool map_reachable_road_within_radius(int x, int y, int size, int radius, map_point &road_tile) {
     OZZY_PROFILER_SECTION("reachable_road_within_radius");
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {

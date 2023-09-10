@@ -1453,7 +1453,7 @@ void map_tiles_remove_entry_exit_flags(void) {
 
 static bool map_has_nonfull_grassland_in_radius(int x, int y, int size, int radius, int terrain) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {

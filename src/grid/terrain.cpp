@@ -47,7 +47,7 @@ void map_terrain_add_in_area(int x_min, int y_min, int x_max, int y_max, int ter
 }
 void map_terrain_add_with_radius(int x, int y, int size, int radius, int terrain) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
@@ -57,7 +57,7 @@ void map_terrain_add_with_radius(int x, int y, int size, int radius, int terrain
 }
 void map_terrain_remove_with_radius(int x, int y, int size, int radius, int terrain) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
@@ -140,7 +140,7 @@ bool map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terra
 }
 bool map_terrain_exists_tile_in_radius_with_type(int x, int y, int size, int radius, int terrain) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
@@ -152,7 +152,7 @@ bool map_terrain_exists_tile_in_radius_with_type(int x, int y, int size, int rad
 }
 bool map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int radius, int terrain) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
@@ -162,15 +162,9 @@ bool map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int ra
     }
     return false;
 }
-bool map_terrain_exists_clear_tile_in_radius(int x,
-                                             int y,
-                                             int size,
-                                             int radius,
-                                             int except_grid_offset,
-                                             int* x_tile,
-                                             int* y_tile) {
+bool map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset, int* x_tile, int* y_tile) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
@@ -204,7 +198,7 @@ bool map_terrain_all_tiles_in_area_are(int x, int y, int size, int terrain) {
 
 bool map_terrain_all_tiles_in_radius_are(int x, int y, int size, int radius, int terrain) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {

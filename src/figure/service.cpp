@@ -7,6 +7,7 @@
 #include "game/resource.h"
 #include "grid/building.h"
 #include "grid/grid.h"
+#include "game/tutorial.h"
 #include "io/config/config.h"
 
 #define MAX_COVERAGE 96
@@ -14,7 +15,7 @@
 static int provide_service(int x, int y, void (*callback)(building*)) {
     int serviced = 0;
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), 1, 2, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
@@ -38,7 +39,7 @@ static int provide_culture(int x, int y, void (*callback)(building*)) {
 static int provide_entertainment(int x, int y, int shows, void (*callback)(building*, int)) {
     int serviced = 0;
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), 1, 2, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
@@ -54,9 +55,10 @@ static int provide_entertainment(int x, int y, int shows, void (*callback)(build
     }
     return serviced;
 }
+
 static int provide_missionary_coverage(int x, int y) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, 1, 4, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), 1, 4, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int building_id = map_building_at(MAP_OFFSET(xx, yy));
@@ -69,10 +71,10 @@ static int provide_missionary_coverage(int x, int y) {
     }
     return 1;
 }
-static int provide_service(int x, int y, int* data, void (*callback)(building*, int*)) {
+static int provide_service(tile2i tile, int* data, void (*callback)(building*, int*)) {
     int serviced = 0;
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile, 1, 2, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
@@ -257,7 +259,7 @@ static int provide_market_goods(building* market, int x, int y) {
     int serviced = 0;
     //    building *market = building_get(market);
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), 1, 2, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
@@ -273,8 +275,6 @@ static int provide_market_goods(building* market, int x, int y) {
     }
     return serviced;
 }
-
-#include "game/tutorial.h"
 
 building* figure::get_entertainment_building() {
     if (action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING
@@ -295,7 +295,7 @@ int figure::figure_service_provide_coverage() {
         break;
     case FIGURE_TAX_COLLECTOR: {
         int max_tax_rate = 0;
-        houses_serviced = provide_service(tile.x(), tile.y(), &max_tax_rate, tax_collector_coverage);
+        houses_serviced = provide_service(tile, &max_tax_rate, tax_collector_coverage);
         min_max_seen = max_tax_rate;
         break;
     }
@@ -391,7 +391,7 @@ int figure::figure_service_provide_coverage() {
         break;
     case FIGURE_ENGINEER: {
         int max_damage = 0;
-        houses_serviced = provide_service(tile.x(), tile.y(), &max_damage, engineer_coverage);
+        houses_serviced = provide_service(tile, &max_damage, engineer_coverage);
         if (max_damage > min_max_seen)
             min_max_seen = max_damage;
         else if (min_max_seen <= 10)
@@ -402,7 +402,7 @@ int figure::figure_service_provide_coverage() {
     }
     case FIGURE_FIREMAN: {
         int min_happiness = 100;
-        houses_serviced = provide_service(tile.x(), tile.y(), &min_happiness, prefect_coverage);
+        houses_serviced = provide_service(tile, &min_happiness, prefect_coverage);
         min_max_seen = min_happiness;
         break;
     }
@@ -413,7 +413,7 @@ int figure::figure_service_provide_coverage() {
     case FIGURE_POLICEMAN:
     case FIGURE_MAGISTRATE:
         int max_criminal_active = 0;
-        houses_serviced = provide_service(tile.x(), tile.y(), &max_criminal_active, policeman_coverage);
+        houses_serviced = provide_service(tile, &max_criminal_active, policeman_coverage);
         if (type == FIGURE_MAGISTRATE) {
             houses_serviced = provide_culture(tile.x(), tile.y(), magistrate_coverage);
         }

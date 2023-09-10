@@ -254,7 +254,7 @@ int map_water_find_alternative_fishing_boat_tile(figure* boat, map_point* tile) 
 
     for (int radius = 1; radius <= 5; radius++) {
         int x_min, y_min, x_max, y_max;
-        map_grid_get_area(boat->tile.x(), boat->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
+        map_grid_get_area(boat->tile, 1, radius, &x_min, &y_min, &x_max, &y_max);
 
         for (int yy = y_min; yy <= y_max; yy++) {
             for (int xx = x_min; xx <= x_max; xx++) {
@@ -275,7 +275,7 @@ int map_water_find_shipwreck_tile(figure* wreck, map_point* tile) {
 
     for (int radius = 1; radius <= 5; radius++) {
         int x_min, y_min, x_max, y_max;
-        map_grid_get_area(wreck->tile.x(), wreck->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
+        map_grid_get_area(wreck->tile, 1, radius, &x_min, &y_min, &x_max, &y_max);
 
         for (int yy = y_min; yy <= y_max; yy++) {
             for (int xx = x_min; xx <= x_max; xx++) {

@@ -20,7 +20,7 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, int* x_t
     int x_found = 0, y_found = 0;
 
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, 1, 4, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(tile2i(x, y), 1, 4, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
