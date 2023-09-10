@@ -77,4 +77,10 @@ enum {
     TRADE_STATUS_EXPORT_SURPLUS = 4,
 };
 
+enum e_availability {
+    NOT_AVAILABLE_YET = -1,
+    NOT_AVAILABLE = 0,
+    AVAILABLE = 1,
+};
+
 #endif // CITY_CONSTANTS_H

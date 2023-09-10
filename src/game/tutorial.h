@@ -3,12 +3,6 @@
 #include "core/buffer.h"
 #include "city/constants.h"
 
-enum tutorial_availability {
-    AVAILABLE,
-    NOT_AVAILABLE,
-    NOT_AVAILABLE_YET,
-};
-
 struct tutorial_flags_t {
     struct {
         bool fire;
@@ -67,8 +61,8 @@ const tutorial_flags_t* tutorial_flags_struct();
 
 void tutorial_init(void);
 
-tutorial_availability tutorial_advisor_availability(e_advisor advisor, int tutorial);
-tutorial_availability tutorial_empire_availability(void);
+e_availability mission_advisor_availability(e_advisor advisor, int mission);
+e_availability mission_empire_availability(void);
 
 void tutorial_menu_update(int tut);
 

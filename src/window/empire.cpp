@@ -932,9 +932,11 @@ void window_empire_show(void) {
     window_show(&window);
 }
 void window_empire_show_checked(void) {
-    tutorial_availability avail = tutorial_empire_availability();
-    if (avail == AVAILABLE || scenario_is_custom())
+    e_availability avail = mission_empire_availability();
+    
+    if (avail == AVAILABLE || scenario_is_custom()) {
         window_empire_show();
-    else
+    } else {
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
+    }
 }
