@@ -1,7 +1,7 @@
 #include "platform/screen.h"
 
-// #include "city/view.h"
 #include "core/calc.h"
+#include "platform/platform.h"
 #include "game/settings.h"
 #include "game/system.h"
 #include "graphics/boilerplate.h"
@@ -69,13 +69,21 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
         scale_percentage = max_scale_pct;
         logs::info("Maximum scale of %i applied", scale_percentage);
     }
+    
+    SDL_SetWindowMinimumSize(SDL.window, scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
 
-    SDL_SetWindowMinimumSize(SDL.window,
-                             scale_logical_to_pixels(MINIMUM.WIDTH),
-                             scale_logical_to_pixels(MINIMUM.HEIGHT));
+    const char *scale_quality = "linear";
+#if !defined(GAME_PLATFORM_ANDROID)
+    // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper.
+    // But not on MacOS: users are used to the linear interpolation since that's what Apple also does.
+    if (scale_percentage % 100 == 0) {
+        scale_quality = "nearest";
+    }
+#endif
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scale_quality);
 }
 
-#ifdef __ANDROID__
+#if defined(GAME_PLATFORM_ANDROID)
 static void set_scale_for_screen(int pixel_width, int pixel_height) {
     set_scale_percentage(android_get_screen_density() * 100, pixel_width, pixel_height);
     //config_set(CONFIG_SCREEN_CURSOR_SCALE, scale_percentage);
@@ -90,7 +98,7 @@ int platform_screen_get_scale() {
     return scale_percentage;
 }
 
-#if !defined(_WIN32) && !defined(__APPLE__)
+#if !defined(GAME_PLATFORM_WIN) && !defined(GAME_PLATFORM_MACOSX)
 static void set_window_icon() {
     // TODO platform_icon_get_pixels() not defined?
     // SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(platform_icon_get_pixels(), 16, 16, 32, 16 * 4,
@@ -103,11 +111,11 @@ static void set_window_icon() {
 }
 #endif
 
-int platform_screen_create(char const* title,
-                           std::string renderer,
-                           bool fullscreen,
-                           int display_scale_percentage,
-                           display_size screen_size) {
+int platform_screen_create(char const* title, std::string renderer, bool fullscreen, int display_scale_percentage, display_size screen_size) {
+#if defined(GAME_PLATFORM_ANDROID)
+    scale.screen_density = android_get_screen_density();
+#endif
+
     set_scale_percentage(display_scale_percentage, 0, 0);
 
     display_size wsize;
@@ -130,7 +138,7 @@ int platform_screen_create(char const* title,
 
     platform_screen_destroy();
 
-#ifdef __ANDROID__
+#if defined(GAME_PLATFORM_ANDROID)
     // Fix for wrong colors on some android devices
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
@@ -331,7 +339,7 @@ void system_set_mouse_position(int* x, int* y) {
 }
 
 int system_is_fullscreen_only(void) {
-#if defined(__ANDROID__) || defined(__SWITCH__) || defined(__vita__)
+#if defined(GAME_PLATFORM_ANDROID) || defined(__SWITCH__) || defined(__vita__)
     return 1;
 #else
     return 0;

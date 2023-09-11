@@ -1,6 +1,7 @@
 #pragma once
 
 #include "input/keys.h"
+#include "platform/platform.h"
 
 struct display_size;
 

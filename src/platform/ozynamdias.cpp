@@ -1,4 +1,5 @@
 #include "core/app.h"
+
 #include "core/encoding.h"
 #include "core/game_environment.h"
 #include "core/stacktrace.h"
@@ -21,6 +22,7 @@
 #include "platform/screen.h"
 #include "platform/touch.h"
 #include "platform/version.hpp"
+#include "platform/platform.h"
 #include "renderer.h"
 
 #include <SDL.h>
@@ -99,6 +101,10 @@ static int init_sdl() {
     SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 #elif SDL_VERSION_ATLEAST(2, 0, 4)
     SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
+#endif
+
+#if defined(GAME_PLATFORM_ANDROID)
+    SDL_SetHint(SDL_HINT_ANDROID_TRAP_BACK_BUTTON, "1");
 #endif
     logs::info("SDL initialized");
     return 1;
@@ -334,7 +340,11 @@ static void setup(Arguments& args) {
                                  "Move the executable file to the directory containing an existing\n"
                                  "Pharaoh installation, or run: ozymandias path/to/directory",
                                  nullptr);
+#if defined(GAME_PLATFORM_ANDROID)
+       ; // do nothing
+#else
         show_options_window(args);
+#endif
     }
 
     // set up game display

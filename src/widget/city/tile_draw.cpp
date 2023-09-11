@@ -233,7 +233,7 @@ static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode
         return;
     }
 
-    auto cache = get_figure_cache_for_tile(point);
+    tile_figure_draw_cache *cache = get_figure_cache_for_tile(point);
     if (cache == nullptr || cache->num_figures == 0) {
         return;
     }
@@ -245,7 +245,6 @@ static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode
 
     // record tile's rendering coords
     int clip_x, clip_y, clip_width, clip_height;
-    //    int size = map_property_multi_tile_size(point.grid_offset());
     int size = 1;
     clip_between_rectangles(&clip_x, &clip_y, &clip_width, &clip_height, pixel.x, pixel.y - (size - 1) * HALF_TILE_HEIGHT_PIXELS - 30,
                             size * TILE_WIDTH_PIXELS, size * TILE_HEIGHT_PIXELS + 30,
@@ -258,7 +257,8 @@ static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode
     }
 
     graphics_set_clip_rectangle(scale * clip_x, scale * clip_y, scale * clip_width, scale * clip_height);
-    const image_t* img = image_get(map_image_at(point.grid_offset()));
+    int image_id = map_image_at(point.grid_offset());
+    const image_t* img = image_get(image_id);
     vec2i tile_z_cross = pixel;
     tile_z_cross += {HALF_TILE_WIDTH_PIXELS, img->isometric_3d_height() - TILE_BLEEDING_Y_BIAS};
 

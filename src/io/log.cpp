@@ -1,7 +1,7 @@
 #include "io/log.h"
 
+#include "platform/platform.h"
 #include "core/application.h"
-
 
 #include <algorithm>
 #include <csignal>
@@ -15,8 +15,10 @@
 #include <sstream>
 #endif // CPPTRACE_ENABLED
 
-#ifdef __WINDOWS__
+#if defined(GAME_PLATFORM_WIN)
 #include <Windows.h>
+#elif defined(GAME_PLATFORM_ANDROID)
+#include <android/log.h>
 #endif
 
 namespace {
@@ -138,10 +140,12 @@ void Logger::write(void* /* userdata */, int /* category */, SDL_LogPriority pri
 void Logger::write_to_file_(char const* prefix, char const* message) {
     file_stream_ << prefix << message << std::endl;
 
-#ifdef __WINDOWS__
+#if defined(GAME_PLATFORM_WIN)
     OutputDebugStringA(prefix);
     OutputDebugStringA(message);
     OutputDebugStringA("\n");
+#elif defined(GAME_PLATFORM_ANDROID)
+    __android_log_print(ANDROID_LOG_INFO, "ozy-and", "%s%s", prefix, message);
 #endif
 }
 

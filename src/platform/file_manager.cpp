@@ -1,6 +1,7 @@
 #include "file_manager.h"
 
 #include "core/string.h"
+#include "platform/platform.h"
 #include "io/file.h"
 #include "io/log.h"
 #include "platform/vita/vita.h"
@@ -104,6 +105,9 @@ int platform_file_manager_list_directory_contents(const char* dir,
     else
         current_dir = set_dir_name(dir);
 
+#if defined(GAME_PLATFORM_ANDROID)
+    int match = android_get_directory_contents(current_dir, type, extension, callback);
+#else
     fs_dir_type* d = fs_dir_open(current_dir);
     if (!d)
         return LIST_ERROR;
@@ -148,22 +152,34 @@ int platform_file_manager_list_directory_contents(const char* dir,
             break;
     }
     fs_dir_close(d);
-    if (dir && *dir && strcmp(dir, ".") != 0)
+#endif
+
+    if (dir && *dir && strcmp(dir, ".") != 0) {
         free_dir_name(current_dir);
+    }
 
     return match;
 }
 
 int platform_file_manager_should_case_correct_file(void) {
-#ifdef _WIN32
+#if defined(GAME_PLATFORM_WIN) || defined(GAME_PLATFORM_ANDROID)
     return 0;
 #else
     return 1;
 #endif
 }
 
+
 int platform_file_manager_set_base_path(std::string_view path) {
+#if defined(GAME_PLATFORM_ANDROID)
+    if (!path) {
+        log_error("set_base_path: path was not set. Julius will probably crash.", 0, 0);
+        return 0;
+    }
+    return android_set_base_path(path);
+#else
     return chdir(path.data()) == 0;
+#endif
 }
 
 #if defined(__vita__)
@@ -201,6 +217,22 @@ bool platform_file_manager_remove_file(const char* filename) {
     int result = _wremove(wfile);
     free(wfile);
     return result == 0;
+}
+
+#elif defined(GAME_PLATFORM_ANDROID)
+
+FILE *platform_file_manager_open_file(const char *filename, const char *mode)
+{
+    int fd = android_get_file_descriptor(filename, mode);
+    if (!fd) {
+        return NULL;
+    }
+    return fdopen(fd, mode);
+}
+
+int platform_file_manager_remove_file(const char *filename)
+{
+    return android_remove_file(filename);
 }
 
 #else
