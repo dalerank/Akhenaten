@@ -1,7 +1,8 @@
-#ifndef PLATFORM_ANDROID_H
-#define PLATFORM_ANDROID_H
+#pragma once
 
-#ifdef __ANDROID__
+#include "platform/platform.h"
+
+#if defined(GAME_PLATFORM_ANDROID)
 
 const char *android_show_pharaoh_path_dialog(int again);
 float android_get_screen_density();
@@ -17,4 +18,4 @@ void platform_show_virtual_keyboard(void);
 void platform_hide_virtual_keyboard(void);
 
 #endif // __ANDROID__
-#endif // PLATFORM_ANDROID_H
+
