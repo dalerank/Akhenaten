@@ -233,21 +233,23 @@ static int config_change_string_language(int key) {
     return 1;
 }
 
-static int apply_changed_configs(void) {
+static bool apply_changed_configs() {
     auto& data = g_window_config_ext_data;
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         if (config_changed(i)) {
-            if (!data.config_values[i].change_action(i))
-                return 0;
+            if (!data.config_values[i].change_action)
+                logs::error("Change action is not available for index: %d", i);
+            else if (!data.config_values[i].change_action(i))
+                return false;
         }
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
         if (config_string_changed(i)) {
             if (!data.config_string_values[i].change_action(i))
-                return 0;
+                return false;
         }
     }
-    return 1;
+    return true;
 }
 
 static void button_hotkeys_goback() {
