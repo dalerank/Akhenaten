@@ -225,15 +225,18 @@ static void clip_between_rectangles(int* xOut,
 static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode mode) {
     auto& draw_context = get_draw_context();
 
-    if (!USE_BLEEDING_CACHE)
+    if (!USE_BLEEDING_CACHE) {
         return;
+    }
 
-    if (!map_property_is_draw_tile(point.grid_offset()))
+    if (!map_property_is_draw_tile(point.grid_offset())) {
         return;
+    }
 
     auto cache = get_figure_cache_for_tile(point);
-    if (cache == nullptr || cache->num_figures == 0)
+    if (cache == nullptr || cache->num_figures == 0) {
         return;
+    }
 
     // city zoom & viewport params
     float scale = zoom_get_scale();
@@ -244,22 +247,15 @@ static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode
     int clip_x, clip_y, clip_width, clip_height;
     //    int size = map_property_multi_tile_size(point.grid_offset());
     int size = 1;
-    clip_between_rectangles(&clip_x,
-                            &clip_y,
-                            &clip_width,
-                            &clip_height,
-                            pixel.x,
-                            pixel.y - (size - 1) * HALF_TILE_HEIGHT_PIXELS - 30,
-                            size * TILE_WIDTH_PIXELS,
-                            size * TILE_HEIGHT_PIXELS + 30,
-                            viewport_pos.x / scale,
-                            viewport_pos.y / scale,
-                            viewport_size.x / scale,
-                            viewport_size.y / scale);
+    clip_between_rectangles(&clip_x, &clip_y, &clip_width, &clip_height, pixel.x, pixel.y - (size - 1) * HALF_TILE_HEIGHT_PIXELS - 30,
+                            size * TILE_WIDTH_PIXELS, size * TILE_HEIGHT_PIXELS + 30,
+                            viewport_pos.x / scale, viewport_pos.y / scale,
+                            viewport_size.x / scale, viewport_size.y / scale);
 
     // set rendering clip around the current tile
-    if (clip_width == 0 || clip_height == 0)
+    if (clip_width == 0 || clip_height == 0) {
         return;
+    }
 
     graphics_set_clip_rectangle(scale * clip_x, scale * clip_y, scale * clip_width, scale * clip_height);
     const image_t* img = image_get(map_image_at(point.grid_offset()));
@@ -277,8 +273,9 @@ static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode
         auto cc_offsets = f->tile_pixel_coords();
         vec2i tile_center = {HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS};
         auto pivot = cache->figures[i].pixel + cc_offsets + tile_center;
-        if (tile_z_cross.y > pivot.y)
+        if (tile_z_cross.y > pivot.y) {
             continue;
+        }
 
         vec2i ghost_pixel = cache->figures[i].pixel;
         switch (mode) {
@@ -287,28 +284,38 @@ static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode
                 if (!draw_context.selected_figure_id) {
                     int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
                     f->city_draw_figure(ghost_pixel, highlight);
-                } else if (figure_id == draw_context.selected_figure_id)
+                } else if (figure_id == draw_context.selected_figure_id) {
                     f->city_draw_figure(ghost_pixel, 0, draw_context.selected_figure_coord);
+                }
             }
             break;
+
         case e_figure_draw_overlay: // overlay
-            if (!f->is_ghost && get_city_overlay()->show_figure(f))
+            if (!f->is_ghost && get_city_overlay()->show_figure(f)) {
                 f->city_draw_figure(ghost_pixel, 0);
+            }
             break;
         }
     }
     // reset rendering clip
     set_city_clip_rectangle();
 }
+
 void draw_debug_figurecaches(vec2i pixel, map_point point) {
     return;
-    if (!USE_BLEEDING_CACHE)
+    if (!USE_BLEEDING_CACHE) {
         return;
-    if (!map_property_is_draw_tile(point.grid_offset()))
+    }
+
+    if (!map_property_is_draw_tile(point.grid_offset())) {
         return;
+    }
+
     auto cache = get_figure_cache_for_tile(point);
-    if (cache == nullptr || cache->num_figures == 0)
+    if (cache == nullptr || cache->num_figures == 0) {
         return;
+    }
+
     const image_t* img = image_get(map_image_at(point.grid_offset()));
     int size = img->isometric_size();
     int height = img->isometric_3d_height();
@@ -316,16 +323,14 @@ void draw_debug_figurecaches(vec2i pixel, map_point point) {
         debug_draw_tile_top_bb(pixel.x, pixel.y, height, COLOR_BLUE, size);
         debug_draw_tile_box(pixel.x, pixel.y, COLOR_NULL, COLOR_BLUE, size, size);
     }
+
     debug_draw_tile_top_bb(pixel.x, pixel.y, height, COLOR_RED);
     debug_draw_tile_box(pixel.x, pixel.y, COLOR_NULL, COLOR_RED);
 
     vec2i tile_z_cross = pixel;
     tile_z_cross += {HALF_TILE_WIDTH_PIXELS, img->isometric_3d_height() - TILE_BLEEDING_Y_BIAS};
-    debug_draw_line_with_contour((pixel.x + 16) * zoom_get_scale(),
-                                 (pixel.x + TILE_WIDTH_PIXELS - 16) * zoom_get_scale(),
-                                 tile_z_cross.y * zoom_get_scale(),
-                                 tile_z_cross.y * zoom_get_scale(),
-                                 COLOR_FONT_YELLOW);
+    debug_draw_line_with_contour((pixel.x + 16) * zoom_get_scale(), (pixel.x + TILE_WIDTH_PIXELS - 16) * zoom_get_scale(),
+                                 tile_z_cross.y * zoom_get_scale(), tile_z_cross.y * zoom_get_scale(), COLOR_FONT_YELLOW);
 
     for (int i = 0; i < cache->num_figures; ++i) {
         auto f = figure_get(cache->figures[i].id);
@@ -334,10 +339,8 @@ void draw_debug_figurecaches(vec2i pixel, map_point point) {
         auto pivot = cache->figures[i].pixel + cc_offsets + tile_center;
         debug_draw_crosshair(pivot.x * zoom_get_scale(), pivot.y * zoom_get_scale());
 
-        debug_draw_line_with_contour(tile_z_cross.x * zoom_get_scale(),
-                                     pivot.x * zoom_get_scale(),
-                                     tile_z_cross.y * zoom_get_scale(),
-                                     pivot.y * zoom_get_scale(),
+        debug_draw_line_with_contour(tile_z_cross.x * zoom_get_scale(), pivot.x * zoom_get_scale(),
+                                     tile_z_cross.y * zoom_get_scale(), pivot.y * zoom_get_scale(),
                                      tile_z_cross.y > pivot.y ? COLOR_RED : COLOR_GREEN);
     }
 }
@@ -349,8 +352,9 @@ void draw_isometrics(vec2i pixel, map_point point) {
     int x = pixel.x;
     int y = pixel.y;
     // black tile outside of map
-    if (grid_offset < 0)
+    if (grid_offset < 0) {
         return ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
+    }
 
     Planner.construction_record_view_position(pixel, point);
     if (map_property_is_draw_tile(grid_offset)) {
@@ -358,12 +362,15 @@ void draw_isometrics(vec2i pixel, map_point point) {
         int building_id = map_building_at(grid_offset);
         color color_mask = COLOR_MASK_NONE;
         bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == point);
-        if (deletion_tool || map_property_is_deleted(point.grid_offset()))
+        if (deletion_tool || map_property_is_deleted(point.grid_offset())) {
             color_mask = COLOR_MASK_RED;
+        }
+
         if (building_id) {
             building* b = building_get(building_id);
-            if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b))
+            if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
                 color_mask = COLOR_MASK_RED;
+            }
 
             vec2i view_pos, view_size;
             city_view_get_viewport(view_pos, view_size);
@@ -375,27 +382,35 @@ void draw_isometrics(vec2i pixel, map_point point) {
                 sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
             }
         }
+        
         if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
             building* b = building_get(0); // abuse empty building
             b->type = BUILDING_GARDENS;
             sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
         }
+
         int image_id = map_image_at(grid_offset);
         if (draw_context.advance_water_animation) {
             if (image_id >= draw_context.image_id_water_first && image_id <= draw_context.image_id_water_last) {
                 image_id++; // wrong, but eh
-                if (image_id > draw_context.image_id_water_last)
+                if (image_id > draw_context.image_id_water_last) {
                     image_id = draw_context.image_id_water_first;
+                }
             }
+
             if (image_id >= draw_context.image_id_deepwater_first && image_id <= draw_context.image_id_deepwater_last) {
                 image_id += 15;
-                if (image_id > draw_context.image_id_deepwater_last)
+
+                if (image_id > draw_context.image_id_deepwater_last) {
                     image_id -= 90;
+                }
             }
             map_image_set(grid_offset, image_id);
         }
-        if (map_property_is_constructing(grid_offset))
+
+        if (map_property_is_constructing(grid_offset)) {
             image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
+        }
 
         //        const image_t *img = image_get(image_id);
         //
@@ -412,6 +427,7 @@ void draw_isometrics(vec2i pixel, map_point point) {
         //        }
     }
 }
+
 void draw_ornaments(vec2i pixel, map_point point) {
     // defined separately in ornaments.cpp
     // cuz it's too much stuff.
