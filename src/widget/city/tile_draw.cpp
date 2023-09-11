@@ -1,7 +1,7 @@
 #include "tile_draw.h"
 
 #include "dev/debug.h"
-
+#include "core/svector.h"
 #include "building/construction/build_planner.h"
 #include "figures_cached_draw.h"
 #include "game/state.h"
@@ -266,25 +266,41 @@ static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode
         graphics_fill_rect(0, 0, 10000, 10000, 0x22000000); // for debugging
     }
 
+    struct tile_figure_t {
+        figure *f;
+        vec2i pixel;
+        vec2i cc_offset;
+    };
+
+    svector<tile_figure_t, 32> tile_figures;
     for (int i = 0; i < cache->num_figures; ++i) {
         int figure_id = cache->figures[i].id;
         figure* f = figure_get(figure_id);
+        tile_figures.push_back({f, cache->figures[i].pixel, f->tile_pixel_coords()});
+    }
 
-        auto cc_offsets = f->tile_pixel_coords();
+    std::sort(tile_figures.begin(), tile_figures.end(), [] (const auto &lhs, const auto &rhs) {
+        return (lhs.pixel.y + lhs.cc_offset.y) < (rhs.pixel.y + rhs.cc_offset.y);
+    });
+
+    for (const auto &c: tile_figures) {
+        figure* f = c.f;
+
+        vec2i cc_offsets = c.cc_offset;
         vec2i tile_center = {HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS};
-        auto pivot = cache->figures[i].pixel + cc_offsets + tile_center;
+        vec2i pivot = c.pixel + cc_offsets + tile_center;
         if (tile_z_cross.y > pivot.y) {
             continue;
         }
 
-        vec2i ghost_pixel = cache->figures[i].pixel;
+        vec2i ghost_pixel = c.pixel;
         switch (mode) {
         case e_figure_draw_common: // non-overlay
             if (!f->is_ghost) {
                 if (!draw_context.selected_figure_id) {
                     int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
                     f->city_draw_figure(ghost_pixel, highlight);
-                } else if (figure_id == draw_context.selected_figure_id) {
+                } else if (f->id == draw_context.selected_figure_id) {
                     f->city_draw_figure(ghost_pixel, 0, draw_context.selected_figure_coord);
                 }
             }
