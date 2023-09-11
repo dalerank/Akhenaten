@@ -21,34 +21,41 @@
 #include "window/city.h"
 #include "window/intermezzo.h"
 #include "window/mission_next.h"
+#include "game/settings.h"
 
 static void button_back(int param1, int param2);
 static void button_start_mission(int param1, int param2);
+static void inc_dec_difficulty(int param1, int param2);
 
 static const vec2i GOAL_OFFSET[] = {{32, 90}, {288, 90}, {32, 112}, {288, 112}, {32, 134}, {288, 134}};
 
-static image_button image_button_back = {0, 0, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1};
-static image_button image_button_start_mission = {0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_mission, button_none, 1, 0, 1};
-
 struct mission_briefing_t {
+    struct {
+        image_button back = {0, 0, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1};
+        image_button start_mission = {0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_mission, button_none, 1, 0, 1};
+        image_button inc_difficulty = {0, 0, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, inc_dec_difficulty, inc_dec_difficulty, 1,  0, true};
+        image_button dec_difficulty = {0, 0, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, inc_dec_difficulty, inc_dec_difficulty, -1,  0, true};
+    } buttons;
+
     int is_review;
     int focus_button;
     int campaign_mission_loaded;
+    int difficulty;
 };
 
-mission_briefing_t g_mission_briefing_data;
+mission_briefing_t g_mission_briefing;
 
-static void init(void) {
-    g_mission_briefing_data.focus_button = 0;
+static void init() {
+    g_mission_briefing.focus_button = 0;
     rich_text_reset(0);
 
     // load map!
-    if (!g_mission_briefing_data.campaign_mission_loaded) {
-        g_mission_briefing_data.campaign_mission_loaded = 1;
+    if (!g_mission_briefing.campaign_mission_loaded) {
+        g_mission_briefing.campaign_mission_loaded = 1;
     }
 }
 
-static void draw_background(void) {
+static void draw_background() {
     //    if (!data.campaign_mission_loaded) {
     //        data.campaign_mission_loaded = 1;
     //        if (!game_file_start_scenario_by_name(scenario_name())) {
@@ -56,7 +63,7 @@ static void draw_background(void) {
     //            return;
     //        }
     //    }
-
+    auto &data = g_mission_briefing;
     window_draw_underlying_window();
 
     graphics_set_to_dialog();
@@ -137,36 +144,50 @@ static void draw_background(void) {
     rich_text_draw(msg->content.text, 48, 202, 496, 14, 0);
     graphics_reset_clip_rectangle();
 
+    lang_text_draw(153, setting_difficulty() + 1, 65 + 45, 433, FONT_NORMAL_BLACK_ON_LIGHT);
+
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
+    auto &data = g_mission_briefing;
     graphics_set_to_dialog();
 
     rich_text_draw_scrollbar();
-    image_buttons_draw(516, 426, &image_button_start_mission, 1);
-    if (!g_mission_briefing_data.is_review && game_mission_has_choice()) {
-        image_buttons_draw(26, 428, &image_button_back, 1);
+    image_buttons_draw(516, 426, &data.buttons.start_mission, 1);
+    if (!data.is_review && game_mission_has_choice()) {
+        image_buttons_draw(26, 428, &data.buttons.back, 1);
+    }
+
+    if (!data.is_review) {
+        image_buttons_draw( 65, 428, &data.buttons.dec_difficulty, 1, 0);
+        image_buttons_draw( 65 + 18, 428, &data.buttons.inc_difficulty, 1, 0);
     }
 
     graphics_reset_dialog();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto &data = g_mission_briefing;
     const mouse* m_dialog = mouse_in_dialog(m);
 
-    if (image_buttons_handle_mouse(m_dialog, 516, 426, &image_button_start_mission, 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, 516, 426, &data.buttons.start_mission, 1, 0)) {
         return;
     }
 
-    if (!g_mission_briefing_data.is_review && game_mission_has_choice()) {
-        if (image_buttons_handle_mouse(m_dialog, 26, 428, &image_button_back, 1, 0))
+    if (!data.is_review && game_mission_has_choice()) {
+        if (image_buttons_handle_mouse(m_dialog, 26, 428, &data.buttons.back, 1, 0))
             return;
+    }
+
+    if (!data.is_review) {
+        image_buttons_handle_mouse(m_dialog, 65, 428, &data.buttons.dec_difficulty, 1, 0);
+        image_buttons_handle_mouse(m_dialog, 65 + 18, 428, &data.buttons.inc_difficulty, 1, 0);
     }
 
     rich_text_handle_mouse(m_dialog);
 }
 static void button_back(int param1, int param2) {
-    if (!g_mission_briefing_data.is_review) {
+    if (!g_mission_briefing.is_review) {
         sound_speech_stop();
         window_mission_next_selection_show();
     }
@@ -178,18 +199,28 @@ static void button_start_mission(int param1, int param2) {
     city_mission_reset_save_start();
 }
 
+static void inc_dec_difficulty(int param1, int param2) {
+    if (param1 > 0) setting_increase_difficulty();
+    else setting_decrease_difficulty();
+    window_invalidate();
+}
+
 static void show(void) {
     window_type window = {WINDOW_MISSION_BRIEFING, draw_background, draw_foreground, handle_input};
     init();
     window_show(&window);
 }
-void window_mission_briefing_show(void) {
-    g_mission_briefing_data.is_review = 0;
-    g_mission_briefing_data.campaign_mission_loaded = 0;
+
+void window_mission_briefing_show() {
+    auto &data = g_mission_briefing;
+    data.is_review = 0;
+    data.campaign_mission_loaded = 0;
     window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }
-void window_mission_briefing_show_review(void) {
-    g_mission_briefing_data.is_review = 1;
-    g_mission_briefing_data.campaign_mission_loaded = 1;
+
+void window_mission_briefing_show_review() {
+    auto &data = g_mission_briefing;
+    data.is_review = 1;
+    data.campaign_mission_loaded = 1;
     window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }

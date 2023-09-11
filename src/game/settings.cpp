@@ -26,7 +26,7 @@ struct settings_data_t {
     int game_speed;
     int scroll_speed;
     // misc settings
-    int difficulty;
+    e_difficulty difficulty;
     int tooltips;
     int monthly_autosave;
     bool warnings;
@@ -126,9 +126,9 @@ static void load_settings(buffer* buf) {
     if (buf->at_end()) {
         // Settings file is from unpatched C3, use default values
         data.difficulty = DIFFICULTY_HARD;
-        data.gods_enabled = 1;
+        data.gods_enabled = true;
     } else {
-        data.difficulty = buf->read_i32();
+        data.difficulty = (e_difficulty)buf->read_i32();
         data.gods_enabled = buf->read_i32();
     }
 }
@@ -139,8 +139,10 @@ void settings_load(void) {
 
     // TODO: load <Pharaoh.inf>
     int size = io_read_file_into_buffer("pharaoh.inf", NOT_LOCALIZED, data.inf_file, INF_SIZE);
-    if (!size)
+    if (!size) {
         return;
+    }
+
     load_settings(data.inf_file);
 
     if (data.window_width + data.window_height < 500) {
@@ -364,21 +366,15 @@ int setting_difficulty(void) {
     auto& data = settings_data();
     return data.difficulty;
 }
-void setting_increase_difficulty(void) {
+
+void setting_increase_difficulty() {
     auto& data = settings_data();
-    if (data.difficulty >= DIFFICULTY_VERY_HARD)
-        data.difficulty = DIFFICULTY_VERY_HARD;
-    else {
-        data.difficulty++;
-    }
+    data.difficulty = std::clamp<e_difficulty>((e_difficulty)(data.difficulty + 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD);
 }
-void setting_decrease_difficulty(void) {
+
+void setting_decrease_difficulty() {
     auto& data = settings_data();
-    if (data.difficulty <= DIFFICULTY_VERY_EASY)
-        data.difficulty = DIFFICULTY_VERY_EASY;
-    else {
-        data.difficulty--;
-    }
+    data.difficulty = std::clamp<e_difficulty>((e_difficulty)(data.difficulty - 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD);
 }
 
 int setting_victory_video(void) {
