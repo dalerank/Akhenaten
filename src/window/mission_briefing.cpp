@@ -25,13 +25,10 @@
 static void button_back(int param1, int param2);
 static void button_start_mission(int param1, int param2);
 
-static const int GOAL_OFFSETS_X[] = {32, 288, 32, 288, 32, 288};
-static const int GOAL_OFFSETS_Y[] = {90, 90, 112, 112, 134, 134};
+static const vec2i GOAL_OFFSET[] = {{32, 90}, {288, 90}, {32, 112}, {288, 112}, {32, 134}, {288, 134}};
 
-static image_button image_button_back
-  = {0, 0, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1};
-static image_button image_button_start_mission
-  = {0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_mission, button_none, 1, 0, 1};
+static image_button image_button_back = {0, 0, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1};
+static image_button image_button_start_mission = {0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_mission, button_none, 1, 0, 1};
 
 struct mission_briefing_t {
     int is_review;
@@ -78,59 +75,57 @@ static void draw_background(void) {
     lang_text_draw(62, 10, 48, 104, FONT_NORMAL_WHITE_ON_DARK);
     int goal_index = 0;
     if (winning_population()) {
-        int x = GOAL_OFFSETS_X[goal_index];
-        int y = GOAL_OFFSETS_Y[goal_index];
+        vec2i offset = GOAL_OFFSET[goal_index];
         goal_index++;
-        label_draw(16 + x, 32 + y, 15, 1);
-        int width = lang_text_draw(62, 11, 16 + x + 8, 32 + y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_population(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
+        label_draw(16 + offset.x, 32 + offset.y, 15, 1);
+        int width = lang_text_draw(62, 11, 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
+        text_draw_number(winning_population(), '@', " ", 16 + offset.x + 8 + width, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
     }
+
     if (winning_housing()) {
-        int x = GOAL_OFFSETS_X[goal_index];
-        int y = GOAL_OFFSETS_Y[goal_index];
+        vec2i offset = GOAL_OFFSET[goal_index];
         goal_index++;
-        label_draw(16 + x, 32 + y, 15, 1);
-        int width = text_draw_number(winning_housing(), '@', " ", 16 + x + 8, 32 + y + 3, FONT_NORMAL_YELLOW);
-        lang_text_draw(29, 20 + winning_houselevel(), 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
+        label_draw(16 + offset.x, 32 + offset.y, 15, 1);
+        int width = text_draw_number(winning_housing(), '@', " ", 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
+        lang_text_draw(29, 20 + winning_houselevel(), 16 + offset.x + 8 + width, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
     }
+
     if (winning_culture()) {
-        int x = GOAL_OFFSETS_X[goal_index];
-        int y = GOAL_OFFSETS_Y[goal_index];
+        vec2i offset = GOAL_OFFSET[goal_index];
         goal_index++;
-        label_draw(16 + x, 32 + y, 15, 1);
-        int width = lang_text_draw(62, 12, 16 + x + 8, 32 + y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_culture(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
+        label_draw(16 + offset.x, 32 + offset.y, 15, 1);
+        int width = lang_text_draw(62, 12, 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
+        text_draw_number(winning_culture(), '@', " ", 16 + offset.x + 8 + width, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
     }
+
     if (winning_prosperity()) {
-        int x = GOAL_OFFSETS_X[goal_index];
-        int y = GOAL_OFFSETS_Y[goal_index];
+        vec2i offset = GOAL_OFFSET[goal_index];
         goal_index++;
-        label_draw(16 + x, 32 + y, 15, 1);
-        int width = lang_text_draw(62, 13, 16 + x + 8, 32 + y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_prosperity(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
+        label_draw(16 + offset.x, 32 + offset.y, 15, 1);
+        int width = lang_text_draw(62, 13, 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
+        text_draw_number(winning_prosperity(), '@', " ", 16 + offset.x + 8 + width, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
     }
+
     if (winning_monuments()) {
-        int x = GOAL_OFFSETS_X[goal_index];
-        int y = GOAL_OFFSETS_Y[goal_index];
+        vec2i offset = GOAL_OFFSET[goal_index];
         goal_index++;
-        label_draw(16 + x, 32 + y, 15, 1);
-        int width = lang_text_draw(62, 14, 16 + x + 8, 32 + y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_monuments(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
+        label_draw(16 + offset.x, 32 + offset.y, 15, 1);
+        int width = lang_text_draw(62, 14, 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
+        text_draw_number(winning_monuments(), '@', " ", 16 + offset.x + 8 + width, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
     }
+
     if (winning_kingdom()) {
-        int x = GOAL_OFFSETS_X[goal_index];
-        int y = GOAL_OFFSETS_Y[goal_index];
+        vec2i offset = GOAL_OFFSET[goal_index];
         goal_index++;
-        label_draw(16 + x, 32 + y, 15, 1);
-        int width = lang_text_draw(62, 15, 16 + x + 8, 32 + y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_kingdom(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
+        label_draw(16 + offset.x, 32 + offset.y, 15, 1);
+        int width = lang_text_draw(62, 15, 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
+        text_draw_number(winning_kingdom(), '@', " ", 16 + offset.x + 8 + width, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
     }
     int immediate_goal_text = tutorial_get_immediate_goal_text();
     if (immediate_goal_text) {
-        int x = GOAL_OFFSETS_X[4];
-        int y = GOAL_OFFSETS_Y[4];
-        label_draw(16 + x, 32 + y, 31, 1);
-        lang_text_draw(62, immediate_goal_text, 16 + x + 8, 32 + y + 3, FONT_NORMAL_YELLOW);
+        vec2i offset = GOAL_OFFSET[4];
+        label_draw(16 + offset.x, 32 + offset.y, 31, 1);
+        lang_text_draw(62, immediate_goal_text, 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
     }
 
     inner_panel_draw(32, 200, 33, 14);
@@ -149,8 +144,9 @@ static void draw_foreground(void) {
 
     rich_text_draw_scrollbar();
     image_buttons_draw(516, 426, &image_button_start_mission, 1);
-    if (!g_mission_briefing_data.is_review && game_mission_has_choice())
+    if (!g_mission_briefing_data.is_review && game_mission_has_choice()) {
         image_buttons_draw(26, 428, &image_button_back, 1);
+    }
 
     graphics_reset_dialog();
 }
@@ -158,12 +154,15 @@ static void draw_foreground(void) {
 static void handle_input(const mouse* m, const hotkeys* h) {
     const mouse* m_dialog = mouse_in_dialog(m);
 
-    if (image_buttons_handle_mouse(m_dialog, 516, 426, &image_button_start_mission, 1, 0))
+    if (image_buttons_handle_mouse(m_dialog, 516, 426, &image_button_start_mission, 1, 0)) {
         return;
+    }
+
     if (!g_mission_briefing_data.is_review && game_mission_has_choice()) {
         if (image_buttons_handle_mouse(m_dialog, 26, 428, &image_button_back, 1, 0))
             return;
     }
+
     rich_text_handle_mouse(m_dialog);
 }
 static void button_back(int param1, int param2) {
