@@ -67,8 +67,10 @@ vec2i figure::tile_pixel_coords() {
             return {0, -2 * prg_y};
             break;
         }
-    } else
+    } else {
         cc_coords_to_pixel_offset(cc_coords.x % 15, cc_coords.y % 15, &x, &y);
+    }
+
     return {x, y};
 }
 
