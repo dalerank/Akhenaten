@@ -5,6 +5,7 @@
 #include "io/file.h"
 #include "io/log.h"
 #include "platform/vita/vita.h"
+#include "platform/android/android.h"
 #include "platform.h"
 
 #include <stdlib.h>
@@ -91,10 +92,7 @@ static int is_file(int mode) {
     return S_ISREG(mode) || S_ISLNK(mode);
 }
 
-int platform_file_manager_list_directory_contents(const char* dir,
-                                                  int type,
-                                                  const char* extension,
-                                                  int (*callback)(const char*)) {
+int platform_file_manager_list_directory_contents(const char* dir, int type, const char* extension, int (*callback)(const char*)) {
     if (type == TYPE_NONE)
         return LIST_ERROR;
 
@@ -170,15 +168,15 @@ int platform_file_manager_should_case_correct_file(void) {
 }
 
 
-int platform_file_manager_set_base_path(std::string_view path) {
+int platform_file_manager_set_base_path(const char* path) {
 #if defined(GAME_PLATFORM_ANDROID)
     if (!path) {
-        log_error("set_base_path: path was not set. Julius will probably crash.", 0, 0);
+        logs::error("set_base_path: path was not set. Julius will probably crash.");
         return 0;
     }
     return android_set_base_path(path);
 #else
-    return chdir(path.data()) == 0;
+    return chdir(path) == 0;
 #endif
 }
 
@@ -230,7 +228,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
     return fdopen(fd, mode);
 }
 
-int platform_file_manager_remove_file(const char *filename)
+bool platform_file_manager_remove_file(const char *filename)
 {
     return android_remove_file(filename);
 }

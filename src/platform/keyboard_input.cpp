@@ -1,6 +1,7 @@
 #include "keyboard_input.h"
 
 #include "game/cheats.h"
+#include "input/mouse.h"
 #include "game/system.h"
 #include "input/hotkey.h"
 #include "input/keyboard.h"
@@ -523,7 +524,7 @@ const char* system_keyboard_key_modifier_name(int modifier) {
     case KEY_MOD_SHIFT:
         return "Shift";
     case KEY_MOD_GUI:
-#ifdef __APPLE__
+#if defined(GAME_PLATFORM_MACOSX)
         return "Cmd";
 #else
         return "Gui";

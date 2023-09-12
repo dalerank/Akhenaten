@@ -1,5 +1,4 @@
-#ifndef PLATFORM_FILE_MANAGER_H
-#define PLATFORM_FILE_MANAGER_H
+#pragma once
 
 #include <stdio.h>
 #include <string_view>
@@ -13,7 +12,7 @@ enum { LIST_ERROR = 0, LIST_NO_MATCH = 1, LIST_CONTINUE = 1, LIST_MATCH = 2 };
  * @param path The path to be set as the base
  * @return true if the base path was correctly set, false otherwise
  */
-int platform_file_manager_set_base_path(std::string_view path);
+int platform_file_manager_set_base_path(const char* path);
 
 /**
  * Gets the contents of a directory by the specified extension
@@ -23,10 +22,7 @@ int platform_file_manager_set_base_path(std::string_view path);
  * @param callback The function to call when a matched file is found
  * @return LIST_ERROR if error, LIST_MATCH if there was a match in the callback, LIST_NO_MATCH if no match was set
  */
-int platform_file_manager_list_directory_contents(const char* dir,
-                                                  int type,
-                                                  const char* extension,
-                                                  int (*callback)(const char*));
+int platform_file_manager_list_directory_contents(const char* dir, int type, const char* extension, int (*callback)(const char*));
 
 /**
  * Indicates whether the file name casing should be checked
@@ -48,5 +44,3 @@ FILE* platform_file_manager_open_file(const char* filename, const char* mode);
  * @return true if removal was successful, false otherwise
  */
 bool platform_file_manager_remove_file(const char* filename);
-
-#endif // PLATFORM_FILE_MANAGER_H
