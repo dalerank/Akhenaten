@@ -1,6 +1,7 @@
 #include "arguments.h"
 
 #include "core/application.h"
+#include "core/bstring.h"
 #include "io/log.h"
 
 #include <filesystem>
@@ -82,8 +83,9 @@ template <typename... Args>
 auto string_format(char const* format, Args... args) {
     const int string_size = std::snprintf(nullptr, 0, format, args...) + 1; // With space for '\0'
 
-    if (string_size <= 0)
-        app::terminate("Error during string formatting.");
+    if (string_size <= 0) {
+        return std::string("");
+    }
 
     std::unique_ptr<char[]> buf(new char[string_size]);
     std::snprintf(buf.get(), string_size, format, args...);
@@ -275,7 +277,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
         } else if (SDL_strcmp(argv[i], "--help") == 0)
             app::terminate(usage());
         else if (SDL_strncmp(argv[i], "--", 2) == 0) {
-            app::terminate(string_format(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));
+            app::terminate(bstring256(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));
         } else {
             // TODO: ???? check that there are no other arguments after
             data_directory_ = argv[i];

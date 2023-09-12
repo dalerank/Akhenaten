@@ -110,8 +110,8 @@ static int init_sdl() {
     return 1;
 }
 
-int pre_init_dir_attempt(std::string_view data_dir, const char* lmsg) {
-    logs::info(lmsg, data_dir.data()); // TODO: get rid of data ???
+int pre_init_dir_attempt(const char* data_dir, const char* lmsg) {
+    logs::info(lmsg, data_dir); // TODO: get rid of data ???
     if (!platform_file_manager_set_base_path(data_dir)) {
         logs::info("%s: directory not found", data_dir);
     }
@@ -123,7 +123,7 @@ int pre_init_dir_attempt(std::string_view data_dir, const char* lmsg) {
     return 0;
 }
 
-static bool pre_init(std::string_view custom_data_dir) {
+static bool pre_init(const char* custom_data_dir) {
     if (pre_init_dir_attempt(custom_data_dir, "Attempting to load game from %s")) {
         return true;
     }
@@ -333,7 +333,7 @@ static void setup(Arguments& args) {
 
     // pre-init engine: assert game directory, pref files, etc.
     init_game_environment(ENGINE_ENV_PHARAOH);
-    while (!pre_init(args.get_data_directory())) {
+    while (!pre_init(args.get_data_directory().c_str())) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
                                  "Warning",
                                  "Ozymandias requires the original files from Pharaoh to run.\n"

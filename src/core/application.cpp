@@ -5,9 +5,9 @@
 
 namespace app {
 
-void terminate(std::string_view message) noexcept {
-    logs::critical("%s", message.data());
-    platform_screen_show_error_message_box("CRASHED", message.data());
+void terminate(const char* message) noexcept {
+    logs::critical("%s", message);
+    platform_screen_show_error_message_box("CRASHED", message);
 
     std::terminate();
 }

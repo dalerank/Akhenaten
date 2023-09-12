@@ -578,8 +578,9 @@ static void prepare_savegame_schema(e_file_format file_format, const int file_ve
 
 void GamestateIO::prepare_folders(const char* path) {
     std::error_code err;
-    if (!std::filesystem::create_directories(path, err) && !std::filesystem::exists(path))
-        app::terminate(err.message());
+    if (!std::filesystem::create_directories(path, err) && !std::filesystem::exists(path)) {
+        app::terminate(err.message().c_str());
+    }
 }
 
 bool GamestateIO::prepare_savegame(const char* filename_short) {
