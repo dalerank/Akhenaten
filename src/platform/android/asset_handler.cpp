@@ -99,8 +99,7 @@ void *asset_handler_open_asset(const char *asset_name, const char *mode)
     }
 }
 
-int asset_handler_get_directory_contents(const char *dir_name, int type,
-    const char *extension, int (*callback)(const char *, long))
+int asset_handler_get_directory_contents(const char *dir_name, int type, const char *extension, int (*callback)(const char *))
 {
     if (*dir_name == '\\' || *dir_name == '/') {
         dir_name++;
@@ -122,7 +121,7 @@ int asset_handler_get_directory_contents(const char *dir_name, int type,
     while ((asset_name = AAssetDir_getNextFileName(dir))) {
         const char *asset_extension = strrchr(asset_name, '.');
         if (asset_extension && strcmp(asset_extension + 1, extension) == 0) {
-            match = callback(asset_name, 0);
+            match = callback(asset_name);
         }
         if (match == LIST_MATCH) {
             break;

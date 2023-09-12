@@ -100,7 +100,7 @@ int android_set_base_path(const char *path)
     return result;
 }
 
-int android_get_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *, long))
+int android_get_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *))
 {
     if (strncmp(dir, ASSETS_DIRECTORY, strlen(ASSETS_DIRECTORY)) == 0) {
         return asset_handler_get_directory_contents(dir + strlen(ASSETS_DIRECTORY), type, extension, callback);
@@ -110,8 +110,7 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
     jni_function_handler get_last_modified_time;
 
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "getDirectoryFileList",
-        "(L" CLASS_OZYAMADIAS_ACTIVITY ";Ljava/lang/String;ILjava/lang/String;)[L" CLASS_FILE_MANAGER "$FileInfo;",
-        &handler)) {
+        "(L" CLASS_OZYAMADIAS_ACTIVITY ";Ljava/lang/String;ILjava/lang/String;)[L" CLASS_FILE_MANAGER "$FileInfo;", &handler)) {
         jni_destroy_function_handler(&handler);
         return LIST_ERROR;
     }
@@ -139,7 +138,7 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
         jstring jfilename = (jstring) handler.env->CallObjectMethod(jfile_info, get_name.method);
         const char *filename = handler.env->GetStringUTFChars(jfilename, NULL);
         long last_modified = (long) handler.env->CallLongMethod(jfile_info, get_last_modified_time.method);
-        match = callback(filename, last_modified);
+        match = callback(filename);
         handler.env->ReleaseStringUTFChars((jstring) jfilename, filename);
         handler.env->DeleteLocalRef(jfilename);
         handler.env->DeleteLocalRef(jfile_info);
