@@ -1,12 +1,11 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
 
 #include "game/settings.h"
 
-int platform_screen_create(char const* title,
-                           std::string renderer,
+int platform_screen_create(const char * title,
+                           const char* renderer,
                            bool fullscreen,
                            int display_scale_percentage,
                            display_size screen_size);

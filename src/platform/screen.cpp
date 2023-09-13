@@ -111,7 +111,7 @@ static void set_window_icon() {
 }
 #endif
 
-int platform_screen_create(char const* title, std::string renderer, bool fullscreen, int display_scale_percentage, display_size screen_size) {
+int platform_screen_create(char const* title, const char *renderer, bool fullscreen, int display_scale_percentage, display_size screen_size) {
 #if defined(GAME_PLATFORM_ANDROID)
     //scale.screen_density = android_get_screen_density();
 #endif

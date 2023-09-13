@@ -1,8 +1,6 @@
 #pragma once
 
-#include <stdexcept>
-#include <string>
-
+#include "core/bstring.h"
 #include "game/settings.h"
 
 class Arguments {
@@ -23,18 +21,18 @@ public:
     [[nodiscard]] int get_cursor_scale_percentage() const;
     void set_cursor_scale_percentage(int value);
 
-    [[nodiscard]] std::string get_renderer() const;
-    void set_renderer(std::string value);
+    [[nodiscard]] const char* get_renderer() const;
+    void set_renderer(const char* value);
 
-    [[nodiscard]] std::string get_data_directory() const;
-    void set_data_directory(std::string value);
+    [[nodiscard]] const char* get_data_directory() const;
+    void set_data_directory(const char *value);
 
     [[nodiscard]] display_size get_window_size() const;
     void set_window_size(display_size value);
 
 private:
-    std::string data_directory_;
-    std::string renderer_;
+    bstring512 data_directory_;
+    bstring64 renderer_;
     int display_scale_percentage_ = 100;
     int cursor_scale_percentage_ = 100;
     display_size window_size_ = {800, 600};

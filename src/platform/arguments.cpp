@@ -1,11 +1,13 @@
 #include "arguments.h"
 
+#include "platform/platform.h"
 #include "core/application.h"
 #include "core/bstring.h"
 #include "io/log.h"
 
 #include <filesystem>
 #include <unordered_map>
+#include <SDL_system.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <ShlObj.h>
@@ -45,7 +47,7 @@ const std::unordered_map<std::string, argument_type> argument_types{{"data_direc
 void set_value(Arguments& arguments, argument_type type, std::string&& value) {
     switch (type) {
     case argument_type::DATA_DIRECTORY:
-        arguments.set_data_directory(value);
+        arguments.set_data_directory(value.c_str());
         break;
     case argument_type::WINDOW_MODE:
         if (value == "1")
@@ -54,7 +56,7 @@ void set_value(Arguments& arguments, argument_type type, std::string&& value) {
             arguments.set_fullscreen();
         break;
     case argument_type::RENDERER:
-        arguments.set_renderer(value);
+        arguments.set_renderer(value.c_str());
         break;
     case argument_type::DISPLAY_SCALE_PERCENTAGE:
         arguments.set_display_scale_percentage(std::stoi(value));
@@ -151,8 +153,8 @@ static int parse_decimal_as_percentage(const char* str) {
     return percentage;
 }
 
-Arguments::Arguments(int argc, char** argv)
-  : data_directory_(std::filesystem::current_path().string()) {
+Arguments::Arguments(int argc, char** argv) {
+    data_directory_ = std::filesystem::current_path().string().c_str();
     arguments::load(*this);
     parse_cli_(argc, argv);
 }
@@ -213,20 +215,20 @@ void Arguments::set_cursor_scale_percentage(int value) {
     cursor_scale_percentage_ = value;
 }
 
-std::string Arguments::get_renderer() const {
-    return renderer_;
+const char *Arguments::get_renderer() const {
+    return renderer_.c_str();
 }
 
-void Arguments::set_renderer(std::string value) {
-    renderer_ = std::move(value);
+void Arguments::set_renderer(const char * value) {
+    renderer_ = value;
 }
 
-std::string Arguments::get_data_directory() const {
+const char *Arguments::get_data_directory() const {
     return data_directory_;
 }
 
-void Arguments::set_data_directory(std::string value) {
-    data_directory_ = std::move(value);
+void Arguments::set_data_directory(const char * value) {
+    data_directory_ = value;
 }
 
 display_size Arguments::get_window_size() const {
