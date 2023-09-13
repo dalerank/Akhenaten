@@ -168,16 +168,5 @@ const dir_listing* dir_append_files_with_extension(const char* dir, const char* 
 }
 
 const char* dir_get_file(const char* filepath, int localizable) {
-    if (localizable != NOT_LOCALIZED) {
-        const char* custom_dir = config_get_string(CONFIG_STRING_UI_LANGUAGE_DIR);
-        if (*custom_dir) {
-            const char* path = dir_get_case_corrected_file(custom_dir, filepath);
-            if (path)
-                return path;
-            else if (localizable == MUST_BE_LOCALIZED)
-                return 0;
-        }
-    }
-
-    return dir_get_case_corrected_file(0, filepath);
+    return dir_get_case_corrected_file(platform_file_manager_get_base_path(), filepath);
 }

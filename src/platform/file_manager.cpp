@@ -12,6 +12,8 @@
 #include <string.h>
 #include <sys/stat.h>
 
+static bstring512 content_dir;
+
 #ifdef _WIN32
 
 #include "dirent_win.h"
@@ -80,7 +82,6 @@ typedef const char* dir_name;
 
 #ifdef _MSC_VER
 #include <direct.h>
-#define chdir _chdir
 #elif !defined(__vita__)
 
 #include <cerrno>
@@ -96,6 +97,8 @@ int platform_file_manager_list_directory_contents(const char* dir, int type, con
     if (type == TYPE_NONE)
         return LIST_ERROR;
 
+    bstring256 save_dir(platform_file_manager_get_base_path(), "/", dir);
+    dir = save_dir.c_str();
     dir_name current_dir;
 
     if (!dir || !*dir || strcmp(dir, ".") == 0)
@@ -167,17 +170,21 @@ int platform_file_manager_should_case_correct_file(void) {
 #endif
 }
 
-
 int platform_file_manager_set_base_path(const char* path) {
+    content_dir = path;
 #if defined(GAME_PLATFORM_ANDROID)
     if (!path) {
         logs::error("set_base_path: path was not set. Ozymandias will probably crash.");
         return 0;
     }
-    return android_set_base_path(path);
+    return (android_set_base_path(path) == 0);
 #else
-    return chdir(path) == 0;
+    return true;
 #endif
+}
+
+const char *platform_file_manager_get_base_path() {
+    return content_dir.c_str();
 }
 
 #if defined(__vita__)

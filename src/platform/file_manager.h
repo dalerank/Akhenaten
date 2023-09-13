@@ -3,9 +3,19 @@
 #include <stdio.h>
 #include <string_view>
 
-enum { TYPE_NONE = 0, TYPE_DIR = 1, TYPE_FILE = 2, TYPE_ANY = 3 };
+enum {
+    TYPE_NONE = 0,
+    TYPE_DIR = 1,
+    TYPE_FILE = 2,
+    TYPE_ANY = 3
+};
 
-enum { LIST_ERROR = 0, LIST_NO_MATCH = 1, LIST_CONTINUE = 1, LIST_MATCH = 2 };
+enum {
+    LIST_ERROR = 0,
+    LIST_NO_MATCH = 1,
+    LIST_CONTINUE = 1,
+    LIST_MATCH = 2
+};
 
 /**
  * Sets the base path for Ozymandias
@@ -13,6 +23,7 @@ enum { LIST_ERROR = 0, LIST_NO_MATCH = 1, LIST_CONTINUE = 1, LIST_MATCH = 2 };
  * @return true if the base path was correctly set, false otherwise
  */
 int platform_file_manager_set_base_path(const char* path);
+const char *platform_file_manager_get_base_path();
 
 /**
  * Gets the contents of a directory by the specified extension
