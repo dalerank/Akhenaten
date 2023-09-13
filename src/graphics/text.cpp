@@ -217,16 +217,19 @@ void text_ellipsize(uint8_t* str, font_t font, int requested_width) {
         str += num_bytes;
         maxlen -= num_bytes;
     }
-    if (10000 - maxlen < string_length(orig_str))
+
+    if (10000 - maxlen < string_length(orig_str)) {
         string_copy(ellipsis.string, orig_str + length_with_ellipsis, ELLIPSIS_LENGTH);
+    }
 }
 
 int text_draw(const uint8_t* str, int x, int y, font_t font, color color) {
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        y = y - 3;
-    }
+    y = y - 3;
 
     const font_definition* def = font_definition_for(font);
+    if (!def) {
+        return 0;
+    }
 
     int length = string_length(str);
     if (!length) {
@@ -271,11 +274,13 @@ int text_draw(const uint8_t* str, int x, int y, font_t font, color color) {
         length -= num_bytes;
         input_cursor.position += num_bytes;
     }
+
     if (input_cursor.capture && !input_cursor.seen) {
         input_cursor.width = 4;
         input_cursor.x_offset = current_x - x;
         input_cursor.seen = 1;
     }
+
     current_x += def->space_width;
     return current_x - x;
 }
@@ -310,13 +315,7 @@ int text_draw_number(int value, char prefix, const char* postfix, int x_offset, 
     number_to_string(str, value, prefix, postfix);
     return text_draw(str, x_offset, y_offset, font, 0);
 }
-int text_draw_number_colored(int value,
-                             char prefix,
-                             const char* postfix,
-                             int x_offset,
-                             int y_offset,
-                             font_t font,
-                             color color) {
+int text_draw_number_colored(int value, char prefix, const char* postfix, int x_offset, int y_offset, font_t font, color color) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, prefix, postfix);
     return text_draw(str, x_offset, y_offset, font, color);
@@ -331,12 +330,7 @@ void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int 
     number_to_string(str, value, prefix, " ");
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
-void text_draw_number_centered_colored(int value,
-                                       int x_offset,
-                                       int y_offset,
-                                       int box_width,
-                                       font_t font,
-                                       color color) {
+void text_draw_number_centered_colored(int value, int x_offset, int y_offset, int box_width, font_t font, color color) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, '@', " ");
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);

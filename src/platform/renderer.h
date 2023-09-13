@@ -29,15 +29,12 @@ int platform_renderer_init(SDL_Window* window, std::string renderer);
 int platform_renderer_create_render_texture(int width, int height);
 int platform_renderer_lost_render_texture(void);
 void platform_renderer_invalidate_target_textures(void);
-void platform_renderer_generate_mouse_cursor_texture(int cursor_id,
-                                                     int size,
-                                                     const color* pixels,
-                                                     int hotspot_x,
-                                                     int hotspot_y);
-void platform_renderer_render(void);
-void platform_renderer_pause(void);
-void platform_renderer_resume(void);
-void platform_renderer_destroy(void);
+void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color* pixels, int hotspot_x, int hotspot_y);
+void platform_renderer_clear();
+void platform_renderer_render();
+void platform_renderer_pause();
+void platform_renderer_resume();
+void platform_renderer_destroy();
 
 struct video_mode {
     int w, h;

@@ -823,9 +823,7 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color* p_da
     return texture;
 }
 
-bool graphics_renderer_interface::save_texture_to_file(const char* filename,
-                                                       SDL_Texture* tex,
-                                                       e_file_format file_format) {
+bool graphics_renderer_interface::save_texture_to_file(const char* filename, SDL_Texture* tex, e_file_format file_format) {
     auto &data = g_renderer_data;
     SDL_Texture* ren_tex;
     SDL_Surface* surf;
@@ -1102,7 +1100,11 @@ static void draw_software_mouse_cursor(void) {
 }
 #endif
 
-void platform_renderer_render(void) {
+void platform_renderer_clear() {
+    graphics_renderer()->clear_screen();
+}
+
+void platform_renderer_render() {
     auto &data = g_renderer_data;
     if (data.paused) {
         return;
@@ -1115,11 +1117,8 @@ void platform_renderer_render(void) {
     SDL_RenderPresent(data.renderer);
     SDL_SetRenderTarget(data.renderer, data.render_texture);
 }
-void platform_renderer_generate_mouse_cursor_texture(int cursor_id,
-                                                     int size,
-                                                     const color* pixels,
-                                                     int hotspot_x,
-                                                     int hotspot_y) {
+
+void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color* pixels, int hotspot_x, int hotspot_y) {
     auto &data = g_renderer_data;
     if (data.paused) {
         return;

@@ -203,7 +203,7 @@ int platform_file_manager_remove_file(const char* filename) {
     return result == 0;
 }
 
-#elif defined(_WIN32)
+#elif defined(GAME_PLATFORM_WIN)
 
 FILE* platform_file_manager_open_file(const char* filename, const char* mode) {
     wchar_t* wfile = utf8_to_wchar(filename);
@@ -228,11 +228,14 @@ bool platform_file_manager_remove_file(const char* filename) {
 
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {
+    /*
     int fd = android_get_file_descriptor(filename, mode);
     if (!fd) {
         return NULL;
     }
     return fdopen(fd, mode);
+     */
+    return fopen(filename, mode);
 }
 
 bool platform_file_manager_remove_file(const char *filename)

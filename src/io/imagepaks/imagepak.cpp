@@ -9,6 +9,9 @@
 #include "io/io.h"
 #include "io/log.h"
 #include "platform/renderer.h"
+#include "graphics/text.h"
+#include "graphics/screen.h"
+#include "graphics/image.h"
 
 #include <array>
 #include <cinttypes>
@@ -580,6 +583,14 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
                atlas_pages.at(atlas_pages.size() - 1).height,
                atlas_pages.size(),
                WATCH.STOP());
+
+    int y_offset = screen_height() - 24;
+
+    platform_renderer_clear();
+    if (image_data_fonts_ready()) {
+        text_draw(bstring512("loading pak (", pak_name, ")"), 5, y_offset, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_YELLOW);
+    }
+    platform_renderer_render();
 
     return true;
 }
