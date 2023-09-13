@@ -474,16 +474,20 @@ void building::spawn_figure_market() {
 
     if (common_spawn_figure_trigger(50)) {
         // market buyer
+        int spawn_delay = figure_spawn_timer();
         if (!has_figure_of_type(1, FIGURE_MARKET_BUYER)) {
-            building* dest = building_get(building_market_get_storage_destination(this));
-            if (dest->id) {
-                figure* f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, 1);
-                f->collecting_item_id = data.market.fetch_inventory_id;
+            figure_spawn_delay++;
+            if (figure_spawn_delay > spawn_delay) {
+                building *dest = building_get(building_market_get_storage_destination(this));
+                if (dest->id) {
+                    figure_spawn_delay = 0;
+                    figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, 1);
+                    f->collecting_item_id = data.market.fetch_inventory_id;
+                }
             }
         }
 
         // market trader
-        int spawn_delay = figure_spawn_timer();
         if (!has_figure_of_type(0, FIGURE_MARKET_TRADER)) {
             int bazar_inventory = std::accumulate(data.market.inventory, data.market.inventory + 7, 0);
             if (bazar_inventory > 0) { // do not spawn trader if bazaar is 100% empty!

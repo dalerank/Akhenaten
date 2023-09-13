@@ -404,9 +404,14 @@ void figure::action_perform() {
 
         case FIGURE_DELIVERY_BOY:
         case FIGURE_TRADE_CARAVAN_DONKEY:
-            if (leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE) {
-                poof();
+            if (leading_figure_id <= 0) {
+                //poof();
             }
+
+            if (leader->action_state == FIGURE_ACTION_149_CORPSE) {  
+                poof(); // TODO make runaway from this tile
+            }
+
             if (leader->is_ghost) {
                 is_ghost = true;
             }
@@ -562,7 +567,7 @@ void figure::action_perform() {
         case 38:
             docker_action();
             break;
-        case 39:
+        case FIGURE_MARKET_BUYER:
             market_buyer_action();
             break;
             //            case 40: patrician_action();                break; //40

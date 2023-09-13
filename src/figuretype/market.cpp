@@ -12,6 +12,7 @@
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
+#include "io/config/config.h"
 
 void figure::market_buyer_action() {
     image_set_animation(GROUP_FIGURE_MARKET_LADY);
@@ -36,7 +37,8 @@ void figure::market_buyer_action() {
     case ACTION_11_RETURNING_EMPTY:
     case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
         if (do_returnhome()) {
-            logs::info("stop");
+            home()->figure_spawn_delay = -3;
+            //logs::info("stop");
         }
         break;
     }
@@ -104,10 +106,12 @@ int figure::take_food_from_granary(building* market, building* granary) {
         return 0;
 
     building_granary_remove_resource(granary, resource, 100 * num_loads);
+
     // create delivery boys
     int previous_boy = id;
-    for (int i = 0; i < num_loads; i++)
+    for (int i = 0; i < num_loads; i++) {
         previous_boy = create_delivery_boy(previous_boy);
+    }
 
     return 1;
 }
@@ -153,15 +157,7 @@ bool figure::take_resource_from_storageyard(building* warehouse) {
 }
 
 void figure::delivery_boy_action() {
-    //    is_ghost = false;
-    //    terrain_usage = TERRAIN_USAGE_ROADS;
-    //    figure_image_increase_offset(12);
-    //    cart_image_id = 0;
-
     figure* leader = figure_get(leading_figure_id);
-    //    if (leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE)
-    //        poof();
-    //    else {
     if (leader->state == FIGURE_STATE_ALIVE) {
         if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY) {
             follow_ticks(1);
@@ -169,10 +165,18 @@ void figure::delivery_boy_action() {
             poof();
         }
     } else { // leader arrived at market, drop resource at market
-        home()->data.market.inventory[collecting_item_id] += 100;
-        poof();
+        if (config_get(CONFIG_GP_CH_DELIVERY_BOY_GOES_TO_MARKET_ALONE)) {
+            leading_figure_id = 0;
+            if (do_returnhome()) {
+                home()->data.market.inventory[collecting_item_id] += 100;
+                poof();
+            }
+        } else {
+            home()->data.market.inventory[collecting_item_id] += 100;
+            poof();
+        }
     }
-    //    }
+
     if (leader->is_ghost) {
         is_ghost = true;
     }

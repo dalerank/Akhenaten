@@ -76,7 +76,7 @@ public:
     //    figure *figure_id2; // labor seeker or market buyer
     //    short immigrant_figure_id;
     //    short figure_id4; // tower ballista or burning ruin prefect
-    unsigned short figure_spawn_delay;
+    short figure_spawn_delay;
     unsigned char figure_roam_direction;
     uint32_t has_water_access;
     int prev_part_building_id;
