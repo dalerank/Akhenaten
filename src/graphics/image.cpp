@@ -5,38 +5,35 @@
 
 struct image_data_t {
     bool fonts_enabled;
+    bool fonts_loaded;
     int font_base_offset;
 
     std::vector<imagepak**> pak_list;
 
-    imagepak* main;
-    imagepak* terrain;
-    imagepak* unloaded;
-    imagepak* sprmain;
-    imagepak* sprambient;
+    imagepak* main = nullptr;
+    imagepak* terrain = nullptr;
+    imagepak* unloaded = nullptr;
+    imagepak* sprmain = nullptr;
+    imagepak* sprambient = nullptr;
 
-    imagepak* expansion;
-    imagepak* sprmain2;
+    imagepak* expansion = nullptr;
+    imagepak* sprmain2 = nullptr;
 
     std::vector<imagepak*> temple_paks;
     std::vector<imagepak*> monument_paks;
     std::vector<imagepak*> enemy_paks;
     std::vector<imagepak*> font_paks;
 
-    imagepak* temple;
-    imagepak* monument;
-    imagepak* enemy;
-    imagepak* empire;
-    imagepak* font;
+    imagepak* temple = nullptr;
+    imagepak* monument = nullptr;
+    imagepak* enemy = nullptr;
+    imagepak* empire = nullptr;
+    imagepak* font = nullptr;
 
     color* tmp_image_data;
 };
 
-static image_data_t* g_image_data = nullptr;
-
-image_data_t& image_data() {
-    return *g_image_data;
-}
+image_data_t *g_image_data = nullptr;
 
 // These functions are actually related to the imagepak class I/O, but it made slightly more
 // sense to me to have here as "core" image struct/class & game graphics related functions.
@@ -48,7 +45,7 @@ bool set_pak_in_collection(int pak_id, imagepak** pak, std::vector<imagepak*>* c
     return true;
 }
 bool image_set_font_pak(encoding_type encoding) {
-    auto& data = image_data();
+    auto& data = *g_image_data;
     // TODO?
     if (encoding == ENCODING_CYRILLIC)
         return false;
@@ -67,16 +64,19 @@ bool image_set_font_pak(encoding_type encoding) {
         return true;
     }
 }
+bool image_data_fonts_ready() {
+    return g_image_data && g_image_data->fonts_loaded;
+}
 bool image_set_enemy_pak(int enemy_id) {
-    auto& data = image_data();
+    auto& data = *g_image_data;
     return set_pak_in_collection(enemy_id, &data.enemy, &data.enemy_paks);
 }
 bool image_set_temple_complex_pak(int temple_id) {
-    auto& data = image_data();
+    auto& data = *g_image_data;
     return set_pak_in_collection(temple_id, &data.temple, &data.temple_paks);
 }
 bool image_set_monument_pak(int monument_id) {
-    auto& data = image_data();
+    auto& data = *g_image_data;
     return set_pak_in_collection(monument_id, &data.monument, &data.monument_paks);
 }
 void image_data_init() {
@@ -84,8 +84,9 @@ void image_data_init() {
 }
 
 bool image_load_paks() {
-    auto& data = image_data();
+    auto& data = *g_image_data;
     data.fonts_enabled = false;
+    data.fonts_loaded = false;
     data.font_base_offset = 0;
 
     // add paks to parsing list cache
@@ -111,6 +112,8 @@ bool image_load_paks() {
     // correct pak in use by the mission, or even depending on buildings
     // present on the map, like the Temple Complexes.
     // What an absolute mess!
+    data.font = new imagepak("Pharaoh_Fonts", 18765, false, true); // 18765 --> 20305
+    data.fonts_loaded = true;
 
     data.unloaded = new imagepak("Pharaoh_Unloaded", 0, true); // 0     --> 682
     data.sprmain = new imagepak("SprMain", 700);               // 700   --> 11007
@@ -123,7 +126,6 @@ bool image_load_paks() {
                                                                  // ladn2a.bmp 581-721
     // <--- original temple complex pak here
     data.sprambient = new imagepak("SprAmbient", 15831);           // 15831 --> 18765
-    data.font = new imagepak("Pharaoh_Fonts", 18765, false, true); // 18765 --> 20305
     data.empire = new imagepak("Empire", 20305);                   // 20305 --> 20506 (+177)
     data.sprmain2 = new imagepak("SprMain2", 20683);               // 20683 --> 23035
     data.expansion = new imagepak("Expansion", 23035);             // 23035 --> 23935 (-200)
@@ -170,7 +172,7 @@ bool image_load_paks() {
 }
 
 static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
-    auto& data = image_data();
+    auto& data = *g_image_data;
     switch (collection) {
     case IMAGE_COLLECTION_UNLOADED:
         return data.unloaded;
@@ -229,7 +231,7 @@ int image_id_from_group(int collection, int group, int pak_cache_idx) {
 }
 
 const image_t* image_get(int id, int mode) {
-    auto& data = image_data();
+    auto& data = *g_image_data;
     const image_t* img;
     for (int i = 0; i < data.pak_list.size(); ++i) {
         imagepak* pak = *(data.pak_list.at(i));
@@ -243,7 +245,7 @@ const image_t* image_get(int id, int mode) {
     return nullptr;
 }
 const image_t* image_letter(int letter_id) {
-    auto& data = image_data();
+    auto& data = *g_image_data;
     if (data.fonts_enabled == FULL_CHARSET_IN_FONT)
         return data.font->get_image(data.font_base_offset + letter_id);
     else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET)
@@ -254,7 +256,7 @@ const image_t* image_letter(int letter_id) {
         return nullptr;
 }
 const image_t* image_get_enemy(int id) {
-    auto& data = image_data();
+    auto& data = *g_image_data;
     return data.enemy->get_image(id);
 }
 
