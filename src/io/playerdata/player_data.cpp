@@ -192,7 +192,7 @@ void player_data_load(const uint8_t* player_name) {
     data.unk35 = data.dat_file->read_i32(); // unknown 32-bit field (35)
     char raw_autosave_path[MAX_AUTOSAVE_PATH];
     data.dat_file->read_raw(raw_autosave_path, MAX_AUTOSAVE_PATH); // path to last autosave_replay.sav file
-    auto proper_path_syntax = dir_get_file(raw_autosave_path, NOT_LOCALIZED);
+    pcstr proper_path_syntax = dir_get_file(raw_autosave_path, NOT_LOCALIZED);
     if (proper_path_syntax)
         strncpy_safe(data.last_autosave_path, proper_path_syntax, MAX_AUTOSAVE_PATH);
     else
