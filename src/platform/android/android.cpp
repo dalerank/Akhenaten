@@ -110,7 +110,7 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
     jni_function_handler get_last_modified_time;
 
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "getDirectoryFileList",
-        "(L" CLASS_OZYAMADIAS_ACTIVITY ";Ljava/lang/String;ILjava/lang/String;)[L" CLASS_FILE_MANAGER "$FileInfo;", &handler)) {
+        "(L" CLASS_OZYMANDIAS_ACTIVITY ";Ljava/lang/String;ILjava/lang/String;)[L" CLASS_FILE_MANAGER "$FileInfo;", &handler)) {
         jni_destroy_function_handler(&handler);
         return LIST_ERROR;
     }
@@ -170,7 +170,7 @@ int android_remove_file(const char *filename)
     return result;
 }
 
-JNIEXPORT void JNICALL Java_com_github_dalerank_ozymandias_OzymandiasMainActivity_gotDirectory(JNIEnv *env, jobject thiz)
+extern "C" JNIEXPORT void JNICALL Java_com_github_dalerank_ozymandias_OzymandiasMainActivity_gotDirectory(JNIEnv *env, jobject thiz)
 {
     has_directory = 1;
 }

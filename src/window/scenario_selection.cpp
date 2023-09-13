@@ -32,8 +32,7 @@ static void button_start_scenario(int param1, int param2);
 static void button_scores_or_goals(int param1, int param2);
 static void on_scroll(void);
 
-static image_button start_button
-  = {600, 440, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_scenario, button_none, 1, 0, 1};
+static image_button start_button = {600, 440, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_scenario, button_none, 1, 0, 1};
 
 #define MAX_SCENARIOS 15
 
@@ -51,15 +50,17 @@ static scrollable_list_ui_params ui_params = [] {
     return ret;
     //        .draw_scrollbar_always = true
 }();
-static scroll_list_panel* panel = new scroll_list_panel(MAX_SCENARIOS,
-                                                        button_select_item,
-                                                        button_none,
-                                                        button_none,
-                                                        button_none,
-                                                        ui_params,
-                                                        true,
-                                                        "Maps/",
-                                                        "map");
+
+struct window_scenario_selection_t {
+    scroll_list_panel *panel = nullptr;
+    map_selection_dialog_type dialog;
+    int campaign_sub_dialog;
+    int scores_or_goals;
+
+    int focus_button_id;
+};
+
+window_scenario_selection_t g_window_scenario_selection;
 
 #define CSEL_X 20
 #define CSEL_Y 261
@@ -83,33 +84,29 @@ static generic_button buttons_campaigns[] = {
   {CSEL_X + CSEL_XGAP * 1, CSEL_Y + CSEL_YGAP * 3, CSEL_W, CSEL_H, button_select_campaign, button_none, 8, 0},
 };
 
-static struct {
-    map_selection_dialog_type dialog;
-    int campaign_sub_dialog;
-    int scores_or_goals;
-
-    int focus_button_id;
-    //    char selected_scenario_filename[FILE_NAME_MAX];
-    //    uint8_t selected_scenario_display[FILE_NAME_MAX];
-} data;
-
 static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector = -1) {
+    auto &data = g_window_scenario_selection;
     data.dialog = dialog_type;
     data.campaign_sub_dialog = sub_dialog_selector;
     data.scores_or_goals = 0;
     scenario_set_campaign_scenario(-1);
+
+    if (!data.panel) {
+        data.panel = new scroll_list_panel(MAX_SCENARIOS, button_select_item, button_none, button_none, button_none, ui_params, true, "Maps/", "map");
+    }
+
     switch (dialog_type) {
     case MAP_SELECTION_CCK_LEGACY:
     case MAP_SELECTION_CUSTOM:
         scenario_set_custom(2);
-        panel->set_file_finder_usage(true);
-        panel->change_file_path("Maps/", "map");
+        data.panel->set_file_finder_usage(true);
+        data.panel->change_file_path("Maps/", "map");
         break;
     case MAP_SELECTION_CAMPAIGN:
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
         scenario_set_custom(0);
-        panel->set_file_finder_usage(false);
-        panel->clear_entry_list();
+        data.panel->set_file_finder_usage(false);
+        data.panel->clear_entry_list();
         switch (data.campaign_sub_dialog) {
         case -1:
             break;
@@ -120,7 +117,7 @@ static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector 
                     char name_utf8[MAX_FILE_NAME] = {0};
                     if (mission_data && mission_data->map_name) {
                         encoding_to_utf8(mission_data->map_name, name_utf8, MAX_FILE_NAME, 0);
-                        panel->add_entry(name_utf8);
+                        data.panel->add_entry(name_utf8);
                     } else {
                         logs::error("Could not initialize SDL: %s", SDL_GetError());
                     }
@@ -220,6 +217,7 @@ static int draw_info_line(int base_group,
     return width;
 }
 static void draw_scenario_thumbnail(int image_id) {
+    auto &data = g_window_scenario_selection;
     switch (data.dialog) {
     case MAP_SELECTION_CCK_LEGACY:
     case MAP_SELECTION_CUSTOM:
@@ -235,7 +233,8 @@ static void draw_scenario_thumbnail(int image_id) {
     }
 }
 static void draw_scenario_info() {
-    if (panel->get_selected_entry_idx() == -1)
+    auto &data = g_window_scenario_selection;
+    if (data.panel->get_selected_entry_idx() == -1)
         return;
 
     // map info
@@ -336,6 +335,7 @@ static void draw_scores(int scenario_id) {
     debug_text(txt, INFO_X, -60, 100, "beaten", beaten, COLOR_FONT_YELLOW);
 }
 static void draw_side_panel_info() {
+    auto &data = g_window_scenario_selection;
     switch (data.dialog) {
     case MAP_SELECTION_CAMPAIGN: {
         // thumbnail
@@ -354,7 +354,7 @@ static void draw_side_panel_info() {
 
         // scenario name
         uint8_t scenario_name[MAX_FILE_NAME];
-        encoding_from_utf8(panel->get_selected_entry_text(FILE_NO_EXT), scenario_name, MAX_FILE_NAME);
+        encoding_from_utf8(data.panel->get_selected_entry_text(FILE_NO_EXT), scenario_name, MAX_FILE_NAME);
         text_ellipsize(scenario_name, FONT_LARGE_BLACK_ON_DARK, INFO_W);
         text_draw_centered(scenario_name, INFO_X, HEADER_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
 
@@ -375,8 +375,10 @@ static void draw_side_panel_info() {
         lang_text_draw_centered(
           294, data.campaign_sub_dialog * 4, INFO_X, HEADER_Y, INFO_W, FONT_NORMAL_BLACK_ON_LIGHT);
 
-        if (panel->get_selected_entry_idx() == -1)
+        if (data.panel->get_selected_entry_idx() == -1) {
             return;
+        }
+
         int scenario_id = scenario_campaign_scenario_id();
 
         // scenario name
@@ -403,6 +405,7 @@ static void draw_side_panel_info() {
 }
 
 static void draw_background(void) {
+    auto &data = g_window_scenario_selection;
     switch (data.dialog) {
     case MAP_SELECTION_CCK_LEGACY:
         ImageDraw::img_background(image_id_from_group(GROUP_MAP_SELECTION_CCK));
@@ -417,19 +420,20 @@ static void draw_background(void) {
     }
     graphics_set_to_dialog();
     if (data.dialog != MAP_SELECTION_CAMPAIGN) {
-        panel->draw();
+        data.panel->draw();
         draw_side_panel_info();
     }
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
+    auto &data = g_window_scenario_selection;
     graphics_set_to_dialog();
 
     switch (data.dialog) {
     case MAP_SELECTION_CUSTOM:
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        panel->draw();
-        if (data.dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && panel->get_selected_entry_idx() != -1) {
+        data.panel->draw();
+        if (data.dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && data.panel->get_selected_entry_idx() != -1) {
             // show scores / goals button
             int i = data.scores_or_goals;
             button_border_draw(button_scores_goals[i].x,
@@ -479,16 +483,15 @@ static void button_select_campaign(int index, int param2) {
     init(MAP_SELECTION_CAMPAIGN_SINGLE_LIST, index);
 }
 static void button_select_item(int index, int param2) {
-    if (index >= panel->get_total_entries())
+    auto &data = g_window_scenario_selection;
+    if (index >= data.panel->get_total_entries())
         return;
     switch (data.dialog) {
     case MAP_SELECTION_CUSTOM:
-        GamestateIO::load_map(panel->get_selected_entry_text(FILE_WITH_EXT), false);
+        GamestateIO::load_map(data.panel->get_selected_entry_text(FILE_WITH_EXT), false);
         break;
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        GamestateIO::load_mission(get_first_mission_in_campaign(data.campaign_sub_dialog)
-                                    + panel->get_selected_entry_idx(),
-                                  false);
+        GamestateIO::load_mission(get_first_mission_in_campaign(data.campaign_sub_dialog) + data.panel->get_selected_entry_idx(), false);
         break;
     }
     window_invalidate();
@@ -499,6 +502,7 @@ static void button_start_scenario(int param1, int param2) {
     GamestateIO::start_loaded_file();
 }
 static void button_scores_or_goals(int param1, int param2) {
+    auto &data = g_window_scenario_selection;
     data.scores_or_goals = param1;
     window_invalidate();
 }
@@ -507,6 +511,7 @@ static void on_scroll(void) {
     window_invalidate();
 }
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto &data = g_window_scenario_selection;
     if (input_go_back_requested(m, h)) {
         switch (data.dialog) {
         case MAP_SELECTION_CUSTOM:
@@ -523,9 +528,11 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     switch (data.dialog) {
     case MAP_SELECTION_CUSTOM:
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        if (panel->input_handle(m_dialog))
+        if (data.panel->input_handle(m_dialog)) {
             return;
-        if (data.dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && panel->get_selected_entry_idx() != -1) {
+        }
+
+        if (data.dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && data.panel->get_selected_entry_idx() != -1) {
             if (!data.scores_or_goals) {
                 if (generic_buttons_handle_mouse(m_dialog, 0, 0, &button_scores_goals[0], 1, &data.focus_button_id))
                     return;
