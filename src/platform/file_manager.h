@@ -8,7 +8,7 @@ enum { TYPE_NONE = 0, TYPE_DIR = 1, TYPE_FILE = 2, TYPE_ANY = 3 };
 enum { LIST_ERROR = 0, LIST_NO_MATCH = 1, LIST_CONTINUE = 1, LIST_MATCH = 2 };
 
 /**
- * Sets the base path for Julius
+ * Sets the base path for Ozymandias
  * @param path The path to be set as the base
  * @return true if the base path was correctly set, false otherwise
  */

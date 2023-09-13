@@ -171,7 +171,7 @@ int platform_file_manager_should_case_correct_file(void) {
 int platform_file_manager_set_base_path(const char* path) {
 #if defined(GAME_PLATFORM_ANDROID)
     if (!path) {
-        logs::error("set_base_path: path was not set. Julius will probably crash.");
+        logs::error("set_base_path: path was not set. Ozymandias will probably crash.");
         return 0;
     }
     return android_set_base_path(path);

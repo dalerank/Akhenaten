@@ -372,7 +372,7 @@ static int is_exception_image_grid(int global_offset, int part_offset)
     if (both_between(v1, v2, 364, 369)) {
         return 1;
     }
-    // burning tent: fix in julius to use its own graphic
+    // burning tent: fix in augustus to use its own graphic
     if ((v1 == 734 && is_between(v2, 743, 770)) || (v2 == 734 && is_between(v1, 743, 770))) {
         return 1;
     }

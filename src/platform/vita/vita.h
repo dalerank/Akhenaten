@@ -5,7 +5,7 @@
 
 #include <vita2d.h>
 
-#define VITA_PATH_PREFIX "ux0:/data/julius/"
+#define VITA_PATH_PREFIX "ux0:/data/ozymandias/"
 #define VITA_DISPLAY_WIDTH 960
 #define VITA_DISPLAY_HEIGHT 544
 

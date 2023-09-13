@@ -15,15 +15,14 @@ static FILE* open_pref_file(const char* filename, const char* mode) {
 #if SDL_VERSION_ATLEAST(2, 0, 1)
     if (platform_sdl_version_at_least(2, 0, 1)) {
 #ifndef PORTABLE
-        char* dir_path = SDL_GetPrefPath("bvschaik", "julius");
+        char* dir_path = SDL_GetPrefPath("dalerank", "ozymandias");
 #else
         char* dir_path = SDL_GetBasePath();
 #endif
 
         // because C is crap
         size_t dir_len = strlen(dir_path);
-        char* file_path = (char*)malloc((strlen(filename) + dir_len + 2)
-                                        * sizeof(char)); // write the full filename path into the char* buffer
+        char* file_path = (char*)malloc((strlen(filename) + dir_len + 2) * sizeof(char)); // write the full filename path into the char* buffer
         if (!file_path) {
             SDL_free(dir_path);
             return NULL;
