@@ -252,9 +252,9 @@ void figure::advance_route_tile(int roaming_enabled) {
     //            direction = DIR_FIGURE_REROUTE;
     //    }
     else if (map_terrain_is(target_grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP)) {
-        if (map_terrain_is(target_grid_offset, TERRAIN_WATER) && map_terrain_is(target_grid_offset, TERRAIN_FLOODPLAIN))
+        if (map_terrain_is(target_grid_offset, TERRAIN_WATER) && map_terrain_is(target_grid_offset, TERRAIN_FLOODPLAIN)) {
             direction = DIR_FIGURE_REROUTE;
-        else if (roaming_enabled && map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
+        } else if (roaming_enabled && map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
             building* b = building_at(target_grid_offset);
             if (b->type == BUILDING_GATEHOUSE || b->type == BUILDING_ROADBLOCK) {
                 // do not allow roaming through gatehouses or roadblocks
@@ -268,6 +268,7 @@ void figure::advance_route_tile(int roaming_enabled) {
             //            case BUILDING_WAREHOUSE_SPACE:
             //            case BUILDING_GRANARY:
         case BUILDING_TRIUMPHAL_ARCH:
+        case BUILDING_HOUSE_VACANT_LOT:
         case BUILDING_FORT_GROUND:
         case BUILDING_FESTIVAL_SQUARE:
         case BUILDING_PLAZA:
