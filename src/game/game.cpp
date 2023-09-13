@@ -114,8 +114,10 @@ static int get_elapsed_ticks(void) {
 }
 
 bool game_pre_init(void) {
-    if (!lang_load(0))
+    if (!lang_load(0)) {
         return false;
+    }
+
     update_encoding();
     settings_load(); // c3.inf
     config_load();   // ozymandias.ini
@@ -126,12 +128,9 @@ bool game_pre_init(void) {
     game_state_unpause();
     return true;
 }
+
 bool game_init() {
     image_data_init();
-    if (!image_load_paks()) {
-        logs::error("unable to load main graphics");
-        return false;
-    }
     int missing_fonts = 0;
     if (!image_set_font_pak(encoding_get())) {
         logs::error("unable to load font graphics");
@@ -141,24 +140,27 @@ bool game_init() {
             return false;
     }
 
+    if (!image_load_paks()) {
+        logs::error("unable to load main graphics");
+        return false;
+    }
+
     if (!model_load()) {
         logs::error("unable to load model data");
         return false;
     }
 
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (!eventmsg_load()) {
-            logs::error("unable to load eventmsg.txt");
-            return false;
-        }
-        if (!eventmsg_auto_phrases_load()) {
-            logs::error("unable to load event auto reason phrases");
-            return false;
-        }
-        if (!game_load_campaign_file()) {
-            logs::error("unable to load campaign data");
-            return false;
-        }
+    if (!eventmsg_load()) {
+        logs::error("unable to load eventmsg.txt");
+        return false;
+    }
+    if (!eventmsg_auto_phrases_load()) {
+        logs::error("unable to load event auto reason phrases");
+        return false;
+    }
+    if (!game_load_campaign_file()) {
+        logs::error("unable to load campaign data");
+        return false;
     }
 
     //    mods_init();
