@@ -35,7 +35,7 @@ static const char *get_pharaoh_path(void)
 const char *android_show_pharaoh_path_dialog(int again)
 {
     jni_function_handler handler;
-    if (jni_get_method_handler(CLASS_OZYAMADIAS_ACTIVITY, "showDirectorySelection", "(Z)V", &handler)) {
+    if (jni_get_method_handler(CLASS_OZYMANDIAS_ACTIVITY, "showDirectorySelection", "(Z)V", &handler)) {
         handler.env->CallVoidMethod(handler.activity, handler.method, again ? JNI_TRUE : JNI_FALSE);
     }
     jni_destroy_function_handler(&handler);
@@ -53,7 +53,7 @@ float android_get_screen_density()
 {
     jni_function_handler handler;
     float result = 1.0f;
-    if (jni_get_method_handler(CLASS_OZYAMADIAS_ACTIVITY, "getScreenDensity", "()F", &handler)) {
+    if (jni_get_method_handler(CLASS_OZYMANDIAS_ACTIVITY, "getScreenDensity", "()F", &handler)) {
         result = (float) handler.env->CallFloatMethod(handler.activity, handler.method);
     }
     jni_destroy_function_handler(&handler);
@@ -65,7 +65,7 @@ int android_get_file_descriptor(const char *filename, const char *mode)
     int result = 0;
     jni_function_handler handler;
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "openFileDescriptor",
-        "(L" CLASS_OZYAMADIAS_ACTIVITY ";Ljava/lang/String;Ljava/lang/String;)I", &handler)) {
+        "(L" CLASS_OZYMANDIAS_ACTIVITY ";Ljava/lang/String;Ljava/lang/String;)I", &handler)) {
         jni_destroy_function_handler(&handler);
         return 0;
     }
@@ -158,7 +158,7 @@ int android_remove_file(const char *filename)
     int result = 0;
     jni_function_handler handler;
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "deleteFile",
-        "(Lcom/github/dalerank/ozymandias/OzymandiasMainActivity;Ljava/lang/String;)Z", &handler)) {
+        "(L" CLASS_OZYMANDIAS_ACTIVITY ";Ljava/lang/String;)Z", &handler)) {
         jni_destroy_function_handler(&handler);
         return 0;
     }

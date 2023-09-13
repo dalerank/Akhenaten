@@ -11,7 +11,7 @@ typedef struct {
     jmethodID method;
 } jni_function_handler;
 
-#define CLASS_OZYAMADIAS_ACTIVITY "com/github/dalerank/ozymandias/OzymandiasMainActivity"
+#define CLASS_OZYMANDIAS_ACTIVITY "com/github/dalerank/ozymandias/OzymandiasMainActivity"
 #define CLASS_FILE_MANAGER "com/github/dalerank/ozymandias/FileManager"
 
 int jni_init_function_handler(const char *class_name, jni_function_handler *handler);
