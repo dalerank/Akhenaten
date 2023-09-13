@@ -183,16 +183,16 @@ static int has_devolve_delay(building* house, int status) {
     }
 }
 
-static int evolve_small_tent(building* house, house_demands* demands) {
+static int evolve_small_hut(building* house, house_demands* demands) {
     if (house->house_population > 0) {
         building_house_merge(house);
         int status = check_requirements(house, demands);
         if (status == E_HOUSE_EVOLVE)
-            building_house_change_to(house, BUILDING_HOUSE_LARGE_TENT);
+            building_house_change_to(house, BUILDING_HOUSE_LARGE_HUT);
     }
     return 0;
 }
-static int evolve_large_tent(building* house, house_demands* demands) {
+static int evolve_large_hut(building* house, house_demands* demands) {
     if (house->house_population > 0) {
         building_house_merge(house);
         e_house_progress status = check_requirements(house, demands);
@@ -212,7 +212,7 @@ static int evolve_small_shack(building* house, house_demands* demands) {
         if (status == E_HOUSE_EVOLVE)
             building_house_change_to(house, BUILDING_HOUSE_LARGE_SHACK);
         else if (status == E_HOUSE_DECAY)
-            building_house_change_to(house, BUILDING_HOUSE_LARGE_TENT);
+            building_house_change_to(house, BUILDING_HOUSE_LARGE_HUT);
     }
     return 0;
 }
@@ -425,7 +425,7 @@ static void consume_resources(building* b) {
 }
 
 static int (*evolve_callback[])(building*, house_demands*)
-  = {evolve_small_tent,   evolve_large_tent,   evolve_small_shack,   evolve_large_shack,  evolve_small_hovel,
+  = {evolve_small_hut,   evolve_large_hut,   evolve_small_shack,   evolve_large_shack,  evolve_small_hovel,
      evolve_large_hovel,  evolve_small_casa,   evolve_large_casa,    evolve_small_insula, evolve_medium_insula,
      evolve_large_insula, evolve_grand_insula, evolve_small_villa,   evolve_medium_villa, evolve_large_villa,
      evolve_grand_villa,  evolve_small_palace, evolve_medium_palace, evolve_large_palace, evolve_luxury_palace};

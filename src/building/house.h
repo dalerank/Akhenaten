@@ -3,8 +3,8 @@
 #include "building/building_type.h"
 
 enum e_house_level {
-    HOUSE_SMALL_TENT = 0,
-    HOUSE_LARGE_TENT = 1,
+    HOUSE_SMALL_HUT = 0,
+    HOUSE_LARGE_HUT = 1,
     HOUSE_SMALL_SHACK = 2,
     HOUSE_LARGE_SHACK = 3,
     HOUSE_SMALL_HOVEL = 4,

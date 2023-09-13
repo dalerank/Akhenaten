@@ -433,7 +433,7 @@ static void add_building(building* b, int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
     switch (b->type) {
     // houses
-    case BUILDING_HOUSE_LARGE_TENT:
+    case BUILDING_HOUSE_LARGE_HUT:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_TENT) + 2);
         break;
 

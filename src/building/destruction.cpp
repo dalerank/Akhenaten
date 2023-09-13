@@ -28,7 +28,7 @@ static void destroy_on_fire(building* b, bool plagued) {
     if (b->house_size && b->house_population)
         city_population_remove_home_removed(b->house_population);
 
-    int was_tent = b->house_size && b->subtype.house_level <= HOUSE_LARGE_TENT;
+    int was_tent = b->house_size && b->subtype.house_level <= HOUSE_LARGE_HUT;
     b->house_population = 0;
     b->house_size = 0;
     b->output_resource_id = RESOURCE_NONE;

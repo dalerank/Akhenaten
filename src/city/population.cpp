@@ -373,7 +373,7 @@ static int calculate_people_per_house_type(void) {
         if (b->house_size) {
             int pop = b->house_population;
             total += pop;
-            if (b->subtype.house_level <= HOUSE_LARGE_TENT)
+            if (b->subtype.house_level <= HOUSE_LARGE_HUT)
                 city_data.population.people_in_tents += pop;
 
             if (b->subtype.house_level <= HOUSE_LARGE_SHACK)

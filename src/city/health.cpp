@@ -73,7 +73,7 @@ static void cause_disease(int total_people) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size && b->house_population) {
-            if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
+            if (b->subtype.house_level <= HOUSE_LARGE_HUT) {
                 people_to_kill -= b->house_population;
                 building_destroy_by_plague(b);
                 if (people_to_kill <= 0) {
@@ -112,7 +112,7 @@ void city_health_update(void) {
         }
 
         total_population += b->house_population;
-        if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
+        if (b->subtype.house_level <= HOUSE_LARGE_HUT) {
             if (b->data.house.apothecary) {
                 healthy_population += b->house_population;
             } else {

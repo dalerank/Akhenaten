@@ -59,7 +59,7 @@ void city_ratings_reduce_prosperity_after_bailout(void) {
 void city_ratings_monument_building_destroyed(int type) {
     switch (type) {
     case BUILDING_HOUSE_SMALL_HUT:
-    case BUILDING_HOUSE_LARGE_TENT:
+    case BUILDING_HOUSE_LARGE_HUT:
     case BUILDING_POLICE_STATION:
     case BUILDING_ENGINEERS_POST:
     case BUILDING_WELL:
@@ -73,6 +73,7 @@ void city_ratings_monument_building_destroyed(int type) {
         city_data.ratings.monument_destroyed_buildings++;
         break;
     }
+
     if (city_data.ratings.monument_destroyed_buildings >= 12)
         city_data.ratings.monument_destroyed_buildings = 12;
 }
