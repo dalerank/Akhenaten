@@ -96,12 +96,10 @@ static int init_sdl() {
         logs::error("Could not initialize SDL: %s", SDL_GetError());
         return 0;
     }
-#if SDL_VERSION_ATLEAST(2, 0, 10)
+    static_assert(SDL_VERSION_ATLEAST(2, 0, 10), "SDL version too old");
     SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
     SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
-#elif SDL_VERSION_ATLEAST(2, 0, 4)
-    SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
-#endif
+    //SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
 
 #if defined(GAME_PLATFORM_ANDROID)
     SDL_SetHint(SDL_HINT_ANDROID_TRAP_BACK_BUTTON, "1");
@@ -133,14 +131,18 @@ static bool pre_init(const char* custom_data_dir) {
         return true;
     }
 
+#if !defined(GAME_PLATFORM_ANDROID)
     // ...then from the executable base path...
-    if (platform_sdl_version_at_least(2, 0, 1)) {
-        char* base_path = SDL_GetBasePath();
-        if (pre_init_dir_attempt(base_path, "Attempting to load game from base path %s")) {
-            SDL_free(base_path);
-            return true;
-        }
+    static_assert(SDL_VERSION_ATLEAST(2, 0, 1), "SDL version too old");
+    char* tmp_path = SDL_GetBasePath();
+    bstring512 base_path(tmp_path);
+    SDL_free(tmp_path);
+    if (pre_init_dir_attempt(base_path, "Attempting to load game from base path %s")) {
+        return true;
     }
+#else
+    ; // android should has files in content directory
+#endif //
 
     const char* user_dir = pref_get_gamepath();
     if (user_dir && pre_init_dir_attempt(user_dir, "Attempting to load game from user pref %s")) {
@@ -198,7 +200,7 @@ static void show_options_window(Arguments& args) {
 
         // Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
-            auto data_directory = args.get_data_directory();
+            bstring512 data_directory = args.get_data_directory();
             ImVec2 window_size(1280 * 0.75, 720 * 0.75);
             int platform_window_w, platform_window_h;
             SDL_GetWindowSize(platform_window, &platform_window_w, &platform_window_h);
@@ -209,7 +211,7 @@ static void show_options_window(Arguments& args) {
 
             ImGui::Begin("Configuration", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus);
             ImGui::Text("Folder with original game data:");
-            ImGui::InputText("default", &data_directory);
+            ImGui::InputText("default", data_directory.data(), data_directory.capacity);
             ImGui::SameLine();
             if (ImGui::Button("...")) {
                 fileDialog.OpenDialog("Choose Folder", "", nullptr, ".", 1, nullptr, ImGuiFileDialogFlags_Modal);
@@ -220,7 +222,7 @@ static void show_options_window(Arguments& args) {
             if (fileDialog.Display("Choose Folder", ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize, filedialog_size, filedialog_size, filedialog_pos)) {
                 ImGui::SetWindowFocus();
                 if (fileDialog.IsOk()) {
-                    args.set_data_directory(fileDialog.GetFilePathName());
+                    args.set_data_directory(fileDialog.GetFilePathName().c_str());
                 }
                 fileDialog.Close();
             }
@@ -265,7 +267,7 @@ static void show_options_window(Arguments& args) {
                 const bool is_selected = (item_driver_current_idx == index);
                 if (ImGui::Selectable(it->c_str(), is_selected)) {
                     item_driver_current_idx = index;
-                    args.set_renderer(*it);
+                    args.set_renderer(it->c_str());
                 }
 
                 if (is_selected) {
@@ -331,9 +333,13 @@ static void setup(Arguments& args) {
     platform_init_callback();
 #endif
 
+#if defined(GAME_PLATFORM_ANDROID)
+    args.set_data_directory(SDL_AndroidGetExternalStoragePath());
+#endif
+
     // pre-init engine: assert game directory, pref files, etc.
     init_game_environment(ENGINE_ENV_PHARAOH);
-    while (!pre_init(args.get_data_directory().c_str())) {
+    while (!pre_init(args.get_data_directory())) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
                                  "Warning",
                                  "Ozymandias requires the original files from Pharaoh to run.\n"
