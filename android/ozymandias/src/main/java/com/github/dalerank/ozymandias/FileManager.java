@@ -211,10 +211,11 @@ public class FileManager {
                     fileInfo.updateModifiedTime();
                 }
             }
+
             ParcelFileDescriptor pfd = activity.getContentResolver().openFileDescriptor(fileUri, internalMode);
             return (pfd == null) ? 0 : pfd.detachFd();
         } catch (Exception e) {
-            Log.e("ozymandias", "Error in openFileDescriptor: " + e);
+            Log.e("oyz-and", "Error in openFileDescriptor: " + e);
             return 0;
         }
     }
