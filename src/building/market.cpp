@@ -1,5 +1,6 @@
 #include "market.h"
 
+#include "figure/figure.h"
 #include "building/storage.h"
 #include "building/building_type.h"
 #include "building/storage_yard.h"
@@ -7,6 +8,12 @@
 #include "core/calc.h"
 #include "game/resource.h"
 #include "scenario/property.h"
+#include "grid/desirability.h"
+#include "grid/building_tiles.h"
+#include "grid/terrain.h"
+#include "graphics/image.h"
+
+#include <numeric>
 
 struct resource_data {
     int building_id;
@@ -257,4 +264,48 @@ int building_market_get_storage_destination(building* market) {
 
     market->data.market.fetch_inventory_id = fetch_inventory;
     return resources[fetch_inventory].building_id;
+}
+
+void building::set_market_graphic() {
+    if (state != BUILDING_STATE_VALID)
+        return;
+    if (map_desirability_get(tile.grid_offset()) <= 30) {
+        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
+    } else {
+        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
+    }
+}
+
+void building::spawn_figure_market() {
+    set_market_graphic();
+    check_labor_problem();
+
+    if (common_spawn_figure_trigger(50)) {
+        // market buyer
+        int spawn_delay = figure_spawn_timer();
+        if (!has_figure_of_type(1, FIGURE_MARKET_BUYER)) {
+            figure_spawn_delay++;
+            if (figure_spawn_delay > spawn_delay) {
+                building *dest = building_get(building_market_get_storage_destination(this));
+                if (dest->id) {
+                    figure_spawn_delay = 0;
+                    figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, 1);
+                    f->collecting_item_id = data.market.fetch_inventory_id;
+                }
+            }
+        }
+
+        // market trader
+        if (!has_figure_of_type(0, FIGURE_MARKET_TRADER)) {
+            int bazar_inventory = std::accumulate(data.market.inventory, data.market.inventory + 7, 0);
+            if (bazar_inventory > 0) { // do not spawn trader if bazaar is 100% empty!
+                figure_spawn_delay++;
+                if (figure_spawn_delay > spawn_delay) {
+                    figure_spawn_delay = 0;
+                    create_roaming_figure(FIGURE_MARKET_TRADER);
+                    return;
+                }
+            }
+        }
+    }
 }

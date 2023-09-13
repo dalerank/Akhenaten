@@ -1,9 +1,9 @@
-#ifndef GRAPHICS_IMAGE_H
-#define GRAPHICS_IMAGE_H
+#pragma once
 
 #include "SDL_render.h"
 #include "core/encoding.h"
 #include "graphics/color.h"
+#include "graphics/image_groups.h"
 
 #define IMAGE_FONT_MULTIBYTE_OFFSET 10000
 #define IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS 2188
@@ -121,5 +121,3 @@ int image_id_from_group(int collection, int group, int pak_cache_idx = -1);
 const image_t* image_get(int id, int mode = 0);
 const image_t* image_letter(int letter_id);
 const image_t* image_get_enemy(int id);
-
-#endif // GRAPHICS_IMAGE_H
