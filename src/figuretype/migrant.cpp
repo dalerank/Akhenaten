@@ -5,6 +5,7 @@
 #include "city/map.h"
 #include "city/population.h"
 #include "core/calc.h"
+#include "core/random.h"
 #include "core/profiler.h"
 #include "figure/combat.h"
 #include "figure/image.h"
@@ -145,6 +146,7 @@ void figure::immigrant_action() {
 
 void figure::emigrant_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Emigrant");
+    map_point &exit = city_map_exit_point();
     switch (action_state) {
     case FIGURE_ACTION_4_EMIGRANT_CREATED:
         //            is_ghost = true;
@@ -160,17 +162,54 @@ void figure::emigrant_action() {
         //            is_ghost = in_building_wait_ticks ? 1 : 0;
         break;
 
+    case ACTION_16_EMIGRANT_RANDOM:
+        roam_wander_freely = false;
+        do_goto(destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_6_EMIGRANT_LEAVING, FIGURE_ACTION_6_EMIGRANT_LEAVING);
+        if (direction == DIR_FIGURE_CAN_NOT_REACH || direction == DIR_FIGURE_REROUTE) {
+            int dx;
+            int dy;
+            state = FIGURE_STATE_ALIVE;
+            random_around_point(tile, tile.x(), tile.y(), &dx, &dy, /*step*/2, /*bias*/4, /*max_dist*/8);
+            destination_tile = map_point(dx, dy);
+            direction = DIR_0_TOP_RIGHT;
+            advance_action(FIGURE_ACTION_6_EMIGRANT_LEAVING);
+        }
+        break;
+
     case FIGURE_ACTION_6_EMIGRANT_LEAVING:
     case 10:
-        map_point& exit = city_map_exit_point();
-        do_goto(exit, TERRAIN_USAGE_ANY);
+        wait_ticks--;
+        if (wait_ticks > 0) {
+            anim_frame = 0;
+            break;
+        }
+
+        if (do_goto(exit, TERRAIN_USAGE_ANY)) {
+            poof();
+        }
+
+        if (direction == DIR_FIGURE_CAN_NOT_REACH) {
+            wait_ticks = 20;
+            route_remove();
+            state = FIGURE_STATE_ALIVE;
+            tile2i road_tile;
+            map_closest_road_within_radius(exit.x(), exit.y(), 1, 2, road_tile);
+            destination_tile = road_tile;
+            direction = DIR_0_TOP_RIGHT;
+            advance_action(ACTION_16_EMIGRANT_RANDOM);
+        }
         break;
     }
-    update_direction_and_image();
+
+    {
+        OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Emigrant/Update Image");
+        update_direction_and_image();
+    }
 }
 
 void figure::homeless_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Homeless");
+    map_point& exit = city_map_exit_point();
     switch (action_state) {
     case FIGURE_ACTION_7_HOMELESS_CREATED:
         anim_frame = 0;
@@ -179,7 +218,7 @@ void figure::homeless_action() {
             int building_id = closest_house_with_room(tile);
             if (building_id) {
                 building* b = building_get(building_id);
-                map_point road_tile;
+                tile2i road_tile;
                 if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
                     b->set_figure(2, id);
                     set_immigrant_home(building_id);
@@ -202,7 +241,6 @@ void figure::homeless_action() {
         break;
     case ACTION_11_RETURNING_EMPTY:
     case FIGURE_ACTION_10_HOMELESS_LEAVING:
-        map_point& exit = city_map_exit_point();
         do_goto(exit, TERRAIN_USAGE_ANY);
 
         wait_ticks++;
