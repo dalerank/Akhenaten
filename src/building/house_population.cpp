@@ -4,6 +4,7 @@
 #include "building/house.h"
 #include "building/list.h"
 #include "building/model.h"
+#include "io/config/config.h"
 #include "city/labor.h"
 #include "city/message.h"
 #include "city/migration.h"
@@ -134,28 +135,38 @@ int house_population_create_immigrants(int num_people) {
 
 int house_population_create_emigrants(int num_people) {
     int total_houses = building_list_large_size();
-    const int* houses = building_list_large_items();
+    const int* ids = building_list_large_items();
+
     int to_emigrate = num_people;
-    for (int level = HOUSE_SMALL_TENT; level < HOUSE_LARGE_INSULA && to_emigrate > 0; level++) {
+    for (int level = HOUSE_SMALL_HUT; level < HOUSE_LARGE_INSULA && to_emigrate > 0; level++) {
         for (int i = 0; i < total_houses && to_emigrate > 0; i++) {
-            building* b = building_get(houses[i]);
-            if (b->house_population > 0 && b->subtype.house_level == level) {
-                int current_people;
-                if (b->house_population >= 4)
-                    current_people = 4;
-                else {
-                    current_people = b->house_population;
-                }
-                if (to_emigrate <= current_people) {
-                    figure_create_emigrant(b, to_emigrate);
-                    to_emigrate = 0;
-                } else {
-                    figure_create_emigrant(b, current_people);
-                    to_emigrate -= current_people;
-                }
+            building* b = building_get(ids[i]);
+
+            if (b->house_population <= 0 || b->subtype.house_level != level) {
+                continue;
+            }
+
+            if (level <= HOUSE_LARGE_HUT && b->house_population < 10 && config_get(CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT)) {
+                continue;
+            }
+
+            int current_people;
+            if (b->house_population >= 4) {
+                current_people = 4;
+            } else {
+                current_people = b->house_population;
+            }
+
+            if (to_emigrate <= current_people) {
+                figure_create_emigrant(b, to_emigrate);
+                to_emigrate = 0;
+            } else {
+                figure_create_emigrant(b, current_people);
+                to_emigrate -= current_people;
             }
         }
     }
+
     return num_people - to_emigrate;
 }
 

@@ -37,22 +37,22 @@ static void update_status(void) {
         city_data.migration.percentage = 0;
         return;
     }
+
     if (city_data.migration.percentage > 0) {
         // immigration
-        if (city_data.migration.emigration_duration)
+        if (city_data.migration.emigration_duration) {
             city_data.migration.emigration_duration--;
-        else {
+        } else {
             city_data.migration.immigration_amount_per_batch
               = calc_adjust_with_percentage(12, city_data.migration.percentage);
             city_data.migration.immigration_duration = 2;
         }
     } else if (city_data.migration.percentage < 0) {
         // emigration
-        if (city_data.migration.immigration_duration)
+        if (city_data.migration.immigration_duration) {
             city_data.migration.immigration_duration--;
-        else if (city_data.population.population > 100) {
-            city_data.migration.emigration_amount_per_batch
-              = calc_adjust_with_percentage(12, -city_data.migration.percentage);
+        } else if (city_data.population.population > 100) {
+            city_data.migration.emigration_amount_per_batch = calc_adjust_with_percentage(12, -city_data.migration.percentage);
             city_data.migration.emigration_duration = 2;
         }
     }
@@ -76,29 +76,33 @@ static void create_migrants(void) {
     city_data.migration.refused_immigrants_today = 0;
 
     if (city_data.migration.immigration_amount_per_batch > 0) {
-        if (city_data.migration.immigration_amount_per_batch >= 4)
+        if (city_data.migration.immigration_amount_per_batch >= 4) {
             create_immigrants(city_data.migration.immigration_amount_per_batch);
-        else if (city_data.migration.immigration_amount_per_batch + city_data.migration.immigration_queue_size >= 4) {
-            create_immigrants(city_data.migration.immigration_amount_per_batch
-                              + city_data.migration.immigration_queue_size);
+
+        } else if (city_data.migration.immigration_amount_per_batch + city_data.migration.immigration_queue_size >= 4) {
+            create_immigrants(city_data.migration.immigration_amount_per_batch+ city_data.migration.immigration_queue_size);
             city_data.migration.immigration_queue_size = 0;
-        } else // queue them for next round
+
+        } else { // queue them for next round
             city_data.migration.immigration_queue_size += city_data.migration.immigration_amount_per_batch;
+        }
     }
+    
     if (city_data.migration.emigration_amount_per_batch > 0) {
-        if (city_data.migration.emigration_amount_per_batch >= 4)
+        if (city_data.migration.emigration_amount_per_batch >= 4) {
             create_emigrants(city_data.migration.emigration_amount_per_batch);
-        else if (city_data.migration.emigration_amount_per_batch + city_data.migration.emigration_queue_size >= 4) {
-            create_emigrants(city_data.migration.emigration_amount_per_batch
-                             + city_data.migration.emigration_queue_size);
+        } else if (city_data.migration.emigration_amount_per_batch + city_data.migration.emigration_queue_size >= 4) {
+            create_emigrants(city_data.migration.emigration_amount_per_batch + city_data.migration.emigration_queue_size);
             city_data.migration.emigration_queue_size = 0;
             if (!city_data.migration.emigration_message_shown) {
                 city_data.migration.emigration_message_shown = 1;
                 //                city_message_post(true, MESSAGE_EMIGRATION, 0, 0);
             }
-        } else // queue them for next round
+        } else { // queue them for next round
             city_data.migration.emigration_queue_size += city_data.migration.emigration_amount_per_batch;
+        }
     }
+
     city_data.migration.immigration_amount_per_batch = 0;
     city_data.migration.emigration_amount_per_batch = 0;
 }
