@@ -6,6 +6,7 @@
 #include "io/log.h"
 
 #include <filesystem>
+#include <string>
 #include <unordered_map>
 #include <SDL_system.h>
 
