@@ -138,6 +138,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         break;
     case BUILDING_CHICKPEAS_FARM:
         b->output_resource_id = RESOURCE_CHICKPEAS;
+        b->fire_proof = 1;
         break;
     case BUILDING_STONE_QUARRY:
         b->output_resource_id = RESOURCE_STONE;
@@ -1005,7 +1006,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         //        b->set_figure(3, buf->read_u16());
         b->bind_iob_figures(iob);
 
-        iob->bind(BIND_SIGNATURE_UINT16, &b->figure_spawn_delay);
+        iob->bind(BIND_SIGNATURE_INT16, &b->figure_spawn_delay);
         iob->bind(BIND_SIGNATURE_UINT8, &b->figure_roam_direction);
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_water_access);
 
