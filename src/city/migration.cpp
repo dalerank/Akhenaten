@@ -119,19 +119,19 @@ void city_migration_update(void) {
 
 void city_migration_determine_int(void) {
     switch (city_data.sentiment.low_mood_cause) {
-    case int_NO_FOOD:
+    case LOW_MOOD_NO_FOOD:
         city_data.migration.no_immigration_cause = 2;
         break;
-    case int_NO_JOBS:
+    case LOW_MOOD_NO_JOBS:
         city_data.migration.no_immigration_cause = 1;
         break;
-    case int_HIGH_TAXES:
+    case LOW_MOOD_HIGH_TAXES:
         city_data.migration.no_immigration_cause = 3;
         break;
-    case int_LOW_WAGES:
+    case LOW_MOOD_LOW_WAGES:
         city_data.migration.no_immigration_cause = 0;
         break;
-    case int_MANY_TENTS:
+    case LOW_MOOD_MANY_TENTS:
         city_data.migration.no_immigration_cause = 4;
         break;
     default:

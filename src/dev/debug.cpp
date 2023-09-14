@@ -919,6 +919,30 @@ void draw_debug_ui(int x, int y) {
         debug_text(str, x, y + 157, cl, "emigration_amount_per_batch:", city_data.migration.emigration_amount_per_batch);
         debug_text(str, x, y + 169, cl, "emigration_duration:", city_data.migration.emigration_duration);
         debug_text(str, x, y + 181, cl, "immigration_amount_per_batch:", city_data.migration.immigration_amount_per_batch);
+        y += 200;
+    }
+
+    if (g_debug_show_opts[e_debug_show_sentiment]) {
+        int cl = 180;
+        debug_text(str, x, y + 1, cl, "value:", city_data.sentiment.value);
+        debug_text(str, x, y + 13, cl, "previous_value:", city_data.sentiment.previous_value);
+        debug_text(str, x, y + 25, cl, "message_delay:", city_data.sentiment.message_delay);
+        debug_text(str, x, y + 37, cl, "include_tents:", city_data.sentiment.include_tents);
+        debug_text(str, x, y + 49, cl, "unemployment:", city_data.sentiment.unemployment);
+        debug_text(str, x, y + 61, cl, "wages:", city_data.sentiment.wages);
+        debug_text(str, x, y + 73, cl, "low_mood_cause:", city_data.sentiment.low_mood_cause);
+        debug_text(str, x, y + 85, cl, "protesters:", city_data.sentiment.protesters);
+        debug_text(str, x, y + 97, cl, "criminals:", city_data.sentiment.criminals);
+        debug_text(str, x, y + 109, cl, "can_create_mugger:", city_data.sentiment.can_create_mugger);
+        debug_text(str, x, y + 121, cl, "can_create_protestor:", city_data.sentiment.can_create_protestor);
+        debug_text(str, x, y + 133, cl, "last_mugger_message:", city_data.sentiment.last_mugger_message);
+        debug_text(str, x, y + 145, cl, "contribution_taxes:", city_data.sentiment.contribution_taxes);
+        debug_text(str, x, y + 157, cl, "contribution_wages:", city_data.sentiment.contribution_wages);
+        debug_text(str, x, y + 169, cl, "contribution_employment:", city_data.sentiment.contribution_employment);
+        debug_text(str, x, y + 181, cl, "penalty_tents:", city_data.sentiment.penalty_tents);
+        debug_text(str, x, y + 193, cl, "monuments:", city_data.sentiment.monuments);
+        debug_text(str, x, y + 205, cl, "religion_coverage:", city_data.sentiment.religion_coverage);
+        y += 210;
     }
 
     /////// FLOODS

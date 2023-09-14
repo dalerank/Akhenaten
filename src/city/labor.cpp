@@ -303,23 +303,23 @@ void city_labor_change_wages(int amount) {
     city_data.labor.wages = calc_bound(city_data.labor.wages, 0, 100);
 }
 int city_labor_wages_rome(void) {
-    return city_data.labor.wages_rome;
+    return city_data.labor.wages_kingdome;
 }
 int city_labor_raise_wages_rome(void) {
-    if (city_data.labor.wages_rome >= 45)
+    if (city_data.labor.wages_kingdome >= 45)
         return 0;
 
-    city_data.labor.wages_rome += 1 + (random_byte_alt() & 3);
-    if (city_data.labor.wages_rome > 45)
-        city_data.labor.wages_rome = 45;
+    city_data.labor.wages_kingdome += 1 + (random_byte_alt() & 3);
+    if (city_data.labor.wages_kingdome > 45)
+        city_data.labor.wages_kingdome = 45;
 
     return 1;
 }
 int city_labor_lower_wages_rome(void) {
-    if (city_data.labor.wages_rome <= 5)
+    if (city_data.labor.wages_kingdome <= 5)
         return 0;
 
-    city_data.labor.wages_rome -= 1 + (random_byte_alt() & 3);
+    city_data.labor.wages_kingdome -= 1 + (random_byte_alt() & 3);
     return 1;
 }
 

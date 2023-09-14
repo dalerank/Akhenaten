@@ -77,6 +77,8 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
   {"gameplay_change_new_tax_collection_system", false},
   {"gameplay_change_small_hut_not_create_emigrant", true},
   {"gameplay_change_delivery_boy_goes_to_market_alone", true},
+  {"gameplay_change_religion_coverage_influence_sentiment", true},
+  {"gameplay_change_monuments_influence_sentiment", true},
 
   ///
 

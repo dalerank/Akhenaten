@@ -5,8 +5,10 @@
 #include "city/gods.h"
 #include "game/difficulty.h"
 #include "scenario/property.h"
-
+#include "core/game_environment.h"
+#include "empire/city.h"
 #include "io/io_buffer.h"
+
 #include <core/string.h>
 #include <string.h>
 
@@ -24,7 +26,7 @@ void city_data_init(void) {
     city_data.health.target_value = 50;
     city_data.health.value = 50;
     city_data.unused.unknown_00c0 = 3;
-    city_data.labor.wages_rome = 30;
+    city_data.labor.wages_kingdome = 30;
     city_data.labor.wages = 30;
     city_data.finance.tax_percentage = 7;
     city_data.trade.caravan_import_resource = RESOURCE_MIN;
@@ -97,9 +99,6 @@ int stack_proper_quantity(int full, int resource) {
         return full / 100;
     }
 }
-
-#include "core/game_environment.h"
-#include "empire/city.h"
 
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_RAW, &city_data.unused.other_player, 18904);
@@ -246,7 +245,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.labor.unemployment_percentage_for_senate);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.labor.workers_needed);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.labor.wages);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.labor.wages_rome);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.labor.wages_kingdome);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_2b6c);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.wages_so_far);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.expenses.wages);
@@ -476,8 +475,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.sentiment.message_delay);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.sentiment.low_mood_cause);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.figure.security_breach_duration);
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_446c[i]);
+    }
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.selected_gift_size);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.months_since_gift); // ok
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.gift_overdose_penalty);

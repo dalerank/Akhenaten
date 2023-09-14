@@ -188,7 +188,7 @@ struct city_data_t {
     } population;
     struct {
         int32_t wages;
-        int32_t wages_rome;
+        int32_t wages_kingdome;
         int32_t workers_available;
         int32_t workers_employed;
         int32_t workers_unemployed;
@@ -220,16 +220,22 @@ struct city_data_t {
         int32_t previous_value;
         int32_t message_delay;
 
-        int8_t include_tents;
+        bool include_tents;
         int32_t unemployment;
         int32_t wages;
         int32_t low_mood_cause;
 
         int32_t protesters;
         int32_t criminals; // muggers+rioters
-        int can_create_mugger;
-        int can_create_protestor;
+        bool can_create_mugger;
+        bool can_create_protestor;
         short last_mugger_message;
+        int32_t contribution_taxes;
+        int32_t contribution_wages;
+        int32_t contribution_employment;
+        int32_t penalty_tents;
+        int32_t religion_coverage;
+        int32_t monuments;
     } sentiment;
     struct {
         int32_t num_hospital_workers;

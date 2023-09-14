@@ -18,16 +18,16 @@ enum e_advisor {
     ADVISOR_HOUSING = 19,
 };
 
-enum {
-    int_NONE = 0,
-    int_NO_FOOD = 1,
-    int_NO_JOBS = 2,
-    int_HIGH_TAXES = 3,
-    int_LOW_WAGES = 4,
-    int_MANY_TENTS = 5,
+enum e_low_mood_reason {
+    LOW_MOOD_NONE = 0,
+    LOW_MOOD_NO_FOOD = 1,
+    LOW_MOOD_NO_JOBS = 2,
+    LOW_MOOD_HIGH_TAXES = 3,
+    LOW_MOOD_LOW_WAGES = 4,
+    LOW_MOOD_MANY_TENTS = 5,
 };
 
-enum {
+enum e_no_immigratoion_reason {
     NO_IMMIGRATION_LOW_WAGES = 0,
     NO_IMMIGRATION_NO_JOBS = 1,
     NO_IMMIGRATION_NO_FOOD = 2,
@@ -36,7 +36,7 @@ enum {
     NO_IMMIGRATION_LOW_MOOD = 5
 };
 
-enum {
+enum e_festival_type {
     FESTIVAL_NONE = 0,
     FESTIVAL_SMALL = 1,
     FESTIVAL_LARGE = 2,
@@ -44,7 +44,7 @@ enum {
     FESTIVAL_BAST_SPECIAL = 4,
 };
 
-enum {
+enum e_trade_status {
     TRADE_STATUS_NONE = 0,
     TRADE_STATUS_IMPORT = 1,
     TRADE_STATUS_EXPORT = 2,

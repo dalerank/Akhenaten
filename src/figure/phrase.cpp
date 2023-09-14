@@ -168,13 +168,13 @@ static int house_seeker_phrase() {
 }
 static int emigrant_phrase(void) {
     switch (city_sentiment_low_mood_cause()) {
-    case int_NO_JOBS:
+    case LOW_MOOD_NO_JOBS:
         return 7;
-    case int_NO_FOOD:
+    case LOW_MOOD_NO_FOOD:
         return 8;
-    case int_HIGH_TAXES:
+    case LOW_MOOD_HIGH_TAXES:
         return 9;
-    case int_LOW_WAGES:
+    case LOW_MOOD_LOW_WAGES:
         return 10;
     default:
         return 11;

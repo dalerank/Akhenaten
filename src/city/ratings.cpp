@@ -166,9 +166,9 @@ static void update_prosperity_explanation(void) {
 
     // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
     int avg_wage = city_data.finance.wage_rate_paid_last_year / 12;
-    if (avg_wage >= city_data.labor.wages_rome + 2)
+    if (avg_wage >= city_data.labor.wages_kingdome + 2)
         change += 1;
-    else if (avg_wage < city_data.labor.wages_rome)
+    else if (avg_wage < city_data.labor.wages_kingdome)
         change -= 1;
 
     // high percentage poor: -1, high percentage rich: +1
@@ -198,7 +198,7 @@ static void update_prosperity_explanation(void) {
         reason = 3;
     else if (city_data.labor.unemployment_percentage >= 15)
         reason = 4;
-    else if (avg_wage < city_data.labor.wages_rome)
+    else if (avg_wage < city_data.labor.wages_kingdome)
         reason = 5;
     else if (pct_tents > 30)
         reason = 6;
@@ -398,9 +398,9 @@ static void update_prosperity_rating(void) {
 
     // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
     int avg_wage = city_data.finance.wage_rate_paid_last_year / 12;
-    if (avg_wage >= city_data.labor.wages_rome + 2)
+    if (avg_wage >= city_data.labor.wages_kingdome + 2)
         change += 1;
-    else if (avg_wage < city_data.labor.wages_rome)
+    else if (avg_wage < city_data.labor.wages_kingdome)
         change -= 1;
 
     // high percentage poor: -1, high percentage rich: +1
