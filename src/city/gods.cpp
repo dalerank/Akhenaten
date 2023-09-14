@@ -30,31 +30,35 @@
 #include <algorithm>
 #include <array>
 
-#define TIE 10
-
 void city_gods_reset() {
-
-    for (int i = 0; i < MAX_GODS; i++) {
-        if (god_known_status(i) == GOD_STATUS_UNKNOWN) {
-            break;
-        }
-
-        god_status* god = &city_data.religion.gods[i];
-        god->target_mood = 50;
-        god->mood = 50;
-        god->wrath_bolts = 0;
-        god->blessing_done = false;
-        god->curse_done = false;
-        god->unused1 = 0;
-        god->unused2 = 0;
-        god->unused3 = 0;
-        god->months_since_festival = 0;
+    for (auto &god: city_data.religion.gods) {
+        god.type = e_god(std::distance(&god, city_data.religion.gods));
+        god.target_mood = 50;
+        god.mood = 50;
+        god.wrath_bolts = 0;
+        god.blessing_done = false;
+        god.curse_done = false;
+        god.unused1 = 0;
+        god.unused2 = 0;
+        god.unused3 = 0;
+        god.months_since_festival = 0;
+        god.is_known = false;
     }
 
     city_data.religion.angry_message_delay = 0;
 }
 
-int god_known_status(int god) {
+svector<god_status*, MAX_GODS> city_gods_knowns() {
+    svector<god_status*, MAX_GODS> gods;
+    for (int i = 0; i < MAX_GODS; i++) {
+        if (city_gods_is_known((e_god)i) == GOD_STATUS_UNKNOWN) {
+            gods.push_back(&city_data.religion.gods[i]);
+        }
+    }
+    return gods;
+}
+
+bool city_gods_is_known(e_god god) {
     return city_data.religion.gods[god].is_known;
 }
 
@@ -65,8 +69,7 @@ static bool OSIRIS_locusts() {
 
 static bool PTAH_warehouse_restock() {
     // fill warehouses with gems, clay, pottery, flax, linen, or jewelry
-    e_resource resources[6]
-      = {RESOURCE_GEMS, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
+    e_resource resources[6] = {RESOURCE_GEMS, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
 
     building* chosen_yard = nullptr;
     int lowest_stock_found = 10000;
@@ -725,61 +728,47 @@ static void calculate_mood_targets() {
     }
 
     // base happiness: percentage of houses covered
-    for (int i = 0; i < MAX_GODS; i++)
+    for (int i = 0; i < MAX_GODS; i++) {
         city_data.religion.gods[i].target_mood = city_culture_coverage_religion(i);
+    }
 
     int max_temples = 0;
-    int max_god = TIE;
+    e_god max_god = GOD_UNKNOWN;
     int min_temples = 100000;
-    int min_god = TIE;
-    for (int i = 0; i < MAX_GODS; i++) {
-        if (god_known_status(i) == GOD_STATUS_UNKNOWN)
-            break;
+    e_god min_god = GOD_UNKNOWN;
+
+    for (auto *god: city_gods_knowns()) {
         int num_temples = 0;
-        switch (i) {
-        case GOD_OSIRIS:
-            num_temples
-              = building_count_total(BUILDING_TEMPLE_OSIRIS) + building_count_total(BUILDING_TEMPLE_COMPLEX_OSIRIS);
-            break;
-        case GOD_RA:
-            num_temples = building_count_total(BUILDING_TEMPLE_RA) + building_count_total(BUILDING_TEMPLE_COMPLEX_RA);
-            break;
-        case GOD_PTAH:
-            num_temples
-              = building_count_total(BUILDING_TEMPLE_PTAH) + building_count_total(BUILDING_TEMPLE_COMPLEX_PTAH);
-            break;
-        case GOD_SETH:
-            num_temples
-              = building_count_total(BUILDING_TEMPLE_SETH) + building_count_total(BUILDING_TEMPLE_COMPLEX_SETH);
-            break;
-        case GOD_BAST:
-            num_temples
-              = building_count_total(BUILDING_TEMPLE_BAST) + building_count_total(BUILDING_TEMPLE_COMPLEX_BAST);
-            break;
+        switch (god->type) {
+        case GOD_OSIRIS: num_temples = building_count_total(BUILDING_TEMPLE_OSIRIS) + building_count_total(BUILDING_TEMPLE_COMPLEX_OSIRIS); break;
+        case GOD_RA: num_temples = building_count_total(BUILDING_TEMPLE_RA) + building_count_total(BUILDING_TEMPLE_COMPLEX_RA); break;
+        case GOD_PTAH: num_temples = building_count_total(BUILDING_TEMPLE_PTAH) + building_count_total(BUILDING_TEMPLE_COMPLEX_PTAH); break;
+        case GOD_SETH: num_temples = building_count_total(BUILDING_TEMPLE_SETH) + building_count_total(BUILDING_TEMPLE_COMPLEX_SETH); break;
+        case GOD_BAST: num_temples = building_count_total(BUILDING_TEMPLE_BAST) + building_count_total(BUILDING_TEMPLE_COMPLEX_BAST); break;
         }
-        if (num_temples == max_temples)
-            max_god = TIE;
-        else if (num_temples > max_temples) {
+
+        if (num_temples == max_temples) {
+            max_god = GOD_UNKNOWN;
+        } else if (num_temples > max_temples) {
             max_temples = num_temples;
-            max_god = i;
+            max_god = god->type;
         }
-        if (num_temples == min_temples)
-            min_god = TIE;
-        else if (num_temples < min_temples) {
+
+        if (num_temples == min_temples) {
+            min_god = GOD_UNKNOWN;
+        } else if (num_temples < min_temples) {
             min_temples = num_temples;
-            min_god = i;
+            min_god = god->type;
         }
     }
+
     // happiness factor based on months since festival (max 40)
-    for (int i = 0; i < MAX_GODS; i++) {
-        if (god_known_status(i) == GOD_STATUS_UNKNOWN)
-            break;
-        int festival_penalty = city_data.religion.gods[i].months_since_festival;
+    for (auto *god: city_gods_knowns()) {
+        int festival_penalty = god->months_since_festival;
         if (festival_penalty > 40)
             festival_penalty = 40;
 
-        city_data.religion.gods[i].target_mood
-          = calc_bound(city_data.religion.gods[i].target_mood + 12 - festival_penalty, 0, 100);
+        god->target_mood = calc_bound(god->target_mood + 12 - festival_penalty, 0, 100);
     }
 
     //    if (!(config_get(CONFIG_GP_CH_JEALOUS_GODS))) {
@@ -797,32 +786,34 @@ static void calculate_mood_targets() {
     int min_mood = 50 - 10 * points;
     int max_mood = 50 + 10 * points;
 
-    for (int i = 0; i < MAX_GODS; i++)
-        city_data.religion.gods[i].target_mood = calc_bound(city_data.religion.gods[i].target_mood, min_mood, max_mood);
+    for (auto *god: city_gods_knowns()) {
+        god->target_mood = calc_bound(god->target_mood, min_mood, max_mood);
+    }
 }
-static void update_moods(int randm_god) {
-    for (int i = 0; i < MAX_GODS; i++) {
-        if (god_known_status(i) != GOD_STATUS_UNKNOWN) {
-            god_status* god = &city_data.religion.gods[i];
-            if (god->mood < god->target_mood)
-                god->mood++;
-            else if (god->mood > god->target_mood)
-                god->mood--;
-            if (scenario_is_mission_rank(1)) {
-                if (god->mood < 50)
-                    god->mood = 50;
-            }
-            if (god->mood > 50)
-                god->curse_done = false;
-            if (god->mood < 50)
-                god->blessing_done = false;
+static void update_moods(e_god randm_god) {
+
+    for (auto *god: city_gods_knowns()) {
+        if (god->mood < god->target_mood) {
+            god->mood++;
+        } else if (god->mood > god->target_mood) {
+            god->mood--;
         }
+
+        if (scenario_is_mission_rank(1)) {
+            if (god->mood < 50)
+                god->mood = 50;
+        }
+
+        if (god->mood > 50)
+            god->curse_done = false;
+
+        if (god->mood < 50)
+            god->blessing_done = false;
     }
 
     // update anger/happiness/bolt icons/etc.
     int difficulty = setting_difficulty();
-    if (god_known_status(randm_god)
-        != GOD_STATUS_UNKNOWN) { // OG code checks "randm_god < MAX_GODS" which is redundant.
+    if (city_gods_is_known(randm_god) != GOD_STATUS_UNKNOWN) { // OG code checks "randm_god < MAX_GODS" which is redundant.
         god_status* god = &city_data.religion.gods[randm_god];
         if (god->mood > 50)
             god->wrath_bolts = 0;
@@ -869,9 +860,8 @@ static void update_moods(int randm_god) {
 
 static void update_monthly_data(int randm_god) {
     // update festival counter
-    for (int i = 0; i < MAX_GODS; i++) {
-        if (god_known_status(i) != GOD_STATUS_UNKNOWN)
-            city_data.religion.gods[i].months_since_festival++;
+    for (auto *god: city_gods_knowns()) {
+        god->months_since_festival++;
     }
 
     // handle blessings, curses, etc every month
@@ -879,10 +869,9 @@ static void update_monthly_data(int randm_god) {
 
     // post city message about the gods being angery
     int min_happiness = 100;
-    for (int i = 0; i < MAX_GODS; i++) {
-        if (god_known_status(i) != GOD_STATUS_UNKNOWN) {
-            if (city_data.religion.gods[i].mood < min_happiness)
-                min_happiness = city_data.religion.gods[i].mood;
+    for (auto *god: city_gods_knowns()) {
+        if (god->mood < min_happiness) {
+           min_happiness = god->mood;
         }
     }
 
@@ -919,7 +908,7 @@ void city_gods_update(bool mood_calc_only) {
     calculate_mood_targets();
 
     if (!mood_calc_only && setting_gods_enabled()) {
-        int randm_god = anti_scum_random_15bit() % 5;
+        e_god randm_god = e_god(anti_scum_random_15bit() % MAX_GODS);
         update_moods(randm_god);
 
         //        perform_minor_blessing(GOD_PTAH); // TODO: DEBUGGING
@@ -933,30 +922,27 @@ void city_gods_update(bool mood_calc_only) {
 }
 
 bool city_gods_calculate_least_happy(void) {
-    int max_god = 0;
+    e_god max_god = GOD_UNKNOWN;
     int max_wrath = 0;
     // first, check who's the most enraged (number of bolts)
-    for (int i = 0; i < MAX_GODS; i++) {
-        if (god_known_status(i) == GOD_STATUS_UNKNOWN)
-            break;
-
-        if (city_data.religion.gods[i].wrath_bolts > max_wrath) {
-            max_god = i + 1;
-            max_wrath = city_data.religion.gods[i].wrath_bolts;
+    for (auto *god: city_gods_knowns()) {
+        if (god->wrath_bolts > max_wrath) {
+            max_god = god->type;
+            max_wrath = god->wrath_bolts;
         }
     }
-    if (max_god > 0) {
+
+    if (max_god != GOD_UNKNOWN) {
         city_data.religion.least_happy_god = max_god;
         return true;
     }
+
     int min_happiness = 40;
     // lastly, check who's the least happy
-    for (int i = 0; i < MAX_GODS; i++) {
-        if (god_known_status(i) == GOD_STATUS_UNKNOWN)
-            break;
-        if (city_data.religion.gods[i].mood < min_happiness) {
-            max_god = i + 1;
-            min_happiness = city_data.religion.gods[i].mood;
+    for (auto *god: city_gods_knowns()) {
+        if (god->mood < min_happiness) {
+            max_god = god->type;
+            min_happiness = god->mood;
         }
     }
     city_data.religion.least_happy_god = max_god;

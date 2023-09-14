@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include "core/svector.h"
 
 enum e_god {
     GOD_OSIRIS = 0, // GOD_CERES = 0,
@@ -8,8 +9,37 @@ enum e_god {
     GOD_PTAH = 2,   // GOD_MERCURY = 2,
     GOD_SETH = 3,   // GOD_MARS = 3,
     GOD_BAST = 4,   // GOD_VENUS = 4
+    MAX_GODS,
+    GOD_UNKNOWN = MAX_GODS
 };
-constexpr uint32_t MAX_GODS = 5;
+
+struct god_status {
+    e_god type;
+    uint8_t mood;
+    uint8_t target_mood;
+    uint8_t wrath_bolts;
+    uint8_t happy_ankhs;
+    bool blessing_done;
+    bool curse_done;
+    uint32_t months_since_festival;
+    int8_t unused1;
+    int8_t unused2;
+    int8_t unused3;
+    bool is_known;
+} ;
+
+enum e_god_event {
+    GOD_EVENT_MAJOR_BLESSING = 1,
+    GOD_EVENT_MINOR_BLESSING = 2,
+    GOD_EVENT_MAJOR_CURSE = 3,
+    GOD_EVENT_MINOR_CURSE = 4
+};
+
+enum e_god_status {
+    GOD_STATUS_UNKNOWN = 0,
+    GOD_STATUS_KNOWN = 1,
+    GOD_STATUS_PATRON = 2
+};
 
 template<typename ...Args>
 inline int make_gods_mask(Args... args) {
@@ -19,24 +49,13 @@ inline int make_gods_mask(Args... args) {
     return mask;
 }
 
-inline bool is_god_available(int mask, e_god g) { int god_mask = (1 << g); return ((mask & god_mask) == god_mask); }
+svector<god_status *, MAX_GODS> city_gods_knowns();
 
-enum {
-    GOD_STATUS_UNKNOWN = 0,
-    GOD_STATUS_KNOWN = 1,
-    GOD_STATUS_PATRON = 2
-};
+inline bool city_gods_is_available(int mask, e_god g) { int god_mask = (1 << g); return ((mask & god_mask) == god_mask); }
 
-void city_gods_reset(void);
+void city_gods_reset();
 
-int god_known_status(int god);
-
-enum e_god_event {
-    GOD_EVENT_MAJOR_BLESSING = 1,
-    GOD_EVENT_MINOR_BLESSING = 2,
-    GOD_EVENT_MAJOR_CURSE = 3,
-    GOD_EVENT_MINOR_CURSE = 4
-};
+bool city_gods_is_known(e_god god);
 
 void city_gods_update_curses_and_blessings(int randm_god, int FORCE_EVENT = -1);
 

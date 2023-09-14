@@ -1,5 +1,4 @@
-#ifndef CITY_DATA_PRIVATE_H
-#define CITY_DATA_PRIVATE_H
+#pragma once
 
 #include <stdint.h>
 
@@ -8,21 +7,8 @@
 #include "city/houses.h"
 #include "city/labor.h"
 #include "city/resource.h"
+#include "city/gods.h"
 #include "grid/point.h"
-
-typedef struct {
-    uint8_t mood;
-    uint8_t target_mood;
-    uint8_t wrath_bolts;
-    uint8_t happy_ankhs;
-    bool blessing_done;
-    bool curse_done;
-    uint32_t months_since_festival;
-    int8_t unused1;
-    int8_t unused2;
-    int8_t unused3;
-    bool is_known;
-} god_status;
 
 struct city_data_t {
     struct {
@@ -286,7 +272,7 @@ struct city_data_t {
         int32_t religion_coverage;
     } culture;
     struct {
-        god_status gods[5];
+        god_status gods[MAX_GODS];
         int32_t least_happy_god;
         int32_t angry_message_delay;
         bool bast_curse_active;
@@ -464,5 +450,3 @@ struct city_data_t {
 
 extern city_data_t city_data;
 const city_data_t* city_data_struct();
-
-#endif // CITY_DATA_PRIVATE_H

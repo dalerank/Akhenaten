@@ -257,13 +257,12 @@ static int trade_ship_phrase() {
 
 static int city_god_state(void) {
     int least_god_happiness = 100;
-    for (int i = 0; i < MAX_GODS; i++) {
-        if (god_known_status(i) == GOD_STATUS_UNKNOWN)
-            break;
-        int happiness = city_god_happiness(i);
+    for (auto *god: city_gods_knowns()) {
+        int happiness = city_god_happiness(god->type);
         if (happiness < least_god_happiness)
             least_god_happiness = happiness;
     }
+
     if (least_god_happiness < 20)
         return GOD_STATE_VERY_ANGRY;
     else if (least_god_happiness < 40)
@@ -272,6 +271,7 @@ static int city_god_state(void) {
         return GOD_STATE_NONE;
     }
 }
+
 static int phrase_based_on_figure_state() {
     //    switch (f->type) {
     //        case FIGURE_LION_TAMER:

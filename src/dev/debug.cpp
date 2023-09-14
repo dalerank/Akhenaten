@@ -823,12 +823,8 @@ void draw_debug_ui(int x, int y) {
 
     /////// RELIGION
     if (g_debug_show_opts[e_debug_show_religion]) {
-        int cl = 0;
-        text_draw((uint8_t*)string_from_ascii("      mood/target  wrath/ankhs   buildings  coverage  festival"),
-                  x,
-                  y + 15,
-                  FONT_SMALL_OUTLINED,
-                  COLOR_WHITE);
+        int cl = 0; 
+        text_draw((uint8_t*)string_from_ascii("                    mood/target  wrath/ankhs            buildings  coverage  festival"), x, y + 15, FONT_SMALL_OUTLINED, COLOR_WHITE);
         y += 15;
         int c0 = 60;
         int c1 = 40;
@@ -839,91 +835,50 @@ void draw_debug_ui(int x, int y) {
         int c6 = 290;
         int c7 = 15;
         int c8 = 360;
-        if (god_known_status(0) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str,
-                                 x,
-                                 y + 15,
-                                 c0,
-                                 c1,
-                                 "Osiris:",
-                                 city_data.religion.gods[0].mood,
-                                 city_data.religion.gods[0].target_mood);
-            debug_text_dual_left(str,
-                                 x + c2,
-                                 y + 15,
-                                 0,
-                                 c1,
-                                 "",
-                                 city_data.religion.gods[0].wrath_bolts,
-                                 city_data.religion.gods[0].happy_ankhs);
+
+        if (city_gods_is_known(GOD_OSIRIS) != GOD_STATUS_UNKNOWN) {
+            debug_text_dual_left(str, x, y + 15, c0, c1, "Osiris:", city_data.religion.gods[0].mood, city_data.religion.gods[0].target_mood);
+            debug_text_dual_left(str, x + c2, y + 15, 0, c1, "", city_data.religion.gods[0].wrath_bolts, city_data.religion.gods[0].happy_ankhs);
             debug_text(str, x + c3, y + 15, cl, "", building_count_total(BUILDING_SHRINE_OSIRIS));
             debug_text(str, x + c4, y + 15, cl, "", building_count_active(BUILDING_TEMPLE_OSIRIS));
             debug_text(str, x + c5, y + 15, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_OSIRIS));
             debug_text(str, x + c6, y + 15, c7, "%", city_culture_coverage_religion(0));
             debug_text(str, x + c8, y + 15, cl, "", city_data.religion.gods[0].months_since_festival);
         }
-        if (god_known_status(1) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(
-              str, x, y + 25, c0, c1, "Ra:", city_data.religion.gods[1].mood, city_data.religion.gods[1].target_mood);
-            debug_text_dual_left(str,
-                                 x + c2,
-                                 y + 25,
-                                 0,
-                                 c1,
-                                 "",
-                                 city_data.religion.gods[1].wrath_bolts,
-                                 city_data.religion.gods[1].happy_ankhs);
+
+        if (city_gods_is_known(GOD_RA) != GOD_STATUS_UNKNOWN) {
+            debug_text_dual_left(str, x, y + 25, c0, c1, "Ra:", city_data.religion.gods[1].mood, city_data.religion.gods[1].target_mood);
+            debug_text_dual_left(str, x + c2, y + 25, 0, c1, "", city_data.religion.gods[1].wrath_bolts, city_data.religion.gods[1].happy_ankhs);
             debug_text(str, x + c3, y + 25, cl, "", building_count_total(BUILDING_SHRINE_RA));
             debug_text(str, x + c4, y + 25, cl, "", building_count_active(BUILDING_TEMPLE_RA));
             debug_text(str, x + c5, y + 25, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_RA));
             debug_text(str, x + c6, y + 25, c7, "%", city_culture_coverage_religion(1));
             debug_text(str, x + c8, y + 25, cl, "", city_data.religion.gods[1].months_since_festival);
         }
-        if (god_known_status(2) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(
-              str, x, y + 35, c0, c1, "Ptah:", city_data.religion.gods[2].mood, city_data.religion.gods[2].target_mood);
-            debug_text_dual_left(str,
-                                 x + c2,
-                                 y + 35,
-                                 0,
-                                 c1,
-                                 "",
-                                 city_data.religion.gods[2].wrath_bolts,
-                                 city_data.religion.gods[2].happy_ankhs);
+
+        if (city_gods_is_known(GOD_PTAH) != GOD_STATUS_UNKNOWN) {
+            debug_text_dual_left(str, x, y + 35, c0, c1, "Ptah:", city_data.religion.gods[2].mood, city_data.religion.gods[2].target_mood);
+            debug_text_dual_left(str, x + c2, y + 35, 0, c1, "", city_data.religion.gods[2].wrath_bolts, city_data.religion.gods[2].happy_ankhs);
             debug_text(str, x + c3, y + 35, cl, "", building_count_total(BUILDING_SHRINE_PTAH));
             debug_text(str, x + c4, y + 35, cl, "", building_count_active(BUILDING_TEMPLE_PTAH));
             debug_text(str, x + c5, y + 35, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_PTAH));
             debug_text(str, x + c6, y + 35, c7, "%", city_culture_coverage_religion(2));
             debug_text(str, x + c8, y + 35, cl, "", city_data.religion.gods[2].months_since_festival);
         }
-        if (god_known_status(3) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(
-              str, x, y + 45, c0, c1, "Seth:", city_data.religion.gods[3].mood, city_data.religion.gods[3].target_mood);
-            debug_text_dual_left(str,
-                                 x + c2,
-                                 y + 45,
-                                 0,
-                                 c1,
-                                 "",
-                                 city_data.religion.gods[3].wrath_bolts,
-                                 city_data.religion.gods[3].happy_ankhs);
+
+        if (city_gods_is_known(GOD_SETH) != GOD_STATUS_UNKNOWN) {
+            debug_text_dual_left(str, x, y + 45, c0, c1, "Seth:", city_data.religion.gods[3].mood, city_data.religion.gods[3].target_mood);
+            debug_text_dual_left(str, x + c2, y + 45, 0, c1, "", city_data.religion.gods[3].wrath_bolts, city_data.religion.gods[3].happy_ankhs);
             debug_text(str, x + c3, y + 45, cl, "", building_count_total(BUILDING_SHRINE_SETH));
             debug_text(str, x + c4, y + 45, cl, "", building_count_active(BUILDING_TEMPLE_SETH));
             debug_text(str, x + c5, y + 45, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_SETH));
             debug_text(str, x + c6, y + 45, c7, "%", city_culture_coverage_religion(3));
             debug_text(str, x + c8, y + 45, cl, "", city_data.religion.gods[3].months_since_festival);
         }
-        if (god_known_status(4) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(
-              str, x, y + 55, c0, c1, "Bast:", city_data.religion.gods[4].mood, city_data.religion.gods[4].target_mood);
-            debug_text_dual_left(str,
-                                 x + c2,
-                                 y + 55,
-                                 0,
-                                 c1,
-                                 "",
-                                 city_data.religion.gods[4].wrath_bolts,
-                                 city_data.religion.gods[4].happy_ankhs);
+
+        if (city_gods_is_known(GOD_BAST) != GOD_STATUS_UNKNOWN) {
+            debug_text_dual_left(str, x, y + 55, c0, c1, "Bast:", city_data.religion.gods[4].mood, city_data.religion.gods[4].target_mood);
+            debug_text_dual_left(str, x + c2, y + 55, 0, c1, "", city_data.religion.gods[4].wrath_bolts, city_data.religion.gods[4].happy_ankhs);
             debug_text(str, x + c3, y + 55, cl, "", building_count_total(BUILDING_SHRINE_BAST));
             debug_text(str, x + c4, y + 55, cl, "", building_count_active(BUILDING_TEMPLE_BAST));
             debug_text(str, x + c5, y + 55, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_BAST));
@@ -934,23 +889,15 @@ void draw_debug_ui(int x, int y) {
         cl = 180;
         debug_text(str, x, y + 75, cl, "150% export profits:", city_data.religion.ra_150_export_profits_months_left);
         debug_text(str, x, y + 85, cl, "No traders:", city_data.religion.ra_no_traders_months_left);
-        debug_text(str,
-                   x,
-                   y + 95,
-                   cl,
-                   "Slightly increased trades:",
-                   city_data.religion.ra_slightly_increased_trading_months_left);
-        debug_text(
-          str, x, y + 105, cl, "Slightly reduced trades:", city_data.religion.ra_slightly_reduced_trading_months_left);
-        debug_text(
-          str, x, y + 115, cl, "Harshly reduced trades:", city_data.religion.ra_harshly_reduced_trading_months_left);
+        debug_text(str, x, y + 95, cl, "Slightly increased trades:", city_data.religion.ra_slightly_increased_trading_months_left);
+        debug_text(str, x, y + 105, cl, "Slightly reduced trades:", city_data.religion.ra_slightly_reduced_trading_months_left);
+        debug_text(str, x, y + 115, cl, "Harshly reduced trades:", city_data.religion.ra_harshly_reduced_trading_months_left);
 
         debug_text(str, x, y + 125, cl, "Enemy troops kill:", city_data.religion.seth_crush_enemy_troops);
         debug_text(str, x, y + 135, cl, "Player troops protection:", city_data.religion.seth_protect_player_troops);
 
         debug_text(str, x, y + 145, cl, "Double farm yields:", city_data.religion.osiris_double_farm_yield);
-        debug_text(
-          str, x, y + 155, cl, "Floods will destroy farms:", city_data.religion.osiris_flood_will_destroy_active);
+        debug_text(str, x, y + 155, cl, "Floods will destroy farms:", city_data.religion.osiris_flood_will_destroy_active);
         y += 170;
     }
 

@@ -99,14 +99,15 @@ static void draw_festival_info(int y_offset) {
         lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305 + y_offset, 400, FONT_NORMAL_WHITE_ON_DARK);
     }
 }
-static void draw_god_row(int god, int y_offset, int temple, int complex, int shrine) {
+static void draw_god_row(e_god god, int y_offset, int temple, int complex, int shrine) {
     //    lang_text_draw(59, 11 + god, 40, y_offset, FONT_NORMAL_WHITE);
     //    lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);
 
-    int is_known = god_known_status(god);
+    bool is_known = city_gods_is_known(god);
     font_t font = FONT_NORMAL_WHITE_ON_DARK;
-    if (is_known == GOD_STATUS_UNKNOWN)
+    if (is_known == GOD_STATUS_UNKNOWN) {
         font = FONT_NORMAL_YELLOW;
+    }
     //    else if (is_known == GOD_STATUS_PATRON)
     //        font = FONT_NORMAL_RED;
 

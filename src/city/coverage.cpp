@@ -89,17 +89,17 @@ static int top(int input) {
     return input > 100 ? 100 : input;
 }
 
-static int god_coverage_total(int god, int temple, int shrine, int complex) {
-    switch (god_known_status(god)) {
+static int god_coverage_total(e_god god, int temple, int shrine, int complex) {
+    switch (city_gods_is_known(god)) {
     default:
         return 0;
+
     case GOD_STATUS_PATRON:
-        return 150 * building_count_total(shrine) + 375 * building_count_active(temple)
-               + 8000 * building_count_active(complex);
+        return 150 * building_count_total(shrine) + 375 * building_count_active(temple) + 8000 * building_count_active(complex);
         break;
+
     case GOD_STATUS_KNOWN:
-        return 300 * building_count_total(shrine) + 750 * building_count_active(temple)
-               + 8000 * building_count_active(complex);
+        return 300 * building_count_total(shrine) + 750 * building_count_active(temple) + 8000 * building_count_active(complex);
         break;
     }
 }
