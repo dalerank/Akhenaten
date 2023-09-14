@@ -26,14 +26,19 @@
 #include "scenario/invasion.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
+
+#include <algorithm>
 #include <array>
 
 #define TIE 10
 
-void city_gods_reset(void) {
+void city_gods_reset() {
+
     for (int i = 0; i < MAX_GODS; i++) {
-        if (god_known_status(i) == GOD_STATUS_UNKNOWN)
+        if (god_known_status(i) == GOD_STATUS_UNKNOWN) {
             break;
+        }
+
         god_status* god = &city_data.religion.gods[i];
         god->target_mood = 50;
         god->mood = 50;
@@ -45,6 +50,7 @@ void city_gods_reset(void) {
         god->unused3 = 0;
         god->months_since_festival = 0;
     }
+
     city_data.religion.angry_message_delay = 0;
 }
 
@@ -56,6 +62,7 @@ static bool OSIRIS_locusts() {
     // TODO
     return 0;
 }
+
 static bool PTAH_warehouse_restock() {
     // fill warehouses with gems, clay, pottery, flax, linen, or jewelry
     e_resource resources[6]
@@ -65,10 +72,14 @@ static bool PTAH_warehouse_restock() {
     int lowest_stock_found = 10000;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID)
+        if (b->state != BUILDING_STATE_VALID) {
             continue;
-        if (b->type != BUILDING_STORAGE_YARD && b->type != 193)
+        }
+        
+        if (b->type != BUILDING_STORAGE_YARD && b->type != 193) {
             continue;
+        }
+        
         int total_stored = 0;
         for (int j = 0; j < 6; ++j)
             total_stored += building_storageyard_get_amount(b, resources[j]);
@@ -98,6 +109,7 @@ static bool PTAH_warehouse_restock() {
     } else
         return false;
 }
+
 static bool PTAH_industry_restock() {
     // restocks shipwrights, weavers and jewelers
     int industries[3] = {BUILDING_SHIPYARD, BUILDING_LINEN_WORKSHOP, BUILDING_JEWELS_WORKSHOP};
@@ -107,16 +119,18 @@ static bool PTAH_industry_restock() {
     int industries_found = 0;
     for (int i = 0; i < 6; ++i) {
         if (building_count_total(industries[i]) > 0
-            || (industry_resource[i] != -1 && building_count_industry_active(industry_resource[i]) > 0))
+            || (industry_resource[i] != -1 && building_count_industry_active(industry_resource[i]) > 0)) {
             industries_found++;
-        else
+        } else {
             industries[i] = 0;
+        }
     }
     if (industries_found == 0)
         return false;
 
     int randm = anti_scum_random_15bit() % industries_found;
     int industry = 0;
+
     for (int i = 0; i < 3; ++i) {
         if (industries[i] > 0) {
             if (industry++ == randm) {
@@ -124,8 +138,8 @@ static bool PTAH_industry_restock() {
                     building* b = building_get(j);
                     if (b->state != BUILDING_STATE_VALID || b->type != industries[i])
                         continue;
-                    if (b->stored_full_amount < 200)
-                        b->stored_full_amount = 200;
+
+                    b->stored_full_amount = std::clamp<short>(b->stored_full_amount, 200, 9999);
                 }
                 return true;
             }
@@ -159,27 +173,26 @@ static bool PTAH_warehouse_destruction() {
     map_routing_update_land();
     return true;
 }
+
 static bool PTAH_industry_destruction() {
     // destroys random industry, if found
-    int industries[6] = {BUILDING_GOLD_MINE,
-                         BUILDING_GEMSTONE_MINE,
-                         BUILDING_CLAY_PIT,
-                         BUILDING_SHIPYARD,
-                         BUILDING_LINEN_WORKSHOP,
-                         BUILDING_JEWELS_WORKSHOP};
+    int industries[6] = {BUILDING_GOLD_MINE, BUILDING_GEMSTONE_MINE, BUILDING_CLAY_PIT, BUILDING_SHIPYARD, BUILDING_LINEN_WORKSHOP, BUILDING_JEWELS_WORKSHOP};
     int industry_resource[6] = {RESOURCE_GOLD, RESOURCE_GEMS, RESOURCE_CLAY, -1, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
 
     // search for industries
     int industries_found = 0;
     for (int i = 0; i < 6; ++i) {
         if (building_count_total(industries[i]) > 0
-            || (industry_resource[i] != -1 && building_count_industry_active(industry_resource[i]) > 0))
+            || (industry_resource[i] != -1 && building_count_industry_active(industry_resource[i]) > 0)) {
             industries_found++;
-        else
+        } else {
             industries[i] = 0;
+        }
     }
-    if (industries_found == 0)
+
+    if (industries_found == 0) {
         return false;
+    }
 
     int randm = anti_scum_random_15bit() % industries_found;
     int industry = 0;
@@ -190,6 +203,7 @@ static bool PTAH_industry_destruction() {
                     building* b = building_get(j);
                     if (b->state != BUILDING_STATE_VALID)
                         continue;
+
                     if (b->type == industries[i]) {
                         building_destroy_by_fire(b);
                         //                        FUN_0046cf10((int)building_id,0);
@@ -229,10 +243,12 @@ static bool SETH_hailstorm() {
     //                }
     return 0;
 }
+
 static bool PTAH_frogs() {
     // TODO
     return 0;
 }
+
 static bool BAST_refill_houses_and_bazaar() {
     // TODO
     //            city_sentiment_change_happiness(25);
@@ -250,18 +266,15 @@ static bool BAST_refill_houses_and_bazaar() {
     return 0;
 }
 
-static void swap(int* A, int* B) {
-    int prevA = *A;
-    *A = *B;
-    *B = prevA;
-}
 static int compare(int A, int B) {
     auto hA = building_get(A)->subtype.house_level;
     auto hB = building_get(B)->subtype.house_level;
+
     if (hA < hB)
         return -1;
     else if (hA > hB)
         return 1;
+
     return 0;
 }
 static void rearrange_CHILD(int arr[20], int first, int last) {
@@ -278,10 +291,11 @@ static void rearrange_CHILD(int arr[20], int first, int last) {
                 A = B;
             B++;
         }
-        swap(&arr[A], &arr[last]);
+        std::swap(arr[A], arr[last]);
         last--;
     }
 }
+
 static void rearrange_dark_magic(int arr[20]) {
     auto DBG = (int(*)[20])arr;
 
@@ -298,7 +312,7 @@ static void rearrange_dark_magic(int arr[20]) {
 REDO:
     size = last - first + 1; // starts with 20
     if (size > 8) {
-        swap(&arr[first], &arr[size / 2]);
+        std::swap(arr[first], arr[size / 2]);
 
         A = first;
         B = last + 1;
@@ -321,10 +335,10 @@ REDO:
             if (A > B)
                 break;
             else // continue the loop
-                swap(&arr[A], &arr[B]);
+                std::swap(arr[A], arr[B]);
         }
 
-        swap(&arr[first], &arr[B]);
+        std::swap(arr[first], arr[B]);
         if (B - 1 - first < last - A) {
             if (A < last) {
                 cache_first[j] = A;
@@ -347,8 +361,10 @@ REDO:
                 goto REDO;
             }
         }
-    } else
+    } else {
         rearrange_CHILD(arr, first, last);
+    }
+
     j--;
     if (j < 0)
         return;
@@ -369,6 +385,7 @@ static bool BAST_houses_destruction() {
         else
             break; // found 20 houses, job done!
     }
+
     if (houses_found > 19) {
         rearrange_dark_magic(houses); // ???????????????
                                       //        FUN_00561c09(houses_array,20,4,&LAB_004c42d0);
@@ -395,6 +412,7 @@ static bool BAST_houses_destruction() {
             // didn't find any better houses, OR we filled the 20 houses completely AGAIN
         }
     }
+
     if (houses_found > 0) {
         for (int i = 0; i < houses_found; ++i) {
             if (houses[i] != 0)
@@ -405,6 +423,7 @@ static bool BAST_houses_destruction() {
     }
     return false;
 }
+
 static bool BAST_malaria_plague() {
     // TODO
     //            city_sentiment_set_max_happiness(50);
@@ -429,6 +448,8 @@ static void perform_major_blessing(int god) {
             city_message_post(true, MESSAGE_BLESSING_OSIRIS_FLOOD, 0, 0);
             return;
         }
+        break;
+
     case GOD_RA:
         if (anti_scum_random_bool()) {
             // exports sell for 150% profits for the next 12 months
@@ -441,6 +462,8 @@ static void perform_major_blessing(int god) {
             city_message_post(true, MESSAGE_BLESSING_RA_KINGDOM, 0, 0);
             return;
         }
+        break;
+
     case GOD_PTAH:
         // gems, clay, pottery, flax, linen, or jewelry in storage yards
         success = PTAH_warehouse_restock();
@@ -449,10 +472,12 @@ static void perform_major_blessing(int god) {
         else // no yard with such goods (and space) found
             city_message_post(true, MESSAGE_BLESSING_PTAH_NOEFFECT, 0, 0);
         return;
+
     case GOD_SETH:
         city_data.religion.seth_crush_enemy_troops = 10;
         city_message_post(true, MESSAGE_BLESSING_SETH, 0, 0);
         return;
+
     case GOD_BAST:
         // fills houses and bazaars
         BAST_refill_houses_and_bazaar();
@@ -460,6 +485,7 @@ static void perform_major_blessing(int god) {
         return;
     }
 }
+
 static void perform_minor_blessing(int god) {
     int randm = 0;
     switch (god) {
@@ -472,6 +498,7 @@ static void perform_minor_blessing(int god) {
         floodplains_adjust_next_quality(randm * 5 + 5);
         city_message_post(true, MESSAGE_SMALL_BLESSING_OSIRIS, 0, 0);
         break;
+
     case GOD_RA:
         if (anti_scum_random_bool()) {
             // slightly increased trading
@@ -484,16 +511,20 @@ static void perform_minor_blessing(int god) {
             city_ratings_change_kingdom(5);
             return;
         }
+        break;
+
     case GOD_PTAH:
         // restocks shipwrights, weavers and jewelers
         PTAH_industry_restock(); // <-- there is no message for when this fails.
         city_message_post(true, MESSAGE_SMALL_BLESSING_PTAH, 0, 0);
         return;
+
     case GOD_SETH:
         // protects soldiers far away
         city_data.religion.seth_protect_player_troops = 10;
         city_message_post(true, MESSAGE_SMALL_BLESSING_SETH, 0, 0);
         return;
+
     case GOD_BAST:
         // throws a festival for the other gods
         city_data.festival.planned.god = GOD_OSIRIS;
@@ -524,6 +555,8 @@ static void perform_major_curse(int god) {
             city_message_post(true, MESSAGE_CURSE_OSIRIS_2, 0, 0);
             return;
         }
+        break;
+
     case GOD_RA:
         if (anti_scum_random_15bit() % 3 == 0) {
             // lowers commerce prices
@@ -531,6 +564,7 @@ static void perform_major_curse(int god) {
             city_message_post(true, MESSAGE_CURSE_RA_2, 0, 0);
             return;
         }
+
         if (anti_scum_random_15bit() % 3 == 1) {
             // lowers reputation
             city_ratings_change_kingdom(-15);
@@ -541,6 +575,7 @@ static void perform_major_curse(int god) {
         city_data.religion.ra_no_traders_months_left = 12;
         city_message_post(true, MESSAGE_CURSE_RA_3, 0, 0);
         return;
+
     case GOD_PTAH:
         if (anti_scum_random_bool()) {
             // destroys some industrial buildings
@@ -556,6 +591,8 @@ static void perform_major_curse(int god) {
             city_message_post(true, MESSAGE_CURSE_PTAH_2, 0, 0);
             return;
         }
+        break;
+
     case GOD_SETH:
         if (anti_scum_random_bool()) {
             // destroys all ships
@@ -567,6 +604,8 @@ static void perform_major_curse(int god) {
             city_message_post(true, MESSAGE_CURSE_SETH_2, 0, 0);
             return;
         }
+        break;
+
     case GOD_BAST:
         // destroy some of the best houses
         BAST_houses_destruction();
@@ -593,6 +632,8 @@ static void perform_minor_curse(int god) {
             city_message_post(true, MESSAGE_SMALL_CURSE_OSIRIS, 0, 0);
             return;
         }
+        break;
+
     case GOD_RA:
         if (anti_scum_random_bool()) {
             // lowers amount of traded goods
@@ -605,22 +646,28 @@ static void perform_minor_curse(int god) {
             city_message_post(true, MESSAGE_SMALL_CURSE_RA_1, 0, 0);
             return;
         }
+        break;
+
     case GOD_PTAH:
         // destroys random storage yard
         success = PTAH_warehouse_destruction();
-        if (success)
+        if (success) {
             city_message_post(true, MESSAGE_SMALL_CURSE_PTAH, 0, 0);
-        else // no yard found
+        } else { // no yard found 
             city_message_post(true, MESSAGE_CURSE_PTAH_NOEFFECT, 0, 0);
+        }
         return;
+
     case GOD_SETH:
         // destroys the best fort
         success = SETH_fort_destruction();
-        if (success)
+        if (success) {
             city_message_post(true, MESSAGE_SMALL_CURSE_SETH, 0, 0);
-        else
+        } else {
             city_message_post(true, MESSAGE_CURSE_SETH_NOEFFECT, 0, 0);
+        }
         break;
+
     case GOD_BAST:
         // plague
         BAST_malaria_plague();
@@ -629,7 +676,7 @@ static void perform_minor_curse(int god) {
     }
 }
 
-void update_curses_and_blessings(int randm_god, int FORCE_EVENT) {
+void city_gods_update_curses_and_blessings(int randm_god, int FORCE_EVENT) {
     if (randm_god >= MAX_GODS) {
         if (city_gods_calculate_least_happy())
             randm_god = city_data.religion.least_happy_god - 1;
@@ -819,6 +866,7 @@ static void update_moods(int randm_god) {
             god->happy_ankhs = 50;
     }
 }
+
 static void update_monthly_data(int randm_god) {
     // update festival counter
     for (int i = 0; i < MAX_GODS; i++) {
@@ -827,7 +875,7 @@ static void update_monthly_data(int randm_god) {
     }
 
     // handle blessings, curses, etc every month
-    update_curses_and_blessings(randm_god);
+    city_gods_update_curses_and_blessings(randm_god);
 
     // post city message about the gods being angery
     int min_happiness = 100;
@@ -837,9 +885,10 @@ static void update_monthly_data(int randm_god) {
                 min_happiness = city_data.religion.gods[i].mood;
         }
     }
-    if (city_data.religion.angry_message_delay > 0)
+
+    if (city_data.religion.angry_message_delay > 0) {
         city_data.religion.angry_message_delay--;
-    else if (min_happiness < 30) { // message delay = 0 and there's a god with mood < 30
+    } else if (min_happiness < 30) { // message delay = 0 and there's a god with mood < 30
         city_data.religion.angry_message_delay = 20;
         if (min_happiness < 10)
             city_message_post(false, MESSAGE_GODS_WRATHFUL, 0, 0);
@@ -851,15 +900,20 @@ static void update_monthly_data(int randm_god) {
     // update status effects with limited durations
     if (city_data.religion.ra_slightly_increased_trading_months_left != -1)
         city_data.religion.ra_slightly_increased_trading_months_left--;
+
     if (city_data.religion.ra_harshly_reduced_trading_months_left != -1)
         city_data.religion.ra_harshly_reduced_trading_months_left--;
+
     if (city_data.religion.ra_slightly_reduced_trading_months_left != -1)
         city_data.religion.ra_slightly_reduced_trading_months_left--;
+
     if (city_data.religion.ra_150_export_profits_months_left != -1)
         city_data.religion.ra_150_export_profits_months_left--;
+
     if (city_data.religion.ra_no_traders_months_left != -1)
         city_data.religion.ra_no_traders_months_left--;
 }
+
 void city_gods_update(bool mood_calc_only) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Gods Update");
     calculate_mood_targets();
@@ -872,10 +926,12 @@ void city_gods_update(bool mood_calc_only) {
         //        BAST_houses_destruction();
 
         // at the start of every month
-        if (game_time_day() == 0)
+        if (game_time_day() == 0) {
             update_monthly_data(randm_god);
+        }
     }
 }
+
 bool city_gods_calculate_least_happy(void) {
     int max_god = 0;
     int max_wrath = 0;
@@ -883,6 +939,7 @@ bool city_gods_calculate_least_happy(void) {
     for (int i = 0; i < MAX_GODS; i++) {
         if (god_known_status(i) == GOD_STATUS_UNKNOWN)
             break;
+
         if (city_data.religion.gods[i].wrath_bolts > max_wrath) {
             max_god = i + 1;
             max_wrath = city_data.religion.gods[i].wrath_bolts;
@@ -905,31 +962,38 @@ bool city_gods_calculate_least_happy(void) {
     city_data.religion.least_happy_god = max_god;
     return max_god > 0;
 }
+
 int city_god_happiness(int god_id) {
     return city_data.religion.gods[god_id].mood;
 }
+
 int city_god_wrath_bolts(int god_id) {
     return city_data.religion.gods[god_id].wrath_bolts;
 }
+
 int city_god_happy_angels(int god_id) {
     return city_data.religion.gods[god_id].happy_ankhs;
 }
+
 int city_god_months_since_festival(int god_id) {
     return city_data.religion.gods[god_id].months_since_festival;
 }
+
 int city_god_least_happy(void) {
     return city_data.religion.least_happy_god - 1;
 }
 
-int city_god_spirit_of_mars_power(void) {
+int city_god_spirit_of_seth_power(void) {
     return city_data.religion.seth_crush_enemy_troops;
 }
-void city_god_spirit_of_mars_mark_used(void) {
+
+void city_god_spirit_of_seth_mark_used(void) {
     city_data.religion.seth_crush_enemy_troops = 0;
 }
-int city_god_neptune_create_shipwreck_flotsam(void) {
-    if (city_data.religion.neptune_sank_ships) {
-        city_data.religion.neptune_sank_ships = 0;
+
+int city_god_osiris_create_shipwreck_flotsam(void) {
+    if (city_data.religion.osiris_sank_ships) {
+        city_data.religion.osiris_sank_ships = 0;
         return 1;
     } else {
         return 0;

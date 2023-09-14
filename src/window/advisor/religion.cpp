@@ -33,20 +33,21 @@ static int focus_button_id;
 static int get_religion_advice(void) {
     int least_happy = city_god_least_happy();
     const house_demands* demands = city_houses_demands();
-    if (least_happy >= 0 && city_god_wrath_bolts(least_happy) > 4)
+    if (least_happy >= 0 && city_god_wrath_bolts(least_happy) > 4) {
         return 6 + least_happy;
-    else if (demands->religion == 1)
+    } else if (demands->religion == 1) {
         return demands->requiring.religion ? 1 : 0;
-    else if (demands->religion == 2)
+    } else if (demands->religion == 2) {
         return 2;
-    else if (demands->religion == 3)
+    } else if (demands->religion == 3) {
         return 3;
-    else if (!demands->requiring.religion)
+    } else if (!demands->requiring.religion) {
         return 4;
-    else if (least_happy >= 0)
+    } else if (least_happy >= 0) {
         return 6 + least_happy;
-    else
+    } else {
         return 5;
+    }
 }
 static int get_festival_advice(void) {
     int months_since_festival = city_festival_months_since_last();
@@ -72,9 +73,9 @@ static void draw_festival_info(int y_offset) {
     ImageDraw::img_generic(image_id_from_group(GROUP_PANEL_WINDOWS) + 15, 460, 255 + y_offset);
     //    lang_text_draw(58, 17, 52, 224 + y_offset, FONT_LARGE_BLACK);
 
-    int width
-      = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
+    int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(58, 15, 112 + width, 260 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
+
     if (city_festival_is_planned()) {
         int size = city_festival_selected_size();
         int months_left = city_festival_months_till_next();
@@ -121,23 +122,27 @@ static void draw_god_row(int god, int y_offset, int temple, int complex, int shr
         lang_text_draw_centered(59, 37, 390, y_offset, 50, font);
         lang_text_draw(59, 37, 460, y_offset, font);
     } else {
-        if (scenario_building_allowed(complex))
+        if (scenario_building_allowed(complex)) {
             text_draw_number_centered(building_count_active(complex), 200, y_offset, 50, font);
-        else
+        } else {
             lang_text_draw_centered(59, 37, 200, y_offset, 50, font);
+        }
         text_draw_number_centered(building_count_active(temple), 265, y_offset, 50, font);
         text_draw_number_centered(building_count_total(shrine), 330, y_offset, 50, font);
         text_draw_number_centered(city_god_months_since_festival(god), 390, y_offset, 50, font);
         width = lang_text_draw(59, 20 + city_god_happiness(god) / 10, 460, y_offset, font); // 32
     }
 
-    for (int i = 0; i < city_god_wrath_bolts(god) / 10; i++)
+    for (int i = 0; i < city_god_wrath_bolts(god) / 10; i++) {
         ImageDraw::img_generic(image_id_from_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
-    for (int i = 0; i < city_god_happy_angels(god) / 10; i++)
+    }
+
+    for (int i = 0; i < city_god_happy_angels(god) / 10; i++) {
         ImageDraw::img_generic(image_id_from_group(GROUP_GOD_ANGEL), 10 * i + width + 460, y_offset - 4);
+    }
 }
 
-static int draw_background(void) {
+static int draw_background() {
     int height_blocks;
     if (setting_gods_enabled()) {
         height_blocks = 27; // 17
@@ -184,13 +189,15 @@ static int draw_background(void) {
 
     return height_blocks;
 }
-static void draw_foreground(void) {
-    if (!city_festival_is_planned())
+static void draw_foreground() {
+    if (!city_festival_is_planned()) {
         button_border_draw(102, 280 + 68, 300, 20, focus_button_id == 1);
+    }
 }
 
 static void confirm_nothing(bool accepted) {
 }
+
 static void button_hold_festival(int param1, int param2) {
     if (!city_building_has_festival_square())
         return window_popup_dialog_show(POPUP_DIALOG_NO_FESTIVAL_SQUARE, confirm_nothing, e_popup_btns_ok);
@@ -202,14 +209,20 @@ static int handle_mouse(const mouse* m) {
     return generic_buttons_handle_mouse(m, 0, 0, hold_festival_button, 1, &focus_button_id);
 }
 static int get_tooltip_text(void) {
-    if (focus_button_id)
+    if (focus_button_id) {
         return 112;
-    else {
+    } else {
         return 0;
     }
 }
 
 const advisor_window_type* window_advisor_religion(void) {
-    static const advisor_window_type window = {draw_background, draw_foreground, handle_mouse, get_tooltip_text};
+    static const advisor_window_type window = {
+        draw_background, 
+        draw_foreground,
+        handle_mouse,
+        get_tooltip_text
+    };
+
     return &window;
 }

@@ -289,13 +289,13 @@ struct city_data_t {
         god_status gods[5];
         int32_t least_happy_god;
         int32_t angry_message_delay;
-        bool venus_curse_active;
+        bool bast_curse_active;
         int32_t ra_150_export_profits_months_left;
         int32_t ra_harshly_reduced_trading_months_left;
         int32_t ra_no_traders_months_left;
         int32_t ra_slightly_reduced_trading_months_left;
         int32_t ra_slightly_increased_trading_months_left;
-        int32_t neptune_sank_ships;
+        int32_t osiris_sank_ships;
         int32_t seth_crush_enemy_troops;
         int32_t seth_protect_player_troops;
         bool osiris_double_farm_yield;

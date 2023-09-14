@@ -380,8 +380,8 @@ int formation_enemy_move_formation_to(const formation* m, int x, int y, int* x_t
     return 0;
 }
 
-static void mars_kill_enemies(void) {
-    int to_kill = city_god_spirit_of_mars_power();
+static void seth_kill_enemies(void) {
+    int to_kill = city_god_spirit_of_seth_power();
     if (to_kill <= 0)
         return;
     int grid_offset = 0;
@@ -397,7 +397,7 @@ static void mars_kill_enemies(void) {
                 grid_offset = f->tile.grid_offset();
         }
     }
-    city_god_spirit_of_mars_mark_used();
+    city_god_spirit_of_seth_mark_used();
     city_message_post(true, MESSAGE_SPIRIT_OF_MARS, 0, grid_offset);
 }
 
@@ -495,12 +495,13 @@ static void update_enemy_movement(formation* m, int roman_distance) {
         }
     }
 
-    if (m->wait_ticks > 32)
-        mars_kill_enemies();
+    if (m->wait_ticks > 32) {
+        seth_kill_enemies();
+    }
 
-    if (halt)
+    if (halt) {
         formation_set_destination(m, m->x_home, m->y_home);
-    else if (pursue_target) {
+    } else if (pursue_target) {
         if (target_formation_id > 0) {
             const formation* target = formation_get(target_formation_id);
             if (target->num_figures > 0)

@@ -505,7 +505,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.granaries.not_operating_with_food);
     for (int i = 0; i < 2; i++)
         iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unused_44e0[i]);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.venus_curse_active);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.bast_curse_active);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unused_44ec);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.ra_150_export_profits_months_left);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.seth_crush_enemy_troops);
@@ -583,7 +583,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT32, &city_data.map.largest_road_networks[i].size);
     }
     iob->bind(BIND_SIGNATURE_INT32, &city_data.houses.missing.second_wine);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.neptune_sank_ships);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.osiris_sank_ships);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.entertainment.hippodrome_has_race);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.entertainment.hippodrome_message_shown);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.entertainment.colosseum_message_shown);

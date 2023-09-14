@@ -73,7 +73,7 @@ void figure::flotsam_action() {
         if (wait_ticks <= 0) {
             action_state = FIGURE_ACTION_129_FLOTSAM_FLOATING;
             wait_ticks = 0;
-            if (!resource_id && city_god_neptune_create_shipwreck_flotsam())
+            if (!resource_id && city_god_osiris_create_shipwreck_flotsam())
                 min_max_seen = 1;
 
             destination_tile = scenario_map_river_exit();
