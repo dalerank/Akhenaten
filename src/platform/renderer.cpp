@@ -927,12 +927,14 @@ cleanup:
 
 /////////
 
-std::vector<std::string> get_video_drivers() {
+std::vector<std::string> get_video_drivers(bool log) {
     SDL_RendererInfo info;
     std::vector<std::string> drivers;
     for (int k = 0; k < SDL_GetNumRenderDrivers(); k++) {
         SDL_GetRenderDriverInfo(k, &info);
-        logs::info("SDLGraficEngine: availabe render %s", info.name);
+        if (log) {
+            logs::info("SDLGraficEngine: available render %s", info.name);
+        }
         drivers.push_back(info.name);
     }
 
@@ -942,7 +944,7 @@ std::vector<std::string> get_video_drivers() {
 int platform_renderer_init(SDL_Window* window, std::string renderer) {
     auto &data = g_renderer_data;
 
-    auto drivers = get_video_drivers();
+    auto drivers = get_video_drivers(true);
 
     auto driver_it = std::find(drivers.begin(), drivers.end(), renderer);
     int driver_index = driver_it != drivers.end() ? std::distance(drivers.begin(), driver_it) : -1;

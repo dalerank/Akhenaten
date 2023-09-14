@@ -179,6 +179,7 @@ static void show_options_window(Arguments& args) {
     ImGuiFileDialog fileDialog;
     bool store_configuration = false;
 
+    auto video_drivers = get_video_drivers(false);
     for (bool done = false; !done;) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -260,7 +261,6 @@ static void show_options_window(Arguments& args) {
             {ImGui::BeginChild("DriverSection");
             ImGui::Text("Driver:");
             static int item_driver_current_idx = 0;
-            auto video_drivers = get_video_drivers();
             ImGui::BeginListBox("##drivers");
             int index = 0;
             for (auto it = video_drivers.begin(); it != video_drivers.end(); ++it, ++index) {
