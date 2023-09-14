@@ -127,9 +127,10 @@ static menu_item menu_debug[] = {
   {5, 6, menu_debug_change_opt, e_debug_show_floods},
   {5, 7, menu_debug_change_opt, e_debug_show_camera},
   {5, 8, menu_debug_change_opt, e_debug_show_tile_cache},
-  {5, 9, menu_debug_show_console, 0, false, "Show console"},
-  {5, 10, menu_debug_screenshot, 0, false, "Screenshot"},
-  {5, 11, menu_debug_full_screenshot, 0, false, "Full Screenshot"},
+  {5, 9, menu_debug_change_opt, e_debug_show_migration},
+  {5, 10, menu_debug_show_console, 0, false, "Show console"},
+  {5, 11, menu_debug_screenshot, 0, false, "Screenshot"},
+  {5, 12, menu_debug_full_screenshot, 0, false, "Full Screenshot"},
 };
 
 menu_bar_item g_top_menu[] = {
@@ -142,14 +143,15 @@ menu_bar_item g_top_menu[] = {
 
 static void menu_debug_opt_text(int opt, bool v) {
     static const char* debug_text[][2] = {
-      {"show_pages ON", "show_pages OFF"},
-      {"show_game_time ON", "show_game_time OFF"},
-      {"show_build_planner ON", "show_build_planner OFF"},
-      {"show_religion ON", "show_religion OFF"},
-      {"show_tutorial ON", "show_tutorial OFF"},
-      {"show_floods ON", "show_floods OFF"},
-      {"show_camera ON", "show_camera OFF"},
-      {"show_tile_cache ON", "show_tile_cache OFF"},
+      {"Pages ON", "Pages OFF"},
+      {"Game Time ON", "Game Time OFF"},
+      {"Build Planner ON", "Build Planner OFF"},
+      {"Religion ON", "Religion OFF"},
+      {"Tutorial ON", "Tutorial OFF"},
+      {"Floods ON", "Floods OFF"},
+      {"Camera ON", "Camera OFF"},
+      {"Tile Cache ON", "Tile Cache OFF"},
+      {"Migration ON", "Migration OFF"},
     };
     menu_update_text(g_top_menu[INDEX_DEBUG], opt, debug_text[opt][v ? 0 : 1]);
 }

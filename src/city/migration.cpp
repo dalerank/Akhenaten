@@ -8,21 +8,25 @@
 #include "game/tutorial.h"
 
 static void update_status(void) {
-    if (city_data.sentiment.value > 70)
-        city_data.migration.percentage = 100;
-    else if (city_data.sentiment.value > 60)
-        city_data.migration.percentage = 75;
-    else if (city_data.sentiment.value >= 50)
-        city_data.migration.percentage = 50;
-    else if (city_data.sentiment.value > 40)
-        city_data.migration.percentage = 0;
-    else if (city_data.sentiment.value > 30)
-        city_data.migration.percentage = -10;
-    else if (city_data.sentiment.value > 20)
-        city_data.migration.percentage = -25;
-    else {
-        city_data.migration.percentage = -50;
+    int percentage_by_sentiment = 0;
+    if (city_data.sentiment.value > 70) {
+        percentage_by_sentiment = 100;
+    } else if (city_data.sentiment.value > 60) {
+        percentage_by_sentiment = 75;
+    } else if (city_data.sentiment.value >= 50) {
+        percentage_by_sentiment = 50;
+    } else if (city_data.sentiment.value > 40) {
+        percentage_by_sentiment = 0;
+    } else if (city_data.sentiment.value > 30) {
+        percentage_by_sentiment = -10;
+    } else if (city_data.sentiment.value > 20) {
+        percentage_by_sentiment = -25;
+    } else {
+        percentage_by_sentiment = -50;
     }
+
+    city_data.migration.percentage_by_sentiment = percentage_by_sentiment;
+    city_data.migration.percentage = city_data.migration.percentage_by_sentiment;
 
     city_data.migration.immigration_amount_per_batch = 0;
     city_data.migration.emigration_amount_per_batch = 0;
@@ -30,11 +34,13 @@ static void update_status(void) {
     int population_cap = tutorial_get_population_cap(200000);
     if (city_data.population.population >= population_cap) {
         city_data.migration.percentage = 0;
+        city_data.migration.migration_cap = true;
         return;
     }
     // war scares immigrants away
     if (city_figures_total_invading_enemies() > 3 && city_data.migration.percentage > 0) {
         city_data.migration.percentage = 0;
+        city_data.migration.invading_cap = true;
         return;
     }
 
@@ -43,8 +49,7 @@ static void update_status(void) {
         if (city_data.migration.emigration_duration) {
             city_data.migration.emigration_duration--;
         } else {
-            city_data.migration.immigration_amount_per_batch
-              = calc_adjust_with_percentage(12, city_data.migration.percentage);
+            city_data.migration.immigration_amount_per_batch = calc_adjust_with_percentage(12, city_data.migration.percentage);
             city_data.migration.immigration_duration = 2;
         }
     } else if (city_data.migration.percentage < 0) {

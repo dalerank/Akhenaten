@@ -901,6 +901,26 @@ void draw_debug_ui(int x, int y) {
         y += 170;
     }
 
+    if (g_debug_show_opts[e_debug_show_migration]) {
+        int cl = 180;
+        debug_text(str, x, y + 1, cl, "invading_cap:", city_data.migration.invading_cap);
+        debug_text(str, x, y + 13, cl, "migration_cap:", city_data.migration.migration_cap);
+        debug_text(str, x, y + 25, cl, "percentage_by_sentiment:", city_data.migration.percentage_by_sentiment);
+        debug_text(str, x, y + 37, cl, "emigration_message_shown:", city_data.migration.emigration_message_shown);
+        debug_text(str, x, y + 49, cl, "newcomers:", city_data.migration.newcomers);
+        debug_text(str, x, y + 61, cl, "percentage:", city_data.migration.percentage);
+        debug_text(str, x, y + 73, cl, "no_immigration_cause:", city_data.migration.no_immigration_cause);
+        debug_text(str, x, y + 85, cl, "refused_immigrants_today:", city_data.migration.refused_immigrants_today);
+        debug_text(str, x, y + 97, cl, "emigrated_today:", city_data.migration.emigrated_today);
+        debug_text(str, x, y + 109, cl, "immigrated_today:", city_data.migration.immigrated_today);
+        debug_text(str, x, y + 121, cl, "emigration_queue_size:", city_data.migration.emigration_queue_size);
+        debug_text(str, x, y + 133, cl, "immigration_queue_size:", city_data.migration.immigration_queue_size);
+        debug_text(str, x, y + 145, cl, "immigration_duration:", city_data.migration.immigration_duration);
+        debug_text(str, x, y + 157, cl, "emigration_amount_per_batch:", city_data.migration.emigration_amount_per_batch);
+        debug_text(str, x, y + 169, cl, "emigration_duration:", city_data.migration.emigration_duration);
+        debug_text(str, x, y + 181, cl, "immigration_amount_per_batch:", city_data.migration.immigration_amount_per_batch);
+    }
+
     /////// FLOODS
     if (g_debug_show_opts[e_debug_show_floods]) {
         const auto& floods = floodplain_data();

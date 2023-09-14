@@ -32,7 +32,7 @@
 
 void city_gods_reset() {
     for (auto &god: city_data.religion.gods) {
-        god.type = e_god(std::distance(&god, city_data.religion.gods));
+        god.type = e_god(std::distance(city_data.religion.gods, &god));
         god.target_mood = 50;
         god.mood = 50;
         god.wrath_bolts = 0;

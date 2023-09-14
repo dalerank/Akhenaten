@@ -211,6 +211,9 @@ struct city_data_t {
         int32_t percentage;
         int32_t newcomers;
         int32_t emigration_message_shown;
+        int32_t percentage_by_sentiment;
+        bool migration_cap;
+        bool invading_cap;
     } migration;
     struct {
         int32_t value;
