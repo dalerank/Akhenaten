@@ -13,7 +13,13 @@ enum e_god {
     GOD_UNKNOWN = MAX_GODS
 };
 
-struct god_status {
+enum e_god_status {
+    GOD_STATUS_UNKNOWN = 0,
+    GOD_STATUS_KNOWN = 1,
+    GOD_STATUS_PATRON = 2
+};
+
+struct god_state {
     e_god type;
     uint8_t mood;
     uint8_t target_mood;
@@ -25,7 +31,7 @@ struct god_status {
     int8_t unused1;
     int8_t unused2;
     int8_t unused3;
-    bool is_known;
+    e_god_status is_known;
 } ;
 
 enum e_god_event {
@@ -33,12 +39,6 @@ enum e_god_event {
     GOD_EVENT_MINOR_BLESSING = 2,
     GOD_EVENT_MAJOR_CURSE = 3,
     GOD_EVENT_MINOR_CURSE = 4
-};
-
-enum e_god_status {
-    GOD_STATUS_UNKNOWN = 0,
-    GOD_STATUS_KNOWN = 1,
-    GOD_STATUS_PATRON = 2
 };
 
 template<typename ...Args>
@@ -49,13 +49,13 @@ inline int make_gods_mask(Args... args) {
     return mask;
 }
 
-svector<god_status *, MAX_GODS> city_gods_knowns();
+svector<god_state *, MAX_GODS> city_gods_knowns();
 
 inline bool city_gods_is_available(int mask, e_god g) { int god_mask = (1 << g); return ((mask & god_mask) == god_mask); }
 
 void city_gods_reset();
 
-bool city_gods_is_known(e_god god);
+e_god_status city_gods_is_known(e_god god);
 
 void city_gods_update_curses_and_blessings(int randm_god, int FORCE_EVENT = -1);
 

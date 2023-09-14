@@ -49,7 +49,7 @@ int city_culture_coverage_average_entertainment(void) {
     return (g_coverage.hippodrome + g_coverage.colosseum + g_coverage.amphitheater + g_coverage.booth) / 4;
 }
 
-int city_culture_coverage_religion(int god) {
+int city_culture_coverage_religion(e_god god) {
     return g_coverage.religion[god];
 }
 

@@ -272,7 +272,7 @@ struct city_data_t {
         int32_t religion_coverage;
     } culture;
     struct {
-        god_status gods[MAX_GODS];
+        god_state gods[MAX_GODS];
         int32_t least_happy_god;
         int32_t angry_message_delay;
         bool bast_curse_active;

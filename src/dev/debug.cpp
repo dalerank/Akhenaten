@@ -842,7 +842,7 @@ void draw_debug_ui(int x, int y) {
             debug_text(str, x + c3, y + 15, cl, "", building_count_total(BUILDING_SHRINE_OSIRIS));
             debug_text(str, x + c4, y + 15, cl, "", building_count_active(BUILDING_TEMPLE_OSIRIS));
             debug_text(str, x + c5, y + 15, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_OSIRIS));
-            debug_text(str, x + c6, y + 15, c7, "%", city_culture_coverage_religion(0));
+            debug_text(str, x + c6, y + 15, c7, "%", city_culture_coverage_religion(GOD_OSIRIS));
             debug_text(str, x + c8, y + 15, cl, "", city_data.religion.gods[0].months_since_festival);
         }
 
@@ -852,7 +852,7 @@ void draw_debug_ui(int x, int y) {
             debug_text(str, x + c3, y + 25, cl, "", building_count_total(BUILDING_SHRINE_RA));
             debug_text(str, x + c4, y + 25, cl, "", building_count_active(BUILDING_TEMPLE_RA));
             debug_text(str, x + c5, y + 25, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_RA));
-            debug_text(str, x + c6, y + 25, c7, "%", city_culture_coverage_religion(1));
+            debug_text(str, x + c6, y + 25, c7, "%", city_culture_coverage_religion(GOD_RA));
             debug_text(str, x + c8, y + 25, cl, "", city_data.religion.gods[1].months_since_festival);
         }
 
@@ -862,7 +862,7 @@ void draw_debug_ui(int x, int y) {
             debug_text(str, x + c3, y + 35, cl, "", building_count_total(BUILDING_SHRINE_PTAH));
             debug_text(str, x + c4, y + 35, cl, "", building_count_active(BUILDING_TEMPLE_PTAH));
             debug_text(str, x + c5, y + 35, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_PTAH));
-            debug_text(str, x + c6, y + 35, c7, "%", city_culture_coverage_religion(2));
+            debug_text(str, x + c6, y + 35, c7, "%", city_culture_coverage_religion(GOD_PTAH));
             debug_text(str, x + c8, y + 35, cl, "", city_data.religion.gods[2].months_since_festival);
         }
 
@@ -872,7 +872,7 @@ void draw_debug_ui(int x, int y) {
             debug_text(str, x + c3, y + 45, cl, "", building_count_total(BUILDING_SHRINE_SETH));
             debug_text(str, x + c4, y + 45, cl, "", building_count_active(BUILDING_TEMPLE_SETH));
             debug_text(str, x + c5, y + 45, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_SETH));
-            debug_text(str, x + c6, y + 45, c7, "%", city_culture_coverage_religion(3));
+            debug_text(str, x + c6, y + 45, c7, "%", city_culture_coverage_religion(GOD_SETH));
             debug_text(str, x + c8, y + 45, cl, "", city_data.religion.gods[3].months_since_festival);
         }
 
@@ -882,7 +882,7 @@ void draw_debug_ui(int x, int y) {
             debug_text(str, x + c3, y + 55, cl, "", building_count_total(BUILDING_SHRINE_BAST));
             debug_text(str, x + c4, y + 55, cl, "", building_count_active(BUILDING_TEMPLE_BAST));
             debug_text(str, x + c5, y + 55, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_BAST));
-            debug_text(str, x + c6, y + 55, c7, "%", city_culture_coverage_religion(4));
+            debug_text(str, x + c6, y + 55, c7, "%", city_culture_coverage_religion(GOD_BAST));
             debug_text(str, x + c8, y + 55, cl, "", city_data.religion.gods[4].months_since_festival);
         }
 

@@ -42,23 +42,23 @@ void city_gods_reset() {
         god.unused2 = 0;
         god.unused3 = 0;
         god.months_since_festival = 0;
-        god.is_known = false;
+        god.is_known = GOD_STATUS_UNKNOWN;
     }
 
     city_data.religion.angry_message_delay = 0;
 }
 
-svector<god_status*, MAX_GODS> city_gods_knowns() {
-    svector<god_status*, MAX_GODS> gods;
+svector<god_state*, MAX_GODS> city_gods_knowns() {
+    svector<god_state*, MAX_GODS> gods;
     for (int i = 0; i < MAX_GODS; i++) {
-        if (city_gods_is_known((e_god)i) == GOD_STATUS_UNKNOWN) {
+        if (city_gods_is_known((e_god)i) != GOD_STATUS_UNKNOWN) {
             gods.push_back(&city_data.religion.gods[i]);
         }
     }
     return gods;
 }
 
-bool city_gods_is_known(e_god god) {
+e_god_status city_gods_is_known(e_god god) {
     return city_data.religion.gods[god].is_known;
 }
 
@@ -375,6 +375,7 @@ REDO:
     last = cache_last[j];
     goto REDO;
 }
+
 static bool BAST_houses_destruction() {
     int houses[20] = {0};
     int houses_found = 0;
@@ -616,6 +617,7 @@ static void perform_major_curse(int god) {
         return;
     }
 }
+
 static void perform_minor_curse(int god) {
     bool success = false;
     switch (god) {
@@ -687,7 +689,7 @@ void city_gods_update_curses_and_blessings(int randm_god, int FORCE_EVENT) {
 
     // perform curses/blessings
     if (randm_god < MAX_GODS) {
-        god_status* god = &city_data.religion.gods[randm_god];
+        god_state* god = &city_data.religion.gods[randm_god];
 
         if (FORCE_EVENT == GOD_EVENT_MAJOR_BLESSING
             || (FORCE_EVENT == -1 && god->happy_ankhs == 50 && god->months_since_festival < 15)) {
@@ -719,17 +721,18 @@ void city_gods_update_curses_and_blessings(int randm_god, int FORCE_EVENT) {
 
 static void calculate_mood_targets() {
     // fix god moods to 30 if campaign has not unlocked them yet
-    if (scenario_is_custom() == 0 && tutorial_flags_struct()->tutorial_2.gold_mined_500 == 0) {
-        for (int i = 0; i < MAX_GODS; i++) {
-            city_data.religion.gods[i].target_mood = 30;
-            city_data.religion.gods[i].mood = 30;
+    // TODO: move this option to city_data.gods_available
+    if (scenario_campaign_scenario_id() < 4) {
+        for (auto *god: city_gods_knowns()) {
+            god->target_mood = 30;
+            god->mood = 30;
         }
         return;
     }
 
     // base happiness: percentage of houses covered
-    for (int i = 0; i < MAX_GODS; i++) {
-        city_data.religion.gods[i].target_mood = city_culture_coverage_religion(i);
+    for (auto *god: city_gods_knowns()) {
+        god->target_mood = city_culture_coverage_religion(god->type);
     }
 
     int max_temples = 0;
@@ -814,7 +817,7 @@ static void update_moods(e_god randm_god) {
     // update anger/happiness/bolt icons/etc.
     int difficulty = setting_difficulty();
     if (city_gods_is_known(randm_god) != GOD_STATUS_UNKNOWN) { // OG code checks "randm_god < MAX_GODS" which is redundant.
-        god_status* god = &city_data.religion.gods[randm_god];
+        god_state* god = &city_data.religion.gods[randm_god];
         if (god->mood > 50)
             god->wrath_bolts = 0;
 
