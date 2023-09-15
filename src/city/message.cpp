@@ -106,6 +106,7 @@ static int new_message_id(void) {
     }
     return -1;
 }
+
 static int has_video(int text_id) {
     const lang_message* msg = lang_get_message(text_id);
     if (!msg->video.text)
@@ -115,6 +116,7 @@ static int has_video(int text_id) {
     encoding_to_utf8(msg->video.text, video_file, MAX_FILE_NAME, 0);
     return file_exists(video_file, MAY_BE_LOCALIZED);
 }
+
 static void enqueue_message(int sequence) {
     auto& data = g_message_data;
     for (int i = 0; i < MAX_QUEUE; i++) {
@@ -124,10 +126,11 @@ static void enqueue_message(int sequence) {
         }
     }
 }
+
 static void play_sound(int text_id) {
-    if (lang_get_message(text_id)->urgent == 1)
+    if (lang_get_message(text_id)->urgent == 1) {
         sound_effect_play(SOUND_EFFECT_FANFARE_URGENT);
-    else {
+    } else {
         sound_effect_play(SOUND_EFFECT_FANFARE);
     }
 }
@@ -148,12 +151,13 @@ static void show_message_popup(int message_id) {
 void city_message_disable_sound_for_next_message(void) {
     should_play_sound = false;
 }
+
 void city_message_apply_sound_interval(int category) {
     auto& data = g_message_data;
     time_millis now = time_get_millis();
-    if (now - data.last_sound_time[category] <= 15000)
+    if (now - data.last_sound_time[category] <= 15000) {
         city_message_disable_sound_for_next_message();
-    else {
+    } else {
         data.last_sound_time[category] = now;
     }
 }
@@ -266,9 +270,9 @@ void city_message_post(bool use_popup, int message_id, int param1, int param2) {
 
 void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2) {
     auto& data = g_message_data;
-    int use_popup = 0;
+    int use_popup = false;
     if (data.message_delay[category] <= 0) {
-        use_popup = 1;
+        use_popup = true;
         data.message_delay[category] = 12;
     }
     city_message_post(use_popup, message_type, param1, param2);
@@ -280,9 +284,9 @@ void city_message_post_with_message_delay(int category, int use_popup, int messa
     if (category == MESSAGE_CAT_FISHING_BLOCKED || category == MESSAGE_CAT_NO_WORKING_DOCK) {
         // bug in the original game: delays for 'fishing blocked' and 'no working dock'
         // are stored in message_count with manual countdown
-        if (data.message_count[category] > 0)
+        if (data.message_count[category] > 0) {
             data.message_count[category]--;
-        else {
+        } else {
             data.message_count[category] = delay;
             city_message_post(use_popup, message_type, 0, 0);
         }
@@ -420,6 +424,7 @@ void city_message_decrease_delays(void) {
             data.message_delay[i]--;
     }
 }
+
 int city_message_mark_population_shown(int population) {
     auto& data = g_message_data;
     int* field;
@@ -465,14 +470,17 @@ const city_message* city_message_get(int message_id) {
     auto& data = g_message_data;
     return &data.messages[message_id];
 }
+
 int city_message_set_current(int message_id) {
     auto& data = g_message_data;
     return data.current_message_id = message_id;
 }
+
 void city_message_mark_read(int message_id) {
     auto& data = g_message_data;
     data.messages[message_id].is_read = 1;
 }
+
 void city_message_delete(int message_id) {
     auto& data = g_message_data;
     data.messages[message_id].MM_text_id = 0;
