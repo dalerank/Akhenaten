@@ -77,4 +77,5 @@ void city_god_spirit_of_seth_mark_used();
 
 int city_god_osiris_create_shipwreck_flotsam(void);
 
-void city_god_blessing_cheat(int god_id);
+void city_god_blessing_cheat(e_god god_id);
+void city_god_upset_cheat(e_god god_id);

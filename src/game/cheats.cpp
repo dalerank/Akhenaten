@@ -31,6 +31,7 @@ static void game_cheat_cast_blessing(uint8_t*);
 static void game_cheat_show_tooltip(uint8_t*);
 static void game_cheat_kill_all(uint8_t*);
 static void game_cheat_victory(uint8_t*);
+static void game_cheat_cast_upset(uint8_t*);
 
 using cheat_command = void(uint8_t* args);
 
@@ -43,6 +44,7 @@ static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_mo
                                                   {"startinvasion", game_cheat_start_invasion},
                                                   {"nextyear", game_cheat_advance_year},
                                                   {"blessing", game_cheat_cast_blessing},
+                                                  {"godupset", game_cheat_cast_upset},
                                                   {"showtooltip", game_cheat_show_tooltip},
                                                   {"killall", game_cheat_kill_all},
                                                   {"victory", game_cheat_victory}};
@@ -153,9 +155,17 @@ static void game_cheat_advance_year(uint8_t* args) {
 static void game_cheat_cast_blessing(uint8_t* args) {
     int god_id = 0;
     parse_integer(args, &god_id);
-    city_god_blessing_cheat(god_id);
+    city_god_blessing_cheat((e_god)god_id);
 
     city_warning_show_console((uint8_t*)"Casted blessing");
+}
+
+static void game_cheat_cast_upset(uint8_t* args) {
+    int god_id = 0;
+    parse_integer(args, &god_id);
+    city_god_upset_cheat((e_god)god_id);
+
+    city_warning_show_console((uint8_t*)"Casted upset");
 }
 
 static void game_cheat_show_tooltip(uint8_t* args) {

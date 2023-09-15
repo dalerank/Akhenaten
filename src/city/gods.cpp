@@ -437,7 +437,7 @@ static bool BAST_malaria_plague() {
     return 0;
 }
 
-static void perform_major_blessing(int god) {
+static void perform_major_blessing(e_god god) {
     bool success = false;
     switch (god) {
     case GOD_OSIRIS:
@@ -618,7 +618,7 @@ static void perform_major_curse(int god) {
     }
 }
 
-static void perform_minor_curse(int god) {
+static void perform_minor_curse(e_god god) {
     bool success = false;
     switch (god) {
     case GOD_OSIRIS:
@@ -631,8 +631,9 @@ static void perform_minor_curse(int god) {
             // lower quality flood
             int randm = anti_scum_random_15bit();
             randm = randm & 0x80000003;
-            if ((int)randm < 0)
+            if ((int)randm < 0) {
                 randm = (randm - 1 | 0xfffffffc) + 1;
+            }
             floodplains_adjust_next_quality((-1 - randm) * 5);
             city_message_post(true, MESSAGE_SMALL_CURSE_OSIRIS, 0, 0);
             return;
@@ -694,7 +695,7 @@ void city_gods_update_curses_and_blessings(int randm_god, int FORCE_EVENT) {
         if (FORCE_EVENT == GOD_EVENT_MAJOR_BLESSING
             || (FORCE_EVENT == -1 && god->happy_ankhs == 50 && god->months_since_festival < 15)) {
             /* ***** MAJOR BLESSINGS ***** */
-            perform_major_blessing(randm_god);
+            perform_major_blessing((e_god)randm_god);
             god->happy_ankhs = 0;
             god->mood = calc_bound(god->mood - 30, 0, 100);
         } else if (FORCE_EVENT == GOD_EVENT_MINOR_BLESSING
@@ -712,7 +713,7 @@ void city_gods_update_curses_and_blessings(int randm_god, int FORCE_EVENT) {
         } else if (FORCE_EVENT == GOD_EVENT_MINOR_CURSE
                    || (FORCE_EVENT == -1 && god->wrath_bolts > 19 && god->months_since_festival > 3)) {
             /* ***** MINOR CURSES ***** */
-            perform_minor_curse(randm_god);
+            perform_minor_curse((e_god)randm_god);
             god->wrath_bolts = 0;
             god->mood = calc_bound(god->mood + 12, 0, 100);
         }
@@ -989,6 +990,10 @@ int city_god_osiris_create_shipwreck_flotsam(void) {
     }
 }
 
-void city_god_blessing_cheat(int god_id) {
+void city_god_blessing_cheat(e_god god_id) {
     perform_major_blessing(god_id);
+}
+
+void city_god_upset_cheat(e_god god_id) {
+    perform_minor_curse(god_id);
 }
