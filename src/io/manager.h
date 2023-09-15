@@ -1,5 +1,4 @@
-#ifndef OZYMANDIAS_MANAGER_H
-#define OZYMANDIAS_MANAGER_H
+#pragma once
 
 #include "core/buffer.h"
 #include "io/file.h"
@@ -65,5 +64,3 @@ public:
 };
 
 extern FileIOManager FILEIO;
-
-#endif // OZYMANDIAS_MANAGER_H

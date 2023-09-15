@@ -395,7 +395,7 @@ struct fps_data_t {
 fps_data_t g_fps = {0, 0, 0};
 
 static void run_and_draw() {
-    OZZY_PROFILER_FRAME();
+    OZZY_PROFILER_FRAME(x);
     time_millis time_before_run = SDL_GetTicks();
     time_set_millis(time_before_run);
 
@@ -420,12 +420,9 @@ static void run_and_draw() {
         int y_offset = screen_height() - 24;
         int y_offset_text = y_offset + 5;
  
-        text_draw_number_colored(g_fps.last_fps, 
-                                    'f', "", 5, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
-        text_draw_number_colored(time_between_run_and_draw - time_before_run, 
-                                    'g', "", 40, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
-        text_draw_number_colored(time_after_draw - time_between_run_and_draw,
-                                    'd', "", 70, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
+        text_draw_number_colored(g_fps.last_fps, 'f', "", 5, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
+        text_draw_number_colored(time_between_run_and_draw - time_before_run, 'g', "", 40, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
+        text_draw_number_colored(time_after_draw - time_between_run_and_draw, 'd', "", 70, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
     }
 
     platform_renderer_render();
