@@ -243,8 +243,7 @@ static void button_message(int param1, int param2) {
     if (id < city_message_count()) {
         const city_message* msg = city_message_get(id);
         city_message_mark_read(id);
-        window_message_dialog_show_city_message(
-          msg->MM_text_id, id, msg->year, msg->month, msg->param1, msg->param2, msg->MM_text_id, 0);
+        window_message_dialog_show_city_message(msg->MM_text_id, id, msg->year, msg->month, msg->param1, msg->param2, msg->MM_text_id, 0);
     }
 }
 static void button_delete(int id_to_delete, int param2) {

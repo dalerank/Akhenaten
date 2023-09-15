@@ -23,6 +23,7 @@ enum e_message_dialog_type {
     MESSAGE_DIALOG_ADVISOR_CHIEF = 31,
     MESSAGE_DIALOG_EMPIRE_MAP = 32,
     MESSAGE_DIALOG_MESSAGES = 34,
+    MESSAGE_DIALOG_GOD_UPSET = 35,
     MESSAGE_DIALOG_INDUSTRY = 46,
     MESSAGE_DIALOG_THEFT = 251,
     MESSAGE_DIALOG_EDITOR_ABOUT = 331,
@@ -38,11 +39,4 @@ void text_fill_in_tags(const uint8_t* src, uint8_t* dst, text_tag_substitution* 
 
 void window_message_dialog_show(int text_id, int message_id, void (*background_callback)(void));
 
-void window_message_dialog_show_city_message(int text_id,
-                                             int message_id,
-                                             int year,
-                                             int month,
-                                             int param1,
-                                             int param2,
-                                             int message_advisor,
-                                             int use_popup);
+void window_message_dialog_show_city_message(int text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup);

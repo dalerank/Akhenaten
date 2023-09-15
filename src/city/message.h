@@ -1,9 +1,6 @@
-#ifndef CITY_MESSAGE_H
-#define CITY_MESSAGE_H
+#pragma once
 
-#include "core/buffer.h"
-
-enum {
+enum e_mesage_category {
     MESSAGE_CAT_RIOT = 0,
     MESSAGE_CAT_FIRE = 1,
     MESSAGE_CAT_COLLAPSE = 2,
@@ -15,7 +12,7 @@ enum {
     MESSAGE_CAT_FISHING_BLOCKED = 11,
 };
 
-enum {
+enum e_message_advisor {
     MESSAGE_ADVISOR_NONE = 0,
     MESSAGE_ADVISOR_LABOR = 1,
     MESSAGE_ADVISOR_TRADE = 2,
@@ -26,7 +23,7 @@ enum {
     MESSAGE_ADVISOR_RELIGION = 7,
 };
 
-enum {
+enum e_message_type {
     MESSAGE_POPULATION_500 = 2,
     MESSAGE_POPULATION_1000 = 3,
     MESSAGE_POPULATION_2000 = 4,
@@ -266,7 +263,7 @@ enum {
     MESSAGE_FLOOD_PERFECT = 349 - 99,
 };
 
-typedef struct {
+struct city_message {
     int sequence;
     int MM_text_id;
     int year;
@@ -293,10 +290,9 @@ typedef struct {
     int req_amount_past;
     int req_resource_past;
     int unk_11a_i8;
-    int unk_11b_i8;
+    int god;
     int unk_12;
-
-} city_message;
+};
 
 void city_message_init_scenario(void);
 void city_message_init_problem_areas(void);
@@ -304,16 +300,9 @@ void city_message_init_problem_areas(void);
 void city_message_disable_sound_for_next_message(void);
 void city_message_apply_sound_interval(int category);
 
-void city_message_post_full(bool use_popup,
-                            int template_id,
-                            int event_id,
-                            int parent_event_id,
-                            int title_id,
-                            int body_id,
-                            int phrase_id,
-                            int param1,
-                            int param2);
+void city_message_post_full(bool use_popup, int template_id, int event_id, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2);
 void city_message_post(bool use_popup, int message_id, int param1, int param2);
+void city_message_god_post(int god, bool use_popup, int message_id, int param1, int param2);
 void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2);
 void city_message_post_with_message_delay(int category, int use_popup, int message_type, int delay);
 
@@ -343,5 +332,3 @@ int city_message_next_problem_area_grid_offset(void);
 void city_message_clear_scroll(void);
 int city_message_scroll_position(void);
 void city_message_set_scroll_position(int scroll_position);
-
-#endif // CITY_MESSAGE_H

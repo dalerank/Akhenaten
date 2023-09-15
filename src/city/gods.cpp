@@ -444,12 +444,12 @@ static void perform_major_blessing(e_god god) {
         if (anti_scum_random_bool()) {
             // double farm yields
             city_data.religion.osiris_double_farm_yield = true;
-            city_message_post(true, MESSAGE_BLESSING_OSIRIS_FARMS, 0, 0);
+            city_message_god_post(GOD_OSIRIS, true, MESSAGE_BLESSING_OSIRIS_FARMS, 0, 0);
             return;
         } else {
             // better next flood quality
             floodplains_adjust_next_quality((anti_scum_random_15bit() % 3 * 5 + 10) * 2);
-            city_message_post(true, MESSAGE_BLESSING_OSIRIS_FLOOD, 0, 0);
+            city_message_god_post(GOD_OSIRIS, true, MESSAGE_BLESSING_OSIRIS_FLOOD, 0, 0);
             return;
         }
         break;
@@ -458,12 +458,12 @@ static void perform_major_blessing(e_god god) {
         if (anti_scum_random_bool()) {
             // exports sell for 150% profits for the next 12 months
             city_data.religion.ra_150_export_profits_months_left = 12;
-            city_message_post(true, MESSAGE_BLESSING_RA_EXPORTS, 0, 0);
+            city_message_god_post(GOD_RA, true, MESSAGE_BLESSING_RA_EXPORTS, 0, 0);
             return;
         } else {
             // increased kingdom by 15
             city_ratings_change_kingdom(15);
-            city_message_post(true, MESSAGE_BLESSING_RA_KINGDOM, 0, 0);
+            city_message_god_post(GOD_RA, true, MESSAGE_BLESSING_RA_KINGDOM, 0, 0);
             return;
         }
         break;
@@ -472,20 +472,20 @@ static void perform_major_blessing(e_god god) {
         // gems, clay, pottery, flax, linen, or jewelry in storage yards
         success = PTAH_warehouse_restock();
         if (success)
-            city_message_post(true, MESSAGE_BLESSING_PTAH, 0, 0);
+            city_message_god_post(GOD_PTAH, true, MESSAGE_BLESSING_PTAH, 0, 0);
         else // no yard with such goods (and space) found
-            city_message_post(true, MESSAGE_BLESSING_PTAH_NOEFFECT, 0, 0);
+            city_message_god_post(GOD_PTAH, true, MESSAGE_BLESSING_PTAH_NOEFFECT, 0, 0);
         return;
 
     case GOD_SETH:
         city_data.religion.seth_crush_enemy_troops = 10;
-        city_message_post(true, MESSAGE_BLESSING_SETH, 0, 0);
+        city_message_god_post(GOD_SETH, true, MESSAGE_BLESSING_SETH, 0, 0);
         return;
 
     case GOD_BAST:
         // fills houses and bazaars
         BAST_refill_houses_and_bazaar();
-        city_message_post(true, MESSAGE_BLESSING_BAST, 0, 0);
+        city_message_god_post(GOD_BAST, true, MESSAGE_BLESSING_BAST, 0, 0);
         return;
     }
 }
@@ -625,7 +625,7 @@ static void perform_minor_curse(e_god god) {
         if (anti_scum_random_bool()) {
             // next flood will destroys farms
             city_data.religion.osiris_flood_will_destroy_active = 1;
-            city_message_post(true, MESSAGE_SMALL_CURSE_OSIRIS, 0, 0);
+            city_message_god_post(GOD_OSIRIS, true, MESSAGE_SMALL_CURSE_OSIRIS, 0, 0);
             return;
         } else {
             // lower quality flood
@@ -635,7 +635,7 @@ static void perform_minor_curse(e_god god) {
                 randm = (randm - 1 | 0xfffffffc) + 1;
             }
             floodplains_adjust_next_quality((-1 - randm) * 5);
-            city_message_post(true, MESSAGE_SMALL_CURSE_OSIRIS, 0, 0);
+            city_message_god_post(GOD_OSIRIS, true, MESSAGE_SMALL_CURSE_OSIRIS, 0, 0);
             return;
         }
         break;
@@ -644,12 +644,12 @@ static void perform_minor_curse(e_god god) {
         if (anti_scum_random_bool()) {
             // lowers amount of traded goods
             city_data.religion.ra_slightly_reduced_trading_months_left = 12;
-            city_message_post(true, MESSAGE_SMALL_CURSE_RA_2, 0, 0);
+            city_message_god_post(GOD_RA, true, MESSAGE_SMALL_CURSE_RA_2, 0, 0);
             return;
         } else {
             // lowers reputation
             city_ratings_change_kingdom(-5);
-            city_message_post(true, MESSAGE_SMALL_CURSE_RA_1, 0, 0);
+            city_message_god_post(GOD_RA, true, MESSAGE_SMALL_CURSE_RA_1, 0, 0);
             return;
         }
         break;
@@ -658,9 +658,9 @@ static void perform_minor_curse(e_god god) {
         // destroys random storage yard
         success = PTAH_warehouse_destruction();
         if (success) {
-            city_message_post(true, MESSAGE_SMALL_CURSE_PTAH, 0, 0);
+            city_message_god_post(GOD_PTAH, true, MESSAGE_SMALL_CURSE_PTAH, 0, 0);
         } else { // no yard found 
-            city_message_post(true, MESSAGE_CURSE_PTAH_NOEFFECT, 0, 0);
+            city_message_god_post(GOD_PTAH, true, MESSAGE_CURSE_PTAH_NOEFFECT, 0, 0);
         }
         return;
 
@@ -668,16 +668,16 @@ static void perform_minor_curse(e_god god) {
         // destroys the best fort
         success = SETH_fort_destruction();
         if (success) {
-            city_message_post(true, MESSAGE_SMALL_CURSE_SETH, 0, 0);
+            city_message_god_post(GOD_SETH, true, MESSAGE_SMALL_CURSE_SETH, 0, 0);
         } else {
-            city_message_post(true, MESSAGE_CURSE_SETH_NOEFFECT, 0, 0);
+            city_message_god_post(GOD_SETH, true, MESSAGE_CURSE_SETH_NOEFFECT, 0, 0);
         }
         break;
 
     case GOD_BAST:
         // plague
         BAST_malaria_plague();
-        city_message_post(true, MESSAGE_SMALL_CURSE_BAST, 0, 0);
+        city_message_god_post(GOD_BAST, true, MESSAGE_SMALL_CURSE_BAST, 0, 0);
         break;
     }
 }

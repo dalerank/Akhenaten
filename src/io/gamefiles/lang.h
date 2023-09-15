@@ -10,12 +10,17 @@
 /**
  * Type
  */
-enum { TYPE_MANUAL = 0, TYPE_ABOUT = 1, TYPE_MESSAGE = 2, TYPE_MISSION = 3 };
+enum { 
+    TYPE_MANUAL = 0,
+    TYPE_ABOUT = 1,
+    TYPE_MESSAGE = 2,
+    TYPE_MISSION = 3
+};
 
 /**
  * Message type
  */
-enum e_message_type {
+enum e_message_category {
     MESSAGE_TYPE_GENERAL = 0,
     MESSAGE_TYPE_DISASTER = 1,
     MESSAGE_TYPE_IMPERIAL = 2,

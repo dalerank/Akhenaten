@@ -641,8 +641,11 @@ static void draw_texture_advanced(const image_t *img, float x, float y, color co
         return;
     }
 
-    SDL_Texture *texture = img->atlas.p_atlas->texture;
+    if (!img->atlas.p_atlas) {
+        return;
+    }
 
+    SDL_Texture *texture = img->atlas.p_atlas->texture;
     if (!texture) {
         return;
     }

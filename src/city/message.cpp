@@ -5,6 +5,7 @@
 #include "core/encoding.h"
 #include "core/string.h"
 #include "core/time.h"
+#include "city/gods.h"
 #include "figure/formation.h"
 #include "game/time.h"
 #include "graphics/window.h"
@@ -130,23 +131,18 @@ static void play_sound(int text_id) {
         sound_effect_play(SOUND_EFFECT_FANFARE);
     }
 }
+
 static void show_message_popup(int message_id) {
     auto& data = g_message_data;
     city_message* msg = &data.messages[message_id];
     data.consecutive_message_delay = 5;
     msg->is_read = 1;
     int text_id = msg->MM_text_id;
-    if (!has_video(text_id))
+    if (!has_video(text_id)) {
         play_sound(text_id);
+    }
 
-    window_message_dialog_show_city_message(text_id,
-                                            message_id,
-                                            msg->year,
-                                            msg->month,
-                                            msg->param1,
-                                            msg->param2,
-                                            city_message_get_advisor(msg->MM_text_id),
-                                            1);
+    window_message_dialog_show_city_message(text_id, message_id, msg->year, msg->month, msg->param1, msg->param2, city_message_get_advisor(msg->MM_text_id), 1);
 }
 
 void city_message_disable_sound_for_next_message(void) {
@@ -162,19 +158,13 @@ void city_message_apply_sound_interval(int category) {
     }
 }
 
-void city_message_post_full(bool use_popup,
-                            int template_id,
-                            int event_id,
-                            int parent_event_id,
-                            int title_id,
-                            int body_id,
-                            int phrase_id,
-                            int param1,
-                            int param2) {
+void city_message_post_full(bool use_popup, int template_id, int event_id, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2) {
     auto& data = g_message_data;
     int id = new_message_id();
+
     if (id < 0)
         return;
+
     data.total_messages++;
     data.current_message_id = id;
 
@@ -194,12 +184,13 @@ void city_message_post_full(bool use_popup,
     msg->req_resource = event->item_fields[0];
     msg->req_amount = event->amount_fields[0];
     msg->req_city = event->location_fields[0] - 1;
-    if (event->is_active)
+    if (event->is_active) {
         msg->req_months_left = event->quest_months_left;
-    else
+    } else {
         //        msg->req_resource = event->item_1; // TODO
         //        msg->req_amount = event->amount_FIXED; // TODO
         msg->req_months_left = event->months_initial;
+    }
 
     const event_ph_t* parent_event = get_scenario_event(parent_event_id);
     msg->req_resource_past = parent_event->item_fields[0];
@@ -214,26 +205,29 @@ void city_message_post_full(bool use_popup,
     else if (use_popup) {
         // add to queue to be processed when player returns to city
         enqueue_message(msg->sequence);
-    } else if (should_play_sound)
+    } else if (should_play_sound) {
         play_sound(text_id);
+    }
 
     should_play_sound = true;
 }
-void city_message_post(bool use_popup, int message_id, int param1, int param2) {
-    auto& data = g_message_data;
-    //    return;
 
-    //    use_popup = false; // temp
+static void city_message_post_common(bool use_popup, int message_id, int param1, int param2, int god) {
+    auto &data = g_message_data;
 
     int id = new_message_id();
-    if (id < 0)
+    if (id < 0) {
         return;
+    }
+
     data.total_messages++;
     data.current_message_id = id;
 
-    city_message* msg = &data.messages[id];
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        message_id += 99;
+    city_message *msg = &data.messages[id];
+
+    // TODO: remove this hack += 99
+    message_id += 99;
+
     msg->MM_text_id = message_id;
     msg->is_read = 0;
     msg->year = game_time_year();
@@ -241,6 +235,7 @@ void city_message_post(bool use_popup, int message_id, int param1, int param2) {
     msg->param1 = param1;
     msg->param2 = param2;
     msg->sequence = data.next_message_sequence++;
+    msg->god = god;
 
     int text_id = city_message_get_text_id(message_id);
     int lang_msg_type = lang_get_message(text_id)->message_type;
@@ -248,16 +243,27 @@ void city_message_post(bool use_popup, int message_id, int param1, int param2) {
         data.problem_count = 1;
         window_invalidate();
     }
-    if (use_popup && window_is(WINDOW_CITY))
+
+    if (use_popup && window_is(WINDOW_CITY)) {
         show_message_popup(id);
-    else if (use_popup) {
+    } else if (use_popup) { 
         // add to queue to be processed when player returns to city
         enqueue_message(msg->sequence);
-    } else if (should_play_sound)
+    } else if (should_play_sound) {
         play_sound(text_id);
+    }
 
     should_play_sound = true;
 }
+
+void city_message_god_post(int god, bool use_popup, int message_id, int param1, int param2) {
+    city_message_post_common(use_popup, message_id, param1, param2, god);
+}
+
+void city_message_post(bool use_popup, int message_id, int param1, int param2) {
+    city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN);
+}
+
 void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2) {
     auto& data = g_message_data;
     int use_popup = 0;
@@ -268,6 +274,7 @@ void city_message_post_with_popup_delay(int category, int message_type, int para
     city_message_post(use_popup, message_type, param1, param2);
     data.message_count[category]++;
 }
+
 void city_message_post_with_message_delay(int category, int use_popup, int message_type, int delay) {
     auto& data = g_message_data;
     if (category == MESSAGE_CAT_FISHING_BLOCKED || category == MESSAGE_CAT_NO_WORKING_DOCK) {
@@ -600,7 +607,7 @@ io_buffer* iob_messages = new io_buffer([](io_buffer* iob, size_t version) {
             iob->bind(BIND_SIGNATURE_INT16, &msg->req_amount_past);
             iob->bind(BIND_SIGNATURE_INT16, &msg->req_resource_past);
             iob->bind(BIND_SIGNATURE_INT8, &msg->unk_11a_i8); // FF
-            iob->bind(BIND_SIGNATURE_INT8, &msg->unk_11b_i8); // FF
+            iob->bind(BIND_SIGNATURE_INT8, &msg->god); // FF
             iob->bind(BIND_SIGNATURE_INT16, &msg->unk_12);    // 00 00
         }
     }
