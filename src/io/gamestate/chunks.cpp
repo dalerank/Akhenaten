@@ -2,6 +2,7 @@
 
 #include "boilerplate.h"
 #include "io/manager.h"
+#include "platform/platform.h"
 
 #include <cstring>
 
@@ -31,7 +32,11 @@ struct chunks_data_t {
 chunks_data_t g_chunks_data;
 
 io_buffer* iob_chunks_schema = new io_buffer([](io_buffer* iob, size_t version) {
-    FILE* debug_file = fopen("DEV_TESTING/CHUNKS_SCHEMA.txt", "wb+");
+    FILE* debug_file = NULL;
+#if defined(GAME_PLATFORM_WIN)
+    //const char *fs_fpath = dir_get_file("DEV_TESTING/CHUNKS_SCHEMA.txt", 0);
+    //debug_file = fopen(fs_fpath, "wb+");
+#endif
     char temp_string[200] = "";
     iob->bind(BIND_SIGNATURE_UINT32, &g_chunks_data.chunks_in_used);
     if (debug_file) {
@@ -73,7 +78,9 @@ io_buffer* iob_chunks_schema = new io_buffer([](io_buffer* iob, size_t version) 
             fwrite(temp_string, strlen(temp_string), 1, debug_file);
         }
     }
-    fclose(debug_file);
+    if (debug_file) {
+        fclose(debug_file);
+    }
 });
 
 io_buffer* iob_junk7a = new io_buffer(default_bind);
@@ -94,14 +101,19 @@ struct junk10_t {
 junk10_t g_junk10;
 io_buffer* iob_junk10a = new io_buffer([](io_buffer* iob, size_t version) {
     const int r_version = FILEIO.get_file_version();
-
-    FILE* debug_file = fopen("DEV_TESTING/JUNK10.txt", "wb+");
+    FILE* debug_file = nullptr;
+#if defined(GAME_PLATFORM_WIN)
+    //const char *fs_fpath = dir_get_file("DEV_TESTING/JUNK10.txt", 0);
+    //debug_file = fopen(fs_fpath, "wb+");
+#endif
     char temp_string[200] = "";
 
     for (int i = 0; i < MAX_JUNK10_FIELDS; ++i) {
         auto field = &g_junk10.fields[i];
         sprintf(temp_string, "%03i: ", i);
-        fwrite(temp_string, strlen(temp_string), 1, debug_file);
+        if (debug_file) {
+            fwrite(temp_string, strlen(temp_string), 1, debug_file);
+        }
         // fill ints / print debug file
         for (int j = 0; j < (version < 149 ? 55 : 56); ++j) {
             iob->bind(BIND_SIGNATURE_UINT32, &field->large_data[j]);
@@ -118,14 +130,21 @@ io_buffer* iob_junk10a = new io_buffer([](io_buffer* iob, size_t version) {
                 sprintf(temp_string, "%4i ", field->large_data[j]);
                 break;
             }
-            fwrite(temp_string, strlen(temp_string), 1, debug_file);
+            if (debug_file) {
+                fwrite(temp_string, strlen(temp_string), 1, debug_file);
+            }
         }
         // first byte is the in_use flag
         if (field->large_data[0] == 1)
             field->in_use = true;
-        fwrite("\n", 1, 1, debug_file);
+        if (debug_file) {
+            fwrite("\n", 1, 1, debug_file);
+        }
     }
-    fclose(debug_file);
+
+    if (debug_file) {
+        fclose(debug_file);
+    }
 });
 
 io_buffer* iob_junk10b = new io_buffer([](io_buffer* iob, size_t version) {
@@ -152,24 +171,37 @@ io_buffer* iob_junk11 = new io_buffer([](io_buffer* iob, size_t version) {
     // the first two fields are the Map Editor's cached empire map coordinates....
     // I have absolutely no idea about the need for this, or any of the rest.
     // the third field is set to "1" when "Edit objects" is active in the editor.
-
-    FILE* debug_file = fopen("DEV_TESTING/JUNK11.txt", "wb+");
+    FILE* debug_file = nullptr;
+#if defined(GAME_PLATFORM_WIN)
+    //const char *fs_fpath = dir_get_file("DEV_TESTING/JUNK11.txt", 0);
+    //debug_file = fopen(fs_fpath, "wb+");
+#endif
     char temp_string[200] = "";
 
     for (int i = 0; i < MAX_JUNK11_FIELDS; ++i) {
         auto field = &g_junk11.fields[i];
         sprintf(temp_string, "%03i: ", i);
-        fwrite(temp_string, strlen(temp_string), 1, debug_file);
+        if (debug_file) {
+            fwrite(temp_string, strlen(temp_string), 1, debug_file);
+        }
 
         // fill ints
         for (int j = 0; j < 16; ++j) {
             iob->bind(BIND_SIGNATURE_UINT16, &field->data[j]);
             sprintf(temp_string, "%4i ", field->data[j]);
-            fwrite(temp_string, strlen(temp_string), 1, debug_file);
+            if (debug_file) {
+                fwrite(temp_string, strlen(temp_string), 1, debug_file);
+            }
         }
-        fwrite("\n", 1, 1, debug_file);
+
+        if (debug_file) {
+            fwrite("\n", 1, 1, debug_file);
+        }
     }
-    fclose(debug_file);
+
+    if (debug_file) {
+        fclose(debug_file);
+    }
 });
 
 io_buffer* iob_junk14 = new io_buffer(default_bind);
@@ -202,7 +234,9 @@ static void record_bizarre_fields(io_buffer* iob, int i) {
     auto chunk = &bizarre.chunks[i];
     char temp_string[200] = "";
     sprintf(temp_string, "CHUNK %i\n", i);
-    fwrite(temp_string, strlen(temp_string), 1, bizarre.debug_file);
+    if (bizarre.debug_file) {
+        fwrite(temp_string, strlen(temp_string), 1, bizarre.debug_file);
+    }
 
     int fields_num = iob->get_size() / 24;
     for (int j = 0; j < fields_num; ++j) {
@@ -220,6 +254,7 @@ static void record_bizarre_fields(io_buffer* iob, int i) {
 
         iob->bind(BIND_SIGNATURE_UINT32, &field.unk05);
 
+#if defined(GAME_PLATFORM_WIN)
         sprintf(temp_string,
                 "%02i-%02i:     %4i %4i %4i %4i  %4i  %4i\n",
                 i,
@@ -231,19 +266,30 @@ static void record_bizarre_fields(io_buffer* iob, int i) {
                 field.unk04,
                 //                field.unk04a, field.unk04b, field.unk04c,
                 field.unk05);
-        fwrite(temp_string, strlen(temp_string), 1, bizarre.debug_file);
+        if (bizarre.debug_file) {
+            fwrite(temp_string, strlen(temp_string), 1, bizarre.debug_file);
+        }
+#endif
     }
 }
 static void bizarre_ordered_fields_bind(io_buffer* iob, size_t version) {
+    const char *fs_fpath = dir_get_file("DEV_TESTING/BIZARRE.txt", 0);
     if (iob == iob_bizarre_ordered_fields_1) {
         bizarre.current_chunk = 0;
-        bizarre.debug_file = fopen("DEV_TESTING/BIZARRE.txt", "wb+");
+#if defined(GAME_PLATFORM_WIN)
+        //bizarre.debug_file = fopen(fs_fpath, "wb+");
+#endif
     } else {
         bizarre.current_chunk++;
-        bizarre.debug_file = fopen("DEV_TESTING/BIZARRE.txt", "ab+");
+#if defined(GAME_PLATFORM_WIN)
+        //bizarre.debug_file = fopen(fs_fpath, "ab+");
+#endif
     }
     record_bizarre_fields(iob, bizarre.current_chunk);
-    fclose(bizarre.debug_file);
+
+    if (bizarre.debug_file) {
+        fclose(bizarre.debug_file);
+    }
 }
 
 io_buffer* iob_bizarre_ordered_fields_1 = new io_buffer(bizarre_ordered_fields_bind);

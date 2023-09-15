@@ -9,6 +9,7 @@
 #include "io/io.h"
 #include "io/log.h"
 #include "platform/renderer.h"
+#include "platform/platform.h"
 #include "graphics/text.h"
 #include "graphics/screen.h"
 #include "graphics/image.h"
@@ -422,8 +423,10 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
 
     // prepare atlas packer & renderer
     vec2i max_texture_sizes = graphics_renderer()->get_max_image_size();
-    if (image_packer_init(&packer, entries_num, max_texture_sizes.x, max_texture_sizes.y) != IMAGE_PACKER_OK)
+    if (image_packer_init(&packer, entries_num, max_texture_sizes.x, max_texture_sizes.y) != IMAGE_PACKER_OK) {
         return false;
+    }
+
     packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;
     packer.options.reduce_image_size = 1;
     packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
@@ -527,10 +530,14 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
     // finish filling in image and atlas information
     for (int i = 0; i < entries_num; i++) {
         image_t* img = &images_array.at(i);
-        if (has_system_bmp && !SHOULD_LOAD_SYSTEM_SPRITES && i < 201)
+        if (has_system_bmp && !SHOULD_LOAD_SYSTEM_SPRITES && i < 201) {
             continue;
-        if (img->offset_mirror != 0)
+        }
+
+        if (img->offset_mirror != 0) {
             img->mirrored_img = &images_array.at(i + img->offset_mirror);
+        }
+
         image_packer_rect* rect = &packer.rects[i];
         img->atlas.index = rect->output.image_index;
         atlas_data_t* p_data = &atlas_pages.at(img->atlas.index);
@@ -558,12 +565,15 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
         atlas_data->TEMP_PIXEL_BUFFER = nullptr;
 
         // ********* DEBUGGING **********
+#if defined(GAME_PLATFORM_WIN)
         if (false) {
             char* lfile = (char*)malloc(200);
             sprintf(lfile, "DEV_TESTING/tex/%s_%i.bmp", name.c_str(), i); // TODO: make this a global function
-            graphics_renderer()->save_texture_to_file(lfile, atlas_data->texture);
+            const char *fs_fpath = dir_get_file(lfile, 0);
+            graphics_renderer()->save_texture_to_file(fs_fpath, atlas_data->texture);
             free(lfile);
         }
+#endif
         // ******************************
     }
 

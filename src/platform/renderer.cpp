@@ -2,18 +2,15 @@
 
 #include "core/time.h"
 #include "graphics/screen.h"
-// #include "platform/cursor.h"
-// #include "platform/haiku/haiku.h"
 #include "platform/arguments.h"
 #include "platform/platform.h"
 #include "platform/screen.h"
-// #include "platform/switch/switch.h"
-// #include "platform/vita/vita.h"
+#include "platform/platform.h"
 #include "graphics/image_groups.h"
 
-#if defined(__APPLE__)
+#if defined(GAME_PLATFORM_MACOSX)
   #include <SDL2_image/SDL_image.h>
-#elif defined(ANDROID_BUILD)
+#elif defined(GAME_PLATFORM_ANDROID)
   // nothing
 #else
   #include <SDL_image.h>
@@ -60,11 +57,11 @@
 
 #define MAX_PACKED_IMAGE_SIZE 64000
 
-#ifdef __ANDROID__
+#if defined(GAME_PLATFORM_ANDROID)
 // On the arm versions of android, for some reason, atlas textures that are too large will make the renderer fetch
 // some images from the atlas with an off-by-one pixel, making things look terrible. Defining a smaller atlas texture
 // prevents the problem, at the cost of performance due to the extra texture context switching.
-#define MAX_TEXTURE_SIZE 1024
+#define MAX_TEXTURE_SIZE 2048
 #endif
 
 #ifdef __vita__
@@ -990,14 +987,14 @@ int platform_renderer_init(SDL_Window* window, std::string renderer) {
     }
     data.paused = 0;
 
-#ifdef MAX_TEXTURE_SIZE
+#if defined(MAX_TEXTURE_SIZE)
     if (data.max_texture_size.width > MAX_TEXTURE_SIZE) {
         data.max_texture_size.width = MAX_TEXTURE_SIZE;
     }
     if (data.max_texture_size.height > MAX_TEXTURE_SIZE) {
         data.max_texture_size.height = MAX_TEXTURE_SIZE;
     }
-#endif
+#endif // MAX_TEXTURE_SIZE
 
     SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0xff);
 

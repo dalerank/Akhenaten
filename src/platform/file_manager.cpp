@@ -106,9 +106,6 @@ int platform_file_manager_list_directory_contents(const char* dir, int type, con
     else
         current_dir = set_dir_name(dir);
 
-#if defined(GAME_PLATFORM_ANDROID)
-    int match = android_get_directory_contents(current_dir, type, extension, callback);
-#else
     fs_dir_type* d = fs_dir_open(current_dir);
     if (!d)
         return LIST_ERROR;
@@ -153,7 +150,6 @@ int platform_file_manager_list_directory_contents(const char* dir, int type, con
             break;
     }
     fs_dir_close(d);
-#endif
 
     if (dir && *dir && strcmp(dir, ".") != 0) {
         free_dir_name(current_dir);

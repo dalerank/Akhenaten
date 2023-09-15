@@ -654,8 +654,6 @@ bool GamestateIO::load_savegame(const char* filename_short, bool start_immediate
     return true;
 }
 bool GamestateIO::load_map(const char* filename_short, bool start_immediately) {
-    //    return false; //TODO
-
     // concatenate string
     char full[MAX_FILE_NAME] = {0};
     fullpath_maps(full, filename_short);

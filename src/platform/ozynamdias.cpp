@@ -343,8 +343,13 @@ static void setup(Arguments& args) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
                                  "Warning",
                                  "Ozymandias requires the original files from Pharaoh to run.\n"
+#if defined(GAME_PLATFORM_ANDROID)
+                                 "Copy your entire Pharaoh folder to your Android device into folder"
+                                 "/sdcard0/Android/data/com.github.dalerank.ozymandias/files",
+#else
                                  "Move the executable file to the directory containing an existing\n"
                                  "Pharaoh installation, or run: ozymandias path/to/directory",
+#endif
                                  nullptr);
 #if defined(GAME_PLATFORM_ANDROID)
        ; // do nothing

@@ -4,6 +4,7 @@
 #include "core/zip.h"
 #include "io/gamestate/boilerplate.h"
 #include "io/log.h"
+#include "platform/platform.h"
 
 #include <cinttypes>
 #include <string.h>
@@ -70,15 +71,20 @@ const int FileIOManager::num_chunks() {
 int findex;
 char* fname;
 static void export_unzipped(file_chunk_t* chunk) {
-    char* lfile = (char*)malloc(200);
-    //    sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex + 1, chunk->buf->size(), fname);
-    GamestateIO::prepare_folders("DEV_TESTING/zip/");
-    sprintf(lfile, "DEV_TESTING/zip/%03i_%s", findex + 1, fname);
-    FILE* log = fopen(lfile, "wb+");
-    if (log)
-        fwrite(chunk->buf->get_data(), chunk->buf->size(), 1, log);
-    fclose(log);
-    free(lfile);
+#if defined(GAME_PLATFORM_WIN)
+    //char* lfile = (char*)malloc(200);
+    ////    sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex + 1, chunk->buf->size(), fname);
+    //const char *folder_fpath = dir_get_file("DEV_TESTING/zip/", 0);
+    //GamestateIO::prepare_folders(folder_fpath);
+    //sprintf(lfile, "DEV_TESTING/zip/%03i_%s", findex + 1, fname);
+    //const char *fs_fpath = dir_get_file(lfile, 0);
+    //FILE* log = fopen(fs_fpath, "wb+");
+    //if (log) {
+    //    fwrite(chunk->buf->get_data(), chunk->buf->size(), 1, log);
+    //}
+    //fclose(log);
+    //free(lfile);
+#endif
 }
 static void log_hex(file_chunk_t* chunk, int i, int offs, int num_chunks) {
     // log first few bytes of the filepiece
@@ -237,10 +243,8 @@ bool FileIOManager::serialize(const char* filename,
     return true;
 }
 
-bool FileIOManager::unserialize(const char* filename,
-                                int offset,
-                                e_file_format format,
-                                const int (*determine_file_version)(const char* fnm, int ofst),
+bool FileIOManager::unserialize(const char* filename, int offset, e_file_format format,
+                                const int (*determine_file_version)(const char* fnm, int ofst), 
                                 void (*init_schema)(e_file_format _format, const int _version)) {
     WATCH.START();
 
@@ -251,7 +255,7 @@ bool FileIOManager::unserialize(const char* filename,
     file_format = format;
 
     // open file handle
-    FILE* fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "rb");
+    FILE* fp = file_open(dir_get_file(file_path, 0), "rb");
     if (!fp) {
         logs::error("Unable to read file, file could not be accessed.");
         clear();
@@ -272,9 +276,9 @@ bool FileIOManager::unserialize(const char* filename,
     }
 
     // init file chunks and buffer collection
-    if (init_schema != nullptr)
+    if (init_schema != nullptr) {
         init_schema(file_format, file_version);
-    else {
+    } else {
         logs::error("Unable to read file, provided schema is invalid.");
         clear();
         return false;

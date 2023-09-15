@@ -25,17 +25,20 @@ int io_read_file_into_buffer(const char* filepath, int localizable, buffer* buf,
     file_close(fp);
     return bytes_read;
 }
+
 int io_read_file_part_into_buffer(const char* filepath, int localizable, buffer* buf, int size, int offset_in_file) {
     const char* cased_file = dir_get_file(filepath, localizable);
-    if (!cased_file)
+    if (!cased_file) {
         return 0;
+    }
 
     int bytes_read = 0;
     FILE* fp = file_open(cased_file, "rb");
     if (fp) {
         int seek_result = fseek(fp, offset_in_file, SEEK_SET);
-        if (seek_result == 0)
+        if (seek_result == 0) {
             bytes_read = buf->from_file((size_t)size, fp);
+        }
         file_close(fp);
     }
     return bytes_read;
