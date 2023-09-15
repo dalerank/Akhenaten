@@ -114,9 +114,10 @@ const char* dir_get_case_corrected_file(const char* dir, const char* filepath) {
 
     size_t dir_len = 0;
     if (dir) {
-        dir_len = strlen(dir) + 1;
+        dir_len = strlen(dir);
         strncpy(corrected_filename, dir, 2 * MAX_FILE_NAME - 1);
-        corrected_filename[dir_len - 1] = '/';
+        if (corrected_filename[dir_len - 1] != '/')
+            corrected_filename[dir_len] = '/';
     } else {
         dir = ".";
     }
