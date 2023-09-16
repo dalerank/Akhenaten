@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/bstring.h"
+
 /**
  * @file
  * Directory-related functions.
