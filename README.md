@@ -98,6 +98,24 @@ Only tested on Manjaro, but under Ubuntu or similar you should install the same 
   $ cmake --build ./build
   ```
 
+### Android
+
+- Clone the repository
+
+- From the root folder executr:
+
+  ```
+  sudo apt install openjdk-17-jdk openjdk-17-jre ninja-build
+  sudo wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip
+  sudo unzip commandlinetools-linux-9123335_latest.zip
+  cd cmdline-tools/bin
+  sdkmanager --install "platform-tools" "build-tools;30.0.1" "emulator" "platforms;android-33"
+  cd ../../build
+  cmake -DCMAKE_BUILD_DEPENDENCIES=android ..
+  cd ../android
+  ./gradlew assembleDebug
+  ```
+
 ## Existing build options
 
 ### Building with logging stack trace on crash
