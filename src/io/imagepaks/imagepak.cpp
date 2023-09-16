@@ -346,7 +346,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
 
     // construct proper filepaths
     name = pak_name;
-    bstring512 filename_full("data/", pak_name);
+    bstring512 filename_full("Data/", pak_name);
 
     // split in .555 and .sg3 filename strings
     bstring512 filename_555(filename_full, ".555");
