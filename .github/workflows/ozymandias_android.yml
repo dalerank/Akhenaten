@@ -1,0 +1,39 @@
+name: Ozymandias Build Android
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    name: run on linux
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-java@v2
+      with:
+        java-version: 17
+        distribution: temurin
+    - name: update-workspace
+      run: |
+        sudo apt -qq update
+        sudo apt install --yes cmake build-essential ninja-build libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev
+    - name: build-project
+      run: |
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_DEPENDENCIES=android ..
+        cd ..
+    - name: Build APK
+      run: |
+        cd android
+        ./gradlew assembleDebug --stacktrace
+    - name: Upload APK
+      uses: actions/upload-artifact@v1
+      with:
+        name: apk
+        path: android/ozymandias/build/outputs/apk/debug/ozymandias-debug.apk
