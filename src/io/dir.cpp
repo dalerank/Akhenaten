@@ -1,8 +1,8 @@
 #include "dir.h"
 
+#include "content/vfs.h"
 #include "core/string.h"
 #include "io/config/config.h"
-#include "io/file.h"
 #include "platform/file_manager.h"
 #include "platform/platform.h"
 
@@ -124,9 +124,9 @@ bstring256 dir_get_case_corrected_file(const char *dir, const char *filepath) {
 
     corrected_filename.append(filepath);
     corrected_filename.replace('\\', '/');
-    FILE *fp = file_open(corrected_filename, "rb");
+    FILE *fp = vfs::file_open(corrected_filename, "rb");
     if (fp) {
-        file_close(fp);
+        vfs::file_close(fp);
         return corrected_filename;
     }
 
@@ -141,6 +141,6 @@ const dir_listing* dir_append_files_with_extension(const char* dir, const char* 
     return &data.listing;
 }
 
-bstring256 dir_get_file(const char* filepath, int localizable) {
+bstring256 dir_get_file(const char* filepath) {
     return dir_get_case_corrected_file(platform_file_manager_get_base_path(), filepath);
 }

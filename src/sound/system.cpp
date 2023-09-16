@@ -1,9 +1,9 @@
 #include "system.h"
 
+#include "content/vfs.h"
 #include "core/game_environment.h"
 #include "game/settings.h"
 #include "io/dir.h"
-#include "io/file.h"
 #include "sound/channel.h"
 #include "sound/city.h"
 #include "sound/device.h"
@@ -326,7 +326,7 @@ static void correct_channel_filenames(void) {
         char* original = channel_filenames[GAME_ENV][i];
         bstring128 audio_path("AUDIO/", channel_filenames[GAME_ENV][i]);
 
-        if (!file_exists(audio_path, 0)) {
+        if (!vfs::file_exists(audio_path)) {
             channel_filenames[GAME_ENV][i][0] = 0;
         } else {
             strncpy(original, audio_path, CHANNEL_FILENAME_MAX);

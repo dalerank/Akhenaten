@@ -225,22 +225,18 @@ static bool is_font_glyph_in_range(const image_t* img, font_t font_start, font_t
 
 static buffer* external_image_buf = nullptr;
 static buffer* load_external_data(const image_t* img) {
-    char filename[MAX_FILE_NAME];
     int size = 0;
     safe_realloc_for_size(&external_image_buf, img->data_length);
 
     // file path
-    strcpy(&filename[0], "Data/");
-    strcpy(&filename[5], img->bmp.name);
-    file_change_extension(filename, "555");
+    bstring256 filename("Data/", img->bmp.name);
+    vfs::file_change_extension(filename, "555");
 
     // load external file
-    size = io_read_file_part_into_buffer(
-      &filename[5], MAY_BE_LOCALIZED, external_image_buf, img->data_length, img->sgx_data_offset - 1);
+    size = io_read_file_part_into_buffer(filename, MAY_BE_LOCALIZED, external_image_buf, img->data_length, img->sgx_data_offset - 1);
     if (!size) {
         // try in 555 dir
-        size = io_read_file_part_into_buffer(
-          filename, MAY_BE_LOCALIZED, external_image_buf, img->data_length, img->sgx_data_offset - 1);
+        size = io_read_file_part_into_buffer(filename, MAY_BE_LOCALIZED, external_image_buf, img->data_length, img->sgx_data_offset - 1);
         if (!size) {
             logs::error("unable to load external image %s", img->bmp.name);
             return nullptr;
@@ -248,6 +244,7 @@ static buffer* load_external_data(const image_t* img) {
     }
     return external_image_buf;
 }
+
 static int isometric_calculate_top_height(const image_t* img) {
     int top_height = img->isometric_top_height();
     int tri_rows = img->height - top_height - HALF_TILE_HEIGHT_PIXELS * img->isometric_size() - 1;
@@ -415,7 +412,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
     }
 
     // (move buffer to the rest of the data)
-    if (file_has_extension((const char *)filename_sgx, "sg2")) {
+    if (vfs::file_has_extension((const char *)filename_sgx, "sg2")) {
         pak_buf->set_offset(PAK_HEADER_SIZE_BASE + (100 * bmp_name::capacity)); // sg2 = 20680 bytes
     } else {
         pak_buf->set_offset(PAK_HEADER_SIZE_BASE + (200 * bmp_name::capacity)); // sg3 = 40680 bytes

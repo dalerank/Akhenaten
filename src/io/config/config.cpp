@@ -1,6 +1,6 @@
 #include "config.h"
 
-#include "io/file.h"
+#include "content/vfs.h"
 #include "io/log.h"
 
 #include <string.h>
@@ -131,7 +131,7 @@ void config_set_defaults() {
 }
 void config_load() {
     config_set_defaults();
-    FILE* fp = file_open(INI_FILENAME, "rt");
+    FILE* fp = vfs::file_open(INI_FILENAME, "rt");
     if (!fp)
         return;
     char line_buffer[MAX_LINE];
@@ -164,10 +164,10 @@ void config_load() {
             }
         }
     }
-    file_close(fp);
+    vfs::file_close(fp);
 }
 void config_save() {
-    FILE* fp = file_open(INI_FILENAME, "wt");
+    FILE* fp = vfs::file_open(INI_FILENAME, "wt");
     if (!fp) {
         logs::error("Unable to write configuration file %s", INI_FILENAME);
         return;
@@ -179,5 +179,5 @@ void config_save() {
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
         fprintf(fp, "%s=%s\n", ini_string_keys[i], string_values[i]);
     }
-    file_close(fp);
+    vfs::file_close(fp);
 }

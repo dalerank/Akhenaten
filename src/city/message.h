@@ -294,8 +294,8 @@ struct city_message {
     int unk_12;
 };
 
-void city_message_init_scenario(void);
-void city_message_init_problem_areas(void);
+void city_message_init_scenario();
+void city_message_init_problem_areas();
 
 void city_message_disable_sound_for_next_message(void);
 void city_message_apply_sound_interval(int category);

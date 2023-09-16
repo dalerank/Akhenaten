@@ -1,6 +1,6 @@
 #include "editor/editor.h"
 
-#include "io/file.h"
+#include "content/vfs.h"
 
 #define MAX_EDITOR_FILES 9
 
@@ -18,7 +18,7 @@ static int is_active;
 
 int editor_is_present(void) {
     for (int i = 0; i < MAX_EDITOR_FILES; i++) {
-        if (!file_exists(EDITOR_FILES[i], MAY_BE_LOCALIZED))
+        if (!vfs::file_exists(EDITOR_FILES[i]))
             return 0;
     }
     return 1;

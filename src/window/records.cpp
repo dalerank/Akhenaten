@@ -8,7 +8,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "io/playerdata/player_data.h"
 
 static void on_scroll(void);
@@ -20,9 +20,11 @@ static void on_scroll(void);
 
 static scrollbar_type scrollbar = {LIST_X + LIST_WIDTH * 16, LIST_Y - 12, (LIST_MAX_SIZE + 1) * 16, on_scroll};
 
-static struct {
+struct records_data_t {
     const dir_listing* file_list;
-} data;
+};
+
+records_data_t g_records_data;
 
 void init() {
     highscores_load();

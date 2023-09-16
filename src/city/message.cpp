@@ -2,6 +2,7 @@
 #include "io/io_buffer.h"
 #include <scenario/events.h>
 
+#include "content/vfs.h"
 #include "core/encoding.h"
 #include "core/string.h"
 #include "core/time.h"
@@ -9,7 +10,6 @@
 #include "figure/formation.h"
 #include "game/time.h"
 #include "graphics/window.h"
-#include "io/file.h"
 #include "io/gamefiles/lang.h"
 #include "sound/effect.h"
 #include "window/message_dialog.h"
@@ -109,12 +109,11 @@ static int new_message_id(void) {
 
 static int has_video(int text_id) {
     const lang_message* msg = lang_get_message(text_id);
-    if (!msg->video.text)
+    if (!msg->video.text) {
         return 0;
+    }
 
-    char video_file[MAX_FILE_NAME];
-    encoding_to_utf8(msg->video.text, video_file, MAX_FILE_NAME, 0);
-    return file_exists(video_file, MAY_BE_LOCALIZED);
+    return vfs::file_exists((const char*)msg->video.text);
 }
 
 static void enqueue_message(int sequence) {

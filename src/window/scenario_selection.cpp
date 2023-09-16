@@ -10,7 +10,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "io/gamestate/boilerplate.h"
 #include "message_dialog.h"
 #include "scenario/criteria.h"

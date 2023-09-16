@@ -1,7 +1,7 @@
 #pragma once
 
 #include "graphics/image.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "core/bstring.h"
 
 #include <vector>

@@ -2,7 +2,7 @@
 
 #include "core/string.h"
 #include "platform/platform.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "io/log.h"
 #include "platform/vita/vita.h"
 #include "platform/android/android.h"
@@ -133,7 +133,7 @@ int platform_file_manager_list_directory_contents(const char* dir, int type, con
                 || S_ISFIFO(m) || S_ISSOCK(m)) {
                 continue;
             }
-            if (is_file(m) && !file_has_extension(name, extension))
+            if (is_file(m) && !vfs::file_has_extension(name, extension))
                 continue;
 
             if (type & TYPE_DIR && name[0] == '.') {
@@ -141,7 +141,7 @@ int platform_file_manager_list_directory_contents(const char* dir, int type, con
                 continue;
             }
             match = callback(name);
-        } else if (file_has_extension(name, extension)) {
+        } else if (vfs::file_has_extension(name, extension)) {
             logs::error("[%s.%s] platform_file_manager_list_directory_contents: %s %u", name, extension, strerror(errno), errno);
             match = callback(name);
         }

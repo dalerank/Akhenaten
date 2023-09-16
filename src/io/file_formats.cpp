@@ -1,33 +1,30 @@
 #include "file_formats.h"
 
-#include "file.h"
+#include "content/vfs.h"
+#include "core/bstring.h"
+
+using namespace vfs;
 
 e_file_format get_format_from_file(const char* filename) {
-    if (file_has_extension(filename, "bmp"))
-        return FILE_FORMAT_BMP;
-    if (file_has_extension(filename, "png"))
-        return FILE_FORMAT_PNG;
-    if (file_has_extension(filename, "jpg") || file_has_extension(filename, "jpeg"))
-        return FILE_FORMAT_JPG;
+    struct format_alias {
+        e_file_format format;
+        bstring32 ext;
+    } formats[] = {{FILE_FORMAT_BMP, "bmp"},
+                   {FILE_FORMAT_PNG, "png"},
+                   {FILE_FORMAT_JPG, "jpg"},
+                   {FILE_FORMAT_JPG, "jpeg"},
+                   {FILE_FORMAT_SGX, "sg2"},
+                   {FILE_FORMAT_SGX, "sg3"},
+                   {FILE_FORMAT_555, "555"},
+                   {FILE_FORMAT_MISSION_PAK, "pak"},
+                   {FILE_FORMAT_SAVE_FILE, "sav"},
+                   {FILE_FORMAT_MAP_FILE, "map"},
+                   {FILE_FORMAT_JAS_RECORDS, "jas"},
+                   {FILE_FORMAT_PLAYER_DATA, "dat"},
+                   {FILE_FORMAT_SAVE_FILE_EXT, "svx"},
+            };
 
-    if (file_has_extension(filename, "sg2") || file_has_extension(filename, "sg3"))
-        return FILE_FORMAT_SGX;
-    if (file_has_extension(filename, "555"))
-        return FILE_FORMAT_555;
+    auto it = std::find_if(std::begin(formats), std::end(formats), [filename] (auto &p) { return file_has_extension(filename, p.ext);  });
 
-    if (file_has_extension(filename, "pak"))
-        return FILE_FORMAT_MISSION_PAK;
-    if (file_has_extension(filename, "sav"))
-        return FILE_FORMAT_SAVE_FILE;
-    if (file_has_extension(filename, "map"))
-        return FILE_FORMAT_MAP_FILE;
-
-    if (file_has_extension(filename, "jas"))
-        return FILE_FORMAT_JAS_RECORDS;
-    if (file_has_extension(filename, "dat"))
-        return FILE_FORMAT_PLAYER_DATA;
-    if (file_has_extension(filename, "svx"))
-        return FILE_FORMAT_SAVE_FILE_EXT;
-
-    return FILE_FORMAT_NULL;
+    return (it == std::end(formats) ? FILE_FORMAT_NULL : it->format);
 }

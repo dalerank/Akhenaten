@@ -9,7 +9,7 @@
 #include "game/system.h"
 #include "graphics/screen.h"
 #include "input/mouse.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "io/gamefiles/lang.h"
 #include "io/config/config.h"
 #include "io/log.h"

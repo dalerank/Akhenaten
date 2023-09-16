@@ -19,7 +19,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "io/dir.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "io/gamefiles/lang.h"
 #include "io/gamestate/boilerplate.h"
 #include "widget/input_box.h"
@@ -199,18 +199,18 @@ static void button_ok_cancel(int is_ok, int param2) {
     bstring256 full = fullpath_saves(filename);
 
     if (data.dialog_type == FILE_DIALOG_LOAD) {
-        if (!file_exists(full, NOT_LOCALIZED)) {
+        if (!vfs::file_exists(full)) {
             filename = bstring256(get_chosen_filename(), ".", saved_game_data_expanded.extension);
             full = fullpath_saves(filename);
         }
 
-        if (!file_exists(full, NOT_LOCALIZED)) {
+        if (!vfs::file_exists(full)) {
             data.message_not_exist_start_time = time_get_millis();
             return;
         }
     }
 
-    if (data.dialog_type != FILE_DIALOG_SAVE && !file_exists(full, NOT_LOCALIZED)) {
+    if (data.dialog_type != FILE_DIALOG_SAVE && !vfs::file_exists(full)) {
         data.message_not_exist_start_time = time_get_millis();
         return;
     }
@@ -236,19 +236,19 @@ static void button_ok_cancel(int is_ok, int param2) {
     } else if (data.dialog_type == FILE_DIALOG_SAVE) {
         input_box_stop(&file_name_input);
         if (data.type == FILE_TYPE_SAVED_GAME) {
-            if (file_has_extension(full, saved_game_data.extension)) {
-                file_change_extension(full, saved_game_data_expanded.extension);
+            if (vfs::file_has_extension(full, saved_game_data.extension)) {
+                vfs::file_change_extension(full, saved_game_data_expanded.extension);
             }
 
-            if (!file_has_extension(full, saved_game_data_expanded.extension)) {
-                file_append_extension(full, saved_game_data_expanded.extension);
+            if (!vfs::file_has_extension(full, saved_game_data_expanded.extension)) {
+                vfs::file_append_extension(full, saved_game_data_expanded.extension);
             }
 
             GamestateIO::write_savegame(full);
             window_city_show();
         } else if (data.type == FILE_TYPE_SCENARIO) {
-            if (!file_has_extension(full, map_file_data.extension)) {
-                file_append_extension(full, map_file_data.extension);
+            if (!vfs::file_has_extension(full, map_file_data.extension)) {
+                vfs::file_append_extension(full, map_file_data.extension);
             }
 
             game_file_editor_write_scenario(full);

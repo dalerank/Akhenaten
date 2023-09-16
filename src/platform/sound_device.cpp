@@ -8,7 +8,7 @@
 
 #include "core/game_environment.h"
 #include "game/settings.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "io/log.h"
 #include "platform/platform.h"
 #include "platform/vita/vita.h"

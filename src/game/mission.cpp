@@ -1,5 +1,5 @@
 #include "mission.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "io/io.h"
 #include "io/log.h"
 #include <core/buffer.h>

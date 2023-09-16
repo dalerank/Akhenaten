@@ -192,8 +192,8 @@ bool FileIOManager::serialize(const char* filename, int offset, e_file_format fo
     file_version = version;
 
     // open file handle
-    bstring256 fs_path = dir_get_file(file_path, NOT_LOCALIZED);
-    FILE* fp = file_open(fs_path, "wb");
+    bstring256 fs_path = dir_get_file(file_path);
+    FILE* fp = vfs::file_open(fs_path, "wb");
     if (!fp) {
         return io_failure_cleanup("write", "file could not be accessed");
     } else if (file_offset) {
@@ -233,7 +233,7 @@ bool FileIOManager::serialize(const char* filename, int offset, e_file_format fo
     }
 
     // close file handle
-    file_close(fp);
+    vfs::file_close(fp);
 
     logs::info("File write successful: %s %i@ --- VERSION: %i --- %" PRIu64 " milliseconds",
                file_path,
@@ -256,8 +256,8 @@ bool FileIOManager::unserialize(const char* filename, int offset, e_file_format 
     file_format = format;
 
     // open file handle
-    bstring256 fs_path = dir_get_file(file_path, 0);
-    FILE* fp = file_open(fs_path, "rb");
+    bstring256 fs_path = dir_get_file(file_path);
+    FILE* fp = vfs::file_open(fs_path, "rb");
     if (!fp) {
         logs::error("Unable to read file, file could not be accessed.");
         clear();
@@ -324,12 +324,13 @@ bool FileIOManager::unserialize(const char* filename, int offset, e_file_format 
     }
 
     // close file handle
-    file_close(fp);
+    vfs::file_close(fp);
 
     // load GAME STATE from buffers
     for (int i = 0; i < num_chunks(); ++i) {
-        if (file_chunks.at(i).VALID)
+        if (file_chunks.at(i).VALID) {
             file_chunks.at(i).iob->read(file_version);
+        }
     }
 
     logs::info("File read successful: %s %i@ --- VERSION HEADER: %i --- %" PRIu64 " milliseconds",

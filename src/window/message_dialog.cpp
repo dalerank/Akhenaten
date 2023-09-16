@@ -98,8 +98,9 @@ static void write_to_body_text_buffer(const uint8_t* in, uint8_t** out) {
     *out += size;
 }
 static void swap_tag(uint8_t* curr_byte, uint8_t** curr_byte_out, const uint8_t* tag, const uint8_t* content) {
-    if (index_of_string(curr_byte, tag, 200) == 1)
+    if (index_of_string(curr_byte, tag, 200) == 1) {
         write_to_body_text_buffer(content, curr_byte_out);
+    }
 }
 void text_fill_in_tags(const uint8_t* src, uint8_t* dst, text_tag_substitution* tag_templates, int num_tags) {
     uint8_t* curr_byte_out = dst;
@@ -112,8 +113,9 @@ void text_fill_in_tags(const uint8_t* src, uint8_t* dst, text_tag_substitution* 
             int size = static_cast<int>(tag_end_ptr - curr_byte - 1);
 
             // needs to go over all the possible tags...
-            for (int i = 0; i < num_tags; ++i)
-                swap_tag(curr_byte, &curr_byte_out, (const uint8_t*)tag_templates[i].tag, tag_templates[i].content);
+            for (int i = 0; i < num_tags; ++i) {
+                swap_tag(curr_byte, &curr_byte_out, (const uint8_t *)tag_templates[i].tag, tag_templates[i].content);
+            }
 
             // go to the end of the tag, then resume
             curr_byte += size;
@@ -135,14 +137,16 @@ static void eventmsg_template_combine(uint8_t* template_ptr, uint8_t* out_ptr, b
     string_from_int(time, msg->req_months_left, false);
     int city_name_id = 0;
     if (phrase_modifier) {
-        auto city = empire_city_get(msg->req_city_past);
-        if (city != nullptr)
+        empire_city* city = empire_city_get(msg->req_city_past);
+        if (city != nullptr) {
             city_name_id = city->name_id;
+        }
         string_from_int(amount, stack_proper_quantity(msg->req_amount_past, msg->req_resource_past), false);
     } else {
-        auto city = empire_city_get(msg->req_city);
-        if (city != nullptr)
+        empire_city *city = empire_city_get(msg->req_city);
+        if (city != nullptr) {
             city_name_id = city->name_id;
+        }
         string_from_int(amount, stack_proper_quantity(msg->req_amount, msg->req_resource), false);
     }
     text_tag_substitution tags[] = {
@@ -204,6 +208,7 @@ static void init(int text_id, int message_id, void (*background_callback)()) {
     data.text_id = text_id;
     data.background_callback = background_callback;
     data.show_video = false;
+    data.goddess_preview = false;
     const lang_message *msg = lang_get_message(text_id);
 
     if (!g_player_message_data.use_popup) {
@@ -659,42 +664,61 @@ static void draw_foreground() {
 
 static bool handle_input_video(const mouse* m_dialog, const lang_message* msg) {
     auto &data = g_message_dialog_data;
-    if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0))
+    if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
         return true;
+    }
 
-    if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0))
+    if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0)) {
         return true;
+    }
 
     if (is_problem_message(msg)) {
-        if (image_buttons_handle_mouse(
-              m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id))
+        if (image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id)) {
             return true;
+        }
     }
     return false;
 }
+
+static bool handle_input_godmsg(const mouse* m_dialog, const lang_message* msg) {
+    auto &data = g_message_dialog_data;
+    if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
+        return true;
+    }
+
+    if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0)) {
+        return true;
+    }
+
+    if (is_problem_message(msg)) {
+        if (image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 static bool handle_input_normal(const mouse* m_dialog, const lang_message* msg) {
     auto &data = g_message_dialog_data;
-    if (msg->type == TYPE_MANUAL
-        && image_buttons_handle_mouse(
-          m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 36, &image_button_back, 1, 0))
+    if (msg->type == TYPE_MANUAL && image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 36, &image_button_back, 1, 0)) {
         return true;
+    }
+
     if (msg->type == TYPE_MESSAGE) {
-        if (image_buttons_handle_mouse(
-              m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 40, get_advisor_button(), 1, 0))
+        if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 40, get_advisor_button(), 1, 0)) {
             return true;
+        }
+
         if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION) {
             if (image_buttons_handle_mouse(m_dialog, data.x + 64, data.y_text + 36, &image_button_go_to_problem, 1, 0))
                 return true;
         }
     }
 
-    if (image_buttons_handle_mouse(m_dialog,
-                                   data.x + 16 * msg->width_blocks - 38,
-                                   data.y + 16 * msg->height_blocks - 36,
-                                   &image_button_close,
-                                   1,
-                                   0))
+    if (image_buttons_handle_mouse(m_dialog, data.x + 16 * msg->width_blocks - 38, data.y + 16 * msg->height_blocks - 36, &image_button_close, 1, 0)) {
         return true;
+    }
+
     rich_text_handle_mouse(m_dialog);
     int text_id = rich_text_get_clicked_link(m_dialog);
     if (text_id >= 0) {
@@ -710,19 +734,24 @@ static bool handle_input_normal(const mouse* m_dialog, const lang_message* msg) 
     }
     return false;
 }
+
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto &data = g_message_dialog_data;
     data.focus_button_id = 0;
     const mouse* m_dialog = mouse_in_dialog(m);
     const lang_message* msg = lang_get_message(data.text_id);
     bool handled;
-    if (data.show_video)
+    if (data.show_video) {
         handled = handle_input_video(m_dialog, msg);
-    else
+    } else if (data.goddess_preview) {
+        handled = handle_input_godmsg(m_dialog, msg);
+    } else {
         handled = handle_input_normal(m_dialog, msg);
+    }
 
-    if (!handled && input_go_back_requested(m, h))
+    if (!handled && input_go_back_requested(m, h)) {
         button_close(0, 0);
+    }
 }
 
 static void cleanup() {
@@ -733,6 +762,7 @@ static void cleanup() {
     }
     g_player_message_data.message_advisor = 0;
 }
+
 static void button_back(int /* param1 */, int /* param2 */) {
     auto &data = g_message_dialog_data;
     if (data.num_history > 0) {
@@ -742,21 +772,25 @@ static void button_back(int /* param1 */, int /* param2 */) {
         window_invalidate();
     }
 }
+
 static void button_close(int param1, int param2) {
     cleanup();
     window_go_back();
     window_invalidate();
 }
+
 static void button_help(int param1, int param2) {
     auto &data = g_message_dialog_data;
     button_close(0, 0);
     window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, data.background_callback);
 }
+
 static void button_advisor(int advisor, int param2) {
     cleanup();
     if (!window_advisors_show_advisor((e_advisor)advisor))
         window_city_show();
 }
+
 static void button_go_to_problem(int param1, int param2) {
     auto &data = g_message_dialog_data;
     cleanup();
@@ -767,8 +801,10 @@ static void button_go_to_problem(int param1, int param2) {
         if (invasion_grid_offset > 0)
             grid_offset = invasion_grid_offset;
     }
-    if (grid_offset > 0 && grid_offset < 26244)
+
+    if (grid_offset > 0 && grid_offset < 26244) {
         camera_go_to_mappoint(map_point(grid_offset));
+    }
 
     window_city_show();
 }

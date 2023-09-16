@@ -4,7 +4,7 @@
 #include "core/application.h"
 #include "core/bstring.h"
 #include "io/log.h"
-#include "io/file.h"
+#include "content/vfs.h"
 
 #include <filesystem>
 #include <string>

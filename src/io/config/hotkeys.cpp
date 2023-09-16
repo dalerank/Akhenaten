@@ -2,7 +2,7 @@
 
 #include "game/system.h"
 #include "input/hotkey.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "io/log.h"
 
 #include <stdio.h>
@@ -240,7 +240,7 @@ static void load_defaults(void) {
 
 static void load_file(void) {
     hotkey_config_clear();
-    FILE* fp = file_open(INI_FILENAME, "rt");
+    FILE* fp = vfs::file_open(INI_FILENAME, "rt");
     if (!fp)
         return;
     char line_buffer[MAX_LINE];
@@ -268,7 +268,7 @@ static void load_file(void) {
             }
         }
     }
-    file_close(fp);
+    vfs::file_close(fp);
 }
 
 void hotkey_config_load(void) {
@@ -284,7 +284,7 @@ void hotkey_config_load(void) {
 void hotkey_config_save(void) {
     auto &data = g_config_hotkeys_data;
     hotkey_install_mapping(data.mappings, data.num_mappings);
-    FILE* fp = file_open(INI_FILENAME, "wt");
+    FILE* fp = vfs::file_open(INI_FILENAME, "wt");
     if (!fp) {
         logs::error("Unable to write hotkey configuration file %s", INI_FILENAME);
         return;
@@ -293,5 +293,5 @@ void hotkey_config_save(void) {
         const char* key_name = key_combination_name(data.mappings[i].key, data.mappings[i].modifiers);
         fprintf(fp, "%s=%s\n", ini_keys[data.mappings[i].action], key_name);
     }
-    file_close(fp);
+    vfs::file_close(fp);
 }

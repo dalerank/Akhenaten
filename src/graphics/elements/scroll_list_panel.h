@@ -2,7 +2,6 @@
 
 #include "graphics/elements/generic_button.h"
 #include "io/dir.h"
-#include "io/file.h"
 #include "scrollbar.h"
 
 #include <vector>
@@ -35,7 +34,7 @@ struct scrollable_list_ui_params {
     font_t font_selected = FONT_NORMAL_WHITE_ON_DARK;
 };
 
-enum {
+enum scroll_list_file_param {
     FILE_NO_EXT,
     FILE_WITH_EXT,
     FILE_FULL_PATH,
@@ -48,21 +47,21 @@ private:
     int num_buttons;
     int focus_button_id = 0;     // first valid --> 1
     int selected_entry_idx = -1; // first valid --> 0
-    void (*left_click_callback)(int param1, int param2);
-    void (*right_click_callback)(int param1, int param2);
-    void (*double_click_callback)(int param1, int param2);
-    void (*focus_change_callback)(int param1, int param2);
+    void (*left_click_callback)(int param1, int param2) = nullptr;
+    void (*right_click_callback)(int param1, int param2) = nullptr;
+    void (*double_click_callback)(int param1, int param2) = nullptr;
+    void (*focus_change_callback)(int param1, int param2) = nullptr;
 
     scrollbar_type scrollbar;
 
-    const dir_listing* file_finder;
-    char files_dir[MAX_FILE_NAME];
-    char files_ext[MAX_FILE_NAME];
+    const dir_listing* file_finder = nullptr;
+    bstring256 files_dir;
+    bstring256 files_ext;
     bool using_file_finder;
 
-    char manual_entry_list[MAX_FILE_NAME][MAX_MANUAL_ENTRIES];
+    bstring256 manual_entry_list[MAX_MANUAL_ENTRIES];
 
-    void (*custom_text_render)(int button_index, const uint8_t* text, int x, int y, font_t font);
+    void (*custom_text_render)(int button_index, const uint8_t* text, int x, int y, font_t font) = nullptr;
     bool using_custom_text_render = false;
 
     bool WAS_DRAWN = false; // for frame-ordered caching logic purposes

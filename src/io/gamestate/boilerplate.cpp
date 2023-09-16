@@ -49,7 +49,7 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "grid/floodplain.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "scenario/criteria.h"
 #include "scenario/demand_change.h"
 #include "scenario/distant_battle.h"
@@ -764,7 +764,7 @@ bool GamestateIO::delete_savegame(const char* filename_short) {
     bstring256 full = fullpath_saves(filename_short);
 
     // delete file
-    return file_remove(full);
+    return vfs::file_remove(full);
 }
 
 bool GamestateIO::delete_family(char const* family_name) {
@@ -779,5 +779,5 @@ bool GamestateIO::delete_map(const char* filename_short) {
     fullpath_maps(full, filename_short);
 
     // delete file
-    return file_remove(full);
+    return vfs::file_remove(full);
 }

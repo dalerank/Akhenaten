@@ -1,16 +1,21 @@
-#include "file.h"
+#include "vfs.h"
 
 #include "core/string.h"
+#include "platform/platform.h"
 #include "platform/file_manager.h"
 
-FILE* file_open(const char* filename, const char* mode) {
+#include <filesystem>
+
+namespace vfs{
+
+FILE * file_open(const char *filename, const char *mode) {
     return platform_file_manager_open_file(filename, mode);
 }
-int file_close(FILE* stream) {
+int file_close(FILE * stream) {
     return fclose(stream);
 }
 
-bool file_has_extension(const char* filename, const char* extension) {
+bool file_has_extension(const char *filename, const char *extension) {
     if (!extension || !*extension)
         return true;
 
@@ -24,12 +29,13 @@ bool file_has_extension(const char* filename, const char* extension) {
 
     return string_compare_case_insensitive(filename, extension) == 0;
 }
-void file_change_extension(char* filename, const char* new_extension) {
+void file_change_extension(char *filename, const char *new_extension) {
     char c;
     do {
         c = *filename;
         filename++;
     } while (c != '.' && c);
+
     if (c == '.') {
         filename[0] = new_extension[0];
         filename[1] = new_extension[1];
@@ -37,7 +43,8 @@ void file_change_extension(char* filename, const char* new_extension) {
         filename[3] = 0;
     }
 }
-void file_append_extension(char* filename, const char* extension) {
+
+void file_append_extension(char *filename, const char *extension) {
     char c;
     do {
         c = *filename;
@@ -50,7 +57,8 @@ void file_append_extension(char* filename, const char* extension) {
     filename[3] = extension[2];
     filename[4] = 0;
 }
-void file_remove_extension(uint8_t* filename) {
+
+void file_remove_extension(uint8_t * filename) {
     uint8_t c;
     do {
         c = *filename;
@@ -62,20 +70,17 @@ void file_remove_extension(uint8_t* filename) {
     }
 }
 
-bool file_exists(const char* filename, int localizable) {
-    bstring256 path = dir_get_file(filename, localizable);
+bool file_exists(const char *filename) {
+    bstring256 path = dir_get_file(filename);
     if (path.empty()) {
         return false;
     }
 
-    FILE* fp = file_open(path, "rb");
-    if (fp) {
-        file_close(fp);
-        return true;
-    }
-
-    return false;
+    return std::filesystem::exists(path.c_str());
 }
-bool file_remove(const char* filename) {
+
+bool file_remove(const char *filename) {
     return platform_file_manager_remove_file(filename);
 }
+
+} //

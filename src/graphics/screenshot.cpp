@@ -4,7 +4,7 @@
 #include "core/buffer.h"
 #include "color.h"
 #include "io/config/config.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "io/log.h"
 #include "core/string.h"
 #include "grid/grid.h"
@@ -56,7 +56,7 @@ static void image_free(void)
     free(screenshot.pixels);
     screenshot.pixels = 0;
     if (screenshot.fp) {
-        file_close(screenshot.fp);
+        vfs::file_close(screenshot.fp);
         screenshot.fp = 0;
     }
     png_destroy_write_struct(&screenshot.png_ptr, &screenshot.info_ptr);
@@ -116,7 +116,7 @@ static const char *generate_filename(screenshot_type type) {
 }
 
 static int image_begin_io(const char *filename) {
-    FILE *fp = file_open(filename, "wb");
+    FILE *fp = vfs::file_open(filename, "wb");
     if (!fp) {
         return 0;
     }

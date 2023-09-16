@@ -56,10 +56,11 @@ static void init() {
     player_data_load(data.player_name);
 
     data.last_autosave = player_get_last_autosave();
-    if (strcmp(data.last_autosave, "") == 0 || !file_exists(data.last_autosave, NOT_LOCALIZED))
+    if (strcmp(data.last_autosave, "") == 0 || !vfs::file_exists(data.last_autosave)) {
         data.to_begin_history = true;
-    else
+    } else {
         data.to_begin_history = false;
+    }
     // in OG pharaoh, the "load save" button doesn't appear if there are no saves
     data.has_saved_games = true;
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/buffer.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "io/file_formats.h"
 #include "io/io_buffer.h"
 #include <vector>
@@ -30,6 +30,7 @@ struct file_chunk_t {
 //      > read the file contents into the chunk cache (io_buffer sequence)
 //      > close the file handle
 //      > load the GAME STATE into the engine from the chunk cache
+
 class FileIOManager {
 private:
     bool loaded = false;

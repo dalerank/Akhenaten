@@ -2,7 +2,7 @@
 
 #include "core/buffer.h"
 #include "core/game_environment.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "io/io.h"
 #include "io/log.h"
 #include "translation/translation.h"
@@ -54,12 +54,8 @@ lang_files_collection lfcs[] = {{"c3.eng", "c3_mm.eng", "c3.rus", "c3_mm.rus", "
                                  "Pharaoh_Map_MM.eng"}};
 
 static bool file_exists_in_dir(const char* dir, const char* file) {
-    char path[2 * MAX_FILE_NAME];
-    path[2 * MAX_FILE_NAME - 1] = 0;
-    strncpy(path, dir, 2 * MAX_FILE_NAME - 1);
-    strncat(path, "/", 2 * MAX_FILE_NAME - 1);
-    strncat(path, file, 2 * MAX_FILE_NAME - 1);
-    return file_exists(path, NOT_LOCALIZED);
+    bstring256 path(dir, "/", file);
+    return vfs::file_exists(path);
 }
 
 bool lang_dir_is_valid(const char* dir) {

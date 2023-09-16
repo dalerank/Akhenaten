@@ -4,7 +4,7 @@
 #include "game/settings.h"
 #include "graphics/boilerplate.h"
 #include "io/dir.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "io/gamefiles/smacker.h"
 #include "platform/renderer.h"
 #include "screen.h"
@@ -45,12 +45,12 @@ static void close_smk(void) {
 }
 
 static int load_smk(const char* filename) {
-    bstring256 path = dir_get_file(filename, MAY_BE_LOCALIZED);
+    bstring256 path = dir_get_file(filename);
     if (path.empty()) {
         return 0;
     }
 
-    FILE* fp = file_open(path, "rb");
+    FILE* fp = vfs::file_open(path, "rb");
     data.s = smacker_open(fp);
     if (!data.s) {
         // smacker_open() closes the stream on error: no need to close fp
