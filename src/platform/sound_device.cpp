@@ -80,7 +80,7 @@ static int percentage_to_volume(int percentage) {
 }
 
 static Mix_Chunk* load_chunk(const char* filename) {
-    if (filename[0]) {
+    if (filename && *filename) {
 #if defined(__vita__) || defined(GAME_PLATFORM_ANDROID)
         FILE* fp = file_open(filename, "rb");
         if (!fp)
