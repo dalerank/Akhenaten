@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+using pcstr = const char *;
+
 template <size_t _size>
 class bstring {
     using ref = bstring<_size>&;
@@ -37,92 +39,30 @@ public:
     inline bstring(const_ref other) {
         ::strncpy(_data, other._data, _size);
     }
-    inline bstring(const char* s1) {
-        concat(s1);
-    }
-    inline bstring(const char* s1, const char* s2) {
-        concat(s1, s2);
-    }
-    inline bstring(const char* s1, const char* s2, const char* s3) {
-        concat(s1, s2, s3);
-    }
-    inline bstring(const char* s1, const char* s2, const char* s3, const char* s4) {
-        concat(s1, s2, s3, s4);
-    }
-    inline bstring(const char* s1, const char* s2, const char* s3, const char* s4, const char* s5) {
-        concat(s1, s2, s3, s4, s5);
-    }
-    inline bstring(const char* s1, const char* s2, const char* s3, const char* s4, const char* s5, const char* s6) {
-        concat(s1, s2, s3, s4, s5, s6);
-    }
-    inline bstring(const char* s1,
-                   const char* s2,
-                   const char* s3,
-                   const char* s4,
-                   const char* s5,
-                   const char* s6,
-                   const char* s7) {
-        concat(s1, s2, s3, s4, s5, s6, s7);
-    }
-    inline ref concat(const char* s1) {
-        snprintf(_data, _size, "%s", s1);
-        return *this;
-    }
-    inline ref concat(const char* s1, const char* s2) {
-        snprintf(_data, _size, "%s%s", s1, s2);
-        return *this;
-    }
-    inline ref concat(const char* s1, const char* s2, const char* s3) {
-        snprintf(_data, _size, "%s%s%s", s1, s2, s3);
-        return *this;
-    }
-    inline ref concat(const char* s1, const char* s2, const char* s3, const char* s4) {
-        snprintf(_data, _size, "%s%s%s%s%s", s1, s2, s3, s4);
-        return *this;
-    }
-    inline ref concat(const char* s1, const char* s2, const char* s3, const char* s4, const char* s5) {
-        snprintf(_data, _size, "%s%s%s%s%s", s1, s2, s3, s4, s5);
-        return *this;
-    }
-    inline ref concat(const char* s1, const char* s2, const char* s3, const char* s4, const char* s5, const char* s6) {
-        snprintf(_data, _size, "%s%s%s%s%s%s", s1, s2, s3, s4, s5, s6);
-        return *this;
-    }
-    inline ref concat(const char* s1,
-                      const char* s2,
-                      const char* s3,
-                      const char* s4,
-                      const char* s5,
-                      const char* s6,
-                      const char* s7) {
-        snprintf(_data, _size, "%s%s%s%s%s%s%s", s1, s2, s3, s4, s5, s6, s7);
-        return *this;
-    }
-    inline ref cat(const char* s) {
-        snprintf(_data, _size, "%s%s", _data, s);
-        return *this;
-    }
-    inline ref cat(const char* s1, const char* s2) {
-        snprintf(_data, _size, "%s%s%s", _data, s1, s2);
-        return *this;
-    }
-    inline ref cat(const char* s1, const char* s2, const char* s3) {
-        snprintf(_data, _size, "%s%s%s%s", _data, s1, s2, s3);
-        return *this;
-    }
-    inline ref cat(const char* s1, const char* s2, const char* s3, const char* s4) {
-        snprintf(_data, _size, "%s%s%s%s%s", _data, s1, s2, s3, s4);
-        return *this;
-    }
-    inline ref cat(const char* s1, const char* s2, const char* s3, const char* s4, const char* s5) {
-        snprintf(_data, _size, "%s%s%s%s%s%s", _data, s1, s2, s3, s4, s5);
-        return *this;
-    }
 
-    inline ref ncat(const char* s, size_t cnt) {
-        ::strncat(_data, s, cnt);
-        return *this;
-    }
+    inline bstring(pcstr s1) { concat(s1); }
+    inline bstring(pcstr s1, pcstr s2) { concat(s1, s2); }
+    inline bstring(pcstr s1, pcstr s2, pcstr s3) { concat(s1, s2, s3); }
+    inline bstring(pcstr s1, pcstr s2, pcstr s3, pcstr s4) { concat(s1, s2, s3, s4); }
+    inline bstring(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5) { concat(s1, s2, s3, s4, s5); }
+    inline bstring(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5, pcstr s6) { concat(s1, s2, s3, s4, s5, s6); }
+    inline bstring(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5, pcstr s6, pcstr s7) { concat(s1, s2, s3, s4, s5, s6, s7); }
+
+    inline ref concat(pcstr s1) { snprintf(_data, _size, "%s", s1); return *this; }
+    inline ref concat(pcstr s1, pcstr s2) { snprintf(_data, _size, "%s%s", s1, s2); return *this; }
+    inline ref concat(pcstr s1, pcstr s2, pcstr s3) { snprintf(_data, _size, "%s%s%s", s1, s2, s3); return *this; }
+    inline ref concat(pcstr s1, pcstr s2, pcstr s3, pcstr s4) { snprintf(_data, _size, "%s%s%s%s", s1, s2, s3, s4); return *this; }
+    inline ref concat(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5) { snprintf(_data, _size, "%s%s%s%s%s", s1, s2, s3, s4, s5); return *this; }
+    inline ref concat(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5, pcstr s6) { snprintf(_data, _size, "%s%s%s%s%s%s", s1, s2, s3, s4, s5, s6); return *this; }
+    inline ref concat(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5, pcstr s6, pcstr s7) { snprintf(_data, _size, "%s%s%s%s%s%s%s", s1, s2, s3, s4, s5, s6, s7); return *this; }
+
+    inline ref cat(pcstr s) { snprintf(_data, _size, "%s%s", _data, s); return *this; }
+    inline ref cat(pcstr s1, pcstr s2) { snprintf(_data, _size, "%s%s%s", _data, s1, s2); return *this; }
+    inline ref cat(pcstr s1,pcstr s2, pcstr s3) { snprintf(_data, _size, "%s%s%s%s", _data, s1, s2, s3); return *this; }
+    inline ref cat(pcstr s1,pcstr s2, pcstr s3, pcstr s4) { snprintf(_data, _size, "%s%s%s%s%s", _data, s1, s2, s3, s4); return *this; }
+    inline ref cat(pcstr*s1,pcstr s2, pcstr s3, pcstr s4, pcstr s5) { snprintf(_data, _size, "%s%s%s%s%s%s", _data, s1, s2, s3, s4, s5); return *this; }
+
+    inline ref ncat(const char* s, size_t cnt) { ::strncat(_data, s, cnt); return *this; }
 
     inline ref append(const char* s) {
         size_t size = this->len();
@@ -142,20 +82,10 @@ public:
 
         return *this;
     }
-    inline ref itoa(int n) {
-        ::snprintf(_data, _size, "%d", n);
-        return *this;
-    }
-    inline int atoi() {
-        return ::atoi(_data);
-    }
-    inline float atof() {
-        return ::atof(_data);
-    }
-
-    inline int64_t atoi64() {
-        return ::strtoll(_data);
-    }
+    inline ref itoa(int n) { ::snprintf(_data, _size, "%d", n); return *this; }
+    inline int atoi() { return ::atoi(_data); }
+    inline float atof() { return ::atof(_data); }
+    inline int64_t atoi64() { return ::strtoll(_data); }
 
     template <typename... Args>
     inline ref printf(const char* fmt, Args&&... args) {
@@ -200,9 +130,8 @@ public:
         const char * ptr = strstr(_data, s);
         return (ptr && (ptr == _data[mylen - slen]));
     }
-    inline char back() const {
-        return empty() ? 0 : (_data[len() - 1]);
-    }
+
+    inline char back() const { return empty() ? 0 : (_data[len() - 1]); }
 
     inline ref replace(const char x, const char y) {
         std::replace_if(_data, _data + len(), [x](char c) { return c == x; }, y);
@@ -223,91 +152,37 @@ public:
         }
         return *this;
     }
-    inline size_t len() const {
-        return ::strlen(_data);
-    }
-    inline bool empty() const {
-        return !_data[0];
-    }
-    inline void clear() {
-        _data[0] = 0;
-    }
-    inline bool equals(const_ref other) const {
-        return ::strncmp(_data, other._data, _size) == 0;
-    }
-    inline bool equals(const char* s) const {
-        assert(s);
-        return ::strncmp(_data, s, _size) == 0;
-    }
-    inline void operator=(const_ref other) {
-        ::strncpy(_data, other._data, _size);
-    }
-    inline void operator=(const char* s) {
-        ::snprintf(_data, _size, "%s", s ? s : "null");
-    }
-    inline void operator=(const uint8_t* s) {
-        ::snprintf(_data, _size, "%s",  s ? (const char*)s : "null");
-    }
-    inline bool operator==(const_ref other) const {
-        return equals(other);
-    }
-    inline operator const uint8_t *() const {
-        return (const uint8_t *)_data;
-    }
-    inline operator uint8_t *() {
-        return (uint8_t *)_data;
-    }
-    inline bool operator==(const char* s) const {
-        assert(s);
-        return ::strncmp(_data, s, _size) == 0;
-    }
 
-    inline bool operator!=(const_ref other) const {
-        return !equals(other);
-    }
-    inline bool operator!=(const char* s) const {
-        assert(s);
-        return ::strncmp(_data, s, _size) != 0;
-    }
+    inline size_t len() const { return ::strlen(_data); }
+    inline bool empty() const { return !_data[0]; }
+    inline void clear() { _data[0] = 0; }
+    inline bool equals(const_ref other) const { return ::strncmp(_data, other._data, _size) == 0; }
+    inline bool equals(const char* s) const { assert(s); return ::strncmp(_data, s, _size) == 0; }
+    inline void operator=(const_ref other) { ::strncpy(_data, other._data, _size); }
+    inline void operator=(const char* s) { ::snprintf(_data, _size, "%s", s ? s : "null"); }
+    inline void operator=(const uint8_t* s) { ::snprintf(_data, _size, "%s",  s ? (const char*)s : "null"); }
+    inline bool operator==(const_ref other) const { return equals(other); }
+    inline operator const uint8_t *() const { return (const uint8_t *)_data; }
+    inline operator uint8_t *() { return (uint8_t *)_data; }
+    inline bool operator==(const char* s) const { assert(s); return ::strncmp(_data, s, _size) == 0; }
 
-    inline operator char*() {
-        return _data;
-    }
-    inline operator const char*() const {
-        return _data;
-    }
+    inline bool operator!=(const_ref other) const { return !equals(other); }
+    inline bool operator!=(const char* s) const { assert(s); return ::strncmp(_data, s, _size) != 0; }
 
-    inline const char* strstr(const_ref sub_str) const {
-        return ::strstr(_data, sub_str._data);
-    }
-    inline const char* strstr(const_ref sub_str) {
-        return ::strstr(_data, sub_str._data);
-    }
-    inline int cmp(const_ref other) const {
-        return strcmp(_data, other._data);
-    }
-    inline int icmp(const_ref other) const {
-        return stricmp(_data, other._data);
-    }
-    inline int ncmp(const_ref other, unsigned int count) const {
-        return ::strncmp(_data, other._data, count);
-    }
+    inline operator char*() { return _data; }
+    inline operator const char*() const { return _data; }
 
-    inline const char* strstr(const char* sub_str) const {
-        return ::strstr(_data, sub_str);
-    }
-    inline const char* strstr(const char* sub_str) {
-        return ::strstr(_data, sub_str);
-    }
-    inline int cmp(const char* str) const {
-        return strcmp(_data, str);
-    }
-    inline int icmp(const char* str) const {
-        return stricmp(_data, str);
-    }
-    inline int ncmp(const char* str, unsigned int count) const {
-        return ::strncmp(_data, str, count);
-    }
+    inline const char* strstr(const_ref sub_str) const { return ::strstr(_data, sub_str._data); }
+    inline const char* strstr(const_ref sub_str) { return ::strstr(_data, sub_str._data); }
+    inline int cmp(const_ref other) const { return strcmp(_data, other._data); }
+    inline int icmp(const_ref other) const { return stricmp(_data, other._data); }
+    inline int ncmp(const_ref other, unsigned int count) const { return ::strncmp(_data, other._data, count); }
+
+    inline const char* strstr(const char* sub_str) const { return ::strstr(_data, sub_str); }
+    inline const char* strstr(const char* sub_str) { return ::strstr(_data, sub_str); }
+    inline int cmp(const char* str) const { return strcmp(_data, str); }
+    inline int icmp(const char* str) const { return stricmp(_data, str); }
+    inline int ncmp(const char* str, unsigned int count) const { return ::strncmp(_data, str, count); }
 };
 
 using bstring32 = bstring<32>;
@@ -316,4 +191,3 @@ using bstring128 = bstring<128>;
 using bstring256 = bstring<256>;
 using bstring512 = bstring<512>;
 using bstring1024 = bstring<1024>;
-using pcstr = const char *;
