@@ -1,7 +1,7 @@
 #include "image.h"
 #include "font.h"
 #include "image_groups.h"
-#include "io/imagepaks/imagepak.h"
+#include "content/imagepak.h"
 
 struct image_data_t {
     bool fonts_enabled;
@@ -39,23 +39,25 @@ image_data_t *g_image_data = nullptr;
 // sense to me to have here as "core" image struct/class & game graphics related functions.
 
 bool set_pak_in_collection(int pak_id, imagepak** pak, std::vector<imagepak*>* collection) {
-    if (pak_id >= collection->size())
+    if (pak_id >= collection->size()) {
         return false;
+    }
+
     *pak = collection->at(pak_id);
     return true;
 }
 bool image_set_font_pak(encoding_type encoding) {
     auto& data = *g_image_data;
     // TODO?
-    if (encoding == ENCODING_CYRILLIC)
+    if (encoding == ENCODING_CYRILLIC) {
         return false;
-    else if (encoding == ENCODING_TRADITIONAL_CHINESE)
+    } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
         return false;
-    else if (encoding == ENCODING_SIMPLIFIED_CHINESE)
+    } else if (encoding == ENCODING_SIMPLIFIED_CHINESE) {
         return false;
-    else if (encoding == ENCODING_KOREAN)
+    } else if (encoding == ENCODING_KOREAN) {
         return false;
-    else {
+    } else {
         //        free(data.font);
         //        free(data.font_data);
         //        data.font = 0;

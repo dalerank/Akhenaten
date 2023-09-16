@@ -12,7 +12,7 @@
 #include "input/mouse.h"
 #include "content/vfs.h"
 #include "io/gamefiles/lang.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "platform/arguments.h"
 #include "platform/cursor.h"
 #include "platform/file_manager.h"
@@ -59,9 +59,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 
-#if !SDL_VERSION_ATLEAST(2, 0, 17)
-#error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
-#endif
+static_assert(SDL_VERSION_ATLEAST(2, 0, 17));
 
 #define INTPTR(d) (*(int*)(d))
 

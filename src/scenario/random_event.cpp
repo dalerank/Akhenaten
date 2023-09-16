@@ -9,7 +9,7 @@
 #include "city/population.h"
 #include "city/trade.h"
 #include "core/random.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "scenario/property.h"
 #include "scenario/scenario_data.h"
 
