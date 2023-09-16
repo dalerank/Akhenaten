@@ -4,6 +4,7 @@
 #include "core/application.h"
 #include "core/bstring.h"
 #include "io/log.h"
+#include "io/file.h"
 
 #include <filesystem>
 #include <string>
@@ -156,6 +157,28 @@ static int parse_decimal_as_percentage(const char* str) {
 
 Arguments::Arguments(int argc, char** argv) {
     data_directory_ = std::filesystem::current_path().string().c_str();
+#if defined(GAME_PLATFORM_WIN)
+    auto get_steam_path = [] () {
+        DWORD dwType = REG_SZ;
+        HKEY hKey = 0;
+        char value[1024] = {0};
+        DWORD value_length = 1024;
+        RegOpenKeyA(HKEY_CURRENT_USER, "SOFTWARE\\Valve\\Steam", &hKey);
+        RegQueryValueExA(hKey, "SteamPath", NULL, &dwType, (LPBYTE)&value, &value_length);
+        return bstring256(value);
+    };
+
+    bstring256 steam_path = get_steam_path();
+    if (!steam_path.empty()) {
+        bstring256 pharaoh_steam_path(steam_path, "/steamapps/common/Pharaoh + Cleopatra/");
+        bstring256 pharaoh_exe_path(pharaoh_steam_path, "Pharaoh.exe");
+        bool binary_exist = std::filesystem::exists(pharaoh_exe_path.c_str());
+        if (binary_exist) {
+            logs::info("Steam pharaoh path: %s", pharaoh_steam_path);
+            data_directory_ = pharaoh_steam_path;
+        }
+    }
+#endif
     arguments::load(*this);
     parse_cli_(argc, argv);
 }
@@ -199,8 +222,9 @@ int Arguments::get_display_scale_percentage() const {
 }
 
 void Arguments::set_display_scale_percentage(int value) {
-    if (value < 50 || value > 500)
+    if (value < 50 || value > 500) {
         app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+    }
 
     display_scale_percentage_ = value;
 }
@@ -210,8 +234,9 @@ int Arguments::get_cursor_scale_percentage() const {
 }
 
 void Arguments::set_cursor_scale_percentage(int value) {
-    if (value != 100 && value != 150 && value != 200)
+    if (value != 100 && value != 150 && value != 200) {
         app::terminate(CURSOR_SCALE_ERROR_MESSAGE);
+    }
 
     cursor_scale_percentage_ = value;
 }
@@ -293,9 +318,9 @@ namespace arguments {
 void load(Arguments& arguments) {
     std::ifstream input(get_configuration_path(), std::ios::in);
 
-    if (!input.is_open())
+    if (!input.is_open()) {
         logs::info("Configuration file was not found.");
-    else {
+    } else {
         std::string line;
         while (std::getline(input, line)) {
             auto pos = line.find('=');

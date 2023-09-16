@@ -31,7 +31,7 @@ public:
     void set_window_size(display_size value);
 
 private:
-    bstring512 data_directory_;
+    bstring256 data_directory_;
     bstring64 renderer_;
     int display_scale_percentage_ = 100;
     int cursor_scale_percentage_ = 100;
