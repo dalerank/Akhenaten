@@ -51,10 +51,11 @@ void window_building_draw_terrain(building_info_context* c) {
     else {
         if (c->can_play_sound) {
             c->can_play_sound = 0;
-            if (c->figure.count > 0)
+            if (c->figure.count > 0) {
                 window_building_play_figure_phrase(c);
-            else
+            } else {
                 sound_speech_play_file("wavs/empty_land.wav");
+            }
         }
 
         if (c->figure.count > 0 && c->figure.figure_ids[c->figure.selected_index]) {

@@ -11,6 +11,7 @@
 #include "city/resource.h"
 #include "city/sentiment.h"
 #include "core/calc.h"
+#include "core/bstring.h"
 #include "core/game_environment.h"
 #include "figure/trader.h"
 #include "figuretype/trader.h"
@@ -18,38 +19,123 @@
 
 #include <string.h>
 
-#define SOUND_FILENAME_MAX 32
+struct e_figure_sound {
+    e_figure_type type;
+    bstring32 prefix;
+};
 
-static const char FIGURE_SOUNDS[2][50][SOUND_FILENAME_MAX]
-  = {{"vigils",    "wallguard", "engine", "taxman", "market", "crtpsh",   "donkey",     "boats",
-      "priest",    "teach",     "pupils", "bather", "doctor", "mortuary", "actors",     "gladtr",
-      "liontr",    "charot",    "patric", "pleb",   "rioter", "homeless", "unemploy",   "emigrate",
-      "immigrant", "enemy",     "local",  "libary", "srgeon", "docker",   "missionary", "granboy"},
-     {
-       //
-     }};
+static e_figure_sound g_figure_sounds[] = {
+    {FIGURE_APOTHECARY, "apothecary"},
+    {FIGURE_NONE, "artisan"},
+    {FIGURE_NONE, "barge"},
+    {FIGURE_NONE, "brick"},
+    {FIGURE_TRADE_CARAVAN, "caravan"},
+    {FIGURE_NONE, "carpenter"},
+    {FIGURE_CART_PUSHER, "cartpusher"},
+    {FIGURE_DANCER, "dancer"},
+    {FIGURE_DENTIST, "dentist"},
+    {FIGURE_NONE, "desease"},
+    {FIGURE_DOCKER, "dock_pusher"},
+    {FIGURE_PHYSICIAN, "doctor"},
+    {FIGURE_NONE, "embalmer"},
+    {FIGURE_EMIGRANT, "emigrant"},
+    {FIGURE_ENGINEER, "engineer"},
+    {FIGURE_FIREMAN, "fireman"},
+    {FIGURE_FISHING_BOAT, "fishing"},
+    {FIGURE_NONE, "governor"},
+    {FIGURE_NONE, "guard"},
+    {FIGURE_OSTRICH_HUNTER, "hunt_ant"},
+    {FIGURE_IMMIGRANT, "immigrant"},
+    {FIGURE_JUGGLER, "juggler"},
+    {FIGURE_NONE, "labor"},
+    {FIGURE_LIBRARIAN, "library"},
+    {FIGURE_MAGISTRATE, "magistrate"},
+    {FIGURE_DELIVERY_BOY, "marketboy"},
+    {FIGURE_MARKET_BUYER, "mkt_buyer"},
+    {FIGURE_MARKET_TRADER, "mkt_seller"},
+    {FIGURE_MUSICIAN, "musician"},
+    {FIGURE_NONE, "pharaoh"},
+    {FIGURE_POLICEMAN, "plice"},
+    {FIGURE_PRIEST, "priest_bast"},
+    {FIGURE_PRIEST, "priest_osiris"},
+    {FIGURE_PRIEST, "priest_ptah"},
+    {FIGURE_PRIEST, "priest_ra"},
+    {FIGURE_PRIEST, "priest_seth"},
+    {FIGURE_REED_GATHERER, "reed"},
+    {FIGURE_CRIMINAL, "robber"},
+    {FIGURE_NONE, "scribe"},
+    {FIGURE_NONE, "senet"},
+    {FIGURE_TAX_COLLECTOR, "taxman"},
+    {FIGURE_TEACHER,"teacher"},
+    {FIGURE_NONE, "thief"},
+    {FIGURE_NONE, "transport"},
+    {FIGURE_NONE, "vagrant"},
+    {FIGURE_NONE, "warship"},
+    {FIGURE_WATER_CARRIER, "water"},
+    {FIGURE_NONE, "woodcutter"},
+    {FIGURE_WORKER, "worker"},
+    {FIGURE_NONE, "zookeeper"}
+};
 
-static const char FIGURE_PHRASE_VARIANTS[2][20][SOUND_FILENAME_MAX]
-  = {{"_starv1.wav", "_nojob1.wav", "_needjob1.wav", "_nofun1.wav", "_relig1.wav", "_great1.wav", "_great2.wav",
-      "_exact1.wav", "_exact2.wav", "_exact3.wav",   "_exact4.wav", "_exact5.wav", "_exact6.wav", "_exact7.wav",
-      "_exact8.wav", "_exact9.wav", "_exact0.wav",   "_free1.wav",  "_free2.wav",  "_free3.wav"},
-     {"_g01.wav", "_g02.wav", "_g03.wav", "_g04.wav", "_g05.wav", "_g06.wav", "_g07.wav",
-      "_g08.wav", "_g09.wav", "_g10.wav", "_e01.wav", "_e02.wav", "_e03.wav", "_e04.wav",
-      "_e05.wav", "_e06.wav", "_e07.wav", "_e08.wav", "_e09.wav", "_e10.wav"}};
+enum e_figure_phrase {
+    figure_sound_none,
+    figure_sound_starved,
+    figure_sound_nojob,
+    figure_sound_needjob,
+    figure_sound_noentert,
+    figure_sound_religion,
+    figure_sound_greatings_1,
+    figure_sound_greatings_2,
+    figure_sound_greatings_3,
+    figure_sound_greatings_4,
+    figure_sound_greatings_5,
+    figure_sound_greatings_6,
+    figure_sound_greatings_7,
+    figure_sound_exact,
+    figure_sound_exact_2,
+    figure_sound_exact_3,
+    figure_sound_exact_4,
+    figure_sound_exact_5,
+    figure_sound_exact_6,
+    figure_sound_exact_7,
+    figure_sound_exact_8,
+    figure_sound_exact_9,
+    figure_sound_exact_10,
+    figure_sound_free,
+    figure_sound_max
+};
 
-static const int int_TO_SOUND_TYPE[2][200] = {{
-                                                -1, 24, 23, 21, 5,  19, -1, 3,  2,  5,  // 0-9
-                                                0,  1,  1,  1,  -1, 14, 15, 16, 17, 6,  // 10-19
-                                                7,  6,  20, 20, 20, -1, 4,  8,  10, 9,  // 20-29
-                                                9,  13, 11, 12, 12, 19, -1, -1, 5,  4,  // 30-39
-                                                18, -1, 1,  25, 25, 25, 25, 25, 25, 25, // 40-49
-                                                25, 25, 25, 25, 25, 25, 25, 25, -1, -1, // 50-59
-                                                -1, -1, -1, -1, 30, -1, 31, -1, -1, -1, // 60-69
-                                                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  // 70-79
-                                              },
-                                              {
-                                                //
-                                              }};
+struct phrase_variant {
+    e_figure_phrase phrase;
+    svector<bstring32, 10> exts;
+};
+
+static phrase_variant g_figure_phrase_variants[figure_sound_max] = {
+    {figure_sound_none, {""}},
+    {figure_sound_starved, {"_g01"}},
+    {figure_sound_nojob, {"_g02"}},
+    {figure_sound_needjob, {"_g03"}},
+    {figure_sound_noentert, {"_g04"}},
+    {figure_sound_religion, {"_g05"}},
+    {figure_sound_greatings_1, {"_g06"}},
+    {figure_sound_greatings_2, {"_g07"}},
+    {figure_sound_greatings_3, {"_g08"}},
+    {figure_sound_greatings_4, {"_g09"}},
+    {figure_sound_greatings_5, {"_g10"}},
+    {figure_sound_greatings_6, {"_g10"}},
+    {figure_sound_greatings_7, {"_g10"}},
+    {figure_sound_exact, {"_e01"}},
+    {figure_sound_exact_2, {"_e02"}},
+    {figure_sound_exact_3, {"_e03"}},
+    {figure_sound_exact_4, {"_e04"}},
+    {figure_sound_exact_5, {"_e05"}},
+    {figure_sound_exact_6, {"_e06"}},
+    {figure_sound_exact_7, {"_e07"}},
+    {figure_sound_exact_8, {"_e08"}},
+    {figure_sound_exact_9, {"_e09"}},
+    {figure_sound_exact_10, {"_e10"}},
+    {figure_sound_free, {"_f01"}}
+};
 
 static int lion_tamer_phrase() {
     //    if (action_state == FIGURE_ACTION_150_ATTACK) {
@@ -88,14 +174,15 @@ static int market_trader_phrase() {
     return 0;
 }
 
-static int market_buyer_phrase() {
-    //    if (action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE)
-    //        return 7;
-    //    else if (action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING)
-    //        return 8;
-    //    else {
-    //        return 0;
-    //    }
+static int market_buyer_phrase(figure *f) {
+    if (f->action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
+        return figure_sound_greatings_3;
+    } else if (f->action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
+        return figure_sound_greatings_4;
+    } else {
+        return 0;
+    }
+
     return 0;
 }
 
@@ -149,6 +236,7 @@ static int prefect_phrase() {
     //    else {
     //        return 9;
     //    }
+    return 0;
 }
 
 static int engineer_phrase() {
@@ -159,6 +247,7 @@ static int engineer_phrase() {
     //    else {
     //        return 0;
     //    }
+    return 0;
 }
 
 static int citizen_phrase() {
@@ -166,6 +255,7 @@ static int citizen_phrase() {
     //        f->phrase_sequence_exact = 0;
     //
     //    return 7 + f->phrase_sequence_exact;
+    return 0;
 }
 
 static int house_seeker_phrase() {
@@ -173,20 +263,21 @@ static int house_seeker_phrase() {
     //        f->phrase_sequence_exact = 0;
     //
     //    return 7 + f->phrase_sequence_exact;
+    return 0;
 }
 
-static int emigrant_phrase(void) {
+static int emigrant_phrase() {
     switch (city_sentiment_low_mood_cause()) {
     case LOW_MOOD_NO_JOBS:
-        return 7;
+        return figure_sound_greatings_2;
     case LOW_MOOD_NO_FOOD:
-        return 8;
+        return figure_sound_greatings_3;
     case LOW_MOOD_HIGH_TAXES:
-        return 9;
+        return figure_sound_greatings_4;
     case LOW_MOOD_LOW_WAGES:
-        return 10;
+        return figure_sound_greatings_5;
     default:
-        return 11;
+        return figure_sound_greatings_6;
     }
 }
 
@@ -204,6 +295,7 @@ static int tower_sentry_phrase() {
     //    else {
     //        return 11;
     //    }
+    return 0;
 }
 
 static int soldier_phrase(void) {
@@ -245,6 +337,7 @@ static int trade_caravan_phrase() {
     //
     //    }
     //    return 8 + f->phrase_sequence_exact;
+    return 0;
 }
 
 static int trade_ship_phrase() {
@@ -287,8 +380,8 @@ static int city_god_mood(void) {
     }
 }
 
-static int phrase_based_on_figure_state() {
-    //    switch (f->type) {
+static int phrase_based_on_figure_state(figure *f) {
+    switch (f->type) {
     //        case FIGURE_LION_TAMER:
     //            return lion_tamer_phrase(f);
     //        case FIGURE_GLADIATOR:
@@ -297,8 +390,7 @@ static int phrase_based_on_figure_state() {
     //            return tax_collector_phrase(f);
     //        case FIGURE_MARKET_TRADER:
     //            return market_trader_phrase(f);
-    //        case FIGURE_MARKET_BUYER:
-    //            return market_buyer_phrase(f);
+    case FIGURE_MARKET_BUYER: return market_buyer_phrase(f);
     //        case FIGURE_CART_PUSHER:
     //            return cart_pusher_phrase(f);
     //        case FIGURE_WAREHOUSEMAN:
@@ -335,7 +427,7 @@ static int phrase_based_on_figure_state() {
     //            return f->type == FIGURE_TRADE_CARAVAN ? trade_caravan_phrase(f) : 0;
     //        case FIGURE_TRADE_SHIP:
     //            return trade_ship_phrase(f);
-    //    }
+    }
     return 0;
 }
 
@@ -374,41 +466,55 @@ static int phrase_based_on_city_state() {
     //    else {
     //        return 5;
     //    }
+    return 0;
 }
 
 void figure::figure_phrase_determine() {
-    //    if (f->id <= 0)
-    //        return;
-    //    f->phrase_id = 0;
-    //
-    //    if (f->is_enemy() || f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_NATIVE_TRADER) {
-    //        f->phrase_id = -1;
-    //        return;
-    //    }
-    //
-    //    int phrase_id = phrase_based_on_figure_state(f);
-    //    if (phrase_id)
-    //        f->phrase_id = phrase_id;
-    //    else
-    //        f->phrase_id = phrase_based_on_city_state(f);
-}
-
-static void play_sound_file(int sound_id, int phrase_id) {
-    if (sound_id >= 0 && phrase_id >= 0) {
-        char path[SOUND_FILENAME_MAX];
-        strcpy(path, "wavs/");
-
-        strcat(path, FIGURE_SOUNDS[GAME_ENV][sound_id]);
-        strcat(path, FIGURE_PHRASE_VARIANTS[GAME_ENV][phrase_id]);
-        sound_speech_play_file(path);
+    if (id <= 0)
+        return;
+    phrase_id = 0;
+    
+    if (is_enemy() || type == FIGURE_INDIGENOUS_NATIVE || type == FIGURE_NATIVE_TRADER) {
+        phrase_id = -1;
+        return;
+    }
+    
+    int id = phrase_based_on_figure_state(this);
+    if (id) {
+        phrase_id = id;
+    } else {
+        phrase_id = phrase_based_on_city_state();
     }
 }
 
+static int play_sound_file(e_figure_type type, int phrase_id) {
+    if (type >= 0) {
+        auto type_it = std::find_if(std::begin(g_figure_sounds), std::end(g_figure_sounds), [type] (auto &t) { return t.type == type; });
+
+        if (type_it == std::end(g_figure_sounds)) {
+            return -1;
+        }
+
+        phrase_variant *variant = nullptr;
+        if (phrase_id > 0 && phrase_id < figure_sound_max) {
+            variant = &g_figure_phrase_variants[phrase_id];
+        }
+
+        if (!variant) {
+            return -1;
+        }
+
+        bstring128 path("Voice/Walker/", type_it->prefix, variant->exts.front(), ".wav");
+        sound_speech_play_file(path);
+    }
+
+    return -1;
+}
+
 int figure::figure_phrase_play() {
-    return 0; // temp!
-    //    if (f->id <= 0)
-    //        return 0;
-    //    int sound_id = int_TO_SOUND_TYPE[GAME_ENV][f->type];
-    //    play_sound_file(sound_id, f->phrase_id);
-    //    return sound_id;
+    if (id <= 0) {
+        return 0;
+    }
+    figure_phrase_determine();
+    return play_sound_file(type, phrase_id);
 }

@@ -325,12 +325,9 @@ void sound_device_play_channel(int channel, int volume_pct) {
     if (data.initialized) {
         sound_channel* ch = &data.channels[channel];
         if (load_channel(ch)) {
-            switch (GAME_ENV) {
-                const char* mp3_track;
-            case ENGINE_ENV_PHARAOH:
-                sound_device_set_channel_volume(channel, volume_pct * 0.4);
-                break;
-            }
+            const char* mp3_track;
+            sound_device_set_channel_volume(channel, volume_pct * 0.4);
+
             Mix_PlayChannel(channel, ch->chunk, 0);
         }
     }
