@@ -5,6 +5,7 @@
 [![Windows](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685266-d429392e-a91e-4233-b496-3863e50af5f6.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_windows/master/windows_build.zip)
 [![Linux](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685605-8ce46564-04e7-45a7-afa4-0ffe32335dd8.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_linux/master/linux_build.zip)
 [![Mac](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685850-a5f39f18-0220-411b-bb70-9bdbc9d48311.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_mac/master/macos_build.zip)
+[![Android](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/268461479-834ae5f0-f57d-4105-b499-869982383a87.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_android/master/apk.zip)
 
 ![2023-08-19 21_17_32-Window](https://github.com/dalerank/Ozymandias/assets/918081/dd616847-9f79-4a01-84fb-800f1cfa2c99)
 
@@ -27,6 +28,7 @@ For the official upcoming remaster (unrelated to Ozymandias) called _A New Era_,
 | Windows        | -              | [![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Windows/badge.svg)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_windows/master/windows_build.zip)  |
 | Linux AppImage | -              | [![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Linux/badge.svg)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_linux/master/linux_build.zip)        |
 | Mac            | -              | [![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Mac/badge.svg)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_mac/master/macos_build.zip)            |
+| Android        | -              | [![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Android/badge.svg)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_android/master/apk.zip) |
 
 
 
