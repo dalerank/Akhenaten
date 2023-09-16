@@ -2,11 +2,11 @@
 
 #include "graphics/color.h"
 
+#include "content/file_formats.h"
 #include "content/vfs.h"
 #include "core/string.h"
 #include "core/vec2i.h"
 #include "graphics/image.h"
-#include "io/file_formats.h"
 
 #include <string>
 #include <vector>

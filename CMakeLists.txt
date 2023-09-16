@@ -176,6 +176,7 @@ add_subdirectory(ext/png)
 add_subdirectory(ext/expat)
 
 file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp)
+file(GLOB CONTENT_FILES ${PROJECT_SOURCE_DIR}/src/content/*.cpp)
 file(GLOB CORE_FILES ${PROJECT_SOURCE_DIR}/src/core/*.cpp)
 file(GLOB CORE_ENCODING_FILES ${PROJECT_SOURCE_DIR}/src/core/encoding/*.cpp)
 file(GLOB BUILDING_FILES ${PROJECT_SOURCE_DIR}/src/building/*.cpp)
@@ -310,6 +311,7 @@ endif()
 
 set(SOURCE_FILES
     ${PLATFORM_FILES}
+    ${CONTENT_FILES}
     ${CORE_FILES} ${CORE_HEADERS}
     ${IO_FILES} ${IO_HEADERS}
     ${IO_CONFIG_FILES}

@@ -2,8 +2,9 @@
 
 #include "core/buffer.h"
 #include "content/vfs.h"
-#include "io/file_formats.h"
+#include "content/file_formats.h"
 #include "io/io_buffer.h"
+
 #include <vector>
 
 struct file_chunk_t {
