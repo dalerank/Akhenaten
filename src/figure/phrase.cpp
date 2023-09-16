@@ -28,6 +28,7 @@ static const char FIGURE_SOUNDS[2][50][SOUND_FILENAME_MAX]
      {
        //
      }};
+
 static const char FIGURE_PHRASE_VARIANTS[2][20][SOUND_FILENAME_MAX]
   = {{"_starv1.wav", "_nojob1.wav", "_needjob1.wav", "_nofun1.wav", "_relig1.wav", "_great1.wav", "_great2.wav",
       "_exact1.wav", "_exact2.wav", "_exact3.wav",   "_exact4.wav", "_exact5.wav", "_exact6.wav", "_exact7.wav",
@@ -35,6 +36,7 @@ static const char FIGURE_PHRASE_VARIANTS[2][20][SOUND_FILENAME_MAX]
      {"_g01.wav", "_g02.wav", "_g03.wav", "_g04.wav", "_g05.wav", "_g06.wav", "_g07.wav",
       "_g08.wav", "_g09.wav", "_g10.wav", "_e01.wav", "_e02.wav", "_e03.wav", "_e04.wav",
       "_e05.wav", "_e06.wav", "_e07.wav", "_e08.wav", "_e09.wav", "_e10.wav"}};
+
 static const int int_TO_SOUND_TYPE[2][200] = {{
                                                 -1, 24, 23, 21, 5,  19, -1, 3,  2,  5,  // 0-9
                                                 0,  1,  1,  1,  -1, 14, 15, 16, 17, 6,  // 10-19
@@ -49,8 +51,6 @@ static const int int_TO_SOUND_TYPE[2][200] = {{
                                                 //
                                               }};
 
-enum E_GOD_STATE { GOD_STATE_NONE = 0, GOD_STATE_VERY_ANGRY = 1, GOD_STATE_ANGRY = 2 };
-
 static int lion_tamer_phrase() {
     //    if (action_state == FIGURE_ACTION_150_ATTACK) {
     //        if (++phrase_sequence_exact >= 3)
@@ -60,10 +60,12 @@ static int lion_tamer_phrase() {
     //    }
     return 0;
 }
+
 static int gladiator_phrase() {
     //    return action_state == FIGURE_ACTION_150_ATTACK ? 7 : 0;
     return 0;
 }
+
 static int tax_collector_phrase() {
     //    if (min_max_seen >= HOUSE_LARGE_CASA)
     //        return 7;
@@ -76,6 +78,7 @@ static int tax_collector_phrase() {
     //    }
     return 0;
 }
+
 static int market_trader_phrase() {
     //    if (action_state == FIGURE_ACTION_126_ROAMER_RETURNING) {
     //        if (building_market_get_max_food_stock(building_get(building_id)) <= 0)
@@ -113,6 +116,7 @@ static int cart_pusher_phrase() {
     //    }
     return 0;
 }
+
 static int warehouseman_phrase() {
     //    if (action_state == FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE) {
     //        if (calc_maximum_distance(
@@ -122,6 +126,7 @@ static int warehouseman_phrase() {
     //    }
     return 0;
 }
+
 static int prefect_phrase() {
     //    if (++f->phrase_sequence_exact >= 4)
     //        f->phrase_sequence_exact = 0;
@@ -145,6 +150,7 @@ static int prefect_phrase() {
     //        return 9;
     //    }
 }
+
 static int engineer_phrase() {
     //    if (f->min_max_seen >= 60)
     //        return 7;
@@ -154,18 +160,21 @@ static int engineer_phrase() {
     //        return 0;
     //    }
 }
+
 static int citizen_phrase() {
     //    if (++f->phrase_sequence_exact >= 3)
     //        f->phrase_sequence_exact = 0;
     //
     //    return 7 + f->phrase_sequence_exact;
 }
+
 static int house_seeker_phrase() {
     //    if (++f->phrase_sequence_exact >= 2)
     //        f->phrase_sequence_exact = 0;
     //
     //    return 7 + f->phrase_sequence_exact;
 }
+
 static int emigrant_phrase(void) {
     switch (city_sentiment_low_mood_cause()) {
     case LOW_MOOD_NO_JOBS:
@@ -180,6 +189,7 @@ static int emigrant_phrase(void) {
         return 11;
     }
 }
+
 static int tower_sentry_phrase() {
     //    if (++f->phrase_sequence_exact >= 2)
     //        f->phrase_sequence_exact = 0;
@@ -195,6 +205,7 @@ static int tower_sentry_phrase() {
     //        return 11;
     //    }
 }
+
 static int soldier_phrase(void) {
     int enemies = city_figures_enemies();
     if (enemies >= 40)
@@ -206,6 +217,7 @@ static int soldier_phrase(void) {
 
     return 0;
 }
+
 static int docker_phrase() {
     //    if (f->action_state == FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE ||
     //        f->action_state == FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE) {
@@ -216,6 +228,7 @@ static int docker_phrase() {
     //    }
     return 0;
 }
+
 static int trade_caravan_phrase() {
     //    if (++f->phrase_sequence_exact >= 2)
     //        f->phrase_sequence_exact = 0;
@@ -233,6 +246,7 @@ static int trade_caravan_phrase() {
     //    }
     //    return 8 + f->phrase_sequence_exact;
 }
+
 static int trade_ship_phrase() {
     //    if (f->action_state == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
     //        if (!trader_has_traded(f->trader_id))
@@ -255,20 +269,21 @@ static int trade_ship_phrase() {
     return 0;
 }
 
-static int city_god_state(void) {
+static int city_god_mood(void) {
     int least_god_happiness = 100;
     for (auto *god: city_gods_knowns()) {
         int happiness = city_god_happiness(god->type);
-        if (happiness < least_god_happiness)
+        if (happiness < least_god_happiness) {
             least_god_happiness = happiness;
+        }
     }
 
-    if (least_god_happiness < 20)
-        return GOD_STATE_VERY_ANGRY;
-    else if (least_god_happiness < 40)
-        return GOD_STATE_ANGRY;
-    else {
-        return GOD_STATE_NONE;
+    if (least_god_happiness < 20) {
+        return GOD_MOOD_VERY_ANGRY;
+    } else if (least_god_happiness < 40) {
+        return GOD_MOOD_ANGRY;
+    } else {
+        return GOD_MOOD_NONE;
     }
 }
 
@@ -323,6 +338,7 @@ static int phrase_based_on_figure_state() {
     //    }
     return 0;
 }
+
 static int phrase_based_on_city_state() {
     //    f->phrase_sequence_city = 0;
     //    int god_state = city_god_state();
@@ -359,6 +375,7 @@ static int phrase_based_on_city_state() {
     //        return 5;
     //    }
 }
+
 void figure::figure_phrase_determine() {
     //    if (f->id <= 0)
     //        return;
@@ -375,6 +392,7 @@ void figure::figure_phrase_determine() {
     //    else
     //        f->phrase_id = phrase_based_on_city_state(f);
 }
+
 static void play_sound_file(int sound_id, int phrase_id) {
     if (sound_id >= 0 && phrase_id >= 0) {
         char path[SOUND_FILENAME_MAX];
@@ -385,6 +403,7 @@ static void play_sound_file(int sound_id, int phrase_id) {
         sound_speech_play_file(path);
     }
 }
+
 int figure::figure_phrase_play() {
     return 0; // temp!
     //    if (f->id <= 0)

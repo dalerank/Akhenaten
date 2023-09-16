@@ -32,7 +32,14 @@ struct god_state {
     int8_t unused2;
     int8_t unused3;
     e_god_status is_known;
-} ;
+};
+
+
+enum e_god_mood {
+    GOD_MOOD_NONE = 0,
+    GOD_MOOD_VERY_ANGRY = 1,
+    GOD_MOOD_ANGRY = 2
+};
 
 enum e_god_event {
     GOD_EVENT_MAJOR_BLESSING = 1,
