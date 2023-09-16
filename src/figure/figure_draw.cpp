@@ -2,7 +2,7 @@
 
 #include "dev/debug.h"
 #include "graphics/view/lookup.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "figuretype/editor.h"
 #include "formation.h"
 #include "graphics/boilerplate.h"

@@ -17,7 +17,7 @@
 #include "io/gamefiles/lang.h"
 #include "io/gamestate/boilerplate.h"
 #include "io/manager.h"
-#include "io/playerdata/player_data.h"
+#include "game/player_data.h"
 
 static void button_click(int param1, int param2);
 

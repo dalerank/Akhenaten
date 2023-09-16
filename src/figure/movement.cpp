@@ -18,7 +18,7 @@
 #include "grid/road_access.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 #include <algorithm>
 

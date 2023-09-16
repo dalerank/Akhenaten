@@ -5,7 +5,7 @@
 #include "core/time.h"
 #include "graphics/view/view.h"
 #include "grid/grid.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 int g_global_rotation = 0;
 static int road_orientation = 1;

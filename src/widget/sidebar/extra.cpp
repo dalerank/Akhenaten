@@ -12,7 +12,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/image.h"
 #include "graphics/text.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "io/gamefiles/lang.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"

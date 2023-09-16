@@ -3,7 +3,7 @@
 #include "figure.h"
 #include "grid.h"
 #include "grid/routing/routing.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "io/io_buffer.h"
 #include "terrain.h"
 #include "tiles.h"

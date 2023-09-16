@@ -4,7 +4,7 @@
 #include "city/ratings.h"
 #include "core/random.h"
 #include "game/time.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "scenario/scenario_data.h"
 
 static struct {

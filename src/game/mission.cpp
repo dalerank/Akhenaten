@@ -2,13 +2,11 @@
 
 #include "core/log.h"
 #include "core/game_environment.h"
-
+#include "core/buffer.h"
+#include "core/string.h"
 #include "content/vfs.h"
 #include "io/io.h"
-#include <core/buffer.h>
-#include <core/string.h>
-
-#include "io/playerdata/player_data.h"
+#include "game/player_data.h"
 #include "scenario/property.h"
 
 struct mission_data_t {

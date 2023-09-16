@@ -12,7 +12,7 @@
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 void figure::market_buyer_action() {
     image_set_animation(GROUP_FIGURE_MARKET_LADY);

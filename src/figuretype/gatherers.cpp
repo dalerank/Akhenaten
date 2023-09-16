@@ -2,7 +2,7 @@
 
 #include "graphics/image_groups.h"
 #include "grid/vegetation.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 void figure::gatherer_action() {
     switch (action_state) {

@@ -10,7 +10,7 @@
 #include "city/sentiment.h"
 #include "core/random.h"
 #include "figure/figure.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 bool city_festival_is_planned(void) {
     return city_data.festival.planned.size != FESTIVAL_NONE;

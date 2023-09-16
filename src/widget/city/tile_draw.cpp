@@ -12,7 +12,7 @@
 #include "grid/property.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "ornaments.h"
 #include "sound/city.h"
 

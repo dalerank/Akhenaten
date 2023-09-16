@@ -4,7 +4,7 @@
 #include "building/house.h"
 #include "building/list.h"
 #include "building/model.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "city/labor.h"
 #include "city/message.h"
 #include "city/migration.h"

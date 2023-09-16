@@ -8,7 +8,7 @@
 #include "city/finance.h"
 #include "city/message.h"
 #include "game/time.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 #include "sound/music.h"

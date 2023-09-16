@@ -10,7 +10,7 @@
 #include "graphics/screen.h"
 #include "graphics/view/view.h"
 #include "input/mouse.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 #include "switch.h"
 

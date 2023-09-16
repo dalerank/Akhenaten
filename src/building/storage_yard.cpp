@@ -18,8 +18,8 @@
 #include "grid/image.h"
 #include "grid/road_access.h"
 #include "scenario/property.h"
+#include "config/config.h"
 
-#include "io/config/config.h"
 #include <cmath>
 
 int building_storageyard_get_space_info(building* storageyard) {

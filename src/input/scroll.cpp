@@ -8,7 +8,7 @@
 #include "game/system.h"
 #include "graphics/screen.h"
 #include "input/touch.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 #include <cmath>
 #include <stdlib.h>

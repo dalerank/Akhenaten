@@ -11,7 +11,7 @@
 #include "game/resource.h"
 #include "grid/point.h"
 #include "grid/road_network.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 void figure::determine_deliveryman_destination() {
     map_point dst;

@@ -12,7 +12,7 @@
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 int figure::create_delivery_boy(int leader_id) {
     figure* boy = figure_create(FIGURE_DELIVERY_BOY, tile, 0);

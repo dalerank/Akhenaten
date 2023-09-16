@@ -3,7 +3,7 @@
 #include "city/buildings.h"
 #include "empire/city.h"
 #include "game/tutorial.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "scenario/building.h"
 #include "scenario/property.h"
 

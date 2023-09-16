@@ -35,7 +35,7 @@
 #include "grid/tiles.h"
 #include "grid/water.h"
 #include "grid/figure.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "routed.h"
 #include "warnings.h"
 

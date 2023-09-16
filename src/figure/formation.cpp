@@ -10,7 +10,7 @@
 #include "figure/formation_legion.h"
 #include "figure/properties.h"
 #include "grid/grid.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "sound/effect.h"
 
 #include <string.h>

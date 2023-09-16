@@ -16,7 +16,7 @@
 #include "grid/road_aqueduct.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "ornaments.h"
 #include "widget/city/bridges.h"
 

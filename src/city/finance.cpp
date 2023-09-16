@@ -10,7 +10,7 @@
 #include "game/difficulty.h"
 #include "game/time.h"
 #include "game/tutorial.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "figure/figure.h"
 
 #include <map>

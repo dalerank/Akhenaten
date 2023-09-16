@@ -10,7 +10,7 @@
 #include "core/profiler.h"
 #include "core/game_environment.h"
 #include "grid/routing/routing_terrain.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
 

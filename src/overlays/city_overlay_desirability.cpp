@@ -10,7 +10,7 @@
 #include "grid/random.h"
 #include "graphics/color.h"
 #include "graphics/boilerplate.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 static int terrain_on_desirability_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD

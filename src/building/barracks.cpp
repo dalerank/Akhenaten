@@ -11,7 +11,7 @@
 #include "figure/formation.h"
 #include "grid/grid.h"
 #include "grid/road_access.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 #define INFINITE 10000
 

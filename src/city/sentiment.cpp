@@ -12,7 +12,7 @@
 #include "game/difficulty.h"
 #include "game/tutorial.h"
 #include "game/time.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "city/coverage.h"
 
 #include <algorithm>

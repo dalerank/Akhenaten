@@ -1,7 +1,7 @@
 #include "floodplain.h"
 
 #include "building_tiles.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "scenario/map.h"
 #include "grid/tiles.h"
 #include "terrain.h"

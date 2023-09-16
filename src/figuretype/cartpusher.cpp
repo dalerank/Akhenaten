@@ -18,7 +18,7 @@
 #include "graphics/image.h"
 #include "grid/road_network.h"
 #include "grid/routing/routing_terrain.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 #include "city/finance.h"
 

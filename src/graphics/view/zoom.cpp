@@ -1,7 +1,7 @@
 #include "zoom.h"
 #include "core/calc.h"
 #include "graphics/elements/menu.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "lookup.h"
 #include <cmath>
 

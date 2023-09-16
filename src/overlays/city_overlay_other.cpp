@@ -16,7 +16,7 @@
 #include "grid/property.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "overlays/city_overlay.h"
 
 static int show_building_food_stocks(const building* b) {

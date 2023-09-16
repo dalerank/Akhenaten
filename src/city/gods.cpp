@@ -21,7 +21,7 @@
 #include "game/tutorial.h"
 #include "game/time.h"
 #include "grid/routing/routing_terrain.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "ratings.h"
 #include "scenario/invasion.h"
 #include "scenario/property.h"
