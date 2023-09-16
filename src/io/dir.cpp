@@ -4,6 +4,7 @@
 #include "io/config/config.h"
 #include "io/file.h"
 #include "platform/file_manager.h"
+#include "platform/platform.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -109,55 +110,27 @@ static void move_left(char* str) {
     *str = 0;
 }
 
-const char* dir_get_case_corrected_file(const char* dir, const char* filepath) {
-    static char corrected_filename[2 * MAX_FILE_NAME] = {0};
+bstring256 dir_get_case_corrected_file(const char *dir, const char *filepath) {
+    bstring256 corrected_filename;
 
     size_t dir_len = 0;
-    if (dir) {
-        dir_len = strlen(dir);
-        strncpy(corrected_filename, dir, 2 * MAX_FILE_NAME - 1);
-        if (corrected_filename[dir_len - 1] != '/')
-            corrected_filename[dir_len] = '/';
-    } else {
+    if (!dir) {
         dir = ".";
     }
+    corrected_filename.append(dir);
+    if (corrected_filename.back() != '/') {
+        corrected_filename.append('/');
+    }
 
-    strncpy(&corrected_filename[dir_len], filepath, 2 * MAX_FILE_NAME - dir_len - 1);
-
-    FILE* fp = file_open(corrected_filename, "rb");
+    corrected_filename.append(filepath);
+    corrected_filename.replace('\\', '/');
+    FILE *fp = file_open(corrected_filename, "rb");
     if (fp) {
         file_close(fp);
         return corrected_filename;
     }
 
-    if (!platform_file_manager_should_case_correct_file()) {
-        return corrected_filename;
-    }
-
-    strncpy(&corrected_filename[dir_len], filepath, 2 * MAX_FILE_NAME - dir_len - 1);
-
-    char* slash = strchr(&corrected_filename[dir_len], '/');
-    if (!slash)
-        slash = strchr(&corrected_filename[dir_len], '\\');
-
-    if (slash) {
-        *slash = 0;
-        if (correct_case(dir, &corrected_filename[dir_len], TYPE_DIR)) {
-            char* path = slash + 1;
-            if (*path == '\\') {
-                // double backslash: move everything to the left
-                move_left(path);
-            }
-            if (correct_case(corrected_filename, path, TYPE_FILE)) {
-                *slash = '/';
-                return corrected_filename;
-            }
-        }
-    } else {
-        if (correct_case(dir, corrected_filename, TYPE_FILE))
-            return corrected_filename;
-    }
-    return 0;
+    return bstring256();
 }
 
 const dir_listing* dir_append_files_with_extension(const char* dir, const char* extension) {
@@ -168,6 +141,6 @@ const dir_listing* dir_append_files_with_extension(const char* dir, const char* 
     return &data.listing;
 }
 
-const char* dir_get_file(const char* filepath, int localizable) {
+bstring256 dir_get_file(const char* filepath, int localizable) {
     return dir_get_case_corrected_file(platform_file_manager_get_base_path(), filepath);
 }

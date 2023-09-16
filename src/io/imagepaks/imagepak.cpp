@@ -566,13 +566,13 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
 
         // ********* DEBUGGING **********
 #if defined(GAME_PLATFORM_WIN)
-        if (false) {
-            char* lfile = (char*)malloc(200);
-            sprintf(lfile, "DEV_TESTING/tex/%s_%i.bmp", name.c_str(), i); // TODO: make this a global function
-            const char *fs_fpath = dir_get_file(lfile, 0);
-            graphics_renderer()->save_texture_to_file(fs_fpath, atlas_data->texture);
-            free(lfile);
-        }
+        //if (false) {
+        //    char* lfile = (char*)malloc(200);
+        //    sprintf(lfile, "DEV_TESTING/tex/%s_%i.bmp", name.c_str(), i); // TODO: make this a global function
+        //    bstring256 fs_fpath = dir_get_file(lfile, 0);
+        //    graphics_renderer()->save_texture_to_file(fs_fpath, atlas_data->texture);
+        //    free(lfile);
+        //}
 #endif
         // ******************************
     }

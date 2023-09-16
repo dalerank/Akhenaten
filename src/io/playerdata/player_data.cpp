@@ -15,8 +15,6 @@
 #define DAT_ENTRIES_PHARAOH 38
 #define DAT_ENTRIES_CLEOPATRA 15
 
-#define MAX_AUTOSAVE_PATH 64
-
 player_record DUMMY_RECORD;
 
 struct player_data_t {
@@ -30,7 +28,7 @@ struct player_data_t {
     int unk38;
     char scenario_names[MAX_DAT_ENTRIES][DAT_MAP_NAME_SIZE];
     int unk35;
-    char last_autosave_path[MAX_AUTOSAVE_PATH];
+    bstring64 last_autosave_path;
     int unk00;
     player_record player_scenario_records[MAX_DAT_ENTRIES];
     buffer* dat_file = new buffer(DAT_FILE_SIZE);
@@ -178,26 +176,33 @@ void player_data_load(const uint8_t* player_name) {
     // <player>.dat
     data.dat_file->clear();
     data.dat_file->reset_offset();
-    char file_path[256];
-    snprintf(file_path, sizeof(file_path), "%s%s.dat", "Save/", (const char*)player_name);
-    int size = io_read_file_into_buffer(file_path, NOT_LOCALIZED, data.dat_file, DAT_FILE_SIZE);
-    if (!size)
+    bstring256 family_save("Save/", (const char*)player_name, ".dat");
+    bstring256 fs_family_save = dir_get_file(family_save, NOT_LOCALIZED);
+    int size = io_read_file_into_buffer(fs_family_save, NOT_LOCALIZED, data.dat_file, DAT_FILE_SIZE);
+    if (!size) {
         return;
+    }
 
-    for (int i = 0; i < MAX_DAT_ENTRIES; ++i) // unused(?) scenario data chunks
+    for (int i = 0; i < MAX_DAT_ENTRIES; ++i) {// unused(?) scenario data chunks
         load_unused_dat_chunk(data.dat_file, i);
+    }
+
     data.unk38 = data.dat_file->read_i32();   // number of fields for the Pharaoh main campaign? (38)
-    for (int i = 0; i < MAX_DAT_ENTRIES; ++i) // map names
+    for (int i = 0; i < MAX_DAT_ENTRIES; ++i) { // map names
         data.dat_file->read_raw(data.scenario_names[i], DAT_MAP_NAME_SIZE);
+    }
+
     data.unk35 = data.dat_file->read_i32(); // unknown 32-bit field (35)
-    char raw_autosave_path[MAX_AUTOSAVE_PATH];
-    data.dat_file->read_raw(raw_autosave_path, MAX_AUTOSAVE_PATH); // path to last autosave_replay.sav file
-    pcstr proper_path_syntax = dir_get_file(raw_autosave_path, NOT_LOCALIZED);
-    if (proper_path_syntax)
-        strncpy_safe(data.last_autosave_path, proper_path_syntax, MAX_AUTOSAVE_PATH);
-    else
-        strncpy_safe(data.last_autosave_path, "", MAX_AUTOSAVE_PATH);
+    bstring64 raw_autosave_path;
+    data.dat_file->read_raw(raw_autosave_path.data(), raw_autosave_path.capacity); // path to last autosave_replay.sav file
+
+    data.last_autosave_path.clear();
+    if (!fs_family_save.empty()) {
+        data.last_autosave_path = raw_autosave_path;
+    }
+
     data.unk00 = data.dat_file->read_i32();  // unknown 32-bit field (0)
-    for (int i = 0; i < MAX_DAT_ENTRIES; ++i) // scenario records
+    for (int i = 0; i < MAX_DAT_ENTRIES; ++i) { // scenario records
         load_jas_record_chunk(data.dat_file, &data.player_scenario_records[i]);
+    }
 }

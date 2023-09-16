@@ -308,13 +308,15 @@ int sound_device_play_music(const char* filename, int volume_pct) {
 
 void sound_device_play_file_on_channel(const char* filename, int channel, int volume_pct) {
     auto &data = g_sound_device_data;
-    if (data.initialized) {
-        sound_device_stop_channel(channel);
-        data.channels[channel].chunk = load_chunk(filename);
-        if (data.channels[channel].chunk) {
-            sound_device_set_channel_volume(channel, volume_pct);
-            Mix_PlayChannel(channel, data.channels[channel].chunk, 0);
-        }
+    if (!data.initialized) {
+        return;
+    }
+
+    sound_device_stop_channel(channel);
+    data.channels[channel].chunk = load_chunk(filename);
+    if (data.channels[channel].chunk) {
+        sound_device_set_channel_volume(channel, volume_pct);
+        Mix_PlayChannel(channel, data.channels[channel].chunk, 0);
     }
 }
 

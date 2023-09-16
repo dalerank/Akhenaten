@@ -45,5 +45,5 @@ const dir_listing* dir_find_all_subdirectories(const char* dir = 0);
  * @param localizable Whether the file may, must or must not be localized
  * @return Corrected file, or NULL if the file was not found
  */
-const char* dir_get_file(const char* filepath, int localizable);
-const char *dir_get_case_corrected_file(const char *dir, const char *filepath);
+bstring256 dir_get_file(const char* filepath, int localizable);
+bstring256 dir_get_case_corrected_file(const char *dir, const char *filepath);

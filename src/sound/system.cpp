@@ -3,6 +3,7 @@
 #include "core/game_environment.h"
 #include "game/settings.h"
 #include "io/dir.h"
+#include "io/file.h"
 #include "sound/channel.h"
 #include "sound/city.h"
 #include "sound/device.h"
@@ -323,19 +324,13 @@ static void correct_channel_filenames(void) {
             continue;
 
         char* original = channel_filenames[GAME_ENV][i];
-        char str[CHANNEL_FILENAME_MAX] = {0};
-        switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH:
-            strncpy(str, "AUDIO/", CHANNEL_FILENAME_MAX);
-            break;
-        }
-        strncat(str, channel_filenames[GAME_ENV][i], CHANNEL_FILENAME_MAX);
+        bstring128 audio_path("AUDIO/", channel_filenames[GAME_ENV][i]);
 
-        const char* corrected = dir_get_file(str, MAY_BE_LOCALIZED);
-        if (!corrected)
+        if (!file_exists(audio_path, 0)) {
             channel_filenames[GAME_ENV][i][0] = 0;
-        else if (corrected != original)
-            strncpy(original, corrected, CHANNEL_FILENAME_MAX);
+        } else {
+            strncpy(original, audio_path, CHANNEL_FILENAME_MAX);
+        }
     }
 }
 void sound_system_init(void) {

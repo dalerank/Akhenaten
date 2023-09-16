@@ -45,9 +45,10 @@ static void close_smk(void) {
 }
 
 static int load_smk(const char* filename) {
-    const char* path = dir_get_file(filename, MAY_BE_LOCALIZED);
-    if (!path)
+    bstring256 path = dir_get_file(filename, MAY_BE_LOCALIZED);
+    if (path.empty()) {
         return 0;
+    }
 
     FILE* fp = file_open(path, "rb");
     data.s = smacker_open(fp);

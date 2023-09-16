@@ -273,15 +273,16 @@ static void record_bizarre_fields(io_buffer* iob, int i) {
     }
 }
 static void bizarre_ordered_fields_bind(io_buffer* iob, size_t version) {
-    const char *fs_fpath = dir_get_file("DEV_TESTING/BIZARRE.txt", 0);
     if (iob == iob_bizarre_ordered_fields_1) {
         bizarre.current_chunk = 0;
 #if defined(GAME_PLATFORM_WIN)
+        //bstrin256 fs_fpath = dir_get_file("DEV_TESTING/BIZARRE.txt", 0);
         //bizarre.debug_file = fopen(fs_fpath, "wb+");
 #endif
     } else {
         bizarre.current_chunk++;
 #if defined(GAME_PLATFORM_WIN)
+        //bstring256 fs_fpath = dir_get_file("DEV_TESTING/BIZARRE.txt", 0);
         //bizarre.debug_file = fopen(fs_fpath, "ab+");
 #endif
     }

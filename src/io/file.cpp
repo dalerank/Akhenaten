@@ -63,8 +63,8 @@ void file_remove_extension(uint8_t* filename) {
 }
 
 bool file_exists(const char* filename, int localizable) {
-    const char* path = dir_get_file(filename, localizable);
-    if (!path) {
+    bstring256 path = dir_get_file(filename, localizable);
+    if (path.empty()) {
         return false;
     }
 

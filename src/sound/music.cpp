@@ -99,8 +99,14 @@ void sound_music_play_track(int track) {
     int volume = setting_sound(SOUND_MUSIC)->volume;
 
     volume = volume * 0.4;
-    const char *music = dir_get_case_corrected_file(0, ph_mp3[track]);
-    sound_device_play_music(music, volume);
+    const char *folder_audio = "AUDIO/";
+    bstring256 corrected_filename = ph_mp3[track];
+    if (strncmp( ph_mp3[track], folder_audio, strlen(folder_audio)) != 0) {
+        corrected_filename = bstring256(folder_audio,  ph_mp3[track]);
+    }
+
+    corrected_filename = dir_get_file(corrected_filename, 0);
+    sound_device_play_music(corrected_filename, volume);
 
     g_music_data.current_track = track;
 }

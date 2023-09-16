@@ -180,11 +180,8 @@ bool FileIOManager::io_failure_cleanup(const char* action, const char* reason) {
     clear();
     return false;
 }
-bool FileIOManager::serialize(const char* filename,
-                              int offset,
-                              e_file_format format,
-                              const int version,
-                              void (*init_schema)(e_file_format _format, const int _version)) {
+
+bool FileIOManager::serialize(const char* filename, int offset, e_file_format format, const int version, void (*init_schema)(e_file_format _format, const int _version)) {
     WATCH.START();
 
     // first, clear up the manager data and set the new file info
@@ -195,17 +192,20 @@ bool FileIOManager::serialize(const char* filename,
     file_version = version;
 
     // open file handle
-    FILE* fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "wb");
-    if (!fp)
+    bstring256 fs_path = dir_get_file(file_path, NOT_LOCALIZED);
+    FILE* fp = file_open(fs_path, "wb");
+    if (!fp) {
         return io_failure_cleanup("write", "file could not be accessed");
-    else if (file_offset)
+    } else if (file_offset) {
         fseek(fp, file_offset, SEEK_SET);
+    }
 
     // init file chunks and buffer collection
-    if (init_schema != nullptr)
+    if (init_schema != nullptr) {
         init_schema(file_format, file_version);
-    else
+    } else {
         return io_failure_cleanup("write", "provided schema is invalid");
+    }
 
     // fill chunks with bound data
     for (int i = 0; i < num_chunks(); ++i) {
@@ -218,10 +218,11 @@ bool FileIOManager::serialize(const char* filename,
         file_chunk_t* chunk = &file_chunks.at(i);
 
         int result = 0;
-        if (chunk->compressed)
+        if (chunk->compressed) {
             result = write_compressed_chunk(fp, chunk->buf, chunk->buf->size());
-        else
+        } else {
             result = chunk->buf->to_file(chunk->buf->size(), fp);
+        }
 
         // The last piece may be smaller than buf->size
         if (!result) {
@@ -255,18 +256,20 @@ bool FileIOManager::unserialize(const char* filename, int offset, e_file_format 
     file_format = format;
 
     // open file handle
-    FILE* fp = file_open(dir_get_file(file_path, 0), "rb");
+    bstring256 fs_path = dir_get_file(file_path, 0);
+    FILE* fp = file_open(fs_path, "rb");
     if (!fp) {
         logs::error("Unable to read file, file could not be accessed.");
         clear();
         return false;
-    } else if (file_offset)
+    } else if (file_offset) {
         fseek(fp, file_offset, SEEK_SET);
+    }
 
     // determine file version based on provided format
-    if (determine_file_version == nullptr)
+    if (determine_file_version == nullptr) {
         file_version = 1;
-    else {
+    } else {
         file_version = determine_file_version(file_path, offset);
         if (file_version == -1) {
             logs::info("Unable to read file %s, file version/format is invalid ", filename);
