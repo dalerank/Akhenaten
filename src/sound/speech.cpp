@@ -1,8 +1,8 @@
 #include "speech.h"
 
+#include "core/log.h"
 #include "game/settings.h"
 #include "io/dir.h"
-#include "io/log.h"
 #include "sound/channel.h"
 #include "sound/device.h"
 

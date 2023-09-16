@@ -1,6 +1,6 @@
 #include "game_environment.h"
 
-#include "io/log.h"
+#include "core/log.h"
 
 #include <cassert>
 

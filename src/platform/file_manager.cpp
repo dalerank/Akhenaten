@@ -1,9 +1,9 @@
 #include "file_manager.h"
 
 #include "core/string.h"
+#include "core/log.h"
 #include "platform/platform.h"
 #include "content/vfs.h"
-#include "io/log.h"
 #include "platform/vita/vita.h"
 #include "platform/android/android.h"
 #include "platform.h"

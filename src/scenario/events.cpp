@@ -1,10 +1,10 @@
 #include "city/message.h"
 #include "core/string.h"
+#include "core/log.h"
 #include "event_phrases.h"
 #include "io/gamefiles/lang.h"
 #include "io/io.h"
 #include "io/io_buffer.h"
-#include "io/log.h"
 #include <core/random.h>
 #include <cstring>
 #include <game/time.h>

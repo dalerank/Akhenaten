@@ -7,9 +7,9 @@
 #endif
 
 #include "core/game_environment.h"
+#include "core/log.h"
 #include "game/settings.h"
 #include "content/vfs.h"
-#include "io/log.h"
 #include "platform/platform.h"
 #include "platform/vita/vita.h"
 #include "sound/device.h"
@@ -281,14 +281,14 @@ int sound_device_play_music(const char* filename, int volume_pct) {
             return 0;
 
         SDL_RWops* sdl_music = SDL_RWFromMem(vita_music_data.buffer, vita_music_data.size);
-        data.music = Mix_LoadMUSType_RW(sdl_music, file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+        data.music = Mix_LoadMUSType_RW(sdl_music, vfs::file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
 #elif defined(GAME_PLATFORM_ANDROID)
         FILE *fp = file_open(filename, "rb");
         if (!fp) {
             return 0;
         }
         SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
-        data.music = Mix_LoadMUSType_RW(sdl_fp, file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+        data.music = Mix_LoadMUSType_RW(sdl_fp, vfs::file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
 #else
         data.music = Mix_LoadMUS(filename);
 #endif

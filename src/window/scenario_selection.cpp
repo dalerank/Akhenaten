@@ -1,6 +1,7 @@
 #include "scenario_selection.h"
 
 #include "core/encoding.h"
+#include "core/log.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
@@ -21,7 +22,6 @@
 #include "dev/debug.h"
 #include "game/mission.h"
 #include "graphics/elements/scroll_list_panel.h"
-#include "io/log.h"
 #include "io/manager.h"
 #include "io/playerdata/player_data.h"
 #include <cmath>

@@ -1,9 +1,9 @@
 #include "manager.h"
 #include "core/stopwatch.h"
 #include "core/string.h"
+#include "core/log.h"
 #include "core/zip.h"
 #include "io/gamestate/boilerplate.h"
-#include "io/log.h"
 #include "platform/platform.h"
 
 #include <cinttypes>

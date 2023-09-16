@@ -2,11 +2,11 @@
 
 #include "city/warning.h"
 #include "core/buffer.h"
+#include "core/string.h"
+#include "core/log.h"
 #include "color.h"
 #include "io/config/config.h"
 #include "content/vfs.h"
-#include "io/log.h"
-#include "core/string.h"
 #include "grid/grid.h"
 #include "platform/renderer.h"
 #include "graphics/screen.h"

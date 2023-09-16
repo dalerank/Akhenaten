@@ -1,11 +1,13 @@
 #include "mission.h"
+
+#include "core/log.h"
+#include "core/game_environment.h"
+
 #include "content/vfs.h"
 #include "io/io.h"
-#include "io/log.h"
 #include <core/buffer.h>
 #include <core/string.h>
 
-#include "core/game_environment.h"
 #include "io/playerdata/player_data.h"
 #include "scenario/property.h"
 

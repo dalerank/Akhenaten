@@ -2,6 +2,7 @@
 
 #include "city/warning.h"
 #include "core/string.h"
+#include "core/log.h"
 #include "game/cheats.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/image_button.h"
@@ -11,7 +12,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "io/log.h"
 #include "widget/input_box.h"
 
 static void send_command(int param1, int param2);

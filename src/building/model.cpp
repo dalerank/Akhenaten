@@ -2,8 +2,8 @@
 
 #include "core/game_environment.h"
 #include "core/string.h"
+#include "core/log.h"
 #include "io/io.h"
-#include "io/log.h"
 
 #include <game/settings.h>
 #include <stdlib.h>

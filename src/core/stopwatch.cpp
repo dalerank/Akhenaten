@@ -1,6 +1,6 @@
 #include "stopwatch.h"
 
-#include "io/log.h"
+#include "core/log.h"
 
 #include <algorithm>
 #include <cinttypes>

@@ -1,11 +1,10 @@
 #include "core/zip.h"
 
+#include "core/log.h"
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "io/log.h"
-
 #include <cassert>
 
 enum E_PK {

@@ -3,7 +3,7 @@
 #include "platform/platform.h"
 #include "core/application.h"
 #include "core/bstring.h"
-#include "io/log.h"
+#include "core/log.h"
 #include "content/vfs.h"
 
 #include <filesystem>

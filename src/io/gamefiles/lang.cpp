@@ -1,10 +1,10 @@
 #include "lang.h"
 
 #include "core/buffer.h"
+#include "core/log.h"
 #include "core/game_environment.h"
 #include "content/vfs.h"
 #include "io/io.h"
-#include "io/log.h"
 #include "translation/translation.h"
 
 #include <cstring>

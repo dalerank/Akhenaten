@@ -1,6 +1,7 @@
 #include "platform/screen.h"
 
 #include "core/calc.h"
+#include "core/log.h"
 #include "platform/platform.h"
 #include "game/settings.h"
 #include "game/system.h"
@@ -9,7 +10,6 @@
 #include "graphics/image.h"
 #include "graphics/screen.h"
 #include "io/config/config.h"
-#include "io/log.h"
 #include "platform/android/android.h"
 #include "arguments.h"
 #include "platform/renderer.h"

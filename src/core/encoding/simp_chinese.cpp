@@ -1,8 +1,8 @@
 #include "simp_chinese.h"
 
 #include "core/encoding.h"
+#include "core/log.h"
 #include "graphics/image.h"
-#include "io/log.h"
 
 #include <stdlib.h>
 #include <string.h>

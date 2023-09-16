@@ -3,8 +3,6 @@
 #include "content/vfs.h"
 #include "core/bstring.h"
 
-using namespace vfs;
-
 e_file_format get_format_from_file(const char* filename) {
     struct format_alias {
         e_file_format format;
@@ -24,7 +22,7 @@ e_file_format get_format_from_file(const char* filename) {
                    {FILE_FORMAT_SAVE_FILE_EXT, "svx"},
             };
 
-    auto it = std::find_if(std::begin(formats), std::end(formats), [filename] (auto &p) { return file_has_extension(filename, p.ext);  });
+    auto it = std::find_if(std::begin(formats), std::end(formats), [filename] (auto &p) { return vfs::file_has_extension(filename, p.ext);  });
 
     return (it == std::end(formats) ? FILE_FORMAT_NULL : it->format);
 }

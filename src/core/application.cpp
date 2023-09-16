@@ -1,6 +1,6 @@
 #include "application.h"
 
-#include "io/log.h"
+#include "core/log.h"
 #include "platform/screen.h"
 
 namespace app {

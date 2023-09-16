@@ -1,7 +1,7 @@
 #include "config.h"
 
 #include "content/vfs.h"
-#include "io/log.h"
+#include "core/log.h"
 
 #include <string.h>
 

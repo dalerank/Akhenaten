@@ -3,7 +3,7 @@
 #include "figure/formation_herd.h"
 #include "graphics/view/lookup.h"
 #include "grid/floodplain.h"
-#include "io/log.h"
+#include "core/log.h"
 #include "widget/sidebar/city.h"
 
 #include "building/dock.h"

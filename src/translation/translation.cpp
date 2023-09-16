@@ -2,7 +2,7 @@
 
 #include "core/encoding.h"
 #include "core/string.h"
-#include "io/log.h"
+#include "core/log.h"
 
 #include <string.h>
 

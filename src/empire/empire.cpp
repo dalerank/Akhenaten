@@ -5,11 +5,11 @@
 #include "city/population.h"
 #include "city/resource.h"
 #include "core/calc.h"
+#include "core/log.h"
 #include "empire/city.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "io/io.h"
-#include "io/log.h"
 #include "type.h"
 
 #include "io/io_buffer.h"

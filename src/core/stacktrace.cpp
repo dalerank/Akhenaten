@@ -1,6 +1,6 @@
 #include "stacktrace.h"
 
-#include "io/log.h"
+#include "core/log.h"
 #include "platform/platform.h"
 #include "platform/screen.h"
 

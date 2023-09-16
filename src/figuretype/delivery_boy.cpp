@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "building/granary.h"
 #include "building/storage.h"
-#include "io/log.h"
+#include "core/log.h"
 #include "building/storage_yard.h"
 #include "figure/combat.h"
 #include "figure/image.h"

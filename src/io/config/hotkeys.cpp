@@ -3,7 +3,7 @@
 #include "game/system.h"
 #include "input/hotkey.h"
 #include "content/vfs.h"
-#include "io/log.h"
+#include "core/log.h"
 
 #include <stdio.h>
 #include <string.h>

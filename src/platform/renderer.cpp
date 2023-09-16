@@ -1,12 +1,14 @@
 #include "renderer.h"
 
 #include "core/time.h"
+#include "core/log.h"
 #include "graphics/screen.h"
 #include "platform/arguments.h"
 #include "platform/platform.h"
 #include "platform/screen.h"
 #include "platform/platform.h"
 #include "graphics/image_groups.h"
+#include "input/cursor.h"
 
 #if defined(GAME_PLATFORM_MACOSX)
   #include <SDL2_image/SDL_image.h>
@@ -16,10 +18,8 @@
   #include <SDL_image.h>
 #endif
 
-#include "input/cursor.h"
-#include "io/log.h"
-#include <string.h>
 
+#include <string.h>
 #include <algorithm>
 #include <set>
 #include <string>

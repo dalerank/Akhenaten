@@ -1,6 +1,7 @@
 #include "main_menu.h"
 
 #include "editor/editor.h"
+#include "core/log.h"
 #include "game/game.h"
 #include "game/system.h"
 #include "graphics/boilerplate.h"
@@ -10,7 +11,6 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "io/log.h"
 #include "platform/version.hpp"
 #include "records.h"
 #include "sound/music.h"
