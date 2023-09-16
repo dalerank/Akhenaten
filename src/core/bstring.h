@@ -186,15 +186,26 @@ public:
         return *this;
     }
     inline bool starts_with(const char* s) const {
-        return sz_starts_with(_data, s);
+        return !empty() && (strncmp(_data, s, strlen(s)) == 0);
     }
     inline bool ends_with(const char* s) const {
-        return sz_ends_with(_data, s);
+        int slen = (s && *s) ? strlen(s) : 0;
+        if (!slen) {
+            return false;
+        }
+        int mylen = len();
+        if (empty() || (mylen <= slen)) {
+            return false;
+        }
+        const char * ptr = strstr(_data, s);
+        return (ptr && (ptr == _data[mylen - slen]));
+    }
+    inline char back() const {
+        return empty() ? 0 : (_data[len() - 1]);
     }
 
     inline ref replace(const char x, const char y) {
-        std::replace_if(
-          _data, _data + len(), [x](char c) { return c == x; }, y);
+        std::replace_if(_data, _data + len(), [x](char c) { return c == x; }, y);
         return *this;
     }
     inline ref replace_str(const char* subst, const char* repl) {
