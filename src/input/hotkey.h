@@ -1,7 +1,7 @@
 #pragma once
 
 #include "input/keys.h"
-#include "io/config/hotkeys.h"
+#include "config/hotkeys.h"
 
 struct hotkeys {
     // fixed keys with multiple functions

@@ -12,7 +12,7 @@
 #include "window/city.h"
 #include "graphics/image_groups.h"
 #include "grid/terrain.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "city/data_private.h"
 #include "city/floods.h"
 #include "game/time.h"

@@ -7,7 +7,7 @@
 #include "graphics/image_groups.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "io/config/hotkeys.h"
+#include "config/hotkeys.h"
 #include "translation/translation.h"
 
 #define NUM_BOTTOM_BUTTONS 2
@@ -47,8 +47,7 @@ static void draw_background(void) {
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         generic_button* btn = &bottom_buttons[i];
-        text_draw_centered(
-          translation_for(bottom_button_texts[i]), btn->x, btn->y + 6, btn->width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        text_draw_centered(translation_for(bottom_button_texts[i]), btn->x, btn->y + 6, btn->width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
 
     graphics_reset_dialog();
@@ -59,8 +58,7 @@ static void draw_foreground(void) {
 
     inner_panel_draw(192, 184, 16, 2);
 
-    text_draw_centered(
-      key_combination_display_name(data.key, data.modifiers), 192, 193, 256, FONT_NORMAL_WHITE_ON_DARK, 0);
+    text_draw_centered(key_combination_display_name(data.key, data.modifiers), 192, 193, 256, FONT_NORMAL_WHITE_ON_DARK, 0);
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         generic_button* btn = &bottom_buttons[i];
@@ -74,13 +72,15 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
     bool handled = 0;
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.focus_button);
-    if (!handled && m->right.went_up)
+    if (!handled && m->right.went_up) {
         button_close(0, 0);
+    }
 }
 
 static void button_close(int ok, int param2) {
-    if (ok)
+    if (ok) {
         data.callback(data.action, data.index, data.key, data.modifiers);
+    }
 
     window_go_back();
 }
@@ -100,12 +100,18 @@ void window_hotkey_editor_key_pressed(int key, int modifiers) {
 
 void window_hotkey_editor_key_released(int key, int modifiers) {
     // update modifiers as long as we don't have a proper keypress
-    if (data.key == KEY_NONE && key == KEY_NONE)
+    if (data.key == KEY_NONE && key == KEY_NONE) {
         data.modifiers = modifiers;
+    }
 }
 
 void window_hotkey_editor_show(int action, int index, void (*callback)(int, int, int, int)) {
-    window_type window = {WINDOW_HOTKEY_EDITOR, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_HOTKEY_EDITOR,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     init(action, index, callback);
     window_show(&window);
 }

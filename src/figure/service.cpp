@@ -8,7 +8,7 @@
 #include "grid/building.h"
 #include "grid/grid.h"
 #include "game/tutorial.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 #define MAX_COVERAGE 96
 

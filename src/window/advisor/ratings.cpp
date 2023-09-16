@@ -7,7 +7,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 

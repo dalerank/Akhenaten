@@ -2,7 +2,7 @@
 
 #include "building/building.h"
 #include "io/gamefiles/lang.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "game/resource.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"

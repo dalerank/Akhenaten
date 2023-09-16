@@ -176,6 +176,7 @@ add_subdirectory(ext/png)
 add_subdirectory(ext/expat)
 
 file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp)
+file(GLOB CONFIG_FILES ${PROJECT_SOURCE_DIR}/src/config/*.cpp)
 file(GLOB CONTENT_FILES ${PROJECT_SOURCE_DIR}/src/content/*.cpp)
 file(GLOB CORE_FILES ${PROJECT_SOURCE_DIR}/src/core/*.cpp)
 file(GLOB CORE_ENCODING_FILES ${PROJECT_SOURCE_DIR}/src/core/encoding/*.cpp)
@@ -300,6 +301,8 @@ if(MSVC)
     source_group("translation" FILES ${TRANSLATION_FILES})
     source_group("imgui" FILES ${IMGUI_FILES})
     source_group("io" FILES ${IO_FILES} {IO_HEADERS})
+    source_group("content" FILES ${CONTENT_FILES})
+    source_group("config" FILES ${CONFIG_FILES})
 endif()
 
 set(MACOSX_FILES "")
@@ -312,6 +315,7 @@ endif()
 set(SOURCE_FILES
     ${PLATFORM_FILES}
     ${CONTENT_FILES}
+    ${CONFIG_FILES}
     ${CORE_FILES} ${CORE_HEADERS}
     ${IO_FILES} ${IO_HEADERS}
     ${IO_CONFIG_FILES}

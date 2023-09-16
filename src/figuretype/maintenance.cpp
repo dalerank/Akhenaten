@@ -1,6 +1,6 @@
 #include "maintenance.h"
 
-#include "io/config/config.h"
+#include "config/config.h"
 #include "building/building.h"
 #include "building/list.h"
 #include "building/maintenance.h"

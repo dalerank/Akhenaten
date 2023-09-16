@@ -2,7 +2,7 @@
 
 #include "content/vfs.h"
 #include "core/string.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "platform/file_manager.h"
 #include "platform/platform.h"
 

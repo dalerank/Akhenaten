@@ -17,7 +17,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "io/dir.h"
 #include "io/gamefiles/lang.h"
 #include "translation/translation.h"

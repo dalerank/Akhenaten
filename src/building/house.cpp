@@ -11,7 +11,7 @@
 #include "grid/image.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 #define MAX_DIR 4
 

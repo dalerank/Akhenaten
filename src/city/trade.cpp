@@ -5,7 +5,7 @@
 #include "city/data_private.h"
 #include "core/profiler.h"
 #include "empire/city.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 void city_trade_update(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Trade Update");
@@ -14,18 +14,20 @@ void city_trade_update(void) {
     // Wine types
     city_data.resource.wine_types_available = building_count_industry_total(RESOURCE_BEER) > 0 ? 1 : 0;
     if (city_data.resource.trade_status[RESOURCE_BEER] == TRADE_STATUS_IMPORT
-        || config_get(CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE))
+        || config_get(CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE)) {
         city_data.resource.wine_types_available += empire_city_count_wine_sources();
+    }
 
     // Update trade problems
-    if (city_data.trade.land_trade_problem_duration > 0)
+    if (city_data.trade.land_trade_problem_duration > 0) {
         city_data.trade.land_trade_problem_duration--;
-    else {
+    } else {
         city_data.trade.land_trade_problem_duration = 0;
     }
-    if (city_data.trade.sea_trade_problem_duration > 0)
+
+    if (city_data.trade.sea_trade_problem_duration > 0) {
         city_data.trade.sea_trade_problem_duration--;
-    else {
+    } else {
         city_data.trade.sea_trade_problem_duration = 0;
     }
     empire_city_generate_trader();

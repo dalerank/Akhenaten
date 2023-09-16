@@ -7,7 +7,7 @@
 #include "city/data_private.h"
 #include "core/calc.h"
 #include "core/random.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 static const int BIRTHS_PER_AGE_DECENNIUM[10] = {0, 3, 16, 9, 2, 0, 0, 0, 0, 0};
 

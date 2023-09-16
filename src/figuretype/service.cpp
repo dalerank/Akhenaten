@@ -11,7 +11,7 @@
 #include "graphics/image_groups.h"
 #include "grid/building.h"
 #include "grid/road_access.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 void figure::school_child_action() {
     switch (action_state) {

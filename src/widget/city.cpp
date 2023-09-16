@@ -20,7 +20,7 @@
 #include "graphics/window.h"
 #include "grid/building.h"
 #include "input/scroll.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "io/gamefiles/lang.h"
 #include "platform/renderer.h"
 #include "scenario/property.h"

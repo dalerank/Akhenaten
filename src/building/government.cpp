@@ -5,7 +5,7 @@
 #include "city/finance.h"
 #include "core/game_environment.h"
 #include "core/profiler.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 void building_government_distribute_treasury() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Distribute Treasury");

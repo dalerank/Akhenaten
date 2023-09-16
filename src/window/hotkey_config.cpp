@@ -10,7 +10,7 @@
 #include "graphics/image_groups.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "io/config/hotkeys.h"
+#include "config/hotkeys.h"
 #include "translation/translation.h"
 #include "window/hotkey_editor.h"
 

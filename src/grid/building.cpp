@@ -3,7 +3,7 @@
 
 #include "building/building.h"
 #include "grid/grid.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 static grid_xx buildings_grid = {0, {FS_UINT16, FS_UINT16}};
 static grid_xx damage_grid = {0, {FS_UINT8, FS_UINT16}};

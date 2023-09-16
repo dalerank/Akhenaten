@@ -12,18 +12,20 @@
 #include "grid/point.h"
 #include "grid/property.h"
 #include "input/scroll.h"
-#include "io/config/config.h"
+#include "config/config.h"
 #include "sound/city.h"
 #include "sound/effect.h"
 #include "widget/city/tile_draw.h"
 #include "widget/map_editor_tool.h"
 
-static struct {
+struct map_editor_data_t {
     map_point current_tile;
     int selected_grid_offset;
     int new_start_grid_offset;
     int capture_input;
-} data;
+};
+
+map_editor_data_t g_map_editor_data;
 
 static struct {
     time_millis last_water_animation_time;
@@ -81,6 +83,7 @@ static void update_zoom_level(void) {
 }
 
 void widget_map_editor_draw(void) {
+    auto &data = g_map_editor_data;
     update_zoom_level();
     set_city_clip_rectangle();
 
@@ -119,6 +122,7 @@ static int input_coords_in_map(int x, int y) {
 }
 
 static void handle_touch_scroll(const touch* t) {
+    auto &data = g_map_editor_data;
     if (editor_tool_is_active()) {
         if (t->has_started) {
             vec2i view_pos, view_size;
@@ -134,6 +138,7 @@ static void handle_touch_scroll(const touch* t) {
 
     if (!data.capture_input)
         return;
+
     int was_click = touch_was_click(get_latest_touch());
     if (t->has_started || was_click) {
         scroll_drag_start(1);
@@ -186,6 +191,7 @@ static bool handle_cancel_construction_button(const touch* t) {
 }
 
 static void handle_first_touch(map_point tile) {
+    auto &data = g_map_editor_data;
     const touch* first = get_earliest_touch();
 
     if (touch_was_click(first)) {
@@ -254,6 +260,7 @@ static void handle_first_touch(map_point tile) {
 }
 
 static void handle_touch(void) {
+    auto &data = g_map_editor_data;
     const touch* first = get_earliest_touch();
     if (!first->in_use) {
         scroll_restore_margins();
@@ -276,6 +283,7 @@ static void handle_touch(void) {
 }
 
 void widget_map_editor_handle_input(const mouse* m, const hotkeys* h) {
+    auto &data = g_map_editor_data;
     scroll_map(m);
 
     if (m->is_touch) {
@@ -326,6 +334,7 @@ void widget_map_editor_handle_input(const mouse* m, const hotkeys* h) {
 }
 
 void widget_map_editor_clear_current_tile(void) {
+    auto &data = g_map_editor_data;
     data.selected_grid_offset = 0;
     data.current_tile.set(0);
 }

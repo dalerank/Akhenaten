@@ -33,7 +33,7 @@
 #include "grid/terrain.h"
 #include "grid/water.h"
 #include "grid/floodplain.h"
-#include "io/config/config.h"
+#include "config/config.h"
 
 #include <cmath>
 #include <algorithm>
