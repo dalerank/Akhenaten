@@ -23,7 +23,7 @@
 #include "game/mission.h"
 #include "graphics/elements/scroll_list_panel.h"
 #include "io/manager.h"
-#include "playerdata/player_data.h"
+#include "game/player_data.h"
 #include <cmath>
 
 static void button_select_item(int index, int param2);

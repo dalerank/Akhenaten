@@ -9,7 +9,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "content/vfs.h"
-#include "playerdata/player_data.h"
+#include "game/player_data.h"
 
 static void on_scroll(void);
 
