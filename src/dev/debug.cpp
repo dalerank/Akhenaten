@@ -339,7 +339,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
         break;
     case 11: // LABOR
         if (b_id && map_property_is_draw_tile(grid_offset)
-            && (b->labor_category != -1 || building_is_floodplain_farm(b))) {
+            && (b->labor_category != (uint8_t)-1 || building_is_floodplain_farm(b))) {
             if (b->labor_category != category_for_building(b))
                 debug_text(str, x0, y + 10, 10, "!!", b->labor_category, COLOR_RED); // incorrect category??
             else
@@ -349,13 +349,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             debug_text(str, x1 - 10, y + 20, 4, ":", b->worker_percentage(), COLOR_LIGHT_BLUE);
             //
             if (building_is_farm(b->type)) {
-                debug_text(str,
-                           x1 + 40,
-                           y + 20,
-                           40,
-                           "fert.",
-                           map_get_fertility_for_farm(b->tile.grid_offset()),
-                           COLOR_FONT_ORANGE_LIGHT);
+                debug_text(str,x1 + 40,y + 20,40,"fert.",map_get_fertility_for_farm(b->tile.grid_offset()),COLOR_FONT_ORANGE_LIGHT);
                 debug_text(str, x0, y + 30, 0, "", b->data.industry.progress, COLOR_GREEN);
                 debug_text(str, x1 + 10, y + 30, 4, ":", b->data.industry.progress / 20, COLOR_GREEN);
                 debug_text(str, x1 + 40, y + 30, 40, "exp.", farm_expected_produce(b), COLOR_GREEN);

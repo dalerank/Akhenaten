@@ -81,6 +81,8 @@ int trade_price_sell(int resource, int bonus_inclusion) {
     case PRICE_ONLY_BONUS:
         return prices[resource].sell * (city_data.religion.ra_150_export_profits_months_left > 0 ? 0.5f : 0.0f);
     }
+
+    return 999;
 }
 
 io_buffer* iob_trade_prices = new io_buffer([](io_buffer* iob, size_t version) {

@@ -85,7 +85,7 @@ public:
     short stored_full_amount;
     bool has_well_access;
     short num_workers;
-    char labor_category;
+    unsigned char labor_category;
     e_resource output_resource_id;
     uint32_t has_road_access;
     short house_criminal_active;

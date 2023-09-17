@@ -1,15 +1,15 @@
 #include "asset_handler.h"
 
 #include "core/bstring.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "platform/android/android.h"
 #include "platform/android/jni.h"
 #include "platform/file_manager.h"
 
-#include "SDL.h"
+#include "android/asset_manager.h"
+#include "android/asset_manager_jni.h"
 
-#include <android/asset_manager.h>
-#include <android/asset_manager_jni.h>
+#include <SDL.h>
 #include <stdio.h>
 #include <string.h>
 

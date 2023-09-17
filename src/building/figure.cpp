@@ -293,6 +293,8 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_ful
             return true;
         }
     }
+
+    return false;
 }
 
 void building::spawn_figure_work_camp() {

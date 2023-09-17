@@ -112,6 +112,7 @@ int get_temple_complex_part_image(int type, int part, int orientation, int level
             return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_UPGRADES, type) + 2 + orientation;
         }
     }
+    return 0;
 }
 building* get_temple_complex_front_facing_part(building* b) {
     int orientation = (5 - (b->data.monuments.variant / 2)) % 4;

@@ -58,6 +58,8 @@ int trade_route_limit(int route_id, int resource, int bonus_inclusion) {
     case LIMIT_BONUS_ONLY:
         return bonus;
     }
+
+    return 0;
 }
 int trade_route_traded(int route_id, int resource) {
     return data[route_id][resource].traded;

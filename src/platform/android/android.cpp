@@ -2,13 +2,12 @@
 
 #include "core/bstring.h"
 #include "io/dir.h"
-#include "io/file.h"
+#include "content/vfs.h"
 #include "platform/android/asset_handler.h"
 #include "platform/android/jni.h"
 #include "platform/file_manager.h"
 
-#include "SDL.h"
-
+#include <SDL.h>
 #include <string.h>
 
 static int has_directory;

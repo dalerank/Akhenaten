@@ -109,8 +109,9 @@ static bool PTAH_warehouse_restock() {
             else
                 return true;
         }
-    } else
-        return false;
+    }
+
+    return false;
 }
 
 static bool PTAH_industry_restock() {
