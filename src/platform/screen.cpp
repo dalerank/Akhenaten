@@ -81,10 +81,10 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
 static void set_scale_for_screen(int pixel_width, int pixel_height) {
     set_scale_percentage(android_get_screen_density() * 100, pixel_width, pixel_height);
     //config_set(CONFIG_SCREEN_CURSOR_SCALE, scale_percentage);
-    if (SDL.window) {
+    if (g_screen.window) {
         //system_init_cursors(scale_percentage);
     }
-    logs::info("Auto-setting scale to %i", scale_percentage);
+    logs::info("Auto-setting scale to %i", g_screen.scale_percentage);
 }
 #endif
 
