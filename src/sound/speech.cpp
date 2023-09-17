@@ -2,7 +2,7 @@
 
 #include "core/log.h"
 #include "game/settings.h"
-#include "io/dir.h"
+#include "content/dir.h"
 #include "sound/channel.h"
 #include "sound/device.h"
 
@@ -23,7 +23,7 @@ void sound_speech_play_file(const char* filename) {
         corrected_filename = bstring256(folder_audio, filename);
     }
 
-    corrected_filename = dir_get_file(corrected_filename);
+    corrected_filename = vfs::dir_get_file(corrected_filename);
 
     if (corrected_filename.empty()) {
         logs::error("Cant open audio file %s", filename);

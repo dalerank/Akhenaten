@@ -1,6 +1,6 @@
 #pragma once
 
-#include "io/dir.h"
+#include "content/dir.h"
 
 #include <stdint.h>
 #include <stdio.h>

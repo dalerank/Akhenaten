@@ -5,7 +5,7 @@
 #include "core/game_environment.h"
 #include "core/profiler.h"
 #include "game/settings.h"
-#include "io/dir.h"
+#include "content/dir.h"
 #include "sound/device.h"
 
 struct music_data_t {
@@ -105,7 +105,7 @@ void sound_music_play_track(int track) {
         corrected_filename = bstring256(folder_audio,  ph_mp3[track]);
     }
 
-    corrected_filename = dir_get_file(corrected_filename);
+    corrected_filename = vfs::dir_get_file(corrected_filename);
     sound_device_play_music(corrected_filename, volume);
 
     g_music_data.current_track = track;

@@ -7,6 +7,7 @@
 #include "core/game_environment.h"
 #include "core/string.h"
 #include "core/time.h"
+#include "content/dir.h"
 #include "game/file_editor.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
@@ -18,7 +19,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "io/dir.h"
 #include "content/vfs.h"
 #include "io/gamefiles/lang.h"
 #include "io/gamestate/boilerplate.h"
@@ -256,8 +256,8 @@ static void button_ok_cancel(int is_ok, int param2) {
         }
     } else if (data.dialog_type == FILE_DIALOG_DELETE) {
         if (GamestateIO::delete_savegame(filename)) {
-            dir_find_files_with_extension(".", data.file_data->extension);
-            dir_append_files_with_extension(".", saved_game_data_expanded.extension);
+            vfs::dir_find_files_with_extension(".", data.file_data->extension);
+            vfs::dir_append_files_with_extension(".", saved_game_data_expanded.extension);
 
             data.panel->clamp_scrollbar_position();
             //            if (scrollbar.scroll_position + NUM_FILES_IN_VIEW >= data.file_list->num_files)

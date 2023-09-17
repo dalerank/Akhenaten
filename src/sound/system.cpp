@@ -3,7 +3,6 @@
 #include "content/vfs.h"
 #include "core/game_environment.h"
 #include "game/settings.h"
-#include "io/dir.h"
 #include "sound/channel.h"
 #include "sound/city.h"
 #include "sound/device.h"

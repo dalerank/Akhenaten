@@ -3,7 +3,7 @@
 #include "core/time.h"
 #include "game/settings.h"
 #include "graphics/boilerplate.h"
-#include "io/dir.h"
+#include "content/dir.h"
 #include "content/vfs.h"
 #include "io/gamefiles/smacker.h"
 #include "platform/renderer.h"
@@ -45,7 +45,7 @@ static void close_smk(void) {
 }
 
 static int load_smk(const char* filename) {
-    bstring256 path = dir_get_file(filename);
+    bstring256 path = vfs::dir_get_file(filename);
     if (path.empty()) {
         return 0;
     }

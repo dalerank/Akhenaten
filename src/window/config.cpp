@@ -18,7 +18,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "config/config.h"
-#include "io/dir.h"
+#include "content/dir.h"
 #include "io/gamefiles/lang.h"
 #include "translation/translation.h"
 #include "window/hotkey_config.h"
@@ -378,7 +378,7 @@ static void init(void (*close_callback)()) {
     string_copy(translation_for(TR_CONFIG_LANGUAGE_DEFAULT), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
     data.language_options[0] = data.language_options_data[0];
     data.num_language_options = 1;
-    const dir_listing* subdirs = dir_find_all_subdirectories();
+    const dir_listing* subdirs = vfs::dir_find_all_subdirectories();
     for (int i = 0; i < subdirs->num_files; i++) {
         if (data.num_language_options < MAX_LANGUAGE_DIRS && lang_dir_is_valid(subdirs->files[i])) {
             int opt_id = data.num_language_options;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "graphics/elements/generic_button.h"
-#include "io/dir.h"
+#include "content/dir.h"
 #include "scrollbar.h"
 
 #include <vector>

@@ -177,7 +177,7 @@ void player_data_load(const uint8_t* player_name) {
     data.dat_file->clear();
     data.dat_file->reset_offset();
     bstring256 family_save("Save/", (const char*)player_name, ".dat");
-    bstring256 fs_family_save = dir_get_file(family_save);
+    bstring256 fs_family_save = vfs::dir_get_file(family_save);
     int size = io_read_file_into_buffer(fs_family_save, NOT_LOCALIZED, data.dat_file, DAT_FILE_SIZE);
     if (!size) {
         return;

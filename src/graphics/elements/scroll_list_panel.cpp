@@ -116,7 +116,7 @@ void scroll_list_panel::change_file_path(const char* dir, const char* ext) {
 }
 
 void scroll_list_panel::append_files_with_extension(const char* dir, const char* extension) {
-    file_finder = dir_append_files_with_extension(dir, extension);
+    file_finder = vfs::dir_append_files_with_extension(dir, extension);
     num_total_entries = file_finder->num_files;
     refresh_scrollbar();
 }
@@ -128,9 +128,9 @@ void scroll_list_panel::refresh_file_finder() {
 
     unfocus();
     if (strcmp(files_ext, "folders") == 0) {
-        file_finder = dir_find_all_subdirectories(files_dir);
+        file_finder = vfs::dir_find_all_subdirectories(files_dir);
     } else {
-        file_finder = dir_find_files_with_extension(files_dir, files_ext);
+        file_finder = vfs::dir_find_files_with_extension(files_dir, files_ext);
     }
     num_total_entries = file_finder->num_files;
     refresh_scrollbar();

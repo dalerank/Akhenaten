@@ -1,8 +1,7 @@
-#ifndef CORE_IO_H
-#define CORE_IO_H
+#pragma once
 
 #include "core/buffer.h"
-#include "dir.h"
+#include "content/dir.h"
 
 /**
  * @file
@@ -37,5 +36,3 @@ int io_read_file_part_into_buffer(const char* filepath, int localizable, buffer*
  * @return Number of bytes written
  */
 int io_write_buffer_to_file(const char* filepath, buffer* buf, int size);
-
-#endif // CORE_IO_H
