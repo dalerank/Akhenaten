@@ -11,6 +11,7 @@ namespace vfs{
 FILE * file_open(const char *filename, const char *mode) {
     return platform_file_manager_open_file(filename, mode);
 }
+
 int file_close(FILE * stream) {
     return fclose(stream);
 }

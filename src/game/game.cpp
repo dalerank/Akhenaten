@@ -21,6 +21,7 @@
 #include "config/config.h"
 #include "config/hotkeys.h"
 #include "io/gamefiles/lang.h"
+#include "platform/file_manager.h"
 #include "mission.h"
 #include "scenario/events.h"
 #include "scenario/scenario.h"
@@ -118,6 +119,7 @@ bool game_pre_init(void) {
         return false;
     }
 
+    logs::switch_output(platform_file_manager_get_base_path());
     update_encoding();
     settings_load(); // c3.inf
     config_load();   // ozymandias.ini

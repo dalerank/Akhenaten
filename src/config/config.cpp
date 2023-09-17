@@ -131,7 +131,9 @@ void config_set_defaults() {
 }
 void config_load() {
     config_set_defaults();
-    FILE* fp = vfs::file_open(INI_FILENAME, "rt");
+    bstring256 fs_file = vfs::dir_get_path(INI_FILENAME);
+
+    FILE* fp = vfs::file_open(fs_file, "rt");
     if (!fp)
         return;
     char line_buffer[MAX_LINE];
@@ -166,8 +168,11 @@ void config_load() {
     }
     vfs::file_close(fp);
 }
+
 void config_save() {
-    FILE* fp = vfs::file_open(INI_FILENAME, "wt");
+    bstring256 fs_file = vfs::dir_get_path(INI_FILENAME);
+
+    FILE* fp = vfs::file_open(fs_file, "wt");
     if (!fp) {
         logs::error("Unable to write configuration file %s", INI_FILENAME);
         return;

@@ -23,6 +23,9 @@
 
 namespace {
 
+pcstr logger_filename_ = "ozymandias-log.txt";
+static std::fstream logger_file_stream_;
+
 const std::unordered_map<std::string, SDL_LogPriority> PRIORITY_DICT = {
     {"verbose", SDL_LOG_PRIORITY_VERBOSE},
     {"debug", SDL_LOG_PRIORITY_DEBUG},
@@ -119,14 +122,21 @@ void initialize() {
     SDL_LogSetAllPriority(get_log_priority());
 }
 
+void switch_output(pcstr folder) {
+    logger_file_stream_.close();
+
+    bstring256 filename(folder, "/", logger_filename_);
+    logger_file_stream_.open(filename, std::fstream::out | std::fstream::trunc);
+}
+
 } // namespace logs
 
 Logger::Logger() {
-    file_stream_.open("ozymandias-log.txt", std::fstream::out | std::fstream::trunc);
+    logger_file_stream_.open(logger_filename_, std::fstream::out | std::fstream::trunc);
 }
 
 Logger::~Logger() {
-    file_stream_.close();
+    logger_file_stream_.close();
 }
 
 void Logger::write(void* /* userdata */, int /* category */, SDL_LogPriority priority, char const* message) {
@@ -138,7 +148,7 @@ void Logger::write(void* /* userdata */, int /* category */, SDL_LogPriority pri
 }
 
 void Logger::write_to_file_(char const* prefix, char const* message) {
-    file_stream_ << prefix << message << std::endl;
+    logger_file_stream_ << prefix << message << std::endl;
 
 #if defined(GAME_PLATFORM_WIN)
     OutputDebugStringA(prefix);

@@ -7,6 +7,7 @@
 namespace logs {
 /// Initialize SDL logger
 void initialize();
+void switch_output(const char *folder);
 
 // Note: to handle format-security warnings
 template <class... Args>
@@ -72,9 +73,6 @@ public:
     static void write(void* userdata, int category, SDL_LogPriority priority, char const* message);
 
 private:
-    /// Output file stream (to store logs)
-    std::fstream file_stream_;
-
     Logger();
     ~Logger();
 

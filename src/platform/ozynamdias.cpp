@@ -573,6 +573,7 @@ int main(int argc, char** argv) {
 
     Arguments arguments(argc, argv);
     setup(arguments);
+
     main_loop();
     teardown();
 

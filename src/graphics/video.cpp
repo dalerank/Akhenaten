@@ -45,12 +45,12 @@ static void close_smk(void) {
 }
 
 static int load_smk(const char* filename) {
-    bstring256 path = vfs::dir_get_file(filename);
-    if (path.empty()) {
+    bstring256 fs_file = vfs::dir_get_file(filename);
+    if (fs_file.empty()) {
         return 0;
     }
 
-    FILE* fp = vfs::file_open(path, "rb");
+    FILE* fp = vfs::file_open(fs_file, "rb");
     data.s = smacker_open(fp);
     if (!data.s) {
         // smacker_open() closes the stream on error: no need to close fp

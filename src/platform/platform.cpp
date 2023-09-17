@@ -1,5 +1,7 @@
 #include "platform.h"
 
+#include "core/log.h"
+
 #include <SDL.h>
 
 #if defined(GAME_PLATFORM_WIN)
