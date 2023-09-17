@@ -804,7 +804,7 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color* p_da
     }
 #else
     // create RGB surface, and texture atlas from that surface
-    //    SDL_Log("Creating atlas texture with size %dx%d", width, height);
+    // SDL_Log("Creating atlas texture with size %dx%d", width, height);
     SDL_Surface* surface = SDL_CreateRGBSurfaceFrom((void*)p_data, width, height, 32, width * sizeof(color), COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);
     if (!surface) {
         logs::error("Unable to create surface for texture. Reason: %s", SDL_GetError());
@@ -915,7 +915,7 @@ bool graphics_renderer_interface::save_texture_to_file(const char* filename, SDL
         st = SDL_SaveBMP(surf, filename);
         break;
 
-#ifndef ANDROID_BUILD
+#if !defined(GAME_PLATFORM_ANDROID)
     case FILE_FORMAT_PNG:
         st = IMG_SavePNG(surf, filename);
         break;
