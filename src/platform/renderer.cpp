@@ -13,11 +13,10 @@
 #if defined(GAME_PLATFORM_MACOSX)
   #include <SDL2_image/SDL_image.h>
 #elif defined(GAME_PLATFORM_ANDROID)
-  // nothing
+  #include <SDL.h>
 #else
   #include <SDL_image.h>
 #endif
-
 
 #include <string.h>
 #include <algorithm>
