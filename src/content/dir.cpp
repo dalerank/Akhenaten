@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <filesystem>
 
 #define BASE_MAX_FILES 100
 
@@ -112,23 +113,22 @@ static void move_left(char *str) {
     *str = 0;
 }
 
-bstring256 dir_get_case_corrected_file(const char *dir, const char *filepath) {
-    bstring256 corrected_filename;
-
-    size_t dir_len = 0;
-    if (!dir) {
-        dir = ".";
-    }
-    corrected_filename.append(dir);
-    if (corrected_filename.back() != '/') {
-        corrected_filename.append('/');
+bstring256 dir_get_path(const char *path) {
+    bstring256 corrected_path = platform_file_manager_get_base_path();
+    if (corrected_path.back() != '/') {
+        corrected_path.append('/');
     }
 
-    corrected_filename.append(filepath);
-    corrected_filename.replace('\\', '/');
-    FILE *fp = vfs::file_open(corrected_filename, "rb");
-    if (fp) {
-        vfs::file_close(fp);
+    corrected_path.append(path);
+    corrected_path.replace('\\', '/');
+    return corrected_path;
+}
+
+bstring256 dir_get_file(const char *filepath) {
+    bstring256 corrected_filename = dir_get_path(filepath);
+    
+    bool exists = std::filesystem::exists(corrected_filename.c_str());
+    if (exists) {
         return corrected_filename;
     }
 
@@ -141,10 +141,6 @@ const dir_listing *dir_append_files_with_extension(const char *dir, const char *
     platform_file_manager_list_directory_contents(dir, TYPE_FILE, extension, add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(char *), compare_lower);
     return &data.listing;
-}
-
-bstring256 dir_get_file(const char *filepath) {
-    return dir_get_case_corrected_file(platform_file_manager_get_base_path(), filepath);
 }
 
 } // vfs

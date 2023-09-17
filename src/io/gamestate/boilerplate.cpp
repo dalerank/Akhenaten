@@ -585,12 +585,12 @@ void GamestateIO::prepare_folders(const char* path) {
 
 bool GamestateIO::prepare_savegame(const char* filename_short) {
     // concatenate string
-    bstring256 full = fullpath_saves(filename_short);
-    bstring256 folders = fullpath_saves("");
+    bstring256 savefile = vfs::dir_get_path(fullpath_saves(filename_short));
+    bstring256 folders = vfs::dir_get_path(fullpath_saves(""));
 
     prepare_folders(folders);
     // write file
-    return FILEIO.serialize(full, 0, FILE_FORMAT_SAVE_FILE, 160, prepare_savegame_schema);
+    return FILEIO.serialize(savefile, 0, FILE_FORMAT_SAVE_FILE, 160, prepare_savegame_schema);
 }
 
 bool GamestateIO::write_map(const char* filename_short) {

@@ -48,6 +48,6 @@ const dir_listing *dir_find_all_subdirectories(const char *dir = 0);
  * @return Corrected file, or NULL if the file was not found
  */
 bstring256 dir_get_file(const char *filepath);
-bstring256 dir_get_case_corrected_file(const char *dir, const char *filepath);
+bstring256 dir_get_path(const char *folder);
 
 }
