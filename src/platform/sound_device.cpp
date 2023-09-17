@@ -82,7 +82,7 @@ static int percentage_to_volume(int percentage) {
 static Mix_Chunk* load_chunk(const char* filename) {
     if (filename && *filename) {
 #if defined(__vita__) || defined(GAME_PLATFORM_ANDROID)
-        FILE* fp = file_open(filename, "rb");
+        FILE* fp = vfs::file_open(filename, "rb");
         if (!fp)
             return NULL;
 
@@ -283,7 +283,7 @@ int sound_device_play_music(const char* filename, int volume_pct) {
         SDL_RWops* sdl_music = SDL_RWFromMem(vita_music_data.buffer, vita_music_data.size);
         data.music = Mix_LoadMUSType_RW(sdl_music, vfs::file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
 #elif defined(GAME_PLATFORM_ANDROID)
-        FILE *fp = file_open(filename, "rb");
+        FILE *fp = vfs::file_open(filename, "rb");
         if (!fp) {
             return 0;
         }
