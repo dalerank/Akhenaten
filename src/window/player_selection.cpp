@@ -19,7 +19,7 @@
 #include "content/vfs.h"
 #include "io/gamefiles/lang.h"
 #include "io/gamestate/boilerplate.h"
-#include "io/playerdata/player_data.h"
+#include "playerdata/player_data.h"
 // #include "widget/input_box.h"
 #include "main_menu.h"
 #include "popup_dialog.h"
