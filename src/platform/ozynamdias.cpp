@@ -158,8 +158,7 @@ static void show_options_window(Arguments& args) {
     SDL_Window* platform_window = SDL_CreateWindow(
       "Ozymandias: configuration", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
 
-    SDL_Renderer* renderer
-      = SDL_CreateRenderer(platform_window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+    SDL_Renderer* renderer = SDL_CreateRenderer(platform_window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr) {
         logs::info("Error creating SDL_Renderer!");
         exit(-1);

@@ -67,6 +67,7 @@ public:
     void fill_rect(int x, int y, int width, int height, color color);
 
     void draw_image(const image_t* img, float x, float y, color color, float scale, bool mirrored);
+    void draw_image(SDL_Texture* tex, float x, float y, vec2i offset, vec2i, color color, float scale, bool mirrored);
     int save_screen_buffer(color *pixels, int x, int y, int width, int height, int row_width);
 
     void create_custom_texture(int type, int width, int height);
@@ -83,6 +84,7 @@ public:
     vec2i get_max_image_size();
 
     SDL_Texture* create_texture_from_buffer(color* p_data, int width, int height);
+    SDL_Texture* create_texture_from_png_buffer(void* p_data, int size);
 
     bool save_texture_to_file(const char* filename, SDL_Texture* tex, e_file_format file_format = FILE_FORMAT_BMP);
 };

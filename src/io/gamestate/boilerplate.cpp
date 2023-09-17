@@ -613,10 +613,10 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
 
     // read file
     pre_load();
-    if (!FILEIO.unserialize(
-          MISSION_PACK_FILE, offset, FILE_FORMAT_MISSION_PAK, GamestateIO::read_file_version, file_schema)) {
+    if (!FILEIO.unserialize(MISSION_PACK_FILE, offset, FILE_FORMAT_MISSION_PAK, GamestateIO::read_file_version, file_schema)) {
         return false;
     }
+
     last_loaded = LOADED_MISSION;
     scenario_set_campaign_scenario(scenario_id);
     post_load();
@@ -649,8 +649,10 @@ bool GamestateIO::load_savegame(const char* filename_short, bool start_immediate
     post_load();
 
     // finish loading and start
-    if (start_immediately)
+    if (start_immediately) {
         start_loaded_file();
+    }
+
     return true;
 }
 bool GamestateIO::load_map(const char* filename_short, bool start_immediately) {
@@ -660,8 +662,10 @@ bool GamestateIO::load_map(const char* filename_short, bool start_immediately) {
 
     // read file
     pre_load();
-    if (!FILEIO.unserialize(full, 0, FILE_FORMAT_MAP_FILE, GamestateIO::read_file_version, file_schema))
+    if (!FILEIO.unserialize(full, 0, FILE_FORMAT_MAP_FILE, GamestateIO::read_file_version, file_schema)) {
         return false;
+    }
+
     last_loaded = LOADED_CUSTOM_MAP;
     post_load();
 
@@ -671,6 +675,7 @@ bool GamestateIO::load_map(const char* filename_short, bool start_immediately) {
         // replay mission autosave file
         GamestateIO::write_savegame("autosave_replay.sav");
     }
+
     return true;
 }
 

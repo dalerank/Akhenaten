@@ -276,32 +276,41 @@ static void set_texture_scale_mode(SDL_Texture* texture, float scale_factor) {
         SDL_GetTextureScaleMode(texture, &current_scale_mode);
         SDL_ScaleMode desired_scale_mode = (scale_factor < 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest);
         //        SDL_ScaleMode desired_scale_mode = (scale_factor < 1.0f ? SDL_ScaleModeBest : SDL_ScaleModeNearest);
-        if (current_scale_mode != desired_scale_mode)
+        if (current_scale_mode != desired_scale_mode) {
             SDL_SetTextureScaleMode(texture, desired_scale_mode);
+        }
     }
 #endif
 }
 
 void graphics_renderer_interface::draw_image(const image_t* img, float x, float y, color color, float scale, bool mirrored) {
     auto &data = g_renderer_data;
-    if (data.paused || img == nullptr)
+    if (data.paused || img == nullptr) {
         return;
-    if (!color)
-        color = COLOR_MASK_NONE;
+    }
 
-    SDL_Texture* texture = img->atlas.p_atlas->texture;
-    if (!texture)
+    vec2i offset = {img->atlas.x_offset, img->atlas.y_offset};
+    vec2i size = {img->width, img->height};
+    draw_image(img->atlas.p_atlas->texture, x, y, offset, size, color, scale, mirrored);
+}
+
+void graphics_renderer_interface::draw_image(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, bool mirrored) {
+    auto &data = g_renderer_data;
+    if (data.paused || texture == nullptr) {
         return;
+    }
+
+    if (!color) {
+        color = COLOR_MASK_NONE;
+    }
 
     float overall_scale_factor = scale * data.global_render_scale;
     bool DOWNSCALED_CITY = false;
-    if (data.global_render_scale < 1.0f)
+    if (data.global_render_scale < 1.0f) {
         DOWNSCALED_CITY = true;
-    set_texture_scale_mode(texture, overall_scale_factor);
+    }
 
-    float x_offset = img->atlas.x_offset;
-    float y_offset = img->atlas.y_offset;
-    float height = img->height;
+    set_texture_scale_mode(texture, overall_scale_factor);
 
 #ifdef USE_RENDER_GEOMETRY
     // if (HAS_RENDER_GEOMETRY) {
@@ -333,10 +342,10 @@ void graphics_renderer_interface::draw_image(const image_t* img, float x, float 
     }
 
     float texture_coord_correction = 0;
-    SDL_Rect texture_coords = {static_cast<int>(x_offset + texture_coord_correction),
-                               static_cast<int>(y_offset + texture_coord_correction),
-                               static_cast<int>(img->width - texture_coord_correction),
-                               static_cast<int>(height - texture_coord_correction)};
+    SDL_Rect texture_coords = {static_cast<int>(offset.x + texture_coord_correction),
+                               static_cast<int>(offset.y + texture_coord_correction),
+                               static_cast<int>(size.x - texture_coord_correction),
+                               static_cast<int>(size.y - texture_coord_correction)};
 
     SDL_FRect screen_coords;
     if (DOWNSCALED_CITY) {
@@ -344,18 +353,20 @@ void graphics_renderer_interface::draw_image(const image_t* img, float x, float 
         // but I can't be arsed to find it. I tried, I gave up.
         screen_coords = {static_cast<float>(x * data.global_render_scale - 0.25),
                          static_cast<float>(y * data.global_render_scale - 0.25),
-                         static_cast<float>(img->width * overall_scale_factor + 0.5),
-                         static_cast<float>(height * overall_scale_factor + 0.5)};
+                         static_cast<float>(size.x * overall_scale_factor + 0.5),
+                         static_cast<float>(size.y * overall_scale_factor + 0.5)};
     } else {
         screen_coords = {x * data.global_render_scale,
                          y * data.global_render_scale,
-                         img->width * overall_scale_factor,
-                         height * overall_scale_factor};
+                         size.x * overall_scale_factor,
+                         size.y * overall_scale_factor};
     }
-    if (mirrored)
+
+    if (mirrored) {
         SDL_RenderCopyExF(data.renderer, texture, &texture_coords, &screen_coords, 0, nullptr, SDL_FLIP_HORIZONTAL);
-    else
+    } else {
         SDL_RenderCopyExF(data.renderer, texture, &texture_coords, &screen_coords, 0, nullptr, SDL_FLIP_NONE);
+    }
 
     // #ifdef USE_RENDERCOPYF
     //     if (HAS_RENDERCOPYF) {
@@ -695,6 +706,7 @@ void graphics_renderer_interface::draw_custom_texture(int type, int x, int y, fl
     if (data.paused) {
         return;
     }
+
     if (type == CUSTOM_IMAGE_RED_FOOTPRINT || type == CUSTOM_IMAGE_GREEN_FOOTPRINT) {
         if (!data.custom_textures[type].texture) {
             create_blend_texture(type);
@@ -733,11 +745,7 @@ void load_unpacked_image(const image_t* img, const color* pixels) {
     }
     int index = first_empty != -1 ? first_empty : oldest_texture_index;
 
-    SDL_Surface* surface = SDL_CreateRGBSurfaceFrom((void*)pixels,
-                                                    img->width,
-                                                    img->height,
-                                                    32,
-                                                    img->width * sizeof(color),
+    SDL_Surface* surface = SDL_CreateRGBSurfaceFrom((void*)pixels, img->width, img->height, 32, img->width * sizeof(color),
                                                     COLOR_CHANNEL_RED,
                                                     COLOR_CHANNEL_GREEN,
                                                     COLOR_CHANNEL_BLUE,
@@ -797,15 +805,7 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color* p_da
 #else
     // create RGB surface, and texture atlas from that surface
     //    SDL_Log("Creating atlas texture with size %dx%d", width, height);
-    SDL_Surface* surface = SDL_CreateRGBSurfaceFrom((void*)p_data,
-                                                    width,
-                                                    height,
-                                                    32,
-                                                    width * sizeof(color),
-                                                    COLOR_CHANNEL_RED,
-                                                    COLOR_CHANNEL_GREEN,
-                                                    COLOR_CHANNEL_BLUE,
-                                                    COLOR_CHANNEL_ALPHA);
+    SDL_Surface* surface = SDL_CreateRGBSurfaceFrom((void*)p_data, width, height, 32, width * sizeof(color), COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);
     if (!surface) {
         logs::error("Unable to create surface for texture. Reason: %s", SDL_GetError());
         return nullptr;
@@ -820,6 +820,25 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color* p_da
 #endif
 
     return texture;
+}
+
+SDL_Texture* graphics_renderer_interface::create_texture_from_png_buffer(void *buffer, int size) {
+    auto &data = g_renderer_data;
+    SDL_RWops* ops = SDL_RWFromMem((void*)buffer, size);
+    SDL_Surface *loadedSurface = IMG_LoadPNG_RW(ops);
+
+    if (loadedSurface == nullptr) {
+        return nullptr;
+    }
+
+    if(loadedSurface != NULL) {
+        SDL_Texture *texture = SDL_CreateTextureFromSurface(data.renderer, loadedSurface);
+        SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+        SDL_FreeSurface( loadedSurface );
+        return texture;
+    }
+
+    return nullptr;
 }
 
 bool graphics_renderer_interface::save_texture_to_file(const char* filename, SDL_Texture* tex, e_file_format file_format) {

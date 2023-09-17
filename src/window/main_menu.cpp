@@ -12,6 +12,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "platform/version.hpp"
+#include "platform/renderer.h"
 #include "records.h"
 #include "sound/music.h"
 #include "window/config.h"
@@ -20,24 +21,31 @@
 #include "window/player_selection.h"
 #include "window/popup_dialog.h"
 #include "window/scenario_selection.h"
+#include "resource/icons.h"
 
 static void button_click(int type, int param2);
 
 #define MAX_BUTTONS 4
-
-static int focus_button_id;
-
 #define BUTTONS_X 192
 #define BUTTONS_Y 125
 #define BUTTONS_WIDTH 256
 #define BUTTONS_HEIGHT 25
 
-static generic_button buttons[] = {
-  {BUTTONS_X, BUTTONS_Y + 40 * 0, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 1, 0},
-  {BUTTONS_X, BUTTONS_Y + 40 * 1, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 2, 0},
-  {BUTTONS_X, BUTTONS_Y + 40 * 2, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 3, 0},
-  {BUTTONS_X, BUTTONS_Y + 40 * 3, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 4, 0},
+struct main_menu_data_t {
+    int focus_button_id;
+
+    generic_button buttons[MAX_BUTTONS] = {
+        {BUTTONS_X, BUTTONS_Y + 40 * 0, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 1, 0},
+        {BUTTONS_X, BUTTONS_Y + 40 * 1, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 2, 0},
+        {BUTTONS_X, BUTTONS_Y + 40 * 2, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 3, 0},
+        {BUTTONS_X, BUTTONS_Y + 40 * 3, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 4, 0},
+    };
+
+    SDL_Texture *dicord_texture = nullptr;
+    generic_button discord_button = {0, 0, 48, 48, button_click, button_none, 10, 0};
 };
+
+main_menu_data_t g_main_menu_data;
 
 static void draw_version_string() {
     static bstring64 version = get_version();
@@ -56,14 +64,18 @@ static void draw_version_string() {
         text_draw((const uint8_t*)version.c_str(), 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
     }
 }
+
 static void draw_background() {
     graphics_clear_screen();
     ImageDraw::img_background(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND));
+
     if (window_is(WINDOW_MAIN_MENU)) {
         draw_version_string();
     }
 }
+
 static void draw_foreground(void) {
+    auto &data = g_main_menu_data;
     graphics_set_to_dialog();
 
     int groups[6][2] = {
@@ -74,21 +86,29 @@ static void draw_foreground(void) {
       {2, 0},
       {30, 4},
     };
+
     for (int i = 0; i < 4; i++) {
-        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
+        large_label_draw(data.buttons[i].x, data.buttons[i].y, data.buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
         lang_text_draw_centered(groups[i][0], groups[i][1], BUTTONS_X, BUTTONS_Y + 40 * i + 6, BUTTONS_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     graphics_reset_dialog();
+
+    if (data.dicord_texture) {
+        vec2i scr_size = screen_size();
+        graphics_renderer()->draw_image(data.dicord_texture, scr_size.x - 50, scr_size.y - 50, {0, 0}, {48, 48}, 0xffffffff, 1.f, false);
+    }
 }
 
 static void window_config_show_back() {
 }
 
 static void confirm_exit(bool accepted) {
-    if (accepted)
+    if (accepted) {
         system_exit();
+    }
 }
+
 static void button_click(int type, int param2) {
     switch (type) {
     case 1:
@@ -118,28 +138,53 @@ static void button_click(int type, int param2) {
     case 4:
         window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, e_popup_btns_yesno);
         break;
+
+    case 10:
+        platform_open_url("https://discord.gg/HS4njmBvpb", "");
+        break;
+
     default:
         logs::error("Unknown button index");
     }
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto &data = g_main_menu_data;
     const mouse* m_dialog = mouse_in_dialog(m);
-    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, MAX_BUTTONS, &focus_button_id))
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, data.buttons, MAX_BUTTONS, &data.focus_button_id)) {
         return;
+    }
 
-    if (h->escape_pressed)
+    vec2i scr_size = screen_size();
+    if (generic_buttons_handle_mouse(m, scr_size.x - 50, scr_size.y - 50, &data.discord_button, 1, nullptr)) {
+        return;
+    }
+
+    if (h->escape_pressed) {
         hotkey_handle_escape();
+    }
 
-    if (h->load_file)
+    if (h->load_file) {
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
+    }
 }
 
 void window_main_menu_show(bool restart_music) {
+    auto &data = g_main_menu_data;
     if (restart_music) {
         sound_music_play_intro();
     }
 
-    window_type window = {WINDOW_MAIN_MENU, draw_background, draw_foreground, handle_input};
+    if (!data.dicord_texture) {
+        data.dicord_texture = load_icon("discord");
+    }
+
+    window_type window = {
+        WINDOW_MAIN_MENU,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
+
     window_show(&window);
 }

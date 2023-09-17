@@ -215,6 +215,7 @@ file(GLOB IO_GAMEFILES_FILES ${PROJECT_SOURCE_DIR}/src/io/gamefiles/*.cpp)
 file(GLOB IO_GAMESTATE_FILES ${PROJECT_SOURCE_DIR}/src/io/gamestate/*.cpp)
 file(GLOB IO_IMAGEPAKS_FILES ${PROJECT_SOURCE_DIR}/src/io/imagepaks/*.cpp)
 file(GLOB IO_PLAYERDATA_FILES ${PROJECT_SOURCE_DIR}/src/io/playerdata/*.cpp)
+file(GLOB RESOURCE_FILES ${PROJECT_SOURCE_DIR}/src/resource/*.cpp)
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "android")
     add_definitions(-DANDROID_BUILD=ON)
@@ -303,6 +304,7 @@ if(MSVC)
     source_group("io" FILES ${IO_FILES} {IO_HEADERS})
     source_group("content" FILES ${CONTENT_FILES})
     source_group("config" FILES ${CONFIG_FILES})
+    source_group("resource" FILES ${RESOURCE_FILES})
 endif()
 
 set(MACOSX_FILES "")
@@ -356,6 +358,7 @@ set(SOURCE_FILES
     ${MACOSX_FILES}
     ${RC_FILES}
     ${TRACY_FILES}
+    ${RESOURCE_FILES}
 )
 
 set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)

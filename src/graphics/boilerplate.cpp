@@ -628,6 +628,7 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
 static const color* tile_data(const color* data, int index) {
     return &data[900 * index];
 }
+
 static void draw_footprint_size_any(int image_id, int x, int y, int size, color color_mask, float scale) {
     //    const color *data = image_data(image_id);
     const image_t* img = image_get(image_id);
@@ -743,8 +744,7 @@ void ImageDraw::img_background(int image_id, float scale) {
     if (scale == -1) {
         //        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
     } else {
-        graphics_renderer()->draw_image(
-          img, (screen_width() - img->width) / 2, (screen_height() - img->height) / 2, COLOR_MASK_NONE, scale, false);
+        graphics_renderer()->draw_image(img, (screen_width() - img->width) / 2, (screen_height() - img->height) / 2, COLOR_MASK_NONE, scale, false);
     }
 }
 

@@ -92,6 +92,11 @@ int platform_screen_get_scale() {
     return g_screen.scale_percentage;
 }
 
+void* platform_screen_surfce_format() {
+    SDL_Surface *scr_surface = SDL_GetWindowSurface( g_screen.window );
+    return scr_surface->format;
+}
+
 #if !defined(GAME_PLATFORM_WIN) && !defined(GAME_PLATFORM_MACOSX)
 static void set_window_icon() {
     // TODO platform_icon_get_pixels() not defined?
