@@ -162,15 +162,19 @@ static int get_sentiment_contribution_religion_coverage() {
         return 0;
     }
 
-    int average_coverage = 0;
-    for (auto *god : city_gods_knowns()) {
-        average_coverage += city_culture_coverage_religion(god->type);
+    if (city_gods_knowns().size() > 0) {
+        int average_coverage = 0;
+        for (auto *god : city_gods_knowns()) {
+            average_coverage += city_culture_coverage_religion(god->type);
+        }
+
+        average_coverage /= (int)city_gods_knowns().size();
+        average_coverage /= 20; // one point for each 20% of coverage
+        int religion_points = calc_bound(average_coverage, 0, 5);
+        return religion_points;
     }
 
-    average_coverage /= (int)city_gods_knowns().size();
-    average_coverage /= 20; // one point for each 20% of coverage
-    int religion_points = calc_bound(average_coverage, 0, 5);
-    return religion_points;
+    return 0;
 }
 
 static int get_sentiment_contribution_employment() {
