@@ -6,11 +6,11 @@
 #include "core/game_environment.h"
 #include "core/profiler.h"
 
-static void decay(unsigned char* value) {
-    if (*value > 0)
-        *value = *value - 1;
-    else {
-        *value = 0;
+static void decay(unsigned char& value) {
+    if (value > 0) {
+        value = value - 1;
+    } else {
+        value = 0;
     }
 }
 
@@ -21,25 +21,26 @@ void house_service_decay_culture(void) {
         if (b->state != BUILDING_STATE_VALID || !b->house_size)
             continue;
 
-        decay(&b->data.house.juggler);
-        decay(&b->data.house.bandstand_juggler);
-        decay(&b->data.house.bandstand_musician);
-        decay(&b->data.house.colosseum_gladiator);
-        decay(&b->data.house.magistrate);
-        decay(&b->data.house.hippodrome);
-        decay(&b->data.house.school);
-        decay(&b->data.house.library);
-        decay(&b->data.house.academy);
-        decay(&b->data.house.apothecary);
-        decay(&b->data.house.dentist);
-        decay(&b->data.house.mortuary);
-        decay(&b->data.house.physician);
-        decay(&b->data.house.temple_osiris);
-        decay(&b->data.house.temple_ra);
-        decay(&b->data.house.temple_ptah);
-        decay(&b->data.house.temple_seth);
-        decay(&b->data.house.temple_bast);
-        decay(&b->data.house.bazaar_access);
+        decay(b->data.house.juggler);
+        decay(b->data.house.bandstand_juggler);
+        decay(b->data.house.bandstand_musician);
+        decay(b->data.house.colosseum_gladiator);
+        decay(b->data.house.magistrate);
+        decay(b->data.house.hippodrome);
+        decay(b->data.house.school);
+        decay(b->data.house.library);
+        decay(b->data.house.academy);
+        decay(b->data.house.apothecary);
+        decay(b->data.house.dentist);
+        decay(b->data.house.mortuary);
+        decay(b->data.house.physician);
+        decay(b->data.house.temple_osiris);
+        decay(b->data.house.temple_ra);
+        decay(b->data.house.temple_ptah);
+        decay(b->data.house.temple_seth);
+        decay(b->data.house.temple_bast);
+        decay(b->data.house.bazaar_access);
+        decay(b->common_health);
     }
 }
 
