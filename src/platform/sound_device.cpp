@@ -188,6 +188,7 @@ void sound_device_load_formats(void) {
                                     {MIX_INIT_OGG, "OGG"},
                                     {MIX_INIT_MID, "MIDI"},
                                     {MIX_INIT_OPUS, "Opus"}};
+
     const int max_num_formats = sizeof(formats) / sizeof(formats[0]);
 
     int all_flags = 0;

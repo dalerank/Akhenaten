@@ -179,6 +179,7 @@ void tutorial_menu_update(int tut) {
         if (g_tutorials_flags.pharaoh.spacious_apartment) building_menu_update(BUILDSET_TUT5_EDUCATION);
         if (g_tutorials_flags.pharaoh.papyrus_made) building_menu_update(BUILDSET_TUT5_TRADING);
         if (g_tutorials_flags.pharaoh.bricks_bought) building_menu_update(BUILDING_MENU_MONUMENTS);
+
     } else if (tut == 6) {
         building_menu_update(BUILDSET_TUT6_START);
     } else if (tut == 7) {
@@ -207,30 +208,6 @@ int tutorial_get_population_cap(int current_cap) {
 }
 
 int tutorial_get_immediate_goal_text(void) {
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    if (scenario_is_mission_rank(1)) {
-    //        if (!g_tutorials_flags.tutorial1.fire && !g_tutorials_flags.tutorial1.crime)
-    //            return 17;
-    //        else if (!g_tutorials_flags.tutorial1.collapse)
-    //            return 18;
-    //        else if (!g_tutorials_flags.tutorial1.senate_built)
-    //            return 19;
-    //        else
-    //            return 20;
-    //    } else if (scenario_is_mission_rank(2)) {
-    //        if (!g_tutorials_flags.tutorial2.granary_built)
-    //            return 21;
-    //        else if (!g_tutorials_flags.tutorial2.population_250_reached)
-    //            return 22;
-    //        else if (!g_tutorials_flags.tutorial2.population_450_reached)
-    //            return 23;
-    //        else if (!g_tutorials_flags.tutorial2.pottery_made)
-    //            return 24;
-    //        else
-    //            return 25;
-    //    }
-    //    return 0;
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
     if (scenario_is_mission_rank(1)) {
         if (!g_tutorials_flags.tutorial_1.population_150_reached)
             return 21;

@@ -717,10 +717,12 @@ void building_menu_update(int build_set) {
         toggle_building(BUILDING_PAPYRUS_WORKSHOP);
         toggle_building(BUILDING_SCHOOL);
         break;
+
     case BUILDSET_TUT5_TRADING:
         // TODO: enable trading
         toggle_building(BUILDING_DOCK);
         break;
+
     case BUILDSET_TUT5_MONUMENTS:
         toggle_building(BUILDING_BRICKLAYERS_GUILD);
         //            enable_monument(MONUMENT_SMALL_MASTABA); // todo!!!!!!

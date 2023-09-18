@@ -20,8 +20,9 @@
 
 static bool drawing_building_as_deleted(building* b) {
     b = b->main();
-    if (b->id && (b->is_deleted || map_property_is_deleted(b->tile.grid_offset())))
+    if (b->id && (b->is_deleted || map_property_is_deleted(b->tile.grid_offset()))) {
         return true;
+    }
 
     return false;
 }
@@ -630,7 +631,7 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
 
     default:
         draw_normal_anim(x, y, b, grid_offset, image_id, color_mask);
-        if (b->ruin_has_plague) {
+        if (b->has_plague) {
             ImageDraw::img_generic(image_id_from_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask);
         }
         break;
