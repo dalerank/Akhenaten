@@ -5,7 +5,7 @@
 #include "grid/building.h"
 
 static int get_column_height_health(const building* b) {
-    if (!b->house_size) {
+    if (!b->house_size || !b->house_population) {
         return NO_COLUMN;
     }
     
