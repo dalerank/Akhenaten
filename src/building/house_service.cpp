@@ -1,5 +1,6 @@
 #include "house_service.h"
 
+#include "figure/service.h"
 #include "building/building.h"
 #include "building/industry.h"
 #include "city/coverage.h"
@@ -14,37 +15,54 @@ static void decay(unsigned char& value) {
     }
 }
 
-void house_service_decay_culture(void) {
+void house_service_decay_services() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/House Decay Culture");
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || !b->house_size)
-            continue;
+    buildings_valid_do([] (building &b) {
+        if (!b.house_size) {
+            return;
+        }
 
-        decay(b->data.house.juggler);
-        decay(b->data.house.bandstand_juggler);
-        decay(b->data.house.bandstand_musician);
-        decay(b->data.house.colosseum_gladiator);
-        decay(b->data.house.magistrate);
-        decay(b->data.house.hippodrome);
-        decay(b->data.house.school);
-        decay(b->data.house.library);
-        decay(b->data.house.academy);
-        decay(b->data.house.apothecary);
-        decay(b->data.house.dentist);
-        decay(b->data.house.mortuary);
-        decay(b->data.house.physician);
-        decay(b->data.house.temple_osiris);
-        decay(b->data.house.temple_ra);
-        decay(b->data.house.temple_ptah);
-        decay(b->data.house.temple_seth);
-        decay(b->data.house.temple_bast);
-        decay(b->data.house.bazaar_access);
-        decay(b->common_health);
-    }
+        decay(b.data.house.juggler);
+        decay(b.data.house.bandstand_juggler);
+        decay(b.data.house.bandstand_musician);
+        decay(b.data.house.colosseum_gladiator);
+        decay(b.data.house.magistrate);
+        decay(b.data.house.hippodrome);
+        decay(b.data.house.school);
+        decay(b.data.house.library);
+        decay(b.data.house.academy);
+        decay(b.data.house.apothecary);
+        decay(b.data.house.dentist);
+        decay(b.data.house.mortuary);
+        decay(b.data.house.physician);
+        decay(b.data.house.temple_osiris);
+        decay(b.data.house.temple_ra);
+        decay(b.data.house.temple_ptah);
+        decay(b.data.house.temple_seth);
+        decay(b.data.house.temple_bast);
+        decay(b.data.house.bazaar_access);
+
+    });
 }
 
-void house_service_decay_tax_collector(void) {
+void house_service_update_health() {
+    buildings_valid_do([] (building &b) {
+        if (!b.house_size) {
+            return;
+        }
+        decay(b.common_health);
+
+        if (b.data.house.apothecary > (MAX_COVERAGE / 2)) {
+            b.common_health++;
+        }
+
+        if (b.data.house.physician > (MAX_COVERAGE / 2)) {
+            b.common_health++;
+        }
+    });
+}
+
+void house_service_decay_tax_collector() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Tax Collector Update");
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
@@ -53,7 +71,7 @@ void house_service_decay_tax_collector(void) {
     }
 }
 
-void house_service_decay_houses_covered(void) {
+void house_service_decay_houses_covered() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/House Service Decay Update");
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
@@ -77,7 +95,7 @@ void house_service_decay_houses_covered(void) {
     }
 }
 
-void house_service_calculate_culture_aggregates(void) {
+void house_service_calculate_culture_aggregates() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/House Aggreate Culture");
     int base_entertainment = city_culture_coverage_average_entertainment() / 5;
     for (int i = 1; i < MAX_BUILDINGS; i++) {

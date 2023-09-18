@@ -277,12 +277,16 @@ building* building_create(e_building_type type, int x, int y, int orientation) {
             break;
         }
     }
+
     if (!b) {
         city_warning_show(WARNING_DATA_LIMIT_REACHED);
         return &g_all_buildings[0];
     }
+
     memset(&(b->data), 0, sizeof(b->data));
     building_new_fill_in_data_for_type(b, type, x, y, orientation);
+    b->data.house.health = 100;
+
     return b;
 }
 

@@ -10,8 +10,6 @@
 #include "game/tutorial.h"
 #include "config/config.h"
 
-#define MAX_COVERAGE 96
-
 static int provide_entertainment(int x, int y, int shows, void (*callback)(building*, int)) {
     int serviced = 0;
     int x_min, y_min, x_max, y_max;
@@ -126,6 +124,9 @@ static void library_coverage(building* b, figure *f, int*) {
 
 static void apothecary_coverage(building* b, figure *f, int*) {
     b->data.house.apothecary = MAX_COVERAGE;
+    if (b->common_health < 50) {
+        b->common_health++;
+    }
 }
 
 static void dentist_coverage(building* b, figure *f, int*) {
@@ -138,7 +139,9 @@ static void mortuary_coverage(building* b, figure *f, int*) {
 
 static void physician_coverage(building* b, figure *f, int*) {
     b->data.house.physician = MAX_COVERAGE;
+    b->common_health = std::min(b->common_health + 1, 100);
 }
+
 static void water_supply_coverage(building* b, figure *f, int*) {
     b->data.house.water_supply = MAX_COVERAGE;
 }

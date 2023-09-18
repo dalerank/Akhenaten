@@ -234,7 +234,8 @@ static void advance_tick(void) {
         building_government_distribute_treasury();
         break;
     case 35:
-        house_service_decay_culture();
+        house_service_decay_services();
+        house_service_update_health();
         break;
     case 36:
         house_service_calculate_culture_aggregates();
