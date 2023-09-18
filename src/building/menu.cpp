@@ -697,7 +697,7 @@ void building_menu_update(int build_set) {
         toggle_building(BUILDING_PERSONAL_MANSION);
         enable_common_health();
         enable_entertainment(2);
-        enable_gods(GOD_OSIRIS, GOD_RA, GOD_BAST);
+        enable_gods(GOD_OSIRIS, GOD_PTAH, GOD_BAST);
 
         toggle_building(BUILDING_CLAY_PIT);
         toggle_building(BUILDING_POTTERY_WORKSHOP);

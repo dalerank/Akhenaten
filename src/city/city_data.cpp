@@ -348,14 +348,21 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.culture.average_entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.houses.missing.entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.festival.months_since_festival); // ok
-    for (int i = 0; i < MAX_GODS; i++)
+
+    for (int i = 0; i < MAX_GODS; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &city_data.religion.gods[i].target_mood);
+    }
+
     iob->bind____skip(5);
-    for (int i = 0; i < MAX_GODS; i++)
+    for (int i = 0; i < MAX_GODS; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &city_data.religion.gods[i].mood);
+    }
+
     iob->bind____skip(5);
-    for (int i = 0; i < MAX_GODS; i++)
+    for (int i = 0; i < MAX_GODS; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &city_data.religion.gods[i].wrath_bolts);
+    }
+
     iob->bind____skip(5);
     iob->bind____skip(15);
     iob->bind____skip(35);

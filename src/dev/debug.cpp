@@ -715,11 +715,7 @@ void draw_debug_ui(int x, int y) {
             text_draw((uint8_t*)string_from_ascii("LABOR"), x, y + 10, FONT_SMALL_OUTLINED, col);
             break;
         case 12:
-            text_draw((uint8_t*)string_from_ascii("SPRITE FRAMES / STATUES AND MONUMENTS"),
-                      x,
-                      y + 10,
-                      FONT_SMALL_OUTLINED,
-                      col);
+            text_draw((uint8_t*)string_from_ascii("SPRITE FRAMES / STATUES AND MONUMENTS"), x, y + 10, FONT_SMALL_OUTLINED, col);
             break;
         case 13:
             text_draw((uint8_t*)string_from_ascii("TERRAIN BIT FIELD"), x, y + 10, FONT_SMALL_OUTLINED, col);
