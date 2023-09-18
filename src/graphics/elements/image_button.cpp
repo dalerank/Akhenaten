@@ -37,32 +37,20 @@ void image_buttons_draw(int x, int y, image_button* buttons, int num_buttons, in
     for (int i = starting_button; i < starting_button + num_buttons; i++) {
         image_button* btn = &buttons[i];
 
-        // hacky workaround
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            if (btn->image_collection == GROUP_BUTTON_EXCLAMATION && btn->image_offset == 4) {
-                btn->image_collection = GROUP_SIDEBAR_BUTTONS;
-                btn->image_offset = 56;
-            }
-        }
-
         int image_id = image_id_from_group(btn->image_collection, btn->image_group) + btn->image_offset;
         if (btn->enabled) {
             if (btn->pressed)
                 image_id += 2;
             else if (btn->focused)
                 image_id += 1;
-        } else
+        } else {
             image_id += 3;
+        }
         ImageDraw::img_generic(image_id, x + btn->x_offset, y + btn->y_offset);
     }
 }
 
-bool image_buttons_handle_mouse(const mouse* m,
-                                int x,
-                                int y,
-                                image_button* buttons,
-                                int num_buttons,
-                                int* focus_button_id) {
+bool image_buttons_handle_mouse(const mouse* m, int x, int y, image_button* buttons, int num_buttons, int* focus_button_id) {
     fade_pressed_effect(buttons, num_buttons);
     //    remove_pressed_effect_build(buttons, num_buttons);
     image_button* hit_button = 0;

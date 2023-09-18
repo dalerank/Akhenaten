@@ -10,13 +10,7 @@
 #include "graphics/image_groups.h"
 #include "input/cursor.h"
 
-#if defined(GAME_PLATFORM_MACOSX)
-  #include <SDL2_image/SDL_image.h>
-#elif defined(GAME_PLATFORM_ANDROID)
-  #include <SDL.h>
-#else
-  #include <SDL_image.h>
-#endif
+#include <SDL.h>
 
 #include <string.h>
 #include <algorithm>
@@ -68,6 +62,10 @@
 // when changing climates, due to lack of contiguous memory space. Creating smaller atlases mitigates the issue
 #define MAX_TEXTURE_SIZE 2048
 #endif
+
+int IMG_InitPNG();
+SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src);
+int IMG_SavePNG(SDL_Surface *surface, const char *file);
 
 struct buffer_texture {
     SDL_Texture* texture;
@@ -824,8 +822,8 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color* p_da
 
 SDL_Texture* graphics_renderer_interface::create_texture_from_png_buffer(void *buffer, int size) {
     auto &data = g_renderer_data;
-    SDL_RWops* ops = SDL_RWFromMem((void*)buffer, size);
-    SDL_Surface *loadedSurface = IMG_LoadPNG_RW(ops);
+    SDL_RWops *rw = SDL_RWFromMem(buffer , size);
+    SDL_Surface* loadedSurface= IMG_LoadPNG_RW(rw);
 
     if (loadedSurface == nullptr) {
         return nullptr;
@@ -915,14 +913,10 @@ bool graphics_renderer_interface::save_texture_to_file(const char* filename, SDL
         st = SDL_SaveBMP(surf, filename);
         break;
 
-#if !defined(GAME_PLATFORM_ANDROID)
     case FILE_FORMAT_PNG:
         st = IMG_SavePNG(surf, filename);
         break;
-    case FILE_FORMAT_JPG:
-        st = IMG_SaveJPG(surf, filename, 60);
-        break;
-#endif // 
+
     default:
         st = -1;
         break;
@@ -1015,6 +1009,7 @@ int platform_renderer_init(SDL_Window* window, std::string renderer) {
 #endif // MAX_TEXTURE_SIZE
 
     SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0xff);
+    IMG_InitPNG();
 
     //    graphics_renderer_set_interface(&data.renderer_interface);
     //    graphics_renderer = &data.renderer_interface;

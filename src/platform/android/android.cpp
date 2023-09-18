@@ -1,7 +1,7 @@
 #include "android.h"
 
 #include "core/bstring.h"
-#include "io/dir.h"
+#include "content/dir.h"
 #include "content/vfs.h"
 #include "platform/android/asset_handler.h"
 #include "platform/android/jni.h"

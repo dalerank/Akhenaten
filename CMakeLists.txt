@@ -66,7 +66,6 @@ endif()
 
 set(SDL2_VERSION "2.28.0")
 set(SDL2_MIXER_VERSION "2.0.4")
-set(SDL2_IMAGE_VERSION "2.6.3")
 
 set(SDL2_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2")
 set(TRACY_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/tracy")
@@ -102,21 +101,6 @@ if (MSVC)
         execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_MIXER_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
         file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_UNPACK_DIR}/include DESTINATION ${SDL2_EXTRACT_PATH})
         file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_UNPACK_DIR}/lib DESTINATION ${SDL2_EXTRACT_PATH})
-    endif()
-
-    set(SDL2_IMAGE_DEP_FILENAME "SDL2_image-devel-${SDL2_IMAGE_VERSION}-VC.zip")
-    set(SDL2_IMAGE_DOWNLOAD_URL "https://libsdl.org/projects/SDL_image/release/${SDL2_IMAGE_DEP_FILENAME}")
-    set(SDL2_IMAGE_UNPACK_DIR "SDL2_image-${SDL2_IMAGE_VERSION}")
-    set(SDL2_IMAGE_CHECK_PATH "${SDL2_EXTRACT_PATH}/include/SDL_image.h")
-    set(SDL2_IMAGE_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${SDL2_IMAGE_DEP_FILENAME}")
-
-    if (NOT EXISTS "${SDL2_IMAGE_CHECK_PATH}")
-        message("Download SDL2_image to ${SDL2_IMAGE_TMP_ZIP_PATH}")
-        file(DOWNLOAD "${SDL2_IMAGE_DOWNLOAD_URL}" "${SDL2_IMAGE_TMP_ZIP_PATH}")
-        message("Unpack SDL2_image to ${SDL2_EXTRACT_PATH}")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_IMAGE_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_IMAGE_UNPACK_DIR}/include DESTINATION ${SDL2_EXTRACT_PATH})
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_IMAGE_UNPACK_DIR}/lib DESTINATION ${SDL2_EXTRACT_PATH})
     endif()
 
     file(GLOB SDL2_DLL_PUBLIC_DLL "${SDL2_EXTRACT_PATH}/lib/${GAME_PROCESSOR_ARCH}/*.dll")
@@ -370,7 +354,6 @@ if (CMAKE_BUILD_PLATFORM STREQUAL "android")
 else()
     find_package(SDL2 REQUIRED)
     find_package(SDL2_mixer REQUIRED)
-    find_package(SDL2_image REQUIRED)
 endif()
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "android")
@@ -431,12 +414,6 @@ if(APPLE)
         set(DIRS "${DIRS};${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
     endif()
 
-    # if SDL2_image library is a framework, we need to indicate to CMake
-    # the path to its dependencies (Ogg.framework etc):
-    if(EXISTS "${SDL2_IMAGE_LIBRARY}/Versions/A/Frameworks")
-        set(DIRS "${DIRS};${SDL2_IMAGE_LIBRARY}/Versions/A/Frameworks")
-    endif()
-
     # when installing, "fixup" automatically copies librairies inside the
     # bundle and links the binary against them
     install(CODE "
@@ -447,7 +424,6 @@ endif()
 
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
-include_directories(${SDL2_IMAGE_INCLUDE_DIR})
 include_directories(${EXTEXPAT_INCLUDE_DIR})
 include_directories(${EXTPNG_INCLUDE_DIR})
 
@@ -466,7 +442,7 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
 endif()
 
 target_link_libraries (${GAME}
-                        ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY}
+                        ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY}
                         ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY})
 
 if(MSVC)

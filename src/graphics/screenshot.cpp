@@ -181,7 +181,7 @@ static int image_write_rows(const color *canvas, int canvas_width) {
     return 1;
 }
 
-static int image_write_canvas(void) {
+static int image_write_canvas() {
     const color *canvas;
     color *pixels = 0;
     pixels = (color *)malloc(sizeof(color) * screenshot.width * screenshot.height);
