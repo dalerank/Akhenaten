@@ -25,8 +25,9 @@ static void destroy_on_fire(building* b, bool plagued) {
     game_undo_disable();
     b->fire_risk = 0;
     b->damage_risk = 0;
-    if (b->house_size && b->house_population)
+    if (b->house_size && b->house_population) {
         city_population_remove_home_removed(b->house_population);
+    }
 
     int was_tent = b->house_size && b->subtype.house_level <= HOUSE_LARGE_HUT;
     b->house_population = 0;
@@ -48,6 +49,7 @@ static void destroy_on_fire(building* b, bool plagued) {
         else
             num_tiles = 0;
     }
+
     map_building_tiles_remove(b->id, b->tile.x(), b->tile.y());
     unsigned int rand_int = random_short();
     if (map_terrain_is(b->tile.grid_offset(), TERRAIN_WATER)) {
@@ -59,7 +61,7 @@ static void destroy_on_fire(building* b, bool plagued) {
         b->fire_duration = (b->map_random_7bit & 7) + 1;
         b->fire_proof = 1;
         b->size = 1;
-        b->ruin_has_plague = plagued;
+        b->has_plague = plagued;
         memset(&b->data, 0, 42);
 
         // FIXME: possible can't render image & fire animation
@@ -68,6 +70,7 @@ static void destroy_on_fire(building* b, bool plagued) {
         int image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         map_building_tiles_add(b->id, b->tile, 1, image_id, TERRAIN_BUILDING);
     }
+
     static const int x_tiles[] = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0};
     static const int y_tiles[] = {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5};
     for (int tile = 1; tile < num_tiles; tile++) {
@@ -86,7 +89,7 @@ static void destroy_on_fire(building* b, bool plagued) {
         ruin->fire_duration = (ruin->map_random_7bit & 7) + 1;
         b->remove_figure(3);
         ruin->fire_proof = 1;
-        ruin->ruin_has_plague = plagued;
+        ruin->has_plague = plagued;
     }
 
     if (waterside_building) {
@@ -163,9 +166,11 @@ void building_destroy_by_fire(building* b) {
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 
-void building_destroy_by_plague(building* b) {
+void building_mark_plague(building* b) {
     b = b->main();
-    destroy_on_fire(b, true);
+    b->disease_days = 30;
+    b->has_plague = true;
+    //destroy_on_fire(b, true);
 }
 
 void building_destroy_by_rioter(building* b) {
