@@ -229,16 +229,30 @@ void city_sentiment_update_day() {
 
 void city_criminals_update_day() {
     buildings_valid_do([] (building &b) {
-        if (b.house_size) {
-            int delta;
-            if (b.sentiment.house_happiness >= 50) {
-                delta = (b.sentiment.house_happiness - 50) / 30;
-            } else if (b.sentiment.house_happiness < 50) {
-                delta = -std::max<int>((50 - b.sentiment.house_happiness) / 10, 0);
-            }
+        if (!b.house_size) {
+            return;
+        }
 
-            b.house_criminal_active += delta;
-            b.house_criminal_active = std::clamp<int>(b.house_criminal_active, 0, 100);
+        int delta;
+        if (b.sentiment.house_happiness >= 50) {
+            delta = (b.sentiment.house_happiness - 50) / 30;
+        } else if (b.sentiment.house_happiness < 50) {
+            delta = -std::max<int>((50 - b.sentiment.house_happiness) / 10, 0);
+        }
+
+        b.house_criminal_active += delta;
+        b.house_criminal_active = std::clamp<int>(b.house_criminal_active, 0, 100);
+    });
+}
+
+void city_plague_update_day() {
+    buildings_valid_do([] (building &b) {
+        if (!b.house_size) {
+            return;
+        }
+        if (b.has_plague && b.disease_days > 0) {
+            b.disease_days--;
+            b.has_plague = (b.disease_days > 0);
         }
     });
 }
