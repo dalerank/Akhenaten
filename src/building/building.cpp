@@ -1045,7 +1045,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
 
         iob->bind(BIND_SIGNATURE_INT32, &b->tax_income_or_storage);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_days_without_food);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->ruin_has_plague); // 6
+        iob->bind(BIND_SIGNATURE_UINT8, &b->has_plague); // 6
 
         iob->bind(BIND_SIGNATURE_INT8, &b->desirability);
         iob->bind(BIND_SIGNATURE_UINT8, &b->is_deleted);

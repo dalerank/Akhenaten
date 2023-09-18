@@ -129,6 +129,7 @@ static void advance_day() {
 
     city_sentiment_update_day();
     city_criminals_update_day();
+    city_plague_update_day();
 
     tutorial_on_day_tick();
 }

@@ -192,7 +192,7 @@ public:
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;
-    bool ruin_has_plague;
+    bool has_plague;
     signed char desirability;
     bool is_deleted;
     bool is_adjacent_to_water;

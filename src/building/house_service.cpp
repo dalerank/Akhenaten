@@ -6,6 +6,7 @@
 #include "city/coverage.h"
 #include "core/game_environment.h"
 #include "core/profiler.h"
+#include "core/random.h"
 
 static void decay(unsigned char& value) {
     if (value > 0) {
@@ -50,6 +51,7 @@ void house_service_update_health() {
         if (!b.house_size) {
             return;
         }
+
         decay(b.common_health);
 
         if (b.data.house.apothecary > (MAX_COVERAGE / 2)) {
@@ -58,6 +60,16 @@ void house_service_update_health() {
 
         if (b.data.house.physician > (MAX_COVERAGE / 2)) {
             b.common_health++;
+        }
+
+        if (b.has_plague) {
+            random_generate_next();
+            int chance_death = std::max(100 - b.common_health, 10);
+            int randm = (random_short() % 99 + 1);
+            bool has_death_today = (randm < chance_death);
+            if (has_death_today) {
+                --b.house_population;
+            }
         }
     });
 }

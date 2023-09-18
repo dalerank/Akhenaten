@@ -97,27 +97,35 @@ static void hippodrome_coverage(building* b, figure *f, int*) {
 static void magistrate_coverage(building* b, figure *f, int*) {
     b->data.house.magistrate = MAX_COVERAGE;
 }
+
 static void religion_coverage_osiris(building* b, figure *f, int*) {
     b->data.house.temple_osiris = MAX_COVERAGE;
 }
+
 static void religion_coverage_ra(building* b, figure *f, int*) {
     b->data.house.temple_ra = MAX_COVERAGE;
 }
+
 static void religion_coverage_ptah(building* b, figure *f, int*) {
     b->data.house.temple_ptah = MAX_COVERAGE;
 }
+
 static void religion_coverage_seth(building* b, figure *f, int*) {
     b->data.house.temple_seth = MAX_COVERAGE;
 }
+
 static void religion_coverage_bast(building* b, figure *f, int*) {
     b->data.house.temple_bast = MAX_COVERAGE;
 }
+
 static void school_coverage(building* b, figure *f, int*) {
     b->data.house.school = MAX_COVERAGE;
 }
+
 static void academy_coverage(building* b, figure *f, int*) {
     b->data.house.academy = MAX_COVERAGE;
 }
+
 static void library_coverage(building* b, figure *f, int*) {
     b->data.house.library = MAX_COVERAGE;
 }

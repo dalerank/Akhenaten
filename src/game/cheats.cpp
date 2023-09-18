@@ -6,6 +6,7 @@
 #include "city/gods.h"
 #include "city/victory.h"
 #include "city/warning.h"
+#include "city/health.h"
 #include "core/string.h"
 #include "figure/figure.h"
 #include "game/tick.h"
@@ -32,6 +33,7 @@ static void game_cheat_show_tooltip(uint8_t*);
 static void game_cheat_kill_all(uint8_t*);
 static void game_cheat_victory(uint8_t*);
 static void game_cheat_cast_upset(uint8_t*);
+static void game_cheat_start_plague(uint8_t*);
 
 using cheat_command = void(uint8_t* args);
 
@@ -46,6 +48,7 @@ static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_mo
                                                   {"blessing", game_cheat_cast_blessing},
                                                   {"godupset", game_cheat_cast_upset},
                                                   {"showtooltip", game_cheat_show_tooltip},
+                                                  {"startplague", game_cheat_start_plague},
                                                   {"killall", game_cheat_kill_all},
                                                   {"victory", game_cheat_victory}};
 
@@ -82,10 +85,10 @@ static int parse_integer(uint8_t* string, int* value) {
     return count + 1;
 }
 
-void game_cheat_activate(void) {
-    if (window_is(WINDOW_BUILDING_INFO))
+void game_cheat_activate() {
+    if (window_is(WINDOW_BUILDING_INFO)) {
         g_cheats_data.is_cheating = window_building_info_get_int() == BUILDING_WELL;
-    else if (g_cheats_data.is_cheating && window_is(WINDOW_MESSAGE_DIALOG)) {
+    } else if (g_cheats_data.is_cheating && window_is(WINDOW_MESSAGE_DIALOG)) {
         g_cheats_data.is_cheating = true;
         scenario_invasion_start_from_cheat();
     } else {
@@ -174,14 +177,29 @@ static void game_cheat_show_tooltip(uint8_t* args) {
     city_warning_show_console((uint8_t*)"Show tooltip toggled");
 }
 
+static void game_cheat_start_plague(uint8_t *args) {
+    int plague_people = 0;
+    int total_population = 0;
+    parse_integer(args ? args : (uint8_t*)"100", &plague_people);
+
+    buildings_valid_do([&] (building &b) {
+        if (!b.house_size || !b.house_population) {
+            return;
+        }
+        total_population += b.house_population;
+    });
+    city_health_start_disease(total_population, true, plague_people);
+}
+
 static void game_cheat_kill_all(uint8_t* args) {
     figure_kill_all();
     city_warning_show_console((uint8_t*)"Killed all walkers");
 }
 
 void game_cheat_parse_command(uint8_t* command) {
-    uint8_t command_to_call[MAX_COMMAND_SIZE];
+    bstring256 command_to_call;
     int next_arg = parse_word(command, command_to_call);
+
     for (auto& handle : g_cheat_commands) {
         if (stricmp((char*)command_to_call, handle.name) == 0) {
             uint8_t *args = next_arg >= strlen((const char *)handle.name) ? (command + next_arg) : nullptr;

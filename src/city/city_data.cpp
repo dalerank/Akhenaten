@@ -115,7 +115,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.sentiment.value);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.health.target_value);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.health.value);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.health.num_hospital_workers);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.health.num_mortuary_workers);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_00c0);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.population);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.population_last_year);

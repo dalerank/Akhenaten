@@ -58,8 +58,10 @@ void building_maintenance_update_burning_ruins(void) {
             recalculate_terrain = 1;
             continue;
         }
-        if (b->ruin_has_plague)
+         
+        if (b->has_plague) {
             continue;
+        }
 
         building_list_burning_add(i);
         if (climate == CLIMATE_DESERT) {
@@ -111,7 +113,7 @@ int building_maintenance_get_closest_burning_ruin(map_point tile, int* distance)
     for (const auto &building_id: burning_ruins) {
         building* b = building_get(building_id);
         if ((b->state == BUILDING_STATE_VALID || b->state == BUILDING_STATE_MOTHBALLED)
-            && b->type == BUILDING_BURNING_RUIN && !b->ruin_has_plague && b->distance_from_entry) {
+            && b->type == BUILDING_BURNING_RUIN && !b->has_plague && b->distance_from_entry) {
 
             int dist = calc_maximum_distance(tile, b->tile);
             if (b->has_figure(3)) {
