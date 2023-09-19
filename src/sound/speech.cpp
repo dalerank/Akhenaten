@@ -26,7 +26,7 @@ void sound_speech_play_file(const char* filename) {
     corrected_filename = vfs::dir_get_file(corrected_filename);
 
     if (corrected_filename.empty()) {
-        logs::error("Cant open audio file %s", corrected_filename.c_str());
+        logs::error("Cant open audio file %s", filename);
         return;
     }
 

@@ -139,10 +139,7 @@ static void collapse_building(building* b) {
     //    return; // TODO: get fire values and logic working before enabling
     city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
     if (!tutorial_handle_collapse()) {
-        city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE,
-                                           MESSAGE_COLLAPSED_BUILDING,
-                                           b->type,
-                                           b->tile.grid_offset());
+        city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, MESSAGE_COLLAPSED_BUILDING, b->type, b->tile.grid_offset());
     }
 
     game_undo_disable();
@@ -168,17 +165,17 @@ void building_maintenance_check_fire_collapse(void) {
     random_generate_next();
     int random_global = random_byte() & 7;
     int max_id = building_get_highest_id();
-    for (int i = 1; i <= max_id; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->fire_proof) {
-            continue;
+
+    buildings_valid_do([&] (building &b) {
+        if (b.fire_proof) {
+            return;
         }
 
-        if (b->type == BUILDING_SENET_HOUSE && b->prev_part_building_id) {
-            continue;
+        if (b.type == BUILDING_SENET_HOUSE && b.prev_part_building_id) {
+            return;
         }
 
-        const model_building* model = model_get_building(b->type);
+        const model_building *model = model_get_building(b.type);
 
         /////// COLLAPSE
         int damage_risk_increase = model->damage_risk;
@@ -186,25 +183,25 @@ void building_maintenance_check_fire_collapse(void) {
             damage_risk_increase += 5;
         }
 
-        b->damage_risk += damage_risk_increase;
-        if (b->damage_risk > 1000) {
-            collapse_building(b);
+        b.damage_risk += damage_risk_increase;
+        if (b.damage_risk > 1000) {
+            collapse_building(&b);
             recalculate_terrain = 1;
-            continue;
+            return;
         }
 
         /////// FIRE
-        int random_building = (i + map_random_get(b->tile.grid_offset())) & 7;
+        int random_building = (b.id + map_random_get(b.tile.grid_offset())) & 7;
         if (random_building == random_global) {
-            b->fire_risk += model->fire_risk;
+            b.fire_risk += model->fire_risk;
             int expected_fire_risk = 0;
-            if (!b->house_size) {
+            if (!b.house_size) {
                 expected_fire_risk += 50;
-            } else if (b->house_population <= 0) {
+            } else if (b.house_population <= 0) {
                 expected_fire_risk = 0;
-            } else if (b->subtype.house_level <= HOUSE_LARGE_SHACK) {
+            } else if (b.subtype.house_level <= HOUSE_LARGE_SHACK) {
                 expected_fire_risk += 100;
-            } else if (b->subtype.house_level <= HOUSE_GRAND_INSULA) {
+            } else if (b.subtype.house_level <= HOUSE_GRAND_INSULA) {
                 expected_fire_risk += 50;
             } else {
                 expected_fire_risk += 20;
@@ -214,18 +211,18 @@ void building_maintenance_check_fire_collapse(void) {
                 expected_fire_risk += 50;
             }
 
-            expected_fire_risk = b->get_fire_risk(expected_fire_risk);
-            b->fire_risk += expected_fire_risk;
+            expected_fire_risk = b.get_fire_risk(expected_fire_risk);
+            b.fire_risk += expected_fire_risk;
             //            if (climate == CLIMATE_NORTHERN)
             //                b->fire_risk = 0;
             //            else if (climate == CLIMATE_DESERT)
             //                b->fire_risk += 30;
         }
-        if (b->fire_risk > 1000) {
-            fire_building(b);
+        if (b.fire_risk > 1000) {
+            fire_building(&b);
             recalculate_terrain = 1;
         }
-    }
+    });
 
     if (recalculate_terrain) {
         map_routing_update_land();

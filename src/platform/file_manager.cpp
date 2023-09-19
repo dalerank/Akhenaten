@@ -101,10 +101,11 @@ int platform_file_manager_list_directory_contents(const char* dir, int type, con
     dir = save_dir.c_str();
     dir_name current_dir;
 
-    if (!dir || !*dir || strcmp(dir, ".") == 0)
+    if (!dir || !*dir || strcmp(dir, ".") == 0) {
         current_dir = CURRENT_DIR;
-    else
+    } else {
         current_dir = set_dir_name(dir);
+    }
 
     fs_dir_type* d = fs_dir_open(current_dir);
     if (!d)
@@ -129,8 +130,7 @@ int platform_file_manager_list_directory_contents(const char* dir, int type, con
         }
         if (stat(fullname, &file_info) != -1) {
             int m = file_info.st_mode;
-            if ((!(type & TYPE_FILE) && is_file(m)) || (!(type & TYPE_DIR) && S_ISDIR(m)) || S_ISCHR(m) || S_ISBLK(m)
-                || S_ISFIFO(m) || S_ISSOCK(m)) {
+            if ((!(type & TYPE_FILE) && is_file(m)) || (!(type & TYPE_DIR) && S_ISDIR(m)) || S_ISCHR(m) || S_ISBLK(m) || S_ISFIFO(m) || S_ISSOCK(m)) {
                 continue;
             }
             if (is_file(m) && !vfs::file_has_extension(name, extension))
@@ -202,21 +202,13 @@ int platform_file_manager_remove_file(const char* filename) {
 #elif defined(GAME_PLATFORM_WIN)
 
 FILE* platform_file_manager_open_file(const char* filename, const char* mode) {
-    wchar_t* wfile = utf8_to_wchar(filename);
-    wchar_t* wmode = utf8_to_wchar(mode);
-
-    FILE* fp = _wfopen(wfile, wmode);
-
-    free(wfile);
-    free(wmode);
+    FILE* fp = fopen(filename, mode);
 
     return fp;
 }
 
 bool platform_file_manager_remove_file(const char* filename) {
-    wchar_t* wfile = utf8_to_wchar(filename);
-    int result = _wremove(wfile);
-    free(wfile);
+    int result = remove(filename);
     return result == 0;
 }
 

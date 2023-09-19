@@ -344,6 +344,7 @@ void tutorial_on_religion() {
         post_message(MESSAGE_TUTORIAL_ENTERTAINMENT);
     }
 }
+
 void tutorial_on_house_evolve(int level) {
     if (!g_tutorials_flags.pharaoh.spacious_apartment && level == 9) {
         g_tutorials_flags.pharaoh.spacious_apartment = 1;
@@ -351,6 +352,7 @@ void tutorial_on_house_evolve(int level) {
         post_message(MESSAGE_TUTORIAL_EDUCATION);
     }
 }
+
 void tutorial_starting_message() {
     if (scenario_is_mission_rank(1) && !g_tutorials_flags.pharaoh.tut1_start) {
         post_message(MESSAGE_TUTORIAL_HOUSING_AND_ROADS);
