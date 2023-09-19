@@ -198,11 +198,11 @@ static void latch_on_venue(e_building_type type, building* main, int dx, int dy,
     case BUILDING_BANDSTAND:
         map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BANDSTAND) + orientation);
         if (orientation == 1) {
-            latch_on_venue(BUILDING_BANDSTAND, main, dx, dy + 1, 0);
+            latch_on_venue(BUILDING_BANDSTAND, main, dx, dy + 1, 0, false);
         } else if (orientation == 2) {
-            latch_on_venue(BUILDING_BANDSTAND, main, dx + 1, dy, 3);
+            latch_on_venue(BUILDING_BANDSTAND, main, dx + 1, dy, 3, false);
         }
-        map_add_bandstand_tiles(this_venue);
+        //map_add_bandstand_tiles(this_venue);
         break;
 
     case BUILDING_PAVILLION:
@@ -290,13 +290,13 @@ static void add_entertainment_venue(building* b, int orientation) {
 
         case 1:
             latch_on_venue(BUILDING_GARDENS, b, 1, 2, 0);
-            latch_on_venue(BUILDING_BANDSTAND, b, 1, 0, 2, true);
+            latch_on_venue(BUILDING_BANDSTAND, b, 1, 0, 2);
             latch_on_venue(BUILDING_BOOTH, b, 2, 2, 0);
             break;
 
         case 2:
             latch_on_venue(BUILDING_GARDENS, b, 2, 1, 0);
-            latch_on_venue(BUILDING_BANDSTAND, b, 0, 1, 1, true);
+            latch_on_venue(BUILDING_BANDSTAND, b, 0, 1, 1);
             latch_on_venue(BUILDING_BOOTH, b, 2, 2, 0);
             break;
 
