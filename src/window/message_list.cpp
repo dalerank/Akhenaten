@@ -80,18 +80,13 @@ static void draw_background(void) {
     if (city_message_count() > 0) {
         lang_text_draw(63, 2, data.x_text + 42, data.y_text - 12, FONT_SMALL_PLAIN);
         lang_text_draw(63, 3, data.x_text + 180, data.y_text - 12, FONT_SMALL_PLAIN);
-        lang_text_draw_multiline(63,
-                                 4,
-                                 data.x_text + 50,
-                                 data.y_text + 12 + 16 * data.text_height_blocks,
-                                 16 * data.text_width_blocks - 100,
-                                 FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_multiline(63, 4, data.x_text + 50, data.y_text + 12 + 16 * data.text_height_blocks, 16 * data.text_width_blocks - 100, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
-        lang_text_draw_multiline(
-          63, 1, data.x_text + 16, data.y_text + 80, 16 * data.text_width_blocks - 48, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(63, 1, data.x_text + 16, data.y_text + 80, 16 * data.text_width_blocks - 48, FONT_NORMAL_BLACK_ON_DARK);
     }
     graphics_reset_dialog();
 }
+
 static void draw_messages(int total_messages) {
     int max = total_messages < MAX_MESSAGES ? total_messages : MAX_MESSAGES;
     int index = scrollbar.scroll_position;
@@ -106,13 +101,11 @@ static void draw_messages(int total_messages) {
             image_type_offset = 4;
 
         if (msg->is_read) {
-            ImageDraw::img_generic(image_id_from_group(GROUP_MESSAGE_ICON) + 15 + image_type_offset,
-                                   data.x_text + 12,
-                                   data.y_text + 6 + 20 * i);
-        } else
-            ImageDraw::img_generic(image_id_from_group(GROUP_MESSAGE_ICON) + 14 + image_type_offset,
-                                   data.x_text + 12,
-                                   data.y_text + 6 + 20 * i);
+            ImageDraw::img_generic(image_id_from_group(GROUP_MESSAGE_ICON) + 15 + image_type_offset, data.x_text + 12, data.y_text + 6 + 20 * i);
+        } else {
+            ImageDraw::img_generic(image_id_from_group(GROUP_MESSAGE_ICON) + 14 + image_type_offset, data.x_text + 12, data.y_text + 6 + 20 * i);
+        }
+
         font_t font = FONT_NORMAL_WHITE_ON_DARK;
         if (data.focus_button_id == i + 1)
             font = FONT_NORMAL_YELLOW;
@@ -174,11 +167,11 @@ static void draw_messages(int total_messages) {
         int width = lang_text_draw(25, msg->month, data.x_text + 42, data.y_text + 8 + 20 * i, font);
         lang_text_draw_year(msg->year, data.x_text + 42 + width, data.y_text + 8 + 20 * i, font);
 
-        if (GAME_ENV == ENGINE_ENV_PHARAOH && msg->eventmsg_body_id != -1) {
-            text_draw(
-              get_eventmsg_text(msg->eventmsg_title_id, 0), data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
-        } else if (lang_msg->title.text) // temp fix so it doesn't crash
+        if (msg->eventmsg_body_id != -1) {
+            text_draw(get_eventmsg_text(msg->eventmsg_title_id, 0), data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
+        } else if (lang_msg->title.text) {// temp fix so it doesn't crash
             text_draw(lang_msg->title.text, data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
+        }
     }
     scrollbar_draw(&scrollbar);
 }
@@ -188,8 +181,9 @@ static void draw_foreground(void) {
     image_buttons_draw(16 * data.width_blocks - 38, 32 + 16 * data.height_blocks - 36, &image_button_close, 1);
 
     int total_messages = city_message_count();
-    if (total_messages > 0)
+    if (total_messages > 0) {
         draw_messages(total_messages);
+    }
 
     graphics_reset_dialog();
 }
@@ -200,22 +194,21 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     data.focus_button_id = 0;
 
     int button_id;
-    bool handled
-      = image_buttons_handle_mouse(m_dialog, 16, 32 + 16 * data.height_blocks - 42, &image_button_help, 1, &button_id);
-    if (button_id)
+    bool handled = image_buttons_handle_mouse(m_dialog, 16, 32 + 16 * data.height_blocks - 42, &image_button_help, 1, &button_id);
+    if (button_id) {
         data.focus_button_id = 11;
+    }
 
-    handled |= image_buttons_handle_mouse(
-      m_dialog, 16 * data.width_blocks - 38, 32 + 16 * data.height_blocks - 36, &image_button_close, 1, &button_id);
-    if (button_id)
+    handled |= image_buttons_handle_mouse(m_dialog, 16 * data.width_blocks - 38, 32 + 16 * data.height_blocks - 36, &image_button_close, 1, &button_id);
+    if (button_id) {
         data.focus_button_id = 12;
+    }
 
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog))
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
         data.focus_button_id = 13;
+    }
 
-    handled |= (generic_buttons_handle_mouse(
-                  m_dialog, data.x_text, data.y_text + 4, generic_buttons_messages, MAX_MESSAGES, &button_id)
-                != 0);
+    handled |= (generic_buttons_handle_mouse(m_dialog, data.x_text, data.y_text + 4, generic_buttons_messages, MAX_MESSAGES, &button_id) != 0);
     if (!data.focus_button_id) {
         data.focus_button_id = button_id;
     }
@@ -266,7 +259,13 @@ static void get_tooltip(tooltip_context* c) {
 }
 
 void window_message_list_show(void) {
-    window_type window = {WINDOW_MESSAGE_LIST, draw_background, draw_foreground, handle_input, get_tooltip};
+    window_type window = {
+        WINDOW_MESSAGE_LIST,
+        draw_background,
+        draw_foreground,
+        handle_input,
+        get_tooltip
+    };
     init();
     window_show(&window);
 }

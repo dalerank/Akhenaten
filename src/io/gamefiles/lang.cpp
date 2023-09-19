@@ -200,5 +200,6 @@ const uint8_t* lang_get_string(int group, int index) {
 }
 
 const lang_message* lang_get_message(int id) {
-    return &g_lang_data.message_entries[id];
+    lang_message *message = &g_lang_data.message_entries[id];
+    return message;
 }

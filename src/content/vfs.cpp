@@ -9,6 +9,7 @@
 namespace vfs{
 
 FILE * file_open(const char *filename, const char *mode) {
+    //if (filename )
     return platform_file_manager_open_file(filename, mode);
 }
 

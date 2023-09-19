@@ -196,10 +196,12 @@ static void init(int text_id, int message_id, void (*background_callback)()) {
             data.phrase_template = get_eventmsg_text(city_msg->eventmsg_phrase_id, 0);
             eventmsg_template_combine(data.phrase_template, (uint8_t *)data.phrase_text.c_str(), true);
             eventmsg_template_combine(data.body_template, (uint8_t *)data.body_text.c_str(), false);
-        } else if (city_msg->god != GOD_UNKNOWN) {
-            data.god = (e_god)city_msg->god;
         } else {
             data.is_eventmsg = false;
+        }
+
+        if (city_msg->god != GOD_UNKNOWN) {
+            data.god = (e_god)city_msg->god;
         }
     } else {
         data.is_eventmsg = false;
@@ -373,24 +375,21 @@ static void draw_subtitle(const lang_message* msg) {
 static void draw_content(const lang_message* msg) {
     auto &data = g_message_dialog_data;
     uint8_t* text = msg->content.text;
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (data.is_eventmsg)
-            text = (uint8_t*)data.body_text.c_str();
+    if (data.is_eventmsg) {
+        text = (uint8_t*)data.body_text.c_str();
     }
 
-    if (!text)
+    if (!text) {
         return;
+    }
     
     int header_offset = msg->type == TYPE_MANUAL ? 48 : 32;
     data.text_height_blocks = msg->height_blocks - 1 - (header_offset + data.y_text - data.y) / 16;
-    data.text_width_blocks
-      = rich_text_init(text, data.x_text, data.y_text, msg->width_blocks - 4, data.text_height_blocks, 1);
+    data.text_width_blocks = rich_text_init(text, data.x_text, data.y_text, msg->width_blocks - 4, data.text_height_blocks, 1);
+
     // content!
     inner_panel_draw(data.x_text, data.y_text, data.text_width_blocks, data.text_height_blocks);
-    graphics_set_clip_rectangle(data.x_text + 3,
-                                data.y_text + 3,
-                                16 * data.text_width_blocks - 6,
-                                16 * data.text_height_blocks - 6);
+    graphics_set_clip_rectangle(data.x_text + 3, data.y_text + 3, 16 * data.text_width_blocks - 6, 16 * data.text_height_blocks - 6);
     rich_text_clear_links();
 
     if (msg->type == TYPE_MESSAGE) {
@@ -398,6 +397,7 @@ static void draw_content(const lang_message* msg) {
     } else {
         rich_text_draw(text, data.x_text + 8, data.y_text + 6, 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
     }
+    
     graphics_reset_clip_rectangle();
 }
 

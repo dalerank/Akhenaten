@@ -354,15 +354,10 @@ void city_message_sort_and_compact(void) {
 }
 
 int city_message_get_text_id(int message_id) {
-    // if (GAME_ENV == ENGINE_ENV_C3) {
-    //    if (message_id > 50)
-    //        return message_id + 199;
-    //    else
-    //        return message_id + 99;
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        return message_id;
+    return message_id;
 }
 int city_message_get_advisor(int message_type) {
+    message_type -= 99;
     switch (message_type) {
     case MESSAGE_LOCAL_UPRISING:
     case MESSAGE_BARBARIAN_ATTACK:
@@ -393,9 +388,9 @@ int city_message_get_advisor(int message_type) {
     case MESSAGE_FOOD_NOT_DELIVERED:
         return MESSAGE_ADVISOR_POPULATION;
 
-    case MESSAGE_HEALTH_ILLNESS:
+    case MESSAGE_HEALTH_MALARIA_PROBLEM:
     case MESSAGE_HEALTH_DISEASE:
-    case MESSAGE_HEALTH_PESTILENCE:
+    case MESSAGE_HEALTH_PLAGUE:
         return MESSAGE_ADVISOR_HEALTH;
 
     default:

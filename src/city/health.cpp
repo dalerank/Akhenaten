@@ -46,63 +46,70 @@ void city_health_start_disease(int total_people, bool force, int plague_people) 
     city_health_change(10);
     int people_to_plague = sick_people - city_data.health.num_mortuary_workers;
     if (people_to_plague <= 0) {
-        city_message_post(true, MESSAGE_HEALTH_ILLNESS, 0, 0);
+        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, MESSAGE_HEALTH_MALARIA_PROBLEM, 0, 0);
         return;
-    }
-
-    if (city_data.health.num_mortuary_workers > 0) {
-        city_message_post(true, MESSAGE_HEALTH_DISEASE, 0, 0);
-    } else {
-        city_message_post(true, MESSAGE_HEALTH_PESTILENCE, 0, 0);
     }
 
     tutorial_on_disease();
 
     // kill people where has little common_health
-    buildings_valid_do([&people_to_plague] (building &b) {
+    building *warn_building = nullptr;
+    buildings_valid_do([&] (building &b) {
         if (people_to_plague <= 0 || !b.house_size || !b.house_population) {
             return;
         }
 
         if (b.common_health < 10) {
+            warn_building = &b;
             people_to_plague -= b.house_population;
             building_mark_plague(&b);
         }
     });
 
     // kill people who don't have access to apothecary/physician
-    buildings_valid_do([&people_to_plague] (building &b) {
+    buildings_valid_do([&] (building &b) {
         if (people_to_plague <= 0 || !b.house_size || !b.house_population) {
             return;
         }
 
         if (!(b.data.house.apothecary || b.data.house.physician)) {
+            warn_building = &b;
             people_to_plague -= b.house_population;
             building_mark_plague(&b);
         }
     });
 
     // kill people in tents
-    buildings_valid_do([&people_to_plague] (building &b) {
+    buildings_valid_do([&] (building &b) {
         if (people_to_plague <= 0 || !b.house_size || !b.house_population) {
             return;
         }
 
         if (b.subtype.house_level <= HOUSE_LARGE_HUT) {
+            warn_building = &b;
             people_to_plague -= b.house_population;
             building_mark_plague(&b);
         }
     });
 
     // kill anyone
-    buildings_valid_do([&people_to_plague] (building &b) {
+    buildings_valid_do([&] (building &b) {
         if (people_to_plague <= 0 || !b.house_size || !b.house_population) {
             return;
         }
 
+        warn_building = &b;
         people_to_plague -= b.house_population;
         building_mark_plague(&b);
     });
+
+    e_building_type btype = (warn_building ? warn_building->type : BUILDING_NONE);
+    int grid_offset = (warn_building ? warn_building->tile.grid_offset() : 0);
+    if (city_data.health.num_mortuary_workers > 0) {
+        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, MESSAGE_HEALTH_DISEASE, btype, grid_offset);
+    } else {
+        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, MESSAGE_HEALTH_PLAGUE, btype, grid_offset);
+    }
 }
 
 void city_health_update() {
