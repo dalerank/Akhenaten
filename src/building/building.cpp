@@ -80,7 +80,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     const building_properties* props = building_properties_for_type(type);
     b->state = BUILDING_STATE_CREATED;
     b->faction_id = 1;
-    b->unknown_value = city_buildings_unknown_value();
+    b->reserved_id = false; // city_buildings_unknown_value();
     b->type = type;
     b->size = props->size;
     b->creation_sequence_index = building_extra_data.created_sequence++;
@@ -964,11 +964,12 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days2);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days3_or_play);
         iob->bind____skip(20);
-        iob->bind(BIND_SIGNATURE_UINT32, &b->data.entertainment.ph_unk00_u32); //  5 for latched booth??
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.ph_unk01_u8);   // 50 ???
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.ph_unk02_u8);   //  2 for latched booth??
-        iob->bind____skip(12);
-        iob->bind(BIND_SIGNATURE_INT32, &b->data.entertainment.booth_corner_grid_offset);
+        iob->bind(BIND_SIGNATURE_UINT32, &b->data.entertainment.latched_venue_main_grid_offset);
+        iob->bind(BIND_SIGNATURE_UINT32, &b->data.entertainment.latched_venue_add_grid_offset);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.orientation);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.ent_reserved_u8);
+        iob->bind____skip(8);
+        iob->bind(BIND_SIGNATURE_UINT32, &b->data.entertainment.booth_corner_grid_offset);
     }
 }
 
@@ -982,7 +983,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
 
         iob->bind(BIND_SIGNATURE_UINT8, &b->state);
         iob->bind(BIND_SIGNATURE_UINT8, &b->faction_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->unknown_value);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->reserved_id);
         iob->bind(BIND_SIGNATURE_UINT8, &b->size);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_is_merged);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_size);

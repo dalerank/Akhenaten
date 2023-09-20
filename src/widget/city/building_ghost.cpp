@@ -407,21 +407,10 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
     int orientation = 0;
     //    map_tile northern_corner = *tile;
     switch (type) {
-    case BUILDING_BOOTH:
-        size = 2;
-        break;
-    case BUILDING_BANDSTAND:
-        size = 3;
-        break;
-        break;
-    case BUILDING_PAVILLION:
-        size = 4;
-        break;
-        break;
-    case BUILDING_FESTIVAL_SQUARE:
-        size = 5;
-        break;
-        break;
+    case BUILDING_BOOTH: size = 2; break;
+    case BUILDING_BANDSTAND: size = 3; break;
+    case BUILDING_PAVILLION: size = 4; break;
+    case BUILDING_FESTIVAL_SQUARE: size = 5; break;
     }
     //    int map_orientation = city_view_orientation();
     //    switch (map_orientation) {
@@ -462,13 +451,12 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
                 ImageDraw::isometric(image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_RED);
             return;
         }
+
         switch (type) {
         case BUILDING_BOOTH:
-            for (int i = 0; i < size * size; i++)
-                ImageDraw::isometric(image_id_from_group(GROUP_BOOTH_SQUARE) + i,
-                                     x + ((i % size) - (i / size)) * 30,
-                                     y + ((i % size) + (i / size)) * 15,
-                                     COLOR_MASK_GREEN);
+            for (int i = 0; i < size * size; i++) {
+                ImageDraw::isometric(image_id_from_group(GROUP_BOOTH_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
+            }
             switch (orientation / 2) {
             case 0:
                 draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x, y}, COLOR_MASK_GREEN);
@@ -484,9 +472,12 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
                 break;
             }
             break;
+
         case BUILDING_BANDSTAND:
-            for (int i = 0; i < size * size; i++)
+            for (int i = 0; i < size * size; i++) {
                 ImageDraw::isometric(image_id_from_group(GROUP_BANDSTAND_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
+            }
+
             switch (orientation / 2) {
             case 0:
                 draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x, y}, COLOR_MASK_GREEN);
@@ -510,12 +501,10 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
                 break;
             }
             break;
+
         case BUILDING_PAVILLION:
             for (int i = 0; i < size * size; i++)
-                ImageDraw::isometric(image_id_from_group(GROUP_PAVILLION_SQUARE) + i,
-                                     x + ((i % size) - (i / size)) * 30,
-                                     y + ((i % size) + (i / size)) * 15,
-                                     COLOR_MASK_GREEN);
+                ImageDraw::isometric(image_id_from_group(GROUP_PAVILLION_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
             switch (orientation) {
             case 0:
                 draw_building(image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
@@ -567,12 +556,11 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
                 break;
             }
             break;
+
         case BUILDING_FESTIVAL_SQUARE:
-            for (int i = 0; i < size * size; i++)
-                ImageDraw::isometric(image_id_from_group(GROUP_FESTIVAL_SQUARE) + i,
-                                     x + ((i % size) - (i / size)) * 30,
-                                     y + ((i % size) + (i / size)) * 15,
-                                     COLOR_MASK_GREEN);
+            for (int i = 0; i < size * size; i++) {
+                ImageDraw::isometric(image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
+            }
             break;
         }
     }
@@ -588,6 +576,7 @@ bool city_building_ghost_mark_deleting(map_point tile) {
     int construction_type = Planner.build_type;
     if (!tile.grid_offset() || Planner.draw_as_constructing || construction_type != BUILDING_CLEAR_LAND)
         return (construction_type == BUILDING_CLEAR_LAND);
+
     if (!Planner.in_progress)
         map_property_clear_constructing_and_deleted();
 

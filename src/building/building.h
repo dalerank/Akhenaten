@@ -42,7 +42,7 @@ public:
     int id;
     e_building_state state;
     unsigned char faction_id;
-    unsigned char unknown_value;
+    unsigned char reserved_id;
     unsigned char size;
     unsigned char house_is_merged;
     unsigned char house_size;
@@ -147,10 +147,11 @@ public:
             unsigned char days2;
             //            unsigned char days3;
             unsigned char days3_or_play;
-            unsigned short booth_corner_grid_offset;
-            unsigned short ph_unk00_u32;
-            unsigned short ph_unk01_u8;
-            unsigned short ph_unk02_u8;
+            uint32_t booth_corner_grid_offset;
+            uint32_t latched_venue_main_grid_offset;
+            uint32_t latched_venue_add_grid_offset;
+            uint8_t orientation;
+            uint8_t ent_reserved_u8;
         } entertainment;
         struct {
             short foods[8];

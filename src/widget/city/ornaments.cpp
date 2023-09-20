@@ -141,8 +141,9 @@ static void draw_entertainment_shows_musicians(building* b, int x, int y, int di
         case 0:
             draw_normal_anim(x + 20, y + 12, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
             break;
+
         case 1:
-            draw_normal_anim(x + 48, y + 12, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1 + 12, color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
+            draw_normal_anim(x + 48, y + 4, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
             break;
         }
     }
@@ -609,9 +610,9 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
 
     case BUILDING_BANDSTAND:
         if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1) {
-            draw_entertainment_shows_musicians(b, x, y, 0, color_mask);
-        } else if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BANDSTAND) + 2) {
             draw_entertainment_shows_musicians(b, x, y, 1, color_mask);
+        } else if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BANDSTAND) + 2) {
+            draw_entertainment_shows_musicians(b, x, y, 0, color_mask);
         }
         break;
 

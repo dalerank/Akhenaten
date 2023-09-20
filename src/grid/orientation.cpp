@@ -180,8 +180,9 @@ void map_orientation_update_buildings(void) {
                 map_add_venue_plaza_tiles(b->id, size, MAP_X(b->data.entertainment.booth_corner_grid_offset), MAP_Y(b->data.entertainment.booth_corner_grid_offset), plaza_image_id, true);
             }
             // additionally, correct bandstand graphics
-            if (b->type == BUILDING_BANDSTAND)
+            if (b->type == BUILDING_BANDSTAND) {
                 map_add_bandstand_tiles(b);
+            }
             break;
         case BUILDING_LARGE_STATUE:
         case BUILDING_MEDIUM_STATUE:

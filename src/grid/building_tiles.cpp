@@ -166,52 +166,79 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
     set_crop_tile(building_id, x, y, 2, 0, crop_image_offset, growth);
 }
 
-void map_add_bandstand_tiles(building* b) {
-    int b_delta_0_m1 = b->tile.shifted(0, -1).grid_offset();
-    int b_delta_0_1 = b->tile.shifted(0, 1).grid_offset();
-    int b_delta_1_0 = b->tile.shifted(1, 0).grid_offset();
-    int b_delta_m1_0 = b->tile.shifted(-1, 0).grid_offset();
-    //    int b_delta_0_m1 = b->tile.grid_offset() - GRID_OFFSET(0, -1);
-    //    int b_delta_0_1 = b->tile.grid_offset() - GRID_OFFSET(0, 1);
-    //    int b_delta_1_0 = b->tile.grid_offset() - GRID_OFFSET(1, 0);
-    //    int b_delta_m1_0 = b->tile.grid_offset() - GRID_OFFSET(-1, 0);
-
-    int offsets_by_orientation[4];
-    switch (city_view_orientation()) {
-    case 0: // north
-        offsets_by_orientation[0] = b_delta_0_m1;
-        offsets_by_orientation[1] = b_delta_0_1;
-        offsets_by_orientation[2] = b_delta_1_0;
-        offsets_by_orientation[3] = b_delta_m1_0;
-        break;
-    case 2: // east
-        offsets_by_orientation[3] = b_delta_0_m1;
-        offsets_by_orientation[2] = b_delta_0_1;
-        offsets_by_orientation[0] = b_delta_1_0;
-        offsets_by_orientation[1] = b_delta_m1_0;
-        break;
-    case 4: // south
-        offsets_by_orientation[1] = b_delta_0_m1;
-        offsets_by_orientation[0] = b_delta_0_1;
-        offsets_by_orientation[3] = b_delta_1_0;
-        offsets_by_orientation[2] = b_delta_m1_0;
-        break;
-    case 6: // west
-        offsets_by_orientation[2] = b_delta_0_m1;
-        offsets_by_orientation[3] = b_delta_0_1;
-        offsets_by_orientation[1] = b_delta_1_0;
-        offsets_by_orientation[0] = b_delta_m1_0;
-        break;
-    }
-
-    for (int j = 0; j < 4; ++j) {
-        auto neighbor = building_at(offsets_by_orientation[j]);
-        if (neighbor->type == BUILDING_BANDSTAND && neighbor->tile.grid_offset() == offsets_by_orientation[j]
-            && neighbor->main() == b->main()) {
-            map_image_set(neighbor->tile.grid_offset(), image_id_from_group(GROUP_BUILDING_BANDSTAND) + j);
-            continue;
+int map_bandstand_main_img_offset(int orientation) {
+    int offset = 0;
+    if (orientation == 2) {
+        switch (city_view_orientation() / 2) {
+        case 0: offset = 1; break;
+        case 1: offset = 2; break;
+        case 2: offset = 0; break;
+        case 3: offset = 3; break;
+        }
+    } else if (orientation == 3) {
+        switch (city_view_orientation() / 2) {
+        case 0: offset = 3; break;
+        case 1: offset = 1; break;
+        case 2: offset = 2; break;
+        case 3: offset = 0; break;
+        }
+    } else if (orientation == 0) {
+        switch (city_view_orientation() / 2) {
+        case 0: offset = 1; break;
+        case 1: offset = 2; break;
+        case 2: offset = 0; break;
+        case 3: offset = 3; break;
+        }
+    } else if (orientation == 1) {
+        switch (city_view_orientation() / 2) {
+        case 0: offset = 2; break;
+        case 1: offset = 0; break;
+        case 2: offset = 3; break;
+        case 3: offset = 1; break;
         }
     }
+    return offset;
+}
+
+int map_bandstand_add_img_offset(int orientation) {
+    int offset = 0;
+    if (orientation == 2) {
+        switch (city_view_orientation() / 2) {
+        case 0: offset = 0; break;
+        case 1: offset = 3; break;
+        case 2: offset = 1; break;
+        case 3: offset = 2; break;
+        }
+    } else if (orientation == 3) {
+        switch (city_view_orientation() / 2) {
+        case 0: offset = 2; break;
+        case 1: offset = 0; break;
+        case 2: offset = 3; break;
+        case 3: offset = 1; break;
+        }
+    } else if (orientation == 0) {
+        switch (city_view_orientation() / 2) {
+        case 0: offset = 0; break;
+        case 1: offset = 3; break;
+        case 2: offset = 1; break;
+        case 3: offset = 2; break;
+        }
+    } else if (orientation == 1) {
+        switch (city_view_orientation() / 2) {
+        case 0: offset = 3; break;
+        case 1: offset = 1; break;
+        case 2: offset = 2; break;
+        case 3: offset = 0; break;
+        }
+    }
+    return offset;
+}
+void map_add_bandstand_tiles(building* b) {
+    int offset = map_bandstand_main_img_offset(b->data.entertainment.orientation);
+    int offset_add = map_bandstand_add_img_offset(b->data.entertainment.orientation);
+
+    map_image_set(b->data.entertainment.latched_venue_main_grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + offset);
+    map_image_set(b->data.entertainment.latched_venue_add_grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + offset_add);
 }
 static void set_underlying_venue_plaza_tile(int grid_offset, int building_id, int image_id, bool update_only) {
     if (!update_only) {

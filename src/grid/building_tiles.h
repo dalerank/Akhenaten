@@ -7,6 +7,8 @@ void map_building_tiles_add(int building_id, map_point tile, int size, int image
 void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_offset, int progress);
 
 void map_add_bandstand_tiles(building* b);
+int map_bandstand_main_img_offset(int orientation);
+int map_bandstand_add_img_offset(int orientation);
 void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int image_id, bool update_only);
 
 void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation);

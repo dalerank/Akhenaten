@@ -152,41 +152,32 @@ static void add_temple_complex(building* b, int orientation) {
     building* oracle = add_temple_complex_element(b->tile.x() + 2 * offset.x(), b->tile.y() + 2 * offset.y(), orientation, altar);
 }
 
-static void latch_on_venue(e_building_type type, building* main, int dx, int dy, int orientation, bool main_venue = false) {
-    map_point point = main->tile.shifted(dx, dy);
+static void latch_on_venue(e_building_type type, building *b, int dx, int dy, int orientation, bool main_venue = false) {
+    map_point point = b->tile.shifted(dx, dy);
     //    int x = main->tile.x() + dx;
     //    int y = main->tile.y() + dy;
     //    int grid_offset = MAP_OFFSET(x, y);
-    building* this_venue = main;
-    if (main_venue) { // this is the main venue building!!
-        if (type != main->type) {
-            return; // hmmm, this shouldn't happen
-        }
-        main->tile = point;
-        //        main->tile.x() += dx;
-        //        main->tile.y() += dy;
-    } else if (type == BUILDING_GARDENS) { // add gardens
-        map_terrain_add(point.grid_offset(), TERRAIN_GARDEN);
-    } else { // extra venue
-        this_venue = building_create(type, point.x(), point.y(), 0);
-        building* parent = main; // link venue to last one in the chain
-        while (parent->next_part_building_id) {
-            parent = building_get(parent->next_part_building_id);
-        }
-        parent->next_part_building_id = this_venue->id;
-        this_venue->prev_part_building_id = parent->id;
-
-        map_building_set(point.grid_offset(), this_venue->id);
-        if (type == BUILDING_PAVILLION) {
-            map_building_set(point.grid_offset() + GRID_OFFSET(1, 0), this_venue->id);
-            map_building_set(point.grid_offset() + GRID_OFFSET(1, 1), this_venue->id);
-            map_building_set(point.grid_offset() + GRID_OFFSET(0, 1), this_venue->id);
-        }
+    { // extra venue
+        //this_venue = building_create(type, point.x(), point.y(), 0);
+        //building* parent = main; // link venue to last one in the chain
+        //while (parent->next_part_building_id) {
+        //    parent = building_get(parent->next_part_building_id);
+        //}
+        //parent->next_part_building_id = this_venue->id;
+        //this_venue->prev_part_building_id = parent->id;
+        //
+        //map_building_set(point.grid_offset(), this_venue->id);
+        //if (type == BUILDING_PAVILLION) {
+        //    map_building_set(point.grid_offset() + GRID_OFFSET(1, 0), this_venue->id);
+        //    map_building_set(point.grid_offset() + GRID_OFFSET(1, 1), this_venue->id);
+        //    map_building_set(point.grid_offset() + GRID_OFFSET(0, 1), this_venue->id);
+        //}
     }
 
     // set map graphics accordingly
     switch (type) {
     case BUILDING_GARDENS:
+        map_terrain_add(point.grid_offset(), TERRAIN_GARDEN);
         map_tiles_update_all_gardens();
         break;
 
@@ -196,40 +187,39 @@ static void latch_on_venue(e_building_type type, building* main, int dx, int dy,
         break;
 
     case BUILDING_BANDSTAND:
-        map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BANDSTAND) + orientation);
-        if (orientation == 1) {
-            latch_on_venue(BUILDING_BANDSTAND, main, dx, dy + 1, 0, false);
-        } else if (orientation == 2) {
-            latch_on_venue(BUILDING_BANDSTAND, main, dx + 1, dy, 3, false);
+        if (main_venue) {
+            b->data.entertainment.latched_venue_main_grid_offset = point.grid_offset();
+            int offset = map_bandstand_main_img_offset(orientation);
+            map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BANDSTAND) + offset);
+        } else {
+            b->data.entertainment.latched_venue_add_grid_offset = point.grid_offset();
+            int offset = map_bandstand_add_img_offset(orientation);
+            map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BANDSTAND) + offset);
         }
+        //if (orientation == 1) {
+        //    latch_on_venue(BUILDING_BANDSTAND, main, dx, dy + 1, 0, false);
+        //} else if (orientation == 2) {
+        //    latch_on_venue(BUILDING_BANDSTAND, main, dx + 1, dy, 3, false);
+        //}
         //map_add_bandstand_tiles(this_venue);
         break;
 
     case BUILDING_PAVILLION:
-        map_building_tiles_add(this_venue->id, point, 2, image_id_from_group(GROUP_BUILDING_PAVILLION), TERRAIN_BUILDING);
+        map_building_tiles_add(b->id, point, 2, image_id_from_group(GROUP_BUILDING_PAVILLION), TERRAIN_BUILDING);
         break;
     }
 }
 
 static void add_entertainment_venue(building* b, int orientation) {
     b->data.entertainment.booth_corner_grid_offset = b->tile.grid_offset();
+    b->data.entertainment.orientation = orientation;
+
     int size = 0;
     switch (b->type) {
-    case BUILDING_BOOTH:
-        size = 2;
-        break;
-
-    case BUILDING_BANDSTAND:
-        size = 3;
-        break;
-
-    case BUILDING_PAVILLION:
-        size = 4;
-        break;
-
-    case BUILDING_FESTIVAL_SQUARE:
-        size = 5;
-        break;
+    case BUILDING_BOOTH: size = 2; break;
+    case BUILDING_BANDSTAND: size = 3; break;
+    case BUILDING_PAVILLION: size = 4; break;
+    case BUILDING_FESTIVAL_SQUARE: size = 5; break;
     }
 
     if (!map_grid_is_inside(b->tile.x(), b->tile.y(), size)) {
@@ -238,72 +228,54 @@ static void add_entertainment_venue(building* b, int orientation) {
 
     int image_id = 0;
     switch (b->type) {
-    case BUILDING_BOOTH:
-        image_id = image_id_from_group(GROUP_BOOTH_SQUARE);
-        break;
-
-    case BUILDING_BANDSTAND:
-        image_id = image_id_from_group(GROUP_BANDSTAND_SQUARE);
-        break;
-
-    case BUILDING_PAVILLION:
-        image_id = image_id_from_group(GROUP_PAVILLION_SQUARE);
-        break;
-
-    case BUILDING_FESTIVAL_SQUARE:
-        image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE);
-        break;
+    case BUILDING_BOOTH: image_id = image_id_from_group(GROUP_BOOTH_SQUARE); break;
+    case BUILDING_BANDSTAND: image_id = image_id_from_group(GROUP_BANDSTAND_SQUARE); break;
+    case BUILDING_PAVILLION: image_id = image_id_from_group(GROUP_PAVILLION_SQUARE); break;
+    case BUILDING_FESTIVAL_SQUARE: image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE); break;
     }
 
     // add underlying plaza first
     map_add_venue_plaza_tiles(b->id, size, b->tile.x(), b->tile.y(), image_id, false);
-
+    int absolute_orientation = (abs(orientation * 2 + (8 - city_view_orientation())) % 8) / 2;
     // add additional building parts, update graphics accordingly
     switch (b->type) {
     case BUILDING_BOOTH:
-        switch (orientation) {
-        case 0:
-            latch_on_venue(BUILDING_BOOTH, b, 0, 0, orientation, true);
-            break;
-
-        case 1:
-            latch_on_venue(BUILDING_BOOTH, b, 1, 0, orientation, true);
-            break;
-
-        case 2:
-            latch_on_venue(BUILDING_BOOTH, b, 1, 1, orientation, true);
-            break;
-
-        case 3:
-            latch_on_venue(BUILDING_BOOTH, b, 0, 1, orientation, true);
-            break;
+        switch (absolute_orientation) {
+        case 0: latch_on_venue(BUILDING_BOOTH, b, 0, 0, orientation, true); break;
+        case 1: latch_on_venue(BUILDING_BOOTH, b, 1, 0, orientation, true); break;
+        case 2: latch_on_venue(BUILDING_BOOTH, b, 1, 1, orientation, true); break;
+        case 3: latch_on_venue(BUILDING_BOOTH, b, 0, 1, orientation, true); break;
         }
         break;
 
     case BUILDING_BANDSTAND:
-        switch (orientation) {
+        switch (absolute_orientation) {
         case 0:
             latch_on_venue(BUILDING_GARDENS, b, 2, 1, 0);
-            latch_on_venue(BUILDING_BANDSTAND, b, 0, 0, 1, true);
             latch_on_venue(BUILDING_BOOTH, b, 2, 0, 0);
+            latch_on_venue(BUILDING_BANDSTAND, b, 0, 0, 0, true);
+            latch_on_venue(BUILDING_BANDSTAND, b, 0, 1, 0, false);
             break;
 
         case 1:
             latch_on_venue(BUILDING_GARDENS, b, 1, 2, 0);
-            latch_on_venue(BUILDING_BANDSTAND, b, 1, 0, 2);
             latch_on_venue(BUILDING_BOOTH, b, 2, 2, 0);
+            latch_on_venue(BUILDING_BANDSTAND, b, 1, 0, 1, true);
+            latch_on_venue(BUILDING_BANDSTAND, b, 2, 0, 1, false);
             break;
 
         case 2:
             latch_on_venue(BUILDING_GARDENS, b, 2, 1, 0);
-            latch_on_venue(BUILDING_BANDSTAND, b, 0, 1, 1);
             latch_on_venue(BUILDING_BOOTH, b, 2, 2, 0);
+            latch_on_venue(BUILDING_BANDSTAND, b, 0, 1, 2, true);
+            latch_on_venue(BUILDING_BANDSTAND, b, 0, 2, 2, false);
             break;
 
         case 3:
             latch_on_venue(BUILDING_GARDENS, b, 1, 2, 0);
-            latch_on_venue(BUILDING_BANDSTAND, b, 0, 0, 2, true);
             latch_on_venue(BUILDING_BOOTH, b, 0, 2, 0);
+            latch_on_venue(BUILDING_BANDSTAND, b, 1, 0, 3, true);
+            latch_on_venue(BUILDING_BANDSTAND, b, 0, 0, 3, false);
             break;
         }
         break;
