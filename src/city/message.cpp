@@ -438,15 +438,15 @@ void city_message_decrease_delays(void) {
 bool city_message_mark_population_shown(int population) {
     auto& data = g_message_data;
     switch (population) {
-    case 500: return data.population_shown.pop500;
-    case 1000: return data.population_shown.pop1000;
-    case 2000: return data.population_shown.pop2000;
-    case 3000: return data.population_shown.pop3000;
-    case 5000: return data.population_shown.pop5000;
-    case 10000: return data.population_shown.pop10000; 
-    case 15000: return data.population_shown.pop15000; 
-    case 20000: return data.population_shown.pop20000; 
-    case 25000: return data.population_shown.pop25000; 
+    case 500: return (data.population_shown.pop500 = true);
+    case 1000: return (data.population_shown.pop1000 = true);
+    case 2000: return (data.population_shown.pop2000 = true);
+    case 3000: return (data.population_shown.pop3000 = true);
+    case 5000: return (data.population_shown.pop5000 = true);
+    case 10000: return (data.population_shown.pop10000 = true); 
+    case 15000: return (data.population_shown.pop15000 = true);
+    case 20000: return (data.population_shown.pop20000 = true); 
+    case 25000: return (data.population_shown.pop25000 = true); 
     default:
         return false;
     }

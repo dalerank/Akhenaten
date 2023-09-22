@@ -191,31 +191,31 @@ static void calculate_working_population(void) {
 
 void city_population_reached_milestone(bool force) {
     int population = city_population();
-    if (population >= 500 && (city_message_mark_population_shown(500) || force))
+    if (population >= 500 && (!city_message_mark_population_shown(500) || force))
         city_message_population_post(true, MESSAGE_POPULATION_500, 0, 0);
 
-    if (population >= 1000 && (city_message_mark_population_shown(1000) || force))
+    if (population >= 1000 && (!city_message_mark_population_shown(1000) || force))
         city_message_population_post(true, MESSAGE_POPULATION_1000, 0, 0);
 
-    if (population >= 2000 && (city_message_mark_population_shown(2000) || force))
+    if (population >= 2000 && (!city_message_mark_population_shown(2000) || force))
         city_message_population_post(true, MESSAGE_POPULATION_2000, 0, 0);
 
-    if (population >= 3000 && (city_message_mark_population_shown(3000) || force))
+    if (population >= 3000 && (!city_message_mark_population_shown(3000) || force))
         city_message_population_post(true, MESSAGE_POPULATION_3000, 0, 0);
 
-    if (population >= 5000 && (city_message_mark_population_shown(5000) || force))
+    if (population >= 5000 && (!city_message_mark_population_shown(5000) || force))
         city_message_population_post(true, MESSAGE_POPULATION_5000, 0, 0);
 
-    if (population >= 10000 && (city_message_mark_population_shown(10000) || force))
+    if (population >= 10000 && (!city_message_mark_population_shown(10000) || force))
         city_message_population_post(true, MESSAGE_POPULATION_10000, 0, 0);
 
-    if (population >= 15000 && (city_message_mark_population_shown(15000) || force))
+    if (population >= 15000 && (!city_message_mark_population_shown(15000) || force))
         city_message_population_post(true, MESSAGE_POPULATION_15000, 0, 0);
 
-    if (population >= 20000 && (city_message_mark_population_shown(20000) || force))
+    if (population >= 20000 && (!city_message_mark_population_shown(20000) || force))
         city_message_population_post(true, MESSAGE_POPULATION_20000, 0, 0);
 
-    if (population >= 25000 && (city_message_mark_population_shown(25000) || force))
+    if (population >= 25000 && (!city_message_mark_population_shown(25000) || force))
         city_message_population_post(true, MESSAGE_POPULATION_25000, 0, 0);
 }
 
