@@ -235,12 +235,6 @@ void draw_farm_crops(e_building_type type, int progress, int grid_offset, vec2i 
     }
 }
 
-enum e_farm_worker_state {
-    FARM_WORKER_TILING,
-    FARM_WORKER_SEEDING,
-    FARM_WORKER_HARVESTING
-};
-
 static void draw_farm_worker(int direction, int action, int frame_offset, vec2i coords, color color_mask = COLOR_MASK_NONE) {
     int action_offset = 0;
     switch (action) {

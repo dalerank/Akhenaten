@@ -29,7 +29,7 @@
 #define MAX_HISTORY 200
 
 static void draw_foreground_video();
-static void draw_foreground_godmsg();
+static void draw_foreground_image();
 
 static void button_back(int param1, int param2);
 static void button_close(int param1, int param2);
@@ -67,7 +67,8 @@ struct message_dialog_data_t {
 
     void (*background_callback)();
     bool show_video;
-    bool goddess_preview;
+    bool background;
+    uint16_t background_img;
     e_god god;
 
     int x;
@@ -203,6 +204,10 @@ static void init(int text_id, int message_id, void (*background_callback)()) {
         if (city_msg->god != GOD_UNKNOWN) {
             data.god = (e_god)city_msg->god;
         }
+
+        if (city_msg->background_img) {
+            data.background_img = city_msg->background_img;
+        }
     } else {
         data.is_eventmsg = false;
     }
@@ -210,7 +215,7 @@ static void init(int text_id, int message_id, void (*background_callback)()) {
     data.text_id = text_id;
     data.background_callback = background_callback;
     data.show_video = false;
-    data.goddess_preview = false;
+    data.background = false;
     const lang_message *msg = lang_get_message(text_id);
 
     if (!g_player_message_data.use_popup) {
@@ -220,9 +225,9 @@ static void init(int text_id, int message_id, void (*background_callback)()) {
     if (msg->video.text && video_start((char *)msg->video.text)) {
         data.show_video = true;
         video_init();
-    } else if (data.god != GOD_UNKNOWN) {
-        data.goddess_preview = true;
-    }
+    } else if ((data.god != GOD_UNKNOWN) || (data.background_img > 0)) {
+        data.background = true;
+    } 
 }
 
 static int resource_image(int resource) {
@@ -415,7 +420,7 @@ static void draw_background_normal(void) {
     draw_content(msg);
 }
 
-static void draw_background_godmsg() {
+static void draw_background_image() {
     auto &data = g_message_dialog_data;
     const lang_message* msg = lang_get_message(data.text_id);
     data.x = 32;
@@ -484,12 +489,18 @@ static void draw_background_godmsg() {
         }
     }
 
-    int image_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 19 + data.god;
-    const image_t* img = image_get(image_id);
+    int image_id = 0;
+    if (data.god != GOD_UNKNOWN) {
+        image_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 19 + data.god;
+    } else if (data.background_img) {
+        image_id = data.background_img;
+    }
+
+    const image_t *img = image_get(image_id);
     int current_x = (500 - img->width) / 2;
     ImageDraw::img_generic(image_id, current_x, 96);
 
-    draw_foreground_godmsg();
+    draw_foreground_image();
 }
 
 static void draw_background_video() {
@@ -575,8 +586,8 @@ static void draw_background() {
     graphics_set_to_dialog();
     if (data.show_video) {
         draw_background_video();
-    } else if (data.goddess_preview) {
-        draw_background_godmsg();
+    } else if (data.background) {
+        draw_background_image();
     } else {
         draw_background_normal();
     }
@@ -619,14 +630,11 @@ static void draw_foreground_normal() {
         if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION)
             image_buttons_draw(data.x + 64, data.y_text + 36, &image_button_go_to_problem, 1);
     }
-    image_buttons_draw(data.x + 16 * msg->width_blocks - 38,
-                       data.y + 16 * msg->height_blocks - 36,
-                       &image_button_close,
-                       1);
+    image_buttons_draw(data.x + 16 * msg->width_blocks - 38, data.y + 16 * msg->height_blocks - 36, &image_button_close, 1);
     rich_text_draw_scrollbar();
 }
 
-static void draw_foreground_godmsg() {
+static void draw_foreground_image() {
     auto &data = g_message_dialog_data;
 
     image_buttons_draw(data.x + 16, data.y + 408, get_advisor_button(), 1);
@@ -653,8 +661,8 @@ static void draw_foreground() {
     graphics_set_to_dialog();
     if (data.show_video) {
         draw_foreground_video();
-    } else if (data.goddess_preview) {
-        draw_foreground_godmsg();
+    } else if (data.background) {
+        draw_foreground_image();
     } else {
         draw_foreground_normal();
     }
@@ -743,7 +751,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     bool handled;
     if (data.show_video) {
         handled = handle_input_video(m_dialog, msg);
-    } else if (data.goddess_preview) {
+    } else if (data.background) {
         handled = handle_input_godmsg(m_dialog, msg);
     } else {
         handled = handle_input_normal(m_dialog, msg);
@@ -826,6 +834,7 @@ void window_message_dialog_show(int text_id, int message_id, void (*background_c
         handle_input,
         get_tooltip
     };
+
     init(text_id, message_id, background_callback);
     window_show(&window);
 }

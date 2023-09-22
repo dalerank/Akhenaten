@@ -2,6 +2,7 @@
 
 #include "building/construction/build_planner.h"
 #include "building/building_type.h"
+#include "building/house_population.h"
 #include "city/finance.h"
 #include "city/gods.h"
 #include "city/victory.h"
@@ -34,6 +35,7 @@ static void game_cheat_kill_all(uint8_t*);
 static void game_cheat_victory(uint8_t*);
 static void game_cheat_cast_upset(uint8_t*);
 static void game_cheat_start_plague(uint8_t*);
+static void game_cheat_pop_milestone(uint8_t *);
 
 using cheat_command = void(uint8_t* args);
 
@@ -50,7 +52,8 @@ static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_mo
                                                   {"showtooltip", game_cheat_show_tooltip},
                                                   {"startplague", game_cheat_start_plague},
                                                   {"killall", game_cheat_kill_all},
-                                                  {"victory", game_cheat_victory}};
+                                                  {"victory", game_cheat_victory},
+                                                  {"popmilestone", game_cheat_pop_milestone}};
 
 struct cheats_data_t {
     bool is_cheating;
@@ -135,6 +138,10 @@ static void game_cheat_add_money(uint8_t* args) {
     window_invalidate();
 
     city_warning_show_console((uint8_t*)"Added money");
+}
+
+static void game_cheat_pop_milestone(uint8_t* args) {
+    city_population_reached_milestone(true);
 }
 
 static void game_cheat_start_invasion(uint8_t* args) {

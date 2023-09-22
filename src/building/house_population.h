@@ -23,7 +23,8 @@ void house_population_update_room(void);
 /**
  * Update migration statistics and create immigrants/emigrants
  */
-void house_population_update_migration(void);
+void house_population_update_migration();
+void city_population_reached_milestone(bool force);
 
 /**
  * Evict people from overcrowded houses

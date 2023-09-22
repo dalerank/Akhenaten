@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 enum e_mesage_category {
     MESSAGE_CAT_RIOT = 0,
     MESSAGE_CAT_FIRE = 1,
@@ -271,7 +273,7 @@ struct city_message {
     int month;
     int param1;
     int param2;
-    int is_read;
+    bool is_read;
     //
     int eventmsg_body_id;
     int eventmsg_title_id;
@@ -292,7 +294,7 @@ struct city_message {
     int req_resource_past;
     int unk_11a_i8;
     int god;
-    int unk_12;
+    uint16_t background_img;
 };
 
 void city_message_init_scenario();
@@ -306,6 +308,7 @@ void city_message_post(bool use_popup, int message_id, int param1, int param2);
 void city_message_god_post(int god, bool use_popup, int message_id, int param1, int param2);
 void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2);
 void city_message_post_with_message_delay(int category, int use_popup, int message_type, int delay);
+void city_message_population_post(bool use_popup, int message_id, int param1, int param2);
 
 void city_message_process_queue(void);
 void city_message_sort_and_compact(void);
@@ -318,7 +321,7 @@ void city_message_increase_category_count(int category);
 int city_message_get_category_count(int category);
 void city_message_decrease_delays(void);
 
-int city_message_mark_population_shown(int population);
+bool city_message_mark_population_shown(int population);
 
 const city_message* city_message_get(int message_id);
 

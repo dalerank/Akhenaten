@@ -10,6 +10,7 @@
 #include "figure/formation.h"
 #include "game/time.h"
 #include "graphics/window.h"
+#include "graphics/image.h"
 #include "io/gamefiles/lang.h"
 #include "sound/effect.h"
 #include "window/message_dialog.h"
@@ -25,19 +26,27 @@ struct message_data_t {
     int consecutive_message_delay;
 
     int next_message_sequence;
-    int total_messages;
-    int current_message_id;
+    uint16_t total_messages;
+    uint16_t reserved_1;
+    uint16_t current_message_id;
+    uint16_t reserved_2;
+    uint16_t reserved_3;
+    uint16_t reserved_4;
+    uint16_t reserved_5;
+    uint8_t reserved_6;
+    uint8_t reserved_7;
 
-    struct {
-        int pop500;
-        int pop1000;
-        int pop2000;
-        int pop3000;
-        int pop5000;
-        int pop10000;
-        int pop15000;
-        int pop20000;
-        int pop25000;
+    union {
+        uint16_t popmiles;
+        uint16_t pop500 : 1;
+        uint16_t pop1000 : 1;
+        uint16_t pop2000 : 1;
+        uint16_t pop3000 : 1;
+        uint16_t pop5000 : 1;
+        uint16_t pop10000 : 1;
+        uint16_t pop15000 : 1;
+        uint16_t pop20000 : 1;
+        uint16_t pop25000 : 1;
     } population_shown;
 
     int message_count[MAX_MESSAGE_CATEGORIES];
@@ -49,7 +58,7 @@ struct message_data_t {
     int problem_index;
     time_millis problem_last_click_time;
 
-    int scroll_position;
+    short scroll_position;
 };
 
 message_data_t g_message_data;
@@ -91,6 +100,7 @@ void city_message_init_scenario(void) {
 
     city_message_init_problem_areas();
 }
+
 void city_message_init_problem_areas(void) {
     auto& data = g_message_data;
     data.problem_count = 0;
@@ -138,13 +148,13 @@ static void show_message_popup(int message_id) {
     auto& data = g_message_data;
     city_message* msg = &data.messages[message_id];
     data.consecutive_message_delay = 5;
-    msg->is_read = 1;
+    msg->is_read = true;
     int text_id = msg->MM_text_id;
     if (!has_video(text_id)) {
         play_sound(text_id);
     }
 
-    window_message_dialog_show_city_message(text_id, message_id, msg->year, msg->month, msg->param1, msg->param2, city_message_get_advisor(msg->MM_text_id), 1);
+    window_message_dialog_show_city_message(text_id, message_id, msg->year, msg->month, msg->param1, msg->param2, city_message_get_advisor(msg->MM_text_id), true);
 }
 
 void city_message_disable_sound_for_next_message(void) {
@@ -215,7 +225,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     should_play_sound = true;
 }
 
-static void city_message_post_common(bool use_popup, int message_id, int param1, int param2, int god) {
+static void city_message_post_common(bool use_popup, int message_id, int param1, int param2, int god, int bg_img) {
     auto &data = g_message_data;
 
     int id = new_message_id();
@@ -239,6 +249,7 @@ static void city_message_post_common(bool use_popup, int message_id, int param1,
     msg->param2 = param2;
     msg->sequence = data.next_message_sequence++;
     msg->god = god;
+    msg->background_img = bg_img;
 
     int text_id = city_message_get_text_id(message_id);
     int lang_msg_type = lang_get_message(text_id)->message_type;
@@ -260,11 +271,16 @@ static void city_message_post_common(bool use_popup, int message_id, int param1,
 }
 
 void city_message_god_post(int god, bool use_popup, int message_id, int param1, int param2) {
-    city_message_post_common(use_popup, message_id, param1, param2, god);
+    city_message_post_common(use_popup, message_id, param1, param2, god, 0);
+}
+
+void city_message_population_post(bool use_popup, int message_id, int param1, int param2) {
+    int img_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 16;
+    city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN, img_id);
 }
 
 void city_message_post(bool use_popup, int message_id, int param1, int param2) {
-    city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN);
+    city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN, 0);
 }
 
 void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2) {
@@ -419,45 +435,21 @@ void city_message_decrease_delays(void) {
     }
 }
 
-int city_message_mark_population_shown(int population) {
+bool city_message_mark_population_shown(int population) {
     auto& data = g_message_data;
-    int* field;
     switch (population) {
-    case 500:
-        field = &data.population_shown.pop500;
-        break;
-    case 1000:
-        field = &data.population_shown.pop1000;
-        break;
-    case 2000:
-        field = &data.population_shown.pop2000;
-        break;
-    case 3000:
-        field = &data.population_shown.pop3000;
-        break;
-    case 5000:
-        field = &data.population_shown.pop5000;
-        break;
-    case 10000:
-        field = &data.population_shown.pop10000;
-        break;
-    case 15000:
-        field = &data.population_shown.pop15000;
-        break;
-    case 20000:
-        field = &data.population_shown.pop20000;
-        break;
-    case 25000:
-        field = &data.population_shown.pop25000;
-        break;
+    case 500: return data.population_shown.pop500;
+    case 1000: return data.population_shown.pop1000;
+    case 2000: return data.population_shown.pop2000;
+    case 3000: return data.population_shown.pop3000;
+    case 5000: return data.population_shown.pop5000;
+    case 10000: return data.population_shown.pop10000; 
+    case 15000: return data.population_shown.pop15000; 
+    case 20000: return data.population_shown.pop20000; 
+    case 25000: return data.population_shown.pop25000; 
     default:
-        return 0;
+        return false;
     }
-    if (!*field) {
-        *field = 1;
-        return 1;
-    }
-    return 0;
 }
 
 const city_message* city_message_get(int message_id) {
@@ -572,66 +564,54 @@ io_buffer* iob_messages = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_message_data;
     for (int i = 0; i < MAX_MESSAGES; i++) {
         city_message* msg = &data.messages[i];
-        //if (GAME_ENV == ENGINE_ENV_C3) {
-        //    iob->bind(BIND_SIGNATURE_INT32, &msg->param1);
-        //    iob->bind(BIND_SIGNATURE_INT16, &msg->year);
-        //    iob->bind(BIND_SIGNATURE_INT16, &msg->param2);
-        //    //            iob->bind(BIND_SIGNATURE_INT16, &msg->message_id);
-        //    //            msg->message_id = city_message_get_text_id(msg->message_id);
-        //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) 
-        {
-            iob->bind(BIND_SIGNATURE_INT32, &msg->param1);
-            iob->bind(BIND_SIGNATURE_INT32, &msg->param2);
-            iob->bind(BIND_SIGNATURE_INT16, &msg->year);
-            //            iob->bind(BIND_SIGNATURE_INT16, &msg->message_id);
-            //            msg->message_id = lang_get_message(msg->message_id)->message_id;
-        }
+       
+        iob->bind(BIND_SIGNATURE_INT32, &msg->param1);
+        iob->bind(BIND_SIGNATURE_INT32, &msg->param2);
+        iob->bind(BIND_SIGNATURE_INT16, &msg->year);
+        
         iob->bind(BIND_SIGNATURE_INT16, &msg->MM_text_id);
         iob->bind(BIND_SIGNATURE_INT16, &msg->sequence);
         iob->bind(BIND_SIGNATURE_UINT8, &msg->is_read);
         iob->bind(BIND_SIGNATURE_UINT8, &msg->month);
-        {
-            iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_body_id);  // FF FF
-            iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_title_id); // FF FF
-            iob->bind(BIND_SIGNATURE_INT16, &msg->unk_02);            // FF FF
 
-            iob->bind(BIND_SIGNATURE_INT16, &msg->req_city);
-            iob->bind(BIND_SIGNATURE_INT16, &msg->req_amount);
-            iob->bind(BIND_SIGNATURE_INT16, &msg->req_resource);
-            iob->bind(BIND_SIGNATURE_INT16, &msg->req_months_left);
-            iob->bind(BIND_SIGNATURE_INT16, &msg->unk_07);
+        iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_body_id);  // FF FF
+        iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_title_id); // FF FF
+        iob->bind(BIND_SIGNATURE_INT16, &msg->unk_02);            // FF FF
 
-            iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_phrase_id);
-            iob->bind(BIND_SIGNATURE_INT16, &msg->req_city_past); // enum?
-            iob->bind(BIND_SIGNATURE_INT16, &msg->unk_09);        // 00 00
-            iob->bind(BIND_SIGNATURE_INT16, &msg->unk_10);        // 00 00
+        iob->bind(BIND_SIGNATURE_INT16, &msg->req_city);
+        iob->bind(BIND_SIGNATURE_INT16, &msg->req_amount);
+        iob->bind(BIND_SIGNATURE_INT16, &msg->req_resource);
+        iob->bind(BIND_SIGNATURE_INT16, &msg->req_months_left);
+        iob->bind(BIND_SIGNATURE_INT16, &msg->unk_07);
 
-            iob->bind(BIND_SIGNATURE_INT16, &msg->req_amount_past);
-            iob->bind(BIND_SIGNATURE_INT16, &msg->req_resource_past);
-            iob->bind(BIND_SIGNATURE_INT8, &msg->unk_11a_i8); // FF
-            iob->bind(BIND_SIGNATURE_INT8, &msg->god); // FF
-            iob->bind(BIND_SIGNATURE_INT16, &msg->unk_12);    // 00 00
-        }
+        iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_phrase_id);
+        iob->bind(BIND_SIGNATURE_INT16, &msg->req_city_past); // enum?
+        iob->bind(BIND_SIGNATURE_INT16, &msg->unk_09);        // 00 00
+        iob->bind(BIND_SIGNATURE_INT16, &msg->unk_10);        // 00 00
+
+        iob->bind(BIND_SIGNATURE_INT16, &msg->req_amount_past);
+        iob->bind(BIND_SIGNATURE_INT16, &msg->req_resource_past);
+        iob->bind(BIND_SIGNATURE_INT8, &msg->unk_11a_i8); // FF
+        iob->bind(BIND_SIGNATURE_UINT8, &msg->god); // FF
+        iob->bind(BIND_SIGNATURE_UINT16, &msg->background_img);    // 00 00
     }
 });
 
 io_buffer* iob_message_extra = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_message_data;
     iob->bind(BIND_SIGNATURE_INT32, &data.next_message_sequence);
-    iob->bind(BIND_SIGNATURE_INT32, &data.total_messages);
-    iob->bind(BIND_SIGNATURE_INT32, &data.current_message_id);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.total_messages);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.reserved_1);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.current_message_id);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.reserved_2);
 
     // population
-    iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop500);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop1000);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop2000);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop3000);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop5000);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop10000);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop15000);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop20000);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop25000);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.reserved_7);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.population_shown.popmiles);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.reserved_3);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.reserved_4);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.reserved_5);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.reserved_6);
 
     for (int i = 0; i < MAX_MESSAGE_CATEGORIES; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.message_count[i]);
