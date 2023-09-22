@@ -3,6 +3,7 @@
 #include "building/construction/build_planner.h"
 #include "building/building_type.h"
 #include "building/house_population.h"
+#include "building/destruction.h"
 #include "city/finance.h"
 #include "city/gods.h"
 #include "city/victory.h"
@@ -36,6 +37,8 @@ static void game_cheat_victory(uint8_t*);
 static void game_cheat_cast_upset(uint8_t*);
 static void game_cheat_start_plague(uint8_t*);
 static void game_cheat_pop_milestone(uint8_t *);
+static void game_cheat_fire(uint8_t *);
+static void game_cheat_collapse(uint8_t *);
 
 using cheat_command = void(uint8_t* args);
 
@@ -53,7 +56,9 @@ static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_mo
                                                   {"startplague", game_cheat_start_plague},
                                                   {"killall", game_cheat_kill_all},
                                                   {"victory", game_cheat_victory},
-                                                  {"popmilestone", game_cheat_pop_milestone}};
+                                                  {"popmilestone", game_cheat_pop_milestone},
+                                                  {"fire", game_cheat_fire},
+                                                  {"collapse", game_cheat_collapse}};
 
 struct cheats_data_t {
     bool is_cheating;
@@ -75,7 +80,7 @@ static int parse_word(uint8_t* string, uint8_t* word) {
 }
 
 // return value is next argument index
-static int parse_integer(uint8_t* string, int* value) {
+static int parse_integer(uint8_t* string, int &value) {
     uint8_t copy[MAX_COMMAND_SIZE];
     int count = 0;
     while (*string && *string != ' ') {
@@ -84,7 +89,7 @@ static int parse_integer(uint8_t* string, int* value) {
         string++;
     }
     copy[count] = 0;
-    *value = string_to_int(copy);
+    value = string_to_int(copy);
     return count + 1;
 }
 
@@ -133,7 +138,7 @@ void game_cheat_console(bool force) {
 
 static void game_cheat_add_money(uint8_t* args) {
     int money = 0;
-    parse_integer(args, &money);
+    parse_integer(args, money);
     city_finance_process_console(money);
     window_invalidate();
 
@@ -148,12 +153,42 @@ static void game_cheat_start_invasion(uint8_t* args) {
     int attack_type = 0;
     int size = 0;
     int invasion_point = 0;
-    int index = parse_integer(args, &attack_type); // 0 barbarians, 1 caesar, 2 mars natives
-    index = parse_integer(args + index, &size);
-    parse_integer(args + index, &invasion_point);
+    int index = parse_integer(args, attack_type); // 0 barbarians, 1 caesar, 2 mars natives
+    index = parse_integer(args + index, size);
+    parse_integer(args + index, invasion_point);
     scenario_invasion_start_from_console(attack_type, size, invasion_point);
 
     city_warning_show_console((uint8_t*)"Started invasion");
+}
+
+static void game_cheat_fire(uint8_t *args) {
+    int count = 0;
+    parse_integer(args ? args : (uint8_t *)"10", count);
+
+    svector<building *, 1000> buildings;
+    buildings_valid_do([&] (building &b) {
+        buildings.push_back(&b);
+    });
+
+    int step = buildings.size() / count;
+    for (int i = 0; i < buildings.size(); i += step) {
+        building_destroy_by_fire(buildings[i]);
+    }
+}
+
+static void game_cheat_collapse(uint8_t *args) {
+    int count = 0;
+    parse_integer(args ? args : (uint8_t *)"10", count);
+
+    svector<building *, 1000> buildings;
+    buildings_valid_do([&] (building &b) {
+        buildings.push_back(&b);
+    });
+
+    int step = buildings.size() / count;
+    for (int i = 0; i < buildings.size(); i += step) {
+        building_destroy_by_collapse(buildings[i]);
+    }
 }
 
 static void game_cheat_advance_year(uint8_t* args) {
@@ -164,7 +199,7 @@ static void game_cheat_advance_year(uint8_t* args) {
 
 static void game_cheat_cast_blessing(uint8_t* args) {
     int god_id = 0;
-    parse_integer(args, &god_id);
+    parse_integer(args, god_id);
     city_god_blessing_cheat((e_god)god_id);
 
     city_warning_show_console((uint8_t*)"Casted blessing");
@@ -172,14 +207,14 @@ static void game_cheat_cast_blessing(uint8_t* args) {
 
 static void game_cheat_cast_upset(uint8_t* args) {
     int god_id = 0;
-    parse_integer(args, &god_id);
+    parse_integer(args, god_id);
     city_god_upset_cheat((e_god)god_id);
 
     city_warning_show_console((uint8_t*)"Casted upset");
 }
 
 static void game_cheat_show_tooltip(uint8_t* args) {
-    parse_integer(args, &g_cheats_data.tooltip_enabled);
+    parse_integer(args, g_cheats_data.tooltip_enabled);
 
     city_warning_show_console((uint8_t*)"Show tooltip toggled");
 }
@@ -187,7 +222,7 @@ static void game_cheat_show_tooltip(uint8_t* args) {
 static void game_cheat_start_plague(uint8_t *args) {
     int plague_people = 0;
     int total_population = 0;
-    parse_integer(args ? args : (uint8_t*)"100", &plague_people);
+    parse_integer(args ? args : (uint8_t*)"100", plague_people);
 
     buildings_valid_do([&] (building &b) {
         if (!b.house_size || !b.house_population) {
@@ -209,7 +244,7 @@ void game_cheat_parse_command(uint8_t* command) {
 
     for (auto& handle : g_cheat_commands) {
         if (stricmp((char*)command_to_call, handle.name) == 0) {
-            uint8_t *args = next_arg >= strlen((const char *)handle.name) ? (command + next_arg) : nullptr;
+            uint8_t *args = (next_arg >= strlen((const char *)command)) ? nullptr : (command + next_arg);
             handle.command(args);
         }
     }
