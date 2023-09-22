@@ -2,6 +2,7 @@
 
 #include "building/animation.h"
 #include "building/building.h"
+#include "building/model.h"
 #include "building/dock.h"
 #include "city/buildings.h"
 #include "city/floods.h"
@@ -29,16 +30,10 @@ static bool drawing_building_as_deleted(building* b) {
 
 /////// ANIMATIONS
 
-static void draw_normal_anim(int x,
-                             int y,
-                             building* b,
-                             int grid_offset,
-                             int sprite_id,
-                             int color_mask,
-                             int base_id = 0,
-                             int max_frames = 0) {
+static void draw_normal_anim(int x, int y, building* b, int grid_offset, int sprite_id, int color_mask, int base_id = 0, int max_frames = 0) {
     if (!base_id)
         base_id = map_image_at(grid_offset);
+
     int animation_offset = building_animation_offset(b, base_id, grid_offset, max_frames);
     if (animation_offset == 0)
         return;
@@ -48,6 +43,7 @@ static void draw_normal_anim(int x,
     else
         ImageDraw::img_sprite(sprite_id + animation_offset, x, y, color_mask);
 }
+
 static void draw_water_lift_anim(building* b, int x, int y, color color_mask) {
     int orientation_rel = city_view_relative_orientation(b->data.industry.orientation);
     int anim_offset = 13 * orientation_rel;
@@ -70,6 +66,7 @@ static void draw_water_lift_anim(building* b, int x, int y, color color_mask) {
 
     draw_normal_anim(x, y, b, b->tile.grid_offset(), image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
 }
+
 static void draw_fort_anim(int x, int y, building* b) {
     if (map_property_is_draw_tile(b->tile.grid_offset())) {
         int offset = 0;
@@ -157,7 +154,7 @@ static void draw_entertainment_shows_dancers(building* b, int x, int y, color co
 }
 
 static const vec2i FARM_TILE_OFFSETS_FLOODPLAIN[9] = {{60, 0}, {90, 15}, {120, 30}, {30, 15}, {60, 30}, {90, 45}, {0, 30}, {30, 45}, {60, 60}};
-static const int FARM_TILE_OFFSETS_MEADOW[5][2] = {{0, 30}, {30, 45}, {60, 60}, {90, 45}, {120, 30}};
+static const vec2i FARM_TILE_OFFSETS_MEADOW[5] = {{0, 30}, {30, 45}, {60, 60}, {90, 45}, {120, 30}};
 
 static vec2i farm_tile_coords(vec2i pos, int tile_x, int tile_y) {
     int tile_id = 3 * abs(tile_y) + abs(tile_x);
@@ -233,7 +230,7 @@ void draw_farm_crops(e_building_type type, int progress, int grid_offset, vec2i 
         for (int i = 0; i < 5; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i * 400) / 100));
 
-            ImageDraw::img_from_below(image_crops + growth_offset, tile.x + FARM_TILE_OFFSETS_MEADOW[i][0], tile.y + FARM_TILE_OFFSETS_MEADOW[i][1], color_mask);
+            ImageDraw::img_from_below(image_crops + growth_offset, tile.x + FARM_TILE_OFFSETS_MEADOW[i].x, tile.y + FARM_TILE_OFFSETS_MEADOW[i].y, color_mask);
         }
     }
 }
@@ -244,11 +241,7 @@ enum e_farm_worker_state {
     FARM_WORKER_HARVESTING
 };
 
-static void draw_farm_worker(int direction,
-                           int action,
-                           int frame_offset,
-                           vec2i coords,
-                           color color_mask = COLOR_MASK_NONE) {
+static void draw_farm_worker(int direction, int action, int frame_offset, vec2i coords, color color_mask = COLOR_MASK_NONE) {
     int action_offset = 0;
     switch (action) {
     case FARM_WORKER_TILING: // tiling
@@ -361,7 +354,7 @@ static void draw_dock_workers(building* b, int x, int y, color color_mask) {
 
 /////// ORNAMENTS
 
-static const int granary_offsets_ph[][2] = {
+static const vec2i granary_offsets_ph[] = {
   {0, 0},
   {16, 9},
   {35, 18},
@@ -378,10 +371,7 @@ static void draw_workshop_raw_material_storage(const building* b, int x, int y, 
     int amount = ceil((float)b->stored_full_amount / 100.0) - 1;
     switch (b->type) {
     case BUILDING_HUNTING_LODGE:
-        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GAMEMEAT_5) + amount,
-                               x + 61,
-                               y + 14,
-                               color_mask);
+        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GAMEMEAT_5) + amount, x + 61, y + 14, color_mask);
         break;
     case BUILDING_POTTERY_WORKSHOP:
         //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_CLAY_2) + amount, x + 65, y + 3,
@@ -449,8 +439,8 @@ static void draw_granary_stores(const building* b, int x, int y, color color_mas
                     spots_filled = 1;
                 for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
                     // draw sprite on each granary "spot"
-                    spot_x = granary_offsets_ph[spot][0];
-                    spot_y = granary_offsets_ph[spot][1];
+                    spot_x = granary_offsets_ph[spot].x;
+                    spot_y = granary_offsets_ph[spot].y;
                     ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 2 + r, x + 110 + spot_x, y - 74 + spot_y, color_mask);
                 }
                 last_spot_filled += spots_filled;
@@ -533,9 +523,14 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
         draw_normal_anim(x, y, b, grid_offset, image_id, color_mask);
         break;
 
-    case BUILDING_GRANARY:
-        draw_granary_stores(b, x, y, color_mask);
-        draw_normal_anim(x + 114, y + 2, b, grid_offset, image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, color_mask);
+    case BUILDING_GRANARY: {
+            draw_granary_stores(b, x, y, color_mask);
+            int max_workers = model_get_building(BUILDING_GRANARY)->laborers;
+            draw_normal_anim(x + 114, y + 2, b, grid_offset, image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, color_mask);
+            if (b->num_workers > max_workers / 2) {
+                draw_normal_anim(x + 96, y - 4, b, grid_offset, image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, color_mask);
+            }
+        }
         break;
 
     case BUILDING_STORAGE_YARD:
