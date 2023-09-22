@@ -1,11 +1,9 @@
-#ifndef FIGURETYPE_MIGRANT_H
-#define FIGURETYPE_MIGRANT_H
+#pragma once
 
-#include "building/building.h"
-#include "figure/figure.h"
+#include "grid/point.h"
+
+class building;
 
 void figure_create_immigrant(building* house, int num_people);
 void figure_create_emigrant(building* house, int num_people);
-void figure_create_homeless(int x, int y, int num_people);
-
-#endif // FIGURETYPE_MIGRANT_H
+void figure_create_homeless(tile2i tile, int num_people);

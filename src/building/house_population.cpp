@@ -13,6 +13,7 @@
 #include "core/profiler.h"
 #include "core/game_environment.h"
 #include "figuretype/migrant.h"
+#include "figure/figure.h"
 
 int house_population_add_to_city(int num_people) {
     int added = 0;
@@ -236,12 +237,13 @@ void house_population_evict_overcrowded(void) {
         building* b = building_get(items[i]);
         if (b->house_population_room < 0) {
             int num_people_to_evict = -b->house_population_room;
-            figure_create_homeless(b->tile.x(), b->tile.y(), num_people_to_evict);
-            if (num_people_to_evict < b->house_population)
+            figure_create_homeless(b->tile, num_people_to_evict);
+            if (num_people_to_evict < b->house_population) {
                 b->house_population -= num_people_to_evict;
-            else
+            } else {
                 // house has been removed
                 b->state = BUILDING_STATE_UNDO;
+            }
         }
     }
 }

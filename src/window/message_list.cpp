@@ -158,7 +158,7 @@ static void draw_messages(int total_messages) {
             debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_11a_i8, c);
             ; // FF FF
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_12, c);
+            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->background_img, c);
             ; // 00 00
 
             continue;
