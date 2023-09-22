@@ -1,5 +1,6 @@
 #include "house.h"
 
+#include "building/building.h"
 #include "core/game_environment.h"
 #include "game/resource.h"
 #include "game/tutorial.h"

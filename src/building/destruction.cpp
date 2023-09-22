@@ -114,7 +114,7 @@ static void destroy_linked_parts(building* b, bool on_fire) {
         if (on_fire) {
             destroy_on_fire(part, false);
         } else {
-            map_building_tiles_set_rubble(part_id, part->tile.x(), part->tile.y(), part->size);
+            map_building_tiles_set_rubble(part_id, part->tile, part->size);
             part->state = BUILDING_STATE_RUBBLE;
         }
     }
@@ -129,7 +129,7 @@ static void destroy_linked_parts(building* b, bool on_fire) {
         if (on_fire) {
             destroy_on_fire(part, false);
         } else {
-            map_building_tiles_set_rubble(part->id, part->tile.x(), part->tile.y(), part->size);
+            map_building_tiles_set_rubble(part->id, part->tile, part->size);
             part->state = BUILDING_STATE_RUBBLE;
         }
     }
@@ -138,8 +138,8 @@ static void destroy_linked_parts(building* b, bool on_fire) {
 void building_destroy_by_collapse(building* b) {
     b = b->main();
     b->state = BUILDING_STATE_RUBBLE;
-    map_building_tiles_set_rubble(b->id, b->tile.x(), b->tile.y(), b->size);
-    figure_create_explosion_cloud(b->tile.x(), b->tile.y(), b->size);
+    map_building_tiles_set_rubble(b->id, b->tile, b->size);
+    figure_create_explosion_cloud(b->tile, b->size);
     destroy_linked_parts(b, false);
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
@@ -147,15 +147,14 @@ void building_destroy_by_collapse(building* b) {
 void building_destroy_by_poof(building* b, bool clouds) {
     b = b->main();
     if (clouds) {
-        figure_create_explosion_cloud(b->tile.x(), b->tile.y(), b->size);
+        figure_create_explosion_cloud(b->tile, b->size);
     }
 
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 
     do {
         b->state = BUILDING_STATE_UNUSED;
-        map_tiles_update_region_empty_land(
-          true, b->tile.x(), b->tile.y(), b->tile.x() + b->size - 1, b->tile.y() + b->size - 1);
+        map_tiles_update_region_empty_land(true, b->tile.x(), b->tile.y(), b->tile.x() + b->size - 1, b->tile.y() + b->size - 1);
         if (b->next_part_building_id < 1) {
             return;
         }
@@ -190,7 +189,7 @@ int building_destroy_first_of_type(e_building_type type) {
         int grid_offset = b->tile.grid_offset();
         game_undo_disable();
         b->state = BUILDING_STATE_RUBBLE;
-        map_building_tiles_set_rubble(i, b->tile.x(), b->tile.y(), b->size);
+        map_building_tiles_set_rubble(i, b->tile, b->size);
         sound_effect_play(SOUND_EFFECT_EXPLOSION);
         map_routing_update_land();
         return grid_offset;
@@ -224,10 +223,10 @@ void building_destroy_increase_enemy_damage(int grid_offset, int max_damage) {
     }
 }
 
-void building_destroy_by_enemy(map_point point) {
-    int grid_offset = point.grid_offset();
-    int x = point.x();
-    int y = point.y();
+void building_destroy_by_enemy(tile2i tile) {
+    int grid_offset = tile.grid_offset();
+    int x = tile.x();
+    int y = tile.y();
     int building_id = map_building_at(grid_offset);
     if (building_id > 0) {
         building* b = building_get(building_id);
@@ -237,10 +236,10 @@ void building_destroy_by_enemy(map_point point) {
         }
     } else {
         if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
-            figure_kill_tower_sentries_at(point);
+            figure_kill_tower_sentries_at(tile);
         }
 
-        map_building_tiles_set_rubble(0, x, y, 1);
+        map_building_tiles_set_rubble(0, tile, 1);
     }
     figure_tower_sentry_reroute();
     map_tiles_update_area_walls(x, y, 3);

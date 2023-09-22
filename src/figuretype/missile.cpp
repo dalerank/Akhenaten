@@ -37,22 +37,16 @@ static const vec2i CLOUD_DIRECTION[] = {{0, -6},
 
 static const int CLOUD_IMAGE_OFFSETS[] = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6, 7};
 
-void figure_create_explosion_cloud(int x, int y, int size) {
+void figure_create_explosion_cloud(tile2i tile, int size) {
     int tile_offset = CLOUD_TILE_OFFSETS[size];
     int cc_offset = CLOUD_CC_OFFSETS[size];
     for (int i = 0; i < 16; i++) {
-        figure* f = figure_create(FIGURE_EXPLOSION, map_point(x + tile_offset, y + tile_offset), DIR_0_TOP_RIGHT);
+        figure* f = figure_create(FIGURE_EXPLOSION, tile.shifted(tile_offset, tile_offset), DIR_0_TOP_RIGHT);
         if (f->id) {
             f->cc_coords.x += cc_offset;
             f->cc_coords.y += cc_offset;
             f->destination_tile.shift(CLOUD_DIRECTION[i].x, CLOUD_DIRECTION[i].y);
-            //            f->destination_tile.x() += CLOUD_DIRECTION[i].x;
-            //            f->destination_tile.y() += CLOUD_DIRECTION[i].y;
-            f->set_cross_country_direction(f->cc_coords.x,
-                                           f->cc_coords.y,
-                                           15 * f->destination_tile.x() + cc_offset,
-                                           15 * f->destination_tile.y() + cc_offset,
-                                           0);
+            f->set_cross_country_direction(f->cc_coords.x, f->cc_coords.y, 15 * f->destination_tile.x() + cc_offset, 15 * f->destination_tile.y() + cc_offset, 0);
             f->speed_multiplier = CLOUD_SPEED[i];
         }
     }

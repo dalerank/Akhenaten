@@ -18,4 +18,4 @@ void building_destroy_last_placed(void);
 
 void building_destroy_increase_enemy_damage(int grid_offset, int max_damage);
 
-void building_destroy_by_enemy(map_point point);
+void building_destroy_by_enemy(tile2i point);

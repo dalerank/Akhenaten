@@ -36,7 +36,7 @@ figure *figure_take_from_pool () {
     return it != g_figure_data.figures.end() ? *it : nullptr;
 }
 
-figure* figure_create(e_figure_type type, map_point tile, int dir) {
+figure* figure_create(e_figure_type type, tile2i tile, int dir) {
     figure *f = figure_take_from_pool();
     if (!f) {
         return figure_get(0);

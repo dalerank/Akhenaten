@@ -523,20 +523,22 @@ void map_building_tiles_remove(int building_id, int x, int y) {
     map_tiles_update_region_meadow(x - 2, y - 2, x + size + 2, y + size + 2);
     map_tiles_update_region_rubble(x, y, x + size, y + size);
 }
-void map_building_tiles_set_rubble(int building_id, int x, int y, int size) {
-    if (!map_grid_is_inside(x, y, size))
+void map_building_tiles_set_rubble(int building_id, tile2i tile, int size) {
+    if (!map_grid_is_inside(tile.x(), tile.y(), size)) {
         return;
+    }
     building* b = building_get(building_id);
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            int grid_offset = MAP_OFFSET(x + dx, y + dy);
+            int grid_offset = tile.shifted(dx, dy).grid_offset();
             if (map_building_at(grid_offset) != building_id)
                 continue;
 
-            if (building_id && building_at(grid_offset)->type != BUILDING_BURNING_RUIN)
+            if (building_id && building_at(grid_offset)->type != BUILDING_BURNING_RUIN) {
                 map_set_rubble_building_type(grid_offset, b->type);
-            else if (!building_id && map_terrain_get(grid_offset) & TERRAIN_WALL)
+            } else if (!building_id && map_terrain_get(grid_offset) & TERRAIN_WALL) {
                 map_set_rubble_building_type(grid_offset, BUILDING_WALL);
+            }
 
             map_property_clear_constructing(grid_offset);
             map_property_set_multi_tile_size(grid_offset, 1);
@@ -547,12 +549,11 @@ void map_building_tiles_set_rubble(int building_id, int x, int y, int size) {
             map_property_set_multi_tile_xy(grid_offset, 0, 0, 1);
             if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 map_terrain_set(grid_offset, TERRAIN_WATER); // clear other flags
-                map_tiles_set_water(MAP_OFFSET(x + dx, y + dy));
+                map_tiles_set_water(grid_offset);
             } else {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 map_terrain_add(grid_offset, TERRAIN_RUBBLE);
-                map_image_set(grid_offset,
-                              image_id_from_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(grid_offset) & 7));
+                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(grid_offset) & 7));
             }
         }
     }
