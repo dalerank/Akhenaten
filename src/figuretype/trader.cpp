@@ -323,10 +323,11 @@ int figure::get_closest_storageyard(map_point tile, int city_id, int distance_fr
     if (!min_building)
         return 0;
 
-    if (min_building->has_road_access == 1)
+    if (min_building->has_road_access == 1) {
         map_point_store_result(min_building->tile.x(), min_building->tile.y(), warehouse);
-    else if (!map_has_road_access(min_building->tile.x(), min_building->tile.y(), 3, warehouse))
+    } else if (!map_has_road_access(min_building->tile, 3, warehouse)) {
         return 0;
+    }
 
     return min_building->id;
 }

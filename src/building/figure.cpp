@@ -465,7 +465,7 @@ void building::spawn_figure_school() {
     if (has_figure_of_type(0, FIGURE_SCHOOL_CHILD))
         return;
     map_point road;
-    if (map_has_road_access(tile.x(), tile.y(), size, &road)) {
+    if (map_has_road_access(tile, size, &road)) {
         common_spawn_labor_seeker(50);
         int spawn_delay = figure_spawn_timer();
         if (spawn_delay == -1)
@@ -924,7 +924,7 @@ void building::spawn_figure_storageyard() {
 void building::spawn_figure_granary() {
     check_labor_problem();
     map_point road;
-    if (map_has_road_access(tile.x(), tile.y(), size, &road)) { // map_has_road_access_granary(x, y, &road)
+    if (map_has_road_access(tile, size, &road)) { // map_has_road_access_granary(x, y, &road)
         common_spawn_labor_seeker(100);
 
         if (has_figure_of_type(0, FIGURE_STORAGE_YARD_DELIVERCART)) {
@@ -1090,12 +1090,14 @@ void building::spawn_figure_native_meeting() {
 void building::spawn_figure_tower() {
     check_labor_problem();
     map_point road;
-    if (map_has_road_access(tile.x(), tile.y(), size, &road)) {
+    if (map_has_road_access(tile, size, &road)) {
         common_spawn_labor_seeker(50);
         if (num_workers <= 0)
             return;
+
         if (has_figure(0) && !has_figure(3)) // has sentry but no ballista -> create
             create_figure_generic(FIGURE_BALLISTA, FIGURE_ACTION_180_BALLISTA_CREATED, 3, DIR_0_TOP_RIGHT);
+
         if (!has_figure(0))
             building_barracks_request_tower_sentry();
     }
@@ -1174,11 +1176,13 @@ void building::update_road_access() {
     //    map_point road;
     switch (type) {
     case BUILDING_STORAGE_YARD:
-        has_road_access = map_has_road_access(tile.x(), tile.y(), 3, &road_access);
+        has_road_access = map_has_road_access(tile, 3, &road_access);
         break;
+
     case BUILDING_BURNING_RUIN:
         has_road_access = burning_ruin_can_be_accessed(tile.x(), tile.y(), &road_access);
         break;
+
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
@@ -1189,10 +1193,11 @@ void building::update_road_access() {
             has_road_access = map_has_road_access_temple_complex(tile.x(), tile.y(), orientation, false, &road_access);
         }
         break;
+
     default:
         if (id == 17)
             int a = 4;
-        has_road_access = map_has_road_access(tile.x(), tile.y(), size, &road_access);
+        has_road_access = map_has_road_access(tile, size, &road_access);
         break;
     }
     // TODO: Temple Complexes

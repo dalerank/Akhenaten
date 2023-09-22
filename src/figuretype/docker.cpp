@@ -139,10 +139,11 @@ static int get_closest_warehouse_for_import(vec2i pos,
         return 0;
 
     building* min = building_get(min_building_id);
-    if (min->has_road_access == 1)
+    if (min->has_road_access == 1) {
         map_point_store_result(min->tile.x(), min->tile.y(), warehouse);
-    else if (!map_has_road_access(min->tile.x(), min->tile.y(), 3, warehouse))
+    } else if (!map_has_road_access(min->tile, 3, warehouse)) {
         return 0;
+    }
 
     import_resource = resource;
     return min_building_id;
@@ -205,10 +206,11 @@ static int get_closest_warehouse_for_export(vec2i pos,
         return 0;
 
     building* min = building_get(min_building_id);
-    if (min->has_road_access == 1)
+    if (min->has_road_access == 1) {
         map_point_store_result(min->tile.x(), min->tile.y(), warehouse);
-    else if (!map_has_road_access(min->tile.x(), min->tile.y(), 3, warehouse))
+    } else if (!map_has_road_access(min->tile, 3, warehouse)) {
         return 0;
+    }
 
     export_resource = resource;
     return min_building_id;

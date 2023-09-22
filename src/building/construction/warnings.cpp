@@ -26,7 +26,7 @@ static void show(int warning) {
     g_has_warning = true;
 }
 
-static void check_road_access(int type, int x, int y, int size, int orientation) {
+static void check_road_access(int type, tile2i tile, int size, int orientation) {
     switch (type) {
     case BUILDING_NONE:
     case BUILDING_CLEAR_LAND:
@@ -52,19 +52,21 @@ static void check_road_access(int type, int x, int y, int size, int orientation)
     }
 
     bool has_road = false;
-    if (map_has_road_access(x, y, size, 0))
+    if (map_has_road_access(tile, size, 0)) {
         has_road = true;
-    else if (type == BUILDING_STORAGE_YARD && map_has_road_access(x, y, 3, 0))
+    } else if (type == BUILDING_STORAGE_YARD && map_has_road_access(tile, 3, 0)) {
         has_road = true;
-    //    else if (type == BUILDING_SENET_HOUSE && map_has_road_access_hippodrome(x, y, 0))
-    //        has_road = true;
-    else if (building_is_large_temple(type) && map_has_road_access_temple_complex(x, y, orientation, true, nullptr))
+        //    else if (type == BUILDING_SENET_HOUSE && map_has_road_access_hippodrome(x, y, 0))
+        //        has_road = true;
+    } else if (building_is_large_temple(type) && map_has_road_access_temple_complex(tile.x(), tile.y(), orientation, true, nullptr)) {
         has_road = true;
-    //    else if (type == BUILDING_ORACLE && map_closest_road_within_radius(x, y, size, 2, 0, 0))
-    //        has_road = true;
+        //    else if (type == BUILDING_ORACLE && map_closest_road_within_radius(x, y, size, 2, 0, 0))
+        //        has_road = true;
+    }
 
-    if (!has_road)
+    if (!has_road) {
         show(WARNING_ROAD_ACCESS_NEEDED);
+    }
 }
 
 static void check_water(int type, int x, int y) {
@@ -221,7 +223,7 @@ static void check_clay_access(int type) {
     }
 }
 
-void building_construction_warning_generic_checks(int type, int x, int y, int size, int orientation) {
+void building_construction_warning_generic_checks(int type, tile2i tile, int size, int orientation) {
     building_construction_warning_check_food_stocks(type);
     check_workers(type);
     check_market(type);
@@ -233,8 +235,8 @@ void building_construction_warning_generic_checks(int type, int x, int y, int si
     check_barracks(type);
     check_weapons_access(type);
 
-    check_wall(type, x, y, size);
-    check_water(type, x, y);
+    check_wall(type, tile.x(), tile.y(), size);
+    check_water(type, tile.x(), tile.y());
 
     check_iron_access(type);
     check_vines_access(type);
@@ -242,7 +244,7 @@ void building_construction_warning_generic_checks(int type, int x, int y, int si
     check_timber_access(type);
     check_clay_access(type);
 
-    check_road_access(type, x, y, size, orientation);
+    check_road_access(type, tile, size, orientation);
 }
 
 void building_construction_warning_check_food_stocks(int type) {

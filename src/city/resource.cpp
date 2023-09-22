@@ -255,8 +255,7 @@ static void calculate_available_food(void) {
             continue;
 
         b->has_road_access = 0;
-        if (map_has_road_access(
-              b->tile.x(), b->tile.y(), b->size, 0)) { // map_has_road_access_granary(b->tile.x(), b->tile.y(), 0)
+        if (map_has_road_access(b->tile, b->size, 0)) { // map_has_road_access_granary(b->tile.x(), b->tile.y(), 0)
             b->has_road_access = 1;
             int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
             if (pct_workers < 100)
@@ -266,6 +265,7 @@ static void calculate_available_food(void) {
             for (int r = RESOURCE_MIN_FOOD; r < RESOURCES_FOODS_MAX; r++) {
                 amount_stored += b->data.granary.resource_stored[r];
             }
+
             if (pct_workers < 50) {
                 city_data.resource.granaries.not_operating++;
                 if (amount_stored > 0)

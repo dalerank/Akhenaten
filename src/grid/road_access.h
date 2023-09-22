@@ -3,7 +3,7 @@
 #include "building/roadblock.h"
 #include "grid/point.h"
 
-bool map_has_road_access(int x, int y, int size, map_point* road);
+bool map_has_road_access(tile2i tile, int size, map_point* road);
 bool burning_ruin_can_be_accessed(int x, int y, map_point* point);
 
 bool map_has_road_access_rotation(int rotation, int x, int y, int size, map_point* road);

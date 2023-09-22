@@ -35,7 +35,7 @@ int building_get_barracks_for_weapon(map_point tile,
         if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_RECRUITER)
             continue;
 
-        if (!map_has_road_access(b->tile.x(), b->tile.y(), b->size, 0))
+        if (!map_has_road_access(b->tile, b->size, 0))
             continue;
 
         if (b->distance_from_entry <= 0 || b->road_network_id != road_network_id)
@@ -122,16 +122,18 @@ int building::barracks_create_soldier() {
         if (academy_id) {
             map_point road;
             building* academy = building_get(academy_id);
-            if (map_has_road_access(academy->tile.x(), academy->tile.y(), academy->size, &road)) {
+            if (map_has_road_access(academy->tile, academy->size, &road)) {
                 f->action_state = FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY;
                 f->destination_tile = road;
                 //                f->destination_x = road.x();
                 //                f->destination_y = road.y();
                 //                f->destination_grid_offset = MAP_OFFSET(f->destination_x, f->destination_y);
-            } else
+            } else {
                 f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
-        } else
+            }
+        } else {
             f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
+        }
     }
     formation_calculate_figures();
     return formation_id ? 1 : 0;
@@ -155,12 +157,13 @@ bool building::barracks_create_tower_sentry() {
     figure* f = figure_create(FIGURE_TOWER_SENTRY, road_access, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
     map_point road;
-    if (map_has_road_access(tower->tile.x(), tower->tile.y(), tower->size, &road)) {
+    if (map_has_road_access(tower->tile, tower->size, &road)) {
         f->destination_tile = road;
         //        f->destination_x = road.x();
         //        f->destination_y = road.y();
-    } else
+    } else {
         f->poof();
+    }
     tower->set_figure(0, f->id);
     f->set_home(tower->id);
     return true;

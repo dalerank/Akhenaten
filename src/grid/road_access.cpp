@@ -43,9 +43,10 @@ void map_road_find_minimum_tile_xy(int x, int y, int sizex, int sizey, int* min_
     }
 }
 
-bool map_has_road_access(int x, int y, int size, map_point* road) {
-    return map_has_road_access_rotation(0, x, y, size, road);
+bool map_has_road_access(tile2i tile, int size, map_point* road) {
+    return map_has_road_access_rotation(0, tile.x(), tile.y(), size, road);
 }
+
 bool burning_ruin_can_be_accessed(int x, int y, map_point* point) {
     int base_offset = MAP_OFFSET(x, y);
     for (const int* tile_delta = map_grid_adjacent_offsets(1); *tile_delta; tile_delta++) {

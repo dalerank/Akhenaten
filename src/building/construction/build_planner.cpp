@@ -1840,7 +1840,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
     // final generic building warnings - these are in another file
     // TODO: bring these warnings over.
-    building_construction_warning_generic_checks(build_type, end.x(), end.y(), size.x, relative_orientation);
+    building_construction_warning_generic_checks(build_type, end, size.x, relative_orientation);
     bool should_recalc_ferry_routes = false;
 
     // update city building info with newly created
