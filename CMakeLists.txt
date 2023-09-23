@@ -474,13 +474,6 @@ if(UNIX AND NOT APPLE)
     install(FILES "res/ozymandias_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.dalerank.ozymandias.png")
 endif()
 
-add_custom_command(
-    TARGET ${GAME}
-    PRE_BUILD
-    COMMAND ${CMAKE_COMMAND}
-    ARGS -E copy ${CMAKE_BINARY_DIR}/ext/incbin/${GAME_BUILD_TYPE}/incbin.exe "${PROJECT_SOURCE_DIR}/bin_x64"
-)
-
 if (MSVC)
     set(BINARY_FILES "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.exe")
 
