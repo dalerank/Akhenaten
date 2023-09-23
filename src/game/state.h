@@ -1,17 +1,19 @@
 #pragma once
 
-void game_state_init(void);
+enum e_overlay;
 
-bool game_state_is_paused(void);
+void game_state_init();
 
-void game_state_toggle_paused(void);
+bool game_state_is_paused();
 
-void game_state_unpause(void);
+void game_state_toggle_paused();
 
-int game_state_overlay(void);
+void game_state_unpause();
 
-void game_state_reset_overlay(void);
+int game_state_overlay();
 
-void game_state_toggle_overlay(void);
+void game_state_reset_overlay();
 
-void game_state_set_overlay(int overlay);
+void game_state_toggle_overlay();
+
+void game_state_set_overlay(e_overlay overlay);

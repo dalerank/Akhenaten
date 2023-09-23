@@ -25,6 +25,7 @@
 #include "io/io_buffer.h"
 #include "menu.h"
 #include "monuments.h"
+#include "overlays/city_overlay.h"
 
 #include <string.h>
 
@@ -400,6 +401,16 @@ void building::clear_related_data() {
 
     if (type == BUILDING_FESTIVAL_SQUARE)
         city_buildings_remove_festival_square();
+}
+
+e_overlay building::get_overlay() const {
+    switch (type) {
+        case BUILDING_SHRINE_OSIRIS:
+        case BUILDING_TEMPLE_OSIRIS:
+             return OVERLAY_RELIGION_OSIRIS;
+    }
+
+    return OVERLAY_NONE;
 }
 
 void building_clear_all(void) {

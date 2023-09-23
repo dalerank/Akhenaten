@@ -14,7 +14,11 @@ struct state_data_t {
     int previous_overlay;
 };
 
-state_data_t g_state_data = {false, OVERLAY_NONE, OVERLAY_NONE};
+state_data_t g_state_data = {
+    false,
+    OVERLAY_NONE,
+    OVERLAY_NONE
+};
 
 void game_state_init(void) {
     city_victory_reset();
@@ -40,23 +44,23 @@ void game_state_toggle_paused(void) {
     g_state_data.paused = g_state_data.paused ? 0 : 1;
 }
 
-int game_state_overlay(void) {
+int game_state_overlay() {
     return g_state_data.current_overlay;
 }
 
-void game_state_reset_overlay(void) {
+void game_state_reset_overlay() {
     g_state_data.current_overlay = OVERLAY_NONE;
     g_state_data.previous_overlay = OVERLAY_NONE;
 }
 
-void game_state_toggle_overlay(void) {
+void game_state_toggle_overlay() {
     int previous_overlay = g_state_data.previous_overlay;
     g_state_data.previous_overlay = g_state_data.current_overlay;
     g_state_data.current_overlay = previous_overlay;
     map_clear_highlights();
 }
 
-void game_state_set_overlay(int overlay) {
+void game_state_set_overlay(e_overlay overlay) {
     if (overlay == OVERLAY_NONE) {
         g_state_data.previous_overlay = g_state_data.current_overlay;
     } else {

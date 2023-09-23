@@ -108,12 +108,13 @@ static void exit_military_command(void) {
     if (window_is(WINDOW_CITY_MILITARY))
         window_city_show();
 }
-static void show_overlay(int overlay) {
+static void show_overlay(e_overlay overlay) {
     exit_military_command();
-    if (game_state_overlay() == overlay)
+    if (game_state_overlay() == overlay) {
         game_state_set_overlay(OVERLAY_NONE);
-    else
+    } else {
         game_state_set_overlay(overlay);
+    }
 
     select_city_overlay();
     window_invalidate();
@@ -162,8 +163,10 @@ static void handle_hotkeys(const hotkeys* h) {
     if (h->increase_game_speed) {
         setting_increase_game_speed();
     }
-    if (h->show_overlay)
-        show_overlay(h->show_overlay);
+
+    if (h->show_overlay) {
+        show_overlay((e_overlay)h->show_overlay);
+    }
 
     if (h->toggle_overlay) {
         exit_military_command();
@@ -171,8 +174,10 @@ static void handle_hotkeys(const hotkeys* h) {
         select_city_overlay();
         window_invalidate();
     }
-    if (h->show_advisor)
+
+    if (h->show_advisor) {
         window_advisors_show_advisor((e_advisor)h->show_advisor);
+    }
 
     if (h->cycle_legion)
         cycle_legion();

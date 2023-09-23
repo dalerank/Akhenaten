@@ -3,6 +3,8 @@
 static const int MIN_Y_POSITION = 32;
 static const int MARGIN_POSITION = 16;
 
+enum e_overlay;
+
 enum building_info_type {
     BUILDING_INFO_NONE = 0,
     BUILDING_INFO_TERRAIN = 1,
@@ -62,6 +64,7 @@ struct building_info_context {
     int warehouse_space_text;
     building_info_type type;
     terrain_info_type terrain_type;
+    e_overlay show_overlay;
     bool can_go_to_advisor;
     int rubble_building_type;
     int storage_show_special_orders;

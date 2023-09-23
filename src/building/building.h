@@ -14,6 +14,8 @@
 class figure;
 class io_buffer;
 
+enum e_overlay;
+
 constexpr uint32_t MAX_BUILDINGS = 4000;
 constexpr uint32_t MAX_FIGURES_PER_BUILDING = 8;
 
@@ -241,6 +243,8 @@ public:
     bool is_military();
 
     void clear_related_data();
+
+    e_overlay get_overlay() const;
 
     const int get_figureID(int i) const {
         return figure_ids_array[i];

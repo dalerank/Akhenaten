@@ -265,7 +265,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 static void button_menu_item(int index, int param2) {
     auto& data = g_overlay_menu_data;
     if (MENU_ID_TO_SUBMENU_ID[index] == 0) {
-        game_state_set_overlay(MENU_ID_TO_OVERLAY[index]);
+        game_state_set_overlay((e_overlay)MENU_ID_TO_OVERLAY[index]);
         close_submenu();
         window_city_show();
     } else {
@@ -281,7 +281,7 @@ static void button_submenu_item(int index, int param2) {
     auto& data = g_overlay_menu_data;
     int overlay = submenu_id_to_overlay[data.selected_submenu][index];
     if (overlay) {
-        game_state_set_overlay(overlay);
+        game_state_set_overlay((e_overlay)overlay);
     }
 
     close_submenu();

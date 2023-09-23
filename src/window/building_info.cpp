@@ -8,7 +8,9 @@
 #include "building/storage_yard.h"
 #include "city/map.h"
 #include "city/resource.h"
+#include "overlays/city_overlay.h"
 #include "core/calc.h"
+#include "game/state.h"
 #include "figure/figure.h"
 #include "figure/formation_legion.h"
 #include "figure/phrase.h"
@@ -45,13 +47,12 @@
 #include "window/city.h"
 #include "window/message_dialog.h"
 
-// #define OFFSET(x,y) (x + GRID_SIZE_PH * y)
-
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_advisor(int advisor, int param2);
 static void button_mothball(int mothball, int param2);
 static void button_debugpath(int debug, int param2);
+static void button_overlay(int overlay, int param2);
 
 static image_button image_buttons_help_close[] = {
   {14, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
@@ -70,11 +71,17 @@ static generic_button generic_button_figures[] = {
   {400, 3, 24, 24, button_debugpath, button_none, 0, 0}
 };
 
+static generic_button generic_button_layer[] = {
+  {375, 3, 24, 24, button_overlay, button_none, 0, 0}
+};
+
 static building_info_context g_building_info_context;
+
 struct focus_button_id {
     int image_button_id = 0;
     int generic_button_id = 0;
-    int debug_path_id = 0;
+    int debug_path_button_id = 0;
+    int overlay_button_id = 0;
 };
 
 focus_button_id g_building_info_focus;
@@ -195,7 +202,7 @@ static void get_tooltip(tooltip_context* c) {
             group_id = 54;
         }
 
-    } else if (g_building_info_focus.debug_path_id) {
+    } else if (g_building_info_focus.debug_path_button_id) {
         ;
 
     } else if (context.type == BUILDING_INFO_LEGION) {
@@ -287,6 +294,8 @@ static void init(map_point tile) {
     context.type = BUILDING_INFO_TERRAIN;
     context.figure.drawn = 0;
     context.figure.draw_debug_path = 0;
+    context.show_overlay = OVERLAY_NONE;
+
     if (!context.building_id && map_sprite_animation_at(grid_offset) > 0) {
         if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
             context.terrain_type = TERRAIN_INFO_BRIDGE;
@@ -368,6 +377,7 @@ static void init(map_point tile) {
         case BUILDING_MENU_FORTS:
             context.formation_id = b->formation_id;
             break;
+
         case BUILDING_STORAGE_YARD_SPACE:
         case BUILDING_SENET_HOUSE:
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
@@ -378,10 +388,12 @@ static void init(map_point tile) {
             b = b->main();
             context.building_id = b->id;
             break;
+
         case BUILDING_RECRUITER:
             context.barracks_soldiers_requested = formation_legion_recruits_needed();
             context.barracks_soldiers_requested += building_barracks_has_tower_sentry_request();
             break;
+
         default:
             if (b->house_size) {
                 context.worst_desirability_building_id = building_house_determine_worst_desirability_building(b);
@@ -389,6 +401,7 @@ static void init(map_point tile) {
             }
             break;
         }
+
         context.has_road_access = 0;
         switch (b->type) {
             //            case BUILDING_GRANARY:
@@ -418,6 +431,7 @@ static void init(map_point tile) {
             //                context.warehouse_space_text = building_warehouse_get_space_info(b);
             //                break;
         default:
+            context.show_overlay = b->get_overlay();
             if (b->has_road_access)
                 context.has_road_access = 1;
             //                if (map_has_road_access(b->tile.x(), b->tile.y(), b->size, 0))
@@ -542,13 +556,20 @@ static void draw_mothball_button(int x, int y, int focused) {
     }
 }
 
+static void draw_overlay_button(int x, int y, int focused) {
+    auto &context = g_building_info_context;
+    button_border_draw(x, y, 20, 20, focused ? 1 : 0);
+
+    if (context.show_overlay != OVERLAY_NONE) {
+        text_draw_centered((uint8_t *)(game_state_overlay() != context.show_overlay ? "V" : "v"), x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    }
+}
+
 static void draw_debugpath_button(int x, int y, int focused) {
     auto &context = g_building_info_context;
     button_border_draw(x, y, 20, 20, focused ? 1 : 0);
     figure* f = figure_get(context.figure.figure_ids[0]);
-    if (f->draw_debug_mode) {
-        text_draw_centered((uint8_t *)"p", x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    }
+    text_draw_centered((uint8_t *)(f->draw_debug_mode ? "P" : "p"), x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 }
 
 static void draw_refresh_background() {
@@ -801,7 +822,11 @@ static void draw_foreground() {
     }
 
     if (context.figure.draw_debug_path) {
-        draw_debugpath_button(context.x_offset + 400, context.y_offset + 3 + 16 * context.height_blocks - 40, g_building_info_focus.debug_path_id);
+        draw_debugpath_button(context.x_offset + 400, context.y_offset + 3 + 16 * context.height_blocks - 40, g_building_info_focus.debug_path_button_id);
+    }
+
+    if (context.show_overlay != OVERLAY_NONE) {
+        draw_overlay_button(context.x_offset + 375, context.y_offset + 3 + 16 * context.height_blocks - 40, g_building_info_focus.overlay_button_id);
     }
 }
 
@@ -880,7 +905,11 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 
     if (context.figure.draw_debug_path) {
-        button_id |= generic_buttons_handle_mouse(m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, generic_button_figures, 1, &g_building_info_focus.debug_path_id);
+        button_id |= generic_buttons_handle_mouse(m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, generic_button_figures, 1, &g_building_info_focus.debug_path_button_id);
+    }
+
+    if (context.show_overlay != OVERLAY_NONE) {
+        button_id |= generic_buttons_handle_mouse(m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, generic_button_layer, 1, &g_building_info_focus.overlay_button_id);
     }
 
     if (!button_id && input_go_back_requested(m, h)) {
@@ -931,6 +960,16 @@ static void button_debugpath(int debug, int param2) {
     auto &context = g_building_info_context;
     figure* f = figure_get(context.figure.figure_ids[0]);
     f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
+    window_invalidate();
+}
+
+static void button_overlay(int debug, int param2) {
+    auto &context = g_building_info_context;
+    if (game_state_overlay() != context.show_overlay) {
+        game_state_set_overlay(context.show_overlay);
+    } else {
+        game_state_reset_overlay();
+    }
     window_invalidate();
 }
 

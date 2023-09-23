@@ -103,7 +103,7 @@ static const city_overlay* set_city_overlay(void) {
     }
 }
 
-const city_overlay* get_city_overlay(void) {
+const city_overlay* get_city_overlay() {
     return g_city_overlay;
 }
 
