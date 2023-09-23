@@ -1,8 +1,5 @@
 #pragma once
 
-#include "grid/point.h"
-
-void figure_create_explosion_cloud(tile2i tile, int size);
 
 // void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, int type);
 

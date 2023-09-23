@@ -2,7 +2,7 @@
 
 #include "grid/point.h"
 
-struct building;
+class building;
 
 void map_building_tiles_add(int building_id, map_point tile, int size, int image_id, int terrain);
 void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_offset, int progress);

@@ -5,7 +5,7 @@
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
-#include "figuretype/missile.h"
+#include "figure/figure.h"
 #include "game/time.h"
 #include "grid/building.h"
 #include "grid/grid.h"
@@ -15,7 +15,7 @@
 #include "scenario/scenario_data.h"
 #include "sound/effect.h"
 
-static struct {
+struct eathquake_data_t {
     int game_year;
     int month;
     int state;
@@ -27,9 +27,12 @@ static struct {
         int x;
         int y;
     } expand[4];
-} data;
+};
+
+eathquake_data_t g_eathquake_data;
 
 void scenario_earthquake_init(void) {
+    auto &data = g_eathquake_data;
     data.game_year = g_scenario_data.start_year + g_scenario_data.earthquake.year;
     data.month = 2 + (random_byte() & 7);
     switch (g_scenario_data.earthquake.severity) {
@@ -88,7 +91,8 @@ static void advance_earthquake_to_tile(int x, int y) {
     figure_create_explosion_cloud(tile2i(x, y), 1);
 }
 
-void scenario_earthquake_process(void) {
+void scenario_earthquake_process() {
+    auto &data = g_eathquake_data;
     if (g_scenario_data.earthquake.severity == EARTHQUAKE_NONE || g_scenario_data.earthquake_point.x() == -1
         || g_scenario_data.earthquake_point.y() == -1)
         return;
@@ -205,10 +209,12 @@ void scenario_earthquake_process(void) {
 }
 
 int scenario_earthquake_is_in_progress(void) {
+    auto &data = g_eathquake_data;
     return data.state == EVENT_STATE_IN_PROGRESS;
 }
 
 void scenario_earthquake_save_state(buffer* buf) {
+    auto &data = g_eathquake_data;
     buf->write_i32(data.game_year);
     buf->write_i32(data.month);
     buf->write_i32(data.state);
@@ -223,6 +229,7 @@ void scenario_earthquake_save_state(buffer* buf) {
 }
 
 void scenario_earthquake_load_state(buffer* buf) {
+    auto &data = g_eathquake_data;
     data.game_year = buf->read_i32();
     data.month = buf->read_i32();
     data.state = buf->read_i32();

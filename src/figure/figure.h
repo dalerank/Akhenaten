@@ -37,6 +37,9 @@ enum e_figure_draw_debug_mode {
     FIGURE_DRAW_DEBUG_ROUTING = 2
 };
 
+constexpr int MAX_CLOUD_IMAGE_OFFSETS = 19;
+
+
 class figure {
 private:
     e_resource resource_id;
@@ -540,3 +543,4 @@ bool figure_type_none_of(figure &f, Args ... args) {
 }
 
 int figure_movement_can_launch_cross_country_missile(map_point src, map_point dst);
+void figure_create_explosion_cloud(tile2i tile, int size);

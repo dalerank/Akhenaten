@@ -141,6 +141,8 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
                     image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 170; // bright teal
                 } else if (b->type == BUILDING_FERRY) {
                     image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 210; // dark grey
+                } else {
+                    image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 210; // dark grey
                 }
             } else if (building_is_food_category(b->type)) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 160; // green
