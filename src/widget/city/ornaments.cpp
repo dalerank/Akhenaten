@@ -603,6 +603,10 @@ void draw_ornaments_and_animations(vec2i tile, map_point point) {
         } else if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BANDSTAND) + 2) {
             draw_entertainment_shows_musicians(b, x, y, 0, color_mask);
         }
+
+        if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BOOTH)) {
+            draw_entertainment_show_jugglers(b, x, y, color_mask);
+        }
         break;
 
     case BUILDING_PAVILLION:

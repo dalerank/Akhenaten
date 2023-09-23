@@ -151,7 +151,6 @@ public:
             uint32_t latched_venue_add_grid_offset;
             uint8_t orientation;
             uint8_t ent_reserved_u8;
-            uint8_t jugglers_delay;
         } entertainment;
         struct {
             short foods[8];
@@ -270,6 +269,8 @@ public:
     void common_spawn_labor_seeker(int min_houses);
     bool common_spawn_roamer(e_figure_type type, int min_houses, int created_action = FIGURE_ACTION_125_ROAMING);
     bool common_spawn_goods_output_cartpusher(bool only_one = true, bool only_full_loads = true, int min_carry = 100, int max_carry = 800);
+
+    int correct_animation_speed(int anim_speed);
 
     void spawn_figure_work_camp();
     bool spawn_patrician(bool spawned);

@@ -297,6 +297,20 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_ful
     return false;
 }
 
+int building::correct_animation_speed(int anim_speed) {
+    switch (type) {
+    case BUILDING_APOTHECARY:
+        anim_speed = 3;
+        break;
+
+    case BUILDING_BANDSTAND:
+        anim_speed = 4;
+        break;
+    }
+
+    return anim_speed;
+}
+
 void building::spawn_figure_work_camp() {
     if (!common_spawn_figure_trigger(100)) {
         return;

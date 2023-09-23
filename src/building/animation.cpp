@@ -123,17 +123,18 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
     }
 
     const image_t* img = image_get(image_id);
-    if (!max_frames)
+    if (!max_frames) {
         max_frames = img->animation.num_sprites;
+    }
+
     int anim_speed = img->animation.speed_id;
     // Bugfix: some wrong values from Pharaoh
-    switch (b->type) {
-    case BUILDING_APOTHECARY:
-        anim_speed = 3;
-        break;
-    }
-    if (!game_animation_should_advance(anim_speed))
+
+    anim_speed = b->correct_animation_speed(anim_speed);
+
+    if (!game_animation_should_advance(anim_speed)) {
         return map_sprite_animation_at(grid_offset) & 0x7f;
+    }
 
     // advance animation
     int new_sprite = 0;
