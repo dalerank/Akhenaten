@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 include(CMakeDependentOption)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
+
 #
 # CppTrace
 #
@@ -21,6 +22,11 @@ else()
         endif()
     endif()
 endif()
+
+#
+# incbin
+#
+add_subdirectory(ext/incbin)
 
 #
 # Ozymandias
@@ -467,6 +473,13 @@ if(UNIX AND NOT APPLE)
     install(FILES "res/ozymandias_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.dalerank.ozymandias.png")
     install(FILES "res/ozymandias_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.dalerank.ozymandias.png")
 endif()
+
+add_custom_command(
+    TARGET ${GAME}
+    PRE_BUILD
+    COMMAND ${CMAKE_COMMAND}
+    ARGS -E copy ${CMAKE_BINARY_DIR}/ext/incbin/${GAME_BUILD_TYPE}/incbin.exe "${PROJECT_SOURCE_DIR}/bin_x64"
+)
 
 if (MSVC)
     set(BINARY_FILES "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.exe")

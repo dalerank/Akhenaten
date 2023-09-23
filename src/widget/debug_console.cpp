@@ -8,9 +8,9 @@ static int log_history_index = 0;
 static bstring256 log_history_buf[40];
 
 void debug_append_console_message(const char *msg) {
-	log_history_buf[log_history_index] = msg;
-  log_history_index++;
-  log_history_index %= 40;
+    log_history_buf[log_history_index] = msg;
+    log_history_index++;
+    log_history_index %= 40;
 }
 
 void debug_console_window_init() {

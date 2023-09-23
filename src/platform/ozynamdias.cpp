@@ -169,8 +169,7 @@ static bool pre_init(const char* custom_data_dir) {
  */
 static void show_options_window(Arguments& args) {
     auto const window_flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
-    SDL_Window* platform_window = SDL_CreateWindow(
-      "Ozymandias: configuration", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+    SDL_Window* platform_window = SDL_CreateWindow("Ozymandias: configuration", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(platform_window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr) {
@@ -340,6 +339,7 @@ static void setup(Arguments& args) {
         logs::error("Exiting: SDL init failed");
         exit(-1);
     }
+
 #ifdef PLATFORM_ENABLE_INIT_CALLBACK
     platform_init_callback();
 #endif

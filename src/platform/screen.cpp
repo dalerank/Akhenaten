@@ -15,6 +15,7 @@
 #include "platform/renderer.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
+#include "resource/icons.h"
 
 #include "SDL.h"
 
@@ -144,11 +145,7 @@ int platform_screen_create(char const* title, const char *renderer, bool fullscr
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 #endif
 
-    logs::info("Creating screen %d x %d, %s, driver: %s",
-               wsize.w,
-               wsize.h,
-               fullscreen ? "fullscreen" : "windowed",
-               SDL_GetCurrentVideoDriver());
+    logs::info("Creating screen %d x %d, %s, driver: %s", wsize.w, wsize.h, fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
@@ -178,6 +175,8 @@ int platform_screen_create(char const* title, const char *renderer, bool fullscr
     if (!platform_renderer_init(g_screen.window, renderer)) {
         return 0;
     }
+
+    SDL_SetWindowIcon(g_screen.window, load_icon_surface("app"));
 
 #if !defined(__APPLE__)
     if (fullscreen && SDL_GetNumVideoDisplays() > 1) {

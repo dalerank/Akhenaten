@@ -176,7 +176,7 @@ void window_main_menu_show(bool restart_music) {
     }
 
     if (!data.dicord_texture) {
-        data.dicord_texture = load_icon("discord");
+        data.dicord_texture = load_icon_texture("discord");
     }
 
     window_type window = {
