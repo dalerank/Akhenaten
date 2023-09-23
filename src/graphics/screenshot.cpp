@@ -11,6 +11,7 @@
 #include "platform/renderer.h"
 #include "graphics/screen.h"
 #include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/menu.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"

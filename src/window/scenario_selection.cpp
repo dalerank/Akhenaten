@@ -153,14 +153,10 @@ static generic_button button_scores_goals[] = {
 static int draw_text_line(int* base_group, int* y, int* phrase_group, font_t font = FONT_NORMAL_BLACK_ON_DARK) {
     int width = lang_text_draw(base_group[0], base_group[1], INFO_X, *y, font) - 5;
     width += lang_text_draw(phrase_group[0], phrase_group[1], INFO_X + width, *y, font);
+    return width;
 }
-static int draw_info_line(int base_group,
-                          int base_id,
-                          int* y,
-                          int value,
-                          int special = -1,
-                          bool colon = false,
-                          font_t font = FONT_NORMAL_BLACK_ON_DARK) {
+
+static int draw_info_line(int base_group, int base_id, int* y, int value, int special = -1, bool colon = false, font_t font = FONT_NORMAL_BLACK_ON_DARK) {
     int width = 0;
     if (special != 5) {
         width += lang_text_draw(base_group, base_id, INFO_X, *y, font) - 5;

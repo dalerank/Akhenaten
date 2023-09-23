@@ -2,6 +2,7 @@
 
 #include "core/profiler.h"
 #include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/warning.h"
 #include "input/cursor.h"
 #include "input/scroll.h"

@@ -85,10 +85,7 @@ figure* figure::get_head_of_caravan() {
 }
 
 static int name_group_id() { // TODO
-    if (GAME_ENV == ENGINE_ENV_C3)
-        return 65;
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        return 254;
+    return 254;
 }
 
 void figure::draw_trader(building_info_context* c) {
@@ -98,12 +95,7 @@ void figure::draw_trader(building_info_context* c) {
     lang_text_draw(21, city->name_id, c->x_offset + 40 + width, c->y_offset + 110, FONT_NORMAL_BLACK_ON_DARK);
 
     width = lang_text_draw(129, 1, c->x_offset + 40, c->y_offset + 132, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw_amount(8,
-                          10,
-                          f->type == FIGURE_TRADE_SHIP ? 1200 : 800,
-                          c->x_offset + 40 + width,
-                          c->y_offset + 132,
-                          FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? 1200 : 800, c->x_offset + 40 + width, c->y_offset + 132, FONT_NORMAL_BLACK_ON_DARK);
 
     int trader_id = f->trader_id;
     if (f->type == FIGURE_TRADE_SHIP) {
@@ -150,14 +142,8 @@ void figure::draw_trader(building_info_context* c) {
         width = lang_text_draw(129, 4, c->x_offset + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
         for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (trader_bought_resources(trader_id, r)) {
-                width += text_draw_number(trader_bought_resources(trader_id, r),
-                                          '@',
-                                          " ",
-                                          c->x_offset + 40 + width,
-                                          y_base,
-                                          FONT_NORMAL_BLACK_ON_DARK);
-                int image_id
-                  = image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                width += text_draw_number(trader_bought_resources(trader_id, r), '@'," ", c->x_offset + 40 + width, y_base, FONT_NORMAL_BLACK_ON_DARK);
+                int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
                 ImageDraw::img_generic(image_id, c->x_offset + 40 + width, y_base - 3);
                 width += 25;
             }
@@ -173,8 +159,7 @@ void figure::draw_trader(building_info_context* c) {
                                           c->x_offset + 40 + width,
                                           y_base,
                                           FONT_NORMAL_BLACK_ON_DARK);
-                int image_id
-                  = image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
                 ImageDraw::img_generic(image_id, c->x_offset + 40 + width, y_base - 3);
                 width += 25;
             }
@@ -185,8 +170,7 @@ void figure::draw_trader(building_info_context* c) {
         width = lang_text_draw(129, 2, c->x_offset + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
         for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (city->buys_resource[r]) {
-                int image_id
-                  = image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
                 ImageDraw::img_generic(image_id, c->x_offset + 40 + width, y_base - 3);
                 width += 25;
             }
@@ -196,8 +180,7 @@ void figure::draw_trader(building_info_context* c) {
         width = lang_text_draw(129, 3, c->x_offset + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
         for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (city->sells_resource[r]) {
-                int image_id
-                  = image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
                 ImageDraw::img_generic(image_id, c->x_offset + 40 + width, y_base - 3);
                 width += 25;
             }
@@ -306,11 +289,9 @@ void figure::draw_cartpusher(building_info_context* c) {
                                c->x_offset + 92,
                                c->y_offset + 154);
 
-        width = text_draw_number(
-          resource_amount_full, ' ', " ", c->x_offset + 108, c->y_offset + 154, FONT_NORMAL_BLACK_ON_DARK);
+        width = text_draw_number(resource_amount_full, ' ', " ", c->x_offset + 108, c->y_offset + 154, FONT_NORMAL_BLACK_ON_DARK);
         width += lang_text_draw(129, 20, c->x_offset + 108 + width, c->y_offset + 154, FONT_NORMAL_BLACK_ON_DARK);
-        width
-          += lang_text_draw(23, resource_id, c->x_offset + 108 + width, c->y_offset + 154, FONT_NORMAL_BLACK_ON_DARK);
+        width += lang_text_draw(23, resource_id, c->x_offset + 108 + width, c->y_offset + 154, FONT_NORMAL_BLACK_ON_DARK);
     }
 
     //    int phrase_height = lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
@@ -417,8 +398,7 @@ void window_building_draw_figure_list(building_info_context* c) {
     else {
         for (int i = 0; i < c->figure.count; i++) {
             button_border_draw(c->x_offset + 60 * i + 25, c->y_offset + 45, 52, 52, i == c->figure.selected_index);
-            graphics_draw_from_texture(
-              g_building_figures_data.figure_images[i], c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48);
+            graphics_draw_from_texture(g_building_figures_data.figure_images[i], c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48);
             //            graphics_draw_from_buffer(c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48,
             //            data.figure_images[i]);
         }
@@ -464,8 +444,7 @@ void window_building_prepare_figure_list(building_info_context* c) {
 int window_building_handle_mouse_figure_list(const mouse* m, building_info_context* c) {
     auto& data = g_building_figures_data;
     data.context_for_callback = c;
-    int button_id = generic_buttons_handle_mouse(
-      m, c->x_offset, c->y_offset, figure_buttons, c->figure.count, &data.focus_button_id);
+    int button_id = generic_buttons_handle_mouse(m, c->x_offset, c->y_offset, figure_buttons, c->figure.count, &data.focus_button_id);
     data.context_for_callback = 0;
     return button_id;
 }

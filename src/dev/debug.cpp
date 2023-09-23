@@ -380,7 +380,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
         // STATUES & MONUMENTS
 
         if (b_id && map_property_is_draw_tile(grid_offset)
-            && (b->labor_category != -1 || building_is_floodplain_farm(b))) {
+            && (b->labor_category != (uint8_t)-1 || building_is_floodplain_farm(b))) {
             switch (b->type) {
             case BUILDING_SMALL_STATUE:
             case BUILDING_MEDIUM_STATUE:
