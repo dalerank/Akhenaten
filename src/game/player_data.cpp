@@ -147,9 +147,7 @@ void player_data_new(const uint8_t* player_name) {
 
 void player_data_delete(const uint8_t* player_name) {
     vfs::path folder_path(vfs::SAVE_FOLDER, "/", (const char*)player_name);
-    folder_path = vfs::dir_get_path(folder_path);
-    
-    std::filesystem::remove_all(folder_path.c_str());
+    vfs::remove_folder(folder_path);
 }
 
 static void load_unused_dat_chunk(buffer* buf, int index) {

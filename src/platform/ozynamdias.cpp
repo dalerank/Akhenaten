@@ -15,7 +15,7 @@
 #include "config/config.h"
 #include "platform/arguments.h"
 #include "platform/cursor.h"
-#include "platform/file_manager.h"
+#include "content/content.h"
 #include "platform/keyboard_input.h"
 #include "platform/platform.h"
 #include "platform/prefs.h"
@@ -108,7 +108,7 @@ static int init_sdl() {
 
 int pre_init_dir_attempt(const char* data_dir, const char* lmsg) {
     logs::info(lmsg, data_dir); // TODO: get rid of data ???
-    if (!platform_file_manager_set_base_path(data_dir)) {
+    if (!vfs::platform_file_manager_set_base_path(data_dir)) {
         logs::info("%s: directory not found", data_dir);
     }
 

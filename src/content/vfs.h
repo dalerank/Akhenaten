@@ -86,5 +86,6 @@ bool file_remove(const char *filename);
 * @param path to be created
 */
 void create_folders(const char *path);
+void remove_folder(path folder_path);
 
 } // vfs

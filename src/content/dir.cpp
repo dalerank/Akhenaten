@@ -3,7 +3,7 @@
 #include "content/vfs.h"
 #include "core/string.h"
 #include "config/config.h"
-#include "platform/file_manager.h"
+#include "content/content.h"
 #include "platform/platform.h"
 
 #include <stdlib.h>

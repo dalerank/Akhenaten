@@ -52,4 +52,4 @@ const dir_listing *dir_find_all_subdirectories(const char *dir = 0);
 bstring256 dir_get_file(const char *filepath);
 bstring256 dir_get_path(const char *folder);
 
-}
+} // vfs

@@ -3,14 +3,13 @@
 #include "core/string.h"
 #include "core/log.h"
 #include "platform/platform.h"
-#include "platform/file_manager.h"
+#include "content/content.h"
 
 #include <filesystem>
 
 namespace vfs{
 
 FILE * file_open(const char *filename, const char *mode) {
-    //if (filename )
     return platform_file_manager_open_file(filename, mode);
 }
 
@@ -27,11 +26,14 @@ bool file_has_extension(const char *filename, const char *extension) {
         c = *filename;
         filename++;
     } while (c != '.' && c);
-    if (!c)
+
+    if (!c) {
         filename--;
+    }
 
     return string_compare_case_insensitive(filename, extension) == 0;
 }
+
 void file_change_extension(char *filename, const char *new_extension) {
     char c;
     do {
@@ -67,6 +69,7 @@ void file_remove_extension(uint8_t * filename) {
         c = *filename;
         filename++;
     } while (c != '.' && c);
+
     if (c == '.') {
         filename--;
         *filename = 0;
@@ -74,12 +77,12 @@ void file_remove_extension(uint8_t * filename) {
 }
 
 bool file_exists(const char *filename) {
-    bstring256 path = dir_get_file(filename);
-    if (path.empty()) {
+    path fspath = dir_get_file(filename);
+    if (fspath.empty()) {
         return false;
     }
 
-    return std::filesystem::exists(path.c_str());
+    return std::filesystem::exists(fspath.c_str());
 }
 
 bool file_remove(const char *filename) {
@@ -91,6 +94,11 @@ void create_folders(const char* path) {
     if (!std::filesystem::create_directories(path, err) && !std::filesystem::exists(path)) {
         logs::info(err.message().c_str());
     }
+}
+
+void remove_folder(path folder_path) {
+    folder_path = dir_get_path(folder_path);
+    std::filesystem::remove_all(folder_path.c_str());
 }
 
 } //
