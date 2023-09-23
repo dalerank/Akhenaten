@@ -1,6 +1,7 @@
 #include "logo.h"
 
 #include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/window.h"
 #include "config/config.h"

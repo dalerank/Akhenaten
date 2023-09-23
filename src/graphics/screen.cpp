@@ -1,8 +1,10 @@
 #include "screen.h"
+
 #include "boilerplate.h"
 #include "city/warning.h"
 #include "graphics/view/view.h"
 #include "platform/renderer.h"
+#include "graphics/graphics.h"
 #include "window.h"
 
 struct screen_data_t {

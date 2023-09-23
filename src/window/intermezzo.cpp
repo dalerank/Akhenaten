@@ -3,6 +3,7 @@
 #include "core/game_environment.h"
 #include "core/time.h"
 #include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
 #include "scenario/property.h"

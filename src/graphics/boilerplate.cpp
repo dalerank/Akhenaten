@@ -38,11 +38,6 @@ void graphics_reset_clip_rectangle(void) {
     graphics_renderer()->reset_clip_rectangle();
 }
 
-void graphics_clear_screen(void) {
-    OZZY_PROFILER_SECTION("Render/Frame/Clear Screen");
-    graphics_renderer()->clear_screen();
-}
-
 void graphics_draw_line(int x_start, int x_end, int y_start, int y_end, color color) {
     graphics_renderer()->draw_line(x_start, x_end, y_start, y_end, color);
 }

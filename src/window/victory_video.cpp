@@ -1,6 +1,7 @@
 #include "victory_video.h"
 
 #include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/screen.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
