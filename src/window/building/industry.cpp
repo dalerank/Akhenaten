@@ -60,21 +60,12 @@ static void draw_farm(building_info_context* c, int help_id, const char* sound_f
 
         // next flood info
         int month_id = 8; // TODO: fetch flood info
-        width = lang_text_draw(
-          177, 2, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 136, FONT_NORMAL_BLACK_ON_LIGHT);
-        lang_text_draw(160,
-                       month_id,
-                       c->x_offset + 32 + width,
-                       c->y_offset + 16 * c->height_blocks - 136,
-                       FONT_NORMAL_BLACK_ON_LIGHT);
+        width = lang_text_draw(177, 2, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 136, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw(160, month_id, c->x_offset + 32 + width, c->y_offset + 16 * c->height_blocks - 136, FONT_NORMAL_BLACK_ON_LIGHT);
 
         // irrigated?
         int is_not_irrigated = 0; // TODO: fetch irrigation info
-        lang_text_draw(177,
-                       is_not_irrigated,
-                       c->x_offset + 32,
-                       c->y_offset + 16 * c->height_blocks - 120,
-                       FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw(177, is_not_irrigated, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 120,FONT_NORMAL_BLACK_ON_LIGHT);
 
         window_building_draw_description_at(c, 16 * c->height_blocks - 96, group_id, 1);
     } else {
@@ -82,8 +73,8 @@ static void draw_farm(building_info_context* c, int help_id, const char* sound_f
         window_building_draw_description_at(c, 16 * c->height_blocks - 136, group_id, 1);
     }
 }
-static void
-draw_raw_material(building_info_context* c, int help_id, const char* sound_file, int group_id, e_resource resource) {
+
+static void draw_raw_material(building_info_context* c, int help_id, const char* sound_file, int group_id, e_resource resource) {
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
 
@@ -120,12 +111,7 @@ draw_raw_material(building_info_context* c, int help_id, const char* sound_file,
     window_building_draw_employment(c, 142);
     window_building_draw_description_at(c, 16 * c->height_blocks - 136, group_id, 1);
 }
-static void draw_workshop(building_info_context* c,
-                          int help_id,
-                          const char* sound_file,
-                          int group_id,
-                          int resource,
-                          int input_resource) {
+static void draw_workshop(building_info_context* c, int help_id, const char* sound_file, int group_id, int resource, int input_resource) {
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
 
@@ -172,55 +158,55 @@ static void draw_workshop(building_info_context* c,
 void window_building_draw_wheat_farm(building_info_context* c) {
     int farm_group_id = 181;
     int output_resource = RESOURCE_BARLEY;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        farm_group_id = 112;
-        output_resource = RESOURCE_GRAIN;
-    }
+    // if (GAME_ENV == ENGINE_ENV_C3) {
+    //     farm_group_id = 112;
+    //     output_resource = RESOURCE_GRAIN;
+    // }
     draw_farm(c, 89, "wavs/wheat_farm.wav", farm_group_id, output_resource);
 }
 void window_building_draw_vegetable_farm(building_info_context* c) {
     int farm_group_id = 115;
     int output_resource = RESOURCE_FLAX;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        farm_group_id = 113;
-        output_resource = RESOURCE_MEAT;
-    }
+    // if (GAME_ENV == ENGINE_ENV_C3) {
+    //     farm_group_id = 113;
+    //     output_resource = RESOURCE_MEAT;
+    // }
     draw_farm(c, 90, "wavs/veg_farm.wav", farm_group_id, output_resource);
 }
 void window_building_draw_fruit_farm(building_info_context* c) {
     int farm_group_id = 112;
     int output_resource = RESOURCE_GRAIN;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        farm_group_id = 114;
-        output_resource = RESOURCE_GRAIN;
-    }
+    // if (GAME_ENV == ENGINE_ENV_C3) {
+    //     farm_group_id = 114;
+    //     output_resource = RESOURCE_GRAIN;
+    // }
     draw_farm(c, 90, "wavs/figs_farm.wav", farm_group_id, output_resource);
 }
 void window_building_draw_olive_farm(building_info_context* c) {
     int farm_group_id = 113;
     int output_resource = RESOURCE_LETTUCE;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        farm_group_id = 115;
-        output_resource = RESOURCE_STRAW;
-    }
+    // if (GAME_ENV == ENGINE_ENV_C3) {
+    //     farm_group_id = 115;
+    //     output_resource = RESOURCE_STRAW;
+    // }
     draw_farm(c, 91, "wavs/olives_farm.wav", farm_group_id, output_resource);
 }
 void window_building_draw_vines_farm(building_info_context* c) {
     int farm_group_id = 114;
     int output_resource = RESOURCE_POMEGRANATES;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        farm_group_id = 116;
-        output_resource = RESOURCE_BARLEY;
-    }
+    // if (GAME_ENV == ENGINE_ENV_C3) {
+    //     farm_group_id = 116;
+    //     output_resource = RESOURCE_BARLEY;
+    // }
     draw_farm(c, 91, "wavs/vines_farm.wav", farm_group_id, output_resource);
 }
 void window_building_draw_pig_farm(building_info_context* c) {
     int farm_group_id = 182;
     int output_resource = RESOURCE_CHICKPEAS;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        farm_group_id = 117;
-        output_resource = RESOURCE_FIGS;
-    }
+    // if (GAME_ENV == ENGINE_ENV_C3) {
+    //     farm_group_id = 117;
+    //     output_resource = RESOURCE_FIGS;
+    // }
     draw_farm(c, 90, "wavs/meat_farm.wav", farm_group_id, output_resource);
 }
 void window_building_draw_fig_farm(building_info_context* c) {
@@ -294,50 +280,38 @@ void window_building_draw_reed_gatherer(building_info_context* c) {
 void window_building_draw_wine_workshop(building_info_context* c) {
     int input_resource = RESOURCE_BARLEY;
     int output_resource = RESOURCE_BEER;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        input_resource = RESOURCE_BARLEY;
-        output_resource = RESOURCE_BEER;
-    }
+
     draw_workshop(c, 96, "wavs/wine_workshop.wav", 122, output_resource, input_resource);
 }
 void window_building_draw_oil_workshop(building_info_context* c) {
     int input_resource = RESOURCE_FLAX;
     int output_resource = RESOURCE_LINEN;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        input_resource = RESOURCE_STRAW;
-        output_resource = RESOURCE_MEAT;
-    }
+    //if (GAME_ENV == ENGINE_ENV_C3) {
+    //    input_resource = RESOURCE_STRAW;
+    //    output_resource = RESOURCE_MEAT;
+    //}
     draw_workshop(c, 97, "wavs/oil_workshop.wav", 123, output_resource, input_resource);
 }
 void window_building_draw_weapons_workshop(building_info_context* c) {
     int output_resource = RESOURCE_WEAPONS;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        output_resource = RESOURCE_WEAPONS;
-    }
+
     draw_workshop(c, 98, "wavs/weapons_workshop.wav", 124, output_resource, RESOURCE_COPPER);
 }
 void window_building_draw_furniture_workshop(building_info_context* c) {
     int input_resource = RESOURCE_GEMS;
     int output_resource = RESOURCE_LUXURY_GOODS;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        input_resource = RESOURCE_GEMS;
-        output_resource = RESOURCE_LUXURY_GOODS;
-    }
+
     draw_workshop(c, 99, "wavs/furniture_workshop.wav", 125, output_resource, input_resource);
 }
 void window_building_draw_pottery_workshop(building_info_context* c) {
     int output_resource = RESOURCE_POTTERY;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        output_resource = RESOURCE_POTTERY;
-    }
+
     draw_workshop(c, 1, "wavs/pottery_workshop.wav", 126, output_resource, RESOURCE_CLAY);
 }
 // TODO: fix brick maker panel
 void window_building_draw_brick_maker_workshop(building_info_context* c) {
     int output_resource = RESOURCE_POTTERY;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        output_resource = RESOURCE_POTTERY;
-    }
+
     draw_workshop(c, 1, "wavs/pottery_workshop.wav", 126, output_resource, RESOURCE_CLAY);
 }
 
@@ -349,9 +323,9 @@ void window_building_draw_shipyard(building_info_context* c) {
 
     building* b = building_get(c->building_id);
 
-    if (!c->has_road_access)
+    if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    else {
+    } else {
         int pct_done = calc_percentage(b->data.industry.progress, 160);
         int width = lang_text_draw(100, 2, c->x_offset + 32, c->y_offset + 56, FONT_NORMAL_BLACK_ON_LIGHT);
         width += text_draw_percentage(pct_done, c->x_offset + 32 + width, c->y_offset + 56, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -373,18 +347,15 @@ void window_building_draw_wharf(building_info_context* c) {
     window_building_play_sound(c, "wavs/wharf.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(102, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_FIGS
-                             + resource_image_offset(RESOURCE_FIGS, RESOURCE_IMAGE_ICON),
-                           c->x_offset + 10,
-                           c->y_offset + 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_FIGS + resource_image_offset(RESOURCE_FIGS, RESOURCE_IMAGE_ICON), c->x_offset + 10, c->y_offset + 10);
 
     building* b = building_get(c->building_id);
 
-    if (!c->has_road_access)
+    if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    else if (!b->data.industry.fishing_boat_id)
+    } else if (!b->data.industry.fishing_boat_id) {
         window_building_draw_description(c, 102, 2);
-    else {
+    } else {
         int text_id;
         switch (figure_get(b->data.industry.fishing_boat_id)->action_state) {
         case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH:
@@ -422,9 +393,9 @@ void window_building_draw_work_camp(building_info_context* c) {
 
     building* b = building_get(c->building_id);
 
-    if (!c->has_road_access)
+    if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    else {
+    } else {
         if (!b->num_workers)
             window_building_draw_description(c, group_id, 2); // not enough workers
         else {
