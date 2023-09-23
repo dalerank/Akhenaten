@@ -164,6 +164,7 @@ endif()
 
 add_subdirectory(ext/png)
 add_subdirectory(ext/expat)
+add_subdirectory(ext/mujs)
 
 file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp)
 file(GLOB CONFIG_FILES ${PROJECT_SOURCE_DIR}/src/config/*.cpp)
@@ -292,9 +293,11 @@ if(MSVC)
     source_group("translation" FILES ${TRANSLATION_FILES})
     source_group("imgui" FILES ${IMGUI_FILES})
     source_group("io" FILES ${IO_FILES} {IO_HEADERS})
+    source_group("io/gamefiles" FILES ${IO_GAMEFILES_FILES})
     source_group("content" FILES ${CONTENT_FILES})
     source_group("config" FILES ${CONFIG_FILES})
     source_group("resource" FILES ${RESOURCE_FILES})
+    source_group("graphics" FILES ${GRAPHICS_FILES})
 endif()
 
 set(MACOSX_FILES "")
@@ -432,6 +435,7 @@ include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${EXTEXPAT_INCLUDE_DIR})
 include_directories(${EXTPNG_INCLUDE_DIR})
+include_directories(${EXTMUJS_INCLUDE_DIR})
 
 include_directories(ext)
 include_directories(src)
@@ -448,7 +452,7 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
 endif()
 
 target_link_libraries (${GAME}
-                        ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY}
+                        ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
                         ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY})
 
 if(MSVC)
@@ -486,4 +490,3 @@ if (MSVC)
         )
     endforeach( file_i )
 endif()
-
