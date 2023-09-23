@@ -1,6 +1,7 @@
 #include "city_overlay_juggler.h"
 
 #include "city_overlay.h"
+#include "figure/figure.h"
 #include "grid/property.h"
 #include "grid/building.h"
 #include "graphics/elements/tooltip.h"

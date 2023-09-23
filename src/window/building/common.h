@@ -1,9 +1,9 @@
 #pragma once
 
+#include "overlays/city_overlay_fwd.h"
+
 static const int MIN_Y_POSITION = 32;
 static const int MARGIN_POSITION = 16;
-
-enum e_overlay;
 
 enum building_info_type {
     BUILDING_INFO_NONE = 0,

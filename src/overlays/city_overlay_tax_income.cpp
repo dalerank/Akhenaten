@@ -7,6 +7,7 @@
 #include "city/finance.h"
 #include "grid/property.h"
 #include "grid/building.h"
+#include "figure/figure.h"
 
 static int get_tooltip_tax_income(tooltip_context* c, const building* b) {
     int denarii = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());

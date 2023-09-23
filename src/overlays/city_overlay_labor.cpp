@@ -5,6 +5,7 @@
 #include "game/state.h"
 #include "grid/building.h"
 #include "grid/property.h"
+#include "figure/figure.h"
 
 static int get_column_height_labor(const building* b) {
     if (b->state == BUILDING_STATE_VALID) {

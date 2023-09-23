@@ -19,6 +19,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "grid/building.h"
+#include "grid/grid.h"
 #include "input/scroll.h"
 #include "config/config.h"
 #include "io/gamefiles/lang.h"

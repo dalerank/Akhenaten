@@ -5,6 +5,7 @@
 #include "game/state.h"
 #include "grid/building.h"
 #include "grid/property.h"
+#include "figure/figure.h"
 
 static int get_column_height_damage(const building* b) {
     auto model = model_get_building(b->type);

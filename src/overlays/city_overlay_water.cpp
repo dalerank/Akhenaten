@@ -10,6 +10,7 @@
 #include "building/building.h"
 #include "widget/city/tile_draw.h"
 #include "core/vec2i.h"
+#include "figure/figure.h"
 
 static int terrain_on_water_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD

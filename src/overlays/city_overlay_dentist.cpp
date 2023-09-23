@@ -4,6 +4,7 @@
 #include "city/constants.h"
 #include "grid/property.h"
 #include "grid/building.h"
+#include "figure/figure.h"
 
 static int get_column_height_dentist(const building* b) {
     return b->house_size && b->data.house.dentist ? b->data.house.dentist / 10 : NO_COLUMN;

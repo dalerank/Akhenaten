@@ -91,4 +91,6 @@ bool file_remove(const char *filename);
 void create_folders(const char *path);
 void remove_folder(path folder_path);
 
+void set_mixed_mode(bool value);
+
 } // vfs

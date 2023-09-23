@@ -34,17 +34,17 @@ enum class argument_type {
     CURSOR_SCALE_PERCENTAGE,
     WINDOW_WIDTH,
     WINDOW_HEIGHT,
+    MIXED_MODE,
 };
 
 const std::unordered_map<std::string, argument_type> argument_types{{"data_directory", argument_type::DATA_DIRECTORY},
                                                                     {"window_mode", argument_type::WINDOW_MODE},
                                                                     {"renderer", argument_type::RENDERER},
-                                                                    {"display_scale_percentage",
-                                                                     argument_type::DISPLAY_SCALE_PERCENTAGE},
-                                                                    {"cursor_scale_percentage",
-                                                                     argument_type::CURSOR_SCALE_PERCENTAGE},
+                                                                    {"display_scale_percentage",argument_type::DISPLAY_SCALE_PERCENTAGE},
+                                                                    {"cursor_scale_percentage",argument_type::CURSOR_SCALE_PERCENTAGE},
                                                                     {"window_width", argument_type::WINDOW_WIDTH},
-                                                                    {"window_height", argument_type::WINDOW_HEIGHT}};
+                                                                    {"window_height", argument_type::WINDOW_HEIGHT},
+                                                                    {"mixed", argument_type::MIXED_MODE}};
 
 void set_value(Arguments& arguments, argument_type type, std::string&& value) {
     switch (type) {
@@ -197,6 +197,8 @@ char const* Arguments::usage() {
            "          window size. Example: 800x600\n"
            "  --window\n"
            "          enable window mode\n"
+           "  --mixed\n"
+           "          read configs from disk\n"
            "\n"
            "The last argument, if present, is interpreted as data directory of the Pharaoh installation";
 }
@@ -294,6 +296,8 @@ void Arguments::parse_cli_(int argc, char** argv) {
                 ++i;
             } else
                 app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+        } else if (SDL_strcmp(argv[i], "--size") == 0) {
+            vfs::set_mixed_mode(true);
         } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
             if (i + 1 < argc) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);

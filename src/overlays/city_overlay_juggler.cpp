@@ -4,6 +4,7 @@
 #include "grid/property.h"
 #include "grid/building.h"
 #include "graphics/elements/tooltip.h"
+#include "figure/figure.h"
 
 static int get_column_height_juggler(const building* b) {
     if (b->house_size) {

@@ -10,6 +10,8 @@
 
 namespace vfs{
 
+bool _mixed_mode = false;
+
 FILE * file_open(const char *filename, const char *mode) {
     return platform_file_manager_open_file(filename, mode);
 }
@@ -111,6 +113,10 @@ void create_folders(const char* path) {
 void remove_folder(path folder_path) {
     folder_path = dir_get_path(folder_path);
     std::filesystem::remove_all(folder_path.c_str());
+}
+
+void set_mixed_mode(bool value) {
+    _mixed_mode = value;
 }
 
 } //

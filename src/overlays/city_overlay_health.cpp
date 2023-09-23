@@ -3,6 +3,7 @@
 #include "city_overlay.h"
 #include "grid/property.h"
 #include "grid/building.h"
+#include "figure/figure.h"
 
 static int get_column_height_health(const building* b) {
     if (!b->house_size || !b->house_population) {

@@ -6,6 +6,7 @@
 #include "grid/building.h"
 #include "building/building.h"
 #include "graphics/elements/tooltip.h"
+#include "figure/figure.h"
 
 static int get_column_height_apothecary(const building* b) {
     return b->house_size && b->subtype.house_level > 0

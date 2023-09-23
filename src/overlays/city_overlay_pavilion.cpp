@@ -4,6 +4,7 @@
 #include "grid/property.h"
 #include "city_overlay.h"
 #include "grid/building.h"
+#include "figure/figure.h"
 
 static int get_column_height_colosseum(const building* b) {
     return b->house_size && b->data.house.colosseum_gladiator ? b->data.house.colosseum_gladiator / 10 : NO_COLUMN;

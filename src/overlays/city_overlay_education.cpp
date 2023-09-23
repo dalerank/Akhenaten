@@ -1,6 +1,7 @@
 #include "city_overlay_education.h"
 
 #include "building/building_type.h"
+#include "figure/figure.h"
 #include "game/state.h"
 
 static int show_figure_education(const figure* f) {

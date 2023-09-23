@@ -583,11 +583,11 @@ static void draw_refresh_background() {
             window_building_draw_house(&context);
         else
             switch (building_get(context.building_id)->type) {
-                case BUILDING_BARLEY_FARM: window_building_draw_wheat_farm(&context); break;
-                case BUILDING_FLAX_FARM: window_building_draw_vegetable_farm(&context); break;
-                case BUILDING_GRAIN_FARM: window_building_draw_fruit_farm(&context); break;
-                case BUILDING_LETTUCE_FARM: window_building_draw_olive_farm(&context); break;
-                case BUILDING_POMEGRANATES_FARM: window_building_draw_vines_farm(&context); break;
+            case BUILDING_BARLEY_FARM: window_building_draw_wheat_farm(&context); break;
+            case BUILDING_FLAX_FARM: window_building_draw_vegetable_farm(&context); break;
+            case BUILDING_GRAIN_FARM: window_building_draw_fruit_farm(&context); break;
+            case BUILDING_LETTUCE_FARM: window_building_draw_olive_farm(&context); break;
+            case BUILDING_POMEGRANATES_FARM: window_building_draw_vines_farm(&context); break;
             case BUILDING_CHICKPEAS_FARM: window_building_draw_pig_farm(&context); break;
             case BUILDING_FIGS_FARM: window_building_draw_fig_farm(&context); break;
             case BUILDING_HENNA_FARM: window_building_draw_henna_farm(&context); break;
@@ -670,7 +670,7 @@ static void draw_refresh_background() {
             case BUILDING_SHRINE_PTAH: window_building_draw_shrine_ptah(&context); break;
             case BUILDING_SHRINE_SETH: window_building_draw_shrine_seth(&context); ;
             case BUILDING_SHRINE_BAST: window_building_draw_shrine_bast(&context); break;
-            
+             
             case BUILDING_ORACLE: window_building_draw_oracle(&context); break;
 
             case BUILDING_PERSONAL_MANSION:

@@ -10,6 +10,7 @@
 #include "grid/property.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
+#include "figure/figure.h"
 
 static int is_problem_cartpusher(figure *fig) {
     if (fig->id > 0) {

@@ -2,6 +2,7 @@
 
 #include "building/building_type.h"
 #include "building/building_state.h"
+#include "overlays/city_overlay_fwd.h"
 #include "core/span.hpp"
 #include "figure/action.h"
 #include "figure/type.h"
@@ -13,8 +14,6 @@
 
 class figure;
 class io_buffer;
-
-enum e_overlay;
 
 constexpr uint32_t MAX_BUILDINGS = 4000;
 constexpr uint32_t MAX_FIGURES_PER_BUILDING = 8;
