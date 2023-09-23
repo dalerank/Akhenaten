@@ -23,6 +23,7 @@
 #include "platform/touch.h"
 #include "platform/version.hpp"
 #include "platform/platform.h"
+#include "widget/debug_console.h"
 #include "renderer.h"
 
 #include <SDL.h>
@@ -71,12 +72,25 @@ void show_usage() {
 
 } // namespace
 
+struct application_t {
+    bool active = true;
+    bool quit = false;
+    bool console = false;
+};
+
+application_t g_application;
+
 void system_exit() {
     app_post_event(USER_EVENT_QUIT);
 }
 
 void system_center() {
     app_post_event(USER_EVENT_CENTER_WINDOW);
+}
+
+void system_toggle_debug_console() {
+    g_application.console = !g_application.console;
+    //
 }
 
 static int init_sdl() {
@@ -422,6 +436,10 @@ static void run_and_draw() {
         text_draw_number_colored(time_after_draw - time_between_run_and_draw, 'd', "", 70, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
     }
 
+    if (g_application.console) {
+        debug_console_window_draw();
+    }
+
     platform_renderer_render();
 }
 
@@ -437,7 +455,7 @@ static void handle_mouse_button(SDL_MouseButtonEvent* event, int is_down) {
         mouse_set_right_down(is_down);
 }
 #ifndef __SWITCH__
-static void handle_window_event(SDL_WindowEvent* event, int* window_active) {
+static void handle_window_event(SDL_WindowEvent* event, bool &window_active) {
     switch (event->event) {
     case SDL_WINDOWEVENT_ENTER:
         mouse_set_inside_window(1);
@@ -459,16 +477,16 @@ static void handle_window_event(SDL_WindowEvent* event, int* window_active) {
 
     case SDL_WINDOWEVENT_SHOWN:
         logs::info("Window %d shown", (unsigned int)event->windowID);
-        *window_active = 1;
+        window_active = true;
         break;
     case SDL_WINDOWEVENT_HIDDEN:
         logs::info("Window %d hidden", (unsigned int)event->windowID);
-        *window_active = 0;
+        window_active = false;
         break;
     }
 }
 #endif
-static void handle_event(SDL_Event* event, int* active, int* quit) {
+static void handle_event(SDL_Event* event, bool &active, bool &quit) {
     switch (event->type) {
 #ifndef __SWITCH__
     case SDL_WINDOWEVENT:
@@ -516,12 +534,12 @@ static void handle_event(SDL_Event* event, int* active, int* quit) {
         break;
 
     case SDL_QUIT:
-        *quit = 1;
+        quit = true;
         break;
 
     case SDL_USEREVENT:
         if (event->user.code == USER_EVENT_QUIT)
-            *quit = 1;
+            quit = true;
         else if (event->user.code == USER_EVENT_RESIZE)
             platform_screen_set_window_size(INTPTR(event->user.data1), INTPTR(event->user.data2));
         else if (event->user.code == USER_EVENT_FULLSCREEN)
@@ -537,13 +555,13 @@ static void handle_event(SDL_Event* event, int* active, int* quit) {
         break;
     }
 }
+
 static void main_loop() {
+    debug_console_window_init();
     mouse_set_inside_window(1);
 
     run_and_draw();
-    int active = 1;
-    int quit = 0;
-    while (!quit) {
+    while (!g_application.quit) {
         SDL_Event event;
 #ifdef PLATFORM_ENABLE_PER_FRAME_CALLBACK
         platform_per_frame_callback();
@@ -556,12 +574,12 @@ static void main_loop() {
 #else
         while (SDL_PollEvent(&event)) {
 #endif
-            handle_event(&event, &active, &quit);
+            handle_event(&event, g_application.active, g_application.quit);
         }
-        if (!quit) {
-            if (active)
+        if (!g_application.quit) {
+            if (g_application.active) {
                 run_and_draw();
-            else {
+            } else {
                 SDL_WaitEvent(NULL);
             }
         }

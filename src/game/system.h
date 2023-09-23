@@ -27,6 +27,8 @@ int system_save_screen_buffer(void* pixels);
  */
 void system_center(void);
 
+void system_toggle_debug_console();
+
 /**
  * Returns whether the window must always be fullscreen
  * @return true when only fullscreen can be used, false otherwise

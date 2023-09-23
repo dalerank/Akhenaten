@@ -2,6 +2,7 @@
 
 #include "platform/platform.h"
 #include "core/application.h"
+#include "widget/debug_console.h"
 
 #include <algorithm>
 #include <csignal>
@@ -157,6 +158,7 @@ void Logger::write_to_file_(char const* prefix, char const* message) {
 #elif defined(GAME_PLATFORM_ANDROID)
     __android_log_print(ANDROID_LOG_INFO, "ozy-and", "%s%s", prefix, message);
 #endif
+    debug_append_console_message(message);
 }
 
 void Logger::write_to_output_(char const* prefix, char const* message) {

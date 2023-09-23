@@ -36,7 +36,7 @@ enum {
     FORMATION_ENEMY12 = 12,
 };
 
-struct formation_state{
+struct formation_state {
     int duration_halt;
     int duration_advance;
     int duration_regroup;

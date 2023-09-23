@@ -296,7 +296,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
                 ++i;
             } else
                 app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
-        } else if (SDL_strcmp(argv[i], "--size") == 0) {
+        } else if (SDL_strcmp(argv[i], "--mixed") == 0) {
             vfs::set_mixed_mode(true);
         } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
             if (i + 1 < argc) {

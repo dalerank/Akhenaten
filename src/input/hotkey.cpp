@@ -421,8 +421,13 @@ void hotkey_key_released(int key, int modifiers) {
         window_hotkey_editor_key_released(key, modifiers);
         return;
     }
-    if (key == KEY_NONE)
+    if (key == KEY_NONE) {
         return;
+    }
+    if (key == KEY_GRAVE) {
+        system_toggle_debug_console();
+        return;
+    }
     for (int i = 0; i < data.num_arrows; i++) {
         arrow_definition* arrow = &data.arrows[i];
         if (arrow->key == key)
