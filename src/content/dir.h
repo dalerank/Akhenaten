@@ -26,6 +26,8 @@ struct dir_listing {
 
 namespace vfs {
 
+constexpr const char *SAVE_FOLDER = "Save";
+
 /**
  * Finds files with the given extension
  * @param dir The directory to search on, or null if base directory

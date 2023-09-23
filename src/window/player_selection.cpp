@@ -62,7 +62,7 @@ struct window_player_selection_t {
     scroll_list_panel* panel = nullptr;
     int focus_button_id;
     bstring32 selected_player;
-    char selected_player_utf8[MAX_PLAYER_NAME];
+    bstring32 selected_player_utf8;
 
     window_player_selection_t() {
         panel = new scroll_list_panel(NUM_FILES_IN_VIEW,
@@ -81,7 +81,7 @@ window_player_selection_t *g_window_player_selection = nullptr;
 
 static void set_name(const char* name) {
     auto& data = *g_window_player_selection;
-    strcpy(data.selected_player_utf8, name);
+    data.selected_player_utf8 = name;
     encoding_from_utf8(data.selected_player_utf8, data.selected_player, MAX_PLAYER_NAME);
 }
 static void clear_selectd_name() {
@@ -89,15 +89,17 @@ static void clear_selectd_name() {
 }
 static bool is_selected_name(int index) {
     auto& data = *g_window_player_selection;
-    return strcmp(data.selected_player_utf8, data.panel->get_selected_entry_text(FILE_NO_EXT)) == 0;
+    return data.selected_player_utf8 == data.panel->get_selected_entry_text(FILE_NO_EXT);
 }
 static bool is_valid_selected_player() {
     auto& data = *g_window_player_selection;
-    if (strcmp(data.selected_player_utf8, "") == 0)
+    if (data.selected_player_utf8.empty()) {
         return false;
+    }
 
-    if (data.panel->get_entry_idx(data.selected_player_utf8) > -1)
+    if (data.panel->get_entry_idx(data.selected_player_utf8) > -1) {
         return true;
+    }
 
     return false;
 }

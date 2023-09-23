@@ -27,13 +27,6 @@ const int read_file_version(const char* filename, int offset);
 bool write_mission(const int scenario_id);
 bool write_savegame(const char* filename_short);
 
-/**
- * Create folders if not exists
- * Throw exception if path not exists and can not be created
- * @param path to be created
- */
-void prepare_folders(const char* path);
-bool prepare_savegame(const char* filename_short);
 bool write_map(const char* filename_short);
 
 bool load_mission(const int scenario_id, bool start_immediately);
@@ -46,10 +39,4 @@ bool delete_mission(const int scenario_id);
 bool delete_savegame(const char* filename_short);
 bool delete_map(const char* filename_short);
 
-/**
- * Delete campaign (aka family) created by user.
- * @param family_name to be removed
- * @return true on success
- */
-bool delete_family(char const* family_name);
 } // namespace GamestateIO

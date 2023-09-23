@@ -1,5 +1,4 @@
-#ifndef OZYMANDIAS_PLAYER_DATA_H
-#define OZYMANDIAS_PLAYER_DATA_H
+#pragma once
 
 #include "core/game_environment.h"
 #include <stdint.h>
@@ -55,23 +54,12 @@ struct player_record {
     bool score_is_valid = false;
 };
 
-///
-
-uint32_t records_calc_score(float unkn,
-                            float funds,
-                            float population,
-                            float r_culture,
-                            float r_prosperity,
-                            float r_kingdom,
-                            float months,
-                            float difficulty);
+uint32_t records_calc_score(float unkn, float funds, float population, float r_culture, float r_prosperity, float r_kingdom, float months, float difficulty);
 uint32_t records_calc_score(const player_record* record);
 const player_record* highscores_get(int rank);
 int highscores_count();
 
 void highscores_load();
-
-///
 
 // const char *player_get_cached_scenario_name(int scenario_id);
 const player_record* player_get_scenario_record(int scenario_id);
@@ -80,5 +68,3 @@ const char* player_get_last_autosave();
 void player_data_new(const uint8_t* player_name);
 void player_data_delete(const uint8_t* player_name);
 void player_data_load(const uint8_t* player_name);
-
-#endif // OZYMANDIAS_PLAYER_DATA_H

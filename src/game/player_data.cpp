@@ -1,8 +1,13 @@
 #include "player_data.h"
+
 #include "core/buffer.h"
 #include "core/string.h"
+#include "content/vfs.h"
 #include "io/gamestate/boilerplate.h"
 #include "io/io.h"
+#include "io/manager.h"
+
+#include <filesystem>
 
 #define JAS_FILE_SIZE 7600
 #define JAS_CHUNK_SIZE 76
@@ -34,19 +39,13 @@ struct player_data_t {
     buffer* dat_file = new buffer(DAT_FILE_SIZE);
 };
 
+player_data_t g_player_data;
+
 player_data_t& player_data() {
-    static player_data_t inst;
-    return inst;
+    return g_player_data;
 }
 
-uint32_t records_calc_score(float unkn,
-                            float funds,
-                            float population,
-                            float r_culture,
-                            float r_prosperity,
-                            float r_kingdom,
-                            float months,
-                            float difficulty) {
+uint32_t records_calc_score(float unkn, float funds, float population, float r_culture, float r_prosperity, float r_kingdom, float months, float difficulty) {
     // I have *NO CLUE* how this value works. It's just black magic.
     // In missions where it's zero, the formula checks out correctly.
     unkn = 0.0;
@@ -121,8 +120,6 @@ void highscores_load() {
         load_jas_record_chunk(data.jas_file, &data.highscores[i]);
 }
 
-///
-
 const player_record* player_get_scenario_record(int scenario_id) {
     auto& data = player_data();
     return &data.player_scenario_records[scenario_id];
@@ -132,12 +129,27 @@ const char* player_get_last_autosave() {
     return data.last_autosave_path;
 }
 
+bool player_data_prepare_savegame(const char* filename_short) {
+    // concatenate string
+    bstring256 savefile = vfs::dir_get_path(fullpath_saves(filename_short));
+    bstring256 folders = vfs::dir_get_path(fullpath_saves(""));
+
+    vfs::create_folders(folders);
+    // write file
+    return FILEIO.serialize(savefile, 0, FILE_FORMAT_SAVE_FILE, latest_save_version, [] (e_file_format file_format, const int file_version) {
+        FILEIO.push_chunk(4, false, "family_index", 0);
+    });
+}
+
 void player_data_new(const uint8_t* player_name) {
-    GamestateIO::prepare_savegame("family.sav");
+    player_data_prepare_savegame("family.sav");
 }
 
 void player_data_delete(const uint8_t* player_name) {
-    GamestateIO::delete_family((char const*)player_name);
+    vfs::path folder_path(vfs::SAVE_FOLDER, "/", (const char*)player_name);
+    folder_path = vfs::dir_get_path(folder_path);
+    
+    std::filesystem::remove_all(folder_path.c_str());
 }
 
 static void load_unused_dat_chunk(buffer* buf, int index) {

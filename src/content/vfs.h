@@ -18,6 +18,9 @@
 #define MAX_FILE_NAME 300
 
 namespace vfs {
+
+using path = bstring256;
+
 /**
  * Wrapper for fopen converting filename to path in current working directory
  * @param filename Filename
@@ -76,5 +79,12 @@ bool file_exists(const char *filename);
  * @return boolean true if the file removal was successful, false otherwise
  */
 bool file_remove(const char *filename);
+
+/**
+* Create folders if not exists
+* Throw exception if path not exists and can not be created
+* @param path to be created
+*/
+void create_folders(const char *path);
 
 } // vfs

@@ -15,6 +15,7 @@
 #include "city/victory.h"
 #include "core/bstring.h"
 #include "core/application.h"
+#include "content/vfs.h"
 #include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "figure/enemy_army.h"
@@ -89,16 +90,12 @@
 
 static const char MISSION_PACK_FILE[] = "mission1.pak";
 
-namespace {
-char const* const SAVE_FOLDER = "Save";
-} // namespace
-
 bstring256 fullpath_saves(const char* filename) {
     if (strncasecmp(filename, "Save/", 5) == 0 || strncasecmp(filename, "Save\\", 5) == 0) {
         return bstring256(filename);
     }
 
-    return bstring256(SAVE_FOLDER, "/", (const char*)setting_player_name(), "/", filename);
+    return bstring256(vfs::SAVE_FOLDER, "/", (const char*)setting_player_name(), "/", filename);
 }
 
 void fullpath_maps(char* full, const char* filename) {
@@ -572,27 +569,6 @@ bool GamestateIO::write_savegame(const char* filename_short) {
     return FILEIO.serialize(full, 0, format, latest_save_version, file_schema);
 }
 
-static void prepare_savegame_schema(e_file_format file_format, const int file_version) {
-    FILEIO.push_chunk(4, false, "family_index", 0);
-}
-
-void GamestateIO::prepare_folders(const char* path) {
-    std::error_code err;
-    if (!std::filesystem::create_directories(path, err) && !std::filesystem::exists(path)) {
-        app::terminate(err.message().c_str());
-    }
-}
-
-bool GamestateIO::prepare_savegame(const char* filename_short) {
-    // concatenate string
-    bstring256 savefile = vfs::dir_get_path(fullpath_saves(filename_short));
-    bstring256 folders = vfs::dir_get_path(fullpath_saves(""));
-
-    prepare_folders(folders);
-    // write file
-    return FILEIO.serialize(savefile, 0, FILE_FORMAT_SAVE_FILE, 160, prepare_savegame_schema);
-}
-
 bool GamestateIO::write_map(const char* filename_short) {
     return false; // TODO
 
@@ -770,12 +746,6 @@ bool GamestateIO::delete_savegame(const char* filename_short) {
 
     // delete file
     return vfs::file_remove(full);
-}
-
-bool GamestateIO::delete_family(char const* family_name) {
-    const std::string folder_path = std::string(SAVE_FOLDER) + "/" + family_name;
-
-    return std::filesystem::remove_all(folder_path) != -1;
 }
 
 bool GamestateIO::delete_map(const char* filename_short) {

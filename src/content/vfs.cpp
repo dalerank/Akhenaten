@@ -1,6 +1,7 @@
 #include "vfs.h"
 
 #include "core/string.h"
+#include "core/log.h"
 #include "platform/platform.h"
 #include "platform/file_manager.h"
 
@@ -83,6 +84,13 @@ bool file_exists(const char *filename) {
 
 bool file_remove(const char *filename) {
     return platform_file_manager_remove_file(filename);
+}
+
+void create_folders(const char* path) {
+    std::error_code err;
+    if (!std::filesystem::create_directories(path, err) && !std::filesystem::exists(path)) {
+        logs::info(err.message().c_str());
+    }
 }
 
 } //
