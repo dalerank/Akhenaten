@@ -8,6 +8,7 @@
 #include "sound/channel.h"
 #include "sound/device.h"
 
+#include <assert.h>
 #include <string.h>
 
 #define MAX_CHANNELS 70
@@ -81,7 +82,7 @@ enum E_SOUND_CHANNEL_CITY {
     SOUND_CHANNEL_CITY_MISSION_POST = 133,
 };
 
-struct city_channel{
+struct city_channel {
     int in_use;
     int available;
     int total_views;
@@ -94,7 +95,12 @@ struct city_channel{
     int should_play;
 };
 
-static city_channel channels[MAX_CHANNELS];
+struct city_sounds_t {
+    time_millis last_update_time;
+    city_channel channels[MAX_CHANNELS];
+};
+
+city_sounds_t g_city_sounds;
 
 static const int int_TO_CHANNEL_ID[] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  // 0-9
@@ -125,15 +131,12 @@ static const int int_TO_CHANNEL_ID[] = {
 
 }; // todo: add additional channels
 
-static time_millis last_update_time;
-
-#include <assert.h>
-
-void sound_city_init(void) {
-    last_update_time = time_get_millis();
+void sound_city_init() {
+    auto &channels = g_city_sounds.channels;
+    g_city_sounds.last_update_time = time_get_millis();
     memset(channels, 0, MAX_CHANNELS * sizeof(city_channel));
     for (int i = 0; i < MAX_CHANNELS; i++)
-        channels[i].last_played_time = last_update_time;
+        channels[i].last_played_time = g_city_sounds.last_update_time;
     for (int i = 1; i < 63; i++) {
         channels[i].in_use = 1;
         channels[i].views_threshold = 200;
@@ -209,6 +212,7 @@ void sound_city_set_volume(int percentage) {
 }
 
 void sound_city_mark_building_view(building* b, int direction) {
+    auto &channels =g_city_sounds.channels;
     if (b->state == BUILDING_STATE_UNUSED)
         return;
 
@@ -231,6 +235,7 @@ void sound_city_mark_building_view(building* b, int direction) {
 }
 
 void sound_city_decay_views(void) {
+    auto &channels = g_city_sounds.channels;
     for (int i = 0; i < MAX_CHANNELS; i++) {
         for (int d = 0; d < 5; d++)
             channels[i].direction_views[d] = 0;
@@ -264,7 +269,9 @@ static void play_channel(int channel, int direction) {
     }
     sound_device_play_channel_panned(channel, setting_sound(SOUND_CITY)->volume, left_pan, right_pan);
 }
-void sound_city_play(void) {
+
+void sound_city_play() {
+    auto &channels = g_city_sounds.channels;
     time_millis now = time_get_millis();
     for (int i = 1; i < MAX_CHANNELS; i++) {
         channels[i].should_play = 0;
@@ -281,9 +288,11 @@ void sound_city_play(void) {
         }
     }
 
-    if (now - last_update_time < 2000)
+    if (now - g_city_sounds.last_update_time < 2000) {
         // Only play 1 sound every 2 seconds
         return;
+    }
+
     time_millis max_delay = 0;
     int max_sound_id = 0;
     for (int i = 1; i < MAX_CHANNELS; i++) {
@@ -310,15 +319,17 @@ void sound_city_play(void) {
         direction = SOUND_DIRECTION_CENTER;
 
     play_channel(channel, direction);
-    last_update_time = now;
+    g_city_sounds.last_update_time = now;
     channels[max_sound_id].last_played_time = now;
     channels[max_sound_id].total_views = 0;
-    for (int d = 0; d < 5; d++)
+    for (int d = 0; d < 5; d++) {
         channels[max_sound_id].direction_views[d] = 0;
+    }
     channels[max_sound_id].times_played++;
 }
 
 io_buffer* iob_city_sounds = new io_buffer([](io_buffer* iob, size_t version) {
+    auto &channels = g_city_sounds.channels;
     for (int i = 0; i < MAX_CHANNELS; i++) {
         city_channel* ch = &channels[i];
         iob->bind(BIND_SIGNATURE_INT32, &ch->available);

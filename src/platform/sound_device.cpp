@@ -43,7 +43,7 @@ static struct {
 #endif
 
 struct sound_channel {
-    const char* filename;
+    bstring128 filename;
     Mix_Chunk* chunk;
 };
 
@@ -97,8 +97,9 @@ static Mix_Chunk* load_chunk(const char* filename) {
 }
 
 static int load_channel(sound_channel* channel) {
-    if (!channel->chunk && channel->filename)
+    if (!channel->chunk && !channel->filename.empty()) {
         channel->chunk = load_chunk(channel->filename);
+    }
 
     return channel->chunk ? 1 : 0;
 }
@@ -111,19 +112,20 @@ static void init_channels(void) {
     }
 }
 
-void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILENAME_MAX]) {
+void sound_device_init_channels(std::span<bstring128> channels) {
     auto &data = g_sound_device_data;
     if (data.initialized) {
+        int num_channels = channels.size();
         if (num_channels > MAX_CHANNELS) {
             num_channels = MAX_CHANNELS;
         }
 
         Mix_AllocateChannels(num_channels);
         logs::info("Loading audio files");
+
         for (int i = 0; i < num_channels; i++) {
-            data.channels[i].chunk = 0;
-            data.channels[i].filename = filenames[i][0] ? filenames[i] : 0;
-            //            SDL_Log("Channel %i : %s", i, data.channels[i].filename);
+            data.channels[i].chunk = nullptr;
+            data.channels[i].filename = channels[i];
         }
     }
 }
@@ -175,7 +177,7 @@ void sound_device_close(void) {
     }
 }
 
-void sound_device_load_formats(void) {
+void sound_device_load_formats() {
     auto &data = g_sound_device_data;
     if (!data.initialized) {
         return;
