@@ -14,7 +14,7 @@ void figure::tax_collector_action() {
         wait_ticks--;
         if (wait_ticks <= 0) {
             map_point road_tile;
-            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
+            if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                 action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
                 set_cross_country_destination(road_tile.x(), road_tile.y());
                 roam_length = 0;
@@ -43,7 +43,7 @@ void figure::tax_collector_action() {
         roam_length++;
         if (roam_length >= max_roam_length) {
             map_point road_tile;
-            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
+            if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                 action_state = FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING;
                 destination_tile = road_tile;
             } else {

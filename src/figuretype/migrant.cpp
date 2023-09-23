@@ -193,7 +193,7 @@ void figure::emigrant_action() {
             route_remove();
             state = FIGURE_STATE_ALIVE;
             tile2i road_tile;
-            map_closest_road_within_radius(exit.x(), exit.y(), 1, 2, road_tile);
+            map_closest_road_within_radius(exit, 1, 2, road_tile);
             destination_tile = road_tile;
             direction = DIR_0_TOP_RIGHT;
             advance_action(ACTION_16_EMIGRANT_RANDOM);
@@ -219,7 +219,7 @@ void figure::homeless_action() {
             if (building_id) {
                 building* b = building_get(building_id);
                 tile2i road_tile;
-                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
+                if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                     b->set_figure(2, id);
                     set_immigrant_home(building_id);
                     advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
@@ -250,7 +250,7 @@ void figure::homeless_action() {
             if (building_id > 0) {
                 building* b = building_get(building_id);
                 map_point road_tile;
-                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
+                if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                     b->set_figure(2, id);
                     set_immigrant_home(building_id);
                     advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);

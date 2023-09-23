@@ -30,7 +30,7 @@ static const int CRIMINAL_OFFSETS[] = {0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3,
 
 static void generate_rioter(building* b) {
     map_point road_tile;
-    if (!map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 4, road_tile)) {
+    if (!map_closest_road_within_radius(b->tile, b->size, 4, road_tile)) {
         return;
     }
 
@@ -80,7 +80,7 @@ static void generate_mugger(building* b) {
     if (b->house_criminal_active > 60 && city_can_create_mugger()) {
         b->house_criminal_active -= 60;
         map_point road_tile;
-        if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
+        if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
             figure* f = figure_create(FIGURE_CRIMINAL, road_tile, DIR_4_BOTTOM_LEFT);
             f->advance_action(FIGURE_ACTION_120_MUGGER_CREATED);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
@@ -116,7 +116,7 @@ static void generate_protestor(building* b) {
     if (b->house_criminal_active > 30 && city_can_create_protestor()) {
         b->house_criminal_active -= 30;
         map_point road_tile;
-        if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
+        if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
             figure* f = figure_create(FIGURE_PROTESTER, road_tile, DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
             city_ratings_monument_record_criminal();
@@ -208,7 +208,7 @@ void figure::mugger_action() {
         int senate_id = city_buildings_get_palace_id();
         building* b_dst = building_get(senate_id);
         map_point road_tile;
-        if (map_closest_road_within_radius(b_dst->tile.x(), b_dst->tile.y(), b_dst->size, 2, road_tile)) {
+        if (map_closest_road_within_radius(b_dst->tile, b_dst->size, 2, road_tile)) {
             destination_tile = road_tile;
             set_destination(senate_id);
             advance_action(FIGURE_ACTION_121_MUGGER_MOVING);

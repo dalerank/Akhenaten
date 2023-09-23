@@ -225,7 +225,7 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, int terrainchoic
             }
 
             if (!found_road) {
-                found_road = map_closest_road_within_radius(main->tile.x(), main->tile.y(), 3, 1, finish_tile);
+                found_road = map_closest_road_within_radius(main->tile, 3, 1, finish_tile);
             }
 
             if (found_road && is_coords_within_range(tile.x(), tile.y(), main->tile.x(), main->tile.y(), 3, 1)) {
@@ -249,9 +249,9 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, int terrainchoic
 
                 if (!found_road) {
                     if (building_is_house(dest->type) || dest->type == BUILDING_BURNING_RUIN) {
-                        found_road = map_closest_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 2, finish_tile);
+                        found_road = map_closest_road_within_radius(dest->tile, dest->size, 2, finish_tile);
                     } else {
-                        found_road = map_closest_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 1, finish_tile);
+                        found_road = map_closest_road_within_radius(dest->tile, dest->size, 1, finish_tile);
                     }
                 }
 

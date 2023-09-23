@@ -16,7 +16,7 @@ bool map_has_road_access_temple_complex(int x, int y, int orientation, bool from
 
 // int map_has_road_access_granary(int x, int y, map_point *road);
 
-bool map_closest_road_within_radius(int x, int y, int size, int radius, map_point &road_tile);
+bool map_closest_road_within_radius(tile2i tile, int size, int radius, map_point &road_tile);
 
 bool map_closest_reachable_road_within_radius(int x, int y, int size, int radius, map_point &road_tile);
 bool map_reachable_road_within_radius(int x, int y, int size, int radius, map_point &road_tile);

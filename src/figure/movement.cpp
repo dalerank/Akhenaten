@@ -351,7 +351,7 @@ void figure::init_roaming_from_building(int roam_dir) {
     // look for a road within the search area
     map_grid_bound(&offset_search_x, &offset_search_y);
     map_point road_tile;
-    int found_road = map_closest_road_within_radius(offset_search_x, offset_search_y, 1, 6, road_tile);
+    int found_road = map_closest_road_within_radius(tile2i(offset_search_x, offset_search_y), 1, 6, road_tile);
     int road_network_original = map_road_network_get(MAP_OFFSET(tile.x(), tile.y()));
     int road_network_found = map_road_network_get(MAP_OFFSET(road_tile.x(), road_tile.y()));
 

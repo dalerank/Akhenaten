@@ -241,7 +241,7 @@ void building_maintenance_check_rome_access(void) {
         if (b->house_size) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/House");
             map_point road_tile;
-            if (!map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
+            if (!map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                 // no road: eject people
                 b->distance_from_entry = 0;
                 b->house_unreachable_ticks++;

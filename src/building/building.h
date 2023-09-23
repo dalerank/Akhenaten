@@ -142,16 +142,16 @@ public:
             unsigned char worker_id;
         } industry;
         struct entertainment_t {
-            unsigned char num_shows;
-            unsigned char days1;
-            unsigned char days2;
-            //            unsigned char days3;
-            unsigned char days3_or_play;
+            uint8_t num_shows;
+            uint8_t days1;
+            uint8_t days2;
+            uint8_t days3_or_play;
             uint32_t booth_corner_grid_offset;
             uint32_t latched_venue_main_grid_offset;
             uint32_t latched_venue_add_grid_offset;
             uint8_t orientation;
             uint8_t ent_reserved_u8;
+            uint8_t jugglers_delay;
         } entertainment;
         struct {
             short foods[8];

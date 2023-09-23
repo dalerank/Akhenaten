@@ -200,7 +200,7 @@ void figure::entertainer_action() {
         wait_ticks--;
         if (wait_ticks <= 0) { // todo: summarize
             map_point road_tile;
-            if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
+            if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                 action_state = FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL;
                 set_cross_country_destination(road_tile.x(), road_tile.y());
                 roam_length = 0;
@@ -235,7 +235,7 @@ void figure::entertainer_action() {
             if (dst_building_id) { // todo: summarize
                 building* b_dst = building_get(dst_building_id);
                 map_point road_tile;
-                if (map_closest_road_within_radius(b_dst->tile.x(), b_dst->tile.y(), b_dst->size, 2, road_tile)) {
+                if (map_closest_road_within_radius(b_dst->tile, b_dst->size, 2, road_tile)) {
                     set_destination(dst_building_id);
                     advance_action(FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
                     destination_tile = road_tile;
@@ -273,7 +273,7 @@ void figure::entertainer_action() {
             if (dst_building_id) { // todo: summarize
                 building* b_dst = building_get(dst_building_id);
                 map_point road_tile;
-                if (map_closest_road_within_radius(b_dst->tile.x(), b_dst->tile.y(), b_dst->size, 2, road_tile)) {
+                if (map_closest_road_within_radius(b_dst->tile, b_dst->size, 2, road_tile)) {
                     set_destination(dst_building_id);
                     advance_action(FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
                     destination_tile = road_tile;

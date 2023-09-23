@@ -176,10 +176,10 @@ bool map_road_within_radius(int x, int y, int size, int radius, map_point &road_
     return false;
 }
 
-bool map_closest_road_within_radius(int x, int y, int size, int radius, map_point &road_tile) {
+bool map_closest_road_within_radius(tile2i tile, int size, int radius, map_point &road_tile) {
     OZZY_PROFILER_SECTION("map_closest_road_within_radius");
     for (int r = 1; r <= radius; r++) {
-        if (map_road_within_radius(x, y, size, r, road_tile))
+        if (map_road_within_radius(tile.x(), tile.y(), size, r, road_tile))
             return true;
     }
     return false;

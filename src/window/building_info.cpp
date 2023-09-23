@@ -240,28 +240,28 @@ void highlight_waypoints(building* b) { // highlight the 4 routing tiles for roa
     hx = b->tile.x();
     hy = b->tile.y() - 8;
     map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(hx, hy, 1, 6, road_tile)) {
+    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
         map_highlight_set(road_tile.grid_offset());
     }
 
     hx = b->tile.x() + 8;
     hy = b->tile.y();
     map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(hx, hy, 1, 6, road_tile)) {
+    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
         map_highlight_set(road_tile.grid_offset());
     }
 
     hx = b->tile.x();
     hy = b->tile.y() + 8;
     map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(hx, hy, 1, 6, road_tile)) {
+    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
         map_highlight_set(road_tile.grid_offset());
     }
 
     hx = b->tile.x() - 8;
     hy = b->tile.y();
     map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(hx, hy, 1, 6, road_tile)) {
+    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
         map_highlight_set(road_tile.grid_offset());
     }
 
