@@ -4,6 +4,7 @@
 #include "core/log.h"
 #include "platform/platform.h"
 #include "content/content.h"
+#include "reader.h"
 
 #include <filesystem>
 
@@ -11,6 +12,17 @@ namespace vfs{
 
 FILE * file_open(const char *filename, const char *mode) {
     return platform_file_manager_open_file(filename, mode);
+}
+
+reader file_open(path path) {
+    FILE *f = file_open(path.c_str(), "rb");
+    fseek(f, 0, SEEK_END);
+    uint32_t size = ftell(f);
+    void *mem = malloc(size);
+    fseek(f, 0, SEEK_SET);
+    fread(mem, 1, size, f);
+    fclose(f);
+    return std::make_shared<data_reader>(path.c_str(), mem, size);
 }
 
 int file_close(FILE * stream) {

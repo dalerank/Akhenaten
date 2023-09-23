@@ -9,6 +9,7 @@
 #include <string.h>
 
 using pcstr = const char *;
+using pstr = char *;
 
 template <size_t _size>
 class bstring {

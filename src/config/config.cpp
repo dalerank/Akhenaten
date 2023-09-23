@@ -5,8 +5,6 @@
 
 #include <string.h>
 
-#define MAX_LINE 100
-
 static const char* INI_FILENAME = "ozymandias.ini";
 
 // Keep this in the same order as the ints in config.h
@@ -129,16 +127,18 @@ void config_set_defaults() {
             default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR],
             CONFIG_STRING_VALUE_MAX);
 }
+
 void config_load() {
     config_set_defaults();
-    bstring256 fs_file = vfs::dir_get_path(INI_FILENAME);
+    vfs::path fs_file = vfs::dir_get_path(INI_FILENAME);
 
-    FILE* fp = vfs::file_open(fs_file, "rt");
-    if (!fp)
+    vfs::reader fp = vfs::file_open(fs_file);
+    if (!fp) {
         return;
-    char line_buffer[MAX_LINE];
+    }
+    bstring128 line_buffer;
     char* line;
-    while ((line = fgets(line_buffer, MAX_LINE, fp))) {
+    while ((line = fp->readline(line_buffer, line_buffer.capacity))) {
         // Remove newline from string
         size_t size = strlen(line);
         while (size > 0 && (line[size - 1] == '\n' || line[size - 1] == '\r')) {
@@ -166,7 +166,6 @@ void config_load() {
             }
         }
     }
-    vfs::file_close(fp);
 }
 
 void config_save() {

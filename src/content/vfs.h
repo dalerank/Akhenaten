@@ -1,6 +1,7 @@
 #pragma once
 
 #include "content/dir.h"
+#include "content/reader.h"
 
 #include <stdint.h>
 #include <stdio.h>
@@ -28,6 +29,8 @@ using path = bstring256;
  * @return FILE
  */
 FILE *file_open(const char *filename, const char *mode);
+reader file_open(path path);
+
 
 /**
  * Wrapper to fclose
