@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/list.h"
+#include "building/model.h"
 #include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/image.h"
@@ -15,7 +16,44 @@
 #include "scenario/gladiator_revolt.h"
 #include "core/svector.h"
 
-int determine_venue_destination(map_point tile, int type1, int type2, int type3) {
+int determine_closest_venue_destination(map_point tile, int type1, int type2, int type3) {
+    int road_network = map_road_network_get(tile);
+
+    svector<building *, 128> venues;
+    buildings_valid_do([&] (building &b) {
+        if (building_type_none_of(b, type1, type2, type3)) {
+            return;
+        }
+
+        if (b.distance_from_entry && b.road_network_id == road_network) {
+            if (!b.is_main()) { // only send directly to the main building
+                return;
+            }
+            venues.push_back(&b);
+        }
+    });
+
+    if (venues.empty()) {
+        return 0;
+    }
+
+    int min_distance = 10000;
+    int min_building_id = 0;
+    for (building *v : venues) {
+        building *b = v->main();
+
+        int dist = calc_maximum_distance(tile, b->tile);
+
+        if (dist < min_distance) {
+            min_distance = dist;
+            min_building_id = v->id;
+        }
+    }
+
+    return min_building_id;
+}
+
+int determine_venue_destination(tile2i tile, int type1, int type2, int type3) {
     int road_network = map_road_network_get(tile);
 
     svector<building *, 128> venues;
@@ -157,7 +195,6 @@ void figure::entertainer_action() {
         break;
 
     case FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED:
-        //            is_ghost = true;
         anim_frame = 0;
         wait_ticks_missile = 0;
         wait_ticks--;
@@ -200,14 +237,53 @@ void figure::entertainer_action() {
                 map_point road_tile;
                 if (map_closest_road_within_radius(b_dst->tile.x(), b_dst->tile.y(), b_dst->size, 2, road_tile)) {
                     set_destination(dst_building_id);
-                    action_state = FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE;
+                    advance_action(FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
                     destination_tile = road_tile;
                     roam_length = 0;
                 } else {
-                    poof();
+                    advance_action(FIGURE_ACTION_93_ENTERTAINER_GOING_TO_RANDOM_ROAD);
                 }
-            } else
-                poof();
+            } else {
+                advance_action(FIGURE_ACTION_93_ENTERTAINER_GOING_TO_RANDOM_ROAD);
+            }
+        }
+        break;
+
+    case FIGURE_ACTION_93_ENTERTAINER_GOING_TO_RANDOM_ROAD:
+        {
+            int dst_building_id = 0;
+            switch (type) {
+            case FIGURE_JUGGLER:
+                dst_building_id = determine_closest_venue_destination(tile, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION);
+                break;
+
+            case FIGURE_MUSICIAN:
+                dst_building_id = determine_closest_venue_destination(tile, BUILDING_BANDSTAND, BUILDING_PAVILLION, 0);
+                break;
+
+            case FIGURE_DANCER:
+                dst_building_id = determine_closest_venue_destination(tile, BUILDING_PAVILLION, 0, 0);
+                break;
+
+            case FIGURE_CHARIOTEER:
+                dst_building_id = determine_closest_venue_destination(tile, BUILDING_SENET_HOUSE, 0, 0);
+                break;
+            }
+
+            if (dst_building_id) { // todo: summarize
+                building* b_dst = building_get(dst_building_id);
+                map_point road_tile;
+                if (map_closest_road_within_radius(b_dst->tile.x(), b_dst->tile.y(), b_dst->size, 2, road_tile)) {
+                    set_destination(dst_building_id);
+                    advance_action(FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+                    destination_tile = road_tile;
+                    roam_length = 0;
+                } else {
+                    advance_action(ACTION_11_RETURNING_EMPTY);
+                }
+            } else {
+                advance_action(ACTION_11_RETURNING_EMPTY);
+            }
         }
         break;
 
@@ -220,7 +296,13 @@ void figure::entertainer_action() {
         }
 
         if (do_gotobuilding(destination())) {
-            entertainer_update_shows();
+            building *b_dst = destination();
+            int labores = b_dst ? model_get_building(b_dst->type)->laborers : 999;
+            if (b_dst && b_dst->num_workers > labores / 2) {
+                entertainer_update_shows();
+            } else {
+                advance_action(ACTION_11_RETURNING_EMPTY);
+            }
         }
         break;
 
