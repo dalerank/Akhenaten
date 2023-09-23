@@ -32,13 +32,13 @@ static int focus_button_id;
 
 static int get_entertainment_advice(void) {
     const house_demands* demands = city_houses_demands();
-    if (demands->missing.entertainment > demands->missing.more_entertainment)
+    if (demands->missing.entertainment > demands->missing.more_entertainment) {
         return 3;
-    else if (!demands->missing.more_entertainment)
+    } else if (!demands->missing.more_entertainment) {
         return city_culture_average_entertainment() ? 1 : 0;
-    else if (city_entertainment_venue_needing_shows())
+    } else if (city_entertainment_venue_needing_shows()) {
         return 3 + city_entertainment_venue_needing_shows();
-    else {
+    } else {
         return 2;
     }
 }
@@ -140,7 +140,7 @@ static void draw_foreground(void) {
 }
 
 static bool handle_mouse(const mouse* m) {
-    //    return generic_buttons_handle_mouse(m, 0, 0, hold_festival_button, 1, &focus_button_id);
+    return generic_buttons_handle_mouse(m, 0, 0, hold_festival_button, 1, &focus_button_id);
 }
 
 static void button_hold_festival(int param1, int param2) {
@@ -149,9 +149,9 @@ static void button_hold_festival(int param1, int param2) {
 }
 
 static int get_tooltip_text(void) {
-    if (focus_button_id)
+    if (focus_button_id) {
         return 112;
-    else {
+    }else {
         return 0;
     }
 }

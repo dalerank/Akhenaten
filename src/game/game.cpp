@@ -47,6 +47,7 @@ static int is_unpatched(void) {
     // languages (pt_BR): delete game falls through to option menu
     return difficulty_option == help_menu || delete_game == option_menu;
 }
+
 static encoding_type update_encoding(void) {
     int language = locale_determine_language();
     encoding_type encoding = encoding_determine(language);
@@ -55,6 +56,7 @@ static encoding_type update_encoding(void) {
     translation_load(language);
     return encoding;
 }
+
 static bool reload_language(int is_editor, int reload_images) {
     if (!lang_load(is_editor)) {
         if (is_editor)

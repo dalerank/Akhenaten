@@ -4,7 +4,7 @@
 #include "content/vfs.h"
 #include "platform/android/android.h"
 #include "platform/android/jni.h"
-#include "platform/file_manager.h"
+#include "content/content.h"
 
 #include "android/asset_manager.h"
 #include "android/asset_manager_jni.h"
@@ -24,7 +24,7 @@ static AAssetManager *asset_manager;
 
 static int assets_directory_found(const char *dummy, long unused)
 {
-    return LIST_MATCH;
+    return vfs::LIST_MATCH;
 }
 
 static void determine_assets_location(void)
@@ -113,17 +113,17 @@ int asset_handler_get_directory_contents(const char *dir_name, int type, const c
     }
     AAssetManager *manager = get_asset_manager();
     if (!manager) {
-        return LIST_ERROR;
+        return vfs::LIST_ERROR;
     }
     AAssetDir *dir = AAssetManager_openDir(manager, dir_name);
-    int match = LIST_NO_MATCH;
+    int match = vfs::LIST_NO_MATCH;
     const char *asset_name = 0;
     while ((asset_name = AAssetDir_getNextFileName(dir))) {
         const char *asset_extension = strrchr(asset_name, '.');
         if (asset_extension && strcmp(asset_extension + 1, extension) == 0) {
             match = callback(asset_name);
         }
-        if (match == LIST_MATCH) {
+        if (match == vfs::LIST_MATCH) {
             break;
         }
     }

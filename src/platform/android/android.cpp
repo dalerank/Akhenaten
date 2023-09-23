@@ -5,7 +5,7 @@
 #include "content/vfs.h"
 #include "platform/android/asset_handler.h"
 #include "platform/android/jni.h"
-#include "platform/file_manager.h"
+#include "content/content.h"
 
 #include <SDL.h>
 #include <string.h>
@@ -111,18 +111,18 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "getDirectoryFileList",
         "(L" CLASS_OZYMANDIAS_ACTIVITY ";Ljava/lang/String;ILjava/lang/String;)[L" CLASS_FILE_MANAGER "$FileInfo;", &handler)) {
         jni_destroy_function_handler(&handler);
-        return LIST_ERROR;
+        return vfs::LIST_ERROR;
     }
     if (!jni_get_method_handler(CLASS_FILE_MANAGER "$FileInfo", "getName", "()Ljava/lang/String;", &get_name)) {
         jni_destroy_function_handler(&get_name);
         jni_destroy_function_handler(&handler);
-        return LIST_ERROR;
+        return vfs::LIST_ERROR;
     }
     if (!jni_get_method_handler(CLASS_FILE_MANAGER "$FileInfo", "getModifiedTime", "()J", &get_last_modified_time)) {
         jni_destroy_function_handler(&get_last_modified_time);
         jni_destroy_function_handler(&get_name);
         jni_destroy_function_handler(&handler);
-        return LIST_ERROR;
+        return vfs::LIST_ERROR;
     }
 
     jstring jdir = handler.env->NewStringUTF(dir);
@@ -130,7 +130,7 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
     jobjectArray result = (jobjectArray) handler.env->CallStaticObjectMethod(handler.nclass, handler.method, handler.activity, jdir, type, jextension);
     handler.env->DeleteLocalRef(jdir);
     handler.env->DeleteLocalRef(jextension);
-    int match = LIST_NO_MATCH;
+    int match = vfs::LIST_NO_MATCH;
     int len = handler.env->GetArrayLength(result);
     for (int i = 0; i < len; ++i) {
         jobject jfile_info = (jobject) handler.env->GetObjectArrayElement(result, i);
@@ -141,7 +141,7 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
         handler.env->ReleaseStringUTFChars((jstring) jfilename, filename);
         handler.env->DeleteLocalRef(jfilename);
         handler.env->DeleteLocalRef(jfile_info);
-        if (match == LIST_MATCH) {
+        if (match == vfs::LIST_MATCH) {
             break;
         }
     }
