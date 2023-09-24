@@ -20,6 +20,7 @@
 
 #define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2"
 #define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
+#define MIXED_MODE_ERROR_MESSAGE "Option --mixed should have path to script folder"
 #define UNKNOWN_OPTION_ERROR_MESSAGE "Option %s not recognized"
 
 namespace {
@@ -198,7 +199,7 @@ char const* Arguments::usage() {
            "  --window\n"
            "          enable window mode\n"
            "  --mixed\n"
-           "          read configs from disk\n"
+           "          hot reload scripts from disk\n"
            "\n"
            "The last argument, if present, is interpreted as data directory of the Pharaoh installation";
 }
@@ -259,6 +260,10 @@ void Arguments::set_data_directory(const char * value) {
     data_directory_ = value;
 }
 
+const char *Arguments::get_scripts_directory() const {
+    return scripts_directory_;
+}
+
 display_size Arguments::get_window_size() const {
     return window_size_;
 }
@@ -272,16 +277,19 @@ void Arguments::parse_cli_(int argc, char** argv) {
         // ignore "-psn" arguments, this is needed to launch the app
         // from the Finder on macOS.
         // https://hg.libsdl.org/SDL/file/c005c49beaa9/test/testdropfile.c#l47
-        if (SDL_strcmp(argv[i], "-psn") == 0)
+        if (SDL_strcmp(argv[i], "-psn") == 0) {
             continue;
-        else if (SDL_strcmp(argv[i], "--window") == 0)
+
+        } else if (SDL_strcmp(argv[i], "--window") == 0) {
             window_mode_ = true;
-        else if (SDL_strcmp(argv[i], "--render") == 0) {
+
+        } else if (SDL_strcmp(argv[i], "--render") == 0) {
             if (i + 1 < argc) {
                 renderer_ = argv[i + 1];
                 ++i;
-            } else
+            } else {
                 app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+            }
         } else if (SDL_strcmp(argv[i], "--display-scale") == 0) {
             if (i + 1 < argc) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
@@ -294,22 +302,32 @@ void Arguments::parse_cli_(int argc, char** argv) {
             if (i + 1 < argc) {
                 SDL_sscanf(argv[i + 1], "%dx%d", &window_size_.w, &window_size_.h);
                 ++i;
-            } else
+            } else {
                 app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+            }
         } else if (SDL_strcmp(argv[i], "--mixed") == 0) {
-            vfs::set_mixed_mode(true);
+            if (i + 1 < argc) {
+                scripts_directory_ = argv[i + 1];
+                ++i;
+            } else {
+                app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+            }
+
         } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
             if (i + 1 < argc) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
                 ++i;
 
                 set_cursor_scale_percentage(percentage);
-            } else
+            } else {
                 app::terminate(CURSOR_SCALE_ERROR_MESSAGE);
+            }
         } else if (SDL_strcmp(argv[i], "--help") == 0)
             app::terminate(usage());
+
         else if (SDL_strncmp(argv[i], "--", 2) == 0) {
             app::terminate(bstring256(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));
+
         } else {
             // TODO: ???? check that there are no other arguments after
             data_directory_ = argv[i];

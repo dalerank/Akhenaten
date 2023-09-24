@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/bstring.h"
+#include "content/vfs.h"
 #include "game/settings.h"
 
 class Arguments {
@@ -30,8 +30,12 @@ public:
     [[nodiscard]] display_size get_window_size() const;
     void set_window_size(display_size value);
 
+    [[nodiscard]] const char* get_scripts_directory() const;
+
 private:
-    bstring256 data_directory_;
+    vfs::path data_directory_;
+    vfs::path scripts_directory_;
+
     bstring64 renderer_;
     int display_scale_percentage_ = 100;
     int cursor_scale_percentage_ = 100;
