@@ -13,75 +13,6 @@
 
 #define MAX_CHANNELS 70
 
-// for compatibility with the original game:
-#define CITY_CHANNEL_OFFSET 15
-
-enum E_SOUND_CHANNEL_CITY {
-    SOUND_CHANNEL_CITY_HOUSE_SLUM = 30,
-    SOUND_CHANNEL_CITY_HOUSE_POOR = 34,
-    SOUND_CHANNEL_CITY_HOUSE_MEDIUM = 38,
-    SOUND_CHANNEL_CITY_HOUSE_GOOD = 42,
-    SOUND_CHANNEL_CITY_HOUSE_POSH = 46,
-    SOUND_CHANNEL_CITY_AMPHITHEATER = 50,
-    SOUND_CHANNEL_CITY_THEATER = 51,
-    SOUND_CHANNEL_CITY_HIPPODROME = 52,
-    SOUND_CHANNEL_CITY_COLOSSEUM = 53,
-    SOUND_CHANNEL_CITY_GLADIATOR_SCHOOL = 54,
-    SOUND_CHANNEL_CITY_LION_PIT = 55,
-    SOUND_CHANNEL_CITY_ACTOR_COLONY = 56,
-    SOUND_CHANNEL_CITY_CHARIOT_MAKER = 57,
-    SOUND_CHANNEL_CITY_GARDEN = 58,
-    SOUND_CHANNEL_CITY_CLINIC = 62,
-    SOUND_CHANNEL_CITY_HOSPITAL = 63,
-    SOUND_CHANNEL_CITY_BATHHOUSE = 64,
-    SOUND_CHANNEL_CITY_BARBER = 65,
-    SOUND_CHANNEL_CITY_SCHOOL = 66,
-    SOUND_CHANNEL_CITY_ACADEMY = 67,
-    SOUND_CHANNEL_CITY_LIBRARY = 68,
-    SOUND_CHANNEL_CITY_PREFECTURE = 69,
-    SOUND_CHANNEL_CITY_FORT = 70,
-    SOUND_CHANNEL_CITY_TOWER = 74,
-    SOUND_CHANNEL_CITY_TEMPLE_CERES = 78,
-    SOUND_CHANNEL_CITY_TEMPLE_NEPTUNE = 79,
-    SOUND_CHANNEL_CITY_TEMPLE_MERCURY = 80,
-    SOUND_CHANNEL_CITY_TEMPLE_MARS = 81,
-    SOUND_CHANNEL_CITY_TEMPLE_VENUS = 82,
-    SOUND_CHANNEL_CITY_MARKET = 83,
-    SOUND_CHANNEL_CITY_GRANARY = 87,
-    SOUND_CHANNEL_CITY_WAREHOUSE = 89,
-    SOUND_CHANNEL_CITY_SHIPYARD = 91,
-    SOUND_CHANNEL_CITY_DOCK = 93,
-    SOUND_CHANNEL_CITY_WHARF = 95,
-    SOUND_CHANNEL_CITY_PALACE = 97,
-    SOUND_CHANNEL_CITY_ENGINEERS_POST = 98,
-    SOUND_CHANNEL_CITY_SENATE = 99,
-    SOUND_CHANNEL_CITY_FORUM = 100,
-    SOUND_CHANNEL_CITY_RESERVOIR = 101,
-    SOUND_CHANNEL_CITY_FOUNTAIN = 102,
-    SOUND_CHANNEL_CITY_WELL = 106,
-    SOUND_CHANNEL_CITY_MILITARY_ACADEMY = 110,
-    SOUND_CHANNEL_CITY_ORACLE = 111,
-    SOUND_CHANNEL_CITY_BURNING_RUIN = 112,
-    SOUND_CHANNEL_CITY_WHEAT_FARM = 113,
-    SOUND_CHANNEL_CITY_VEGETABLE_FARM = 114,
-    SOUND_CHANNEL_CITY_FRUIT_FARM = 115,
-    SOUND_CHANNEL_CITY_OLIVE_FARM = 116,
-    SOUND_CHANNEL_CITY_VINE_FARM = 117,
-    SOUND_CHANNEL_CITY_PIG_FARM = 118,
-    SOUND_CHANNEL_CITY_QUARRY = 119,
-    SOUND_CHANNEL_CITY_IRON_MINE = 120,
-    SOUND_CHANNEL_CITY_TIMBER_YARD = 121,
-    SOUND_CHANNEL_CITY_CLAY_PIT = 122,
-    SOUND_CHANNEL_CITY_WINE_WORKSHOP = 123,
-    SOUND_CHANNEL_CITY_OIL_WORKSHOP = 124,
-    SOUND_CHANNEL_CITY_WEAPONS_WORKSHOP = 125,
-    SOUND_CHANNEL_CITY_FURNITURE_WORKSHOP = 126,
-    SOUND_CHANNEL_CITY_POTTERY_WORKSHOP = 127,
-    SOUND_CHANNEL_CITY_EMPTY_LAND = 128,
-    SOUND_CHANNEL_CITY_RIVER = 132,
-    SOUND_CHANNEL_CITY_MISSION_POST = 133,
-};
-
 struct city_channel {
     int in_use;
     int available;
@@ -102,46 +33,20 @@ struct city_sounds_t {
 
 city_sounds_t g_city_sounds;
 
-static const int int_TO_CHANNEL_ID[] = {
-  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  // 0-9
-  1,  1,  1,  1,  1,  1,  2,  2,  2,  2,  // 10-19
-  3,  3,  3,  3,  4,  4,  4,  4,  5,  5,  // 20-29
-  6,  7,  8,  9,  10, 11, 12, 13, 0,  14, // 30-39
-  0,  0,  0,  0,  0,  0,  15, 16, 17, 18, // 40-49
-  0,  19, 20, 21, 0,  22, 0,  23, 24, 24, // 50-59
-  25, 26, 27, 28, 29, 25, 26, 27, 28, 29, // 60-69
-  30, 31, 32, 0,  33, 34, 35, 36, 36, 36, // 70-79
-  63, 37, 0,  0,  38, 38, 39, 39, 0,  0,  // 80-89
-  40, 0,  0,  0,  43, 0,  0,  0,  44, 45, // 90-99
-  46, 47, 48, 49, 50, 51, 52, 53, 54, 55, // 100-109
-  56, 57, 58, 59, 60, 0,  0,  0,  0,  0,  // 110-119
-  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  // 120-129
-  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  // 130-139
-  25, 26, 27, 28, 29, 0,                  // 140-145
-  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  // 146-155
-  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  // 156-165
-  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  // 166-175
-  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  // 176-185
-  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  // 186-195
-  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  // 196-205
-  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  // 206-215
-  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  // 216-225
-  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  // 226-235
-  0,                                      // 236
-
-}; // todo: add additional channels
-
 void sound_city_init() {
     auto &channels = g_city_sounds.channels;
     g_city_sounds.last_update_time = time_get_millis();
     memset(channels, 0, MAX_CHANNELS * sizeof(city_channel));
-    for (int i = 0; i < MAX_CHANNELS; i++)
+    for (int i = 0; i < MAX_CHANNELS; i++) {
         channels[i].last_played_time = g_city_sounds.last_update_time;
+    }
+
     for (int i = 1; i < 63; i++) {
         channels[i].in_use = 1;
         channels[i].views_threshold = 200;
         channels[i].delay_millis = 30000;
     }
+
     channels[1].channel = SOUND_CHANNEL_CITY_HOUSE_SLUM;
     channels[2].channel = SOUND_CHANNEL_CITY_HOUSE_POOR;
     channels[3].channel = SOUND_CHANNEL_CITY_HOUSE_MEDIUM;
@@ -206,27 +111,71 @@ void sound_city_init() {
     channels[62].channel = SOUND_CHANNEL_CITY_RIVER;
     channels[63].channel = SOUND_CHANNEL_CITY_MISSION_POST;
 }
+
 void sound_city_set_volume(int percentage) {
     for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++)
         sound_device_set_channel_volume(i, percentage);
 }
 
+int building_type_to_channel(building *b) {
+    switch (b->type) {
+
+    case BUILDING_HOUSE_SMALL_HUT:
+        if (b->house_population <= 0)
+            return 0;
+        // falltrougth
+    case BUILDING_HOUSE_LARGE_HUT:
+    case BUILDING_HOUSE_SMALL_SHACK:
+    case BUILDING_HOUSE_LARGE_SHACK:
+        return SOUND_CHANNEL_CITY_HOUSE_SLUM;
+
+    case BUILDING_HOUSE_SMALL_HOVEL:
+    case BUILDING_HOUSE_LARGE_HOVEL:
+    case BUILDING_HOUSE_SMALL_CASA:
+    case BUILDING_HOUSE_LARGE_CASA:
+        return SOUND_CHANNEL_CITY_HOUSE_POOR;
+
+    case BUILDING_HOUSE_SMALL_INSULA:
+    case BUILDING_HOUSE_MEDIUM_INSULA:
+    case BUILDING_HOUSE_LARGE_INSULA:
+    case BUILDING_HOUSE_GRAND_INSULA:
+        return SOUND_CHANNEL_CITY_HOUSE_MEDIUM;
+
+    case BUILDING_HOUSE_SMALL_VILLA:
+    case BUILDING_HOUSE_MEDIUM_VILLA:
+    case BUILDING_HOUSE_LARGE_VILLA:
+    case BUILDING_HOUSE_GRAND_VILLA:
+        return SOUND_CHANNEL_CITY_HOUSE_GOOD;
+
+    case BUILDING_HOUSE_SMALL_PALACE:
+    case BUILDING_HOUSE_MEDIUM_PALACE:
+    case BUILDING_HOUSE_LARGE_PALACE:
+    case BUILDING_HOUSE_LUXURY_PALACE:
+        return SOUND_CHANNEL_CITY_HOUSE_POSH;
+    }
+
+    return 0;
+}
+
 void sound_city_mark_building_view(building* b, int direction) {
-    auto &channels =g_city_sounds.channels;
-    if (b->state == BUILDING_STATE_UNUSED)
+    auto &channels = g_city_sounds.channels;
+    if (b->state == BUILDING_STATE_UNUSED) {
         return;
+    }
 
     int type = b->type;
     assert(type <= 236);
-    int channel = int_TO_CHANNEL_ID[type];
-    if (!channel)
+    int system_channel_index = building_type_to_channel(b);
+    if (!system_channel_index) {
         return;
+    }
 
-    if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_CONSERVATORY
-        || type == BUILDING_SENET_HOUSE) {
+    int channel = system_channel_index - SOUND_CHANNEL_CITY_START;
+    if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_CONSERVATORY || type == BUILDING_SENET_HOUSE) {
         // entertainment is shut off when caesar invades
-        if (b->num_workers <= 0 || city_figures_imperial_soldiers() > 0)
+        if (b->num_workers <= 0 || city_figures_imperial_soldiers() > 0) {
             return;
+        }
     }
 
     channels[channel].available = 1;
@@ -243,30 +192,37 @@ void sound_city_decay_views(void) {
     }
 }
 
-static void play_channel(int channel, int direction) {
-    channel += CITY_CHANNEL_OFFSET;
-    if (!setting_sound(SOUND_CITY)->enabled)
+static void sound_city_play_channel(int channel, int direction) {
+    if (!setting_sound(SOUND_CITY)->enabled) {
         return;
-    if (sound_device_is_channel_playing(channel))
+    }
+
+    if (sound_device_is_channel_playing(channel)) {
         return;
+    }
+
     int left_pan;
     int right_pan;
     switch (direction) {
     case SOUND_DIRECTION_CENTER:
         left_pan = right_pan = 100;
         break;
+
     case SOUND_DIRECTION_LEFT:
         left_pan = 100;
         right_pan = 0;
         break;
+
     case SOUND_DIRECTION_RIGHT:
         left_pan = 0;
         right_pan = 100;
         break;
+
     default:
         left_pan = right_pan = 0;
         break;
     }
+
     sound_device_play_channel_panned(channel, setting_sound(SOUND_CITY)->volume, left_pan, right_pan);
 }
 
@@ -283,8 +239,9 @@ void sound_city_play() {
             }
         } else {
             channels[i].total_views = 0;
-            for (int d = 0; d < 5; d++)
+            for (int d = 0; d < 5; d++) {
                 channels[i].direction_views[d] = 0;
+            }
         }
     }
 
@@ -303,22 +260,25 @@ void sound_city_play() {
             }
         }
     }
-    if (!max_sound_id)
+
+    if (!max_sound_id) {
         return;
+    }
 
     // always only one channel available... use it
     int channel = channels[max_sound_id].channel;
     int direction;
-    if (channels[max_sound_id].direction_views[SOUND_DIRECTION_CENTER] > 10)
+    if (channels[max_sound_id].direction_views[SOUND_DIRECTION_CENTER] > 10) {
         direction = SOUND_DIRECTION_CENTER;
-    else if (channels[max_sound_id].direction_views[SOUND_DIRECTION_LEFT] > 10)
+    } else if (channels[max_sound_id].direction_views[SOUND_DIRECTION_LEFT] > 10) {
         direction = SOUND_DIRECTION_LEFT;
-    else if (channels[max_sound_id].direction_views[SOUND_DIRECTION_RIGHT] > 10)
+    } else if (channels[max_sound_id].direction_views[SOUND_DIRECTION_RIGHT] > 10) {
         direction = SOUND_DIRECTION_RIGHT;
-    else
+    } else {
         direction = SOUND_DIRECTION_CENTER;
+    }
 
-    play_channel(channel, direction);
+    sound_city_play_channel(channel, direction);
     g_city_sounds.last_update_time = now;
     channels[max_sound_id].last_played_time = now;
     channels[max_sound_id].total_views = 0;
@@ -335,8 +295,9 @@ io_buffer* iob_city_sounds = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT32, &ch->available);
         iob->bind(BIND_SIGNATURE_INT32, &ch->total_views);
         iob->bind(BIND_SIGNATURE_INT32, &ch->views_threshold);
-        for (int d = 0; d < 5; d++)
+        for (int d = 0; d < 5; d++) {
             iob->bind(BIND_SIGNATURE_INT32, &ch->direction_views[d]);
+        }
         iob->bind____skip(4); // current channel
         iob->bind____skip(4); // num channels
         iob->bind(BIND_SIGNATURE_INT32, &ch->channel);

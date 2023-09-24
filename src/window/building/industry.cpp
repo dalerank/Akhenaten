@@ -410,8 +410,9 @@ void window_building_draw_work_camp(building_info_context* c) {
                     window_building_draw_description(c, group_id, 4); // looking for work
                 //                window_building_draw_description(c, group_id, 7); // working on both floodplains and
                 //                monuments (unused?)
-            } else
+            } else {
                 window_building_draw_description(c, group_id, 3);
+            }
             //            if (c->worker_percentage >= 100)
             //                window_building_draw_description_at(c, 72, group_id, 4);
             //            else if (c->worker_percentage >= 75)

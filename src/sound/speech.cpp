@@ -3,6 +3,7 @@
 #include "core/log.h"
 #include "game/settings.h"
 #include "content/dir.h"
+#include "content/vfs.h"
 #include "sound/channel.h"
 #include "sound/device.h"
 
@@ -17,20 +18,19 @@ void sound_speech_play_file(const char* filename) {
 
     sound_device_stop_channel(SOUND_CHANNEL_SPEECH);
 
-    const char *folder_audio = "AUDIO/";
-    bstring256 corrected_filename = filename;
-    if (strncmp(filename, folder_audio, strlen(folder_audio)) != 0) {
-        corrected_filename = bstring256(folder_audio, filename);
+    vfs::path fs_path = filename;
+    if (strncmp(filename, vfs::content_audio, strlen(vfs::content_audio)) != 0) {
+        fs_path = vfs::path(vfs::content_audio, filename);
     }
 
-    corrected_filename = vfs::dir_get_file(corrected_filename);
+    fs_path = vfs::dir_get_file(fs_path);
 
-    if (corrected_filename.empty()) {
+    if (fs_path.empty()) {
         logs::error("Cant open audio file %s", filename);
         return;
     }
 
-    sound_device_play_file_on_channel(corrected_filename, SOUND_CHANNEL_SPEECH, setting_sound(SOUND_SPEECH)->volume);
+    sound_device_play_file_on_channel(fs_path, SOUND_CHANNEL_SPEECH, setting_sound(SOUND_SPEECH)->volume);
 }
 
 void sound_speech_stop(void) {

@@ -3,6 +3,7 @@
 #include "city/figures.h"
 #include "city/population.h"
 #include "core/game_environment.h"
+#include "content/vfs.h"
 #include "core/profiler.h"
 #include "game/settings.h"
 #include "content/dir.h"
@@ -99,10 +100,9 @@ void sound_music_play_track(int track) {
     int volume = setting_sound(SOUND_MUSIC)->volume;
 
     volume = volume * 0.4;
-    const char *folder_audio = "AUDIO/";
-    bstring256 corrected_filename = ph_mp3[track];
-    if (strncmp( ph_mp3[track], folder_audio, strlen(folder_audio)) != 0) {
-        corrected_filename = bstring256(folder_audio,  ph_mp3[track]);
+    vfs::path corrected_filename = ph_mp3[track];
+    if (strncmp( ph_mp3[track], vfs::content_audio, strlen(vfs::content_audio)) != 0) {
+        corrected_filename = vfs::path(vfs::content_audio,  ph_mp3[track]);
     }
 
     corrected_filename = vfs::dir_get_file(corrected_filename);

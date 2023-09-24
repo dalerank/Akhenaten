@@ -12,7 +12,7 @@
 
 #include <string.h>
 
-static bstring128 channel_filenames[2][SOUND_CHANNEL_MAX] = {{
+static vfs::path channel_filenames[2][SOUND_CHANNEL_MAX] = {{
                                                               "", // speech channel
                                                               "wavs/panel1.wav",
                                                               "wavs/panel3.wav",
@@ -211,26 +211,26 @@ static bstring128 channel_filenames[2][SOUND_CHANNEL_MAX] = {{
                                                               "wavs/fire_splash.wav",
                                                               "wavs/formation_shield.wav",
                                                               // city sounds
-                                                              "wavs/house_slum1.wav",
-                                                              "",
-                                                              "",
-                                                              "",
-                                                              "wavs/house_poor1.wav",
-                                                              "",
-                                                              "",
-                                                              "",
-                                                              "wavs/house_mid1.wav",
-                                                              "",
-                                                              "",
-                                                              "",
-                                                              "wavs/house_good1.wav",
-                                                              "",
-                                                              "",
-                                                              "",
-                                                              "wavs/house_posh1.wav",
-                                                              "",
-                                                              "",
-                                                              "",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
+                                                              "wavs/housing_r.wav",
                                                               "wavs/ampitheatre.wav",
                                                               "wavs/theatre.wav",
                                                               "wavs/hippodrome.wav",
@@ -320,16 +320,17 @@ static bstring128 channel_filenames[2][SOUND_CHANNEL_MAX] = {{
 
 static void correct_channel_filenames(void) {
     for (int i = 1; i < SOUND_CHANNEL_MAX; i++) {
-        if (channel_filenames[GAME_ENV][i].empty())
+        if (channel_filenames[GAME_ENV][i].empty()) {
             continue;
+        }
 
-        bstring128 &original = channel_filenames[GAME_ENV][i];
-        bstring128 audio_path("AUDIO/", channel_filenames[GAME_ENV][i]);
+        vfs::path &original = channel_filenames[GAME_ENV][i];
+        vfs::path audio_path("AUDIO/", channel_filenames[GAME_ENV][i]);
 
         if (!vfs::file_exists(audio_path)) {
             channel_filenames[GAME_ENV][i].clear();
         } else {
-            original = audio_path;
+            original = vfs::dir_get_path(audio_path);
         }
     }
 }

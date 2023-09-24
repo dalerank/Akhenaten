@@ -43,7 +43,7 @@ static struct {
 #endif
 
 struct sound_channel {
-    bstring128 filename;
+    vfs::path filename;
     Mix_Chunk* chunk;
 };
 
@@ -112,7 +112,7 @@ static void init_channels(void) {
     }
 }
 
-void sound_device_init_channels(std::span<bstring128> channels) {
+void sound_device_init_channels(std::span<vfs::path> channels) {
     auto &data = g_sound_device_data;
     if (data.initialized) {
         int num_channels = channels.size();

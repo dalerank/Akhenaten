@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/bstring.h"
+#include "content/vfs.h"
 #include "core/span.hpp"
 
 void sound_device_open(void);
@@ -9,7 +10,7 @@ void sound_device_close(void);
 void sound_device_load_formats(void);
 void sound_device_unload_formats(void);
 
-void sound_device_init_channels(std::span<bstring128> filenames);
+void sound_device_init_channels(std::span<vfs::path> filenames);
 int sound_device_is_channel_playing(int channel);
 
 void sound_device_set_music_volume(int volume_pct);

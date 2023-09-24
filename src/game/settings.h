@@ -19,7 +19,10 @@ enum e_sound_type {
     SOUND_CITY = 4,
 };
 
-enum { CITIES_OLD_NAMES = 0, CITIES_NEW_NAMES = 1 };
+enum {
+    CITIES_OLD_NAMES = 0,
+    CITIES_NEW_NAMES = 1
+};
 
 struct set_sound {
     bool enabled;

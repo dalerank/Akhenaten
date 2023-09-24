@@ -22,6 +22,8 @@ namespace vfs {
 
 using path = bstring256;
 
+constexpr pcstr content_audio = "AUDIO/";
+
 /**
  * Wrapper for fopen converting filename to path in current working directory
  * @param filename Filename
