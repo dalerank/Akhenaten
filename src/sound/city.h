@@ -1,5 +1,7 @@
 #pragma once
 
+#include "sound/channel.h"
+
 class building;
 
 enum e_sound_dir { 
@@ -9,8 +11,8 @@ enum e_sound_dir {
 };
 
 enum e_sound_channel_city {
-    SOUND_CHANNEL_CITY_START = 45,
-    SOUND_CHANNEL_CITY_HOUSE_SLUM = 45,
+    SOUND_CHANNEL_CITY_START = SOUND_CHANNEL_CITY_MIN,
+    SOUND_CHANNEL_CITY_HOUSE_SLUM = SOUND_CHANNEL_CITY_MIN,
     SOUND_CHANNEL_CITY_HOUSE_POOR,
     SOUND_CHANNEL_CITY_HOUSE_MEDIUM,
     SOUND_CHANNEL_CITY_HOUSE_GOOD,
