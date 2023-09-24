@@ -44,7 +44,8 @@ else()
   set(GAME_PROCESSOR_ARCH "x86")
 endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include("${CMAKE_MODULE_PATH}/CMakeRC.cmake")
 
 if (MSVC)
     add_compile_options(/wd4244)
@@ -207,6 +208,8 @@ file(GLOB IO_GAMESTATE_FILES ${PROJECT_SOURCE_DIR}/src/io/gamestate/*.cpp)
 file(GLOB IO_IMAGEPAKS_FILES ${PROJECT_SOURCE_DIR}/src/io/imagepaks/*.cpp)
 file(GLOB IO_PLAYERDATA_FILES ${PROJECT_SOURCE_DIR}/src/io/playerdata/*.cpp)
 file(GLOB RESOURCE_FILES ${PROJECT_SOURCE_DIR}/src/resource/*.cpp)
+file(GLOB JS_FILES ${PROJECT_SOURCE_DIR}/src/js/*.cpp)
+file(GLOB SCRIPTS_FILES ${PROJECT_SOURCE_DIR}/src/scripts/*.cpp)
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "android")
     add_definitions(-DANDROID_BUILD=ON)
@@ -296,8 +299,9 @@ if(MSVC)
     source_group("io/gamefiles" FILES ${IO_GAMEFILES_FILES})
     source_group("content" FILES ${CONTENT_FILES})
     source_group("config" FILES ${CONFIG_FILES})
-    source_group("resource" FILES ${RESOURCE_FILES})
+    source_group("resource" FILES ${RESOURCE_FILES} ${SCRIPTS_FILES})
     source_group("graphics" FILES ${GRAPHICS_FILES})
+    source_group("js" FILES ${JS_FILES})
 endif()
 
 set(MACOSX_FILES "")
@@ -352,6 +356,18 @@ set(SOURCE_FILES
     ${RC_FILES}
     ${TRACY_FILES}
     ${RESOURCE_FILES}
+    ${JS_FILES}
+    ${SCRIPTS_FILES}
+)
+
+set(SCRIPTS_FOLDER ${PROJECT_SOURCE_DIR}/src/scripts)
+cmrc_add_resource_library(
+    resources
+    ALIAS ozymandias::rc
+    NAMESPACE ozymandias
+
+    ${SCRIPTS_FOLDER}/modules.js
+    ${PROJECT_SOURCE_DIR}/res/ozymandias_72.png
 )
 
 set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
@@ -436,6 +452,7 @@ include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${EXTEXPAT_INCLUDE_DIR})
 include_directories(${EXTPNG_INCLUDE_DIR})
 include_directories(${EXTMUJS_INCLUDE_DIR})
+include_directories(${CMRC_INCLUDE_DIR})
 
 include_directories(ext)
 include_directories(src)
@@ -453,7 +470,8 @@ endif()
 
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
-                        ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY})
+                        ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY} 
+                        ozymandias::rc)
 
 if(MSVC)
    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
