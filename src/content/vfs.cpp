@@ -16,12 +16,10 @@ FILE * file_open(const char *filename, const char *mode) {
 }
 
 reader file_open(path path) {
-    void *mem = nullptr;
-    uint32_t size = 0;
     if (!path.empty() && path.data()[0] == ':') {
         auto data = internal_file_open(path.c_str());
         if (data.first) {
-            mem = malloc(data.second);
+            void *mem = malloc(data.second);
             memcpy(mem, data.first, data.second);
             return std::make_shared<data_reader>(path.c_str(), mem, data.second);
         }
@@ -29,8 +27,8 @@ reader file_open(path path) {
         FILE *f = file_open(path.c_str(), "rb");
         if (f) {
             fseek(f, 0, SEEK_END);
-            size = ftell(f);
-            mem = malloc(size);
+            uint32_t size = ftell(f);
+            void *mem = malloc(size);
             fseek(f, 0, SEEK_SET);
             fread(mem, 1, size, f);
             fclose(f);
