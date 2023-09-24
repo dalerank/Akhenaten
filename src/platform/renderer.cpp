@@ -1142,8 +1142,7 @@ void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, co
         SDL_DestroyTexture(data.cursors[cursor_id].texture);
         SDL_memset(&data.cursors[cursor_id], 0, sizeof(data.cursors[cursor_id]));
     }
-    data.cursors[cursor_id].texture
-      = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, size, size);
+    data.cursors[cursor_id].texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, size, size);
     if (!data.cursors[cursor_id].texture) {
         return;
     }
