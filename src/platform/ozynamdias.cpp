@@ -5,6 +5,7 @@
 #include "core/stacktrace.h"
 #include "core/time.h"
 #include "core/log.h"
+#include "js/js.h"
 #include "core/profiler.h"
 #include "game/game.h"
 #include "game/system.h"
@@ -389,6 +390,10 @@ static void setup(Arguments& args) {
         logs::info("Exiting: game init failed");
         exit(2);
     }
+
+    // setup script engine
+    js_vm_set_scripts_folder(args.get_scripts_directory());
+    js_vm_setup();
 }
 static void teardown(void) {
     logs::info("Exiting game");
@@ -441,6 +446,8 @@ static void run_and_draw() {
     }
 
     platform_renderer_render();
+
+    js_vm_sync();
 }
 
 static void handle_mouse_button(SDL_MouseButtonEvent* event, int is_down) {
