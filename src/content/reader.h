@@ -23,7 +23,12 @@ struct reader_base {
         __pos = ptr;
         assert((__pos <= __size) && (__pos >= 0));
     };
+    inline char *begin() { return (char*)__data; }
+    inline char *end() { return (char*)(__data + __size); }
+    inline const char *begin() const { return (const char*)__data; }
+    inline const char *end() const { return (const char*)(__data + __size); }
     inline int length() const { return __size; };
+    inline int size() const { return __size; }
     inline void *data() const { return (void *)__data; };
     inline void *current_pointer() const { return (void *)(__data + __pos); };
     inline void advance(int cnt) {
