@@ -27,6 +27,7 @@ struct dir_listing {
 namespace vfs {
 
 constexpr const char *SAVE_FOLDER = "Save";
+constexpr const char *SCRIPTS_FOLDER = "Scripts";
 
 /**
  * Finds files with the given extension
@@ -50,6 +51,6 @@ const dir_listing *dir_find_all_subdirectories(const char *dir = 0);
  * @return Corrected file, or NULL if the file was not found
  */
 bstring256 dir_get_file(const char *filepath);
-bstring256 dir_get_path(const char *folder);
+bstring256 dir_get_path(const char *filepath);
 
 } // vfs

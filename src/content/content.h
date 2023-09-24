@@ -1,6 +1,8 @@
 #pragma once
 
-#include <stdio.h>
+#include <utility>
+
+#include "content/vfs.h"
 
 namespace vfs {
 
@@ -56,5 +58,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode);
  * @return true if removal was successful, false otherwise
  */
 bool platform_file_manager_remove_file(const char *filename);
+
+std::pair<void*, uint32_t> internal_file_open(pcstr path);
 
 } // vfs

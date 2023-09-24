@@ -7,24 +7,37 @@
 #include "reader.h"
 
 #include <filesystem>
+#include <memory>
 
 namespace vfs{
-
-bool _mixed_mode = false;
 
 FILE * file_open(const char *filename, const char *mode) {
     return platform_file_manager_open_file(filename, mode);
 }
 
 reader file_open(path path) {
-    FILE *f = file_open(path.c_str(), "rb");
-    fseek(f, 0, SEEK_END);
-    uint32_t size = ftell(f);
-    void *mem = malloc(size);
-    fseek(f, 0, SEEK_SET);
-    fread(mem, 1, size, f);
-    fclose(f);
-    return std::make_shared<data_reader>(path.c_str(), mem, size);
+    void *mem = nullptr;
+    uint32_t size = 0;
+    if (!path.empty() && path.data()[0] == ':') {
+        auto data = internal_file_open(path.c_str());
+        if (data.first) {
+            mem = malloc(data.second);
+            memcpy(mem, data.first, data.second);
+            return std::make_shared<data_reader>(path.c_str(), mem, data.second);
+        }
+    } else {
+        FILE *f = file_open(path.c_str(), "rb");
+        if (f) {
+            fseek(f, 0, SEEK_END);
+            size = ftell(f);
+            mem = malloc(size);
+            fseek(f, 0, SEEK_SET);
+            fread(mem, 1, size, f);
+            fclose(f);
+            return std::make_shared<data_reader>(path.c_str(), mem, size);
+        }
+    }
+    return reader();
 }
 
 int file_close(FILE * stream) {
@@ -113,10 +126,6 @@ void create_folders(const char* path) {
 void remove_folder(path folder_path) {
     folder_path = dir_get_path(folder_path);
     std::filesystem::remove_all(folder_path.c_str());
-}
-
-void set_mixed_mode(bool value) {
-    _mixed_mode = value;
 }
 
 } //
