@@ -176,7 +176,7 @@ int platform_screen_create(char const* title, const char *renderer, bool fullscr
         return 0;
     }
 
-    SDL_SetWindowIcon(g_screen.window, load_icon_surface("app"));
+    SDL_SetWindowIcon(g_screen.window, load_icon_surface(":ozymandias_72.png"));
 
 #if !defined(__APPLE__)
     if (fullscreen && SDL_GetNumVideoDisplays() > 1) {
