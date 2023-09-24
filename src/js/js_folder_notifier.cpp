@@ -18,6 +18,8 @@
 
 #ifdef _WIN32
 #include <Windows.h>
+#else
+#define MAX_PATH 260
 #endif
 
 struct FileInfo {
@@ -138,7 +140,7 @@ int js_vm_notifier_watch_directory(const char *lpDir)
     fd = inotify_init();
 
     if ( fd < 0 ) {
-        log_info( "WARNING !!! Cant init inotify for ", lpDir, 0);
+        logs::info( "WARNING !!! Cant init inotify for %s", lpDir);
         return 0;
     }
 
@@ -146,7 +148,7 @@ int js_vm_notifier_watch_directory(const char *lpDir)
     length = read( fd, buffer, BUF_LEN );
 
     if ( length < 0 ) {
-        log_info( "WARNING !!! Cant read inotify event ", lpDir, 0);
+        logs::info( "WARNING !!! Cant read inotify event %s", lpDir);
         return 0;
     }
 
@@ -156,9 +158,9 @@ int js_vm_notifier_watch_directory(const char *lpDir)
         if ( event->len ) {
             if ( event->mask & IN_MODIFY ) {
                 if ( event->mask & IN_ISDIR ) {
-                    log_info( "WARNING !!! The directory was modified", event->name, 0 );
+                    logs::info( "WARNING !!! The directory was modified %s", event->name);
                 } else {
-                    log_info( "WARNING !!! The file was modified", event->name, 0 );
+                    logs::info( "WARNING !!! The file was modified %s", event->name);
                     result = 2;
                     break;
                 }

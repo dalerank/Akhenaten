@@ -51,7 +51,7 @@ int js_vm_trypcall(js_State *J, int params) {
             vm.error_str.printf("%.*s", cur_symbol - start_str, start_str);
             start_str = cur_symbol + 1;
             cur_symbol += 2;
-            logs::info("!!! pcall error %s", vm.error_str);
+            logs::info("!!! pcall error %s", vm.error_str.c_str());
         }
         logs::info("!!! pcall error %s", start_str);
         js_pop(J, 1);
@@ -79,7 +79,7 @@ int js_vm_load_file_and_exec(const char *path) {
     vfs::reader reader = vfs::file_open(rpath);
 
     if (!reader) {
-        logs::info("!!! Cant find script at %s", rpath);
+        logs::info("!!! Cant find script at %s", rpath.c_str());
         return 0;
     }
 
@@ -111,7 +111,7 @@ void js_vm_sync() {
 
     if (vm.files2load_num > 0) {
         for (int i = 0; i < vm.files2load_num; i++) {
-            logs::info("JS: script reloaded %s", vm.files2load[i]);
+            logs::info("JS: script reloaded %s", vm.files2load[i].c_str());
             js_vm_load_file_and_exec(vm.files2load[i]);
         }
     }
