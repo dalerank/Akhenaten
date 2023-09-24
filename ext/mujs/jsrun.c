@@ -688,7 +688,7 @@ static int jsR_delproperty(js_State *J, js_Object *obj, const char *name)
 	}
 
 	else if (obj->type == JS_CUSERDATA) {
-		if (obj->u.user.delete && obj->u.user.delete(J, obj->u.user.data, name))
+		if (obj->u.user.rdelete && obj->u.user.rdelete(J, obj->u.user.data, name))
 			return 1;
 	}
 

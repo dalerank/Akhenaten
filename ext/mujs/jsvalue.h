@@ -114,7 +114,7 @@ struct js_Object
 			void *data;
 			js_HasProperty has;
 			js_Put put;
-			js_Delete delete;
+			js_Delete rdelete;
 			js_Finalize finalize;
 		} user;
 	} u;
