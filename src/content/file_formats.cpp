@@ -20,6 +20,7 @@ e_file_format get_format_from_file(const char* filename) {
                    {FILE_FORMAT_JAS_RECORDS, "jas"},
                    {FILE_FORMAT_PLAYER_DATA, "dat"},
                    {FILE_FORMAT_SAVE_FILE_EXT, "svx"},
+                   {FILE_FORMAT_JS, "js"}
             };
 
     auto it = std::find_if(std::begin(formats), std::end(formats), [filename] (auto &p) { return vfs::file_has_extension(filename, p.ext);  });

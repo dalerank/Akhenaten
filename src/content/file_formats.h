@@ -1,4 +1,5 @@
 #pragma once
+
 enum e_file_format {
     FILE_FORMAT_NULL,
     //
@@ -16,7 +17,9 @@ enum e_file_format {
     FILE_FORMAT_JAS_RECORDS,
     FILE_FORMAT_PLAYER_DATA,
     //
-    FILE_FORMAT_SAVE_FILE_EXT
+    FILE_FORMAT_SAVE_FILE_EXT,
+    //
+    FILE_FORMAT_JS
 };
 
 e_file_format get_format_from_file(const char* filename);
