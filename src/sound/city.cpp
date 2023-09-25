@@ -41,80 +41,19 @@ void sound_city_init() {
         channels[i].last_played_time = g_city_sounds.last_update_time;
     }
 
-    for (int i = 1; i < 63; i++) {
+    for (int i = 1; i < MAX_CHANNELS; i++) {
         channels[i].in_use = 1;
         channels[i].views_threshold = 200;
         channels[i].delay_millis = 30000;
+        channels[i].last_played_time = 35000;
+        channels[i].channel = (i + SOUND_CHANNEL_CITY_START);
     }
-
-    channels[1].channel = SOUND_CHANNEL_CITY_HOUSE_SLUM;
-    channels[2].channel = SOUND_CHANNEL_CITY_HOUSE_POOR;
-    channels[3].channel = SOUND_CHANNEL_CITY_HOUSE_MEDIUM;
-    channels[4].channel = SOUND_CHANNEL_CITY_HOUSE_GOOD;
-    channels[5].channel = SOUND_CHANNEL_CITY_HOUSE_POSH;
-    channels[6].channel = SOUND_CHANNEL_CITY_AMPHITHEATER;
-    channels[7].channel = SOUND_CHANNEL_CITY_THEATER;
-    channels[8].channel = SOUND_CHANNEL_CITY_HIPPODROME;
-    channels[9].channel = SOUND_CHANNEL_CITY_COLOSSEUM;
-    channels[10].channel = SOUND_CHANNEL_CITY_GLADIATOR_SCHOOL;
-    channels[11].channel = SOUND_CHANNEL_CITY_LION_PIT;
-    channels[12].channel = SOUND_CHANNEL_CITY_ACTOR_COLONY;
-    channels[13].channel = SOUND_CHANNEL_CITY_CHARIOT_MAKER;
-    channels[14].channel = SOUND_CHANNEL_CITY_GARDEN;
-    channels[15].channel = SOUND_CHANNEL_CITY_CLINIC;
-    channels[16].channel = SOUND_CHANNEL_CITY_HOSPITAL;
-    channels[17].channel = SOUND_CHANNEL_CITY_BATHHOUSE;
-    channels[18].channel = SOUND_CHANNEL_CITY_BARBER;
-    channels[19].channel = SOUND_CHANNEL_CITY_SCHOOL;
-    channels[20].channel = SOUND_CHANNEL_CITY_ACADEMY;
-    channels[21].channel = SOUND_CHANNEL_CITY_LIBRARY;
-    channels[22].channel = SOUND_CHANNEL_CITY_PREFECTURE;
-    channels[23].channel = SOUND_CHANNEL_CITY_FORT;
-    channels[24].channel = SOUND_CHANNEL_CITY_TOWER;
-    channels[25].channel = SOUND_CHANNEL_CITY_TEMPLE_CERES;
-    channels[26].channel = SOUND_CHANNEL_CITY_TEMPLE_NEPTUNE;
-    channels[27].channel = SOUND_CHANNEL_CITY_TEMPLE_MERCURY;
-    channels[28].channel = SOUND_CHANNEL_CITY_TEMPLE_MARS;
-    channels[29].channel = SOUND_CHANNEL_CITY_TEMPLE_VENUS;
-    channels[30].channel = SOUND_CHANNEL_CITY_MARKET;
-    channels[31].channel = SOUND_CHANNEL_CITY_GRANARY;
-    channels[32].channel = SOUND_CHANNEL_CITY_WAREHOUSE;
-    channels[33].channel = SOUND_CHANNEL_CITY_SHIPYARD;
-    channels[34].channel = SOUND_CHANNEL_CITY_DOCK;
-    channels[35].channel = SOUND_CHANNEL_CITY_WHARF;
-    channels[36].channel = SOUND_CHANNEL_CITY_PALACE;
-    channels[37].channel = SOUND_CHANNEL_CITY_ENGINEERS_POST;
-    channels[38].channel = SOUND_CHANNEL_CITY_SENATE;
-    channels[39].channel = SOUND_CHANNEL_CITY_FORUM;
-    channels[40].channel = SOUND_CHANNEL_CITY_RESERVOIR;
-    channels[41].channel = SOUND_CHANNEL_CITY_FOUNTAIN;
-    channels[42].channel = SOUND_CHANNEL_CITY_WELL;
-    channels[43].channel = SOUND_CHANNEL_CITY_MILITARY_ACADEMY;
-    channels[44].channel = SOUND_CHANNEL_CITY_ORACLE;
-    channels[45].channel = SOUND_CHANNEL_CITY_BURNING_RUIN;
-    channels[46].channel = SOUND_CHANNEL_CITY_WHEAT_FARM;
-    channels[47].channel = SOUND_CHANNEL_CITY_VEGETABLE_FARM;
-    channels[48].channel = SOUND_CHANNEL_CITY_FRUIT_FARM;
-    channels[49].channel = SOUND_CHANNEL_CITY_OLIVE_FARM;
-    channels[50].channel = SOUND_CHANNEL_CITY_VINE_FARM;
-    channels[51].channel = SOUND_CHANNEL_CITY_PIG_FARM;
-    channels[52].channel = SOUND_CHANNEL_CITY_QUARRY;
-    channels[53].channel = SOUND_CHANNEL_CITY_IRON_MINE;
-    channels[54].channel = SOUND_CHANNEL_CITY_TIMBER_YARD;
-    channels[55].channel = SOUND_CHANNEL_CITY_CLAY_PIT;
-    channels[56].channel = SOUND_CHANNEL_CITY_WINE_WORKSHOP;
-    channels[57].channel = SOUND_CHANNEL_CITY_OIL_WORKSHOP;
-    channels[58].channel = SOUND_CHANNEL_CITY_WEAPONS_WORKSHOP;
-    channels[59].channel = SOUND_CHANNEL_CITY_FURNITURE_WORKSHOP;
-    channels[60].channel = SOUND_CHANNEL_CITY_POTTERY_WORKSHOP;
-    channels[61].channel = SOUND_CHANNEL_CITY_EMPTY_LAND;
-    channels[62].channel = SOUND_CHANNEL_CITY_RIVER;
-    channels[63].channel = SOUND_CHANNEL_CITY_MISSION_POST;
 }
 
 void sound_city_set_volume(int percentage) {
-    for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++)
+    for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++) {
         sound_device_set_channel_volume(i, percentage);
+    }
 }
 
 int building_type_to_channel(building *b) {

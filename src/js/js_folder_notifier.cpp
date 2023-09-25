@@ -16,12 +16,15 @@
 
 #include <SDL.h>
 #include <SDL_thread.h>
+#include <filesystem>
 
 #ifdef _WIN32
 #include <Windows.h>
 #else
 #define MAX_PATH 260
 #endif
+
+namespace fs = std::filesystem;
 
 struct FileInfo {
     vfs::path path;
@@ -201,23 +204,24 @@ static int get_time_modified(const char *path, struct tm *ftime) {
 }
 
 void js_vm_notifier_create_snapshot(const char *folder) {
-    const char *js_path;
     struct tm ftime;
-    vfs::path filepath, abspath;
     for (auto &p: g_script_notifier.files) {
         p.path.clear();
     }
 
-    const dir_listing *js_files = vfs::dir_find_files_with_extension(folder, "js");
+    svector<vfs::path, 256> js_files;
+    for (const auto &entry : fs::directory_iterator(folder)) {
+        if (entry.path().extension().string() == ".js") {
+            js_files.push_back(entry.path().string().c_str());
+        }
+    }
 
-    for (int i = 0; i < js_files->num_files; ++i) {
-        js_path = js_files->files[i];
+    for (auto &js_path: js_files) {
+        //vfs::path abspath = js_vm_get_absolute_path(js_path);
+        get_time_modified(js_path, &ftime);
 
-        abspath = js_vm_get_absolute_path(filepath);
-        get_time_modified(abspath, &ftime);
-
-        g_script_notifier.files[i].hashtime = ftime.tm_hour * 1000 + ftime.tm_min * 100 + ftime.tm_sec;
-        g_script_notifier.files[i].path = js_path;
+        int hashtime = ftime.tm_hour * 1000 + ftime.tm_min * 100 + ftime.tm_sec;
+        g_script_notifier.files.push_back({js_path, hashtime});
     }
 }
 
@@ -226,8 +230,8 @@ void js_vm_notifier_check_snapshot(void) {
     vfs::path abspath, filepath;
     struct tm ftime;
 
-    for (int i = 0; i < MAX_PATH; ++i) {
-        js_path = g_script_notifier.files[i].path;
+    for (auto &note: g_script_notifier.files) {
+        js_path = note.path;
         if (!*js_path) {
             return;
         }
@@ -236,9 +240,9 @@ void js_vm_notifier_check_snapshot(void) {
         get_time_modified(abspath, &ftime);
 
         unsigned int newTime = ftime.tm_hour * 1000 + ftime.tm_min * 100 + ftime.tm_sec;
-        unsigned int oldTime = g_script_notifier.files[i].hashtime;
+        unsigned int oldTime = note.hashtime;
         if( newTime != oldTime ) {
-            g_script_notifier.files[i].hashtime = newTime;
+            note.hashtime = newTime;
             filepath.printf(":%s", js_path);
             js_vm_reload_file(filepath);
         }

@@ -228,6 +228,7 @@ void js_reset_vm_state() {
     //js_register_mouse_functions(vm.J);
     //js_register_hotkey_functions(vm.J);
     js_register_game_constants(vm.J);
+    js_register_city_sound_constants(vm.J);
     //js_register_ui_functions(vm.J);
 
     int ok = js_vm_load_file_and_exec(":modules.js");
@@ -242,6 +243,15 @@ void js_vm_set_scripts_folder(vfs::path folder) {
 }
 
 vfs::path js_vm_get_absolute_path(vfs::path path) {
+#if defined(GAME_PLATFORM_WIN)
+    bool is_absolute_path = path.data()[1] == ':' && path.len() > 2;
+#else
+    bool is_absolute_path = path.data()[0] == '/' && path.lend() > 1;
+#endif
+    if (is_absolute_path) {
+        return path;
+    }
+
     vfs::path buffer;
     if (!vm.scripts_folder.empty()) {
         vfs::path conpath(vm.scripts_folder, "/", path);

@@ -367,6 +367,7 @@ cmrc_add_resource_library(
     NAMESPACE ozymandias
 
     ${SCRIPTS_FOLDER}/modules.js
+    ${SCRIPTS_FOLDER}/city_sounds.js
     ${PROJECT_SOURCE_DIR}/res/ozymandias_72.png
 )
 

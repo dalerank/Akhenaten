@@ -6,6 +6,8 @@
 #include "core/log.h"
 #include "mujs/mujs.h"
 
+#include "sound/system.h"
+
 void js_game_log_info(js_State *J) {
     if (js_isundefined(J, 1)) {
         logs::info("log() Try to print undefined object", 0, 0);
@@ -44,9 +46,17 @@ void js_game_load_text(js_State *J) {
     free(text);
 }
 
+void js_sound_system_update_channel(js_State *J) {
+    const int channel = js_tointeger(J, 1);
+    const char *path = js_tostring(J, 2);
+
+    sound_system_update_channel(channel, path);
+}
+
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
+    REGISTER_GLOBAL_FUNCTION(J, js_sound_system_update_channel, "sound_system_update_channel", 2);
 }
 

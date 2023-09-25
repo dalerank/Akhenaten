@@ -2,6 +2,7 @@ log_info("Ozymandias: load modules started")
 
 var modules = [
     "math",
+    "city_sounds",
     // "main_menu"
 ]
 

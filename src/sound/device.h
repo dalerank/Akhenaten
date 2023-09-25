@@ -10,6 +10,7 @@ void sound_device_close(void);
 void sound_device_load_formats(void);
 void sound_device_unload_formats(void);
 
+void sound_device_init_channel(int index, vfs::path filename);
 void sound_device_init_channels(std::span<vfs::path> filenames);
 int sound_device_is_channel_playing(int channel);
 

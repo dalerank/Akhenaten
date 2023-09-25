@@ -112,21 +112,27 @@ static void init_channels(void) {
     }
 }
 
+void sound_device_init_channel(int index, vfs::path filename) {
+    auto &data = g_sound_device_data;
+    data.channels[index].chunk = nullptr;
+    data.channels[index].filename = filename;
+}
+
 void sound_device_init_channels(std::span<vfs::path> channels) {
     auto &data = g_sound_device_data;
-    if (data.initialized) {
-        int num_channels = channels.size();
-        if (num_channels > MAX_CHANNELS) {
-            num_channels = MAX_CHANNELS;
-        }
+    if (!data.initialized) {
+        return;
+    }
+    int num_channels = channels.size();
+    if (num_channels > MAX_CHANNELS) {
+        num_channels = MAX_CHANNELS;
+    }
 
-        Mix_AllocateChannels(num_channels);
-        logs::info("Loading audio files");
+    Mix_AllocateChannels(num_channels);
+    logs::info("Loading audio files");
 
-        for (int i = 0; i < num_channels; i++) {
-            data.channels[i].chunk = nullptr;
-            data.channels[i].filename = channels[i];
-        }
+    for (int i = 0; i < num_channels; i++) {
+        sound_device_init_channel(i, channels[i]);
     }
 }
 
