@@ -246,7 +246,7 @@ vfs::path js_vm_get_absolute_path(vfs::path path) {
 #if defined(GAME_PLATFORM_WIN)
     bool is_absolute_path = path.data()[1] == ':' && path.len() > 2;
 #else
-    bool is_absolute_path = path.data()[0] == '/' && path.lend() > 1;
+    bool is_absolute_path = path.data()[0] == '/' && path.len() > 1;
 #endif
     if (is_absolute_path) {
         return path;
