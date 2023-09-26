@@ -28,6 +28,7 @@ enum e_sound_channel_city {
     SOUND_CHANNEL_CITY_APOTHECARY,
     SOUND_CHANNEL_CITY_PHYSICIAN,
     SOUND_CHANNEL_CITY_MORTUARY,
+    SOUND_CHANNEL_CITY_DENTIST,
     SOUND_CHANNEL_CITY_FIREMAN,
     SOUND_CHANNEL_CITY_TOWER,
     SOUND_CHANNEL_CITY_TEMPLE_OSIRIS,
@@ -67,10 +68,19 @@ enum e_sound_channel_city {
     SOUND_CHANNEL_CITY_ROCK,
     SOUND_CHANNEL_CITY_STATUE,
     SOUND_CHANNEL_CITY_TAX_COLLECTOR,
+    SOUND_CHANNEL_CITY_MANSION,
+    SOUND_CHANNEL_CITY_TREE,
+    SOUND_CHANNEL_CITY_WATER,
+    SOUND_CHANNEL_CITY_SHRUB,
+    SOUND_CHANNEL_CITY_CANAL,
+    SOUND_CHANNEL_CITY_MEADOW,
+    SOUND_CHANNEL_CITY_FLOODPLAIN,
+    SOUND_CHANNEL_CITY_MARSHLAND
 };
 
 void sound_city_init();
 void sound_city_set_volume(int percentage);
 void sound_city_mark_building_view(building* b, int direction);
+void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction);
 void sound_city_decay_views();
 void sound_city_play();

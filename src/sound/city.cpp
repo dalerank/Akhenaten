@@ -4,12 +4,14 @@
 #include "city/figures.h"
 #include "core/time.h"
 #include "game/settings.h"
+#include "grid/terrain.h"
 #include "io/io_buffer.h"
 #include "sound/channel.h"
 #include "sound/device.h"
 
 #include <assert.h>
 #include <string.h>
+#include <array>
 
 #define MAX_CHANNELS 70
 
@@ -28,7 +30,7 @@ struct city_channel {
 
 struct city_sounds_t {
     time_millis last_update_time;
-    city_channel channels[MAX_CHANNELS];
+    std::array<city_channel, 96> channels;
 };
 
 city_sounds_t g_city_sounds;
@@ -36,17 +38,18 @@ city_sounds_t g_city_sounds;
 void sound_city_init() {
     auto &channels = g_city_sounds.channels;
     g_city_sounds.last_update_time = time_get_millis();
-    memset(channels, 0, MAX_CHANNELS * sizeof(city_channel));
+    memset(channels.data(), 0, channels.size() * sizeof(city_channel));
     for (int i = 0; i < MAX_CHANNELS; i++) {
         channels[i].last_played_time = g_city_sounds.last_update_time;
     }
 
-    for (int i = 1; i < MAX_CHANNELS; i++) {
-        channels[i].in_use = 1;
-        channels[i].views_threshold = 200;
-        channels[i].delay_millis = 30000;
-        channels[i].last_played_time = 35000;
-        channels[i].channel = (i + SOUND_CHANNEL_CITY_START);
+    int i = SOUND_CHANNEL_CITY_START;
+    for (auto &channel: channels) {
+        channel.in_use = 1;
+        channel.views_threshold = 200;
+        channel.delay_millis = 30000;
+        channel.last_played_time = 35000;
+        channel.channel = i++;
     }
 }
 
@@ -91,9 +94,126 @@ int building_type_to_channel(building *b) {
     case BUILDING_HOUSE_LARGE_PALACE:
     case BUILDING_HOUSE_LUXURY_PALACE:
         return SOUND_CHANNEL_CITY_HOUSE_POSH;
+
+    case BUILDING_BANDSTAND: return SOUND_CHANNEL_CITY_BANDSTAND;
+    case BUILDING_BOOTH: return SOUND_CHANNEL_CITY_BOOTH;
+    case BUILDING_SENET_HOUSE: return SOUND_CHANNEL_CITY_SENET_HOUSE;
+    case BUILDING_PAVILLION: return SOUND_CHANNEL_CITY_PAVILION;
+    case BUILDING_CONSERVATORY: return SOUND_CHANNEL_CITY_CONSERVATORY;
+    case BUILDING_DANCE_SCHOOL: return SOUND_CHANNEL_CITY_DANCE_SCHOOL;
+    case BUILDING_JUGGLER_SCHOOL: return SOUND_CHANNEL_CITY_JUGGLER_SCHOOL;
+    case BUILDING_GARDENS: return SOUND_CHANNEL_CITY_GARDEN;
+
+    case BUILDING_SMALL_STATUE:
+    case BUILDING_MEDIUM_STATUE:
+    case BUILDING_LARGE_STATUE:
+        return SOUND_CHANNEL_CITY_STATUE;
+
+    case BUILDING_APOTHECARY: return SOUND_CHANNEL_CITY_APOTHECARY;
+    case BUILDING_MORTUARY: return SOUND_CHANNEL_CITY_MORTUARY;
+    case BUILDING_DENTIST: return SOUND_CHANNEL_CITY_DENTIST;
+    case BUILDING_POLICE_STATION: return SOUND_CHANNEL_CITY_POLICE;
+    
+    case BUILDING_TEMPLE_OSIRIS: return SOUND_CHANNEL_CITY_TEMPLE_OSIRIS;
+    case BUILDING_TEMPLE_RA: return SOUND_CHANNEL_CITY_TEMPLE_RA;
+    case BUILDING_TEMPLE_PTAH: return SOUND_CHANNEL_CITY_TEMPLE_PTAH;
+    case BUILDING_TEMPLE_SETH: return SOUND_CHANNEL_CITY_TEMPLE_SETH;
+    case BUILDING_TEMPLE_BAST: return SOUND_CHANNEL_CITY_TEMPLE_BAST;
+
+    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+    case BUILDING_TEMPLE_COMPLEX_RA:
+    case BUILDING_TEMPLE_COMPLEX_PTAH:
+    case BUILDING_TEMPLE_COMPLEX_SETH:
+    case BUILDING_TEMPLE_COMPLEX_BAST:
+        return 0;
+
+    case BUILDING_MARKET: return SOUND_CHANNEL_CITY_MARKET;
+    case BUILDING_GRANARY: return SOUND_CHANNEL_CITY_GRANARY;
+
+    case BUILDING_STORAGE_YARD:
+    case BUILDING_STORAGE_YARD_SPACE:
+        return SOUND_CHANNEL_CITY_STORAGE_YARD;
+
+    case BUILDING_SHIPYARD: return SOUND_CHANNEL_CITY_STORAGE_YARD;
+    case BUILDING_DOCK: return SOUND_CHANNEL_CITY_DOCK;
+
+    case BUILDING_FISHING_WHARF: return SOUND_CHANNEL_CITY_WHARF;
+
+    case BUILDING_PERSONAL_MANSION:
+    case BUILDING_FAMILY_MANSION:
+    case BUILDING_DYNASTY_MANSION:
+        return SOUND_CHANNEL_CITY_MANSION;
+
+    case BUILDING_ENGINEERS_POST: return SOUND_CHANNEL_CITY_ENGINEERS_POST;
+
+    case BUILDING_LOW_BRIDGE:
+    case BUILDING_SHIP_BRIDGE:
+        return 0;
+
+    case BUILDING_TAX_COLLECTOR:
+    case BUILDING_TAX_COLLECTOR_UPGRADED:
+        return SOUND_CHANNEL_CITY_TAX_COLLECTOR;
+
+
+    case BUILDING_WATER_LIFT: return 0;
+    case BUILDING_WELL: return SOUND_CHANNEL_CITY_WELL;
+
+    case BUILDING_BURNING_RUIN: return SOUND_CHANNEL_CITY_BURNING_RUIN;
+
+    case BUILDING_BARLEY_FARM:
+    case BUILDING_FLAX_FARM:
+    case BUILDING_GRAIN_FARM:
+    case BUILDING_LETTUCE_FARM:
+    case BUILDING_POMEGRANATES_FARM:
+    case BUILDING_CHICKPEAS_FARM:
+    case BUILDING_STONE_QUARRY:
+    case BUILDING_LIMESTONE_QUARRY:
+    case BUILDING_BEER_WORKSHOP:
+    case BUILDING_LINEN_WORKSHOP:
+    case BUILDING_WEAPONS_WORKSHOP:
+    case BUILDING_JEWELS_WORKSHOP:
+    case BUILDING_WOOD_CUTTERS:
+        return 0;
+
+    case BUILDING_CLAY_PIT: return SOUND_CHANNEL_CITY_CLAY_PIT;
+    case BUILDING_POTTERY_WORKSHOP: return  SOUND_CHANNEL_CITY_POTTERY_WORKSHOP;
+    case BUILDING_HUNTING_LODGE: return  SOUND_CHANNEL_CITY_HUNTER_LOUDGE;
     }
 
     return 0;
+}
+
+void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction) {
+    auto &channels = g_city_sounds.channels;
+    int system_channel_index = 0;
+    if (terrain & TERRAIN_TREE) {
+        system_channel_index = SOUND_CHANNEL_CITY_TREE;
+    } else if (terrain & TERRAIN_ROCK) {
+        system_channel_index = SOUND_CHANNEL_CITY_ROCK;
+    } else if (terrain & TERRAIN_WATER) {
+        system_channel_index = SOUND_CHANNEL_CITY_WATER;
+    } else if (terrain & TERRAIN_SHRUB) {
+        system_channel_index = SOUND_CHANNEL_CITY_SHRUB;
+    } else if (terrain & TERRAIN_GARDEN) {
+        system_channel_index = SOUND_CHANNEL_CITY_GARDEN;
+    } else if (terrain & TERRAIN_CANAL) {
+        system_channel_index = SOUND_CHANNEL_CITY_CANAL;
+    } else if (terrain & TERRAIN_MEADOW) {
+        system_channel_index = SOUND_CHANNEL_CITY_MEADOW;
+    } else if (terrain & TERRAIN_FLOODPLAIN) {
+        system_channel_index = SOUND_CHANNEL_CITY_FLOODPLAIN;
+    } else if (terrain & TERRAIN_MARSHLAND) {
+        system_channel_index = SOUND_CHANNEL_CITY_MARSHLAND;
+    }
+
+    if (!system_channel_index) {
+        return;
+    }
+
+    int channel = system_channel_index - SOUND_CHANNEL_CITY_START;
+    channels[channel].available = 1;
+    ++channels[channel].total_views;
+    ++channels[channel].direction_views[direction];
 }
 
 void sound_city_mark_building_view(building* b, int direction) {
@@ -102,7 +222,7 @@ void sound_city_mark_building_view(building* b, int direction) {
         return;
     }
 
-    int type = b->type;
+    e_building_type type = b->type;
     assert(type <= 236);
     int system_channel_index = building_type_to_channel(b);
     if (!system_channel_index) {

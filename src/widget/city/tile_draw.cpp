@@ -382,27 +382,25 @@ void draw_isometrics(vec2i pixel, map_point point) {
             color_mask = COLOR_MASK_RED;
         }
 
+        vec2i view_pos, view_size;
+        city_view_get_viewport(view_pos, view_size);
+        int direction = SOUND_DIRECTION_CENTER;
+        if (x < view_pos.x + 100) {
+           direction = SOUND_DIRECTION_LEFT;
+        } else if (x > view_pos.x + view_size.x - 100) {
+           direction = SOUND_DIRECTION_RIGHT;
+        }
+
         if (building_id) {
             building* b = building_get(building_id);
             if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
                 color_mask = COLOR_MASK_RED;
             }
 
-            vec2i view_pos, view_size;
-            city_view_get_viewport(view_pos, view_size);
-            if (x < view_pos.x + 100) {
-                sound_city_mark_building_view(b, SOUND_DIRECTION_LEFT);
-            } else if (x > view_pos.x + view_size.x - 100) {
-                sound_city_mark_building_view(b, SOUND_DIRECTION_RIGHT);
-            } else {
-                sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
-            }
-        }
-        
-        if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
-            building* b = building_get(0); // abuse empty building
-            b->type = BUILDING_GARDENS;
-            sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
+            sound_city_mark_building_view(b, direction);
+        } else {
+            int terrain = map_terrain_get(grid_offset);
+            sound_city_mark_terrain_view(terrain, grid_offset, direction);
         }
 
         int image_id = map_image_at(grid_offset);
@@ -438,9 +436,6 @@ void draw_isometrics(vec2i pixel, map_point point) {
         //        footprint_height) * zoom_get_scale(), COLOR_RED);
 
         ImageDraw::isometric_from_drawtile(image_id, x, y, color_mask);
-        //        if ((footprint_height > FOOTPRINT_HALF_HEIGHT) || !tall) {
-        ////            color_mask = COLOR_FONT_YELLOW;
-        //        }
     }
 }
 
