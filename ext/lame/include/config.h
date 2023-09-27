@@ -52,32 +52,7 @@
 #define HAVE_STRCHR
 #define HAVE_MEMCPY
 
-#if defined(_MSC_VER) || defined(__BORLANDC__)
-#pragma warning( disable : 4305 )
-	typedef __int8  int8_t;
-	typedef __int16 int16_t;
-	typedef __int32 int32_t;
-	typedef __int64 int64_t;
-
-	typedef unsigned __int8  uint8_t;
-	typedef unsigned __int16 uint16_t;
-	typedef unsigned __int32 uint32_t;
-	typedef unsigned __int64 uint64_t;
-
-	typedef float  float32_t;
-	typedef double float64_t;
-#elif defined (__GNUC__) && !defined(__ANDROID__)
-#define __int8_t_defined
-#define uint8_t unsigned char
-#define uint16_t unsigned short
-#define uint32_t unsigned int
-#define uint64_t unsigned long long
-
-#define int8_t signed char
-#define int16_t signed short
-#define int32_t signed int
-#define int64_t signed long long
-#endif
+#include <stdint.h>
 
 typedef long double ieee854_float80_t;
 typedef double      ieee754_float64_t;
