@@ -66,7 +66,7 @@
 
 	typedef float  float32_t;
 	typedef double float64_t;
-#elif defined (__GNUC__)
+#elif defined (__GNUC__) && !defined(__ANDROID__)
 #define __int8_t_defined
 #define uint8_t unsigned char
 #define uint16_t unsigned short

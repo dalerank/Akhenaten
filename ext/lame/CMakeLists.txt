@@ -34,6 +34,12 @@ set(SOURCES_LIST "${PROJECT_SOURCE_DIR}/libmp3lame/lame.c"
 include_directories("${PROJECT_SOURCE_DIR}/include")
 #include_directories("${PROJECT_SOURCE_DIR}/lib")
 
+if (MSVC)
+
+elseif()
+  add_compile_definitions("-Wno-absolute-value")
+endif()
+
 add_definitions(-DHAVE_CONFIG_H=ON)
 add_definitions(-DCPU_IS_LITTLE_ENDIAN=1)
 add_definitions(-DPACKAGE_NAME="Ozy")

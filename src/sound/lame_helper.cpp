@@ -69,7 +69,7 @@ vfs::reader lame_helper::decode(const char* mp3_in) {
 
 	FILE* pcm = fopen(pcm_out, "wb");
 	if(pcm == NULL)	{
-		logs::info("FATAL ERROR: file '%s' can't be open for write. Aborting!\n", pcm_out);
+		logs::info("FATAL ERROR: file '%s' can't be open for write. Aborting!\n", pcm_out.c_str());
 		return vfs::reader();
 	}
 
@@ -77,7 +77,7 @@ vfs::reader lame_helper::decode(const char* mp3_in) {
 	lame_t lame = lame_init();
 	lame_set_decode_only(lame, 1);
 	if(lame_init_params(lame) == -1) {
-		logs::info("FATAL ERROR: parameters failed to initialize properly in lame. Aborting!\n", pcm_out);
+		logs::info("FATAL ERROR: parameters failed to initialize properly in lame. Aborting!\n", pcm_out.c_str());
 		return vfs::reader();
 	}
 
