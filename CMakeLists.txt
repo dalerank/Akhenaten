@@ -24,11 +24,6 @@ else()
 endif()
 
 #
-# incbin
-#
-add_subdirectory(ext/incbin)
-
-#
 # Ozymandias
 #
 
@@ -166,6 +161,7 @@ endif()
 add_subdirectory(ext/png)
 add_subdirectory(ext/expat)
 add_subdirectory(ext/mujs)
+add_subdirectory(ext/lame)
 
 file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp)
 file(GLOB CONFIG_FILES ${PROJECT_SOURCE_DIR}/src/config/*.cpp)
@@ -454,6 +450,7 @@ include_directories(${EXTEXPAT_INCLUDE_DIR})
 include_directories(${EXTPNG_INCLUDE_DIR})
 include_directories(${EXTMUJS_INCLUDE_DIR})
 include_directories(${CMRC_INCLUDE_DIR})
+include_directories(${EXTLAME_INCLUDE_DIR})
 
 include_directories(ext)
 include_directories(src)
@@ -471,8 +468,8 @@ endif()
 
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
-                        ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY} 
-                        ozymandias::rc)
+                        ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY}
+                        ${EXTLAME_LIBRARY} ozymandias::rc)
 
 if(MSVC)
    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")

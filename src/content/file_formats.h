@@ -19,7 +19,8 @@ enum e_file_format {
     //
     FILE_FORMAT_SAVE_FILE_EXT,
     //
-    FILE_FORMAT_JS
+    FILE_FORMAT_JS,
+    FILE_FORMAT_MP3,
 };
 
 e_file_format get_format_from_file(const char* filename);

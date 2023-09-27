@@ -7,6 +7,7 @@
 #endif
 
 #include "core/game_environment.h"
+#include "content/file_formats.h"
 #include "core/log.h"
 #include "game/settings.h"
 #include "content/vfs.h"
@@ -14,9 +15,12 @@
 #include "platform/vita/vita.h"
 #include "sound/device.h"
 
+#include "lame_helper.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
+#include <map>
 
 #ifdef __vita__
 #include <psp2/io/fcntl.h>
@@ -71,6 +75,7 @@ struct custom_music_t {
     int buffer_size;
     int cur_read;
     int cur_write;
+    std::map<std::string, vfs::reader> cached_chunks;
 };
 
 custom_music_t g_custom_music;
@@ -79,17 +84,58 @@ static int percentage_to_volume(int percentage) {
     return percentage * SDL_MIX_MAXVOLUME / 100;
 }
 
+static vfs::reader load_cached_chunk(vfs::path filename) {
+    auto &data = g_custom_music;
+
+    auto it = data.cached_chunks.insert({filename.c_str(), vfs::reader()});
+
+    if (!it.second) {
+        return it.first->second;
+    }
+
+    vfs::path converted_wav(filename);
+    bool need_converting = false;
+    auto format = get_format_from_file(filename);
+    if (format == FILE_FORMAT_MP3) {
+        // first check we have converted file on the disk
+        vfs::file_change_extension(converted_wav.data(), "wav");
+        need_converting = !vfs::file_exists(converted_wav);
+    }
+    
+    if (need_converting) {
+        lame_helper helper;
+        it.first->second = helper.decode(filename);
+    } else {
+        it.first->second = vfs::file_open(converted_wav);
+    }
+
+    return it.first->second;
+}
+
 static Mix_Chunk* load_chunk(const char* filename) {
     if (filename && *filename) {
+        auto format = get_format_from_file(filename);
+        if (format == FILE_FORMAT_MP3) {
+            vfs::reader r = load_cached_chunk(filename);
+
+            if (!r) {
+                return nullptr;
+            }
+
+            SDL_RWops* sdl_fp = SDL_RWFromConstMem(r->data(), r->size());
+            return Mix_LoadWAV_RW(sdl_fp, SDL_FALSE);
+        }
+
 #if defined(__vita__) || defined(GAME_PLATFORM_ANDROID)
         FILE* fp = vfs::file_open(filename, "rb");
-        if (!fp)
+        if (!fp) {
             return NULL;
+        }
 
         SDL_RWops* sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
         return Mix_LoadWAV_RW(sdl_fp, 1);
 #else
-        return Mix_LoadWAV(filename);
+        return Mix_LoadWAV_RW(SDL_RWFromFile(filename, "rb"), 1);
 #endif
     } else {
         return NULL;
