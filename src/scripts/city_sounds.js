@@ -38,7 +38,7 @@
   sound_system_update_channel(SOUND_CHANNEL_CITY_STORAGE_YARD, "wavs/warehouse1.wav")
   sound_system_update_channel(SOUND_CHANNEL_CITY_WELL, "wavs/WELL.WAV")
   sound_system_update_channel(SOUND_CHANNEL_CITY_GRAIN_FARM, "wavs/wheatfarm.wav")
-  sound_system_update_channel(SOUND_CHANNEL_CITY_BURNING_RUI, "wavs/FIRE.WAV")
+  sound_system_update_channel(SOUND_CHANNEL_CITY_BURNING_RUIN, "wavs/FIRE.WAV")
  //sound_system_update_channel(SOUND_CHANNEL_CITY_GARDEN, 
  //SOUND_CHANNEL_CITY_APOTHECARY
  //SOUND_CHANNEL_CITY_DENTIST
@@ -47,7 +47,7 @@
   sound_system_update_channel(SOUND_CHANNEL_CITY_WATER, "wavs/WATER1.WAV");
   sound_system_update_channel(SOUND_CHANNEL_CITY_ROCK, "Ambient/ROCK.MP3");
   //sound_system_update_channel(SOUND_CHANNEL_CITY_SHRUB, );
-  sound_system_update_channel(SOUND_CHANNEL_CITY_CANAL);
+  sound_system_update_channel(SOUND_CHANNEL_CITY_CANAL, "wavs/WATER1.WAV");
   sound_system_update_channel(SOUND_CHANNEL_CITY_MEADOW, "Ambient/MEADOW.MP3");
   sound_system_update_channel(SOUND_CHANNEL_CITY_FLOODPLAIN, "Ambient/floodplain.mp3");
   sound_system_update_channel(SOUND_CHANNEL_CITY_MARSHLAND, "Ambient/vegetation.mp3");
