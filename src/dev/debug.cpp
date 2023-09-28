@@ -270,7 +270,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
         }
         break;
 
-    case 4: // ROUTING DISTANCE
+    case e_debug_render_routing_dist: // ROUTING DISTANCE
         d = map_routing_distance(grid_offset);
         if (d > 0)
             debug_text(str, x, y + 10, 0, "", d, COLOR_WHITE);
