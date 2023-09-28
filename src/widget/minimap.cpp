@@ -165,7 +165,7 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
             } else if (building_is_monument(b->type)) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 210; // dark grey
             } else {
-                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + debug_range_1;
+                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + g_debug_tile;
             }
 
             auto multi_tile_size = map_property_multi_tile_size(grid_offset);

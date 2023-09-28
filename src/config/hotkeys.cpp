@@ -188,8 +188,8 @@ void init_defaults(void) {
     //
     set_mapping(KEY_PAGEUP, KEY_MOD_CTRL, HOTKEY_DEBUG_1_UP);
     set_mapping(KEY_PAGEUP, KEY_MOD_CTRL, HOTKEY_DEBUG_1_DOWN);
-    set_mapping(KEY_PAGEDOWN, KEY_MOD_ALT, HOTKEY_DEBUG_2_UP);
-    set_mapping(KEY_PAGEDOWN, KEY_MOD_ALT, HOTKEY_DEBUG_2_DOWN);
+    set_mapping(KEY_PAGEDOWN, KEY_MOD_ALT, HOTKEY_DEBUG_RENDER_UP);
+    set_mapping(KEY_PAGEDOWN, KEY_MOD_ALT, HOTKEY_DEBUG_RENDER_DOWN);
 }
 
 const hotkey_mapping* hotkey_for_action(int action, int index) {
@@ -197,9 +197,9 @@ const hotkey_mapping* hotkey_for_action(int action, int index) {
     int num = 0;
     for (int i = 0; i < data.num_mappings; i++) {
         if (data.mappings[i].action == action) {
-            if (num == index)
+            if (num == index) {
                 return &data.mappings[i];
-
+            }
             num++;
         }
     }
@@ -208,8 +208,9 @@ const hotkey_mapping* hotkey_for_action(int action, int index) {
 
 const hotkey_mapping* hotkey_default_for_action(int action, int index) {
     auto &data = g_config_hotkeys_data;
-    if (index < 0 || index >= 2 || (int)action < 0 || action >= HOTKEY_MAX_ITEMS)
+    if (index < 0 || index >= 2 || (int)action < 0 || action >= HOTKEY_MAX_ITEMS) {
         return 0;
+    }
 
     return &data.default_mappings[action][index];
 }
@@ -232,8 +233,9 @@ static void load_defaults(void) {
     hotkey_config_clear();
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
         for (int index = 0; index < 2; index++) {
-            if (data.default_mappings[action][index].key)
+            if (data.default_mappings[action][index].key) {
                 hotkey_config_add_mapping(&data.default_mappings[action][index]);
+            }
         }
     }
 }

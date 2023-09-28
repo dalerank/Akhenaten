@@ -282,19 +282,19 @@ static void add_definition(const hotkey_mapping* mapping) {
         def->value = BUILDING_ROADBLOCK;
         break;
     case HOTKEY_DEBUG_1_UP:
-        def->action = &data.hotkey_state.debug_1_up;
+        def->action = &data.hotkey_state.debug_tile_up;
         def->repeatable = 1;
         break;
     case HOTKEY_DEBUG_1_DOWN:
-        def->action = &data.hotkey_state.debug_1_down;
+        def->action = &data.hotkey_state.debug_tile_down;
         def->repeatable = 1;
         break;
-    case HOTKEY_DEBUG_2_UP:
-        def->action = &data.hotkey_state.debug_2_up;
+    case HOTKEY_DEBUG_RENDER_UP:
+        def->action = &data.hotkey_state.debug_render_up;
         def->repeatable = 1;
         break;
-    case HOTKEY_DEBUG_2_DOWN:
-        def->action = &data.hotkey_state.debug_2_down;
+    case HOTKEY_DEBUG_RENDER_DOWN:
+        def->action = &data.hotkey_state.debug_render_down;
         def->repeatable = 1;
         break;
     default:

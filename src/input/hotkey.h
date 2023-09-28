@@ -26,10 +26,10 @@ struct hotkeys {
     int change_building_variant;
     int building;
     // debug
-    int debug_1_up;
-    int debug_1_down;
-    int debug_2_up;
-    int debug_2_down;
+    int debug_tile_up;
+    int debug_tile_down;
+    int debug_render_up;
+    int debug_render_down;
 };
 
 void hotkey_install_mapping(hotkey_mapping* mappings, int num_mappings);

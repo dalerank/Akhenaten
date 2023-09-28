@@ -26,7 +26,17 @@ enum e_debug_show_opt {
     e_debug_opt_size,
 };
 
+enum e_debug_render {
+    e_debug_render_none = 0,
+    e_debug_render_building = 1,
+    e_debug_render_tilesize = 2,
+
+    e_debug_render_size
+};
+
 extern bool g_debug_show_opts[e_debug_opt_size];
+extern int g_debug_tile;
+extern int g_debug_render;
 
 void handle_debug_hotkeys(const hotkeys* h);
 

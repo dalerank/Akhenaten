@@ -35,24 +35,26 @@
 #include "grid/figure.h"
 #include "platform/renderer.h"
 
-int debug_range_1 = 0;
-int debug_range_2 = 0;
+int g_debug_tile = 0;
+int g_debug_render = 0;
 int debug_range_3 = 0;
 int debug_range_4 = 0;
 
 void handle_debug_hotkeys(const hotkeys* h) {
-    if (h->debug_1_up)
-        debug_range_1 += 1;
-    if (h->debug_1_down)
-        debug_range_1 -= 1;
-    if (h->debug_2_up)
-        debug_range_2 += 1;
-    if (h->debug_2_down)
-        debug_range_2 -= 1;
-    //    if (debug_range_1 < 0)
-    //        debug_range_1 = 0;
-    //    if (debug_range_1 > 20)
-    //        debug_range_1 = 20;
+    if (h->debug_tile_up) {
+        g_debug_tile += 1;
+    }
+    if (h->debug_tile_down) {
+        g_debug_tile -= 1;
+    }
+    
+    if (h->debug_render_up) {
+        g_debug_render += 1;
+    }
+
+    if (h->debug_render_down) {
+        g_debug_render -= 1;
+    }
 }
 
 static const uint8_t* font_test_str = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/"
@@ -203,7 +205,8 @@ void draw_debug_tile(vec2i pixel, map_point point) {
     int x = pixel.x;
     int y = pixel.y;
 
-    int DB2 = abs(debug_range_2) % 20;
+    int DB2 = abs(g_debug_render) % 20;
+
     if (DB2 == 0)
         return;
 
@@ -221,7 +224,8 @@ void draw_debug_tile(vec2i pixel, map_point point) {
     switch (DB2) {
     default:
         break;
-    case 1: // BUILDING IDS
+
+    case e_debug_render_building: // BUILDING IDS
         if (b_id && b->tile.grid_offset() == grid_offset) {
             draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, {x - 15, y}, COLOR_MASK_GREEN);
         }
@@ -234,7 +238,8 @@ void draw_debug_tile(vec2i pixel, map_point point) {
                 text_draw((uint8_t*)string_from_ascii("sub"), x0, y - 10, FONT_SMALL_OUTLINED, COLOR_RED);
         }
         break;
-    case 2: // DRAW-TILES AND SIZES
+
+    case e_debug_render_tilesize: // DRAW-TILES AND SIZES
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
             if (map_property_is_draw_tile(grid_offset)) {
                 debug_text(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_GREEN);
@@ -244,6 +249,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
         } else if (!map_property_is_draw_tile(grid_offset))
             debug_text(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_BLUE);
         break;
+
     case 3:                                                   // ROADS
         if (b_id && map_property_is_draw_tile(grid_offset)) { //&& b->tile.grid_offset() == grid_offset
             debug_text(str, x0, y + 5, 0, "", b->road_access.x(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);
@@ -263,6 +269,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             debug_text(str, x, y + 10, 10, "R", d, COLOR_LIGHT_BLUE);
         }
         break;
+
     case 4: // ROUTING DISTANCE
         d = map_routing_distance(grid_offset);
         if (d > 0)
@@ -270,6 +277,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
         else if (d == 0)
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
+
     case 5: // CITIZEN ROUTING GRID
         d = map_citizen_grid(grid_offset);
         if (d > 0)
@@ -277,6 +285,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
         else
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
+
     case 6: // MOISTURE
         d = map_moisture_get(grid_offset);
         if (d & MOISTURE_GRASS)
@@ -286,11 +295,13 @@ void draw_debug_tile(vec2i pixel, map_point point) {
         else if (d & MOISTURE_SHORE_TALLGRASS)
             debug_text(str, x, y + 10, 0, "", d, COLOR_GREEN);
         break;
+
     case 7: // PROPER GRASS LEVEL
         d = map_grasslevel_get(grid_offset);
         if (d)
             debug_text(str, x, y + 10, 0, "", d, COLOR_GREEN);
         break;
+
     case 8: // FERTILITY & SOIL DEPLETION
         d = map_get_fertility(grid_offset, FERT_WITH_MALUS);
         if (d) {
@@ -304,11 +315,13 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             }
         }
         break;
+
     case 9: // FLOODPLAIN SHORE ORDER
         d = map_get_floodplain_row(grid_offset);
         if (d > -1)
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
+
     case 10: // FLOODPLAIN TERRAIN FLAGS
         d = map_terrain_is(grid_offset, TERRAIN_BUILDING);
         if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
@@ -337,6 +350,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
                 debug_text(str, x, y + 10, 0, "", d, 0xff00ffff);
         }
         break;
+
     case 11: // LABOR
         if (b_id && map_property_is_draw_tile(grid_offset)
             && (b->labor_category != (uint8_t)-1 || building_is_floodplain_farm(b))) {
@@ -365,8 +379,8 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             }
         }
         break;
-    case 12: // SPRITE FRAMES
 
+    case 12: // SPRITE FRAMES
         if (grid_offset == MAP_OFFSET(b->tile.x(), b->tile.y()))
             draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, {x - 15, y}, COLOR_MASK_GREEN);
         if (grid_offset == north_tile_grid_offset(b->tile.x(), b->tile.y()))
@@ -399,32 +413,39 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             }
         }
         break;
+
     case 13: // TERRAIN BIT FIELD
         debug_text(str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE);
         break;
+
     case 14: // IMAGE FIELD
         debug_text(str, x, y + 10, 0, "", map_image_at(grid_offset) - 14252, COLOR_LIGHT_RED);
         break;
+
     case 15: // MARSHLAND DEPLETION
         d = map_get_vegetation_growth(grid_offset);
         if (d != 255)
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
+
     case 16: // MARSHLAND
         d = map_terrain_is(grid_offset, TERRAIN_MARSHLAND);
         if (d != 0)
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
+
     case 17: // TERRAIN TYPE
         d = map_terrain_get(grid_offset);
         //            if (d != 0)
         debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_BLUE);
         break;
+
     case 18: // UNKNOWN SOIL GRID
         d = map_get_UNK04(grid_offset);
         if (d != 0)
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
+
     case 19: // UNKNOWN 32BIT GRID
         d = map_get_UNK03(grid_offset);
         if (d != 0)
@@ -643,8 +664,8 @@ void draw_debug_ui(int x, int y) {
     /////// DEBUG PAGES NAME
     if (g_debug_show_opts[e_debug_show_pages]) {
         y += 13;
-        int DB1 = abs(debug_range_1) % 7;
-        int DB2 = abs(debug_range_2) % 20;
+        int DB1 = abs(g_debug_tile) % 7;
+        int DB2 = abs(g_debug_render) % 20;
 
         color col = COLOR_GREEN;
 

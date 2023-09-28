@@ -45,9 +45,20 @@
 #include "core/core_utility.h"
 #include "core/span.hpp"
 
-enum E_INFO { INFO_NONE = 0, INFO_FUNDS = 1, INFO_POPULATION = 2, INFO_DATE = 3 };
+enum e_info {
+    INFO_NONE = 0,
+    INFO_FUNDS = 1,
+    INFO_POPULATION = 2,
+    INFO_DATE = 3
+};
 
-enum e_menu_index { INDEX_OPTIONS = 1, INDEX_HELP = 2, INDEX_ADVISORS = 3, INDEX_DEBUG = 4 };
+enum e_menu_index {
+    INDEX_OPTIONS = 1,
+    INDEX_HELP = 2,
+    INDEX_ADVISORS = 3,
+    INDEX_DEBUG = 4,
+    INDEX_DEBUG_RENDER = 5,
+};
 
 static void menu_file_new_game(int param);
 static void menu_file_replay_map(int param);
@@ -69,8 +80,13 @@ static void menu_help_mouse_help(int param);
 static void menu_help_warnings(int param);
 static void menu_help_about(int param);
 
+static void button_rotate_left(int param1, int param2);
+static void button_rotate_reset(int param1, int param2);
+static void button_rotate_right(int param1, int param2);
+
 static void menu_advisors_go_to(int advisor);
 static void menu_debug_change_opt(int opt);
+static void menu_debug_render_change_opt(int);
 static void menu_debug_screenshot(int opt);
 static void menu_debug_full_screenshot(int opt);
 static void menu_debug_show_console(int param);
@@ -78,72 +94,105 @@ static void menu_update_text(menu_bar_item& menu, int index, int text_number);
 static void menu_update_text(menu_bar_item& menu, int index, const char* text);
 
 static menu_item menu_file[] = {
-  {1, 1, menu_file_new_game, 0},
-  {1, 2, menu_file_replay_map, 0},
-  {1, 3, menu_file_load_game, 0},
-  {1, 4, menu_file_save_game, 0},
-  {1, 6, menu_file_delete_game, 0},
-  {1, 5, menu_file_exit_city, 0},
+    {1, 1, menu_file_new_game, 0},
+    {1, 2, menu_file_replay_map, 0},
+    {1, 3, menu_file_load_game, 0},
+    {1, 4, menu_file_save_game, 0},
+    {1, 6, menu_file_delete_game, 0},
+    {1, 5, menu_file_exit_city, 0},
 };
 
 static menu_item menu_options[] = {
-  {2, 1, menu_options_display, 0},
-  {2, 2, menu_options_sound, 0},
-  {2, 3, menu_options_speed, 0},
-  {2, 6, menu_options_difficulty, 0},
-  {19, 51, menu_options_autosave, 0},
-  {2, 1, menu_options_hotkeys, 0, false, "Hotkeys options"},
-  {2, 1, menu_options_change_enh, 0, false, "Enhanced options"},
+    {2, 1, menu_options_display, 0},
+    {2, 2, menu_options_sound, 0},
+    {2, 3, menu_options_speed, 0},
+    {2, 6, menu_options_difficulty, 0},
+    {19, 51, menu_options_autosave, 0},
+    {2, 1, menu_options_hotkeys, 0, false, "Hotkeys options"},
+    {2, 1, menu_options_change_enh, 0, false, "Enhanced options"},
 };
 
 static menu_item menu_help[] = {
-  {3, 1, menu_help_help, 0},
-  {3, 2, menu_help_mouse_help, 0},
-  {3, 5, menu_help_warnings, 0},
-  {3, 7, menu_help_about, 0},
+    {3, 1, menu_help_help, 0},
+    {3, 2, menu_help_mouse_help, 0},
+    {3, 5, menu_help_warnings, 0},
+    {3, 7, menu_help_about, 0},
 };
 
 static menu_item menu_advisors[] = {
-  {4, 1, menu_advisors_go_to, ADVISOR_LABOR},
-  {4, 2, menu_advisors_go_to, ADVISOR_MILITARY},
-  {4, 3, menu_advisors_go_to, ADVISOR_IMPERIAL},
-  {4, 4, menu_advisors_go_to, ADVISOR_RATINGS},
-  {4, 5, menu_advisors_go_to, ADVISOR_TRADE},
-  {4, 6, menu_advisors_go_to, ADVISOR_POPULATION},
-  {4, 7, menu_advisors_go_to, ADVISOR_HEALTH},
-  {4, 8, menu_advisors_go_to, ADVISOR_EDUCATION},
-  {4, 9, menu_advisors_go_to, ADVISOR_ENTERTAINMENT},
-  {4, 10, menu_advisors_go_to, ADVISOR_RELIGION},
-  {4, 11, menu_advisors_go_to, ADVISOR_FINANCIAL},
-  {4, 12, menu_advisors_go_to, ADVISOR_CHIEF},
+    {4, 1, menu_advisors_go_to, ADVISOR_LABOR},
+    {4, 2, menu_advisors_go_to, ADVISOR_MILITARY},
+    {4, 3, menu_advisors_go_to, ADVISOR_IMPERIAL},
+    {4, 4, menu_advisors_go_to, ADVISOR_RATINGS},
+    {4, 5, menu_advisors_go_to, ADVISOR_TRADE},
+    {4, 6, menu_advisors_go_to, ADVISOR_POPULATION},
+    {4, 7, menu_advisors_go_to, ADVISOR_HEALTH},
+    {4, 8, menu_advisors_go_to, ADVISOR_EDUCATION},
+    {4, 9, menu_advisors_go_to, ADVISOR_ENTERTAINMENT},
+    {4, 10, menu_advisors_go_to, ADVISOR_RELIGION},
+    {4, 11, menu_advisors_go_to, ADVISOR_FINANCIAL},
+    {4, 12, menu_advisors_go_to, ADVISOR_CHIEF},
 };
 
 static menu_item menu_debug[] = {
-  {5, 1, menu_debug_change_opt, e_debug_show_pages},
-  {5, 2, menu_debug_change_opt, e_debug_show_game_time},
-  {5, 3, menu_debug_change_opt, e_debug_show_build_planner},
-  {5, 4, menu_debug_change_opt, e_debug_show_religion},
-  {5, 5, menu_debug_change_opt, e_debug_show_tutorial},
-  {5, 6, menu_debug_change_opt, e_debug_show_floods},
-  {5, 7, menu_debug_change_opt, e_debug_show_camera},
-  {5, 8, menu_debug_change_opt, e_debug_show_tile_cache},
-  {5, 9, menu_debug_change_opt, e_debug_show_migration},
-  {5, 10, menu_debug_change_opt, e_debug_show_sentiment},
-  {5, 11, menu_debug_show_console, 0, false, "Show console"},
-  {5, 12, menu_debug_screenshot, 0, false, "Screenshot"},
-  {5, 13, menu_debug_full_screenshot, 0, false, "Full Screenshot"},
+    {5, 1, menu_debug_change_opt, e_debug_show_pages},
+    {5, 2, menu_debug_change_opt, e_debug_show_game_time},
+    {5, 3, menu_debug_change_opt, e_debug_show_build_planner},
+    {5, 4, menu_debug_change_opt, e_debug_show_religion},
+    {5, 5, menu_debug_change_opt, e_debug_show_tutorial},
+    {5, 6, menu_debug_change_opt, e_debug_show_floods},
+    {5, 7, menu_debug_change_opt, e_debug_show_camera},
+    {5, 8, menu_debug_change_opt, e_debug_show_tile_cache},
+    {5, 9, menu_debug_change_opt, e_debug_show_migration},
+    {5, 10, menu_debug_change_opt, e_debug_show_sentiment},
+    {5, 11, menu_debug_show_console, 0, false, "Show console"},
+    {5, 12, menu_debug_screenshot, 0, false, "Screenshot"},
+    {5, 13, menu_debug_full_screenshot, 0, false, "Full Screenshot"},
+};
+
+static menu_item menu_render[] = {
+    {6, 1, menu_debug_render_change_opt, e_debug_render_building},
+    {6, 2, menu_debug_render_change_opt, e_debug_render_tilesize},
 };
 
 menu_bar_item g_top_menu[] = {
-  {1, menu_file, std::size(menu_file)},
-  {2, menu_options, std::size(menu_options)},
-  {3, menu_help, std::size(menu_help)},
-  {4, menu_advisors, std::size(menu_advisors)},
-  {5, menu_debug, std::size(menu_debug), "Debug"},
+    {1, menu_file, std::size(menu_file)},
+    {2, menu_options, std::size(menu_options)},
+    {3, menu_help, std::size(menu_help)},
+    {4, menu_advisors, std::size(menu_advisors)},
+    {5, menu_debug, std::size(menu_debug), "Debug"},
+    {6, menu_render, std::size(menu_render), "Render"},
 };
 
+static image_button orientation_button[] = {
+    {0, 0, 36, 21, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 72, button_rotate_left, button_none, 0, 0, 1},
+};
+
+static generic_button orientation_buttons_ph[] = {
+    {12, 0, 36 - 24, 21, button_rotate_reset, button_none, 0, 0},
+    {0, 0, 12, 21, button_rotate_left, button_none, 0, 0},
+    {36 - 12, 0, 12, 21, button_rotate_right, button_none, 0, 0},
+};
+
+struct top_menu_data_t {
+    int offset_funds;
+    int offset_population;
+    int offset_date;
+    int offset_rotate;
+
+    int open_sub_menu;
+    int focus_menu_id;
+    int focus_sub_menu_id;
+
+    int population;
+    int treasury;
+    int month;
+};
+
+top_menu_data_t g_top_menu_data;
+
 static void menu_debug_opt_text(int opt, bool v) {
-    static const char* debug_text[][2] = {
+    static const char* debug_text_opt[][2] = {
       {"Pages ON", "Pages OFF"},
       {"Game Time ON", "Game Time OFF"},
       {"Build Planner ON", "Build Planner OFF"},
@@ -155,12 +204,27 @@ static void menu_debug_opt_text(int opt, bool v) {
       {"Migration ON", "Migration OFF"},
       {"Sentiment ON", "Sentiment OFF"},
     };
-    menu_update_text(g_top_menu[INDEX_DEBUG], opt, debug_text[opt][v ? 0 : 1]);
+    menu_update_text(g_top_menu[INDEX_DEBUG], opt, debug_text_opt[opt][v ? 0 : 1]);
+}
+
+static void menu_debug_render_text(int opt, bool v) {
+    static const char *debug_text_rend[][2] = {
+        {"Buildings ON", "Buildings OFF"},
+        {"Tile Size ON", "Tile Size OFF"},
+    };
+    menu_update_text(g_top_menu[INDEX_DEBUG_RENDER], opt, debug_text_rend[opt][v ? 0 : 1]);
 }
 
 static void menu_debug_change_opt(int opt) {
     g_debug_show_opts[opt] = !g_debug_show_opts[opt];
     menu_debug_opt_text(opt, g_debug_show_opts[opt]);
+}
+
+static void menu_debug_render_change_opt(int opt) {
+    g_debug_render = (opt == g_debug_render) ? 0 : opt;
+    for (int i = 0; i < std::size(menu_render); ++i) {
+        menu_debug_render_text(i, g_debug_render == menu_render[i].parameter);
+    }
 }
 
 static void menu_debug_screenshot(int opt) {
@@ -189,29 +253,6 @@ static void button_rotate_right(int param1, int param2) {
     game_orientation_rotate_right();
     window_invalidate();
 }
-
-static image_button orientation_button[] = {
-  {0, 0, 36, 21, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 72, button_rotate_left, button_none, 0, 0, 1},
-};
-
-static generic_button orientation_buttons_ph[] = {
-  {12, 0, 36 - 24, 21, button_rotate_reset, button_none, 0, 0},
-  {0, 0, 12, 21, button_rotate_left, button_none, 0, 0},
-  {36 - 12, 0, 12, 21, button_rotate_right, button_none, 0, 0},
-};
-
-struct top_menu_data_t {
-    int offset_funds;
-    int offset_population;
-    int offset_date;
-    int offset_rotate;
-
-    int open_sub_menu;
-    int focus_menu_id;
-    int focus_sub_menu_id;
-};
-
-top_menu_data_t g_top_menu_data;
 
 #define TOP_MENU_BASE_X_OFFSET 10
 #define MENU_BASE_TEXT_Y_OFFSET 6
@@ -273,9 +314,11 @@ static void calculate_menu_dimensions(menu_bar_item& menu) {
     menu.calculated_width_blocks = blocks < 10 ? 10 : blocks;
     menu.calculated_height_blocks = height_pixels / 16;
 }
+
 void menu_draw(menu_bar_item& menu, int focus_item_id) {
-    if (menu.calculated_width_blocks == 0 || menu.calculated_height_blocks == 0)
+    if (menu.calculated_width_blocks == 0 || menu.calculated_height_blocks == 0) {
         calculate_menu_dimensions(menu);
+    }
 
     unbordered_panel_draw(menu.x_start, TOP_MENU_HEIGHT, menu.calculated_width_blocks, menu.calculated_height_blocks);
     int y_offset = TOP_MENU_HEIGHT + MENU_BASE_TEXT_Y_OFFSET * 2;
@@ -358,14 +401,6 @@ void menu_update_text(menu_bar_item& menu, int index, int text_number) {
     }
 }
 
-struct top_menu_drawn_t {
-    int population;
-    int treasury;
-    int month;
-};
-
-top_menu_drawn_t g_top_menu_drawn;
-
 void widget_top_menu_clear_state() {
     auto& data = g_top_menu_data;
 
@@ -380,15 +415,9 @@ static void set_text_for_autosave(void) {
 static void set_text_for_tooltips(void) {
     int new_text;
     switch (setting_tooltips()) {
-    case TOOLTIPS_NONE:
-        new_text = 2;
-        break;
-    case TOOLTIPS_SOME:
-        new_text = 3;
-        break;
-    case TOOLTIPS_FULL:
-        new_text = 4;
-        break;
+    case TOOLTIPS_NONE: new_text = 2; break;
+    case TOOLTIPS_SOME: new_text = 3; break;
+    case TOOLTIPS_FULL: new_text = 4; break;
     default:
         return;
     }
@@ -397,9 +426,14 @@ static void set_text_for_tooltips(void) {
 static void set_text_for_warnings(void) {
     menu_update_text(g_top_menu[INDEX_HELP], 2, setting_warnings() ? 6 : 5);
 }
-static void set_text_for_debug() {
-    for (int i = 0; i < e_debug_opt_size; ++i) {
+static void set_text_for_debug_city() {
+    for (int i = 0; i < std::size(menu_debug); ++i) {
         menu_debug_opt_text(i, g_debug_show_opts[i]);
+    }
+}
+static void set_text_for_debug_render() {
+    for (int i = 0; i < std::size(menu_render); ++i) {
+        menu_debug_render_text(i, g_debug_render == menu_render[i].parameter);
     }
 }
 
@@ -409,7 +443,8 @@ static void init(void) {
     set_text_for_autosave();
     set_text_for_tooltips();
     set_text_for_warnings();
-    set_text_for_debug();
+    set_text_for_debug_city();
+    set_text_for_debug_render();
 }
 
 static void draw_background(void) {
@@ -453,9 +488,9 @@ static void refresh_background(void) {
             ImageDraw::img_generic(image_base + i % 8, i * block_width, 0);
 
         // black panels for funds/pop/time
-        if (s_width < 800)
+        if (s_width < 800) {
             ImageDraw::img_generic(image_base + 14, 336, 0);
-        else if (s_width < 1024) {
+        } else if (s_width < 1024) {
             ImageDraw::img_generic(image_base + 14, 336, 0);
             ImageDraw::img_generic(image_base + 14, 456, 0);
             ImageDraw::img_generic(image_base + 14, 648, 0);
@@ -480,8 +515,8 @@ static void refresh_background(void) {
 void widget_top_menu_draw(int force) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Topmenu");
     auto& data = g_top_menu_data;
-    if (!force && g_top_menu_drawn.treasury == city_finance_treasury()
-        && g_top_menu_drawn.population == city_population() && g_top_menu_drawn.month == game_time_month()) {
+    if (!force && data.treasury == city_finance_treasury()
+        && data.population == city_population() && data.month == game_time_month()) {
         return;
     }
 
@@ -504,57 +539,46 @@ void widget_top_menu_draw(int force) {
         data.offset_date = s_width - 150; // 135
         data.offset_rotate = data.offset_date - 50;
 
-        lang_text_draw_month_year_max_width(
-          game_time_month(), game_time_year(), data.offset_date - 2, 5, 110, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), data.offset_date - 2, 5, 110, FONT_NORMAL_BLACK_ON_LIGHT, 0);
         // Orientation icon
         if (orientation_button_pressed) {
-            ImageDraw::img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3,
-                                   data.offset_rotate,
-                                   0);
+            ImageDraw::img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, data.offset_rotate, 0);
             orientation_button_pressed--;
-        } else
-            ImageDraw::img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state,
-                                   data.offset_rotate,
-                                   0);
+        } else {
+            ImageDraw::img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state, data.offset_rotate, 0);
+        }
     }
 
     if (s_width < 800) {
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            data.offset_funds = 338;      // +2
-            data.offset_population = 453; // +5
-            data.offset_date = 547;
-            data.offset_rotate = data.offset_date - 50;
+        data.offset_funds = 338;      // +2
+        data.offset_population = 453; // +5
+        data.offset_date = 547;
+        data.offset_rotate = data.offset_date - 50;
 
-            int width = lang_text_draw_colored(6, 0, 341, 5, FONT_SMALL_PLAIN, treasure_color);
-            text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_SMALL_PLAIN, treasure_color);
+        int width = lang_text_draw_colored(6, 0, 341, 5, FONT_SMALL_PLAIN, treasure_color);
+        text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_SMALL_PLAIN, treasure_color);
 
-            width = lang_text_draw(6, 1, 458, 5, FONT_NORMAL_BLACK_ON_LIGHT);
-            text_draw_number(city_population(), '@', " ", 450 + width, 5, FONT_NORMAL_BLACK_ON_LIGHT);
+        width = lang_text_draw(6, 1, 458, 5, FONT_NORMAL_BLACK_ON_LIGHT);
+        text_draw_number(city_population(), '@', " ", 450 + width, 5, FONT_NORMAL_BLACK_ON_LIGHT);
 
-            lang_text_draw_month_year_max_width(
-              game_time_month(), game_time_year(), 540, 5, 100, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            // TODO: draw for 800x600 resolution
-        }
+        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 540, 5, 100, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     } else if (s_width < 1024) {
         int width = lang_text_draw_colored(6, 0, data.offset_funds + 2 + 100, 5, treasure_font, 0);
         text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width + 100, 5, treasure_font, 0);
 
         width = lang_text_draw(6, 1, data.offset_population + 2 + 100, 5, FONT_NORMAL_BLACK_ON_LIGHT);
-        text_draw_number(
-          city_population(), '@', " ", data.offset_population + 7 + width + 100, 5, FONT_NORMAL_BLACK_ON_LIGHT);
+        text_draw_number(city_population(), '@', " ", data.offset_population + 7 + width + 100, 5, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
         int width = lang_text_draw_colored(6, 0, data.offset_funds + 2, 5, treasure_font, 0);
         text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width, 5, treasure_font, 0);
 
         width = lang_text_draw(6, 1, data.offset_population + 2, 5, FONT_NORMAL_BLACK_ON_LIGHT);
-        text_draw_number(
-          city_population(), '@', " ", data.offset_population + 7 + width, 5, FONT_NORMAL_BLACK_ON_LIGHT);
+        text_draw_number(city_population(), '@', " ", data.offset_population + 7 + width, 5, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
-    g_top_menu_drawn.treasury = treasury;
-    g_top_menu_drawn.population = city_population();
-    g_top_menu_drawn.month = game_time_month();
+    data.treasury = treasury;
+    data.population = city_population();
+    data.month = game_time_month();
 }
 
 static int get_info_id(int mouse_x, int mouse_y) {
