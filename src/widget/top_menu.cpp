@@ -166,7 +166,8 @@ static menu_item menu_render[] = {
     {6, 13, menu_debug_render_change_opt, e_debug_render_terrain_bits},
     {6, 14, menu_debug_render_change_opt, e_debug_render_image},
     {6, 15, menu_debug_render_change_opt, e_debug_render_marshland_depl},
-    
+    {6, 16, menu_debug_render_change_opt, e_debug_render_marshland},
+    {6, 17, menu_debug_render_change_opt, e_debug_render_terrain_type},
 };
 
 menu_bar_item g_top_menu[] = {
@@ -238,6 +239,8 @@ static void menu_debug_render_text(int opt, bool v) {
         {"Terrain Bits ON", "Terrain Bits OFF"},
         {"Image ON", "Image OFF"},
         {"Marshland Depl ON", "Marshland Depl OFF"},
+        {"Marshland ON", "Marshland OFF"},
+        {"Terrain ON", "Terrain OFF"},
     };
     menu_update_text(g_top_menu[INDEX_DEBUG_RENDER], opt, debug_text_rend[opt][v ? 0 : 1]);
 }

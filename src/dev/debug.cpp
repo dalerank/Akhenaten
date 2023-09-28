@@ -428,13 +428,13 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
 
-    case 16: // MARSHLAND
+    case e_debug_render_marshland: // MARSHLAND
         d = map_terrain_is(grid_offset, TERRAIN_MARSHLAND);
         if (d != 0)
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
 
-    case 17: // TERRAIN TYPE
+    case e_debug_render_terrain_type: // TERRAIN TYPE
         d = map_terrain_get(grid_offset);
         //            if (d != 0)
         debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_BLUE);
