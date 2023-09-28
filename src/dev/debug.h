@@ -35,6 +35,8 @@ enum e_debug_render {
     e_debug_render_routing_grid = 5,
     e_debug_render_moisture = 6,
     e_debug_render_grass_level = 7,
+    e_debug_render_grass_soil_depletion = 8,
+    e_debug_render_grass_flood_order = 9,
 
     e_debug_render_size
 };

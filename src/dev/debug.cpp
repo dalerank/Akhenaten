@@ -302,7 +302,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             debug_text(str, x, y + 10, 0, "", d, COLOR_GREEN);
         break;
 
-    case 8: // FERTILITY & SOIL DEPLETION
+    case e_debug_render_grass_soil_depletion: // FERTILITY & SOIL DEPLETION
         d = map_get_fertility(grid_offset, FERT_WITH_MALUS);
         if (d) {
             int n = map_get_fertility(grid_offset, FERT_NO_MALUS);
@@ -316,7 +316,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
         }
         break;
 
-    case 9: // FLOODPLAIN SHORE ORDER
+    case e_debug_render_grass_flood_order: // FLOODPLAIN SHORE ORDER
         d = map_get_floodplain_row(grid_offset);
         if (d > -1)
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
