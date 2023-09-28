@@ -46,15 +46,10 @@ static struct {
 } vita_music_data;
 #endif
 
-struct sound_channel {
-    vfs::path filename;
-    Mix_Chunk* chunk;
-};
-
 struct sound_device_data_t {
     int initialized;
     Mix_Music* music;
-    sound_channel channels[MAX_CHANNELS];
+    std::array<sound_device_channel, MAX_CHANNELS> channels;
 };
 
 sound_device_data_t g_sound_device_data;
@@ -142,7 +137,7 @@ static Mix_Chunk* load_chunk(const char* filename) {
     }
 }
 
-static int load_channel(sound_channel* channel) {
+static int load_channel(sound_device_channel* channel) {
     if (!channel->chunk && !channel->filename.empty()) {
         channel->chunk = load_chunk(channel->filename);
     }
@@ -150,12 +145,24 @@ static int load_channel(sound_channel* channel) {
     return channel->chunk ? 1 : 0;
 }
 
-static void init_channels(void) {
+static void channel_finished(int channel) {
+    auto &data = g_sound_device_data;
+    data.channels[channel].playing = false;
+}
+
+static void init_channels() {
     auto &data = g_sound_device_data;
     data.initialized = 1;
     for (int i = 0; i < MAX_CHANNELS; i++) {
         data.channels[i].chunk = 0;
     }
+
+    Mix_ChannelFinished(channel_finished);
+}
+
+std::span<sound_device_channel> sound_device_channels() {
+    auto &data = g_sound_device_data;
+    return make_span<sound_device_channel>(data.channels.data(), data.channels.size());
 }
 
 void sound_device_init_channel(int index, vfs::path filename) {
@@ -297,10 +304,14 @@ void sound_device_set_music_volume(int volume_pct) {
     Mix_VolumeMusic(percentage_to_volume(volume_pct));
 }
 
+void sound_device_set_channel_panning(int channel, int left, int right) {
+    Mix_SetPanning(channel, left, right);
+}
+
 void sound_device_set_channel_volume(int channel, int volume_pct) {
     auto &data = g_sound_device_data;
     if (data.channels[channel].chunk) {
-        Mix_VolumeChunk(data.channels[channel].chunk, percentage_to_volume(volume_pct));
+        Mix_VolumeChunk((Mix_Chunk*)data.channels[channel].chunk, percentage_to_volume(volume_pct));
     }
 }
 
@@ -365,33 +376,43 @@ void sound_device_play_file_on_channel(const char* filename, int channel, int vo
     data.channels[channel].chunk = load_chunk(filename);
     if (data.channels[channel].chunk) {
         sound_device_set_channel_volume(channel, volume_pct);
-        Mix_PlayChannel(channel, data.channels[channel].chunk, 0);
+        Mix_PlayChannel(channel, (Mix_Chunk*)data.channels[channel].chunk, 0);
     }
 }
 
 void sound_device_play_channel(int channel, int volume_pct) {
     auto &data = g_sound_device_data;
     if (data.initialized) {
-        sound_channel* ch = &data.channels[channel];
-        if (load_channel(ch)) {
-            const char* mp3_track;
+        sound_device_channel &ch = data.channels[channel];
+        if (load_channel(&ch)) {
+            ch.playing = true;
             sound_device_set_channel_volume(channel, volume_pct * 0.4);
 
-            Mix_PlayChannel(channel, ch->chunk, 0);
+            Mix_PlayChannelTimed(channel, (Mix_Chunk*)ch.chunk, 0, -1);
         }
     }
 }
 
 void sound_device_play_channel_panned(int channel, int volume_pct, int left_pct, int right_pct) {
     auto &data = g_sound_device_data;
-    if (data.initialized) {
-        sound_channel* ch = &data.channels[channel];
-        if (load_channel(ch)) {
-            Mix_SetPanning(channel, left_pct * 255 / 100, right_pct * 255 / 100);
-            sound_device_set_channel_volume(channel, volume_pct);
-            Mix_PlayChannel(channel, ch->chunk, 0);
-        }
+    if (!data.initialized) {
+        return;
     }
+
+    sound_device_channel& ch = data.channels[channel];
+    if (!load_channel(&ch)) {
+        return;
+    }
+
+    ch.left_pan = left_pct * 255 / 100;
+    ch.right_pan = right_pct * 255 / 100;
+    ch.volume = volume_pct;
+    ch.playing = true;
+
+    sound_device_set_channel_panning(channel, ch.left_pan, ch.right_pan);
+    sound_device_set_channel_volume(channel, ch.volume);
+
+    Mix_PlayChannelTimed(channel, (Mix_Chunk*)ch.chunk, 0, -1);
 }
 
 void sound_device_stop_music(void) {
@@ -408,10 +429,10 @@ void sound_device_stop_music(void) {
 void sound_device_stop_channel(int channel) {
     auto &data = g_sound_device_data;
     if (data.initialized) {
-        sound_channel* ch = &data.channels[channel];
+        sound_device_channel* ch = &data.channels[channel];
         if (ch->chunk) {
             Mix_HaltChannel(channel);
-            Mix_FreeChunk(ch->chunk);
+            Mix_FreeChunk((Mix_Chunk*)ch->chunk);
             ch->chunk = 0;
         }
     }

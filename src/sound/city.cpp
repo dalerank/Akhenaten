@@ -15,30 +15,16 @@
 
 #define MAX_CHANNELS 70
 
-struct city_channel {
-    int in_use;
-    int available;
-    int total_views;
-    int views_threshold;
-    int direction_views[5];
-    int channel;
-    int times_played;
-    time_millis last_played_time;
-    time_millis delay_millis;
-    int should_play;
-};
-
-struct city_sounds_t {
-    time_millis last_update_time;
-    std::array<city_channel, 96> channels;
-};
-
 city_sounds_t g_city_sounds;
+
+const city_sounds_t &sound_city_channels() {
+    return g_city_sounds;
+}
 
 void sound_city_init() {
     auto &channels = g_city_sounds.channels;
     g_city_sounds.last_update_time = time_get_millis();
-    memset(channels.data(), 0, channels.size() * sizeof(city_channel));
+    memset(channels.data(), 0, channels.size() * sizeof(city_sound_channel));
     for (int i = 0; i < MAX_CHANNELS; i++) {
         channels[i].last_played_time = g_city_sounds.last_update_time;
     }
@@ -351,7 +337,7 @@ void sound_city_play() {
 io_buffer* iob_city_sounds = new io_buffer([](io_buffer* iob, size_t version) {
     auto &channels = g_city_sounds.channels;
     for (int i = 0; i < MAX_CHANNELS; i++) {
-        city_channel* ch = &channels[i];
+        city_sound_channel* ch = &channels[i];
         iob->bind(BIND_SIGNATURE_INT32, &ch->available);
         iob->bind(BIND_SIGNATURE_INT32, &ch->total_views);
         iob->bind(BIND_SIGNATURE_INT32, &ch->views_threshold);

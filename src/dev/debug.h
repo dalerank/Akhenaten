@@ -22,6 +22,7 @@ enum e_debug_show_opt {
     e_debug_show_tile_cache,
     e_debug_show_migration,
     e_debug_show_sentiment,
+    e_debug_show_sound_channels,
 
     e_debug_opt_size,
 };

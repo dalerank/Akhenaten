@@ -1,6 +1,9 @@
 #pragma once
 
+#include "core/time.h"
 #include "sound/channel.h"
+
+#include <array>
 
 class building;
 
@@ -78,7 +81,26 @@ enum e_sound_channel_city {
     SOUND_CHANNEL_CITY_MARSHLAND
 };
 
+struct city_sound_channel {
+    int in_use;
+    int available;
+    int total_views;
+    int views_threshold;
+    int direction_views[5];
+    int channel;
+    int times_played;
+    time_millis last_played_time;
+    time_millis delay_millis;
+    int should_play;
+};
+
+struct city_sounds_t {
+    time_millis last_update_time;
+    std::array<city_sound_channel, 96> channels;
+};
+
 void sound_city_init();
+const city_sounds_t &sound_city_channels();
 void sound_city_set_volume(int percentage);
 void sound_city_mark_building_view(building* b, int direction);
 void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction);

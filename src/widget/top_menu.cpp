@@ -145,9 +145,10 @@ static menu_item menu_debug[] = {
     {5, 8, menu_debug_change_opt, e_debug_show_tile_cache},
     {5, 9, menu_debug_change_opt, e_debug_show_migration},
     {5, 10, menu_debug_change_opt, e_debug_show_sentiment},
-    {5, 11, menu_debug_show_console, 0, false, "Show console"},
-    {5, 12, menu_debug_screenshot, 0, false, "Screenshot"},
-    {5, 13, menu_debug_full_screenshot, 0, false, "Full Screenshot"},
+    {5, 11, menu_debug_change_opt, e_debug_show_sound_channels},
+    {5, 12, menu_debug_show_console, 0, false, "Show console"},
+    {5, 13, menu_debug_screenshot, 0, false, "Screenshot"},
+    {5, 14, menu_debug_full_screenshot, 0, false, "Full Screenshot"},
 };
 
 static menu_item menu_render[] = {
@@ -218,6 +219,7 @@ static void menu_debug_opt_text(int opt, bool v) {
         {"Tile Cache ON", "Tile Cache OFF"},
         {"Migration ON", "Migration OFF"},
         {"Sentiment ON", "Sentiment OFF"},
+        {"Sound Channels ON", "Sound Channels OFF"},
     };
     menu_update_text(g_top_menu[INDEX_DEBUG], opt, debug_text_opt[opt][v ? 0 : 1]);
 }

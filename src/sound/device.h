@@ -4,8 +4,19 @@
 #include "content/vfs.h"
 #include "core/span.hpp"
 
-void sound_device_open(void);
-void sound_device_close(void);
+struct sound_device_channel {
+    vfs::path filename;
+    int left_pan = 0;
+    int right_pan = 0;
+    int volume = 0;
+    void* chunk = nullptr;
+    bool playing = false;
+};
+
+void sound_device_open();
+void sound_device_close();
+
+std::span<sound_device_channel> sound_device_channels();
 
 void sound_device_load_formats(void);
 void sound_device_unload_formats(void);
@@ -15,6 +26,7 @@ void sound_device_init_channels(std::span<vfs::path> filenames);
 int sound_device_is_channel_playing(int channel);
 
 void sound_device_set_music_volume(int volume_pct);
+void sound_device_set_channel_panning(int channel, int left, int right);
 void sound_device_set_channel_volume(int channel, int volume_pct);
 
 int sound_device_play_music(const char* filename, int volume_pct);

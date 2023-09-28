@@ -28,6 +28,8 @@
 #include "city/coverage.h"
 #include "city/floods.h"
 #include "city/gods.h"
+#include "sound/city.h"
+#include "sound/device.h"
 #include "core/random.h"
 #include "figure/route.h"
 #include "game/time.h"
@@ -909,6 +911,18 @@ void draw_debug_ui(int x, int y) {
         debug_text(str, x, y + 145, cl, "Double farm yields:", city_data.religion.osiris_double_farm_yield);
         debug_text(str, x, y + 155, cl, "Floods will destroy farms:", city_data.religion.osiris_flood_will_destroy_active);
         y += 170;
+    }
+
+    if (g_debug_show_opts[e_debug_show_sound_channels]) {
+        const auto &channels = sound_device_channels();
+        int cl = 180;
+        for (const auto &ch: channels) {
+            if (!ch.playing) {
+                continue;
+            }
+            debug_text(str, x, y + 1, cl, bstring256().printf("%03u: L%03u: R:%03u: %s", &ch - channels.begin(), ch.left_pan, ch.right_pan, ch.filename.c_str()).c_str(), 0);
+            y += 12;
+        }
     }
 
     if (g_debug_show_opts[e_debug_show_migration]) {
