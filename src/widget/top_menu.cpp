@@ -458,7 +458,9 @@ static void set_text_for_warnings(void) {
 }
 static void set_text_for_debug_city() {
     for (int i = 0; i < std::size(menu_debug); ++i) {
-        menu_debug_opt_text(i, g_debug_show_opts[i]);
+        if (!menu_debug[i].text_raw) {
+            menu_debug_opt_text(i, g_debug_show_opts[i]);
+        }
     }
 }
 static void set_text_for_debug_render() {

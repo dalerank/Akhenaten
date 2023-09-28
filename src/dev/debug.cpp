@@ -436,7 +436,6 @@ void draw_debug_tile(vec2i pixel, map_point point) {
 
     case e_debug_render_terrain_type: // TERRAIN TYPE
         d = map_terrain_get(grid_offset);
-        //            if (d != 0)
         debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_BLUE);
         break;
 
