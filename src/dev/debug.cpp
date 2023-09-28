@@ -322,7 +322,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
 
-    case 10: // FLOODPLAIN TERRAIN FLAGS
+    case e_debug_render_grass_flood_flags: // FLOODPLAIN TERRAIN FLAGS
         d = map_terrain_is(grid_offset, TERRAIN_BUILDING);
         if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
             if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
@@ -351,7 +351,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
         }
         break;
 
-    case 11: // LABOR
+    case e_debug_render_labor: // LABOR
         if (b_id && map_property_is_draw_tile(grid_offset)
             && (b->labor_category != (uint8_t)-1 || building_is_floodplain_farm(b))) {
             if (b->labor_category != category_for_building(b))

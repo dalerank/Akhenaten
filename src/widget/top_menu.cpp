@@ -160,6 +160,8 @@ static menu_item menu_render[] = {
     {6, 7, menu_debug_render_change_opt, e_debug_render_grass_level},
     {6, 8, menu_debug_render_change_opt, e_debug_render_grass_soil_depletion},
     {6, 9, menu_debug_render_change_opt, e_debug_render_grass_flood_order},
+    {6, 10, menu_debug_render_change_opt, e_debug_render_grass_flood_flags},
+    {6, 11, menu_debug_render_change_opt, e_debug_render_labor},
 };
 
 menu_bar_item g_top_menu[] = {
@@ -225,6 +227,8 @@ static void menu_debug_render_text(int opt, bool v) {
         {"Grass Level ON", "Grass Level OFF"},
         {"Soil Depl ON", "Soil Depl OFF"},
         {"Flood Order ON", "Flood Order OFF"},
+        {"Flood Flags ON", "Flood Flags OFF"},
+        {"Labor ON", "Labor OFF"},
     };
     menu_update_text(g_top_menu[INDEX_DEBUG_RENDER], opt, debug_text_rend[opt][v ? 0 : 1]);
 }
