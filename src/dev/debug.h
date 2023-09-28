@@ -32,6 +32,9 @@ enum e_debug_render {
     e_debug_render_tilesize = 2,
     e_debug_render_roads = 3,
     e_debug_render_routing_dist = 4,
+    e_debug_render_routing_grid = 5,
+    e_debug_render_moisture = 6,
+    e_debug_render_grass_level = 7,
 
     e_debug_render_size
 };

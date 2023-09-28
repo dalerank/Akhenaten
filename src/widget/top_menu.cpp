@@ -155,6 +155,9 @@ static menu_item menu_render[] = {
     {6, 2, menu_debug_render_change_opt, e_debug_render_tilesize},
     {6, 3, menu_debug_render_change_opt, e_debug_render_roads},
     {6, 4, menu_debug_render_change_opt, e_debug_render_routing_dist},
+    {6, 5, menu_debug_render_change_opt, e_debug_render_routing_grid},
+    {6, 6, menu_debug_render_change_opt, e_debug_render_moisture},
+    {6, 7, menu_debug_render_change_opt, e_debug_render_grass_level},
 };
 
 menu_bar_item g_top_menu[] = {
@@ -195,16 +198,16 @@ top_menu_data_t g_top_menu_data;
 
 static void menu_debug_opt_text(int opt, bool v) {
     static const char* debug_text_opt[][2] = {
-      {"Pages ON", "Pages OFF"},
-      {"Game Time ON", "Game Time OFF"},
-      {"Build Planner ON", "Build Planner OFF"},
-      {"Religion ON", "Religion OFF"},
-      {"Tutorial ON", "Tutorial OFF"},
-      {"Floods ON", "Floods OFF"},
-      {"Camera ON", "Camera OFF"},
-      {"Tile Cache ON", "Tile Cache OFF"},
-      {"Migration ON", "Migration OFF"},
-      {"Sentiment ON", "Sentiment OFF"},
+        {"Pages ON", "Pages OFF"},
+        {"Game Time ON", "Game Time OFF"},
+        {"Build Planner ON", "Build Planner OFF"},
+        {"Religion ON", "Religion OFF"},
+        {"Tutorial ON", "Tutorial OFF"},
+        {"Floods ON", "Floods OFF"},
+        {"Camera ON", "Camera OFF"},
+        {"Tile Cache ON", "Tile Cache OFF"},
+        {"Migration ON", "Migration OFF"},
+        {"Sentiment ON", "Sentiment OFF"},
     };
     menu_update_text(g_top_menu[INDEX_DEBUG], opt, debug_text_opt[opt][v ? 0 : 1]);
 }
@@ -215,6 +218,9 @@ static void menu_debug_render_text(int opt, bool v) {
         {"Tile Size ON", "Tile Size OFF"},
         {"Roads ON", "Roads OFF"},
         {"Routing Dist ON", "Routing Dist OFF"},
+        {"Routing Grid ON", "Routing Grid OFF"},
+        {"Moisture ON", "Moisture OFF"},
+        {"Grass Level ON", "Grass Level OFF"},
     };
     menu_update_text(g_top_menu[INDEX_DEBUG_RENDER], opt, debug_text_rend[opt][v ? 0 : 1]);
 }

@@ -278,7 +278,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
 
-    case 5: // CITIZEN ROUTING GRID
+    case e_debug_render_routing_grid: // CITIZEN ROUTING GRID
         d = map_citizen_grid(grid_offset);
         if (d > 0)
             debug_text(str, x, y + 10, 0, "", d, COLOR_WHITE);
@@ -286,7 +286,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
 
-    case 6: // MOISTURE
+    case e_debug_render_moisture: // MOISTURE
         d = map_moisture_get(grid_offset);
         if (d & MOISTURE_GRASS)
             debug_text(str, x, y + 10, 0, "", d, COLOR_WHITE);
@@ -296,7 +296,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             debug_text(str, x, y + 10, 0, "", d, COLOR_GREEN);
         break;
 
-    case 7: // PROPER GRASS LEVEL
+    case e_debug_render_grass_level: // PROPER GRASS LEVEL
         d = map_grasslevel_get(grid_offset);
         if (d)
             debug_text(str, x, y + 10, 0, "", d, COLOR_GREEN);
