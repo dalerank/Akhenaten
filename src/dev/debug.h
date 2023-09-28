@@ -39,6 +39,10 @@ enum e_debug_render {
     e_debug_render_grass_flood_order = 9,
     e_debug_render_grass_flood_flags = 10,
     e_debug_render_labor = 11,
+    e_debug_render_sprite_frames = 12,
+    e_debug_render_terrain_bits = 13,
+    e_debug_render_image = 14,
+    e_debug_render_marshland_depl = 15,
 
     e_debug_render_size
 };

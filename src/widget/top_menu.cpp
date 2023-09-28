@@ -162,6 +162,11 @@ static menu_item menu_render[] = {
     {6, 9, menu_debug_render_change_opt, e_debug_render_grass_flood_order},
     {6, 10, menu_debug_render_change_opt, e_debug_render_grass_flood_flags},
     {6, 11, menu_debug_render_change_opt, e_debug_render_labor},
+    {6, 12, menu_debug_render_change_opt, e_debug_render_sprite_frames},
+    {6, 13, menu_debug_render_change_opt, e_debug_render_terrain_bits},
+    {6, 14, menu_debug_render_change_opt, e_debug_render_image},
+    {6, 15, menu_debug_render_change_opt, e_debug_render_marshland_depl},
+    
 };
 
 menu_bar_item g_top_menu[] = {
@@ -229,6 +234,10 @@ static void menu_debug_render_text(int opt, bool v) {
         {"Flood Order ON", "Flood Order OFF"},
         {"Flood Flags ON", "Flood Flags OFF"},
         {"Labor ON", "Labor OFF"},
+        {"Sprite Frames ON", "Sprite Frames OFF"},
+        {"Terrain Bits ON", "Terrain Bits OFF"},
+        {"Image ON", "Image OFF"},
+        {"Marshland Depl ON", "Marshland Depl OFF"},
     };
     menu_update_text(g_top_menu[INDEX_DEBUG_RENDER], opt, debug_text_rend[opt][v ? 0 : 1]);
 }

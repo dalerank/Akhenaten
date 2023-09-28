@@ -380,7 +380,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
         }
         break;
 
-    case 12: // SPRITE FRAMES
+    case e_debug_render_sprite_frames: // SPRITE FRAMES
         if (grid_offset == MAP_OFFSET(b->tile.x(), b->tile.y()))
             draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, {x - 15, y}, COLOR_MASK_GREEN);
         if (grid_offset == north_tile_grid_offset(b->tile.x(), b->tile.y()))
@@ -414,15 +414,15 @@ void draw_debug_tile(vec2i pixel, map_point point) {
         }
         break;
 
-    case 13: // TERRAIN BIT FIELD
+    case e_debug_render_terrain_bits: // TERRAIN BIT FIELD
         debug_text(str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE);
         break;
 
-    case 14: // IMAGE FIELD
-        debug_text(str, x, y + 10, 0, "", map_image_at(grid_offset) - 14252, COLOR_LIGHT_RED);
+    case e_debug_render_image: // IMAGE FIELD
+        debug_text(str, x, y + 10, 0, "", map_image_at(grid_offset), COLOR_LIGHT_RED);
         break;
 
-    case 15: // MARSHLAND DEPLETION
+    case e_debug_render_marshland_depl: // MARSHLAND DEPLETION
         d = map_get_vegetation_growth(grid_offset);
         if (d != 255)
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
