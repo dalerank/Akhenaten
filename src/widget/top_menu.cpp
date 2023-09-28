@@ -153,6 +153,7 @@ static menu_item menu_debug[] = {
 static menu_item menu_render[] = {
     {6, 1, menu_debug_render_change_opt, e_debug_render_building},
     {6, 2, menu_debug_render_change_opt, e_debug_render_tilesize},
+    {6, 3, menu_debug_render_change_opt, e_debug_render_roads},
 };
 
 menu_bar_item g_top_menu[] = {
@@ -211,6 +212,7 @@ static void menu_debug_render_text(int opt, bool v) {
     static const char *debug_text_rend[][2] = {
         {"Buildings ON", "Buildings OFF"},
         {"Tile Size ON", "Tile Size OFF"},
+        {"Roads ON", "Roads OFF"},
     };
     menu_update_text(g_top_menu[INDEX_DEBUG_RENDER], opt, debug_text_rend[opt][v ? 0 : 1]);
 }

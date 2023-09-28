@@ -250,7 +250,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             debug_text(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_BLUE);
         break;
 
-    case 3:                                                   // ROADS
+    case e_debug_render_roads:                                                   // ROADS
         if (b_id && map_property_is_draw_tile(grid_offset)) { //&& b->tile.grid_offset() == grid_offset
             debug_text(str, x0, y + 5, 0, "", b->road_access.x(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);
             debug_text(str, x0, y + 15, 0, "", b->road_access.y(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);

@@ -30,6 +30,7 @@ enum e_debug_render {
     e_debug_render_none = 0,
     e_debug_render_building = 1,
     e_debug_render_tilesize = 2,
+    e_debug_render_roads = 3,
 
     e_debug_render_size
 };
