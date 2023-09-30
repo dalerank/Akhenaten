@@ -115,6 +115,12 @@ struct window_advisors_t {
 
 window_advisors_t g_window_advisors;
 
+static void clear_all_advisors_button() {
+    for (auto &btn : advisor_buttons) {
+        btn.pressed = false;
+    }
+}
+
 static void set_advisor_window() {
     auto &data = g_window_advisors;
     if (sub_advisors[data.current_advisor]) {
@@ -127,6 +133,7 @@ static void set_advisor(int advisor) {
     auto &data = g_window_advisors;
     data.current_advisor = advisor;
     setting_set_last_advisor(advisor);
+    clear_all_advisors_button();
     set_advisor_window();
     advisor_buttons[advisor - 1].pressed = 1; // set button active when coming back to menu
 }
