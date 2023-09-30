@@ -7,12 +7,13 @@
 #include "mujs/mujs.h"
 
 #include "sound/system.h"
+#include "sound/sound_mission.h"
 
 void js_game_log_info(js_State *J) {
     if (js_isundefined(J, 1)) {
         logs::info("log() Try to print undefined object", 0, 0);
     } else {
-        logs::info("", js_tostring(J, 1), 0);
+        logs::info("%s", js_tostring(J, 1));
     }
 
     js_pushundefined(J);
@@ -53,9 +54,18 @@ void js_sound_system_update_channel(js_State *J) {
     sound_system_update_channel(channel, path);
 }
 
+void js_sound_system_mission_config(js_State *J) {
+    const int mission = js_tointeger(J, 1);
+    const char *inter = js_tostring(J, 2);
+    const char *won = js_tostring(J, 3);
+
+    snd::set_mission_config(mission, inter, won);
+}
+
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_sound_system_update_channel, "sound_system_update_channel", 2);
+    REGISTER_GLOBAL_FUNCTION(J, js_sound_system_mission_config, "sound_system_mission_config", 2);
 }
