@@ -1,5 +1,5 @@
 #pragma once
 
-struct building_info_context;
+struct object_info;
 
-void window_building_draw_house(building_info_context* c);
+void window_building_draw_house(object_info* c);

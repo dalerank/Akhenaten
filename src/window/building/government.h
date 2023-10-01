@@ -1,19 +1,12 @@
 #pragma once
 
-#include "common.h"
+struct object_info;
 
-void window_building_draw_tax_collector(building_info_context* c);
-
-void window_building_draw_palace(building_info_context* c);
-
-void window_building_draw_governor_home(building_info_context* c);
-
-void window_building_draw_garden(building_info_context* c);
-
-void window_building_draw_plaza(building_info_context* c);
-
-void window_building_draw_statue(building_info_context* c);
-
-void window_building_draw_triumphal_arch(building_info_context* c);
-
-void window_building_draw_courthouse(building_info_context* c);
+void window_building_draw_tax_collector(object_info* c);
+void window_building_draw_palace(object_info* c);
+void window_building_draw_governor_home(object_info* c);
+void window_building_draw_garden(object_info* c);
+void window_building_draw_plaza(object_info* c);
+void window_building_draw_statue(object_info* c);
+void window_building_draw_triumphal_arch(object_info* c);
+void window_building_draw_courthouse(object_info* c);

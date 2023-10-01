@@ -28,7 +28,7 @@ void window_building_set_possible_position(int* x_offset, int* y_offset, int wid
         *x_offset = view_size.x - dialog_width;
     }
 }
-int window_building_get_vertical_offset(building_info_context* c, int new_window_height) {
+int window_building_get_vertical_offset(object_info* c, int new_window_height) {
     new_window_height = new_window_height * 16;
     int old_window_height = c->height_blocks * 16;
     c->height_blocks_submenu = new_window_height / 16;
@@ -50,8 +50,7 @@ int window_building_get_vertical_offset(building_info_context* c, int new_window
     return new_window_y;
 }
 
-static int
-get_employment_info_text_id(building_info_context* c, building* b, int y_offset, int consider_house_covering) {
+static int get_employment_info_text_id(object_info* c, building* b, int y_offset, int consider_house_covering) {
     int text_id;
     if (b->num_workers >= model_get_building(b->type)->laborers)
         text_id = 0;
@@ -73,7 +72,8 @@ get_employment_info_text_id(building_info_context* c, building* b, int y_offset,
 
     return text_id;
 }
-static void draw_employment_details(building_info_context* c, building* b, int y_offset, int text_id) {
+
+static void draw_employment_details(object_info* c, building* b, int y_offset, int text_id) {
     y_offset += c->y_offset;
     ImageDraw::img_generic(image_id_from_group(GROUP_CONTEXT_ICONS) + 14, c->x_offset + 40, y_offset + 6);
     if (text_id) {
@@ -87,22 +87,24 @@ static void draw_employment_details(building_info_context* c, building* b, int y
         lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
-static void draw_employment_farm_ph_details(building_info_context* c, building* b, int y_offset, int text_id) {
+
+static void draw_employment_farm_ph_details(object_info* c, building* b, int y_offset, int text_id) {
     y_offset += c->y_offset;
     ImageDraw::img_generic(image_id_from_group(GROUP_CONTEXT_ICONS) + 14, c->x_offset + 40, y_offset + 6);
     int width = lang_text_draw_multiline(177, text_id, c->x_offset + 70, y_offset + 10, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
 }
-void window_building_draw_employment(building_info_context* c, int y_offset) {
+
+void window_building_draw_employment(object_info* c, int y_offset) {
     building* b = building_get(c->building_id);
     int text_id = get_employment_info_text_id(c, b, y_offset, 1);
     draw_employment_details(c, b, y_offset, text_id);
 }
-void window_building_draw_employment_without_house_cover(building_info_context* c, int y_offset) {
+void window_building_draw_employment_without_house_cover(object_info* c, int y_offset) {
     building* b = building_get(c->building_id);
     int text_id = get_employment_info_text_id(c, b, y_offset, 0);
     draw_employment_details(c, b, y_offset, text_id);
 }
-void window_building_draw_employment_flood_farm(building_info_context* c, int y_offset) {
+void window_building_draw_employment_flood_farm(object_info* c, int y_offset) {
     building* b = building_get(c->building_id);
     int text_id = 5;
     if (b->num_workers >= model_get_building(b->type)->laborers) {
@@ -110,13 +112,13 @@ void window_building_draw_employment_flood_farm(building_info_context* c, int y_
     }
     draw_employment_farm_ph_details(c, b, y_offset, text_id);
 }
-void window_building_draw_description(building_info_context* c, int text_group, int text_id) {
+void window_building_draw_description(object_info* c, int text_group, int text_id) {
     lang_text_draw_multiline(text_group, text_id, c->x_offset + 32, c->y_offset + 56, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
-void window_building_draw_description_at(building_info_context* c, int y_offset, int text_group, int text_id) {
+void window_building_draw_description_at(object_info* c, int y_offset, int text_group, int text_id) {
     lang_text_draw_multiline(text_group, text_id, c->x_offset + 32, c->y_offset + y_offset, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
-void window_building_play_sound(building_info_context* c, const char* sound_file) {
+void window_building_play_sound(object_info* c, const char* sound_file) {
     if (c->can_play_sound) {
         sound_speech_play_file(sound_file);
         c->can_play_sound = 0;

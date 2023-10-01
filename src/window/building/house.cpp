@@ -14,7 +14,7 @@
 #include "grid/road_access.h"
 #include "window/building/figures.h"
 
-static void draw_vacant_lot(building_info_context* c) {
+static void draw_vacant_lot(object_info* c) {
     window_building_prepare_figure_list(c);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(128, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
@@ -29,7 +29,7 @@ static void draw_vacant_lot(building_info_context* c) {
 
     window_building_draw_description_at(c, 16 * c->height_blocks - 113, 128, text_id);
 }
-static void draw_population_info(building_info_context* c, int y_offset) {
+static void draw_population_info(object_info* c, int y_offset) {
     building* b = building_get(c->building_id);
     ImageDraw::img_generic(image_id_from_group(GROUP_CONTEXT_ICONS) + 13, c->x_offset + 34, y_offset + 4);
     int width
@@ -46,7 +46,7 @@ static void draw_population_info(building_info_context* c, int y_offset) {
           b->house_population_room, '@', " ", c->x_offset + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
-static void draw_tax_info(building_info_context* c, int y_offset) {
+static void draw_tax_info(object_info* c, int y_offset) {
     building* b = building_get(c->building_id);
     if (b->house_tax_coverage) {
         int pct = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
@@ -57,7 +57,7 @@ static void draw_tax_info(building_info_context* c, int y_offset) {
         lang_text_draw(127, 23, c->x_offset + 36, y_offset, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
-static void draw_happiness_info(building_info_context* c, int y_offset) {
+static void draw_happiness_info(object_info* c, int y_offset) {
     int happiness = building_get(c->building_id)->sentiment.house_happiness;
     int text_id;
     if (happiness >= 50)
@@ -82,7 +82,7 @@ static void draw_happiness_info(building_info_context* c, int y_offset) {
 #define Y_FOODS 100          // 234
 #define Y_GOODS Y_FOODS + 20 // 174 //274
 
-void window_building_draw_house(building_info_context* c) {
+void window_building_draw_house(object_info* c) {
     c->help_id = 56;
     window_building_play_sound(c, "wavs/housing.wav");
     building* b = building_get(c->building_id);

@@ -8,8 +8,9 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "window/building/figures.h"
+#include "window/building/common.h"
 
-void window_building_draw_tax_collector(building_info_context* c) {
+void window_building_draw_tax_collector(object_info* c) {
     c->help_id = e_text_building_tax_collector;
     window_building_play_sound(c, "wavs/taxfarm.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -44,7 +45,7 @@ void window_building_draw_tax_collector(building_info_context* c) {
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_palace(building_info_context* c) {
+void window_building_draw_palace(object_info* c) {
     c->can_go_to_advisor = true;
     c->help_id = e_text_building_palace;
 
@@ -80,7 +81,7 @@ void window_building_draw_palace(building_info_context* c) {
     lang_text_draw(105, 3, c->x_offset + 60, c->y_offset + 220, FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
-void window_building_draw_governor_home(building_info_context* c) {
+void window_building_draw_governor_home(object_info* c) {
     c->help_id = 78;
     window_building_play_sound(c, "wavs/gov_palace.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -88,7 +89,7 @@ void window_building_draw_governor_home(building_info_context* c) {
     window_building_draw_description_at(c, 16 * c->height_blocks - 143, 103, 1);
 }
 
-void window_building_draw_garden(building_info_context* c) {
+void window_building_draw_garden(object_info* c) {
     c->help_id = 80;
     window_building_play_sound(c, "wavs/park.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -96,7 +97,7 @@ void window_building_draw_garden(building_info_context* c) {
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 79, 1);
 }
 
-void window_building_draw_plaza(building_info_context* c) {
+void window_building_draw_plaza(object_info* c) {
     c->help_id = 80;
     window_building_play_sound(c, "wavs/plaza.wav");
     window_building_prepare_figure_list(c);
@@ -106,7 +107,7 @@ void window_building_draw_plaza(building_info_context* c) {
     window_building_draw_description_at(c, 16 * c->height_blocks - 113, 137, 1);
 }
 
-void window_building_draw_statue(building_info_context* c) {
+void window_building_draw_statue(object_info* c) {
     c->help_id = 79;
     window_building_play_sound(c, "wavs/statue.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -114,7 +115,7 @@ void window_building_draw_statue(building_info_context* c) {
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 80, 1);
 }
 
-void window_building_draw_triumphal_arch(building_info_context* c) {
+void window_building_draw_triumphal_arch(object_info* c) {
     c->help_id = 79;
     window_building_play_sound(c, "wavs/statue.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -123,7 +124,7 @@ void window_building_draw_triumphal_arch(building_info_context* c) {
 }
 
 // TODO: fix courthouse panel
-void window_building_draw_courthouse(building_info_context* c) {
+void window_building_draw_courthouse(object_info* c) {
     const int LANG_GROUP_ID = 176;
     c->help_id = 76;
     window_building_play_sound(c, "wavs/forum.wav");

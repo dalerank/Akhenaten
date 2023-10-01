@@ -17,7 +17,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/invasion.h"
-#include "window/building_info.h"
+#include "window/window_building_info.h"
 #include "window/city.h"
 #include "window/console.h"
 

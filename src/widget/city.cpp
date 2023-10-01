@@ -31,7 +31,7 @@
 #include "widget/city/figures_cached_draw.h"
 #include "widget/city/tile_draw.h"
 #include "widget/minimap.h"
-#include "window/building_info.h"
+#include "window/window_building_info.h"
 #include "window/city.h"
 #include "building/building.h"
 

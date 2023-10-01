@@ -45,7 +45,7 @@ struct military_data_t {
     int focus_priority_button_id;
     int return_button_id;
     int building_id;
-    building_info_context* context_for_callback;
+    object_info* context_for_callback;
 };
 
 military_data_t g_military_data;
@@ -65,7 +65,7 @@ static void draw_priority_buttons(int x, int y, int buttons) {
     }
 }
 
-void window_building_draw_wall(building_info_context* c) {
+void window_building_draw_wall(object_info* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/wall.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -73,7 +73,7 @@ void window_building_draw_wall(building_info_context* c) {
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 139, 1);
 }
 
-void window_building_draw_ferry(building_info_context* c) {
+void window_building_draw_ferry(object_info* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/gatehouse.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -88,7 +88,7 @@ void window_building_draw_ferry(building_info_context* c) {
     }
 }
 
-void window_building_draw_gatehouse(building_info_context* c) {
+void window_building_draw_gatehouse(object_info* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/gatehouse.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -96,7 +96,7 @@ void window_building_draw_gatehouse(building_info_context* c) {
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 90, 1);
 }
 
-void window_building_draw_tower(building_info_context* c) {
+void window_building_draw_tower(object_info* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/tower.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -116,7 +116,7 @@ void window_building_draw_tower(building_info_context* c) {
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_barracks(building_info_context* c) {
+void window_building_draw_barracks(object_info* c) {
     auto& data = g_military_data;
     int military_resource = RESOURCE_WEAPONS;
     if (GAME_ENV == ENGINE_ENV_C3) {
@@ -163,11 +163,11 @@ void window_building_draw_barracks(building_info_context* c) {
     lang_text_draw(89, 0, c->x_offset + 46, c->y_offset + 244, FONT_NORMAL_BLACK_ON_LIGHT);  // "Fort"
 }
 
-void window_building_draw_barracks_foreground(building_info_context* c) {
+void window_building_draw_barracks_foreground(object_info* c) {
     draw_priority_buttons(c->x_offset + 46, c->y_offset + 224, 2);
 }
 
-int window_building_handle_mouse_barracks(const mouse* m, building_info_context* c) {
+int window_building_handle_mouse_barracks(const mouse* m, object_info* c) {
     auto& data = g_military_data;
     if (generic_buttons_handle_mouse(m, c->x_offset + 46, c->y_offset + 224, priority_buttons, 2, &data.focus_priority_button_id)) {
         window_invalidate();
@@ -176,7 +176,7 @@ int window_building_handle_mouse_barracks(const mouse* m, building_info_context*
     return 0;
 }
 
-void window_building_draw_military_academy(building_info_context* c) {
+void window_building_draw_military_academy(object_info* c) {
     c->help_id = 88;
     window_building_play_sound(c, "wavs/mil_acad.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -196,7 +196,7 @@ void window_building_draw_military_academy(building_info_context* c) {
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_fort(building_info_context* c) {
+void window_building_draw_fort(object_info* c) {
     c->help_id = 87;
     window_building_play_sound(c, "wavs/fort.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -205,7 +205,7 @@ void window_building_draw_fort(building_info_context* c) {
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 89, text_id);
 }
 
-void window_building_draw_legion_info(building_info_context* c) {
+void window_building_draw_legion_info(object_info* c) {
     int text_id;
     const formation* m = formation_get(c->formation_id);
     c->help_id = 87;
@@ -308,7 +308,7 @@ void window_building_draw_legion_info(building_info_context* c) {
     }
 }
 
-void window_building_draw_legion_info_foreground(building_info_context* c) {
+void window_building_draw_legion_info_foreground(object_info* c) {
     auto& data = g_military_data;
     const formation* m = formation_get(c->formation_id);
     if (!m->num_figures)
@@ -422,7 +422,7 @@ void window_building_draw_legion_info_foreground(building_info_context* c) {
     }
 }
 
-int window_building_handle_mouse_legion_info(const mouse* m, building_info_context* c) {
+int window_building_handle_mouse_legion_info(const mouse* m, object_info* c) {
     auto& data = g_military_data;
     data.context_for_callback = c;
     int button_id = generic_buttons_handle_mouse(m, c->x_offset, c->y_offset, layout_buttons, 5, &data.focus_button_id);
@@ -442,7 +442,7 @@ int window_building_handle_mouse_legion_info(const mouse* m, building_info_conte
     return button_id;
 }
 
-int window_building_get_legion_info_tooltip_text(building_info_context* c) {
+int window_building_get_legion_info_tooltip_text(object_info* c) {
     auto& data = g_military_data;
     return data.focus_button_id ? 147 : 0;
 }

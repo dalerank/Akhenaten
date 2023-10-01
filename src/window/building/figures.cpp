@@ -38,7 +38,7 @@ static generic_button figure_buttons[] = {
 struct building_figures_data_t {
     int figure_images[7];
     int focus_button_id;
-    building_info_context* context_for_callback;
+    object_info* context_for_callback;
 };
 
 building_figures_data_t g_building_figures_data;
@@ -88,7 +88,7 @@ static int name_group_id() { // TODO
     return 254;
 }
 
-void figure::draw_trader(building_info_context* c) {
+void figure::draw_trader(object_info* c) {
     figure* f = get_head_of_caravan();
     const empire_city* city = empire_city_get(f->empire_city_id);
     int width = lang_text_draw(64, f->type, c->x_offset + 40, c->y_offset + 110, FONT_NORMAL_BLACK_ON_DARK);
@@ -187,7 +187,7 @@ void figure::draw_trader(building_info_context* c) {
         }
     }
 }
-void figure::draw_enemy(building_info_context* c) {
+void figure::draw_enemy(object_info* c) {
     int image_id = FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[type];
     int enemy_type = formation_get(formation_id)->enemy_type;
     switch (type) {
@@ -269,11 +269,11 @@ void figure::draw_enemy(building_info_context* c) {
     lang_text_draw(name_group_id(), name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BLACK_ON_DARK);
     lang_text_draw(37, scenario_property_enemy() + 20, c->x_offset + 92, c->y_offset + 149, FONT_NORMAL_BLACK_ON_DARK);
 }
-void figure::draw_animal(building_info_context* c) {
+void figure::draw_animal(object_info* c) {
     ImageDraw::img_generic(big_people_image(type), c->x_offset + 28, c->y_offset + 112);
     lang_text_draw(64, type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
 }
-void figure::draw_cartpusher(building_info_context* c) {
+void figure::draw_cartpusher(object_info* c) {
     ImageDraw::img_generic(big_people_image(type), c->x_offset + 28, c->y_offset + 112);
 
     lang_text_draw(name_group_id(), name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BLACK_ON_DARK);
@@ -335,7 +335,7 @@ void figure::draw_cartpusher(building_info_context* c) {
     //    }
 }
 
-void figure::draw_market_buyer(building_info_context* c) {
+void figure::draw_market_buyer(object_info* c) {
     ImageDraw::img_generic(big_people_image(type), c->x_offset + 28, c->y_offset + 112);
 
     lang_text_draw(name_group_id(), name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BLACK_ON_DARK);
@@ -356,7 +356,7 @@ void figure::draw_market_buyer(building_info_context* c) {
     }
 }
 
-void figure::draw_normal_figure(building_info_context* c) {
+void figure::draw_normal_figure(object_info* c) {
     int image_id = big_people_image(type);
     if (action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE || action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
         image_id = image_id_from_group(GROUP_PORTRAITS) + 18;
@@ -372,7 +372,7 @@ void figure::draw_normal_figure(building_info_context* c) {
     }
 }
 
-static void draw_figure_info(building_info_context* c, int figure_id) {
+static void draw_figure_info(object_info* c, int figure_id) {
     button_border_draw(c->x_offset + 24, c->y_offset + 102, 16 * (c->width_blocks - 3), 138, 0);
 
     figure* f = figure_get(figure_id);
@@ -391,7 +391,7 @@ static void draw_figure_info(building_info_context* c, int figure_id) {
         f->draw_normal_figure(c);
 }
 
-void window_building_draw_figure_list(building_info_context* c) {
+void window_building_draw_figure_list(object_info* c) {
     inner_panel_draw(c->x_offset + 16, c->y_offset + 40, c->width_blocks - 2, 13);
     if (c->figure.count <= 0)
         lang_text_draw_centered(70, 0, c->x_offset, c->y_offset + 120, 16 * c->width_blocks, FONT_NORMAL_BLACK_ON_DARK);
@@ -421,7 +421,7 @@ static void draw_figure_in_city(int figure_id, vec2i* coord) {
     //    city_view_go_to_tile(x_cam, y_cam);
 }
 
-void window_building_prepare_figure_list(building_info_context* c) {
+void window_building_prepare_figure_list(object_info* c) {
     auto& data = g_building_figures_data;
     if (c->figure.count > 0) {
         vec2i coord = {0, 0};
@@ -441,7 +441,7 @@ void window_building_prepare_figure_list(building_info_context* c) {
     }
 }
 
-int window_building_handle_mouse_figure_list(const mouse* m, building_info_context* c) {
+int window_building_handle_mouse_figure_list(const mouse* m, object_info* c) {
     auto& data = g_building_figures_data;
     data.context_for_callback = c;
     int button_id = generic_buttons_handle_mouse(m, c->x_offset, c->y_offset, figure_buttons, c->figure.count, &data.focus_button_id);
@@ -456,7 +456,7 @@ static void select_figure(int index, int param2) {
     window_invalidate();
 }
 
-void window_building_play_figure_phrase(building_info_context* c) {
+void window_building_play_figure_phrase(object_info* c) {
     int figure_id = c->figure.figure_ids[c->figure.selected_index];
     figure* f = figure_get(figure_id);
     c->figure.sound_id = f->figure_phrase_play();

@@ -1,4 +1,4 @@
-#include "building_info.h"
+#include "window_building_info.h"
 
 #include "building/barracks.h"
 #include "building/building.h"
@@ -75,7 +75,7 @@ static generic_button generic_button_layer[] = {
   {375, 3, 24, 24, button_overlay, button_none, 0, 0}
 };
 
-static building_info_context g_building_info_context;
+static object_info g_building_info_context;
 
 struct focus_button_id {
     int image_button_id = 0;
@@ -86,7 +86,7 @@ struct focus_button_id {
 
 focus_button_id g_building_info_focus;
 
-static int get_height_id(void) {
+static int get_height_id() {
     auto &context = g_building_info_context;
     if (context.type == BUILDING_INFO_TERRAIN) {
         switch (context.terrain_type) {

@@ -503,12 +503,12 @@ public:
 
     // window/building/figures.c
     figure* get_head_of_caravan();
-    void draw_trader(building_info_context* c);
-    void draw_enemy(building_info_context* c);
-    void draw_animal(building_info_context* c);
-    void draw_cartpusher(building_info_context* c);
-    void draw_market_buyer(building_info_context* c);
-    void draw_normal_figure(building_info_context* c);
+    void draw_trader(object_info* c);
+    void draw_enemy(object_info* c);
+    void draw_animal(object_info* c);
+    void draw_cartpusher(object_info* c);
+    void draw_market_buyer(object_info* c);
+    void draw_normal_figure(object_info* c);
 
     // grid/marshland.c
     bool find_resource_tile(int resource_type, int* out_x, int* out_y);

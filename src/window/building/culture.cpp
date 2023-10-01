@@ -5,8 +5,9 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "io/gamefiles/lang.h"
+#include "window/building/common.h"
 
-static void draw_building_service_info(building_info_context* c, int help_id, const char* sound_file, int group_id, e_figure_type ftype) {
+static void draw_building_service_info(object_info* c, int help_id, const char* sound_file, int group_id, e_figure_type ftype) {
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -27,16 +28,16 @@ static void draw_building_service_info(building_info_context* c, int help_id, co
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_apothecary(building_info_context* c) {
+void window_building_draw_apothecary(object_info* c) {
     draw_building_service_info(c, 63, "wavs/apothecary.wav", e_text_building_apothecary, FIGURE_APOTHECARY);
 }
-void window_building_draw_dentist(building_info_context* c) {
+void window_building_draw_dentist(object_info* c) {
     draw_building_service_info(c, 65, "wavs/dentist.wav", e_text_building_dentist, FIGURE_DENTIST);
 }
-void window_building_draw_mortuary(building_info_context* c) {
+void window_building_draw_mortuary(object_info* c) {
     draw_building_service_info(c, 66, "wavs/mortuary.wav", e_text_building_mortuary, FIGURE_MORTUARY_WORKER);
 }
-void window_building_draw_physician(building_info_context *c) {
+void window_building_draw_physician(object_info *c) {
     c->help_id = 64;
     window_building_play_sound(c, "wavs/physician.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -60,17 +61,17 @@ void window_building_draw_physician(building_info_context *c) {
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_school(building_info_context* c) {
+void window_building_draw_school(object_info* c) {
     draw_building_service_info(c, 68, "wavs/school.wav", 85, FIGURE_SCHOOL_CHILD);
 }
-void window_building_draw_academy(building_info_context* c) {
+void window_building_draw_academy(object_info* c) {
     draw_building_service_info(c, 69, "wavs/academy.wav", 86, FIGURE_TEACHER);
 }
-void window_building_draw_library(building_info_context* c) {
+void window_building_draw_library(object_info* c) {
     draw_building_service_info(c, 70, "wavs/library.wav", 87, FIGURE_LIBRARIAN);
 }
 
-static void draw_temple(building_info_context* c, const char* sound_file, int group_id, int image_offset) {
+static void draw_temple(object_info* c, const char* sound_file, int group_id, int image_offset) {
     c->help_id = 67;
     window_building_play_sound(c, sound_file);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -83,7 +84,7 @@ static void draw_temple(building_info_context* c, const char* sound_file, int gr
         window_building_draw_description_at(c, 16 * c->height_blocks - 128, 69, 25);
     }
 }
-static void draw_shrine(building_info_context* c, const char* sound_file, int text_id, int image_offset) {
+static void draw_shrine(object_info* c, const char* sound_file, int text_id, int image_offset) {
     c->help_id = 67;
     window_building_play_sound(c, sound_file);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -96,39 +97,39 @@ static void draw_shrine(building_info_context* c, const char* sound_file, int te
     }
 }
 
-void window_building_draw_temple_osiris(building_info_context* c) {
+void window_building_draw_temple_osiris(object_info* c) {
     draw_temple(c, "wavs/temple_farm.wav", 92, 21);
 }
-void window_building_draw_temple_ra(building_info_context* c) {
+void window_building_draw_temple_ra(object_info* c) {
     draw_temple(c, "wavs/temple_ship.wav", 93, 22);
 }
-void window_building_draw_temple_ptah(building_info_context* c) {
+void window_building_draw_temple_ptah(object_info* c) {
     draw_temple(c, "wavs/temple_comm.wav", 94, 23);
 }
-void window_building_draw_temple_seth(building_info_context* c) {
+void window_building_draw_temple_seth(object_info* c) {
     draw_temple(c, "wavs/temple_war.wav", 95, 24);
 }
-void window_building_draw_temple_bast(building_info_context* c) {
+void window_building_draw_temple_bast(object_info* c) {
     draw_temple(c, "wavs/temple_love.wav", 96, 25);
 }
 
-void window_building_draw_shrine_osiris(building_info_context* c) {
+void window_building_draw_shrine_osiris(object_info* c) {
     draw_shrine(c, "wavs/temple_farm.wav", 0, 21);
 }
-void window_building_draw_shrine_ra(building_info_context* c) {
+void window_building_draw_shrine_ra(object_info* c) {
     draw_shrine(c, "wavs/temple_ship.wav", 2, 22);
 }
-void window_building_draw_shrine_ptah(building_info_context* c) {
+void window_building_draw_shrine_ptah(object_info* c) {
     draw_shrine(c, "wavs/temple_comm.wav", 4, 23);
 }
-void window_building_draw_shrine_seth(building_info_context* c) {
+void window_building_draw_shrine_seth(object_info* c) {
     draw_shrine(c, "wavs/temple_war.wav", 6, 24);
 }
-void window_building_draw_shrine_bast(building_info_context* c) {
+void window_building_draw_shrine_bast(object_info* c) {
     draw_shrine(c, "wavs/temple_love.wav", 8, 25);
 }
 
-void window_building_draw_oracle(building_info_context* c) {
+void window_building_draw_oracle(object_info* c) {
     c->help_id = 67;
     window_building_play_sound(c, "wavs/oracle.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -136,7 +137,7 @@ void window_building_draw_oracle(building_info_context* c) {
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 110, 1);
 }
 
-void window_building_draw_booth(building_info_context* c) {
+void window_building_draw_booth(object_info* c) {
     c->help_id = 71;
     window_building_play_sound(c, "wavs/theatre.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -162,7 +163,7 @@ void window_building_draw_booth(building_info_context* c) {
         lang_text_draw(72, 5, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
-void window_building_draw_bandstand(building_info_context* c) {
+void window_building_draw_bandstand(object_info* c) {
     c->help_id = 72;
     // The file name has a typo
     window_building_play_sound(c, "wavs/ampitheatre.wav");
@@ -198,7 +199,7 @@ void window_building_draw_bandstand(building_info_context* c) {
         lang_text_draw(71, 9, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
-void window_building_draw_pavilion(building_info_context* c) {
+void window_building_draw_pavilion(object_info* c) {
     c->help_id = 73;
     window_building_play_sound(c, "wavs/colloseum.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -233,7 +234,7 @@ void window_building_draw_pavilion(building_info_context* c) {
         lang_text_draw(74, 9, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
-void window_building_draw_senet_house(building_info_context* c) {
+void window_building_draw_senet_house(object_info* c) {
     c->help_id = 74;
     window_building_play_sound(c, "wavs/hippodrome.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -258,7 +259,7 @@ void window_building_draw_senet_house(building_info_context* c) {
     }
 }
 
-static void draw_entertainment_school(building_info_context* c, const char* sound_file, int group_id) {
+static void draw_entertainment_school(object_info* c, const char* sound_file, int group_id) {
     c->help_id = 75;
     window_building_play_sound(c, sound_file);
 
@@ -283,24 +284,24 @@ static void draw_entertainment_school(building_info_context* c, const char* soun
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_juggler_school(building_info_context* c) {
+void window_building_draw_juggler_school(object_info* c) {
     draw_entertainment_school(c, "wavs/art_pit.wav", 77);
 }
 
-void window_building_draw_conservatory(building_info_context* c) {
+void window_building_draw_conservatory(object_info* c) {
     draw_entertainment_school(c, "wavs/glad_pit.wav", 75);
 }
 
-void window_building_draw_dancer_school(building_info_context* c) {
+void window_building_draw_dancer_school(object_info* c) {
     draw_entertainment_school(c, "wavs/lion_pit.wav", 76);
 }
 
-void window_building_draw_chariot_maker(building_info_context* c) {
+void window_building_draw_chariot_maker(object_info* c) {
     draw_entertainment_school(c, "wavs/char_pit.wav", 78);
 }
 
 // TODO: fix festival square panel
-void window_building_draw_festival_square(building_info_context* c) {
+void window_building_draw_festival_square(object_info* c) {
     const int32_t group_id = 188;
     c->help_id = 75;
     window_building_play_sound(c, "wavs/prefecture.wav"); // TODO: change to festival square
