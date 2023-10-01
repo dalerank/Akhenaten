@@ -5,7 +5,8 @@ var modules = [
     "common",
     "city_sounds",
     "mission_sounds",
-    "walker_sounds"
+    "walker_sounds",
+    "building_sounds"
 ]
 
 for (var i in modules) {

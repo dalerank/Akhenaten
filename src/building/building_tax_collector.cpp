@@ -9,10 +9,11 @@
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
 #include "window/building/common.h"
+#include "sound/sound_building.h"
 
 void building_tax_collector_draw_info(object_info* c) {
     c->help_id = e_text_building_tax_collector;
-    window_building_play_sound(c, "wavs/taxfarm.wav");
+    window_building_play_sound(c, snd::get_building_info_sound("tax_collector"));
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(106, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     ImageDraw::img_generic(image_id_resource_icon(RESOURCE_DEBEN), c->x_offset + 16, c->y_offset + 36);

@@ -365,6 +365,7 @@ cmrc_add_resource_library(
     ${SCRIPTS_FOLDER}/modules.js
     ${SCRIPTS_FOLDER}/common.js
     ${SCRIPTS_FOLDER}/city_sounds.js
+    ${SCRIPTS_FOLDER}/building_sounds.js
     ${SCRIPTS_FOLDER}/walker_sounds.js
     ${SCRIPTS_FOLDER}/mission_sounds.js
     ${PROJECT_SOURCE_DIR}/res/ozymandias_72.png
