@@ -10,6 +10,7 @@
 #include "sound/speech.h"
 #include "window/building/figures.h"
 #include "building/building_garden.h"
+#include "building/building_plaza.h"
 
 void window_building_draw_no_people(object_info* c) {
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -48,7 +49,7 @@ void window_building_draw_terrain(object_info* c) {
     else if (c->terrain_type == TERRAIN_INFO_GARDEN)
         building_garden_draw_info(*c);
     else if (c->terrain_type == TERRAIN_INFO_PLAZA && c->figure.count <= 0)
-        window_building_draw_plaza(c);
+        building_plaza_draw_info(*c);
     else {
         if (c->can_play_sound) {
             c->can_play_sound = 0;

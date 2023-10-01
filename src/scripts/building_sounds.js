@@ -3,7 +3,8 @@ log_info("Ozymandias: building sounds started")
 var g_building_sounds = [
   { type: "tax_collector", 						sound: "wavs/taxfarm.wav"},
   { type: "palace", 									sound: "wavs/palace.wav"},
-  { type: "garden",										sound: "wavs/park1.wav"}
+  { type: "garden",										sound: "wavs/park1.wav"},
+  { type: "plaza", 										sound: "wavs/FANFARE1.wav"}
 ]
 
 for (var i in g_building_sounds) {

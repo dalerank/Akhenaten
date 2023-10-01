@@ -18,16 +18,6 @@ void window_building_draw_governor_home(object_info* c) {
     window_building_draw_description_at(c, 16 * c->height_blocks - 143, 103, 1);
 }
 
-void window_building_draw_plaza(object_info* c) {
-    c->help_id = 80;
-    window_building_play_sound(c, "wavs/plaza.wav");
-    window_building_prepare_figure_list(c);
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(137, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    window_building_draw_figure_list(c);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 113, 137, 1);
-}
-
 void window_building_draw_statue(object_info* c) {
     c->help_id = 79;
     window_building_play_sound(c, "wavs/statue.wav");
