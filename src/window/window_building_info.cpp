@@ -2,6 +2,7 @@
 
 #include "building/barracks.h"
 #include "building/building.h"
+#include "building/building_tax_collector.h"
 #include "building/house_evolution.h"
 #include "building/model.h"
 #include "building/storage.h"
@@ -681,7 +682,7 @@ static void draw_refresh_background() {
 
             case BUILDING_TAX_COLLECTOR:
             case BUILDING_TAX_COLLECTOR_UPGRADED:
-                window_building_draw_tax_collector(&context);
+                building_tax_collector_draw_info(&context);
                 break;
 
             case BUILDING_COURTHOUSE: window_building_draw_courthouse(&context); break;
@@ -966,7 +967,7 @@ static void button_debugpath(int debug, int param2) {
 static void button_overlay(int debug, int param2) {
     auto &context = g_building_info_context;
     if (game_state_overlay() != context.show_overlay) {
-        game_state_set_overlay(context.show_overlay);
+        game_state_set_overlay((e_overlay)context.show_overlay);
     } else {
         game_state_reset_overlay();
     }
