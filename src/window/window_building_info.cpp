@@ -4,6 +4,7 @@
 #include "building/building.h"
 #include "building/building_tax_collector.h"
 #include "building/building_palace.h"
+#include "building/building_statue.h"
 #include "building/house_evolution.h"
 #include "building/model.h"
 #include "building/storage.h"
@@ -715,7 +716,7 @@ static void draw_refresh_background() {
             case BUILDING_SMALL_STATUE:
             case BUILDING_MEDIUM_STATUE:
             case BUILDING_LARGE_STATUE:
-                window_building_draw_statue(&context);
+                building_statue_draw_info(context);
                 break;
 
             case BUILDING_TRIUMPHAL_ARCH: window_building_draw_triumphal_arch(&context); break;
