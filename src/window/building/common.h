@@ -15,4 +15,7 @@ void window_building_draw_employment_flood_farm(object_info* c, int y_offset);
 void window_building_draw_description(object_info* c, int text_group, int text_id);
 void window_building_draw_description_at(object_info* c, int y_offset, int text_group, int text_id);
 
+inline void window_building_draw_description(object_info &c, int text_group, int text_id) { window_building_draw_description(&c, text_group, text_id); }
+inline void window_building_draw_description_at(object_info &c, int y_offset, int text_group, int text_id) { window_building_draw_description_at(&c, y_offset, text_group, text_id); }
+
 void window_building_play_sound(object_info* c, const char* sound_file);

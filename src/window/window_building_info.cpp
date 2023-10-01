@@ -3,6 +3,7 @@
 #include "building/barracks.h"
 #include "building/building.h"
 #include "building/building_tax_collector.h"
+#include "building/building_palace.h"
 #include "building/house_evolution.h"
 #include "building/model.h"
 #include "building/storage.h"
@@ -692,7 +693,7 @@ static void draw_refresh_background() {
             case BUILDING_VILLAGE_PALACE:
             case BUILDING_TOWN_PALACE:
             case BUILDING_CITY_PALACE:
-                window_building_draw_palace(&context);
+                building_palace_draw_info(context);
                 break;
 
             case BUILDING_ENGINEERS_POST: window_building_draw_engineers_post(&context); break;
