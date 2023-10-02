@@ -31,7 +31,7 @@ struct reader_base {
     inline int size() const { return __size; }
     inline void *data() const { return (void *)__data; };
     inline void *current_pointer() const { return (void *)(__data + __pos); };
-    inline void advance(int cnt) {
+    inline void advance(size_t cnt) {
         __pos += cnt;
         assert((__pos <= __size) && (__pos >= 0));
     };

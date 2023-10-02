@@ -56,21 +56,6 @@ void js_sound_system_update_channel(js_State *J) {
     sound_system_update_channel(channel, path);
 }
 
-void js_sound_system_mission_config(js_State *J) {
-    const int mission = js_tointeger(J, 1);
-    const char *inter = js_tostring(J, 2);
-    const char *won = js_tostring(J, 3);
-
-    snd::set_mission_config(mission, inter, won);
-}
-
-void js_sound_system_walker_reaction(js_State *J) {
-    const char *type = js_tostring(J, 1);
-    const char *path = js_tostring(J, 2);
-
-    snd::set_walker_reaction(type, path);
-}
-
 template<typename Arch, typename T>
 inline void js_config_load_global_array(Arch arch, pcstr name, T read_func) {
     js_getglobal(arch, name);
@@ -98,6 +83,14 @@ inline pcstr read_string(Arch arch, pcstr name) {
     return result;
 }
 
+template<typename Arch>
+inline int read_integer(Arch arch, pcstr name) {
+    js_getproperty(arch, -1, name);
+    int result = js_tointeger(arch, -1);
+    js_pop(arch, 1);
+    return result;
+}
+
 void js_config_load_building_sounds(js_State *arch) {
     js_config_load_global_array(arch, "building_sounds", [] (auto arch) {
         const char *type = read_string(arch, "type");
@@ -106,11 +99,26 @@ void js_config_load_building_sounds(js_State *arch) {
     });
 }
 
+void js_config_load_mission_sounds(js_State *arch) {
+    js_config_load_global_array(arch, "mission_sounds", [] (auto arch) {
+        const int mission = read_integer(arch, "mission");
+        const char *inter = read_string(arch, "briefing");
+        const char *won = read_string(arch, "victory");
+        snd::set_mission_config(mission, inter, won);
+    });
+}
+
+void js_config_load_walker_sounds(js_State *arch) {
+    js_config_load_global_array(arch, "walker_sounds", [] (auto arch) {
+        const char *type = read_string(arch, "type");
+        const char *path = read_string(arch, "sound");
+        snd::set_walker_reaction(type, path);
+    });
+}
+
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_sound_system_update_channel, "sound_system_update_channel", 2);
-    REGISTER_GLOBAL_FUNCTION(J, js_sound_system_mission_config, "sound_system_mission_config", 3);
-    REGISTER_GLOBAL_FUNCTION(J, js_sound_system_walker_reaction, "sound_system_walker_reaction", 2);
 }

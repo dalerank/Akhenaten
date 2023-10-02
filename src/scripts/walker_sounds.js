@@ -1,6 +1,6 @@
 log_info("Ozymandias: walker sounds started")
 
-var g_walker_sounds = [
+walker_sounds = [
  {type: "apothecary_no_threat_malaria_here", 						sound:"apothecary_e02.wav"},
  {type: "apothecary_have_malaria_risk_here", 						sound:"apothecary_e03.wav"},
  {type: "artisan_work_my_tools_need_for_monument", 			sound:"artisan_e01.wav"},
@@ -376,9 +376,3 @@ var g_walker_sounds = [
  {type: "", sound: "zookeeper_e09.wav"},
  {type: "", sound: "zookeeper_e10.wav"}
 ]
-
-for (var i in g_walker_sounds) {
-	var conf = g_walker_sounds[i]
-	var sound = _format("Voice/Walker/{0}", conf.sound);
-	sound_system_walker_reaction(conf.type, sound)
-}
