@@ -104,6 +104,7 @@ void js_vm_reload_configs() {
     js_config_load_building_sounds(vm.J);
     js_config_load_mission_sounds(vm.J);
     js_config_load_walker_sounds(vm.J);
+    js_config_load_city_sounds(vm.J);
 }
 
 void js_vm_sync() {

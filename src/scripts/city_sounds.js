@@ -1,6 +1,6 @@
 log_info("Ozymandias: city sounds started")
 
-var g_city_sounds = [
+city_sounds = [
   {c: SOUND_CHANNEL_CITY_HOUSE_SLUM,    p: "ambient/HOUSING1.MP3"},
   {c: SOUND_CHANNEL_CITY_HOUSE_POOR,    p: "ambient/HOUSING2.MP3"},
   {c: SOUND_CHANNEL_CITY_HOUSE_MEDIUM,  p: "ambient/HOUSING3.MP3"},
@@ -49,8 +49,3 @@ var g_city_sounds = [
   {c: SOUND_CHANNEL_CITY_FLOODPLAIN,    p: "Ambient/floodplain.mp3"},
   {c: SOUND_CHANNEL_CITY_MARSHLAND,     p: "Ambient/vegetation.mp3"},
 ]
-
-for (var i in g_city_sounds) {
-  var sound = g_city_sounds[i]
-  sound_system_update_channel(sound.c, sound.p) 
-}

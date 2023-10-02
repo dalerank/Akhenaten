@@ -49,13 +49,6 @@ void js_game_load_text(js_State *J) {
     free(text);
 }
 
-void js_sound_system_update_channel(js_State *J) {
-    const int channel = js_tointeger(J, 1);
-    const char *path = js_tostring(J, 2);
-
-    sound_system_update_channel(channel, path);
-}
-
 template<typename Arch, typename T>
 inline void js_config_load_global_array(Arch arch, pcstr name, T read_func) {
     js_getglobal(arch, name);
@@ -116,9 +109,16 @@ void js_config_load_walker_sounds(js_State *arch) {
     });
 }
 
+void js_config_load_city_sounds(js_State *arch) {
+    js_config_load_global_array(arch, "city_sounds", [] (auto arch) {
+        const int channel = read_integer(arch, "c");
+        const char *path = read_string(arch, "p");
+        sound_system_update_channel(channel, path);
+    });
+}
+
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
-    REGISTER_GLOBAL_FUNCTION(J, js_sound_system_update_channel, "sound_system_update_channel", 2);
 }

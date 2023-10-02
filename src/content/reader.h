@@ -32,7 +32,7 @@ struct reader_base {
     inline void *data() const { return (void *)__data; };
     inline void *current_pointer() const { return (void *)(__data + __pos); };
     inline void advance(size_t cnt) {
-        __pos += cnt;
+        __pos += (int)cnt;
         assert((__pos <= __size) && (__pos >= 0));
     };
     inline void rewind() { seek(0); }
