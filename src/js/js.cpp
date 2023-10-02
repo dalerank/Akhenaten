@@ -204,7 +204,7 @@ void js_game_panic(js_State *J) {
 }
 
 void js_register_vm_functions(js_State *J) {
-    REGISTER_GLOBAL_FUNCTION(J, js_vm_load_module, "load_js_module", 1);
+    REGISTER_GLOBAL_FUNCTION(J, js_vm_load_module, "include", 1);
 }
 
 void js_reset_vm_state() {

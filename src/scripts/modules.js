@@ -1,15 +1,8 @@
 log_info("Ozymandias: load modules started")
 
-var modules = [
-    "math",
-    "common",
-    "city_sounds",
-    "mission_sounds",
-    "walker_sounds",
-    "building_sounds"
-]
-
-for (var i in modules) {
-    log_info("Loading module " + modules[i])
-    load_js_module(":" + modules[i] + ".js")
-}
+include(":math.js")
+include(":common.js")
+include(":city_sounds.js")
+include(":mission_sounds.js")
+include(":walker_sounds.js")
+include(":building_sounds.js")
