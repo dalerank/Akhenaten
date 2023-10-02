@@ -11,7 +11,7 @@ void sound_speech_set_volume(int percentage) {
     sound_device_set_channel_volume(SOUND_CHANNEL_SPEECH, percentage);
 }
 
-void sound_speech_play_file(const char* filename) {
+void sound_speech_play_file(const char* filename, int volume) {
     if (!setting_sound(SOUND_SPEECH)->enabled) {
         return;
     }
