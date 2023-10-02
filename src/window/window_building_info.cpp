@@ -7,6 +7,7 @@
 #include "building/building_statue.h"
 #include "building/house_evolution.h"
 #include "building/building_farm.h"
+#include "building/building_hunting_lodge.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/storage_yard.h"
@@ -598,7 +599,10 @@ static void draw_refresh_background() {
                 building_farm_draw_info(context);
                 break;
 
-            case BUILDING_HUNTING_LODGE: window_building_draw_hunting_lodge(&context); break;
+            case BUILDING_HUNTING_LODGE:
+                building_hunting_lodge_draw_info(context);
+                break;
+
             case BUILDING_STONE_QUARRY: window_building_draw_marble_quarry(&context); break;
             case BUILDING_LIMESTONE_QUARRY: window_building_draw_iron_mine(&context); break;
             case BUILDING_WOOD_CUTTERS: window_building_draw_timber_yard(&context); break;

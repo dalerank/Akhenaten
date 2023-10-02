@@ -2,8 +2,6 @@
 
 struct object_info;
 
-void window_building_draw_hunting_lodge(object_info* c);
-
 void window_building_draw_marble_quarry(object_info* c);
 void window_building_draw_iron_mine(object_info* c);
 void window_building_draw_timber_yard(object_info* c);

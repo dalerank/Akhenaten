@@ -14,4 +14,5 @@ building_sounds = [
 	{ type: "chickpeas_farm",						sound: "wavs/chickfarm.wav"},
 	{ type: "figs_farm",								sound: "wavs/figs_farm.wav"},
 	{ type: "henna_farm",								sound: "wavs/farm2.wav"},
+	{ type: "hunting_lodge", 						sound: "wavs/lo_hunt.wav" },
 ]
