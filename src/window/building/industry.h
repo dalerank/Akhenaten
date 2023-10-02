@@ -2,15 +2,6 @@
 
 struct object_info;
 
-void window_building_draw_wheat_farm(object_info* c);
-void window_building_draw_vegetable_farm(object_info* c);
-void window_building_draw_fruit_farm(object_info* c);
-void window_building_draw_olive_farm(object_info* c);
-void window_building_draw_vines_farm(object_info* c);
-void window_building_draw_pig_farm(object_info* c);
-void window_building_draw_fig_farm(object_info* c);
-void window_building_draw_henna_farm(object_info* c);
-
 void window_building_draw_hunting_lodge(object_info* c);
 
 void window_building_draw_marble_quarry(object_info* c);

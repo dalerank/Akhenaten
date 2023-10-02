@@ -14,66 +14,6 @@
 #include "grid/terrain.h"
 #include "io/gamefiles/lang.h"
 
-static void draw_farm(object_info* c, int help_id, const char* sound_file, int group_id, int resource) {
-    c->help_id = help_id;
-    window_building_play_sound(c, sound_file);
-
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
-    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-
-    building* b = building_get(c->building_id);
-    //int pct_grown = calc_percentage(b->data.industry.progress, 200);
-    int pct_grown = calc_percentage(b->data.industry.progress, 2000);
-    int width = lang_text_draw(group_id, 2, c->x_offset + 32, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += text_draw_percentage(pct_grown, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += lang_text_draw(group_id, 3, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    // fertility
-    int pct_fertility = map_get_fertility_for_farm(b->tile.grid_offset());
-    width += lang_text_draw(group_id, 12, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += text_draw_percentage(pct_fertility, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(group_id, 13, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    if (!c->has_road_access)
-        window_building_draw_description_at(c, 70, 69, 25);
-    else if (city_resource_is_mothballed(resource))
-        window_building_draw_description_at(c, 70, group_id, 4);
-    else if (b->data.industry.curse_days_left > 4)
-        window_building_draw_description_at(c, 70, group_id, 11);
-    else if (b->num_workers <= 0)
-        window_building_draw_description_at(c, 70, group_id, 5);
-    else if (c->worker_percentage >= 100)
-        window_building_draw_description_at(c, 70, group_id, 6);
-    else if (c->worker_percentage >= 75)
-        window_building_draw_description_at(c, 70, group_id, 7);
-    else if (c->worker_percentage >= 50)
-        window_building_draw_description_at(c, 70, group_id, 8);
-    else if (c->worker_percentage >= 25)
-        window_building_draw_description_at(c, 70, group_id, 9);
-    else
-        window_building_draw_description_at(c, 70, group_id, 10);
-
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
-    if (building_is_floodplain_farm(b)) {
-        window_building_draw_employment_flood_farm(c, 142);
-
-        // next flood info
-        int month_id = 8; // TODO: fetch flood info
-        width = lang_text_draw(177, 2, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 136, FONT_NORMAL_BLACK_ON_LIGHT);
-        lang_text_draw(160, month_id, c->x_offset + 32 + width, c->y_offset + 16 * c->height_blocks - 136, FONT_NORMAL_BLACK_ON_LIGHT);
-
-        // irrigated?
-        int is_not_irrigated = 0; // TODO: fetch irrigation info
-        lang_text_draw(177, is_not_irrigated, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 120,FONT_NORMAL_BLACK_ON_LIGHT);
-
-        window_building_draw_description_at(c, 16 * c->height_blocks - 96, group_id, 1);
-    } else {
-        window_building_draw_employment(c, 142);
-        window_building_draw_description_at(c, 16 * c->height_blocks - 136, group_id, 1);
-    }
-}
-
 static void draw_raw_material(object_info* c, int help_id, const char* sound_file, int group_id, e_resource resource) {
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
@@ -111,6 +51,7 @@ static void draw_raw_material(object_info* c, int help_id, const char* sound_fil
     window_building_draw_employment(c, 142);
     window_building_draw_description_at(c, 16 * c->height_blocks - 136, group_id, 1);
 }
+
 static void draw_workshop(object_info* c, int help_id, const char* sound_file, int group_id, int resource, int input_resource) {
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
@@ -153,67 +94,6 @@ static void draw_workshop(object_info* c, int help_id, const char* sound_file, i
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
-}
-
-void window_building_draw_wheat_farm(object_info* c) {
-    int farm_group_id = 181;
-    int output_resource = RESOURCE_BARLEY;
-    // if (GAME_ENV == ENGINE_ENV_C3) {
-    //     farm_group_id = 112;
-    //     output_resource = RESOURCE_GRAIN;
-    // }
-    draw_farm(c, 89, "wavs/wheat_farm.wav", farm_group_id, output_resource);
-}
-void window_building_draw_vegetable_farm(object_info* c) {
-    int farm_group_id = 115;
-    int output_resource = RESOURCE_FLAX;
-    // if (GAME_ENV == ENGINE_ENV_C3) {
-    //     farm_group_id = 113;
-    //     output_resource = RESOURCE_MEAT;
-    // }
-    draw_farm(c, 90, "wavs/veg_farm.wav", farm_group_id, output_resource);
-}
-void window_building_draw_fruit_farm(object_info* c) {
-    int farm_group_id = 112;
-    int output_resource = RESOURCE_GRAIN;
-    // if (GAME_ENV == ENGINE_ENV_C3) {
-    //     farm_group_id = 114;
-    //     output_resource = RESOURCE_GRAIN;
-    // }
-    draw_farm(c, 90, "wavs/figs_farm.wav", farm_group_id, output_resource);
-}
-void window_building_draw_olive_farm(object_info* c) {
-    int farm_group_id = 113;
-    int output_resource = RESOURCE_LETTUCE;
-    // if (GAME_ENV == ENGINE_ENV_C3) {
-    //     farm_group_id = 115;
-    //     output_resource = RESOURCE_STRAW;
-    // }
-    draw_farm(c, 91, "wavs/olives_farm.wav", farm_group_id, output_resource);
-}
-void window_building_draw_vines_farm(object_info* c) {
-    int farm_group_id = 114;
-    int output_resource = RESOURCE_POMEGRANATES;
-    // if (GAME_ENV == ENGINE_ENV_C3) {
-    //     farm_group_id = 116;
-    //     output_resource = RESOURCE_BARLEY;
-    // }
-    draw_farm(c, 91, "wavs/vines_farm.wav", farm_group_id, output_resource);
-}
-void window_building_draw_pig_farm(object_info* c) {
-    int farm_group_id = 182;
-    int output_resource = RESOURCE_CHICKPEAS;
-    // if (GAME_ENV == ENGINE_ENV_C3) {
-    //     farm_group_id = 117;
-    //     output_resource = RESOURCE_FIGS;
-    // }
-    draw_farm(c, 90, "wavs/meat_farm.wav", farm_group_id, output_resource);
-}
-void window_building_draw_fig_farm(object_info* c) {
-    draw_farm(c, 90, "wavs/figs_farm.wav", 183, RESOURCE_FIGS);
-}
-void window_building_draw_henna_farm(object_info* c) {
-    draw_farm(c, 90, "wavs/henna_farm.wav", 306, RESOURCE_HENNA);
 }
 
 void window_building_draw_hunting_lodge(object_info* c) {

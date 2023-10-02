@@ -6,6 +6,7 @@
 #include "building/building_palace.h"
 #include "building/building_statue.h"
 #include "building/house_evolution.h"
+#include "building/building_farm.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/storage_yard.h"
@@ -586,14 +587,17 @@ static void draw_refresh_background() {
             window_building_draw_house(&context);
         else
             switch (building_get(context.building_id)->type) {
-            case BUILDING_BARLEY_FARM: window_building_draw_wheat_farm(&context); break;
-            case BUILDING_FLAX_FARM: window_building_draw_vegetable_farm(&context); break;
-            case BUILDING_GRAIN_FARM: window_building_draw_fruit_farm(&context); break;
-            case BUILDING_LETTUCE_FARM: window_building_draw_olive_farm(&context); break;
-            case BUILDING_POMEGRANATES_FARM: window_building_draw_vines_farm(&context); break;
-            case BUILDING_CHICKPEAS_FARM: window_building_draw_pig_farm(&context); break;
-            case BUILDING_FIGS_FARM: window_building_draw_fig_farm(&context); break;
-            case BUILDING_HENNA_FARM: window_building_draw_henna_farm(&context); break;
+            case BUILDING_BARLEY_FARM:
+            case BUILDING_FLAX_FARM:
+            case BUILDING_GRAIN_FARM:
+            case BUILDING_LETTUCE_FARM:
+            case BUILDING_POMEGRANATES_FARM:
+            case BUILDING_CHICKPEAS_FARM:
+            case BUILDING_FIGS_FARM:
+            case BUILDING_HENNA_FARM:
+                building_farm_draw_info(context);
+                break;
+
             case BUILDING_HUNTING_LODGE: window_building_draw_hunting_lodge(&context); break;
             case BUILDING_STONE_QUARRY: window_building_draw_marble_quarry(&context); break;
             case BUILDING_LIMESTONE_QUARRY: window_building_draw_iron_mine(&context); break;
