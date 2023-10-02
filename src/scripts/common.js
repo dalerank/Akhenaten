@@ -7,3 +7,5 @@ var _format = function() {
     }
     return formatted
 };
+
+var building_sounds = []

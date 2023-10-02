@@ -100,6 +100,10 @@ int js_vm_load_file_and_exec(const char *path) {
     return 1;
 }
 
+void js_vm_reload_configs() {
+    js_config_load_building_sounds(vm.J);
+}
+
 void js_vm_sync() {
     if (!vm.files2load_num) {
         return;
@@ -119,6 +123,8 @@ void js_vm_sync() {
     for (int i = 0; i < MAX_FILES_RELOAD; ++i) {
         vm.files2load[i].clear();
     }
+
+    js_vm_reload_configs();
 
     vm.files2load_num = 0;
     vm.have_error = 0;
@@ -229,7 +235,6 @@ void js_reset_vm_state() {
     //js_register_hotkey_functions(vm.J);
     js_register_game_constants(vm.J);
     js_register_city_sound_constants(vm.J);
-    //js_register_ui_functions(vm.J);
 
     int ok = js_vm_load_file_and_exec(":modules.js");
     if (ok) {
