@@ -37,9 +37,9 @@
 #include "grid/figure.h"
 #include "config/config.h"
 #include "routed.h"
-#include "warnings.h"
+#include "city/warnings.h"
 
-enum E_PLACE_RESERVOIR {
+enum e_place_reservoir {
     PLACE_RESERVOIR_BLOCKED = -1,
     PLACE_RESERVOIR_NO = 0,
     PLACE_RESERVOIR_YES = 1,
