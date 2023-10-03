@@ -15,4 +15,10 @@ building_sounds = [
 	{ type: "figs_farm",								sound: "wavs/figs_farm.wav"},
 	{ type: "henna_farm",								sound: "wavs/farm2.wav"},
 	{ type: "hunting_lodge", 						sound: "wavs/lo_hunt.wav" },
+	{ type: "marble_quarry", 						sound: "wavs/marble.wav" },
+	{ type: "iron_mine", 								sound: "wavs/gold.wav" },
+	{ type: "gold_mine", 								sound: "wavs/gold.wav" },
+	{ type: "timber_yard", 							sound: "wavs/lumber.wav" },
+	{ type: "clay_pit", 								sound: "wavs/clay.wav" },
+	{ type: "reed_farm", 								sound: "wavs/reedfarm.wav" },
 ]

@@ -14,43 +14,6 @@
 #include "grid/terrain.h"
 #include "io/gamefiles/lang.h"
 
-static void draw_raw_material(object_info* c, int help_id, const char* sound_file, int group_id, e_resource resource) {
-    c->help_id = help_id;
-    window_building_play_sound(c, sound_file);
-
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
-    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-
-    building* b = building_get(c->building_id);
-    int pct_done = calc_percentage(b->data.industry.progress, 200);
-    int width = lang_text_draw(group_id, 2, c->x_offset + 32, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += text_draw_percentage(pct_done, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(group_id, 3, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    if (!c->has_road_access)
-        window_building_draw_description_at(c, 70, 69, 25);
-    else if (city_resource_is_mothballed(resource))
-        window_building_draw_description_at(c, 70, group_id, 4);
-    else if (b->data.industry.curse_days_left > 4)
-        window_building_draw_description_at(c, 70, group_id, 11);
-    else if (b->num_workers <= 0)
-        window_building_draw_description_at(c, 70, group_id, 5);
-    else if (c->worker_percentage >= 100)
-        window_building_draw_description_at(c, 70, group_id, 6);
-    else if (c->worker_percentage >= 75)
-        window_building_draw_description_at(c, 70, group_id, 7);
-    else if (c->worker_percentage >= 50)
-        window_building_draw_description_at(c, 70, group_id, 8);
-    else if (c->worker_percentage >= 25)
-        window_building_draw_description_at(c, 70, group_id, 9);
-    else
-        window_building_draw_description_at(c, 70, group_id, 10);
-
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
-    window_building_draw_employment(c, 142);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 136, group_id, 1);
-}
 
 static void draw_workshop(object_info* c, int help_id, const char* sound_file, int group_id, int resource, int input_resource) {
     c->help_id = help_id;
@@ -94,26 +57,6 @@ static void draw_workshop(object_info* c, int help_id, const char* sound_file, i
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
-}
-
-void window_building_draw_marble_quarry(object_info* c) {
-    draw_raw_material(c, 95, "wavs/quarry.wav", 118, RESOURCE_MARBLE);
-}
-void window_building_draw_iron_mine(object_info* c) {
-    draw_raw_material(c, 93, "wavs/mine.wav", 119, RESOURCE_COPPER);
-}
-void window_building_draw_gold_mine(object_info* c) {
-    draw_raw_material(c, 93, "wavs/mine.wav", e_text_info_gold_mine, RESOURCE_GOLD);
-}
-void window_building_draw_timber_yard(object_info* c) {
-    draw_raw_material(c, 94, "wavs/timber.wav", 120, RESOURCE_TIMBER);
-}
-void window_building_draw_clay_pit(object_info* c) {
-    draw_raw_material(c, 92, "wavs/clay.wav", e_text_info_clay_pit, RESOURCE_CLAY);
-}
-// TODO: fix reed gatherer panel
-void window_building_draw_reed_gatherer(object_info* c) {
-    draw_raw_material(c, 92, "wavs/clay.wav", 116, RESOURCE_REEDS);
 }
 
 void window_building_draw_wine_workshop(object_info* c) {

@@ -2,12 +2,6 @@
 
 struct object_info;
 
-void window_building_draw_marble_quarry(object_info* c);
-void window_building_draw_iron_mine(object_info* c);
-void window_building_draw_timber_yard(object_info* c);
-void window_building_draw_clay_pit(object_info* c);
-void window_building_draw_gold_mine(object_info* c);
-
 void window_building_draw_wine_workshop(object_info* c);
 void window_building_draw_oil_workshop(object_info* c);
 void window_building_draw_weapons_workshop(object_info* c);

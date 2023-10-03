@@ -8,6 +8,7 @@
 #include "building/house_evolution.h"
 #include "building/building_farm.h"
 #include "building/building_hunting_lodge.h"
+#include "building/building_raw_material.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/storage_yard.h"
@@ -579,14 +580,14 @@ static void draw_debugpath_button(int x, int y, int focused) {
 
 static void draw_refresh_background() {
     auto &context = g_building_info_context;
-    if (context.type == BUILDING_INFO_NONE)
+    if (context.type == BUILDING_INFO_NONE) {
         window_building_draw_no_people(&context);
-    else if (context.type == BUILDING_INFO_TERRAIN)
+    } else if (context.type == BUILDING_INFO_TERRAIN) {
         window_building_draw_terrain(&context);
-    else if (context.type == BUILDING_INFO_BUILDING) {
-        if (building_is_house(building_get(context.building_id)->type))
+    } else if (context.type == BUILDING_INFO_BUILDING) {
+        if (building_is_house(building_get(context.building_id)->type)) {
             window_building_draw_house(&context);
-        else
+        } else {
             switch (building_get(context.building_id)->type) {
             case BUILDING_BARLEY_FARM:
             case BUILDING_FLAX_FARM:
@@ -599,15 +600,12 @@ static void draw_refresh_background() {
                 building_farm_draw_info(context);
                 break;
 
-            case BUILDING_HUNTING_LODGE:
-                building_hunting_lodge_draw_info(context);
-                break;
-
-            case BUILDING_STONE_QUARRY: window_building_draw_marble_quarry(&context); break;
-            case BUILDING_LIMESTONE_QUARRY: window_building_draw_iron_mine(&context); break;
-            case BUILDING_WOOD_CUTTERS: window_building_draw_timber_yard(&context); break;
-            case BUILDING_CLAY_PIT: window_building_draw_clay_pit(&context); break;
-            case BUILDING_GOLD_MINE: window_building_draw_gold_mine(&context); break;
+            case BUILDING_HUNTING_LODGE: building_hunting_lodge_draw_info(context); break;
+            case BUILDING_STONE_QUARRY: building_marble_quarry_draw_info(context); break;
+            case BUILDING_LIMESTONE_QUARRY: building_iron_mine_draw_info(context); break;
+            case BUILDING_WOOD_CUTTERS: building_timber_yard_draw_info(context); break;
+            case BUILDING_CLAY_PIT: building_clay_pit_draw_info(context); break;
+            case BUILDING_GOLD_MINE: building_gold_mine_draw_info(context); break;
             case BUILDING_BEER_WORKSHOP: window_building_draw_wine_workshop(&context); break;
             case BUILDING_LINEN_WORKSHOP: window_building_draw_oil_workshop(&context); break;
             case BUILDING_WEAPONS_WORKSHOP: window_building_draw_weapons_workshop(&context); break;
@@ -752,7 +750,7 @@ static void draw_refresh_background() {
             case BUILDING_WORK_CAMP: window_building_draw_work_camp(&context); break;
             case BUILDING_FESTIVAL_SQUARE: window_building_draw_festival_square(&context); break;
             }
-
+        }
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info(&context);
     }

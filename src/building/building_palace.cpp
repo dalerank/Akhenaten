@@ -1,4 +1,4 @@
-#include "building_tax_collector.h"
+#include "building_palace.h"
 
 #include "building/building.h"
 #include "city/object_info.h"
