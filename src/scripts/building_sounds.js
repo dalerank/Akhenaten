@@ -30,4 +30,5 @@ building_sounds = [
 	{ type: "work_camp",				 		  	sound: "wavs/eng_r.wav"},
 	{ type: "wharf",				 		  			sound: "wavs/shipyrd_r.wav"},
 	{ type: "shipyard",				 		  		sound: "wavs/shipyrd.wav"},
+	{ type: "engineer_post", 						sound: "wavs/eng.wav"},
 ]

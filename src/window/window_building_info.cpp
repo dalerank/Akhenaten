@@ -13,6 +13,7 @@
 #include "building/building_workshop.h"
 #include "building/building_wharf.h"
 #include "building/building_shipyard.h"
+#include "building/building_engineer_post.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/storage_yard.h"
@@ -706,7 +707,7 @@ static void draw_refresh_background() {
                 building_palace_draw_info(context);
                 break;
 
-            case BUILDING_ENGINEERS_POST: window_building_draw_engineers_post(&context); break;
+            case BUILDING_ENGINEERS_POST: building_engineer_post_draw_info(context); break;
             case BUILDING_SHIPYARD: building_shipyard_draw_info(context); break;
             
             case BUILDING_DOCK:
