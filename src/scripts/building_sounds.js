@@ -29,4 +29,5 @@ building_sounds = [
 	{ type: "brick_maker",				 			sound: "wavs/brick.wav"},
 	{ type: "work_camp",				 		  	sound: "wavs/eng_r.wav"},
 	{ type: "wharf",				 		  			sound: "wavs/shipyrd_r.wav"},
+	{ type: "shipyard",				 		  		sound: "wavs/shipyrd.wav"},
 ]

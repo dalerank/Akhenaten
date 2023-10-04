@@ -12,6 +12,7 @@
 #include "building/building_work_camp.h"
 #include "building/building_workshop.h"
 #include "building/building_wharf.h"
+#include "building/building_shipyard.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/storage_yard.h"
@@ -49,7 +50,6 @@
 #include "window/building/figures.h"
 #include "window/building/government.h"
 #include "window/building/house.h"
-#include "window/building/industry.h"
 #include "window/building/military.h"
 #include "window/building/terrain.h"
 #include "window/building/utility.h"
@@ -707,7 +707,7 @@ static void draw_refresh_background() {
                 break;
 
             case BUILDING_ENGINEERS_POST: window_building_draw_engineers_post(&context); break;
-            case BUILDING_SHIPYARD: window_building_draw_shipyard(&context); break;
+            case BUILDING_SHIPYARD: building_shipyard_draw_info(context); break;
             
             case BUILDING_DOCK:
                 if (context.storage_show_special_orders)
