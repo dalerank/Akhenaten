@@ -11,6 +11,7 @@
 #include "building/building_raw_material.h"
 #include "building/building_work_camp.h"
 #include "building/building_workshop.h"
+#include "building/building_wharf.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/storage_yard.h"
@@ -715,7 +716,7 @@ static void draw_refresh_background() {
                     window_building_draw_dock(&context);
                 break;
 
-            case BUILDING_FISHING_WHARF: window_building_draw_wharf(&context); break;
+            case BUILDING_FISHING_WHARF: building_wharf_draw_info(context); break;
             case BUILDING_WATER_LIFT: window_building_draw_water_lift(&context); break;
             case BUILDING_MENU_BEAUTIFICATION: window_building_draw_fountain(&context); break;
             case BUILDING_WATER_SUPPLY: window_building_draw_water_supply(&context); break;
