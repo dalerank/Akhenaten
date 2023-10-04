@@ -31,4 +31,9 @@ building_sounds = [
 	{ type: "wharf",				 		  			sound: "wavs/shipyrd_r.wav"},
 	{ type: "shipyard",				 		  		sound: "wavs/shipyrd.wav"},
 	{ type: "engineer_post", 						sound: "wavs/eng.wav"},
+	{ type: "shrine_osiris", 						sound: "wavs/shr_osiris.wav"},
+	{ type: "shrine_ra", 								sound: "wavs/SHR_RA.wav"},
+	{ type: "shrine_ptah", 							sound: "wavs/SHR_PTAH.wav"},
+	{ type: "shrine_seth", 							sound: "wavs/SHR_SETH.wav"},
+	{ type: "shrine_bast", 							sound: "wavs/SHR_BAST.wav"},
 ]

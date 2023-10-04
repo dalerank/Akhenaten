@@ -408,6 +408,25 @@ e_overlay building::get_overlay() const {
         case BUILDING_SHRINE_OSIRIS:
         case BUILDING_TEMPLE_OSIRIS:
              return OVERLAY_RELIGION_OSIRIS;
+
+        case BUILDING_SHRINE_RA:
+        case BUILDING_TEMPLE_RA:
+            return OVERLAY_RELIGION_RA;
+
+        case BUILDING_SHRINE_PTAH:
+        case BUILDING_TEMPLE_PTAH:
+            return OVERLAY_RELIGION_PTAH;
+
+        case BUILDING_SHRINE_SETH:
+        case BUILDING_TEMPLE_SETH:
+            return OVERLAY_RELIGION_SETH;
+
+        case BUILDING_SHRINE_BAST:
+        case BUILDING_TEMPLE_BAST:
+            return OVERLAY_RELIGION_BAST;
+
+        case BUILDING_ENGINEERS_POST:
+            return OVERLAY_DAMAGE;
     }
 
     return OVERLAY_NONE;

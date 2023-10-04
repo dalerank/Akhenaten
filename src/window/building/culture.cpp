@@ -84,18 +84,6 @@ static void draw_temple(object_info* c, const char* sound_file, int group_id, in
         window_building_draw_description_at(c, 16 * c->height_blocks - 128, 69, 25);
     }
 }
-static void draw_shrine(object_info* c, const char* sound_file, int text_id, int image_offset) {
-    c->help_id = 67;
-    window_building_play_sound(c, sound_file);
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(161, text_id, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-
-    if (c->has_road_access) {
-        ImageDraw::img_generic(image_offset + image_id_from_group(GROUP_PANEL_WINDOWS), c->x_offset + 190, c->y_offset + 16 * c->height_blocks - 148);
-    } else {
-        window_building_draw_description_at(c, 16 * c->height_blocks - 128, 69, 25);
-    }
-}
 
 void window_building_draw_temple_osiris(object_info* c) {
     draw_temple(c, "wavs/temple_farm.wav", 92, 21);
@@ -111,22 +99,6 @@ void window_building_draw_temple_seth(object_info* c) {
 }
 void window_building_draw_temple_bast(object_info* c) {
     draw_temple(c, "wavs/temple_love.wav", 96, 25);
-}
-
-void window_building_draw_shrine_osiris(object_info* c) {
-    draw_shrine(c, "wavs/temple_farm.wav", 0, 21);
-}
-void window_building_draw_shrine_ra(object_info* c) {
-    draw_shrine(c, "wavs/temple_ship.wav", 2, 22);
-}
-void window_building_draw_shrine_ptah(object_info* c) {
-    draw_shrine(c, "wavs/temple_comm.wav", 4, 23);
-}
-void window_building_draw_shrine_seth(object_info* c) {
-    draw_shrine(c, "wavs/temple_war.wav", 6, 24);
-}
-void window_building_draw_shrine_bast(object_info* c) {
-    draw_shrine(c, "wavs/temple_love.wav", 8, 25);
 }
 
 void window_building_draw_oracle(object_info* c) {

@@ -17,12 +17,6 @@ void window_building_draw_temple_ptah(object_info* c);
 void window_building_draw_temple_seth(object_info* c);
 void window_building_draw_temple_bast(object_info* c);
 
-void window_building_draw_shrine_osiris(object_info* c);
-void window_building_draw_shrine_ra(object_info* c);
-void window_building_draw_shrine_ptah(object_info* c);
-void window_building_draw_shrine_seth(object_info* c);
-void window_building_draw_shrine_bast(object_info* c);
-
 void window_building_draw_oracle(object_info* c);
 
 void window_building_draw_booth(object_info* c);
