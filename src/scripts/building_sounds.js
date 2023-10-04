@@ -21,4 +21,10 @@ building_sounds = [
 	{ type: "timber_yard", 							sound: "wavs/lumber.wav" },
 	{ type: "clay_pit", 								sound: "wavs/clay.wav" },
 	{ type: "reed_farm", 								sound: "wavs/reedfarm.wav" },
+	{ type: "brewery",									sound: "wavs/brewery.wav"},
+	{ type: "flax_workshop",						sound: "wavs/flaxfarm.wav"},
+	{ type: "weapons_workshop",				  sound: "wavs/weapon.wav"},
+	{ type: "luxury_workshop",				  sound: "wavs/gem_r.wav"},
+	{ type: "pottery_workshop",				  sound: "wavs/pottery.wav"},
+	{ type: "brick_maker",				 			sound: "wavs/brick.wav"},
 ]

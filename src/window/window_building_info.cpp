@@ -9,6 +9,7 @@
 #include "building/building_farm.h"
 #include "building/building_hunting_lodge.h"
 #include "building/building_raw_material.h"
+#include "building/building_workshop.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/storage_yard.h"
@@ -602,15 +603,15 @@ static void draw_refresh_background() {
 
             case BUILDING_HUNTING_LODGE: building_hunting_lodge_draw_info(context); break;
             case BUILDING_STONE_QUARRY: building_marble_quarry_draw_info(context); break;
-            case BUILDING_LIMESTONE_QUARRY: building_iron_mine_draw_info(context); break;
+            case BUILDING_LIMESTONE_QUARRY: building_limestone_quarry_draw_info(context); break;
             case BUILDING_WOOD_CUTTERS: building_timber_yard_draw_info(context); break;
             case BUILDING_CLAY_PIT: building_clay_pit_draw_info(context); break;
             case BUILDING_GOLD_MINE: building_gold_mine_draw_info(context); break;
-            case BUILDING_BEER_WORKSHOP: window_building_draw_wine_workshop(&context); break;
-            case BUILDING_LINEN_WORKSHOP: window_building_draw_oil_workshop(&context); break;
-            case BUILDING_WEAPONS_WORKSHOP: window_building_draw_weapons_workshop(&context); break;
-            case BUILDING_JEWELS_WORKSHOP: window_building_draw_furniture_workshop(&context); break;
-            case BUILDING_POTTERY_WORKSHOP: window_building_draw_pottery_workshop(&context); break;
+            case BUILDING_BEER_WORKSHOP: building_brewery_draw_info(context); break;
+            case BUILDING_LINEN_WORKSHOP: building_flax_workshop_draw_info(context); break;
+            case BUILDING_WEAPONS_WORKSHOP: building_weapons_workshop_draw_info(context); break;
+            case BUILDING_JEWELS_WORKSHOP: building_luxury_workshop_draw_info(context); break;
+            case BUILDING_POTTERY_WORKSHOP: building_pottery_workshop_draw_info(context); break;
             
             case BUILDING_MARKET:
                 if (context.storage_show_special_orders)
