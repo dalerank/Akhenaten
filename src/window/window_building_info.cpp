@@ -9,6 +9,7 @@
 #include "building/building_farm.h"
 #include "building/building_hunting_lodge.h"
 #include "building/building_raw_material.h"
+#include "building/building_work_camp.h"
 #include "building/building_workshop.h"
 #include "building/model.h"
 #include "building/storage.h"
@@ -748,7 +749,7 @@ static void draw_refresh_background() {
             case BUILDING_NATIVE_CROPS: window_building_draw_native_crops(&context); break;
             case BUILDING_MISSION_POST: window_building_draw_mission_post(&context); break;
             case BUILDING_FIREHOUSE: window_building_draw_firehouse(&context); break;
-            case BUILDING_WORK_CAMP: window_building_draw_work_camp(&context); break;
+            case BUILDING_WORK_CAMP: building_work_camp_draw_info(context); break;
             case BUILDING_FESTIVAL_SQUARE: window_building_draw_festival_square(&context); break;
             }
         }

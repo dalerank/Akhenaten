@@ -27,4 +27,5 @@ building_sounds = [
 	{ type: "luxury_workshop",				  sound: "wavs/gem_r.wav"},
 	{ type: "pottery_workshop",				  sound: "wavs/pottery.wav"},
 	{ type: "brick_maker",				 			sound: "wavs/brick.wav"},
+	{ type: "work_camp",				 		  	sound: "wavs/eng_r.wav"},
 ]
