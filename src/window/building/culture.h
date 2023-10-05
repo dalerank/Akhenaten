@@ -13,7 +13,6 @@ void window_building_draw_library(object_info* c);
 
 void window_building_draw_oracle(object_info* c);
 
-void window_building_draw_booth(object_info* c);
 void window_building_draw_bandstand(object_info* c);
 void window_building_draw_pavilion(object_info* c);
 void window_building_draw_senet_house(object_info* c);

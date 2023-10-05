@@ -16,6 +16,7 @@
 #include "building/building_engineer_post.h"
 #include "building/building_shrine.h"
 #include "building/building_temple.h"
+#include "building/building_booth.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/storage_yard.h"
@@ -640,7 +641,7 @@ static void draw_refresh_background() {
                 break;
 
             case BUILDING_BANDSTAND: window_building_draw_bandstand(&context); break;
-            case BUILDING_BOOTH: window_building_draw_booth(&context); break;
+            case BUILDING_BOOTH: building_booth_draw_info(context); break;
             case BUILDING_SENET_HOUSE: window_building_draw_senet_house(&context); break;
             case BUILDING_PAVILLION: window_building_draw_pavilion(&context); break;
             case BUILDING_CONSERVATORY: window_building_draw_conservatory(&context); break;
