@@ -36,4 +36,9 @@ building_sounds = [
 	{ type: "shrine_ptah", 							sound: "wavs/SHR_PTAH.wav"},
 	{ type: "shrine_seth", 							sound: "wavs/SHR_SETH.wav"},
 	{ type: "shrine_bast", 							sound: "wavs/SHR_BAST.wav"},
+	{ type: "temple_osiris", 						sound: "wavs/tem_osiris_l.wav"},
+	{ type: "temple_ra", 								sound: "wavs/tem_RA_l.wav"},
+	{ type: "temple_ptah", 							sound: "wavs/tem_PTAH_l.wav"},
+	{ type: "temple_seth", 							sound: "wavs/tem_SETH_l.wav"},
+	{ type: "temple_bast", 							sound: "wavs/tem_BAST_l.wav"},
 ]

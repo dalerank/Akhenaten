@@ -71,36 +71,6 @@ void window_building_draw_library(object_info* c) {
     draw_building_service_info(c, 70, "wavs/library.wav", 87, FIGURE_LIBRARIAN);
 }
 
-static void draw_temple(object_info* c, const char* sound_file, int group_id, int image_offset) {
-    c->help_id = 67;
-    window_building_play_sound(c, sound_file);
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 56, c->width_blocks - 2, 4);
-    window_building_draw_employment(c, 62);
-    if (c->has_road_access) {
-        ImageDraw::img_generic(image_offset + image_id_from_group(GROUP_PANEL_WINDOWS), c->x_offset + 190, c->y_offset + 16 * c->height_blocks - 118);
-    } else {
-        window_building_draw_description_at(c, 16 * c->height_blocks - 128, 69, 25);
-    }
-}
-
-void window_building_draw_temple_osiris(object_info* c) {
-    draw_temple(c, "wavs/temple_farm.wav", 92, 21);
-}
-void window_building_draw_temple_ra(object_info* c) {
-    draw_temple(c, "wavs/temple_ship.wav", 93, 22);
-}
-void window_building_draw_temple_ptah(object_info* c) {
-    draw_temple(c, "wavs/temple_comm.wav", 94, 23);
-}
-void window_building_draw_temple_seth(object_info* c) {
-    draw_temple(c, "wavs/temple_war.wav", 95, 24);
-}
-void window_building_draw_temple_bast(object_info* c) {
-    draw_temple(c, "wavs/temple_love.wav", 96, 25);
-}
-
 void window_building_draw_oracle(object_info* c) {
     c->help_id = 67;
     window_building_play_sound(c, "wavs/oracle.wav");

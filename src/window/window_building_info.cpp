@@ -15,6 +15,7 @@
 #include "building/building_shipyard.h"
 #include "building/building_engineer_post.h"
 #include "building/building_shrine.h"
+#include "building/building_temple.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/storage_yard.h"
@@ -656,27 +657,27 @@ static void draw_refresh_background() {
             
             case BUILDING_TEMPLE_OSIRIS:
             case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-                window_building_draw_temple_osiris(&context);
+                building_temple_osiris_draw_info(context);
                 break;
 
             case BUILDING_TEMPLE_RA:
             case BUILDING_TEMPLE_COMPLEX_RA:
-                window_building_draw_temple_ra(&context);
+                building_temple_ra_draw_info(context);
                 break;
 
             case BUILDING_TEMPLE_PTAH:
             case BUILDING_TEMPLE_COMPLEX_PTAH:
-                window_building_draw_temple_ptah(&context);
+                building_temple_ptah_draw_info(context);
                 break;
 
             case BUILDING_TEMPLE_SETH:
             case BUILDING_TEMPLE_COMPLEX_SETH:
-                window_building_draw_temple_seth(&context);
+                building_temple_seth_draw_info(context);
                 break;
 
             case BUILDING_TEMPLE_BAST:
             case BUILDING_TEMPLE_COMPLEX_BAST:
-                window_building_draw_temple_bast(&context);
+                building_temple_bast_draw_info(context);
                 break;
 
             case BUILDING_SHRINE_OSIRIS: building_shrine_osiris_draw_info(context); break;

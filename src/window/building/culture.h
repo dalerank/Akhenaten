@@ -11,12 +11,6 @@ void window_building_draw_school(object_info* c);
 void window_building_draw_academy(object_info* c);
 void window_building_draw_library(object_info* c);
 
-void window_building_draw_temple_osiris(object_info* c);
-void window_building_draw_temple_ra(object_info* c);
-void window_building_draw_temple_ptah(object_info* c);
-void window_building_draw_temple_seth(object_info* c);
-void window_building_draw_temple_bast(object_info* c);
-
 void window_building_draw_oracle(object_info* c);
 
 void window_building_draw_booth(object_info* c);
