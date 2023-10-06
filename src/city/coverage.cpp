@@ -139,7 +139,7 @@ void city_culture_update_coverage() {
 
     coverage.school = top(calc_percentage(75 * building_count_active(BUILDING_SCHOOL), city_population_school_age()));
     coverage.library = top(calc_percentage(800 * building_count_active(BUILDING_LIBRARY), population));
-    coverage.academy = top(calc_percentage(100 * building_count_active(BUILDING_MENU_WATER_CROSSINGS), city_population_academy_age()));
+    coverage.academy = top(calc_percentage(100 * building_count_active(BUILDING_ACADEMY), city_population_academy_age()));
 }
 
 void city_health_update_coverage() {
