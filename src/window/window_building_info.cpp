@@ -30,7 +30,7 @@
 #include "game/state.h"
 #include "figure/figure.h"
 #include "figure/formation_legion.h"
-#include "figure/phrase.h"
+#include "figure/figure_phrase.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
