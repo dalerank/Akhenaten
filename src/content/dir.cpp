@@ -113,7 +113,7 @@ static void move_left(char *str) {
     *str = 0;
 }
 
-vfs::path dir_get_path(const char *path) {
+vfs::path content_path(const char *path) {
     bstring256 corrected_path = platform_file_manager_get_base_path();
     if (corrected_path.back() != '/') {
         corrected_path.append('/');
@@ -124,8 +124,8 @@ vfs::path dir_get_path(const char *path) {
     return corrected_path;
 }
 
-vfs::path dir_get_file(const char *filepath) {
-    bstring256 corrected_filename = dir_get_path(filepath);
+vfs::path content_file(const char *filepath) {
+    bstring256 corrected_filename = content_path(filepath);
     
     bool exists = std::filesystem::exists(corrected_filename.c_str());
     if (exists) {

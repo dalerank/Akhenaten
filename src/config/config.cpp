@@ -130,7 +130,7 @@ void config_set_defaults() {
 
 void config_load() {
     config_set_defaults();
-    vfs::path fs_file = vfs::dir_get_path(INI_FILENAME);
+    vfs::path fs_file = vfs::content_path(INI_FILENAME);
 
     vfs::reader fp = vfs::file_open(fs_file);
     if (!fp) {
@@ -169,7 +169,7 @@ void config_load() {
 }
 
 void config_save() {
-    bstring256 fs_file = vfs::dir_get_path(INI_FILENAME);
+    bstring256 fs_file = vfs::content_path(INI_FILENAME);
 
     FILE* fp = vfs::file_open(fs_file, "wt");
     if (!fp) {

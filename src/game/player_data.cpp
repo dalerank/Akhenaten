@@ -131,8 +131,8 @@ const char* player_get_last_autosave() {
 
 bool player_data_prepare_savegame(const char* filename_short) {
     // concatenate string
-    bstring256 savefile = vfs::dir_get_path(fullpath_saves(filename_short));
-    bstring256 folders = vfs::dir_get_path(fullpath_saves(""));
+    bstring256 savefile = vfs::content_path(fullpath_saves(filename_short));
+    bstring256 folders = vfs::content_path(fullpath_saves(""));
 
     vfs::create_folders(folders);
     // write file
@@ -187,7 +187,7 @@ void player_data_load(const uint8_t* player_name) {
     data.dat_file->clear();
     data.dat_file->reset_offset();
     bstring256 family_save("Save/", (const char*)player_name, ".dat");
-    bstring256 fs_family_save = vfs::dir_get_file(family_save);
+    vfs::path fs_family_save = vfs::content_file(family_save);
     int size = io_read_file_into_buffer(fs_family_save, NOT_LOCALIZED, data.dat_file, DAT_FILE_SIZE);
     if (!size) {
         return;

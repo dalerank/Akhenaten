@@ -273,7 +273,7 @@ vfs::path js_vm_get_absolute_path(vfs::path path) {
         return buffer;
     }
 
-    buffer = vfs::dir_get_path(vfs::SCRIPTS_FOLDER);
+    buffer = vfs::content_path(vfs::SCRIPTS_FOLDER);
     return buffer;
 }
 

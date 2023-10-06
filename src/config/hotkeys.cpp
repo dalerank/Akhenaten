@@ -242,7 +242,7 @@ static void load_defaults(void) {
 
 static void load_file(void) {
     hotkey_config_clear();
-    bstring256 fs_file = vfs::dir_get_path(INI_FILENAME);
+    bstring256 fs_file = vfs::content_path(INI_FILENAME);
 
     FILE* fp = vfs::file_open(fs_file, "rt");
     if (!fp)
@@ -287,7 +287,7 @@ void hotkey_config_load(void) {
 
 void hotkey_config_save(void) {
     auto &data = g_config_hotkeys_data;
-    bstring256 fs_file = vfs::dir_get_path(INI_FILENAME);
+    bstring256 fs_file = vfs::content_path(INI_FILENAME);
 
     hotkey_install_mapping(data.mappings, data.num_mappings);
     FILE* fp = vfs::file_open(fs_file, "wt");

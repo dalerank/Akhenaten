@@ -105,7 +105,7 @@ void sound_music_play_track(int track) {
         corrected_filename = vfs::path(vfs::content_audio,  ph_mp3[track]);
     }
 
-    corrected_filename = vfs::dir_get_file(corrected_filename);
+    corrected_filename = vfs::content_file(corrected_filename);
     sound_device_play_music(corrected_filename, volume);
 
     g_music_data.current_track = track;

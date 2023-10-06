@@ -17,7 +17,7 @@ vfs::path sound_speed_filename(const char *filename) {
         fs_path = vfs::path(vfs::content_audio, filename);
     }
 
-    return vfs::dir_get_file(fs_path);
+    return vfs::content_file(fs_path);
 }
 
 bool sound_speech_file_exist(const char *filename) {
@@ -36,7 +36,7 @@ void sound_speech_play_file(const char* filename, int volume) {
         fs_path = vfs::path(vfs::content_audio, filename);
     }
 
-    fs_path = vfs::dir_get_file(fs_path);
+    fs_path = vfs::content_file(fs_path);
 
     if (fs_path.empty()) {
         logs::error("Cant open audio file %s", filename);

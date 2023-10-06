@@ -28,7 +28,7 @@ void sound_system_update_channel(int channel, vfs::path filename) {
         logs::info("Sound: cant find audio %s", audio_path.c_str());
         channel_filenames[channel].clear();
     } else {
-        original = vfs::dir_get_path(audio_path);
+        original = vfs::content_path(audio_path);
         sound_device_init_channel(channel, original);
     }
 }

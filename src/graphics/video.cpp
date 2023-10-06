@@ -45,7 +45,7 @@ static void close_smk(void) {
 }
 
 static int load_smk(const char* filename) {
-    bstring256 fs_file = vfs::dir_get_file(filename);
+    vfs::path fs_file = vfs::content_path(filename);
     if (fs_file.empty()) {
         return 0;
     }

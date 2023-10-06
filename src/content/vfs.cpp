@@ -101,7 +101,7 @@ void file_remove_extension(uint8_t * filename) {
 }
 
 bool file_exists(const char *filename) {
-    path fspath = dir_get_file(filename);
+    path fspath = content_file(filename);
     if (fspath.empty()) {
         return false;
     }
@@ -121,7 +121,7 @@ void create_folders(const char* path) {
 }
 
 void remove_folder(path folder_path) {
-    folder_path = dir_get_path(folder_path);
+    folder_path = content_path(folder_path);
     std::filesystem::remove_all(folder_path.c_str());
 }
 
