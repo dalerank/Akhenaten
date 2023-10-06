@@ -47,4 +47,8 @@ building_sounds = [
 	{ type: "conservatory", 						sound: "wavs/music_school.wav"},
 	{ type: "dance_school", 						sound: "wavs/dance_school.wav"},
 	{ type: "bullfight_school", 				sound: "wavs/bullfight_school.wav"},
+	{ type: "apothecary", 							sound: "wavs/apothecary.wav"},
+	{ type: "dentist", 									sound: "wavs/dentist.wav"},
+	{ type: "mortuary", 								sound: "wavs/mortuary.wav"},
+	{ type: "physician", 								sound: "wavs/physician.wav"},
 ]

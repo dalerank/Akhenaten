@@ -687,7 +687,7 @@ bool building_is_entertainment(int type) {
 }
 
 bool building_is_culture(int type) {
-    if (type == BUILDING_SCHOOL || type == BUILDING_LIBRARY || type == BUILDING_MENU_WATER_CROSSINGS)
+    if (type == BUILDING_SCHOOL || type == BUILDING_LIBRARY || type == BUILDING_ACADEMY)
         return true;
     return false;
 }

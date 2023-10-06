@@ -976,7 +976,7 @@ void BuildPlanner::setup_build(e_building_type type) { // select building for co
     case BUILDING_MENU_GUILDS:
     case BUILDING_MENU_DEFENSES:
     case BUILDING_MENU_FORTS:
-    case BUILDING_MENU_WATER_CROSSINGS:
+    case BUILDING_MENU_WATER_CROSSING:
     case BUILDING_MENU_BEAUTIFICATION:
     case BUILDING_MENU_MONUMENTS:
         return;

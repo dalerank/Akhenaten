@@ -19,6 +19,7 @@
 #include "building/building_temple.h"
 #include "building/building_booth.h"
 #include "building/building_entertainment.h"
+#include "building/building_service.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/storage_yard.h"
@@ -152,7 +153,7 @@ static int get_height_id() {
         case BUILDING_ENGINEERS_POST:
         case BUILDING_FIREHOUSE:
         case BUILDING_SCHOOL:
-        case BUILDING_MENU_WATER_CROSSINGS:
+        case BUILDING_ACADEMY:
         case BUILDING_LIBRARY:
         case BUILDING_GATEHOUSE:
         case BUILDING_TOWER:
@@ -650,13 +651,13 @@ static void draw_refresh_background() {
             case BUILDING_DANCE_SCHOOL: building_dancer_school_draw_info(context); break;
             case BUILDING_JUGGLER_SCHOOL: building_juggler_school_draw_info(context); break;
             case BUILDING_CHARIOT_MAKER: building_bullfight_school_draw_info(context); break;
-            case BUILDING_APOTHECARY: window_building_draw_apothecary(&context); break;
-            case BUILDING_MORTUARY: window_building_draw_mortuary(&context); break;
-            case BUILDING_PHYSICIAN: window_building_draw_physician(&context); break;
-            case BUILDING_DENTIST: window_building_draw_dentist(&context); break;
-            case BUILDING_SCHOOL: window_building_draw_school(&context); break;
-            case BUILDING_MENU_WATER_CROSSINGS: window_building_draw_academy(&context); break;
-            case BUILDING_LIBRARY: window_building_draw_library(&context); break;
+            case BUILDING_APOTHECARY: building_apothecary_draw_info(context); break;
+            case BUILDING_MORTUARY: building_mortuary_draw_info(context); break;
+            case BUILDING_PHYSICIAN: building_physician_draw_info(context); break;
+            case BUILDING_DENTIST: building_dentist_draw_info(context); break;
+            case BUILDING_SCHOOL: building_school_draw_info(context); break;
+            case BUILDING_ACADEMY: building_academy_draw_info(context); break;
+            case BUILDING_LIBRARY: building_library_draw_info(context); break;
             
             case BUILDING_TEMPLE_OSIRIS:
             case BUILDING_TEMPLE_COMPLEX_OSIRIS:

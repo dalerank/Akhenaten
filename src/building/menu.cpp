@@ -7,6 +7,11 @@
 #include "scenario/building.h"
 #include "scenario/property.h"
 
+#include "SDL.h"
+#include "core/game_environment.h"
+#include "io/gamefiles/lang.h"
+#include "building/industry.h"
+
 #define BUILD_MENU_ITEM_MAX 30
 
 static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
@@ -17,7 +22,7 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
     {BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH, BUILDING_MENU_BEAUTIFICATION, BUILDING_WELL, 0},
     {BUILDING_DENTIST, BUILDING_MENU_MONUMENTS, BUILDING_APOTHECARY, BUILDING_MORTUARY, 0},
     {BUILDING_MENU_TEMPLES, BUILDING_MENU_TEMPLE_COMPLEX, BUILDING_ORACLE, 0},
-    {BUILDING_SCHOOL, BUILDING_MENU_WATER_CROSSINGS, BUILDING_LIBRARY, BUILDING_MISSION_POST, 0},
+    {BUILDING_SCHOOL, BUILDING_ACADEMY, BUILDING_LIBRARY, BUILDING_MISSION_POST, 0},
     {BUILDING_BOOTH,
      BUILDING_BANDSTAND,
      BUILDING_PAVILLION,
@@ -144,7 +149,7 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_FAMILY_MANSION,
      BUILDING_DYNASTY_MANSION,
      BUILDING_ROADBLOCK,
-     BUILDING_MENU_WATER_CROSSINGS,
+     BUILDING_MENU_WATER_CROSSING,
      BUILDING_MENU_BEAUTIFICATION,
      0},
 
@@ -243,10 +248,6 @@ int g_menu_enabled[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX];
 
 static int changed = 1;
 
-#include "SDL.h"
-#include "core/game_environment.h"
-#include "io/gamefiles/lang.h"
-
 void building_menu_disable_all() {
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
@@ -261,8 +262,6 @@ void building_menu_enable_all(void) {
         }
     }
 }
-
-#include "building/industry.h"
 
 int is_building_enabled(int type) {
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
@@ -284,31 +283,42 @@ static void toggle_building(int type, bool enabled = true) {
     }
 
     // additional buildings / building menus
-    if (GAME_ENV == ENGINE_ENV_PHARAOH && enabled) {
+    if (enabled) {
         if (building_is_farm(type))
             toggle_building(BUILDING_MENU_FARMS);
+
         if (building_is_extractor(type))
             toggle_building(BUILDING_MENU_RAW_MATERIALS);
+
         if (building_is_fort(type))
             toggle_building(BUILD_MENU_FORTS);
+
         if (building_is_defense_ph(type))
             toggle_building(BUILDING_MENU_DEFENSES);
+
         if (building_is_shrine(type))
             toggle_building(BUILDING_MENU_SHRINES);
+
         if (building_is_temple(type))
             toggle_building(BUILDING_MENU_TEMPLES);
+
         if (building_is_large_temple(type))
             toggle_building(BUILDING_MENU_TEMPLE_COMPLEX);
+
         if (building_is_guild(type))
             toggle_building(BUILDING_MENU_GUILDS);
+
         if (building_is_beautification(type))
             toggle_building(BUILDING_MENU_BEAUTIFICATION);
+
         if (building_is_water_crossing(type))
-            toggle_building(BUILDING_MENU_WATER_CROSSINGS);
+            toggle_building(BUILDING_MENU_WATER_CROSSING);
+
         if (building_is_monument(type))
             toggle_building(BUILDING_MENU_MONUMENTS);
     }
 }
+
 static void enable_if_allowed(int type) {
     if (scenario_building_allowed(type))
         toggle_building(type, true);
@@ -769,6 +779,7 @@ void building_menu_update(int build_set) {
 
     changed = 1;
 }
+
 int building_menu_count_items(int submenu) {
     int count = 0;
     for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {

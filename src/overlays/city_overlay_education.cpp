@@ -98,7 +98,7 @@ struct city_overlay_education : public city_overlay {
     }
 
     bool show_building(const building* b) const override {
-        return b->type == BUILDING_SCHOOL || b->type == BUILDING_LIBRARY || b->type == BUILDING_MENU_WATER_CROSSINGS;
+        return b->type == BUILDING_SCHOOL || b->type == BUILDING_LIBRARY || b->type == BUILDING_ACADEMY;
     }
 };
 
@@ -161,7 +161,7 @@ struct city_overlay_academy : public city_overlay {
     }
 
     bool show_building(const building* b) const override {
-        return b->type == BUILDING_MENU_WATER_CROSSINGS;
+        return b->type == BUILDING_ACADEMY;
     }
 };
 

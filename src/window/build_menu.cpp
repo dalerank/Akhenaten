@@ -117,9 +117,7 @@ static int set_submenu_for_type(int type) {
             return 0;
         data.selected_submenu = BUILD_MENU_MONUMENTS;
         break;
-    case BUILDING_MENU_WATER_CROSSINGS:
-        if (GAME_ENV == ENGINE_ENV_C3)
-            return 0;
+    case BUILDING_MENU_WATER_CROSSING:
         data.selected_submenu = BUILD_MENU_WATER_CROSSINGS;
         break;
     case BUILDING_MENU_BEAUTIFICATION:
@@ -142,6 +140,16 @@ static int set_submenu_for_type(int type) {
 static void draw_background(void) {
     window_city_draw_panels();
 }
+
+static int menu_index_to_text_index(int type) {
+    switch (type) {
+    case BUILDING_MENU_WATER_CROSSING:
+        return 52;
+    }
+
+    return type;
+}
+
 static void draw_menu_buttons(void) {
     int x_offset = get_sidebar_x_offset();
     int label_width = (BTN_W_TOT) / 16;
@@ -153,29 +161,35 @@ static void draw_menu_buttons(void) {
     font_t font = FONT_NORMAL_BLACK_ON_DARK;
     int item_index = -1;
     for (int i = 0; i < data.num_items; i++) {
-        if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            font = FONT_NORMAL_BLACK_ON_LIGHT;
-        if (data.focus_button_id == i + 1)
+        font = FONT_NORMAL_BLACK_ON_LIGHT;
+
+        if (data.focus_button_id == i + 1) {
             font = FONT_NORMAL_BLACK_ON_DARK;
+        }
+
         item_index = building_menu_next_index(data.selected_submenu, item_index);
-        label_draw(x_offset - label_margin,
-                   data.y_offset + 110 + 24 * i,
-                   label_width,
-                   data.focus_button_id == i + 1 ? 1 : 2);
+        label_draw(x_offset - label_margin, data.y_offset + 110 + 24 * i, label_width, data.focus_button_id == i + 1 ? 1 : 2);
         int type = building_menu_type(data.selected_submenu, item_index);
-        if (is_all_button(type))
+        
+        if (is_all_button(type)) {
             lang_text_draw_centered(52, 19, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, font);
-        else if (type >= BUILDING_TEMPLE_COMPLEX_ALTAR && type <= BUILDING_TEMPLE_COMPLEX_ORACLE) {
+        } else if (type >= BUILDING_TEMPLE_COMPLEX_ALTAR && type <= BUILDING_TEMPLE_COMPLEX_ORACLE) {
             building* b = building_get(city_buildings_get_temple_complex());
             int index = (type - BUILDING_TEMPLE_COMPLEX_ALTAR) + 2 * (b->type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
             lang_text_draw_centered(189, index, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, font);
-        } else
-            lang_text_draw_centered(28, type, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, font);
+        } else {
+            int text_index = menu_index_to_text_index(type);
+            lang_text_draw_centered(28, text_index, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, font);
+        }
+
         int cost = model_get_building(type)->cost;
-        if (type == BUILDING_MENU_FORTS)
+        if (type == BUILDING_MENU_FORTS) {
             cost = 0;
-        if (cost)
+        }
+
+        if (cost) {
             text_draw_money(cost, x_offset - 82 - label_offset, data.y_offset + 114 + 24 * i, font);
+        }
     }
 }
 static void draw_foreground(void) {

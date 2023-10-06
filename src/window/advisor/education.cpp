@@ -89,13 +89,10 @@ static int draw_background(void) {
     }
 
     // academies
-    lang_text_draw_amount(
-      8, 20, building_count_total(BUILDING_MENU_WATER_CROSSINGS), 40, 125, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw_number_centered(
-      building_count_active(BUILDING_MENU_WATER_CROSSINGS), 150, 125, 100, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw_amount(8, 20, building_count_total(BUILDING_ACADEMY), 40, 125, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_number_centered(building_count_active(BUILDING_ACADEMY), 150, 125, 100, FONT_NORMAL_WHITE_ON_DARK);
 
-    width = text_draw_number(
-      100 * building_count_active(BUILDING_MENU_WATER_CROSSINGS), '@', " ", 280, 125, FONT_NORMAL_WHITE_ON_DARK);
+    width = text_draw_number(100 * building_count_active(BUILDING_ACADEMY), '@', " ", 280, 125, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(57, 8, 280 + width, 125, FONT_NORMAL_WHITE_ON_DARK);
 
     int pct_academy = city_culture_coverage_academy();

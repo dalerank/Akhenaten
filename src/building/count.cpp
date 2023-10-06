@@ -143,7 +143,7 @@ void building_count_update(void) {
             // education
         case BUILDING_SCHOOL:
         case BUILDING_LIBRARY:
-        case BUILDING_MENU_WATER_CROSSINGS:
+        case BUILDING_ACADEMY:
             // health
         case BUILDING_DENTIST:
         case BUILDING_MENU_MONUMENTS:
