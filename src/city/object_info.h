@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/string.h"
+
 enum building_info_type {
     BUILDING_INFO_NONE = 0,
     BUILDING_INFO_TERRAIN = 1,
@@ -38,7 +40,6 @@ enum terrain_info_type {
     TERRAIN_INFO_CLIFFS = 26,
 };
 
-
 struct object_info {
     int x_offset;
     int y_offset;
@@ -68,6 +69,7 @@ struct object_info {
         int draw_debug_path;
         int sound_id;
         int phrase_id;
+        bstring64 phrase_key;
         int selected_index;
         int count;
         int drawn;

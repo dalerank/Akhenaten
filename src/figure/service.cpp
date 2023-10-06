@@ -134,6 +134,9 @@ static void apothecary_coverage(building* b, figure *f, int*) {
     b->data.house.apothecary = MAX_COVERAGE;
     if (b->common_health < 50) {
         b->common_health++;
+        if (b->common_health < 20) {
+            f->service_values.apothecary_see_low_health++;
+        }
     }
 }
 

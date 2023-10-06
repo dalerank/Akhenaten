@@ -3,7 +3,6 @@
 #include "core/string.h"
 #include "core/log.h"
 #include "platform/platform.h"
-#include "content/content.h"
 #include "reader.h"
 
 #include <filesystem>

@@ -1,6 +1,6 @@
 #include "js.h"
 
-#include "content/vfs.h"
+#include "content/dir.h"
 #include "core/log.h"
 #include "graphics/window.h"
 #include "js/js_constants.h"

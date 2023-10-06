@@ -4,5 +4,5 @@
 
 namespace snd {
     void set_walker_reaction(pcstr reaction, pcstr sound);
-    vfs::path get_walker_reaction(pcstr reaction);
+    bstring64 get_walker_reaction(pcstr reaction);
 }

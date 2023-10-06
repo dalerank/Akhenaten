@@ -1,6 +1,6 @@
 #include "system.h"
 
-#include "content/vfs.h"
+#include "content/dir.h"
 #include "core/game_environment.h"
 #include "core/log.h"
 #include "game/settings.h"

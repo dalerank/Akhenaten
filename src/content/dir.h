@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/bstring.h"
+#include "core/string.h"
 
 /**
  * @file
@@ -26,8 +26,11 @@ struct dir_listing {
 
 namespace vfs {
 
-constexpr const char *SAVE_FOLDER = "Save";
-constexpr const char *SCRIPTS_FOLDER = "Scripts";
+using path = bstring256;
+
+constexpr pcstr SAVE_FOLDER = "Save";
+constexpr pcstr SCRIPTS_FOLDER = "Scripts";
+constexpr pcstr content_audio = "AUDIO/";
 
 /**
  * Finds files with the given extension
@@ -50,7 +53,7 @@ const dir_listing *dir_find_all_subdirectories(const char *dir = 0);
  * @param localizable Whether the file may, must or must not be localized
  * @return Corrected file, or NULL if the file was not found
  */
-bstring256 dir_get_file(const char *filepath);
-bstring256 dir_get_path(const char *filepath);
+vfs::path dir_get_file(const char *filepath);
+vfs::path dir_get_path(const char *filepath);
 
 } // vfs

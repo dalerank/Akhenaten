@@ -16,6 +16,7 @@
 #include "figure/trader.h"
 #include "figuretype/trader.h"
 #include "sound/speech.h"
+#include "sound/sound_walker.h"
 
 #include <string.h>
 
@@ -77,66 +78,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "zookeeper"}
 };
 
-enum e_figure_phrase {
-    figure_sound_none,
-    figure_sound_starved,
-    figure_sound_nojob,
-    figure_sound_needjob,
-    figure_sound_noentert,
-    figure_sound_religion,
-    figure_sound_greatings_1,
-    figure_sound_greatings_2,
-    figure_sound_greatings_3,
-    figure_sound_greatings_4,
-    figure_sound_greatings_5,
-    figure_sound_greatings_6,
-    figure_sound_greatings_7,
-    figure_sound_exact,
-    figure_sound_exact_2,
-    figure_sound_exact_3,
-    figure_sound_exact_4,
-    figure_sound_exact_5,
-    figure_sound_exact_6,
-    figure_sound_exact_7,
-    figure_sound_exact_8,
-    figure_sound_exact_9,
-    figure_sound_exact_10,
-    figure_sound_free,
-    figure_sound_max
-};
-
-struct phrase_variant {
-    e_figure_phrase phrase;
-    svector<bstring32, 10> exts;
-};
-
-static phrase_variant g_figure_phrase_variants[figure_sound_max] = {
-    {figure_sound_none, {""}},
-    {figure_sound_starved, {"_g01"}},
-    {figure_sound_nojob, {"_g02"}},
-    {figure_sound_needjob, {"_g03"}},
-    {figure_sound_noentert, {"_g04"}},
-    {figure_sound_religion, {"_g05"}},
-    {figure_sound_greatings_1, {"_g06"}},
-    {figure_sound_greatings_2, {"_g07"}},
-    {figure_sound_greatings_3, {"_g08"}},
-    {figure_sound_greatings_4, {"_g09"}},
-    {figure_sound_greatings_5, {"_g10"}},
-    {figure_sound_greatings_6, {"_g10"}},
-    {figure_sound_greatings_7, {"_g10"}},
-    {figure_sound_exact, {"_e01"}},
-    {figure_sound_exact_2, {"_e02"}},
-    {figure_sound_exact_3, {"_e03"}},
-    {figure_sound_exact_4, {"_e04"}},
-    {figure_sound_exact_5, {"_e05"}},
-    {figure_sound_exact_6, {"_e06"}},
-    {figure_sound_exact_7, {"_e07"}},
-    {figure_sound_exact_8, {"_e08"}},
-    {figure_sound_exact_9, {"_e09"}},
-    {figure_sound_exact_10, {"_e10"}},
-    {figure_sound_free, {"_f01"}}
-};
-
 static int lion_tamer_phrase() {
     //    if (action_state == FIGURE_ACTION_150_ATTACK) {
     //        if (++phrase_sequence_exact >= 3)
@@ -174,16 +115,24 @@ static int market_trader_phrase() {
     return 0;
 }
 
-static int market_buyer_phrase(figure *f) {
+static bstring64 market_buyer_phrase(figure *f) {
     if (f->action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
-        return figure_sound_greatings_3;
+        return "market_buyer_goto_store";
     } else if (f->action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
-        return figure_sound_greatings_4;
+        return "market_buyer_back_to_market";
+    } 
+
+    return {};
+}
+
+static bstring64 apothecary_phrase(figure *f) {
+    if (f->service_values.apothecary_see_low_health > 0) {
+        return "apothecary_have_malaria_risk_here";
     } else {
-        return 0;
+        return "apothecary_no_threat_malaria_here";
     }
 
-    return 0;
+    return {};
 }
 
 static int cart_pusher_phrase() {
@@ -266,18 +215,17 @@ static int house_seeker_phrase() {
     return 0;
 }
 
-static int emigrant_phrase() {
+static bstring64 emigrant_phrase(figure *f) {
     switch (city_sentiment_low_mood_cause()) {
-    case LOW_MOOD_NO_JOBS:
-        return figure_sound_greatings_2;
-    case LOW_MOOD_NO_FOOD:
-        return figure_sound_greatings_3;
-    case LOW_MOOD_HIGH_TAXES:
-        return figure_sound_greatings_4;
-    case LOW_MOOD_LOW_WAGES:
-        return figure_sound_greatings_5;
-    default:
-        return figure_sound_greatings_6;
+    case LOW_MOOD_NO_JOBS: return "emigrant_no_job_in_city";
+    case LOW_MOOD_NO_FOOD: return "emigrant_no_food_in_city";
+    case LOW_MOOD_HIGH_TAXES: return "emigrant_tax_too_high";
+    case LOW_MOOD_LOW_WAGES: return "emigrant_salary_too_low";
+    }
+
+    building *b = f->destination();
+    if (!b || !b->id) {
+        return "emigrant_no_house_for_me";
     }
 }
 
@@ -298,7 +246,7 @@ static int tower_sentry_phrase() {
     return 0;
 }
 
-static int soldier_phrase(void) {
+static int soldier_phrase() {
     int enemies = city_figures_enemies();
     if (enemies >= 40)
         return 11;
@@ -362,7 +310,7 @@ static int trade_ship_phrase() {
     return 0;
 }
 
-static int city_god_mood(void) {
+static int city_god_mood() {
     int least_god_happiness = 100;
     for (auto *god: city_gods_knowns()) {
         int happiness = city_god_happiness(god->type);
@@ -380,7 +328,7 @@ static int city_god_mood(void) {
     }
 }
 
-static int phrase_based_on_figure_state(figure *f) {
+static bstring64 phrase_based_on_figure_state(figure *f) {
     switch (f->type) {
     //        case FIGURE_LION_TAMER:
     //            return lion_tamer_phrase(f);
@@ -390,6 +338,7 @@ static int phrase_based_on_figure_state(figure *f) {
     //            return tax_collector_phrase(f);
     //        case FIGURE_MARKET_TRADER:
     //            return market_trader_phrase(f);
+    case FIGURE_APOTHECARY: return apothecary_phrase(f);
     case FIGURE_MARKET_BUYER: return market_buyer_phrase(f);
     //        case FIGURE_CART_PUSHER:
     //            return cart_pusher_phrase(f);
@@ -408,8 +357,7 @@ static int phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_HOMELESS:
     //        case FIGURE_IMMIGRANT:
     //            return house_seeker_phrase(f);
-    //        case FIGURE_EMIGRANT:
-    //            return emigrant_phrase();
+    case FIGURE_EMIGRANT: return emigrant_phrase(f);
     //        case FIGURE_TOWER_SENTRY:
     //            return tower_sentry_phrase(f);
     //        case FIGURE_FORT_JAVELIN:
@@ -428,10 +376,10 @@ static int phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_TRADE_SHIP:
     //            return trade_ship_phrase(f);
     }
-    return 0;
+    return {};
 }
 
-static int phrase_based_on_city_state() {
+static bstring64 phrase_based_on_city_state() {
     //    f->phrase_sequence_city = 0;
     //    int god_state = city_god_state();
     //    int unemployment_pct = city_labor_unemployment_percentage();
@@ -466,28 +414,32 @@ static int phrase_based_on_city_state() {
     //    else {
     //        return 5;
     //    }
-    return 0;
+    return bstring64();
 }
 
 void figure::figure_phrase_determine() {
-    if (id <= 0)
+    if (id <= 0) {
         return;
+    }
+
     phrase_id = 0;
+    phrase_key = "";
     
     if (is_enemy() || type == FIGURE_INDIGENOUS_NATIVE || type == FIGURE_NATIVE_TRADER) {
         phrase_id = -1;
+        phrase_key = "unknown";
         return;
     }
     
-    int id = phrase_based_on_figure_state(this);
-    if (id) {
-        phrase_id = id;
+    bstring64 key = phrase_based_on_figure_state(this);
+    if (!key.empty()) {
+        phrase_key = key;
     } else {
-        phrase_id = phrase_based_on_city_state();
+        phrase_key = phrase_based_on_city_state();
     }
 }
 
-static int play_sound_file(e_figure_type type, int phrase_id) {
+static int figure_play_phrase_file(figure *f, e_figure_type type, bstring64 key) {
     if (type >= 0) {
         auto type_it = std::find_if(std::begin(g_figure_sounds), std::end(g_figure_sounds), [type] (auto &t) { return t.type == type; });
 
@@ -495,16 +447,21 @@ static int play_sound_file(e_figure_type type, int phrase_id) {
             return -1;
         }
 
-        phrase_variant *variant = nullptr;
-        if (phrase_id > 0 && phrase_id < figure_sound_max) {
-            variant = &g_figure_phrase_variants[phrase_id];
+        vfs::path path;
+        if (key.empty()) {
+            if (f->phrase_id == 0) {
+                f->phrase_id = rand() % 10;
+            }
+            path.printf("Voice/Walker/%s_random_%02u.wav", type_it->prefix, key.c_str(), f->phrase_id);
+
+            if (!sound_speech_file_exist(path)) {
+                // fallback to standart phrase
+                path.printf("Voice/Walker/%s_random_01.wav", type_it->prefix, key.c_str());
+            }
+        } else {
+            path.printf("Voice/Walker/%s", snd::get_walker_reaction(key));
         }
 
-        if (!variant) {
-            return -1;
-        }
-
-        bstring128 path("Voice/Walker/", type_it->prefix, variant->exts.front(), ".wav");
         sound_speech_play_file(path);
     }
 
@@ -516,5 +473,5 @@ int figure::figure_phrase_play() {
         return 0;
     }
     figure_phrase_determine();
-    return play_sound_file(type, phrase_id);
+    return figure_play_phrase_file(this, type, phrase_key);
 }

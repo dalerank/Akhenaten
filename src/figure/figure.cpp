@@ -356,7 +356,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->collecting_item_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->trade_ship_failed_dock_attempts);
     iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_exact);
-    iob->bind(BIND_SIGNATURE_INT8, &f->phrase_id);
+    iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_city);
     iob->bind(BIND_SIGNATURE_INT8, &f->progress_inside);
     iob->bind(BIND_SIGNATURE_UINT8, &f->trader_id);
@@ -382,7 +382,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT16, &f->market_lady_bought_amount);         // 200
     iob->bind____skip(115);
     iob->bind(BIND_SIGNATURE_UINT8, &f->draw_debug_mode);     // 6
-    iob->bind(BIND_SIGNATURE_INT16, &f->unk_ph4_ffff); // -1
+    iob->bind(BIND_SIGNATURE_INT16, &f->service_values.value); // -1
     iob->bind____skip(48);
     iob->bind(BIND_SIGNATURE_INT8, &f->festival_remaining_dances);
     iob->bind____skip(27);

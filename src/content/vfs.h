@@ -2,6 +2,7 @@
 
 #include "content/dir.h"
 #include "content/reader.h"
+#include "content/content.h"
 
 #include <stdint.h>
 #include <stdio.h>
@@ -19,10 +20,6 @@
 #define MAX_FILE_NAME 300
 
 namespace vfs {
-
-using path = bstring256;
-
-constexpr pcstr content_audio = "AUDIO/";
 
 /**
  * Wrapper for fopen converting filename to path in current working directory

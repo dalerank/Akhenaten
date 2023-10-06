@@ -303,10 +303,13 @@ void figure::action_perform() {
     if (state) {
         if (targeted_by_figure_id) {
             figure* attacker = figure_get(targeted_by_figure_id);
-            if (attacker->state != FIGURE_STATE_ALIVE)
+            if (attacker && attacker->state != FIGURE_STATE_ALIVE) {
                 targeted_by_figure_id = 0;
-            if (attacker->target_figure_id != id)
+            }
+
+            if (attacker && attacker->target_figure_id != id) {
                 targeted_by_figure_id = 0;
+            }
         }
 
         //////////////

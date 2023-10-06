@@ -1,4 +1,4 @@
-#include "content/content.h"
+#include "content/vfs.h"
 
 #include "cmrc/cmrc.hpp"
 

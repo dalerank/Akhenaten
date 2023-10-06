@@ -1,8 +1,9 @@
 #pragma once
 
-#include <utility>
+#include "core/string.h"
 
-#include "content/vfs.h"
+#include <utility>
+#include <stdio.h>
 
 namespace vfs {
 

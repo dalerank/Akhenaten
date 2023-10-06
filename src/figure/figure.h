@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "core/buffer.h"
+#include "core/string.h"
 #include "core/direction.h"
 #include "core/span.hpp"
 #include "figure/action.h"
@@ -93,7 +94,7 @@ public:
     //    unsigned char source_y;
     union {
         unsigned char soldier;
-        signed char enemy;
+        unsigned char enemy;
     } formation_position_x;
     union {
         unsigned char soldier;
@@ -158,7 +159,8 @@ public:
     unsigned char collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
     unsigned char trade_ship_failed_dock_attempts;
     unsigned char phrase_sequence_exact;
-    signed char phrase_id;
+    unsigned char phrase_id;
+    bstring64 phrase_key;
     unsigned char phrase_sequence_city;
     unsigned char trader_id;
     unsigned char wait_ticks_next_target;
@@ -183,7 +185,10 @@ public:
     short market_lady_bought_amount;
     // 115 bytes
     unsigned char draw_debug_mode;
-    short unk_ph4_ffff;
+    union {
+        short apothecary_see_low_health;
+        short value;
+    } service_values;
     char festival_remaining_dances;
 
     //

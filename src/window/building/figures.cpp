@@ -461,4 +461,5 @@ void window_building_play_figure_phrase(object_info* c) {
     figure* f = figure_get(figure_id);
     c->figure.sound_id = f->figure_phrase_play();
     c->figure.phrase_id = f->phrase_id;
+    c->figure.phrase_key = f->phrase_key;
 }
