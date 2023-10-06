@@ -18,6 +18,7 @@
 #include "building/building_shrine.h"
 #include "building/building_temple.h"
 #include "building/building_booth.h"
+#include "building/building_entertainment.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/storage_yard.h"
@@ -645,10 +646,10 @@ static void draw_refresh_background() {
             case BUILDING_BOOTH: building_booth_draw_info(context); break;
             case BUILDING_SENET_HOUSE: window_building_draw_senet_house(&context); break;
             case BUILDING_PAVILLION: window_building_draw_pavilion(&context); break;
-            case BUILDING_CONSERVATORY: window_building_draw_conservatory(&context); break;
-            case BUILDING_DANCE_SCHOOL: window_building_draw_dancer_school(&context); break;
-            case BUILDING_JUGGLER_SCHOOL: window_building_draw_juggler_school(&context); break;
-            case BUILDING_CHARIOT_MAKER: window_building_draw_chariot_maker(&context); break;
+            case BUILDING_CONSERVATORY: building_conservatory_draw_info(context); break;
+            case BUILDING_DANCE_SCHOOL: building_dancer_school_draw_info(context); break;
+            case BUILDING_JUGGLER_SCHOOL: building_juggler_school_draw_info(context); break;
+            case BUILDING_CHARIOT_MAKER: building_bullfight_school_draw_info(context); break;
             case BUILDING_APOTHECARY: window_building_draw_apothecary(&context); break;
             case BUILDING_MORTUARY: window_building_draw_mortuary(&context); break;
             case BUILDING_PHYSICIAN: window_building_draw_physician(&context); break;

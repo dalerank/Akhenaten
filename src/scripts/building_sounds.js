@@ -43,4 +43,8 @@ building_sounds = [
 	{ type: "temple_bast", 							sound: "wavs/tem_BAST_l.wav"},
 	{ type: "booth", 										sound: "wavs/jugger_r.wav"},
 	{ type: "bandstand", 								sound: "wavs/music_r.wav"},
+	{ type: "juggler_school",						sound: "wavs/juggler_school.wav"},
+	{ type: "conservatory", 						sound: "wavs/music_school.wav"},
+	{ type: "dance_school", 						sound: "wavs/dance_school.wav"},
+	{ type: "bullfight_school", 				sound: "wavs/bullfight_school.wav"},
 ]

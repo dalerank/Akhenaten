@@ -139,47 +139,6 @@ void window_building_draw_senet_house(object_info* c) {
     }
 }
 
-static void draw_entertainment_school(object_info* c, const char* sound_file, int group_id) {
-    c->help_id = 75;
-    window_building_play_sound(c, sound_file);
-
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    if (!c->has_road_access) {
-        window_building_draw_description(c, 69, 25);
-    } else if (building_get(c->building_id)->num_workers <= 0) {
-        window_building_draw_description(c, group_id, 7);
-    } else if (c->worker_percentage >= 100) {
-        window_building_draw_description(c, group_id, 2);
-    } else if (c->worker_percentage >= 75) {
-        window_building_draw_description(c, group_id, 3);
-    } else if (c->worker_percentage >= 50) {
-        window_building_draw_description(c, group_id, 4);
-    } else if (c->worker_percentage >= 25) {
-        window_building_draw_description(c, group_id, 5);
-    } else {
-        window_building_draw_description(c, group_id, 6);
-    }
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
-    window_building_draw_employment(c, 142);
-}
-
-void window_building_draw_juggler_school(object_info* c) {
-    draw_entertainment_school(c, "wavs/art_pit.wav", 77);
-}
-
-void window_building_draw_conservatory(object_info* c) {
-    draw_entertainment_school(c, "wavs/glad_pit.wav", 75);
-}
-
-void window_building_draw_dancer_school(object_info* c) {
-    draw_entertainment_school(c, "wavs/lion_pit.wav", 76);
-}
-
-void window_building_draw_chariot_maker(object_info* c) {
-    draw_entertainment_school(c, "wavs/char_pit.wav", 78);
-}
-
 // TODO: fix festival square panel
 void window_building_draw_festival_square(object_info* c) {
     const int32_t group_id = 188;
