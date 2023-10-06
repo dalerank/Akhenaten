@@ -5,7 +5,7 @@
 #include "empire/city.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
-#include "figure/phrase.h"
+#include "figure/figure_phrase.h"
 #include "figure/trader.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"

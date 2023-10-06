@@ -348,8 +348,7 @@ void city_labor_calculate_workers(int num_plebs, int num_patricians) {
         city_data.labor.workers_available = city_data.population.working_age;
     } else {
         city_data.population.working_age = calc_adjust_with_percentage(city_population_people_of_working_age(), 60);
-        city_data.labor.workers_available
-          = calc_adjust_with_percentage(city_data.population.working_age, city_data.population.percentage_plebs);
+        city_data.labor.workers_available = calc_adjust_with_percentage(city_data.population.working_age, city_data.population.percentage_plebs);
     }
 }
 static bool should_have_workers(building* b, int category, int check_access) {
@@ -484,18 +483,17 @@ static void allocate_workers_to_categories(void) {
 
         city_data.labor.workers_employed = city_data.labor.workers_available;
         for (int i = 0; i < 9; i++) {
-            city_data.labor.workers_needed
-              += city_data.labor.categories[i].workers_needed - city_data.labor.categories[i].workers_allocated;
+            city_data.labor.workers_needed += city_data.labor.categories[i].workers_needed - city_data.labor.categories[i].workers_allocated;
         }
     }
     city_data.labor.workers_unemployed = city_data.labor.workers_available - city_data.labor.workers_employed;
-    city_data.labor.unemployment_percentage
-      = calc_percentage(city_data.labor.workers_unemployed, city_data.labor.workers_available);
+    city_data.labor.unemployment_percentage = calc_percentage(city_data.labor.workers_unemployed, city_data.labor.workers_available);
 }
 
 static void allocate_workers_to_water(void) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         return;
+
     static int start_building_id = 1;
     labor_category_data* water_cat = &city_data.labor.categories[LABOR_CATEGORY_WATER_HEALTH];
 

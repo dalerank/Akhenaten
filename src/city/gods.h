@@ -36,9 +36,13 @@ struct god_state {
 
 
 enum e_god_mood {
-    GOD_MOOD_NONE = 0,
-    GOD_MOOD_VERY_ANGRY = 1,
-    GOD_MOOD_ANGRY = 2
+    GOD_MOOD_WRATHFUL = -3,
+    GOD_MOOD_VERY_ANGRY = -2,
+    GOD_MOOD_ANGRY = -1,
+    GOD_MOOD_INDIFIRENT = 0,
+    GOD_MOOD_FINE = 1,
+    GOD_MOOD_PLEASURE = 2,
+    GOD_MOOD_EXALTED = 3
 };
 
 enum e_god_event {
@@ -72,6 +76,7 @@ int city_god_happiness(int god_id);
 int city_god_wrath_bolts(int god_id);
 int city_god_happy_angels(int god_id);
 
+int city_gods_least_mood();
 /**
  * @return God ID or -1 if no single god is the least happy
  */

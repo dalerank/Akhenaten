@@ -10,7 +10,7 @@
 #include "game/tutorial.h"
 #include "scenario/property.h"
 
-int city_health(void) {
+int city_health() {
     return city_data.health.value;
 }
 

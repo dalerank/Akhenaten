@@ -1,8 +1,10 @@
-#include "phrase.h"
+#include "figure_phrase.h"
 
 #include "building/building.h"
 #include "building/market.h"
 #include "city/constants.h"
+#include "city/health.h"
+#include "city/houses.h"
 #include "city/coverage.h"
 #include "city/figures.h"
 #include "city/gods.h"
@@ -125,6 +127,52 @@ static bstring64 market_buyer_phrase(figure *f) {
     return {};
 }
 
+static bstring64 physician_phrase(figure *f) {
+    int enemies = city_figures_enemies();
+    if (enemies > 10) {
+        return "physician_enemies_in_city";
+    }
+
+    svector<bstring64, 10> keys;
+    if (city_health() < 40) {
+        keys.push_back(city_health() < 20
+                       ? "physician_desease_can_start_at_any_moment"
+                       : "physician_city_has_low_health");
+    } else if (city_health() > 80) {
+        keys.push_back("physician_city_very_healthy");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+        keys.push_back("physician_no_food_in_city");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+        keys.push_back("physician_no_job_in_city");
+    }
+
+    if (city_labor_workers_needed() >= 10) {
+        keys.push_back("physician_need_workers");
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back("physician_gods_are_angry");
+    } else { // gods are good
+        keys.push_back("physician_gods_are_pleasures");
+    }
+
+    const house_demands *demands = city_houses_demands();
+    if (demands->missing.more_entertainment > 0) {  // low entertainment
+        keys.push_back("physician_low_entertainment");
+    }
+
+    if (keys.empty()) {
+        return "physician_all_good_in_city";
+    }
+
+    int index = rand() % keys.size();
+    return keys[index];
+}
+
 static bstring64 apothecary_phrase(figure *f) {
     if (f->service_values.apothecary_see_low_health > 0) {
         return "apothecary_have_malaria_risk_here";
@@ -227,6 +275,8 @@ static bstring64 emigrant_phrase(figure *f) {
     if (!b || !b->id) {
         return "emigrant_no_house_for_me";
     }
+
+    return  "emigrant_all_good_in_city";
 }
 
 static int tower_sentry_phrase() {
@@ -310,24 +360,6 @@ static int trade_ship_phrase() {
     return 0;
 }
 
-static int city_god_mood() {
-    int least_god_happiness = 100;
-    for (auto *god: city_gods_knowns()) {
-        int happiness = city_god_happiness(god->type);
-        if (happiness < least_god_happiness) {
-            least_god_happiness = happiness;
-        }
-    }
-
-    if (least_god_happiness < 20) {
-        return GOD_MOOD_VERY_ANGRY;
-    } else if (least_god_happiness < 40) {
-        return GOD_MOOD_ANGRY;
-    } else {
-        return GOD_MOOD_NONE;
-    }
-}
-
 static bstring64 phrase_based_on_figure_state(figure *f) {
     switch (f->type) {
     //        case FIGURE_LION_TAMER:
@@ -340,6 +372,7 @@ static bstring64 phrase_based_on_figure_state(figure *f) {
     //            return market_trader_phrase(f);
     case FIGURE_APOTHECARY: return apothecary_phrase(f);
     case FIGURE_MARKET_BUYER: return market_buyer_phrase(f);
+    case FIGURE_PHYSICIAN: return physician_phrase(f);
     //        case FIGURE_CART_PUSHER:
     //            return cart_pusher_phrase(f);
     //        case FIGURE_WAREHOUSEMAN:
@@ -419,6 +452,10 @@ static bstring64 phrase_based_on_city_state() {
 
 void figure::figure_phrase_determine() {
     if (id <= 0) {
+        return;
+    }
+
+    if (!phrase_key.empty()) {
         return;
     }
 

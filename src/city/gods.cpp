@@ -927,7 +927,7 @@ void city_gods_update(bool mood_calc_only) {
     }
 }
 
-bool city_gods_calculate_least_happy(void) {
+bool city_gods_calculate_least_happy() {
     e_god max_god = GOD_UNKNOWN;
     int max_wrath = 0;
     // first, check who's the most enraged (number of bolts)
@@ -967,11 +967,38 @@ int city_god_happy_angels(int god_id) {
     return city_data.religion.gods[god_id].happy_ankhs;
 }
 
+int city_gods_least_mood() {
+    int least_god_happiness = 100;
+    for (auto *god: city_gods_knowns()) {
+        int happiness = city_god_happiness(god->type);
+        if (happiness < least_god_happiness) {
+            least_god_happiness = happiness;
+        }
+    }
+
+    if (least_god_happiness < 10) {
+        return GOD_MOOD_WRATHFUL;
+    } else if (least_god_happiness < 20) {
+        return GOD_MOOD_VERY_ANGRY;
+    } else if (least_god_happiness < 40) {
+        return GOD_MOOD_ANGRY;
+    } else if (least_god_happiness < 51) {
+        return GOD_MOOD_INDIFIRENT;
+    } else if (least_god_happiness < 65) {
+        return GOD_MOOD_FINE;
+    } else if (least_god_happiness < 80) {
+        return GOD_MOOD_PLEASURE;
+    } else {
+        return GOD_MOOD_EXALTED;
+    }
+}
+
+
 int city_god_months_since_festival(int god_id) {
     return city_data.religion.gods[god_id].months_since_festival;
 }
 
-int city_god_least_happy(void) {
+int city_god_least_happy() {
     return city_data.religion.least_happy_god - 1;
 }
 

@@ -42,6 +42,7 @@ static int get_entertainment_advice(void) {
         return 2;
     }
 }
+
 static int get_festival_advice(void) {
     int months_since_festival = city_festival_months_since_last();
     if (months_since_festival <= 1)
@@ -103,6 +104,7 @@ static void draw_festival_info(void) {
     }
     lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305, 400, FONT_NORMAL_WHITE_ON_DARK);
 }
+
 static int draw_background(void) {
     city_gods_update(true);
     city_culture_calculate();
