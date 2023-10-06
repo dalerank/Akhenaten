@@ -452,14 +452,15 @@ static int figure_play_phrase_file(figure *f, e_figure_type type, bstring64 key)
             if (f->phrase_id == 0) {
                 f->phrase_id = rand() % 10;
             }
-            path.printf("Voice/Walker/%s_random_%02u.wav", type_it->prefix, key.c_str(), f->phrase_id);
+            path.printf("Voice/Walker/%s_random_%02u.wav", type_it->prefix.c_str(), key.c_str(), f->phrase_id);
 
             if (!sound_speech_file_exist(path)) {
                 // fallback to standart phrase
-                path.printf("Voice/Walker/%s_random_01.wav", type_it->prefix, key.c_str());
+                path.printf("Voice/Walker/%s_random_01.wav", type_it->prefix.c_str(), key.c_str());
             }
         } else {
-            path.printf("Voice/Walker/%s", snd::get_walker_reaction(key));
+            auto reaction = snd::get_walker_reaction(key);
+            path.printf("Voice/Walker/%s", reaction.c_str());
         }
 
         sound_speech_play_file(path);
