@@ -42,4 +42,5 @@ building_sounds = [
 	{ type: "temple_seth", 							sound: "wavs/tem_SETH_l.wav"},
 	{ type: "temple_bast", 							sound: "wavs/tem_BAST_l.wav"},
 	{ type: "booth", 										sound: "wavs/jugger_r.wav"},
+	{ type: "bandstand", 								sound: "wavs/music_r.wav"},
 ]

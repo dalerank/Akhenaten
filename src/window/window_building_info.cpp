@@ -6,6 +6,7 @@
 #include "building/building_palace.h"
 #include "building/building_statue.h"
 #include "building/house_evolution.h"
+#include "building/building_bandstand.h"
 #include "building/building_farm.h"
 #include "building/building_hunting_lodge.h"
 #include "building/building_raw_material.h"
@@ -640,7 +641,7 @@ static void draw_refresh_background() {
                     window_building_draw_warehouse(&context);
                 break;
 
-            case BUILDING_BANDSTAND: window_building_draw_bandstand(&context); break;
+            case BUILDING_BANDSTAND: building_bandstand_draw_info(context); break;
             case BUILDING_BOOTH: building_booth_draw_info(context); break;
             case BUILDING_SENET_HOUSE: window_building_draw_senet_house(&context); break;
             case BUILDING_PAVILLION: window_building_draw_pavilion(&context); break;
