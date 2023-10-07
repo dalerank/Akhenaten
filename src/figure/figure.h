@@ -315,6 +315,7 @@ public:
     void cross_country_advance();
 
     // actions.c
+    static void check_action_properties_lookup();
     void action_perform();
     void advance_action(short NEXT_ACTION);
     bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = ACTION_2_ROAMERS_RETURNING);
