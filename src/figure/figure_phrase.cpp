@@ -193,22 +193,22 @@ static bstring64 apothecary_phrase(figure *f) {
     return {};
 }
 
-static int cart_pusher_phrase() {
-    //    if (action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL) {
-    //        if (min_max_seen == 2)
-    //            return 7;
-    //        else if (min_max_seen == 1)
-    //            return 8;
-    //
-    //    } else if (action_state == FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE ||
-    //               action_state == FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY ||
-    //               action_state == FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP) {
-    //        if (calc_maximum_distance(
-    //                destination_x, destination_y, source_x, source_y) >= 25) {
-    //            return 9; // too far
-    //        }
-    //    }
-    return 0;
+static bstring64 cart_pusher_phrase(figure *f) {
+    if (f->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL) {
+        return "cartpusher_i_have_no_destination";
+    }
+
+    if (f->action_state == FIGURE_ACTION_27_CARTPUSHER_RETURNING) {
+        return "cartpusher_back_to_home";
+    }
+
+    if (f->action_state == FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE ||
+        f->action_state == FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY ||
+        f->action_state == FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP) {
+        return "cartpusher_delivering_items";
+    }
+
+    return {};
 }
 
 static int warehouseman_phrase() {
@@ -384,8 +384,7 @@ static bstring64 phrase_based_on_figure_state(figure *f) {
     case FIGURE_HERBALIST: return apothecary_phrase(f);
     case FIGURE_MARKET_BUYER: return market_buyer_phrase(f);
     case FIGURE_PHYSICIAN: return physician_phrase(f);
-    //        case FIGURE_CART_PUSHER:
-    //            return cart_pusher_phrase(f);
+    case FIGURE_CART_PUSHER: return cart_pusher_phrase(f);
     //        case FIGURE_WAREHOUSEMAN:
     //            return warehouseman_phrase(f);
     //        case FIGURE_PREFECT:
