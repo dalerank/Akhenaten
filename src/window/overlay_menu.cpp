@@ -170,6 +170,8 @@ const char* game_state_overlay_text(int index) {
         return "Health";
     case OVERLAY_APOTHECARY: 
         return "Apothecary";
+    case OVERLAY_MORTUARY:
+        return "Mortuary";
     case OVERLAY_DENTIST:
         return "Dentist";
     case OVERLAY_PROBLEMS:
