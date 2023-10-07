@@ -102,9 +102,9 @@ int figure::get_permission_for_int() {
         break;
 
     case FIGURE_PHYSICIAN:
-    case FIGURE_MORTUARY_WORKER:
+    case FIGURE_EMBALMER:
     case FIGURE_DENTIST:
-    case FIGURE_APOTHECARY:
+    case FIGURE_HERBALIST:
         return PERMISSION_MEDICINE;
 
     case FIGURE_SCHOOL_CHILD:

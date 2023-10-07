@@ -60,11 +60,11 @@ static void add_fort(int type, building* fort) {
     map_building_tiles_add(fort->id, fort->tile, fort->size, image_id_from_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
 
     if (type == BUILDING_FORT_CHARIOTEERS) {
-        fort->subtype.fort_figure_type = FIGURE_FORT_LEGIONARY;
+        fort->subtype.fort_figure_type = FIGURE_FORT_SPEARMAN;
     } else if (type == BUILDING_FORT_ARCHERS) {
-        fort->subtype.fort_figure_type = FIGURE_FORT_JAVELIN;
+        fort->subtype.fort_figure_type = FIGURE_FORT_ARCHER;
     } else if (type == BUILDING_FORT_INFANTRY) {
-        fort->subtype.fort_figure_type = FIGURE_FORT_MOUNTED;
+        fort->subtype.fort_figure_type = FIGURE_FORT_CHARIOT;
     }
 
     // create parade ground

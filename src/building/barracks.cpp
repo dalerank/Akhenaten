@@ -77,7 +77,7 @@ static int get_closest_legion_needing_soldiers(building* barracks) {
         if (m->in_distant_battle || m->legion_recruit_type == LEGION_RECRUIT_NONE)
             continue;
 
-        if (m->legion_recruit_type == LEGION_RECRUIT_LEGIONARY && barracks->stored_full_amount <= 0)
+        if (m->legion_recruit_type == LEGION_RECRUIT_SPEARMAN && barracks->stored_full_amount <= 0)
             continue;
 
         building* fort = building_get(m->building_id);
@@ -114,7 +114,7 @@ int building::barracks_create_soldier() {
         figure* f = figure_create(m->figure_type, road_access, DIR_0_TOP_RIGHT);
         f->formation_id = formation_id;
         f->formation_at_rest = 1;
-        if (m->figure_type == FIGURE_FORT_LEGIONARY) {
+        if (m->figure_type == FIGURE_FORT_SPEARMAN) {
             if (stored_full_amount > 0)
                 stored_full_amount -= 100;
         }

@@ -56,13 +56,13 @@ void figure::military_standard_action() {
     map_figure_add();
 
     sprite_image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
-    if (m->figure_type == FIGURE_FORT_LEGIONARY) {
+    if (m->figure_type == FIGURE_FORT_SPEARMAN) {
         if (m->is_halted)
             cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 8;
         else {
             cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + anim_frame / 2;
         }
-    } else if (m->figure_type == FIGURE_FORT_MOUNTED) {
+    } else if (m->figure_type == FIGURE_FORT_CHARIOT) {
         if (m->is_halted)
             cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 26;
         else {
@@ -194,11 +194,11 @@ void figure::soldier_update_image(const formation* m) {
     else
         dir = previous_tile_direction;
     dir = figure_image_normalize_direction(dir);
-    if (type == FIGURE_FORT_JAVELIN)
+    if (type == FIGURE_FORT_ARCHER)
         update_image_javelin(dir);
-    else if (type == FIGURE_FORT_MOUNTED)
+    else if (type == FIGURE_FORT_CHARIOT)
         update_image_mounted(dir);
-    else if (type == FIGURE_FORT_LEGIONARY)
+    else if (type == FIGURE_FORT_SPEARMAN)
         update_image_legionary(m, dir);
 }
 
@@ -212,9 +212,9 @@ void figure::soldier_action() {
         kill();
 
     int speed_factor;
-    if (type == FIGURE_FORT_MOUNTED)
+    if (type == FIGURE_FORT_CHARIOT)
         speed_factor = 3;
-    else if (type == FIGURE_FORT_JAVELIN)
+    else if (type == FIGURE_FORT_ARCHER)
         speed_factor = 2;
     else {
         speed_factor = 1;
@@ -313,9 +313,9 @@ void figure::soldier_action() {
             }
         }
         if (action_state != FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD) {
-            if (type == FIGURE_FORT_JAVELIN)
+            if (type == FIGURE_FORT_ARCHER)
                 javelin_launch_missile();
-            else if (type == FIGURE_FORT_LEGIONARY)
+            else if (type == FIGURE_FORT_SPEARMAN)
                 legionary_attack_adjacent_enemy();
         }
         break;

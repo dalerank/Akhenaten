@@ -121,13 +121,13 @@ static int draw_background(void) {
         lang_text_draw(138, m->legion_id, 84, 83 + 44 * i, FONT_NORMAL_WHITE_ON_DARK);
         int width = text_draw_number(m->num_figures, '@', " ", 84, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
         switch (m->figure_type) {
-        case FIGURE_FORT_LEGIONARY:
+        case FIGURE_FORT_SPEARMAN:
             lang_text_draw(138, 33, 84 + width, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
             break;
-        case FIGURE_FORT_MOUNTED:
+        case FIGURE_FORT_CHARIOT:
             lang_text_draw(138, 34, 84 + width, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
             break;
-        case FIGURE_FORT_JAVELIN:
+        case FIGURE_FORT_ARCHER:
             lang_text_draw(138, 35, 84 + width, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
             break;
         }

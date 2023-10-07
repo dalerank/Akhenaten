@@ -98,7 +98,7 @@ void figure::arrow_action() {
     int should_die = move_ticks_cross_country(4);
     int target_id = get_non_citizen_on_tile(tile.grid_offset());
     if (target_id) {
-        missile_hit_target(target_id, FIGURE_FORT_LEGIONARY);
+        missile_hit_target(target_id, FIGURE_FORT_SPEARMAN);
         sound_effect_play(SOUND_EFFECT_ARROW_HIT);
     } else if (should_die)
         poof();
@@ -112,7 +112,7 @@ void figure::spear_action() {
     int should_die = move_ticks_cross_country(4);
     int target_id = get_citizen_on_tile(tile.grid_offset());
     if (target_id) {
-        missile_hit_target(target_id, FIGURE_FORT_LEGIONARY);
+        missile_hit_target(target_id, FIGURE_FORT_SPEARMAN);
         sound_effect_play(SOUND_EFFECT_JAVELIN);
     } else if (should_die)
         poof();

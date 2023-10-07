@@ -249,18 +249,18 @@ void figure::hit_opponent() {
     // if (type == /*FIGURE_WOLF*/)
     //    figure_attack = difficulty_adjust_wolf_attack(figure_attack);
 
-    if (opponent->opponent_id != id && m->figure_type != FIGURE_FORT_LEGIONARY
+    if (opponent->opponent_id != id && m->figure_type != FIGURE_FORT_SPEARMAN
         && attack_is_same_direction(attack_direction, opponent->attack_direction)) {
         figure_attack += 4; // attack opponent on the (exposed) back
         sound_effect_play(SOUND_EFFECT_SWORD_SWING);
     }
-    if (m->is_halted && m->figure_type == FIGURE_FORT_LEGIONARY
+    if (m->is_halted && m->figure_type == FIGURE_FORT_SPEARMAN
         && attack_is_same_direction(attack_direction, m->direction)) {
         figure_attack += 4; // coordinated formation attack bonus
     }
     // defense modifiers
     if (opponent_formation->is_halted
-        && (opponent_formation->figure_type == FIGURE_FORT_LEGIONARY
+        && (opponent_formation->figure_type == FIGURE_FORT_SPEARMAN
             || opponent_formation->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)) {
         if (!attack_is_same_direction(opponent->attack_direction, opponent_formation->direction))
             opponent_defense -= 4; // opponent not attacking in coordinated formation

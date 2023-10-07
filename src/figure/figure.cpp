@@ -152,7 +152,7 @@ bool figure::is_enemy() {
     return type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY_CAESAR_LEGIONARY;
 }
 bool figure::is_legion() {
-    return type >= FIGURE_FORT_JAVELIN && type <= FIGURE_FORT_LEGIONARY;
+    return type >= FIGURE_FORT_ARCHER && type <= FIGURE_FORT_SPEARMAN;
 }
 bool figure::is_herd() {
     return type >= FIGURE_SHEEP && type <= FIGURE_ZEBRA;

@@ -47,9 +47,9 @@ void figure::play_die_sound() {
     case FIGURE_TRADE_CARAVAN_DONKEY:
         break;
 
-    case FIGURE_FORT_JAVELIN:
-    case FIGURE_FORT_MOUNTED:
-    case FIGURE_FORT_LEGIONARY:
+    case FIGURE_FORT_ARCHER:
+    case FIGURE_FORT_CHARIOT:
+    case FIGURE_FORT_SPEARMAN:
     case FIGURE_INDIGENOUS_NATIVE:
     case FIGURE_TOWER_SENTRY:
     case FIGURE_ENEMY43_SPEAR:
@@ -88,13 +88,13 @@ void figure::play_die_sound() {
 void figure::play_hit_sound() {
     figure* f = this;
     switch (type) {
-    case FIGURE_FORT_LEGIONARY:
+    case FIGURE_FORT_SPEARMAN:
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
         if (city_sound_update_hit_soldier())
             sound_effect_play(SOUND_EFFECT_SWORD);
-
         break;
-    case FIGURE_FORT_MOUNTED:
+
+    case FIGURE_FORT_CHARIOT:
     case FIGURE_ENEMY45_SWORD:
     case FIGURE_ENEMY48_CHARIOT:
     case FIGURE_ENEMY50_SWORD:
@@ -102,19 +102,19 @@ void figure::play_hit_sound() {
     case FIGURE_ENEMY54_GLADIATOR:
         if (city_sound_update_hit_soldier())
             sound_effect_play(SOUND_EFFECT_SWORD_SWING);
-
         break;
-    case FIGURE_FORT_JAVELIN:
+
+    case FIGURE_FORT_ARCHER:
         if (city_sound_update_hit_soldier())
             sound_effect_play(SOUND_EFFECT_LIGHT_SWORD);
-
         break;
+
     case FIGURE_ENEMY43_SPEAR:
     case FIGURE_ENEMY51_SPEAR:
         if (city_sound_update_hit_spear())
             sound_effect_play(SOUND_EFFECT_SPEAR);
-
         break;
+
     case FIGURE_ENEMY44_SWORD:
     case FIGURE_ENEMY49_FAST_SWORD:
         if (city_sound_update_hit_club())

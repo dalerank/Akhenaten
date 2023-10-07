@@ -57,12 +57,12 @@ void formation_legion_update_recruit_status(building* fort) {
         return;
     if (m->num_figures < m->max_figures) {
         int type = fort->subtype.fort_figure_type;
-        if (type == FIGURE_FORT_LEGIONARY)
-            m->legion_recruit_type = LEGION_RECRUIT_LEGIONARY;
-        else if (type == FIGURE_FORT_JAVELIN)
-            m->legion_recruit_type = LEGION_RECRUIT_JAVELIN;
-        else if (type == FIGURE_FORT_MOUNTED)
-            m->legion_recruit_type = LEGION_RECRUIT_MOUNTED;
+        if (type == FIGURE_FORT_SPEARMAN)
+            m->legion_recruit_type = LEGION_RECRUIT_SPEARMAN;
+        else if (type == FIGURE_FORT_ARCHER)
+            m->legion_recruit_type = LEGION_RECRUIT_ARCHER;
+        else if (type == FIGURE_FORT_CHARIOT)
+            m->legion_recruit_type = LEGION_RECRUIT_CHARIOT;
 
     } else { // too many figures
         int too_many = m->num_figures - m->max_figures;
@@ -161,9 +161,9 @@ static int dispatch_soldiers(formation* m) {
     }
     int strength_factor;
     if (m->has_military_training)
-        strength_factor = m->figure_type == FIGURE_FORT_LEGIONARY ? 3 : 2;
+        strength_factor = m->figure_type == FIGURE_FORT_SPEARMAN ? 3 : 2;
     else {
-        strength_factor = m->figure_type == FIGURE_FORT_LEGIONARY ? 2 : 1;
+        strength_factor = m->figure_type == FIGURE_FORT_SPEARMAN ? 2 : 1;
     }
     return strength_factor * m->num_figures;
 }
@@ -250,7 +250,7 @@ int formation_legion_curse(void) {
         formation* m = formation_get(i);
         if (m->in_use == 1 && m->is_legion) {
             int weight = m->num_figures;
-            if (m->figure_type == FIGURE_FORT_LEGIONARY)
+            if (m->figure_type == FIGURE_FORT_SPEARMAN)
                 weight *= 2;
 
             if (weight > best_legion_weight) {

@@ -209,7 +209,7 @@ void formation_calculate_legion_totals(void) {
             if (m->is_legion) {
                 data.id_last_formation = i;
                 data.num_formations++;
-                if (m->figure_type == FIGURE_FORT_LEGIONARY)
+                if (m->figure_type == FIGURE_FORT_SPEARMAN)
                     city_military_add_legionary_legion();
             }
             if (m->missile_attack_timeout <= 0 && m->figures[0] && !m->is_herd) {
@@ -251,11 +251,11 @@ int formation_for_legion(int legion_index) {
 
 void formation_change_morale(formation* m, int amount) {
     int max_morale;
-    if (m->figure_type == FIGURE_FORT_LEGIONARY)
+    if (m->figure_type == FIGURE_FORT_SPEARMAN)
         max_morale = m->has_military_training ? 100 : 80;
     else if (m->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)
         max_morale = 100;
-    else if (m->figure_type == FIGURE_FORT_JAVELIN || m->figure_type == FIGURE_FORT_MOUNTED)
+    else if (m->figure_type == FIGURE_FORT_ARCHER|| m->figure_type == FIGURE_FORT_CHARIOT)
         max_morale = m->has_military_training ? 80 : 60;
     else {
         switch (m->enemy_type) {
@@ -479,11 +479,11 @@ void formation_calculate_figures(void) {
                             m->is_halted = 0;
                     }
                     int total_strength = m->num_figures;
-                    if (m->figure_type == FIGURE_FORT_LEGIONARY)
+                    if (m->figure_type == FIGURE_FORT_SPEARMAN)
                         total_strength += m->num_figures / 2;
 
                     enemy_army_totals_add_legion_formation(total_strength);
-                    if (m->figure_type == FIGURE_FORT_LEGIONARY) {
+                    if (m->figure_type == FIGURE_FORT_SPEARMAN) {
                         if (!was_halted && m->is_halted)
                             sound_effect_play(SOUND_EFFECT_FORMATION_SHIELD);
                     }

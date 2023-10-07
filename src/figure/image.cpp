@@ -196,10 +196,10 @@ int figure::figure_image_corpse_offset() {
         type_offset = 136;
         break;
     case FIGURE_JAVELIN:
-    case FIGURE_FORT_MOUNTED:
+    case FIGURE_FORT_CHARIOT:
         type_offset = 144;
         break;
-    case FIGURE_FORT_LEGIONARY:
+    case FIGURE_FORT_SPEARMAN:
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
         type_offset = 152;
         break;

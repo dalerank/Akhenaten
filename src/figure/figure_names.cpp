@@ -107,7 +107,7 @@ int figure_name_get(int type, int enemy) {
 
     case FIGURE_SCHOOL_CHILD:
     case FIGURE_DELIVERY_BOY:
-    case FIGURE_APOTHECARY:
+    case FIGURE_HERBALIST:
     case FIGURE_WATER_CARRIER:
     case FIGURE_WORKER:
     default:
@@ -117,20 +117,20 @@ int figure_name_get(int type, int enemy) {
     case FIGURE_TEACHER:
     case FIGURE_MISSIONARY:
     case FIGURE_LIBRARIAN:
-    case FIGURE_MORTUARY_WORKER:
+    case FIGURE_EMBALMER:
     case FIGURE_PHYSICIAN:
     case FIGURE_PATRICIAN:
         return get_next_name(&data.patrician, 66, 32);
 
-    case FIGURE_FORT_JAVELIN:
+    case FIGURE_FORT_ARCHER:
     case FIGURE_ENEMY_CAESAR_JAVELIN:
         return get_next_name(&data.javelin_thrower, 231, 32);
 
-    case FIGURE_FORT_MOUNTED:
+    case FIGURE_FORT_SPEARMAN:
     case FIGURE_ENEMY_CAESAR_MOUNTED:
         return get_next_name(&data.cavalry, 264, 32);
 
-    case FIGURE_FORT_LEGIONARY:
+    case FIGURE_FORT_CHARIOT:
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
         return get_next_name(&data.legionary, 297, 32);
 
