@@ -36,7 +36,7 @@ struct city_overlay_apothecary : public city_overlay {
     }
 
     bool show_figure(const figure* f) const override {
-        return f->type == FIGURE_APOTHECARY;
+        return f->type == FIGURE_HERBALIST;
     }
 
     void draw_custom_top(vec2i pixel, map_point point) const override {

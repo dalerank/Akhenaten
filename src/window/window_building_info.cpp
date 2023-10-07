@@ -513,7 +513,7 @@ static void init(map_point tile) {
             context.type = BUILDING_INFO_LEGION;
             context.formation_id = f->formation_id;
             const formation* m = formation_get(context.formation_id);
-            if (m->figure_type != FIGURE_FORT_LEGIONARY)
+            if (m->figure_type != FIGURE_FORT_SPEARMAN)
                 context.formation_types = 5;
             else if (m->has_military_training)
                 context.formation_types = 4;

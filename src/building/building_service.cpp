@@ -35,7 +35,7 @@ static void building_service_draw_info(object_info& c, int help_id, const char* 
 }
 
 void building_apothecary_draw_info(object_info& c) {
-    building_service_draw_info(c, 63, "apothecary", e_text_building_apothecary, FIGURE_APOTHECARY);
+    building_service_draw_info(c, 63, "apothecary", e_text_building_apothecary, FIGURE_HERBALIST);
 }
 
 void building_dentist_draw_info(object_info& c) {
@@ -43,7 +43,7 @@ void building_dentist_draw_info(object_info& c) {
 }
 
 void building_mortuary_draw_info(object_info& c) {
-    building_service_draw_info(c, 66, "mortuary", e_text_building_mortuary, FIGURE_MORTUARY_WORKER);
+    building_service_draw_info(c, 66, "mortuary", e_text_building_mortuary, FIGURE_EMBALMER);
 }
 
 void building_physician_draw_info(object_info& c) {

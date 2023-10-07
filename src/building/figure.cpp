@@ -530,7 +530,7 @@ void building::spawn_figure_library() {
     //    }
 }
 void building::spawn_figure_mortuary() {
-    common_spawn_roamer(FIGURE_MORTUARY_WORKER, 50);
+    common_spawn_roamer(FIGURE_EMBALMER, 50);
     //    check_labor_problem();
     //    if (has_figure_of_type(FIGURE_BARBER))
     //        return;
@@ -548,7 +548,7 @@ void building::spawn_figure_mortuary() {
     //    }
 }
 void building::spawn_figure_apothecary() {
-    common_spawn_roamer(FIGURE_APOTHECARY, 50);
+    common_spawn_roamer(FIGURE_HERBALIST, 50);
     //    check_labor_problem();
     //    if (has_figure_of_type(FIGURE_DOCTOR))
     //        return;
@@ -568,9 +568,11 @@ void building::spawn_figure_apothecary() {
 void building::spawn_figure_dentist() {
     common_spawn_roamer(FIGURE_DENTIST, 50);
 }
+
 void building::spawn_figure_physician() {
     common_spawn_roamer(FIGURE_PHYSICIAN, 50);
 }
+
 void building::spawn_figure_magistrate() {
     common_spawn_roamer(FIGURE_MAGISTRATE, 50);
 }

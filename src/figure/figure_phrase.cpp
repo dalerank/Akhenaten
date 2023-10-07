@@ -28,7 +28,7 @@ struct e_figure_sound {
 };
 
 static e_figure_sound g_figure_sounds[] = {
-    {FIGURE_APOTHECARY, "apothecary"},
+    {FIGURE_HERBALIST, "apothecary"},
     {FIGURE_NONE, "artisan"},
     {FIGURE_NONE, "barge"},
     {FIGURE_NONE, "brick"},
@@ -40,7 +40,7 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "desease"},
     {FIGURE_DOCKER, "dock_pusher"},
     {FIGURE_PHYSICIAN, "doctor"},
-    {FIGURE_NONE, "embalmer"},
+    {FIGURE_EMBALMER, "embalmer"},
     {FIGURE_EMIGRANT, "emigrant"},
     {FIGURE_ENGINEER, "engineer"},
     {FIGURE_FIREMAN, "fireman"},
@@ -370,7 +370,7 @@ static bstring64 phrase_based_on_figure_state(figure *f) {
     //            return tax_collector_phrase(f);
     //        case FIGURE_MARKET_TRADER:
     //            return market_trader_phrase(f);
-    case FIGURE_APOTHECARY: return apothecary_phrase(f);
+    case FIGURE_HERBALIST: return apothecary_phrase(f);
     case FIGURE_MARKET_BUYER: return market_buyer_phrase(f);
     case FIGURE_PHYSICIAN: return physician_phrase(f);
     //        case FIGURE_CART_PUSHER:

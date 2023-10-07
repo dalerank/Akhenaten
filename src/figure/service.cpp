@@ -333,13 +333,13 @@ int figure::figure_service_provide_coverage() {
     case FIGURE_LIBRARIAN:
         houses_serviced = provide_culture(tile, this, library_coverage);
         break;
-    case FIGURE_APOTHECARY:
+    case FIGURE_HERBALIST:
         houses_serviced = provide_culture(tile, this, apothecary_coverage);
         break;
     case FIGURE_DENTIST:
         houses_serviced = provide_culture(tile, this, dentist_coverage);
         break;
-    case FIGURE_MORTUARY_WORKER:
+    case FIGURE_EMBALMER:
         houses_serviced = provide_culture(tile, this, mortuary_coverage);
         break;
     case FIGURE_PHYSICIAN:
