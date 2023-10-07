@@ -173,6 +173,16 @@ static bstring64 physician_phrase(figure *f) {
     return keys[index];
 }
 
+static bstring64 immigrant_phrase(figure *f) {
+    svector<bstring64, 10> keys;
+    keys.push_back("immigrant_i_hope_i_need_here");
+    keys.push_back("immigrant_i_heard_city_have_work_for_all");
+    keys.push_back("immigrant_i_heard_city_have_cheap_food");
+
+    int index = rand() % keys.size();
+    return keys[index];
+}
+
 static bstring64 apothecary_phrase(figure *f) {
     if (f->service_values.apothecary_see_low_health > 0) {
         return "apothecary_have_malaria_risk_here";
@@ -370,6 +380,7 @@ static bstring64 phrase_based_on_figure_state(figure *f) {
     //            return tax_collector_phrase(f);
     //        case FIGURE_MARKET_TRADER:
     //            return market_trader_phrase(f);
+    case FIGURE_IMMIGRANT: return immigrant_phrase(f);
     case FIGURE_HERBALIST: return apothecary_phrase(f);
     case FIGURE_MARKET_BUYER: return market_buyer_phrase(f);
     case FIGURE_PHYSICIAN: return physician_phrase(f);
@@ -388,8 +399,6 @@ static bstring64 phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_MISSIONARY:
     //            return citizen_phrase(f);
     //        case FIGURE_HOMELESS:
-    //        case FIGURE_IMMIGRANT:
-    //            return house_seeker_phrase(f);
     case FIGURE_EMIGRANT: return emigrant_phrase(f);
     //        case FIGURE_TOWER_SENTRY:
     //            return tower_sentry_phrase(f);
