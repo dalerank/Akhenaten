@@ -5,6 +5,7 @@
 #include "core/stacktrace.h"
 #include "core/time.h"
 #include "core/log.h"
+#include "figure/figure.h"
 #include "js/js.h"
 #include "core/profiler.h"
 #include "game/game.h"
@@ -334,6 +335,7 @@ static void show_options_window(Arguments& args) {
 
 static void setup(Arguments& args) {
     crashhandler_install();
+    figure::check_action_properties_lookup();
 
     logs::info("Ozymandias version %s", get_version().c_str());
     if (!init_sdl()) {

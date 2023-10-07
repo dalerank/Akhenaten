@@ -31,7 +31,7 @@ struct city_overlay_mortuary : public city_overlay {
     }
 
     bool show_figure(const figure* f) const override {
-        return f->type == FIGURE_MORTUARY_WORKER;
+        return f->type == FIGURE_EMBALMER;
     }
 
     void draw_custom_top(vec2i pixel, map_point point) const override {

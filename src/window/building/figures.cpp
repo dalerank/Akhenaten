@@ -43,13 +43,10 @@ struct building_figures_data_t {
 
 building_figures_data_t g_building_figures_data;
 
-static int big_people_image(int type) {
+static int big_people_image(e_figure_type type) {
     int result = 0;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        result = image_id_from_group(GROUP_PORTRAITS) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[type] - 1;
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        result = image_id_from_group(GROUP_PORTRAITS) + type;
-    }
+    int index = type;
+    result = image_id_from_group(GROUP_PORTRAITS) + type;
     return result;
 }
 
