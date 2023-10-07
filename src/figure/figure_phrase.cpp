@@ -45,6 +45,7 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_ENGINEER, "engineer"},
     {FIGURE_FIREMAN, "fireman"},
     {FIGURE_FISHING_BOAT, "fishing"},
+    {FIGURE_LABOR_SEEKER, "laborseeker"},
     {FIGURE_NONE, "governor"},
     {FIGURE_NONE, "guard"},
     {FIGURE_OSTRICH_HUNTER, "hunt_ant"},
@@ -289,6 +290,64 @@ static bstring64 emigrant_phrase(figure *f) {
     return  "emigrant_all_good_in_city";
 }
 
+static bstring64 labor_seeker(figure *f) {
+    svector<bstring64, 10> keys;
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+        keys.push_back("laborseeker_no_jobs");
+    }
+
+    if (city_labor_workers_needed() >= 0) {
+        keys.push_back("laborseeker_no_some_workers");
+    }
+
+    if (city_labor_workers_needed() >= 10) {
+        keys.push_back("laborseeker_need_workers");
+    }
+
+    if (city_labor_workers_needed() >= 20) {
+        keys.push_back("laborseeker_need_more_workers");
+    }
+
+    int houses_in_disease = 0;
+    buildings_valid_do([&] (building &b) {
+        if (!b.house_size || !b.house_population) {
+            return;
+        }
+        houses_in_disease = (b.disease_days > 0) ? 1 : 0;
+    });
+
+    if (houses_in_disease > 0) {
+        keys.push_back("laborseeker_disease_in_city");
+    }
+
+    int enemies = city_figures_enemies();
+    if (enemies > 0) {
+        keys.push_back("laborseeker_city_not_safety_workers_leaving");
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back("laborseeker_gods_are_angry");
+    } else { // gods are good
+        keys.push_back("laborseeker_city_is_amazing");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+        keys.push_back("laborseeker_no_food_in_city");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_LOW_WAGES) {
+        keys.push_back("laborseeker_i_want_to_leave_city");
+    }
+
+    if (city_labor_unemployment_percentage() >= 15) {
+        keys.push_back("laborseeker_much_unemployments");
+    }
+
+    keys.push_back("laborseeker_i_looking_for_the_workers");
+    int index = rand() % keys.size();
+    return keys[index];
+}
+
 static int tower_sentry_phrase() {
     //    if (++f->phrase_sequence_exact >= 2)
     //        f->phrase_sequence_exact = 0;
@@ -398,6 +457,7 @@ static bstring64 phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_MISSIONARY:
     //            return citizen_phrase(f);
     //        case FIGURE_HOMELESS:
+    case FIGURE_LABOR_SEEKER: return labor_seeker(f);
     case FIGURE_EMIGRANT: return emigrant_phrase(f);
     //        case FIGURE_TOWER_SENTRY:
     //            return tower_sentry_phrase(f);

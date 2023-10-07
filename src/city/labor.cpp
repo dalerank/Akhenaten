@@ -323,7 +323,7 @@ int city_labor_lower_wages_rome(void) {
     return 1;
 }
 
-int city_labor_unemployment_percentage(void) {
+int city_labor_unemployment_percentage() {
     return city_data.labor.unemployment_percentage;
 }
 int city_labor_unemployment_percentage_for_senate(void) {
