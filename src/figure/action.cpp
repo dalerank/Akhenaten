@@ -540,7 +540,7 @@ void figure::action_perform() {
         case 21:
             trade_caravan_donkey_action();
             break;
-        case 22:
+        case FIGURE_PROTESTER:
             protestor_action();
             break;
         case 23:
@@ -681,13 +681,16 @@ void figure::action_perform() {
         case 75:
             gatherer_action();
             break; // wood cutters
+        case FIGURE_GOVERNOR:
+            governor_action();
+            break;
         case FIGURE_HIPPO:
             hippo_action();
             break;
         case FIGURE_WORKER_PH:
             worker_action();
             break;
-        case 87:
+        case FIGURE_WATER_CARRIER:
             water_carrier_action();
             break;
         case FIGURE_POLICEMAN:

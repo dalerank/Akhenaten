@@ -5,13 +5,15 @@
 
 #include "city/data_private.h"
 
-bool city_buildings_has_palace(void) {
+bool city_buildings_has_palace() {
     return city_data.building.palace_placed;
 }
 
-int city_buildings_get_palace_id(void) {
-    if (!city_buildings_has_palace())
+int city_buildings_get_palace_id() {
+    if (!city_buildings_has_palace()) {
         return 0;
+    }
+
     return city_data.building.palace_building_id;
 }
 
@@ -28,13 +30,15 @@ void city_buildings_remove_palace(building* palace) {
     city_data.building.palace_placed = !!next_palace;
 }
 
-bool city_buildings_has_mansion(void) {
+bool city_buildings_has_mansion() {
     return city_data.building.mansion_placed;
 }
 
-int city_buildings_get_mansion_id(void) {
-    if (!city_buildings_has_mansion())
+int city_buildings_get_mansion_id() {
+    if (!city_buildings_has_mansion()) {
         return 0;
+    }
+
     return city_data.building.mansion_building_id;
 }
 
@@ -43,23 +47,17 @@ void city_buildings_add_mansion(building* mansion) {
     if (!city_data.building.mansion.grid_offset()) {
         city_data.building.mansion_building_id = mansion->id;
         city_data.building.mansion.set(mansion->tile.grid_offset());
-        //        city_data.building.mansion.x() = mansion->x;
-        //        city_data.building.mansion.y = mansion->y;
-        //        city_data.building.mansion.grid_offset() = mansion->grid_offset;
     }
 }
 
 void city_buildings_remove_mansion(building* mansion) {
     if (mansion->tile.grid_offset() == city_data.building.mansion.grid_offset()) {
         city_data.building.mansion.set(0);
-        //        city_data.building.mansion.grid_offset() = 0;
-        //        city_data.building.mansion.x() = 0;
-        //        city_data.building.mansion.y = 0;
         city_data.building.mansion_placed = 0;
     }
 }
 
-bool city_buildings_has_recruiter(void) {
+bool city_buildings_has_recruiter() {
     return city_data.building.barracks_placed;
 }
 

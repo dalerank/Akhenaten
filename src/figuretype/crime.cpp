@@ -194,6 +194,7 @@ void figure::protestor_action() {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_THIEF_WALK) + CRIMINAL_OFFSETS[anim_frame / 4] + 104;
     }
 }
+
 void figure::mugger_action() {
     //    terrain_usage = TERRAIN_USAGE_ROADS;
     //    figure_image_increase_offset(32);

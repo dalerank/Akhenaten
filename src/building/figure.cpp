@@ -236,7 +236,7 @@ void building::common_spawn_labor_seeker(int min_houses) {
 }
 bool building::common_spawn_figure_trigger(int min_houses) {
     check_labor_problem();
-    if (has_figure(0)) {
+    if (has_figure(BUILDING_SLOT_SERVICE)) {
         return false;
     }
 
@@ -257,6 +257,7 @@ bool building::common_spawn_figure_trigger(int min_houses) {
             return true;
         }
     }
+
     return false;
 }
 
@@ -1238,6 +1239,17 @@ bool building::figure_generate() {
         spawn_figure_tax_collector();
     } else if (is_administration()) {
         common_spawn_figure_trigger(50);
+
+        if (is_governor_mansion() && !has_figure(BUILDING_SLOT_GOVERNOR)) {
+            map_point road_tile;
+            if (map_closest_road_within_radius(tile, size, 2, road_tile)) {
+                figure *f = figure_create(FIGURE_GOVERNOR, road_tile, DIR_4_BOTTOM_LEFT);
+                f->advance_action(FIGURE_ACTION_120_GOVERNOR_CREATED);
+                f->set_home(this);
+                f->wait_ticks = 10 + (map_random_7bit & 0xf);
+                set_figure(BUILDING_SLOT_GOVERNOR, f);
+            }
+        }
     } else if (is_temple() || is_large_temple()) {
         spawn_figure_temple();
     } else {

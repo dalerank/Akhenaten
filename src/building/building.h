@@ -28,6 +28,7 @@ enum e_building_slot {
     BUILDING_SLOT_SERVICE = 0,
     BUILDING_SLOT_CARTPUSHER = 1,
     BUILDING_SLOT_LABOR_SEEKER = 2,
+    BUILDING_SLOT_GOVERNOR = 3,
     BUILDING_SLOT_HUNTER = 3,
 };
 
@@ -224,7 +225,7 @@ public:
     bool is_monument();
     bool is_palace();
     bool is_tax_collector();
-    bool is_governor_palace();
+    bool is_governor_mansion();
     bool is_temple();
     bool is_large_temple();
     bool is_shrine() const;
@@ -398,7 +399,7 @@ building* building_at(int grid_offset);
 building* building_at(int x, int y);
 building* building_at(map_point point);
 bool building_exists_at(int grid_offset, building* b);
-bool building_exists_at(int x, int y, building* b);
+
 bool building_exists_at(map_point point, building* b);
 
 void building_clear_all(void);
@@ -416,7 +417,7 @@ bool building_is_monument(int type);
 bool building_is_administration(int type);
 bool building_is_palace(int type);
 bool building_is_tax_collector(int type);
-bool building_is_governor_palace(int type);
+bool building_is_governor_mansion(int type);
 bool building_is_temple(int type);
 bool building_is_large_temple(int type);
 bool building_is_shrine(int type);

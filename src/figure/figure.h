@@ -344,6 +344,7 @@ public:
     void protestor_action();
     void mugger_action();
     void rioter_action();
+    void governor_action();
     void fishing_boat_action();
     void market_trader_action();
     void priest_action();

@@ -440,6 +440,7 @@ static void enable_common_beautifications() {
     toggle_building(BUILDING_GARDENS);
     toggle_building(BUILDING_PLAZA);
 }
+
 static void enable_common_municipal(int level) {
     enable_common_beautifications();
     toggle_building(BUILDING_ROADBLOCK);
