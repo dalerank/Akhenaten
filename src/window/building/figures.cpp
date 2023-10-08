@@ -18,7 +18,7 @@
 #include "scenario/property.h"
 #include "widget/city.h"
 
-static void select_figure(int index, int param2);
+static void window_info_select_figure(int index, int param2);
 
 static const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[]
   = {8,  13, 13, 9,  4,  13, 8,  16, 7,  4, 18, 42, 26, 41, 8,  1,  33, 10, 11, 25, 8,  25, 15, 15, 15,
@@ -26,13 +26,13 @@ static const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[]
      8,  8,  34, 39, 33, 43, 27, 48, 63, 8, 8,  8,  8,  8,  53, 8,  38, 62, 54, 55, 56, 8,  8};
 
 static generic_button figure_buttons[] = {
-  {26, 46, 50, 50, select_figure, button_none, 0, 0},
-  {86, 46, 50, 50, select_figure, button_none, 1, 0},
-  {146, 46, 50, 50, select_figure, button_none, 2, 0},
-  {206, 46, 50, 50, select_figure, button_none, 3, 0},
-  {266, 46, 50, 50, select_figure, button_none, 4, 0},
-  {326, 46, 50, 50, select_figure, button_none, 5, 0},
-  {386, 46, 50, 50, select_figure, button_none, 6, 0},
+  {26, 46, 50, 50, window_info_select_figure, button_none, 0, 0},
+  {86, 46, 50, 50, window_info_select_figure, button_none, 1, 0},
+  {146, 46, 50, 50, window_info_select_figure, button_none, 2, 0},
+  {206, 46, 50, 50, window_info_select_figure, button_none, 3, 0},
+  {266, 46, 50, 50, window_info_select_figure, button_none, 4, 0},
+  {326, 46, 50, 50, window_info_select_figure, button_none, 5, 0},
+  {386, 46, 50, 50, window_info_select_figure, button_none, 6, 0},
 };
 
 struct building_figures_data_t {
@@ -446,16 +446,25 @@ int window_building_handle_mouse_figure_list(const mouse* m, object_info* c) {
     return button_id;
 }
 
-static void select_figure(int index, int param2) {
+static void window_info_select_figure(int index, int param2) {
     auto& data = g_building_figures_data;
     data.context_for_callback->figure.selected_index = index;
     window_building_play_figure_phrase(data.context_for_callback);
     window_invalidate();
 }
 
+static int window_info_show_overlay(figure *f) {
+    switch (f->type) {
+    case FIGURE_FIREMAN: return OVERLAY_FIRE;
+    case FIGURE_HERBALIST: return OVERLAY_APOTHECARY;
+    case FIGURE_PHYSICIAN: return OVERLAY_PHYSICIAN;
+    }
+}
+
 void window_building_play_figure_phrase(object_info* c) {
     int figure_id = c->figure.figure_ids[c->figure.selected_index];
     figure* f = figure_get(figure_id);
+    c->show_overlay = window_info_show_overlay(f);
     c->figure.sound_id = f->figure_phrase_play();
     c->figure.phrase_id = f->phrase_id;
     c->figure.phrase_key = f->phrase_key;
