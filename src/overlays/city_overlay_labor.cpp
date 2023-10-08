@@ -67,6 +67,10 @@ struct city_overlay_labor : public city_overlay {
     }
 
     bool show_building(const building* b) const override {
+        if (b->type == BUILDING_WORK_CAMP) {
+            return true;
+        }
+
         if (b->state == BUILDING_STATE_VALID) {
             if (b->show_on_problem_overlay)
                 return true;

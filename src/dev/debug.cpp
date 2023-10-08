@@ -992,14 +992,16 @@ void draw_debug_ui(int x, int y) {
         for (int i = 0; i < 392; ++i) {
             text_draw(dot, x + i - 1, y + 15, FONT_SMALL_PLAIN, 0);
         }
+
         for (int i = 0; i < 392; ++i) {
             int abs_i = i + additional_abs_ticks;
             text_draw(dot, x + i, y + 15, FONT_SMALL_PLAIN, COLOR_WHITE);
 
             if ((i > rc_start - 28 && i < rc_end + 28)
                 || (i > rc_start - 28 - CYCLES_IN_A_YEAR && i < rc_end + 28 - CYCLES_IN_A_YEAR)
-                || (i > rc_start - 28 + CYCLES_IN_A_YEAR && i < rc_end + 28 + CYCLES_IN_A_YEAR))
+                || (i > rc_start - 28 + CYCLES_IN_A_YEAR && i < rc_end + 28 + CYCLES_IN_A_YEAR)) {
                 text_draw(dot, x + i, y + 15, FONT_SMALL_PLAIN, COLOR_FONT_ORANGE_LIGHT);
+            }
 
             if ((i > rc_start && i < rc_end) || (i > rc_start - CYCLES_IN_A_YEAR && i < rc_end - CYCLES_IN_A_YEAR)
                 || (i > rc_start + CYCLES_IN_A_YEAR && i < rc_end + CYCLES_IN_A_YEAR))
@@ -1031,6 +1033,7 @@ void draw_debug_ui(int x, int y) {
         debug_text(str, x, y + 25, cl, "t-49:", _c_start - 49);               // 49 cycles prior
         debug_text(str, x, y + 35, cl, "t-28:", _c_start - 28);               // 28 cycles prior
         debug_text(str, x, y + 45, cl, "  START", _c_start);                  // flood start
+
         if (floods_debug_period() > 0) {
             debug_text(str, x, y + 55, cl, "rest:", _c_start + _c_period_next);  // first rest period
             debug_text(str, x, y + 65, cl, "retract:", _c_end - _c_period_next); // first rest period
@@ -1038,6 +1041,7 @@ void draw_debug_ui(int x, int y) {
             debug_text(str, x, y + 55, cl, "rest:", _c_start + _c_period_last);  // first rest period
             debug_text(str, x, y + 65, cl, "retract:", _c_end - _c_period_last); // first rest period
         }
+
         debug_text(str, x, y + 75, cl, "    END", _c_end);    // flood end
         debug_text(str, x, y + 85, cl, "t+23:", _c_end + 23); // lands farmable again
         debug_text(str, x, y + 95, cl, "t+28:", _c_end + 28); // lands farmable again

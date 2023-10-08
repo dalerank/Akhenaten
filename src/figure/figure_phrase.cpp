@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/market.h"
+#include "city/floods.h"
 #include "city/constants.h"
 #include "city/health.h"
 #include "city/houses.h"
@@ -69,6 +70,7 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_WATER_CARRIER, "water"},
     {FIGURE_NONE, "woodcutter"},
     {FIGURE_WORKER, "worker"},
+    {FIGURE_WORKER_PH, "worker"},
     {FIGURE_NONE, "zookeeper"}
 };
 
@@ -79,11 +81,6 @@ static int lion_tamer_phrase() {
     //
     //        return 7 + phrase_sequence_exact;
     //    }
-    return 0;
-}
-
-static int gladiator_phrase() {
-    //    return action_state == FIGURE_ACTION_150_ATTACK ? 7 : 0;
     return 0;
 }
 
@@ -98,6 +95,62 @@ static int tax_collector_phrase() {
     //        return 0;
     //    }
     return 0;
+}
+
+static sound_key worker_phrase(figure *f) {
+    int enemies = city_figures_enemies();
+    if (enemies > 10) {
+        return "worker_enemies_in_city";
+    }
+
+    svector<sound_key, 10> keys;
+    if (f->action_state == ACTION_10_GOING) {
+        keys.push_back("worker_going_to_workplace");
+    }
+
+    if (!floodplains_is(FLOOD_STATE_FARMABLE)) {
+        keys.push_back("worker_farm_is_flooded");
+    }
+
+    if (city_health() < 30) {
+        keys.push_back("worker_desease_can_start_at_any_moment");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+        keys.push_back("worker_no_food_in_city");
+    }
+
+    if (city_labor_workers_needed() >= 10) {
+        keys.push_back("worker_need_workers");
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back("worker_gods_are_angry");
+    }
+
+    if (city_sentiment() < 30) {
+        keys.push_back("worker_city_is_bad");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+        keys.push_back("worker_much_unemployments");
+    }
+
+    const house_demands *demands = city_houses_demands();
+    if (demands->missing.more_entertainment > 0) {  // low entertainment
+        keys.push_back("worker_low_entertainment");
+    }
+
+    if (city_sentiment() > 50) {
+        keys.push_back("worker_city_is_good");
+    }
+
+    if (city_sentiment() > 90) {
+        keys.push_back("worker_city_is_amazing");
+    }
+
+    int index = rand() % keys.size();
+    return keys[index];
 }
 
 static sound_key market_buyer_phrase(figure *f) {
@@ -544,14 +597,6 @@ static int citizen_phrase() {
     return 0;
 }
 
-static int house_seeker_phrase() {
-    //    if (++f->phrase_sequence_exact >= 2)
-    //        f->phrase_sequence_exact = 0;
-    //
-    //    return 7 + f->phrase_sequence_exact;
-    return 0;
-}
-
 static sound_key emigrant_phrase(figure *f) {
     switch (city_sentiment_low_mood_cause()) {
     case LOW_MOOD_NO_JOBS: return "emigrant_no_job_in_city";
@@ -738,6 +783,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_MISSIONARY:
     //            return citizen_phrase(f);
     //        case FIGURE_HOMELESS:
+    case FIGURE_WORKER: case FIGURE_WORKER_PH: return worker_phrase(f);
     case FIGURE_MUSICIAN: return musician_phrase(f);
     case FIGURE_JUGGLER: return juggler_phrase(f);
     case FIGURE_LABOR_SEEKER: return labor_seeker_phrase(f);

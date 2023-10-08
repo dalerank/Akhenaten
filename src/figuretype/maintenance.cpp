@@ -378,7 +378,8 @@ void figure::worker_action() {
     switch (action_state) {
     case 9:
         break;
-    case 10:
+
+    case ACTION_10_GOING:
         if (do_gotobuilding(destination())) {
             if (building_is_farm(b_dest->type)) {
                 b_dest->num_workers = std::clamp<int>((1.f - bhome->tile.dist(b_dest->tile) / 20.f) * 12, 2, 10);

@@ -32,8 +32,9 @@ void floodplains_init() {
     data.has_floodplains = false;
 
     data.floodplain_width = map_floodplain_rebuild_rows();
-    if (data.floodplain_width > 0)
+    if (data.floodplain_width > 0) {
         data.has_floodplains = true;
+    }
 
     floodplains_tick_update(true);
 }
