@@ -217,6 +217,59 @@ static int warehouseman_phrase() {
     return 0;
 }
 
+static sound_key musician_phrase(figure *f) {
+    int enemies = city_figures_enemies();
+    if (enemies > 0) {
+        return "musician_city_not_safety_workers_leaving";
+    }
+
+    svector<sound_key, 10> keys;
+    uint32_t months_since_last_festival = city_months_since_last_festival();
+    if (months_since_last_festival < 6) {
+        keys.push_back("musician_i_like_festivals");
+    }
+
+    if (city_health() < 40) {
+        keys.push_back("musician_city_heath_too_low");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+        keys.push_back("musician_no_food_in_city");
+    }
+
+    if (city_labor_workers_needed() >= 10) {
+        keys.push_back("musician_need_workers");
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back("musician_gods_are_angry");
+    } else {
+        keys.push_back("musician_gods_are_pleasures");
+    }
+
+    if (city_sentiment() < 30) {
+        keys.push_back("musician_city_is_bad_reputation");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+        keys.push_back("musician_much_unemployments");
+    }
+
+    const house_demands *demands = city_houses_demands();
+    if (demands->missing.more_entertainment == 0) {
+        keys.push_back("musician_no_entertainment_need");
+    }
+
+    if (city_sentiment() < 50) {
+        keys.push_back("musician_city_not_bad");
+    } else {
+        keys.push_back("musician_city_is_good");
+    }
+
+    int index = rand() % keys.size();
+    return keys[index];
+}
+
 static sound_key juggler_phrase(figure *f) {
     int enemies = city_figures_enemies();
     if (enemies > 0) {
@@ -552,6 +605,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_MISSIONARY:
     //            return citizen_phrase(f);
     //        case FIGURE_HOMELESS:
+    case FIGURE_MUSICIAN: return musician_phrase(f);
     case FIGURE_JUGGLER: return juggler_phrase(f);
     case FIGURE_LABOR_SEEKER: return labor_seeker_phrase(f);
     case FIGURE_EMIGRANT: return emigrant_phrase(f);
