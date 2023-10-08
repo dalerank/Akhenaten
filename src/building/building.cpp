@@ -399,8 +399,9 @@ void building::clear_related_data() {
         building_menu_update(BUILDSET_NORMAL);
     }
 
-    if (type == BUILDING_FESTIVAL_SQUARE)
+    if (type == BUILDING_FESTIVAL_SQUARE) {
         city_buildings_remove_festival_square();
+    }
 }
 
 e_overlay building::get_overlay() const {

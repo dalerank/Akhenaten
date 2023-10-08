@@ -993,9 +993,17 @@ int city_gods_least_mood() {
     }
 }
 
-
 int city_god_months_since_festival(int god_id) {
     return city_data.religion.gods[god_id].months_since_festival;
+}
+
+int city_months_since_last_festival() {
+    uint32_t since_last_festival_months = 999;
+    for (auto &g : city_data.religion.gods) {
+        since_last_festival_months = std::min<int>(since_last_festival_months, g.months_since_festival);
+    }
+
+    return since_last_festival_months;
 }
 
 int city_god_least_happy() {

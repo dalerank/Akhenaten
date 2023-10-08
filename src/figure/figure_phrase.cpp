@@ -217,6 +217,68 @@ static int warehouseman_phrase() {
     return 0;
 }
 
+static sound_key juggler_phrase(figure *f) {
+    int enemies = city_figures_enemies();
+    if (enemies > 0) {
+       return "juggler_city_not_safety_workers_leaving";
+    }
+
+    svector<sound_key, 10> keys;
+    uint32_t months_since_last_festival = city_months_since_last_festival();
+    if (months_since_last_festival < 6) {
+        keys.push_back("juggler_i_like_festivals");
+    }
+
+    int houses_in_disease = 0;
+    buildings_valid_do([&] (building &b) {
+        if (!b.house_size || !b.house_population) {
+            return;
+        }
+        houses_in_disease = (b.disease_days > 0) ? 1 : 0;
+    });
+
+    if (houses_in_disease > 0) {
+        return "juggler_disease_in_city";
+    }
+
+    if (city_sentiment() < 30) {
+        if (city_sentiment() < 20) {
+            keys.push_back("juggler_city_verylow_sentiment");
+        }
+        keys.push_back("juggler_city_low_sentiment");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+        keys.push_back("juggler_much_unemployments");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_LOW_WAGES) {
+        keys.push_back("juggler_salary_too_low");
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back("juggler_gods_are_angry");
+    } else {
+        keys.push_back("juggler_gods_are_pleasures");
+    }
+
+    const house_demands *demands = city_houses_demands();
+    if (demands->missing.more_entertainment > 0) {  // low entertainment
+        keys.push_back("juggler_low_entertainment");
+    }
+
+    if (city_sentiment() > 50) {
+        keys.push_back("juggler_city_is_good");
+    }
+
+    if (city_sentiment() > 90) {
+        keys.push_back("juggler_city_is_amazing");
+    }
+
+    int index = rand() % keys.size();
+    return keys[index];
+}
+
 static sound_key fireman_phrase(figure *f) {
     if (f->action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE) {
         return "fireman_going_to_fire";
@@ -323,7 +385,7 @@ static sound_key emigrant_phrase(figure *f) {
     return  "emigrant_all_good_in_city";
 }
 
-static sound_key labor_seeker(figure *f) {
+static sound_key labor_seeker_phrase(figure *f) {
     svector<sound_key, 10> keys;
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
         keys.push_back("laborseeker_no_jobs");
@@ -490,7 +552,8 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_MISSIONARY:
     //            return citizen_phrase(f);
     //        case FIGURE_HOMELESS:
-    case FIGURE_LABOR_SEEKER: return labor_seeker(f);
+    case FIGURE_JUGGLER: return juggler_phrase(f);
+    case FIGURE_LABOR_SEEKER: return labor_seeker_phrase(f);
     case FIGURE_EMIGRANT: return emigrant_phrase(f);
     //        case FIGURE_TOWER_SENTRY:
     //            return tower_sentry_phrase(f);

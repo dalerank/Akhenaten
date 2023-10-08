@@ -71,16 +71,17 @@ e_god_status city_gods_is_known(e_god god);
 void city_gods_update_curses_and_blessings(int randm_god, int FORCE_EVENT = -1);
 
 void city_gods_update(bool mood_calc_only);
-bool city_gods_calculate_least_happy(void);
+bool city_gods_calculate_least_happy();
 int city_god_happiness(int god_id);
 int city_god_wrath_bolts(int god_id);
 int city_god_happy_angels(int god_id);
+int city_months_since_last_festival();
 
 int city_gods_least_mood();
 /**
  * @return God ID or -1 if no single god is the least happy
  */
-int city_god_least_happy(void);
+int city_god_least_happy();
 
 int city_god_months_since_festival(int god_id);
 
