@@ -460,6 +460,7 @@ static int window_info_show_overlay(figure *f) {
     case FIGURE_PHYSICIAN: return OVERLAY_PHYSICIAN;
     case FIGURE_JUGGLER: return OVERLAY_BOOTH;
     case FIGURE_MUSICIAN: return OVERLAY_BANDSTAND;
+    case FIGURE_DANCER: return OVERLAY_PAVILION;
     }
 
     return OVERLAY_NONE;
