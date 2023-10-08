@@ -247,16 +247,6 @@ static sound_key cart_pusher_phrase(figure *f) {
     return {};
 }
 
-static int warehouseman_phrase() {
-    //    if (action_state == FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE) {
-    //        if (calc_maximum_distance(
-    //                destination_x, destination_y, source_x, f->source_y) >= 25) {
-    //            return 9; // too far
-    //        }
-    //    }
-    return 0;
-}
-
 static sound_key marker_trader_phrase(figure *f) {
     if (f->action_state == FIGURE_ACTION_126_ROAMER_RETURNING) {
         return "market_seller_goods_are_finished";
@@ -552,7 +542,7 @@ static sound_key fireman_phrase(figure *f) {
 
     int houses_risk_fire = 0;
     buildings_valid_do([&] (building &b) {
-        houses_risk_fire = (b.fire_risk > 70) ? 1 : 0;
+        houses_risk_fire += (b.fire_risk > 70) ? 1 : 0;
     });
 
     if (houses_risk_fire > 0) {
@@ -578,15 +568,66 @@ static sound_key fireman_phrase(figure *f) {
     return keys[index];
 }
 
-static int engineer_phrase() {
-    //    if (f->min_max_seen >= 60)
-    //        return 7;
-    //    else if (f->min_max_seen >= 10)
-    //        return 8;
-    //    else {
-    //        return 0;
-    //    }
-    return 0;
+static sound_key engineer_phrase(figure *f) {
+    int enemies = city_figures_enemies();
+    if (enemies > 0) {
+        return "engineer_city_not_safety";
+    }
+
+    svector<sound_key, 10> keys;
+
+    int houses_damage_risk = 0;
+    int hoeses_damage_high = 0;
+    buildings_valid_do([&] (building &b) {
+        houses_damage_risk += (b.damage_risk > 70) ? 1 : 0;
+        hoeses_damage_high += (b.damage_risk > 50) ? 1 : 0;
+    });
+
+    if (houses_damage_risk > 0) {
+        keys.push_back("engineer_extreme_damage_level");
+    }
+
+    if (hoeses_damage_high > 0) {
+        keys.push_back("engineer_high_damage_level");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+        keys.push_back("engineer_no_food_in_city");
+    }
+
+    if (city_labor_workers_needed() >= 20) {
+        keys.push_back("engineer_need_more_workers");
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back("engineer_gods_are_angry");
+    }
+
+    if (city_sentiment() < 30) {
+        keys.push_back("engineer_city_has_bad_reputation");
+    }
+
+    if (city_sentiment() > 50) {
+        keys.push_back("engineer_city_is_good");
+    }
+
+    if (city_sentiment() >= 30) {
+        keys.push_back("engineer_city_is_bad");
+    }
+
+    const house_demands *demands = city_houses_demands();
+    if (demands->missing.more_entertainment > 0) {  // low entertainment
+        keys.push_back("engineer_low_entertainment");
+    }
+
+    if (city_sentiment() > 90) {
+        keys.push_back("engineer_city_is_amazing");
+    }
+
+    keys.push_back("engineer_i_am_works");
+
+    int index = rand() % keys.size();
+    return keys[index];
 }
 
 static int citizen_phrase() {
@@ -768,8 +809,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     case FIGURE_MARKET_BUYER: return market_buyer_phrase(f);
     case FIGURE_PHYSICIAN: return physician_phrase(f);
     case FIGURE_CART_PUSHER: return cart_pusher_phrase(f);
-    //        case FIGURE_WAREHOUSEMAN:
-    //            return warehouseman_phrase(f);
+    case FIGURE_ENGINEER: return engineer_phrase(f);
     case FIGURE_PRIEST: return priest_phrase(f);
     case FIGURE_FIREMAN: return fireman_phrase(f);
     case FIGURE_DANCER: return dancer_phrase(f);
