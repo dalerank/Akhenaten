@@ -112,12 +112,12 @@ static void create_migrants(void) {
     city_data.migration.emigration_amount_per_batch = 0;
 }
 
-void city_migration_update(void) {
+void city_migration_update() {
     update_status();
     create_migrants();
 }
 
-void city_migration_determine_int(void) {
+void city_migration_determine_int() {
     switch (city_data.sentiment.low_mood_cause) {
     case LOW_MOOD_NO_FOOD:
         city_data.migration.no_immigration_cause = 2;
@@ -140,15 +140,19 @@ void city_migration_determine_int(void) {
     }
 }
 
-int city_migration_int(void) {
+int city_migration_problems_cause() {
     return city_data.migration.no_immigration_cause;
 }
 
-int city_migration_no_room_for_immigrants(void) {
+void city_migration_advance_year() {
+    city_data.migration.nobles_leave_city_this_year = 0;
+}
+
+int city_migration_no_room_for_immigrants() {
     return city_data.migration.refused_immigrants_today || city_data.population.room_in_houses <= 0;
 }
 
-int city_migration_percentage(void) {
+int city_migration_percentage() {
     return city_data.migration.percentage;
 }
 

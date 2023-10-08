@@ -16,6 +16,10 @@ const city_data_t* city_data_struct() {
     return &city_data;
 }
 
+void city_migration_nobles_leave_city(int num_people) {
+    city_data.migration.nobles_leave_city_this_year += num_people;
+}
+
 void city_data_init(void) {
     memset(&city_data, 0, sizeof(struct city_data_t));
 
@@ -41,6 +45,7 @@ void city_data_init(void) {
 
     city_gods_reset();
 }
+
 void city_data_init_custom_map(void) {
     city_data.unused.faction_id = 1;
     city_data.unused.unknown_00a2 = 1;
@@ -48,6 +53,7 @@ void city_data_init_custom_map(void) {
     city_data.finance.treasury = difficulty_adjust_money(scenario_initial_funds());
     city_data.finance.last_year.balance = city_data.finance.treasury;
 }
+
 void city_data_init_campaign_mission(void) {
     city_data.finance.treasury = difficulty_adjust_money(city_data.finance.treasury);
 }
@@ -55,6 +61,7 @@ void city_data_init_campaign_mission(void) {
 int ALLOWED_FOODS(int i) {
     return city_data.resource.food_types_allowed[i];
 }
+
 bool is_food_allowed(int resource) {
     bool result = false;
     for (int i = 0; i < 4; i++) {
@@ -65,6 +72,7 @@ bool is_food_allowed(int resource) {
     // for etc etc todo: other resources?
     return result;
 }
+
 void set_allowed_food(int i, int resource) {
     city_data.resource.food_types_allowed[i] = resource;
 }
@@ -89,6 +97,7 @@ int stack_units_by_resource(int resource) {
         return RESOURCE_UNIT_CHARIOT;
     }
 }
+
 int stack_proper_quantity(int full, int resource) {
     switch (stack_units_by_resource(resource)) {
     default: // all other goods are 100 worth of, per pile
@@ -156,12 +165,18 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.migration.immigration_duration);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.migration.emigration_duration);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.migration.newcomers);
-    for (int i = 0; i < 4; i++)
+    iob->bind(BIND_SIGNATURE_UINT16, &city_data.migration.nobles_leave_city_this_year);
+    iob->bind(BIND_SIGNATURE_UINT16, &city_data.unused.unused_27d0_short);
+
+    for (int i = 0; i < 3; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_27e0[i]);
+    }
+    
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unknown_27f0);
     iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.last_used_warehouse);
-    for (int i = 0; i < 18; i++)
+    for (int i = 0; i < 18; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unknown_27f4[i]);
+    }
     iob->bind(BIND_SIGNATURE_UINT16, city_data.map.entry_point.private_access(_X));
     iob->bind(BIND_SIGNATURE_UINT16, city_data.map.entry_point.private_access(_Y));
     iob->bind(BIND_SIGNATURE_INT32, city_data.map.entry_point.private_access(_GRID_OFFSET));

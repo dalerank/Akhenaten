@@ -212,7 +212,7 @@ walker_sounds = [
  {type: "worker_low_entertainment", 										sound: "worker_g08.wav"},
  {type: "worker_city_is_good", 													sound: "worker_g09.wav"},
  {type: "worker_city_is_amazing", 											sound: "worker_g10.wav"},
- //
+ // engineer
  {type: "engineer_extreme_damage_level", 								sound: "engineer_e01.wav"},
  {type: "engineer_i_am_works", 													sound: "engineer_e02.wav"},
  {type: "engineer_high_damage_level", 									sound: "engineer_g01.wav"},
@@ -225,9 +225,10 @@ walker_sounds = [
  {type: "engineer_low_entertainment", 									sound: "engineer_g08.wav"},
  {type: "engineer_city_is_bad", 												sound: "engineer_g09.wav"},
  {type: "engineer_city_is_amazing", 										sound: "engineer_g10.wav"},
+ // governor
+ {type: "governor_city_left_much_nobles", 							sound: "governor_e01.WAV"},
+ {type: "governor_festival_was_near", 									sound: "governor_e02.wav"},
  //
- {type: "", sound: "library_g02.wav"},
- {type: "", sound: "library_g03.wav"},
  {type: "", sound: "library_g04.wav"},
  {type: "", sound: "library_g05.wav"},
  {type: "", sound: "library_g06.wav"},

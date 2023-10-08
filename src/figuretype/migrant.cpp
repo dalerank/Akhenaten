@@ -4,6 +4,7 @@
 #include "building/model.h"
 #include "city/map.h"
 #include "city/population.h"
+#include "city/city_data.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "core/profiler.h"
@@ -35,6 +36,10 @@ void figure_create_emigrant(building* house, int num_people) {
     }
 
     figure* f = figure_create(FIGURE_EMIGRANT, house->tile, DIR_0_TOP_RIGHT);
+    if (house->subtype.house_level >= HOUSE_SMALL_VILLA) {
+        city_migration_nobles_leave_city(num_people);
+    }
+
     f->action_state = FIGURE_ACTION_4_EMIGRANT_CREATED;
     f->wait_ticks = 0;
     f->migrant_num_people = num_people;

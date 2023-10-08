@@ -69,6 +69,7 @@ static void advance_year(void) {
     game_time_advance_year();
     city_population_request_yearly_update();
     city_finance_handle_year_change();
+    city_migration_advance_year();
     empire_city_reset_yearly_trade_amounts();
     building_maintenance_update_fire_direction();
     city_ratings_update(1);

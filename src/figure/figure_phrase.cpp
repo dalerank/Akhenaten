@@ -6,6 +6,7 @@
 #include "city/constants.h"
 #include "city/health.h"
 #include "city/houses.h"
+#include "city/data_private.h"
 #include "city/coverage.h"
 #include "city/figures.h"
 #include "city/gods.h"
@@ -654,6 +655,27 @@ static sound_key emigrant_phrase(figure *f) {
     return  "emigrant_all_good_in_city";
 }
 
+static sound_key governor_phrase(figure *f) {
+    int nobles_in_city = 0;
+    buildings_valid_do([&] (building &b) {
+        if (!b.house_size || !b.house_population || b.subtype.house_level < BUILDING_HOUSE_SMALL_VILLA) {
+            return;
+        }
+        nobles_in_city += b.house_population;
+    });
+
+    int nolbes_leave_city_pct = calc_percentage(city_data_struct()->migration.nobles_leave_city_this_year, nobles_in_city);
+    if (nolbes_leave_city_pct > 10) {
+        return "governor_city_left_much_nobles";
+    }
+
+    if (city_data_struct()->festival.months_since_festival < 6) {
+        return "governor_festival_was_near";
+    }
+
+    return {};
+}
+
 static sound_key labor_seeker_phrase(figure *f) {
     svector<sound_key, 10> keys;
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
@@ -828,6 +850,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     case FIGURE_JUGGLER: return juggler_phrase(f);
     case FIGURE_LABOR_SEEKER: return labor_seeker_phrase(f);
     case FIGURE_EMIGRANT: return emigrant_phrase(f);
+    case FIGURE_GOVERNOR: return governor_phrase(f);
     //        case FIGURE_TOWER_SENTRY:
     //            return tower_sentry_phrase(f);
     //        case FIGURE_FORT_JAVELIN:

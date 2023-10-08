@@ -83,7 +83,8 @@ enum e_figure_type : uint16_t {
     FIGURE_HUNTER_ARROW = 74,
     FIGURE_LUMBERJACK = 75,
     //
-    FIGURE_77, // TODO
+    FIGURE_76,
+    FIGURE_GOVERNOR, // TODO
     FIGURE_78, // TODO
     //
     FIGURE_CROCODILE = 82,

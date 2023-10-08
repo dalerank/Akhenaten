@@ -21,9 +21,11 @@
 
 static void button_graph(int param1, int param2);
 
-static generic_button graph_buttons[] = {{503, 61, 104, 55, button_graph, button_none, 0, 0},
-                                         {503, 161, 104, 55, button_graph, button_none, 1, 0},
-                                         {545, 260, 60, 51, button_graph, button_none, 0, 1}};
+static generic_button graph_buttons[] = {
+    {503, 61, 104, 55, button_graph, button_none, 0, 0},
+    {503, 161, 104, 55, button_graph, button_none, 1, 0},
+    {545, 260, 60, 51, button_graph, button_none, 0, 1}
+};
 
 static int focus_button_id;
 
@@ -342,7 +344,7 @@ static void print_history_info(void) {
     } else if (city_migration_percentage() < 80) {
         lang_text_draw(55, 25, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
         int text_id;
-        switch (city_migration_int()) {
+        switch (city_migration_problems_cause()) {
         case NO_IMMIGRATION_LOW_WAGES:
             text_id = 20;
             break;
@@ -566,6 +568,11 @@ static int get_tooltip_text(void) {
 }
 
 const advisor_window_type* window_advisor_population(void) {
-    static const advisor_window_type window = {draw_background, draw_foreground, handle_mouse, get_tooltip_text};
+    static const advisor_window_type window = {
+        draw_background,
+        draw_foreground,
+        handle_mouse,
+        get_tooltip_text
+    };
     return &window;
 }

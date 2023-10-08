@@ -212,6 +212,7 @@ struct city_data_t {
         int32_t newcomers;
         int32_t emigration_message_shown;
         int32_t percentage_by_sentiment;
+        uint16_t nobles_leave_city_this_year;
         bool migration_cap;
         bool invading_cap;
     } migration;
@@ -422,7 +423,8 @@ struct city_data_t {
         int8_t unknown_00a7;
         int32_t unknown_00c0;
         int32_t unused_27d0;
-        int32_t unknown_27e0[4];
+        uint16_t unused_27d0_short;
+        int32_t unknown_27e0[3];
         int16_t unknown_27f0;
         int16_t unknown_27f4[18];
         int16_t unknown_2828;

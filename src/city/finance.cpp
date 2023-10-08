@@ -18,6 +18,7 @@
 int city_finance_treasury(void) {
     return city_data.finance.treasury;
 }
+
 int city_finance_out_of_money(void) {
     return city_data.finance.treasury <= -5000;
 }
@@ -25,9 +26,11 @@ int city_finance_out_of_money(void) {
 int city_finance_tax_percentage(void) {
     return city_data.finance.tax_percentage;
 }
+
 void city_finance_change_tax_percentage(int change) {
     city_data.finance.tax_percentage = calc_bound(city_data.finance.tax_percentage + change, 0, 25);
 }
+
 int city_finance_percentage_taxed_people(void) {
     return city_data.taxes.percentage_taxed_people;
 }
@@ -35,9 +38,11 @@ int city_finance_percentage_taxed_people(void) {
 int city_finance_estimated_tax_income(void) {
     return city_data.finance.estimated_tax_income;
 }
+
 int city_finance_estimated_tax_uncollected(void) {
     return city_data.finance.estimated_tax_uncollected;
 }
+
 int city_finance_estimated_wages(void) {
     return city_data.finance.estimated_wages;
 }
@@ -46,6 +51,7 @@ void city_finance_process_import(int price) {
     city_data.finance.treasury -= price;
     city_data.finance.this_year.expenses.imports += price;
 }
+
 void city_finance_process_export(int price) {
     city_data.finance.treasury += price;
     city_data.finance.this_year.income.exports += price;
@@ -64,29 +70,35 @@ void city_finance_process_gold_extraction(int amount, figure *f) {
         city_data.finance.this_year.income.taxes += amount;
     }
 }
+
 void city_finance_process_cheat(void) {
     if (city_data.finance.treasury < 5000) {
         city_data.finance.treasury += 1000;
         city_data.finance.cheated_money += 1000;
     }
 }
+
 void city_finance_process_console(int amount) {
     city_data.finance.treasury += amount;
     city_data.finance.cheated_money += amount;
 }
+
 void city_finance_process_stolen(int stolen) {
     city_data.finance.treasury -= stolen;
     city_data.finance.stolen_this_year += stolen;
     city_data.finance.this_year.expenses.stolen += stolen;
 }
+
 void city_finance_process_donation(int amount) {
     city_data.finance.treasury += amount;
     city_data.finance.this_year.income.donated += amount;
 }
+
 void city_finance_process_requests_and_festivals(int cost) {
     city_data.finance.treasury -= cost;
     city_data.finance.this_year.expenses.requests_and_festivals += cost;
 }
+
 void city_finance_process_construction(int cost) {
     city_data.finance.treasury -= cost;
     city_data.finance.this_year.expenses.construction += cost;
@@ -95,6 +107,7 @@ void city_finance_process_construction(int cost) {
 void city_finance_update_interest(void) {
     city_data.finance.this_year.expenses.interest = city_data.finance.interest_so_far;
 }
+
 void city_finance_update_salary(void) {
     city_data.finance.this_year.expenses.salary = city_data.finance.salary_so_far;
 }

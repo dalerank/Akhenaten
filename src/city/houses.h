@@ -1,5 +1,4 @@
-#ifndef CITY_HOUSES_H
-#define CITY_HOUSES_H
+#pragma once
 
 struct house_demands {
     struct {
@@ -36,10 +35,6 @@ struct house_demands {
     int entertainment;
 };
 
-void city_houses_reset_demands(void);
-
-house_demands* city_houses_demands(void);
-
-void city_houses_calculate_culture_demands(void);
-
-#endif // CITY_HOUSES_H
+void city_houses_reset_demands();
+house_demands* city_houses_demands();
+void city_houses_calculate_culture_demands();
