@@ -577,8 +577,9 @@ void building::spawn_figure_magistrate() {
     common_spawn_roamer(FIGURE_MAGISTRATE, 50);
 }
 void building::spawn_figure_temple() {
-    if (is_main())
+    if (is_main()) {
         common_spawn_roamer(FIGURE_PRIEST, 50);
+    }
 }
 
 //void building::set_water_supply_graphic() {

@@ -79,7 +79,7 @@ void figure::set_target_height_bridge() {
     target_height = map_bridge_height(tile.grid_offset());
 }
 
-int figure::get_permission_for_int() {
+int figure::get_permission_for_figure() {
     switch (type) {
     case FIGURE_ENGINEER:
     case FIGURE_FIREMAN:
@@ -482,7 +482,7 @@ void figure::roam_ticks(int num_ticks) {
 
             int came_from_direction = (previous_tile_direction + 4) % 8;
             int road_tiles[8];
-            int permission = get_permission_for_int();
+            int permission = get_permission_for_figure();
             int adjacent_road_tiles = map_get_adjacent_road_tiles_for_roaming(tile.grid_offset(), road_tiles, permission);
             if (adjacent_road_tiles == 3 && map_get_diagonal_road_tiles_for_roaming(tile.grid_offset(), road_tiles) >= 5) {
                 // go in the straight direction of a double-wide road

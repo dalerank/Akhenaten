@@ -294,7 +294,7 @@ public:
     // movement.c
     void advance_figure_tick();
     void set_target_height_bridge();
-    int get_permission_for_int();
+    int get_permission_for_figure();
     void move_to_next_tile();
     void set_next_tile_and_direction();
     void advance_route_tile(int roaming_enabled);

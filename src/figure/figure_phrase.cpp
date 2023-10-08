@@ -55,11 +55,7 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_MUSICIAN, "musician"},
     {FIGURE_NONE, "pharaoh"},
     {FIGURE_POLICEMAN, "plice"},
-    {FIGURE_PRIEST, "priest_bast"},
-    {FIGURE_PRIEST, "priest_osiris"},
-    {FIGURE_PRIEST, "priest_ptah"},
-    {FIGURE_PRIEST, "priest_ra"},
-    {FIGURE_PRIEST, "priest_seth"},
+    {FIGURE_PRIEST, "priest_"},
     {FIGURE_REED_GATHERER, "reed"},
     {FIGURE_CRIMINAL, "robber"},
     {FIGURE_NONE, "scribe"},
@@ -373,12 +369,93 @@ static sound_key juggler_phrase(figure *f) {
         keys.push_back("juggler_low_entertainment");
     }
 
-    if (city_sentiment() > 50) {
+    if (city_sentiment() > 40) {
         keys.push_back("juggler_city_is_good");
     }
 
     if (city_sentiment() > 90) {
         keys.push_back("juggler_city_is_amazing");
+    }
+
+    int index = rand() % keys.size();
+    return keys[index];
+}
+
+static sound_key priest_phrase(figure *f) {
+    pcstr god_prefix = "unk";
+    e_god god;
+    switch (f->home()->type) {
+    case BUILDING_TEMPLE_OSIRIS: case BUILDING_TEMPLE_COMPLEX_OSIRIS: god = GOD_OSIRIS; god_prefix = "osiris"; break;
+    case BUILDING_TEMPLE_RA: case BUILDING_TEMPLE_COMPLEX_RA: god = GOD_RA; god_prefix = "ra"; break;
+    case BUILDING_TEMPLE_PTAH: case BUILDING_TEMPLE_COMPLEX_PTAH: god = GOD_PTAH;  god_prefix = "ptah"; break;
+    case BUILDING_TEMPLE_SETH: case BUILDING_TEMPLE_COMPLEX_SETH: god = GOD_SETH;  god_prefix = "seth"; break;
+    case BUILDING_TEMPLE_BAST: case BUILDING_TEMPLE_COMPLEX_BAST: god = GOD_BAST;  god_prefix = "bast"; break;
+    }
+
+    auto create_key = [&] (pcstr fmt) { return sound_key().printf("priest_%s_%s", god_prefix, fmt); };
+    int enemies = city_figures_enemies();
+    if (enemies > 0) {
+        return create_key("city_not_safety");
+    }
+
+    svector<sound_key, 10> keys;
+    if (city_god_months_since_festival(god) < 6) {
+        keys.push_back(create_key("god_love_festival"));
+    }
+
+    if (city_labor_workers_needed() >= 10) {
+        keys.push_back(create_key("need_workers"));
+    }
+
+    if (city_sentiment() < 30) {
+        keys.push_back(create_key("city_low_mood"));
+    }
+
+    const house_demands *demands = city_houses_demands();
+    if (demands->missing.more_entertainment > 1) {  // low entertainment
+        keys.push_back(create_key("low_entertainment"));
+    } else {
+        keys.push_back(create_key("need_entertainment"));
+    }
+
+    int houses_in_disease = 0;
+    buildings_valid_do([&] (building &b) {
+        if (!b.house_size || !b.house_population) {
+            return;
+        }
+        houses_in_disease = (b.disease_days > 0) ? 1 : 0;
+    });
+
+    if (houses_in_disease > 0) {
+        keys.push_back(create_key("disease_in_city"));
+    }
+
+    if (city_health() < 30) {
+        keys.push_back(create_key("city_low_health"));
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+        keys.push_back(create_key("no_food_in_city"));
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back(create_key("gods_are_angry"));
+    }
+
+    if (city_sentiment() < 30) {
+        keys.push_back(create_key("low_sentiment"));
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+        keys.push_back(create_key("much_unemployments"));
+    }
+
+    if (city_sentiment() > 40) {
+        keys.push_back(create_key("city_is_good"));
+    }
+
+    if (city_sentiment() > 90) {
+        keys.push_back(create_key("city_is_amazing"));
     }
 
     int index = rand() % keys.size();
@@ -648,6 +725,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     case FIGURE_CART_PUSHER: return cart_pusher_phrase(f);
     //        case FIGURE_WAREHOUSEMAN:
     //            return warehouseman_phrase(f);
+    case FIGURE_PRIEST: return priest_phrase(f);
     case FIGURE_FIREMAN: return fireman_phrase(f);
     case FIGURE_DANCER: return dancer_phrase(f);
     case FIGURE_MARKET_TRADER: return marker_trader_phrase(f);

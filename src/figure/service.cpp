@@ -358,18 +358,22 @@ int figure::figure_service_provide_coverage() {
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
             houses_serviced = provide_culture(tile, this, religion_coverage_osiris);
             break;
+
         case BUILDING_TEMPLE_RA:
         case BUILDING_TEMPLE_COMPLEX_RA:
             houses_serviced = provide_culture(tile, this, religion_coverage_ra);
             break;
+
         case BUILDING_TEMPLE_PTAH:
         case BUILDING_TEMPLE_COMPLEX_PTAH:
             houses_serviced = provide_culture(tile, this, religion_coverage_ptah);
             break;
+
         case BUILDING_TEMPLE_SETH:
         case BUILDING_TEMPLE_COMPLEX_SETH:
             houses_serviced = provide_culture(tile, this, religion_coverage_seth);
             break;
+
         case BUILDING_TEMPLE_BAST:
         case BUILDING_TEMPLE_COMPLEX_BAST:
             houses_serviced = provide_culture(tile, this, religion_coverage_bast);
