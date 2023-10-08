@@ -217,6 +217,60 @@ static int warehouseman_phrase() {
     return 0;
 }
 
+static sound_key dancer_phrase(figure *f) {
+    int enemies = city_figures_enemies();
+    if (enemies > 0) {
+        return "dancer_city_not_safety_workers_leaving";
+    }
+
+    svector<sound_key, 10> keys;
+    uint32_t months_since_last_festival = city_months_since_last_festival();
+    if (months_since_last_festival < 6) {
+        keys.push_back("dancer_i_like_festivals");
+    }
+
+    if (city_health() < 20) {
+        keys.push_back("dancer_desease_can_start_at_any_moment");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+        keys.push_back("dancer_no_food_in_city");
+    }
+
+    if (city_labor_workers_needed() >= 10) {
+        keys.push_back("dancer_need_workers");
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back("dancer_gods_are_angry");
+    } else {
+        keys.push_back("dancer_gods_are_pleasures");
+    }
+
+    if (city_sentiment() < 30) {
+        keys.push_back("dancer_city_is_bad");
+    }
+
+    if (city_sentiment() > 50) {
+        keys.push_back("dancer_city_is_good");
+    }
+
+    if (city_sentiment() > 90) {
+        keys.push_back("dancer_city_is_amazing");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_LOW_WAGES) {
+        keys.push_back("dancer_salary_too_low");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+        keys.push_back("dancer_much_unemployments");
+    }
+
+    int index = rand() % keys.size();
+    return keys[index];
+}
+
 static sound_key musician_phrase(figure *f) {
     int enemies = city_figures_enemies();
     if (enemies > 0) {
@@ -596,6 +650,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_WAREHOUSEMAN:
     //            return warehouseman_phrase(f);
     case FIGURE_FIREMAN: return fireman_phrase(f);
+    case FIGURE_DANCER: return dancer_phrase(f);
     //        case FIGURE_ENGINEER:
     //            return engineer_phrase(f);
     //        case FIGURE_PROTESTER:

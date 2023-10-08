@@ -20,7 +20,7 @@
 static void button_go_to_legion(int legion_id, int param2);
 static void button_return_to_fort(int legion_id, int param2);
 static void button_empire_service(int legion_id, int param2);
-static void on_scroll(void);
+static void on_scroll();
 
 static scrollbar_type scrollbar = {592, 70, 272, on_scroll};
 
