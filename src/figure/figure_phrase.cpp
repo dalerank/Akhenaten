@@ -104,15 +104,6 @@ static int tax_collector_phrase() {
     return 0;
 }
 
-static int market_trader_phrase() {
-    //    if (action_state == FIGURE_ACTION_126_ROAMER_RETURNING) {
-    //        if (building_market_get_max_food_stock(building_get(building_id)) <= 0)
-    //            return 9; // run out of goods
-    //
-    //    }
-    return 0;
-}
-
 static sound_key market_buyer_phrase(figure *f) {
     if (f->action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
         return "market_buyer_goto_store";
@@ -215,6 +206,14 @@ static int warehouseman_phrase() {
     //        }
     //    }
     return 0;
+}
+
+static sound_key marker_trader_phrase(figure *f) {
+    if (f->action_state == FIGURE_ACTION_126_ROAMER_RETURNING) {
+        return "market_seller_goods_are_finished";
+    } else {
+        return "market_seller_we_are_selling_goods";
+    }
 }
 
 static sound_key dancer_phrase(figure *f) {
@@ -651,6 +650,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //            return warehouseman_phrase(f);
     case FIGURE_FIREMAN: return fireman_phrase(f);
     case FIGURE_DANCER: return dancer_phrase(f);
+    case FIGURE_MARKET_TRADER: return marker_trader_phrase(f);
     //        case FIGURE_ENGINEER:
     //            return engineer_phrase(f);
     //        case FIGURE_PROTESTER:
