@@ -5,7 +5,7 @@
 
 struct figure_name_data_t {
     int32_t citizen_male;
-    int32_t patrician;
+    int32_t nobles;
     int32_t citizen_female;
     int32_t tax_collector;
     int32_t engineer;
@@ -37,7 +37,7 @@ static int32_t init_name(void) {
 void figure_name_init() {
     auto &data = g_figure_name_data;
     data.citizen_male = init_name();
-    data.patrician = init_name();
+    data.nobles = init_name();
     data.citizen_female = init_name();
     data.tax_collector = init_name();
     data.engineer = init_name();
@@ -119,8 +119,8 @@ int figure_name_get(int type, int enemy) {
     case FIGURE_LIBRARIAN:
     case FIGURE_EMBALMER:
     case FIGURE_PHYSICIAN:
-    case FIGURE_PATRICIAN:
-        return get_next_name(&data.patrician, 66, 32);
+    case FIGURE_NOBLES:
+        return get_next_name(&data.nobles, 66, 32);
 
     case FIGURE_FORT_ARCHER:
     case FIGURE_ENEMY_CAESAR_JAVELIN:
@@ -180,7 +180,7 @@ int figure_name_get(int type, int enemy) {
 io_buffer* iob_figure_names = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_figure_name_data;
     iob->bind(BIND_SIGNATURE_INT32, &data.citizen_male);
-    iob->bind(BIND_SIGNATURE_INT32, &data.patrician);
+    iob->bind(BIND_SIGNATURE_INT32, &data.nobles);
     iob->bind(BIND_SIGNATURE_INT32, &data.citizen_female);
     iob->bind(BIND_SIGNATURE_INT32, &data.tax_collector);
     iob->bind(BIND_SIGNATURE_INT32, &data.engineer);

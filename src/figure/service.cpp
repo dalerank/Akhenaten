@@ -300,7 +300,7 @@ int figure::figure_service_provide_coverage() {
     int none_service = 0;
     building* b;
     switch (type) {
-    case FIGURE_PATRICIAN:
+    case FIGURE_NOBLES:
         return 0;
     case FIGURE_LABOR_SEEKER:
         houses_serviced = provide_culture(tile, this, labor_seeker_coverage);

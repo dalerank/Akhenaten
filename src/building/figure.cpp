@@ -329,7 +329,7 @@ void building::spawn_figure_work_camp() {
 }
 
 bool building::spawn_patrician(bool spawned) {
-    return common_spawn_roamer(FIGURE_PATRICIAN, 50);
+    return common_spawn_roamer(FIGURE_NOBLES, 50);
 }
 
 void building::spawn_figure_engineers_post() {
