@@ -458,7 +458,10 @@ static int window_info_show_overlay(figure *f) {
     case FIGURE_FIREMAN: return OVERLAY_FIRE;
     case FIGURE_HERBALIST: return OVERLAY_APOTHECARY;
     case FIGURE_PHYSICIAN: return OVERLAY_PHYSICIAN;
+    case FIGURE_JUGGLER: return OVERLAY_BOOTH;
     }
+
+    return OVERLAY_NONE;
 }
 
 void window_building_play_figure_phrase(object_info* c) {
