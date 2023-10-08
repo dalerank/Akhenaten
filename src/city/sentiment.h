@@ -1,6 +1,6 @@
 #pragma once
 
-int city_sentiment(void);
+int city_sentiment();
 
 int city_sentiment_low_mood_cause();
 

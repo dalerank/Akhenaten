@@ -39,6 +39,7 @@ static void game_cheat_start_plague(uint8_t*);
 static void game_cheat_pop_milestone(uint8_t *);
 static void game_cheat_fire(uint8_t *);
 static void game_cheat_collapse(uint8_t *);
+static void game_cheat_nofire(uint8_t *);
 
 using cheat_command = void(uint8_t* args);
 
@@ -58,6 +59,7 @@ static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_mo
                                                   {"victory", game_cheat_victory},
                                                   {"popmilestone", game_cheat_pop_milestone},
                                                   {"fire", game_cheat_fire},
+                                                  {"nofire", game_cheat_nofire},
                                                   {"collapse", game_cheat_collapse}};
 
 struct cheats_data_t {
@@ -174,6 +176,12 @@ static void game_cheat_fire(uint8_t *args) {
     for (int i = 0; i < buildings.size(); i += step) {
         building_destroy_by_fire(buildings[i]);
     }
+}
+
+static void game_cheat_nofire(uint8_t *args) {
+    buildings_valid_do([&] (building &b) {
+        b.fire_risk = 0;
+    });
 }
 
 static void game_cheat_collapse(uint8_t *args) {

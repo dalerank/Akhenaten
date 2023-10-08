@@ -22,11 +22,6 @@
 
 #include <string.h>
 
-struct e_figure_sound {
-    e_figure_type type;
-    bstring32 prefix;
-};
-
 static e_figure_sound g_figure_sounds[] = {
     {FIGURE_HERBALIST, "apothecary"},
     {FIGURE_NONE, "artisan"},
@@ -118,7 +113,7 @@ static int market_trader_phrase() {
     return 0;
 }
 
-static bstring64 market_buyer_phrase(figure *f) {
+static sound_key market_buyer_phrase(figure *f) {
     if (f->action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
         return "market_buyer_goto_store";
     } else if (f->action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
@@ -128,13 +123,13 @@ static bstring64 market_buyer_phrase(figure *f) {
     return {};
 }
 
-static bstring64 physician_phrase(figure *f) {
+static sound_key physician_phrase(figure *f) {
     int enemies = city_figures_enemies();
     if (enemies > 10) {
         return "physician_enemies_in_city";
     }
 
-    svector<bstring64, 10> keys;
+    svector<sound_key, 10> keys;
     if (city_health() < 40) {
         keys.push_back(city_health() < 20
                        ? "physician_desease_can_start_at_any_moment"
@@ -174,8 +169,8 @@ static bstring64 physician_phrase(figure *f) {
     return keys[index];
 }
 
-static bstring64 immigrant_phrase(figure *f) {
-    svector<bstring64, 10> keys;
+static sound_key immigrant_phrase(figure *f) {
+    svector<sound_key, 10> keys;
     keys.push_back("immigrant_i_hope_i_need_here");
     keys.push_back("immigrant_i_heard_city_have_work_for_all");
     keys.push_back("immigrant_i_heard_city_have_cheap_food");
@@ -184,7 +179,7 @@ static bstring64 immigrant_phrase(figure *f) {
     return keys[index];
 }
 
-static bstring64 apothecary_phrase(figure *f) {
+static sound_key apothecary_phrase(figure *f) {
     if (f->service_values.apothecary_see_low_health > 0) {
         return "apothecary_have_malaria_risk_here";
     } else {
@@ -194,7 +189,7 @@ static bstring64 apothecary_phrase(figure *f) {
     return {};
 }
 
-static bstring64 cart_pusher_phrase(figure *f) {
+static sound_key cart_pusher_phrase(figure *f) {
     if (f->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL) {
         return "cartpusher_i_have_no_destination";
     }
@@ -222,29 +217,67 @@ static int warehouseman_phrase() {
     return 0;
 }
 
-static int prefect_phrase() {
-    //    if (++f->phrase_sequence_exact >= 4)
-    //        f->phrase_sequence_exact = 0;
-    //
-    //    if (f->action_state == FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE)
-    //        return 10;
-    //    else if (f->action_state == FIGURE_ACTION_75_PREFECT_AT_FIRE)
-    //        return 11 + (f->phrase_sequence_exact % 2);
-    //    else if (f->action_state == FIGURE_ACTION_150_ATTACK)
-    //        return 13 + f->phrase_sequence_exact;
-    //    else if (f->min_max_seen >= 50) {
-    //        // alternate between "no sign of crime around here" and the regular city phrases
-    //        if (f->phrase_sequence_exact % 2)
-    //            return 7;
-    //        else {
-    //            return 0;
-    //        }
-    //    } else if (f->min_max_seen >= 10)
-    //        return 8;
-    //    else {
-    //        return 9;
-    //    }
-    return 0;
+static sound_key fireman_phrase(figure *f) {
+    if (f->action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE) {
+        return "fireman_going_to_fire";
+    }
+    
+    svector<sound_key, 10> keys;
+    if (f->action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
+        keys.push_back("fireman_fighting_fire_also");
+        keys.push_back("fireman_fighting_fire");
+
+        int index = rand() % keys.size();
+        return keys[index];
+    }
+
+    if (city_health() < 20) {
+        keys.push_back("fireman_desease_can_start_at_any_moment");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+        keys.push_back("fireman_no_food_in_city");
+    }
+
+    int enemies = city_figures_enemies();
+    if (enemies > 0) {
+        keys.push_back("fireman_city_not_safety_workers_leaving");
+    }
+
+    if (city_labor_workers_needed() >= 10) {
+        keys.push_back("fireman_need_workers");
+    }
+
+    if (city_labor_workers_needed() >= 20) {
+        keys.push_back("fireman_need_more_workers");
+    }
+
+    int houses_risk_fire = 0;
+    buildings_valid_do([&] (building &b) {
+        houses_risk_fire = (b.fire_risk > 70) ? 1 : 0;
+    });
+
+    if (houses_risk_fire > 0) {
+        keys.push_back("fireman_hight_fire_level");
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back("fireman_gods_are_angry");
+    } else {
+        keys.push_back("fireman_gods_are_pleasures");
+    }
+
+    const house_demands *demands = city_houses_demands();
+    if (demands->missing.more_entertainment > 0) {  // low entertainment
+        keys.push_back("fireman_low_entertainment");
+    }
+
+    if (city_sentiment() > 90) {
+        keys.push_back("fireman_city_is_amazing");
+    }
+
+    int index = rand() % keys.size();
+    return keys[index];
 }
 
 static int engineer_phrase() {
@@ -274,7 +307,7 @@ static int house_seeker_phrase() {
     return 0;
 }
 
-static bstring64 emigrant_phrase(figure *f) {
+static sound_key emigrant_phrase(figure *f) {
     switch (city_sentiment_low_mood_cause()) {
     case LOW_MOOD_NO_JOBS: return "emigrant_no_job_in_city";
     case LOW_MOOD_NO_FOOD: return "emigrant_no_food_in_city";
@@ -290,8 +323,8 @@ static bstring64 emigrant_phrase(figure *f) {
     return  "emigrant_all_good_in_city";
 }
 
-static bstring64 labor_seeker(figure *f) {
-    svector<bstring64, 10> keys;
+static sound_key labor_seeker(figure *f) {
+    svector<sound_key, 10> keys;
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
         keys.push_back("laborseeker_no_jobs");
     }
@@ -367,12 +400,13 @@ static int tower_sentry_phrase() {
 
 static int soldier_phrase() {
     int enemies = city_figures_enemies();
-    if (enemies >= 40)
+    if (enemies >= 40) {
         return 11;
-    else if (enemies > 20)
+    } else if (enemies > 20) {
         return 10;
-    else if (enemies)
+    } else if (enemies) {
         return 9;
+    }
 
     return 0;
 }
@@ -429,7 +463,7 @@ static int trade_ship_phrase() {
     return 0;
 }
 
-static bstring64 phrase_based_on_figure_state(figure *f) {
+static sound_key phrase_based_on_figure_state(figure *f) {
     switch (f->type) {
     //        case FIGURE_LION_TAMER:
     //            return lion_tamer_phrase(f);
@@ -446,8 +480,7 @@ static bstring64 phrase_based_on_figure_state(figure *f) {
     case FIGURE_CART_PUSHER: return cart_pusher_phrase(f);
     //        case FIGURE_WAREHOUSEMAN:
     //            return warehouseman_phrase(f);
-    //        case FIGURE_PREFECT:
-    //            return prefect_phrase(f);
+    case FIGURE_FIREMAN: return fireman_phrase(f);
     //        case FIGURE_ENGINEER:
     //            return engineer_phrase(f);
     //        case FIGURE_PROTESTER:
@@ -480,7 +513,7 @@ static bstring64 phrase_based_on_figure_state(figure *f) {
     return {};
 }
 
-static bstring64 phrase_based_on_city_state() {
+static sound_key phrase_based_on_city_state() {
     //    f->phrase_sequence_city = 0;
     //    int god_state = city_god_state();
     //    int unemployment_pct = city_labor_unemployment_percentage();
@@ -515,7 +548,7 @@ static bstring64 phrase_based_on_city_state() {
     //    else {
     //        return 5;
     //    }
-    return bstring64();
+    return sound_key();
 }
 
 void figure::figure_phrase_determine() {

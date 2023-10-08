@@ -404,12 +404,13 @@ int figure::figure_service_provide_coverage() {
     case FIGURE_ENGINEER: {
         int max_damage = 0;
         houses_serviced = provide_service(tile, this, &max_damage, engineer_coverage);
-        if (max_damage > min_max_seen)
+        if (max_damage > min_max_seen) {
             min_max_seen = max_damage;
-        else if (min_max_seen <= 10)
+        } else if (min_max_seen <= 10) {
             min_max_seen = 0;
-        else
+        } else {
             min_max_seen -= 10;
+        }
         break;
     }
     case FIGURE_FIREMAN: {
