@@ -426,8 +426,8 @@ e_overlay building::get_overlay() const {
         case BUILDING_TEMPLE_BAST:
             return OVERLAY_RELIGION_BAST;
 
-        case BUILDING_ENGINEERS_POST:
-            return OVERLAY_DAMAGE;
+        case BUILDING_ENGINEERS_POST: return OVERLAY_DAMAGE;
+        case BUILDING_FIREHOUSE: return OVERLAY_FIRE;
     }
 
     return OVERLAY_NONE;
