@@ -246,10 +246,12 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             if (map_property_is_draw_tile(grid_offset)) {
                 debug_text(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_GREEN);
                 debug_text(str, x1, y + 10, 0, "", b->size, COLOR_WHITE);
-            } else
+            } else {
                 debug_text(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_RED);
-        } else if (!map_property_is_draw_tile(grid_offset))
+            }
+        } else if (!map_property_is_draw_tile(grid_offset)) {
             debug_text(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_BLUE);
+        }
         break;
 
     case e_debug_render_roads:                                                   // ROADS
@@ -258,9 +260,7 @@ void draw_debug_tile(vec2i pixel, map_point point) {
             debug_text(str, x0, y + 15, 0, "", b->road_access.y(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);
             if (b->has_road_access) {
                 auto tile_coords = mappoint_to_pixel(b->road_access);
-                draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23,
-                              tile_coords,
-                              COLOR_MASK_GREEN);
+                draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords, COLOR_MASK_GREEN);
             }
         }
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
@@ -927,6 +927,8 @@ void draw_debug_ui(int x, int y) {
 
     if (g_debug_show_opts[e_debug_show_migration]) {
         int cl = 180;
+        debug_text(str, x, y + 1, cl, "====================== migration ======================", 0);
+        y += 12;
         debug_text(str, x, y + 1, cl, "invading_cap:", city_data.migration.invading_cap);
         debug_text(str, x, y + 13, cl, "migration_cap:", city_data.migration.migration_cap);
         debug_text(str, x, y + 25, cl, "percentage_by_sentiment:", city_data.migration.percentage_by_sentiment);
@@ -943,7 +945,8 @@ void draw_debug_ui(int x, int y) {
         debug_text(str, x, y + 157, cl, "emigration_amount_per_batch:", city_data.migration.emigration_amount_per_batch);
         debug_text(str, x, y + 169, cl, "emigration_duration:", city_data.migration.emigration_duration);
         debug_text(str, x, y + 181, cl, "immigration_amount_per_batch:", city_data.migration.immigration_amount_per_batch);
-        y += 200;
+        debug_text(str, x, y + 193, cl, "nobles_leave_city_this_year:", city_data.migration.nobles_leave_city_this_year);
+        y += 212;
     }
 
     if (g_debug_show_opts[e_debug_show_sentiment]) {
