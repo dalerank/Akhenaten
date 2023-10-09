@@ -228,9 +228,10 @@ walker_sounds = [
  // governor
  {type: "governor_city_left_much_nobles", 							sound: "governor_e01.WAV"},
  {type: "governor_festival_was_near", 									sound: "governor_e02.wav"},
+ // hunter ostrich
+ {type: "hunterostrich_hunting", 												sound: "hunt_ostrich_e01.wav"},
+ {type: "hunterostrich_back", 													sound: "hunt_ostrich_e02.wav"},
  //
- {type: "", sound: "library_g04.wav"},
- {type: "", sound: "library_g05.wav"},
  {type: "", sound: "library_g06.wav"},
  {type: "", sound: "library_g07.wav"},
  {type: "", sound: "library_g08.wav"},

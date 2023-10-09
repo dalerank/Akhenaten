@@ -256,6 +256,14 @@ static sound_key marker_trader_phrase(figure *f) {
     }
 }
 
+static sound_key hunter_ostric_phrase(figure *f) {
+    if (f->action_state == ACTION_16_HUNTER_INVESTIGATE || f->action_state == ACTION_9_CHASE_PREY || f->action_state == ACTION_15_HUNTER_HUNT) {
+        return "hunterostrich_hunting";
+    } else {
+        return "hunterostrich_back";
+    }
+}
+
 static sound_key dancer_phrase(figure *f) {
     int enemies = city_figures_enemies();
     if (enemies > 0) {
@@ -836,6 +844,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     case FIGURE_FIREMAN: return fireman_phrase(f);
     case FIGURE_DANCER: return dancer_phrase(f);
     case FIGURE_MARKET_TRADER: return marker_trader_phrase(f);
+    case FIGURE_OSTRICH_HUNTER: return hunter_ostric_phrase(f);
     //        case FIGURE_ENGINEER:
     //            return engineer_phrase(f);
     //        case FIGURE_PROTESTER:
