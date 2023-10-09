@@ -221,6 +221,17 @@ static sound_key immigrant_phrase(figure *f) {
     return keys[index];
 }
 
+static sound_key deliverty_boy_phrase(figure *f) {
+    svector<sound_key, 10> keys;
+    keys.push_back("marketboy_those_baskets_too_heavy");
+    keys.push_back("marketboy_i_works_all_day");
+    keys.push_back("marketboy_upon_ill_be_market_owner");
+
+    int index = rand() % keys.size();
+    return keys[index];
+    
+}
+
 static sound_key apothecary_phrase(figure *f) {
     if (f->service_values.apothecary_see_low_health > 0) {
         return "apothecary_have_malaria_risk_here";
@@ -902,6 +913,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //            return tax_collector_phrase(f);
     //        case FIGURE_MARKET_TRADER:
     //            return market_trader_phrase(f);
+    case FIGURE_DELIVERY_BOY: return deliverty_boy_phrase(f);
     case FIGURE_IMMIGRANT: return immigrant_phrase(f);
     case FIGURE_HERBALIST: return apothecary_phrase(f);
     case FIGURE_MARKET_BUYER: return market_buyer_phrase(f);
