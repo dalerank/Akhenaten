@@ -194,7 +194,7 @@ int formation_has_low_morale(formation* m) {
     return m->months_low_morale || m->months_very_low_morale;
 }
 
-int formation_get_num_legions_cached(void) {
+int formation_get_num_forts_cached(void) {
     return g_formation_data.num_formations;
 }
 

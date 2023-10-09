@@ -200,10 +200,7 @@ static void draw_storage_yard(vec2i tile) {
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
             draw_building(image_id_hut, tile + VIEW_OFFSETS[i]);
-            ImageDraw::img_generic(image_id_hut + 17,
-                                   tile.x + VIEW_OFFSETS[i].x + corner_offset.x,
-                                   tile.y + VIEW_OFFSETS[i].y + corner_offset.y,
-                                   COLOR_MASK_GREEN);
+            ImageDraw::img_generic(image_id_hut + 17, tile.x + VIEW_OFFSETS[i].x + corner_offset.x, tile.y + VIEW_OFFSETS[i].y + corner_offset.y, COLOR_MASK_GREEN);
         } else {
             draw_building(image_id_space, tile + VIEW_OFFSETS[i] + place_offset);
         }
@@ -221,10 +218,11 @@ static void draw_farm(e_building_type type, vec2i tile, int grid_offset) {
     //} else if (GAME_ENV == ENGINE_ENV_PHARAOH)
     draw_farm_crops(type, 0, grid_offset, tile + vec2i{-60, 30}, COLOR_MASK_GREEN);
 }
+
 static void draw_fort(map_point* tile, vec2i pos) {
     bool fully_blocked = false;
     bool blocked = false;
-    if (formation_get_num_legions_cached() >= formation_get_max_legions() || city_finance_out_of_money()) {
+    if (formation_get_num_forts_cached() >= formation_get_max_forts() || city_finance_out_of_money()) {
         fully_blocked = true;
         blocked = true;
     }

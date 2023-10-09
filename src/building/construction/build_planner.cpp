@@ -1808,12 +1808,8 @@ void BuildPlanner::construction_update(map_point tile) {
     total_cost = current_cost;
     int global_rotation = building_rotation_global_rotation();
     if (building_is_fort(build_type)) {
-        if (formation_get_num_legions_cached() < 6) {
-            if (map_building_tiles_are_clear(x, y, 3, TERRAIN_ALL) && map_building_tiles_are_clear(
-                  x + FORT_X_OFFSET[global_rotation][city_view_orientation() / 2],
-                  y + FORT_Y_OFFSET[global_rotation][city_view_orientation() / 2],
-                  4,
-                  TERRAIN_ALL)) {
+        if (formation_get_num_forts_cached() < 6) {
+            if (map_building_tiles_are_clear(x, y, 3, TERRAIN_ALL) && map_building_tiles_are_clear(x + FORT_X_OFFSET[global_rotation][city_view_orientation() / 2], y + FORT_Y_OFFSET[global_rotation][city_view_orientation() / 2], 4, TERRAIN_ALL)) {
                 mark_construction(x, y, 3, 3, TERRAIN_ALL, false);
             }
         }

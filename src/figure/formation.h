@@ -130,15 +130,7 @@ void formation_clear(int formation_id);
 
 formation* formation_create_legion(int building_id, int x, int y, e_figure_type type);
 int formation_create_herd(e_figure_type figure_type, int x, int y, int num_animals);
-int formation_create_enemy(e_figure_type figure_type,
-                           int x,
-                           int y,
-                           int layout,
-                           int orientation,
-                           int enemy_type,
-                           int attack_type,
-                           int invasion_id,
-                           int invasion_sequence);
+int formation_create_enemy(e_figure_type figure_type, int x, int y, int layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence);
 
 formation* formation_get(int formation_id);
 
@@ -154,7 +146,7 @@ void formation_caesar_pause(void);
 
 void formation_caesar_retreat(void);
 
-int formation_get_num_legions_cached(void);
+int formation_get_num_forts_cached(void);
 void formation_calculate_legion_totals(void);
 
 int formation_get_num_forts();
