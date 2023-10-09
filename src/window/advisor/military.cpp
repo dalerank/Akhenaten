@@ -49,7 +49,7 @@ static int focus_button_id;
 static int num_legions;
 
 static void init() {
-    num_legions = formation_get_num_legions();
+    num_legions = formation_get_num_forts();
     scrollbar_init(&scrollbar, 0, num_legions - 6);
 }
 
@@ -157,7 +157,7 @@ static int draw_background(void) {
 
 static void draw_foreground(void) {
     scrollbar_draw(&scrollbar);
-    num_legions = formation_get_num_legions();
+    num_legions = formation_get_num_forts();
     for (int i = 0; i < 6 && i < num_legions; i++) {
         button_border_draw(384, 83 + 44 * i, 30, 30, focus_button_id == 3 * i + 1);
         button_border_draw(464, 83 + 44 * i, 30, 30, focus_button_id == 3 * i + 2);

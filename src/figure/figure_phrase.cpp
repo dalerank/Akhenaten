@@ -156,21 +156,57 @@ static sound_key worker_phrase(figure *f) {
 }
 
 static sound_key market_buyer_phrase(figure *f) {
+    svector<sound_key, 10> keys;
     if (f->action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
-        return "market_buyer_goto_store";
+        keys.push_back("market_buyer_goto_store");
     } else if (f->action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
-        return "market_buyer_back_to_market";
+        keys.push_back("market_buyer_back_to_market");
     } 
 
-    return {};
+    if (city_health() < 30) {
+        keys.push_back("market_buyer_city_has_low_health");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+        keys.push_back("market_buyer_no_food_in_city");
+    }
+
+    if (formation_get_num_forts() < 1) {
+        keys.push_back("market_buyer_city_have_no_army");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+        keys.push_back("market_buyer_much_unemployments");
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back("market_buyer_gods_are_angry");
+    }
+
+    if (city_rating_kingdom() < 30) {
+        keys.push_back("market_buyer_city_is_bad_reputation");
+    }
+
+    if (city_labor_unemployment_percentage() >= 15) {
+        keys.push_back("market_buyer_too_much_unemployments");
+    }
+
+    const house_demands *demands = city_houses_demands();
+    if (demands->missing.more_entertainment > 0) {  // low entertainment
+        keys.push_back("market_buyer_low_entertainment");
+    }
+
+    if (city_sentiment() > 90) {
+        keys.push_back("market_buyer_city_is_amazing");
+    } else if (city_sentiment() > 50) {
+        keys.push_back("market_buyer_city_is_good");
+    }
+
+    int index = rand() % keys.size();
+    return keys[index];
 }
 
 static sound_key physician_phrase(figure *f) {
-    int enemies = city_figures_enemies();
-    if (enemies > 10) {
-        return "physician_enemies_in_city";
-    }
-
     svector<sound_key, 10> keys;
     if (city_health() < 40) {
         keys.push_back(city_health() < 20
@@ -178,6 +214,10 @@ static sound_key physician_phrase(figure *f) {
                        : "physician_city_has_low_health");
     } else if (city_health() > 80) {
         keys.push_back("physician_city_very_healthy");
+    }
+
+    if (formation_get_num_forts() < 1) {
+        keys.push_back("physician_city_have_no_army");
     }
 
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
@@ -277,11 +317,6 @@ static sound_key hunter_ostric_phrase(figure *f) {
 }
 
 static sound_key dancer_phrase(figure *f) {
-    int enemies = city_figures_enemies();
-    if (enemies > 0) {
-        return "dancer_city_not_safety_workers_leaving";
-    }
-
     svector<sound_key, 10> keys;
     uint32_t months_since_last_festival = city_months_since_last_festival();
     if (months_since_last_festival < 6) {
@@ -290,6 +325,10 @@ static sound_key dancer_phrase(figure *f) {
 
     if (city_health() < 20) {
         keys.push_back("dancer_desease_can_start_at_any_moment");
+    }
+
+    if (formation_get_num_forts() < 1) {
+        keys.push_back("dancer_city_not_safety_workers_leaving");
     }
 
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
@@ -306,7 +345,7 @@ static sound_key dancer_phrase(figure *f) {
         keys.push_back("dancer_gods_are_pleasures");
     }
 
-    if (city_sentiment() < 30) {
+    if (city_rating_kingdom() < 30) {
         keys.push_back("dancer_city_is_bad");
     }
 
@@ -331,11 +370,6 @@ static sound_key dancer_phrase(figure *f) {
 }
 
 static sound_key magistrate_phrase(figure *f) {
-    int enemies = city_figures_enemies();
-    if (enemies > 0) {
-        return "magistrate_city_not_safety";
-    }
-
     int houses_in_disease = 0;
     buildings_valid_do([&] (building &b) {
         if (!b.house_size || !b.house_population) {
@@ -352,6 +386,10 @@ static sound_key magistrate_phrase(figure *f) {
     int criminals = city_sentiment_criminals();
     if (criminals <= 0) {
         keys.push_back("magistrate_no_criminals_in_city");
+    }
+
+    if (formation_get_num_forts() < 1) {
+        keys.push_back("magistrate_city_not_safety");
     }
 
     if (city_labor_workers_needed() >= 10) {
@@ -398,15 +436,14 @@ static sound_key magistrate_phrase(figure *f) {
 }
 
 static sound_key musician_phrase(figure *f) {
-    int enemies = city_figures_enemies();
-    if (enemies > 0) {
-        return "musician_city_not_safety_workers_leaving";
-    }
-
     svector<sound_key, 10> keys;
     uint32_t months_since_last_festival = city_months_since_last_festival();
     if (months_since_last_festival < 6) {
         keys.push_back("musician_i_like_festivals");
+    }
+
+    if (formation_get_num_forts() < 1) {
+        keys.push_back("musician_city_not_safety_workers_leaving");
     }
 
     if (city_health() < 40) {
@@ -523,13 +560,13 @@ static sound_key priest_phrase(figure *f) {
     case BUILDING_TEMPLE_BAST: case BUILDING_TEMPLE_COMPLEX_BAST: god = GOD_BAST;  god_prefix = "bast"; break;
     }
 
+    svector<sound_key, 10> keys;
     auto create_key = [&] (pcstr fmt) { return sound_key().printf("priest_%s_%s", god_prefix, fmt); };
-    int enemies = city_figures_enemies();
-    if (enemies > 0) {
-        return create_key("city_not_safety");
+
+    if (formation_get_num_forts() < 1) {
+        keys.push_back(create_key("city_not_safety"));
     }
 
-    svector<sound_key, 10> keys;
     if (city_god_months_since_festival(god) < 6) {
         keys.push_back(create_key("god_love_festival"));
     }
@@ -573,7 +610,7 @@ static sound_key priest_phrase(figure *f) {
         keys.push_back(create_key("gods_are_angry"));
     }
 
-    if (city_sentiment() < 30) {
+    if (city_rating_kingdom() < 30) {
         keys.push_back(create_key("low_sentiment"));
     }
 
@@ -615,8 +652,7 @@ static sound_key fireman_phrase(figure *f) {
         keys.push_back("fireman_no_food_in_city");
     }
 
-    int enemies = city_figures_enemies();
-    if (enemies > 0) {
+    if (formation_get_num_forts() < 1) {
         keys.push_back("fireman_city_not_safety_workers_leaving");
     }
 
@@ -657,11 +693,6 @@ static sound_key fireman_phrase(figure *f) {
 }
 
 static sound_key engineer_phrase(figure *f) {
-    int enemies = city_figures_enemies();
-    if (enemies > 0) {
-        return "engineer_city_not_safety";
-    }
-
     svector<sound_key, 10> keys;
 
     int houses_damage_risk = 0;
@@ -673,6 +704,10 @@ static sound_key engineer_phrase(figure *f) {
 
     if (houses_damage_risk > 0) {
         keys.push_back("engineer_extreme_damage_level");
+    }
+
+    if (formation_get_num_forts() < 0) {
+        keys.push_back("engineer_city_not_safety");
     }
 
     if (hoeses_damage_high > 0) {
@@ -793,8 +828,7 @@ static sound_key labor_seeker_phrase(figure *f) {
         keys.push_back("laborseeker_disease_in_city");
     }
 
-    int enemies = city_figures_enemies();
-    if (enemies > 0) {
+    if (formation_get_num_forts() < 1) {
         keys.push_back("laborseeker_city_not_safety_workers_leaving");
     }
 

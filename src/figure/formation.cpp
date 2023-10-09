@@ -221,7 +221,7 @@ void formation_calculate_legion_totals(void) {
     }
 }
 
-int formation_get_num_legions(void) {
+int formation_get_num_forts() {
     int total = 0;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         if (g_formations[i].in_use && g_formations[i].is_legion)
@@ -230,7 +230,7 @@ int formation_get_num_legions(void) {
     return total;
 }
 
-int formation_get_max_legions(void) {
+int formation_get_max_forts() {
     if (config_get(CONFIG_GP_CH_EXTRA_FORTS))
         return MAX_LEGIONS + 4;
     else {
