@@ -375,7 +375,6 @@ const int* map_grid_adjacent_offsets_xy(int sizex, int sizey) {
         }
 
         offsets_array[i] = GRID_OFFSET(x, y);
-        break;
 
         if (i == array_size)
             offsets_array[i] = 0;
