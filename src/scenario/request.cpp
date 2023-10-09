@@ -113,14 +113,14 @@ void scenario_request_dispatch(int id) {
 
 int scenario_requests_active_count() {
     int count = 0;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 0; i < MAX_REQUESTS; i++) {
-            if (g_scenario_data.requests[i].resource && g_scenario_data.requests[i].visible
-                && g_scenario_data.requests[i].state <= 1) {
-                count++;
-            }
-        }
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    //if (GAME_ENV == ENGINE_ENV_C3) {
+    //    for (int i = 0; i < MAX_REQUESTS; i++) {
+    //        if (g_scenario_data.requests[i].resource && g_scenario_data.requests[i].visible
+    //            && g_scenario_data.requests[i].state <= 1) {
+    //            count++;
+    //        }
+    //    }
+    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         for (int i = 0; i < get_scenario_events_num(); i++) {
             const event_ph_t* event = get_scenario_event(i);
             if (event->type == EVENT_TYPE_REQUEST && event->is_active != 0
@@ -128,39 +128,33 @@ int scenario_requests_active_count() {
                 count++;
             }
         }
-    }
+    //}
     return count;
 }
 
 const scenario_request* scenario_request_get(int id) {
     static scenario_request request;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        request.id = id;
-        request.amount = g_scenario_data.requests[id].amount;
-        request.resource = g_scenario_data.requests[id].resource;
-        request.state = g_scenario_data.requests[id].state;
-        request.months_to_comply = g_scenario_data.requests[id].months_to_comply;
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        request.id = id;
-        auto event = get_scenario_event(id);
-        request.amount = event->amount_fields[0];
-        request.resource = event->item_fields[0];
-        request.state = event->event_state;
-        request.months_to_comply = event->quest_months_left;
-    }
+
+    request.id = id;
+    auto event = get_scenario_event(id);
+    request.amount = event->amount_fields[0];
+    request.resource = event->item_fields[0];
+    request.state = event->event_state;
+    request.months_to_comply = event->quest_months_left;
+
     return &request;
 }
 const scenario_request* scenario_request_get_visible(int index) {
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 0; i < MAX_REQUESTS; i++) {
-            if (g_scenario_data.requests[i].resource && g_scenario_data.requests[i].visible
-                && g_scenario_data.requests[i].state <= 1) {
-                if (index == 0)
-                    return scenario_request_get(i);
-                index--; // I have no idea
-            }
-        }
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    //if (GAME_ENV == ENGINE_ENV_C3) {
+    //    for (int i = 0; i < MAX_REQUESTS; i++) {
+    //        if (g_scenario_data.requests[i].resource && g_scenario_data.requests[i].visible
+    //            && g_scenario_data.requests[i].state <= 1) {
+    //            if (index == 0)
+    //                return scenario_request_get(i);
+    //            index--; // I have no idea
+    //        }
+    //    }
+    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         int event_index = -1;
         for (int i = 0; i < MAX_REQUESTS; i++) {
             const event_ph_t* event;
@@ -177,20 +171,20 @@ const scenario_request* scenario_request_get_visible(int index) {
                 index--;
             }
         }
-    }
+    //}
     return 0;
 }
 
 int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request* request)) {
     int index = start_index;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 0; i < MAX_REQUESTS; i++) {
-            if (g_scenario_data.requests[i].resource && g_scenario_data.requests[i].visible) {
-                callback(index, scenario_request_get(i));
-                index++;
-            }
-        }
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    //if (GAME_ENV == ENGINE_ENV_C3) {
+    //    for (int i = 0; i < MAX_REQUESTS; i++) {
+    //        if (g_scenario_data.requests[i].resource && g_scenario_data.requests[i].visible) {
+    //            callback(index, scenario_request_get(i));
+    //            index++;
+    //        }
+    //    }
+    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         for (int i = 0; i < MAX_REQUESTS; i++) {
             auto request = scenario_request_get_visible(i);
             if (request) {
@@ -198,6 +192,6 @@ int scenario_request_foreach_visible(int start_index, void (*callback)(int index
                 index++;
             }
         }
-    }
+    //}
     return index;
 }

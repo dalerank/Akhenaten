@@ -84,11 +84,8 @@ int editor_tool_can_place_access_ramp(map_point tile, int* orientation_index) {
         int top_elevation = 0;
         for (int index = 0; index < 6; index++) {
             int tile_offset = tile.grid_offset(); // + ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION[orientation][index];
-            switch (GAME_ENV) {
-            case ENGINE_ENV_PHARAOH:
-                tile_offset += ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_PH[orientation][index];
-                break;
-            }
+            tile_offset += ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_PH[orientation][index];
+
             int elevation = map_elevation_at(tile_offset);
             if (index < 2) {
                 if (map_terrain_is(tile_offset, TERRAIN_ELEVATION))
@@ -133,11 +130,8 @@ int editor_tool_can_place_building(map_point tile, int num_tiles, int* blocked_t
     bool blocked = false;
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = tile.grid_offset(); // + TILE_GRID_OFFSETS[i];
-        switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH:
-            tile_offset += TILE_GRID_OFFSETS_PH[i];
-            break;
-        }
+        tile_offset += TILE_GRID_OFFSETS_PH[i];
+
         int forbidden_terrain = map_terrain_get(tile_offset) & TERRAIN_NOT_CLEAR;
         if (forbidden_terrain || map_has_figure_at(tile_offset)) {
             blocked = true;

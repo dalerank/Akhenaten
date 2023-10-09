@@ -79,27 +79,27 @@ void city_festival_schedule(void) {
 }
 
 static void throw_party(void) {
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        for (int i = 1; i < MAX_BUILDINGS; i++) {
-            building* b = building_get(i);
-            if (b->state != BUILDING_STATE_VALID)
-                continue;
-            switch (b->type) {
-            case BUILDING_TEMPLE_OSIRIS:
-            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-            case BUILDING_TEMPLE_RA:
-            case BUILDING_TEMPLE_COMPLEX_RA:
-            case BUILDING_TEMPLE_PTAH:
-            case BUILDING_TEMPLE_COMPLEX_PTAH:
-            case BUILDING_TEMPLE_SETH:
-            case BUILDING_TEMPLE_COMPLEX_SETH:
-            case BUILDING_TEMPLE_BAST:
-            case BUILDING_TEMPLE_COMPLEX_BAST:
-            case BUILDING_JUGGLER_SCHOOL:
-            case BUILDING_CONSERVATORY:
-            case BUILDING_DANCE_SCHOOL: { // this actually doesn't happen in Pharaoh?
-                                          //                    if (b->has_figure(0))
-                                          //                        b->remove_figure(0);
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building* b = building_get(i);
+        if (b->state != BUILDING_STATE_VALID)
+            continue;
+
+        switch (b->type) {
+        case BUILDING_TEMPLE_OSIRIS:
+        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+        case BUILDING_TEMPLE_RA:
+        case BUILDING_TEMPLE_COMPLEX_RA:
+        case BUILDING_TEMPLE_PTAH:
+        case BUILDING_TEMPLE_COMPLEX_PTAH:
+        case BUILDING_TEMPLE_SETH:
+        case BUILDING_TEMPLE_COMPLEX_SETH:
+        case BUILDING_TEMPLE_BAST:
+        case BUILDING_TEMPLE_COMPLEX_BAST:
+        case BUILDING_JUGGLER_SCHOOL:
+        case BUILDING_CONSERVATORY:
+        case BUILDING_DANCE_SCHOOL: { // this actually doesn't happen in Pharaoh?
+                                      //                    if (b->has_figure(0))
+                                      //                        b->remove_figure(0);
                 figure* f = b->create_figure_generic(FIGURE_FESTIVAL_PRIEST, 10, 2, DIR_4_BOTTOM_LEFT);
                 f->festival_remaining_dances = 10;
 
@@ -109,7 +109,6 @@ static void throw_party(void) {
                 f->do_goto(festival, TERRAIN_USAGE_ROADS, 10);
 
                 break;
-            }
             }
         }
     }

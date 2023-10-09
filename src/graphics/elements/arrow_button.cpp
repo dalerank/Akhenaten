@@ -13,15 +13,15 @@ static const unsigned int BUTTON_PRESSED_FRAMES = 3;
 void arrow_buttons_draw(int x, int y, arrow_button* buttons, int num_buttons, bool tiny) {
     for (int i = 0; i < num_buttons; i++) {
         int image_id = 0;
-        if (tiny)
+        if (tiny) {
             image_id = image_id_from_group(GROUP_TINY_ARROWS) + buttons[i].image_id;
-        else
+        } else {
             image_id = image_id_from_group(GROUP_SYSTEM_GRAPHICS) + buttons[i].image_id;
+        }
 
-        if (GAME_ENV == ENGINE_ENV_C3 && buttons[i].pressed)
+        if (!buttons[i].pressed) {
             image_id += 1;
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH && !buttons[i].pressed)
-            image_id += 1;
+        }
 
         ImageDraw::img_generic(image_id, x + buttons[i].x_offset, y + buttons[i].y_offset);
     }

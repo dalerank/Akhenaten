@@ -374,11 +374,8 @@ const int* map_grid_adjacent_offsets_xy(int sizex, int sizey) {
             y = sizey - (i % (sizey + 1)) - 1;
         }
 
-        switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH:
-            offsets_array[i] = GRID_OFFSET(x, y);
-            break;
-        }
+        offsets_array[i] = GRID_OFFSET(x, y);
+        break;
 
         if (i == array_size)
             offsets_array[i] = 0;

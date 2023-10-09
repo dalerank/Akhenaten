@@ -11,12 +11,8 @@ const char* pref_filename;
 void init_game_environment(int env) {
     assert(env != ENGINE_ENV_MAX);
     GAME_ENV = env;
-    switch (env) {
-    case ENGINE_ENV_PHARAOH:
-        game_name = "Ozymandias";
-        pref_filename = "data_dir_pharaoh.txt";
-        break;
-    }
+    game_name = "Ozymandias";
+    pref_filename = "data_dir_pharaoh.txt";
     logs::info("Engine set to %s", game_name);
 }
 void assert_env_init() {

@@ -58,30 +58,28 @@ int building_storage_create(int building_type) {
             data.storages[i].in_use = 1;
 
             // default settings for Pharaoh
-            if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                for (int r = 0; r < 36; r++) {
-                    data.storages[i].storage.resource_state[r] = STORAGE_STATE_PHARAOH_REFUSE;
-                    data.storages[i].storage.resource_max_accept[r] = 3200;
-                    data.storages[i].storage.resource_max_get[r] = 3200;
-                }
-                const resources_list* list = city_resource_get_available();
-                for (int r = 0; r < list->size; r++) {
-                    int resource = list->items[r];
-                    switch (building_type) {
-                    case BUILDING_STORAGE_YARD:
-                    case BUILDING_STORAGE_YARD_SPACE:
-                        if (resource < 9)
-                            data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_REFUSE;
-                        else
-                            data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_ACCEPT;
-                        break;
-                    case BUILDING_GRANARY:
-                        if (resource < 9)
-                            data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_ACCEPT;
-                        else
-                            data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_REFUSE;
-                        break;
-                    }
+            for (int r = 0; r < 36; r++) {
+                data.storages[i].storage.resource_state[r] = STORAGE_STATE_PHARAOH_REFUSE;
+                data.storages[i].storage.resource_max_accept[r] = 3200;
+                data.storages[i].storage.resource_max_get[r] = 3200;
+            }
+            const resources_list* list = city_resource_get_available();
+            for (int r = 0; r < list->size; r++) {
+                int resource = list->items[r];
+                switch (building_type) {
+                case BUILDING_STORAGE_YARD:
+                case BUILDING_STORAGE_YARD_SPACE:
+                    if (resource < 9)
+                        data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_REFUSE;
+                    else
+                        data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_ACCEPT;
+                    break;
+                case BUILDING_GRANARY:
+                    if (resource < 9)
+                        data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_ACCEPT;
+                    else
+                        data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_REFUSE;
+                    break;
                 }
             }
             return i;

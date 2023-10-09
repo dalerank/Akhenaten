@@ -132,26 +132,23 @@ bool model_load_file(const char* filepath,
 
 bool model_load(void) {
     auto& data = g_model_data;
-    switch (GAME_ENV) {
-    case ENGINE_ENV_PHARAOH: {
-        if (!model_load_file("Pharaoh_Model_VeryEasy.txt", 237, 20, data.buildings[0], data.houses[0])) {
-            return false;
-        }
-        if (!model_load_file("Pharaoh_Model_Easy.txt", 237, 20, data.buildings[1], data.houses[1])) {
-            return false;
-        }
-        if (!model_load_file("Pharaoh_Model_Normal.txt", 237, 20, data.buildings[2], data.houses[2])) {
-            return false;
-        }
-        if (!model_load_file("Pharaoh_Model_Hard.txt", 237, 20, data.buildings[3], data.houses[3])) {
-            return false;
-        }
-        if (!model_load_file("Pharaoh_Model_Impossible.txt", 237, 20, data.buildings[4], data.houses[4])) {
-            return false;
-        }
-        break;
+
+    if (!model_load_file("Pharaoh_Model_VeryEasy.txt", 237, 20, data.buildings[0], data.houses[0])) {
+        return false;
     }
+    if (!model_load_file("Pharaoh_Model_Easy.txt", 237, 20, data.buildings[1], data.houses[1])) {
+        return false;
     }
+    if (!model_load_file("Pharaoh_Model_Normal.txt", 237, 20, data.buildings[2], data.houses[2])) {
+        return false;
+    }
+    if (!model_load_file("Pharaoh_Model_Hard.txt", 237, 20, data.buildings[3], data.houses[3])) {
+        return false;
+    }
+    if (!model_load_file("Pharaoh_Model_Impossible.txt", 237, 20, data.buildings[4], data.houses[4])) {
+        return false;
+    }
+
     return true;
 }
 

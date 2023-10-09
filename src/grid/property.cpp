@@ -96,19 +96,12 @@ int map_property_multi_tile_size(int grid_offset) {
 void map_property_set_multi_tile_size(int grid_offset, int size) {
     map_grid_and(&bitfields_grid, grid_offset, BIT_NO_SIZES);
 
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        if (size < 2)
-            size = 2;
-        if (size > 5)
-            size = 5;
-        map_grid_or(&bitfields_grid, grid_offset, size - 1);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (size < 1)
-            size = 1;
-        if (size > 6)
-            size = 6;
-        map_grid_or(&bitfields_grid, grid_offset, size - 1);
-    }
+    if (size < 1)
+        size = 1;
+
+    if (size > 6)
+        size = 6;
+    map_grid_or(&bitfields_grid, grid_offset, size - 1);
 }
 
 void map_property_init_alternate_terrain(void) {

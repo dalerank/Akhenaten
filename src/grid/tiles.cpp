@@ -710,23 +710,22 @@ int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain
         road_dir_right = city_view_relative_orientation(road_dir_right) % 2;
         bool is_paved = map_tiles_is_paved_road(grid_offset);
 
-        switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH:
-            if (road_dir_right) // left/right offset is opposite from C3
-                image_offset = 0;
-            else
-                image_offset = 1;
-            if (is_paved) {
-                floodplains_offset = 0; // no floodplains version for paved roads
-                image_offset += 42;
-            } else
-                image_offset += 15;
-        }
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (image_offset <= 3)
+
+        if (road_dir_right) // left/right offset is opposite from C3
+            image_offset = 0;
+        else
+            image_offset = 1;
+        if (is_paved) {
+            floodplains_offset = 0; // no floodplains version for paved roads
+            image_offset += 42;
+        } else
+            image_offset += 15;
+    } else {
+        if (image_offset <= 3) {
             image_offset = !(image_offset - 2);
-        else if (image_offset <= 7)
+        } else if (image_offset <= 7) {
             image_offset -= 2;
+        }
     }
     // TODO: canals disappearing into the Nile river --- good luck with that!
     return image_id_from_group(GROUP_BUILDING_AQUEDUCT) + water_offset + floodplains_offset + image_offset;
@@ -1280,11 +1279,7 @@ static int get_access_ramp_image_offset(int x, int y) {
         for (int i = 0; i < 6; i++) {
             int grid_offset = base_offset;
 
-            switch (GAME_ENV) {
-            case ENGINE_ENV_PHARAOH:
-                grid_offset += offsets_PH[dir][i];
-                break;
-            }
+            grid_offset += offsets_PH[dir][i];
 
             if (i < 2) { // 2nd row
                 if (map_terrain_is(grid_offset, TERRAIN_ELEVATION))
