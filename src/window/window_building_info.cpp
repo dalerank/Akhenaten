@@ -448,11 +448,7 @@ static void init(map_point tile) {
             //                break;
         default:
             context.show_overlay = b->get_overlay();
-            if (b->has_road_access)
-                context.has_road_access = 1;
-            //                if (map_has_road_access(b->tile.x(), b->tile.y(), b->size, 0))
-            //                    context.has_road_access = 1;
-
+            context.has_road_access = b->has_road_access;
             break;
         }
     }

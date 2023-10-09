@@ -1335,24 +1335,30 @@ bool building::figure_generate() {
         case BUILDING_HENNA_FARM:
             spawn_figure_farms();
             break;
+
         case BUILDING_MENU_FORTS:
             formation_legion_update_recruit_status(this);
             break;
+
         case BUILDING_RECRUITER:
             spawn_figure_barracks();
             break;
+
         case BUILDING_VILLAGE_PALACE:
         case BUILDING_TOWN_PALACE:
         case BUILDING_CITY_PALACE:
         case BUILDING_MILITARY_ACADEMY:
             common_spawn_figure_trigger(100);
             break;
+
         case BUILDING_HUNTING_LODGE:
             spawn_figure_hunting_lodge();
             break;
+
         case BUILDING_WORK_CAMP:
             spawn_figure_work_camp();
             break;
+
         case BUILDING_COURTHOUSE:
             spawn_figure_magistrate();
             break;

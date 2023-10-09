@@ -5,6 +5,7 @@
 #include "city/floods.h"
 #include "city/constants.h"
 #include "city/health.h"
+#include "city/ratings.h"
 #include "city/houses.h"
 #include "city/data_private.h"
 #include "city/coverage.h"
@@ -313,6 +314,73 @@ static sound_key dancer_phrase(figure *f) {
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
         keys.push_back("dancer_much_unemployments");
     }
+
+    int index = rand() % keys.size();
+    return keys[index];
+}
+
+static sound_key magistrate_phrase(figure *f) {
+    int enemies = city_figures_enemies();
+    if (enemies > 0) {
+        return "magistrate_city_not_safety";
+    }
+
+    int houses_in_disease = 0;
+    buildings_valid_do([&] (building &b) {
+        if (!b.house_size || !b.house_population) {
+            return;
+        }
+        houses_in_disease = (b.disease_days > 0) ? 1 : 0;
+    });
+
+    if (houses_in_disease > 0) {
+        return "magistrate_disease_in_city";
+    }
+
+    svector<sound_key, 10> keys;
+    int criminals = city_sentiment_criminals();
+    if (criminals <= 0) {
+        keys.push_back("magistrate_no_criminals_in_city");
+    }
+
+    if (city_labor_workers_needed() >= 10) {
+        keys.push_back("magistrate_need_workers");
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back("magistrate_gods_are_angry");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+        keys.push_back("magistrate_no_food_in_city");
+    }
+
+    if (city_rating_kingdom() < 10) {
+        keys.push_back("magistrate_city_bad_reputation");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+        keys.push_back("magistrate_much_unemployments");
+    }
+
+    const house_demands *demands = city_houses_demands();
+    if (demands->missing.more_entertainment > 0) {
+        keys.push_back("magistrate_no_entertainment_need");
+    }
+
+    if (city_sentiment() > 90) {
+        keys.push_back("magistrate_city_is_amazing");
+    } else if (city_sentiment() > 30) {
+        keys.push_back("magistrate_city_not_bad");
+    }
+
+    if (f->min_max_seen > 60) {
+        keys.push_back("magistrate_all_good_in_city");
+    } else {
+        keys.push_back("magistrate_streets_still_arent_safety");
+    }
+
+    keys.push_back("magistrate_i_hope_we_are_ready");
 
     int index = rand() % keys.size();
     return keys[index];
@@ -845,6 +913,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     case FIGURE_DANCER: return dancer_phrase(f);
     case FIGURE_MARKET_TRADER: return marker_trader_phrase(f);
     case FIGURE_OSTRICH_HUNTER: return hunter_ostric_phrase(f);
+    case FIGURE_MAGISTRATE: return magistrate_phrase(f);
     //        case FIGURE_ENGINEER:
     //            return engineer_phrase(f);
     //        case FIGURE_PROTESTER:

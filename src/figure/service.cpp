@@ -444,11 +444,13 @@ int figure::figure_service_provide_coverage() {
 
         break;
     }
+
     if (has_home()) {
         b = home()->main();
         b->houses_covered += houses_serviced;
         if (b->houses_covered >= 300)
             b->houses_covered = 300;
     }
+
     return 0;
 }
