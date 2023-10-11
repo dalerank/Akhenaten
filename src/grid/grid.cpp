@@ -1,8 +1,11 @@
 #include "grid.h"
 
-#include <string.h>
-
 #include "scenario/scenario_data.h"
+#include "core/game_environment.h"
+
+#include <string.h>
+#include <cassert>
+#include <stdlib.h>
 
 static const int DIRECTION_DELTA_PH[] = {-GRID_OFFSET(0, 1),
                                          GRID_OFFSET(1, -1),
@@ -12,10 +15,6 @@ static const int DIRECTION_DELTA_PH[] = {-GRID_OFFSET(0, 1),
                                          GRID_OFFSET(-1, 1),
                                          -1,
                                          -GRID_OFFSET(1, 1)};
-
-#include "core/game_environment.h"
-#include <cassert>
-#include <stdlib.h>
 
 void map_grid_init(grid_xx* grid) {
     grid->size_field = gr_sizes[grid->datatype[GAME_ENV]];
