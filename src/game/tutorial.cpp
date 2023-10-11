@@ -350,7 +350,7 @@ void tutorial_on_religion() {
 }
 
 void tutorial_on_house_evolve(e_house_level level) {
-    if (!g_tutorials_flags.tutorial_5.spacious_apartment && level == HOUSE_MEDIUM_INSULA) {
+    if (!g_tutorials_flags.tutorial_5.spacious_apartment && level == HOUSE_SPACIOUS_APARTMENT) {
         g_tutorials_flags.tutorial_5.spacious_apartment = true;
         building_menu_update(BUILDSET_TUT5_EDUCATION);
         post_message(MESSAGE_TUTORIAL_EDUCATION);

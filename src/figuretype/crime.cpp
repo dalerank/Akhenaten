@@ -351,8 +351,10 @@ int figure::figure_rioter_collapse_building() {
         case BUILDING_BURNING_RUIN:
             continue;
         }
-        if (b->house_size && b->subtype.house_level < HOUSE_SMALL_CASA)
+
+        if (b->house_size && b->subtype.house_level < HOUSE_MODEST_HOMESTEAD) {
             continue;
+        }
 
         city_message_apply_sound_interval(MESSAGE_CAT_RIOT_COLLAPSE);
         city_message_post(false, MESSAGE_DESTROYED_BUILDING, b->type, grid_offset);

@@ -472,7 +472,7 @@ void building_house_devolve_from_large_villa(building* house) {
     map_building_tiles_add(house->id, house->tile, house->size, image_id + (map_random_get(house->tile.grid_offset()) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
-    image_id = house_image_group(HOUSE_MEDIUM_INSULA);
+    image_id = house_image_group(HOUSE_SPACIOUS_APARTMENT);
     create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 2, house->tile.y(), image_id, population_per_tile,inventory_per_tile);
     create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 2, house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
     create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x(), house->tile.y() + 2, image_id, population_per_tile, inventory_per_tile);
@@ -507,7 +507,7 @@ void building_house_devolve_from_large_palace(building* house) {
     map_building_tiles_add(house->id, house->tile, house->size, image_id, TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
-    image_id = house_image_group(HOUSE_MEDIUM_INSULA);
+    image_id = house_image_group(HOUSE_SPACIOUS_APARTMENT);
     create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 3, house->tile.y(), image_id, population_per_tile, inventory_per_tile);
     create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 3, house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
     create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->tile.x() + 3, house->tile.y() + 2, image_id, population_per_tile, inventory_per_tile);
