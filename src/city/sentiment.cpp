@@ -107,7 +107,7 @@ static int get_sentiment_penalty_for_tent_dwellers() {
         else {
             penalty = -6;
         }
-    } else if (city_data.population.people_in_large_insula_and_above > 0) {
+    } else if (city_data.population.people_in_residences > 0) {
         if (pct_tents >= 57)
             penalty = 0;
         else if (pct_tents >= 40)

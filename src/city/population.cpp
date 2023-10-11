@@ -362,7 +362,7 @@ static int calculate_people_per_house_type(void) {
     city_data.population.people_in_shanties = 0;
     city_data.population.people_in_villas_palaces = 0;
     city_data.population.people_in_huts = 0;
-    city_data.population.people_in_large_insula_and_above = 0;
+    city_data.population.people_in_residences = 0;
     int total = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
@@ -381,8 +381,9 @@ static int calculate_people_per_house_type(void) {
                 city_data.population.people_in_shanties += pop;
             }
 
-            if (b->subtype.house_level >= HOUSE_LARGE_INSULA)
-                city_data.population.people_in_large_insula_and_above += pop;
+            if (b->subtype.house_level >= HOUSE_COMMON_RESIDENCE) {
+                city_data.population.people_in_residences += pop;
+            }
 
             if (b->subtype.house_level >= HOUSE_SMALL_VILLA)
                 city_data.population.people_in_villas_palaces += pop;

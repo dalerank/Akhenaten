@@ -386,7 +386,7 @@ void building_house_expand_to_large_insula(building* house) {
     prepare_for_merge(house->id, 4);
 
     house->type = BUILDING_HOUSE_LARGE_INSULA;
-    house->subtype.house_level = HOUSE_LARGE_INSULA;
+    house->subtype.house_level = HOUSE_COMMON_RESIDENCE;
     house->size = house->house_size = 2;
     house->house_population += g_merge_data.population;
     for (int i = 0; i < INVENTORY_MAX; i++) {

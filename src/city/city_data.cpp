@@ -551,7 +551,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.figure.enemies);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.sentiment.wages);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.people_in_huts);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.population.people_in_large_insula_and_above);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.population.people_in_residences);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.figure.imperial_soldiers);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.invasion.duration_day_countdown);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.invasion.warnings_given);

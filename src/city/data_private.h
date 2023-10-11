@@ -178,7 +178,7 @@ struct city_data_t {
 
         int32_t people_in_huts;
         int32_t people_in_shanties;
-        int32_t people_in_large_insula_and_above;
+        int32_t people_in_residences;
         int32_t people_in_villas_palaces;
         int32_t percentage_plebs;
 
