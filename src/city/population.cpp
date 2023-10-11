@@ -359,7 +359,7 @@ int* calculate_houses_demanding_goods(int* housing_type_counts) {
 }
 
 static int calculate_people_per_house_type(void) {
-    city_data.population.people_in_tents_shacks = 0;
+    city_data.population.people_in_shanties = 0;
     city_data.population.people_in_villas_palaces = 0;
     city_data.population.people_in_huts = 0;
     city_data.population.people_in_large_insula_and_above = 0;
@@ -377,8 +377,9 @@ static int calculate_people_per_house_type(void) {
                 city_data.population.people_in_huts += pop;
             }
 
-            if (b->subtype.house_level <= HOUSE_LARGE_SHACK)
-                city_data.population.people_in_tents_shacks += pop;
+            if (b->subtype.house_level <= HOUSE_COMMON_SHANTY) {
+                city_data.population.people_in_shanties += pop;
+            }
 
             if (b->subtype.house_level >= HOUSE_LARGE_INSULA)
                 city_data.population.people_in_large_insula_and_above += pop;
@@ -429,18 +430,19 @@ int city_population_yearly_deaths(void) {
     return city_data.population.yearly_deaths;
 }
 
-int city_population_yearly_births(void) {
+int city_population_yearly_births() {
     return city_data.population.yearly_births;
 }
 
-int percentage_city_population_in_tents_shacks(void) {
-    if (!city_data.population.population)
+int percentage_city_population_in_shanties() {
+    if (!city_data.population.population) {
         return 0;
+    }
 
-    return calc_percentage(city_data.population.people_in_tents_shacks, city_data.population.population);
+    return calc_percentage(city_data.population.people_in_shanties, city_data.population.population);
 }
 
-int percentage_city_population_in_villas_palaces(void) {
+int percentage_city_population_in_villas_palaces() {
     if (!city_data.population.population)
         return 0;
 

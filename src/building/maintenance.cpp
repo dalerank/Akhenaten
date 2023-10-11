@@ -198,7 +198,7 @@ void building_maintenance_check_fire_collapse(void) {
                 expected_fire_risk += 50;
             } else if (b.house_population <= 0) {
                 expected_fire_risk = 0;
-            } else if (b.subtype.house_level <= HOUSE_LARGE_SHACK) {
+            } else if (b.subtype.house_level <= HOUSE_COMMON_SHANTY) {
                 expected_fire_risk += 100;
             } else if (b.subtype.house_level <= HOUSE_GRAND_INSULA) {
                 expected_fire_risk += 50;

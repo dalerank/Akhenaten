@@ -1,5 +1,4 @@
-#ifndef CITY_POPULATION_H
-#define CITY_POPULATION_H
+#pragma once
 
 int city_population(void);
 int city_population_school_age(void);
@@ -82,8 +81,6 @@ int city_population_average_age(void);
 
 int city_population_percent_in_workforce(void);
 
-int percentage_city_population_in_tents_shacks(void);
+int percentage_city_population_in_shanties();
 
 int percentage_city_population_in_villas_palaces(void);
-
-#endif // CITY_POPULATION_H

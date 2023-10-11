@@ -151,7 +151,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.last_change);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.average_per_year);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.total_all_years);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.population.people_in_tents_shacks);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.population.people_in_shanties);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.people_in_villas_palaces);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.total_years);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.yearly_update_requested);

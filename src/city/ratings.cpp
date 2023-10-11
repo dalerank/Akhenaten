@@ -148,10 +148,11 @@ static void update_prosperity_explanation(void) {
     int change = 0;
     int profit = 0;
     // unemployment: -1 for too high, +1 for low
-    if (city_data.labor.unemployment_percentage < 5)
+    if (city_data.labor.unemployment_percentage < 5) {
         change += 1;
-    else if (city_data.labor.unemployment_percentage >= 15)
+    } else if (city_data.labor.unemployment_percentage >= 15) {
         change -= 1;
+    }
 
     // losing/earning money: -1 for losing, +5 for profit
     if (has_made_money()) {
@@ -164,20 +165,23 @@ static void update_prosperity_explanation(void) {
     //    if (city_data.resource.food_types_eaten >= 2) todo
     //        change += 1;
 
-    // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
+    // wages: +1 for wages 2+ above Rome, -1 for wages below Kingdome
     int avg_wage = city_data.finance.wage_rate_paid_last_year / 12;
-    if (avg_wage >= city_data.labor.wages_kingdome + 2)
+    if (avg_wage >= city_data.labor.wages_kingdome + 2) {
         change += 1;
-    else if (avg_wage < city_data.labor.wages_kingdome)
+    } else if (avg_wage < city_data.labor.wages_kingdome) {
         change -= 1;
+    }
 
     // high percentage poor: -1, high percentage rich: +1
-    int pct_tents = calc_percentage(city_data.population.people_in_tents_shacks, city_data.population.population);
-    if (pct_tents > 30)
+    int pct_shanties = calc_percentage(city_data.population.people_in_shanties, city_data.population.population);
+    if (pct_shanties > 30) {
         change -= 1;
+    }
 
-    if (calc_percentage(city_data.population.people_in_villas_palaces, city_data.population.population) > 10)
+    if (calc_percentage(city_data.population.people_in_villas_palaces, city_data.population.population) > 10) {
         change += 1;
+    }
 
     // tribute not paid: -1
     if (city_data.finance.tribute_not_paid_last_year)
@@ -200,7 +204,7 @@ static void update_prosperity_explanation(void) {
         reason = 4;
     else if (avg_wage < city_data.labor.wages_kingdome)
         reason = 5;
-    else if (pct_tents > 30)
+    else if (pct_shanties > 30)
         reason = 6;
     else if (city_data.finance.tribute_not_paid_last_year)
         reason = 7;
@@ -404,7 +408,7 @@ static void update_prosperity_rating(void) {
         change -= 1;
 
     // high percentage poor: -1, high percentage rich: +1
-    if (calc_percentage(city_data.population.people_in_tents_shacks, city_data.population.population) > 30)
+    if (calc_percentage(city_data.population.people_in_shanties, city_data.population.population) > 30)
         change -= 1;
 
     if (calc_percentage(city_data.population.people_in_villas_palaces, city_data.population.population) > 10)
