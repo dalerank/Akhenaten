@@ -956,7 +956,7 @@ void draw_debug_ui(int x, int y) {
         debug_text(str, x, y + 1, cl, "value:", city_data.sentiment.value);
         debug_text(str, x, y + 13, cl, "previous_value:", city_data.sentiment.previous_value);
         debug_text(str, x, y + 25, cl, "message_delay:", city_data.sentiment.message_delay);
-        debug_text(str, x, y + 37, cl, "include_tents:", city_data.sentiment.include_tents);
+        debug_text(str, x, y + 37, cl, "include_tents:", city_data.sentiment.include_huts);
         debug_text(str, x, y + 49, cl, "unemployment:", city_data.sentiment.unemployment);
         debug_text(str, x, y + 61, cl, "wages:", city_data.sentiment.wages);
         debug_text(str, x, y + 73, cl, "low_mood_cause:", city_data.sentiment.low_mood_cause);

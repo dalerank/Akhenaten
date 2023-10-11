@@ -406,79 +406,79 @@ static void add_building(building* b, int orientation, int variant) {
     switch (b->type) {
     // houses
     case BUILDING_HOUSE_LARGE_HUT:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_TENT) + 2);
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_HUT) + 2);
         break;
 
     case BUILDING_HOUSE_SMALL_SHACK:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_SHACK));
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_SHANTY));
         break;
 
     case BUILDING_HOUSE_LARGE_SHACK:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_SHACK) + 2);
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_SHANTY) + 2);
         break;
 
     case BUILDING_HOUSE_SMALL_HOVEL:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_HOVEL));
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_COTTAGE));
         break;
 
     case BUILDING_HOUSE_LARGE_HOVEL:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_HOVEL) + 2);
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_COTTAGE) + 2);
         break;
 
     case BUILDING_HOUSE_SMALL_CASA:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_CASA));
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_HOMESTEAD));
         break;
 
     case BUILDING_HOUSE_LARGE_CASA:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2);
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_HOMESTEAD) + 2);
         break;
 
     case BUILDING_HOUSE_SMALL_INSULA:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_INSULA_1));
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_APARTMENT));
         break;
 
     case BUILDING_HOUSE_MEDIUM_INSULA:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_INSULA_1) + 2);
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_APARTMENT) + 2);
         break;
 
     case BUILDING_HOUSE_LARGE_INSULA:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_INSULA_2));
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_RESIDENCE));
         break;
 
     case BUILDING_HOUSE_GRAND_INSULA:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_INSULA_2) + 2);
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_RESIDENCE) + 2);
         break;
 
     case BUILDING_HOUSE_SMALL_VILLA:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_VILLA_1));
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_MANOR));
         break;
 
     case BUILDING_HOUSE_MEDIUM_VILLA:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_VILLA_1) + 2);
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_MANOR) + 2);
         break;
 
     case BUILDING_HOUSE_LARGE_VILLA:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_VILLA_2));
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_ELEGANT_MANOR));
         break;
 
     case BUILDING_HOUSE_GRAND_VILLA:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_VILLA_2) + 1);
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_ELEGANT_MANOR) + 1);
         break;
 
     case BUILDING_HOUSE_SMALL_PALACE:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALACE_1));
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_ESTATE));
         break;
 
     case BUILDING_HOUSE_MEDIUM_PALACE:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALACE_1) + 1);
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_ESTATE) + 1);
         break;
 
     case BUILDING_HOUSE_LARGE_PALACE:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALACE_2));
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALATIAL));
         break;
 
     case BUILDING_HOUSE_LUXURY_PALACE:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALACE_2) + 1);
+        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALATIAL) + 1);
         break;
         // entertainment
     case BUILDING_BOOTH:

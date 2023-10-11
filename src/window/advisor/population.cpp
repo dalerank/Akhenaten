@@ -367,8 +367,10 @@ static void print_history_info(void) {
             text_id = 0;
             break;
         }
-        if (text_id)
+
+        if (text_id) {
             lang_text_draw(55, text_id, 75, 396, FONT_NORMAL_WHITE_ON_DARK);
+        }
 
     } else {
         lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
@@ -382,7 +384,7 @@ static void print_history_info(void) {
 }
 
 static void draw_housing_button(int full_size, int x, int y) {
-    ImageDraw::isometric(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE, 1.0f);
+    ImageDraw::isometric(image_id_from_group(GROUP_BUILDING_HOUSE_HOMESTEAD) + 2, x, y, COLOR_MASK_NONE, 1.0f);
     //    ImageDraw::isometric_top(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE);
 }
 
@@ -394,11 +396,11 @@ static int draw_background(void) {
 
     int graph_order = city_population_graph_order();
     // Title: depends on big graph shown
-    if (graph_order < 2)
+    if (graph_order < 2) {
         lang_text_draw(55, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
-    else if (graph_order < 4)
+    } else if (graph_order < 4) {
         lang_text_draw(55, 1, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
-    else {
+    } else {
         lang_text_draw(55, 2, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     }
 
