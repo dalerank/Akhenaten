@@ -361,7 +361,7 @@ int* calculate_houses_demanding_goods(int* housing_type_counts) {
 static int calculate_people_per_house_type(void) {
     city_data.population.people_in_tents_shacks = 0;
     city_data.population.people_in_villas_palaces = 0;
-    city_data.population.people_in_tents = 0;
+    city_data.population.people_in_huts = 0;
     city_data.population.people_in_large_insula_and_above = 0;
     int total = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -373,8 +373,9 @@ static int calculate_people_per_house_type(void) {
         if (b->house_size) {
             int pop = b->house_population;
             total += pop;
-            if (b->subtype.house_level <= HOUSE_LARGE_HUT)
-                city_data.population.people_in_tents += pop;
+            if (b->subtype.house_level <= HOUSE_STURDY_HUT) {
+                city_data.population.people_in_huts += pop;
+            }
 
             if (b->subtype.house_level <= HOUSE_LARGE_SHACK)
                 city_data.population.people_in_tents_shacks += pop;

@@ -85,7 +85,7 @@ void city_health_start_disease(int total_people, bool force, int plague_people) 
             return;
         }
 
-        if (b.subtype.house_level <= HOUSE_LARGE_HUT) {
+        if (b.subtype.house_level <= HOUSE_STURDY_HUT) {
             warn_building = &b;
             people_to_plague -= b.house_population;
             building_mark_plague(&b);
@@ -127,7 +127,7 @@ void city_health_update() {
         }
 
         total_population += b.house_population;
-        if (b.subtype.house_level <= HOUSE_LARGE_HUT) {
+        if (b.subtype.house_level <= HOUSE_STURDY_HUT) {
             if (b.data.house.apothecary) {
                 healthy_population += b.house_population;
             } else {

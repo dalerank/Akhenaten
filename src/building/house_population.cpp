@@ -147,7 +147,7 @@ int house_population_create_emigrants(int num_people) {
                 continue;
             }
 
-            if (config_get(CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT) && (level <= HOUSE_LARGE_HUT || (level < HOUSE_LARGE_HOVEL && b->house_population < 10))) {
+            if (config_get(CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT) && (level <= HOUSE_STURDY_HUT || (level < HOUSE_LARGE_HOVEL && b->house_population < 10))) {
                 continue;
             }
 

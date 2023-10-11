@@ -111,9 +111,9 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
 
     // subtype
     if (b->is_house()) {
-        b->subtype.house_level = type - BUILDING_HOUSE_VACANT_LOT;
+        b->subtype.house_level = (e_house_level)(type - BUILDING_HOUSE_VACANT_LOT);
     } else {
-        b->subtype.house_level = 0;
+        b->subtype.house_level = HOUSE_CRUDE_HUT;
     }
 
     // unique data

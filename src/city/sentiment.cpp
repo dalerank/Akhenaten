@@ -94,7 +94,7 @@ static int get_sentiment_penalty_for_tent_dwellers() {
     city_data.sentiment.include_tents = false;
 
     int penalty;
-    int pct_tents = calc_percentage(city_data.population.people_in_tents, city_data.population.population);
+    int pct_tents = calc_percentage(city_data.population.people_in_huts, city_data.population.population);
     if (city_data.population.people_in_villas_palaces > 0) {
         if (pct_tents >= 57)
             penalty = 0;

@@ -176,7 +176,7 @@ struct city_data_t {
         int32_t total_capacity;
         int32_t room_in_houses;
 
-        int32_t people_in_tents;
+        int32_t people_in_huts;
         int32_t people_in_tents_shacks;
         int32_t people_in_large_insula_and_above;
         int32_t people_in_villas_palaces;
