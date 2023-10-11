@@ -50,15 +50,16 @@ int city_rating_selected_explanation(void) {
 
 void city_ratings_reduce_prosperity_after_bailout(void) {
     city_data.ratings.prosperity -= 3;
-    if (city_data.ratings.prosperity < 0)
+    if (city_data.ratings.prosperity < 0) {
         city_data.ratings.prosperity = 0;
+    }
 
     city_data.ratings.prosperity_explanation = 8;
 }
 
 void city_ratings_monument_building_destroyed(int type) {
     switch (type) {
-    case BUILDING_HOUSE_SMALL_HUT:
+    case BUILDING_HOUSE_CRUDE_HUT:
     case BUILDING_HOUSE_LARGE_HUT:
     case BUILDING_POLICE_STATION:
     case BUILDING_ENGINEERS_POST:
@@ -74,8 +75,9 @@ void city_ratings_monument_building_destroyed(int type) {
         break;
     }
 
-    if (city_data.ratings.monument_destroyed_buildings >= 12)
+    if (city_data.ratings.monument_destroyed_buildings >= 12) {
         city_data.ratings.monument_destroyed_buildings = 12;
+    }
 }
 
 void city_ratings_monument_record_criminal(void) {

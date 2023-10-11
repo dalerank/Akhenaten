@@ -71,7 +71,7 @@ static e_victory_state determine_victory_state(void) {
         int houses_of_required_level = 0;
         for (int i = 0; i < building_get_highest_id(); i++) {
             building* b = building_get(i);
-            if (b->state == BUILDING_STATE_VALID && b->type == winning_houselevel() + BUILDING_HOUSE_SMALL_HUT)
+            if (b->state == BUILDING_STATE_VALID && b->type == winning_houselevel() + BUILDING_HOUSE_CRUDE_HUT)
                 houses_of_required_level++;
         }
         if (houses_of_required_level < winning_housing())

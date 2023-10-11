@@ -99,7 +99,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
 
     // house size
     b->house_size = 0;
-    if (type >= BUILDING_HOUSE_SMALL_HUT && type <= BUILDING_HOUSE_MEDIUM_INSULA) {
+    if (type >= BUILDING_HOUSE_CRUDE_HUT && type <= BUILDING_HOUSE_MEDIUM_INSULA) {
         b->house_size = 1;
     } else if (type >= BUILDING_HOUSE_LARGE_INSULA && type <= BUILDING_HOUSE_MEDIUM_VILLA) {
         b->house_size = 2;

@@ -198,9 +198,9 @@ static int evolve_large_hut(building* house, house_demands* demands) {
         e_house_progress status = check_requirements(house, demands);
         if (!has_devolve_delay(house, status)) {
             if (status == E_HOUSE_EVOLVE)
-                building_house_change_to(house, BUILDING_HOUSE_SMALL_SHACK);
+                building_house_change_to(house, BUILDING_HOUSE_SMALL_SHANTY);
             else if (status == E_HOUSE_DECAY)
-                building_house_change_to(house, BUILDING_HOUSE_SMALL_HUT);
+                building_house_change_to(house, BUILDING_HOUSE_CRUDE_HUT);
         }
     }
     return 0;
@@ -210,7 +210,7 @@ static int evolve_small_shack(building* house, house_demands* demands) {
     e_house_progress status = check_requirements(house, demands);
     if (!has_devolve_delay(house, status)) {
         if (status == E_HOUSE_EVOLVE)
-            building_house_change_to(house, BUILDING_HOUSE_LARGE_SHACK);
+            building_house_change_to(house, BUILDING_HOUSE_LARGE_SHANTY);
         else if (status == E_HOUSE_DECAY)
             building_house_change_to(house, BUILDING_HOUSE_LARGE_HUT);
     }
@@ -223,7 +223,7 @@ static int evolve_large_shack(building* house, house_demands* demands) {
         if (status == E_HOUSE_EVOLVE)
             building_house_change_to(house, BUILDING_HOUSE_SMALL_HOVEL);
         else if (status == E_HOUSE_DECAY)
-            building_house_change_to(house, BUILDING_HOUSE_SMALL_SHACK);
+            building_house_change_to(house, BUILDING_HOUSE_SMALL_SHANTY);
     }
     return 0;
 }
@@ -234,7 +234,7 @@ static int evolve_small_hovel(building* house, house_demands* demands) {
         if (status == E_HOUSE_EVOLVE)
             building_house_change_to(house, BUILDING_HOUSE_LARGE_HOVEL);
         else if (status == E_HOUSE_DECAY)
-            building_house_change_to(house, BUILDING_HOUSE_LARGE_SHACK);
+            building_house_change_to(house, BUILDING_HOUSE_LARGE_SHANTY);
     }
     return 0;
 }
