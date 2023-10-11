@@ -1186,13 +1186,13 @@ void draw_debug_ui(int x, int y) {
                 f = { "3:pottery_200", flags->tutorial_3.pottery_made };
                 break;
             case 9:
-                f = { "4:disease", flags->tutorial_3.disease };
+                f = { "3:disease", flags->tutorial_3.disease };
                 break;
             case 10:
                 f = { "4:beer_300", flags->tutorial_4.beer_made };
                 break;
             case 11:
-                f = { "4:apartment", flags->pharaoh.spacious_apartment };
+                f = { "5:apartment", flags->tutorial_5.spacious_apartment };
                 break;
             case 15:
                 f = { "tut1 start", flags->pharaoh.tut1_start };

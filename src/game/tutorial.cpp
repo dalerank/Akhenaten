@@ -43,8 +43,8 @@ static void set_all_tut_flags_null() {
     g_tutorials_flags.tutorial_3.pottery_made = 0;
 
     g_tutorials_flags.tutorial_4.beer_made = 0;
-    g_tutorials_flags.pharaoh.spacious_apartment = 0;
 
+    g_tutorials_flags.tutorial_5.spacious_apartment = 0;
     g_tutorials_flags.pharaoh.papyrus_made = 0;
     g_tutorials_flags.pharaoh.bricks_bought = 0;
 
@@ -89,9 +89,10 @@ void tutorial_init(void) {
     g_tutorials_flags.tutorial_3.disease = tut_passed[2];
     // tut4
     g_tutorials_flags.tutorial_4.beer_made = tut_passed[3];
+    // tut5
+    g_tutorials_flags.tutorial_5.spacious_apartment = tut_passed[4];
 
     g_tutorials_flags.pharaoh.flags[8] = tut_passed[4];
-    g_tutorials_flags.pharaoh.spacious_apartment = tut_passed[4];
     g_tutorials_flags.pharaoh.papyrus_made = tut_passed[4];
     g_tutorials_flags.pharaoh.bricks_bought = tut_passed[4];
 
@@ -176,7 +177,7 @@ void tutorial_menu_update(int tut) {
         if (g_tutorials_flags.tutorial_4.beer_made) building_menu_update(BUILDSET_TUT4_FINANCE);
     } else if (tut == 5) {
         building_menu_update(BUILDSET_TUT5_START);
-        if (g_tutorials_flags.pharaoh.spacious_apartment) building_menu_update(BUILDSET_TUT5_EDUCATION);
+        if (g_tutorials_flags.tutorial_5.spacious_apartment) building_menu_update(BUILDSET_TUT5_EDUCATION);
         if (g_tutorials_flags.pharaoh.papyrus_made) building_menu_update(BUILDSET_TUT5_TRADING);
         if (g_tutorials_flags.pharaoh.bricks_bought) building_menu_update(BUILDING_MENU_MONUMENTS);
 
@@ -236,14 +237,17 @@ int tutorial_get_immediate_goal_text(void) {
             return 33;
         }
     } else if (scenario_is_mission_rank(5)) {
-        if (!g_tutorials_flags.pharaoh.spacious_apartment)
+        if (!g_tutorials_flags.tutorial_5.spacious_apartment) {
             return 31;
-        else if (!g_tutorials_flags.pharaoh.papyrus_made)
+        } else if (!g_tutorials_flags.pharaoh.papyrus_made) {
             return 30;
-        else if (!g_tutorials_flags.pharaoh.bricks_bought)
+        } else if (!g_tutorials_flags.pharaoh.bricks_bought) {
             return 29;
-        else
+        } else {
             return 34;
+        }
+    } else if (scenario_is_mission_rank(5)) {
+
     }
     return 0;
 }
@@ -345,9 +349,9 @@ void tutorial_on_religion() {
     }
 }
 
-void tutorial_on_house_evolve(int level) {
-    if (!g_tutorials_flags.pharaoh.spacious_apartment && level == 9) {
-        g_tutorials_flags.pharaoh.spacious_apartment = 1;
+void tutorial_on_house_evolve(e_house_level level) {
+    if (!g_tutorials_flags.tutorial_5.spacious_apartment && level == HOUSE_MEDIUM_INSULA) {
+        g_tutorials_flags.tutorial_5.spacious_apartment = true;
         building_menu_update(BUILDSET_TUT5_EDUCATION);
         post_message(MESSAGE_TUTORIAL_EDUCATION);
     }
@@ -459,7 +463,8 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.pottery_made);
     // tut 4
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_4.beer_made);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.spacious_apartment);
+    // tut 5
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.spacious_apartment);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[12]);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[13]);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[14]);

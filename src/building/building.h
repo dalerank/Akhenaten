@@ -54,7 +54,7 @@ public:
     //    unsigned short grid_offset;
     e_building_type type;
     union {
-        short house_level;
+        e_house_level house_level;
         e_resource warehouse_resource_id;
         //        short workshop_type;
         short orientation;

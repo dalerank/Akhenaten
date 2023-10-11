@@ -97,7 +97,7 @@ static void create_vacant_lot(int x, int y, int image_id) {
 }
 
 void building_house_change_to(building* house, e_building_type type) {
-    tutorial_on_house_evolve(type - BUILDING_HOUSE_VACANT_LOT);
+    tutorial_on_house_evolve((e_house_level)(type - BUILDING_HOUSE_VACANT_LOT));
     house->type = type;
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
     int image_id = image_id_from_group(HOUSE_IMAGE[house->subtype.house_level].collection, HOUSE_IMAGE[house->subtype.house_level].group);

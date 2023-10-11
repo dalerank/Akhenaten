@@ -139,7 +139,7 @@ int house_population_create_emigrants(int num_people) {
     const int* ids = building_list_large_items();
 
     int to_emigrate = num_people;
-    for (int level = HOUSE_SMALL_HUT; level < HOUSE_LARGE_INSULA && to_emigrate > 0; level++) {
+    for (int level = HOUSE_CRUDE_HUT; level < HOUSE_LARGE_INSULA && to_emigrate > 0; level++) {
         for (int i = 0; i < total_houses && to_emigrate > 0; i++) {
             building* b = building_get(ids[i]);
 
