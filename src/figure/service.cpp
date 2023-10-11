@@ -198,7 +198,7 @@ static void tax_collector_coverage(building* b, figure *f, int* max_tax_multipli
 
         if (b->subtype.house_level < HOUSE_ORDINARY_COTTAGE) {
             f->service_values.taxman_poor_taxed++;
-        } else if (b->subtype.house_level < HOUSE_ELEGANT_RESIDENCE) {
+        } else if (b->subtype.house_level < HOUSE_COMMON_MANOR) {
             f->service_values.taxman_middle_taxed++;
         } else {
             f->service_values.taxman_reach_taxed++;

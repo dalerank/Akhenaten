@@ -360,7 +360,7 @@ int* calculate_houses_demanding_goods(int* housing_type_counts) {
 
 static int calculate_people_per_house_type(void) {
     city_data.population.people_in_shanties = 0;
-    city_data.population.people_in_villas_palaces = 0;
+    city_data.population.people_in_manors = 0;
     city_data.population.people_in_huts = 0;
     city_data.population.people_in_residences = 0;
     int total = 0;
@@ -385,8 +385,8 @@ static int calculate_people_per_house_type(void) {
                 city_data.population.people_in_residences += pop;
             }
 
-            if (b->subtype.house_level >= HOUSE_ELEGANT_RESIDENCE) {
-                city_data.population.people_in_villas_palaces += pop;
+            if (b->subtype.house_level >= HOUSE_COMMON_MANOR) {
+                city_data.population.people_in_manors += pop;
             }
         }
     }
@@ -444,9 +444,10 @@ int percentage_city_population_in_shanties() {
     return calc_percentage(city_data.population.people_in_shanties, city_data.population.population);
 }
 
-int percentage_city_population_in_villas_palaces() {
-    if (!city_data.population.population)
+int percentage_city_population_in_manors() {
+    if (!city_data.population.population) {
         return 0;
+    }
 
-    return calc_percentage(city_data.population.people_in_villas_palaces, city_data.population.population);
+    return calc_percentage(city_data.population.people_in_manors, city_data.population.population);
 }

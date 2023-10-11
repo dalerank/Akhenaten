@@ -172,21 +172,21 @@ int house_population_create_emigrants(int num_people) {
 }
 
 static void calculate_working_population(void) {
-    int num_plebs = 0;
-    int num_patricians = 0;
+    int num_peasants = 0;
+    int num_nobles = 0;
     int total_houses = building_list_large_size();
     const int* houses = building_list_large_items();
     for (int i = 0; i < total_houses; i++) {
         building* b = building_get(houses[i]);
         if (b->house_population > 0) {
-            if (b->subtype.house_level >= HOUSE_ELEGANT_RESIDENCE)
-                num_patricians += b->house_population;
+            if (b->subtype.house_level >= HOUSE_COMMON_MANOR)
+                num_nobles += b->house_population;
             else {
-                num_plebs += b->house_population;
+                num_peasants += b->house_population;
             }
         }
     }
-    city_labor_calculate_workers(num_plebs, num_patricians);
+    city_labor_calculate_workers(num_peasants, num_nobles);
 }
 
 void city_population_reached_milestone(bool force) {

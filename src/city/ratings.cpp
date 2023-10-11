@@ -179,7 +179,7 @@ static void update_prosperity_explanation(void) {
         change -= 1;
     }
 
-    if (calc_percentage(city_data.population.people_in_villas_palaces, city_data.population.population) > 10) {
+    if (calc_percentage(city_data.population.people_in_manors, city_data.population.population) > 10) {
         change += 1;
     }
 
@@ -408,11 +408,13 @@ static void update_prosperity_rating(void) {
         change -= 1;
 
     // high percentage poor: -1, high percentage rich: +1
-    if (calc_percentage(city_data.population.people_in_shanties, city_data.population.population) > 30)
+    if (calc_percentage(city_data.population.people_in_shanties, city_data.population.population) > 30) {
         change -= 1;
+    }
 
-    if (calc_percentage(city_data.population.people_in_villas_palaces, city_data.population.population) > 10)
+    if (calc_percentage(city_data.population.people_in_manors, city_data.population.population) > 10) {
         change += 1;
+    }
 
     // tribute not paid: -1
     if (city_data.finance.tribute_not_paid_last_year)

@@ -276,11 +276,11 @@ static void print_society_info(void) {
     text_draw_number(city_ratings_prosperity_max(), '@', " ", 75 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
 
     // Percent patricians
-    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_VILLAS_PALACES), 75, 360, FONT_NORMAL_WHITE_ON_DARK, 0);
-    text_draw_percentage(percentage_city_population_in_villas_palaces(), 75 + width, 360, FONT_NORMAL_WHITE_ON_DARK);
+    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_MANORS), 75, 360, FONT_NORMAL_WHITE_ON_DARK, 0);
+    text_draw_percentage(percentage_city_population_in_manors(), 75 + width, 360, FONT_NORMAL_WHITE_ON_DARK);
 
     // Percent impoverished
-    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_TENTS_SHACKS), 75, 378, FONT_NORMAL_WHITE_ON_DARK, 0);
+    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_SHANTIES), 75, 378, FONT_NORMAL_WHITE_ON_DARK, 0);
     text_draw_percentage(percentage_city_population_in_shanties(), 75 + width, 378, FONT_NORMAL_WHITE_ON_DARK);
 
     // Average tax

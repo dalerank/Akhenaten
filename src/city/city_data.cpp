@@ -152,7 +152,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.average_per_year);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.total_all_years);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.people_in_shanties);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.population.people_in_villas_palaces);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.population.people_in_manors);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.total_years);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.yearly_update_requested);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.last_used_house_add);
@@ -591,7 +591,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT8, &city_data.sound.hit_wolf);
     iob->bind(BIND_SIGNATURE_INT8, &city_data.sound.march_wolf);
     iob->bind____skip(10);
-    iob->bind(BIND_SIGNATURE_INT8, &city_data.sentiment.include_tents);
+    iob->bind(BIND_SIGNATURE_INT8, &city_data.sentiment.include_huts);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.invasion.count);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.invasion.size);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.invasion.soldiers_killed);

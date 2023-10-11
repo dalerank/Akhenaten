@@ -86,16 +86,16 @@ int city_sentiment_criminals() {
 
 static int get_sentiment_penalty_for_tent_dwellers() {
     // alternate the penalty for every update
-    if (!city_data.sentiment.include_tents) {
-        city_data.sentiment.include_tents = true;
+    if (!city_data.sentiment.include_huts) {
+        city_data.sentiment.include_huts = true;
         return 0;
     }
 
-    city_data.sentiment.include_tents = false;
+    city_data.sentiment.include_huts = false;
 
     int penalty;
     int pct_tents = calc_percentage(city_data.population.people_in_huts, city_data.population.population);
-    if (city_data.population.people_in_villas_palaces > 0) {
+    if (city_data.population.people_in_manors > 0) {
         if (pct_tents >= 57)
             penalty = 0;
         else if (pct_tents >= 40)

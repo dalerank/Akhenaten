@@ -1,8 +1,8 @@
 #include "translation/common.h"
 #include "translation/translation.h"
 
-static translation_string all_strings[]
-  = {{TR_NO_PATCH_TITLE, "Patch 1.0.1.0 nie jest zainstalowany"},
+static translation_string all_strings[] = {
+     {TR_NO_PATCH_TITLE, "Patch 1.0.1.0 nie jest zainstalowany"},
      {TR_NO_PATCH_MESSAGE,
       "Twoja instalacja Cezara 3 nie ma zainstalowanej łatki 1.0.1.0."
       "Łatkę możesz pobrać z:\n." URL_PATCHES "\n"
@@ -112,14 +112,15 @@ static translation_string all_strings[]
      {TR_ADVISOR_ADVISOR_HEADER_HOUSING, "Populacja - domy"},
      {TR_ADVISOR_BUTTON_GRAPHS, "Wykresy"},
      {TR_ADVISOR_HOUSING_PROSPERITY_RATING, "Bogactwo domów"},
-     {TR_ADVISOR_PERCENTAGE_IN_VILLAS_PALACES, "Procent populacji w willach i pałacach"},
-     {TR_ADVISOR_PERCENTAGE_IN_TENTS_SHACKS, "Procent populacji w namiotach i szałasach"},
+     {TR_ADVISOR_PERCENTAGE_IN_MANORS, "Procent populacji w willach i pałacach"},
+     {TR_ADVISOR_PERCENTAGE_IN_SHANTIES, "Procent populacji w namiotach i szałasach"},
      {TR_ADVISOR_AVERAGE_TAX, "Średni podatek na głowę"},
      {TR_ADVISOR_AVERAGE_AGE, "Średnia wieku populacji"},
      {TR_ADVISOR_PERCENT_IN_WORKFORCE, "Procent populacji w sile roboczej"},
      {TR_ADVISOR_BIRTHS_LAST_YEAR, "Narodzin w zeszłym roku:"},
      {TR_ADVISOR_DEATHS_LAST_YEAR, "Śmierci w zeszłym roku:"},
-     {TR_ADVISOR_TOTAL_POPULATION, "Razem mieszkańców"}};
+     {TR_ADVISOR_TOTAL_POPULATION, "Razem mieszkańców"}
+};
 
 void translation_polish(const translation_string** strings, int* num_strings) {
     *strings = all_strings;

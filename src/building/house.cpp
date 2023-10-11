@@ -405,7 +405,7 @@ void building_house_expand_to_large_villa(building* house) {
     prepare_for_merge(house->id, 9);
 
     house->type = BUILDING_HOUSE_LARGE_VILLA;
-    house->subtype.house_level = HOUSE_LARGE_VILLA;
+    house->subtype.house_level = HOUSE_COMMON_MANOR;
     house->size = house->house_size = 3;
     house->house_population += g_merge_data.population;
     for (int i = 0; i < INVENTORY_MAX; i++) {

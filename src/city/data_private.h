@@ -179,7 +179,7 @@ struct city_data_t {
         int32_t people_in_huts;
         int32_t people_in_shanties;
         int32_t people_in_residences;
-        int32_t people_in_villas_palaces;
+        int32_t people_in_manors;
         int32_t percentage_plebs;
 
         int32_t last_used_house_add;
@@ -221,7 +221,7 @@ struct city_data_t {
         int32_t previous_value;
         int32_t message_delay;
 
-        bool include_tents;
+        bool include_huts;
         int32_t unemployment;
         int32_t wages;
         int32_t low_mood_cause;

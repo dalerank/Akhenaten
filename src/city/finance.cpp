@@ -150,7 +150,7 @@ void city_finance_estimate_taxes() {
         if (!(b.house_size || b.house_tax_coverage)) {
             return;
         }
-        int is_nobles = (b.subtype.house_level >= HOUSE_SMALL_VILLA);
+        int is_nobles = (b.subtype.house_level >= HOUSE_COMMON_MANOR);
         int tax_multiplier = model_get_house(b.subtype.house_level)->tax_multiplier;
         int level_tax_rate_multiplier = difficulty_adjust_money(tax_multiplier);
 
@@ -202,7 +202,7 @@ static void collect_monthly_taxes() {
             return;
         }
 
-        int is_nobles = b.subtype.house_level >= HOUSE_SMALL_VILLA;
+        int is_nobles = (b.subtype.house_level >= HOUSE_COMMON_MANOR);
         int population = b.house_population;
         int trm = difficulty_adjust_money(model_get_house(b.subtype.house_level)->tax_multiplier);
         city_data.population.at_level[b.subtype.house_level] += population;
