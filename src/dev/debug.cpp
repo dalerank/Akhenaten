@@ -588,8 +588,10 @@ void figure::draw_debug() {
     case 5: // FESTIVAL
         pixel.y += 30;
         debug_text(str, pixel.x, pixel.y, indent, "", unk_ph1_269, COLOR_WHITE);
-        debug_text(str, pixel.x, pixel.y + 10, indent, "service", service_values.value, COLOR_WHITE);
-        debug_text(str, pixel.x, pixel.y + 20, indent, "", festival_remaining_dances, COLOR_WHITE);
+        debug_text(str, pixel.x, pixel.y + 10, indent, "service_a", service_values.value_a, COLOR_WHITE);
+        debug_text(str, pixel.x, pixel.y + 20, indent, "service_b", service_values.value_b, COLOR_WHITE);
+        debug_text(str, pixel.x, pixel.y + 30, indent, "service_c", service_values.value_c, COLOR_WHITE);
+        debug_text(str, pixel.x, pixel.y + 40, indent, "", festival_remaining_dances, COLOR_WHITE);
         break;
     case 6: // CROSS-COUNTRY MOVEMENT
         if (use_cross_country) {

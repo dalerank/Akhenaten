@@ -146,6 +146,52 @@ static sound_key tax_collector_phrase(figure *f) {
     return keys[index];
 }
 
+static sound_key water_carier_phrase(figure *f) {
+    svector<sound_key, 10> keys;
+    if (city_health() < 30) {
+        keys.push_back("water_desease_can_start_at_any_moment");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+        keys.push_back("water_no_food_in_city");
+    }
+
+    if (formation_get_num_forts() < 1) {
+        keys.push_back("water_city_have_no_army");
+    }
+
+    if (city_labor_workers_needed() >= 10) {
+        keys.push_back("water_need_workers");
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back("water_gods_are_angry");
+    }
+
+    if (city_rating_kingdom() < 30) {
+        keys.push_back("water_city_is_bad");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+        keys.push_back("water_much_unemployments");
+    }
+
+    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
+        keys.push_back("water_low_entertainment");
+    }
+
+    if (city_sentiment() > 50) {
+        keys.push_back("water_city_is_good");
+    }
+
+    if (city_sentiment() > 90) {
+        keys.push_back("water_city_is_amazing");
+    }
+
+    int index = rand() % keys.size();
+    return keys[index];
+}
+
 static sound_key worker_phrase(figure *f) {
     int enemies = city_figures_enemies();
     if (enemies > 10) {
@@ -1042,8 +1088,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_GLADIATOR:
     //            return gladiator_phrase(f);
     case FIGURE_TAX_COLLECTOR: return tax_collector_phrase(f);
-    //        case FIGURE_MARKET_TRADER:
-    //            return market_trader_phrase(f);
     case FIGURE_DELIVERY_BOY: return deliverty_boy_phrase(f);
     case FIGURE_IMMIGRANT: return immigrant_phrase(f);
     case FIGURE_HERBALIST: return apothecary_phrase(f);
@@ -1065,6 +1109,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_MISSIONARY:
     //            return citizen_phrase(f);
     //        case FIGURE_HOMELESS:
+    case FIGURE_WATER_CARRIER: return water_carier_phrase(f);
     case FIGURE_WORKER: case FIGURE_WORKER_PH: return worker_phrase(f);
     case FIGURE_MUSICIAN: return musician_phrase(f);
     case FIGURE_JUGGLER: return juggler_phrase(f);
