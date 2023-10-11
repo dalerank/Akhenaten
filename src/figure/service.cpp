@@ -135,7 +135,7 @@ static void apothecary_coverage(building* b, figure *f, int*) {
     if (b->common_health < 50) {
         b->common_health++;
         if (b->common_health < 20) {
-            f->service_values.apothecary_see_low_health++;
+            f->service_values.herbalist_see_low_health++;
         }
     }
 }
@@ -196,6 +196,13 @@ static void tax_collector_coverage(building* b, figure *f, int* max_tax_multipli
             *max_tax_multiplier = tax_multiplier;
         }
 
+        if (b->subtype.house_level < HOUSE_LARGE_HOVEL) {
+            f->service_values.taxman_poor_taxed++;
+        } else if (b->subtype.house_level < HOUSE_SMALL_VILLA) {
+            f->service_values.taxman_middle_taxed++;
+        } else {
+            f->service_values.taxman_reach_taxed++;
+        }
         b->tax_collector_id = f->home()->id;
         b->house_tax_coverage = 50;
     }

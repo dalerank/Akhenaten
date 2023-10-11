@@ -432,6 +432,7 @@ e_overlay building::get_overlay() const {
         case BUILDING_FIREHOUSE: return OVERLAY_FIRE;
         case BUILDING_POLICE_STATION: return OVERLAY_CRIME;
         case BUILDING_APOTHECARY: return OVERLAY_APOTHECARY;
+        case BUILDING_TAX_COLLECTOR: return OVERLAY_TAX_INCOME;
     }
 
     return OVERLAY_NONE;

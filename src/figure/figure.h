@@ -186,8 +186,23 @@ public:
     // 115 bytes
     unsigned char draw_debug_mode;
     union {
-        short apothecary_see_low_health;
-        short value;
+        struct {
+            short herbalist_see_low_health;
+            short herbalist_reserved_1;
+            short herbalist_reserved_2;
+        };
+
+        struct {
+            short taxman_poor_taxed;
+            short taxman_middle_taxed;
+            short taxman_reach_taxed;
+        };
+
+        struct {
+            short value_a;
+            short value_b;
+            short value_c;
+        };
     } service_values;
     char festival_remaining_dances;
 

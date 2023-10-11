@@ -86,17 +86,64 @@ static int lion_tamer_phrase() {
     return 0;
 }
 
-static int tax_collector_phrase() {
-    //    if (min_max_seen >= HOUSE_LARGE_CASA)
-    //        return 7;
-    //    else if (min_max_seen >= HOUSE_SMALL_HOVEL)
-    //        return 8;
-    //    else if (min_max_seen >= HOUSE_LARGE_TENT)
-    //        return 9;
-    //    else {
-    //        return 0;
-    //    }
-    return 0;
+static sound_key tax_collector_phrase(figure *f) {
+    svector<sound_key, 10> keys;
+    if (city_finance_percentage_taxed_people() < 80) {
+        keys.push_back("taxman_need_more_tax_collectors");
+    }
+    
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_HIGH_TAXES) {
+        keys.push_back("taxman_high_taxes");
+    }
+
+    int all_taxed = f->service_values.taxman_poor_taxed + f->service_values.taxman_middle_taxed + f->service_values.taxman_reach_taxed;
+    int poor_taxed = calc_percentage(f->service_values.taxman_poor_taxed, all_taxed);
+    if (poor_taxed > 50) {
+        keys.push_back("taxman_much_pooh_houses");
+    }
+
+    if (city_health() < 30) {
+        keys.push_back("taxman_desease_can_start_at_any_moment");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+        keys.push_back("taxman_no_food_in_city");
+    }
+
+    if (formation_get_num_forts() < 1) {
+        keys.push_back("taxman_buyer_city_have_no_army");
+    }
+
+    if (city_labor_workers_needed() >= 10) {
+        keys.push_back("taxman_need_workers");
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back("taxman_gods_are_angry");
+    }
+
+    if (city_rating_kingdom() < 30) {
+        keys.push_back("taxman_city_is_bad");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+        keys.push_back("taxman_much_unemployments");
+    }
+
+    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
+        keys.push_back("taxman_low_entertainment");
+    }
+
+    if (city_sentiment() > 50) {
+        keys.push_back("taxman_city_is_good");
+    }
+
+    if (city_sentiment() > 90) {
+        keys.push_back("taxman_city_is_amazing");
+    }
+
+    int index = rand() % keys.size();
+    return keys[index];
 }
 
 static sound_key worker_phrase(figure *f) {
@@ -130,7 +177,7 @@ static sound_key worker_phrase(figure *f) {
         keys.push_back("worker_gods_are_angry");
     }
 
-    if (city_sentiment() < 30) {
+    if (city_rating_kingdom() < 30) {
         keys.push_back("worker_city_is_bad");
     }
 
@@ -270,7 +317,7 @@ static sound_key deliverty_boy_phrase(figure *f) {
 }
 
 static sound_key apothecary_phrase(figure *f) {
-    if (f->service_values.apothecary_see_low_health > 0) {
+    if (f->service_values.herbalist_see_low_health > 0) {
         return "apothecary_have_malaria_risk_here";
     } else {
         return "apothecary_no_threat_malaria_here";
@@ -994,8 +1041,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //            return lion_tamer_phrase(f);
     //        case FIGURE_GLADIATOR:
     //            return gladiator_phrase(f);
-    //        case FIGURE_TAX_COLLECTOR:
-    //            return tax_collector_phrase(f);
+    case FIGURE_TAX_COLLECTOR: return tax_collector_phrase(f);
     //        case FIGURE_MARKET_TRADER:
     //            return market_trader_phrase(f);
     case FIGURE_DELIVERY_BOY: return deliverty_boy_phrase(f);
