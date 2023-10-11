@@ -36,7 +36,7 @@ void figure_create_emigrant(building* house, int num_people) {
     }
 
     figure* f = figure_create(FIGURE_EMIGRANT, house->tile, DIR_0_TOP_RIGHT);
-    if (house->subtype.house_level >= HOUSE_SMALL_VILLA) {
+    if (house->subtype.house_level >= HOUSE_ELEGANT_RESIDENCE) {
         city_migration_nobles_leave_city(num_people);
     }
 

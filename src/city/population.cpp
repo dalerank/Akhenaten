@@ -385,8 +385,9 @@ static int calculate_people_per_house_type(void) {
                 city_data.population.people_in_residences += pop;
             }
 
-            if (b->subtype.house_level >= HOUSE_SMALL_VILLA)
+            if (b->subtype.house_level >= HOUSE_ELEGANT_RESIDENCE) {
                 city_data.population.people_in_villas_palaces += pop;
+            }
         }
     }
     return total;

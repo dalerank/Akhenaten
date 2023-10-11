@@ -179,7 +179,7 @@ static void calculate_working_population(void) {
     for (int i = 0; i < total_houses; i++) {
         building* b = building_get(houses[i]);
         if (b->house_population > 0) {
-            if (b->subtype.house_level >= HOUSE_SMALL_VILLA)
+            if (b->subtype.house_level >= HOUSE_ELEGANT_RESIDENCE)
                 num_patricians += b->house_population;
             else {
                 num_plebs += b->house_population;
