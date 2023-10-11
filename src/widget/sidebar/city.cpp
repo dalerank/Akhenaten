@@ -206,14 +206,16 @@ static void draw_expanded_background(int x_offset) {
 }
 void widget_sidebar_city_draw_background(void) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar");
-    if (city_view_is_sidebar_collapsed())
+    if (city_view_is_sidebar_collapsed()) {
         draw_collapsed_background();
-    else
+    } else {
         draw_expanded_background(sidebar_common_get_x_offset_expanded());
+    }
 }
 void widget_sidebar_city_draw_foreground(void) {
-    if (building_menu_has_changed())
+    if (building_menu_has_changed()) {
         refresh_build_menu_buttons();
+    }
 
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = sidebar_common_get_x_offset_collapsed();
@@ -223,25 +225,23 @@ void widget_sidebar_city_draw_foreground(void) {
         draw_buttons_expanded(x_offset);
         draw_overlay_text(x_offset + 4);
 
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            widget_minimap_draw({x_offset + 8, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
-            draw_number_of_messages(x_offset);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
-            draw_number_of_messages(x_offset - 26);
-        }
+        widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
+        draw_number_of_messages(x_offset - 26);
     }
     sidebar_extra_draw_foreground();
 
     window_request_refresh();
     draw_debug_ui(10, 30);
 }
+
 void widget_sidebar_city_draw_foreground_military(void) {
     widget_minimap_draw({sidebar_common_get_x_offset_expanded() + 8, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 }
+
 int widget_sidebar_city_handle_mouse(const mouse* m) {
-    if (widget_city_has_input())
+    if (widget_city_has_input()) {
         return false;
+    }
 
     bool handled = false;
     int button_id;
@@ -250,16 +250,19 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = sidebar_common_get_x_offset_collapsed();
         handled |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, std::size(button_expand_sidebar), &button_id);
-        if (button_id)
+        if (button_id) {
             data.focus_tooltip_text_id = 12;
+        }
 
         handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, std::size(buttons_build_collapsed), &button_id);
-        if (button_id)
+        if (button_id) {
             data.focus_tooltip_text_id = button_id + 19;
+        }
 
     } else {
-        if (widget_minimap_handle_mouse(m))
+        if (widget_minimap_handle_mouse(m)) {
             return true;
+        }
 
         int x_offset = sidebar_common_get_x_offset_expanded();
         handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, std::size(buttons_overlays_collapse_sidebar), &button_id);
@@ -286,12 +289,11 @@ int widget_sidebar_city_handle_mouse_build_menu(const mouse* m) {
     if (city_view_is_sidebar_collapsed()) {
         return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_collapsed(), 24, buttons_build_collapsed, std::size(buttons_build_collapsed), 0);
     } else {
-        return image_buttons_handle_mouse(
-          m, sidebar_common_get_x_offset_expanded(), 24, buttons_build_expanded, std::size(buttons_build_expanded), 0);
+        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build_expanded, std::size(buttons_build_expanded), 0);
     }
 }
 
-int widget_sidebar_city_get_tooltip_text(void) {
+int widget_sidebar_city_get_tooltip_text() {
     return g_sidebar_data.focus_tooltip_text_id;
 }
 
@@ -300,7 +302,7 @@ void widget_sidebar_city_release_build_buttons() {
     image_buttons_release_press(buttons_build_collapsed, 20);
 }
 
-static void slide_finished(void) {
+static void slide_finished() {
     city_view_toggle_sidebar();
     window_city_show();
     window_draw(1);

@@ -108,6 +108,7 @@ void inner_panel_draw(int x, int y, int width_blocks, int height_blocks) {
             image_y = 0;
     }
 }
+
 void label_draw(int x, int y, int width_blocks, int type) {
     int image_base = image_id_from_group(GROUP_PANEL_BUTTON);
     for (int i = 0; i < width_blocks; i++) {
@@ -122,6 +123,22 @@ void label_draw(int x, int y, int width_blocks, int type) {
         ImageDraw::img_generic(image_base + image_id, x + 16 * i, y);
     }
 }
+
+void label_draw_colored(int x, int y, int width_blocks, int type, uint32_t mask) {
+    int image_base = image_id_from_group(GROUP_PANEL_BUTTON);
+    for (int i = 0; i < width_blocks; i++) {
+        int image_id;
+        if (i == 0)
+            image_id = 3 * type + 40;
+        else if (i < width_blocks - 1)
+            image_id = 3 * type + 41;
+        else {
+            image_id = 3 * type + 42;
+        }
+        ImageDraw::img_generic(image_base + image_id, x + 16 * i, y, mask);
+    }
+}
+
 void large_label_draw(int x, int y, int width_blocks, int type) {
     int image_base = image_id_from_group(GROUP_PANEL_BUTTON);
     for (int i = 0; i < width_blocks; i++) {
