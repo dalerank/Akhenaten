@@ -54,7 +54,7 @@ int building_type_to_channel(building *b) {
         // falltrougth
     case BUILDING_HOUSE_STURDY_HUT:
     case BUILDING_HOUSE_MEAGER_SHANTY:
-    case BUILDING_HOUSE_LARGE_SHANTY:
+    case BUILDING_HOUSE_COMMON_SHANTY:
         return SOUND_CHANNEL_CITY_HOUSE_SLUM;
 
     case BUILDING_HOUSE_SMALL_HOVEL:

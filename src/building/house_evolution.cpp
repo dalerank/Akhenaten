@@ -213,7 +213,7 @@ static int evolve_small_shanty(building* house, house_demands* demands) {
     e_house_progress status = check_requirements(house, demands);
     if (!has_devolve_delay(house, status)) {
         if (status == E_HOUSE_EVOLVE)
-            building_house_change_to(house, BUILDING_HOUSE_LARGE_SHANTY);
+            building_house_change_to(house, BUILDING_HOUSE_COMMON_SHANTY);
         else if (status == E_HOUSE_DECAY)
             building_house_change_to(house, BUILDING_HOUSE_STURDY_HUT);
     }
@@ -238,7 +238,7 @@ static int evolve_small_hovel(building* house, house_demands* demands) {
         if (status == E_HOUSE_EVOLVE)
             building_house_change_to(house, BUILDING_HOUSE_LARGE_HOVEL);
         else if (status == E_HOUSE_DECAY)
-            building_house_change_to(house, BUILDING_HOUSE_LARGE_SHANTY);
+            building_house_change_to(house, BUILDING_HOUSE_COMMON_SHANTY);
     }
     return 0;
 }
