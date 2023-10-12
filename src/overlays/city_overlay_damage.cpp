@@ -1,4 +1,4 @@
-#include "city_overlay_fire.h"
+#include "city_overlay_damage.h"
 
 #include "city_overlay.h"
 #include "building/model.h"

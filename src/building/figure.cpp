@@ -1249,6 +1249,12 @@ bool building::figure_generate() {
                 f->wait_ticks = 10 + (map_random_7bit & 0xf);
                 set_figure(BUILDING_SLOT_GOVERNOR, f);
             }
+        } else {
+            switch (type) {
+            case BUILDING_COURTHOUSE:
+                spawn_figure_magistrate();
+                break;
+            }
         }
     } else if (is_temple() || is_large_temple()) {
         spawn_figure_temple();
@@ -1357,10 +1363,6 @@ bool building::figure_generate() {
 
         case BUILDING_WORK_CAMP:
             spawn_figure_work_camp();
-            break;
-
-        case BUILDING_COURTHOUSE:
-            spawn_figure_magistrate();
             break;
         }
     }

@@ -27,6 +27,7 @@
 #include "overlays/city_overlay_damage.h"
 #include "overlays/city_overlay_labor.h"
 #include "overlays/city_overlay_tax_income.h"
+#include "overlays/city_overlay_courthouse.h"
 
 const city_overlay* g_city_overlay = 0;
 
@@ -98,6 +99,8 @@ static const city_overlay* set_city_overlay(void) {
         return city_overlay_for_health();
     case OVERLAY_LABOR:
         return city_overlay_for_labor();
+    case OVERLAY_COUTHOUSE:
+        return city_overlay_for_courthouse();
     default:
         return 0;
     }

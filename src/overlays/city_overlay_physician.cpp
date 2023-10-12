@@ -10,19 +10,19 @@ static int get_column_height_physician(const building* b) {
     return b->house_size && b->subtype.house_level
              ? b->data.house.physician
                 ? b->data.house.physician / 10
-                : 1
+                : 0
              : NO_COLUMN;
 }
 
 static int get_tooltip_physician(tooltip_context* c, const building* b) {
-    if (b->data.house.physician <= 0)
-        return 35;
-    else if (b->data.house.physician >= 80)
-        return 36;
-    else if (b->data.house.physician >= 20)
-        return 37;
-    else {
-        return 38;
+    if (b->data.house.physician <= 0) {
+        return 132;
+    } else if (b->data.house.physician <= 33) {
+        return 133;
+    } else if (b->data.house.physician <= 66) {
+        return 134;
+    } else {
+        return 135;
     }
 }
 

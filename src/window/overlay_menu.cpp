@@ -93,6 +93,7 @@ static const int submenu_id_to_overlay[7][8] = {
   
   { // Administration
    OVERLAY_TAX_INCOME,
+   OVERLAY_COUTHOUSE,
    OVERLAY_FOOD_STOCKS,
    OVERLAY_BAZAAR_ACCESS,
    OVERLAY_DESIRABILITY,
@@ -178,6 +179,8 @@ const char* game_state_overlay_text(int index) {
         return "Problems";
     case OVERLAY_LABOR:
         return "Labor";
+    case OVERLAY_COUTHOUSE:
+        return "Magistrate";
     }
 
     return (const char*)lang_get_string(e_text_overlay_menu, index);

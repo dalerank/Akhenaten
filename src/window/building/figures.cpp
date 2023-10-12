@@ -469,6 +469,7 @@ static int window_info_show_overlay(figure *f) {
     case FIGURE_WATER_CARRIER: return OVERLAY_WATER;
     case FIGURE_TAX_COLLECTOR: return OVERLAY_TAX_INCOME;
     case FIGURE_DELIVERY_BOY: return OVERLAY_BAZAAR_ACCESS;
+    case FIGURE_MAGISTRATE: return OVERLAY_COUTHOUSE;
     case FIGURE_PRIEST:
         switch (f->home()->type) {
         case BUILDING_SHRINE_OSIRIS: case BUILDING_TEMPLE_OSIRIS: case BUILDING_TEMPLE_COMPLEX_OSIRIS: return OVERLAY_RELIGION_OSIRIS;

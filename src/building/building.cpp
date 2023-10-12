@@ -434,6 +434,7 @@ e_overlay building::get_overlay() const {
         case BUILDING_APOTHECARY: return OVERLAY_APOTHECARY;
         case BUILDING_TAX_COLLECTOR: return OVERLAY_TAX_INCOME;
         case BUILDING_WATER_SUPPLY: return OVERLAY_WATER;
+        case BUILDING_COURTHOUSE: return OVERLAY_COUTHOUSE;
     }
 
     return OVERLAY_NONE;

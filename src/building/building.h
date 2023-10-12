@@ -161,7 +161,7 @@ public:
             unsigned char bandstand_juggler;
             unsigned char bandstand_musician;
             unsigned char colosseum_gladiator;
-            unsigned char magistrate; // colosseum_lion
+            unsigned char magistrate;
             unsigned char hippodrome;
             unsigned char school;
             unsigned char library;
