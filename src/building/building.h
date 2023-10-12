@@ -359,6 +359,15 @@ void buildings_valid_do(T func) {
     }
 }
 
+template<typename T>
+void buildings_house_do(T func) {
+    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
+        if (it->state == BUILDING_STATE_VALID && building_is_house(it->type)) {
+            func(*it);
+        }
+    }
+}
+
 template<typename ... Args>
 bool building_type_any_of(building &b, Args ... args) {
     int types[] = {args...};

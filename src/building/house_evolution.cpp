@@ -213,7 +213,7 @@ static bool evolve_sturdy_hut(building* house, house_demands* demands) {
     return false;
 }
 
-static bool evolve_small_shanty(building* house, house_demands* demands) {
+static bool evolve_meager_shanty(building* house, house_demands* demands) {
     building_house_merge(house);
     e_house_progress status = check_requirements(house, demands);
     if (!has_devolve_delay(house, status)) {
@@ -225,7 +225,7 @@ static bool evolve_small_shanty(building* house, house_demands* demands) {
     return 0;
 }
 
-static bool evolve_large_shack(building* house, house_demands* demands) {
+static bool evolve_common_shanty(building* house, house_demands* demands) {
     building_house_merge(house);
     e_house_progress status = check_requirements(house, demands);
     if (!has_devolve_delay(house, status)) {
@@ -242,7 +242,7 @@ static bool evolve_small_hovel(building* house, house_demands* demands) {
     e_house_progress status = check_requirements(house, demands);
     if (!has_devolve_delay(house, status)) {
         if (status == E_HOUSE_EVOLVE)
-            building_house_change_to(house, BUILDING_HOUSE_LARGE_HOVEL);
+            building_house_change_to(house, BUILDING_HOUSE_ORDINARY_COTTAGE);
         else if (status == E_HOUSE_DECAY)
             building_house_change_to(house, BUILDING_HOUSE_COMMON_SHANTY);
     }
@@ -260,6 +260,7 @@ static bool evolve_large_hovel(building* house, house_demands* demands) {
     }
     return 0;
 }
+
 static bool evolve_small_casa(building* house, house_demands* demands) {
     building_house_merge(house);
     e_house_progress status = check_requirements(house, demands);
@@ -267,7 +268,7 @@ static bool evolve_small_casa(building* house, house_demands* demands) {
         if (status == E_HOUSE_EVOLVE)
             building_house_change_to(house, BUILDING_HOUSE_LARGE_CASA);
         else if (status == E_HOUSE_DECAY)
-            building_house_change_to(house, BUILDING_HOUSE_LARGE_HOVEL);
+            building_house_change_to(house, BUILDING_HOUSE_ORDINARY_COTTAGE);
     }
     return 0;
 }
@@ -419,17 +420,18 @@ static bool evolve_luxury_palace(building* house, house_demands* demands) {
     return 0;
 }
 
-static void consume_resource(building* b, int inventory, int amount) {
+static void consume_resource(building& b, int inventory, int amount) {
     if (amount > 0) {
-        if (amount > b->data.house.inventory[inventory])
-            b->data.house.inventory[inventory] = 0;
+        if (amount > b.data.house.inventory[inventory])
+            b.data.house.inventory[inventory] = 0;
         else {
-            b->data.house.inventory[inventory] -= amount;
+            b.data.house.inventory[inventory] -= amount;
         }
     }
 }
-static void consume_resources(building* b) {
-    const model_house* model = model_get_house(b->subtype.house_level);
+
+static void consume_resources(building &b) {
+    const model_house* model = model_get_house(b.subtype.house_level);
     consume_resource(b, INVENTORY_GOOD1, model->pottery);
     consume_resource(b, INVENTORY_GOOD2, model->jewelry_furniture);
     consume_resource(b, INVENTORY_GOOD3, model->linen_oil);
@@ -439,8 +441,8 @@ static void consume_resources(building* b) {
 static bool (*evolve_callback[])(building*, house_demands*) = {
     evolve_crudy_hut,
     evolve_sturdy_hut,
-    evolve_small_shanty,
-    evolve_large_shack,
+    evolve_meager_shanty,
+    evolve_common_shanty,
     evolve_small_hovel,
     evolve_large_hovel,
     evolve_small_casa,
@@ -464,17 +466,14 @@ void building_house_process_evolve_and_consume_goods(void) {
     city_houses_reset_demands();
     house_demands* demands = city_houses_demands();
     bool has_expanded = false;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && building_is_house(b->type)) {
-            building_house_check_for_corruption(b);
-            has_expanded |= evolve_callback[b->type - BUILDING_HOUSE_VACANT_LOT](b, demands);
+    buildings_house_do([&] (building &h) {
+        building_house_check_for_corruption(&h);
+        has_expanded |= evolve_callback[h.type - BUILDING_HOUSE_VACANT_LOT](&h, demands);
 
-            if (game_time_day() == 0 || game_time_day() == 7) {
-                consume_resources(b);
-            }
+        if (game_time_day() == 0 || game_time_day() == 7) {
+            consume_resources(h);
         }
-    }
+    });
 
     if (has_expanded) {
         map_routing_update_land();

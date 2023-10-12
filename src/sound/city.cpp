@@ -58,7 +58,7 @@ int building_type_to_channel(building *b) {
         return SOUND_CHANNEL_CITY_HOUSE_SLUM;
 
     case BUILDING_HOUSE_ROUGH_COTTAGE:
-    case BUILDING_HOUSE_LARGE_HOVEL:
+    case BUILDING_HOUSE_ORDINARY_COTTAGE:
     case BUILDING_HOUSE_SMALL_CASA:
     case BUILDING_HOUSE_LARGE_CASA:
         return SOUND_CHANNEL_CITY_HOUSE_POOR;
