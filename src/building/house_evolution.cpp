@@ -200,7 +200,7 @@ static int evolve_large_hut(building* house, house_demands* demands) {
         e_house_progress status = check_requirements(house, demands);
         if (!has_devolve_delay(house, status)) {
             if (status == E_HOUSE_EVOLVE)
-                building_house_change_to(house, BUILDING_HOUSE_SMALL_SHANTY);
+                building_house_change_to(house, BUILDING_HOUSE_MEAGER_SHANTY);
             else if (status == E_HOUSE_DECAY)
                 building_house_change_to(house, BUILDING_HOUSE_CRUDE_HUT);
         }
@@ -227,7 +227,7 @@ static int evolve_large_shack(building* house, house_demands* demands) {
         if (status == E_HOUSE_EVOLVE)
             building_house_change_to(house, BUILDING_HOUSE_SMALL_HOVEL);
         else if (status == E_HOUSE_DECAY)
-            building_house_change_to(house, BUILDING_HOUSE_SMALL_SHANTY);
+            building_house_change_to(house, BUILDING_HOUSE_MEAGER_SHANTY);
     }
     return 0;
 }
