@@ -17,15 +17,15 @@ int city_rating_prosperity(void) {
     return city_data.ratings.prosperity;
 }
 
-int city_rating_monument(void) {
+int city_rating_monument() {
     return city_data.ratings.monument;
 }
 
-int city_rating_kingdom(void) {
+int city_rating_kingdom() {
     return city_data.ratings.kingdom;
 }
 
-int city_rating_selected(void) {
+int city_rating_selected() {
     return city_data.ratings.selected;
 }
 
@@ -33,7 +33,7 @@ void city_rating_select(int rating) {
     city_data.ratings.selected = rating;
 }
 
-int city_rating_selected_explanation(void) {
+int city_rating_selected_explanation() {
     switch (city_data.ratings.selected) {
     case SELECTED_RATING_CULTURE:
         return city_data.ratings.culture_explanation;
@@ -48,7 +48,7 @@ int city_rating_selected_explanation(void) {
     }
 }
 
-void city_ratings_reduce_prosperity_after_bailout(void) {
+void city_ratings_reduce_prosperity_after_bailout() {
     city_data.ratings.prosperity -= 3;
     if (city_data.ratings.prosperity < 0) {
         city_data.ratings.prosperity = 0;
@@ -60,7 +60,7 @@ void city_ratings_reduce_prosperity_after_bailout(void) {
 void city_ratings_monument_building_destroyed(int type) {
     switch (type) {
     case BUILDING_HOUSE_CRUDE_HUT:
-    case BUILDING_HOUSE_LARGE_HUT:
+    case BUILDING_HOUSE_STURDY_HUT:
     case BUILDING_POLICE_STATION:
     case BUILDING_ENGINEERS_POST:
     case BUILDING_WELL:

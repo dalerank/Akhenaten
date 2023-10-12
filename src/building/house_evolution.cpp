@@ -183,15 +183,17 @@ static int has_devolve_delay(building* house, int status) {
     }
 }
 
-static int evolve_small_hut(building* house, house_demands* demands) {
+static int evolve_crudy_hut(building* house, house_demands* demands) {
     if (house->house_population > 0) {
         building_house_merge(house);
         int status = check_requirements(house, demands);
-        if (status == E_HOUSE_EVOLVE)
-            building_house_change_to(house, BUILDING_HOUSE_LARGE_HUT);
+        if (status == E_HOUSE_EVOLVE) {
+            building_house_change_to(house, BUILDING_HOUSE_STURDY_HUT);
+        }
     }
     return 0;
 }
+
 static int evolve_large_hut(building* house, house_demands* demands) {
     if (house->house_population > 0) {
         building_house_merge(house);
@@ -205,17 +207,19 @@ static int evolve_large_hut(building* house, house_demands* demands) {
     }
     return 0;
 }
-static int evolve_small_shack(building* house, house_demands* demands) {
+
+static int evolve_small_shanty(building* house, house_demands* demands) {
     building_house_merge(house);
     e_house_progress status = check_requirements(house, demands);
     if (!has_devolve_delay(house, status)) {
         if (status == E_HOUSE_EVOLVE)
             building_house_change_to(house, BUILDING_HOUSE_LARGE_SHANTY);
         else if (status == E_HOUSE_DECAY)
-            building_house_change_to(house, BUILDING_HOUSE_LARGE_HUT);
+            building_house_change_to(house, BUILDING_HOUSE_STURDY_HUT);
     }
     return 0;
 }
+
 static int evolve_large_shack(building* house, house_demands* demands) {
     building_house_merge(house);
     e_house_progress status = check_requirements(house, demands);
@@ -398,8 +402,9 @@ static int evolve_large_palace(building* house, house_demands* demands) {
 }
 static int evolve_luxury_palace(building* house, house_demands* demands) {
     e_house_progress status = check_evolve_desirability(house);
-    if (!has_required_goods_and_services(house, 0, demands))
+    if (!has_required_goods_and_services(house, 0, demands)) {
         status = E_HOUSE_DECAY;
+    }
 
     if (!has_devolve_delay(house, status) && status == E_HOUSE_DECAY)
         building_house_change_to(house, BUILDING_HOUSE_LARGE_PALACE);
@@ -424,11 +429,28 @@ static void consume_resources(building* b) {
     consume_resource(b, INVENTORY_GOOD4, model->beer_wine);
 }
 
-static int (*evolve_callback[])(building*, house_demands*)
-  = {evolve_small_hut,   evolve_large_hut,   evolve_small_shack,   evolve_large_shack,  evolve_small_hovel,
-     evolve_large_hovel,  evolve_small_casa,   evolve_large_casa,    evolve_small_insula, evolve_medium_insula,
-     evolve_large_insula, evolve_grand_insula, evolve_small_villa,   evolve_medium_villa, evolve_large_villa,
-     evolve_grand_villa,  evolve_small_palace, evolve_medium_palace, evolve_large_palace, evolve_luxury_palace};
+static int (*evolve_callback[])(building*, house_demands*) = {
+    evolve_crudy_hut,
+    evolve_large_hut,
+    evolve_small_shanty,
+    evolve_large_shack,
+    evolve_small_hovel,
+    evolve_large_hovel,
+    evolve_small_casa,
+    evolve_large_casa,
+    evolve_small_insula,
+    evolve_medium_insula,
+    evolve_large_insula,
+    evolve_grand_insula,
+    evolve_small_villa,
+    evolve_medium_villa,
+    evolve_large_villa,
+    evolve_grand_villa,
+    evolve_small_palace,
+    evolve_medium_palace,
+    evolve_large_palace,
+    evolve_luxury_palace
+};
 
 void building_house_process_evolve_and_consume_goods(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Process'n'Consume Goods");
