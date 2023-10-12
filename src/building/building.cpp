@@ -538,9 +538,6 @@ bool building::is_military() {
 
 ///////////////
 
-bool building_is_house(int type) {
-    return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
-}
 bool building_is_fort(int type) {
     return type == BUILDING_FORT_CHARIOTEERS || type == BUILDING_FORT_ARCHERS || type == BUILDING_FORT_INFANTRY;
 }

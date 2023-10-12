@@ -336,6 +336,8 @@ public:
     int barracks_get_priority();
 };
 
+inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE; }
+
 int building_id_first(e_building_type type);
 building* building_first(e_building_type type);
 
@@ -414,7 +416,6 @@ bool building_exists_at(map_point point, building* b);
 void building_clear_all(void);
 // void building_totals_add_corrupted_house(int unfixable);
 
-bool building_is_house(int type);
 bool building_is_fort(int type);
 bool building_is_defense_ph(int type);
 bool building_is_farm(int type);
