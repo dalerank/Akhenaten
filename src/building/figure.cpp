@@ -1005,10 +1005,11 @@ bool building::can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_bui
     bool resource_reachable = false;
     switch (ftype) {
     case FIGURE_REED_GATHERER:
-        resource_reachable = map_routing_citizen_found_terrain(road_access.x(), road_access.y(), nullptr, nullptr, TERRAIN_MARSHLAND);
+        resource_reachable = map_routing_citizen_found_terrain(road_access, nullptr, TERRAIN_MARSHLAND);
         break;
+
     case FIGURE_LUMBERJACK:
-        resource_reachable = map_routing_citizen_found_terrain(road_access.x(), road_access.y(), nullptr, nullptr, TERRAIN_TREE);
+        resource_reachable = map_routing_citizen_found_terrain(road_access, nullptr, TERRAIN_TREE);
         break;
     }
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {

@@ -316,12 +316,14 @@ static bool callback_travel_found_terrain(int next_offset, int dist, int terrain
     }
     return false;
 }
-bool map_routing_citizen_found_terrain(int src_x, int src_y, int* dst_x, int* dst_y, int terrain_type) {
-    int src_offset = MAP_OFFSET(src_x, src_y);
+
+bool map_routing_citizen_found_terrain(tile2i src, tile2i* dst, int terrain_type) {
+    int src_offset = src.grid_offset();
     ++g_routing_stats.total_routes_calculated;
-    bool found = route_queue_until_terrain(src_offset, terrain_type, dst_x, dst_y, callback_travel_found_terrain);
+    bool found = route_queue_until_terrain(src_offset, terrain_type, dst, callback_travel_found_terrain);
     return found;
 }
+
 static bool callback_travel_found_reeds(int next_offset, int dist) {
     if (map_grid_get(&routing_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset)) {
         enqueue(next_offset, dist);
