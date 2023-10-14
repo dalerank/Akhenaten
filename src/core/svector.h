@@ -49,9 +49,10 @@ public:
         assign_impl_ilist(l);
     }
 
-    svector(std::initializer_list<T> values) {
-        for (auto &v : values) {
-            emplace_back(std::move(v));
+    template<typename Y>
+    svector(std::initializer_list<Y> values) {
+        for (const auto &v : values) {
+            push_back(v);
         }
     }
 
