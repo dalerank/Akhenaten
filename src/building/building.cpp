@@ -178,6 +178,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         break;
     case BUILDING_REED_GATHERER:
         b->output_resource_id = RESOURCE_REEDS;
+        b->data.industry.max_gatheres = 1;
         break;
     case BUILDING_GOLD_MINE:
         b->output_resource_id = RESOURCE_GOLD;
@@ -960,7 +961,8 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &b->data.industry.ready_production);
         iob->bind(BIND_SIGNATURE_INT16, &b->data.industry.progress);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.spawned_worker_this_month);
-        for (int i = 0; i < 11; i++) {
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.max_gatheres);
+        for (int i = 0; i < 10; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_b[i]);
         }
         //        iob->bind____skip(12);

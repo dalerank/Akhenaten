@@ -126,7 +126,8 @@ public:
             short ready_production;
             short progress;
             bool spawned_worker_this_month;
-            int unk_b[11];
+            unsigned char max_gatheres;
+            int unk_b[10];
             unsigned char has_fish;
             int unk_c[14];
             unsigned char blessing_days_left;
