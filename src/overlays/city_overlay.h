@@ -4,6 +4,8 @@
 #include "graphics/elements/tooltip.h"
 #include "core/vec2i.h"
 #include "city_overlay_fwd.h"
+#include "core/bstring.h"
+#include "core/svector.h"
 
 constexpr int NO_COLUMN = -1;
 
@@ -14,7 +16,7 @@ inline bool show_figure_none(const figure *f) { return false; }
 inline int get_column_height_none(const building* b) { return NO_COLUMN; }
 
 struct city_overlay {
-    int type = -1;
+    e_overlay type = OVERLAY_NONE;
     int column_type = -1;
     int (*show_building_func)(const building* b) = 0;
     int (*show_figure_func)(const figure* f) = 0;
@@ -24,8 +26,14 @@ struct city_overlay {
     void (*draw_custom_footprint)(vec2i pixel, map_point point) = 0;
     void (*draw_custom_top_func)(vec2i pixel, map_point point) = 0;
 
+    int tooltip_base;
+    svector<int, 10> tooltips;
+    bstring64 caption;
+    svector<e_figure_type, 4> walkers;
+    svector<e_building_type, 10> buildings;
+
     city_overlay() {}
-    city_overlay(int _type,
+    city_overlay(e_overlay _type,
                  int _column_type,
                  int (*_show_building_func)(const building* b),
                  int (*_show_figure)(const figure* f),
@@ -64,7 +72,8 @@ struct city_overlay {
     }
 };
 
-const city_overlay* get_city_overlay(void);
+const city_overlay* get_city_overlay();
+city_overlay *get_city_overlay(e_overlay e);
 bool select_city_overlay();
 int widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset);
 

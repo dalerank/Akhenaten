@@ -69,6 +69,6 @@ struct city_overlay_fire : public city_overlay {
 
 city_overlay_fire g_city_overlay_fire;
 
-const city_overlay* city_overlay_for_fire(void) {
+city_overlay* city_overlay_for_fire() {
     return &g_city_overlay_fire;
 }

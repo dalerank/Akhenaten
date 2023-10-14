@@ -104,7 +104,7 @@ struct city_overlay_education : public city_overlay {
 
 city_overlay_education g_city_overlay_education;
 
-const city_overlay* city_overlay_for_education(void) {
+city_overlay* city_overlay_for_education() {
     return &g_city_overlay_education;
 }
 
@@ -125,7 +125,7 @@ struct city_overlay_schools : public city_overlay {
 
 city_overlay_schools g_city_overlay_schools;
 
-const city_overlay* city_overlay_for_school(void) {
+city_overlay* city_overlay_for_school() {
     return &g_city_overlay_schools;
 }
 
@@ -146,7 +146,7 @@ struct city_overlay_libraries : public city_overlay {
 
 city_overlay_libraries g_city_overlay_libraries;
 
-const city_overlay* city_overlay_for_library(void) {
+city_overlay* city_overlay_for_library() {
     return &g_city_overlay_libraries;
 }
 
@@ -167,6 +167,6 @@ struct city_overlay_academy : public city_overlay {
 
 city_overlay_academy g_city_overlay_academy;
 
-const city_overlay* city_overlay_for_academy(void) {
+city_overlay* city_overlay_for_academy() {
     return &g_city_overlay_academy;
 }

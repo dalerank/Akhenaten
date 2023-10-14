@@ -105,6 +105,8 @@ void js_vm_reload_configs() {
     js_config_load_mission_sounds(vm.J);
     js_config_load_walker_sounds(vm.J);
     js_config_load_city_sounds(vm.J);
+    js_config_load_city_overlays(vm.J);
+
 }
 
 void js_vm_sync() {
@@ -238,6 +240,9 @@ void js_reset_vm_state() {
     //js_register_hotkey_functions(vm.J);
     js_register_game_constants(vm.J);
     js_register_city_sound_constants(vm.J);
+    js_register_city_overlays(vm.J);
+    js_register_city_buildings(vm.J);
+    js_register_city_walkers(vm.J);
 
     int ok = js_vm_load_file_and_exec(":modules.js");
     if (ok) {

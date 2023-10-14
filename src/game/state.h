@@ -10,7 +10,7 @@ void game_state_toggle_paused();
 
 void game_state_unpause();
 
-int game_state_overlay();
+e_overlay game_state_overlay();
 
 void game_state_reset_overlay();
 

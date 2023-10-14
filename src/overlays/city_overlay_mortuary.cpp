@@ -54,6 +54,6 @@ struct city_overlay_mortuary : public city_overlay {
 
 city_overlay_mortuary g_city_overlay_mortuary;
 
-const city_overlay* city_overlay_for_mortuary(void) {
+city_overlay* city_overlay_for_mortuary() {
     return &g_city_overlay_mortuary;
 }

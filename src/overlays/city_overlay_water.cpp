@@ -126,6 +126,6 @@ struct city_overlay_water : public city_overlay {
 
 city_overlay_water g_city_overlay_water;
 
-const city_overlay* city_overlay_for_water(void) {
+city_overlay* city_overlay_for_water() {
     return &g_city_overlay_water;
 }

@@ -31,8 +31,8 @@
 
 const city_overlay* g_city_overlay = 0;
 
-static const city_overlay* set_city_overlay(void) {
-    switch (game_state_overlay()) {
+city_overlay* get_city_overlay(e_overlay ov) {
+    switch (ov) {
     case OVERLAY_FIRE:
         return city_overlay_for_fire();
     case OVERLAY_CRIME:
@@ -102,7 +102,7 @@ static const city_overlay* set_city_overlay(void) {
     case OVERLAY_COUTHOUSE:
         return city_overlay_for_courthouse();
     default:
-        return 0;
+        return nullptr;
     }
 }
 
@@ -112,7 +112,7 @@ const city_overlay* get_city_overlay() {
 
 bool select_city_overlay() {
     if (!g_city_overlay || g_city_overlay->type != game_state_overlay()) {
-        g_city_overlay = set_city_overlay();
+        g_city_overlay = get_city_overlay(game_state_overlay());
     }
 
     return g_city_overlay != 0;

@@ -59,6 +59,6 @@ struct city_overlay_apothecary : public city_overlay {
 
 city_overlay_apothecary g_city_overlay_apothecary;
 
-const city_overlay* city_overlay_for_apothecary(void) {
+city_overlay* city_overlay_for_apothecary() {
     return &g_city_overlay_apothecary;
 }

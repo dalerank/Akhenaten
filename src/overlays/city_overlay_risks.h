@@ -5,6 +5,6 @@ class building;
 
 void overlay_problems_prepare_building(building* b);
 
-const city_overlay* city_overlay_for_problems(void);
+city_overlay* city_overlay_for_problems();
 
-const city_overlay* city_overlay_for_native(void);
+city_overlay* city_overlay_for_native();

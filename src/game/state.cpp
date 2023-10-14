@@ -10,8 +10,8 @@
 
 struct state_data_t {
     bool paused;
-    int current_overlay;
-    int previous_overlay;
+    e_overlay current_overlay;
+    e_overlay previous_overlay;
 };
 
 state_data_t g_state_data = {
@@ -44,7 +44,7 @@ void game_state_toggle_paused(void) {
     g_state_data.paused = g_state_data.paused ? 0 : 1;
 }
 
-int game_state_overlay() {
+e_overlay game_state_overlay() {
     return g_state_data.current_overlay;
 }
 
@@ -54,7 +54,7 @@ void game_state_reset_overlay() {
 }
 
 void game_state_toggle_overlay() {
-    int previous_overlay = g_state_data.previous_overlay;
+    e_overlay previous_overlay = g_state_data.previous_overlay;
     g_state_data.previous_overlay = g_state_data.current_overlay;
     g_state_data.current_overlay = previous_overlay;
     map_clear_highlights();

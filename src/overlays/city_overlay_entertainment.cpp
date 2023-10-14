@@ -68,7 +68,7 @@ static int get_tooltip_hippodrome(tooltip_context* c, const building* b) {
     }
 }
 
-const city_overlay* city_overlay_for_entertainment(void) {
+city_overlay* city_overlay_for_entertainment() {
     static city_overlay overlay = {OVERLAY_ENTERTAINMENT,
                                    COLUMN_TYPE_WATER_ACCESS,
                                    show_building_entertainment,
@@ -81,7 +81,7 @@ const city_overlay* city_overlay_for_entertainment(void) {
     return &overlay;
 }
 
-const city_overlay* city_overlay_for_hippodrome(void) {
+city_overlay* city_overlay_for_hippodrome() {
     static city_overlay overlay = {OVERLAY_HIPPODROME,
                                    COLUMN_TYPE_WATER_ACCESS,
                                    show_building_hippodrome,

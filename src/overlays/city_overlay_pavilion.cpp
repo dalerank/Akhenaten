@@ -59,6 +59,6 @@ struct city_overlay_pavilion : public city_overlay {
 
 city_overlay_pavilion g_city_overlay_pavilion;
 
-const city_overlay* city_overlay_for_pavilion(void) {
+city_overlay* city_overlay_for_pavilion() {
     return &g_city_overlay_pavilion;
 }

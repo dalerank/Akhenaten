@@ -63,6 +63,6 @@ struct city_overlay_courthouse : public city_overlay {
 
 city_overlay_courthouse g_city_overlay_courthouse;
 
-const city_overlay* city_overlay_for_courthouse(void) {
+city_overlay* city_overlay_for_courthouse() {
     return &g_city_overlay_courthouse;
 }

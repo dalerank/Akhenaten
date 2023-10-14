@@ -64,6 +64,6 @@ struct city_overlay_tax_income : public city_overlay {
 
 city_overlay_tax_income g_city_overlay_tax_income;
 
-const city_overlay* city_overlay_for_tax_income() {
+city_overlay* city_overlay_for_tax_income() {
     return &g_city_overlay_tax_income;
 }

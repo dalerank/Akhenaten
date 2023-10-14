@@ -96,6 +96,6 @@ struct city_overlay_fertility : public city_overlay {
 
 city_overlay_fertility g_city_overlay_fertility;
 
-const city_overlay* city_overlay_for_fertility(void) {
+city_overlay* city_overlay_for_fertility() {
     return &g_city_overlay_fertility;
 }

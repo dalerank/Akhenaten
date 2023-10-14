@@ -57,6 +57,6 @@ struct city_overlay_physician : public city_overlay {
 
 city_overlay_physician g_city_overlay_physician;
 
-const city_overlay* city_overlay_for_physician(void) {
+city_overlay* city_overlay_for_physician() {
     return &g_city_overlay_physician;
 }

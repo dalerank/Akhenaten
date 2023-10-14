@@ -61,6 +61,6 @@ struct city_overlay_booth : public city_overlay {
 
 city_overlay_booth g_city_overlay_booth;
 
-const city_overlay* city_overlay_for_booth() {
+city_overlay* city_overlay_for_booth() {
     return &g_city_overlay_booth;
 }

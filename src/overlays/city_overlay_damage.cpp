@@ -63,6 +63,6 @@ struct city_overlay_damage : public city_overlay {
 
 city_overlay_damage g_city_overlay_damage;
 
-const city_overlay* city_overlay_for_damage(void) {
+city_overlay* city_overlay_for_damage() {
     return &g_city_overlay_damage;
 }

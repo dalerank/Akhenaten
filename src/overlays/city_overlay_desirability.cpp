@@ -135,6 +135,6 @@ struct city_overlay_desirability : public city_overlay {
 };
 
 city_overlay_desirability g_city_overlay_desirability;
-const city_overlay* city_overlay_for_desirability() {
+city_overlay* city_overlay_for_desirability() {
     return &g_city_overlay_desirability;
 }

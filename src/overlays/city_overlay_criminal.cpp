@@ -70,6 +70,6 @@ struct city_overlay_crime : public city_overlay {
 
 city_overlay_crime g_city_overlay_crime;
 
-const city_overlay* city_overlay_for_crime(void) {
+city_overlay* city_overlay_for_crime() {
     return &g_city_overlay_crime;
 }

@@ -86,6 +86,6 @@ struct city_overlay_labor : public city_overlay {
 
 city_overlay_labor g_city_overlay_labor;
 
-const city_overlay* city_overlay_for_labor(void) {
+city_overlay* city_overlay_for_labor() {
     return &g_city_overlay_labor;
 }

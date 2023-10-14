@@ -120,6 +120,6 @@ struct city_overlay_routing : public city_overlay {
 
 city_overlay_routing g_city_overlay_routing;
 
-const city_overlay* city_overlay_for_routing() {
+city_overlay* city_overlay_for_routing() {
     return &g_city_overlay_routing;
 }

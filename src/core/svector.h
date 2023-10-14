@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
+#include <vector>
 
 template <typename T, size_t Capacity>
 struct svector {
@@ -83,6 +84,20 @@ public:
         clear();
         for (auto& elem : v) {
             push_back(elem);
+        }
+
+        return *this;
+    }
+
+    svector& operator=(const std::vector<T>& v) {
+        if ((void*)this == (void*)&v) {
+            // prevent self usurp
+            return *this;
+        }
+
+        clear();
+        for (auto &elem : v) {
+            this->push_back(elem);
         }
 
         return *this;

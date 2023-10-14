@@ -61,7 +61,7 @@ static int show_figure_native(const figure* f) {
     return f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_MISSIONARY;
 }
 
-const city_overlay* city_overlay_for_problems(void) {
+city_overlay* city_overlay_for_problems() {
     static city_overlay overlay = {
         OVERLAY_PROBLEMS,
         COLUMN_TYPE_RISK,
@@ -125,7 +125,7 @@ static void draw_top_native(vec2i pixel, map_point point) {
         city_with_overlay_draw_building_top(pixel, point);
 }
 
-const city_overlay* city_overlay_for_native(void) {
+city_overlay* city_overlay_for_native() {
     static city_overlay overlay = {
         OVERLAY_NATIVE,
         COLUMN_TYPE_RISK,

@@ -76,6 +76,6 @@ struct city_overlay_bazaar_access : public city_overlay {
 
 city_overlay_bazaar_access g_city_overlay_bazaar_access;
 
-const city_overlay* city_overlay_for_bazaar_access(void) {
+city_overlay* city_overlay_for_bazaar_access() {
     return &g_city_overlay_bazaar_access;
 }

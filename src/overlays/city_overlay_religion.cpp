@@ -87,29 +87,23 @@ struct city_overlay_religion : public city_overlay {
 };
 
 city_overlay_religion g_city_overlay_religion;
-const city_overlay* city_overlay_for_religion(void) {
+city_overlay* city_overlay_for_religion() {
     return &g_city_overlay_religion;
 }
 
 struct city_overlay_religion_god : public city_overlay {
-    std::array<e_building_type, 4> btypes;
     city_overlay_religion_god() {
         type = OVERLAY_RELIGION_BAST;
         column_type = COLUMN_TYPE_WATER_ACCESS;
 
         get_column_height = get_column_height_religion;
         get_tooltip_for_building = get_tooltip_religion;
-        btypes.fill(BUILDING_NONE);
     }
 
     bool show_figure(const figure* f) const override {
-        return f->type == FIGURE_PRIEST;
-    }
-
-    template <typename... Args>
-    void assign_btypes(Args... args) {
-        auto tmp = {args...};
-        std::copy(std::begin(tmp), std::end(tmp), std::begin(btypes));
+        return walkers.size() > 0
+                ? std::find(walkers.begin(), walkers.end(), f->type) != walkers.end()
+                : f->type == FIGURE_PRIEST;
     }
 
     void draw_custom_top(vec2i pixel, map_point point) const override {
@@ -124,42 +118,41 @@ struct city_overlay_religion_god : public city_overlay {
     }
 
     bool show_building(const building* b) const override {
-        return std::find(btypes.begin(), btypes.end(), b->type) != btypes.end();
+        return std::find(buildings.begin(), buildings.end(), b->type) != buildings.end();
     }
 };
 
 struct city_overlay_religion_osiris : public city_overlay_religion_god {
     city_overlay_religion_osiris() {
         type = OVERLAY_RELIGION_OSIRIS;
-        assign_btypes(BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_SHRINE_OSIRIS);
     }
 };
 
 struct city_overlay_religion_ra : public city_overlay_religion_god {
     city_overlay_religion_ra() {
         type = OVERLAY_RELIGION_RA;
-        assign_btypes(BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_SHRINE_RA);
+        buildings = {BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_SHRINE_RA};
     }
 };
 
 struct city_overlay_religion_ptah : public city_overlay_religion_god {
     city_overlay_religion_ptah() {
         type = OVERLAY_RELIGION_PTAH;
-        assign_btypes(BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_SHRINE_PTAH);
+        buildings = {BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_SHRINE_PTAH};
     }
 };
 
 struct city_overlay_religion_seth : public city_overlay_religion_god {
     city_overlay_religion_seth() {
         type = OVERLAY_RELIGION_SETH;
-        assign_btypes(BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_SHRINE_SETH);
+        buildings = {BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_SHRINE_SETH};
     }
 };
 
 struct city_overlay_religion_bast : public city_overlay_religion_god {
     city_overlay_religion_bast() {
         type = OVERLAY_RELIGION_BAST;
-        assign_btypes(BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_SHRINE_BAST);
+        buildings = {BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_SHRINE_BAST};
     }
 };
 
@@ -169,18 +162,22 @@ city_overlay_religion_ptah g_city_overlay_religion_ptah;
 city_overlay_religion_seth g_city_overlay_religion_seth;
 city_overlay_religion_bast g_city_overlay_religion_bast;
 
-const city_overlay* city_overlay_for_religion_osiris() {
+city_overlay* city_overlay_for_religion_osiris() {
     return &g_city_overlay_religion_osiris;
 }
-const city_overlay* city_overlay_for_religion_ra() {
+
+city_overlay* city_overlay_for_religion_ra() {
     return &g_city_overlay_religion_ra;
 }
-const city_overlay* city_overlay_for_religion_ptah() {
+
+city_overlay* city_overlay_for_religion_ptah() {
     return &g_city_overlay_religion_ptah;
 }
-const city_overlay* city_overlay_for_religion_seth() {
+
+city_overlay* city_overlay_for_religion_seth() {
     return &g_city_overlay_religion_seth;
 }
-const city_overlay* city_overlay_for_religion_bast() {
+
+city_overlay* city_overlay_for_religion_bast() {
     return &g_city_overlay_religion_bast;
 }

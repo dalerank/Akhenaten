@@ -63,6 +63,6 @@ struct city_overlay_bandstand : public city_overlay {
 
 city_overlay_bandstand g_city_overlay_bandstand;
 
-const city_overlay* city_overlay_for_bandstand() {
+city_overlay* city_overlay_for_bandstand() {
     return &g_city_overlay_bandstand;
 }

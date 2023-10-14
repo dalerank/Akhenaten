@@ -78,7 +78,7 @@ static int get_tooltip_food_stocks(tooltip_context* c, const building* b) {
     }
 }
 
-const city_overlay* city_overlay_for_food_stocks(void) {
+city_overlay* city_overlay_for_food_stocks() {
     static city_overlay overlay = {
         OVERLAY_FOOD_STOCKS,
         COLUMN_TYPE_RISK,

@@ -11,6 +11,11 @@
 #include "sound/sound_building.h"
 #include "sound/sound_walker.h"
 
+#include "overlays/city_overlay.h"
+#include "figure/figure.h"
+
+#include <vector>
+
 void js_game_log_info(js_State *J) {
     if (js_isundefined(J, 1)) {
         logs::info("log() Try to print undefined object", 0, 0);
@@ -41,7 +46,7 @@ void js_game_load_text(js_State *J) {
     fseek(ftext, 0, SEEK_SET);  /* same as rewind(f); */
 
     text = (char *)malloc(fsize + 1);
-    int bytes = fread(text, 1, fsize, ftext);
+    size_t bytes = fread(text, 1, fsize, ftext);
     fclose(ftext);
 
     text[fsize] = 0;
@@ -84,6 +89,24 @@ inline int read_integer(Arch arch, pcstr name) {
     return result;
 }
 
+template<typename T = int, typename Arch>
+inline std::vector<T> read_integer_array(Arch arch, pcstr name) {
+    js_getproperty(arch, -1, name);
+    std::vector<T> result;
+    if (js_isarray(arch, -1)) {
+        int length = js_getlength(arch, -1);
+
+        for (int i = 0; i < length; ++i) {
+            js_getindex(arch, -1, i);
+            int v = js_tointeger(arch, -1);
+            result.push_back((T)v);
+            js_pop(arch, 1);
+        }
+        js_pop(arch, 1);
+    }
+    return result;
+}
+
 void js_config_load_building_sounds(js_State *arch) {
     js_config_load_global_array(arch, "building_sounds", [] (auto arch) {
         const char *type = read_string(arch, "type");
@@ -114,6 +137,26 @@ void js_config_load_city_sounds(js_State *arch) {
         const int channel = read_integer(arch, "c");
         const char *path = read_string(arch, "p");
         sound_system_update_channel(channel, path);
+    });
+}
+
+void js_config_load_city_overlays(js_State *arch) {
+    js_config_load_global_array(arch, "overlays", [] (auto arch) {
+        const int e_v = read_integer(arch, "id");
+        const char *caption = read_string(arch, "caption");
+        auto walkers = read_integer_array<e_figure_type>(arch, "walkers");
+        auto buildings = read_integer_array<e_building_type>(arch, "buildings");
+        int tooltip_base = read_integer(arch, "tooltip_base");
+        auto tooltips = read_integer_array(arch, "tooltips");
+        auto overlay = get_city_overlay((e_overlay)e_v);
+
+        if (overlay) {
+            if (tooltip_base) { overlay->tooltip_base = tooltip_base; }
+            if (buildings.size()) { overlay->buildings = buildings; }
+            if (*caption) { overlay->caption = caption; }
+            if (tooltips.size()) { overlay->tooltips = tooltips; }
+            if (walkers.size()) { overlay->walkers = walkers; }
+        }
     });
 }
 
