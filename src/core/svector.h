@@ -110,6 +110,16 @@ public:
         return *this;
     }
 
+    template<typename Y>
+    svector &operator=(std::initializer_list<Y> values) {
+        clear();
+        for (auto &elem : values) {
+            this->push_back(elem);
+        }
+
+        return *this;
+    }
+
     svector& operator=(svector&& v) noexcept(std::is_nothrow_move_assignable<T>::value) {
         clear();
         for (auto i = v.begin(); i != v.end(); ++i) {
