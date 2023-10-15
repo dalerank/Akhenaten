@@ -89,14 +89,14 @@ void debug_font_test() {
     debug_font_line(&y, FONT_SMALL_SHADED);
 }
 
-void debug_text(uint8_t* str, int x, int y, int indent, const char* text, int value, color color) {
-    text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
+void debug_text(uint8_t* str, int x, int y, int indent, const char* text, int value, color color, font_t font) {
+    text_draw(string_from_ascii(text), x, y, font, color);
     string_from_int(str, value, 0);
-    text_draw(str, x + indent, y, FONT_SMALL_OUTLINED, color);
+    text_draw(str, x + indent, y, font, color);
 }
 
-void debug_text_a(uint8_t* str, int x, int y, int indent, const char* text, color color) {
-    text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
+void debug_text_a(uint8_t* str, int x, int y, int indent, const char* text, color color, font_t font) {
+    text_draw(string_from_ascii(text), x, y, font, color);
 }
 
 void debug_text_float(uint8_t* str, int x, int y, int indent, const char* text, double value, color color) {
@@ -202,12 +202,12 @@ static int north_tile_grid_offset(int x, int y) {
     return grid_offset;
 }
 
-void draw_debug_tile(vec2i pixel, map_point point) {
+void draw_debug_tile(vec2i pixel, tile2i point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
 
-    int DB2 = abs(g_debug_render) % 20;
+    int DB2 = abs(g_debug_render) % e_debug_render_size;
 
     if (DB2 == 0)
         return;
@@ -420,6 +420,14 @@ void draw_debug_tile(vec2i pixel, map_point point) {
         debug_text(str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE);
         break;
 
+    case e_debug_render_tile_pos:
+        ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
+        if (!(point.x() % 5) && !(point.y() % 5)) {
+            snprintf((char*)str, 30, "(%d,%d)", point.x(), point.y());
+            debug_text_a(str, x, y + 10, 0, (const char*)str, COLOR_WHITE, FONT_SMALL_PLAIN);
+        }
+        break;
+
     case e_debug_render_image: // IMAGE FIELD
         debug_text(str, x, y + 10, 0, "", map_image_at(grid_offset), COLOR_LIGHT_RED);
         break;
@@ -441,20 +449,20 @@ void draw_debug_tile(vec2i pixel, map_point point) {
         debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_BLUE);
         break;
 
-    case 18: // UNKNOWN SOIL GRID
+    case e_debug_render_soil: // UNKNOWN SOIL GRID
         d = map_get_UNK04(grid_offset);
         if (d != 0)
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
 
-    case 19: // UNKNOWN 32BIT GRID
+    case e_debug_render_unk_19: // UNKNOWN 32BIT GRID
         d = map_get_UNK03(grid_offset);
         if (d != 0)
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
     }
 }
-void draw_debug_figures(vec2i pixel, map_point point) {
+void draw_debug_figures(vec2i pixel, tile2i point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -470,15 +478,16 @@ void draw_debug_figures(vec2i pixel, map_point point) {
 }
 
 void figure::draw_debug() {
-    if (draw_debug_mode == 0)
+    if (draw_debug_mode == 0) {
         return;
+    }
 
     building* b = home();
     building* bdest = destination();
 
     uint8_t str[10];
     vec2i pixel;
-    pixel = mappoint_to_pixel(map_point(tile.x(), tile.y()));
+    pixel = mappoint_to_pixel(tile);
     adjust_pixel_offset(&pixel);
     pixel.x -= 10;
     pixel.y -= 80;
