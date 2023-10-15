@@ -139,6 +139,9 @@ e_availability mission_advisor_availability(e_advisor advisor, int tutorial) {
         break;
     case 5:
         advisors = {ADVISOR_LABOR, ADVISOR_IMPERIAL, ADVISOR_RATINGS, ADVISOR_POPULATION, ADVISOR_HEALTH, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION, ADVISOR_FINANCIAL, ADVISOR_CHIEF};
+        if (g_tutorials_flags.tutorial_5.spacious_apartment) {
+            advisors.push_back(ADVISOR_EDUCATION);
+        }
         break;
     }
 
