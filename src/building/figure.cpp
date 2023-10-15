@@ -477,41 +477,31 @@ void building::spawn_figure_senet() {
 
 void building::spawn_figure_school() {
     check_labor_problem();
-    if (has_figure_of_type(0, FIGURE_SCHOOL_CHILD))
+    if (has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_TEACHER)) {
         return;
-    map_point road;
+    }
+
+    tile2i road;
     if (map_has_road_access(tile, size, &road)) {
         common_spawn_labor_seeker(50);
         int spawn_delay = figure_spawn_timer();
-        if (spawn_delay == -1)
+        if (spawn_delay == -1) {
             return;
+        }
+
         figure_spawn_delay++;
         if (figure_spawn_delay > spawn_delay) {
             figure_spawn_delay = 0;
 
-            figure* child1 = figure_create(FIGURE_SCHOOL_CHILD, road, DIR_0_TOP_RIGHT);
-            child1->action_state = FIGURE_ACTION_125_ROAMING;
-            child1->set_home(id);
-            set_figure(0, child1->id); // first "child" (teacher) is the coupled figure to the school building
-            child1->init_roaming_from_building(0);
-
-            figure* child2 = figure_create(FIGURE_SCHOOL_CHILD, road, DIR_0_TOP_RIGHT);
-            child2->action_state = FIGURE_ACTION_125_ROAMING;
-            child1->set_home(id);
-            child2->init_roaming_from_building(0);
-
-            figure* child3 = figure_create(FIGURE_SCHOOL_CHILD, road, DIR_0_TOP_RIGHT);
-            child3->action_state = FIGURE_ACTION_125_ROAMING;
-            child1->set_home(id);
-            child3->init_roaming_from_building(0);
-
-            figure* child4 = figure_create(FIGURE_SCHOOL_CHILD, road, DIR_0_TOP_RIGHT);
-            child4->action_state = FIGURE_ACTION_125_ROAMING;
-            child1->set_home(id);
-            child4->init_roaming_from_building(0);
+            figure* f = figure_create(FIGURE_TEACHER, road, DIR_0_TOP_RIGHT);
+            f->action_state = FIGURE_ACTION_125_ROAMING;
+            f->set_home(id);
+            set_figure(BUILDING_SLOT_SERVICE, f->id);
+            f->init_roaming_from_building(0);
         }
     }
 }
+
 void building::spawn_figure_library() {
     common_spawn_roamer(FIGURE_LIBRARIAN, 50);
     check_labor_problem();
@@ -1270,7 +1260,7 @@ bool building::figure_generate() {
         case BUILDING_MARKET:
             spawn_figure_market();
             break;
-        case BUILDING_SCHOOL:
+        case BUILDING_SCRIBAL_SCHOOL:
             spawn_figure_school();
             break;
         case BUILDING_LIBRARY:

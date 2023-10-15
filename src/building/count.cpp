@@ -141,7 +141,7 @@ void building_count_update(void) {
 
             // DEFAULT TREATMENT
             // education
-        case BUILDING_SCHOOL:
+        case BUILDING_SCRIBAL_SCHOOL:
         case BUILDING_LIBRARY:
         case BUILDING_ACADEMY:
             // health
@@ -341,8 +341,8 @@ io_buffer* iob_building_count_industry = new io_buffer([](io_buffer* iob, size_t
     //    data.buildings[BUILDING_PAVILLION].active = culture1->read_i32();
     //    data.buildings[BUILDING_SENET_HOUSE].total = culture1->read_i32();
     //    data.buildings[BUILDING_SENET_HOUSE].active = culture1->read_i32();
-    //    data.buildings[BUILDING_SCHOOL].total = culture1->read_i32();
-    //    data.buildings[BUILDING_SCHOOL].active = culture1->read_i32();
+    //    data.buildings[BUILDING_SCRIBAL_SCHOOL].total = culture1->read_i32();
+    //    data.buildings[BUILDING_SCRIBAL_SCHOOL].active = culture1->read_i32();
     //    data.buildings[BUILDING_LIBRARY].total = culture1->read_i32();
     //    data.buildings[BUILDING_LIBRARY].active = culture1->read_i32();
     //    data.buildings[BUILDING_MENU_WATER_CROSSINGS].total = culture1->read_i32();

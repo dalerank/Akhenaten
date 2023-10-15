@@ -4,7 +4,7 @@
 
 city_overlay* city_overlay_for_education();
 
-city_overlay* city_overlay_for_school();
+city_overlay* city_overlay_for_scribal_school();
 
 city_overlay* city_overlay_for_library();
 

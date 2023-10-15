@@ -55,8 +55,8 @@ city_overlay* get_city_overlay(e_overlay ov) {
         return city_overlay_for_hippodrome();
     case OVERLAY_EDUCATION:
         return city_overlay_for_education();
-    case OVERLAY_SCHOOL:
-        return city_overlay_for_school();
+    case OVERLAY_SCRIBAL_SCHOOL:
+        return city_overlay_for_scribal_school();
     case OVERLAY_LIBRARY:
         return city_overlay_for_library();
     case OVERLAY_ACADEMY:

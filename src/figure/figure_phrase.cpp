@@ -61,7 +61,7 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_PRIEST, "priest_"},
     {FIGURE_REED_GATHERER, "reed"},
     {FIGURE_CRIMINAL, "robber"},
-    {FIGURE_NONE, "scribe"},
+    {FIGURE_SCRIBER, "scribe"},
     {FIGURE_NONE, "senet"},
     {FIGURE_TAX_COLLECTOR, "taxman"},
     {FIGURE_TEACHER,"teacher"},

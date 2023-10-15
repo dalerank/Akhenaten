@@ -436,6 +436,7 @@ e_overlay building::get_overlay() const {
         case BUILDING_TAX_COLLECTOR: return OVERLAY_TAX_INCOME;
         case BUILDING_WATER_SUPPLY: return OVERLAY_WATER;
         case BUILDING_COURTHOUSE: return OVERLAY_COUTHOUSE;
+        case BUILDING_SCRIBAL_SCHOOL: return OVERLAY_SCRIBAL_SCHOOL;
     }
 
     return OVERLAY_NONE;
@@ -703,7 +704,7 @@ bool building_is_entertainment(int type) {
 }
 
 bool building_is_culture(int type) {
-    if (type == BUILDING_SCHOOL || type == BUILDING_LIBRARY || type == BUILDING_ACADEMY)
+    if (type == BUILDING_SCRIBAL_SCHOOL || type == BUILDING_LIBRARY || type == BUILDING_ACADEMY)
         return true;
     return false;
 }

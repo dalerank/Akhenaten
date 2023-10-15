@@ -36,7 +36,7 @@ bool scenario_building_allowed(int building_type) {
         return g_scenario_data.allowed_buildings[14];
     case BUILDING_FESTIVAL_SQUARE:
         return g_scenario_data.allowed_buildings[15];
-    case BUILDING_SCHOOL:
+    case BUILDING_SCRIBAL_SCHOOL:
         return g_scenario_data.allowed_buildings[16];
     case BUILDING_LIBRARY:
         return g_scenario_data.allowed_buildings[17];

@@ -137,7 +137,7 @@ void city_culture_update_coverage() {
     // education
     city_population_calculate_educational_age();
 
-    coverage.school = top(calc_percentage(75 * building_count_active(BUILDING_SCHOOL), city_population_school_age()));
+    coverage.school = top(calc_percentage(75 * building_count_active(BUILDING_SCRIBAL_SCHOOL), city_population_school_age()));
     coverage.library = top(calc_percentage(800 * building_count_active(BUILDING_LIBRARY), population));
     coverage.academy = top(calc_percentage(100 * building_count_active(BUILDING_ACADEMY), city_population_academy_age()));
 }

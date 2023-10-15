@@ -70,11 +70,11 @@ void building_physician_draw_info(object_info& c) {
     window_building_draw_employment(&c, 142);
 }
 
-void building_school_draw_info(object_info& c) {
-    building_service_draw_info(c, 68, "school", 85, FIGURE_SCHOOL_CHILD);
+void building_scribal_school_draw_info(object_info& c) {
+    building_service_draw_info(c, 68, "school_scribe", 85, FIGURE_TEACHER);
 }
 void building_academy_draw_info(object_info& c) {
-    building_service_draw_info(c, 69, "academy", 86, FIGURE_TEACHER);
+    building_service_draw_info(c, 69, "academy", 86, FIGURE_SCRIBER);
 }
 void building_library_draw_info(object_info& c) {
     building_service_draw_info(c, 70, "library", 87, FIGURE_LIBRARIAN);

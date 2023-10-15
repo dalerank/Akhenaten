@@ -161,17 +161,8 @@ void window_building_draw_burning_ruin(object_info* c) {
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(111, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
-    lang_text_draw(41,
-                   c->rubble_building_type,
-                   c->x_offset + 32,
-                   c->y_offset + 16 * c->height_blocks - 173,
-                   FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_multiline(111,
-                             1,
-                             c->x_offset + 32,
-                             c->y_offset + 16 * c->height_blocks - 143,
-                             16 * (c->width_blocks - 4),
-                             FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw(41, c->rubble_building_type, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 173, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(111, 1, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 143, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 void window_building_draw_rubble(object_info* c) {
     c->help_id = 0;
@@ -179,17 +170,8 @@ void window_building_draw_rubble(object_info* c) {
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(140, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
-    lang_text_draw(41,
-                   c->rubble_building_type,
-                   c->x_offset + 32,
-                   c->y_offset + 16 * c->height_blocks - 173,
-                   FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_multiline(140,
-                             1,
-                             c->x_offset + 32,
-                             c->y_offset + 16 * c->height_blocks - 143,
-                             16 * (c->width_blocks - 4),
-                             FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw(41, c->rubble_building_type, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 173, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(140, 1, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 143, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
 void window_building_draw_water_lift(object_info* c) {
@@ -337,15 +319,9 @@ int window_building_handle_mouse_roadblock_orders(const mouse* m, object_info* c
     int y_offset = window_building_get_vertical_offset(c, 28);
 
     data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m,
-                                     c->x_offset + 180,
-                                     y_offset + 46,
-                                     orders_permission_buttons,
-                                     size_of_orders_permission_buttons,
-                                     &data.figure_focus_button_id)) {
+    if (generic_buttons_handle_mouse(m, c->x_offset + 180, y_offset + 46, orders_permission_buttons, size_of_orders_permission_buttons, &data.figure_focus_button_id)) {
         return 1;
     }
 
-    return generic_buttons_handle_mouse(
-      m, c->x_offset + 80, y_offset + 404, roadblock_order_buttons, 1, &data.orders_focus_button_id);
+    return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, roadblock_order_buttons, 1, &data.orders_focus_button_id);
 }

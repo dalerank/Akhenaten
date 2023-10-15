@@ -5,11 +5,11 @@
 #include "game/state.h"
 
 static int show_figure_education(const figure* f) {
-    return f->type == FIGURE_SCHOOL_CHILD || f->type == FIGURE_LIBRARIAN || f->type == FIGURE_TEACHER;
+    return f->type == FIGURE_SCRIBER || f->type == FIGURE_LIBRARIAN || f->type == FIGURE_TEACHER;
 }
 
 static int show_figure_school(const figure* f) {
-    return f->type == FIGURE_SCHOOL_CHILD;
+    return f->type == FIGURE_TEACHER;
 }
 
 static int show_figure_library(const figure* f) {
@@ -17,7 +17,7 @@ static int show_figure_library(const figure* f) {
 }
 
 static int show_figure_academy(const figure* f) {
-    return f->type == FIGURE_TEACHER;
+    return f->type == FIGURE_SCRIBER;
 }
 
 static int get_column_height_education(const building* b) {
@@ -98,7 +98,7 @@ struct city_overlay_education : public city_overlay {
     }
 
     bool show_building(const building* b) const override {
-        return b->type == BUILDING_SCHOOL || b->type == BUILDING_LIBRARY || b->type == BUILDING_ACADEMY;
+        return b->type == BUILDING_SCRIBAL_SCHOOL || b->type == BUILDING_LIBRARY || b->type == BUILDING_ACADEMY;
     }
 };
 
@@ -110,7 +110,7 @@ city_overlay* city_overlay_for_education() {
 
 struct city_overlay_schools : public city_overlay {
     city_overlay_schools() {
-        type = OVERLAY_SCHOOL;
+        type = OVERLAY_SCRIBAL_SCHOOL;
         column_type = COLUMN_TYPE_WATER_ACCESS;
 
         show_figure_func = show_figure_school;
@@ -119,13 +119,13 @@ struct city_overlay_schools : public city_overlay {
     }
 
     bool show_building(const building* b) const override {
-        return b->type == BUILDING_SCHOOL;
+        return b->type == BUILDING_SCRIBAL_SCHOOL;
     }
 };
 
 city_overlay_schools g_city_overlay_schools;
 
-city_overlay* city_overlay_for_school() {
+city_overlay* city_overlay_for_scribal_school() {
     return &g_city_overlay_schools;
 }
 

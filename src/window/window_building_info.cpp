@@ -152,7 +152,7 @@ static int get_height_id() {
         case BUILDING_POLICE_STATION:
         case BUILDING_ENGINEERS_POST:
         case BUILDING_FIREHOUSE:
-        case BUILDING_SCHOOL:
+        case BUILDING_SCRIBAL_SCHOOL:
         case BUILDING_ACADEMY:
         case BUILDING_LIBRARY:
         case BUILDING_GATEHOUSE:
@@ -653,7 +653,7 @@ static void draw_refresh_background() {
             case BUILDING_MORTUARY: building_mortuary_draw_info(context); break;
             case BUILDING_PHYSICIAN: building_physician_draw_info(context); break;
             case BUILDING_DENTIST: building_dentist_draw_info(context); break;
-            case BUILDING_SCHOOL: building_school_draw_info(context); break;
+            case BUILDING_SCRIBAL_SCHOOL: building_scribal_school_draw_info(context); break;
             case BUILDING_ACADEMY: building_academy_draw_info(context); break;
             case BUILDING_LIBRARY: building_library_draw_info(context); break;
             

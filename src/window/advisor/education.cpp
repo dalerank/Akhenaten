@@ -72,11 +72,11 @@ static int draw_background(void) {
     inner_panel_draw(32, 100, 36, 4);
 
     // schools
-    lang_text_draw_amount(8, 18, building_count_total(BUILDING_SCHOOL), 40, 105, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw_number_centered(building_count_active(BUILDING_SCHOOL), 150, 105, 100, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw_amount(8, 18, building_count_total(BUILDING_SCRIBAL_SCHOOL), 40, 105, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_number_centered(building_count_active(BUILDING_SCRIBAL_SCHOOL), 150, 105, 100, FONT_NORMAL_WHITE_ON_DARK);
 
     width
-      = text_draw_number(75 * building_count_active(BUILDING_SCHOOL), '@', " ", 280, 105, FONT_NORMAL_WHITE_ON_DARK);
+      = text_draw_number(75 * building_count_active(BUILDING_SCRIBAL_SCHOOL), '@', " ", 280, 105, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(57, 7, 280 + width, 105, FONT_NORMAL_WHITE_ON_DARK);
 
     int pct_school = city_culture_coverage_school();

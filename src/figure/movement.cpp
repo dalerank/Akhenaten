@@ -107,8 +107,8 @@ int figure::get_permission_for_figure() {
     case FIGURE_HERBALIST:
         return PERMISSION_MEDICINE;
 
-    case FIGURE_SCHOOL_CHILD:
     case FIGURE_TEACHER:
+    case FIGURE_SCRIBER:
     case FIGURE_LIBRARIAN:
         return PERMISSION_EDUCATION;
 

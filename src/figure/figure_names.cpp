@@ -105,7 +105,7 @@ int figure_name_get(int type, int enemy) {
     case FIGURE_MARKET_BUYER:
         return get_next_name(&data.citizen_female, 99, 32);
 
-    case FIGURE_SCHOOL_CHILD:
+    case FIGURE_SCRIBER:
     case FIGURE_DELIVERY_BOY:
     case FIGURE_HERBALIST:
     case FIGURE_WATER_CARRIER:

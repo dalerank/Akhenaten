@@ -51,4 +51,5 @@ building_sounds = [
 	{ type: "dentist", 									sound: "wavs/dentist.wav"},
 	{ type: "mortuary", 								sound: "wavs/mortuary.wav"},
 	{ type: "physician", 								sound: "wavs/physician.wav"},
+	{ type: "school_scribe"							sound: "wavs/school_scribe.wav"}
 ]

@@ -332,11 +332,11 @@ int figure::figure_service_provide_coverage() {
         }
         break;
 
-    case FIGURE_SCHOOL_CHILD:
+    case FIGURE_TEACHER:
         houses_serviced = provide_culture(tile, this, school_coverage);
         break;
 
-    case FIGURE_TEACHER:
+    case FIGURE_SCRIBER:
         houses_serviced = provide_culture(tile, this, academy_coverage);
         break;
 

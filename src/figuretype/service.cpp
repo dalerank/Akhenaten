@@ -13,7 +13,7 @@
 #include "grid/road_access.h"
 #include "config/config.h"
 
-void figure::school_child_action() {
+void figure::scribal_school_teacher_action() {
     switch (action_state) {
     case ACTION_10_DELIVERING_FOOD:
     case FIGURE_ACTION_125_ROAMING:
@@ -22,7 +22,6 @@ void figure::school_child_action() {
         if (roam_length >= max_roam_length)
             poof();
 
-        roam_ticks(2);
         break;
     }
 }
