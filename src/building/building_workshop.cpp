@@ -65,27 +65,38 @@ void building_brewery_draw_info(object_info& c) {
 
     building_workshop_draw_info(c, 96, "brewery", 122, output_resource, input_resource);
 }
+
 void building_flax_workshop_draw_info(object_info& c) {
     int input_resource = RESOURCE_FLAX;
     int output_resource = RESOURCE_LINEN;
     building_workshop_draw_info(c, 97, "flax_workshop", 123, output_resource, input_resource);
 }
+
 void building_weapons_workshop_draw_info(object_info& c) {
     int output_resource = RESOURCE_WEAPONS;
 
     building_workshop_draw_info(c, 98, "weapons_workshop", 124, output_resource, RESOURCE_COPPER);
 }
+
 void building_luxury_workshop_draw_info(object_info& c) {
     int input_resource = RESOURCE_GEMS;
     int output_resource = RESOURCE_LUXURY_GOODS;
 
     building_workshop_draw_info(c, 99, "luxury_workshop", 125, output_resource, input_resource);
 }
+
 void building_pottery_workshop_draw_info(object_info& c) {
     int output_resource = RESOURCE_POTTERY;
 
     building_workshop_draw_info(c, 1, "pottery_workshop", 126, output_resource, RESOURCE_CLAY);
 }
+
+void building_papyrus_workshop_draw_info(object_info& c) {
+    int output_resource = RESOURCE_PAPYRUS;
+
+    building_workshop_draw_info(c, 1, "papyrus_workshop", 190, output_resource, RESOURCE_REEDS);
+}
+
 // TODO: fix brick maker panel
 void building_brick_maker_workshop_draw_info(object_info& c) {
     int output_resource = RESOURCE_POTTERY;

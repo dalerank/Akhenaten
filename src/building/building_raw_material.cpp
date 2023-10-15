@@ -67,7 +67,6 @@ void building_timber_yard_draw_info(object_info& c) {
 void building_clay_pit_draw_info(object_info& c) {
     building_raw_material_draw_info(c, 92, "clay_pit", e_text_info_clay_pit, RESOURCE_CLAY);
 }
-// TODO: fix reed gatherer panel
 void building_reed_gatherer_draw_info(object_info& c) {
     building_raw_material_draw_info(c, 92, "reed_farm", 116, RESOURCE_REEDS);
 }
