@@ -1,12 +1,11 @@
-#ifndef BUILDING_HOUSE_EVOLUTION_H
-#define BUILDING_HOUSE_EVOLUTION_H
+#pragma once
 
 #include "building/building.h"
 
 /**
  * Evolves/devolves houses if appropriate, and consumes pottery/furniture/oil/wine
  */
-void building_house_process_evolve_and_consume_goods(void);
+void building_house_process_evolve_and_consume_goods();
 
 /**
  * Determine the text to show for evolution of a house, stored in house->evolve_text_id
@@ -21,5 +20,3 @@ void building_house_determine_evolve_text(building* house, int worst_desirabilit
  * @return Worst desirability building ID
  */
 int building_house_determine_worst_desirability_building(building* house);
-
-#endif // BUILDING_HOUSE_EVOLUTION_H

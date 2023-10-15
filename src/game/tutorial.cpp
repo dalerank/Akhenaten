@@ -124,21 +124,29 @@ void tutorial_init(void) {
 }
 
 e_availability mission_advisor_availability(e_advisor advisor, int tutorial) {
-    auto is_available = [advisor] (const std::initializer_list<e_advisor> &advisors) {
-        return (std::find(advisors.begin(), advisors.end(), advisor) != advisors.end())
-                      ? AVAILABLE 
-                      : NOT_AVAILABLE;
-    };
-
+    svector<e_advisor, ADVISOR_MAX> advisors;
     switch (tutorial) {
-    case 1: return NOT_AVAILABLE;
-    case 2: return is_available({ADVISOR_TRADE, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION});
-    case 3: return is_available({ADVISOR_LABOR, ADVISOR_TRADE, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION});
-    case 4: return is_available({ADVISOR_LABOR, ADVISOR_TRADE, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION, ADVISOR_FINANCIAL});
-    case 5: return is_available({ADVISOR_LABOR, ADVISOR_IMPERIAL, ADVISOR_RATINGS, ADVISOR_POPULATION, ADVISOR_HEALTH, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION, ADVISOR_FINANCIAL, ADVISOR_CHIEF});
+    case 1:
+        return NOT_AVAILABLE;
+    case 2:
+        advisors = {ADVISOR_TRADE, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION};
+        break;
+    case 3: 
+        advisors = {ADVISOR_LABOR, ADVISOR_TRADE, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION};
+        break;
+    case 4:
+        advisors = {ADVISOR_LABOR, ADVISOR_TRADE, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION, ADVISOR_FINANCIAL};
+        break;
+    case 5:
+        advisors = {ADVISOR_LABOR, ADVISOR_IMPERIAL, ADVISOR_RATINGS, ADVISOR_POPULATION, ADVISOR_HEALTH, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION, ADVISOR_FINANCIAL, ADVISOR_CHIEF};
+        break;
     }
 
-    return AVAILABLE;
+    return advisors.empty() 
+                ? AVAILABLE 
+                : (std::find(advisors.begin(), advisors.end(), advisor) != advisors.end())
+                    ? AVAILABLE
+                    : NOT_AVAILABLE;
 }
 
 e_availability mission_empire_availability() {

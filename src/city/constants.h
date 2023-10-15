@@ -16,6 +16,7 @@ enum e_advisor {
     ADVISOR_CHIEF = 12,
     ADVISOR_MONUMENTS = 13,
     ADVISOR_HOUSING = 19,
+    ADVISOR_MAX
 };
 
 enum e_low_mood_reason {
