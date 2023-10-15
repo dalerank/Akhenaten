@@ -34,6 +34,7 @@ struct tutorial_flags_t {
 
     struct {
         bool spacious_apartment;
+        bool papyrus_made;
     } tutorial_5;
 
     struct {
@@ -41,7 +42,6 @@ struct tutorial_flags_t {
         //
         bool crime;
 
-        bool papyrus_made;
         bool bricks_bought;
 
         bool tut5_can_trade_finally;
