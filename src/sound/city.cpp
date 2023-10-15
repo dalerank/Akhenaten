@@ -49,8 +49,9 @@ int building_type_to_channel(building *b) {
     switch (b->type) {
 
     case BUILDING_HOUSE_CRUDE_HUT:
-        if (b->house_population <= 0)
+        if (b->house_population <= 0) {
             return 0;
+        }
         // falltrougth
     case BUILDING_HOUSE_STURDY_HUT:
     case BUILDING_HOUSE_MEAGER_SHANTY:
@@ -63,7 +64,7 @@ int building_type_to_channel(building *b) {
     case BUILDING_HOUSE_SPACIOUS_HOMESTEAD:
         return SOUND_CHANNEL_CITY_HOUSE_POOR;
 
-    case BUILDING_HOUSE_SMALL_INSULA:
+    case BUILDING_HOUSE_MODEST_APARTMENT:
     case BUILDING_HOUSE_MEDIUM_INSULA:
     case BUILDING_HOUSE_LARGE_INSULA:
     case BUILDING_HOUSE_GRAND_INSULA:

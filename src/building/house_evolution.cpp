@@ -278,7 +278,7 @@ static bool evolve_large_casa(building* house, house_demands* demands) {
     e_house_progress status = check_requirements(house, demands);
     if (!has_devolve_delay(house, status)) {
         if (status == E_HOUSE_EVOLVE)
-            building_house_change_to(house, BUILDING_HOUSE_SMALL_INSULA);
+            building_house_change_to(house, BUILDING_HOUSE_MODEST_APARTMENT);
         else if (status == E_HOUSE_DECAY)
             building_house_change_to(house, BUILDING_HOUSE_MODEST_HOMESTEAD);
     }
@@ -306,8 +306,9 @@ static bool evolve_medium_insula(building* house, house_demands* demands) {
                 map_tiles_update_all_gardens();
                 return 1;
             }
-        } else if (status == E_HOUSE_DECAY)
-            building_house_change_to(house, BUILDING_HOUSE_SMALL_INSULA);
+        } else if (status == E_HOUSE_DECAY) {
+            building_house_change_to(house, BUILDING_HOUSE_MODEST_APARTMENT);
+        }
     }
     return 0;
 }
