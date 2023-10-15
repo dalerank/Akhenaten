@@ -49,7 +49,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_FISHING_BOAT, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_MARKET_TRADER, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_MARKET_LADY_2},
   {FIGURE_PRIEST, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_PRIEST},
-  {FIGURE_TEACHER, 1, TERRAIN_USAGE_ROADS, 192, GROUP_FIGURE_TEACHER},
+  {FIGURE_TEACHER, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_TEACHER},
   {FIGURE_SCRIBER, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_SCRIBER},
   {FIGURE_LIBRARIAN, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_LIBRARIAN},
   {FIGURE_DENTIST, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_DENTIST},
@@ -285,9 +285,11 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, int terrainchoic
 
     return false;
 }
+
 bool figure::do_returnhome(int terrainchoice, short NEXT_ACTION) {
     return do_gotobuilding(home(), true, terrainchoice, NEXT_ACTION);
 }
+
 bool figure::do_exitbuilding(bool invisible, short NEXT_ACTION, short FAIL_ACTION) {
     use_cross_country = true;
     if (invisible)
@@ -295,6 +297,7 @@ bool figure::do_exitbuilding(bool invisible, short NEXT_ACTION, short FAIL_ACTIO
     // "go to" home, but stop at road = go to entrance
     return do_gotobuilding(home(), true, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
 }
+
 bool figure::do_enterbuilding(bool invisible, building* b, short NEXT_ACTION, short FAIL_ACTION) {
     use_cross_country = true;
     if (invisible)
@@ -493,7 +496,7 @@ void figure::action_perform() {
         case FIGURE_EMIGRANT:
             emigrant_action();
             break;
-        case 3:
+        case FIGURE_HOMELESS:
             homeless_action();
             break;
         case 4:
@@ -503,10 +506,10 @@ void figure::action_perform() {
         case 6:
             explosion_cloud_action();
             break;
-        case 7:
+        case FIGURE_TAX_COLLECTOR:
             tax_collector_action();
             break;
-        case 8:
+        case FIGURE_ENGINEER:
             engineer_action();
             break;
         case 9:
@@ -522,15 +525,18 @@ void figure::action_perform() {
         case 13:
             soldier_action();
             break;
+
         case 14:
             military_standard_action();
             break;
-        case 15: // entertainer_action();              break;
-        case 16: // entertainer_action();              break;
-        case 17: // entertainer_action();              break;
-        case 18:
+
+        case FIGURE_JUGGLER: // entertainer_action();              break;
+        case FIGURE_MUSICIAN: // entertainer_action();              break;
+        case FIGURE_DANCER: // entertainer_action();              break;
+        case FIGURE_CHARIOTEER:
             entertainer_action();
             break;
+
         case 19:
             trade_caravan_action();
             break;
@@ -543,10 +549,10 @@ void figure::action_perform() {
         case FIGURE_PROTESTER:
             protestor_action();
             break;
-        case 23:
+        case FIGURE_CRIMINAL:
             mugger_action();
             break;
-        case 24:
+        case FIGURE_RIOTER:
             rioter_action();
             break;
         case 25:
@@ -555,11 +561,11 @@ void figure::action_perform() {
         case FIGURE_MARKET_TRADER:
             market_trader_action();
             break;
-        case 27:
+        case FIGURE_PRIEST:
             priest_action();
             break;
             //            case 27: common_action(12, GROUP_FIGURE_PRIEST); break;
-        case 28:
+        case FIGURE_TEACHER:
             scribal_school_teacher_action();
             break;
             //            case 29: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break;

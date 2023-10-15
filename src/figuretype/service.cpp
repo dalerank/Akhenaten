@@ -15,19 +15,22 @@
 
 void figure::scribal_school_teacher_action() {
     switch (action_state) {
-    case ACTION_10_DELIVERING_FOOD:
     case FIGURE_ACTION_125_ROAMING:
-        //            is_ghost = false;
         roam_length++;
-        if (roam_length >= max_roam_length)
-            poof();
+        if (roam_length >= max_roam_length) {
+            advance_action(FIGURE_ACTION_126_ROAMER_RETURNING);
+        }
 
         break;
+
+    case FIGURE_ACTION_126_ROAMER_RETURNING:
+        ; // nothing here
+        break;
+    
     }
 }
+
 void figure::priest_action() {
-    if (GAME_ENV == ENGINE_ENV_C3)
-        return;
     building* temple = home();
     switch (temple->type) {
     case BUILDING_TEMPLE_OSIRIS:
