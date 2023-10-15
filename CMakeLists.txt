@@ -366,6 +366,7 @@ cmrc_add_resource_library(
     ${SCRIPTS_FOLDER}/common.js
     ${SCRIPTS_FOLDER}/city_sounds.js
     ${SCRIPTS_FOLDER}/building_sounds.js
+    ${SCRIPTS_FOLDER}/building_info.js
     ${SCRIPTS_FOLDER}/walker_sounds.js
     ${SCRIPTS_FOLDER}/mission_sounds.js
     ${SCRIPTS_FOLDER}/overlays.js

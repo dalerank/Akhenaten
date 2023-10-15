@@ -140,6 +140,15 @@ void js_config_load_city_sounds(js_State *arch) {
     });
 }
 
+void js_config_load_building_info(js_State *arch) {
+    js_config_load_global_array(arch, "building_info", [] (auto arch) {
+        const char *type = read_string(arch, "type");
+        auto &meta = building::get_info(type);
+        meta.help_id = read_integer(arch, "help_id");
+        meta.text_id = read_integer(arch, "text_id");
+    });
+}
+
 void js_config_load_city_overlays(js_State *arch) {
     js_config_load_global_array(arch, "overlays", [] (auto arch) {
         const int e_v = read_integer(arch, "id");

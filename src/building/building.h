@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/bstring.h"
 #include "building/building_type.h"
 #include "building/building_state.h"
 #include "overlays/city_overlay_fwd.h"
@@ -39,6 +40,13 @@ private:
     //    short immigrant_figure_id;
     //    short figure_id4; // tower ballista or burning ruin prefect
     short figure_ids_array[MAX_FIGURES_PER_BUILDING]; // oh boy!
+
+public:
+    struct metainfo {
+        int help_id;
+        int text_id;
+    };
+    static building::metainfo &building::get_info(pcstr type);
 
 public:
     int id;
