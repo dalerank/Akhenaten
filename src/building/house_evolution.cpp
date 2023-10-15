@@ -23,8 +23,9 @@ static e_house_progress check_evolve_desirability(building* house) {
     int level = house->subtype.house_level;
     const model_house* model = model_get_house(level);
     int evolve_des = model->evolve_desirability;
-    if (level >= HOUSE_LUXURY_PALACE)
+    if (level >= HOUSE_PALATIAL_ESTATE) {
         evolve_des = 1000;
+    }
 
     int current_des = house->desirability;
     e_house_progress status;

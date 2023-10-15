@@ -437,7 +437,7 @@ void building_house_expand_to_large_palace(building* house) {
     prepare_for_merge(house->id, 16);
 
     house->type = BUILDING_HOUSE_LARGE_PALACE;
-    house->subtype.house_level = HOUSE_LARGE_PALACE;
+    house->subtype.house_level = HOUSE_MODEST_ESTATE;
     house->size = house->house_size = 4;
     house->house_population += g_merge_data.population;
     for (int i = 0; i < INVENTORY_MAX; i++) {

@@ -226,8 +226,9 @@ static void distribute_good(building* b, building* market, int stock_wanted, int
 }
 static void distribute_market_resources(building* b, building* market) {
     int level = b->subtype.house_level;
-    if (level < HOUSE_LUXURY_PALACE)
+    if (level < HOUSE_PALATIAL_ESTATE) {
         level++;
+    }
 
     int max_food_stocks = 4 * b->house_highest_population;
     int food_types_stored_max = 0;
@@ -235,11 +236,13 @@ static void distribute_market_resources(building* b, building* market) {
         if (b->data.house.inventory[i] >= max_food_stocks)
             food_types_stored_max++;
     }
+
     const model_house* model = model_get_house(level);
     if (model->food_types > food_types_stored_max) {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            if (b->data.house.inventory[i] >= max_food_stocks)
+            if (b->data.house.inventory[i] >= max_food_stocks) {
                 continue;
+            }
 
             if (market->data.market.inventory[i] >= max_food_stocks) {
                 b->data.house.inventory[i] += max_food_stocks;
