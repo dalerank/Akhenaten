@@ -46,7 +46,7 @@ public:
         int help_id;
         int text_id;
     };
-    static building::metainfo &building::get_info(pcstr type);
+    static building::metainfo &get_info(pcstr type);
 
 public:
     int id;

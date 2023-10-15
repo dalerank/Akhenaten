@@ -251,6 +251,7 @@ int tutorial_get_immediate_goal_text(void) {
     }
     return 0;
 }
+
 int tutorial_adjust_request_year(int* year) {
     if (scenario_is_mission_rank(2)) {
         if (!g_tutorials_flags.tutorial_3.pottery_made) {
@@ -261,14 +262,17 @@ int tutorial_adjust_request_year(int* year) {
     }
     return 1;
 }
+
 int tutorial_extra_fire_risk(void) {
     return !g_tutorials_flags.tutorial_1.fire
            && scenario_is_mission_rank(1); // Fix for extra fire risk in late tutorials
 }
+
 int tutorial_extra_damage_risk(void) {
     return g_tutorials_flags.tutorial_1.fire && !g_tutorials_flags.tutorial_1.collapse
            && scenario_is_mission_rank(1); // Fix for extra damage risk in late tutorials
 }
+
 int tutorial_handle_fire(void) {
     if (g_tutorials_flags.tutorial_1.fire)
         return 0;
@@ -278,6 +282,7 @@ int tutorial_handle_fire(void) {
     post_message(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE);
     return 1;
 }
+
 int tutorial_handle_collapse(void) {
     if (g_tutorials_flags.tutorial_1.collapse)
         return 0;
@@ -294,9 +299,11 @@ void tutorial_on_crime(void) {
         building_menu_update(BUILDSET_TUT1_CRIME);
     }
 }
+
 void tutorial_on_disease(void) {
     g_tutorials_flags.tutorial_3.disease = true;
 }
+
 void tutorial_on_filled_granary(int quantity) {
     if (scenario_is_mission_rank(1) && !g_tutorials_flags.tutorial_1.gamemeat_400_stored && quantity >= 400) {
         g_tutorials_flags.tutorial_1.gamemeat_400_stored = 1;
