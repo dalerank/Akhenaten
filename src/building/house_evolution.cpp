@@ -328,7 +328,7 @@ static bool evolve_grand_insula(building* house, house_demands* demands) {
         if (status == E_HOUSE_EVOLVE)
             building_house_change_to(house, BUILDING_HOUSE_SMALL_VILLA);
         else if (status == E_HOUSE_DECAY)
-            building_house_change_to(house, BUILDING_HOUSE_LARGE_INSULA);
+            building_house_change_to(house, BUILDING_HOUSE_COMMON_RESIDENCE);
     }
     return 0;
 }

@@ -393,13 +393,11 @@ static void split(building* house, int num_tiles) {
     }
 }
 
-/// OLD STUFF
-
 void building_house_expand_to_large_insula(building* house) {
     split(house, 4);
     prepare_for_merge(house->id, 4);
 
-    house->type = BUILDING_HOUSE_LARGE_INSULA;
+    house->type = BUILDING_HOUSE_COMMON_RESIDENCE;
     house->subtype.house_level = HOUSE_COMMON_RESIDENCE;
     house->size = house->house_size = 2;
     house->house_population += g_merge_data.population;

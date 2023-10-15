@@ -101,7 +101,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     b->house_size = 0;
     if (type >= BUILDING_HOUSE_CRUDE_HUT && type <= BUILDING_HOUSE_SPACIOUS_APARTMENT) {
         b->house_size = 1;
-    } else if (type >= BUILDING_HOUSE_LARGE_INSULA && type <= BUILDING_HOUSE_MEDIUM_VILLA) {
+    } else if (type >= BUILDING_HOUSE_COMMON_RESIDENCE && type <= BUILDING_HOUSE_MEDIUM_VILLA) {
         b->house_size = 2;
     } else if (type >= BUILDING_HOUSE_LARGE_VILLA && type <= BUILDING_HOUSE_MEDIUM_PALACE) {
         b->house_size = 3;
