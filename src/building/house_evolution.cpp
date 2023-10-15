@@ -315,10 +315,11 @@ static bool evolve_medium_insula(building* house, house_demands* demands) {
 static bool evolve_large_insula(building* house, house_demands* demands) {
     e_house_progress status = check_requirements(house, demands);
     if (!has_devolve_delay(house, status)) {
-        if (status == E_HOUSE_EVOLVE)
-            building_house_change_to(house, BUILDING_HOUSE_GRAND_INSULA);
-        else if (status == E_HOUSE_DECAY)
+        if (status == E_HOUSE_EVOLVE) {
+            building_house_change_to(house, BUILDING_HOUSE_SPACIOUS_RESIDENCE);
+        } else if (status == E_HOUSE_DECAY) {
             building_house_devolve_from_large_insula(house);
+        }
     }
     return 0;
 }
@@ -338,7 +339,7 @@ static bool evolve_small_villa(building* house, house_demands* demands) {
         if (status == E_HOUSE_EVOLVE)
             building_house_change_to(house, BUILDING_HOUSE_MEDIUM_VILLA);
         else if (status == E_HOUSE_DECAY)
-            building_house_change_to(house, BUILDING_HOUSE_GRAND_INSULA);
+            building_house_change_to(house, BUILDING_HOUSE_SPACIOUS_RESIDENCE);
     }
     return 0;
 }
