@@ -254,7 +254,7 @@ static bool evolve_large_hovel(building* house, house_demands* demands) {
     e_house_progress status = check_requirements(house, demands);
     if (!has_devolve_delay(house, status)) {
         if (status == E_HOUSE_EVOLVE)
-            building_house_change_to(house, BUILDING_HOUSE_SMALL_CASA);
+            building_house_change_to(house, BUILDING_HOUSE_MODEST_HOMESTEAD);
         else if (status == E_HOUSE_DECAY)
             building_house_change_to(house, BUILDING_HOUSE_ROUGH_COTTAGE);
     }
@@ -279,7 +279,7 @@ static bool evolve_large_casa(building* house, house_demands* demands) {
         if (status == E_HOUSE_EVOLVE)
             building_house_change_to(house, BUILDING_HOUSE_SMALL_INSULA);
         else if (status == E_HOUSE_DECAY)
-            building_house_change_to(house, BUILDING_HOUSE_SMALL_CASA);
+            building_house_change_to(house, BUILDING_HOUSE_MODEST_HOMESTEAD);
     }
     return 0;
 }
