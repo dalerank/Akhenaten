@@ -221,6 +221,7 @@ void figure::homeless_action() {
         anim_frame = 0;
         wait_ticks++;
         if (wait_ticks > 51) {
+            wait_ticks = 0;
             int building_id = closest_house_with_room(tile);
             if (building_id) {
                 building* b = building_get(building_id);
@@ -238,16 +239,51 @@ void figure::homeless_action() {
         }
         break;
     case FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE:
-        do_gotobuilding(immigrant_home(), true, TERRAIN_USAGE_ANY, FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE);
+        if (!has_home()) {
+            direction = DIR_0_TOP_RIGHT;
+            advance_action(FIGURE_ACTION_10_HOMELESS_LEAVING);
+        } else {
+            do_gotobuilding(immigrant_home(), true, TERRAIN_USAGE_ANY, FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE);
+        }
         break;
+
     case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE:
-        if (do_enterbuilding(false, immigrant_home()))
+        if (do_enterbuilding(false, immigrant_home())) {
             add_house_population(immigrant_home(), migrant_num_people);
+        }
         //            is_ghost = in_building_wait_ticks ? 1 : 0;
         break;
+
+    case ACTION_16_HOMELESS_RANDOM:
+        roam_wander_freely = false;
+        do_goto(destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_6_EMIGRANT_LEAVING, FIGURE_ACTION_6_EMIGRANT_LEAVING);
+        if (direction == DIR_FIGURE_CAN_NOT_REACH || direction == DIR_FIGURE_REROUTE) {
+            int dx;
+            int dy;
+            state = FIGURE_STATE_ALIVE;
+            random_around_point(tile, tile.x(), tile.y(), &dx, &dy, /*step*/2, /*bias*/4, /*max_dist*/8);
+            destination_tile = map_point(dx, dy);
+            direction = DIR_0_TOP_RIGHT;
+            advance_action(FIGURE_ACTION_10_HOMELESS_LEAVING);
+        }
+        break;
+
     case ACTION_11_RETURNING_EMPTY:
     case FIGURE_ACTION_10_HOMELESS_LEAVING:
-        do_goto(exit, TERRAIN_USAGE_ANY);
+        if (do_goto(exit, TERRAIN_USAGE_ANY)) {
+            poof();
+        }
+
+        if (direction == DIR_FIGURE_CAN_NOT_REACH) {
+            wait_ticks = 20;
+            route_remove();
+            state = FIGURE_STATE_ALIVE;
+            tile2i road_tile;
+            map_closest_road_within_radius(exit, 1, 2, road_tile);
+            destination_tile = road_tile;
+            direction = DIR_0_TOP_RIGHT;
+            advance_action(ACTION_16_HOMELESS_RANDOM);
+        }
 
         wait_ticks++;
         if (wait_ticks > 30) {

@@ -195,10 +195,14 @@ void debug_draw_tile_top_bb(int x, int y, int height, color color, int size) {
 static int north_tile_grid_offset(int x, int y) {
     int grid_offset = MAP_OFFSET(x, y);
     int size = map_property_multi_tile_size(grid_offset);
-    for (int i = 0; i < size && map_property_multi_tile_x(grid_offset); i++)
+    for (int i = 0; i < size && map_property_multi_tile_x(grid_offset); i++) {
         grid_offset += GRID_OFFSET(-1, 0);
-    for (int i = 0; i < size && map_property_multi_tile_y(grid_offset); i++)
+    }
+
+    for (int i = 0; i < size && map_property_multi_tile_y(grid_offset); i++) {
         grid_offset += GRID_OFFSET(0, -1);
+    }
+
     return grid_offset;
 }
 
@@ -236,8 +240,9 @@ void draw_debug_tile(vec2i pixel, tile2i point) {
             bool red = !map_terrain_is(grid_offset, TERRAIN_BUILDING);
             debug_text(str, x0, y + 0, 0, "", b_id, red ? COLOR_LIGHT_RED : COLOR_WHITE);
             debug_text(str, x0, y + 10, 0, "", b->type, red ? COLOR_LIGHT_RED : COLOR_LIGHT_BLUE);
-            if (!b->is_main())
-                text_draw((uint8_t*)string_from_ascii("sub"), x0, y - 10, FONT_SMALL_OUTLINED, COLOR_RED);
+            if (!b->is_main()) {
+                text_draw((uint8_t *)string_from_ascii("sub"), x0, y - 10, FONT_SMALL_OUTLINED, COLOR_RED);
+            }
         }
         break;
 
@@ -383,10 +388,12 @@ void draw_debug_tile(vec2i pixel, tile2i point) {
         break;
 
     case e_debug_render_sprite_frames: // SPRITE FRAMES
-        if (grid_offset == MAP_OFFSET(b->tile.x(), b->tile.y()))
+        if (grid_offset == b->tile.grid_offset()) {
             draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, {x - 15, y}, COLOR_MASK_GREEN);
-        if (grid_offset == north_tile_grid_offset(b->tile.x(), b->tile.y()))
+        }
+        if (grid_offset == north_tile_grid_offset(b->tile.x(), b->tile.y())) {
             ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, x - 15, y, COLOR_MASK_RED);
+        }
         d = map_sprite_animation_at(grid_offset);
         if (d) {
             string_from_int(str, d, 0);
@@ -395,8 +402,7 @@ void draw_debug_tile(vec2i pixel, tile2i point) {
 
         // STATUES & MONUMENTS
 
-        if (b_id && map_property_is_draw_tile(grid_offset)
-            && (b->labor_category != (uint8_t)-1 || building_is_floodplain_farm(b))) {
+        if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != (uint8_t)-1 || building_is_floodplain_farm(b))) {
             switch (b->type) {
             case BUILDING_SMALL_STATUE:
             case BUILDING_MEDIUM_STATUE:
@@ -434,14 +440,16 @@ void draw_debug_tile(vec2i pixel, tile2i point) {
 
     case e_debug_render_marshland_depl: // MARSHLAND DEPLETION
         d = map_get_vegetation_growth(grid_offset);
-        if (d != 255)
+        if (d != 255) {
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
+        }
         break;
 
     case e_debug_render_marshland: // MARSHLAND
         d = map_terrain_is(grid_offset, TERRAIN_MARSHLAND);
-        if (d != 0)
+        if (d != 0) {
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
+        }
         break;
 
     case e_debug_render_terrain_type: // TERRAIN TYPE
@@ -451,17 +459,20 @@ void draw_debug_tile(vec2i pixel, tile2i point) {
 
     case e_debug_render_soil: // UNKNOWN SOIL GRID
         d = map_get_UNK04(grid_offset);
-        if (d != 0)
+        if (d != 0) {
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
+        }
         break;
 
     case e_debug_render_unk_19: // UNKNOWN 32BIT GRID
         d = map_get_UNK03(grid_offset);
-        if (d != 0)
+        if (d != 0) {
             debug_text(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
+        }
         break;
     }
 }
+
 void draw_debug_figures(vec2i pixel, tile2i point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
