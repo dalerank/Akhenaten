@@ -175,7 +175,7 @@ void figure::emigrant_action() {
             int dx;
             int dy;
             state = FIGURE_STATE_ALIVE;
-            random_around_point(tile, tile.x(), tile.y(), &dx, &dy, /*step*/2, /*bias*/4, /*max_dist*/8);
+            random_around_point(tile, tile, &dx, &dy, /*step*/2, /*bias*/4, /*max_dist*/8);
             destination_tile = map_point(dx, dy);
             direction = DIR_0_TOP_RIGHT;
             advance_action(FIGURE_ACTION_6_EMIGRANT_LEAVING);
@@ -261,7 +261,7 @@ void figure::homeless_action() {
             int dx;
             int dy;
             state = FIGURE_STATE_ALIVE;
-            random_around_point(tile, tile.x(), tile.y(), &dx, &dy, /*step*/2, /*bias*/4, /*max_dist*/8);
+            random_around_point(tile, tile, &dx, &dy, /*step*/2, /*bias*/4, /*max_dist*/8);
             destination_tile = map_point(dx, dy);
             direction = DIR_0_TOP_RIGHT;
             advance_action(FIGURE_ACTION_10_HOMELESS_LEAVING);

@@ -72,7 +72,7 @@ int32_t random_from_pool(int index);
 
 void randomize_event_fields(int16_t field[4], int32_t* seed);
 
-void random_around_point(map_point tile, int x, int y, int* dest_x, int* dest_y, int step, int bias, int max_dist);
+void random_around_point(tile2i tile, tile2i src, int* dest_x, int* dest_y, int step, int bias, int max_dist);
 bool random_bool_lerp_scalar_int(int minimum, int maximum, int v);
 
 uint16_t anti_scum_random_15bit(bool update = true);
