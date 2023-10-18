@@ -172,11 +172,8 @@ void figure::emigrant_action() {
         roam_wander_freely = false;
         do_goto(destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_6_EMIGRANT_LEAVING, FIGURE_ACTION_6_EMIGRANT_LEAVING);
         if (direction == DIR_FIGURE_CAN_NOT_REACH || direction == DIR_FIGURE_REROUTE) {
-            int dx;
-            int dy;
             state = FIGURE_STATE_ALIVE;
-            random_around_point(tile, tile, &dx, &dy, /*step*/2, /*bias*/4, /*max_dist*/8);
-            destination_tile = map_point(dx, dy);
+            destination_tile = random_around_point(tile, tile, /*step*/2, /*bias*/4, /*max_dist*/8);
             direction = DIR_0_TOP_RIGHT;
             advance_action(FIGURE_ACTION_6_EMIGRANT_LEAVING);
         }
@@ -258,11 +255,8 @@ void figure::homeless_action() {
         roam_wander_freely = false;
         do_goto(destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_6_EMIGRANT_LEAVING, FIGURE_ACTION_6_EMIGRANT_LEAVING);
         if (direction == DIR_FIGURE_CAN_NOT_REACH || direction == DIR_FIGURE_REROUTE) {
-            int dx;
-            int dy;
             state = FIGURE_STATE_ALIVE;
-            random_around_point(tile, tile, &dx, &dy, /*step*/2, /*bias*/4, /*max_dist*/8);
-            destination_tile = map_point(dx, dy);
+            destination_tile = random_around_point(tile, tile, /*step*/2, /*bias*/4, /*max_dist*/8);
             direction = DIR_0_TOP_RIGHT;
             advance_action(FIGURE_ACTION_10_HOMELESS_LEAVING);
         }

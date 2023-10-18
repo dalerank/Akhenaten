@@ -61,10 +61,7 @@ void figure::ostrich_hunter_action() {
             } else {
                 base_tile = home()->tile;
             }
-            int dx;
-            int dy;
-            random_around_point(base_tile, tile, &dx, &dy, /*step*/4, /*bias*/8, /*max_dist*/32);
-            destination_tile = map_point(dx, dy);
+            destination_tile = random_around_point(base_tile, tile, /*step*/4, /*bias*/8, /*max_dist*/32);
         }
         break;
 

@@ -123,34 +123,39 @@ void randomize_event_fields(int16_t field[4], int32_t* seed) {
     field[0] = f_fixed;
 }
 
-void random_around_point(map_point tile, tile2i src, int* dest_x, int* dest_y, int step, int bias, int max_dist) {
+tile2i random_around_point(map_point tile, tile2i src, int step, int bias, int max_dist) {
     random_generate_next();
     int det = 64 / step;
     int rand_x = random_byte() / det - step;
     int rand_y = random_byte_alt() / det - step;
-    *dest_x = src.x() + rand_x;
-    *dest_y = src.y() + rand_y;
-    int dist_x = (tile.x() - *dest_x);
-    int dist_y = (tile.y() - *dest_y);
+
+    vec2i result = {src.x() + rand_x, src.y() + rand_y};
+
+    int dist_x = (tile.x() - result.x);
+    int dist_y = (tile.y() - result.y);
     if (bias <= 1)
         bias = 1;
-    *dest_x += dist_x / bias;
-    *dest_y += dist_y / bias;
+
+    result.x += dist_x / bias;
+    result.y += dist_y / bias;
+
     if (max_dist > 0) {
-        dist_x = (tile.x() - *dest_x);
-        dist_y = (tile.y() - *dest_y);
+        dist_x = (tile.x() - result.x);
+        dist_y = (tile.y() - result.y);
         if (dist_x > max_dist)
-            *dest_x = tile.x() + max_dist;
+            result.x = tile.x() + max_dist;
 
         if (dist_x < -max_dist)
-            *dest_x = tile.x() - max_dist;
+            result.x = tile.x() - max_dist;
 
         if (dist_y > max_dist)
-            *dest_y = tile.y() + max_dist;
+            result.y = tile.y() + max_dist;
 
         if (dist_y < -max_dist)
-            *dest_y = tile.y() - max_dist;
+            result.y = tile.y() - max_dist;
     }
+
+    return {result.x, result.y};
 }
 
 // please email me if you have a better name for this
