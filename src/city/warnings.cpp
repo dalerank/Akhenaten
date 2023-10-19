@@ -37,13 +37,11 @@ static void check_road_access(int type, tile2i tile, int size, int orientation) 
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
     case BUILDING_GARDENS:
-        //        case BUILDING_MENU_BEAUTIFICATION:
     case BUILDING_WELL:
     case BUILDING_WATER_LIFT:
     case BUILDING_GATEHOUSE:
     case BUILDING_ROADBLOCK:
     case BUILDING_TRIUMPHAL_ARCH:
-        //        case BUILDING_MENU_FORTS:
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_ARCHERS:
     case BUILDING_FORT_INFANTRY:

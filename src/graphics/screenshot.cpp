@@ -320,7 +320,7 @@ static void create_full_city_screenshot() {
                 local_context.figure_cache = &local_figure_data;
                 local_context.view_data = &city_view_data_unsafe(); // &local_view_data;
 
-                ::camera_go_to_pixel(local_context, {min_pos.x + width, current_height}, false);
+                camera_go_to_pixel(local_context, vec2i{min_pos.x + width, current_height}, false);
                 tile2i dummy_tile(0, 0);
                 widget_city_draw_without_overlay(0, 0, dummy_tile, local_context);
                 graphics_renderer()->save_screen_buffer(&canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
