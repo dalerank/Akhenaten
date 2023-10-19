@@ -19,6 +19,7 @@
 #include "scenario/scenario.h"
 #include "widget/minimap.h"
 #include "widget/sidebar/common.h"
+#include "widget/city/figures_cached_draw.h"
 #include "widget/city.h"
 
 #include "png.h"
@@ -27,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <thread>
 
 #define TILE_X_SIZE 60
 #define TILE_Y_SIZE 30
@@ -239,14 +241,14 @@ static void create_window_screenshot(void) {
     image_free();
 }
 
-static void create_full_city_screenshot(void) {
+static void create_full_city_screenshot() {
     if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY)) {
         return;
     }
     vec2i original_camera_pixels = camera_get_position();
 
     vec2i min_pos, max_pos;
-    city_view_get_camera_scrollable_pixel_limits(min_pos, max_pos);
+    city_view_get_camera_scrollable_pixel_limits(city_view_data_unsafe(), min_pos, max_pos);
 
     vec2i view_pos, view_size;
     city_view_get_viewport(view_pos, view_size);
@@ -279,7 +281,6 @@ static void create_full_city_screenshot(void) {
 
     int old_scale = zoom_get_scale() * 100;
 
-    map_point dummy_tile(0, 0);
     int error = 0;
     int base_height = image_set_loop_height_limits(min_pos.y, max_pos.y);
     int size;
@@ -290,9 +291,15 @@ static void create_full_city_screenshot(void) {
     city_view_get_viewport(viewport_offset, viewport_size);
     city_view_set_viewport(canvas_width + (city_view_is_sidebar_collapsed() ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH), canvas_height + TOP_MENU_HEIGHT);
     int current_height = base_height;
+
+    int yy = 0;
     while ((size = image_request_rows()) != 0) {
+        
         int y_offset = (current_height + canvas_height > max_pos.y) ? canvas_height - (max_pos.y - current_height) - TILE_Y_SIZE : 0;
 
+        std::vector<std::thread> threads;
+
+        int i = 0;
         for (int width = 0; width < city_canvas_pixels.x; width += canvas_width) {
             int image_section_width = canvas_width;
             int x_offset = 0;
@@ -301,9 +308,32 @@ static void create_full_city_screenshot(void) {
                 x_offset = canvas_width - image_section_width - TILE_X_SIZE * 2;
             }
 
-            camera_go_to_pixel({min_pos.x + width, current_height}, false);
-            widget_city_draw_without_overlay(0, 0, dummy_tile);
-            graphics_renderer()->save_screen_buffer(&canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
+            //threads.push_back(std::thread([] (vec2i min_pos, int width, int canvas_width, int current_height, color *canvas, int x_offset, int y_offset, int image_section_width, int canvas_height, vec2i city_canvas_pixels, int color) {
+                SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE, canvas_width, canvas_height, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+                SDL_Renderer *renderer = SDL_CreateSoftwareRenderer(surface);
+                
+                //SDL_Rect rect{0, 0, canvas_width, canvas_height};
+                //SDL_FillRect(surface, &rect, color );
+                figure_draw_cache_data_t local_figure_data;
+                view_data_t local_view_data = city_view_data_unsafe();
+                view_context local_context;
+                local_context.figure_cache = &local_figure_data;
+                local_context.view_data = &city_view_data_unsafe(); // &local_view_data;
+
+                ::camera_go_to_pixel(local_context, {min_pos.x + width, current_height}, false);
+                tile2i dummy_tile(0, 0);
+                widget_city_draw_without_overlay(0, 0, dummy_tile, local_context);
+                graphics_renderer()->save_screen_buffer(&canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
+                //SDL_Rect rect2 = {x_offset, y_offset, canvas_width, canvas_height};
+                //bool ok = SDL_RenderReadPixels(renderer, &rect2, SDL_PIXELFORMAT_ARGB8888, &canvas[width], city_canvas_pixels.x * sizeof(color)) == 0;
+                SDL_DestroyRenderer(renderer);
+                SDL_FreeSurface(surface);
+            //}, min_pos, width, canvas_width, current_height, canvas, x_offset, y_offset, image_section_width, canvas_height, city_canvas_pixels, ((yy + i) % 2) ? 0xff00ff00 : 0xff0000ff));
+            i++;
+        }
+
+        for (std::thread& t : threads) {
+           // t.join();
         }
 
         if (!image_write_rows(canvas, city_canvas_pixels.x)) {
@@ -311,6 +341,7 @@ static void create_full_city_screenshot(void) {
             error = 1;
             break;
         }
+        yy++;
         current_height += canvas_height;
     }
 
@@ -318,7 +349,7 @@ static void create_full_city_screenshot(void) {
     zoom_set_scale(old_scale);
 
     graphics_reset_clip_rectangle();
-    camera_go_to_pixel(original_camera_pixels, true);
+    camera_go_to_pixel(view_context_main(), original_camera_pixels, true);
     
     if (!error) {
         image_finish();

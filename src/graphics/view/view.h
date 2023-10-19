@@ -1,17 +1,9 @@
-#ifndef CITY_VIEW_H
-#define CITY_VIEW_H
+#pragma once
 
 #include "core/buffer.h"
 #include "grid/point.h"
 #include "zoom.h"
 
-// int MAP_TILE_UPPER_LIMIT_X();
-// int MAP_TILE_UPPER_LIMIT_Y();
-
-// int SCROLL_MIN_SCREENTILE_X();
-// int SCROLL_MIN_SCREENTILE_Y();
-// int SCROLL_MAX_SCREENTILE_X();
-// int SCROLL_MAX_SCREENTILE_Y();
 extern int SCROLL_MIN_SCREENTILE_X;
 extern int SCROLL_MIN_SCREENTILE_Y;
 extern int SCROLL_MAX_SCREENTILE_X;
@@ -39,8 +31,17 @@ struct view_data_t {
     screen_tile selected_tile;
 };
 
-typedef void(tile_draw_callback)(vec2i pixel, map_point point);
-typedef void(minimap_draw_callback)(screen_tile screen, map_point point);
+struct figure_draw_cache_data_t;
+
+struct view_context {
+    figure_draw_cache_data_t *figure_cache;
+    view_data_t *view_data;
+};
+
+view_context view_context_main();
+
+using tile_draw_callback = void(vec2i pixel, tile2i tile, view_context &payload);
+using minimap_draw_callback = void(vec2i pixel, tile2i point);
 
 view_data_t& city_view_data_unsafe();
 
@@ -61,10 +62,10 @@ vec2i camera_get_pixel_offset_internal();
 void city_view_get_camera_max_tile(int* x, int* y);
 void city_view_get_camera_max_pixel_offset(int* x, int* y);
 vec2i city_view_get_camera_in_pixels();
-void city_view_get_camera_scrollable_pixel_limits(vec2i &min_pos, vec2i &max_pos);
+void city_view_get_camera_scrollable_pixel_limits(view_data_t& view, vec2i &min_pos, vec2i &max_pos);
 void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip);
 
-void camera_go_to_pixel(vec2i pixel, bool validate);
+void camera_go_to_pixel(view_context &ctx, vec2i pixel, bool validate);
 void camera_go_to_corner_tile(screen_tile screen, bool validate);
 void camera_go_to_screen_tile(screen_tile screen, bool validate);
 void camera_go_to_mappoint(map_point point);
@@ -87,14 +88,13 @@ bool city_view_is_sidebar_collapsed(void);
 void city_view_start_sidebar_toggle(void);
 void city_view_toggle_sidebar(void);
 
-void city_view_foreach_valid_map_tile(tile_draw_callback* callback1,
+void city_view_foreach_valid_map_tile(view_context &ctx,
+                                      tile_draw_callback* callback1,
                                       tile_draw_callback* callback2 = nullptr,
                                       tile_draw_callback* callback3 = nullptr,
                                       tile_draw_callback* callback4 = nullptr,
                                       tile_draw_callback* callback5 = nullptr,
                                       tile_draw_callback* callback6 = nullptr);
 
-void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, tile_draw_callback* callback);
+void city_view_foreach_tile_in_range(view_context &ctx, int grid_offset, int size, int radius, tile_draw_callback* callback);
 void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles, int height_tiles, minimap_draw_callback callback);
-
-#endif // CITY_VIEW_H

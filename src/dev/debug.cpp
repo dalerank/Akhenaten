@@ -206,7 +206,7 @@ static int north_tile_grid_offset(int x, int y) {
     return grid_offset;
 }
 
-void draw_debug_tile(vec2i pixel, tile2i point) {
+void draw_debug_tile(vec2i pixel, tile2i point, view_context &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -473,7 +473,7 @@ void draw_debug_tile(vec2i pixel, tile2i point) {
     }
 }
 
-void draw_debug_figures(vec2i pixel, tile2i point) {
+void draw_debug_figures(vec2i pixel, tile2i point, view_context &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -1098,7 +1098,7 @@ void draw_debug_ui(int x, int y) {
         vec2i camera_pixels = camera_get_pixel_offset_internal();
 
         vec2i min_pos, max_pos;
-        city_view_get_camera_scrollable_pixel_limits(min_pos, max_pos);
+        city_view_get_camera_scrollable_pixel_limits(city_view_data_unsafe(), min_pos, max_pos);
 
         auto& viewdata = city_view_data_unsafe();
         int real_max_x;

@@ -13,6 +13,7 @@
 #include "widget/sidebar/common.h"
 #include "city/sentiment.h"
 #include "scenario/property.h"
+#include "widget/city/figures_cached_draw.h"
 
 view_data_t g_city_view_data;
 
@@ -89,13 +90,11 @@ vec2i city_view_get_camera_in_pixels() {
             data.camera.tile_internal.y * HALF_TILE_HEIGHT_PIXELS + data.camera.position.y};
 }
 
-void city_view_get_camera_scrollable_pixel_limits(vec2i &min_pos, vec2i &max_pos) {
-    auto& data = g_city_view_data;
-
+void city_view_get_camera_scrollable_pixel_limits(view_data_t& view, vec2i &min_pos, vec2i &max_pos) {
     min_pos.x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
     min_pos.y = SCROLL_MIN_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS;
-    max_pos.x = SCROLL_MAX_SCREENTILE_X * TILE_WIDTH_PIXELS - calc_adjust_with_percentage(data.viewport.size_pixels.x, zoom_get_percentage());
-    max_pos.y = SCROLL_MAX_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS - calc_adjust_with_percentage(data.viewport.size_pixels.y, zoom_get_percentage());
+    max_pos.x = SCROLL_MAX_SCREENTILE_X * TILE_WIDTH_PIXELS - calc_adjust_with_percentage(view.viewport.size_pixels.x, zoom_get_percentage());
+    max_pos.y = SCROLL_MAX_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS - calc_adjust_with_percentage(view.viewport.size_pixels.y, zoom_get_percentage());
 }
 
 void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip) {
@@ -112,11 +111,9 @@ void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip) {
     clip.y = (min_y - data.camera.position.y);
 }
 
-static void camera_validate_position(void) {
-    auto& data = g_city_view_data;
-
+static void camera_validate_position(view_data_t& view) {
     vec2i min_pos, max_pos;
-    city_view_get_camera_scrollable_pixel_limits(min_pos, max_pos);
+    city_view_get_camera_scrollable_pixel_limits(view, min_pos, max_pos);
 
     // if MAX and MIN limits are the same (map is too zoomed out for the borders) kinda do an average
     if (max_pos.x <= min_pos.x) {
@@ -130,21 +127,24 @@ static void camera_validate_position(void) {
         max_pos.y += corr_y;
     }
 
-    if (data.camera.position.x < min_pos.x)
-        data.camera.position.x = min_pos.x;
-    if (data.camera.position.x > max_pos.x)
-        data.camera.position.x = max_pos.x;
+    if (view.camera.position.x < min_pos.x)
+        view.camera.position.x = min_pos.x;
 
-    if (data.camera.position.y < min_pos.y)
-        data.camera.position.y = min_pos.y;
-    if (data.camera.position.y > max_pos.y)
-        data.camera.position.y = max_pos.y;
+    if (view.camera.position.x > max_pos.x)
+        view.camera.position.x = max_pos.x;
 
-    data.camera.tile_internal.x = data.camera.position.x / TILE_WIDTH_PIXELS;
-    data.camera.tile_internal.y = data.camera.position.y / HALF_TILE_HEIGHT_PIXELS;
+    if (view.camera.position.y < min_pos.y)
+        view.camera.position.y = min_pos.y;
 
-    data.camera.tile_internal.y &= ~1;
+    if (view.camera.position.y > max_pos.y)
+        view.camera.position.y = max_pos.y;
+
+    view.camera.tile_internal.x = view.camera.position.x / TILE_WIDTH_PIXELS;
+    view.camera.tile_internal.y = view.camera.position.y / HALF_TILE_HEIGHT_PIXELS;
+
+    view.camera.tile_internal.y &= ~1;
 }
+
 void city_view_camera_position_refresh() {
     auto& data = g_city_view_data;
 
@@ -175,31 +175,30 @@ vec2i camera_get_pixel_offset_internal() {
     return pixel_offset_internal;
 }
 
-void camera_go_to_pixel(vec2i pixel, bool validate) {
-    auto& data = g_city_view_data;
-
-    data.camera.position = pixel;
+void camera_go_to_pixel(view_context& ctx, vec2i pixel, bool validate) {
+    auto &view = *ctx.view_data;
+    view.camera.position = pixel;
     if (validate) {
-        camera_validate_position();
+        camera_validate_position(city_view_data_unsafe());
     } else {
-        data.camera.tile_internal.x = data.camera.position.x / TILE_WIDTH_PIXELS;
-        data.camera.tile_internal.y = data.camera.position.y / HALF_TILE_HEIGHT_PIXELS;
+        view.camera.tile_internal.x = view.camera.position.x / TILE_WIDTH_PIXELS;
+        view.camera.tile_internal.y = view.camera.position.y / HALF_TILE_HEIGHT_PIXELS;
 
-        data.camera.tile_internal.y &= ~1;
+        view.camera.tile_internal.y &= ~1;
     }
 }
 
 void camera_go_to_corner_tile(screen_tile screen, bool validate) {
     int x = screen.x * TILE_WIDTH_PIXELS;
     int y = screen.y * HALF_TILE_HEIGHT_PIXELS;
-    camera_go_to_pixel({x, y}, validate);
+    camera_go_to_pixel(view_context_main(), {x, y}, validate);
 }
 void camera_go_to_screen_tile(screen_tile screen, bool validate) {
     auto& data = g_city_view_data;
 
     int x = (screen.x - data.viewport.width_tiles / 2) * TILE_WIDTH_PIXELS;
     int y = (screen.y - data.viewport.height_tiles / 2) * HALF_TILE_HEIGHT_PIXELS;
-    camera_go_to_pixel({x, y}, validate);
+    camera_go_to_pixel(view_context_main(), {x, y}, validate);
 }
 void camera_go_to_mappoint(map_point point) {
     //camera_go_to_pixel(mappoint_to_pixel(point), true);
@@ -210,12 +209,13 @@ void camera_go_to_mappoint(map_point point) {
         screen.y &= ~1;
         camera_go_to_corner_tile(screen, true);
 }
-void camera_scroll(int x, int y) {
-    auto& data = g_city_view_data;
 
-    data.camera.position.x += x;
-    data.camera.position.y += y;
-    camera_validate_position();
+void camera_scroll(int x, int y) {
+    auto& view = g_city_view_data;
+
+    view.camera.position.x += x;
+    view.camera.position.y += y;
+    camera_validate_position(view);
 }
 
 screen_tile camera_get_selected_screen_tile() {
@@ -306,10 +306,17 @@ static void set_viewport_without_sidebar(void) {
     set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - SIDEBAR_COLLAPSED_WIDTH + 2, data.screen_height - TOP_MENU_HEIGHT);
 }
 
-void city_view_refresh_viewport() {
-    auto& data = g_city_view_data;
+view_context view_context_main() {
+    view_context ctx;
+    ctx.figure_cache = &figure_draw_cache();
+    ctx.view_data = &city_view_data_unsafe();
+    return ctx;
+}
 
-    if (data.sidebar_collapsed) {
+void city_view_refresh_viewport() {
+    auto& view = g_city_view_data;
+
+    if (view.sidebar_collapsed) {
         set_viewport_without_sidebar();
     } else {
         set_viewport_with_sidebar();
@@ -317,21 +324,21 @@ void city_view_refresh_viewport() {
     //    data.camera.pixel.x = 0;
     //    data.camera.pixel.y = 0;
     //    adjust_camera_position_for_pixels();
-    camera_validate_position();
+    camera_validate_position(view);
 }
 
 void city_view_set_viewport(int screen_width, int screen_height) {
-    auto& data = g_city_view_data;
+    auto& view = g_city_view_data;
 
-    data.screen_width = screen_width;
-    data.screen_height = screen_height;
-    if (data.sidebar_collapsed) {
+    view.screen_width = screen_width;
+    view.screen_height = screen_height;
+    if (view.sidebar_collapsed) {
         set_viewport_without_sidebar();
     } else {
         set_viewport_with_sidebar();
     }
     //    adjust_camera_position_for_pixels();
-    camera_validate_position();
+    camera_validate_position(view);
 }
 
 void city_view_get_viewport(vec2i &pos, vec2i &size) {
@@ -363,21 +370,22 @@ bool city_view_is_sidebar_collapsed(void) {
     return data.sidebar_collapsed;
 }
 
-void city_view_start_sidebar_toggle(void) {
+void city_view_start_sidebar_toggle() {
     set_viewport_without_sidebar();
-    camera_validate_position();
+    camera_validate_position(city_view_data_unsafe());
 }
-void city_view_toggle_sidebar(void) {
-    auto& data = g_city_view_data;
 
-    if (data.sidebar_collapsed) {
-        data.sidebar_collapsed = false;
+void city_view_toggle_sidebar(void) {
+    auto& view = g_city_view_data;
+
+    if (view.sidebar_collapsed) {
+        view.sidebar_collapsed = false;
         set_viewport_with_sidebar();
     } else {
-        data.sidebar_collapsed = true;
+        view.sidebar_collapsed = true;
         set_viewport_without_sidebar();
     }
-    camera_validate_position();
+    camera_validate_position(view);
 }
 
 io_buffer* iob_city_view_orientation = new io_buffer([](io_buffer* iob, size_t version) {
@@ -419,7 +427,9 @@ static vec2i starting_pixel_coord() {
               + calc_adjust_with_percentage(TOP_MENU_HEIGHT, zoom_get_percentage()); // - pixel_offset_internal().y;
     return pixel - camera_get_pixel_offset_internal();
 }
-void city_view_foreach_valid_map_tile(tile_draw_callback* callback1,
+
+void city_view_foreach_valid_map_tile(view_context &ctx,
+                                      tile_draw_callback* callback1,
                                       tile_draw_callback* callback2,
                                       tile_draw_callback* callback3,
                                       tile_draw_callback* callback4,
@@ -446,17 +456,17 @@ void city_view_foreach_valid_map_tile(tile_draw_callback* callback1,
                     record_mappoint_pixelcoord(point, pixel);
                     if (point.grid_offset() >= 0) {
                         if (callback1)
-                            callback1(pixel, point);
+                            callback1(pixel, point, ctx);
                         if (callback2)
-                            callback2(pixel, point);
+                            callback2(pixel, point, ctx);
                         if (callback3)
-                            callback3(pixel, point);
+                            callback3(pixel, point, ctx);
                         if (callback4)
-                            callback4(pixel, point);
+                            callback4(pixel, point, ctx);
                         if (callback5)
-                            callback5(pixel, point);
+                            callback5(pixel, point, ctx);
                         if (callback6)
-                            callback6(pixel, point);
+                            callback6(pixel, point, ctx);
                     }
                 }
                 pixel.x += TILE_WIDTH_PIXELS;
@@ -469,12 +479,13 @@ void city_view_foreach_valid_map_tile(tile_draw_callback* callback1,
     }
 }
 
-static void do_valid_callback(vec2i pixel, map_point point, tile_draw_callback* callback) {
-    if (point.grid_offset() >= 0 && map_image_at(point.grid_offset()) >= 6)
-        callback(pixel, point);
+static void do_valid_callback(vec2i pixel, tile2i point, tile_draw_callback* callback, view_context &ctx) {
+    if (point.grid_offset() >= 0 && map_image_at(point.grid_offset()) >= 6) {
+        callback(pixel, point, ctx);
+    }
 }
 
-void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, tile_draw_callback* callback) {
+void city_view_foreach_tile_in_range(view_context &ctx, int grid_offset, int size, int radius, tile_draw_callback* callback) {
     auto& data = g_city_view_data;
 
     screen_tile screen = mappoint_to_screentile(map_point(grid_offset));
@@ -504,7 +515,7 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, tile
         x_offset += HALF_TILE_WIDTH_PIXELS * size;
         y_offset += HALF_TILE_HEIGHT_PIXELS * size;
     } else {
-        do_valid_callback(pixel, map_point(grid_offset), callback);
+        do_valid_callback(pixel, tile2i(grid_offset), callback, ctx);
     }
     // Basic algorithm: we cycle the radius as successive rings
     // Starting at the innermost ring (determined by size), we first cycle
@@ -516,34 +527,36 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, tile
         map_point point = map_point(grid_offset);
         do_valid_callback({pixel.x, pixel.y + y_offset * pixel_rotation},
                           point.shifted(offset_south * orientation_x, offset_south * orientation_y),
-                          callback);
+                          callback, ctx);
         do_valid_callback({pixel.x, pixel.y - y_offset * pixel_rotation},
                           point.shifted(offset_north * orientation_x, offset_north * orientation_y),
-                          callback);
+                          callback, ctx);
         do_valid_callback({pixel.x - x_offset - x_delta, pixel.y},
                           point.shifted(offset_north * orientation_x, offset_south * orientation_y),
-                          callback);
+                          callback, ctx);
         do_valid_callback({pixel.x + x_offset + x_delta, pixel.y},
                           point.shifted(offset_south * orientation_x, offset_north * orientation_y),
-                          callback);
+                          callback, ctx);
+
         for (int tile = 1; tile < ring * 2 + size + 2; ++tile) {
             do_valid_callback({pixel.x + x_delta * tile,
                                pixel.y - y_offset * pixel_rotation + y_delta * pixel_rotation * tile},
                               point.shifted((tile + offset_north) * orientation_x, offset_north * orientation_y),
-                              callback);
+                              callback, ctx);
             do_valid_callback({pixel.x - x_delta * tile,
                                pixel.y - y_offset * pixel_rotation + y_delta * pixel_rotation * tile},
                               point.shifted(offset_north * orientation_x, (tile + offset_north) * orientation_y),
-                              callback);
+                              callback, ctx);
             do_valid_callback({pixel.x + x_delta * tile,
                                pixel.y + y_offset * pixel_rotation - y_delta * pixel_rotation * tile},
                               point.shifted(offset_south * orientation_x, (offset_south - tile) * orientation_y),
-                              callback);
+                              callback, ctx);
             do_valid_callback({pixel.x - x_delta * tile,
                                pixel.y + y_offset * pixel_rotation - y_delta * pixel_rotation * tile},
                               point.shifted((offset_south - tile) * orientation_x, offset_south * orientation_y),
-                              callback);
+                              callback, ctx);
         }
+
         x_offset += TILE_WIDTH_PIXELS;
         y_offset += TILE_HEIGHT_PIXELS;
     }
