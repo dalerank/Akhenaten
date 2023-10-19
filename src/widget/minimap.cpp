@@ -347,14 +347,14 @@ bool widget_minimap_handle_mouse(const mouse* m) {
             vec2i min_pos, max_pos;
             vec2i view_pos, view_size;
 
-            city_view_get_camera_scrollable_pixel_limits(min_pos, max_pos);
+            city_view_get_camera_scrollable_pixel_limits(city_view_data_unsafe(), min_pos, max_pos);
             city_view_get_viewport(view_pos, view_size);
 
             max_pos += view_size;
             vec2i city_canvas_pixels = max_pos - min_pos;
             vec2i map_pos(city_canvas_pixels.x * xx, city_canvas_pixels.y * yy);
 
-            camera_go_to_pixel(min_pos + map_pos - view_size / 2, true);
+            camera_go_to_pixel(view_context_main(), min_pos + map_pos - view_size / 2, true);
             widget_minimap_invalidate();
             data.mouse_last_coords = {m->x, m->y};
             return true;

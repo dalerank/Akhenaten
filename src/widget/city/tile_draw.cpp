@@ -222,7 +222,7 @@ static void clip_between_rectangles(int* xOut,
         *hOut = 0;
 }
 
-static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode mode) {
+static void draw_cached_figures(vec2i pixel, tile2i point, e_figure_draw_mode mode, view_context &ctx) {
     auto& draw_context = get_draw_context();
 
     if (!USE_BLEEDING_CACHE) {
@@ -233,7 +233,7 @@ static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode
         return;
     }
 
-    tile_figure_draw_cache *cache = get_figure_cache_for_tile(point);
+    tile_figure_draw_cache *cache = get_figure_cache_for_tile(*(ctx.figure_cache), point);
     if (cache == nullptr || cache->num_figures == 0) {
         return;
     }
@@ -317,8 +317,9 @@ static void draw_cached_figures(vec2i pixel, map_point point, e_figure_draw_mode
     set_city_clip_rectangle();
 }
 
-void draw_debug_figurecaches(vec2i pixel, map_point point) {
+void draw_debug_figurecaches(vec2i pixel, map_point point, view_context &ctx) {
     return;
+
     if (!USE_BLEEDING_CACHE) {
         return;
     }
@@ -327,7 +328,7 @@ void draw_debug_figurecaches(vec2i pixel, map_point point) {
         return;
     }
 
-    auto cache = get_figure_cache_for_tile(point);
+    auto cache = get_figure_cache_for_tile(*ctx.figure_cache, point);
     if (cache == nullptr || cache->num_figures == 0) {
         return;
     }
@@ -361,7 +362,7 @@ void draw_debug_figurecaches(vec2i pixel, map_point point) {
     }
 }
 
-void draw_isometrics(vec2i pixel, map_point point) {
+void draw_isometrics(vec2i pixel, tile2i point, view_context &ctx) {
     auto& draw_context = get_draw_context();
 
     int grid_offset = point.grid_offset();
@@ -439,16 +440,17 @@ void draw_isometrics(vec2i pixel, map_point point) {
     }
 }
 
-void draw_ornaments(vec2i pixel, map_point point) {
+void draw_ornaments(vec2i pixel, tile2i point, view_context &ctx) {
     // defined separately in ornaments.cpp
     // cuz it's too much stuff.
-    draw_ornaments_and_animations(pixel, point);
+    draw_ornaments_and_animations(pixel, point, ctx);
 }
-void draw_figures(vec2i pixel, map_point point) {
+
+void draw_figures(vec2i pixel, tile2i point, view_context &ctx) {
     auto& draw_context = get_draw_context();
 
     // first, draw from the cache
-    draw_cached_figures(pixel, point, e_figure_draw_common);
+    draw_cached_figures(pixel, point, e_figure_draw_common, ctx);
 
     // secondly, draw figures found on this tile as normal
     int grid_offset = point.grid_offset();
@@ -469,7 +471,7 @@ void draw_figures(vec2i pixel, map_point point) {
     }
 }
 
-void draw_isometrics_overlay(vec2i pixel, map_point point) {
+void draw_isometrics_overlay(vec2i pixel, map_point point, view_context &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -502,7 +504,8 @@ void draw_isometrics_overlay(vec2i pixel, map_point point) {
 
     get_city_overlay()->draw_custom_top(pixel, point);
 }
-void draw_ornaments_overlay(vec2i pixel, map_point point) {
+
+void draw_ornaments_overlay(vec2i pixel, map_point point, view_context &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -510,15 +513,16 @@ void draw_ornaments_overlay(vec2i pixel, map_point point) {
     if (b_id) {
         const building* b = building_at(grid_offset);
         if (get_city_overlay()->show_building(b)) {
-            draw_ornaments(pixel, point);
+            draw_ornaments(pixel, point, ctx);
         }
     } else {
-        draw_ornaments(pixel, point);
+        draw_ornaments(pixel, point, ctx);
     }
 }
-void draw_figures_overlay(vec2i pixel, map_point point) {
+
+void draw_figures_overlay(vec2i pixel, tile2i point, view_context &ctx) {
     // first, draw the cached figures
-    draw_cached_figures(pixel, point, e_figure_draw_overlay);
+    draw_cached_figures(pixel, point, e_figure_draw_overlay, ctx);
 
     // secondly, draw the figures normally found on this tile
     int grid_offset = point.grid_offset();
@@ -603,18 +607,19 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
     }
 }
 
-void city_with_overlay_draw_building_top(vec2i pixel, map_point point) {
+void city_with_overlay_draw_building_top(vec2i pixel, tile2i point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
     building* b = building_at(grid_offset);
-    if (get_city_overlay()->type == OVERLAY_PROBLEMS)
+    if (get_city_overlay()->type == OVERLAY_PROBLEMS) {
         overlay_problems_prepare_building(b);
+    }
 
-    if (get_city_overlay()->show_building(b))
+    if (get_city_overlay()->show_building(b)) {
         //        draw_top(pixel, point);
-        draw_isometrics(pixel, point);
-    else {
+        draw_isometrics(pixel, point, view_context_main());
+    } else {
         int column_height = get_city_overlay()->get_column_height(b);
         if (column_height != NO_COLUMN) {
             int draw = 1;

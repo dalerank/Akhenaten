@@ -13,4 +13,4 @@ enum e_farm_worker_state {
 int get_farm_image(int grid_offset);
 void draw_farm_crops(e_building_type type, int progress, int grid_offset, vec2i tile, color color_mask);
 
-void draw_ornaments_and_animations(vec2i pixel, map_point point);
+void draw_ornaments_and_animations(vec2i pixel, tile2i point, view_context &ctx);

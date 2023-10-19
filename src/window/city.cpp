@@ -259,9 +259,12 @@ void window_city_draw_all(void) {
 void window_city_draw_panels(void) {
     window_city_draw_background();
 }
-void window_city_draw(void) {
-    widget_city_draw();
+
+void window_city_draw() {
+    view_context &ctx = view_context_main();
+    widget_city_draw(ctx);
 }
+
 void window_city_show(void) {
     window_type window = {WINDOW_CITY, window_city_draw_background, draw_foreground, handle_input, get_tooltip};
     window_show(&window);

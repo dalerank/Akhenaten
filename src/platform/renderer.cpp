@@ -1153,12 +1153,12 @@ void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, co
     SDL_SetTextureBlendMode(data.cursors[cursor_id].texture, SDL_BLENDMODE_BLEND);
 }
 
-void platform_renderer_pause(void) {
+void platform_renderer_pause() {
     auto &data = g_renderer_data;
     SDL_SetRenderTarget(data.renderer, NULL);
     data.paused = 1;
 }
-void platform_renderer_resume(void) {
+void platform_renderer_resume() {
     auto &data = g_renderer_data;
     data.paused = 0;
     platform_renderer_create_render_texture(screen_width(), screen_height());

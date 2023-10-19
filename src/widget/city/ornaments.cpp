@@ -487,7 +487,7 @@ static void draw_palace_rating_flags(const building* b, int x, int y, color colo
     }
 }
 
-void draw_ornaments_and_animations(vec2i tile, map_point point) {
+void draw_ornaments_and_animations(vec2i tile, map_point point, view_context &ctx) {
     int grid_offset = point.grid_offset();
     int x = tile.x;
     int y = tile.y;

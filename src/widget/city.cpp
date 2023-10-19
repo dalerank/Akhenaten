@@ -58,11 +58,11 @@ void set_city_clip_rectangle(void) {
     //    - 30);
 }
 
-static void update_zoom_level(void) {
+static void update_zoom_level() {
     vec2i offset = camera_get_position();
     if (zoom_update_value(&offset)) {
         city_view_refresh_viewport();
-        camera_go_to_pixel(offset, true);
+        camera_go_to_pixel(view_context_main(), offset, true);
         sound_city_decay_views();
     }
 }
@@ -74,9 +74,9 @@ static void scroll_map(const mouse* m) {
     }
 }
 static map_point update_city_view_coords(vec2i pixel) {
-    if (!pixel_is_inside_viewport(pixel))
+    if (!pixel_is_inside_viewport(pixel)) {
         return map_point(0);
-    else {
+    } else {
         screen_tile screen = pixel_to_screentile(pixel);
         if (screen.x != -1 && screen.y != -1) {
             city_view_set_selected_view_tile(&screen);
@@ -94,8 +94,6 @@ static int input_coords_in_city(int x, int y) {
 
     return (x >= 0 && x < view_size.x && y >= 0 && y < view_size.y);
 }
-
-stopwatch WATCH;
 
 static void draw_TEST(vec2i pixel, map_point point) {
     int grid_offset = point.grid_offset();
@@ -119,73 +117,78 @@ static void draw_TEST(vec2i pixel, map_point point) {
     //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
     //        COLOR_CHANNEL_GREEN);
 }
+
 static void draw_tile_boxes(vec2i pixel, map_point point) {
     if (map_property_is_draw_tile(point.grid_offset())) {
         int tile_size = map_property_multi_tile_size(point.grid_offset());
         debug_draw_tile_box(pixel.x, pixel.y, tile_size, tile_size);
     }
 };
-void widget_city_draw_without_overlay(int selected_figure_id, vec2i* figure_coord, map_point tile) {
-    WATCH.REPEAT();
 
+void widget_city_draw_without_overlay(int selected_figure_id, vec2i* figure_coord, tile2i tile, view_context &ctx) {
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
         highlighted_formation = formation_legion_at_grid_offset(tile.grid_offset());
-        if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle)
+        if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle) {
             highlighted_formation = 0;
+        }
     }
+
     init_draw_context(selected_figure_id, figure_coord, highlighted_formation);
 
     city_building_ghost_mark_deleting(tile);
-    reset_tiledraw_caches();
-    city_view_foreach_valid_map_tile(cache_figures);
-    city_view_foreach_valid_map_tile(draw_isometrics, draw_ornaments, draw_figures);
+
+    reset_tiledraw_caches(*ctx.figure_cache);
+
+    city_view_foreach_valid_map_tile(ctx, cache_figures);
+    city_view_foreach_valid_map_tile(ctx, draw_isometrics, draw_ornaments, draw_figures);
+
     if (!selected_figure_id) {
         Planner.update(tile);
         Planner.draw();
     }
 
     // finally, draw these on top of everything else
-    city_view_foreach_valid_map_tile(draw_debug_tile, draw_debug_figurecaches);
-    city_view_foreach_valid_map_tile(draw_debug_figures);
-
-    WATCH.STOP();
-    //    WATCH.LOG();
+    city_view_foreach_valid_map_tile(ctx, draw_debug_tile, draw_debug_figurecaches);
+    city_view_foreach_valid_map_tile(ctx, draw_debug_figures);
 }
-void widget_city_draw_with_overlay(map_point tile) {
+
+void widget_city_draw_with_overlay(view_context &ctx, tile2i tile) {
     if (!select_city_overlay())
         return;
 
     city_building_ghost_mark_deleting(tile);
-    reset_tiledraw_caches();
-    city_view_foreach_valid_map_tile(cache_figures);
-    city_view_foreach_valid_map_tile(draw_isometrics_overlay, draw_ornaments_overlay, draw_figures_overlay);
+    reset_tiledraw_caches(*ctx.figure_cache);
+    city_view_foreach_valid_map_tile(ctx, cache_figures);
+    city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay, draw_ornaments_overlay, draw_figures_overlay);
     Planner.update(tile);
     Planner.draw();
 }
 
-void widget_city_draw(void) {
+void widget_city_draw(view_context &ctx) {
     auto& data = g_wdiget_city_data;
     update_zoom_level();
     set_render_scale(zoom_get_scale());
     set_city_clip_rectangle();
     if (game_state_overlay()) {
-        widget_city_draw_with_overlay(data.current_tile);
+        widget_city_draw_with_overlay(ctx, data.current_tile);
     } else {
-        widget_city_draw_without_overlay(0, 0, data.current_tile);
+        widget_city_draw_without_overlay(0, 0, data.current_tile, ctx);
     }
     graphics_reset_clip_rectangle();
     set_render_scale(1.0f);
 }
-void widget_city_draw_for_figure(int figure_id, vec2i* coord) {
+
+void widget_city_draw_for_figure(int figure_id, vec2i* coord, view_context &ctx) {
     auto& data = g_wdiget_city_data;
     set_city_clip_rectangle();
 
-    widget_city_draw_without_overlay(figure_id, coord, data.current_tile);
+    widget_city_draw_without_overlay(figure_id, coord, data.current_tile, ctx);
 
     graphics_reset_clip_rectangle();
 }
-bool widget_city_draw_construction_cost_and_size(void) {
+
+bool widget_city_draw_construction_cost_and_size() {
     if (!Planner.in_progress)
         return false;
 

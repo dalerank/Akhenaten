@@ -404,7 +404,7 @@ void window_building_draw_figure_list(object_info* c) {
     c->figure.drawn = 1;
 }
 
-static void draw_figure_in_city(int figure_id, vec2i* coord) {
+static void draw_figure_in_city(int figure_id, vec2i* coord, view_context &ctx) {
     map_point camera_tile = city_view_get_camera_mappoint();
 
     int grid_offset = figure_get(figure_id)->tile.grid_offset();
@@ -413,17 +413,18 @@ static void draw_figure_in_city(int figure_id, vec2i* coord) {
 
     //    city_view_go_to_tile(x - 2, y - 6);
 
-    widget_city_draw_for_figure(figure_id, coord);
+    widget_city_draw_for_figure(figure_id, coord, ctx);
 
     //    city_view_go_to_tile(x_cam, y_cam);
 }
 
 void window_building_prepare_figure_list(object_info* c) {
-    auto& data = g_building_figures_data;
+    auto &data = g_building_figures_data;
+    auto &ctx = view_context_main();
     if (c->figure.count > 0) {
         vec2i coord = {0, 0};
         for (int i = 0; i < c->figure.count; i++) {
-            draw_figure_in_city(c->figure.figure_ids[i], &coord);
+            draw_figure_in_city(c->figure.figure_ids[i], &coord, ctx);
             data.figure_images[i] = graphics_save_to_texture(data.figure_images[i], coord.x, coord.y, 48, 48);
         }
         //        if (config_get(CONFIG_UI_ZOOM))
@@ -434,7 +435,7 @@ void window_building_prepare_figure_list(object_info* c) {
         //            graphics_save_to_buffer(coord.x - 25, coord.y - 45, 48, 48, data.figure_images[i]);
         //        }
         //        graphics_set_active_canvas(CANVAS_UI);
-        widget_city_draw();
+        widget_city_draw(ctx);
     }
 }
 

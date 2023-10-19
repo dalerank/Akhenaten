@@ -184,7 +184,7 @@ void draw_building(int image_id, vec2i tile, color color_mask) {
     ImageDraw::isometric(image_id, tile, color_mask);
 }
 
-static void draw_fountain_range(vec2i pixel, map_point point) {
+static void draw_fountain_range(vec2i pixel, map_point point, view_context &ctx) {
     ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE, zoom_get_scale());
 }
 
@@ -567,16 +567,19 @@ static void draw_monument_blueprint(map_point tile, int x, int y, int type) {
     // TODO: implement monuments
 }
 
-bool city_building_ghost_mark_deleting(map_point tile) {
-    if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
+bool city_building_ghost_mark_deleting(tile2i tile) {
+    if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE)) {
         return false;
+    }
 
     int construction_type = Planner.build_type;
-    if (!tile.grid_offset() || Planner.draw_as_constructing || construction_type != BUILDING_CLEAR_LAND)
+    if (!tile.grid_offset() || Planner.draw_as_constructing || construction_type != BUILDING_CLEAR_LAND) {
         return (construction_type == BUILDING_CLEAR_LAND);
+    }
 
-    if (!Planner.in_progress)
+    if (!Planner.in_progress) {
         map_property_clear_constructing_and_deleted();
+    }
 
     map_building_tiles_mark_deleting(tile.grid_offset());
     return true;
@@ -634,8 +637,9 @@ void BuildPlanner::draw_graphics() {
         break;
 
     case BUILDING_WELL:
-        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE))
-            city_view_foreach_tile_in_range(end.grid_offset(), 1, 2, draw_fountain_range);
+        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
+            city_view_foreach_tile_in_range(view_context_main(), end.grid_offset(), 1, 2, draw_fountain_range);
+        }
         break;
     }
 

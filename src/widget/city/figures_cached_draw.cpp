@@ -3,27 +3,28 @@
 #include "grid/figure.h"
 #include "grid/property.h"
 
-struct {
-    tile_figure_draw_cache tile_caches[MAX_TILE_CACHES];
-    int num_cached_tiles;
-    int num_cached_figures;
-    int caches_fast_index_lookup[GRID_SIZE_TOTAL];
-} FIGURE_DRAW_CACHE;
+figure_draw_cache_data_t g_figure_draw_cache;
 
-void reset_tiledraw_caches() {
-    FIGURE_DRAW_CACHE.num_cached_tiles = 0;
-    FIGURE_DRAW_CACHE.num_cached_figures = 0;
-    memset((void*)&FIGURE_DRAW_CACHE.caches_fast_index_lookup, -1, GRID_SIZE_TOTAL * sizeof(int));
+figure_draw_cache_data_t &figure_draw_cache() {
+    return g_figure_draw_cache;
+}
+
+void reset_tiledraw_caches(figure_draw_cache_data_t &figure_cache) {
+    figure_cache.num_cached_tiles = 0;
+    figure_cache.num_cached_figures = 0;
+    memset((void*)&figure_cache.caches_fast_index_lookup, -1, GRID_SIZE_TOTAL * sizeof(int));
     for (int p = 0; p < MAX_TILE_CACHES; ++p) {
-        FIGURE_DRAW_CACHE.tile_caches[p].num_figures = 0;
-        FIGURE_DRAW_CACHE.tile_caches[p].grid_offset = -1;
+        figure_cache.tile_caches[p].num_figures = 0;
+        figure_cache.tile_caches[p].grid_offset = -1;
     }
 }
-tile_figure_draw_cache* get_figure_cache_for_tile(map_point point) {
-    int fast_index = FIGURE_DRAW_CACHE.caches_fast_index_lookup[point.grid_offset()];
+
+tile_figure_draw_cache* get_figure_cache_for_tile(figure_draw_cache_data_t &figure_cache, tile2i point) {
+    int fast_index = figure_cache.caches_fast_index_lookup[point.grid_offset()];
     if (fast_index == -1)
         return nullptr; // no cache in memory for the chosen tile.
-    return &FIGURE_DRAW_CACHE.tile_caches[fast_index];
+
+    return &figure_cache.tile_caches[fast_index];
 }
 
 static map_point tile_get_northtile(map_point point) {
@@ -34,6 +35,7 @@ static map_point tile_get_northtile(map_point point) {
         point.shift(0, -1);
     return point;
 }
+
 static map_point tile_get_drawtile(map_point point) {
     point = tile_get_northtile(point);
     int size = map_property_multi_tile_size(point.grid_offset());
@@ -56,11 +58,12 @@ static map_point tile_get_drawtile(map_point point) {
     }
     return point;
 }
-static void record_figure_over_tile(figure* f, vec2i pixel, map_point point) {
+
+static void record_figure_over_tile(figure_draw_cache_data_t &figure_cache, figure* f, vec2i pixel, map_point point) {
     //    point = tile_get_drawtile(point);
     int grid_offset = point.grid_offset();
     int figure_id = f->id;
-    tile_figure_draw_cache* cache = get_figure_cache_for_tile(point);
+    tile_figure_draw_cache* cache = get_figure_cache_for_tile(figure_draw_cache(), point);
     if (cache != nullptr) { // found an existing cache!
         if (cache->num_figures >= MAX_CACHED_FIGURES_PER_TILE)
             return; // cache is FULL!
@@ -68,33 +71,34 @@ static void record_figure_over_tile(figure* f, vec2i pixel, map_point point) {
         int i = cache->num_figures++;
         cache->figures[i].id = figure_id;
         cache->figures[i].pixel = pixel;
-        FIGURE_DRAW_CACHE.num_cached_figures++;
+        figure_cache.num_cached_figures++;
         return;
     }
     // no cache found -- make a new one.
-    if (FIGURE_DRAW_CACHE.num_cached_tiles >= MAX_TILE_CACHES)
+    if (figure_cache.num_cached_tiles >= MAX_TILE_CACHES) {
         return; // can not cache any more tiles.
-    int p = FIGURE_DRAW_CACHE.num_cached_tiles++;
-    FIGURE_DRAW_CACHE.caches_fast_index_lookup[grid_offset] = p;
-    cache = &FIGURE_DRAW_CACHE.tile_caches[p];
+    }
+    int p = figure_cache.num_cached_tiles++;
+    figure_cache.caches_fast_index_lookup[grid_offset] = p;
+    cache = &figure_cache.tile_caches[p];
     cache->grid_offset = grid_offset;
 
     // add figure to cache (figure id + the original rendering coords)
     int i = cache->num_figures++;
     cache->figures[i].id = figure_id;
     cache->figures[i].pixel = pixel;
-    FIGURE_DRAW_CACHE.num_cached_figures++;
+    figure_cache.num_cached_figures++;
 }
-static void cache_figure(figure* f, vec2i pixel) {
+static void cache_figure(figure_draw_cache_data_t &figure_cache, figure* f, vec2i pixel) {
     map_point point = f->tile;
-    record_figure_over_tile(f, pixel, point.shifted(0, -1));
-    record_figure_over_tile(f, pixel, point.shifted(1, -1));
-    record_figure_over_tile(f, pixel, point.shifted(1, 0));
-    record_figure_over_tile(f, pixel, point.shifted(1, 1));
-    record_figure_over_tile(f, pixel, point.shifted(0, 1));
-    record_figure_over_tile(f, pixel, point.shifted(-1, 1));
-    record_figure_over_tile(f, pixel, point.shifted(-1, 0));
-    record_figure_over_tile(f, pixel, point.shifted(-1, -1));
+    record_figure_over_tile(figure_cache, f, pixel, point.shifted(0, -1));
+    record_figure_over_tile(figure_cache, f, pixel, point.shifted(1, -1));
+    record_figure_over_tile(figure_cache, f, pixel, point.shifted(1, 0));
+    record_figure_over_tile(figure_cache, f, pixel, point.shifted(1, 1));
+    record_figure_over_tile(figure_cache, f, pixel, point.shifted(0, 1));
+    record_figure_over_tile(figure_cache, f, pixel, point.shifted(-1, 1));
+    record_figure_over_tile(figure_cache, f, pixel, point.shifted(-1, 0));
+    record_figure_over_tile(figure_cache, f, pixel, point.shifted(-1, -1));
     //    bool entering_tile = (f->progress_on_tile < 8);
     //    switch (f->direction) {
     //        // Y-axis aligned
@@ -141,16 +145,18 @@ static void cache_figure(figure* f, vec2i pixel) {
     //    }
     //    record_figure_over_tile(f, pixel, f->previous_tile);
 }
-void cache_figures(vec2i pixel, map_point point) {
+
+void cache_figures(vec2i pixel, tile2i point, view_context &ctx) {
     int figure_id = map_figure_id_get(point.grid_offset());
 
     while (figure_id) {
         figure* f = figure_get(figure_id);
-        if (!f->is_ghost || f->height_adjusted_ticks)
-            cache_figure(f, pixel);
-        if (figure_id != f->next_figure)
+        if (!f->is_ghost || f->height_adjusted_ticks) {
+            cache_figure(*ctx.figure_cache, f, pixel);
+        } if (figure_id != f->next_figure) {
             figure_id = f->next_figure;
-        else
+        } else {
             figure_id = 0;
+        }
     }
 }
