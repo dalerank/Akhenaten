@@ -10,4 +10,12 @@ overlays = [
   	tooltips:[]
   },
 
+  {
+  	id:OVERLAY_RELIGION_RA,
+  	caption:"Ra",
+  	walkers:[FIGURE_PRIEST],
+  	buildings:[BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_SHRINE_RA],
+  	tooltip_base:0,
+  	tooltips:[]
+  }
 ]

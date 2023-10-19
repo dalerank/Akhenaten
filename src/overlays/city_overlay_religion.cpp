@@ -131,7 +131,6 @@ struct city_overlay_religion_osiris : public city_overlay_religion_god {
 struct city_overlay_religion_ra : public city_overlay_religion_god {
     city_overlay_religion_ra() {
         type = OVERLAY_RELIGION_RA;
-        buildings = {BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_SHRINE_RA};
     }
 };
 
