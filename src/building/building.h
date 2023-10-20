@@ -153,6 +153,7 @@ public:
             unsigned char worker_id;
         } industry;
         struct entertainment_t {
+            bool spawned_entertainer_this_month;
             uint8_t num_shows;
             uint8_t days1;
             uint8_t days2;
