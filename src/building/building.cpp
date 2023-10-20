@@ -437,6 +437,11 @@ e_overlay building::get_overlay() const {
         case BUILDING_WATER_SUPPLY: return OVERLAY_WATER;
         case BUILDING_COURTHOUSE: return OVERLAY_COUTHOUSE;
         case BUILDING_SCRIBAL_SCHOOL: return OVERLAY_SCRIBAL_SCHOOL;
+        
+        case BUILDING_BOOTH:
+        case BUILDING_JUGGLER_SCHOOL:
+            return OVERLAY_BOOTH;
+
     }
 
     return OVERLAY_NONE;
@@ -1016,7 +1021,8 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT32, &b->data.entertainment.latched_venue_add_grid_offset);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.orientation);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.ent_reserved_u8);
-        iob->bind____skip(8);
+        iob->bind____skip(7);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.spawned_entertainer_this_month);
         iob->bind(BIND_SIGNATURE_UINT32, &b->data.entertainment.booth_corner_grid_offset);
     }
 }
