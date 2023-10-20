@@ -5,10 +5,7 @@
 #include "grid/grid.h"
 
 static map_point SCREENTILE_TO_MAPPOINT_LOOKUP[4][500][500];
-static void screentile_calc_params_by_orientation(int city_orientation,
-                                                  vec2i* start,
-                                                  vec2i* column_step,
-                                                  vec2i* row_step) {
+static void screentile_calc_params_by_orientation(int city_orientation, vec2i* start, vec2i* column_step, vec2i* row_step) {
     switch (city_orientation) {
     default:
     case 0:
@@ -33,6 +30,7 @@ static void screentile_calc_params_by_orientation(int city_orientation,
         break;
     }
 }
+
 static void fill_in_lookup_table_for_orientation(int city_orientation) {
     vec2i start;
     vec2i column_step;
@@ -54,25 +52,35 @@ static void fill_in_lookup_table_for_orientation(int city_orientation) {
         start += row_step;
     }
 }
+
 void calculate_screentile_lookup_tables() {
     // reset lookup tables
-    for (int o = 0; o < 4; ++o)
-        for (int y = 0; y < (2 * GRID_LENGTH) + 1; y++)
-            for (int x = 0; x < GRID_LENGTH + 3; x++)
+    for (int o = 0; o < 4; ++o) {
+        for (int y = 0; y < (2 * GRID_LENGTH) + 1; y++) {
+            for (int x = 0; x < GRID_LENGTH + 3; x++) {
                 SCREENTILE_TO_MAPPOINT_LOOKUP[o][x][y].set(-1);
+            }
+        }
+    }
     // fill in tables
-    for (int orientation = 0; orientation < 4; ++orientation)
+    for (int orientation = 0; orientation < 4; ++orientation) {
         fill_in_lookup_table_for_orientation(orientation);
+    }
 }
-map_point screentile_to_mappoint(screen_tile screen) {
-    if (screen.x == -1 || screen.y == -1)
+
+tile2i screentile_to_mappoint(vec2i screen) {
+    if (screen.x == -1 || screen.y == -1) {
         return map_point(-1);
+    }
+
     int city_orientation = city_view_orientation() / 2;
     return SCREENTILE_TO_MAPPOINT_LOOKUP[city_orientation][screen.x][screen.y];
 }
-screen_tile mappoint_to_screentile(map_point point) {
-    if (!map_grid_inside_map_area(point.grid_offset()))
+
+vec2i mappoint_to_screentile(tile2i point) {
+    if (!map_grid_inside_map_area(point.grid_offset())) {
         return {-1, -1};
+    }
 
     vec2i start;
     vec2i column_step;
@@ -87,17 +95,19 @@ screen_tile mappoint_to_screentile(map_point point) {
 }
 
 static vec2i MAPPOINT_TO_PIXEL_LOOKUP[GRID_SIZE_TOTAL];
-void record_mappoint_pixelcoord(map_point point, vec2i pixel) {
+void record_mappoint_pixelcoord(tile2i point, vec2i pixel) {
     MAPPOINT_TO_PIXEL_LOOKUP[point.grid_offset()] = {pixel.x, pixel.y};
 }
-vec2i mappoint_to_pixel(map_point point) {
+
+vec2i mappoint_to_pixel(tile2i point) {
     return MAPPOINT_TO_PIXEL_LOOKUP[point.grid_offset()];
 }
 
 vec2i pixel_to_viewport_coord(vec2i pixel) {
     return pixel - city_view_data_unsafe().viewport.offset;
 }
-camera_coordinate pixel_to_camera_coord(vec2i pixel, bool relative) {
+
+vec2i pixel_to_camera_coord(vec2i pixel, bool relative) {
     // check if within viewport
     if (!pixel_is_inside_viewport(pixel))
         return {-1, -1};
@@ -113,12 +123,13 @@ camera_coordinate pixel_to_camera_coord(vec2i pixel, bool relative) {
         pixel += city_view_data_unsafe().camera.position;
     return pixel;
 }
-screen_tile pixel_to_screentile(vec2i pixel) {
+
+vec2i pixel_to_screentile(vec2i pixel) {
     if (!pixel_is_inside_viewport(pixel))
         return {-1, -1};
 
     // get the absolute camera pixel coords
-    camera_coordinate coord = pixel_to_camera_coord(pixel, false);
+    vec2i coord = pixel_to_camera_coord(pixel, false);
 
     // black magic
     int odd = (coord.x / HALF_TILE_WIDTH_PIXELS + coord.y / HALF_TILE_HEIGHT_PIXELS) & 1;
@@ -140,5 +151,6 @@ screen_tile pixel_to_screentile(vec2i pixel) {
         else if (x_is_odd && y_is_odd)
             screen_x_offset++;
     }
-    return screen_tile(screen_x_offset, screen_y_offset);
+
+    return vec2i(screen_x_offset, screen_y_offset);
 }

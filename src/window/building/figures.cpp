@@ -413,7 +413,7 @@ static void draw_figure_in_city(int figure_id, vec2i* coord, view_context &ctx) 
 
     //    city_view_go_to_tile(x - 2, y - 6);
 
-    widget_city_draw_for_figure(figure_id, coord, ctx);
+    widget_city_draw_for_figure(ctx, figure_id, coord);
 
     //    city_view_go_to_tile(x_cam, y_cam);
 }

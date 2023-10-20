@@ -323,7 +323,7 @@ static void create_full_city_screenshot() {
 
                 camera_go_to_pixel(local_context, vec2i{min_pos.x + width, current_height}, false);
                 tile2i dummy_tile(0, 0);
-                widget_city_draw_without_overlay(0, 0, dummy_tile, local_context);
+                widget_city_draw_without_overlay(local_context, 0, nullptr, dummy_tile);
                 graphics_renderer()->save_screen_buffer(&canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
                 //SDL_Rect rect2 = {x_offset, y_offset, canvas_width, canvas_height};
                 //bool ok = SDL_RenderReadPixels(renderer, &rect2, SDL_PIXELFORMAT_ARGB8888, &canvas[width], city_canvas_pixels.x * sizeof(color)) == 0;
@@ -350,7 +350,8 @@ static void create_full_city_screenshot() {
     zoom_set_scale(old_scale);
 
     graphics_reset_clip_rectangle();
-    camera_go_to_pixel(view_context_main(), original_camera_pixels, true);
+    view_context global_context = view_context_main();
+    camera_go_to_pixel(global_context, original_camera_pixels, true);
     
     if (!error) {
         image_finish();

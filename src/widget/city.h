@@ -8,8 +8,8 @@
 void set_city_clip_rectangle();
 
 void widget_city_draw(view_context &ctx);
-void widget_city_draw_for_figure(int figure_id, vec2i* coord, view_context &ctx);
-void widget_city_draw_without_overlay(int selected_figure_id, vec2i *figure_coord, tile2i tile, view_context &ctx);
+void widget_city_draw_for_figure(view_context &ctx, int figure_id, vec2i* coord);
+void widget_city_draw_without_overlay(view_context &ctx, int selected_figure_id, vec2i *figure_coord, tile2i tile);
 
 bool widget_city_draw_construction_cost_and_size(void);
 

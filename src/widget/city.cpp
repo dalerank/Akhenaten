@@ -95,7 +95,7 @@ static int input_coords_in_city(int x, int y) {
     return (x >= 0 && x < view_size.x && y >= 0 && y < view_size.y);
 }
 
-static void draw_TEST(vec2i pixel, map_point point) {
+static void draw_TEST(vec2i pixel, tile2i point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -118,14 +118,14 @@ static void draw_TEST(vec2i pixel, map_point point) {
     //        COLOR_CHANNEL_GREEN);
 }
 
-static void draw_tile_boxes(vec2i pixel, map_point point) {
+static void draw_tile_boxes(vec2i pixel, tile2i point) {
     if (map_property_is_draw_tile(point.grid_offset())) {
         int tile_size = map_property_multi_tile_size(point.grid_offset());
         debug_draw_tile_box(pixel.x, pixel.y, tile_size, tile_size);
     }
 };
 
-void widget_city_draw_without_overlay(int selected_figure_id, vec2i* figure_coord, tile2i tile, view_context &ctx) {
+void widget_city_draw_without_overlay(view_context &ctx, int selected_figure_id, vec2i* figure_coord, tile2i tile) {
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
         highlighted_formation = formation_legion_at_grid_offset(tile.grid_offset());
@@ -173,17 +173,17 @@ void widget_city_draw(view_context &ctx) {
     if (game_state_overlay()) {
         widget_city_draw_with_overlay(ctx, data.current_tile);
     } else {
-        widget_city_draw_without_overlay(0, 0, data.current_tile, ctx);
+        widget_city_draw_without_overlay(ctx, 0, nullptr, data.current_tile);
     }
     graphics_reset_clip_rectangle();
     set_render_scale(1.0f);
 }
 
-void widget_city_draw_for_figure(int figure_id, vec2i* coord, view_context &ctx) {
+void widget_city_draw_for_figure(view_context &ctx, int figure_id, vec2i* coord) {
     auto& data = g_wdiget_city_data;
     set_city_clip_rectangle();
 
-    widget_city_draw_without_overlay(figure_id, coord, data.current_tile, ctx);
+    widget_city_draw_without_overlay(ctx, figure_id, coord, data.current_tile);
 
     graphics_reset_clip_rectangle();
 }
