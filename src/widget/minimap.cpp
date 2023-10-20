@@ -220,10 +220,11 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
         ImageDraw::img_generic(image_id, screen_x, screen_y);
     }
 }
-static void draw_viewport_rectangle(void) {
+
+static void draw_viewport_rectangle(view_context &ctx) {
     auto& data = g_minimap_data;
     map_point camera_tile = city_view_get_camera_mappoint();
-    vec2i camera_pixels = camera_get_pixel_offset_internal();
+    vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
@@ -257,13 +258,15 @@ static void clear_minimap(void) {
 }
 
 void draw_minimap() {
+    view_context ctx = view_context_main();
     auto& data = g_minimap_data;
+
     graphics_set_clip_rectangle(data.screen_offset.x, data.screen_offset.y, data.size.x, data.size.y);
     clear_minimap();
     foreach_map_tile(draw_minimap_tile);
     //    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
     //    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
-    draw_viewport_rectangle();
+    draw_viewport_rectangle(ctx);
     graphics_reset_clip_rectangle();
 }
 
@@ -276,6 +279,7 @@ static void draw_uncached(vec2i offset, int width_tiles, int height_tiles) {
 }
 
 void draw_using_cache(vec2i offset, int width_tiles, int height_tiles, int is_scrolling) {
+    view_context ctx = view_context_main();
     auto& data = g_minimap_data;
     if (width_tiles * 2 != data.size.x || height_tiles != data.size.y || offset.x != data.screen_offset.x) {
         draw_uncached(offset, width_tiles, height_tiles);
@@ -294,7 +298,7 @@ void draw_using_cache(vec2i offset, int width_tiles, int height_tiles, int is_sc
 
     graphics_set_clip_rectangle(offset.x, offset.y, 2 * width_tiles, height_tiles);
     //    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
-    draw_viewport_rectangle();
+    draw_viewport_rectangle(ctx);
     graphics_reset_clip_rectangle();
 }
 

@@ -58,7 +58,7 @@ void city_view_reset_orientation(void);
 screen_tile city_view_get_camera_screentile();
 map_point city_view_get_camera_mappoint();
 vec2i camera_get_position();
-vec2i camera_get_pixel_offset_internal();
+vec2i camera_get_pixel_offset_internal(view_context &ctx);
 void city_view_get_camera_max_tile(int* x, int* y);
 void city_view_get_camera_max_pixel_offset(int* x, int* y);
 vec2i city_view_get_camera_in_pixels();

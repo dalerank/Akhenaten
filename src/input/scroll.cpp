@@ -413,7 +413,8 @@ static bool set_scroll_speed_from_input(const mouse* m, scroll_type type) {
         int align_x = 0;
         int align_y = 0;
         if (type == SCROLL_TYPE_CITY) {
-            vec2i camera_pixels = camera_get_pixel_offset_internal();
+            view_context ctx = view_context_main();
+            vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
             align_x = get_alignment_delta(dir_x, TILE_X_PIXELS, camera_pixels.x);
             align_y = get_alignment_delta(dir_y, TILE_Y_PIXELS, camera_pixels.y);
         }

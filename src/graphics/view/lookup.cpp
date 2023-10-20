@@ -70,7 +70,7 @@ void calculate_screentile_lookup_tables() {
 
 tile2i screentile_to_mappoint(vec2i screen) {
     if (screen.x == -1 || screen.y == -1) {
-        return map_point(-1);
+        return tile2i(-1);
     }
 
     int city_orientation = city_view_orientation() / 2;

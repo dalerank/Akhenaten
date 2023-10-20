@@ -1094,8 +1094,9 @@ void draw_debug_ui(int x, int y) {
 
     /////// CAMERA
     if (g_debug_show_opts[e_debug_show_camera]) {
-        map_point camera_tile = city_view_get_camera_mappoint();
-        vec2i camera_pixels = camera_get_pixel_offset_internal();
+        view_context ctx = view_context_main();
+        tile2i camera_tile = city_view_get_camera_mappoint();
+        vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
 
         vec2i min_pos, max_pos;
         city_view_get_camera_scrollable_pixel_limits(city_view_data_unsafe(), min_pos, max_pos);
