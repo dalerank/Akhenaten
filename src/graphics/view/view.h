@@ -35,7 +35,7 @@ struct figure_draw_cache_data_t;
 
 struct view_context {
     figure_draw_cache_data_t *figure_cache;
-    view_data_t *view_data;
+    view_data_t *view;
 };
 
 view_context view_context_main();

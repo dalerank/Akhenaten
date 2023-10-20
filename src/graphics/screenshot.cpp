@@ -248,7 +248,8 @@ static void create_full_city_screenshot() {
     vec2i original_camera_pixels = camera_get_position();
 
     vec2i min_pos, max_pos;
-    city_view_get_camera_scrollable_pixel_limits(city_view_data_unsafe(), min_pos, max_pos);
+    view_data_t full_city_view_data = city_view_data_unsafe();
+    city_view_get_camera_scrollable_pixel_limits(full_city_view_data, min_pos, max_pos);
 
     vec2i view_pos, view_size;
     city_view_get_viewport(view_pos, view_size);
@@ -315,10 +316,10 @@ static void create_full_city_screenshot() {
                 //SDL_Rect rect{0, 0, canvas_width, canvas_height};
                 //SDL_FillRect(surface, &rect, color );
                 figure_draw_cache_data_t local_figure_data;
-                view_data_t local_view_data = city_view_data_unsafe();
+                view_data_t local_view_data = full_city_view_data;
                 view_context local_context;
                 local_context.figure_cache = &local_figure_data;
-                local_context.view_data = &city_view_data_unsafe(); // &local_view_data;
+                local_context.view = &local_view_data;
 
                 camera_go_to_pixel(local_context, vec2i{min_pos.x + width, current_height}, false);
                 tile2i dummy_tile(0, 0);

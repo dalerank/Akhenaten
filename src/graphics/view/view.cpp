@@ -176,10 +176,10 @@ vec2i camera_get_pixel_offset_internal() {
 }
 
 void camera_go_to_pixel(view_context& ctx, vec2i pixel, bool validate) {
-    auto &view = *ctx.view_data;
+    auto &view = *ctx.view;
     view.camera.position = pixel;
     if (validate) {
-        camera_validate_position(city_view_data_unsafe());
+        camera_validate_position(view);
     } else {
         view.camera.tile_internal.x = view.camera.position.x / TILE_WIDTH_PIXELS;
         view.camera.tile_internal.y = view.camera.position.y / HALF_TILE_HEIGHT_PIXELS;
@@ -309,7 +309,7 @@ static void set_viewport_without_sidebar(void) {
 view_context view_context_main() {
     view_context ctx;
     ctx.figure_cache = &figure_draw_cache();
-    ctx.view_data = &city_view_data_unsafe();
+    ctx.view = &city_view_data_unsafe();
     return ctx;
 }
 
@@ -410,14 +410,13 @@ io_buffer* iob_city_view_camera = new io_buffer([](io_buffer* iob, size_t versio
     camera_go_to_corner_tile(data.camera.tile_internal, false);
 });
 
-static screen_tile starting_tile() {
-    auto& data = g_city_view_data;
-
+static screen_tile starting_tile(view_context &ctx) {
     screen_tile screen;
-    screen.x = data.camera.tile_internal.x - 4;
-    screen.y = data.camera.tile_internal.y - 8;
+    screen.x = ctx.view->camera.tile_internal.x - 4;
+    screen.y = ctx.view->camera.tile_internal.y - 8;
     return screen;
 }
+
 static vec2i starting_pixel_coord() {
     auto& data = g_city_view_data;
 
@@ -438,7 +437,7 @@ void city_view_foreach_valid_map_tile(view_context &ctx,
     auto& data = g_city_view_data;
 
     int odd = 0;
-    screen_tile screen_0 = starting_tile();
+    screen_tile screen_0 = starting_tile(ctx);
     screen_tile screen = screen_0;
     vec2i pixel_0 = starting_pixel_coord();
     vec2i pixel = pixel_0;
