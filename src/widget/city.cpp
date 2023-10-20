@@ -10,7 +10,6 @@
 #include "city/finance.h"
 #include "city/warning.h"
 #include "core/calc.h"
-#include "core/stopwatch.h"
 #include "core/string.h"
 #include "figure/formation_legion.h"
 #include "game/cheats.h"

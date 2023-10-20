@@ -27,7 +27,7 @@ jobs:
         cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
         cd ..
         cmake --build ./build
-        cp ./build/ozymandias ./linux_build/ozymandias.linux
+        cp ./build/akhenaten ./linux_build/akhenaten.linux
     - uses: actions/upload-artifact@v3
       with:
         name: linux_build

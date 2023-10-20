@@ -2,9 +2,9 @@
 [Desktop Entry]
 Type=Application
 Version=1.0
-Exec=ozymandias
-Icon=com.github.dalerank.ozymandias
-Name=Ozymandias
+Exec=akhenaten
+Icon=com.github.dalerank.akhenaten
+Name=Akhenaten
 GenericName=Egyptian city management game
 Comment=Open Source re-implementation of Pharaoh.
 Categories=Game;Simulation;

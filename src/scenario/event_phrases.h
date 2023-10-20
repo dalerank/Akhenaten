@@ -1,6 +1,4 @@
-#ifndef OZYMANDIAS_EVENT_PHRASES_H
-#define OZYMANDIAS_EVENT_PHRASES_H
-
+#pragma once
 enum {
     PHRASE_egyptian_city_attacked_title_P,                // =
     PHRASE_egyptian_city_attacked_title_C,                // =
@@ -949,5 +947,3 @@ enum {
     PHRASE_pyramid_speedup_Seth,                // =
     PHRASE_pyramid_speedup_Bast,                // =
 };
-
-#endif // OZYMANDIAS_EVENT_PHRASES_H

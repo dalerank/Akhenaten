@@ -1,4 +1,4 @@
-log_info("Ozymandias: load modules started")
+log_info("akhenaten: load modules started")
 
 include(":math.js")
 include(":common.js")

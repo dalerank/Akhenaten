@@ -1,5 +1,4 @@
 #include "manager.h"
-#include "core/stopwatch.h"
 #include "core/string.h"
 #include "core/log.h"
 #include "core/zip.h"
@@ -165,8 +164,6 @@ static bool write_compressed_chunk(FILE* fp, buffer* buf, int bytes_to_write) {
     return true;
 }
 
-static stopwatch WATCH;
-
 bool FileIOManager::io_failure_cleanup(const char* action, const char* reason) {
     const char* format = "Unable to %s file, %s.";
     int size_f = strlen(format);
@@ -182,8 +179,6 @@ bool FileIOManager::io_failure_cleanup(const char* action, const char* reason) {
 }
 
 bool FileIOManager::serialize(const char* filename, int offset, e_file_format format, const int version, void (*init_schema)(e_file_format _format, const int _version)) {
-    WATCH.START();
-
     // first, clear up the manager data and set the new file info
     clear();
     strncpy_safe(file_path, filename, MAX_FILE_NAME);
@@ -235,11 +230,10 @@ bool FileIOManager::serialize(const char* filename, int offset, e_file_format fo
     // close file handle
     vfs::file_close(fp);
 
-    logs::info("File write successful: %s %i@ --- VERSION: %i --- %" PRIu64 " milliseconds",
+    logs::info("File write successful: %s %i@ --- VERSION: %i ---",
                file_path,
                file_offset,
-               file_version,
-               WATCH.STOP());
+               file_version);
 
     return true;
 }
@@ -247,8 +241,6 @@ bool FileIOManager::serialize(const char* filename, int offset, e_file_format fo
 bool FileIOManager::unserialize(const char* filename, int offset, e_file_format format,
                                 const int (*determine_file_version)(const char* fnm, int ofst), 
                                 void (*init_schema)(e_file_format _format, const int _version)) {
-    WATCH.START();
-
     // first, clear up the manager data and set the new file info
     clear();
     strncpy_safe(file_path, filename, MAX_FILE_NAME);
@@ -333,11 +325,10 @@ bool FileIOManager::unserialize(const char* filename, int offset, e_file_format 
         }
     }
 
-    logs::info("File read successful: %s %i@ --- VERSION HEADER: %i --- %" PRIu64 " milliseconds",
+    logs::info("File read successful: %s %i@ --- VERSION HEADER: %i ---",
                file_path,
                file_offset,
-               file_version,
-               WATCH.STOP());
+               file_version);
 
     return true;
 }

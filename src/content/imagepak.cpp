@@ -1,7 +1,6 @@
 #include "imagepak.h"
 #include "atlas_packer.h"
 #include "core/buffer.h"
-#include "core/stopwatch.h"
 #include "core/string.h"
 #include "core/vec2i.h"
 #include "core/log.h"
@@ -303,8 +302,6 @@ static bool convert_image_data(buffer* buf, image_t* img, bool convert_fonts) {
 
 #define MAX_FILE_SCRATCH_SIZE 20000000
 
-static stopwatch WATCH;
-
 imagepak::imagepak(const char* pak_name, int starting_index, bool SYSTEM_SPRITES, bool FONTS) {
     //    images = nullptr;
     //    image_data = nullptr;
@@ -339,7 +336,6 @@ void imagepak::cleanup_and_destroy() {
 buffer* pak_buf = new buffer(MAX_FILE_SCRATCH_SIZE);
 bool imagepak::load_pak(const char* pak_name, int starting_index) {
     OZZY_PROFILER_SECTION("Game/Loading/Resources/ImagePack");
-    WATCH.START();
 
     // construct proper filepaths
     name = pak_name;
@@ -582,14 +578,13 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
 
     image_packer_free(&packer);
 
-    logs::info("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u), %" PRIu64 " milliseconds.",
+    logs::info("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u)",
                filename_sgx.c_str(),
                entries_num,
                groups_num,
                atlas_pages.at(atlas_pages.size() - 1).width,
                atlas_pages.at(atlas_pages.size() - 1).height,
-               atlas_pages.size(),
-               WATCH.STOP());
+               atlas_pages.size());
 
     int y_offset = screen_height() - 24;
 

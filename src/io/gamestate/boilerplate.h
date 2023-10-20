@@ -10,11 +10,11 @@
 //  149 (later campaign scenarios and maps)
 //  150 (later campaign scenarios and maps)
 //  160 (post-Cleopatra campaign scenarios, patched Bubastis scenario)
-//  161 ozymandias: save foods in houses
-//  162 ozymandias: save g_terrain_floodplain_growth
-//  163 ozymandias: save bazaar_days in house
-//  164 ozymandias: save water_supply in house
-//  165 ozymandias: save house health option
+//  161 akhenaten: save foods in houses
+//  162 akhenaten: save g_terrain_floodplain_growth
+//  163 akhenaten: save bazaar_days in house
+//  164 akhenaten: save water_supply in house
+//  165 akhenaten: save house health option
 constexpr uint32_t latest_save_version = 165;
 
 bstring256 fullpath_saves(const char* filename);

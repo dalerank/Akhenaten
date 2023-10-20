@@ -72,7 +72,6 @@
 #include "chunks.h"
 #include "city/coverage.h"
 #include "city/floods.h"
-#include "core/stopwatch.h"
 #include "io/io.h"
 #include "io/manager.h"
 
@@ -125,7 +124,6 @@ const int GamestateIO::read_file_version(const char* filename, int offset) {
 
 enum E_LOADED { LOADED_NULL = -1, LOADED_MISSION = 0, LOADED_SAVE = 1, LOADED_CUSTOM_MAP = 2 };
 
-static stopwatch WATCH;
 static int last_loaded = LOADED_NULL;
 static void pre_load() { // do we NEED this...?
     scenario_set_campaign_scenario(-1);
@@ -169,10 +167,6 @@ static void pre_load() { // do we NEED this...?
     map_random_init();
 }
 static void post_load() {
-    // TODO: check all of these...
-
-    WATCH.START();
-
     // scenario settings
     scenario_set_name(scenario_name());
     city_set_player_name(setting_player_name());
@@ -236,9 +230,6 @@ static void post_load() {
 
     // city sounds
     sound_city_init();
-
-    WATCH.RECORD("post-load"); //////////////////////////////////////////////////////////////////
-    WATCH.LOG();
 }
 
 // set up list of io_buffer chunks in correct order for specific file format read/write operations

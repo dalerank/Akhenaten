@@ -1,6 +1,3 @@
-#ifndef OZYMANDIAS_RECORDS_H
-#define OZYMANDIAS_RECORDS_H
+#pragma once
 
 void window_records_show(void);
-
-#endif // OZYMANDIAS_RECORDS_H

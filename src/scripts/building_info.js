@@ -1,4 +1,4 @@
-log_info("Ozymandias: building info started")
+log_info("akhenaten: building info started")
 
 building_info = [
   { type: "school_scribe", help_id: 68, text_id: 85},

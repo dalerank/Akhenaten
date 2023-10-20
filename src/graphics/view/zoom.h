@@ -1,5 +1,4 @@
-#ifndef OZYMANDIAS_ZOOM_H
-#define OZYMANDIAS_ZOOM_H
+#pragma once
 
 #include "input/mouse.h"
 #include "input/touch.h"
@@ -20,5 +19,3 @@ float zoom_debug_delta();
 float zoom_get_scale();
 float zoom_get_percentage();
 void zoom_set_scale(float z);
-
-#endif // OZYMANDIAS_ZOOM_H

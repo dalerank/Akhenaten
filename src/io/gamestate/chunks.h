@@ -1,5 +1,4 @@
-#ifndef OZYMANDIAS_GAMESTATE_CHUNKS_H
-#define OZYMANDIAS_GAMESTATE_CHUNKS_H
+#pragma once
 
 #include "io/io_buffer.h"
 
@@ -121,5 +120,3 @@ extern io_buffer* iob_bizarre_ordered_fields_6;
 extern io_buffer* iob_bizarre_ordered_fields_7;
 extern io_buffer* iob_bizarre_ordered_fields_8;
 extern io_buffer* iob_bizarre_ordered_fields_9;
-
-#endif // OZYMANDIAS_GAMESTATE_CHUNKS_H

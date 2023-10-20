@@ -1,4 +1,4 @@
-log_info("Ozymandias: mission sounds started")
+log_info("akhenaten: mission sounds started")
 
 for (var i = 0; i < 38; i++) {
 	mission_sounds[i] = {

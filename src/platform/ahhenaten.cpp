@@ -171,7 +171,7 @@ static bool pre_init(const char* custom_data_dir) {
  */
 static void show_options_window(Arguments& args) {
     auto const window_flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
-    SDL_Window* platform_window = SDL_CreateWindow("Ozymandias: configuration", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+    SDL_Window* platform_window = SDL_CreateWindow("Akhenaten: configuration", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(platform_window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr) {
@@ -337,7 +337,7 @@ static void setup(Arguments& args) {
     crashhandler_install();
     figure::check_action_properties_lookup();
 
-    logs::info("Ozymandias version %s", get_version().c_str());
+    logs::info("Akhenaten version %s", get_version().c_str());
     if (!init_sdl()) {
         logs::error("Exiting: SDL init failed");
         exit(-1);
@@ -356,13 +356,13 @@ static void setup(Arguments& args) {
     while (!pre_init(args.get_data_directory())) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
                                  "Warning",
-                                 "Ozymandias requires the original files from Pharaoh to run.\n"
+                                 "Akhenaten requires the original files from Pharaoh to run.\n"
 #if defined(GAME_PLATFORM_ANDROID)
                                  "Copy your entire Pharaoh folder to your Android device into folder"
-                                 "/sdcard0/Android/data/com.github.dalerank.ozymandias/files",
+                                 "/sdcard0/Android/data/com.github.dalerank.akhenaten/files",
 #else
                                  "Move the executable file to the directory containing an existing\n"
-                                 "Pharaoh installation, or run: ozymandias path/to/directory",
+                                 "Pharaoh installation, or run: akhenaten path/to/directory",
 #endif
                                  nullptr);
 #if defined(GAME_PLATFORM_ANDROID)
@@ -373,9 +373,7 @@ static void setup(Arguments& args) {
     }
 
     // set up game display
-    char title[100] = {0};
-    encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
-    if (!platform_screen_create(title,
+    if (!platform_screen_create("Akhenaten",
                                 args.get_renderer(),
                                 args.is_fullscreen(),
                                 args.get_display_scale_percentage(),

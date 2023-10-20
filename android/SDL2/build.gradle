@@ -76,7 +76,7 @@ android {
             headers "${findSDL2Mixer.includePath}"
         }
     }
-    namespace 'com.github.dalerank.ozymandias.sdl2'
+    namespace 'com.github.dalerank.akhenaten.sdl2'
 }
 
 repositories {

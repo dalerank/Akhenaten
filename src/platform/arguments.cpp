@@ -25,7 +25,7 @@
 
 namespace {
 
-char const* const CFG_FILE_NAME = "ozymandias.cfg";
+char const* const CFG_FILE_NAME = "akhenaten.cfg";
 
 enum class argument_type {
     DATA_DIRECTORY,
@@ -185,7 +185,7 @@ Arguments::Arguments(int argc, char** argv) {
 }
 
 char const* Arguments::usage() {
-    return "Usage: ozymandias [ARGS] [DATA_DIR]\n"
+    return "Usage: akhenaten [ARGS] [DATA_DIR]\n"
            "\n"
            "ARGS may be:\n"
            "  --display-scale NUMBER\n"

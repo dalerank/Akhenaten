@@ -1,4 +1,4 @@
-log_info("Ozymandias: building sounds started")
+log_info("akhenaten: building sounds started")
 
 building_sounds = [
   { type: "tax_collector", 						sound: "wavs/taxfarm.wav"},

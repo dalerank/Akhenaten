@@ -1,5 +1,4 @@
-#ifndef OZYMANDIAS_EVENTS_H
-#define OZYMANDIAS_EVENTS_H
+#pragma once
 
 #include "core/buffer.h"
 
@@ -170,5 +169,3 @@ void scenario_event_process();
 
 bool eventmsg_load(void);
 bool eventmsg_auto_phrases_load(void);
-
-#endif // OZYMANDIAS_EVENTS_H

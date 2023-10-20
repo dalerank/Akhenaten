@@ -8,6 +8,6 @@ if "%1"=="" (
 )
 
 cmake -DCMAKE_BUILD_TYPE=%build_type% ../
-start ozymandias.sln %debug_flag% .
+start akhenaten.sln %debug_flag% .
 cd ..
 

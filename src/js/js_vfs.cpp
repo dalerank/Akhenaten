@@ -2,7 +2,7 @@
 
 #include "cmrc/cmrc.hpp"
 
-CMRC_DECLARE(ozymandias);
+CMRC_DECLARE(akhenaten);
 
 namespace vfs {
 
@@ -13,7 +13,7 @@ std::pair<void*, uint32_t> internal_file_open(pcstr path) {
 		return {nullptr, 0};
 	}
 
-	auto fs = cmrc::ozymandias::get_filesystem();
+	auto fs = cmrc::akhenaten::get_filesystem();
 
 	bstring256 fs_path(internal_scripts_path, (*path == ':') ? (path + 1) : path);
 	if (!fs.exists(fs_path.c_str())) {

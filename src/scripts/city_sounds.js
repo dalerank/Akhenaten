@@ -1,4 +1,4 @@
-log_info("Ozymandias: city sounds started")
+log_info("akhenaten: city sounds started")
 
 city_sounds = [
   {c: SOUND_CHANNEL_CITY_HOUSE_SLUM,    p: "ambient/HOUSING1.MP3"},

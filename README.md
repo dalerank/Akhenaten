@@ -1,4 +1,4 @@
-# Ozymandias [![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Windows/badge.svg)](https://github.com/dalerank/Ozymandias/actions)
+# Akhenaten [![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Windows/badge.svg)](https://github.com/dalerank/Ozymandias/actions)
 
 [![Discord](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263684745-bcca8b70-13c4-48d8-8e91-4b0be8a440e6.png)](https://discord.gg/HS4njmBvpb)
 [![Download](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685010-cd624917-786d-487b-89c0-298bc694f3f2.png)](https://dalerank.itch.io/ozymandias)
@@ -19,7 +19,7 @@ If you want additional features and visual/UI improvements, and don't care about
 compatibility with the original save files, check out [Augustus](https://github.com/Keriew/augustus).<br>
 For the original game, check out the page on [Steam](https://store.steampowered.com/app/564530/Pharaoh__Cleopatra/)
 or [GOG](https://www.gog.com/en/game/pharaoh_cleopatra).<br>
-For the official upcoming remaster (unrelated to Ozymandias) called _A New Era_, check out the Steam page [here](https://store.steampowered.com/app/1351080/Pharaoh_A_New_Era/).
+For the official upcoming remaster (unrelated to Akhenaten) called _A New Era_, check out the Steam page [here](https://store.steampowered.com/app/1351080/Pharaoh_A_New_Era/).
 
 ## Running the game
 
@@ -33,15 +33,15 @@ For the official upcoming remaster (unrelated to Ozymandias) called _A New Era_,
 
 
 After downloading the most recent binaries from above or building them from source,
-start Ozymandias and it will ask you to point to an original Pharaoh installation folder.
+start Akhenaten and it will ask you to point to an original Pharaoh installation folder.
 
-Ozymandias, like Julius and Augustus, requires the original assets (graphics, sounds, etc)
+Akhenaten, like Julius and Augustus, requires the original assets (graphics, sounds, etc)
 from an unmodified game installation to run, in this case it needs _Pharaoh_ **as well as the _Cleopatra_ expansion.**
 
 Note that you must have permission to write in the game data directory as the saves will be
-stored there; also, your game must be patched to last version to run Ozymandias.
+stored there; also, your game must be patched to last version to run Akhenaten.
 
-## Building Ozymandias from source
+## Building Akhenaten from source
 
 ### Windows + Visual Studio
 
@@ -157,7 +157,7 @@ cd ext/tracy/profiler/build/unix && make && ./Tracy-release
 Build & run with tracy enabled:
 
 ```shell
-cmake -DUSE_FUTURE_TRACY=ON .. && make ozymandias && ./ozymandias
+cmake -DUSE_FUTURE_TRACY=ON .. && make akhenaten && ./akhenaten
 ```
 
 ![Alt](https://repobeats.axiom.co/api/embed/d972b1b3da5423da758f1b4a1396177626bff54b.svg "Repobeats analytics image")

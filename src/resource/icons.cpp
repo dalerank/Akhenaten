@@ -22,7 +22,7 @@
 #include "platform/renderer.h"
 #include "cmrc/cmrc.hpp"
 
-CMRC_DECLARE(ozymandias);
+CMRC_DECLARE(akhenaten);
 
 #include <SDL.h>
 #include <string.h>
@@ -36,7 +36,7 @@ std::pair<void *, uint32_t> internal_read_data(pcstr path) {
         return {nullptr, 0};
     }
 
-    auto fs = cmrc::ozymandias::get_filesystem();
+    auto fs = cmrc::akhenaten::get_filesystem();
 
     bstring256 fs_path(internal_res_path, (*path == ':') ? (path + 1) : path);
     if (!fs.exists(fs_path.c_str())) {

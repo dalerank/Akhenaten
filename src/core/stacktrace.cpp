@@ -14,9 +14,9 @@ static void display_crash_message() {
     platform_screen_show_error_message_box(
       "Ozzy has crashed :(",
       "There was an unrecoverable error, which will now close.\n"
-      "The piece of code that caused the crash has been saved to ozymandias-log.txt.\n"
+      "The piece of code that caused the crash has been saved to akhenaten-log.txt.\n"
       "If you can, please create an issue by going to:\n"
-      "https://github.com/dalerank/ozymandias/issues/new \n"
+      "https://github.com/dalerank/akhenaten/issues/new \n"
       "Please attach log.txt and your city save to the issue report.\n"
       "Also, please describe what you were doing when the game crashed.\n"
       "With your help, we can avoid this crash in the future.\n"

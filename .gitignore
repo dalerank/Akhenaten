@@ -10,7 +10,7 @@
 src/platform/version.c
 res/version.rc
 res/version.txt
-res/ozymandias.icns
+res/akhenaten.icns
 
 # Build output and data directories
 /build*/
@@ -33,8 +33,8 @@ distribution/
 *.log
 
 /wiki/*
-/ozymandias-extra/*
-/ozymandias.wiki/*
+/akhenaten-extra/*
+/akhenaten.wiki/*
 doc
 /doc/*
 *.ods#

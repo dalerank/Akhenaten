@@ -1,4 +1,4 @@
-log_info("Ozymandias: walker sounds started")
+log_info("akhenaten: walker sounds started")
 
 walker_sounds = [
  // herbalist

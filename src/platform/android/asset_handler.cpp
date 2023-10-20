@@ -131,7 +131,7 @@ int asset_handler_get_directory_contents(const char *dir_name, int type, const c
     return match;
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_github_dalerank_ozymandias_OzymandiasMainActivity_releaseAssetManager(JNIEnv *env, jobject thiz)
+extern "C" JNIEXPORT void JNICALL Java_com_github_dalerank_AKHENATEN_AkhenatenMainActivity_releaseAssetManager(JNIEnv *env, jobject thiz)
 {
     if (asset_manager) {
         JNIEnv *env = (JNIEnv *)SDL_AndroidGetJNIEnv();

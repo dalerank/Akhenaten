@@ -24,10 +24,10 @@ else()
 endif()
 
 #
-# Ozymandias
+# Akhenaten
 #
 
-set(GAME ozymandias)
+set(GAME akhenaten)
 project(${GAME} CXX)
 message("C++ compiler is ${CMAKE_CXX_COMPILER_ID}" )
 
@@ -302,9 +302,9 @@ endif()
 
 set(MACOSX_FILES "")
 if(APPLE)
-    #set(RC_FILES ${PROJECT_SOURCE_DIR}/res/ozymandias.icns)
+    #set(RC_FILES ${PROJECT_SOURCE_DIR}/res/akhenaten.icns)
 elseif(MSVC)
-    #set(RC_FILES ${PROJECT_SOURCE_DIR}/res/ozymandias.rc)
+    #set(RC_FILES ${PROJECT_SOURCE_DIR}/res/akhenaten.rc)
 endif()
 
 set(SOURCE_FILES
@@ -359,8 +359,8 @@ set(SOURCE_FILES
 set(SCRIPTS_FOLDER ${PROJECT_SOURCE_DIR}/src/scripts)
 cmrc_add_resource_library(
     resources
-    ALIAS ozymandias::rc
-    NAMESPACE ozymandias
+    ALIAS akhenaten::rc
+    NAMESPACE akhenaten
 
     ${SCRIPTS_FOLDER}/modules.js
     ${SCRIPTS_FOLDER}/common.js
@@ -370,7 +370,7 @@ cmrc_add_resource_library(
     ${SCRIPTS_FOLDER}/walker_sounds.js
     ${SCRIPTS_FOLDER}/mission_sounds.js
     ${SCRIPTS_FOLDER}/overlays.js
-    ${PROJECT_SOURCE_DIR}/res/ozymandias_72.png
+    ${PROJECT_SOURCE_DIR}/res/akhenaten_72.png
 )
 
 set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
@@ -396,27 +396,27 @@ endif()
 
 if(APPLE)
     # generating a macOS icns file (see https://stackoverflow.cppom/a/20703594)
-    add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/ozymandias.icns
-        COMMAND mkdir -p ozymandias.iconset
-        COMMAND sips -z 16 16    ozymandias_256.png --out ozymandias.iconset/icon_16x16.png
-        COMMAND sips -z 32 32    ozymandias_256.png --out ozymandias.iconset/icon_16x16@2x.png
-        COMMAND sips -z 32 32    ozymandias_256.png --out ozymandias.iconset/icon_32x32.png
-        COMMAND sips -z 64 64    ozymandias_256.png --out ozymandias.iconset/icon_32x32@2x.png
-        COMMAND sips -z 128 128  ozymandias_256.png --out ozymandias.iconset/icon_128x128.png
-        COMMAND sips -z 256 256  ozymandias_256.png --out ozymandias.iconset/icon_128x128@2x.png
-        COMMAND sips -z 256 256  ozymandias_256.png --out ozymandias.iconset/icon_256x256.png
-        COMMAND iconutil -c icns ozymandias.iconset
-        COMMAND rm -R ozymandias.iconset
+    add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/akhenaten.icns
+        COMMAND mkdir -p akhenaten.iconset
+        COMMAND sips -z 16 16    akhenaten_256.png --out akhenaten.iconset/icon_16x16.png
+        COMMAND sips -z 32 32    akhenaten_256.png --out akhenaten.iconset/icon_16x16@2x.png
+        COMMAND sips -z 32 32    akhenaten_256.png --out akhenaten.iconset/icon_32x32.png
+        COMMAND sips -z 64 64    akhenaten_256.png --out akhenaten.iconset/icon_32x32@2x.png
+        COMMAND sips -z 128 128  akhenaten_256.png --out akhenaten.iconset/icon_128x128.png
+        COMMAND sips -z 256 256  akhenaten_256.png --out akhenaten.iconset/icon_128x128@2x.png
+        COMMAND sips -z 256 256  akhenaten_256.png --out akhenaten.iconset/icon_256x256.png
+        COMMAND iconutil -c icns akhenaten.iconset
+        COMMAND rm -R akhenaten.iconset
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/res)
 
-    set_source_files_properties(${PROJECT_SOURCE_DIR}/res/ozymandias.icns PROPERTIES
+    set_source_files_properties(${PROJECT_SOURCE_DIR}/res/akhenaten.icns PROPERTIES
         MACOSX_PACKAGE_LOCATION "Resources")
 
     # setting variables that will populate Info.plist
-    set(MACOSX_BUNDLE_GUI_IDENTIFIER "mt.dalerank.ozymandias")
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER "mt.dalerank.akhenaten")
     set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OS X deployment version" FORCE)
-    set(MACOSX_BUNDLE_ICON_FILE "ozymandias.icns")
+    set(MACOSX_BUNDLE_ICON_FILE "akhenaten.icns")
     set(MACOSX_BUNDLE_BUNDLE_VERSION "0.2.1 ${GAME_BUILD_NUMBER}")
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
@@ -475,7 +475,7 @@ endif()
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
                         ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY}
-                        ${EXTLAME_LIBRARY} ozymandias::rc)
+                        ${EXTLAME_LIBRARY} akhenaten::rc)
 
 if(MSVC)
    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
@@ -493,11 +493,11 @@ if(NOT APPLE)
 endif()
 
 if(UNIX AND NOT APPLE)
-    install(FILES "res/ozymandias.desktop" DESTINATION "share/applications" RENAME "com.github.dalerank.ozymandias.desktop")
-    install(FILES "res/ozymandias.metainfo.xml" DESTINATION "share/metainfo" RENAME "com.github.dalerank.ozymandias.metainfo.xml")
-    install(FILES "res/ozymandias_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "com.github.dalerank.ozymandias.png")
-    install(FILES "res/ozymandias_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.dalerank.ozymandias.png")
-    install(FILES "res/ozymandias_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.dalerank.ozymandias.png")
+    install(FILES "res/akhenaten.desktop" DESTINATION "share/applications" RENAME "com.github.dalerank.akhenaten.desktop")
+    install(FILES "res/akhenaten.metainfo.xml" DESTINATION "share/metainfo" RENAME "com.github.dalerank.akhenaten.metainfo.xml")
+    install(FILES "res/akhenaten_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "com.github.dalerank.akhenaten.png")
+    install(FILES "res/akhenaten_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.dalerank.akhenaten.png")
+    install(FILES "res/akhenaten_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.dalerank.akhenaten.png")
 endif()
 
 if (MSVC)

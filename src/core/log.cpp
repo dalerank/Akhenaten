@@ -24,7 +24,7 @@
 
 namespace {
 
-pcstr logger_filename_ = "ozymandias-log.txt";
+pcstr logger_filename_ = "akhenaten-log.txt";
 static std::fstream logger_file_stream_;
 
 const std::unordered_map<std::string, SDL_LogPriority> PRIORITY_DICT = {

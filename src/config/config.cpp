@@ -5,7 +5,7 @@
 
 #include <string.h>
 
-static const char* INI_FILENAME = "ozymandias.ini";
+static const char* INI_FILENAME = "akhenaten.ini";
 
 // Keep this in the same order as the ints in config.h
 struct enhanced_option_t {

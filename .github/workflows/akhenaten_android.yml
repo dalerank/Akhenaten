@@ -36,4 +36,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: apk
-        path: android/ozymandias/build/outputs/apk/debug/ozymandias-debug.apk
+        path: android/akhenaten/build/outputs/apk/debug/akhenaten-debug.apk

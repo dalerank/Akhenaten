@@ -27,8 +27,8 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
         cd ..
-        cmake --build ./build --target ozymandias --config RelWithDebInfo
-        copy ./build/RelWithDebInfo/ozymandias.exe ./bin_x64/ozymandias.exe
+        cmake --build ./build --target akhenaten --config RelWithDebInfo
+        copy ./build/RelWithDebInfo/akhenaten.exe ./bin_x64/akhenaten.exe
     - name: create-package
       shell: pwsh
       run: |

@@ -1,5 +1,4 @@
-#ifndef OZYMANDIAS_IO_BUFFER_H
-#define OZYMANDIAS_IO_BUFFER_H
+#pragma once
 
 #include <core/buffer.h>
 #include <grid/grid.h>
@@ -127,5 +126,3 @@ public:
 
 void default_bind(io_buffer* iob, size_t version);
 extern io_buffer* iob_none;
-
-#endif // OZYMANDIAS_IO_BUFFER_H

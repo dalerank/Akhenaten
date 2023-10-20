@@ -12,7 +12,7 @@
 	<frame id="frame2">
 		<liveitem>
 			<text valign="bottom" align="left" text-align="left" text-valign="bottom" line-space="3" ellipsis="on">
-				<str color="#ffffff" size="50" bold="on" shadow="on">Ozymandias</str>
+				<str color="#ffffff" size="50" bold="on" shadow="on">Akhenaten</str>
 			</text>
 		</liveitem>
 	</frame>
@@ -20,7 +20,7 @@
 	<frame id="frame3">
 		<liveitem>
 			<text valign="top" align="left" text-align="left" text-valign="top" line-space="2" ellipsis="on">
-				<str size="22" shadow="on">port by devnoname120</str>
+				<str size="22" shadow="on">port by dalerank</str>
 			</text>
 		</liveitem>
 	</frame>

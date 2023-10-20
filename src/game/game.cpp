@@ -126,7 +126,7 @@ bool game_pre_init(void) {
     logs::switch_output(vfs::platform_file_manager_get_base_path());
     update_encoding();
     settings_load(); // c3.inf
-    config_load();   // ozymandias.ini
+    config_load();   // akhenaten.ini
     hotkey_config_load();
     scenario_settings_init();
     random_init();

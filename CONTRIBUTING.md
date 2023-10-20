@@ -5,7 +5,7 @@ Discord chat, or any other method with the owner of this repository before openi
 
 ## Aim of the project
 
-The aim of Ozymandias is to re-create the exact same logic that the original Pharaoh uses, with full savegame
+The aim of Akhenaten is to re-create the exact same logic that the original Pharaoh uses, with full savegame
 compatibility, but with some small user interface enhancements.
 
 Later on there may be an 'enhanced' edition with new features, but for now any pull requests which change the game logic

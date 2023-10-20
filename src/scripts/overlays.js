@@ -1,4 +1,4 @@
-log_info("Ozymandias: overlays started")
+log_info("akhenaten: overlays started")
 
 overlays = [
   {

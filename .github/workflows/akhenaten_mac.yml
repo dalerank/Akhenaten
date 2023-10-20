@@ -27,7 +27,7 @@ jobs:
         cd ..
         cmake --build ./build -j6
         mkdir macos_build
-        cp -R ./build/ozymandias.app ./macos_build/ozymandias.app
+        cp -R ./build/akhenaten.app ./macos_build/akhenaten.app
     - uses: actions/upload-artifact@v3
       with:
         name: macos_build

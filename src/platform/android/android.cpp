@@ -34,7 +34,7 @@ static const char *get_pharaoh_path(void)
 const char *android_show_pharaoh_path_dialog(int again)
 {
     jni_function_handler handler;
-    if (jni_get_method_handler(CLASS_OZYMANDIAS_ACTIVITY, "showDirectorySelection", "(Z)V", &handler)) {
+    if (jni_get_method_handler(CLASS_AKHENATEN_ACTIVITY, "showDirectorySelection", "(Z)V", &handler)) {
         handler.env->CallVoidMethod(handler.activity, handler.method, again ? JNI_TRUE : JNI_FALSE);
     }
     jni_destroy_function_handler(&handler);
@@ -52,7 +52,7 @@ float android_get_screen_density()
 {
     jni_function_handler handler;
     float result = 1.0f;
-    if (jni_get_method_handler(CLASS_OZYMANDIAS_ACTIVITY, "getScreenDensity", "()F", &handler)) {
+    if (jni_get_method_handler(CLASS_AKHENATEN_ACTIVITY, "getScreenDensity", "()F", &handler)) {
         result = (float) handler.env->CallFloatMethod(handler.activity, handler.method);
     }
     jni_destroy_function_handler(&handler);
@@ -64,7 +64,7 @@ int android_get_file_descriptor(const char *filename, const char *mode)
     int result = 0;
     jni_function_handler handler;
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "openFileDescriptor",
-        "(L" CLASS_OZYMANDIAS_ACTIVITY ";Ljava/lang/String;Ljava/lang/String;)I", &handler)) {
+        "(L" CLASS_AKHENATEN_ACTIVITY ";Ljava/lang/String;Ljava/lang/String;)I", &handler)) {
         jni_destroy_function_handler(&handler);
         return 0;
     }
@@ -109,7 +109,7 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
     jni_function_handler get_last_modified_time;
 
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "getDirectoryFileList",
-        "(L" CLASS_OZYMANDIAS_ACTIVITY ";Ljava/lang/String;ILjava/lang/String;)[L" CLASS_FILE_MANAGER "$FileInfo;", &handler)) {
+        "(L" CLASS_AKHENATEN_ACTIVITY ";Ljava/lang/String;ILjava/lang/String;)[L" CLASS_FILE_MANAGER "$FileInfo;", &handler)) {
         jni_destroy_function_handler(&handler);
         return vfs::LIST_ERROR;
     }
@@ -157,7 +157,7 @@ int android_remove_file(const char *filename)
     int result = 0;
     jni_function_handler handler;
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "deleteFile",
-        "(L" CLASS_OZYMANDIAS_ACTIVITY ";Ljava/lang/String;)Z", &handler)) {
+        "(L" CLASS_AKHENATEN_ACTIVITY ";Ljava/lang/String;)Z", &handler)) {
         jni_destroy_function_handler(&handler);
         return 0;
     }
@@ -169,7 +169,7 @@ int android_remove_file(const char *filename)
     return result;
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_github_dalerank_ozymandias_OzymandiasMainActivity_gotDirectory(JNIEnv *env, jobject thiz)
+extern "C" JNIEXPORT void JNICALL Java_com_github_dalerank_AKHENATEN_AkhenatenMainActivity_gotDirectory(JNIEnv *env, jobject thiz)
 {
     has_directory = 1;
 }

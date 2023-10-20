@@ -25,7 +25,7 @@ jobs:
         cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
         cd ..
         cmake --build ./build
-        cp ./build/ozymandias ./artifacts/ozymandias.linux
+        cp ./build/akhenaten ./artifacts/akhenaten.linux
         zip -r linux_build.zip ./artifacts
         wget https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_windows/master/windows_build.zip
         unzip windows_build.zip -d artifacts
