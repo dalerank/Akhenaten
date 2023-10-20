@@ -105,12 +105,14 @@ static int draw_figure(screen_tile screen, map_point point) {
     graphics_draw_horizontal_line(screen_x, screen_x + 1, screen_y, color);
     return 1;
 }
-static void draw_minimap_tile(screen_tile screen, map_point point) {
+
+static void draw_minimap_tile(vec2i screen, tile2i point) {
+    view_context ctx = view_context_main();
     int grid_offset = point.grid_offset();
     int screen_x = screen.x;
     int screen_y = screen.y;
     if (grid_offset < 0) {
-        ImageDraw::img_generic(image_id_from_group(GROUP_MINIMAP_BLACK), screen_x, screen_y);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_MINIMAP_BLACK), screen_x, screen_y);
         return;
     }
 
@@ -175,13 +177,13 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
             case 3:
             case 4:
             case 5:
-                ImageDraw::img_generic(image_id + (multi_tile_size - 1), screen_x, screen_y - (multi_tile_size - 1));
+                ImageDraw::img_generic(ctx, image_id + (multi_tile_size - 1), screen_x, screen_y - (multi_tile_size - 1));
                 break;
             case 6: // TODO: make a generalized formula?
-                ImageDraw::img_generic(image_id + 2, screen_x, screen_y - 2);
-                ImageDraw::img_generic(image_id + 2, screen_x + 3, screen_y - 5);
-                ImageDraw::img_generic(image_id + 2, screen_x + 6, screen_y - 2);
-                ImageDraw::img_generic(image_id + 2, screen_x + 3, screen_y + 1);
+                ImageDraw::img_generic(ctx, image_id + 2, screen_x, screen_y - 2);
+                ImageDraw::img_generic(ctx, image_id + 2, screen_x + 3, screen_y - 5);
+                ImageDraw::img_generic(ctx, image_id + 2, screen_x + 6, screen_y - 2);
+                ImageDraw::img_generic(ctx, image_id + 2, screen_x + 3, screen_y + 1);
                 break;
             }
         }
@@ -217,7 +219,7 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
         else
             image_id = image_id_from_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
 
-        ImageDraw::img_generic(image_id, screen_x, screen_y);
+        ImageDraw::img_generic(ctx, image_id, screen_x, screen_y);
     }
 }
 

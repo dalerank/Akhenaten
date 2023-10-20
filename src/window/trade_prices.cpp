@@ -3,6 +3,7 @@
 #include "empire/trade_prices.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/view/view.h"
 #include "graphics/elements/panel.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
@@ -10,7 +11,7 @@
 #include "input/input.h"
 #include "window/advisors.h"
 
-static void draw_background(void) {
+static void draw_background() {
     window_draw_underlying_window();
 
     graphics_set_to_dialog();
@@ -20,9 +21,11 @@ static void draw_background(void) {
     lang_text_draw(54, 21, 26, 153, FONT_LARGE_BLACK_ON_LIGHT);
     lang_text_draw(54, 22, 26, 228, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(54, 23, 26, 253, FONT_NORMAL_BLACK_ON_LIGHT);
+
+    view_context ctx = view_context_main();
     for (int i = 1; i < 16; i++) {
         int image_offset = i + resource_image_offset(i, RESOURCE_IMAGE_ICON);
-        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 126 + 30 * i, 194);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 126 + 30 * i, 194);
         text_draw_number_centered(trade_price_buy(i), 120 + 30 * i, 229, 30, FONT_SMALL_OUTLINED);
         text_draw_number_centered(trade_price_sell(i), 120 + 30 * i, 254, 30, FONT_SMALL_OUTLINED);
     }

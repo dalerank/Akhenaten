@@ -52,11 +52,12 @@ static void init_draw_context(void) {
 }
 
 static void draw_flags(vec2i pixel, map_point point) {
+    view_context ctx = view_context_main();
     int figure_id = map_figure_id_get(point);
     while (figure_id) {
         figure* f = figure_get(figure_id);
         if (!f->is_ghost) {
-            f->city_draw_figure(pixel, 0);
+            f->city_draw_figure(ctx, pixel, 0);
         }
 
         if (figure_id != f->next_figure) {
@@ -82,7 +83,8 @@ static void update_zoom_level() {
     }
 }
 
-void widget_map_editor_draw(void) {
+void widget_map_editor_draw() {
+    view_context ctx = view_context_main();
     auto &data = g_map_editor_data;
     update_zoom_level();
     set_city_clip_rectangle();
@@ -91,7 +93,7 @@ void widget_map_editor_draw(void) {
     //    city_view_foreach_map_tile(draw_buildings);
     city_view_foreach_valid_map_tile(view_context_main(), draw_isometrics);
     //    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
-    map_editor_tool_draw(data.current_tile);
+    map_editor_tool_draw(ctx, data.current_tile);
 }
 
 static void update_city_view_coords(int x, int y, map_point* tile) {

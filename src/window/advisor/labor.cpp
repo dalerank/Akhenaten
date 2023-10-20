@@ -6,6 +6,7 @@
 #include "graphics/boilerplate.h"
 #include "graphics/elements/arrow_button.h"
 #include "graphics/elements/generic_button.h"
+#include "graphics/view/view.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
@@ -35,9 +36,10 @@ static arrow_button wage_buttons[]
 static int focus_button_id;
 static int arrow_button_focus;
 
-static int draw_background(void) {
+static int draw_background() {
+    view_context ctx = view_context_main();
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS), 10, 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS), 10, 10);
 
     lang_text_draw(50, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
 
@@ -69,7 +71,8 @@ static int draw_background(void) {
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground(void) {
+static void draw_foreground() {
+    view_context ctx = view_context_main();
     arrow_buttons_draw(0, 0, wage_buttons, 2);
 
     inner_panel_draw(32, 70, 36, 15);
@@ -80,14 +83,15 @@ static void draw_foreground(void) {
         button_border_draw(40, 77 + 25 * i, 560, 22, focus);
         const labor_category_data* cat = city_labor_category(i);
         if (cat->priority) {
-            ImageDraw::img_generic(image_id_from_group(GROUP_LABOR_PRIORITY_LOCK), 70, y_offset - 2);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_LABOR_PRIORITY_LOCK), 70, y_offset - 2);
             text_draw_number(cat->priority, '@', " ", 90, y_offset, FONT_NORMAL_WHITE_ON_DARK);
         }
         lang_text_draw(50, i + 1, 170, y_offset, FONT_NORMAL_WHITE_ON_DARK);
         text_draw_number(cat->workers_needed, '@', " ", 410, y_offset, FONT_NORMAL_WHITE_ON_DARK);
         font_t font = FONT_NORMAL_WHITE_ON_DARK;
-        if (cat->workers_needed != cat->workers_allocated)
+        if (cat->workers_needed != cat->workers_allocated) {
             font = FONT_NORMAL_YELLOW;
+        }
 
         text_draw_number(cat->workers_allocated, '@', " ", 510, y_offset, font);
     }

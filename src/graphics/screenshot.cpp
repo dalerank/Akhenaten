@@ -184,11 +184,11 @@ static int image_write_rows(const color *canvas, int canvas_width) {
     return 1;
 }
 
-static int image_write_canvas() {
+static int image_write_canvas(view_context &ctx) {
     const color *canvas;
     color *pixels = 0;
     pixels = (color *)malloc(sizeof(color) * screenshot.width * screenshot.height);
-    if (!graphics_renderer()->save_screen_buffer(pixels, 0, 0, screen_width(), screen_height(), screen_width())) {
+    if (!graphics_renderer()->save_screen_buffer(ctx, pixels, 0, 0, screen_width(), screen_height(), screen_width())) {
         free(pixels);
         return 0;
     }
@@ -216,7 +216,7 @@ static void show_saved_notice(const char *filename) {
     city_warning_show_custom(notice_text);
 }
 
-static void create_window_screenshot(void) {
+static void create_window_screenshot() {
     if (!image_create(screen_size(), 0, 1)) {
         logs::error("Unable to create memory for screenshot");
         return;
@@ -229,7 +229,8 @@ static void create_window_screenshot(void) {
         return;
     }
 
-    if (!image_write_canvas()) {
+    view_context &ctx = view_context_main();
+    if (!image_write_canvas(ctx)) {
         logs::error("Error writing image");
         image_free();
         return;
@@ -309,32 +310,35 @@ static void create_full_city_screenshot() {
                 x_offset = canvas_width - image_section_width - TILE_X_SIZE * 2;
             }
 
-            //threads.push_back(std::thread([] (vec2i min_pos, int width, int canvas_width, int current_height, color *canvas, int x_offset, int y_offset, int image_section_width, int canvas_height, vec2i city_canvas_pixels, int color) {
+            //threads.push_back(std::thread([] (vec2i min_pos, int width, int canvas_width, int current_height, color *canvas, 
+            //                                    int x_offset, int y_offset, int image_section_width, int canvas_height, vec2i city_canvas_pixels, view_data_t &full_city_view_data) {
                 SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE, canvas_width, canvas_height, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
                 SDL_Renderer *renderer = SDL_CreateSoftwareRenderer(surface);
                 
                 //SDL_Rect rect{0, 0, canvas_width, canvas_height};
                 //SDL_FillRect(surface, &rect, color );
-                figure_draw_cache_data_t local_figure_data;
+                figure_draw_cache_data_t local_figure_cache;
                 view_data_t local_view_data = full_city_view_data;
                 view_context local_context;
-                local_context.figure_cache = &local_figure_data;
+                local_context.figure_cache = &local_figure_cache;
                 local_context.view = &local_view_data;
+                local_context.global_render_scale = 1.f;
+                local_context.renderer = graphics_renderer()->renderer();
 
                 camera_go_to_pixel(local_context, vec2i{min_pos.x + width, current_height}, false);
                 tile2i dummy_tile(0, 0);
                 widget_city_draw_without_overlay(local_context, 0, nullptr, dummy_tile);
-                graphics_renderer()->save_screen_buffer(&canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
+                graphics_renderer()->save_screen_buffer(local_context, &canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
                 //SDL_Rect rect2 = {x_offset, y_offset, canvas_width, canvas_height};
                 //bool ok = SDL_RenderReadPixels(renderer, &rect2, SDL_PIXELFORMAT_ARGB8888, &canvas[width], city_canvas_pixels.x * sizeof(color)) == 0;
                 SDL_DestroyRenderer(renderer);
                 SDL_FreeSurface(surface);
-            //}, min_pos, width, canvas_width, current_height, canvas, x_offset, y_offset, image_section_width, canvas_height, city_canvas_pixels, ((yy + i) % 2) ? 0xff00ff00 : 0xff0000ff));
+            //}, min_pos, width, canvas_width, current_height, canvas, x_offset, y_offset, image_section_width, canvas_height, city_canvas_pixels, full_city_view_data)); // ((yy + i) % 2) ? 0xff00ff00 : 0xff0000ff));
             i++;
         }
 
         for (std::thread& t : threads) {
-           // t.join();
+            t.join();
         }
 
         if (!image_write_rows(canvas, city_canvas_pixels.x)) {
@@ -387,11 +391,13 @@ static void create_minimap_screenshot() {
         image_free();
         return;
     }
+    view_context ctx = view_context_main();
+
     memset(canvas, 0, sizeof(color) * width_pixels * height_pixels);
     widget_minimap_draw({0, 0}, width_pixels, height_pixels, 1);
     graphics_clear_screen();
     graphics_renderer()->draw_custom_texture(CUSTOM_IMAGE_MINIMAP, 0, 0, 1 / MINIMAP_SCALE);
-    graphics_renderer()->save_screen_buffer(canvas, 0, 0, width_pixels, height_pixels, width_pixels);
+    graphics_renderer()->save_screen_buffer(ctx, canvas, 0, 0, width_pixels, height_pixels, width_pixels);
     if (image_write_rows(canvas, width_pixels)) {
         image_finish();
         logs::info("Saved city map screenshot:", filename, 0);

@@ -9,6 +9,7 @@
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "graphics/view/view.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -36,7 +37,7 @@ static generic_button buttons[] = {
 
 static int focus_button_id;
 
-static int get_dialog_width(void) {
+static int get_dialog_width() {
     int dialog_width = 16 + lang_text_get_width(52, 15, FONT_LARGE_BLACK_ON_LIGHT);
     if (dialog_width < MIN_DIALOG_WIDTH)
         dialog_width = MIN_DIALOG_WIDTH;
@@ -47,13 +48,15 @@ static int get_dialog_width(void) {
     return dialog_width;
 }
 
-static void draw_foreground(void) {
+static void draw_foreground() {
+    view_context ctx = view_context_main();
+
     graphics_set_to_dialog();
 
     int dialog_width = get_dialog_width();
     int dialog_x = 128 - (dialog_width - MIN_DIALOG_WIDTH) / 2;
     outer_panel_draw(dialog_x, 32, dialog_width / 16, 25);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_DEBEN, dialog_x + 16, 48);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_DEBEN, dialog_x + 16, 48);
     lang_text_draw_centered(52, 15, dialog_x + 48, 48, dialog_width - 64, FONT_LARGE_BLACK_ON_LIGHT);
 
     inner_panel_draw(144, 80, 22, 15);

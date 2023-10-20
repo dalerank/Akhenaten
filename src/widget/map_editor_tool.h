@@ -1,8 +1,7 @@
-#ifndef WIDGET_MAP_EDITOR_TOOL_H
-#define WIDGET_MAP_EDITOR_TOOL_H
+#pragma once
 
 #include "grid/point.h"
 
-void map_editor_tool_draw(map_point tile);
+struct view_context;
 
-#endif // WIDGET_MAP_EDITOR_TOOL_H
+void map_editor_tool_draw(view_context &ctx, tile2i tile);

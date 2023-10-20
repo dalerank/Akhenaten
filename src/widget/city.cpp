@@ -95,7 +95,7 @@ static int input_coords_in_city(int x, int y) {
     return (x >= 0 && x < view_size.x && y >= 0 && y < view_size.y);
 }
 
-static void draw_TEST(vec2i pixel, tile2i point) {
+static void draw_TEST(vec2i pixel, tile2i point, view_context &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -108,8 +108,9 @@ static void draw_TEST(vec2i pixel, tile2i point) {
     //    if (tx==40 && ty==44)
     //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
     //        COLOR_CHANNEL_RED);
-    if (map_grid_inside_map_area(grid_offset, 1))
-        return ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN);
+    if (map_grid_inside_map_area(grid_offset, 1)) {
+        return ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN);
+    }
     //    if (!map_grid_is_inside(tx, ty, 1))
     //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
     //        COLOR_CHANNEL_RED);

@@ -46,7 +46,7 @@ struct city_overlay_health : public city_overlay {
         return (f->type == FIGURE_EMBALMER || f->type == FIGURE_HERBALIST || f->type == FIGURE_PHYSICIAN || f->type == FIGURE_DENTIST);
     }
 
-    void draw_custom_top(vec2i pixel, map_point point) const override {
+    void draw_custom_top(vec2i pixel, tile2i point, view_context &ctx) const override {
         int grid_offset = point.grid_offset();
         int x = pixel.x;
         int y = pixel.y;
@@ -55,7 +55,7 @@ struct city_overlay_health : public city_overlay {
         }
 
         if (map_building_at(grid_offset)) {
-            city_with_overlay_draw_building_top(pixel, point);
+            city_with_overlay_draw_building_top(pixel, point, ctx);
         }
     }
 

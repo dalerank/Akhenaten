@@ -80,7 +80,7 @@ static int terrain_on_native_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
 
-static void draw_footprint_native(vec2i pixel, map_point point) {
+static void draw_footprint_native(vec2i pixel, tile2i point, view_context &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -88,30 +88,31 @@ static void draw_footprint_native(vec2i pixel, map_point point) {
         return;
     if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
-            city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
+            city_with_overlay_draw_building_footprint(ctx, x, y, grid_offset, 0);
         else {
-            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, 0);
         }
     } else if (map_terrain_is(grid_offset, TERRAIN_CANAL | TERRAIN_WALL)) {
         // display groundwater
         int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-        ImageDraw::isometric_from_drawtile(image_id, x, y, 0);
+        ImageDraw::isometric_from_drawtile(ctx, image_id, x, y, 0);
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
-        city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
+        city_with_overlay_draw_building_footprint(ctx, x, y, grid_offset, 0);
     else {
         if (map_property_is_native_land(grid_offset))
-            ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + 1, x, y, 0);
+            ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + 1, x, y, 0);
         else {
-            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, 0);
         }
     }
 }
-static void draw_top_native(vec2i pixel, map_point point) {
+static void draw_top_native(vec2i pixel, tile2i point, view_context &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
     if (!map_property_is_draw_tile(grid_offset))
         return;
+
     if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
         if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
             color color_mask = 0;
@@ -121,8 +122,9 @@ static void draw_top_native(vec2i pixel, map_point point) {
             //            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask,
             //            city_view_get_scale_float());
         }
-    } else if (map_building_at(grid_offset))
-        city_with_overlay_draw_building_top(pixel, point);
+    } else if (map_building_at(grid_offset)) {
+        city_with_overlay_draw_building_top(pixel, point, ctx);
+    }
 }
 
 city_overlay* city_overlay_for_native() {

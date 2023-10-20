@@ -9,6 +9,7 @@
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/view/view.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -81,6 +82,7 @@ static void get_min_max_month_year(int max_months, int* start_month, int* start_
 }
 
 static void draw_history_graph(int full_size, int x, int y) {
+    view_context ctx = view_context_main();
     int max_months;
     int month_count = city_population_monthly_count();
     if (month_count <= 20)
@@ -139,22 +141,16 @@ static void draw_history_graph(int full_size, int x, int y) {
             if (val > 0) {
                 switch (max_months) {
                 case 20:
-                    ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * m, y + 200 - val);
+                    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * m, y + 200 - val);
                     break;
                 case 40:
-                    ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 1,
-                                           x + 10 * m,
-                                           y + 200 - val);
+                    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 1, x + 10 * m, y + 200 - val);
                     break;
                 case 100:
-                    ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2,
-                                           x + 4 * m,
-                                           y + 200 - val);
+                    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * m, y + 200 - val);
                     break;
                 case 200:
-                    ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 3,
-                                           x + 2 * m,
-                                           y + 200 - val);
+                    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 3, x + 2 * m,y + 200 - val);
                     break;
                 default:
                     graphics_draw_vertical_line(x + m, y + 200 - val, y + 199, COLOR_RED);
@@ -179,6 +175,7 @@ static void draw_history_graph(int full_size, int x, int y) {
 }
 
 static void draw_census_graph(int full_size, int x, int y) {
+    view_context ctx = view_context_main();
     int max_value = 0;
     for (int i = 0; i < 100; i++) {
         int value = city_population_at_age(i);
@@ -208,8 +205,9 @@ static void draw_census_graph(int full_size, int x, int y) {
             else {
                 val = pop >> y_shift;
             }
-            if (val > 0)
-                ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * i, y + 200 - val);
+            if (val > 0) {
+                ImageDraw::img_generic(ctx, image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * i, y + 200 - val);
+            }
         }
         graphics_reset_clip_rectangle();
     } else {
@@ -223,6 +221,7 @@ static void draw_census_graph(int full_size, int x, int y) {
 }
 
 static void draw_society_graph(int full_size, int x, int y) {
+    view_context ctx = view_context_main();
     int max_value = 0;
     for (int i = 0; i < 20; i++) {
         int value = city_population_at_level(i);
@@ -251,8 +250,9 @@ static void draw_society_graph(int full_size, int x, int y) {
             else {
                 val = pop >> y_shift;
             }
-            if (val > 0)
-                ImageDraw::img_generic(image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * i, y + 200 - val);
+            if (val > 0) {
+                ImageDraw::img_generic(ctx, image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * i, y + 200 - val);
+            }
         }
         graphics_reset_clip_rectangle();
     } else {
@@ -384,15 +384,17 @@ static void print_history_info(void) {
 }
 
 static void draw_housing_button(int full_size, int x, int y) {
-    ImageDraw::isometric(image_id_from_group(GROUP_BUILDING_HOUSE_HOMESTEAD) + 2, x, y, COLOR_MASK_NONE, 1.0f);
+    view_context ctx = view_context_main();
+    ImageDraw::isometric(ctx, image_id_from_group(GROUP_BUILDING_HOUSE_HOMESTEAD) + 2, x, y, COLOR_MASK_NONE, 1.0f);
     //    ImageDraw::isometric_top(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE);
 }
 
-static int draw_background(void) {
+static int draw_background() {
+    view_context ctx = view_context_main();
     int width;
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
 
     int graph_order = city_population_graph_order();
     // Title: depends on big graph shown
@@ -404,7 +406,7 @@ static int draw_background(void) {
         lang_text_draw(55, 2, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     }
 
-    ImageDraw::img_generic(image_id_from_group(GROUP_PANEL_WINDOWS) + 14, 56, 60);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_WINDOWS) + 14, 56, 60);
 
     width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK_ON_LIGHT);
     text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK_ON_LIGHT, 0);
@@ -493,10 +495,10 @@ static int draw_background(void) {
     // info panel
     inner_panel_draw(48, 336, 34, 5);
     int image_id = image_id_from_group(GROUP_BULLET);
-    ImageDraw::img_generic(image_id, 56, 344);
-    ImageDraw::img_generic(image_id, 56, 362);
-    ImageDraw::img_generic(image_id, 56, 380);
-    ImageDraw::img_generic(image_id, 56, 398);
+    ImageDraw::img_generic(ctx, image_id, 56, 344);
+    ImageDraw::img_generic(ctx, image_id, 56, 362);
+    ImageDraw::img_generic(ctx, image_id, 56, 380);
+    ImageDraw::img_generic(ctx, image_id, 56, 398);
 
     info_panel();
 

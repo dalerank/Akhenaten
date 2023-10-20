@@ -1,11 +1,13 @@
 #include "button.h"
 
 #include "graphics/boilerplate.h"
+#include "graphics/view/view.h"
 
 void button_none(int param1, int param2) {
 }
 
 void button_border_draw(int x, int y, int width_pixels, int height_pixels, bool has_focus) {
+    view_context ctx = view_context_main();
     int width_blocks = width_pixels / 16;
     if (width_pixels % 16)
         width_blocks++;
@@ -27,25 +29,23 @@ void button_border_draw(int x, int y, int width_pixels, int height_pixels, bool 
             int draw_offset_x = x + 16 * xx;
             if (yy == 0) {
                 if (xx == 0)
-                    ImageDraw::img_generic(image_base, draw_offset_x, draw_offset_y);
+                    ImageDraw::img_generic(ctx, image_base, draw_offset_x, draw_offset_y);
                 else if (xx < width_blocks - 1)
-                    ImageDraw::img_generic(image_base + 1, draw_offset_x, draw_offset_y);
+                    ImageDraw::img_generic(ctx, image_base + 1, draw_offset_x, draw_offset_y);
                 else
-                    ImageDraw::img_generic(image_base + 2, draw_offset_x - last_block_offset_x, draw_offset_y);
+                    ImageDraw::img_generic(ctx, image_base + 2, draw_offset_x - last_block_offset_x, draw_offset_y);
             } else if (yy < height_blocks - 1) {
                 if (xx == 0)
-                    ImageDraw::img_generic(image_base + 7, draw_offset_x, draw_offset_y);
+                    ImageDraw::img_generic(ctx, image_base + 7, draw_offset_x, draw_offset_y);
                 else if (xx >= width_blocks - 1)
-                    ImageDraw::img_generic(image_base + 3, draw_offset_x - last_block_offset_x, draw_offset_y);
+                    ImageDraw::img_generic(ctx, image_base + 3, draw_offset_x - last_block_offset_x, draw_offset_y);
             } else {
                 if (xx == 0)
-                    ImageDraw::img_generic(image_base + 6, draw_offset_x, draw_offset_y - last_block_offset_y);
+                    ImageDraw::img_generic(ctx, image_base + 6, draw_offset_x, draw_offset_y - last_block_offset_y);
                 else if (xx < width_blocks - 1)
-                    ImageDraw::img_generic(image_base + 5, draw_offset_x, draw_offset_y - last_block_offset_y);
+                    ImageDraw::img_generic(ctx, image_base + 5, draw_offset_x, draw_offset_y - last_block_offset_y);
                 else
-                    ImageDraw::img_generic(image_base + 4,
-                                           draw_offset_x - last_block_offset_x,
-                                           draw_offset_y - last_block_offset_y);
+                    ImageDraw::img_generic(ctx, image_base + 4, draw_offset_x - last_block_offset_x, draw_offset_y - last_block_offset_y);
             }
         }
     }

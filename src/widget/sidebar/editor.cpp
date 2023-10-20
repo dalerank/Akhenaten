@@ -4,6 +4,7 @@
 #include "editor/tool.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/image_button.h"
+#include "graphics/view/view.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/image_groups.h"
@@ -194,10 +195,11 @@ static void draw_status(void) {
     }
 }
 
-void widget_sidebar_editor_draw_background(void) {
+void widget_sidebar_editor_draw_background() {
+    view_context ctx = view_context_main();
     int image_base = image_id_from_group(GROUP_EDITOR_SIDE_PANEL);
     int x_offset = sidebar_common_get_x_offset_expanded();
-    ImageDraw::img_generic(image_base, x_offset, TOP_MENU_HEIGHT);
+    ImageDraw::img_generic(ctx, image_base, x_offset, TOP_MENU_HEIGHT);
     draw_buttons();
     widget_minimap_draw({x_offset + 8, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
     draw_status();

@@ -5,6 +5,7 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/scrollbar.h"
+#include "graphics/view/view.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -31,8 +32,9 @@ void init() {
     scrollbar_init(&scrollbar, 0, highscores_count() - LIST_MAX_SIZE);
 }
 
-static void draw_background(void) {
-    ImageDraw::img_background(image_id_from_group(GROUP_SCORES_BACKGROUND));
+static void draw_background() {
+    view_context ctx = view_context_main();
+    ImageDraw::img_background(ctx, image_id_from_group(GROUP_SCORES_BACKGROUND));
 }
 static void draw_foreground(void) {
     graphics_set_to_dialog();

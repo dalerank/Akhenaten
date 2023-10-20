@@ -10,6 +10,7 @@
 #include "city/houses.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
+#include "graphics/view/view.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
@@ -90,9 +91,10 @@ static void draw_entertainer(int type, int y_offset, int venue, int shows, int c
     }
 }
 
-static void draw_festival_info(void) {
+static void draw_festival_info() {
+    view_context ctx = view_context_main();
     inner_panel_draw(48, 252, 34, 6);
-    ImageDraw::img_generic(image_id_from_group(GROUP_PANEL_WINDOWS) + 15, 460, 255);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_WINDOWS) + 15, 460, 255);
     lang_text_draw(58, 17, 52, 224, FONT_LARGE_BLACK_ON_LIGHT);
 
     int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260, FONT_NORMAL_WHITE_ON_DARK);
@@ -105,12 +107,13 @@ static void draw_festival_info(void) {
     lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305, 400, FONT_NORMAL_WHITE_ON_DARK);
 }
 
-static int draw_background(void) {
+static int draw_background() {
+    view_context ctx = view_context_main();
     city_gods_update(true);
     city_culture_calculate();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 8, 10, 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 8, 10, 10);
 
     lang_text_draw(58, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
 

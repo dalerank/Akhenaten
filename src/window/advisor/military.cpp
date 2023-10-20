@@ -53,9 +53,10 @@ static void init() {
     scrollbar_init(&scrollbar, 0, num_legions - 6);
 }
 
-static int draw_background(void) {
+static int draw_background() {
+    view_context ctx = view_context_main();
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 1, 10, 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 1, 10, 10);
     lang_text_draw(51, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
 
     lang_text_draw(51, 1, 374, 43, FONT_SMALL_PLAIN);
@@ -89,23 +90,23 @@ static int draw_background(void) {
     int bullet_x = 60;
     int text_x = 80;
     if (num_legions <= 0) {
-        ImageDraw::img_generic(image_id_from_group(GROUP_BULLET), bullet_x, 359);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), bullet_x, 359);
         lang_text_draw(51, enemy_text_id, text_x, 358, FONT_NORMAL_BLACK_ON_LIGHT);
 
-        ImageDraw::img_generic(image_id_from_group(GROUP_BULLET), bullet_x, 379);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), bullet_x, 379);
         lang_text_draw(51, distant_battle_text_id, text_x, 378, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
         // has forts
-        ImageDraw::img_generic(image_id_from_group(GROUP_BULLET), bullet_x, 349);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), bullet_x, 349);
         int width
           = lang_text_draw_amount(8, 46, city_military_total_soldiers(), text_x, 348, FONT_NORMAL_BLACK_ON_LIGHT);
         width += lang_text_draw(51, 7, text_x + width, 348, FONT_NORMAL_BLACK_ON_LIGHT);
         lang_text_draw_amount(8, 48, city_military_total_legions(), text_x + width, 348, FONT_NORMAL_BLACK_ON_LIGHT);
 
-        ImageDraw::img_generic(image_id_from_group(GROUP_BULLET), bullet_x, 369);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), bullet_x, 369);
         lang_text_draw(51, enemy_text_id, text_x, 368, FONT_NORMAL_BLACK_ON_LIGHT);
 
-        ImageDraw::img_generic(image_id_from_group(GROUP_BULLET), bullet_x, 389);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), bullet_x, 389);
         lang_text_draw(51, distant_battle_text_id, text_x, 388, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
@@ -117,7 +118,7 @@ static int draw_background(void) {
     for (int i = 0; i < 6 && i < num_legions; i++) {
         const formation* m = formation_get(formation_for_legion(i + 1 + scrollbar.scroll_position));
         button_border_draw(22, 77 + 44 * i, 560, 40, 0);
-        ImageDraw::img_generic(image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id, 32, 82 + 44 * i);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id, 32, 82 + 44 * i);
         lang_text_draw(138, m->legion_id, 84, 83 + 44 * i, FONT_NORMAL_WHITE_ON_DARK);
         int width = text_draw_number(m->num_figures, '@', " ", 84, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
         switch (m->figure_type) {
@@ -135,27 +136,27 @@ static int draw_background(void) {
 
         int image_id = image_id_from_group(GROUP_FORT_ICONS);
         button_border_draw(384, 83 + 44 * i, 30, 30, 0);
-        ImageDraw::img_generic(image_id, 387, 86 + 44 * i);
+        ImageDraw::img_generic(ctx, image_id, 387, 86 + 44 * i);
 
         button_border_draw(464, 83 + 44 * i, 30, 30, 0);
         if (m->is_at_fort)
-            ImageDraw::img_generic(image_id + 2, 467, 86 + 44 * i);
+            ImageDraw::img_generic(ctx, image_id + 2, 467, 86 + 44 * i);
         else {
-            ImageDraw::img_generic(image_id + 1, 467, 86 + 44 * i);
+            ImageDraw::img_generic(ctx, image_id + 1, 467, 86 + 44 * i);
         }
 
         button_border_draw(544, 83 + 44 * i, 30, 30, 0);
         if (m->empire_service)
-            ImageDraw::img_generic(image_id + 3, 547, 86 + 44 * i);
+            ImageDraw::img_generic(ctx, image_id + 3, 547, 86 + 44 * i);
         else {
-            ImageDraw::img_generic(image_id + 4, 547, 86 + 44 * i);
+            ImageDraw::img_generic(ctx, image_id + 4, 547, 86 + 44 * i);
         }
     }
 
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground(void) {
+static void draw_foreground() {
     scrollbar_draw(&scrollbar);
     num_legions = formation_get_num_forts();
     for (int i = 0; i < 6 && i < num_legions; i++) {

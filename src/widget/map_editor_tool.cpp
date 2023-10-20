@@ -44,12 +44,12 @@ static void draw_partially_blocked(int x, int y, int num_tiles, int* blocked_til
     }
 }
 
-static void draw_building_image(int image_id, int x, int y) {
-    ImageDraw::isometric(image_id, x, y, COLOR_MASK_GREEN);
+static void draw_building_image(view_context &ctx, int image_id, int x, int y) {
+    ImageDraw::isometric(ctx, image_id, x, y, COLOR_MASK_GREEN);
     //    ImageDraw::isometric_top(image_id, x, y, COLOR_MASK_GREEN, city_view_get_scale_float());
 }
 
-static void draw_building(map_point tile, int screen_x, int screen_y, int type) {
+static void draw_building(view_context &ctx, tile2i tile, int screen_x, int screen_y, int type) {
     const building_properties* props = building_properties_for_type(type);
 
     int num_tiles = props->size * props->size;
@@ -63,7 +63,7 @@ static void draw_building(map_point tile, int screen_x, int screen_y, int type) 
         for (int i = 0; i < num_tiles; i++) {
             int x_offset = screen_x + X_VIEW_OFFSETS[i];
             int y_offset = screen_y + Y_VIEW_OFFSETS[i];
-            ImageDraw::isometric(image_id, x_offset, y_offset);
+            ImageDraw::isometric(ctx, image_id, x_offset, y_offset);
         }
     } else {
         int image_id;
@@ -71,11 +71,11 @@ static void draw_building(map_point tile, int screen_x, int screen_y, int type) 
             image_id = image_id_from_group(GROUP_EDITOR_BUILDING_CROPS);
         else
             image_id = image_id_from_group(props->image_collection, props->image_group) + props->image_offset;
-        draw_building_image(image_id, screen_x, screen_y);
+        draw_building_image(ctx, image_id, screen_x, screen_y);
     }
 }
 
-static void draw_road(map_point tile, int x, int y) {
+static void draw_road(view_context &ctx, tile2i tile, int x, int y) {
     int grid_offset = tile.grid_offset();
     bool blocked = false;
     int image_id = 0;
@@ -91,7 +91,7 @@ static void draw_road(map_point tile, int x, int y) {
     if (blocked)
         draw_flat_tile(x, y, COLOR_MASK_RED);
     else {
-        draw_building_image(image_id, x, y);
+        draw_building_image(ctx, image_id, x, y);
     }
 }
 
@@ -102,16 +102,16 @@ static void draw_brush_tile(const void* data, int dx, int dy) {
     draw_flat_tile(view->x + view_dx, view->y + view_dy, COLOR_MASK_GREEN);
 }
 
-static void draw_brush(map_point tile, int x, int y) {
+static void draw_brush(tile2i tile, int x, int y) {
     screen_tile vt = {x, y};
     editor_tool_foreach_brush_tile(draw_brush_tile, &vt);
 }
 
-static void draw_access_ramp(map_point tile, int x, int y) {
+static void draw_access_ramp(view_context &ctx, tile2i tile, int x, int y) {
     int orientation;
     if (editor_tool_can_place_access_ramp(tile, &orientation)) {
         int image_id = image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation;
-        draw_building_image(image_id, x, y);
+        draw_building_image(ctx, image_id, x, y);
     } else {
         int blocked[4] = {1, 1, 1, 1};
         draw_partially_blocked(x, y, 4, blocked);
@@ -122,7 +122,7 @@ static void draw_map_flag(int x, int y, int is_ok) {
     draw_flat_tile(x, y, is_ok ? COLOR_MASK_GREEN : COLOR_MASK_RED);
 }
 
-void map_editor_tool_draw(map_point tile) {
+void map_editor_tool_draw(view_context &ctx, tile2i tile) {
     if (!tile.grid_offset() || scroll_in_progress() || !editor_tool_is_active())
         return;
 
@@ -132,13 +132,13 @@ void map_editor_tool_draw(map_point tile) {
     int y = screen.y;
     switch (type) {
     case TOOL_NATIVE_CENTER:
-        draw_building(tile, x, y, BUILDING_NATIVE_MEETING);
+        draw_building(ctx, tile, x, y, BUILDING_NATIVE_MEETING);
         break;
     case TOOL_NATIVE_HUT:
-        draw_building(tile, x, y, BUILDING_NATIVE_HUT);
+        draw_building(ctx, tile, x, y, BUILDING_NATIVE_HUT);
         break;
     case TOOL_NATIVE_FIELD:
-        draw_building(tile, x, y, BUILDING_NATIVE_CROPS);
+        draw_building(ctx, tile, x, y, BUILDING_NATIVE_CROPS);
         break;
 
     case TOOL_EARTHQUAKE_POINT:
@@ -153,7 +153,7 @@ void map_editor_tool_draw(map_point tile) {
         break;
 
     case TOOL_ACCESS_RAMP:
-        draw_access_ramp(tile, x, y);
+        draw_access_ramp(ctx, tile, x, y);
         break;
 
     case TOOL_GRASS:
@@ -168,7 +168,7 @@ void map_editor_tool_draw(map_point tile) {
         break;
 
     case TOOL_ROAD:
-        draw_road(tile, x, y);
+        draw_road(ctx, tile, x, y);
         break;
     }
 }

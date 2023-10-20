@@ -4,6 +4,7 @@
 #include "core/string.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/image_button.h"
+#include "graphics/view/view.h"
 #include "graphics/elements/scrollbar.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
@@ -184,7 +185,7 @@ static int get_word_width(const uint8_t* str, int in_link, int* num_chars) {
     return width;
 }
 
-static void draw_line(const uint8_t* str, int x, int y, color color, bool measure_only) {
+static void draw_line(view_context &ctx, const uint8_t* str, int x, int y, color color, bool measure_only) {
     int start_link = 0;
     int num_link_chars = 0;
     while (*str) {
@@ -215,7 +216,7 @@ static void draw_line(const uint8_t* str, int x, int y, color color, bool measur
                 const image_t* img = image_letter(letter_id);
                 if (!measure_only) {
                     int height = def->image_y_offset(*str, img->height, def->line_height);
-                    ImageDraw::img_letter(def->font, letter_id, x, y - height, color);
+                    ImageDraw::img_letter(ctx, def->font, letter_id, x, y - height, color);
                 }
                 x += img->width + def->letter_spacing;
             }
@@ -229,13 +230,7 @@ static void draw_line(const uint8_t* str, int x, int y, color color, bool measur
     }
 }
 
-static int draw_text(const uint8_t* text,
-                     int x_offset,
-                     int y_offset,
-                     int box_width,
-                     int height_lines,
-                     color color,
-                     bool measure_only) {
+static int draw_text(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, color color, bool measure_only) {
     int image_height_lines = 0;
     int image_id = 0;
     int lines_before_image = 0;
@@ -245,6 +240,7 @@ static int draw_text(const uint8_t* text,
     int guard = 0;
     int line = 0;
     int num_lines = 0;
+    view_context ctx = view_context_main();
     while (has_more_characters || image_height_lines) {
         if (++guard >= 1000)
             break;
@@ -314,8 +310,10 @@ static int draw_text(const uint8_t* text,
             if (line < scrollbar.scroll_position || line >= scrollbar.scroll_position + height_lines)
                 outside_viewport = 1;
         }
-        if (!outside_viewport)
-            draw_line(tmp_line, x_line_offset + x_offset, y, color, measure_only);
+
+        if (!outside_viewport) {
+            draw_line(ctx, tmp_line, x_line_offset + x_offset, y, color, measure_only);
+        }
 
         if (!measure_only) {
             if (image_id) {

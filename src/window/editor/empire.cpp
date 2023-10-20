@@ -59,44 +59,45 @@ static void init(void) {
     data.focus_button_id = 0;
 }
 
-static int map_viewport_width(void) {
+static int map_viewport_width() {
     return data.x_max - data.x_min - 32;
 }
 
-static int map_viewport_height(void) {
+static int map_viewport_height() {
     return data.y_max - data.y_min - 136;
 }
 
-static void draw_paneling(void) {
+static void draw_paneling() {
+    view_context ctx = view_context_main();
     int image_base = image_id_from_group(GROUP_EDITOR_EMPIRE_PANELS);
     // bottom panel background
     graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, data.y_max - data.y_min);
     for (int x = data.x_min; x < data.x_max; x += 70) {
-        ImageDraw::img_generic(image_base + 3, x, data.y_max - 120);
-        ImageDraw::img_generic(image_base + 3, x, data.y_max - 80);
-        ImageDraw::img_generic(image_base + 3, x, data.y_max - 40);
+        ImageDraw::img_generic(ctx, image_base + 3, x, data.y_max - 120);
+        ImageDraw::img_generic(ctx, image_base + 3, x, data.y_max - 80);
+        ImageDraw::img_generic(ctx, image_base + 3, x, data.y_max - 40);
     }
 
     // horizontal bar borders
     for (int x = data.x_min; x < data.x_max; x += 86) {
-        ImageDraw::img_generic(image_base + 1, x, data.y_min);
-        ImageDraw::img_generic(image_base + 1, x, data.y_max - 120);
-        ImageDraw::img_generic(image_base + 1, x, data.y_max - 16);
+        ImageDraw::img_generic(ctx, image_base + 1, x, data.y_min);
+        ImageDraw::img_generic(ctx, image_base + 1, x, data.y_max - 120);
+        ImageDraw::img_generic(ctx, image_base + 1, x, data.y_max - 16);
     }
 
     // vertical bar borders
     for (int y = data.y_min + 16; y < data.y_max; y += 86) {
-        ImageDraw::img_generic(image_base, data.x_min, y);
-        ImageDraw::img_generic(image_base, data.x_max - 16, y);
+        ImageDraw::img_generic(ctx, image_base, data.x_min, y);
+        ImageDraw::img_generic(ctx, image_base, data.x_max - 16, y);
     }
 
     // crossbars
-    ImageDraw::img_generic(image_base + 2, data.x_min, data.y_min);
-    ImageDraw::img_generic(image_base + 2, data.x_min, data.y_max - 120);
-    ImageDraw::img_generic(image_base + 2, data.x_min, data.y_max - 16);
-    ImageDraw::img_generic(image_base + 2, data.x_max - 16, data.y_min);
-    ImageDraw::img_generic(image_base + 2, data.x_max - 16, data.y_max - 120);
-    ImageDraw::img_generic(image_base + 2, data.x_max - 16, data.y_max - 16);
+    ImageDraw::img_generic(ctx, image_base + 2, data.x_min, data.y_min);
+    ImageDraw::img_generic(ctx, image_base + 2, data.x_min, data.y_max - 120);
+    ImageDraw::img_generic(ctx, image_base + 2, data.x_min, data.y_max - 16);
+    ImageDraw::img_generic(ctx, image_base + 2, data.x_max - 16, data.y_min);
+    ImageDraw::img_generic(ctx, image_base + 2, data.x_max - 16, data.y_max - 120);
+    ImageDraw::img_generic(ctx, image_base + 2, data.x_max - 16, data.y_max - 16);
 
     graphics_reset_clip_rectangle();
 }
@@ -122,6 +123,7 @@ static void draw_shadowed_number(int value, int x, int y, color color) {
 }
 
 static void draw_empire_object(const empire_object* obj) {
+    view_context ctx = view_context_main();
     int x = obj->x;
     int y = obj->y;
     int image_id = obj->image_id;
@@ -136,31 +138,21 @@ static void draw_empire_object(const empire_object* obj) {
             image_id = image_id_from_group(GROUP_EDITOR_EMPIRE_FOREIGN_CITY);
         }
     } else if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
-        draw_shadowed_number(obj->invasion_path_id,
-                             data.x_draw_offset + x - 9,
-                             data.y_draw_offset + y - 9,
-                             COLOR_WHITE);
-        draw_shadowed_number(obj->invasion_years,
-                             data.x_draw_offset + x + 15,
-                             data.y_draw_offset + y - 9,
-                             COLOR_FONT_RED);
+        draw_shadowed_number(obj->invasion_path_id, data.x_draw_offset + x - 9, data.y_draw_offset + y - 9, COLOR_WHITE);
+        draw_shadowed_number(obj->invasion_years, data.x_draw_offset + x + 15, data.y_draw_offset + y - 9, COLOR_FONT_RED);
     } else if (obj->type == EMPIRE_OBJECT_ROMAN_ARMY || obj->type == EMPIRE_OBJECT_ENEMY_ARMY) {
-        draw_shadowed_number(obj->distant_battle_travel_months,
-                             data.x_draw_offset + x + 7,
-                             data.y_draw_offset + y - 9,
-                             obj->type == EMPIRE_OBJECT_ROMAN_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
+        draw_shadowed_number(obj->distant_battle_travel_months, data.x_draw_offset + x + 7, data.y_draw_offset + y - 9, obj->type == EMPIRE_OBJECT_ROMAN_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
     }
-    ImageDraw::img_generic(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
+    ImageDraw::img_generic(ctx, image_id, data.x_draw_offset + x, data.y_draw_offset + y);
     const image_t* img = image_get(image_id);
     if (img->animation.speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
-        ImageDraw::img_generic(image_id + new_animation,
-                               data.x_draw_offset + x + img->animation.sprite_x_offset,
-                               data.y_draw_offset + y + img->animation.sprite_y_offset);
+        ImageDraw::img_generic(ctx, image_id + new_animation, data.x_draw_offset + x + img->animation.sprite_x_offset, data.y_draw_offset + y + img->animation.sprite_y_offset);
     }
 }
 
-static void draw_map(void) {
+static void draw_map() {
+    view_context ctx = view_context_main();
     int viewport_width = map_viewport_width();
     int viewport_height = map_viewport_height();
     graphics_set_clip_rectangle(data.x_min + 16, data.y_min + 16, viewport_width, viewport_height);
@@ -170,7 +162,7 @@ static void draw_map(void) {
     data.x_draw_offset = data.x_min + 16;
     data.y_draw_offset = data.y_min + 16;
     empire_adjust_scroll(&data.x_draw_offset, &data.y_draw_offset);
-    ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_EMPIRE_MAP), data.x_draw_offset, data.y_draw_offset);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_EMPIRE_MAP), data.x_draw_offset, data.y_draw_offset);
 
     empire_object_foreach(draw_empire_object);
 
@@ -178,19 +170,20 @@ static void draw_map(void) {
 }
 
 static void draw_resource(int resource, int trade_max, int x_offset, int y_offset) {
+    view_context ctx = view_context_main();
     graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
     int image_id = resource + image_id_from_group(GROUP_EDITOR_EMPIRE_RESOURCES);
     int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-    ImageDraw::img_generic(image_id + resource_offset, x_offset + 1, y_offset + 1);
+    ImageDraw::img_generic(ctx, image_id + resource_offset, x_offset + 1, y_offset + 1);
     switch (trade_max) {
     case 15:
-        ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT), x_offset + 21, y_offset - 1);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT), x_offset + 21, y_offset - 1);
         break;
     case 25:
-        ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1);
         break;
     case 40:
-        ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1);
         break;
     }
 }

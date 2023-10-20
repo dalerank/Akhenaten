@@ -13,6 +13,8 @@ void camera_calc_scroll_limits();
 typedef vec2i screen_tile;
 typedef vec2i camera_coordinate;
 
+struct SDL_Renderer;
+
 struct view_data_t {
     int screen_width;
     int screen_height;
@@ -36,6 +38,8 @@ struct figure_draw_cache_data_t;
 struct view_context {
     figure_draw_cache_data_t *figure_cache;
     view_data_t *view;
+    SDL_Renderer *renderer;
+    float global_render_scale;
 };
 
 view_context view_context_main();

@@ -10,6 +10,7 @@
 #include "graphics/boilerplate.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
+#include "graphics/view/view.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
@@ -67,8 +68,9 @@ static void init() {
 }
 
 static void draw_background() {
+    view_context ctx = view_context_main();
     graphics_clear_screen();
-    ImageDraw::img_background(image_id_from_group(GROUP_GAME_MENU));
+    ImageDraw::img_background(ctx, image_id_from_group(GROUP_GAME_MENU));
     graphics_set_to_dialog();
     graphics_reset_dialog();
 }

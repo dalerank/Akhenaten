@@ -14,6 +14,7 @@
 #include "game/settings.h"
 #include "game/tutorial.h"
 #include "graphics/boilerplate.h"
+#include "graphics/view/view.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/image_groups.h"
@@ -171,8 +172,9 @@ static void init() {
     advisor_buttons[13].enabled = true;
 }
 
-void window_advisors_draw_dialog_background(void) {
-    ImageDraw::img_background(image_id_from_group(GROUP_ADVISOR_BACKGROUND));
+void window_advisors_draw_dialog_background() {
+    view_context ctx = view_context_main();
+    ImageDraw::img_background(ctx, image_id_from_group(GROUP_ADVISOR_BACKGROUND));
     graphics_set_to_dialog();
     ImageDraw::img_generic(image_id_from_group(GROUP_MENU_ADVISOR_LAYOUT), 0, 432);
 

@@ -9,6 +9,7 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
+#include "graphics/view/view.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/scrollbar.h"
@@ -115,8 +116,9 @@ void window_player_selection_init() {
 }
 
 static void draw_background() {
+    view_context ctx = view_context_main();
     graphics_clear_screen();
-    ImageDraw::img_background(image_id_from_group(GROUP_PLAYER_SELECTION));
+    ImageDraw::img_background(ctx, image_id_from_group(GROUP_PLAYER_SELECTION));
 }
 static void draw_foreground() {
     auto& data = *g_window_player_selection;

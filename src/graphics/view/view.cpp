@@ -13,6 +13,7 @@
 #include "widget/sidebar/common.h"
 #include "city/sentiment.h"
 #include "scenario/property.h"
+#include "platform/renderer.h"
 #include "widget/city/figures_cached_draw.h"
 
 view_data_t g_city_view_data;
@@ -312,6 +313,9 @@ view_context view_context_main() {
     view_context ctx;
     ctx.figure_cache = &figure_draw_cache();
     ctx.view = &city_view_data_unsafe();
+    ctx.renderer = graphics_renderer()->renderer();
+    ctx.global_render_scale = graphics_renderer()->scale();
+
     return ctx;
 }
 

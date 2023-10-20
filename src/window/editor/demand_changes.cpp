@@ -6,6 +6,7 @@
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "graphics/view/view.h"
 #include "graphics/image_groups.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -43,11 +44,13 @@ static generic_button buttons[] = {
 
 static int focus_button_id;
 
-static void draw_background(void) {
+static void draw_background() {
     window_editor_map_draw_all();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground() {
+    view_context ctx = view_context_main();
+
     graphics_set_to_dialog();
 
     outer_panel_draw(0, 0, 40, 23);
@@ -68,12 +71,9 @@ static void draw_foreground(void) {
         scenario_editor_demand_change_get(i, &demand_change);
         if (demand_change.year) {
             text_draw_number(demand_change.year, '+', " ", x + 10, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
-            lang_text_draw_year(scenario_property_start_year() + demand_change.year,
-                                x + 35,
-                                y + 6,
-                                FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_year(scenario_property_start_year() + demand_change.year, x + 35, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
             int offset = demand_change.resource + resource_image_offset(demand_change.resource, RESOURCE_IMAGE_ICON);
-            ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 115, y + 3);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 115, y + 3);
             int width = lang_text_draw(44, 97, x + 140, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
             width
               += text_draw_number(demand_change.route_id, '@', " ", x + 140 + width, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);

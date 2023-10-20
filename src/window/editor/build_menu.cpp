@@ -105,13 +105,13 @@ static void draw_foreground(void) {
 }
 
 static int handle_build_submenu(const mouse* m) {
-    return generic_buttons_handle_mouse(
-      m, get_sidebar_x_offset() - 170, data.y_offset + 110, build_menu_buttons, data.num_items, &data.focus_button_id);
+    return generic_buttons_handle_mouse(m, get_sidebar_x_offset() - 170, data.y_offset + 110, build_menu_buttons, data.num_items, &data.focus_button_id);
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
     if (handle_build_submenu(m) || widget_sidebar_editor_handle_mouse_build_menu(m))
         return;
+
     if (input_go_back_requested(m, h))
         window_editor_map_show();
 }
@@ -169,9 +169,11 @@ static void button_menu_item(int index, int param2) {
             break;
         }
         break;
+
     case MENU_INVASION_POINTS:
         editor_tool_set_with_id(TOOL_INVASION_POINT, index);
         break;
+
     case MENU_ANIMAL_POINTS:
         if (index < 8)
             editor_tool_set_with_id(TOOL_FISHING_POINT, index);
@@ -186,6 +188,11 @@ static void button_menu_item(int index, int param2) {
 
 void window_editor_build_menu_show(int submenu) {
     init(submenu);
-    window_type window = {WINDOW_EDITOR_BUILD_MENU, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_EDITOR_BUILD_MENU,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     window_show(&window);
 }

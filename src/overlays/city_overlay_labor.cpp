@@ -55,14 +55,14 @@ struct city_overlay_labor : public city_overlay {
         return false;
     }
 
-    void draw_custom_top(vec2i pixel, map_point point) const override {
+    void draw_custom_top(vec2i pixel, tile2i point, view_context &ctx) const override {
         int grid_offset = point.grid_offset();
         if (!map_property_is_draw_tile(grid_offset)) {
             return;
         }
 
         if (map_building_at(grid_offset)) {
-            city_with_overlay_draw_building_top(pixel, point);
+            city_with_overlay_draw_building_top(pixel, point, ctx);
         }
     }
 

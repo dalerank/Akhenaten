@@ -11,6 +11,7 @@
 #include "graphics/image_groups.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "graphics/view/view.h"
 #include "config/hotkeys.h"
 #include "translation/translation.h"
 #include "window/hotkey_editor.h"
@@ -185,10 +186,11 @@ static void init(void (*close_callback)(void)) {
 }
 
 static void draw_background() {
+    view_context ctx = view_context_main();
     auto& data = g_hotkeys_window_data;
     graphics_clear_screen();
 
-    ImageDraw::img_background(image_id_from_group(GROUP_CONFIG_BACKGROUND));
+    ImageDraw::img_background(ctx, image_id_from_group(GROUP_CONFIG_BACKGROUND));
     graphics_set_to_dialog();
     outer_panel_draw(0, 0, 40, 30);
 

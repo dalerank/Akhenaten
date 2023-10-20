@@ -3,6 +3,7 @@
 #include "core/game_environment.h"
 #include "core/string.h"
 #include "graphics/boilerplate.h"
+#include "graphics/view/view.h"
 #include "io/gamefiles/lang.h"
 
 #define ELLIPSIS_LENGTH 4
@@ -224,6 +225,7 @@ void text_ellipsize(uint8_t* str, font_t font, int requested_width) {
 }
 
 int text_draw(const uint8_t* str, int x, int y, font_t font, color color) {
+    view_context ctx = view_context_main();
     y = y - 3;
 
     const font_definition* def = font_definition_for(font);
@@ -255,7 +257,7 @@ int text_draw(const uint8_t* str, int x, int y, font_t font, color color) {
                 const image_t* img = image_letter(letter_id);
                 if (img != nullptr) {
                     int height = def->image_y_offset(*str, img->height, def->line_height);
-                    ImageDraw::img_letter(font, letter_id, current_x, y - height, color);
+                    ImageDraw::img_letter(ctx, font, letter_id, current_x, y - height, color);
                     width = def->letter_spacing + img->width;
                 }
             }

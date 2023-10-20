@@ -2,6 +2,7 @@
 
 #include "graphics/screen.h"
 #include "platform/renderer.h"
+#include "graphics/view/view.h"
 #include "core/profiler.h"
 
 #ifdef __vita__
@@ -635,6 +636,7 @@ static void draw_footprint_size_any(int image_id, int x, int y, int size, color 
     // symmetric around the x axis.
     // What an absolute mess!
     int index = 0;
+    view_context ctx = view_context_main();
     for (int k = 0; k < (size * 2) - 1; k++) {
         int k_limit = k;
         if (k >= size - 1)
@@ -645,7 +647,7 @@ static void draw_footprint_size_any(int image_id, int x, int y, int size, color 
             int y_offset = k * 15;
 
             //            draw_footprint_tile(tile_data(data, index++), x + x_offset, y + y_offset, color_mask);
-            graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
+            graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, false);
         }
     }
 }
@@ -691,10 +693,16 @@ static void draw_multibyte_letter(font_t font, const image_t* img, int x, int y,
 }
 
 void ImageDraw::img_generic(int image_id, int x, int y, color color_mask, float scale) {
-    const image_t* img = image_get(image_id);
-    graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
+    view_context ctx = view_context_main();
+    img_generic(ctx, image_id, x, y, color_mask, scale);
 }
-void ImageDraw::img_sprite(int image_id, int x, int y, color color_mask, float scale) {
+
+void ImageDraw::img_generic(view_context &ctx, int image_id, int x, int y, color color_mask, float scale) {
+    const image_t* img = image_get(image_id);
+    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, false);
+}
+
+void ImageDraw::img_sprite(view_context &ctx, int image_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
     //    debug_draw_sprite_box(x, y, img, zoom_get_scale());
     bool mirrored = (img->offset_mirror != 0);
@@ -704,22 +712,25 @@ void ImageDraw::img_sprite(int image_id, int x, int y, color color_mask, float s
     } else
         x -= img->animation.sprite_x_offset;
     y -= img->animation.sprite_y_offset;
-    graphics_renderer()->draw_image(img, x, y, color_mask, scale, mirrored);
+    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, mirrored);
 }
-void ImageDraw::img_ornament(int image_id, int base_id, int x, int y, color color_mask, float scale) {
+
+void ImageDraw::img_ornament(view_context &ctx, int image_id, int base_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
     const image_t* base = image_get(base_id);
     int ydiff = HALF_TILE_HEIGHT_PIXELS * (base->isometric_size() + 1);
     x += base->animation.sprite_x_offset;
     y += base->animation.sprite_y_offset - base->height + ydiff;
     //    y += base->animation.sprite_y_offset - img->isometric_ydiff();
-    graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
+    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, false);
 }
-void ImageDraw::img_from_below(int image_id, int x, int y, color color_mask, float scale) {
+
+void ImageDraw::img_from_below(view_context &ctx, int image_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
-    graphics_renderer()->draw_image(img, x, y - img->height, color_mask, scale, false);
+    graphics_renderer()->draw_image(ctx, img, x, y - img->height, color_mask, scale, false);
 }
-void ImageDraw::img_letter(font_t font, int letter_id, int x, int y, color color_mask, float scale) {
+
+void ImageDraw::img_letter(view_context &ctx,font_t font, int letter_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_letter(letter_id);
     if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
         //        draw_multibyte_letter(font, img, x, y, color_mask, scale);
@@ -728,10 +739,11 @@ void ImageDraw::img_letter(font_t font, int letter_id, int x, int y, color color
     if (!color_mask)
         color_mask = base_color_for_font(font);
     if (font == FONT_SMALL_SHADED)
-        graphics_renderer()->draw_image(img, x + 1, y + 1, COLOR_BLACK, scale, false);
-    graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
+        graphics_renderer()->draw_image(ctx, img, x + 1, y + 1, COLOR_BLACK, scale, false);
+    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, false);
 }
-void ImageDraw::img_background(int image_id, float scale) {
+
+void ImageDraw::img_background(view_context &ctx, int image_id, float scale) {
     //    graphics_set_to_dialog();
     //    ImageDraw::img_generic(image_id, 0, 0, COLOR_MASK_NONE, scale);
     //    graphics_reset_dialog();
@@ -739,25 +751,25 @@ void ImageDraw::img_background(int image_id, float scale) {
     if (scale == -1) {
         //        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
     } else {
-        graphics_renderer()->draw_image(img, (screen_width() - img->width) / 2, (screen_height() - img->height) / 2, COLOR_MASK_NONE, scale, false);
+        graphics_renderer()->draw_image(ctx, img, (screen_width() - img->width) / 2, (screen_height() - img->height) / 2, COLOR_MASK_NONE, scale, false);
     }
 }
 
-void ImageDraw::isometric(int image_id, vec2i pos, color color_mask, float scale) {
+void ImageDraw::isometric(view_context &ctx, int image_id, vec2i pos, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
-    ImageDraw::img_generic(image_id, pos.x, pos.y, color_mask, scale);
+    ImageDraw::img_generic(ctx, image_id, pos.x, pos.y, color_mask, scale);
 }
 
-void ImageDraw::isometric(int image_id, int x, int y, color color_mask, float scale) {
+void ImageDraw::isometric(view_context &ctx, int image_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
-    ImageDraw::img_generic(image_id, x, y, color_mask, scale);
+    ImageDraw::img_generic(ctx, image_id, x, y, color_mask, scale);
 }
 
-void ImageDraw::isometric_from_drawtile(int image_id, int x, int y, color color_mask) {
+void ImageDraw::isometric_from_drawtile(view_context &ctx, int image_id, int x, int y, color color_mask) {
     const image_t* img = image_get(image_id);
     //    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
     //        assets_load_unpacked_asset(image_id);
     //    }
     y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
-    graphics_renderer()->draw_image(img, x, y, color_mask, 1.0f, false);
+    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, 1.0f, false);
 }

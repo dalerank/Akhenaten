@@ -5,6 +5,7 @@
 #include "core/speed.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/menu.h"
+#include "graphics/view/view.h"
 #include "graphics/window.h"
 #include "sound/effect.h"
 #include "widget/sidebar/common.h"
@@ -26,7 +27,9 @@ static struct {
 #include "core/game_environment.h"
 #include "graphics/screen.h"
 
-static void draw_sliding_foreground(void) {
+static void draw_sliding_foreground() {
+    view_context ctx = view_context_main();
+
     window_request_refresh();
     data.position += speed_get_delta(&data.slide_speed);
     if (data.position >= SIDEBAR_EXPANDED_WIDTH) {
@@ -52,9 +55,10 @@ static void draw_sliding_foreground(void) {
         int s_end = screen_width() - 1000 - 24 + (rel_offset <= 162 - 18 ? rel_offset : 162 - 18);
 
         int s_start = s_end - ceil((float)s_end / (float)block_width) * block_width;
-        for (int i = 0; s_start + i * block_width < s_end; i++)
-            ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
-        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
+        for (int i = 0; s_start + i * block_width < s_end; i++) {
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
+        }
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
     }
 
     data.back_sidebar_draw();

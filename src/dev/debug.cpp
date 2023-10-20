@@ -233,7 +233,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, view_context &ctx) {
 
     case e_debug_render_building: // BUILDING IDS
         if (b_id && b->tile.grid_offset() == grid_offset) {
-            draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, {x - 15, y}, COLOR_MASK_GREEN);
+            draw_building(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, {x - 15, y}, COLOR_MASK_GREEN);
         }
 
         if (b_id && map_property_is_draw_tile(grid_offset)) { // b->tile.grid_offset() == grid_offset
@@ -265,7 +265,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, view_context &ctx) {
             debug_text(str, x0, y + 15, 0, "", b->road_access.y(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);
             if (b->has_road_access) {
                 auto tile_coords = mappoint_to_pixel(b->road_access);
-                draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords, COLOR_MASK_GREEN);
             }
         }
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
@@ -389,10 +389,10 @@ void draw_debug_tile(vec2i pixel, tile2i point, view_context &ctx) {
 
     case e_debug_render_sprite_frames: // SPRITE FRAMES
         if (grid_offset == b->tile.grid_offset()) {
-            draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, {x - 15, y}, COLOR_MASK_GREEN);
+            draw_building(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, {x - 15, y}, COLOR_MASK_GREEN);
         }
         if (grid_offset == north_tile_grid_offset(b->tile.x(), b->tile.y())) {
-            ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, x - 15, y, COLOR_MASK_RED);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, x - 15, y, COLOR_MASK_RED);
         }
         d = map_sprite_animation_at(grid_offset);
         if (d) {
@@ -427,7 +427,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, view_context &ctx) {
         break;
 
     case e_debug_render_tile_pos:
-        ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
         if (!(point.x() % 5) && !(point.y() % 5)) {
             snprintf((char*)str, 30, "(%d,%d)", point.x(), point.y());
             debug_text_a(str, x, y + 10, 0, (const char*)str, COLOR_WHITE, FONT_SMALL_PLAIN);
@@ -504,6 +504,7 @@ void figure::draw_debug() {
     pixel.y -= 80;
     int indent = 0;
     color col = COLOR_WHITE;
+    view_context ctx = view_context_main();
 
     switch (draw_debug_mode) {
     case 1: // ACTION & STATE IDS
@@ -524,17 +525,18 @@ void figure::draw_debug() {
         debug_text(str, pixel.x, pixel.y + 30, indent, "", progress_on_tile, COLOR_FONT_MEDIUM_GRAY);
         debug_text(str, pixel.x + 30, pixel.y + 30, indent, "", routing_path_current_tile, COLOR_FONT_MEDIUM_GRAY);
         break;
+
     case FIGURE_DRAW_DEBUG_ROUTING:
         // draw path
         if (routing_path_id) { //&& (roam_length == max_roam_length || roam_length == 0)
             vec2i coords = mappoint_to_pixel(map_point(destination()->tile.x(), destination()->tile.y()));
-            draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, coords);
+            draw_building(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, coords);
             coords = mappoint_to_pixel(map_point(destination_tile.x(), destination_tile.y()));
-            draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords);
+            draw_building(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords);
             int tx = tile.x();
             int ty = tile.y();
             coords = mappoint_to_pixel(map_point(tx, ty));
-            ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
             int starting_tile_index = routing_path_current_tile;
             if (progress_on_tile >= 0 && progress_on_tile < 8) { // adjust half-tile offset
                 starting_tile_index--;
@@ -553,7 +555,7 @@ void figure::draw_debug() {
                 case 7: tx--; ty--; break;
                 }
                 coords = mappoint_to_pixel(map_point(tx, ty));
-                ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
+                ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
             }
         }
 

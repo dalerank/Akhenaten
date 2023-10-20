@@ -78,7 +78,7 @@ private:
     void dispatch_warnings();
 
     void update_coord_caches();
-    void draw_flat_tile(vec2i pos, color color_mask);
+    void draw_flat_tile(vec2i pos, color color_mask, view_context &ctx);
     void draw_blueprints(bool fully_blocked);
     void draw_graphics();
 

@@ -70,7 +70,7 @@ struct city_overlay_fertility : public city_overlay {
         return b && building_is_farm(b->type);
     }
 
-    void draw_custom_top(vec2i pixel, map_point point) const override {
+    void draw_custom_top(vec2i pixel, tile2i point, view_context &ctx) const override {
         int grid_offset = point.grid_offset();
         int x = pixel.x;
         int y = pixel.y;
@@ -78,14 +78,14 @@ struct city_overlay_fertility : public city_overlay {
         if (map_terrain_is(grid_offset, terrain_on_fertility_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
             // display normal tile
             //if (map_property_is_draw_tile(grid_offset)) {
-                ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
+                ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, color_mask);
             //}
         } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
             int fertility = map_get_fertility(grid_offset, FERT_WITH_MALUS);
             int offset = get_fertility_image_offset(fertility);
-            ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
+            ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
         } else {
-            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, color_mask);
         }
     }
 

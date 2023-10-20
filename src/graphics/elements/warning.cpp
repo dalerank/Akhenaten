@@ -3,6 +3,7 @@
 #include "city/warning.h"
 #include "game/state.h"
 #include "graphics/boilerplate.h"
+#include "graphics/view/view.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -23,12 +24,13 @@ static int determine_width(const uint8_t* text) {
     }
 }
 
-void warning_draw(void) {
+void warning_draw() {
     if (!window_is(WINDOW_CITY) && !window_is(WINDOW_EDITOR_MAP)) {
         city_warning_clear_all();
         return;
     }
 
+    view_context ctx = view_context_main();
     int center = (screen_width() - 180) / 2;
     for (int i = 0; i < 5; i++) {
         const uint8_t* text = city_warning_get(i);
@@ -43,12 +45,8 @@ void warning_draw(void) {
         label_draw(center - box_width / 2 + 1, top_offset, box_width / 16 + 1, 1);
         if (box_width < 460) {
             // ornaments at the side
-            ImageDraw::img_generic(image_id_from_group(GROUP_CONTEXT_ICONS) + 15,
-                                   center - box_width / 2 + 2,
-                                   top_offset + 2);
-            ImageDraw::img_generic(image_id_from_group(GROUP_CONTEXT_ICONS) + 15,
-                                   center + box_width / 2 - 30,
-                                   top_offset + 2);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center - box_width / 2 + 2, top_offset + 2);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center + box_width / 2 - 30, top_offset + 2);
         }
         text_draw_centered(text, center - box_width / 2 + 1, top_offset + 4, box_width, FONT_NORMAL_WHITE_ON_DARK, 0);
     }

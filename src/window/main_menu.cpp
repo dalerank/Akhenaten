@@ -9,6 +9,7 @@
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "graphics/view/view.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -67,15 +68,16 @@ static void draw_version_string() {
 }
 
 static void draw_background() {
+    view_context ctx = view_context_main();
     graphics_clear_screen();
-    ImageDraw::img_background(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND));
+    ImageDraw::img_background(ctx, image_id_from_group(GROUP_MAIN_MENU_BACKGROUND));
 
     if (window_is(WINDOW_MAIN_MENU)) {
         draw_version_string();
     }
 }
 
-static void draw_foreground(void) {
+static void draw_foreground() {
     auto &data = g_main_menu_data;
     graphics_set_to_dialog();
 
@@ -97,7 +99,8 @@ static void draw_foreground(void) {
 
     if (data.dicord_texture) {
         vec2i scr_size = screen_size();
-        graphics_renderer()->draw_image(data.dicord_texture, scr_size.x - 50, scr_size.y - 50, {0, 0}, {48, 48}, 0xffffffff, 1.f, false);
+        view_context ctx = view_context_main();
+        graphics_renderer()->draw_image(ctx, data.dicord_texture, scr_size.x - 50, scr_size.y - 50, {0, 0}, {48, 48}, 0xffffffff, 1.f, false);
     }
 }
 

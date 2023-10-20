@@ -4,6 +4,7 @@
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/view/view.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -25,6 +26,7 @@ static generic_button rating_buttons[] = {
 static int focus_button_id;
 
 static void draw_rating_column(int x_offset, int y_offset, int value, int has_reached) {
+    view_context ctx = view_context_main();
     int image_base = image_id_from_group(GROUP_RATINGS_COLUMN);
     int y = y_offset - image_get(image_base)->height;
     int value_to_draw = value * 0.75;
@@ -36,11 +38,11 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
         //        if (value < 30)
         //            has_reached = 0;
     }
-    ImageDraw::img_generic(image_base, x_offset - 4, y);
+    ImageDraw::img_generic(ctx, image_base, x_offset - 4, y);
     for (int i = 0; i < 2 * value_to_draw; i++)
-        ImageDraw::img_generic(image_base + 1, x_offset + 11, --y);
+        ImageDraw::img_generic(ctx, image_base + 1, x_offset + 11, --y);
     if (has_reached)
-        ImageDraw::img_generic(image_base + 2, x_offset - 6, y - 50);
+        ImageDraw::img_generic(ctx, image_base + 2, x_offset - 6, y - 50);
 }
 
 static void draw_rating(int id, int value, int open_play, int goal) {
@@ -59,9 +61,10 @@ static void draw_rating(int id, int value, int open_play, int goal) {
     draw_rating_column(rating_buttons[id].x + 30, rating_buttons[id].y, value, has_reached);
 }
 
-static int draw_background(void) {
+static int draw_background() {
+    view_context ctx = view_context_main();
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
     int width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     if (!winning_population() || scenario_is_open_play()) {
         lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -69,7 +72,7 @@ static int draw_background(void) {
         width += lang_text_draw(53, 6, 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
         text_draw_number(winning_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
     }
-    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_RATINGS_BACKGROUND), 60, 48 - 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_RATINGS_BACKGROUND), 60, 48 - 10);
 
     int open_play = scenario_is_open_play();
 

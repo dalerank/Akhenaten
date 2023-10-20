@@ -6,6 +6,7 @@
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/view/view.h"
 #include "graphics/elements/panel.h"
 #include "graphics/view/view.h"
 #include "graphics/window.h"
@@ -186,16 +187,19 @@ const char* game_state_overlay_text(int index) {
     return (const char*)lang_get_string(e_text_overlay_menu, index);
 }
 
-static void draw_foreground(void) {
+static void draw_foreground() {
+    view_context ctx = view_context_main();
     auto& data = g_overlay_menu_data;
     window_city_draw();
     int x_offset = get_sidebar_x_offset();
+
     for (int i = 0; i < 8; i++) {
         label_draw(x_offset - 170, 74 + 24 * i, 10, data.menu_focus_button_id == i + 1 ? 1 : 2);
         lang_text_draw_centered(14, MENU_ID_TO_OVERLAY[i], x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_BLACK_ON_DARK);
     }
+
     if (data.selected_submenu > 0) {
-        ImageDraw::img_generic(image_id_from_group(GROUP_BULLET), x_offset - 185, 80 + 24 * data.selected_menu);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), x_offset - 185, 80 + 24 * data.selected_menu);
         for (int i = 0; i < data.num_submenu_items; i++) {
             label_draw(x_offset - 348, 74 + 24 * (i + data.selected_menu), 10, data.submenu_focus_button_id == i + 1 ? 1 : 2);
 

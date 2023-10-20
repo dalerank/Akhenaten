@@ -4,6 +4,7 @@
 #include "graphics/boilerplate.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/view/view.h"
 #include "graphics/image_groups.h"
 #include "graphics/window.h"
 #include "io/gamestate/boilerplate.h"
@@ -36,8 +37,7 @@ static const struct {
   {200, 300, 400, 300},
 };
 
-static image_button image_button_start_mission
-  = {0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start, button_none, 1, 0, 1};
+static image_button image_button_start_mission = {0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start, button_none, 1, 0, 1};
 
 struct mission_next_t {
     int choice;
@@ -46,12 +46,13 @@ struct mission_next_t {
 
 mission_next_t g_mission_next;
 
-static void draw_background(void) {
+static void draw_background() {
+    view_context ctx = view_context_main();
     int rank = scenario_campaign_rank();
 
-    ImageDraw::img_background(image_id_from_group(GROUP_SELECT_MISSION_BACKGROUND));
+    ImageDraw::img_background(ctx, image_id_from_group(GROUP_SELECT_MISSION_BACKGROUND));
     graphics_set_to_dialog();
-    ImageDraw::img_generic(image_id_from_group(GROUP_NEXT_MISSION_SELECT) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_NEXT_MISSION_SELECT) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
     lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK_ON_LIGHT);
     if (g_mission_next.choice)
         lang_text_draw_multiline(144, 1 + 3 * rank + g_mission_next.choice, 20, 440, 560, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -60,7 +61,9 @@ static void draw_background(void) {
     }
     graphics_reset_dialog();
 }
-static void draw_foreground(void) {
+
+static void draw_foreground() {
+    view_context ctx = view_context_main();
     graphics_set_to_dialog();
 
     if (g_mission_next.choice > 0)
@@ -73,14 +76,14 @@ static void draw_foreground(void) {
     int y_military = CAMPAIGN_SELECTION[rank].y_military - 4;
     int image_id = image_id_from_group(GROUP_SELECT_MISSION_BUTTON);
     if (g_mission_next.choice == 0) {
-        ImageDraw::img_generic(g_mission_next.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
-        ImageDraw::img_generic(g_mission_next.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
+        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
+        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
     } else if (g_mission_next.choice == 1) {
-        ImageDraw::img_generic(g_mission_next.focus_button == 1 ? image_id + 1 : image_id + 2, x_peaceful, y_peaceful);
-        ImageDraw::img_generic(g_mission_next.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
+        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 1 ? image_id + 1 : image_id + 2, x_peaceful, y_peaceful);
+        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
     } else {
-        ImageDraw::img_generic(g_mission_next.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
-        ImageDraw::img_generic(g_mission_next.focus_button == 2 ? image_id + 1 : image_id + 2, x_military, y_military);
+        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
+        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 2 ? image_id + 1 : image_id + 2, x_military, y_military);
     }
     graphics_reset_dialog();
 }

@@ -158,7 +158,7 @@ static int menu_index_to_text_index(int type) {
     return type;
 }
 
-static void draw_menu_buttons(void) {
+static void draw_menu_buttons() {
     auto &data = g_build_menu_data;
     int x_offset = get_sidebar_x_offset();
     int label_width = (BTN_W_TOT) / 16;
@@ -167,6 +167,7 @@ static void draw_menu_buttons(void) {
 
     font_t font = FONT_NORMAL_BLACK_ON_DARK;
     int item_index = -1;
+    view_context ctx = view_context_main();
     for (int i = 0; i < data.num_items; i++) {
         font = FONT_NORMAL_BLACK_ON_LIGHT;
 
@@ -181,7 +182,7 @@ static void draw_menu_buttons(void) {
             bool has_palace = city_buildings_has_palace();
             int text_index = menu_index_to_text_index(type);
 
-            label_draw_colored(x_offset - label_margin, data.y_offset + 110 + 24 * i, label_width, ((data.focus_button_id == i + 1) || has_palace) ? 1 : 2, has_palace ? 0xffC0C0C0 : 0xffffffff);
+            label_draw_colored(ctx, x_offset - label_margin, data.y_offset + 110 + 24 * i, label_width, ((data.focus_button_id == i + 1) || has_palace) ? 1 : 2, has_palace ? 0xffC0C0C0 : 0xffffffff);
             lang_text_draw_centered(28, text_index, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, has_palace ? FONT_NORMAL_BLACK_ON_LIGHT : font);
         } else {
             label_draw(x_offset - label_margin, data.y_offset + 110 + 24 * i, label_width, data.focus_button_id == i + 1 ? 1 : 2);

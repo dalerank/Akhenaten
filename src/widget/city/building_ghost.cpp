@@ -166,29 +166,29 @@ static int is_blocked_for_building(int grid_offset, int num_tiles, int* blocked_
     return blocked;
 }
 
-static void draw_flat_tile(int x, int y, color color_mask) {
-    ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
+static void draw_flat_tile(view_context &ctx, int x, int y, color color_mask) {
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
 }
 
-static void draw_partially_blocked(vec2i tile, int fully_blocked, int num_tiles, int* blocked_tiles) {
+static void draw_partially_blocked(view_context &ctx, vec2i tile, int fully_blocked, int num_tiles, int* blocked_tiles) {
     for (int i = 0; i < num_tiles; i++) {
         vec2i offset = tile + VIEW_OFFSETS[i];
         if (fully_blocked || blocked_tiles[i])
-            draw_flat_tile(offset.x, offset.y, COLOR_MASK_RED);
+            draw_flat_tile(ctx, offset.x, offset.y, COLOR_MASK_RED);
         else
-            draw_flat_tile(offset.x, offset.y, COLOR_MASK_GREEN);
+            draw_flat_tile(ctx, offset.x, offset.y, COLOR_MASK_GREEN);
     }
 }
 
-void draw_building(int image_id, vec2i tile, color color_mask) {
-    ImageDraw::isometric(image_id, tile, color_mask);
+void draw_building(view_context &ctx, int image_id, vec2i tile, color color_mask) {
+    ImageDraw::isometric(ctx, image_id, tile, color_mask);
 }
 
 static void draw_fountain_range(vec2i pixel, map_point point, view_context &ctx) {
-    ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE, zoom_get_scale());
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE, zoom_get_scale());
 }
 
-static void draw_storage_yard(vec2i tile) {
+static void draw_storage_yard(vec2i tile, view_context &ctx) {
     int global_rotation = building_rotation_global_rotation();
     int index_rotation = building_rotation_get_storage_fort_orientation(global_rotation);
     int corner = building_rotation_get_corner(index_rotation);
@@ -199,27 +199,27 @@ static void draw_storage_yard(vec2i tile) {
     int image_id_space = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
-            draw_building(image_id_hut, tile + VIEW_OFFSETS[i]);
-            ImageDraw::img_generic(image_id_hut + 17, tile.x + VIEW_OFFSETS[i].x + corner_offset.x, tile.y + VIEW_OFFSETS[i].y + corner_offset.y, COLOR_MASK_GREEN);
+            draw_building(ctx, image_id_hut, tile + VIEW_OFFSETS[i]);
+            ImageDraw::img_generic(ctx, image_id_hut + 17, tile.x + VIEW_OFFSETS[i].x + corner_offset.x, tile.y + VIEW_OFFSETS[i].y + corner_offset.y, COLOR_MASK_GREEN);
         } else {
-            draw_building(image_id_space, tile + VIEW_OFFSETS[i] + place_offset);
+            draw_building(ctx, image_id_space, tile + VIEW_OFFSETS[i] + place_offset);
         }
     }
 }
 
-static void draw_farm(e_building_type type, vec2i tile, int grid_offset) {
+static void draw_farm(view_context &ctx, e_building_type type, vec2i tile, int grid_offset) {
     int image_id = get_farm_image(grid_offset);
-    draw_building(image_id, tile + vec2i{-60, 0});
+    draw_building(ctx, image_id, tile + vec2i{-60, 0});
     
     // fields
     //if (GAME_ENV == ENGINE_ENV_C3) {
     //    for (int i = 4; i < 9; i++)
     //        ImageDraw::isometric(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
     //} else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-    draw_farm_crops(type, 0, grid_offset, tile + vec2i{-60, 30}, COLOR_MASK_GREEN);
+    draw_farm_crops(ctx, type, 0, grid_offset, tile + vec2i{-60, 30}, COLOR_MASK_GREEN);
 }
 
-static void draw_fort(map_point* tile, vec2i pos) {
+static void draw_fort(map_point* tile, vec2i pos, view_context &ctx) {
     bool fully_blocked = false;
     bool blocked = false;
     if (formation_get_num_forts_cached() >= formation_get_max_forts() || city_finance_out_of_money()) {
@@ -246,23 +246,23 @@ static void draw_fort(map_point* tile, vec2i pos) {
     vec2i ground = pos + vec2i(FORT_GROUND_X_VIEW_OFFSETS[orientation_index], FORT_GROUND_Y_VIEW_OFFSETS[orientation_index]);
 
     if (blocked) {
-        draw_partially_blocked(pos, fully_blocked, num_tiles_fort, blocked_tiles_fort);
-        draw_partially_blocked(ground, fully_blocked, num_tiles_ground, blocked_tiles_ground);
+        draw_partially_blocked(ctx, pos, fully_blocked, num_tiles_fort, blocked_tiles_fort);
+        draw_partially_blocked(ctx, ground, fully_blocked, num_tiles_ground, blocked_tiles_ground);
     } else {
         int image_id = image_id_from_group(GROUP_BUILDING_FORT);
         if (orientation_index == 0 || orientation_index == 3) {
             // draw fort first, then ground
-            draw_building(image_id, pos);
-            draw_building(image_id + 1, ground);
+            draw_building(ctx, image_id, pos);
+            draw_building(ctx, image_id + 1, ground);
         } else {
             // draw ground first, then fort
-            draw_building(image_id + 1, ground);
-            draw_building(image_id, pos);
+            draw_building(ctx, image_id + 1, ground);
+            draw_building(ctx, image_id, pos);
         }
     }
 }
 
-static void draw_aqueduct(map_point tile, int x, int y) {
+static void draw_aqueduct(map_point tile, int x, int y, view_context &ctx) {
     int grid_offset = tile.grid_offset();
     bool blocked = false;
     if (!map_can_place_initial_road_or_aqueduct(grid_offset, true)) {
@@ -285,13 +285,13 @@ static void draw_aqueduct(map_point tile, int x, int y) {
     }
 
     if (blocked) { // cannot draw!
-        draw_flat_tile(x, y, COLOR_MASK_RED);
+        draw_flat_tile(ctx, x, y, COLOR_MASK_RED);
     } else {
         const terrain_image* img = map_image_context_get_aqueduct(grid_offset); // get starting tile
-        draw_building(get_aqueduct_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), {x, y});
+        draw_building(ctx, get_aqueduct_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), {x, y});
     }
 }
-static void draw_road(map_point tile, int x, int y) {
+static void draw_road(tile2i tile, int x, int y, view_context &ctx) {
     int grid_offset = tile.grid_offset();
     bool blocked = false;
     int image_id = 0;
@@ -335,12 +335,13 @@ static void draw_road(map_point tile, int x, int y) {
     }
 
     if (blocked) {
-        draw_flat_tile(x, y, COLOR_MASK_RED);
+        draw_flat_tile(ctx, x, y, COLOR_MASK_RED);
     } else {
-        draw_building(image_id, {x, y});
+        draw_building(ctx, image_id, {x, y});
     }
 }
-static void draw_bridge(map_point tile, int x, int y, int type) {
+
+static void draw_bridge(map_point tile, int x, int y, int type, view_context &ctx) {
     int length, direction;
     int end_grid_offset = map_bridge_calculate_length_direction(tile.x(), tile.y(), &length, &direction);
 
@@ -379,26 +380,26 @@ static void draw_bridge(map_point tile, int x, int y, int type) {
         return;
     }
     if (blocked) {
-        draw_flat_tile(x, y, length > 0 ? COLOR_MASK_GREEN : COLOR_MASK_RED);
+        draw_flat_tile(ctx, x, y, length > 0 ? COLOR_MASK_GREEN : COLOR_MASK_RED);
         if (length > 1)
-            draw_flat_tile(x + x_delta * (length - 1), y + y_delta * (length - 1), COLOR_MASK_RED);
+            draw_flat_tile(ctx, x + x_delta * (length - 1), y + y_delta * (length - 1), COLOR_MASK_RED);
 
     } else {
         if (dir == DIR_0_TOP_RIGHT || dir == DIR_6_TOP_LEFT) {
             for (int i = length - 1; i >= 0; i--) {
                 int sprite_id = map_bridge_get_sprite_id(i, length, dir, type == BUILDING_SHIP_BRIDGE);
-                city_draw_bridge_tile(x + x_delta * i, y + y_delta * i, sprite_id, COLOR_MASK_GREEN);
+                city_draw_bridge_tile(ctx, x + x_delta * i, y + y_delta * i, sprite_id, COLOR_MASK_GREEN);
             }
         } else {
             for (int i = 0; i < length; i++) {
                 int sprite_id = map_bridge_get_sprite_id(i, length, dir, type == BUILDING_SHIP_BRIDGE);
-                city_draw_bridge_tile(x + x_delta * i, y + y_delta * i, sprite_id, COLOR_MASK_GREEN);
+                city_draw_bridge_tile(ctx, x + x_delta * i, y + y_delta * i, sprite_id, COLOR_MASK_GREEN);
             }
         }
     }
 }
 
-static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
+static void draw_entertainment_venue(map_point tile, int x, int y, int type, view_context &ctx) {
     int can_build = 0;
     //    const building_properties *props = building_properties_for_type(type);
     int size = 0;
@@ -441,123 +442,125 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
     orientation = abs(orientation + (8 - city_view_orientation())) % 8;
 
     if (can_build != 1) { // no can place
-        for (int i = 0; i < size * size; i++)
-            draw_flat_tile(x + VIEW_OFFSETS[i].x, y + VIEW_OFFSETS[i].y, COLOR_MASK_RED);
+        for (int i = 0; i < size * size; i++) {
+            draw_flat_tile(ctx, x + VIEW_OFFSETS[i].x, y + VIEW_OFFSETS[i].y, COLOR_MASK_RED);
+        }
     } else { // can place (theoretically)
         if (type == BUILDING_FESTIVAL_SQUARE && city_building_has_festival_square()) {
             for (int i = 0; i < size * size; i++)
-                ImageDraw::isometric(image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_RED);
+                ImageDraw::isometric(ctx, image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_RED);
             return;
         }
 
         switch (type) {
         case BUILDING_BOOTH:
             for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(image_id_from_group(GROUP_BOOTH_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
+                ImageDraw::isometric(ctx, image_id_from_group(GROUP_BOOTH_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
             }
             switch (orientation / 2) {
             case 0:
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x, y}, COLOR_MASK_GREEN);
                 break;
             case 1:
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x + 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x + 30, y + 15}, COLOR_MASK_GREEN);
                 break;
             case 2:
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 3:
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 30, y + 15}, COLOR_MASK_GREEN);
                 break;
             }
             break;
 
         case BUILDING_BANDSTAND:
             for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(image_id_from_group(GROUP_BANDSTAND_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
+                ImageDraw::isometric(ctx, image_id_from_group(GROUP_BANDSTAND_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
             }
 
             switch (orientation / 2) {
             case 0:
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x, y}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x + 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x + 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 1:
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 2, {x + 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 3, {x + 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 2, {x + 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 3, {x + 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
                 break;
             case 2:
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
                 break;
             case 3:
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 2, {x, y}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 3, {x + 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 2, {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 3, {x + 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             }
             break;
 
         case BUILDING_PAVILLION:
-            for (int i = 0; i < size * size; i++)
-                ImageDraw::isometric(image_id_from_group(GROUP_PAVILLION_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
+            for (int i = 0; i < size * size; i++) {
+                ImageDraw::isometric(ctx, image_id_from_group(GROUP_PAVILLION_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
+            }
             switch (orientation) {
             case 0:
-                draw_building(image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x + 90, y + 45}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND), {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x + 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND), {x + 60, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 1:
-                draw_building(image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x, y}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 2:
-                draw_building(image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x + 90, y + 45}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND), {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x, y + 90}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x + 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND), {x + 60, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x, y + 90}, COLOR_MASK_GREEN);
                 break;
             case 3:
-                draw_building(image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 45}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x + 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND), {x, y + 90}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x + 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x + 30, y + 75}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND), {x, y + 90}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x + 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             case 4:
-                draw_building(image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 45}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             case 5:
-                draw_building(image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND), {x + 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x + 60, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND), {x + 30, y + 75}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             case 6:
-                draw_building(image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x, y + 60}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND), {x - 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND), {x - 30, y + 75}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x, y}, COLOR_MASK_GREEN);
                 break;
             case 7:
-                draw_building(image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x + 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND), {x + 30, y + 45}, COLOR_MASK_GREEN);
-                draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, {x + 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BANDSTAND), {x + 30, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             }
             break;
 
         case BUILDING_FESTIVAL_SQUARE:
             for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
+                ImageDraw::isometric(ctx, image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
             }
             break;
         }
@@ -585,16 +588,17 @@ bool city_building_ghost_mark_deleting(tile2i tile) {
     return true;
 }
 
-void BuildPlanner::draw_flat_tile(vec2i pos, color color_mask) {
-    ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos.x, pos.y, color_mask);
+void BuildPlanner::draw_flat_tile(vec2i pos, color color_mask, view_context &ctx) {
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos.x, pos.y, color_mask);
 }
 
 void BuildPlanner::draw_blueprints(bool fully_blocked) {
+    view_context ctx = view_context_main();
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
             vec2i current_coord = pixel_coords_cache[row][column];
             color color_mask = (tile_blocked_array[row][column] || fully_blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30;
-            draw_flat_tile(current_coord, color_mask);
+            draw_flat_tile(current_coord, color_mask, ctx);
         }
     }
 }
@@ -602,27 +606,28 @@ void BuildPlanner::draw_blueprints(bool fully_blocked) {
 void BuildPlanner::draw_graphics() {
     // TODO: bring these all over the unified system
     // special graphics buildings
+    view_context ctx = view_context_main();
     vec2i pixel = pixel_coords_cache[0][0];
     switch (build_type) {
     case BUILDING_ROAD:
-        return draw_road(end, pixel.x, pixel.y);
+        return draw_road(end, pixel.x, pixel.y, ctx);
         break;
 
     case BUILDING_IRRIGATION_DITCH:
-        return draw_aqueduct(end, pixel.x, pixel.y);
+        return draw_aqueduct(end, pixel.x, pixel.y, ctx);
         break;
         //        case BUILDING_WALL_PH:
         //            return draw_walls((const map_tile*)&end, end_coord.x, end_coord.y);
         //            break;
     case BUILDING_STORAGE_YARD:
-        return draw_storage_yard(pixel);
+        return draw_storage_yard(pixel, ctx);
         break;
 
     case BUILDING_BOOTH:
     case BUILDING_BANDSTAND:
     case BUILDING_PAVILLION:
     case BUILDING_FESTIVAL_SQUARE:
-        draw_entertainment_venue(end, pixel.x, pixel.y, build_type);
+        draw_entertainment_venue(end, pixel.x, pixel.y, build_type, ctx);
         break;
 
     case BUILDING_BARLEY_FARM:
@@ -633,7 +638,7 @@ void BuildPlanner::draw_graphics() {
     case BUILDING_CHICKPEAS_FARM:
     case BUILDING_FIGS_FARM:
     case BUILDING_HENNA_FARM:
-        draw_farm(build_type, pixel, end.grid_offset());
+        draw_farm(ctx, build_type, pixel, end.grid_offset());
         break;
 
     case BUILDING_WELL:
@@ -653,7 +658,7 @@ void BuildPlanner::draw_graphics() {
             int image_id = tile_graphics_array[row][column];
             if (image_id > 0) {
                 vec2i current_coord = pixel_coords_cache[row][column];
-                ImageDraw::isometric_from_drawtile(image_id, current_coord.x, current_coord.y, COLOR_MASK_GREEN);
+                ImageDraw::isometric_from_drawtile(ctx, image_id, current_coord.x, current_coord.y, COLOR_MASK_GREEN);
                 //                ImageDraw::isometric_top_from_drawtile(image_id, current_coord.x, current_coord.y,
                 //                COLOR_MASK_GREEN, city_view_get_scale_float());
             }

@@ -212,19 +212,21 @@ static int draw_info_line(int base_group, int base_id, int* y, int value, int sp
     *y += LINE_H;
     return width;
 }
+
 static void draw_scenario_thumbnail(int image_id) {
+    view_context ctx = view_context_main();
     auto &data = g_window_scenario_selection;
     switch (data.dialog) {
     case MAP_SELECTION_CCK_LEGACY:
     case MAP_SELECTION_CUSTOM:
-        ImageDraw::img_generic(image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, 78, 36);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, 78, 36);
         break;
     case MAP_SELECTION_CAMPAIGN:
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        ImageDraw::img_generic(image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, 78, 56);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, 78, 56);
         break;
     case MAP_SELECTION_CAMPAIGN_UNUSED_BACKGROUND:
-        ImageDraw::img_generic(image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, 78, 60);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, 78, 60);
         break;
     }
 }
@@ -400,18 +402,19 @@ static void draw_side_panel_info() {
     }
 }
 
-static void draw_background(void) {
+static void draw_background() {
     auto &data = g_window_scenario_selection;
+    view_context ctx = view_context_main();
     switch (data.dialog) {
     case MAP_SELECTION_CCK_LEGACY:
-        ImageDraw::img_background(image_id_from_group(GROUP_MAP_SELECTION_CCK));
+        ImageDraw::img_background(ctx, image_id_from_group(GROUP_MAP_SELECTION_CCK));
         break;
     case MAP_SELECTION_CUSTOM:
-        ImageDraw::img_background(image_id_from_group(GROUP_MAP_SELECTION_CUSTOM));
+        ImageDraw::img_background(ctx, image_id_from_group(GROUP_MAP_SELECTION_CUSTOM));
         break;
     case MAP_SELECTION_CAMPAIGN:
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        ImageDraw::img_background(image_id_from_group(GROUP_MAP_SELECTION_HISTORY));
+        ImageDraw::img_background(ctx, image_id_from_group(GROUP_MAP_SELECTION_HISTORY));
         break;
     }
     graphics_set_to_dialog();

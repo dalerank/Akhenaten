@@ -77,17 +77,18 @@ static void draw_paused_and_time_left(void) {
         //        city_view_dirty = 1;
     }
 }
-static void draw_cancel_construction(void) {
+static void draw_cancel_construction() {
     if (!mouse_get()->is_touch || !Planner.build_type)
         return;
     vec2i view_pos, view_size;
     city_view_get_viewport(view_pos, view_size);
     view_size.x -= 4 * 16;
     inner_panel_draw(view_size.x - 4, 40, 3, 2);
-    ImageDraw::img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, view_size.x, 44);
+    view_context ctx = view_context_main();
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, view_size.x, 44);
     //    city_view_dirty = 1;
 }
-static void draw_foreground(void) {
+static void draw_foreground() {
     //    clear_city_view(0);
     widget_top_menu_draw(0);
     window_city_draw();

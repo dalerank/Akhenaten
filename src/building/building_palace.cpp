@@ -5,6 +5,7 @@
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/view/view.h"
 #include "graphics/boilerplate.h"
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
@@ -12,6 +13,7 @@
 #include "sound/sound_building.h"
 
 void building_palace_draw_info(object_info& c) {
+    view_context ctx = view_context_main();
     c.can_go_to_advisor = true;
     c.help_id = e_text_building_palace;
 
@@ -19,7 +21,7 @@ void building_palace_draw_info(object_info& c) {
     outer_panel_draw(c.x_offset, c.y_offset, c.width_blocks, c.height_blocks);
     lang_text_draw_centered(105, 0, c.x_offset, c.y_offset + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
-    ImageDraw::img_generic(image_id_resource_icon(RESOURCE_DEBEN), c.x_offset + 16, c.y_offset + 36);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), c.x_offset + 16, c.y_offset + 36);
 
     building* b = building_get(c.building_id);
     int width = lang_text_draw(105, 2, c.x_offset + 44, c.y_offset + 43, FONT_NORMAL_BLACK_ON_LIGHT);

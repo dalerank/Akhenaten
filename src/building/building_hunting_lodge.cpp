@@ -6,6 +6,7 @@
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/view/view.h"
 #include "graphics/boilerplate.h"
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
@@ -14,6 +15,7 @@
 #include "sound/sound_building.h"
 
 void building_hunting_lodge_draw_info(object_info &c) {
+    view_context ctx = view_context_main();
     int group_id = 154;
     c.help_id = 90;
     window_building_play_sound(&c, snd::get_building_info_sound("hunting_lodge"));
@@ -22,7 +24,7 @@ void building_hunting_lodge_draw_info(object_info &c) {
     lang_text_draw_centered(group_id, 0, c.x_offset, c.y_offset + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_GAMEMEAT, c.x_offset + 32, c.y_offset + 56);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_GAMEMEAT, c.x_offset + 32, c.y_offset + 56);
     int width = lang_text_draw(group_id, 13, c.x_offset + 60, c.y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
     if (b->stored_full_amount < 100) {
         lang_text_draw_amount(8, 10, 0, c.x_offset + 60 + width, c.y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);

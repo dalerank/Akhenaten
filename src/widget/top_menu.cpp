@@ -514,26 +514,27 @@ static void top_menu_window_show(void) {
 int orientation_button_state = 0;
 int orientation_button_pressed = 0;
 
-static void refresh_background(void) {
+static void refresh_background() {
+    view_context ctx = view_context_main();
     int block_width = 24;
     int image_base = image_id_from_group(GROUP_TOP_MENU_SIDEBAR);
     int s_width = screen_width();
 
     if (GAME_ENV == ENGINE_ENV_C3) {
         for (int i = 0; i * block_width < s_width; i++)
-            ImageDraw::img_generic(image_base + i % 8, i * block_width, 0);
+            ImageDraw::img_generic(ctx, image_base + i % 8, i * block_width, 0);
 
         // black panels for funds/pop/time
         if (s_width < 800) {
-            ImageDraw::img_generic(image_base + 14, 336, 0);
+            ImageDraw::img_generic(ctx, image_base + 14, 336, 0);
         } else if (s_width < 1024) {
-            ImageDraw::img_generic(image_base + 14, 336, 0);
-            ImageDraw::img_generic(image_base + 14, 456, 0);
-            ImageDraw::img_generic(image_base + 14, 648, 0);
+            ImageDraw::img_generic(ctx, image_base + 14, 336, 0);
+            ImageDraw::img_generic(ctx, image_base + 14, 456, 0);
+            ImageDraw::img_generic(ctx, image_base + 14, 648, 0);
         } else {
-            ImageDraw::img_generic(image_base + 14, 480, 0);
-            ImageDraw::img_generic(image_base + 14, 624, 0);
-            ImageDraw::img_generic(image_base + 14, 840, 0);
+            ImageDraw::img_generic(ctx, image_base + 14, 480, 0);
+            ImageDraw::img_generic(ctx, image_base + 14, 624, 0);
+            ImageDraw::img_generic(ctx, image_base + 14, 840, 0);
         }
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         block_width = 96;
@@ -541,10 +542,10 @@ static void refresh_background(void) {
         int s_start = s_end - ceil((float)s_end / (float)block_width) * block_width;
 
         for (int i = 0; s_start + i * block_width < s_end; i++) {
-            ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
         }
 
-        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
     }
 }
 
@@ -569,20 +570,19 @@ void widget_top_menu_draw(int force) {
     font_t treasure_font = (treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
     int s_width = screen_width();
 
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        data.offset_funds = s_width - 540;
-        data.offset_population = s_width - 400;
-        data.offset_date = s_width - 150; // 135
-        data.offset_rotate = data.offset_date - 50;
+    data.offset_funds = s_width - 540;
+    data.offset_population = s_width - 400;
+    data.offset_date = s_width - 150; // 135
+    data.offset_rotate = data.offset_date - 50;
 
-        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), data.offset_date - 2, 5, 110, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-        // Orientation icon
-        if (orientation_button_pressed) {
-            ImageDraw::img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, data.offset_rotate, 0);
-            orientation_button_pressed--;
-        } else {
-            ImageDraw::img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state, data.offset_rotate, 0);
-        }
+    lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), data.offset_date - 2, 5, 110, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    // Orientation icon
+    view_context ctx = view_context_main();
+    if (orientation_button_pressed) {
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, data.offset_rotate, 0);
+        orientation_button_pressed--;
+    } else {
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state, data.offset_rotate, 0);
     }
 
     if (s_width < 800) {

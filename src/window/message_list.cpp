@@ -11,6 +11,7 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/scrollbar.h"
+#include "graphics/view/view.h"
 #include "graphics/image_groups.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -88,6 +89,8 @@ static void draw_background(void) {
 }
 
 static void draw_messages(int total_messages) {
+    view_context ctx = view_context_main();
+
     int max = total_messages < MAX_MESSAGES ? total_messages : MAX_MESSAGES;
     int index = scrollbar.scroll_position;
     for (int i = 0; i < max; i++, index++) {
@@ -101,9 +104,9 @@ static void draw_messages(int total_messages) {
             image_type_offset = 4;
 
         if (msg->is_read) {
-            ImageDraw::img_generic(image_id_from_group(GROUP_MESSAGE_ICON) + 15 + image_type_offset, data.x_text + 12, data.y_text + 6 + 20 * i);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_MESSAGE_ICON) + 15 + image_type_offset, data.x_text + 12, data.y_text + 6 + 20 * i);
         } else {
-            ImageDraw::img_generic(image_id_from_group(GROUP_MESSAGE_ICON) + 14 + image_type_offset, data.x_text + 12, data.y_text + 6 + 20 * i);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_MESSAGE_ICON) + 14 + image_type_offset, data.x_text + 12, data.y_text + 6 + 20 * i);
         }
 
         font_t font = FONT_NORMAL_WHITE_ON_DARK;

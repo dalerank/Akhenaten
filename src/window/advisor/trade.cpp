@@ -7,6 +7,7 @@
 #include "game/resource.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
+#include "graphics/view/view.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
@@ -55,11 +56,12 @@ static scrollbar_type scrollbar = {590, 52, 336, on_scroll};
 #include <city/data_private.h>
 #include <empire/city.h>
 
-static int draw_background(void) {
+static int draw_background() {
+    view_context ctx = view_context_main();
     city_resource_determine_available();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 4, 10, 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 4, 10, 10);
 
     lang_text_draw(54, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     int width = lang_text_get_width(54, 1, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -67,7 +69,8 @@ static int draw_background(void) {
 
     return ADVISOR_HEIGHT;
 }
-static void draw_foreground(void) {
+static void draw_foreground() {
+    view_context ctx = view_context_main();
     inner_panel_draw(17, 52, 36, 21);
     graphics_set_clip_rectangle(20, 39, 575, 346);
     const resources_list* list = city_resource_get_available();
@@ -75,7 +78,7 @@ static void draw_foreground(void) {
         int y_offset = 22 * (i - scrollbar.scroll_position);
         int resource = list->items[i];
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 24, y_offset + 58);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 24, y_offset + 58);
 
         font_t font_color = FONT_NORMAL_WHITE_ON_DARK;
         if (city_resource_is_mothballed(resource))

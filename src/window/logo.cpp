@@ -3,6 +3,7 @@
 #include "graphics/boilerplate.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/view/view.h"
 #include "graphics/window.h"
 #include "config/config.h"
 #include "sound/music.h"
@@ -18,8 +19,9 @@ static void init() {
 
 static void draw_logo_background() {
     graphics_clear_screen();
+    view_context ctx = view_context_main();
 
-    ImageDraw::img_background(image_id_from_group(GROUP_LOGO));
+    ImageDraw::img_background(ctx, image_id_from_group(GROUP_LOGO));
 }
 
 static void draw_logo_foreground() {

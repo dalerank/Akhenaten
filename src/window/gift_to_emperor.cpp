@@ -6,6 +6,7 @@
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "graphics/view/view.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -29,13 +30,14 @@ static void init(void) {
     city_emperor_init_selected_gift();
 }
 
-static void draw_background(void) {
+static void draw_background() {
     window_advisors_draw_dialog_background();
 
     graphics_set_to_dialog();
 
     outer_panel_draw(96, 144, 30, 15);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_DEBEN, 112, 160);
+    view_context ctx = view_context_main();
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_DEBEN, 112, 160);
     lang_text_draw_centered(52, 69, 144, 160, 416, FONT_LARGE_BLACK_ON_LIGHT);
 
     int width = lang_text_draw(52, 50, 144, 304, FONT_NORMAL_BLACK_ON_LIGHT);

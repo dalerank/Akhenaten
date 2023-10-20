@@ -18,7 +18,7 @@ static int terrain_on_water_overlay(void) {
         | TERRAIN_MARSHLAND;
 }
 
-static void draw_footprint_water(vec2i pixel, map_point point) {
+static void draw_footprint_water(vec2i pixel, tile2i point, view_context &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -26,9 +26,9 @@ static void draw_footprint_water(vec2i pixel, map_point point) {
     if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
         // (except for roadblocks on roads, draw these as flattened tiles)
         if (building_at(grid_offset)->type == BUILDING_ROADBLOCK) {
-            city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
+            city_with_overlay_draw_building_footprint(ctx, x, y, grid_offset, 0);
         } else if (map_property_is_draw_tile(grid_offset)) {
-            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, 0);
         }
     } else {
         int terrain = map_terrain_get(grid_offset);
@@ -36,7 +36,7 @@ static void draw_footprint_water(vec2i pixel, map_point point) {
         // draw houses, wells and water supplies either fully or flattened
         if (terrain & TERRAIN_BUILDING && (building_is_house(b->type)) || b->type == BUILDING_WELL || b->type == BUILDING_WATER_SUPPLY) {
             if (map_property_is_draw_tile(grid_offset)) {
-                city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
+                city_with_overlay_draw_building_footprint(ctx, x, y, grid_offset, 0);
             }
         } else {
             // draw groundwater levels
@@ -51,7 +51,7 @@ static void draw_footprint_water(vec2i pixel, map_point point) {
                 image_id += 1;
                 break;
             }
-            ImageDraw::isometric(image_id, x, y);
+            ImageDraw::isometric(ctx, image_id, x, y);
         }
     }
 }
@@ -74,7 +74,7 @@ static int get_column_height_water(const building* b) {
     return b->house_size ? b->data.house.water_supply * 17 / 10 : NO_COLUMN;
 }
 
-static void draw_top_water(vec2i pixel, map_point point) {
+static void draw_top_water(vec2i pixel, tile2i point, view_context &ctx) {
     int grid_offset = point.grid_offset();
     if (!map_property_is_draw_tile(grid_offset)) {
         return;
@@ -89,7 +89,7 @@ static void draw_top_water(vec2i pixel, map_point point) {
             //            city_view_get_scale_float());
         }
     } else if (map_building_at(grid_offset)) {
-        city_with_overlay_draw_building_top(pixel, point);
+        city_with_overlay_draw_building_top(pixel, point, ctx);
     }
 }
 
@@ -108,14 +108,14 @@ struct city_overlay_water : public city_overlay {
         return f->type == FIGURE_WATER_CARRIER;
     }
 
-    void draw_custom_top(vec2i pixel, map_point point) const override {
+    void draw_custom_top(vec2i pixel, tile2i point, view_context &ctx) const override {
         int grid_offset = point.grid_offset();
         if (!map_property_is_draw_tile(grid_offset)) {
             return;
         }
 
         if (map_building_at(grid_offset)) {
-            city_with_overlay_draw_building_top(pixel, point);
+            city_with_overlay_draw_building_top(pixel, point, ctx);
         }
     }
 

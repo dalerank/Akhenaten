@@ -7,6 +7,7 @@
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/view/view.h"
 #include "graphics/text.h"
 #include "graphics/boilerplate.h"
 #include "grid/floodplain.h"
@@ -16,11 +17,12 @@
 #include "sound/sound_building.h"
 
 static void building_farm_draw_info(object_info &c, int help_id, const char* type, int group_id, int resource) {
+    view_context ctx = view_context_main();
     c.help_id = help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
     outer_panel_draw(c.x_offset, c.y_offset, c.width_blocks, c.height_blocks);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c.x_offset + 10, c.y_offset + 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c.x_offset + 10, c.y_offset + 10);
     lang_text_draw_centered(group_id, 0, c.x_offset, c.y_offset + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);

@@ -37,6 +37,8 @@ static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 
 
 static time_millis last_update;
 
+game_t game;
+
 static int is_unpatched(void) {
     const uint8_t* delete_game = lang_get_string(1, 6);
     const uint8_t* option_menu = lang_get_string(2, 0);

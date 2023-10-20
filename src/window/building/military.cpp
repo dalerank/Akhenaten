@@ -117,6 +117,7 @@ void window_building_draw_tower(object_info* c) {
 }
 
 void window_building_draw_barracks(object_info* c) {
+    view_context ctx = view_context_main();
     auto& data = g_military_data;
     int military_resource = RESOURCE_WEAPONS;
     if (GAME_ENV == ENGINE_ENV_C3) {
@@ -127,7 +128,7 @@ void window_building_draw_barracks(object_info* c) {
     window_building_play_sound(c, "wavs/barracks.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(136, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, c->x_offset + 64, c->y_offset + 38);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, c->x_offset + 64, c->y_offset + 38);
 
     building* b = building_get(c->building_id);
     if (b->stored_full_amount < 100)
@@ -208,6 +209,7 @@ void window_building_draw_fort(object_info* c) {
 void window_building_draw_legion_info(object_info* c) {
     int text_id;
     const formation* m = formation_get(c->formation_id);
+    view_context ctx = view_context_main();
     c->help_id = 87;
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(138, m->legion_id, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
@@ -215,7 +217,7 @@ void window_building_draw_legion_info(object_info* c) {
     // standard icon at the top
     int image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
     int icon_height = image_get(image_id)->height;
-    ImageDraw::img_generic(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16);
+    ImageDraw::img_generic(ctx, image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16);
     // standard flag
     image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS);
     if (m->figure_type == FIGURE_FORT_ARCHER) {
@@ -224,14 +226,15 @@ void window_building_draw_legion_info(object_info* c) {
         image_id += 18;
     }
 
-    if (m->is_halted)
+    if (m->is_halted) {
         image_id += 8;
+    }
 
     int flag_height = image_get(image_id)->height;
-    ImageDraw::img_generic(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height);
+    ImageDraw::img_generic(ctx, image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height);
     // standard pole and morale ball
     image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
-    ImageDraw::img_generic(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height + flag_height);
+    ImageDraw::img_generic(ctx, image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height + flag_height);
 
     // number of soldiers
     lang_text_draw(138, 23, c->x_offset + 100, c->y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -286,9 +289,7 @@ void window_building_draw_legion_info(object_info* c) {
             offsets = OFFSETS_OTHER[index];
         }
         for (int i = 5 - c->formation_types; i < 5; i++) {
-            ImageDraw::img_generic(image_id_from_group(GROUP_FORT_FORMATIONS) + offsets[i],
-                                   c->x_offset + 21 + 85 * i,
-                                   c->y_offset + 141);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_FORT_FORMATIONS) + offsets[i], c->x_offset + 21 + 85 * i, c->y_offset + 141);
         }
         window_building_draw_legion_info_foreground(c);
     } else {

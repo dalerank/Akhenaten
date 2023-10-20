@@ -13,6 +13,7 @@
 #include "graphics/elements/button.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/panel.h"
+#include "graphics/view/view.h"
 #include "graphics/elements/scrollbar.h"
 #include "graphics/image_groups.h"
 #include "graphics/screen.h"
@@ -405,9 +406,10 @@ static bool is_config_option_enabled(int option) {
 
 static void draw_background() {
     auto& data = g_window_config_ext_data;
+    view_context ctx = view_context_main();
     graphics_clear_screen();
 
-    ImageDraw::img_background(image_id_from_group(GROUP_CONFIG_BACKGROUND));
+    ImageDraw::img_background(ctx, image_id_from_group(GROUP_CONFIG_BACKGROUND));
     graphics_set_to_dialog();
     outer_panel_draw(0, 0, 40, 30);
 

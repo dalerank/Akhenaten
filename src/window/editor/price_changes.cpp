@@ -7,6 +7,7 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/image_groups.h"
+#include "graphics/view/view.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -48,6 +49,8 @@ static void draw_background(void) {
 }
 
 static void draw_foreground(void) {
+    view_context ctx = view_context_main();
+
     graphics_set_to_dialog();
 
     outer_panel_draw(0, 0, 40, 30);
@@ -69,12 +72,9 @@ static void draw_foreground(void) {
         scenario_editor_price_change_get(i, &price_change);
         if (price_change.year) {
             text_draw_number(price_change.year, '+', " ", x + 10, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
-            lang_text_draw_year(scenario_property_start_year() + price_change.year,
-                                x + 65,
-                                y + 6,
-                                FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_year(scenario_property_start_year() + price_change.year, x + 65, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
             int offset = price_change.resource + resource_image_offset(price_change.resource, RESOURCE_IMAGE_ICON);
-            ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 140, y + 3);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 140, y + 3);
             int width
               = lang_text_draw(44, price_change.is_rise ? 104 : 103, x + 170, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
             text_draw_number(price_change.amount, '@', " ", x + 170 + width, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
