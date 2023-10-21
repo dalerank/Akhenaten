@@ -78,7 +78,8 @@ static void update_zoom_level() {
     vec2i offset = camera_get_position();
     if (zoom_update_value(&offset)) {
         city_view_refresh_viewport();
-        camera_go_to_pixel(view_context_main(), offset, true);
+        view_context ctx = view_context_main();
+        camera_go_to_pixel(ctx, offset, true);
         sound_city_decay_views();
     }
 }
@@ -91,7 +92,7 @@ void widget_map_editor_draw() {
 
     init_draw_context();
     //    city_view_foreach_map_tile(draw_buildings);
-    city_view_foreach_valid_map_tile(view_context_main(), draw_isometrics);
+    city_view_foreach_valid_map_tile(ctx, draw_isometrics);
     //    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
     map_editor_tool_draw(ctx, data.current_tile);
 }
