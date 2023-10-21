@@ -643,7 +643,8 @@ void BuildPlanner::draw_graphics() {
 
     case BUILDING_WELL:
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-            city_view_foreach_tile_in_range(view_context_main(), end.grid_offset(), 1, 2, draw_fountain_range);
+            view_context ctx = view_context_main();
+            city_view_foreach_tile_in_range(ctx, end.grid_offset(), 1, 2, draw_fountain_range);
         }
         break;
     }

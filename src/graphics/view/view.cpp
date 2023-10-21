@@ -193,14 +193,17 @@ void camera_go_to_pixel(view_context& ctx, vec2i pixel, bool validate) {
 void camera_go_to_corner_tile(screen_tile screen, bool validate) {
     int x = screen.x * TILE_WIDTH_PIXELS;
     int y = screen.y * HALF_TILE_HEIGHT_PIXELS;
-    camera_go_to_pixel(view_context_main(), {x, y}, validate);
+    view_context ctx = view_context_main();
+    camera_go_to_pixel(ctx, {x, y}, validate);
 }
 void camera_go_to_screen_tile(screen_tile screen, bool validate) {
     auto& data = g_city_view_data;
 
     int x = (screen.x - data.viewport.width_tiles / 2) * TILE_WIDTH_PIXELS;
     int y = (screen.y - data.viewport.height_tiles / 2) * HALF_TILE_HEIGHT_PIXELS;
-    camera_go_to_pixel(view_context_main(), {x, y}, validate);
+
+    view_context ctx = view_context_main();
+    camera_go_to_pixel(ctx, {x, y}, validate);
 }
 void camera_go_to_mappoint(map_point point) {
     //camera_go_to_pixel(mappoint_to_pixel(point), true);
