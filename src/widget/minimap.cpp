@@ -360,7 +360,8 @@ bool widget_minimap_handle_mouse(const mouse* m) {
             vec2i city_canvas_pixels = max_pos - min_pos;
             vec2i map_pos(city_canvas_pixels.x * xx, city_canvas_pixels.y * yy);
 
-            camera_go_to_pixel(view_context_main(), min_pos + map_pos - view_size / 2, true);
+            view_context ctx = view_context_main();
+            camera_go_to_pixel(ctx, min_pos + map_pos - view_size / 2, true);
             widget_minimap_invalidate();
             data.mouse_last_coords = {m->x, m->y};
             return true;
