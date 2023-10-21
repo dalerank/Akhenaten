@@ -1,4 +1,4 @@
-name: Ozymandias Build Android
+name: Akhenaten Build Android
 
 on:
   push:

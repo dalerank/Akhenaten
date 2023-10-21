@@ -1,13 +1,13 @@
-# Akhenaten [![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Windows/badge.svg)](https://github.com/dalerank/Ozymandias/actions)
+# Akhenaten [![Github Actions](https://github.com/dalerank/Akhenaten/workflows/Akhenaten%20Build%20Windows/badge.svg)](https://github.com/dalerank/Akhenaten/actions)
 
 [![Discord](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263684745-bcca8b70-13c4-48d8-8e91-4b0be8a440e6.png)](https://discord.gg/HS4njmBvpb)
-[![Download](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685010-cd624917-786d-487b-89c0-298bc694f3f2.png)](https://dalerank.itch.io/ozymandias)
-[![Windows](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685266-d429392e-a91e-4233-b496-3863e50af5f6.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_windows/master/windows_build.zip)
-[![Linux](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685605-8ce46564-04e7-45a7-afa4-0ffe32335dd8.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_linux/master/linux_build.zip)
-[![Mac](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685850-a5f39f18-0220-411b-bb70-9bdbc9d48311.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_mac/master/macos_build.zip)
-[![Android](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/268461479-834ae5f0-f57d-4105-b499-869982383a87.png)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_android/master/apk.zip)
+[![Download](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685010-cd624917-786d-487b-89c0-298bc694f3f2.png)](https://dalerank.itch.io/Akhenaten)
+[![Windows](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685266-d429392e-a91e-4233-b496-3863e50af5f6.png)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip)
+[![Linux](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685605-8ce46564-04e7-45a7-afa4-0ffe32335dd8.png)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_linux/master/linux_build.zip)
+[![Mac](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685850-a5f39f18-0220-411b-bb70-9bdbc9d48311.png)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac/master/macos_build.zip)
+[![Android](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/268461479-834ae5f0-f57d-4105-b499-869982383a87.png)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_android/master/apk.zip)
 
-![2023-08-19 21_17_32-Window](https://github.com/dalerank/Ozymandias/assets/918081/dd616847-9f79-4a01-84fb-800f1cfa2c99)
+![2023-08-19 21_17_32-Window](https://github.com/dalerank/Akhenaten/assets/918081/dd616847-9f79-4a01-84fb-800f1cfa2c99)
 
 This is a fork of the **Julius/Augustus** project with the aim of making it work with _Pharaoh_ instead of _Caesar 3_.
 
@@ -25,10 +25,10 @@ For the official upcoming remaster (unrelated to Akhenaten) called _A New Era_, 
 
 | Platform       | Latest release | Unstable build |
 | -------------- | -------------- | -------------- |
-| Windows        | -              | [![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Windows/badge.svg)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_windows/master/windows_build.zip)  |
-| Linux AppImage | -              | [![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Linux/badge.svg)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_linux/master/linux_build.zip)        |
-| Mac            | -              | [![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Mac/badge.svg)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_mac/master/macos_build.zip)            |
-| Android        | -              | [![Github Actions](https://github.com/dalerank/ozymandias/workflows/Ozymandias%20Build%20Android/badge.svg)](https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_android/master/apk.zip) |
+| Windows        | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Windows/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip)  |
+| Linux AppImage | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Linux/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_linux/master/linux_build.zip)        |
+| Mac            | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Mac/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac/master/macos_build.zip)            |
+| Android        | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Android/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_android/master/apk.zip) |
 
 
 

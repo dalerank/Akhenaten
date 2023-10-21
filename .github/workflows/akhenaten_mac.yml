@@ -1,4 +1,4 @@
-name: Ozymandias Build Mac
+name: Akhenaten Build Mac
 
 on:
   push:

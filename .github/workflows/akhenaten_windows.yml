@@ -1,4 +1,4 @@
-name: Ozymandias Build Windows
+name: Akhenaten Build Windows
 
 on:
   push:

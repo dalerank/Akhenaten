@@ -1,4 +1,4 @@
-name: Ozymandias Build Linux
+name: Akhenaten Build Linux
 
 on:
   push:

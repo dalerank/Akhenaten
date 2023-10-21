@@ -1,4 +1,4 @@
-name: Ozymandias Build Content
+name: Akhenaten Build Content
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
         cmake --build ./build
         cp ./build/akhenaten ./artifacts/akhenaten.linux
         zip -r linux_build.zip ./artifacts
-        wget https://nightly.link/dalerank/Ozymandias/workflows/ozymandias_windows/master/windows_build.zip
+        wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip
         unzip windows_build.zip -d artifacts
     - uses: actions/upload-artifact@v3
       with:
@@ -38,12 +38,12 @@ jobs:
         butlerApiKey: ${{ secrets.ITCHIO }}
         gameData: windows_build.zip
         itchUsername: dalerank
-        itchGameId: ozymandias
+        itchGameId: akhenaten
         buildChannel: windows
     - uses: KikimoraGames/itch-publish@v0.0.3
       with:
         butlerApiKey: ${{ secrets.ITCHIO }}
         gameData: linux_build.zip
         itchUsername: dalerank
-        itchGameId: ozymandias
+        itchGameId: akhenaten
         buildChannel: linux

@@ -229,7 +229,7 @@ static void create_window_screenshot() {
         return;
     }
 
-    view_context &ctx = view_context_main();
+    view_context ctx = view_context_main();
     if (!image_write_canvas(ctx)) {
         logs::error("Error writing image");
         image_free();
