@@ -189,30 +189,34 @@ void figure::move_to_next_tile() {
 
 void figure::set_next_tile_and_direction() {
     if (routing_path_id > 0) {                               // has a path generated for its destination
-        if (routing_path_current_tile < routing_path_length) // advance to next tile in path
+        if (routing_path_current_tile < routing_path_length) {// advance to next tile in path
             direction = figure_route_get_direction(routing_path_id, routing_path_current_tile);
-        else { // at destination!!
+        } else { // at destination!!
             route_remove();
             direction = DIR_FIGURE_NONE;
         }
     } else { // no path possible - should be at destination
         direction = calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
         if (direction != DIR_FIGURE_NONE) {
-            if (!roam_wander_freely) // this is because the road network was cutoff from the "randomized direction"
+            if (!roam_wander_freely) { // this is because the road network was cutoff from the "randomized direction"
                                      // target
                 roam_wander_freely = true;
-            else // all other cases
+            } else { // all other cases
                 direction = DIR_FIGURE_CAN_NOT_REACH;
+            }
         }
     }
 }
 void figure::advance_route_tile(int roaming_enabled) {
     if (direction >= 8)
         return;
+
     int target_grid_offset = tile.grid_offset() + map_grid_direction_delta(direction);
 
     const bool is_boat = (allow_move_type == EMOVE_BOAT);
-    if (is_boat && !map_terrain_is(target_grid_offset, TERRAIN_WATER)) { // boats can not travel on land
+    if (!is_boat && map_terrain_is(target_grid_offset, TERRAIN_WATER)) {
+        direction = DIR_FIGURE_REROUTE;
+    } else if (is_boat && !map_terrain_is(target_grid_offset, TERRAIN_WATER)) { // boats can not travel on land
         direction = DIR_FIGURE_REROUTE;
     } else if (!map_routing_passable_by_usage(terrain_usage, target_grid_offset)) {
         direction = DIR_FIGURE_REROUTE;

@@ -150,8 +150,9 @@ void figure::figure_route_add() {
             break;
         case TERRAIN_USAGE_PREFER_ROADS:
             can_travel = map_routing_citizen_can_travel_over_road(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
-            if (!can_travel)
+            if (!can_travel) {
                 can_travel = map_routing_citizen_can_travel_over_land(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+            }
             break;
         case TERRAIN_USAGE_ROADS:
             can_travel = map_routing_citizen_can_travel_over_road(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());

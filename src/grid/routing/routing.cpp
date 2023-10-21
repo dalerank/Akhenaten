@@ -363,8 +363,11 @@ bool map_routing_citizen_found_timber(int src_x, int src_y, int* dst_x, int* dst
 }
 
 static void callback_travel_citizen_land(int next_offset, int dist) {
-    if (map_grid_get(&routing_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset))
+    if (map_grid_get(&routing_land_citizen, next_offset) >= CITIZEN_0_ROAD 
+        && !has_fighting_friendly(next_offset)
+        && !map_terrain_is(next_offset, TERRAIN_WATER)) {
         enqueue(next_offset, dist);
+    }
 }
 bool map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y) {
     int src_offset = MAP_OFFSET(src_x, src_y);

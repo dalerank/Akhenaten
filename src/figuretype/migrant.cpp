@@ -15,6 +15,7 @@
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "grid/road_access.h"
+#include "grid/terrain.h"
 
 void figure_create_immigrant(building* house, int num_people) {
     map_point& entry = city_map_entry_point();
@@ -133,7 +134,14 @@ void figure::immigrant_action() {
     case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE: // arriving
         {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant/Goto Building");
-            do_gotobuilding(home, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE);
+            if (direction <= 8) {
+                int next_tile_grid_offset = tile.grid_offset() + map_grid_direction_delta(direction);
+                if (map_terrain_is(next_tile_grid_offset, TERRAIN_WATER)) {
+                    route_remove();
+                }
+            }
+            
+            do_gotobuilding(home, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE, ACTION_8_RECALCULATE);
         }
         break;
     case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
