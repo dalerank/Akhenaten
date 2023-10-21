@@ -187,7 +187,7 @@ bool FileIOManager::serialize(const char* filename, int offset, e_file_format fo
     file_version = version;
 
     // open file handle
-    vfs::path fs_path = vfs::content_file(file_path);
+    vfs::path fs_path = vfs::content_path(file_path);
     FILE* fp = vfs::file_open(fs_path, "wb");
     if (!fp) {
         return io_failure_cleanup("write", "file could not be accessed");
