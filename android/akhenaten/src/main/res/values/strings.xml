@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Akhenaten</string>
+    <string name="directory_selector_instructions">"Warning! Akhenaten requires the original files from Pharaoh to run. Please follow these steps:\n\n1. Copy your entire Pharaoh folder to your Android device.\n\n2. Select that directory using the button below. This is also the directory where any saved games will be stored."</string>
+    <string name="directory_selector_button">Select directory</string>
+</resources>
