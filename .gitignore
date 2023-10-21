@@ -20,7 +20,10 @@ cmake-build-*
 /ext/SDL2/**
 *~
 *.swp
-/android
+/android/.gradle
+/android/.idea
+/android/SDL2
+/android/akhenaten/build
 # Android
 *.iml
 .gradle

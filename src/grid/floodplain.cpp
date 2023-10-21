@@ -151,8 +151,8 @@ void map_tiles_update_floodplain_images() {
     }
 }
 
-int map_get_floodplain_short(int grid_offset) {
-    return map_grid_get(&g_terrain_floodplain_flood_shore, grid_offset);
+int map_get_floodplain_edge(tile2i tile) {
+    return map_grid_get(&g_terrain_floodplain_flood_shore, tile.grid_offset());
 }
 
 int map_get_fertility(int grid_offset, int tally_type) { // actual percentage integer [0-99]

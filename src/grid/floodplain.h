@@ -16,7 +16,7 @@ extern tile_cache floodplain_tiles_cache;
 void foreach_floodplain_row(int row, void (*callback)(int grid_offset, int order));
 int map_floodplain_rebuild_rows();
 void map_floodplain_rebuild_shores();
-int map_get_floodplain_short(int grid_offset);
+int map_get_floodplain_edge(tile2i tile);
 int8_t map_get_floodplain_row(int grid_offset);
 
 uint8_t map_get_floodplain_growth(int grid_offset);

@@ -435,7 +435,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, view_context &ctx) {
         break;
 
     case e_debug_render_floodplain_shore:
-        d = map_get_floodplain_short(grid_offset);
+        d = map_get_floodplain_edge(point);
         if (d) {
             string_from_int(str, d, 0);
             text_draw(ctx, str, x, y + 15, FONT_SMALL_OUTLINED, COLOR_WHITE);

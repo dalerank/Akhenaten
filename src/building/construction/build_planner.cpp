@@ -1325,14 +1325,17 @@ void BuildPlanner::update_obstructions_check() {
                 restricted_terrain -= TERRAIN_FLOODPLAIN;
             }
 
+            bool can_blocked_by_floodplain_edge = true;
             if (special_flags & PlannerFlags::Road
                 || special_flags & PlannerFlags::Intersection
                 || special_flags & PlannerFlags::Canals) {
                 restricted_terrain -= TERRAIN_ROAD;
+                can_blocked_by_floodplain_edge = false;
             }
 
             if (special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Canals) {
                 restricted_terrain -= TERRAIN_CANAL;
+
             }
 
             if (special_flags & PlannerFlags::Water || special_flags & PlannerFlags::ShoreLine) {
@@ -1344,9 +1347,11 @@ void BuildPlanner::update_obstructions_check() {
             }
 
             tile_blocked_array[row][column] = false;
+            bool blocked_by_floodplain_edge = (can_blocked_by_floodplain_edge && map_get_floodplain_edge(current_tile));
             if (!map_grid_is_inside(current_tile.x(), current_tile.y(), 1)
                 || map_terrain_is(current_tile, restricted_terrain & TERRAIN_NOT_CLEAR)
-                || map_has_figure_at(current_tile)) {
+                || map_has_figure_at(current_tile)
+                || blocked_by_floodplain_edge) {
                 tile_blocked_array[row][column] = true;
                 tiles_blocked_total++;
             }
