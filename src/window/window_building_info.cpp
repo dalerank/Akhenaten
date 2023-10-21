@@ -335,6 +335,8 @@ static void init(map_point tile) {
     } else if (!context.building_id && map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
             context.terrain_type = TERRAIN_INFO_FLOODPLAIN_SUBMERGED;
+        } else if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+            context.terrain_type = TERRAIN_INFO_ROAD;
         } else {
             context.terrain_type = TERRAIN_INFO_FLOODPLAIN;
         }

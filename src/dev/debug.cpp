@@ -951,7 +951,7 @@ void draw_debug_ui(int x, int y) {
 
     if (g_debug_show_opts[e_debug_show_migration]) {
         int cl = 180;
-        debug_text(str, x, y + 1, cl, "====================== migration ======================", 0);
+        debug_text_a(str, x, y + 1, cl, "====================== migration ======================");
         y += 12;
         debug_text(str, x, y + 1, cl, "invading_cap:", city_data.migration.invading_cap);
         debug_text(str, x, y + 13, cl, "migration_cap:", city_data.migration.migration_cap);
