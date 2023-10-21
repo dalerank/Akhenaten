@@ -262,9 +262,8 @@ static const SDL_BlendMode premult_alpha = SDL_ComposeCustomBlendMode(SDL_BLENDF
                                                                       SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
                                                                       SDL_BLENDOPERATION_ADD);
 
-void set_render_scale(float scale) {
-    auto &data = g_renderer_data;
-    data.global_render_scale = scale;
+void set_render_scale(view_context &ctx, float scale) {
+    ctx.global_render_scale = scale;
 }
 
 static void set_texture_scale_mode(SDL_Texture* texture, float scale_factor) {

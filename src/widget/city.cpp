@@ -58,15 +58,15 @@ void set_city_clip_rectangle(void) {
     //    - 30);
 }
 
-static void update_zoom_level() {
+static void update_zoom_level(view_context &ctx) {
     vec2i offset = camera_get_position();
     if (zoom_update_value(&offset)) {
         city_view_refresh_viewport();
-        view_context ctx = view_context_main();
         camera_go_to_pixel(ctx, offset, true);
         sound_city_decay_views();
     }
 }
+
 static void scroll_map(const mouse* m) {
     vec2i delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
@@ -170,8 +170,8 @@ void widget_city_draw_with_overlay(view_context &ctx, tile2i tile) {
 
 void widget_city_draw(view_context &ctx) {
     auto& data = g_wdiget_city_data;
-    update_zoom_level();
-    set_render_scale(zoom_get_scale());
+    update_zoom_level(ctx);
+    set_render_scale(ctx, zoom_get_scale());
     set_city_clip_rectangle();
     if (game_state_overlay()) {
         widget_city_draw_with_overlay(ctx, data.current_tile);
@@ -179,7 +179,7 @@ void widget_city_draw(view_context &ctx) {
         widget_city_draw_without_overlay(ctx, 0, nullptr, data.current_tile);
     }
     graphics_reset_clip_rectangle();
-    set_render_scale(1.0f);
+    set_render_scale(ctx, 1.0f);
 }
 
 void widget_city_draw_for_figure(view_context &ctx, int figure_id, vec2i* coord) {

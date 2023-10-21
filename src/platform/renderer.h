@@ -95,6 +95,6 @@ public:
 
 graphics_renderer_interface* graphics_renderer();
 
-void set_render_scale(float scale);
+void set_render_scale(view_context &ctx, float scale);
 std::vector<video_mode> get_video_modes();
 std::vector<std::string> get_video_drivers(bool log);

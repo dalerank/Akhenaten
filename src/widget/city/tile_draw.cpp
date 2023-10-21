@@ -621,7 +621,7 @@ void city_with_overlay_draw_building_top(vec2i pixel, tile2i point, view_context
 
     if (get_city_overlay()->show_building(b)) {
         //        draw_top(pixel, point);
-        draw_isometrics(pixel, point, view_context_main());
+        draw_isometrics(pixel, point, ctx);
     } else {
         int column_height = get_city_overlay()->get_column_height(b);
         if (column_height != NO_COLUMN) {
