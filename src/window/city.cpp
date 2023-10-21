@@ -39,12 +39,12 @@ static int center_in_city(int element_width_pixels) {
     return view_pos.x + margin;
 }
 
-static void window_city_draw_background(void) {
+static void window_city_draw_background() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Bakground");
     widget_sidebar_city_draw_background();
     widget_top_menu_draw(1);
 }
-static void draw_paused_and_time_left(void) {
+static void draw_paused_and_time_left() {
     if (scenario_criteria_time_limit_enabled() && !city_victory_has_won()) {
         int years;
         if (scenario_criteria_max_year() <= game_time_year() + 1)
@@ -102,14 +102,14 @@ static void draw_foreground() {
     if (window_is(WINDOW_CITY))
         city_message_process_queue();
 }
-static void draw_foreground_military(void) {
+static void draw_foreground_military() {
     widget_top_menu_draw(0);
     window_city_draw();
     widget_sidebar_city_draw_foreground_military();
     draw_paused_and_time_left();
 }
 
-static void exit_military_command(void) {
+static void exit_military_command() {
     if (window_is(WINDOW_CITY_MILITARY))
         window_city_show();
 }
@@ -149,7 +149,7 @@ static void cycle_legion(void) {
         }
     }
 }
-static void toggle_pause(void) {
+static void toggle_pause() {
     game_state_toggle_paused();
     city_warning_clear_all();
 }
@@ -253,11 +253,11 @@ static void get_tooltip(tooltip_context* c) {
     widget_city_get_tooltip(c);
 }
 
-void window_city_draw_all(void) {
+void window_city_draw_all() {
     window_city_draw_background();
     draw_foreground();
 }
-void window_city_draw_panels(void) {
+void window_city_draw_panels() {
     window_city_draw_background();
 }
 
@@ -266,8 +266,14 @@ void window_city_draw() {
     widget_city_draw(ctx);
 }
 
-void window_city_show(void) {
-    window_type window = {WINDOW_CITY, window_city_draw_background, draw_foreground, handle_input, get_tooltip};
+void window_city_show() {
+    window_type window = {
+        WINDOW_CITY,
+        window_city_draw_background,
+        draw_foreground,
+        handle_input,
+        get_tooltip
+    };
     window_show(&window);
     city_has_loaded = false;
 }
