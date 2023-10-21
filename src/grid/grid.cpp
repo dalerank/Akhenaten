@@ -56,8 +56,10 @@ int32_t map_grid_get(grid_xx* grid, uint32_t at) {
 void map_grid_set(grid_xx* grid, uint32_t at, int64_t value) {
     if (!grid->initialized)
         map_grid_init(grid);
-    if (at >= GRID_SIZE_TOTAL)
+
+    if (at >= GRID_SIZE_TOTAL) {
         return;
+    }
     //    assert(at < GRID_SIZE_TOTAL);
     switch (grid->datatype[GAME_ENV]) {
     case FS_UINT8:
@@ -136,8 +138,10 @@ void map_grid_or(grid_xx* grid, uint32_t at, int mask) {
     map_grid_set(grid, at, v);
 }
 void map_grid_and_all(grid_xx* grid, int mask) {
-    if (!grid->initialized)
+    if (!grid->initialized) {
         map_grid_init(grid);
+    }
+
     for (int i = 0; i < GRID_SIZE_TOTAL; i++) {
         switch (grid->datatype[GAME_ENV]) {
         case FS_UINT8:
@@ -163,8 +167,10 @@ void map_grid_and_all(grid_xx* grid, int mask) {
 }
 
 void map_grid_save_buffer(grid_xx* grid, buffer* buf) {
-    if (!grid->initialized)
+    if (!grid->initialized) {
         map_grid_init(grid);
+    }
+
     switch (grid->datatype[GAME_ENV]) {
     case FS_UINT8:
         buf->write_raw(grid->items_xx, GRID_SIZE_TOTAL);
@@ -191,8 +197,10 @@ void map_grid_save_buffer(grid_xx* grid, buffer* buf) {
     }
 }
 void map_grid_load_buffer(grid_xx* grid, buffer* buf) {
-    if (!grid->initialized)
+    if (!grid->initialized) {
         map_grid_init(grid);
+    }
+
     switch (grid->datatype[GAME_ENV]) {
     case FS_UINT8:
         buf->read_raw(grid->items_xx, GRID_SIZE_TOTAL);

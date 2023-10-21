@@ -434,6 +434,15 @@ void draw_debug_tile(vec2i pixel, tile2i point, view_context &ctx) {
         }
         break;
 
+    case e_debug_render_floodplain_shore:
+        d = map_get_floodplain_short(grid_offset);
+        if (d) {
+            string_from_int(str, d, 0);
+            text_draw(str, x + 30, y + 15, FONT_SMALL_OUTLINED, COLOR_WHITE);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
+        }
+        break;
+
     case e_debug_render_image: // IMAGE FIELD
         debug_text(str, x, y + 10, 0, "", map_image_at(grid_offset), COLOR_LIGHT_RED);
         break;
@@ -727,7 +736,7 @@ void draw_debug_ui(int x, int y) {
         switch (DB2) {
         default:
             break;
-        case 1:
+        case e_debug_render_building:
             text_draw((uint8_t*)string_from_ascii("BUILDING IDS"), x, y + 10, FONT_SMALL_OUTLINED, col);
             break;
         case 2:

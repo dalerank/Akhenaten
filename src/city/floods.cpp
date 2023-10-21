@@ -32,6 +32,7 @@ void floodplains_init() {
     data.has_floodplains = false;
 
     data.floodplain_width = map_floodplain_rebuild_rows();
+    map_floodplain_rebuild_shores();
     if (data.floodplain_width > 0) {
         data.has_floodplains = true;
     }
@@ -52,9 +53,11 @@ const double CYCLES_IN_A_YEAR = 9792.0f / 25.0f; // 391.68
 double floods_current_cycle() {
     return (double)(game_time_absolute_tick(true) + 1) / 25.0f;
 }
+
 int floods_current_subcycle() {
     return (game_time_absolute_tick(true) + 1) % 25;
 }
+
 bool tick_is_flood_cycle() {
     return floods_current_subcycle() == 0;
 }
@@ -64,10 +67,12 @@ int floods_start_cycle() {
     double cycle_start = ((double)data.season * 105.0f) / 100.0f + 15.0f + cycles_so_far - 0.5f;
     return (int)cycle_start;
 }
+
 int floods_end_cycle() {
     auto& data = floodplain_data();
     return floods_start_cycle() + data.duration + data.floodplain_width * 2;
 }
+
 double floods_period_length(bool upcoming) {
     auto& data = floodplain_data();
     if (upcoming)
@@ -83,6 +88,7 @@ int cycle_compare(int c2, bool relative = true) {
     }
     return diff;
 }
+
 bool cycle_is(int c2, bool relative = true) {
     return cycle_compare(c2, relative) == 0;
 }
@@ -96,10 +102,12 @@ void floodplains_adjust_next_quality(int quality) {
     auto& data = floodplain_data();
     data.quality_next = calc_bound(data.quality_next + quality, 0, 100);
 }
+
 int floodplains_expected_quality() {
     auto& data = floodplain_data();
     return data.quality_next;
 }
+
 int floodplains_expected_month() {
     auto& data = floodplain_data();
     return (data.season_initial / 15) - 10;

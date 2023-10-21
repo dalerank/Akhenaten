@@ -170,6 +170,7 @@ static menu_item menu_render[] = {
     {6, 16, menu_debug_render_change_opt, e_debug_render_marshland},
     {6, 17, menu_debug_render_change_opt, e_debug_render_terrain_type},
     {6, 18, menu_debug_render_change_opt, e_debug_render_tile_pos},
+    {6, 18, menu_debug_render_change_opt, e_debug_render_floodplain_shore},
 };
 
 menu_bar_item g_top_menu[] = {
@@ -245,6 +246,7 @@ static void menu_debug_render_text(int opt, bool v) {
         {"Marshland ON", "Marshland OFF"},
         {"Terrain ON", "Terrain OFF"},
         {"Tile Coord ON", "Tile Coord OFF"},
+        {"Flood Shore ON", "Flood Shore OFF"},
     };
     menu_update_text(g_top_menu[INDEX_DEBUG_RENDER], opt, debug_text_rend[opt][v ? 0 : 1]);
 }

@@ -34,8 +34,9 @@ enum e_grid_data_type {
     FS_INT32 = 6
 };
 
-static size_t gr_sizes[]
-  = {0, sizeof(uint8_t), sizeof(int8_t), sizeof(uint16_t), sizeof(int16_t), sizeof(uint32_t), sizeof(int32_t)};
+static size_t gr_sizes[] = {
+    0, sizeof(uint8_t), sizeof(int8_t), sizeof(uint16_t), sizeof(int16_t), sizeof(uint32_t), sizeof(int32_t)
+};
 
 struct grid_xx {
     int initialized;

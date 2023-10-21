@@ -49,6 +49,7 @@ enum e_debug_render {
     e_debug_render_soil = 18,
     e_debug_render_unk_19,
     e_debug_render_tile_pos = 20,
+    e_debug_render_floodplain_shore = 21,
 
     e_debug_render_size
 };

@@ -28,6 +28,7 @@ grid_xx g_terrain_floodplain_row = {0, {FS_UINT8, FS_UINT8}};
 grid_xx g_terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
 grid_xx g_terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
 grid_xx g_terrain_floodplain_max_fertile = {0, {FS_UINT8, FS_UINT8}};
+grid_xx g_terrain_floodplain_flood_shore = {0, {FS_UINT8, FS_UINT8}};
 
 int map_floodplain_rebuild_rows() {
     // reset all to zero
@@ -106,6 +107,29 @@ int map_floodplain_rebuild_rows() {
     return MAX_FLOODPLAIN_ROWS;
 }
 
+void map_floodplain_rebuild_shores() {
+    map_grid_fill(&g_terrain_floodplain_flood_shore, 0);
+
+    foreach_river_tile([&] (int tile_offset) {
+        // get current river tile's grid offset and coords
+        int tx = MAP_X(tile_offset);
+        int ty = MAP_Y(tile_offset);
+
+        int x_min, y_min, x_max, y_max;
+        map_grid_get_area(tile2i(tx, ty), 1, 1, &x_min, &y_min, &x_max, &y_max);
+
+        for (int yy = y_min; yy <= y_max; yy++) {
+            for (int xx = x_min; xx <= x_max; xx++) {
+                tile2i shore(xx, yy);
+                if (map_terrain_is(shore.grid_offset(), TERRAIN_WATER) || map_terrain_is(shore.grid_offset(), TERRAIN_FLOODPLAIN)) {
+                    continue;
+                }
+                map_grid_set(&g_terrain_floodplain_flood_shore, MAP_OFFSET(xx, yy), 1);
+            }
+        }
+    });
+}
+
 int8_t map_get_floodplain_row(int grid_offset) {
     return map_grid_get(&g_terrain_floodplain_row, grid_offset);
 }
@@ -125,6 +149,10 @@ void map_tiles_update_floodplain_images() {
         foreach_floodplain_row(12 + i, callback);
         foreach_floodplain_row(24 + i, callback);
     }
+}
+
+int map_get_floodplain_short(int grid_offset) {
+    return map_grid_get(&g_terrain_floodplain_flood_shore, grid_offset);
 }
 
 int map_get_fertility(int grid_offset, int tally_type) { // actual percentage integer [0-99]
