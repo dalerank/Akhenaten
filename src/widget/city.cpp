@@ -2,6 +2,7 @@
 
 #include "graphics/boilerplate.h"
 #include "graphics/view/lookup.h"
+#include "graphics/view/view.h"
 #include "grid/property.h"
 #include "widget/city/building_ghost.h"
 #include "overlays/city_overlay.h"
