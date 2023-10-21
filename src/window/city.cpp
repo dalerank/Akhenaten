@@ -262,7 +262,7 @@ void window_city_draw_panels() {
 }
 
 void window_city_draw() {
-    view_context &ctx = view_context_main();
+    view_context ctx = view_context_main();
     widget_city_draw(ctx);
 }
 
