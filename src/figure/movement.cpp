@@ -214,7 +214,8 @@ void figure::advance_route_tile(int roaming_enabled) {
     int target_grid_offset = tile.grid_offset() + map_grid_direction_delta(direction);
 
     const bool is_boat = (allow_move_type == EMOVE_BOAT);
-    if (!is_boat && map_terrain_is(target_grid_offset, TERRAIN_WATER)) {
+    const bool is_hippo = (allow_move_type == EMOVE_HIPPO);
+    if (!is_boat && !is_hippo && map_terrain_is(target_grid_offset, TERRAIN_WATER)) {
         direction = DIR_FIGURE_REROUTE;
     } else if (is_boat && !map_terrain_is(target_grid_offset, TERRAIN_WATER)) { // boats can not travel on land
         direction = DIR_FIGURE_REROUTE;
