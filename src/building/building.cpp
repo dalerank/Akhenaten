@@ -442,6 +442,8 @@ e_overlay building::get_overlay() const {
         case BUILDING_JUGGLER_SCHOOL:
             return OVERLAY_BOOTH;
 
+        case BUILDING_WELL:
+            return OVERLAY_WATER;
     }
 
     return OVERLAY_NONE;

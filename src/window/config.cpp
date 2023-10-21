@@ -45,7 +45,7 @@ constexpr uint32_t CONFIG_PAGES = 5;
 #define ITEM_Y_OFFSET 60
 #define ITEM_HEIGHT 24
 
-static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 10, 5};
+static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 11, 5};
 
 static void toggle_switch(int id, int param2);
 static void toggle_god_disabled(int id, int param2);
@@ -115,6 +115,7 @@ static generic_button checkbox_buttons[] = {
   {20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DELIVERY_BOY_GOES_TO_MARKET_ALONE, TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE},
   {20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RELIGION_COVERAGE_INFLUENCE_SENTIMENT, TR_CONFIG_RELIGION_COVERAGE_INFLUENCE_SENTIMENT},
   {20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MONUMENTS_INFLUENCE_SENTIMENT, TR_CONFIG_MONUMENTS_INFLUENCE_SENTIMENT},
+  {20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WELL_RADIUS_DEPENDS_MOISTURE, TR_CONFIG_WELL_RADIUS_DEPENDS_MOISTURE},
 
   // GODS
   {20, 72, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_OSIRIS_DISABLED, TR_CONFIG_GOD_OSIRIS_DISABLED},

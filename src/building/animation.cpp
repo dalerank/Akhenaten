@@ -70,8 +70,9 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
         }
         break;
     case BUILDING_WELL:
-        if (map_water_supply_is_well_unnecessary(b->id, 3) != WELL_NECESSARY)
+        if (map_water_supply_is_well_unnecessary(b->id, 3) != WELL_NECESSARY) {
             return 0;
+        }
         break;
         //        case BUILDING_PREFECTURE: // police house
         //        case BUILDING_ENGINEERS_POST:

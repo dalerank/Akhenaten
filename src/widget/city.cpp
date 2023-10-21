@@ -62,7 +62,8 @@ static void update_zoom_level() {
     vec2i offset = camera_get_position();
     if (zoom_update_value(&offset)) {
         city_view_refresh_viewport();
-        camera_go_to_pixel(view_context_main(), offset, true);
+        view_context ctx = view_context_main();
+        camera_go_to_pixel(ctx, offset, true);
         sound_city_decay_views();
     }
 }
@@ -81,8 +82,9 @@ static map_point update_city_view_coords(vec2i pixel) {
         if (screen.x != -1 && screen.y != -1) {
             city_view_set_selected_view_tile(&screen);
             return screentile_to_mappoint(screen);
-        } else
+        } else {
             return map_point(0);
+        }
     }
 }
 static int input_coords_in_city(int x, int y) {

@@ -82,6 +82,7 @@ static translation_string all_strings[]
      {TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE, "Delivery boy goes to market alone"},
      {TR_CONFIG_RELIGION_COVERAGE_INFLUENCE_SENTIMENT, "Religion coverage influence sentiment"},
      {TR_CONFIG_MONUMENTS_INFLUENCE_SENTIMENT, "Monuments influence sentiment"},
+     {TR_CONFIG_WELL_RADIUS_DEPENDS_MOISTURE, "Well radius depends from moisture"},
      {TR_CONFIG_GOD_OSIRIS_DISABLED, "Osiris disabled"},
      {TR_CONFIG_GOD_RA_DISABLED, "Ra disabled"},
      {TR_CONFIG_GOD_PTAH_DISABLED, "Ptah disabled"},

@@ -5,10 +5,12 @@
 #include "core/game_environment.h"
 #include "core/svector.h"
 #include "core/profiler.h"
+#include "config/config.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "grid/aqueduct.h"
 #include "grid/building.h"
+#include "grid/moisture.h"
 #include "grid/building_tiles.h"
 #include "grid/desirability.h"
 #include "grid/grid.h"
@@ -32,9 +34,14 @@ struct water_supply_queue_t {
 
 water_supply_queue_t g_water_supply_queue;
 
-static void mark_well_access(int well_id, int radius) {
-    building* well = building_get(well_id);
+static void mark_well_access(building *well) {
     int x_min, y_min, x_max, y_max;
+
+    int radius = 1;
+    if (config_get(CONFIG_GP_CH_WELL_RADIUS_DEPENDS_MOISTURE)) {
+        radius = (map_moisture_get(well->tile.grid_offset()) / 40);
+        radius = std::clamp(radius, 1, 4);
+    }
     map_grid_get_area(well->tile, 1, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
@@ -49,28 +56,23 @@ static void mark_well_access(int well_id, int radius) {
 }
 
 void map_water_supply_update_houses() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Water Supply Update");
-    svector<int, 512> wells;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-
-        if (b->state != BUILDING_STATE_VALID)
-            continue;
-
-        if (b->type == BUILDING_WELL) {
-            wells.push_back(i);
-        } else if (b->house_size) {
-            b->has_water_access = false;
-            b->has_well_access = 0;
-            if (b->data.house.water_supply
-                || map_terrain_exists_tile_in_area_with_type(b->tile.x(), b->tile.y(), b->size, TERRAIN_FOUNTAIN_RANGE)) {
-                b->has_water_access = true;
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Well Access Update");
+    svector<building *, 512> wells;
+    buildings_valid_do([&] (building &b) {
+        if (b.type == BUILDING_WELL) {
+            wells.push_back(&b);
+        } else if (b.house_size) {
+            b.has_water_access = false;
+            b.has_well_access = 0;
+            if (b.data.house.water_supply
+                || map_terrain_exists_tile_in_area_with_type(b.tile.x(), b.tile.y(), b.size, TERRAIN_FOUNTAIN_RANGE)) {
+                b.has_water_access = true;
             }
         }
-    }
+    });
 
     for (const auto& w : wells) {
-        mark_well_access(w, 1);
+        mark_well_access(w);
     }
 }
 
@@ -116,8 +118,9 @@ static void fill_canals_from_offset(int grid_offset) {
 
         map_aqueduct_set(grid_offset, 1);
         int image_id = map_image_at(grid_offset);
-        if (image_id >= image_without_water)
+        if (image_id >= image_without_water) {
             map_image_set(grid_offset, image_id - IMAGE_CANAL_FULL_OFFSET);
+        }
         map_terrain_add_with_radius(MAP_X(grid_offset), MAP_Y(grid_offset), 1, 2, TERRAIN_IRRIGATION_RANGE);
 
         next_offset = -1;
@@ -129,14 +132,15 @@ static void fill_canals_from_offset(int grid_offset) {
                 // check if aqueduct connects to reservoir --> doesn't connect to corner
                 int xy = map_property_multi_tile_xy(new_offset);
                 if (xy != EDGE_X0Y0 && xy != EDGE_X2Y0 && xy != EDGE_X0Y2 && xy != EDGE_X2Y2) {
-                    if (!b->has_water_access)
+                    if (!b->has_water_access) {
                         b->has_water_access = 2;
+                    }
                 }
             } else if (map_terrain_is(new_offset, TERRAIN_CANAL)) {
                 if (!map_aqueduct_at(new_offset)) {
-                    if (next_offset == -1)
+                    if (next_offset == -1) {
                         next_offset = new_offset;
-                    else {
+                    } else {
                         g_water_supply_queue.items[g_water_supply_queue.tail++] = new_offset;
                         if (g_water_supply_queue.tail >= MAX_QUEUE)
                             g_water_supply_queue.tail = 0;
@@ -145,12 +149,14 @@ static void fill_canals_from_offset(int grid_offset) {
             }
         }
         if (next_offset == -1) {
-            if (g_water_supply_queue.head == g_water_supply_queue.tail)
+            if (g_water_supply_queue.head == g_water_supply_queue.tail) {
                 return;
+            }
 
             next_offset = g_water_supply_queue.items[g_water_supply_queue.head++];
-            if (g_water_supply_queue.head >= MAX_QUEUE)
+            if (g_water_supply_queue.head >= MAX_QUEUE) {
                 g_water_supply_queue.head = 0;
+            }
         }
         grid_offset = next_offset;
     } while (next_offset > -1);
