@@ -307,6 +307,7 @@ static void draw_scenario_info() {
     }
 }
 static void draw_scores(int scenario_id) {
+    view_context ctx = view_context_main();
     int rank = get_scenario_mission_rank(scenario_id);
     bool unlocked = game_scenario_unlocked(scenario_id);
     bool beaten = game_scenario_beaten(scenario_id);
@@ -328,9 +329,9 @@ static void draw_scores(int scenario_id) {
     }
 
     uint8_t txt[200];
-    debug_text(txt, INFO_X, -100, 100, "rank", rank, COLOR_FONT_YELLOW);
-    debug_text(txt, INFO_X, -80, 100, "unlocked", unlocked, COLOR_FONT_YELLOW);
-    debug_text(txt, INFO_X, -60, 100, "beaten", beaten, COLOR_FONT_YELLOW);
+    debug_text(ctx, txt, INFO_X, -100, 100, "rank", rank, COLOR_FONT_YELLOW);
+    debug_text(ctx, txt, INFO_X, -80, 100, "unlocked", unlocked, COLOR_FONT_YELLOW);
+    debug_text(ctx, txt, INFO_X, -60, 100, "beaten", beaten, COLOR_FONT_YELLOW);
 }
 static void draw_side_panel_info() {
     auto &data = g_window_scenario_selection;
@@ -425,6 +426,7 @@ static void draw_background() {
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
+    view_context ctx = view_context_main();
     auto &data = g_window_scenario_selection;
     graphics_set_to_dialog();
 
@@ -435,35 +437,17 @@ static void draw_foreground(void) {
         if (data.dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && data.panel->get_selected_entry_idx() != -1) {
             // show scores / goals button
             int i = data.scores_or_goals;
-            button_border_draw(button_scores_goals[i].x,
-                               button_scores_goals[i].y,
-                               button_scores_goals[i].width,
-                               button_scores_goals[i].height,
-                               data.focus_button_id == 1 ? 1 : 0);
-            lang_text_draw_centered(44,
-                                    221 - i,
-                                    button_scores_goals[i].x,
-                                    button_scores_goals[i].y + 10,
-                                    button_scores_goals[i].width,
-                                    FONT_NORMAL_BLACK_ON_DARK);
+            button_border_draw(button_scores_goals[i].x, button_scores_goals[i].y, button_scores_goals[i].width, button_scores_goals[i].height, data.focus_button_id == 1 ? 1 : 0);
+            lang_text_draw_centered(44, 221 - i, button_scores_goals[i].x, button_scores_goals[i].y + 10, button_scores_goals[i].width, FONT_NORMAL_BLACK_ON_DARK);
         }
         break;
     case MAP_SELECTION_CAMPAIGN:
         // campaign buttons
         lang_text_draw_centered(294, 41, CSEL_X, CSEL_Y + 10 - CSEL_YGAP, CSEL_W, FONT_NORMAL_BLACK_ON_LIGHT);
-        lang_text_draw_centered(
-          294, 42, CSEL_X + CSEL_XGAP, CSEL_Y + 10 - CSEL_YGAP, CSEL_W, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_centered(294, 42, CSEL_X + CSEL_XGAP, CSEL_Y + 10 - CSEL_YGAP, CSEL_W, FONT_NORMAL_BLACK_ON_LIGHT);
         for (int i = 0; i < 9; ++i) {
-            large_label_draw(buttons_campaigns[i].x,
-                             buttons_campaigns[i].y,
-                             buttons_campaigns[i].width / 16,
-                             data.focus_button_id == i + 1 ? 1 : 0);
-            lang_text_draw_centered(294,
-                                    i * 4,
-                                    buttons_campaigns[i].x,
-                                    buttons_campaigns[i].y + 5,
-                                    buttons_campaigns[i].width,
-                                    FONT_NORMAL_BLACK_ON_LIGHT);
+            large_label_draw(buttons_campaigns[i].x, buttons_campaigns[i].y, buttons_campaigns[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
+            lang_text_draw_centered(294, i * 4, buttons_campaigns[i].x, buttons_campaigns[i].y + 5, buttons_campaigns[i].width, FONT_NORMAL_BLACK_ON_LIGHT);
         }
         if (data.focus_button_id > 0)
             draw_side_panel_info();
@@ -471,7 +455,7 @@ static void draw_foreground(void) {
     }
 
     uint8_t txt[200];
-    debug_text(txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
+    debug_text(ctx, txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
     //    draw_debug_line(txt, INFO_X + 100, -120, 0, "", get_junk2(), COLOR_FONT_YELLOW);
 
     image_buttons_draw(0, 0, &start_button, 1);

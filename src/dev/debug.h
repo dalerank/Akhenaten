@@ -62,8 +62,8 @@ void handle_debug_hotkeys(const hotkeys* h);
 
 void debug_font_test();
 
-void debug_text(uint8_t* str, int x, int y, int indent, const char* text, int value, color color = COLOR_WHITE, font_t font = FONT_SMALL_OUTLINED);
-void debug_text_a(uint8_t* str, int x, int y, int indent, const char* text, color color = COLOR_WHITE, font_t font = FONT_SMALL_OUTLINED);
+void debug_text(view_context &ctx, uint8_t* str, int x, int y, int indent, const char* text, int value, color color = COLOR_WHITE, font_t font = FONT_SMALL_OUTLINED);
+void debug_text_a(view_context &ctx, uint8_t* str, int x, int y, int indent, const char* text, color color = COLOR_WHITE, font_t font = FONT_SMALL_OUTLINED);
 void debug_text_float(uint8_t* str, int x, int y, int indent, const char* text, double value, color color = COLOR_WHITE);
 void debug_text_dual_left(uint8_t* str, int x, int y, int indent, int indent2, const char* text, int value1, int value2, color color = COLOR_WHITE);
 

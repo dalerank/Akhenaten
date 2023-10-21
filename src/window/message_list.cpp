@@ -93,6 +93,7 @@ static void draw_messages(int total_messages) {
 
     int max = total_messages < MAX_MESSAGES ? total_messages : MAX_MESSAGES;
     int index = scrollbar.scroll_position;
+
     for (int i = 0; i < max; i++, index++) {
         const city_message* msg = city_message_get(index);
         const lang_message* lang_msg = lang_get_message(city_message_get_text_id(msg->MM_text_id));
@@ -121,47 +122,47 @@ static void draw_messages(int total_messages) {
             uint8_t str[10];
 
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_body_id, c);
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_body_id, c);
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_title_id, c); // FF FF
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_title_id, c); // FF FF
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_02, c); // FF FF
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_02, c); // FF FF
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city, c);
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city, c);
             ; // enum?
 
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount, c);
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount, c);
             ;
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource, c);
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource, c);
             ;
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_months_left, c);
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_months_left, c);
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_07, c);
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_07, c);
 
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_phrase_id, c);
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_phrase_id, c);
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city_past, c);
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city_past, c);
             ; // enum?
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_09, c); // 00 00
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_09, c); // 00 00
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_10, c); // 00 00
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_10, c); // 00 00
 
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount_past, c);
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount_past, c);
             ;
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource_past, c);
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource_past, c);
             ;
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_11a_i8, c);
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_11a_i8, c);
             ; // FF FF
             o += oo;
-            debug_text(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->background_img, c);
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->background_img, c);
             ; // 00 00
 
             continue;
