@@ -426,7 +426,7 @@ static void draw_figure_in_city(int figure_id, vec2i* coord, view_context &ctx) 
 
 void window_building_prepare_figure_list(object_info* c) {
     auto &data = g_building_figures_data;
-    auto &ctx = view_context_main();
+    view_context ctx = view_context_main();
     if (c->figure.count > 0) {
         vec2i coord = {0, 0};
         for (int i = 0; i < c->figure.count; i++) {
