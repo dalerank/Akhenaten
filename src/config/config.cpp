@@ -78,6 +78,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
   {"gameplay_change_religion_coverage_influence_sentiment", true},
   {"gameplay_change_monuments_influence_sentiment", true},
   {"gameplay_change_well_radius_depends_moisture", true},
+  {"gameplay_change_enter_point_on_nearest_tile", true},
 
   ///
 

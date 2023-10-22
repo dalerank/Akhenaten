@@ -20,8 +20,9 @@ static void set_strings(const translation_string* strings, int num_strings, int 
         if (data.strings[string->key])
             continue;
 
-        if (is_default)
+        if (is_default) {
             logs::info("Translation key not found: %s %u", string->string, string->key);
+        }
 
         int length_left = BUFFER_SIZE - data.buf_index;
         encoding_from_utf8(string->string, &data.buffer[data.buf_index], length_left);

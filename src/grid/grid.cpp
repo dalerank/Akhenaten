@@ -360,9 +360,9 @@ bool map_grid_inside_map_area(int grid_offset, int edge_size) {
 //     scenario_map_data()->start_offset / GRID_LENGTH, edge_size);
 // }
 
-static int offsets_array[150];
-const int* map_grid_adjacent_offsets_xy(int sizex, int sizey) {
+void map_grid_adjacent_offsets_xy(int sizex, int sizey, offsets_array &arr) {
     int array_size = (sizex + 1) * 2 + (sizey + 1) * 2;
+    array_size = std::min(150, array_size);
     for (int i = 0; i <= array_size; i++) {
         int x = 0;
         int y = 0;
@@ -381,15 +381,12 @@ const int* map_grid_adjacent_offsets_xy(int sizex, int sizey) {
             y = sizey - (i % (sizey + 1)) - 1;
         }
 
-        offsets_array[i] = GRID_OFFSET(x, y);
-
-        if (i == array_size)
-            offsets_array[i] = 0;
+        arr.push_back(GRID_OFFSET(x, y));
     }
-    return offsets_array;
 }
-const int* map_grid_adjacent_offsets(int size) {
-    return map_grid_adjacent_offsets_xy(size, size);
+
+void map_grid_adjacent_offsets(int size, offsets_array &arr) {
+    return map_grid_adjacent_offsets_xy(size, size, arr);
 
     //////////////
 

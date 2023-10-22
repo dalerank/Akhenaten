@@ -21,21 +21,50 @@ static bool road_tile_valid_access(int grid_offset) {
             building_at(grid_offset)->type == BUILDING_GATEHOUSE || building_at(grid_offset)->type == BUILDING_BOOTH
             || building_at(grid_offset)->type == BUILDING_BANDSTAND
             || building_at(grid_offset)->type == BUILDING_PAVILLION
-            || building_at(grid_offset)->type == BUILDING_FESTIVAL_SQUARE))
+            || building_at(grid_offset)->type == BUILDING_FESTIVAL_SQUARE)) {
         return true;
+    }
+
     return false;
 }
 
-void map_road_find_minimum_tile_xy(tile2i tile, int sizex, int sizey, int* min_value, int* min_grid_offset) {
+void map_road_find_minimum_tile_xy(tile2i tile, int sizex, int sizey, int *min_value, int *min_grid_offset) {
+    config_get(CONFIG_GP_CH_ENTER_POINT_ON_NEAREST_TILE)
+        ? map_road_find_minimum_tile_xy_nearest(tile, sizex, sizey, min_value, min_grid_offset)
+        : map_road_find_minimum_tile_xy_classic(tile, sizex, sizey, min_value, min_grid_offset);
+}
+
+void map_road_find_minimum_tile_xy_nearest(tile2i tile, int sizex, int sizey, int* min_value, int* min_grid_offset) {
     int base_offset = tile.grid_offset();
-    const int *tile_delta = map_grid_adjacent_offsets_xy(sizex, sizey);
-    for (; *tile_delta; tile_delta++) {
-        int grid_offset = base_offset + *tile_delta;
+    offsets_array offsets;
+    map_grid_adjacent_offsets_xy(sizex, sizey, offsets);
+    float f_min_value = *min_value;
+    for (const auto &tile_delta: offsets) {
+        int grid_offset = base_offset + tile_delta;
 
         if (!road_tile_valid_access(grid_offset)) {
             continue;
         }
-//testy
+
+        float road_dist = tile2i(grid_offset).dist(tile);
+        if (road_dist < f_min_value) {
+            f_min_value = road_dist;
+            *min_value = f_min_value;
+            *min_grid_offset = grid_offset;
+        }
+    }
+}
+
+void map_road_find_minimum_tile_xy_classic(tile2i tile, int sizex, int sizey, int* min_value, int* min_grid_offset) {
+    int base_offset = tile.grid_offset();
+    offsets_array offsets;
+    map_grid_adjacent_offsets_xy(sizex, sizey, offsets);
+    for (const auto &tile_delta: offsets) {
+        int grid_offset = base_offset + tile_delta;
+
+        if (!road_tile_valid_access(grid_offset)) {
+            continue;
+        }
         int road_index = city_map_road_network_index(map_road_network_get(grid_offset));
         if (road_index < *min_value) {
             *min_value = road_index;
@@ -54,8 +83,10 @@ bool map_get_road_access_tile(tile2i tile, int size, tile2i &road) {
 
 bool burning_ruin_can_be_accessed(int x, int y, tile2i* point) {
     int base_offset = MAP_OFFSET(x, y);
-    for (const int* tile_delta = map_grid_adjacent_offsets(1); *tile_delta; tile_delta++) {
-        int grid_offset = base_offset + *tile_delta;
+    offsets_array offsets;
+    map_grid_adjacent_offsets(1, offsets);
+    for (const auto &tile_delta: offsets) {
+        int grid_offset = base_offset + tile_delta;
 
         if (road_tile_valid_access(grid_offset)
             || (building_at(grid_offset)->type == BUILDING_BURNING_RUIN
@@ -235,8 +266,10 @@ int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, i
     int min_index = 12;
     int min_grid_offset = -1;
     int base_offset = MAP_OFFSET(x, y);
-    for (const int* tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
-        int grid_offset = base_offset + *tile_delta;
+    offsets_array offsets;
+    map_grid_adjacent_offsets(size, offsets);
+    for (const auto &tile_delta: offsets) {
+        int grid_offset = base_offset + tile_delta;
         if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
             int index = city_map_road_network_index(map_road_network_get(grid_offset));
             if (index < min_index) {
@@ -252,8 +285,10 @@ int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, i
     }
     int min_dist = 100000;
     min_grid_offset = -1;
-    for (const int* tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
-        int grid_offset = base_offset + *tile_delta;
+    offsets.clear();
+    map_grid_adjacent_offsets(size, offsets);
+    for (const auto &tile_delta: offsets) {
+        int grid_offset = base_offset + tile_delta;
         int dist = map_routing_distance(grid_offset);
         if (dist > 0 && dist < min_dist) {
             min_dist = dist;
@@ -273,8 +308,10 @@ int map_road_to_largest_network(int x, int y, int size, int* x_road, int* y_road
 
 static void check_road_to_largest_network_hippodrome(int x, int y, int* min_index, int* min_grid_offset) {
     int base_offset = MAP_OFFSET(x, y);
-    for (const int* tile_delta = map_grid_adjacent_offsets(5); *tile_delta; tile_delta++) {
-        int grid_offset = base_offset + *tile_delta;
+    offsets_array offsets;
+    map_grid_adjacent_offsets(5, offsets);
+    for (const int &tile_delta: offsets) {
+        int grid_offset = base_offset + tile_delta;
         if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
             int index = city_map_road_network_index(map_road_network_get(grid_offset));
             if (index < *min_index) {
@@ -285,10 +322,11 @@ static void check_road_to_largest_network_hippodrome(int x, int y, int* min_inde
     }
 }
 
-static void
-check_min_dist_hippodrome(int base_offset, int x_offset, int* min_dist, int* min_grid_offset, int* min_x_offset) {
-    for (const int* tile_delta = map_grid_adjacent_offsets(5); *tile_delta; tile_delta++) {
-        int grid_offset = base_offset + *tile_delta;
+static void check_min_dist_hippodrome(int base_offset, int x_offset, int* min_dist, int* min_grid_offset, int* min_x_offset) {
+    offsets_array offsets;
+    map_grid_adjacent_offsets(5, offsets);
+    for (const int &tile_delta: offsets) {
+        int grid_offset = base_offset + tile_delta;
         int dist = map_routing_distance(grid_offset);
         if (dist > 0 && dist < *min_dist) {
             *min_dist = dist;

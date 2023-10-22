@@ -30,7 +30,7 @@ public:
     const int ABS_X(void);
     const int ABS_Y(void);
 
-    inline int dist(map_point o) { return ::sqrtf(::powf(x() - o.x(), 2) + ::powf(y() - o.y(), 2)); }
+    inline float dist(map_point o) { return ::sqrtf(::powf(x() - o.x(), 2) + ::powf(y() - o.y(), 2)); }
 
     // MODIFIERS
     void shift(int _x, int _y);

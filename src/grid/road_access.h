@@ -19,4 +19,6 @@ int map_get_diagonal_road_tiles_for_roaming(int grid_offset, int* road_tiles);
 int map_has_adjacent_road_tiles(int grid_offset);
 int map_has_adjacent_granary_road(int grid_offset);
 void map_road_find_minimum_tile_xy(tile2i tile, int sizex, int sizey, int *min_value, int *min_grid_offset);
+void map_road_find_minimum_tile_xy_nearest(tile2i tile, int sizex, int sizey, int *min_value, int *min_grid_offset);
+void map_road_find_minimum_tile_xy_classic(tile2i tile, int sizex, int sizey, int *min_value, int *min_grid_offset);
 bool map_road_within_radius(int x, int y, int size, int radius, tile2i &road_tile);

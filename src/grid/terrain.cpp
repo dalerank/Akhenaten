@@ -236,25 +236,31 @@ bool map_terrain_has_only_meadow_in_ring(int x, int y, int distance) {
 }
 bool map_terrain_is_adjacent_to_wall(int x, int y, int size) {
     int base_offset = MAP_OFFSET(x, y);
-    for (const int* tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
-        if (map_terrain_is(base_offset + *tile_delta, TERRAIN_WALL))
+    offsets_array offsets;
+    map_grid_adjacent_offsets(size, offsets);
+    for (const int& tile_delta: offsets) {
+        if (map_terrain_is(base_offset + tile_delta, TERRAIN_WALL))
             return true;
     }
     return false;
 }
 bool map_terrain_is_adjacent_to_water(int x, int y, int size) {
     int base_offset = MAP_OFFSET(x, y);
-    for (const int* tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
-        if (map_terrain_is(base_offset + *tile_delta, TERRAIN_WATER))
+    offsets_array offsets;
+    map_grid_adjacent_offsets(size, offsets);
+    for (const int& tile_delta: offsets) {
+        if (map_terrain_is(base_offset + tile_delta, TERRAIN_WATER))
             return true;
     }
     return false;
 }
 bool map_terrain_is_adjacent_to_open_water(int x, int y, int size) {
     int base_offset = MAP_OFFSET(x, y);
-    for (const int* tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
-        if (map_terrain_is(base_offset + *tile_delta, TERRAIN_WATER)
-            && map_routing_distance(base_offset + *tile_delta) > 0) {
+    offsets_array offsets;
+    map_grid_adjacent_offsets(size, offsets);
+    for (const int& tile_delta: offsets) {
+        if (map_terrain_is(base_offset + tile_delta, TERRAIN_WATER)
+            && map_routing_distance(base_offset + tile_delta) > 0) {
             return true;
         }
     }
@@ -262,8 +268,10 @@ bool map_terrain_is_adjacent_to_open_water(int x, int y, int size) {
 }
 bool map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int* x_tile, int* y_tile) {
     int base_offset = MAP_OFFSET(x, y);
-    for (const int* tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
-        int grid_offset = base_offset + *tile_delta;
+    offsets_array offsets;
+    map_grid_adjacent_offsets(size, offsets);
+    for (const int& tile_delta: offsets) {
+        int grid_offset = base_offset + tile_delta;
         if (map_terrain_is(grid_offset, TERRAIN_ROAD) || !map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
             *x_tile = MAP_X(grid_offset);
             *y_tile = MAP_Y(grid_offset);

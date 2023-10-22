@@ -256,6 +256,9 @@ static int center_in_city(int element_width_pixels) {
 
 void highlight_waypoints(building* b) { // highlight the 4 routing tiles for roams from this building
     map_clear_highlights();
+    if (b->has_road_access) {
+        map_highlight_set(b->road_access.grid_offset(), 2);
+    }
     if (b->type == BUILDING_MENU_FORTS || b->house_size) { // building doesn't send roamers
         return;
     }
@@ -287,10 +290,6 @@ void highlight_waypoints(building* b) { // highlight the 4 routing tiles for roa
     map_grid_bound(&hx, &hy);
     if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
         map_highlight_set(road_tile.grid_offset(), 1);
-    }
-
-    if (b->has_road_access) {
-        map_highlight_set(b->road_access.grid_offset(), 2);
     }
 
     window_invalidate();

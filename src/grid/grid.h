@@ -3,6 +3,7 @@
 #include "core/buffer.h"
 #include "core/game_environment.h"
 #include "core/vec2i.h"
+#include "core/svector.h"
 #include "point.h"
 #include "scenario/map.h"
 
@@ -80,8 +81,9 @@ int map_grid_is_inside(map_point tile, int size);
 int map_grid_is_inside(int x, int y, int size);
 bool map_grid_inside_map_area(int grid_offset, int edge_size = 0);
 // bool map_grid_inside_map_area(int x, int y, int edge_size = 0);
-const int* map_grid_adjacent_offsets_xy(int sizex, int sizey);
-const int* map_grid_adjacent_offsets(int size);
+using offsets_array = svector<int, 150>;
+void map_grid_adjacent_offsets_xy(int sizex, int sizey, offsets_array &arr);
+void map_grid_adjacent_offsets(int size, offsets_array &arr);
 
 void map_grid_save_state_u8(const uint8_t* grid, buffer* buf);
 void map_grid_save_state_i8(const int8_t* grid, buffer* buf);
