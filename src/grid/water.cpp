@@ -244,7 +244,8 @@ int map_water_get_wharf_for_new_fishing_boat(figure* boat, map_point* tile) {
         dy = 1;
         break;
     }
-    map_point_store_result(wharf->tile.x() + dx, wharf->tile.y() + dy, tile);
+    tile2i wharf_tile = wharf->tile.shifted(dx, dy);
+    map_point_store_result(wharf_tile, *tile);
     return wharf->id;
 }
 int map_water_find_alternative_fishing_boat_tile(figure* boat, map_point* tile) {
@@ -260,7 +261,7 @@ int map_water_find_alternative_fishing_boat_tile(figure* boat, map_point* tile) 
             for (int xx = x_min; xx <= x_max; xx++) {
                 int grid_offset = MAP_OFFSET(xx, yy);
                 if (!map_has_figure_at(grid_offset) && map_terrain_is(grid_offset, TERRAIN_WATER)) {
-                    map_point_store_result(xx, yy, tile);
+                    map_point_store_result(tile2i(xx, yy), *tile);
                     return 1;
                 }
             }
@@ -286,7 +287,7 @@ int map_water_find_shipwreck_tile(figure* wreck, map_point* tile) {
                         && map_terrain_is(MAP_OFFSET(xx, yy + 2), TERRAIN_WATER)
                         && map_terrain_is(MAP_OFFSET(xx - 2, yy), TERRAIN_WATER)
                         && map_terrain_is(MAP_OFFSET(xx + 2, yy), TERRAIN_WATER)) {
-                        map_point_store_result(xx, yy, tile);
+                        map_point_store_result(tile2i(xx, yy), *tile);
                         return 1;
                     }
                 }
@@ -312,7 +313,7 @@ int map_water_can_spawn_fishing_boat(int x, int y, int size, map_point* tile) {
         if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
             if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
                 if (num_surrounding_water_tiles(grid_offset) >= 8) {
-                    map_point_store_result(MAP_X(grid_offset), MAP_Y(grid_offset), tile);
+                    map_point_store_result(tile2i(grid_offset), *tile);
                     return 1;
                 }
             }

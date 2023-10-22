@@ -17,11 +17,7 @@
 
 int g_tower_sentry_request = 0;
 
-int building_get_barracks_for_weapon(map_point tile,
-                                     int resource,
-                                     int road_network_id,
-                                     int distance_from_entry,
-                                     map_point* dst) {
+int building_get_barracks_for_weapon(tile2i tile, int resource, int road_network_id, int distance_from_entry, tile2i* dst) {
     if (resource != RESOURCE_WEAPONS)
         return 0;
 
@@ -52,8 +48,9 @@ int building_get_barracks_for_weapon(map_point tile,
         }
     }
     if (min_building && min_dist < INFINITE) {
-        if (dst)
-            map_point_store_result(min_building->road_access.x(), min_building->road_access.y(), dst);
+        if (dst) {
+            map_point_store_result(min_building->road_access, *dst);
+        }
 
         return min_building->id;
     }

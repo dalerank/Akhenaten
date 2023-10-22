@@ -320,7 +320,8 @@ int building_granary_for_storing(map_point tile, int resource, int distance_from
     }
     // deliver to center of granary
     building* min = building_get(min_building_id);
-    map_point_store_result(min->tile.x() + 1, min->tile.y() + 1, dst);
+    tile2i granary_tile = min->tile.shifted(1, 1);
+    map_point_store_result(granary_tile, *dst);
     return min_building_id;
 }
 
@@ -363,7 +364,8 @@ int building_getting_granary_for_storing(map_point tile, int resource, int dista
     }
 
     building* min = building_get(min_building_id);
-    map_point_store_result(min->tile.x() + 1, min->tile.y() + 1, dst);
+    tile2i storing_tile = min->tile.shifted(1, 1);
+    map_point_store_result(storing_tile, *dst);
     return min_building_id;
 }
 
@@ -418,7 +420,8 @@ int building_granary_for_getting(building* src, map_point* dst) {
         }
     }
     building* min = building_get(min_building_id);
-    map_point_store_result(min->tile.x() + 1, min->tile.y() + 1, dst);
+    tile2i storing_tile = min->tile.shifted(1, 1);
+    map_point_store_result(storing_tile, *dst);
     return min_building_id;
 }
 

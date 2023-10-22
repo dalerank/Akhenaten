@@ -245,7 +245,7 @@ int figure_trade_ship_is_trading(figure* ship) {
     return TRADE_SHIP_NONE;
 }
 
-int figure::get_closest_storageyard(map_point tile, int city_id, int distance_from_entry, map_point* warehouse) {
+int figure::get_closest_storageyard(map_point tile, int city_id, int distance_from_entry, tile2i *warehouse) {
     int exportable[RESOURCES_MAX];
     int importable[RESOURCES_MAX];
     exportable[RESOURCE_NONE] = 0;
@@ -324,7 +324,7 @@ int figure::get_closest_storageyard(map_point tile, int city_id, int distance_fr
         return 0;
 
     if (min_building->has_road_access == 1) {
-        map_point_store_result(min_building->tile.x(), min_building->tile.y(), warehouse);
+        map_point_store_result(min_building->tile, *warehouse);
     } else if (!map_has_road_access(min_building->tile, 3, warehouse)) {
         return 0;
     }

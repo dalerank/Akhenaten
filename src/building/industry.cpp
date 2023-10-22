@@ -385,7 +385,7 @@ int building_get_workshop_for_raw_material_with_room(map_point tile,
     }
 
     if (min_building) {
-        map_point_store_result(min_building->road_access.x(), min_building->road_access.y(), dst);
+        map_point_store_result(min_building->road_access, *dst);
         return min_building->id;
     }
 
@@ -420,7 +420,7 @@ int building_get_workshop_for_raw_material(vec2i tile,
     }
 
     if (min_building) {
-        map_point_store_result(min_building->road_access.x(), min_building->road_access.y(), dst);
+        map_point_store_result(min_building->road_access, *dst);
         return min_building->id;
     }
 

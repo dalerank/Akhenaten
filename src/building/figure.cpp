@@ -146,8 +146,8 @@ figure* building::create_roaming_figure(e_figure_type _type, int created_action,
 
     return f;
 }
-figure*
-building::create_figure_with_destination(e_figure_type _type, building* destination, int created_action, int slot) {
+
+figure* building::create_figure_with_destination(e_figure_type _type, building* destination, int created_action, int slot) {
     figure* f = create_figure_generic(_type, created_action, slot, DIR_4_BOTTOM_LEFT);
     f->set_destination(destination->id);
     f->set_immigrant_home(0);
@@ -155,6 +155,7 @@ building::create_figure_with_destination(e_figure_type _type, building* destinat
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
     return f;
 }
+
 figure* building::create_cartpusher(e_resource resource_id, int quantity, int created_action, int slot) {
     // TODO: industry cartpushers do not spawn in the correct place?
 

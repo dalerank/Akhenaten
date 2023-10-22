@@ -43,11 +43,11 @@ void map_road_find_minimum_tile_xy(int x, int y, int sizex, int sizey, int* min_
     }
 }
 
-bool map_has_road_access(tile2i tile, int size, map_point* road) {
+bool map_has_road_access(tile2i tile, int size, tile2i* road) {
     return map_has_road_access_rotation(0, tile.x(), tile.y(), size, road);
 }
 
-bool burning_ruin_can_be_accessed(int x, int y, map_point* point) {
+bool burning_ruin_can_be_accessed(int x, int y, tile2i* point) {
     int base_offset = MAP_OFFSET(x, y);
     for (const int* tile_delta = map_grid_adjacent_offsets(1); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
@@ -55,14 +55,14 @@ bool burning_ruin_can_be_accessed(int x, int y, map_point* point) {
         if (road_tile_valid_access(grid_offset)
             || (building_at(grid_offset)->type == BUILDING_BURNING_RUIN
                 && building_at(grid_offset)->fire_duration <= 0)) {
-            map_point_store_result(MAP_X(grid_offset), MAP_Y(grid_offset), point);
+            map_point_store_result(tile2i(grid_offset), *point);
             return true;
         }
     }
     return false;
 }
 
-bool map_has_road_access_rotation(int rotation, int x, int y, int size, map_point* road) {
+bool map_has_road_access_rotation(int rotation, int x, int y, int size, tile2i* road) {
     switch (rotation) {
     case 1:
         x = x - size + 1;
@@ -81,8 +81,9 @@ bool map_has_road_access_rotation(int rotation, int x, int y, int size, map_poin
     int min_grid_offset = MAP_OFFSET(x, y);
     map_road_find_minimum_tile_xy(x, y, size, size, &min_value, &min_grid_offset);
     if (min_value < 12) {
-        if (road)
-            map_point_store_result(MAP_X(min_grid_offset), MAP_Y(min_grid_offset), road);
+        if (road) {
+            map_point_store_result(tile2i(min_grid_offset), *road);
+        }
         return true;
     }
     return false;
@@ -149,7 +150,7 @@ bool map_has_road_access_temple_complex(int x, int y, int orientation, bool from
     map_road_find_minimum_tile_xy(x, y, sizex, sizey, &min_value, &min_grid_offset);
     if (min_value < 12) {
         if (road) {
-            map_point_store_result(MAP_X(min_grid_offset), MAP_Y(min_grid_offset), road);
+            map_point_store_result(tile2i(min_grid_offset), *road);
         }
         return true;
     }

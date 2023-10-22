@@ -603,30 +603,36 @@ static void add_building(building* b, int orientation, int variant) {
 
 static void mark_construction(int x, int y, int size_x, int size_y, int terrain, bool absolute_xy) {
     if (Planner.can_be_placed() == CAN_PLACE
-        && map_building_tiles_mark_construction(x, y, size_x, size_y, terrain, absolute_xy))
+        && map_building_tiles_mark_construction(x, y, size_x, size_y, terrain, absolute_xy)) {
         Planner.draw_as_constructing = true;
+    }
 }
+
 static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end) {
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure* f = figure_get(i);
         if (config_get(CONFIG_GP_CH_WOLVES_BLOCK)) {
-            if (f->state != FIGURE_STATE_ALIVE || !f->is_enemy())
+            if (f->state != FIGURE_STATE_ALIVE || !f->is_enemy()) {
                 continue;
+            }
 
-        } else if (f->state != FIGURE_STATE_ALIVE || !f->is_enemy())
+        } else if (f->state != FIGURE_STATE_ALIVE || !f->is_enemy()) {
             continue;
+        }
 
         int tile_x = f->tile.x();
         int tile_y = f->tile.y();
         int dx = (tile_x > x_start) ? (tile_x - x_start) : (x_start - tile_x);
         int dy = (tile_y > y_start) ? (tile_y - y_start) : (y_start - tile_y);
-        if (dx <= 12 && dy <= 12)
+        if (dx <= 12 && dy <= 12) {
             return 1;
+        }
 
         dx = (tile_x > x_end) ? (tile_x - x_end) : (x_end - tile_x);
         dy = (tile_y > y_end) ? (tile_y - y_end) : (y_end - tile_y);
-        if (dx <= 12 && dy <= 12)
+        if (dx <= 12 && dy <= 12) {
             return 1;
+        }
     }
     return 0;
 }

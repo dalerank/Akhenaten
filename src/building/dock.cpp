@@ -109,7 +109,8 @@ int building_dock_get_free_destination(int ship_id, map_point* tile) {
         dy = 1;
         break;
     }
-    map_point_store_result(dock->tile.x() + dx, dock->tile.y() + dy, tile);
+    tile2i dock_tile = dock->tile.shifted(dx, dy);
+    map_point_store_result(dock_tile, *tile);
     dock->data.dock.trade_ship_id = ship_id;
     return dock_id;
 }
@@ -147,9 +148,12 @@ int building_dock_get_queue_destination(int ship_id, map_point* tile) {
             dy = 2;
             break;
         }
-        map_point_store_result(dock->tile.x() + dx, dock->tile.y() + dy, tile);
-        if (!map_has_figure_at(tile->grid_offset()))
+        tile2i dock_tile = dock->tile.shifted(dx, dy);
+        map_point_store_result(dock_tile, *tile);
+
+        if (!map_has_figure_at(tile->grid_offset())) {
             return dock_id;
+        }
     }
     // second queue position
     for (int i = 0; i < 10; i++) {
@@ -180,9 +184,11 @@ int building_dock_get_queue_destination(int ship_id, map_point* tile) {
             dy = 2;
             break;
         }
-        map_point_store_result(dock->tile.x() + dx, dock->tile.y() + dy, tile);
-        if (!map_has_figure_at(tile->grid_offset()))
+        tile2i dock_tile = dock->tile.shifted(dx, dy);
+        map_point_store_result(dock_tile, *tile);
+        if (!map_has_figure_at(tile->grid_offset())) {
             return dock_id;
+        }
     }
     return 0;
 }

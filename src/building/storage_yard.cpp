@@ -401,10 +401,11 @@ int building_storageyard_for_storing(building* src,
 
     // abuse null building space
     building* b = building_get(min_building_id)->main();
-    if (b->has_road_access == 1)
-        map_point_store_result(b->tile.x(), b->tile.y(), dst);
-    else if (!map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), 3, dst))
+    if (b->has_road_access == 1) {
+        map_point_store_result(b->tile, *dst);
+    } else if (!map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), 3, dst)) {
         return 0;
+    }
 
     return min_building_id;
 }
@@ -439,8 +440,9 @@ int building_storageyard_for_getting(building* src, e_resource resource, map_poi
         }
     }
     if (min_building) {
-        if (dst)
-            map_point_store_result(min_building->road_access.x(), min_building->road_access.y(), dst);
+        if (dst) {
+            map_point_store_result(min_building->road_access, *dst);
+        }
         return min_building->id;
     } else
         return 0;

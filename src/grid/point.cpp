@@ -152,12 +152,9 @@ map_point::map_point(int _x, int _y) {
 static map_point last; // cached point for some internal logic uses
 const map_point map_point_invalid;
 
-void map_point_store_result(int x, int y, map_point* point) {
-    point->set(x, y);
-    last.set(x, y);
-    //    *point = last = map_point(x, y);
-    //    point->x = last.x = x;
-    //    point->y = last.y = y;
+void map_point_store_result(tile2i tile, tile2i& point) {
+    point = tile;
+    last = tile;
 }
 
 void map_point_get_last_result(map_point* point) {

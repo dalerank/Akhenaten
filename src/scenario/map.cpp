@@ -24,13 +24,13 @@ void scenario_map_init_entry_exit(void) {
     }
 }
 
-map_point scenario_map_entry(void) {
-    map_point point = {g_scenario_data.entry_point.x(), g_scenario_data.entry_point.y()};
+tile2i scenario_map_entry(void) {
+    tile2i point = {g_scenario_data.entry_point.x(), g_scenario_data.entry_point.y()};
     return point;
 }
 
-map_point scenario_map_exit(void) {
-    map_point point = {g_scenario_data.exit_point.x(), g_scenario_data.exit_point.y()};
+tile2i scenario_map_exit(void) {
+    tile2i point = {g_scenario_data.exit_point.x(), g_scenario_data.exit_point.y()};
     return point;
 }
 
@@ -38,8 +38,8 @@ int scenario_map_has_river_entry(void) {
     return g_scenario_data.river_entry_point.x() != -1 && g_scenario_data.river_entry_point.y() != -1;
 }
 
-map_point scenario_map_river_entry(void) {
-    map_point point = {g_scenario_data.river_entry_point.x(), g_scenario_data.river_entry_point.y()};
+tile2i scenario_map_river_entry(void) {
+    tile2i point = {g_scenario_data.river_entry_point.x(), g_scenario_data.river_entry_point.y()};
     return point;
 }
 
@@ -47,8 +47,8 @@ int scenario_map_has_river_exit(void) {
     return g_scenario_data.river_exit_point.x() != -1 && g_scenario_data.river_exit_point.y() != -1;
 }
 
-map_point scenario_map_river_exit(void) {
-    map_point point = {g_scenario_data.river_exit_point.x(), g_scenario_data.river_exit_point.y()};
+tile2i scenario_map_river_exit(void) {
+    tile2i point = {g_scenario_data.river_exit_point.x(), g_scenario_data.river_exit_point.y()};
     return point;
 }
 
@@ -66,7 +66,7 @@ void scenario_map_foreach_fishing_point(void (*callback)(int x, int y)) {
     }
 }
 
-int scenario_map_closest_fishing_point(map_point pos, map_point* fish) {
+int scenario_map_closest_fishing_point(tile2i pos, tile2i &fish) {
     int num_fishing_spots = 0;
     for (int i = 0; i < MAX_FISH_POINTS; i++) {
         if (g_scenario_data.fishing_points[i].x() > 0)
@@ -87,9 +87,7 @@ int scenario_map_closest_fishing_point(map_point pos, map_point* fish) {
         }
     }
     if (min_dist < 10000) {
-        map_point_store_result(g_scenario_data.fishing_points[min_fish_id].x(),
-                               g_scenario_data.fishing_points[min_fish_id].y(),
-                               fish);
+        map_point_store_result(g_scenario_data.fishing_points[min_fish_id], fish);
         return 1;
     }
     return 0;

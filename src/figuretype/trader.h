@@ -1,5 +1,4 @@
-#ifndef FIGURETYPE_TRADER_H
-#define FIGURETYPE_TRADER_H
+#pragma once
 
 #include "figure/figure.h"
 
@@ -27,4 +26,3 @@ bool figure_trade_caravan_can_sell(figure* trader, building* warehouse, int city
 //
 // void figure_trade_ship_action();
 
-#endif // FIGURETYPE_TRADER_H

@@ -548,7 +548,7 @@ std::span<figure*> figures();
  * @param dir Direction the figure faces
  * @return Always a figure. If figure->id is zero, it is an invalid one.
  */
-figure* figure_create(e_figure_type type, map_point tile, int dir);
+figure* figure_create(e_figure_type type, tile2i tile, int dir);
 
 // void figure *f->map_figure_remove();
 // int figure_is_dead(const figure *f);

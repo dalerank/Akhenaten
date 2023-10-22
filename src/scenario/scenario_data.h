@@ -215,7 +215,7 @@ struct scenario_data_t {
     map_point earthquake_point;
     map_point herd_points_predator[MAX_PREDATOR_HERD_POINTS];
     map_point herd_points_prey[MAX_PREY_HERD_POINTS];
-    map_point fishing_points[MAX_FISH_POINTS];
+    tile2i fishing_points[MAX_FISH_POINTS];
     map_point disembark_points[MAX_DISEMBARK_POINTS];
     map_point invasion_points_land[MAX_INVASION_POINTS_LAND];
     map_point invasion_points_sea[MAX_INVASION_POINTS_SEA];
