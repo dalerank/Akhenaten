@@ -973,7 +973,7 @@ static sound_key emigrant_phrase(figure *f) {
 static sound_key governor_phrase(figure *f) {
     int nobles_in_city = 0;
     buildings_valid_do([&] (building &b) {
-        if (!b.house_size || !b.house_population || b.subtype.house_level < BUILDING_HOUSE_SMALL_VILLA) {
+        if (!b.house_size || !b.house_population || b.subtype.house_level < BUILDING_HOUSE_COMMON_MANOR) {
             return;
         }
         nobles_in_city += b.house_population;

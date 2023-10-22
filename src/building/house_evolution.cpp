@@ -327,7 +327,7 @@ static bool evolve_grand_insula(building* house, house_demands* demands) {
     e_house_progress status = check_requirements(house, demands);
     if (!has_devolve_delay(house, status)) {
         if (status == E_HOUSE_EVOLVE)
-            building_house_change_to(house, BUILDING_HOUSE_SMALL_VILLA);
+            building_house_change_to(house, BUILDING_HOUSE_ELEGANT_RESIDENCE);
         else if (status == E_HOUSE_DECAY)
             building_house_change_to(house, BUILDING_HOUSE_COMMON_RESIDENCE);
     }
@@ -337,7 +337,7 @@ static bool evolve_small_villa(building* house, house_demands* demands) {
     e_house_progress status = check_requirements(house, demands);
     if (!has_devolve_delay(house, status)) {
         if (status == E_HOUSE_EVOLVE)
-            building_house_change_to(house, BUILDING_HOUSE_MEDIUM_VILLA);
+            building_house_change_to(house, BUILDING_HOUSE_FANCY_RESIDENCE);
         else if (status == E_HOUSE_DECAY)
             building_house_change_to(house, BUILDING_HOUSE_SPACIOUS_RESIDENCE);
     }
@@ -353,7 +353,7 @@ static bool evolve_medium_villa(building* house, house_demands* demands) {
                 return true;
             }
         } else if (status == E_HOUSE_DECAY)
-            building_house_change_to(house, BUILDING_HOUSE_SMALL_VILLA);
+            building_house_change_to(house, BUILDING_HOUSE_ELEGANT_RESIDENCE);
     }
     return false;
 }
@@ -373,7 +373,7 @@ static bool evolve_grand_villa(building* house, house_demands* demands) {
         if (status == E_HOUSE_EVOLVE)
             building_house_change_to(house, BUILDING_HOUSE_SMALL_PALACE);
         else if (status == E_HOUSE_DECAY)
-            building_house_change_to(house, BUILDING_HOUSE_LARGE_VILLA);
+            building_house_change_to(house, BUILDING_HOUSE_COMMON_MANOR);
     }
     return 0;
 }

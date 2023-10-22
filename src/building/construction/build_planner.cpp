@@ -449,15 +449,15 @@ static void add_building(building* b, int orientation, int variant) {
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_RESIDENCE) + 2);
         break;
 
-    case BUILDING_HOUSE_SMALL_VILLA:
+    case BUILDING_HOUSE_ELEGANT_RESIDENCE:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_MANOR));
         break;
 
-    case BUILDING_HOUSE_MEDIUM_VILLA:
+    case BUILDING_HOUSE_FANCY_RESIDENCE:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_MANOR) + 2);
         break;
 
-    case BUILDING_HOUSE_LARGE_VILLA:
+    case BUILDING_HOUSE_COMMON_MANOR:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_ELEGANT_MANOR));
         break;
 
