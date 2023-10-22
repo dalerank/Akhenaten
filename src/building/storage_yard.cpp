@@ -403,7 +403,7 @@ int building_storageyard_for_storing(building* src,
     building* b = building_get(min_building_id)->main();
     if (b->has_road_access == 1) {
         map_point_store_result(b->tile, *dst);
-    } else if (!map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), 3, dst)) {
+    } else if (!map_has_road_access_rotation(b->subtype.orientation, b->tile, 3, dst)) {
         return 0;
     }
 

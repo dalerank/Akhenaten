@@ -490,7 +490,7 @@ void building::spawn_figure_school() {
     }
 
     tile2i road;
-    if (map_has_road_access(tile, size, &road)) {
+    if (map_get_road_access_tile(tile, size, road)) {
         common_spawn_labor_seeker(50);
         int spawn_delay = figure_spawn_timer();
         if (spawn_delay == -1) {
@@ -940,7 +940,7 @@ void building::spawn_figure_storageyard() {
 void building::spawn_figure_granary() {
     check_labor_problem();
     map_point road;
-    if (map_has_road_access(tile, size, &road)) { // map_has_road_access_granary(x, y, &road)
+    if (map_get_road_access_tile(tile, size, road)) { // map_has_road_access_granary(x, y, &road)
         common_spawn_labor_seeker(100);
 
         if (has_figure_of_type(0, FIGURE_STORAGE_YARD_DELIVERCART)) {
@@ -1086,7 +1086,7 @@ void building::spawn_figure_native_meeting() {
 void building::spawn_figure_tower() {
     check_labor_problem();
     map_point road;
-    if (map_has_road_access(tile, size, &road)) {
+    if (map_get_road_access_tile(tile, size, road)) {
         common_spawn_labor_seeker(50);
         if (num_workers <= 0)
             return;
@@ -1176,7 +1176,7 @@ void building::update_road_access() {
     //    map_point road;
     switch (type) {
     case BUILDING_STORAGE_YARD:
-        has_road_access = map_has_road_access(tile, 3, &road_access);
+        has_road_access = map_get_road_access_tile(tile, 3, road_access);
         break;
 
     case BUILDING_BURNING_RUIN:
@@ -1190,14 +1190,12 @@ void building::update_road_access() {
     case BUILDING_TEMPLE_COMPLEX_BAST:
         if (is_main()) {
             int orientation = (5 - (data.monuments.variant / 2)) % 4;
-            has_road_access = map_has_road_access_temple_complex(tile.x(), tile.y(), orientation, false, &road_access);
+            has_road_access = map_has_road_access_temple_complex(tile, orientation, false, &road_access);
         }
         break;
 
     default:
-        if (id == 17)
-            int a = 4;
-        has_road_access = map_has_road_access(tile, size, &road_access);
+        has_road_access = map_get_road_access_tile(tile, size, road_access);
         break;
     }
     // TODO: Temple Complexes

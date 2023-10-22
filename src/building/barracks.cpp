@@ -28,17 +28,21 @@ int building_get_barracks_for_weapon(tile2i tile, int resource, int road_network
     building* min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_RECRUITER)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_RECRUITER) {
             continue;
+        }
 
-        if (!map_has_road_access(b->tile, b->size, 0))
+        if (!map_has_road_access(b->tile, b->size)) {
             continue;
+        }
 
-        if (b->distance_from_entry <= 0 || b->road_network_id != road_network_id)
+        if (b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
             continue;
+        }
 
-        if (b->stored_full_amount >= MAX_WEAPONS_BARRACKS * 100)
+        if (b->stored_full_amount >= MAX_WEAPONS_BARRACKS * 100) {
             continue;
+        }
 
         int dist = calc_distance_with_penalty(b->tile, tile, distance_from_entry, b->distance_from_entry);
         dist += 8 * b->stored_full_amount / 100;
@@ -119,7 +123,7 @@ int building::barracks_create_soldier() {
         if (academy_id) {
             map_point road;
             building* academy = building_get(academy_id);
-            if (map_has_road_access(academy->tile, academy->size, &road)) {
+            if (map_get_road_access_tile(academy->tile, academy->size, road)) {
                 f->action_state = FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY;
                 f->destination_tile = road;
                 //                f->destination_x = road.x();
@@ -154,7 +158,7 @@ bool building::barracks_create_tower_sentry() {
     figure* f = figure_create(FIGURE_TOWER_SENTRY, road_access, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
     map_point road;
-    if (map_has_road_access(tower->tile, tower->size, &road)) {
+    if (map_get_road_access_tile(tower->tile, tower->size, road)) {
         f->destination_tile = road;
         //        f->destination_x = road.x();
         //        f->destination_y = road.y();

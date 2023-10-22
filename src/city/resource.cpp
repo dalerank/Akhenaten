@@ -177,9 +177,9 @@ void city_resource_calculate_storageyard_stocks(void) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_STORAGE_YARD) {
             b->has_road_access = 0;
-            if (map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), b->size, 0)) {
+            if (map_has_road_access_rotation(b->subtype.orientation, b->tile, b->size, 0)) {
                 b->has_road_access = 1;
-            } else if (map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), 3, 0)) {
+            } else if (map_has_road_access_rotation(b->subtype.orientation, b->tile, 3, 0)) {
                 b->has_road_access = 2;
             }
         }
@@ -255,11 +255,12 @@ static void calculate_available_food(void) {
             continue;
 
         b->has_road_access = 0;
-        if (map_has_road_access(b->tile, b->size, 0)) { // map_has_road_access_granary(b->tile.x(), b->tile.y(), 0)
+        if (map_has_road_access(b->tile, b->size)) { // map_has_road_access_granary(b->tile.x(), b->tile.y(), 0)
             b->has_road_access = 1;
             int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
-            if (pct_workers < 100)
+            if (pct_workers < 100) {
                 city_data.resource.granaries.understaffed++;
+            }
 
             int amount_stored = 0;
             for (int r = RESOURCE_MIN_FOOD; r < RESOURCES_FOODS_MAX; r++) {

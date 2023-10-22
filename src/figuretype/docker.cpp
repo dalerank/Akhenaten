@@ -20,7 +20,6 @@
 #include "grid/road_access.h"
 
 static int try_import_resource(building* warehouse, e_resource resource, int city_id) {
-    //    building *warehouse = building_get(b);
     if (warehouse->type != BUILDING_STORAGE_YARD)
         return 0;
 
@@ -78,12 +77,7 @@ static int try_export_resource(building* warehouse, e_resource resource, int cit
     return 0;
 }
 
-static int get_closest_warehouse_for_import(vec2i pos,
-                                            int city_id,
-                                            int distance_from_entry,
-                                            int road_network_id,
-                                            map_point* warehouse,
-                                            e_resource& import_resource) {
+static int get_closest_warehouse_for_import(vec2i pos, int city_id, int distance_from_entry, int road_network_id, map_point &warehouse, e_resource& import_resource) {
     int importable[16];
     importable[RESOURCE_NONE] = 0;
     for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
@@ -140,20 +134,16 @@ static int get_closest_warehouse_for_import(vec2i pos,
 
     building* min = building_get(min_building_id);
     if (min->has_road_access == 1) {
-        map_point_store_result(min->tile, *warehouse);
-    } else if (!map_has_road_access(min->tile, 3, warehouse)) {
+        map_point_store_result(min->tile, warehouse);
+    } else if (!map_get_road_access_tile(min->tile, 3, warehouse)) {
         return 0;
     }
 
     import_resource = resource;
     return min_building_id;
 }
-static int get_closest_warehouse_for_export(vec2i pos,
-                                            int city_id,
-                                            int distance_from_entry,
-                                            int road_network_id,
-                                            map_point* warehouse,
-                                            e_resource& export_resource) {
+
+static int get_closest_warehouse_for_export(vec2i pos, int city_id, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource& export_resource) {
     int exportable[16];
     exportable[RESOURCE_NONE] = 0;
     for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
@@ -207,8 +197,8 @@ static int get_closest_warehouse_for_export(vec2i pos,
 
     building* min = building_get(min_building_id);
     if (min->has_road_access == 1) {
-        map_point_store_result(min->tile, *warehouse);
-    } else if (!map_has_road_access(min->tile, 3, warehouse)) {
+        map_point_store_result(min->tile, warehouse);
+    } else if (!map_get_road_access_tile(min->tile, 3, warehouse)) {
         return 0;
     }
 
@@ -240,9 +230,10 @@ int figure::deliver_import_resource(building* dock) {
     get_trade_center_location(&x, &y);
     map_point tile;
     e_resource resource;
-    int warehouse_id = get_closest_warehouse_for_import(vec2i(x, y), ship->empire_city_id, dock->distance_from_entry, dock->road_network_id, &tile, resource);
-    if (!warehouse_id)
+    int warehouse_id = get_closest_warehouse_for_import(vec2i(x, y), ship->empire_city_id, dock->distance_from_entry, dock->road_network_id, tile, resource);
+    if (!warehouse_id) {
         return 0;
+    }
 
     ship->dump_resource(100);
     set_destination(warehouse_id);
@@ -267,10 +258,11 @@ int figure::fetch_export_resource(building* dock) {
     get_trade_center_location(&x, &y);
     map_point tile;
     e_resource resource;
-    int warehouse_id = get_closest_warehouse_for_export(vec2i(x, y), ship->empire_city_id, dock->distance_from_entry, dock->road_network_id, &tile, resource);
+    int warehouse_id = get_closest_warehouse_for_export(vec2i(x, y), ship->empire_city_id, dock->distance_from_entry, dock->road_network_id, tile, resource);
 
-    if (!warehouse_id)
+    if (!warehouse_id) {
         return 0;
+    }
 
     ship->trader_amount_bought++;
     set_destination(warehouse_id);

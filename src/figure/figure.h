@@ -460,8 +460,8 @@ public:
     void trader_sell(int amounts);
     int trader_total_bought();
     int trader_total_sold();
-    int get_closest_storageyard(map_point tile, int city_id, int distance_from_entry, map_point* storageyard);
-    void go_to_next_storageyard(map_point src_tile, int distance_to_entry);
+    int get_closest_storageyard(tile2i tile, int city_id, int distance_from_entry, tile2i &storageyard);
+    void go_to_next_storageyard(tile2i src_tile, int distance_to_entry);
     int trade_ship_lost_queue();
     int trade_ship_done_trading();
 

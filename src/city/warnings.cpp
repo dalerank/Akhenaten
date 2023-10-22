@@ -51,13 +51,13 @@ static void check_road_access(int type, tile2i tile, int size, int orientation) 
     }
 
     bool has_road = false;
-    if (map_has_road_access(tile, size, 0)) {
+    if (map_has_road_access(tile, size)) {
         has_road = true;
-    } else if (type == BUILDING_STORAGE_YARD && map_has_road_access(tile, 3, 0)) {
+    } else if (type == BUILDING_STORAGE_YARD && map_has_road_access(tile, 3)) {
         has_road = true;
         //    else if (type == BUILDING_SENET_HOUSE && map_has_road_access_hippodrome(x, y, 0))
         //        has_road = true;
-    } else if (building_is_large_temple(type) && map_has_road_access_temple_complex(tile.x(), tile.y(), orientation, true, nullptr)) {
+    } else if (building_is_large_temple(type) && map_has_road_access_temple_complex(tile, orientation, true, nullptr)) {
         has_road = true;
         //    else if (type == BUILDING_ORACLE && map_closest_road_within_radius(x, y, size, 2, 0, 0))
         //        has_road = true;

@@ -26,8 +26,8 @@ static bool road_tile_valid_access(int grid_offset) {
     return false;
 }
 
-void map_road_find_minimum_tile_xy(int x, int y, int sizex, int sizey, int* min_value, int* min_grid_offset) {
-    int base_offset = MAP_OFFSET(x, y);
+void map_road_find_minimum_tile_xy(tile2i tile, int sizex, int sizey, int* min_value, int* min_grid_offset) {
+    int base_offset = tile.grid_offset();
     const int *tile_delta = map_grid_adjacent_offsets_xy(sizex, sizey);
     for (; *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
@@ -43,8 +43,12 @@ void map_road_find_minimum_tile_xy(int x, int y, int sizex, int sizey, int* min_
     }
 }
 
-bool map_has_road_access(tile2i tile, int size, tile2i* road) {
-    return map_has_road_access_rotation(0, tile.x(), tile.y(), size, road);
+bool map_has_road_access(tile2i tile, int size) {
+    return map_has_road_access_rotation(0, tile, size, nullptr);
+}
+
+bool map_get_road_access_tile(tile2i tile, int size, tile2i &road) {
+    return map_has_road_access_rotation(0, tile, size, &road);
 }
 
 bool burning_ruin_can_be_accessed(int x, int y, tile2i* point) {
@@ -62,24 +66,23 @@ bool burning_ruin_can_be_accessed(int x, int y, tile2i* point) {
     return false;
 }
 
-bool map_has_road_access_rotation(int rotation, int x, int y, int size, tile2i* road) {
+bool map_has_road_access_rotation(int rotation, tile2i tile, int size, tile2i *road) {
     switch (rotation) {
     case 1:
-        x = x - size + 1;
+        tile.shift(-size + 1, 0);
         break;
     case 2:
-        x = x - size + 1;
-        y = y - size + 1;
+        tile.shift(-size + 1, -size + 1);
         break;
     case 3:
-        y = y - size + 1;
+        tile.shift(0, -size + 1);
         break;
     default:
         break;
     }
     int min_value = 12;
-    int min_grid_offset = MAP_OFFSET(x, y);
-    map_road_find_minimum_tile_xy(x, y, size, size, &min_value, &min_grid_offset);
+    int min_grid_offset = tile.grid_offset();
+    map_road_find_minimum_tile_xy(tile, size, size, &min_value, &min_grid_offset);
     if (min_value < 12) {
         if (road) {
             map_point_store_result(tile2i(min_grid_offset), *road);
@@ -112,7 +115,7 @@ bool map_has_road_access_rotation(int rotation, int x, int y, int size, tile2i* 
 // }
 
 // TODO: fix getting road access for temple complex
-bool map_has_road_access_temple_complex(int x, int y, int orientation, bool from_corner, map_point* road) {
+bool map_has_road_access_temple_complex(tile2i tile, int orientation, bool from_corner, tile2i* road) {
     int sizex = 7;
     int sizey = 13;
 
@@ -129,25 +132,23 @@ bool map_has_road_access_temple_complex(int x, int y, int orientation, bool from
     if (!from_corner) {
         switch (orientation) {
         case 0:
-            x -= 2;
-            y -= 11;
+            tile.shift(-2, -11);
             break;
         case 1:
-            y -= 2;
+            tile.shift(0, -2);
             break;
         case 2:
-            x -= 2;
+            tile.shift(-2, 0);
             break;
         case 3:
-            x -= 11;
-            y -= 2;
+            tile.shift(-11, -2);
             break;
         }
     }
 
     int min_value = 12;
-    int min_grid_offset = MAP_OFFSET(x, y);
-    map_road_find_minimum_tile_xy(x, y, sizex, sizey, &min_value, &min_grid_offset);
+    int min_grid_offset = tile.grid_offset();
+    map_road_find_minimum_tile_xy(tile, sizex, sizey, &min_value, &min_grid_offset);
     if (min_value < 12) {
         if (road) {
             map_point_store_result(tile2i(min_grid_offset), *road);
@@ -157,7 +158,7 @@ bool map_has_road_access_temple_complex(int x, int y, int orientation, bool from
     return false;
 }
 
-bool map_road_within_radius(int x, int y, int size, int radius, map_point &road_tile) {
+bool map_road_within_radius(int x, int y, int size, int radius, tile2i &road_tile) {
     OZZY_PROFILER_SECTION("road_within_radius");
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
@@ -177,7 +178,7 @@ bool map_road_within_radius(int x, int y, int size, int radius, map_point &road_
     return false;
 }
 
-bool map_closest_road_within_radius(tile2i tile, int size, int radius, map_point &road_tile) {
+bool map_closest_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile) {
     OZZY_PROFILER_SECTION("map_closest_road_within_radius");
     for (int r = 1; r <= radius; r++) {
         if (map_road_within_radius(tile.x(), tile.y(), size, r, road_tile)) {
@@ -187,7 +188,7 @@ bool map_closest_road_within_radius(tile2i tile, int size, int radius, map_point
     return false;
 }
 
-bool map_reachable_road_within_radius(int x, int y, int size, int radius, map_point &road_tile) {
+bool map_reachable_road_within_radius(int x, int y, int size, int radius, tile2i &road_tile) {
     OZZY_PROFILER_SECTION("reachable_road_within_radius");
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
@@ -206,7 +207,7 @@ bool map_reachable_road_within_radius(int x, int y, int size, int radius, map_po
     return false;
 }
 
-bool map_closest_reachable_road_within_radius(int x, int y, int size, int radius, map_point &road_tile) {
+bool map_closest_reachable_road_within_radius(int x, int y, int size, int radius, tile2i &road_tile) {
     OZZY_PROFILER_SECTION("map_closest_reachable_road_within_radius");
     for (int r = 1; r <= radius; r++) {
         if (map_reachable_road_within_radius(x, y, size, r, road_tile))
