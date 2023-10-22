@@ -12,6 +12,7 @@
 #include "core/string.h"
 #include "figure/figure.h"
 #include "game/tick.h"
+#include "game/tutorial.h"
 #include "graphics/color.h"
 #include "graphics/font.h"
 #include "graphics/text.h"
@@ -40,6 +41,8 @@ static void game_cheat_pop_milestone(uint8_t *);
 static void game_cheat_fire(uint8_t *);
 static void game_cheat_collapse(uint8_t *);
 static void game_cheat_nofire(uint8_t *);
+static void game_cheat_nodamage(uint8_t *);
+static void game_cheat_spacious_apartment(uint8_t *);
 
 using cheat_command = void(uint8_t* args);
 
@@ -60,7 +63,10 @@ static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_mo
                                                   {"popmilestone", game_cheat_pop_milestone},
                                                   {"fire", game_cheat_fire},
                                                   {"nofire", game_cheat_nofire},
-                                                  {"collapse", game_cheat_collapse}};
+                                                  {"nodamage", game_cheat_nodamage},
+                                                  {"collapse", game_cheat_collapse},
+                                                  {"tutspaciousapt", game_cheat_spacious_apartment},
+};
 
 struct cheats_data_t {
     bool is_cheating;
@@ -178,9 +184,19 @@ static void game_cheat_fire(uint8_t *args) {
     }
 }
 
+static void game_cheat_spacious_apartment(uint8_t *args) {
+    tutorial_on_house_evolve(HOUSE_SPACIOUS_APARTMENT);
+}
+
 static void game_cheat_nofire(uint8_t *args) {
     buildings_valid_do([&] (building &b) {
         b.fire_risk = 0;
+    });
+}
+
+static void game_cheat_nodamage(uint8_t *args) {
+    buildings_valid_do([&] (building &b) {
+        b.damage_risk = 0;
     });
 }
 

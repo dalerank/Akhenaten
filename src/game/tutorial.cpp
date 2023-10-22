@@ -91,9 +91,9 @@ void tutorial_init(void) {
     g_tutorials_flags.tutorial_4.beer_made = tut_passed[3];
     // tut5
     g_tutorials_flags.tutorial_5.spacious_apartment = tut_passed[4];
+    g_tutorials_flags.tutorial_5.papyrus_made = tut_passed[4];
 
     g_tutorials_flags.pharaoh.flags[8] = tut_passed[4];
-    g_tutorials_flags.tutorial_5.papyrus_made = tut_passed[4];
     g_tutorials_flags.pharaoh.bricks_bought = tut_passed[4];
 
     //
@@ -370,7 +370,7 @@ void tutorial_on_religion() {
 }
 
 void tutorial_on_house_evolve(e_house_level level) {
-    if (!g_tutorials_flags.tutorial_5.spacious_apartment && level == HOUSE_SPACIOUS_APARTMENT) {
+    if (!g_tutorials_flags.tutorial_5.spacious_apartment && level >= HOUSE_SPACIOUS_APARTMENT) {
         g_tutorials_flags.tutorial_5.spacious_apartment = true;
         building_menu_update(BUILDSET_TUT5_EDUCATION);
         post_message(MESSAGE_TUTORIAL_EDUCATION);
