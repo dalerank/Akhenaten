@@ -22,7 +22,7 @@ void figure_create_immigrant(building* house, int num_people) {
     figure* f = figure_create(FIGURE_IMMIGRANT, entry, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_1_IMMIGRANT_CREATED;
     f->set_immigrant_home(house->id);
-    house->set_figure(2, f->id);
+    house->set_figure(BUILDING_SLOT_IMMIGRANT, f->id);
     f->wait_ticks = 10 + (house->map_random_7bit & 0x7f);
     f->migrant_num_people = num_people;
 }
@@ -104,21 +104,21 @@ static void add_house_population(building* house, int num_people) {
     house->remove_figure(2);
 }
 
+bool is_near_ferry_route(int base_offset, int radius) {
+    offsets_array offsets;
+    map_grid_adjacent_offsets_xy(1, 1, offsets);
+    for (const auto &tile_delta: offsets) {
+        if (map_terrain_is(base_offset + tile_delta, TERRAIN_FERRY_ROUTE)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void figure::immigrant_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant");
     building* home = immigrant_home();
-
-    if (tile == previous_tile) {
-        movement_ticks_watchdog++;
-    } else {
-        movement_ticks_watchdog = 0;
-    }
-
-    if (movement_ticks_watchdog > 60) {
-        movement_ticks_watchdog = 0;
-        route_remove();
-        advance_action(ACTION_8_RECALCULATE);
-    }
 
     switch (action_state) {
     case FIGURE_ACTION_1_IMMIGRANT_CREATED:
@@ -137,13 +137,36 @@ void figure::immigrant_action() {
             if (direction <= 8) {
                 int next_tile_grid_offset = tile.grid_offset() + map_grid_direction_delta(direction);
                 if (map_terrain_is(next_tile_grid_offset, TERRAIN_WATER)) {
-                    route_remove();
+                    bool is_ferry_route = map_terrain_is(next_tile_grid_offset, TERRAIN_FERRY_ROUTE);
+
+                    if (!is_ferry_route) {
+                        is_ferry_route = is_near_ferry_route(next_tile_grid_offset, 1);
+                    }
+                   
+                    if (!is_ferry_route) {
+                        route_remove();
+                    }
                 }
             }
-            
+
             do_gotobuilding(home, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE, ACTION_8_RECALCULATE);
+
+            if (direction == DIR_FIGURE_CAN_NOT_REACH) {
+                routing_try_reroute_counter++;
+                if (routing_try_reroute_counter > 20) {
+                    poof();
+                    break;
+                }
+                wait_ticks = 20;
+                route_remove();
+                state = FIGURE_STATE_ALIVE;
+                direction = calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+                advance_action(ACTION_8_RECALCULATE);
+                roam_wander_freely = true;
+            }
         }
         break;
+
     case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
     case FIGURE_ACTION_10_HOMELESS_ENTERING_HOUSE:
         if (do_enterbuilding(false, home)) {

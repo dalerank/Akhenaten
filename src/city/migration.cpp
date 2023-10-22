@@ -67,8 +67,9 @@ static void create_immigrants(int num_people) {
     int immigrated = house_population_create_immigrants(num_people);
     city_data.migration.immigrated_today += immigrated;
     city_data.migration.newcomers += city_data.migration.immigrated_today;
-    if (immigrated == 0)
+    if (immigrated == 0) {
         city_data.migration.refused_immigrants_today += num_people;
+    }
 }
 
 static void create_emigrants(int num_people) {

@@ -28,17 +28,25 @@ static bool road_tile_valid_access(int grid_offset) {
     return false;
 }
 
-void map_road_find_minimum_tile_xy(tile2i tile, int sizex, int sizey, int *min_value, int *min_grid_offset) {
-    config_get(CONFIG_GP_CH_ENTER_POINT_ON_NEAREST_TILE)
-        ? map_road_find_minimum_tile_xy_nearest(tile, sizex, sizey, min_value, min_grid_offset)
-        : map_road_find_minimum_tile_xy_classic(tile, sizex, sizey, min_value, min_grid_offset);
+bool map_road_find_minimum_tile_xy(tile2i tile, int sizex, int sizey, int *min_value, int *min_grid_offset) {
+    bool found = false;
+    if (config_get(CONFIG_GP_CH_ENTER_POINT_ON_NEAREST_TILE)) {
+        found = map_road_find_minimum_tile_xy_nearest(tile, sizex, sizey, min_value, min_grid_offset);
+    }
+
+    if (!found) {
+        found = map_road_find_minimum_tile_xy_classic(tile, sizex, sizey, min_value, min_grid_offset);
+    }
+
+    return found;
 }
 
-void map_road_find_minimum_tile_xy_nearest(tile2i tile, int sizex, int sizey, int* min_value, int* min_grid_offset) {
+bool map_road_find_minimum_tile_xy_nearest(tile2i tile, int sizex, int sizey, int* min_value, int* min_grid_offset) {
     int base_offset = tile.grid_offset();
     offsets_array offsets;
     map_grid_adjacent_offsets_xy(sizex, sizey, offsets);
     float f_min_value = *min_value;
+    bool found = false;
     for (const auto &tile_delta: offsets) {
         int grid_offset = base_offset + tile_delta;
 
@@ -51,26 +59,34 @@ void map_road_find_minimum_tile_xy_nearest(tile2i tile, int sizex, int sizey, in
             f_min_value = road_dist;
             *min_value = f_min_value;
             *min_grid_offset = grid_offset;
+            found = true;
         }
     }
+
+    return found;
 }
 
-void map_road_find_minimum_tile_xy_classic(tile2i tile, int sizex, int sizey, int* min_value, int* min_grid_offset) {
+bool map_road_find_minimum_tile_xy_classic(tile2i tile, int sizex, int sizey, int* min_value, int* min_grid_offset) {
     int base_offset = tile.grid_offset();
     offsets_array offsets;
     map_grid_adjacent_offsets_xy(sizex, sizey, offsets);
+    bool found = false;
     for (const auto &tile_delta: offsets) {
         int grid_offset = base_offset + tile_delta;
 
         if (!road_tile_valid_access(grid_offset)) {
             continue;
         }
+
         int road_index = city_map_road_network_index(map_road_network_get(grid_offset));
         if (road_index < *min_value) {
             *min_value = road_index;
             *min_grid_offset = grid_offset;
+            found = false;
         }
     }
+
+    return false;
 }
 
 bool map_has_road_access(tile2i tile, int size) {
