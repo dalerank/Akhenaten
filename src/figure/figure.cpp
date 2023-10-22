@@ -373,7 +373,8 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT16, &f->attacker_id2);
     iob->bind(BIND_SIGNATURE_INT16, &f->opponent_id);
     //        iob->bind____skip(239);
-    iob->bind____skip(7);
+    iob->bind____skip(6);
+    iob->bind(BIND_SIGNATURE_UINT8, &f->routing_try_reroute_counter);                       // 269
     iob->bind(BIND_SIGNATURE_INT16, &f->unk_ph1_269);                       // 269
     iob->bind(BIND_SIGNATURE_UINT16, &f->sender_building_id);                        // 0
     iob->bind(BIND_SIGNATURE_INT32, &f->market_lady_resource_image_offset); // 03 00 00 00

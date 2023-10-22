@@ -176,6 +176,7 @@ public:
     // pharaoh
 
     // 7 bytes 00 00 00 00 00 00 00
+    unsigned char routing_try_reroute_counter;
     short unk_ph1_269;
     unsigned short sender_building_id;
     short market_lady_resource_image_offset;
