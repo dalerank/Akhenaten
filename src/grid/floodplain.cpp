@@ -121,10 +121,24 @@ void map_floodplain_rebuild_shores() {
         for (int yy = y_min; yy <= y_max; yy++) {
             for (int xx = x_min; xx <= x_max; xx++) {
                 tile2i shore(xx, yy);
+                if (map_get_floodplain_edge(shore)) {
+                    continue;
+                }
+
                 if (map_terrain_is(shore.grid_offset(), TERRAIN_WATER) || map_terrain_is(shore.grid_offset(), TERRAIN_FLOODPLAIN)) {
                     continue;
                 }
-                map_grid_set(&g_terrain_floodplain_flood_shore, MAP_OFFSET(xx, yy), 1);
+
+                int base_offset = shore.grid_offset();
+                offsets_array offsets;
+                map_grid_adjacent_offsets_xy(1, 1, offsets);
+                for (const auto &tile_delta: offsets) {
+                    int grid_offset = base_offset + tile_delta;
+                    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+                        map_grid_set(&g_terrain_floodplain_flood_shore, MAP_OFFSET(xx, yy), 1);
+                        break;
+                    }
+                }
             }
         }
     });
