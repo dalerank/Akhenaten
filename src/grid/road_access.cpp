@@ -32,9 +32,10 @@ void map_road_find_minimum_tile_xy(tile2i tile, int sizex, int sizey, int* min_v
     for (; *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
 
-        if (!road_tile_valid_access(grid_offset))
+        if (!road_tile_valid_access(grid_offset)) {
             continue;
-
+        }
+//testy
         int road_index = city_map_road_network_index(map_road_network_get(grid_offset));
         if (road_index < *min_value) {
             *min_value = road_index;

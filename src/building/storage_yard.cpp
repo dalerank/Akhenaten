@@ -358,13 +358,7 @@ int building_storageyard_remove_resource(e_resource resource, int amount) {
     return amount - amount_left;
 }
 
-int building_storageyard_for_storing(building* src,
-                                   map_point tile,
-                                   e_resource resource,
-                                   int distance_from_entry,
-                                   int road_network_id,
-                                   int* understaffed,
-                                   map_point* dst) {
+int building_storageyard_for_storing(building* src, map_point tile, e_resource resource, int distance_from_entry, int road_network_id, int* understaffed, map_point* dst) {
     int min_dist = 10000;
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {

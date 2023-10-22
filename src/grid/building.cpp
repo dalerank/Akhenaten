@@ -22,12 +22,13 @@ void map_building_set(int grid_offset, int building_id) {
 void map_building_damage_clear(int grid_offset) {
     map_grid_set(&damage_grid, grid_offset, 0);
 }
-void map_highlight_set(int grid_offset) {
-    map_grid_set(&highlight_grid, grid_offset, 1);
+void map_highlight_set(int grid_offset, int mode) {
+    map_grid_set(&highlight_grid, grid_offset, mode);
 }
 void map_highlight_clear(int grid_offset) {
     map_grid_set(&highlight_grid, grid_offset, 0);
 }
+
 int map_is_highlighted(int grid_offset) {
     if (config_get(CONFIG_UI_WALKER_WAYPOINTS)) {
         return map_grid_get(&highlight_grid, grid_offset);
@@ -35,6 +36,7 @@ int map_is_highlighted(int grid_offset) {
         return 0;
     }
 }
+
 int map_building_damage_increase(int grid_offset) {
     int d = map_grid_get(&damage_grid, grid_offset) + 1;
     map_grid_set(&damage_grid, grid_offset, d);

@@ -473,14 +473,16 @@ void draw_figures(vec2i pixel, tile2i point, view_context &ctx) {
     }
 }
 
-void draw_isometrics_overlay(vec2i pixel, map_point point, view_context &ctx) {
+void draw_isometrics_overlay(vec2i pixel, tile2i point, view_context &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
     Planner.construction_record_view_position(pixel, point);
+    constexpr int mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED};
     if (grid_offset < 0) {
         // Outside map: draw black tile
         ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
+
     } else if (get_city_overlay()->draw_custom_footprint) {
         get_city_overlay()->draw_custom_footprint(pixel, point, ctx);
 
@@ -489,10 +491,10 @@ void draw_isometrics_overlay(vec2i pixel, map_point point, view_context &ctx) {
         if (terrain & (TERRAIN_CANAL | TERRAIN_WALL)) {
             // display groundwater
             int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-            ImageDraw::isometric_from_drawtile(ctx, image_id, x, y, map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
+            ImageDraw::isometric_from_drawtile(ctx, image_id, x, y, mode_highlighted[map_is_highlighted(grid_offset)]);
 
         } else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, mode_highlighted[map_is_highlighted(grid_offset)]);
 
         } else if (terrain & TERRAIN_BUILDING) {
             city_with_overlay_draw_building_footprint(ctx, x, y, grid_offset, 0);

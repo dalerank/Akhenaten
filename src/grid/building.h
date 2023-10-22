@@ -31,7 +31,7 @@ void map_set_rubble_building_type(int grid_offset, int type);
  */
 void map_building_clear(void);
 
-void map_highlight_set(int grid_offset);
+void map_highlight_set(int grid_offset, int mode);
 void map_highlight_clear(int grid_offset);
 int map_is_highlighted(int grid_offset);
 void map_clear_highlights(void);
