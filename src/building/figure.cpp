@@ -330,7 +330,7 @@ void building::spawn_figure_work_camp() {
     }
 }
 
-bool building::spawn_patrician(bool spawned) {
+bool building::spawn_noble(bool spawned) {
     return common_spawn_roamer(FIGURE_NOBLES, 50);
 }
 
@@ -1206,9 +1206,9 @@ void building::update_road_access() {
 bool building::figure_generate() {
     show_on_problem_overlay = 0;
 
-    bool patrician_generated = false;
-    if (type >= BUILDING_HOUSE_SMALL_VILLA && type <= BUILDING_HOUSE_LUXURY_PALACE) {
-        patrician_generated = spawn_patrician(patrician_generated);
+    bool noble_generated = false;
+    if (type >= BUILDING_HOUSE_COMMON_MANOR && type <= BUILDING_HOUSE_LUXURY_PALACE) {
+        noble_generated = spawn_noble(noble_generated);
     } else if (type == BUILDING_REED_GATHERER) {
         spawn_figure_reed_gatherers();
     } else if (type == BUILDING_WOOD_CUTTERS) {
@@ -1221,7 +1221,7 @@ bool building::figure_generate() {
         common_spawn_figure_trigger(50);
 
         if (is_governor_mansion() && !has_figure(BUILDING_SLOT_GOVERNOR)) {
-            map_point road_tile;
+            tile2i road_tile;
             if (map_closest_road_within_radius(tile, size, 2, road_tile)) {
                 figure *f = figure_create(FIGURE_GOVERNOR, road_tile, DIR_4_BOTTOM_LEFT);
                 f->advance_action(FIGURE_ACTION_120_GOVERNOR_CREATED);

@@ -416,7 +416,7 @@ void building_house_expand_to_large_villa(building* house) {
     split(house, 9);
     prepare_for_merge(house->id, 9);
 
-    house->type = BUILDING_HOUSE_LARGE_VILLA;
+    house->type = BUILDING_HOUSE_COMMON_MANOR;
     house->subtype.house_level = HOUSE_COMMON_MANOR;
     house->size = house->house_size = 3;
     house->house_population += g_merge_data.population;
@@ -470,7 +470,7 @@ void building_house_devolve_from_large_villa(building* house) {
     map_building_tiles_remove(house->id, house->tile.x(), house->tile.y());
 
     // main tile
-    house->type = BUILDING_HOUSE_MEDIUM_VILLA;
+    house->type = BUILDING_HOUSE_FANCY_RESIDENCE;
     house->subtype.house_level = (e_house_level)(house->type - BUILDING_HOUSE_VACANT_LOT);
     house->size = house->house_size = 2;
     house->house_is_merged = 0;

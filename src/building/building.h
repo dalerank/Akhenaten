@@ -288,7 +288,7 @@ public:
     int correct_animation_speed(int anim_speed);
 
     void spawn_figure_work_camp();
-    bool spawn_patrician(bool spawned);
+    bool spawn_noble(bool spawned);
     void spawn_figure_engineers_post();
     void spawn_figure_firehouse();
     void spawn_figure_police();
