@@ -478,7 +478,7 @@ void draw_isometrics_overlay(vec2i pixel, tile2i point, view_context &ctx) {
     int x = pixel.x;
     int y = pixel.y;
     Planner.construction_record_view_position(pixel, point);
-    constexpr int mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED};
+    constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED};
     if (grid_offset < 0) {
         // Outside map: draw black tile
         ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
