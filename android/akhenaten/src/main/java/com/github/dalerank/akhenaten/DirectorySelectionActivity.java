@@ -11,8 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
-import com.github.dalerank.ozymandias.R;
-
 public class DirectorySelectionActivity extends AppCompatActivity {
     private static final String ARG_SKIP_INSTRUCTIONS = "arg_skip_instructions";
     private static final int RW_FLAGS_PERMISSION = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
@@ -51,13 +49,13 @@ public class DirectorySelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_directory_selection);
+        //setContentView(R.layout.activity_directory_selection);
 
-        Button button = findViewById(R.id.directory_selector_button);
-        button.setOnClickListener(v -> directorySelectionLauncher.launch(Uri.EMPTY));
+        //Button button = findViewById(R.id.directory_selector_button);
+        //button.setOnClickListener(v -> directorySelectionLauncher.launch(Uri.EMPTY));
 
-        if (savedInstanceState == null && getIntent().getBooleanExtra(ARG_SKIP_INSTRUCTIONS, false)) {
-            directorySelectionLauncher.launch(Uri.EMPTY);
-        }
+        //if (savedInstanceState == null && getIntent().getBooleanExtra(ARG_SKIP_INSTRUCTIONS, false)) {
+        //    directorySelectionLauncher.launch(Uri.EMPTY);
+        //}
     }
 }
