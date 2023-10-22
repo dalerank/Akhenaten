@@ -12,7 +12,7 @@ buildscript {
 }
 
 ext {
-    usingAAR = file('akhenaten/libs/SDL2.aar').exists() || file('akhenaten/libs/SDL2-debug.aar').exists() || file('akhenaten/libs/SDL2-release.aar').exists()
+    usingAAR = file('SDL2/build/outputs/aar/SDL2.aar').exists() || file('SDL2/build/outputs/aar/SDL2-debug.aar').exists() || file('SDL2/build/outputs/aar/SDL2-release.aar').exists()
 }
 
 task clean(type: Delete) {

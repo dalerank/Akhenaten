@@ -70,7 +70,7 @@ android {
     ndkVersion "25.2.9519653"
 
     defaultConfig {
-        applicationId "com.github.dalerank.ozymandias"
+        applicationId "com.github.dalerank.akhenaten"
         minSdkVersion 21
         targetSdkVersion 33
 
@@ -84,7 +84,7 @@ android {
             }
         }
         ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a'
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
         sourceSets {
             main.res.srcDirs += '../../res/android'
@@ -104,9 +104,9 @@ android {
         release {
             def isCI = System.getenv("CI") == "true"
             if (isCI) {
-                storeFile file("../ozymandias.keystore")
+                storeFile file("../akhenaten.keystore")
                 storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
-                keyAlias "ozymandias"
+                keyAlias "akhenaten"
                 keyPassword System.getenv("ANDROID_KEYSTORE_KEY_PASSWORD")
             }
         }
@@ -139,7 +139,7 @@ android {
             path "../../CMakeLists.txt"
         }
     }
-    namespace 'com.github.dalerank.ozymandias'
+    namespace 'com.github.dalerank.akhenaten'
 }
 
 /** play {
