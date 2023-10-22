@@ -592,8 +592,7 @@ void BuildPlanner::draw_flat_tile(vec2i pos, color color_mask, view_context &ctx
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos.x, pos.y, color_mask);
 }
 
-void BuildPlanner::draw_blueprints(bool fully_blocked) {
-    view_context ctx = view_context_main();
+void BuildPlanner::draw_blueprints(view_context &ctx, bool fully_blocked) {
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
             vec2i current_coord = pixel_coords_cache[row][column];
@@ -603,10 +602,9 @@ void BuildPlanner::draw_blueprints(bool fully_blocked) {
     }
 }
 
-void BuildPlanner::draw_graphics() {
+void BuildPlanner::draw_graphics(view_context &ctx) {
     // TODO: bring these all over the unified system
     // special graphics buildings
-    view_context ctx = view_context_main();
     vec2i pixel = pixel_coords_cache[0][0];
     switch (build_type) {
     case BUILDING_ROAD:
@@ -667,18 +665,18 @@ void BuildPlanner::draw_graphics() {
     }
 }
 
-void BuildPlanner::draw() {
+void BuildPlanner::draw(view_context &ctx) {
     // empty building
     if (size.x < 1 || size.y < 1)
         return;
 
     if (can_place == CAN_NOT_PLACE)
         // draw fully red (placement not allowed)
-        draw_blueprints(true);
+        draw_blueprints(ctx, true);
     else if (tiles_blocked_total > 0)
         // draw green blueprint with red (blocked) tiles
-        draw_blueprints(false);
+        draw_blueprints(ctx, false);
     else if (!draw_as_constructing)
         // draw normal building ghost (green)
-        draw_graphics();
+        draw_graphics(ctx);
 }

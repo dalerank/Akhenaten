@@ -148,7 +148,7 @@ void widget_city_draw_without_overlay(view_context &ctx, int selected_figure_id,
 
     if (!selected_figure_id) {
         Planner.update(tile);
-        Planner.draw();
+        Planner.draw(ctx);
     }
 
     // finally, draw these on top of everything else
@@ -165,7 +165,7 @@ void widget_city_draw_with_overlay(view_context &ctx, tile2i tile) {
     city_view_foreach_valid_map_tile(ctx, cache_figures);
     city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay, draw_ornaments_overlay, draw_figures_overlay);
     Planner.update(tile);
-    Planner.draw();
+    Planner.draw(ctx);
 }
 
 void widget_city_draw(view_context &ctx) {

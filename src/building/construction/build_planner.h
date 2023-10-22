@@ -45,7 +45,7 @@ private:
     bool tile_blocked_array[30][30] = {};
     int tiles_blocked_total = 0;
 
-    map_point tile_coord_cache[30][30];
+    tile2i tile_coord_cache[30][30];
     vec2i pixel_coords_cache[30][30];
 
     long long special_flags = 0;
@@ -79,8 +79,8 @@ private:
 
     void update_coord_caches();
     void draw_flat_tile(vec2i pos, color color_mask, view_context &ctx);
-    void draw_blueprints(bool fully_blocked);
-    void draw_graphics();
+    void draw_blueprints(view_context &ctx, bool fully_blocked);
+    void draw_graphics(view_context &ctx);
 
     /////
 
@@ -88,8 +88,8 @@ public:
     e_building_type build_type;
     bool in_progress;
     bool draw_as_constructing;
-    map_point start;
-    map_point end;
+    tile2i start;
+    tile2i end;
     int total_cost;
     int relative_orientation;
     int absolute_orientation;
@@ -103,31 +103,31 @@ public:
         int y;
     } pivot;
 
-    map_point north_tile;
-    map_point east_tile;
-    map_point south_tile;
-    map_point west_tile;
+    tile2i north_tile;
+    tile2i east_tile;
+    tile2i south_tile;
+    tile2i west_tile;
 
     int can_be_placed();
 
     void reset();
     void setup_build(e_building_type type);
 
-    void construction_start(map_point tile);
-    void construction_update(map_point tile);
+    void construction_start(tile2i tile);
+    void construction_update(tile2i tile);
     void construction_cancel();
     void construction_finalize();
 
     void add_building_tiles_from_list(int building_id, bool graphics_only);
 
     void update_orientations(bool check_if_changed = true);
-    void construction_record_view_position(vec2i pixel, map_point point);
+    void construction_record_view_position(vec2i pixel, tile2i point);
 
     int get_total_drag_size(int* x, int* y);
     bool has_flag_set(int flag, int param1 = -1, int param2 = -1, int param3 = -1);
 
-    void update(map_point cursor_tile);
-    void draw();
+    void update(tile2i cursor_tile);
+    void draw(view_context &ctx);
     bool place();
 };
 
