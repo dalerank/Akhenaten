@@ -365,17 +365,12 @@ public:
     void market_trader_action();
     void priest_action();
     void scribal_school_teacher_action();
-    //    void teacher_action();
-    //    void librarian_action(); //30
-    //    void barber_action();
-    //    void bathhouse_worker_action();
-    //    void doctor_action();
     void worker_action();
     void editor_flag_action();
     void flotsam_action();
     void docker_action();
     void market_buyer_action();
-    //    void patrician_action(); //40
+    void noble_action();
     void indigenous_native_action();
     void tower_sentry_action();
     void enemy43_spear_action();

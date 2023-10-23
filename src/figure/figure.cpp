@@ -213,6 +213,10 @@ bool figure::has_destination(building* b) {
     return (b == destination());
 }
 
+void figure::noble_action() {
+
+}
+
 e_minimap_figure_color figure::get_figure_color() {
     if (is_legion()) {
         return FIGURE_COLOR_SOLDIER;

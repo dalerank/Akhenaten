@@ -593,7 +593,9 @@ void figure::action_perform() {
         case FIGURE_MARKET_BUYER:
             market_buyer_action();
             break;
-            //            case 40: patrician_action();                break; //40
+        case FIGURE_NOBLES:
+            noble_action();
+            break; 
         case 41:
             indigenous_native_action();
             break;
