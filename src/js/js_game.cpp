@@ -151,7 +151,7 @@ void js_config_load_building_info(js_State *arch) {
 }
 
 void js_config_load_images_info(js_State *arch) {
-    js_config_load_global_array(arch, "building_info", [] (auto arch) {
+    js_config_load_global_array(arch, "images", [] (auto arch) {
         int type = read_integer(arch, "img");
         int pack = read_integer(arch, "pack");
         int id = read_integer(arch, "id");
