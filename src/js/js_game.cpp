@@ -12,6 +12,7 @@
 #include "sound/sound_walker.h"
 
 #include "overlays/city_overlay.h"
+#include "graphics/image_desc.h"
 #include "figure/figure.h"
 
 #include <vector>
@@ -146,6 +147,15 @@ void js_config_load_building_info(js_State *arch) {
         auto &meta = building::get_info(type);
         meta.help_id = read_integer(arch, "help_id");
         meta.text_id = read_integer(arch, "text_id");
+    });
+}
+
+void js_config_load_images_info(js_State *arch) {
+    js_config_load_global_array(arch, "building_info", [] (auto arch) {
+        int type = read_integer(arch, "img");
+        int pack = read_integer(arch, "pack");
+        int id = read_integer(arch, "id");
+        set_image_desc((e_image_type)type, pack, id);
     });
 }
 

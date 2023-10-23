@@ -15,7 +15,7 @@
 #include "config/config.h"
 
 void figure::market_buyer_action() {
-    image_set_animation(GROUP_FIGURE_MARKET_LADY);
+    image_set_animation(GROUP_FIGURE_MARKET_BUYER);
     switch (action_state) {
     case 8:
     case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:

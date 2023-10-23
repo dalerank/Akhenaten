@@ -8,3 +8,4 @@ void js_config_load_walker_sounds(js_State *arch);
 void js_config_load_city_sounds(js_State *arch);
 void js_config_load_building_info(js_State *arch);
 void js_config_load_city_overlays(js_State *arch);
+void js_config_load_images_info(js_State *arch);

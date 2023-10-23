@@ -35,7 +35,7 @@ void figure::priest_action() {
     switch (temple->type) {
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        image_set_animation(GROUP_PRIEST_OSIRIS);
+        image_set_animation(GROUP_FIGURE_OSIRIS_PRIEST);
         break;
 
     case BUILDING_TEMPLE_RA:

@@ -7,12 +7,34 @@
 #include "window/file_dialog.h"
 #include "overlays/city_overlay_fwd.h"
 #include "building/building.h"
+#include "graphics/image_desc.h"
+#include "graphics/image_groups.h"
 
 #include "sound/city.h"
 
 void js_register_game_constants(js_State *J) {
    REGISTER_GLOBAL_CONSTANT(J, FILE_TYPE_SAVED_GAME);
    REGISTER_GLOBAL_CONSTANT(J, FILE_DIALOG_LOAD);
+}
+
+void js_register_city_images(js_State *J) {
+   REGISTER_GLOBAL_CONSTANT(J, IMAGE_NONE);
+   REGISTER_GLOBAL_CONSTANT(J, IMAGE_IMMIGRANT);
+}
+
+void js_register_collection_images(js_State *J) {
+   REGISTER_GLOBAL_CONSTANT(J, PACK_UNLOADED);
+   REGISTER_GLOBAL_CONSTANT(J, PACK_TERRAIN);
+   REGISTER_GLOBAL_CONSTANT(J, PACK_GENERAL);
+   REGISTER_GLOBAL_CONSTANT(J, PACK_SPR_MAIN);
+   REGISTER_GLOBAL_CONSTANT(J, PACK_SPR_AMBIENT);
+   REGISTER_GLOBAL_CONSTANT(J, PACK_EMPIRE);
+   REGISTER_GLOBAL_CONSTANT(J, PACK_FONT);
+   REGISTER_GLOBAL_CONSTANT(J, PACK_TEMPLE);
+   REGISTER_GLOBAL_CONSTANT(J, PACK_MONUMENT);
+   REGISTER_GLOBAL_CONSTANT(J, PACK_ENEMY)
+   REGISTER_GLOBAL_CONSTANT(J, PACK_EXPANSION);
+   REGISTER_GLOBAL_CONSTANT(J, PACK_EXPANSION_SPR);
 }
 
 void js_register_city_walkers(js_State *J) {

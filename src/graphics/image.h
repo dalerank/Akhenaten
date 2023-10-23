@@ -13,7 +13,7 @@
 #define IMAGE_ATLAS_BIT_OFFSET 28
 #define IMAGE_ATLAS_BIT_MASK 0x0fffffff
 
-enum {
+enum e_image_type {
     IMAGE_TYPE_WITH_TRANSPARENCY = 0,
     IMAGE_TYPE_FULLY_OPAQUE = 1,
     IMAGE_TYPE_16x16 = 10,

@@ -335,7 +335,6 @@ static void show_options_window(Arguments& args) {
 
 static void setup(Arguments& args) {
     crashhandler_install();
-    figure::check_action_properties_lookup();
 
     logs::info("Akhenaten version %s", get_version().c_str());
     if (!init_sdl()) {
@@ -394,6 +393,8 @@ static void setup(Arguments& args) {
     // setup script engine
     js_vm_set_scripts_folder(args.get_scripts_directory());
     js_vm_setup();
+
+    figure::check_action_properties_lookup();
 }
 static void teardown(void) {
     logs::info("Exiting game");

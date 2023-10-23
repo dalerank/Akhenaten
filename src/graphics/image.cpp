@@ -176,45 +176,45 @@ bool image_load_paks() {
 static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
     auto& data = *g_image_data;
     switch (collection) {
-    case IMAGE_COLLECTION_UNLOADED:
+    case PACK_UNLOADED:
         return data.unloaded;
-    case IMAGE_COLLECTION_TERRAIN:
+    case PACK_TERRAIN:
         return data.terrain;
-    case IMAGE_COLLECTION_GENERAL:
+    case PACK_GENERAL:
         return data.main;
-    case IMAGE_COLLECTION_SPR_MAIN:
+    case PACK_SPR_MAIN:
         return data.sprmain;
-    case IMAGE_COLLECTION_SPR_AMBIENT:
+    case PACK_SPR_AMBIENT:
         return data.sprambient;
-    case IMAGE_COLLECTION_EMPIRE:
+    case PACK_EMPIRE:
         return data.empire;
         /////
-    case IMAGE_COLLECTION_FONT:
+    case PACK_FONT:
         if (pak_cache_idx < 0 || pak_cache_idx >= data.font_paks.size())
             return data.font;
         else
             return data.font_paks.at(pak_cache_idx);
         return data.font;
         /////
-    case IMAGE_COLLECTION_TEMPLE:
+    case PACK_TEMPLE:
         if (pak_cache_idx < 0 || pak_cache_idx >= data.temple_paks.size())
             return data.temple;
         else
             return data.temple_paks.at(pak_cache_idx);
-    case IMAGE_COLLECTION_MONUMENT:
+    case PACK_MONUMENT:
         if (pak_cache_idx < 0 || pak_cache_idx >= data.monument_paks.size())
             return data.monument;
         else
             return data.monument_paks.at(pak_cache_idx);
-    case IMAGE_COLLECTION_ENEMY:
+    case PACK_ENEMY:
         if (pak_cache_idx < 0 || pak_cache_idx >= data.enemy_paks.size())
             return data.enemy;
         else
             return data.enemy_paks.at(pak_cache_idx);
         /////
-    case IMAGE_COLLECTION_EXPANSION:
+    case PACK_EXPANSION:
         return data.expansion;
-    case IMAGE_COLLECTION_EXPANSION_SPR:
+    case PACK_EXPANSION_SPR:
         return data.sprmain2;
         /////
     }

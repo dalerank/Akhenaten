@@ -1,5 +1,4 @@
-#ifndef FIGURE_ACTION_H
-#define FIGURE_ACTION_H
+#pragma once
 
 enum e_figure_action {
     FIGURE_ACTION_1_IMMIGRANT_CREATED = 1,
@@ -201,5 +200,3 @@ enum e_figure_action {
 };
 
 void figure_action_handle(void);
-
-#endif // FIGURE_ACTION_H
