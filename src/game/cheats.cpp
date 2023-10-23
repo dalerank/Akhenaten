@@ -43,6 +43,7 @@ static void game_cheat_collapse(uint8_t *);
 static void game_cheat_nofire(uint8_t *);
 static void game_cheat_nodamage(uint8_t *);
 static void game_cheat_spacious_apartment(uint8_t *);
+static void game_cheat_spawn_nobles(uint8_t *);
 
 using cheat_command = void(uint8_t* args);
 
@@ -65,6 +66,7 @@ static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_mo
                                                   {"nofire", game_cheat_nofire},
                                                   {"nodamage", game_cheat_nodamage},
                                                   {"collapse", game_cheat_collapse},
+                                                  {"spawnnobles", game_cheat_spawn_nobles},
                                                   {"tutspaciousapt", game_cheat_spacious_apartment},
 };
 
@@ -178,7 +180,7 @@ static void game_cheat_fire(uint8_t *args) {
         buildings.push_back(&b);
     });
 
-    int step = buildings.size() / count;
+    int step = std::max<int>(1, (int)buildings.size() / count);
     for (int i = 0; i < buildings.size(); i += step) {
         building_destroy_by_fire(buildings[i]);
     }
@@ -209,9 +211,29 @@ static void game_cheat_collapse(uint8_t *args) {
         buildings.push_back(&b);
     });
 
-    int step = buildings.size() / count;
+    int step = std::max<int>(1, (int)buildings.size() / count);
     for (int i = 0; i < buildings.size(); i += step) {
         building_destroy_by_collapse(buildings[i]);
+    }
+}
+
+static void game_cheat_spawn_nobles(uint8_t *args) {
+    int count = 0;
+    parse_integer(args ? args : (uint8_t *)"10", count);
+
+    svector<building *, 1000> buildings;
+    buildings_valid_do([&] (building &b) {
+        if (b.house_size > 0) {
+            buildings.push_back(&b);
+        }
+    });
+    
+    int step = std::max<int>(1, (int)buildings.size() / count);
+    for (int i = 0; i < buildings.size(); i += step) {
+        if (!buildings[i]->has_road_access) {
+            continue;
+        }
+        buildings[i]->create_roaming_figure(FIGURE_NOBLES, FIGURE_ACTION_125_ROAMING);
     }
 }
 

@@ -61,7 +61,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_FLOTSAM, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_DOCKER, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
   {FIGURE_MARKET_BUYER, 1, TERRAIN_USAGE_ROADS, 800, 0, 0},
-  {FIGURE_NOBLES, 1, TERRAIN_USAGE_ROADS, 128, GROUP_FIGURE_PATRICIAN},
+  {FIGURE_NOBLES, 1, TERRAIN_USAGE_ROADS, 128, GROUP_FIGURE_NOBLE},
   {FIGURE_INDIGENOUS_NATIVE, 1, TERRAIN_USAGE_ANY, 800, 0, 0},
   {FIGURE_TOWER_SENTRY, 1, TERRAIN_USAGE_WALLS, 800, 0, 0},
   {FIGURE_ENEMY43_SPEAR, 1, TERRAIN_USAGE_ENEMY, 0, 0, 0},
@@ -414,6 +414,12 @@ void figure::action_perform() {
             //            case FIGURE_MARKET_BUYER:
             if (b->state != BUILDING_STATE_VALID) //  || !b->has_figure(1, id)
                 poof();
+            break;
+
+        case FIGURE_NOBLES:
+            if (b->state != BUILDING_STATE_VALID) {
+                poof();
+            }
             break;
 
         case FIGURE_DELIVERY_BOY:
