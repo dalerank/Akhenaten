@@ -7,6 +7,7 @@
 #include "core/profiler.h"
 #include "figure/figure.h"
 #include "graphics/image_groups.h"
+#include "graphics/image_desc.h"
 #include "grid/road_access.h"
 
 #include <algorithm>
@@ -16,13 +17,20 @@ struct figure_action_property {
     char speed_mult;
     char terrain_usage;
     short max_roam_length;
-    int base_image_collection;
-    int base_image_group;
+    int _image_collection;
+    int _image_group;
+    e_image_type image_desc = IMG_NONE;
+
+    image_desc_t img() {
+        return (image_desc == IMG_NONE)
+                    ? image_desc_t{_image_collection, _image_group}
+                    : get_image_desc(image_desc);
+    }
 };
 
 static figure_action_property action_properties_lookup[] = {
   {FIGURE_NONE,     0, 0, 0, 0, 0},
-  {FIGURE_IMMIGRANT,1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_IMMIGRANT},
+  {FIGURE_IMMIGRANT,1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, IMG_IMMIGRANT},
   {FIGURE_EMIGRANT, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_VAGRANT},
   {FIGURE_HOMELESS, 1, TERRAIN_USAGE_PREFER_ROADS, 0, GROUP_FIGURE_VAGRANT},
   {FIGURE_CART_PUSHER, 1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_CARTPUSHER},
@@ -333,11 +341,13 @@ void figure::action_perform() {
 
         // base lookup data
         figure_action_property action_properties = action_properties_lookup[type];
-        if (action_properties.terrain_usage != -1 && terrain_usage == -1)
+        if (action_properties.terrain_usage != -1 && terrain_usage == -1) {
             terrain_usage = action_properties.terrain_usage;
+        }
         max_roam_length = action_properties.max_roam_length;
         speed_multiplier = action_properties.speed_mult;
-        image_set_animation(action_properties.base_image_collection, action_properties.base_image_group);
+        image_desc_t img = action_properties.img();
+        image_set_animation(img.pack, img.id);
 
         // check for building being alive (at the start of the action)
         building* b = home();

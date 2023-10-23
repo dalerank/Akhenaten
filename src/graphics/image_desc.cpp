@@ -2,18 +2,18 @@
 
 #include <array>
 
-std::array<image_desc_t, IMAGE_SIZE> g_image_desc;
+std::array<image_desc_t, IMG_SIZE> g_image_desc;
  
-void set_image_desc(e_image_type t, int collection, int id) {
-    if (t >= IMAGE_SIZE) {
+void set_image_desc(e_image_type t, int pack, int id) {
+    if (t >= IMG_SIZE) {
         return;
     }
 
-    g_image_desc[t] = {collection, id};
+    g_image_desc[t] = {pack, id};
 }
 
-image_desc_t image_desc(e_image_type t) {
-    if (t >= IMAGE_SIZE) {
+image_desc_t get_image_desc(e_image_type t) {
+    if (t >= IMG_SIZE) {
         return {0, 0};
     }
 

@@ -370,6 +370,7 @@ cmrc_add_resource_library(
     ${SCRIPTS_FOLDER}/walker_sounds.js
     ${SCRIPTS_FOLDER}/mission_sounds.js
     ${SCRIPTS_FOLDER}/overlays.js
+    ${SCRIPTS_FOLDER}/images.js
     ${PROJECT_SOURCE_DIR}/res/akhenaten_72.png
 )
 

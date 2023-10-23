@@ -11,6 +11,7 @@
 #include "core/random.h"
 #include "figure/figure.h"
 #include "config/config.h"
+#include "graphics/image_groups.h"
 
 bool city_festival_is_planned(void) {
     return city_data.festival.planned.size != FESTIVAL_NONE;
@@ -190,14 +191,12 @@ void city_festival_calculate_costs(void) {
     }
 }
 
-#include "graphics/image_groups.h"
-
 void figure::festival_guy_action() {
     building* b = home();
     switch (b->type) {
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        image_set_animation(GROUP_PRIEST_OSIRIS);
+        image_set_animation(GROUP_FIGURE_OSIRIS_PRIEST);
         break;
     case BUILDING_TEMPLE_RA:
     case BUILDING_TEMPLE_COMPLEX_RA:
