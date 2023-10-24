@@ -999,7 +999,6 @@ void building::spawn_figure_hunting_lodge() {
 }
 
 bool building::can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person) {
-    int gatherers_this_yard = 0;
     bool resource_reachable = false;
     switch (ftype) {
     case FIGURE_REED_GATHERER:
@@ -1010,42 +1009,21 @@ bool building::can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_bui
         resource_reachable = map_routing_citizen_found_terrain(road_access, nullptr, TERRAIN_TREE);
         break;
     }
+
+    int gatherers_this_yard = 0;
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure* f = figure_get(i);
-        if (f->has_type(ftype)) {        // figure with type on map
-            if (f->has_home(this)) // belongs to this building
-                gatherers_this_yard++;
+        if (f->has_type(ftype) && f->has_home(this)) {        // figure with type on map and  belongs to this building
+            gatherers_this_yard++;
         }
     }
-    // max 5 per building
+
     // can only spawn if there's space for more reed in the building
     int max_loads = 500 / carry_per_person;
     if (gatherers_this_yard < max_gatherers_per_building
         && gatherers_this_yard + (stored_full_amount / carry_per_person) < (max_loads - gatherers_this_yard))
         return true;
     return false;
-}
-
-void building::spawn_figure_wood_cutters() {
-    check_labor_problem();
-    if (has_road_access) {
-        common_spawn_labor_seeker(100);
-        int pct_workers = worker_percentage();
-        int spawn_delay = figure_spawn_timer();
-        if (spawn_delay == -1)
-            return;
-        figure_spawn_delay++;
-        if (figure_spawn_delay > spawn_delay) {
-            figure_spawn_delay = 0;
-
-            while (can_spawn_gatherer(FIGURE_LUMBERJACK, 3, 25)) {
-                auto f = create_figure_generic(FIGURE_LUMBERJACK, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
-                random_generate_next();
-                f->wait_ticks = random_short() % 30; // ok
-            }
-        }
-    }
-    common_spawn_goods_output_cartpusher();
 }
 
 void building::spawn_figure_native_hut() {

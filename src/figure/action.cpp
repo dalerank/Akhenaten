@@ -702,8 +702,8 @@ void figure::action_perform() {
         case 74:
             arrow_action();
             break;
-        case 75:
-            gatherer_action();
+        case FIGURE_LUMBERJACK:
+            lumberjack_action();
             break; // wood cutters
         case FIGURE_GOVERNOR:
             governor_action();
@@ -723,8 +723,8 @@ void figure::action_perform() {
         case 89:
             magistrate_action();
             break;
-        case 90:
-            gatherer_action();
+        case FIGURE_REED_GATHERER:
+            reed_gatherer_action();
             break; // reed gatherers
         case 91:
             festival_guy_action();

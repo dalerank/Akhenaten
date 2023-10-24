@@ -149,6 +149,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         break;
     case BUILDING_WOOD_CUTTERS:
         b->output_resource_id = RESOURCE_TIMBER;
+        b->data.industry.max_gatheres = 1;
         break;
     case BUILDING_CLAY_PIT:
         b->output_resource_id = RESOURCE_CLAY;

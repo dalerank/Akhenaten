@@ -404,7 +404,8 @@ public:
     void hippodrome_horse_action();
     // pharaoh
     void ostrich_hunter_action();
-    void gatherer_action();
+    void lumberjack_action();
+    void reed_gatherer_action();
     void policeman_action();
     void magistrate_action();
     void water_carrier_action();
