@@ -62,6 +62,7 @@ void figure::update_direction_and_image() {
         figure_image_set_cart_offset((dir + 4) % 8);
     }
 }
+
 static int closest_house_with_room(map_point tile) {
     int min_dist = 1000;
     int min_building_id = 0;
@@ -267,14 +268,15 @@ void figure::homeless_action() {
                     poof();
                 }
             } else {
-                advance_action(FIGURE_ACTION_10_HOMELESS_LEAVING);
+                advance_action(FIGURE_ACTION_6_HOMELESS_LEAVING);
             }
         }
         break;
+
     case FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE:
         if (!has_home()) {
             direction = DIR_0_TOP_RIGHT;
-            advance_action(FIGURE_ACTION_10_HOMELESS_LEAVING);
+            advance_action(FIGURE_ACTION_6_HOMELESS_LEAVING);
         } else {
             do_gotobuilding(immigrant_home(), true, TERRAIN_USAGE_ANY, FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE);
         }
@@ -289,7 +291,7 @@ void figure::homeless_action() {
 
     case ACTION_16_HOMELESS_RANDOM:
         roam_wander_freely = false;
-        do_goto(destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_6_EMIGRANT_LEAVING, FIGURE_ACTION_6_EMIGRANT_LEAVING);
+        do_goto(destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_6_HOMELESS_LEAVING, FIGURE_ACTION_6_HOMELESS_LEAVING);
         if (direction == DIR_FIGURE_CAN_NOT_REACH || direction == DIR_FIGURE_REROUTE) {
             routing_try_reroute_counter++;
             if (routing_try_reroute_counter > 20) {
@@ -299,17 +301,21 @@ void figure::homeless_action() {
             state = FIGURE_STATE_ALIVE;
             destination_tile = random_around_point(tile, tile, /*step*/2, /*bias*/4, /*max_dist*/8);
             direction = DIR_0_TOP_RIGHT;
-            advance_action(FIGURE_ACTION_10_HOMELESS_LEAVING);
+            advance_action(FIGURE_ACTION_6_HOMELESS_LEAVING);
         }
         break;
 
-    case ACTION_11_RETURNING_EMPTY:
-    case FIGURE_ACTION_10_HOMELESS_LEAVING:
+    case FIGURE_ACTION_6_HOMELESS_LEAVING:
         if (do_goto(exit, TERRAIN_USAGE_ANY)) {
             poof();
         }
 
         if (direction == DIR_FIGURE_CAN_NOT_REACH) {
+            routing_try_reroute_counter++;
+            if (routing_try_reroute_counter > 20) {
+                poof();
+                break;
+            }
             wait_ticks = 20;
             route_remove();
             state = FIGURE_STATE_ALIVE;
