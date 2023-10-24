@@ -66,7 +66,7 @@ static int get_festival_advice(void) {
 static void draw_entertainer(int type, int y_offset, int venue, int shows, int coverage, int entertain_coeff) {
     font_t font = FONT_NORMAL_WHITE_ON_DARK;
 
-    if (!is_building_enabled(venue)) {
+    if (!building_menu_is_building_enabled(venue)) {
         font = FONT_NORMAL_YELLOW;
         lang_text_draw(58, 47 + type, 40, y_offset, font);
         lang_text_draw_centered(58, 51, 150, y_offset, 100, font);
@@ -79,15 +79,15 @@ static void draw_entertainer(int type, int y_offset, int venue, int shows, int c
         lang_text_draw(58, 47 + type, 40, y_offset, font);
         text_draw_number_centered(building_count_active(venue), 150, y_offset, 100, font);
         text_draw_number_centered(shows, 230, y_offset, 100, font);
-        int width
-          = text_draw_number(entertain_coeff * building_count_active(venue), '_', " ", PEOPLE_OFFSET, y_offset, font);
+        int width = text_draw_number(entertain_coeff * building_count_active(venue), '_', " ", PEOPLE_OFFSET, y_offset, font);
         lang_text_draw(58, 5, PEOPLE_OFFSET + width, y_offset, font);
-        if (coverage == 0)
+        if (coverage == 0) {
             lang_text_draw_centered(57, 7, COVERAGE_OFFSET, y_offset, COVERAGE_WIDTH, font);
-        else if (coverage < 100)
+        } else if (coverage < 100) {
             lang_text_draw_centered(57, 8 + coverage / 10, COVERAGE_OFFSET, y_offset, COVERAGE_WIDTH, font);
-        else
+        } else {
             lang_text_draw_centered(57, 18, COVERAGE_OFFSET, y_offset, COVERAGE_WIDTH, font);
+        }
     }
 }
 
@@ -99,9 +99,9 @@ static void draw_festival_info() {
 
     int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(58, 15, 112 + width, 260, FONT_NORMAL_WHITE_ON_DARK);
-    if (city_festival_is_planned())
+    if (city_festival_is_planned()) {
         lang_text_draw_centered(58, 34, 102, 284, 300, FONT_NORMAL_WHITE_ON_DARK);
-    else {
+    } else {
         lang_text_draw_centered(58, 16, 102, 284, 300, FONT_NORMAL_WHITE_ON_DARK);
     }
     lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305, 400, FONT_NORMAL_WHITE_ON_DARK);

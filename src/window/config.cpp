@@ -26,10 +26,11 @@
 #include "window/hotkey_config.h"
 #include "window/plain_message_dialog.h"
 #include "window/select_list.h"
+#include "empire/city.h"
 
 #include <string.h>
 
-constexpr uint32_t CONFIG_PAGES = 5;
+constexpr uint32_t CONFIG_PAGES = 7;
 #define MAX_LANGUAGE_DIRS 20
 
 #define FIRST_BUTTON_Y 72
@@ -45,7 +46,7 @@ constexpr uint32_t CONFIG_PAGES = 5;
 #define ITEM_Y_OFFSET 60
 #define ITEM_HEIGHT 24
 
-static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 12, 5};
+static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 12, 5, 1, 1};
 
 static void toggle_switch(int id, int param2);
 static void toggle_god_disabled(int id, int param2);
@@ -55,90 +56,93 @@ static void button_reset_defaults(int param1, int param2);
 static void button_hotkeys(int param1, int param2);
 static void button_close(int save, int param2);
 static void button_page(int param1, int param2);
-static int config_change_basic(int key);
+static void toggle_building(int id, int param2);
+static void toggle_resource(int id, int param2);
 // static int config_change_zoom(int key);
+static int config_change_basic(int key);
 static int config_change_string_basic(int key);
 static int config_change_string_language(int key);
 
 static generic_button checkbox_buttons[] = {
-  {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO, TR_CONFIG_SHOW_INTRO_VIDEO},
-  {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO, TR_CONFIG_SIDEBAR_INFO},
-  {20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING, TR_CONFIG_SMOOTH_SCROLLING},
-  {20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_WALKER_WAYPOINTS, TR_CONFIG_DRAW_WALKER_WAYPOINTS},
-  {20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE, TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE},
-  {20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE},
-  {20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE, TR_CONFIG_SHOW_CONSTRUCTION_SIZE},
-  {20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_ZOOM_STEPPED, TR_CONFIG_ZOOM_STEPPED},
-  {20, 264, 20, 20, toggle_switch, button_none, CONFIG_UI_COMPLETE_RATING_COLUMNS, TR_CONFIG_COMPLETE_RATING_COLUMNS},
-  {20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_LEGIONS, TR_CONFIG_HIGHLIGHT_LEGIONS},
-  {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_ROTATE_MANUALLY, TR_CONFIG_ROTATE_MANUALLY},
-  {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
-  // 
-  {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG, TR_CONFIG_FIX_IMMIGRATION_BUG},
-  {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS},
-  {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANDFESTIVAL, TR_CONFIG_GRANDFESTIVAL},
-  {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_JEALOUS_GODS, TR_CONFIG_JEALOUS_GODS},
-  {20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GLOBAL_LABOUR, TR_CONFIG_GLOBAL_LABOUR},
-  {20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SCHOOL_WALKERS, TR_CONFIG_SCHOOL_WALKERS},
-  {20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RETIRE_AT_60, TR_CONFIG_RETIRE_AT_60},
-  {20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIXED_WORKERS, TR_CONFIG_FIXED_WORKERS},
-  {20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_EXTRA_FORTS, TR_CONFIG_EXTRA_FORTS},
-  {20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WOLVES_BLOCK, TR_CONFIG_WOLVES_BLOCK},
-  {20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DYNAMIC_GRANARIES, TR_CONFIG_DYNAMIC_GRANARIES},
-  {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MORE_STOCKPILE, TR_CONFIG_MORE_STOCKPILE},
-  {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NO_BUYER_DISTRIBUTION, TR_CONFIG_NO_BUYER_DISTRIBUTION},
-  {20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS, TR_CONFIG_FIX_EDITOR_EVENTS},
-  //
-  {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS, TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS},
-  {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD, TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD},
-  {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANARIES_GET_DOUBLE, TR_CONFIG_GRANARIES_GET_DOUBLE},
-  {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD, TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD},
-  {20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FARMS_DELIVER_CLOSE, TR_CONFIG_FARMS_DELIVER_CLOSE},
-  {20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES, TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES},
-  {20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ALL_HOUSES_MERGE, TR_CONFIG_ALL_HOUSES_MERGE},
-  {20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE},
-  {20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY, TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY},
-  {20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MULTIPLE_BARRACKS, TR_CONFIG_MULTIPLE_BARRACKS},
-  {20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT, TR_CONFIG_NOT_ACCEPTING_WAREHOUSES},
-  {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS, TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS},
-  {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIREMAN_RETUNING, TR_CONFIG_FIREMAN_RETURNING},
-  {20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CART_SPEED_QUANTITY, TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY},
-
-  //
-  {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CITIZEN_ROAD_OFFSET, TR_CONFIG_CH_CITIZEN_ROAD_OFFSET},
-  {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WORK_CAMP_ONE_WORKER_PER_MONTH, TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH},
-  {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CLAY_PIT_FIRE_RISK_REDUCED, TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED},
-  {20, 144, 20, 20, toggle_city_animals_switch, button_none, CONFIG_GP_CH_CITY_HAS_ANIMALS, TR_CONFIG_CITY_HAS_ANIMALS},
-  {20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GOLDMINE_TWICE_PRODUCTION, TR_CONFIG_GOLDMINE_TWICE_PRODUCTION},
-  {20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM, TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM},
-  {20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT, TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT},
-  {20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DELIVERY_BOY_GOES_TO_MARKET_ALONE, TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE},
-  {20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RELIGION_COVERAGE_INFLUENCE_SENTIMENT, TR_CONFIG_RELIGION_COVERAGE_INFLUENCE_SENTIMENT},
-  {20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MONUMENTS_INFLUENCE_SENTIMENT, TR_CONFIG_MONUMENTS_INFLUENCE_SENTIMENT},
-  {20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WELL_RADIUS_DEPENDS_MOISTURE, TR_CONFIG_WELL_RADIUS_DEPENDS_MOISTURE},
-  {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ENTER_POINT_ON_NEAREST_TILE, TR_CONFIG_ENTER_POINT_ON_NEAREST_TILE},
-  
-
-  // GODS
-  {20, 72, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_OSIRIS_DISABLED, TR_CONFIG_GOD_OSIRIS_DISABLED},
-  {20, 96, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_RA_DISABLED, TR_CONFIG_GOD_RA_DISABLED},
-  {20, 120, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_PTAH_DISABLED, TR_CONFIG_GOD_PTAH_DISABLED},
-  {20, 144, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_SETH_DISABLED, TR_CONFIG_GOD_SETH_DISABLED},
-  {20, 168, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_BAST_DISABLED, TR_CONFIG_GOD_BAST_DISABLED},
+    {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO, TR_CONFIG_SHOW_INTRO_VIDEO},
+    {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO, TR_CONFIG_SIDEBAR_INFO},
+    {20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING, TR_CONFIG_SMOOTH_SCROLLING},
+    {20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_WALKER_WAYPOINTS, TR_CONFIG_DRAW_WALKER_WAYPOINTS},
+    {20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE, TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE},
+    {20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE},
+    {20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE, TR_CONFIG_SHOW_CONSTRUCTION_SIZE},
+    {20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_ZOOM_STEPPED, TR_CONFIG_ZOOM_STEPPED},
+    {20, 264, 20, 20, toggle_switch, button_none, CONFIG_UI_COMPLETE_RATING_COLUMNS, TR_CONFIG_COMPLETE_RATING_COLUMNS},
+    {20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_LEGIONS, TR_CONFIG_HIGHLIGHT_LEGIONS},
+    {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_ROTATE_MANUALLY, TR_CONFIG_ROTATE_MANUALLY},
+    {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
+    // 
+    {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG, TR_CONFIG_FIX_IMMIGRATION_BUG},
+    {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS},
+    {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANDFESTIVAL, TR_CONFIG_GRANDFESTIVAL},
+    {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_JEALOUS_GODS, TR_CONFIG_JEALOUS_GODS},
+    {20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GLOBAL_LABOUR, TR_CONFIG_GLOBAL_LABOUR},
+    {20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SCHOOL_WALKERS, TR_CONFIG_SCHOOL_WALKERS},
+    {20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RETIRE_AT_60, TR_CONFIG_RETIRE_AT_60},
+    {20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIXED_WORKERS, TR_CONFIG_FIXED_WORKERS},
+    {20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_EXTRA_FORTS, TR_CONFIG_EXTRA_FORTS},
+    {20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WOLVES_BLOCK, TR_CONFIG_WOLVES_BLOCK},
+    {20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DYNAMIC_GRANARIES, TR_CONFIG_DYNAMIC_GRANARIES},
+    {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MORE_STOCKPILE, TR_CONFIG_MORE_STOCKPILE},
+    {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NO_BUYER_DISTRIBUTION, TR_CONFIG_NO_BUYER_DISTRIBUTION},
+    {20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS, TR_CONFIG_FIX_EDITOR_EVENTS},
+    //
+    {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS, TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS},
+    {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD, TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD},
+    {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANARIES_GET_DOUBLE, TR_CONFIG_GRANARIES_GET_DOUBLE},
+    {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD, TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD},
+    {20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FARMS_DELIVER_CLOSE, TR_CONFIG_FARMS_DELIVER_CLOSE},
+    {20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES, TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES},
+    {20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ALL_HOUSES_MERGE, TR_CONFIG_ALL_HOUSES_MERGE},
+    {20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE},
+    {20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY, TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY},
+    {20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MULTIPLE_BARRACKS, TR_CONFIG_MULTIPLE_BARRACKS},
+    {20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT, TR_CONFIG_NOT_ACCEPTING_WAREHOUSES},
+    {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS, TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS},
+    {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIREMAN_RETUNING, TR_CONFIG_FIREMAN_RETURNING},
+    {20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CART_SPEED_QUANTITY, TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY},
+    //
+    {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CITIZEN_ROAD_OFFSET, TR_CONFIG_CH_CITIZEN_ROAD_OFFSET},
+    {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WORK_CAMP_ONE_WORKER_PER_MONTH, TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH},
+    {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CLAY_PIT_FIRE_RISK_REDUCED, TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED},
+    {20, 144, 20, 20, toggle_city_animals_switch, button_none, CONFIG_GP_CH_CITY_HAS_ANIMALS, TR_CONFIG_CITY_HAS_ANIMALS},
+    {20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GOLDMINE_TWICE_PRODUCTION, TR_CONFIG_GOLDMINE_TWICE_PRODUCTION},
+    {20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM, TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM},
+    {20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT, TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT},
+    {20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DELIVERY_BOY_GOES_TO_MARKET_ALONE, TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE},
+    {20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RELIGION_COVERAGE_INFLUENCE_SENTIMENT, TR_CONFIG_RELIGION_COVERAGE_INFLUENCE_SENTIMENT},
+    {20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MONUMENTS_INFLUENCE_SENTIMENT, TR_CONFIG_MONUMENTS_INFLUENCE_SENTIMENT},
+    {20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WELL_RADIUS_DEPENDS_MOISTURE, TR_CONFIG_WELL_RADIUS_DEPENDS_MOISTURE},
+    {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ENTER_POINT_ON_NEAREST_TILE, TR_CONFIG_ENTER_POINT_ON_NEAREST_TILE},
+    // GODS
+    {20, 72, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_OSIRIS_DISABLED, TR_CONFIG_GOD_OSIRIS_DISABLED},
+    {20, 96, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_RA_DISABLED, TR_CONFIG_GOD_RA_DISABLED},
+    {20, 120, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_PTAH_DISABLED, TR_CONFIG_GOD_PTAH_DISABLED},
+    {20, 144, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_SETH_DISABLED, TR_CONFIG_GOD_SETH_DISABLED},
+    {20, 168, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_BAST_DISABLED, TR_CONFIG_GOD_BAST_DISABLED},
+    //
+    {20, 72, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_WOOD_CUTTER, TR_CONFIG_BUILDING_WOOD_CUTTER},
+    //
+    {20, 72, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
 };
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
 static generic_button bottom_buttons[]= {
-  {250, 436, 150, 30, button_reset_defaults, button_none, 0, TR_BUTTON_RESET_DEFAULTS},
-  {410, 436, 100, 30, button_close, button_none, 0, TR_BUTTON_CANCEL},
-  {520, 436, 100, 30, button_close, button_none, 1, TR_BUTTON_OK},
-  {20, 436, 180, 30, button_hotkeys, button_none, 0, TR_BUTTON_CONFIGURE_HOTKEYS}
+    {250, 436, 150, 30, button_reset_defaults, button_none, 0, TR_BUTTON_RESET_DEFAULTS},
+    {410, 436, 100, 30, button_close, button_none, 0, TR_BUTTON_CANCEL},
+    {520, 436, 100, 30, button_close, button_none, 1, TR_BUTTON_OK},
+    {20, 436, 180, 30, button_hotkeys, button_none, 0, TR_BUTTON_CONFIGURE_HOTKEYS}
 };
 
 static generic_button page_buttons[] = {
-  {20, 16, 25, 25, button_page, button_none, 0, TR_BUTTON_PREV},
-  {50, 16, 25, 25, button_page, button_none, 1, TR_BUTTON_NEXT}
+    {20, 16, 25, 25, button_page, button_none, 0, TR_BUTTON_PREV},
+    {50, 16, 25, 25, button_page, button_none, 1, TR_BUTTON_NEXT}
 };
 
 static int page_names[] = {
@@ -146,7 +150,9 @@ static int page_names[] = {
     TR_CONFIG_HEADER_GAMEPLAY_CHANGES,
     TR_CONFIG_HEADER_GAMEPLAY_CHANGES,
     TR_CONFIG_HEADER_GAMEPLAY_CHANGES,
-    TR_CONFIG_HEADER_GODS_CHANGES
+    TR_CONFIG_HEADER_GODS_CHANGES,
+    TR_CONFIG_HEADER_BUILDING_CHANGES,
+    TR_CONFIG_HEADER_RESOURCE_CHANGES
 };
 
 struct window_config_ext_data_t {
@@ -354,6 +360,32 @@ static void toggle_city_animals_switch(int key, int param2) {
     window_invalidate();
 }
 
+static void toggle_building(int id, int param2) {
+    e_building_type type = BUILDING_NONE;
+    switch (id) {
+    case CONGIG_GP_CH_BUILDING_WOOD_CUTTER: type = BUILDING_WOOD_CUTTERS; break;
+    default:
+        return;
+    }
+
+    bool can_build = building_menu_is_building_enabled(type);
+    building_menu_toggle_building(type, !can_build);
+    window_invalidate();
+}
+
+static void toggle_resource(int id, int param2) {
+    e_resource resource = RESOURCE_NONE;
+    switch (id) {
+    case CONFIG_GP_CH_RESOURCE_TIMBER: resource = RESOURCE_TIMBER; break;
+    default:
+        return;
+    }
+
+    bool can_produce = can_produce_resource(resource);
+    set_city_produce_resource(resource, !can_produce);
+    window_invalidate();
+}
+
 static void toggle_switch(int key, int param2) {
     auto& data = g_window_config_ext_data;
     data.config_values[key].new_value = 1 - data.config_values[key].new_value;
@@ -402,6 +434,8 @@ static bool is_config_option_enabled(int option) {
     auto& data = g_window_config_ext_data;
     switch (option) {
     case CONFIG_GP_CH_CITY_HAS_ANIMALS: return city_data.env.has_animals;
+    case CONFIG_GP_CH_RESOURCE_TIMBER: return can_produce_resource(RESOURCE_TIMBER);
+    case CONGIG_GP_CH_BUILDING_WOOD_CUTTER: return building_menu_is_building_enabled(BUILDING_WOOD_CUTTERS);
     }
 
     return data.config_values[option].new_value;
@@ -442,14 +476,7 @@ static void draw_background() {
     }
 
     if (GAME_ENV == ENGINE_ENV_C3) { // TODO: temporary fix to mitigate translation exception
-        text_draw_label_and_number_centered((const char*)translation_for(TR_CONFIG_PAGE_LABEL),
-                                            data.page + 1,
-                                            "",
-                                            60,
-                                            416,
-                                            85,
-                                            FONT_NORMAL_BLACK_ON_LIGHT,
-                                            0);
+        text_draw_label_and_number_centered((const char*)translation_for(TR_CONFIG_PAGE_LABEL), data.page + 1, "", 60, 416, 85, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
 
     // text_draw_centered(translation_for(TR_CONFIG_PAGE_LABEL), 80, 415, 30, FONT_NORMAL_BLACK, 0);
@@ -457,6 +484,7 @@ static void draw_background() {
 
     graphics_reset_dialog();
 }
+
 static void draw_foreground() {
     auto& data = g_window_config_ext_data;
     graphics_set_to_dialog();
@@ -492,7 +520,12 @@ static void draw_foreground() {
     graphics_reset_dialog();
 }
 void window_config_show(void (*close_callback)(void)) {
-    window_type window = {WINDOW_CONFIG, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_CONFIG,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     init(close_callback);
     window_show(&window);
 }

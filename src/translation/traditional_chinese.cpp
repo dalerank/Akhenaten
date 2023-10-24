@@ -29,6 +29,8 @@ static translation_string all_strings[]
      {TR_CONFIG_HEADER_UI_CHANGES, "使用者介面更變"},
      {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "遊戲內容更變"},
      {TR_CONFIG_HEADER_GODS_CHANGES, "Gods changes"},
+     {TR_CONFIG_HEADER_BUILDING_CHANGES, "Building changes"},
+     {TR_CONFIG_HEADER_RESOURCE_CHANGES, "Resource changes"},
      {TR_CONFIG_SHOW_INTRO_VIDEO, "播放啓動動畫"},
      {TR_CONFIG_SIDEBAR_INFO, "控制台更多資訊"},
      {TR_CONFIG_SMOOTH_SCROLLING, "平滑視角滾動"},

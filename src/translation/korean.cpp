@@ -25,6 +25,8 @@ static translation_string all_strings[]
      {TR_CONFIG_HEADER_UI_CHANGES, "사용자 인터페이스 변경"},
      {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "게임플레이 변경"},
      {TR_CONFIG_HEADER_GODS_CHANGES, "Gods changes"},
+     {TR_CONFIG_HEADER_BUILDING_CHANGES, "Building changes"},
+     {TR_CONFIG_HEADER_RESOURCE_CHANGES, "Resource changes"},
      {TR_CONFIG_SHOW_INTRO_VIDEO, "시작 영상 재생"},
      {TR_CONFIG_SIDEBAR_INFO, "게임 제어판에 추가 정보 표시"},
      {TR_CONFIG_SMOOTH_SCROLLING, "부드러운 화면이동 가능"},

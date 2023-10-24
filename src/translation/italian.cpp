@@ -29,6 +29,8 @@ static translation_string all_strings[]
      {TR_CONFIG_HEADER_UI_CHANGES, "Modifiche all'interfaccia utente"},
      {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Modifiche al gioco"},
      {TR_CONFIG_HEADER_GODS_CHANGES, "Gods changes"},
+     {TR_CONFIG_HEADER_BUILDING_CHANGES, "Building changes"},
+     {TR_CONFIG_HEADER_RESOURCE_CHANGES, "Resource changes"},
      {TR_CONFIG_SHOW_INTRO_VIDEO, "Riproduce il video introduttivo"},
      {TR_CONFIG_SIDEBAR_INFO, "Informazioni extra nel pannello di controllo"},
      {TR_CONFIG_SMOOTH_SCROLLING, "Abilita lo scorrimento continuo"},

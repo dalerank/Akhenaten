@@ -29,6 +29,8 @@ static translation_string all_strings[]
      {TR_CONFIG_HEADER_UI_CHANGES, "Cambios en la interfaz"},
      {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Cambios en el juego"},
      {TR_CONFIG_HEADER_GODS_CHANGES, "Gods changes"},
+     {TR_CONFIG_HEADER_BUILDING_CHANGES, "Building changes"},
+     {TR_CONFIG_HEADER_RESOURCE_CHANGES, "Resource changes"},
      {TR_CONFIG_SHOW_INTRO_VIDEO, "Reproducir vídeos al inicio"},
      {TR_CONFIG_SIDEBAR_INFO, "Mostrar información adicional en el panel de control"},
      {TR_CONFIG_SMOOTH_SCROLLING, "Activar desplazamiento suave del mapa"},

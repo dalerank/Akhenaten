@@ -43,6 +43,7 @@ bool empire_can_import_resource(int resource, bool check_if_open) {
     }
     return false;
 }
+
 bool empire_can_export_resource(int resource, bool check_if_open) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
         if (g_cities[i].in_use && empire_city_type_can_trade(g_cities[i].type)
@@ -53,7 +54,16 @@ bool empire_can_export_resource(int resource, bool check_if_open) {
     return false;
 }
 
-static bool can_produce_resource(int resource) {
+void set_city_produce_resource(int resource, bool v) {
+    for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
+        if (g_cities[i].in_use && (g_cities[i].type == EMPIRE_CITY_OURS)) {
+            g_cities[i].sells_resource[resource] = v;
+            break;
+        }
+    }
+}
+
+bool can_produce_resource(int resource) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
         if (g_cities[i].in_use && (g_cities[i].type == EMPIRE_CITY_OURS)) {
             if (g_cities[i].sells_resource[resource])
@@ -249,11 +259,13 @@ static bool generate_trader(int city_id, empire_city* city) {
     }
     return false;
 }
+
 void empire_city_open_trade(int city_id) {
     empire_city* city = &g_cities[city_id];
     city_finance_process_construction(city->cost_to_open);
     city->is_open = 1;
 }
+
 void empire_city_generate_trader(void) {
     for (int i = 1; i < MAX_CITIES[GAME_ENV]; i++) {
         if (!g_cities[i].in_use || !g_cities[i].is_open)

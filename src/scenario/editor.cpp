@@ -324,7 +324,7 @@ int scenario_editor_is_building_allowed(int id) {
 }
 
 void scenario_editor_toggle_building_allowed(int id) {
-    g_scenario_data.allowed_buildings[id] = g_scenario_data.allowed_buildings[id] ? 0 : 1;
+    g_scenario_data.allowed_buildings[id] = !g_scenario_data.allowed_buildings[id];
     g_scenario_data.is_saved = 0;
 }
 

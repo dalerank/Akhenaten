@@ -78,7 +78,8 @@ enum e_buildset_tutorial {
     BUILDSET_TUT8_START,
 };
 
-int is_building_enabled(int type);
+int building_menu_is_building_enabled(int type);
+void building_menu_toggle_building(int type, bool enabled = true);
 
 void building_menu_enable_all(void);
 

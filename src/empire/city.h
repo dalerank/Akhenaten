@@ -55,3 +55,6 @@ void empire_city_open_trade(int city_id);
 void empire_city_generate_trader(void);
 
 void empire_city_remove_trader(int city_id, int figure_id);
+
+void set_city_produce_resource(int resource, bool v);
+bool can_produce_resource(int resource);

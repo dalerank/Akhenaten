@@ -29,6 +29,8 @@ static translation_string all_strings[] = {
      {TR_CONFIG_HEADER_UI_CHANGES, "Zmiany interfejsu użytkownika"},
      {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Zmiany gry"},
      {TR_CONFIG_HEADER_GODS_CHANGES, "Gods changes"},
+     {TR_CONFIG_HEADER_BUILDING_CHANGES, "Building changes"},
+    {TR_CONFIG_HEADER_RESOURCE_CHANGES, "Resource changes"},
      {TR_CONFIG_SHOW_INTRO_VIDEO, "Odgrywaj film wprowadzający"},
      {TR_CONFIG_SIDEBAR_INFO, "Dodatkowe informacje w panelu sterowania"},
      {TR_CONFIG_SMOOTH_SCROLLING, "Płynne przewijanie"},

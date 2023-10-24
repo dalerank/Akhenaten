@@ -35,6 +35,8 @@ static translation_string all_strings[] = {
   {TR_CONFIG_HEADER_UI_CHANGES, "Configuration de l'interface"},
   {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Configuration du jeu"},
   {TR_CONFIG_HEADER_GODS_CHANGES, "Gods changes"},
+  {TR_CONFIG_HEADER_BUILDING_CHANGES, "Building changes"},
+  {TR_CONFIG_HEADER_RESOURCE_CHANGES, "Resource changes"},
   {TR_CONFIG_SHOW_INTRO_VIDEO, "Jouer la vidéo d'introduction"},
   {TR_CONFIG_SIDEBAR_INFO, "Informations supplémentaires dans le panneau latéral"},
   {TR_CONFIG_SMOOTH_SCROLLING, "Activer le défilement doux"},
