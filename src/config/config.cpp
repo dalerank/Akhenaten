@@ -85,8 +85,10 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"#god_bast_disabled", false},
     ///
     {"city_building_wood_cutters", true},
-    ///
     {"city_produce_timber", true},
+
+    {"city_building_copper_mine", true},
+    {"city_produce_copper", true},
 };
 
 static const char* ini_string_keys[] = {

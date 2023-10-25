@@ -1,19 +1,19 @@
 #include "translation/common.h"
 #include "translation/translation.h"
 
-static translation_string all_strings[]
-  = {{TR_NO_PATCH_TITLE, "Patch 1.0.1.0 not installed"},
+static translation_string all_strings[] = {
+     {TR_NO_PATCH_TITLE, "Patch 1.0.1.0 not installed"},
      {TR_NO_PATCH_MESSAGE,
-      "Your Caesar 3 installation does not have the 1.0.1.0 patch installed. "
+      "Your Pharahoh installation does not have the 1.2.1.0 patch installed. "
       "You can download the patch from:\n" URL_PATCHES "\n"
       "Continue at your own risk."},
      {TR_MISSING_FONTS_TITLE, "Missing fonts"},
      {TR_MISSING_FONTS_MESSAGE,
-      "Your Caesar 3 installation requires extra font files. "
+      "Your Pharahoh installation requires extra font files. "
       "You can download them for your language from:\n" URL_PATCHES},
      {TR_NO_EDITOR_TITLE, "Editor not installed"},
      {TR_NO_EDITOR_MESSAGE,
-      "Your Caesar 3 installation does not contain the editor files. "
+      "Your Pharahoh installation does not contain the editor files. "
       "You can download them from:\n" URL_EDITOR},
      {TR_INVALID_LANGUAGE_TITLE, "Invalid language directory"},
      {TR_INVALID_LANGUAGE_MESSAGE,
@@ -92,7 +92,9 @@ static translation_string all_strings[]
      {TR_CONFIG_GOD_SETH_DISABLED, "Seth disabled"},
      {TR_CONFIG_GOD_BAST_DISABLED, "Bast disabled"},
      {TR_CONFIG_BUILDING_WOOD_CUTTER, "Wood cutter enabled"},
+     {TR_CONFIG_BUILDING_COPPE_MINE, "Copper Mine enabled"},
      {TR_CONFIG_RESOURCE_TIMBER, "City produce timber"},
+     {TR_CONFIG_RESOURCE_COPPER, "City produce copper"},
      {TR_CONFIG_DRAW_FPS, "Draw FPS"},
      {TR_HOTKEY_TITLE, "Hotkeys configuration"},
      {TR_HOTKEY_LABEL, "Hotkey"},
