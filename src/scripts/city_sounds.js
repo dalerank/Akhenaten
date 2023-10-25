@@ -48,4 +48,5 @@ city_sounds = [
   {c: SOUND_CHANNEL_CITY_MEADOW,        p: "Ambient/MEADOW.MP3"},
   {c: SOUND_CHANNEL_CITY_FLOODPLAIN,    p: "Ambient/floodplain.mp3"},
   {c: SOUND_CHANNEL_CITY_MARSHLAND,     p: "Ambient/vegetation.mp3"},
+  {c: SOUND_CHANNEL_CITY_CHICKFARM,     p: "wavs/chickfarm.wav"},
 ]
