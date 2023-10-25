@@ -64,7 +64,7 @@ void city_resource_set_last_used_storageyard(int warehouse_id) {
     city_data.resource.last_used_warehouse = warehouse_id;
 }
 
-int city_int(int resource) {
+int city_resource_trade_status(int resource) {
     return city_data.resource.trade_status[resource];
 }
 

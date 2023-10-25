@@ -46,7 +46,7 @@ constexpr uint32_t CONFIG_PAGES = 7;
 #define ITEM_Y_OFFSET 60
 #define ITEM_HEIGHT 24
 
-static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 12, 5, 2, 2};
+static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 12, 5, 5, 4};
 
 static void toggle_switch(int id, int param2);
 static void toggle_god_disabled(int id, int param2);
@@ -128,9 +128,15 @@ static generic_button checkbox_buttons[] = {
     //
     {20, 72, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_WOOD_CUTTER, TR_CONFIG_BUILDING_WOOD_CUTTER},
     {20, 96, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_COPPER_MINE, TR_CONFIG_BUILDING_COPPE_MINE},
+    {20, 120, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_REED_GATHERER, TR_CONFIG_BUILDING_REED_GATHERER},
+    {20, 144, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_PAPYRUS_MAKER, TR_CONFIG_BUILDING_PAPYRUS_MAKER},
+    {20, 168, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_SCRIBAL_SCHOOL, TR_CONFIG_BUILDING_SCRIBAL_SCHOOL},
+    
     //
     {20, 72, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
     {20, 96, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_COPPER, TR_CONFIG_RESOURCE_COPPER},
+    {20, 120, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_REED, TR_CONFIG_RESOURCE_REED},
+    {20, 144, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_PAPYRUS, TR_CONFIG_RESOURCE_PAPYRUS},
 };
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
@@ -367,6 +373,9 @@ static void toggle_building(int id, int param2) {
     switch (id) {
     case CONGIG_GP_CH_BUILDING_WOOD_CUTTER: type = BUILDING_WOOD_CUTTERS; break;
     case CONGIG_GP_CH_BUILDING_COPPER_MINE: type = BUILDING_COPPER_MINE; break;
+    case CONGIG_GP_CH_BUILDING_REED_GATHERER: type = BUILDING_REED_GATHERER; break;
+    case CONGIG_GP_CH_BUILDING_PAPYRUS_MAKER: type = BUILDING_PAPYRUS_WORKSHOP; break;
+    case CONGIG_GP_CH_BUILDING_SCRIBAL_SCHOOL: type = BUILDING_SCRIBAL_SCHOOL; break;
     default:
         return;
     }
@@ -381,6 +390,8 @@ static void toggle_resource(int id, int param2) {
     switch (id) {
     case CONFIG_GP_CH_RESOURCE_TIMBER: resource = RESOURCE_TIMBER; break;
     case CONFIG_GP_CH_RESOURCE_COPPER: resource = RESOURCE_COPPER; break;
+    case CONFIG_GP_CH_RESOURCE_REED: resource = RESOURCE_REEDS; break;
+    case CONFIG_GP_CH_RESOURCE_PAPYRUS: resource = RESOURCE_PAPYRUS; break;
     default:
         return;
     }
@@ -440,8 +451,13 @@ static bool is_config_option_enabled(int option) {
     case CONFIG_GP_CH_CITY_HAS_ANIMALS: return city_data.env.has_animals;
     case CONFIG_GP_CH_RESOURCE_TIMBER: return can_produce_resource(RESOURCE_TIMBER);
     case CONFIG_GP_CH_RESOURCE_COPPER: return can_produce_resource(RESOURCE_COPPER);
+    case CONFIG_GP_CH_RESOURCE_REED: return can_produce_resource(RESOURCE_REEDS);
+    case CONFIG_GP_CH_RESOURCE_PAPYRUS: return can_produce_resource(RESOURCE_PAPYRUS);
     case CONGIG_GP_CH_BUILDING_WOOD_CUTTER: return building_menu_is_building_enabled(BUILDING_WOOD_CUTTERS);
     case CONGIG_GP_CH_BUILDING_COPPER_MINE: return building_menu_is_building_enabled(BUILDING_COPPER_MINE);
+    case CONGIG_GP_CH_BUILDING_REED_GATHERER: return building_menu_is_building_enabled(BUILDING_REED_GATHERER);
+    case CONGIG_GP_CH_BUILDING_PAPYRUS_MAKER: return building_menu_is_building_enabled(BUILDING_PAPYRUS_WORKSHOP);
+    case CONGIG_GP_CH_BUILDING_SCRIBAL_SCHOOL: return building_menu_is_building_enabled(BUILDING_SCRIBAL_SCHOOL);
     }
 
     return data.config_values[option].new_value;

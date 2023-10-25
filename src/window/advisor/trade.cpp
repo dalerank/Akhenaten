@@ -95,7 +95,7 @@ static void draw_foreground() {
         else if (city_resource_is_mothballed(resource))
             lang_text_draw_centered(18, 5, 210, y_offset + 61, 100, FONT_NORMAL_YELLOW);
 
-        int trade_status = city_int(resource);
+        int trade_status = city_resource_trade_status(resource);
         int trade_amount = stack_proper_quantity(city_resource_trading_amount(resource), resource);
         switch (trade_status) {
         case TRADE_STATUS_NONE: {

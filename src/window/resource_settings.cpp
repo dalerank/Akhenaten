@@ -28,43 +28,55 @@ static void button_toggle_trade(int param1, int param2);
 static void button_import_ph(int param1, int param2);
 static void button_export_ph(int param1, int param2);
 
-static image_button resource_image_buttons[]
-  = {{58 - 16, 332, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
-     {558 + 16, 335, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_ok, button_none, 0, 0, 1}};
+static image_button resource_image_buttons[] = {
+    {58 - 16, 332, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
+    {558 + 16, 335, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_ok, button_none, 0, 0, 1}
+};
 
-static arrow_button resource_arrow_buttons[]
-  = {{314, 215, 17, 24, button_trade_up_down, 1, 0}, {338, 215, 15, 24, button_trade_up_down, 0, 0}};
-static arrow_button resource_arrow_buttons_import_ph[]
-  = {{264, 215, 17, 24, button_trade_up_down, 1, 0}, {288, 215, 15, 24, button_trade_up_down, 0, 0}};
-static arrow_button resource_arrow_buttons_export_ph[]
-  = {{264 + 268, 215, 17, 24, button_trade_up_down, 1, 0}, {288 + 268, 215, 15, 24, button_trade_up_down, 0, 0}};
+static arrow_button resource_arrow_buttons[] = {
+    {314, 215, 17, 24, button_trade_up_down, 1, 0},
+    {338, 215, 15, 24, button_trade_up_down, 0, 0}
+};
+
+static arrow_button resource_arrow_buttons_import_ph[] = {
+    {264, 215, 17, 24, button_trade_up_down, 1, 0},
+    {288, 215, 15, 24, button_trade_up_down, 0, 0}
+};
+
+static arrow_button resource_arrow_buttons_export_ph[] = {
+    {264 + 268, 215, 17, 24, button_trade_up_down, 1, 0},
+    {288 + 268, 215, 15, 24, button_trade_up_down, 0, 0}
+};
 
 static generic_button resource_trade_toggle_buttons[] = {
-  {98, 250, 432, 30, button_toggle_industry, button_none, 0, 0},
-  {98, 288, 432, 50, button_toggle_stockpile, button_none, 0, 0},
-  {98, 212, 432, 30, button_toggle_trade, button_none, 0, 0},
+    {98, 250, 432, 30, button_toggle_industry, button_none, 0, 0},
+    {98, 288, 432, 50, button_toggle_stockpile, button_none, 0, 0},
+    {98, 212, 432, 30, button_toggle_trade, button_none, 0, 0},
 };
 
 static generic_button resource_trade_ph_buttons[] = {
-  {98, 250, 432, 30, button_toggle_industry, button_none, 0, 0},
-  {98, 288, 432, 50, button_toggle_stockpile, button_none, 0, 0},
-  {98 - 52, 212, 268, 50, button_import_ph, button_none, 0, 0},
-  {98 + 216, 212, 268, 50, button_export_ph, button_none, 0, 0},
+    {98, 250, 432, 30, button_toggle_industry, button_none, 0, 0},
+    {98, 288, 432, 50, button_toggle_stockpile, button_none, 0, 0},
+    {98 - 52, 212, 268, 50, button_import_ph, button_none, 0, 0},
+    {98 + 216, 212, 268, 50, button_export_ph, button_none, 0, 0},
 };
 
-static struct {
+struct resource_settings_data {
     int resource;
     int focus_button_id;
-} data;
+};
+
+resource_settings_data g_resource_settings_data;
 
 static void init(int resource) {
-    data.resource = resource;
+    g_resource_settings_data.resource = resource;
 }
 
 static void draw_background(void) {
     window_draw_underlying_window();
 }
 static void draw_foreground(void) {
+    auto &data = g_resource_settings_data;
     graphics_set_to_dialog();
 
     outer_panel_draw(32, 128, 36, 15);
@@ -116,7 +128,7 @@ static void draw_foreground(void) {
     bool could_import = empire_can_import_resource(data.resource, false);
     bool could_export = empire_can_export_resource(data.resource, false);
 
-    int trade_status = city_int(data.resource);
+    int trade_status = city_resource_trade_status(data.resource);
     if (GAME_ENV == ENGINE_ENV_C3) {
         if (!can_import && !can_export)
             lang_text_draw(54, 24, 98, 212, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -178,11 +190,9 @@ static void draw_foreground(void) {
         // export
         if (!can_export) {
             if (could_export)
-                lang_text_draw_centered(
-                  54, 35, btn_exp.x, 221, btn_exp.width, FONT_NORMAL_BLACK_ON_LIGHT); // open trade route to import
+                lang_text_draw_centered(54, 35, btn_exp.x, 221, btn_exp.width, FONT_NORMAL_BLACK_ON_LIGHT); // open trade route to import
             else
-                lang_text_draw_centered(
-                  54, 42, btn_exp.x, 221, btn_exp.width, FONT_NORMAL_BLACK_ON_LIGHT); // no sellers
+                lang_text_draw_centered(54, 42, btn_exp.x, 221, btn_exp.width, FONT_NORMAL_BLACK_ON_LIGHT); // no sellers
         } else {
             button_border_draw(btn_exp.x, btn_exp.y, btn_exp.width, 30, data.focus_button_id == 4);
             switch (trade_status) {
@@ -229,33 +239,32 @@ static void draw_foreground(void) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto &data = g_resource_settings_data;
     const mouse* m_dialog = mouse_in_dialog(m);
 
     // help / back / ok buttons
-    if (image_buttons_handle_mouse(m_dialog, 0, 0, resource_image_buttons, 2, 0))
+    if (image_buttons_handle_mouse(m_dialog, 0, 0, resource_image_buttons, 2, 0)) {
         return;
-    if ((city_int(data.resource) == TRADE_STATUS_EXPORT || city_int(data.resource) == TRADE_STATUS_IMPORT)) {
+    }
+
+    if ((city_resource_trade_status(data.resource) == TRADE_STATUS_EXPORT || city_resource_trade_status(data.resource) == TRADE_STATUS_IMPORT)) {
         int button = 0;
-        if (GAME_ENV == ENGINE_ENV_C3)
-            arrow_buttons_handle_mouse(m_dialog, 0, 0, resource_arrow_buttons, 2, &button);
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            if (city_int(data.resource) == TRADE_STATUS_IMPORT)
-                arrow_buttons_handle_mouse(m_dialog, 0, 0, resource_arrow_buttons_import_ph, 2, &button);
-            else if (city_int(data.resource) == TRADE_STATUS_EXPORT)
-                arrow_buttons_handle_mouse(m_dialog, 0, 0, resource_arrow_buttons_export_ph, 2, &button);
+        if (city_resource_trade_status(data.resource) == TRADE_STATUS_IMPORT) {
+            arrow_buttons_handle_mouse(m_dialog, 0, 0, resource_arrow_buttons_import_ph, 2, &button);
+        } else if (city_resource_trade_status(data.resource) == TRADE_STATUS_EXPORT) {
+            arrow_buttons_handle_mouse(m_dialog, 0, 0, resource_arrow_buttons_export_ph, 2, &button);
         }
         if (button)
             return;
     }
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        if (generic_buttons_handle_mouse(m_dialog, 0, 0, resource_trade_toggle_buttons, 3, &data.focus_button_id))
-            return;
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (generic_buttons_handle_mouse(m_dialog, 0, 0, resource_trade_ph_buttons, 4, &data.focus_button_id))
-            return;
+
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, resource_trade_ph_buttons, 4, &data.focus_button_id)) {
+        return;
     }
-    if (input_go_back_requested(m, h))
+
+    if (input_go_back_requested(m, h)) {
         window_go_back();
+    }
 }
 
 static void button_help(int param1, int param2) {
@@ -266,28 +275,40 @@ static void button_ok(int param1, int param2) {
 }
 
 static void button_trade_up_down(int is_down, int param2) {
+    auto &data = g_resource_settings_data;
     city_resource_change_trading_amount(data.resource, is_down ? -1 : 1);
 }
 
 static void button_toggle_industry(int param1, int param2) {
+    auto &data = g_resource_settings_data;
     if (building_count_industry_total(data.resource) > 0)
         city_resource_toggle_mothballed(data.resource);
 }
 static void button_toggle_stockpile(int param1, int param2) {
+    auto &data = g_resource_settings_data;
     city_resource_toggle_stockpiled(data.resource);
 }
 static void button_toggle_trade(int param1, int param2) {
+    auto &data = g_resource_settings_data;
     city_resource_cycle_trade_status(data.resource);
 }
 static void button_import_ph(int param1, int param2) {
+    auto &data = g_resource_settings_data;
     city_resource_cycle_trade_import(data.resource);
 }
 static void button_export_ph(int param1, int param2) {
+    auto &data = g_resource_settings_data;
     city_resource_cycle_trade_export(data.resource);
 }
 
 void window_resource_settings_show(int resource) {
-    window_type window = {WINDOW_RESOURCE_SETTINGS, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_RESOURCE_SETTINGS,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
+
     init(resource);
     window_show(&window);
 }

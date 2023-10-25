@@ -160,7 +160,7 @@ static void check_iron_access(int type) {
                 show(WARNING_BUILD_IRON_MINE);
             else if (!empire_can_import_resource(RESOURCE_COPPER, true))
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            else if (city_int(RESOURCE_COPPER) != TRADE_STATUS_IMPORT)
+            else if (city_resource_trade_status(RESOURCE_COPPER) != TRADE_STATUS_IMPORT)
                 show(WARNING_TRADE_IMPORT_RESOURCE);
         }
     }
@@ -174,7 +174,7 @@ static void check_vines_access(int type) {
                 show(WARNING_BUILD_VINES_FARM);
             else if (!empire_can_import_resource(RESOURCE_BARLEY, true))
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            else if (city_int(RESOURCE_BARLEY) != TRADE_STATUS_IMPORT)
+            else if (city_resource_trade_status(RESOURCE_BARLEY) != TRADE_STATUS_IMPORT)
                 show(WARNING_TRADE_IMPORT_RESOURCE);
         }
     }
@@ -188,8 +188,34 @@ static void check_olives_access(int type) {
                 show(WARNING_BUILD_OLIVE_FARM);
             else if (!empire_can_import_resource(RESOURCE_STRAW, true))
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            else if (city_int(RESOURCE_STRAW) != TRADE_STATUS_IMPORT)
+            else if (city_resource_trade_status(RESOURCE_STRAW) != TRADE_STATUS_IMPORT)
                 show(WARNING_TRADE_IMPORT_RESOURCE);
+        }
+    }
+}
+
+static void check_papyrus_access(e_building_type type) {
+    if (type == BUILDING_SCRIBAL_SCHOOL && building_count_industry_active(RESOURCE_PAPYRUS) <= 0) {
+        if (city_resource_count(RESOURCE_PAPYRUS) <= 0) {
+            show(WARNING_PAPYRUS_NEEDED);
+            if (empire_can_produce_resource(RESOURCE_PAPYRUS, true))
+                show(WARNING_BUILD_PAPYRUS_MAKER);
+            else if (!empire_can_import_resource(RESOURCE_PAPYRUS, true))
+                show(WARNING_INSTRUCT_OVERSEER_TO_IMPORT_PAPYRUS);
+            else if (city_resource_trade_status(RESOURCE_PAPYRUS) != TRADE_STATUS_IMPORT)
+                show(WARNING_OPEN_TRADE_TO_IMPORT_PAPYRUS);
+        }
+    }
+
+    if (type == BUILDING_PAPYRUS_WORKSHOP && building_count_industry_active(RESOURCE_REEDS) <= 0) {
+        if (city_resource_count(RESOURCE_REEDS) <= 0) {
+            show(WARNING_NEED_REEDS);
+            if (empire_can_produce_resource(RESOURCE_REEDS, true))
+                show(WARNING_BUILD_REEDS_GATHERER);
+            else if (!empire_can_import_resource(RESOURCE_REEDS, true))
+                show(WARNING_INSTRUCT_OVERSEER_TO_IMPORT_REED);
+            else if (city_resource_trade_status(RESOURCE_REEDS) != TRADE_STATUS_IMPORT)
+                show(WARNING_OPEN_TRADE_TO_IMPORT_REED);
         }
     }
 }
@@ -202,7 +228,7 @@ static void check_timber_access(int type) {
                 show(WARNING_BUILD_TIMBER_YARD);
             else if (!empire_can_import_resource(RESOURCE_GEMS, true))
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            else if (city_int(RESOURCE_GEMS) != TRADE_STATUS_IMPORT)
+            else if (city_resource_trade_status(RESOURCE_GEMS) != TRADE_STATUS_IMPORT)
                 show(WARNING_TRADE_IMPORT_RESOURCE);
         }
     }
@@ -216,7 +242,7 @@ static void check_clay_access(int type) {
                 show(WARNING_BUILD_CLAY_PIT);
             else if (!empire_can_import_resource(RESOURCE_CLAY, true))
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            else if (city_int(RESOURCE_CLAY) != TRADE_STATUS_IMPORT)
+            else if (city_resource_trade_status(RESOURCE_CLAY) != TRADE_STATUS_IMPORT)
                 show(WARNING_TRADE_IMPORT_RESOURCE);
         }
     }
@@ -242,6 +268,7 @@ void building_construction_warning_generic_checks(int type, tile2i tile, int siz
     check_olives_access(type);
     check_timber_access(type);
     check_clay_access(type);
+    check_papyrus_access((e_building_type)type);
 
     check_road_access(type, tile, size, orientation);
 }

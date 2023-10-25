@@ -28,7 +28,7 @@ int city_resource_operating_granaries(void);
 int city_resource_last_used_storageyard(void);
 void city_resource_set_last_used_storageyard(int warehouse_id);
 
-int city_int(int resource);
+int city_resource_trade_status(int resource);
 void city_resource_cycle_trade_status(int resource);
 void city_resource_cycle_trade_import(int resource);
 void city_resource_cycle_trade_export(int resource);

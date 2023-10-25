@@ -89,6 +89,12 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
 
     {"city_building_copper_mine", true},
     {"city_produce_copper", true},
+
+    {"city_building_copper_reed_gatherer", true},
+    {"city_building_copper_papyrus_maker", true},
+    {"city_building_copper_scribal_school", true},
+    {"city_produce_reed", true},
+    {"city_produce_papyrus", true},
 };
 
 static const char* ini_string_keys[] = {
