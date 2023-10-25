@@ -20,6 +20,7 @@ void js_register_game_constants(js_State *J) {
 void js_register_city_images(js_State *J) {
    REGISTER_GLOBAL_CONSTANT(J, IMG_NONE);
    REGISTER_GLOBAL_CONSTANT(J, IMG_IMMIGRANT);
+   REGISTER_GLOBAL_CONSTANT(J, IMG_EMIGRANT);
 }
 
 void js_register_collection_images(js_State *J) {

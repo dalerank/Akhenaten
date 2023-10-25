@@ -5,6 +5,7 @@
 enum e_image_type : uint16_t {
     IMG_NONE = 0,
     IMG_IMMIGRANT = 1,
+    IMG_EMIGRANT = 2,
 
     IMG_SIZE
 };

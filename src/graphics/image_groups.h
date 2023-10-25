@@ -340,8 +340,8 @@ enum e_pack {
 #define GROUP_FIGURE_MUSICIAN PACK_SPR_MAIN, 191        // 111
 #define GROUP_FIGURE_HUNTER_ARROW PACK_SPR_MAIN, 0
 #define GROUP_FIGURE_HUNTER_ARROW_SHADOW PACK_SPR_MAIN, 1         // 33
-#define GROUP_FIGURE_EMIGRANT PACK_SPR_MAIN, 2                    // 65
-#define GROUP_FIGURE_EMIGRANT_DEATH PACK_SPR_MAIN, 3              // 161
+//#define GROUP_FIGURE_EMIGRANT PACK_SPR_MAIN, 2                    // 65
+//#define GROUP_FIGURE_EMIGRANT_DEATH PACK_SPR_MAIN, 3              // 161
 #define GROUP_FIGURE_ENGINEER PACK_SPR_MAIN, 4                    //  169
 #define GROUP_FIGURE_ENGINEER_DEATH PACK_SPR_MAIN, 5              // 265
 #define GROUP_FIGURE_FIREMAN PACK_SPR_MAIN, 6                     // 273
