@@ -326,24 +326,27 @@ static void enable_if_allowed(int type) {
         building_menu_toggle_building(type, false);
 }
 
-static int disable_raw_if_unavailable(int type, int resource) {
+static int disable_raw_if_unavailable(int type, e_resource resource) {
     if (!empire_can_produce_resource(resource, false)) {
         building_menu_toggle_building(type, false);
         return 0;
     }
     return 1;
 }
-static int disable_crafted_if_unavailable(int type, int resource, int resource2 = RESOURCE_NONE) {
+
+static int disable_crafted_if_unavailable(int type, e_resource resource, e_resource resource2 = RESOURCE_NONE) {
     if (!empire_can_produce_resource(resource, false)) {
         building_menu_toggle_building(type, false);
         return 0;
     }
+
     if (resource2 != RESOURCE_NONE && !empire_can_produce_resource(resource2, false)) {
         building_menu_toggle_building(type, false);
         return 0;
     }
     return 1;
 }
+
 static void disable_resources() {
     disable_raw_if_unavailable(BUILDING_BARLEY_FARM, RESOURCE_BARLEY);
     disable_raw_if_unavailable(BUILDING_FLAX_FARM, RESOURCE_FLAX);

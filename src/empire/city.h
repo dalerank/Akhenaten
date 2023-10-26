@@ -29,7 +29,8 @@ int empire_city_get_route_id(int city_id);
 bool empire_can_import_resource(int resource, bool check_if_open);
 bool empire_can_export_resource(int resource, bool check_if_open);
 
-bool empire_can_produce_resource(int resource, bool check_if_open);
+bool empire_can_produce_resource(e_resource resource, bool check_if_open);
+e_resource get_raw_resource(e_resource resource);
 // bool empire_can_produce_resource_potentially(int resource);
 
 int empire_city_get_for_object(int empire_object_id);
@@ -56,5 +57,5 @@ void empire_city_generate_trader(void);
 
 void empire_city_remove_trader(int city_id, int figure_id);
 
-void set_city_produce_resource(int resource, bool v);
-bool can_produce_resource(int resource);
+void set_city_produce_resource(e_resource resource, bool v);
+bool can_produce_resource(e_resource resource);

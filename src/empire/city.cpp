@@ -54,7 +54,7 @@ bool empire_can_export_resource(int resource, bool check_if_open) {
     return false;
 }
 
-void set_city_produce_resource(int resource, bool v) {
+void set_city_produce_resource(e_resource resource, bool v) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
         if (g_cities[i].in_use && (g_cities[i].type == EMPIRE_CITY_OURS)) {
             g_cities[i].sells_resource[resource] = v;
@@ -63,7 +63,7 @@ void set_city_produce_resource(int resource, bool v) {
     }
 }
 
-bool can_produce_resource(int resource) {
+bool can_produce_resource(e_resource resource) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
         if (g_cities[i].in_use && (g_cities[i].type == EMPIRE_CITY_OURS)) {
             if (g_cities[i].sells_resource[resource])
@@ -73,7 +73,7 @@ bool can_produce_resource(int resource) {
     return false;
 }
 
-static int get_raw_resource(int resource) {
+e_resource get_raw_resource(e_resource resource) {
     switch (resource) {
     case RESOURCE_STRAW:
         return RESOURCE_GRAIN;
@@ -100,8 +100,8 @@ static int get_raw_resource(int resource) {
     }
 }
 
-bool empire_can_produce_resource(int resource, bool check_if_open) {
-    int raw_resource = get_raw_resource(resource);
+bool empire_can_produce_resource(e_resource resource, bool check_if_open) {
+    e_resource raw_resource = get_raw_resource(resource);
     // finished goods: check imports of raw materials
     if (raw_resource != resource && empire_can_import_resource(raw_resource, false))
         return true;
@@ -345,7 +345,7 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
     }
     int food_index = 0;
     for (int resource = 1; resource < RESOURCES_FOODS_MAX; resource++) {
-        int can_do_food_x = empire_can_produce_resource(resource, true);
+        int can_do_food_x = empire_can_produce_resource((e_resource)resource, true);
         if (can_do_food_x) {
             set_allowed_food(food_index, resource);
             food_index++;

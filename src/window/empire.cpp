@@ -892,14 +892,17 @@ static void get_tooltip(tooltip_context* c) {
 static void button_help(int param1, int param2) {
     window_message_dialog_show(MESSAGE_DIALOG_EMPIRE_MAP, -1, 0);
 }
+
 static void button_return_to_city(int param1, int param2) {
     window_city_show();
 }
+
 static void button_advisor(int advisor, int param2) {
     window_advisors_show_advisor((e_advisor)advisor);
 }
+
 static void button_show_resource_window(int resource, int param2) {
-    window_resource_settings_show(resource);
+    window_resource_settings_show((e_resource)resource);
 }
 
 static void confirmed_open_trade(bool accepted) {
@@ -909,16 +912,25 @@ static void confirmed_open_trade(bool accepted) {
         window_trade_opened_show(data.selected_city);
     }
 }
+
 static void button_open_trade(int param1, int param2) {
     window_popup_dialog_show(POPUP_DIALOG_OPEN_TRADE, confirmed_open_trade, e_popup_btns_yesno);
 }
 
-void window_empire_show(void) {
-    window_type window = {WINDOW_EMPIRE, draw_background, draw_foreground, handle_input, get_tooltip};
+void window_empire_show() {
+    window_type window = {
+        WINDOW_EMPIRE,
+        draw_background,
+        draw_foreground,
+        handle_input,
+        get_tooltip
+    };
+
     init();
     window_show(&window);
 }
-void window_empire_show_checked(void) {
+
+void window_empire_show_checked() {
     e_availability avail = mission_empire_availability();
     
     if (avail == AVAILABLE || scenario_is_custom()) {

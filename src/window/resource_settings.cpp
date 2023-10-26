@@ -62,13 +62,13 @@ static generic_button resource_trade_ph_buttons[] = {
 };
 
 struct resource_settings_data {
-    int resource;
+    e_resource resource;
     int focus_button_id;
 };
 
 resource_settings_data g_resource_settings_data;
 
-static void init(int resource) {
+static void init(e_resource resource) {
     g_resource_settings_data.resource = resource;
 }
 
@@ -301,7 +301,7 @@ static void button_export_ph(int param1, int param2) {
     city_resource_cycle_trade_export(data.resource);
 }
 
-void window_resource_settings_show(int resource) {
+void window_resource_settings_show(e_resource resource) {
     window_type window = {
         WINDOW_RESOURCE_SETTINGS,
         draw_background,
