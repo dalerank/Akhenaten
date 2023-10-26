@@ -41,7 +41,6 @@ enum e_figure_draw_debug_mode {
 
 constexpr int MAX_CLOUD_IMAGE_OFFSETS = 19;
 
-
 class figure {
 private:
     e_resource resource_id;

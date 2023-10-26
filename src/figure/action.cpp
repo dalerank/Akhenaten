@@ -19,7 +19,7 @@ struct figure_action_property {
     short max_roam_length;
     int _image_collection;
     int _image_group;
-    e_image_type image_desc = IMG_NONE;
+    e_img image_desc = IMG_NONE;
 
     image_desc_t img() {
         return (image_desc == IMG_NONE)
@@ -32,7 +32,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_NONE,     0, 0, 0, 0, 0},
   {FIGURE_IMMIGRANT,1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, IMG_IMMIGRANT},
   {FIGURE_EMIGRANT, 1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, IMG_EMIGRANT},
-  {FIGURE_HOMELESS, 1, TERRAIN_USAGE_PREFER_ROADS, 0, GROUP_FIGURE_VAGRANT},
+  {FIGURE_HOMELESS, 1, TERRAIN_USAGE_PREFER_ROADS, 0, 0, 0, IMG_HOMELESS},
   {FIGURE_CART_PUSHER, 1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_CARTPUSHER},
   {FIGURE_LABOR_SEEKER, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_LABOR_SEEKER},
   {FIGURE_EXPLOSION, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_EXPLOSION},

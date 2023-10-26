@@ -155,7 +155,7 @@ void js_config_load_images_info(js_State *arch) {
         int type = read_integer(arch, "img");
         int pack = read_integer(arch, "pack");
         int id = read_integer(arch, "id");
-        set_image_desc((e_image_type)type, pack, id);
+        set_image_desc((e_img)type, pack, id);
     });
 }
 

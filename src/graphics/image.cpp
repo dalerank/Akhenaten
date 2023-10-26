@@ -2,6 +2,7 @@
 #include "font.h"
 #include "image_groups.h"
 #include "content/imagepak.h"
+#include "graphics/image_desc.h"
 
 struct image_data_t {
     bool fonts_enabled;
@@ -223,6 +224,11 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
 
 int image_id_resource_icon(int resource) {
     return image_id_from_group(GROUP_RESOURCE_ICONS) + resource;
+}
+
+int image_id_from_group(e_img type) {
+    image_desc_t desc = get_image_desc(type);
+    return image_id_from_group(desc.pack, desc.id);
 }
 
 int image_id_from_group(int collection, int group, int pak_cache_idx) {

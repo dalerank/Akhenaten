@@ -4,7 +4,7 @@
 
 std::array<image_desc_t, IMG_SIZE> g_image_desc;
  
-void set_image_desc(e_image_type t, int pack, int id) {
+void set_image_desc(e_img t, int pack, int id) {
     if (t >= IMG_SIZE) {
         return;
     }
@@ -12,7 +12,7 @@ void set_image_desc(e_image_type t, int pack, int id) {
     g_image_desc[t] = {pack, id};
 }
 
-image_desc_t get_image_desc(e_image_type t) {
+image_desc_t get_image_desc(e_img t) {
     if (t >= IMG_SIZE) {
         return {0, 0};
     }

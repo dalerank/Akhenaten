@@ -350,8 +350,8 @@ enum e_pack {
 #define GROUP_FIGURE_GRANARY_BOY PACK_SPR_MAIN, 9                 // 673
 #define GROUP_FIGURE_GRANARY_BOY_DEATH PACK_SPR_MAIN, 10          // 769
 #define GROUP_FIGURE_HUNTER_STICK PACK_SPR_MAIN, 11               // 777
-#define GROUP_FIGURE_VAGRANT PACK_SPR_MAIN, 12                    // 782 -- homeless
-#define GROUP_FIGURE_VAGRANT_DEATH PACK_SPR_MAIN, 13              // 878
+//#define GROUP_FIGURE_VAGRANT PACK_SPR_MAIN, 12                    // 782 -- homeless
+//#define GROUP_FIGURE_VAGRANT_DEATH PACK_SPR_MAIN, 13              // 878
 //#define GROUP_FIGURE_IMMIGRANT PACK_SPR_MAIN, 14                  // 886
 //#define GROUP_FIGURE_IMMIGRANT_DEATH PACK_SPR_MAIN, 15            // 982
 #define GROUP_FIGURE_MARKET_BUYER PACK_SPR_MAIN, 16               // 990
