@@ -248,6 +248,12 @@ static void check_clay_access(int type) {
     }
 }
 
+static void check_shipyard(int type) {
+    if (type == BUILDING_FISHING_WHARF && !city_buildings_has_working_shipyard()) {
+        show(WARNING_SHIPWRIGHT_NEEDED);
+    }
+}
+
 void building_construction_warning_generic_checks(int type, tile2i tile, int size, int orientation) {
     building_construction_warning_check_food_stocks(type);
     check_workers(type);
@@ -269,6 +275,7 @@ void building_construction_warning_generic_checks(int type, tile2i tile, int siz
     check_timber_access(type);
     check_clay_access(type);
     check_papyrus_access((e_building_type)type);
+    check_shipyard(type);
 
     check_road_access(type, tile, size, orientation);
 }

@@ -85,7 +85,7 @@ void building_entertainment_update() {
     }
 }
 
-void building_count_update(void) {
+void building_count_update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Buildin Count Update");
     clear_counters();
     city_buildings_reset_dock_wharf_counters();
@@ -187,14 +187,22 @@ void building_count_update(void) {
 
             // water-side
         case BUILDING_FISHING_WHARF:
-            if (b.num_workers > 0)
+            if (b.num_workers > 0) {
                 city_buildings_add_working_wharf(!b.data.industry.fishing_boat_id);
+            }
             break;
 
         case BUILDING_DOCK:
-            if (b.num_workers > 0 && b.has_water_access)
+            if (b.num_workers > 0 && b.has_water_access) {
                 city_buildings_add_working_dock(b.id);
+            }
             break;
+
+        case BUILDING_SHIPYARD:
+            if (b.num_workers > 0 && b.has_water_access) {
+                city_buildings_add_working_shipyard(b.id);
+            }
+        break;
         }
         // industry
         switch (b.type) {

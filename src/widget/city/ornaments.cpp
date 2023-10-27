@@ -626,6 +626,10 @@ void draw_ornaments_and_animations(vec2i tile, map_point point, view_context &ct
         draw_normal_anim(ctx, x + 104, y, b, grid_offset, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask);
         break;
 
+    case BUILDING_FISHING_WHARF:
+        draw_normal_anim(ctx, x + 74, y, b, grid_offset, image_id_from_group(IMG_FISHIHG_WHARF_ANIM) - 1, color_mask);
+        break;
+
     default:
         draw_normal_anim(ctx, x, y, b, grid_offset, image_id, color_mask);
         if (b->has_plague) {

@@ -39,11 +39,13 @@ void city_buildings_remove_triumphal_arch(void);
 void city_buildings_add_dock(void);
 void city_buildings_remove_dock(void);
 
-void city_buildings_reset_dock_wharf_counters(void);
+void city_buildings_reset_dock_wharf_counters();
 void city_buildings_add_working_wharf(int needs_fishing_boat);
 void city_buildings_add_working_dock(int building_id);
-int city_buildings_shipyard_boats_requested(void);
-bool city_buildings_has_working_dock(void);
+void city_buildings_add_working_shipyard(int building_id);
+int city_buildings_shipyard_boats_requested();
+bool city_buildings_has_working_dock();
+bool city_buildings_has_working_shipyard();
 int city_buildings_get_working_dock(int index);
 
 map_point city_buildings_main_native_meeting_center();

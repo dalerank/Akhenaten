@@ -44,6 +44,7 @@ struct city_data_t {
         int32_t shipyard_boats_requested;
         int16_t working_docks;
         int16_t working_dock_ids[10];
+        int16_t working_shipyards;
         int32_t mission_post_operational;
         map_point main_native_meeting;
         int8_t unknown_value;

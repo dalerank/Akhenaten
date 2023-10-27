@@ -22,6 +22,7 @@ void js_register_city_images(js_State *J) {
    REGISTER_GLOBAL_CONSTANT(J, IMG_IMMIGRANT);
    REGISTER_GLOBAL_CONSTANT(J, IMG_EMIGRANT);
    REGISTER_GLOBAL_CONSTANT(J, IMG_HOMELESS);
+   REGISTER_GLOBAL_CONSTANT(J, IMG_FISHIHG_WHARF_ANIM);
 }
 
 void js_register_collection_images(js_State *J) {
