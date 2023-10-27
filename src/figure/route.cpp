@@ -125,10 +125,10 @@ void figure::figure_route_add() {
     if (can_move_by_water()) {
         if (allow_move_type == EMOVE_FLOTSAM) { // flotsam
             map_routing_calculate_distances_water_flotsam(tile.x(), tile.y());
-            path_length = map_routing_get_path_on_water(data.direction_paths[path_id], destination_tile.x(), destination_tile.y(), true);
+            path_length = map_routing_get_path_on_water(data.direction_paths[path_id], destination_tile, true);
         } else {
             map_routing_calculate_distances_water_boat(tile.x(), tile.y());
-            path_length = map_routing_get_path_on_water(data.direction_paths[path_id], destination_tile.x(), destination_tile.y(), false);
+            path_length = map_routing_get_path_on_water(data.direction_paths[path_id], destination_tile, false);
         }
     } else {
         // land figure
@@ -350,17 +350,17 @@ int map_routing_get_closest_tile_within_range(int src_x,
     return 0;
 }
 
-int map_routing_get_path_on_water(uint8_t* path, int dst_x, int dst_y, bool is_flotsam) {
+int map_routing_get_path_on_water(uint8_t* path, tile2i dst, bool is_flotsam) {
     int rand = random_byte() & 3;
-    int dst_grid_offset = MAP_OFFSET(dst_x, dst_y);
+    int dst_grid_offset = dst.grid_offset();
     int distance = map_routing_distance(dst_grid_offset);
     if (distance <= 0 || distance >= 998)
         return 0;
 
     int num_tiles = 0;
     int last_direction = -1;
-    int x = dst_x;
-    int y = dst_y;
+    int x = dst.x();
+    int y = dst.y();
     int grid_offset = dst_grid_offset;
     while (distance > 1) {
         int current_rand = rand;
@@ -392,8 +392,9 @@ int map_routing_get_path_on_water(uint8_t* path, int dst_x, int dst_y, bool is_f
         int forward_direction = (direction + 4) % 8;
         g_direction_path[num_tiles++] = forward_direction;
         last_direction = forward_direction;
-        if (num_tiles >= MAX_PATH_LENGTH)
+        if (num_tiles >= MAX_PATH_LENGTH) {
             return 0;
+        }
     }
     for (int i = 0; i < num_tiles; i++) {
         path[i] = g_direction_path[num_tiles - i - 1];

@@ -30,12 +30,7 @@ struct routing_state_data_t {
 
 routing_state_data_t g_routing_state_data;
 
-static bool can_place_on_crossing_no_neighboring(int grid_offset,
-                                                 int terrain_underneath,
-                                                 int terrain_to_avoid,
-                                                 int d_x,
-                                                 int d_y,
-                                                 bool adjacent) {
+static bool can_place_on_crossing_no_neighboring(int grid_offset, int terrain_underneath, int terrain_to_avoid, int d_x, int d_y, bool adjacent) {
     // this is similar to the way Pharaoh does it... it only allows to build in alternating rows/columns
     // after starting the road placement. not perfect, but it works.
     d_x++;
@@ -78,7 +73,7 @@ static void callback_calc_distance(int next_offset, int dist) {
         enqueue(next_offset, dist);
 }
 
-void map_routing_calculate_distances(map_point tile) {
+void map_routing_calculate_distances(tile2i tile) {
     ++g_routing_stats.total_routes_calculated;
     route_queue(tile.grid_offset(), -1, callback_calc_distance);
 }
@@ -240,7 +235,7 @@ bool map_routing_ferry_has_routes(building *b) {
 
         std::array<uint8_t, 500> path_data;
         map_routing_calculate_distances_water_boat(fpoints_begin.point_a.x(), fpoints_begin.point_a.y());
-        int path_length = map_routing_get_path_on_water(path_data.data(), fpoints_end.point_a.x(), fpoints_end.point_a.y(), false);
+        int path_length = map_routing_get_path_on_water(path_data.data(), fpoints_end.point_a, false);
 
         if (path_length > 0) {
             return true;
