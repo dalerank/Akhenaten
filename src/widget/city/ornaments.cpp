@@ -627,7 +627,7 @@ void draw_ornaments_and_animations(vec2i tile, map_point point, view_context &ct
         break;
 
     case BUILDING_FISHING_WHARF:
-        draw_normal_anim(ctx, x + 74, y, b, grid_offset, image_id_from_group(IMG_FISHIHG_WHARF_ANIM) - 1, color_mask);
+        draw_normal_anim(ctx, x + 74, y + 7, b, grid_offset, image_id_from_group(IMG_FISHIHG_WHARF_ANIM) - 1, color_mask);
         break;
 
     default:

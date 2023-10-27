@@ -21,6 +21,7 @@
 #include "figure/route.h"
 #include "figure/trader.h"
 #include "graphics/image.h"
+#include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
 #include "grid/figure.h"
 #include "grid/road_access.h"
@@ -29,13 +30,16 @@
 void figure::trader_buy(int amounts) {
     trader_amount_bought += amounts;
 }
+
 void figure::trader_sell(int amounts) {
     resource_amount_full += amounts;
     //    resource_amount_loads += amounts / 100;
 }
+
 int figure::trader_total_bought() {
     return trader_amount_bought;
 }
+
 int figure::trader_total_sold() {
     return resource_amount_full;
 }
@@ -55,6 +59,7 @@ int figure_create_trade_caravan(int x, int y, int city_id) {
     donkey2->leading_figure_id = donkey1->id;
     return caravan->id;
 }
+
 int figure_create_trade_ship(int x, int y, int city_id) {
     figure* ship = figure_create(FIGURE_TRADE_SHIP, map_point(x, y), DIR_0_TOP_RIGHT);
     ship->empire_city_id = city_id;
@@ -62,6 +67,7 @@ int figure_create_trade_ship(int x, int y, int city_id) {
     ship->wait_ticks = 10;
     return ship->id;
 }
+
 bool figure_trade_caravan_can_buy(figure* trader, building* warehouse, int city_id) {
     if (warehouse->type != BUILDING_STORAGE_YARD)
         return false;
@@ -532,10 +538,10 @@ void figure::native_trader_action() {
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + 96 + figure_image_corpse_offset();
+        sprite_image_id = image_id_from_group(IMG_CARTPUSHER_DEATH);
         cart_image_id = 0;
     } else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * anim_frame;
+        sprite_image_id = image_id_from_group(IMG_CARTPUSHER) + dir + 8 * anim_frame;
     }
     cart_image_id = image_id_from_group(GROUP_FIGURE_IMMIGRANT_CART) + 8
                     + 8 * resource_id; // BUGFIX should be within else statement?

@@ -17,6 +17,7 @@
 #include "figure/trader.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
+#include "graphics/image_desc.h"
 #include "grid/road_access.h"
 
 static int try_import_resource(building* warehouse, e_resource resource, int city_id) {
@@ -478,10 +479,10 @@ void figure::docker_action() {
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + figure_image_corpse_offset() + 96;
+        sprite_image_id = image_id_from_group(IMG_CARTPUSHER_DEATH);
         cart_image_id = 0;
     } else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * anim_frame;
+        sprite_image_id = image_id_from_group(IMG_CARTPUSHER) + dir + 8 * anim_frame;
     }
     if (cart_image_id) {
         cart_image_id += dir;

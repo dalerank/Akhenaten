@@ -7,5 +7,7 @@ images = [
 	//{img: IMG_EMIGRANT_DEATH, pack: PACK_SPR_MAIN, id: 3}, // 161
 	{img: IMG_HOMELESS, pack: PACK_SPR_MAIN, id: 12}, // 782
 	//{img: IMG_EMIGRANT, pack: PACK_SPR_MAIN, id: 13}, // 878
-	{img: IMG_FISHIHG_WHARF_ANIM, pack: PACK_SPR_AMBIENT, id:47},  // 2551 + 15831}
+	{img: IMG_FISHIHG_WHARF_ANIM, pack: PACK_SPR_AMBIENT, id:47},  // 2551 + 15831
+	{img: IMG_CARTPUSHER, pack: PACK_SPR_MAIN, id:43},
+	{img: IMG_CARTPUSHER_DEATH, pack: PACK_SPR_MAIN, id:44},
 ]

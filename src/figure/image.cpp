@@ -1,6 +1,7 @@
 #include "image.h"
 
 #include "graphics/image.h"
+#include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
 
 static const int CORPSE_IMAGE_OFFSETS[128]
@@ -140,10 +141,9 @@ void figure::figure_image_update(bool refresh_only) {
         break;
     }
 }
-// int testcart = 0;
+
 void figure::cart_update_image() {
     // determine cart sprite
-
     cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
     if (resource_amount_full > 0) {
         short amount_offset = 2;
@@ -174,10 +174,11 @@ void figure::cart_update_image() {
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + figure_image_corpse_offset() + 96;
-        //        cart_image_id = 0;
-    } else
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * anim_frame;
+        sprite_image_id = image_id_from_group(IMG_CARTPUSHER_DEATH);
+    } else {
+        sprite_image_id = image_id_from_group(IMG_CARTPUSHER) + dir + 8 * anim_frame;
+    }
+
     if (cart_image_id) {
         cart_image_id += dir;
         figure_image_set_cart_offset(dir);

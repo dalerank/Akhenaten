@@ -11,6 +11,8 @@ enum e_img : uint16_t {
     IMG_HOMELESS = 5,
     IMG_HOMELESS_DEATH = 6,
     IMG_FISHIHG_WHARF_ANIM = 7,
+    IMG_CARTPUSHER = 8,
+    IMG_CARTPUSHER_DEATH = 9,
 
     IMG_SIZE
 };
