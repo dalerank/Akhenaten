@@ -3,6 +3,7 @@
 #include "building/market.h"
 #include "building/building.h"
 #include "building/building_type.h"
+#include "grid/water.h"
 #include "city/buildings.h"
 #include "city/resource.h"
 #include "core/profiler.h"
@@ -29,7 +30,7 @@ int building_dock_count_idle_dockers(building* dock) {
 
 void building_river_update_open_water_access() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Oper Water Access Update");
-    map_point river_entry = scenario_map_river_entry();
+    tile2i river_entry = scenario_map_river_entry();
     map_routing_calculate_distances_water_boat(river_entry);
 
     buildings_valid_do([] (building &b) {
@@ -37,20 +38,26 @@ void building_river_update_open_water_access() {
             return;
         }
 
-        if (map_terrain_is_adjacent_to_open_water(b.tile.x(), b.tile.y(), 3)) {
+        bool found = map_terrain_is_adjacent_to_open_water(b.tile, 3);
+        if (found) {
             b.has_water_access = true;
             b.has_open_water_access = true;
+            auto ppoints = map_water_docking_points(&b);
+            b.data.dock.dock_tiles[0] = ppoints.point_a.grid_offset();
+            b.data.dock.dock_tiles[1] = ppoints.point_b.grid_offset();
         } else {
             b.has_water_access = false;
             b.has_open_water_access = false;
+            b.data.dock.dock_tiles[0] = -1;
+            b.data.dock.dock_tiles[1] = -1;
         }
     });
 }
 
-bool building_dock_is_connected_to_open_water(int x, int y) {
-    map_point river_entry = scenario_map_river_entry();
+bool building_dock_is_connected_to_open_water(tile2i tile) {
+    tile2i river_entry = scenario_map_river_entry();
     map_routing_calculate_distances_water_boat(river_entry);
-    return map_terrain_is_adjacent_to_open_water(x, y, 3);
+    return map_terrain_is_adjacent_to_open_water(tile, 3);
 }
 
 int building_dock_accepts_ship(int ship_id, int dock_id) {

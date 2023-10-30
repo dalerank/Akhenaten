@@ -362,8 +362,8 @@ void map_routing_update_ferry_routes() {
 
     for (auto f1 = ferries.begin(); f1 != ferries.end(); ++f1) {
         for (auto f2 = f1 + 1; f2 != ferries.end(); ++f2) {
-            ferry_points fpoints_begin = get_ferry_points(*f1);
-            ferry_points fpoints_end = get_ferry_points(*f2);
+            ferry_points fpoints_begin = map_water_docking_points(*f1);
+            ferry_points fpoints_end = map_water_docking_points(*f2);
 
             svector<path_points, 4> possible_paths = {
                 {fpoints_begin.point_a, fpoints_end.point_a},

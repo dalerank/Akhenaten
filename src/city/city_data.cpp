@@ -177,14 +177,14 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < 18; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unknown_27f4[i]);
     }
-    iob->bind(BIND_SIGNATURE_UINT16, city_data.map.entry_point.private_access(_X));
-    iob->bind(BIND_SIGNATURE_UINT16, city_data.map.entry_point.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT16, city_data.map.entry_point.private_access(_X));
+    iob->bind(BIND_SIGNATURE_INT16, city_data.map.entry_point.private_access(_Y));
     iob->bind(BIND_SIGNATURE_INT32, city_data.map.entry_point.private_access(_GRID_OFFSET));
-    iob->bind(BIND_SIGNATURE_UINT16, city_data.map.exit_point.private_access(_X));
-    iob->bind(BIND_SIGNATURE_UINT16, city_data.map.exit_point.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT16, city_data.map.exit_point.private_access(_X));
+    iob->bind(BIND_SIGNATURE_INT16, city_data.map.exit_point.private_access(_Y));
     iob->bind(BIND_SIGNATURE_INT32, city_data.map.exit_point.private_access(_GRID_OFFSET));
-    iob->bind(BIND_SIGNATURE_UINT16, city_data.building.palace_point.private_access(_X));
-    iob->bind(BIND_SIGNATURE_UINT16, city_data.building.palace_point.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT16, city_data.building.palace_point.private_access(_X));
+    iob->bind(BIND_SIGNATURE_INT16, city_data.building.palace_point.private_access(_Y));
     iob->bind(BIND_SIGNATURE_INT32, city_data.building.palace_point.private_access(_GRID_OFFSET));
     iob->bind(BIND_SIGNATURE_INT32, &city_data.building.palace_building_id);
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unknown_2828);

@@ -32,6 +32,7 @@ enum e_building_slot {
     BUILDING_SLOT_IMMIGRANT = 2,
     BUILDING_SLOT_GOVERNOR = 3,
     BUILDING_SLOT_HUNTER = 3,
+    BUILDING_SLOT_BOAT = 3,
 };
 
 class building {
@@ -116,6 +117,7 @@ public:
     union {
         struct dock_t {
             short queued_docker_id;
+            int dock_tiles[2];
             unsigned char num_ships;
             signed char orientation;
             short docker_ids[3];

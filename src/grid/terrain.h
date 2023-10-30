@@ -3,6 +3,8 @@
 #include "core/buffer.h"
 #include "grid/point.h"
 
+#include <vector>
+
 enum e_terrain {
     TERRAIN_NONE = 0x0,
 
@@ -121,7 +123,8 @@ bool map_terrain_is_adjacent_to_wall(int x, int y, int size);
 
 bool map_terrain_is_adjacent_to_water(int x, int y, int size);
 
-bool map_terrain_is_adjacent_to_open_water(int x, int y, int size);
+bool map_terrain_is_adjacent_to_open_water(tile2i tile, int size);
+bool map_terrain_adjacent_open_water_tiles(tile2i tile, int size, std::vector<tile2i> &water_tiles);
 
 bool map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int* x_tile, int* y_tile);
 

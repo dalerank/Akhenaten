@@ -38,8 +38,8 @@ void map_water_cache_river_tiles() {
     }
 }
 
-ferry_points get_ferry_points(building *b) {
-    if (b->type != BUILDING_FERRY) {
+ferry_points map_water_docking_points(building *b) {
+    if (!building_type_any_of(*b, BUILDING_FERRY, BUILDING_FISHING_WHARF)) {
         return {{-1, -1},{-1, -1}};
     }
 

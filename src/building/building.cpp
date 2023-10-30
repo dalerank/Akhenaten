@@ -983,7 +983,9 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
 
     } else if (b->type == BUILDING_DOCK) {
         iob->bind(BIND_SIGNATURE_INT16, &b->data.dock.queued_docker_id);
-        iob->bind____skip(25);
+        iob->bind(BIND_SIGNATURE_INT32, &b->data.dock.dock_tiles[0]);
+        iob->bind(BIND_SIGNATURE_INT32, &b->data.dock.dock_tiles[1]);
+        iob->bind____skip(17);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.dock.num_ships);
         iob->bind____skip(2);
         iob->bind(BIND_SIGNATURE_INT8, &b->data.dock.orientation);
@@ -1071,8 +1073,8 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->size);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_is_merged);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_size);
-        iob->bind(BIND_SIGNATURE_UINT16, b->tile.private_access(_X));
-        iob->bind(BIND_SIGNATURE_UINT16, b->tile.private_access(_Y));
+        iob->bind(BIND_SIGNATURE_INT16, b->tile.private_access(_X));
+        iob->bind(BIND_SIGNATURE_INT16, b->tile.private_access(_Y));
         iob->bind____skip(2);
         iob->bind(BIND_SIGNATURE_INT32, b->tile.private_access(_GRID_OFFSET));
         iob->bind(BIND_SIGNATURE_INT16, &b->type);

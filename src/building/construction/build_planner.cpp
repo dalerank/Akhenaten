@@ -1369,6 +1369,7 @@ void BuildPlanner::update_obstructions_check() {
         can_place = CAN_NOT_BUT_GREEN;
     }
 }
+
 void BuildPlanner::update_requirements_check() {
     // invalid build
     if (build_type == BUILDING_NONE) {
@@ -1470,7 +1471,7 @@ void BuildPlanner::update_requirements_check() {
     }
 
     if (special_flags & PlannerFlags::RiverAccess) {
-        if (!building_dock_is_connected_to_open_water(end.x(), end.y())) {
+        if (!building_dock_is_connected_to_open_water(end)) {
             immediate_warning_id = WARNING_DOCK_OPEN_WATER_NEEDED;
         }
     }

@@ -51,16 +51,7 @@ void building::bind_iob_figures(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT16, &figure_ids_array[3]);
 }
 void building::set_figure(int i, int figure_id) {
-    //    // correct index if out of bounds
-    //    if (i < 0)
-    //        i = 0;
-    //    if (i >= MAX_FIGURES_PER_BUILDING)
-    //        i = MAX_FIGURES_PER_BUILDING - 1;
-
-    //    // correct id if below zero
-    //    if (id < 0)
-    //        figure_id = 0;
-
+    //assert(figure_ids_array[i] == 0);
     figure_ids_array[i] = figure_id;
 }
 
@@ -125,6 +116,7 @@ figure* building::create_figure_generic(e_figure_type _type, int created_action,
     figure* f = figure_create(_type, road_access, created_dir);
     f->action_state = created_action;
     f->set_home(id);
+    set_figure(slot, f);
 
     return f;
 }
@@ -787,10 +779,15 @@ void building::spawn_figure_wharf() {
                 figure_spawn_delay = 0;
 
                 if (config_get(CONFIG_GP_CH_FISHING_WHARF_SPAWN_BOATS)) {
-                    figure *f = create_figure_generic(FIGURE_FISHING_BOAT, FIGURE_ACTION_190_FISHING_BOAT_CREATED, 0, DIR_4_BOTTOM_LEFT);
+                    tile2i dock_tile(data.dock.dock_tiles[0]);
+                    figure* f = figure_create(FIGURE_FISHING_BOAT, dock_tile, DIR_4_BOTTOM_LEFT);
+                    f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
+                    f->set_home(id);
+                    set_figure(BUILDING_SLOT_BOAT, f);
                     random_generate_next();
                     f->wait_ticks = random_short() % 30; // ok
-                    //f->tile = this->has_water_access;
+                    f->allow_move_type = EMOVE_BOAT;
+                    data.industry.fishing_boat_id = f->id;
                 }
             }
         }
