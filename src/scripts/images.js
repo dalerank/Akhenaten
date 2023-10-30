@@ -10,4 +10,6 @@ images = [
 	{img: IMG_FISHIHG_WHARF_ANIM, pack: PACK_SPR_AMBIENT, id:47},  // 2551 + 15831
 	{img: IMG_CARTPUSHER, pack: PACK_SPR_MAIN, id:43},
 	{img: IMG_CARTPUSHER_DEATH, pack: PACK_SPR_MAIN, id:44},
+	{img: IMG_FISHING_BOAT, pack:PACK_SPR_MAIN, id:34 },
+	{img: IMG_FISHING_BOAT_WORK, pack:PACK_SPR_MAIN, id:35 },
 ]

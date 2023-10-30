@@ -571,7 +571,7 @@ void figure::action_perform() {
         case FIGURE_RIOTER:
             rioter_action();
             break;
-        case 25:
+        case FIGURE_FISHING_BOAT:
             fishing_boat_action();
             break;
         case FIGURE_MARKET_TRADER:

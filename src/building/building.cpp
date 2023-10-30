@@ -1103,7 +1103,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
 
         iob->bind(BIND_SIGNATURE_INT32, &b->tax_income_or_storage);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_days_without_food);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->has_plague); // 6
+        iob->bind(BIND_SIGNATURE_UINT8, &b->has_plague); // 1
 
         iob->bind(BIND_SIGNATURE_INT8, &b->desirability);
         iob->bind(BIND_SIGNATURE_UINT8, &b->is_deleted);
@@ -1111,12 +1111,13 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
 
         iob->bind(BIND_SIGNATURE_UINT8, &b->storage_id);
         iob->bind(BIND_SIGNATURE_INT8, &b->sentiment.house_happiness); // which union field we use does not matter // 90 for house, 50 for wells
-        iob->bind(BIND_SIGNATURE_UINT8, &b->show_on_problem_overlay); // 4
-        iob->bind(BIND_SIGNATURE_UINT16, &b->deben_storage); // 4
-
+        iob->bind(BIND_SIGNATURE_UINT8, &b->show_on_problem_overlay); // 1
+        iob->bind(BIND_SIGNATURE_UINT16, &b->deben_storage); // 2
+        iob->bind(BIND_SIGNATURE_UINT8, &b->has_open_water_access); // 1
+        
         // 68 additional bytes
 
-        iob->bind____skip(66); // temp for debugging
+        iob->bind____skip(65); // temp for debugging
                                //            assert(iob->get_offset() - sind == 264);
         g_all_buildings[i].id = i;
 

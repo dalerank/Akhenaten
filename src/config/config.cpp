@@ -98,7 +98,8 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
 
     {"city_building_shipyard", true},
     {"city_building_fishing_wharf", true},
-    {"city_produce_fish", true}
+    {"city_produce_fish", true},
+    {"fishing_wharf_spawn_boats", false}
 };
 
 static const char* ini_string_keys[] = {
@@ -109,16 +110,17 @@ bool g_ozzy_config[CONFIG_MAX_ENTRIES];
 static char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 static char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
-int config_get(int key) {
+int config_get(e_config_key key) {
     return g_ozzy_config[key];
 }
-void config_set(int key, int value) {
+void config_set(e_config_key key, int value) {
     g_ozzy_config[key] = value;
 }
 
 const char* config_get_string(int key) {
     return string_values[key];
 }
+
 void config_set_string(int key, const char* value) {
     if (!value)
         string_values[key][0] = 0;
@@ -126,10 +128,12 @@ void config_set_string(int key, const char* value) {
         strncpy(string_values[key], value, CONFIG_STRING_VALUE_MAX - 1);
     }
 }
-bool config_get_default_value(int key) {
+
+bool config_get_default_value(e_config_key key) {
     return ini_keys_defaults[key].enabled;
 }
-const char* config_get_default_string_value(int key) {
+
+const char* config_get_default_string_value(e_config_key key) {
     return default_string_values[key];
 }
 
@@ -150,6 +154,7 @@ void config_load() {
     if (!fp) {
         return;
     }
+
     bstring128 line_buffer;
     char* line;
     while ((line = fp->readline(line_buffer, line_buffer.capacity))) {

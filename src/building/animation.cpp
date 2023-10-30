@@ -55,13 +55,17 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
     switch (b->type) {
     case BUILDING_BURNING_RUIN:
         break;
+
     case BUILDING_STORAGE_YARD_SPACE:
         return 0;
         break;
+
     case BUILDING_MENU_BEAUTIFICATION:
-        if (b->num_workers <= 0 || !b->has_water_access)
+        if (b->num_workers <= 0 || !b->has_water_access) {
             return 0;
+        }
         break;
+
     case BUILDING_WATER_LIFT:
         if (b->num_workers <= 0) {
            return 0;
@@ -69,6 +73,7 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
             return 0;
         }
         break;
+
     case BUILDING_WELL:
         if (map_water_supply_is_well_unnecessary(b->id, 3) != WELL_NECESSARY) {
             return 0;

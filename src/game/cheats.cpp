@@ -44,6 +44,7 @@ static void game_cheat_nofire(uint8_t *);
 static void game_cheat_nodamage(uint8_t *);
 static void game_cheat_spacious_apartment(uint8_t *);
 static void game_cheat_spawn_nobles(uint8_t *);
+static void game_cheat_kill_fish_boats(uint8_t *);
 
 using cheat_command = void(uint8_t* args);
 
@@ -68,6 +69,7 @@ static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_mo
                                                   {"collapse", game_cheat_collapse},
                                                   {"spawnnobles", game_cheat_spawn_nobles},
                                                   {"tutspaciousapt", game_cheat_spacious_apartment},
+                                                  {"killfishboats", game_cheat_kill_fish_boats}
 };
 
 struct cheats_data_t {
@@ -214,6 +216,23 @@ static void game_cheat_collapse(uint8_t *args) {
     int step = std::max<int>(1, (int)buildings.size() / count);
     for (int i = 0; i < buildings.size(); i += step) {
         building_destroy_by_collapse(buildings[i]);
+    }
+}
+
+static void game_cheat_kill_fish_boats(uint8_t *) {
+    buildings_valid_do([&] (building &b) {
+        if (b.type != BUILDING_FISHING_WHARF) {
+            return;
+        }
+
+        b.data.industry.fishing_boat_id = 0;
+    });
+
+    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
+        figure* f = figure_get(i);
+        if (f->has_type(FIGURE_FISHING_BOAT)) {
+            f->advance_action(FIGURE_ACTION_149_CORPSE);
+        }
     }
 }
 

@@ -89,7 +89,8 @@ public:
     //    short figure_id4; // tower ballista or burning ruin prefect
     short figure_spawn_delay;
     unsigned char figure_roam_direction;
-    uint32_t has_water_access;
+    bool has_water_access;
+    bool has_open_water_access;
     int prev_part_building_id;
     int next_part_building_id;
     //    short stored_loads_c3;
@@ -330,8 +331,8 @@ public:
     void spawn_figure_barracks();
 
     bool can_spawn_ostrich_hunter();
+    int get_gatherers_number(e_figure_type ftype);
     bool can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person);
-    bool can_spawn_woodcutter();
 
     void update_native_crop_progress();
     void update_road_access();

@@ -30,15 +30,20 @@ void building_dock_update_open_water_access(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Oper Water Access Update");
     map_point river_entry = scenario_map_river_entry();
     map_routing_calculate_distances_water_boat(river_entry.x(), river_entry.y());
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && !b->house_size && b->type == BUILDING_DOCK) {
-            if (map_terrain_is_adjacent_to_open_water(b->tile.x(), b->tile.y(), 3))
-                b->has_water_access = true;
-            else
-                b->has_water_access = false;
+
+    buildings_valid_do([] (building &b) {
+        if (b.type != BUILDING_DOCK) {
+            return;
         }
-    }
+
+        if (map_terrain_is_adjacent_to_open_water(b.tile.x(), b.tile.y(), 3)) {
+            b.has_water_access = true;
+            b.has_open_water_access = true;
+        } else {
+            b.has_water_access = false;
+            b.has_open_water_access = false;
+        }
+    });
 }
 
 int building_dock_is_connected_to_open_water(int x, int y) {

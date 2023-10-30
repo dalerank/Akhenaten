@@ -118,6 +118,7 @@ static generic_button checkbox_buttons[] = {
     {20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MONUMENTS_INFLUENCE_SENTIMENT, TR_CONFIG_MONUMENTS_INFLUENCE_SENTIMENT},
     {20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WELL_RADIUS_DEPENDS_MOISTURE, TR_CONFIG_WELL_RADIUS_DEPENDS_MOISTURE},
     {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ENTER_POINT_ON_NEAREST_TILE, TR_CONFIG_ENTER_POINT_ON_NEAREST_TILE},
+    {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FISHING_WHARF_SPAWN_BOATS, TR_CONFIG_FISHING_WHARF_SPAWN_BOATS},
     // GODS
     {20, 72, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_OSIRIS_DISABLED, TR_CONFIG_GOD_OSIRIS_DISABLED},
     {20, 96, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_RA_DISABLED, TR_CONFIG_GOD_RA_DISABLED},
@@ -141,7 +142,7 @@ static generic_button checkbox_buttons[] = {
     {20, 168, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_FISH, TR_CONFIG_RESOURCE_FISH},
 };
 
-static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 12, 5, 7, 5};
+static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 13, 5, 7, 5};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -216,7 +217,7 @@ static void cancel_values(void) {
                CONFIG_STRING_VALUE_MAX - 1); // memcpy required to fix warning on Switch build
     }
 }
-static int config_changed(int key) {
+static int config_changed(e_config_key key) {
     auto& data = g_window_config_ext_data;
     return data.config_values[key].original_value != data.config_values[key].new_value;
 }
@@ -226,7 +227,7 @@ static int config_string_changed(int key) {
 }
 static int config_change_basic(int key) {
     auto& data = g_window_config_ext_data;
-    config_set(key, data.config_values[key].new_value);
+    config_set((e_config_key)key, data.config_values[key].new_value);
     data.config_values[key].original_value = data.config_values[key].new_value;
     return 1;
 }
@@ -262,7 +263,7 @@ static int config_change_string_language(int key) {
 static bool apply_changed_configs() {
     auto& data = g_window_config_ext_data;
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
-        if (config_changed(i)) {
+        if (config_changed((e_config_key)i)) {
             if (!data.config_values[i].change_action)
                 logs::error("Change action is not available for index: %d", i);
             else if (!data.config_values[i].change_action(i))
@@ -297,11 +298,11 @@ static void button_reset_defaults(int param1, int param2) {
     auto& data = g_window_config_ext_data;
 
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
-        data.config_values[i].new_value = config_get_default_value(i);
+        data.config_values[i].new_value = config_get_default_value((e_config_key)i);
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
         strncpy(data.config_string_values[i].new_value,
-                config_get_default_string_value(i),
+                config_get_default_string_value((e_config_key)i),
                 CONFIG_STRING_VALUE_MAX - 1);
     }
     set_language(0);
@@ -421,7 +422,7 @@ static void init(void (*close_callback)()) {
     data.starting_option = 0;
     data.close_callback = close_callback;
     for (int i = 0; i < std::size(checkbox_buttons); i++) {
-        int key = checkbox_buttons[i].parameter1;
+        e_config_key key = (e_config_key)checkbox_buttons[i].parameter1;
         data.config_values[key].original_value = config_get(key);
         data.config_values[key].new_value = config_get(key);
         data.config_values[key].change_action = config_change_basic;

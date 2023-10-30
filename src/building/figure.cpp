@@ -772,37 +772,34 @@ void building::spawn_figure_farm_harvests() {
         }
     }
 }
-void building::spawn_figure_wharf() {
-    common_spawn_figure_trigger(100);
-    //    if (common_spawn_figure_trigger()) {
-    //        create_figure_generic(FIGURE_FISHING_BOAT, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
-    //    }
-    common_spawn_goods_output_cartpusher();
 
-    //    check_labor_problem();
-    //    if (data.industry.fishing_boat_id) {
-    //        figure *f = figure_get(data.industry.fishing_boat_id);
-    //        if (f->state != FIGURE_STATE_ALIVE || f->type != FIGURE_FISHING_BOAT)
-    //            data.industry.fishing_boat_id = 0;
-    //
-    //    }
-    //    map_point road;
-    //    if (map_has_road_access(x, y, size, &road)) {
-    //        spawn_labor_seeker(50);
-    //        if (has_figure_of_type(FIGURE_CART_PUSHER))
-    //            return;
-    //        if (figure_spawn_delay) {
-    //            figure_spawn_delay = 0;
-    //            data.industry.has_fish = 0;
-    //            output_resource_id = RESOURCE_FIGS;
-    //            figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
-    //            f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-    //            f->set_resource(RESOURCE_FIGS);
-    //            f->home() = b;
-    //            figure_id = f->id;
-    //            f->wait_ticks = 30;
-    //        }
-    //    }
+void building::spawn_figure_wharf() {
+    check_labor_problem();
+    if (has_road_access) {
+        common_spawn_labor_seeker(100);
+        int pct_workers = worker_percentage();
+        int spawn_delay = figure_spawn_timer();
+        if (spawn_delay == -1) {
+            ; // nothing
+        } else {
+            figure_spawn_delay++;
+            if (data.industry.fishing_boat_id == 0 && figure_spawn_delay > spawn_delay) {
+                figure_spawn_delay = 0;
+
+                if (config_get(CONFIG_GP_CH_FISHING_WHARF_SPAWN_BOATS)) {
+                    figure *f = create_figure_generic(FIGURE_FISHING_BOAT, FIGURE_ACTION_190_FISHING_BOAT_CREATED, 0, DIR_4_BOTTOM_LEFT);
+                    random_generate_next();
+                    f->wait_ticks = random_short() % 30; // ok
+                    //f->tile = this->has_water_access;
+                }
+            }
+        }
+    }
+    
+    bool cart_spawned = common_spawn_goods_output_cartpusher();
+    if (cart_spawned) {
+        data.industry.has_fish = 0;
+    }
 }
 void building::spawn_figure_shipyard() {
     //    check_labor_problem();
@@ -998,6 +995,18 @@ void building::spawn_figure_hunting_lodge() {
     }
 }
 
+int building::get_gatherers_number(e_figure_type ftype) {
+    int gatherers_this_yard = 0;
+    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
+        figure* f = figure_get(i);
+        if (f->has_type(ftype) && f->has_home(this)) {        // figure with type on map and  belongs to this building
+            gatherers_this_yard++;
+        }
+    }
+
+    return gatherers_this_yard;
+}
+
 bool building::can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person) {
     bool resource_reachable = false;
     switch (ftype) {
@@ -1010,19 +1019,19 @@ bool building::can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_bui
         break;
     }
 
-    int gatherers_this_yard = 0;
-    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure* f = figure_get(i);
-        if (f->has_type(ftype) && f->has_home(this)) {        // figure with type on map and  belongs to this building
-            gatherers_this_yard++;
-        }
+    if (!resource_reachable) {
+        return false;
     }
+
+    int gatherers_this_yard = get_gatherers_number(ftype);
 
     // can only spawn if there's space for more reed in the building
     int max_loads = 500 / carry_per_person;
     if (gatherers_this_yard < max_gatherers_per_building
-        && gatherers_this_yard + (stored_full_amount / carry_per_person) < (max_loads - gatherers_this_yard))
+        && gatherers_this_yard + (stored_full_amount / carry_per_person) < (max_loads - gatherers_this_yard)) {
         return true;
+    }
+
     return false;
 }
 

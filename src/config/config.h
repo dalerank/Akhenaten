@@ -2,7 +2,7 @@
 
 #define CONFIG_STRING_VALUE_MAX 64
 
-enum {
+enum e_config_key {
     CONFIG_GP_FIX_IMMIGRATION_BUG = 0,
     CONFIG_GP_FIX_100_YEAR_GHOSTS,
     CONFIG_GP_FIX_EDITOR_EVENTS,
@@ -90,6 +90,7 @@ enum {
     CONGIG_GP_CH_BUILDING_SHIPYARD,
     CONGIG_GP_CH_BUILDING_FISHING_WHARF,
     CONFIG_GP_CH_RESOURCE_FISH,
+    CONFIG_GP_CH_FISHING_WHARF_SPAWN_BOATS,
 
     CONFIG_MAX_ENTRIES
 };
@@ -101,14 +102,14 @@ enum { CONFIG_STRING_UI_LANGUAGE_DIR, CONFIG_STRING_MAX_ENTRIES };
  * @param key Integer key
  * @return Config value
  */
-int config_get(int key);
+int config_get(e_config_key key);
 
 /**
  * Set an integer config value
  * @param key Integer key
  * @param value Value to set
  */
-void config_set(int key, int value);
+void config_set(e_config_key key, int value);
 
 /**
  * Get a string config value
@@ -129,26 +130,26 @@ void config_set_string(int key, const char* value);
  * @param key Integer key
  * @return Default config value
  */
-bool config_get_default_value(int key);
+bool config_get_default_value(e_config_key key);
 
 /**
  * Get a string default config value
  * @param key String key
  * @return Default config value, is always non-NULL but may be an empty string
  */
-const char* config_get_default_string_value(int key);
+const char* config_get_default_string_value(e_config_key key);
 
 /**
  * Reset all settings to their defaults
  */
-void config_set_defaults(void);
+void config_set_defaults();
 
 /**
  * Load config from file
  */
-void config_load(void);
+void config_load();
 
 /**
  * Save config to file
  */
-void config_save(void);
+void config_save();
