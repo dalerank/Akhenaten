@@ -873,6 +873,33 @@ int building_mothball_set(building* b, int mothball) {
     return b->state;
 }
 
+bool resource_required_by_workshop(building* b, int resource) {
+    switch (resource) {
+    case RESOURCE_CLAY:
+    return (b->type == BUILDING_POTTERY_WORKSHOP || b->type == BUILDING_BRICKS_WORKSHOP);
+    case RESOURCE_STRAW:
+    return (b->type == BUILDING_BRICKS_WORKSHOP || b->type == BUILDING_CATTLE_RANCH);
+    case RESOURCE_BARLEY:
+    return b->type == BUILDING_BEER_WORKSHOP;
+    case RESOURCE_REEDS:
+    return b->type == BUILDING_PAPYRUS_WORKSHOP;
+    case RESOURCE_FLAX:
+    return b->type == BUILDING_LINEN_WORKSHOP;
+    case RESOURCE_GEMS:
+    return b->type == BUILDING_JEWELS_WORKSHOP;
+    case RESOURCE_COPPER:
+    return b->type == BUILDING_WEAPONS_WORKSHOP;
+    case RESOURCE_TIMBER:
+    return b->type == BUILDING_CHARIOTS_WORKSHOP;
+    case RESOURCE_HENNA:
+    return b->type == BUILDING_PAINT_WORKSHOP;
+    case RESOURCE_OIL:
+    return b->type == BUILDING_LAMP_WORKSHOP;
+    default:
+    return false;
+    }
+}
+
 // void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever) {
 
 // iob->bind(BIND_SIGNATURE_INT32, &//    extra.created_sequence);

@@ -467,4 +467,6 @@ void building_update_desirability(void);
 int building_mothball_toggle(building* b);
 int building_mothball_set(building* b, int value);
 
+bool resource_required_by_workshop(building* b, int resource);
+
 std::span<building>& city_buildings();

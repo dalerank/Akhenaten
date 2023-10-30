@@ -1,7 +1,5 @@
 #pragma once
 
-class building;
-
 enum e_resource {
     RESOURCE_NONE = 0,
     RESOURCE_GRAIN = 1,        // RESOURCE_WHEAT = 1,
@@ -133,5 +131,3 @@ inline e_resource& operator++(e_resource& e) {
 int resource_get_icon(int resource, int quantity = 1);
 
 int resource_is_food(int resource);
-
-bool resource_required_by_workshop(building* b, int resource);
