@@ -21,6 +21,7 @@ struct ferry_points {
 };
 
 ferry_points map_water_docking_points(building *b);
+bool map_water_is_point_inside(tile2i tile);
 
 void map_water_add_building(int building_id, map_point tile, int size, int image_id, int ext_terrain_flags = 0);
 

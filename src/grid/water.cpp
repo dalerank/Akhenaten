@@ -22,6 +22,12 @@ void foreach_river_tile(void (*callback)(int grid_offset)) {
 
 tile_cache &river_tiles() { return river_tiles_cache; }
 
+bool map_water_is_point_inside(tile2i tile) {
+    int map_height = scenario_map_data()->height;
+    int map_width = scenario_map_data()->width;
+    return tile.x() < map_width && tile.y() < map_height;
+}
+
 void map_water_cache_river_tiles() {
     river_tiles_cache.clear();
 
@@ -269,6 +275,7 @@ int map_water_find_alternative_fishing_boat_tile(figure* boat, map_point* tile) 
     }
     return 0;
 }
+
 int map_water_find_shipwreck_tile(figure* wreck, map_point* tile) {
     if (map_terrain_is(wreck->tile.grid_offset(), TERRAIN_WATER)
         && map_figure_id_get(wreck->tile) == wreck->id)

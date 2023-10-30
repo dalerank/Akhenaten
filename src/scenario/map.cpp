@@ -72,8 +72,10 @@ int scenario_map_closest_fishing_point(tile2i pos, tile2i &fish) {
         if (g_scenario_data.fishing_points[i].x() > 0)
             num_fishing_spots++;
     }
-    if (num_fishing_spots <= 0)
+
+    if (num_fishing_spots <= 0) {
         return 0;
+    }
 
     int min_dist = 10000;
     int min_fish_id = 0;
