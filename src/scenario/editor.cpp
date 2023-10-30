@@ -348,7 +348,7 @@ void scenario_editor_toggle_rome_supplies_wheat(void) {
     g_scenario_data.is_saved = 0;
 }
 
-void scenario_editor_toggle_flotsam(void) {
+void scenario_editor_toggle_flotsam() {
     g_scenario_data.flotsam_enabled = !g_scenario_data.flotsam_enabled;
     g_scenario_data.is_saved = 0;
 }

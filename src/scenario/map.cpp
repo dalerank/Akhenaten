@@ -93,6 +93,6 @@ int scenario_map_closest_fishing_point(tile2i pos, tile2i &fish) {
     return 0;
 }
 
-int scenario_map_has_flotsam(void) {
+int scenario_map_has_flotsam() {
     return g_scenario_data.flotsam_enabled;
 }

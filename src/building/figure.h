@@ -1,3 +1,3 @@
 #pragma once
 
-void building_figure_generate(void);
+void building_figure_generate();

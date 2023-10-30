@@ -2,7 +2,7 @@
 
 #include "graphics/color.h"
 #include "graphics/view/view.h"
-#include "building/building.h"
+#include "building/building_type.h"
 
 enum e_farm_worker_state {
     FARM_WORKER_TILING,

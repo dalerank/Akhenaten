@@ -1350,7 +1350,7 @@ int building::get_fire_risk(int value) {
     return value;
 }
 
-void building_figure_generate(void) {
+void building_figure_generate() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Generate");
     building_barracks_decay_tower_sentry_request();
     int max_id = building_get_highest_id();

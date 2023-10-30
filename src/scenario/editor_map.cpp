@@ -18,8 +18,7 @@ void scenario_editor_set_exit_point(int x, int y) {
     g_scenario_data.is_saved = 0;
 }
 
-static void update_river(void) {
-    figure_create_flotsam();
+static void update_river() {
     map_routing_update_water();
 }
 
