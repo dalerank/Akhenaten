@@ -63,7 +63,7 @@ public:
     unsigned char is_enemy_image;
 
     unsigned char alternative_location_index;
-    unsigned char flotsam_visible;
+    bool flotsam_visible;
     short next_figure;
     e_figure_type type;
     //    unsigned char resource_id;
@@ -196,6 +196,12 @@ public:
             short taxman_poor_taxed;
             short taxman_middle_taxed;
             short taxman_reach_taxed;
+        };
+
+        struct {
+            short flotsam_frame;
+            short flotsam_value_b;
+            short flotsam_value_c;
         };
 
         struct {

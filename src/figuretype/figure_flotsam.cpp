@@ -4,6 +4,7 @@
 #include "city/gods.h"
 #include "core/random.h"
 #include "graphics/image.h"
+#include "graphics/image_desc.h"
 
 static const int FLOTSAM_RESOURCE_IDS[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};
 static const int FLOTSAM_WAIT_TICKS[]  = {10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300};
@@ -36,14 +37,15 @@ void city_river_update_flotsam() {
 
 void figure::flotsam_action() {
     allow_move_type = EMOVE_FLOTSAM;
-    if (!scenario_map_has_river_exit())
+    if (!scenario_map_has_river_exit()) {
         return;
-    //    is_ghost = false;
+    }
+
     cart_image_id = 0;
     terrain_usage = TERRAIN_USAGE_ANY;
+
     switch (action_state) {
     case FIGURE_ACTION_128_FLOTSAM_CREATED:
-        //            is_ghost = true;
         wait_ticks--;
         if (wait_ticks <= 0) {
             action_state = FIGURE_ACTION_129_FLOTSAM_FLOATING;
@@ -57,14 +59,14 @@ void figure::flotsam_action() {
             //                destination_tile.y() = river_exit.y();
         }
         break;
+
     case FIGURE_ACTION_129_FLOTSAM_FLOATING:
-        if (flotsam_visible)
-            flotsam_visible = 0;
-        else {
-            flotsam_visible = 1;
+        if (flotsam_visible) {
+            flotsam_visible = false;
+        } else {
+            flotsam_visible = true;
             wait_ticks++;
             move_ticks(1);
-            //                is_ghost = false;
             height_adjusted_ticks = 0;
             if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_REROUTE
                 || direction == DIR_FIGURE_CAN_NOT_REACH) {
@@ -72,50 +74,29 @@ void figure::flotsam_action() {
             }
         }
         break;
+
     case FIGURE_ACTION_130_FLOTSAM_OFF_MAP:
-        //            is_ghost = true;
         min_max_seen = 0;
         action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
-        if (wait_ticks >= 400)
+        if (wait_ticks >= 400) {
             wait_ticks = random_byte() & 7;
-        else if (wait_ticks >= 200)
+        } else if (wait_ticks >= 200) {
             wait_ticks = 50 + (random_byte() & 0xf);
-        else if (wait_ticks >= 100)
+        } else if (wait_ticks >= 100) {
             wait_ticks = 100 + (random_byte() & 0x1f);
-        else if (wait_ticks >= 50)
+        } else if (wait_ticks >= 50) {
             wait_ticks = 200 + (random_byte() & 0x3f);
-        else {
+        } else {
             wait_ticks = 300 + random_byte();
         }
         map_figure_remove();
         tile = scenario_map_river_entry();
-        //            map_point river_entry = scenario_map_river_entry();
-        //            tile.x() = river_entry.x();
-        //            tile.y() = river_entry.y();
-        //            tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
         cc_coords.x = 15 * tile.x();
         cc_coords.y = 15 * tile.y();
         break;
     }
-    if (resource_id == 0) {
-        //        figure_image_increase_offset(12);
-        if (min_max_seen)
-            sprite_image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_SHEEP) + FLOTSAM_TYPE_0[anim_frame];
-        else {
-            sprite_image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_0) + FLOTSAM_TYPE_0[anim_frame];
-        }
-    } else if (resource_id == 1) {
-        //        figure_image_increase_offset(24);
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_1) + FLOTSAM_TYPE_12[anim_frame];
-    } else if (resource_id == 2) {
-        //        figure_image_increase_offset(24);
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_2) + FLOTSAM_TYPE_12[anim_frame];
-    } else if (resource_id == 3) {
-        //        figure_image_increase_offset(24);
-        if (FLOTSAM_TYPE_3[anim_frame] == -1)
-            sprite_image_id = 0;
-        else {
-            sprite_image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_3) + FLOTSAM_TYPE_3[anim_frame];
-        }
-    }
+
+    service_values.flotsam_frame++;
+    int cur_frame = std::min<int>(service_values.flotsam_frame / 36, 35);
+    sprite_image_id = image_id_from_group(IMG_FLOTSAM) + cur_frame;
 }

@@ -27,6 +27,7 @@ void js_register_city_images(js_State *J) {
    REGISTER_GLOBAL_CONSTANT(J, IMG_CARTPUSHER_DEATH);
    REGISTER_GLOBAL_CONSTANT(J, IMG_FISHING_BOAT);
    REGISTER_GLOBAL_CONSTANT(J, IMG_FISHING_BOAT_WORK);
+   REGISTER_GLOBAL_CONSTANT(J, IMG_FLOTSAM);
 }
 
 void js_register_collection_images(js_State *J) {

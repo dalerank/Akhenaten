@@ -12,4 +12,5 @@ images = [
 	{img: IMG_CARTPUSHER_DEATH, pack: PACK_SPR_MAIN, id:44},
 	{img: IMG_FISHING_BOAT, pack:PACK_SPR_MAIN, id:34 },
 	{img: IMG_FISHING_BOAT_WORK, pack:PACK_SPR_MAIN, id:35 },
+	{img: IMG_FLOTSAM, pack:PACK_SPR_AMBIENT, id:0},  // 1 + 15831
 ]
