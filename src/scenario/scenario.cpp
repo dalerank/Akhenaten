@@ -16,17 +16,16 @@ bool scenario_is_saved(void) {
     return g_scenario_data.is_saved;
 }
 
-void scenario_settings_init(void) {
+void scenario_settings_init() {
     g_scenario_data.settings.campaign_scenario_id = 0;
     g_scenario_data.settings.campaign_mission_rank = 0;
     g_scenario_data.settings.is_custom = 0;
     g_scenario_data.settings.starting_kingdom = difficulty_starting_kingdom();
     g_scenario_data.settings.starting_personal_savings = 0;
 }
-void scenario_settings_init_mission(void) {
+void scenario_settings_init_mission() {
     g_scenario_data.settings.starting_kingdom = difficulty_starting_kingdom();
-    g_scenario_data.settings.starting_personal_savings
-      = setting_personal_savings_for_mission(g_scenario_data.settings.campaign_mission_rank);
+    g_scenario_data.settings.starting_personal_savings = setting_personal_savings_for_mission(g_scenario_data.settings.campaign_mission_rank);
 }
 
 // fancy lambdas! probably gonna create many problems down the road. :3
@@ -135,8 +134,8 @@ io_buffer* iob_scenario_info = new io_buffer([](io_buffer* iob, size_t version) 
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.win_criteria.milestone75_year);
 
     // junk 4b
-    iob->bind____skip(12); // 3 * 4 (usually go n, n+2, n+1497)
-
+    iob->bind____skip(11); // 3 * 4 (usually go n, n+2, n+1497)
+    iob->bind(BIND_SIGNATURE_UINT8, &g_scenario_data.flotsam_enabled);
     iob->bind(BIND_SIGNATURE_UINT8, &g_scenario_data.climate);
 
     // junk 4e

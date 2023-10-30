@@ -37,6 +37,7 @@
 #include "empire/city.h"
 #include "figure/formation.h"
 #include "figuretype/crime.h"
+#include "figuretype/water.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"
@@ -131,6 +132,7 @@ static void advance_day() {
     city_sentiment_update_day();
     city_criminals_update_day();
     city_plague_update_day();
+    city_river_update_flotsam();
 
     tutorial_on_day_tick();
 }
@@ -168,6 +170,8 @@ static void advance_tick(void) {
     case 8:
         building_granaries_calculate_stocks();
         break;
+    case 9:
+        // nothing yet
     case 10:
         building_update_highest_id();
         break;
@@ -184,7 +188,7 @@ static void advance_tick(void) {
         //            city_resource_calculate_workshop_stocks();
         break;
     case 19:
-        building_dock_update_open_water_access();
+        building_river_update_open_water_access();
         break;
     case 20:
         building_industry_update_production();

@@ -105,7 +105,6 @@ static void prepare_map_for_editing(void) {
 
     figure_init_scenario();
     figure_create_editor_flags();
-    figure_create_flotsam();
 
     map_tiles_update_all_elevation();
     map_tiles_river_refresh_entire();

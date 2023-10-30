@@ -2,7 +2,7 @@
 
 #include "figure/figure.h"
 
-void figure_create_flotsam(void);
+void city_river_update_flotsam(void);
 
 // void figure_flotsam_action();
 //

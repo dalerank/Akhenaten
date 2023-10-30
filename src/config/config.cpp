@@ -99,7 +99,8 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"city_building_shipyard", true},
     {"city_building_fishing_wharf", true},
     {"city_produce_fish", true},
-    {"fishing_wharf_spawn_boats", false}
+    {"fishing_wharf_spawn_boats", false},
+    {"city_flotsam_enabled", false}
 };
 
 static const char* ini_string_keys[] = {

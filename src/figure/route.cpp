@@ -127,7 +127,7 @@ void figure::figure_route_add() {
             map_routing_calculate_distances_water_flotsam(tile.x(), tile.y());
             path_length = map_routing_get_path_on_water(data.direction_paths[path_id], destination_tile, true);
         } else {
-            map_routing_calculate_distances_water_boat(tile.x(), tile.y());
+            map_routing_calculate_distances_water_boat(tile);
             path_length = map_routing_get_path_on_water(data.direction_paths[path_id], destination_tile, false);
         }
     } else {

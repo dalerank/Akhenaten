@@ -338,7 +338,7 @@ void figure::rioter_action() {
 
 int figure::figure_rioter_collapse_building() {
     for (int dir = 0; dir < 8; dir += 2) {
-        int grid_offset = grid_offset + map_grid_direction_delta(dir);
+        int grid_offset = tile.grid_offset() + map_grid_direction_delta(dir);
         if (!map_building_at(grid_offset))
             continue;
 

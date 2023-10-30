@@ -341,7 +341,7 @@ void map_routing_update_ferry_routes() {
     using path_points = std::pair<map_point, map_point>;
     auto mark_path = [] (path_points &ppoints) {
         std::array<uint8_t, 500> path_data;
-        map_routing_calculate_distances_water_boat(ppoints.first.x(), ppoints.first.y());
+        map_routing_calculate_distances_water_boat(ppoints.first);
         int path_length = map_routing_get_path_on_water(path_data.data(), ppoints.second, false);
 
         map_terrain_add(ppoints.first.grid_offset(), TERRAIN_FERRY_ROUTE);

@@ -25,6 +25,7 @@
 #include "translation/translation.h"
 #include "window/hotkey_config.h"
 #include "window/plain_message_dialog.h"
+#include "scenario/scenario_data.h"
 #include "window/select_list.h"
 #include "empire/city.h"
 
@@ -49,7 +50,7 @@ constexpr uint32_t CONFIG_PAGES = 7;
 
 static void toggle_switch(int id, int param2);
 static void toggle_god_disabled(int id, int param2);
-static void toggle_city_animals_switch(int id, int param2);
+static void toggle_city_option(int id, int param2);
 static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
 static void button_hotkeys(int param1, int param2);
@@ -109,7 +110,7 @@ static generic_button checkbox_buttons[] = {
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CITIZEN_ROAD_OFFSET, TR_CONFIG_CH_CITIZEN_ROAD_OFFSET},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WORK_CAMP_ONE_WORKER_PER_MONTH, TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CLAY_PIT_FIRE_RISK_REDUCED, TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED},
-    {20, 144, 20, 20, toggle_city_animals_switch, button_none, CONFIG_GP_CH_CITY_HAS_ANIMALS, TR_CONFIG_CITY_HAS_ANIMALS},
+    {20, 144, 20, 20, toggle_city_option, button_none, CONFIG_GP_CH_CITY_HAS_ANIMALS, TR_CONFIG_CITY_HAS_ANIMALS},
     {20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GOLDMINE_TWICE_PRODUCTION, TR_CONFIG_GOLDMINE_TWICE_PRODUCTION},
     {20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM, TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM},
     {20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT, TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT},
@@ -119,6 +120,8 @@ static generic_button checkbox_buttons[] = {
     {20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WELL_RADIUS_DEPENDS_MOISTURE, TR_CONFIG_WELL_RADIUS_DEPENDS_MOISTURE},
     {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ENTER_POINT_ON_NEAREST_TILE, TR_CONFIG_ENTER_POINT_ON_NEAREST_TILE},
     {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FISHING_WHARF_SPAWN_BOATS, TR_CONFIG_FISHING_WHARF_SPAWN_BOATS},
+    {20, 384, 20, 20, toggle_city_option, button_none, CONFIG_GP_CH_FLOTSAM_ENABLED, TR_CONFIG_CITY_FLOTSAM_ENABLED},
+    
     // GODS
     {20, 72, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_OSIRIS_DISABLED, TR_CONFIG_GOD_OSIRIS_DISABLED},
     {20, 96, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_RA_DISABLED, TR_CONFIG_GOD_RA_DISABLED},
@@ -142,7 +145,7 @@ static generic_button checkbox_buttons[] = {
     {20, 168, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_FISH, TR_CONFIG_RESOURCE_FISH},
 };
 
-static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 13, 5, 7, 5};
+static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 14, 5, 7, 5};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -368,8 +371,12 @@ static void toggle_god_disabled(int key, int param2) {
     window_invalidate();
 }
 
-static void toggle_city_animals_switch(int key, int param2) {
-    city_data.env.has_animals = !city_data.env.has_animals;
+static void toggle_city_option(int key, int param2) {
+    switch (key) {
+    case CONFIG_GP_CH_CITY_HAS_ANIMALS: city_data.env.has_animals = !city_data.env.has_animals; break;
+    case CONFIG_GP_CH_FLOTSAM_ENABLED: g_scenario_data.flotsam_enabled = !g_scenario_data.flotsam_enabled; break;
+    }
+    
     window_invalidate();
 }
 
@@ -457,6 +464,7 @@ static bool is_config_option_enabled(int option) {
     auto& data = g_window_config_ext_data;
     switch (option) {
     case CONFIG_GP_CH_CITY_HAS_ANIMALS: return city_data.env.has_animals;
+    case CONFIG_GP_CH_FLOTSAM_ENABLED: return g_scenario_data.flotsam_enabled;
     case CONFIG_GP_CH_RESOURCE_TIMBER: return can_produce_resource(RESOURCE_TIMBER);
     case CONFIG_GP_CH_RESOURCE_COPPER: return can_produce_resource(RESOURCE_COPPER);
     case CONFIG_GP_CH_RESOURCE_REED: return can_produce_resource(RESOURCE_REEDS);

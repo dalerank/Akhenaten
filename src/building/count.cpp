@@ -187,19 +187,19 @@ void building_count_update() {
 
             // water-side
         case BUILDING_FISHING_WHARF:
-            if (b.num_workers > 0) {
+            if (b.num_workers > 0 && b.has_open_water_access) {
                 city_buildings_add_working_wharf(!b.data.industry.fishing_boat_id);
             }
             break;
 
         case BUILDING_DOCK:
-            if (b.num_workers > 0 && b.has_water_access) {
+            if (b.num_workers > 0 && b.has_open_water_access) {
                 city_buildings_add_working_dock(b.id);
             }
             break;
 
         case BUILDING_SHIPYARD:
-            if (b.num_workers > 0 && b.has_water_access) {
+            if (b.num_workers > 0 && b.has_open_water_access) {
                 city_buildings_add_working_shipyard(b.id);
             }
         break;

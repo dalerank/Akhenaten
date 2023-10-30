@@ -12,8 +12,8 @@ enum routed_int {
     ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC = 4,
 };
 
-void map_routing_calculate_distances(map_point tile);
-void map_routing_calculate_distances_water_boat(int x, int y);
+void map_routing_calculate_distances(tile2i tile);
+void map_routing_calculate_distances_water_boat(tile2i tile);
 void map_routing_calculate_distances_water_flotsam(int x, int y);
 
 bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct);

@@ -666,7 +666,6 @@ void GamestateIO::start_loaded_file() {
         //        map_natives_init();
         figure_create_fishing_points();
         figure_create_herds();
-        figure_create_flotsam();
 
         map_point entry = scenario_map_entry();
         map_point exit = scenario_map_exit();

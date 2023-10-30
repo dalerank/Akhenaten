@@ -207,7 +207,7 @@ struct scenario_data_t {
     ////        map_tile entry_flag;
     ////        map_tile exit_flag;
     //    } map;
-    int flotsam_enabled;
+    bool flotsam_enabled;
     map_point entry_point;
     map_point exit_point;
     map_point river_entry_point;

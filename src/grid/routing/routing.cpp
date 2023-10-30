@@ -89,14 +89,16 @@ static void callback_calc_distance_water_boat(int next_offset, int dist) {
         }
     }
 }
-void map_routing_calculate_distances_water_boat(int x, int y) {
-    int grid_offset = MAP_OFFSET(x, y);
+
+void map_routing_calculate_distances_water_boat(tile2i tile) {
+    int grid_offset = tile.grid_offset();
     if (map_grid_get(&routing_tiles_water, grid_offset) == WATER_N1_BLOCKED) {
         clear_distances();
     } else {
         route_queue_boat(grid_offset, callback_calc_distance_water_boat);
     }
 }
+
 static void callback_calc_distance_water_flotsam(int next_offset, int dist) {
     if (map_grid_get(&routing_tiles_water, next_offset) != WATER_N1_BLOCKED) {
         enqueue(next_offset, dist);
@@ -234,7 +236,7 @@ bool map_routing_ferry_has_routes(building *b) {
         ferry_points fpoints_end = get_ferry_points(b);
 
         std::array<uint8_t, 500> path_data;
-        map_routing_calculate_distances_water_boat(fpoints_begin.point_a.x(), fpoints_begin.point_a.y());
+        map_routing_calculate_distances_water_boat(fpoints_begin.point_a);
         int path_length = map_routing_get_path_on_water(path_data.data(), fpoints_end.point_a, false);
 
         if (path_length > 0) {

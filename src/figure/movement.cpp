@@ -215,9 +215,10 @@ void figure::advance_route_tile(int roaming_enabled) {
 
     const bool is_boat = (allow_move_type == EMOVE_BOAT);
     const bool is_hippo = (allow_move_type == EMOVE_HIPPO);
+    const bool is_floatsam = (allow_move_type == EMOVE_FLOTSAM);
     const bool is_ferry_route = map_terrain_is(target_grid_offset, TERRAIN_FERRY_ROUTE);
     const bool is_water = map_terrain_is(target_grid_offset, TERRAIN_WATER);
-    if (!is_boat && !is_hippo && !is_ferry_route && is_water) {
+    if (!is_floatsam && !is_boat && !is_hippo && !is_ferry_route && is_water) {
         direction = DIR_FIGURE_REROUTE;
     } else if (is_boat && !is_water) { // boats can not travel on land
         direction = DIR_FIGURE_REROUTE;
