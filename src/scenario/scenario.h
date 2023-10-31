@@ -1,5 +1,4 @@
-#ifndef SCENARIO_SCENARIO_H
-#define SCENARIO_SCENARIO_H
+#pragma once
 
 #include "core/buffer.h"
 
@@ -38,8 +37,6 @@ struct scenario_data_buffers {
     buffer* monuments = nullptr;
 };
 
-bool scenario_is_saved(void);
-void scenario_settings_init(void);
-void scenario_settings_init_mission(void);
-
-#endif // SCENARIO_SCENARIO_H
+bool scenario_is_saved();
+void scenario_settings_init();
+void scenario_settings_init_mission();

@@ -12,9 +12,6 @@
 
 struct city_data_t {
     struct {
-        uint8_t has_animals;
-    } env;
-    struct {
         bool palace_placed;
         int32_t palace_building_id;
         map_point palace_point;
@@ -53,6 +50,7 @@ struct city_data_t {
         int32_t temple_complex_id;
     } building;
     struct {
+        uint8_t fish_number;
         uint8_t animals_number;
         int32_t attacking_natives;
         int32_t enemies;

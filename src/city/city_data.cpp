@@ -426,7 +426,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     }
 
     iob->bind(BIND_SIGNATURE_INT16, &city_data.building.temple_complex_placed);
-    iob->bind(BIND_SIGNATURE_UINT8, &city_data.env.has_animals);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_data.figure.fish_number);
     iob->bind(BIND_SIGNATURE_UINT8, &city_data.figure.animals_number);
 
     for (int i = 0; i < 3; i++) {

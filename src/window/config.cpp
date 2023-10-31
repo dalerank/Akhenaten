@@ -373,8 +373,8 @@ static void toggle_god_disabled(int key, int param2) {
 
 static void toggle_city_option(int key, int param2) {
     switch (key) {
-    case CONFIG_GP_CH_CITY_HAS_ANIMALS: city_data.env.has_animals = !city_data.env.has_animals; break;
-    case CONFIG_GP_CH_FLOTSAM_ENABLED: g_scenario_data.flotsam_enabled = !g_scenario_data.flotsam_enabled; break;
+    case CONFIG_GP_CH_CITY_HAS_ANIMALS: g_scenario_data.env.has_animals = !g_scenario_data.env.has_animals; break;
+    case CONFIG_GP_CH_FLOTSAM_ENABLED: g_scenario_data.env.flotsam_enabled = !g_scenario_data.env.flotsam_enabled; break;
     }
     
     window_invalidate();
@@ -463,8 +463,8 @@ static void init(void (*close_callback)()) {
 static bool is_config_option_enabled(int option) {
     auto& data = g_window_config_ext_data;
     switch (option) {
-    case CONFIG_GP_CH_CITY_HAS_ANIMALS: return city_data.env.has_animals;
-    case CONFIG_GP_CH_FLOTSAM_ENABLED: return g_scenario_data.flotsam_enabled;
+    case CONFIG_GP_CH_CITY_HAS_ANIMALS: return g_scenario_data.env.has_animals;
+    case CONFIG_GP_CH_FLOTSAM_ENABLED: return g_scenario_data.env.flotsam_enabled;
     case CONFIG_GP_CH_RESOURCE_TIMBER: return can_produce_resource(RESOURCE_TIMBER);
     case CONFIG_GP_CH_RESOURCE_COPPER: return can_produce_resource(RESOURCE_COPPER);
     case CONFIG_GP_CH_RESOURCE_REED: return can_produce_resource(RESOURCE_REEDS);

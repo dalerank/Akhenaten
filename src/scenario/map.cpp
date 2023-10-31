@@ -95,6 +95,10 @@ int scenario_map_closest_fishing_point(tile2i pos, tile2i &fish) {
     return 0;
 }
 
-int scenario_map_has_flotsam() {
-    return g_scenario_data.flotsam_enabled;
+bool scenario_map_has_flotsam() {
+    return g_scenario_data.env.flotsam_enabled;
+}
+
+bool scenario_map_has_animals() {
+    return g_scenario_data.env.has_animals;
 }

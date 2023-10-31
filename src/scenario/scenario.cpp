@@ -12,7 +12,7 @@
 
 scenario_data_t g_scenario_data;
 
-bool scenario_is_saved(void) {
+bool scenario_is_saved() {
     return g_scenario_data.is_saved;
 }
 
@@ -134,8 +134,9 @@ io_buffer* iob_scenario_info = new io_buffer([](io_buffer* iob, size_t version) 
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.win_criteria.milestone75_year);
 
     // junk 4b
-    iob->bind____skip(11); // 3 * 4 (usually go n, n+2, n+1497)
-    iob->bind(BIND_SIGNATURE_UINT8, &g_scenario_data.flotsam_enabled);
+    iob->bind____skip(10); // 3 * 4 (usually go n, n+2, n+1497)
+    iob->bind(BIND_SIGNATURE_UINT8, &g_scenario_data.env.has_animals);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_scenario_data.env.flotsam_enabled);
     iob->bind(BIND_SIGNATURE_UINT8, &g_scenario_data.climate);
 
     // junk 4e

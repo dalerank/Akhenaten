@@ -1,5 +1,4 @@
-#ifndef SCENARIO_DATA_H
-#define SCENARIO_DATA_H
+#pragma once
 
 #include "core/game_environment.h"
 #include "events.h"
@@ -207,7 +206,6 @@ struct scenario_data_t {
     ////        map_tile entry_flag;
     ////        map_tile exit_flag;
     //    } map;
-    bool flotsam_enabled;
     map_point entry_point;
     map_point exit_point;
     map_point river_entry_point;
@@ -247,8 +245,12 @@ struct scenario_data_t {
         } burial_provisions[RESOURCES_MAX];
     } monuments;
 
+    struct {
+        bool flotsam_enabled;
+        bool has_animals;
+    } env;
+
     bool is_saved;
 };
 
 extern scenario_data_t g_scenario_data;
-#endif // SCENARIO_DATA_H

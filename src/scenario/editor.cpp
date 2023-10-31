@@ -343,13 +343,13 @@ void scenario_editor_set_rescue_loan(int amount) {
     g_scenario_data.is_saved = 0;
 }
 
-void scenario_editor_toggle_rome_supplies_wheat(void) {
+void scenario_editor_toggle_rome_supplies_wheat() {
     g_scenario_data.rome_supplies_wheat = !g_scenario_data.rome_supplies_wheat;
     g_scenario_data.is_saved = 0;
 }
 
 void scenario_editor_toggle_flotsam() {
-    g_scenario_data.flotsam_enabled = !g_scenario_data.flotsam_enabled;
+    g_scenario_data.env.flotsam_enabled = !g_scenario_data.env.flotsam_enabled;
     g_scenario_data.is_saved = 0;
 }
 

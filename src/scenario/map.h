@@ -28,4 +28,5 @@ void scenario_map_foreach_fishing_point(void (*callback)(int x, int y));
 
 int scenario_map_closest_fishing_point(tile2i tile, tile2i &fish);
 
-int scenario_map_has_flotsam();
+bool scenario_map_has_flotsam();
+bool scenario_map_has_animals();

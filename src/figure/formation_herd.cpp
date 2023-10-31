@@ -315,7 +315,7 @@ static void update_herd_formation(formation* m) {
 }
 
 void formation_herd_update(void) {
-    if (!city_has_animals()) {
+    if (!scenario_map_has_animals()) {
         return;
     }
 

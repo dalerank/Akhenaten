@@ -44,10 +44,6 @@ void city_figures_set_gladiator_revolt(void) {
     city_data.figure.attacking_natives = 10;
 }
 
-bool city_has_animals(void) {
-    return !!city_data.env.has_animals;
-}
-
 int city_figures_attacking_natives(void) {
     return city_data.figure.attacking_natives;
 }
