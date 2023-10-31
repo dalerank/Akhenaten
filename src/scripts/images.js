@@ -16,4 +16,6 @@ images = [
 	{img: IMG_FISHING_BOAT_DEATH, pack:PACK_SPR_MAIN, id:136 }, // 7118
 	{img: IMG_FISHING_BOAT_IDLE, pack:PACK_SPR_MAIN, id:137 }, // 7129
 	{img: IMG_FLOTSAM, pack:PACK_SPR_AMBIENT, id:0},  // 1 + 15831
+	{img: IMG_LABOR_SEEKER, pack:PACK_SPR_MAIN, id:206},       // 9909}
+	{img: IMG_LABOR_SEEKER_DEATH, pack:PACK_SPR_MAIN, id:207}, // 10005
 ]
