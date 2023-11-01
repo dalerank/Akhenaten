@@ -19,6 +19,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "figuretype/animal.h"
 #include "config/config.h"
 #include "content/dir.h"
 #include "io/gamefiles/lang.h"
@@ -411,8 +412,16 @@ static void toggle_resource(int id, int param2) {
         return;
     }
 
-    bool can_produce = can_city_produce_resource(resource);
-    set_city_produce_resource(resource, !can_produce);
+    bool can_produce = !can_city_produce_resource(resource);
+    set_city_produce_resource(resource, can_produce);
+
+    if (resource == RESOURCE_FISH) {
+        if (can_produce) {
+            figure_reset_fishing_points();
+        } else {
+            figure_clear_fishing_points();
+        }
+    }
     window_invalidate();
 }
 

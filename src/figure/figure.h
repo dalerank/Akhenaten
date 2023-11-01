@@ -9,6 +9,7 @@
 #include "figure/formation.h"
 #include "figure/type.h"
 #include "grid/point.h"
+#include "graphics/image_desc.h"
 #include "io/io_buffer.h"
 #include "widget/city.h"
 #include "window/building/common.h"
@@ -75,10 +76,10 @@ public:
     signed char direction;
     signed char previous_tile_direction;
     signed char attack_direction;
-    map_point tile;
-    map_point previous_tile;
-    map_point source_tile;
-    map_point destination_tile;
+    tile2i tile;
+    tile2i previous_tile;
+    tile2i source_tile;
+    tile2i destination_tile;
     //    unsigned char tile_x;
     //    unsigned char tile_y;
     //    unsigned char previous_tile_x;
@@ -205,6 +206,12 @@ public:
         };
 
         struct {
+            short fishpoint_offset;
+            short fishpoint_max_step;
+            short fishpoint_current_step;
+        };
+
+        struct {
             short value_a;
             short value_b;
             short value_c;
@@ -291,6 +298,7 @@ public:
     void route_remove();
 
     // image.c
+    void image_set_animation(e_img img, int offset = 0, int max_frames = 12, int duration = 1);
     void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1);
     void figure_image_update(bool refresh_only);
     void figure_image_set_cart_offset(int direction);
@@ -397,7 +405,7 @@ public:
     void bolt_action();
     void ballista_action();
     //    void missionary_action();
-    void seagulls_action();
+    void fishing_point_action();
     void delivery_boy_action();
     void shipwreck_action();
     void sheep_action();

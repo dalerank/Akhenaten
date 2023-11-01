@@ -18,4 +18,6 @@ images = [
 	{img: IMG_FLOTSAM, pack:PACK_SPR_AMBIENT, id:0},  // 1 + 15831
 	{img: IMG_LABOR_SEEKER, pack:PACK_SPR_MAIN, id:206},       // 9909}
 	{img: IMG_LABOR_SEEKER_DEATH, pack:PACK_SPR_MAIN, id:207}, // 10005
+	{img: IMG_FISHING_POINT, pack:PACK_SPR_AMBIENT, id:8},
+	{img: IMG_FISHING_POINT_BUBLES, pack:PACK_SPR_AMBIENT, id:11},
 ]

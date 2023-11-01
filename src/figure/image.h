@@ -1,5 +1,4 @@
-#ifndef FIGURE_IMAGE_H
-#define FIGURE_IMAGE_H
+#pragma once
 
 #include "figure/figure.h"
 
@@ -16,5 +15,3 @@
 // int figure_image_direction();
 
 int figure_image_normalize_direction(int direction);
-
-#endif // FIGURE_IMAGE_H

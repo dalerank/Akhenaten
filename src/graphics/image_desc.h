@@ -20,6 +20,8 @@ enum e_img : uint16_t {
     IMG_FLOTSAM = 15,
     IMG_LABOR_SEEKER = 16,
     IMG_LABOR_SEEKER_DEATH = 17,
+    IMG_FISHING_POINT = 18,
+    IMG_FISHING_POINT_BUBLES = 19,
 
     IMG_SIZE
 };

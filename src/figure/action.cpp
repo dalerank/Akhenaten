@@ -94,7 +94,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_BALLISTA, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_CREATURE, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_MISSIONARY, 1, TERRAIN_USAGE_ROADS, 192, GROUP_FIGURE_MISSIONARY},
-  {FIGURE_FISHING_POINT, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_SEAGULLS},
+  {FIGURE_FISHING_POINT, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_FISHING_POINT},
   {FIGURE_DELIVERY_BOY, 1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_GRANARY_BOY},
   {FIGURE_SHIPWRECK, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_SHEEP, 2, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_SHEEP},
@@ -670,8 +670,8 @@ void figure::action_perform() {
             break;
             //                no_action();                            break;
             //            case 64: missionary_action();               break;
-        case 65:
-            seagulls_action();
+        case FIGURE_FISHING_POINT:
+            fishing_point_action();
             break;
 
         case FIGURE_DELIVERY_BOY:

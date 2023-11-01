@@ -685,6 +685,7 @@ void figure::cross_country_advance() {
         }
     }
 }
+
 int figure::move_ticks_cross_country(int num_ticks) {
     map_figure_remove();
     int is_at_destination = 0;
@@ -700,7 +701,7 @@ int figure::move_ticks_cross_country(int num_ticks) {
         }
         cross_country_advance();
     }
-    map_point old = tile;
+    tile2i old = tile;
     tile.set(cc_coords.x / 15, cc_coords.y / 15);
     //    tile.x() = cc_coords.x / 15;
     //    tile.y() = cc_coords.y / 15;
@@ -715,7 +716,8 @@ int figure::move_ticks_cross_country(int num_ticks) {
         previous_tile = old;
     return is_at_destination;
 }
-int figure_movement_can_launch_cross_country_missile(map_point src, map_point dst) {
+
+int figure_movement_can_launch_cross_country_missile(tile2i src, tile2i dst) {
     int height = 0;
     figure* f = figure_get(0); // abuse unused figure 0 as scratch
     f->cc_coords.x = 15 * src.x();

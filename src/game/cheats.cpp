@@ -21,6 +21,7 @@
 #include "window/window_building_info.h"
 #include "window/city.h"
 #include "window/console.h"
+#include "figure/formation_herd.h"
 
 #include <string.h>
 
@@ -45,6 +46,7 @@ static void game_cheat_nodamage(uint8_t *);
 static void game_cheat_spacious_apartment(uint8_t *);
 static void game_cheat_spawn_nobles(uint8_t *);
 static void game_cheat_kill_fish_boats(uint8_t *);
+static void game_cheat_update_fish_points(uint8_t *);
 
 using cheat_command = void(uint8_t* args);
 
@@ -69,7 +71,8 @@ static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_mo
                                                   {"collapse", game_cheat_collapse},
                                                   {"spawnnobles", game_cheat_spawn_nobles},
                                                   {"tutspaciousapt", game_cheat_spacious_apartment},
-                                                  {"killfishboats", game_cheat_kill_fish_boats}
+                                                  {"killfishboats", game_cheat_kill_fish_boats},
+                                                  {"upfishpoints", game_cheat_update_fish_points}
 };
 
 struct cheats_data_t {
@@ -217,6 +220,13 @@ static void game_cheat_collapse(uint8_t *args) {
     for (int i = 0; i < buildings.size(); i += step) {
         building_destroy_by_collapse(buildings[i]);
     }
+}
+
+static void game_cheat_update_fish_points(uint8_t *args) {
+    int count = 0;
+    parse_integer(args ? args : (uint8_t *)"10", count);
+
+    formation_fish_update(count);
 }
 
 static void game_cheat_kill_fish_boats(uint8_t *) {

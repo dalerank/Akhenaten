@@ -11,12 +11,15 @@
 #include "figure/formation_layout.h"
 #include "figure/image.h"
 #include "figure/movement.h"
+#include "figure/formation_herd.h"
 #include "figure/route.h"
 #include "graphics/image.h"
+#include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/figure.h"
+#include "grid/water.h"
 #include "grid/grid.h"
 #include "grid/point.h"
 #include "grid/terrain.h"
@@ -29,7 +32,7 @@
 #include "grid/terrain.h"
 #include "missile.h"
 
-static const vec2i SEAGULL_OFFSETS[] = {{0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}};
+static const vec2i FISHPOINT_OFFSETS[] = {{0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}};
 
 static const vec2i HORSE_DESTINATION_1[] = {
     {2, 1},  {3, 1},  {4, 1},  {5, 1}, {6, 1}, {7, 1}, {8, 1}, {9, 1}, {10, 1}, {11, 1}, {12, 2},
@@ -54,11 +57,19 @@ static void create_fishing_point(tile2i tile) {
     figure* fish = figure_create(FIGURE_FISHING_POINT, tile, DIR_0_TOP_RIGHT);
     fish->anim_frame = random_byte() & 0x1f;
     fish->progress_on_tile = random_byte() & 7;
+    fish->advance_action(FIGURE_ACTION_196_FISHPOINT_BUBLES);
     fish->set_cross_country_direction(fish->cc_coords.x, fish->cc_coords.y, 15 * fish->destination_tile.x(), 15 * fish->destination_tile.y(), 0);
+    fish->image_set_animation(IMG_FISHING_POINT, 0, 24, 6);
 }
 
 void figure_create_fishing_points() {
     scenario_map_foreach_fishing_point(create_fishing_point);
+}
+
+void figure_reset_fishing_points() {
+    tile_cache &river = river_tiles();
+    int num_points = std::max<int>(1, (int)river.size() / 500);
+    formation_fish_update(num_points);
 }
 
 void figure_clear_fishing_points() {
@@ -132,26 +143,43 @@ bool figure::herd_roost(int step, int bias, int max_dist, int terrain_mask) {
     }
 }
 
-void figure::seagulls_action() {
+void figure::fishing_point_action() {
     terrain_usage = TERRAIN_USAGE_ANY;
     is_ghost = false;
     use_cross_country = true;
-    if (!(anim_frame & 3) && move_ticks_cross_country(1)) {
+    bool animation_finished = false;
+    if (anim_frame == 0) {
         progress_on_tile++;
         if (progress_on_tile > 14) { // wrap around
             progress_on_tile = 0;
         }
-        set_cross_country_destination(source_tile.x() + SEAGULL_OFFSETS[progress_on_tile].x, source_tile.y() + SEAGULL_OFFSETS[progress_on_tile].y);
+
+        service_values.fishpoint_offset++;
+        service_values.fishpoint_offset %= std::size(FISHPOINT_OFFSETS);
+        vec2i offset = FISHPOINT_OFFSETS[service_values.fishpoint_offset];
+        set_cross_country_destination(source_tile.x() + offset.x, source_tile.y() + offset.y);
+        animation_finished = true;
     }
 
-    if (id & 1) {
-        image_set_animation(GROUP_FIGURE_SEAGULLS, 0, 54, 3);
-        //        figure_image_increase_offset(54);
-        //        sprite_image_id = image_id_from_group(GROUP_FIGURE_SEAGULLS) + anim_frame / 3;
-    } else {
-        image_set_animation(GROUP_FIGURE_SEAGULLS, 18, 72, 3);
-        //        figure_image_increase_offset(72);
-        //        sprite_image_id = image_id_from_group(GROUP_FIGURE_SEAGULLS) + 18 + anim_frame / 3;
+    switch (action_state) {
+    case FIGURE_ACTION_196_FISHPOINT_BUBLES:
+        image_set_animation(IMG_FISHING_POINT_BUBLES, 0, 22, 4);
+        if (animation_finished) {
+            service_values.fishpoint_current_step++;
+            if (service_values.fishpoint_current_step > service_values.fishpoint_max_step) {
+                service_values.fishpoint_current_step = 0;
+                advance_action(FIGURE_ACTION_197_FISHPOINT_JUMP);
+            }
+        }
+        break;
+
+    case FIGURE_ACTION_197_FISHPOINT_JUMP:
+        image_set_animation(IMG_FISHING_POINT, 0, 24, 4);
+        if (animation_finished) {
+            advance_action(FIGURE_ACTION_196_FISHPOINT_BUBLES);
+            service_values.fishpoint_max_step = 5 + rand() % 10;
+        }
+        break;
     }
 }
 

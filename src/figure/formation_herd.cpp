@@ -18,6 +18,7 @@
 #include "sound/effect.h"
 
 #include <vector>
+#include <time.h>
 
 static int get_free_tile(int x, int y, int allow_negative_desirability, int* x_tile, int* y_tile) {
     unsigned int disallowed_terrain = ~(TERRAIN_ACCESS_RAMP | TERRAIN_MEADOW);
@@ -316,10 +317,11 @@ void formation_fish_update(int points_num) {
     }
 
     figure_clear_fishing_points();
+    srand (time(nullptr));
 
     for (int i = 0; i < num_fishing_spots; i++) {
         int index = rand() % deep_water.size();
-        g_scenario_data.fishing_points[i] = tile2i(deep_water[i]);
+        g_scenario_data.fishing_points[i] = tile2i(deep_water[index]);
     }
 
     figure_create_fishing_points();

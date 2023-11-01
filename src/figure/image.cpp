@@ -75,6 +75,11 @@ vec2i figure::tile_pixel_coords() {
     return {x, y};
 }
 
+void figure::image_set_animation(e_img img, int offset, int max_frames, int duration) {
+    image_desc_t desc = get_image_desc(img);
+    image_set_animation(desc.pack, desc.id, offset, max_frames, duration);
+}
+
 void figure::image_set_animation(int collection, int group, int offset, int max_frames, int duration) {
     anim_base = image_id_from_group(collection, group);
     anim_offset = offset;
@@ -117,7 +122,15 @@ void figure::figure_image_update(bool refresh_only) {
         anim_frame++;
     if (anim_frame >= anim_max_frames * anim_frame_duration)
         anim_frame = 0;
-    cart_update_image();
+
+    switch (type) {
+    case FIGURE_EXPLOSION:
+    case FIGURE_FISHING_POINT:
+        break;
+
+    default:
+        cart_update_image();
+    }
 
     switch (type) {
     case FIGURE_JAVELIN:
@@ -127,8 +140,16 @@ void figure::figure_image_update(bool refresh_only) {
         sprite_image_id = anim_base + 16 + dir;
         break;
     }
+
     case FIGURE_EXPLOSION:
         break;
+
+    case FIGURE_FISHING_POINT: {
+        int effective_frame = anim_frame / anim_frame_duration;
+        sprite_image_id = anim_base + anim_offset + effective_frame;
+        break;
+    }
+
     default:
         // play death animation if it's dying, otherwise always follow the same pattern - offsets are set during action
         // logic

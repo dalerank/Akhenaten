@@ -136,6 +136,9 @@ bool figure::can_move_by_water() {
     
     case FIGURE_HIPPO:
         return !map_terrain_is(tile.grid_offset(), TERRAIN_DEEPWATER);
+
+    case FIGURE_FISHING_POINT:
+        return map_terrain_is(tile.grid_offset(), TERRAIN_DEEPWATER);
     }
     return (allow_move_type == EMOVE_BOAT || allow_move_type == EMOVE_FLOTSAM || allow_move_type == EMOVE_HIPPO);
 }
