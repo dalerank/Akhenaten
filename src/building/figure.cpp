@@ -795,7 +795,9 @@ void building::spawn_figure_wharf() {
     
     bool cart_spawned = common_spawn_goods_output_cartpusher();
     if (cart_spawned) {
-        data.industry.has_fish = 0;
+        if (data.industry.has_fish) {
+            data.industry.has_fish = (stored_full_amount > 0);
+        }
     }
 }
 void building::spawn_figure_shipyard() {

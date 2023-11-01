@@ -108,8 +108,9 @@ void figure::fishing_boat_action() {
     case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: {
         int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
         int max_wait_ticks = 5 * (102 - pct_workers);
-        if (b->data.industry.has_fish > 0)
+        if (b->data.industry.has_fish) {
             pct_workers = 0;
+        }
 
         if (pct_workers > 0) {
             wait_ticks++;
@@ -133,7 +134,8 @@ void figure::fishing_boat_action() {
             action_state = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;
             wait_ticks = 0;
             b->figure_spawn_delay = 1;
-            b->data.industry.has_fish++;
+            b->data.industry.has_fish = true;
+            b->stored_full_amount += 200;
         } else if (direction == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction == DIR_FIGURE_CAN_NOT_REACH) {

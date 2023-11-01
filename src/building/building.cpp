@@ -249,8 +249,11 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_TEMPLE_COMPLEX_BAST:
         b->data.monuments.variant = (10 - (2 * orientation)) % 8; // ugh!
         break;
-    case BUILDING_WATER_LIFT:
     case BUILDING_FISHING_WHARF:
+        b->data.industry.orientation = orientation;
+        b->output_resource_id = RESOURCE_FISH;
+        break;
+    case BUILDING_WATER_LIFT:
     case BUILDING_TRANSPORT_WHARF:
     case BUILDING_SHIPYARD:
     case BUILDING_WARSHIP_WHARF:
