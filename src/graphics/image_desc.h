@@ -22,6 +22,8 @@ enum e_img : uint16_t {
     IMG_LABOR_SEEKER_DEATH = 17,
     IMG_FISHING_POINT = 18,
     IMG_FISHING_POINT_BUBLES = 19,
+    IMG_ENGINEER = 20,
+    IMG_ENGINEER_DEATH = 21,
 
     IMG_SIZE
 };
