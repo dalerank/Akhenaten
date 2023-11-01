@@ -38,6 +38,7 @@
 #include "figure/formation.h"
 #include "figuretype/crime.h"
 #include "figuretype/water.h"
+#include "figure/formation_herd.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"
@@ -111,6 +112,7 @@ static void advance_month(void) {
     city_population_record_monthly();
     city_festival_update();
     city_buildings_update_month();
+    formation_fish_update();
     
     //if (GAME_ENV == ENGINE_ENV_C3)
     //    tutorial_on_month_tick();

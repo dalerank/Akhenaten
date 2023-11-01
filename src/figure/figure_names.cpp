@@ -170,7 +170,7 @@ int figure_name_get(int type, int enemy) {
 
     case FIGURE_EXPLOSION:
     case FIGURE_FORT_STANDARD:
-    case FIGURE_FISH_GULLS:
+    case FIGURE_FISHING_POINT:
     case FIGURE_CREATURE:
     case FIGURE_HIPPODROME_HORSES:
         return 0;

@@ -17,39 +17,34 @@ void scenario_map_init_entry_exit(void) {
         g_scenario_data.entry_point.x(g_scenario_data.map.width - 1);
         g_scenario_data.entry_point.y(g_scenario_data.map.height / 2);
     }
+
     if (g_scenario_data.exit_point.x() == -1 || g_scenario_data.exit_point.y() == -1) {
         g_scenario_data.exit_point = g_scenario_data.entry_point;
-        //        g_scenario_data.exit_point.x() = g_scenario_data.entry_point.x();
-        //        g_scenario_data.exit_point.y() = g_scenario_data.entry_point.y();
     }
 }
 
 tile2i scenario_map_entry(void) {
-    tile2i point = {g_scenario_data.entry_point.x(), g_scenario_data.entry_point.y()};
-    return point;
+    return g_scenario_data.entry_point;
 }
 
 tile2i scenario_map_exit(void) {
-    tile2i point = {g_scenario_data.exit_point.x(), g_scenario_data.exit_point.y()};
-    return point;
+    return g_scenario_data.exit_point;
 }
 
 int scenario_map_has_river_entry(void) {
     return g_scenario_data.river_entry_point.x() != -1 && g_scenario_data.river_entry_point.y() != -1;
 }
 
-tile2i scenario_map_river_entry(void) {
-    tile2i point = {g_scenario_data.river_entry_point.x(), g_scenario_data.river_entry_point.y()};
-    return point;
+tile2i scenario_map_river_entry() {
+    return g_scenario_data.river_entry_point;
 }
 
-int scenario_map_has_river_exit(void) {
+int scenario_map_has_river_exit() {
     return g_scenario_data.river_exit_point.x() != -1 && g_scenario_data.river_exit_point.y() != -1;
 }
 
-tile2i scenario_map_river_exit(void) {
-    tile2i point = {g_scenario_data.river_exit_point.x(), g_scenario_data.river_exit_point.y()};
-    return point;
+tile2i scenario_map_river_exit() {
+    return g_scenario_data.river_exit_point;
 }
 
 void scenario_map_foreach_herd_point(void (*callback)(int x, int y)) {
@@ -59,14 +54,14 @@ void scenario_map_foreach_herd_point(void (*callback)(int x, int y)) {
     }
 }
 
-void scenario_map_foreach_fishing_point(void (*callback)(int x, int y)) {
+void scenario_map_foreach_fishing_point(void (*callback)(tile2i)) {
     for (int i = 0; i < MAX_FISH_POINTS; i++) {
         if (g_scenario_data.fishing_points[i].x() > 0)
-            callback(g_scenario_data.fishing_points[i].x(), g_scenario_data.fishing_points[i].y());
+            callback(g_scenario_data.fishing_points[i]);
     }
 }
 
-int scenario_map_closest_fishing_point(tile2i pos, tile2i &fish) {
+bool scenario_map_closest_fishing_point(tile2i pos, tile2i &fish) {
     int num_fishing_spots = 0;
     for (int i = 0; i < MAX_FISH_POINTS; i++) {
         if (g_scenario_data.fishing_points[i].x() > 0)
@@ -88,11 +83,13 @@ int scenario_map_closest_fishing_point(tile2i pos, tile2i &fish) {
             }
         }
     }
+
     if (min_dist < 10000) {
         map_point_store_result(g_scenario_data.fishing_points[min_fish_id], fish);
-        return 1;
+        return true;
     }
-    return 0;
+
+    return false;
 }
 
 bool scenario_map_has_flotsam() {

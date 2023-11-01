@@ -177,7 +177,7 @@ int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, 
         case FIGURE_BOLT:
         case FIGURE_BALLISTA:
         case FIGURE_CREATURE:
-        case FIGURE_FISH_GULLS:
+        case FIGURE_FISHING_POINT:
         case FIGURE_SHIPWRECK:
         case FIGURE_SHEEP:
         // case FIGURE_WOLF:

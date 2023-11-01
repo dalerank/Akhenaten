@@ -63,7 +63,7 @@ void set_city_produce_resource(e_resource resource, bool v) {
     }
 }
 
-bool can_produce_resource(e_resource resource) {
+bool can_city_produce_resource(e_resource resource) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
         if (g_cities[i].in_use && (g_cities[i].type == EMPIRE_CITY_OURS)) {
             if (g_cities[i].sells_resource[resource])
@@ -103,15 +103,16 @@ e_resource get_raw_resource(e_resource resource) {
 bool empire_can_produce_resource(e_resource resource, bool check_if_open) {
     e_resource raw_resource = get_raw_resource(resource);
     // finished goods: check imports of raw materials
-    if (raw_resource != resource && empire_can_import_resource(raw_resource, false))
+    if (raw_resource != resource && empire_can_import_resource(raw_resource, false)) {
         return true;
+    }
 
     //    // if food, see if it's enabled
     //    if (is_food_allowed(resource))
     //        return true;
 
     // check if we can produce the raw materials
-    return can_produce_resource(raw_resource);
+    return can_city_produce_resource(raw_resource);
 }
 
 int empire_city_get_for_object(int empire_object_id) {
@@ -121,10 +122,12 @@ int empire_city_get_for_object(int empire_object_id) {
     }
     return 0;
 }
+
 int empire_city_get_for_trade_route(int route_id) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        if (g_cities[i].in_use && g_cities[i].route_id == route_id)
+        if (g_cities[i].in_use && g_cities[i].route_id == route_id) {
             return i;
+        }
     }
     return -1;
 }

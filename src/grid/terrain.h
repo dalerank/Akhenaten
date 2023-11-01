@@ -78,7 +78,7 @@ enum e_terrain {
 };
 
 bool map_terrain_is(int grid_offset, int terrain_mask);
-inline bool map_terrain_is(map_point tile, int terrain_mask) { return map_terrain_is(tile.grid_offset(), terrain_mask); }
+inline bool map_terrain_is(tile2i tile, int terrain_mask) { return map_terrain_is(tile.grid_offset(), terrain_mask); }
 
 int map_terrain_get(int grid_offset);
 

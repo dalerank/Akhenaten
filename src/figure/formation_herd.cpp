@@ -3,8 +3,10 @@
 #include "city/figures.h"
 #include "city/sound.h"
 #include "core/random.h"
+#include "empire/city.h"
 #include "figure/combat.h"
 #include "figure/figure.h"
+#include "figuretype/animal.h"
 #include "figure/formation.h"
 #include "figure/formation_enemy.h"
 #include "figure/route.h"
@@ -12,7 +14,10 @@
 #include "grid/grid.h"
 #include "grid/soldier_strength.h"
 #include "grid/terrain.h"
+#include "grid/water.h"
 #include "sound/effect.h"
+
+#include <vector>
 
 static int get_free_tile(int x, int y, int allow_negative_desirability, int* x_tile, int* y_tile) {
     unsigned int disallowed_terrain = ~(TERRAIN_ACCESS_RAMP | TERRAIN_MEADOW);
@@ -48,14 +53,7 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, int* x_t
     return tile_found;
 }
 
-static int get_roaming_destination(int formation_id,
-                                   int allow_negative_desirability,
-                                   int x,
-                                   int y,
-                                   int distance,
-                                   int direction,
-                                   int* x_tile,
-                                   int* y_tile) {
+static int get_roaming_destination(int formation_id, int allow_negative_desirability, int x, int y, int distance, int direction, int* x_tile, int* y_tile) {
     int target_direction = (formation_id + random_byte()) & 6;
     if (direction) {
         target_direction = direction;
@@ -122,36 +120,24 @@ static void move_animals(const formation* m, int attacking_animals, int terrain_
     for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
         if (m->figures[i] <= 0)
             continue;
+
         figure* f = figure_get(m->figures[i]);
         if (f->action_state == FIGURE_ACTION_149_CORPSE || f->action_state == FIGURE_ACTION_150_ATTACK) {
             continue;
         }
-        if (GAME_ENV == ENGINE_ENV_C3)
-            f->wait_ticks = 401;
+
         if (attacking_animals) {
             int target_id = figure_combat_get_target_for_wolf(f->tile, 6);
             if (target_id) {
-                if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                    f->destination_tile.set(0, 0);
-                    //                    while (f->destination_x == 0 || f->destination_y == 0)
-                    f->herd_roost(4, 8, 22, terrain_mask);
-                    if (f->destination_tile.x() != 0 && f->destination_tile.y() != 0)
-                        f->advance_action(16);
-                } else {
-                    figure* target = figure_get(target_id);
-                    f->target_figure_id = target_id;
-                    f->action_state = FIGURE_ACTION_199_WOLF_ATTACKING;
-                    f->destination_tile = target->tile;
-                    target->targeted_by_figure_id = f->id;
-                    f->target_figure_created_sequence = target->created_sequence;
-                    f->route_remove();
+                f->destination_tile.set(0, 0);
+                //                    while (f->destination_x == 0 || f->destination_y == 0)
+                f->herd_roost(4, 8, 22, terrain_mask);
+                if (f->destination_tile.x() != 0 && f->destination_tile.y() != 0) {
+                    f->advance_action(16);
                 }
             } else {
-                if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                    f->advance_action(14);
-                    f->destination_tile.set(0, 0);
-                } else
-                    f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
+                f->advance_action(14);
+                f->destination_tile.set(0, 0);
             }
         } else {
             f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
@@ -190,7 +176,6 @@ static bool can_spawn_ostrich(formation* m) {
 }
 
 static void set_figures_to_initial(const formation* m) {
-    //    return;
     for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
         if (m->figures[i] > 0) {
             figure* f = figure_get(m->figures[i]);
@@ -200,11 +185,10 @@ static void set_figures_to_initial(const formation* m) {
                 f->wait_ticks = 0;
 
                 // ostriches!
-                if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                    random_generate_next();
-                    f->wait_ticks = 255 + (random_byte()) - 64;
-                    if (f->type == FIGURE_OSTRICH)
-                        f->action_state = 18 + (random_byte() & 0x1);
+                random_generate_next();
+                f->wait_ticks = 255 + (random_byte()) - 64;
+                if (f->type == FIGURE_OSTRICH) {
+                    f->action_state = 18 + (random_byte() & 0x1);
                 }
             }
         }
@@ -217,8 +201,7 @@ static void update_herd_formation(formation* m) {
         if (!map_terrain_is(MAP_OFFSET(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
             figure* wolf = figure_create(m->figure_type, map_point(m->x, m->y), DIR_0_TOP_RIGHT);
             wolf->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
-            if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                wolf->action_state = 24;
+            wolf->action_state = 24;
             wolf->formation_id = m->id;
             wolf->wait_ticks = wolf->id & 0x1f;
         }
@@ -296,14 +279,7 @@ static void update_herd_formation(formation* m) {
                 }
             }*/
 
-            if (get_roaming_destination(m->id,
-                                        allow_negative_desirability,
-                                        m->x_home,
-                                        m->y_home,
-                                        roam_distance,
-                                        m->herd_direction,
-                                        &x_tile,
-                                        &y_tile)) {
+            if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home, roam_distance, m->herd_direction, &x_tile, &y_tile)) {
                 m->herd_direction = 0;
                 if (formation_enemy_move_formation_to(m, x_tile, y_tile, &x_tile, &y_tile)) {
                     formation_set_destination(m, x_tile, y_tile);
@@ -314,7 +290,42 @@ static void update_herd_formation(formation* m) {
     }
 }
 
-void formation_herd_update(void) {
+void formation_fish_update(int points_num) {
+    if (!can_city_produce_resource(RESOURCE_FISH)) {
+        return;
+    }
+
+    int num_fishing_spots = 0;
+    for (int i = 0; i < MAX_FISH_POINTS; i++) {
+        if (g_scenario_data.fishing_points[i].x() > 0)
+            num_fishing_spots++;
+
+        g_scenario_data.fishing_points[i] = {-1, -1};
+    }
+
+    if (points_num >= 0) {
+        num_fishing_spots = std::min(MAX_FISH_POINTS, points_num);
+    }
+
+    tile_cache &river = river_tiles();
+    std::vector<int> deep_water;
+    for (const auto &tile : river) {
+        if (map_terrain_is(tile, TERRAIN_DEEPWATER)) {
+            deep_water.push_back(tile);
+        }
+    }
+
+    figure_clear_fishing_points();
+
+    for (int i = 0; i < num_fishing_spots; i++) {
+        int index = rand() % deep_water.size();
+        g_scenario_data.fishing_points[i] = tile2i(deep_water[i]);
+    }
+
+    figure_create_fishing_points();
+}
+
+void formation_herd_update() {
     if (!scenario_map_has_animals()) {
         return;
     }

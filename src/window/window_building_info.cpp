@@ -488,7 +488,7 @@ static void init(map_point tile) {
                 case FIGURE_BOLT:
                 case FIGURE_BALLISTA:
                 case FIGURE_CREATURE:
-                case FIGURE_FISH_GULLS:
+                case FIGURE_FISHING_POINT:
                 case FIGURE_SPEAR:
                 case FIGURE_HIPPODROME_HORSES:
                     break;

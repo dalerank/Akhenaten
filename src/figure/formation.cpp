@@ -119,15 +119,7 @@ int formation_create_herd(e_figure_type figure_type, int x, int y, int num_anima
     return formation_id;
 }
 
-int formation_create_enemy(e_figure_type figure_type,
-                           int x,
-                           int y,
-                           int layout,
-                           int orientation,
-                           int enemy_type,
-                           int attack_type,
-                           int invasion_id,
-                           int invasion_sequence) {
+int formation_create_enemy(e_figure_type figure_type, int x, int y, int layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence) {
     int formation_id = formation_create(figure_type, layout, orientation, x, y);
     if (!formation_id)
         return 0;
@@ -311,7 +303,7 @@ static void change_all_morale(int legion, int enemy) {
     }
 }
 
-void formation_update_monthly_morale_deployed(void) {
+void formation_update_monthly_morale_deployed() {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* f = &g_formations[i];
         if (f->in_use != 1 || f->is_herd)
@@ -561,8 +553,9 @@ void formation_update_all(bool second_time) {
     formation_calculate_figures();
     update_directions();
     formation_legion_decrease_damage();
-    if (!second_time)
+    if (!second_time) {
         formation_update_monthly_morale_deployed();
+    }
 
     set_legion_max_figures();
     formation_legion_update();

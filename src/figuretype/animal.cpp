@@ -49,17 +49,27 @@ static const int SHEEP_IMAGE_OFFSETS[] = {
 
 enum E_HORSE { HORSE_CREATED = 0, HORSE_RACING = 1, HORSE_FINISHED = 2 };
 
-static void create_fishing_point(int x, int y) {
+static void create_fishing_point(tile2i tile) {
     random_generate_next();
-    figure* fish = figure_create(FIGURE_FISH_GULLS, map_point(x, y), DIR_0_TOP_RIGHT);
+    figure* fish = figure_create(FIGURE_FISHING_POINT, tile, DIR_0_TOP_RIGHT);
     fish->anim_frame = random_byte() & 0x1f;
     fish->progress_on_tile = random_byte() & 7;
-    fish->set_cross_country_direction(
-      fish->cc_coords.x, fish->cc_coords.y, 15 * fish->destination_tile.x(), 15 * fish->destination_tile.y(), 0);
+    fish->set_cross_country_direction(fish->cc_coords.x, fish->cc_coords.y, 15 * fish->destination_tile.x(), 15 * fish->destination_tile.y(), 0);
 }
 
-void figure_create_fishing_points(void) {
+void figure_create_fishing_points() {
     scenario_map_foreach_fishing_point(create_fishing_point);
+}
+
+void figure_clear_fishing_points() {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
+        figure *f = figure_get(i);
+        if (f->type != FIGURE_FISHING_POINT) {
+            continue;
+        }
+
+        f->poof();
+    }
 }
 
 static void create_herd(int x, int y) {

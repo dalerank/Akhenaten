@@ -1,7 +1,5 @@
-#ifndef FIGURE_FORMATION_HERD_H
-#define FIGURE_FORMATION_HERD_H
+#pragma once
 
-void formation_herd_update(void);
+void formation_herd_update();
+void formation_fish_update(int points_num = -1);
 int formation_herd_breeding_ground_at(int x, int y, int size);
-
-#endif // FIGURE_FORMATION_HERD_H

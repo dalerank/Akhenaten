@@ -411,7 +411,7 @@ static void toggle_resource(int id, int param2) {
         return;
     }
 
-    bool can_produce = can_produce_resource(resource);
+    bool can_produce = can_city_produce_resource(resource);
     set_city_produce_resource(resource, !can_produce);
     window_invalidate();
 }
@@ -465,11 +465,11 @@ static bool is_config_option_enabled(int option) {
     switch (option) {
     case CONFIG_GP_CH_CITY_HAS_ANIMALS: return g_scenario_data.env.has_animals;
     case CONFIG_GP_CH_FLOTSAM_ENABLED: return g_scenario_data.env.flotsam_enabled;
-    case CONFIG_GP_CH_RESOURCE_TIMBER: return can_produce_resource(RESOURCE_TIMBER);
-    case CONFIG_GP_CH_RESOURCE_COPPER: return can_produce_resource(RESOURCE_COPPER);
-    case CONFIG_GP_CH_RESOURCE_REED: return can_produce_resource(RESOURCE_REEDS);
-    case CONFIG_GP_CH_RESOURCE_FISH: return can_produce_resource(RESOURCE_FISH);
-    case CONFIG_GP_CH_RESOURCE_PAPYRUS: return can_produce_resource(RESOURCE_PAPYRUS);
+    case CONFIG_GP_CH_RESOURCE_TIMBER: return can_city_produce_resource(RESOURCE_TIMBER);
+    case CONFIG_GP_CH_RESOURCE_COPPER: return can_city_produce_resource(RESOURCE_COPPER);
+    case CONFIG_GP_CH_RESOURCE_REED: return can_city_produce_resource(RESOURCE_REEDS);
+    case CONFIG_GP_CH_RESOURCE_FISH: return can_city_produce_resource(RESOURCE_FISH);
+    case CONFIG_GP_CH_RESOURCE_PAPYRUS: return can_city_produce_resource(RESOURCE_PAPYRUS);
     case CONGIG_GP_CH_BUILDING_WOOD_CUTTER: return building_menu_is_building_enabled(BUILDING_WOOD_CUTTERS);
     case CONGIG_GP_CH_BUILDING_COPPER_MINE: return building_menu_is_building_enabled(BUILDING_COPPER_MINE);
     case CONGIG_GP_CH_BUILDING_REED_GATHERER: return building_menu_is_building_enabled(BUILDING_REED_GATHERER);
