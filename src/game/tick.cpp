@@ -127,7 +127,6 @@ static void advance_day() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Advance Day");
     //    map_advance_floodplain_growth();
 
-    city_buildings_update_month();
     if (game_time_advance_day()) {
         advance_month();
     }
