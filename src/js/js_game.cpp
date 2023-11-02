@@ -85,7 +85,7 @@ inline pcstr read_string(Arch arch, pcstr name) {
 template<typename Arch>
 inline int read_integer(Arch arch, pcstr name) {
     js_getproperty(arch, -1, name);
-    int result = js_tointeger(arch, -1);
+    int result = js_isundefined(arch, -1) ? 0 : js_tointeger(arch, -1);
     js_pop(arch, 1);
     return result;
 }
@@ -155,7 +155,8 @@ void js_config_load_images_info(js_State *arch) {
         int type = read_integer(arch, "img");
         int pack = read_integer(arch, "pack");
         int id = read_integer(arch, "id");
-        set_image_desc((e_img)type, pack, id);
+        int offset = read_integer(arch, "offset");
+        set_image_desc((e_image_id)type, pack, id, offset);
     });
 }
 

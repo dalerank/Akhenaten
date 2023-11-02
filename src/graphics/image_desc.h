@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-enum e_img : uint16_t {
+enum e_image_id : uint16_t {
     IMG_NONE = 0,
     IMG_IMMIGRANT = 1,
     IMG_IMMIGRANT_DEATH = 2,
@@ -26,14 +26,17 @@ enum e_img : uint16_t {
     IMG_ENGINEER_DEATH = 21,
     IMG_WATER_SUPPLY = 22,
     IMG_WATER_SUPPLY_FANCY = 23,
+    IMG_WELL = 24,
+    IMG_WELL_FANCY = 25,
 
     IMG_SIZE
 };
 
-struct image_desc_t {
+struct image_desc {
     int pack = 0;
     int id = 0;
+    int offset = 0;
 };
 
-void set_image_desc(e_img t, int pack, int id);
-image_desc_t get_image_desc(e_img t);
+void set_image_desc(e_image_id t, int pack, int id, int offset);
+image_desc get_image_desc(e_image_id t);

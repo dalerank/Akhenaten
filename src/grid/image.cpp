@@ -18,6 +18,12 @@ grid_xx g_images_grid_backup = {0,
 int map_image_at(int grid_offset) {
     return (int)map_grid_get(&g_images_grid, grid_offset);
 }
+
+void map_image_set(int grid_offset, e_image_id img) {
+    int image_id = image_id_from_group(img);
+    map_grid_set(&g_images_grid, grid_offset, image_id);
+}
+
 void map_image_set(int grid_offset, int image_id) {
     map_grid_set(&g_images_grid, grid_offset, image_id);
 }

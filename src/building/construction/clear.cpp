@@ -52,7 +52,7 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
     game_undo_restore_map(0);
 
     int x_min, x_max, y_min, y_max;
-    map_grid_start_end_to_area(map_point(x_start, y_start), map_point(x_end, y_end), &x_min, &y_min, &x_max, &y_max);
+    map_grid_start_end_to_area(tile2i(x_start, y_start), tile2i(x_end, y_end), &x_min, &y_min, &x_max, &y_max);
 
     int visual_feedback_on_delete = config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE);
     for (int y = y_min; y <= y_max; y++) {

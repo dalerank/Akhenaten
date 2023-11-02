@@ -1,10 +1,12 @@
 #pragma once
 
 #include "grid/point.h"
+#include "graphics/image_desc.h"
 
 class building;
 
-void map_building_tiles_add(int building_id, map_point tile, int size, int image_id, int terrain);
+void map_building_tiles_add(int building_id, tile2i tile, int size, e_image_id img, int terrain);
+void map_building_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain);
 void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_offset, int progress);
 
 void map_add_bandstand_tiles(building* b);

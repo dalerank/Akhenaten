@@ -820,6 +820,7 @@ void building_update_state(void) {
         map_routing_update_ferry_routes();
     }
 }
+
 void building_update_desirability(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Building Update Desirability");
     for (int i = 1; i < MAX_BUILDINGS; i++) {

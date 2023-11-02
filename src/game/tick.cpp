@@ -78,7 +78,7 @@ static void advance_year(void) {
     //    city_gods_reset_yearly_blessings();
 }
 
-static void advance_month(void) {
+static void advance_month() {
     city_migration_reset_newcomers();
     city_health_update();
     scenario_random_event_process();
@@ -127,6 +127,7 @@ static void advance_day() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Advance Day");
     //    map_advance_floodplain_growth();
 
+    city_buildings_update_month();
     if (game_time_advance_day()) {
         advance_month();
     }

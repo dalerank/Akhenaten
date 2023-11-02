@@ -125,6 +125,7 @@ void building_house_change_to(building* house, e_building_type type) {
     }
     map_building_tiles_add(house->id, house->tile, house->size, image_id, TERRAIN_BUILDING);
 }
+
 void building_house_change_to_vacant_lot(building* house) {
     house->type = BUILDING_HOUSE_VACANT_LOT;
     house->subtype.house_level = (e_house_level)(house->type - BUILDING_HOUSE_VACANT_LOT);

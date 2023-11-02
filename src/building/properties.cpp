@@ -98,7 +98,7 @@ static building_properties properties[400] = {
     {2, 1, 0, 0},
     {2, 1, GROUP_BUILDING_WATER_LIFT}, // ??????? water lift ???????
     {1, 1, 0, 0},
-    {1, 1, GROUP_BUILDING_WELL}, // well
+    {1, 1, 0, 0}, // well
     {1, 1, 0, 0},
     {4, 0, GROUP_BUILDING_MILITARY_ACADEMY}, // academy
     {3, 0, GROUP_BUILDING_BARRACKS},         // recruiter
@@ -241,10 +241,10 @@ const building_properties dummy_property = {0, 0, 0, 0};
 
 void building_properties_init() {
     properties[BUILDING_WATER_SUPPLY] = {2, 1, 0, 0, 0, IMG_WATER_SUPPLY};
+    properties[BUILDING_WELL] = {1, 1, 0, 0, 0, IMG_WELL};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {
-    // Roadblock properties, as plaza
     if (type >= BUILD_MAX) {
         return &dummy_property;
     }

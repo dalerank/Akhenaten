@@ -10,18 +10,18 @@ struct building_properties {
     int _image_collection;
     int _image_group;
     int image_offset;
-    e_img img = IMG_NONE;
+    e_image_id _img = IMG_NONE;
 
-    image_desc_t img_desc() const {
-        if (img == 0) {
+    image_desc img() const {
+        if (_img == 0) {
             return {_image_collection, _image_group};
         }
 
-        return get_image_desc(img);
+        return get_image_desc(_img);
     }
 
     int img_id() const {
-        return image_id_from_group(img_desc()) + image_offset;
+        return image_id_from_group(img()) + image_offset;
     }
 };
 

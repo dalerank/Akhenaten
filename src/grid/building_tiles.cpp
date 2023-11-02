@@ -50,7 +50,7 @@ static void set_crop_tile(view_context &ctx, int building_id, int x, int y, int 
     ImageDraw::isometric(ctx, crop_image_id + (growth < 4 ? growth : 4), MAP_X(grid_offset), MAP_Y(grid_offset));
 }
 
-void map_building_tiles_add(int building_id, tile2i tile, int size, e_img image_id, int terrain) {
+void map_building_tiles_add(int building_id, tile2i tile, int size, e_image_id image_id, int terrain) {
     map_building_tiles_add(building_id, tile, size, image_id_from_group(image_id), terrain);
 }
 
@@ -239,6 +239,7 @@ int map_bandstand_add_img_offset(int orientation) {
     }
     return offset;
 }
+
 void map_add_bandstand_tiles(building* b) {
     int offset = map_bandstand_main_img_offset(b->data.entertainment.orientation);
     int offset_add = map_bandstand_add_img_offset(b->data.entertainment.orientation);
@@ -246,6 +247,7 @@ void map_add_bandstand_tiles(building* b) {
     map_image_set(b->data.entertainment.latched_venue_main_grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + offset);
     map_image_set(b->data.entertainment.latched_venue_add_grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + offset_add);
 }
+
 static void set_underlying_venue_plaza_tile(int grid_offset, int building_id, int image_id, bool update_only) {
     if (!update_only) {
         map_image_set(grid_offset, image_id);

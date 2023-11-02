@@ -113,20 +113,43 @@ void map_desirability_update(void) {
 int map_desirability_get(int grid_offset) {
     return map_grid_get(&desirability_grid, grid_offset);
 }
+
 int map_desirability_get_max(int x, int y, int size) {
-    if (size == 1)
+    if (size == 1) {
         return map_grid_get(&desirability_grid, MAP_OFFSET(x, y));
+    }
 
     int max = -9999;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = MAP_OFFSET(x + dx, y + dy);
-            if (map_grid_get(&desirability_grid, grid_offset) > max)
-                max = map_grid_get(&desirability_grid, grid_offset);
+            int value = map_grid_get(&desirability_grid, grid_offset);
+            max = std::max(value, max);
         }
     }
     return max;
 }
 
-io_buffer* iob_desirability_grid
-  = new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &desirability_grid); });
+int map_desirabilty_avg(int x, int y, int size) {
+    if (size == 1) {
+        return map_grid_get(&desirability_grid, MAP_OFFSET(x, y));
+    }
+    int x_min, x_max, y_min, y_max;
+    map_grid_start_end_to_area(tile2i(x - size, y - size), tile2i(x + size, y + size), &x_min, &y_min, &x_max, &y_max);
+
+    int summ = 0;
+    int count = 1;
+    for (int y = y_min; y <= y_max; y++) {
+        for (int x = x_min; x <= x_max; x++) {
+            int grid_offset = MAP_OFFSET(x, y);
+            summ += map_grid_get(&desirability_grid, grid_offset);
+            count++;
+        }
+    }
+
+    return summ / count;
+}
+
+io_buffer* iob_desirability_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &desirability_grid);
+});

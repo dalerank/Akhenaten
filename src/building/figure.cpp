@@ -1155,6 +1155,28 @@ void building::update_month() {
             f->sender_building_id = this->id;
         }
         break;
+
+    case BUILDING_WATER_SUPPLY:
+        {
+            int avg_desirability = map_desirabilty_avg(tile.x(), tile.y(), 4);
+            if (avg_desirability > 30) {
+                map_building_tiles_add(id, tile, 2, IMG_WATER_SUPPLY_FANCY, TERRAIN_BUILDING);
+            } else {
+                map_building_tiles_add(id, tile, 2, IMG_WATER_SUPPLY, TERRAIN_BUILDING);
+            }
+        }
+        break;
+
+    case BUILDING_WELL:
+        {
+            int avg_desirability = map_desirabilty_avg(tile.x(), tile.y(), 4);
+            if (avg_desirability > 30) {
+                map_image_set(tile.grid_offset(), IMG_WELL_FANCY);
+            } else {
+                map_image_set(tile.grid_offset(), IMG_WELL);
+            }
+        }
+        break;
     }
 }
 

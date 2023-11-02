@@ -226,13 +226,13 @@ int image_id_resource_icon(int resource) {
     return image_id_from_group(GROUP_RESOURCE_ICONS) + resource;
 }
 
-int image_id_from_group(image_desc_t desc) {
+int image_id_from_group(image_desc desc) {
     return image_id_from_group(desc.pack, desc.id);
 }
 
-int image_id_from_group(e_img type) {
-    image_desc_t desc = get_image_desc(type);
-    return image_id_from_group(desc.pack, desc.id);
+int image_id_from_group(e_image_id type) {
+    image_desc desc = get_image_desc(type);
+    return image_id_from_group(desc.pack, desc.id) + desc.offset;
 }
 
 int image_id_from_group(int collection, int group, int pak_cache_idx) {

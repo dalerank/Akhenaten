@@ -70,7 +70,7 @@ static void draw_building(view_context &ctx, tile2i tile, int screen_x, int scre
         if (type == BUILDING_NATIVE_CROPS) {
             image_id = image_id_from_group(GROUP_EDITOR_BUILDING_CROPS);
         } else {
-            image_desc_t desc = props->img_desc();
+            image_desc desc = props->img();
             image_id = image_id_from_group(desc) + props->image_offset;
         }
         draw_building_image(ctx, image_id, screen_x, screen_y);

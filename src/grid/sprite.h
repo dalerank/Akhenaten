@@ -1,5 +1,4 @@
-#ifndef MAP_SPRITE_H
-#define MAP_SPRITE_H
+#pragma once
 
 #include "core/buffer.h"
 
@@ -15,9 +14,7 @@ int map_sprite_animation_at(int grid_offset);
 void map_sprite_animation_set(int grid_offset, int value);
 
 void map_sprite_clear_tile(int grid_offset);
-void map_sprite_clear(void);
+void map_sprite_clear();
 
-void map_sprite_backup(void);
-void map_sprite_restore(void);
-
-#endif // MAP_SPRITE_H
+void map_sprite_backup();
+void map_sprite_restore();

@@ -19,12 +19,12 @@ struct figure_action_property {
     short max_roam_length;
     int _image_collection;
     int _image_group;
-    e_img image_desc = IMG_NONE;
+    e_image_id _img = IMG_NONE;
 
-    image_desc_t img() {
-        return (image_desc == IMG_NONE)
-                    ? image_desc_t{_image_collection, _image_group}
-                    : get_image_desc(image_desc);
+    image_desc img() {
+        return (_img == IMG_NONE)
+                    ? image_desc{_image_collection, _image_group}
+                    : get_image_desc(_img);
     }
 };
 
@@ -346,7 +346,7 @@ void figure::action_perform() {
         }
         max_roam_length = action_properties.max_roam_length;
         speed_multiplier = action_properties.speed_mult;
-        image_desc_t img = action_properties.img();
+        image_desc img = action_properties.img();
         image_set_animation(img.pack, img.id);
 
         // check for building being alive (at the start of the action)

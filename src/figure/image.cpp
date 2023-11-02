@@ -75,8 +75,8 @@ vec2i figure::tile_pixel_coords() {
     return {x, y};
 }
 
-void figure::image_set_animation(e_img img, int offset, int max_frames, int duration) {
-    image_desc_t desc = get_image_desc(img);
+void figure::image_set_animation(e_image_id img, int offset, int max_frames, int duration) {
+    image_desc desc = get_image_desc(img);
     image_set_animation(desc.pack, desc.id, offset, max_frames, duration);
 }
 

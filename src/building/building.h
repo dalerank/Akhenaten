@@ -58,7 +58,7 @@ public:
     unsigned char size;
     unsigned char house_is_merged;
     unsigned char house_size;
-    map_point tile;
+    tile2i tile;
     //    unsigned char x;
     //    unsigned char y;
     //    unsigned short grid_offset;

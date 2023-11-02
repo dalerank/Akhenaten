@@ -1,6 +1,7 @@
 #pragma once
 
 #include "io/io_buffer.h"
+#include "graphics/image_desc.h"
 
 class io_image_grid : public io_buffer {
 public:
@@ -16,6 +17,7 @@ public:
 
 int map_image_at(int grid_offset);
 void map_image_set(int grid_offset, int image_id);
+void map_image_set(int grid_offset, e_image_id img);
 
 void map_image_backup(void);
 void map_image_restore(void);
