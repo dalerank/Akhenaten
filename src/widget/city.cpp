@@ -364,10 +364,11 @@ static void handle_touch_zoom(const touch* first, const touch* last) {
     if (first->has_ended || last->has_ended)
         zoom_end_touch();
 }
+
 static void handle_first_touch(map_point tile) {
     auto& data = g_wdiget_city_data;
     const touch* first = get_earliest_touch();
-    int type = Planner.build_type;
+    e_building_type type = Planner.build_type;
 
     if (touch_was_click(first)) {
         if (handle_cancel_construction_button(first) || handle_legion_click(tile))

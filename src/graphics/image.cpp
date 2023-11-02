@@ -226,6 +226,10 @@ int image_id_resource_icon(int resource) {
     return image_id_from_group(GROUP_RESOURCE_ICONS) + resource;
 }
 
+int image_id_from_group(image_desc_t desc) {
+    return image_id_from_group(desc.pack, desc.id);
+}
+
 int image_id_from_group(e_img type) {
     image_desc_t desc = get_image_desc(type);
     return image_id_from_group(desc.pack, desc.id);

@@ -50,7 +50,11 @@ static void set_crop_tile(view_context &ctx, int building_id, int x, int y, int 
     ImageDraw::isometric(ctx, crop_image_id + (growth < 4 ? growth : 4), MAP_X(grid_offset), MAP_Y(grid_offset));
 }
 
-void map_building_tiles_add(int building_id, map_point tile, int size, int image_id, int terrain) {
+void map_building_tiles_add(int building_id, tile2i tile, int size, e_img image_id, int terrain) {
+    map_building_tiles_add(building_id, tile, size, image_id_from_group(image_id), terrain);
+}
+
+void map_building_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain) {
     int x_leftmost, y_leftmost;
     switch (city_view_orientation()) {
     case DIR_0_TOP_RIGHT:

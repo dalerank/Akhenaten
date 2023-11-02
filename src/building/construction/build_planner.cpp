@@ -541,7 +541,7 @@ static void add_building(building* b, int orientation, int variant) {
 
     case BUILDING_WATER_LIFT: {
         auto props = building_properties_for_type(b->type);
-        map_water_add_building(b->id, b->tile, props->size, image_id_from_group(props->image_collection, props->image_group) + orientation_rel + 4 * variant);
+        map_water_add_building(b->id, b->tile, props->size, props->img_id() + orientation_rel + 4 * variant);
         break;
     }
 
@@ -551,14 +551,14 @@ static void add_building(building* b, int orientation, int variant) {
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_DOCK: {
         auto props = building_properties_for_type(b->type);
-        map_water_add_building(b->id, b->tile, props->size, image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
+        map_water_add_building(b->id, b->tile, props->size, props->img_id() + orientation_rel);
         break;
     }
 
     case BUILDING_FERRY: {
         auto props = building_properties_for_type(b->type);
-        map_water_add_building(b->id, b->tile, props->size, image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
-        place_ferry(b, props->size, image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
+        map_water_add_building(b->id, b->tile, props->size, props->img_id() + orientation_rel);
+        place_ferry(b, props->size, props->img_id() + orientation_rel);
         break;
     }
         // defense
@@ -596,7 +596,7 @@ static void add_building(building* b, int orientation, int variant) {
 
     default:
         auto p = building_properties_for_type(b->type);
-        add_building_tiles_image(b, image_id_from_group(p->image_collection, p->image_group) + p->image_offset);
+        add_building_tiles_image(b, p->img_id());
         break;
     }
 }
@@ -1264,9 +1264,7 @@ void BuildPlanner::setup_build_graphics() {
         break;
 
     case BUILDING_WATER_LIFT:
-        set_tiles_building(image_id_from_group(props->image_collection, props->image_group) + relative_orientation
-                             + variant * 4,
-                           props->size);
+        set_tiles_building(props->img_id() + relative_orientation + variant * 4, props->size);
         break;
 
     case BUILDING_FISHING_WHARF:
@@ -1275,8 +1273,7 @@ void BuildPlanner::setup_build_graphics() {
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_TRANSPORT_WHARF:
     case BUILDING_FERRY:
-        set_tiles_building(image_id_from_group(props->image_collection, props->image_group) + relative_orientation,
-                           props->size);
+        set_tiles_building(props->img_id() + relative_orientation, props->size);
         break;
 
     case BUILDING_LOW_BRIDGE:
@@ -1291,7 +1288,7 @@ void BuildPlanner::setup_build_graphics() {
         break;
 
     case BUILDING_STORAGE_YARD:
-        set_tiles_building(image_id_from_group(props->image_collection, props->image_group), 3);
+        set_tiles_building(props->img_id(), 3);
         break;
 
     case BUILDING_BOOTH:
@@ -1311,7 +1308,7 @@ void BuildPlanner::setup_build_graphics() {
         break;
 
     default: // regular buildings
-        set_tiles_building(image_id_from_group(props->image_collection, props->image_group), props->size);
+        set_tiles_building(props->img_id(), props->size);
         break;
     }
 }

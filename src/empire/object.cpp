@@ -97,7 +97,7 @@ static void fix_image_ids(void) {
 
 // static int objects_are_loaded = 0;
 
-void empire_object_init_cities(void) {
+void empire_object_init_cities() {
     auto& objects = g_empire_objects;
     empire_city_clear_all();
     //    int route_index = 1;

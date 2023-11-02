@@ -4,6 +4,7 @@
 #include "building/granary.h"
 #include "building/maintenance.h"
 #include "building/menu.h"
+#include "building/properties.h"
 #include "building/storage.h"
 #include "city/city_data.h"
 #include "city/emperor.h"
@@ -693,6 +694,8 @@ void GamestateIO::start_loaded_file() {
         // tutorial flags
         tutorial_init();
     }
+
+    building_properties_init();
 
     // city view / orientation
     city_view_init();

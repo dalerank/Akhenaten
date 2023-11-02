@@ -24,6 +24,8 @@ enum e_img : uint16_t {
     IMG_FISHING_POINT_BUBLES = 19,
     IMG_ENGINEER = 20,
     IMG_ENGINEER_DEATH = 21,
+    IMG_WATER_SUPPLY = 22,
+    IMG_WATER_SUPPLY_FANCY = 23,
 
     IMG_SIZE
 };

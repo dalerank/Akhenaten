@@ -82,7 +82,7 @@ struct reservoir_range_data_t {
 reservoir_range_data_t reservoir_range_data;
 
 static int get_building_image_id(int map_x, int map_y, int type, const building_properties* props) {
-    int image_id = image_id_from_group(props->image_collection, props->image_group) + props->image_offset;
+    int image_id = props->img_id();
     if (type == BUILDING_GATEHOUSE) {
         int orientation = map_orientation_for_gatehouse(map_x, map_y);
         int image_offset;

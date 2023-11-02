@@ -49,7 +49,7 @@ static void draw_building_image(view_context &ctx, int image_id, int x, int y) {
     //    ImageDraw::isometric_top(image_id, x, y, COLOR_MASK_GREEN, city_view_get_scale_float());
 }
 
-static void draw_building(view_context &ctx, tile2i tile, int screen_x, int screen_y, int type) {
+static void draw_building(view_context &ctx, tile2i tile, int screen_x, int screen_y, e_building_type type) {
     const building_properties* props = building_properties_for_type(type);
 
     int num_tiles = props->size * props->size;
@@ -67,10 +67,12 @@ static void draw_building(view_context &ctx, tile2i tile, int screen_x, int scre
         }
     } else {
         int image_id;
-        if (type == BUILDING_NATIVE_CROPS)
+        if (type == BUILDING_NATIVE_CROPS) {
             image_id = image_id_from_group(GROUP_EDITOR_BUILDING_CROPS);
-        else
-            image_id = image_id_from_group(props->image_collection, props->image_group) + props->image_offset;
+        } else {
+            image_desc_t desc = props->img_desc();
+            image_id = image_id_from_group(desc) + props->image_offset;
+        }
         draw_building_image(ctx, image_id, screen_x, screen_y);
     }
 }
