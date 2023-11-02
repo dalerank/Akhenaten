@@ -3,13 +3,10 @@
 #include "building/building_type.h"
 #include "figure/figure.h"
 #include "game/state.h"
+#include "grid/property.h"
 
 static int show_figure_education(const figure* f) {
     return f->type == FIGURE_SCRIBER || f->type == FIGURE_LIBRARIAN || f->type == FIGURE_TEACHER;
-}
-
-static int show_figure_school(const figure* f) {
-    return f->type == FIGURE_TEACHER;
 }
 
 static int show_figure_library(const figure* f) {
@@ -22,10 +19,6 @@ static int show_figure_academy(const figure* f) {
 
 static int get_column_height_education(const building* b) {
     return b->house_size && b->data.house.education ? b->data.house.education * 3 - 1 : NO_COLUMN;
-}
-
-static int get_column_height_school(const building* b) {
-    return b->house_size && b->data.house.school ? b->data.house.school / 10 : NO_COLUMN;
 }
 
 static int get_column_height_library(const building* b) {
@@ -48,18 +41,6 @@ static int get_tooltip_education(tooltip_context* c, const building* b) {
         return 103;
     default:
         return 0;
-    }
-}
-
-static int get_tooltip_school(tooltip_context* c, const building* b) {
-    if (b->data.house.school <= 0)
-        return 19;
-    else if (b->data.house.school >= 80)
-        return 20;
-    else if (b->data.house.school >= 20)
-        return 21;
-    else {
-        return 22;
     }
 }
 
@@ -106,27 +87,6 @@ city_overlay_education g_city_overlay_education;
 
 city_overlay* city_overlay_for_education() {
     return &g_city_overlay_education;
-}
-
-struct city_overlay_schools : public city_overlay {
-    city_overlay_schools() {
-        type = OVERLAY_SCRIBAL_SCHOOL;
-        column_type = COLUMN_TYPE_WATER_ACCESS;
-
-        show_figure_func = show_figure_school;
-        get_column_height = get_column_height_school;
-        get_tooltip_for_building = get_tooltip_school;
-    }
-
-    bool show_building(const building* b) const override {
-        return b->type == BUILDING_SCRIBAL_SCHOOL;
-    }
-};
-
-city_overlay_schools g_city_overlay_schools;
-
-city_overlay* city_overlay_for_scribal_school() {
-    return &g_city_overlay_schools;
 }
 
 struct city_overlay_libraries : public city_overlay {
