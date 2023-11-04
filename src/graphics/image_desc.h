@@ -28,6 +28,7 @@ enum e_image_id : uint16_t {
     IMG_WATER_SUPPLY_FANCY = 23,
     IMG_WELL = 24,
     IMG_WELL_FANCY = 25,
+    IMG_EXPLOSION = 26,
 
     IMG_SIZE
 };

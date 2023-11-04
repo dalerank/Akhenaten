@@ -40,6 +40,7 @@ void js_register_city_images(js_State *J) {
    REGISTER_GLOBAL_CONSTANT(J, IMG_WATER_SUPPLY_FANCY);
    REGISTER_GLOBAL_CONSTANT(J, IMG_WELL);
    REGISTER_GLOBAL_CONSTANT(J, IMG_WELL_FANCY);
+   REGISTER_GLOBAL_CONSTANT(J, IMG_EXPLOSION);
 }
 
 void js_register_collection_images(js_State *J) {
