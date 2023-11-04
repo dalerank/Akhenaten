@@ -282,6 +282,8 @@ void map_grid_get_area(tile2i tile, int size, int radius, tile2i &tmin, tile2i &
 }
 
 void map_grid_start_end_to_area(tile2i start, tile2i end, tile2i &tmin, tile2i &tmax) {
+    tmin.set(0, 0);
+    tmax.set(0, 0);
     if (start.x() < end.x()) {
         tmin.set_x(start.x());
         tmax.set_x(end.x());
