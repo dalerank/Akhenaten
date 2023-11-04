@@ -52,4 +52,6 @@ building_sounds = [
 	{ type: "mortuary", 								sound: "wavs/mortuary.wav"},
 	{ type: "physician", 								sound: "wavs/physician.wav"},
 	{ type: "school_scribe",						sound: "wavs/school_scribe.wav"}
+	{ type: "papyrus_workshop",				  sound: "wavs/paper.wav"},
+	{ type: "cattle_ranch",				 	 		sound: "wavs/cowfarm_r.wav"},
 ]
