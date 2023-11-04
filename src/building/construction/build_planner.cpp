@@ -1754,7 +1754,7 @@ void BuildPlanner::construction_update(tile2i tile) {
     int items_placed = 1;
     switch (build_type) {
     case BUILDING_CLEAR_LAND:
-        items_placed = last_items_cleared = building_construction_clear_land(true, start.x(), start.y(), end.x(), end.y());
+        items_placed = last_items_cleared = building_construction_clear_land(true, start, end);
         break;
     case BUILDING_WALL:
         items_placed = building_construction_place_wall(true, start.x(), start.y(), end.x(), end.y());
@@ -1956,7 +1956,7 @@ bool BuildPlanner::place() {
         // the previous cost is deducted from treasury and if user chooses 'no', they still pay for removal.
         // If we don't do it this way, the user doesn't pay for the removal at all since we don't come back
         // here when the user says yes.
-        int items_placed = building_construction_clear_land(false, start.x(), start.y(), end.x(), end.y());
+        int items_placed = building_construction_clear_land(false, start, end);
         if (items_placed < 0)
             items_placed = last_items_cleared;
         placement_cost *= items_placed;
