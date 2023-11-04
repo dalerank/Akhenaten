@@ -144,9 +144,10 @@ static generic_button checkbox_buttons[] = {
     {20, 120, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_REED, TR_CONFIG_RESOURCE_REED},
     {20, 144, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_PAPYRUS, TR_CONFIG_RESOURCE_PAPYRUS},
     {20, 168, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_FISH, TR_CONFIG_RESOURCE_FISH},
+    {20, 192, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CHICKPEAS, TR_CONFIG_RESOURCE_CHICKPEAS},
 };
 
-static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 14, 5, 7, 5};
+static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 14, 5, 7, 6};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -408,6 +409,7 @@ static void toggle_resource(int id, int param2) {
     case CONFIG_GP_CH_RESOURCE_REED: resource = RESOURCE_REEDS; break;
     case CONFIG_GP_CH_RESOURCE_PAPYRUS: resource = RESOURCE_PAPYRUS; break;
     case CONFIG_GP_CH_RESOURCE_FISH: resource = RESOURCE_FISH; break;
+    case CONFIG_GP_CH_RESOURCE_CHICKPEAS: resource = RESOURCE_CHICKPEAS; break;
     default:
         return;
     }
@@ -478,6 +480,7 @@ static bool is_config_option_enabled(int option) {
     case CONFIG_GP_CH_RESOURCE_COPPER: return can_city_produce_resource(RESOURCE_COPPER);
     case CONFIG_GP_CH_RESOURCE_REED: return can_city_produce_resource(RESOURCE_REEDS);
     case CONFIG_GP_CH_RESOURCE_FISH: return can_city_produce_resource(RESOURCE_FISH);
+    case CONFIG_GP_CH_RESOURCE_CHICKPEAS: return can_city_produce_resource(RESOURCE_CHICKPEAS);
     case CONFIG_GP_CH_RESOURCE_PAPYRUS: return can_city_produce_resource(RESOURCE_PAPYRUS);
     case CONGIG_GP_CH_BUILDING_WOOD_CUTTER: return building_menu_is_building_enabled(BUILDING_WOOD_CUTTERS);
     case CONGIG_GP_CH_BUILDING_COPPER_MINE: return building_menu_is_building_enabled(BUILDING_COPPER_MINE);
