@@ -1329,7 +1329,7 @@ void BuildPlanner::update_obstructions_check() {
                 restricted_terrain -= TERRAIN_FLOODPLAIN;
             }
 
-            bool can_blocked_by_floodplain_edge = true;
+            bool can_blocked_by_floodplain_edge = !building_is_farm(build_type);
             if (special_flags & PlannerFlags::Road
                 || special_flags & PlannerFlags::Intersection
                 || special_flags & PlannerFlags::Canals) {
