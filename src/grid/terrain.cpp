@@ -128,15 +128,15 @@ bool map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain) {
 bool map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terrain) {
     for (int yy = y; yy < y + size; yy++) {
         for (int xx = x; xx < x + size; xx++) {
-            if (map_grid_is_inside(xx, yy, 1) && map_grid_get(&g_terrain_grid, MAP_OFFSET(xx, yy)) & terrain)
+            if (map_grid_is_inside(tile2i(xx, yy), 1) && map_grid_get(&g_terrain_grid, MAP_OFFSET(xx, yy)) & terrain)
                 return true;
         }
     }
     return false;
 }
-bool map_terrain_exists_tile_in_radius_with_type(int x, int y, int size, int radius, int terrain) {
+bool map_terrain_exists_tile_in_radius_with_type(tile2i tile, int size, int radius, int terrain) {
     tile2i tmin, tmax;
-    map_grid_get_area(tile2i(x, y), size, radius, tmin, tmax);
+    map_grid_get_area(tile, size, radius, tmin, tmax);
 
     for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
         for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
@@ -179,13 +179,13 @@ bool map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius,
     return false;
 }
 
-bool map_terrain_all_tiles_in_area_are(int x, int y, int size, int terrain) {
-    if (!map_grid_is_inside(x, y, size))
+bool map_terrain_all_tiles_in_area_are(tile2i tile, int size, int terrain) {
+    if (!map_grid_is_inside(tile, size))
         return false;
 
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            int grid_offset = MAP_OFFSET(x + dx, y + dy);
+            int grid_offset = tile.shifted(dx, dy).grid_offset();
             //            if ((map_terrain_get(grid_offset) & TERRAIN_NOT_CLEAR) != terrain)
             if (!map_terrain_is(grid_offset, terrain))
                 return false;

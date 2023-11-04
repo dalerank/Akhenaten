@@ -788,7 +788,7 @@ void building_update_state(void) {
                     water_routes_recalc = true;
                 }
 
-                map_building_tiles_remove(i, b->tile.x(), b->tile.y());
+                map_building_tiles_remove(i, b->tile);
                 road_recalc = true; // always recalc underlying road tiles
                 land_recalc = true;
                 building_delete_UNSAFE(b);

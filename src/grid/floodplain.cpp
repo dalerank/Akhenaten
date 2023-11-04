@@ -209,14 +209,13 @@ void map_update_area_fertility(int x, int y, int size, int delta) {
 }
 
 uint8_t map_get_fertility_for_farm(int grid_offset) {
-    int x = MAP_X(grid_offset);
-    int y = MAP_Y(grid_offset);
+    tile2i tile(grid_offset);
 
     bool is_irrigated = false;
     if (config_get(CONFIG_GP_FIX_IRRIGATION_RANGE)) {
-        is_irrigated = map_terrain_exists_tile_in_area_with_type(x, y, 3, TERRAIN_IRRIGATION_RANGE);
+        is_irrigated = map_terrain_exists_tile_in_area_with_type(tile.x(), tile.y(), 3, TERRAIN_IRRIGATION_RANGE);
     } else {
-        is_irrigated = map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_IRRIGATION_RANGE);
+        is_irrigated = map_terrain_exists_tile_in_radius_with_type(tile, 1, 2, TERRAIN_IRRIGATION_RANGE);
     }
     int irrigation_bonus = 40;
 
@@ -224,7 +223,7 @@ uint8_t map_get_fertility_for_farm(int grid_offset) {
         irrigation_bonus = 20;
     }
 
-    return std::min(2 + map_get_fertility_average(x, y, 3) + is_irrigated * irrigation_bonus, 99);
+    return std::min(2 + map_get_fertility_average(tile.x(), tile.y(), 3) + is_irrigated * irrigation_bonus, 99);
 }
 
 void map_set_floodplain_growth(int grid_offset, int growth) {

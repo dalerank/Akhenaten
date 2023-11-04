@@ -154,12 +154,12 @@ static void add_terrain(const void* tile_data, int dx, int dy) {
     map_point tile = *(map_point*)tile_data;
     int x = tile.x() + dx;
     int y = tile.y() + dy;
-    if (!map_grid_is_inside(x, y, 1))
+    if (!map_grid_is_inside(tile2i(x, y), 1))
         return;
     int grid_offset = tile.grid_offset() + GRID_OFFSET(dx, dy);
     int terrain = map_terrain_get(grid_offset);
     if (terrain & TERRAIN_BUILDING) {
-        map_building_tiles_remove(0, x, y);
+        map_building_tiles_remove(0, tile2i(x, y));
         terrain = map_terrain_get(grid_offset);
     }
     switch (data.type) {

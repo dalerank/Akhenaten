@@ -57,17 +57,19 @@ void map_clear_highlights(void) {
     map_grid_clear(&highlight_grid);
 }
 
-io_buffer* iob_building_grid
-  = new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &buildings_grid); });
+io_buffer* iob_building_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &buildings_grid);
+});
 
-io_buffer* iob_damage_grid
-  = new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &damage_grid); });
+io_buffer* iob_damage_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &damage_grid);
+});
 
-int map_building_is_reservoir(int x, int y) {
-    if (!map_grid_is_inside(x, y, 3))
+int map_building_is_reservoir(tile2i tile) {
+    if (!map_grid_is_inside(tile, 3))
         return 0;
 
-    int grid_offset = MAP_OFFSET(x, y);
+    int grid_offset = tile.grid_offset();
     int building_id = map_building_at(grid_offset);
     if (!building_id || building_get(building_id)->type != BUILDING_WATER_LIFT)
         return 0;

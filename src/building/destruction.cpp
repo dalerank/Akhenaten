@@ -58,7 +58,7 @@ static void destroy_on_fire(building* b, bool plagued) {
         }
     }
 
-    map_building_tiles_remove(b->id, b->tile.x(), b->tile.y());
+    map_building_tiles_remove(b->id, b->tile);
     unsigned int rand_int = random_short();
     if (map_terrain_is(b->tile.grid_offset(), TERRAIN_WATER)) {
         b->state = BUILDING_STATE_DELETED_BY_GAME;

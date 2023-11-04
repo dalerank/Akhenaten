@@ -78,7 +78,7 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
                 } else if (map_terrain_is(grid_offset, TERRAIN_CANAL)
                            || (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
                            && map_terrain_is(grid_offset, TERRAIN_CLEARABLE)
-                           && !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN))) {
+                           && !map_terrain_exists_tile_in_radius_with_type(tile2i(x, y), 1, 1, TERRAIN_FLOODPLAIN))) {
                     items_placed++;
                 }
                 continue;

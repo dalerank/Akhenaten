@@ -300,11 +300,7 @@ void map_grid_start_end_to_area(tile2i start, tile2i end, tile2i &tmin, tile2i &
     map_grid_bound_area(tmin, tmax);
 }
 
-int map_grid_is_inside(map_point tile, int size) {
-    return map_grid_is_inside(tile.x(), tile.y(), size);
-}
-
-int map_grid_is_inside(int x, int y, int size) {
+int map_grid_is_inside(tile2i tile, int size) {
    //if (GAME_ENV == ENGINE_ENV_C3)
    //    return x >= 0 && x + size <= scenario_map_data()->width && y >= 0 && y + size <= scenario_map_data()->height;
    //else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
@@ -329,6 +325,8 @@ int map_grid_is_inside(int x, int y, int size) {
     int min_y = 0;
     int max_y = scenario_map_data()->height;
 
+    int x = tile.x();
+    int y = tile.y();
     return x >= min_x && x + size <= max_x && y >= min_y && y + size <= max_y;
 }
 

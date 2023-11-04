@@ -131,7 +131,7 @@ void building_house_change_to_vacant_lot(building* house) {
     house->subtype.house_level = (e_house_level)(house->type - BUILDING_HOUSE_VACANT_LOT);
     int image_id = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
     if (house->house_is_merged) {
-        map_building_tiles_remove(house->id, house->tile.x(), house->tile.y());
+        map_building_tiles_remove(house->id, house->tile);
         house->house_is_merged = 0;
         house->size = house->house_size = 1;
         map_building_tiles_add(house->id, house->tile, 1, image_id, TERRAIN_BUILDING);
@@ -180,7 +180,7 @@ static void merge(building* b) {
     if (HOUSE_IMAGE[b->subtype.house_level].offset)
         image_id += 1;
 
-    map_building_tiles_remove(b->id, b->tile.x(), b->tile.y());
+    map_building_tiles_remove(b->id, b->tile);
     b->tile.set(g_merge_data.x, g_merge_data.y);
     //    b->tile.x() = merge_data.x;
     //    b->tile.y() = merge_data.y;
@@ -317,7 +317,7 @@ static void split_size2(building* house, e_building_type new_type) {
     int population_per_tile = house->house_population / 4;
     int population_remainder = house->house_population % 4;
 
-    map_building_tiles_remove(house->id, house->tile.x(), house->tile.y());
+    map_building_tiles_remove(house->id, house->tile);
 
     // main tile
     house->type = new_type;
@@ -334,12 +334,9 @@ static void split_size2(building* house, e_building_type new_type) {
     map_building_tiles_add(house->id, house->tile, house->size, image_id + (map_random_get(house->tile.grid_offset()) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
-    create_house_tile(
-      house->type, house->tile.x() + 1, house->tile.y(), image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(
-      house->type, house->tile.x(), house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(
-      house->type, house->tile.x() + 1, house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(house->type, house->tile.x() + 1, house->tile.y(), image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(house->type, house->tile.x(), house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(house->type, house->tile.x() + 1, house->tile.y() + 1, image_id, population_per_tile, inventory_per_tile);
 }
 static void split_size3(building* house) {
     int inventory_per_tile[INVENTORY_MAX];
@@ -351,7 +348,7 @@ static void split_size3(building* house) {
     int population_per_tile = house->house_population / 9;
     int population_remainder = house->house_population % 9;
 
-    map_building_tiles_remove(house->id, house->tile.x(), house->tile.y());
+    map_building_tiles_remove(house->id, house->tile);
 
     // main tile
     house->type = BUILDING_HOUSE_SPACIOUS_APARTMENT;
@@ -406,7 +403,7 @@ void building_house_expand_to_large_insula(building* house) {
         house->data.house.inventory[i] += g_merge_data.inventory[i];
     }
     int image_id = house_image_group(house->subtype.house_level) + (map_random_get(house->tile.grid_offset()) & 1);
-    map_building_tiles_remove(house->id, house->tile.x(), house->tile.y());
+    map_building_tiles_remove(house->id, house->tile);
     house->tile.set(g_merge_data.x, g_merge_data.y);
     //    house->tile.x() = merge_data.x;
     //    house->tile.y() = merge_data.y;
@@ -425,7 +422,7 @@ void building_house_expand_to_large_villa(building* house) {
         house->data.house.inventory[i] += g_merge_data.inventory[i];
     }
     int image_id = house_image_group(house->subtype.house_level);
-    map_building_tiles_remove(house->id, house->tile.x(), house->tile.y());
+    map_building_tiles_remove(house->id, house->tile);
     house->tile.set(g_merge_data.x, g_merge_data.y);
     //    house->tile.x() = merge_data.x;
     //    house->tile.y() = merge_data.y;
@@ -444,7 +441,7 @@ void building_house_expand_to_large_palace(building* house) {
         house->data.house.inventory[i] += g_merge_data.inventory[i];
     }
     int image_id = house_image_group(house->subtype.house_level);
-    map_building_tiles_remove(house->id, house->tile.x(), house->tile.y());
+    map_building_tiles_remove(house->id, house->tile);
     house->tile.set(g_merge_data.x, g_merge_data.y);
     //    house->tile.x() = merge_data.x;
     //    house->tile.y() = merge_data.y;
@@ -468,7 +465,7 @@ void building_house_devolve_from_large_villa(building* house) {
     int population_per_tile = house->house_population / 6;
     int population_remainder = house->house_population % 6;
 
-    map_building_tiles_remove(house->id, house->tile.x(), house->tile.y());
+    map_building_tiles_remove(house->id, house->tile);
 
     // main tile
     house->type = BUILDING_HOUSE_FANCY_RESIDENCE;
@@ -503,7 +500,7 @@ void building_house_devolve_from_large_palace(building* house) {
     int population_per_tile = house->house_population / 8;
     int population_remainder = house->house_population % 8;
 
-    map_building_tiles_remove(house->id, house->tile.x(), house->tile.y());
+    map_building_tiles_remove(house->id, house->tile);
 
     // main tile
     house->type = BUILDING_HOUSE_MEDIUM_PALACE;

@@ -15,25 +15,28 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 
-static int north_tile_grid_offset(int x, int y, int* size) {
-    int grid_offset = MAP_OFFSET(x, y);
+static int north_tile_grid_offset(tile2i tile, int* size) {
+    int grid_offset = tile.grid_offset();
     *size = map_property_multi_tile_size(grid_offset);
+    
     for (int i = 0; i < *size && map_property_multi_tile_x(grid_offset); i++)
         grid_offset += GRID_OFFSET(-1, 0);
+
     for (int i = 0; i < *size && map_property_multi_tile_y(grid_offset); i++)
         grid_offset += GRID_OFFSET(0, -1);
+
     return grid_offset;
 }
-static void adjust_to_absolute_xy(int* x, int* y, int size) {
+static void adjust_to_absolute_xy(tile2i tile, int size) {
     switch (city_view_orientation()) {
     case DIR_2_BOTTOM_RIGHT:
-        *x = *x - size + 1;
+        tile.set_x(tile.x() - size + 1);
         break;
     case DIR_4_BOTTOM_LEFT:
-        *x = *x - size + 1;
+        tile.set(tile.x() - size + 1);
         // fall-through
     case DIR_6_TOP_LEFT:
-        *y = *y - size + 1;
+        tile.set_y(tile.y() - size + 1);
         break;
     }
 }
@@ -469,13 +472,16 @@ void map_building_tiles_add_temple_complex_parts(building* b) {
     }
 }
 
-void map_building_tiles_remove(int building_id, int x, int y) {
-    if (!map_grid_is_inside(x, y, 1))
+void map_building_tiles_remove(int building_id, tile2i tile) {
+    if (!map_grid_is_inside(tile, 1)) {
         return;
+    }
+
     int size; // todo: monuments???
-    int base_grid_offset = north_tile_grid_offset(x, y, &size);
+    int base_grid_offset = north_tile_grid_offset(tile, &size);
     if (map_terrain_get(base_grid_offset) == TERRAIN_ROCK)
         return;
+
     building* b = building_get(building_id);
     if (building_id && building_is_farm(b->type))
         size = 3;
@@ -498,8 +504,8 @@ void map_building_tiles_remove(int building_id, int x, int y) {
         break;
     }
 
-    x = MAP_X(base_grid_offset);
-    y = MAP_Y(base_grid_offset);
+    int x = MAP_X(base_grid_offset);
+    int y = MAP_Y(base_grid_offset);
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = MAP_OFFSET(x + dx, y + dy);
@@ -531,8 +537,9 @@ void map_building_tiles_remove(int building_id, int x, int y) {
     map_tiles_update_region_meadow(x - 2, y - 2, x + size + 2, y + size + 2);
     map_tiles_update_region_rubble(x, y, x + size, y + size);
 }
+
 void map_building_tiles_set_rubble(int building_id, tile2i tile, int size) {
-    if (!map_grid_is_inside(tile.x(), tile.y(), size)) {
+    if (!map_grid_is_inside(tile, size)) {
         return;
     }
     building* b = building_get(building_id);
@@ -566,20 +573,24 @@ void map_building_tiles_set_rubble(int building_id, tile2i tile, int size) {
         }
     }
 }
-bool map_building_tiles_mark_construction(int x, int y, int size_x, int size_y, int terrain, bool absolute_xy) {
-    if (!absolute_xy)
-        adjust_to_absolute_xy(&x, &y, size_x); // todo??
 
-    if (!map_grid_is_inside(x, y, size_x))
+bool map_building_tiles_mark_construction(tile2i tile, int size_x, int size_y, int terrain, bool absolute_xy) {
+    if (!absolute_xy) {
+        adjust_to_absolute_xy(tile, size_x); // todo??
+    }
+
+    if (!map_grid_is_inside(tile, size_x))
         return false;
-    if (!map_grid_is_inside(x, y, size_y))
+
+    if (!map_grid_is_inside(tile, size_y))
         return false;
 
     for (int dy = 0; dy < size_y; dy++) {
         for (int dx = 0; dx < size_x; dx++) {
-            int grid_offset = MAP_OFFSET(x + dx, y + dy);
+            tile2i otile = tile.shifted(dx, dy);
+            int grid_offset = otile.grid_offset();
             if (map_terrain_is(grid_offset, terrain & TERRAIN_NOT_CLEAR) || map_has_figure_at(grid_offset)
-                || map_terrain_exists_tile_in_radius_with_type(x + dx, y + dy, 1, 1, TERRAIN_FLOODPLAIN))
+                || map_terrain_exists_tile_in_radius_with_type(otile, 1, 1, TERRAIN_FLOODPLAIN))
                 return false;
         }
     }
@@ -592,7 +603,7 @@ bool map_building_tiles_mark_construction(int x, int y, int size_x, int size_y, 
     // mark as being constructed
     for (int dy = 0; dy < size_y; dy++) {
         for (int dx = 0; dx < size_x; dx++) {
-            int grid_offset = MAP_OFFSET(x + dx, y + dy);
+            int grid_offset = tile.shifted(dx, dy).grid_offset();
             map_property_mark_constructing(grid_offset);
         }
     }
@@ -606,14 +617,16 @@ void map_building_tiles_mark_deleting(int grid_offset) {
         grid_offset = building_get(building_id)->main()->tile.grid_offset();
     map_property_mark_deleted(grid_offset);
 }
-int map_building_tiles_are_clear(int x, int y, int size, int terrain) {
-    adjust_to_absolute_xy(&x, &y, size);
-    if (!map_grid_is_inside(x, y, size))
+
+int map_building_tiles_are_clear(tile2i tile, int size, int terrain) {
+    adjust_to_absolute_xy(tile, size);
+    if (!map_grid_is_inside(tile, size)) {
         return 0;
+    }
 
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            int grid_offset = MAP_OFFSET(x + dx, y + dy);
+            int grid_offset = tile.shifted(dx, dy).grid_offset();
             if (map_terrain_is(grid_offset, terrain & TERRAIN_NOT_CLEAR))
                 return 0;
         }

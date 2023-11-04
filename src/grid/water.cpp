@@ -137,7 +137,7 @@ shore_orientation map_shore_determine_orientation(map_point tile, int size, bool
             break;
         }
     }
-    if (!map_grid_is_inside(x, y, size))
+    if (!map_grid_is_inside(tile2i(x, y), size))
         return {false, 0};
 
     // actually... check also the bordering blocks on each side.

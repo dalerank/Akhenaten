@@ -222,7 +222,7 @@ static void add_entertainment_venue(building* b, int orientation) {
     case BUILDING_FESTIVAL_SQUARE: size = 5; break;
     }
 
-    if (!map_grid_is_inside(b->tile.x(), b->tile.y(), size)) {
+    if (!map_grid_is_inside(b->tile, size)) {
         return;
     }
 
@@ -601,9 +601,9 @@ static void add_building(building* b, int orientation, int variant) {
     }
 }
 
-static void mark_construction(int x, int y, int size_x, int size_y, int terrain, bool absolute_xy) {
+static void mark_construction(tile2i tile, int size_x, int size_y, int terrain, bool absolute_xy) {
     if (Planner.can_be_placed() == CAN_PLACE
-        && map_building_tiles_mark_construction(x, y, size_x, size_y, terrain, absolute_xy)) {
+        && map_building_tiles_mark_construction(tile, size_x, size_y, terrain, absolute_xy)) {
         Planner.draw_as_constructing = true;
     }
 }
@@ -648,8 +648,9 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
         for (int x = tmin.x(), endx = tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
-                || map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN))
+                || map_terrain_exists_tile_in_radius_with_type(tile2i(x, y), 1, 1, TERRAIN_FLOODPLAIN)) {
                 continue;
+            }
 
             if (measure_only) {
                 map_property_mark_constructing(grid_offset);
@@ -664,8 +665,9 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
                     game_undo_add_building(b);
                     if (b->id > 0) {
                         items_placed++;
-                        map_building_tiles_add(b->id, map_point(x, y), 1, image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT), TERRAIN_BUILDING);
-                        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_ROAD)) {
+                        tile2i otile(x, y);
+                        map_building_tiles_add(b->id, otile, 1, image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT), TERRAIN_BUILDING);
+                        if (!map_terrain_exists_tile_in_radius_with_type(otile, 1, 2, TERRAIN_ROAD)) {
                             needs_road_warning = 1;
                         }
                     }
@@ -723,7 +725,7 @@ static int place_garden(tile2i start, tile2i end) {
     map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
         int grid_offset = tile.grid_offset();
         if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
-            && !map_terrain_exists_tile_in_radius_with_type(tile.x(), tile.y(), 1, 1, TERRAIN_FLOODPLAIN)) {
+            && !map_terrain_exists_tile_in_radius_with_type(tile, 1, 1, TERRAIN_FLOODPLAIN)) {
             if (formation_herd_breeding_ground_at(tile.x(), tile.y(), 1)) {
                 map_property_clear_constructing_and_deleted();
                 city_warning_show(WARNING_HERD_BREEDING_GROUNDS);
@@ -1352,7 +1354,7 @@ void BuildPlanner::update_obstructions_check() {
 
             tile_blocked_array[row][column] = false;
             bool blocked_by_floodplain_edge = (can_blocked_by_floodplain_edge && map_get_floodplain_edge(current_tile));
-            if (!map_grid_is_inside(current_tile.x(), current_tile.y(), 1)
+            if (!map_grid_is_inside(current_tile, 1)
                 || map_terrain_is(current_tile, restricted_terrain & TERRAIN_NOT_CLEAR)
                 || map_has_figure_at(current_tile)
                 || blocked_by_floodplain_edge) {
@@ -1393,21 +1395,21 @@ void BuildPlanner::update_requirements_check() {
     }
 
     if (special_flags & PlannerFlags::Groundwater) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 0, TERRAIN_GROUNDWATER)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 0, TERRAIN_GROUNDWATER)) {
             immediate_warning_id = WARNING_GROUNDWATER_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
     if (special_flags & PlannerFlags::NearbyWater) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 3, TERRAIN_WATER)
-            && !map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 3, TERRAIN_FLOODPLAIN)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 3, TERRAIN_WATER)
+            && !map_terrain_exists_tile_in_radius_with_type(end, size.x, 3, TERRAIN_FLOODPLAIN)) {
             immediate_warning_id = WARNING_WATER_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
 
     if (special_flags & PlannerFlags::Meadow) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 1, TERRAIN_MEADOW)
+        if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_MEADOW)
             && !map_terrain_all_tiles_in_radius_are(end.x(), end.y(), size.x, 0, TERRAIN_FLOODPLAIN)) {
             immediate_warning_id = WARNING_MEADOW_NEEDED;
             can_place = CAN_NOT_PLACE;
@@ -1415,21 +1417,21 @@ void BuildPlanner::update_requirements_check() {
     }
 
     if (special_flags & PlannerFlags::Rock) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 1, TERRAIN_ROCK)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_ROCK)) {
             immediate_warning_id = WARNING_ROCK_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
 
     if (special_flags & PlannerFlags::Ore) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 1, TERRAIN_ORE)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_ORE)) {
             immediate_warning_id = WARNING_ROCK_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
 
     if (special_flags & PlannerFlags::Trees) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 1, TERRAIN_SHRUB | TERRAIN_TREE)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_SHRUB | TERRAIN_TREE)) {
             immediate_warning_id = WARNING_TREE_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
@@ -1737,12 +1739,11 @@ void BuildPlanner::construction_cancel() {
     }
     building_rotation_reset_rotation();
 }
-void BuildPlanner::construction_update(map_point tile) {
+void BuildPlanner::construction_update(tile2i tile) {
     end = tile;
-    if (end == map_point(-1, -1))
+    if (end == tile2i(-1, -1))
         return;
-    const int x = end.x();
-    const int y = end.y();
+
     if (!build_type || city_finance_out_of_money()) {
         total_cost = 0;
         return;
@@ -1753,13 +1754,13 @@ void BuildPlanner::construction_update(map_point tile) {
     int items_placed = 1;
     switch (build_type) {
     case BUILDING_CLEAR_LAND:
-        items_placed = last_items_cleared = building_construction_clear_land(true, start.x(), start.y(), x, y);
+        items_placed = last_items_cleared = building_construction_clear_land(true, start.x(), start.y(), end.x(), end.y());
         break;
     case BUILDING_WALL:
-        items_placed = building_construction_place_wall(true, start.x(), start.y(), x, y);
+        items_placed = building_construction_place_wall(true, start.x(), start.y(), end.x(), end.y());
         break;
     case BUILDING_ROAD:
-        items_placed = building_construction_place_road(true, start.x(), start.y(), x, y);
+        items_placed = building_construction_place_road(true, start.x(), start.y(), end.x(), end.y());
         break;
     case BUILDING_PLAZA:
         items_placed = place_plaza(start, end);
@@ -1768,7 +1769,7 @@ void BuildPlanner::construction_update(map_point tile) {
         items_placed = place_garden(start, end);
         break;
     case BUILDING_IRRIGATION_DITCH:
-        items_placed = building_construction_place_aqueduct(true, start.x(), start.y(), x, y);
+        items_placed = building_construction_place_aqueduct(true, start.x(), start.y(), end.x(), end.y());
         map_tiles_update_all_aqueducts(0);
         break;
     case BUILDING_LOW_BRIDGE:
@@ -1776,16 +1777,16 @@ void BuildPlanner::construction_update(map_point tile) {
         items_placed = map_bridge_building_length();
         break;
     case BUILDING_HOUSE_VACANT_LOT:
-        items_placed = place_houses(true, start.x(), start.y(), x, y);
+        items_placed = place_houses(true, start.x(), start.y(), end.x(), end.y());
         break;
     case BUILDING_GATEHOUSE_PH:
-        mark_construction(x, y, 1, 3, ~TERRAIN_ROAD, false); // TODO
+        mark_construction(tile, 1, 3, ~TERRAIN_ROAD, false); // TODO
         break;
     case BUILDING_TRIUMPHAL_ARCH:
-        mark_construction(x, y, 3, 3, ~TERRAIN_ROAD, false);
+        mark_construction(tile, 3, 3, ~TERRAIN_ROAD, false);
         break;
     case BUILDING_STORAGE_YARD:
-        mark_construction(x, y, 3, 3, TERRAIN_ALL, false);
+        mark_construction(tile, 3, 3, TERRAIN_ALL, false);
         break;
 
     case BUILDING_WATER_LIFT:
@@ -1806,9 +1807,9 @@ void BuildPlanner::construction_update(map_point tile) {
             // never draw as constructing
         } else {
             if ((city_view_orientation() / 2) % 2 == 0) {
-                mark_construction(north_tile.x(), north_tile.y(), size.x, size.y, TERRAIN_ALL, true);
+                mark_construction(north_tile, size.x, size.y, TERRAIN_ALL, true);
             } else {
-                mark_construction(north_tile.x(), north_tile.y(), size.y, size.x, TERRAIN_ALL, true);
+                mark_construction(north_tile, size.y, size.x, TERRAIN_ALL, true);
             }
         }
     }
@@ -1819,8 +1820,9 @@ void BuildPlanner::construction_update(map_point tile) {
     int global_rotation = building_rotation_global_rotation();
     if (building_is_fort(build_type)) {
         if (formation_get_num_forts_cached() < 6) {
-            if (map_building_tiles_are_clear(x, y, 3, TERRAIN_ALL) && map_building_tiles_are_clear(x + FORT_X_OFFSET[global_rotation][city_view_orientation() / 2], y + FORT_Y_OFFSET[global_rotation][city_view_orientation() / 2], 4, TERRAIN_ALL)) {
-                mark_construction(x, y, 3, 3, TERRAIN_ALL, false);
+            if (map_building_tiles_are_clear(tile, 3, TERRAIN_ALL)
+                && map_building_tiles_are_clear(tile.shifted(FORT_X_OFFSET[global_rotation][city_view_orientation() / 2], FORT_Y_OFFSET[global_rotation][city_view_orientation() / 2]), 4, TERRAIN_ALL)) {
+                mark_construction(tile, 3, 3, TERRAIN_ALL, false);
             }
         }
     }

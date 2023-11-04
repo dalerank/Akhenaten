@@ -456,7 +456,7 @@ bool map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, 
 }
 
 void map_routing_block(int x, int y, int size) {
-    if (!map_grid_is_inside(x, y, size))
+    if (!map_grid_is_inside(tile2i(x, y), size))
         return;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {

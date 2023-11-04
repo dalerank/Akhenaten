@@ -106,7 +106,7 @@ void map_natives_init(void) {
                 type = BUILDING_NATIVE_CROPS;
                 map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_FARMLAND) + random_bit);
             } else { // unknown building
-                map_building_tiles_remove(0, x, y);
+                map_building_tiles_remove(0, tile2i(x, y));
                 continue;
             }
             building* b = building_create(type, x, y, 0);
@@ -167,7 +167,7 @@ void map_natives_init_editor(void) {
                 type = BUILDING_NATIVE_CROPS;
                 map_image_set(grid_offset, image_id_from_group(GROUP_EDITOR_BUILDING_CROPS));
             } else { // unknown building
-                map_building_tiles_remove(0, x, y);
+                map_building_tiles_remove(0, tile2i(x, y));
                 continue;
             }
             building* b = building_create(type, x, y, 0);

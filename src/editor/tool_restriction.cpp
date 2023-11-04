@@ -75,7 +75,7 @@ int editor_tool_can_place_flag(int type, map_point tile, int* warning) {
 }
 
 int editor_tool_can_place_access_ramp(map_point tile, int* orientation_index) {
-    if (!map_grid_is_inside(tile.x(), tile.y(), 2))
+    if (!map_grid_is_inside(tile, 2))
         return 0;
 
     for (int orientation = 0; orientation < 4; orientation++) {

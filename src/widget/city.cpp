@@ -252,7 +252,7 @@ static void build_end(void) {
     }
 }
 
-static bool has_confirmed_construction(map_point ghost, map_point point, int range_size) {
+static bool has_confirmed_construction(tile2i ghost, tile2i point, int range_size) {
     //    map_point point = map_point(tile_offset);
     switch (city_view_orientation()) {
     case DIR_0_TOP_RIGHT:
@@ -266,7 +266,7 @@ static bool has_confirmed_construction(map_point ghost, map_point point, int ran
 
     //    int x = map_grid_offset_to_x(tile_offset);
     //    int y = map_grid_offset_to_y(tile_offset);
-    if (ghost.grid_offset() <= 0 || !map_grid_is_inside(point.x(), point.y(), range_size))
+    if (ghost.grid_offset() <= 0 || !map_grid_is_inside(point, range_size))
         return false;
 
     for (int dy = 0; dy < range_size; dy++) {
@@ -278,7 +278,7 @@ static bool has_confirmed_construction(map_point ghost, map_point point, int ran
     return false;
 }
 
-static bool handle_right_click_allow_building_info(map_point tile) {
+static bool handle_right_click_allow_building_info(tile2i tile) {
     int allow = true;
     if (!window_is(WINDOW_CITY))
         allow = false;
