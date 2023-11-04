@@ -96,7 +96,7 @@ void figure::flotsam_action() {
         break;
     }
 
-    service_values.flotsam_frame++;
+    service_values.flotsam_frame = std::min<short>(service_values.flotsam_frame++, 2048);
     int cur_frame = std::min<int>(service_values.flotsam_frame / 36, 35);
     sprite_image_id = image_id_from_group(IMG_FLOTSAM) + cur_frame;
 }
