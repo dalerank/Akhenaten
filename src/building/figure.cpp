@@ -42,7 +42,7 @@
 const int generic_delay_table[] = {0, 1, 3, 7, 15, 29, 44};
 
 figure* building::get_figure(int i) {
-    return figure_get(get_figureID(i));
+    return ::figure_get(get_figureID(i));
 }
 void building::bind_iob_figures(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT16, &figure_ids_array[0]);
@@ -67,12 +67,13 @@ bool building::has_figure(int i, int figure_id) {
     // seatrch through all the figures if index is -1
     if (i == -1) {
         bool has_any = false;
-        for (int i = 0; i < MAX_FIGURES_PER_BUILDING; i++)
+        for (int i = 0; i < MAX_FIGURES_PER_BUILDING; i++) {
             if (has_figure(i, figure_id))
                 has_any = true;
+        }
         return has_any;
     } else {
-        figure* f = get_figure(i);
+        figure* f = this->get_figure(i);
         if (f->state
             && (f->home() == this || f->immigrant_home() == this)) { // check if figure belongs to this building...
             if (figure_id < 0)                                       // only check if there is a figure
@@ -102,6 +103,7 @@ bool building::has_figure_of_type(int i, e_figure_type _type) {
         return (get_figure(i)->type == _type);
     }
 }
+
 int building::get_figure_slot(figure* f) {
     // search through all the slots, check if figure matches
     for (int i = 0; i < MAX_FIGURES_PER_BUILDING; i++) {
@@ -112,7 +114,7 @@ int building::get_figure_slot(figure* f) {
     return -1;
 }
 
-figure* building::create_figure_generic(e_figure_type _type, int created_action, int slot, int created_dir) {
+figure* building::create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir) {
     figure* f = figure_create(_type, road_access, created_dir);
     f->action_state = created_action;
     f->set_home(id);
@@ -121,7 +123,7 @@ figure* building::create_figure_generic(e_figure_type _type, int created_action,
     return f;
 }
 
-figure* building::create_roaming_figure(e_figure_type _type, int created_action, int slot) {
+figure* building::create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) {
     figure* f = create_figure_generic(_type, created_action, slot, figure_roam_direction);
 
     f->set_destination(0);
@@ -139,7 +141,7 @@ figure* building::create_roaming_figure(e_figure_type _type, int created_action,
     return f;
 }
 
-figure* building::create_figure_with_destination(e_figure_type _type, building* destination, int created_action, int slot) {
+figure* building::create_figure_with_destination(e_figure_type _type, building* destination, e_figure_action created_action, e_building_slot slot) {
     figure* f = create_figure_generic(_type, created_action, slot, DIR_4_BOTTOM_LEFT);
     f->set_destination(destination->id);
     f->set_immigrant_home(0);
@@ -148,7 +150,7 @@ figure* building::create_figure_with_destination(e_figure_type _type, building* 
     return f;
 }
 
-figure* building::create_cartpusher(e_resource resource_id, int quantity, int created_action, int slot) {
+figure* building::create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action, e_building_slot slot) {
     // TODO: industry cartpushers do not spawn in the correct place?
 
     figure* f = create_figure_generic(FIGURE_CART_PUSHER, created_action, slot, DIR_4_BOTTOM_LEFT);
@@ -223,7 +225,7 @@ void building::common_spawn_labor_seeker(int min_houses) {
         if (has_figure(1)) { // no figure slot available!
             return;
         } else {
-            create_roaming_figure(FIGURE_LABOR_SEEKER, FIGURE_ACTION_125_ROAMING, true);
+            create_roaming_figure(FIGURE_LABOR_SEEKER, FIGURE_ACTION_125_ROAMING, BUILDING_SLOT_LABOR_SEEKER);
         }
     }
 }
@@ -254,7 +256,7 @@ bool building::common_spawn_figure_trigger(int min_houses) {
     return false;
 }
 
-bool building::common_spawn_roamer(e_figure_type type, int min_houses, int created_action) {
+bool building::common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) {
     if (common_spawn_figure_trigger(min_houses)) {
         create_roaming_figure(type, created_action);
         return true;
@@ -280,7 +282,7 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_ful
             amounts_to_carry -= amounts_to_carry % 100; // remove pittance
         }
 
-        create_cartpusher(output_resource_id, amounts_to_carry);
+        create_cartpusher(output_resource_first_id, amounts_to_carry);
         stored_full_amount -= amounts_to_carry;
         if (only_one || stored_full_amount == 0) {
             // done once, or out of goods?
@@ -316,7 +318,7 @@ void building::spawn_figure_work_camp() {
 
     building* dest = building_determine_worker_needed();
     if (dest) {
-        figure *f = create_figure_with_destination(FIGURE_WORKER_PH, dest, 10, BUILDING_SLOT_SERVICE);
+        figure *f = create_figure_with_destination(FIGURE_WORKER_PH, dest, FIGURE_ACTION_10_WORKER_CREATED, BUILDING_SLOT_SERVICE);
         dest->data.industry.worker_id = f->id;
         data.industry.spawned_worker_this_month = true;
     }
@@ -710,16 +712,16 @@ void building::spawn_figure_industry() {
         return;
     }
 
-    if (building_industry_has_produced_resource(this)) {
+    if (building_industry_has_produced_resource(*this)) {
         building_industry_start_new_production(this);
-        create_cartpusher(output_resource_id, 100);
+        create_cartpusher(output_resource_first_id, 100);
     }
 }
 void building::spawn_figure_farms() {
-    bool is_floodplain = building_is_floodplain_farm(this);
+    bool is_floodplain = building_is_floodplain_farm(*this);
     if (!is_floodplain && has_road_access) { // only for meadow farms
         common_spawn_labor_seeker(50);
-        if (building_farm_time_to_deliver(false, output_resource_id)) { // UGH!!
+        if (building_farm_time_to_deliver(false, output_resource_first_id)) { // UGH!!
             spawn_figure_farm_harvests();
         }
     } else if (is_floodplain) {
@@ -728,6 +730,7 @@ void building::spawn_figure_farms() {
         }
     }
 }
+
 void building::spawn_figure_farm_harvests() {
     if (is_floodplain_farm()) { // floodplain farms
         // In OG Pharaoh, farms can NOT send out a cartpusher if the cartpusher
@@ -742,25 +745,35 @@ void building::spawn_figure_farm_harvests() {
             int farm_fertility = map_get_fertility_for_farm(grid_offset);
 
             data.industry.ready_production = data.industry.progress * farm_fertility / 100;
-            figure *f = create_cartpusher(output_resource_id, farm_expected_produce(this));
-            building_farm_deplete_soil(this);
+            int expected_produce = farm_expected_produce(this);
+            {
+                figure *f = create_cartpusher(output_resource_first_id, expected_produce);
+                building_farm_deplete_soil(this);
 
-            f->sender_building_id = this->id;
+                f->sender_building_id = this->id;
 
-            data.industry.progress = 0;
-            data.industry.ready_production = 0;
-            data.industry.worker_id = 0;
-            data.industry.work_camp_id = 0;
-            data.industry.labor_state = LABOR_STATE_NONE;
-            data.industry.labor_days_left = 0;
-            num_workers = 0;
+                data.industry.progress = 0;
+                data.industry.ready_production = 0;
+                data.industry.worker_id = 0;
+                data.industry.work_camp_id = 0;
+                data.industry.labor_state = LABOR_STATE_NONE;
+                data.industry.labor_days_left = 0;
+                num_workers = 0;
+            }
+
+            if (output_resource_second_id != RESOURCE_NONE) {
+                int rate = std::max<int>(1, output_resource_second_rate);
+                int second_produce_expected = expected_produce / rate;
+                figure *f = create_cartpusher(output_resource_second_id, second_produce_expected, FIGURE_ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
+                f->sender_building_id = this->id;
+            }
         }
     } else { // meadow farms
         if (has_road_access) {
             if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
                 return;
             }
-            create_cartpusher(output_resource_id, farm_expected_produce(this));
+            create_cartpusher(output_resource_first_id, farm_expected_produce(this));
             building_industry_start_new_production(this);
         }
     }
@@ -986,7 +999,7 @@ void building::spawn_figure_hunting_lodge() {
 
     if (can_spawn_ostrich_hunter()) {
         figure_spawn_delay = 10;
-        figure* f = create_figure_generic(FIGURE_OSTRICH_HUNTER, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
+        figure* f = create_figure_generic(FIGURE_OSTRICH_HUNTER, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
         set_figure(BUILDING_SLOT_HUNTER, f);
     }
 
@@ -1078,11 +1091,13 @@ void building::spawn_figure_tower() {
         if (num_workers <= 0)
             return;
 
-        if (has_figure(0) && !has_figure(3)) // has sentry but no ballista -> create
-            create_figure_generic(FIGURE_BALLISTA, FIGURE_ACTION_180_BALLISTA_CREATED, 3, DIR_0_TOP_RIGHT);
+        if (has_figure(0) && !has_figure(3)) { // has sentry but no ballista -> create
+            create_figure_generic(FIGURE_BALLISTA, FIGURE_ACTION_180_BALLISTA_CREATED, BUILDING_SLOT_BALLISTA, DIR_0_TOP_RIGHT);
+        }
 
-        if (!has_figure(0))
+        if (!has_figure(0)) {
             building_barracks_request_tower_sentry();
+        }
     }
 }
 void building::spawn_figure_barracks() {

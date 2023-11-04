@@ -26,25 +26,27 @@
 #define MAX_PROGRESS_FARM_PH 2000
 #define INFINITE 10000
 
-static int max_progress(building* b) {
-    if (building_is_farm(b->type)) {
+static int max_progress(building &b) {
+    if (building_is_farm(b.type)) {
         return MAX_PROGRESS_FARM_PH;
     }
 
-    return building_is_workshop(b->type) ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
+    return building_is_workshop(b.type) ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
 }
 
-static void update_farm_image(building* b) {
+static void update_farm_image(building &b) {
     bool is_flooded = false;
     if (building_is_floodplain_farm(b)) {
-        for (int _y = b->tile.y(); _y < b->tile.y() + b->size; _y++)
-            for (int _x = b->tile.x(); _x < b->tile.x() + b->size; _x++)
+        for (int _y = b.tile.y(); _y < b.tile.y() + b.size; _y++) {
+            for (int _x = b.tile.x(); _x < b.tile.x() + b.size; _x++) {
                 if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER))
                     is_flooded = true;
+            }
+        }
     }
 
     if (!is_flooded) {
-        map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), image_id_from_group(GROUP_BUILDING_FARMLAND) + 5 * (b->output_resource_id - 1), b->data.industry.progress);
+        map_building_tiles_add_farm(b.id, b.tile.x(), b.tile.y(), image_id_from_group(GROUP_BUILDING_FARMLAND) + 5 * (b.output_resource_first_id - 1), b.data.industry.progress);
     }
 }
 
@@ -54,7 +56,7 @@ building* building_determine_worker_needed() {
             continue;
         }
 
-        if (floodplains_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(it)) {
+        if (floodplains_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(*it)) {
             if (!it->data.industry.worker_id && it->data.industry.labor_days_left <= 47 && !it->num_workers) {
                 return it;
             }
@@ -68,29 +70,29 @@ building* building_determine_worker_needed() {
 
 static const float produce_uptick_per_day = 103.5f * 20.0f / 128.0f / 100.0f; // don't ask
 
-float get_farm_produce_uptick_per_day(building* b) {
+float get_farm_produce_uptick_per_day(building &b) {
     return produce_uptick_per_day;
 }
 
-float get_produce_uptick_per_day(building* b) {
-    switch (b->type) {
+float get_produce_uptick_per_day(building &b) {
+    switch (b.type) {
     case BUILDING_GOLD_MINE:
         if (config_get(CONFIG_GP_CH_GOLDMINE_TWICE_PRODUCTION)) {
-            return b->num_workers / 5.f;
+            return b.num_workers / 5.f;
         } else {
-            return b->num_workers / 10.f;
+            return b.num_workers / 10.f;
         }
         break;
 
     case BUILDING_STONE_QUARRY:
-        return b->num_workers / 2.f;
+        return b.num_workers / 2.f;
         break;
 
     default:
         break;
     }
 
-    return b->num_workers;
+    return b.num_workers;
 }
 
 // void building_bless_farms(void) {
@@ -114,7 +116,7 @@ int farm_expected_produce(building* b) {
     // down to the lowest 20 points. No idea why! But here's as an option.
 
     int modifier = 1;
-    if (city_data.religion.osiris_double_farm_yield && building_is_floodplain_farm(b)) {
+    if (city_data.religion.osiris_double_farm_yield && building_is_floodplain_farm(*b)) {
         modifier = 2;
     }
 
@@ -123,135 +125,134 @@ int farm_expected_produce(building* b) {
 
 void building_industry_update_production(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Industry Update");
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-
-        if (b->state != BUILDING_STATE_VALID || !b->output_resource_id) {
-            continue;
+    buildings_valid_do([] (building &b) {
+        if (!b.output_resource_first_id) {
+            return;
         }
 
-        if (building_is_farm(b->type)) {
-            continue;
+        if (building_is_farm(b.type)) {
+            return;
         }
 
-        b->data.industry.has_raw_materials = false;
-        if (b->num_workers <= 0) {
-            continue;
+        b.data.industry.has_raw_materials = false;
+        if (b.num_workers <= 0) {
+            return;
         }
 
-        if (building_is_workshop(b->type) && !b->stored_full_amount) {
-            continue;
+        if (building_is_workshop(b.type) && !b.stored_full_amount) {
+            return;
         }
 
-        if (b->data.industry.curse_days_left) {
-            b->data.industry.curse_days_left--;
+        if (b.data.industry.curse_days_left) {
+            b.data.industry.curse_days_left--;
         } else {
-            if (b->data.industry.blessing_days_left) {
-                b->data.industry.blessing_days_left--;
+            if (b.data.industry.blessing_days_left) {
+                b.data.industry.blessing_days_left--;
             }
 
-            b->data.industry.progress += get_produce_uptick_per_day(b);
+            b.data.industry.progress += get_produce_uptick_per_day(b);
 
-            if (b->data.industry.blessing_days_left && building_is_farm(b->type)) {
+            if (b.data.industry.blessing_days_left && building_is_farm(b.type)) {
                 const float normal_progress = get_produce_uptick_per_day(b);
-                b->data.industry.progress += normal_progress;
+                b.data.industry.progress += normal_progress;
             }
 
             int max = max_progress(b);
-            if (b->data.industry.progress > max) {
-                b->data.industry.progress = max;
+            if (b.data.industry.progress > max) {
+                b.data.industry.progress = max;
             }
         }
-    }
+    });
 }
 
 void building_industry_update_farms(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Farms Update");
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || !b->output_resource_id) {
-            continue;
+
+    buildings_valid_do([] (building &b) {
+        if (!b.output_resource_first_id) {
+            return;
         }
 
-        if (!building_is_farm(b->type)) {
-            continue;
+        if (!building_is_farm(b.type)) {
+            return;
         }
 
-        if (b->data.industry.curse_days_left) { // TODO
-            b->data.industry.curse_days_left--;
+        if (b.data.industry.curse_days_left) { // TODO
+            b.data.industry.curse_days_left--;
         }
 
-        if (b->data.industry.blessing_days_left) {
-            b->data.industry.blessing_days_left--;
+        if (b.data.industry.blessing_days_left) {
+            b.data.industry.blessing_days_left--;
         }
         //        if (b->data.industry.blessing_days_left && building_is_farm(b->type))
         //            b->data.industry.progress += b->num_workers;
 
         bool is_floodplain = building_is_floodplain_farm(b);
-        int fert = map_get_fertility_for_farm(b->tile.grid_offset());
+        int fert = map_get_fertility_for_farm(b.tile.grid_offset());
         int progress_step = (float)fert * get_farm_produce_uptick_per_day(b); // 0.16f
 
         if (is_floodplain) { // floodplain farms
             // advance production
-            if (b->data.industry.labor_days_left > 0) {
-                b->data.industry.progress += progress_step;
+            if (b.data.industry.labor_days_left > 0) {
+                b.data.industry.progress += progress_step;
             }
             // update labor state
-            if (b->data.industry.labor_state == LABOR_STATE_JUST_ENTERED) {
-                b->data.industry.labor_state = LABOR_STATE_PRESENT;
+            if (b.data.industry.labor_state == LABOR_STATE_JUST_ENTERED) {
+                b.data.industry.labor_state = LABOR_STATE_PRESENT;
             }
 
-            if (b->data.industry.labor_days_left == 0) {
-                b->data.industry.labor_state = LABOR_STATE_NONE;
+            if (b.data.industry.labor_days_left == 0) {
+                b.data.industry.labor_state = LABOR_STATE_NONE;
             }
 
-            if (b->data.industry.labor_days_left > 0) {
-                b->data.industry.labor_days_left--;
+            if (b.data.industry.labor_days_left > 0) {
+                b.data.industry.labor_days_left--;
             }
         } else { // meadow farms
             // advance production
-            if (b->num_workers > 0) {
-                b->data.industry.progress += progress_step * ((float)b->num_workers / 10.0f);
+            if (b.num_workers > 0) {
+                b.data.industry.progress += progress_step * ((float)b.num_workers / 10.0f);
             }
         }
 
         // clamp progress
         int max = max_progress(b);
-        b->data.industry.progress = std::clamp<int>(b->data.industry.progress, 0, max);
+        b.data.industry.progress = std::clamp<int>(b.data.industry.progress, 0, max);
 
         update_farm_image(b);
-    }
+    });
     city_data.religion.osiris_double_farm_yield = false;
 }
 
-void building_industry_update_wheat_production(void) {
+void building_industry_update_wheat_production() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Wheat Production Update");
     if (scenario_property_climate() == CLIMATE_NORTHERN)
         return;
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || !b->output_resource_id)
-            continue;
+    buildings_valid_do([] (building &b) {
+        if (!b.output_resource_first_id) {
+            return;
+        }
 
-        if (b->houses_covered <= 0 || b->num_workers <= 0)
-            continue;
+        if (b.houses_covered <= 0 || b.num_workers <= 0) {
+            return;
+        }
 
-        if (b->type == BUILDING_BARLEY_FARM && !b->data.industry.curse_days_left) {
-            b->data.industry.progress += b->num_workers;
-            if (b->data.industry.blessing_days_left)
-                b->data.industry.progress += b->num_workers;
+        if (b.type == BUILDING_BARLEY_FARM && !b.data.industry.curse_days_left) {
+            b.data.industry.progress += b.num_workers;
+            if (b.data.industry.blessing_days_left)
+                b.data.industry.progress += b.num_workers;
 
-            if (b->data.industry.progress > MAX_PROGRESS_RAW)
-                b->data.industry.progress = MAX_PROGRESS_RAW;
+            if (b.data.industry.progress > MAX_PROGRESS_RAW)
+                b.data.industry.progress = MAX_PROGRESS_RAW;
 
             update_farm_image(b);
         }
-    }
+    });
 }
 
-bool building_industry_has_produced_resource(building* b) {
-    return b->data.industry.progress >= max_progress(b);
+bool building_industry_has_produced_resource(building &b) {
+    return b.data.industry.progress >= max_progress(b);
 }
 
 void building_industry_start_new_production(building* b) {
@@ -265,8 +266,9 @@ void building_industry_start_new_production(building* b) {
         }
     }
 
-    if (building_is_farm(b->type))
-        update_farm_image(b);
+    if (building_is_farm(b->type)) {
+        update_farm_image(*b);
+    }
 }
 
 static bool farm_harvesting_month_for_produce(int resource_id, int month) {
@@ -342,7 +344,7 @@ void building_farm_deplete_soil(building* b) {
             }
         }
     }
-    update_farm_image(b);
+    update_farm_image(*b);
 }
 
 void building_workshop_add_raw_material(building* b, int amount) {

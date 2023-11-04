@@ -119,7 +119,7 @@ static void floodplains_reset_farms() {
             continue;
         }
 
-        if (!building_is_floodplain_farm(it)) {
+        if (!building_is_floodplain_farm(*it)) {
             continue;
         }
 

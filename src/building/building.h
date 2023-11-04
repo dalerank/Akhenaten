@@ -28,11 +28,15 @@ enum e_labor_state {
 enum e_building_slot {
     BUILDING_SLOT_SERVICE = 0,
     BUILDING_SLOT_CARTPUSHER = 1,
+    BUILDING_SLOT_MARKET_BUYER = 1,
     BUILDING_SLOT_LABOR_SEEKER = 2,
+    BUILDING_SLOT_PRIEST = 2,
     BUILDING_SLOT_IMMIGRANT = 2,
     BUILDING_SLOT_GOVERNOR = 3,
     BUILDING_SLOT_HUNTER = 3,
     BUILDING_SLOT_BOAT = 3,
+    BUILDING_SLOT_BALLISTA = 3,
+    BUILDING_SLOT_CARTPUSHER_2 = 3,
 };
 
 class building {
@@ -98,9 +102,11 @@ public:
     short stored_full_amount;
     bool has_well_access;
     short num_workers;
-    unsigned char labor_category;
-    e_resource output_resource_id;
-    uint32_t has_road_access;
+    uint8_t labor_category;
+    e_resource output_resource_first_id;
+    e_resource output_resource_second_id;
+    uint8_t output_resource_second_rate;
+    bool has_road_access;
     short house_criminal_active;
     unsigned char disease_days;
     unsigned char common_health;
@@ -274,10 +280,10 @@ public:
     bool has_figure_of_type(int i, e_figure_type _type);
     int get_figure_slot(figure* f);
 
-    figure* create_figure_generic(e_figure_type _type, int created_action, int slot, int created_dir);
-    figure* create_roaming_figure(e_figure_type _type, int created_action = FIGURE_ACTION_125_ROAMING, int slot = BUILDING_SLOT_SERVICE);
-    figure* create_figure_with_destination(e_figure_type _type, building* destination, int created_action = ACTION_10_GOING, int slot = BUILDING_SLOT_SERVICE);
-    figure* create_cartpusher(e_resource resource_id, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, int slot = BUILDING_SLOT_CARTPUSHER);
+    figure* create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir);
+    figure* create_roaming_figure(e_figure_type _type, e_figure_action created_action = FIGURE_ACTION_125_ROAMING, e_building_slot slot = BUILDING_SLOT_SERVICE);
+    figure* create_figure_with_destination(e_figure_type _type, building* destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE);
+    figure* create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, e_building_slot slot = BUILDING_SLOT_CARTPUSHER);
 
     int worker_percentage();
     int figure_hunting_longe_spawn_timer();
@@ -285,7 +291,7 @@ public:
     void check_labor_problem();
     bool common_spawn_figure_trigger(int min_houses);
     void common_spawn_labor_seeker(int min_houses);
-    bool common_spawn_roamer(e_figure_type type, int min_houses, int created_action = FIGURE_ACTION_125_ROAMING);
+    bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action = FIGURE_ACTION_125_ROAMING);
     bool common_spawn_goods_output_cartpusher(bool only_one = true, bool only_full_loads = true, int min_carry = 100, int max_carry = 800);
 
     int correct_animation_speed(int anim_speed);
@@ -433,7 +439,7 @@ void building_clear_all(void);
 bool building_is_fort(int type);
 bool building_is_defense_ph(int type);
 bool building_is_farm(int type);
-bool building_is_floodplain_farm(building* b);
+bool building_is_floodplain_farm(building &b);
 bool building_is_workshop(int type);
 bool building_is_extractor(int type);
 bool building_is_harvester(int type);

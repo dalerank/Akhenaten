@@ -18,7 +18,7 @@ void building::spawn_figure_reed_gatherers() {
             figure_spawn_delay = 0;
 
             if (can_spawn_gatherer(FIGURE_REED_GATHERER, data.industry.max_gatheres, 50)) {
-                auto f = create_figure_generic(FIGURE_REED_GATHERER, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
+                auto f = create_figure_generic(FIGURE_REED_GATHERER, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
                 random_generate_next();
                 f->wait_ticks = random_short() % 30; // ok
             }
@@ -43,7 +43,7 @@ void building::spawn_figure_wood_cutters() {
             figure_spawn_delay = 0;
 
             if (can_spawn_gatherer(FIGURE_LUMBERJACK, data.industry.max_gatheres, 50)) {
-                auto f = create_figure_generic(FIGURE_LUMBERJACK, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
+                auto f = create_figure_generic(FIGURE_LUMBERJACK, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
                 random_generate_next();
                 f->wait_ticks = random_short() % 30; // ok
             }

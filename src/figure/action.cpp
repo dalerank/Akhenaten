@@ -408,7 +408,7 @@ void figure::action_perform() {
             if (has_destination())
                 break;
 
-            if (!building_is_floodplain_farm(b)
+            if (!building_is_floodplain_farm(*b)
                 && (b->state != BUILDING_STATE_VALID || (!b->has_figure(0, id) && !b->has_figure(1, id)))) {
                 poof();
             }

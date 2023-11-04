@@ -263,7 +263,7 @@ static void draw_farm_workers(view_context &ctx, building* b, int grid_offset, v
     int animation_offset = 0;
     int random_seed = 1234.567f * (1 + game_time_day()) * map_random_get(b->tile.grid_offset());
     int d = random_seed % 8;
-    if (building_is_floodplain_farm(b)) {
+    if (building_is_floodplain_farm(*b)) {
         if (floodplains_is(FLOOD_STATE_IMMINENT)) {
             //int random_x = random_seed % 3;
             //int random_y = int(1234.567f * random_seed) % 3;

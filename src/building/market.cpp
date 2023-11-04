@@ -289,7 +289,7 @@ void building::spawn_figure_market() {
                 building *dest = building_get(building_market_get_storage_destination(this));
                 if (dest->id) {
                     figure_spawn_delay = 0;
-                    figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, 1);
+                    figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, BUILDING_SLOT_MARKET_BUYER);
                     f->collecting_item_id = data.market.fetch_inventory_id;
                 }
             }

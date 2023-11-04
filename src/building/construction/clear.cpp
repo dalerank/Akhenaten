@@ -99,7 +99,7 @@ static int clear_land_confirmed(bool measure_only, tile2i start, tile2i end) {
                     b->house_population = 0;
                 }
 
-                if (building_is_floodplain_farm(b) && config_get(CONFIG_GP_CH_SOIL_DEPLETION)) {
+                if (building_is_floodplain_farm(*b) && config_get(CONFIG_GP_CH_SOIL_DEPLETION)) {
                     building_farm_deplete_soil(b);
                 }
 

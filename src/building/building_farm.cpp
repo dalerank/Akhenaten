@@ -58,7 +58,7 @@ static void building_farm_draw_info(object_info &c, int help_id, const char* typ
         window_building_draw_description_at(c, 70, group_id, 10);
 
     inner_panel_draw(c.x_offset + 16, c.y_offset + 136, c.width_blocks - 2, 4);
-    if (building_is_floodplain_farm(b)) {
+    if (building_is_floodplain_farm(*b)) {
         window_building_draw_employment_flood_farm(&c, 142);
 
         // next flood info

@@ -119,113 +119,115 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     // unique data
     switch (type) {
     case BUILDING_BARLEY_FARM:
-        b->output_resource_id = RESOURCE_BARLEY;
+        b->output_resource_first_id = RESOURCE_BARLEY;
         b->fire_proof = 1;
         break;
     case BUILDING_FLAX_FARM:
-        b->output_resource_id = RESOURCE_FLAX;
+        b->output_resource_first_id = RESOURCE_FLAX;
         b->fire_proof = 1;
         break;
     case BUILDING_GRAIN_FARM:
-        b->output_resource_id = RESOURCE_GRAIN;
+        b->output_resource_first_id = RESOURCE_GRAIN;
+        b->output_resource_second_id = RESOURCE_STRAW;
+        b->output_resource_second_rate = 10;
         b->fire_proof = 1;
         break;
     case BUILDING_LETTUCE_FARM:
-        b->output_resource_id = RESOURCE_LETTUCE;
+        b->output_resource_first_id = RESOURCE_LETTUCE;
         b->fire_proof = 1;
         break;
     case BUILDING_POMEGRANATES_FARM:
-        b->output_resource_id = RESOURCE_POMEGRANATES;
+        b->output_resource_first_id = RESOURCE_POMEGRANATES;
         b->fire_proof = 1;
         break;
     case BUILDING_CHICKPEAS_FARM:
-        b->output_resource_id = RESOURCE_CHICKPEAS;
+        b->output_resource_first_id = RESOURCE_CHICKPEAS;
         b->fire_proof = 1;
         break;
     case BUILDING_STONE_QUARRY:
-        b->output_resource_id = RESOURCE_STONE;
+        b->output_resource_first_id = RESOURCE_STONE;
         break;
     case BUILDING_LIMESTONE_QUARRY:
-        b->output_resource_id = RESOURCE_LIMESTONE;
+        b->output_resource_first_id = RESOURCE_LIMESTONE;
         break;
     case BUILDING_WOOD_CUTTERS:
-        b->output_resource_id = RESOURCE_TIMBER;
+        b->output_resource_first_id = RESOURCE_TIMBER;
         b->data.industry.max_gatheres = 1;
         break;
     case BUILDING_CLAY_PIT:
-        b->output_resource_id = RESOURCE_CLAY;
+        b->output_resource_first_id = RESOURCE_CLAY;
         break;
     case BUILDING_BEER_WORKSHOP:
-        b->output_resource_id = RESOURCE_BEER;
+        b->output_resource_first_id = RESOURCE_BEER;
         //            b->subtype.workshop_type = WORKSHOP_BEER;
         break;
     case BUILDING_LINEN_WORKSHOP:
-        b->output_resource_id = RESOURCE_LINEN;
+        b->output_resource_first_id = RESOURCE_LINEN;
         //            b->subtype.workshop_type = WORKSHOP_LINEN;
         break;
     case BUILDING_WEAPONS_WORKSHOP:
-        b->output_resource_id = RESOURCE_WEAPONS;
+        b->output_resource_first_id = RESOURCE_WEAPONS;
         //            b->subtype.workshop_type = WORKSHOP_WEAPONS;
         break;
     case BUILDING_JEWELS_WORKSHOP:
-        b->output_resource_id = RESOURCE_LUXURY_GOODS;
+        b->output_resource_first_id = RESOURCE_LUXURY_GOODS;
         //            b->subtype.workshop_type = WORKSHOP_JEWELS;
         break;
     case BUILDING_POTTERY_WORKSHOP:
-        b->output_resource_id = RESOURCE_POTTERY;
+        b->output_resource_first_id = RESOURCE_POTTERY;
         //            b->subtype.workshop_type = WORKSHOP_POTTERY;
         break;
     case BUILDING_HUNTING_LODGE:
-        b->output_resource_id = RESOURCE_GAMEMEAT;
+        b->output_resource_first_id = RESOURCE_GAMEMEAT;
         break;
     case BUILDING_REED_GATHERER:
-        b->output_resource_id = RESOURCE_REEDS;
+        b->output_resource_first_id = RESOURCE_REEDS;
         b->data.industry.max_gatheres = 1;
         break;
     case BUILDING_GOLD_MINE:
-        b->output_resource_id = RESOURCE_GOLD;
+        b->output_resource_first_id = RESOURCE_GOLD;
         break;
     case BUILDING_GEMSTONE_MINE:
-        b->output_resource_id = RESOURCE_GEMS;
+        b->output_resource_first_id = RESOURCE_GEMS;
         break;
     case BUILDING_CATTLE_RANCH:
-        b->output_resource_id = RESOURCE_MEAT;
+        b->output_resource_first_id = RESOURCE_MEAT;
         //            b->subtype.workshop_type = WORKSHOP_CATTLE;
         break;
     case BUILDING_FIGS_FARM:
-        b->output_resource_id = RESOURCE_FIGS;
+        b->output_resource_first_id = RESOURCE_FIGS;
         b->fire_proof = 1;
         break;
     case BUILDING_PAPYRUS_WORKSHOP:
-        b->output_resource_id = RESOURCE_PAPYRUS;
+        b->output_resource_first_id = RESOURCE_PAPYRUS;
         //            b->subtype.workshop_type = WORKSHOP_PAPYRUS;
         break;
     case BUILDING_BRICKS_WORKSHOP:
-        b->output_resource_id = RESOURCE_BRICKS;
+        b->output_resource_first_id = RESOURCE_BRICKS;
         //            b->subtype.workshop_type = WORKSHOP_BRICKS;
         break;
     case BUILDING_CHARIOTS_WORKSHOP:
-        b->output_resource_id = RESOURCE_CHARIOTS;
+        b->output_resource_first_id = RESOURCE_CHARIOTS;
         //            b->subtype.workshop_type = WORKSHOP_CHARIOTS;
         break;
     case BUILDING_GRANITE_QUARRY:
-        b->output_resource_id = RESOURCE_GRANITE;
+        b->output_resource_first_id = RESOURCE_GRANITE;
         break;
     case BUILDING_COPPER_MINE:
-        b->output_resource_id = RESOURCE_COPPER;
+        b->output_resource_first_id = RESOURCE_COPPER;
         break;
     case BUILDING_SANDSTONE_QUARRY:
-        b->output_resource_id = RESOURCE_SANDSTONE;
+        b->output_resource_first_id = RESOURCE_SANDSTONE;
         break;
     case BUILDING_HENNA_FARM:
-        b->output_resource_id = RESOURCE_HENNA;
+        b->output_resource_first_id = RESOURCE_HENNA;
         break;
     case BUILDING_LAMP_WORKSHOP:
-        b->output_resource_id = RESOURCE_LAMPS;
+        b->output_resource_first_id = RESOURCE_LAMPS;
         //            b->subtype.workshop_type = WORKSHOP_LAMPS;
         break;
     case BUILDING_PAINT_WORKSHOP:
-        b->output_resource_id = RESOURCE_PAINT;
+        b->output_resource_first_id = RESOURCE_PAINT;
         //            b->subtype.workshop_type = WORKSHOP_PAINT;
         break;
     case BUILDING_GRANARY:
@@ -252,7 +254,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         break;
     case BUILDING_FISHING_WHARF:
         b->data.industry.orientation = orientation;
-        b->output_resource_id = RESOURCE_FISH;
+        b->output_resource_first_id = RESOURCE_FISH;
         break;
     case BUILDING_WATER_LIFT:
     case BUILDING_TRANSPORT_WHARF:
@@ -272,7 +274,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->fire_proof = 1;
         break;
     default:
-        b->output_resource_id = RESOURCE_NONE;
+        b->output_resource_first_id = RESOURCE_NONE;
         break;
     }
 }
@@ -486,7 +488,7 @@ bool building::is_farm() {
     return building_is_farm(type);
 }
 bool building::is_floodplain_farm() {
-    return building_is_floodplain_farm(this);
+    return building_is_floodplain_farm(*this);
 }
 bool building::is_workshop() {
     return building_is_workshop(type);
@@ -562,8 +564,8 @@ bool building_is_farm(int type) {
     return (type >= BUILDING_BARLEY_FARM && type <= BUILDING_CHICKPEAS_FARM) || type == BUILDING_FIGS_FARM
            || type == BUILDING_HENNA_FARM;
 }
-bool building_is_floodplain_farm(building* b) {
-    return (building_is_farm(b->type) && map_terrain_is(b->tile.grid_offset(), TERRAIN_FLOODPLAIN)); // b->data.industry.labor_state >= 1 // b->labor_category == 255
+bool building_is_floodplain_farm(building &b) {
+    return (building_is_farm(b.type) && map_terrain_is(b.tile.grid_offset(), TERRAIN_FLOODPLAIN)); // b->data.industry.labor_state >= 1 // b->labor_category == 255
 }
 bool building_is_workshop(int type) {
     return (type >= BUILDING_BEER_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
@@ -634,7 +636,7 @@ bool building_is_water_crossing(int type) {
     return (type == BUILDING_FERRY) || type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE;
 }
 bool building_is_industry_type(const building* b) {
-    return b->output_resource_id || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_SHIPYARD || b->type == BUILDING_FISHING_WHARF;
+    return b->output_resource_first_id || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_SHIPYARD || b->type == BUILDING_FISHING_WHARF;
 }
 
 bool building_is_industry(int type) {
@@ -1058,8 +1060,9 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         //        building_state_load_from_buffer(buf, &all_buildings[i]);
         auto b = &g_all_buildings[i];
         int sind = (int)iob->get_offset();
-        if (sind == 640)
+        if (sind == 640) {
             int a = 2134;
+        }
 
         iob->bind(BIND_SIGNATURE_UINT8, &b->state);
         iob->bind(BIND_SIGNATURE_UINT8, &b->faction_id);
@@ -1105,7 +1108,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
 
         iob->bind(BIND_SIGNATURE_INT16, &b->num_workers);
         iob->bind(BIND_SIGNATURE_UINT8, &b->labor_category); // FF
-        iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_first_id);
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_road_access);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_criminal_active);
 
@@ -1137,10 +1140,12 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->show_on_problem_overlay); // 1
         iob->bind(BIND_SIGNATURE_UINT16, &b->deben_storage); // 2
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_open_water_access); // 1
+        iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_second_id); // 1
+        iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_second_rate); // 1
         
-        // 68 additional bytes
+        // 63 additional bytes
 
-        iob->bind____skip(65); // temp for debugging
+        iob->bind____skip(63); // temp for debugging
                                //            assert(iob->get_offset() - sind == 264);
         g_all_buildings[i].id = i;
 

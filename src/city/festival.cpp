@@ -101,7 +101,7 @@ static void throw_party(void) {
         case BUILDING_DANCE_SCHOOL: { // this actually doesn't happen in Pharaoh?
                                       //                    if (b->has_figure(0))
                                       //                        b->remove_figure(0);
-                figure* f = b->create_figure_generic(FIGURE_FESTIVAL_PRIEST, 10, 2, DIR_4_BOTTOM_LEFT);
+                figure* f = b->create_figure_generic(FIGURE_FESTIVAL_PRIEST, FIGURE_ACTION_10_FESTIVAL_PRIEST_CREATED, BUILDING_SLOT_PRIEST, DIR_4_BOTTOM_LEFT);
                 f->festival_remaining_dances = 10;
 
                 // choose a random tile on the festival square

@@ -287,12 +287,9 @@ labor_priority_t DEFAULT_PRIORITY[] = {
   {LABOR_CATEGORY_RELIGION, 1},
 };
 
-static int is_industry_disabled(building* b) {
-    int resource = b->output_resource_id;
-    if (city_data.resource.mothballed[resource])
-        return 1;
-
-    return 0;
+static bool is_industry_disabled(building* b) {
+    int resource = b->output_resource_first_id;
+    return city_data.resource.mothballed[resource];
 }
 
 int city_labor_wages(void) {
@@ -379,28 +376,25 @@ static void calculate_workers_needed_per_category(void) {
         city_data.labor.categories[cat].workers_allocated = 0;
         city_data.labor.categories[cat].workers_needed = 0;
     }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID)
-            continue;
 
-        e_labor_category category = category_for_building(b);
-        b->labor_category = category;
+    buildings_valid_do([] (building &b) {
+        e_labor_category category = category_for_building(&b);
+        b.labor_category = category;
 
         // exception for floodplain farms in Pharaoh
         // it cover by distance from work camp
-        if (building_is_floodplain_farm(b)) { 
-            b->labor_category = -1;
+        if (building_is_floodplain_farm(b)) {
+            b.labor_category = -1;
         }
 
-        if (!should_have_workers(b, category, 1)) {
-            continue;
+        if (!should_have_workers(&b, category, 1)) {
+            return;
         }
 
-        city_data.labor.categories[category].workers_needed += model_get_building(b->type)->laborers;
-        city_data.labor.categories[category].total_houses_covered += b->houses_covered;
+        city_data.labor.categories[category].workers_needed += model_get_building(b.type)->laborers;
+        city_data.labor.categories[category].total_houses_covered += b.houses_covered;
         city_data.labor.categories[category].buildings++;
-    }
+    });
 }
 
 static void set_building_worker_weight(void) {
@@ -546,47 +540,40 @@ static void allocate_workers_to_non_water_buildings(void) {
         category_workers_needed[i] = city_data.labor.categories[i].workers_allocated < city_data.labor.categories[i].workers_needed ? 1 : 0;
     }
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID) {
-            continue;
-        }
-
-        e_labor_category cat = category_for_building(b);
-        //if (GAME_ENV == ENGINE_ENV_C3 && cat == LABOR_CATEGORY_WATER_HEALTH) 
-        //   continue;
-
+    buildings_valid_do([&] (building &b) {
+        e_labor_category cat = category_for_building(&b);
         if (building_is_floodplain_farm(b)) {
-            if (b->data.industry.labor_state <= 0) {
-                b->num_workers = 0;
+            if (b.data.industry.labor_state <= 0) {
+                b.num_workers = 0;
             }
+            return; // water is handled by allocate_workers_to_water(void) in C3
 
-            continue; // water is handled by allocate_workers_to_water(void) in C3
         } else {
-            if (b->houses_covered <= 0) {
-                b->num_workers = 0;
+            if (b.houses_covered <= 0) {
+                b.num_workers = 0;
             }
         }
 
-        if (!should_have_workers(b, cat, 0)) {
-            continue;
+        if (!should_have_workers(&b, cat, 0)) {
+            return;
         }
 
-        if (b->percentage_houses_covered > 0) {
-            int required_workers = model_get_building(b->type)->laborers;
+        if (b.percentage_houses_covered > 0) {
+            int required_workers = model_get_building(b.type)->laborers;
             if (category_workers_needed[cat]) {
-                int num_workers = calc_adjust_with_percentage(city_data.labor.categories[cat].workers_allocated, b->percentage_houses_covered) / 100;
+                int num_workers = calc_adjust_with_percentage(city_data.labor.categories[cat].workers_allocated, b.percentage_houses_covered) / 100;
                 if (num_workers > required_workers) {
                     num_workers = required_workers;
                 }
 
-                b->num_workers = num_workers;
+                b.num_workers = num_workers;
                 category_workers_allocated[cat] += num_workers;
             } else {
-                b->num_workers = required_workers;
+                b.num_workers = required_workers;
             }
         }
-    }
+    });
+
     for (int i = 0; i < LABOR_CATEGORY_SIZE; i++) {
         if (category_workers_needed[i]) {
             // watch out: category_workers_needed is now reset to 'unallocated workers available'

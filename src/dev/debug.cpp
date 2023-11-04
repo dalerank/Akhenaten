@@ -360,11 +360,12 @@ void draw_debug_tile(vec2i pixel, tile2i point, view_context &ctx) {
 
     case e_debug_render_labor: // LABOR
         if (b_id && map_property_is_draw_tile(grid_offset)
-            && (b->labor_category != (uint8_t)-1 || building_is_floodplain_farm(b))) {
-            if (b->labor_category != category_for_building(b))
+            && (b->labor_category != (uint8_t)-1 || building_is_floodplain_farm(*b))) {
+            if (b->labor_category != category_for_building(b)) {
                 debug_text(ctx, str, x0, y + 10, 10, "!!", b->labor_category, COLOR_RED); // incorrect category??
-            else
+            } else {
                 debug_text(ctx, str, x0, y + 10, 0, "", b->labor_category, COLOR_WHITE);
+            }
             debug_text(ctx, str, x1, y + 10, 0, "", b->houses_covered, COLOR_LIGHT_RED);
             debug_text(ctx, str, x0, y + 20, 0, "", b->num_workers, COLOR_LIGHT_BLUE);
             debug_text(ctx, str, x1 - 10, y + 20, 4, ":", b->worker_percentage(), COLOR_LIGHT_BLUE);
@@ -374,7 +375,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, view_context &ctx) {
                 debug_text(ctx, str, x0, y + 30, 0, "", b->data.industry.progress, COLOR_GREEN);
                 debug_text(ctx, str, x1 + 10, y + 30, 4, ":", b->data.industry.progress / 20, COLOR_GREEN);
                 debug_text(ctx, str, x1 + 40, y + 30, 40, "exp.", farm_expected_produce(b), COLOR_GREEN);
-                if (building_is_floodplain_farm(b)) {
+                if (building_is_floodplain_farm(*b)) {
                     debug_text(ctx, str, x0, y + 40, 0, "", b->data.industry.labor_state, COLOR_WHITE);
                     debug_text(ctx, str, x1, y + 40, 0, "", b->data.industry.labor_days_left, COLOR_WHITE);
                 }
@@ -402,7 +403,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, view_context &ctx) {
 
         // STATUES & MONUMENTS
 
-        if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != (uint8_t)-1 || building_is_floodplain_farm(b))) {
+        if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != (uint8_t)-1 || building_is_floodplain_farm(*b))) {
             switch (b->type) {
             case BUILDING_SMALL_STATUE:
             case BUILDING_MEDIUM_STATUE:
