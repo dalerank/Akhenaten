@@ -459,22 +459,24 @@ bool map_routing_passable_by_usage(int terrain_usage, int grid_offset) {
 int map_routing_is_wall_passable(int grid_offset) {
     return map_grid_get(&routing_tiles_walls, grid_offset) == WALL_0_PASSABLE;
 }
-static int wall_tile_in_radius(int x, int y, int radius, int* x_wall, int* y_wall) {
-    int size = 1;
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
 
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
+static bool wall_tile_in_radius(int x, int y, int radius, int* x_wall, int* y_wall) {
+    int size = 1;
+    tile2i tmin, tmax;
+    map_grid_get_area(tile2i(x, y), size, radius, tmin, tmax);
+
+    for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
             if (map_routing_is_wall_passable(MAP_OFFSET(xx, yy))) {
                 *x_wall = xx;
                 *y_wall = yy;
-                return 1;
+                return true;
             }
         }
     }
-    return 0;
+    return false;
 }
+
 int map_routing_wall_tile_in_radius(int x, int y, int radius, int* x_wall, int* y_wall) {
     for (int i = 1; i <= radius; i++) {
         if (wall_tile_in_radius(x, y, i, x_wall, y_wall))

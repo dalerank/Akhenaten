@@ -229,7 +229,7 @@ void editor_tool_update_use(map_point tile) {
         map_image_context_reset_water();
         map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
         map_tiles_update_all_rocks();
-        map_tiles_update_region_empty_land(false, x_min, y_min, x_max, y_max);
+        map_tiles_update_region_empty_land(false, tile2i(x_min, y_min), tile2i(x_max, y_max));
         map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
         break;
     case TOOL_TREES:
@@ -265,7 +265,7 @@ void editor_tool_update_use(map_point tile) {
         map_tiles_update_region_trees(x_min, y_min, x_max, y_max);
         map_tiles_update_region_shrub(x_min, y_min, x_max, y_max);
         map_tiles_update_all_rocks();
-        map_tiles_update_region_empty_land(false, x_min, y_min, x_max, y_max);
+        map_tiles_update_region_empty_land(false, tile2i(x_min, y_min), tile2i(x_max, y_max));
         map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
         break;
     default:

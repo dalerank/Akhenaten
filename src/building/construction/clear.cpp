@@ -51,12 +51,12 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
     game_undo_restore_building_state();
     game_undo_restore_map(0);
 
-    int x_min, x_max, y_min, y_max;
-    map_grid_start_end_to_area(tile2i(x_start, y_start), tile2i(x_end, y_end), &x_min, &y_min, &x_max, &y_max);
+    tile2i tmin, tmax;
+    map_grid_start_end_to_area(tile2i(x_start, y_start), tile2i(x_end, y_end), tmin, tmax);
 
     int visual_feedback_on_delete = config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE);
-    for (int y = y_min; y <= y_max; y++) {
-        for (int x = x_min; x <= x_max; x++) {
+    for (int y = tmin.y(), endy = tmax.y(); y <= endy; y++) {
+        for (int x = tmin.x(), endx = tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION | TERRAIN_DUNE)) {
                 continue;
@@ -77,9 +77,10 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
                     continue;
                 } else if (map_terrain_is(grid_offset, TERRAIN_CANAL)
                            || (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
-                               && map_terrain_is(grid_offset, TERRAIN_CLEARABLE)
-                               && !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)))
+                           && map_terrain_is(grid_offset, TERRAIN_CLEARABLE)
+                           && !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN))) {
                     items_placed++;
+                }
                 continue;
             }
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
@@ -149,11 +150,17 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
     }
     if (!measure_only || !visual_feedback_on_delete) {
         int radius;
-        if (x_max - x_min <= y_max - y_min)
-            radius = y_max - y_min + 3;
-        else
-            radius = x_max - x_min + 3;
-        map_tiles_update_region_empty_land(true, x_min, y_min, x_max, y_max);
+        if (tmax.x() - tmin.x() <= tmax.y() - tmin.y()) {
+            radius = tmax.y() - tmin.y() + 3;
+        } else {
+            radius = tmax.x() - tmin.x() + 3;
+        }
+
+        const int x_min = tmin.x();
+        const int y_min = tmin.y();
+        const int x_max = tmax.x();
+        const int y_max = tmax.y();
+        map_tiles_update_region_empty_land(true, tmin, tmax);
         map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
         map_tiles_update_region_rubble(x_min, y_min, x_max, y_max);
         map_tiles_update_all_gardens();
@@ -162,6 +169,7 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
         map_tiles_update_area_walls(x_min, y_min, radius);
         map_tiles_update_region_aqueducts(x_min - 3, y_min - 3, x_max + 3, y_max + 3);
     }
+
     if (!measure_only) {
         map_routing_update_land();
         map_routing_update_walls();
@@ -199,24 +207,26 @@ int building_construction_clear_land(bool measure_only, int x_start, int y_start
     if (measure_only)
         return clear_land_confirmed(measure_only, x_start, y_start, x_end, y_end);
 
-    int x_min, x_max, y_min, y_max;
-    map_grid_start_end_to_area(map_point(x_start, y_start), map_point(x_end, y_end), &x_min, &y_min, &x_max, &y_max);
+    tile2i tmin, tmax;
+    map_grid_start_end_to_area(map_point(x_start, y_start), map_point(x_end, y_end), tmin, tmax);
 
     int ask_confirm_bridge = 0;
     int ask_confirm_fort = 0;
-    for (int y = y_min; y <= y_max; y++) {
-        for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = MAP_OFFSET(x, y);
-            int building_id = map_building_at(grid_offset);
-            if (building_id) {
-                building* b = building_get(building_id);
-                if (b->type == BUILDING_MENU_FORTS || b->type == BUILDING_FORT_GROUND)
-                    ask_confirm_fort = 1;
+    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+        int grid_offset = tile.grid_offset();
+        int building_id = map_building_at(grid_offset);
+        if (building_id) {
+            building *b = building_get(building_id);
+            if (b->type == BUILDING_MENU_FORTS || b->type == BUILDING_FORT_GROUND) {
+                ask_confirm_fort = 1;
             }
-            if (map_is_bridge(grid_offset))
-                ask_confirm_bridge = 1;
         }
-    }
+
+        if (map_is_bridge(grid_offset)) {
+            ask_confirm_bridge = 1;
+        }
+    });
+
     confirm.x_start = x_start;
     confirm.y_start = y_start;
     confirm.x_end = x_end;

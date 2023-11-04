@@ -35,24 +35,23 @@ struct water_supply_queue_t {
 water_supply_queue_t g_water_supply_queue;
 
 static void mark_well_access(building *well) {
-    int x_min, y_min, x_max, y_max;
+    tile2i tmin, tmax;
 
     int radius = 1;
     if (config_get(CONFIG_GP_CH_WELL_RADIUS_DEPENDS_MOISTURE)) {
         radius = (map_moisture_get(well->tile.grid_offset()) / 40);
         radius = std::clamp(radius, 1, 4);
     }
-    map_grid_get_area(well->tile, 1, radius, &x_min, &y_min, &x_max, &y_max);
 
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            int building_id = map_building_at(MAP_OFFSET(xx, yy));
+    map_grid_get_area(well->tile, 1, radius, tmin, tmax);
 
-            if (building_id) {
-                building_get(building_id)->has_well_access = true;
-            }
+    map_grid_area_foreach(tmin, tmax, [] (tile2i tile) {
+        int building_id = map_building_at(tile.grid_offset());
+
+        if (building_id) {
+            building_get(building_id)->has_well_access = true;
         }
-    }
+    });
 }
 
 void map_water_supply_update_houses() {
@@ -232,14 +231,14 @@ void map_update_wells_range(void) {
     }
 }
 
-int map_water_supply_is_well_unnecessary(int well_id, int radius) {
+e_well_status map_water_supply_is_well_unnecessary(int well_id, int radius) {
     building* well = building_get(well_id);
     int num_houses = 0;
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(well->tile, 1, radius, &x_min, &y_min, &x_max, &y_max);
+    tile2i tmin, tmax;
+    map_grid_get_area(well->tile, 1, radius, tmin, tmax);
 
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
+    for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
             int building_id = map_building_at(grid_offset);
             if (building_id && building_get(building_id)->house_size && !building_get(building_id)->data.house.water_supply) {

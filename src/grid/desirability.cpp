@@ -134,13 +134,13 @@ int map_desirabilty_avg(int x, int y, int size) {
     if (size == 1) {
         return map_grid_get(&desirability_grid, MAP_OFFSET(x, y));
     }
-    int x_min, x_max, y_min, y_max;
-    map_grid_start_end_to_area(tile2i(x - size, y - size), tile2i(x + size, y + size), &x_min, &y_min, &x_max, &y_max);
+    tile2i tmin, tmax;
+    map_grid_start_end_to_area(tile2i(x - size, y - size), tile2i(x + size, y + size), tmin, tmax);
 
     int summ = 0;
     int count = 1;
-    for (int y = y_min; y <= y_max; y++) {
-        for (int x = x_min; x <= x_max; x++) {
+    for (int y = tmin.y(), endy = tmax.y(); y <= endy; y++) {
+        for (int x = tmin.x(), endx = tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
             summ += map_grid_get(&desirability_grid, grid_offset);
             count++;

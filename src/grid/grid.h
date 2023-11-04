@@ -74,9 +74,9 @@ int map_grid_direction_delta(int direction);
 int map_grid_width();
 int map_grid_height();
 void map_grid_bound(int* x, int* y);
-void map_grid_bound_area(int* x_min, int* y_min, int* x_max, int* y_max);
-void map_grid_get_area(tile2i tile, int size, int radius, int* x_min, int* y_min, int* x_max, int* y_max);
-void map_grid_start_end_to_area(tile2i start, tile2i end, int* x_min, int* y_min, int* x_max, int* y_max);
+void map_grid_bound_area(tile2i &tmin, tile2i &tmax);
+void map_grid_get_area(tile2i tile, int size, int radius, tile2i &tmin, tile2i &tmax);
+void map_grid_start_end_to_area(tile2i start, tile2i end, tile2i &tmin, tile2i &tmax);
 int map_grid_is_inside(map_point tile, int size);
 int map_grid_is_inside(int x, int y, int size);
 bool map_grid_inside_map_area(int grid_offset, int edge_size = 0);
@@ -84,6 +84,16 @@ bool map_grid_inside_map_area(int grid_offset, int edge_size = 0);
 using offsets_array = svector<int, 150>;
 void map_grid_adjacent_offsets_xy(int sizex, int sizey, offsets_array &arr);
 void map_grid_adjacent_offsets(int size, offsets_array &arr);
+
+template<typename T>
+void map_grid_area_foreach(tile2i tmin, tile2i tmax, T func) {
+    for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
+            func(tile2i(xx, yy));
+        }
+    }
+}
+
 
 void map_grid_save_state_u8(const uint8_t* grid, buffer* buf);
 void map_grid_save_state_i8(const int8_t* grid, buffer* buf);

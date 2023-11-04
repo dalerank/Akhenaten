@@ -527,7 +527,7 @@ void map_building_tiles_remove(int building_id, int x, int y) {
             }
         }
     }
-    map_tiles_update_region_empty_land(true, x - 2, y - 2, x + size + 2, y + size + 2);
+    map_tiles_update_region_empty_land(true, tile2i(x - 2, y - 2), tile2i(x + size + 2, y + size + 2));
     map_tiles_update_region_meadow(x - 2, y - 2, x + size + 2, y + size + 2);
     map_tiles_update_region_rubble(x, y, x + size, y + size);
 }

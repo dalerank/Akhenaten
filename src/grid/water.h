@@ -35,6 +35,6 @@ struct shore_orientation {
 shore_orientation map_shore_determine_orientation(map_point tile, int size, bool adjust_xy, bool adjacent = false, int shore_terrain = TERRAIN_WATER);
 
 int map_water_get_wharf_for_new_fishing_boat(figure* boat, map_point* tile);
-int map_water_find_alternative_fishing_boat_tile(figure* boat, map_point* tile);
-int map_water_find_shipwreck_tile(figure* wreck, map_point* tile);
+bool map_water_find_alternative_fishing_boat_tile(figure* boat, map_point* tile);
+bool map_water_find_shipwreck_tile(figure* wreck, map_point* tile);
 int map_water_can_spawn_fishing_boat(int x, int y, int size, map_point* tile);

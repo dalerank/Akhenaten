@@ -268,45 +268,36 @@ void map_grid_bound(int* x, int* y) {
     if (*y >= scenario_map_data()->height)
         *y = scenario_map_data()->height - 1;
 }
-void map_grid_bound_area(int* x_min, int* y_min, int* x_max, int* y_max) {
-    if (*x_min < 0)
-        *x_min = 0;
-
-    if (*y_min < 0)
-        *y_min = 0;
-
-    if (*x_max >= scenario_map_data()->width)
-        *x_max = scenario_map_data()->width - 1;
-
-    if (*y_max >= scenario_map_data()->height)
-        *y_max = scenario_map_data()->height - 1;
+void map_grid_bound_area(tile2i &tmin, tile2i &tmax) {
+    if (tmin.x() < 0) { tmin.set_x(0); }
+    if (tmin.y() < 0) { tmin.set_y(0); }
+    if (tmax.x() >= scenario_map_data()->width) { tmax.set_x(scenario_map_data()->width - 1); }
+    if (tmax.y() >= scenario_map_data()->height) { tmax.set_y(scenario_map_data()->height - 1); }
 }
 
-void map_grid_get_area(tile2i tile, int size, int radius, int* x_min, int* y_min, int* x_max, int* y_max) {
-    *x_min = tile.x() - radius;
-    *y_min = tile.y() - radius;
-    *x_max = tile.x() + size + radius - 1;
-    *y_max = tile.y() + size + radius - 1;
-    map_grid_bound_area(x_min, y_min, x_max, y_max);
+void map_grid_get_area(tile2i tile, int size, int radius, tile2i &tmin, tile2i &tmax) {
+    tmin.set(tile.x() - radius, tile.y() - radius);
+    tmax.set(tile.x() + size + radius - 1, tile.y() + size + radius - 1);
+    map_grid_bound_area(tmin, tmax);
 }
 
-void map_grid_start_end_to_area(tile2i start, tile2i end, int* x_min, int* y_min, int* x_max, int* y_max) {
+void map_grid_start_end_to_area(tile2i start, tile2i end, tile2i &tmin, tile2i &tmax) {
     if (start.x() < end.x()) {
-        *x_min = start.x();
-        *x_max = end.x();
+        tmin.set_x(start.x());
+        tmax.set_x(end.x());
     } else {
-        *x_min = end.x();
-        *x_max = start.x();
+        tmin.set_x(end.x());
+        tmax.set_x(start.x());
     }
     if (start.y() < end.y()) {
-        *y_min = start.y();
-        *y_max = end.y();
+        tmin.set_y(start.y());
+        tmax.set_y(end.y());
     } else {
-        *y_min = end.y();
-        *y_max = start.y();
+        tmin.set_y(end.y());
+        tmax.set_y(start.y());
     }
 
-    map_grid_bound_area(x_min, y_min, x_max, y_max);
+    map_grid_bound_area(tmin, tmax);
 }
 
 int map_grid_is_inside(map_point tile, int size) {

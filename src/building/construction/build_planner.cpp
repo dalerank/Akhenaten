@@ -638,14 +638,14 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end) {
 }
 
 static int place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
-    int x_min, x_max, y_min, y_max;
-    map_grid_start_end_to_area(map_point(x_start, y_start), map_point(x_end, y_end), &x_min, &y_min, &x_max, &y_max);
+    tile2i tmin, tmax;
+    map_grid_start_end_to_area(tile2i(x_start, y_start), tile2i(x_end, y_end), tmin, tmax);
 
     int needs_road_warning = 0;
     int items_placed = 0;
     game_undo_restore_building_state();
-    for (int y = y_min; y <= y_max; y++) {
-        for (int x = x_min; x <= x_max; x++) {
+    for (int y = tmin.y(), endy = tmax.y(); y <= endy; y++) {
+        for (int x = tmin.x(), endx = tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
                 || map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN))
@@ -654,6 +654,7 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
             if (measure_only) {
                 map_property_mark_constructing(grid_offset);
                 items_placed++;
+
             } else {
                 if (formation_herd_breeding_ground_at(x, y, 1)) {
                     map_property_clear_constructing_and_deleted();
@@ -672,6 +673,7 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
             }
         }
     }
+
     if (!measure_only) {
         building_construction_warning_check_food_stocks(BUILDING_HOUSE_VACANT_LOT);
         if (needs_road_warning) {
@@ -685,19 +687,20 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
 }
 
 static int place_plaza(map_point start, map_point end) {
-    int x_min, y_min, x_max, y_max;
-    map_grid_start_end_to_area(start, end, &x_min, &y_min, &x_max, &y_max);
+    tile2i tmin, tmax;
+    map_grid_start_end_to_area(start, end, tmin, tmax);
     game_undo_restore_map(1);
 
     int items_placed = 0;
-    for (int y = y_min; y <= y_max; y++) {
-        for (int x = x_min; x <= x_max; x++) {
+    for (int y = tmin.y(), endy = tmax.y(); y <= endy; y++) {
+        for (int x = tmin.x(), endx = tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)
                 && !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_CANAL)
                 && map_tiles_is_paved_road(grid_offset)) {
-                if (!map_property_is_plaza_or_earthquake(grid_offset))
+                if (!map_property_is_plaza_or_earthquake(grid_offset)) {
                     items_placed++;
+                }
 
                 map_image_set(grid_offset, 0);
                 map_property_mark_plaza_or_earthquake(grid_offset);
@@ -710,28 +713,26 @@ static int place_plaza(map_point start, map_point end) {
     return items_placed;
 }
 
-static int place_garden(map_point start, map_point end) {
+static int place_garden(tile2i start, tile2i end) {
     game_undo_restore_map(1);
 
-    int x_min, y_min, x_max, y_max;
-    map_grid_start_end_to_area(start, end, &x_min, &y_min, &x_max, &y_max);
+    tile2i tmin, tmax;
+    map_grid_start_end_to_area(start, end, tmin, tmax);
 
     int items_placed = 0;
-    for (int y = y_min; y <= y_max; y++) {
-        for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = MAP_OFFSET(x, y);
-            if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
-                && !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)) {
-                if (formation_herd_breeding_ground_at(x, y, 1)) {
-                    map_property_clear_constructing_and_deleted();
-                    city_warning_show(WARNING_HERD_BREEDING_GROUNDS);
-                } else {
-                    items_placed++;
-                    map_terrain_add(grid_offset, TERRAIN_GARDEN);
-                }
+    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+        int grid_offset = tile.grid_offset();
+        if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
+            && !map_terrain_exists_tile_in_radius_with_type(tile.x(), tile.y(), 1, 1, TERRAIN_FLOODPLAIN)) {
+            if (formation_herd_breeding_ground_at(tile.x(), tile.y(), 1)) {
+                map_property_clear_constructing_and_deleted();
+                city_warning_show(WARNING_HERD_BREEDING_GROUNDS);
+            } else {
+                items_placed++;
+                map_terrain_add(grid_offset, TERRAIN_GARDEN);
             }
         }
-    }
+    });
     map_tiles_update_all_gardens();
     return items_placed;
 }
@@ -1910,7 +1911,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     formation_move_herds_away(end);
     city_finance_process_construction(total_cost);
     game_undo_finish_build(total_cost);
-    map_tiles_update_region_empty_land(false, start.x() - 2, start.y() - 2, end.x() + size.x + 2, end.y() + size.y + 2);
+    map_tiles_update_region_empty_land(false, start.shifted(-2, -2), end.shifted(size.x + 2, size.y + 2));
     map_routing_update_land();
     map_routing_update_walls();
 

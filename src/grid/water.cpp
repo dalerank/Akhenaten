@@ -254,39 +254,40 @@ int map_water_get_wharf_for_new_fishing_boat(figure* boat, map_point* tile) {
     map_point_store_result(wharf_tile, *tile);
     return wharf->id;
 }
-int map_water_find_alternative_fishing_boat_tile(figure* boat, map_point* tile) {
+
+bool map_water_find_alternative_fishing_boat_tile(figure* boat, map_point* tile) {
     if (map_figure_id_get(boat->tile) == boat->id) {
-        return 0;
+        return false;
     }
 
     for (int radius = 1; radius <= 5; radius++) {
-        int x_min, y_min, x_max, y_max;
-        map_grid_get_area(boat->tile, 1, radius, &x_min, &y_min, &x_max, &y_max);
+        tile2i tmin, tmax;
+        map_grid_get_area(boat->tile, 1, radius, tmin, tmax);
 
-        for (int yy = y_min; yy <= y_max; yy++) {
-            for (int xx = x_min; xx <= x_max; xx++) {
+        for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+            for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
                 int grid_offset = MAP_OFFSET(xx, yy);
                 if (!map_has_figure_at(grid_offset) && map_terrain_is(grid_offset, TERRAIN_WATER)) {
                     map_point_store_result(tile2i(xx, yy), *tile);
-                    return 1;
+                    return true;
                 }
             }
         }
     }
-    return 0;
+    return false;
 }
 
-int map_water_find_shipwreck_tile(figure* wreck, map_point* tile) {
-    if (map_terrain_is(wreck->tile.grid_offset(), TERRAIN_WATER)
-        && map_figure_id_get(wreck->tile) == wreck->id)
-        return 0;
+bool map_water_find_shipwreck_tile(figure* wreck, map_point* tile) {
+    if (map_terrain_is(wreck->tile.grid_offset(), TERRAIN_WATER) && map_figure_id_get(wreck->tile) == wreck->id) {
+        return false;
+    }
 
     for (int radius = 1; radius <= 5; radius++) {
-        int x_min, y_min, x_max, y_max;
-        map_grid_get_area(wreck->tile, 1, radius, &x_min, &y_min, &x_max, &y_max);
+        tile2i tmin, tmax;
+        map_grid_get_area(wreck->tile, 1, radius, tmin, tmax);
 
-        for (int yy = y_min; yy <= y_max; yy++) {
-            for (int xx = x_min; xx <= x_max; xx++) {
+        for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+            for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
                 int grid_offset = MAP_OFFSET(xx, yy);
                 if (!map_has_figure_at(grid_offset) || map_figure_id_get(grid_offset) == wreck->id) {
                     if (map_terrain_is(grid_offset, TERRAIN_WATER)
@@ -295,13 +296,13 @@ int map_water_find_shipwreck_tile(figure* wreck, map_point* tile) {
                         && map_terrain_is(MAP_OFFSET(xx - 2, yy), TERRAIN_WATER)
                         && map_terrain_is(MAP_OFFSET(xx + 2, yy), TERRAIN_WATER)) {
                         map_point_store_result(tile2i(xx, yy), *tile);
-                        return 1;
+                        return true;
                     }
                 }
             }
         }
     }
-    return 0;
+    return false;
 }
 
 static int num_surrounding_water_tiles(int grid_offset) {

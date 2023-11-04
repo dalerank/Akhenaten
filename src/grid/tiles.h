@@ -1,7 +1,7 @@
-#ifndef MAP_TILES_H
-#define MAP_TILES_H
+#pragma once
 
 #include "image_context.h"
+#include "grid/point.h"
 
 void map_tiles_update_all_rocks(void);
 
@@ -24,7 +24,7 @@ int map_tiles_set_road(int x, int y);
 
 void map_tiles_update_all_cleared_land();
 void map_tiles_update_all_empty_land();
-void map_tiles_update_region_empty_land(bool clear, int x_min, int y_min, int x_max, int y_max);
+void map_tiles_update_region_empty_land(bool clear, tile2i tmin, tile2i tmax);
 
 void map_tiles_update_all_meadow(void);
 void map_tiles_update_region_meadow(int x_min, int y_min, int x_max, int y_max);
@@ -59,13 +59,7 @@ enum {
     CLEAR_LAND_CHECK_FIGURES_ANYWHERE = 2
 };
 
-int map_tiles_are_clear(int x,
-                        int y,
-                        int size,
-                        int disallowed_terrain,
-                        int check_figures = CLEAR_LAND_CHECK_FIGURES_ANYWHERE);
+int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain, int check_figures = CLEAR_LAND_CHECK_FIGURES_ANYWHERE);
 
 void map_tiles_add_entry_exit_flags(void);
 void map_tiles_remove_entry_exit_flags(void);
-
-#endif // MAP_TILES_H

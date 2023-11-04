@@ -208,11 +208,11 @@ bool map_has_road_access_temple_complex(tile2i tile, int orientation, bool from_
 
 bool map_road_within_radius(int x, int y, int size, int radius, tile2i &road_tile) {
     OZZY_PROFILER_SECTION("road_within_radius");
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
+    tile2i tmin, tmax;
+    map_grid_get_area(tile2i(x, y), size, radius, tmin, tmax);
 
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
+    for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
             if (map_terrain_is(MAP_OFFSET(xx, yy), TERRAIN_ROAD)) {
                 // Don't spawn walkers on roadblocks
                 if (building_at(xx, yy)->type == BUILDING_ROADBLOCK)
@@ -238,11 +238,11 @@ bool map_closest_road_within_radius(tile2i tile, int size, int radius, tile2i &r
 
 bool map_reachable_road_within_radius(int x, int y, int size, int radius, tile2i &road_tile) {
     OZZY_PROFILER_SECTION("reachable_road_within_radius");
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
+    tile2i tmin, tmax;
+    map_grid_get_area(tile2i(x, y), size, radius, tmin, tmax);
 
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
+    for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
                 if (map_routing_distance(grid_offset) > 0) {

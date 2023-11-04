@@ -57,15 +57,13 @@ int map_floodplain_rebuild_rows() {
             if (is_vergin_water || is_vergin_floodplain) { 
 
                 // loop through for a 3x3 area around the tile
-                int x_min = tile_x - 1;
-                int x_max = tile_x + 1;
-                int y_min = tile_y - 1;
-                int y_max = tile_y + 1;
+                tile2i tmin(tile_x - 1, tile_y - 1);
+                tile2i tmax(tile_x + 1, tile_y + 1);
 
-                map_grid_bound_area(&x_min, &y_min, &x_max, &y_max);
-                int grid_offset = MAP_OFFSET(x_min, y_min);
-                for (int yy = y_min; yy <= y_max; yy++) {
-                    for (int xx = x_min; xx <= x_max; xx++) {
+                map_grid_bound_area(tmin, tmax);
+                int grid_offset = tmin.grid_offset();
+                for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+                    for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
                         // do only on floodplain tiles that haven't been calculated / cached yet
                         if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)
                             && map_grid_is_valid_offset(grid_offset)
@@ -83,7 +81,7 @@ int map_floodplain_rebuild_rows() {
                         }
                         ++grid_offset;
                     }
-                    grid_offset += GRID_LENGTH - (x_max - x_min + 1);
+                    grid_offset += GRID_LENGTH - (tmax.x() - tmin.x() + 1);
                 }
             }
         });
@@ -112,35 +110,31 @@ void map_floodplain_rebuild_shores() {
 
     foreach_river_tile([&] (int tile_offset) {
         // get current river tile's grid offset and coords
-        int tx = MAP_X(tile_offset);
-        int ty = MAP_Y(tile_offset);
+        tile2i tile(tile_offset);
 
-        int x_min, y_min, x_max, y_max;
-        map_grid_get_area(tile2i(tx, ty), 1, 1, &x_min, &y_min, &x_max, &y_max);
+        tile2i tmin, tmax;
+        map_grid_get_area(tile, 1, 1, tmin, tmax);
 
-        for (int yy = y_min; yy <= y_max; yy++) {
-            for (int xx = x_min; xx <= x_max; xx++) {
-                tile2i shore(xx, yy);
-                if (map_get_floodplain_edge(shore)) {
-                    continue;
-                }
+        map_grid_area_foreach(tmin, tmax, [] (tile2i shore) {
+            if (map_get_floodplain_edge(shore)) {
+                return;
+            }
 
-                if (map_terrain_is(shore.grid_offset(), TERRAIN_WATER) || map_terrain_is(shore.grid_offset(), TERRAIN_FLOODPLAIN)) {
-                    continue;
-                }
+            if (map_terrain_is(shore.grid_offset(), TERRAIN_WATER) || map_terrain_is(shore.grid_offset(), TERRAIN_FLOODPLAIN)) {
+                return;
+            }
 
-                int base_offset = shore.grid_offset();
-                offsets_array offsets;
-                map_grid_adjacent_offsets_xy(1, 1, offsets);
-                for (const auto &tile_delta: offsets) {
-                    int grid_offset = base_offset + tile_delta;
-                    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
-                        map_grid_set(&g_terrain_floodplain_flood_shore, MAP_OFFSET(xx, yy), 1);
-                        break;
-                    }
+            int base_offset = shore.grid_offset();
+            offsets_array offsets;
+            map_grid_adjacent_offsets_xy(1, 1, offsets);
+            for (const auto &tile_delta: offsets) {
+                int grid_offset = base_offset + tile_delta;
+                if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+                    map_grid_set(&g_terrain_floodplain_flood_shore, grid_offset, 1);
+                    break;
                 }
             }
-        }
+        });
     });
 }
 
@@ -187,45 +181,37 @@ int map_get_fertility(int grid_offset, int tally_type) { // actual percentage in
     return 0;
 }
 
-static uint8_t map_get_fertility_average(int grid_offset, int x, int y, int size) {
+static uint8_t map_get_fertility_average(int x, int y, int size) {
     // returns average of fertility in square starting on the top-left corner
-    int x_min = x;
-    int y_min = y;
-    int x_max = x_min + size - 1;
-    int y_max = y_min + size - 1;
+    tile2i tmin(x, y);
+    tile2i tmax(x + size - 1, y + size - 1);
 
     int fert_total = 0;
-    map_grid_bound_area(&x_min, &y_min, &x_max, &y_max);
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            fert_total += map_get_fertility(grid_offset, FERT_WITH_MALUS);
-            ++grid_offset;
-        }
-        grid_offset += GRID_LENGTH - (x_max - x_min + 1);
-    }
+    map_grid_bound_area(tmin, tmax);
+
+    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+        fert_total += map_get_fertility(tile.grid_offset(), FERT_WITH_MALUS);
+    });
+
     return fert_total / (size * size);
 }
 
-void map_update_area_fertility(int grid_offset, int x, int y, int size, int delta) {
+void map_update_area_fertility(int x, int y, int size, int delta) {
     // returns average of fertility in square starting on the top-left corner
-    int x_min = x;
-    int y_min = y;
-    int x_max = x_min + size - 1;
-    int y_max = y_min + size - 1;
+    tile2i tmin(x, y);
+    tile2i tmax(x + size - 1, y + size - 1);
 
-    map_grid_bound_area(&x_min, &y_min, &x_max, &y_max);
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            map_update_tile_fertility(grid_offset, delta);
-            ++grid_offset;
-        }
-        grid_offset += GRID_LENGTH - (x_max - x_min + 1);
-    }
+    map_grid_bound_area(tmin, tmax);
+
+    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+        map_update_tile_fertility(tile.grid_offset(), delta);
+    });
 }
 
 uint8_t map_get_fertility_for_farm(int grid_offset) {
     int x = MAP_X(grid_offset);
     int y = MAP_Y(grid_offset);
+
     bool is_irrigated = false;
     if (config_get(CONFIG_GP_FIX_IRRIGATION_RANGE)) {
         is_irrigated = map_terrain_exists_tile_in_area_with_type(x, y, 3, TERRAIN_IRRIGATION_RANGE);
@@ -238,7 +224,7 @@ uint8_t map_get_fertility_for_farm(int grid_offset) {
         irrigation_bonus = 20;
     }
 
-    return std::min(2 + map_get_fertility_average(grid_offset, x, y, 3) + is_irrigated * irrigation_bonus, 99);
+    return std::min(2 + map_get_fertility_average(x, y, 3) + is_irrigated * irrigation_bonus, 99);
 }
 
 void map_set_floodplain_growth(int grid_offset, int growth) {

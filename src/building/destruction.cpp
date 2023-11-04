@@ -154,7 +154,7 @@ void building_destroy_by_poof(building* b, bool clouds) {
 
     do {
         b->state = BUILDING_STATE_UNUSED;
-        map_tiles_update_region_empty_land(true, b->tile.x(), b->tile.y(), b->tile.x() + b->size - 1, b->tile.y() + b->size - 1);
+        map_tiles_update_region_empty_land(true, b->tile, b->tile.shifted(b->size - 1, b->size - 1));
         if (b->next_part_building_id < 1) {
             return;
         }

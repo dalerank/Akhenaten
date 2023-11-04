@@ -19,31 +19,29 @@
 #include "scenario/map.h"
 
 static void mark_native_land(int x, int y, int size, int radius) {
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            map_property_mark_native_land(MAP_OFFSET(xx, yy));
-        }
-    }
+    tile2i tmin, tmax;
+    map_grid_get_area(tile2i(x, y), size, radius, tmin, tmax);
+    map_grid_area_foreach(tmin, tmax, [] (tile2i tile) {
+        map_property_mark_native_land(tile.grid_offset());
+    });
 }
 
-static int has_building_on_native_land(int x, int y, int size, int radius) {
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(tile2i(x, y), size, radius, &x_min, &y_min, &x_max, &y_max);
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
+static bool has_building_on_native_land(int x, int y, int size, int radius) {
+    tile2i tmin, tmax;
+    map_grid_get_area(tile2i(x, y), size, radius, tmin, tmax);
+    for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
             int building_id = map_building_at(MAP_OFFSET(xx, yy));
             if (building_id > 0) {
                 int type = building_get(building_id)->type;
                 if (type != BUILDING_MISSION_POST && type != BUILDING_NATIVE_HUT && type != BUILDING_NATIVE_MEETING
                     && type != BUILDING_NATIVE_CROPS && type != BUILDING_ROADBLOCK) {
-                    return 1;
+                    return true;
                 }
             }
         }
     }
-    return 0;
+    return false;
 }
 
 static void determine_meeting_center(void) {

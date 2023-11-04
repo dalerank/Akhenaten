@@ -20,41 +20,40 @@
 #include <vector>
 #include <time.h>
 
-static int get_free_tile(int x, int y, int allow_negative_desirability, int* x_tile, int* y_tile) {
+static int get_free_tile(int x, int y, int allow_negative_desirability, tile2i &outtile) {
     unsigned int disallowed_terrain = ~(TERRAIN_ACCESS_RAMP | TERRAIN_MEADOW);
-    int tile_found = 0;
-    int x_found = 0, y_found = 0;
+    bool tile_found = false;
+    tile2i tmin, tmax, tfound;
+    map_grid_get_area(tile2i(x, y), 1, 4, tmin, tmax);
 
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(tile2i(x, y), 1, 4, &x_min, &y_min, &x_max, &y_max);
-
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
+    for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
             if (!map_terrain_is(grid_offset, disallowed_terrain)) {
-                if (map_soldier_strength_get(grid_offset))
+                if (map_soldier_strength_get(grid_offset)) {
                     return 0;
+                }
 
                 int desirability = map_desirability_get(grid_offset);
                 if (allow_negative_desirability) {
-                    if (desirability > 1)
+                    if (desirability > 1) {
                         return 0;
+                    }
 
-                } else if (desirability)
+                } else if (desirability) {
                     return 0;
+                }
 
                 tile_found = 1;
-                x_found = xx;
-                y_found = yy;
+                tfound = tile2i(xx, yy);
             }
         }
     }
-    *x_tile = x_found;
-    *y_tile = y_found;
+    outtile = tfound;
     return tile_found;
 }
 
-static int get_roaming_destination(int formation_id, int allow_negative_desirability, int x, int y, int distance, int direction, int* x_tile, int* y_tile) {
+static int get_roaming_destination(int formation_id, int allow_negative_desirability, int x, int y, int distance, int direction, tile2i &outtile) {
     int target_direction = (formation_id + random_byte()) & 6;
     if (direction) {
         target_direction = direction;
@@ -107,8 +106,9 @@ static int get_roaming_destination(int formation_id, int allow_negative_desirabi
         else if (y_target >= scenario_map_data()->height - 1)
             y_target = scenario_map_data()->height - 2;
 
-        if (get_free_tile(x_target, y_target, allow_negative_desirability, x_tile, y_tile))
+        if (get_free_tile(x_target, y_target, allow_negative_desirability, outtile)) {
             return 1;
+        }
 
         target_direction += 2;
         if (target_direction > 6)
@@ -227,11 +227,11 @@ static void update_herd_formation(formation* m) {
         attacking_animals = 1;
         m->missile_attack_timeout--;
     }
-    if (m->figures[0] && GAME_ENV != ENGINE_ENV_PHARAOH) {
-        figure* f = figure_get(m->figures[0]);
-        if (f->state == FIGURE_STATE_ALIVE)
-            formation_set_home(m, f->tile.x(), f->tile.y());
-    }
+    //if (m->figures[0] && GAME_ENV != ENGINE_ENV_PHARAOH) {
+    //    figure* f = figure_get(m->figures[0]);
+    //    if (f->state == FIGURE_STATE_ALIVE)
+    //        formation_set_home(m, f->tile.x(), f->tile.y());
+    //}
     int roam_distance;
     int roam_delay;
     int allow_negative_desirability;
@@ -268,9 +268,8 @@ static void update_herd_formation(formation* m) {
             formation_set_destination(m, m->x_home, m->y_home);
             move_animals(m, attacking_animals, terrain_mask);
         } else {
-            int x_tile, y_tile;
-            if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                set_figures_to_initial(m);
+            tile2i rtile;
+            set_figures_to_initial(m);
 
             /*if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home, roam_distance,
             m->herd_direction, &x_tile, &y_tile)) { m->herd_direction = 0; if (formation_enemy_move_formation_to(m,
@@ -280,10 +279,10 @@ static void update_herd_formation(formation* m) {
                 }
             }*/
 
-            if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home, roam_distance, m->herd_direction, &x_tile, &y_tile)) {
+            if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home, roam_distance, m->herd_direction, rtile)) {
                 m->herd_direction = 0;
-                if (formation_enemy_move_formation_to(m, x_tile, y_tile, &x_tile, &y_tile)) {
-                    formation_set_destination(m, x_tile, y_tile);
+                if (formation_enemy_move_formation_to(m, rtile, rtile)) {
+                    formation_set_destination(m, rtile.x(), rtile.y());
                     move_animals(m, attacking_animals, terrain_mask);
                 }
             }

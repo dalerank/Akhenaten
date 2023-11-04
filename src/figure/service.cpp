@@ -12,58 +12,54 @@
 
 static int provide_entertainment(int x, int y, int shows, void (*callback)(building*, int)) {
     int serviced = 0;
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(tile2i(x, y), 1, 2, &x_min, &y_min, &x_max, &y_max);
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = MAP_OFFSET(xx, yy);
-            int building_id = map_building_at(grid_offset);
-            if (building_id) {
-                building* b = building_get(building_id);
-                if (b->house_size && b->house_population > 0) {
-                    callback(b, shows);
-                    serviced++;
-                }
+    tile2i tmin, tmax;
+    map_grid_get_area(tile2i(x, y), 1, 2, tmin, tmax);
+    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+        int grid_offset = tile.grid_offset();
+        int building_id = map_building_at(grid_offset);
+        if (building_id) {
+            building *b = building_get(building_id);
+            if (b->house_size && b->house_population > 0) {
+                callback(b, shows);
+                serviced++;
             }
         }
-    }
+    });
     return serviced;
 }
 
 static int provide_missionary_coverage(int x, int y) {
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(tile2i(x, y), 1, 4, &x_min, &y_min, &x_max, &y_max);
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            int building_id = map_building_at(MAP_OFFSET(xx, yy));
-            if (building_id) {
-                building* b = building_get(building_id);
-                if (b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING)
-                    b->sentiment.native_anger = 0;
-            }
+    tile2i tmin, tmax;
+    map_grid_get_area(tile2i(x, y), 1, 4, tmin, tmax);
+
+    map_grid_area_foreach(tmin, tmax, [] (tile2i tile) {
+        int building_id = map_building_at(tile.grid_offset());
+        if (building_id) {
+            building *b = building_get(building_id);
+            if (b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING)
+                b->sentiment.native_anger = 0;
         }
-    }
+    });
     return 1;
 }
 
 template<typename T>
 static int provide_service(tile2i tile, figure* f, int* data, T callback) {
     int serviced = 0;
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(tile, 1, 2, &x_min, &y_min, &x_max, &y_max);
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = MAP_OFFSET(xx, yy);
-            int building_id = map_building_at(grid_offset);
-            if (building_id) {
-                building* b = building_get(building_id);
-                callback(b, f, data);
-                if (b->house_size && b->house_population > 0) {
-                    serviced++;
-                }
+    tile2i tmin, tmax;
+    map_grid_get_area(tile, 1, 2, tmin, tmax);
+
+    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+        int grid_offset = tile.grid_offset();
+        int building_id = map_building_at(grid_offset);
+        if (building_id) {
+            building *b = building_get(building_id);
+            callback(b, f, data);
+            if (b->house_size && b->house_population > 0) {
+                serviced++;
             }
         }
-    }
+    });
     return serviced;
 }
 
@@ -279,21 +275,20 @@ static void distribute_market_resources(building* b, building* market) {
 static int provide_market_goods(building* market, int x, int y) {
     int serviced = 0;
     //    building *market = building_get(market);
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(tile2i(x, y), 1, 2, &x_min, &y_min, &x_max, &y_max);
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = MAP_OFFSET(xx, yy);
-            int building_id = map_building_at(grid_offset);
-            if (building_id) {
-                building* b = building_get(building_id);
-                if (b->house_size && b->house_population > 0) {
-                    distribute_market_resources(b, market);
-                    serviced++;
-                }
+    tile2i tmin, tmax;
+    map_grid_get_area(tile2i(x, y), 1, 2, tmin, tmax);
+
+    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+        int grid_offset = tile.grid_offset();
+        int building_id = map_building_at(grid_offset);
+        if (building_id) {
+            building *b = building_get(building_id);
+            if (b->house_size && b->house_population > 0) {
+                distribute_market_resources(b, market);
+                serviced++;
             }
         }
-    }
+    });
     return serviced;
 }
 

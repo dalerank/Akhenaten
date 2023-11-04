@@ -11,45 +11,42 @@ void map_soldier_strength_clear(void) {
     map_grid_clear(&strength);
 }
 void map_soldier_strength_add(int x, int y, int radius, int amount) {
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(tile2i(x, y), 1, radius, &x_min, &y_min, &x_max, &y_max);
+    tile2i tmin, tmax;
+    map_grid_get_area(tile2i(x, y), 1, radius, tmin, tmax);
 
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = MAP_OFFSET(xx, yy);
-            int v = map_grid_get(&strength, grid_offset);
-            map_grid_set(&strength, grid_offset, v + amount);
-            if (map_has_figure_at(grid_offset)) {
-                if (figure_get(map_figure_id_get(grid_offset))->is_legion())
-                    map_grid_set(&strength, grid_offset, v + amount + 2);
-            }
+    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+        int grid_offset = tile.grid_offset();
+        int v = map_grid_get(&strength, grid_offset);
+        map_grid_set(&strength, grid_offset, v + amount);
+        if (map_has_figure_at(grid_offset)) {
+            if (figure_get(map_figure_id_get(grid_offset))->is_legion())
+                map_grid_set(&strength, grid_offset, v + amount + 2);
         }
-    }
+    });
 }
 
 int map_soldier_strength_get(int grid_offset) {
     return map_grid_get(&strength, grid_offset);
 }
-int map_soldier_strength_get_max(int x, int y, int radius, int* out_x, int* out_y) {
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(tile2i(x, y), 1, radius, &x_min, &y_min, &x_max, &y_max);
+
+int map_soldier_strength_get_max(int x, int y, int radius, tile2i &out) {
+    tile2i tmin, tmax;
+    map_grid_get_area(tile2i(x, y), 1, radius, tmin, tmax);
 
     int max_value = 0;
-    int max_tile_x = 0, max_tile_y = 0;
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = MAP_OFFSET(xx, yy);
-            if (map_routing_distance(grid_offset) > 0 && map_grid_get(&strength, grid_offset) > max_value) {
-                max_value = map_grid_get(&strength, grid_offset);
-                max_tile_x = xx;
-                max_tile_y = yy;
-            }
+    tile2i max_tile(0, 0);
+    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+        int grid_offset = tile.grid_offset();
+        if (map_routing_distance(grid_offset) > 0 && map_grid_get(&strength, grid_offset) > max_value) {
+            max_value = map_grid_get(&strength, grid_offset);
+            max_tile = tile;
         }
-    }
+    });
+
     if (max_value > 0) {
-        *out_x = max_tile_x;
-        *out_y = max_tile_y;
-        return 1;
+        out = max_tile;
+        return true;
     }
-    return 0;
+
+    return false;
 }
