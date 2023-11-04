@@ -136,6 +136,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         break;
     case BUILDING_POMEGRANATES_FARM:
         b->output_resource_id = RESOURCE_POMEGRANATES;
+        b->fire_proof = 1;
         break;
     case BUILDING_CHICKPEAS_FARM:
         b->output_resource_id = RESOURCE_CHICKPEAS;

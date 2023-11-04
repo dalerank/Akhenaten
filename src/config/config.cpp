@@ -88,6 +88,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"city_produce_timber", true},
     {"city_produce_chickpeas", true},
     {"city_produce_pomegranades", true},
+    {"city_produce_lettuce", true},
     {"city_building_copper_mine", true},
     {"city_produce_copper", true},
 
@@ -101,7 +102,10 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"city_building_fishing_wharf", true},
     {"city_produce_fish", true},
     {"fishing_wharf_spawn_boats", false},
-    {"city_flotsam_enabled", false}
+    {"city_flotsam_enabled", false},
+    {"chickpeas_farm_enabled", true},
+    {"lettuce_farm_enabled", true},
+    {"pomegranates_farm_enabled", true},
 };
 
 static const char* ini_string_keys[] = {
