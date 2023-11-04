@@ -110,21 +110,23 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
     case BUILDING_STONE_QUARRY:
     case BUILDING_CONSERVATORY:
         if (b->num_workers <= 0) {
-            if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                return 0;
-            map_sprite_animation_set(grid_offset, 1);
-            return 1;
+            return 0;
+            //map_sprite_animation_set(grid_offset, 1);
+            //return 1;
         }
         break;
+
     case BUILDING_DOCK:
         if (b->data.dock.num_ships <= 0) {
             map_sprite_animation_set(grid_offset, 1);
             return 1;
         }
         break;
+
     default:
-        if (b->main()->num_workers <= 0)
+        if (b->main()->num_workers <= 0) {
             return 0;
+        }
         break;
     }
 
@@ -195,8 +197,9 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
     } else {
         // Absolutely normal case
         new_sprite = map_sprite_animation_at(grid_offset) + 1;
-        if (new_sprite > max_frames)
+        if (new_sprite > max_frames) {
             new_sprite = 1;
+        }
     }
 
     map_sprite_animation_set(grid_offset, is_reverse ? new_sprite | 0x80 : new_sprite);
