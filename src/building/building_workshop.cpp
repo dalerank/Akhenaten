@@ -31,10 +31,11 @@ static void building_workshop_draw_info(object_info& c, int help_id, const char*
 
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + input_resource, c.x_offset + 32, c.y_offset + 56);
     width = lang_text_draw(group_id, 12, c.x_offset + 60, c.y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    if (b->stored_full_amount < 100)
+    if (b->stored_full_amount < 100) {
         lang_text_draw_amount(8, 10, 0, c.x_offset + 60 + width, c.y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    else
+    } else {
         lang_text_draw_amount(8, 10, b->stored_full_amount, c.x_offset + 60 + width, c.y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
+    }
 
     if (!c.has_road_access)
         window_building_draw_description_at(c, 86, 69, 25);
@@ -79,8 +80,8 @@ void building_weapons_workshop_draw_info(object_info& c) {
 }
 
 void building_luxury_workshop_draw_info(object_info& c) {
-    int input_resource = RESOURCE_GEMS;
-    int output_resource = RESOURCE_LUXURY_GOODS;
+    e_resource input_resource = RESOURCE_GEMS;
+    e_resource output_resource = RESOURCE_LUXURY_GOODS;
 
     building_workshop_draw_info(c, 99, "luxury_workshop", 125, output_resource, input_resource);
 }
@@ -95,6 +96,12 @@ void building_papyrus_workshop_draw_info(object_info& c) {
     int output_resource = RESOURCE_PAPYRUS;
 
     building_workshop_draw_info(c, 1, "papyrus_workshop", 190, output_resource, RESOURCE_REEDS);
+}
+
+void building_cattle_ranch_draw_info(object_info &c) {
+    e_resource output_resource = RESOURCE_MEAT;
+
+    building_workshop_draw_info(c, 1, "cattle_ranch", 117, output_resource, RESOURCE_STRAW);
 }
 
 // TODO: fix brick maker panel

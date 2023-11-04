@@ -9,3 +9,4 @@ void building_luxury_workshop_draw_info(object_info& c);
 void building_pottery_workshop_draw_info(object_info& c);
 void building_brick_maker_workshop_draw_info(object_info& c);
 void building_papyrus_workshop_draw_info(object_info &c);
+void building_cattle_ranch_draw_info(object_info &c);
