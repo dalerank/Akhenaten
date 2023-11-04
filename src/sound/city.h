@@ -80,6 +80,7 @@ enum e_sound_channel_city {
     SOUND_CHANNEL_CITY_FLOODPLAIN,
     SOUND_CHANNEL_CITY_MARSHLAND,
     SOUND_CHANNEL_CITY_CHICKFARM,
+    SOUND_CHANNEL_CITY_COWFARM,
 };
 
 struct city_sound_channel {

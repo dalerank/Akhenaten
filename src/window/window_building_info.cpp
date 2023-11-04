@@ -625,6 +625,7 @@ static void draw_refresh_background() {
             case BUILDING_JEWELS_WORKSHOP: building_luxury_workshop_draw_info(context); break;
             case BUILDING_POTTERY_WORKSHOP: building_pottery_workshop_draw_info(context); break;
             case BUILDING_PAPYRUS_WORKSHOP: building_papyrus_workshop_draw_info(context); break;
+            case BUILDING_CATTLE_RANCH: building_cattle_ranch_draw_info(context); break;
             
             case BUILDING_MARKET:
                 if (context.storage_show_special_orders)

@@ -201,7 +201,7 @@ static building_properties properties[400] = {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
-    {4, 0, GROUP_BUILDING_CATTLE_RANCH},    // ranch
+    {3, 0, 0, 0}, //GROUP_BUILDING_CATTLE_RANCH},    // ranch
     {2, 0, GROUP_BUILDING_REEDS_COLLECTOR}, // reeds
     {3, 1, 0, 0},                           // figs farm
     {0, 0, 0, 0},
@@ -242,6 +242,7 @@ const building_properties dummy_property = {0, 0, 0, 0};
 void building_properties_init() {
     properties[BUILDING_WATER_SUPPLY] = {2, 1, 0, 0, 0, IMG_WATER_SUPPLY};
     properties[BUILDING_WELL] = {1, 1, 0, 0, 0, IMG_WELL};
+    properties[BUILDING_CATTLE_RANCH] = {3, 0, 0, 0, 0, IMG_CATTLE_RANCH};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

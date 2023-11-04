@@ -142,6 +142,7 @@ static generic_button checkbox_buttons[] = {
     {20, 288, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_POMEGRANATES_FARM, TR_CONFIG_BUILDING_POMEGRANATES_FARM},
     {20, 312, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_FIGS_FARM, TR_CONFIG_BUILDING_FIGS_FARM},
     {20, 336, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_GRAIN_FARM, TR_CONFIG_BUILDING_GRAIN_FARM},
+    {20, 360, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_CATTLE_RANCH, TR_CONFIG_BUILDING_CATTLE_RANCH},
     
     //
     {20, 72, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
@@ -154,9 +155,10 @@ static generic_button checkbox_buttons[] = {
     {20, 240, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_LETTUCE, TR_CONFIG_RESOURCE_LETTUCE},
     {20, 264, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_FIGS, TR_CONFIG_RESOURCE_FIGS},
     {20, 288, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_GRAIN, TR_CONFIG_RESOURCE_GRAIN},
+    {20, 312, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_MEAT, TR_CONFIG_RESOURCE_MEAT},
 };
 
-static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 14, 5, 12, 10};
+static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 14, 5, 13, 11};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -359,10 +361,10 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     const mouse* m_dialog = mouse_in_dialog(m);
     bool mouse_button = false;
 
-    mouse_button |= generic_buttons_min_handle_mouse(m_dialog, 0, 0, checkbox_buttons, data.starting_option + options_per_page[data.page], &data.focus_button, data.starting_option);
-    mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, std::size(bottom_buttons), &data.bottom_focus_button);
-    mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0, page_buttons, std::size(page_buttons), &data.page_focus_button);
-    mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
+    mouse_button |= !!generic_buttons_min_handle_mouse(m_dialog, 0, 0, checkbox_buttons, data.starting_option + options_per_page[data.page], &data.focus_button, data.starting_option);
+    mouse_button |= !!generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, (int)std::size(bottom_buttons), &data.bottom_focus_button);
+    mouse_button |= !!generic_buttons_handle_mouse(m_dialog, 0, 0, page_buttons, (int)std::size(page_buttons), &data.page_focus_button);
+    mouse_button |= !!generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
 
     if (!mouse_button && (m->right.went_up || h->escape_pressed)) {
         if (data.close_callback) {
@@ -406,6 +408,7 @@ static void toggle_building(int id, int param2) {
     case CONGIG_GP_CH_BUILDING_POMEGRANATES_FARM: type = BUILDING_POMEGRANATES_FARM; break;
     case CONGIG_GP_CH_BUILDING_FIGS_FARM: type = BUILDING_FIGS_FARM; break;
     case CONGIG_GP_CH_BUILDING_GRAIN_FARM: type = BUILDING_GRAIN_FARM; break;
+    case CONGIG_GP_CH_BUILDING_CATTLE_RANCH: type = BUILDING_CATTLE_RANCH; break;
     default:
         return;
     }
@@ -428,6 +431,7 @@ static void toggle_resource(int id, int param2) {
     case CONFIG_GP_CH_RESOURCE_POMEGRANADES: resource = RESOURCE_POMEGRANATES; break;
     case CONFIG_GP_CH_RESOURCE_FIGS: resource = RESOURCE_FIGS; break;
     case CONFIG_GP_CH_RESOURCE_GRAIN: resource = RESOURCE_GRAIN; break;
+    case CONFIG_GP_CH_RESOURCE_MEAT: resource = RESOURCE_MEAT; break;
     default:
         return;
     }
@@ -503,6 +507,7 @@ static bool is_config_option_enabled(int option) {
     case CONFIG_GP_CH_RESOURCE_LETTUCE: return can_city_produce_resource(RESOURCE_LETTUCE);
     case CONFIG_GP_CH_RESOURCE_FIGS: return can_city_produce_resource(RESOURCE_FIGS);
     case CONFIG_GP_CH_RESOURCE_GRAIN: return can_city_produce_resource(RESOURCE_GRAIN);
+    case CONFIG_GP_CH_RESOURCE_MEAT: return can_city_produce_resource(RESOURCE_MEAT);
     case CONFIG_GP_CH_RESOURCE_PAPYRUS: return can_city_produce_resource(RESOURCE_PAPYRUS);
     case CONGIG_GP_CH_BUILDING_WOOD_CUTTER: return building_menu_is_building_enabled(BUILDING_WOOD_CUTTERS);
     case CONGIG_GP_CH_BUILDING_COPPER_MINE: return building_menu_is_building_enabled(BUILDING_COPPER_MINE);
@@ -516,6 +521,7 @@ static bool is_config_option_enabled(int option) {
     case CONGIG_GP_CH_BUILDING_LETTUCE_FARM: return building_menu_is_building_enabled(BUILDING_LETTUCE_FARM);
     case CONGIG_GP_CH_BUILDING_FIGS_FARM: return building_menu_is_building_enabled(BUILDING_FIGS_FARM);
     case CONGIG_GP_CH_BUILDING_GRAIN_FARM: return building_menu_is_building_enabled(BUILDING_GRAIN_FARM);
+    case CONGIG_GP_CH_BUILDING_CATTLE_RANCH: return building_menu_is_building_enabled(BUILDING_CATTLE_RANCH);
     }
 
     return data.config_values[option].new_value;

@@ -110,6 +110,8 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"city_produce_figs", true},
     {"grain_farm_enabled", true},
     {"city_produce_grain", true},
+    {"cattle_ranch_enabled", true},
+    {"city_produce_meat", true},
 };
 
 static const char* ini_string_keys[] = {

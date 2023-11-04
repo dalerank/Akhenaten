@@ -880,29 +880,18 @@ int building_mothball_set(building* b, int mothball) {
 
 bool resource_required_by_workshop(building* b, int resource) {
     switch (resource) {
-    case RESOURCE_CLAY:
-    return (b->type == BUILDING_POTTERY_WORKSHOP || b->type == BUILDING_BRICKS_WORKSHOP);
-    case RESOURCE_STRAW:
-    return (b->type == BUILDING_BRICKS_WORKSHOP || b->type == BUILDING_CATTLE_RANCH);
-    case RESOURCE_BARLEY:
-    return b->type == BUILDING_BEER_WORKSHOP;
-    case RESOURCE_REEDS:
-    return b->type == BUILDING_PAPYRUS_WORKSHOP;
-    case RESOURCE_FLAX:
-    return b->type == BUILDING_LINEN_WORKSHOP;
-    case RESOURCE_GEMS:
-    return b->type == BUILDING_JEWELS_WORKSHOP;
-    case RESOURCE_COPPER:
-    return b->type == BUILDING_WEAPONS_WORKSHOP;
-    case RESOURCE_TIMBER:
-    return b->type == BUILDING_CHARIOTS_WORKSHOP;
-    case RESOURCE_HENNA:
-    return b->type == BUILDING_PAINT_WORKSHOP;
-    case RESOURCE_OIL:
-    return b->type == BUILDING_LAMP_WORKSHOP;
-    default:
-    return false;
+    case RESOURCE_CLAY: return (b->type == BUILDING_POTTERY_WORKSHOP || b->type == BUILDING_BRICKS_WORKSHOP);
+    case RESOURCE_STRAW: return (b->type == BUILDING_BRICKS_WORKSHOP || b->type == BUILDING_CATTLE_RANCH);
+    case RESOURCE_BARLEY: return b->type == BUILDING_BEER_WORKSHOP;
+    case RESOURCE_REEDS: return b->type == BUILDING_PAPYRUS_WORKSHOP;
+    case RESOURCE_FLAX: return b->type == BUILDING_LINEN_WORKSHOP;
+    case RESOURCE_GEMS: return b->type == BUILDING_JEWELS_WORKSHOP;
+    case RESOURCE_COPPER: return b->type == BUILDING_WEAPONS_WORKSHOP;
+    case RESOURCE_TIMBER: return b->type == BUILDING_CHARIOTS_WORKSHOP;
+    case RESOURCE_HENNA: return b->type == BUILDING_PAINT_WORKSHOP;
+    case RESOURCE_OIL: return b->type == BUILDING_LAMP_WORKSHOP;
     }
+    return false;
 }
 
 // void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever) {
@@ -1068,7 +1057,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         //        building_state_load_from_buffer(buf, &all_buildings[i]);
         auto b = &g_all_buildings[i];
-        int sind = iob->get_offset();
+        int sind = (int)iob->get_offset();
         if (sind == 640)
             int a = 2134;
 

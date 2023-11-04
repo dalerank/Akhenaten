@@ -29,6 +29,7 @@ enum e_image_id : uint16_t {
     IMG_WELL = 24,
     IMG_WELL_FANCY = 25,
     IMG_EXPLOSION = 26,
+    IMG_CATTLE_RANCH = 27,
 
     IMG_SIZE
 };
