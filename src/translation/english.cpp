@@ -106,6 +106,7 @@ static translation_string all_strings[] = {
      {TR_CONFIG_RESOURCE_PAPYRUS, "City produce papyrus"},
      {TR_CONFIG_RESOURCE_FISH, "City produce fish"},
      {TR_CONFIG_RESOURCE_CHICKPEAS, "City produce chickpeas"},
+     {TR_CONFIG_RESOURCE_POMEGRANADES, "City produce pomegranades"},
      {TR_CONFIG_DRAW_FPS, "Draw FPS"},
      {TR_HOTKEY_TITLE, "Hotkeys configuration"},
      {TR_HOTKEY_LABEL, "Hotkey"},

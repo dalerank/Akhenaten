@@ -145,9 +145,11 @@ static generic_button checkbox_buttons[] = {
     {20, 144, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_PAPYRUS, TR_CONFIG_RESOURCE_PAPYRUS},
     {20, 168, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_FISH, TR_CONFIG_RESOURCE_FISH},
     {20, 192, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CHICKPEAS, TR_CONFIG_RESOURCE_CHICKPEAS},
+    {20, 216, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_POMEGRANADES, TR_CONFIG_RESOURCE_POMEGRANADES},
+    
 };
 
-static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 14, 5, 7, 6};
+static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 14, 5, 7, 7};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -403,19 +405,25 @@ static void toggle_building(int id, int param2) {
 
 static void toggle_resource(int id, int param2) {
     e_resource resource = RESOURCE_NONE;
+    e_building_type building = BUILDING_NONE;
     switch (id) {
-    case CONFIG_GP_CH_RESOURCE_TIMBER: resource = RESOURCE_TIMBER; break;
-    case CONFIG_GP_CH_RESOURCE_COPPER: resource = RESOURCE_COPPER; break;
-    case CONFIG_GP_CH_RESOURCE_REED: resource = RESOURCE_REEDS; break;
-    case CONFIG_GP_CH_RESOURCE_PAPYRUS: resource = RESOURCE_PAPYRUS; break;
-    case CONFIG_GP_CH_RESOURCE_FISH: resource = RESOURCE_FISH; break;
-    case CONFIG_GP_CH_RESOURCE_CHICKPEAS: resource = RESOURCE_CHICKPEAS; break;
+    case CONFIG_GP_CH_RESOURCE_TIMBER: resource = RESOURCE_TIMBER; building = BUILDING_WOOD_CUTTERS ; break;
+    case CONFIG_GP_CH_RESOURCE_COPPER: resource = RESOURCE_COPPER; building = BUILDING_COPPER_MINE; break;
+    case CONFIG_GP_CH_RESOURCE_REED: resource = RESOURCE_REEDS; building = BUILDING_REED_GATHERER; break;
+    case CONFIG_GP_CH_RESOURCE_PAPYRUS: resource = RESOURCE_PAPYRUS; building = BUILDING_PAPYRUS_WORKSHOP; break;
+    case CONFIG_GP_CH_RESOURCE_FISH: resource = RESOURCE_FISH; building = BUILDING_FISHING_WHARF; break;
+    case CONFIG_GP_CH_RESOURCE_CHICKPEAS: resource = RESOURCE_CHICKPEAS; building = BUILDING_CHICKPEAS_FARM; break;
+    case CONFIG_GP_CH_RESOURCE_POMEGRANADES: resource = RESOURCE_POMEGRANATES; building = BUILDING_POMEGRANATES_FARM; break;
     default:
         return;
     }
 
     bool can_produce = !can_city_produce_resource(resource);
     set_city_produce_resource(resource, can_produce);
+
+    if (building != BUILDING_NONE) {
+        building_menu_toggle_building(building, can_produce);
+    }
 
     if (resource == RESOURCE_FISH) {
         if (can_produce) {
@@ -481,6 +489,7 @@ static bool is_config_option_enabled(int option) {
     case CONFIG_GP_CH_RESOURCE_REED: return can_city_produce_resource(RESOURCE_REEDS);
     case CONFIG_GP_CH_RESOURCE_FISH: return can_city_produce_resource(RESOURCE_FISH);
     case CONFIG_GP_CH_RESOURCE_CHICKPEAS: return can_city_produce_resource(RESOURCE_CHICKPEAS);
+    case CONFIG_GP_CH_RESOURCE_POMEGRANADES: return can_city_produce_resource(RESOURCE_POMEGRANATES);
     case CONFIG_GP_CH_RESOURCE_PAPYRUS: return can_city_produce_resource(RESOURCE_PAPYRUS);
     case CONGIG_GP_CH_BUILDING_WOOD_CUTTER: return building_menu_is_building_enabled(BUILDING_WOOD_CUTTERS);
     case CONGIG_GP_CH_BUILDING_COPPER_MINE: return building_menu_is_building_enabled(BUILDING_COPPER_MINE);

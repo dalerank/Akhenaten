@@ -87,6 +87,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"city_building_wood_cutters", true},
     {"city_produce_timber", true},
     {"city_produce_chickpeas", true},
+    {"city_produce_pomegranades", true},
     {"city_building_copper_mine", true},
     {"city_produce_copper", true},
 
