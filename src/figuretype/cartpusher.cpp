@@ -278,7 +278,7 @@ void figure::determine_storageyard_cart_destination() {
     }
 
     // priority 2: raw materials to workshop
-    set_destination(building_get_workshop_for_raw_material_with_room(tile, resource_id, warehouse->distance_from_entry, road_network_id, &dst));
+    set_destination(building_get_workshop_for_raw_material_with_room(tile, resource_id, warehouse->distance_from_entry, road_network_id, dst));
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }

@@ -351,11 +351,7 @@ void building_workshop_add_raw_material(building* b, int amount) {
     if (b->id > 0 && building_is_workshop(b->type))
         b->stored_full_amount += amount; // BUG: any raw material accepted
 }
-int building_get_workshop_for_raw_material_with_room(map_point tile,
-                                                     int resource,
-                                                     int distance_from_entry,
-                                                     int road_network_id,
-                                                     map_point* dst) {
+int building_get_workshop_for_raw_material_with_room(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i &dst) {
     if (city_resource_is_stockpiled(resource)) {
         return 0;
     }
@@ -387,17 +383,13 @@ int building_get_workshop_for_raw_material_with_room(map_point tile,
     }
 
     if (min_building) {
-        map_point_store_result(min_building->road_access, *dst);
+        map_point_store_result(min_building->road_access, dst);
         return min_building->id;
     }
 
     return 0;
 }
-int building_get_workshop_for_raw_material(vec2i tile,
-                                           int resource,
-                                           int distance_from_entry,
-                                           int road_network_id,
-                                           map_point* dst) {
+int building_get_workshop_for_raw_material(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i &dst) {
     if (city_resource_is_stockpiled(resource)) {
         return 0;
     }
@@ -422,7 +414,7 @@ int building_get_workshop_for_raw_material(vec2i tile,
     }
 
     if (min_building) {
-        map_point_store_result(min_building->road_access, *dst);
+        map_point_store_result(min_building->road_access, dst);
         return min_building->id;
     }
 

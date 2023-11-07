@@ -43,6 +43,7 @@ void js_register_city_images(js_State *J) {
    REGISTER_GLOBAL_CONSTANT(J, IMG_EXPLOSION);
    REGISTER_GLOBAL_CONSTANT(J, IMG_CATTLE_RANCH);
    REGISTER_GLOBAL_CONSTANT(J, IMG_TAX_COLLECTOR);
+   REGISTER_GLOBAL_CONSTANT(J, IMG_BRICKS_WORKSHOP);
 }
 
 void js_register_collection_images(js_State *J) {

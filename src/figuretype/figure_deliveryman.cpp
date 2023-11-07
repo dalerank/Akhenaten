@@ -74,7 +74,7 @@ void figure::determine_deliveryman_destination() {
     }
 
     // priority 3: workshop for raw material
-    int workshop_id = building_get_workshop_for_raw_material_with_room(tile, resource_id, warehouse->distance_from_entry, road_network_id, &dst);
+    int workshop_id = building_get_workshop_for_raw_material_with_room(tile, (e_resource)resource_id, warehouse->distance_from_entry, road_network_id, dst);
     set_destination(workshop_id);
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP);

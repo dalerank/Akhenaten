@@ -143,7 +143,8 @@ static generic_button checkbox_buttons[] = {
     {20, 312, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_FIGS_FARM, TR_CONFIG_BUILDING_FIGS_FARM},
     {20, 336, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_GRAIN_FARM, TR_CONFIG_BUILDING_GRAIN_FARM},
     {20, 360, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_CATTLE_RANCH, TR_CONFIG_BUILDING_CATTLE_RANCH},
-    
+    {20, 384, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_BRICKS_WORKSHOP, TR_CONFIG_BUILDING_BRICKS_WORKSHOP},
+
     //
     {20, 72, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
     {20, 96, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_COPPER, TR_CONFIG_RESOURCE_COPPER},
@@ -156,9 +157,10 @@ static generic_button checkbox_buttons[] = {
     {20, 264, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_FIGS, TR_CONFIG_RESOURCE_FIGS},
     {20, 288, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_GRAIN, TR_CONFIG_RESOURCE_GRAIN},
     {20, 312, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_MEAT, TR_CONFIG_RESOURCE_MEAT},
+    {20, 336, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_BRICKS, TR_CONFIG_RESOURCE_BRICKS},
 };
 
-static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 14, 5, 13, 11};
+static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 14, 5, 14, 12};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -409,6 +411,7 @@ static void toggle_building(int id, int param2) {
     case CONGIG_GP_CH_BUILDING_FIGS_FARM: type = BUILDING_FIGS_FARM; break;
     case CONGIG_GP_CH_BUILDING_GRAIN_FARM: type = BUILDING_GRAIN_FARM; break;
     case CONGIG_GP_CH_BUILDING_CATTLE_RANCH: type = BUILDING_CATTLE_RANCH; break;
+    case CONGIG_GP_CH_BUILDING_BRICKS_WORKSHOP: type = BUILDING_BRICKS_WORKSHOP; break;
     default:
         return;
     }
@@ -432,6 +435,7 @@ static void toggle_resource(int id, int param2) {
     case CONFIG_GP_CH_RESOURCE_FIGS: resource = RESOURCE_FIGS; break;
     case CONFIG_GP_CH_RESOURCE_GRAIN: resource = RESOURCE_GRAIN; break;
     case CONFIG_GP_CH_RESOURCE_MEAT: resource = RESOURCE_MEAT; break;
+    case CONFIG_GP_CH_RESOURCE_BRICKS: resource = RESOURCE_BRICKS; break;
     default:
         return;
     }
@@ -509,6 +513,8 @@ static bool is_config_option_enabled(int option) {
     case CONFIG_GP_CH_RESOURCE_GRAIN: return can_city_produce_resource(RESOURCE_GRAIN);
     case CONFIG_GP_CH_RESOURCE_MEAT: return can_city_produce_resource(RESOURCE_MEAT);
     case CONFIG_GP_CH_RESOURCE_PAPYRUS: return can_city_produce_resource(RESOURCE_PAPYRUS);
+    case CONFIG_GP_CH_RESOURCE_BRICKS: return can_city_produce_resource(RESOURCE_BRICKS);
+
     case CONGIG_GP_CH_BUILDING_WOOD_CUTTER: return building_menu_is_building_enabled(BUILDING_WOOD_CUTTERS);
     case CONGIG_GP_CH_BUILDING_COPPER_MINE: return building_menu_is_building_enabled(BUILDING_COPPER_MINE);
     case CONGIG_GP_CH_BUILDING_REED_GATHERER: return building_menu_is_building_enabled(BUILDING_REED_GATHERER);
@@ -522,6 +528,7 @@ static bool is_config_option_enabled(int option) {
     case CONGIG_GP_CH_BUILDING_FIGS_FARM: return building_menu_is_building_enabled(BUILDING_FIGS_FARM);
     case CONGIG_GP_CH_BUILDING_GRAIN_FARM: return building_menu_is_building_enabled(BUILDING_GRAIN_FARM);
     case CONGIG_GP_CH_BUILDING_CATTLE_RANCH: return building_menu_is_building_enabled(BUILDING_CATTLE_RANCH);
+    case CONGIG_GP_CH_BUILDING_BRICKS_WORKSHOP: return building_menu_is_building_enabled(BUILDING_BRICKS_WORKSHOP);
     }
 
     return data.config_values[option].new_value;

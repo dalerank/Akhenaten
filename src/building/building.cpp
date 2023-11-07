@@ -880,7 +880,7 @@ int building_mothball_set(building* b, int mothball) {
     return b->state;
 }
 
-bool resource_required_by_workshop(building* b, int resource) {
+bool resource_required_by_workshop(building* b, e_resource resource) {
     switch (resource) {
     case RESOURCE_CLAY: return (b->type == BUILDING_POTTERY_WORKSHOP || b->type == BUILDING_BRICKS_WORKSHOP);
     case RESOURCE_STRAW: return (b->type == BUILDING_BRICKS_WORKSHOP || b->type == BUILDING_CATTLE_RANCH);
