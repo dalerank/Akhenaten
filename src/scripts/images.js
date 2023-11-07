@@ -28,4 +28,5 @@ images = [
 	{img: IMG_WELL_FANCY, pack:PACK_GENERAL, id:23, offset:2},
 	{img: IMG_EXPLOSION, pack:PACK_SPR_AMBIENT, id:12, offset:0},
 	{img: IMG_CATTLE_RANCH, pack:PACK_GENERAL, id:105},
+	{img: IMG_TAX_COLLECTOR, pack:PACK_SPR_MAIN, id:41},
 ]
