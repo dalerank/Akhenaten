@@ -26,10 +26,10 @@ void building_hunting_lodge_draw_info(object_info &c) {
     building* b = building_get(c.building_id);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_GAMEMEAT, c.x_offset + 32, c.y_offset + 56);
     int width = lang_text_draw(group_id, 13, c.x_offset + 60, c.y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    if (b->stored_full_amount < 100) {
+    if (!b->workshop_has_resources()) {
         lang_text_draw_amount(8, 10, 0, c.x_offset + 60 + width, c.y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
-        lang_text_draw_amount(8, 10, b->stored_full_amount, c.x_offset + 60 + width, c.y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_amount(8, 10, b->stored_amount(), c.x_offset + 60 + width, c.y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     if (!c.has_road_access)
@@ -38,7 +38,7 @@ void building_hunting_lodge_draw_info(object_info &c) {
         window_building_draw_description_at(c, 86, group_id, 4);
     else if (b->num_workers <= 0)
         window_building_draw_description_at(c, 86, group_id, 5);
-    else if (b->stored_full_amount <= 0)
+    else if (b->stored_amount() <= 0)
         window_building_draw_description_at(c, 86, group_id, 11);
     else if (c.worker_percentage >= 100)
         window_building_draw_description_at(c, 86, group_id, 6);

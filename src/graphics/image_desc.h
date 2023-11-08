@@ -32,6 +32,9 @@ enum e_image_id : uint16_t {
     IMG_CATTLE_RANCH = 27,
     IMG_TAX_COLLECTOR = 28,
     IMG_BRICKS_WORKSHOP = 29,
+    IMG_RESOURCE_GAMEMEAT = 30,
+    IMG_RESOURCE_CLAY = 31,
+    IMG_RESOURCE_STRAW = 32,
 
     IMG_SIZE
 };

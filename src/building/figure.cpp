@@ -114,6 +114,27 @@ int building::get_figure_slot(figure* f) {
     return -1;
 }
 
+int building::stored_amount(e_resource res) const {
+    if (data.industry.first_material_id == res) {
+        return stored_full_amount;
+    }
+
+    if (data.industry.second_material_id == res) {
+        return data.industry.stored_amount_second;
+    }
+
+    return 0;
+}
+
+int building::stored_amount(int idx) const {
+    switch (idx) {
+    case 0: return stored_full_amount;
+    case 1: return data.industry.stored_amount_second;
+    }
+
+    return 0;
+}
+
 figure* building::create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir) {
     figure* f = figure_create(_type, road_access, created_dir);
     f->action_state = created_action;
@@ -321,6 +342,40 @@ void building::spawn_figure_work_camp() {
         figure *f = create_figure_with_destination(FIGURE_WORKER_PH, dest, FIGURE_ACTION_10_WORKER_CREATED, BUILDING_SLOT_SERVICE);
         dest->data.industry.worker_id = f->id;
         data.industry.spawned_worker_this_month = true;
+    }
+}
+
+bool building::workshop_has_resources() {
+    assert(is_workshop());
+    bool has_second_material = true;
+    if (data.industry.second_material_id != RESOURCE_NONE) {
+        has_second_material = (data.industry.stored_amount_second > 100);
+    }
+
+    bool hase_first_resource = (stored_full_amount >= 100);
+    return has_second_material && hase_first_resource;
+}
+
+void building::workshop_start_production() {
+    assert(is_workshop());
+    bool can_start_b = false;
+    if (data.industry.second_material_id != RESOURCE_NONE) {
+        if (data.industry.stored_amount_second > 100) {
+            data.industry.stored_amount_second -= 100;
+            can_start_b = true;
+        }
+    } else {
+        can_start_b = true;
+    }
+
+    bool can_start_a = false;
+    if (stored_full_amount) {
+        stored_full_amount -= 100;
+        can_start_a = true;
+    }
+
+    if (can_start_b && can_start_a) {
+        data.industry.has_raw_materials = true;
     }
 }
 
@@ -1041,7 +1096,7 @@ bool building::can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_bui
     // can only spawn if there's space for more reed in the building
     int max_loads = 500 / carry_per_person;
     if (gatherers_this_yard < max_gatherers_per_building
-        && gatherers_this_yard + (stored_full_amount / carry_per_person) < (max_loads - gatherers_this_yard)) {
+        && gatherers_this_yard + (stored_amount() / carry_per_person) < (max_loads - gatherers_this_yard)) {
         return true;
     }
 

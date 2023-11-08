@@ -360,28 +360,60 @@ static const vec2i granary_offsets_ph[] = {
   {37, 35},
 };
 
-static void draw_workshop_raw_material_storage(const building* b, int x, int y, color color_mask, view_context &ctx) {
-    if (b->stored_full_amount <= 0)
-        return;
-    int amount = ceil((float)b->stored_full_amount / 100.0) - 1;
+static void draw_workshop_raw_material_storage(view_context &ctx, const building* b, int x, int y, color color_mask) {
+    int amount = ceil((float)b->stored_amount() / 100.0) - 1;
+    int amount2 = 0;
     switch (b->type) {
     case BUILDING_HUNTING_LODGE:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_GAMEMEAT_5) + amount, x + 61, y + 14, color_mask);
+        ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_GAMEMEAT) + amount, x + 61, y + 14, color_mask);
         break;
+
+    case BUILDING_BRICKS_WORKSHOP:
+        amount = std::min<int>(2, ceil((float)b->stored_amount(RESOURCE_CLAY) / 100.0) - 1);
+        amount2 = std::min<int>(2, ceil((float)b->stored_amount(RESOURCE_STRAW) / 100.0) - 1);
+        if (amount > 0) {
+            ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_CLAY) + amount, x + 46, y + 25, color_mask);
+        }
+
+        if (amount2 > 0) {
+            ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_STRAW) + amount, x + 51, y + 18, color_mask);
+        }
+        break;
+
+    case BUILDING_WEAPONS_WORKSHOP:
+        amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
+        if (amount > 0) {
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_COPPER_2) + amount, x + 61, y + 14, color_mask);
+        }
+        break;
+
     case BUILDING_POTTERY_WORKSHOP:
-        //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_CLAY_2) + amount, x + 65, y + 3,
-        //            color_mask);
+        amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
+        if (amount > 0) {
+            ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_CLAY) + amount, x + 65, y + 3, color_mask);
+        }
         break;
+
     case BUILDING_BEER_WORKSHOP:
-        //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_BARLEY_2) + amount, x + 65, y + 3,
-        //            color_mask);
+        amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
+        if (amount > 0) {
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_BARLEY_2) + amount, x + 65, y + 3, color_mask);
+        }
         break;
+
     case BUILDING_PAPYRUS_WORKSHOP:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_REEDS_5) + amount, x + 35, y + 4, color_mask);
+        amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
+        if (amount > 0) {
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_REEDS_5) + amount, x + 35, y + 4, color_mask);
+        }
         break;
+
     case BUILDING_WOOD_CUTTERS:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3, color_mask);
+        if (amount > 0) {
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3, color_mask);
+        }
         break;
+
     case BUILDING_LINEN_WORKSHOP:
         //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_FLAX_2) + amount, x + 65, y + 3,
         //            color_mask);
@@ -394,10 +426,7 @@ static void draw_workshop_raw_material_storage(const building* b, int x, int y, 
         //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3,
         //            color_mask);
         break;
-    case BUILDING_WEAPONS_WORKSHOP:
-        //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_COPPER_2) + amount, x + 65, y + 3,
-        //            color_mask);
-        break;
+
     case BUILDING_CHARIOTS_WORKSHOP:
         //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3,
         //            color_mask);
@@ -640,6 +669,6 @@ void draw_ornaments_and_animations(vec2i tile, map_point point, view_context &ct
 
     // specific buildings
     draw_palace_rating_flags(b, x, y, color_mask, ctx);
-    draw_workshop_raw_material_storage(b, x, y, color_mask, ctx);
+    draw_workshop_raw_material_storage(ctx, b, x, y, color_mask);
     //    draw_hippodrome_ornaments(pixel, point);
 }

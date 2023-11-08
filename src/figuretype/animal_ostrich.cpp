@@ -43,11 +43,8 @@ void figure::ostrich_action() {
     case ACTION_16_FLEEING: // fleeing
     case ACTION_10_GOING:
     case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
-        //            if (action_state == 16)
-        //                while (destination_x == 0 || destination_y == 0)
-        //                    herd_roost(4, 8, 22);
         if (do_goto(destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_18_ROOSTING + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
-            if (map_has_figure_at(destination_tile)) {
+            if (map_has_figure_but(destination_tile, id)) {
                 wait_ticks = 1;
                 advance_action(ACTION_8_RECALCULATE);
             } else {
@@ -58,13 +55,13 @@ void figure::ostrich_action() {
     }
 
     switch (action_state) {
-        case ACTION_8_RECALCULATE:
-        case FIGURE_ACTION_19_ANIMAL_IDLE: // idle
+    case ACTION_8_RECALCULATE:
+    case FIGURE_ACTION_19_ANIMAL_IDLE: // idle
         image_set_animation(GROUP_FIGURE_OSTRICH_IDLE, 0, 8);
         break;
 
     case ACTION_18_ROOSTING: // roosting
-        image_set_animation(GROUP_FIGURE_OSTRICH_IDLE, 0, 8);
+        image_set_animation(GROUP_FIGURE_OSTRICH_EATING, 0, 7);
         break;
 
     case ACTION_16_FLEEING: // fleeing

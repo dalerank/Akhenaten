@@ -10,6 +10,7 @@ static grid_xx grid_figures = {0, {FS_UINT16, FS_UINT16}};
 bool map_has_figure_at(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) && map_grid_get(&grid_figures, grid_offset) > 0;
 }
+
 int map_figure_id_get(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) ? map_grid_get(&grid_figures, grid_offset) : 0;
 }
@@ -21,6 +22,26 @@ void map_figure_set(int grid_offset, int id) {
 figure *map_figure_get(int grid_offset) {
     int id = map_figure_id_get(grid_offset);
     return figure_get(id);
+}
+
+bool map_has_figure_but(tile2i tile, int id) {
+    if (map_figure_id_get(tile.grid_offset()) > 0) {
+        int figure_id = map_figure_id_get(tile.grid_offset());
+        while (figure_id) {
+            if (figure_id != id) {
+                return true;
+            }
+
+            figure* f = figure_get(figure_id);
+            if (figure_id != f->next_figure) {
+                figure_id = f->next_figure;
+            } else {
+                figure_id = 0;
+            }
+        }
+    }
+
+    return false;
 }
 
 int map_figure_foreach_until(int grid_offset, int test) {

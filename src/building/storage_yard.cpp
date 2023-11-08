@@ -28,13 +28,17 @@ int building_storageyard_get_space_info(building* storageyard) {
     building* space = storageyard;
     for (int i = 0; i < 8; i++) {
         space = space->next();
-        if (space->id <= 0)
+        if (space->id <= 0) {
             return 0;
-        if (space->subtype.warehouse_resource_id)
+        }
+
+        if (space->subtype.warehouse_resource_id) {
             total_amounts += space->stored_full_amount;
-        else
+        } else {
             empty_spaces++;
+        }
     }
+
     if (empty_spaces > 0)
         return STORAGEYARD_ROOM;
     else if (total_amounts < 3200)

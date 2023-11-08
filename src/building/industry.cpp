@@ -139,7 +139,7 @@ void building_industry_update_production(void) {
             return;
         }
 
-        if (building_is_workshop(b.type) && !b.stored_full_amount) {
+        if (building_is_workshop(b.type) && !b.workshop_has_resources()) {
             return;
         }
 
@@ -258,11 +258,8 @@ bool building_industry_has_produced_resource(building &b) {
 void building_industry_start_new_production(building* b) {
     b->data.industry.progress = 0;
     if (building_is_workshop(b->type)) {
-        if (b->stored_full_amount) {
-            if (b->stored_full_amount > 100)
-                b->data.industry.has_raw_materials = true;
-
-            b->stored_full_amount -= 100;
+        if (b->workshop_has_resources()) {
+            b->workshop_start_production();
         }
     }
 
@@ -347,9 +344,20 @@ void building_farm_deplete_soil(building* b) {
     update_farm_image(*b);
 }
 
-void building_workshop_add_raw_material(building* b, int amount) {
-    if (b->id > 0 && building_is_workshop(b->type))
-        b->stored_full_amount += amount; // BUG: any raw material accepted
+void building_workshop_add_raw_material(building* b, int amount, e_resource res) {
+    if (b->id > 0
+        && building_is_workshop(b->type)
+        && resource_required_by_workshop(b, res)) {
+        if (b->data.industry.first_material_id == res) {
+            b->stored_full_amount += amount; // BUG: any raw material accepted
+        } else if (b->data.industry.second_material_id == res) {
+            b->data.industry.stored_amount_second += amount;
+        } else {
+            assert(false);
+        }
+    } else {
+        assert(false);
+    }
 }
 int building_get_workshop_for_raw_material_with_room(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i &dst) {
     if (city_resource_is_stockpiled(resource)) {
@@ -358,29 +366,27 @@ int building_get_workshop_for_raw_material_with_room(tile2i tile, e_resource res
 
     int min_dist = INFINITE;
     building* min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || !building_is_workshop(b->type)) {
-            continue;
+    buildings_valid_do([&] (building &b) {
+        if (!building_is_workshop(b.type)) {
+            return;
         }
 
-        if (!b->has_road_access || b->distance_from_entry <= 0) {
-            continue;
+        if (!b.has_road_access || b.distance_from_entry <= 0) {
+            return;
         }
 
-        if (resource_required_by_workshop(b, resource) && b->road_network_id == road_network_id
-            && b->stored_full_amount < 200) {
-            int dist = calc_distance_with_penalty(b->tile, tile, distance_from_entry, b->distance_from_entry);
-            if (b->stored_full_amount > 0) {
+        if (resource_required_by_workshop(&b, resource) && b.road_network_id == road_network_id && b.stored_amount(resource) < 200) {
+            int dist = calc_distance_with_penalty(b.tile, tile, distance_from_entry, b.distance_from_entry);
+            if (b.stored_amount(resource) > 0) {
                 dist += 20;
             }
 
             if (dist < min_dist) {
                 min_dist = dist;
-                min_building = b;
+                min_building = &b;
             }
         }
-    }
+    });
 
     if (min_building) {
         map_point_store_result(min_building->road_access, dst);
@@ -395,23 +401,24 @@ int building_get_workshop_for_raw_material(tile2i tile, e_resource resource, int
     }
 
     int min_dist = INFINITE;
-    building* min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || !building_is_workshop(b->type))
-            continue;
+    building* min_building = nullptr;
+    buildings_valid_do([&] (building &b) {
+        if (!building_is_workshop(b.type)) {
+            return;
+        }
 
-        if (!b->has_road_access || b->distance_from_entry <= 0)
-            continue;
+        if (!b.has_road_access || b.distance_from_entry <= 0) {
+            return;
+        }
 
-        if (resource_required_by_workshop(b, resource) && b->road_network_id == road_network_id) {
-            int dist = 10 * (b->stored_full_amount / 100) + calc_distance_with_penalty(b->tile, tile, distance_from_entry, b->distance_from_entry);
+        if (resource_required_by_workshop(&b, resource) && b.road_network_id == road_network_id) {
+            int dist = 10 * (b.stored_amount(resource) / 100) + calc_distance_with_penalty(b.tile, tile, distance_from_entry, b.distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;
-                min_building = b;
+                min_building = &b;
             }
         }
-    }
+    });
 
     if (min_building) {
         map_point_store_result(min_building->road_access, dst);

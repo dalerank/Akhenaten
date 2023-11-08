@@ -22,19 +22,20 @@ enum {
  * @return Figure ID of first figure at offset
  */
 int map_figure_id_get(int grid_offset);
-inline int map_figure_id_get(map_point tile) { return map_figure_id_get(tile.grid_offset());  }
+inline int map_figure_id_get(tile2i tile) { return map_figure_id_get(tile.grid_offset());  }
 
 figure *map_figure_get(int grid_offset);
 
 void map_figure_set(int grid_offset, int id);
-inline void map_figure_set(map_point tile, int id) { map_figure_set(tile.grid_offset(), id); }
+inline void map_figure_set(tile2i tile, int id) { map_figure_set(tile.grid_offset(), id); }
 /**
  * Returns whether there is a figure at the given offset
  * @param grid_offset Map offset
  * @return True if there is a figure, otherwise false
  */
 bool map_has_figure_at(int grid_offset);
-inline bool map_has_figure_at(map_point tile) { return map_has_figure_at(tile.grid_offset());  }
+bool map_has_figure_but(tile2i tile, int id);
+inline bool map_has_figure_at(tile2i tile) { return map_has_figure_at(tile.grid_offset());  }
 
 // void map_figure_add();
 //

@@ -158,22 +158,27 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->output_resource_first_id = RESOURCE_CLAY;
         break;
     case BUILDING_BEER_WORKSHOP:
+        b->data.industry.first_material_id = RESOURCE_BARLEY;
         b->output_resource_first_id = RESOURCE_BEER;
         //            b->subtype.workshop_type = WORKSHOP_BEER;
         break;
     case BUILDING_LINEN_WORKSHOP:
+        b->data.industry.first_material_id = RESOURCE_FLAX;
         b->output_resource_first_id = RESOURCE_LINEN;
         //            b->subtype.workshop_type = WORKSHOP_LINEN;
         break;
     case BUILDING_WEAPONS_WORKSHOP:
+        b->data.industry.first_material_id = RESOURCE_COPPER;
         b->output_resource_first_id = RESOURCE_WEAPONS;
         //            b->subtype.workshop_type = WORKSHOP_WEAPONS;
         break;
     case BUILDING_JEWELS_WORKSHOP:
+        b->data.industry.first_material_id = RESOURCE_GEMS;
         b->output_resource_first_id = RESOURCE_LUXURY_GOODS;
         //            b->subtype.workshop_type = WORKSHOP_JEWELS;
         break;
     case BUILDING_POTTERY_WORKSHOP:
+        b->data.industry.first_material_id = RESOURCE_CLAY;
         b->output_resource_first_id = RESOURCE_POTTERY;
         //            b->subtype.workshop_type = WORKSHOP_POTTERY;
         break;
@@ -191,6 +196,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->output_resource_first_id = RESOURCE_GEMS;
         break;
     case BUILDING_CATTLE_RANCH:
+        b->data.industry.first_material_id = RESOURCE_STRAW;
         b->output_resource_first_id = RESOURCE_MEAT;
         //            b->subtype.workshop_type = WORKSHOP_CATTLE;
         break;
@@ -199,14 +205,19 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->fire_proof = 1;
         break;
     case BUILDING_PAPYRUS_WORKSHOP:
+        b->data.industry.first_material_id = RESOURCE_REEDS;
         b->output_resource_first_id = RESOURCE_PAPYRUS;
         //            b->subtype.workshop_type = WORKSHOP_PAPYRUS;
         break;
     case BUILDING_BRICKS_WORKSHOP:
+        b->data.industry.first_material_id = RESOURCE_STRAW;
+        b->data.industry.second_material_id = RESOURCE_CLAY;
         b->output_resource_first_id = RESOURCE_BRICKS;
         //            b->subtype.workshop_type = WORKSHOP_BRICKS;
         break;
     case BUILDING_CHARIOTS_WORKSHOP:
+        b->data.industry.first_material_id = RESOURCE_TIMBER;
+        b->data.industry.second_material_id = RESOURCE_WEAPONS;
         b->output_resource_first_id = RESOURCE_CHARIOTS;
         //            b->subtype.workshop_type = WORKSHOP_CHARIOTS;
         break;
@@ -223,10 +234,13 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->output_resource_first_id = RESOURCE_HENNA;
         break;
     case BUILDING_LAMP_WORKSHOP:
+        b->data.industry.first_material_id = RESOURCE_OIL;
+        b->data.industry.second_material_id = RESOURCE_TIMBER;
         b->output_resource_first_id = RESOURCE_LAMPS;
         //            b->subtype.workshop_type = WORKSHOP_LAMPS;
         break;
     case BUILDING_PAINT_WORKSHOP:
+        b->data.industry.first_material_id = RESOURCE_OIL;
         b->output_resource_first_id = RESOURCE_PAINT;
         //            b->subtype.workshop_type = WORKSHOP_PAINT;
         break;
@@ -867,6 +881,7 @@ int building_mothball_toggle(building* b) {
 
     return b->state;
 }
+
 int building_mothball_set(building* b, int mothball) {
     if (mothball) {
         if (b->state == BUILDING_STATE_VALID) {
@@ -1008,10 +1023,11 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.blessing_days_left);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.orientation);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.has_raw_materials);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_1);
-        //        iob->bind____skip(1);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.second_material_id);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.curse_days_left);
-        for (int i = 0; i < 6; i++) {
+        iob->bind(BIND_SIGNATURE_UINT16, &b->data.industry.stored_amount_second);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.first_material_id);
+        for (int i = 0; i < 3; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_6[i]);
         }
         //        iob->bind____skip(6);
@@ -1142,9 +1158,8 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_open_water_access); // 1
         iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_second_id); // 1
         iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_second_rate); // 1
-        
-        // 63 additional bytes
 
+        // 63 additional bytes
         iob->bind____skip(63); // temp for debugging
                                //            assert(iob->get_offset() - sind == 264);
         g_all_buildings[i].id = i;

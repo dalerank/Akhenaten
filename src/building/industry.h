@@ -23,7 +23,7 @@ bool building_farm_time_to_deliver(bool floodplains, int resource_id = 0);
 void building_curse_farms(int big_curse);
 void building_farm_deplete_soil(building* b);
 
-void building_workshop_add_raw_material(building* b, int amount);
+void building_workshop_add_raw_material(building* b, int amount, e_resource res);
 
 int building_get_workshop_for_raw_material(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i& dst);
 int building_get_workshop_for_raw_material_with_room(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i& dst);

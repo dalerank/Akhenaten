@@ -50,10 +50,7 @@ void figure::determine_deliveryman_destination() {
     }
 
     // priority 2: accepting granary for food
-    set_destination(building_granary_for_storing(tile,
-                                                 resource_id, warehouse->distance_from_entry,
-                                                 road_network_id, 0,
-                                                 &understaffed_storages, &dst));
+    set_destination(building_granary_for_storing(tile, resource_id, warehouse->distance_from_entry, road_network_id, 0, &understaffed_storages, &dst));
     if (config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
         int dist = 0;
         building* src_building = home();

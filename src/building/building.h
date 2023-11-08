@@ -150,10 +150,12 @@ public:
             int unk_c[14];
             unsigned char blessing_days_left;
             unsigned char orientation;
+            short stored_amount_second;
             bool has_raw_materials;
-            int unk_1;
+            e_resource first_material_id;
+            e_resource second_material_id;
             unsigned char curse_days_left;
-            int unk_6[6];
+            int unk_6[5];
             short fishing_boat_id;
             int unk_40[40];
             e_labor_state labor_state;
@@ -279,6 +281,8 @@ public:
     bool has_figure(int i, figure* f);
     bool has_figure_of_type(int i, e_figure_type _type);
     int get_figure_slot(figure* f);
+    int stored_amount(int idx = 0) const;
+    int stored_amount(e_resource res) const;
 
     figure* create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir);
     figure* create_roaming_figure(e_figure_type _type, e_figure_action created_action = FIGURE_ACTION_125_ROAMING, e_building_slot slot = BUILDING_SLOT_SERVICE);
@@ -293,6 +297,8 @@ public:
     void common_spawn_labor_seeker(int min_houses);
     bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action = FIGURE_ACTION_125_ROAMING);
     bool common_spawn_goods_output_cartpusher(bool only_one = true, bool only_full_loads = true, int min_carry = 100, int max_carry = 800);
+    bool workshop_has_resources();
+    void workshop_start_production();
 
     int correct_animation_speed(int anim_speed);
 

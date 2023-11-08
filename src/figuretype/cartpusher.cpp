@@ -37,7 +37,6 @@ void figure::load_resource(int amount, e_resource resource) {
 int figure::dump_resource(int amount) {
     amount = std::min<int>(amount, resource_amount_full);
     resource_amount_full -= amount;
-    //    resource_amount_loads -= amount / 100;
 
     // automatically clear field if carrying nothing
     if (resource_amount_full == 0)
@@ -97,7 +96,7 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
                 accepting = building_storageyard_get_accepting_amount(resource_id, dest);
                 break;
             default:
-                accepting = 200 - dest->stored_full_amount;
+                accepting = 200 - dest->stored_amount(resource);
                 //                    accepting = stack_proper_quantity(2 - dest->loads_stored, resource);
                 break;
             }
@@ -150,8 +149,8 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
 
             default:                              // workshop
                 for (int i = 0; i < times; i++) { // do one by one...
-                    if (dest->stored_full_amount < 200) {
-                        building_workshop_add_raw_material(dest, 100);
+                    if (dest->stored_amount(resource) < 200) {
+                        building_workshop_add_raw_material(dest, 100, resource);
                         dump_resource(100);
                         if (i + 1 == times) {
                             advance_action(ACTION_DONE);

@@ -79,18 +79,15 @@ static int get_request_status(int index) {
     return 0;
 }
 static void draw_request(int index, const scenario_request* request) {
-    if (index >= 5)
+    if (index >= 5) {
         return;
+    }
 
+    view_context ctx = view_context_main();
     button_border_draw(38, 96 + 42 * index, 560, 42, 0);
     int resource_offset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource_offset, 45, 103 + 42 * index);
-    int width = text_draw_number(stack_proper_quantity(request->amount, request->resource),
-                                 '@',
-                                 " ",
-                                 65,
-                                 102 + 42 * index,
-                                 FONT_NORMAL_WHITE_ON_DARK);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + resource_offset, 45, 103 + 42 * index);
+    int width = text_draw_number(stack_proper_quantity(request->amount, request->resource), '@', " ", 65, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(23, request->resource, 65 + width, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
 
     width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
@@ -101,9 +98,9 @@ static void draw_request(int index, const scenario_request* request) {
         int treasury = city_finance_treasury();
         width = text_draw_number(treasury, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         width += lang_text_draw(52, 44, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        if (treasury < request->amount)
+        if (treasury < request->amount) {
             lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        else {
+        } else {
             lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         }
     } else {
@@ -111,9 +108,9 @@ static void draw_request(int index, const scenario_request* request) {
         int amount_stored = city_resource_count(request->resource);
         width = text_draw_number(amount_stored, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         width += lang_text_draw(52, 43, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        if (amount_stored < request->amount)
+        if (amount_stored < request->amount) {
             lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        else {
+        } else {
             lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         }
     }
@@ -121,13 +118,12 @@ static void draw_request(int index, const scenario_request* request) {
 
 static int draw_background(void) {
     int military_resource = RESOURCE_WEAPONS;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        military_resource = RESOURCE_WEAPONS;
-    }
+
+    view_context ctx = view_context_main();
     city_emperor_calculate_gift_costs();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 2, 10, 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 2, 10, 10);
 
     text_draw(city_player_name(), 60, 12, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
@@ -143,7 +139,7 @@ static int draw_background(void) {
         && !city_military_distant_battle_roman_army_is_traveling_forth()) {
         // can send to distant battle
         button_border_draw(38, 96, 560, 40, 0);
-        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, 50, 106);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, 50, 106);
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE_ON_DARK);
         lang_text_draw(21,
                        empire_city_get(city_military_distant_battle_city())->name_id,
