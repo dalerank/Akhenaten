@@ -365,7 +365,9 @@ static void draw_workshop_raw_material_storage(view_context &ctx, const building
     int amount2 = 0;
     switch (b->type) {
     case BUILDING_HUNTING_LODGE:
-        ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_GAMEMEAT) + amount, x + 61, y + 14, color_mask);
+        if (amount > 0) {
+            ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_GAMEMEAT) + amount, x + 61, y + 14, color_mask);
+        }
         break;
 
     case BUILDING_BRICKS_WORKSHOP:
