@@ -20,8 +20,6 @@ void figure::ostrich_action() {
     case FIGURE_ACTION_19_ANIMAL_IDLE: // idle
     case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
         wait_ticks--;
-        //            if (wait_ticks % 5 == 0 && is_nearby(NEARBY_ANY, 6))
-        //                advance_action(ACTION_16_FLEEING);
         if (wait_ticks <= 0) {
             advance_action(ACTION_8_RECALCULATE);
         }
@@ -66,7 +64,7 @@ void figure::ostrich_action() {
 
     case ACTION_16_FLEEING: // fleeing
     case ACTION_10_GOING:   // on the move
-        image_set_animation(GROUP_FIGURE_OSTRICH_WALK, 0, 11);
+        image_set_animation(IMG_OSTRICH_WALK, 0, 11);
         break;
 
     case ACTION_15_ANIMAL_TERRIFIED: // terrified
@@ -80,7 +78,7 @@ void figure::ostrich_action() {
         break;
 
     case FIGURE_ACTION_150_ATTACK:
-    // TODO: dalerank ostrich want to attack anybody
+        // TODO: dalerank ostrich want to attack anybody
         advance_action(ACTION_8_RECALCULATE);
         image_set_animation(GROUP_FIGURE_OSTRICH_ATTACK, 0, 8);
         break;

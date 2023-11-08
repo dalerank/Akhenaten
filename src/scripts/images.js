@@ -33,4 +33,5 @@ images = [
 	{img: IMG_RESOURCE_GAMEMEAT, pack:PACK_GENERAL, id:205},
 	{img: IMG_RESOURCE_STRAW, pack:PACK_GENERAL, id:206},
 	{img: IMG_RESOURCE_CLAY, pack:PACK_GENERAL, id:207},
+	{img: IMG_OSTRICH_WALK, pack:PACK_SPR_MAIN, id:156}, // 7823 - 0
 ]

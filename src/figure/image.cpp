@@ -88,6 +88,7 @@ void figure::image_set_animation(int collection, int group, int offset, int max_
         duration = 1;
     anim_frame_duration = duration;
 }
+
 void figure::figure_image_update(bool refresh_only) {
     // update pixel coords
     //    sprite_pixel_on_tile = {HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS};
