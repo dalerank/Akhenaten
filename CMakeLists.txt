@@ -373,6 +373,7 @@ cmrc_add_resource_library(
     ${SCRIPTS_FOLDER}/overlays.js
     ${SCRIPTS_FOLDER}/images.js
     ${PROJECT_SOURCE_DIR}/res/akhenaten_72.png
+    ${PROJECT_SOURCE_DIR}/res/patreon_48.png
 )
 
 set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)

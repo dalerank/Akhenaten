@@ -64,7 +64,7 @@ void figure::ostrich_action() {
 
     case ACTION_16_FLEEING: // fleeing
     case ACTION_10_GOING:   // on the move
-        image_set_animation(IMG_OSTRICH_WALK, 0, 11);
+        image_set_animation(IMG_OSTRICH_WALK, 0, 12);
         break;
 
     case ACTION_15_ANIMAL_TERRIFIED: // terrified

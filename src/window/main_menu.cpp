@@ -44,7 +44,9 @@ struct main_menu_data_t {
     };
 
     SDL_Texture *dicord_texture = nullptr;
+    SDL_Texture *patreon_texture = nullptr;
     generic_button discord_button = {0, 0, 48, 48, button_click, button_none, 10, 0};
+    generic_button patreon_button = {0, 0, 48, 48, button_click, button_none, 11, 0};
 };
 
 main_menu_data_t g_main_menu_data;
@@ -97,10 +99,14 @@ static void draw_foreground() {
 
     graphics_reset_dialog();
 
+    view_context ctx = view_context_main();
+    vec2i scr_size = screen_size();
     if (data.dicord_texture) {
-        vec2i scr_size = screen_size();
-        view_context ctx = view_context_main();
-        graphics_renderer()->draw_image(ctx, data.dicord_texture, scr_size.x - 50, scr_size.y - 50, {0, 0}, {48, 48}, 0xffffffff, 1.f, false);
+        graphics_renderer()->draw_image(ctx, data.dicord_texture, scr_size.x - 50, scr_size.y - 50, {0, 0}, {48, 48}, 0xffffffff, 0.75f, false);
+    }
+
+    if (data.patreon_texture) {
+        graphics_renderer()->draw_image(ctx, data.patreon_texture, scr_size.x - 100, scr_size.y - 50, {0, 0}, {48, 48}, 0xffffffff, 0.75f, false);
     }
 }
 
@@ -147,6 +153,10 @@ static void button_click(int type, int param2) {
         platform_open_url("https://discord.gg/HS4njmBvpb", "");
         break;
 
+    case 11:
+        platform_open_url("https://www.patreon.com/imspinner", "");
+        break;
+
     default:
         logs::error("Unknown button index");
     }
@@ -161,6 +171,10 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
     vec2i scr_size = screen_size();
     if (generic_buttons_handle_mouse(m, scr_size.x - 50, scr_size.y - 50, &data.discord_button, 1, nullptr)) {
+        return;
+    }
+
+    if (generic_buttons_handle_mouse(m, scr_size.x - 100, scr_size.y - 50, &data.patreon_button, 1, nullptr)) {
         return;
     }
 
@@ -181,6 +195,10 @@ void window_main_menu_show(bool restart_music) {
 
     if (!data.dicord_texture) {
         data.dicord_texture = load_icon_texture("discord");
+    }
+
+    if (!data.patreon_texture) {
+        data.patreon_texture = load_icon_texture(":patreon_48.png");
     }
 
     window_type window = {
