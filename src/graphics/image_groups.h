@@ -337,7 +337,7 @@ enum e_pack {
 //#define GROUP_FIGURE_EMIGRANT_DEATH PACK_SPR_MAIN, 3              // 161
 //#define GROUP_FIGURE_ENGINEER PACK_SPR_MAIN, 4                    //  169
 //#define GROUP_FIGURE_ENGINEER_DEATH PACK_SPR_MAIN, 5              // 265
-#define GROUP_FIGURE_FIREMAN PACK_SPR_MAIN, 6                     // 273
+//#define GROUP_FIGURE_FIREMAN PACK_SPR_MAIN, 6                     // 273
 #define GROUP_FIGURE_FIREMAN_DEATH PACK_SPR_MAIN, 7               // 369
 #define GROUP_FIGURE_FIREMAN_ATFIRE PACK_SPR_MAIN, 8              // 377
 #define GROUP_FIGURE_GRANARY_BOY PACK_SPR_MAIN, 9                 // 673

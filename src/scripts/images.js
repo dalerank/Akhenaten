@@ -35,4 +35,5 @@ images = [
 	{img: IMG_RESOURCE_CLAY, pack:PACK_GENERAL, id:207},
 	{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
 	{img: IMG_OSTRICH_WALK, pack:PACK_SPR_MAIN, id:156}, // 7823 - 0
+	{img: IMG_FIREMAN, pack:PACK_SPR_MAIN, id:6},  // 273
 ]

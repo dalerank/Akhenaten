@@ -49,6 +49,7 @@ void js_register_city_images(js_State *J) {
    REGISTER_GLOBAL_CONSTANT(J, IMG_RESOURCE_STRAW);
    REGISTER_GLOBAL_CONSTANT(J, IMG_RESOURCE_ICONS);
    REGISTER_GLOBAL_CONSTANT(J, IMG_OSTRICH_WALK);
+   REGISTER_GLOBAL_CONSTANT(J, IMG_FIREMAN);
 }
 
 void js_register_collection_images(js_State *J) {

@@ -502,7 +502,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
     // repack and generate atlas pages
     image_packer_pack(&packer);
     atlas_pages.reserve(packer.result.pages_needed);
-    for (int i = 0; i < packer.result.pages_needed; ++i) {
+    for (uint32_t i = 0; i < packer.result.pages_needed; ++i) {
         atlas_data_t atlas_data;
         atlas_data.width = i == packer.result.pages_needed - 1 ? packer.result.last_image_width : max_texture_sizes.x;
         atlas_data.height = i == packer.result.pages_needed - 1 ? packer.result.last_image_height : max_texture_sizes.y;
