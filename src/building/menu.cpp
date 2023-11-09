@@ -554,10 +554,11 @@ void building_menu_update(int build_set) {
     // do this if loading normally from a save - tutorial stage will
     // be determined accordingly by the set flags!
     if (build_set == BUILDSET_NORMAL) {
-        for (int i = 1; i <= 10; i++)
+        for (int i = 1; i <= 10; i++) {
             if (scenario_is_mission_rank(i)) {
                 return tutorial_menu_update(i);
             }
+        }
     }
 
     switch (build_set) {

@@ -66,6 +66,7 @@ void tutorial_init();
 e_availability mission_advisor_availability(e_advisor advisor, int mission);
 e_availability mission_empire_availability();
 
+void tutorial_map_update(int tut);
 void tutorial_menu_update(int tut);
 
 int tutorial_get_population_cap(int current_cap);

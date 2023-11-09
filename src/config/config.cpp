@@ -114,6 +114,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"city_produce_meat", true},
     {"bricks_workshop_enabled", true},
     {"city_produce_bricks", true},
+    {"city_building_work_camp", true},
 };
 
 static const char* ini_string_keys[] = {

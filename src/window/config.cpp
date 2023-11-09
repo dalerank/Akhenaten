@@ -32,7 +32,6 @@
 
 #include <string.h>
 
-constexpr uint32_t CONFIG_PAGES = 7;
 #define MAX_LANGUAGE_DIRS 20
 
 #define FIRST_BUTTON_Y 72
@@ -144,6 +143,8 @@ static generic_button checkbox_buttons[] = {
     {20, 336, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_GRAIN_FARM, TR_CONFIG_BUILDING_GRAIN_FARM},
     {20, 360, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_CATTLE_RANCH, TR_CONFIG_BUILDING_CATTLE_RANCH},
     {20, 384, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_BRICKS_WORKSHOP, TR_CONFIG_BUILDING_BRICKS_WORKSHOP},
+    //
+    {20, 72, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_WORK_CAMP, TR_CONFIG_BUILDING_WORK_CAMP},
 
     //
     {20, 72, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
@@ -160,7 +161,7 @@ static generic_button checkbox_buttons[] = {
     {20, 336, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_BRICKS, TR_CONFIG_RESOURCE_BRICKS},
 };
 
-static int options_per_page[CONFIG_PAGES] = {12, 14, 14, 14, 5, 14, 12};
+static int options_per_page[] = {12, 14, 14, 14, 5, 14, 1, 12};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -341,13 +342,14 @@ static void button_page(int param1, int param2) {
     auto& data = g_window_config_ext_data;
     if (param1) {
         data.page++;
-        if (data.page >= CONFIG_PAGES)
+        if (data.page >= std::size(options_per_page))
             data.page = 0;
 
     } else {
         data.page--;
-        if (data.page < 0)
-            data.page = CONFIG_PAGES - 1;
+        if (data.page < 0) {
+            data.page = std::size(options_per_page) - 1;
+        }
     }
 
     data.starting_option = 0;
@@ -412,6 +414,7 @@ static void toggle_building(int id, int param2) {
     case CONGIG_GP_CH_BUILDING_GRAIN_FARM: type = BUILDING_GRAIN_FARM; break;
     case CONGIG_GP_CH_BUILDING_CATTLE_RANCH: type = BUILDING_CATTLE_RANCH; break;
     case CONGIG_GP_CH_BUILDING_BRICKS_WORKSHOP: type = BUILDING_BRICKS_WORKSHOP; break;
+    case CONGIG_GP_CH_BUILDING_WORK_CAMP: type = BUILDING_WORK_CAMP; break;
     default:
         return;
     }
@@ -529,6 +532,7 @@ static bool is_config_option_enabled(int option) {
     case CONGIG_GP_CH_BUILDING_GRAIN_FARM: return building_menu_is_building_enabled(BUILDING_GRAIN_FARM);
     case CONGIG_GP_CH_BUILDING_CATTLE_RANCH: return building_menu_is_building_enabled(BUILDING_CATTLE_RANCH);
     case CONGIG_GP_CH_BUILDING_BRICKS_WORKSHOP: return building_menu_is_building_enabled(BUILDING_BRICKS_WORKSHOP);
+    case CONGIG_GP_CH_BUILDING_WORK_CAMP: return building_menu_is_building_enabled(BUILDING_WORK_CAMP);
     }
 
     return data.config_values[option].new_value;

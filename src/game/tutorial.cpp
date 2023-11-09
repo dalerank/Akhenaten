@@ -61,11 +61,12 @@ static void set_all_tut_flags_null() {
     }
 }
 
-void tutorial_init(void) {
+void tutorial_init() {
     set_all_tut_flags_null();
 
-    if (scenario_is_custom())
+    if (scenario_is_custom()) {
         return;
+    }
 
     int scenario_id = scenario_campaign_scenario_id();
     bool tut_passed[10];
@@ -119,6 +120,7 @@ void tutorial_init(void) {
     g_tutorials_flags.pharaoh.flags[38] = tut_passed[3];
     g_tutorials_flags.pharaoh.flags[39] = tut_passed[3];
 
+    tutorial_map_update(scenario_id + 1);
 
     tutorial_menu_update(scenario_id + 1);
 }
@@ -160,6 +162,14 @@ e_availability mission_empire_availability() {
     //        return NOT_AVAILABLE_YET;
     //    else
     return AVAILABLE;
+}
+
+void tutorial_map_update(int tut) {
+    if (tut == 1) {
+        g_scenario_data.env.has_animals = true;
+    } else if (tut == 2) {
+        g_scenario_data.env.has_animals = true;
+    }
 }
 
 void tutorial_menu_update(int tut) {
