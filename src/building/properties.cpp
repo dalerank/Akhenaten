@@ -168,7 +168,7 @@ static building_properties properties[400] = {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
-    {2, 0, GROUP_BUILDING_GOLD_MINE},     // gold
+    {2, 0, 0, 0},     // gold
     {2, 0, GROUP_BUILDING_GEMSTONE_MINE}, // gemstone
     {0, 0, 0, 0},
     {0, 0, 0, 0},
@@ -244,6 +244,7 @@ void building_properties_init() {
     properties[BUILDING_WELL] = {1, 1, 0, 0, 0, IMG_WELL};
     properties[BUILDING_CATTLE_RANCH] = {3, 0, 0, 0, 0, IMG_CATTLE_RANCH};
     properties[BUILDING_BRICKS_WORKSHOP] = {2, 0, 0, 0, 0, IMG_BRICKS_WORKSHOP};
+    properties[BUILDING_GOLD_MINE] = {2, 0, 0, 0, 0, IMG_GOLD_MINE};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

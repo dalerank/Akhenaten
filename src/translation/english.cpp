@@ -108,6 +108,7 @@ static translation_string all_strings[] = {
      {TR_CONFIG_BUILDING_CATTLE_RANCH, "Cattle ranch enabled"},
      {TR_CONFIG_BUILDING_BRICKS_WORKSHOP, "Bricks workshop enabled"},
      {TR_CONFIG_BUILDING_WORK_CAMP, "Work camp enabled"},
+     {TR_CONFIG_BUILDING_GOLD_MINE, "Gold mine enabled"},
      {TR_CONFIG_FISHING_WHARF_SPAWN_BOATS, "Fishing wharf spawn boats"},
      {TR_CONFIG_CITY_FLOTSAM_ENABLED, "City flotsam enabled"},
      {TR_CONFIG_RESOURCE_REED, "City produce reed"},

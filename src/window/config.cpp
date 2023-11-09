@@ -145,6 +145,7 @@ static generic_button checkbox_buttons[] = {
     {20, 384, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_BRICKS_WORKSHOP, TR_CONFIG_BUILDING_BRICKS_WORKSHOP},
     //
     {20, 72, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_WORK_CAMP, TR_CONFIG_BUILDING_WORK_CAMP},
+    {20, 96, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_GOLD_MINE, TR_CONFIG_BUILDING_GOLD_MINE},
 
     //
     {20, 72, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
@@ -415,6 +416,7 @@ static void toggle_building(int id, int param2) {
     case CONGIG_GP_CH_BUILDING_CATTLE_RANCH: type = BUILDING_CATTLE_RANCH; break;
     case CONGIG_GP_CH_BUILDING_BRICKS_WORKSHOP: type = BUILDING_BRICKS_WORKSHOP; break;
     case CONGIG_GP_CH_BUILDING_WORK_CAMP: type = BUILDING_WORK_CAMP; break;
+    case CONGIG_GP_CH_BUILDING_GOLD_MINE: type = BUILDING_GOLD_MINE; break;
     default:
         return;
     }
@@ -533,6 +535,7 @@ static bool is_config_option_enabled(int option) {
     case CONGIG_GP_CH_BUILDING_CATTLE_RANCH: return building_menu_is_building_enabled(BUILDING_CATTLE_RANCH);
     case CONGIG_GP_CH_BUILDING_BRICKS_WORKSHOP: return building_menu_is_building_enabled(BUILDING_BRICKS_WORKSHOP);
     case CONGIG_GP_CH_BUILDING_WORK_CAMP: return building_menu_is_building_enabled(BUILDING_WORK_CAMP);
+    case CONGIG_GP_CH_BUILDING_GOLD_MINE: return building_menu_is_building_enabled(BUILDING_GOLD_MINE);
     }
 
     return data.config_values[option].new_value;
