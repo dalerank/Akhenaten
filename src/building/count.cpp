@@ -310,13 +310,6 @@ void building_count_update() {
         default:
             return;
         }
-
-        if (b.has_figure(2)) {
-            figure* f = b.get_figure(2);
-            if (f->state != FIGURE_STATE_ALIVE || f->destination()->id != b.id)
-                b.remove_figure(2);
-            //                b->immigrant_figure_id = 0;
-        }
     });
 }
 

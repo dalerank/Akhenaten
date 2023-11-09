@@ -158,6 +158,7 @@ figure* building::create_roaming_figure(e_figure_type _type, e_figure_action cre
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
     f->init_roaming_from_building(figure_roam_direction);
+    f->set_home(id);
 
     // update building to have a different roamer direction for next time
     figure_roam_direction += 2;
