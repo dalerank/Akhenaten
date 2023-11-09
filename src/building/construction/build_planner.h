@@ -78,9 +78,9 @@ private:
     void dispatch_warnings();
 
     void update_coord_caches();
-    void draw_flat_tile(vec2i pos, color color_mask, view_context &ctx);
-    void draw_blueprints(view_context &ctx, bool fully_blocked);
-    void draw_graphics(view_context &ctx);
+    void draw_flat_tile(vec2i pos, color color_mask, painter &ctx);
+    void draw_blueprints(painter &ctx, bool fully_blocked);
+    void draw_graphics(painter &ctx);
 
     /////
 
@@ -127,7 +127,7 @@ public:
     bool has_flag_set(int flag, int param1 = -1, int param2 = -1, int param3 = -1);
 
     void update(tile2i cursor_tile);
-    void draw(view_context &ctx);
+    void draw(painter &ctx);
     bool place();
 };
 

@@ -21,6 +21,7 @@
 #include "window/editor/attributes.h"
 #include "window/editor/build_menu.h"
 #include "window/editor/map.h"
+#include "game/game.h"
 
 #define MINIMAP_Y_OFFSET 30
 
@@ -196,7 +197,7 @@ static void draw_status(void) {
 }
 
 void widget_sidebar_editor_draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int image_base = image_id_from_group(GROUP_EDITOR_SIDE_PANEL);
     int x_offset = sidebar_common_get_x_offset_expanded();
     ImageDraw::img_generic(ctx, image_base, x_offset, TOP_MENU_HEIGHT);

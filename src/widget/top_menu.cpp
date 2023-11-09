@@ -41,6 +41,7 @@
 #include "window/popup_dialog.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
+#include "game/game.h"
 
 #include "core/core_utility.h"
 #include "core/span.hpp"
@@ -517,7 +518,7 @@ int orientation_button_state = 0;
 int orientation_button_pressed = 0;
 
 static void refresh_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int block_width = 24;
     int image_base = image_id_from_group(GROUP_TOP_MENU_SIDEBAR);
     int s_width = screen_width();
@@ -579,7 +580,7 @@ void widget_top_menu_draw(int force) {
 
     lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), data.offset_date - 2, 5, 110, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     // Orientation icon
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     if (orientation_button_pressed) {
         ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, data.offset_rotate, 0);
         orientation_button_pressed--;

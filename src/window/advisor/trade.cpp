@@ -15,6 +15,7 @@
 #include "window/empire.h"
 #include "window/resource_settings.h"
 #include "window/trade_prices.h"
+#include "game/game.h"
 
 #define ADVISOR_HEIGHT 27
 
@@ -57,7 +58,7 @@ static scrollbar_type scrollbar = {590, 52, 336, on_scroll};
 #include <empire/city.h>
 
 static int draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     city_resource_determine_available();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
@@ -70,7 +71,7 @@ static int draw_background() {
     return ADVISOR_HEIGHT;
 }
 static void draw_foreground() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     inner_panel_draw(17, 52, 36, 21);
     graphics_set_clip_rectangle(20, 39, 575, 346);
     const resources_list* list = city_resource_get_available();
@@ -78,7 +79,7 @@ static void draw_foreground() {
         int y_offset = 22 * (i - scrollbar.scroll_position);
         int resource = list->items[i];
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 24, y_offset + 58);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(image_offset), 24, y_offset + 58);
 
         font_t font_color = FONT_NORMAL_WHITE_ON_DARK;
         if (city_resource_is_mothballed(resource))

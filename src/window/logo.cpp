@@ -9,6 +9,7 @@
 #include "sound/music.h"
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"
+#include "game/game.h"
 
 #include <cmath>
 
@@ -19,7 +20,7 @@ static void init() {
 
 static void draw_logo_background() {
     graphics_clear_screen();
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
 
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_LOGO));
 }

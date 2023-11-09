@@ -12,15 +12,16 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
+#include "game/game.h"
 
 void building_wharf_draw_info(object_info &c) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
 
     c.help_id = 84;
     window_building_play_sound(&c, snd::get_building_info_sound("wharf"));
     outer_panel_draw(c.x_offset, c.y_offset, c.width_blocks, c.height_blocks);
     lang_text_draw_centered(102, 0, c.x_offset, c.y_offset + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_FIGS + resource_image_offset(RESOURCE_FIGS, RESOURCE_IMAGE_ICON), c.x_offset + 10, c.y_offset + 10);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_FIGS) + resource_image_offset(RESOURCE_FIGS, RESOURCE_IMAGE_ICON), c.x_offset + 10, c.y_offset + 10);
 
     building* b = building_get(c.building_id);
 

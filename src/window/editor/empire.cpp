@@ -20,6 +20,7 @@
 #include "scenario/editor.h"
 #include "scenario/empire.h"
 #include "window/editor/map.h"
+#include "game/game.h"
 
 const static int EMPIRE_WIDTH[2] = {
   2000 + 32,
@@ -68,7 +69,7 @@ static int map_viewport_height() {
 }
 
 static void draw_paneling() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int image_base = image_id_from_group(GROUP_EDITOR_EMPIRE_PANELS);
     // bottom panel background
     graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, data.y_max - data.y_min);
@@ -123,7 +124,7 @@ static void draw_shadowed_number(int value, int x, int y, color color) {
 }
 
 static void draw_empire_object(const empire_object* obj) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int x = obj->x;
     int y = obj->y;
     int image_id = obj->image_id;
@@ -152,7 +153,7 @@ static void draw_empire_object(const empire_object* obj) {
 }
 
 static void draw_map() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int viewport_width = map_viewport_width();
     int viewport_height = map_viewport_height();
     graphics_set_clip_rectangle(data.x_min + 16, data.y_min + 16, viewport_width, viewport_height);
@@ -170,7 +171,7 @@ static void draw_map() {
 }
 
 static void draw_resource(int resource, int trade_max, int x_offset, int y_offset) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
     int image_id = resource + image_id_from_group(GROUP_EDITOR_EMPIRE_RESOURCES);
     int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);

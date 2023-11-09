@@ -62,8 +62,8 @@ void handle_debug_hotkeys(const hotkeys* h);
 
 void debug_font_test();
 
-void debug_text(view_context &ctx, uint8_t* str, int x, int y, int indent, const char* text, int value, color color = COLOR_WHITE, font_t font = FONT_SMALL_OUTLINED);
-void debug_text_a(view_context &ctx, uint8_t* str, int x, int y, int indent, const char* text, color color = COLOR_WHITE, font_t font = FONT_SMALL_OUTLINED);
+void debug_text(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, int value, color color = COLOR_WHITE, font_t font = FONT_SMALL_OUTLINED);
+void debug_text_a(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, color color = COLOR_WHITE, font_t font = FONT_SMALL_OUTLINED);
 void debug_text_float(uint8_t* str, int x, int y, int indent, const char* text, double value, color color = COLOR_WHITE);
 void debug_text_dual_left(uint8_t* str, int x, int y, int indent, int indent2, const char* text, int value1, int value2, color color = COLOR_WHITE);
 
@@ -75,7 +75,7 @@ void debug_draw_sprite_box(int x, int y, const image_t* img, float scale, color 
 void debug_draw_tile_box(int x, int y, color rect, color bb, int tile_size_x = 1, int tile_size_y = 1);
 void debug_draw_tile_top_bb(int x, int y, int height, color color, int size = 1);
 
-void draw_debug_tile(vec2i pixel, tile2i point, view_context &ctx);
-void draw_debug_figures(vec2i pixel, tile2i point, view_context &ctx);
+void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx);
+void draw_debug_figures(vec2i pixel, tile2i point, painter &ctx);
 
 void draw_debug_ui(int x, int y);

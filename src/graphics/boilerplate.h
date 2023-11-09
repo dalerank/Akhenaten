@@ -6,7 +6,7 @@
 #include "image_groups.h"
 #include "core/vec2i.h"
 
-struct view_context;
+struct painter;
 
 void graphics_set_to_dialog(void);
 void graphics_in_dialog_with_size(int width, int height);
@@ -29,14 +29,14 @@ void graphics_draw_from_texture(int image_id, int x, int y, int width, int heigh
 
 namespace ImageDraw {
 void img_generic(int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
-void img_generic(view_context &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
-void img_sprite(view_context &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
-void img_ornament(view_context &ctx, int image_id, int base_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
-void img_from_below(view_context &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
-void img_letter(view_context &ctx, font_t font, int letter_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
-void img_background(view_context &ctx, int image_id, float scale = 1.0f);
-void isometric(view_context &ctx, int image_id, vec2i pos, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
-void isometric(view_context &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
-void isometric_from_drawtile(view_context &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE);
+void img_generic(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+void img_sprite(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+void img_ornament(painter &ctx, int image_id, int base_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+void img_from_below(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+void img_letter(painter &ctx, font_t font, int letter_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+void img_background(painter &ctx, int image_id, float scale = 1.0f);
+void isometric(painter &ctx, int image_id, vec2i pos, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+void isometric(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+void isometric_from_drawtile(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE);
 } // namespace ImageDraw
 

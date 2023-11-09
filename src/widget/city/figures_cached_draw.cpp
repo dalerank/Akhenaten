@@ -146,7 +146,7 @@ static void cache_figure(figure_draw_cache_data_t &figure_cache, figure* f, vec2
     //    record_figure_over_tile(f, pixel, f->previous_tile);
 }
 
-void cache_figures(vec2i pixel, tile2i point, view_context &ctx) {
+void cache_figures(vec2i pixel, tile2i point, painter &ctx) {
     int figure_id = map_figure_id_get(point.grid_offset());
 
     while (figure_id) {

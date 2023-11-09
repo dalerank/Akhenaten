@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-struct view_context;
+struct painter;
 
 enum e_custome_image_type {
     CUSTOM_IMAGE_NONE = 0,
@@ -68,9 +68,9 @@ public:
     void draw_rect(int x, int y, int width, int height, color color);
     void fill_rect(int x, int y, int width, int height, color color);
 
-    void draw_image(view_context &ctx, const image_t* img, float x, float y, color color, float scale, bool mirrored);
-    void draw_image(view_context &ctx, SDL_Texture *tex, float x, float y, vec2i offset, vec2i, color color, float scale, bool mirrored);
-    bool save_screen_buffer(view_context &ctx, color *pixels, int x, int y, int width, int height, int row_width);
+    void draw_image(painter &ctx, const image_t* img, float x, float y, color color, float scale, bool mirrored);
+    void draw_image(painter &ctx, SDL_Texture *tex, float x, float y, vec2i offset, vec2i, color color, float scale, bool mirrored);
+    bool save_screen_buffer(painter &ctx, color *pixels, int x, int y, int width, int height, int row_width);
 
     void create_custom_texture(int type, int width, int height);
     int has_custom_texture(int type);
@@ -95,6 +95,6 @@ public:
 
 graphics_renderer_interface* graphics_renderer();
 
-void set_render_scale(view_context &ctx, float scale);
+void set_render_scale(painter &ctx, float scale);
 std::vector<video_mode> get_video_modes();
 std::vector<std::string> get_video_drivers(bool log);

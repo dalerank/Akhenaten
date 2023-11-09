@@ -28,10 +28,12 @@
 #include "window/editor/map.h"
 #include "window/game_menu.h"
 #include "window/new_career.h"
+#include "game/game.h"
+#include "game/settings.h"
 
 #include "graphics/elements/scroll_list_panel.h"
-#include <core/game_environment.h>
-#include <game/settings.h>
+#include "core/game_environment.h"
+
 #include <string.h>
 
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
@@ -121,7 +123,7 @@ void window_player_selection_init() {
 }
 
 static void draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     graphics_clear_screen();
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_PLAYER_SELECTION));
 }

@@ -70,7 +70,7 @@ struct city_overlay_fertility : public city_overlay {
         return b && building_is_farm(b->type);
     }
 
-    void draw_custom_top(vec2i pixel, tile2i point, view_context &ctx) const override {
+    void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
         int grid_offset = point.grid_offset();
         int x = pixel.x;
         int y = pixel.y;

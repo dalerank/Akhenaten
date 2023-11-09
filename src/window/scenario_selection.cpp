@@ -18,6 +18,7 @@
 #include "scenario/invasion.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
+#include "game/game.h"
 
 #include "dev/debug.h"
 #include "game/mission.h"
@@ -214,7 +215,7 @@ static int draw_info_line(int base_group, int base_id, int* y, int value, int sp
 }
 
 static void draw_scenario_thumbnail(int image_id) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     auto &data = g_window_scenario_selection;
     switch (data.dialog) {
     case MAP_SELECTION_CCK_LEGACY:
@@ -307,7 +308,7 @@ static void draw_scenario_info() {
     }
 }
 static void draw_scores(int scenario_id) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int rank = get_scenario_mission_rank(scenario_id);
     bool unlocked = game_scenario_unlocked(scenario_id);
     bool beaten = game_scenario_beaten(scenario_id);
@@ -405,7 +406,7 @@ static void draw_side_panel_info() {
 
 static void draw_background() {
     auto &data = g_window_scenario_selection;
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     switch (data.dialog) {
     case MAP_SELECTION_CCK_LEGACY:
         ImageDraw::img_background(ctx, image_id_from_group(GROUP_MAP_SELECTION_CCK));
@@ -426,7 +427,7 @@ static void draw_background() {
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     auto &data = g_window_scenario_selection;
     graphics_set_to_dialog();
 

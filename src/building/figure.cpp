@@ -123,7 +123,12 @@ int building::stored_amount(e_resource res) const {
         return data.industry.stored_amount_second;
     }
 
-    return 0;
+    if (output_resource_first_id == res) {
+        return data.industry.ready_production;
+    }
+
+    // todo: dalerank, temporary, building should return own resource type only
+    return stored_full_amount;
 }
 
 int building::stored_amount(int idx) const {
@@ -132,6 +137,7 @@ int building::stored_amount(int idx) const {
     case 1: return data.industry.stored_amount_second;
     }
 
+    assert(false);
     return 0;
 }
 

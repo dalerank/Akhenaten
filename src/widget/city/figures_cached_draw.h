@@ -7,7 +7,7 @@
 #define MAX_TILE_CACHES 3000
 #define MAX_CACHED_FIGURES_PER_TILE 20
 
-struct view_context;
+struct painter;
 
 struct tile_figure_draw_cache {
     int grid_offset;
@@ -29,4 +29,4 @@ figure_draw_cache_data_t &figure_draw_cache();
 
 void reset_tiledraw_caches(figure_draw_cache_data_t &cache);
 tile_figure_draw_cache* get_figure_cache_for_tile(figure_draw_cache_data_t &cache, tile2i point);
-void cache_figures(vec2i pixel, tile2i point, view_context &ctx);
+void cache_figures(vec2i pixel, tile2i point, painter &ctx);

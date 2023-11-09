@@ -58,7 +58,7 @@ void set_city_clip_rectangle(void) {
     //    - 30);
 }
 
-static void update_zoom_level(view_context &ctx) {
+static void update_zoom_level(painter &ctx) {
     vec2i offset = camera_get_position();
     if (zoom_update_value(&offset)) {
         city_view_refresh_viewport();
@@ -97,7 +97,7 @@ static int input_coords_in_city(int x, int y) {
     return (x >= 0 && x < view_size.x && y >= 0 && y < view_size.y);
 }
 
-static void draw_TEST(vec2i pixel, tile2i point, view_context &ctx) {
+static void draw_TEST(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -128,7 +128,7 @@ static void draw_tile_boxes(vec2i pixel, tile2i point) {
     }
 };
 
-void widget_city_draw_without_overlay(view_context &ctx, int selected_figure_id, vec2i* figure_coord, tile2i tile) {
+void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord, tile2i tile) {
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
         highlighted_formation = formation_legion_at_grid_offset(tile.grid_offset());
@@ -156,7 +156,7 @@ void widget_city_draw_without_overlay(view_context &ctx, int selected_figure_id,
     city_view_foreach_valid_map_tile(ctx, draw_debug_figures);
 }
 
-void widget_city_draw_with_overlay(view_context &ctx, tile2i tile) {
+void widget_city_draw_with_overlay(painter &ctx, tile2i tile) {
     if (!select_city_overlay())
         return;
 
@@ -168,7 +168,7 @@ void widget_city_draw_with_overlay(view_context &ctx, tile2i tile) {
     Planner.draw(ctx);
 }
 
-void widget_city_draw(view_context &ctx) {
+void widget_city_draw(painter &ctx) {
     auto& data = g_wdiget_city_data;
     update_zoom_level(ctx);
     set_render_scale(ctx, zoom_get_scale());
@@ -182,7 +182,7 @@ void widget_city_draw(view_context &ctx) {
     set_render_scale(ctx, 1.0f);
 }
 
-void widget_city_draw_for_figure(view_context &ctx, int figure_id, vec2i* coord) {
+void widget_city_draw_for_figure(painter &ctx, int figure_id, vec2i* coord) {
     auto& data = g_wdiget_city_data;
     set_city_clip_rectangle();
 

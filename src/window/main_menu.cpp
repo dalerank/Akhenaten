@@ -70,7 +70,7 @@ static void draw_version_string() {
 }
 
 static void draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     graphics_clear_screen();
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_MAIN_MENU_BACKGROUND));
 
@@ -99,7 +99,7 @@ static void draw_foreground() {
 
     graphics_reset_dialog();
 
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     vec2i scr_size = screen_size();
     if (data.dicord_texture) {
         graphics_renderer()->draw_image(ctx, data.dicord_texture, scr_size.x - 50, scr_size.y - 50, {0, 0}, {48, 48}, 0xffffffff, 0.75f, false);

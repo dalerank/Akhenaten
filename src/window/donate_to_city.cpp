@@ -44,7 +44,7 @@ static void draw_background(void) {
     graphics_set_to_dialog();
 
     outer_panel_draw(64, 160, 32, 10);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_DEBEN, 80, 176);
+    ImageDraw::img_generic(image_id_resource_icon(RESOURCE_DEBEN), 80, 176);
     lang_text_draw_centered(52, 16, 112, 176, 448, FONT_LARGE_BLACK_ON_LIGHT);
 
     inner_panel_draw(112, 208, 26, 4);

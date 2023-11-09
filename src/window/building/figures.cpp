@@ -17,6 +17,7 @@
 #include "config/config.h"
 #include "scenario/property.h"
 #include "widget/city.h"
+#include "game/game.h"
 
 static void window_info_select_figure(int index, int param2);
 
@@ -86,7 +87,7 @@ static int name_group_id() { // TODO
 }
 
 void figure::draw_trader(object_info* c) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     figure* f = get_head_of_caravan();
     const empire_city* city = empire_city_get(f->empire_city_id);
     int width = lang_text_draw(64, f->type, c->x_offset + 40, c->y_offset + 110, FONT_NORMAL_BLACK_ON_DARK);
@@ -141,7 +142,7 @@ void figure::draw_trader(object_info* c) {
         for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (trader_bought_resources(trader_id, r)) {
                 width += text_draw_number(trader_bought_resources(trader_id, r), '@'," ", c->x_offset + 40 + width, y_base, FONT_NORMAL_BLACK_ON_DARK);
-                int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
                 ImageDraw::img_generic(ctx, image_id, c->x_offset + 40 + width, y_base - 3);
                 width += 25;
             }
@@ -157,7 +158,7 @@ void figure::draw_trader(object_info* c) {
                                           c->x_offset + 40 + width,
                                           y_base,
                                           FONT_NORMAL_BLACK_ON_DARK);
-                int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
                 ImageDraw::img_generic(ctx, image_id, c->x_offset + 40 + width, y_base - 3);
                 width += 25;
             }
@@ -168,7 +169,7 @@ void figure::draw_trader(object_info* c) {
         width = lang_text_draw(129, 2, c->x_offset + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
         for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (city->buys_resource[r]) {
-                int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
                 ImageDraw::img_generic(ctx, image_id, c->x_offset + 40 + width, y_base - 3);
                 width += 25;
             }
@@ -178,7 +179,7 @@ void figure::draw_trader(object_info* c) {
         width = lang_text_draw(129, 3, c->x_offset + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
         for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (city->sells_resource[r]) {
-                int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
                 ImageDraw::img_generic(ctx, image_id, c->x_offset + 40 + width, y_base - 3);
                 width += 25;
             }
@@ -187,7 +188,7 @@ void figure::draw_trader(object_info* c) {
 }
 
 void figure::draw_enemy(object_info* c) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int image_id = FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[type];
     int enemy_type = formation_get(formation_id)->enemy_type;
     switch (type) {
@@ -271,13 +272,13 @@ void figure::draw_enemy(object_info* c) {
 }
 
 void figure::draw_animal(object_info* c) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     ImageDraw::img_generic(ctx, big_people_image(type), c->x_offset + 28, c->y_offset + 112);
     lang_text_draw(64, type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
 }
 
 void figure::draw_cartpusher(object_info* c) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     ImageDraw::img_generic(ctx, big_people_image(type), c->x_offset + 28, c->y_offset + 112);
 
     lang_text_draw(name_group_id(), name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BLACK_ON_DARK);
@@ -288,7 +289,7 @@ void figure::draw_cartpusher(object_info* c) {
 
     if (action_state != FIGURE_ACTION_132_DOCKER_IDLING && resource_id) {
         int resource = resource_id;
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->x_offset + 92, c->y_offset + 154);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->x_offset + 92, c->y_offset + 154);
 
         width = text_draw_number(resource_amount_full, ' ', " ", c->x_offset + 108, c->y_offset + 154, FONT_NORMAL_BLACK_ON_DARK);
         width += lang_text_draw(129, 20, c->x_offset + 108 + width, c->y_offset + 154, FONT_NORMAL_BLACK_ON_DARK);
@@ -337,7 +338,7 @@ void figure::draw_cartpusher(object_info* c) {
 }
 
 void figure::draw_market_buyer(object_info* c) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     ImageDraw::img_generic(ctx, big_people_image(type), c->x_offset + 28, c->y_offset + 112);
 
     lang_text_draw(name_group_id(), name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BLACK_ON_DARK);
@@ -346,11 +347,11 @@ void figure::draw_market_buyer(object_info* c) {
     if (action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
         width += lang_text_draw(129, 17, c->x_offset + 90 + width, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
         int resource = inventory_to_resource_id(collecting_item_id);
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->x_offset + 90 + width, c->y_offset + 135);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->x_offset + 90 + width, c->y_offset + 135);
     } else if (action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
         width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
         int resource = inventory_to_resource_id(collecting_item_id);
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->x_offset + 90 + width, c->y_offset + 135);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->x_offset + 90 + width, c->y_offset + 135);
     }
 
     if (c->figure.phrase_id >= 0) {
@@ -359,7 +360,7 @@ void figure::draw_market_buyer(object_info* c) {
 }
 
 void figure::draw_normal_figure(object_info* c) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int image_id = big_people_image(type);
     if (action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE || action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
         image_id = image_id_from_group(GROUP_PORTRAITS) + 18;
@@ -410,7 +411,7 @@ void window_building_draw_figure_list(object_info* c) {
     c->figure.drawn = 1;
 }
 
-static void draw_figure_in_city(int figure_id, vec2i* coord, view_context &ctx) {
+static void draw_figure_in_city(int figure_id, vec2i* coord, painter &ctx) {
     map_point camera_tile = city_view_get_camera_mappoint();
 
     int grid_offset = figure_get(figure_id)->tile.grid_offset();
@@ -426,7 +427,7 @@ static void draw_figure_in_city(int figure_id, vec2i* coord, view_context &ctx) 
 
 void window_building_prepare_figure_list(object_info* c) {
     auto &data = g_building_figures_data;
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     if (c->figure.count > 0) {
         vec2i coord = {0, 0};
         for (int i = 0; i < c->figure.count; i++) {

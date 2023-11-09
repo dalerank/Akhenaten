@@ -41,7 +41,7 @@ struct city_overlay_pavilion : public city_overlay {
         return 0;
     }
 
-    void draw_custom_top(vec2i pixel, tile2i point, view_context &ctx) const override {
+    void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
         int grid_offset = point.grid_offset();
         if (!map_property_is_draw_tile(grid_offset)) {
             return;

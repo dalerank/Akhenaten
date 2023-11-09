@@ -1,5 +1,7 @@
 #pragma once
 
+#include "graphics/painter.h"
+
 bool game_pre_init(void);
 
 bool game_init(void);
@@ -22,6 +24,8 @@ void game_exit(void);
 
 struct game_t {
     bool paused = false;
+
+    painter painter();
 };
 
 extern game_t game;

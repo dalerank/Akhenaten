@@ -34,6 +34,7 @@
 #include "window/popup_dialog.h"
 #include "window/resource_settings.h"
 #include "window/trade_opened.h"
+#include "game/game.h"
 
 const static int EMPIRE_WIDTH[2] = {
   2000 + 32,
@@ -148,7 +149,7 @@ static void draw_trade_route(int route_id, int effect) {
     if (!obj->in_use)
         return;
 
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     // get graphics ready..
     int image_id = 0;
     switch (effect) {
@@ -205,9 +206,9 @@ static int row_idx(int index) {
 }
 
 static void draw_trade_resource(int resource, int trade_max, int x_offset, int y_offset) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     graphics_draw_inset_rect(x_offset, y_offset, TRADE_RESOURCE_SIZE[GAME_ENV], TRADE_RESOURCE_SIZE[GAME_ENV]);
-    ImageDraw::img_generic(ctx, resource_get_icon(resource), x_offset + 1, y_offset + 1);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(resource), x_offset + 1, y_offset + 1);
 
     if (data.focus_resource == resource)
         button_border_draw(x_offset - 2, y_offset - 2, 101 + 4, 24, 1);
@@ -535,7 +536,7 @@ static void draw_empire_object(const empire_object* obj) {
         if (city_military_distant_battle_roman_months_traveled() != obj->distant_battle_travel_months)
             return;
     }
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_id, data.x_draw_offset + x, data.y_draw_offset + y);
 
     const image_t* img = image_get(image_id);
@@ -546,12 +547,12 @@ static void draw_empire_object(const empire_object* obj) {
 }
 
 static void draw_invasion_warning(int x, int y, int image_id) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_id, data.x_draw_offset + x, data.y_draw_offset + y);
 }
 
 static void draw_map() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     graphics_set_clip_rectangle(data.x_min + 16, data.y_min + 16, data.x_max - data.x_min - 32, data.y_max - data.y_min - 136);
 
     empire_set_viewport(data.x_max - data.x_min - 32, data.y_max - data.y_min - 136);
@@ -577,7 +578,7 @@ static void draw_city_name(const empire_city* city) {
     //        lang_text_draw_centered(21, city->name_id, (data.x_min + data.x_max - 332) / 2 + 64, data.y_max - 118, 268, FONT_LARGE_BLACK_ON_LIGHT);
     //    }
     //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     if (city) {
         if (setting_city_names_style() == CITIES_OLD_NAMES)
             lang_text_draw_centered(195, city->name_id, (data.x_min + data.x_max - 332) / 2 + 32, data.y_max - INFO_Y_CITY_NAME, 268, FONT_LARGE_BLACK_ON_LIGHT);
@@ -608,7 +609,7 @@ static void draw_panel_buttons(const empire_city* city) {
 }
 
 static void draw_paneling() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int image_base = image_id_from_group(GROUP_EMPIRE_PANELS);
     // bottom panel background
     graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, data.y_max - data.y_min);

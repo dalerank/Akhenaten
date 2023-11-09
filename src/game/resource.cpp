@@ -19,12 +19,6 @@ int resource_image_offset(int resource, int type) {
         return 0;
     }
 }
-#include "core/game_environment.h"
-#include "graphics/boilerplate.h"
-
-int resource_get_icon(int resource, int quantity) {
-    return resource + image_id_from_group(GROUP_RESOURCE_ICONS);
-}
 
 int resource_is_food(int resource) {
     return resource == RESOURCE_GRAIN || resource == RESOURCE_MEAT || resource == RESOURCE_LETTUCE

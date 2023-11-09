@@ -14,6 +14,7 @@
 #include "grid/grid.h"
 #include "scenario/invasion.h"
 #include "window/city.h"
+#include "game/game.h"
 
 #define ADVISOR_HEIGHT 26
 
@@ -54,7 +55,7 @@ static void init() {
 }
 
 static int draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 1, 10, 10);
     lang_text_draw(51, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);

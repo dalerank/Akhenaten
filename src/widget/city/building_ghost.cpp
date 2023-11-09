@@ -18,6 +18,7 @@
 #include "grid/tiles.h"
 #include "config/config.h"
 #include "ornaments.h"
+#include "game/game.h"
 #include "widget/city/bridges.h"
 
 #include <cmath>
@@ -166,11 +167,11 @@ static int is_blocked_for_building(int grid_offset, int num_tiles, int* blocked_
     return blocked;
 }
 
-static void draw_flat_tile(view_context &ctx, int x, int y, color color_mask) {
+static void draw_flat_tile(painter &ctx, int x, int y, color color_mask) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
 }
 
-static void draw_partially_blocked(view_context &ctx, vec2i tile, int fully_blocked, int num_tiles, int* blocked_tiles) {
+static void draw_partially_blocked(painter &ctx, vec2i tile, int fully_blocked, int num_tiles, int* blocked_tiles) {
     for (int i = 0; i < num_tiles; i++) {
         vec2i offset = tile + VIEW_OFFSETS[i];
         if (fully_blocked || blocked_tiles[i])
@@ -180,15 +181,15 @@ static void draw_partially_blocked(view_context &ctx, vec2i tile, int fully_bloc
     }
 }
 
-void draw_building(view_context &ctx, int image_id, vec2i tile, color color_mask) {
+void draw_building(painter &ctx, int image_id, vec2i tile, color color_mask) {
     ImageDraw::isometric(ctx, image_id, tile, color_mask);
 }
 
-static void draw_fountain_range(vec2i pixel, map_point point, view_context &ctx) {
+static void draw_fountain_range(vec2i pixel, map_point point, painter &ctx) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE, zoom_get_scale());
 }
 
-static void draw_storage_yard(vec2i tile, view_context &ctx) {
+static void draw_storage_yard(vec2i tile, painter &ctx) {
     int global_rotation = building_rotation_global_rotation();
     int index_rotation = building_rotation_get_storage_fort_orientation(global_rotation);
     int corner = building_rotation_get_corner(index_rotation);
@@ -207,7 +208,7 @@ static void draw_storage_yard(vec2i tile, view_context &ctx) {
     }
 }
 
-static void draw_farm(view_context &ctx, e_building_type type, vec2i tile, int grid_offset) {
+static void draw_farm(painter &ctx, e_building_type type, vec2i tile, int grid_offset) {
     int image_id = get_farm_image(grid_offset);
     draw_building(ctx, image_id, tile + vec2i{-60, 0});
     
@@ -219,7 +220,7 @@ static void draw_farm(view_context &ctx, e_building_type type, vec2i tile, int g
     draw_farm_crops(ctx, type, 0, grid_offset, tile + vec2i{-60, 30}, COLOR_MASK_GREEN);
 }
 
-static void draw_fort(map_point* tile, vec2i pos, view_context &ctx) {
+static void draw_fort(map_point* tile, vec2i pos, painter &ctx) {
     bool fully_blocked = false;
     bool blocked = false;
     if (formation_get_num_forts_cached() >= formation_get_max_forts() || city_finance_out_of_money()) {
@@ -262,7 +263,7 @@ static void draw_fort(map_point* tile, vec2i pos, view_context &ctx) {
     }
 }
 
-static void draw_aqueduct(map_point tile, int x, int y, view_context &ctx) {
+static void draw_aqueduct(map_point tile, int x, int y, painter &ctx) {
     int grid_offset = tile.grid_offset();
     bool blocked = false;
     if (!map_can_place_initial_road_or_aqueduct(grid_offset, true)) {
@@ -291,7 +292,7 @@ static void draw_aqueduct(map_point tile, int x, int y, view_context &ctx) {
         draw_building(ctx, get_aqueduct_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), {x, y});
     }
 }
-static void draw_road(tile2i tile, int x, int y, view_context &ctx) {
+static void draw_road(tile2i tile, int x, int y, painter &ctx) {
     int grid_offset = tile.grid_offset();
     bool blocked = false;
     int image_id = 0;
@@ -341,7 +342,7 @@ static void draw_road(tile2i tile, int x, int y, view_context &ctx) {
     }
 }
 
-static void draw_bridge(map_point tile, int x, int y, int type, view_context &ctx) {
+static void draw_bridge(map_point tile, int x, int y, int type, painter &ctx) {
     int length, direction;
     int end_grid_offset = map_bridge_calculate_length_direction(tile.x(), tile.y(), &length, &direction);
 
@@ -399,7 +400,7 @@ static void draw_bridge(map_point tile, int x, int y, int type, view_context &ct
     }
 }
 
-static void draw_entertainment_venue(map_point tile, int x, int y, int type, view_context &ctx) {
+static void draw_entertainment_venue(map_point tile, int x, int y, int type, painter &ctx) {
     int can_build = 0;
     //    const building_properties *props = building_properties_for_type(type);
     int size = 0;
@@ -588,11 +589,11 @@ bool city_building_ghost_mark_deleting(tile2i tile) {
     return true;
 }
 
-void BuildPlanner::draw_flat_tile(vec2i pos, color color_mask, view_context &ctx) {
+void BuildPlanner::draw_flat_tile(vec2i pos, color color_mask, painter &ctx) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos.x, pos.y, color_mask);
 }
 
-void BuildPlanner::draw_blueprints(view_context &ctx, bool fully_blocked) {
+void BuildPlanner::draw_blueprints(painter &ctx, bool fully_blocked) {
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
             vec2i current_coord = pixel_coords_cache[row][column];
@@ -602,7 +603,7 @@ void BuildPlanner::draw_blueprints(view_context &ctx, bool fully_blocked) {
     }
 }
 
-void BuildPlanner::draw_graphics(view_context &ctx) {
+void BuildPlanner::draw_graphics(painter &ctx) {
     // TODO: bring these all over the unified system
     // special graphics buildings
     vec2i pixel = pixel_coords_cache[0][0];
@@ -641,7 +642,7 @@ void BuildPlanner::draw_graphics(view_context &ctx) {
 
     case BUILDING_WELL:
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-            view_context ctx = view_context_main();
+            painter ctx = game.painter();
             city_view_foreach_tile_in_range(ctx, end.grid_offset(), 1, 2, draw_fountain_range);
         }
         break;
@@ -665,7 +666,7 @@ void BuildPlanner::draw_graphics(view_context &ctx) {
     }
 }
 
-void BuildPlanner::draw(view_context &ctx) {
+void BuildPlanner::draw(painter &ctx) {
     // empty building
     if (size.x < 1 || size.y < 1)
         return;

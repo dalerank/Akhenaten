@@ -15,6 +15,7 @@
 #include "widget/city.h"
 #include "widget/sidebar/city.h"
 #include "window/city.h"
+#include "game/game.h"
 
 static void button_menu_index(int param1, int param2);
 static void button_menu_item(int item);
@@ -167,7 +168,7 @@ static void draw_menu_buttons() {
 
     font_t font = FONT_NORMAL_BLACK_ON_DARK;
     int item_index = -1;
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     for (int i = 0; i < data.num_items; i++) {
         font = FONT_NORMAL_BLACK_ON_LIGHT;
 

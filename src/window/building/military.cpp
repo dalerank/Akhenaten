@@ -18,6 +18,7 @@
 #include "sound/speech.h"
 #include "window/city.h"
 #include "window/building/common.h"
+#include "game/game.h"
 
 static void button_return_to_fort(int param1, int param2);
 static void button_layout(int index, int param2);
@@ -117,7 +118,7 @@ void window_building_draw_tower(object_info* c) {
 }
 
 void window_building_draw_barracks(object_info* c) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     auto& data = g_military_data;
     int military_resource = RESOURCE_WEAPONS;
     if (GAME_ENV == ENGINE_ENV_C3) {
@@ -128,7 +129,7 @@ void window_building_draw_barracks(object_info* c) {
     window_building_play_sound(c, "wavs/barracks.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(136, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, c->x_offset + 64, c->y_offset + 38);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(military_resource), c->x_offset + 64, c->y_offset + 38);
 
     building* b = building_get(c->building_id);
     if (b->stored_full_amount < 100)
@@ -209,7 +210,7 @@ void window_building_draw_fort(object_info* c) {
 void window_building_draw_legion_info(object_info* c) {
     int text_id;
     const formation* m = formation_get(c->formation_id);
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     c->help_id = 87;
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(138, m->legion_id, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);

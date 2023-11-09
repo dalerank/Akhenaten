@@ -31,7 +31,7 @@ static bool drawing_building_as_deleted(building* b) {
 
 /////// ANIMATIONS
 
-static void draw_normal_anim(view_context &ctx, int x, int y, building* b, int grid_offset, int sprite_id, int color_mask, int base_id = 0, int max_frames = 0) {
+static void draw_normal_anim(painter &ctx, int x, int y, building* b, int grid_offset, int sprite_id, int color_mask, int base_id = 0, int max_frames = 0) {
     if (!base_id)
         base_id = map_image_at(grid_offset);
 
@@ -45,7 +45,7 @@ static void draw_normal_anim(view_context &ctx, int x, int y, building* b, int g
         ImageDraw::img_sprite(ctx, sprite_id + animation_offset, x, y, color_mask);
 }
 
-static void draw_water_lift_anim(view_context &ctx, building* b, int x, int y, color color_mask) {
+static void draw_water_lift_anim(painter &ctx, building* b, int x, int y, color color_mask) {
     int orientation_rel = city_view_relative_orientation(b->data.industry.orientation);
     int anim_offset = 13 * orientation_rel;
     x += 53;
@@ -68,7 +68,7 @@ static void draw_water_lift_anim(view_context &ctx, building* b, int x, int y, c
     draw_normal_anim(ctx, x, y, b, b->tile.grid_offset(), image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
 }
 
-static void draw_fort_anim(int x, int y, building* b, view_context &ctx) {
+static void draw_fort_anim(int x, int y, building* b, painter &ctx) {
     if (map_property_is_draw_tile(b->tile.grid_offset())) {
         int offset = 0;
         switch (b->subtype.fort_figure_type) {
@@ -87,7 +87,7 @@ static void draw_fort_anim(int x, int y, building* b, view_context &ctx) {
     }
 }
 
-static void draw_gatehouse_anim(int x, int y, building* b, view_context &ctx) {
+static void draw_gatehouse_anim(int x, int y, building* b, painter &ctx) {
     int xy = map_property_multi_tile_xy(b->tile.grid_offset());
     int orientation = city_view_orientation();
     if ((orientation == DIR_0_TOP_RIGHT && xy == EDGE_X1Y1) || (orientation == DIR_2_BOTTOM_RIGHT && xy == EDGE_X0Y1)
@@ -124,14 +124,14 @@ static void draw_entertainment_shows_c3(building* b, int x, int y, color color_m
     //        draw_hippodrome_spectators(b, x, y, color_mask);
 }
 
-static void draw_entertainment_show_jugglers(view_context &ctx, building* b, int x, int y, color color_mask) {
+static void draw_entertainment_show_jugglers(painter &ctx, building* b, int x, int y, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days1) {
         draw_normal_anim(ctx, x + 30, y + 15, b, b->tile.grid_offset(), image_id_from_group(GROUP_JUGGLERS_SHOW_ALONE) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BOOTH));
     }
 }
 
-static void draw_entertainment_shows_musicians(view_context &ctx, building* b, int x, int y, int direction, color color_mask) {
+static void draw_entertainment_shows_musicians(painter &ctx, building* b, int x, int y, int direction, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days2) {
         building* next_tile = b->next();
@@ -147,7 +147,7 @@ static void draw_entertainment_shows_musicians(view_context &ctx, building* b, i
     }
 }
 
-static void draw_entertainment_shows_dancers(view_context &ctx, building* b, int x, int y, color color_mask) {
+static void draw_entertainment_shows_dancers(painter &ctx, building* b, int x, int y, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days3_or_play) {
         draw_normal_anim(ctx, x + 64, y, b, b->tile.grid_offset(), image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask, image_id_from_group(GROUP_BUILDING_PAVILLION));
@@ -220,7 +220,7 @@ int get_crops_image(e_building_type type, int growth) {
     return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
 }
 
-void draw_farm_crops(view_context &ctx, e_building_type type, int progress, int grid_offset, vec2i tile, color color_mask) {
+void draw_farm_crops(painter &ctx, e_building_type type, int progress, int grid_offset, vec2i tile, color color_mask) {
     int image_crops = get_crops_image(type, 0);
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) { // on floodplains - all
         for (int i = 0; i < 9; i++) {
@@ -236,7 +236,7 @@ void draw_farm_crops(view_context &ctx, e_building_type type, int progress, int 
     }
 }
 
-static void draw_farm_worker(view_context &ctx, int direction, int action, int frame_offset, vec2i coords, color color_mask = COLOR_MASK_NONE) {
+static void draw_farm_worker(painter &ctx, int direction, int action, int frame_offset, vec2i coords, color color_mask = COLOR_MASK_NONE) {
     int action_offset = 0;
     switch (action) {
     case FARM_WORKER_TILING: // tiling
@@ -254,7 +254,7 @@ static void draw_farm_worker(view_context &ctx, int direction, int action, int f
     ImageDraw::img_sprite(ctx, image_id_from_group(GROUP_FIGURE_WORKER_PH) + final_offset, coords.x, coords.y, color_mask);
 }
 
-static void draw_farm_workers(view_context &ctx, building* b, int grid_offset, vec2i pos) {
+static void draw_farm_workers(painter &ctx, building* b, int grid_offset, vec2i pos) {
     if (b->num_workers == 0) {
         return;
     }
@@ -323,7 +323,7 @@ static void draw_farm_workers(view_context &ctx, building* b, int grid_offset, v
     }
 }
 
-static void draw_dock_workers(building* b, int x, int y, color color_mask, view_context &ctx) {
+static void draw_dock_workers(building* b, int x, int y, color color_mask, painter &ctx) {
     int num_dockers = building_dock_count_idle_dockers(b);
     if (num_dockers > 0) {
         int image_dock = map_image_at(b->tile.grid_offset());
@@ -360,12 +360,12 @@ static const vec2i granary_offsets_ph[] = {
   {37, 35},
 };
 
-static void draw_workshop_raw_material_storage(view_context &ctx, const building* b, int x, int y, color color_mask) {
+static void draw_workshop_raw_material_storage(painter &ctx, const building* b, int x, int y, color color_mask) {
     int amount = ceil((float)b->stored_amount() / 100.0) - 1;
     int amount2 = 0;
     switch (b->type) {
     case BUILDING_HUNTING_LODGE:
-        if (amount > 0) {
+        if (amount >= 0) {
             ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_GAMEMEAT) + amount, x + 61, y + 14, color_mask);
         }
         break;
@@ -373,45 +373,45 @@ static void draw_workshop_raw_material_storage(view_context &ctx, const building
     case BUILDING_BRICKS_WORKSHOP:
         amount = std::min<int>(2, ceil((float)b->stored_amount(RESOURCE_CLAY) / 100.0) - 1);
         amount2 = std::min<int>(2, ceil((float)b->stored_amount(RESOURCE_STRAW) / 100.0) - 1);
-        if (amount > 0) {
+        if (amount >= 0) {
             ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_CLAY) + amount, x + 46, y + 25, color_mask);
         }
 
-        if (amount2 > 0) {
+        if (amount2 >= 0) {
             ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_STRAW) + amount, x + 51, y + 18, color_mask);
         }
         break;
 
     case BUILDING_WEAPONS_WORKSHOP:
         amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
-        if (amount > 0) {
+        if (amount >= 0) {
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_COPPER_2) + amount, x + 61, y + 14, color_mask);
         }
         break;
 
     case BUILDING_POTTERY_WORKSHOP:
         amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
-        if (amount > 0) {
+        if (amount >= 0) {
             ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_CLAY) + amount, x + 65, y + 3, color_mask);
         }
         break;
 
     case BUILDING_BEER_WORKSHOP:
         amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
-        if (amount > 0) {
+        if (amount >= 0) {
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_BARLEY_2) + amount, x + 65, y + 3, color_mask);
         }
         break;
 
     case BUILDING_PAPYRUS_WORKSHOP:
         amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
-        if (amount > 0) {
+        if (amount >= 0) {
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_REEDS_5) + amount, x + 35, y + 4, color_mask);
         }
         break;
 
     case BUILDING_WOOD_CUTTERS:
-        if (amount > 0) {
+        if (amount >= 0) {
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3, color_mask);
         }
         break;
@@ -439,7 +439,7 @@ static void draw_workshop_raw_material_storage(view_context &ctx, const building
         break;
     }
 }
-static void draw_granary_stores(const building* b, int x, int y, color color_mask, view_context &ctx) {
+static void draw_granary_stores(const building* b, int x, int y, color color_mask, painter &ctx) {
     if (GAME_ENV == ENGINE_ENV_C3) {
         ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BUILDING_GRANARY) + 1, x, y + 60, color_mask);
         if (b->data.granary.resource_stored[RESOURCE_NONE] < 2400)
@@ -475,13 +475,13 @@ static void draw_granary_stores(const building* b, int x, int y, color color_mas
     }
 }
 
-static void draw_storageyard_ornaments(const building* b, int x, int y, color color_mask, view_context &ctx) {
+static void draw_storageyard_ornaments(const building* b, int x, int y, color color_mask, painter &ctx) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BUILDING_STORAGE_YARD) + 17, x - 5, y - 42, color_mask);
     //if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
     //    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
 }
 
-static void draw_hippodrome_ornaments(vec2i pixel, map_point point, view_context &ctx) {
+static void draw_hippodrome_ornaments(vec2i pixel, map_point point, painter &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -493,7 +493,7 @@ static void draw_hippodrome_ornaments(vec2i pixel, map_point point, view_context
     }
 }
 
-static void draw_palace_rating_flags(const building* b, int x, int y, color color_mask, view_context &ctx) {
+static void draw_palace_rating_flags(const building* b, int x, int y, color color_mask, painter &ctx) {
     if (b->type == BUILDING_GREATE_PALACE || b->type == BUILDING_GREATE_PALACE_UPGRADED) {
         // rating flags
         int image_id = image_id_from_group(GROUP_BUILDING_PALACE);
@@ -521,7 +521,7 @@ static void draw_palace_rating_flags(const building* b, int x, int y, color colo
     }
 }
 
-void draw_ornaments_and_animations(vec2i tile, map_point point, view_context &ctx) {
+void draw_ornaments_and_animations(vec2i tile, map_point point, painter &ctx) {
     int grid_offset = point.grid_offset();
     int x = tile.x;
     int y = tile.y;

@@ -5,7 +5,7 @@
 #include "grid/sprite.h"
 #include "grid/terrain.h"
 
-void city_draw_bridge(vec2i pixel, tile2i point, view_context &ctx) {
+void city_draw_bridge(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -22,7 +22,7 @@ void city_draw_bridge(vec2i pixel, tile2i point, view_context &ctx) {
     city_draw_bridge_tile(ctx, x, y, map_sprite_animation_at(grid_offset) + 1, color_mask);
 }
 
-void city_draw_bridge_tile(view_context &ctx, int x, int y, int bridge_sprite_id, color color_mask) {
+void city_draw_bridge_tile(painter &ctx, int x, int y, int bridge_sprite_id, color color_mask) {
     int image_id = image_id_from_group(GROUP_BUILDING_BRIDGE);
     switch (bridge_sprite_id) {
     case 1:

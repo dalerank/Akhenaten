@@ -15,6 +15,7 @@
 #include "scenario/property.h"
 #include "platform/renderer.h"
 #include "widget/city/figures_cached_draw.h"
+#include "game/game.h"
 
 view_data_t g_city_view_data;
 
@@ -167,7 +168,7 @@ vec2i camera_get_position() {
 
     return data.camera.position;
 }
-vec2i camera_get_pixel_offset_internal(view_context &ctx) {
+vec2i camera_get_pixel_offset_internal(painter &ctx) {
     auto& view = *ctx.view;
 
     vec2i pixel_offset_internal;
@@ -177,7 +178,7 @@ vec2i camera_get_pixel_offset_internal(view_context &ctx) {
     return pixel_offset_internal;
 }
 
-void camera_go_to_pixel(view_context& ctx, vec2i pixel, bool validate) {
+void camera_go_to_pixel(painter& ctx, vec2i pixel, bool validate) {
     auto &view = *ctx.view;
     view.camera.position = pixel;
     if (validate) {
@@ -193,7 +194,7 @@ void camera_go_to_pixel(view_context& ctx, vec2i pixel, bool validate) {
 void camera_go_to_corner_tile(screen_tile screen, bool validate) {
     int x = screen.x * TILE_WIDTH_PIXELS;
     int y = screen.y * HALF_TILE_HEIGHT_PIXELS;
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     camera_go_to_pixel(ctx, {x, y}, validate);
 }
 void camera_go_to_screen_tile(screen_tile screen, bool validate) {
@@ -202,7 +203,7 @@ void camera_go_to_screen_tile(screen_tile screen, bool validate) {
     int x = (screen.x - data.viewport.width_tiles / 2) * TILE_WIDTH_PIXELS;
     int y = (screen.y - data.viewport.height_tiles / 2) * HALF_TILE_HEIGHT_PIXELS;
 
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     camera_go_to_pixel(ctx, {x, y}, validate);
 }
 void camera_go_to_mappoint(map_point point) {
@@ -230,7 +231,7 @@ screen_tile camera_get_selected_screen_tile() {
 }
 
 void city_view_set_selected_view_tile(const vec2i* tile) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     auto& data = *ctx.view;
 
     int screen_x_offset = tile->x - data.camera.tile_internal.x;
@@ -310,16 +311,6 @@ static void set_viewport_without_sidebar(void) {
     auto& data = g_city_view_data;
 
     set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - SIDEBAR_COLLAPSED_WIDTH + 2, data.screen_height - TOP_MENU_HEIGHT);
-}
-
-view_context view_context_main() {
-    view_context ctx;
-    ctx.figure_cache = &figure_draw_cache();
-    ctx.view = &city_view_data_unsafe();
-    ctx.renderer = graphics_renderer()->renderer();
-    ctx.global_render_scale = graphics_renderer()->scale();
-
-    return ctx;
 }
 
 void city_view_refresh_viewport() {
@@ -419,14 +410,14 @@ io_buffer* iob_city_view_camera = new io_buffer([](io_buffer* iob, size_t versio
     camera_go_to_corner_tile(data.camera.tile_internal, false);
 });
 
-static vec2i starting_tile(view_context &ctx) {
+static vec2i starting_tile(painter &ctx) {
     vec2i screen;
     screen.x = ctx.view->camera.tile_internal.x - 4;
     screen.y = ctx.view->camera.tile_internal.y - 8;
     return screen;
 }
 
-static vec2i starting_pixel_coord(view_context &ctx) {
+static vec2i starting_pixel_coord(painter &ctx) {
     vec2i pixel;
     pixel.x = -(4 * TILE_WIDTH_PIXELS); // - pixel_offset_internal().x;
     pixel.y = ctx.view->viewport.offset.y - 11 * HALF_TILE_HEIGHT_PIXELS
@@ -434,7 +425,7 @@ static vec2i starting_pixel_coord(view_context &ctx) {
     return pixel - camera_get_pixel_offset_internal(ctx);
 }
 
-void city_view_foreach_valid_map_tile(view_context &ctx,
+void city_view_foreach_valid_map_tile(painter &ctx,
                                       tile_draw_callback* callback1,
                                       tile_draw_callback* callback2,
                                       tile_draw_callback* callback3,
@@ -490,13 +481,13 @@ void city_view_foreach_valid_map_tile(view_context &ctx,
     }
 }
 
-static void do_valid_callback(view_context &ctx, vec2i pixel, tile2i point, tile_draw_callback* callback) {
+static void do_valid_callback(painter &ctx, vec2i pixel, tile2i point, tile_draw_callback* callback) {
     if (point.grid_offset() >= 0 && map_image_at(point.grid_offset()) >= 6) {
         callback(pixel, point, ctx);
     }
 }
 
-void city_view_foreach_tile_in_range(view_context &ctx, int grid_offset, int size, int radius, tile_draw_callback* callback) {
+void city_view_foreach_tile_in_range(painter &ctx, int grid_offset, int size, int radius, tile_draw_callback* callback) {
     auto& data = g_city_view_data;
 
     vec2i screen = mappoint_to_screentile(tile2i(grid_offset));

@@ -36,6 +36,7 @@
 #include "window/advisor/trade.h"
 #include "window/city.h"
 #include "window/message_dialog.h"
+#include "game/game.h"
 
 static void button_change_advisor(int advisor, int param2);
 static void button_back_to_city(int param1, int param2);
@@ -173,7 +174,7 @@ static void init() {
 }
 
 void window_advisors_draw_dialog_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_ADVISOR_BACKGROUND));
     graphics_set_to_dialog();
     ImageDraw::img_generic(image_id_from_group(GROUP_MENU_ADVISOR_LAYOUT), 0, 432);

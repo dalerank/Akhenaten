@@ -44,12 +44,12 @@ static void draw_partially_blocked(int x, int y, int num_tiles, int* blocked_til
     }
 }
 
-static void draw_building_image(view_context &ctx, int image_id, int x, int y) {
+static void draw_building_image(painter &ctx, int image_id, int x, int y) {
     ImageDraw::isometric(ctx, image_id, x, y, COLOR_MASK_GREEN);
     //    ImageDraw::isometric_top(image_id, x, y, COLOR_MASK_GREEN, city_view_get_scale_float());
 }
 
-static void draw_building(view_context &ctx, tile2i tile, int screen_x, int screen_y, e_building_type type) {
+static void draw_building(painter &ctx, tile2i tile, int screen_x, int screen_y, e_building_type type) {
     const building_properties* props = building_properties_for_type(type);
 
     int num_tiles = props->size * props->size;
@@ -77,7 +77,7 @@ static void draw_building(view_context &ctx, tile2i tile, int screen_x, int scre
     }
 }
 
-static void draw_road(view_context &ctx, tile2i tile, int x, int y) {
+static void draw_road(painter &ctx, tile2i tile, int x, int y) {
     int grid_offset = tile.grid_offset();
     bool blocked = false;
     int image_id = 0;
@@ -109,7 +109,7 @@ static void draw_brush(tile2i tile, int x, int y) {
     editor_tool_foreach_brush_tile(draw_brush_tile, &vt);
 }
 
-static void draw_access_ramp(view_context &ctx, tile2i tile, int x, int y) {
+static void draw_access_ramp(painter &ctx, tile2i tile, int x, int y) {
     int orientation;
     if (editor_tool_can_place_access_ramp(tile, &orientation)) {
         int image_id = image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation;
@@ -124,7 +124,7 @@ static void draw_map_flag(int x, int y, int is_ok) {
     draw_flat_tile(x, y, is_ok ? COLOR_MASK_GREEN : COLOR_MASK_RED);
 }
 
-void map_editor_tool_draw(view_context &ctx, tile2i tile) {
+void map_editor_tool_draw(painter &ctx, tile2i tile) {
     if (!tile.grid_offset() || scroll_in_progress() || !editor_tool_is_active())
         return;
 

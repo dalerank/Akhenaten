@@ -14,6 +14,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "window/advisors.h"
+#include "game/game.h"
 
 #define MIN_DIALOG_WIDTH 384
 
@@ -49,14 +50,14 @@ static int get_dialog_width() {
 }
 
 static void draw_foreground() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
 
     graphics_set_to_dialog();
 
     int dialog_width = get_dialog_width();
     int dialog_x = 128 - (dialog_width - MIN_DIALOG_WIDTH) / 2;
     outer_panel_draw(dialog_x, 32, dialog_width / 16, 25);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_DEBEN, dialog_x + 16, 48);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), dialog_x + 16, 48);
     lang_text_draw_centered(52, 15, dialog_x + 48, 48, dialog_width - 64, FONT_LARGE_BLACK_ON_LIGHT);
 
     inner_panel_draw(144, 80, 22, 15);

@@ -1,6 +1,6 @@
 #include "entertainment.h"
-#include <building/menu.h>
-#include <scenario/building.h>
+#include "building/menu.h"
+#include "scenario/building.h"
 
 #include "building/count.h"
 #include "city/coverage.h"
@@ -16,6 +16,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "window/hold_festival.h"
+#include "game/game.h"
 
 #define ADVISOR_HEIGHT 20 // 23
 
@@ -92,7 +93,7 @@ static void draw_entertainer(int type, int y_offset, int venue, int shows, int c
 }
 
 static void draw_festival_info() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     inner_panel_draw(48, 252, 34, 6);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_WINDOWS) + 15, 460, 255);
     lang_text_draw(58, 17, 52, 224, FONT_LARGE_BLACK_ON_LIGHT);
@@ -108,7 +109,7 @@ static void draw_festival_info() {
 }
 
 static int draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     city_gods_update(true);
     city_culture_calculate();
 

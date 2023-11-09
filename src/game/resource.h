@@ -128,6 +128,4 @@ inline e_resource& operator++(e_resource& e) {
     return e;
 };
 
-int resource_get_icon(int resource, int quantity = 1);
-
 int resource_is_food(int resource);

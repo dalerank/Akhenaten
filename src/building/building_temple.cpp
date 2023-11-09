@@ -12,6 +12,7 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
+#include "game/game.h"
 
 static void building_temple_draw_temple(object_info& c, const char* type, int group_id, int image_offset) {
     c.help_id = 67;
@@ -20,7 +21,7 @@ static void building_temple_draw_temple(object_info& c, const char* type, int gr
     lang_text_draw_centered(group_id, 0, c.x_offset, c.y_offset + 12, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(c.x_offset + 16, c.y_offset + 56, c.width_blocks - 2, 4);
     window_building_draw_employment(&c, 62);
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     if (c.has_road_access) {
         ImageDraw::img_generic(ctx, image_offset + image_id_from_group(GROUP_PANEL_WINDOWS), c.x_offset + 190, c.y_offset + 16 * c.height_blocks - 118);
     } else {

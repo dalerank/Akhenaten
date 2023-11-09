@@ -9,6 +9,7 @@
 #include "grid/terrain.h"
 #include "input/scroll.h"
 #include "scenario/property.h"
+#include "game/game.h"
 
 #include "dev/debug.h"
 
@@ -107,7 +108,7 @@ static int draw_figure(screen_tile screen, map_point point) {
 }
 
 static void draw_minimap_tile(vec2i screen, tile2i point) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int grid_offset = point.grid_offset();
     int screen_x = screen.x;
     int screen_y = screen.y;
@@ -223,7 +224,7 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
     }
 }
 
-static void draw_viewport_rectangle(view_context &ctx) {
+static void draw_viewport_rectangle(painter &ctx) {
     auto& data = g_minimap_data;
     map_point camera_tile = city_view_get_camera_mappoint();
     vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
@@ -260,7 +261,7 @@ static void clear_minimap(void) {
 }
 
 void draw_minimap() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     auto& data = g_minimap_data;
 
     graphics_set_clip_rectangle(data.screen_offset.x, data.screen_offset.y, data.size.x, data.size.y);
@@ -281,7 +282,7 @@ static void draw_uncached(vec2i offset, int width_tiles, int height_tiles) {
 }
 
 void draw_using_cache(vec2i offset, int width_tiles, int height_tiles, int is_scrolling) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     auto& data = g_minimap_data;
     if (width_tiles * 2 != data.size.x || height_tiles != data.size.y || offset.x != data.screen_offset.x) {
         draw_uncached(offset, width_tiles, height_tiles);
@@ -360,7 +361,7 @@ bool widget_minimap_handle_mouse(const mouse* m) {
             vec2i city_canvas_pixels = max_pos - min_pos;
             vec2i map_pos(city_canvas_pixels.x * xx, city_canvas_pixels.y * yy);
 
-            view_context ctx = view_context_main();
+            painter ctx = game.painter();
             camera_go_to_pixel(ctx, min_pos + map_pos - view_size / 2, true);
             widget_minimap_invalidate();
             data.mouse_last_coords = {m->x, m->y};

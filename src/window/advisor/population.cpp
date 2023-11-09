@@ -17,6 +17,7 @@
 #include "scenario/property.h"
 #include "translation/translation.h"
 #include "window/advisors.h"
+#include "game/game.h"
 
 #define ADVISOR_HEIGHT 27
 
@@ -82,7 +83,7 @@ static void get_min_max_month_year(int max_months, int* start_month, int* start_
 }
 
 static void draw_history_graph(int full_size, int x, int y) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int max_months;
     int month_count = city_population_monthly_count();
     if (month_count <= 20)
@@ -175,7 +176,7 @@ static void draw_history_graph(int full_size, int x, int y) {
 }
 
 static void draw_census_graph(int full_size, int x, int y) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int max_value = 0;
     for (int i = 0; i < 100; i++) {
         int value = city_population_at_age(i);
@@ -221,7 +222,7 @@ static void draw_census_graph(int full_size, int x, int y) {
 }
 
 static void draw_society_graph(int full_size, int x, int y) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int max_value = 0;
     for (int i = 0; i < 20; i++) {
         int value = city_population_at_level(i);
@@ -384,13 +385,13 @@ static void print_history_info(void) {
 }
 
 static void draw_housing_button(int full_size, int x, int y) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     ImageDraw::isometric(ctx, image_id_from_group(GROUP_BUILDING_HOUSE_HOMESTEAD) + 2, x, y, COLOR_MASK_NONE, 1.0f);
     //    ImageDraw::isometric_top(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE);
 }
 
 static int draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int width;
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);

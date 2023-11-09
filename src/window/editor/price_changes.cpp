@@ -16,6 +16,7 @@
 #include "window/editor/attributes.h"
 #include "window/editor/edit_price_change.h"
 #include "window/editor/map.h"
+#include "game/game.h"
 
 static void button_price_change(int id, int param2);
 
@@ -49,7 +50,7 @@ static void draw_background(void) {
 }
 
 static void draw_foreground(void) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
 
     graphics_set_to_dialog();
 

@@ -8,6 +8,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "panel.h"
+#include "game/game.h"
 
 static const int TOP_OFFSETS[] = {30, 55, 80, 105, 130};
 
@@ -30,7 +31,7 @@ void warning_draw() {
         return;
     }
 
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int center = (screen_width() - 180) / 2;
     for (int i = 0; i < 5; i++) {
         const uint8_t* text = city_warning_get(i);

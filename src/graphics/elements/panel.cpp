@@ -2,13 +2,14 @@
 
 #include "graphics/boilerplate.h"
 #include "graphics/view/view.h"
+#include "game/game.h"
 
 void outer_panel_draw(int x, int y, int width_blocks, int height_blocks) {
     int image_base = image_id_from_group(GROUP_DIALOG_BACKGROUND);
     int image_id;
     int image_y = 0;
     int y_add = 0;
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     for (int yy = 0; yy < height_blocks; yy++) {
         int image_x = 0;
         for (int xx = 0; xx < width_blocks; xx++) {
@@ -52,7 +53,7 @@ void outer_panel_draw(int x, int y, int width_blocks, int height_blocks) {
 void unbordered_panel_draw(int x, int y, int width_blocks, int height_blocks) {
     int image_base = image_id_from_group(GROUP_DIALOG_BACKGROUND);
     int image_y = 0;
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     for (int yy = 0; yy < height_blocks; yy++) {
         int image_x = 0;
         for (int xx = 0; xx < width_blocks; xx++) {
@@ -70,7 +71,7 @@ void inner_panel_draw(int x, int y, int width_blocks, int height_blocks) {
     int image_base = image_id_from_group(GROUP_SUNKEN_TEXTBOX_BACKGROUND);
     int image_y = 0;
     int y_add = 0;
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     for (int yy = 0; yy < height_blocks; yy++) {
         int image_x = 0;
         for (int xx = 0; xx < width_blocks; xx++) {
@@ -115,7 +116,7 @@ void inner_panel_draw(int x, int y, int width_blocks, int height_blocks) {
 
 void label_draw(int x, int y, int width_blocks, int type) {
     int image_base = image_id_from_group(GROUP_PANEL_BUTTON);
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     for (int i = 0; i < width_blocks; i++) {
         int image_id;
         if (i == 0)
@@ -129,7 +130,7 @@ void label_draw(int x, int y, int width_blocks, int type) {
     }
 }
 
-void label_draw_colored(view_context &ctx, int x, int y, int width_blocks, int type, uint32_t mask) {
+void label_draw_colored(painter &ctx, int x, int y, int width_blocks, int type, uint32_t mask) {
     int image_base = image_id_from_group(GROUP_PANEL_BUTTON);
     for (int i = 0; i < width_blocks; i++) {
         int image_id;
@@ -145,7 +146,7 @@ void label_draw_colored(view_context &ctx, int x, int y, int width_blocks, int t
 }
 
 void large_label_draw(int x, int y, int width_blocks, int type) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int image_base = image_id_from_group(GROUP_PANEL_BUTTON);
     for (int i = 0; i < width_blocks; i++) {
         int image_id;

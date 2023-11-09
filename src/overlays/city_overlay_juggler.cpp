@@ -41,7 +41,7 @@ struct city_overlay_booth : public city_overlay {
         return f->type == FIGURE_JUGGLER;
     }
 
-    void draw_custom_top(vec2i pixel, tile2i point, view_context &ctx) const override {
+    void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
         int grid_offset = point.grid_offset();
         int x = pixel.x;
         int y = pixel.y;

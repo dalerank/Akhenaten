@@ -11,9 +11,10 @@
 #include "config/config.h"
 #include "window/building/common.h"
 #include "sound/sound_building.h"
+#include "game/game.h"
 
 void building_tax_collector_draw_info(object_info* c) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     c->help_id = e_text_building_tax_collector;
     window_building_play_sound(c, snd::get_building_info_sound("tax_collector"));
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);

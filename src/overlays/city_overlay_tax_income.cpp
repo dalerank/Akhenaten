@@ -46,7 +46,7 @@ struct city_overlay_tax_income : public city_overlay {
         return f->type == FIGURE_TAX_COLLECTOR;
     }
 
-    void draw_custom_top(vec2i pixel, map_point point, view_context &ctx) const override {
+    void draw_custom_top(vec2i pixel, map_point point, painter &ctx) const override {
         int grid_offset = point.grid_offset();
         if (!map_property_is_draw_tile(grid_offset)) {
             return;

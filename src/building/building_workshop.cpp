@@ -14,15 +14,16 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
+#include "game/game.h"
 
 static void building_workshop_draw_info(object_info& c, int help_id, const char* type, int group_id, int resource, e_resource input_resource) {
     c.help_id = help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
 
     outer_panel_draw(c.x_offset, c.y_offset, c.width_blocks, c.height_blocks);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c.x_offset + 10, c.y_offset + 10);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(resource), c.x_offset + 10, c.y_offset + 10);
     lang_text_draw_centered(group_id, 0, c.x_offset, c.y_offset + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
@@ -31,7 +32,7 @@ static void building_workshop_draw_info(object_info& c, int help_id, const char*
     width += text_draw_percentage(pct_done, c.x_offset + 32 + width, c.y_offset + 40, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(group_id, 3, c.x_offset + 32 + width, c.y_offset + 40, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + input_resource, c.x_offset + 32, c.y_offset + 56);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(input_resource), c.x_offset + 32, c.y_offset + 56);
     width = lang_text_draw(group_id, 12, c.x_offset + 60, c.y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
     if (b->stored_amount() < 100) {
         lang_text_draw_amount(8, 10, 0, c.x_offset + 60 + width, c.y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -66,10 +67,10 @@ static void building_workshop_draw_info(object_info& c, int help_id, const char*
     c.help_id = help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
 
     outer_panel_draw(c.x_offset, c.y_offset, c.width_blocks, c.height_blocks);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c.x_offset + 10, c.y_offset + 10);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(resource), c.x_offset + 10, c.y_offset + 10);
     lang_text_draw_centered(group_id, 0, c.x_offset, c.y_offset + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
@@ -78,7 +79,7 @@ static void building_workshop_draw_info(object_info& c, int help_id, const char*
     width += text_draw_percentage(pct_done, c.x_offset + 32 + width, c.y_offset + 40, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(group_id, 3, c.x_offset + 32 + width, c.y_offset + 40, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + input_resource_a, c.x_offset + 32, c.y_offset + 56);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(input_resource_a), c.x_offset + 32, c.y_offset + 56);
     width = lang_text_draw(group_id, 13, c.x_offset + 60, c.y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
 
     if (b->stored_amount() < 100) {
@@ -88,7 +89,7 @@ static void building_workshop_draw_info(object_info& c, int help_id, const char*
     }
 
     int y_offset = 80;
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + input_resource_b, c.x_offset + 32, c.y_offset + y_offset);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(input_resource_b), c.x_offset + 32, c.y_offset + y_offset);
     width = lang_text_draw(group_id, 14, c.x_offset + 60, c.y_offset + y_offset + 4, FONT_NORMAL_BLACK_ON_LIGHT);
 
     if (b->stored_amount(1) < 100) {

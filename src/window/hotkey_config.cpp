@@ -15,6 +15,7 @@
 #include "config/hotkeys.h"
 #include "translation/translation.h"
 #include "window/hotkey_editor.h"
+#include "game/game.h"
 
 #define HOTKEY_HEADER -1
 #define TR_NONE -1
@@ -186,7 +187,7 @@ static void init(void (*close_callback)(void)) {
 }
 
 static void draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     auto& data = g_hotkeys_window_data;
     graphics_clear_screen();
 

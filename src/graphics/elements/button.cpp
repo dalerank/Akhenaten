@@ -2,12 +2,13 @@
 
 #include "graphics/boilerplate.h"
 #include "graphics/view/view.h"
+#include "game/game.h"
 
 void button_none(int param1, int param2) {
 }
 
 void button_border_draw(int x, int y, int width_pixels, int height_pixels, bool has_focus) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int width_blocks = width_pixels / 16;
     if (width_pixels % 16)
         width_blocks++;

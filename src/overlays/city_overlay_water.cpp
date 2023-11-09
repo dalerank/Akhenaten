@@ -18,7 +18,7 @@ static int terrain_on_water_overlay(void) {
         | TERRAIN_MARSHLAND;
 }
 
-static void draw_footprint_water(vec2i pixel, tile2i point, view_context &ctx) {
+static void draw_footprint_water(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -74,7 +74,7 @@ static int get_column_height_water(const building* b) {
     return b->house_size ? b->data.house.water_supply * 17 / 10 : NO_COLUMN;
 }
 
-static void draw_top_water(vec2i pixel, tile2i point, view_context &ctx) {
+static void draw_top_water(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     if (!map_property_is_draw_tile(grid_offset)) {
         return;
@@ -108,7 +108,7 @@ struct city_overlay_water : public city_overlay {
         return f->type == FIGURE_WATER_CARRIER;
     }
 
-    void draw_custom_top(vec2i pixel, tile2i point, view_context &ctx) const override {
+    void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
         int grid_offset = point.grid_offset();
         if (!map_property_is_draw_tile(grid_offset)) {
             return;

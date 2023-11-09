@@ -11,6 +11,7 @@
 #include "config/config.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
+#include "game/game.h"
 
 #define ADVISOR_HEIGHT 27
 
@@ -26,7 +27,7 @@ static generic_button rating_buttons[] = {
 static int focus_button_id;
 
 static void draw_rating_column(int x_offset, int y_offset, int value, int has_reached) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int image_base = image_id_from_group(GROUP_RATINGS_COLUMN);
     int y = y_offset - image_get(image_base)->height;
     int value_to_draw = value * 0.75;
@@ -62,7 +63,7 @@ static void draw_rating(int id, int value, int open_play, int goal) {
 }
 
 static int draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
     int width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);

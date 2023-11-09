@@ -22,6 +22,7 @@
 #include "window/gift_to_emperor.h"
 #include "window/popup_dialog.h"
 #include "window/set_salary.h"
+#include "game/game.h"
 
 #define ADVISOR_HEIGHT 27
 
@@ -52,14 +53,14 @@ static int focus_button_id;
 static int selected_request_id;
 
 static void draw_request(int index, const scenario_request* request) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     if (index >= 5)
         return;
 
     button_border_draw(38, 96 + 42 * index, 560, 40, 0);
     text_draw_number(request->amount, '@', " ", 40, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
     int resource_offset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + resource_offset, 110, 100 + 42 * index);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(resource_offset), 110, 100 + 42 * index);
     lang_text_draw(23, request->resource, 150, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
 
     int width
@@ -90,7 +91,7 @@ static void draw_request(int index, const scenario_request* request) {
 }
 
 static int draw_background(void) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int military_resource = RESOURCE_WEAPONS;
     city_emperor_calculate_gift_costs();
 
@@ -111,7 +112,7 @@ static int draw_background(void) {
         && !city_military_distant_battle_roman_army_is_traveling_forth()) {
         // can send to distant battle
         button_border_draw(38, 96, 560, 40, 0);
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, 50, 106);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(military_resource), 50, 106);
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE_ON_DARK);
         lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id, 80 + width, 102, FONT_NORMAL_WHITE_ON_DARK);
         int strength_text_id;

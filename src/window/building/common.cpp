@@ -10,6 +10,7 @@
 #include "graphics/text.h"
 #include "graphics/view/view.h"
 #include "sound/speech.h"
+#include "game/game.h"
 
 void window_building_set_possible_position(int* x_offset, int* y_offset, int width_blocks, int height_blocks) {
     int dialog_width = 16 * width_blocks;
@@ -74,7 +75,7 @@ static int get_employment_info_text_id(object_info* c, building* b, int y_offset
 }
 
 static void draw_employment_details(object_info* c, building* b, int y_offset, int text_id) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     y_offset += c->y_offset;
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 14, c->x_offset + 40, y_offset + 6);
     if (text_id) {
@@ -90,7 +91,7 @@ static void draw_employment_details(object_info* c, building* b, int y_offset, i
 }
 
 static void draw_employment_farm_ph_details(object_info* c, building* b, int y_offset, int text_id) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     y_offset += c->y_offset;
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 14, c->x_offset + 40, y_offset + 6);
     int width = lang_text_draw_multiline(177, text_id, c->x_offset + 70, y_offset + 10, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);

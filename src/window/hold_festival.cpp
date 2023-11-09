@@ -61,13 +61,7 @@ static void draw_buttons(void) {
     width += lang_text_draw_amount(8, 0, city_festival_grand_cost(), 110 + width, 284, FONT_NORMAL_BLACK_ON_LIGHT);
     width += lang_text_draw_amount(8, 10, city_festival_grand_alcohol(), 120 + width, 284, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    int resource_image_id = 0;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        resource_image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_BEER;
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        resource_image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_BEER;
-    }
-
+    int resource_image_id = image_id_resource_icon(RESOURCE_BEER);
     ImageDraw::img_generic(resource_image_id, 120 + width, 279);
 
     // greying out of buttons

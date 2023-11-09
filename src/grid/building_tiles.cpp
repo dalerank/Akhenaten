@@ -14,6 +14,7 @@
 #include "grid/sprite.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
+#include "game/game.h"
 
 static int north_tile_grid_offset(tile2i tile, int* size) {
     int grid_offset = tile.grid_offset();
@@ -40,7 +41,7 @@ static void adjust_to_absolute_xy(tile2i tile, int size) {
         break;
     }
 }
-static void set_crop_tile(view_context &ctx, int building_id, int x, int y, int dx, int dy, int crop_image_id, int growth) {
+static void set_crop_tile(painter &ctx, int building_id, int x, int y, int dx, int dy, int crop_image_id, int growth) {
     int grid_offset = MAP_OFFSET(x + dx, y + dy);
     //if (GAME_ENV == ENGINE_ENV_C3) {
     //    map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
@@ -141,7 +142,7 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
         //        int image_id = image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
         //        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_FLOODPLAIN))
         //            image_id = image_id_from_group(GROUP_BUILDING_FARMLAND);
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     map_building_tiles_add(building_id, map_point(x, y), 3, get_farm_image(MAP_OFFSET(x, y)), TERRAIN_BUILDING);
         //        crop_image_offset += image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH);
         return;

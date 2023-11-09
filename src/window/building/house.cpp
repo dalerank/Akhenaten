@@ -14,6 +14,7 @@
 #include "graphics/text.h"
 #include "grid/road_access.h"
 #include "window/building/figures.h"
+#include "game/game.h"
 
 static void draw_vacant_lot(object_info* c) {
     window_building_prepare_figure_list(c);
@@ -31,7 +32,7 @@ static void draw_vacant_lot(object_info* c) {
     window_building_draw_description_at(c, 16 * c->height_blocks - 113, 128, text_id);
 }
 static void draw_population_info(object_info* c, int y_offset) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     building* b = building_get(c->building_id);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 13, c->x_offset + 34, y_offset + 4);
     int width = text_draw_number(b->house_population, '@', " ", c->x_offset + 50, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
@@ -82,7 +83,7 @@ static void draw_happiness_info(object_info* c, int y_offset) {
 #define Y_GOODS Y_FOODS + 20 // 174 //274
 
 void window_building_draw_house(object_info* c) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     c->help_id = 56;
     window_building_play_sound(c, "wavs/housing.wav");
     building* b = building_get(c->building_id);
@@ -122,7 +123,7 @@ void window_building_draw_house(object_info* c) {
                                  16 * (c->width_blocks - 4),
                                  FONT_NORMAL_BLACK_ON_LIGHT);
 
-    int resource_image = image_id_from_group(GROUP_RESOURCE_ICONS);
+    int resource_image = image_id_resource_icon(0);
     // food inventory
     // todo: fetch map available foods?
     int food1 = ALLOWED_FOODS(0);

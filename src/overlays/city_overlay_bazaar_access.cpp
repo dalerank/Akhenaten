@@ -56,7 +56,7 @@ struct city_overlay_bazaar_access : public city_overlay {
         return f->type == FIGURE_MARKET_BUYER || f->type == FIGURE_MARKET_TRADER;
     }
 
-    void draw_custom_top(vec2i pixel, tile2i point, view_context &ctx) const override {
+    void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
         int grid_offset = point.grid_offset();
         int x = pixel.x;
         int y = pixel.y;

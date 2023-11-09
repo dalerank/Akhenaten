@@ -21,6 +21,7 @@
 #include "window/gift_to_emperor.h"
 #include "window/popup_dialog.h"
 #include "window/set_salary.h"
+#include "game/game.h"
 
 #define ADVISOR_HEIGHT 27
 
@@ -83,10 +84,10 @@ static void draw_request(int index, const scenario_request* request) {
         return;
     }
 
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     button_border_draw(38, 96 + 42 * index, 560, 42, 0);
     int resource_offset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + resource_offset, 45, 103 + 42 * index);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(resource_offset), 45, 103 + 42 * index);
     int width = text_draw_number(stack_proper_quantity(request->amount, request->resource), '@', " ", 65, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(23, request->resource, 65 + width, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
 
@@ -119,7 +120,7 @@ static void draw_request(int index, const scenario_request* request) {
 static int draw_background(void) {
     int military_resource = RESOURCE_WEAPONS;
 
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     city_emperor_calculate_gift_costs();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
@@ -139,13 +140,9 @@ static int draw_background(void) {
         && !city_military_distant_battle_roman_army_is_traveling_forth()) {
         // can send to distant battle
         button_border_draw(38, 96, 560, 40, 0);
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, 50, 106);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(military_resource), 50, 106);
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE_ON_DARK);
-        lang_text_draw(21,
-                       empire_city_get(city_military_distant_battle_city())->name_id,
-                       80 + width,
-                       102,
-                       FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id, 80 + width, 102, FONT_NORMAL_WHITE_ON_DARK);
         int strength_text_id;
         int enemy_strength = city_military_distant_battle_enemy_strength();
         if (enemy_strength < 46)
@@ -156,13 +153,13 @@ static int draw_background(void) {
             strength_text_id = 75;
         }
         width = lang_text_draw(52, strength_text_id, 80, 120, FONT_NORMAL_WHITE_ON_DARK);
-        lang_text_draw_amount(
-          8, 4, city_military_months_until_distant_battle(), 80 + width, 120, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_amount(8, 4, city_military_months_until_distant_battle(), 80 + width, 120, FONT_NORMAL_WHITE_ON_DARK);
         num_requests = 1;
     }
     num_requests = scenario_request_foreach_visible(num_requests, draw_request);
-    if (!num_requests)
+    if (!num_requests) {
         lang_text_draw_multiline(52, 21, 64, 160, 512, FONT_NORMAL_WHITE_ON_DARK);
+    }
 
     return ADVISOR_HEIGHT;
 }

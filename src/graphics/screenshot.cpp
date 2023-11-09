@@ -21,6 +21,7 @@
 #include "widget/sidebar/common.h"
 #include "widget/city/figures_cached_draw.h"
 #include "widget/city.h"
+#include "game/game.h"
 
 #include "png.h"
 
@@ -184,7 +185,7 @@ static int image_write_rows(const color *canvas, int canvas_width) {
     return 1;
 }
 
-static int image_write_canvas(view_context &ctx) {
+static int image_write_canvas(painter &ctx) {
     const color *canvas;
     color *pixels = 0;
     pixels = (color *)malloc(sizeof(color) * screenshot.width * screenshot.height);
@@ -229,7 +230,7 @@ static void create_window_screenshot() {
         return;
     }
 
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     if (!image_write_canvas(ctx)) {
         logs::error("Error writing image");
         image_free();
@@ -319,7 +320,7 @@ static void create_full_city_screenshot() {
                 //SDL_FillRect(surface, &rect, color );
                 figure_draw_cache_data_t local_figure_cache;
                 view_data_t local_view_data = full_city_view_data;
-                view_context local_context;
+                painter local_context;
                 local_context.figure_cache = &local_figure_cache;
                 local_context.view = &local_view_data;
                 local_context.global_render_scale = 1.f;
@@ -354,7 +355,7 @@ static void create_full_city_screenshot() {
     zoom_set_scale(old_scale);
 
     graphics_reset_clip_rectangle();
-    view_context global_context = view_context_main();
+    painter global_context = game.painter();
     camera_go_to_pixel(global_context, original_camera_pixels, true);
     
     if (!error) {
@@ -391,7 +392,7 @@ static void create_minimap_screenshot() {
         image_free();
         return;
     }
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
 
     memset(canvas, 0, sizeof(color) * width_pixels * height_pixels);
     widget_minimap_draw({0, 0}, width_pixels, height_pixels, 1);

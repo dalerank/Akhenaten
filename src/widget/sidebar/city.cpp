@@ -30,6 +30,7 @@
 #include "window/message_list.h"
 #include "window/mission_briefing.h"
 #include "window/overlay_menu.h"
+#include "game/game.h"
 
 #define MINIMAP_Y_OFFSET 59
 
@@ -175,7 +176,7 @@ static void refresh_build_menu_buttons(void) {
     }
 }
 static void draw_collapsed_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int x_offset = sidebar_common_get_x_offset_collapsed();
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT);
     draw_buttons_collapsed(x_offset);
@@ -184,7 +185,7 @@ static void draw_collapsed_background() {
 
 static void draw_expanded_background(int x_offset) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded");
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT);
     ImageDraw::img_generic(ctx, window_build_menu_image(), x_offset + 11, 181 + TOP_MENU_HEIGHT);
     widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);

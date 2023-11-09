@@ -5,6 +5,7 @@
 #include "graphics/boilerplate.h"
 #include "graphics/view/view.h"
 #include "io/gamefiles/lang.h"
+#include "game/game.h"
 
 #define ELLIPSIS_LENGTH 4
 #define NUMBER_BUFFER_LENGTH 100
@@ -225,11 +226,11 @@ void text_ellipsize(uint8_t* str, font_t font, int requested_width) {
 }
 
 int text_draw(const uint8_t *str, int x, int y, font_t font, color color) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     return text_draw(ctx, str, x, y, font, color);
 }
 
-int text_draw(view_context &ctx, const uint8_t* str, int x, int y, font_t font, color color) {
+int text_draw(painter &ctx, const uint8_t* str, int x, int y, font_t font, color color) {
     y = y - 3;
 
     const font_definition* def = font_definition_for(font);

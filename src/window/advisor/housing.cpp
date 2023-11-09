@@ -14,6 +14,7 @@
 #include "graphics/window.h"
 #include "scenario/property.h"
 #include "translation/translation.h"
+#include "game/game.h"
 
 #define ADVISOR_HEIGHT 27
 
@@ -65,16 +66,16 @@ static void draw_housing_table() {
     text_draw(translation_for(TR_ADVISOR_TOTAL_HOUSING_CAPACITY), 270, y_offset + 220, FONT_NORMAL_BLACK_ON_DARK, 0);
     text_draw_number(city_population_total_housing_capacity(), '@', " ", 450, y_offset + 220, FONT_NORMAL_WHITE_ON_DARK);
 
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     for (int i = 0; i <= 3; i++) {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_ICONS) + goods_icons[i], 54, y_offset + 260 + (23 * i));
+        ImageDraw::img_generic(ctx, image_id_resource_icon(goods_icons[i]), 54, y_offset + 260 + (23 * i));
         text_draw(translation_for(goods_demand_strings[i]), 90, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT, 0);
         text_draw_number(houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
 
 static int draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
 
     int val;
     int width;

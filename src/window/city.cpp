@@ -29,6 +29,7 @@
 #include "widget/city.h"
 #include "window/advisors.h"
 #include "window/file_dialog.h"
+#include "game/game.h"
 
 static int selected_legion_formation_id;
 
@@ -84,7 +85,7 @@ static void draw_cancel_construction() {
     city_view_get_viewport(view_pos, view_size);
     view_size.x -= 4 * 16;
     inner_panel_draw(view_size.x - 4, 40, 3, 2);
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, view_size.x, 44);
     //    city_view_dirty = 1;
 }
@@ -262,7 +263,7 @@ void window_city_draw_panels() {
 }
 
 void window_city_draw() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     widget_city_draw(ctx);
 }
 

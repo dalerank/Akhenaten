@@ -9,6 +9,7 @@
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/window.h"
+#include "game/game.h"
 
 #define MAX_LINKS 50
 
@@ -185,7 +186,7 @@ static int get_word_width(const uint8_t* str, int in_link, int* num_chars) {
     return width;
 }
 
-static void draw_line(view_context &ctx, const uint8_t* str, int x, int y, color color, bool measure_only) {
+static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color color, bool measure_only) {
     int start_link = 0;
     int num_link_chars = 0;
     while (*str) {
@@ -240,7 +241,7 @@ static int draw_text(const uint8_t* text, int x_offset, int y_offset, int box_wi
     int guard = 0;
     int line = 0;
     int num_lines = 0;
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     while (has_more_characters || image_height_lines) {
         if (++guard >= 1000)
             break;

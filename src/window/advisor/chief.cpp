@@ -22,18 +22,19 @@
 #include "scenario/property.h"
 #include "translation/translation.h"
 #include "window/advisors.h"
+#include "game/game.h"
 
 #define ADVISOR_HEIGHT 24
 #define X_OFFSET 185
 
 static void draw_title(int y, int text_id) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), 26, y + 1);
     lang_text_draw(61, text_id, 44, y, FONT_NORMAL_WHITE_ON_DARK);
 }
 
 static int draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int width;
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);

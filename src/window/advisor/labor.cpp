@@ -12,6 +12,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "window/labor_priority.h"
+#include "game/game.h"
 
 #define ADVISOR_HEIGHT 26
 
@@ -37,7 +38,7 @@ static int focus_button_id;
 static int arrow_button_focus;
 
 static int draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS), 10, 10);
 
@@ -72,7 +73,7 @@ static int draw_background() {
 }
 
 static void draw_foreground() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     arrow_buttons_draw(0, 0, wage_buttons, 2);
 
     inner_panel_draw(32, 70, 36, 15);

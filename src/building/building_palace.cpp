@@ -11,9 +11,10 @@
 #include "config/config.h"
 #include "window/building/common.h"
 #include "sound/sound_building.h"
+#include "game/game.h"
 
 void building_palace_draw_info(object_info& c) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     c.can_go_to_advisor = true;
     c.help_id = e_text_building_palace;
 

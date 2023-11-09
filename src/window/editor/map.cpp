@@ -28,7 +28,7 @@ static void draw_background() {
 }
 
 static void draw_cancel_construction() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     if (!mouse_get()->is_touch || !editor_tool_is_active()) {
         return;
     }

@@ -13,6 +13,7 @@
 #include "input/input.h"
 #include "io/gamefiles/lang.h"
 #include "window/city.h"
+#include "game/game.h"
 
 static void button_menu_item(int index, int param2);
 static void button_submenu_item(int index, int param2);
@@ -188,7 +189,7 @@ const char* game_state_overlay_text(int index) {
 }
 
 static void draw_foreground() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     auto& data = g_overlay_menu_data;
     window_city_draw();
     int x_offset = get_sidebar_x_offset();

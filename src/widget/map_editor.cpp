@@ -17,6 +17,7 @@
 #include "sound/effect.h"
 #include "widget/city/tile_draw.h"
 #include "widget/map_editor_tool.h"
+#include "game/game.h"
 
 struct map_editor_data_t {
     map_point current_tile;
@@ -52,7 +53,7 @@ static void init_draw_context(void) {
 }
 
 static void draw_flags(vec2i pixel, map_point point) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int figure_id = map_figure_id_get(point);
     while (figure_id) {
         figure* f = figure_get(figure_id);
@@ -78,14 +79,14 @@ static void update_zoom_level() {
     vec2i offset = camera_get_position();
     if (zoom_update_value(&offset)) {
         city_view_refresh_viewport();
-        view_context ctx = view_context_main();
+        painter ctx = game.painter();
         camera_go_to_pixel(ctx, offset, true);
         sound_city_decay_views();
     }
 }
 
 void widget_map_editor_draw() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     auto &data = g_map_editor_data;
     update_zoom_level();
     set_city_clip_rectangle();

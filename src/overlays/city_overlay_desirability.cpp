@@ -60,7 +60,7 @@ static int get_desirability_image_offset(int desirability) {
         return 9;
 }
 
-static void draw_footprint_desirability(vec2i pixel, tile2i point, view_context &ctx) {
+static void draw_footprint_desirability(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -128,7 +128,7 @@ struct city_overlay_desirability : public city_overlay {
         return false;
     }
 
-    void draw_custom_top(vec2i pixel, tile2i point, view_context &ctx) const override {
+    void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
         ; // nothing
     }
 

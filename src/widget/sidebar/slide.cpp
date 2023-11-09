@@ -10,6 +10,7 @@
 #include "sound/effect.h"
 #include "widget/sidebar/common.h"
 #include "window/city.h"
+#include "game/game.h"
 
 #define SLIDE_SPEED 7
 #define SLIDE_ACCELERATION_MILLIS 65
@@ -28,7 +29,7 @@ static struct {
 #include "graphics/screen.h"
 
 static void draw_sliding_foreground() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
 
     window_request_refresh();
     data.position += speed_get_delta(&data.slide_speed);

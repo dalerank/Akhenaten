@@ -122,7 +122,7 @@ void figure::adjust_pixel_offset(vec2i* pixel) {
     //    *y += y_offset - img->sprite_offset_y;
 }
 
-void figure::draw_figure_main(view_context &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
+void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
     int x_correction = 0;
     int y_correction = 3;
 
@@ -140,11 +140,11 @@ void figure::draw_figure_main(view_context &ctx, vec2i pixel, int highlight, vec
     const image_t* img = is_enemy_image ? image_get_enemy(sprite_image_id) : image_get(sprite_image_id);
     ImageDraw::img_sprite(ctx, sprite_image_id, pixel.x + x_correction, pixel.y + y_correction, COLOR_MASK_NONE);
 }
-void figure::draw_figure_cart(view_context &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
+void figure::draw_figure_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
     const image_t* img = image_get(cart_image_id);
     ImageDraw::img_sprite(ctx, cart_image_id, pixel.x + cart_offset.x, pixel.y + cart_offset.y - 7);
 }
-void figure::draw_figure_with_cart(view_context &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
+void figure::draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
     draw_figure_cart(ctx, pixel, highlight, coord_out);
     draw_figure_main(ctx, pixel, highlight, coord_out);
     return; // pharaoh doesn't draw carts on top - to rework maybe later..?
@@ -158,7 +158,7 @@ void figure::draw_figure_with_cart(view_context &ctx, vec2i pixel, int highlight
     }
 }
 
-void figure::city_draw_figure(view_context &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
+void figure::city_draw_figure(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
     // This is to update the sprite's direction when rotating the city view.
     // Unfortunately, because the only thing we have at the time of file loading is
     // the raw sprite image id, it doesn't work if we haven't performed at least a

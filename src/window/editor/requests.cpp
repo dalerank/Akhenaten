@@ -16,6 +16,7 @@
 #include "window/editor/attributes.h"
 #include "window/editor/edit_request.h"
 #include "window/editor/map.h"
+#include "game/game.h"
 
 static void button_request(int id, int param2);
 
@@ -46,7 +47,7 @@ static void draw_foreground() {
     lang_text_draw_centered(13, 3, 0, 456, 640, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw_multiline(152, 1, 32, 376, 576, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
 
     for (int i = 0; i < 20; i++) {
         int x, y;

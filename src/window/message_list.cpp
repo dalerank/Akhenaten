@@ -19,6 +19,7 @@
 #include "io/gamefiles/lang.h"
 #include "window/city.h"
 #include "window/message_dialog.h"
+#include "game/game.h"
 
 #define MAX_MESSAGES 10
 
@@ -89,7 +90,7 @@ static void draw_background(void) {
 }
 
 static void draw_messages(int total_messages) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
 
     int max = total_messages < MAX_MESSAGES ? total_messages : MAX_MESSAGES;
     int index = scrollbar.scroll_position;

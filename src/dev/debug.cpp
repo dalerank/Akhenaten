@@ -22,6 +22,7 @@
 #include "grid/terrain.h"
 #include "grid/vegetation.h"
 #include "widget/city/building_ghost.h"
+#include "game/game.h"
 
 #include "building/construction/build_planner.h"
 #include "building/count.h"
@@ -89,13 +90,13 @@ void debug_font_test() {
     debug_font_line(&y, FONT_SMALL_SHADED);
 }
 
-void debug_text(view_context &ctx, uint8_t* str, int x, int y, int indent, const char* text, int value, color color, font_t font) {
+void debug_text(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, int value, color color, font_t font) {
     text_draw(ctx, string_from_ascii(text), x, y, font, color);
     string_from_int(str, value, 0);
     text_draw(ctx, str, x + indent, y, font, color);
 }
 
-void debug_text_a(view_context &ctx, uint8_t* str, int x, int y, int indent, const char* text, color color, font_t font) {
+void debug_text_a(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, color color, font_t font) {
     text_draw(ctx, string_from_ascii(text), x, y, font, color);
 }
 
@@ -206,7 +207,7 @@ static int north_tile_grid_offset(int x, int y) {
     return grid_offset;
 }
 
-void draw_debug_tile(vec2i pixel, tile2i point, view_context &ctx) {
+void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -483,7 +484,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, view_context &ctx) {
     }
 }
 
-void draw_debug_figures(vec2i pixel, tile2i point, view_context &ctx) {
+void draw_debug_figures(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -514,7 +515,7 @@ void figure::draw_debug() {
     pixel.y -= 80;
     int indent = 0;
     color col = COLOR_WHITE;
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
 
     switch (draw_debug_mode) {
     case 1: // ACTION & STATE IDS
@@ -696,7 +697,7 @@ bool g_debug_show_opts[e_debug_opt_size] = {0};
 void draw_debug_ui(int x, int y) {
     uint8_t str[300];
 
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     /////// DEBUG PAGES NAME
     if (g_debug_show_opts[e_debug_show_pages]) {
         y += 13;
@@ -1107,7 +1108,7 @@ void draw_debug_ui(int x, int y) {
 
     /////// CAMERA
     if (g_debug_show_opts[e_debug_show_camera]) {
-        view_context ctx = view_context_main();
+        painter ctx = game.painter();
         tile2i camera_tile = city_view_get_camera_mappoint();
         vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
 

@@ -11,7 +11,7 @@ constexpr int NO_COLUMN = -1;
 
 class figure;
 class building;
-struct view_context;
+struct painter;
 
 inline bool show_figure_none(const figure *f) { return false; }
 inline int get_column_height_none(const building* b) { return NO_COLUMN; }
@@ -24,8 +24,8 @@ struct city_overlay {
     int (*get_column_height)(const building* b) = 0;
     int (*get_tooltip_for_grid_offset)(tooltip_context* c, int grid_offset) = 0;
     int (*get_tooltip_for_building)(tooltip_context* c, const building* b) = 0;
-    void (*draw_custom_footprint)(vec2i pixel, tile2i point, view_context &ctx) = 0;
-    void (*draw_custom_top_func)(vec2i pixel, tile2i point, view_context &ctx) = 0;
+    void (*draw_custom_footprint)(vec2i pixel, tile2i point, painter &ctx) = 0;
+    void (*draw_custom_top_func)(vec2i pixel, tile2i point, painter &ctx) = 0;
 
     int tooltip_base;
     svector<int, 10> tooltips;
@@ -41,8 +41,8 @@ struct city_overlay {
                  int (*_get_column_height)(const building* b),
                  int (*_get_tooltip_for_grid_offset)(tooltip_context* c, int grid_offset),
                  int (*_get_tooltip_for_building)(tooltip_context* c, const building* b),
-                 void (*_draw_custom_footprint)(vec2i pixel, tile2i point, view_context &ctx),
-                 void (*_draw_custom_top)(vec2i pixel, tile2i point, view_context &ctx)) {
+                 void (*_draw_custom_footprint)(vec2i pixel, tile2i point, painter &ctx),
+                 void (*_draw_custom_top)(vec2i pixel, tile2i point, painter &ctx)) {
         type = _type;
         column_type = _column_type;
         show_building_func = _show_building_func;
@@ -62,7 +62,7 @@ struct city_overlay {
         return false;
     }
 
-    virtual void draw_custom_top(vec2i pixel, tile2i point, view_context &ctx) const {
+    virtual void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
         if (draw_custom_top_func) {
             draw_custom_top_func(pixel, point, ctx);
         }
@@ -78,5 +78,5 @@ city_overlay *get_city_overlay(e_overlay e);
 bool select_city_overlay();
 int widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset);
 
-void city_with_overlay_draw_building_footprint(view_context &ctx, int x, int y, int grid_offset, int image_offset);
-void city_with_overlay_draw_building_top(vec2i pixel, tile2i point, view_context &ctx);
+void city_with_overlay_draw_building_footprint(painter &ctx, int x, int y, int grid_offset, int image_offset);
+void city_with_overlay_draw_building_top(vec2i pixel, tile2i point, painter &ctx);

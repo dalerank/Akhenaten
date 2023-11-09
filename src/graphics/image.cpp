@@ -223,7 +223,7 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
 }
 
 int image_id_resource_icon(int resource) {
-    return image_id_from_group(GROUP_RESOURCE_ICONS) + resource;
+    return image_id_from_group(IMG_RESOURCE_ICONS) + resource;
 }
 
 int image_id_from_group(image_desc desc) {

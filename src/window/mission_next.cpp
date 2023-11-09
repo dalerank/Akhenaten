@@ -12,6 +12,7 @@
 #include "sound/speech.h"
 #include "window/main_menu.h"
 #include "window/mission_briefing.h"
+#include "game/game.h"
 
 static void button_start(int param1, int param2);
 
@@ -47,7 +48,7 @@ struct mission_next_t {
 mission_next_t g_mission_next;
 
 static void draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     int rank = scenario_campaign_rank();
 
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_SELECT_MISSION_BACKGROUND));
@@ -63,7 +64,7 @@ static void draw_background() {
 }
 
 static void draw_foreground() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     graphics_set_to_dialog();
 
     if (g_mission_next.choice > 0)

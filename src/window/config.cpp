@@ -536,7 +536,7 @@ static bool is_config_option_enabled(int option) {
 
 static void draw_background() {
     auto& data = g_window_config_ext_data;
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     graphics_clear_screen();
 
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_CONFIG_BACKGROUND));

@@ -2,6 +2,6 @@
 
 #include "grid/point.h"
 
-struct view_context;
+struct painter;
 
-void map_editor_tool_draw(view_context &ctx, tile2i tile);
+void map_editor_tool_draw(painter &ctx, tile2i tile);

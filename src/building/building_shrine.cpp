@@ -12,9 +12,10 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
+#include "game/game.h"
 
 static void building_shrine_draw_info(object_info& c, const char* type, int text_id, int image_offset) {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     c.help_id = 67;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
     outer_panel_draw(c.x_offset, c.y_offset, c.width_blocks, c.height_blocks);

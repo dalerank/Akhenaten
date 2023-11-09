@@ -118,7 +118,7 @@ struct renderer_data_t {
 
 renderer_data_t g_renderer_data;
 
-bool graphics_renderer_interface::save_screen_buffer(view_context &ctx, color* pixels, int x, int y, int width, int height, int row_width) {
+bool graphics_renderer_interface::save_screen_buffer(painter &ctx, color* pixels, int x, int y, int width, int height, int row_width) {
     if (game.paused) {
         return false;
     }
@@ -262,7 +262,7 @@ static const SDL_BlendMode premult_alpha = SDL_ComposeCustomBlendMode(SDL_BLENDF
                                                                       SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
                                                                       SDL_BLENDOPERATION_ADD);
 
-void set_render_scale(view_context &ctx, float scale) {
+void set_render_scale(painter &ctx, float scale) {
     ctx.global_render_scale = scale;
 }
 
@@ -281,7 +281,7 @@ static void set_texture_scale_mode(SDL_Texture* texture, float scale_factor) {
 #endif
 }
 
-void graphics_renderer_interface::draw_image(view_context &ctx, const image_t* img, float x, float y, color color, float scale, bool mirrored) {
+void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, float x, float y, color color, float scale, bool mirrored) {
     if (game.paused || img == nullptr) {
         return;
     }
@@ -291,7 +291,7 @@ void graphics_renderer_interface::draw_image(view_context &ctx, const image_t* i
     draw_image(ctx, img->atlas.p_atlas->texture, x, y, offset, size, color, scale, mirrored);
 }
 
-void graphics_renderer_interface::draw_image(view_context &ctx, SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, bool mirrored) {
+void graphics_renderer_interface::draw_image(painter &ctx, SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, bool mirrored) {
     if (game.paused || texture == nullptr) {
         return;
     }

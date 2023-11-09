@@ -11,6 +11,7 @@
 #include "input/input.h"
 #include "content/vfs.h"
 #include "game/player_data.h"
+#include "game/game.h"
 
 static void on_scroll(void);
 
@@ -33,7 +34,7 @@ void init() {
 }
 
 static void draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_SCORES_BACKGROUND));
 }
 static void draw_foreground(void) {

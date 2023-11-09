@@ -20,6 +20,7 @@
 #include "io/gamestate/boilerplate.h"
 #include "io/manager.h"
 #include "game/player_data.h"
+#include "game/game.h"
 
 static void button_click(int param1, int param2);
 
@@ -68,7 +69,7 @@ static void init() {
 }
 
 static void draw_background() {
-    view_context ctx = view_context_main();
+    painter ctx = game.painter();
     graphics_clear_screen();
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_GAME_MENU));
     graphics_set_to_dialog();
