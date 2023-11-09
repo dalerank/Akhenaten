@@ -25,7 +25,7 @@ void game_exit(void);
 struct game_t {
     bool paused = false;
 
-    painter painter();
+    ::painter painter();
 };
 
 extern game_t game;
