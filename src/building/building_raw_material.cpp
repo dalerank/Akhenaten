@@ -73,3 +73,6 @@ void building_clay_pit_draw_info(object_info& c) {
 void building_reed_gatherer_draw_info(object_info& c) {
     building_raw_material_draw_info(c, 92, "reed_farm", 116, RESOURCE_REEDS);
 }
+void building_sandstone_quarry_draw_info(object_info& c) {
+    building_raw_material_draw_info(c, 92, "sandstone_quarry", 194, RESOURCE_SANDSTONE);
+}
