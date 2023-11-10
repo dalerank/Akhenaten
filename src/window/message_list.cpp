@@ -82,9 +82,9 @@ static void draw_background(void) {
     if (city_message_count() > 0) {
         lang_text_draw(63, 2, data.x_text + 42, data.y_text - 12, FONT_SMALL_PLAIN);
         lang_text_draw(63, 3, data.x_text + 180, data.y_text - 12, FONT_SMALL_PLAIN);
-        lang_text_draw_multiline(63, 4, data.x_text + 50, data.y_text + 12 + 16 * data.text_height_blocks, 16 * data.text_width_blocks - 100, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_multiline(63, 4, vec2i{data.x_text + 50, data.y_text + 12 + 16 * data.text_height_blocks}, 16 * data.text_width_blocks - 100, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
-        lang_text_draw_multiline(63, 1, data.x_text + 16, data.y_text + 80, 16 * data.text_width_blocks - 48, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(63, 1, vec2i{data.x_text + 16, data.y_text + 80}, 16 * data.text_width_blocks - 48, FONT_NORMAL_BLACK_ON_DARK);
     }
     graphics_reset_dialog();
 }

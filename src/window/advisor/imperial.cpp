@@ -131,7 +131,7 @@ static int draw_background(void) {
     int width = lang_text_draw(52, 0, 60, 44, FONT_NORMAL_BLACK_ON_LIGHT);
     text_draw_number(city_rating_kingdom(), '@', " ", 60 + width, 44, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    lang_text_draw_multiline(52, city_rating_kingdom() / 5 + 22, 60, 60, 544, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(52, city_rating_kingdom() / 5 + 22, vec2i{60, 60}, 544, FONT_NORMAL_BLACK_ON_LIGHT);
 
     inner_panel_draw(32, 90, 36, 14);
 
@@ -158,7 +158,7 @@ static int draw_background(void) {
     }
     num_requests = scenario_request_foreach_visible(num_requests, draw_request);
     if (!num_requests) {
-        lang_text_draw_multiline(52, 21, 64, 160, 512, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_multiline(52, 21, vec2i{64, 160}, 512, FONT_NORMAL_WHITE_ON_DARK);
     }
 
     return ADVISOR_HEIGHT;

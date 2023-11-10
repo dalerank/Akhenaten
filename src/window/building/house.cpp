@@ -18,8 +18,8 @@
 
 static void draw_vacant_lot(object_info* c) {
     window_building_prepare_figure_list(c);
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(128, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(128, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_figure_list(c);
 
     int text_id = 2;
@@ -34,27 +34,27 @@ static void draw_vacant_lot(object_info* c) {
 static void draw_population_info(object_info* c, int y_offset) {
     painter ctx = game.painter();
     building* b = building_get(c->building_id);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 13, c->x_offset + 34, y_offset + 4);
-    int width = text_draw_number(b->house_population, '@', " ", c->x_offset + 50, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
-    width += lang_text_draw(127, 20, c->x_offset + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 13, vec2i{c->offset.x + 34, y_offset + 4});
+    int width = text_draw_number(b->house_population, '@', " ", c->offset.x + 50, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
+    width += lang_text_draw(127, 20, c->offset.x + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
 
     if (b->house_population_room < 0) {
-        width += text_draw_number(-b->house_population_room, '@', " ", c->x_offset + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw(127, 21, c->x_offset + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
+        width += text_draw_number(-b->house_population_room, '@', " ", c->offset.x + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(127, 21, c->offset.x + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
     } else if (b->house_population_room > 0) {
-        width += lang_text_draw(127, 22, c->x_offset + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
-        text_draw_number(b->house_population_room, '@', " ", c->x_offset + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
+        width += lang_text_draw(127, 22, c->offset.x + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
+        text_draw_number(b->house_population_room, '@', " ", c->offset.x + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 static void draw_tax_info(object_info* c, int y_offset) {
     building* b = building_get(c->building_id);
     if (b->house_tax_coverage) {
         int pct = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
-        int width = lang_text_draw(127, 24, c->x_offset + 36, y_offset, FONT_NORMAL_BLACK_ON_DARK);
-        width += lang_text_draw_amount(8, 0, pct, c->x_offset + 36 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw(127, 25, c->x_offset + 36 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
+        int width = lang_text_draw(127, 24, c->offset.x + 36, y_offset, FONT_NORMAL_BLACK_ON_DARK);
+        width += lang_text_draw_amount(8, 0, pct, c->offset.x + 36 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(127, 25, c->offset.x + 36 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
     } else {
-        lang_text_draw(127, 23, c->x_offset + 36, y_offset, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(127, 23, c->offset.x + 36, y_offset, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 static void draw_happiness_info(object_info* c, int y_offset) {
@@ -75,7 +75,7 @@ static void draw_happiness_info(object_info* c, int y_offset) {
     else {
         text_id = 32;
     }
-    lang_text_draw(127, text_id, c->x_offset + 36, y_offset, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw(127, text_id, c->offset.x + 36, y_offset, FONT_NORMAL_BLACK_ON_DARK);
 }
 
 #define Y_COMPLAINTS 40      // 70
@@ -92,36 +92,26 @@ void window_building_draw_house(object_info* c) {
         return;
     }
     int level = b->type - 10;
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(29, level, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 148, c->width_blocks - 2, 10);
+    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(29, level, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    inner_panel_draw(c->offset.x + 16, c->offset.y + 148, c->width_blocks - 2, 10);
 
     if (b->data.house.evolve_text_id == 62) { // is about to devolve
         int width = lang_text_draw(127,
                                    40 + b->data.house.evolve_text_id,
-                                   c->x_offset + 32,
-                                   c->y_offset + Y_COMPLAINTS,
+                                   c->offset.x + 32,
+                                   c->offset.y + Y_COMPLAINTS,
                                    FONT_NORMAL_BLACK_ON_LIGHT);
         width += lang_text_draw_colored(41,
                                         building_get(c->worst_desirability_building_id)->type,
-                                        c->x_offset + 32 + width,
-                                        c->y_offset + Y_COMPLAINTS,
+                                        c->offset.x + 32 + width,
+                                        c->offset.y + Y_COMPLAINTS,
                                         FONT_NORMAL_YELLOW,
                                         0);
-        text_draw((uint8_t*)")", c->x_offset + 32 + width, c->y_offset + Y_COMPLAINTS, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-        lang_text_draw_multiline(127,
-                                 41 + b->data.house.evolve_text_id,
-                                 c->x_offset + 32,
-                                 c->y_offset + Y_COMPLAINTS + 16,
-                                 16 * (c->width_blocks - 4),
-                                 FONT_NORMAL_BLACK_ON_LIGHT);
+        text_draw((uint8_t*)")", c->offset.x + 32 + width, c->offset.y + Y_COMPLAINTS, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        lang_text_draw_multiline(127, 41 + b->data.house.evolve_text_id, c->offset + vec2i{32, Y_COMPLAINTS + 16}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
     } else // needs something to evolve
-        lang_text_draw_multiline(127,
-                                 40 + b->data.house.evolve_text_id,
-                                 c->x_offset + 32,
-                                 c->y_offset + Y_COMPLAINTS,
-                                 16 * (c->width_blocks - 4),
-                                 FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_multiline(127, 40 + b->data.house.evolve_text_id, c->offset + vec2i{32, Y_COMPLAINTS}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 
     int resource_image = image_id_resource_icon(0);
     // food inventory
@@ -132,40 +122,40 @@ void window_building_draw_house(object_info* c) {
     int food4 = ALLOWED_FOODS(3);
 
     if (food1) { // wheat
-        ImageDraw::img_generic(ctx, resource_image + food1, c->x_offset + 32, c->y_offset + Y_FOODS);
-        text_draw_number(b->data.house.inventory[0], '@', " ", c->x_offset + 64, c->y_offset + Y_FOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
+        ImageDraw::img_generic(ctx, resource_image + food1, c->offset + vec2i{32, Y_FOODS});
+        text_draw_number(b->data.house.inventory[0], '@', " ", c->offset.x + 64, c->offset.y + Y_FOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     if (food2) { // vegetables
-        ImageDraw::img_generic(ctx, resource_image + food2, c->x_offset + 142, c->y_offset + Y_FOODS);
-        text_draw_number(b->data.house.inventory[1], '@', " ", c->x_offset + 174, c->y_offset + Y_FOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
+        ImageDraw::img_generic(ctx, resource_image + food2, c->offset + vec2i{142, Y_FOODS});
+        text_draw_number(b->data.house.inventory[1], '@', " ", c->offset.x + 174, c->offset.y + Y_FOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     if (food3) { // fruit
-        ImageDraw::img_generic(ctx, resource_image + food3, c->x_offset + 252, c->y_offset + Y_FOODS);
-        text_draw_number(b->data.house.inventory[2], '@', " ", c->x_offset + 284, c->y_offset + Y_FOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
+        ImageDraw::img_generic(ctx, resource_image + food3, c->offset + vec2i{252, Y_FOODS});
+        text_draw_number(b->data.house.inventory[2], '@', " ", c->offset.x + 284, c->offset.y + Y_FOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     if (food4) { // meat/fish
-        ImageDraw::img_generic(ctx, resource_image + food4, c->x_offset + 362, c->y_offset + Y_FOODS);
-        text_draw_number(b->data.house.inventory[3], '@', " ", c->x_offset + 394, c->y_offset + Y_FOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
+        ImageDraw::img_generic(ctx, resource_image + food4, c->offset + vec2i{362, Y_FOODS});
+        text_draw_number(b->data.house.inventory[3], '@', " ", c->offset.x + 394, c->offset.y + Y_FOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     // goods inventory
     // pottery
-    ImageDraw::img_generic(ctx, resource_image + INV_RESOURCES[0], c->x_offset + 32, c->y_offset + Y_GOODS);
-    text_draw_number(b->data.house.inventory[INVENTORY_GOOD1], '@', " ", c->x_offset + 64, c->y_offset + Y_GOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
+    ImageDraw::img_generic(ctx, resource_image + INV_RESOURCES[0], c->offset + vec2i{32, Y_GOODS});
+    text_draw_number(b->data.house.inventory[INVENTORY_GOOD1], '@', " ", c->offset.x + 64, c->offset.y + Y_GOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
     // furniture
-    ImageDraw::img_generic(ctx, resource_image + INV_RESOURCES[1], c->x_offset + 142, c->y_offset + Y_GOODS);
-    text_draw_number(b->data.house.inventory[INVENTORY_GOOD2], '@', " ", c->x_offset + 174, c->y_offset + Y_GOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
+    ImageDraw::img_generic(ctx, resource_image + INV_RESOURCES[1], c->offset + vec2i{142, Y_GOODS});
+    text_draw_number(b->data.house.inventory[INVENTORY_GOOD2], '@', " ", c->offset.x + 174, c->offset.y + Y_GOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
     // oil
-    ImageDraw::img_generic(ctx, resource_image + INV_RESOURCES[2], c->x_offset + 252, c->y_offset + Y_GOODS);
-    text_draw_number(b->data.house.inventory[INVENTORY_GOOD3], '@', " ", c->x_offset + 284, c->y_offset + Y_GOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
+    ImageDraw::img_generic(ctx, resource_image + INV_RESOURCES[2], c->offset + vec2i{252, Y_GOODS});
+    text_draw_number(b->data.house.inventory[INVENTORY_GOOD3], '@', " ", c->offset.x + 284, c->offset.y + Y_GOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
     // wine
-    ImageDraw::img_generic(ctx, resource_image + INV_RESOURCES[3], c->x_offset + 362, c->y_offset + Y_GOODS);
-    text_draw_number(b->data.house.inventory[INVENTORY_GOOD4], '@', " ", c->x_offset + 394, c->y_offset + Y_GOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
+    ImageDraw::img_generic(ctx, resource_image + INV_RESOURCES[3], c->offset + vec2i{362, Y_GOODS});
+    text_draw_number(b->data.house.inventory[INVENTORY_GOOD4], '@', " ", c->offset.x + 394, c->offset.y + Y_GOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    draw_population_info(c, c->y_offset + 154);
-    draw_tax_info(c, c->y_offset + 194);
-    draw_happiness_info(c, c->y_offset + 214);
+    draw_population_info(c, c->offset.y + 154);
+    draw_tax_info(c, c->offset.y + 194);
+    draw_happiness_info(c, c->offset.y + 214);
     if (!model_get_house(b->subtype.house_level)->food_types) { // no foods
-        lang_text_draw_multiline(127, 33, c->x_offset + 36, c->y_offset + 234, 16 * (c->width_blocks - 6), FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(127, 33, c->offset + vec2i{36, 234}, 16 * (c->width_blocks - 6), FONT_NORMAL_BLACK_ON_DARK);
     }
 }

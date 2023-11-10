@@ -3,6 +3,7 @@
 #include "core/game_environment.h"
 #include "graphics/boilerplate.h"
 #include "sound/effect.h"
+#include "game/game.h"
 
 #define PRESSED_EFFECT_MILLIS 100
 #define PRESSED_REPEAT_INITIAL_MILLIS 300
@@ -33,6 +34,7 @@ static void remove_pressed_effect_build(image_button* buttons, int num_buttons) 
 }
 
 void image_buttons_draw(int x, int y, image_button* buttons, int num_buttons, int starting_button) {
+    painter ctx = game.painter();
     fade_pressed_effect(buttons, num_buttons);
     for (int i = starting_button; i < starting_button + num_buttons; i++) {
         image_button* btn = &buttons[i];
@@ -46,7 +48,7 @@ void image_buttons_draw(int x, int y, image_button* buttons, int num_buttons, in
         } else {
             image_id += 3;
         }
-        ImageDraw::img_generic(image_id, x + btn->x_offset, y + btn->y_offset);
+        ImageDraw::img_generic(ctx, image_id, vec2i{x + btn->x_offset, y + btn->y_offset});
     }
 }
 

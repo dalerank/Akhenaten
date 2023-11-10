@@ -9,6 +9,7 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
+#include "game/game.h"
 
 #define ADVISOR_HEIGHT 18
 
@@ -30,13 +31,14 @@ static int get_health_advice() {
 
 static int draw_background() {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
+    painter ctx = game.painter();
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
 
     lang_text_draw(56, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     if (city_population() >= 200) {
-        lang_text_draw_multiline(56, city_health() / 10 + 16, 60, 46, 512, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_multiline(56, city_health() / 10 + 16, vec2i{60, 46}, 512, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
-        lang_text_draw_multiline(56, 15, 60, 46, 512, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_multiline(56, 15, vec2i{60, 46}, 512, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     lang_text_draw(56, 3, 180, 94, FONT_SMALL_PLAIN);
     lang_text_draw(56, 4, 290, 94, FONT_SMALL_PLAIN);
@@ -78,7 +80,7 @@ static int draw_background() {
         lang_text_draw_centered(57, 21, 440, 172, 160, FONT_NORMAL_BLACK_ON_DARK);
     }
 
-    lang_text_draw_multiline(56, 7 + get_health_advice(), 60, 194, 512, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(56, 7 + get_health_advice(), vec2i{60, 194}, 512, FONT_NORMAL_BLACK_ON_LIGHT);
 
     return ADVISOR_HEIGHT;
 }

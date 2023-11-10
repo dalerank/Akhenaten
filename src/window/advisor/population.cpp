@@ -384,9 +384,9 @@ static void print_history_info(void) {
     }
 }
 
-static void draw_housing_button(int full_size, int x, int y) {
+static void draw_housing_button(int full_size, vec2i pos) {
     painter ctx = game.painter();
-    ImageDraw::isometric(ctx, image_id_from_group(GROUP_BUILDING_HOUSE_HOMESTEAD) + 2, x, y, COLOR_MASK_NONE, 1.0f);
+    ImageDraw::isometric(ctx, image_id_from_group(GROUP_BUILDING_HOUSE_HOMESTEAD) + 2, pos, COLOR_MASK_NONE, 1.0f);
     //    ImageDraw::isometric_top(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE);
 }
 
@@ -416,7 +416,7 @@ static int draw_background() {
     void (*big_graph)(int, int, int);
     void (*top_graph)(int, int, int);
     void (*bot_graph)(int, int, int);
-    void (*housing_button)(int, int, int);
+    void (*housing_button)(int, vec2i);
     void (*info_panel)();
 
     switch (graph_order) {
@@ -491,7 +491,7 @@ static int draw_background() {
     big_graph(1, 64, 64);
     top_graph(0, 505, 63);
     bot_graph(0, 505, 163);
-    housing_button(0, 545, 275);
+    housing_button(0, vec2i{545, 275});
 
     // info panel
     inner_panel_draw(48, 336, 34, 5);

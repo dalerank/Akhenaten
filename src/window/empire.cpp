@@ -171,27 +171,26 @@ static void draw_trade_route(int route_id, int effect) {
     }
 
     for (int i = 0; i < obj->num_points; i++) {
-        auto route_point = obj->points[i];
+        const auto &route_point = obj->points[i];
 
         // first corner in pair
-        ImageDraw::img_generic(ctx, image_id, data.x_draw_offset + route_point.x, data.y_draw_offset + route_point.y);
+        ImageDraw::img_generic(ctx, image_id, vec2i{data.x_draw_offset, data.y_draw_offset} + route_point.p);
 
         // draw lines connecting the turns
         if (i < obj->num_points - 1) {
             auto nextup_route_point = obj->points[i + 1];
-            int d_x = nextup_route_point.x - route_point.x;
-            int d_y = nextup_route_point.y - route_point.y;
+            vec2i d = nextup_route_point.p - route_point.p;
             //            float step_size = 0.5;
-            float len = 0.2f * sqrtf(float(d_x * d_x) + float(d_y * d_y));
+            float len = 0.2f * sqrtf(float(d.x * d.x) + float(d.y * d.y));
 
-            float scaled_x = (float)d_x / len;
-            float scaled_y = (float)d_y / len;
+            float scaled_x = (float)d.x / len;
+            float scaled_y = (float)d.y / len;
 
             float progress = 1.0;
             while (progress < len) {
-                int disp_x = (int)data.x_draw_offset + route_point.x + scaled_x * progress;
-                int disp_y = (int)data.y_draw_offset + route_point.y + scaled_y * progress;
-                ImageDraw::img_generic(ctx, image_id, disp_x, disp_y);
+                int disp_x = (int)data.x_draw_offset + route_point.p.x + scaled_x * progress;
+                int disp_y = (int)data.y_draw_offset + route_point.p.y + scaled_y * progress;
+                ImageDraw::img_generic(ctx, image_id, vec2i{disp_x, disp_y});
                 progress += 1.0f;
             }
         }
@@ -208,7 +207,7 @@ static int row_idx(int index) {
 static void draw_trade_resource(int resource, int trade_max, int x_offset, int y_offset) {
     painter ctx = game.painter();
     graphics_draw_inset_rect(x_offset, y_offset, TRADE_RESOURCE_SIZE[GAME_ENV], TRADE_RESOURCE_SIZE[GAME_ENV]);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(resource), x_offset + 1, y_offset + 1);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(resource), vec2i{x_offset + 1, y_offset + 1});
 
     if (data.focus_resource == resource)
         button_border_draw(x_offset - 2, y_offset - 2, 101 + 4, 24, 1);
@@ -216,15 +215,15 @@ static void draw_trade_resource(int resource, int trade_max, int x_offset, int y
     switch (trade_max) {
     case 1500:
     case 15:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT), x_offset + 21, y_offset - 1);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT), vec2i{x_offset + 21, y_offset - 1});
         break;
     case 2500:
     case 25:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT) + 1, vec2i{x_offset + 17, y_offset - 1});
         break;
     case 4000:
     case 40:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT) + 2, vec2i{x_offset + 13, y_offset - 1});
         break;
     }
 }
@@ -380,23 +379,21 @@ static void draw_city_info(const empire_object* object) {
 static void draw_roman_army_info(const empire_object* object) {
     if (city_military_distant_battle_roman_army_is_traveling()) {
         if (city_military_distant_battle_roman_months_traveled() == object->distant_battle_travel_months) {
-            int x_offset = (data.x_min + data.x_max - 240) / 2;
-            int y_offset = data.y_max - 68;
+            vec2i offset{(data.x_min + data.x_max - 240) / 2, data.y_max - 68};
             int text_id;
             if (city_military_distant_battle_roman_army_is_traveling_forth())
                 text_id = 15;
             else {
                 text_id = 16;
             }
-            lang_text_draw_multiline(47, text_id, x_offset, y_offset, 240, FONT_OBJECT_INFO[GAME_ENV]);
+            lang_text_draw_multiline(47, text_id, offset, 240, FONT_OBJECT_INFO[GAME_ENV]);
         }
     }
 }
 static void draw_enemy_army_info(const empire_object* object) {
     if (city_military_months_until_distant_battle() > 0) {
         if (city_military_distant_battle_enemy_months_traveled() == object->distant_battle_travel_months) {
-            lang_text_draw_multiline(
-              47, 14, (data.x_min + data.x_max - 240) / 2, data.y_max - 68, 240, FONT_OBJECT_INFO[GAME_ENV]);
+            lang_text_draw_multiline(47, 14, vec2i{(data.x_min + data.x_max - 240) / 2, data.y_max - 68}, 240, FONT_OBJECT_INFO[GAME_ENV]);
         }
     }
 }
@@ -537,18 +534,18 @@ static void draw_empire_object(const empire_object* obj) {
             return;
     }
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id, data.x_draw_offset + x, data.y_draw_offset + y);
+    ImageDraw::img_generic(ctx, image_id, vec2i{data.x_draw_offset + x, data.y_draw_offset + y});
 
     const image_t* img = image_get(image_id);
     if (img->animation.speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
-        ImageDraw::img_generic(ctx, image_id + new_animation, data.x_draw_offset + x + img->animation.sprite_x_offset, data.y_draw_offset + y + img->animation.sprite_y_offset);
+        ImageDraw::img_generic(ctx, image_id + new_animation, vec2i{data.x_draw_offset + x + img->animation.sprite_x_offset, data.y_draw_offset + y + img->animation.sprite_y_offset});
     }
 }
 
 static void draw_invasion_warning(int x, int y, int image_id) {
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id, data.x_draw_offset + x, data.y_draw_offset + y);
+    ImageDraw::img_generic(ctx, image_id, vec2i{data.x_draw_offset + x, data.y_draw_offset + y});
 }
 
 static void draw_map() {
@@ -560,7 +557,7 @@ static void draw_map() {
     data.x_draw_offset = data.x_min + 16;
     data.y_draw_offset = data.y_min + 16;
     empire_adjust_scroll(&data.x_draw_offset, &data.y_draw_offset);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EMPIRE_MAP), data.x_draw_offset, data.y_draw_offset);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EMPIRE_MAP), vec2i{data.x_draw_offset, data.y_draw_offset});
 
     empire_object_foreach(draw_empire_object);
 
@@ -614,32 +611,32 @@ static void draw_paneling() {
     // bottom panel background
     graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, data.y_max - data.y_min);
     for (int x = data.x_min; x < data.x_max; x += 70) {
-        ImageDraw::img_generic(ctx, image_base + 3, x, data.y_max - 140);
-        ImageDraw::img_generic(ctx, image_base + 3, x, data.y_max - 100);
-        ImageDraw::img_generic(ctx, image_base + 3, x, data.y_max - 60);
-        ImageDraw::img_generic(ctx, image_base + 3, x, data.y_max - 20);
+        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.y_max - 140});
+        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.y_max - 100});
+        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.y_max - 60});
+        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.y_max - 20});
     }
 
     // horizontal bar borders
     for (int x = data.x_min; x < data.x_max; x += 86) {
-        ImageDraw::img_generic(ctx, image_base + 1, x, data.y_min);
-        ImageDraw::img_generic(ctx, image_base + 1, x, data.y_max - 140);
-        ImageDraw::img_generic(ctx, image_base + 1, x, data.y_max - 16);
+        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.y_min});
+        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.y_max - 140});
+        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.y_max - 16});
     }
 
     // vertical bar borders
     for (int y = data.y_min + 16; y < data.y_max; y += 86) {
-        ImageDraw::img_generic(ctx, image_base, data.x_min, y);
-        ImageDraw::img_generic(ctx, image_base, data.x_max - 16, y);
+        ImageDraw::img_generic(ctx, image_base, vec2i{data.x_min, y});
+        ImageDraw::img_generic(ctx, image_base, vec2i{data.x_max - 16, y});
     }
 
     // crossbars
-    ImageDraw::img_generic(ctx, image_base + 2, data.x_min, data.y_min);
-    ImageDraw::img_generic(ctx, image_base + 2, data.x_min, data.y_max - 140);
-    ImageDraw::img_generic(ctx, image_base + 2, data.x_min, data.y_max - 16);
-    ImageDraw::img_generic(ctx, image_base + 2, data.x_max - 16, data.y_min);
-    ImageDraw::img_generic(ctx, image_base + 2, data.x_max - 16, data.y_max - 140);
-    ImageDraw::img_generic(ctx, image_base + 2, data.x_max - 16, data.y_max - 16);
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_min, data.y_min});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_min, data.y_max - 140});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_min, data.y_max - 16});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_max - 16, data.y_min});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_max - 16, data.y_max - 140});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_max - 16, data.y_max - 16});
 
     graphics_reset_clip_rectangle();
 }

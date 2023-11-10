@@ -17,6 +17,7 @@
 #include "scenario/building.h"
 #include "window/advisor/trade.h"
 #include "window/message_dialog.h"
+#include "game/game.h"
 
 static void button_help(int param1, int param2);
 static void button_ok(int param1, int param2);
@@ -77,11 +78,12 @@ static void draw_background(void) {
 }
 static void draw_foreground(void) {
     auto &data = g_resource_settings_data;
+    painter ctx = game.painter();
     graphics_set_to_dialog();
 
     outer_panel_draw(32, 128, 36, 15);
     int image_offset = data.resource + resource_image_offset(data.resource, RESOURCE_IMAGE_ICON);
-    ImageDraw::img_generic(image_id_resource_icon(image_offset), 58 - 16, 136);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(image_offset), 58 - 16, 136);
     lang_text_draw(23, data.resource, 92 - 16, 137, FONT_LARGE_BLACK_ON_LIGHT);
 
     if (empire_can_produce_resource(data.resource, true)) {

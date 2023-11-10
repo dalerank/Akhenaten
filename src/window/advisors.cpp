@@ -177,7 +177,7 @@ void window_advisors_draw_dialog_background() {
     painter ctx = game.painter();
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_ADVISOR_BACKGROUND));
     graphics_set_to_dialog();
-    ImageDraw::img_generic(image_id_from_group(GROUP_MENU_ADVISOR_LAYOUT), 0, 432);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_MENU_ADVISOR_LAYOUT), 0, 432);
 
     for (int i = 0; i < 14; i++) {
         int selected_offset = 0;

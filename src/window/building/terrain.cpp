@@ -13,8 +13,8 @@
 #include "building/building_plaza.h"
 
 void window_building_draw_no_people(object_info* c) {
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(70, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(70, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 }
 
 void window_building_draw_terrain(object_info* c) {
@@ -69,18 +69,18 @@ void window_building_draw_terrain(object_info* c) {
         }
 
         window_building_prepare_figure_list(c);
-        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
 
         int text_id_offset = 0;
         text_id_offset = 36;
         c->figure.draw_debug_path = 1;
 
         if (!c->figure.count) {
-            lang_text_draw_centered(70, c->terrain_type + 10, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+            lang_text_draw_centered(70, c->terrain_type + 10, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
         }
 
         if (c->terrain_type != TERRAIN_INFO_ROAD && c->terrain_type != TERRAIN_INFO_PLAZA) {
-            lang_text_draw_multiline(70, c->terrain_type + text_id_offset, c->x_offset + 40, c->y_offset + 16 * c->height_blocks - 113, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_multiline(70, c->terrain_type + text_id_offset, c->offset + vec2i{40, 16 * c->height_blocks - 113}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
         }
         window_building_draw_figure_list(c);
     }

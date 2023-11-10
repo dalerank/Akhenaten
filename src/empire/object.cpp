@@ -404,8 +404,8 @@ io_buffer* iob_empire_map_routes = new io_buffer([](io_buffer* iob, size_t versi
         iob->bind(BIND_SIGNATURE_UINT32, &obj->unk_header[1]); // 00 00 00 00
 
         for (int i = 0; i < 50; i++) {
-            iob->bind(BIND_SIGNATURE_UINT16, &obj->points[i].x);
-            iob->bind(BIND_SIGNATURE_UINT16, &obj->points[i].y);
+            iob->bind(BIND_SIGNATURE_UINT16, &obj->points[i].p.x);
+            iob->bind(BIND_SIGNATURE_UINT16, &obj->points[i].p.y);
             iob->bind(BIND_SIGNATURE_UINT16, &obj->points[i].is_in_use);
         }
         iob->bind(BIND_SIGNATURE_UINT32, &obj->length);

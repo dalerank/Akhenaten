@@ -1,5 +1,7 @@
 #pragma once
 
+#include <initializer_list>
+
 struct vec2i {
     int x = 0;
     int y = 0;

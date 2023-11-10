@@ -72,8 +72,7 @@ struct map_route_object {
     int unk_header[2]; // 05 00 00 00 00 00 00 00
     /////
     struct {
-        int x;
-        int y;
+        vec2i p;
         bool is_in_use;
     } points[50];
     int length;

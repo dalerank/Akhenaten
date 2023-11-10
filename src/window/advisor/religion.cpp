@@ -18,6 +18,7 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
+#include "game/game.h"
 
 #include "window/advisors.h"
 #include "window/hold_festival.h"
@@ -70,7 +71,8 @@ static int get_festival_advice(void) {
 
 static void draw_festival_info(int y_offset) {
     inner_panel_draw(48, 252 + y_offset, 34, 6);
-    ImageDraw::img_generic(image_id_from_group(GROUP_PANEL_WINDOWS) + 15, 460, 255 + y_offset);
+    painter ctx = game.painter();
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_WINDOWS) + 15, 460, 255 + y_offset);
     //    lang_text_draw(58, 17, 52, 224 + y_offset, FONT_LARGE_BLACK);
 
     int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
@@ -93,13 +95,14 @@ static void draw_festival_info(int y_offset) {
             size = 31;
             break;
         }
-        lang_text_draw_multiline(295, size + months_left - 1, 56, 305 + y_offset, 400, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_multiline(295, size + months_left - 1, vec2i{56, 305 + y_offset}, 400, FONT_NORMAL_WHITE_ON_DARK);
     } else {
         lang_text_draw_centered(58, 16, 102, 284 + y_offset, 300, FONT_NORMAL_WHITE_ON_DARK);
-        lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305 + y_offset, 400, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_multiline(58, 18 + get_festival_advice(), vec2i{56, 305 + y_offset}, 400, FONT_NORMAL_WHITE_ON_DARK);
     }
 }
 static void draw_god_row(e_god god, int y_offset, int temple, int complex, int shrine) {
+    painter ctx = game.painter();
     //    lang_text_draw(59, 11 + god, 40, y_offset, FONT_NORMAL_WHITE);
     //    lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);
 
@@ -135,26 +138,27 @@ static void draw_god_row(e_god god, int y_offset, int temple, int complex, int s
     }
 
     for (int i = 0; i < city_god_wrath_bolts(god) / 10; i++) {
-        ImageDraw::img_generic(image_id_from_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
     }
 
     for (int i = 0; i < city_god_happy_angels(god) / 10; i++) {
-        ImageDraw::img_generic(image_id_from_group(GROUP_GOD_ANGEL), 10 * i + width + 460, y_offset - 4);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_GOD_ANGEL), 10 * i + width + 460, y_offset - 4);
     }
 }
 
 static int draw_background() {
     int height_blocks;
+    painter ctx = game.painter();
     if (setting_gods_enabled()) {
         height_blocks = 27; // 17
         outer_panel_draw(0, 0, 40, height_blocks);
     } else {
         height_blocks = 27; // 20
         outer_panel_draw(0, 0, 40, height_blocks);
-        lang_text_draw_multiline(59, 43, 60, 256, 520, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_multiline(59, 43, vec2i{60, 256}, 520, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
-    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 9, 10, 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 9, 10, 10);
 
     lang_text_draw(59, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
 
@@ -184,7 +188,7 @@ static int draw_background() {
 
     city_gods_calculate_least_happy();
 
-    lang_text_draw_multiline(59, 9 + get_religion_advice(), 60, 273, 512, FONT_NORMAL_BLACK_ON_LIGHT); // 21
+    lang_text_draw_multiline(59, 9 + get_religion_advice(), vec2i{60, 273}, 512, FONT_NORMAL_BLACK_ON_LIGHT); // 21
 
     draw_festival_info(68);
 

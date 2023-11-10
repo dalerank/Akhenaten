@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/string.h"
+#include "core/vec2i.h"
 
 enum building_info_type {
     BUILDING_INFO_NONE = 0,
@@ -41,8 +42,7 @@ enum terrain_info_type {
 };
 
 struct object_info {
-    int x_offset;
-    int y_offset;
+    vec2i offset;
     int y_offset_submenu;
     int width_blocks;
     int height_blocks;

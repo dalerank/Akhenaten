@@ -40,7 +40,7 @@ static int arrow_button_focus;
 static int draw_background() {
     painter ctx = game.painter();
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS), 10, 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS), vec2i{10, 10});
 
     lang_text_draw(50, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
 
@@ -84,7 +84,7 @@ static void draw_foreground() {
         button_border_draw(40, 77 + 25 * i, 560, 22, focus);
         const labor_category_data* cat = city_labor_category(i);
         if (cat->priority) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_LABOR_PRIORITY_LOCK), 70, y_offset - 2);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_LABOR_PRIORITY_LOCK), vec2i{70, y_offset - 2});
             text_draw_number(cat->priority, '@', " ", 90, y_offset, FONT_NORMAL_WHITE_ON_DARK);
         }
         lang_text_draw(50, i + 1, 170, y_offset, FONT_NORMAL_WHITE_ON_DARK);

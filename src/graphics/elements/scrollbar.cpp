@@ -5,6 +5,7 @@
 #include "graphics/elements/image_button.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
+#include "game/game.h"
 
 #define SCROLL_BUTTON_HEIGHT 26
 #define SCROLL_BUTTON_WIDTH 39
@@ -13,54 +14,10 @@
 
 static void text_scroll(int is_down, int num_lines);
 
-static image_button image_button_scroll_up = {0,
-                                              0,
-                                              SCROLL_BUTTON_WIDTH,
-                                              SCROLL_BUTTON_HEIGHT,
-                                              IB_SCROLL,
-                                              GROUP_OK_CANCEL_SCROLL_BUTTONS,
-                                              8,
-                                              text_scroll,
-                                              button_none,
-                                              0,
-                                              1,
-                                              1};
-static image_button image_button_scroll_down = {0,
-                                                0,
-                                                SCROLL_BUTTON_WIDTH,
-                                                SCROLL_BUTTON_HEIGHT,
-                                                IB_SCROLL,
-                                                GROUP_OK_CANCEL_SCROLL_BUTTONS,
-                                                12,
-                                                text_scroll,
-                                                button_none,
-                                                1,
-                                                1,
-                                                1};
-static image_button image_button_scroll_up_thin = {0,
-                                                   0,
-                                                   SCROLL_BUTTON_WIDTH,
-                                                   SCROLL_BUTTON_HEIGHT,
-                                                   IB_SCROLL,
-                                                   GROUP_SYSTEM_GRAPHICS,
-                                                   15,
-                                                   text_scroll,
-                                                   button_none,
-                                                   0,
-                                                   1,
-                                                   1};
-static image_button image_button_scroll_down_thin = {0,
-                                                     0,
-                                                     SCROLL_BUTTON_WIDTH,
-                                                     SCROLL_BUTTON_HEIGHT,
-                                                     IB_SCROLL,
-                                                     GROUP_SYSTEM_GRAPHICS,
-                                                     17,
-                                                     text_scroll,
-                                                     button_none,
-                                                     1,
-                                                     1,
-                                                     1};
+static image_button image_button_scroll_up = {0, 0, SCROLL_BUTTON_WIDTH, SCROLL_BUTTON_HEIGHT, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 8, text_scroll, button_none, 0, 1, 1};
+static image_button image_button_scroll_down = {0, 0, SCROLL_BUTTON_WIDTH, SCROLL_BUTTON_HEIGHT, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 12, text_scroll, button_none, 1, 1, 1};
+static image_button image_button_scroll_up_thin = {0, 0, SCROLL_BUTTON_WIDTH, SCROLL_BUTTON_HEIGHT, IB_SCROLL, GROUP_SYSTEM_GRAPHICS, 15, text_scroll, button_none, 0, 1, 1};
+static image_button image_button_scroll_down_thin = {0, 0, SCROLL_BUTTON_WIDTH, SCROLL_BUTTON_HEIGHT, IB_SCROLL, GROUP_SYSTEM_GRAPHICS, 17, text_scroll, button_none, 1, 1, 1};
 
 static scrollbar_type* current;
 
@@ -88,6 +45,7 @@ void scrollbar_update_max(scrollbar_type* scrollbar, int max_scroll_position) {
 }
 
 void scrollbar_draw(scrollbar_type* scrollbar) {
+    painter ctx = game.painter();
     if (scrollbar->max_scroll_position > 0 || scrollbar->always_visible) {
         if (!scrollbar->thin) {
             image_buttons_draw(scrollbar->x, scrollbar->y, &image_button_scroll_up, 1);
@@ -115,7 +73,7 @@ void scrollbar_draw(scrollbar_type* scrollbar) {
         if (scrollbar->is_dragging_scroll)
             offset = scrollbar->scroll_position_drag;
 
-        ImageDraw::img_generic(image_id_from_group(GROUP_PANEL_BUTTON) + 39,
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_BUTTON) + 39,
                                scrollbar->x + (SCROLL_BUTTON_WIDTH - SCROLL_DOT_SIZE) / 2,
                                scrollbar->y + offset + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding);
     }

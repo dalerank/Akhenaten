@@ -95,7 +95,7 @@ static void draw_entertainer(int type, int y_offset, int venue, int shows, int c
 static void draw_festival_info() {
     painter ctx = game.painter();
     inner_panel_draw(48, 252, 34, 6);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_WINDOWS) + 15, 460, 255);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_WINDOWS) + 15, vec2i{460, 255});
     lang_text_draw(58, 17, 52, 224, FONT_LARGE_BLACK_ON_LIGHT);
 
     int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260, FONT_NORMAL_WHITE_ON_DARK);
@@ -105,7 +105,7 @@ static void draw_festival_info() {
     } else {
         lang_text_draw_centered(58, 16, 102, 284, 300, FONT_NORMAL_WHITE_ON_DARK);
     }
-    lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305, 400, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw_multiline(58, 18 + get_festival_advice(), vec2i{56, 305}, 400, FONT_NORMAL_WHITE_ON_DARK);
 }
 
 static int draw_background() {
@@ -114,7 +114,7 @@ static int draw_background() {
     city_culture_calculate();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 8, 10, 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 8, vec2i{10, 10});
 
     lang_text_draw(58, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
 
@@ -136,7 +136,7 @@ static int draw_background() {
     draw_entertainer(3, y_offset + y_dist * 3, BUILDING_SENET_HOUSE, city_entertainment_hippodrome_shows(), city_culture_coverage_hippodrome(), 0);
     draw_entertainer(9, y_offset + y_dist * 4, BUILDING_ZOO, 0, 0, 0);
 
-    lang_text_draw_multiline(58, 7 + get_entertainment_advice(), 60, 208, 512, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(58, 7 + get_entertainment_advice(), vec2i{60, 208}, 512, FONT_NORMAL_BLACK_ON_LIGHT);
 
     return ADVISOR_HEIGHT;
 }

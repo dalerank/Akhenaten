@@ -33,14 +33,13 @@ int window_building_get_vertical_offset(object_info* c, int new_window_height) {
     new_window_height = new_window_height * 16;
     int old_window_height = c->height_blocks * 16;
     c->height_blocks_submenu = new_window_height / 16;
-    int y_offset = c->y_offset;
 
-    int center = (old_window_height / 2) + y_offset;
+    int center = (old_window_height / 2) + c->offset.y;
     int new_window_y = center - (new_window_height / 2);
 
-    if (new_window_y < MIN_Y_POSITION)
+    if (new_window_y < MIN_Y_POSITION) {
         new_window_y = MIN_Y_POSITION;
-    else {
+    } else {
         int height = screen_height() - MARGIN_POSITION;
 
         if (new_window_y + new_window_height > height)
@@ -76,25 +75,25 @@ static int get_employment_info_text_id(object_info* c, building* b, int y_offset
 
 static void draw_employment_details(object_info* c, building* b, int y_offset, int text_id) {
     painter ctx = game.painter();
-    y_offset += c->y_offset;
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 14, c->x_offset + 40, y_offset + 6);
+    y_offset += c->offset.y;
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 14, vec2i{c->offset.x + 40, y_offset + 6});
     if (text_id) {
-        int width = lang_text_draw_amount(8, 12, b->num_workers, c->x_offset + 60, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
-        width += text_draw_number(model_get_building(b->type)->laborers, '(', "", c->x_offset + 70 + width, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw(69, text_id, c->x_offset + 70, y_offset + 26, FONT_NORMAL_BLACK_ON_DARK);
+        int width = lang_text_draw_amount(8, 12, b->num_workers, c->offset.x + 60, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
+        width += text_draw_number(model_get_building(b->type)->laborers, '(', "", c->offset.x + 70 + width, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(69, 0, c->offset.x + 70 + width, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(69, text_id, c->offset.x + 70, y_offset + 26, FONT_NORMAL_BLACK_ON_DARK);
     } else {
-        int width = lang_text_draw_amount(8, 12, b->num_workers, c->x_offset + 60, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
-        width += text_draw_number(model_get_building(b->type)->laborers, '(', "", c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
+        int width = lang_text_draw_amount(8, 12, b->num_workers, c->offset.x + 60, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
+        width += text_draw_number(model_get_building(b->type)->laborers, '(', "", c->offset.x + 70 + width, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(69, 0, c->offset.x + 70 + width, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 
 static void draw_employment_farm_ph_details(object_info* c, building* b, int y_offset, int text_id) {
     painter ctx = game.painter();
-    y_offset += c->y_offset;
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 14, c->x_offset + 40, y_offset + 6);
-    int width = lang_text_draw_multiline(177, text_id, c->x_offset + 70, y_offset + 10, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
+    y_offset += c->offset.y;
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 14, vec2i{c->offset.x + 40, y_offset + 6});
+    int width = lang_text_draw_multiline(177, text_id, vec2i{c->offset.x + 70, y_offset + 10}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
 }
 
 void window_building_draw_employment(object_info* c, int y_offset) {
@@ -116,10 +115,10 @@ void window_building_draw_employment_flood_farm(object_info* c, int y_offset) {
     draw_employment_farm_ph_details(c, b, y_offset, text_id);
 }
 void window_building_draw_description(object_info* c, int text_group, int text_id) {
-    lang_text_draw_multiline(text_group, text_id, c->x_offset + 32, c->y_offset + 56, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(text_group, text_id, c->offset + vec2i{32, 56}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 void window_building_draw_description_at(object_info* c, int y_offset, int text_group, int text_id) {
-    lang_text_draw_multiline(text_group, text_id, c->x_offset + 32, c->y_offset + y_offset, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(text_group, text_id, c->offset + vec2i{32, y_offset}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 void window_building_play_sound(object_info* c, const char* sound_file) {
     if (c->can_play_sound) {

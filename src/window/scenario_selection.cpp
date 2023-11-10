@@ -220,14 +220,14 @@ static void draw_scenario_thumbnail(int image_id) {
     switch (data.dialog) {
     case MAP_SELECTION_CCK_LEGACY:
     case MAP_SELECTION_CUSTOM:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, 78, 36);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 36});
         break;
     case MAP_SELECTION_CAMPAIGN:
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, 78, 56);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 56});
         break;
     case MAP_SELECTION_CAMPAIGN_UNUSED_BACKGROUND:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, 78, 60);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 60});
         break;
     }
 }
@@ -261,7 +261,7 @@ static void draw_scenario_info() {
     lang_text_draw_centered(44, 127, INFO_X, line_y, INFO_W, FONT_NORMAL_WHITE_ON_DARK);
     line_y += LINE_H;
     if (scenario_is_open_play()) {
-        lang_text_draw_multiline(145, 0, INFO_X, line_y, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(145, 0, vec2i{INFO_X, line_y}, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         if (winning_culture() > 0)
             draw_info_line(44, 129, &line_y, winning_culture(), 5);
@@ -314,7 +314,7 @@ static void draw_scores(int scenario_id) {
     bool beaten = game_scenario_beaten(scenario_id);
     if (beaten) {
         const player_record* record = player_get_scenario_record(scenario_id);
-        lang_text_draw_multiline(297, scenario_id, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(297, scenario_id, vec2i{INFO_X, INFO_Y}, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
 
         int line_y = SCORES_Y;
         draw_info_line(298, 6, &line_y, record->completion_months, 0);
@@ -326,7 +326,7 @@ static void draw_scores(int scenario_id) {
         draw_info_line(298, 7, &line_y, record->difficulty, 1);
         draw_info_line(298, 8, &line_y, record->score, -1, false, FONT_NORMAL_WHITE_ON_DARK);
     } else {
-        lang_text_draw_multiline(305, 0, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_YELLOW);
+        lang_text_draw_multiline(305, 0, vec2i{INFO_X, INFO_Y}, INFO_W, FONT_NORMAL_YELLOW);
     }
 
     uint8_t txt[200];
@@ -342,10 +342,8 @@ static void draw_side_panel_info() {
         draw_scenario_thumbnail(data.focus_button_id - 1);
 
         int text_id_offset = 1; // 0 = description; 1 = unlocked; 2 = locked
-        lang_text_draw_centered(
-          294, (data.focus_button_id - 1) * 4, INFO_X, SUBTITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK);
-        lang_text_draw_multiline(
-          294, (data.focus_button_id - 1) * 4 + text_id_offset, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_centered(294, (data.focus_button_id - 1) * 4, INFO_X, SUBTITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK);
+        lang_text_draw_multiline(294, (data.focus_button_id - 1) * 4 + text_id_offset, vec2i{INFO_X, INFO_Y}, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
         break;
     }
     case MAP_SELECTION_CUSTOM: {

@@ -60,11 +60,10 @@ static void draw_request(int index, const scenario_request* request) {
     button_border_draw(38, 96 + 42 * index, 560, 40, 0);
     text_draw_number(request->amount, '@', " ", 40, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
     int resource_offset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(resource_offset), 110, 100 + 42 * index);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(resource_offset), vec2i{110, 100 + 42 * index});
     lang_text_draw(23, request->resource, 150, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
 
-    int width
-      = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
+    int width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(12, 2, 310 + width, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
 
     if (request->resource == RESOURCE_DEBEN) {
@@ -96,14 +95,14 @@ static int draw_background(void) {
     city_emperor_calculate_gift_costs();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 2, 10, 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 2, vec2i{10, 10});
 
     text_draw(city_player_name(), 60, 12, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
     int width = lang_text_draw(52, 0, 60, 44, FONT_NORMAL_BLACK_ON_LIGHT);
     text_draw_number(city_rating_kingdom(), '@', " ", 60 + width, 44, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    lang_text_draw_multiline(52, city_rating_kingdom() / 5 + 22, 60, 60, 544, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(52, city_rating_kingdom() / 5 + 22, vec2i{60, 60}, 544, FONT_NORMAL_BLACK_ON_LIGHT);
 
     inner_panel_draw(32, 90, 36, 14);
 
@@ -112,7 +111,7 @@ static int draw_background(void) {
         && !city_military_distant_battle_roman_army_is_traveling_forth()) {
         // can send to distant battle
         button_border_draw(38, 96, 560, 40, 0);
-        ImageDraw::img_generic(ctx, image_id_resource_icon(military_resource), 50, 106);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(military_resource), vec2i{50, 106});
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE_ON_DARK);
         lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id, 80 + width, 102, FONT_NORMAL_WHITE_ON_DARK);
         int strength_text_id;
@@ -130,7 +129,7 @@ static int draw_background(void) {
     }
     num_requests = scenario_request_foreach_visible(num_requests, draw_request);
     if (!num_requests) {
-        lang_text_draw_multiline(52, 21, 64, 160, 512, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_multiline(52, 21, vec2i{64, 160}, 512, FONT_NORMAL_WHITE_ON_DARK);
     }
 
     return ADVISOR_HEIGHT;

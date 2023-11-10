@@ -16,8 +16,8 @@ static void building_entertainment_school_draw_info(object_info& c, const char* 
     c.help_id = 75;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
-    outer_panel_draw(c.x_offset, c.y_offset, c.width_blocks, c.height_blocks);
-    lang_text_draw_centered(group_id, 0, c.x_offset, c.y_offset + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);
+    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (building_get(c.building_id)->num_workers <= 0) {
@@ -33,7 +33,7 @@ static void building_entertainment_school_draw_info(object_info& c, const char* 
     } else {
         window_building_draw_description(c, group_id, 6);
     }
-    inner_panel_draw(c.x_offset + 16, c.y_offset + 136, c.width_blocks - 2, 4);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
     window_building_draw_employment(&c, 142);
 }
 

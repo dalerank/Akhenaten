@@ -15,8 +15,8 @@
 void building_engineer_post_draw_info(object_info &c) {
     c.help_id = 81;
     window_building_play_sound(&c, snd::get_building_info_sound("engineer_post"));
-    outer_panel_draw(c.x_offset, c.y_offset, c.width_blocks, c.height_blocks);
-    lang_text_draw_centered(104, 0, c.x_offset, c.y_offset + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);
+    lang_text_draw_centered(104, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
     if (!c.has_road_access) {
@@ -43,6 +43,6 @@ void building_engineer_post_draw_info(object_info &c) {
         }
     }
 
-    inner_panel_draw(c.x_offset + 16, c.y_offset + 136, c.width_blocks - 2, 4);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
     window_building_draw_employment(&c, 142);
 }

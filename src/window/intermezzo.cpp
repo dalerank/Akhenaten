@@ -12,6 +12,7 @@
 #include "sound/music.h"
 #include "sound/speech.h"
 #include "sound/sound_mission.h"
+#include "game/game.h"
 
 #include <map>
 
@@ -64,21 +65,22 @@ static void draw_background(void) {
     // draw background by mission
     int mission = scenario_campaign_scenario_id();
     int image_base = image_id_from_group(GROUP_INTERMEZZO_BACKGROUND);
+    painter ctx = game.painter();
     if (g_intermezzo_data.type == INTERMEZZO_MISSION_BRIEFING) {
         if (scenario_is_custom()) {
-            ImageDraw::img_generic(image_base + 1, x_offset, y_offset);
+            ImageDraw::img_generic(ctx, image_base + 1, x_offset, y_offset);
         } else {
-            ImageDraw::img_generic(image_base + 1 + (mission >= 20), x_offset, y_offset);
+            ImageDraw::img_generic(ctx, image_base + 1 + (mission >= 20), x_offset, y_offset);
         }
 
     } else if (g_intermezzo_data.type == INTERMEZZO_FIRED) {
-        ImageDraw::img_generic(image_base, x_offset, y_offset);
+        ImageDraw::img_generic(ctx, image_base, x_offset, y_offset);
 
     } else if (g_intermezzo_data.type == INTERMEZZO_WON) {
         if (scenario_is_custom()) {
-            ImageDraw::img_generic(image_base + 2, x_offset, y_offset);
+            ImageDraw::img_generic(ctx, image_base + 2, x_offset, y_offset);
         } else {
-            ImageDraw::img_generic(image_base, x_offset, y_offset);
+            ImageDraw::img_generic(ctx, image_base, x_offset, y_offset);
         }
     }
 }

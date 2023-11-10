@@ -29,6 +29,7 @@
 #include "window/editor/starting_conditions.h"
 #include "window/editor/win_criteria.h"
 #include "window/select_list.h"
+#include "game/game.h"
 
 static void button_starting_conditions(int param1, int param2);
 static void button_requests(int param1, int param2);
@@ -91,7 +92,8 @@ static void draw_background(void) {
     window_editor_map_draw_all();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground() {
+    painter ctx = game.painter();
     graphics_set_to_dialog();
     outer_panel_draw(0, 28, 30, 28);
 
@@ -113,7 +115,7 @@ static void draw_foreground(void) {
         lang_text_draw_year(scenario_property_start_year() + request.year, 222, 165, FONT_NORMAL_BLACK_ON_LIGHT);
         int width = text_draw_number(request.amount, '@', " ", 312, 165, FONT_NORMAL_BLACK_ON_LIGHT);
         int offset = request.resource + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON);
-        ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, 322 + width, 160);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, 322 + width, 160);
     } else {
         lang_text_draw_centered(44, 19, 212, 165, 250, FONT_NORMAL_BLACK_ON_LIGHT);
     }
@@ -151,7 +153,7 @@ static void draw_foreground(void) {
     lang_text_draw_centered(44, 94, 212, 445, 250, FONT_NORMAL_BLACK_ON_LIGHT);
 
     button_border_draw(18, 278, 184, 144, 0);
-    ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_SCENARIO_IMAGE) + scenario_image_id(), 20, 280);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_SCENARIO_IMAGE) + scenario_image_id(), 20, 280);
 
     arrow_buttons_draw(0, 0, image_arrows, 2);
 

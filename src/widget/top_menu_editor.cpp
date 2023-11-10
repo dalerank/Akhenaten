@@ -112,8 +112,9 @@ void widget_top_menu_editor_draw(void) {
     int block_width = 24;
     int image_base = image_id_from_group(GROUP_TOP_MENU_SIDEBAR);
     int s_width = screen_width();
+    painter ctx = game.painter();
     for (int i = 0; i * block_width < s_width; i++) {
-        ImageDraw::img_generic(image_base + i % 8, i * block_width, 0);
+        ImageDraw::img_generic(ctx, image_base + i % 8, i * block_width, 0);
     }
     //    menu_bar_draw(menu, 5);
 }

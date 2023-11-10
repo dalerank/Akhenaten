@@ -16,8 +16,8 @@ void building_bandstand_draw_info(object_info &c) {
     c.help_id = 72;
 
     window_building_play_sound(&c, snd::get_building_info_sound("bandstand"));
-    outer_panel_draw(c.x_offset, c.y_offset, c.width_blocks, c.height_blocks);
-    lang_text_draw_centered(71, 0, c.x_offset, c.y_offset + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);
+    lang_text_draw_centered(71, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     building* b = building_get(c.building_id);
 
     if (!c.has_road_access) {
@@ -34,20 +34,20 @@ void building_bandstand_draw_info(object_info &c) {
         window_building_draw_description(c, 71, 5);
     }
 
-    inner_panel_draw(c.x_offset + 16, c.y_offset + 136, c.width_blocks - 2, 7);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 7);
     window_building_draw_employment(&c, 138);
     if (b->data.entertainment.days1 > 0) {
-        int width = lang_text_draw(71, 8, c.x_offset + 32, c.y_offset + 182, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1, c.x_offset + width + 32, c.y_offset + 182, FONT_NORMAL_BLACK_ON_DARK);
+        int width = lang_text_draw(71, 8, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1, c.offset.x + width + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
     } else {
-        lang_text_draw(71, 7, c.x_offset + 32, c.y_offset + 182, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(71, 7, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
     }
 
     if (b->data.entertainment.days2 > 0) {
-        int width = lang_text_draw(71, 10, c.x_offset + 32, c.y_offset + 202, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2, c.x_offset + width + 32, c.y_offset + 202, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw(72, 7 + b->data.entertainment.days3_or_play, c.x_offset + 32, c.y_offset + 222, FONT_NORMAL_BLACK_ON_DARK);
+        int width = lang_text_draw(71, 10, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2, c.offset.x + width + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(72, 7 + b->data.entertainment.days3_or_play, c.offset.x + 32, c.offset.y + 222, FONT_NORMAL_BLACK_ON_DARK);
     } else {
-        lang_text_draw(71, 9, c.x_offset + 32, c.y_offset + 202, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(71, 9, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
     }
 }

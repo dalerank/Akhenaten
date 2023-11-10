@@ -57,7 +57,7 @@ static void draw_foreground() {
     int dialog_width = get_dialog_width();
     int dialog_x = 128 - (dialog_width - MIN_DIALOG_WIDTH) / 2;
     outer_panel_draw(dialog_x, 32, dialog_width / 16, 25);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), dialog_x + 16, 48);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), vec2i{dialog_x + 16, 48});
     lang_text_draw_centered(52, 15, dialog_x + 48, 48, dialog_width - 64, FONT_LARGE_BLACK_ON_LIGHT);
 
     inner_panel_draw(144, 80, 22, 15);
@@ -70,11 +70,12 @@ static void draw_foreground() {
 
     if (!city_victory_has_won()) {
         if (city_emperor_salary_rank() <= city_emperor_rank())
-            lang_text_draw_multiline(52, 76, 152, 336, 336, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_multiline(52, 76, vec2i{152, 336}, 336, FONT_NORMAL_BLACK_ON_LIGHT);
         else
-            lang_text_draw_multiline(52, 71, 152, 336, 336, FONT_NORMAL_BLACK_ON_LIGHT);
-    } else
-        lang_text_draw_multiline(52, 77, 152, 336, 336, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_multiline(52, 71, vec2i{152, 336}, 336, FONT_NORMAL_BLACK_ON_LIGHT);
+    } else {
+        lang_text_draw_multiline(52, 77, vec2i{152, 336}, 336, FONT_NORMAL_BLACK_ON_LIGHT);
+    }
     button_border_draw(240, 395, 160, 20, focus_button_id == 1);
     lang_text_draw_centered(13, 4, 176, 400, 288, FONT_NORMAL_BLACK_ON_LIGHT);
 

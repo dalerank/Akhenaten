@@ -61,7 +61,7 @@ static void draw_background(void) {
     if (data.popup_text_offset >= 0) {
         lang_text_draw_centered(GROUP, data.popup_text_offset, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
         if (lang_text_get_width(GROUP, data.popup_text_offset + 1, FONT_NORMAL_BLACK_ON_LIGHT) >= 420)
-            lang_text_draw_multiline(GROUP, data.popup_text_offset + 1, 110, 140, 420, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_multiline(GROUP, data.popup_text_offset + 1, vec2i{110, 140}, 420, FONT_NORMAL_BLACK_ON_LIGHT);
         else
             lang_text_draw_centered(GROUP, data.popup_text_offset + 1, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {

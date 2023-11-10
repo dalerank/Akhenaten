@@ -90,11 +90,11 @@ void figure::draw_trader(object_info* c) {
     painter ctx = game.painter();
     figure* f = get_head_of_caravan();
     const empire_city* city = empire_city_get(f->empire_city_id);
-    int width = lang_text_draw(64, f->type, c->x_offset + 40, c->y_offset + 110, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw(21, city->name_id, c->x_offset + 40 + width, c->y_offset + 110, FONT_NORMAL_BLACK_ON_DARK);
+    int width = lang_text_draw(64, f->type, c->offset.x + 40, c->offset.y + 110, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw(21, city->name_id, c->offset.x + 40 + width, c->offset.y + 110, FONT_NORMAL_BLACK_ON_DARK);
 
-    width = lang_text_draw(129, 1, c->x_offset + 40, c->y_offset + 132, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? 1200 : 800, c->x_offset + 40 + width, c->y_offset + 132, FONT_NORMAL_BLACK_ON_DARK);
+    width = lang_text_draw(129, 1, c->offset.x + 40, c->offset.y + 132, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? 1200 : 800, c->offset.x + 40 + width, c->offset.y + 132, FONT_NORMAL_BLACK_ON_DARK);
 
     int trader_id = f->trader_id;
     if (f->type == FIGURE_TRADE_SHIP) {
@@ -113,7 +113,7 @@ void figure::draw_trader(object_info* c) {
             text_id = 9;
             break;
         }
-        lang_text_draw(129, text_id, c->x_offset + 40, c->y_offset + 154, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(129, text_id, c->offset.x + 40, c->offset.y + 154, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         int text_id;
         switch (f->action_state) {
@@ -133,54 +133,49 @@ void figure::draw_trader(object_info* c) {
             text_id = 11;
             break;
         }
-        lang_text_draw(129, text_id, c->x_offset + 40, c->y_offset + 154, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(129, text_id, c->offset.x + 40, c->offset.y + 154, FONT_NORMAL_BLACK_ON_DARK);
     }
     if (trader_has_traded(trader_id)) {
         // bought
-        int y_base = c->y_offset + 180;
-        width = lang_text_draw(129, 4, c->x_offset + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
+        int y_base = c->offset.y + 180;
+        width = lang_text_draw(129, 4, c->offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
         for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (trader_bought_resources(trader_id, r)) {
-                width += text_draw_number(trader_bought_resources(trader_id, r), '@'," ", c->x_offset + 40 + width, y_base, FONT_NORMAL_BLACK_ON_DARK);
+                width += text_draw_number(trader_bought_resources(trader_id, r), '@'," ", c->offset.x + 40 + width, y_base, FONT_NORMAL_BLACK_ON_DARK);
                 int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-                ImageDraw::img_generic(ctx, image_id, c->x_offset + 40 + width, y_base - 3);
+                ImageDraw::img_generic(ctx, image_id, vec2i{c->offset.x + 40 + width, y_base - 3});
                 width += 25;
             }
         }
         // sold
-        y_base = c->y_offset + 210;
-        width = lang_text_draw(129, 5, c->x_offset + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
+        y_base = c->offset.y + 210;
+        width = lang_text_draw(129, 5, c->offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
         for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (trader_sold_resources(trader_id, r)) {
-                width += text_draw_number(trader_sold_resources(trader_id, r),
-                                          '@',
-                                          " ",
-                                          c->x_offset + 40 + width,
-                                          y_base,
-                                          FONT_NORMAL_BLACK_ON_DARK);
+                width += text_draw_number(trader_sold_resources(trader_id, r), '@', " ", c->offset.x + 40 + width, y_base, FONT_NORMAL_BLACK_ON_DARK);
                 int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-                ImageDraw::img_generic(ctx, image_id, c->x_offset + 40 + width, y_base - 3);
+                ImageDraw::img_generic(ctx, image_id, vec2i{c->offset.x + 40 + width, y_base - 3});
                 width += 25;
             }
         }
     } else { // nothing sold/bought (yet)
         // buying
-        int y_base = c->y_offset + 180;
-        width = lang_text_draw(129, 2, c->x_offset + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
+        int y_base = c->offset.y + 180;
+        width = lang_text_draw(129, 2, c->offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
         for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (city->buys_resource[r]) {
                 int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-                ImageDraw::img_generic(ctx, image_id, c->x_offset + 40 + width, y_base - 3);
+                ImageDraw::img_generic(ctx, image_id, vec2i{c->offset.x + 40 + width, y_base - 3});
                 width += 25;
             }
         }
         // selling
-        y_base = c->y_offset + 210;
-        width = lang_text_draw(129, 3, c->x_offset + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
+        y_base = c->offset.y + 210;
+        width = lang_text_draw(129, 3, c->offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
         for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (city->sells_resource[r]) {
                 int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-                ImageDraw::img_generic(ctx, image_id, c->x_offset + 40 + width, y_base - 3);
+                ImageDraw::img_generic(ctx, image_id, vec2i{c->offset.x + 40 + width, y_base - 3});
                 width += 25;
             }
         }
@@ -265,39 +260,39 @@ void figure::draw_enemy(object_info* c) {
         }
         break;
     }
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PORTRAITS) + image_id - 1, c->x_offset + 28, c->y_offset + 112);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PORTRAITS) + image_id - 1, c->offset + vec2i{28, 112});
 
-    lang_text_draw(name_group_id(), name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BLACK_ON_DARK);
-    lang_text_draw(37, scenario_property_enemy() + 20, c->x_offset + 92, c->y_offset + 149, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw(name_group_id(), name, c->offset.x + 90, c->offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
+    lang_text_draw(37, scenario_property_enemy() + 20, c->offset.x + 92, c->offset.y + 149, FONT_NORMAL_BLACK_ON_DARK);
 }
 
 void figure::draw_animal(object_info* c) {
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, big_people_image(type), c->x_offset + 28, c->y_offset + 112);
-    lang_text_draw(64, type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
+    ImageDraw::img_generic(ctx, big_people_image(type), c->offset + vec2i{28, 112});
+    lang_text_draw(64, type, c->offset.x + 92, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
 }
 
 void figure::draw_cartpusher(object_info* c) {
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, big_people_image(type), c->x_offset + 28, c->y_offset + 112);
+    ImageDraw::img_generic(ctx, big_people_image(type), c->offset + vec2i{28, 112});
 
-    lang_text_draw(name_group_id(), name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BLACK_ON_DARK);
+    lang_text_draw(name_group_id(), name, c->offset.x + 90, c->offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
     int width = 0;
     if (has_home())
-        width += lang_text_draw(41, home()->type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
-    width += lang_text_draw(64, type, c->x_offset + 92 + width, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
+        width += lang_text_draw(41, home()->type, c->offset.x + 92, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
+    width += lang_text_draw(64, type, c->offset.x + 92 + width, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
 
     if (action_state != FIGURE_ACTION_132_DOCKER_IDLING && resource_id) {
         int resource = resource_id;
-        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->x_offset + 92, c->y_offset + 154);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->offset + vec2i{92, 154});
 
-        width = text_draw_number(resource_amount_full, ' ', " ", c->x_offset + 108, c->y_offset + 154, FONT_NORMAL_BLACK_ON_DARK);
-        width += lang_text_draw(129, 20, c->x_offset + 108 + width, c->y_offset + 154, FONT_NORMAL_BLACK_ON_DARK);
-        width += lang_text_draw(23, resource_id, c->x_offset + 108 + width, c->y_offset + 154, FONT_NORMAL_BLACK_ON_DARK);
+        width = text_draw_number(resource_amount_full, ' ', " ", c->offset.x + 108, c->offset.y + 154, FONT_NORMAL_BLACK_ON_DARK);
+        width += lang_text_draw(129, 20, c->offset.x + 108 + width, c->offset.y + 154, FONT_NORMAL_BLACK_ON_DARK);
+        width += lang_text_draw(23, resource_id, c->offset.x + 108 + width, c->offset.y + 154, FONT_NORMAL_BLACK_ON_DARK);
     }
 
     //    int phrase_height = lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
-    //                                                 c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 8),
+    //                                                 c->offset.x + 90, c->offset.y + 160, 16 * (c->width_blocks - 8),
     //                                                 FONT_NORMAL_GREEN);
 
     if (!has_home())
@@ -318,8 +313,8 @@ void figure::draw_cartpusher(object_info* c) {
         break;
     }
     //    if (action_state != FIGURE_ACTION_132_DOCKER_IDLING) {
-    //        int x_base = c->x_offset + 40;
-    //        int y_base = c->y_offset + 216;
+    //        int x_base = c->offset.x + 40;
+    //        int y_base = c->offset.y + 216;
     //        if (phrase_height > 60)
     //            y_base += 8;
     //
@@ -339,23 +334,23 @@ void figure::draw_cartpusher(object_info* c) {
 
 void figure::draw_market_buyer(object_info* c) {
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, big_people_image(type), c->x_offset + 28, c->y_offset + 112);
+    ImageDraw::img_generic(ctx, big_people_image(type), c->offset + vec2i{28, 112});
 
-    lang_text_draw(name_group_id(), name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BLACK_ON_DARK);
-    int width = lang_text_draw(64, type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw(name_group_id(), name, c->offset.x + 90, c->offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
+    int width = lang_text_draw(64, type, c->offset.x + 92, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
 
     if (action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
-        width += lang_text_draw(129, 17, c->x_offset + 90 + width, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
+        width += lang_text_draw(129, 17, c->offset.x + 90 + width, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
         int resource = inventory_to_resource_id(collecting_item_id);
-        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->x_offset + 90 + width, c->y_offset + 135);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->offset + vec2i{90 + width, 135});
     } else if (action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
-        width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
+        width += lang_text_draw(129, 18, c->offset.x + 90 + width, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
         int resource = inventory_to_resource_id(collecting_item_id);
-        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->x_offset + 90 + width, c->y_offset + 135);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->offset + vec2i{90 + width, 135});
     }
 
     if (c->figure.phrase_id >= 0) {
-        lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1, c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 8), FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1, c->offset + vec2i{90, 160}, 16 * (c->width_blocks - 8), FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 
@@ -366,18 +361,18 @@ void figure::draw_normal_figure(object_info* c) {
         image_id = image_id_from_group(GROUP_PORTRAITS) + 18;
     }
 
-    ImageDraw::img_generic(ctx, image_id, c->x_offset + 28, c->y_offset + 112);
+    ImageDraw::img_generic(ctx, image_id, c->offset + vec2i{28, 112});
 
-    lang_text_draw(name_group_id(), name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BLACK_ON_DARK);
-    lang_text_draw(64, type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw(name_group_id(), name, c->offset.x + 90, c->offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
+    lang_text_draw(64, type, c->offset.x + 92, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
 
     if (c->figure.phrase_id >= 0) {
-        lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1, c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 8), FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1, c->offset + vec2i{90, 160}, 16 * (c->width_blocks - 8), FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 
 static void draw_figure_info(object_info* c, int figure_id) {
-    button_border_draw(c->x_offset + 24, c->y_offset + 102, 16 * (c->width_blocks - 3), 138, 0);
+    button_border_draw(c->offset.x + 24, c->offset.y + 102, 16 * (c->width_blocks - 3), 138, 0);
 
     figure* f = figure_get(figure_id);
     int type = f->type;
@@ -396,14 +391,14 @@ static void draw_figure_info(object_info* c, int figure_id) {
 }
 
 void window_building_draw_figure_list(object_info* c) {
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 40, c->width_blocks - 2, 13);
+    inner_panel_draw(c->offset.x + 16, c->offset.y + 40, c->width_blocks - 2, 13);
     if (c->figure.count <= 0) {
-        lang_text_draw_centered(70, 0, c->x_offset, c->y_offset + 120, 16 * c->width_blocks, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_centered(70, 0, c->offset.x, c->offset.y + 120, 16 * c->width_blocks, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         for (int i = 0; i < c->figure.count; i++) {
-            button_border_draw(c->x_offset + 60 * i + 25, c->y_offset + 45, 52, 52, i == c->figure.selected_index);
-            graphics_draw_from_texture(g_building_figures_data.figure_images[i], c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48);
-            //            graphics_draw_from_buffer(c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48,
+            button_border_draw(c->offset.x + 60 * i + 25, c->offset.y + 45, 52, 52, i == c->figure.selected_index);
+            graphics_draw_from_texture(g_building_figures_data.figure_images[i], c->offset.x + 27 + 60 * i, c->offset.y + 47, 48, 48);
+            //            graphics_draw_from_buffer(c->offset.x + 27 + 60 * i, c->offset.y + 47, 48, 48,
             //            data.figure_images[i]);
         }
         draw_figure_info(c, c->figure.figure_ids[c->figure.selected_index]);
@@ -449,7 +444,7 @@ void window_building_prepare_figure_list(object_info* c) {
 int window_building_handle_mouse_figure_list(const mouse* m, object_info* c) {
     auto& data = g_building_figures_data;
     data.context_for_callback = c;
-    int button_id = generic_buttons_handle_mouse(m, c->x_offset, c->y_offset, figure_buttons, c->figure.count, &data.focus_button_id);
+    int button_id = generic_buttons_handle_mouse(m, c->offset.x, c->offset.y, figure_buttons, c->figure.count, &data.focus_button_id);
     data.context_for_callback = 0;
     return button_id;
 }

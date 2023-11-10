@@ -53,12 +53,12 @@ static void draw_background() {
 
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_SELECT_MISSION_BACKGROUND));
     graphics_set_to_dialog();
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_NEXT_MISSION_SELECT) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_NEXT_MISSION_SELECT) + BACKGROUND_IMAGE_OFFSET[rank], vec2i{0, 0});
     lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK_ON_LIGHT);
     if (g_mission_next.choice)
-        lang_text_draw_multiline(144, 1 + 3 * rank + g_mission_next.choice, 20, 440, 560, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_multiline(144, 1 + 3 * rank + g_mission_next.choice, vec2i{20, 440}, 560, FONT_NORMAL_BLACK_ON_LIGHT);
     else {
-        lang_text_draw_multiline(144, 0, 20, 440, 560, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_multiline(144, 0, vec2i{20, 440}, 560, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     graphics_reset_dialog();
 }
@@ -71,20 +71,18 @@ static void draw_foreground() {
         image_buttons_draw(580, 410, &image_button_start_mission, 1);
 
     int rank = scenario_campaign_rank();
-    int x_peaceful = CAMPAIGN_SELECTION[rank].x_peaceful - 4;
-    int y_peaceful = CAMPAIGN_SELECTION[rank].y_peaceful - 4;
-    int x_military = CAMPAIGN_SELECTION[rank].x_military - 4;
-    int y_military = CAMPAIGN_SELECTION[rank].y_military - 4;
+    vec2i peaceful{CAMPAIGN_SELECTION[rank].x_peaceful - 4, CAMPAIGN_SELECTION[rank].y_peaceful - 4};
+    vec2i military{CAMPAIGN_SELECTION[rank].x_military - 4, CAMPAIGN_SELECTION[rank].y_military - 4};
     int image_id = image_id_from_group(GROUP_SELECT_MISSION_BUTTON);
     if (g_mission_next.choice == 0) {
-        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
-        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
+        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 1 ? image_id + 1 : image_id, peaceful);
+        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 2 ? image_id + 1 : image_id, military);
     } else if (g_mission_next.choice == 1) {
-        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 1 ? image_id + 1 : image_id + 2, x_peaceful, y_peaceful);
-        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
+        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 1 ? image_id + 1 : image_id + 2, peaceful);
+        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 2 ? image_id + 1 : image_id, military);
     } else {
-        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
-        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 2 ? image_id + 1 : image_id + 2, x_military, y_military);
+        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 1 ? image_id + 1 : image_id, peaceful);
+        ImageDraw::img_generic(ctx, g_mission_next.focus_button == 2 ? image_id + 1 : image_id + 2, military);
     }
     graphics_reset_dialog();
 }

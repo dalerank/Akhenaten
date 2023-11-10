@@ -25,6 +25,7 @@
 #include "scenario/request.h"
 #include "window/advisors.h"
 #include "window/city.h"
+#include "game/game.h"
 
 #define MAX_HISTORY 200
 
@@ -256,6 +257,7 @@ static int get_message_image_id(const lang_message* msg) {
 static void draw_city_message_text(const lang_message* msg) {
     auto &data = g_message_dialog_data;
     uint8_t* text = msg->content.text;
+    painter ctx = game.painter();
  
     if (data.is_eventmsg) {
         text = (uint8_t *)data.body_text.c_str();
@@ -293,7 +295,7 @@ static void draw_city_message_text(const lang_message* msg) {
             int city_sentiment = city_sentiment_low_mood_cause();
             if (city_sentiment >= 1 && city_sentiment <= 5) {
                 int max_width = 16 * (data.text_width_blocks - 1) - 64;
-                lang_text_draw_multiline(12, city_sentiment + 2, data.x + 64, data.y_text + 44, max_width, FONT_NORMAL_WHITE_ON_DARK);
+                lang_text_draw_multiline(12, city_sentiment + 2, vec2i{data.x + 64, data.y_text + 44}, max_width, FONT_NORMAL_WHITE_ON_DARK);
             }
             rich_text_draw(text, data.x_text + 8, data.y_text + 86, 16 * (data.text_width_blocks - 1), data.text_height_blocks - 1, 0);
             break;
@@ -303,13 +305,13 @@ static void draw_city_message_text(const lang_message* msg) {
             break;
 
         case MESSAGE_TYPE_TRADE_CHANGE:
-            ImageDraw::img_generic(resource_image(g_player_message_data.param2), data.x + 64, data.y_text + 40);
+            ImageDraw::img_generic(ctx, resource_image(g_player_message_data.param2), data.x + 64, data.y_text + 40);
             lang_text_draw(21, empire_city_get(g_player_message_data.param1)->name_id, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
             rich_text_draw(text, data.x_text + 8, data.y_text + 86, 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
             break;
 
         case MESSAGE_TYPE_PRICE_CHANGE:
-            ImageDraw::img_generic(resource_image(g_player_message_data.param2), data.x + 64, data.y_text + 40);
+            ImageDraw::img_generic(ctx, resource_image(g_player_message_data.param2), data.x + 64, data.y_text + 40);
             text_draw_money(g_player_message_data.param1, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
             rich_text_draw(text, data.x_text + 8, data.y_text + 86, 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
             break;
@@ -322,7 +324,7 @@ static void draw_city_message_text(const lang_message* msg) {
                 //                const scenario_request *request = scenario_request_get(player_message.param1);
                 auto city_msg = city_message_get(data.message_id);
                 int y_offset = data.y_text + 86 + lines * 16;
-                ImageDraw::img_generic(resource_image(city_msg->req_resource), data.x_text + 8, y_offset - 4);
+                ImageDraw::img_generic(ctx, resource_image(city_msg->req_resource), vec2i{data.x_text + 8, y_offset - 4});
                 int width = text_draw_number(stack_proper_quantity(city_msg->req_amount, city_msg->req_resource), '@', " ", data.x_text + 28, y_offset, FONT_NORMAL_WHITE_ON_DARK);
                 lang_text_draw(23, city_msg->req_resource, data.x_text + 26 + width, y_offset, FONT_NORMAL_WHITE_ON_DARK);
                 //                if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
@@ -336,6 +338,7 @@ static void draw_city_message_text(const lang_message* msg) {
 }
 
 static void draw_title(const lang_message* msg) {
+    painter ctx = game.painter();
     auto &data = g_message_dialog_data;
     uint8_t* text = msg->title.text;
     
@@ -361,7 +364,7 @@ static void draw_title(const lang_message* msg) {
     if (img) {
         int image_x = msg->image.x;
         int image_y = msg->image.y;
-        ImageDraw::img_generic(image_id, data.x + image_x, data.y + image_y);
+        ImageDraw::img_generic(ctx, image_id, vec2i{data.x + image_x, data.y + image_y});
 
         if (data.y + image_y + img->height + 8 > data.y_text)
             data.y_text = data.y + image_y + img->height + 8;
@@ -422,6 +425,7 @@ static void draw_background_normal(void) {
 
 static void draw_background_image() {
     auto &data = g_message_dialog_data;
+    painter ctx = game.painter();
     const lang_message* msg = lang_get_message(data.text_id);
     data.x = 32;
     data.y = 28;
@@ -481,7 +485,7 @@ static void draw_background_image() {
 
         const scenario_request* request = scenario_request_get(g_player_message_data.param1);
         text_draw_number(request->amount, '@', " ", data.x + 8, y_text, FONT_NORMAL_WHITE_ON_DARK);
-        ImageDraw::img_generic(image_id_resource_icon(request->resource) + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON), data.x + 70, y_text - 5);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(request->resource) + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON), vec2i{data.x + 70, y_text - 5});
         lang_text_draw(23, request->resource, data.x + 100, y_text, FONT_NORMAL_WHITE_ON_DARK);
         if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
             width = lang_text_draw_amount(8, 4, request->months_to_comply, data.x + 200, y_text, FONT_NORMAL_WHITE_ON_DARK);
@@ -498,13 +502,14 @@ static void draw_background_image() {
 
     const image_t *img = image_get(image_id);
     int current_x = (500 - img->width) / 2;
-    ImageDraw::img_generic(image_id, current_x, 96);
+    ImageDraw::img_generic(ctx, image_id, current_x, 96);
 
     draw_foreground_image();
 }
 
 static void draw_background_video() {
     auto &data = g_message_dialog_data;
+    painter ctx = game.painter();
     const lang_message* msg = lang_get_message(data.text_id);
     data.x = 32;
     data.y = 28;
@@ -564,7 +569,7 @@ static void draw_background_video() {
 
         const scenario_request* request = scenario_request_get(g_player_message_data.param1);
         text_draw_number(request->amount, '@', " ", data.x + 8, y_text, FONT_NORMAL_WHITE_ON_DARK);
-        ImageDraw::img_generic(image_id_resource_icon(request->resource) + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON), data.x + 70, y_text - 5);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(request->resource) + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON), data.x + 70, y_text - 5);
         lang_text_draw(23, request->resource, data.x + 100, y_text, FONT_NORMAL_WHITE_ON_DARK);
         if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
             width = lang_text_draw_amount(8, 4, request->months_to_comply, data.x + 200, y_text, FONT_NORMAL_WHITE_ON_DARK);

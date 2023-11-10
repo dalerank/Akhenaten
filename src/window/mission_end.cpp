@@ -48,7 +48,7 @@ static int get_max(int value1, int value2, int value3) {
 static void draw_lost(void) {
     outer_panel_draw(48, 16, 34, 16);
     lang_text_draw_centered(62, 1, 48, 32, 544, FONT_LARGE_BLACK_ON_LIGHT);
-    lang_text_draw_multiline(62, 16, 64, 72, 496, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(62, 16, vec2i{64, 72}, 496, FONT_NORMAL_BLACK_ON_LIGHT);
 }
 static void draw_won(void) {
     outer_panel_draw(48, 128, 34, 18);
@@ -57,9 +57,9 @@ static void draw_won(void) {
     inner_panel_draw(64, 184, 32, 7);
 
     if (scenario_is_custom()) {
-        lang_text_draw_multiline(147, 20, 80, 192, 488, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_multiline(147, 20, vec2i{80, 192}, 488, FONT_NORMAL_WHITE_ON_DARK);
     } else {
-        lang_text_draw_multiline(147, scenario_campaign_scenario_id(), 80, 192, 488, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_multiline(147, scenario_campaign_scenario_id(), vec2i{80, 192}, 488, FONT_NORMAL_WHITE_ON_DARK);
     }
 
     int left_width = get_max(lang_text_get_width(148, 0, FONT_NORMAL_BLACK_ON_LIGHT),

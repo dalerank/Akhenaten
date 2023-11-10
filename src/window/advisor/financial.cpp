@@ -8,6 +8,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "game/game.h"
 
 #define ADVISOR_HEIGHT 27
 
@@ -24,9 +25,10 @@ static void draw_row(int group, int number, int* y, int value_last_year, int val
     text_draw_number(value_this_year, '@', " ", 430, *y, FONT_NORMAL_BLACK_ON_LIGHT);
     *y += 15;
 }
-static int draw_background(void) {
+static int draw_background() {
+    painter ctx = game.painter();
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 10, 10, 10);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 10, vec2i{10, 10});
 
     lang_text_draw(60, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(64, 48, 34, 5);

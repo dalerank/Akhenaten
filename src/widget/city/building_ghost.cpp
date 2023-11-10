@@ -449,14 +449,14 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
     } else { // can place (theoretically)
         if (type == BUILDING_FESTIVAL_SQUARE && city_building_has_festival_square()) {
             for (int i = 0; i < size * size; i++)
-                ImageDraw::isometric(ctx, image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_RED);
+                ImageDraw::isometric(ctx, image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_RED);
             return;
         }
 
         switch (type) {
         case BUILDING_BOOTH:
             for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(ctx, image_id_from_group(GROUP_BOOTH_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
+                ImageDraw::isometric(ctx, image_id_from_group(GROUP_BOOTH_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
             }
             switch (orientation / 2) {
             case 0:
@@ -476,7 +476,7 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
 
         case BUILDING_BANDSTAND:
             for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(ctx, image_id_from_group(GROUP_BANDSTAND_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
+                ImageDraw::isometric(ctx, image_id_from_group(GROUP_BANDSTAND_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
             }
 
             switch (orientation / 2) {
@@ -505,7 +505,7 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
 
         case BUILDING_PAVILLION:
             for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(ctx, image_id_from_group(GROUP_PAVILLION_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
+                ImageDraw::isometric(ctx, image_id_from_group(GROUP_PAVILLION_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
             }
             switch (orientation) {
             case 0:
@@ -561,7 +561,7 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
 
         case BUILDING_FESTIVAL_SQUARE:
             for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(ctx, image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15, COLOR_MASK_GREEN);
+                ImageDraw::isometric(ctx, image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
             }
             break;
         }

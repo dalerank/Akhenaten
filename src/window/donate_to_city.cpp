@@ -12,6 +12,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "window/advisors.h"
+#include "game/game.h"
 
 static void button_set_amount(int amount_id, int param2);
 static void button_donate(int param1, int param2);
@@ -44,7 +45,8 @@ static void draw_background(void) {
     graphics_set_to_dialog();
 
     outer_panel_draw(64, 160, 32, 10);
-    ImageDraw::img_generic(image_id_resource_icon(RESOURCE_DEBEN), 80, 176);
+    painter ctx = game.painter();
+    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), vec2i{80, 176});
     lang_text_draw_centered(52, 16, 112, 176, 448, FONT_LARGE_BLACK_ON_LIGHT);
 
     inner_panel_draw(112, 208, 26, 4);

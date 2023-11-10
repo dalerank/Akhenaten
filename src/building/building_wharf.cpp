@@ -19,9 +19,9 @@ void building_wharf_draw_info(object_info &c) {
 
     c.help_id = 84;
     window_building_play_sound(&c, snd::get_building_info_sound("wharf"));
-    outer_panel_draw(c.x_offset, c.y_offset, c.width_blocks, c.height_blocks);
-    lang_text_draw_centered(102, 0, c.x_offset, c.y_offset + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_FIGS) + resource_image_offset(RESOURCE_FIGS, RESOURCE_IMAGE_ICON), c.x_offset + 10, c.y_offset + 10);
+    outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);
+    lang_text_draw_centered(102, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_FIGS) + resource_image_offset(RESOURCE_FIGS, RESOURCE_IMAGE_ICON), c.offset.x + 10, c.offset.y + 10);
 
     building* b = building_get(c.building_id);
 
@@ -54,6 +54,6 @@ void building_wharf_draw_info(object_info &c) {
         window_building_draw_description(c, 102, text_id);
     }
 
-    inner_panel_draw(c.x_offset + 16, c.y_offset + 136, c.width_blocks - 2, 4);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
     window_building_draw_employment(&c, 142);
 }

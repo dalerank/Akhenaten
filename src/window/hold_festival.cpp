@@ -16,6 +16,7 @@
 #include "input/input.h"
 #include "window/advisors.h"
 #include "window/message_dialog.h"
+#include "game/game.h"
 
 static void button_god(int god, int param2);
 static void button_size(int size, int param2);
@@ -45,6 +46,7 @@ static int focus_button_id;
 static int focus_image_button_id;
 
 static void draw_buttons(void) {
+    painter ctx = game.painter();
     // small festival
     button_border_draw(102, 216, 430, 26, focus_button_id == 6);
     int width = lang_text_draw(58, 31, 110, 224, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -62,7 +64,7 @@ static void draw_buttons(void) {
     width += lang_text_draw_amount(8, 10, city_festival_grand_alcohol(), 120 + width, 284, FONT_NORMAL_BLACK_ON_LIGHT);
 
     int resource_image_id = image_id_resource_icon(RESOURCE_BEER);
-    ImageDraw::img_generic(resource_image_id, 120 + width, 279);
+    ImageDraw::img_generic(ctx, resource_image_id, vec2i{120 + width, 279});
 
     // greying out of buttons
     if (city_finance_out_of_money()) {
@@ -74,6 +76,7 @@ static void draw_buttons(void) {
     }
 }
 static void draw_background(void) {
+    painter ctx = game.painter();
     window_advisors_draw_dialog_background();
 
     graphics_set_to_dialog();
@@ -83,9 +86,9 @@ static void draw_background(void) {
     for (int god = 0; god < MAX_GODS; god++) {
         if (god == city_festival_selected_god()) {
             button_border_draw(100 * god + 66, 92, 90, 100, 1);
-            ImageDraw::img_generic(image_id_from_group(GROUP_PANEL_WINDOWS) + god + 21, 100 * god + 70, 96);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_WINDOWS) + god + 21, 100 * god + 70, 96);
         } else {
-            ImageDraw::img_generic(image_id_from_group(GROUP_PANEL_WINDOWS) + god + 16, 100 * god + 70, 96);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_WINDOWS) + god + 16, 100 * god + 70, 96);
         }
     }
     draw_buttons();

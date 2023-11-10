@@ -51,7 +51,7 @@ static void draw_footprint_water(vec2i pixel, tile2i point, painter &ctx) {
                 image_id += 1;
                 break;
             }
-            ImageDraw::isometric(ctx, image_id, x, y);
+            ImageDraw::isometric(ctx, image_id, vec2i{x, y});
         }
     }
 }

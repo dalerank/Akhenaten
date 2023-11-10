@@ -326,11 +326,9 @@ static int draw_text(const uint8_t* text, int x_offset, int y_offset, int box_wi
                     int image_offset_x = x_offset + (box_width - img->width) / 2 - 4;
                     if (line < height_lines + scrollbar.scroll_position) {
                         if (line >= scrollbar.scroll_position)
-                            ImageDraw::img_generic(image_id, image_offset_x, y + 8);
+                            ImageDraw::img_generic(ctx, image_id, image_offset_x, y + 8);
                         else {
-                            ImageDraw::img_generic(image_id,
-                                                   image_offset_x,
-                                                   y + 8 - 16 * (scrollbar.scroll_position - line));
+                            ImageDraw::img_generic(ctx, image_id, image_offset_x, y + 8 - 16 * (scrollbar.scroll_position - line));
                         }
                     }
                     image_id = 0;

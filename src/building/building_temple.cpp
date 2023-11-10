@@ -17,13 +17,13 @@
 static void building_temple_draw_temple(object_info& c, const char* type, int group_id, int image_offset) {
     c.help_id = 67;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
-    outer_panel_draw(c.x_offset, c.y_offset, c.width_blocks, c.height_blocks);
-    lang_text_draw_centered(group_id, 0, c.x_offset, c.y_offset + 12, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c.x_offset + 16, c.y_offset + 56, c.width_blocks - 2, 4);
+    outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);
+    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 12, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 56, c.width_blocks - 2, 4);
     window_building_draw_employment(&c, 62);
     painter ctx = game.painter();
     if (c.has_road_access) {
-        ImageDraw::img_generic(ctx, image_offset + image_id_from_group(GROUP_PANEL_WINDOWS), c.x_offset + 190, c.y_offset + 16 * c.height_blocks - 118);
+        ImageDraw::img_generic(ctx, image_offset + image_id_from_group(GROUP_PANEL_WINDOWS), c.offset.x + 190, c.offset.y + 16 * c.height_blocks - 118);
     } else {
         window_building_draw_description_at(c, 16 * c.height_blocks - 128, 69, 25);
     }

@@ -693,14 +693,14 @@ static void draw_multibyte_letter(font_t font, const image_t* img, int x, int y,
     //    }
 }
 
-void ImageDraw::img_generic(int image_id, int x, int y, color color_mask, float scale) {
-    painter ctx = game.painter();
-    img_generic(ctx, image_id, x, y, color_mask, scale);
-}
-
 void ImageDraw::img_generic(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
     graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, false);
+}
+
+void ImageDraw::img_generic(painter &ctx, int image_id, vec2i p, color color_mask, float scale) {
+    const image_t* img = image_get(image_id);
+    graphics_renderer()->draw_image(ctx, img, p.x, p.y, color_mask, scale, false);
 }
 
 void ImageDraw::img_sprite(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
@@ -741,6 +741,7 @@ void ImageDraw::img_letter(painter &ctx,font_t font, int letter_id, int x, int y
         color_mask = base_color_for_font(font);
     if (font == FONT_SMALL_SHADED)
         graphics_renderer()->draw_image(ctx, img, x + 1, y + 1, COLOR_BLACK, scale, false);
+
     graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, false);
 }
 
@@ -758,12 +759,7 @@ void ImageDraw::img_background(painter &ctx, int image_id, float scale) {
 
 void ImageDraw::isometric(painter &ctx, int image_id, vec2i pos, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
-    ImageDraw::img_generic(ctx, image_id, pos.x, pos.y, color_mask, scale);
-}
-
-void ImageDraw::isometric(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
-    const image_t* img = image_get(image_id);
-    ImageDraw::img_generic(ctx, image_id, x, y, color_mask, scale);
+    ImageDraw::img_generic(ctx, image_id, pos, color_mask, scale);
 }
 
 void ImageDraw::isometric_from_drawtile(painter &ctx, int image_id, int x, int y, color color_mask) {

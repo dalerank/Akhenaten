@@ -550,18 +550,15 @@ static void init(map_point tile) {
     // dialog placement
     int s_width = screen_width();
     int s_height = screen_height();
-    context.x_offset = center_in_city(16 * context.width_blocks);
+    context.offset.x = center_in_city(16 * context.width_blocks);
     if (s_width >= 1024 && s_height >= 768) {
-        context.x_offset = mouse_get()->x;
-        context.y_offset = mouse_get()->y;
-        window_building_set_possible_position(&context.x_offset,
-                                              &context.y_offset,
-                                              context.width_blocks,
-                                              context.height_blocks);
+        context.offset.x = mouse_get()->x;
+        context.offset.y = mouse_get()->y;
+        window_building_set_possible_position(&context.offset.x, &context.offset.y, context.width_blocks, context.height_blocks);
     } else if (s_height >= 600 && mouse_get()->y <= (s_height - 24) / 2 + 24) {
-        context.y_offset = s_height - 16 * context.height_blocks - MARGIN_POSITION;
+        context.offset.y = s_height - 16 * context.height_blocks - MARGIN_POSITION;
     } else {
-        context.y_offset = MIN_Y_POSITION;
+        context.offset.y = MIN_Y_POSITION;
     }
 }
 
@@ -830,28 +827,28 @@ static void draw_foreground() {
 
     // general buttons
     if (context.storage_show_special_orders) {
-        image_buttons_draw(context.x_offset, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40, image_buttons_help_close, 2);
+        image_buttons_draw(context.offset.x, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40, image_buttons_help_close, 2);
     } else {
-        image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_help_close, 2);
+        image_buttons_draw(context.offset.x, context.offset.y + 16 * context.height_blocks - 40, image_buttons_help_close, 2);
     }
 
     if (context.can_go_to_advisor) {
-        image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_advisor, 1);
+        image_buttons_draw(context.offset.x, context.offset.y + 16 * context.height_blocks - 40, image_buttons_advisor, 1);
     }
 
     if (!context.storage_show_special_orders) {
         int workers_needed = model_get_building(building_get(context.building_id)->type)->laborers;
         if (workers_needed) {
-            draw_mothball_button(context.x_offset + 400, context.y_offset + 3 + 16 * context.height_blocks - 40, g_building_info_focus.generic_button_id);
+            draw_mothball_button(context.offset.x + 400, context.offset.y + 3 + 16 * context.height_blocks - 40, g_building_info_focus.generic_button_id);
         }
     }
 
     if (context.figure.draw_debug_path) {
-        draw_debugpath_button(context.x_offset + 400, context.y_offset + 3 + 16 * context.height_blocks - 40, g_building_info_focus.debug_path_button_id);
+        draw_debugpath_button(context.offset.x + 400, context.offset.y + 3 + 16 * context.height_blocks - 40, g_building_info_focus.debug_path_button_id);
     }
 
     if (context.show_overlay != OVERLAY_NONE) {
-        draw_overlay_button(context.x_offset + 375, context.y_offset + 3 + 16 * context.height_blocks - 40, g_building_info_focus.overlay_button_id);
+        draw_overlay_button(context.offset.x + 375, context.offset.y + 3 + 16 * context.height_blocks - 40, g_building_info_focus.overlay_button_id);
     }
 }
 
@@ -915,14 +912,14 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     // general buttons
     if (context.storage_show_special_orders) {
         //        int y_offset = window_building_get_vertical_offset(&context, 28 + 5);
-        button_id |= image_buttons_handle_mouse(m, context.x_offset, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40, image_buttons_help_close, 2, &g_building_info_focus.image_button_id);
+        button_id |= image_buttons_handle_mouse(m, context.offset.x, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40, image_buttons_help_close, 2, &g_building_info_focus.image_button_id);
     } else {
-        button_id |= image_buttons_handle_mouse(m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_help_close, 2, &g_building_info_focus.image_button_id);
-        button_id |= generic_buttons_handle_mouse(m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, generic_button_mothball, 1, &g_building_info_focus.generic_button_id);
+        button_id |= image_buttons_handle_mouse(m, context.offset.x, context.offset.y + 16 * context.height_blocks - 40, image_buttons_help_close, 2, &g_building_info_focus.image_button_id);
+        button_id |= generic_buttons_handle_mouse(m, context.offset.x, context.offset.y + 16 * context.height_blocks - 40, generic_button_mothball, 1, &g_building_info_focus.generic_button_id);
     }
 
     if (context.can_go_to_advisor) {
-        button_id |= image_buttons_handle_mouse(m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_advisor, 1, 0);
+        button_id |= image_buttons_handle_mouse(m, context.offset.x, context.offset.y + 16 * context.height_blocks - 40, image_buttons_advisor, 1, 0);
     }
 
     if (!button_id) {
@@ -930,11 +927,11 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 
     if (context.figure.draw_debug_path) {
-        button_id |= generic_buttons_handle_mouse(m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, generic_button_figures, 1, &g_building_info_focus.debug_path_button_id);
+        button_id |= generic_buttons_handle_mouse(m, context.offset.x, context.offset.y + 16 * context.height_blocks - 40, generic_button_figures, 1, &g_building_info_focus.debug_path_button_id);
     }
 
     if (context.show_overlay != OVERLAY_NONE) {
-        button_id |= generic_buttons_handle_mouse(m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, generic_button_layer, 1, &g_building_info_focus.overlay_button_id);
+        button_id |= generic_buttons_handle_mouse(m, context.offset.x, context.offset.y + 16 * context.height_blocks - 40, generic_button_layer, 1, &g_building_info_focus.overlay_button_id);
     }
 
     if (!button_id && input_go_back_requested(m, h)) {

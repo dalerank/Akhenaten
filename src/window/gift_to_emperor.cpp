@@ -38,7 +38,7 @@ static void draw_background() {
 
     outer_panel_draw(96, 144, 30, 15);
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), 112, 160);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), vec2i{112, 160});
     lang_text_draw_centered(52, 69, 144, 160, 416, FONT_LARGE_BLACK_ON_LIGHT);
 
     int width = lang_text_draw(52, 50, 144, 304, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -60,7 +60,7 @@ static void draw_foreground(void) {
         int width = lang_text_draw(52, 51 + gift->id, 224, 218, font);
         text_draw_money(gift->cost, 224 + width, 218, font);
     } else {
-        lang_text_draw_multiline(52, 70, 160, 224, 352, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_multiline(52, 70, vec2i{160, 224}, 352, FONT_NORMAL_WHITE_ON_DARK);
     }
     if (city_emperor_can_send_gift(GIFT_GENEROUS)) {
         const emperor_gift* gift = city_emperor_get_gift(GIFT_GENEROUS);

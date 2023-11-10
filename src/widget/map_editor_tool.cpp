@@ -9,6 +9,7 @@
 #include "grid/terrain.h"
 #include "input/scroll.h"
 #include "scenario/property.h"
+#include "game/game.h"
 
 #define MAX_TILES 4
 
@@ -21,14 +22,12 @@ static void offset_to_view_offset(int dx, int dy, int* view_dx, int* view_dy) {
     *view_dy = (dx + dy) * 15;
 }
 
-static void draw_flat_tile(int x, int y, color color_mask) {
+static void draw_flat_tile(vec2i pos, color color_mask) {
+    painter ctx = game.painter();
     if (color_mask == COLOR_MASK_GREEN && scenario_property_climate() != CLIMATE_DESERT)
-        ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED),
-                               x,
-                               y,
-                               ALPHA_MASK_SEMI_TRANSPARENT & color_mask);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos, ALPHA_MASK_SEMI_TRANSPARENT & color_mask);
     else {
-        ImageDraw::img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos, color_mask);
     }
 }
 
@@ -37,33 +36,35 @@ static void draw_partially_blocked(int x, int y, int num_tiles, int* blocked_til
         int x_offset = x + X_VIEW_OFFSETS[i];
         int y_offset = y + Y_VIEW_OFFSETS[i];
         if (blocked_tiles[i])
-            draw_flat_tile(x_offset, y_offset, COLOR_MASK_RED);
+            draw_flat_tile(vec2i{x_offset, y_offset}, COLOR_MASK_RED);
         else {
-            draw_flat_tile(x_offset, y_offset, COLOR_MASK_GREEN);
+            draw_flat_tile(vec2i{x_offset, y_offset}, COLOR_MASK_GREEN);
         }
     }
 }
 
-static void draw_building_image(painter &ctx, int image_id, int x, int y) {
-    ImageDraw::isometric(ctx, image_id, x, y, COLOR_MASK_GREEN);
+static void draw_building_image(int image_id, int x, int y) {
+    painter ctx = game.painter();
+    ImageDraw::isometric(ctx, image_id, vec2i{x, y}, COLOR_MASK_GREEN);
     //    ImageDraw::isometric_top(image_id, x, y, COLOR_MASK_GREEN, city_view_get_scale_float());
 }
 
-static void draw_building(painter &ctx, tile2i tile, int screen_x, int screen_y, e_building_type type) {
+static void draw_building(tile2i tile, int screen_x, int screen_y, e_building_type type) {
     const building_properties* props = building_properties_for_type(type);
+    painter ctx = game.painter();
 
     int num_tiles = props->size * props->size;
     int blocked_tiles[MAX_TILES];
     int blocked = !editor_tool_can_place_building(tile, num_tiles, blocked_tiles);
 
-    if (blocked)
+    if (blocked) {
         draw_partially_blocked(screen_x, screen_y, num_tiles, blocked_tiles);
-    else if (editor_tool_is_in_use()) {
+    } else if (editor_tool_is_in_use()) {
         int image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
         for (int i = 0; i < num_tiles; i++) {
             int x_offset = screen_x + X_VIEW_OFFSETS[i];
             int y_offset = screen_y + Y_VIEW_OFFSETS[i];
-            ImageDraw::isometric(ctx, image_id, x_offset, y_offset);
+            ImageDraw::isometric(ctx, image_id, vec2i{x_offset, y_offset});
         }
     } else {
         int image_id;
@@ -73,7 +74,7 @@ static void draw_building(painter &ctx, tile2i tile, int screen_x, int screen_y,
             image_desc desc = props->img();
             image_id = image_id_from_group(desc) + props->image_offset;
         }
-        draw_building_image(ctx, image_id, screen_x, screen_y);
+        draw_building_image(image_id, screen_x, screen_y);
     }
 }
 
@@ -91,9 +92,9 @@ static void draw_road(painter &ctx, tile2i tile, int x, int y) {
         }
     }
     if (blocked)
-        draw_flat_tile(x, y, COLOR_MASK_RED);
+        draw_flat_tile(vec2i{x, y}, COLOR_MASK_RED);
     else {
-        draw_building_image(ctx, image_id, x, y);
+        draw_building_image(image_id, x, y);
     }
 }
 
@@ -101,19 +102,19 @@ static void draw_brush_tile(const void* data, int dx, int dy) {
     screen_tile* view = (screen_tile*)data;
     int view_dx, view_dy;
     offset_to_view_offset(dx, dy, &view_dx, &view_dy);
-    draw_flat_tile(view->x + view_dx, view->y + view_dy, COLOR_MASK_GREEN);
+    draw_flat_tile(vec2i{view->x + view_dx, view->y + view_dy}, COLOR_MASK_GREEN);
 }
 
-static void draw_brush(tile2i tile, int x, int y) {
+static void draw_brush(painter &ctx, tile2i tile, int x, int y) {
     screen_tile vt = {x, y};
     editor_tool_foreach_brush_tile(draw_brush_tile, &vt);
 }
 
-static void draw_access_ramp(painter &ctx, tile2i tile, int x, int y) {
+static void draw_access_ramp(tile2i tile, int x, int y) {
     int orientation;
     if (editor_tool_can_place_access_ramp(tile, &orientation)) {
         int image_id = image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation;
-        draw_building_image(ctx, image_id, x, y);
+        draw_building_image(image_id, x, y);
     } else {
         int blocked[4] = {1, 1, 1, 1};
         draw_partially_blocked(x, y, 4, blocked);
@@ -121,7 +122,7 @@ static void draw_access_ramp(painter &ctx, tile2i tile, int x, int y) {
 }
 
 static void draw_map_flag(int x, int y, int is_ok) {
-    draw_flat_tile(x, y, is_ok ? COLOR_MASK_GREEN : COLOR_MASK_RED);
+    draw_flat_tile(vec2i{x, y}, is_ok ? COLOR_MASK_GREEN : COLOR_MASK_RED);
 }
 
 void map_editor_tool_draw(painter &ctx, tile2i tile) {
@@ -134,13 +135,13 @@ void map_editor_tool_draw(painter &ctx, tile2i tile) {
     int y = screen.y;
     switch (type) {
     case TOOL_NATIVE_CENTER:
-        draw_building(ctx, tile, x, y, BUILDING_NATIVE_MEETING);
+        draw_building(tile, x, y, BUILDING_NATIVE_MEETING);
         break;
     case TOOL_NATIVE_HUT:
-        draw_building(ctx, tile, x, y, BUILDING_NATIVE_HUT);
+        draw_building(tile, x, y, BUILDING_NATIVE_HUT);
         break;
     case TOOL_NATIVE_FIELD:
-        draw_building(ctx, tile, x, y, BUILDING_NATIVE_CROPS);
+        draw_building(tile, x, y, BUILDING_NATIVE_CROPS);
         break;
 
     case TOOL_EARTHQUAKE_POINT:
@@ -155,7 +156,7 @@ void map_editor_tool_draw(painter &ctx, tile2i tile) {
         break;
 
     case TOOL_ACCESS_RAMP:
-        draw_access_ramp(ctx, tile, x, y);
+        draw_access_ramp(tile, x, y);
         break;
 
     case TOOL_GRASS:
@@ -166,7 +167,7 @@ void map_editor_tool_draw(painter &ctx, tile2i tile) {
     case TOOL_WATER:
     case TOOL_RAISE_LAND:
     case TOOL_LOWER_LAND:
-        draw_brush(tile, x, y);
+        draw_brush(ctx, tile, x, y);
         break;
 
     case TOOL_ROAD:

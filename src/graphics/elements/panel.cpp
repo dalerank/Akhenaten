@@ -41,9 +41,10 @@ void outer_panel_draw(int x, int y, int width_blocks, int height_blocks) {
                 }
                 y_add = 0;
             }
-            ImageDraw::img_generic(ctx, image_base + image_id, x + 16 * xx, y + 16 * yy);
-            if (image_x >= 10)
+            ImageDraw::img_generic(ctx, image_base + image_id, vec2i{x + 16 * xx, y + 16 * yy});
+            if (image_x >= 10) {
                 image_x = 0;
+            }
         }
         image_y += y_add;
         if (image_y >= 120)
@@ -58,7 +59,7 @@ void unbordered_panel_draw(int x, int y, int width_blocks, int height_blocks) {
         int image_x = 0;
         for (int xx = 0; xx < width_blocks; xx++) {
             int image_id = 13 + image_y + image_x++;
-            ImageDraw::img_generic(ctx, image_base + image_id, x + 16 * xx, y + 16 * yy);
+            ImageDraw::img_generic(ctx, image_base + image_id, vec2i{x + 16 * xx, y + 16 * yy});
             if (image_x >= 10)
                 image_x = 0;
         }
@@ -104,7 +105,7 @@ void inner_panel_draw(int x, int y, int width_blocks, int height_blocks) {
                 }
                 y_add = 0;
             }
-            ImageDraw::img_generic(ctx, image_base + image_id, x + 16 * xx, y + 16 * yy);
+            ImageDraw::img_generic(ctx, image_base + image_id, vec2i{x + 16 * xx, y + 16 * yy});
             if (image_x >= 5)
                 image_x = 0;
         }
@@ -126,7 +127,7 @@ void label_draw(int x, int y, int width_blocks, int type) {
         else {
             image_id = 3 * type + 42;
         }
-        ImageDraw::img_generic(ctx, image_base + image_id, x + 16 * i, y);
+        ImageDraw::img_generic(ctx, image_base + image_id, vec2i{x + 16 * i, y});
     }
 }
 
@@ -141,7 +142,7 @@ void label_draw_colored(painter &ctx, int x, int y, int width_blocks, int type, 
         else {
             image_id = 3 * type + 42;
         }
-        ImageDraw::img_generic(ctx, image_base + image_id, x + 16 * i, y, mask);
+        ImageDraw::img_generic(ctx, image_base + image_id, vec2i{x + 16 * i, y}, mask);
     }
 }
 
@@ -156,6 +157,6 @@ void large_label_draw(int x, int y, int width_blocks, int type) {
             image_id = 3 * type + 1;
         else
             image_id = 3 * type + 2;
-        ImageDraw::img_generic(ctx, image_base + image_id, x + 16 * i, y);
+        ImageDraw::img_generic(ctx, image_base + image_id, vec2i{x + 16 * i, y});
     }
 }

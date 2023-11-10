@@ -3,6 +3,7 @@
 
 #include "core/time.h"
 #include "graphics/boilerplate.h"
+#include "game/game.h"
 
 static const int REPEATS[] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
                               0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0};
@@ -11,6 +12,7 @@ static const time_millis REPEAT_MILLIS = 30;
 static const unsigned int BUTTON_PRESSED_FRAMES = 3;
 
 void arrow_buttons_draw(int x, int y, arrow_button* buttons, int num_buttons, bool tiny) {
+    painter ctx = game.painter();
     for (int i = 0; i < num_buttons; i++) {
         int image_id = 0;
         if (tiny) {
@@ -23,7 +25,7 @@ void arrow_buttons_draw(int x, int y, arrow_button* buttons, int num_buttons, bo
             image_id += 1;
         }
 
-        ImageDraw::img_generic(image_id, x + buttons[i].x_offset, y + buttons[i].y_offset);
+        ImageDraw::img_generic(ctx, image_id, x + buttons[i].x_offset, y + buttons[i].y_offset);
     }
 }
 

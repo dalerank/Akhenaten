@@ -22,22 +22,22 @@ static void building_farm_draw_info(object_info &c, int help_id, const char* typ
     c.help_id = help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
-    outer_panel_draw(c.x_offset, c.y_offset, c.width_blocks, c.height_blocks);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(resource), c.x_offset + 10, c.y_offset + 10);
-    lang_text_draw_centered(group_id, 0, c.x_offset, c.y_offset + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(resource), c.offset.x + 10, c.offset.y + 10);
+    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
     //int pct_grown = calc_percentage(b->data.industry.progress, 200);
     int pct_grown = calc_percentage(b->data.industry.progress, 2000);
-    int width = lang_text_draw(group_id, 2, c.x_offset + 32, c.y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += text_draw_percentage(pct_grown, c.x_offset + 32 + width, c.y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += lang_text_draw(group_id, 3, c.x_offset + 32 + width, c.y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
+    int width = lang_text_draw(group_id, 2, c.offset.x + 32, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
+    width += text_draw_percentage(pct_grown, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
+    width += lang_text_draw(group_id, 3, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
 
     // fertility
     int pct_fertility = map_get_fertility_for_farm(b->tile.grid_offset());
-    width += lang_text_draw(group_id, 12, c.x_offset + 32 + width, c.y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += text_draw_percentage(pct_fertility, c.x_offset + 32 + width, c.y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(group_id, 13, c.x_offset + 32 + width, c.y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
+    width += lang_text_draw(group_id, 12, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
+    width += text_draw_percentage(pct_fertility, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw(group_id, 13, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
 
     if (!c.has_road_access)
         window_building_draw_description_at(c, 70, 69, 25);
@@ -58,18 +58,18 @@ static void building_farm_draw_info(object_info &c, int help_id, const char* typ
     else
         window_building_draw_description_at(c, 70, group_id, 10);
 
-    inner_panel_draw(c.x_offset + 16, c.y_offset + 136, c.width_blocks - 2, 4);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
     if (building_is_floodplain_farm(*b)) {
         window_building_draw_employment_flood_farm(&c, 142);
 
         // next flood info
         int month_id = 8; // TODO: fetch flood info
-        width = lang_text_draw(177, 2, c.x_offset + 32, c.y_offset + 16 * c.height_blocks - 136, FONT_NORMAL_BLACK_ON_LIGHT);
-        lang_text_draw(160, month_id, c.x_offset + 32 + width, c.y_offset + 16 * c.height_blocks - 136, FONT_NORMAL_BLACK_ON_LIGHT);
+        width = lang_text_draw(177, 2, c.offset.x + 32, c.offset.y + 16 * c.height_blocks - 136, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw(160, month_id, c.offset.x + 32 + width, c.offset.y + 16 * c.height_blocks - 136, FONT_NORMAL_BLACK_ON_LIGHT);
 
         // irrigated?
         int is_not_irrigated = 0; // TODO: fetch irrigation info
-        lang_text_draw(177, is_not_irrigated, c.x_offset + 32, c.y_offset + 16 * c.height_blocks - 120,FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw(177, is_not_irrigated, c.offset.x + 32, c.offset.y + 16 * c.height_blocks - 120,FONT_NORMAL_BLACK_ON_LIGHT);
 
         window_building_draw_description_at(c, 16 * c.height_blocks - 96, group_id, 1);
     } else {

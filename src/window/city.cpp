@@ -79,14 +79,15 @@ static void draw_paused_and_time_left() {
     }
 }
 static void draw_cancel_construction() {
-    if (!mouse_get()->is_touch || !Planner.build_type)
+    if (!mouse_get()->is_touch || !Planner.build_type) {
         return;
+    }
     vec2i view_pos, view_size;
     city_view_get_viewport(view_pos, view_size);
     view_size.x -= 4 * 16;
     inner_panel_draw(view_size.x - 4, 40, 3, 2);
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, view_size.x, 44);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, vec2i{view_size.x, 44});
     //    city_view_dirty = 1;
 }
 static void draw_foreground() {

@@ -92,34 +92,31 @@ static int draw_background() {
     case SELECTED_RATING_CULTURE:
         lang_text_draw(53, 1, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
         if (city_rating_culture() <= 90) {
-            lang_text_draw_multiline(
-              53, 9 + city_rating_selected_explanation(), box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
+            lang_text_draw_multiline(53, 9 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         } else
-            lang_text_draw_multiline(53, 50, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
+            lang_text_draw_multiline(53, 50, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         break;
     case SELECTED_RATING_PROSPERITY:
         lang_text_draw(53, 2, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
         if (city_rating_prosperity() <= 90) {
             lang_text_draw_multiline(
-              53, 16 + city_rating_selected_explanation(), box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
+                53, 16 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         } else
-            lang_text_draw_multiline(53, 51, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
+            lang_text_draw_multiline(53, 51, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         break;
     case SELECTED_RATING_MONUMENT:
         lang_text_draw(53, 3, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
         if (city_rating_monument() <= 90) {
-            lang_text_draw_multiline(
-              53, 41 + city_rating_selected_explanation(), box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
+            lang_text_draw_multiline(53, 41 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         } else
-            lang_text_draw_multiline(53, 52, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
+            lang_text_draw_multiline(53, 52, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         break;
     case SELECTED_RATING_KINGDOM:
         lang_text_draw(53, 4, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
         if (city_rating_kingdom() <= 90) {
-            lang_text_draw_multiline(
-              53, 27 + city_rating_selected_explanation(), box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
+            lang_text_draw_multiline(53, 27 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         } else
-            lang_text_draw_multiline(53, 53, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
+            lang_text_draw_multiline(53, 53, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         break;
     default:
         lang_text_draw_centered(53, 8, box_x + 8, 380, box_w, FONT_NORMAL_WHITE_ON_DARK);

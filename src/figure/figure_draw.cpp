@@ -8,6 +8,7 @@
 #include "graphics/boilerplate.h"
 #include "graphics/text.h"
 #include "image.h"
+#include "game/game.h"
 
 static const vec2i crowd_offsets[] = {
     {0, 0}, {4, 0}, {4, 4}, {-4, 8}, {-4, -4}, {0, -8}, {8, 0}, {0, 8}, {-8, 0}, {4, -8}, {-4, 8}, {8, 4}, {-8, -4}, {8,-4}, {-8,4}, {4,8}, {-4, -8}, {0,-12}, {12,0}, {0, 12}, {-12, 0}
@@ -15,22 +16,24 @@ static const vec2i crowd_offsets[] = {
 static const int crowd_offsets_size = std::size(crowd_offsets);
 
 void figure::draw_fort_standard(vec2i pixel, int highlight, vec2i* coord_out) {
+    painter ctx = game.painter();
     if (!formation_get(formation_id)->in_distant_battle) {
         // base
-        ImageDraw::img_generic(sprite_image_id, pixel.x, pixel.y);
+        ImageDraw::img_generic(ctx, sprite_image_id, pixel.x, pixel.y);
         // flag
         int flag_height = image_get(cart_image_id)->height;
-        ImageDraw::img_generic(cart_image_id, pixel.x, pixel.y - flag_height);
+        ImageDraw::img_generic(ctx, cart_image_id, pixel.x, pixel.y - flag_height);
         // top icon
         int icon_image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + formation_get(formation_id)->legion_id;
-        ImageDraw::img_generic(icon_image_id, pixel.x, pixel.y - image_get(icon_image_id)->height - flag_height);
+        ImageDraw::img_generic(ctx, icon_image_id, pixel.x, pixel.y - image_get(icon_image_id)->height - flag_height);
     }
 }
 void figure::draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out) {
+    painter ctx = game.painter();
     // base
-    ImageDraw::img_generic(sprite_image_id, pixel.x, pixel.y);
+    ImageDraw::img_generic(ctx, sprite_image_id, pixel.x, pixel.y);
     // flag
-    ImageDraw::img_generic(cart_image_id, pixel.x, pixel.y - image_get(cart_image_id)->height);
+    ImageDraw::img_generic(ctx, cart_image_id, pixel.x, pixel.y - image_get(cart_image_id)->height);
     // flag number
     int number = 0;
     int id = resource_id;
