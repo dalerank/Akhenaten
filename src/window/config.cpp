@@ -162,7 +162,7 @@ static generic_button checkbox_buttons[] = {
     {20, 336, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_BRICKS, TR_CONFIG_RESOURCE_BRICKS},
 };
 
-static int options_per_page[] = {12, 14, 14, 14, 5, 14, 1, 12};
+static int options_per_page[] = {12, 14, 14, 14, 5, 14, 2, 12};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 

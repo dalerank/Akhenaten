@@ -57,6 +57,7 @@ static void draw_tax_info(object_info* c, int y_offset) {
         lang_text_draw(127, 23, c->offset.x + 36, y_offset, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
+
 static void draw_happiness_info(object_info* c, int y_offset) {
     int happiness = building_get(c->building_id)->sentiment.house_happiness;
     int text_id;
@@ -91,27 +92,20 @@ void window_building_draw_house(object_info* c) {
         draw_vacant_lot(c);
         return;
     }
+
     int level = b->type - 10;
     outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(29, level, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(c->offset.x + 16, c->offset.y + 148, c->width_blocks - 2, 10);
 
     if (b->data.house.evolve_text_id == 62) { // is about to devolve
-        int width = lang_text_draw(127,
-                                   40 + b->data.house.evolve_text_id,
-                                   c->offset.x + 32,
-                                   c->offset.y + Y_COMPLAINTS,
-                                   FONT_NORMAL_BLACK_ON_LIGHT);
-        width += lang_text_draw_colored(41,
-                                        building_get(c->worst_desirability_building_id)->type,
-                                        c->offset.x + 32 + width,
-                                        c->offset.y + Y_COMPLAINTS,
-                                        FONT_NORMAL_YELLOW,
-                                        0);
+        int width = lang_text_draw(127, 40 + b->data.house.evolve_text_id, c->offset.x + 32, c->offset.y + Y_COMPLAINTS, FONT_NORMAL_BLACK_ON_LIGHT);
+        width += lang_text_draw_colored(41, building_get(c->worst_desirability_building_id)->type, c->offset.x + 32 + width, c->offset.y + Y_COMPLAINTS, FONT_NORMAL_YELLOW, 0);
         text_draw((uint8_t*)")", c->offset.x + 32 + width, c->offset.y + Y_COMPLAINTS, FONT_NORMAL_BLACK_ON_LIGHT, 0);
         lang_text_draw_multiline(127, 41 + b->data.house.evolve_text_id, c->offset + vec2i{32, Y_COMPLAINTS + 16}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
-    } else // needs something to evolve
+    } else { // needs something to evolve 
         lang_text_draw_multiline(127, 40 + b->data.house.evolve_text_id, c->offset + vec2i{32, Y_COMPLAINTS}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+    }
 
     int resource_image = image_id_resource_icon(0);
     // food inventory
