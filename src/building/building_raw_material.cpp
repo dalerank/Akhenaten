@@ -59,7 +59,7 @@ void building_marble_quarry_draw_info(object_info& c) {
     building_raw_material_draw_info(c, 95, "marble_quarry", 118, RESOURCE_MARBLE);
 }
 void building_limestone_quarry_draw_info(object_info& c) {
-    building_raw_material_draw_info(c, 93, "limestone_quarry", 119, RESOURCE_COPPER);
+    building_raw_material_draw_info(c, 93, "limestone_quarry", 119, RESOURCE_LIMESTONE);
 }
 void building_gold_mine_draw_info(object_info& c) {
     building_raw_material_draw_info(c, 93, "gold_mine", e_text_info_gold_mine, RESOURCE_GOLD);

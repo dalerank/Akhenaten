@@ -16,8 +16,16 @@ static const int MISSILE_LAUNCHER_OFFSETS[128]
      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-static const int CART_OFFSETS_X[] = {17, 22, 17, 0, -17, -22, -17, 0};
-static const int CART_OFFSETS_Y[] = {-7, -1, 7, 11, 6, -1, -7, -12};
+static vec2i CART_OFFSETS[] = {{17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12}};
+static vec2i SLED_OFFSETS[] = {{17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12}};
+
+void set_cart_image_offset(int i, vec2i offset) {
+    CART_OFFSETS[i] = offset;
+}
+
+void set_sled_image_offset(int i, vec2i offset) {
+    SLED_OFFSETS[i] = offset;
+}
 
 static void cc_coords_to_pixel_offset(int cross_country_x, int cross_country_y, int* pixel_x, int* pixel_y) {
     int dir = city_view_orientation();
@@ -166,23 +174,34 @@ void figure::figure_image_update(bool refresh_only) {
 
 void figure::cart_update_image() {
     // determine cart sprite
-    cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
-    if (resource_amount_full > 0) {
-        short amount_offset = 2;
-        if (resource_amount_full <= 200) {
-            amount_offset = 0;
-        } else if (resource_amount_full <= 400) {
-            amount_offset = 1;
-        }
-        //            amount_offset = testcart;
-        //            testcart++; if (testcart >= 3) testcart = 0;
-        cart_image_id += 8 + 24 * (resource_id - 1) + 8 * amount_offset;
+    switch (resource_id) {
+    case RESOURCE_NONE:
+        break;
 
-        // adjust sprite for sled resources (blocks/chariots/etc.)
-        short res_single_load[] = {12, 24, 25, 26, 27, 28, 30, 35, 999};
-        for (int i = 0; res_single_load[i] < 999; i++) {
-            if (resource_id > res_single_load[i])
-                cart_image_id -= 16;
+    case RESOURCE_SANDSTONE:
+        cart_image_id = image_id_from_group(IMG_SLED_SANDSTONE_SMALL);
+        anim_frame = 0;
+        break;
+
+    default:
+        cart_image_id = image_id_from_group(IMG_CARTPUSHER_CART_IMAGE);
+        if (resource_amount_full > 0) {
+            short amount_offset = 2;
+            if (resource_amount_full <= 200) {
+                amount_offset = 0;
+            } else if (resource_amount_full <= 400) {
+                amount_offset = 1;
+            }
+            //            amount_offset = testcart;
+            //            testcart++; if (testcart >= 3) testcart = 0;
+            cart_image_id += 8 + 24 * (resource_id - 1) + 8 * amount_offset;
+
+            // adjust sprite for sled resources (blocks/chariots/etc.)
+            short res_single_load[] = {12, 24, 25, 26, 27, 28, 30, 35, 999};
+            for (int i = 0; res_single_load[i] < 999; i++) {
+                if (resource_id > res_single_load[i])
+                    cart_image_id -= 16;
+            }
         }
     }
     //} else if (resource_amount_full == 100) {
@@ -201,11 +220,22 @@ void figure::cart_update_image() {
         sprite_image_id = image_id_from_group(IMG_CARTPUSHER) + dir + 8 * anim_frame;
     }
 
-    if (cart_image_id) {
-        cart_image_id += dir;
-        figure_image_set_cart_offset(dir);
-        //        if (loads_counter >= 8)
-        //            y_offset_cart -= 40;
+    switch (resource_id) {
+    case RESOURCE_NONE:
+        break;
+
+    case RESOURCE_SANDSTONE:
+        if (cart_image_id) {
+            cart_image_id += dir;
+            figure_image_set_sled_offset(dir);
+        }
+        break;
+
+    default:
+        if (cart_image_id) {
+            cart_image_id += dir;
+            figure_image_set_cart_offset(dir);
+        }
     }
 }
 int figure::figure_image_corpse_offset() {
@@ -257,17 +287,22 @@ int figure::figure_image_corpse_offset() {
     }
     return CORPSE_IMAGE_OFFSETS[wait_ticks / 2] + type_offset;
 }
-void figure::figure_image_set_cart_offset(int direction) {
-    cart_offset.x = CART_OFFSETS_X[direction];
-    cart_offset.y = CART_OFFSETS_Y[direction];
+void figure::figure_image_set_sled_offset(int direction) {
+    cart_offset = SLED_OFFSETS[direction];
 }
+
+void figure::figure_image_set_cart_offset(int direction) {
+    cart_offset = CART_OFFSETS[direction];
+}
+
 int figure::figure_image_missile_launcher_offset() {
     return MISSILE_LAUNCHER_OFFSETS[attack_image_offset / 2];
 }
 int figure::figure_image_direction() {
     int dir = direction - city_view_orientation();
-    if (dir < 0)
+    if (dir < 0) {
         dir += 8;
+    }
     return dir;
 }
 

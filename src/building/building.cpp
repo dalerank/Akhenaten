@@ -237,7 +237,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->data.industry.first_material_id = RESOURCE_OIL;
         b->data.industry.second_material_id = RESOURCE_TIMBER;
         b->output_resource_first_id = RESOURCE_LAMPS;
-        //            b->subtype.workshop_type = WORKSHOP_LAMPS;
         break;
     case BUILDING_PAINT_WORKSHOP:
         b->data.industry.first_material_id = RESOURCE_OIL;

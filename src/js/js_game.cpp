@@ -14,6 +14,7 @@
 #include "overlays/city_overlay.h"
 #include "graphics/image_desc.h"
 #include "figure/figure.h"
+#include "figure/image.h"
 
 #include <vector>
 
@@ -177,6 +178,24 @@ void js_config_load_city_overlays(js_State *arch) {
             if (tooltips.size()) { overlay->tooltips = tooltips; }
             if (walkers.size()) { overlay->walkers = walkers; }
         }
+    });
+}
+
+void js_config_load_cart_offsets(js_State *arch) {
+    int i = 0;
+    js_config_load_global_array(arch, "cart_offsets", [&i] (auto arch) {
+        int x = read_integer(arch, "x");
+        int y = read_integer(arch, "y");
+        set_cart_image_offset(i, vec2i{x, y});
+        i++;
+    });
+
+    i = 0;
+    js_config_load_global_array(arch, "sled_offsets", [&i] (auto arch) {
+        int x = read_integer(arch, "x");
+        int y = read_integer(arch, "y");
+        set_sled_image_offset(i, vec2i{x, y});
+        i++;
     });
 }
 

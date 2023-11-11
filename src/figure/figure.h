@@ -301,6 +301,7 @@ public:
     void image_set_animation(e_image_id img, int offset = 0, int max_frames = 12, int duration = 1);
     void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1);
     void figure_image_update(bool refresh_only);
+    void figure_image_set_sled_offset(int direction);
     void figure_image_set_cart_offset(int direction);
     int figure_image_corpse_offset();
     int figure_image_missile_launcher_offset();

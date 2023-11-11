@@ -152,7 +152,7 @@ static void check_charioteer_access(int type) {
     }
 }
 
-static void check_iron_access(int type) {
+static void check_copper_access(int type) {
     if (type == BUILDING_WEAPONS_WORKSHOP && building_count_industry_active(RESOURCE_COPPER) <= 0) {
         if (city_resource_count(RESOURCE_WEAPONS) <= 0 && city_resource_count(RESOURCE_COPPER) <= 0) {
             show(WARNING_IRON_NEEDED);
@@ -269,7 +269,7 @@ void building_construction_warning_generic_checks(int type, tile2i tile, int siz
     check_wall(type, tile.x(), tile.y(), size);
     check_water(type, tile.x(), tile.y());
 
-    check_iron_access(type);
+    check_copper_access(type);
     check_vines_access(type);
     check_olives_access(type);
     check_timber_access(type);

@@ -41,4 +41,28 @@ images = [
 	{img: IMG_SANDSTONE_QUARRY, pack:PACK_GENERAL, id:197},
 	{img: ANIM_SANDSTONE_QUARRY_1, pack:PACK_SPR_AMBIENT, id:49},
 	{img: ANIM_SANDSTONE_QUARRY_2, pack:PACK_SPR_AMBIENT, id:49},
+	{img: IMG_CARTPUSHER_CART_IMAGE, pack:PACK_SPR_MAIN, id:77},
+	{img: IMG_SLED_SANDSTONE_SMALL, pack:PACK_SPR_MAIN, id:101},
+]
+
+cart_offsets = [
+  {x:17, y:-7},
+  {x:22, y:-1},
+  {x:17, y:7},
+  {x:0, 	y:11},
+  {x:-17, y:6},
+  {x:-22, y:-1},
+  {x:-17, y:-7},
+  {x:0, y:-12}
+]
+
+sled_offsets = [
+  {x:17, y:-7},
+  {x:22, y:-1},
+  {x:17, y:7},
+  {x:0, 	y:11},
+  {x:12, y:-2},
+  {x:-22, y:-1},
+  {x:-17, y:-7},
+  {x:0, y:-12}
 ]
