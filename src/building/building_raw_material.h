@@ -10,3 +10,4 @@ void building_gold_mine_draw_info(object_info& c);
 void building_reed_gatherer_draw_info(object_info& c);
 void building_sandstone_quarry_draw_info(object_info &c);
 void building_granite_quarry_draw_info(object_info &c);
+void building_plainstone_quarry_draw_info(object_info &c);

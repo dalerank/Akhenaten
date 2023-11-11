@@ -175,6 +175,15 @@ void figure::figure_image_update(bool refresh_only) {
 void figure::cart_update_image() {
     // determine cart sprite
     switch (resource_id) {
+    case RESOURCE_STONE:
+        if (resource_amount_full > 0) {
+            cart_image_id = image_id_from_group(IMG_SLED_STONE_SMALL);
+        } else {
+            cart_image_id = image_id_from_group(IMG_SLED_EMPTY_SMALL);
+        }
+        anim_frame = 0;
+        break;
+
     case RESOURCE_GRANITE:
         if (resource_amount_full > 0) {
             cart_image_id = image_id_from_group(IMG_SLED_GRANITE_SMALL);
@@ -232,6 +241,7 @@ void figure::cart_update_image() {
 
     switch (resource_id) {
     case RESOURCE_GRANITE:
+    case RESOURCE_STONE:
     case RESOURCE_SANDSTONE:
         if (cart_image_id) {
             cart_image_id += dir;

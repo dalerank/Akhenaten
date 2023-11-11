@@ -118,6 +118,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"city_building_gold_mine", true},
     {"city_building_quarry_sandstone", true},
     {"city_building_quarry_granite", true},
+    {"city_building_quarry_stone", true},
 };
 
 static const char* ini_string_keys[] = {

@@ -12,4 +12,5 @@ building_info = [
   { help_id:92, type:"reed_farm", text_id:116},
   { help_id:92, type:"sandstone_quarry", text_id:194},
   { help_id:92, type:"granite_quarry", text_id:192},
+  { help_id:92, type:"plainstone_quarry", text_id:118},
 ]

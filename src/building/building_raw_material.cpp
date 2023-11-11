@@ -80,5 +80,6 @@ void building_sandstone_quarry_draw_info(object_info& c) {
 void building_granite_quarry_draw_info(object_info& c) {
     building_raw_material_draw_info(c, "granite_quarry", RESOURCE_SANDSTONE);
 }
-
-
+void building_plainstone_quarry_draw_info(object_info& c) {
+    building_raw_material_draw_info(c, "plainstone_quarry", RESOURCE_STONE);
+}
