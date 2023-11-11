@@ -598,14 +598,14 @@ void draw_ornaments_and_animations(vec2i tile, map_point point, painter &ctx) {
     case BUILDING_GOLD_MINE:
     case BUILDING_COPPER_MINE:
     case BUILDING_GEMSTONE_MINE:
-        draw_normal_anim(ctx, x + 54, y + 15, b, grid_offset, image_id_from_group(GROUP_MINES) - 1, color_mask);
+        draw_normal_anim(ctx, x + 54, y + 15, b, grid_offset, image_id_from_group(ANIM_GOLD_MINE) - 1, color_mask);
         break;
 
     case BUILDING_STONE_QUARRY:
     case BUILDING_LIMESTONE_QUARRY:
     case BUILDING_GRANITE_QUARRY:
     case BUILDING_SANDSTONE_QUARRY:
-        draw_normal_anim(ctx, x + 54, y + 15, b, grid_offset, image_id_from_group(GROUP_MINES) - 1, color_mask);
+        draw_normal_anim(ctx, x + 54, y + 15, b, grid_offset, image_id_from_group(ANIM_SANDSTONE_QUARRY_1) - 1, color_mask);
         break; 
 
     case BUILDING_MENU_FORTS:

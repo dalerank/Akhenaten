@@ -228,7 +228,7 @@ static building_properties properties[400] = {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
-    {2, 0, GROUP_BUILDING_SANDSTONE_MINE, 0}, // sandstone
+    {2, 0, 0, 0}, // sandstone
     {-1, 1, 0, 0},                            // mausoleum
     {0, 0, 0, 0},
     {3, 0, 0, 0},  // henna
@@ -245,6 +245,7 @@ void building_properties_init() {
     properties[BUILDING_CATTLE_RANCH] = {3, 0, 0, 0, 0, IMG_CATTLE_RANCH};
     properties[BUILDING_BRICKS_WORKSHOP] = {2, 0, 0, 0, 0, IMG_BRICKS_WORKSHOP};
     properties[BUILDING_GOLD_MINE] = {2, 0, 0, 0, 0, IMG_GOLD_MINE};
+    properties[BUILDING_SANDSTONE_QUARRY] = {2, 0, 0, 0, 0, IMG_SANDSTONE_QUARRY};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

@@ -36,5 +36,9 @@ images = [
 	{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
 	{img: IMG_OSTRICH_WALK, pack:PACK_SPR_MAIN, id:156}, // 7823 - 0
 	{img: IMG_FIREMAN, pack:PACK_SPR_MAIN, id:6},  // 273
-	{img: IMG_GOLD_MINE, pack:PACK_GENERAL, id:185}
+	{img: IMG_GOLD_MINE, pack:PACK_GENERAL, id:185},
+	{img: ANIM_GOLD_MINE, pack:PACK_SPR_AMBIENT, id:48},
+	{img: IMG_SANDSTONE_QUARRY, pack:PACK_GENERAL, id:197},
+	{img: ANIM_SANDSTONE_QUARRY_1, pack:PACK_SPR_AMBIENT, id:49},
+	{img: ANIM_SANDSTONE_QUARRY_2, pack:PACK_SPR_AMBIENT, id:49},
 ]

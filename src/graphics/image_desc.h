@@ -39,6 +39,10 @@ enum e_image_id : uint16_t {
     IMG_OSTRICH_WALK = 34,
     IMG_FIREMAN = 35,
     IMG_GOLD_MINE = 36,
+    ANIM_GOLD_MINE = 37,
+    IMG_SANDSTONE_QUARRY = 38,
+    ANIM_SANDSTONE_QUARRY_1 = 39,
+    ANIM_SANDSTONE_QUARRY_2 = 40,
 
     IMG_SIZE
 };
