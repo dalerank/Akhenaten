@@ -184,7 +184,7 @@ void figure::cart_update_image() {
         break;
 
     default:
-        cart_image_id = image_id_from_group(IMG_CARTPUSHER_CART_IMAGE);
+        cart_image_id = image_id_from_group(IMG_CARTPUSHER_CART);
         if (resource_amount_full > 0) {
             short amount_offset = 2;
             if (resource_amount_full <= 200) {

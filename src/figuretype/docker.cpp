@@ -380,7 +380,7 @@ void figure::docker_action() {
 
         break;
     case FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
-        cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
+        cart_image_id = image_id_from_group(IMG_CARTPUSHER_CART); // empty
         move_ticks(1);
         if (direction == DIR_FIGURE_NONE)
             action_state = FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE;
@@ -450,7 +450,7 @@ void figure::docker_action() {
         anim_frame = 0;
         break;
     case FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE:
-        cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
+        cart_image_id = image_id_from_group(IMG_CARTPUSHER_CART); // empty
         wait_ticks++;
         if (wait_ticks > 10) {
             int trade_city_id;
