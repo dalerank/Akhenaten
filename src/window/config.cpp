@@ -147,6 +147,7 @@ static generic_button checkbox_buttons[] = {
     {20, 72, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_WORK_CAMP, TR_CONFIG_BUILDING_WORK_CAMP},
     {20, 96, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_GOLD_MINE, TR_CONFIG_BUILDING_GOLD_MINE},
     {20, 120, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_QUARRY_SANDSTONE, TR_CONFIG_BUILDING_QUARRY_SANDSTONE},
+    {20, 144, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_QUARRY_GRANITE, TR_CONFIG_BUILDING_QUARRY_GRANITE},
 
     //
     {20, 72, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
@@ -163,7 +164,7 @@ static generic_button checkbox_buttons[] = {
     {20, 336, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_BRICKS, TR_CONFIG_RESOURCE_BRICKS},
 };
 
-static int options_per_page[] = {12, 14, 14, 14, 5, 14, 3, 12};
+static int options_per_page[] = {12, 14, 14, 14, 5, 14, 4, 12};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -419,6 +420,7 @@ static void toggle_building(int id, int param2) {
     case CONGIG_GP_CH_BUILDING_WORK_CAMP: type = BUILDING_WORK_CAMP; break;
     case CONGIG_GP_CH_BUILDING_GOLD_MINE: type = BUILDING_GOLD_MINE; break;
     case CONGIG_GP_CH_BUILDING_QUARRY_SANDSTONE: type = BUILDING_SANDSTONE_QUARRY; break;
+    case CONGIG_GP_CH_BUILDING_QUARRY_GRANITE: type = BUILDING_GRANITE_QUARRY; break;
     default:
         return;
     }
@@ -539,6 +541,7 @@ static bool is_config_option_enabled(int option) {
     case CONGIG_GP_CH_BUILDING_WORK_CAMP: return building_menu_is_building_enabled(BUILDING_WORK_CAMP);
     case CONGIG_GP_CH_BUILDING_GOLD_MINE: return building_menu_is_building_enabled(BUILDING_GOLD_MINE);
     case CONGIG_GP_CH_BUILDING_QUARRY_SANDSTONE: return building_menu_is_building_enabled(BUILDING_SANDSTONE_QUARRY);
+    case CONGIG_GP_CH_BUILDING_QUARRY_GRANITE: return building_menu_is_building_enabled(BUILDING_GRANITE_QUARRY);
     }
 
     return data.config_values[option].new_value;

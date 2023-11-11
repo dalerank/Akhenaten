@@ -43,6 +43,8 @@ images = [
 	{img: ANIM_SANDSTONE_QUARRY_2, pack:PACK_SPR_AMBIENT, id:49},
 	{img: IMG_CARTPUSHER_CART, pack:PACK_SPR_MAIN, id:77},
 	{img: IMG_SLED_SANDSTONE_SMALL, pack:PACK_SPR_MAIN, id:101},
+	{img: IMG_SLED_EMPTY_SMALL, pack:PACK_SPR_MAIN, id:106},
+	{img: IMG_SLED_GRANITE_SMALL, pack:PACK_SPR_MAIN, id:103},
 ]
 
 cart_offsets = [

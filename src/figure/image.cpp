@@ -175,11 +175,21 @@ void figure::figure_image_update(bool refresh_only) {
 void figure::cart_update_image() {
     // determine cart sprite
     switch (resource_id) {
-    case RESOURCE_NONE:
+    case RESOURCE_GRANITE:
+        if (resource_amount_full > 0) {
+            cart_image_id = image_id_from_group(IMG_SLED_GRANITE_SMALL);
+        } else {
+            cart_image_id = image_id_from_group(IMG_SLED_EMPTY_SMALL);
+        }
+        anim_frame = 0;
         break;
 
     case RESOURCE_SANDSTONE:
-        cart_image_id = image_id_from_group(IMG_SLED_SANDSTONE_SMALL);
+        if (resource_amount_full > 0) {
+            cart_image_id = image_id_from_group(IMG_SLED_SANDSTONE_SMALL);
+        } else {
+            cart_image_id = image_id_from_group(IMG_SLED_EMPTY_SMALL);
+        }
         anim_frame = 0;
         break;
 
@@ -221,9 +231,7 @@ void figure::cart_update_image() {
     }
 
     switch (resource_id) {
-    case RESOURCE_NONE:
-        break;
-
+    case RESOURCE_GRANITE:
     case RESOURCE_SANDSTONE:
         if (cart_image_id) {
             cart_image_id += dir;

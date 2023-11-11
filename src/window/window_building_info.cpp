@@ -617,6 +617,7 @@ static void draw_refresh_background() {
             case BUILDING_REED_GATHERER: building_reed_gatherer_draw_info(context); break;
             case BUILDING_GOLD_MINE: building_gold_mine_draw_info(context); break;
             case BUILDING_SANDSTONE_QUARRY: building_sandstone_quarry_draw_info(context); break;
+            case BUILDING_GRANITE_QUARRY: building_granite_quarry_draw_info(context); break;
             case BUILDING_BEER_WORKSHOP: building_brewery_draw_info(context); break;
             case BUILDING_LINEN_WORKSHOP: building_flax_workshop_draw_info(context); break;
             case BUILDING_WEAPONS_WORKSHOP: building_weapons_workshop_draw_info(context); break;
