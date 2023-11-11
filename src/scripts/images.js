@@ -45,6 +45,7 @@ images = [
 	{img: IMG_SLED_SANDSTONE_SMALL, pack:PACK_SPR_MAIN, id:101},
 	{img: IMG_SLED_EMPTY_SMALL, pack:PACK_SPR_MAIN, id:106},
 	{img: IMG_SLED_GRANITE_SMALL, pack:PACK_SPR_MAIN, id:103},
+	{img: IMG_JUGGLER_WALK, pack:PACK_SPR_MAIN, id:130},
 ]
 
 cart_offsets = [

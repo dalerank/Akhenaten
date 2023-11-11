@@ -215,7 +215,7 @@ void figure::festival_guy_action() {
         image_set_animation(GROUP_PRIEST_BAST);
         break;
     case BUILDING_JUGGLER_SCHOOL:
-        image_set_animation(GROUP_FIGURE_JUGGLER);
+        image_set_animation(IMG_JUGGLER_WALK);
         break;
     case BUILDING_CONSERVATORY:
         image_set_animation(GROUP_FIGURE_MUSICIAN);

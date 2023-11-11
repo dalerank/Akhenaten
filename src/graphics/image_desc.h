@@ -47,6 +47,7 @@ enum e_image_id : uint16_t {
     IMG_SLED_SANDSTONE_SMALL = 42,
     IMG_SLED_EMPTY_SMALL = 43,
     IMG_SLED_GRANITE_SMALL = 44,
+    IMG_JUGGLER_WALK = 45,
 
     IMG_SIZE
 };

@@ -136,7 +136,7 @@ void figure::entertainer_update_image() {
     
     int image_id;
     if (type == FIGURE_JUGGLER) {
-        image_id = image_id_from_group(GROUP_FIGURE_JUGGLER);
+        image_id = image_id_from_group(IMG_JUGGLER_WALK);
     } else if (type == FIGURE_MUSICIAN) {
         image_id = image_id_from_group(GROUP_FIGURE_MUSICIAN);
     } else if (type == FIGURE_DANCER) {
