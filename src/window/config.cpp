@@ -129,27 +129,28 @@ static generic_button checkbox_buttons[] = {
     {20, 144, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_SETH_DISABLED, TR_CONFIG_GOD_SETH_DISABLED},
     {20, 168, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_BAST_DISABLED, TR_CONFIG_GOD_BAST_DISABLED},
     //
-    {20, 72, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_WOOD_CUTTER, TR_CONFIG_BUILDING_WOOD_CUTTER},
-    {20, 96, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_COPPER_MINE, TR_CONFIG_BUILDING_COPPE_MINE},
-    {20, 120, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_REED_GATHERER, TR_CONFIG_BUILDING_REED_GATHERER},
-    {20, 144, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_PAPYRUS_MAKER, TR_CONFIG_BUILDING_PAPYRUS_MAKER},
-    {20, 168, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_SCRIBAL_SCHOOL, TR_CONFIG_BUILDING_SCRIBAL_SCHOOL},
-    {20, 192, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_SHIPYARD, TR_CONFIG_BUILDING_SHIPYARD},
-    {20, 216, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_FISHING_WHARF, TR_CONFIG_BUILDING_FISHING_WHARF},
-    {20, 240, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_CHICKPEAS_FARM, TR_CONFIG_BUILDING_CHICKPEAS_FARM},
-    {20, 264, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_LETTUCE_FARM, TR_CONFIG_BUILDING_LETTUCE_FARM},
-    {20, 288, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_POMEGRANATES_FARM, TR_CONFIG_BUILDING_POMEGRANATES_FARM},
-    {20, 312, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_FIGS_FARM, TR_CONFIG_BUILDING_FIGS_FARM},
-    {20, 336, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_GRAIN_FARM, TR_CONFIG_BUILDING_GRAIN_FARM},
-    {20, 360, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_CATTLE_RANCH, TR_CONFIG_BUILDING_CATTLE_RANCH},
-    {20, 384, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_BRICKS_WORKSHOP, TR_CONFIG_BUILDING_BRICKS_WORKSHOP},
+    {20, 72, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_WOOD_CUTTER, TR_CONFIG_BUILDING_WOOD_CUTTER},
+    {20, 96, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_COPPER_MINE, TR_CONFIG_BUILDING_COPPE_MINE},
+    {20, 120, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_REED_GATHERER, TR_CONFIG_BUILDING_REED_GATHERER},
+    {20, 144, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_PAPYRUS_MAKER, TR_CONFIG_BUILDING_PAPYRUS_MAKER},
+    {20, 168, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_SCRIBAL_SCHOOL, TR_CONFIG_BUILDING_SCRIBAL_SCHOOL},
+    {20, 192, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_SHIPYARD, TR_CONFIG_BUILDING_SHIPYARD},
+    {20, 216, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_FISHING_WHARF, TR_CONFIG_BUILDING_FISHING_WHARF},
+    {20, 240, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_CHICKPEAS_FARM, TR_CONFIG_BUILDING_CHICKPEAS_FARM},
+    {20, 264, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_LETTUCE_FARM, TR_CONFIG_BUILDING_LETTUCE_FARM},
+    {20, 288, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_POMEGRANATES_FARM, TR_CONFIG_BUILDING_POMEGRANATES_FARM},
+    {20, 312, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_FIGS_FARM, TR_CONFIG_BUILDING_FIGS_FARM},
+    {20, 336, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_GRAIN_FARM, TR_CONFIG_BUILDING_GRAIN_FARM},
+    {20, 360, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_CATTLE_RANCH, TR_CONFIG_BUILDING_CATTLE_RANCH},
+    {20, 384, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BRICKS_WORKSHOP, TR_CONFIG_BUILDING_BRICKS_WORKSHOP},
     //
-    {20, 72, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_WORK_CAMP, TR_CONFIG_BUILDING_WORK_CAMP},
-    {20, 96, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_GOLD_MINE, TR_CONFIG_BUILDING_GOLD_MINE},
-    {20, 120, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_QUARRY_SANDSTONE, TR_CONFIG_BUILDING_QUARRY_SANDSTONE},
-    {20, 144, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_QUARRY_GRANITE, TR_CONFIG_BUILDING_QUARRY_GRANITE},
-    {20, 168, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_QUARRY_STONE, TR_CONFIG_BUILDING_QUARRY_STONE},
-    {20, 192, 20, 20, toggle_building, button_none, CONGIG_GP_CH_BUILDING_QUARRY_LIMESTONE, TR_CONFIG_BUILDING_QUARRY_LIMESTONE},
+    {20, 72, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_WORK_CAMP, TR_CONFIG_BUILDING_WORK_CAMP},
+    {20, 96, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_GOLD_MINE, TR_CONFIG_BUILDING_GOLD_MINE},
+    {20, 120, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_QUARRY_SANDSTONE, TR_CONFIG_BUILDING_QUARRY_SANDSTONE},
+    {20, 144, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_QUARRY_GRANITE, TR_CONFIG_BUILDING_QUARRY_GRANITE},
+    {20, 168, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_QUARRY_STONE, TR_CONFIG_BUILDING_QUARRY_STONE},
+    {20, 192, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE, TR_CONFIG_BUILDING_QUARRY_LIMESTONE},
+    {20, 216, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_CLAY_PIT, TR_CONFIG_BUILDING_CLAY_PIT},
 
     //
     {20, 72, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
@@ -164,9 +165,10 @@ static generic_button checkbox_buttons[] = {
     {20, 288, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_GRAIN, TR_CONFIG_RESOURCE_GRAIN},
     {20, 312, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_MEAT, TR_CONFIG_RESOURCE_MEAT},
     {20, 336, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_BRICKS, TR_CONFIG_RESOURCE_BRICKS},
+    {20, 360, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CLAY, TR_CONFIG_RESOURCE_CLAY},
 };
 
-static int options_per_page[] = {12, 14, 14, 14, 5, 14, 6, 12};
+static int options_per_page[] = {12, 14, 14, 14, 5, 14, 7, 13};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -405,26 +407,27 @@ static void toggle_city_option(int key, int param2) {
 static void toggle_building(int id, int param2) {
     e_building_type type = BUILDING_NONE;
     switch (id) {
-    case CONGIG_GP_CH_BUILDING_WOOD_CUTTER: type = BUILDING_WOOD_CUTTERS; break;
-    case CONGIG_GP_CH_BUILDING_COPPER_MINE: type = BUILDING_COPPER_MINE; break;
-    case CONGIG_GP_CH_BUILDING_REED_GATHERER: type = BUILDING_REED_GATHERER; break;
-    case CONGIG_GP_CH_BUILDING_PAPYRUS_MAKER: type = BUILDING_PAPYRUS_WORKSHOP; break;
-    case CONGIG_GP_CH_BUILDING_SCRIBAL_SCHOOL: type = BUILDING_SCRIBAL_SCHOOL; break;
-    case CONGIG_GP_CH_BUILDING_SHIPYARD: type = BUILDING_SHIPYARD; break;
-    case CONGIG_GP_CH_BUILDING_FISHING_WHARF: type = BUILDING_FISHING_WHARF; break;
-    case CONGIG_GP_CH_BUILDING_CHICKPEAS_FARM: type = BUILDING_CHICKPEAS_FARM; break;
-    case CONGIG_GP_CH_BUILDING_LETTUCE_FARM: type = BUILDING_LETTUCE_FARM; break;
-    case CONGIG_GP_CH_BUILDING_POMEGRANATES_FARM: type = BUILDING_POMEGRANATES_FARM; break;
-    case CONGIG_GP_CH_BUILDING_FIGS_FARM: type = BUILDING_FIGS_FARM; break;
-    case CONGIG_GP_CH_BUILDING_GRAIN_FARM: type = BUILDING_GRAIN_FARM; break;
-    case CONGIG_GP_CH_BUILDING_CATTLE_RANCH: type = BUILDING_CATTLE_RANCH; break;
-    case CONGIG_GP_CH_BUILDING_BRICKS_WORKSHOP: type = BUILDING_BRICKS_WORKSHOP; break;
-    case CONGIG_GP_CH_BUILDING_WORK_CAMP: type = BUILDING_WORK_CAMP; break;
-    case CONGIG_GP_CH_BUILDING_GOLD_MINE: type = BUILDING_GOLD_MINE; break;
-    case CONGIG_GP_CH_BUILDING_QUARRY_SANDSTONE: type = BUILDING_SANDSTONE_QUARRY; break;
-    case CONGIG_GP_CH_BUILDING_QUARRY_GRANITE: type = BUILDING_GRANITE_QUARRY; break;
-    case CONGIG_GP_CH_BUILDING_QUARRY_STONE: type = BUILDING_STONE_QUARRY; break;
-    case CONGIG_GP_CH_BUILDING_QUARRY_LIMESTONE: type = BUILDING_LIMESTONE_QUARRY; break;
+    case CONFIG_GP_CH_BUILDING_WOOD_CUTTER: type = BUILDING_WOOD_CUTTERS; break;
+    case CONFIG_GP_CH_BUILDING_COPPER_MINE: type = BUILDING_COPPER_MINE; break;
+    case CONFIG_GP_CH_BUILDING_REED_GATHERER: type = BUILDING_REED_GATHERER; break;
+    case CONFIG_GP_CH_BUILDING_PAPYRUS_MAKER: type = BUILDING_PAPYRUS_WORKSHOP; break;
+    case CONFIG_GP_CH_BUILDING_SCRIBAL_SCHOOL: type = BUILDING_SCRIBAL_SCHOOL; break;
+    case CONFIG_GP_CH_BUILDING_SHIPYARD: type = BUILDING_SHIPYARD; break;
+    case CONFIG_GP_CH_BUILDING_FISHING_WHARF: type = BUILDING_FISHING_WHARF; break;
+    case CONFIG_GP_CH_BUILDING_CHICKPEAS_FARM: type = BUILDING_CHICKPEAS_FARM; break;
+    case CONFIG_GP_CH_BUILDING_LETTUCE_FARM: type = BUILDING_LETTUCE_FARM; break;
+    case CONFIG_GP_CH_BUILDING_POMEGRANATES_FARM: type = BUILDING_POMEGRANATES_FARM; break;
+    case CONFIG_GP_CH_BUILDING_FIGS_FARM: type = BUILDING_FIGS_FARM; break;
+    case CONFIG_GP_CH_BUILDING_GRAIN_FARM: type = BUILDING_GRAIN_FARM; break;
+    case CONFIG_GP_CH_BUILDING_CATTLE_RANCH: type = BUILDING_CATTLE_RANCH; break;
+    case CONFIG_GP_CH_BUILDING_BRICKS_WORKSHOP: type = BUILDING_BRICKS_WORKSHOP; break;
+    case CONFIG_GP_CH_BUILDING_WORK_CAMP: type = BUILDING_WORK_CAMP; break;
+    case CONFIG_GP_CH_BUILDING_GOLD_MINE: type = BUILDING_GOLD_MINE; break;
+    case CONFIG_GP_CH_BUILDING_QUARRY_SANDSTONE: type = BUILDING_SANDSTONE_QUARRY; break;
+    case CONFIG_GP_CH_BUILDING_QUARRY_GRANITE: type = BUILDING_GRANITE_QUARRY; break;
+    case CONFIG_GP_CH_BUILDING_QUARRY_STONE: type = BUILDING_STONE_QUARRY; break;
+    case CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE: type = BUILDING_LIMESTONE_QUARRY; break;
+    case CONFIG_GP_CH_BUILDING_CLAY_PIT: type = BUILDING_CLAY_PIT; break;
     default:
         return;
     }
@@ -449,6 +452,7 @@ static void toggle_resource(int id, int param2) {
     case CONFIG_GP_CH_RESOURCE_GRAIN: resource = RESOURCE_GRAIN; break;
     case CONFIG_GP_CH_RESOURCE_MEAT: resource = RESOURCE_MEAT; break;
     case CONFIG_GP_CH_RESOURCE_BRICKS: resource = RESOURCE_BRICKS; break;
+    case CONFIG_GP_CH_RESOURCE_CLAY: resource = RESOURCE_CLAY; break;
     default:
         return;
     }
@@ -528,26 +532,27 @@ static bool is_config_option_enabled(int option) {
     case CONFIG_GP_CH_RESOURCE_PAPYRUS: return can_city_produce_resource(RESOURCE_PAPYRUS);
     case CONFIG_GP_CH_RESOURCE_BRICKS: return can_city_produce_resource(RESOURCE_BRICKS);
 
-    case CONGIG_GP_CH_BUILDING_WOOD_CUTTER: return building_menu_is_building_enabled(BUILDING_WOOD_CUTTERS);
-    case CONGIG_GP_CH_BUILDING_COPPER_MINE: return building_menu_is_building_enabled(BUILDING_COPPER_MINE);
-    case CONGIG_GP_CH_BUILDING_REED_GATHERER: return building_menu_is_building_enabled(BUILDING_REED_GATHERER);
-    case CONGIG_GP_CH_BUILDING_PAPYRUS_MAKER: return building_menu_is_building_enabled(BUILDING_PAPYRUS_WORKSHOP);
-    case CONGIG_GP_CH_BUILDING_SCRIBAL_SCHOOL: return building_menu_is_building_enabled(BUILDING_SCRIBAL_SCHOOL);
-    case CONGIG_GP_CH_BUILDING_SHIPYARD: return building_menu_is_building_enabled(BUILDING_SHIPYARD);
-    case CONGIG_GP_CH_BUILDING_FISHING_WHARF: return building_menu_is_building_enabled(BUILDING_FISHING_WHARF);
-    case CONGIG_GP_CH_BUILDING_POMEGRANATES_FARM: return building_menu_is_building_enabled(BUILDING_POMEGRANATES_FARM);
-    case CONGIG_GP_CH_BUILDING_CHICKPEAS_FARM: return building_menu_is_building_enabled(BUILDING_CHICKPEAS_FARM);
-    case CONGIG_GP_CH_BUILDING_LETTUCE_FARM: return building_menu_is_building_enabled(BUILDING_LETTUCE_FARM);
-    case CONGIG_GP_CH_BUILDING_FIGS_FARM: return building_menu_is_building_enabled(BUILDING_FIGS_FARM);
-    case CONGIG_GP_CH_BUILDING_GRAIN_FARM: return building_menu_is_building_enabled(BUILDING_GRAIN_FARM);
-    case CONGIG_GP_CH_BUILDING_CATTLE_RANCH: return building_menu_is_building_enabled(BUILDING_CATTLE_RANCH);
-    case CONGIG_GP_CH_BUILDING_BRICKS_WORKSHOP: return building_menu_is_building_enabled(BUILDING_BRICKS_WORKSHOP);
-    case CONGIG_GP_CH_BUILDING_WORK_CAMP: return building_menu_is_building_enabled(BUILDING_WORK_CAMP);
-    case CONGIG_GP_CH_BUILDING_GOLD_MINE: return building_menu_is_building_enabled(BUILDING_GOLD_MINE);
-    case CONGIG_GP_CH_BUILDING_QUARRY_SANDSTONE: return building_menu_is_building_enabled(BUILDING_SANDSTONE_QUARRY);
-    case CONGIG_GP_CH_BUILDING_QUARRY_GRANITE: return building_menu_is_building_enabled(BUILDING_GRANITE_QUARRY);
-    case CONGIG_GP_CH_BUILDING_QUARRY_STONE: return building_menu_is_building_enabled(BUILDING_STONE_QUARRY);
-    case CONGIG_GP_CH_BUILDING_QUARRY_LIMESTONE: return building_menu_is_building_enabled(BUILDING_LIMESTONE_QUARRY);
+    case CONFIG_GP_CH_BUILDING_WOOD_CUTTER: return building_menu_is_building_enabled(BUILDING_WOOD_CUTTERS);
+    case CONFIG_GP_CH_BUILDING_COPPER_MINE: return building_menu_is_building_enabled(BUILDING_COPPER_MINE);
+    case CONFIG_GP_CH_BUILDING_REED_GATHERER: return building_menu_is_building_enabled(BUILDING_REED_GATHERER);
+    case CONFIG_GP_CH_BUILDING_PAPYRUS_MAKER: return building_menu_is_building_enabled(BUILDING_PAPYRUS_WORKSHOP);
+    case CONFIG_GP_CH_BUILDING_SCRIBAL_SCHOOL: return building_menu_is_building_enabled(BUILDING_SCRIBAL_SCHOOL);
+    case CONFIG_GP_CH_BUILDING_SHIPYARD: return building_menu_is_building_enabled(BUILDING_SHIPYARD);
+    case CONFIG_GP_CH_BUILDING_FISHING_WHARF: return building_menu_is_building_enabled(BUILDING_FISHING_WHARF);
+    case CONFIG_GP_CH_BUILDING_POMEGRANATES_FARM: return building_menu_is_building_enabled(BUILDING_POMEGRANATES_FARM);
+    case CONFIG_GP_CH_BUILDING_CHICKPEAS_FARM: return building_menu_is_building_enabled(BUILDING_CHICKPEAS_FARM);
+    case CONFIG_GP_CH_BUILDING_LETTUCE_FARM: return building_menu_is_building_enabled(BUILDING_LETTUCE_FARM);
+    case CONFIG_GP_CH_BUILDING_FIGS_FARM: return building_menu_is_building_enabled(BUILDING_FIGS_FARM);
+    case CONFIG_GP_CH_BUILDING_GRAIN_FARM: return building_menu_is_building_enabled(BUILDING_GRAIN_FARM);
+    case CONFIG_GP_CH_BUILDING_CATTLE_RANCH: return building_menu_is_building_enabled(BUILDING_CATTLE_RANCH);
+    case CONFIG_GP_CH_BUILDING_BRICKS_WORKSHOP: return building_menu_is_building_enabled(BUILDING_BRICKS_WORKSHOP);
+    case CONFIG_GP_CH_BUILDING_WORK_CAMP: return building_menu_is_building_enabled(BUILDING_WORK_CAMP);
+    case CONFIG_GP_CH_BUILDING_GOLD_MINE: return building_menu_is_building_enabled(BUILDING_GOLD_MINE);
+    case CONFIG_GP_CH_BUILDING_QUARRY_SANDSTONE: return building_menu_is_building_enabled(BUILDING_SANDSTONE_QUARRY);
+    case CONFIG_GP_CH_BUILDING_QUARRY_GRANITE: return building_menu_is_building_enabled(BUILDING_GRANITE_QUARRY);
+    case CONFIG_GP_CH_BUILDING_QUARRY_STONE: return building_menu_is_building_enabled(BUILDING_STONE_QUARRY);
+    case CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE: return building_menu_is_building_enabled(BUILDING_LIMESTONE_QUARRY);
+    case CONFIG_GP_CH_BUILDING_CLAY_PIT: return building_menu_is_building_enabled(BUILDING_CLAY_PIT);
     }
 
     return data.config_values[option].new_value;

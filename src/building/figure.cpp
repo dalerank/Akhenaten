@@ -362,22 +362,20 @@ void building::workshop_start_production() {
     assert(is_workshop());
     bool can_start_b = false;
     if (data.industry.second_material_id != RESOURCE_NONE) {
-        if (data.industry.stored_amount_second > 100) {
-            data.industry.stored_amount_second -= 100;
-            can_start_b = true;
-        }
+        can_start_b = (data.industry.stored_amount_second >= 100);
     } else {
         can_start_b = true;
     }
 
-    bool can_start_a = false;
-    if (stored_full_amount) {
-        stored_full_amount -= 100;
-        can_start_a = true;
-    }
-
+    bool can_start_a = (stored_full_amount >= 100);
     if (can_start_b && can_start_a) {
         data.industry.has_raw_materials = true;
+        if (data.industry.stored_amount_second >= 100) {
+            data.industry.stored_amount_second -= 100;
+        }
+        if (stored_full_amount >= 100) {
+            stored_full_amount -= 100;
+        }
     }
 }
 

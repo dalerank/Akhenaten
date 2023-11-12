@@ -172,12 +172,13 @@ void figure::figure_image_update(bool refresh_only) {
     }
 }
 
-int resource_to_cart_image(e_resource res) {
+e_image_id resource_to_cart_image(e_resource res) {
     switch (res) {
     case RESOURCE_STONE: return IMG_SLED_STONE_SMALL;
     case RESOURCE_GRANITE: return IMG_SLED_GRANITE_SMALL;
     case RESOURCE_SANDSTONE: return IMG_SLED_SANDSTONE_SMALL;
     case RESOURCE_LIMESTONE: return IMG_SLED_LIMESTONE_SMALL;
+    case RESOURCE_BRICKS: return IMG_SLED_BRICKS;
     }
 
     return IMG_SLED_EMPTY_SMALL;
@@ -190,13 +191,13 @@ void figure::cart_update_image() {
     case RESOURCE_LIMESTONE:
     case RESOURCE_GRANITE:
     case RESOURCE_SANDSTONE:
+    case RESOURCE_BRICKS:
         if (resource_amount_full > 0) {
-            int image_id = resource_to_cart_image(resource_id);
-            cart_image_id = image_id_from_group(IMG_SLED_STONE_SMALL);
+            e_image_id image_id = resource_to_cart_image(resource_id);
+            cart_image_id = image_id_from_group(image_id);
         } else {
             cart_image_id = image_id_from_group(IMG_SLED_EMPTY_SMALL);
         }
-        anim_frame = 0;
         break;
 
     default:
@@ -241,6 +242,7 @@ void figure::cart_update_image() {
     case RESOURCE_STONE:
     case RESOURCE_SANDSTONE:
     case RESOURCE_LIMESTONE:
+    case RESOURCE_BRICKS:
         if (cart_image_id) {
             cart_image_id += dir;
             figure_image_set_sled_offset(dir);

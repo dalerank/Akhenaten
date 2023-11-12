@@ -46,7 +46,7 @@ images = [
 	{img: IMG_SLED_STONE_SMALL, pack:PACK_SPR_MAIN, id:102},
 	{img: IMG_SLED_GRANITE_SMALL, pack:PACK_SPR_MAIN, id:103},
 	{img: IMG_SLED_LIMESTONE_SMALL, pack:PACK_GENERAL, id:104},
-	{img: IMG_SLED_EMPTY_SMALL, pack:PACK_SPR_MAIN, id:106},
+	{img: IMG_SLED_BRICKS, pack:PACK_SPR_MAIN, id:89},
 	{img: IMG_JUGGLER_WALK, pack:PACK_SPR_MAIN, id:130},
 	{img: IMG_PLAINSTONE_QUARRY, pack:PACK_GENERAL, id:187},
 ]
@@ -63,12 +63,12 @@ cart_offsets = [
 ]
 
 sled_offsets = [
-  {x:17, y:-7},
+  {x:-17, y:9},
   {x:22, y:-1},
-  {x:17, y:7},
+  {x:-15, y:-5},
   {x:0, 	y:11},
   {x:12, y:-2},
   {x:-22, y:-1},
-  {x:-17, y:-7},
+  {x:17, y:7},
   {x:0, y:-12}
 ]

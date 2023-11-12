@@ -82,20 +82,20 @@ static void building_workshop_draw_info(object_info& c, int help_id, const char*
     ImageDraw::img_generic(ctx, image_id_resource_icon(input_resource_a), c.offset.x + 32, c.offset.y + 56);
     width = lang_text_draw(group_id, 13, c.offset.x + 60, c.offset.y + 60, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    if (b->stored_amount() < 100) {
+    if (b->stored_amount(input_resource_a) < 100) {
         lang_text_draw_amount(8, 10, 0, c.offset.x + 60 + width, c.offset.y + 60, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
-        lang_text_draw_amount(8, 10, b->stored_amount(), c.offset.x + 60 + width, c.offset.y + 60, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_amount(8, 10, b->stored_amount(input_resource_a), c.offset.x + 60 + width, c.offset.y + 60, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     int y_offset = 80;
     ImageDraw::img_generic(ctx, image_id_resource_icon(input_resource_b), c.offset.x + 32, c.offset.y + y_offset);
     width = lang_text_draw(group_id, 14, c.offset.x + 60, c.offset.y + y_offset + 4, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    if (b->stored_amount(1) < 100) {
+    if (b->stored_amount(input_resource_b) < 100) {
         lang_text_draw_amount(8, 10, 0, c.offset.x + 60 + width, c.offset.y + y_offset + 4, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
-        lang_text_draw_amount(8, 10, b->stored_amount(1), c.offset.x + 60 + width, c.offset.y + y_offset + 4, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_amount(8, 10, b->stored_amount(input_resource_b), c.offset.x + 60 + width, c.offset.y + y_offset + 4, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     y_offset = 110;

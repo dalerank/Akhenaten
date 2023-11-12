@@ -114,12 +114,14 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"city_produce_meat", true},
     {"bricks_workshop_enabled", true},
     {"city_produce_bricks", true},
+    {"city_produce_clay", true},
     {"city_building_work_camp", true},
     {"city_building_gold_mine", true},
     {"city_building_quarry_sandstone", true},
     {"city_building_quarry_granite", true},
     {"city_building_quarry_stone", true},
     {"city_building_quarry_limestone", true},
+    {"city_building_claypit", true},
 };
 
 static const char* ini_string_keys[] = {
