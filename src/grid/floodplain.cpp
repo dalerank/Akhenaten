@@ -130,7 +130,7 @@ void map_floodplain_rebuild_shores() {
             for (const auto &tile_delta: offsets) {
                 int grid_offset = base_offset + tile_delta;
                 if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
-                    map_grid_set(&g_terrain_floodplain_flood_shore, grid_offset, 1);
+                    map_grid_set(&g_terrain_floodplain_flood_shore, base_offset, 1);
                     break;
                 }
             }
