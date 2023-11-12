@@ -186,7 +186,6 @@ void camera_go_to_pixel(painter& ctx, vec2i pixel, bool validate) {
     } else {
         view.camera.tile_internal.x = view.camera.position.x / TILE_WIDTH_PIXELS;
         view.camera.tile_internal.y = view.camera.position.y / HALF_TILE_HEIGHT_PIXELS;
-
         view.camera.tile_internal.y &= ~1;
     }
 }
@@ -313,6 +312,10 @@ static void set_viewport_without_sidebar(void) {
     set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - SIDEBAR_COLLAPSED_WIDTH + 2, data.screen_height - TOP_MENU_HEIGHT);
 }
 
+view_data_t &city_view_viewport() {
+    return g_city_view_data;
+}
+
 void city_view_refresh_viewport() {
     auto& view = g_city_view_data;
 
@@ -341,11 +344,9 @@ void city_view_set_viewport(int screen_width, int screen_height) {
     camera_validate_position(view);
 }
 
-void city_view_get_viewport(vec2i &pos, vec2i &size) {
-    auto& data = g_city_view_data;
-
-    pos = data.viewport.offset;
-    size = data.viewport.size_pixels;
+void city_view_get_viewport(const view_data_t &view, vec2i &pos, vec2i &size) {
+    pos = view.viewport.offset;
+    size = view.viewport.size_pixels;
 }
 
 void city_view_get_viewport_size_tiles(int* width, int* height) {

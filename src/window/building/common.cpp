@@ -16,7 +16,8 @@ void window_building_set_possible_position(int* x_offset, int* y_offset, int wid
     int dialog_width = 16 * width_blocks;
     int dialog_height = 16 * height_blocks;
     vec2i view_pos, view_size;
-    city_view_get_viewport(view_pos, view_size);
+    view_data_t viewport = city_view_viewport();
+    city_view_get_viewport(viewport, view_pos, view_size);
     view_size.x -= MARGIN_POSITION;
 
     if (*y_offset + dialog_height > screen_height() - MARGIN_POSITION) {

@@ -244,7 +244,7 @@ static void draw_cached_figures(vec2i pixel, tile2i point, e_figure_draw_mode mo
     // city zoom & viewport params
     float scale = zoom_get_scale();
     vec2i viewport_pos, viewport_size;
-    city_view_get_viewport(viewport_pos, viewport_size);
+    city_view_get_viewport(*ctx.view, viewport_pos, viewport_size);
 
     // record tile's rendering coords
     int clip_x, clip_y, clip_width, clip_height;
@@ -317,7 +317,7 @@ static void draw_cached_figures(vec2i pixel, tile2i point, e_figure_draw_mode mo
         }
     }
     // reset rendering clip
-    set_city_clip_rectangle();
+    set_city_clip_rectangle(ctx);
 }
 
 void draw_debug_figurecaches(vec2i pixel, map_point point, painter &ctx) {
@@ -387,7 +387,7 @@ void draw_isometrics(vec2i pixel, tile2i point, painter &ctx) {
         }
 
         vec2i view_pos, view_size;
-        city_view_get_viewport(view_pos, view_size);
+        city_view_get_viewport(*ctx.view, view_pos, view_size);
         int direction = SOUND_DIRECTION_CENTER;
         if (x < view_pos.x + 100) {
            direction = SOUND_DIRECTION_LEFT;

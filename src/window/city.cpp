@@ -35,7 +35,8 @@ static int selected_legion_formation_id;
 
 static int center_in_city(int element_width_pixels) {
     vec2i view_pos, view_size;
-    city_view_get_viewport(view_pos, view_size);
+    view_data_t viewport = city_view_viewport();
+    city_view_get_viewport(viewport, view_pos, view_size);
     int margin = (view_size.x - element_width_pixels) / 2;
     return view_pos.x + margin;
 }
@@ -83,7 +84,8 @@ static void draw_cancel_construction() {
         return;
     }
     vec2i view_pos, view_size;
-    city_view_get_viewport(view_pos, view_size);
+    view_data_t viewport = city_view_viewport();
+    city_view_get_viewport(viewport, view_pos, view_size);
     view_size.x -= 4 * 16;
     inner_panel_draw(view_size.x - 4, 40, 3, 2);
     painter ctx = game.painter();

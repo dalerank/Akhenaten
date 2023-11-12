@@ -33,6 +33,7 @@
 #include "widget/minimap.h"
 #include "window/window_building_info.h"
 #include "window/city.h"
+#include "game/game.h"
 #include "building/building.h"
 
 struct widget_city_data_t {
@@ -44,9 +45,9 @@ struct widget_city_data_t {
 
 widget_city_data_t g_wdiget_city_data;
 
-void set_city_clip_rectangle(void) {
+void set_city_clip_rectangle(painter &ctx) {
     vec2i view_pos, view_size;
-    city_view_get_viewport(view_pos, view_size);
+    city_view_get_viewport(*ctx.view, view_pos, view_size);
     graphics_set_clip_rectangle(view_pos.x, view_pos.y, view_size.x, view_size.y);
 
     // TODO?
@@ -89,7 +90,8 @@ static map_point update_city_view_coords(vec2i pixel) {
 }
 static int input_coords_in_city(int x, int y) {
     vec2i view_pos, view_size;
-    city_view_get_viewport(view_pos, view_size);
+    view_data_t viewport = city_view_viewport();
+    city_view_get_viewport(viewport, view_pos, view_size);
 
     x -= view_pos.x;
     y -= view_pos.y;
@@ -172,7 +174,7 @@ void widget_city_draw(painter &ctx) {
     auto& data = g_wdiget_city_data;
     update_zoom_level(ctx);
     set_render_scale(ctx, zoom_get_scale());
-    set_city_clip_rectangle();
+    set_city_clip_rectangle(ctx);
     if (game_state_overlay()) {
         widget_city_draw_with_overlay(ctx, data.current_tile);
     } else {
@@ -184,7 +186,7 @@ void widget_city_draw(painter &ctx) {
 
 void widget_city_draw_for_figure(painter &ctx, int figure_id, vec2i* coord) {
     auto& data = g_wdiget_city_data;
-    set_city_clip_rectangle();
+    set_city_clip_rectangle(ctx);
 
     widget_city_draw_without_overlay(ctx, figure_id, coord, data.current_tile);
 
@@ -201,10 +203,12 @@ bool widget_city_draw_construction_cost_and_size() {
     int size_x, size_y;
     int cost = Planner.total_cost;
     int has_size = Planner.get_total_drag_size(&size_x, &size_y);
-    if (!cost && !has_size)
+    if (!cost && !has_size) {
         return false;
+    }
 
-    set_city_clip_rectangle();
+    painter ctx = game.painter();
+    set_city_clip_rectangle(ctx);
     screen_tile screen = camera_get_selected_screen_tile();
     int x = screen.x;
     int y = screen.y;
@@ -309,7 +313,8 @@ static bool handle_cancel_construction_button(const touch* t) {
         return false;
 
     vec2i view_pos, view_size;
-    city_view_get_viewport(view_pos, view_size);
+    view_data_t viewport = city_view_viewport();
+    city_view_get_viewport(viewport, view_pos, view_size);
     int box_size = 5 * 16;
     view_size.x -= box_size;
 
@@ -335,7 +340,8 @@ static void handle_touch_scroll(const touch* t) {
     if (Planner.build_type) {
         if (t->has_started) {
             vec2i view_pos, view_size;
-            city_view_get_viewport(view_pos, view_size);
+            view_data_t viewport = city_view_viewport();
+            city_view_get_viewport(viewport, view_pos, view_size);
             scroll_set_custom_margins(view_pos.x, view_pos.y, view_size.x, view_size.y);
         }
         if (t->has_ended)

@@ -76,8 +76,10 @@ void city_view_rotate_right(void);
 
 void city_view_refresh_viewport();
 
+view_data_t &city_view_viewport();
+
 void city_view_set_viewport(int screen_width, int screen_height);
-void city_view_get_viewport(vec2i &pos, vec2i &size);
+void city_view_get_viewport(const view_data_t &view, vec2i &pos, vec2i &size);
 void city_view_get_viewport_size_tiles(int* width, int* height);
 
 bool pixel_is_inside_viewport(vec2i pixel);

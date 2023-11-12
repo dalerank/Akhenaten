@@ -5,7 +5,7 @@
 #include "input/hotkey.h"
 #include "input/mouse.h"
 
-void set_city_clip_rectangle();
+void set_city_clip_rectangle(painter &ctx);
 
 void widget_city_draw(painter &ctx);
 void widget_city_draw_for_figure(painter &ctx, int figure_id, vec2i* coord);

@@ -85,9 +85,10 @@ static bool init(int submenu) {
     }
 }
 
-static int get_sidebar_x_offset(void) {
+static int get_sidebar_x_offset() {
     vec2i view_pos, view_size;
-    city_view_get_viewport(view_pos, view_size);
+    view_data_t viewport = city_view_viewport();
+    city_view_get_viewport(viewport, view_pos, view_size);
 
     return view_pos.x + view_size.x;
 }

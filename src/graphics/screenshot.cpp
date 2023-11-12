@@ -254,7 +254,8 @@ static void create_full_city_screenshot() {
     city_view_get_camera_scrollable_pixel_limits(full_city_view_data, min_pos, max_pos);
 
     vec2i view_pos, view_size;
-    city_view_get_viewport(view_pos, view_size);
+    view_data_t viewport = city_view_viewport();
+    city_view_get_viewport(viewport, view_pos, view_size);
 
     max_pos += view_size;
 
@@ -291,7 +292,7 @@ static void create_full_city_screenshot() {
     graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, canvas_width, canvas_height);
     
     vec2i viewport_offset, viewport_size;
-    city_view_get_viewport(viewport_offset, viewport_size);
+    city_view_get_viewport(viewport, viewport_offset, viewport_size);
     city_view_set_viewport(canvas_width + (city_view_is_sidebar_collapsed() ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH), canvas_height + TOP_MENU_HEIGHT);
     int current_height = base_height;
 
@@ -312,12 +313,12 @@ static void create_full_city_screenshot() {
             }
 
             //threads.push_back(std::thread([] (vec2i min_pos, int width, int canvas_width, int current_height, color *canvas, 
-            //                                    int x_offset, int y_offset, int image_section_width, int canvas_height, vec2i city_canvas_pixels, view_data_t &full_city_view_data) {
-                SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE, canvas_width, canvas_height, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-                SDL_Renderer *renderer = SDL_CreateSoftwareRenderer(surface);
+              //                                  int x_offset, int y_offset, int image_section_width, int canvas_height, vec2i city_canvas_pixels, view_data_t &full_city_view_data, int color) {
+               //SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE, viewport_size.x, viewport_size.y, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+               //SDL_Renderer *renderer = SDL_CreateSoftwareRenderer(surface);
                 
-                //SDL_Rect rect{0, 0, canvas_width, canvas_height};
-                //SDL_FillRect(surface, &rect, color );
+               //SDL_Rect rect{0, 0, canvas_width, canvas_height};
+               //SDL_FillRect(surface, &rect, ((yy + i) % 2) ? 0xff00ff00 : 0xff0000ff);
                 figure_draw_cache_data_t local_figure_cache;
                 view_data_t local_view_data = full_city_view_data;
                 painter local_context;
@@ -331,16 +332,16 @@ static void create_full_city_screenshot() {
                 widget_city_draw_without_overlay(local_context, 0, nullptr, dummy_tile);
                 graphics_renderer()->save_screen_buffer(local_context, &canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
                 //SDL_Rect rect2 = {x_offset, y_offset, canvas_width, canvas_height};
-                //bool ok = SDL_RenderReadPixels(renderer, &rect2, SDL_PIXELFORMAT_ARGB8888, &canvas[width], city_canvas_pixels.x * sizeof(color)) == 0;
-                SDL_DestroyRenderer(renderer);
-                SDL_FreeSurface(surface);
-            //}, min_pos, width, canvas_width, current_height, canvas, x_offset, y_offset, image_section_width, canvas_height, city_canvas_pixels, full_city_view_data)); // ((yy + i) % 2) ? 0xff00ff00 : 0xff0000ff));
+                //bool ok = SDL_RenderReadPixels(local_context.renderer, &rect2, SDL_PIXELFORMAT_ARGB8888, &canvas[width], city_canvas_pixels.x * sizeof(color)) == 0;
+               //SDL_DestroyRenderer(renderer);
+               //SDL_FreeSurface(surface);
+            //}, min_pos, width, canvas_width, current_height, canvas, x_offset, y_offset, image_section_width, canvas_height, city_canvas_pixels, full_city_view_data, ((yy + i) % 2) ? 0xff00ff00 : 0xff0000ff));
             i++;
         }
 
-        for (std::thread& t : threads) {
-            t.join();
-        }
+        //for (std::thread& t : threads) {
+        //    t.join();
+        //}
 
         if (!image_write_rows(canvas, city_canvas_pixels.x)) {
             logs::error("Error writing image", 0, 0);

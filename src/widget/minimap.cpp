@@ -355,7 +355,8 @@ bool widget_minimap_handle_mouse(const mouse* m) {
             vec2i view_pos, view_size;
 
             city_view_get_camera_scrollable_pixel_limits(city_view_data_unsafe(), min_pos, max_pos);
-            city_view_get_viewport(view_pos, view_size);
+            const view_data_t &viewport = city_view_viewport();
+            city_view_get_viewport(viewport, view_pos, view_size);
 
             max_pos += view_size;
             vec2i city_canvas_pixels = max_pos - min_pos;
