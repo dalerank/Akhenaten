@@ -380,34 +380,6 @@ inline building* building_end() {
     return building_get(MAX_BUILDINGS);
 }
 
-template<typename T>
-void buildings_valid_do(T func) {
-    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
-        if (it->state == BUILDING_STATE_VALID) {
-            func(*it);
-        }
-    }
-}
-
-template<typename T>
-void buildings_house_do(T func) {
-    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
-        if (it->state == BUILDING_STATE_VALID && building_is_house(it->type)) {
-            func(*it);
-        }
-    }
-}
-
-template<typename T>
-void buildings_workshop_do(T func) {
-    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
-        if (it->state == BUILDING_STATE_VALID && building_is_workshop(it->type)) {
-            func(*it);
-        }
-    }
-}
-
-
 template<typename ... Args>
 bool building_type_any_of(building &b, Args ... args) {
     int types[] = {args...};
@@ -494,4 +466,31 @@ inline building* building_first(T pred) {
         }
     }
     return nullptr;
+}
+
+template<typename T>
+void buildings_valid_do(T func) {
+    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
+        if (it->state == BUILDING_STATE_VALID) {
+            func(*it);
+        }
+    }
+}
+
+template<typename T>
+void buildings_house_do(T func) {
+    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
+        if (it->state == BUILDING_STATE_VALID && building_is_house(it->type)) {
+            func(*it);
+        }
+    }
+}
+
+template<typename T>
+void buildings_workshop_do(T func) {
+    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
+        if (it->state == BUILDING_STATE_VALID && building_is_workshop(it->type)) {
+            func(*it);
+        }
+    }
 }
