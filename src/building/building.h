@@ -281,6 +281,8 @@ public:
     bool has_figure(int i, figure* f);
     bool has_figure_of_type(int i, e_figure_type _type);
     int get_figure_slot(figure* f);
+    int need_resource_amount(e_resource resource) const;
+    int max_storage_amount(e_resource res) const;
     int stored_amount(int idx = 0) const;
     int stored_amount(e_resource res) const;
     
@@ -395,6 +397,16 @@ void buildings_house_do(T func) {
         }
     }
 }
+
+template<typename T>
+void buildings_workshop_do(T func) {
+    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
+        if (it->state == BUILDING_STATE_VALID && building_is_workshop(it->type)) {
+            func(*it);
+        }
+    }
+}
+
 
 template<typename ... Args>
 bool building_type_any_of(building &b, Args ... args) {

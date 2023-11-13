@@ -535,8 +535,8 @@ int building_storageyard_determine_worker_task(building* warehouse, e_resource& 
     building* space;
 
     // get resources
-    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
-        if (!building_storageyard_is_getting(r, warehouse) || city_resource_is_stockpiled(r))
+    for (e_resource check_resource = RESOURCE_MIN; check_resource < RESOURCES_MAX; check_resource = (e_resource)(check_resource + 1)) {
+        if (!building_storageyard_is_getting(check_resource, warehouse) || city_resource_is_stockpiled(check_resource))
             continue;
         int total_stored = 0; // total amounts of resource in warehouse!
         int room = 0;         // total potential room for resource!
@@ -546,21 +546,21 @@ int building_storageyard_determine_worker_task(building* warehouse, e_resource& 
             if (space->id > 0) {
                 if (space->stored_full_amount <= 0) // this space (tile) is empty! FREE REAL ESTATE
                     room += 4;
-                if (space->subtype.warehouse_resource_id == r) { // found a space (tile) with resource on it!
+                if (space->subtype.warehouse_resource_id == check_resource) { // found a space (tile) with resource on it!
                     total_stored += space->stored_full_amount;   // add loads to total, if any!
                     room += 400 - space->stored_full_amount;     // add room to total, if any!
                 }
             }
         }
 
-        int requesting = building_storageyard_get_accepting_amount(r, warehouse);
+        int requesting = building_storageyard_get_accepting_amount(check_resource, warehouse);
         int lacking = requesting - total_stored;
 
         // determine if there's enough room for more to accept, depending on "get up to..." settings!
-        if (room >= 0 && lacking > 0 && city_resource_count(r) - total_stored > 0) {
-            if (!building_storageyard_for_getting(warehouse, r, 0)) // any other place contain this resource..?
+        if (room >= 0 && lacking > 0 && city_resource_count(check_resource) - total_stored > 0) {
+            if (!building_storageyard_for_getting(warehouse, check_resource, 0)) // any other place contain this resource..?
                 continue;
-            resource = r;
+            resource = check_resource;
             amount = lacking;
 
             // bug in original Pharaoh: warehouses send out two cartpushers even if there is no room!
@@ -574,11 +574,7 @@ int building_storageyard_determine_worker_task(building* warehouse, e_resource& 
     // deliver weapons to barracks
     if (building_count_active(BUILDING_RECRUITER) > 0 && city_military_has_legionary_legions()
         && !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
-        building* barracks = building_get(building_get_barracks_for_weapon(warehouse->tile,
-                                                                           RESOURCE_WEAPONS,
-                                                                           warehouse->road_network_id,
-                                                                           warehouse->distance_from_entry,
-                                                                           0));
+        building* barracks = building_get(building_get_barracks_for_weapon(warehouse->tile, RESOURCE_WEAPONS, warehouse->road_network_id, warehouse->distance_from_entry, 0));
         int barracks_want = (100 * MAX_WEAPONS_BARRACKS) - barracks->stored_full_amount;
         if (barracks_want > 0 && warehouse->road_network_id == barracks->road_network_id) {
             int available = 0;
@@ -602,17 +598,21 @@ int building_storageyard_determine_worker_task(building* warehouse, e_resource& 
     for (int i = 0; i < 8; i++) {
         space = space->next();
         if (space->id > 0 && space->stored_full_amount > 0) {
-            if (!city_resource_is_stockpiled(space->subtype.warehouse_resource_id)) {
-                for (int j = 0; j < MAX_BUILDINGS; ++j) {
-                    auto b = building_get(j);
-                    if (b->state != BUILDING_STATE_VALID || !building_is_workshop(b->type))
-                        continue;
-                    if (resource_required_by_workshop(b, space->subtype.warehouse_resource_id)
-                        && 200 - b->stored_full_amount >= 100) {
-                        resource = space->subtype.warehouse_resource_id;
-                        amount = 100; // always one load only for industry!!
-                        return STORAGEYARD_TASK_DELIVERING;
+            e_resource check_resource = space->subtype.warehouse_resource_id;
+            if (!city_resource_is_stockpiled(check_resource)) {
+                e_storageyard_task status = STORAGEYARD_TASK_NONE;
+                buildings_workshop_do([&] (building &b) {
+                    if (!resource_required_by_workshop(&b, space->subtype.warehouse_resource_id) || b.need_resource_amount(check_resource) < 100) {
+                        return;
                     }
+                    
+                    resource = space->subtype.warehouse_resource_id;
+                    amount = 100; // always one load only for industry!!
+                    status = STORAGEYARD_TASK_DELIVERING;
+                });
+
+                if (status == STORAGEYARD_TASK_DELIVERING) {
+                    return STORAGEYARD_TASK_DELIVERING;
                 }
             }
         }

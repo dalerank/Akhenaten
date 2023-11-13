@@ -131,6 +131,14 @@ int building::stored_amount(e_resource res) const {
     return stored_full_amount;
 }
 
+int building::need_resource_amount(e_resource resource) const {
+    return max_storage_amount(resource) - stored_amount(resource);
+}
+
+int building::max_storage_amount(e_resource resource) const {
+    return 200;
+}
+
 int building::stored_amount(int idx) const {
     switch (idx) {
     case 0: return stored_full_amount;

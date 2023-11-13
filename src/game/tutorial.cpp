@@ -267,7 +267,7 @@ int tutorial_get_immediate_goal_text(void) {
         } else {
             return 34;
         }
-    } else if (scenario_is_mission_rank(5)) {
+    } else if (scenario_is_mission_rank(6)) {
 
     }
     return 0;
