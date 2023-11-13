@@ -14,102 +14,20 @@
 
 #define BUILD_MENU_ITEM_MAX 30
 
-static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
-  {
-    {BUILDING_HOUSE_VACANT_LOT, 0},
-    {BUILDING_CLEAR_LAND, 0},
-    {BUILDING_ROAD, 0},
-    {BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH, BUILDING_MENU_BEAUTIFICATION, BUILDING_WELL, 0},
-    {BUILDING_DENTIST, BUILDING_MENU_MONUMENTS, BUILDING_APOTHECARY, BUILDING_MORTUARY, 0},
-    {BUILDING_MENU_TEMPLES, BUILDING_MENU_TEMPLE_COMPLEX, BUILDING_ORACLE, 0},
-    {BUILDING_SCRIBAL_SCHOOL, BUILDING_ACADEMY, BUILDING_LIBRARY, BUILDING_MISSION_POST, 0},
-    {BUILDING_BOOTH,
-     BUILDING_BANDSTAND,
-     BUILDING_PAVILLION,
-     BUILDING_SENET_HOUSE,
-     BUILDING_JUGGLER_SCHOOL,
-     BUILDING_CONSERVATORY,
-     BUILDING_DANCE_SCHOOL,
-     BUILDING_CHARIOT_MAKER,
+static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
+    {BUILDING_HOUSE_VACANT_LOT,
      0},
-    {BUILDING_TAX_COLLECTOR,
-     BUILDING_GREATE_PALACE,
-     BUILDING_PERSONAL_MANSION,
-     BUILDING_FAMILY_MANSION,
-     BUILDING_DYNASTY_MANSION,
-     BUILDING_SMALL_STATUE,
-     BUILDING_MEDIUM_STATUE,
-     BUILDING_LARGE_STATUE,
-     BUILDING_ROADBLOCK,
-     BUILDING_TRIUMPHAL_ARCH,
-     0},
-    {BUILDING_GARDENS,
-     BUILDING_PLAZA,
-     BUILDING_ENGINEERS_POST,
-     BUILDING_LOW_BRIDGE,
-     BUILDING_SHIP_BRIDGE,
-     BUILDING_SHIPYARD,
-     BUILDING_DOCK,
-     BUILDING_FISHING_WHARF,
-     0},
-    {BUILDING_WALL,
-     BUILDING_TOWER,
-     BUILDING_GATEHOUSE,
-     BUILDING_POLICE_STATION,
-     BUILDING_MENU_FORTS,
-     BUILDING_MILITARY_ACADEMY,
-     BUILDING_RECRUITER,
-     0},
-    {BUILDING_MENU_FARMS,
-     BUILDING_MENU_RAW_MATERIALS,
-     BUILDING_MENU_GUILDS,
-     BUILDING_MARKET,
-     BUILDING_GRANARY,
-     BUILDING_STORAGE_YARD,
-     0},
-    {BUILDING_BARLEY_FARM,
-     BUILDING_FLAX_FARM,
-     BUILDING_GRAIN_FARM,
-     BUILDING_LETTUCE_FARM,
-     BUILDING_POMEGRANATES_FARM,
-     BUILDING_CHICKPEAS_FARM,
-     0},
-    {BUILDING_CLAY_PIT, BUILDING_STONE_QUARRY, BUILDING_LIMESTONE_QUARRY, BUILDING_WOOD_CUTTERS, 0},
-    {BUILDING_BEER_WORKSHOP,
-     BUILDING_LINEN_WORKSHOP,
-     BUILDING_WEAPONS_WORKSHOP,
-     BUILDING_JEWELS_WORKSHOP,
-     BUILDING_POTTERY_WORKSHOP,
-     0},
-    {BUILDING_MENU_TEMPLES,
-     BUILDING_TEMPLE_OSIRIS,
-     BUILDING_TEMPLE_RA,
-     BUILDING_TEMPLE_PTAH,
-     BUILDING_TEMPLE_SETH,
-     BUILDING_TEMPLE_BAST,
-     0},
-    {BUILDING_MENU_TEMPLE_COMPLEX,
-     BUILDING_TEMPLE_COMPLEX_OSIRIS,
-     BUILDING_TEMPLE_COMPLEX_RA,
-     BUILDING_TEMPLE_COMPLEX_PTAH,
-     BUILDING_TEMPLE_COMPLEX_SETH,
-     BUILDING_TEMPLE_COMPLEX_BAST,
-     0},
-    {BUILDING_FORT_CHARIOTEERS, BUILDING_FORT_ARCHERS, BUILDING_FORT_INFANTRY, 0},
 
-    {0},
-    {0},
-    {0},
-    {0},
-    {0},
-  },
-  {
-    {BUILDING_HOUSE_VACANT_LOT, 0},
-    {BUILDING_CLEAR_LAND, 0},
-    {BUILDING_ROAD, 0},
+    {BUILDING_CLEAR_LAND,
+     0},
+
+    {BUILDING_ROAD,
+     0},
 
     // water crossings
-    {BUILDING_LOW_BRIDGE, BUILDING_FERRY, 0},
+    {BUILDING_LOW_BRIDGE,
+     BUILDING_FERRY,
+     0},
     // health and sanitation structures
     {BUILDING_WELL,
      BUILDING_WATER_SUPPLY,
@@ -126,7 +44,9 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_FESTIVAL_SQUARE,
      0},
     // education structures
-    {BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, 0},
+    {BUILDING_SCRIBAL_SCHOOL,
+     BUILDING_LIBRARY,
+     0},
     // entertainment structures
     {BUILDING_BOOTH,
      BUILDING_BANDSTAND,
@@ -154,7 +74,12 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      0},
 
     // beautifications
-    {BUILDING_GARDENS, BUILDING_PLAZA, BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, 0},
+    {BUILDING_GARDENS,
+     BUILDING_PLAZA,
+     BUILDING_SMALL_STATUE,
+     BUILDING_MEDIUM_STATUE,
+     BUILDING_LARGE_STATUE,
+     0},
 
     // military structures
     {BUILDING_MENU_DEFENSES,
@@ -164,7 +89,8 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_WEAPONS_WORKSHOP,
      BUILDING_CHARIOTS_WORKSHOP,
      BUILDING_WARSHIP_WHARF,
-     BUILDING_TRANSPORT_WHARF},
+     BUILDING_TRANSPORT_WHARF,
+     0},
     // industry structures
     {BUILDING_MENU_RAW_MATERIALS,
      BUILDING_JEWELS_WORKSHOP,
@@ -208,7 +134,12 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_ARTISANS_GUILD,
      0},
     // shrines
-    {BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_BAST, 0},
+    {BUILDING_TEMPLE_OSIRIS,
+     BUILDING_TEMPLE_RA,
+     BUILDING_TEMPLE_PTAH,
+     BUILDING_TEMPLE_SETH,
+     BUILDING_TEMPLE_BAST,
+     0},
     // temple complexes
     {BUILDING_TEMPLE_COMPLEX_OSIRIS,
      BUILDING_TEMPLE_COMPLEX_RA,
@@ -239,7 +170,12 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_DOCK,
      0},
     // shrines
-    {BUILDING_SHRINE_OSIRIS, BUILDING_SHRINE_RA, BUILDING_SHRINE_PTAH, BUILDING_SHRINE_SETH, BUILDING_SHRINE_BAST, 0},
+    {BUILDING_SHRINE_OSIRIS,
+     BUILDING_SHRINE_RA,
+     BUILDING_SHRINE_PTAH,
+     BUILDING_SHRINE_SETH,
+     BUILDING_SHRINE_BAST,
+     0},
     // monuments
     {BUILDING_SMALL_ROYAL_TOMB,
      BUILDING_MEDIUM_ROYAL_TOMB,
@@ -254,8 +190,11 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_ABU_SIMBEL,
      0},
     // defensive structures
-    {BUILDING_WALL_PH, BUILDING_TOWER_PH, BUILDING_GATEHOUSE_PH, 0},
-  }};
+    {BUILDING_WALL_PH,
+     BUILDING_TOWER_PH,
+     BUILDING_GATEHOUSE_PH,
+     0},
+};
 int g_menu_enabled[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX];
 
 static int changed = 1;
@@ -278,7 +217,7 @@ void building_menu_enable_all(void) {
 int building_menu_is_building_enabled(int type) {
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-            if (MENU_int[GAME_ENV][sub][item] == type) // found matching menu item!!!
+            if (MENU_CONFIG[sub][item] == type) // found matching menu item!!!
                 return g_menu_enabled[sub][item];
         }
     }
@@ -289,7 +228,7 @@ void building_menu_toggle_building(int type, bool enabled) {
     // go through all the menu items, and toggle the matching one
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-            if (MENU_int[GAME_ENV][sub][item] == type) // found match!
+            if (MENU_CONFIG[sub][item] == type) // found match!
                 g_menu_enabled[sub][item] = enabled;
         }
     }
@@ -780,14 +719,16 @@ void building_menu_update(int build_set) {
 int building_menu_count_items(int submenu) {
     int count = 0;
     for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-        if (g_menu_enabled[submenu][item] && MENU_int[GAME_ENV][submenu][item] > 0)
+        if (g_menu_enabled[submenu][item] && MENU_CONFIG[submenu][item] > 0)
             count++;
     }
+
     return count;
 }
+
 int building_menu_next_index(int submenu, int current_index) {
     for (int i = current_index + 1; i < BUILD_MENU_ITEM_MAX; i++) {
-        if (MENU_int[GAME_ENV][submenu][i] <= 0)
+        if (MENU_CONFIG[submenu][i] <= 0)
             return 0;
 
         if (g_menu_enabled[submenu][i])
@@ -797,7 +738,7 @@ int building_menu_next_index(int submenu, int current_index) {
 }
 
 e_building_type building_menu_type(int submenu, int item) {
-    return (e_building_type)MENU_int[GAME_ENV][submenu][item];
+    return (e_building_type)MENU_CONFIG[submenu][item];
 }
 
 int building_menu_has_changed(void) {

@@ -431,17 +431,6 @@ void buildings_get(Array &arr, Args ... args) {
         }
     }
 }
-
-template <typename T>
-inline building* building_first(T pred) {
-    for (auto it = building_begin(), end = building_end(); it != end; ++it) {
-        if (it->state == BUILDING_STATE_VALID && pred(*it)) {
-            return it;
-        }
-    }
-    return nullptr;
-}
-
 building* building_create(e_building_type type, int x, int y, int orientation);
 
 building* building_at(int grid_offset);
@@ -496,3 +485,13 @@ int building_mothball_set(building* b, int value);
 bool resource_required_by_workshop(building* b, e_resource resource);
 
 std::span<building>& city_buildings();
+
+template <typename T>
+inline building* building_first(T pred) {
+    for (auto it = building_begin(), end = building_end(); it != end; ++it) {
+        if (it->state == BUILDING_STATE_VALID && pred(*it)) {
+            return it;
+        }
+    }
+    return nullptr;
+}
