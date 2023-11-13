@@ -440,37 +440,21 @@ static void draw_workshop_raw_material_storage(painter &ctx, const building* b, 
     }
 }
 static void draw_granary_stores(const building* b, int x, int y, color color_mask, painter &ctx) {
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BUILDING_GRANARY) + 1, x, y + 60, color_mask);
-        if (b->data.granary.resource_stored[RESOURCE_NONE] < 2400)
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask);
-
-        if (b->data.granary.resource_stored[RESOURCE_NONE] < 1800)
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 50, color_mask);
-
-        if (b->data.granary.resource_stored[RESOURCE_NONE] < 1200)
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50, color_mask);
-
-        if (b->data.granary.resource_stored[RESOURCE_NONE] < 600)
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62, color_mask);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        int last_spot_filled = 0;
-        int spot_x = 0;
-        int spot_y = 0;
-        for (int r = 1; r < 9; r++) {
-            if (b->data.granary.resource_stored[r] > 0) {
-                int spots_filled = ceil((float)(b->data.granary.resource_stored[r] - 199)
-                                        / (float)400); // number of "spots" occupied by food
-                if (spots_filled == 0 && b->data.granary.resource_stored[r] > 0)
-                    spots_filled = 1;
-                for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
-                    // draw sprite on each granary "spot"
-                    spot_x = granary_offsets_ph[spot].x;
-                    spot_y = granary_offsets_ph[spot].y;
-                    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BUILDING_GRANARY) + 2 + r, x + 110 + spot_x, y - 74 + spot_y, color_mask);
-                }
-                last_spot_filled += spots_filled;
+    int last_spot_filled = 0;
+    int spot_x = 0;
+    int spot_y = 0;
+    for (int r = 1; r < 9; r++) {
+        if (b->data.granary.resource_stored[r] > 0) {
+            int spots_filled = ceil((float)(b->data.granary.resource_stored[r] - 199) / (float)400); // number of "spots" occupied by food
+            if (spots_filled == 0 && b->data.granary.resource_stored[r] > 0)
+                spots_filled = 1;
+            for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
+                // draw sprite on each granary "spot"
+                spot_x = granary_offsets_ph[spot].x;
+                spot_y = granary_offsets_ph[spot].y;
+                ImageDraw::img_generic(ctx, image_id_from_group(IMG_GRANARY_RESOURCES) + r, x + 110 + spot_x, y - 74 + spot_y, color_mask);
             }
+            last_spot_filled += spots_filled;
         }
     }
 }

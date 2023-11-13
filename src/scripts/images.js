@@ -49,6 +49,8 @@ images = [
 	{img: IMG_SLED_BRICKS, pack:PACK_SPR_MAIN, id:89},
 	{img: IMG_JUGGLER_WALK, pack:PACK_SPR_MAIN, id:130},
 	{img: IMG_PLAINSTONE_QUARRY, pack:PACK_GENERAL, id:187},
+	{img: IMG_GRANARY, pack:PACK_GENERAL, id:99},
+	{img: IMG_GRANARY_RESOURCES, pack:PACK_GENERAL, id:99, offset:2},
 ]
 
 cart_offsets = [

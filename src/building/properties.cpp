@@ -77,7 +77,7 @@ static building_properties properties[400] = {
     {3, 0, 0, 0},                         // seth
     {3, 0, 0, 0},                         // temple complex ^^^^
     {2, 0, GROUP_BUILDING_MARKET},        // bazaar
-    {4, 0, GROUP_BUILDING_GRANARY},       // granary
+    {4, 0, 0, 0},       // granary
     {1, 1, GROUP_BUILDING_STORAGE_YARD},  // storageyard (hut)
     {1, 1, 0, 0},                         // storageyard (space tile)
     {3, 0, GROUP_BUILDING_SHIPYARD},      // shipwright
@@ -247,6 +247,7 @@ void building_properties_init() {
     properties[BUILDING_GOLD_MINE] = {2, 0, 0, 0, 0, IMG_GOLD_MINE};
     properties[BUILDING_SANDSTONE_QUARRY] = {2, 0, 0, 0, 0, IMG_SANDSTONE_QUARRY};
     properties[BUILDING_STONE_QUARRY] = {2, 0, 0, 0, 0, IMG_PLAINSTONE_QUARRY};
+    properties[BUILDING_GRANARY] = {4, 0, 0, 0, 0, IMG_GRANARY};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

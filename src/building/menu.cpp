@@ -673,22 +673,26 @@ void building_menu_update(int build_set) {
         building_menu_toggle_building(BUILDING_BRICKLAYERS_GUILD);
         //            enable_monument(MONUMENT_SMALL_MASTABA); // todo!!!!!!
         break;
+
     case BUILDSET_TUT6_START:
         building_menu_disable_all();
         // todo
         break;
+
     case BUILDSET_TUT7_START:
         building_menu_disable_all();
         for (int i = 0; i < BUILDING_MAX; i++)
             enable_if_allowed(i);
         // todo
         break;
+
     case BUILDSET_TUT8_START:
         building_menu_disable_all();
         for (int i = 0; i < BUILDING_MAX; i++)
             enable_if_allowed(i);
         // todo
         break;
+
     default:
         for (int i = 0; i < BUILDING_MAX; i++)
             enable_if_allowed(i);

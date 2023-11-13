@@ -52,6 +52,8 @@ enum e_image_id : uint16_t {
     IMG_SLED_STONE_SMALL = 47,
     IMG_SLED_LIMESTONE_SMALL = 48,
     IMG_SLED_BRICKS = 49,
+    IMG_GRANARY = 50,
+    IMG_GRANARY_RESOURCES = 51,
 
     IMG_SIZE
 };
