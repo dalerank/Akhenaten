@@ -530,19 +530,18 @@ void set_granary_res_offset(int i, vec2i v) {
 
 void draw_granary_stores(const building &b, vec2i point, color color_mask, painter &ctx) {
     int last_spot_filled = 0;
-    int spot_x = 0;
-    int spot_y = 0;
     for (int r = 1; r < 9; r++) {
         if (b.data.granary.resource_stored[r] > 0) {
             int spots_filled = ceil((float)(b.data.granary.resource_stored[r] - 199) / (float)400); // number of "spots" occupied by food
             if (spots_filled == 0 && b.data.granary.resource_stored[r] > 0)
                 spots_filled = 1;
+
             for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
                 // draw sprite on each granary "spot"
-                spot_x = granary_offsets_ph[spot].x;
-                spot_y = granary_offsets_ph[spot].y;
-                ImageDraw::img_generic(ctx, image_id_from_group(IMG_GRANARY_RESOURCES) + r, point + vec2i{110 + spot_x, -74 + spot_y}, color_mask);
+                vec2i spot_pos = granary_offsets_ph[spot];
+                ImageDraw::img_generic(ctx, image_id_from_group(IMG_GRANARY_RESOURCES) + r, point + spot_pos + vec2i{110, -74}, color_mask);
             }
+
             last_spot_filled += spots_filled;
         }
     }
