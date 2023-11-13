@@ -2,7 +2,7 @@
 
 #include "building/count.h"
 #include "building/destruction.h"
-#include "building/granary.h"
+#include "building/building_granary.h"
 #include "building/industry.h"
 #include "building/storage_yard.h"
 #include "city/coverage.h"

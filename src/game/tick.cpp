@@ -8,7 +8,7 @@
 #include "building/dock.h"
 #include "building/figure.h"
 #include "building/government.h"
-#include "building/granary.h"
+#include "building/building_granary.h"
 #include "building/house_evolution.h"
 #include "building/house_population.h"
 #include "building/house_service.h"

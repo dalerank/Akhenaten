@@ -1,9 +1,12 @@
 #pragma once
 
 #include "game/resource.h"
+#include "core/vec2i.h"
+#include "grid/point.h"
+#include "graphics/color.h"
 
 class building;
-class map_point;
+struct painter;
 
 enum e_granary_task {
     GRANARY_TASK_NONE = -1,
@@ -27,25 +30,18 @@ int building_granary_is_not_accepting(int resource, building* b);
 
 granary_task_status building_granary_determine_worker_task(building* granary);
 
-void building_granaries_calculate_stocks(void);
+void building_granaries_calculate_stocks();
 
-int building_granary_for_storing(map_point tile,
-                                 int resource,
-                                 int distance_from_entry,
-                                 int road_network_id,
-                                 int force_on_stockpile,
-                                 int* understaffed,
-                                 map_point* dst);
+int building_granary_for_storing(tile2i tile, int resource, int distance_from_entry, int road_network_id, int force_on_stockpile, int* understaffed, tile2i* dst);
 
-int building_getting_granary_for_storing(map_point tile,
-                                         int resource,
-                                         int distance_from_entry,
-                                         int road_network_id,
-                                         map_point* dst);
+int building_getting_granary_for_storing(tile2i tile, int resource, int distance_from_entry, int road_network_id, tile2i* dst);
 
-int building_granary_for_getting(building* src, map_point* dst);
+int building_granary_for_getting(building* src, tile2i* dst);
 
 void building_granary_bless(void);
 void building_granary_warehouse_curse(int big);
 
 bool building_granary_is_getting(int resource, building* b);
+void building_granary_set_res_offset(int i, vec2i v);
+
+void building_granary_draw_anim(building &b, vec2i point, tile2i tile, color mask, painter &ctx);

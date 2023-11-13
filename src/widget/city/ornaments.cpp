@@ -4,6 +4,7 @@
 #include "building/building.h"
 #include "building/model.h"
 #include "building/dock.h"
+#include "building/building_granary.h"
 #include "city/buildings.h"
 #include "city/floods.h"
 #include "city/labor.h"
@@ -31,7 +32,7 @@ static bool drawing_building_as_deleted(building* b) {
 
 /////// ANIMATIONS
 
-static void draw_normal_anim(painter &ctx, int x, int y, building* b, int grid_offset, int sprite_id, int color_mask, int base_id = 0, int max_frames = 0) {
+void building_draw_normal_anim(painter &ctx, int x, int y, building* b, int grid_offset, int sprite_id, int color_mask, int base_id, int max_frames) {
     if (!base_id)
         base_id = map_image_at(grid_offset);
 
@@ -65,7 +66,7 @@ static void draw_water_lift_anim(painter &ctx, building* b, int x, int y, color 
         break;
     }
 
-    draw_normal_anim(ctx, x, y, b, b->tile.grid_offset(), image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
+    building_draw_normal_anim(ctx, x, y, b, b->tile.grid_offset(), image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
 }
 
 static void draw_fort_anim(int x, int y, building* b, painter &ctx) {
@@ -127,7 +128,7 @@ static void draw_entertainment_shows_c3(building* b, int x, int y, color color_m
 static void draw_entertainment_show_jugglers(painter &ctx, building* b, int x, int y, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days1) {
-        draw_normal_anim(ctx, x + 30, y + 15, b, b->tile.grid_offset(), image_id_from_group(GROUP_JUGGLERS_SHOW_ALONE) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BOOTH));
+        building_draw_normal_anim(ctx, x + 30, y + 15, b, b->tile.grid_offset(), image_id_from_group(GROUP_JUGGLERS_SHOW_ALONE) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BOOTH));
     }
 }
 
@@ -137,11 +138,11 @@ static void draw_entertainment_shows_musicians(painter &ctx, building* b, int x,
         building* next_tile = b->next();
         switch (direction) {
         case 0:
-            draw_normal_anim(ctx, x + 20, y + 12, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
+            building_draw_normal_anim(ctx, x + 20, y + 12, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
             break;
 
         case 1:
-            draw_normal_anim(ctx, x + 48, y + 4, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
+            building_draw_normal_anim(ctx, x + 48, y + 4, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
             break;
         }
     }
@@ -150,7 +151,7 @@ static void draw_entertainment_shows_musicians(painter &ctx, building* b, int x,
 static void draw_entertainment_shows_dancers(painter &ctx, building* b, int x, int y, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days3_or_play) {
-        draw_normal_anim(ctx, x + 64, y, b, b->tile.grid_offset(), image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask, image_id_from_group(GROUP_BUILDING_PAVILLION));
+        building_draw_normal_anim(ctx, x + 64, y, b, b->tile.grid_offset(), image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask, image_id_from_group(GROUP_BUILDING_PAVILLION));
     }
 }
 
@@ -349,17 +350,6 @@ static void draw_dock_workers(building* b, int x, int y, color color_mask, paint
 
 /////// ORNAMENTS
 
-static const vec2i granary_offsets_ph[] = {
-  {0, 0},
-  {16, 9},
-  {35, 18},
-  {51, 26},
-  {-16, 7},
-  {1, 16},
-  {20, 26},
-  {37, 35},
-};
-
 static void draw_workshop_raw_material_storage(painter &ctx, const building* b, int x, int y, color color_mask) {
     int amount = ceil((float)b->stored_amount() / 100.0) - 1;
     int amount2 = 0;
@@ -439,25 +429,6 @@ static void draw_workshop_raw_material_storage(painter &ctx, const building* b, 
         break;
     }
 }
-static void draw_granary_stores(const building* b, int x, int y, color color_mask, painter &ctx) {
-    int last_spot_filled = 0;
-    int spot_x = 0;
-    int spot_y = 0;
-    for (int r = 1; r < 9; r++) {
-        if (b->data.granary.resource_stored[r] > 0) {
-            int spots_filled = ceil((float)(b->data.granary.resource_stored[r] - 199) / (float)400); // number of "spots" occupied by food
-            if (spots_filled == 0 && b->data.granary.resource_stored[r] > 0)
-                spots_filled = 1;
-            for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
-                // draw sprite on each granary "spot"
-                spot_x = granary_offsets_ph[spot].x;
-                spot_y = granary_offsets_ph[spot].y;
-                ImageDraw::img_generic(ctx, image_id_from_group(IMG_GRANARY_RESOURCES) + r, x + 110 + spot_x, y - 74 + spot_y, color_mask);
-            }
-            last_spot_filled += spots_filled;
-        }
-    }
-}
 
 static void draw_storageyard_ornaments(const building* b, int x, int y, color color_mask, painter &ctx) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BUILDING_STORAGE_YARD) + 17, x - 5, y - 42, color_mask);
@@ -505,10 +476,10 @@ static void draw_palace_rating_flags(const building* b, int x, int y, color colo
     }
 }
 
-void draw_ornaments_and_animations(vec2i tile, map_point point, painter &ctx) {
-    int grid_offset = point.grid_offset();
-    int x = tile.x;
-    int y = tile.y;
+void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
+    int grid_offset = tile.grid_offset();
+    int x = point.x;
+    int y = point.y;
     // tile must contain image draw data
     if (!map_property_is_draw_tile(grid_offset)) {
         return;
@@ -532,22 +503,16 @@ void draw_ornaments_and_animations(vec2i tile, map_point point, painter &ctx) {
 
     switch (b->type) {
     case BUILDING_BURNING_RUIN:
-        draw_normal_anim(ctx, x, y, b, grid_offset, image_id, color_mask);
+        building_draw_normal_anim(ctx, x, y, b, grid_offset, image_id, color_mask);
         break;
 
-    case BUILDING_GRANARY: {
-            draw_granary_stores(b, x, y, color_mask, ctx);
-            int max_workers = model_get_building(BUILDING_GRANARY)->laborers;
-            draw_normal_anim(ctx, x + 114, y + 2, b, grid_offset, image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, color_mask);
-            if (b->num_workers > max_workers / 2) {
-                draw_normal_anim(ctx, x + 96, y - 4, b, grid_offset, image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, color_mask);
-            }
-        }
+    case BUILDING_GRANARY:
+        building_granary_draw_anim(*b, point, tile, color_mask, ctx);
         break;
 
     case BUILDING_STORAGE_YARD:
         draw_storageyard_ornaments(b, x, y, color_mask, ctx);
-        draw_normal_anim(ctx, x + 21, y + 24, b, grid_offset, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
+        building_draw_normal_anim(ctx, x + 21, y + 24, b, grid_offset, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
         ImageDraw::img_generic(ctx, image_id + 17, x - 5, y - 42, color_mask);
         break;
 
@@ -563,15 +528,15 @@ void draw_ornaments_and_animations(vec2i tile, map_point point, painter &ctx) {
     case BUILDING_FLAX_FARM:
     case BUILDING_HENNA_FARM:
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            draw_farm_crops(ctx, b->type, b->data.industry.progress, b->tile.grid_offset(), tile, color_mask);
-            draw_farm_workers(ctx, b, grid_offset, tile);
+            draw_farm_crops(ctx, b->type, b->data.industry.progress, b->tile.grid_offset(), point, color_mask);
+            draw_farm_workers(ctx, b, grid_offset, point);
         }
         break;
 
     case BUILDING_FIGS_FARM:
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            draw_farm_crops(ctx, b->type, b->data.industry.progress, b->tile.grid_offset(), tile, color_mask);
-            draw_farm_workers(ctx, b, grid_offset, tile);
+            draw_farm_crops(ctx, b->type, b->data.industry.progress, b->tile.grid_offset(), point, color_mask);
+            draw_farm_workers(ctx, b, grid_offset, point);
         }
         break;
 
@@ -582,14 +547,14 @@ void draw_ornaments_and_animations(vec2i tile, map_point point, painter &ctx) {
     case BUILDING_GOLD_MINE:
     case BUILDING_COPPER_MINE:
     case BUILDING_GEMSTONE_MINE:
-        draw_normal_anim(ctx, x + 54, y + 15, b, grid_offset, image_id_from_group(ANIM_GOLD_MINE) - 1, color_mask);
+        building_draw_normal_anim(ctx, x + 54, y + 15, b, grid_offset, image_id_from_group(ANIM_GOLD_MINE) - 1, color_mask);
         break;
 
     case BUILDING_STONE_QUARRY:
     case BUILDING_LIMESTONE_QUARRY:
     case BUILDING_GRANITE_QUARRY:
     case BUILDING_SANDSTONE_QUARRY:
-        draw_normal_anim(ctx, x + 54, y + 15, b, grid_offset, image_id_from_group(ANIM_SANDSTONE_QUARRY_1) - 1, color_mask);
+        building_draw_normal_anim(ctx, x + 54, y + 15, b, grid_offset, image_id_from_group(ANIM_SANDSTONE_QUARRY_1) - 1, color_mask);
         break; 
 
     case BUILDING_MENU_FORTS:
@@ -635,19 +600,19 @@ void draw_ornaments_and_animations(vec2i tile, map_point point, painter &ctx) {
         break;
 
     case BUILDING_CONSERVATORY:
-        draw_normal_anim(ctx, x + 82, y + 14, b, grid_offset, image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask);
+        building_draw_normal_anim(ctx, x + 82, y + 14, b, grid_offset, image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask);
         break;
 
     case BUILDING_DANCE_SCHOOL:
-        draw_normal_anim(ctx, x + 104, y, b, grid_offset, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask);
+        building_draw_normal_anim(ctx, x + 104, y, b, grid_offset, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask);
         break;
 
     case BUILDING_FISHING_WHARF:
-        draw_normal_anim(ctx, x + 74, y + 7, b, grid_offset, image_id_from_group(IMG_FISHIHG_WHARF_ANIM) - 1, color_mask);
+        building_draw_normal_anim(ctx, x + 74, y + 7, b, grid_offset, image_id_from_group(IMG_FISHIHG_WHARF_ANIM) - 1, color_mask);
         break;
 
     default:
-        draw_normal_anim(ctx, x, y, b, grid_offset, image_id, color_mask);
+        building_draw_normal_anim(ctx, x, y, b, grid_offset, image_id, color_mask);
         if (b->has_plague) {
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask);
         }

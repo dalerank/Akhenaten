@@ -1,7 +1,7 @@
 #include "market.h"
 
 #include "building/building.h"
-#include "building/granary.h"
+#include "building/building_granary.h"
 #include "building/storage.h"
 #include "core/log.h"
 #include "building/storage_yard.h"

@@ -1,7 +1,7 @@
 #include "boilerplate.h"
 
 #include "building/construction/build_planner.h"
-#include "building/granary.h"
+#include "building/building_granary.h"
 #include "building/maintenance.h"
 #include "building/menu.h"
 #include "building/properties.h"

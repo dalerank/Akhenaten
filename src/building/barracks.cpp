@@ -194,3 +194,4 @@ void building::barracks_toggle_priority() {
 int building::barracks_get_priority() {
     return subtype.barracks_priority;
 }
+

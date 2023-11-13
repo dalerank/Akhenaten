@@ -1,4 +1,4 @@
-#include "granary.h"
+#include "building_granary.h"
 
 #include "building/destruction.h"
 #include "building/model.h"
@@ -13,6 +13,12 @@
 #include "config/config.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
+#include "graphics/image_desc.h"
+#include "graphics/color.h"
+#include "graphics/graphics.h"
+#include "graphics/boilerplate.h"
+#include "widget/city/ornaments.h"
+#include "game/game.h"
 
 #include <cmath>
 
@@ -504,5 +510,49 @@ void building_granary_storageyard_curse(int big) {
             amount = building_granary_remove_resource(max_building, RESOURCE_LETTUCE, amount);
             building_granary_remove_resource(max_building, RESOURCE_FIGS, amount);
         }
+    }
+}
+
+static vec2i granary_offsets_ph[] = {
+    {0, 0},
+    {16, 9},
+    {35, 18},
+    {51, 26},
+    {-16, 7},
+    {1, 16},
+    {20, 26},
+    {37, 35},
+};
+
+void set_granary_res_offset(int i, vec2i v) {
+    granary_offsets_ph[i] = v;
+}
+
+void draw_granary_stores(const building &b, vec2i point, color color_mask, painter &ctx) {
+    int last_spot_filled = 0;
+    int spot_x = 0;
+    int spot_y = 0;
+    for (int r = 1; r < 9; r++) {
+        if (b.data.granary.resource_stored[r] > 0) {
+            int spots_filled = ceil((float)(b.data.granary.resource_stored[r] - 199) / (float)400); // number of "spots" occupied by food
+            if (spots_filled == 0 && b.data.granary.resource_stored[r] > 0)
+                spots_filled = 1;
+            for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
+                // draw sprite on each granary "spot"
+                spot_x = granary_offsets_ph[spot].x;
+                spot_y = granary_offsets_ph[spot].y;
+                ImageDraw::img_generic(ctx, image_id_from_group(IMG_GRANARY_RESOURCES) + r, point + vec2i{110 + spot_x, -74 + spot_y}, color_mask);
+            }
+            last_spot_filled += spots_filled;
+        }
+    }
+}
+
+void building_granary_draw_anim(building &b, vec2i point, tile2i tile, color mask, painter &ctx) {
+    draw_granary_stores(b, point, mask, ctx);
+    int max_workers = model_get_building(BUILDING_GRANARY)->laborers;
+    building_draw_normal_anim(ctx, point.x + 114, point.y + 2, &b, tile.grid_offset(), image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, mask);
+    if (b.num_workers > max_workers / 2) {
+        building_draw_normal_anim(ctx, point.x + 96, point.y - 4, &b, tile.grid_offset(), image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, mask);
     }
 }

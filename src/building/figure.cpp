@@ -4,7 +4,7 @@
 #include "figuretype/entertainer.h"
 
 #include "building/barracks.h"
-#include "building/granary.h"
+#include "building/building_granary.h"
 #include "building/industry.h"
 #include "building/market.h"
 #include "building/model.h"
