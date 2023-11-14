@@ -15,5 +15,4 @@
 // int figure_image_direction();
 
 int figure_image_normalize_direction(int direction);
-void set_cart_image_offset(int i, vec2i offset);
 void set_sled_image_offset(int i, vec2i offset);

@@ -1,10 +1,7 @@
 #include "js_game.h"
 
-#include "js/js_defines.h"
-
 #include "content/vfs.h"
 #include "core/log.h"
-#include "mujs/mujs.h"
 
 #include "sound/system.h"
 #include "sound/sound_mission.h"
@@ -56,119 +53,66 @@ void js_game_load_text(js_State *J) {
     free(text);
 }
 
-template<typename Arch, typename T>
-inline void js_config_load_global_array(Arch arch, pcstr name, T read_func) {
-    js_getglobal(arch, name);
-    if (js_isarray(arch, -1)) {
-        int length = js_getlength(arch, -1);
-
-        for (int i = 0; i < length; ++i) {
-            js_getindex(arch, -1, i);
-
-            if (js_isobject(arch, -1)) {
-                read_func(arch);
-            }
-
-            js_pop(arch, 1);
-        }
-        js_pop(arch, 1);
-    }
-}
-
-template<typename Arch>
-inline pcstr read_string(Arch arch, pcstr name) {
-    js_getproperty(arch, -1, name);
-    const char *result = js_tostring(arch, -1);
-    js_pop(arch, 1);
-    return result;
-}
-
-template<typename Arch>
-inline int read_integer(Arch arch, pcstr name) {
-    js_getproperty(arch, -1, name);
-    int result = js_isundefined(arch, -1) ? 0 : js_tointeger(arch, -1);
-    js_pop(arch, 1);
-    return result;
-}
-
-template<typename T = int, typename Arch>
-inline std::vector<T> read_integer_array(Arch arch, pcstr name) {
-    js_getproperty(arch, -1, name);
-    std::vector<T> result;
-    if (js_isarray(arch, -1)) {
-        int length = js_getlength(arch, -1);
-
-        for (int i = 0; i < length; ++i) {
-            js_getindex(arch, -1, i);
-            int v = js_tointeger(arch, -1);
-            result.push_back((T)v);
-            js_pop(arch, 1);
-        }
-        js_pop(arch, 1);
-    }
-    return result;
-}
-
-void js_config_load_building_sounds(js_State *arch) {
-    js_config_load_global_array(arch, "building_sounds", [] (auto arch) {
-        const char *type = read_string(arch, "type");
-        const char *path = read_string(arch, "sound");
+void js_config_load_building_sounds(archive arch) {
+    arch.load_global_array("building_sounds", [] (archive arch) {
+        const char *type = arch.read_string("type");
+        const char *path = arch.read_string("sound");
         snd::set_building_info_sound(type, path);
     });
 }
 
-void js_config_load_mission_sounds(js_State *arch) {
-    js_config_load_global_array(arch, "mission_sounds", [] (auto arch) {
-        const int mission = read_integer(arch, "mission");
-        const char *inter = read_string(arch, "briefing");
-        const char *won = read_string(arch, "victory");
+void js_config_load_mission_sounds(archive arch) {
+    arch.load_global_array("mission_sounds", [] (archive arch) {
+        const int mission = arch.read_integer("mission");
+        const char *inter = arch.read_string("briefing");
+        const char *won = arch.read_string("victory");
         snd::set_mission_config(mission, inter, won);
     });
 }
 
-void js_config_load_walker_sounds(js_State *arch) {
-    js_config_load_global_array(arch, "walker_sounds", [] (auto arch) {
-        const char *type = read_string(arch, "type");
-        const char *path = read_string(arch, "sound");
+void js_config_load_walker_sounds(archive arch) {
+    arch.load_global_array("walker_sounds", [] (archive arch) {
+        const char *type = arch.read_string("type");
+        const char *path = arch.read_string("sound");
         snd::set_walker_reaction(type, path);
     });
 }
 
-void js_config_load_city_sounds(js_State *arch) {
-    js_config_load_global_array(arch, "city_sounds", [] (auto arch) {
-        const int channel = read_integer(arch, "c");
-        const char *path = read_string(arch, "p");
+void js_config_load_city_sounds(archive arch) {
+    arch.load_global_array("city_sounds", [] (archive arch) {
+        const int channel = arch.read_integer("c");
+        const char *path = arch.read_string("p");
         sound_system_update_channel(channel, path);
     });
 }
 
-void js_config_load_building_info(js_State *arch) {
-    js_config_load_global_array(arch, "building_info", [] (auto arch) {
-        const char *type = read_string(arch, "type");
+void js_config_load_building_info(archive arch) {
+    arch.load_global_array("building_info", [] (archive arch) {
+        const char *type = arch.read_string("type");
         auto &meta = building::get_info(type);
-        meta.help_id = read_integer(arch, "help_id");
-        meta.text_id = read_integer(arch, "text_id");
+        meta.help_id = arch.read_integer("help_id");
+        meta.text_id = arch.read_integer("text_id");
     });
 }
 
-void js_config_load_images_info(js_State *arch) {
-    js_config_load_global_array(arch, "images", [] (auto arch) {
-        int type = read_integer(arch, "img");
-        int pack = read_integer(arch, "pack");
-        int id = read_integer(arch, "id");
-        int offset = read_integer(arch, "offset");
+void js_config_load_images_info(archive arch) {
+    arch.load_global_array("images", [] (archive arch) {
+        int type = arch.read_integer("img");
+        int pack = arch.read_integer("pack");
+        int id = arch.read_integer("id");
+        int offset = arch.read_integer("offset");
         set_image_desc((e_image_id)type, pack, id, offset);
     });
 }
 
-void js_config_load_city_overlays(js_State *arch) {
-    js_config_load_global_array(arch, "overlays", [] (auto arch) {
-        const int e_v = read_integer(arch, "id");
-        const char *caption = read_string(arch, "caption");
-        auto walkers = read_integer_array<e_figure_type>(arch, "walkers");
-        auto buildings = read_integer_array<e_building_type>(arch, "buildings");
-        int tooltip_base = read_integer(arch, "tooltip_base");
-        auto tooltips = read_integer_array(arch, "tooltips");
+void js_config_load_city_overlays(archive arch) {
+    arch.load_global_array("overlays", [] (archive arch) {
+        const int e_v = arch.read_integer("id");
+        const char *caption = arch.read_string("caption");
+        auto walkers = arch.read_integer_array<e_figure_type>("walkers");
+        auto buildings = arch.read_integer_array<e_building_type>("buildings");
+        int tooltip_base = arch.read_integer("tooltip_base");
+        auto tooltips = arch.read_integer_array("tooltips");
         auto overlay = get_city_overlay((e_overlay)e_v);
 
         if (overlay) {
@@ -181,19 +125,11 @@ void js_config_load_city_overlays(js_State *arch) {
     });
 }
 
-void js_config_load_cart_offsets(js_State *arch) {
+void js_config_load_cart_offsets(archive arch) {
     int i = 0;
-    js_config_load_global_array(arch, "cart_offsets", [&i] (auto arch) {
-        int x = read_integer(arch, "x");
-        int y = read_integer(arch, "y");
-        set_cart_image_offset(i, vec2i{x, y});
-        i++;
-    });
-
-    i = 0;
-    js_config_load_global_array(arch, "sled_offsets", [&i] (auto arch) {
-        int x = read_integer(arch, "x");
-        int y = read_integer(arch, "y");
+    arch.load_global_array("sled_offsets", [&i] (archive arch) {
+        int x = arch.read_integer("x");
+        int y = arch.read_integer("y");
         set_sled_image_offset(i, vec2i{x, y});
         i++;
     });
@@ -204,3 +140,13 @@ void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
 }
+
+namespace config {
+    FuncLinkedList *FuncLinkedList::tail = nullptr;
+    
+    void refresh(archive arch) {
+        for (FuncLinkedList *s = FuncLinkedList::tail; s; s = s->next) {
+            s->func(arch);
+        }
+    }
+} // config
