@@ -63,7 +63,6 @@ struct archive {
 };
 
 void js_register_game_functions(js_State *J);
-void js_config_load_building_sounds(archive arch);
 
 namespace config {
 

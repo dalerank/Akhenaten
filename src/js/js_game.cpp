@@ -53,14 +53,6 @@ void js_game_load_text(js_State *J) {
     free(text);
 }
 
-void js_config_load_building_sounds(archive arch) {
-    arch.load_global_array("building_sounds", [] (archive arch) {
-        const char *type = arch.read_string("type");
-        const char *path = arch.read_string("sound");
-        snd::set_building_info_sound(type, path);
-    });
-}
-
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);

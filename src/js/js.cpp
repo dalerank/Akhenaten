@@ -101,7 +101,6 @@ int js_vm_load_file_and_exec(const char *path) {
 }
 
 void js_vm_reload_configs() {
-    js_config_load_building_sounds(vm.J);
     config::refresh(vm.J);
 }
 
