@@ -61,14 +61,6 @@ void js_config_load_building_sounds(archive arch) {
     });
 }
 
-void js_config_load_city_sounds(archive arch) {
-    arch.load_global_array("city_sounds", [] (archive arch) {
-        const int channel = arch.read_integer("c");
-        const char *path = arch.read_string("p");
-        sound_system_update_channel(channel, path);
-    });
-}
-
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
