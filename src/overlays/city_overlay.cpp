@@ -28,8 +28,31 @@
 #include "overlays/city_overlay_labor.h"
 #include "overlays/city_overlay_tax_income.h"
 #include "overlays/city_overlay_courthouse.h"
+#include "js/js_game.h"
 
 const city_overlay* g_city_overlay = 0;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays);
+void config_load_city_overlays(archive arch) {
+    arch.load_global_array("overlays", [] (archive arch) {
+        const int e_v = arch.read_integer("id");
+        const char *caption = arch.read_string("caption");
+        auto walkers = arch.read_integer_array<e_figure_type>("walkers");
+        auto buildings = arch.read_integer_array<e_building_type>("buildings");
+        int tooltip_base = arch.read_integer("tooltip_base");
+        auto tooltips = arch.read_integer_array("tooltips");
+        city_overlay* overlay = get_city_overlay((e_overlay)e_v);
+
+        if (overlay) {
+            if (tooltip_base) { overlay->tooltip_base = tooltip_base; }
+            if (buildings.size()) { overlay->buildings = buildings; }
+            if (*caption) { overlay->caption = caption; }
+            if (tooltips.size()) { overlay->tooltips = tooltips; }
+            if (walkers.size()) { overlay->walkers = walkers; }
+        }
+    });
+}
+
 
 city_overlay* get_city_overlay(e_overlay ov) {
     switch (ov) {

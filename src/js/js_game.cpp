@@ -105,26 +105,6 @@ void js_config_load_images_info(archive arch) {
     });
 }
 
-void js_config_load_city_overlays(archive arch) {
-    arch.load_global_array("overlays", [] (archive arch) {
-        const int e_v = arch.read_integer("id");
-        const char *caption = arch.read_string("caption");
-        auto walkers = arch.read_integer_array<e_figure_type>("walkers");
-        auto buildings = arch.read_integer_array<e_building_type>("buildings");
-        int tooltip_base = arch.read_integer("tooltip_base");
-        auto tooltips = arch.read_integer_array("tooltips");
-        auto overlay = get_city_overlay((e_overlay)e_v);
-
-        if (overlay) {
-            if (tooltip_base) { overlay->tooltip_base = tooltip_base; }
-            if (buildings.size()) { overlay->buildings = buildings; }
-            if (*caption) { overlay->caption = caption; }
-            if (tooltips.size()) { overlay->tooltips = tooltips; }
-            if (walkers.size()) { overlay->walkers = walkers; }
-        }
-    });
-}
-
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
