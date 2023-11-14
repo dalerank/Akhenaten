@@ -8,6 +8,5 @@ namespace snd {
         vfs::path won;
     };
 
-    void set_mission_config(int mission, pcstr inter, pcstr won);
     mission_config get_mission_config(int mission);
 }

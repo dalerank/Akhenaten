@@ -61,15 +61,6 @@ void js_config_load_building_sounds(archive arch) {
     });
 }
 
-void js_config_load_mission_sounds(archive arch) {
-    arch.load_global_array("mission_sounds", [] (archive arch) {
-        const int mission = arch.read_integer("mission");
-        const char *inter = arch.read_string("briefing");
-        const char *won = arch.read_string("victory");
-        snd::set_mission_config(mission, inter, won);
-    });
-}
-
 void js_config_load_city_sounds(archive arch) {
     arch.load_global_array("city_sounds", [] (archive arch) {
         const int channel = arch.read_integer("c");
