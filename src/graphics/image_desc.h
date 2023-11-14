@@ -64,5 +64,4 @@ struct image_desc {
     int offset = 0;
 };
 
-void set_image_desc(e_image_id t, int pack, int id, int offset);
 image_desc get_image_desc(e_image_id t);

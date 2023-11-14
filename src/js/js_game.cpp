@@ -69,16 +69,6 @@ void js_config_load_city_sounds(archive arch) {
     });
 }
 
-void js_config_load_images_info(archive arch) {
-    arch.load_global_array("images", [] (archive arch) {
-        int type = arch.read_integer("img");
-        int pack = arch.read_integer("pack");
-        int id = arch.read_integer("id");
-        int offset = arch.read_integer("offset");
-        set_image_desc((e_image_id)type, pack, id, offset);
-    });
-}
-
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
