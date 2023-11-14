@@ -70,14 +70,6 @@ void js_config_load_mission_sounds(archive arch) {
     });
 }
 
-void js_config_load_walker_sounds(archive arch) {
-    arch.load_global_array("walker_sounds", [] (archive arch) {
-        const char *type = arch.read_string("type");
-        const char *path = arch.read_string("sound");
-        snd::set_walker_reaction(type, path);
-    });
-}
-
 void js_config_load_city_sounds(archive arch) {
     arch.load_global_array("city_sounds", [] (archive arch) {
         const int channel = arch.read_integer("c");

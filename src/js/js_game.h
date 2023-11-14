@@ -65,9 +65,7 @@ struct archive {
 void js_register_game_functions(js_State *J);
 void js_config_load_building_sounds(archive arch);
 void js_config_load_mission_sounds(archive arch);
-void js_config_load_walker_sounds(archive arch);
 void js_config_load_city_sounds(archive arch);
-void js_config_load_building_info(archive arch);
 void js_config_load_images_info(archive arch);
 
 namespace config {
