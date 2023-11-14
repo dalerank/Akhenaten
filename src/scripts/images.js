@@ -51,6 +51,7 @@ images = [
 	{img: IMG_PLAINSTONE_QUARRY, pack:PACK_GENERAL, id:187},
 	{img: IMG_GRANARY, pack:PACK_GENERAL, id:99},
 	{img: IMG_GRANARY_RESOURCES, pack:PACK_GENERAL, id:99, offset:2},
+	{img: IMG_CART_COPPER, pack:PACK_SPR_MAIN, id:107},
 ]
 
 cart_offsets = [

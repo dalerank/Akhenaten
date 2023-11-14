@@ -12,7 +12,7 @@ void config_load_walker_sounds(archive arch) {
     arch.load_global_array("walker_sounds", [] (archive arch) {
         const char *type = arch.read_string("type");
         const char *path = arch.read_string("sound");
-        g_walker_reaction[type] = type;
+        g_walker_reaction[type] = path;
     });
 }
 

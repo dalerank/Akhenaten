@@ -54,6 +54,7 @@ enum e_image_id : uint16_t {
     IMG_SLED_BRICKS = 49,
     IMG_GRANARY = 50,
     IMG_GRANARY_RESOURCES = 51,
+    IMG_CART_COPPER = 52,
 
     IMG_SIZE
 };

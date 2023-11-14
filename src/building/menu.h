@@ -100,4 +100,5 @@ void building_menu_update_gods_available(e_god god, bool available);
  * Also marks the change as 'seen'.
  * @return True if the building menu has changed
  */
-int building_menu_has_changed(void);
+bool building_menu_has_changed();
+void building_menu_invalidate();

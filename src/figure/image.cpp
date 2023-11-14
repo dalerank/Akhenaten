@@ -191,7 +191,7 @@ void figure::figure_image_update(bool refresh_only) {
     }
 }
 
-e_image_id resource_to_cart_image(e_resource res) {
+e_image_id resource_to_sled_image(e_resource res) {
     switch (res) {
     case RESOURCE_STONE: return IMG_SLED_STONE_SMALL;
     case RESOURCE_GRANITE: return IMG_SLED_GRANITE_SMALL;
@@ -203,6 +203,18 @@ e_image_id resource_to_cart_image(e_resource res) {
     return IMG_SLED_EMPTY_SMALL;
 }
 
+int cart_image_offset_from_amount(int amount) {
+    if (amount <= 100) {
+        return 0;
+    } else if (amount <= 200) {
+        return 1;
+    } else if (amount <= 400) {
+        return 2;
+    }
+
+    return 2;
+}
+
 void figure::cart_update_image() {
     // determine cart sprite
     switch (resource_id) {
@@ -212,32 +224,27 @@ void figure::cart_update_image() {
     case RESOURCE_SANDSTONE:
     case RESOURCE_BRICKS:
         if (resource_amount_full > 0) {
-            e_image_id image_id = resource_to_cart_image(resource_id);
+            e_image_id image_id = resource_to_sled_image(resource_id);
             cart_image_id = image_id_from_group(image_id);
         } else {
             cart_image_id = image_id_from_group(IMG_SLED_EMPTY_SMALL);
         }
         break;
 
+    case RESOURCE_COPPER:
+        cart_image_id = image_id_from_group(IMG_CARTPUSHER_CART);
+        if (resource_amount_full > 0) {
+            cart_image_id = image_id_from_group(IMG_CART_COPPER);
+            int amount_offset = cart_image_offset_from_amount(resource_amount_full);
+            cart_image_id += 8 * amount_offset;
+        }
+        break;
+
     default:
         cart_image_id = image_id_from_group(IMG_CARTPUSHER_CART);
         if (resource_amount_full > 0) {
-            short amount_offset = 2;
-            if (resource_amount_full <= 200) {
-                amount_offset = 0;
-            } else if (resource_amount_full <= 400) {
-                amount_offset = 1;
-            }
-            //            amount_offset = testcart;
-            //            testcart++; if (testcart >= 3) testcart = 0;
+            int amount_offset = cart_image_offset_from_amount(resource_amount_full);
             cart_image_id += 8 + 24 * (resource_id - 1) + 8 * amount_offset;
-
-            // adjust sprite for sled resources (blocks/chariots/etc.)
-            short res_single_load[] = {12, 24, 25, 26, 27, 28, 30, 35, 999};
-            for (int i = 0; res_single_load[i] < 999; i++) {
-                if (resource_id > res_single_load[i])
-                    cart_image_id -= 16;
-            }
         }
     }
     //} else if (resource_amount_full == 100) {

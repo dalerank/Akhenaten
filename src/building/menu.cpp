@@ -197,7 +197,7 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
 };
 int g_menu_enabled[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX];
 
-static int changed = 1;
+static bool changed = 1;
 
 void building_menu_disable_all() {
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
@@ -206,7 +206,7 @@ void building_menu_disable_all() {
         }
     }
 }
-void building_menu_enable_all(void) {
+void building_menu_enable_all() {
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
             g_menu_enabled[sub][item] = 1;
@@ -271,10 +271,7 @@ void building_menu_toggle_building(int type, bool enabled) {
 }
 
 static void enable_if_allowed(int type) {
-    if (scenario_building_allowed(type))
-        building_menu_toggle_building(type, true);
-    else
-        building_menu_toggle_building(type, false);
+    building_menu_toggle_building(type, scenario_building_allowed(type));
 }
 
 static int disable_raw_if_unavailable(int type, e_resource resource) {
@@ -745,10 +742,14 @@ e_building_type building_menu_type(int submenu, int item) {
     return (e_building_type)MENU_CONFIG[submenu][item];
 }
 
-int building_menu_has_changed(void) {
+bool building_menu_has_changed() {
     if (changed) {
-        changed = 0;
-        return 1;
+        changed = false;
+        return true;
     }
-    return 0;
+    return false;
+}
+
+void building_menu_invalidate() {
+    changed = true;
 }

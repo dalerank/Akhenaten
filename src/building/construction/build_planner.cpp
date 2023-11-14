@@ -1034,9 +1034,15 @@ void BuildPlanner::setup_build_flags() {
 
     case BUILDING_GOLD_MINE:
     case BUILDING_GEMSTONE_MINE:
-    case BUILDING_COPPER_MINE:
         set_flag(PlannerFlags::Rock);
         set_flag(PlannerFlags::Ore);
+        break;
+
+    case BUILDING_COPPER_MINE:
+        set_flag(PlannerFlags::Rock);
+        if (!config_get(CONFIG_GP_CH_COPPER_NEAR_MOUNTAINS)) {
+            set_flag(PlannerFlags::Ore);
+        }
         break;
 
     case BUILDING_CLAY_PIT:
