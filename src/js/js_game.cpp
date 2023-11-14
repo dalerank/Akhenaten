@@ -86,15 +86,6 @@ void js_config_load_city_sounds(archive arch) {
     });
 }
 
-void js_config_load_building_info(archive arch) {
-    arch.load_global_array("building_info", [] (archive arch) {
-        const char *type = arch.read_string("type");
-        auto &meta = building::get_info(type);
-        meta.help_id = arch.read_integer("help_id");
-        meta.text_id = arch.read_integer("text_id");
-    });
-}
-
 void js_config_load_images_info(archive arch) {
     arch.load_global_array("images", [] (archive arch) {
         int type = arch.read_integer("img");
