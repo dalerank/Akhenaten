@@ -125,16 +125,6 @@ void js_config_load_city_overlays(archive arch) {
     });
 }
 
-void js_config_load_cart_offsets(archive arch) {
-    int i = 0;
-    arch.load_global_array("sled_offsets", [&i] (archive arch) {
-        int x = arch.read_integer("x");
-        int y = arch.read_integer("y");
-        set_sled_image_offset(i, vec2i{x, y});
-        i++;
-    });
-}
-
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);

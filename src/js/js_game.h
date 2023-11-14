@@ -70,7 +70,6 @@ void js_config_load_city_sounds(archive arch);
 void js_config_load_building_info(archive arch);
 void js_config_load_city_overlays(archive arch);
 void js_config_load_images_info(archive arch);
-void js_config_load_cart_offsets(archive arch);
 
 namespace config {
 
