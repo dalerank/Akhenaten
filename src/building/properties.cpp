@@ -224,7 +224,7 @@ static building_properties properties[400] = {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {2, 0, GROUP_BUILDING_GRANITE_QUARY, 0}, // granite
-    {2, 0, GROUP_BUILDING_COPPER_MINE, 0},   // copper
+    {2, 0, 0, 0},   // copper
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
@@ -248,6 +248,7 @@ void building_properties_init() {
     properties[BUILDING_SANDSTONE_QUARRY] = {2, 0, 0, 0, 0, IMG_SANDSTONE_QUARRY};
     properties[BUILDING_STONE_QUARRY] = {2, 0, 0, 0, 0, IMG_PLAINSTONE_QUARRY};
     properties[BUILDING_GRANARY] = {4, 0, 0, 0, 0, IMG_GRANARY};
+    properties[BUILDING_COPPER_MINE] = {2, 0, 0, 0, 0, IMG_COPPER_MINE};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {
