@@ -7,6 +7,7 @@ building_info = [
   { type: "marble_quarry", help_id:95, text_id:118},
   { help_id:93, type:"limestone_quarry", text_id:119},
   { help_id:93, type:"gold_mine", text_id:162},
+  { help_id:93, type:"copper_mine", text_id:193},
   { help_id:94, type:"timber_yard", text_id:120},
   { help_id:92, type:"clay_pit", text_id:121},
   { help_id:92, type:"reed_farm", text_id:116},

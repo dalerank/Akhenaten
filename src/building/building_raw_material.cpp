@@ -65,6 +65,9 @@ void building_limestone_quarry_draw_info(object_info& c) {
 void building_gold_mine_draw_info(object_info& c) {
     building_raw_material_draw_info(c, "gold_mine", RESOURCE_GOLD);
 }
+void building_copper_mine_draw_info(object_info& c) {
+    building_raw_material_draw_info(c, "copper_mine", RESOURCE_COPPER);
+}
 void building_timber_yard_draw_info(object_info& c) {
     building_raw_material_draw_info(c, "timber_yard", RESOURCE_TIMBER);
 }
