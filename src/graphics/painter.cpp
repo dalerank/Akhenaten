@@ -2,6 +2,7 @@
 
 #include "game/game.h"
 #include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "platform/renderer.h"
 
 #include <string>
@@ -93,4 +94,19 @@ void painter::draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i s
     //     SDL_Rect dst_coords = { (int) round(x / scale), (int) round(y / scale),
     //         (int) round(img->width / scale), (int) round(height / scale) };
     //     SDL_RenderCopy(data.renderer, texture, &src_coords, &dst_coords);
+}
+
+void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale, bool mirrored) {
+    if (game.paused || spr.img == nullptr) {
+        return;
+    }
+
+    vec2i offset{spr.img->atlas.x_offset, spr.img->atlas.y_offset};
+    vec2i size{spr.img->width, spr.img->height};
+    draw(spr.img->atlas.p_atlas->texture, pos.x, pos.y, offset, size, color_mask, scale, mirrored);
+}
+
+sprite_resource_icon::sprite_resource_icon(e_resource res) {
+    int image_id = image_id_resource_icon(res);
+    img = image_get(image_id);
 }

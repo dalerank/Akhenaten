@@ -17,13 +17,14 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 
-static void building_farm_draw_info(object_info &c, int help_id, const char* type, int group_id, int resource) {
+static void building_farm_draw_info(object_info &c, int help_id, const char* type, int group_id, e_resource resource) {
     painter ctx = game.painter();
+
     c.help_id = help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
     outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(resource), c.offset.x + 10, c.offset.y + 10);
+    ctx.draw(sprite_resource_icon(resource), c.offset + vec2i{10, 10});
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
@@ -82,7 +83,7 @@ void building_farm_draw_info(object_info& c) {
     building *b = building_get(c.building_id);
 
     int farm_group_id = 0;
-    int output_resource = RESOURCE_NONE;
+    e_resource output_resource = RESOURCE_NONE;
     switch (b->type) {
     case BUILDING_BARLEY_FARM:
         farm_group_id = 181;
