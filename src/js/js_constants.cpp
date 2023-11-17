@@ -68,6 +68,7 @@ void js_register_city_images(js_State *J) {
    REGISTER_GLOBAL_CONSTANT(J, IMG_GRANARY_RESOURCES);
    REGISTER_GLOBAL_CONSTANT(J, IMG_CART_COPPER);
    REGISTER_GLOBAL_CONSTANT(J, IMG_COPPER_MINE);
+   REGISTER_GLOBAL_CONSTANT(J, IMG_CONSERVATORY);
 }
 
 void js_register_collection_images(js_State *J) {
