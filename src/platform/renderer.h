@@ -69,7 +69,6 @@ public:
     void fill_rect(int x, int y, int width, int height, color color);
 
     void draw_image(painter &ctx, const image_t* img, float x, float y, color color, float scale, bool mirrored);
-    void draw_image(painter &ctx, SDL_Texture *tex, float x, float y, vec2i offset, vec2i, color color, float scale, bool mirrored);
     bool save_screen_buffer(painter &ctx, color *pixels, int x, int y, int width, int height, int row_width);
 
     void create_custom_texture(int type, int width, int height);
@@ -82,11 +81,15 @@ public:
 
     int save_texture_from_screen(int image_id, int x, int y, int width, int height);
     void draw_saved_texture_to_screen(int image_id, int x, int y, int width, int height);
+    void set_texture_scale_mode(SDL_Texture *texture, float scale_factor);
+    unsigned int premult_alpha();
 
     vec2i get_max_image_size();
 
     SDL_Texture* create_texture_from_buffer(color* p_data, int width, int height);
     SDL_Texture* create_texture_from_png_buffer(void* p_data, int size);
+
+    bool has_texture_scale_mode();
 
     bool save_texture_to_file(const char* filename, SDL_Texture* tex, e_file_format file_format = FILE_FORMAT_BMP);
     float scale();

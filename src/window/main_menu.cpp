@@ -102,11 +102,11 @@ static void draw_foreground() {
     painter ctx = game.painter();
     vec2i scr_size = screen_size();
     if (data.dicord_texture) {
-        graphics_renderer()->draw_image(ctx, data.dicord_texture, scr_size.x - 50, scr_size.y - 50, {0, 0}, {48, 48}, 0xffffffff, 0.75f, false);
+        ctx.draw(data.dicord_texture, scr_size.x - 50, scr_size.y - 50, {0, 0}, {48, 48}, 0xffffffff, 0.75f, false);
     }
 
     if (data.patreon_texture) {
-        graphics_renderer()->draw_image(ctx, data.patreon_texture, scr_size.x - 100, scr_size.y - 50, {0, 0}, {48, 48}, 0xffffffff, 0.75f, false);
+        ctx.draw(data.patreon_texture, scr_size.x - 100, scr_size.y - 50, {0, 0}, {48, 48}, 0xffffffff, 0.75f, false);
     }
 }
 
