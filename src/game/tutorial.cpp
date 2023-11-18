@@ -322,8 +322,12 @@ void tutorial_on_crime(void) {
     }
 }
 
-void tutorial_on_disease(void) {
-    g_tutorials_flags.tutorial_3.disease = true;
+void tutorial_on_disease() {
+    if (scenario_is_mission_rank(3) && !g_tutorials_flags.tutorial_3.disease) {
+        g_tutorials_flags.tutorial_3.disease = true;
+        building_menu_update(BUILDSET_TUT3_HEALTH);
+        post_message(MESSAGE_TUTORIAL_BASIC_HEALTHCARE);
+    }
 }
 
 void tutorial_on_filled_granary(int quantity) {
@@ -419,6 +423,16 @@ void tutorial_update_step(int step) {
         building_menu_toggle_building(BUILDING_BOOTH);
         building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
         post_message(MESSAGE_TUTORIAL_ENTERTAINMENT);
+        break;
+
+    case BUILDSET_TUT3_INDUSTRY:
+        building_menu_update(BUILDSET_TUT3_INDUSTRY);
+        post_message(MESSAGE_TUTORIAL_INDUSTRY);
+        break;
+
+    case BUILDSET_TUT3_HEALTH:
+        building_menu_update(BUILDSET_TUT3_HEALTH);
+        post_message(MESSAGE_TUTORIAL_BASIC_HEALTHCARE);
         break;
     }
 }
