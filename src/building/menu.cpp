@@ -516,13 +516,7 @@ void building_menu_update(int build_set) {
         building_menu_toggle_building(BUILDING_WATER_SUPPLY);
         break;
 
-    case BUILDSET_TUT1_COLLAPSE_C3:
-        building_menu_toggle_building(BUILDING_ENGINEERS_POST);
-        building_menu_toggle_building(BUILDING_GREATE_PALACE);
-        building_menu_toggle_building(BUILDING_ROADBLOCK);
-        break;
-
-    case BUILDSET_TUT1_COLLAPSE_PH:
+    case BUILDSET_TUT1_COLLAPSE:
         building_menu_toggle_building(BUILDING_ENGINEERS_POST);
         break;
 

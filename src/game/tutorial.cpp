@@ -178,7 +178,7 @@ void tutorial_menu_update(int tut) {
             
         if (g_tutorials_flags.tutorial_1.population_150_reached)  building_menu_update(BUILDSET_TUT1_FOOD);
         if (g_tutorials_flags.tutorial_1.fire) building_menu_update(BUILDSET_TUT1_FIRE);
-        if (g_tutorials_flags.tutorial_1.collapse) building_menu_update(BUILDSET_TUT1_COLLAPSE_PH);
+        if (g_tutorials_flags.tutorial_1.collapse) building_menu_update(BUILDSET_TUT1_COLLAPSE);
         if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) building_menu_update(BUILDSET_TUT1_WATER);
     } else if (tut == 2) {
         building_menu_update(BUILDSET_TUT2_START);
@@ -310,7 +310,7 @@ int tutorial_handle_collapse(void) {
         return 0;
 
     g_tutorials_flags.tutorial_1.collapse = 1;
-    building_menu_update(BUILDSET_TUT1_COLLAPSE_PH);
+    building_menu_update(BUILDSET_TUT1_COLLAPSE);
     post_message(MESSAGE_TUTORIAL_COLLAPSED_BUILDING);
     return 1;
 }
@@ -393,6 +393,11 @@ void tutorial_update_step(int step) {
     case BUILDSET_TUT1_FIRE:
         g_tutorials_flags.tutorial_1.fire = false;
         tutorial_handle_fire();
+        break;
+
+    case BUILDSET_TUT1_COLLAPSE:
+        g_tutorials_flags.tutorial_1.collapse = false;
+        tutorial_handle_collapse();
         break;
     }
 }
