@@ -395,6 +395,11 @@ void tutorial_update_step(int step) {
         tutorial_handle_fire();
         break;
 
+    case BUILDSET_TUT1_FOOD:
+        building_menu_update(BUILDSET_TUT1_WATER);
+        post_message(MESSAGE_TUTORIAL_CLEAN_WATER);
+        break;
+
     case BUILDSET_TUT1_COLLAPSE:
         g_tutorials_flags.tutorial_1.collapse = false;
         tutorial_handle_collapse();
