@@ -2,14 +2,13 @@
 
 #include "core/vec2i.h"
 #include "color.h"
+#include "game/resource.h"
 
 struct figure_draw_cache_data_t;
 struct view_data_t;
 struct SDL_Renderer;
 struct SDL_Texture;
 struct image_t;
-
-enum e_resource;
 
 struct sprite {
     const image_t *img = nullptr;
