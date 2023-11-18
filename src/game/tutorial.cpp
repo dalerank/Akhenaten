@@ -434,6 +434,11 @@ void tutorial_update_step(int step) {
         building_menu_update(BUILDSET_TUT3_HEALTH);
         post_message(MESSAGE_TUTORIAL_BASIC_HEALTHCARE);
         break;
+
+    case BUILDSET_TUT3_GARDENS:
+        building_menu_update(BUILDSET_TUT3_GARDENS);
+        post_message(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES);
+        break;
     }
 }
 
