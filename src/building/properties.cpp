@@ -213,7 +213,7 @@ static building_properties properties[400] = {
     {2, 0, GROUP_BUILDING_PAPYRUS_WORKSHOP},   // papyrus
     {2, 0, 0, 0, 0}, // bricks
     {4, 0, 0, 0},                              // chariots
-    {2, 0, GROUP_BUILDING_PHYSICIAN, 0},       // physician
+    {2, 0, 0, 0},       // physician
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {5, 1, 0, 0},  // festival square
@@ -250,6 +250,7 @@ void building_properties_init() {
     properties[BUILDING_GRANARY] = {4, 0, 0, 0, 0, IMG_GRANARY};
     properties[BUILDING_COPPER_MINE] = {2, 0, 0, 0, 0, IMG_COPPER_MINE};
     properties[BUILDING_CONSERVATORY] = {3, 0, 0, 0, 0, IMG_CONSERVATORY};
+    properties[BUILDING_PHYSICIAN] = {2, 0, 0, 0, 0, IMG_PHYSICIAN};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

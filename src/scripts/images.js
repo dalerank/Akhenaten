@@ -54,6 +54,7 @@ images = [
 	{img: IMG_CART_COPPER, pack:PACK_SPR_MAIN, id:107},
 	{img: IMG_COPPER_MINE, pack:PACK_GENERAL, id:196},
 	{img: IMG_CONSERVATORY, pack:PACK_GENERAL, id:51},
+	{img: IMG_PHYSICIAN, pack:PACK_GENERAL, id:70},
 ]
 
 cart_offsets = [

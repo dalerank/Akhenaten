@@ -57,6 +57,7 @@ enum e_image_id : uint16_t {
     IMG_CART_COPPER = 52,
     IMG_COPPER_MINE = 53,
     IMG_CONSERVATORY = 54,
+    IMG_PHYSICIAN = 55,
 
     IMG_SIZE
 };
