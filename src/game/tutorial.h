@@ -92,3 +92,5 @@ void tutorial_starting_message();
 
 void tutorial_on_day_tick();
 void tutorial_on_month_tick();
+
+void tutorial_update_step(int step);

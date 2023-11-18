@@ -502,12 +502,7 @@ void building_menu_update(int build_set) {
         building_menu_disable_all();
         break;
 
-    case BUILDSET_TUT1_FIRE_C3:
-        building_menu_toggle_building(BUILDING_POLICE_STATION);
-        building_menu_toggle_building(BUILDING_MARKET);
-        break;
-
-    case BUILDSET_TUT1_FIRE_PH:
+    case BUILDSET_TUT1_FIRE:
         building_menu_toggle_building(BUILDING_FIREHOUSE);
         break;
 

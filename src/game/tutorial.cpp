@@ -177,7 +177,7 @@ void tutorial_menu_update(int tut) {
         building_menu_update(BUILDSET_TUT1_START);
             
         if (g_tutorials_flags.tutorial_1.population_150_reached)  building_menu_update(BUILDSET_TUT1_FOOD);
-        if (g_tutorials_flags.tutorial_1.fire) building_menu_update(BUILDSET_TUT1_FIRE_PH);
+        if (g_tutorials_flags.tutorial_1.fire) building_menu_update(BUILDSET_TUT1_FIRE);
         if (g_tutorials_flags.tutorial_1.collapse) building_menu_update(BUILDSET_TUT1_COLLAPSE_PH);
         if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) building_menu_update(BUILDSET_TUT1_WATER);
     } else if (tut == 2) {
@@ -294,12 +294,13 @@ int tutorial_extra_damage_risk(void) {
            && scenario_is_mission_rank(1); // Fix for extra damage risk in late tutorials
 }
 
-int tutorial_handle_fire(void) {
-    if (g_tutorials_flags.tutorial_1.fire)
+int tutorial_handle_fire() {
+    if (g_tutorials_flags.tutorial_1.fire) {
         return 0;
+    }
 
     g_tutorials_flags.tutorial_1.fire = 1;
-    building_menu_update(BUILDSET_TUT1_FIRE_PH);
+    building_menu_update(BUILDSET_TUT1_FIRE);
     post_message(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE);
     return 1;
 }
@@ -384,6 +385,15 @@ void tutorial_on_house_evolve(e_house_level level) {
         g_tutorials_flags.tutorial_5.spacious_apartment = true;
         building_menu_update(BUILDSET_TUT5_EDUCATION);
         post_message(MESSAGE_TUTORIAL_EDUCATION);
+    }
+}
+
+void tutorial_update_step(int step) {
+    switch (step) {
+    case BUILDSET_TUT1_FIRE:
+        g_tutorials_flags.tutorial_1.fire = false;
+        tutorial_handle_fire();
+        break;
     }
 }
 

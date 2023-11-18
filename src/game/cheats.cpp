@@ -47,6 +47,7 @@ static void game_cheat_spacious_apartment(uint8_t *);
 static void game_cheat_spawn_nobles(uint8_t *);
 static void game_cheat_kill_fish_boats(uint8_t *);
 static void game_cheat_update_fish_points(uint8_t *);
+static void game_cheat_tutorial_step(uint8_t *);
 
 using cheat_command = void(uint8_t* args);
 
@@ -72,7 +73,8 @@ static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_mo
                                                   {"spawnnobles", game_cheat_spawn_nobles},
                                                   {"tutspaciousapt", game_cheat_spacious_apartment},
                                                   {"killfishboats", game_cheat_kill_fish_boats},
-                                                  {"upfishpoints", game_cheat_update_fish_points}
+                                                  {"upfishpoints", game_cheat_update_fish_points},
+                                                  {"tutorialstep", game_cheat_tutorial_step}
 };
 
 struct cheats_data_t {
@@ -227,6 +229,13 @@ static void game_cheat_update_fish_points(uint8_t *args) {
     parse_integer(args ? args : (uint8_t *)"10", count);
 
     formation_fish_update(count);
+}
+
+static void game_cheat_tutorial_step(uint8_t *args) {
+    int step = 0;
+    parse_integer(args ? args : (uint8_t *)"0", step);
+
+    tutorial_update_step(step);
 }
 
 static void game_cheat_kill_fish_boats(uint8_t *) {
