@@ -396,6 +396,11 @@ void tutorial_update_step(int step) {
         break;
 
     case BUILDSET_TUT1_FOOD:
+        building_menu_update(BUILDSET_TUT1_FOOD);
+        post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
+        break;
+
+    case BUILDSET_TUT1_WATER:
         building_menu_update(BUILDSET_TUT1_WATER);
         post_message(MESSAGE_TUTORIAL_CLEAN_WATER);
         break;
@@ -403,6 +408,17 @@ void tutorial_update_step(int step) {
     case BUILDSET_TUT1_COLLAPSE:
         g_tutorials_flags.tutorial_1.collapse = false;
         tutorial_handle_collapse();
+        break;
+
+    case BUILDSET_TUT2_GODS:
+        building_menu_update(BUILDSET_TUT2_GODS);
+        post_message(MESSAGE_TUTORIAL_GODS_OF_EGYPT);
+        break;
+
+    case BUILDSET_TUT2_ENTERTAINMENT:
+        building_menu_toggle_building(BUILDING_BOOTH);
+        building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
+        post_message(MESSAGE_TUTORIAL_ENTERTAINMENT);
         break;
     }
 }
@@ -444,41 +460,11 @@ void tutorial_starting_message() {
         g_tutorials_flags.pharaoh.tut8_start = 1;
     }
 }
-void tutorial_on_day_tick(void) {
+void tutorial_on_day_tick() {
     if (g_tutorials_flags.tutorial_1.fire) {
         city_mission_tutorial_set_fire_message_shown(1);
     }
 
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    if (g_tutorials_flags.tutorial3.disease && city_mission_tutorial_show_disease_message())
-    //        post_message(MESSAGE_TUTORIAL_HEALTH);
-    //    if (g_tutorials_flags.tutorial2.granary_built) {
-    //        if (!g_tutorials_flags.tutorial2.population_250_reached && city_population() >= 250) {
-    //            g_tutorials_flags.tutorial2.population_250_reached = 1;
-    //            building_menu_update(BUILDSET_TUT2_UP_TO_450);
-    //            post_message(MESSAGE_TUTORIAL_GROWING_YOUR_CITY);
-    //        }
-    //    }
-    //    if (g_tutorials_flags.tutorial2.population_250_reached) {
-    //        if (!g_tutorials_flags.tutorial2.population_450_reached && city_population() >= 450) {
-    //            g_tutorials_flags.tutorial2.population_450_reached = 1;
-    //            building_menu_update(BUILDSET_TUT2_AFTER_450);
-    //            post_message(MESSAGE_TUTORIAL_TAXES_INDUSTRY);
-    //        }
-    //    }
-    //    if (g_tutorials_flags.tutorial1.fire && !g_tutorials_flags.tutorial1.senate_built) {
-    //        int population_almost = city_population() >= winning_population() - 20;
-    //        if (!game_time_day() || population_almost) {
-    //            if (city_buildings_has_palace())
-    //                city_mission_tutorial_add_senate();
-    //            if (city_mission_tutorial_has_senate() || population_almost) {
-    //                g_tutorials_flags.tutorial1.senate_built = 1;
-    //                building_menu_update(BUILDSET_NORMAL);
-    //                post_message(MESSAGE_TUTORIAL_RELIGION);
-    //            }
-    //        }
-    //    }
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
     if (scenario_is_mission_rank(1)) {
         if (!g_tutorials_flags.tutorial_1.population_150_reached && city_population() >= 150) {
             g_tutorials_flags.tutorial_1.population_150_reached = 1;
@@ -487,7 +473,7 @@ void tutorial_on_day_tick(void) {
         }
     }
 }
-void tutorial_on_month_tick(void) {
+void tutorial_on_month_tick() {
     if (scenario_is_mission_rank(3)) {
         if (game_time_month() == 5)
             city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3,

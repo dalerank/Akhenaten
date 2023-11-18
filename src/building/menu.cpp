@@ -543,13 +543,13 @@ void building_menu_update(int build_set) {
         building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
         break;
 
-    case BUILDSET_TUT2_UP_TO_250:
+    case BUILDSET_TUT6_IRRIGATION:
         building_menu_toggle_building(BUILDING_WATER_LIFT);
         building_menu_toggle_building(BUILDING_IRRIGATION_DITCH);
         building_menu_toggle_building(BUILDING_MENU_BEAUTIFICATION);
         break;
 
-    case BUILDSET_TUT2_UP_TO_450:
+    case BUILDSET_TUT6_EDUCATION:
         building_menu_toggle_building(BUILDING_GARDENS);
         building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
         building_menu_toggle_building(BUILDING_BOOTH);
@@ -557,7 +557,7 @@ void building_menu_update(int build_set) {
         building_menu_toggle_building(BUILDING_SCRIBAL_SCHOOL);
         break;
 
-    case BUILDSET_TUT2_AFTER_450:
+    case BUILDSET_TUT6_GUILDS:
         building_menu_toggle_building(BUILDING_MENU_RAW_MATERIALS);
         building_menu_toggle_building(BUILDING_MENU_GUILDS);
         building_menu_toggle_building(BUILDING_STORAGE_YARD);
