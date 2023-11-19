@@ -101,7 +101,7 @@ static building_properties properties[400] = {
     {1, 1, 0, 0}, // well
     {1, 1, 0, 0},
     {4, 0, GROUP_BUILDING_MILITARY_ACADEMY}, // academy
-    {3, 0, GROUP_BUILDING_BARRACKS},         // recruiter
+    {3, 0, 0, 0},         // recruiter
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {2, 0, 0, 0},
@@ -251,6 +251,7 @@ void building_properties_init() {
     properties[BUILDING_COPPER_MINE] = {2, 0, 0, 0, 0, IMG_COPPER_MINE};
     properties[BUILDING_CONSERVATORY] = {3, 0, 0, 0, 0, IMG_CONSERVATORY};
     properties[BUILDING_PHYSICIAN] = {2, 0, 0, 0, 0, IMG_PHYSICIAN};
+    properties[BUILDING_RECRUITER] = {3, 0, 0, 0, 0, IMG_BARRACKS};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

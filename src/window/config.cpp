@@ -154,6 +154,7 @@ static generic_button checkbox_buttons[] = {
     {20, 192, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE, TR_CONFIG_BUILDING_QUARRY_LIMESTONE},
     {20, 216, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_CLAY_PIT, TR_CONFIG_BUILDING_CLAY_PIT},
     {20, 240, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_WEAPON_WORKSHOP, TR_CONFIG_BUILDING_WEAPON_WORKSHOP},
+    {20, 264, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_RECRUTER, TR_CONFIG_BUILDING_RECRUTER},
 
     //
     {20, 72, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
@@ -171,7 +172,7 @@ static generic_button checkbox_buttons[] = {
     {20, 360, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CLAY, TR_CONFIG_RESOURCE_CLAY},
 };
 
-static int options_per_page[] = {12, 14, 14, 14, 1, 5, 14, 8, 13};
+static int options_per_page[] = {12, 14, 14, 14, 1, 5, 14, 9, 13};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -432,6 +433,7 @@ static void toggle_building(int id, int param2) {
     case CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE: type = BUILDING_LIMESTONE_QUARRY; break;
     case CONFIG_GP_CH_BUILDING_CLAY_PIT: type = BUILDING_CLAY_PIT; break;
     case CONFIG_GP_CH_BUILDING_WEAPON_WORKSHOP: type = BUILDING_WEAPONS_WORKSHOP; break;
+    case CONFIG_GP_CH_BUILDING_RECRUTER: type = BUILDING_RECRUITER; break;
     default:
         return;
     }
@@ -559,6 +561,7 @@ static bool is_config_option_enabled(int option) {
     case CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE: return building_menu_is_building_enabled(BUILDING_LIMESTONE_QUARRY);
     case CONFIG_GP_CH_BUILDING_CLAY_PIT: return building_menu_is_building_enabled(BUILDING_CLAY_PIT);
     case CONFIG_GP_CH_BUILDING_WEAPON_WORKSHOP: return building_menu_is_building_enabled(BUILDING_WEAPONS_WORKSHOP);
+    case CONFIG_GP_CH_BUILDING_RECRUTER: return building_menu_is_building_enabled(BUILDING_RECRUITER);
     }
 
     return data.config_values[option].new_value;
