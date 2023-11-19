@@ -5,13 +5,7 @@
 
 class buffer;
 
-#define MAX_WEAPONS_BARRACKS 4
-
-int building_get_barracks_for_weapon(map_point tile,
-                                     int resource,
-                                     int road_network_id,
-                                     int distance_from_entry,
-                                     map_point* dst);
+int building_get_barracks_for_weapon(tile2i tile, int resource, int road_network_id, int distance_from_entry, tile2i* dst);
 
 // void building_barracks_add_weapon(building *barracks);
 // int building_barracks_create_soldier(building *barracks, int x, int y);

@@ -514,8 +514,10 @@ static int contains_non_stockpiled_food(building* space, const int* resources) {
     if (space->stored_full_amount <= 0)
         return 0;
     int resource = space->subtype.warehouse_resource_id;
-    if (city_resource_is_stockpiled(resource))
+    if (city_resource_is_stockpiled(resource)) {
         return 0;
+    }
+
     if (resource == RESOURCE_GRAIN || resource == RESOURCE_MEAT || resource == RESOURCE_LETTUCE
         || resource == RESOURCE_FIGS) {
         if (resources[resource] > 0)
@@ -572,10 +574,12 @@ int building_storageyard_determine_worker_task(building* warehouse, e_resource& 
         }
     }
     // deliver weapons to barracks
-    if (building_count_active(BUILDING_RECRUITER) > 0 && city_military_has_legionary_legions()
+    if (building_count_active(BUILDING_RECRUITER) > 0 
+        && (city_military_has_legionary_legions() || config_get(CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS))
         && !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
-        building* barracks = building_get(building_get_barracks_for_weapon(warehouse->tile, RESOURCE_WEAPONS, warehouse->road_network_id, warehouse->distance_from_entry, 0));
-        int barracks_want = (100 * MAX_WEAPONS_BARRACKS) - barracks->stored_full_amount;
+        int building_id = building_get_barracks_for_weapon(warehouse->tile, RESOURCE_WEAPONS, warehouse->road_network_id, warehouse->distance_from_entry, 0);
+        building* barracks = building_get(building_id);
+        int barracks_want = barracks->need_resource_amount(RESOURCE_WEAPONS);
         if (barracks_want > 0 && warehouse->road_network_id == barracks->road_network_id) {
             int available = 0;
             space = warehouse;

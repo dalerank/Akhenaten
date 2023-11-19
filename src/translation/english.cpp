@@ -130,6 +130,7 @@ static translation_string all_strings[] = {
      {TR_CONFIG_RESOURCE_BRICKS, "City produce bricks"},
      {TR_CONFIG_RESOURCE_CLAY, "City produce clay"},
      {TR_CONFIG_COPPER_NEAR_MOUNTAINS, "Copper mine can build near mountains"},
+     {TR_CONFIG_RECRUITER_NOT_NEED_FORTS, "Recruiter not need forts"},
      {TR_CONFIG_DRAW_FPS, "Draw FPS"},
      {TR_HOTKEY_TITLE, "Hotkeys configuration"},
      {TR_HOTKEY_LABEL, "Hotkey"},

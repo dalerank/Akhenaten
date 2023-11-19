@@ -40,7 +40,7 @@ int building_get_barracks_for_weapon(tile2i tile, int resource, int road_network
             continue;
         }
 
-        if (b->stored_full_amount >= MAX_WEAPONS_BARRACKS * 100) {
+        if (b->stored_full_amount >= b->need_resource_amount(RESOURCE_WEAPONS) * 100) {
             continue;
         }
 

@@ -121,9 +121,6 @@ void window_building_draw_barracks(object_info* c) {
     painter ctx = game.painter();
     auto& data = g_military_data;
     int military_resource = RESOURCE_WEAPONS;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        military_resource = RESOURCE_WEAPONS;
-    }
     c->help_id = 37;
     data.building_id = c->building_id;
     window_building_play_sound(c, "wavs/barracks.wav");
