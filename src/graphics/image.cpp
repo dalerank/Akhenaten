@@ -227,7 +227,7 @@ int image_id_resource_icon(int resource) {
 }
 
 int image_id_from_group(image_desc desc) {
-    return image_id_from_group(desc.pack, desc.id);
+    return image_id_from_group(desc.pack, desc.id) + desc.offset;
 }
 
 int image_id_from_group(e_image_id type) {

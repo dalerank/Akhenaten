@@ -210,8 +210,9 @@ public:
             unsigned char water_supply;
         } house;
         struct {
-            unsigned char variant;
-            unsigned char temple_complex_attachments;
+            uint8_t variant;
+            uint8_t statue_offset;
+            uint8_t temple_complex_attachments;
         } monuments;
     } data;
     int tax_income_or_storage;

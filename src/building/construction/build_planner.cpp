@@ -1292,8 +1292,10 @@ void BuildPlanner::setup_build_graphics() {
 
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
-    case BUILDING_LARGE_STATUE:
-        set_tiles_building(get_statue_image(build_type, relative_orientation, variant), props->size);
+    case BUILDING_LARGE_STATUE: {
+            int statue_img = get_statue_image(build_type, relative_orientation, variant);
+            set_tiles_building(statue_img, props->size);
+        }
         break;
 
     case BUILDING_STORAGE_YARD:

@@ -6,6 +6,7 @@
 #include "graphics/view/view.h"
 #include "grid/grid.h"
 #include "config/config.h"
+#include "monuments.h"
 
 int g_global_rotation = 0;
 static int road_orientation = 1;
@@ -29,13 +30,21 @@ void building_rotation_rotate_by_hotkey(void) {
         Planner.update_orientations();
     }
 }
-void building_rotation_variant_by_hotkey(void) {
-    variant++;
-    if (variant > 3)
-        variant = 0;
+void building_rotation_variant_by_hotkey() {
+    switch (Planner.build_type) {
+    case BUILDING_SMALL_STATUE:
+    case BUILDING_MEDIUM_STATUE:
+    case BUILDING_LARGE_STATUE:
+        variant = next_statue_variant(Planner.build_type, variant);
+        break;
+
+    default:
+        variant = (variant + 1) % 4;
+    }
+
     Planner.update_orientations();
 }
-void building_rotation_reset_rotation(void) {
+void building_rotation_reset_rotation() {
     g_global_rotation = 0;
     variant = 0;
     Planner.update_orientations();
@@ -56,11 +65,11 @@ void building_rotation_update_road_orientation(void) {
         }
     }
 }
-int building_rotation_get_road_orientation(void) {
+int building_rotation_get_road_orientation() {
     return road_orientation;
 }
 
-int building_rotation_get_building_variant(void) {
+int building_rotation_get_building_variant() {
     return variant;
 }
 

@@ -1,5 +1,12 @@
 log_info("akhenaten: images started")
 
+small_statue_images = [
+	{pack: PACK_GENERAL, id: 61, offset:1},
+	{pack: PACK_GENERAL, id: 61, offset:5},
+	{pack: PACK_EXPANSION, id: 37, offset:1},
+	{pack: PACK_EXPANSION, id: 37, offset:5},
+]
+
 images = [
 	{img: IMG_IMMIGRANT, pack: PACK_SPR_MAIN, id: 14},// 886
 	//{img: IMG_IMMIGRANT_DEATH, pack: PACK_SPR_MAIN, id: 15} // 982

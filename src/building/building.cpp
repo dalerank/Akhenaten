@@ -255,9 +255,14 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         break;
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
-    case BUILDING_LARGE_STATUE:
-        b->data.monuments.variant = get_statue_variant_value((4 + building_rotation_global_rotation() + city_view_orientation() / 2) % 4, building_rotation_get_building_variant());
+    case BUILDING_LARGE_STATUE: {
+            int orientation = (4 + building_rotation_global_rotation() + city_view_orientation() / 2) % 4;
+            int variant = building_rotation_get_building_variant();
+            b->data.monuments.variant = get_statue_variant_value(orientation, variant);
+            b->data.monuments.statue_offset = rand() % 4;
+        }
         break;
+
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
@@ -1044,7 +1049,8 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.worker_id);
 
     } else if (building_is_statue(b->type) || building_is_large_temple(b->type)) {
-        iob->bind____skip(87);
+        iob->bind____skip(86);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.statue_offset);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.temple_complex_attachments);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.variant);
 
