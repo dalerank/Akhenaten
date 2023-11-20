@@ -13,6 +13,7 @@
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/storage.h"
+#include "building/building_statue.h"
 #include "building/storage_yard.h"
 #include "city/buildings.h"
 #include "city/finance.h"
@@ -490,8 +491,10 @@ static void add_building(building* b, int orientation, int variant) {
         // statues
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
-    case BUILDING_LARGE_STATUE:
-        add_building_tiles_image(b, get_statue_image(b->type, orientation_rel, variant));
+    case BUILDING_LARGE_STATUE:{
+            int image_id = building_statue_get_image(b->type, orientation_rel, variant);
+            add_building_tiles_image(b, image_id);
+        }
         break;
         // farms
     case BUILDING_BARLEY_FARM:
@@ -1293,7 +1296,7 @@ void BuildPlanner::setup_build_graphics() {
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE: {
-            int statue_img = get_statue_image(build_type, relative_orientation, variant);
+            int statue_img = building_statue_get_image(build_type, relative_orientation, variant);
             set_tiles_building(statue_img, props->size);
         }
         break;

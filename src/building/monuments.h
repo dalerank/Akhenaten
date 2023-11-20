@@ -2,7 +2,10 @@
 
 #include "building.h"
 
-enum { MONUMENT_PYRAMID = 0, MONUMENT_MASTABA = 1 };
+enum {
+    MONUMENT_PYRAMID = 0,
+    MONUMENT_MASTABA = 1
+};
 
 enum {
     MONUMENT_PART_CORNERS = 0,
@@ -18,12 +21,6 @@ enum {
     TEMPLE_COMPLEX_ALTAR_ATTACHMENT = 1,
     TEMPLE_COMPLEX_ORACLE_ATTACHMENT = 2,
 };
-
-int next_statue_variant(int type, int variant);
-
-int get_statue_image(int type, int orientation, int variant);
-int get_statue_image_from_value(int type, int combined, int map_orientation);
-int get_statue_variant_value(int orientation, int variant);
 
 int get_monument_part_image(int part, int orientation, int level);
 

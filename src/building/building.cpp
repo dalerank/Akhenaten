@@ -4,6 +4,7 @@
 #include "building/rotation.h"
 #include "building/building_type.h"
 #include "building/storage.h"
+#include "building/building_statue.h"
 #include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
@@ -253,12 +254,13 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_STORAGE_YARD:
         b->subtype.orientation = building_rotation_global_rotation();
         break;
+
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE: {
             int orientation = (4 + building_rotation_global_rotation() + city_view_orientation() / 2) % 4;
             int variant = building_rotation_get_building_variant();
-            b->data.monuments.variant = get_statue_variant_value(orientation, variant);
+            b->data.monuments.variant = building_statue_get_variant_value(orientation, variant);
             b->data.monuments.statue_offset = rand() % 4;
         }
         break;

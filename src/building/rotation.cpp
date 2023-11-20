@@ -1,12 +1,12 @@
 #include "rotation.h"
 
 #include "building/construction/build_planner.h"
+#include "building/building_statue.h"
 #include "core/direction.h"
 #include "core/time.h"
 #include "graphics/view/view.h"
 #include "grid/grid.h"
 #include "config/config.h"
-#include "monuments.h"
 
 int g_global_rotation = 0;
 static int road_orientation = 1;
@@ -35,7 +35,7 @@ void building_rotation_variant_by_hotkey() {
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
-        variant = next_statue_variant(Planner.build_type, variant);
+        variant = building_statue_next_variant(Planner.build_type, variant);
         break;
 
     default:
