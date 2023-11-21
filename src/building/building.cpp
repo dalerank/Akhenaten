@@ -471,6 +471,9 @@ e_overlay building::get_overlay() const {
 
         case BUILDING_WELL:
             return OVERLAY_WATER;
+
+        case BUILDING_PHYSICIAN:
+            return OVERLAY_PHYSICIAN;
     }
 
     return OVERLAY_NONE;
