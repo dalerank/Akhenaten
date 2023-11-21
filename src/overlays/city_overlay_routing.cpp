@@ -61,26 +61,25 @@ struct city_overlay_routing : public city_overlay {
 
     void draw_custom_top(vec2i pixel, map_point point, painter &ctx) const override {
         int grid_offset = point.grid_offset();
-        int x = pixel.x;
-        int y = pixel.y;
+
         color color_mask = 0;
         bool drawn = false;
         int image_id = image_id_from_group(GROUP_TERRAIN_DESIRABILITY);
         if (map_terrain_is(grid_offset, terrain_on_routing_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING) ) {
             drawn = true;
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, color_mask);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, color_mask);
         }
 
         if (!drawn && map_terrain_is(grid_offset, TERRAIN_WATER)) {
              drawn = true;
             if (map_terrain_is(grid_offset, TERRAIN_FERRY_ROUTE)) {
                 int offset = 4;
-                ImageDraw::isometric_from_drawtile(ctx, image_id + offset, x, y, color_mask);
+                ImageDraw::isometric_from_drawtile(ctx, image_id + offset, pixel, color_mask);
             } else if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
                 int offset = 5;
-                ImageDraw::isometric_from_drawtile(ctx, image_id + offset, x, y, color_mask);
+                ImageDraw::isometric_from_drawtile(ctx, image_id + offset, pixel, color_mask);
             } else {
-                ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, color_mask);
+                ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, color_mask);
             }
         }
         
@@ -90,7 +89,7 @@ struct city_overlay_routing : public city_overlay {
                 int offset = 2;
 
                 if (b && !building_on_routing_overlay(b->type)) {
-                    ImageDraw::isometric_from_drawtile(ctx, image_id + offset, x, y, color_mask);
+                    ImageDraw::isometric_from_drawtile(ctx, image_id + offset, pixel, color_mask);
                     drawn = true;
                 }
             }
@@ -104,12 +103,12 @@ struct city_overlay_routing : public city_overlay {
             if (road || building_road) {
                 int offset = 5;
                 drawn = true;
-                ImageDraw::isometric_from_drawtile(ctx, image_id + offset, x, y, color_mask);
+                ImageDraw::isometric_from_drawtile(ctx, image_id + offset, pixel, color_mask);
             }
         }
 
         if (!drawn) {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, color_mask);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, color_mask);
         }
     }
 

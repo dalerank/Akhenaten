@@ -101,8 +101,7 @@ static int input_coords_in_city(int x, int y) {
 
 static void draw_TEST(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
+
     // NO grid_offset outside of the valid map area can be accessed -- the ones passed through here will ALWAYS be set
     // to -1. so it's impossible to draw outside the map with these!
     if (grid_offset == -1)
@@ -113,7 +112,7 @@ static void draw_TEST(vec2i pixel, tile2i point, painter &ctx) {
     //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
     //        COLOR_CHANNEL_RED);
     if (map_grid_inside_map_area(grid_offset, 1)) {
-        return ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN);
+        return ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_GARDEN), pixel, COLOR_CHANNEL_GREEN);
     }
     //    if (!map_grid_is_inside(tx, ty, 1))
     //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,

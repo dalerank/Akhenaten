@@ -762,11 +762,11 @@ void ImageDraw::isometric(painter &ctx, int image_id, vec2i pos, color color_mas
     ImageDraw::img_generic(ctx, image_id, pos, color_mask, scale);
 }
 
-void ImageDraw::isometric_from_drawtile(painter &ctx, int image_id, int x, int y, color color_mask) {
+void ImageDraw::isometric_from_drawtile(painter &ctx, int image_id, vec2i pos, color color_mask) {
     const image_t* img = image_get(image_id);
     //    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
     //        assets_load_unpacked_asset(image_id);
     //    }
-    y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
-    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, 1.0f, false);
+    pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
+    graphics_renderer()->draw_image(ctx, img, pos.x, pos.y, color_mask, 1.0f, false);
 }

@@ -20,15 +20,14 @@ static int terrain_on_water_overlay(void) {
 
 static void draw_footprint_water(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
+
     // roads, bushes, dunes, etc. are drawn normally
     if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
         // (except for roadblocks on roads, draw these as flattened tiles)
         if (building_at(grid_offset)->type == BUILDING_ROADBLOCK) {
-            city_with_overlay_draw_building_footprint(ctx, x, y, grid_offset, 0);
+            city_with_overlay_draw_building_footprint(ctx, pixel.x, pixel.y, grid_offset, 0);
         } else if (map_property_is_draw_tile(grid_offset)) {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, 0);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, 0);
         }
     } else {
         int terrain = map_terrain_get(grid_offset);
@@ -36,7 +35,7 @@ static void draw_footprint_water(vec2i pixel, tile2i point, painter &ctx) {
         // draw houses, wells and water supplies either fully or flattened
         if (terrain & TERRAIN_BUILDING && (building_is_house(b->type)) || b->type == BUILDING_WELL || b->type == BUILDING_WATER_SUPPLY) {
             if (map_property_is_draw_tile(grid_offset)) {
-                city_with_overlay_draw_building_footprint(ctx, x, y, grid_offset, 0);
+                city_with_overlay_draw_building_footprint(ctx, pixel.x, pixel.y, grid_offset, 0);
             }
         } else {
             // draw groundwater levels
@@ -51,7 +50,7 @@ static void draw_footprint_water(vec2i pixel, tile2i point, painter &ctx) {
                 image_id += 1;
                 break;
             }
-            ImageDraw::isometric(ctx, image_id, vec2i{x, y});
+            ImageDraw::isometric(ctx, image_id, pixel);
         }
     }
 }

@@ -72,29 +72,28 @@ struct draw_context_t {
     vec2i* selected_figure_coord;
 };
 
+draw_context_t g_draw_context;
+
 draw_context_t& get_draw_context() {
-    static draw_context_t data;
-    return data;
+    return g_draw_context;
 }
 
 void init_draw_context(int selected_figure_id, vec2i* figure_coord, int highlighted_formation) {
-    auto& draw_context = get_draw_context();
-
-    draw_context.advance_water_animation = 0;
+    g_draw_context.advance_water_animation = 0;
     if (!selected_figure_id) {
         time_millis now = time_get_millis();
-        if (now - draw_context.last_water_animation_time > 60) {
-            draw_context.last_water_animation_time = now;
-            draw_context.advance_water_animation = 1;
+        if (now - g_draw_context.last_water_animation_time > 60) {
+            g_draw_context.last_water_animation_time = now;
+            g_draw_context.advance_water_animation = 1;
         }
     }
-    draw_context.image_id_water_first = image_id_from_group(GROUP_TERRAIN_WATER);
-    draw_context.image_id_water_last = 5 + draw_context.image_id_water_first;
-    draw_context.image_id_deepwater_first = image_id_from_group(GROUP_TERRAIN_DEEPWATER);
-    draw_context.image_id_deepwater_last = 89 + draw_context.image_id_deepwater_first;
-    draw_context.selected_figure_id = selected_figure_id;
-    draw_context.selected_figure_coord = figure_coord;
-    draw_context.highlighted_formation = highlighted_formation;
+    g_draw_context.image_id_water_first = image_id_from_group(GROUP_TERRAIN_WATER);
+    g_draw_context.image_id_water_last = 5 + g_draw_context.image_id_water_first;
+    g_draw_context.image_id_deepwater_first = image_id_from_group(GROUP_TERRAIN_DEEPWATER);
+    g_draw_context.image_id_deepwater_last = 89 + g_draw_context.image_id_deepwater_first;
+    g_draw_context.selected_figure_id = selected_figure_id;
+    g_draw_context.selected_figure_coord = figure_coord;
+    g_draw_context.highlighted_formation = highlighted_formation;
 }
 
 static bool drawing_building_as_deleted(building* b) {
@@ -172,8 +171,7 @@ void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int 
 
     for (int xx = 0; xx < size_x; xx++) {
         for (int yy = 0; yy < size_y; yy++) {
-            int t_x = x + (30 * xx) + (30 * yy);
-            int t_y = y + (15 * xx) - (15 * yy);
+            vec2i tp = {x + (30 * xx) + (30 * yy), y + (15 * xx) - (15 * yy)};
 
             // tile shape -- image offset
             // (0 = top corner, 1 = left edge, 2 = right edge, 3 = any other case)
@@ -182,13 +180,15 @@ void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int 
                 shape_offset = 1;
                 if (yy == size_y - 1)
                     shape_offset = 0;
-            } else if (yy == size_y - 1)
+            } else if (yy == size_y - 1) {
                 shape_offset = 2;
+            }
 
-            ImageDraw::isometric_from_drawtile(ctx, image_base + shape_offset, t_x, t_y, color_mask);
+            ImageDraw::isometric_from_drawtile(ctx, image_base + shape_offset, tp, color_mask);
         }
     }
 }
+
 void draw_flattened_footprint_building(const building* b, int x, int y, int image_offset, color color_mask) {
     return (draw_flattened_footprint_anysize(x, y, b->size, b->size, image_offset, color_mask));
 }
@@ -369,78 +369,77 @@ void draw_isometrics(vec2i pixel, tile2i point, painter &ctx) {
     auto& draw_context = get_draw_context();
 
     int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
     // black tile outside of map
     if (grid_offset < 0) {
-        return ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
+        return ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
     }
 
     Planner.construction_record_view_position(pixel, point);
-    if (map_property_is_draw_tile(grid_offset)) {
-        // Valid grid_offset_figure and leftmost tile -> draw
-        int building_id = map_building_at(grid_offset);
-        color color_mask = COLOR_MASK_NONE;
-        bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == point);
-        if (deletion_tool || map_property_is_deleted(point.grid_offset())) {
+    if (!map_property_is_draw_tile(grid_offset)) {
+        return;
+    }
+    // Valid grid_offset_figure and leftmost tile -> draw
+    int building_id = map_building_at(grid_offset);
+    color color_mask = COLOR_MASK_NONE;
+    bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == point);
+    if (deletion_tool || map_property_is_deleted(point.grid_offset())) {
+        color_mask = COLOR_MASK_RED;
+    }
+
+    vec2i view_pos, view_size;
+    city_view_get_viewport(*ctx.view, view_pos, view_size);
+    int direction = SOUND_DIRECTION_CENTER;
+    if (pixel.x < view_pos.x + 100) {
+        direction = SOUND_DIRECTION_LEFT;
+    } else if (pixel.x > view_pos.x + view_size.x - 100) {
+        direction = SOUND_DIRECTION_RIGHT;
+    }
+
+    if (building_id) {
+        building* b = building_get(building_id);
+        if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
             color_mask = COLOR_MASK_RED;
         }
 
-        vec2i view_pos, view_size;
-        city_view_get_viewport(*ctx.view, view_pos, view_size);
-        int direction = SOUND_DIRECTION_CENTER;
-        if (x < view_pos.x + 100) {
-           direction = SOUND_DIRECTION_LEFT;
-        } else if (x > view_pos.x + view_size.x - 100) {
-           direction = SOUND_DIRECTION_RIGHT;
-        }
-
-        if (building_id) {
-            building* b = building_get(building_id);
-            if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
-                color_mask = COLOR_MASK_RED;
-            }
-
-            sound_city_mark_building_view(b, direction);
-        } else {
-            int terrain = map_terrain_get(grid_offset);
-            sound_city_mark_terrain_view(terrain, grid_offset, direction);
-        }
-
-        int image_id = map_image_at(grid_offset);
-        if (draw_context.advance_water_animation) {
-            if (image_id >= draw_context.image_id_water_first && image_id <= draw_context.image_id_water_last) {
-                image_id++; // wrong, but eh
-                if (image_id > draw_context.image_id_water_last) {
-                    image_id = draw_context.image_id_water_first;
-                }
-            }
-
-            if (image_id >= draw_context.image_id_deepwater_first && image_id <= draw_context.image_id_deepwater_last) {
-                image_id += 15;
-
-                if (image_id > draw_context.image_id_deepwater_last) {
-                    image_id -= 90;
-                }
-            }
-            map_image_set(grid_offset, image_id);
-        }
-
-        if (map_property_is_constructing(grid_offset)) {
-            image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
-        }
-
-        //        const image_t *img = image_get(image_id);
-        //
-        //        int tile_size = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-        //        int footprint_height = img->height - (FOOTPRINT_HEIGHT * (tile_size));
-        //
-        //        int y_start = y + FOOTPRINT_HALF_HEIGHT;
-        //        graphics_draw_line(x * zoom_get_scale(), x * zoom_get_scale(), y_start * zoom_get_scale(), (y_start -
-        //        footprint_height) * zoom_get_scale(), COLOR_RED);
-
-        ImageDraw::isometric_from_drawtile(ctx, image_id, x, y, color_mask);
+        sound_city_mark_building_view(b, direction);
+    } else {
+        int terrain = map_terrain_get(grid_offset);
+        sound_city_mark_terrain_view(terrain, grid_offset, direction);
     }
+
+    int image_id = map_image_at(grid_offset);
+    if (draw_context.advance_water_animation) {
+        if (image_id >= draw_context.image_id_water_first && image_id <= draw_context.image_id_water_last) {
+            image_id++; // wrong, but eh
+            if (image_id > draw_context.image_id_water_last) {
+                image_id = draw_context.image_id_water_first;
+            }
+        }
+
+        if (image_id >= draw_context.image_id_deepwater_first && image_id <= draw_context.image_id_deepwater_last) {
+            image_id += 15;
+
+            if (image_id > draw_context.image_id_deepwater_last) {
+                image_id -= 90;
+            }
+        }
+        map_image_set(grid_offset, image_id);
+    }
+
+    if (map_property_is_constructing(grid_offset)) {
+        image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
+    }
+
+    //        const image_t *img = image_get(image_id);
+    //
+    //        int tile_size = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+    //        int footprint_height = img->height - (FOOTPRINT_HEIGHT * (tile_size));
+    //
+    //        int y_start = y + FOOTPRINT_HALF_HEIGHT;
+    //        graphics_draw_line(x * zoom_get_scale(), x * zoom_get_scale(), y_start * zoom_get_scale(), (y_start -
+    //        footprint_height) * zoom_get_scale(), COLOR_RED);
+
+    ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
 }
 
 void draw_ornaments(vec2i pixel, tile2i point, painter &ctx) {
@@ -476,13 +475,11 @@ void draw_figures(vec2i pixel, tile2i point, painter &ctx) {
 
 void draw_isometrics_overlay(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
     Planner.construction_record_view_position(pixel, point);
     constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED};
     if (grid_offset < 0) {
         // Outside map: draw black tile
-        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
+        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, 0);
 
     } else if (get_city_overlay()->draw_custom_footprint) {
         get_city_overlay()->draw_custom_footprint(pixel, point, ctx);
@@ -492,16 +489,16 @@ void draw_isometrics_overlay(vec2i pixel, tile2i point, painter &ctx) {
         if (terrain & (TERRAIN_CANAL | TERRAIN_WALL)) {
             // display groundwater
             int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-            ImageDraw::isometric_from_drawtile(ctx, image_id, x, y, mode_highlighted[map_is_highlighted(grid_offset)]);
+            ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
 
         } else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, mode_highlighted[map_is_highlighted(grid_offset)]);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
 
         } else if (terrain & TERRAIN_BUILDING) {
-            city_with_overlay_draw_building_footprint(ctx, x, y, grid_offset, 0);
+            city_with_overlay_draw_building_footprint(ctx, pixel.x, pixel.y, grid_offset, 0);
 
         } else {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, 0);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, 0);
         }
     }
 
@@ -591,12 +588,12 @@ void city_with_overlay_draw_building_footprint(painter &ctx, int x, int y, int g
     if (get_city_overlay()->show_building(b)) {
         if (building_is_farm(b->type)) {
             if (is_drawable_farmhouse(grid_offset, city_view_orientation())) {
-                ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, 0);
+                ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), vec2i{x, y}, 0);
             } else if (map_property_is_draw_tile(grid_offset)) {
-                ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, 0);
+                ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), vec2i{x, y}, 0);
             }
         } else {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, 0);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), vec2i{x, y}, 0);
         }
     } else {
         if (b->type == BUILDING_FESTIVAL_SQUARE) {

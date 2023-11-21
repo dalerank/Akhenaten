@@ -62,19 +62,18 @@ static int get_desirability_image_offset(int desirability) {
 
 static void draw_footprint_desirability(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
+
     color color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
     if (map_terrain_is(grid_offset, terrain_on_desirability_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
         if (map_property_is_draw_tile(grid_offset)) {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, color_mask);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, color_mask);
         }
 
     } else if (map_terrain_is(grid_offset, TERRAIN_CANAL | TERRAIN_WALL)) {
         // display empty land/groundwater
         int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-        ImageDraw::isometric_from_drawtile(ctx, image_id, x, y, color_mask);
+        ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
 
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_desirability_get(grid_offset)) {
         if (has_deleted_building(grid_offset)) {
@@ -82,9 +81,9 @@ static void draw_footprint_desirability(vec2i pixel, tile2i point, painter &ctx)
         }
 
         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
-        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
+        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, pixel, color_mask);
     } else {
-        ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), x, y, color_mask);
+        ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, color_mask);
     }
 }
 
