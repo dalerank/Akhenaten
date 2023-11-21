@@ -365,7 +365,7 @@ void draw_debug_figurecaches(vec2i pixel, map_point point, painter &ctx) {
     }
 }
 
-void draw_isometrics(vec2i pixel, tile2i point, painter &ctx) {
+void draw_isometric_flat(vec2i pixel, tile2i point, painter &ctx) {
     auto& draw_context = get_draw_context();
 
     int grid_offset = point.grid_offset();
@@ -378,8 +378,17 @@ void draw_isometrics(vec2i pixel, tile2i point, painter &ctx) {
     if (!map_property_is_draw_tile(grid_offset)) {
         return;
     }
+
+    if (map_terrain_is(grid_offset, TERRAIN_TREE)) {
+        return;
+    }
+    
     // Valid grid_offset_figure and leftmost tile -> draw
     int building_id = map_building_at(grid_offset);
+    if (building_id > 0) {
+        return;
+    }
+
     color color_mask = COLOR_MASK_NONE;
     bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == point);
     if (deletion_tool || map_property_is_deleted(point.grid_offset())) {
@@ -395,17 +404,8 @@ void draw_isometrics(vec2i pixel, tile2i point, painter &ctx) {
         direction = SOUND_DIRECTION_RIGHT;
     }
 
-    if (building_id) {
-        building* b = building_get(building_id);
-        if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
-            color_mask = COLOR_MASK_RED;
-        }
-
-        sound_city_mark_building_view(b, direction);
-    } else {
-        int terrain = map_terrain_get(grid_offset);
-        sound_city_mark_terrain_view(terrain, grid_offset, direction);
-    }
+    int terrain = map_terrain_get(grid_offset);
+    sound_city_mark_terrain_view(terrain, grid_offset, direction);
 
     int image_id = map_image_at(grid_offset);
     if (draw_context.advance_water_animation) {
@@ -430,22 +430,59 @@ void draw_isometrics(vec2i pixel, tile2i point, painter &ctx) {
         image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
     }
 
-    //        const image_t *img = image_get(image_id);
-    //
-    //        int tile_size = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-    //        int footprint_height = img->height - (FOOTPRINT_HEIGHT * (tile_size));
-    //
-    //        int y_start = y + FOOTPRINT_HALF_HEIGHT;
-    //        graphics_draw_line(x * zoom_get_scale(), x * zoom_get_scale(), y_start * zoom_get_scale(), (y_start -
-    //        footprint_height) * zoom_get_scale(), COLOR_RED);
-
     ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
 }
 
-void draw_ornaments(vec2i pixel, tile2i point, painter &ctx) {
-    // defined separately in ornaments.cpp
-    // cuz it's too much stuff.
-    draw_ornaments_and_animations(pixel, point, ctx);
+void draw_isometric_height(vec2i pixel, tile2i point, painter &ctx) {
+    auto& draw_context = get_draw_context();
+
+    int grid_offset = point.grid_offset();
+    // black tile outside of map
+    if (grid_offset < 0) {
+        return ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
+    }
+
+    Planner.construction_record_view_position(pixel, point);
+    if (!map_property_is_draw_tile(grid_offset)) {
+        return;
+    }
+    // Valid grid_offset_figure and leftmost tile -> draw
+    int building_id = map_building_at(grid_offset);
+    bool is_terrain = map_terrain_is(grid_offset, TERRAIN_TREE);
+    bool should_draw = building_id > 0 || is_terrain;
+
+    if (!should_draw) {
+        return;
+    }
+
+    color color_mask = COLOR_MASK_NONE;
+    bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == point);
+    if (deletion_tool || map_property_is_deleted(point.grid_offset())) {
+        color_mask = COLOR_MASK_RED;
+    }
+
+    vec2i view_pos, view_size;
+    city_view_get_viewport(*ctx.view, view_pos, view_size);
+    int direction = SOUND_DIRECTION_CENTER;
+    if (pixel.x < view_pos.x + 100) {
+        direction = SOUND_DIRECTION_LEFT;
+    } else if (pixel.x > view_pos.x + view_size.x - 100) {
+        direction = SOUND_DIRECTION_RIGHT;
+    }
+
+    building* b = building_get(building_id);
+    if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
+        color_mask = COLOR_MASK_RED;
+    }
+
+    sound_city_mark_building_view(b, direction);
+
+    int image_id = map_image_at(grid_offset);
+    if (map_property_is_constructing(grid_offset)) {
+        image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
+    }
+
+    ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
 }
 
 void draw_figures(vec2i pixel, tile2i point, painter &ctx) {
@@ -513,10 +550,10 @@ void draw_ornaments_overlay(vec2i pixel, map_point point, painter &ctx) {
     if (b_id) {
         const building* b = building_at(grid_offset);
         if (get_city_overlay()->show_building(b)) {
-            draw_ornaments(pixel, point, ctx);
+            draw_ornaments_and_animations(pixel, point, ctx);
         }
     } else {
-        draw_ornaments(pixel, point, ctx);
+        draw_ornaments_and_animations(pixel, point, ctx);
     }
 }
 
@@ -620,8 +657,7 @@ void city_with_overlay_draw_building_top(vec2i pixel, tile2i point, painter &ctx
     }
 
     if (get_city_overlay()->show_building(b)) {
-        //        draw_top(pixel, point);
-        draw_isometrics(pixel, point, ctx);
+        draw_isometric_height(pixel, point, ctx);
     } else {
         int column_height = get_city_overlay()->get_column_height(b);
         if (column_height != NO_COLUMN) {

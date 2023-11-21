@@ -93,7 +93,8 @@ void widget_map_editor_draw() {
 
     init_draw_context();
     //    city_view_foreach_map_tile(draw_buildings);
-    city_view_foreach_valid_map_tile(ctx, draw_isometrics);
+    city_view_foreach_valid_map_tile(ctx, draw_isometric_flat);
+    city_view_foreach_valid_map_tile(ctx, draw_isometric_height);
     //    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
     map_editor_tool_draw(ctx, data.current_tile);
 }
@@ -103,8 +104,9 @@ static void update_city_view_coords(int x, int y, map_point* tile) {
     if (screen.x != -1 && screen.y != -1) {
         tile->set(screentile_to_mappoint(screen).grid_offset());
         city_view_set_selected_view_tile(&screen);
-    } else
+    } else {
         tile->set(0);
+    }
 }
 
 static void scroll_map(const mouse* m) {

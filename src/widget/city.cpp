@@ -29,6 +29,7 @@
 #include "sound/effect.h"
 #include "sound/speech.h"
 #include "widget/city/figures_cached_draw.h"
+#include "widget/city/ornaments.h"
 #include "widget/city/tile_draw.h"
 #include "widget/minimap.h"
 #include "window/window_building_info.h"
@@ -145,7 +146,8 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
     reset_tiledraw_caches(*ctx.figure_cache);
 
     city_view_foreach_valid_map_tile(ctx, cache_figures);
-    city_view_foreach_valid_map_tile(ctx, draw_isometrics, draw_ornaments, draw_figures);
+    city_view_foreach_valid_map_tile(ctx, draw_isometric_flat);
+    city_view_foreach_valid_map_tile(ctx, draw_isometric_height, draw_ornaments_and_animations, draw_figures);
 
     if (!selected_figure_id) {
         Planner.update(tile);
