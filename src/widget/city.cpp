@@ -166,8 +166,10 @@ void widget_city_draw_with_overlay(painter &ctx, tile2i tile) {
         return;
 
     city_building_ghost_mark_deleting(tile);
-    reset_tiledraw_caches(*ctx.figure_cache);
-    city_view_foreach_valid_map_tile(ctx, cache_figures);
+    //reset_tiledraw_caches(*ctx.figure_cache);
+    map_render_clear();
+    //city_view_foreach_valid_map_tile(ctx, cache_figures);
+    city_view_foreach_valid_map_tile(ctx, draw_isometric_flat);
     city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay, draw_ornaments_overlay, draw_figures_overlay);
     Planner.update(tile);
     Planner.draw(ctx);
