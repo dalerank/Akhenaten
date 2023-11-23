@@ -55,6 +55,30 @@ static const int ADJACENT_OFFSETS_PH[2][4][7]
        GRID_OFFSET(-3, -1),
        GRID_OFFSET(-3, -2)}}};
 
+
+grid_xx g_render_grid = {0,
+                          {
+                             FS_UINT32, // c3
+                             FS_UINT32  // ph
+                          }
+};
+
+enum e_render_state {
+    RENDER_TALL_TILE = 1,
+};
+
+void map_render_clear() {
+    map_grid_clear(&g_render_grid);
+}
+
+bool map_render_is(int grid_offset, int render_mask) {
+    return map_grid_is_valid_offset(grid_offset) && !!(map_grid_get(&g_render_grid, grid_offset) & render_mask);
+}
+
+void map_render_set(int grid_offset, int flag) {
+    map_grid_set(&g_render_grid, grid_offset, flag);
+}
+
 enum e_figure_draw_mode { e_figure_draw_common = 0, e_figure_draw_overlay = 1 };
 
 struct draw_context_t {
@@ -105,18 +129,17 @@ static bool drawing_building_as_deleted(building* b) {
         return true;
     return false;
 }
+
 static bool is_multi_tile_terrain(int grid_offset) {
     return (!map_building_at(grid_offset) && map_property_multi_tile_size(grid_offset) > 1);
 }
+
 static bool has_adjacent_deletion(int grid_offset) {
     int size = map_property_multi_tile_size(grid_offset);
     int total_adjacent_offsets = size * 2 + 1;
     const int* adjacent_offset; // = ADJACENT_OFFSETS[size - 2][city_view_orientation() / 2];
-    switch (GAME_ENV) {
-    case ENGINE_ENV_PHARAOH: // TODO: get rid of this garbage
-        adjacent_offset = ADJACENT_OFFSETS_PH[size - 2][city_view_orientation() / 2];
-        break;
-    }
+
+    adjacent_offset = ADJACENT_OFFSETS_PH[size - 2][city_view_orientation() / 2];
     for (int i = 0; i < total_adjacent_offsets; ++i) {
         if (map_property_is_deleted(grid_offset + adjacent_offset[i])
             || drawing_building_as_deleted(building_at(grid_offset + adjacent_offset[i]))) {
@@ -125,8 +148,6 @@ static bool has_adjacent_deletion(int grid_offset) {
     }
     return false;
 }
-
-/////////
 
 static bool is_drawable_farmhouse(int grid_offset, int map_orientation) {
     if (!map_property_is_draw_tile(grid_offset))
@@ -147,6 +168,7 @@ static bool is_drawable_farmhouse(int grid_offset, int map_orientation) {
 
     return false;
 }
+
 static bool is_drawable_farm_corner(int grid_offset) {
     if (!map_property_is_draw_tile(grid_offset))
         return false;
@@ -193,22 +215,7 @@ void draw_flattened_footprint_building(const building* b, int x, int y, int imag
     return (draw_flattened_footprint_anysize(x, y, b->size, b->size, image_offset, color_mask));
 }
 
-/////////
-
-#define TILE_BLEEDING_Y_BIAS 8
-static bool USE_BLEEDING_CACHE = true;
-static void clip_between_rectangles(int* xOut,
-                                    int* yOut,
-                                    int* wOut,
-                                    int* hOut,
-                                    int xA,
-                                    int yA,
-                                    int wA,
-                                    int hA,
-                                    int xB,
-                                    int yB,
-                                    int wB,
-                                    int hB) {
+static void clip_between_rectangles(int* xOut, int* yOut, int* wOut, int* hOut, int xA, int yA, int wA, int hA, int xB, int yB, int wB, int hB) {
     *xOut = (xA > xB) ? xA : xB;
     *yOut = (yA > yB) ? yA : yB;
     int x_end_A = (xA + wA);
@@ -225,143 +232,17 @@ static void clip_between_rectangles(int* xOut,
         *hOut = 0;
 }
 
-static void draw_cached_figures(vec2i pixel, tile2i point, e_figure_draw_mode mode, painter &ctx) {
-    auto& draw_context = get_draw_context();
-
-    if (!USE_BLEEDING_CACHE) {
-        return;
-    }
-
-    if (!map_property_is_draw_tile(point.grid_offset())) {
-        return;
-    }
-
-    tile_figure_draw_cache *cache = get_figure_cache_for_tile(*(ctx.figure_cache), point);
-    if (cache == nullptr || cache->num_figures == 0) {
-        return;
-    }
-
-    // city zoom & viewport params
-    float scale = zoom_get_scale();
-    vec2i viewport_pos, viewport_size;
-    city_view_get_viewport(*ctx.view, viewport_pos, viewport_size);
-
-    // record tile's rendering coords
-    int clip_x, clip_y, clip_width, clip_height;
-    int size = 1;
-    clip_between_rectangles(&clip_x, &clip_y, &clip_width, &clip_height, pixel.x, pixel.y - (size - 1) * HALF_TILE_HEIGHT_PIXELS - 30,
-                            size * TILE_WIDTH_PIXELS, size * TILE_HEIGHT_PIXELS + 30,
-                            viewport_pos.x / scale, viewport_pos.y / scale,
-                            viewport_size.x / scale, viewport_size.y / scale);
-
-    // set rendering clip around the current tile
-    if (clip_width == 0 || clip_height == 0) {
-        return;
-    }
-
-    graphics_set_clip_rectangle(scale * clip_x, scale * clip_y, scale * clip_width, scale * clip_height);
-    int image_id = map_image_at(point.grid_offset());
-    const image_t* img = image_get(image_id);
-    vec2i tile_z_cross = pixel;
-    tile_z_cross += {HALF_TILE_WIDTH_PIXELS, img->isometric_3d_height() - TILE_BLEEDING_Y_BIAS};
-
-    if (g_debug_show_opts[e_debug_show_tile_cache]) {
-        graphics_fill_rect(0, 0, 10000, 10000, 0x22000000); // for debugging
-    }
-
-    struct tile_figure_t {
-        figure *f;
-        vec2i pixel;
-        vec2i cc_offset;
-    };
-
-    svector<tile_figure_t, 32> tile_figures;
-    for (int i = 0; i < cache->num_figures; ++i) {
-        int figure_id = cache->figures[i].id;
-        figure* f = figure_get(figure_id);
-        tile_figures.push_back({f, cache->figures[i].pixel, f->tile_pixel_coords()});
-    }
-
-    std::sort(tile_figures.begin(), tile_figures.end(), [] (const auto &lhs, const auto &rhs) {
-        return (lhs.pixel.y + lhs.cc_offset.y) < (rhs.pixel.y + rhs.cc_offset.y);
-    });
-
-    for (const auto &c: tile_figures) {
-        figure* f = c.f;
-
-        vec2i cc_offsets = c.cc_offset;
-        vec2i tile_center = {HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS};
-        vec2i pivot = c.pixel + cc_offsets + tile_center;
-        if (tile_z_cross.y > pivot.y) {
-            continue;
+void draw_isometric_mark_sound(int building_id, int grid_offset, color &color_mask, int direction) {
+    if (building_id) {
+        building* b = building_get(building_id);
+        if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
+            color_mask = COLOR_MASK_RED;
         }
 
-        vec2i ghost_pixel = c.pixel;
-        switch (mode) {
-        case e_figure_draw_common: // non-overlay
-            if (!f->is_ghost) {
-                if (!draw_context.selected_figure_id) {
-                    int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
-                    f->city_draw_figure(ctx, ghost_pixel, highlight);
-                } else if (f->id == draw_context.selected_figure_id) {
-                    f->city_draw_figure(ctx, ghost_pixel, 0, draw_context.selected_figure_coord);
-                }
-            }
-            break;
-
-        case e_figure_draw_overlay: // overlay
-            if (!f->is_ghost && get_city_overlay()->show_figure(f)) {
-                f->city_draw_figure(ctx, ghost_pixel, 0);
-            }
-            break;
-        }
-    }
-    // reset rendering clip
-    set_city_clip_rectangle(ctx);
-}
-
-void draw_debug_figurecaches(vec2i pixel, map_point point, painter &ctx) {
-    return;
-
-    if (!USE_BLEEDING_CACHE) {
-        return;
-    }
-
-    if (!map_property_is_draw_tile(point.grid_offset())) {
-        return;
-    }
-
-    auto cache = get_figure_cache_for_tile(*ctx.figure_cache, point);
-    if (cache == nullptr || cache->num_figures == 0) {
-        return;
-    }
-
-    const image_t* img = image_get(map_image_at(point.grid_offset()));
-    int size = img->isometric_size();
-    int height = img->isometric_3d_height();
-    if (size > 1) {
-        debug_draw_tile_top_bb(pixel.x, pixel.y, height, COLOR_BLUE, size);
-        debug_draw_tile_box(pixel.x, pixel.y, COLOR_NULL, COLOR_BLUE, size, size);
-    }
-
-    debug_draw_tile_top_bb(pixel.x, pixel.y, height, COLOR_RED);
-    debug_draw_tile_box(pixel.x, pixel.y, COLOR_NULL, COLOR_RED);
-
-    vec2i tile_z_cross = pixel;
-    tile_z_cross += {HALF_TILE_WIDTH_PIXELS, img->isometric_3d_height() - TILE_BLEEDING_Y_BIAS};
-    debug_draw_line_with_contour((pixel.x + 16) * zoom_get_scale(), (pixel.x + TILE_WIDTH_PIXELS - 16) * zoom_get_scale(),
-                                 tile_z_cross.y * zoom_get_scale(), tile_z_cross.y * zoom_get_scale(), COLOR_FONT_YELLOW);
-
-    for (int i = 0; i < cache->num_figures; ++i) {
-        auto f = figure_get(cache->figures[i].id);
-        auto cc_offsets = f->tile_pixel_coords();
-        vec2i tile_center = {HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS};
-        auto pivot = cache->figures[i].pixel + cc_offsets + tile_center;
-        debug_draw_crosshair(pivot.x * zoom_get_scale(), pivot.y * zoom_get_scale());
-
-        debug_draw_line_with_contour(tile_z_cross.x * zoom_get_scale(), pivot.x * zoom_get_scale(),
-                                     tile_z_cross.y * zoom_get_scale(), pivot.y * zoom_get_scale(),
-                                     tile_z_cross.y > pivot.y ? COLOR_RED : COLOR_GREEN);
+        sound_city_mark_building_view(b, direction);
+    } else {
+        int terrain = map_terrain_get(grid_offset);
+        sound_city_mark_terrain_view(terrain, grid_offset, direction);
     }
 }
 
@@ -371,22 +252,22 @@ void draw_isometric_flat(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     // black tile outside of map
     if (grid_offset < 0) {
-        return ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
+        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
+        return;
     }
 
     Planner.construction_record_view_position(pixel, point);
     if (!map_property_is_draw_tile(grid_offset)) {
         return;
     }
-
-    if (map_terrain_is(grid_offset, TERRAIN_TREE)) {
-        return;
-    }
-    
+   
     // Valid grid_offset_figure and leftmost tile -> draw
     int building_id = map_building_at(grid_offset);
     if (building_id > 0) {
-        return;
+        building *b = building_get(building_id);
+        if (b->type != BUILDING_BOOTH) {
+            return;
+        }
     }
 
     color color_mask = COLOR_MASK_NONE;
@@ -404,8 +285,7 @@ void draw_isometric_flat(vec2i pixel, tile2i point, painter &ctx) {
         direction = SOUND_DIRECTION_RIGHT;
     }
 
-    int terrain = map_terrain_get(grid_offset);
-    sound_city_mark_terrain_view(terrain, grid_offset, direction);
+    draw_isometric_mark_sound(building_id, grid_offset, color_mask, direction);
 
     int image_id = map_image_at(grid_offset);
     if (draw_context.advance_water_animation) {
@@ -430,7 +310,9 @@ void draw_isometric_flat(vec2i pixel, tile2i point, painter &ctx) {
         image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
     }
 
-    ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
+    const image_t *img = ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
+    int top_height = img->isometric_top_height();
+    map_render_set(grid_offset, top_height > 0 ? RENDER_TALL_TILE : 0);
 }
 
 void draw_isometric_height(vec2i pixel, tile2i point, painter &ctx) {
@@ -439,7 +321,8 @@ void draw_isometric_height(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     // black tile outside of map
     if (grid_offset < 0) {
-        return ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
+        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
+        return;
     }
 
     Planner.construction_record_view_position(pixel, point);
@@ -448,10 +331,16 @@ void draw_isometric_height(vec2i pixel, tile2i point, painter &ctx) {
     }
     // Valid grid_offset_figure and leftmost tile -> draw
     int building_id = map_building_at(grid_offset);
-    bool is_terrain = map_terrain_is(grid_offset, TERRAIN_TREE);
-    bool should_draw = building_id > 0 || is_terrain;
+    bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
+    bool should_draw = building_id > 0 || tall_flat_tile;
 
     if (!should_draw) {
+        return;
+    }
+
+    int image_id = map_image_at(grid_offset);
+    if (tall_flat_tile) {
+        ImageDraw::isometric_from_drawtile_part(ctx, image_id, pixel, -1);
         return;
     }
 
@@ -476,8 +365,6 @@ void draw_isometric_height(vec2i pixel, tile2i point, painter &ctx) {
     }
 
     sound_city_mark_building_view(b, direction);
-
-    int image_id = map_image_at(grid_offset);
     if (map_property_is_constructing(grid_offset)) {
         image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
     }
@@ -489,7 +376,7 @@ void draw_figures(vec2i pixel, tile2i point, painter &ctx) {
     auto& draw_context = get_draw_context();
 
     // first, draw from the cache
-    draw_cached_figures(pixel, point, e_figure_draw_common, ctx);
+    //draw_cached_figures(pixel, point, e_figure_draw_common, ctx);
 
     // secondly, draw figures found on this tile as normal
     int grid_offset = point.grid_offset();
@@ -559,7 +446,7 @@ void draw_ornaments_overlay(vec2i pixel, map_point point, painter &ctx) {
 
 void draw_figures_overlay(vec2i pixel, tile2i point, painter &ctx) {
     // first, draw the cached figures
-    draw_cached_figures(pixel, point, e_figure_draw_overlay, ctx);
+    //draw_cached_figures(pixel, point, e_figure_draw_overlay, ctx);
 
     // secondly, draw the figures normally found on this tile
     int grid_offset = point.grid_offset();

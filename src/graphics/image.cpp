@@ -242,14 +242,14 @@ int image_id_from_group(int collection, int group, int pak_cache_idx) {
     return pak->get_global_image_index(group);
 }
 
-const image_t* image_get(int id, int mode) {
+const image_t* image_get(int id) {
     auto& data = *g_image_data;
     const image_t* img;
     for (int i = 0; i < data.pak_list.size(); ++i) {
         imagepak* pak = *(data.pak_list.at(i));
         if (pak == nullptr)
             continue;
-        img = (pak)->get_image(id);
+        img = pak->get_image(id);
         if (img != nullptr)
             return img;
     }

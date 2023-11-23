@@ -284,6 +284,16 @@ unsigned int graphics_renderer_interface::premult_alpha() {
     return ::premult_alpha;
 }
 
+void graphics_renderer_interface::draw_image_part(painter &ctx, const image_t* img, int offset, float x, float y, color color, float scale, bool mirrored) {
+    if (game.paused || img == nullptr) {
+        return;
+    }
+
+    vec2i atlas_offset = {img->atlas.x_offset, img->atlas.y_offset};
+    vec2i size = {img->width, img->height - offset};
+    ctx.draw(img->atlas.p_atlas->texture, x, y, atlas_offset, size, color, scale, mirrored);
+}
+
 void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, float x, float y, color color, float scale, bool mirrored) {
     if (game.paused || img == nullptr) {
         return;

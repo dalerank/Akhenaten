@@ -436,6 +436,14 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         }
         break;
 
+    case e_debug_render_tile_toph: {
+        int image_id = map_image_at(grid_offset);
+        const image_t *img = image_get(image_id);
+        snprintf((char*)str, 30, "%d", img->isometric_top_height());
+        debug_text_a(ctx, str, x, y + 10, 0, (const char*)str, COLOR_WHITE, FONT_SMALL_PLAIN);
+        }
+        break;
+
     case e_debug_render_floodplain_shore:
         d = map_get_floodplain_edge(point);
         if (d) {

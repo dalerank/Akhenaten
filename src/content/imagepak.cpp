@@ -269,8 +269,7 @@ static bool convert_image_data(buffer* buf, image_t* img, bool convert_fonts) {
     if (buf == nullptr)
         return false;
 
-    img->TEMP_PIXEL_DATA
-      = &img->atlas.p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset * img->atlas.p_atlas->width) + img->atlas.x_offset];
+    img->TEMP_PIXEL_DATA = &img->atlas.p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset * img->atlas.p_atlas->width) + img->atlas.x_offset];
 
     if (img->type == IMAGE_TYPE_ISOMETRIC) {
         convert_isometric_footprint(buf, img);
@@ -278,10 +277,11 @@ static bool convert_image_data(buffer* buf, image_t* img, bool convert_fonts) {
             convert_compressed(buf, img->data_length - img->uncompressed_length, img);
             img->isometric_box_height = isometric_calculate_top_height(img);
         }
-    } else if (img->is_fully_compressed)
+    } else if (img->is_fully_compressed) {
         convert_compressed(buf, img->data_length, img);
-    else
+    } else {
         convert_uncompressed(buf, img);
+    }
 
     if (convert_fonts) { // special font conversions
         if (is_font_glyph_in_range(img, FONT_SMALL_PLAIN, FONT_NORMAL_BLACK_ON_LIGHT)
@@ -322,8 +322,9 @@ void imagepak::cleanup_and_destroy() {
         if (atlas_data.TEMP_PIXEL_BUFFER != nullptr)
             delete atlas_data.TEMP_PIXEL_BUFFER;
         atlas_data.TEMP_PIXEL_BUFFER = nullptr;
-        if (atlas_data.texture != nullptr)
+        if (atlas_data.texture != nullptr) {
             SDL_DestroyTexture(atlas_data.texture);
+        }
         atlas_data.texture = nullptr;
     }
     //    for (int i = 0; i < images_array.size(); ++i) {
@@ -361,9 +362,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
     version = pak_buf->read_u32();
     int unk02 = pak_buf->read_u32();
     int unk03 = pak_buf->read_u32(); // max num of img entries (225 spaces at the end left unused?)
-    entries_num
-      = pak_buf->read_u32()
-        + 1; // the first entry (id 0) in the pak is always empty, but necessary for the layout to get mapped properly
+    entries_num = pak_buf->read_u32() + 1; // the first entry (id 0) in the pak is always empty, but necessary for the layout to get mapped properly
     num_bmp_names = pak_buf->read_u32();
     int unk06 = pak_buf->read_u32(); // bmp group names minus 1?
     int unk07 = pak_buf->read_u32(); // sum of unk08 and unk09
@@ -547,9 +546,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
     // create textures from atlas data
     for (int i = 0; i < atlas_pages.size(); ++i) {
         atlas_data_t* atlas_data = &atlas_pages.at(i);
-        atlas_data->texture = graphics_renderer()->create_texture_from_buffer(atlas_data->TEMP_PIXEL_BUFFER,
-                                                                              atlas_data->width,
-                                                                              atlas_data->height);
+        atlas_data->texture = graphics_renderer()->create_texture_from_buffer(atlas_data->TEMP_PIXEL_BUFFER, atlas_data->width, atlas_data->height);
         if (atlas_data->texture == nullptr)
             return false;
 

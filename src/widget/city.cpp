@@ -113,7 +113,8 @@ static void draw_TEST(vec2i pixel, tile2i point, painter &ctx) {
     //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
     //        COLOR_CHANNEL_RED);
     if (map_grid_inside_map_area(grid_offset, 1)) {
-        return ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_GARDEN), pixel, COLOR_CHANNEL_GREEN);
+        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_GARDEN), pixel, COLOR_CHANNEL_GREEN);
+        return;
     }
     //    if (!map_grid_is_inside(tx, ty, 1))
     //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
@@ -143,9 +144,10 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
 
     city_building_ghost_mark_deleting(tile);
 
-    reset_tiledraw_caches(*ctx.figure_cache);
+    //reset_tiledraw_caches(*ctx.figure_cache);
 
-    city_view_foreach_valid_map_tile(ctx, cache_figures);
+    map_render_clear();
+    //city_view_foreach_valid_map_tile(ctx, cache_figures);
     city_view_foreach_valid_map_tile(ctx, draw_isometric_flat);
     city_view_foreach_valid_map_tile(ctx, draw_isometric_height, draw_ornaments_and_animations, draw_figures);
 
@@ -155,7 +157,7 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
     }
 
     // finally, draw these on top of everything else
-    city_view_foreach_valid_map_tile(ctx, draw_debug_tile, draw_debug_figurecaches);
+    city_view_foreach_valid_map_tile(ctx, draw_debug_tile);
     city_view_foreach_valid_map_tile(ctx, draw_debug_figures);
 }
 
