@@ -313,9 +313,9 @@ static void print_history_info(void) {
     int width;
 
     // food stores
-    if (scenario_property_rome_supplies_wheat())
+    if (scenario_property_kingdom_supplies_grain()) {
         lang_text_draw(55, 11, 75, 342, FONT_NORMAL_WHITE_ON_DARK);
-    else {
+    } else {
         width = lang_text_draw_amount(8, 6, city_resource_operating_granaries(), 70, 342, FONT_NORMAL_WHITE_ON_DARK);
         if (city_resource_food_supply_months() > 0) {
             width += lang_text_draw(55, 12, 70 + width, 342, FONT_NORMAL_WHITE_ON_DARK);

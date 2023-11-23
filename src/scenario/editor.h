@@ -80,9 +80,9 @@ void scenario_editor_set_initial_funds(int amount);
 
 void scenario_editor_set_rescue_loan(int amount);
 
-void scenario_editor_toggle_rome_supplies_wheat(void);
+void scenario_editor_toggle_kingdom_supplies_grain();
 
-void scenario_editor_toggle_flotsam(void);
+void scenario_editor_toggle_flotsam();
 
 int scenario_editor_milestone_year(int milestone_percentage);
 

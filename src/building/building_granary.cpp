@@ -195,7 +195,7 @@ granary_task_status building_granary_determine_worker_task(building* granary) {
     const building_storage* s = building_storage_get(granary->storage_id);
     if (s->empty_all) {
         // bring food to another granary
-        for (e_resource res = RESOURCE_MIN_FOOD; res < RESOURCES_FOODS_MAX; res = (e_resource)(res + 1)) {
+        for (e_resource res = RESOURCE_FOOD_MIN; res < RESOURCES_FOODS_MAX; res = (e_resource)(res + 1)) {
             if (granary->data.granary.resource_stored[res])
                 return {GRANARY_TASK_GETTING, res};
         }
@@ -279,7 +279,7 @@ void building_granaries_calculate_stocks(void) {
 }
 
 int building_granary_for_storing(map_point tile, int resource, int distance_from_entry, int road_network_id, int force_on_stockpile, int* understaffed, map_point* dst) {
-    if (scenario_property_rome_supplies_wheat())
+    if (scenario_property_kingdom_supplies_grain())
         return 0;
 
     if (!resource_is_food(resource))
@@ -332,7 +332,7 @@ int building_granary_for_storing(map_point tile, int resource, int distance_from
 }
 
 int building_getting_granary_for_storing(map_point tile, int resource, int distance_from_entry, int road_network_id, map_point* dst) {
-    if (scenario_property_rome_supplies_wheat())
+    if (scenario_property_kingdom_supplies_grain())
         return 0;
 
     if (!resource_is_food(resource))
@@ -380,8 +380,9 @@ int building_granary_for_getting(building* src, map_point* dst) {
     if (s_src->empty_all)
         return 0;
 
-    if (scenario_property_rome_supplies_wheat())
+    if (scenario_property_kingdom_supplies_grain()) {
         return 0;
+    }
 
     int is_getting = 0;
     if (building_granary_is_getting(RESOURCE_GRAIN, src) || building_granary_is_getting(RESOURCE_MEAT, src)
@@ -440,7 +441,7 @@ void building_granary_bless(void) {
             continue;
 
         int total_stored = 0;
-        for (int r = RESOURCE_MIN_FOOD; r < RESOURCES_FOODS_MAX; r++) {
+        for (int r = RESOURCE_FOOD_MIN; r < RESOURCES_FOODS_MAX; r++) {
             total_stored += building_granary_get_amount(b, r);
         }
 
@@ -480,7 +481,7 @@ void building_granary_storageyard_curse(int big) {
                 total_stored += building_storageyard_get_amount(b, r);
             }
         } else if (b->type == BUILDING_GRANARY) {
-            for (int r = RESOURCE_MIN_FOOD; r < RESOURCES_FOODS_MAX; r++) {
+            for (int r = RESOURCE_FOOD_MIN; r < RESOURCES_FOODS_MAX; r++) {
                 total_stored += building_granary_get_amount(b, r);
             }
             total_stored /= UNITS_PER_LOAD;

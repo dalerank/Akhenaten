@@ -186,6 +186,9 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_HUNTING_LODGE:
         b->output_resource_first_id = RESOURCE_GAMEMEAT;
         break;
+    case BUILDING_SCRIBAL_SCHOOL:
+        b->data.entertainment.consume_material_id = RESOURCE_PAPYRUS;
+        break;
     case BUILDING_REED_GATHERER:
         b->output_resource_first_id = RESOURCE_REEDS;
         b->data.industry.max_gatheres = 1;
@@ -1075,7 +1078,8 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT32, &b->data.entertainment.latched_venue_add_grid_offset);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.orientation);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.ent_reserved_u8);
-        iob->bind____skip(7);
+        iob->bind____skip(6);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.consume_material_id);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.spawned_entertainer_this_month);
         iob->bind(BIND_SIGNATURE_UINT32, &b->data.entertainment.booth_corner_grid_offset);
     }

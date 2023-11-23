@@ -35,7 +35,7 @@ int scenario_property_climate(void);
 
 int scenario_property_start_year(void);
 
-int scenario_property_rome_supplies_wheat(void);
+int scenario_property_kingdom_supplies_grain();
 
 int scenario_property_enemy(void);
 

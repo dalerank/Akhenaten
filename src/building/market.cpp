@@ -112,7 +112,7 @@ int building_market_get_storage_destination(building* market) {
             continue;
 
         if (b->type == BUILDING_GRANARY) {
-            if (scenario_property_rome_supplies_wheat())
+            if (scenario_property_kingdom_supplies_grain())
                 continue;
 
             // todo: fetch map available foods?

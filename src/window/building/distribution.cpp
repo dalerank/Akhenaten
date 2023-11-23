@@ -520,11 +520,11 @@ void window_building_draw_granary(object_info* c) {
     building* b = building_get(c->building_id);
     if (!c->has_road_access) {
         window_building_draw_description_at(c, 40, 69, 25);
-    } else if (scenario_property_rome_supplies_wheat()) {
+    } else if (scenario_property_kingdom_supplies_grain()) {
         window_building_draw_description_at(c, 40, 98, 4);
     } else {
         int total_stored = 0;
-        for (int i = RESOURCE_MIN_FOOD; i < RESOURCES_FOODS_MAX; i++) {
+        for (int i = RESOURCE_FOOD_MIN; i < RESOURCES_FOODS_MAX; i++) {
             total_stored += b->data.granary.resource_stored[i];
         }
 

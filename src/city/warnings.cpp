@@ -282,7 +282,7 @@ void building_construction_warning_generic_checks(int type, tile2i tile, int siz
 
 void building_construction_warning_check_food_stocks(int type) {
     if (!g_has_warning && type == BUILDING_HOUSE_VACANT_LOT) {
-        if (city_population() >= 200 && !scenario_property_rome_supplies_wheat()) {
+        if (city_population() >= 200 && !scenario_property_kingdom_supplies_grain()) {
             if (city_resource_food_percentage_produced() <= 95)
                 show(WARNING_MORE_FOOD_NEEDED);
         }

@@ -2,6 +2,8 @@
 
 enum e_resource {
     RESOURCE_NONE = 0,
+    RESOURCE_MIN = 1,
+    RESOURCE_FOOD_MIN = 1,
     RESOURCE_GRAIN = 1,        // RESOURCE_WHEAT = 1,
     RESOURCE_MEAT = 2,         // RESOURCE_VEGETABLES = 2,
     RESOURCE_LETTUCE = 3,      // RESOURCE_FRUIT = 3,
@@ -42,9 +44,6 @@ enum e_resource {
     //
     RESOURCE_DEBEN = 36,
     RESOURCE_TROOPS = 37,
-    // helper constants
-    RESOURCE_MIN = 1,
-    RESOURCE_MIN_FOOD = 1,
 };
 
 enum e_inventory_good {

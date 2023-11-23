@@ -175,6 +175,7 @@ public:
             uint32_t latched_venue_add_grid_offset;
             uint8_t orientation;
             uint8_t ent_reserved_u8;
+            e_resource consume_material_id;
         } entertainment;
         struct {
             short foods[8];

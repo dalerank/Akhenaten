@@ -68,7 +68,7 @@ static void draw_foreground(void) {
 
     lang_text_draw(44, 43, 32, 245, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(262, 236, 200, 30, focus_button_id == 5);
-    lang_text_draw_centered(18, scenario_property_rome_supplies_wheat(), 262, 245, 200, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(18, scenario_property_kingdom_supplies_grain(), 262, 245, 200, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 80, 32, 285, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(262, 276, 200, 30, focus_button_id == 6);
@@ -128,7 +128,7 @@ static void button_rescue_loan(int param1, int param2) {
 }
 
 static void button_wheat(int param1, int param2) {
-    scenario_editor_toggle_rome_supplies_wheat();
+    scenario_editor_toggle_kingdom_supplies_grain();
 }
 
 static void button_flotsam(int param1, int param2) {

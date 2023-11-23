@@ -447,7 +447,7 @@ int building_storageyard_for_getting(building* src, e_resource resource, map_poi
 }
 
 static int determine_granary_accept_foods(int resources[8], int road_network) {
-    if (scenario_property_rome_supplies_wheat())
+    if (scenario_property_kingdom_supplies_grain())
         return 0;
 
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
@@ -478,7 +478,7 @@ static int determine_granary_accept_foods(int resources[8], int road_network) {
     return can_accept;
 }
 static int determine_granary_get_foods(int resources[8], int road_network) {
-    if (scenario_property_rome_supplies_wheat())
+    if (scenario_property_kingdom_supplies_grain())
         return 0;
 
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
@@ -526,28 +526,23 @@ static int contains_non_stockpiled_food(building* space, const int* resources) {
     return 0;
 }
 
-int building_storageyard_determine_worker_task(building* warehouse, e_resource& resource, int& amount) {
-    // check workers - if less than enough, no task will be done today.
-    int pct_workers = calc_percentage(warehouse->num_workers, model_get_building(warehouse->type)->laborers);
-    if (pct_workers < 50) {
-        return STORAGEYARD_TASK_NONE;
-    }
-
-    const building_storage* s = building_storage_get(warehouse->storage_id);
-    building* space;
-
-    // get resources
+storage_worker_task building_storageyard_determine_getting_up_resources(building* warehouse) {
+    building* space = nullptr;
     for (e_resource check_resource = RESOURCE_MIN; check_resource < RESOURCES_MAX; check_resource = (e_resource)(check_resource + 1)) {
-        if (!building_storageyard_is_getting(check_resource, warehouse) || city_resource_is_stockpiled(check_resource))
+        if (!building_storageyard_is_getting(check_resource, warehouse) || city_resource_is_stockpiled(check_resource)) {
             continue;
+        }
+
         int total_stored = 0; // total amounts of resource in warehouse!
         int room = 0;         // total potential room for resource!
         space = warehouse;
         for (int i = 0; i < 8; i++) {
             space = space->next();
             if (space->id > 0) {
-                if (space->stored_full_amount <= 0) // this space (tile) is empty! FREE REAL ESTATE
+                if (space->stored_full_amount <= 0) { // this space (tile) is empty! FREE REAL ESTATE
                     room += 4;
+                }
+
                 if (space->subtype.warehouse_resource_id == check_resource) { // found a space (tile) with resource on it!
                     total_stored += space->stored_full_amount;   // add loads to total, if any!
                     room += 400 - space->stored_full_amount;     // add room to total, if any!
@@ -560,26 +555,31 @@ int building_storageyard_determine_worker_task(building* warehouse, e_resource& 
 
         // determine if there's enough room for more to accept, depending on "get up to..." settings!
         if (room >= 0 && lacking > 0 && city_resource_count(check_resource) - total_stored > 0) {
-            if (!building_storageyard_for_getting(warehouse, check_resource, 0)) // any other place contain this resource..?
+            if (!building_storageyard_for_getting(warehouse, check_resource, 0)) { // any other place contain this resource..?
                 continue;
-            resource = check_resource;
-            amount = lacking;
+            }
 
             // bug in original Pharaoh: warehouses send out two cartpushers even if there is no room!
-            if (lacking > requesting / 2) {
-                return STORAGEYARD_TASK_GETTING_MOAR;
-            } else {
-                return STORAGEYARD_TASK_GETTING;
-            }
+            e_storageyard_task status = lacking > requesting / 2
+                                            ? STORAGEYARD_TASK_GETTING_MOAR
+                                            : STORAGEYARD_TASK_GETTING;
+            return {status, space, lacking, check_resource};
         }
     }
-    // deliver weapons to barracks
+
+    return {STORAGEYARD_TASK_NONE};
+}
+
+storage_worker_task building_storageyard_deliver_weapons(building *warehouse) {
+    building *space = warehouse;
+
     if (building_count_active(BUILDING_RECRUITER) > 0 
         && (city_military_has_legionary_legions() || config_get(CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS))
         && !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
         int building_id = building_get_barracks_for_weapon(warehouse->tile, RESOURCE_WEAPONS, warehouse->road_network_id, warehouse->distance_from_entry, 0);
         building* barracks = building_get(building_id);
         int barracks_want = barracks->need_resource_amount(RESOURCE_WEAPONS);
+
         if (barracks_want > 0 && warehouse->road_network_id == barracks->road_network_id) {
             int available = 0;
             space = warehouse;
@@ -590,78 +590,128 @@ int building_storageyard_determine_worker_task(building* warehouse, e_resource& 
                     available += space->stored_full_amount;
                 }
             }
+
             if (available > 0) {
-                resource = RESOURCE_WEAPONS;
-                amount = std::min(available, barracks_want);
-                return STORAGEYARD_TASK_DELIVERING;
+                int amount = std::min(available, barracks_want);
+                return {STORAGEYARD_TASK_DELIVERING, space, amount, RESOURCE_WEAPONS};
             }
         }
     }
-    // deliver raw materials to workshops
-    space = warehouse;
+
+    return {STORAGEYARD_TASK_NONE};
+}
+
+storage_worker_task building_storageyard_deliver_resource_to_workshop(building *warehouse) {
+    building *space = warehouse;
+
     for (int i = 0; i < 8; i++) {
         space = space->next();
         if (space->id > 0 && space->stored_full_amount > 0) {
             e_resource check_resource = space->subtype.warehouse_resource_id;
             if (!city_resource_is_stockpiled(check_resource)) {
-                e_storageyard_task status = STORAGEYARD_TASK_NONE;
+                storage_worker_task task = {STORAGEYARD_TASK_NONE};
                 buildings_workshop_do([&] (building &b) {
                     if (!resource_required_by_workshop(&b, space->subtype.warehouse_resource_id) || b.need_resource_amount(check_resource) < 100) {
                         return;
                     }
-                    
-                    resource = space->subtype.warehouse_resource_id;
-                    amount = 100; // always one load only for industry!!
-                    status = STORAGEYARD_TASK_DELIVERING;
+                    task = {STORAGEYARD_TASK_DELIVERING, space, 100, space->subtype.warehouse_resource_id};
                 });
 
-                if (status == STORAGEYARD_TASK_DELIVERING) {
-                    return STORAGEYARD_TASK_DELIVERING;
+                if (task.result == STORAGEYARD_TASK_DELIVERING) {
+                    return task;
                 }
             }
         }
     }
-    // deliver food to getting granary
-    int granary_resources[RESOURCES_FOODS_MAX];
+
+    return {STORAGEYARD_TASK_NONE};
+}
+
+storage_worker_task building_storageyard_deliver_food_to_gettingup_granary(building *warehouse) {
+    building *space = warehouse;
+
+    int granary_resources[RESOURCES_FOODS_MAX] = {0};
     if (determine_granary_get_foods(granary_resources, warehouse->road_network_id)) {
         space = warehouse;
         for (int i = 0; i < 8; i++) {
             space = space->next();
             if (contains_non_stockpiled_food(space, granary_resources)) {
-                resource = space->subtype.warehouse_resource_id;
-                amount = 100; // always one load only for granaries?
-                return STORAGEYARD_TASK_DELIVERING;
+                // always one load only for granaries?
+                return {STORAGEYARD_TASK_DELIVERING, space, 100, space->subtype.warehouse_resource_id};
             }
         }
     }
-    // deliver food to accepting granary
+
+    return {STORAGEYARD_TASK_NONE};
+}
+
+storage_worker_task building_storageyard_deliver_food_to_accepting_granary(building *warehouse) {
+    building *space = warehouse;
+
+    int granary_resources[RESOURCES_FOODS_MAX] = {0};
     if (determine_granary_accept_foods(granary_resources, warehouse->road_network_id)
-        && !scenario_property_rome_supplies_wheat()) {
+        && !scenario_property_kingdom_supplies_grain()) {
         space = warehouse;
         for (int i = 0; i < 8; i++) {
             space = space->next();
             if (contains_non_stockpiled_food(space, granary_resources)) {
-                resource = space->subtype.warehouse_resource_id;
-                amount = 100; // always one load only for granaries?
-                return STORAGEYARD_TASK_DELIVERING;
+                // always one load only for granaries?
+                return {STORAGEYARD_TASK_DELIVERING, space, 100, space->subtype.warehouse_resource_id};
             }
         }
     }
-    // emptying resource
+
+    return {STORAGEYARD_TASK_NONE};
+}
+
+storage_worker_task building_storageyard_deliver_emptying_resources(building *warehouse) {
+    building *space = warehouse;
+
     for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
-        if (!building_storageyard_is_emptying(r, warehouse))
+        if (!building_storageyard_is_emptying(r, warehouse)) {
             continue;
+        }
 
         int in_storage = building_storageyard_get_amount(warehouse, r);
         if (in_storage > 0) {
-            resource = r;
-            amount = building_storageyard_get_amount(warehouse, r);
-            return STORAGEYARD_TASK_EMPTYING;
+            int amount = building_storageyard_get_amount(warehouse, r);
+            return {STORAGEYARD_TASK_EMPTYING, nullptr, amount, r};
         }
     }
+
+    return {STORAGEYARD_TASK_NONE};
+}
+
+e_storageyard_task building_storageyard_determine_worker_task(building* warehouse, e_resource& resource, int& amount) {
+    // check workers - if less than enough, no task will be done today.
+    int pct_workers = calc_percentage(warehouse->num_workers, model_get_building(warehouse->type)->laborers);
+    if (pct_workers < 50) {
+        return STORAGEYARD_TASK_NONE;
+    }
+
+    using action_type = decltype(building_storageyard_deliver_weapons);
+    action_type *actions[] = {
+        &building_storageyard_determine_getting_up_resources,       // getting up resources
+        &building_storageyard_deliver_weapons,                      // deliver weapons to barracks
+        &building_storageyard_deliver_resource_to_workshop,         // deliver raw materials to workshops
+        &building_storageyard_deliver_food_to_gettingup_granary,    // deliver food to getting granary
+        &building_storageyard_deliver_food_to_accepting_granary,    // deliver food to accepting granary
+        &building_storageyard_deliver_emptying_resources,           // emptying resource
+    };
+
+    for (const auto &action : actions) {
+        storage_worker_task task = (*action)(warehouse);
+        if (task.result != STORAGEYARD_TASK_NONE) {
+            resource = task.resource;
+            amount = task.amount;
+            return task.result;
+        }
+    }
+    
     // move goods to other warehouses
+    const building_storage* s = building_storage_get(warehouse->storage_id);
     if (s->empty_all) {
-        space = warehouse;
+        building *space = warehouse;
         for (int i = 0; i < 8; i++) {
             space = space->next();
             if (space->id > 0 && space->stored_full_amount > 0) {
@@ -671,5 +721,6 @@ int building_storageyard_determine_worker_task(building* warehouse, e_resource& 
             }
         }
     }
+
     return STORAGEYARD_TASK_NONE;
 }

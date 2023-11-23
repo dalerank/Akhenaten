@@ -59,6 +59,7 @@ enum e_image_id : uint16_t {
     IMG_CONSERVATORY = 54,
     IMG_PHYSICIAN = 55,
     IMG_BARRACKS = 56,
+    IMG_SCRIBAL_SCHOOL = 57,
 
     IMG_SIZE
 };

@@ -148,7 +148,7 @@ static int draw_background() {
     // food stocks
     text_b = 95;
     draw_title(y_line, 4);
-    if (scenario_property_rome_supplies_wheat()) {
+    if (scenario_property_kingdom_supplies_grain()) {
         lang_text_draw(61, 26, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
     } else if (city_resource_food_supply_months() > 0) {
         width = lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
@@ -161,7 +161,7 @@ static int draw_background() {
     // food consumption
     text_b = 13;
     draw_title(y_line, 5);
-    if (scenario_property_rome_supplies_wheat()) {
+    if (scenario_property_kingdom_supplies_grain()) {
         lang_text_draw(61, 26, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         int pct = city_resource_food_percentage_produced();

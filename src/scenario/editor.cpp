@@ -41,7 +41,7 @@ void scenario_editor_create(int map_size) {
     for (int i = 0; i < MAX_ALLOWED_BUILDINGS; i++) {
         g_scenario_data.allowed_buildings[i] = 1;
     }
-    g_scenario_data.rome_supplies_wheat = 0;
+    g_scenario_data.kingdom_supplies_grain = 0;
 
     g_scenario_data.win_criteria.culture.goal = 10;
     g_scenario_data.win_criteria.culture.enabled = 1;
@@ -343,8 +343,8 @@ void scenario_editor_set_rescue_loan(int amount) {
     g_scenario_data.is_saved = 0;
 }
 
-void scenario_editor_toggle_rome_supplies_wheat() {
-    g_scenario_data.rome_supplies_wheat = !g_scenario_data.rome_supplies_wheat;
+void scenario_editor_toggle_kingdom_supplies_grain() {
+    g_scenario_data.kingdom_supplies_grain = !g_scenario_data.kingdom_supplies_grain;
     g_scenario_data.is_saved = 0;
 }
 

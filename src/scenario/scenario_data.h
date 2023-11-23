@@ -122,7 +122,7 @@ struct scenario_data_t {
     int rescue_loan;
     int debt_interest_rate;
 
-    int rome_supplies_wheat;
+    int kingdom_supplies_grain;
     int image_id;
     uint8_t subtitle[64];
     uint8_t brief_description[522];

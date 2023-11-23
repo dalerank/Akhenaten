@@ -77,6 +77,7 @@ images = [
 	{img: IMG_CONSERVATORY, pack:PACK_GENERAL, id:51},
 	{img: IMG_PHYSICIAN, pack:PACK_GENERAL, id:70},
 	{img: IMG_BARRACKS, pack:PACK_GENERAL, id:166},
+	{img: IMG_SCRIBAL_SCHOOL, pack:PACK_GENERAL, id:42},
 ]
 
 cart_offsets = [

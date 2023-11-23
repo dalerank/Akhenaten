@@ -57,7 +57,7 @@ static building_properties properties[400] = {
     {2, 0, 0, 0},
     {1, 0, GROUP_BUILDING_DENTIST},        // dentist
     {3, 0, 0, 0},                          // unused (distribution center)
-    {2, 0, GROUP_BUILDING_SCRIBAL_SCHOOL},         // school
+    {2, 0, 0, 0},         // school
     {3, 0, 0, 0},                          // water crossings
     {3, 0, GROUP_BUILDING_LIBRARY},        // library
     {4, 1, GROUP_BUILDING_FORT, 1},        // fort yard
@@ -252,6 +252,7 @@ void building_properties_init() {
     properties[BUILDING_CONSERVATORY] = {3, 0, 0, 0, 0, IMG_CONSERVATORY};
     properties[BUILDING_PHYSICIAN] = {2, 0, 0, 0, 0, IMG_PHYSICIAN};
     properties[BUILDING_RECRUITER] = {3, 0, 0, 0, 0, IMG_BARRACKS};
+    properties[BUILDING_SCRIBAL_SCHOOL] = {2, 0, 0, 0, 0, IMG_SCRIBAL_SCHOOL};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "game/resource.h"
+#include "grid/point.h"
 
 class building;
-class map_point;
 
 enum e_storageyard_state { STORAGEYARD_ROOM = 0, STORAGEYARD_FULL = 1, STORAGEYARD_SOME_ROOM = 2 };
 
@@ -14,6 +14,13 @@ enum e_storageyard_task {
     STORAGEYARD_TASK_EMPTYING = 2,
     //
     STORAGEYARD_TASK_GETTING_MOAR = 9,
+};
+
+struct storage_worker_task {
+    e_storageyard_task result = STORAGEYARD_TASK_NONE;
+    building *space = nullptr;
+    int amount = 0;
+    e_resource resource = RESOURCE_NONE;
 };
 
 int building_storageyard_get_space_info(building* warehouse);
@@ -42,14 +49,8 @@ void building_storageyards_add_resource(e_resource resource, int amount);
 
 int building_storageyard_remove_resource(e_resource resource, int amount);
 
-int building_storageyard_for_storing(building* src,
-                                   map_point tile,
-                                   e_resource resource,
-                                   int distance_from_entry,
-                                   int road_network_id,
-                                   int* understaffed,
-                                   map_point* dst);
+int building_storageyard_for_storing(building* src, tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int* understaffed, tile2i* dst);
 
-int building_storageyard_for_getting(building* src, e_resource resource, map_point* dst);
+int building_storageyard_for_getting(building* src, e_resource resource, tile2i* dst);
 
-int building_storageyard_determine_worker_task(building* warehouse, e_resource& resource, int& amount);
+e_storageyard_task building_storageyard_determine_worker_task(building* warehouse, e_resource& resource, int& amount);

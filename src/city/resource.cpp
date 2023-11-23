@@ -213,7 +213,7 @@ void city_resource_determine_available(void) {
     g_available_data.food_list.size = 0;
     g_available_data.market_goods_list.size = 0;
 
-    for (e_resource i = RESOURCE_MIN_FOOD; i < RESOURCES_FOODS_MAX; i = (e_resource)(i + 1)) {
+    for (e_resource i = RESOURCE_FOOD_MIN; i < RESOURCES_FOODS_MAX; i = (e_resource)(i + 1)) {
         if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false)) {
             const int food_index = g_available_data.food_list.size;
             g_available_data.food_list.items[food_index] = i;
@@ -263,7 +263,7 @@ static void calculate_available_food(void) {
             }
 
             int amount_stored = 0;
-            for (int r = RESOURCE_MIN_FOOD; r < RESOURCES_FOODS_MAX; r++) {
+            for (int r = RESOURCE_FOOD_MIN; r < RESOURCES_FOODS_MAX; r++) {
                 amount_stored += b->data.granary.resource_stored[r];
             }
 
@@ -282,7 +282,7 @@ static void calculate_available_food(void) {
             }
         }
     }
-    for (int i = RESOURCE_MIN_FOOD; i < RESOURCES_FOODS_MAX; i++) {
+    for (int i = RESOURCE_FOOD_MIN; i < RESOURCES_FOODS_MAX; i++) {
         if (city_data.resource.granary_food_stored[i]) {
             city_data.resource.granary_total_stored += city_data.resource.granary_food_stored[i];
             city_data.resource.food_types_available_num++;
@@ -295,15 +295,16 @@ static void calculate_available_food(void) {
     } else {
         city_data.resource.food_supply_months = city_data.resource.granary_total_stored > 0 ? 1 : 0;
     }
-    if (scenario_property_rome_supplies_wheat()) {
+    if (scenario_property_kingdom_supplies_grain()) {
         //        city_data.resource.food_types_available = 1;
         city_data.resource.food_supply_months = 12;
     }
 }
+
 void city_resource_calculate_food_stocks_and_supply_wheat(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Food Stocks Update");
     calculate_available_food();
-    if (scenario_property_rome_supplies_wheat()) {
+    if (scenario_property_kingdom_supplies_grain()) {
         for (int i = 1; i < MAX_BUILDINGS; i++) {
             building* b = building_get(i);
             if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MARKET)
@@ -332,7 +333,7 @@ void city_resource_consume_food() {
                 amount_per_type /= num_types;
 
             b->data.house.num_foods = 0;
-            if (scenario_property_rome_supplies_wheat()) {
+            if (scenario_property_kingdom_supplies_grain()) {
                 city_data.resource.food_types_eaten_num = 1;
                 //                city_data.resource.food_types_available = 1;
                 b->data.house.inventory[0] = amount_per_type;

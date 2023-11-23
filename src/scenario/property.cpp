@@ -61,8 +61,8 @@ int scenario_property_climate(void) {
 int scenario_property_start_year(void) {
     return g_scenario_data.start_year;
 }
-int scenario_property_rome_supplies_wheat(void) {
-    return g_scenario_data.rome_supplies_wheat;
+int scenario_property_kingdom_supplies_grain(void) {
+    return g_scenario_data.kingdom_supplies_grain;
 }
 int scenario_property_enemy(void) {
     return g_scenario_data.enemy_id;
