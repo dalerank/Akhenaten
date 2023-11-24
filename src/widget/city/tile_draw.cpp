@@ -397,33 +397,67 @@ void draw_figures(vec2i pixel, tile2i point, painter &ctx) {
     }
 }
 
-void draw_isometrics_overlay(vec2i pixel, tile2i point, painter &ctx) {
+void draw_isometrics_overlay_flat(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     Planner.construction_record_view_position(pixel, point);
     constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED};
     if (grid_offset < 0) {
         // Outside map: draw black tile
         ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, 0);
+        return;
+    }
 
-    } else if (get_city_overlay()->draw_custom_footprint) {
+    if (get_city_overlay()->draw_custom_footprint) {
         get_city_overlay()->draw_custom_footprint(pixel, point, ctx);
 
     } else if (map_property_is_draw_tile(grid_offset)) {
         int terrain = map_terrain_get(grid_offset);
         if (terrain & (TERRAIN_CANAL | TERRAIN_WALL)) {
-            // display groundwater
-            int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-            ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
-
-        } else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
-
+        //    // display groundwater
+        //    int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
+        //    ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
+        //
+        //} else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
+        //    ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
+        //
         } else if (terrain & TERRAIN_BUILDING) {
             city_with_overlay_draw_building_footprint(ctx, pixel.x, pixel.y, grid_offset, 0);
-
+        
         } else {
             ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, 0);
         }
+    }
+
+    //get_city_overlay()->draw_custom_top(pixel, point, ctx);
+}
+
+void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
+    int grid_offset = point.grid_offset();
+    //Planner.construction_record_view_position(pixel, point);
+    constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED};
+    if (grid_offset < 0) {
+        // Outside map: draw black tile
+        //ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, 0);
+
+    } else if (get_city_overlay()->draw_custom_footprint) {
+        //get_city_overlay()->draw_custom_footprint(pixel, point, ctx);
+
+    } else if (map_property_is_draw_tile(grid_offset)) {
+        //int terrain = map_terrain_get(grid_offset);
+        //if (terrain & (TERRAIN_CANAL | TERRAIN_WALL)) {
+        //    // display groundwater
+        //    int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
+        //    ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
+        //
+        //} else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
+        //    ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
+        //
+        //} else if (terrain & TERRAIN_BUILDING) {
+        //    city_with_overlay_draw_building_footprint(ctx, pixel.x, pixel.y, grid_offset, 0);
+        //
+        //} else {
+        //    ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, 0);
+        //}
     }
 
     get_city_overlay()->draw_custom_top(pixel, point, ctx);

@@ -17,6 +17,7 @@ void draw_isometric_flat(vec2i pixel, tile2i point, painter &ctx);
 void draw_isometric_height(vec2i pixel, tile2i point, painter &ctx);
 void draw_figures(vec2i pixel, tile2i point, painter &ctx);
 
-void draw_isometrics_overlay(vec2i pixel, tile2i point, painter &ctx);
+void draw_isometrics_overlay_flat(vec2i pixel, tile2i point, painter &ctx);
+void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx);
 void draw_ornaments_overlay(vec2i pixel, tile2i point, painter &ctx);
 void draw_figures_overlay(vec2i pixel, tile2i point, painter &ctx);
