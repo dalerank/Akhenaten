@@ -50,6 +50,51 @@ static void update_farm_image(building &b) {
     }
 }
 
+delivery_destination building_get_asker_for_resource(tile2i tile, e_building_type btype, e_resource resource, int road_network_id, int distance_from_entry) {
+    if (resource != RESOURCE_WEAPONS) {
+        return {0};
+    }
+
+    if (city_resource_is_stockpiled(resource)) {
+        return {0};
+    }
+
+    int min_dist = INFINITE;
+    building* min_building = 0;
+    buildings_valid_do([&] (building &b) {
+        if (b.type != btype) {
+            return;
+        }
+
+        if (!map_has_road_access(b.tile, b.size)) {
+            return;
+        }
+
+        if (b.distance_from_entry <= 0 || b.road_network_id != road_network_id) {
+            return;
+        }
+
+        if (b.stored_full_amount >= b.need_resource_amount(resource) * 100) {
+            return;
+        }
+
+        int dist = calc_distance_with_penalty(b.tile, tile, distance_from_entry, b.distance_from_entry);
+        dist += 8 * b.stored_full_amount / 100;
+        if (dist < min_dist) {
+            min_dist = dist;
+            min_building = &b;
+        }
+    });
+
+    if (min_building && min_dist < INFINITE) {
+        tile2i dst;
+        map_point_store_result(min_building->road_access, dst);
+        return {min_building->id, dst};
+    }
+
+    return {0};
+}
+
 building* building_determine_worker_needed() {
     for (building *it = building_begin(), *end = building_end(); it != end; ++it) {
         if (it->state != BUILDING_STATE_VALID) {

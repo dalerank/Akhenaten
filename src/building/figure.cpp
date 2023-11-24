@@ -1437,6 +1437,12 @@ bool building::figure_generate() {
     return true;
 }
 
+void building::school_add_papyrus(int amount) {
+    if (id > 0) {
+        stored_full_amount += amount;
+    }
+}
+
 int building::get_fire_risk(int value) {
     switch (type) {
     case BUILDING_CLAY_PIT:

@@ -358,8 +358,10 @@ public:
     bool figure_generate();
     int get_fire_risk(int value);
 
+    void school_add_papyrus(int amount);
+
     // barracks.c
-    void barracks_add_weapon();
+    void barracks_add_weapon(int amount);
     int barracks_create_soldier();
     bool barracks_create_tower_sentry();
     void barracks_toggle_priority();

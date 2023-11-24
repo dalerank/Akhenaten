@@ -18,6 +18,13 @@ void building_industry_update_wheat_production(void);
 bool building_industry_has_produced_resource(building &b);
 void building_industry_start_new_production(building* b);
 
+struct delivery_destination {
+    int building_id = 0;
+    tile2i dest = tile2i(-1);
+};
+
+delivery_destination building_get_asker_for_resource(tile2i tile, e_building_type btype, e_resource resource, int road_network_id, int distance_from_entry);
+
 bool building_farm_time_to_deliver(bool floodplains, int resource_id = 0);
 
 void building_curse_farms(int big_curse);

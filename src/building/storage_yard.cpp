@@ -3,6 +3,7 @@
 #include "building/barracks.h"
 #include "building/count.h"
 #include "building/building_granary.h"
+#include "building/industry.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "city/buildings.h"
@@ -576,8 +577,8 @@ storage_worker_task building_storageyard_deliver_weapons(building *warehouse) {
     if (building_count_active(BUILDING_RECRUITER) > 0 
         && (city_military_has_legionary_legions() || config_get(CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS))
         && !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
-        int building_id = building_get_barracks_for_weapon(warehouse->tile, RESOURCE_WEAPONS, warehouse->road_network_id, warehouse->distance_from_entry, 0);
-        building* barracks = building_get(building_id);
+        auto result = building_get_asker_for_resource(warehouse->tile, BUILDING_RECRUITER, RESOURCE_WEAPONS, warehouse->road_network_id, warehouse->distance_from_entry);
+        building* barracks = building_get(result.building_id);
         int barracks_want = barracks->need_resource_amount(RESOURCE_WEAPONS);
 
         if (barracks_want > 0 && warehouse->road_network_id == barracks->road_network_id) {
@@ -594,6 +595,37 @@ storage_worker_task building_storageyard_deliver_weapons(building *warehouse) {
             if (available > 0) {
                 int amount = std::min(available, barracks_want);
                 return {STORAGEYARD_TASK_DELIVERING, space, amount, RESOURCE_WEAPONS};
+            }
+        }
+    }
+
+    return {STORAGEYARD_TASK_NONE};
+}
+
+storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(building *warehouse) {
+    building *space = warehouse;
+
+    if (building_count_active(BUILDING_SCRIBAL_SCHOOL) > 0 
+        //&& (config_get(CONFIG_GP_CH_SCRIBAL_SCHOOL_NEED_PAPYRUS))
+        && !city_resource_is_stockpiled(RESOURCE_PAPYRUS)) {
+        auto result = building_get_asker_for_resource(warehouse->tile, BUILDING_SCRIBAL_SCHOOL, RESOURCE_PAPYRUS, warehouse->road_network_id, warehouse->distance_from_entry);
+        building* scribal_school = building_get(result.building_id);
+        int school_want = scribal_school->need_resource_amount(RESOURCE_PAPYRUS);
+
+        if (school_want > 0 && warehouse->road_network_id == scribal_school->road_network_id) {
+            int available = 0;
+            space = warehouse;
+            for (int i = 0; i < 8; i++) {
+                space = space->next();
+                if (space->id > 0 && space->stored_full_amount > 0
+                    && space->subtype.warehouse_resource_id == RESOURCE_PAPYRUS) {
+                    available += space->stored_full_amount;
+                }
+            }
+
+            if (available > 0) {
+                int amount = std::min(available, school_want);
+                return {STORAGEYARD_TASK_DELIVERING, space, amount, RESOURCE_PAPYRUS};
             }
         }
     }
@@ -694,6 +726,7 @@ e_storageyard_task building_storageyard_determine_worker_task(building* warehous
         &building_storageyard_determine_getting_up_resources,       // getting up resources
         &building_storageyard_deliver_weapons,                      // deliver weapons to barracks
         &building_storageyard_deliver_resource_to_workshop,         // deliver raw materials to workshops
+        &building_storageyard_deliver_papyrus_to_scribal_school,    // deliver raw materials to workshops
         &building_storageyard_deliver_food_to_gettingup_granary,    // deliver food to getting granary
         &building_storageyard_deliver_food_to_accepting_granary,    // deliver food to accepting granary
         &building_storageyard_deliver_emptying_resources,           // emptying resource

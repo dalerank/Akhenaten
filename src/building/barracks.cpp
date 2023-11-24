@@ -17,53 +17,10 @@
 
 int g_tower_sentry_request = 0;
 
-int building_get_barracks_for_weapon(tile2i tile, int resource, int road_network_id, int distance_from_entry, tile2i* dst) {
-    if (resource != RESOURCE_WEAPONS)
-        return 0;
-
-    if (city_resource_is_stockpiled(resource))
-        return 0;
-
-    int min_dist = INFINITE;
-    building* min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_RECRUITER) {
-            continue;
-        }
-
-        if (!map_has_road_access(b->tile, b->size)) {
-            continue;
-        }
-
-        if (b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
-            continue;
-        }
-
-        if (b->stored_full_amount >= b->need_resource_amount(RESOURCE_WEAPONS) * 100) {
-            continue;
-        }
-
-        int dist = calc_distance_with_penalty(b->tile, tile, distance_from_entry, b->distance_from_entry);
-        dist += 8 * b->stored_full_amount / 100;
-        if (dist < min_dist) {
-            min_dist = dist;
-            min_building = b;
-        }
+void building::barracks_add_weapon(int amount) {
+    if (id > 0) {
+        stored_full_amount += amount;
     }
-    if (min_building && min_dist < INFINITE) {
-        if (dst) {
-            map_point_store_result(min_building->road_access, *dst);
-        }
-
-        return min_building->id;
-    }
-    return 0;
-}
-
-void building::barracks_add_weapon() {
-    if (id > 0)
-        stored_full_amount += 100;
 }
 
 static int get_closest_legion_needing_soldiers(building* barracks) {
