@@ -33,12 +33,13 @@ struct display_size {
     int w, h;
 };
 
-void settings_load(void);
-void settings_save(void);
+void settings_load();
+void settings_save();
 
-int setting_fullscreen(void);
+int setting_fullscreen();
 display_size setting_display_size();
-void setting_set_fullscreen(int fullscreen);
+void setting_set_fullscreen(bool fullscreen);
+void setting_set_cli_fullscreen(bool fullscreen);
 void setting_set_display(int width, int height);
 
 const set_sound* setting_sound(int type);

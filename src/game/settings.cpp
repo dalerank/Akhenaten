@@ -15,6 +15,7 @@
 struct settings_data_t {
     // display settings
     bool fullscreen;
+    bool cli_fullscreen;
     int window_width;
     int window_height;
     // sound settings
@@ -51,9 +52,15 @@ settings_data_t& settings_data() {
     return inst;
 }
 
-static void load_default_settings(void) {
+void setting_set_cli_fullscreen(bool fullscreen) {
+    auto& data = settings_data();
+    data.cli_fullscreen = fullscreen;
+}
+
+static void load_default_settings() {
     auto& data = settings_data();
     data.fullscreen = true;
+    data.cli_fullscreen = false;
     data.window_width = 800;
     data.window_height = 600;
 
@@ -133,7 +140,7 @@ static void load_settings(buffer* buf) {
     }
 }
 
-void settings_load(void) {
+void settings_load() {
     auto& data = settings_data();
     load_default_settings();
 
@@ -151,7 +158,7 @@ void settings_load(void) {
         data.window_height = 600;
     }
 }
-void settings_save(void) {
+void settings_save() {
     auto& data = settings_data();
     buffer* buf = data.inf_file;
 
@@ -196,13 +203,13 @@ void settings_save(void) {
 }
 int setting_fullscreen() {
     auto& data = settings_data();
-    return data.fullscreen;
+    return data.fullscreen && data.cli_fullscreen;
 }
 display_size setting_display_size() {
     auto& data = settings_data();
     return {data.window_width, data.window_height};
 }
-void setting_set_fullscreen(int fullscreen) {
+void setting_set_fullscreen(bool fullscreen) {
     auto& data = settings_data();
     data.fullscreen = fullscreen;
 }

@@ -282,7 +282,6 @@ void Arguments::parse_cli_(int argc, char** argv) {
 
         } else if (SDL_strcmp(argv[i], "--window") == 0) {
             window_mode_ = true;
-
         } else if (SDL_strcmp(argv[i], "--render") == 0) {
             if (i + 1 < argc) {
                 renderer_ = argv[i + 1];

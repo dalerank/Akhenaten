@@ -1,6 +1,5 @@
 #include "city.h"
 #include "dev/debug.h"
-#include <tgmath.h>
 
 #include "building/menu.h"
 #include "city/message.h"

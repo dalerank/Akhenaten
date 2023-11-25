@@ -380,6 +380,7 @@ static void setup(Arguments& args) {
         logs::info("Exiting: SDL create window failed");
         exit(-2);
     }
+    setting_set_cli_fullscreen(args.is_fullscreen());
     platform_init_cursors(args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
                                                                // otherwise it fails on Nintendo Switch
 

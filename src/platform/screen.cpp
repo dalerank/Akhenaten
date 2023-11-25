@@ -258,7 +258,7 @@ void platform_screen_set_fullscreen(void) {
     setting_set_display(mode.w, mode.h);
 }
 
-void platform_screen_set_windowed(void) {
+void platform_screen_set_windowed() {
     if (system_is_fullscreen_only()) {
         return;
     }
