@@ -134,7 +134,7 @@ static void set_advisor_window() {
 static void set_advisor(int advisor) {
     auto &data = g_window_advisors;
     data.current_advisor = advisor;
-    setting_set_last_advisor(advisor);
+    g_settings.last_advisor = advisor;
     clear_all_advisors_button();
     set_advisor_window();
     advisor_buttons[advisor - 1].pressed = 1; // set button active when coming back to menu
@@ -307,7 +307,7 @@ void window_advisors_show(void) {
 void window_advisors_show_checked() {
     e_availability avail = mission_advisor_availability(ADVISOR_LABOR, scenario_campaign_scenario_id() + 1);
     if (avail == AVAILABLE) {
-        set_advisor(setting_last_advisor());
+        set_advisor(g_settings.last_advisor);
         window_advisors_show();
     } else {
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);

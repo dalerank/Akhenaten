@@ -205,21 +205,6 @@ void game_settings::toggle_tooltips() {
     }
 }
 
-int setting_victory_video(void) {
-    auto& data = g_settings;
-    data.victory_video = data.victory_video ? 0 : 1;
-    return data.victory_video;
-}
-
-int setting_last_advisor(void) {
-    auto& data = g_settings;
-    return data.last_advisor;
-}
-void setting_set_last_advisor(int advisor) {
-    auto& data = g_settings;
-    data.last_advisor = advisor;
-}
-
 const uint8_t* setting_player_name(void) {
     auto& data = g_settings;
     return data.player_name;

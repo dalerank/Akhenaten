@@ -120,6 +120,7 @@ struct game_settings {
     void increase_difficulty() { difficulty = std::clamp<e_difficulty>((e_difficulty)(difficulty + 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
     void decrease_difficulty() { difficulty = std::clamp<e_difficulty>((e_difficulty)(difficulty - 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
 
+    bool show_victory_video() { victory_video = !victory_video; return victory_video; }
 
 private:
     void load_settings(buffer *buf);
@@ -129,8 +130,6 @@ private:
 };
 
 extern game_settings g_settings;
-
-int setting_victory_video(void);
 
 int setting_last_advisor(void);
 void setting_set_last_advisor(int advisor);
