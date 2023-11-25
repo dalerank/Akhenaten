@@ -60,6 +60,10 @@ enum e_image_id : uint16_t {
     IMG_PHYSICIAN = 55,
     IMG_BARRACKS = 56,
     IMG_SCRIBAL_SCHOOL = 57,
+    IMG_TEACHER_WALK = 58,
+    IMG_TEACHER_DEATH = 59,
+    IMG_SCRIBER_WALK = 60,
+    IMG_SCRIBER_DEATH = 61,
 
     IMG_SIZE
 };

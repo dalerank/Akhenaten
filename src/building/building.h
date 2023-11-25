@@ -186,7 +186,7 @@ public:
             unsigned char colosseum_gladiator;
             unsigned char magistrate;
             unsigned char hippodrome;
-            unsigned char school;
+            uint8_t school;
             unsigned char library;
             unsigned char academy;
             unsigned char apothecary;
@@ -475,6 +475,19 @@ inline building* building_first(T pred) {
 template<typename T>
 void buildings_valid_do(T func) {
     for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
+        if (it->state == BUILDING_STATE_VALID) {
+            func(*it);
+        }
+    }
+}
+
+template<typename ... Args, typename T>
+void buildings_valid_do(T func, Args ... args) {
+    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
+        if (!building_type_any_of(*it, args...)) {
+            continue;
+        }
+
         if (it->state == BUILDING_STATE_VALID) {
             func(*it);
         }

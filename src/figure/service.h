@@ -1,3 +1,5 @@
 #pragma once
 
-constexpr unsigned char MAX_COVERAGE = 96;
+#include <cstdint>
+
+constexpr uint8_t MAX_COVERAGE = 96;

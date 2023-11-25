@@ -28,6 +28,7 @@
 #include "city/ratings.h"
 #include "city/resource.h"
 #include "city/sentiment.h"
+#include "city/education.h"
 #include "city/trade.h"
 #include "city/victory.h"
 #include "core/random.h"
@@ -85,12 +86,7 @@ static void advance_month() {
     city_finance_handle_month_change();
     city_resource_consume_food();
     scenario_distant_battle_process();
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    scenario_invasion_process();
-    //    scenario_request_process_C3();
-    //    scenario_demand_change_process();
-    //    scenario_price_change_process();
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) { // Pharaoh uses its own event system
+    city_education_handle_month_change();
     random_generate_next();                  // TODO: find out the source / reason for this
     scenario_event_process();
     
@@ -113,9 +109,6 @@ static void advance_month() {
     city_festival_update();
     city_buildings_update_month();
     formation_fish_update();
-    
-    //if (GAME_ENV == ENGINE_ENV_C3)
-    //    tutorial_on_month_tick();
 
     if (setting_monthly_autosave()) {
         bstring256 autosave_file("autosave_month.", saved_game_data_expanded.extension);

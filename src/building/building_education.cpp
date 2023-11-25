@@ -6,6 +6,8 @@
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/boilerplate.h"
+#include "grid/road_access.h"
+#include "figure/figure.h"
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
 #include "window/building/common.h"
@@ -43,4 +45,31 @@ void building_academy_draw_info(object_info& c) {
 }
 void building_library_draw_info(object_info& c) {
     building_education_draw_info(c, "library", FIGURE_LIBRARIAN);
+}
+
+void building::spawn_figure_school() {
+    check_labor_problem();
+    if (has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_TEACHER)) {
+        return;
+    }
+
+    tile2i road;
+    if (map_get_road_access_tile(tile, size, road)) {
+        common_spawn_labor_seeker(50);
+        int spawn_delay = figure_spawn_timer();
+        if (spawn_delay == -1) {
+            return;
+        }
+
+        figure_spawn_delay++;
+        if (figure_spawn_delay > spawn_delay) {
+            figure_spawn_delay = 0;
+
+            figure* f = figure_create(FIGURE_TEACHER, road, DIR_0_TOP_RIGHT);
+            f->action_state = FIGURE_ACTION_125_ROAMING;
+            f->set_home(id);
+            set_figure(BUILDING_SLOT_SERVICE, f->id);
+            f->init_roaming_from_building(0);
+        }
+    }
 }

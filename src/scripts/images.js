@@ -78,6 +78,10 @@ images = [
 	{img: IMG_PHYSICIAN, pack:PACK_GENERAL, id:70},
 	{img: IMG_BARRACKS, pack:PACK_GENERAL, id:166},
 	{img: IMG_SCRIBAL_SCHOOL, pack:PACK_GENERAL, id:42},
+	{img: IMG_SCRIBER_WALK, pack:PACK_SPR_MAIN, id:199},
+	{img: IMG_SCRIBER_DEATH, pack:PACK_SPR_MAIN, id:200},
+	{img: IMG_TEACHER_WALK, pack:PACK_SPR_MAIN, id:201},
+	{img: IMG_TEACHER_DEATH, pack:PACK_SPR_MAIN, id:202},
 ]
 
 cart_offsets = [
