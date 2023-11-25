@@ -27,8 +27,8 @@ public:
     [[nodiscard]] const char* get_data_directory() const;
     void set_data_directory(const char *value);
 
-    [[nodiscard]] display_size get_window_size() const;
-    void set_window_size(display_size value);
+    [[nodiscard]] vec2i get_window_size() const;
+    void set_window_size(vec2i value);
 
     [[nodiscard]] const char* get_scripts_directory() const;
 
@@ -39,7 +39,7 @@ private:
     bstring64 renderer_;
     int display_scale_percentage_ = 100;
     int cursor_scale_percentage_ = 100;
-    display_size window_size_ = {800, 600};
+    vec2i window_size_ = {800, 600};
     bool window_mode_ = false;
 
     /// apply parameters from command line

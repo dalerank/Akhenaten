@@ -48,7 +48,7 @@ static void draw_foreground(void) {
 
     lang_text_draw_centered(42, 0, 128, 94, 224, FONT_LARGE_BLACK_ON_LIGHT);
 
-    lang_text_draw_centered(42, setting_fullscreen() ? 2 : 1, 128, 140, 224, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw_centered(42, g_settings.is_fullscreen() ? 2 : 1, 128, 140, 224, FONT_NORMAL_BLACK_ON_DARK);
 
     lang_text_draw_centered(42, 3, 128, 164, 224, FONT_NORMAL_BLACK_ON_DARK);
     lang_text_draw_centered(42, 4, 128, 188, 224, FONT_NORMAL_BLACK_ON_DARK);
@@ -68,7 +68,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void button_fullscreen(int param1, int param2) {
-    app_fullscreen(!setting_fullscreen());
+    app_fullscreen(!g_settings.is_fullscreen());
     g_display_options_data.close_callback();
 }
 

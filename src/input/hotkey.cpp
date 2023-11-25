@@ -456,7 +456,7 @@ void hotkey_handle_global_keys() {
     }
 
     if (data.global_hotkey_state.toggle_fullscreen) {
-        app_fullscreen(!setting_fullscreen());
+        app_fullscreen(!g_settings.is_fullscreen());
     }
 
     if (data.global_hotkey_state.save_screenshot) {

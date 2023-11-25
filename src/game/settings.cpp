@@ -16,171 +16,145 @@ game_settings::game_settings() {
     inf_file = new buffer(INF_SIZE);
 }
 
-void setting_set_cli_fullscreen(bool fullscreen) {
-    auto& data = g_settings;
-    data.cli_fullscreen = fullscreen;
-}
+void game_settings::load_default_settings() {
+    fullscreen = true;
+    cli_fullscreen = false;
+    display_size = {800, 600};
 
-static void load_default_settings() {
-    auto& data = g_settings;
-    data.fullscreen = true;
-    data.cli_fullscreen = false;
-    data.window_width = 800;
-    data.window_height = 600;
+    sound_effects.enabled = true;
+    sound_effects.volume = 100;
+    sound_music.enabled = true;
+    sound_music.volume = 80;
+    sound_speech.enabled = true;
+    sound_speech.volume = 100;
+    sound_city.enabled = true;
+    sound_city.volume = 100;
 
-    data.sound_effects.enabled = true;
-    data.sound_effects.volume = 100;
-    data.sound_music.enabled = true;
-    data.sound_music.volume = 80;
-    data.sound_speech.enabled = true;
-    data.sound_speech.volume = 100;
-    data.sound_city.enabled = true;
-    data.sound_city.volume = 100;
+    game_speed = 90;
+    scroll_speed = 70;
 
-    data.game_speed = 90;
-    data.scroll_speed = 70;
+    difficulty = DIFFICULTY_HARD;
+    tooltips = TOOLTIPS_FULL;
+    warnings = true;
+    gods_enabled = true;
+    victory_video = false;
+    last_advisor = ADVISOR_LABOR;
 
-    data.difficulty = DIFFICULTY_HARD;
-    data.tooltips = TOOLTIPS_FULL;
-    data.warnings = true;
-    data.gods_enabled = true;
-    data.victory_video = false;
-    data.last_advisor = ADVISOR_LABOR;
-
-    data.popup_messages = 0;
-    data.city_names_style = CITIES_OLD_NAMES;
-    data.pyramid_speedup = false;
+    popup_messages = 0;
+    city_names_style = CITIES_OLD_NAMES;
+    pyramid_speedup = false;
 
     setting_clear_personal_savings();
 }
-static void load_settings(buffer* buf) {
-    auto& data = g_settings;
+
+void game_settings::load_settings(buffer* buf) {
     buf->skip(4);
-    data.fullscreen = buf->read_i32();
+    fullscreen = buf->read_i32();
     buf->skip(3);
-    data.sound_effects.enabled = buf->read_u8();
-    data.sound_music.enabled = buf->read_u8();
-    data.sound_speech.enabled = buf->read_u8();
+    sound_effects.enabled = buf->read_u8();
+    sound_music.enabled = buf->read_u8();
+    sound_speech.enabled = buf->read_u8();
     buf->skip(6);
-    data.game_speed = buf->read_i32();
-    data.game_speed = 80; // todo: fix settings
-    data.scroll_speed = buf->read_i32();
-    buf->read_raw(data.player_name.data(), data.player_name.capacity);
+    game_speed = buf->read_i32();
+    game_speed = 80; // todo: fix settings
+    scroll_speed = buf->read_i32();
+    buf->read_raw(player_name.data(), player_name.capacity);
     buf->skip(16);
-    data.last_advisor = buf->read_i32();
-    data.last_advisor = ADVISOR_TRADE; // debug
+    last_advisor = buf->read_i32();
+    last_advisor = ADVISOR_TRADE; // debug
     buf->skip(4);                      // int save_game_mission_id;
-    data.tooltips = buf->read_i32();
+    tooltips = buf->read_i32();
     buf->skip(4); // int starting_kingdom;
     buf->skip(4); // int personal_savings_last_mission;
     buf->skip(4); // int current_mission_id;
     buf->skip(4); // int is_custom_scenario;
-    data.sound_city.enabled = buf->read_u8();
-    data.warnings = buf->read_u8();
-    data.monthly_autosave = buf->read_u8();
+    sound_city.enabled = buf->read_u8();
+    warnings = buf->read_u8();
+    monthly_autosave = buf->read_u8();
     buf->skip(1); // unsigned char autoclear_enabled;
-    data.sound_effects.volume = buf->read_i32();
-    data.sound_music.volume = buf->read_i32();
-    data.sound_speech.volume = buf->read_i32();
-    data.sound_city.volume = buf->read_i32();
+    sound_effects.volume = buf->read_i32();
+    sound_music.volume = buf->read_i32();
+    sound_speech.volume = buf->read_i32();
+    sound_city.volume = buf->read_i32();
     buf->skip(8); // ram
-    data.window_width = buf->read_i32();
-    data.window_width = 0;
-    data.window_height = buf->read_i32();
-    data.window_height = 0;
+    display_size.x = buf->read_i32();
+    display_size.y = buf->read_i32();
+    display_size = {0, 0};
+
     buf->skip(8); // int max_confirmed_resolution;
-    for (int i = 0; i < g_settings.MAX_PERSONAL_SAVINGS; i++) {
-        data.personal_savings[i] = buf->read_i32();
+    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
+        personal_savings[i] = buf->read_i32();
     }
-    data.victory_video = buf->read_i32();
+    victory_video = buf->read_i32();
 
     if (buf->at_end()) {
         // Settings file is from unpatched C3, use default values
-        data.difficulty = DIFFICULTY_HARD;
-        data.gods_enabled = true;
+        difficulty = DIFFICULTY_HARD;
+        gods_enabled = true;
     } else {
-        data.difficulty = (e_difficulty)buf->read_i32();
-        data.gods_enabled = buf->read_i32();
+        difficulty = (e_difficulty)buf->read_i32();
+        gods_enabled = buf->read_i32();
     }
 }
 
-void settings_load() {
-    auto& data = g_settings;
+void game_settings::load() {
     load_default_settings();
 
     // TODO: load <Pharaoh.inf>
-    int size = io_read_file_into_buffer("pharaoh.inf", NOT_LOCALIZED, data.inf_file, INF_SIZE);
+    int size = io_read_file_into_buffer("pharaoh.inf", NOT_LOCALIZED, inf_file, INF_SIZE);
     if (!size) {
         return;
     }
 
-    load_settings(data.inf_file);
+    load_settings(inf_file);
 
-    if (data.window_width + data.window_height < 500) {
+    if (display_size.x + display_size.y < 500) {
         // most likely migration from Caesar 3
-        data.window_width = 800;
-        data.window_height = 600;
+        display_size = {800, 600};
     }
 }
-void settings_save() {
-    auto& data = g_settings;
-    buffer* buf = data.inf_file;
+
+void game_settings::save() {
+    buffer* buf = inf_file;
 
     buf->skip(4);
-    buf->write_i32(data.fullscreen);
+    buf->write_i32(fullscreen);
     buf->skip(3);
-    buf->write_u8(data.sound_effects.enabled);
-    buf->write_u8(data.sound_music.enabled);
-    buf->write_u8(data.sound_speech.enabled);
+    buf->write_u8(sound_effects.enabled);
+    buf->write_u8(sound_music.enabled);
+    buf->write_u8(sound_speech.enabled);
     buf->skip(6);
-    buf->write_i32(data.game_speed);
-    buf->write_i32(data.scroll_speed);
-    buf->write_raw(data.player_name.data(), data.player_name.capacity);
+    buf->write_i32(game_speed);
+    buf->write_i32(scroll_speed);
+    buf->write_raw(player_name.data(), player_name.capacity);
     buf->skip(16);
-    buf->write_i32(data.last_advisor);
+    buf->write_i32(last_advisor);
     buf->skip(4); // int save_game_mission_id;
-    buf->write_i32(data.tooltips);
+    buf->write_i32(tooltips);
     buf->skip(4); // int starting_kingdom;
     buf->skip(4); // int personal_savings_last_mission;
     buf->skip(4); // int current_mission_id;
     buf->skip(4); // int is_custom_scenario;
-    buf->write_u8(data.sound_city.enabled);
-    buf->write_u8(data.warnings);
-    buf->write_u8(data.monthly_autosave);
+    buf->write_u8(sound_city.enabled);
+    buf->write_u8(warnings);
+    buf->write_u8(monthly_autosave);
     buf->skip(1); // unsigned char autoclear_enabled;
-    buf->write_i32(data.sound_effects.volume);
-    buf->write_i32(data.sound_music.volume);
-    buf->write_i32(data.sound_speech.volume);
-    buf->write_i32(data.sound_city.volume);
+    buf->write_i32(sound_effects.volume);
+    buf->write_i32(sound_music.volume);
+    buf->write_i32(sound_speech.volume);
+    buf->write_i32(sound_city.volume);
     buf->skip(8); // ram
-    buf->write_i32(data.window_width);
-    buf->write_i32(data.window_height);
+    buf->write_i32(display_size.x);
+    buf->write_i32(display_size.y);
     buf->skip(8); // int max_confirmed_resolution;
-    for (int i = 0; i < g_settings.MAX_PERSONAL_SAVINGS; i++) {
-        buf->write_i32(data.personal_savings[i]);
+    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
+        buf->write_i32(personal_savings[i]);
     }
-    buf->write_i32(data.victory_video);
-    buf->write_i32(data.difficulty);
-    buf->write_i32(data.gods_enabled);
+    buf->write_i32(victory_video);
+    buf->write_i32(difficulty);
+    buf->write_i32(gods_enabled);
 
-    io_write_buffer_to_file("c3.inf", data.inf_file, INF_SIZE);
-}
-int setting_fullscreen() {
-    auto& data = g_settings;
-    return data.fullscreen && data.cli_fullscreen;
-}
-display_size setting_display_size() {
-    auto& data = g_settings;
-    return {data.window_width, data.window_height};
-}
-void setting_set_fullscreen(bool fullscreen) {
-    auto& data = g_settings;
-    data.fullscreen = fullscreen;
-}
-void setting_set_display(int width, int height) {
-    auto& data = g_settings;
-    data.window_width = width;
-    data.window_height = height;
+    io_write_buffer_to_file("pharaoh.inf", inf_file, INF_SIZE);
 }
 
 static set_sound* get_sound(int type) {

@@ -1,6 +1,6 @@
 #pragma once
 
-struct display_size;
+#include "core/vec2i.h"
 
 enum e_user_event {
     USER_EVENT_QUIT,
@@ -10,6 +10,6 @@ enum e_user_event {
     USER_EVENT_CENTER_WINDOW,
 };
 
-void app_window_resize(const display_size& wsize);
+void app_window_resize(const vec2i& wsize);
 void app_fullscreen(bool fullscreen);
 void app_post_event(int code);

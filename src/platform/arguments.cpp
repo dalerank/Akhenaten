@@ -69,13 +69,13 @@ void set_value(Arguments& arguments, argument_type type, std::string&& value) {
         break;
     case argument_type::WINDOW_WIDTH: {
         auto v = arguments.get_window_size();
-        v.w = std::stoi(value);
+        v.x = std::stoi(value);
         arguments.set_window_size(v);
         break;
     }
     case argument_type::WINDOW_HEIGHT: {
         auto v = arguments.get_window_size();
-        v.h = std::stoi(value);
+        v.y = std::stoi(value);
         arguments.set_window_size(v);
         break;
     }
@@ -264,11 +264,11 @@ const char *Arguments::get_scripts_directory() const {
     return scripts_directory_;
 }
 
-display_size Arguments::get_window_size() const {
+vec2i Arguments::get_window_size() const {
     return window_size_;
 }
 
-void Arguments::set_window_size(display_size value) {
+void Arguments::set_window_size(vec2i value) {
     window_size_ = value;
 }
 
@@ -299,7 +299,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
                 app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
         } else if (SDL_strcmp(argv[i], "--size") == 0) {
             if (i + 1 < argc) {
-                SDL_sscanf(argv[i + 1], "%dx%d", &window_size_.w, &window_size_.h);
+                SDL_sscanf(argv[i + 1], "%dx%d", &window_size_.x, &window_size_.y);
                 ++i;
             } else {
                 app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
@@ -368,8 +368,8 @@ void store(Arguments const& arguments) {
     output << "renderer" << '=' << arguments.get_renderer() << '\n';
     output << "display_scale_percentage" << '=' << arguments.get_display_scale_percentage() << '\n';
     output << "cursor_scale_percentage" << '=' << arguments.get_cursor_scale_percentage() << '\n';
-    output << "window_width" << '=' << arguments.get_window_size().w << '\n';
-    output << "window_height" << '=' << arguments.get_window_size().h << '\n';
+    output << "window_width" << '=' << arguments.get_window_size().x << '\n';
+    output << "window_height" << '=' << arguments.get_window_size().y << '\n';
 }
 
 } // namespace arguments

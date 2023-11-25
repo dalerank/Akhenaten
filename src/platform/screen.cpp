@@ -111,14 +111,14 @@ static void set_window_icon() {
 }
 #endif
 
-int platform_screen_create(char const* title, const char *renderer, bool fullscreen, int display_scale_percentage, display_size screen_size) {
+int platform_screen_create(char const* title, const char *renderer, bool fullscreen, int display_scale_percentage, vec2i screen_size) {
 #if defined(GAME_PLATFORM_ANDROID)
     //scale.screen_density = android_get_screen_density();
 #endif
 
     set_scale_percentage(display_scale_percentage, 0, 0);
 
-    display_size wsize;
+    vec2i wsize;
     if (!fullscreen && system_is_fullscreen_only()) {
         fullscreen = true;
     }
@@ -128,12 +128,12 @@ int platform_screen_create(char const* title, const char *renderer, bool fullscr
         SDL_GetDesktopDisplayMode(0, &mode);
         wsize = {mode.w, mode.h};
     } else {
-        wsize = setting_display_size();
-        wsize.w = std::max<int>(wsize.w, screen_size.w);
-        wsize.h = std::max<int>(wsize.h, screen_size.h);
+        wsize = g_settings.display_size;
+        wsize.x = std::max<int>(wsize.x, screen_size.x);
+        wsize.y = std::max<int>(wsize.y, screen_size.y);
 
-        wsize.w = scale_logical_to_pixels(wsize.w);
-        wsize.h = scale_logical_to_pixels(wsize.h);
+        wsize.x = scale_logical_to_pixels(wsize.x);
+        wsize.y = scale_logical_to_pixels(wsize.y);
     }
 
     platform_screen_destroy();
@@ -145,7 +145,7 @@ int platform_screen_create(char const* title, const char *renderer, bool fullscr
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 #endif
 
-    logs::info("Creating screen %d x %d, %s, driver: %s", wsize.w, wsize.h, fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
+    logs::info("Creating screen %d x %d, %s, driver: %s", wsize.x, wsize.y, fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
@@ -156,7 +156,7 @@ int platform_screen_create(char const* title, const char *renderer, bool fullscr
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
 
-    g_screen.window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, wsize.w, wsize.h, flags);
+    g_screen.window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, wsize.x, wsize.y, flags);
 
     if (!g_screen.window) {
         logs::error("Unable to create window: %s", SDL_GetError());
@@ -169,7 +169,7 @@ int platform_screen_create(char const* title, const char *renderer, bool fullscr
 #endif
 
     if (system_is_fullscreen_only()) {
-        SDL_GetWindowSize(g_screen.window, &wsize.w, &wsize.h);
+        SDL_GetWindowSize(g_screen.window, &wsize.x, &wsize.y);
     }
 
     if (!platform_renderer_init(g_screen.window, renderer)) {
@@ -183,8 +183,8 @@ int platform_screen_create(char const* title, const char *renderer, bool fullscr
         SDL_SetWindowGrab(g_screen.window, SDL_TRUE);
     }
 #endif
-    set_scale_percentage(display_scale_percentage, wsize.w, wsize.h);
-    return platform_screen_resize(wsize.w, wsize.h, 1);
+    set_scale_percentage(display_scale_percentage, wsize.x, wsize.y);
+    return platform_screen_resize(wsize.x, wsize.y, 1);
 }
 
 void platform_screen_destroy(void) {
@@ -204,7 +204,7 @@ int platform_screen_resize(int pixel_width, int pixel_height, int save) {
     int logical_height = scale_pixels_to_logical(pixel_height);
 
     if (save) {
-        setting_set_display(logical_width, logical_height);
+        g_settings.display_size = {logical_width, logical_height};
     }
 
     if (platform_renderer_create_render_texture(logical_width, logical_height)) {
@@ -230,7 +230,7 @@ int system_get_max_display_scale(void) {
 }
 
 void platform_screen_move(int x, int y) {
-    if (!setting_fullscreen()) {
+    if (!g_settings.is_fullscreen()) {
         g_screen.pos.x = x;
         g_screen.pos.y = y;
         g_screen.centered = 0;
@@ -254,17 +254,17 @@ void platform_screen_set_fullscreen(void) {
         SDL_SetWindowGrab(g_screen.window, SDL_TRUE);
     }
 #endif
-    setting_set_fullscreen(1);
-    setting_set_display(mode.w, mode.h);
+    g_settings.set_fullscreen(1);
+    g_settings.display_size = {mode.w, mode.h};
 }
 
 void platform_screen_set_windowed() {
     if (system_is_fullscreen_only()) {
         return;
     }
-    auto wsize = setting_display_size();
-    int pixel_width = scale_logical_to_pixels(wsize.w);
-    int pixel_height = scale_logical_to_pixels(wsize.h);
+    auto wsize = g_settings.display_size;
+    int pixel_width = scale_logical_to_pixels(wsize.x);
+    int pixel_height = scale_logical_to_pixels(wsize.y);
     int display = SDL_GetWindowDisplayIndex(g_screen.window);
     logs::info("User to windowed %d x %d on display %d", pixel_width, pixel_height, display);
     SDL_SetWindowFullscreen(g_screen.window, 0);
@@ -275,8 +275,8 @@ void platform_screen_set_windowed() {
     if (SDL_GetWindowGrab(g_screen.window) == SDL_TRUE) {
         SDL_SetWindowGrab(g_screen.window, SDL_FALSE);
     }
-    setting_set_fullscreen(0);
-    setting_set_display(pixel_width, pixel_height);
+    g_settings.set_fullscreen(0);
+    g_settings.display_size = {pixel_width, pixel_height};
 }
 
 void platform_screen_set_window_size(int logical_width, int logical_height) {
@@ -286,7 +286,7 @@ void platform_screen_set_window_size(int logical_width, int logical_height) {
     int pixel_width = scale_logical_to_pixels(logical_width);
     int pixel_height = scale_logical_to_pixels(logical_height);
     int display = SDL_GetWindowDisplayIndex(g_screen.window);
-    if (setting_fullscreen()) {
+    if (g_settings.is_fullscreen()) {
         SDL_SetWindowFullscreen(g_screen.window, 0);
     } else {
         SDL_GetWindowPosition(g_screen.window, &g_screen.pos.x, &g_screen.pos.y);
@@ -302,8 +302,8 @@ void platform_screen_set_window_size(int logical_width, int logical_height) {
     if (SDL_GetWindowGrab(g_screen.window) == SDL_TRUE) {
         SDL_SetWindowGrab(g_screen.window, SDL_FALSE);
     }
-    setting_set_fullscreen(0);
-    setting_set_display(pixel_width, pixel_height);
+    g_settings.set_fullscreen(0);
+    g_settings.display_size = {pixel_width, pixel_height};
 }
 
 void platform_screen_center_window(void) {
@@ -317,7 +317,7 @@ void platform_screen_recreate_texture(void) {
     // On Windows, if ctrl + alt + del is pressed during fullscreen, the rendering context may be lost for a few frames
     // after restoring the window, preventing the texture from being recreated. This forces an attempt to recreate the
     // texture every frame to bypass that issue.
-    if (setting_fullscreen() && platform_renderer_lost_render_texture()) {
+    if (g_settings.is_fullscreen() && platform_renderer_lost_render_texture()) {
         SDL_DisplayMode mode;
         SDL_GetWindowDisplayMode(g_screen.window, &mode);
         screen_set_resolution(scale_pixels_to_logical(mode.w), scale_pixels_to_logical(mode.h));

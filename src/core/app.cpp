@@ -3,12 +3,12 @@
 #include "game/settings.h"
 #include <SDL.h>
 
-void app_window_resize(const display_size& wsize) {
+void app_window_resize(const vec2i& wsize) {
     static int s_width;
     static int s_height;
 
-    s_width = wsize.w;
-    s_height = wsize.h;
+    s_width = wsize.x;
+    s_height = wsize.y;
     SDL_Event event;
     event.user.type = SDL_USEREVENT;
     event.user.code = USER_EVENT_RESIZE;

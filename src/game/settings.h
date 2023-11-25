@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include "core/bstring.h"
+#include "core/vec2i.h"
 
 class buffer;
 
@@ -36,17 +37,10 @@ struct set_sound {
     int volume;
 };
 
-struct display_size {
-    int w, h;
-};
-
 struct game_settings {
     static constexpr int MAX_PERSONAL_SAVINGS = 100;
     // display settings
-    bool fullscreen;
-    bool cli_fullscreen;
-    int window_width;
-    int window_height;
+    vec2i display_size;
     // sound settings
     set_sound sound_effects;
     set_sound sound_music;
@@ -76,18 +70,23 @@ struct game_settings {
     buffer *inf_file = nullptr;
 
     game_settings();
+
+    void load_default_settings();
+    void load();
+    void save();
+    inline bool is_fullscreen() { return fullscreen && cli_fullscreen; }
+
+    void set_cli_fullscreen(bool fullscreen) { cli_fullscreen = fullscreen; }
+    void set_fullscreen(bool fullscreen) { fullscreen = fullscreen; }
+
+private:
+    void load_settings(buffer *buf);
+
+    bool fullscreen;
+    bool cli_fullscreen;
 };
 
 extern game_settings g_settings;
-
-void settings_load();
-void settings_save();
-
-int setting_fullscreen();
-display_size setting_display_size();
-void setting_set_fullscreen(bool fullscreen);
-void setting_set_cli_fullscreen(bool fullscreen);
-void setting_set_display(int width, int height);
 
 const set_sound* setting_sound(int type);
 

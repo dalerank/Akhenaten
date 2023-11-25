@@ -51,8 +51,8 @@ struct display_options_ext_t {
     int focus_button_id;
 
     void (*close_callback)(void);
-    display_size original_resolution;
-    display_size selected_resolution;
+    vec2i original_resolution;
+    vec2i selected_resolution;
     scroll_list_panel* panel = nullptr;
     std::vector<video_mode> video_modes;
 };
@@ -72,16 +72,16 @@ static void init(void (*close_callback)(void)) {
         data.panel->add_entry(mode.str);
     }
 
-    auto wsize = setting_display_size();
-    data.original_resolution = {wsize.w, wsize.h};
-    data.selected_resolution = {wsize.w, wsize.h};
+    auto wsize = g_settings.display_size;
+    data.original_resolution = {wsize.x, wsize.y};
+    data.selected_resolution = {wsize.x, wsize.y};
 
-    video_mode selected(wsize.w, wsize.h);
+    video_mode selected(wsize.x, wsize.y);
     data.panel->select(selected.str);
 }
 
 static void button_fullscreen(int param1, int param2) {
-    app_fullscreen(!setting_fullscreen());
+    app_fullscreen(!g_settings.is_fullscreen());
     g_display_options_ext.close_callback();
 }
 
@@ -97,7 +97,7 @@ static void draw_foreground() {
     data.panel->draw();
 
     label_draw(148, 76, 14, data.focus_button_id == 1 ? 1 : 2);
-    lang_text_draw_centered(42, setting_fullscreen() ? 2 : 1, 148, 80, 224, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw_centered(42, g_settings.is_fullscreen() ? 2 : 1, 148, 80, 224, FONT_NORMAL_BLACK_ON_DARK);
 
     image_buttons_draw(0, 0, image_buttons, 2);
 
@@ -108,7 +108,7 @@ static void button_ok_cancel(int is_ok, int param2) {
     auto& data = g_display_options_ext;
 
     if (is_ok) {
-        app_window_resize({data.selected_resolution.w, data.selected_resolution.h});
+        app_window_resize({data.selected_resolution.x, data.selected_resolution.y});
     }
     data.close_callback();
 }
