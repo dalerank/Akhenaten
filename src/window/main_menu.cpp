@@ -25,31 +25,55 @@
 #include "window/scenario_selection.h"
 #include "resource/icons.h"
 
+#include "js/js_game.h"
+
 static void button_click(int type, int param2);
 
-#define MAX_BUTTONS 4
-#define BUTTONS_X 192
-#define BUTTONS_Y 125
-#define BUTTONS_WIDTH 256
-#define BUTTONS_HEIGHT 25
+ANK_REGISTER_CONFIG_ITERATOR(config_load_main_menu);
 
 struct main_menu_data_t {
     int focus_button_id;
 
-    generic_button buttons[MAX_BUTTONS] = {
-        {BUTTONS_X, BUTTONS_Y + 40 * 0, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 1, 0},
-        {BUTTONS_X, BUTTONS_Y + 40 * 1, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 2, 0},
-        {BUTTONS_X, BUTTONS_Y + 40 * 2, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 3, 0},
-        {BUTTONS_X, BUTTONS_Y + 40 * 3, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 4, 0},
-    };
+    vec2i button_pos;
+    vec2i button_size;
+    int button_offset;
 
     SDL_Texture *dicord_texture = nullptr;
     SDL_Texture *patreon_texture = nullptr;
     generic_button discord_button = {0, 0, 48, 48, button_click, button_none, 10, 0};
     generic_button patreon_button = {0, 0, 48, 48, button_click, button_none, 11, 0};
+    std::vector<std::pair<int, int>> buttons_text;
+
+    std::vector<generic_button> make_buttons() {
+        std::vector<generic_button> buttons = {
+            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 0, (short)button_size.x, (short)button_size.y, button_click, button_none, 1, 0},
+            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 1, (short)button_size.x, (short)button_size.y, button_click, button_none, 2, 0},
+            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 2, (short)button_size.x, (short)button_size.y, button_click, button_none, 3, 0},
+            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 3, (short)button_size.x, (short)button_size.y, button_click, button_none, 4, 0},
+        };
+
+        return buttons;
+    }
 };
 
 main_menu_data_t g_main_menu_data;
+void config_load_main_menu(archive arch) {
+    arch.load_global_section("main_menu_window", [] (archive arch) {
+        auto &data = g_main_menu_data;
+        data.button_pos.x = arch.read_integer("x_pos");
+        data.button_pos.y = arch.read_integer("y_pos");
+        data.button_size.x = arch.read_integer("btn_width");
+        data.button_size.y = arch.read_integer("btn_height");
+        data.button_offset = arch.read_integer("button_offset");
+
+        data.buttons_text.clear();
+        arch.read_object_array("buttons", [&] (archive arch) {
+            int group = arch.read_integer("group");
+            int id = arch.read_integer("id");
+            data.buttons_text.push_back({group, id});
+        });
+    });
+}
 
 static void draw_version_string() {
     static bstring64 version = get_version();
@@ -83,18 +107,11 @@ static void draw_foreground() {
     auto &data = g_main_menu_data;
     graphics_set_to_dialog();
 
-    int groups[6][2] = {
-      {30, 0},
-      {30, 5}, //{1, 3},
-               //                    {30, 3},
-               //                    {9,  8},
-      {2, 0},
-      {30, 4},
-    };
-
-    for (int i = 0; i < 4; i++) {
-        large_label_draw(data.buttons[i].x, data.buttons[i].y, data.buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
-        lang_text_draw_centered(groups[i][0], groups[i][1], BUTTONS_X, BUTTONS_Y + 40 * i + 6, BUTTONS_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT);
+    auto buttons = data.make_buttons();
+    for (int i = 0; i < buttons.size(); i++) {
+        auto text = data.buttons_text[i];
+        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
+        lang_text_draw_centered(text.first, text.second, data.button_pos.x, data.button_pos.y + 40 * i + 6, data.button_size.x, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     graphics_reset_dialog();
@@ -165,7 +182,8 @@ static void button_click(int type, int param2) {
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto &data = g_main_menu_data;
     const mouse* m_dialog = mouse_in_dialog(m);
-    if (generic_buttons_handle_mouse(m_dialog, 0, 0, data.buttons, MAX_BUTTONS, &data.focus_button_id)) {
+    auto buttons = data.make_buttons();
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons.data(), buttons.size(), &data.focus_button_id)) {
         return;
     }
 

@@ -40,7 +40,7 @@ struct archive {
 
     inline pcstr read_string(pcstr name) {
         js_getproperty(vm, -1, name);
-        const char *result = js_tostring(vm, -1);
+        const char *result = js_isundefined(vm, -1) ? "" : js_tostring(vm, -1);
         js_pop(vm, 1);
         return result;
     }
@@ -68,6 +68,25 @@ struct archive {
         int result = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1);
         js_pop(vm, 1);
         return result;
+    }
+
+    template<typename T>
+    inline void read_object_array(pcstr name, T read_func) {
+        js_getproperty(vm, -1, name);
+        if (js_isarray(vm, -1)) {
+            int length = js_getlength(vm, -1);
+
+            for (int i = 0; i < length; ++i) {
+                js_getindex(vm, -1, i);
+
+                if (js_isobject(vm, -1)) {
+                    read_func(vm);
+                }
+
+                js_pop(vm, 1);
+            }
+        }
+        js_pop(vm, 1);
     }
 };
 
