@@ -29,6 +29,15 @@ struct archive {
         }
     }
 
+    template<typename T>
+    inline void load_global_section(pcstr name, T read_func) {
+        js_getglobal(vm, name);
+        if (js_isobject(vm, -1)) {
+            read_func(vm);
+            js_pop(vm, 1);
+        }
+    }
+
     inline pcstr read_string(pcstr name) {
         js_getproperty(vm, -1, name);
         const char *result = js_tostring(vm, -1);

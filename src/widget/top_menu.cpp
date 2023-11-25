@@ -47,6 +47,8 @@
 #include "core/core_utility.h"
 #include "core/span.hpp"
 
+#include "js/js_game.h"
+
 enum e_info {
     INFO_NONE = 0,
     INFO_FUNDS = 1,
@@ -208,6 +210,10 @@ struct top_menu_data_t {
     int population;
     int treasury;
     int month;
+
+    int x_offset;
+    int y_offset;
+    int item_height;
 };
 
 top_menu_data_t g_top_menu_data;
@@ -294,21 +300,27 @@ static void button_rotate_right(int param1, int param2) {
     window_invalidate();
 }
 
-#define TOP_MENU_BASE_X_OFFSET 10
-#define MENU_BASE_TEXT_Y_OFFSET 6
-#define MENU_ITEM_HEIGHT 20
+ANK_REGISTER_CONFIG_ITERATOR(config_load_top_menu_bar);
+void config_load_top_menu_bar(archive arch) {
+    arch.load_global_section("top_menu_bar", [] (archive arch) {
+        auto& data = g_top_menu_data;
+        data.x_offset = arch.read_integer("x_offset");
+        data.y_offset = arch.read_integer("y_offset");
+        data.item_height = arch.read_integer("item_height");
+    });
+}
 
 void menu_bar_draw(const std::span<menu_bar_item>& items) {
     auto& data = g_top_menu_data;
-    short x_offset = TOP_MENU_BASE_X_OFFSET;
+    short x_offset = data.x_offset;
     font_t hightlight_font = config_get(CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER) ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT;
     for (auto& item : items) {
         item.x_start = x_offset;
         int current_id = std::distance(items.begin(), &item) + 1;
         font_t font = (current_id == data.focus_menu_id) ? hightlight_font : FONT_NORMAL_BLACK_ON_LIGHT;
         int text_length = item.text_raw
-                                ? lang_text_draw(item.text_raw, x_offset, MENU_BASE_TEXT_Y_OFFSET, font)
-                                : lang_text_draw(item.text_group, 0, x_offset, MENU_BASE_TEXT_Y_OFFSET, font);
+                                ? lang_text_draw(item.text_raw, x_offset, data.y_offset, font)
+                                : lang_text_draw(item.text_group, 0, x_offset, data.y_offset, font);
         x_offset += text_length;
         item.x_end = x_offset;
         x_offset += 32; // spacing
@@ -316,9 +328,10 @@ void menu_bar_draw(const std::span<menu_bar_item>& items) {
 }
 
 static int get_menu_bar_item(const mouse* m, const std::span<menu_bar_item>& items) {
+    auto& data = g_top_menu_data;
     for (int i = 0; i < items.size(); i++) {
-        if (items[i].x_start <= m->x && items[i].x_end > m->x && MENU_BASE_TEXT_Y_OFFSET <= m->y
-            && MENU_BASE_TEXT_Y_OFFSET + 12 > m->y) {
+        if (items[i].x_start <= m->x && items[i].x_end > m->x && data.y_offset <= m->y
+            && data.y_offset + 12 > m->y) {
             return i + 1;
         }
     }
@@ -336,20 +349,22 @@ static void menu_debug_show_console(int param) {
 }
 
 static void calculate_menu_dimensions(menu_bar_item& menu) {
+    auto& data = g_top_menu_data;
     int max_width = 0;
-    int height_pixels = MENU_ITEM_HEIGHT;
+    int height_pixels = data.item_height;
     for (int i = 0; i < menu.num_items; i++) {
         menu_item* sub = &menu.items[i];
-        if (sub->hidden)
+        if (sub->hidden) {
             continue;
+        }
 
         int width_pixels = sub->text_raw
-                             ? lang_text_get_width(sub->text_raw, FONT_NORMAL_BLACK_ON_LIGHT)
-                             : lang_text_get_width(sub->text_group, sub->text_number, FONT_NORMAL_BLACK_ON_LIGHT);
+                                ? lang_text_get_width(sub->text_raw, FONT_NORMAL_BLACK_ON_LIGHT)
+                                : lang_text_get_width(sub->text_group, sub->text_number, FONT_NORMAL_BLACK_ON_LIGHT);
 
-        max_width = std::clamp(max_width, 0, width_pixels);
+        max_width = std::max(max_width, width_pixels);
 
-        height_pixels += MENU_ITEM_HEIGHT;
+        height_pixels += data.item_height;
     }
     int blocks = (max_width + 8) / 16 + 1; // 1 block padding
     menu.calculated_width_blocks = blocks < 10 ? 10 : blocks;
@@ -357,12 +372,13 @@ static void calculate_menu_dimensions(menu_bar_item& menu) {
 }
 
 void menu_draw(menu_bar_item& menu, int focus_item_id) {
+    auto& data = g_top_menu_data;
     if (menu.calculated_width_blocks == 0 || menu.calculated_height_blocks == 0) {
         calculate_menu_dimensions(menu);
     }
 
     unbordered_panel_draw(menu.x_start, TOP_MENU_HEIGHT, menu.calculated_width_blocks, menu.calculated_height_blocks);
-    int y_offset = TOP_MENU_HEIGHT + MENU_BASE_TEXT_Y_OFFSET * 2;
+    int y_offset = TOP_MENU_HEIGHT + data.y_offset * 2;
     for (int i = 0; i < menu.num_items; i++) {
         menu_item* sub = &menu.items[i];
 
@@ -372,17 +388,20 @@ void menu_draw(menu_bar_item& menu, int focus_item_id) {
         // Set color/font on the menu item mouse hover
         if (i == focus_item_id - 1) {
             sub->text_raw
-                ? lang_text_draw(sub->text_raw, menu.x_start + 8, y_offset, FONT_NORMAL_YELLOW)
-                : lang_text_draw(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_NORMAL_YELLOW);
+                    ? lang_text_draw(sub->text_raw, menu.x_start + 8, y_offset, FONT_NORMAL_YELLOW)
+                    : lang_text_draw(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_NORMAL_YELLOW);
         } else {
-            sub->text_raw ? lang_text_draw(sub->text_raw, menu.x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT)
-                          : lang_text_draw(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT);
+            sub->text_raw 
+                    ? lang_text_draw(sub->text_raw, menu.x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT)
+                    : lang_text_draw(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT);
         }
-        y_offset += MENU_ITEM_HEIGHT;
+        y_offset += data.item_height;
     }
 }
+
 static int get_menu_item(const mouse* m, menu_bar_item* menu) {
-    int y_offset = TOP_MENU_HEIGHT + MENU_BASE_TEXT_Y_OFFSET * 2;
+    auto& data = g_top_menu_data;
+    int y_offset = TOP_MENU_HEIGHT + data.y_offset * 2;
     for (int i = 0; i < menu->num_items; i++) {
         if (menu->items[i].hidden)
             continue;
@@ -391,10 +410,11 @@ static int get_menu_item(const mouse* m, menu_bar_item* menu) {
             && y_offset + 19 > m->y) {
             return i + 1;
         }
-        y_offset += MENU_ITEM_HEIGHT;
+        y_offset += data.item_height;
     }
     return 0;
 }
+
 int menu_handle_mouse(const mouse* m, menu_bar_item* menu, int* focus_item_id) {
     int item_id = get_menu_item(m, menu);
     if (focus_item_id)
@@ -490,10 +510,6 @@ static void draw_background(void) {
 }
 static void draw_foreground(void) {
     auto& data = g_top_menu_data;
-    if (data.focus_menu_id > 0) {
-
-    }
-
     if (!data.open_sub_menu) {
         return;
     }
