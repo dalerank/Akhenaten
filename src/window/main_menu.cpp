@@ -2,6 +2,7 @@
 
 #include "editor/editor.h"
 #include "core/log.h"
+#include "config/config.h"
 #include "game/game.h"
 #include "game/system.h"
 #include "graphics/boilerplate.h"
@@ -23,7 +24,9 @@
 #include "window/player_selection.h"
 #include "window/popup_dialog.h"
 #include "window/scenario_selection.h"
+#include "window/city.h"
 #include "resource/icons.h"
+#include "io/gamestate/boilerplate.h"
 
 #include "js/js_game.h"
 
@@ -46,10 +49,11 @@ struct main_menu_data_t {
 
     std::vector<generic_button> make_buttons() {
         std::vector<generic_button> buttons = {
-            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 0, (short)button_size.x, (short)button_size.y, button_click, button_none, 1, 0},
-            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 1, (short)button_size.x, (short)button_size.y, button_click, button_none, 2, 0},
-            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 2, (short)button_size.x, (short)button_size.y, button_click, button_none, 3, 0},
-            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 3, (short)button_size.x, (short)button_size.y, button_click, button_none, 4, 0},
+            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 0, (short)button_size.x, (short)button_size.y, button_click, button_none, 5, 0},
+            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 1, (short)button_size.x, (short)button_size.y, button_click, button_none, 1, 0},
+            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 2, (short)button_size.x, (short)button_size.y, button_click, button_none, 2, 0},
+            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 3, (short)button_size.x, (short)button_size.y, button_click, button_none, 3, 0},
+            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 4, (short)button_size.x, (short)button_size.y, button_click, button_none, 4, 0},
         };
 
         return buttons;
@@ -164,6 +168,14 @@ static void button_click(int type, int param2) {
 
     case 4:
         window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, e_popup_btns_yesno);
+        break;
+
+    case 5: {
+            pcstr last_save = config_get_string(CONFIG_STRING_LAST_SAVE);
+            if (GamestateIO::load_savegame(last_save)) {
+                window_city_show();
+            }
+        }
         break;
 
     case 10:

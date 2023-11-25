@@ -309,8 +309,9 @@ static void show_options_window(Arguments& args) {
             ImGui::End();
         }
 
-        if (store_configuration)
+        if (store_configuration) {
             arguments::store(args);
+        }
 
         // Rendering
         ImGui::Render();

@@ -14,6 +14,7 @@ main_menu_window = {
 	button_offset : 40,
 
 	buttons : [
+		{group: 13, id: 5, },
 	  {group: 30, id: 0, },
 	  {group: 30, id: 5, },
 	  {group: 2, id: 0, },

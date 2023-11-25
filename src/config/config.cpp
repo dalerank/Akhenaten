@@ -132,6 +132,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
 
 static const char* ini_string_keys[] = {
   "ui_language_dir",
+  "last_save_filename",
 };
 
 bool g_ozzy_config[CONFIG_MAX_ENTRIES];

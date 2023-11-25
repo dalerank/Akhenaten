@@ -6,6 +6,7 @@
 #include "building/menu.h"
 #include "building/properties.h"
 #include "building/storage.h"
+#include "config/config.h"
 #include "city/city_data.h"
 #include "city/emperor.h"
 #include "city/map.h"
@@ -559,7 +560,14 @@ bool GamestateIO::write_savegame(const char* filename_short) {
     // write file
     e_file_format format = get_format_from_file(filename_short);
     assert(format == FILE_FORMAT_SAVE_FILE_EXT);
-    return FILEIO.serialize(full, 0, format, latest_save_version, file_schema);
+    bool save_ok = FILEIO.serialize(full, 0, format, latest_save_version, file_schema);
+    if (save_ok) {
+        //vfs::path fs_path = vfs::content_path(full);
+        config_set_string(CONFIG_STRING_LAST_SAVE, full);
+        config_save();
+    }
+
+    return save_ok;
 }
 
 bool GamestateIO::write_map(const char* filename_short) {
