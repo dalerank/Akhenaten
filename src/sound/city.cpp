@@ -242,7 +242,7 @@ void sound_city_decay_views(void) {
 }
 
 static void sound_city_play_channel(int channel, int direction) {
-    if (!setting_sound(SOUND_CITY)->enabled) {
+    if (!g_settings.get_sound(SOUND_CITY)->enabled) {
         return;
     }
 
@@ -272,7 +272,7 @@ static void sound_city_play_channel(int channel, int direction) {
         break;
     }
 
-    sound_device_play_channel_panned(channel, setting_sound(SOUND_CITY)->volume, left_pan, right_pan);
+    sound_device_play_channel_panned(channel, g_settings.get_sound(SOUND_CITY)->volume, left_pan, right_pan);
 }
 
 void sound_city_play() {

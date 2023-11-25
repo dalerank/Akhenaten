@@ -68,7 +68,7 @@ static int load_smk(const char* filename) {
     data.video.micros_per_frame = micros_per_frame;
 
     data.audio.has_audio = 0;
-    if (setting_sound(SOUND_EFFECTS)->enabled) {
+    if (g_settings.get_sound(SOUND_EFFECTS)->enabled) {
         int has_track, channels, bitdepth, rate;
         smacker_get_audio_info(data.s, 0, &has_track, &channels, &bitdepth, &rate);
         if (has_track) {

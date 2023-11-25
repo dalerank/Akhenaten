@@ -48,10 +48,10 @@ void sound_system_init(void) {
     sound_device_init_channels(channel_filenames);
     sound_device_load_formats();
 
-    sound_city_set_volume(setting_sound(SOUND_CITY)->volume);
-    sound_effect_set_volume(setting_sound(SOUND_EFFECTS)->volume);
-    sound_music_set_volume(setting_sound(SOUND_MUSIC)->volume);
-    sound_speech_set_volume(setting_sound(SOUND_SPEECH)->volume);
+    sound_city_set_volume(g_settings.get_sound(SOUND_CITY)->volume);
+    sound_effect_set_volume(g_settings.get_sound(SOUND_EFFECTS)->volume);
+    sound_music_set_volume(g_settings.get_sound(SOUND_MUSIC)->volume);
+    sound_speech_set_volume(g_settings.get_sound(SOUND_SPEECH)->volume);
 }
 
 void sound_system_shutdown(void) {

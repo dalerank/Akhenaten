@@ -618,7 +618,7 @@ void sound_device_write_custom_music_data(const unsigned char* audio_data, int l
     if (!mix_buffer)
         return;
     memset(mix_buffer, (custom_music.format == AUDIO_U8) ? 128 : 0, len);
-    SDL_MixAudioFormat(mix_buffer, audio_data, custom_music.format, len, percentage_to_volume(setting_sound(SOUND_EFFECTS)->volume));
+    SDL_MixAudioFormat(mix_buffer, audio_data, custom_music.format, len, percentage_to_volume(g_settings.get_sound(SOUND_EFFECTS)->volume));
 
     put_custom_audio_stream(mix_buffer, len);
     free(mix_buffer);

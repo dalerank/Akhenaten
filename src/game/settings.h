@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include "core/bstring.h"
 #include "core/vec2i.h"
+#include "core/calc.h"
 
 class buffer;
 
@@ -32,7 +33,7 @@ enum {
     CITIES_NEW_NAMES = 1
 };
 
-struct set_sound {
+struct sound_settings {
     bool enabled;
     int volume;
 };
@@ -42,10 +43,10 @@ struct game_settings {
     // display settings
     vec2i display_size;
     // sound settings
-    set_sound sound_effects;
-    set_sound sound_music;
-    set_sound sound_speech;
-    set_sound sound_city;
+    sound_settings sound_effects;
+    sound_settings sound_music;
+    sound_settings sound_speech;
+    sound_settings sound_city;
     // speed settings
     int game_speed;
     int scroll_speed;
@@ -78,6 +79,29 @@ struct game_settings {
 
     void set_cli_fullscreen(bool fullscreen) { cli_fullscreen = fullscreen; }
     void set_fullscreen(bool fullscreen) { fullscreen = fullscreen; }
+    bool sound_is_enabled(int type) { return get_sound(type)->enabled; }
+    sound_settings *get_sound(int type);
+
+    void toggle_sound_enabled(int type) {
+        auto sound = get_sound(type);
+        sound->enabled = sound->enabled ? 0 : 1;
+    }
+
+    void increase_sound_volume(int type) {
+        auto sound = get_sound(type);
+        sound->volume = calc_bound(sound->volume + 1, 0, 100);
+    }
+
+    void decrease_sound_volume(int type) {
+        auto* sound = get_sound(type);
+        sound->volume = calc_bound(sound->volume - 1, 0, 100);
+    }
+
+    void reset_sound(int type, int enabled, int volume) {
+        auto* sound = get_sound(type);
+        sound->enabled = enabled;
+        sound->volume = calc_bound(volume, 0, 100);
+    }
 
 private:
     void load_settings(buffer *buf);
@@ -87,14 +111,6 @@ private:
 };
 
 extern game_settings g_settings;
-
-const set_sound* setting_sound(int type);
-
-bool setting_sound_is_enabled(int type);
-void setting_toggle_sound_enabled(int type);
-void setting_increase_sound_volume(int type);
-void setting_decrease_sound_volume(int type);
-void setting_reset_sound(int type, int enabled, int volume);
 
 int setting_game_speed(void);
 void setting_increase_game_speed(void);

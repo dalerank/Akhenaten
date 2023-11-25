@@ -157,7 +157,7 @@ void game_settings::save() {
     io_write_buffer_to_file("pharaoh.inf", inf_file, INF_SIZE);
 }
 
-static set_sound* get_sound(int type) {
+sound_settings* game_settings::get_sound(int type) {
     auto& data = g_settings;
     switch (type) {
     case SOUND_MUSIC:
@@ -172,30 +172,7 @@ static set_sound* get_sound(int type) {
         return 0;
     }
 }
-const set_sound* setting_sound(int type) {
-    return get_sound(type);
-}
 
-bool setting_sound_is_enabled(int type) {
-    return get_sound(type)->enabled;
-}
-void setting_toggle_sound_enabled(int type) {
-    set_sound* sound = get_sound(type);
-    sound->enabled = sound->enabled ? 0 : 1;
-}
-void setting_increase_sound_volume(int type) {
-    set_sound* sound = get_sound(type);
-    sound->volume = calc_bound(sound->volume + 1, 0, 100);
-}
-void setting_decrease_sound_volume(int type) {
-    set_sound* sound = get_sound(type);
-    sound->volume = calc_bound(sound->volume - 1, 0, 100);
-}
-void setting_reset_sound(int type, int enabled, int volume) {
-    set_sound* sound = get_sound(type);
-    sound->enabled = enabled;
-    sound->volume = calc_bound(volume, 0, 100);
-}
 int setting_game_speed(void) {
     auto& data = g_settings;
     return data.game_speed;

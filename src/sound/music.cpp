@@ -97,7 +97,7 @@ void sound_music_play_track(int track) {
         return;
     }
 
-    int volume = setting_sound(SOUND_MUSIC)->volume;
+    int volume = g_settings.get_sound(SOUND_MUSIC)->volume;
 
     volume = volume * 0.4;
     vfs::path corrected_filename = ph_mp3[track];
@@ -116,13 +116,13 @@ void sound_music_set_volume(int percentage) {
 }
 
 void sound_music_play_intro() {
-    if (setting_sound(SOUND_MUSIC)->enabled) {
+    if (g_settings.get_sound(SOUND_MUSIC)->enabled) {
         sound_music_play_track(TRACK_MENU);
     }
 }
 
 void sound_music_play_editor() {
-    if (setting_sound(SOUND_MUSIC)->enabled) {
+    if (g_settings.get_sound(SOUND_MUSIC)->enabled) {
         sound_music_play_track(TRACK_CITY_1);
     }
 }
@@ -134,7 +134,7 @@ void sound_music_update(bool force) {
         return;
     }
 
-    if (!setting_sound(SOUND_MUSIC)->enabled) {
+    if (!g_settings.get_sound(SOUND_MUSIC)->enabled) {
         return;
     }
 

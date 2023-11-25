@@ -11,9 +11,11 @@ void sound_effect_set_volume(int percentage) {
 }
 
 void sound_effect_play(int effect) {
-    if (!setting_sound(SOUND_EFFECTS)->enabled)
+    if (!g_settings.get_sound(SOUND_EFFECTS)->enabled)
         return;
+
     if (sound_device_is_channel_playing(effect))
         return;
-    sound_device_play_channel(effect, setting_sound(SOUND_EFFECTS)->volume);
+
+    sound_device_play_channel(effect, g_settings.get_sound(SOUND_EFFECTS)->volume);
 }

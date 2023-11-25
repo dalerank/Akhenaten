@@ -25,7 +25,7 @@ bool sound_speech_file_exist(const char *filename) {
 }
 
 void sound_speech_play_file(const char* filename, int volume) {
-    if (!setting_sound(SOUND_SPEECH)->enabled) {
+    if (!g_settings.get_sound(SOUND_SPEECH)->enabled) {
         return;
     }
 
@@ -43,7 +43,7 @@ void sound_speech_play_file(const char* filename, int volume) {
         return;
     }
 
-    sound_device_play_file_on_channel(fs_path, SOUND_CHANNEL_SPEECH, setting_sound(SOUND_SPEECH)->volume);
+    sound_device_play_file_on_channel(fs_path, SOUND_CHANNEL_SPEECH, g_settings.get_sound(SOUND_SPEECH)->volume);
 }
 
 void sound_speech_stop(void) {
