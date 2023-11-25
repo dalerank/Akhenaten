@@ -252,7 +252,7 @@ static void show_options_window(Arguments& args) {
                 const bool is_selected = (item_mode_current_idx == index);
                 if (ImGui::Selectable(it->str.c_str(), is_selected)) {
                     item_mode_current_idx = index;
-                    args.set_window_size({it->w, it->h});
+                    args.set_window_size({it->x, it->y});
                 }
 
                 if (is_selected) {

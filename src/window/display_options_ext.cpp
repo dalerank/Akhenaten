@@ -124,7 +124,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     if (data.panel->input_handle(m_dialog)) {
         auto it = data.video_modes.begin();
         std::advance(it, data.panel->get_selected_entry_idx());
-        data.selected_resolution = {it->w, it->h};
+        data.selected_resolution = {it->x, it->y};
     }
 
     if (image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 2, 0)) {

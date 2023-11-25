@@ -37,22 +37,16 @@ void platform_renderer_pause();
 void platform_renderer_resume();
 void platform_renderer_destroy();
 
-struct video_mode {
-    int w, h;
+struct video_mode : public vec2i {
     bstring64 str;
-    inline video_mode()
-      : w(0),
-        h(0) {
-    }
-    inline video_mode(int _w, int _h)
-      : w(_w),
-        h(_h) {
+    inline video_mode() : vec2i(0, 0) {}
+    inline video_mode(int _w, int _h) : vec2i(_w, _h) {
         char buffer[64] = {0};
-        snprintf(buffer, 64, "%u x %u", _w, _h);
+        snprintf(buffer, 64, "%u x %u", x, y);
         str = buffer;
     }
     inline bool operator<(const video_mode& o) const {
-        return ((int64_t(w) << 32) + h) < ((int64_t(o.w) << 32) + o.h);
+        return ((int64_t(x) << 32) + y) < ((int64_t(o.x) << 32) + o.y);
     }
 };
 
