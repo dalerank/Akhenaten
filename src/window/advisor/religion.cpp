@@ -149,7 +149,7 @@ static void draw_god_row(e_god god, int y_offset, int temple, int complex, int s
 static int draw_background() {
     int height_blocks;
     painter ctx = game.painter();
-    if (setting_gods_enabled()) {
+    if (g_settings.gods_enabled) {
         height_blocks = 27; // 17
         outer_panel_draw(0, 0, 40, height_blocks);
     } else {

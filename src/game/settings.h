@@ -113,6 +113,9 @@ struct game_settings {
     void toggle_warnings() { warnings = !warnings; }
     void toggle_monthly_autosave() { monthly_autosave = !monthly_autosave; }
     void toggle_city_names_style() { city_names_style = !city_names_style; }
+    void toggle_pyramid_speedup() { pyramid_speedup = !pyramid_speedup; }
+    void toggle_popup_messages(int flag) { popup_messages ^= flag; }
+    void toggle_gods_enabled() { gods_enabled = !gods_enabled; }
 
 private:
     void load_settings(buffer *buf);
@@ -123,13 +126,7 @@ private:
 
 extern game_settings g_settings;
 
-int setting_pyramid_speedup(void);
-void setting_toggle_pyramid_speedup(void);
-
-int setting_popup_messages(void);
-void setting_toggle_popup_messages(int flag);
-
-bool setting_gods_enabled(void);
+bool setting_gods_enabled();
 void setting_toggle_gods_enabled(void);
 
 int setting_difficulty(void);

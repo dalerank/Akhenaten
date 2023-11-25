@@ -205,33 +205,6 @@ void game_settings::toggle_tooltips() {
     }
 }
 
-int setting_pyramid_speedup(void) {
-    auto& data = g_settings;
-    return data.pyramid_speedup;
-}
-void setting_toggle_pyramid_speedup(void) {
-    auto& data = g_settings;
-    data.pyramid_speedup = data.pyramid_speedup ? 0 : 1;
-}
-
-int setting_popup_messages(void) {
-    auto& data = g_settings;
-    return data.popup_messages;
-}
-void setting_toggle_popup_messages(int flag) {
-    auto& data = g_settings;
-    data.popup_messages ^= flag;
-}
-
-bool setting_gods_enabled(void) {
-    auto& data = g_settings;
-    return data.gods_enabled;
-}
-void setting_toggle_gods_enabled(void) {
-    auto& data = g_settings;
-    data.gods_enabled = data.gods_enabled ? 0 : 1;
-}
-
 int setting_difficulty(void) {
     auto& data = g_settings;
     return data.difficulty;

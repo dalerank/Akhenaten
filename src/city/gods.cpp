@@ -913,7 +913,7 @@ void city_gods_update(bool mood_calc_only) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Gods Update");
     calculate_mood_targets();
 
-    if (!mood_calc_only && setting_gods_enabled()) {
+    if (!mood_calc_only && g_settings.gods_enabled) {
         e_god randm_god = e_god(anti_scum_random_15bit() % MAX_GODS);
         update_moods(randm_god);
 

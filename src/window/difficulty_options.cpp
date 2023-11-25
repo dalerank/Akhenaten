@@ -28,7 +28,7 @@ static void draw_foreground(void) {
     lang_text_draw_centered(153, 0, 48, 94, 384, FONT_LARGE_BLACK_ON_LIGHT);
 
     lang_text_draw_centered(153, setting_difficulty() + 1, 70, 142, 244, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_centered(153, setting_gods_enabled() ? 7 : 6, 70, 190, 244, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(153, g_settings.gods_enabled ? 7 : 6, 70, 190, 244, FONT_NORMAL_BLACK_ON_LIGHT);
     arrow_buttons_draw(288, 80, arrow_buttons, 3);
     lang_text_draw_centered(153, 8, 48, 246, 384, FONT_NORMAL_BLACK_ON_LIGHT);
 
@@ -43,19 +43,24 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void arrow_button_difficulty(int is_down, int param2) {
-    if (is_down)
+    if (is_down) {
         setting_decrease_difficulty();
-    else {
+    } else {
         setting_increase_difficulty();
     }
 }
 
 static void arrow_button_gods(int param1, int param2) {
-    setting_toggle_gods_enabled();
+    g_settings.toggle_gods_enabled();
 }
 
 void window_difficulty_options_show(void (*close_callback)(void)) {
-    window_type window = {WINDOW_DIFFICULTY_OPTIONS, window_draw_underlying_window, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_DIFFICULTY_OPTIONS,
+        window_draw_underlying_window,
+        draw_foreground,
+        handle_input
+    };
     data.close_callback = close_callback;
     window_show(&window);
 }
