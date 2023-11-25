@@ -465,7 +465,7 @@ void widget_top_menu_clear_state() {
 }
 
 static void set_text_for_autosave(void) {
-    menu_update_text(g_top_menu[INDEX_OPTIONS], 4, setting_monthly_autosave() ? 51 : 52);
+    menu_update_text(g_top_menu[INDEX_OPTIONS], 4, g_settings.monthly_autosave ? 51 : 52);
 }
 
 static void set_text_for_tooltips() {
@@ -822,7 +822,7 @@ static void menu_options_difficulty(int param) {
     window_difficulty_options_show(window_city_show);
 }
 static void menu_options_autosave(int param) {
-    setting_toggle_monthly_autosave();
+    g_settings.toggle_monthly_autosave();
     set_text_for_autosave();
 }
 

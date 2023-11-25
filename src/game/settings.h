@@ -111,6 +111,7 @@ struct game_settings {
 
     void toggle_tooltips();
     void toggle_warnings() { warnings = !warnings; }
+    void toggle_monthly_autosave() {monthly_autosave = !monthly_autosave; }
 
 private:
     void load_settings(buffer *buf);
@@ -120,12 +121,6 @@ private:
 };
 
 extern game_settings g_settings;
-
-int setting_warnings(void);
-void setting_toggle_warnings(void);
-
-int setting_monthly_autosave(void);
-void setting_toggle_monthly_autosave(void);
 
 int setting_city_names_style(void);
 void setting_toggle_city_names_style(void);

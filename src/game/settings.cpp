@@ -205,15 +205,6 @@ void game_settings::toggle_tooltips() {
     }
 }
 
-int setting_monthly_autosave(void) {
-    auto& data = g_settings;
-    return data.monthly_autosave;
-}
-void setting_toggle_monthly_autosave(void) {
-    auto& data = g_settings;
-    data.monthly_autosave = data.monthly_autosave ? 0 : 1;
-}
-
 int setting_city_names_style(void) {
     auto& data = g_settings;
     return data.city_names_style;

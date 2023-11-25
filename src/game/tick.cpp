@@ -110,7 +110,7 @@ static void advance_month() {
     city_buildings_update_month();
     formation_fish_update();
 
-    if (setting_monthly_autosave()) {
+    if (g_settings.monthly_autosave) {
         bstring256 autosave_file("autosave_month.", saved_game_data_expanded.extension);
         GamestateIO::write_savegame(autosave_file);
     }
