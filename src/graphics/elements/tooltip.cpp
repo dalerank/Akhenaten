@@ -284,7 +284,7 @@ static bool should_draw_tooltip(tooltip_context* c) {
         reset_timer();
         return false;
     }
-    if (!c->high_priority && setting_tooltips() != TOOLTIPS_FULL) {
+    if (!c->high_priority && g_settings.tooltips != TOOLTIPS_FULL) {
         reset_timer();
         return false;
     }
@@ -302,7 +302,7 @@ void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
     }
     tooltip_context context = {m->x, m->y, 0, 0, 0, 0, 0, 0};
     context.text_group = DEFAULT_TEXT_GROUP;
-    if (setting_tooltips() && func)
+    if (g_settings.tooltips && func)
         func(&context);
 
     if (should_draw_tooltip(&context)) {

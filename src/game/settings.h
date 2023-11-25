@@ -109,6 +109,8 @@ struct game_settings {
     void increase_scroll_speed() { scroll_speed = calc_bound(scroll_speed + 10, 0, 100); }
     void decrease_scroll_speed() { scroll_speed = calc_bound(scroll_speed - 10, 0, 100); }
 
+    void toggle_tooltips();
+
 private:
     void load_settings(buffer *buf);
 
@@ -117,9 +119,6 @@ private:
 };
 
 extern game_settings g_settings;
-
-int setting_tooltips(void);
-void setting_cycle_tooltips(void);
 
 int setting_warnings(void);
 void setting_toggle_warnings(void);

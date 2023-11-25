@@ -584,7 +584,7 @@ void widget_city_handle_input_military(const mouse* m, const hotkeys* h, int leg
 
 void widget_city_get_tooltip(tooltip_context* c) {
     auto& data = g_wdiget_city_data;
-    if (setting_tooltips() == TOOLTIPS_NONE) {
+    if (g_settings.tooltips == TOOLTIPS_NONE) {
         return;
     }
 

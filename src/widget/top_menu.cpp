@@ -467,9 +467,10 @@ void widget_top_menu_clear_state() {
 static void set_text_for_autosave(void) {
     menu_update_text(g_top_menu[INDEX_OPTIONS], 4, setting_monthly_autosave() ? 51 : 52);
 }
-static void set_text_for_tooltips(void) {
+
+static void set_text_for_tooltips() {
     int new_text;
-    switch (setting_tooltips()) {
+    switch (g_settings.tooltips) {
     case TOOLTIPS_NONE: new_text = 2; break;
     case TOOLTIPS_SOME: new_text = 3; break;
     case TOOLTIPS_FULL: new_text = 4; break;
@@ -478,6 +479,7 @@ static void set_text_for_tooltips(void) {
     }
     menu_update_text(g_top_menu[INDEX_HELP], 1, new_text);
 }
+
 static void set_text_for_warnings(void) {
     menu_update_text(g_top_menu[INDEX_HELP], 2, setting_warnings() ? 6 : 5);
 }
@@ -841,7 +843,7 @@ static void menu_help_help(int param) {
     window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
 }
 static void menu_help_mouse_help(int param) {
-    setting_cycle_tooltips();
+    g_settings.toggle_tooltips();
     set_text_for_tooltips();
 }
 static void menu_help_warnings(int param) {

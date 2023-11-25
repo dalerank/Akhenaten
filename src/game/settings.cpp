@@ -190,12 +190,7 @@ void game_settings::decrease_game_speed(void) {
     }
 }
 
-int setting_tooltips(void) {
-    auto& data = g_settings;
-    return data.tooltips;
-}
-
-void setting_cycle_tooltips(void) {
+void game_settings::toggle_tooltips() {
     auto& data = g_settings;
     switch (data.tooltips) {
     case TOOLTIPS_NONE:
