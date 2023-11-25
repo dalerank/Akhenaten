@@ -9,56 +9,20 @@
 #include "io/io.h"
 
 #define INF_SIZE 564
-#define MAX_PERSONAL_SAVINGS 100
-// #define MAX_PLAYER_NAME 32
 
-struct settings_data_t {
-    // display settings
-    bool fullscreen;
-    bool cli_fullscreen;
-    int window_width;
-    int window_height;
-    // sound settings
-    set_sound sound_effects;
-    set_sound sound_music;
-    set_sound sound_speech;
-    set_sound sound_city;
-    // speed settings
-    int game_speed;
-    int scroll_speed;
-    // misc settings
-    e_difficulty difficulty;
-    int tooltips;
-    int monthly_autosave;
-    bool warnings;
-    bool gods_enabled;
-    bool victory_video;
-    // pharaoh settings
-    int popup_messages;
-    int city_names_style;
-    bool pyramid_speedup;
-    // persistent game state
-    int last_advisor;
-    uint8_t player_name[MAX_PLAYER_NAME] = {0};
-    char player_name_utf8[MAX_PLAYER_NAME] = {0};
-    // personal savings
-    int personal_savings[MAX_PERSONAL_SAVINGS] = {0};
-    // file data
-    buffer* inf_file = new buffer(INF_SIZE);
-};
+game_settings g_settings;
 
-settings_data_t& settings_data() {
-    static settings_data_t inst;
-    return inst;
+game_settings::game_settings() {
+    inf_file = new buffer(INF_SIZE);
 }
 
 void setting_set_cli_fullscreen(bool fullscreen) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.cli_fullscreen = fullscreen;
 }
 
 static void load_default_settings() {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.fullscreen = true;
     data.cli_fullscreen = false;
     data.window_width = 800;
@@ -90,7 +54,7 @@ static void load_default_settings() {
     setting_clear_personal_savings();
 }
 static void load_settings(buffer* buf) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     buf->skip(4);
     data.fullscreen = buf->read_i32();
     buf->skip(3);
@@ -101,7 +65,7 @@ static void load_settings(buffer* buf) {
     data.game_speed = buf->read_i32();
     data.game_speed = 80; // todo: fix settings
     data.scroll_speed = buf->read_i32();
-    buf->read_raw(data.player_name, MAX_PLAYER_NAME);
+    buf->read_raw(data.player_name.data(), data.player_name.capacity);
     buf->skip(16);
     data.last_advisor = buf->read_i32();
     data.last_advisor = ADVISOR_TRADE; // debug
@@ -125,7 +89,7 @@ static void load_settings(buffer* buf) {
     data.window_height = buf->read_i32();
     data.window_height = 0;
     buf->skip(8); // int max_confirmed_resolution;
-    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
+    for (int i = 0; i < g_settings.MAX_PERSONAL_SAVINGS; i++) {
         data.personal_savings[i] = buf->read_i32();
     }
     data.victory_video = buf->read_i32();
@@ -141,7 +105,7 @@ static void load_settings(buffer* buf) {
 }
 
 void settings_load() {
-    auto& data = settings_data();
+    auto& data = g_settings;
     load_default_settings();
 
     // TODO: load <Pharaoh.inf>
@@ -159,7 +123,7 @@ void settings_load() {
     }
 }
 void settings_save() {
-    auto& data = settings_data();
+    auto& data = g_settings;
     buffer* buf = data.inf_file;
 
     buf->skip(4);
@@ -171,7 +135,7 @@ void settings_save() {
     buf->skip(6);
     buf->write_i32(data.game_speed);
     buf->write_i32(data.scroll_speed);
-    buf->write_raw(data.player_name, MAX_PLAYER_NAME);
+    buf->write_raw(data.player_name.data(), data.player_name.capacity);
     buf->skip(16);
     buf->write_i32(data.last_advisor);
     buf->skip(4); // int save_game_mission_id;
@@ -192,7 +156,7 @@ void settings_save() {
     buf->write_i32(data.window_width);
     buf->write_i32(data.window_height);
     buf->skip(8); // int max_confirmed_resolution;
-    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
+    for (int i = 0; i < g_settings.MAX_PERSONAL_SAVINGS; i++) {
         buf->write_i32(data.personal_savings[i]);
     }
     buf->write_i32(data.victory_video);
@@ -202,25 +166,25 @@ void settings_save() {
     io_write_buffer_to_file("c3.inf", data.inf_file, INF_SIZE);
 }
 int setting_fullscreen() {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.fullscreen && data.cli_fullscreen;
 }
 display_size setting_display_size() {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return {data.window_width, data.window_height};
 }
 void setting_set_fullscreen(bool fullscreen) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.fullscreen = fullscreen;
 }
 void setting_set_display(int width, int height) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.window_width = width;
     data.window_height = height;
 }
 
 static set_sound* get_sound(int type) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     switch (type) {
     case SOUND_MUSIC:
         return &data.sound_music;
@@ -259,11 +223,11 @@ void setting_reset_sound(int type, int enabled, int volume) {
     sound->volume = calc_bound(volume, 0, 100);
 }
 int setting_game_speed(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.game_speed;
 }
 void setting_increase_game_speed(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     if (data.game_speed >= 100) {
         if (data.game_speed < 1000)
             data.game_speed += 100;
@@ -271,7 +235,7 @@ void setting_increase_game_speed(void) {
         data.game_speed = calc_bound(data.game_speed + 10, 10, 100);
 }
 void setting_decrease_game_speed(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     if (data.game_speed > 100)
         data.game_speed -= 100;
     else
@@ -279,29 +243,29 @@ void setting_decrease_game_speed(void) {
 }
 
 int setting_scroll_speed(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.scroll_speed;
 }
 void setting_increase_scroll_speed(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.scroll_speed = calc_bound(data.scroll_speed + 10, 0, 100);
 }
 void setting_decrease_scroll_speed(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.scroll_speed = calc_bound(data.scroll_speed - 10, 0, 100);
 }
 void setting_reset_speeds(int game_speed, int scroll_speed) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.game_speed = game_speed;
     data.scroll_speed = scroll_speed;
 }
 
 int setting_tooltips(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.tooltips;
 }
 void setting_cycle_tooltips(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     switch (data.tooltips) {
     case TOOLTIPS_NONE:
         data.tooltips = TOOLTIPS_SOME;
@@ -316,114 +280,114 @@ void setting_cycle_tooltips(void) {
 }
 
 int setting_warnings(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.warnings;
 }
 void setting_toggle_warnings(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.warnings = data.warnings ? 0 : 1;
 }
 
 int setting_monthly_autosave(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.monthly_autosave;
 }
 void setting_toggle_monthly_autosave(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.monthly_autosave = data.monthly_autosave ? 0 : 1;
 }
 
 int setting_city_names_style(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.city_names_style;
 }
 void setting_toggle_city_names_style(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.city_names_style = data.city_names_style ? 0 : 1;
 }
 
 int setting_pyramid_speedup(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.pyramid_speedup;
 }
 void setting_toggle_pyramid_speedup(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.pyramid_speedup = data.pyramid_speedup ? 0 : 1;
 }
 
 int setting_popup_messages(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.popup_messages;
 }
 void setting_toggle_popup_messages(int flag) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.popup_messages ^= flag;
 }
 
 bool setting_gods_enabled(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.gods_enabled;
 }
 void setting_toggle_gods_enabled(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.gods_enabled = data.gods_enabled ? 0 : 1;
 }
 
 int setting_difficulty(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.difficulty;
 }
 
 void setting_increase_difficulty() {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.difficulty = std::clamp<e_difficulty>((e_difficulty)(data.difficulty + 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD);
 }
 
 void setting_decrease_difficulty() {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.difficulty = std::clamp<e_difficulty>((e_difficulty)(data.difficulty - 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD);
 }
 
 int setting_victory_video(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.victory_video = data.victory_video ? 0 : 1;
     return data.victory_video;
 }
 
 int setting_last_advisor(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.last_advisor;
 }
 void setting_set_last_advisor(int advisor) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.last_advisor = advisor;
 }
 
 const uint8_t* setting_player_name(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.player_name;
 }
 const char* setting_player_name_utf8(void) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.player_name_utf8;
 }
 void setting_set_player_name(const uint8_t* player_name) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     string_copy(player_name, data.player_name, MAX_PLAYER_NAME);
     encoding_to_utf8(player_name, data.player_name_utf8, MAX_PLAYER_NAME, 0);
 }
 
 int setting_personal_savings_for_mission(int mission_id) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     return data.personal_savings[mission_id];
 }
 void setting_set_personal_savings_for_mission(int mission_id, int savings) {
-    auto& data = settings_data();
+    auto& data = g_settings;
     data.personal_savings[mission_id] = savings;
 }
-void setting_clear_personal_savings(void) {
-    auto& data = settings_data();
-    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
+void setting_clear_personal_savings() {
+    auto& data = g_settings;
+    for (int i = 0; i < g_settings.MAX_PERSONAL_SAVINGS; i++) {
         data.personal_savings[i] = 0;
     }
 }

@@ -1,8 +1,15 @@
 #pragma once
 
 #include <stdint.h>
+#include "core/bstring.h"
 
-enum { TOOLTIPS_NONE = 0, TOOLTIPS_SOME = 1, TOOLTIPS_FULL = 2 };
+class buffer;
+
+enum { 
+    TOOLTIPS_NONE = 0,
+    TOOLTIPS_SOME = 1,
+    TOOLTIPS_FULL = 2
+};
 
 enum e_difficulty {
     DIFFICULTY_VERY_EASY = 0,
@@ -32,6 +39,46 @@ struct set_sound {
 struct display_size {
     int w, h;
 };
+
+struct game_settings {
+    static constexpr int MAX_PERSONAL_SAVINGS = 100;
+    // display settings
+    bool fullscreen;
+    bool cli_fullscreen;
+    int window_width;
+    int window_height;
+    // sound settings
+    set_sound sound_effects;
+    set_sound sound_music;
+    set_sound sound_speech;
+    set_sound sound_city;
+    // speed settings
+    int game_speed;
+    int scroll_speed;
+    // misc settings
+    e_difficulty difficulty;
+    int tooltips;
+    int monthly_autosave;
+    bool warnings;
+    bool gods_enabled;
+    bool victory_video;
+    // pharaoh settings
+    int popup_messages;
+    int city_names_style;
+    bool pyramid_speedup;
+    // persistent game state
+    int last_advisor;
+    bstring32 player_name;
+    bstring32 player_name_utf8;
+    // personal savings
+    int personal_savings[MAX_PERSONAL_SAVINGS] = {0};
+    // file data
+    buffer *inf_file = nullptr;
+
+    game_settings();
+};
+
+extern game_settings g_settings;
 
 void settings_load();
 void settings_save();
