@@ -123,6 +123,11 @@ struct game_settings {
     bool show_victory_video() { victory_video = !victory_video; return victory_video; }
     void set_player_name(const uint8_t* player_name);
 
+    int personal_savings_for_mission(int mission_id) { return personal_savings[mission_id]; }
+    void set_personal_savings_for_mission(int mission_id, int savings) { personal_savings[mission_id] = savings; }
+
+    void clear_personal_savings(void);
+
 private:
     void load_settings(buffer *buf);
 
@@ -131,7 +136,3 @@ private:
 };
 
 extern game_settings g_settings;
-
-int setting_personal_savings_for_mission(int mission_id);
-void setting_set_personal_savings_for_mission(int mission_id, int savings);
-void setting_clear_personal_savings(void);

@@ -44,7 +44,7 @@ void game_settings::load_default_settings() {
     city_names_style = CITIES_OLD_NAMES;
     pyramid_speedup = false;
 
-    setting_clear_personal_savings();
+    g_settings.clear_personal_savings();
 }
 
 void game_settings::load_settings(buffer* buf) {
@@ -210,17 +210,8 @@ void game_settings::set_player_name(const uint8_t* name) {
     encoding_to_utf8(name, player_name_utf8, MAX_PLAYER_NAME, 0);
 }
 
-int setting_personal_savings_for_mission(int mission_id) {
-    auto& data = g_settings;
-    return data.personal_savings[mission_id];
-}
-void setting_set_personal_savings_for_mission(int mission_id, int savings) {
-    auto& data = g_settings;
-    data.personal_savings[mission_id] = savings;
-}
-void setting_clear_personal_savings() {
-    auto& data = g_settings;
-    for (int i = 0; i < g_settings.MAX_PERSONAL_SAVINGS; i++) {
-        data.personal_savings[i] = 0;
+void game_settings::clear_personal_savings() {
+    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
+        personal_savings[i] = 0;
     }
 }

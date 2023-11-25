@@ -25,7 +25,7 @@ void scenario_settings_init() {
 }
 void scenario_settings_init_mission() {
     g_scenario_data.settings.starting_kingdom = difficulty_starting_kingdom();
-    g_scenario_data.settings.starting_personal_savings = setting_personal_savings_for_mission(g_scenario_data.settings.campaign_mission_rank);
+    g_scenario_data.settings.starting_personal_savings = g_settings.personal_savings_for_mission(g_scenario_data.settings.campaign_mission_rank);
 }
 
 // fancy lambdas! probably gonna create many problems down the road. :3

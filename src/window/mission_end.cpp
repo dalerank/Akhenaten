@@ -110,7 +110,7 @@ static void draw_foreground(void) {
 }
 
 static void advance_to_next_mission(void) {
-    setting_set_personal_savings_for_mission(scenario_campaign_rank() + 1, city_emperor_personal_savings());
+    g_settings.set_personal_savings_for_mission(scenario_campaign_rank() + 1, city_emperor_personal_savings());
     scenario_set_campaign_rank(scenario_campaign_rank() + 1);
     city_save_campaign_player_name();
 
@@ -122,7 +122,7 @@ static void advance_to_next_mission(void) {
     if (scenario_campaign_rank() >= 11 || scenario_is_custom()) {
         window_main_menu_show(1);
         if (!scenario_is_custom()) {
-            setting_clear_personal_savings();
+            g_settings.clear_personal_savings();
             scenario_settings_init();
             scenario_set_campaign_rank(2);
         }

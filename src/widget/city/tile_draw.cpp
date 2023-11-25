@@ -265,7 +265,7 @@ void draw_isometric_flat(vec2i pixel, tile2i point, painter &ctx) {
     int building_id = map_building_at(grid_offset);
     if (building_id > 0) {
         building *b = building_get(building_id);
-        if (b->type != BUILDING_BOOTH) {
+        if (building_type_none_of(*b, BUILDING_BOOTH, BUILDING_ROADBLOCK)) {
             return;
         }
     }
@@ -331,6 +331,14 @@ void draw_isometric_height(vec2i pixel, tile2i point, painter &ctx) {
     }
     // Valid grid_offset_figure and leftmost tile -> draw
     int building_id = map_building_at(grid_offset);
+    building* b = building_get(building_id);
+    if (building_id > 0) {
+        if (building_type_any_of(*b, BUILDING_BOOTH, BUILDING_ROADBLOCK)) {
+            return;
+        }
+    }
+
+
     bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
     bool should_draw = building_id > 0 || tall_flat_tile;
 
@@ -359,7 +367,6 @@ void draw_isometric_height(vec2i pixel, tile2i point, painter &ctx) {
         direction = SOUND_DIRECTION_RIGHT;
     }
 
-    building* b = building_get(building_id);
     if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
         color_mask = COLOR_MASK_RED;
     }

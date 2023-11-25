@@ -290,7 +290,7 @@ void graphics_renderer_interface::draw_image_part(painter &ctx, const image_t* i
     }
 
     vec2i atlas_offset = {img->atlas.x_offset, img->atlas.y_offset};
-    vec2i size = {img->width, img->height - offset};
+    vec2i size = {img->width, (img->height - offset) / 2 + offset};
     ctx.draw(img->atlas.p_atlas->texture, x, y, atlas_offset, size, color, scale, mirrored);
 }
 

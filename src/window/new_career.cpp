@@ -34,7 +34,7 @@ struct new_career_t {
 new_career_t g_new_career;
 
 static void init() {
-    setting_clear_personal_savings();
+    g_settings.clear_personal_savings();
     scenario_settings_init();
     string_copy(g_settings.player_name, g_new_career.player_name, MAX_PLAYER_NAME);
     input_box_start(&g_new_career.player_name_input, g_new_career.player_name, MAX_PLAYER_NAME, 1);
