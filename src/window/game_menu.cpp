@@ -52,7 +52,7 @@ static struct {
 } data;
 
 static void init() {
-    string_copy(setting_player_name(), data.player_name, MAX_PLAYER_NAME);
+    string_copy(g_settings.player_name, data.player_name, MAX_PLAYER_NAME);
     text_tag_substitution tags[] = {{"[player_name]", data.player_name}};
     text_fill_in_tags(lang_get_string(293, 5), data.player_name_title, tags, 1);
 

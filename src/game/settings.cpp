@@ -205,18 +205,9 @@ void game_settings::toggle_tooltips() {
     }
 }
 
-const uint8_t* setting_player_name(void) {
-    auto& data = g_settings;
-    return data.player_name;
-}
-const char* setting_player_name_utf8(void) {
-    auto& data = g_settings;
-    return data.player_name_utf8;
-}
-void setting_set_player_name(const uint8_t* player_name) {
-    auto& data = g_settings;
-    string_copy(player_name, data.player_name, MAX_PLAYER_NAME);
-    encoding_to_utf8(player_name, data.player_name_utf8, MAX_PLAYER_NAME, 0);
+void game_settings::set_player_name(const uint8_t* name) {
+    string_copy(name, player_name, MAX_PLAYER_NAME);
+    encoding_to_utf8(name, player_name_utf8, MAX_PLAYER_NAME, 0);
 }
 
 int setting_personal_savings_for_mission(int mission_id) {

@@ -121,6 +121,7 @@ struct game_settings {
     void decrease_difficulty() { difficulty = std::clamp<e_difficulty>((e_difficulty)(difficulty - 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
 
     bool show_victory_video() { victory_video = !victory_video; return victory_video; }
+    void set_player_name(const uint8_t* player_name);
 
 private:
     void load_settings(buffer *buf);
@@ -130,13 +131,6 @@ private:
 };
 
 extern game_settings g_settings;
-
-int setting_last_advisor(void);
-void setting_set_last_advisor(int advisor);
-
-const uint8_t* setting_player_name(void);
-const char* setting_player_name_utf8(void);
-void setting_set_player_name(const uint8_t* player_name);
 
 int setting_personal_savings_for_mission(int mission_id);
 void setting_set_personal_savings_for_mission(int mission_id, int savings);

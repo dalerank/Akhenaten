@@ -36,7 +36,7 @@ new_career_t g_new_career;
 static void init() {
     setting_clear_personal_savings();
     scenario_settings_init();
-    string_copy(setting_player_name(), g_new_career.player_name, MAX_PLAYER_NAME);
+    string_copy(g_settings.player_name, g_new_career.player_name, MAX_PLAYER_NAME);
     input_box_start(&g_new_career.player_name_input, g_new_career.player_name, MAX_PLAYER_NAME, 1);
 }
 
@@ -59,7 +59,7 @@ static void button_back(int param1, int param2) {
 }
 static void confirm_new_player_name(int param1, int param2) {
     input_box_stop(&g_new_career.player_name_input);
-    setting_set_player_name(g_new_career.player_name);
+    g_settings.set_player_name(g_new_career.player_name);
     // in OG Pharaoh, creating a new player name automatically opens the
     // game selection menu; here we first go back to the player list instead
     player_data_new(g_new_career.player_name);

@@ -95,7 +95,7 @@ bstring256 fullpath_saves(const char* filename) {
         return bstring256(filename);
     }
 
-    return bstring256(vfs::SAVE_FOLDER, "/", (const char*)setting_player_name(), "/", filename);
+    return bstring256(vfs::SAVE_FOLDER, "/", (const char*)g_settings.player_name, "/", filename);
 }
 
 void fullpath_maps(char* full, const char* filename) {
@@ -167,10 +167,11 @@ static void pre_load() { // do we NEED this...?
     map_image_context_init();
     map_random_init();
 }
+
 static void post_load() {
     // scenario settings
     scenario_set_name(scenario_name());
-    city_set_player_name(setting_player_name());
+    city_set_player_name(g_settings.player_name);
     int scenario_id = scenario_campaign_scenario_id();
     int mission_rank = get_scenario_mission_rank(scenario_id);
     scenario_set_campaign_rank(mission_rank);

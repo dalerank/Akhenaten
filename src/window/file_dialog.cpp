@@ -134,7 +134,7 @@ static void init(file_type type, file_dialog_type dialog_type) {
     switch (GAME_ENV) {
     case ENGINE_ENV_PHARAOH:
         char folder_name[MAX_FILE_NAME] = "Save/";
-        strcat(folder_name, (const char*)setting_player_name());
+        strcat(folder_name, (const char*)g_settings.player_name);
         strcat(folder_name, "/");
         if (type == FILE_TYPE_SCENARIO) {
             data.panel->change_file_path("Maps/", map_file_data.extension);
