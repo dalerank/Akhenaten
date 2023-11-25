@@ -205,21 +205,6 @@ void game_settings::toggle_tooltips() {
     }
 }
 
-int setting_difficulty(void) {
-    auto& data = g_settings;
-    return data.difficulty;
-}
-
-void setting_increase_difficulty() {
-    auto& data = g_settings;
-    data.difficulty = std::clamp<e_difficulty>((e_difficulty)(data.difficulty + 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD);
-}
-
-void setting_decrease_difficulty() {
-    auto& data = g_settings;
-    data.difficulty = std::clamp<e_difficulty>((e_difficulty)(data.difficulty - 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD);
-}
-
 int setting_victory_video(void) {
     auto& data = g_settings;
     data.victory_video = data.victory_video ? 0 : 1;

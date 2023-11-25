@@ -817,7 +817,7 @@ static void update_moods(e_god randm_god) {
     }
 
     // update anger/happiness/bolt icons/etc.
-    int difficulty = setting_difficulty();
+    int difficulty = g_settings.difficulty;
     if (city_gods_is_known(randm_god) != GOD_STATUS_UNKNOWN) { // OG code checks "randm_god < MAX_GODS" which is redundant.
         god_state* god = &city_data.religion.gods[randm_god];
         if (god->mood > 50)

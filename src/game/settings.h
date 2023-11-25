@@ -117,6 +117,10 @@ struct game_settings {
     void toggle_popup_messages(int flag) { popup_messages ^= flag; }
     void toggle_gods_enabled() { gods_enabled = !gods_enabled; }
 
+    void increase_difficulty() { difficulty = std::clamp<e_difficulty>((e_difficulty)(difficulty + 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
+    void decrease_difficulty() { difficulty = std::clamp<e_difficulty>((e_difficulty)(difficulty - 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
+
+
 private:
     void load_settings(buffer *buf);
 
@@ -125,13 +129,6 @@ private:
 };
 
 extern game_settings g_settings;
-
-bool setting_gods_enabled();
-void setting_toggle_gods_enabled(void);
-
-int setting_difficulty(void);
-void setting_increase_difficulty(void);
-void setting_decrease_difficulty(void);
 
 int setting_victory_video(void);
 

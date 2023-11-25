@@ -157,9 +157,9 @@ const model_building* model_get_building(int type) {
     //    if (type == BUILDING_ROADBLOCK) {
     //        return &MODEL_ROADBLOCK;
     //    }
-    return &g_model_data.buildings[setting_difficulty()][type];
+    return &g_model_data.buildings[g_settings.difficulty][type];
 }
 
 const model_house* model_get_house(int level) {
-    return &g_model_data.houses[setting_difficulty()][level];
+    return &g_model_data.houses[g_settings.difficulty][level];
 }

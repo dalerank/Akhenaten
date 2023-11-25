@@ -144,7 +144,7 @@ static void draw_background() {
     rich_text_draw(msg->content.text, 48, 202, 496, 14, 0);
     graphics_reset_clip_rectangle();
 
-    lang_text_draw(153, setting_difficulty() + 1, 65 + 45, 433, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw(153, g_settings.difficulty + 1, 65 + 45, 433, FONT_NORMAL_BLACK_ON_LIGHT);
 
     graphics_reset_dialog();
 }
@@ -200,8 +200,8 @@ static void button_start_mission(int param1, int param2) {
 }
 
 static void inc_dec_difficulty(int param1, int param2) {
-    if (param1 > 0) setting_increase_difficulty();
-    else setting_decrease_difficulty();
+    if (param1 > 0) { g_settings.increase_difficulty(); }
+    else { g_settings.decrease_difficulty(); }
     window_invalidate();
 }
 
