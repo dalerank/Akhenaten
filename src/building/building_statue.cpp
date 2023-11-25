@@ -53,6 +53,17 @@ void config_load_big_statue_images(archive arch) {
     config_load_statue_images_t(arch, "big_statue_images", big_statues_img);
 }
 
+int building_statue_random_variant(int type, int variant) {
+    int size = 1;
+    switch (type) {
+    case BUILDING_SMALL_STATUE: size = small_statues_img.size(); break;
+    case BUILDING_MEDIUM_STATUE: size = medium_statue_images.size(); break;
+    case BUILDING_LARGE_STATUE: size = big_statues_img.size(); break;
+    }
+
+    return rand() % size;
+}
+
 int building_statue_next_variant(int type, int variant) {
     if (variant < 0) {
         return 0;

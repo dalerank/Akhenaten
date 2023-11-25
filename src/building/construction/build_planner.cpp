@@ -999,6 +999,10 @@ void BuildPlanner::setup_build(e_building_type type) { // select building for co
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
+        building_rotation_randomize_variant(type);
+        relative_orientation = 1; // force these buildings to start in a specific orientation
+        update_orientations(false);
+        break;
         //
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
@@ -1715,6 +1719,7 @@ int BuildPlanner::get_total_drag_size(int* x, int* y) {
     *y = size_y;
     return 1;
 }
+
 void BuildPlanner::construction_start(map_point tile) {
     start = end = tile;
 
@@ -1732,13 +1737,17 @@ void BuildPlanner::construction_start(map_point tile) {
         case BUILDING_WALL:
             can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start.x(), start.y());
             break;
+
         default:
             break;
         }
-        if (!can_start)
+
+        if (!can_start) {
             construction_cancel();
+        }
     }
 }
+
 void BuildPlanner::construction_cancel() {
     map_property_clear_constructing_and_deleted();
     if (in_progress && special_flags & PlannerFlags::Draggable) {
@@ -1750,6 +1759,7 @@ void BuildPlanner::construction_cancel() {
     }
     building_rotation_reset_rotation();
 }
+
 void BuildPlanner::construction_update(tile2i tile) {
     end = tile;
     if (end == tile2i(-1, -1))
@@ -1870,6 +1880,12 @@ void BuildPlanner::construction_finalize() { // confirm final placement
         break;
     case BUILDING_FESTIVAL_SQUARE:
         city_buildings_add_festival_square(last_created_building);
+        break;
+    case BUILDING_SMALL_STATUE:
+    case BUILDING_MEDIUM_STATUE:
+    case BUILDING_LARGE_STATUE:
+        building_rotation_randomize_variant(build_type);
+        update_orientations(false);
         break;
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:

@@ -30,6 +30,18 @@ void building_rotation_rotate_by_hotkey(void) {
         Planner.update_orientations();
     }
 }
+
+void building_rotation_randomize_variant(int type) {
+    variant = 0;
+    switch (type) {
+    case BUILDING_SMALL_STATUE:
+    case BUILDING_MEDIUM_STATUE:
+    case BUILDING_LARGE_STATUE:
+        variant = building_statue_random_variant(type, variant);
+    break;
+    }
+}
+
 void building_rotation_variant_by_hotkey() {
     switch (Planner.build_type) {
     case BUILDING_SMALL_STATUE:
@@ -44,6 +56,7 @@ void building_rotation_variant_by_hotkey() {
 
     Planner.update_orientations();
 }
+
 void building_rotation_reset_rotation() {
     g_global_rotation = 0;
     variant = 0;

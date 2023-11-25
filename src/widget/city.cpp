@@ -489,10 +489,13 @@ static void handle_mouse(const mouse* m) {
     zoom_map(m);
     Planner.draw_as_constructing = false;
     if (m->left.went_down) {
-        if (handle_legion_click(data.current_tile))
+        if (handle_legion_click(data.current_tile)) {
             return;
-        if (!Planner.in_progress)
+        }
+        
+        if (!Planner.in_progress) {
             build_start(data.current_tile);
+        }
 
         build_move(data.current_tile);
     } else if (m->left.is_down || Planner.in_progress)
@@ -517,7 +520,7 @@ static void handle_mouse(const mouse* m) {
     if (m->middle.went_up)
         scroll_drag_end();
 }
-static void military_map_click(int legion_formation_id, map_point tile) {
+static void military_map_click(int legion_formation_id, tile2i tile) {
     if (!tile.grid_offset()) {
         window_city_show();
         return;
