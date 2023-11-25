@@ -133,6 +133,7 @@ static translation_string all_strings[] = {
      {TR_CONFIG_RECRUITER_NOT_NEED_FORTS, "Recruiter not need forts"},
      {TR_CONFIG_DRAW_FPS, "Draw FPS"},
      {TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER, "Highlight Top Menu Items"},
+     {TR_CONFIG_EMPIRE_CITY_OLD_NAMES, "Show Old Names for city on empire map"},
      {TR_HOTKEY_TITLE, "Hotkeys configuration"},
      {TR_HOTKEY_LABEL, "Hotkey"},
      {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},

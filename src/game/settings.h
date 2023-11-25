@@ -111,7 +111,8 @@ struct game_settings {
 
     void toggle_tooltips();
     void toggle_warnings() { warnings = !warnings; }
-    void toggle_monthly_autosave() {monthly_autosave = !monthly_autosave; }
+    void toggle_monthly_autosave() { monthly_autosave = !monthly_autosave; }
+    void toggle_city_names_style() { city_names_style = !city_names_style; }
 
 private:
     void load_settings(buffer *buf);
@@ -121,9 +122,6 @@ private:
 };
 
 extern game_settings g_settings;
-
-int setting_city_names_style(void);
-void setting_toggle_city_names_style(void);
 
 int setting_pyramid_speedup(void);
 void setting_toggle_pyramid_speedup(void);

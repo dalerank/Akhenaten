@@ -205,15 +205,6 @@ void game_settings::toggle_tooltips() {
     }
 }
 
-int setting_city_names_style(void) {
-    auto& data = g_settings;
-    return data.city_names_style;
-}
-void setting_toggle_city_names_style(void) {
-    auto& data = g_settings;
-    data.city_names_style = data.city_names_style ? 0 : 1;
-}
-
 int setting_pyramid_speedup(void) {
     auto& data = g_settings;
     return data.pyramid_speedup;

@@ -6,6 +6,7 @@
 #include "core/log.h"
 #include "city/gods.h"
 #include "city/data_private.h"
+#include "game/settings.h"
 #include "game/game.h"
 #include "game/system.h"
 #include "graphics/boilerplate.h"
@@ -77,6 +78,7 @@ static generic_button checkbox_buttons[] = {
     {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_ROTATE_MANUALLY, TR_CONFIG_ROTATE_MANUALLY},
     {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
     {20, 360, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
+    {20, 384, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
     // 
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG, TR_CONFIG_FIX_IMMIGRATION_BUG},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS},
@@ -174,7 +176,7 @@ static generic_button checkbox_buttons[] = {
     {20, 360, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CLAY, TR_CONFIG_RESOURCE_CLAY},
 };
 
-static int options_per_page[] = {13, 14, 14, 14, 2, 5, 14, 9, 13};
+static int options_per_page[] = {14, 14, 14, 14, 2, 5, 14, 9, 13};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -481,7 +483,13 @@ static void toggle_resource(int id, int param2) {
 
 static void toggle_switch(int key, int param2) {
     auto& data = g_window_config_ext_data;
-    data.config_values[key].new_value = 1 - data.config_values[key].new_value;
+    data.config_values[key].new_value = !data.config_values[key].new_value;
+
+    switch (key) {
+    case CONFIG_UI_EMPIRE_CITY_OLD_NAMES: 
+        g_settings.city_names_style = data.config_values[key].new_value;
+        break;
+    }
 
     window_invalidate();
 }

@@ -466,8 +466,9 @@ static void draw_empire_object(const empire_object* obj) {
             }
 
             int text_group = 21;
-            if (setting_city_names_style() == CITIES_OLD_NAMES)
+            if (g_settings.city_names_style == CITIES_OLD_NAMES) {
                 text_group = 195;
+            }
 
             int text_offset_x = 0;
             int text_offset_y = 50;
@@ -565,25 +566,18 @@ static void draw_map() {
 
     graphics_reset_clip_rectangle();
 }
+
 static void draw_city_name(const empire_city* city) {
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    int image_base = image_id_from_group(GROUP_EMPIRE_PANELS);
-    //    ImageDraw::img_generic(image_base + 6, data.x_min + 2, data.y_max - 199);
-    //    ImageDraw::img_generic(image_base + 7, data.x_max - 84, data.y_max - 199);
-    //    ImageDraw::img_generic(image_base + 8, (data.x_min + data.x_max - 332) / 2, data.y_max - 181);
-    //    if (city) {
-    //        lang_text_draw_centered(21, city->name_id, (data.x_min + data.x_max - 332) / 2 + 64, data.y_max - 118, 268, FONT_LARGE_BLACK_ON_LIGHT);
-    //    }
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
     painter ctx = game.painter();
     if (city) {
-        if (setting_city_names_style() == CITIES_OLD_NAMES)
+        if (g_settings.city_names_style == CITIES_OLD_NAMES) {
             lang_text_draw_centered(195, city->name_id, (data.x_min + data.x_max - 332) / 2 + 32, data.y_max - INFO_Y_CITY_NAME, 268, FONT_LARGE_BLACK_ON_LIGHT);
-        else
-            lang_text_draw_centered(21, city->name_id, (data.x_min + data.x_max - 332) / 2 + 32, data.y_max - INFO_Y_CITY_NAME, 268,FONT_LARGE_BLACK_ON_LIGHT);
+        } else {
+            lang_text_draw_centered(21, city->name_id, (data.x_min + data.x_max - 332) / 2 + 32, data.y_max - INFO_Y_CITY_NAME, 268, FONT_LARGE_BLACK_ON_LIGHT);
+        }
     }
-    //}
 }
+
 static void draw_panel_buttons(const empire_city* city) {
     image_buttons_draw(data.x_min + 20, data.y_max - 44, image_button_help, 1);
     image_buttons_draw(data.x_max - 44, data.y_max - 44, image_button_return_to_city, 1);
