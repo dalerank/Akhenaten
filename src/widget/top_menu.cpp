@@ -371,14 +371,9 @@ void menu_draw(menu_bar_item& menu, int focus_item_id) {
         }
         // Set color/font on the menu item mouse hover
         if (i == focus_item_id - 1) {
-            if (GAME_ENV == ENGINE_ENV_C3) {
-                graphics_fill_rect(menu.x_start, y_offset - 4, 16 * menu.calculated_width_blocks, 20, COLOR_BLACK);
-                lang_text_draw_colored(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_SMALL_PLAIN, COLOR_FONT_ORANGE);
-            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                sub->text_raw
-                  ? lang_text_draw(sub->text_raw, menu.x_start + 8, y_offset, FONT_NORMAL_YELLOW)
-                  : lang_text_draw(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_NORMAL_YELLOW);
-            }
+            sub->text_raw
+                ? lang_text_draw(sub->text_raw, menu.x_start + 8, y_offset, FONT_NORMAL_YELLOW)
+                : lang_text_draw(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_NORMAL_YELLOW);
         } else {
             sub->text_raw ? lang_text_draw(sub->text_raw, menu.x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT)
                           : lang_text_draw(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -692,17 +687,14 @@ bool widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
     if (!widget_city_has_input()) {
         int button_id = 0;
         int handled = false;
-        if (GAME_ENV == ENGINE_ENV_C3)
-            handled = image_buttons_handle_mouse(m, data.offset_rotate, 0, orientation_button, 3, &button_id);
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            handled = generic_buttons_handle_mouse(m, data.offset_rotate, 0, orientation_buttons_ph, 3, &button_id);
-            if (button_id) {
-                orientation_button_state = button_id;
-                if (handled)
-                    orientation_button_pressed = 5;
-            } else
-                orientation_button_state = 0;
-        }
+
+        handled = generic_buttons_handle_mouse(m, data.offset_rotate, 0, orientation_buttons_ph, 3, &button_id);
+        if (button_id) {
+            orientation_button_state = button_id;
+            if (handled)
+                orientation_button_pressed = 5;
+        } else
+            orientation_button_state = 0;
 
         if (button_id)
             result = handled;
