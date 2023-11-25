@@ -126,6 +126,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"copper_mine_can_build_near_mountains", false},
     {"city_building_recruter", false},
     {"recruiter_not_need_forts", false},
+    {"ui_highlight_top_menu_hover", true},
 };
 
 static const char* ini_string_keys[] = {

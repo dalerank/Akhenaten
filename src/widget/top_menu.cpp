@@ -5,6 +5,7 @@
 #include "city/constants.h"
 #include "city/population.h"
 #include "core/profiler.h"
+#include "config/config.h"
 #include "dev/debug.h"
 #include "game/cheats.h"
 #include "game/mission.h"
@@ -298,12 +299,16 @@ static void button_rotate_right(int param1, int param2) {
 #define MENU_ITEM_HEIGHT 20
 
 void menu_bar_draw(const std::span<menu_bar_item>& items) {
+    auto& data = g_top_menu_data;
     short x_offset = TOP_MENU_BASE_X_OFFSET;
+    font_t hightlight_font = config_get(CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER) ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT;
     for (auto& item : items) {
         item.x_start = x_offset;
+        int current_id = std::distance(items.begin(), &item) + 1;
+        font_t font = (current_id == data.focus_menu_id) ? hightlight_font : FONT_NORMAL_BLACK_ON_LIGHT;
         int text_length = item.text_raw
-                                ? lang_text_draw(item.text_raw, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT)
-                                : lang_text_draw(item.text_group, 0, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT);
+                                ? lang_text_draw(item.text_raw, x_offset, MENU_BASE_TEXT_Y_OFFSET, font)
+                                : lang_text_draw(item.text_group, 0, x_offset, MENU_BASE_TEXT_Y_OFFSET, font);
         x_offset += text_length;
         item.x_end = x_offset;
         x_offset += 32; // spacing
@@ -320,11 +325,9 @@ static int get_menu_bar_item(const mouse* m, const std::span<menu_bar_item>& ite
     return 0;
 }
 
-static int menu_bar_handle_mouse(const mouse* m, const std::span<menu_bar_item>& items, int* focus_menu_id) {
+static int menu_bar_handle_mouse(const mouse* m, const std::span<menu_bar_item>& items) {
     int menu_id = get_menu_bar_item(m, items);
-    if (focus_menu_id)
-        *focus_menu_id = menu_id;
-
+    g_top_menu_data.focus_menu_id = menu_id;
     return menu_id;
 }
 
@@ -344,8 +347,7 @@ static void calculate_menu_dimensions(menu_bar_item& menu) {
                              ? lang_text_get_width(sub->text_raw, FONT_NORMAL_BLACK_ON_LIGHT)
                              : lang_text_get_width(sub->text_group, sub->text_number, FONT_NORMAL_BLACK_ON_LIGHT);
 
-        if (width_pixels > max_width)
-            max_width = width_pixels;
+        max_width = std::clamp(max_width, 0, width_pixels);
 
         height_pixels += MENU_ITEM_HEIGHT;
     }
@@ -363,15 +365,15 @@ void menu_draw(menu_bar_item& menu, int focus_item_id) {
     int y_offset = TOP_MENU_HEIGHT + MENU_BASE_TEXT_Y_OFFSET * 2;
     for (int i = 0; i < menu.num_items; i++) {
         menu_item* sub = &menu.items[i];
-        if (sub->hidden)
-            continue;
 
+        if (sub->hidden) {
+            continue;
+        }
         // Set color/font on the menu item mouse hover
         if (i == focus_item_id - 1) {
             if (GAME_ENV == ENGINE_ENV_C3) {
                 graphics_fill_rect(menu.x_start, y_offset - 4, 16 * menu.calculated_width_blocks, 20, COLOR_BLACK);
-                lang_text_draw_colored(
-                  sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_SMALL_PLAIN, COLOR_FONT_ORANGE);
+                lang_text_draw_colored(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_SMALL_PLAIN, COLOR_FONT_ORANGE);
             } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 sub->text_raw
                   ? lang_text_draw(sub->text_raw, menu.x_start + 8, y_offset, FONT_NORMAL_YELLOW)
@@ -379,8 +381,7 @@ void menu_draw(menu_bar_item& menu, int focus_item_id) {
             }
         } else {
             sub->text_raw ? lang_text_draw(sub->text_raw, menu.x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT)
-                          : lang_text_draw(
-                            sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT);
+                          : lang_text_draw(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT);
         }
         y_offset += MENU_ITEM_HEIGHT;
     }
@@ -494,6 +495,10 @@ static void draw_background(void) {
 }
 static void draw_foreground(void) {
     auto& data = g_top_menu_data;
+    if (data.focus_menu_id > 0) {
+
+    }
+
     if (!data.open_sub_menu) {
         return;
     }
@@ -525,33 +530,15 @@ static void refresh_background() {
     int image_base = image_id_from_group(GROUP_TOP_MENU_SIDEBAR);
     int s_width = screen_width();
 
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 0; i * block_width < s_width; i++)
-            ImageDraw::img_generic(ctx, image_base + i % 8, i * block_width, 0);
+    block_width = 96;
+    int s_end = s_width - 1000 - 24 + city_view_is_sidebar_collapsed() * (162 - 18);
+    int s_start = s_end - ceil((float)s_end / (float)block_width) * block_width;
 
-        // black panels for funds/pop/time
-        if (s_width < 800) {
-            ImageDraw::img_generic(ctx, image_base + 14, 336, 0);
-        } else if (s_width < 1024) {
-            ImageDraw::img_generic(ctx, image_base + 14, 336, 0);
-            ImageDraw::img_generic(ctx, image_base + 14, 456, 0);
-            ImageDraw::img_generic(ctx, image_base + 14, 648, 0);
-        } else {
-            ImageDraw::img_generic(ctx, image_base + 14, 480, 0);
-            ImageDraw::img_generic(ctx, image_base + 14, 624, 0);
-            ImageDraw::img_generic(ctx, image_base + 14, 840, 0);
-        }
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        block_width = 96;
-        int s_end = s_width - 1000 - 24 + city_view_is_sidebar_collapsed() * (162 - 18);
-        int s_start = s_end - ceil((float)s_end / (float)block_width) * block_width;
-
-        for (int i = 0; s_start + i * block_width < s_end; i++) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
-        }
-
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
+    for (int i = 0; s_start + i * block_width < s_end; i++) {
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
     }
+
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
 }
 
 void widget_top_menu_draw(int force) {
@@ -654,7 +641,7 @@ static bool handle_input_submenu(const mouse* m, const hotkeys* h) {
         window_go_back();
         return true;
     }
-    int menu_id = menu_bar_handle_mouse(m, make_span(g_top_menu), &data.focus_menu_id);
+    int menu_id = menu_bar_handle_mouse(m, make_span(g_top_menu));
     if (menu_id && menu_id != data.open_sub_menu) {
         window_invalidate();
         data.open_sub_menu = menu_id;
@@ -685,7 +672,7 @@ static bool handle_right_click(int type) {
 }
 static bool handle_mouse_menu(const mouse* m) {
     auto& data = g_top_menu_data;
-    int menu_id = menu_bar_handle_mouse(m, make_span(g_top_menu), &data.focus_menu_id);
+    int menu_id = menu_bar_handle_mouse(m, make_span(g_top_menu));
     if (menu_id && m->left.went_up) {
         data.open_sub_menu = menu_id;
         top_menu_window_show();

@@ -132,6 +132,7 @@ static translation_string all_strings[] = {
      {TR_CONFIG_COPPER_NEAR_MOUNTAINS, "Copper mine can build near mountains"},
      {TR_CONFIG_RECRUITER_NOT_NEED_FORTS, "Recruiter not need forts"},
      {TR_CONFIG_DRAW_FPS, "Draw FPS"},
+     {TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER, "Highlight Top Menu Items"},
      {TR_HOTKEY_TITLE, "Hotkeys configuration"},
      {TR_HOTKEY_LABEL, "Hotkey"},
      {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},

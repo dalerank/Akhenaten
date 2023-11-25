@@ -76,6 +76,7 @@ static generic_button checkbox_buttons[] = {
     {20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_LEGIONS, TR_CONFIG_HIGHLIGHT_LEGIONS},
     {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_ROTATE_MANUALLY, TR_CONFIG_ROTATE_MANUALLY},
     {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
+    {20, 360, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
     // 
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG, TR_CONFIG_FIX_IMMIGRATION_BUG},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS},
@@ -173,7 +174,7 @@ static generic_button checkbox_buttons[] = {
     {20, 360, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CLAY, TR_CONFIG_RESOURCE_CLAY},
 };
 
-static int options_per_page[] = {12, 14, 14, 14, 2, 5, 14, 9, 13};
+static int options_per_page[] = {13, 14, 14, 14, 2, 5, 14, 9, 13};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
