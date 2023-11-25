@@ -41,7 +41,7 @@ static void init(void (*close_callback)()) {
     data.focus_button_id = 0;
     data.close_callback = close_callback;
     data.original_game_speed = g_settings.game_speed;
-    data.original_scroll_speed = setting_scroll_speed();
+    data.original_scroll_speed = g_settings.scroll_speed;
 }
 
 static void draw_foreground(void) {
@@ -62,7 +62,7 @@ static void draw_foreground(void) {
     text_draw_percentage(g_settings.game_speed, 328, 146, FONT_SMALL_PLAIN);
     // scroll speed
     lang_text_draw(45, 3, 112, 182, FONT_SMALL_PLAIN);
-    text_draw_percentage(setting_scroll_speed(), 328, 182, FONT_SMALL_PLAIN);
+    text_draw_percentage(g_settings.scroll_speed, 328, 182, FONT_SMALL_PLAIN);
 
     arrow_buttons_draw(160, 40, arrow_buttons, 4);
     graphics_reset_dialog();
@@ -71,10 +71,13 @@ static void draw_foreground(void) {
 static void handle_input(const mouse* m, const hotkeys* h) {
     const mouse* m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 2, &data.focus_button_id)
-        || arrow_buttons_handle_mouse(m_dialog, 160, 40, arrow_buttons, 4, 0))
+        || arrow_buttons_handle_mouse(m_dialog, 160, 40, arrow_buttons, 4, 0)) {
         return;
-    if (input_go_back_requested(m, h))
+    }
+
+    if (input_go_back_requested(m, h)) {
         data.close_callback();
+    }
 }
 
 static void button_ok(int param1, int param2) {
@@ -82,7 +85,8 @@ static void button_ok(int param1, int param2) {
 }
 
 static void button_cancel(int param1, int param2) {
-    setting_reset_speeds(data.original_game_speed, data.original_scroll_speed);
+    g_settings.game_speed = data.original_game_speed;
+    g_settings.scroll_speed = data.original_scroll_speed;
     data.close_callback();
 }
 
@@ -96,14 +100,19 @@ static void arrow_button_game(int is_down, int param2) {
 
 static void arrow_button_scroll(int is_down, int param2) {
     if (is_down)
-        setting_decrease_scroll_speed();
+        g_settings.decrease_scroll_speed();
     else {
-        setting_increase_scroll_speed();
+        g_settings.increase_scroll_speed();
     }
 }
 
 void window_speed_options_show(void (*close_callback)(void)) {
-    window_type window = {WINDOW_SPEED_OPTIONS, window_draw_underlying_window, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_SPEED_OPTIONS,
+        window_draw_underlying_window,
+        draw_foreground,
+        handle_input
+    };
     init(close_callback);
     window_show(&window);
 }

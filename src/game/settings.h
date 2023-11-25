@@ -106,6 +106,9 @@ struct game_settings {
     void increase_game_speed();
     void decrease_game_speed();
 
+    void increase_scroll_speed() { scroll_speed = calc_bound(scroll_speed + 10, 0, 100); }
+    void decrease_scroll_speed() { scroll_speed = calc_bound(scroll_speed - 10, 0, 100); }
+
 private:
     void load_settings(buffer *buf);
 
@@ -114,11 +117,6 @@ private:
 };
 
 extern game_settings g_settings;
-
-int setting_scroll_speed(void);
-void setting_increase_scroll_speed(void);
-void setting_decrease_scroll_speed(void);
-void setting_reset_speeds(int game_speed, int scroll_speed);
 
 int setting_tooltips(void);
 void setting_cycle_tooltips(void);

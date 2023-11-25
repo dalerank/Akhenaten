@@ -190,28 +190,11 @@ void game_settings::decrease_game_speed(void) {
     }
 }
 
-int setting_scroll_speed(void) {
-    auto& data = g_settings;
-    return data.scroll_speed;
-}
-void setting_increase_scroll_speed(void) {
-    auto& data = g_settings;
-    data.scroll_speed = calc_bound(data.scroll_speed + 10, 0, 100);
-}
-void setting_decrease_scroll_speed(void) {
-    auto& data = g_settings;
-    data.scroll_speed = calc_bound(data.scroll_speed - 10, 0, 100);
-}
-void setting_reset_speeds(int game_speed, int scroll_speed) {
-    auto& data = g_settings;
-    data.game_speed = game_speed;
-    data.scroll_speed = scroll_speed;
-}
-
 int setting_tooltips(void) {
     auto& data = g_settings;
     return data.tooltips;
 }
+
 void setting_cycle_tooltips(void) {
     auto& data = g_settings;
     switch (data.tooltips) {

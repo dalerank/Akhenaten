@@ -153,9 +153,11 @@ int scroll_in_progress(void) {
     auto &data = g_input_scroll_data;
     return data.is_scrolling || data.drag.active;
 }
+
 static int get_scroll_speed_factor(void) {
-    return calc_bound((100 - setting_scroll_speed()) / 10, 0, 10);
+    return calc_bound((100 - g_settings.scroll_speed) / 10, 0, 10);
 }
+
 int scroll_is_smooth(void) {
     auto &data = g_input_scroll_data;
     return config_get(CONFIG_UI_SMOOTH_SCROLLING) || data.drag.active || data.speed.decaying;
