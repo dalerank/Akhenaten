@@ -105,11 +105,11 @@ static int get_elapsed_ticks(void) {
     case WINDOW_SLIDING_SIDEBAR:
     case WINDOW_OVERLAY_MENU:
     case WINDOW_BUILD_MENU:
-        game_speed_index = (100 - setting_game_speed()) / 10;
+        game_speed_index = (100 - g_settings.game_speed) / 10;
         if (game_speed_index >= 10)
             return 0;
         else if (game_speed_index < 0) {
-            ticks_per_frame = setting_game_speed() / 100;
+            ticks_per_frame = g_settings.game_speed / 100;
             game_speed_index = 0;
         }
         break;

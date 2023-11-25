@@ -173,24 +173,21 @@ sound_settings* game_settings::get_sound(int type) {
     }
 }
 
-int setting_game_speed(void) {
-    auto& data = g_settings;
-    return data.game_speed;
+void game_settings::increase_game_speed(void) {
+    if (game_speed >= 100) {
+        if (game_speed < 1000)
+            game_speed += 100;
+    } else {
+        game_speed = calc_bound(game_speed + 10, 10, 100);
+    }
 }
-void setting_increase_game_speed(void) {
-    auto& data = g_settings;
-    if (data.game_speed >= 100) {
-        if (data.game_speed < 1000)
-            data.game_speed += 100;
-    } else
-        data.game_speed = calc_bound(data.game_speed + 10, 10, 100);
-}
-void setting_decrease_game_speed(void) {
-    auto& data = g_settings;
-    if (data.game_speed > 100)
-        data.game_speed -= 100;
-    else
-        data.game_speed = calc_bound(data.game_speed - 10, 10, 100);
+
+void game_settings::decrease_game_speed(void) {
+    if (game_speed > 100) {
+        game_speed -= 100;
+    } else {
+        game_speed = calc_bound(game_speed - 10, 10, 100);
+    }
 }
 
 int setting_scroll_speed(void) {

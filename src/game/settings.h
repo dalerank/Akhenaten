@@ -103,6 +103,9 @@ struct game_settings {
         sound->volume = calc_bound(volume, 0, 100);
     }
 
+    void increase_game_speed();
+    void decrease_game_speed();
+
 private:
     void load_settings(buffer *buf);
 
@@ -111,10 +114,6 @@ private:
 };
 
 extern game_settings g_settings;
-
-int setting_game_speed(void);
-void setting_increase_game_speed(void);
-void setting_decrease_game_speed(void);
 
 int setting_scroll_speed(void);
 void setting_increase_scroll_speed(void);

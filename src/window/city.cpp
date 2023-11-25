@@ -167,10 +167,10 @@ static void handle_hotkeys(const hotkeys* h) {
         toggle_pause();
 
     if (h->decrease_game_speed) {
-        setting_decrease_game_speed();
+        g_settings.decrease_game_speed();
     }
     if (h->increase_game_speed) {
-        setting_increase_game_speed();
+        g_settings.increase_game_speed();
     }
 
     if (h->show_overlay) {

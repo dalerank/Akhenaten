@@ -134,12 +134,11 @@ static int update_extra_info_value(int value, int* field) {
 static int update_extra_info(int is_background) {
     int changed = 0;
     if (g_extra_data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)
-        changed |= update_extra_info_value(setting_game_speed(), &g_extra_data.game_speed);
+        changed |= update_extra_info_value(g_settings.game_speed, &g_extra_data.game_speed);
 
     if (g_extra_data.info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
         changed |= update_extra_info_value(city_labor_unemployment_percentage(), &g_extra_data.unemployment_percentage);
-        changed |= update_extra_info_value(city_labor_workers_unemployed() - city_labor_workers_needed(),
-                                           &g_extra_data.unemployment_amount);
+        changed |= update_extra_info_value(city_labor_workers_unemployed() - city_labor_workers_needed(), &g_extra_data.unemployment_amount);
     }
     if (g_extra_data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
         if (is_background)
@@ -283,8 +282,8 @@ int sidebar_extra_handle_mouse(const mouse* m) {
 
 static void button_game_speed(int is_down, int param2) {
     if (is_down)
-        setting_decrease_game_speed();
+        g_settings.decrease_game_speed();
     else {
-        setting_increase_game_speed();
+        g_settings.increase_game_speed();
     }
 }

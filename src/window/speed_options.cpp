@@ -37,10 +37,10 @@ static struct {
     int original_scroll_speed;
 } data;
 
-static void init(void (*close_callback)(void)) {
+static void init(void (*close_callback)()) {
     data.focus_button_id = 0;
     data.close_callback = close_callback;
-    data.original_game_speed = setting_game_speed();
+    data.original_game_speed = g_settings.game_speed;
     data.original_scroll_speed = setting_scroll_speed();
 }
 
@@ -59,7 +59,7 @@ static void draw_foreground(void) {
     lang_text_draw_centered(45, 1, 128, 266, 224, FONT_NORMAL_BLACK_ON_DARK);
     // game speed
     lang_text_draw(45, 2, 112, 146, FONT_SMALL_PLAIN);
-    text_draw_percentage(setting_game_speed(), 328, 146, FONT_SMALL_PLAIN);
+    text_draw_percentage(g_settings.game_speed, 328, 146, FONT_SMALL_PLAIN);
     // scroll speed
     lang_text_draw(45, 3, 112, 182, FONT_SMALL_PLAIN);
     text_draw_percentage(setting_scroll_speed(), 328, 182, FONT_SMALL_PLAIN);
@@ -88,9 +88,9 @@ static void button_cancel(int param1, int param2) {
 
 static void arrow_button_game(int is_down, int param2) {
     if (is_down)
-        setting_decrease_game_speed();
+        g_settings.decrease_game_speed();
     else {
-        setting_increase_game_speed();
+        g_settings.increase_game_speed();
     }
 }
 
