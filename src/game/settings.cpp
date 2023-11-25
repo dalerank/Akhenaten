@@ -205,15 +205,6 @@ void game_settings::toggle_tooltips() {
     }
 }
 
-int setting_warnings(void) {
-    auto& data = g_settings;
-    return data.warnings;
-}
-void setting_toggle_warnings(void) {
-    auto& data = g_settings;
-    data.warnings = data.warnings ? 0 : 1;
-}
-
 int setting_monthly_autosave(void) {
     auto& data = g_settings;
     return data.monthly_autosave;

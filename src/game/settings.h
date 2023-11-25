@@ -110,6 +110,7 @@ struct game_settings {
     void decrease_scroll_speed() { scroll_speed = calc_bound(scroll_speed - 10, 0, 100); }
 
     void toggle_tooltips();
+    void toggle_warnings() { warnings = !warnings; }
 
 private:
     void load_settings(buffer *buf);

@@ -481,7 +481,7 @@ static void set_text_for_tooltips() {
 }
 
 static void set_text_for_warnings(void) {
-    menu_update_text(g_top_menu[INDEX_HELP], 2, setting_warnings() ? 6 : 5);
+    menu_update_text(g_top_menu[INDEX_HELP], 2, g_settings.warnings ? 6 : 5);
 }
 static void set_text_for_debug_city() {
     for (int i = 0; i < std::size(menu_debug); ++i) {
@@ -847,7 +847,7 @@ static void menu_help_mouse_help(int param) {
     set_text_for_tooltips();
 }
 static void menu_help_warnings(int param) {
-    setting_toggle_warnings();
+    g_settings.toggle_warnings();
     set_text_for_warnings();
 }
 static void menu_help_about(int param) {

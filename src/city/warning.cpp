@@ -27,7 +27,7 @@ static struct warning* new_warning(void) {
 }
 
 void city_warning_show_custom(const char *text) {
-    if (!setting_warnings()) {
+    if (!g_settings.warnings) {
         return;
     }
     warning* w = new_warning();
