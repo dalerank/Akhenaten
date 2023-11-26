@@ -73,24 +73,17 @@ static bool PTAH_warehouse_restock() {
 
     building* chosen_yard = nullptr;
     int lowest_stock_found = 10000;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID) {
-            continue;
-        }
-        
-        if (b->type != BUILDING_STORAGE_YARD && b->type != 193) {
-            continue;
-        }
-        
+    buildings_valid_do([&] (building &b) {
         int total_stored = 0;
-        for (int j = 0; j < 6; ++j)
-            total_stored += building_storageyard_get_amount(b, resources[j]);
+        for (int j = 0; j < 6; ++j) {
+            total_stored += building_storageyard_get_amount(&b, resources[j]);
+        }
+
         if (total_stored > 0 && total_stored < lowest_stock_found) {
             lowest_stock_found = total_stored;
-            chosen_yard = b;
+            chosen_yard = &b;
         }
-    }
+    }, BUILDING_STORAGE_YARD);
 
     e_resource chosen_resource = RESOURCE_NONE;
     int lowest_resource_found = 10000;
@@ -102,12 +95,11 @@ static bool PTAH_warehouse_restock() {
                 chosen_resource = resources[i];
             }
         }
+
         if (chosen_resource > 0) {
             building_storageyard_add_resource(chosen_yard, chosen_resource, 999999); // because I'm lazy.
-            if (building_storageyard_get_amount(chosen_yard, chosen_resource) == lowest_resource_found)
-                return false;
-            else
-                return true;
+            bool was_added = building_storageyard_get_amount(chosen_yard, chosen_resource) == lowest_resource_found;
+            return !was_added;
         }
     }
 

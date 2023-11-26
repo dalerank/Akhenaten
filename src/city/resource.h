@@ -57,3 +57,4 @@ void city_resource_calculate_food_stocks_and_supply_wheat(void);
 
 void city_resource_consume_food();
 void city_buildings_update_month();
+void city_resource_add_items(e_resource res, int amount);

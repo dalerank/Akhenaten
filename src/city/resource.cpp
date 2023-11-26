@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/industry.h"
 #include "building/model.h"
+#include "building/storage_yard.h"
 #include "city/data_private.h"
 #include "core/calc.h"
 #include "core/profiler.h"
@@ -359,4 +360,38 @@ void city_resource_consume_food() {
     city_data.resource.food_consumed_last_month = total_consumed;
     city_data.resource.food_produced_last_month = city_data.resource.food_produced_this_month;
     city_data.resource.food_produced_this_month = 0;
+}
+
+void city_resource_add_items(e_resource res, int amount) {
+    building* chosen_yard = nullptr;
+    int lowest_stock_found = 10000;
+    buildings_valid_do([&] (building &b) {
+        int total_stored = 0;
+        for (int j = 0; j < 6; ++j) {
+            total_stored += building_storageyard_get_amount(&b, res);
+        }
+
+        if (total_stored < lowest_stock_found) {
+            lowest_stock_found = total_stored;
+            chosen_yard = &b;
+        }
+    }, BUILDING_STORAGE_YARD);
+
+    bool storage_found = false;
+    int lowest_resource_found = 10000;
+    if (chosen_yard == nullptr) {
+        return;
+    }
+
+    for (int i = 0; i < 6; ++i) {
+        int stored = building_storageyard_get_amount(chosen_yard, res);
+        if (stored >= 0 && stored < lowest_resource_found) {
+            lowest_resource_found = stored;
+            storage_found = true;
+        }
+    }
+
+    if (storage_found) {
+        building_storageyard_add_resource(chosen_yard, res, amount); // because I'm lazy.
+    }
 }

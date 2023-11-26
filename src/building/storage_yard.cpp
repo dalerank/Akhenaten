@@ -47,6 +47,7 @@ int building_storageyard_get_space_info(building* storageyard) {
     else
         return STORAGEYARD_FULL;
 }
+
 int building_storageyard_get_amount(building* storageyard, e_resource resource) {
     int total = 0;
     building* space = storageyard;

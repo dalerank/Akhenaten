@@ -9,6 +9,7 @@
 #include "city/victory.h"
 #include "city/warning.h"
 #include "city/health.h"
+#include "city/resource.h"
 #include "core/string.h"
 #include "figure/figure.h"
 #include "game/tick.h"
@@ -48,6 +49,7 @@ static void game_cheat_spawn_nobles(uint8_t *);
 static void game_cheat_kill_fish_boats(uint8_t *);
 static void game_cheat_update_fish_points(uint8_t *);
 static void game_cheat_tutorial_step(uint8_t *);
+static void game_cheat_add_pottery(uint8_t *);
 
 using cheat_command = void(uint8_t* args);
 
@@ -58,6 +60,7 @@ struct cheat_command_handle {
 
 static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_money},
                                                   {"startinvasion", game_cheat_start_invasion},
+                                                  {"addpottery", game_cheat_add_pottery},
                                                   {"nextyear", game_cheat_advance_year},
                                                   {"blessing", game_cheat_cast_blessing},
                                                   {"godupset", game_cheat_cast_upset},
@@ -151,6 +154,15 @@ void game_cheat_console(bool force) {
         window_city_show();
         window_console_show();
     }
+}
+
+static void game_cheat_add_pottery(uint8_t *args) {
+    int pottery = 0;
+    parse_integer(args, pottery);
+    city_resource_add_items(RESOURCE_POTTERY, pottery);
+    window_invalidate();
+
+    city_warning_show_console((uint8_t*)"Added pottery");
 }
 
 static void game_cheat_add_money(uint8_t* args) {
