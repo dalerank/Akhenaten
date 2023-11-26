@@ -373,16 +373,16 @@ void draw_isometric_height(vec2i pixel, tile2i tile, painter &ctx) {
         return;
     }
 
-    int image_id = map_image_at(grid_offset);
-    if (tall_flat_tile) {
-        ImageDraw::isometric_from_drawtile_part(ctx, image_id, pixel, -1);
-        return;
-    }
-
     color color_mask = COLOR_MASK_NONE;
     bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == tile);
     if (deletion_tool || map_property_is_deleted(tile.grid_offset())) {
         color_mask = COLOR_MASK_RED;
+    }
+
+    int image_id = map_image_at(grid_offset);
+    if (tall_flat_tile) {
+        ImageDraw::isometric_from_drawtile_part(ctx, image_id, pixel, -1, color_mask);
+        return;
     }
 
     vec2i view_pos, view_size;

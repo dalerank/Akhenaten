@@ -50,6 +50,7 @@ static void game_cheat_kill_fish_boats(pcstr);
 static void game_cheat_update_fish_points(pcstr);
 static void game_cheat_tutorial_step(pcstr);
 static void game_cheat_add_pottery(pcstr);
+static void game_cheat_add_beer(pcstr);
 
 using cheat_command = void(pcstr);
 
@@ -61,6 +62,7 @@ struct cheat_command_handle {
 static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_money},
                                                   {"startinvasion", game_cheat_start_invasion},
                                                   {"addpottery", game_cheat_add_pottery},
+                                                  {"addbeer", game_cheat_add_beer},
                                                   {"nextyear", game_cheat_advance_year},
                                                   {"blessing", game_cheat_cast_blessing},
                                                   {"godupset", game_cheat_cast_upset},
@@ -163,6 +165,15 @@ static void game_cheat_add_pottery(pcstr args) {
     window_invalidate();
 
     city_warning_show_console("Added pottery");
+}
+
+static void game_cheat_add_beer(pcstr args) {
+    int beer = 0;
+    parse_integer(args, beer);
+    city_resource_add_items(RESOURCE_BEER, beer);
+    window_invalidate();
+
+    city_warning_show_console("Added beer");
 }
 
 static void game_cheat_add_money(pcstr args) {

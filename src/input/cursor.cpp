@@ -371,11 +371,11 @@ const cursor* input_cursor_data(cursor_shape cursor_id, cursor_scale scale) {
 }
 
 void input_cursor_update(e_window_id window) {
-    if (window == WINDOW_CITY_MILITARY)
+    if (window == WINDOW_CITY_MILITARY) {
         system_set_cursor(CURSOR_SWORD);
-    else if (window == WINDOW_CITY && Planner.build_type == BUILDING_CLEAR_LAND)
+    } else if (window == WINDOW_CITY && Planner.build_type == BUILDING_CLEAR_LAND) {
         system_set_cursor(CURSOR_SHOVEL);
-    else {
+    } else {
         system_set_cursor(CURSOR_ARROW);
     }
 }

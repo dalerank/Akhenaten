@@ -1978,17 +1978,17 @@ bool BuildPlanner::place() {
     int placement_cost = model_get_building(build_type)->cost;
     switch (build_type) {
     case BUILDING_CLEAR_LAND: {
-        // BUG in original (keep this behaviour): if confirmation has to be asked (bridge/fort),
-        // the previous cost is deducted from treasury and if user chooses 'no', they still pay for removal.
-        // If we don't do it this way, the user doesn't pay for the removal at all since we don't come back
-        // here when the user says yes.
-        int items_placed = building_construction_clear_land(false, start, end);
-        if (items_placed < 0)
-            items_placed = last_items_cleared;
-        placement_cost *= items_placed;
-        map_property_clear_constructing_and_deleted();
+            // BUG in original (keep this behaviour): if confirmation has to be asked (bridge/fort),
+            // the previous cost is deducted from treasury and if user chooses 'no', they still pay for removal.
+            // If we don't do it this way, the user doesn't pay for the removal at all since we don't come back
+            // here when the user says yes.
+            int items_placed = building_construction_clear_land(false, start, end);
+            if (items_placed < 0)
+                items_placed = last_items_cleared;
+            placement_cost *= items_placed;
+            map_property_clear_constructing_and_deleted();
+        }
         break;
-    }
     case BUILDING_WALL:
         placement_cost *= building_construction_place_wall(false, start.x(), start.y(), end.x(), end.y());
         break;
