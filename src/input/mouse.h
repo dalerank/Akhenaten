@@ -1,5 +1,4 @@
-#ifndef GRAPHICS_MOUSE_H
-#define GRAPHICS_MOUSE_H
+#pragma once
 
 /**
  * @file
@@ -7,6 +6,7 @@
  */
 
 #include "input/touch.h"
+#include "core/vec2i.h"
 
 /**
  * Mouse button state
@@ -24,9 +24,7 @@ enum { SCROLL_NONE = 0, SCROLL_UP = -1, SCROLL_DOWN = 1 };
 /**
  * Mouse state
  */
-struct mouse {
-    int x;                /**< Global position X */
-    int y;                /**< Global position Y */
+struct mouse : public vec2i {
     int scrolled;         /**< Scroll state (up/down/none) */
     mouse_button left;    /**< Left mouse button */
     mouse_button middle;  /**< Middle mouse button */
@@ -74,4 +72,3 @@ void mouse_determine_button_state(void);
 
 const mouse* mouse_in_dialog(const mouse* m);
 
-#endif // GRAPHICS_MOUSE_H

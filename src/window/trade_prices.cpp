@@ -43,8 +43,8 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 static int get_tooltip_resource(tooltip_context* c) {
     int x_base = screen_dialog_offset_x() + 124;
     int y = screen_dialog_offset_y() + 192;
-    int x_mouse = c->mouse_x;
-    int y_mouse = c->mouse_y;
+    int x_mouse = c->mpos.x;
+    int y_mouse = c->mpos.y;
 
     for (int i = 1; i < 16; i++) {
         int x = x_base + 30 * i;
@@ -63,6 +63,12 @@ static void get_tooltip(tooltip_context* c) {
 }
 
 void window_trade_prices_show(void) {
-    window_type window = {WINDOW_TRADE_PRICES, draw_background, 0, handle_input, get_tooltip};
+    window_type window = {
+        WINDOW_TRADE_PRICES,
+        draw_background,
+        0,
+        handle_input,
+        get_tooltip
+    };
     window_show(&window);
 }

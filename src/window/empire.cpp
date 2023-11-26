@@ -787,8 +787,8 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 static int is_mouse_hit(tooltip_context* c, int x, int y, int size) {
-    int mx = c->mouse_x;
-    int my = c->mouse_y;
+    int mx = c->mpos.x;
+    int my = c->mpos.y;
     return x <= mx && mx < x + size && y <= my && my < y + size;
 }
 
@@ -845,7 +845,7 @@ static void get_tooltip_trade_route_type(tooltip_context* c) {
     int x_offset = (data.x_min + data.x_max + 300) / 2;
     int y_offset = data.y_max - 41;
     int y_offset_max = y_offset + 22 - 2 * city->is_sea_trade;
-    if (c->mouse_x >= x_offset && c->mouse_x < x_offset + 32 && c->mouse_y >= y_offset && c->mouse_y < y_offset_max) {
+    if (c->mpos.x >= x_offset && c->mpos.x < x_offset + 32 && c->mpos.y >= y_offset && c->mpos.y < y_offset_max) {
         c->type = TOOLTIP_BUTTON;
         c->text_group = 44;
         c->text_id = 28 + city->is_sea_trade;

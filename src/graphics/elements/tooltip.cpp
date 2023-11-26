@@ -84,18 +84,18 @@ static void draw_button_tooltip(tooltip_context* c) {
     int height = 16 * lines + 10;
 
     int x, y;
-    if (c->mouse_x < screen_dialog_offset_x() + width + 100) {
+    if (c->mpos.x < screen_dialog_offset_x() + width + 100) {
         if (window_is(WINDOW_ADVISORS))
-            x = c->mouse_x + 50;
+            x = c->mpos.x + 50;
         else
-            x = c->mouse_x + 20;
+            x = c->mpos.x + 20;
     } else
-        x = c->mouse_x - width - 20;
+        x = c->mpos.x - width - 20;
 
     switch (window_get_id()) {
     case WINDOW_ADVISORS:
-        if (c->mouse_y < screen_dialog_offset_y() + 432) {
-            y = c->mouse_y;
+        if (c->mpos.y < screen_dialog_offset_y() + 432) {
+            y = c->mpos.y;
             switch (window_advisors_get_advisor()) {
             case ADVISOR_LABOR:
                 y -= 74;
@@ -114,23 +114,23 @@ static void draw_button_tooltip(tooltip_context* c) {
             y = screen_dialog_offset_y() + 432;
         break;
     case WINDOW_TRADE_PRICES: // FIXED used to cause ghosting
-        y = c->mouse_y - 42;
+        y = c->mpos.y - 42;
         break;
     case WINDOW_DONATE_TO_CITY:
-        y = c->mouse_y - 52;
+        y = c->mpos.y - 52;
         break;
     case WINDOW_LABOR_PRIORITY:
-        x = c->mouse_x - width / 2 - 10;
-        if (c->mouse_y < screen_dialog_offset_y() + 200)
-            y = c->mouse_y + 40;
+        x = c->mpos.x - width / 2 - 10;
+        if (c->mpos.y < screen_dialog_offset_y() + 200)
+            y = c->mpos.y + 40;
         else
-            y = c->mouse_y - 72;
+            y = c->mpos.y - 72;
         break;
     default:
-        if (c->mouse_y < screen_dialog_offset_y() + 200)
-            y = c->mouse_y + 40;
+        if (c->mpos.y < screen_dialog_offset_y() + 200)
+            y = c->mpos.y + 40;
         else
-            y = c->mouse_y - 62;
+            y = c->mpos.y - 62;
         break;
     }
 
@@ -170,17 +170,17 @@ static void draw_overlay_tooltip(tooltip_context* c) {
     int height = 16 * lines + 10;
 
     int x, y;
-    if (c->mouse_x < width + 20)
-        x = c->mouse_x + 20;
+    if (c->mpos.x < width + 20)
+        x = c->mpos.x + 20;
     else {
-        x = c->mouse_x - width - 20;
+        x = c->mpos.x - width - 20;
     }
-    if (c->mouse_y < 200)
-        y = c->mouse_y + 50;
-    else if (c->mouse_y + height - 72 > screen_height())
+    if (c->mpos.y < 200)
+        y = c->mpos.y + 50;
+    else if (c->mpos.y + height - 72 > screen_height())
         y = screen_height() - height;
     else {
-        y = c->mouse_y - 72;
+        y = c->mpos.y - 72;
     }
 
     save_window_under_tooltip_to_buffer(x, y, width, height);
@@ -188,7 +188,7 @@ static void draw_overlay_tooltip(tooltip_context* c) {
     text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
 }
 static void draw_tile_tooltip(tooltip_context* c) {
-    screen_tile screen = pixel_to_screentile({c->mouse_x, c->mouse_y});
+    screen_tile screen = pixel_to_screentile({c->mpos.x, c->mpos.y});
     if (screen.x != -1 && screen.y != -1) {
         int grid_offset = screentile_to_mappoint(screen).grid_offset();
         city_view_set_selected_view_tile(&screen);
@@ -198,17 +198,17 @@ static void draw_tile_tooltip(tooltip_context* c) {
         int x, y;
         int width = 60;
         int height = 40;
-        if (c->mouse_x < width + 20)
-            x = c->mouse_x + 20;
+        if (c->mpos.x < width + 20)
+            x = c->mpos.x + 20;
         else {
-            x = c->mouse_x - width - 20;
+            x = c->mpos.x - width - 20;
         }
-        if (c->mouse_y < 40)
-            y = c->mouse_y + 10;
-        else if (c->mouse_y + height - 32 > screen_height())
+        if (c->mpos.y < 40)
+            y = c->mpos.y + 10;
+        else if (c->mpos.y + height - 32 > screen_height())
             y = screen_height() - height;
         else
-            y = c->mouse_y - 32;
+            y = c->mpos.y - 32;
 
         save_window_under_tooltip_to_buffer(x, y, width, height);
         draw_tooltip_box(x, y, width, height);
@@ -221,18 +221,18 @@ static void draw_senate_tooltip(tooltip_context* c) {
     int width = 220;
     int height = 80;
 
-    if (c->mouse_x < width + 20)
-        x = c->mouse_x + 20;
+    if (c->mpos.x < width + 20)
+        x = c->mpos.x + 20;
     else {
-        x = c->mouse_x - width - 20;
+        x = c->mpos.x - width - 20;
     }
 
-    if (c->mouse_y < 200) {
-        y = c->mouse_y + 10;
-    } else if (c->mouse_y + height - 32 > screen_height()) {
+    if (c->mpos.y < 200) {
+        y = c->mpos.y + 10;
+    } else if (c->mpos.y + height - 32 > screen_height()) {
         y = screen_height() - height;
     } else {
-        y = c->mouse_y - 32;
+        y = c->mpos.y - 32;
     }
 
     save_window_under_tooltip_to_buffer(x, y, width, height);
@@ -300,7 +300,7 @@ void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
         reset_timer();
         return;
     }
-    tooltip_context context = {m->x, m->y, 0, 0, 0, 0, 0, 0};
+    tooltip_context context{*m};
     context.text_group = DEFAULT_TEXT_GROUP;
     if (g_settings.tooltips && func)
         func(&context);

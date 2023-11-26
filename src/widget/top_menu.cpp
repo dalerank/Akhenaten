@@ -637,24 +637,24 @@ void widget_top_menu_draw(int force) {
     data.month = game_time_month();
 }
 
-static int get_info_id(int mouse_x, int mouse_y) {
+static int get_info_id(vec2i m) {
     auto& data = g_top_menu_data;
-    if (mouse_y < 4 || mouse_y >= 18)
+    if (m.y < 4 || m.y >= 18)
         return INFO_NONE;
 
-    if (mouse_x > data.offset_funds && mouse_x < data.offset_funds + 128)
+    if (m.x > data.offset_funds && m.x < data.offset_funds + 128)
         return INFO_FUNDS;
 
-    if (mouse_x > data.offset_population && mouse_x < data.offset_population + 128)
+    if (m.x > data.offset_population && m.x < data.offset_population + 128)
         return INFO_POPULATION;
 
-    if (mouse_x > data.offset_date && mouse_x < data.offset_date + 128)
+    if (m.x > data.offset_date && m.x < data.offset_date + 128)
         return INFO_DATE;
 
-    if (mouse_x > data.offset_rotate && mouse_x < data.offset_rotate + 36) {
-        if (mouse_x <= data.offset_rotate + 12)
+    if (m.x > data.offset_rotate && m.x < data.offset_rotate + 36) {
+        if (m.x <= data.offset_rotate + 12)
             return -15;
-        else if (mouse_x <= data.offset_rotate + 24)
+        else if (m.x <= data.offset_rotate + 24)
             return -16;
         else
             return -14;
@@ -708,7 +708,7 @@ static bool handle_mouse_menu(const mouse* m) {
     }
 
     if (m->right.went_up) {
-        return handle_right_click(get_info_id(m->x, m->y));
+        return handle_right_click(get_info_id(*m));
     }
 
     return false;
@@ -746,7 +746,7 @@ int widget_top_menu_get_tooltip_text(tooltip_context* c) {
     if (data.focus_menu_id)
         return 50 + data.focus_menu_id;
 
-    int button_id = get_info_id(c->mouse_x, c->mouse_y);
+    int button_id = get_info_id(c->mpos);
     if (button_id) {
         button_id += 1;
     }

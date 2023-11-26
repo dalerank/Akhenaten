@@ -1,8 +1,9 @@
 #pragma once
 
-struct mouse;
+#include "core/vec2i.h"
 
 #define TOOLTIP_MAX_EXTRA_VALUES 5
+struct mouse;
 
 enum e_tooltip_mode { 
     TOOLTIP_NONE = 0,
@@ -13,17 +14,16 @@ enum e_tooltip_mode {
 };
 
 struct tooltip_context {
-    const int mouse_x;
-    const int mouse_y;
-    int type;
-    int high_priority;
-    int text_group;
-    int text_id;
-    int has_numeric_prefix;
-    int numeric_prefix;
-    int num_extra_values;
-    int extra_value_text_groups[TOOLTIP_MAX_EXTRA_VALUES];
-    int extra_value_text_ids[TOOLTIP_MAX_EXTRA_VALUES];
+    vec2i mpos;
+    int type = 0;
+    int high_priority = 0;
+    int text_group = 0;
+    int text_id = 0;
+    int has_numeric_prefix = 0;
+    int numeric_prefix = 0;
+    int num_extra_values = 0;
+    int extra_value_text_groups[TOOLTIP_MAX_EXTRA_VALUES] = {0};
+    int extra_value_text_ids[TOOLTIP_MAX_EXTRA_VALUES] = {0};
 };
 
 void tooltip_invalidate();
