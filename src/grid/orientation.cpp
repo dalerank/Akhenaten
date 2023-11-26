@@ -189,7 +189,7 @@ void map_orientation_update_buildings(void) {
         case BUILDING_MEDIUM_STATUE:
         case BUILDING_SMALL_STATUE:
             {
-                int image_id = building_statue_get_image_from_value(b->type, b->data.monuments.variant, map_orientation);
+                int image_id = building_statue_get_image_from_value(b->type, 0, b->data.monuments.variant, map_orientation);
                 map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_BUILDING);
             }
             break;

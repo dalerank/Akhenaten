@@ -206,13 +206,26 @@ e_image_id resource_to_sled_image(e_resource res) {
 int cart_image_offset_from_amount(int amount) {
     if (amount <= 100) {
         return 0;
-    } else if (amount <= 200) {
+    } 
+    
+    if (amount <= 200) {
         return 1;
-    } else if (amount <= 400) {
+    } 
+    
+    if (amount <= 400) {
         return 2;
     }
 
     return 2;
+}
+
+e_image_id resoure2imgid(e_resource resource_id) {
+    switch (resource_id) {
+    case RESOURCE_BARLEY: return IMG_CART_BARLEY;
+    case RESOURCE_COPPER: return IMG_CART_COPPER;
+    }
+
+    return IMG_CARTPUSHER_CART;
 }
 
 void figure::cart_update_image() {
@@ -231,10 +244,11 @@ void figure::cart_update_image() {
         }
         break;
 
+    case RESOURCE_BARLEY:
     case RESOURCE_COPPER:
         cart_image_id = image_id_from_group(IMG_CARTPUSHER_CART);
         if (resource_amount_full > 0) {
-            cart_image_id = image_id_from_group(IMG_CART_COPPER);
+            cart_image_id = image_id_from_group(resoure2imgid(resource_id));
             int amount_offset = cart_image_offset_from_amount(resource_amount_full);
             cart_image_id += 8 * amount_offset;
         }

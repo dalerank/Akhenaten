@@ -75,6 +75,7 @@ enum e_image_id : uint16_t {
     IMG_JUGGLER_SHOW = 70,
     IMG_MUSICIAN_SHOW_SN = 71,
     IMG_MUSICIAN_SHOW_WE = 72,
+    IMG_CART_BARLEY = 73,
 
     IMG_SIZE
 };

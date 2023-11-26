@@ -113,15 +113,7 @@ int building_statue_get_image(int type, int orientation, int variant) {
     return image_id;
 }
 
-int building_statue_get_image_from_value(int type, int combined, int map_orientation) {
+int building_statue_get_image_from_value(int type, int combined, int variant, int map_orientation) {
     int orientation = combined % 4 - (map_orientation / 2);
-    int variant = combined / 16;
-
     return building_statue_get_image(type, orientation - 1, variant);
 }
-
-int building_statue_get_variant_value(int orientation, int variant) {
-    int combined = variant * 4 + orientation + 2;
-    return combined;
-}
-
