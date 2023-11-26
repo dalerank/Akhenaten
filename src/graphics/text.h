@@ -3,6 +3,7 @@
 #include "graphics/color.h"
 #include "graphics/font.h"
 #include "graphics/view/view.h"
+#include "core/bstring.h"
 #include "input/mouse.h"
 
 #include <stdint.h>
@@ -13,8 +14,8 @@ void text_capture_cursor(int cursor_position, int offset_start, int offset_end);
 void text_draw_cursor(int x_offset, int y_offset, int is_insert);
 
 int text_get_width(const uint8_t* str, font_t font);
-unsigned int
-text_get_max_length_for_width(const uint8_t* str, int length, font_t font, unsigned int requested_width, int invert);
+inline int text_get_width(pcstr str, font_t font) { return text_get_width((const uint8_t*)str, font); }
+uint32_t text_get_max_length_for_width(const uint8_t* str, int length, font_t font, unsigned int requested_width, int invert);
 void text_ellipsize(uint8_t* str, font_t font, int requested_width);
 
 int text_draw(painter &ctx, const uint8_t* str, int x, int y, font_t font, color color);

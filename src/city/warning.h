@@ -1,7 +1,7 @@
-#ifndef CITY_WARNING_H
-#define CITY_WARNING_H
+#pragma once
 
 #include <stdint.h>
+#include "core/bstring.h"
 
 enum {
     WARNING_ORIENTATION = 1,
@@ -107,13 +107,11 @@ enum {
 void city_warning_show(int type);
 void city_warning_show_custom(const char *text);
 
-int city_has_warnings(void);
+int city_has_warnings();
 
-const uint8_t* city_warning_get(int id);
+pcstr city_warning_get(int id);
 
-void city_warning_clear_all(void);
-void city_warning_clear_outdated(void);
+void city_warning_clear_all();
+void city_warning_clear_outdated();
 
-void city_warning_show_console(uint8_t* warning_text);
-
-#endif // CITY_WARNING_H
+void city_warning_show_console(pcstr warning_text);

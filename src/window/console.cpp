@@ -24,10 +24,10 @@ static image_button image_buttons[] = {
 
 static input_box command_input = {160, 208, 20, 2, FONT_NORMAL_WHITE_ON_DARK};
 
-static char command[MAX_COMMAND_SIZE] = "";
+static bstring64 command = "";
 
 static void init(void) {
-    input_box_start(&command_input, (uint8_t*)command, MAX_COMMAND_SIZE, 1);
+    input_box_start(&command_input, (uint8_t*)command, command.capacity, 1);
 }
 
 static void draw_foreground(void) {

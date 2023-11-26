@@ -30,28 +30,28 @@
 #define stricmp strcasecmp
 #endif
 
-static void game_cheat_add_money(uint8_t*);
-static void game_cheat_start_invasion(uint8_t*);
-static void game_cheat_advance_year(uint8_t*);
-static void game_cheat_cast_blessing(uint8_t*);
-static void game_cheat_show_tooltip(uint8_t*);
-static void game_cheat_kill_all(uint8_t*);
-static void game_cheat_victory(uint8_t*);
-static void game_cheat_cast_upset(uint8_t*);
-static void game_cheat_start_plague(uint8_t*);
-static void game_cheat_pop_milestone(uint8_t *);
-static void game_cheat_fire(uint8_t *);
-static void game_cheat_collapse(uint8_t *);
-static void game_cheat_nofire(uint8_t *);
-static void game_cheat_nodamage(uint8_t *);
-static void game_cheat_spacious_apartment(uint8_t *);
-static void game_cheat_spawn_nobles(uint8_t *);
-static void game_cheat_kill_fish_boats(uint8_t *);
-static void game_cheat_update_fish_points(uint8_t *);
-static void game_cheat_tutorial_step(uint8_t *);
-static void game_cheat_add_pottery(uint8_t *);
+static void game_cheat_add_money(pcstr);
+static void game_cheat_start_invasion(pcstr);
+static void game_cheat_advance_year(pcstr);
+static void game_cheat_cast_blessing(pcstr);
+static void game_cheat_show_tooltip(pcstr);
+static void game_cheat_kill_all(pcstr);
+static void game_cheat_victory(pcstr);
+static void game_cheat_cast_upset(pcstr);
+static void game_cheat_start_plague(pcstr);
+static void game_cheat_pop_milestone(pcstr);
+static void game_cheat_fire(pcstr);
+static void game_cheat_collapse(pcstr);
+static void game_cheat_nofire(pcstr);
+static void game_cheat_nodamage(pcstr);
+static void game_cheat_spacious_apartment(pcstr);
+static void game_cheat_spawn_nobles(pcstr);
+static void game_cheat_kill_fish_boats(pcstr);
+static void game_cheat_update_fish_points(pcstr);
+static void game_cheat_tutorial_step(pcstr);
+static void game_cheat_add_pottery(pcstr);
 
-using cheat_command = void(uint8_t* args);
+using cheat_command = void(pcstr);
 
 struct cheat_command_handle {
     const char* name;
@@ -87,7 +87,7 @@ struct cheats_data_t {
 
 cheats_data_t g_cheats_data;
 
-static int parse_word(uint8_t* string, uint8_t* word) {
+static int parse_word(pcstr string, pstr word) {
     int count = 0;
     while (*string && *string != ' ') {
         *word = *string;
@@ -95,20 +95,20 @@ static int parse_word(uint8_t* string, uint8_t* word) {
         string++;
         count++;
     }
-    *word = 0;
+    *word = '\0';
     return count + 1;
 }
 
 // return value is next argument index
-static int parse_integer(uint8_t* string, int &value) {
-    uint8_t copy[MAX_COMMAND_SIZE];
+static int parse_integer(pcstr string, int &value) {
+    bstring64 copy;
     int count = 0;
     while (*string && *string != ' ') {
-        copy[count] = *string;
+        copy.data()[count] = *string;
         count++;
         string++;
     }
-    copy[count] = 0;
+    copy.data()[count] = '\0';
     value = string_to_int(copy);
     return count + 1;
 }
@@ -135,7 +135,7 @@ void game_cheat_money(void) {
     }
 }
 
-void game_cheat_victory(uint8_t*) {
+void game_cheat_victory(pcstr) {
     if (g_cheats_data.is_cheating) {
         city_victory_force_win();
     }
@@ -156,29 +156,29 @@ void game_cheat_console(bool force) {
     }
 }
 
-static void game_cheat_add_pottery(uint8_t *args) {
+static void game_cheat_add_pottery(pcstr args) {
     int pottery = 0;
     parse_integer(args, pottery);
     city_resource_add_items(RESOURCE_POTTERY, pottery);
     window_invalidate();
 
-    city_warning_show_console((uint8_t*)"Added pottery");
+    city_warning_show_console("Added pottery");
 }
 
-static void game_cheat_add_money(uint8_t* args) {
+static void game_cheat_add_money(pcstr args) {
     int money = 0;
     parse_integer(args, money);
     city_finance_process_console(money);
     window_invalidate();
 
-    city_warning_show_console((uint8_t*)"Added money");
+    city_warning_show_console("Added money");
 }
 
-static void game_cheat_pop_milestone(uint8_t* args) {
+static void game_cheat_pop_milestone(pcstr args) {
     city_population_reached_milestone(true);
 }
 
-static void game_cheat_start_invasion(uint8_t* args) {
+static void game_cheat_start_invasion(pcstr args) {
     int attack_type = 0;
     int size = 0;
     int invasion_point = 0;
@@ -187,12 +187,12 @@ static void game_cheat_start_invasion(uint8_t* args) {
     parse_integer(args + index, invasion_point);
     scenario_invasion_start_from_console(attack_type, size, invasion_point);
 
-    city_warning_show_console((uint8_t*)"Started invasion");
+    city_warning_show_console("Started invasion");
 }
 
-static void game_cheat_fire(uint8_t *args) {
+static void game_cheat_fire(pcstr args) {
     int count = 0;
-    parse_integer(args ? args : (uint8_t *)"10", count);
+    parse_integer(args ? args : (pcstr )"10", count);
 
     svector<building *, 1000> buildings;
     buildings_valid_do([&] (building &b) {
@@ -205,25 +205,25 @@ static void game_cheat_fire(uint8_t *args) {
     }
 }
 
-static void game_cheat_spacious_apartment(uint8_t *args) {
+static void game_cheat_spacious_apartment(pcstr args) {
     tutorial_on_house_evolve(HOUSE_SPACIOUS_APARTMENT);
 }
 
-static void game_cheat_nofire(uint8_t *args) {
+static void game_cheat_nofire(pcstr args) {
     buildings_valid_do([&] (building &b) {
         b.fire_risk = 0;
     });
 }
 
-static void game_cheat_nodamage(uint8_t *args) {
+static void game_cheat_nodamage(pcstr args) {
     buildings_valid_do([&] (building &b) {
         b.damage_risk = 0;
     });
 }
 
-static void game_cheat_collapse(uint8_t *args) {
+static void game_cheat_collapse(pcstr args) {
     int count = 0;
-    parse_integer(args ? args : (uint8_t *)"10", count);
+    parse_integer(args ? args : (pcstr )"10", count);
 
     svector<building *, 1000> buildings;
     buildings_valid_do([&] (building &b) {
@@ -236,21 +236,21 @@ static void game_cheat_collapse(uint8_t *args) {
     }
 }
 
-static void game_cheat_update_fish_points(uint8_t *args) {
+static void game_cheat_update_fish_points(pcstr args) {
     int count = 0;
-    parse_integer(args ? args : (uint8_t *)"10", count);
+    parse_integer(args ? args : "10", count);
 
     formation_fish_update(count);
 }
 
-static void game_cheat_tutorial_step(uint8_t *args) {
+static void game_cheat_tutorial_step(pcstr args) {
     int step = 0;
-    parse_integer(args ? args : (uint8_t *)"0", step);
+    parse_integer(args ? args : "0", step);
 
     tutorial_update_step(step);
 }
 
-static void game_cheat_kill_fish_boats(uint8_t *) {
+static void game_cheat_kill_fish_boats(pcstr ) {
     buildings_valid_do([&] (building &b) {
         if (b.type != BUILDING_FISHING_WHARF) {
             return;
@@ -267,9 +267,9 @@ static void game_cheat_kill_fish_boats(uint8_t *) {
     }
 }
 
-static void game_cheat_spawn_nobles(uint8_t *args) {
+static void game_cheat_spawn_nobles(pcstr args) {
     int count = 0;
-    parse_integer(args ? args : (uint8_t *)"10", count);
+    parse_integer(args ? args : "10", count);
 
     svector<building *, 1000> buildings;
     buildings_valid_do([&] (building &b) {
@@ -287,38 +287,38 @@ static void game_cheat_spawn_nobles(uint8_t *args) {
     }
 }
 
-static void game_cheat_advance_year(uint8_t* args) {
+static void game_cheat_advance_year(pcstr args) {
     game_tick_cheat_year();
 
-    city_warning_show_console((uint8_t*)"Year advanced");
+    city_warning_show_console("Year advanced");
 }
 
-static void game_cheat_cast_blessing(uint8_t* args) {
+static void game_cheat_cast_blessing(pcstr args) {
     int god_id = 0;
     parse_integer(args, god_id);
     city_god_blessing_cheat((e_god)god_id);
 
-    city_warning_show_console((uint8_t*)"Casted blessing");
+    city_warning_show_console("Casted blessing");
 }
 
-static void game_cheat_cast_upset(uint8_t* args) {
+static void game_cheat_cast_upset(pcstr args) {
     int god_id = 0;
     parse_integer(args, god_id);
     city_god_upset_cheat((e_god)god_id);
 
-    city_warning_show_console((uint8_t*)"Casted upset");
+    city_warning_show_console("Casted upset");
 }
 
-static void game_cheat_show_tooltip(uint8_t* args) {
+static void game_cheat_show_tooltip(pcstr args) {
     parse_integer(args, g_cheats_data.tooltip_enabled);
 
-    city_warning_show_console((uint8_t*)"Show tooltip toggled");
+    city_warning_show_console("Show tooltip toggled");
 }
 
-static void game_cheat_start_plague(uint8_t *args) {
+static void game_cheat_start_plague(pcstr args) {
     int plague_people = 0;
     int total_population = 0;
-    parse_integer(args ? args : (uint8_t*)"100", plague_people);
+    parse_integer(args ? args : "100", plague_people);
 
     buildings_valid_do([&] (building &b) {
         if (!b.house_size || !b.house_population) {
@@ -329,18 +329,18 @@ static void game_cheat_start_plague(uint8_t *args) {
     city_health_start_disease(total_population, true, plague_people);
 }
 
-static void game_cheat_kill_all(uint8_t* args) {
+static void game_cheat_kill_all(pcstr args) {
     figure_kill_all();
-    city_warning_show_console((uint8_t*)"Killed all walkers");
+    city_warning_show_console("Killed all walkers");
 }
 
-void game_cheat_parse_command(uint8_t* command) {
+void game_cheat_parse_command(pcstr command) {
     bstring256 command_to_call;
     int next_arg = parse_word(command, command_to_call);
 
     for (auto& handle : g_cheat_commands) {
         if (stricmp((char*)command_to_call, handle.name) == 0) {
-            uint8_t *args = (next_arg >= strlen((const char *)command)) ? nullptr : (command + next_arg);
+            pcstr args = (next_arg >= strlen((const char *)command)) ? nullptr : (command + next_arg);
             handle.command(args);
         }
     }

@@ -58,20 +58,20 @@ int city_has_warnings(void) {
     return 0;
 }
 
-const uint8_t* city_warning_get(int id) {
+pcstr city_warning_get(int id) {
     if (g_warnings[id].in_use)
-        return (const uint8_t*)g_warnings[id].text.data();
+        return g_warnings[id].text.data();
 
     return 0;
 }
 
-void city_warning_clear_all(void) {
+void city_warning_clear_all() {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         g_warnings[i].in_use = 0;
     }
 }
 
-void city_warning_clear_outdated(void) {
+void city_warning_clear_outdated() {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (g_warnings[i].in_use && time_get_millis() - g_warnings[i].time > TIMEOUT_MS) {
             g_warnings[i].in_use = 0;
@@ -80,7 +80,7 @@ void city_warning_clear_outdated(void) {
     }
 }
 
-void city_warning_show_console(uint8_t* warning_text) {
+void city_warning_show_console(pcstr warning_text) {
     struct warning* w = new_warning();
     if (!w) {
         return;

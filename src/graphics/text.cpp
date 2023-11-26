@@ -85,6 +85,7 @@ void text_draw_cursor(int x_offset, int y_offset, int is_insert) {
         }
     }
 }
+
 int text_get_width(const uint8_t* str, font_t font) {
     const font_definition* def = font_definition_for(font);
     int maxlen = 10000;
@@ -153,8 +154,7 @@ static int get_word_width(const uint8_t* str, font_t font, int* out_num_chars) {
     *out_num_chars = num_chars;
     return width;
 }
-unsigned int
-text_get_max_length_for_width(const uint8_t* str, int length, font_t font, unsigned int requested_width, int invert) {
+uint32_t text_get_max_length_for_width(const uint8_t* str, int length, font_t font, unsigned int requested_width, int invert) {
     const font_definition* def = font_definition_for(font);
     if (!length)
         length = string_length(str);
@@ -292,7 +292,7 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, font_t font, color
     return current_x - x;
 }
 void text_draw_centered(const uint8_t* str, int x, int y, int box_width, font_t font, color color) {
-    int offset = (box_width - text_get_width(str, font)) / 2;
+    int offset = (box_width - (int)text_get_width(str, font)) / 2;
     if (offset < 0) {
         offset = 0;
     }
@@ -300,7 +300,7 @@ void text_draw_centered(const uint8_t* str, int x, int y, int box_width, font_t 
     text_draw(str, offset + x, y, font, color);
 }
 int text_draw_left(uint8_t* str, int x, int y, font_t font, color color) {
-    return text_draw(str, x - text_get_width(str, font), y, font, color);
+    return text_draw(str, x - (int)text_get_width(str, font), y, font, color);
 }
 
 static int number_to_string(uint8_t* str, int value, char prefix, const char* postfix) {
