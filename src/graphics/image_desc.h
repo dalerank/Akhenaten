@@ -76,6 +76,9 @@ enum e_image_id : uint16_t {
     IMG_MUSICIAN_SHOW_SN = 71,
     IMG_MUSICIAN_SHOW_WE = 72,
     IMG_CART_BARLEY = 73,
+    IMG_SIDE_PANEL = 74,
+    IMG_TOP_MENU_BACKGROUND = 75,
+    IMG_EDITOR_SIDE_PANEL = 76,
 
     IMG_SIZE
 };

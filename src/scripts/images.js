@@ -94,6 +94,9 @@ images = [
 	{img: IMG_MUSICIAN_SHOW_SN, pack:PACK_SPR_AMBIENT, id:10, offset:-1},
 	{img: IMG_MUSICIAN_SHOW_WE, pack:PACK_SPR_AMBIENT, id:9, offset:-1},
 	{img: IMG_CART_BARLEY, pack:PACK_SPR_MAIN, id:91},
+	{img: IMG_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
+	{img: IMG_TOP_MENU_BACKGROUND, pack:PACK_GENERAL, id:121, offset:8},
+	{img: IMG_EDITOR_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
 ]
 
 cart_offsets = [

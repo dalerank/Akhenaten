@@ -47,8 +47,9 @@ static void draw_sliding_foreground() {
         if (data.position > SIDEBAR_DECELERATION_OFFSET)
             speed_set_target(&data.slide_speed, 1, SLIDE_ACCELERATION_MILLIS, 1);
         rel_offset = SIDEBAR_EXPANDED_WIDTH - data.position;
-    } else
+    } else {
         rel_offset = data.position;
+    }
     x_offset += rel_offset;
 
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
@@ -57,9 +58,9 @@ static void draw_sliding_foreground() {
 
         int s_start = s_end - ceil((float)s_end / (float)block_width) * block_width;
         for (int i = 0; s_start + i * block_width < s_end; i++) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL) + 8, vec2i{s_start + (i * block_width), 0});
+            ImageDraw::img_generic(ctx, image_id_from_group(IMG_SIDE_PANEL) + 8, vec2i{s_start + (i * block_width), 0});
         }
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL) + 8, vec2i{s_end, 0});
+        ImageDraw::img_generic(ctx, image_id_from_group(IMG_SIDE_PANEL) + 8, vec2i{s_end, 0});
     }
 
     data.back_sidebar_draw();
@@ -75,15 +76,18 @@ void sidebar_slide(int direction,
     data.direction = direction;
     data.position = 0;
     speed_clear(&data.slide_speed);
-    speed_set_target(&data.slide_speed,
-                     SLIDE_SPEED,
-                     direction == SLIDE_DIRECTION_OUT ? SLIDE_ACCELERATION_MILLIS : SPEED_CHANGE_IMMEDIATE,
-                     1);
+    speed_set_target(&data.slide_speed, SLIDE_SPEED, direction == SLIDE_DIRECTION_OUT ? SLIDE_ACCELERATION_MILLIS : SPEED_CHANGE_IMMEDIATE, 1);
     data.back_sidebar_draw = back_sidebar_callback;
     data.front_sidebar_draw = front_sidebar_callback;
     data.finished_callback = finished_callback;
     sound_effect_play(SOUND_EFFECT_SIDEBAR);
 
-    window_type window = {WINDOW_SLIDING_SIDEBAR, window_city_draw, draw_sliding_foreground, 0, 0};
+    window_type window = {
+        WINDOW_SLIDING_SIDEBAR,
+        window_city_draw,
+        draw_sliding_foreground,
+        0,
+        0
+    };
     window_show(&window);
 }

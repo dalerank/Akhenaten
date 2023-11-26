@@ -199,9 +199,13 @@ static generic_button orientation_buttons_ph[] = {
 
 struct top_menu_data_t {
     int offset_funds;
+    int offset_funds_basic;
     int offset_population;
+    int offset_population_basic;
     int offset_date;
+    int offset_date_basic;
     int offset_rotate;
+    int offset_rotate_basic;
 
     int open_sub_menu;
     int focus_menu_id;
@@ -214,6 +218,8 @@ struct top_menu_data_t {
     int x_offset;
     int y_offset;
     int item_height;
+    int spacing;
+    e_image_id background;
 };
 
 top_menu_data_t g_top_menu_data;
@@ -307,6 +313,12 @@ void config_load_top_menu_bar(archive arch) {
         data.x_offset = arch.read_integer("x_offset");
         data.y_offset = arch.read_integer("y_offset");
         data.item_height = arch.read_integer("item_height");
+        data.background = (e_image_id)arch.read_integer("background");
+        data.spacing = arch.read_integer("spacing");
+        data.offset_funds_basic = arch.read_integer("offset_funds_basic");
+        data.offset_population_basic = arch.read_integer("offset_population_basic");
+        data.offset_date_basic = arch.read_integer("offset_date_basic");
+        data.offset_rotate_basic = arch.read_integer("offset_rotate_basic");
     });
 }
 
@@ -323,15 +335,14 @@ void menu_bar_draw(const std::span<menu_bar_item>& items) {
                                 : lang_text_draw(item.text_group, 0, x_offset, data.y_offset, font);
         x_offset += text_length;
         item.x_end = x_offset;
-        x_offset += 32; // spacing
+        x_offset += data.spacing;
     }
 }
 
 static int get_menu_bar_item(const mouse* m, const std::span<menu_bar_item>& items) {
     auto& data = g_top_menu_data;
     for (int i = 0; i < items.size(); i++) {
-        if (items[i].x_start <= m->x && items[i].x_end > m->x && data.y_offset <= m->y
-            && data.y_offset + 12 > m->y) {
+        if (items[i].x_start <= m->x && items[i].x_end > m->x && data.y_offset <= m->y && data.y_offset + 12 > m->y) {
             return i + 1;
         }
     }
@@ -406,8 +417,7 @@ static int get_menu_item(const mouse* m, menu_bar_item* menu) {
         if (menu->items[i].hidden)
             continue;
 
-        if (menu->x_start <= m->x && menu->x_start + 16 * menu->calculated_width_blocks > m->x && y_offset - 2 <= m->y
-            && y_offset + 19 > m->y) {
+        if (menu->x_start <= m->x && menu->x_start + 16 * menu->calculated_width_blocks > m->x && y_offset - 2 <= m->y && y_offset + 19 > m->y) {
             return i + 1;
         }
         y_offset += data.item_height;
@@ -417,16 +427,19 @@ static int get_menu_item(const mouse* m, menu_bar_item* menu) {
 
 int menu_handle_mouse(const mouse* m, menu_bar_item* menu, int* focus_item_id) {
     int item_id = get_menu_item(m, menu);
-    if (focus_item_id)
+    if (focus_item_id) {
         *focus_item_id = item_id;
+    }
 
-    if (!item_id)
+    if (!item_id) {
         return 0;
+    }
 
     if (m->left.went_up) {
         menu_item* item = &menu->items[item_id - 1];
         item->left_click_handler(item->parameter);
     }
+
     return item_id;
 }
 
@@ -434,8 +447,9 @@ void menu_update_text(menu_bar_item& menu, int index, const char* text) {
     menu.items[index].text_number = 0;
     menu.items[index].text_group = 0;
     menu.items[index].text_raw = text;
-    if (menu.calculated_width_blocks == 0)
+    if (menu.calculated_width_blocks == 0) {
         return;
+    }
 
     int item_width = lang_text_get_width(menu.items[index].text_raw, FONT_NORMAL_BLACK_ON_LIGHT);
     int blocks = (item_width + 8) / 16 + 1;
@@ -483,6 +497,7 @@ static void set_text_for_tooltips() {
 static void set_text_for_warnings(void) {
     menu_update_text(g_top_menu[INDEX_HELP], 2, g_settings.warnings ? 6 : 5);
 }
+
 static void set_text_for_debug_city() {
     for (int i = 0; i < std::size(menu_debug); ++i) {
         if (!menu_debug[i].text_raw) {
@@ -490,6 +505,7 @@ static void set_text_for_debug_city() {
         }
     }
 }
+
 static void set_text_for_debug_render() {
     for (int i = 0; i < std::size(menu_render); ++i) {
         menu_debug_render_text(i, g_debug_render == menu_render[i].parameter);
@@ -539,19 +555,18 @@ int orientation_button_pressed = 0;
 
 static void refresh_background() {
     painter ctx = game.painter();
-    int block_width = 24;
-    int image_base = image_id_from_group(GROUP_TOP_MENU_SIDEBAR);
+    int block_width = 96;
     int s_width = screen_width();
 
-    block_width = 96;
     int s_end = s_width - 1000 - 24 + city_view_is_sidebar_collapsed() * (162 - 18);
     int s_start = s_end - ceil((float)s_end / (float)block_width) * block_width;
 
+    int img_id = image_id_from_group(g_top_menu_data.background);
     for (int i = 0; s_start + i * block_width < s_end; i++) {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
+        ImageDraw::img_generic(ctx, img_id, s_start + (i * block_width), COLOR_MASK_NONE);
     }
 
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
+    ImageDraw::img_generic(ctx, img_id, s_end, 0);
 }
 
 void widget_top_menu_draw(int force) {
@@ -575,10 +590,10 @@ void widget_top_menu_draw(int force) {
     font_t treasure_font = (treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
     int s_width = screen_width();
 
-    data.offset_funds = s_width - 540;
-    data.offset_population = s_width - 400;
-    data.offset_date = s_width - 150; // 135
-    data.offset_rotate = data.offset_date - 50;
+    data.offset_funds = s_width - data.offset_funds_basic;
+    data.offset_population = s_width - data.offset_population_basic;
+    data.offset_date = s_width - data.offset_date_basic;
+    data.offset_rotate = s_width - data.offset_rotate_basic;
 
     lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), data.offset_date - 2, 5, 110, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     // Orientation icon
@@ -711,8 +726,9 @@ bool widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
             orientation_button_state = button_id;
             if (handled)
                 orientation_button_pressed = 5;
-        } else
+        } else {
             orientation_button_state = 0;
+        }
 
         if (button_id)
             result = handled;
@@ -724,16 +740,20 @@ bool widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
 
     return result;
 }
+
 int widget_top_menu_get_tooltip_text(tooltip_context* c) {
     auto& data = g_top_menu_data;
     if (data.focus_menu_id)
         return 50 + data.focus_menu_id;
 
     int button_id = get_info_id(c->mouse_x, c->mouse_y);
-    if (button_id && GAME_ENV == ENGINE_ENV_PHARAOH)
+    if (button_id) {
         button_id += 1;
-    if (button_id)
+    }
+
+    if (button_id) {
         return 59 + button_id;
+    }
 
     return 0;
 }
