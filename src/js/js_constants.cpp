@@ -81,6 +81,7 @@ void js_register_city_images(js_State *J) {
    REGISTER_GLOBAL_CONSTANT(J, IMG_BANDSTAND_WE_W);
    REGISTER_GLOBAL_CONSTANT(J, IMG_BANDSTAND_WE_E);
    REGISTER_GLOBAL_CONSTANT(J, IMG_BOOTH);
+   REGISTER_GLOBAL_CONSTANT(J, IMG_BOOTH_SQUARE);
 }
 
 void js_register_collection_images(js_State *J) {

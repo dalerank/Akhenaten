@@ -245,17 +245,45 @@ void draw_isometric_mark_sound(int building_id, int grid_offset, color &color_ma
     }
 }
 
-void draw_isometric_flat(vec2i pixel, tile2i point, painter &ctx) {
+bool draw_isometric_flat_building(building *b, tile2i point) {
+    int img_id = 0;
+    int tile_id = 0;
+    switch (b->type) {
+    case BUILDING_BOOTH:
+        img_id = image_id_from_group(IMG_BOOTH);
+        tile_id = map_image_at(point.grid_offset());
+        return (img_id != tile_id);
+
+    case BUILDING_BANDSTAND: {
+            tile_id = map_image_at(point.grid_offset());
+            e_image_id imgs[] = {IMG_BOOTH, IMG_BANDSTAND_SN_N, IMG_BANDSTAND_SN_S, IMG_BANDSTAND_WE_W, IMG_BANDSTAND_WE_E};
+            for (const auto &i : imgs) {
+                img_id = image_id_from_group(i);
+                if (img_id == tile_id) {
+                    return false;
+                }
+            }
+        }
+        break;
+
+    case BUILDING_ROADBLOCK:
+        return true;
+    }
+
+    return false;
+}
+
+void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
     auto& draw_context = get_draw_context();
 
-    int grid_offset = point.grid_offset();
+    int grid_offset = tile.grid_offset();
     // black tile outside of map
     if (grid_offset < 0) {
         ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
         return;
     }
 
-    Planner.construction_record_view_position(pixel, point);
+    Planner.construction_record_view_position(pixel, tile);
     if (!map_property_is_draw_tile(grid_offset)) {
         return;
     }
@@ -264,14 +292,14 @@ void draw_isometric_flat(vec2i pixel, tile2i point, painter &ctx) {
     int building_id = map_building_at(grid_offset);
     if (building_id > 0) {
         building *b = building_get(building_id);
-        if (building_type_none_of(*b, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_ROADBLOCK)) {
+        if (!draw_isometric_flat_building(b, tile)) {
             return;
         }
     }
 
     color color_mask = COLOR_MASK_NONE;
-    bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == point);
-    if (deletion_tool || map_property_is_deleted(point.grid_offset())) {
+    bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == tile);
+    if (deletion_tool || map_property_is_deleted(tile.grid_offset())) {
         color_mask = COLOR_MASK_RED;
     }
 
@@ -314,17 +342,17 @@ void draw_isometric_flat(vec2i pixel, tile2i point, painter &ctx) {
     map_render_set(grid_offset, top_height > 0 ? RENDER_TALL_TILE : 0);
 }
 
-void draw_isometric_height(vec2i pixel, tile2i point, painter &ctx) {
+void draw_isometric_height(vec2i pixel, tile2i tile, painter &ctx) {
     auto& draw_context = get_draw_context();
 
-    int grid_offset = point.grid_offset();
+    int grid_offset = tile.grid_offset();
     // black tile outside of map
     if (grid_offset < 0) {
         ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
         return;
     }
 
-    Planner.construction_record_view_position(pixel, point);
+    Planner.construction_record_view_position(pixel, tile);
     if (!map_property_is_draw_tile(grid_offset)) {
         return;
     }
@@ -332,11 +360,10 @@ void draw_isometric_height(vec2i pixel, tile2i point, painter &ctx) {
     int building_id = map_building_at(grid_offset);
     building* b = building_get(building_id);
     if (building_id > 0) {
-        if (building_type_any_of(*b, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_ROADBLOCK)) {
+        if (draw_isometric_flat_building(b, tile)) {
             return;
         }
     }
-
 
     bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
     bool should_draw = building_id > 0 || tall_flat_tile;
@@ -352,8 +379,8 @@ void draw_isometric_height(vec2i pixel, tile2i point, painter &ctx) {
     }
 
     color color_mask = COLOR_MASK_NONE;
-    bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == point);
-    if (deletion_tool || map_property_is_deleted(point.grid_offset())) {
+    bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == tile);
+    if (deletion_tool || map_property_is_deleted(tile.grid_offset())) {
         color_mask = COLOR_MASK_RED;
     }
 

@@ -160,7 +160,7 @@ void map_orientation_update_buildings(void) {
                 switch (b->type) {
                 case BUILDING_BOOTH:
                     size = 2;
-                    plaza_image_id = image_id_from_group(GROUP_BOOTH_SQUARE);
+                    plaza_image_id = image_id_from_group(IMG_BOOTH_SQUARE);
                     break;
 
                 case BUILDING_BANDSTAND:

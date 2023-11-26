@@ -69,6 +69,7 @@ enum e_image_id : uint16_t {
     IMG_BANDSTAND_WE_W = 64,
     IMG_BANDSTAND_WE_E = 65,
     IMG_BOOTH = 66,
+    IMG_BOOTH_SQUARE = 67,
 
     IMG_SIZE
 };
