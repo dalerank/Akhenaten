@@ -33,18 +33,20 @@ static bool drawing_building_as_deleted(building* b) {
 
 /////// ANIMATIONS
 
-void building_draw_normal_anim(painter &ctx, int x, int y, building* b, int grid_offset, int sprite_id, int color_mask, int base_id, int max_frames) {
-    if (!base_id)
+void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, int grid_offset, int sprite_id, int color_mask, int base_id, int max_frames) {
+    if (!base_id) {
         base_id = map_image_at(grid_offset);
+    }
 
     int animation_offset = building_animation_offset(b, base_id, grid_offset, max_frames);
     if (animation_offset == 0)
         return;
 
-    if (base_id == sprite_id)
-        ImageDraw::img_ornament(ctx, sprite_id + animation_offset, base_id, x, y, color_mask);
-    else
-        ImageDraw::img_sprite(ctx, sprite_id + animation_offset, x, y, color_mask);
+    if (base_id == sprite_id) {
+        ImageDraw::img_ornament(ctx, sprite_id + animation_offset, base_id, pos.x, pos.y, color_mask);
+    } else {
+        ImageDraw::img_sprite(ctx, sprite_id + animation_offset, pos.x, pos.y, color_mask);
+    }
 }
 
 static void draw_water_lift_anim(painter &ctx, building* b, int x, int y, color color_mask) {
@@ -67,7 +69,7 @@ static void draw_water_lift_anim(painter &ctx, building* b, int x, int y, color 
         break;
     }
 
-    building_draw_normal_anim(ctx, x, y, b, b->tile.grid_offset(), image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
+    building_draw_normal_anim(ctx, vec2i{x, y}, b, b->tile.grid_offset(), image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
 }
 
 static void draw_fort_anim(int x, int y, building* b, painter &ctx) {
@@ -434,8 +436,6 @@ static void draw_palace_rating_flags(const building* b, int x, int y, color colo
 
 void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
     int grid_offset = tile.grid_offset();
-    int x = point.x;
-    int y = point.y;
     // tile must contain image draw data
     if (!map_property_is_draw_tile(grid_offset)) {
         return;
@@ -444,7 +444,7 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
     int image_id = map_image_at(grid_offset);
     building* b = building_at(grid_offset);
     if (b->type == BUILDING_STORAGE_YARD && b->state == BUILDING_STATE_CREATED) {
-        ImageDraw::img_generic(ctx, image_id + 17, x - 5, y - 42);
+        ImageDraw::img_generic(ctx, image_id + 17, point.x - 5, point.y - 42);
     }
 
     if (b->type == 0 || b->state == BUILDING_STATE_UNUSED) {
@@ -459,7 +459,7 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
 
     switch (b->type) {
     case BUILDING_BURNING_RUIN:
-        building_draw_normal_anim(ctx, x, y, b, grid_offset, image_id, color_mask);
+        building_draw_normal_anim(ctx, point, b, grid_offset, image_id, color_mask);
         break;
 
     case BUILDING_GRANARY:
@@ -467,13 +467,13 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
         break;
 
     case BUILDING_STORAGE_YARD:
-        draw_storageyard_ornaments(b, x, y, color_mask, ctx);
-        building_draw_normal_anim(ctx, x + 21, y + 24, b, grid_offset, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
-        ImageDraw::img_generic(ctx, image_id + 17, x - 5, y - 42, color_mask);
+        draw_storageyard_ornaments(b, point.x, point.y, color_mask, ctx);
+        building_draw_normal_anim(ctx, point + vec2i{21, 24}, b, grid_offset, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
+        ImageDraw::img_generic(ctx, image_id + 17, point.x - 5, point.y - 42, color_mask);
         break;
 
     case BUILDING_DOCK:
-        draw_dock_workers(b, x, y, color_mask, ctx);
+        draw_dock_workers(b, point.x, point.y, color_mask, ctx);
         break;
 
     case BUILDING_GRAIN_FARM:
@@ -497,28 +497,28 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
         break;
 
     case BUILDING_WATER_LIFT:
-        draw_water_lift_anim(ctx, b, x, y, color_mask);
+        draw_water_lift_anim(ctx, b, point.x, point.y, color_mask);
         break;
 
     case BUILDING_GOLD_MINE:
     case BUILDING_COPPER_MINE:
     case BUILDING_GEMSTONE_MINE:
-        building_draw_normal_anim(ctx, x + 54, y + 15, b, grid_offset, image_id_from_group(ANIM_GOLD_MINE) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, grid_offset, image_id_from_group(ANIM_GOLD_MINE) - 1, color_mask);
         break;
 
     case BUILDING_STONE_QUARRY:
     case BUILDING_LIMESTONE_QUARRY:
     case BUILDING_GRANITE_QUARRY:
     case BUILDING_SANDSTONE_QUARRY:
-        building_draw_normal_anim(ctx, x + 54, y + 15, b, grid_offset, image_id_from_group(ANIM_SANDSTONE_QUARRY_1) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, grid_offset, image_id_from_group(ANIM_SANDSTONE_QUARRY_1) - 1, color_mask);
         break; 
 
     case BUILDING_MENU_FORTS:
-        draw_fort_anim(x, y, b, ctx);
+        draw_fort_anim(point.x, point.y, b, ctx);
         break;
 
     case BUILDING_GATEHOUSE:
-        draw_gatehouse_anim(x, y, b, ctx);
+        draw_gatehouse_anim(point.x, point.y, b, ctx);
         break;
         //        case BUILDING_WELL:
         //            if (map_water_supply_is_well_unnecessary(b->id, 3) == WELL_NECESSARY) {
@@ -533,50 +533,50 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
         //            break;
     case BUILDING_BOOTH:
         if (map_image_at(grid_offset) == image_id_from_group(IMG_BOOTH)) {
-            building_entertainment_draw_show_jugglers(ctx, b, x, y, color_mask);
+            building_entertainment_draw_show_jugglers(ctx, b, point, color_mask);
         }
         break;
 
     case BUILDING_BANDSTAND:
         if (map_image_at(grid_offset) == image_id_from_group(IMG_BANDSTAND_SN_N)) {
-            building_entertainment_draw_shows_musicians(ctx, b, x, y, 1, color_mask);
+            building_entertainment_draw_shows_musicians(ctx, b, point, 1, color_mask);
         } else if (map_image_at(grid_offset) == image_id_from_group(IMG_BANDSTAND_WE_W)) {
-            building_entertainment_draw_shows_musicians(ctx, b, x, y, 0, color_mask);
+            building_entertainment_draw_shows_musicians(ctx, b, point, 0, color_mask);
         }
 
         if (map_image_at(grid_offset) == image_id_from_group(IMG_BOOTH)) {
-            building_entertainment_draw_show_jugglers(ctx, b, x, y, color_mask);
+            building_entertainment_draw_show_jugglers(ctx, b, point, color_mask);
         }
         break;
 
     case BUILDING_PAVILLION:
         if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_PAVILLION)) {
-            building_entertainment_draw_shows_dancers(ctx, b, x, y, color_mask);
+            building_entertainment_draw_shows_dancers(ctx, b, point, color_mask);
         }
         break;
 
     case BUILDING_CONSERVATORY:
-        building_draw_normal_anim(ctx, x + 82, y + 14, b, grid_offset, image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{82, 14}, b, grid_offset, image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask);
         break;
 
     case BUILDING_DANCE_SCHOOL:
-        building_draw_normal_anim(ctx, x + 104, y, b, grid_offset, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{104, 0}, b, grid_offset, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask);
         break;
 
     case BUILDING_FISHING_WHARF:
-        building_draw_normal_anim(ctx, x + 74, y + 7, b, grid_offset, image_id_from_group(IMG_FISHIHG_WHARF_ANIM) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{74, 7}, b, grid_offset, image_id_from_group(IMG_FISHIHG_WHARF_ANIM) - 1, color_mask);
         break;
 
     default:
-        building_draw_normal_anim(ctx, x, y, b, grid_offset, image_id, color_mask);
+        building_draw_normal_anim(ctx, point, b, grid_offset, image_id, color_mask);
         if (b->has_plague) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PLAGUE_SKULL), point.x + 18, point.y - 32, color_mask);
         }
         break;
     }
 
     // specific buildings
-    draw_palace_rating_flags(b, x, y, color_mask, ctx);
-    draw_workshop_raw_material_storage(ctx, b, x, y, color_mask);
+    draw_palace_rating_flags(b, point.x, point.y, color_mask, ctx);
+    draw_workshop_raw_material_storage(ctx, b, point.x, point.y, color_mask);
     //    draw_hippodrome_ornaments(pixel, point);
 }
