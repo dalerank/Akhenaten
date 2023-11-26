@@ -17,8 +17,35 @@ building_info = [
 ]
 
 building_booth = {
-  juggler_pos_x : 35,
-  juggler_pos_y : 17,
-  base_id : IMG_BOOTH,
-  anim_id : IMG_JUGGLER_SHOW,
+  juggler_anim : {
+    pos_x : 35,
+    pos_y : 17,
+    base_id : IMG_BOOTH,
+    anim_id : IMG_JUGGLER_SHOW,
+  }
+}
+
+building_bandstand = {
+  juggler_anim : {
+    pos_x : 35,
+    pos_y : 17,
+    base_id : IMG_BOOTH,
+    anim_id : IMG_JUGGLER_SHOW,
+  },
+
+  musician_anim_sn : {
+    pos_x : 20,
+    pos_y : 12,
+    base_id : IMG_BANDSTAND_SN_S,
+    anim_id : IMG_MUSICIAN_SHOW_SN,
+    max_frames : 12,
+  },
+
+  musician_anim_we : {
+    pos_x : 48,
+    pos_y : 4,
+    base_id : IMG_BANDSTAND_SN_S,
+    anim_id : IMG_MUSICIAN_SHOW_WE,
+    max_frames : 12,
+  }
 }

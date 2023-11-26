@@ -56,19 +56,46 @@ void building_bullfight_school_draw_info(object_info& c) {
     building_entertainment_school_draw_info(c, "bullfight_school", 78);
 }
 
-struct building_booth_t {
-    vec2i juggler_pos;
+struct anim_t {
+    vec2i pos;
     e_image_id base_id;
     e_image_id anim_id;
+    int max_frames;
+
+    void load(archive arch, pcstr section) {
+        arch.read_object_section(section, [this] (archive arch) {
+           pos.x = arch.read_integer("pos_x");
+           pos.y = arch.read_integer("pos_y");
+           base_id = (e_image_id)arch.read_integer("base_id");
+           anim_id = (e_image_id)arch.read_integer("anim_id");
+           max_frames = arch.read_integer("max_frames");
+        });
+    }
+};
+
+struct building_booth_t {
+    anim_t juggler;
 } building_booth;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_booth_config);
 void config_load_building_booth_config(archive arch) {
     arch.load_global_section("building_booth", [] (archive arch) {
-        building_booth.juggler_pos.x = arch.read_integer("juggler_pos_x");
-        building_booth.juggler_pos.y = arch.read_integer("juggler_pos_y");
-        building_booth.base_id = (e_image_id)arch.read_integer("base_id");
-        building_booth.anim_id = (e_image_id)arch.read_integer("anim_id");
+        building_booth.juggler.load(arch, "juggler_anim");
+    });
+}
+
+struct building_bandstand_t {
+    anim_t juggler;
+    anim_t musician_sn;
+    anim_t musician_we;
+} building_bandstand;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bandstand_config);
+void config_load_building_bandstand_config(archive arch) {
+    arch.load_global_section("building_bandstand", [] (archive arch) {
+        building_bandstand.juggler.load(arch, "juggler_anim");
+        building_bandstand.musician_sn.load(arch, "musician_anim_sn");
+        building_bandstand.musician_we.load(arch, "musician_anim_we");
     });
 }
 
@@ -82,7 +109,10 @@ void building_entertainment_draw_shows_dancers(painter &ctx, building* b, vec2i 
 void building_entertainment_draw_show_jugglers(painter &ctx, building* b, vec2i pixel, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days1) {
-        building_draw_normal_anim(ctx, pixel + building_booth.juggler_pos, b, b->tile, image_id_from_group(building_booth.anim_id), color_mask, image_id_from_group(building_booth.base_id));
+        building_draw_normal_anim(ctx, pixel + building_booth.juggler.pos, b, b->tile,
+                                  image_id_from_group(building_booth.juggler.anim_id), color_mask,
+                                  image_id_from_group(building_booth.juggler.base_id),
+                                  building_booth.juggler.max_frames);
     }
 }
 
@@ -92,11 +122,17 @@ void building_entertainment_draw_shows_musicians(painter &ctx, building* b, vec2
         building* next_tile = b->next();
         switch (direction) {
         case 0:
-            building_draw_normal_anim(ctx, pixel + vec2i{20, 12}, b, b->tile, image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask, image_id_from_group(IMG_BANDSTAND_SN_S), 12);
+            building_draw_normal_anim(ctx, pixel + building_bandstand.musician_sn.pos, b, b->tile, 
+                                      image_id_from_group(building_bandstand.musician_sn.anim_id), color_mask,
+                                      image_id_from_group(building_bandstand.musician_sn.base_id),
+                                      building_bandstand.musician_sn.max_frames);
             break;
 
         case 1:
-            building_draw_normal_anim(ctx, pixel + vec2i{48, 4}, b, b->tile, image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1, color_mask, image_id_from_group(IMG_BANDSTAND_SN_S), 12);
+            building_draw_normal_anim(ctx, pixel + vec2i{48, 4}, b, b->tile,
+                                      image_id_from_group(building_bandstand.musician_we.anim_id), color_mask,
+                                      image_id_from_group(building_bandstand.musician_we.base_id),
+                                      building_bandstand.musician_we.max_frames);
             break;
         }
     }

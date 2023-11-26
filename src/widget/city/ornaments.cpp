@@ -557,7 +557,7 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
         break;
 
     case BUILDING_CONSERVATORY:
-        building_draw_normal_anim(ctx, point + vec2i{82, 14}, b, tile, image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{82, 14}, b, tile, image_id_from_group(IMG_MUSICIAN_SHOW_SN), color_mask);
         break;
 
     case BUILDING_DANCE_SCHOOL:

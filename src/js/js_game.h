@@ -71,6 +71,15 @@ struct archive {
     }
 
     template<typename T>
+    inline void read_object_section(pcstr name, T read_func) {
+        js_getproperty(vm, -1, name);
+        if (js_isobject(vm, -1)) {
+            read_func(vm);
+        }
+        js_pop(vm, 1);
+    }
+
+    template<typename T>
     inline void read_object_array(pcstr name, T read_func) {
         js_getproperty(vm, -1, name);
         if (js_isarray(vm, -1)) {
