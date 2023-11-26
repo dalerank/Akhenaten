@@ -187,8 +187,7 @@ static bool is_drawable_farm_corner(int grid_offset) {
     return false;
 }
 
-void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int image_offset, color color_mask) {
-    painter ctx = game.painter();
+void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int image_offset, color color_mask, painter &ctx) {
     int image_base = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT) + image_offset;
 
     for (int xx = 0; xx < size_x; xx++) {
@@ -211,8 +210,8 @@ void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int 
     }
 }
 
-void draw_flattened_footprint_building(const building* b, int x, int y, int image_offset, color color_mask) {
-    return (draw_flattened_footprint_anysize(x, y, b->size, b->size, image_offset, color_mask));
+void draw_flattened_footprint_building(const building* b, int x, int y, int image_offset, color color_mask, painter &ctx) {
+    return (draw_flattened_footprint_anysize(x, y, b->size, b->size, image_offset, color_mask, ctx));
 }
 
 static void clip_between_rectangles(int* xOut, int* yOut, int* wOut, int* hOut, int xA, int yA, int wA, int hA, int xB, int yB, int wB, int hB) {
@@ -570,7 +569,7 @@ void city_with_overlay_draw_building_footprint(painter &ctx, int x, int y, int g
         }
 
         if (draw) {
-            draw_flattened_footprint_building(b, x, y, image_offset, 0);
+            draw_flattened_footprint_building(b, x, y, image_offset, 0, ctx);
         }
     }
 }
