@@ -259,10 +259,11 @@ bool draw_isometric_flat_building(building *b, tile2i point) {
             e_image_id imgs[] = {IMG_BOOTH, IMG_BANDSTAND_SN_N, IMG_BANDSTAND_SN_S, IMG_BANDSTAND_WE_W, IMG_BANDSTAND_WE_E};
             for (const auto &i : imgs) {
                 img_id = image_id_from_group(i);
-                if (img_id != tile_id) {
+                if (img_id == tile_id) {
                     return false;
                 }
             }
+            return true;
         }
         break;
 
