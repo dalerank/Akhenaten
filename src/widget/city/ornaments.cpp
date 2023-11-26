@@ -33,7 +33,8 @@ static bool drawing_building_as_deleted(building* b) {
 
 /////// ANIMATIONS
 
-void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, int grid_offset, int sprite_id, int color_mask, int base_id, int max_frames) {
+void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile, int sprite_id, int color_mask, int base_id, int max_frames) {
+    int grid_offset = tile.grid_offset();
     if (!base_id) {
         base_id = map_image_at(grid_offset);
     }
@@ -69,7 +70,7 @@ static void draw_water_lift_anim(painter &ctx, building* b, int x, int y, color 
         break;
     }
 
-    building_draw_normal_anim(ctx, vec2i{x, y}, b, b->tile.grid_offset(), image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
+    building_draw_normal_anim(ctx, vec2i{x, y}, b, b->tile, image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
 }
 
 static void draw_fort_anim(int x, int y, building* b, painter &ctx) {
@@ -459,7 +460,7 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
 
     switch (b->type) {
     case BUILDING_BURNING_RUIN:
-        building_draw_normal_anim(ctx, point, b, grid_offset, image_id, color_mask);
+        building_draw_normal_anim(ctx, point, b, tile, image_id, color_mask);
         break;
 
     case BUILDING_GRANARY:
@@ -468,7 +469,7 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
 
     case BUILDING_STORAGE_YARD:
         draw_storageyard_ornaments(b, point.x, point.y, color_mask, ctx);
-        building_draw_normal_anim(ctx, point + vec2i{21, 24}, b, grid_offset, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{21, 24}, b, tile, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
         ImageDraw::img_generic(ctx, image_id + 17, point.x - 5, point.y - 42, color_mask);
         break;
 
@@ -503,14 +504,14 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
     case BUILDING_GOLD_MINE:
     case BUILDING_COPPER_MINE:
     case BUILDING_GEMSTONE_MINE:
-        building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, grid_offset, image_id_from_group(ANIM_GOLD_MINE) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, tile, image_id_from_group(ANIM_GOLD_MINE) - 1, color_mask);
         break;
 
     case BUILDING_STONE_QUARRY:
     case BUILDING_LIMESTONE_QUARRY:
     case BUILDING_GRANITE_QUARRY:
     case BUILDING_SANDSTONE_QUARRY:
-        building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, grid_offset, image_id_from_group(ANIM_SANDSTONE_QUARRY_1) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, tile, image_id_from_group(ANIM_SANDSTONE_QUARRY_1) - 1, color_mask);
         break; 
 
     case BUILDING_MENU_FORTS:
@@ -556,19 +557,19 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
         break;
 
     case BUILDING_CONSERVATORY:
-        building_draw_normal_anim(ctx, point + vec2i{82, 14}, b, grid_offset, image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{82, 14}, b, tile, image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask);
         break;
 
     case BUILDING_DANCE_SCHOOL:
-        building_draw_normal_anim(ctx, point + vec2i{104, 0}, b, grid_offset, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{104, 0}, b, tile, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask);
         break;
 
     case BUILDING_FISHING_WHARF:
-        building_draw_normal_anim(ctx, point + vec2i{74, 7}, b, grid_offset, image_id_from_group(IMG_FISHIHG_WHARF_ANIM) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{74, 7}, b, tile, image_id_from_group(IMG_FISHIHG_WHARF_ANIM) - 1, color_mask);
         break;
 
     default:
-        building_draw_normal_anim(ctx, point, b, grid_offset, image_id, color_mask);
+        building_draw_normal_anim(ctx, point, b, tile, image_id, color_mask);
         if (b->has_plague) {
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PLAGUE_SKULL), point.x + 18, point.y - 32, color_mask);
         }

@@ -71,14 +71,14 @@ void config_load_building_booth_config(archive arch) {
 void building_entertainment_draw_shows_dancers(painter &ctx, building* b, vec2i pixel, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days3_or_play) {
-        building_draw_normal_anim(ctx, pixel + vec2i{64, 0}, b, b->tile.grid_offset(), image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask, image_id_from_group(GROUP_BUILDING_PAVILLION));
+        building_draw_normal_anim(ctx, pixel + vec2i{64, 0}, b, b->tile, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask, image_id_from_group(GROUP_BUILDING_PAVILLION));
     }
 }
 
 void building_entertainment_draw_show_jugglers(painter &ctx, building* b, vec2i pixel, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days1) {
-        building_draw_normal_anim(ctx, pixel + building_booth.juggler_pos, b, b->tile.grid_offset(), image_id_from_group(GROUP_JUGGLERS_SHOW_ALONE) - 1, color_mask, image_id_from_group(IMG_BOOTH));
+        building_draw_normal_anim(ctx, pixel + building_booth.juggler_pos, b, b->tile, image_id_from_group(GROUP_JUGGLERS_SHOW_ALONE) - 1, color_mask, image_id_from_group(IMG_BOOTH));
     }
 }
 
@@ -88,11 +88,11 @@ void building_entertainment_draw_shows_musicians(painter &ctx, building* b, vec2
         building* next_tile = b->next();
         switch (direction) {
         case 0:
-            building_draw_normal_anim(ctx, pixel + vec2i{20, 12}, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask, image_id_from_group(IMG_BANDSTAND_SN_S), 12);
+            building_draw_normal_anim(ctx, pixel + vec2i{20, 12}, b, b->tile, image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask, image_id_from_group(IMG_BANDSTAND_SN_S), 12);
             break;
 
         case 1:
-            building_draw_normal_anim(ctx, pixel + vec2i{48, 4}, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1, color_mask, image_id_from_group(IMG_BANDSTAND_SN_S), 12);
+            building_draw_normal_anim(ctx, pixel + vec2i{48, 4}, b, b->tile, image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1, color_mask, image_id_from_group(IMG_BANDSTAND_SN_S), 12);
             break;
         }
     }

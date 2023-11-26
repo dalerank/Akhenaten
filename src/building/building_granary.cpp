@@ -551,8 +551,8 @@ void draw_granary_stores(const building &b, vec2i point, color color_mask, paint
 void building_granary_draw_anim(building &b, vec2i point, tile2i tile, color mask, painter &ctx) {
     draw_granary_stores(b, point, mask, ctx);
     int max_workers = model_get_building(BUILDING_GRANARY)->laborers;
-    building_draw_normal_anim(ctx, point + vec2i{114, 2}, &b, tile.grid_offset(), image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, mask);
+    building_draw_normal_anim(ctx, point + vec2i{114, 2}, &b, tile, image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, mask);
     if (b.num_workers > max_workers / 2) {
-        building_draw_normal_anim(ctx, point + vec2i{96, -4}, &b, tile.grid_offset(), image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, mask);
+        building_draw_normal_anim(ctx, point + vec2i{96, -4}, &b, tile, image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, mask);
     }
 }
