@@ -465,16 +465,16 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
             }
             switch (orientation / 2) {
             case 0:
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x, y}, COLOR_MASK_GREEN);
                 break;
             case 1:
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x + 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x + 30, y + 15}, COLOR_MASK_GREEN);
                 break;
             case 2:
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 3:
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 30, y + 15}, COLOR_MASK_GREEN);
                 break;
             }
             break;
@@ -488,22 +488,22 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
             case 0:
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x, y}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x + 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x + 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 1:
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_WE_W), {x + 30, y + 15}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_WE_E), {x + 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
                 break;
             case 2:
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x - 30, y + 15}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
                 break;
             case 3:
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_WE_W), {x, y}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_WE_E), {x + 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             }
             break;
@@ -517,49 +517,49 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x + 90, y + 45}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 1:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 60, y + 30}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x, y}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 2:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 15}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x + 90, y + 45}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x, y + 90}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x, y + 90}, COLOR_MASK_GREEN);
                 break;
             case 3:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 45}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x + 30, y + 75}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x, y + 90}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x + 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x + 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             case 4:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 45}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x - 30, y + 15}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             case 5:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 15}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x + 60, y + 60}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x + 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             case 6:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 60, y + 30}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x, y + 60}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x - 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x, y}, COLOR_MASK_GREEN);
                 break;
             case 7:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x + 60, y + 30}, COLOR_MASK_GREEN);
                 draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x + 30, y + 45}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             }
             break;

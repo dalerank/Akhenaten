@@ -86,6 +86,7 @@ images = [
 	{img: IMG_BANDSTAND_SN_N, pack:PACK_GENERAL, id:92, offset:1},
 	{img: IMG_BANDSTAND_WE_W, pack:PACK_GENERAL, id:92, offset:2},
 	{img: IMG_BANDSTAND_WE_E, pack:PACK_GENERAL, id:92, offset:3},
+	{img: IMG_BOOTH, pack:PACK_GENERAL, id:114},
 ]
 
 cart_offsets = [

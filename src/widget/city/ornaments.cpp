@@ -128,7 +128,7 @@ static void draw_entertainment_shows_c3(building* b, int x, int y, color color_m
 static void draw_entertainment_show_jugglers(painter &ctx, building* b, int x, int y, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days1) {
-        building_draw_normal_anim(ctx, x + 30, y + 15, b, b->tile.grid_offset(), image_id_from_group(GROUP_JUGGLERS_SHOW_ALONE) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BOOTH));
+        building_draw_normal_anim(ctx, x + 30, y + 15, b, b->tile.grid_offset(), image_id_from_group(GROUP_JUGGLERS_SHOW_ALONE) - 1, color_mask, image_id_from_group(IMG_BOOTH));
     }
 }
 
@@ -576,7 +576,7 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
         //            }
         //            break;
     case BUILDING_BOOTH:
-        if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BOOTH)) {
+        if (map_image_at(grid_offset) == image_id_from_group(IMG_BOOTH)) {
             draw_entertainment_show_jugglers(ctx, b, x, y, color_mask);
         }
         break;
@@ -588,7 +588,7 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
             draw_entertainment_shows_musicians(ctx, b, x, y, 0, color_mask);
         }
 
-        if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BOOTH)) {
+        if (map_image_at(grid_offset) == image_id_from_group(IMG_BOOTH)) {
             draw_entertainment_show_jugglers(ctx, b, x, y, color_mask);
         }
         break;
