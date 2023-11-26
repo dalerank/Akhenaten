@@ -34,8 +34,8 @@ building_bandstand = {
   },
 
   musician_anim_sn : {
-    pos_x : 20,
-    pos_y : 12,
+    pos_x : 45,
+    pos_y : 7,
     base_id : IMG_BANDSTAND_SN_S,
     anim_id : IMG_MUSICIAN_SHOW_SN,
     max_frames : 12,

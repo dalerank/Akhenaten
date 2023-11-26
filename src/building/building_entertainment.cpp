@@ -107,12 +107,29 @@ void building_entertainment_draw_shows_dancers(painter &ctx, building* b, vec2i 
 }
 
 void building_entertainment_draw_show_jugglers(painter &ctx, building* b, vec2i pixel, color color_mask) {
+    const anim_t *config = nullptr;
+
+    switch (b->type) {
+    case BUILDING_BOOTH:
+        config = &building_booth.juggler;
+        break;
+    case BUILDING_BANDSTAND:
+        config = &building_bandstand.juggler;
+        break;
+    case BUILDING_PAVILLION:
+        config = &building_booth.juggler;
+        break;
+    }
+    if (!config) {
+        return;
+    }
+
     building* main = b->main();
     if (main->data.entertainment.days1) {
-        building_draw_normal_anim(ctx, pixel + building_booth.juggler.pos, b, b->tile,
-                                  image_id_from_group(building_booth.juggler.anim_id), color_mask,
-                                  image_id_from_group(building_booth.juggler.base_id),
-                                  building_booth.juggler.max_frames);
+        building_draw_normal_anim(ctx, pixel + config->pos, b, b->tile,
+                                  image_id_from_group(config->anim_id), color_mask,
+                                  image_id_from_group(config->base_id),
+                                  config->max_frames);
     }
 }
 
