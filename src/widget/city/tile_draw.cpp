@@ -264,7 +264,7 @@ void draw_isometric_flat(vec2i pixel, tile2i point, painter &ctx) {
     int building_id = map_building_at(grid_offset);
     if (building_id > 0) {
         building *b = building_get(building_id);
-        if (building_type_none_of(*b, BUILDING_BOOTH, BUILDING_ROADBLOCK)) {
+        if (building_type_none_of(*b, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_ROADBLOCK)) {
             return;
         }
     }
@@ -332,7 +332,7 @@ void draw_isometric_height(vec2i pixel, tile2i point, painter &ctx) {
     int building_id = map_building_at(grid_offset);
     building* b = building_get(building_id);
     if (building_id > 0) {
-        if (building_type_any_of(*b, BUILDING_BOOTH, BUILDING_ROADBLOCK)) {
+        if (building_type_any_of(*b, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_ROADBLOCK)) {
             return;
         }
     }

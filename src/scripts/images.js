@@ -82,6 +82,10 @@ images = [
 	{img: IMG_SCRIBER_DEATH, pack:PACK_SPR_MAIN, id:200},
 	{img: IMG_TEACHER_WALK, pack:PACK_SPR_MAIN, id:201},
 	{img: IMG_TEACHER_DEATH, pack:PACK_SPR_MAIN, id:202},
+	{img: IMG_BANDSTAND_SN_S, pack:PACK_GENERAL, id:92},
+	{img: IMG_BANDSTAND_SN_N, pack:PACK_GENERAL, id:92, offset:1},
+	{img: IMG_BANDSTAND_WE_W, pack:PACK_GENERAL, id:92, offset:2},
+	{img: IMG_BANDSTAND_WE_E, pack:PACK_GENERAL, id:92, offset:3},
 ]
 
 cart_offsets = [

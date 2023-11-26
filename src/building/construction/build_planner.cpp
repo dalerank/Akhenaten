@@ -191,11 +191,11 @@ static void latch_on_venue(e_building_type type, building *b, int dx, int dy, in
         if (main_venue) {
             b->data.entertainment.latched_venue_main_grid_offset = point.grid_offset();
             int offset = map_bandstand_main_img_offset(orientation);
-            map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BANDSTAND) + offset);
+            map_image_set(point.grid_offset(), image_id_from_group(IMG_BANDSTAND_SN_S) + offset);
         } else {
             b->data.entertainment.latched_venue_add_grid_offset = point.grid_offset();
             int offset = map_bandstand_add_img_offset(orientation);
-            map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BANDSTAND) + offset);
+            map_image_set(point.grid_offset(), image_id_from_group(IMG_BANDSTAND_SN_S) + offset);
         }
         //if (orientation == 1) {
         //    latch_on_venue(BUILDING_BANDSTAND, main, dx, dy + 1, 0, false);

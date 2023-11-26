@@ -138,11 +138,11 @@ static void draw_entertainment_shows_musicians(painter &ctx, building* b, int x,
         building* next_tile = b->next();
         switch (direction) {
         case 0:
-            building_draw_normal_anim(ctx, x + 20, y + 12, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
+            building_draw_normal_anim(ctx, x + 20, y + 12, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask, image_id_from_group(IMG_BANDSTAND_SN_S), 12);
             break;
 
         case 1:
-            building_draw_normal_anim(ctx, x + 48, y + 4, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1, color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
+            building_draw_normal_anim(ctx, x + 48, y + 4, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1, color_mask, image_id_from_group(IMG_BANDSTAND_SN_S), 12);
             break;
         }
     }
@@ -582,9 +582,9 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
         break;
 
     case BUILDING_BANDSTAND:
-        if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1) {
+        if (map_image_at(grid_offset) == image_id_from_group(IMG_BANDSTAND_SN_N)) {
             draw_entertainment_shows_musicians(ctx, b, x, y, 1, color_mask);
-        } else if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BANDSTAND) + 2) {
+        } else if (map_image_at(grid_offset) == image_id_from_group(IMG_BANDSTAND_WE_W)) {
             draw_entertainment_shows_musicians(ctx, b, x, y, 0, color_mask);
         }
 

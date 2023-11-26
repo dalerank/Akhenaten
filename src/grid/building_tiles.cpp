@@ -248,8 +248,8 @@ void map_add_bandstand_tiles(building* b) {
     int offset = map_bandstand_main_img_offset(b->data.entertainment.orientation);
     int offset_add = map_bandstand_add_img_offset(b->data.entertainment.orientation);
 
-    map_image_set(b->data.entertainment.latched_venue_main_grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + offset);
-    map_image_set(b->data.entertainment.latched_venue_add_grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + offset_add);
+    map_image_set(b->data.entertainment.latched_venue_main_grid_offset, image_id_from_group(IMG_BANDSTAND_SN_S) + offset);
+    map_image_set(b->data.entertainment.latched_venue_add_grid_offset, image_id_from_group(IMG_BANDSTAND_SN_S) + offset_add);
 }
 
 static void set_underlying_venue_plaza_tile(int grid_offset, int building_id, int image_id, bool update_only) {

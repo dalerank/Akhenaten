@@ -64,6 +64,10 @@ enum e_image_id : uint16_t {
     IMG_TEACHER_DEATH = 59,
     IMG_SCRIBER_WALK = 60,
     IMG_SCRIBER_DEATH = 61,
+    IMG_BANDSTAND_SN_S = 62,
+    IMG_BANDSTAND_SN_N = 63,
+    IMG_BANDSTAND_WE_W = 64,
+    IMG_BANDSTAND_WE_E = 65,
 
     IMG_SIZE
 };
