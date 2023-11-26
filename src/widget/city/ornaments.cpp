@@ -5,6 +5,7 @@
 #include "building/model.h"
 #include "building/dock.h"
 #include "building/building_granary.h"
+#include "building/building_entertainment.h"
 #include "city/buildings.h"
 #include "city/floods.h"
 #include "city/labor.h"
@@ -107,51 +108,6 @@ static void draw_gatehouse_anim(int x, int y, building* b, painter &ctx) {
             else
                 ImageDraw::img_generic(ctx, image_id, x - 22, y - 80, color_mask);
         }
-    }
-}
-
-static void draw_entertainment_shows_c3(building* b, int x, int y, color color_mask) {
-    //    if (b->type == BUILDING_AMPHITHEATER && b->num_workers > 0)
-    //        ImageDraw::img_generic(image_id_from_group(GROUP_DANCERS_SHOW), x + 36, y - 47, color_mask);
-    //
-    //    if (b->type == BUILDING_THEATER && b->num_workers > 0)
-    //        ImageDraw::img_generic(image_id_from_group(GROUP_JUGGLERS_SHOW), x + 34, y - 22, color_mask);
-    //
-    //    if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0)
-    //        ImageDraw::img_generic(image_id_from_group(GROUP_MUSICIANS_SHOW), x + 70, y - 90, color_mask);
-    //
-    //    if (b->type == BUILDING_HIPPODROME && b->main()->num_workers > 0 &&
-    //        city_entertainment_hippodrome_has_race())
-    //        draw_hippodrome_spectators(b, x, y, color_mask);
-}
-
-static void draw_entertainment_show_jugglers(painter &ctx, building* b, int x, int y, color color_mask) {
-    building* main = b->main();
-    if (main->data.entertainment.days1) {
-        building_draw_normal_anim(ctx, x + 30, y + 15, b, b->tile.grid_offset(), image_id_from_group(GROUP_JUGGLERS_SHOW_ALONE) - 1, color_mask, image_id_from_group(IMG_BOOTH));
-    }
-}
-
-static void draw_entertainment_shows_musicians(painter &ctx, building* b, int x, int y, int direction, color color_mask) {
-    building* main = b->main();
-    if (main->data.entertainment.days2) {
-        building* next_tile = b->next();
-        switch (direction) {
-        case 0:
-            building_draw_normal_anim(ctx, x + 20, y + 12, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask, image_id_from_group(IMG_BANDSTAND_SN_S), 12);
-            break;
-
-        case 1:
-            building_draw_normal_anim(ctx, x + 48, y + 4, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1, color_mask, image_id_from_group(IMG_BANDSTAND_SN_S), 12);
-            break;
-        }
-    }
-}
-
-static void draw_entertainment_shows_dancers(painter &ctx, building* b, int x, int y, color color_mask) {
-    building* main = b->main();
-    if (main->data.entertainment.days3_or_play) {
-        building_draw_normal_anim(ctx, x + 64, y, b, b->tile.grid_offset(), image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask, image_id_from_group(GROUP_BUILDING_PAVILLION));
     }
 }
 
@@ -577,25 +533,25 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
         //            break;
     case BUILDING_BOOTH:
         if (map_image_at(grid_offset) == image_id_from_group(IMG_BOOTH)) {
-            draw_entertainment_show_jugglers(ctx, b, x, y, color_mask);
+            building_entertainment_draw_show_jugglers(ctx, b, x, y, color_mask);
         }
         break;
 
     case BUILDING_BANDSTAND:
         if (map_image_at(grid_offset) == image_id_from_group(IMG_BANDSTAND_SN_N)) {
-            draw_entertainment_shows_musicians(ctx, b, x, y, 1, color_mask);
+            building_entertainment_draw_shows_musicians(ctx, b, x, y, 1, color_mask);
         } else if (map_image_at(grid_offset) == image_id_from_group(IMG_BANDSTAND_WE_W)) {
-            draw_entertainment_shows_musicians(ctx, b, x, y, 0, color_mask);
+            building_entertainment_draw_shows_musicians(ctx, b, x, y, 0, color_mask);
         }
 
         if (map_image_at(grid_offset) == image_id_from_group(IMG_BOOTH)) {
-            draw_entertainment_show_jugglers(ctx, b, x, y, color_mask);
+            building_entertainment_draw_show_jugglers(ctx, b, x, y, color_mask);
         }
         break;
 
     case BUILDING_PAVILLION:
         if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_PAVILLION)) {
-            draw_entertainment_shows_dancers(ctx, b, x, y, color_mask);
+            building_entertainment_draw_shows_dancers(ctx, b, x, y, color_mask);
         }
         break;
 

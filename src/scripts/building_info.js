@@ -15,3 +15,8 @@ building_info = [
   { help_id:92, type:"granite_quarry", text_id:192},
   { help_id:92, type:"plainstone_quarry", text_id:118},
 ]
+
+building_booth = {
+  juggler_pos_x : 35,
+  juggler_pos_y : 17,
+}

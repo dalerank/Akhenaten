@@ -1,4 +1,4 @@
-#include "building_plaza.h"
+#include "building_entertainment.h"
 
 #include "building/building.h"
 #include "city/object_info.h"
@@ -11,6 +11,9 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
+#include "widget/city/ornaments.h"
+
+#include "js/js_game.h"
 
 static void building_entertainment_school_draw_info(object_info& c, const char* type, int group_id) {
     c.help_id = 75;
@@ -51,4 +54,46 @@ void building_dancer_school_draw_info(object_info& c) {
 
 void building_bullfight_school_draw_info(object_info& c) {
     building_entertainment_school_draw_info(c, "bullfight_school", 78);
+}
+
+struct building_booth_t {
+    vec2i juggler_pos;
+} building_booth;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_booth_config);
+void config_load_building_booth_config(archive arch) {
+    arch.load_global_section("building_booth", [] (archive arch) {
+        building_booth.juggler_pos.x = arch.read_integer("juggler_pos_x");
+        building_booth.juggler_pos.y = arch.read_integer("juggler_pos_y");
+    });
+}
+
+void building_entertainment_draw_shows_dancers(painter &ctx, building* b, int x, int y, color color_mask) {
+    building* main = b->main();
+    if (main->data.entertainment.days3_or_play) {
+        building_draw_normal_anim(ctx, x + 64, y, b, b->tile.grid_offset(), image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask, image_id_from_group(GROUP_BUILDING_PAVILLION));
+    }
+}
+
+void building_entertainment_draw_show_jugglers(painter &ctx, building* b, int x, int y, color color_mask) {
+    building* main = b->main();
+    if (main->data.entertainment.days1) {
+        building_draw_normal_anim(ctx, x + building_booth.juggler_pos.x, y + building_booth.juggler_pos.y, b, b->tile.grid_offset(), image_id_from_group(GROUP_JUGGLERS_SHOW_ALONE) - 1, color_mask, image_id_from_group(IMG_BOOTH));
+    }
+}
+
+void building_entertainment_draw_shows_musicians(painter &ctx, building* b, int x, int y, int direction, color color_mask) {
+    building* main = b->main();
+    if (main->data.entertainment.days2) {
+        building* next_tile = b->next();
+        switch (direction) {
+        case 0:
+            building_draw_normal_anim(ctx, x + 20, y + 12, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW1) - 1, color_mask, image_id_from_group(IMG_BANDSTAND_SN_S), 12);
+            break;
+
+        case 1:
+            building_draw_normal_anim(ctx, x + 48, y + 4, b, b->tile.grid_offset(), image_id_from_group(GROUP_MUSICIANS_SHOW2) - 1, color_mask, image_id_from_group(IMG_BANDSTAND_SN_S), 12);
+            break;
+        }
+    }
 }
