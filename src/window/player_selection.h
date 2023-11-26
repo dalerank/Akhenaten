@@ -1,7 +1,5 @@
-#ifndef WINDOW_FAMILY_SELECTION_H
-#define WINDOW_FAMILY_SELECTION_H
+#pragma once
 
 void window_player_selection_init();
-void window_player_selection_show(void);
-
-#endif // WINDOW_FAMILY_SELECTION_H
+void window_player_selection_show();
+void window_player_set_name(const char* name);

@@ -69,28 +69,22 @@ struct window_player_selection_t {
     bstring32 selected_player_utf8;
 
     window_player_selection_t() {
-        panel = new scroll_list_panel(NUM_FILES_IN_VIEW,
-                                      button_select_file,
-                                      button_none,
-                                      button_double_click,
-                                      button_none,
-                                      ui_params,
-                                      true,
-                                      "Save/",
-                                      "folders");
+        panel = new scroll_list_panel(NUM_FILES_IN_VIEW, button_select_file, button_none, button_double_click, button_none, ui_params, true, "Save/", "folders");
     }
 };
 
 window_player_selection_t *g_window_player_selection = nullptr;
 
-static void set_name(const char* name) {
+void window_player_set_name(const char* name) {
     auto& data = *g_window_player_selection;
     data.selected_player_utf8 = name;
     encoding_from_utf8(data.selected_player_utf8, data.selected_player, MAX_PLAYER_NAME);
 }
+
 static void clear_selectd_name() {
-    set_name("");
+    window_player_set_name("");
 }
+
 static bool is_selected_name(int index) {
     auto& data = *g_window_player_selection;
     return data.selected_player_utf8 == data.panel->get_selected_entry_text(FILE_NO_EXT);
@@ -117,7 +111,7 @@ void window_player_selection_init() {
     data.panel->select(data.selected_player_utf8);
     if (data.panel->get_total_entries() == 1) {
         data.panel->select_entry(0);
-        set_name(data.panel->get_selected_entry_text(FILE_NO_EXT));
+        window_player_set_name(data.panel->get_selected_entry_text(FILE_NO_EXT));
         g_settings.set_player_name(data.selected_player);
     }
 }
@@ -170,7 +164,7 @@ static void button_select_file(int index, int param2) {
         return clear_selectd_name();
     }
 
-    set_name(data.panel->get_selected_entry_text(FILE_NO_EXT));
+    window_player_set_name(data.panel->get_selected_entry_text(FILE_NO_EXT));
     g_settings.set_player_name(data.selected_player);
 }
 
@@ -185,10 +179,11 @@ static void button_click(int param1, int param2) {
         break;
 
     case 1: // delete player
-        if (is_valid_selected_player())
+        if (is_valid_selected_player()) {
             window_popup_dialog_show(POPUP_DIALOG_DELETE_DYNASTY, confirm_delete_player, e_popup_btns_yesno);
-        else
+        } else {
             window_popup_dialog_show(POPUP_DIALOG_NO_DYNASTY, confirm_nothing, e_popup_btns_yes);
+        }
         break;
 
     case 2: // proceed with selected player

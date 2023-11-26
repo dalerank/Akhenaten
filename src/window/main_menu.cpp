@@ -5,6 +5,7 @@
 #include "config/config.h"
 #include "game/game.h"
 #include "game/system.h"
+#include "game/settings.h"
 #include "graphics/boilerplate.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
@@ -172,6 +173,8 @@ static void button_click(int type, int param2) {
 
     case 5: {
             pcstr last_save = config_get_string(CONFIG_STRING_LAST_SAVE);
+            pcstr last_player = config_get_string(CONFIG_STRING_LAST_PLAYER);
+            g_settings.set_player_name((const uint8_t*)last_player);
             if (GamestateIO::load_savegame(last_save)) {
                 window_city_show();
             }

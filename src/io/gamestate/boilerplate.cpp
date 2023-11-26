@@ -564,6 +564,7 @@ bool GamestateIO::write_savegame(const char* filename_short) {
     if (save_ok) {
         //vfs::path fs_path = vfs::content_path(full);
         config_set_string(CONFIG_STRING_LAST_SAVE, full);
+        config_set_string(CONFIG_STRING_LAST_PLAYER, g_settings.player_name);
         config_save();
     }
 
