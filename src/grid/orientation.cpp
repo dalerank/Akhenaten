@@ -165,7 +165,7 @@ void map_orientation_update_buildings(void) {
 
                 case BUILDING_BANDSTAND:
                     size = 3;
-                    plaza_image_id = image_id_from_group(GROUP_BANDSTAND_SQUARE);
+                    plaza_image_id = image_id_from_group(IMG_BANDSTAND_SQUARE);
                     break;
 
                 case BUILDING_PAVILLION:

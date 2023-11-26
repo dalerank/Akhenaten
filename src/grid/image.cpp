@@ -24,6 +24,11 @@ void map_image_set(int grid_offset, e_image_id img) {
     map_grid_set(&g_images_grid, grid_offset, image_id);
 }
 
+void map_image_set(int grid_offset, e_image_id img, int offset) {
+    int image_id = image_id_from_group(img) + offset;
+    map_grid_set(&g_images_grid, grid_offset, image_id);
+}
+
 void map_image_set(int grid_offset, int image_id) {
     map_grid_set(&g_images_grid, grid_offset, image_id);
 }

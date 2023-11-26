@@ -481,7 +481,7 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
 
         case BUILDING_BANDSTAND:
             for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(ctx, image_id_from_group(GROUP_BANDSTAND_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
+                ImageDraw::isometric(ctx, image_id_from_group(IMG_BANDSTAND_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
             }
 
             switch (orientation / 2) {

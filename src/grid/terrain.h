@@ -85,6 +85,7 @@ int map_terrain_get(int grid_offset);
 void map_terrain_set(int grid_offset, int terrain);
 
 void map_terrain_add(int grid_offset, int terrain);
+inline void map_terrain_add(tile2i tile, int terrain) { map_terrain_add(tile.grid_offset(), terrain); }
 
 void map_terrain_remove(int grid_offset, int terrain);
 
