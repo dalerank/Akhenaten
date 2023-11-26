@@ -58,6 +58,8 @@ void building_bullfight_school_draw_info(object_info& c) {
 
 struct building_booth_t {
     vec2i juggler_pos;
+    e_image_id base_id;
+    e_image_id anim_id;
 } building_booth;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_booth_config);
@@ -65,6 +67,8 @@ void config_load_building_booth_config(archive arch) {
     arch.load_global_section("building_booth", [] (archive arch) {
         building_booth.juggler_pos.x = arch.read_integer("juggler_pos_x");
         building_booth.juggler_pos.y = arch.read_integer("juggler_pos_y");
+        building_booth.base_id = (e_image_id)arch.read_integer("base_id");
+        building_booth.anim_id = (e_image_id)arch.read_integer("anim_id");
     });
 }
 
@@ -78,7 +82,7 @@ void building_entertainment_draw_shows_dancers(painter &ctx, building* b, vec2i 
 void building_entertainment_draw_show_jugglers(painter &ctx, building* b, vec2i pixel, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days1) {
-        building_draw_normal_anim(ctx, pixel + building_booth.juggler_pos, b, b->tile, image_id_from_group(GROUP_JUGGLERS_SHOW_ALONE) - 1, color_mask, image_id_from_group(IMG_BOOTH));
+        building_draw_normal_anim(ctx, pixel + building_booth.juggler_pos, b, b->tile, image_id_from_group(building_booth.anim_id), color_mask, image_id_from_group(building_booth.base_id));
     }
 }
 

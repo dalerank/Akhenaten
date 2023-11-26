@@ -19,4 +19,6 @@ building_info = [
 building_booth = {
   juggler_pos_x : 35,
   juggler_pos_y : 17,
+  base_id : IMG_BOOTH,
+  anim_id : IMG_JUGGLER_SHOW,
 }

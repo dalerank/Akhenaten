@@ -72,6 +72,7 @@ enum e_image_id : uint16_t {
     IMG_BOOTH_SQUARE = 67,
     IMG_BANDSTAND_SQUARE = 68,
     IMG_MUSICIAN = 69,
+    IMG_JUGGLER_SHOW = 70,
 
     IMG_SIZE
 };
