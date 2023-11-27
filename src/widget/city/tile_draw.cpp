@@ -268,6 +268,13 @@ bool draw_isometric_flat_building(building *b, tile2i point) {
         break;
 
     case BUILDING_ROADBLOCK:
+    case BUILDING_CHICKPEAS_FARM:
+    case BUILDING_BURNING_RUIN:
+    case BUILDING_BARLEY_FARM:
+    case BUILDING_FLAX_FARM:
+    case BUILDING_GRAIN_FARM:
+    case BUILDING_LETTUCE_FARM:
+    case BUILDING_POMEGRANATES_FARM:
         return true;
     }
 

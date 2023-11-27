@@ -14,7 +14,7 @@ void building::spawn_figure_reed_gatherers() {
         }
 
         figure_spawn_delay++;
-        if (figure_spawn_delay < spawn_delay) {
+        if (figure_spawn_delay > spawn_delay) {
             figure_spawn_delay = 0;
 
             if (can_spawn_gatherer(FIGURE_REED_GATHERER, data.industry.max_gatheres, 50)) {
