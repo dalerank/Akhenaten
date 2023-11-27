@@ -97,7 +97,7 @@ static sound_key tax_collector_phrase(figure *f) {
     }
 
     int all_taxed = f->service_values.taxman_poor_taxed + f->service_values.taxman_middle_taxed + f->service_values.taxman_reach_taxed;
-    int poor_taxed = calc_percentage(f->service_values.taxman_poor_taxed, all_taxed);
+    int poor_taxed = calc_percentage<int>(f->service_values.taxman_poor_taxed, all_taxed);
     if (poor_taxed > 50) {
         keys.push_back("taxman_much_pooh_houses");
     }
@@ -979,7 +979,7 @@ static sound_key governor_phrase(figure *f) {
         nobles_in_city += b.house_population;
     });
 
-    int nolbes_leave_city_pct = calc_percentage(city_data_struct()->migration.nobles_leave_city_this_year, nobles_in_city);
+    int nolbes_leave_city_pct = calc_percentage<int>(city_data_struct()->migration.nobles_leave_city_this_year, nobles_in_city);
     if (nolbes_leave_city_pct > 10) {
         return "governor_city_left_much_nobles";
     }

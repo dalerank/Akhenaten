@@ -187,7 +187,7 @@ int building_granary_remove_for_getting_deliveryman(building* src, building* dst
 }
 
 granary_task_status building_granary_determine_worker_task(building* granary) {
-    int pct_workers = calc_percentage(granary->num_workers, model_get_building(granary->type)->laborers);
+    int pct_workers = calc_percentage<int>(granary->num_workers, model_get_building(granary->type)->laborers);
     if (pct_workers < 50) {
         return {GRANARY_TASK_NONE, RESOURCE_NONE};
     }
@@ -299,7 +299,7 @@ int building_granary_for_storing(map_point tile, int resource, int distance_from
             continue;
 
         if (!config_get(CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS)) {
-            int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+            int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
             if (pct_workers < 75) {
                 if (understaffed)
                     *understaffed += 1;
@@ -351,7 +351,7 @@ int building_getting_granary_for_storing(map_point tile, int resource, int dista
         if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id)
             continue;
 
-        int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+        int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
         if (pct_workers < 100)
             continue;
 

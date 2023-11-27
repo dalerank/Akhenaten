@@ -247,7 +247,7 @@ static void city_finance_collect_monthly_taxes() {
     if (config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
         for (auto &it : tax_collectors) {
             building *b = building_get(it.first);
-            b->deben_storage += calc_adjust_with_percentage(it.second / tax_city_divider, city_data.finance.tax_percentage);
+            b->deben_storage += calc_adjust_with_percentage<uint32_t>(it.second / tax_city_divider, city_data.finance.tax_percentage);
         }
     } else {
         city_data.finance.treasury += collected_total;

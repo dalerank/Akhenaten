@@ -95,8 +95,8 @@ vec2i city_view_get_camera_in_pixels() {
 void city_view_get_camera_scrollable_pixel_limits(view_data_t& view, vec2i &min_pos, vec2i &max_pos) {
     min_pos.x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
     min_pos.y = SCROLL_MIN_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS;
-    max_pos.x = SCROLL_MAX_SCREENTILE_X * TILE_WIDTH_PIXELS - calc_adjust_with_percentage(view.viewport.size_pixels.x, zoom_get_percentage());
-    max_pos.y = SCROLL_MAX_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS - calc_adjust_with_percentage(view.viewport.size_pixels.y, zoom_get_percentage());
+    max_pos.x = SCROLL_MAX_SCREENTILE_X * TILE_WIDTH_PIXELS - calc_adjust_with_percentage<int>(view.viewport.size_pixels.x, zoom_get_percentage());
+    max_pos.y = SCROLL_MAX_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS - calc_adjust_with_percentage<int>(view.viewport.size_pixels.y, zoom_get_percentage());
 }
 
 void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip) {
@@ -296,8 +296,8 @@ static void set_viewport(int x_offset, int y_offset, int width, int height) {
     data.viewport.size_pixels.y = height;
     //    data.viewport.width_tiles = width / TILE_WIDTH_PIXELS;
     //    data.viewport.height_tiles = height / HALF_TILE_HEIGHT_PIXELS;
-    data.viewport.width_tiles = calc_adjust_with_percentage(width, zoom) / TILE_WIDTH_PIXELS;
-    data.viewport.height_tiles = calc_adjust_with_percentage(height, zoom) / HALF_TILE_HEIGHT_PIXELS;
+    data.viewport.width_tiles = calc_adjust_with_percentage<int>(width, zoom) / TILE_WIDTH_PIXELS;
+    data.viewport.height_tiles = calc_adjust_with_percentage<int>(height, zoom) / HALF_TILE_HEIGHT_PIXELS;
 }
 
 static void set_viewport_with_sidebar(void) {
@@ -421,8 +421,7 @@ static vec2i starting_tile(painter &ctx) {
 static vec2i starting_pixel_coord(painter &ctx) {
     vec2i pixel;
     pixel.x = -(4 * TILE_WIDTH_PIXELS); // - pixel_offset_internal().x;
-    pixel.y = ctx.view->viewport.offset.y - 11 * HALF_TILE_HEIGHT_PIXELS
-              + calc_adjust_with_percentage(TOP_MENU_HEIGHT, zoom_get_percentage()); // - pixel_offset_internal().y;
+    pixel.y = ctx.view->viewport.offset.y - 11 * HALF_TILE_HEIGHT_PIXELS + calc_adjust_with_percentage<int>(TOP_MENU_HEIGHT, zoom_get_percentage()); // - pixel_offset_internal().y;
     return pixel - camera_get_pixel_offset_internal(ctx);
 }
 

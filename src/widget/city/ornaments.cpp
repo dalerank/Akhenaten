@@ -6,6 +6,7 @@
 #include "building/dock.h"
 #include "building/building_granary.h"
 #include "building/building_entertainment.h"
+#include "building/building_workshop.h"
 #include "city/buildings.h"
 #include "city/floods.h"
 #include "city/labor.h"
@@ -309,86 +310,6 @@ static void draw_dock_workers(building* b, int x, int y, color color_mask, paint
 
 /////// ORNAMENTS
 
-static void draw_workshop_raw_material_storage(painter &ctx, const building* b, int x, int y, color color_mask) {
-    int amount = ceil((float)b->stored_amount() / 100.0) - 1;
-    int amount2 = 0;
-    switch (b->type) {
-    case BUILDING_HUNTING_LODGE:
-        if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_GAMEMEAT) + amount, x + 61, y + 14, color_mask);
-        }
-        break;
-
-    case BUILDING_BRICKS_WORKSHOP:
-        amount = std::min<int>(2, ceil((float)b->stored_amount(RESOURCE_CLAY) / 100.0) - 1);
-        amount2 = std::min<int>(2, ceil((float)b->stored_amount(RESOURCE_STRAW) / 100.0) - 1);
-        if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_CLAY) + amount, x + 46, y + 25, color_mask);
-        }
-
-        if (amount2 >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_STRAW) + amount, x + 51, y + 18, color_mask);
-        }
-        break;
-
-    case BUILDING_WEAPONS_WORKSHOP:
-        amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
-        if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_COPPER_2) + amount, x + 61, y + 14, color_mask);
-        }
-        break;
-
-    case BUILDING_POTTERY_WORKSHOP:
-        amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
-        if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_CLAY) + amount, x + 65, y + 3, color_mask);
-        }
-        break;
-
-    case BUILDING_BEER_WORKSHOP:
-        amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
-        if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_BARLEY_2) + amount, x + 65, y + 3, color_mask);
-        }
-        break;
-
-    case BUILDING_PAPYRUS_WORKSHOP:
-        amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
-        if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_REEDS_5) + amount, x + 35, y + 4, color_mask);
-        }
-        break;
-
-    case BUILDING_WOOD_CUTTERS:
-        if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3, color_mask);
-        }
-        break;
-
-    case BUILDING_LINEN_WORKSHOP:
-        //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_FLAX_2) + amount, x + 65, y + 3,
-        //            color_mask);
-        break;
-    case BUILDING_JEWELS_WORKSHOP:
-        //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GEMS_2) + amount, x + 65, y + 3,
-        //            color_mask);
-        break;
-    case BUILDING_SHIPYARD:
-        //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3,
-        //            color_mask);
-        break;
-
-    case BUILDING_CHARIOTS_WORKSHOP:
-        //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3,
-        //            color_mask);
-        break;
-    case BUILDING_CHARIOT_MAKER:
-        //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_CHARIOTS_2) + amount, x + 65, y +
-        //            3, color_mask);
-        break;
-    }
-}
-
 static void draw_storageyard_ornaments(const building* b, int x, int y, color color_mask, painter &ctx) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BUILDING_STORAGE_YARD) + 17, x - 5, y - 42, color_mask);
     //if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
@@ -578,6 +499,6 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
 
     // specific buildings
     draw_palace_rating_flags(b, point.x, point.y, color_mask, ctx);
-    draw_workshop_raw_material_storage(ctx, b, point.x, point.y, color_mask);
+    building_workshop_draw_raw_material_storage(ctx, b, point.x, point.y, color_mask);
     //    draw_hippodrome_ornaments(pixel, point);
 }

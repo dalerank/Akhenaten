@@ -217,7 +217,7 @@ bool widget_city_draw_construction_cost_and_size() {
     screen_tile screen = camera_get_selected_screen_tile();
     int x = screen.x;
     int y = screen.y;
-    int inverted_scale = calc_percentage(100, zoom_get_percentage());
+    int inverted_scale = calc_percentage<int>(100, zoom_get_percentage());
     x = calc_adjust_with_percentage(x, inverted_scale);
     y = calc_adjust_with_percentage(y, inverted_scale);
 
@@ -230,6 +230,7 @@ bool widget_city_draw_construction_cost_and_size() {
         text_draw_number_colored(cost, '@', " ", x + 58 + 1, y + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
         text_draw_number_colored(cost, '@', " ", x + 58, y, FONT_SMALL_PLAIN, color);
     }
+
     if (has_size) {
         int width = -text_get_width(string_from_ascii("  "), FONT_SMALL_PLAIN);
         width += text_draw_number_colored(size_x, '@', "x", x - 15 + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);

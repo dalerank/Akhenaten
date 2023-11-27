@@ -258,7 +258,7 @@ static void calculate_available_food(void) {
         b->has_road_access = 0;
         if (map_has_road_access(b->tile, b->size)) { // map_has_road_access_granary(b->tile.x(), b->tile.y(), 0)
             b->has_road_access = 1;
-            int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+            int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
             if (pct_workers < 100) {
                 city_data.resource.granaries.understaffed++;
             }
@@ -325,38 +325,47 @@ void city_resource_consume_food() {
     city_data.resource.food_types_eaten_num = 0;
     city_data.unused.unknown_00c0 = 0;
     int total_consumed = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->house_size) {
-            int num_types = model_get_house(b->subtype.house_level)->food_types;
-            int amount_per_type = calc_adjust_with_percentage(b->house_population, 50);
-            if (num_types > 1)
-                amount_per_type /= num_types;
+    buildings_house_do([&total_consumed] (building &b) {
+        if (!b.house_size) {
+            return;
+        }
 
-            b->data.house.num_foods = 0;
-            if (scenario_property_kingdom_supplies_grain()) {
-                city_data.resource.food_types_eaten_num = 1;
-                //                city_data.resource.food_types_available = 1;
-                b->data.house.inventory[0] = amount_per_type;
-                b->data.house.num_foods = 1;
-            } else if (num_types > 0) {
-                for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && b->data.house.num_foods < num_types; t++) {
-                    if (b->data.house.inventory[t] >= amount_per_type) {
-                        b->data.house.inventory[t] -= amount_per_type;
-                        b->data.house.num_foods++;
-                        total_consumed += amount_per_type;
-                    } else if (b->data.house.inventory[t]) {
-                        // has food but not enough
-                        b->data.house.inventory[t] = 0;
-                        b->data.house.num_foods++;
-                        total_consumed += amount_per_type;
-                    }
-                    if (b->data.house.num_foods > city_data.resource.food_types_eaten_num)
-                        city_data.resource.food_types_eaten_num = b->data.house.num_foods;
-                }
+        int num_types = model_get_house(b.subtype.house_level)->food_types;
+        short amount_per_type = calc_adjust_with_percentage<short>(b.house_population, 35);
+        if (num_types > 1) {
+            amount_per_type /= num_types;
+        }
+
+        b.data.house.num_foods = 0;
+        if (scenario_property_kingdom_supplies_grain()) {
+            city_data.resource.food_types_eaten_num = 1;
+            b.data.house.inventory[0] = amount_per_type;
+            b.data.house.num_foods = 1;
+            return;
+        } 
+        
+        if (num_types <= 0) {
+            return;
+        }
+
+        for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && b.data.house.num_foods < num_types; t++) {
+            if (b.data.house.inventory[t] >= amount_per_type) {
+                b.data.house.inventory[t] -= amount_per_type;
+                b.data.house.num_foods++;
+                total_consumed += amount_per_type;
+            } else if (b.data.house.inventory[t]) {
+                // has food but not enough
+                b.data.house.inventory[t] = 0;
+                b.data.house.num_foods++;
+                total_consumed += amount_per_type;
+            }
+
+            if (b.data.house.num_foods > city_data.resource.food_types_eaten_num) {
+                city_data.resource.food_types_eaten_num = b.data.house.num_foods;
             }
         }
-    }
+    });
+
     city_data.resource.food_consumed_last_month = total_consumed;
     city_data.resource.food_produced_last_month = city_data.resource.food_produced_this_month;
     city_data.resource.food_produced_this_month = 0;

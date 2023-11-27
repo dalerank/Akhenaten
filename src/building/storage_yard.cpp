@@ -385,7 +385,7 @@ int building_storageyard_for_storing(building* src, map_point tile, e_resource r
         }
 
         if (!config_get(CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS)) {
-            int pct_workers = calc_percentage(dest->num_workers, model_get_building(dest->type)->laborers);
+            int pct_workers = calc_percentage<int>(dest->num_workers, model_get_building(dest->type)->laborers);
             if (pct_workers < 100) {
                 if (understaffed)
                     *understaffed += 1;
@@ -464,7 +464,7 @@ static int determine_granary_accept_foods(int resources[8], int road_network) {
         if (road_network != b->road_network_id)
             continue;
 
-        int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+        int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
         if (pct_workers >= 100 && b->data.granary.resource_stored[RESOURCE_NONE] >= 1200) {
             const building_storage* s = building_storage_get(b->storage_id);
             if (!s->empty_all) {
@@ -495,7 +495,7 @@ static int determine_granary_get_foods(int resources[8], int road_network) {
         if (road_network != b->road_network_id)
             continue;
 
-        int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+        int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
         if (pct_workers >= 100 && b->data.granary.resource_stored[RESOURCE_NONE] > 100) {
             const building_storage* s = building_storage_get(b->storage_id);
             if (!s->empty_all) {
@@ -717,7 +717,7 @@ storage_worker_task building_storageyard_deliver_emptying_resources(building *wa
 
 e_storageyard_task building_storageyard_determine_worker_task(building* warehouse, e_resource& resource, int& amount) {
     // check workers - if less than enough, no task will be done today.
-    int pct_workers = calc_percentage(warehouse->num_workers, model_get_building(warehouse->type)->laborers);
+    int pct_workers = calc_percentage<int>(warehouse->num_workers, model_get_building(warehouse->type)->laborers);
     if (pct_workers < 50) {
         return STORAGEYARD_TASK_NONE;
     }

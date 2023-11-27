@@ -390,7 +390,7 @@ static void init(map_point tile) {
     } else {
         building* b = building_get(context.building_id);
         context.type = BUILDING_INFO_BUILDING;
-        context.worker_percentage = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+        context.worker_percentage = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
         highlight_waypoints(b);
 
         switch (b->type) {

@@ -65,7 +65,7 @@ static int get_tooltip_food_stocks(tooltip_context* c, const building* b) {
             stocks_present += b->data.house.inventory[i];
         }
 
-        int stocks_per_pop = calc_percentage(stocks_present, b->house_population);
+        int stocks_per_pop = calc_percentage<int>(stocks_present, b->house_population);
         if (stocks_per_pop <= 0) {
             return 4;
         } else if (stocks_per_pop < 100) {

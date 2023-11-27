@@ -27,7 +27,7 @@ static void building_workshop_draw_info(object_info& c, int help_id, const char*
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
-    int pct_done = calc_percentage(b->data.industry.progress, 400);
+    int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
     int width = lang_text_draw(group_id, 2, c.offset.x + 32, c.offset.y + 40, FONT_NORMAL_BLACK_ON_LIGHT);
     width += text_draw_percentage(pct_done, c.offset.x + 32 + width, c.offset.y + 40, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(group_id, 3, c.offset.x + 32 + width, c.offset.y + 40, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -74,7 +74,7 @@ static void building_workshop_draw_info(object_info& c, int help_id, const char*
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
-    int pct_done = calc_percentage(b->data.industry.progress, 400);
+    int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
     int width = lang_text_draw(group_id, 2, c.offset.x + 32, c.offset.y + 40, FONT_NORMAL_BLACK_ON_LIGHT);
     width += text_draw_percentage(pct_done, c.offset.x + 32 + width, c.offset.y + 40, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(group_id, 3, c.offset.x + 32 + width, c.offset.y + 40, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -170,4 +170,84 @@ void building_brick_maker_workshop_draw_info(object_info& c) {
     e_resource output_resource = RESOURCE_BRICKS;
 
     building_workshop_draw_info(c, 1, "brick_maker", 180, output_resource, RESOURCE_CLAY, RESOURCE_STRAW);
+}
+
+void building_workshop_draw_raw_material_storage(painter &ctx, const building* b, int x, int y, color color_mask) {
+    int amount = ceil((float)b->stored_amount() / 100.0) - 1;
+    int amount2 = 0;
+    switch (b->type) {
+    case BUILDING_HUNTING_LODGE:
+    if (amount >= 0) {
+        ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_GAMEMEAT) + amount, x + 61, y + 14, color_mask);
+    }
+    break;
+
+    case BUILDING_BRICKS_WORKSHOP:
+    amount = std::min<int>(2, ceil((float)b->stored_amount(RESOURCE_CLAY) / 100.0) - 1);
+    amount2 = std::min<int>(2, ceil((float)b->stored_amount(RESOURCE_STRAW) / 100.0) - 1);
+    if (amount >= 0) {
+        ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_CLAY) + amount, x + 46, y + 25, color_mask);
+    }
+
+    if (amount2 >= 0) {
+        ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_STRAW) + amount, x + 51, y + 18, color_mask);
+    }
+    break;
+
+    case BUILDING_WEAPONS_WORKSHOP:
+    amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
+    if (amount >= 0) {
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_COPPER_2) + amount, x + 61, y + 14, color_mask);
+    }
+    break;
+
+    case BUILDING_POTTERY_WORKSHOP:
+    amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
+    if (amount >= 0) {
+        ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_CLAY) + amount, x + 65, y + 3, color_mask);
+    }
+    break;
+
+    case BUILDING_BEER_WORKSHOP:
+    amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
+    if (amount >= 0) {
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_BARLEY_2) + amount, x + 65, y + 3, color_mask);
+    }
+    break;
+
+    case BUILDING_PAPYRUS_WORKSHOP:
+    amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
+    if (amount >= 0) {
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_REEDS_5) + amount, x + 35, y + 4, color_mask);
+    }
+    break;
+
+    case BUILDING_WOOD_CUTTERS:
+    if (amount >= 0) {
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3, color_mask);
+    }
+    break;
+
+    case BUILDING_LINEN_WORKSHOP:
+    //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_FLAX_2) + amount, x + 65, y + 3,
+    //            color_mask);
+    break;
+    case BUILDING_JEWELS_WORKSHOP:
+    //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GEMS_2) + amount, x + 65, y + 3,
+    //            color_mask);
+    break;
+    case BUILDING_SHIPYARD:
+    //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3,
+    //            color_mask);
+    break;
+
+    case BUILDING_CHARIOTS_WORKSHOP:
+    //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3,
+    //            color_mask);
+    break;
+    case BUILDING_CHARIOT_MAKER:
+    //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_CHARIOTS_2) + amount, x + 65, y +
+    //            3, color_mask);
+    break;
+    }
 }

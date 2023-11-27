@@ -29,7 +29,7 @@ static void building_farm_draw_info(object_info &c, int help_id, const char* typ
 
     building* b = building_get(c.building_id);
     //int pct_grown = calc_percentage(b->data.industry.progress, 200);
-    int pct_grown = calc_percentage(b->data.industry.progress, 2000);
+    int pct_grown = calc_percentage<int>(b->data.industry.progress, 2000);
     int width = lang_text_draw(group_id, 2, c.offset.x + 32, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
     width += text_draw_percentage(pct_grown, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
     width += lang_text_draw(group_id, 3, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);

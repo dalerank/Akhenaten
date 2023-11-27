@@ -149,7 +149,7 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
     bool is_reverse = false;
     if (b->type == BUILDING_BEER_WORKSHOP) {
         // exception for wine...
-        int pct_done = calc_percentage(b->data.industry.progress, 400);
+        int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
         if (pct_done <= 0)
             new_sprite = 0;
         else if (pct_done < 4)

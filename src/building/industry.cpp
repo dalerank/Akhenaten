@@ -51,10 +51,6 @@ static void update_farm_image(building &b) {
 }
 
 delivery_destination building_get_asker_for_resource(tile2i tile, e_building_type btype, e_resource resource, int road_network_id, int distance_from_entry) {
-    if (resource != RESOURCE_WEAPONS) {
-        return {0};
-    }
-
     if (city_resource_is_stockpiled(resource)) {
         return {0};
     }

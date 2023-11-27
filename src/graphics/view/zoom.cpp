@@ -115,11 +115,11 @@ bool zoom_update_value(vec2i* camera_position) {
 
     // re-center camera around the input point
     vec2i old_offset, new_offset;
-    old_offset.x = calc_adjust_with_percentage(data.input_offset.x, old_zoom);
-    old_offset.y = calc_adjust_with_percentage(data.input_offset.y, old_zoom);
+    old_offset.x = calc_adjust_with_percentage<int>(data.input_offset.x, old_zoom);
+    old_offset.y = calc_adjust_with_percentage<int>(data.input_offset.y, old_zoom);
 
-    new_offset.x = calc_adjust_with_percentage(data.input_offset.x, data.zoom);
-    new_offset.y = calc_adjust_with_percentage(data.input_offset.y, data.zoom);
+    new_offset.x = calc_adjust_with_percentage<int>(data.input_offset.x, data.zoom);
+    new_offset.y = calc_adjust_with_percentage<int>(data.input_offset.y, data.zoom);
 
     camera_position->x -= new_offset.x - old_offset.x;
     camera_position->y -= new_offset.y - old_offset.y;

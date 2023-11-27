@@ -561,7 +561,7 @@ static void allocate_workers_to_non_water_buildings(void) {
         if (b.percentage_houses_covered > 0) {
             int required_workers = model_get_building(b.type)->laborers;
             if (category_workers_needed[cat]) {
-                int num_workers = calc_adjust_with_percentage(city_data.labor.categories[cat].workers_allocated, b.percentage_houses_covered) / 100;
+                short num_workers = calc_adjust_with_percentage<short>(city_data.labor.categories[cat].workers_allocated, b.percentage_houses_covered) / 100;
                 if (num_workers > required_workers) {
                     num_workers = required_workers;
                 }

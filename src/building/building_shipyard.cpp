@@ -26,7 +26,7 @@ void building_shipyard_draw_info(object_info &c) {
     if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else {
-        int pct_done = calc_percentage(b->data.industry.progress, 160);
+        int pct_done = calc_percentage<int>(b->data.industry.progress, 160);
         int width = lang_text_draw(100, 2, c.offset.x + 32, c.offset.y + 56, FONT_NORMAL_BLACK_ON_LIGHT);
         width += text_draw_percentage(pct_done, c.offset.x + 32 + width, c.offset.y + 56, FONT_NORMAL_BLACK_ON_LIGHT);
         lang_text_draw(100, 3, c.offset.x + 32 + width, c.offset.y + 56, FONT_NORMAL_BLACK_ON_LIGHT);

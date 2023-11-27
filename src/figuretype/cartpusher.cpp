@@ -271,50 +271,65 @@ void figure::determine_storageyard_cart_destination() {
         if (has_destination()) {
             advance_action(FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE);
             terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-        } else
+        } else {
             advance_action(FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY);
+        }
         return;
     }
     building* warehouse = home();
 
     ////// delivering resource!
     // priority 1: weapons to barracks
-    auto result = building_get_asker_for_resource(tile, BUILDING_RECRUITER, resource_id, road_network_id, warehouse->distance_from_entry);
-    set_destination(result.building_id);
-    if (has_destination()) {
-        return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+    if (resource_id == RESOURCE_WEAPONS) {
+        auto result = building_get_asker_for_resource(tile, BUILDING_RECRUITER, resource_id, road_network_id, warehouse->distance_from_entry);
+        set_destination(result.building_id);
+        if (has_destination()) {
+            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+        }
     }
 
     // priority 2: paryrus to scribal school
-    result = building_get_asker_for_resource(tile, BUILDING_SCRIBAL_SCHOOL, resource_id, road_network_id, warehouse->distance_from_entry);
-    set_destination(result.building_id);
-    if (has_destination()) {
-        return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+    if (resource_id == RESOURCE_PAPYRUS) {
+        auto result = building_get_asker_for_resource(tile, BUILDING_SCRIBAL_SCHOOL, resource_id, road_network_id, warehouse->distance_from_entry);
+        set_destination(result.building_id);
+        if (has_destination()) {
+            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+        }
     }
 
     // priority 3: raw materials to workshop
-    int building_id = building_get_workshop_for_raw_material_with_room(tile, resource_id, warehouse->distance_from_entry, road_network_id, result.dest);
-    set_destination(building_id);
-    if (has_destination()) {
-        return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+    {
+        tile2i dest;
+        int building_id = building_get_workshop_for_raw_material_with_room(tile, resource_id, warehouse->distance_from_entry, road_network_id, dest);
+        set_destination(building_id);
+        if (has_destination()) {
+            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+        }
     }
 
     // priority 4: food to granary
-    building_id = building_granary_for_storing(tile, resource_id, warehouse->distance_from_entry, road_network_id, 0, 0, &result.dest);
-    set_destination(building_id);
-    if (has_destination()) {
-        return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+    {
+        tile2i dest;
+        int building_id = building_granary_for_storing(tile, resource_id, warehouse->distance_from_entry, road_network_id, 0, 0, &dest);
+        set_destination(building_id);
+        if (has_destination()) {
+            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+        }
     }
 
     // priority 5: food to getting granary
-    building_id = building_getting_granary_for_storing(tile, resource_id, warehouse->distance_from_entry, road_network_id, &result.dest);
-    set_destination(building_id);
-    if (has_destination()) {
-        return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+    {
+        tile2i dest;
+        int building_id = building_getting_granary_for_storing(tile, resource_id, warehouse->distance_from_entry, road_network_id, &dest);
+        set_destination(building_id);
+        if (has_destination()) {
+            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+        }
     }
 
     // priority 6: resource to other warehouse
-    building_id = building_storageyard_for_storing(home(), tile, resource_id, warehouse->distance_from_entry, road_network_id, 0, &result.dest);
+    tile2i dest;
+    int building_id = building_storageyard_for_storing(home(), tile, resource_id, warehouse->distance_from_entry, road_network_id, 0, &dest);
     set_destination(building_id);
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);

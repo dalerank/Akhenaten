@@ -203,7 +203,7 @@ figure* building::create_cartpusher(e_resource resource_id, int quantity, e_figu
 }
 
 int building::worker_percentage() {
-    return calc_percentage(num_workers, model_get_building(type)->laborers);
+    return calc_percentage<int>(num_workers, model_get_building(type)->laborers);
 }
 
 int building::figure_hunting_longe_spawn_timer() {
