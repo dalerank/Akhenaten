@@ -13,8 +13,32 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
+#include "game/game.h"
 
-static void building_education_draw_info(object_info& c, const char* type, e_figure_type ftype) {
+#include "js/js_game.h"
+
+struct building_scribal_school_t {
+    vec2i papyrus;
+    vec2i icon_res;
+    vec2i text_res;
+} building_scribal_school;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_scribal_school);
+void config_load_scribal_school(archive arch) {
+    arch.load_global_section("building_scribal_school", [] (archive arch) {
+        building_scribal_school.papyrus.x = arch.read_integer("papyrus_x");
+        building_scribal_school.papyrus.y = arch.read_integer("papyrus_y");
+
+        arch.read_object_section("info", [] (archive arch) {
+            building_scribal_school.icon_res.x = arch.read_integer("icon_res_x");
+            building_scribal_school.icon_res.y = arch.read_integer("icon_res_y");
+            building_scribal_school.text_res.x = arch.read_integer("text_res_x");
+            building_scribal_school.text_res.y = arch.read_integer("text_res_y");
+        });
+    });
+}
+
+static void building_education_draw_info(object_info& c, const char* type, e_figure_type ftype, e_resource resource) {
     auto &meta = building::get_info(type);
     c.help_id = meta.help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
@@ -22,6 +46,13 @@ static void building_education_draw_info(object_info& c, const char* type, e_fig
     lang_text_draw_centered(meta.text_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building *b = building_get(c.building_id);
+    painter ctx = game.painter();
+
+    if (resource != RESOURCE_NONE) {
+        ImageDraw::img_generic(ctx, image_id_resource_icon(resource), c.offset + building_scribal_school.icon_res);
+        int width = lang_text_draw(23, 77, c.offset + building_scribal_school.text_res, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_amount(8, 10, b->stored_amount(), c.offset + building_scribal_school.text_res + vec2i{width, 0}, FONT_NORMAL_BLACK_ON_LIGHT);
+    }
 
     if (ftype != FIGURE_NONE && b->has_figure_of_type(BUILDING_SLOT_SERVICE, ftype)) {
         window_building_draw_description(c, meta.text_id, e_text_figure_on_patrol);
@@ -38,13 +69,13 @@ static void building_education_draw_info(object_info& c, const char* type, e_fig
 }
 
 void building_scribal_school_draw_info(object_info& c) {
-    building_education_draw_info(c, "school_scribe", FIGURE_TEACHER);
+    building_education_draw_info(c, "school_scribe", FIGURE_TEACHER, RESOURCE_PAPYRUS);
 }
 void building_academy_draw_info(object_info& c) {
-    building_education_draw_info(c, "academy", FIGURE_SCRIBER);
+    building_education_draw_info(c, "academy", FIGURE_SCRIBER, RESOURCE_NONE);
 }
 void building_library_draw_info(object_info& c) {
-    building_education_draw_info(c, "library", FIGURE_LIBRARIAN);
+    building_education_draw_info(c, "library", FIGURE_LIBRARIAN, RESOURCE_NONE);
 }
 
 void building::spawn_figure_school() {
@@ -71,5 +102,18 @@ void building::spawn_figure_school() {
             set_figure(BUILDING_SLOT_SERVICE, f->id);
             f->init_roaming_from_building(0);
         }
+    }
+}
+
+void building_education_draw_raw_material_storage(painter &ctx, const building *b, vec2i pos, color color_mask) {
+    int amount = 0;
+    int amount2 = 0;
+    switch (b->type) {
+    case BUILDING_SCRIBAL_SCHOOL:
+        amount = ceil((float)b->stored_amount() / 100.0) - 1;
+        if (amount >= 0) {
+            ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_PAPYRUS) + amount, pos + building_scribal_school.papyrus, color_mask);
+        }
+        break;
     }
 }

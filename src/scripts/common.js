@@ -24,3 +24,5 @@ var top_menu_bar = {}
 var main_menu_window = {}
 var building_booth = {}
 var building_bandstand = {}
+var building_scribal_school = {}
+var building_scribal_school_info = {}

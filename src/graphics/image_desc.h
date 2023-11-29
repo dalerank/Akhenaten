@@ -79,6 +79,7 @@ enum e_image_id : uint16_t {
     IMG_SIDE_PANEL = 74,
     IMG_TOP_MENU_BACKGROUND = 75,
     IMG_EDITOR_SIDE_PANEL = 76,
+    IMG_RESOURCE_PAPYRUS = 77,
 
     IMG_SIZE
 };

@@ -13,4 +13,4 @@ void building_pottery_workshop_draw_info(object_info& c);
 void building_brick_maker_workshop_draw_info(object_info& c);
 void building_papyrus_workshop_draw_info(object_info &c);
 void building_cattle_ranch_draw_info(object_info &c);
-void building_workshop_draw_raw_material_storage(painter &ctx, const building *b, int x, int y, color color_mask);
+void building_workshop_draw_raw_material_storage(painter &ctx, const building *b, vec2i pos, color color_mask);

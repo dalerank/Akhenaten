@@ -6,6 +6,7 @@
 #include "building/dock.h"
 #include "building/building_granary.h"
 #include "building/building_entertainment.h"
+#include "building/building_education.h"
 #include "building/building_workshop.h"
 #include "building/building_farm.h"
 #include "city/buildings.h"
@@ -360,6 +361,7 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
 
     // specific buildings
     draw_palace_rating_flags(b, point.x, point.y, color_mask, ctx);
-    building_workshop_draw_raw_material_storage(ctx, b, point.x, point.y, color_mask);
+    building_workshop_draw_raw_material_storage(ctx, b, point, color_mask);
+    building_education_draw_raw_material_storage(ctx, b, point, color_mask);
     //    draw_hippodrome_ornaments(pixel, point);
 }
