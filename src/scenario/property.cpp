@@ -29,7 +29,7 @@ bool scenario_is_mission_rank(int rank) {
     //    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
     return !g_scenario_data.settings.is_custom && g_scenario_data.settings.campaign_mission_rank == rank - 1;
 }
-int scenario_is_tutorial_before_mission_5(void) {
+int scenario_is_tutorial_before_mission_5() {
     return !g_scenario_data.settings.is_custom && g_scenario_data.settings.campaign_mission_rank < 5;
 }
 

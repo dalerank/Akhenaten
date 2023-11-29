@@ -727,10 +727,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
             data.selected_city = empire_city_get_for_object(selected_object - 1);
             const empire_city* city = empire_city_get(data.selected_city);
 
-            if ((GAME_ENV == ENGINE_ENV_C3 && city->type == EMPIRE_CITY_PHARAOH)
-                || (GAME_ENV == ENGINE_ENV_PHARAOH
-                    && (city->type == EMPIRE_CITY_PHARAOH_TRADING || city->type == EMPIRE_CITY_EGYPTIAN_TRADING
-                        || city->type == EMPIRE_CITY_FOREIGN_TRADING))) {
+            if ((city->type == EMPIRE_CITY_PHARAOH_TRADING || city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING)) {
                 if (city->is_open) {
                     int x_offset = (data.x_min + data.x_max - 500) / 2;
                     int y_offset = data.y_max - 113;
@@ -742,22 +739,12 @@ static void handle_input(const mouse* m, const hotkeys* h) {
                         if (empire_object_city_sells_resource(obj->id, resource)) {
                             int column_offset = TRADE_COLUMN_SPACING * column_idx(index_sell) - 150;
                             int row_offset = TRADE_ROW_SPACING * row_idx(index_sell) + 20;
-                            generic_buttons_handle_mouse(m,
-                                                         x_offset + column_offset + 125,
-                                                         y_offset + INFO_Y_TRADED + row_offset - 7,
-                                                         generic_button_trade_resource + resource - 1,
-                                                         1,
-                                                         &button_id);
+                            generic_buttons_handle_mouse(m, x_offset + column_offset + 125, y_offset + INFO_Y_TRADED + row_offset - 7, generic_button_trade_resource + resource - 1, 1, &button_id);
                             index_sell++;
                         } else if (empire_object_city_buys_resource(obj->id, resource)) {
                             int column_offset = TRADE_COLUMN_SPACING * column_idx(index_buy) + 200;
                             int row_offset = TRADE_ROW_SPACING * row_idx(index_buy) + 20;
-                            generic_buttons_handle_mouse(m,
-                                                         x_offset + column_offset + 125,
-                                                         y_offset + INFO_Y_TRADED + row_offset - 7,
-                                                         generic_button_trade_resource + resource - 1,
-                                                         1,
-                                                         &button_id);
+                            generic_buttons_handle_mouse(m, x_offset + column_offset + 125, y_offset + INFO_Y_TRADED + row_offset - 7, generic_button_trade_resource + resource - 1, 1, &button_id);
                             index_buy++;
                         }
 
@@ -768,12 +755,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
                         }
                     }
                 } else {
-                    generic_buttons_handle_mouse(m,
-                                                 (data.x_min + data.x_max - 500) / 2 + TRADE_BUTTON_OFFSET_X,
-                                                 data.y_max - 105 + TRADE_BUTTON_OFFSET_Y,
-                                                 generic_button_open_trade,
-                                                 1,
-                                                 &data.selected_button);
+                    generic_buttons_handle_mouse(m, (data.x_min + data.x_max - 500) / 2 + TRADE_BUTTON_OFFSET_X, data.y_max - 105 + TRADE_BUTTON_OFFSET_Y, generic_button_open_trade, 1, &data.selected_button);
                 }
             }
         }
@@ -797,9 +779,9 @@ static int get_tooltip_resource(tooltip_context* c) {
     // we only want to check tooltips on our own closed cities.
     // open city resource tooltips are handled by their respective buttons directly
     if (city->is_open || (GAME_ENV == ENGINE_ENV_C3 && city->type != EMPIRE_CITY_PHARAOH)
-        || (GAME_ENV == ENGINE_ENV_PHARAOH && city->type != EMPIRE_CITY_PHARAOH_TRADING
-            && city->type != EMPIRE_CITY_EGYPTIAN_TRADING && city->type != EMPIRE_CITY_FOREIGN_TRADING))
+        || (city->type != EMPIRE_CITY_PHARAOH_TRADING && city->type != EMPIRE_CITY_EGYPTIAN_TRADING && city->type != EMPIRE_CITY_FOREIGN_TRADING)) {
         return 0;
+    }
 
     int object_id = empire_selected_object() - 1;
     int x_offset = (data.x_min + data.x_max - 500) / 2;
@@ -808,10 +790,7 @@ static int get_tooltip_resource(tooltip_context* c) {
     int item_offset = lang_text_get_width(47, 5, FONT_OBJECT_INFO[GAME_ENV]);
     for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         if (empire_object_city_sells_resource(object_id, r)) {
-            if (is_mouse_hit(c,
-                             x_offset + 18 + item_offset,
-                             y_offset + INFO_Y_SELLS - TRADE_RESOURCE_OFFSET[GAME_ENV],
-                             TRADE_RESOURCE_SIZE[GAME_ENV]))
+            if (is_mouse_hit(c, x_offset + 18 + item_offset, y_offset + INFO_Y_SELLS - TRADE_RESOURCE_OFFSET[GAME_ENV], TRADE_RESOURCE_SIZE[GAME_ENV]))
                 return r;
 
             item_offset += 32;
@@ -820,10 +799,7 @@ static int get_tooltip_resource(tooltip_context* c) {
     item_offset += lang_text_get_width(47, 4, FONT_OBJECT_INFO[GAME_ENV]);
     for (int r = RESOURCE_MIN; r <= RESOURCES_MAX; r++) {
         if (empire_object_city_buys_resource(object_id, r)) {
-            if (is_mouse_hit(c,
-                             x_offset + 18 + item_offset,
-                             y_offset + INFO_Y_BUYS - TRADE_RESOURCE_OFFSET[GAME_ENV],
-                             TRADE_RESOURCE_SIZE[GAME_ENV]))
+            if (is_mouse_hit(c, x_offset + 18 + item_offset, y_offset + INFO_Y_BUYS - TRADE_RESOURCE_OFFSET[GAME_ENV], TRADE_RESOURCE_SIZE[GAME_ENV]))
                 return r;
 
             item_offset += 32;
@@ -923,7 +899,7 @@ void window_empire_show() {
 }
 
 void window_empire_show_checked() {
-    e_availability avail = mission_empire_availability();
+    e_availability avail = mission_empire_availability(scenario_campaign_scenario_id() + 1);
     
     if (avail == AVAILABLE || scenario_is_custom()) {
         window_empire_show();

@@ -299,7 +299,13 @@ int window_advisors_get_advisor(void) {
 }
 
 void window_advisors_show(void) {
-    window_type window = {WINDOW_ADVISORS, draw_background, draw_foreground, handle_input, get_tooltip};
+    window_type window = {
+        WINDOW_ADVISORS,
+        draw_background,
+        draw_foreground,
+        handle_input,
+        get_tooltip
+    };
     init();
     window_show(&window);
 }

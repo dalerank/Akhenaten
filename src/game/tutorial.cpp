@@ -125,9 +125,9 @@ void tutorial_init() {
     tutorial_menu_update(scenario_id + 1);
 }
 
-e_availability mission_advisor_availability(e_advisor advisor, int tutorial) {
+e_availability mission_advisor_availability(e_advisor advisor, int mission) {
     svector<e_advisor, ADVISOR_MAX> advisors;
-    switch (tutorial) {
+    switch (mission) {
     case 1:
         return NOT_AVAILABLE;
     case 2:
@@ -154,9 +154,20 @@ e_availability mission_advisor_availability(e_advisor advisor, int tutorial) {
                     : NOT_AVAILABLE;
 }
 
-e_availability mission_empire_availability() {
-    if (scenario_is_tutorial_before_mission_5())
+e_availability mission_empire_availability(int mission) {
+    if (g_scenario_data.settings.is_custom) {
         return NOT_AVAILABLE;
+    }
+
+    if (mission < 5) {
+        return NOT_AVAILABLE;
+    }
+
+    if (mission == 5) {
+        return (g_tutorials_flags.tutorial_5.papyrus_made)
+                    ? AVAILABLE
+                    : NOT_AVAILABLE;
+    }
     // TODO
     //    else if (!g_tutorials_flags.pharaoh.tut5_can_trade_finally)
     //        return NOT_AVAILABLE_YET;
@@ -360,8 +371,8 @@ void tutorial_on_add_to_storageyard() {
         post_message(MESSAGE_TUTORIAL_FINANCES);
     } if (!g_tutorials_flags.tutorial_5.papyrus_made && city_resource_count(RESOURCE_PAPYRUS) >= 1) {
         g_tutorials_flags.tutorial_5.papyrus_made = 1;
-        // building_menu_update(BUILDSET_TUT5_TRADING);
-        // post_message(MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES);
+        building_menu_update(BUILDSET_TUT5_TRADING);
+        post_message(MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES);
     } if (!g_tutorials_flags.pharaoh.bricks_bought && city_resource_count(RESOURCE_BRICKS) >= 1) {
         g_tutorials_flags.pharaoh.bricks_bought = 1;
         building_menu_update(BUILDSET_TUT5_MONUMENTS);
