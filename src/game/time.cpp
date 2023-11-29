@@ -40,6 +40,7 @@ int game_time_absolute_day(bool since_start) {
         days += 192 * game_time_year_since_start();
     return days;
 }
+
 int game_time_absolute_tick(bool since_start) {
     int ticks = game_time_absolute_day() * 51 + g_game_time.tick;
     if (since_start)
