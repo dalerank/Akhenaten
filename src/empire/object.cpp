@@ -1,6 +1,7 @@
 #include "object.h"
 
 #include "core/calc.h"
+#include "core/log.h"
 #include "core/game_environment.h"
 #include "empire/city.h"
 #include "empire/trade_route.h"
@@ -35,6 +36,7 @@ static bool is_trade_city(int index) {
             || objects[index].city_type == EMPIRE_CITY_EGYPTIAN_TRADING
             || objects[index].city_type == EMPIRE_CITY_FOREIGN_TRADING);
 }
+
 static int get_trade_amount_code(int index, int resource) {
     auto& objects = g_empire_objects;
     if (!is_trade_city(index))
@@ -56,6 +58,7 @@ static int get_trade_amount_code(int index, int resource) {
     } else
         return objects[index].trade_demand[resource];
 }
+
 static bool is_sea_trade_route(int route_id) {
     auto& objects = g_empire_objects;
     for (int i = 0; i < MAX_OBJECTS; i++) {
@@ -94,8 +97,6 @@ static void fix_image_ids(void) {
         }
     }
 }
-
-// static int objects_are_loaded = 0;
 
 void empire_object_init_cities() {
     auto& objects = g_empire_objects;
@@ -330,8 +331,6 @@ int empire_object_update_animation(const empire_object* obj, int image_id) {
     return objects[obj->id].obj.animation_index = get_animation_offset(image_id, obj->animation_index);
 }
 
-////////
-
 #define MAX_ROUTE_OBJECTS 50
 
 static struct map_route_object route_objects[MAX_ROUTE_OBJECTS];
@@ -341,9 +340,8 @@ map_route_object* empire_get_route_object(int id) {
 }
 
 io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t version) {
+    logs::info("iob_empire_map_objects");
     auto& objects = g_empire_objects;
-    //    if (objects_are_loaded)
-    //        return;
     int last_object_was_used = 1;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         full_empire_object* full = &objects[i];
@@ -397,6 +395,7 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t vers
     }
 });
 io_buffer* iob_empire_map_routes = new io_buffer([](io_buffer* iob, size_t version) {
+    logs::info("iob_empire_map_routes");
     for (int id = 0; id < MAX_ROUTE_OBJECTS; id++) {
         map_route_object* obj = &route_objects[id];
 

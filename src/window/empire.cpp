@@ -36,14 +36,7 @@
 #include "window/trade_opened.h"
 #include "game/game.h"
 
-const static int EMPIRE_WIDTH[2] = {
-  2000 + 32,
-  1200 + 32,
-};
-const static int EMPIRE_HEIGHT[2] = {
-  1000 + 136,
-  1600 + 136 + 20,
-};
+const static vec2i EMPIRE_SIZE{1200 + 32,  1600 + 136 + 20};
 const static font_t FONT_OBJECT_INFO[2] = {FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT};
 
 static void button_help(int param1, int param2);
@@ -52,12 +45,16 @@ static void button_advisor(int advisor, int param2);
 static void button_open_trade(int param1, int param2);
 static void button_show_resource_window(int resource, int param2);
 
-static image_button image_button_help[]
-  = {{0, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1}};
-static image_button image_button_return_to_city[]
-  = {{0, 0, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_return_to_city, button_none, 0, 0, 1}};
+static image_button image_button_help[] = {
+    {0, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1}
+};
+
+static image_button image_button_return_to_city[] = {
+    {0, 0, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_return_to_city, button_none, 0, 0, 1}
+};
+
 static image_button image_button_advisor[] = {
-  {-4, 0, 24, 24, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1},
+    {-4, 0, 24, 24, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1},
 };
 static int ADVISOR_BUTTON_X = 0;
 
@@ -105,7 +102,7 @@ static generic_button generic_button_open_trade[] = {{30, 56, 440, 20, button_op
 #define TRADE_BUTTON_OFFSET_X 0
 #define TRADE_BUTTON_OFFSET_Y 10
 
-static struct {
+struct empire_window_t {
     int selected_button;
     int selected_city;
     int x_min, x_max, y_min, y_max;
@@ -114,9 +111,12 @@ static struct {
     int is_scrolling;
     int finished_scroll;
     int focus_resource;
-} data = {0, 1};
+};
+
+empire_window_t g_empire_window = {0, 1};
 
 static void init(void) {
+    auto &data = g_empire_window;
     data.selected_button = 0;
     int selected_object = empire_selected_object();
     if (selected_object)
@@ -145,6 +145,7 @@ const int TRADE_RESOURCE_OFFSET[2] = {9, 3};
 // static color fade_in_out_color = 0xff000000;
 
 static void draw_trade_route(int route_id, int effect) {
+    auto &data = g_empire_window;
     map_route_object* obj = empire_get_route_object(route_id);
     if (!obj->in_use)
         return;
@@ -205,6 +206,7 @@ static int row_idx(int index) {
 }
 
 static void draw_trade_resource(int resource, int trade_max, int x_offset, int y_offset) {
+    auto &data = g_empire_window;
     painter ctx = game.painter();
     graphics_draw_inset_rect(x_offset, y_offset, TRADE_RESOURCE_SIZE[GAME_ENV], TRADE_RESOURCE_SIZE[GAME_ENV]);
     ImageDraw::img_generic(ctx, image_id_resource_icon(resource), vec2i{x_offset + 1, y_offset + 1});
@@ -228,6 +230,7 @@ static void draw_trade_resource(int resource, int trade_max, int x_offset, int y
     }
 }
 static void draw_trade_city_info(const empire_object* object, const empire_city* city) {
+    auto &data = g_empire_window;
     int x_offset = (data.x_min + data.x_max - 500) / 2;
     int y_offset = data.y_max - 113;
 
@@ -325,58 +328,35 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
     }
 }
 static void draw_city_info(const empire_object* object) {
+    auto &data = g_empire_window;
     int x_offset = (data.x_min + data.x_max - 240) / 2;
     int y_offset = data.y_max - 88;
 
     const empire_city* city = empire_city_get(data.selected_city);
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        switch (city->type) {
-        case EMPIRE_CITY_OURS:
-            lang_text_draw_centered(47, 12, x_offset, y_offset + INFO_Y_BUYS, 240, FONT_OBJECT_INFO[GAME_ENV]);
-            break;
-        case EMPIRE_CITY_FOREIGN_TRADING:
-            if (city_military_distant_battle_city_is_roman())
-                lang_text_draw_centered(47, 12, x_offset, y_offset + INFO_Y_BUYS, 240, FONT_OBJECT_INFO[GAME_ENV]);
-            else {
-                lang_text_draw_centered(47, 13, x_offset, y_offset + INFO_Y_BUYS, 240, FONT_OBJECT_INFO[GAME_ENV]);
-            }
-            break;
-        case EMPIRE_CITY_EGYPTIAN_TRADING:
-        case EMPIRE_CITY_EGYPTIAN:
-        case EMPIRE_CITY_FOREIGN:
-            lang_text_draw_centered(47, 0, x_offset, y_offset + INFO_Y_BUYS, 240, FONT_OBJECT_INFO[GAME_ENV]);
-            break;
-        case EMPIRE_CITY_PHARAOH_TRADING:
-            lang_text_draw_centered(47, 1, x_offset, y_offset + INFO_Y_BUYS, 240, FONT_OBJECT_INFO[GAME_ENV]);
-            break;
-        case EMPIRE_CITY_PHARAOH:
-            draw_trade_city_info(object, city);
-            break;
-        }
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        switch (city->type) {
-        case EMPIRE_CITY_OURS:
-            lang_text_draw_centered(47, 1, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
-            break;
-        case EMPIRE_CITY_PHARAOH:
-            lang_text_draw_centered(47, 19, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
-            break;
-        case EMPIRE_CITY_EGYPTIAN:
-            lang_text_draw_centered(47, 13, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
-            break;
-        case EMPIRE_CITY_FOREIGN:
-            lang_text_draw_centered(47, 0, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
-            break;
-        case EMPIRE_CITY_PHARAOH_TRADING:
-        case EMPIRE_CITY_EGYPTIAN_TRADING:
-        case EMPIRE_CITY_FOREIGN_TRADING:
-            draw_trade_city_info(object, city);
-            break;
-        }
+
+    switch (city->type) {
+    case EMPIRE_CITY_OURS:
+        lang_text_draw_centered(47, 1, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
+        break;
+    case EMPIRE_CITY_PHARAOH:
+        lang_text_draw_centered(47, 19, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
+        break;
+    case EMPIRE_CITY_EGYPTIAN:
+        lang_text_draw_centered(47, 13, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
+        break;
+    case EMPIRE_CITY_FOREIGN:
+        lang_text_draw_centered(47, 0, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
+        break;
+    case EMPIRE_CITY_PHARAOH_TRADING:
+    case EMPIRE_CITY_EGYPTIAN_TRADING:
+    case EMPIRE_CITY_FOREIGN_TRADING:
+        draw_trade_city_info(object, city);
+        break;
     }
 }
 
 static void draw_roman_army_info(const empire_object* object) {
+    auto &data = g_empire_window;
     if (city_military_distant_battle_roman_army_is_traveling()) {
         if (city_military_distant_battle_roman_months_traveled() == object->distant_battle_travel_months) {
             vec2i offset{(data.x_min + data.x_max - 240) / 2, data.y_max - 68};
@@ -391,6 +371,7 @@ static void draw_roman_army_info(const empire_object* object) {
     }
 }
 static void draw_enemy_army_info(const empire_object* object) {
+    auto &data = g_empire_window;
     if (city_military_months_until_distant_battle() > 0) {
         if (city_military_distant_battle_enemy_months_traveled() == object->distant_battle_travel_months) {
             lang_text_draw_multiline(47, 14, vec2i{(data.x_min + data.x_max - 240) / 2, data.y_max - 68}, 240, FONT_OBJECT_INFO[GAME_ENV]);
@@ -399,6 +380,7 @@ static void draw_enemy_army_info(const empire_object* object) {
 }
 
 static void draw_object_info(void) {
+    auto &data = g_empire_window;
     int selected_object = empire_selected_object();
     if (selected_object) {
         const empire_object* object = empire_object_get(selected_object - 1);
@@ -414,13 +396,11 @@ static void draw_object_info(void) {
             break;
         }
     } else {
-        if (GAME_ENV == ENGINE_ENV_C3)
-            lang_text_draw_centered(47, 8, data.x_min, data.y_max - 48, data.x_max - data.x_min, FONT_OBJECT_INFO[GAME_ENV]);
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            lang_text_draw_centered(47, 9, data.x_min, data.y_max - 68, data.x_max - data.x_min, FONT_OBJECT_INFO[GAME_ENV]);
+        lang_text_draw_centered(47, 9, data.x_min, data.y_max - 68, data.x_max - data.x_min, FONT_OBJECT_INFO[GAME_ENV]);
     }
 }
 static void draw_empire_object(const empire_object* obj) {
+    auto &data = g_empire_window;
     if (obj->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj->type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
         if (!empire_city_is_trade_route_open(obj->trade_route_id))
             return;
@@ -436,88 +416,61 @@ static void draw_empire_object(const empire_object* obj) {
         image_id = obj->image_id;
     }
 
-    if (GAME_ENV == ENGINE_ENV_C3 && obj->type == EMPIRE_OBJECT_CITY) {
+    if (obj->type == EMPIRE_OBJECT_CITY) {
         const empire_city* city = empire_city_get(empire_city_get_for_object(obj->id));
-        if (city->type == EMPIRE_CITY_EGYPTIAN || city->type == EMPIRE_CITY_FOREIGN) {
-            image_id = image_id_from_group(GROUP_EMPIRE_FOREIGN_CITY);
-        } else if (city->type == EMPIRE_CITY_PHARAOH) {
-            // Fix cases where empire map still gives a blue flag for new trade cities (e.g. Massilia in campaign
-            // Lugdunum)
-            image_id = image_id_from_group(GROUP_EMPIRE_CITY_PH_PHARAOH);
+
+        // draw routes!
+        if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING
+            || city->type == EMPIRE_CITY_PHARAOH_TRADING) {
+            if (!city->is_open) {
+                if (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id))
+                    draw_trade_route(city->route_id, 2);
+                else
+                    draw_trade_route(city->route_id, 0);
+            } else {
+                if (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id))
+                    draw_trade_route(city->route_id, 3);
+                else
+                    draw_trade_route(city->route_id, 1);
+            }
         }
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (obj->type == EMPIRE_OBJECT_CITY) {
-            const empire_city* city = empire_city_get(empire_city_get_for_object(obj->id));
 
-            // draw routes!
-            if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING
-                || city->type == EMPIRE_CITY_PHARAOH_TRADING) {
-                if (!city->is_open) {
-                    if (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id))
-                        draw_trade_route(city->route_id, 2);
-                    else
-                        draw_trade_route(city->route_id, 0);
-                } else {
-                    if (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id))
-                        draw_trade_route(city->route_id, 3);
-                    else
-                        draw_trade_route(city->route_id, 1);
-                }
-            }
-
-            int text_group = 21;
-            if (g_settings.city_names_style == CITIES_OLD_NAMES) {
-                text_group = 195;
-            }
-
-            int text_offset_x = 0;
-            int text_offset_y = 50;
-
-            int text_x = data.x_draw_offset + x + text_offset_x;
-            int text_y = data.y_draw_offset + y + text_offset_x;
-
-            switch (obj->text_align) {
-            case 0:
-                lang_text_draw_left_colored(
-                  text_group, city->name_id, text_x, text_y + (obj->height / 2), FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
-                break;
-            case 1:
-                lang_text_draw_centered_colored(text_group,
-                                                city->name_id,
-                                                text_x - 150 + (obj->width / 2),
-                                                text_y - 10,
-                                                300,
-                                                FONT_SMALL_PLAIN,
-                                                COLOR_FONT_DARK_RED);
-                break;
-            case 2:
-                lang_text_draw_colored(text_group,
-                                       city->name_id,
-                                       text_x + obj->width,
-                                       text_y + (obj->height / 2),
-                                       FONT_SMALL_PLAIN,
-                                       COLOR_FONT_DARK_RED);
-                break;
-            case 3:
-                lang_text_draw_centered_colored(text_group,
-                                                city->name_id,
-                                                text_x - 150 + (obj->width / 2),
-                                                text_y + obj->height + 5,
-                                                300,
-                                                FONT_SMALL_PLAIN,
-                                                COLOR_FONT_DARK_RED);
-                break;
-            }
-        } else if (obj->type == EMPIRE_OBJECT_TEXT) {
-            const full_empire_object* full = empire_get_full_object(obj->id);
-            int text_x = data.x_draw_offset + x + 0;
-            int text_y = data.y_draw_offset + y + 0;
-
-            lang_text_draw_centered_colored(
-              196, full->city_name_id, text_x - 5, text_y, 100, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN);
-            return;
+        int text_group = 21;
+        if (g_settings.city_names_style == CITIES_OLD_NAMES) {
+            text_group = 195;
         }
+
+        int text_offset_x = 0;
+        int text_offset_y = 50;
+
+        int text_x = data.x_draw_offset + x + text_offset_x;
+        int text_y = data.y_draw_offset + y + text_offset_x;
+
+        switch (obj->text_align) {
+        case 0:
+            lang_text_draw_left_colored(
+                text_group, city->name_id, text_x, text_y + (obj->height / 2), FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
+            break;
+        case 1:
+            lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y - 10, 300, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
+            break;
+        case 2:
+            lang_text_draw_colored(text_group, city->name_id, text_x + obj->width, text_y + (obj->height / 2), FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
+            break;
+        case 3:
+            lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y + obj->height + 5, 300, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
+            break;
+        }
+    } else if (obj->type == EMPIRE_OBJECT_TEXT) {
+        const full_empire_object* full = empire_get_full_object(obj->id);
+        int text_x = data.x_draw_offset + x + 0;
+        int text_y = data.y_draw_offset + y + 0;
+
+        lang_text_draw_centered_colored(
+            196, full->city_name_id, text_x - 5, text_y, 100, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN);
+        return;
     }
+
     if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
         // handled later
         return;
@@ -545,11 +498,13 @@ static void draw_empire_object(const empire_object* obj) {
 }
 
 static void draw_invasion_warning(int x, int y, int image_id) {
+    auto &data = g_empire_window;
     painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_id, vec2i{data.x_draw_offset + x, data.y_draw_offset + y});
 }
 
 static void draw_map() {
+    auto &data = g_empire_window;
     painter ctx = game.painter();
     graphics_set_clip_rectangle(data.x_min + 16, data.y_min + 16, data.x_max - data.x_min - 32, data.y_max - data.y_min - 136);
 
@@ -568,6 +523,7 @@ static void draw_map() {
 }
 
 static void draw_city_name(const empire_city* city) {
+    auto &data = g_empire_window;
     painter ctx = game.painter();
     if (city) {
         if (g_settings.city_names_style == CITIES_OLD_NAMES) {
@@ -579,13 +535,11 @@ static void draw_city_name(const empire_city* city) {
 }
 
 static void draw_panel_buttons(const empire_city* city) {
+    auto &data = g_empire_window;
     image_buttons_draw(data.x_min + 20, data.y_max - 44, image_button_help, 1);
     image_buttons_draw(data.x_max - 44, data.y_max - 44, image_button_return_to_city, 1);
 
-    if (GAME_ENV == ENGINE_ENV_C3)
-        ADVISOR_BUTTON_X = data.x_max - 44;
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        ADVISOR_BUTTON_X = data.x_min + 24;
+    ADVISOR_BUTTON_X = data.x_min + 24;
     image_buttons_draw(ADVISOR_BUTTON_X, data.y_max - 120, image_button_advisor, 1);
 
     // trade button
@@ -600,6 +554,7 @@ static void draw_panel_buttons(const empire_city* city) {
 }
 
 static void draw_paneling() {
+    auto &data = g_empire_window;
     painter ctx = game.painter();
     int image_base = image_id_from_group(GROUP_EMPIRE_PANELS);
     // bottom panel background
@@ -636,18 +591,21 @@ static void draw_paneling() {
 }
 
 static void draw_background(void) {
+    auto &data = g_empire_window;
     int s_width = screen_width();
     int s_height = screen_height();
-    data.x_min = s_width <= EMPIRE_WIDTH[GAME_ENV] ? 0 : (s_width - EMPIRE_WIDTH[GAME_ENV]) / 2;
-    data.x_max = s_width <= EMPIRE_WIDTH[GAME_ENV] ? s_width : data.x_min + EMPIRE_WIDTH[GAME_ENV];
-    data.y_min = s_height <= EMPIRE_HEIGHT[GAME_ENV] ? 0 : (s_height - EMPIRE_HEIGHT[GAME_ENV]) / 2;
-    data.y_max = s_height <= EMPIRE_HEIGHT[GAME_ENV] ? s_height : data.y_min + EMPIRE_HEIGHT[GAME_ENV];
+    data.x_min = s_width <= EMPIRE_SIZE.x ? 0 : (s_width - EMPIRE_SIZE.x) / 2;
+    data.x_max = s_width <= EMPIRE_SIZE.x ? s_width : data.x_min + EMPIRE_SIZE.x;
+    data.y_min = s_height <= EMPIRE_SIZE.y ? 0 : (s_height - EMPIRE_SIZE.y) / 2;
+    data.y_max = s_height <= EMPIRE_SIZE.y ? s_height : data.y_min + EMPIRE_SIZE.y;
 
-    if (data.x_min || data.y_min)
+    if (data.x_min || data.y_min) {
         graphics_clear_screen();
+    }
 }
 
 static void draw_foreground(void) {
+    auto &data = g_empire_window;
     //    fade_in_out++;
     //    float v = 0.5 * (1.0 + sin(0.35 * (float)fade_in_out));
     //    int mm = int(v * 0xff);
@@ -676,9 +634,12 @@ static void draw_foreground(void) {
 }
 
 static int is_outside_map(int x, int y) {
+    auto &data = g_empire_window;
     return (x < data.x_min + 16 || x >= data.x_max - 16 || y < data.y_min + 16 || y >= data.y_max - 120);
 }
+
 static void determine_selected_object(const mouse* m) {
+    auto &data = g_empire_window;
     if (!m->left.went_up || data.finished_scroll || is_outside_map(m->x, m->y)) {
         data.finished_scroll = 0;
         return;
@@ -687,6 +648,7 @@ static void determine_selected_object(const mouse* m) {
     window_invalidate();
 }
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto &data = g_empire_window;
     vec2i position;
     if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE))
         empire_scroll_map(position.x, position.y);
@@ -775,10 +737,11 @@ static int is_mouse_hit(tooltip_context* c, int x, int y, int size) {
 }
 
 static int get_tooltip_resource(tooltip_context* c) {
+    auto &data = g_empire_window;
     const empire_city* city = empire_city_get(data.selected_city);
     // we only want to check tooltips on our own closed cities.
     // open city resource tooltips are handled by their respective buttons directly
-    if (city->is_open || (GAME_ENV == ENGINE_ENV_C3 && city->type != EMPIRE_CITY_PHARAOH)
+    if (city->is_open
         || (city->type != EMPIRE_CITY_PHARAOH_TRADING && city->type != EMPIRE_CITY_EGYPTIAN_TRADING && city->type != EMPIRE_CITY_FOREIGN_TRADING)) {
         return 0;
     }
@@ -809,6 +772,7 @@ static int get_tooltip_resource(tooltip_context* c) {
     return 0;
 }
 static void get_tooltip_trade_route_type(tooltip_context* c) {
+    auto &data = g_empire_window;
     int selected_object = empire_selected_object();
     if (!selected_object || empire_object_get(selected_object - 1)->type != EMPIRE_OBJECT_CITY)
         return;
@@ -828,15 +792,12 @@ static void get_tooltip_trade_route_type(tooltip_context* c) {
     }
 }
 static void get_tooltip(tooltip_context* c) {
+    auto &data = g_empire_window;
     int resource = data.focus_resource ? data.focus_resource : get_tooltip_resource(c);
     if (resource) {
         c->type = TOOLTIP_BUTTON;
-        if (GAME_ENV == ENGINE_ENV_C3)
-            c->text_id = 131 + resource;
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            c->text_group = 23;
-            c->text_id = resource;
-        }
+        c->text_group = 23;
+        c->text_id = resource;
     } else if (data.focus_button_id) {
         c->type = TOOLTIP_BUTTON;
         switch (data.focus_button_id) {
@@ -847,10 +808,7 @@ static void get_tooltip(tooltip_context* c) {
             c->text_id = 2;
             break;
         case 3:
-            if (GAME_ENV == ENGINE_ENV_C3)
-                c->text_id = 69;
-            else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                c->text_id = 70;
+            c->text_id = 70;
             break;
         }
     } else
@@ -874,6 +832,7 @@ static void button_show_resource_window(int resource, int param2) {
 }
 
 static void confirmed_open_trade(bool accepted) {
+    auto &data = g_empire_window;
     if (accepted) {
         empire_city_open_trade(data.selected_city);
         building_menu_update(BUILDSET_NORMAL);

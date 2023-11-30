@@ -531,7 +531,7 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_4.beer_made);
     // tut 5
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.spacious_apartment);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[12]);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.papyrus_made);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[13]);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[14]);
 

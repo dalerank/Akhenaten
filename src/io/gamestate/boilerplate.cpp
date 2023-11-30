@@ -521,6 +521,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(16, false, "junk10c", iob_junk10c);
         FILEIO.push_chunk(8200, false, "junk10d", iob_junk10d);
         FILEIO.push_chunk(1280, false, "junk11", iob_junk11); // unknown compressed data
+        FILEIO.push_chunk(19600, true, "empire_map_objects", iob_empire_map_objects);
         FILEIO.push_chunk(16200, false, "empire_map_routes", iob_empire_map_routes);
         FILEIO.push_chunk(51984, false, "vegetation_growth", iob_vegetation_growth); // todo: 1-byte grid
         FILEIO.push_chunk(20, false, "junk14", iob_junk14);
@@ -542,10 +543,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(360, false, "bizarre_ordered_fields_7", iob_bizarre_ordered_fields_7);
         FILEIO.push_chunk(1344, false, "bizarre_ordered_fields_8", iob_bizarre_ordered_fields_8);
         FILEIO.push_chunk(1776, false, "bizarre_ordered_fields_9", iob_bizarre_ordered_fields_9);
-
-        if (file_version > 161) {
-            FILEIO.push_chunk(51984, false, "terrain_floodplain_growth", iob_terrain_floodplain_growth);
-        }
+        FILEIO.push_chunk(51984, false, "terrain_floodplain_growth", iob_terrain_floodplain_growth);
         break;
     }
 }
