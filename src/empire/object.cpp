@@ -222,21 +222,19 @@ int empire_object_get_closest(vec2i pos) {
     int min_obj_id = 0;
     for (int i = 0; i < MAX_OBJECTS && objects[i].in_use; i++) {
         const empire_object* obj = &objects[i].obj;
-        int obj_x, obj_y;
+        vec2i obj_pos;
         if (scenario_empire_is_expanded()) {
-            obj_x = obj->expanded.x;
-            obj_y = obj->expanded.y;
+            obj_pos = obj->expanded.pos;
         } else {
-            obj_x = obj->x;
-            obj_y = obj->y;
+            obj_pos = obj->pos;
         }
-        if (obj_x - 8 > pos.x || obj_x + obj->width + 8 <= pos.x)
+        if (obj_pos.x - 8 > pos.x || obj_pos.x + obj->width + 8 <= pos.x)
             continue;
 
-        if (obj_y - 8 > pos.y || obj_y + obj->height + 8 <= pos.y)
+        if (obj_pos.y - 8 > pos.y || obj_pos.y + obj->height + 8 <= pos.y)
             continue;
 
-        int dist = calc_maximum_distance(pos, vec2i(obj_x + obj->width / 2, obj_y + obj->height / 2));
+        int dist = calc_maximum_distance(pos, vec2i(obj_pos.x + obj->width / 2, obj_pos.y + obj->height / 2));
         if (dist < min_dist) {
             min_dist = dist;
             min_obj_id = i + 1;
@@ -352,8 +350,8 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t vers
         iob->bind(BIND_SIGNATURE_UINT8, &full->in_use);
         iob->bind(BIND_SIGNATURE_UINT8, &obj->animation_index);
         iob->bind____skip(1);
-        iob->bind(BIND_SIGNATURE_INT16, &obj->x);
-        iob->bind(BIND_SIGNATURE_INT16, &obj->y);
+        iob->bind(BIND_SIGNATURE_INT16, &obj->pos.x);
+        iob->bind(BIND_SIGNATURE_INT16, &obj->pos.y);
         iob->bind(BIND_SIGNATURE_INT16, &obj->width);
         iob->bind(BIND_SIGNATURE_INT16, &obj->height);
         iob->bind(BIND_SIGNATURE_INT16, &obj->image_id);
@@ -362,8 +360,8 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t vers
         iob->bind(BIND_SIGNATURE_UINT8, &obj->distant_battle_travel_months);
         iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_UINT8, &obj->text_align);
-        iob->bind(BIND_SIGNATURE_INT16, &obj->expanded.x);
-        iob->bind(BIND_SIGNATURE_INT16, &obj->expanded.y);
+        iob->bind(BIND_SIGNATURE_INT16, &obj->expanded.pos.x);
+        iob->bind(BIND_SIGNATURE_INT16, &obj->expanded.pos.y);
         iob->bind(BIND_SIGNATURE_UINT8, &full->city_type);
         iob->bind(BIND_SIGNATURE_UINT8, &full->city_name_id);
         iob->bind(BIND_SIGNATURE_UINT8, &obj->trade_route_id);
@@ -394,6 +392,7 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t vers
             full->in_use = last_object_was_used;
     }
 });
+
 io_buffer* iob_empire_map_routes = new io_buffer([](io_buffer* iob, size_t version) {
     logs::info("iob_empire_map_routes");
     for (int id = 0; id < MAX_ROUTE_OBJECTS; id++) {

@@ -105,8 +105,8 @@ static generic_button generic_button_open_trade[] = {{30, 56, 440, 20, button_op
 struct empire_window_t {
     int selected_button;
     int selected_city;
-    int x_min, x_max, y_min, y_max;
-    int x_draw_offset, y_draw_offset;
+    vec2i min_pos, max_pos;
+    vec2i draw_offset;
     int focus_button_id;
     int is_scrolling;
     int finished_scroll;
@@ -175,7 +175,7 @@ static void draw_trade_route(int route_id, int effect) {
         const auto &route_point = obj->points[i];
 
         // first corner in pair
-        ImageDraw::img_generic(ctx, image_id, vec2i{data.x_draw_offset, data.y_draw_offset} + route_point.p);
+        ImageDraw::img_generic(ctx, image_id, vec2i{data.draw_offset.x, data.draw_offset.y} + route_point.p);
 
         // draw lines connecting the turns
         if (i < obj->num_points - 1) {
@@ -189,8 +189,8 @@ static void draw_trade_route(int route_id, int effect) {
 
             float progress = 1.0;
             while (progress < len) {
-                int disp_x = (int)data.x_draw_offset + route_point.p.x + scaled_x * progress;
-                int disp_y = (int)data.y_draw_offset + route_point.p.y + scaled_y * progress;
+                int disp_x = (int)data.draw_offset.x + route_point.p.x + scaled_x * progress;
+                int disp_y = (int)data.draw_offset.y + route_point.p.y + scaled_y * progress;
                 ImageDraw::img_generic(ctx, image_id, vec2i{disp_x, disp_y});
                 progress += 1.0f;
             }
@@ -231,8 +231,8 @@ static void draw_trade_resource(int resource, int trade_max, int x_offset, int y
 }
 static void draw_trade_city_info(const empire_object* object, const empire_city* city) {
     auto &data = g_empire_window;
-    int x_offset = (data.x_min + data.x_max - 500) / 2;
-    int y_offset = data.y_max - 113;
+    int x_offset = (data.min_pos.x + data.max_pos.x - 500) / 2;
+    int y_offset = data.max_pos.y - 113;
 
     if (city->is_open) {
         font_t traded_font = FONT_SMALL_PLAIN;
@@ -329,8 +329,8 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
 }
 static void draw_city_info(const empire_object* object) {
     auto &data = g_empire_window;
-    int x_offset = (data.x_min + data.x_max - 240) / 2;
-    int y_offset = data.y_max - 88;
+    int x_offset = (data.min_pos.x + data.max_pos.x - 240) / 2;
+    int y_offset = data.max_pos.y - 88;
 
     const empire_city* city = empire_city_get(data.selected_city);
 
@@ -359,7 +359,7 @@ static void draw_roman_army_info(const empire_object* object) {
     auto &data = g_empire_window;
     if (city_military_distant_battle_roman_army_is_traveling()) {
         if (city_military_distant_battle_roman_months_traveled() == object->distant_battle_travel_months) {
-            vec2i offset{(data.x_min + data.x_max - 240) / 2, data.y_max - 68};
+            vec2i offset{(data.min_pos.x + data.max_pos.x - 240) / 2, data.max_pos.y - 68};
             int text_id;
             if (city_military_distant_battle_roman_army_is_traveling_forth())
                 text_id = 15;
@@ -374,7 +374,7 @@ static void draw_enemy_army_info(const empire_object* object) {
     auto &data = g_empire_window;
     if (city_military_months_until_distant_battle() > 0) {
         if (city_military_distant_battle_enemy_months_traveled() == object->distant_battle_travel_months) {
-            lang_text_draw_multiline(47, 14, vec2i{(data.x_min + data.x_max - 240) / 2, data.y_max - 68}, 240, FONT_OBJECT_INFO[GAME_ENV]);
+            lang_text_draw_multiline(47, 14, vec2i{(data.min_pos.x + data.max_pos.x - 240) / 2, data.max_pos.y - 68}, 240, FONT_OBJECT_INFO[GAME_ENV]);
         }
     }
 }
@@ -396,7 +396,7 @@ static void draw_object_info(void) {
             break;
         }
     } else {
-        lang_text_draw_centered(47, 9, data.x_min, data.y_max - 68, data.x_max - data.x_min, FONT_OBJECT_INFO[GAME_ENV]);
+        lang_text_draw_centered(47, 9, data.min_pos.x, data.max_pos.y - 68, data.max_pos.x - data.min_pos.x, FONT_OBJECT_INFO[GAME_ENV]);
     }
 }
 static void draw_empire_object(const empire_object* obj) {
@@ -405,14 +405,13 @@ static void draw_empire_object(const empire_object* obj) {
         if (!empire_city_is_trade_route_open(obj->trade_route_id))
             return;
     }
-    int x, y, image_id;
+    vec2i pos;
+    int image_id;
     if (scenario_empire_is_expanded()) {
-        x = obj->expanded.x;
-        y = obj->expanded.y;
+        pos = obj->expanded.pos;
         image_id = obj->expanded.image_id;
     } else {
-        x = obj->x;
-        y = obj->y;
+        pos = obj->pos;
         image_id = obj->image_id;
     }
 
@@ -443,8 +442,8 @@ static void draw_empire_object(const empire_object* obj) {
         int text_offset_x = 0;
         int text_offset_y = 50;
 
-        int text_x = data.x_draw_offset + x + text_offset_x;
-        int text_y = data.y_draw_offset + y + text_offset_x;
+        int text_x = data.draw_offset.x + pos.x + text_offset_x;
+        int text_y = data.draw_offset.y + pos.y + text_offset_x;
 
         switch (obj->text_align) {
         case 0:
@@ -463,8 +462,8 @@ static void draw_empire_object(const empire_object* obj) {
         }
     } else if (obj->type == EMPIRE_OBJECT_TEXT) {
         const full_empire_object* full = empire_get_full_object(obj->id);
-        int text_x = data.x_draw_offset + x + 0;
-        int text_y = data.y_draw_offset + y + 0;
+        int text_x = data.draw_offset.x + pos.x + 0;
+        int text_y = data.draw_offset.y + pos.y + 0;
 
         lang_text_draw_centered_colored(
             196, full->city_name_id, text_x - 5, text_y, 100, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN);
@@ -488,32 +487,32 @@ static void draw_empire_object(const empire_object* obj) {
             return;
     }
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id, vec2i{data.x_draw_offset + x, data.y_draw_offset + y});
+    ImageDraw::img_generic(ctx, image_id, vec2i{data.draw_offset.x + pos.x, data.draw_offset.y + pos.y});
 
     const image_t* img = image_get(image_id);
     if (img->animation.speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
-        ImageDraw::img_generic(ctx, image_id + new_animation, vec2i{data.x_draw_offset + x + img->animation.sprite_x_offset, data.y_draw_offset + y + img->animation.sprite_y_offset});
+        ImageDraw::img_generic(ctx, image_id + new_animation, data.draw_offset + pos + vec2i{img->animation.sprite_x_offset, img->animation.sprite_y_offset});
     }
 }
 
 static void draw_invasion_warning(int x, int y, int image_id) {
     auto &data = g_empire_window;
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id, vec2i{data.x_draw_offset + x, data.y_draw_offset + y});
+    ImageDraw::img_generic(ctx, image_id, vec2i{data.draw_offset.x + x, data.draw_offset.y + y});
 }
 
 static void draw_map() {
     auto &data = g_empire_window;
     painter ctx = game.painter();
-    graphics_set_clip_rectangle(data.x_min + 16, data.y_min + 16, data.x_max - data.x_min - 32, data.y_max - data.y_min - 136);
+    graphics_set_clip_rectangle(data.min_pos.x + 16, data.min_pos.y + 16, data.max_pos.x - data.min_pos.x - 32, data.max_pos.y - data.min_pos.y - 136);
 
-    empire_set_viewport(data.x_max - data.x_min - 32, data.y_max - data.y_min - 136);
+    empire_set_viewport(data.max_pos.x - data.min_pos.x - 32, data.max_pos.y - data.min_pos.y - 136);
 
-    data.x_draw_offset = data.x_min + 16;
-    data.y_draw_offset = data.y_min + 16;
-    empire_adjust_scroll(&data.x_draw_offset, &data.y_draw_offset);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EMPIRE_MAP), vec2i{data.x_draw_offset, data.y_draw_offset});
+    data.draw_offset.x = data.min_pos.x + 16;
+    data.draw_offset.y = data.min_pos.y + 16;
+    empire_adjust_scroll(&data.draw_offset.x, &data.draw_offset.y);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EMPIRE_MAP), vec2i{data.draw_offset.x, data.draw_offset.y});
 
     empire_object_foreach(draw_empire_object);
 
@@ -527,26 +526,26 @@ static void draw_city_name(const empire_city* city) {
     painter ctx = game.painter();
     if (city) {
         if (g_settings.city_names_style == CITIES_OLD_NAMES) {
-            lang_text_draw_centered(195, city->name_id, (data.x_min + data.x_max - 332) / 2 + 32, data.y_max - INFO_Y_CITY_NAME, 268, FONT_LARGE_BLACK_ON_LIGHT);
+            lang_text_draw_centered(195, city->name_id, (data.min_pos.x + data.max_pos.x - 332) / 2 + 32, data.max_pos.y - INFO_Y_CITY_NAME, 268, FONT_LARGE_BLACK_ON_LIGHT);
         } else {
-            lang_text_draw_centered(21, city->name_id, (data.x_min + data.x_max - 332) / 2 + 32, data.y_max - INFO_Y_CITY_NAME, 268, FONT_LARGE_BLACK_ON_LIGHT);
+            lang_text_draw_centered(21, city->name_id, (data.min_pos.x + data.max_pos.x - 332) / 2 + 32, data.max_pos.y - INFO_Y_CITY_NAME, 268, FONT_LARGE_BLACK_ON_LIGHT);
         }
     }
 }
 
 static void draw_panel_buttons(const empire_city* city) {
     auto &data = g_empire_window;
-    image_buttons_draw(data.x_min + 20, data.y_max - 44, image_button_help, 1);
-    image_buttons_draw(data.x_max - 44, data.y_max - 44, image_button_return_to_city, 1);
+    image_buttons_draw(data.min_pos.x + 20, data.max_pos.y - 44, image_button_help, 1);
+    image_buttons_draw(data.max_pos.x - 44, data.max_pos.y - 44, image_button_return_to_city, 1);
 
-    ADVISOR_BUTTON_X = data.x_min + 24;
-    image_buttons_draw(ADVISOR_BUTTON_X, data.y_max - 120, image_button_advisor, 1);
+    ADVISOR_BUTTON_X = data.min_pos.x + 24;
+    image_buttons_draw(ADVISOR_BUTTON_X, data.max_pos.y - 120, image_button_advisor, 1);
 
     // trade button
     if (city && !city->is_open) {
         if (empire_city_type_can_trade(city->type))
-            button_border_draw((data.x_min + data.x_max - 500) / 2 + 30 + TRADE_BUTTON_OFFSET_X,
-                               data.y_max - 49 + TRADE_BUTTON_OFFSET_Y,
+            button_border_draw((data.min_pos.x + data.max_pos.x - 500) / 2 + 30 + TRADE_BUTTON_OFFSET_X,
+                               data.max_pos.y - 49 + TRADE_BUTTON_OFFSET_Y,
                                generic_button_open_trade[0].width,
                                generic_button_open_trade[0].height,
                                data.selected_button);
@@ -558,34 +557,34 @@ static void draw_paneling() {
     painter ctx = game.painter();
     int image_base = image_id_from_group(GROUP_EMPIRE_PANELS);
     // bottom panel background
-    graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, data.y_max - data.y_min);
-    for (int x = data.x_min; x < data.x_max; x += 70) {
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.y_max - 140});
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.y_max - 100});
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.y_max - 60});
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.y_max - 20});
+    graphics_set_clip_rectangle(data.min_pos.x, data.min_pos.y, data.max_pos.x - data.min_pos.x, data.max_pos.y - data.min_pos.y);
+    for (int x = data.min_pos.x; x < data.max_pos.x; x += 70) {
+        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.max_pos.y - 140});
+        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.max_pos.y - 100});
+        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.max_pos.y - 60});
+        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.max_pos.y - 20});
     }
 
     // horizontal bar borders
-    for (int x = data.x_min; x < data.x_max; x += 86) {
-        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.y_min});
-        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.y_max - 140});
-        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.y_max - 16});
+    for (int x = data.min_pos.x; x < data.max_pos.x; x += 86) {
+        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.min_pos.y});
+        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.max_pos.y - 140});
+        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.max_pos.y - 16});
     }
 
     // vertical bar borders
-    for (int y = data.y_min + 16; y < data.y_max; y += 86) {
-        ImageDraw::img_generic(ctx, image_base, vec2i{data.x_min, y});
-        ImageDraw::img_generic(ctx, image_base, vec2i{data.x_max - 16, y});
+    for (int y = data.min_pos.y + 16; y < data.max_pos.y; y += 86) {
+        ImageDraw::img_generic(ctx, image_base, vec2i{data.min_pos.x, y});
+        ImageDraw::img_generic(ctx, image_base, vec2i{data.max_pos.x - 16, y});
     }
 
     // crossbars
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_min, data.y_min});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_min, data.y_max - 140});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_min, data.y_max - 16});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_max - 16, data.y_min});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_max - 16, data.y_max - 140});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_max - 16, data.y_max - 16});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.min_pos.x, data.min_pos.y});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.min_pos.x, data.max_pos.y - 140});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.min_pos.x, data.max_pos.y - 16});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.max_pos.x - 16, data.min_pos.y});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.max_pos.x - 16, data.max_pos.y - 140});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.max_pos.x - 16, data.max_pos.y - 16});
 
     graphics_reset_clip_rectangle();
 }
@@ -594,12 +593,12 @@ static void draw_background(void) {
     auto &data = g_empire_window;
     int s_width = screen_width();
     int s_height = screen_height();
-    data.x_min = s_width <= EMPIRE_SIZE.x ? 0 : (s_width - EMPIRE_SIZE.x) / 2;
-    data.x_max = s_width <= EMPIRE_SIZE.x ? s_width : data.x_min + EMPIRE_SIZE.x;
-    data.y_min = s_height <= EMPIRE_SIZE.y ? 0 : (s_height - EMPIRE_SIZE.y) / 2;
-    data.y_max = s_height <= EMPIRE_SIZE.y ? s_height : data.y_min + EMPIRE_SIZE.y;
+    data.min_pos.x = s_width <= EMPIRE_SIZE.x ? 0 : (s_width - EMPIRE_SIZE.x) / 2;
+    data.max_pos.x = s_width <= EMPIRE_SIZE.x ? s_width : data.min_pos.x + EMPIRE_SIZE.x;
+    data.min_pos.y = s_height <= EMPIRE_SIZE.y ? 0 : (s_height - EMPIRE_SIZE.y) / 2;
+    data.max_pos.y = s_height <= EMPIRE_SIZE.y ? s_height : data.min_pos.y + EMPIRE_SIZE.y;
 
-    if (data.x_min || data.y_min) {
+    if (data.min_pos.x || data.min_pos.y) {
         graphics_clear_screen();
     }
 }
@@ -635,7 +634,7 @@ static void draw_foreground(void) {
 
 static int is_outside_map(int x, int y) {
     auto &data = g_empire_window;
-    return (x < data.x_min + 16 || x >= data.x_max - 16 || y < data.y_min + 16 || y >= data.y_max - 120);
+    return (x < data.min_pos.x + 16 || x >= data.max_pos.x - 16 || y < data.min_pos.y + 16 || y >= data.max_pos.y - 120);
 }
 
 static void determine_selected_object(const mouse* m) {
@@ -644,7 +643,7 @@ static void determine_selected_object(const mouse* m) {
         data.finished_scroll = 0;
         return;
     }
-    empire_select_object(m->x - data.x_min - 16, m->y - data.y_min - 16);
+    empire_select_object(m->x - data.min_pos.x - 16, m->y - data.min_pos.y - 16);
     window_invalidate();
 }
 static void handle_input(const mouse* m, const hotkeys* h) {
@@ -670,14 +669,14 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     data.focus_button_id = 0;
     data.focus_resource = 0;
     int button_id;
-    image_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 44, image_button_help, 1, &button_id);
+    image_buttons_handle_mouse(m, data.min_pos.x + 20, data.max_pos.y - 44, image_button_help, 1, &button_id);
     if (button_id)
         data.focus_button_id = 1;
 
-    image_buttons_handle_mouse(m, data.x_max - 44, data.y_max - 44, image_button_return_to_city, 1, &button_id);
+    image_buttons_handle_mouse(m, data.max_pos.x - 44, data.max_pos.y - 44, image_button_return_to_city, 1, &button_id);
     if (button_id)
         data.focus_button_id = 2;
-    image_buttons_handle_mouse(m, ADVISOR_BUTTON_X, data.y_max - 120, image_button_advisor, 1, &button_id);
+    image_buttons_handle_mouse(m, ADVISOR_BUTTON_X, data.max_pos.y - 120, image_button_advisor, 1, &button_id);
     if (button_id)
         data.focus_button_id = 3;
 
@@ -691,8 +690,8 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
             if ((city->type == EMPIRE_CITY_PHARAOH_TRADING || city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING)) {
                 if (city->is_open) {
-                    int x_offset = (data.x_min + data.x_max - 500) / 2;
-                    int y_offset = data.y_max - 113;
+                    int x_offset = (data.min_pos.x + data.max_pos.x - 500) / 2;
+                    int y_offset = data.max_pos.y - 113;
                     int index_sell = 0;
                     int index_buy = 0;
 
@@ -717,7 +716,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
                         }
                     }
                 } else {
-                    generic_buttons_handle_mouse(m, (data.x_min + data.x_max - 500) / 2 + TRADE_BUTTON_OFFSET_X, data.y_max - 105 + TRADE_BUTTON_OFFSET_Y, generic_button_open_trade, 1, &data.selected_button);
+                    generic_buttons_handle_mouse(m, (data.min_pos.x + data.max_pos.x - 500) / 2 + TRADE_BUTTON_OFFSET_X, data.max_pos.y - 105 + TRADE_BUTTON_OFFSET_Y, generic_button_open_trade, 1, &data.selected_button);
                 }
             }
         }
@@ -747,8 +746,8 @@ static int get_tooltip_resource(tooltip_context* c) {
     }
 
     int object_id = empire_selected_object() - 1;
-    int x_offset = (data.x_min + data.x_max - 500) / 2;
-    int y_offset = data.y_max - 113;
+    int x_offset = (data.min_pos.x + data.max_pos.x - 500) / 2;
+    int y_offset = data.max_pos.y - 113;
 
     int item_offset = lang_text_get_width(47, 5, FONT_OBJECT_INFO[GAME_ENV]);
     for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
@@ -782,8 +781,8 @@ static void get_tooltip_trade_route_type(tooltip_context* c) {
     if (city->type != EMPIRE_CITY_PHARAOH || city->is_open)
         return;
 
-    int x_offset = (data.x_min + data.x_max + 300) / 2;
-    int y_offset = data.y_max - 41;
+    int x_offset = (data.min_pos.x + data.max_pos.x + 300) / 2;
+    int y_offset = data.max_pos.y - 41;
     int y_offset_max = y_offset + 22 - 2 * city->is_sea_trade;
     if (c->mpos.x >= x_offset && c->mpos.x < x_offset + 32 && c->mpos.y >= y_offset && c->mpos.y < y_offset_max) {
         c->type = TOOLTIP_BUTTON;

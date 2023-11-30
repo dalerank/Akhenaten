@@ -125,30 +125,30 @@ static void draw_shadowed_number(int value, int x, int y, color color) {
 
 static void draw_empire_object(const empire_object* obj) {
     painter ctx = game.painter();
-    int x = obj->x;
-    int y = obj->y;
+    vec2i pos = obj->pos;
     int image_id = obj->image_id;
 
     if (!data.show_battle_objects
-        && (obj->type == EMPIRE_OBJECT_BATTLE_ICON || obj->type == EMPIRE_OBJECT_ROMAN_ARMY
-            || obj->type == EMPIRE_OBJECT_ENEMY_ARMY))
+        && (obj->type == EMPIRE_OBJECT_BATTLE_ICON || obj->type == EMPIRE_OBJECT_ROMAN_ARMY || obj->type == EMPIRE_OBJECT_ENEMY_ARMY)) {
         return;
+    }
+
     if (obj->type == EMPIRE_OBJECT_CITY) {
         const empire_city* city = empire_city_get(empire_city_get_for_object(obj->id));
         if (city->type == EMPIRE_CITY_EGYPTIAN || city->type == EMPIRE_CITY_FOREIGN) {
             image_id = image_id_from_group(GROUP_EDITOR_EMPIRE_FOREIGN_CITY);
         }
     } else if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
-        draw_shadowed_number(obj->invasion_path_id, data.x_draw_offset + x - 9, data.y_draw_offset + y - 9, COLOR_WHITE);
-        draw_shadowed_number(obj->invasion_years, data.x_draw_offset + x + 15, data.y_draw_offset + y - 9, COLOR_FONT_RED);
+        draw_shadowed_number(obj->invasion_path_id, data.x_draw_offset + pos.x - 9, data.y_draw_offset + pos.y - 9, COLOR_WHITE);
+        draw_shadowed_number(obj->invasion_years, data.x_draw_offset + pos.x + 15, data.y_draw_offset + pos.y - 9, COLOR_FONT_RED);
     } else if (obj->type == EMPIRE_OBJECT_ROMAN_ARMY || obj->type == EMPIRE_OBJECT_ENEMY_ARMY) {
-        draw_shadowed_number(obj->distant_battle_travel_months, data.x_draw_offset + x + 7, data.y_draw_offset + y - 9, obj->type == EMPIRE_OBJECT_ROMAN_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
+        draw_shadowed_number(obj->distant_battle_travel_months, data.x_draw_offset + pos.x + 7, data.y_draw_offset + pos.y - 9, obj->type == EMPIRE_OBJECT_ROMAN_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
     }
-    ImageDraw::img_generic(ctx, image_id, vec2i{data.x_draw_offset + x, data.y_draw_offset + y});
+    ImageDraw::img_generic(ctx, image_id, vec2i{data.x_draw_offset + pos.x, data.y_draw_offset + pos.y});
     const image_t* img = image_get(image_id);
     if (img->animation.speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
-        ImageDraw::img_generic(ctx, image_id + new_animation, vec2i{data.x_draw_offset + x + img->animation.sprite_x_offset, data.y_draw_offset + y + img->animation.sprite_y_offset});
+        ImageDraw::img_generic(ctx, image_id + new_animation, vec2i{data.x_draw_offset + pos.x + img->animation.sprite_x_offset, data.y_draw_offset + pos.y + img->animation.sprite_y_offset});
     }
 }
 

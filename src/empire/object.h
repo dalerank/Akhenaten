@@ -8,15 +8,13 @@ struct empire_object {
     int id;
     int type;
     int animation_index;
-    int x;
-    int y;
+    vec2i pos;
     int width;
     int height;
     int image_id;
     int text_align;
     struct {
-        int x;
-        int y;
+        vec2i pos;
         int image_id;
     } expanded;
     int distant_battle_travel_months;
