@@ -141,7 +141,7 @@ int game_file_editor_write_scenario(const char* scenario_file) {
     scenario_editor_set_native_images(image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE),
                                       image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE) + 2,
                                       image_id_from_group(GROUP_EDITOR_BUILDING_CROPS));
-    scenario_distant_battle_set_roman_travel_months();
+    scenario_distant_battle_set_kingdome_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
 
     //    return game_file_io_write_scenario(scenario_file); TODO

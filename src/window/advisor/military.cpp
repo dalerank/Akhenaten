@@ -79,9 +79,9 @@ static int draw_background() {
         enemy_text_id = 8;
     }
     int distant_battle_text_id;
-    if (city_military_distant_battle_roman_army_is_traveling_back())
+    if (city_military_distant_battle_kingdome_army_is_traveling_back())
         distant_battle_text_id = 15;
-    else if (city_military_distant_battle_roman_army_is_traveling_forth())
+    else if (city_military_distant_battle_kingdome_army_is_traveling_forth())
         distant_battle_text_id = 14;
     else if (city_military_months_until_distant_battle() > 0)
         distant_battle_text_id = 13;

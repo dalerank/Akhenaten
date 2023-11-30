@@ -129,7 +129,7 @@ static void draw_empire_object(const empire_object* obj) {
     int image_id = obj->image_id;
 
     if (!data.show_battle_objects
-        && (obj->type == EMPIRE_OBJECT_BATTLE_ICON || obj->type == EMPIRE_OBJECT_ROMAN_ARMY || obj->type == EMPIRE_OBJECT_ENEMY_ARMY)) {
+        && (obj->type == EMPIRE_OBJECT_BATTLE_ICON || obj->type == EMPIRE_OBJECT_KINGDOME_ARMY || obj->type == EMPIRE_OBJECT_ENEMY_ARMY)) {
         return;
     }
 
@@ -141,8 +141,8 @@ static void draw_empire_object(const empire_object* obj) {
     } else if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
         draw_shadowed_number(obj->invasion_path_id, data.x_draw_offset + pos.x - 9, data.y_draw_offset + pos.y - 9, COLOR_WHITE);
         draw_shadowed_number(obj->invasion_years, data.x_draw_offset + pos.x + 15, data.y_draw_offset + pos.y - 9, COLOR_FONT_RED);
-    } else if (obj->type == EMPIRE_OBJECT_ROMAN_ARMY || obj->type == EMPIRE_OBJECT_ENEMY_ARMY) {
-        draw_shadowed_number(obj->distant_battle_travel_months, data.x_draw_offset + pos.x + 7, data.y_draw_offset + pos.y - 9, obj->type == EMPIRE_OBJECT_ROMAN_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
+    } else if (obj->type == EMPIRE_OBJECT_KINGDOME_ARMY || obj->type == EMPIRE_OBJECT_ENEMY_ARMY) {
+        draw_shadowed_number(obj->distant_battle_travel_months, data.x_draw_offset + pos.x + 7, data.y_draw_offset + pos.y - 9, obj->type == EMPIRE_OBJECT_KINGDOME_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
     }
     ImageDraw::img_generic(ctx, image_id, vec2i{data.x_draw_offset + pos.x, data.y_draw_offset + pos.y});
     const image_t* img = image_get(image_id);

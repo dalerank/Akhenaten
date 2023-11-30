@@ -82,11 +82,11 @@ void scenario_request_process_C3(void) {
                         g_scenario_data.requests[i].can_comply_dialog_shown = 1;
 
                     if (g_scenario_data.requests[i].resource == RESOURCE_DEBEN)
-                        city_message_post(true, MESSAGE_CAESAR_REQUESTS_MONEY, i, 0);
+                        city_message_post(true, MESSAGE_KINGDOME_REQUESTS_MONEY, i, 0);
                     else if (g_scenario_data.requests[i].resource == RESOURCE_TROOPS)
-                        city_message_post(true, MESSAGE_CAESAR_REQUESTS_ARMY, i, 0);
+                        city_message_post(true, MESSAGE_KINGDOME_REQUESTS_ARMY, i, 0);
                     else
-                        city_message_post(true, MESSAGE_CAESAR_REQUESTS_GOODS, i, 0);
+                        city_message_post(true, MESSAGE_KINGDOME_REQUESTS_GOODS, i, 0);
                 }
             }
         }

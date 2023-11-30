@@ -272,7 +272,7 @@ static int draw_background() {
         lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
     else if (scenario_invasion_exists_upcoming())
         lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-    else if (city_military_distant_battle_roman_army_is_traveling())
+    else if (city_military_distant_battle_kingdome_army_is_traveling())
         lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
     else if (city_military_months_until_distant_battle() > 0)
         lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_YELLOW);

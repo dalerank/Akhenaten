@@ -159,7 +159,7 @@ struct scenario_data_t {
         int id;
         int is_expanded;
         int expansion_year;
-        int distant_battle_roman_travel_months;
+        int distant_battle_kingdome_travel_months;
         int distant_battle_enemy_travel_months;
     } empire;
 

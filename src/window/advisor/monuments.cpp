@@ -108,7 +108,7 @@ static int draw_background(void) {
 
     int num_requests = 0;
     if (city_military_months_until_distant_battle() > 0
-        && !city_military_distant_battle_roman_army_is_traveling_forth()) {
+        && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
         // can send to distant battle
         button_border_draw(38, 96, 560, 40, 0);
         ImageDraw::img_generic(ctx, image_id_resource_icon(military_resource), vec2i{50, 106});
@@ -138,7 +138,7 @@ static int draw_background(void) {
 static int get_request_status(int index) {
     int num_requests = 0;
     if (city_military_months_until_distant_battle() > 0
-        && !city_military_distant_battle_roman_army_is_traveling_forth()) {
+        && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
         num_requests = 1;
         if (index == 0) {
             if (city_military_total_legions() <= 0)

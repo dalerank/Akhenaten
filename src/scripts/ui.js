@@ -27,3 +27,15 @@ main_menu_window = {
 	  {group: 30, id: 4, }
 	]
 }
+
+empire_window = {
+	trade_column_spacing : 106,
+	trade_row_spacing : 20,
+	info_y_traded : -3,
+	trade_button_offset_x : 0,
+	info_y_sells : 30,
+	info_y_buys : 52,
+	info_y_footer_1 : 78,
+	info_y_city_name : 120,
+	info_y_city_desc : 28,
+}
