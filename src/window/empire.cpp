@@ -37,7 +37,7 @@
 #include "game/game.h"
 
 const static vec2i EMPIRE_SIZE{1200 + 32,  1600 + 136 + 20};
-const static font_t FONT_OBJECT_INFO[2] = {FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT};
+const static font_t FONT_OBJECT_INFO = FONT_NORMAL_BLACK_ON_LIGHT;
 
 static void button_help(int param1, int param2);
 static void button_return_to_city(int param1, int param2);
@@ -135,14 +135,11 @@ static void init(void) {
 #define INFO_Y_CITY_NAME 120
 #define INFO_Y_CITY_DESC 28
 
-const int TRADE_RESOURCE_SIZE[2] = {26, 18};
-const int TRADE_RESOURCE_OFFSET[2] = {9, 3};
+const int TRADE_RESOURCE_SIZE = 18;
+const int TRADE_RESOURCE_OFFSET = 3;
 
 #define TRADE_COLUMN_SPACING 106
 #define TRADE_ROW_SPACING 20
-
-// static int fade_in_out = 1;
-// static color fade_in_out_color = 0xff000000;
 
 static void draw_trade_route(int route_id, int effect) {
     auto &data = g_empire_window;
@@ -201,6 +198,7 @@ static void draw_trade_route(int route_id, int effect) {
 static int column_idx(int index) {
     return index % 2;
 }
+
 static int row_idx(int index) {
     return index / 2;
 }
@@ -208,7 +206,7 @@ static int row_idx(int index) {
 static void draw_trade_resource(int resource, int trade_max, int x_offset, int y_offset) {
     auto &data = g_empire_window;
     painter ctx = game.painter();
-    graphics_draw_inset_rect(x_offset, y_offset, TRADE_RESOURCE_SIZE[GAME_ENV], TRADE_RESOURCE_SIZE[GAME_ENV]);
+    graphics_draw_inset_rect(x_offset, y_offset, TRADE_RESOURCE_SIZE, TRADE_RESOURCE_SIZE);
     ImageDraw::img_generic(ctx, image_id_resource_icon(resource), vec2i{x_offset + 1, y_offset + 1});
 
     if (data.focus_resource == resource)
@@ -229,6 +227,7 @@ static void draw_trade_resource(int resource, int trade_max, int x_offset, int y
         break;
     }
 }
+
 static void draw_trade_city_info(const empire_object* object, const empire_city* city) {
     auto &data = g_empire_window;
     int x_offset = (data.min_pos.x + data.max_pos.x - 500) / 2;
@@ -239,7 +238,7 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
         //        font_t traded_font = FONT_OBJECT_INFO[GAME_ENV];
 
         // city sells
-        lang_text_draw(47, 11, x_offset + 44, y_offset + INFO_Y_TRADED - 2, FONT_OBJECT_INFO[GAME_ENV]);
+        lang_text_draw(47, 11, x_offset + 44, y_offset + INFO_Y_TRADED - 2, FONT_OBJECT_INFO);
         int index = 0;
         for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
             if (!empire_object_city_sells_resource(object->id, resource))
@@ -264,7 +263,7 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
             index++;
         }
         // city buys
-        lang_text_draw(47, 10, x_offset + 44 + 350, y_offset + INFO_Y_TRADED - 2, FONT_OBJECT_INFO[GAME_ENV]);
+        lang_text_draw(47, 10, x_offset + 44 + 350, y_offset + INFO_Y_TRADED - 2, FONT_OBJECT_INFO);
         index = 0;
         for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
             if (!empire_object_city_buys_resource(object->id, resource))
@@ -292,7 +291,7 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
 
         // selling
         int spacing = 0;
-        lang_text_draw(47, 5, x_offset + 30, y_offset + INFO_Y_SELLS, FONT_OBJECT_INFO[GAME_ENV]);
+        lang_text_draw(47, 5, x_offset + 30, y_offset + INFO_Y_SELLS, FONT_OBJECT_INFO);
         for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
             if (!empire_object_city_sells_resource(object->id, resource))
                 continue;
@@ -302,31 +301,30 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
             draw_trade_resource(resource,
                                 trade_max,
                                 x_offset + spacing + 80,
-                                y_offset + INFO_Y_SELLS - TRADE_RESOURCE_OFFSET[GAME_ENV]);
+                                y_offset + INFO_Y_SELLS - TRADE_RESOURCE_OFFSET);
             spacing += 32;
         }
 
         // buying
         spacing = 0;
-        lang_text_draw(47, 4, x_offset + 30, y_offset + INFO_Y_BUYS, FONT_OBJECT_INFO[GAME_ENV]);
+        lang_text_draw(47, 4, x_offset + 30, y_offset + INFO_Y_BUYS, FONT_OBJECT_INFO);
         for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
             if (!empire_object_city_buys_resource(object->id, resource))
                 continue;
 
             int trade_max = trade_route_limit(city->route_id, resource);
             trade_max = stack_proper_quantity(trade_max, resource);
-            draw_trade_resource(resource, trade_max, x_offset + spacing + 80,y_offset + INFO_Y_BUYS - TRADE_RESOURCE_OFFSET[GAME_ENV]);
+            draw_trade_resource(resource, trade_max, x_offset + spacing + 80,y_offset + INFO_Y_BUYS - TRADE_RESOURCE_OFFSET);
             spacing += 32;
         }
 
         // trade open button
-        spacing = lang_text_draw_amount(8, 0, city->cost_to_open, x_offset + 40, y_offset + INFO_Y_FOOTER_1, FONT_OBJECT_INFO[GAME_ENV]);
-        lang_text_draw(47, 6 + city->is_sea_trade, x_offset + spacing + 40, y_offset + INFO_Y_FOOTER_1, FONT_OBJECT_INFO[GAME_ENV]);
+        spacing = lang_text_draw_amount(8, 0, city->cost_to_open, x_offset + 40, y_offset + INFO_Y_FOOTER_1, FONT_OBJECT_INFO);
+        lang_text_draw(47, 6 + city->is_sea_trade, x_offset + spacing + 40, y_offset + INFO_Y_FOOTER_1, FONT_OBJECT_INFO);
         int image_id = image_id_from_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1 - city->is_sea_trade;
-        //if (GAME_ENV == ENGINE_ENV_C3)
-        //    ImageDraw::img_generic(image_id, x_offset + 430, y_offset + 65 + 2 * city->is_sea_trade);
     }
 }
+
 static void draw_city_info(const empire_object* object) {
     auto &data = g_empire_window;
     int x_offset = (data.min_pos.x + data.max_pos.x - 240) / 2;
@@ -366,15 +364,16 @@ static void draw_roman_army_info(const empire_object* object) {
             else {
                 text_id = 16;
             }
-            lang_text_draw_multiline(47, text_id, offset, 240, FONT_OBJECT_INFO[GAME_ENV]);
+            lang_text_draw_multiline(47, text_id, offset, 240, FONT_OBJECT_INFO);
         }
     }
 }
+
 static void draw_enemy_army_info(const empire_object* object) {
     auto &data = g_empire_window;
     if (city_military_months_until_distant_battle() > 0) {
         if (city_military_distant_battle_enemy_months_traveled() == object->distant_battle_travel_months) {
-            lang_text_draw_multiline(47, 14, vec2i{(data.min_pos.x + data.max_pos.x - 240) / 2, data.max_pos.y - 68}, 240, FONT_OBJECT_INFO[GAME_ENV]);
+            lang_text_draw_multiline(47, 14, vec2i{(data.min_pos.x + data.max_pos.x - 240) / 2, data.max_pos.y - 68}, 240, FONT_OBJECT_INFO);
         }
     }
 }
@@ -396,7 +395,7 @@ static void draw_object_info(void) {
             break;
         }
     } else {
-        lang_text_draw_centered(47, 9, data.min_pos.x, data.max_pos.y - 68, data.max_pos.x - data.min_pos.x, FONT_OBJECT_INFO[GAME_ENV]);
+        lang_text_draw_centered(47, 9, data.min_pos.x, data.max_pos.y - 68, data.max_pos.x - data.min_pos.x, FONT_OBJECT_INFO);
     }
 }
 static void draw_empire_object(const empire_object* obj) {
@@ -729,6 +728,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
             window_city_show();
     }
 }
+
 static int is_mouse_hit(tooltip_context* c, int x, int y, int size) {
     int mx = c->mpos.x;
     int my = c->mpos.y;
@@ -749,19 +749,19 @@ static int get_tooltip_resource(tooltip_context* c) {
     int x_offset = (data.min_pos.x + data.max_pos.x - 500) / 2;
     int y_offset = data.max_pos.y - 113;
 
-    int item_offset = lang_text_get_width(47, 5, FONT_OBJECT_INFO[GAME_ENV]);
+    int item_offset = lang_text_get_width(47, 5, FONT_OBJECT_INFO);
     for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         if (empire_object_city_sells_resource(object_id, r)) {
-            if (is_mouse_hit(c, x_offset + 18 + item_offset, y_offset + INFO_Y_SELLS - TRADE_RESOURCE_OFFSET[GAME_ENV], TRADE_RESOURCE_SIZE[GAME_ENV]))
+            if (is_mouse_hit(c, x_offset + 18 + item_offset, y_offset + INFO_Y_SELLS - TRADE_RESOURCE_OFFSET, TRADE_RESOURCE_SIZE))
                 return r;
 
             item_offset += 32;
         }
     }
-    item_offset += lang_text_get_width(47, 4, FONT_OBJECT_INFO[GAME_ENV]);
+    item_offset += lang_text_get_width(47, 4, FONT_OBJECT_INFO);
     for (int r = RESOURCE_MIN; r <= RESOURCES_MAX; r++) {
         if (empire_object_city_buys_resource(object_id, r)) {
-            if (is_mouse_hit(c, x_offset + 18 + item_offset, y_offset + INFO_Y_BUYS - TRADE_RESOURCE_OFFSET[GAME_ENV], TRADE_RESOURCE_SIZE[GAME_ENV]))
+            if (is_mouse_hit(c, x_offset + 18 + item_offset, y_offset + INFO_Y_BUYS - TRADE_RESOURCE_OFFSET, TRADE_RESOURCE_SIZE))
                 return r;
 
             item_offset += 32;

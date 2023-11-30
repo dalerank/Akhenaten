@@ -131,18 +131,22 @@ e_availability mission_advisor_availability(e_advisor advisor, int mission) {
     case 1:
         return NOT_AVAILABLE;
     case 2:
-        advisors = {ADVISOR_TRADE, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION};
+        advisors = {ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION};
         break;
     case 3: 
-        advisors = {ADVISOR_LABOR, ADVISOR_TRADE, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION};
+        advisors = {ADVISOR_LABOR, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION};
         break;
     case 4:
-        advisors = {ADVISOR_LABOR, ADVISOR_TRADE, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION, ADVISOR_FINANCIAL};
+        advisors = {ADVISOR_LABOR, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION, ADVISOR_FINANCIAL};
         break;
     case 5:
         advisors = {ADVISOR_LABOR, ADVISOR_IMPERIAL, ADVISOR_RATINGS, ADVISOR_POPULATION, ADVISOR_HEALTH, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION, ADVISOR_FINANCIAL, ADVISOR_CHIEF};
         if (g_tutorials_flags.tutorial_5.spacious_apartment) {
             advisors.push_back(ADVISOR_EDUCATION);
+        }
+
+        if (g_tutorials_flags.tutorial_5.papyrus_made) {
+            advisors.push_back(ADVISOR_TRADE);
         }
         break;
     }
