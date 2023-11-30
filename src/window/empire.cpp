@@ -154,30 +154,30 @@ void config_load_empire_window_config(archive arch) {
     });
 }
 
-static void draw_trade_route(int route_id, int effect) {
+static void draw_trade_route(int route_id, e_empire_route_state effect) {
     auto &data = g_empire_window;
-    map_route_object* obj = empire_get_route_object(route_id);
-    if (!obj->in_use)
-        return;
-
     painter ctx = game.painter();
+
+    map_route_object* obj = empire_get_route_object(route_id);
+    if (!obj->in_use) {
+        return;
+    }
+
     // get graphics ready..
     int image_id = 0;
     switch (effect) {
-    case 0: // closed
+    case ROUTE_CLOSED: // closed
         return;
         //image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 211;
         break;
-    case 2: // highlighted, closed
-        image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 211;
-        //            image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 201;
+    case ROUTE_CLOSED_SELECTED: // highlighted, closed
+        image_id = image_id_from_group(IMG_EMPIRE_ROUTE_HL_CLOSED);
         break;
-    case 1: // open
-        image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 201;
-        //            image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 181;
+    case ROUTE_OPEN: // open
+        image_id = image_id_from_group(IMG_EMPIRE_ROUTE_OPEN);
         break;
-    case 3: // highlighted, open
-        image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 186;
+    case ROUTE_OPEN_SELECTED: // highlighted, open
+        image_id = image_id_from_group(IMG_EMPIRE_ROUTE_HL_OPEN);
         break;
     }
 
@@ -185,13 +185,12 @@ static void draw_trade_route(int route_id, int effect) {
         const auto &route_point = obj->points[i];
 
         // first corner in pair
-        ImageDraw::img_generic(ctx, image_id, vec2i{data.draw_offset.x, data.draw_offset.y} + route_point.p);
+        ImageDraw::img_generic(ctx, image_id, data.draw_offset + route_point.p);
 
         // draw lines connecting the turns
         if (i < obj->num_points - 1) {
             auto nextup_route_point = obj->points[i + 1];
             vec2i d = nextup_route_point.p - route_point.p;
-            //            float step_size = 0.5;
             float len = 0.2f * sqrtf(float(d.x * d.x) + float(d.y * d.y));
 
             float scaled_x = (float)d.x / len;
@@ -199,9 +198,8 @@ static void draw_trade_route(int route_id, int effect) {
 
             float progress = 1.0;
             while (progress < len) {
-                int disp_x = (int)data.draw_offset.x + route_point.p.x + scaled_x * progress;
-                int disp_y = (int)data.draw_offset.y + route_point.p.y + scaled_y * progress;
-                ImageDraw::img_generic(ctx, image_id, vec2i{disp_x, disp_y});
+                vec2i disp = data.draw_offset + route_point.p + vec2i{(int)(scaled_x * progress), (int)(scaled_y * progress)};
+                ImageDraw::img_generic(ctx, image_id, disp);
                 progress += 1.0f;
             }
         }
@@ -428,19 +426,14 @@ static void draw_empire_object(const empire_object* obj) {
         const empire_city* city = empire_city_get(empire_city_get_for_object(obj->id));
 
         // draw routes!
-        if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING
-            || city->type == EMPIRE_CITY_PHARAOH_TRADING) {
-            if (!city->is_open) {
-                if (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id))
-                    draw_trade_route(city->route_id, 2);
-                else
-                    draw_trade_route(city->route_id, 0);
+        if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING || city->type == EMPIRE_CITY_PHARAOH_TRADING) {
+            e_empire_route_state state = ROUTE_CLOSED;
+            if (city->is_open) {
+                state = (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id)) ? ROUTE_OPEN_SELECTED : ROUTE_OPEN;
             } else {
-                if (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id))
-                    draw_trade_route(city->route_id, 3);
-                else
-                    draw_trade_route(city->route_id, 1);
+                state = (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id)) ? ROUTE_CLOSED_SELECTED : ROUTE_CLOSED;
             }
+            draw_trade_route(city->route_id, state);
         }
 
         int text_group = 21;
