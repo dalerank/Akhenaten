@@ -28,10 +28,6 @@ main_menu_window = {
 	]
 }
 
-empire_images_remap = [
-  {id:14320, rid:14320},
-]
-
 empire_window = {
 	trade_column_spacing : 106,
 	trade_row_spacing : 20,

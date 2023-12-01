@@ -4,6 +4,8 @@
 #include "content/imagepak.h"
 #include "graphics/image_desc.h"
 
+#include "js/js_game.h"
+
 struct image_data_t {
     bool fonts_enabled;
     bool fonts_loaded;
@@ -35,6 +37,16 @@ struct image_data_t {
 };
 
 image_data_t *g_image_data = nullptr;
+
+int img_mapping[32000] = {0};
+ANK_REGISTER_CONFIG_ITERATOR(config_load_images_remap_config);
+void config_load_images_remap_config(archive arch) {
+    arch.load_global_array("images_remap", [] (archive arch) {
+        int id = arch.read_integer("id");
+        int remap = arch.read_integer("rid");
+        img_mapping[id] = remap;
+    });
+}
 
 // These functions are actually related to the imagepak class I/O, but it made slightly more
 // sense to me to have here as "core" image struct/class & game graphics related functions.
@@ -242,16 +254,25 @@ int image_id_from_group(int collection, int group, int pak_cache_idx) {
     return pak->get_global_image_index(group);
 }
 
+int image_id_map(int id) {
+    int rimg = img_mapping[id];
+    return rimg ? rimg : id;
+}
+
 const image_t* image_get(int id) {
     auto& data = *g_image_data;
     const image_t* img;
+    id = image_id_map(id);
     for (int i = 0; i < data.pak_list.size(); ++i) {
         imagepak* pak = *(data.pak_list.at(i));
-        if (pak == nullptr)
+        if (pak == nullptr) {
             continue;
+        }
+
         img = pak->get_image(id);
-        if (img != nullptr)
+        if (img != nullptr) {
             return img;
+        }
     }
     // default (failure)
     return nullptr;

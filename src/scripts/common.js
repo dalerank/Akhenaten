@@ -27,4 +27,4 @@ var building_bandstand = {}
 var building_scribal_school = {}
 var building_scribal_school_info = {}
 var empire_window = {}
-var empire_images_remap = {}
+var images_remap = []

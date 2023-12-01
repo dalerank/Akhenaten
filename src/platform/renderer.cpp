@@ -301,7 +301,9 @@ void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, f
 
     vec2i offset = {img->atlas.x_offset, img->atlas.y_offset};
     vec2i size = {img->width, img->height};
-    ctx.draw(img->atlas.p_atlas->texture, x, y, offset, size, color, scale, mirrored);
+    if (offset.x >= 0 && offset.y >= 0) {
+        ctx.draw(img->atlas.p_atlas->texture, x, y, offset, size, color, scale, mirrored);
+    }
 }
 
 void graphics_renderer_interface::create_custom_texture(int type, int width, int height) {

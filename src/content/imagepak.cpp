@@ -13,6 +13,8 @@
 #include "graphics/screen.h"
 #include "graphics/image.h"
 
+#include "js/js_game.h"
+
 #include <array>
 #include <cinttypes>
 #include <cstring>
@@ -597,12 +599,16 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
 int imagepak::get_entry_count() {
     return entries_num;
 }
+
 int imagepak::get_global_image_index(int group) {
-    if (group < 0 || group >= groups_num)
+    if (group < 0 || group >= groups_num) {
         return -1;
+    }
+
     int image_id = group_image_ids[group];
     return image_id + global_image_index_offset;
 }
+
 const image_t* imagepak::get_image(int id, bool relative) {
     if (!relative)
         id -= global_image_index_offset;
