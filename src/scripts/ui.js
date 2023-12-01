@@ -38,4 +38,6 @@ empire_window = {
 	info_y_footer_1 : 78,
 	info_y_city_name : 120,
 	info_y_city_desc : 28,
+	text_group_old_names : 195,
+	text_group_new_names : 21,
 }

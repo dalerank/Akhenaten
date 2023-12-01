@@ -123,6 +123,8 @@ struct empire_window_t {
     int info_y_footer_1;
     int info_y_city_name;
     int info_y_city_desc;
+    int text_group_old_names;
+    int text_group_new_names;
 };
 
 empire_window_t g_empire_window = {0, 1};
@@ -151,6 +153,8 @@ void config_load_empire_window_config(archive arch) {
         g.info_y_footer_1 = arch.read_integer("info_y_footer_1");
         g.info_y_city_name = arch.read_integer("info_y_city_name");
         g.info_y_city_desc = arch.read_integer("info_y_city_desc");
+        g.text_group_old_names = arch.read_integer("text_group_old_names");
+        g.text_group_new_names = arch.read_integer("text_group_new_names");
     });
 }
 
@@ -406,11 +410,13 @@ static void draw_object_info(void) {
         lang_text_draw_centered(47, 9, data.min_pos.x, data.max_pos.y - 68, data.max_pos.x - data.min_pos.x, FONT_OBJECT_INFO);
     }
 }
+
 static void draw_empire_object(const empire_object* obj) {
     auto &data = g_empire_window;
     if (obj->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj->type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
-        if (!empire_city_is_trade_route_open(obj->trade_route_id))
+        if (!empire_city_is_trade_route_open(obj->trade_route_id)) {
             return;
+        }
     }
     vec2i pos;
     int image_id;
@@ -423,7 +429,8 @@ static void draw_empire_object(const empire_object* obj) {
     }
 
     if (obj->type == EMPIRE_OBJECT_CITY) {
-        const empire_city* city = empire_city_get(empire_city_get_for_object(obj->id));
+        int empire_city_id = empire_city_get_for_object(obj->id);
+        const empire_city* city = empire_city_get(empire_city_id);
 
         // draw routes!
         if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING || city->type == EMPIRE_CITY_PHARAOH_TRADING) {
@@ -436,39 +443,33 @@ static void draw_empire_object(const empire_object* obj) {
             draw_trade_route(city->route_id, state);
         }
 
-        int text_group = 21;
-        if (g_settings.city_names_style == CITIES_OLD_NAMES) {
-            text_group = 195;
-        }
+        int text_group = (g_settings.city_names_style == CITIES_OLD_NAMES) 
+                                ? data.text_group_old_names
+                                : data.text_group_new_names;
 
-        int text_offset_x = 0;
-        int text_offset_y = 50;
+        vec2i text_offset = {0, 50};
 
-        int text_x = data.draw_offset.x + pos.x + text_offset_x;
-        int text_y = data.draw_offset.y + pos.y + text_offset_x;
+        vec2i text_pos = data.draw_offset + pos + text_offset;
 
         switch (obj->text_align) {
         case 0:
-            lang_text_draw_left_colored(
-                text_group, city->name_id, text_x, text_y + (obj->height / 2), FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
+            lang_text_draw_left_colored(text_group, city->name_id, text_pos.x, text_pos.y + (obj->height / 2), FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
             break;
         case 1:
-            lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y - 10, 300, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
+            lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x - 150 + (obj->width / 2), text_pos.y - 10, 300, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
             break;
         case 2:
-            lang_text_draw_colored(text_group, city->name_id, text_x + obj->width, text_y + (obj->height / 2), FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
+            lang_text_draw_colored(text_group, city->name_id, text_pos.x + obj->width, text_pos.y + (obj->height / 2), FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
             break;
         case 3:
-            lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y + obj->height + 5, 300, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
+            lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x - 150 + (obj->width / 2), text_pos.y + obj->height + 5, 300, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
             break;
         }
     } else if (obj->type == EMPIRE_OBJECT_TEXT) {
         const full_empire_object* full = empire_get_full_object(obj->id);
-        int text_x = data.draw_offset.x + pos.x + 0;
-        int text_y = data.draw_offset.y + pos.y + 0;
+        vec2i text_pos = data.draw_offset + pos;
 
-        lang_text_draw_centered_colored(
-            196, full->city_name_id, text_x - 5, text_y, 100, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN);
+        lang_text_draw_centered_colored(196, full->city_name_id, text_pos.x - 5, text_pos.y, 100, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN);
         return;
     }
 
@@ -483,12 +484,14 @@ static void draw_empire_object(const empire_object* obj) {
         if (city_military_distant_battle_enemy_months_traveled() != obj->distant_battle_travel_months)
             return;
     }
+    
     if (obj->type == EMPIRE_OBJECT_KINGDOME_ARMY) {
         if (!city_military_distant_battle_kingdome_army_is_traveling())
             return;
         if (city_military_distant_battle_kingdome_months_traveled() != obj->distant_battle_travel_months)
             return;
     }
+
     painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_id, vec2i{data.draw_offset.x + pos.x, data.draw_offset.y + pos.y});
 
@@ -512,10 +515,10 @@ static void draw_map() {
 
     empire_set_viewport(data.max_pos.x - data.min_pos.x - 32, data.max_pos.y - data.min_pos.y - 136);
 
-    data.draw_offset.x = data.min_pos.x + 16;
-    data.draw_offset.y = data.min_pos.y + 16;
+    data.draw_offset = data.min_pos + vec2i{16, 16};
     empire_adjust_scroll(&data.draw_offset.x, &data.draw_offset.y);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EMPIRE_MAP), vec2i{data.draw_offset.x, data.draw_offset.y});
+
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EMPIRE_MAP), data.draw_offset);
 
     empire_object_foreach(draw_empire_object);
 
@@ -528,8 +531,8 @@ static void draw_city_name(const empire_city* city) {
     auto &data = g_empire_window;
     painter ctx = game.painter();
     if (city) {
-         lang_text_draw_centered(g_settings.city_names_style == CITIES_OLD_NAMES ? 195 : 21, 
-                                    city->name_id, (data.min_pos.x + data.max_pos.x - 332) / 2 + 32, data.max_pos.y - data.info_y_city_name, 268, FONT_LARGE_BLACK_ON_LIGHT);
+        int text_group = g_settings.city_names_style == CITIES_OLD_NAMES ? data.text_group_old_names : data.text_group_new_names;
+        lang_text_draw_centered(text_group, city->name_id, (data.min_pos.x + data.max_pos.x - 332) / 2 + 32, data.max_pos.y - data.info_y_city_name, 268, FONT_LARGE_BLACK_ON_LIGHT);
     }
 }
 
@@ -626,6 +629,7 @@ static void draw_foreground(void) {
             city = empire_city_get(data.selected_city);
         }
     }
+
     draw_paneling();
     draw_city_name(city);
     draw_panel_buttons(city);
@@ -646,11 +650,13 @@ static void determine_selected_object(const mouse* m) {
     empire_select_object(m->x - data.min_pos.x - 16, m->y - data.min_pos.y - 16);
     window_invalidate();
 }
+
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto &data = g_empire_window;
     vec2i position;
-    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE))
+    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
         empire_scroll_map(position.x, position.y);
+    }
 
     if (m->is_touch) {
         const touch* t = get_earliest_touch();
@@ -666,6 +672,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
             scroll_drag_end();
         }
     }
+
     data.focus_button_id = 0;
     data.focus_resource = 0;
     int button_id;
@@ -771,6 +778,7 @@ static int get_tooltip_resource(tooltip_context* c) {
 
     return 0;
 }
+
 static void get_tooltip_trade_route_type(tooltip_context* c) {
     auto &data = g_empire_window;
     int selected_object = empire_selected_object();
@@ -791,6 +799,7 @@ static void get_tooltip_trade_route_type(tooltip_context* c) {
         c->text_id = 28 + city->is_sea_trade;
     }
 }
+
 static void get_tooltip(tooltip_context* c) {
     auto &data = g_empire_window;
     int resource = data.focus_resource ? data.focus_resource : get_tooltip_resource(c);
