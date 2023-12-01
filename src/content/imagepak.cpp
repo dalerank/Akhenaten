@@ -315,9 +315,11 @@ imagepak::imagepak(const char* pak_name, int starting_index, bool SYSTEM_SPRITES
     if (!load_pak(pak_name, starting_index))
         cleanup_and_destroy();
 }
+
 imagepak::~imagepak() {
     cleanup_and_destroy();
 }
+
 void imagepak::cleanup_and_destroy() {
     for (int i = 0; i < atlas_pages.size(); ++i) {
         auto atlas_data = atlas_pages.at(i);

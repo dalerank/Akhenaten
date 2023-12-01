@@ -3,19 +3,30 @@
 #include "image_groups.h"
 #include "content/imagepak.h"
 #include "graphics/image_desc.h"
+#include "core/svector.h"
 
 #include "js/js_game.h"
 
+#include <array>
+
+struct imagepak_handle {
+    bstring128 name;
+    int id = -1;
+    int index = -1;
+    bool system = false;
+    imagepak *handle = nullptr;
+};
+
 struct image_data_t {
-    bool fonts_enabled;
-    bool fonts_loaded;
+    bool fonts_enabled = false;
+    bool fonts_loaded = false;
+    bool common_inited = false;
     int font_base_offset;
 
     std::vector<imagepak**> pak_list;
 
     imagepak* main = nullptr;
     imagepak* terrain = nullptr;
-    imagepak* unloaded = nullptr;
     imagepak* sprmain = nullptr;
     imagepak* sprambient = nullptr;
 
@@ -33,7 +44,9 @@ struct image_data_t {
     imagepak* empire = nullptr;
     imagepak* font = nullptr;
 
-    color* tmp_image_data;
+    color* tmp_image_data = nullptr;
+
+    std::array<imagepak_handle, 16> common;
 };
 
 image_data_t *g_image_data = nullptr;
@@ -48,6 +61,22 @@ void config_load_images_remap_config(archive arch) {
     });
 }
 
+ANK_REGISTER_CONFIG_ITERATOR(config_load_imagepaks_config);
+void config_load_imagepaks_config(archive arch) {
+    if (g_image_data->common_inited) {
+        return;
+    }
+    arch.load_global_array("imagepaks", [] (archive arch) {
+        imagepak_handle config;
+        config.id = arch.read_integer("id");
+        config.name = arch.read_string("name");
+        config.index = arch.read_integer("index");
+        config.system = arch.read_bool("system");
+        g_image_data->common[config.id] = config;
+    });
+    g_image_data->common_inited = true;
+}
+
 // These functions are actually related to the imagepak class I/O, but it made slightly more
 // sense to me to have here as "core" image struct/class & game graphics related functions.
 
@@ -59,6 +88,7 @@ bool set_pak_in_collection(int pak_id, imagepak** pak, std::vector<imagepak*>* c
     *pak = collection->at(pak_id);
     return true;
 }
+
 bool image_set_font_pak(encoding_type encoding) {
     auto& data = *g_image_data;
     // TODO?
@@ -79,9 +109,11 @@ bool image_set_font_pak(encoding_type encoding) {
         return true;
     }
 }
+
 bool image_data_fonts_ready() {
     return g_image_data && g_image_data->fonts_loaded;
 }
+
 bool image_set_enemy_pak(int enemy_id) {
     auto& data = *g_image_data;
     return set_pak_in_collection(enemy_id, &data.enemy, &data.enemy_paks);
@@ -94,6 +126,7 @@ bool image_set_monument_pak(int monument_id) {
     auto& data = *g_image_data;
     return set_pak_in_collection(monument_id, &data.monument, &data.monument_paks);
 }
+
 void image_data_init() {
     g_image_data = new image_data_t;
 }
@@ -106,7 +139,6 @@ bool image_load_paks() {
 
     // add paks to parsing list cache
     data.pak_list.push_back(&data.sprmain);
-    data.pak_list.push_back(&data.unloaded);
     data.pak_list.push_back(&data.main);
     data.pak_list.push_back(&data.terrain);
     data.pak_list.push_back(&data.temple);
@@ -130,7 +162,14 @@ bool image_load_paks() {
     data.font = new imagepak("Pharaoh_Fonts", 18765, false, true); // 18765 --> 20305
     data.fonts_loaded = true;
 
-    data.unloaded = new imagepak("Pharaoh_Unloaded", 0, true); // 0     --> 682
+    for (const auto &imgpak : g_image_data->common) {
+        if (imgpak.name.empty()) {
+            continue;
+        }
+        auto *newpak = new imagepak(imgpak.name, imgpak.index, imgpak.system);
+        data.common[imgpak.id].handle = newpak;
+        data.pak_list.push_back(&data.common[imgpak.id].handle);
+    }
     data.sprmain = new imagepak("SprMain", 700);               // 700   --> 11007
     // <--- original enemy pak in here                                                                              //
     // 11008 --> 11866
@@ -188,9 +227,12 @@ bool image_load_paks() {
 
 static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
     auto& data = *g_image_data;
+    auto handle = g_image_data->common[collection].handle;
+    if (handle) {
+        return handle;
+    }
+
     switch (collection) {
-    case PACK_UNLOADED:
-        return data.unloaded;
     case PACK_TERRAIN:
         return data.terrain;
     case PACK_GENERAL:
@@ -277,17 +319,20 @@ const image_t* image_get(int id) {
     // default (failure)
     return nullptr;
 }
+
 const image_t* image_letter(int letter_id) {
     auto& data = *g_image_data;
-    if (data.fonts_enabled == FULL_CHARSET_IN_FONT)
+    if (data.fonts_enabled == FULL_CHARSET_IN_FONT) {
         return data.font->get_image(data.font_base_offset + letter_id);
-    else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET)
+    } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
         return data.font->get_image(data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET);
-    else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET)
+    } else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
         return image_get(image_id_from_group(GROUP_FONT) + letter_id);
-    else
+    } else {
         return nullptr;
+    }
 }
+
 const image_t* image_get_enemy(int id) {
     auto& data = *g_image_data;
     return data.enemy->get_image(id);

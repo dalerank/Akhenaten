@@ -384,6 +384,11 @@ static void setup(Arguments& args) {
     g_settings.set_cli_fullscreen(args.is_fullscreen());
     platform_init_cursors(args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
                                                                // otherwise it fails on Nintendo Switch
+    image_data_init();                                         // image paks strcutures init
+                                                               
+    js_vm_set_scripts_folder(args.get_scripts_directory());    // setup script engine
+    js_vm_setup();
+    js_vm_sync();
 
     // init game!
     time_set_millis(SDL_GetTicks());
@@ -391,10 +396,6 @@ static void setup(Arguments& args) {
         logs::info("Exiting: game init failed");
         exit(2);
     }
-
-    // setup script engine
-    js_vm_set_scripts_folder(args.get_scripts_directory());
-    js_vm_setup();
 
     figure::check_action_properties_lookup();
 }

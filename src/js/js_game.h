@@ -70,6 +70,13 @@ struct archive {
         return result;
     }
 
+    inline bool read_bool(pcstr name) {
+        js_getproperty(vm, -1, name);
+        bool result = js_isundefined(vm, -1) ? 0 : js_toboolean(vm, -1);
+        js_pop(vm, 1);
+        return result;
+    }
+
     template<typename T>
     inline void read_object_section(pcstr name, T read_func) {
         js_getproperty(vm, -1, name);

@@ -150,7 +150,6 @@ bool game_pre_init(void) {
 }
 
 bool game_init() {
-    image_data_init();
     int missing_fonts = 0;
     if (!image_set_font_pak(encoding_get())) {
         logs::error("unable to load font graphics");
