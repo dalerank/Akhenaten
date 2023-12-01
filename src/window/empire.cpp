@@ -140,6 +140,8 @@ static void init(void) {
 const int TRADE_RESOURCE_SIZE = 18;
 const int TRADE_RESOURCE_OFFSET = 3;
 
+int empire_img_mapping[32000] = {0};
+
 ANK_REGISTER_CONFIG_ITERATOR(config_load_empire_window_config);
 void config_load_empire_window_config(archive arch) {
     arch.load_global_section("empire_window", [] (archive arch) {
@@ -155,6 +157,15 @@ void config_load_empire_window_config(archive arch) {
         g.info_y_city_desc = arch.read_integer("info_y_city_desc");
         g.text_group_old_names = arch.read_integer("text_group_old_names");
         g.text_group_new_names = arch.read_integer("text_group_new_names");
+    });
+}
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_empire_images_remap_config);
+void config_load_empire_images_remap_config(archive arch) {
+    arch.load_global_array("empire_images_remap", [] (archive arch) {
+        int id = arch.read_integer("id");
+        int remap = arch.read_integer("rid");
+        empire_img_mapping[id] = remap;
     });
 }
 

@@ -137,38 +137,38 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
                 image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT);
             else if (terrain & TERRAIN_ROAD) {
                 if (b->type == BUILDING_ROADBLOCK) {
-                    image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 5; // black
+                    image_id = image_id_from_group(IMG_MINIMAP_BLACK); // black
                 } else if (building_is_entertainment(b->type)) {
-                    image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 170; // bright teal
+                    image_id = image_id_from_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
                 } else if (b->type == BUILDING_FESTIVAL_SQUARE) {
-                    image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 170; // bright teal
+                    image_id = image_id_from_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
                 } else if (b->type == BUILDING_FERRY) {
-                    image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 210; // dark grey
+                    image_id = image_id_from_group(IMG_MINIMAP_DARK_GREY); // dark grey
                 } else {
-                    image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 210; // dark grey
+                    image_id = image_id_from_group(IMG_MINIMAP_DARK_GREY); // dark grey
                 }
             } else if (building_is_food_category(b->type)) {
-                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 160; // green
+                image_id = image_id_from_group(IMG_MINIMAP_GREEN); // green
             } else if (building_is_industry(b->type)) {
-                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 165; // dark red
+                image_id = image_id_from_group(IMG_MINIMAP_DARK_RED); // dark red
             } else if (building_is_entertainment(b->type)) {
-                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 170; // bright teal
+                image_id = image_id_from_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
             } else if (building_is_religion(b->type)) {
-                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 175; // purple
+                image_id = image_id_from_group(IMG_MINIMAP_PURPLE); // purple
             } else if (building_is_culture(b->type)) {
-                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 180; // light yellow
+                image_id = image_id_from_group(IMG_MINIMAP_LIGHT_YELLOW); // light yellow
             } else if (building_is_infrastructure(b->type)) {
-                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 190; // bright blue
+                image_id = image_id_from_group(IMG_MINIMAP_BRIGHT_BLUE); // bright blue
             } else if (building_is_administration(b->type)) {
-                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 195; // lilac
+                image_id = image_id_from_group(IMG_MINIMAP_LILAC); // lilac
             } else if (building_is_military(b->type)) {
-                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 200; // orange
+                image_id = image_id_from_group(IMG_MINIMAP_ORANGE); // orange
             } else if (building_is_beautification(b->type)) {
-                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 205; // spent teal
+                image_id = image_id_from_group(IMG_MINIMAP_SPENT_TEAL); // spent teal
             } else if (building_is_monument(b->type)) {
-                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 210; // dark grey
+                image_id = image_id_from_group(IMG_MINIMAP_DARK_GREY); // dark grey
             } else {
-                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + g_debug_tile;
+                image_id = image_id_from_group(IMG_MINIMAP_COLOR) + g_debug_tile;
             }
 
             auto multi_tile_size = map_property_multi_tile_size(grid_offset);
@@ -216,7 +216,7 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
         else if (terrain & TERRAIN_DUNE)
             image_id = image_id_from_group(GROUP_MINIMAP_DUNES) + (rand & 7);
         else if (terrain & TERRAIN_GARDEN)
-            image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 205; // spent teal
+            image_id = image_id_from_group(IMG_MINIMAP_SPENT_TEAL); // spent teal
         else
             image_id = image_id_from_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
 

@@ -101,6 +101,16 @@ images = [
 	{img: IMG_EMPIRE_ROUTE_HL_CLOSED, pack:PACK_GENERAL, id:149, offset:211},
 	{img: IMG_EMPIRE_ROUTE_OPEN, pack:PACK_GENERAL, id:149, offset:201},
 	{img: IMG_EMPIRE_ROUTE_HL_OPEN, pack:PACK_GENERAL, id:149, offset:186},
+	{img: IMG_MINIMAP_BLACK, pack:PACK_GENERAL, id:149, offset:5},
+	{img: IMG_MINIMAP_BRIGHT_TEAL, pack:PACK_GENERAL, id:149, offset:170},
+	{img: IMG_MINIMAP_DARK_GREY, pack:PACK_GENERAL, id:149, offset:210},
+	{img: IMG_MINIMAP_GREEN, pack:PACK_GENERAL, id:149, offset:160},
+	{img: IMG_MINIMAP_DARK_RED, pack:PACK_GENERAL, id:149, offset:165},
+	{img: IMG_MINIMAP_PURPLE, pack:PACK_GENERAL, id:149, offset:175},
+	{img: IMG_MINIMAP_LIGHT_YELLOW, pack:PACK_GENERAL, id:149, offset:180},
+	{img: IMG_MINIMAP_LILAC, pack:PACK_GENERAL, id:149, offset:195},
+	{img: IMG_MINIMAP_SPENT_TEAL, pack:PACK_GENERAL, id:149, offset:200},
+	{img: IMG_MINIMAP_COLOR, pack:PACK_GENERAL, id:149, offset:0},
 ]
 
 cart_offsets = [
