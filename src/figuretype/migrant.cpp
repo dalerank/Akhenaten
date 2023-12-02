@@ -184,7 +184,7 @@ void figure::immigrant_action() {
 
 void figure::emigrant_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Emigrant");
-    map_point &exit = city_map_exit_point();
+    tile2i exit = city_map_exit_point();
     switch (action_state) {
     case FIGURE_ACTION_4_EMIGRANT_CREATED:
         //            is_ghost = true;

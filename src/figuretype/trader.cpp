@@ -341,23 +341,26 @@ int figure::get_closest_storageyard(map_point tile, int city_id, int distance_fr
 
     return min_building->id;
 }
+
 void figure::go_to_next_storageyard(map_point src_tile, int distance_to_entry) {
-    map_point dst;
+    tile2i dst;
     int warehouse_id = get_closest_storageyard(src_tile, empire_city_id, distance_to_entry, dst);
     if (warehouse_id && warehouse_id != destinationID()) {
         set_destination(warehouse_id);
         action_state = FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING;
         destination_tile = dst;
-        //        destination_tile.x() = dst.x();
-        //        destination_tile.y() = dst.y();
     } else {
-        map_point& exit = city_map_exit_point();
+        tile2i exit = city_map_exit_point();
+        tile2i road_tile;
+        state = FIGURE_STATE_ALIVE;
+        map_closest_road_within_radius(exit, 1, 2, road_tile);
+        destination_tile = road_tile;
+        direction = DIR_0_TOP_RIGHT;
+        advance_action(ACTION_16_EMIGRANT_RANDOM);
         action_state = FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING;
-        destination_tile = exit;
-        //        destination_tile.x() = exit->x();
-        //        destination_tile.y() = exit->y();
     }
 }
+
 int figure::trade_ship_lost_queue() {
     building* b = destination();
     if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_DOCK && b->num_workers > 0
@@ -449,7 +452,9 @@ void figure::trade_caravan_action() {
         break;
     case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
     case 11:
-        do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS);
+        if (do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS)) {
+            poof();
+        }
         break;
     }
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);

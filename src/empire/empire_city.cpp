@@ -5,6 +5,7 @@
 #include "city/map.h"
 #include "city/message.h"
 #include "city/trade.h"
+#include "core/profiler.h"
 #include "core/game_environment.h"
 #include "empire/empire_object.h"
 #include "empire/trade_route.h"
@@ -163,27 +164,33 @@ void empire_city_expand_empire(void) {
 }
 
 static bool generate_trader(int city_id, empire_city &city) {
-    if (city_data.religion.ra_no_traders_months_left > 0)
+    if (city_data.religion.ra_no_traders_months_left > 0) {
         return false;
+    }
 
     int max_traders = 0;
     int num_resources = 0;
     for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
         if (city.buys_resource[r] || city.sells_resource[r]) {
             ++num_resources;
-            switch (trade_route_limit(city.route_id, r)) {
-            case 15: max_traders += 1; break;
-            case 25: max_traders += 2; break;
-            case 40: max_traders += 3; break;
+            int trade_limit = trade_route_limit(city.route_id, r);
+            if (trade_limit >= 1500 && trade_limit < 2500) {
+                max_traders += 1;
+            } else if (trade_limit >= 2500 && trade_limit < 4000) {
+                max_traders += 2;
+            } else if (trade_limit >= 4000) {
+                max_traders += 3;
             }
         }
     }
+
     if (num_resources > 1) {
         if (max_traders % num_resources)
             max_traders = max_traders / num_resources + 1;
         else
             max_traders = max_traders / num_resources;
     }
+
     if (max_traders <= 0)
         return false;
 
@@ -215,6 +222,7 @@ static bool generate_trader(int city_id, empire_city &city) {
         city.trader_entry_delay--;
         return false;
     }
+
     city.trader_entry_delay = city.is_sea_trade ? 30 : 4;
 
     if (city.is_sea_trade) {
@@ -229,7 +237,7 @@ static bool generate_trader(int city_id, empire_city &city) {
         // generate caravan and donkeys
         if (!city_trade_has_land_trade_problems()) {
             // caravan head
-            map_point& entry = city_map_entry_point();
+            tile2i& entry = city_map_entry_point();
             city.trader_figure_ids[index] = figure_create_trade_caravan(entry, city_id);
             return true;
         }
@@ -244,6 +252,7 @@ void empire_city_open_trade(int city_id) {
 }
 
 void empire_city_generate_trader(void) {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Trade Update/Genereate trader");
     for (int i = 0; i < MAX_CITIES; i++) {
         empire_city &city = g_cities[i];
         if (!city.in_use || !city.is_open) {
