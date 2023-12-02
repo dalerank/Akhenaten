@@ -25,7 +25,6 @@ struct image_data_t {
 
     std::vector<imagepak**> pak_list;
 
-    imagepak* terrain = nullptr;
     imagepak* sprambient = nullptr;
 
     imagepak* expansion = nullptr;
@@ -159,7 +158,6 @@ bool image_load_paks() {
     }
 
     // add paks to parsing list cache
-    data.pak_list.push_back(&data.terrain);
     data.pak_list.push_back(&data.temple);
     data.pak_list.push_back(&data.sprambient);
     data.pak_list.push_back(&data.empire);
@@ -168,7 +166,6 @@ bool image_load_paks() {
     data.pak_list.push_back(&data.monument);
     // <--- original enemy pak in here                                                                              //
     // 11008 --> 11866
-    data.terrain = new imagepak("Pharaoh_Terrain", 14252); // 14252 --> 15767 (+64)
                                                                  // system.bmp 0-199
                                                                  // land1a.bmp 200-580
                                                                  // ladn2a.bmp 581-721
@@ -227,8 +224,6 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
     }
 
     switch (collection) {
-    case PACK_TERRAIN:
-        return data.terrain;
     case PACK_SPR_AMBIENT:
         return data.sprambient;
     case PACK_EMPIRE:
