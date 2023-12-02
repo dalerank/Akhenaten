@@ -250,15 +250,17 @@ static void draw_trade_resource(e_resource resource, int trade_max, vec2i offset
     switch (trade_max) {
     case 1500:
     case 15:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT), offset + vec2i{21, -1});
+        ImageDraw::img_generic(ctx, image_id_from_group(IMG_TRADE_AMOUNT), offset + vec2i{21, -1});
         break;
+
     case 2500:
     case 25:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT) + 1, offset + vec2i{17, -1});
+        ImageDraw::img_generic(ctx, image_id_from_group(IMG_TRADE_AMOUNT) + 1, offset + vec2i{17, -1});
         break;
+
     case 4000:
     case 40:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT) + 2, offset + vec2i{13, -1});
+        ImageDraw::img_generic(ctx, image_id_from_group(IMG_TRADE_AMOUNT) + 2, offset + vec2i{13, -1});
         break;
     }
 }
@@ -369,17 +371,21 @@ static void draw_city_info(const empire_object* object) {
 
     switch (city->type) {
     case EMPIRE_CITY_OURS:
-        lang_text_draw_centered(47, 1, x_offset, y_offset + data.info_y_city_desc, 240, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_centered(data.sell_res_group, 1, x_offset, y_offset + data.info_y_city_desc, 240, FONT_NORMAL_BLACK_ON_LIGHT);
         break;
+
     case EMPIRE_CITY_PHARAOH:
-        lang_text_draw_centered(47, 19, x_offset, y_offset + data.info_y_city_desc, 240, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_centered(data.sell_res_group, 19, x_offset, y_offset + data.info_y_city_desc, 240, FONT_NORMAL_BLACK_ON_LIGHT);
         break;
+
     case EMPIRE_CITY_EGYPTIAN:
-        lang_text_draw_centered(47, 13, x_offset, y_offset + data.info_y_city_desc, 240, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_centered(data.sell_res_group, 13, x_offset, y_offset + data.info_y_city_desc, 240, FONT_NORMAL_BLACK_ON_LIGHT);
         break;
+
     case EMPIRE_CITY_FOREIGN:
-        lang_text_draw_centered(47, 0, x_offset, y_offset + data.info_y_city_desc, 240, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_centered(data.sell_res_group, 0, x_offset, y_offset + data.info_y_city_desc, 240, FONT_NORMAL_BLACK_ON_LIGHT);
         break;
+
     case EMPIRE_CITY_PHARAOH_TRADING:
     case EMPIRE_CITY_EGYPTIAN_TRADING:
     case EMPIRE_CITY_FOREIGN_TRADING:
@@ -399,7 +405,7 @@ static void draw_kingdome_army_info(const empire_object* object) {
             else {
                 text_id = 16;
             }
-            lang_text_draw_multiline(47, text_id, offset, 240, FONT_OBJECT_INFO);
+            lang_text_draw_multiline(data.sell_res_group, text_id, offset, 240, FONT_OBJECT_INFO);
         }
     }
 }
@@ -408,7 +414,7 @@ static void draw_enemy_army_info(const empire_object* object) {
     auto &data = g_empire_window;
     if (city_military_months_until_distant_battle() > 0) {
         if (city_military_distant_battle_enemy_months_traveled() == object->distant_battle_travel_months) {
-            lang_text_draw_multiline(47, 14, vec2i{(data.min_pos.x + data.max_pos.x - 240) / 2, data.max_pos.y - 68}, 240, FONT_OBJECT_INFO);
+            lang_text_draw_multiline(data.sell_res_group, 14, vec2i{(data.min_pos.x + data.max_pos.x - 240) / 2, data.max_pos.y - 68}, 240, FONT_OBJECT_INFO);
         }
     }
 }
@@ -430,7 +436,7 @@ static void draw_object_info(void) {
             break;
         }
     } else {
-        lang_text_draw_centered(47, 9, data.min_pos.x, data.max_pos.y - 68, data.max_pos.x - data.min_pos.x, FONT_OBJECT_INFO);
+        lang_text_draw_centered(data.sell_res_group, 9, data.min_pos.x, data.max_pos.y - 68, data.max_pos.x - data.min_pos.x, FONT_OBJECT_INFO);
     }
 }
 
