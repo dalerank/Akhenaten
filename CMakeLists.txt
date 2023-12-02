@@ -372,6 +372,9 @@ cmrc_add_resource_library(
     ${SCRIPTS_FOLDER}/mission_sounds.js
     ${SCRIPTS_FOLDER}/overlays.js
     ${SCRIPTS_FOLDER}/images.js
+    ${SCRIPTS_FOLDER}/images_remap.js
+    ${SCRIPTS_FOLDER}/imagepaks.js
+    ${SCRIPTS_FOLDER}/ui.js
     ${PROJECT_SOURCE_DIR}/res/akhenaten_72.png
     ${PROJECT_SOURCE_DIR}/res/patreon_48.png
 )
