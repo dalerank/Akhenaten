@@ -705,13 +705,15 @@ void ImageDraw::img_generic(painter &ctx, int image_id, vec2i p, color color_mas
 
 void ImageDraw::img_sprite(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
-    //    debug_draw_sprite_box(x, y, img, zoom_get_scale());
     bool mirrored = (img->offset_mirror != 0);
+   
     if (mirrored) {
         img = img->mirrored_img;
         x -= (img->width - img->animation.sprite_x_offset);
-    } else
+    } else {
         x -= img->animation.sprite_x_offset;
+    }
+
     y -= img->animation.sprite_y_offset;
     graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, mirrored);
 }

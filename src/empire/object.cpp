@@ -121,7 +121,7 @@ void empire_object_init_cities() {
         city->cost_to_open = obj->trade_route_cost;
         city->is_sea_trade = is_sea_trade_route(obj->obj.trade_route_id);
 
-        for (int resource = 0; resource < RESOURCES_MAX; resource++) {
+        for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_MAX; ++resource) {
             city->sells_resource[resource] = false;
             city->buys_resource[resource] = false;
             if (!is_trade_city(i))
@@ -252,10 +252,11 @@ void empire_object_set_expanded(int object_id, e_empire_city new_city_type) {
         objects[object_id].obj.expanded.image_id = image_id_from_group(GROUP_EMPIRE_CITY_PH_OURS);
 }
 
-bool empire_object_city_buys_resource(int object_id, int resource, bool from_raw_object) {
+bool empire_object_city_buys_resource(int object_id, e_resource resource, bool from_raw_object) {
     auto& objects = g_empire_objects;
     if (object_id == -1)
         return false;
+
     if (from_raw_object) {
         const full_empire_object* object = &objects[object_id];
         for (int i = 0; i < EMPIRE_OBJ_MAX_BOUGHT_RESOURCES; i++) {
@@ -263,12 +264,13 @@ bool empire_object_city_buys_resource(int object_id, int resource, bool from_raw
                 return true;
         }
         return false;
-    } else {
-        const empire_city* city = empire_city_get(empire_city_get_for_object(object_id));
-        return city->buys_resource[resource];
-    }
+    } 
+
+    const empire_city* city = empire_city_get(empire_city_get_for_object(object_id));
+    return city->buys_resource[resource];
 }
-bool empire_object_city_sells_resource(int object_id, int resource, bool from_raw_object) {
+
+bool empire_object_city_sells_resource(int object_id, e_resource resource, bool from_raw_object) {
     auto& objects = g_empire_objects;
     if (object_id == -1)
         return false;
@@ -279,10 +281,10 @@ bool empire_object_city_sells_resource(int object_id, int resource, bool from_ra
                 return true;
         }
         return false;
-    } else {
-        const empire_city* city = empire_city_get(empire_city_get_for_object(object_id));
-        return city->sells_resource[resource];
-    }
+    } 
+    
+    const empire_city* city = empire_city_get(empire_city_get_for_object(object_id));
+    return city->sells_resource[resource];
 }
 
 static int get_animation_offset(int image_id, int current_index) {

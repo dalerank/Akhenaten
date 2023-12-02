@@ -164,12 +164,7 @@ bool image_load_paks() {
     data.pak_list.push_back(&data.sprmain2);
     data.pak_list.push_back(&data.expansion);
     data.pak_list.push_back(&data.monument);
-    // <--- original enemy pak in here                                                                              //
-    // 11008 --> 11866
-                                                                 // system.bmp 0-199
-                                                                 // land1a.bmp 200-580
-                                                                 // ladn2a.bmp 581-721
-    // <--- original temple complex pak here
+
     data.sprambient = new imagepak("SprAmbient", 15831);           // 15831 --> 18765
     data.empire = new imagepak("Empire", 20305);                   // 20305 --> 20506 (+177)
     data.sprmain2 = new imagepak("SprMain2", 20683);               // 20683 --> 23035
@@ -178,6 +173,7 @@ bool image_load_paks() {
     // 23735 --> 24163
 
     // the 5 Temple Complex paks.
+    // <--- original temple complex pak here
     data.temple_paks.push_back(new imagepak("Temple_nile", 15591));
     data.temple_paks.push_back(new imagepak("Temple_ra", 15591));
     data.temple_paks.push_back(new imagepak("Temple_ptah", 15591));

@@ -208,7 +208,7 @@ static void draw_city_info(const empire_city* city) {
     case EMPIRE_CITY_PHARAOH_TRADING: {
         width += lang_text_draw(47, 1, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
         int resource_x_offset = x_offset + 30 + width;
-        for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
             if (empire_object_city_sells_resource(city->empire_object_id, r)) {
                 draw_resource(r, 0, resource_x_offset, y_offset - 9);
                 resource_x_offset += 32;
@@ -219,7 +219,7 @@ static void draw_city_info(const empire_city* city) {
     case EMPIRE_CITY_PHARAOH: {
         width += lang_text_draw(47, 5, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
         int resource_x_offset = x_offset + 30 + width;
-        for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
             if (empire_object_city_sells_resource(city->empire_object_id, r)) {
                 draw_resource(r, trade_route_limit(city->route_id, r), resource_x_offset, y_offset - 9);
                 resource_x_offset += 32;
@@ -228,7 +228,7 @@ static void draw_city_info(const empire_city* city) {
         resource_x_offset += 50;
         resource_x_offset += lang_text_draw(47, 4, resource_x_offset, y_offset, FONT_NORMAL_BLACK_ON_DARK);
         resource_x_offset += 10;
-        for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
             if (empire_object_city_buys_resource(city->empire_object_id, r)) {
                 draw_resource(r, trade_route_limit(city->route_id, r), resource_x_offset, y_offset - 9);
                 resource_x_offset += 32;

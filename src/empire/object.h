@@ -59,8 +59,8 @@ int empire_object_get_closest(vec2i pos);
 
 void empire_object_set_expanded(int object_id, e_empire_city new_city_type);
 
-bool empire_object_city_buys_resource(int object_id, int resource, bool from_raw_object = false);
-bool empire_object_city_sells_resource(int object_id, int resource, bool from_raw_object = false);
+bool empire_object_city_buys_resource(int object_id, e_resource resource, bool from_raw_object = false);
+bool empire_object_city_sells_resource(int object_id, e_resource resource, bool from_raw_object = false);
 
 int empire_object_update_animation(const empire_object* obj, int image_id);
 

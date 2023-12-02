@@ -103,7 +103,11 @@ static generic_button generic_button_trade_resource[] = {
 static generic_button generic_button_open_trade[] = {
     {30, 56, 440, 20, button_open_trade, button_none, 0, 0}
 };
-#define TRADE_BUTTON_OFFSET_Y 10
+
+struct object_trade_info {
+    rect r;
+    e_resource res;
+};
 
 struct empire_window_t {
     int selected_button;
@@ -125,6 +129,12 @@ struct empire_window_t {
     int info_y_city_desc;
     int text_group_old_names;
     int text_group_new_names;
+    int trade_resource_size;
+    int trade_resource_offset;
+    int sell_res_group;
+    int trade_button_offset_y;
+    svector<object_trade_info, 16> buying_goods;
+    svector<object_trade_info, 16> selling_goods;
 };
 
 empire_window_t g_empire_window = {0, 1};
@@ -136,9 +146,6 @@ static void init(void) {
     data.selected_city = selected_object ? empire_city_get_for_object(selected_object - 1) : 0;
     data.focus_button_id = 0;
 }
-
-const int TRADE_RESOURCE_SIZE = 18;
-const int TRADE_RESOURCE_OFFSET = 3;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_empire_window_config);
 void config_load_empire_window_config(archive arch) {
@@ -155,6 +162,10 @@ void config_load_empire_window_config(archive arch) {
         g.info_y_city_desc = arch.read_integer("info_y_city_desc");
         g.text_group_old_names = arch.read_integer("text_group_old_names");
         g.text_group_new_names = arch.read_integer("text_group_new_names");
+        g.trade_resource_size = arch.read_integer("trade_resource_size");
+        g.trade_resource_offset = arch.read_integer("trade_resource_offset");
+        g.sell_res_group = arch.read_integer("sell_res_group");
+        g.trade_button_offset_y = arch.read_integer("trade_button_offset_y");
     });
 }
 
@@ -218,28 +229,36 @@ static int row_idx(int index) {
     return index / 2;
 }
 
-static void draw_trade_resource(int resource, int trade_max, int x_offset, int y_offset) {
+static void draw_trade_resource(e_resource resource, int trade_max, vec2i offset, int mode) {
     auto &data = g_empire_window;
     painter ctx = game.painter();
-    graphics_draw_inset_rect(x_offset, y_offset, TRADE_RESOURCE_SIZE, TRADE_RESOURCE_SIZE);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(resource), vec2i{x_offset + 1, y_offset + 1});
+    graphics_draw_inset_rect(offset.x, offset.y, data.trade_resource_size, data.trade_resource_size);
+    int img_id = image_id_resource_icon(resource);
+    ImageDraw::img_generic(ctx, img_id, offset + vec2i{1, 1});
+
+    const image_t* img = image_get(img_id);
+    if (mode) {
+        data.selling_goods.push_back({{offset, offset + vec2i{img->width, img->height}}, resource});
+    } else {
+        data.buying_goods.push_back({{offset, offset + vec2i{img->width, img->height}}, resource});
+    }
 
     if (data.focus_resource == resource) {
-        button_border_draw(x_offset - 2, y_offset - 2, 101 + 4, 24, 1);
+        button_border_draw(offset.x - 2, offset.y - 2, 101 + 4, 24, 1);
     }
 
     switch (trade_max) {
     case 1500:
     case 15:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT), vec2i{x_offset + 21, y_offset - 1});
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT), offset + vec2i{21, -1});
         break;
     case 2500:
     case 25:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT) + 1, vec2i{x_offset + 17, y_offset - 1});
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT) + 1, offset + vec2i{17, -1});
         break;
     case 4000:
     case 40:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT) + 2, vec2i{x_offset + 13, y_offset - 1});
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TRADE_AMOUNT) + 2, offset + vec2i{13, -1});
         break;
     }
 }
@@ -249,13 +268,16 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
     int x_offset = (data.min_pos.x + data.max_pos.x - 500) / 2;
     int y_offset = data.max_pos.y - 113;
 
+    data.buying_goods.clear();
+    data.selling_goods.clear();
+
     if (city->is_open) {
         font_t traded_font = FONT_SMALL_PLAIN;
 
         // city sells
-        lang_text_draw(47, 11, x_offset + 44, y_offset + data.info_y_traded - 2, FONT_OBJECT_INFO);
+        lang_text_draw(data.sell_res_group, 11, x_offset + 44, y_offset + data.info_y_traded - 2, FONT_OBJECT_INFO);
         int index = 0;
-        for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
+        for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_MAX; ++resource) {
             if (!empire_object_city_sells_resource(object->id, resource))
                 continue;
 
@@ -263,7 +285,7 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
             int row_offset = data.trade_row_spacing * row_idx(index) + 20;
 
             int trade_max = trade_route_limit(city->route_id, resource);
-            draw_trade_resource(resource, trade_max, x_offset + column_offset + 125, y_offset + data.info_y_traded + row_offset - 5);
+            draw_trade_resource(resource, trade_max, vec2i{x_offset + column_offset + 125, y_offset + data.info_y_traded + row_offset - 5}, 1);
             int trade_now = trade_route_traded(city->route_id, resource);
 
             if (trade_now > trade_max)
@@ -273,14 +295,15 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
             trade_max = stack_proper_quantity(trade_max, resource);
 
             int text_width = text_draw_number(trade_now, '@', "", x_offset + column_offset + 150, y_offset + data.info_y_traded + row_offset, traded_font);
-            text_width += lang_text_draw(47, 12, x_offset + column_offset + 148 + text_width, y_offset + data.info_y_traded + row_offset, traded_font);
+            text_width += lang_text_draw(data.sell_res_group, 12, x_offset + column_offset + 148 + text_width, y_offset + data.info_y_traded + row_offset, traded_font);
             text_draw_number(trade_max, '@', "", x_offset + column_offset + 138 + text_width, y_offset + data.info_y_traded + row_offset,traded_font);
             index++;
         }
         // city buys
-        lang_text_draw(47, 10, x_offset + 44 + 350, y_offset + data.info_y_traded - 2, FONT_OBJECT_INFO);
+        lang_text_draw(data.sell_res_group, 10, x_offset + 44 + 350, y_offset + data.info_y_traded - 2, FONT_OBJECT_INFO);
         index = 0;
-        for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
+
+        for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_MAX; ++resource) {
             if (!empire_object_city_buys_resource(object->id, resource))
                 continue;
 
@@ -288,7 +311,7 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
             int row_offset = data.trade_row_spacing * row_idx(index) + 20;
 
             int trade_max = trade_route_limit(city->route_id, resource);
-            draw_trade_resource(resource, trade_max, x_offset + column_offset + 125, y_offset + data.info_y_traded + row_offset - 5);
+            draw_trade_resource(resource, trade_max, vec2i{x_offset + column_offset + 125, y_offset + data.info_y_traded + row_offset - 5}, 0);
             int trade_now = trade_route_traded(city->route_id, resource);
 
             if (trade_now > trade_max)
@@ -298,7 +321,7 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
             trade_max = stack_proper_quantity(trade_max, resource);
 
             int text_width = text_draw_number(trade_now, '@', "", x_offset + column_offset + 150, y_offset + data.info_y_traded + row_offset, traded_font);
-            text_width += lang_text_draw(47, 12, x_offset + column_offset + 148 + text_width, y_offset + data.info_y_traded + row_offset, traded_font);
+            text_width += lang_text_draw(data.sell_res_group, 12, x_offset + column_offset + 148 + text_width, y_offset + data.info_y_traded + row_offset, traded_font);
             text_draw_number(trade_max, '@', "", x_offset + column_offset + 138 + text_width, y_offset + data.info_y_traded + row_offset, traded_font);
             index++;
         }
@@ -306,33 +329,33 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
 
         // selling
         int spacing = 0;
-        lang_text_draw(47, 5, x_offset + 30, y_offset + data.info_y_sells, FONT_OBJECT_INFO);
-        for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
+        lang_text_draw(data.sell_res_group, 5, x_offset + 30, y_offset + data.info_y_sells, FONT_OBJECT_INFO);
+        for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_MAX; ++resource) {
             if (!empire_object_city_sells_resource(object->id, resource))
                 continue;
 
             int trade_max = trade_route_limit(city->route_id, resource);
             trade_max = stack_proper_quantity(trade_max, resource);
-            draw_trade_resource(resource, trade_max, x_offset + spacing + 80, y_offset + data.info_y_sells - TRADE_RESOURCE_OFFSET);
+            draw_trade_resource(resource, trade_max, vec2i{x_offset + spacing + 80, y_offset + data.info_y_sells - data.trade_resource_offset}, 1);
             spacing += 32;
         }
 
         // buying
         spacing = 0;
-        lang_text_draw(47, 4, x_offset + 30, y_offset + data.info_y_buys, FONT_OBJECT_INFO);
-        for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
+        lang_text_draw(data.sell_res_group, 4, x_offset + 30, y_offset + data.info_y_buys, FONT_OBJECT_INFO);
+        for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_MAX; ++resource) {
             if (!empire_object_city_buys_resource(object->id, resource))
                 continue;
 
             int trade_max = trade_route_limit(city->route_id, resource);
             trade_max = stack_proper_quantity(trade_max, resource);
-            draw_trade_resource(resource, trade_max, x_offset + spacing + 80,y_offset + data.info_y_buys - TRADE_RESOURCE_OFFSET);
+            draw_trade_resource(resource, trade_max, vec2i{x_offset + spacing + 80,y_offset + data.info_y_buys - data.trade_resource_offset}, 0);
             spacing += 32;
         }
 
         // trade open button
         spacing = lang_text_draw_amount(8, 0, city->cost_to_open, x_offset + 40, y_offset + data.info_y_footer_1, FONT_OBJECT_INFO);
-        lang_text_draw(47, 6 + city->is_sea_trade, x_offset + spacing + 40, y_offset + data.info_y_footer_1, FONT_OBJECT_INFO);
+        lang_text_draw(data.sell_res_group, 6 + city->is_sea_trade, x_offset + spacing + 40, y_offset + data.info_y_footer_1, FONT_OBJECT_INFO);
         int image_id = image_id_from_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1 - city->is_sea_trade;
     }
 }
@@ -548,7 +571,7 @@ static void draw_panel_buttons(const empire_city* city) {
     if (city && !city->is_open) {
         if (empire_city_type_can_trade(city->type))
             button_border_draw((data.min_pos.x + data.max_pos.x - 500) / 2 + 30 + data.trade_button_offset_x,
-                               data.max_pos.y - 49 + TRADE_BUTTON_OFFSET_Y,
+                               data.max_pos.y - 49 + data.trade_button_offset_y,
                                generic_button_open_trade[0].width,
                                generic_button_open_trade[0].height,
                                data.selected_button);
@@ -703,7 +726,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
                     int index_buy = 0;
 
                     // we only want to handle resource buttons that the selected city trades
-                    for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
+                    for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_MAX; ++resource) {
                         if (empire_object_city_sells_resource(obj->id, resource)) {
                             int column_offset = data.trade_column_spacing * column_idx(index_sell) - 150;
                             int row_offset = data.trade_row_spacing * row_idx(index_sell) + 20;
@@ -723,7 +746,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
                         }
                     }
                 } else {
-                    generic_buttons_handle_mouse(m, (data.min_pos.x + data.max_pos.x - 500) / 2 + data.trade_button_offset_x, data.max_pos.y - 105 + TRADE_BUTTON_OFFSET_Y, generic_button_open_trade, 1, &data.selected_button);
+                    generic_buttons_handle_mouse(m, (data.min_pos.x + data.max_pos.x - 500) / 2 + data.trade_button_offset_x, data.max_pos.y - 105 + data.trade_button_offset_y, generic_button_open_trade, 1, &data.selected_button);
                 }
             }
         }
@@ -737,46 +760,33 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-static int is_mouse_hit(tooltip_context* c, int x, int y, int size) {
-    int mx = c->mpos.x;
-    int my = c->mpos.y;
-    return x <= mx && mx < x + size && y <= my && my < y + size;
+template<typename T>
+static e_resource resource_from_mouse_pos(tooltip_context* c, const T& arr) {
+    vec2i m = c->mpos;
+    for (const auto &c: arr) {
+        if (c.r.inside(m)) {
+            return c.res;
+        }
+    }
+    return RESOURCE_NONE;
 }
 
-static int get_tooltip_resource(tooltip_context* c) {
+static e_resource get_tooltip_resource(tooltip_context* c) {
     auto &data = g_empire_window;
     const empire_city* city = empire_city_get(data.selected_city);
     // we only want to check tooltips on our own closed cities.
     // open city resource tooltips are handled by their respective buttons directly
     if (city->is_open
         || (city->type != EMPIRE_CITY_PHARAOH_TRADING && city->type != EMPIRE_CITY_EGYPTIAN_TRADING && city->type != EMPIRE_CITY_FOREIGN_TRADING)) {
-        return 0;
+        return RESOURCE_NONE;
     }
 
-    int object_id = empire_selected_object() - 1;
-    int x_offset = (data.min_pos.x + data.max_pos.x - 500) / 2;
-    int y_offset = data.max_pos.y - 113;
-
-    int item_offset = lang_text_get_width(47, 5, FONT_OBJECT_INFO);
-    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
-        if (empire_object_city_sells_resource(object_id, r)) {
-            if (is_mouse_hit(c, x_offset + 18 + item_offset, y_offset + data.info_y_sells - TRADE_RESOURCE_OFFSET, TRADE_RESOURCE_SIZE))
-                return r;
-
-            item_offset += 32;
-        }
+    e_resource res = resource_from_mouse_pos(c, data.selling_goods);
+    if (res == RESOURCE_NONE) {
+        res = resource_from_mouse_pos(c, data.buying_goods);
     }
-    item_offset += lang_text_get_width(47, 4, FONT_OBJECT_INFO);
-    for (int r = RESOURCE_MIN; r <= RESOURCES_MAX; r++) {
-        if (empire_object_city_buys_resource(object_id, r)) {
-            if (is_mouse_hit(c, x_offset + 18 + item_offset, y_offset + data.info_y_buys - TRADE_RESOURCE_OFFSET, TRADE_RESOURCE_SIZE))
-                return r;
-
-            item_offset += 32;
-        }
-    }
-
-    return 0;
+    
+    return res;
 }
 
 static void get_tooltip_trade_route_type(tooltip_context* c) {
@@ -820,8 +830,9 @@ static void get_tooltip(tooltip_context* c) {
             c->text_id = 70;
             break;
         }
-    } else
+    } else {
         get_tooltip_trade_route_type(c);
+    }
 }
 
 static void button_help(int param1, int param2) {
