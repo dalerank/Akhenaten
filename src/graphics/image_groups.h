@@ -2,9 +2,9 @@
 
 enum e_pack {
     PACK_UNLOADED,
-    PACK_TERRAIN,
-    PACK_GENERAL,
     PACK_SPR_MAIN,
+    PACK_GENERAL,
+    PACK_TERRAIN,
     PACK_SPR_AMBIENT,
     PACK_EMPIRE,
     //

@@ -346,6 +346,9 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
     }
 
     const image_t *img = ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
+    if (!img) {
+        return;
+    }
     int top_height = img->isometric_top_height();
     map_render_set(grid_offset, top_height > 0 ? RENDER_TALL_TILE : 0);
 }

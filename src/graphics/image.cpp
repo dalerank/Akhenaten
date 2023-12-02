@@ -25,9 +25,7 @@ struct image_data_t {
 
     std::vector<imagepak**> pak_list;
 
-    imagepak* main = nullptr;
     imagepak* terrain = nullptr;
-    imagepak* sprmain = nullptr;
     imagepak* sprambient = nullptr;
 
     imagepak* expansion = nullptr;
@@ -137,18 +135,6 @@ bool image_load_paks() {
     data.fonts_loaded = false;
     data.font_base_offset = 0;
 
-    // add paks to parsing list cache
-    data.pak_list.push_back(&data.sprmain);
-    data.pak_list.push_back(&data.main);
-    data.pak_list.push_back(&data.terrain);
-    data.pak_list.push_back(&data.temple);
-    data.pak_list.push_back(&data.sprambient);
-    data.pak_list.push_back(&data.font);
-    data.pak_list.push_back(&data.empire);
-    data.pak_list.push_back(&data.sprmain2);
-    data.pak_list.push_back(&data.expansion);
-    data.pak_list.push_back(&data.monument);
-
     // Pharaoh loads every image into a global listed cache; however, some
     // display systems use discordant indexes; The sprites cached in the
     // save files, for examples, appear to start at 700 while the terrain
@@ -160,6 +146,7 @@ bool image_load_paks() {
     // present on the map, like the Temple Complexes.
     // What an absolute mess!
     data.font = new imagepak("Pharaoh_Fonts", 18765, false, true); // 18765 --> 20305
+    data.pak_list.push_back(&data.font);
     data.fonts_loaded = true;
 
     for (const auto &imgpak : g_image_data->common) {
@@ -170,11 +157,18 @@ bool image_load_paks() {
         data.common[imgpak.id].handle = newpak;
         data.pak_list.push_back(&data.common[imgpak.id].handle);
     }
-    data.sprmain = new imagepak("SprMain", 700);               // 700   --> 11007
+
+    // add paks to parsing list cache
+    data.pak_list.push_back(&data.terrain);
+    data.pak_list.push_back(&data.temple);
+    data.pak_list.push_back(&data.sprambient);
+    data.pak_list.push_back(&data.empire);
+    data.pak_list.push_back(&data.sprmain2);
+    data.pak_list.push_back(&data.expansion);
+    data.pak_list.push_back(&data.monument);
     // <--- original enemy pak in here                                                                              //
     // 11008 --> 11866
-    data.main = new imagepak("Pharaoh_General", 11906 - 200);    // 11906 --> 11866
-    data.terrain = new imagepak("Pharaoh_Terrain", 14452 - 200); // 14252 --> 15767 (+64)
+    data.terrain = new imagepak("Pharaoh_Terrain", 14252); // 14252 --> 15767 (+64)
                                                                  // system.bmp 0-199
                                                                  // land1a.bmp 200-580
                                                                  // ladn2a.bmp 581-721
@@ -235,10 +229,6 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
     switch (collection) {
     case PACK_TERRAIN:
         return data.terrain;
-    case PACK_GENERAL:
-        return data.main;
-    case PACK_SPR_MAIN:
-        return data.sprmain;
     case PACK_SPR_AMBIENT:
         return data.sprambient;
     case PACK_EMPIRE:

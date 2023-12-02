@@ -764,6 +764,9 @@ void ImageDraw::isometric(painter &ctx, int image_id, vec2i pos, color color_mas
 
 const image_t* ImageDraw::isometric_from_drawtile(painter &ctx, int image_id, vec2i pos, color color_mask) {
     const image_t* img = image_get(image_id);
+    if (!img) {
+        return nullptr;
+    }
     //    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
     //        assets_load_unpacked_asset(image_id);
     //    }

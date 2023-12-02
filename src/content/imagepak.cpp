@@ -73,8 +73,9 @@ static int convert_compressed(buffer* buf, int data_length, const image_t* img) 
     return 0; // pixels_count;
 }
 
-static const int FOOTPRINT_X_START_PER_HEIGHT[]
-  = {28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28};
+static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
+    28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
+};
 #define FOOTPRINT_WIDTH 58
 #define FOOTPRINT_HEIGHT 30
 #define FOOTPRINT_HALF_HEIGHT 15
@@ -304,16 +305,17 @@ static bool convert_image_data(buffer* buf, image_t* img, bool convert_fonts) {
 
 #define MAX_FILE_SCRATCH_SIZE 20000000
 
-imagepak::imagepak(const char* pak_name, int starting_index, bool SYSTEM_SPRITES, bool FONTS) {
+imagepak::imagepak(const char* pak_name, int starting_index, bool system_sprites, bool fonts) {
     //    images = nullptr;
     //    image_data = nullptr;
     entries_num = 0;
     std::memset(group_image_ids, 0, PAK_GROUPS_MAX * sizeof(uint16_t));
-    SHOULD_LOAD_SYSTEM_SPRITES = SYSTEM_SPRITES;
-    SHOULD_CONVERT_FONTS = FONTS;
+    should_load_system_sprites = system_sprites;
+    should_convert_fonts = fonts;
 
-    if (!load_pak(pak_name, starting_index))
+    if (!load_pak(pak_name, starting_index)) {
         cleanup_and_destroy();
+    }
 }
 
 imagepak::~imagepak() {
@@ -428,6 +430,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
     packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
 
     // read img data and record atlas rect sizes
+    constexpr uint32_t system_img_size = 200;
     int bmp_last_group_id = 0;
     int last_idx_in_bmp = 1;
     images_array.reserve(entries_num);
@@ -486,7 +489,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
             img.unk20 = pak_buf->read_i32();
         }
 
-        if (has_system_bmp && !SHOULD_LOAD_SYSTEM_SPRITES && i < 201) {
+        if (has_system_bmp && !should_load_system_sprites && i < (system_img_size+1)) {
             // continue;
         } else {
             // record atlas rect sizes in the packer
@@ -498,8 +501,8 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
     }
 
     // create special fonts
-    if (SHOULD_CONVERT_FONTS) {
-        create_special_fonts(&images_array, 1 + (200 * (!SHOULD_LOAD_SYSTEM_SPRITES)));
+    if (should_convert_fonts) {
+        create_special_fonts(&images_array, 1 + (200 * (!should_load_system_sprites)));
     }
 
     // repack and generate atlas pages
@@ -526,7 +529,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
     // finish filling in image and atlas information
     for (int i = 0; i < entries_num; i++) {
         image_t* img = &images_array.at(i);
-        if (has_system_bmp && !SHOULD_LOAD_SYSTEM_SPRITES && i < 201) {
+        if (has_system_bmp && !should_load_system_sprites && i < 201) {
             continue;
         }
 
@@ -544,7 +547,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
 
         // load and convert image bitmap data
         pak_buf->set_offset(img->sgx_data_offset);
-        convert_image_data(pak_buf, img, SHOULD_CONVERT_FONTS);
+        convert_image_data(pak_buf, img, should_convert_fonts);
     }
 
     // create textures from atlas data
@@ -580,12 +583,7 @@ bool imagepak::load_pak(const char* pak_name, int starting_index) {
     image_packer_free(&packer);
 
     logs::info("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u)",
-               filename_sgx.c_str(),
-               entries_num,
-               groups_num,
-               atlas_pages.at(atlas_pages.size() - 1).width,
-               atlas_pages.at(atlas_pages.size() - 1).height,
-               atlas_pages.size());
+               filename_sgx.c_str(), entries_num, groups_num, atlas_pages.at(atlas_pages.size() - 1).width, atlas_pages.at(atlas_pages.size() - 1).height, atlas_pages.size());
 
     int y_offset = screen_height() - 24;
 

@@ -23,8 +23,8 @@ class imagepak {
     uint16_t group_image_ids[PAK_GROUPS_MAX];
     std::vector<image_t> images_array;
 
-    bool SHOULD_LOAD_SYSTEM_SPRITES;
-    bool SHOULD_CONVERT_FONTS;
+    bool should_load_system_sprites;
+    bool should_convert_fonts;
 
     bool load_pak(const char* pak_name, int starting_index);
     void cleanup_and_destroy();

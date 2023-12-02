@@ -56,11 +56,11 @@ struct image_t {
     int start_index;
     image_t* mirrored_img = nullptr;
     //
-    int width;
-    int height;
-    int unk01; //
-    int unk02; //
-    int unk03; //
+    short width;
+    short height;
+    short unk01; //
+    short unk02; //
+    short unk03; //
     struct {
         int num_sprites;
         int unk04; //
