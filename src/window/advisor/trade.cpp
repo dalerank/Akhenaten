@@ -1,4 +1,5 @@
 #include "trade.h"
+
 #include "graphics/boilerplate.h"
 #include "graphics/elements/rich_text.h"
 #include "graphics/elements/scrollbar.h"
@@ -12,6 +13,8 @@
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "city/data_private.h"
+#include "empire/empire_city.h"
 #include "window/empire.h"
 #include "window/resource_settings.h"
 #include "window/trade_prices.h"
@@ -54,9 +57,6 @@ static scrollbar_type scrollbar = {590, 52, 336, on_scroll};
 
 #define IMPORT_EXPORT_X 310
 
-#include <city/data_private.h>
-#include <empire/city.h>
-
 static int draw_background() {
     painter ctx = game.painter();
     city_resource_determine_available();
@@ -77,7 +77,7 @@ static void draw_foreground() {
     const resources_list* list = city_resource_get_available();
     for (int i = scrollbar.scroll_position; i < list->size; i++) {
         int y_offset = 22 * (i - scrollbar.scroll_position);
-        int resource = list->items[i];
+        e_resource resource = list->items[i];
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         ImageDraw::img_generic(ctx, image_id_resource_icon(image_offset), 24, y_offset + 58);
 

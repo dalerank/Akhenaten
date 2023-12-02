@@ -128,3 +128,5 @@ inline e_resource& operator++(e_resource& e) {
 };
 
 int resource_is_food(int resource);
+
+e_resource get_raw_resource(e_resource resource);

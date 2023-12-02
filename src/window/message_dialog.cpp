@@ -5,7 +5,7 @@
 #include "city/constants.h"
 #include "city/gods.h"
 #include "city/sentiment.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "figure/formation.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/image_button.h"

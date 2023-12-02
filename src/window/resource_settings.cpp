@@ -3,7 +3,7 @@
 #include "building/count.h"
 #include "city/resource.h"
 #include "core/calc.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/arrow_button.h"
 #include "graphics/elements/generic_button.h"

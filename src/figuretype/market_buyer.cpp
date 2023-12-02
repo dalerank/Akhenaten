@@ -97,7 +97,7 @@ int figure::market_buyer_take_food_from_granary(building* market, building* gran
     if (num_loads <= 0)
         return 0;
 
-    building_granary_remove_resource(granary, resource, 100 * num_loads);
+    building_granary_remove_resource(granary, (e_resource)resource, 100 * num_loads);
 
     // create delivery boys
     int previous_boy = id;

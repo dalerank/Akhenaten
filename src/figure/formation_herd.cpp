@@ -3,7 +3,7 @@
 #include "city/figures.h"
 #include "city/sound.h"
 #include "core/random.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "figure/combat.h"
 #include "figure/figure.h"
 #include "figuretype/animal.h"

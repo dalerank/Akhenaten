@@ -6,7 +6,7 @@
 #include "city/message.h"
 #include "city/ratings.h"
 #include "core/calc.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "figure/formation.h"
 #include "figure/formation_legion.h"
 #include "scenario/distant_battle.h"

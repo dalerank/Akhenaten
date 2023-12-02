@@ -452,7 +452,7 @@ static int determine_granary_accept_foods(int resources[8], int road_network) {
     if (scenario_property_kingdom_supplies_grain())
         return 0;
 
-    for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
+    for (e_resource i = RESOURCE_NONE; i < RESOURCES_FOODS_MAX; ++i) {
         resources[i] = 0;
     }
     int can_accept = 0;
@@ -468,9 +468,9 @@ static int determine_granary_accept_foods(int resources[8], int road_network) {
         if (pct_workers >= 100 && b->data.granary.resource_stored[RESOURCE_NONE] >= 1200) {
             const building_storage* s = building_storage_get(b->storage_id);
             if (!s->empty_all) {
-                for (int r = 0; r < RESOURCES_FOODS_MAX; r++) {
+                for (e_resource r = RESOURCE_MIN; r < RESOURCES_FOODS_MAX; ++r) {
                     if (!building_granary_is_not_accepting(r, b)) {
-                        resources[r]++;
+                        ++resources[r];
                         can_accept = 1;
                     }
                 }
@@ -479,11 +479,12 @@ static int determine_granary_accept_foods(int resources[8], int road_network) {
     }
     return can_accept;
 }
+
 static int determine_granary_get_foods(int resources[8], int road_network) {
     if (scenario_property_kingdom_supplies_grain())
         return 0;
 
-    for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
+    for (e_resource i = RESOURCE_NONE; i < RESOURCES_FOODS_MAX; ++i) {
         resources[i] = 0;
     }
     int can_get = 0;
@@ -499,9 +500,9 @@ static int determine_granary_get_foods(int resources[8], int road_network) {
         if (pct_workers >= 100 && b->data.granary.resource_stored[RESOURCE_NONE] > 100) {
             const building_storage* s = building_storage_get(b->storage_id);
             if (!s->empty_all) {
-                for (int r = 0; r < RESOURCES_FOODS_MAX; r++) {
+                for (e_resource r = RESOURCE_MIN; r < RESOURCES_FOODS_MAX; ++r) {
                     if (building_granary_is_getting(r, b)) {
-                        resources[r]++;
+                        ++resources[r];
                         can_get = 1;
                     }
                 }
@@ -510,12 +511,13 @@ static int determine_granary_get_foods(int resources[8], int road_network) {
     }
     return can_get;
 }
+
 static int contains_non_stockpiled_food(building* space, const int* resources) {
     if (space->id <= 0)
         return 0;
     if (space->stored_full_amount <= 0)
         return 0;
-    int resource = space->subtype.warehouse_resource_id;
+    e_resource resource = space->subtype.warehouse_resource_id;
     if (city_resource_is_stockpiled(resource)) {
         return 0;
     }
@@ -530,7 +532,7 @@ static int contains_non_stockpiled_food(building* space, const int* resources) {
 
 storage_worker_task building_storageyard_determine_getting_up_resources(building* warehouse) {
     building* space = nullptr;
-    for (e_resource check_resource = RESOURCE_MIN; check_resource < RESOURCES_MAX; check_resource = (e_resource)(check_resource + 1)) {
+    for (e_resource check_resource = RESOURCE_MIN; check_resource < RESOURCES_MAX; ++check_resource) {
         if (!building_storageyard_is_getting(check_resource, warehouse) || city_resource_is_stockpiled(check_resource)) {
             continue;
         }
@@ -663,7 +665,7 @@ storage_worker_task building_storageyard_deliver_resource_to_workshop(building *
 storage_worker_task building_storageyard_deliver_food_to_gettingup_granary(building *warehouse) {
     building *space = warehouse;
 
-    int granary_resources[RESOURCES_FOODS_MAX] = {0};
+    int granary_resources[RESOURCES_FOODS_MAX] = {RESOURCE_NONE};
     if (determine_granary_get_foods(granary_resources, warehouse->road_network_id)) {
         space = warehouse;
         for (int i = 0; i < 8; i++) {
@@ -681,7 +683,7 @@ storage_worker_task building_storageyard_deliver_food_to_gettingup_granary(build
 storage_worker_task building_storageyard_deliver_food_to_accepting_granary(building *warehouse) {
     building *space = warehouse;
 
-    int granary_resources[RESOURCES_FOODS_MAX] = {0};
+    int granary_resources[RESOURCES_FOODS_MAX] = {RESOURCE_NONE};
     if (determine_granary_accept_foods(granary_resources, warehouse->road_network_id)
         && !scenario_property_kingdom_supplies_grain()) {
         space = warehouse;

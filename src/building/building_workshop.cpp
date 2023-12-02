@@ -16,7 +16,7 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 
-static void building_workshop_draw_info(object_info& c, int help_id, const char* type, int group_id, int resource, e_resource input_resource) {
+static void building_workshop_draw_info(object_info& c, int help_id, const char* type, int group_id, e_resource resource, e_resource input_resource) {
     c.help_id = help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
@@ -63,7 +63,7 @@ static void building_workshop_draw_info(object_info& c, int help_id, const char*
     window_building_draw_employment(&c, 142);
 }
 
-static void building_workshop_draw_info(object_info& c, int help_id, const char* type, int group_id, int resource, e_resource input_resource_a, e_resource input_resource_b) {
+static void building_workshop_draw_info(object_info& c, int help_id, const char* type, int group_id, e_resource resource, e_resource input_resource_a, e_resource input_resource_b) {
     c.help_id = help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 

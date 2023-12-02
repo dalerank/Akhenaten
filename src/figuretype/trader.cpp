@@ -11,7 +11,7 @@
 #include "city/resource.h"
 #include "city/trade.h"
 #include "core/calc.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
@@ -44,24 +44,24 @@ int figure::trader_total_sold() {
     return resource_amount_full;
 }
 
-int figure_create_trade_caravan(int x, int y, int city_id) {
-    figure* caravan = figure_create(FIGURE_TRADE_CARAVAN, map_point(x, y), DIR_0_TOP_RIGHT);
+int figure_create_trade_caravan(tile2i tile, int city_id) {
+    figure* caravan = figure_create(FIGURE_TRADE_CARAVAN, tile, DIR_0_TOP_RIGHT);
     caravan->empire_city_id = city_id;
     caravan->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
     caravan->wait_ticks = 10;
     // donkey 1
-    figure* donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, map_point(x, y), DIR_0_TOP_RIGHT);
+    figure* donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, tile, DIR_0_TOP_RIGHT);
     donkey1->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
     donkey1->leading_figure_id = caravan->id;
     // donkey 2
-    figure* donkey2 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, map_point(x, y), DIR_0_TOP_RIGHT);
+    figure* donkey2 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, tile, DIR_0_TOP_RIGHT);
     donkey2->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
     donkey2->leading_figure_id = donkey1->id;
     return caravan->id;
 }
 
-int figure_create_trade_ship(int x, int y, int city_id) {
-    figure* ship = figure_create(FIGURE_TRADE_SHIP, map_point(x, y), DIR_0_TOP_RIGHT);
+int figure_create_trade_ship(tile2i tile, int city_id) {
+    figure* ship = figure_create(FIGURE_TRADE_SHIP, tile, DIR_0_TOP_RIGHT);
     ship->empire_city_id = city_id;
     ship->action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
     ship->wait_ticks = 10;
@@ -88,6 +88,7 @@ bool figure_trade_caravan_can_buy(figure* trader, building* warehouse, int city_
     }
     return false;
 }
+
 bool figure_trade_caravan_can_sell(figure* trader, building* warehouse, int city_id) {
     if (warehouse->type != BUILDING_STORAGE_YARD)
         return false;
@@ -173,6 +174,7 @@ static int trader_get_buy_resource(building* storageyard, int city_id) {
     }
     return 0;
 }
+
 static int trader_get_sell_resource(building* warehouse, int city_id) {
     //    building *warehouse = building_get(warehouse);
     if (warehouse->type != BUILDING_STORAGE_YARD)
@@ -225,6 +227,7 @@ static int trader_get_sell_resource(building* warehouse, int city_id) {
     }
     return 0;
 }
+
 int figure_trade_ship_is_trading(figure* ship) {
     building* b = ship->destination();
     if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_DOCK)
@@ -256,7 +259,8 @@ int figure::get_closest_storageyard(map_point tile, int city_id, int distance_fr
     int importable[RESOURCES_MAX];
     exportable[RESOURCE_NONE] = 0;
     importable[RESOURCE_NONE] = 0;
-    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+
+    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
         exportable[r] = empire_can_export_resource_to_city(city_id, r);
         if (trader_amount_bought >= 8)
             exportable[r] = 0;
@@ -301,7 +305,7 @@ int figure::get_closest_storageyard(map_point tile, int city_id, int distance_fr
                 distance_penalty -= 4;
 
             if (num_importable && num_imports_for_warehouse && !s->empty_all) {
-                for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+                for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
                     if (!building_storageyard_is_not_accepting(city_trade_next_caravan_import_resource(), b))
                         break;
                 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "game/resource.h"
+
 void empire_load_editor(int empire_id, int viewport_width, int viewport_height);
 
 void empire_init_scenario(void);
@@ -11,8 +13,8 @@ void empire_adjust_scroll(int* x_offset, int* y_offset);
 
 int empire_selected_object(void);
 
-void empire_clear_selected_object(void);
+void empire_clear_selected_object();
 void empire_select_object(int x, int y);
 
-bool empire_can_export_resource_to_city(int city_id, int resource);
-int empire_can_import_resource_from_city(int city_id, int resource);
+bool empire_can_export_resource_to_city(int city_id, e_resource resource);
+int empire_can_import_resource_from_city(int city_id, e_resource resource);

@@ -5,7 +5,7 @@
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
-#include "empire/object.h"
+#include "empire/empire_object.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "figure/figure_names.h"

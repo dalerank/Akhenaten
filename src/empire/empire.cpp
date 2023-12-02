@@ -6,8 +6,8 @@
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/log.h"
-#include "empire/city.h"
-#include "empire/object.h"
+#include "empire/empire_city.h"
+#include "empire/empire_object.h"
 #include "empire/trade_route.h"
 #include "io/io.h"
 #include "type.h"
@@ -152,7 +152,7 @@ static int get_max_stock_for_population(void) {
     }
 }
 
-bool empire_can_export_resource_to_city(int city_id, int resource) {
+bool empire_can_export_resource_to_city(int city_id, e_resource resource) {
     empire_city* city = empire_city_get(city_id);
     if (city_id && trade_route_limit_reached(city->route_id, resource)) {
         // quota reached
@@ -167,7 +167,8 @@ bool empire_can_export_resource_to_city(int city_id, int resource) {
     else
         return false;
 }
-int empire_can_import_resource_from_city(int city_id, int resource) {
+
+int empire_can_import_resource_from_city(int city_id, e_resource resource) {
     empire_city* city = empire_city_get(city_id);
     if (!city->sells_resource[resource])
         return 0;

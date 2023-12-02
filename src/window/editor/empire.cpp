@@ -1,9 +1,9 @@
 #include "empire.h"
 
 #include "core/game_environment.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "empire/empire.h"
-#include "empire/object.h"
+#include "empire/empire_object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "graphics/boilerplate.h"

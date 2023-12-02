@@ -1,7 +1,7 @@
 #include "menu.h"
 
 #include "city/buildings.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "game/tutorial.h"
 #include "config/config.h"
 #include "scenario/building.h"

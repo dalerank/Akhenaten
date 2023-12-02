@@ -29,7 +29,7 @@
 #include "window/plain_message_dialog.h"
 #include "scenario/scenario_data.h"
 #include "window/select_list.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 
 #include <string.h>
 

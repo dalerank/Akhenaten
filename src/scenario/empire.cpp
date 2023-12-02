@@ -1,7 +1,7 @@
 #include "empire.h"
 
 #include "city/message.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "game/time.h"
 #include "scenario/scenario_data.h"
 

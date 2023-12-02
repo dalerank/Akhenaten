@@ -1,6 +1,6 @@
 #include "trade_opened.h"
 
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"

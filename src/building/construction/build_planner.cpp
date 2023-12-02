@@ -1402,7 +1402,7 @@ void BuildPlanner::update_requirements_check() {
     /////// special requirements
     //
     if (special_flags & PlannerFlags::Resources) {
-        if (city_resource_count(additional_req_param1) < additional_req_param2) {
+        if (city_resource_count((e_resource)additional_req_param1) < additional_req_param2) {
             immediate_warning_id = additional_req_param3;
             can_place = CAN_NOT_BUT_GREEN;
         }

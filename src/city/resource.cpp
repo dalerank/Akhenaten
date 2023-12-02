@@ -7,7 +7,7 @@
 #include "city/data_private.h"
 #include "core/calc.h"
 #include "core/profiler.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "game/tutorial.h"
 #include "grid/road_access.h"
 #include "scenario/building.h"
@@ -21,55 +21,55 @@ struct available_data_t {
 
 available_data_t g_available_data;
 
-int city_resource_count(int resource) {
+int city_resource_count(e_resource resource) {
     return city_data.resource.stored_in_warehouses[resource];
 }
 
-const resources_list* city_resource_get_available(void) {
+const resources_list* city_resource_get_available() {
     return &g_available_data.resource_list;
 }
-const resources_list* city_resource_get_available_foods(void) {
+const resources_list* city_resource_get_available_foods() {
     return &g_available_data.food_list;
 }
-const resources_list* city_resource_get_available_market_goods(void) {
+const resources_list* city_resource_get_available_market_goods() {
     return &g_available_data.market_goods_list;
 }
 
-int city_resource_multiple_wine_available(void) {
+int city_resource_multiple_wine_available() {
     return city_data.resource.wine_types_available >= 2;
 }
 
-int city_resource_food_types_available(void) {
+int city_resource_food_types_available() {
     return city_data.resource.food_types_available_num;
 }
-int city_resource_food_stored(void) {
+int city_resource_food_stored() {
     return city_data.resource.granary_total_stored;
 }
-int city_resource_food_needed(void) {
+int city_resource_food_needed() {
     return city_data.resource.food_needed_per_month;
 }
-int city_resource_food_supply_months(void) {
+int city_resource_food_supply_months() {
     return city_data.resource.food_supply_months;
 }
-int city_resource_food_percentage_produced(void) {
+int city_resource_food_percentage_produced() {
     return calc_percentage(city_data.resource.food_produced_last_month, city_data.resource.food_consumed_last_month);
 }
 
-int city_resource_operating_granaries(void) {
+int city_resource_operating_granaries() {
     return city_data.resource.granaries.operating;
 }
-int city_resource_last_used_storageyard(void) {
+int city_resource_last_used_storageyard() {
     return city_data.resource.last_used_warehouse;
 }
 void city_resource_set_last_used_storageyard(int warehouse_id) {
     city_data.resource.last_used_warehouse = warehouse_id;
 }
 
-int city_resource_trade_status(int resource) {
+int city_resource_trade_status(e_resource resource) {
     return city_data.resource.trade_status[resource];
 }
 
-void city_resource_cycle_trade_status(int resource) {
+void city_resource_cycle_trade_status(e_resource resource) {
     ++city_data.resource.trade_status[resource];
     if (city_data.resource.trade_status[resource] > TRADE_STATUS_EXPORT)
         city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
@@ -88,7 +88,7 @@ void city_resource_cycle_trade_status(int resource) {
         city_data.resource.stockpiled[resource] = 0;
     }
 }
-void city_resource_cycle_trade_import(int resource) {
+void city_resource_cycle_trade_import(e_resource resource) {
     // no sellers?
     if (!empire_can_import_resource(resource, true))
         return;
@@ -105,7 +105,7 @@ void city_resource_cycle_trade_import(int resource) {
         break;
     }
 }
-void city_resource_cycle_trade_export(int resource) {
+void city_resource_cycle_trade_export(e_resource resource) {
     // no buyers?
     if (!empire_can_export_resource(resource, true))
         return;
@@ -124,18 +124,18 @@ void city_resource_cycle_trade_export(int resource) {
         break;
     }
 }
-int city_resource_trading_amount(int resource) {
+int city_resource_trading_amount(e_resource resource) {
     return city_data.resource.trading_amount[resource];
 }
-void city_resource_change_trading_amount(int resource, int delta) {
-    city_data.resource.trading_amount[resource]
-      = calc_bound(city_data.resource.trading_amount[resource] + delta, 0, 100);
+void city_resource_change_trading_amount(e_resource resource, int delta) {
+    city_data.resource.trading_amount[resource] = calc_bound(city_data.resource.trading_amount[resource] + delta, 0, 100);
 }
 
-int city_resource_is_stockpiled(int resource) {
+int city_resource_is_stockpiled(e_resource resource) {
     return city_data.resource.stockpiled[resource];
 }
-void city_resource_toggle_stockpiled(int resource) {
+
+void city_resource_toggle_stockpiled(e_resource resource) {
     if (city_data.resource.stockpiled[resource])
         city_data.resource.stockpiled[resource] = 0;
     else {
@@ -145,10 +145,10 @@ void city_resource_toggle_stockpiled(int resource) {
             city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
     }
 }
-int city_resource_is_mothballed(int resource) {
+int city_resource_is_mothballed(e_resource resource) {
     return city_data.resource.mothballed[resource];
 }
-void city_resource_toggle_mothballed(int resource) {
+void city_resource_toggle_mothballed(e_resource resource) {
     city_data.resource.mothballed[resource] = city_data.resource.mothballed[resource] ? 0 : 1;
 }
 
@@ -158,16 +158,16 @@ void city_resource_add_produced_to_granary(int amount) {
 void city_resource_remove_from_granary(int food, int amount) {
     city_data.resource.granary_food_stored[food] -= amount;
 }
-void city_resource_add_to_storageyard(int resource, int amount) {
+void city_resource_add_to_storageyard(e_resource resource, int amount) {
     city_data.resource.space_in_warehouses[resource] -= amount;
     city_data.resource.stored_in_warehouses[resource] += amount;
 }
-void city_resource_remove_from_storageyard(int resource, int amount) {
+void city_resource_remove_from_storageyard(e_resource resource, int amount) {
     city_data.resource.space_in_warehouses[resource] += amount;
     city_data.resource.stored_in_warehouses[resource] -= amount;
 }
 
-void city_resource_calculate_storageyard_stocks(void) {
+void city_resource_calculate_storageyard_stocks() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Warehouse Stocks Update");
     for (int i = 0; i < RESOURCES_MAX; i++) {
         city_data.resource.space_in_warehouses[i] = 0;
@@ -205,7 +205,7 @@ void city_resource_calculate_storageyard_stocks(void) {
         }
     }
 }
-void city_resource_determine_available(void) {
+void city_resource_determine_available() {
     for (int i = 0; i < RESOURCES_MAX; i++) {
         g_available_data.resource_list.items[i] = RESOURCE_NONE;
         g_available_data.food_list.items[i] = RESOURCE_NONE;
@@ -239,7 +239,7 @@ void city_resource_determine_available(void) {
         }
     }
 }
-static void calculate_available_food(void) {
+static void calculate_available_food() {
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
         city_data.resource.granary_food_stored[i] = 0;
     }
@@ -302,7 +302,7 @@ static void calculate_available_food(void) {
     }
 }
 
-void city_resource_calculate_food_stocks_and_supply_wheat(void) {
+void city_resource_calculate_food_stocks_and_supply_wheat() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Food Stocks Update");
     calculate_available_food();
     if (scenario_property_kingdom_supplies_grain()) {

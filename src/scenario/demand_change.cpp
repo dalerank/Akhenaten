@@ -2,7 +2,7 @@
 
 #include "city/message.h"
 #include "core/random.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "empire/trade_route.h"
 #include "game/time.h"
 #include "scenario/scenario_data.h"

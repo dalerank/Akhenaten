@@ -2,7 +2,7 @@
 #include <graphics/view/lookup.h>
 
 #include "building/building.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "figure/figure_phrase.h"

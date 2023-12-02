@@ -35,7 +35,7 @@
 #include "core/profiler.h"
 #include "core/bstring.h"
 #include "editor/editor.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "figure/formation.h"
 #include "figuretype/crime.h"
 #include "figuretype/water.h"

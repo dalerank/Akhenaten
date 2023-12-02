@@ -4,7 +4,7 @@
 #include "city/emperor.h"
 #include "core/random.h"
 #include "core/svector.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "figure/figure_names.h"
 #include "figure/route.h"
 #include "figure/trader.h"

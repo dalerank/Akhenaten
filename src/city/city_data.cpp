@@ -6,7 +6,7 @@
 #include "game/difficulty.h"
 #include "scenario/property.h"
 #include "core/game_environment.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "io/io_buffer.h"
 
 #include <core/string.h>

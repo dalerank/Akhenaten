@@ -1,7 +1,7 @@
 #include "edit_demand_change.h"
 
 #include "core/string.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "empire/type.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/button.h"

@@ -7,7 +7,7 @@
 #include "city/message.h"
 #include "city/victory.h"
 #include "empire/empire.h"
-#include "empire/object.h"
+#include "empire/empire_object.h"
 #include "figure/enemy_army.h"
 #include "figure/figure.h"
 #include "figure/formation.h"

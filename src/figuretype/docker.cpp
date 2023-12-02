@@ -7,7 +7,7 @@
 #include "city/trade.h"
 #include "core/calc.h"
 #include "core/game_environment.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "empire/empire.h"
 #include "empire/trade_route.h"
 #include "figure/combat.h"
@@ -81,11 +81,12 @@ static int try_export_resource(building* warehouse, e_resource resource, int cit
 static int get_closest_warehouse_for_import(vec2i pos, int city_id, int distance_from_entry, int road_network_id, map_point &warehouse, e_resource& import_resource) {
     int importable[16];
     importable[RESOURCE_NONE] = 0;
-    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
         importable[r] = empire_can_import_resource_from_city(city_id, r);
     }
+
     e_resource resource = city_trade_next_docker_import_resource();
-    for (int i = RESOURCE_MIN; i < RESOURCES_MAX && !importable[resource]; i++) {
+    for (e_resource i = RESOURCE_MIN; i < RESOURCES_MAX && !importable[resource]; ++i) {
         resource = city_trade_next_docker_import_resource();
     }
     if (!importable[resource])
@@ -147,7 +148,7 @@ static int get_closest_warehouse_for_import(vec2i pos, int city_id, int distance
 static int get_closest_warehouse_for_export(vec2i pos, int city_id, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource& export_resource) {
     int exportable[16];
     exportable[RESOURCE_NONE] = 0;
-    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
         exportable[r] = empire_can_export_resource_to_city(city_id, r);
     }
 

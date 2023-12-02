@@ -6,7 +6,7 @@
 #include "city/military.h"
 #include "city/ratings.h"
 #include "city/resource.h"
-#include "empire/city.h"
+#include "empire/empire_city.h"
 #include "figure/formation_legion.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/generic_button.h"
@@ -72,7 +72,7 @@ static int get_request_status(int index) {
             if (city_finance_treasury() <= request->amount)
                 return STATUS_NOT_ENOUGH_RESOURCES;
         } else {
-            if (city_resource_count(request->resource) < request->amount)
+            if (city_resource_count((e_resource)request->resource) < request->amount)
                 return STATUS_NOT_ENOUGH_RESOURCES;
         }
         return request->id + 1;
@@ -106,7 +106,7 @@ static void draw_request(int index, const scenario_request* request) {
         }
     } else {
         // normal goods request
-        int amount_stored = city_resource_count(request->resource);
+        int amount_stored = city_resource_count((e_resource)request->resource);
         width = text_draw_number(amount_stored, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         width += lang_text_draw(52, 43, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         if (amount_stored < request->amount) {
@@ -264,6 +264,11 @@ static int get_tooltip_text(void) {
 }
 
 const advisor_window_type* window_advisor_imperial(void) {
-    static const advisor_window_type window = {draw_background, draw_foreground, handle_mouse, get_tooltip_text};
+    static const advisor_window_type window = {
+        draw_background,
+        draw_foreground,
+        handle_mouse,
+        get_tooltip_text
+    };
     return &window;
 }
