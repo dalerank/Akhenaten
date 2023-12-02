@@ -112,6 +112,8 @@ images = [
 	{img: IMG_MINIMAP_SPENT_TEAL, pack:PACK_GENERAL, id:149, offset:200},
 	{img: IMG_MINIMAP_COLOR, pack:PACK_GENERAL, id:149, offset:0},
 	{img: IMG_TRADE_AMOUNT, pack:PACK_GENERAL, id:171, offset:0},
+	{img: IMG_TRADER_CARAVAN, pack:PACK_SPR_AMBIENT, id:20, offset:0},
+	{img: IMG_TRADER_CARAVAN_DONKEY, pack:PACK_SPR_MAIN, id:52, offset:0},
 ]
 
 cart_offsets = [

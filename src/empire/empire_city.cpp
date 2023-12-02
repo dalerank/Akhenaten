@@ -10,7 +10,8 @@
 #include "empire/empire_object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
-#include "figuretype/trader.h"
+#include "figuretype/figure_kingdome_trader.h"
+#include "figuretype/figure_trader_ship.h"
 #include "scenario/map.h"
 
 #include <city/data_private.h>

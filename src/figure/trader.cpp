@@ -2,8 +2,16 @@
 
 #include "core/game_environment.h"
 #include "empire/trade_prices.h"
-
+#include "building/storage.h"
+#include "building/storage_yard.h"
 #include "io/io_buffer.h"
+#include "empire/empire.h"
+#include "figure/figure.h"
+
+#include "city/finance.h"
+#include "city/resource.h"
+#include "city/trade.h"
+
 #include <string.h>
 
 #define MAX_TRADERS 100
@@ -72,6 +80,89 @@ int trader_has_traded(int trader_id) {
 int trader_has_traded_max(int trader_id) {
     auto &data = g_figure_trader_data;
     return data.traders[trader_id].bought_amount >= 1200 || data.traders[trader_id].sold_amount >= 1200;
+}
+
+e_resource trader_get_buy_resource(building* storageyard, int city_id) {
+    if (storageyard->type != BUILDING_STORAGE_YARD) {
+        return RESOURCE_NONE;
+    }
+
+    building* space = storageyard;
+    for (int i = 0; i < 8; i++) {
+        space = space->next();
+        if (space->id <= 0)
+            continue;
+
+        e_resource resource = space->subtype.warehouse_resource_id;
+        if (space->stored_full_amount >= 100 && empire_can_export_resource_to_city(city_id, resource)) {
+            // update stocks
+            city_resource_remove_from_storageyard(resource, 100);
+            space->stored_full_amount -= 100;
+            if (space->stored_full_amount <= 0)
+                space->subtype.warehouse_resource_id = RESOURCE_NONE;
+
+            // update finances
+            city_finance_process_export(trade_price_sell(resource));
+
+            // update graphics
+            building_storageyard_space_set_image(space, resource);
+            return resource;
+        }
+    }
+    return RESOURCE_NONE;
+}
+
+e_resource trader_get_sell_resource(building* warehouse, int city_id) {
+    //    building *warehouse = building_get(warehouse);
+    if (warehouse->type != BUILDING_STORAGE_YARD)
+        return RESOURCE_NONE;
+
+    e_resource resource_to_import = city_trade_current_caravan_import_resource();
+    int imp = RESOURCE_MIN;
+    while (imp < RESOURCES_MAX && !empire_can_import_resource_from_city(city_id, resource_to_import)) {
+        imp++;
+        resource_to_import = city_trade_next_caravan_import_resource();
+    }
+    if (imp >= RESOURCES_MAX)
+        return RESOURCE_NONE;
+
+    // add to existing bay with room
+    building* space = warehouse;
+    for (int i = 0; i < 8; i++) {
+        space = space->next();
+        if (space->id > 0 && space->stored_full_amount > 0 && space->stored_full_amount < 400
+            && space->subtype.warehouse_resource_id == resource_to_import) {
+            building_storageyard_space_add_import(space, resource_to_import);
+            city_trade_next_caravan_import_resource();
+            return resource_to_import;
+        }
+    }
+    // add to empty bay
+    space = warehouse;
+    for (int i = 0; i < 8; i++) {
+        space = space->next();
+        if (space->id > 0 && !space->stored_full_amount) {
+            building_storageyard_space_add_import(space, resource_to_import);
+            city_trade_next_caravan_import_resource();
+            return resource_to_import;
+        }
+    }
+    // find another importable resource that can be added to this warehouse
+    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+        resource_to_import = city_trade_next_caravan_backup_import_resource();
+        if (empire_can_import_resource_from_city(city_id, resource_to_import)) {
+            space = warehouse;
+            for (int i = 0; i < 8; i++) {
+                space = space->next();
+                if (space->id > 0 && space->stored_full_amount < 400
+                    && space->subtype.warehouse_resource_id == resource_to_import) {
+                    building_storageyard_space_add_import(space, resource_to_import);
+                    return resource_to_import;
+                }
+            }
+        }
+    }
+    return RESOURCE_NONE;
 }
 
 io_buffer* iob_figure_traders = new io_buffer([](io_buffer* iob, size_t version) {

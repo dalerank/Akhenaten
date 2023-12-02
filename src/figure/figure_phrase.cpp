@@ -19,7 +19,8 @@
 #include "core/bstring.h"
 #include "core/game_environment.h"
 #include "figure/trader.h"
-#include "figuretype/trader.h"
+#include "figure/formation.h"
+#include "figure/figure.h"
 #include "sound/speech.h"
 #include "sound/sound_walker.h"
 

@@ -1,8 +1,9 @@
-#ifndef FIGURE_TRADER_H
-#define FIGURE_TRADER_H
+#pragma once
 
 #include "core/buffer.h"
 #include "game/resource.h"
+
+class building;
 
 /**
  * @file
@@ -64,4 +65,5 @@ int trader_has_traded(int trader_id);
  */
 int trader_has_traded_max(int trader_id);
 
-#endif // FIGURE_TRADE_INFO_H
+e_resource trader_get_buy_resource(building *storageyard, int city_id);
+e_resource trader_get_sell_resource(building *warehouse, int city_id);
