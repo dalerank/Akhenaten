@@ -77,7 +77,7 @@ static void add_fort(int type, building* fort) {
     ground->prev_part_building_id = fort->id;
     fort->next_part_building_id = ground->id;
     ground->next_part_building_id = 0;
-    map_point fort_tile_add = fort->tile.shifted(offsets_x[global_rotation], offsets_y[global_rotation]);
+    tile2i fort_tile_add = fort->tile.shifted(offsets_x[global_rotation], offsets_y[global_rotation]);
     map_building_tiles_add(ground->id, fort_tile_add, 4, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 
     fort->formation_id = formation_legion_create_for_fort(fort);
@@ -89,7 +89,7 @@ void BuildPlanner::add_building_tiles_from_list(int building_id, bool graphics_o
         for (int column = 0; column < size.x; ++column) {
             int image_id = tile_graphics_array[row][column];
             int size = tile_sizes_array[row][column];
-            map_point tile = tile_coord_cache[row][column];
+            tile2i tile = tile_coord_cache[row][column];
 
             // correct for city orientation
             switch (city_view_orientation() / 2) {
@@ -134,7 +134,7 @@ static building* add_temple_complex_element(int x, int y, int orientation, build
 
 static void add_temple_complex(building* b, int orientation) {
     Planner.add_building_tiles_from_list(b->id, false);
-    map_point offset = {0, 0};
+    tile2i offset = {0, 0};
     switch (orientation) {
     case 0:
         offset = {0, -3};
@@ -154,7 +154,7 @@ static void add_temple_complex(building* b, int orientation) {
 }
 
 static void latch_on_venue(e_building_type type, building *b, int dx, int dy, int orientation, bool main_venue = false) {
-    map_point point = b->tile.shifted(dx, dy);
+    tile2i point = b->tile.shifted(dx, dy);
     //    int x = main->tile.x() + dx;
     //    int y = main->tile.y() + dy;
     //    int grid_offset = MAP_OFFSET(x, y);
@@ -357,7 +357,7 @@ static building* add_storageyard_space(int x, int y, building* prev) {
     game_undo_add_building(b);
     b->prev_part_building_id = prev->id;
     prev->next_part_building_id = b->id;
-    map_building_tiles_add(b->id, map_point(x, y), 1, image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY), TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, tile2i(x, y), 1, image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY), TERRAIN_BUILDING);
     return b;
 }
 
@@ -373,7 +373,7 @@ static void add_storageyard(building* b) {
     }
 
     b->prev_part_building_id = 0;
-    map_point shifted_tile = b->tile.shifted(x_offset[corner], y_offset[corner]);
+    tile2i shifted_tile = b->tile.shifted(x_offset[corner], y_offset[corner]);
     map_building_tiles_add(b->id, shifted_tile, 1, image_id_from_group(GROUP_BUILDING_STORAGE_YARD), TERRAIN_BUILDING);
 
     building* prev = b;
@@ -690,7 +690,7 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
     return items_placed;
 }
 
-static int place_plaza(map_point start, map_point end) {
+static int place_plaza(tile2i start, tile2i end) {
     tile2i tmin, tmax;
     map_grid_start_end_to_area(start, end, tmin, tmax);
     game_undo_restore_map(1);
@@ -819,7 +819,7 @@ static bool attach_temple_upgrade(int upgrade_param, int grid_offset) {
     building_menu_update_temple_complexes();
     return true;
 }
-static map_point temple_complex_part_target(building* main, int part) {
+static tile2i temple_complex_part_target(building* main, int part) {
     building* b = main;
     if (part == 1) {
         b = b->next();
@@ -843,7 +843,7 @@ static map_point temple_complex_part_target(building* main, int part) {
         y += 2;
         break;
     }
-    return map_point(x, y);
+    return tile2i(x, y);
 }
 
 //////////////////////
@@ -1335,7 +1335,7 @@ void BuildPlanner::update_obstructions_check() {
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
             // check terrain at coords
-            map_point current_tile = tile_coord_cache[row][column];
+            tile2i current_tile = tile_coord_cache[row][column];
             unsigned int restricted_terrain = TERRAIN_ALL;
 
             // special cases
@@ -1605,7 +1605,7 @@ void BuildPlanner::update_coord_caches() {
             int y_offset = (row - pivot.y);
 
             // get abs. tile
-            map_point tile;
+            tile2i tile;
             switch (orientation) {
             case 0:
                 tile = end.shifted(x_offset, y_offset);
@@ -1686,7 +1686,7 @@ void BuildPlanner::update_orientations(bool check_if_changed) {
     setup_build_graphics(); // reload graphics, tiles, etc.
     update_coord_caches();  // refresh caches
 }
-void BuildPlanner::construction_record_view_position(vec2i pixel, map_point point) {
+void BuildPlanner::construction_record_view_position(vec2i pixel, tile2i point) {
     if (point == start) {
         start_offset_screen_x = pixel.x;
         start_offset_screen_y = pixel.y;
@@ -1719,7 +1719,7 @@ int BuildPlanner::get_total_drag_size(int* x, int* y) {
     return 1;
 }
 
-void BuildPlanner::construction_start(map_point tile) {
+void BuildPlanner::construction_start(tile2i tile) {
     start = end = tile;
 
     if (game_undo_start_build(build_type)) {
@@ -1950,7 +1950,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
 //////////////////////
 
-void BuildPlanner::update(map_point cursor_tile) {
+void BuildPlanner::update(tile2i cursor_tile) {
     end = cursor_tile;
     update_coord_caches();
 
@@ -1966,7 +1966,7 @@ bool BuildPlanner::place() {
     int x = end.x();
     int y = end.y();
 
-    if (end == map_point(-1, -1))
+    if (end == tile2i(-1, -1))
         return false;
 
     // for debugging...

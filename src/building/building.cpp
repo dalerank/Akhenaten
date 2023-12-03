@@ -329,7 +329,7 @@ building* building_at(int x, int y) {
     return building_get(map_building_at(MAP_OFFSET(x, y)));
 }
 
-building* building_at(map_point point) {
+building* building_at(tile2i point) {
     return building_get(map_building_at(point.grid_offset()));
 }
 
@@ -346,7 +346,7 @@ bool building_exists_at(int grid_offset, building* b) {
     }
     return false;
 }
-bool building_exists_at(map_point tile, building* b) {
+bool building_exists_at(tile2i tile, building* b) {
     b = nullptr;
     int b_id = map_building_at(tile);
     if (b_id > 0) {

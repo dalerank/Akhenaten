@@ -148,8 +148,8 @@ public:
     vec2i cart_offset;
     //    signed char x_offset_cart;
     //    signed char y_offset_cart;
-    unsigned char empire_city_id;
-    unsigned short trader_amount_bought;
+    uint8_t empire_city_id;
+    uint16_t trader_amount_bought;
     short name;
     char terrain_usage;
     e_move_type allow_move_type;

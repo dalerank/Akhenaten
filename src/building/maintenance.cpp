@@ -104,7 +104,7 @@ void building_maintenance_update_burning_ruins(void) {
         map_routing_update_land();
 }
 
-int building_maintenance_get_closest_burning_ruin(map_point tile, int* distance) {
+int building_maintenance_get_closest_burning_ruin(tile2i tile, int* distance) {
     int min_free_building_id = 0;
     int min_occupied_building_id = 0;
     int min_occupied_dist = *distance = 10000;
@@ -228,9 +228,9 @@ void building_maintenance_check_fire_collapse(void) {
     }
 }
 
-void building_maintenance_check_rome_access(void) {
+void building_maintenance_check_kingdome_access(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access");
-    map_point& entry_point = city_map_entry_point();
+    tile2i entry_point = city_map_entry_point();
     map_routing_calculate_distances(entry_point);
     int problem_grid_offset = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -240,7 +240,7 @@ void building_maintenance_check_rome_access(void) {
 
         if (b->house_size) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/House");
-            map_point road_tile;
+            tile2i road_tile;
             if (!map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                 // no road: eject people
                 b->distance_from_entry = 0;

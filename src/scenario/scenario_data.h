@@ -105,7 +105,7 @@ struct price_change_t {
 struct demand_change_t {
     int year;
     int month;
-    int resource;
+    e_resource resource;
     int route_id;
     int is_rise;
 };

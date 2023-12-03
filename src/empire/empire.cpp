@@ -4,6 +4,7 @@
 #include "city/constants.h"
 #include "city/population.h"
 #include "city/resource.h"
+#include "city/trade.h"
 #include "core/calc.h"
 #include "core/log.h"
 #include "empire/empire_city.h"
@@ -15,14 +16,7 @@
 #include "io/io_buffer.h"
 #include <string.h>
 
-const static int EMPIRE_WIDTH[2] = {
-  2000,
-  1200,
-};
-const static int EMPIRE_HEIGHT[2] = {
-  1000,
-  1600,
-};
+const static vec2i EMPIRE_SIZE{1200, 1600};
 
 enum E_EMPIRE {
     //    EMPIRE_WIDTH = 2000,
@@ -60,8 +54,8 @@ bool empire_city_type_can_trade(int type) {
 
 static void check_scroll_boundaries(void) {
     auto& data = g_empire_map_data;
-    int max_x = EMPIRE_WIDTH[GAME_ENV] - data.viewport_width;
-    int max_y = EMPIRE_HEIGHT[GAME_ENV] - data.viewport_height + 20;
+    int max_x = EMPIRE_SIZE.x - data.viewport_width;
+    int max_y = EMPIRE_SIZE.y - data.viewport_height + 20;
 
     data.scroll_x = calc_bound(data.scroll_x, 0, max_x);
     data.scroll_y = calc_bound(data.scroll_y, 0, max_y);
@@ -88,8 +82,8 @@ void empire_init_scenario(void) {
     auto& data = g_empire_map_data;
     data.scroll_x = data.initial_scroll_x;
     data.scroll_y = data.initial_scroll_y;
-    data.viewport_width = EMPIRE_WIDTH[GAME_ENV];
-    data.viewport_height = EMPIRE_HEIGHT[GAME_ENV];
+    data.viewport_width = EMPIRE_SIZE.x;
+    data.viewport_height = EMPIRE_SIZE.y;
 
     empire_object_init_cities();
 }
@@ -162,10 +156,15 @@ bool empire_can_export_resource_to_city(int city_id, e_resource resource) {
         // stocks too low
         return false;
     }
-    if (city_id == 0 || city->buys_resource[resource])
-        return city_resource_trade_status(resource) == TRADE_STATUS_EXPORT;
-    else
-        return false;
+    if (city_id == 0 || city->buys_resource[resource]) {
+        int status = city_resource_trade_status(resource);
+        switch (status) {
+        case TRADE_STATUS_EXPORT: return true;
+        case TRADE_STATUS_EXPORT_SURPLUS: return city_resource_trade_surplus(resource);
+        }
+    }
+    
+    return false;
 }
 
 int empire_can_import_resource_from_city(int city_id, e_resource resource) {

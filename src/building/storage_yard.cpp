@@ -409,7 +409,7 @@ int building_storageyard_for_storing(building* src, map_point tile, e_resource r
 
     return min_building_id;
 }
-int building_storageyard_for_getting(building* src, e_resource resource, map_point* dst) {
+int building_storageyard_for_getting(building* src, e_resource resource, tile2i* dst) {
     int min_dist = 10000;
     building* min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -481,12 +481,14 @@ static int determine_granary_accept_foods(int resources[8], int road_network) {
 }
 
 static int determine_granary_get_foods(int resources[8], int road_network) {
-    if (scenario_property_kingdom_supplies_grain())
+    if (scenario_property_kingdom_supplies_grain()) {
         return 0;
+    }
 
     for (e_resource i = RESOURCE_NONE; i < RESOURCES_FOODS_MAX; ++i) {
         resources[i] = 0;
     }
+
     int can_get = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);

@@ -78,7 +78,7 @@ int building::barracks_create_soldier() {
         }
         int academy_id = get_closest_military_academy(building_get(m->building_id));
         if (academy_id) {
-            map_point road;
+            tile2i road;
             building* academy = building_get(academy_id);
             if (map_get_road_access_tile(academy->tile, academy->size, road)) {
                 f->action_state = FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY;
@@ -114,7 +114,7 @@ bool building::barracks_create_tower_sentry() {
 
     figure* f = figure_create(FIGURE_TOWER_SENTRY, road_access, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
-    map_point road;
+    tile2i road;
     if (map_get_road_access_tile(tower->tile, tower->size, road)) {
         f->destination_tile = road;
         //        f->destination_x = road.x();

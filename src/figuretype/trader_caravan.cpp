@@ -60,14 +60,12 @@ bool figure_trade_caravan_can_sell(figure* trader, building* warehouse, int city
 
     int can_import = 0;
     e_resource resource = city_trade_current_caravan_import_resource();
-    if (!building_storageyard_is_not_accepting(resource, warehouse)
-        && empire_can_import_resource_from_city(city_id, resource)) {
+    if (!building_storageyard_is_not_accepting(resource, warehouse) && empire_can_import_resource_from_city(city_id, resource)) {
         can_import = 1;
     } else {
         for (int i = RESOURCE_MIN; i < RESOURCES_MAX; i++) {
             resource = city_trade_next_caravan_import_resource();
-            if (!building_storageyard_is_not_accepting(resource, warehouse)
-                && empire_can_import_resource_from_city(city_id, resource)) {
+            if (!building_storageyard_is_not_accepting(resource, warehouse) && empire_can_import_resource_from_city(city_id, resource)) {
                 can_import = 1;
                 break;
             }

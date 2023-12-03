@@ -25,7 +25,7 @@ void scenario_demand_change_process(void) {
             continue;
         }
         int route = g_scenario_data.demand_changes[i].route_id;
-        int resource = g_scenario_data.demand_changes[i].resource;
+        e_resource resource = g_scenario_data.demand_changes[i].resource;
         int city_id = empire_city_get_for_trade_route(route);
         if (city_id < 0)
             city_id = 0;

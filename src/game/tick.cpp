@@ -190,7 +190,7 @@ static void advance_tick(void) {
         vegetation_growth_update();
         break;
     case 21:
-        building_maintenance_check_rome_access();
+        building_maintenance_check_kingdome_access();
         break;
     case 22:
         house_population_update_room();

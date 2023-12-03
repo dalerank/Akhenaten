@@ -60,7 +60,7 @@ void figure::native_trader_action() {
     if (wait_ticks > 10) {
         wait_ticks = 0;
         if (figure_trade_caravan_can_buy(this, destination(), 0)) {
-            int resource = trader_get_buy_resource(destination(), 0);
+            e_resource resource = trader_get_buy_resource(destination(), 0, 100);
             trader_record_bought_resource(trader_id, resource);
             trader_amount_bought += 3;
         } else {

@@ -50,17 +50,17 @@ void figure::determine_deliveryman_destination() {
     }
 
     // priority 2: accepting granary for food
-    set_destination(building_granary_for_storing(tile, resource_id, warehouse->distance_from_entry, road_network_id, 0, &understaffed_storages, &dst));
+    int granary_food_id = building_granary_for_storing(tile, resource_id, warehouse->distance_from_entry, road_network_id, 0, &understaffed_storages, &dst);
+    set_destination(granary_food_id);
     if (config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
         int dist = 0;
         building* src_building = home();
         building* dst_building = destination();
         int src_int = src_building->type;
-        if ((src_int >= BUILDING_BARLEY_FARM && src_int <= BUILDING_CHICKPEAS_FARM)
-            || src_int == BUILDING_FISHING_WHARF) {
-            dist = calc_distance_with_penalty(src_building->tile, dst_building->tile,
-                                              src_building->distance_from_entry,dst_building->distance_from_entry);
+        if ((src_int >= BUILDING_BARLEY_FARM && src_int <= BUILDING_CHICKPEAS_FARM) || src_int == BUILDING_FISHING_WHARF) {
+            dist = calc_distance_with_penalty(src_building->tile, dst_building->tile, src_building->distance_from_entry,dst_building->distance_from_entry);
         }
+
         if (dist >= 64) {
             set_destination(0);
         }
@@ -79,24 +79,25 @@ void figure::determine_deliveryman_destination() {
 
     // priority 4: warehouse
     set_destination(building_storageyard_for_storing(0, tile, resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, &dst));
-    if (has_destination())
+    if (has_destination()) {
         return advance_action(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE);
+    }
 
     // priority 5: granary forced when on stockpile
-    set_destination(building_granary_for_storing(tile,
-                                                 resource_id, warehouse->distance_from_entry, road_network_id, 1,
-                                                 &understaffed_storages, &dst));
+    int granary_id = building_granary_for_storing(tile, resource_id, warehouse->distance_from_entry, road_network_id, 1, &understaffed_storages, &dst);
+    set_destination(granary_id);
     if (config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
         int dist = 0;
         building* src_building = home();
         building* dst_building = destination();
         int src_int = src_building->type;
-        if ((src_int >= BUILDING_BARLEY_FARM && src_int <= BUILDING_CHICKPEAS_FARM)
-            || src_int == BUILDING_FISHING_WHARF)
-            dist = calc_distance_with_penalty(src_building->tile, dst_building->tile,
-                                              src_building->distance_from_entry, dst_building->distance_from_entry);
-        if (dist >= 64)
+        if ((src_int >= BUILDING_BARLEY_FARM && src_int <= BUILDING_CHICKPEAS_FARM) || src_int == BUILDING_FISHING_WHARF) {
+            dist = calc_distance_with_penalty(src_building->tile, dst_building->tile, src_building->distance_from_entry, dst_building->distance_from_entry);
+        }
+
+        if (dist >= 64) {
             set_destination(0);
+        }
     }
 
     if (has_destination()) {

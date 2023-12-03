@@ -250,7 +250,7 @@ static void sort_demand_changes(void) {
 
 void scenario_editor_demand_change_delete(int index) {
     g_scenario_data.demand_changes[index].year = 0;
-    g_scenario_data.demand_changes[index].resource = 0;
+    g_scenario_data.demand_changes[index].resource = RESOURCE_NONE;
     g_scenario_data.demand_changes[index].route_id = 0;
     g_scenario_data.demand_changes[index].is_rise = 0;
     sort_demand_changes();
@@ -259,7 +259,7 @@ void scenario_editor_demand_change_delete(int index) {
 
 void scenario_editor_demand_change_save(int index, editor_demand_change* demand_change) {
     g_scenario_data.demand_changes[index].year = demand_change->year;
-    g_scenario_data.demand_changes[index].resource = demand_change->resource;
+    g_scenario_data.demand_changes[index].resource = (e_resource)demand_change->resource;
     g_scenario_data.demand_changes[index].route_id = demand_change->route_id;
     g_scenario_data.demand_changes[index].is_rise = demand_change->is_rise;
     sort_demand_changes();

@@ -203,7 +203,7 @@ int city_buildings_get_working_dock(int index) {
     return city_data.building.working_dock_ids[index];
 }
 
-map_point city_buildings_main_native_meeting_center() {
+tile2i city_buildings_main_native_meeting_center() {
     return city_data.building.main_native_meeting;
 }
 void city_buildings_set_main_native_meeting_center(int x, int y) {
@@ -222,7 +222,7 @@ bool city_building_has_festival_square(void) {
     return city_data.building.festival_square_placed;
 }
 
-map_point city_building_get_festival_square_position() {
+tile2i city_building_get_festival_square_position() {
     return city_data.building.festival_square;
 }
 

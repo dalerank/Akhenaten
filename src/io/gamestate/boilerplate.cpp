@@ -718,7 +718,7 @@ void GamestateIO::start_loaded_file() {
     figure_route_clean();
     map_road_network_update();
     map_routing_update_ferry_routes();
-    building_maintenance_check_rome_access();
+    building_maintenance_check_kingdome_access();
 
     // tiles
     floodplains_init();

@@ -76,7 +76,7 @@ int building_dock_accepts_ship(int ship_id, int dock_id) {
     return 1;
 }
 
-int building_dock_get_free_destination(int ship_id, map_point* tile) {
+int building_dock_get_free_destination(int ship_id, tile2i* tile) {
     if (!city_buildings_has_working_dock())
         return 0;
 
@@ -125,7 +125,7 @@ int building_dock_get_free_destination(int ship_id, map_point* tile) {
     return dock_id;
 }
 
-int building_dock_get_queue_destination(int ship_id, map_point* tile) {
+int building_dock_get_queue_destination(int ship_id, tile2i* tile) {
     if (!city_buildings_has_working_dock())
         return 0;
 

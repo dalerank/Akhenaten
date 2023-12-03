@@ -48,26 +48,26 @@ int trader_create(void) {
     return trader_id;
 }
 
-void trader_record_bought_resource(int trader_id, int resource) {
+void trader_record_bought_resource(int trader_id, e_resource resource) {
     auto &data = g_figure_trader_data;
     data.traders[trader_id].bought_amount += 100;
     data.traders[trader_id].bought_resources[resource] += 100;
     data.traders[trader_id].bought_value += trade_price_sell(resource);
 }
 
-void trader_record_sold_resource(int trader_id, int resource) {
+void trader_record_sold_resource(int trader_id, e_resource resource) {
     auto &data = g_figure_trader_data;
     data.traders[trader_id].sold_amount += 100;
     data.traders[trader_id].sold_resources[resource] += 100;
     data.traders[trader_id].sold_value += trade_price_buy(resource);
 }
 
-int trader_bought_resources(int trader_id, int resource) {
+int trader_bought_resources(int trader_id, e_resource resource) {
     auto &data = g_figure_trader_data;
     return data.traders[trader_id].bought_resources[resource];
 }
 
-int trader_sold_resources(int trader_id, int resource) {
+int trader_sold_resources(int trader_id, e_resource resource) {
     auto &data = g_figure_trader_data;
     return data.traders[trader_id].sold_resources[resource];
 }
@@ -82,7 +82,7 @@ int trader_has_traded_max(int trader_id) {
     return data.traders[trader_id].bought_amount >= 1200 || data.traders[trader_id].sold_amount >= 1200;
 }
 
-e_resource trader_get_buy_resource(building* storageyard, int city_id) {
+e_resource trader_get_buy_resource(building* storageyard, int city_id, int amount) {
     if (storageyard->type != BUILDING_STORAGE_YARD) {
         return RESOURCE_NONE;
     }
@@ -94,10 +94,10 @@ e_resource trader_get_buy_resource(building* storageyard, int city_id) {
             continue;
 
         e_resource resource = space->subtype.warehouse_resource_id;
-        if (space->stored_full_amount >= 100 && empire_can_export_resource_to_city(city_id, resource)) {
+        if (space->stored_full_amount >= amount && empire_can_export_resource_to_city(city_id, resource)) {
             // update stocks
-            city_resource_remove_from_storageyard(resource, 100);
-            space->stored_full_amount -= 100;
+            city_resource_remove_from_storageyard(resource, amount);
+            space->stored_full_amount -= amount;
             if (space->stored_full_amount <= 0)
                 space->subtype.warehouse_resource_id = RESOURCE_NONE;
 

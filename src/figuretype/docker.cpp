@@ -20,15 +20,15 @@
 #include "graphics/image_desc.h"
 #include "grid/road_access.h"
 
-static int try_import_resource(building* warehouse, e_resource resource, int city_id) {
+static bool try_import_resource(building* warehouse, e_resource resource, int city_id) {
     if (warehouse->type != BUILDING_STORAGE_YARD)
-        return 0;
+        return false;
 
     if (building_storageyard_is_not_accepting(resource, warehouse))
-        return 0;
+        return false;
 
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse))
-        return 0;
+        return false;
 
     int route_id = empire_city_get_route_id(city_id);
     // try existing storage bay with the same resource
@@ -36,11 +36,10 @@ static int try_import_resource(building* warehouse, e_resource resource, int cit
     for (int i = 0; i < 8; i++) {
         space = space->next();
         if (space->id > 0) {
-            if (space->stored_full_amount && space->stored_full_amount < 400
-                && space->subtype.warehouse_resource_id == resource) {
-                trade_route_increase_traded(route_id, resource);
+            if (space->stored_full_amount && space->stored_full_amount < 400 && space->subtype.warehouse_resource_id == resource) {
+                trade_route_increase_traded(route_id, resource, 100);
                 building_storageyard_space_add_import(space, resource);
-                return 1;
+                return true;
             }
         }
     }
@@ -50,26 +49,29 @@ static int try_import_resource(building* warehouse, e_resource resource, int cit
         space = space->next();
         if (space->id > 0) {
             if (space->subtype.warehouse_resource_id == RESOURCE_NONE) {
-                trade_route_increase_traded(route_id, resource);
+                trade_route_increase_traded(route_id, resource, 100);
                 building_storageyard_space_add_import(space, resource);
-                return 1;
+                return true;
             }
         }
     }
-    return 0;
+    return false;
 }
+
 static int try_export_resource(building* warehouse, e_resource resource, int city_id) {
     //    building *warehouse = building_get(b);
     if (warehouse->type != BUILDING_STORAGE_YARD)
         return 0;
+
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse))
         return 0;
+
     building* space = warehouse;
     for (int i = 0; i < 8; i++) {
         space = space->next();
         if (space->id > 0) {
             if (space->stored_full_amount && space->subtype.warehouse_resource_id == resource) {
-                trade_route_increase_traded(empire_city_get_route_id(city_id), resource);
+                trade_route_increase_traded(empire_city_get_route_id(city_id), resource, 100);
                 building_storageyard_space_remove_export(space, resource);
                 return 1;
             }

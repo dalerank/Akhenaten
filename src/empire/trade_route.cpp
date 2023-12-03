@@ -12,12 +12,12 @@ struct route_resource {
 
 static struct route_resource data[MAX_ROUTES][RESOURCES_MAX];
 
-void trade_route_init(int route_id, int resource, int limit) {
+void trade_route_init(int route_id, e_resource resource, int limit) {
     data[route_id][resource].limit = limit;
     data[route_id][resource].traded = 0;
 }
 
-int trade_route_limit(int route_id, int resource, int bonus_inclusion) {
+int trade_route_limit(int route_id, e_resource resource, int bonus_inclusion) {
     int bonus_points = 0;
     if (city_data.religion.ra_slightly_increased_trading_months_left > 0)
         bonus_points = 1;
@@ -61,11 +61,11 @@ int trade_route_limit(int route_id, int resource, int bonus_inclusion) {
 
     return 0;
 }
-int trade_route_traded(int route_id, int resource) {
+int trade_route_traded(int route_id, e_resource resource) {
     return data[route_id][resource].traded;
 }
 
-bool trade_route_increase_limit(int route_id, int resource) {
+bool trade_route_increase_limit(int route_id, e_resource resource) {
     switch (data[route_id][resource].limit) {
     case 0:
         data[route_id][resource].limit = 1500;
@@ -81,7 +81,7 @@ bool trade_route_increase_limit(int route_id, int resource) {
     }
     return true;
 }
-bool trade_route_decrease_limit(int route_id, int resource) {
+bool trade_route_decrease_limit(int route_id, e_resource resource) {
     switch (data[route_id][resource].limit) {
     case 4000:
         data[route_id][resource].limit = 2500;
@@ -98,8 +98,8 @@ bool trade_route_decrease_limit(int route_id, int resource) {
     return true;
 }
 
-void trade_route_increase_traded(int route_id, int resource) {
-    data[route_id][resource].traded += 100;
+void trade_route_increase_traded(int route_id, e_resource resource, int amount) {
+    data[route_id][resource].traded += amount;
 }
 void trade_route_reset_traded(int route_id) {
     for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
@@ -107,7 +107,7 @@ void trade_route_reset_traded(int route_id) {
     }
 }
 
-int trade_route_limit_reached(int route_id, int resource) {
+int trade_route_limit_reached(int route_id, e_resource resource) {
     //    return data[route_id][resource].traded >= data[route_id][resource].limit;
     return data[route_id][resource].traded >= trade_route_limit(route_id, resource);
 }
