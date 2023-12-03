@@ -14,6 +14,7 @@ struct imagepak_handle {
     int id = -1;
     int index = -1;
     bool system = false;
+    bool custom = false;
     imagepak *handle = nullptr;
 };
 
@@ -69,6 +70,7 @@ void config_load_imagepaks_config(archive arch) {
         config.name = arch.read_string("name");
         config.index = arch.read_integer("index");
         config.system = arch.read_bool("system");
+        config.custom = arch.read_bool("custom");
         g_image_data->common[config.id] = config;
     });
     g_image_data->common_inited = true;
@@ -152,7 +154,7 @@ bool image_load_paks() {
         if (imgpak.name.empty()) {
             continue;
         }
-        auto *newpak = new imagepak(imgpak.name, imgpak.index, imgpak.system);
+        auto *newpak = new imagepak(imgpak.name, imgpak.index, imgpak.system, false, imgpak.custom);
         data.common[imgpak.id].handle = newpak;
         data.pak_list.push_back(&data.common[imgpak.id].handle);
     }

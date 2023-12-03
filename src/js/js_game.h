@@ -111,6 +111,7 @@ void js_register_game_functions(js_State *J);
 namespace config {
 
 void refresh(archive);
+archive load(pcstr filename);
 
 typedef void (*config_iterator_function_cb)(archive);
 

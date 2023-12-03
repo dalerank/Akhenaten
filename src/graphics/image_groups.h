@@ -17,6 +17,7 @@ enum e_pack {
     PACK_EXPANSION,
     PACK_EXPANSION_SPR,
     //
+    PACK_CUSTOM,
 };
 
 ////////////////// FONT

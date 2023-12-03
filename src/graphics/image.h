@@ -34,7 +34,7 @@ enum e_image_type {
 struct atlas_data_t {
     SDL_Texture* texture = nullptr;
     //    std::vector<image*> images;
-    color* TEMP_PIXEL_BUFFER = nullptr;
+    color* temp_pixel_buffer = nullptr;
     int bmp_size;
     int width;
     int height;
@@ -100,7 +100,7 @@ struct image_t {
         atlas_data_t* p_atlas = nullptr;
     } atlas;
 
-    color* TEMP_PIXEL_DATA = nullptr;
+    color* temp_pixel_data = nullptr;
 
     const int isometric_size() const;
     const int isometric_top_height() const;

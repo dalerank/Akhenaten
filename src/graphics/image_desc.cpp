@@ -22,6 +22,10 @@ void config_load_images_info(archive arch) {
     });
 }
 
+void set_image_desc(int type, int pack, int id, int offset) {
+    g_image_desc[type] = {pack, id, offset};
+}
+
 image_desc get_image_desc(e_image_id t) {
     if (t >= IMG_SIZE) {
         return {0, 0, 0};

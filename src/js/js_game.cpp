@@ -13,6 +13,8 @@
 #include "figure/figure.h"
 #include "figure/image.h"
 
+#include "js.h"
+
 #include <vector>
 
 void js_game_log_info(js_State *J) {
@@ -30,6 +32,19 @@ void js_game_log_warn(js_State *J) {
         logs::info("warning() Try to print undefined object", 0, 0);
     } else {
         logs::info("WARN: ", js_tostring(J, 1), 0);
+    }
+
+    js_pushundefined(J);
+}
+
+void js_game_set_image(js_State *J) {
+    if (js_isobject(J, 1)) {
+        archive arch{js_vm_state()};
+        int img = arch.read_integer("img");
+        int pack = arch.read_integer("pack");
+        int id = arch.read_integer("id");
+        int offset = arch.read_integer("offset");
+        js_pop(J, 1);
     }
 
     js_pushundefined(J);
@@ -57,6 +72,7 @@ void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
+    REGISTER_GLOBAL_FUNCTION(J, js_game_set_image, "set_image", 1);
 }
 
 namespace config {
@@ -66,5 +82,10 @@ namespace config {
         for (FuncLinkedList *s = FuncLinkedList::tail; s; s = s->next) {
             s->func(arch);
         }
+    }
+
+    archive load(pcstr filename) {
+        js_vm_load_file_and_exec(filename);
+        return {js_vm_state()};
     }
 } // config

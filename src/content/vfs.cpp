@@ -10,7 +10,7 @@
 
 namespace vfs{
 
-FILE * file_open(const char *filename, const char *mode) {
+FILE * file_open(pcstr filename, pcstr mode) {
     return platform_file_manager_open_file(filename, mode);
 }
 
@@ -41,7 +41,7 @@ int file_close(FILE * stream) {
     return fclose(stream);
 }
 
-bool file_has_extension(const char *filename, const char *extension) {
+bool file_has_extension(pcstr filename, pcstr extension) {
     if (!extension || !*extension)
         return true;
 
@@ -58,7 +58,7 @@ bool file_has_extension(const char *filename, const char *extension) {
     return string_compare_case_insensitive(filename, extension) == 0;
 }
 
-void file_change_extension(char *filename, const char *new_extension) {
+void file_change_extension(char *filename, pcstr new_extension) {
     char c;
     do {
         c = *filename;
@@ -73,7 +73,7 @@ void file_change_extension(char *filename, const char *new_extension) {
     }
 }
 
-void file_append_extension(char *filename, const char *extension) {
+void file_append_extension(char *filename, pcstr extension) {
     char c;
     do {
         c = *filename;
@@ -87,7 +87,7 @@ void file_append_extension(char *filename, const char *extension) {
     filename[4] = 0;
 }
 
-void file_remove_extension(uint8_t * filename) {
+void file_remove_extension(char * filename) {
     uint8_t c;
     do {
         c = *filename;
@@ -100,7 +100,7 @@ void file_remove_extension(uint8_t * filename) {
     }
 }
 
-bool file_exists(const char *filename) {
+bool file_exists(pcstr filename) {
     path fspath = content_file(filename);
     if (fspath.empty()) {
         return false;
@@ -109,11 +109,11 @@ bool file_exists(const char *filename) {
     return std::filesystem::exists(fspath.c_str());
 }
 
-bool file_remove(const char *filename) {
+bool file_remove(pcstr filename) {
     return platform_file_manager_remove_file(filename);
 }
 
-void create_folders(const char* path) {
+void create_folders(pcstr path) {
     std::error_code err;
     if (!std::filesystem::create_directories(path, err) && !std::filesystem::exists(path)) {
         logs::info(err.message().c_str());

@@ -15,6 +15,7 @@
 using bmp_name = bstring<200>;
 
 class imagepak {
+    bool userpack;
     int version;
     int entries_num;
     int groups_num;
@@ -26,7 +27,8 @@ class imagepak {
     bool should_load_system_sprites;
     bool should_convert_fonts;
 
-    bool load_pak(const char* pak_name, int starting_index);
+    bool load_pak(pcstr pak_name, int starting_index);
+    bool load_folder_pak(pcstr folder);
     void cleanup_and_destroy();
 
 public:
@@ -35,7 +37,7 @@ public:
 
     int global_image_index_offset = 0;
 
-    imagepak(const char* pak_name, int starting_index, bool SYSTEM_SPRITES = false, bool FONTS = false);
+    imagepak(pcstr pak_name, int starting_index, bool system_sprites = false, bool fonts = false, bool custom = false);
     ~imagepak();
 
     int get_entry_count();

@@ -7,10 +7,6 @@
 #include "js/js_defines.h"
 #include "js/js_folder_notifier.h"
 #include "js/js_game.h"
-//#include "js/js_graphics.h"
-//#include "js/js_hotkey.h"
-//#include "js/js_ui.h"
-//#include "js/js_mouse.h"
 #include "graphics/elements/panel.h"
 #include "mujs/mujs.h"
 #include "mujs/jsi.h"
@@ -102,6 +98,10 @@ int js_vm_load_file_and_exec(const char *path) {
 
 void js_vm_reload_configs() {
     config::refresh(vm.J);
+}
+
+js_State *js_vm_state() {
+    return vm.J;
 }
 
 void js_vm_sync() {

@@ -27,7 +27,7 @@ namespace vfs {
  * @param mode Mode to open the file (e.g. "wb").
  * @return FILE
  */
-FILE *file_open(const char *filename, const char *mode);
+FILE *file_open(pcstr filename, pcstr mode);
 reader file_open(path path);
 
 
@@ -44,7 +44,7 @@ int file_close(FILE *stream);
  * @param extension Extension
  * @return boolean true if the file has the given extension, false otherwise
  */
-bool file_has_extension(const char *filename, const char *extension);
+bool file_has_extension(pcstr filename, pcstr extension);
 
 /**
  * Replaces the current extension by the given new extension.
@@ -52,20 +52,20 @@ bool file_has_extension(const char *filename, const char *extension);
  * @param[in,out] filename Filename to change
  * @param new_extension New extension
  */
-void file_change_extension(char *filename, const char *new_extension);
+void file_change_extension(char *filename, pcstr new_extension);
 
 /**
  * Appends the extension to the file
  * @param[in,out] filename Filename to change
  * @param extension Extension to append
  */
-void file_append_extension(char *filename, const char *extension);
+void file_append_extension(char *filename, pcstr extension);
 
 /**
  * Removes the extension from the file
  * @param[in,out] filename Filename to change
  */
-void file_remove_extension(uint8_t *filename);
+void file_remove_extension(char *filename);
 
 /**
  * Check if file exists
@@ -73,21 +73,21 @@ void file_remove_extension(uint8_t *filename);
  * @param localizable Whether the file may be localized (see core/dir.h)
  * @return boolean true if the file exists, false otherwise
  */
-bool file_exists(const char *filename);
+bool file_exists(pcstr filename);
 
 /**
  * Remove a file
  * @param filename Filename to remove
  * @return boolean true if the file removal was successful, false otherwise
  */
-bool file_remove(const char *filename);
+bool file_remove(pcstr filename);
 
 /**
 * Create folders if not exists
 * Throw exception if path not exists and can not be created
 * @param path to be created
 */
-void create_folders(const char *path);
+void create_folders(pcstr path);
 void remove_folder(path folder_path);
 
 void set_mixed_mode(bool value);

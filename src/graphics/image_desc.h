@@ -16,3 +16,4 @@ struct image_desc {
 };
 
 image_desc get_image_desc(e_image_id t);
+void set_image_desc(int type, int pack, int id, int offset);

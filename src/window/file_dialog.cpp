@@ -131,24 +131,20 @@ static void init(file_type type, file_dialog_type dialog_type) {
     data.message_not_exist_start_time = 0;
 
     // populate file list
-    switch (GAME_ENV) {
-    case ENGINE_ENV_PHARAOH:
-        char folder_name[MAX_FILE_NAME] = "Save/";
-        strcat(folder_name, (const char*)g_settings.player_name);
-        strcat(folder_name, "/");
-        if (type == FILE_TYPE_SCENARIO) {
-            data.panel->change_file_path("Maps/", map_file_data.extension);
+    char folder_name[MAX_FILE_NAME] = "Save/";
+    strcat(folder_name, (const char*)g_settings.player_name);
+    strcat(folder_name, "/");
+    if (type == FILE_TYPE_SCENARIO) {
+        data.panel->change_file_path("Maps/", map_file_data.extension);
+    } else {
+        if (data.dialog_type == FILE_DIALOG_LOAD) {
+            data.panel->change_file_path(folder_name, data.file_data->extension);
+            data.panel->append_files_with_extension(folder_name, saved_game_data_expanded.extension); // TODO?
+        } else if (data.dialog_type == FILE_DIALOG_SAVE) {
+            data.panel->change_file_path(folder_name, saved_game_data_expanded.extension);
         } else {
-            if (data.dialog_type == FILE_DIALOG_LOAD) {
-                data.panel->change_file_path(folder_name, data.file_data->extension);
-                data.panel->append_files_with_extension(folder_name, saved_game_data_expanded.extension); // TODO?
-            } else if (data.dialog_type == FILE_DIALOG_SAVE) {
-                data.panel->change_file_path(folder_name, saved_game_data_expanded.extension);
-            } else {
-                assert(false);
-            }
+            assert(false);
         }
-        break;
     }
 
     set_chosen_filename(data.file_data->last_loaded_file);
