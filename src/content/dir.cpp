@@ -79,13 +79,23 @@ const dir_listing *dir_find_files_with_extension(const char *dir, const char *ex
     return &data.listing;
 }
 
-const dir_listing *dir_find_all_subdirectories(const char *dir) {
+const dir_listing *dir_find_all_subdirectories(pcstr dir) {
     auto &data = g_dir_data;
 
     clear_dir_listing();
     platform_file_manager_list_directory_contents(dir, TYPE_DIR, 0, add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(char *), compare_lower);
     return &data.listing;
+}
+
+
+std::vector<path> dir_find_all_subdirectories(vfs::path dir, bool) {
+    auto *listing = dir_find_all_subdirectories(dir.c_str());
+    std::vector<path> folders;
+    for (int i = 0; i < listing->num_files; i++) {
+         folders.push_back(listing->files[i]);
+    }
+    return folders;
 }
 
 static int compare_case(const char *filename) {

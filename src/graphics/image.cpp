@@ -3,6 +3,7 @@
 #include "image_groups.h"
 #include "content/imagepak.h"
 #include "graphics/image_desc.h"
+#include "content/dir.h"
 #include "core/svector.h"
 
 #include "js/js_game.h"
@@ -210,6 +211,21 @@ bool image_load_paks() {
     data.temple = data.temple_paks.at(0);
     data.monument = data.monument_paks.at(0);
     data.enemy = data.enemy_paks.at(0);
+
+    auto folders = vfs::dir_find_all_subdirectories("Data/", true);
+    for (const auto &f : folders) {
+        auto *newpak = new imagepak(f.c_str(), 0, false, false, /*custom*/true);
+        if (!newpak->get_entry_count()) {
+            delete newpak;
+            continue;
+        }
+        int useridx = newpak->get_user_idx();
+        data.common[useridx].handle = newpak;
+        data.common[useridx].id = useridx;
+        data.common[useridx].index = newpak->get_global_image_index(0);
+        data.common[useridx].custom = true;
+        data.pak_list.push_back(&data.common[useridx].handle);
+    }
 
     return true;
 }

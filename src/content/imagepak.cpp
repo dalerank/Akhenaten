@@ -385,29 +385,30 @@ bool imagepak::load_folder_pak(pcstr folder) {
     int bmp_last_group_id = 0;
     int last_idx_in_bmp = 1;
 
-    vfs::path configname(folder, ".js");
+    vfs::path datafolder("Data/", folder);
+    vfs::path configname(datafolder, "/", folder, ".js");
     
     if (!vfs::file_exists(configname)) {
         return false;
     }
 
-    vfs::path datafolder("Data/", folder);
     vfs::path foldername = vfs::content_path(datafolder);
-    vfs::path config = vfs::path(foldername, "/", configname);
-    archive arch = config::load(config);
+    archive arch = config::load(configname);
 
-    int global_index = 0;
+    global_image_index_offset = 0;
     arch.load_global_section(folder, [&] (archive arch) {
-        global_index = arch.read_integer("global_index");
+        useridx = arch.read_integer("pack");
+        global_image_index_offset = arch.read_integer("global_index");
         int start_index = arch.read_integer("start_index");
         int finish_index = arch.read_integer("finish_index");
-        entries_num += (finish_index - start_index);
+        entries_num += (finish_index - start_index) + 1;
         bmp_names[groups_num] = arch.read_string("group_name");
         groups_num++;
     });
 
-    assert(global_index > 30000);
+    assert(global_image_index_offset >= 30000);
     images_array.reserve(entries_num);
+
     auto load_img = [&] (pcstr fn, int i, int group_id) {
         image_t img;
         img.pak_name = name;
@@ -415,7 +416,7 @@ bool imagepak::load_folder_pak(pcstr folder) {
         img.data_length = -1;
         img.uncompressed_length = -1;
         img.unk00 = -1;
-        img.start_index = global_index;
+        img.start_index = global_image_index_offset;
         img.offset_mirror = 0;
 
         vfs::reader file = vfs::file_open(fn);
@@ -489,7 +490,7 @@ bool imagepak::load_folder_pak(pcstr folder) {
         int finish_index = arch.read_integer("finish_index");
         version = arch.read_integer("version");
 
-        for (int i = start_index; i < finish_index; ++i) {
+        for (int i = start_index; i <= finish_index; ++i) {
             bstring512 name;
             name.printf("%s%05u.png", prefix, i);
             load_img(bstring256(foldername, "/", name), i - start_index, tmp_group_id);
@@ -537,8 +538,9 @@ bool imagepak::load_folder_pak(pcstr folder) {
     for (int i = 0; i < atlas_pages.size(); ++i) {
         atlas_data_t* atlas_data = &atlas_pages.at(i);
         atlas_data->texture = graphics_renderer()->create_texture_from_buffer(atlas_data->temp_pixel_buffer, atlas_data->width, atlas_data->height);
-        if (atlas_data->texture == nullptr)
+        if (atlas_data->texture == nullptr) {
             return false;
+        }
 
         // delete temp data buffer in the atlas
         delete atlas_data->temp_pixel_buffer;
@@ -558,7 +560,6 @@ bool imagepak::load_folder_pak(pcstr folder) {
                name.c_str(), entries_num, groups_num, atlas_pages.at(atlas_pages.size() - 1).width, atlas_pages.at(atlas_pages.size() - 1).height, atlas_pages.size());
 
     int y_offset = screen_height() - 24;
-
     platform_renderer_clear();
     if (image_data_fonts_ready()) {
         text_draw(bstring512("loading folder pak (", folder, ")"), 5, y_offset, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_YELLOW);
@@ -566,7 +567,6 @@ bool imagepak::load_folder_pak(pcstr folder) {
     //painter ctx = game.painter();
     //graphics_renderer()->draw_image(ctx, &images_array.at(0), 0, 0, 0xffffffff, 1.0f, false);
     platform_renderer_render();
-
     return true;
 }
 

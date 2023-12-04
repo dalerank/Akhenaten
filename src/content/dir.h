@@ -2,6 +2,8 @@
 
 #include "core/string.h"
 
+#include <vector>
+
 /**
  * @file
  * Directory-related functions.
@@ -45,7 +47,8 @@ const dir_listing *dir_append_files_with_extension(const char *dir, const char *
  * Finds all subdirectories
  * @return Directory listing
  */
-const dir_listing *dir_find_all_subdirectories(const char *dir = 0);
+const dir_listing *dir_find_all_subdirectories(pcstr dir);
+std::vector<path> dir_find_all_subdirectories(vfs::path dir, bool);
 
 /**
  * Get the case sensitive and localized filename of the file

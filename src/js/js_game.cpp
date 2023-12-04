@@ -44,6 +44,7 @@ void js_game_set_image(js_State *J) {
         int pack = arch.read_integer("pack");
         int id = arch.read_integer("id");
         int offset = arch.read_integer("offset");
+        set_image_desc(img, pack, id, offset);
         js_pop(J, 1);
     }
 
@@ -85,7 +86,8 @@ namespace config {
     }
 
     archive load(pcstr filename) {
-        js_vm_load_file_and_exec(filename);
+        vfs::path fspath = vfs::content_path(filename);
+        js_vm_load_file_and_exec(fspath);
         return {js_vm_state()};
     }
 } // config

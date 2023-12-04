@@ -16,6 +16,7 @@ using bmp_name = bstring<200>;
 
 class imagepak {
     bool userpack;
+    int useridx;
     int version;
     int entries_num;
     int groups_num;
@@ -42,5 +43,6 @@ public:
 
     int get_entry_count();
     int get_global_image_index(int group);
+    inline int get_user_idx() const { return useridx; }
     const image_t* get_image(int id, bool relative = false);
 };
