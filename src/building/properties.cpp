@@ -92,8 +92,8 @@ static building_properties properties[400] = {
     {1, 1, 0, 0},
     {0, 0, 0, 0}, // senate (unused?)
     {5, 0, 0, 0}, // senate2 (unused?)
-    {2, 0, GROUP_BUILDING_TAX_COLLECTOR},
-    {2, 0, GROUP_BUILDING_TAX_COLLECTOR}, // tax collectors ^^
+    {2, 0, 0, 0},
+    {2, 0, 0, 0}, // tax collectors ^^
     {1, 1, 0, 0},
     {2, 1, 0, 0},
     {2, 1, GROUP_BUILDING_WATER_LIFT}, // ??????? water lift ???????
@@ -253,6 +253,8 @@ void building_properties_init() {
     properties[BUILDING_PHYSICIAN] = {2, 0, 0, 0, 0, IMG_PHYSICIAN};
     properties[BUILDING_RECRUITER] = {3, 0, 0, 0, 0, IMG_BARRACKS};
     properties[BUILDING_SCRIBAL_SCHOOL] = {2, 0, 0, 0, 0, IMG_SCRIBAL_SCHOOL};
+    properties[BUILDING_TAX_COLLECTOR] = {2, 0, 0, 0, 0, IMG_TAX_COLLECTOR_BUILDING};
+    properties[BUILDING_TAX_COLLECTOR_UPGRADED] = {2, 0, 0, 0, 0, IMG_TAX_COLLECTOR_BUILDING_UP};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {
