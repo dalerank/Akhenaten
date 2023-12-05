@@ -116,6 +116,7 @@ images = [
 	{img: IMG_TRADER_CARAVAN_DONKEY, pack:PACK_SPR_MAIN, id:52, offset:0},
 	{img: IMG_TAX_COLLECTOR_BUILDING, pack:PACK_GENERAL, id:63, offset:0},
 	{img: IMG_TAX_COLLECTOR_BUILDING_UP, pack:PACK_GENERAL, id:64, offset:0},
+	{img: IMG_HOUSE_HUT, pack:PACK_GENERAL, id:26, offset:0},
 ]
 
 cart_offsets = [
