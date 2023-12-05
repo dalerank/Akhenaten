@@ -169,8 +169,7 @@ bool FileIOManager::io_failure_cleanup(const char* action, const char* reason) {
     size_t size_f = strlen(format);
     size_t size_a = strlen(action);
     size_t size_r = strlen(reason);
-    int size = size_f + size_a + size_r - 4
-               + 1; // remove the size of the format characters, add one character for string termination
+    int size = size_f + size_a + size_r - 4 + 1; // remove the size of the format characters, add one character for string termination
     std::vector<char> text(size);
     snprintf(text.data(), size, format, action, reason);
     logs::error(text.data());

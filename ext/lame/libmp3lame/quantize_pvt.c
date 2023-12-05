@@ -294,16 +294,16 @@ compute_ath(lame_internal_flags const* gfc)
 
     if (cfg->noATH) {
         for (sfb = 0; sfb < SBMAX_l; sfb++) {
-            ATH_l[sfb] = 1E-20;
+            ATH_l[sfb] = 1E-20f;
         }
         for (sfb = 0; sfb < PSFB21; sfb++) {
-            ATH_psfb21[sfb] = 1E-20;
+            ATH_psfb21[sfb] = 1E-20f;
         }
         for (sfb = 0; sfb < SBMAX_s; sfb++) {
-            ATH_s[sfb] = 1E-20;
+            ATH_s[sfb] = 1E-20f;
         }
         for (sfb = 0; sfb < PSFB12; sfb++) {
-            ATH_psfb12[sfb] = 1E-20;
+            ATH_psfb12[sfb] = 1E-20f;
         }
     }
 
@@ -961,7 +961,7 @@ set_pinfo(lame_internal_flags const *gfc,
             en0 += cod_info->xr[j] * cod_info->xr[j];
         en0 /= bw;
         /* convert to MDCT units */
-        en1 = 1e15;     /* scaling so it shows up on FFT plot */
+        en1 = 1e15f;     /* scaling so it shows up on FFT plot */
         gfc->pinfo->en[gr][ch][sfb] = en1 * en0;
         gfc->pinfo->xfsf[gr][ch][sfb] = en1 * l3_xmin[sfb] * xfsf[sfb] / bw;
 
@@ -996,7 +996,7 @@ set_pinfo(lame_internal_flags const *gfc,
                 }
                 en0 = Max(en0 / bw, 1e-20);
                 /* convert to MDCT units */
-                en1 = 1e15; /* scaling so it shows up on FFT plot */
+                en1 = 1e15f; /* scaling so it shows up on FFT plot */
 
                 gfc->pinfo->en_s[gr][ch][3 * sfb + i] = en1 * en0;
                 gfc->pinfo->xfsf_s[gr][ch][3 * sfb + i] = en1 * l3_xmin[sfb2] * xfsf[sfb2] / bw;

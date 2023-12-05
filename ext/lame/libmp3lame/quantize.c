@@ -727,10 +727,10 @@ amp_scalefac_bands(lame_internal_flags * gfc,
     int     noise_shaping_amp;
 
     if (cod_info->scalefac_scale == 0) {
-        ifqstep34 = 1.29683955465100964055; /* 2**(.75*.5) */
+        ifqstep34 = 1.29683955465100964055f; /* 2**(.75*.5) */
     }
     else {
-        ifqstep34 = 1.68179283050742922612; /* 2**(.75*1) */
+        ifqstep34 = 1.68179283050742922612f; /* 2**(.75*1) */
     }
 
     /* compute maximum value of distort[]  */
