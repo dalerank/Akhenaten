@@ -125,7 +125,7 @@ static bool read_compressed_chunk(FILE* fp, buffer* buf, int filepiece_size) {
             return false;
     } else {
         // read into buffer chunk of specified size - the actual "file piece" size is used for the output!
-        int csize = fread(compress_buffer, 1, chunk_size, fp);
+        size_t csize = fread(compress_buffer, 1, chunk_size, fp);
         if (csize != chunk_size) {
             logs::info("Incorrect chunk size, expected %i, found %i", chunk_size, csize);
             return false;
@@ -166,9 +166,9 @@ static bool write_compressed_chunk(FILE* fp, buffer* buf, int bytes_to_write) {
 
 bool FileIOManager::io_failure_cleanup(const char* action, const char* reason) {
     const char* format = "Unable to %s file, %s.";
-    int size_f = strlen(format);
-    int size_a = strlen(action);
-    int size_r = strlen(reason);
+    size_t size_f = strlen(format);
+    size_t size_a = strlen(action);
+    size_t size_r = strlen(reason);
     int size = size_f + size_a + size_r - 4
                + 1; // remove the size of the format characters, add one character for string termination
     std::vector<char> text(size);

@@ -406,15 +406,15 @@ static void add_building(building* b, int orientation, int variant) {
     switch (b->type) {
     // houses
     case BUILDING_HOUSE_STURDY_HUT:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_HUT) + 2);
+        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_HUT) + 2);
         break;
 
     case BUILDING_HOUSE_MEAGER_SHANTY:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_SHANTY));
+        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_SHANTY));
         break;
 
     case BUILDING_HOUSE_COMMON_SHANTY:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_SHANTY) + 2);
+        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_SHANTY) + 2);
         break;
 
     case BUILDING_HOUSE_ROUGH_COTTAGE:

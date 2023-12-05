@@ -16,15 +16,6 @@
 
 #define MAX_DIR 4
 
-// #define OFFSET_C3(x,y) (x + GRID_SIZE_C3 * y)
-// #define OFFSET_PH(x,y) (x + GRID_SIZE_PH * y)
-
-// static const int HOUSE_TILE_OFFSETS_C3[] = {
-//         OFFSET_C3(0, 0), OFFSET_C3(1, 0), OFFSET_C3(0, 1), OFFSET_C3(1, 1), // 2x2
-//         OFFSET_C3(2, 0), OFFSET_C3(2, 1), OFFSET_C3(2, 2), OFFSET_C3(1, 2), OFFSET_C3(0, 2), // 3x3
-//         OFFSET_C3(3, 0), OFFSET_C3(3, 1), OFFSET_C3(3, 2), OFFSET_C3(3, 3), OFFSET_C3(2, 3), OFFSET_C3(1, 3),
-//         OFFSET_C3(0, 3) // 4x4
-// };
 static const int HOUSE_TILE_OFFSETS_PH[] = {
   GRID_OFFSET(0, 0),
   GRID_OFFSET(1, 0),
@@ -52,8 +43,8 @@ struct house_image_t : public image_desc {
 const house_image_t HOUSE_IMAGE[20] = {
     {0, 0, 0, 2, IMG_HOUSE_HUT},
     {0, 0, 2, 2, IMG_HOUSE_HUT},
-    {GROUP_BUILDING_HOUSE_SHANTY, 0, 2},
-    {GROUP_BUILDING_HOUSE_SHANTY, 2, 2},
+    {0, 0, 0, 2, IMG_HOUSE_SHANTY},
+    {0, 0, 2, 2, IMG_HOUSE_SHANTY},
     {GROUP_BUILDING_HOUSE_COTTAGE, 0, 2},
     {GROUP_BUILDING_HOUSE_COTTAGE, 2, 2},
     {GROUP_BUILDING_HOUSE_HOMESTEAD, 0, 2},
