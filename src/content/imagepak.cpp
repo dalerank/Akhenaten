@@ -397,13 +397,17 @@ bool imagepak::load_folder_pak(pcstr folder) {
 
     global_image_index_offset = 0;
     arch.load_global_section(folder, [&] (archive arch) {
-        useridx = arch.read_integer("pack");
         global_image_index_offset = arch.read_integer("global_index");
-        int start_index = arch.read_integer("start_index");
-        int finish_index = arch.read_integer("finish_index");
-        entries_num += (finish_index - start_index) + 1;
-        bmp_names[groups_num] = arch.read_string("group_name");
-        groups_num++;
+        version = arch.read_integer("version");
+        useridx = arch.read_integer("pack");
+
+        arch.read_object_array("groups", [&] (archive arch) {
+            int start_index = arch.read_integer("start_index");
+            int finish_index = arch.read_integer("finish_index");
+            entries_num += (finish_index - start_index) + 1;
+            bmp_names[groups_num] = arch.read_string("name");
+            ++groups_num;
+        });
     });
 
     assert(global_image_index_offset >= 30000);
@@ -485,17 +489,18 @@ bool imagepak::load_folder_pak(pcstr folder) {
 
     int tmp_group_id = 0;
     arch.load_global_section(folder, [&] (archive arch) {
-        pcstr prefix = arch.read_string("prefix");
-        int start_index = arch.read_integer("start_index");
-        int finish_index = arch.read_integer("finish_index");
-        version = arch.read_integer("version");
+        arch.read_object_array("groups", [&] (archive arch) {
+            pcstr prefix = arch.read_string("prefix");
+            int start_index = arch.read_integer("start_index");
+            int finish_index = arch.read_integer("finish_index");
 
-        for (int i = start_index; i <= finish_index; ++i) {
-            bstring512 name;
-            name.printf("%s%05u.png", prefix, i);
-            load_img(bstring256(foldername, "/", name), i - start_index, tmp_group_id);
-            tmp_group_id++;
-        }
+            for (int i = start_index; i <= finish_index; ++i) {
+                bstring512 name;
+                name.printf("%s%05u.png", prefix, i);
+                load_img(bstring256(foldername, "/", name), i - start_index, tmp_group_id);
+                tmp_group_id++;
+            }
+        });
     });
 
     packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;
