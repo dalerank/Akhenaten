@@ -401,6 +401,7 @@ static int place_ferry(building *b, int size, int image_id) {
 static void add_building_tiles_image(building* b, int image_id) {
     map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
 }
+
 static void add_building(building* b, int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
     switch (b->type) {
@@ -426,11 +427,11 @@ static void add_building(building* b, int orientation, int variant) {
         break;
 
     case BUILDING_HOUSE_MODEST_HOMESTEAD:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_HOMESTEAD));
+        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_HOMESTEAD));
         break;
 
     case BUILDING_HOUSE_SPACIOUS_HOMESTEAD:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_HOMESTEAD) + 2);
+        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_HOMESTEAD) + 2);
         break;
 
     case BUILDING_HOUSE_MODEST_APARTMENT:

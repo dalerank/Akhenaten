@@ -117,6 +117,9 @@ images = [
 	{img: IMG_TAX_COLLECTOR_BUILDING, pack:PACK_GENERAL, id:63, offset:0},
 	{img: IMG_TAX_COLLECTOR_BUILDING_UP, pack:PACK_GENERAL, id:64, offset:0},
 	{img: IMG_HOUSE_HUT, pack:PACK_GENERAL, id:26, offset:0},
+	{img: IMG_HOUSE_SHANTY, pack:PACK_GENERAL, id:27, offset:0},
+	{img: IMG_HOUSE_COTTAGE, pack:PACK_GENERAL, id:28, offset:0},
+	{img: IMG_HOUSE_HOMESTEAD, pack:PACK_GENERAL, id:29, offset:0},
 ]
 
 cart_offsets = [

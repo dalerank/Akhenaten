@@ -386,7 +386,7 @@ static void print_history_info(void) {
 
 static void draw_housing_button(int full_size, vec2i pos) {
     painter ctx = game.painter();
-    ImageDraw::isometric(ctx, image_id_from_group(GROUP_BUILDING_HOUSE_HOMESTEAD) + 2, pos, COLOR_MASK_NONE, 1.0f);
+    ImageDraw::isometric(ctx, image_id_from_group(IMG_HOUSE_HOMESTEAD) + 2, pos, COLOR_MASK_NONE, 1.0f);
     //    ImageDraw::isometric_top(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE);
 }
 
