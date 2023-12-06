@@ -14,6 +14,14 @@ building_info = [
   { help_id:92, type:"sandstone_quarry", text_id:194},
   { help_id:92, type:"granite_quarry", text_id:192},
   { help_id:92, type:"plainstone_quarry", text_id:118},
+  { help_id:89, type:"barley_farm", text_id:181},
+  { help_id:90, type:"flax_farm", text_id:115},
+  { help_id:90, type:"grain_farm", text_id:112},
+  { help_id:91, type:"lettuce_farm", text_id:113},
+  { help_id:91, type:"pomegranades_farm", text_id:114},
+  { help_id:90, type:"chickpeas_farm", text_id:182},
+  { help_id:90, type:"figs_farm", text_id:183},
+  { help_id:90, type:"henna_farm", text_id:306},
 ]
 
 building_booth = {

@@ -106,6 +106,11 @@ void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale, 
     draw(spr.img->atlas.p_atlas->texture, pos.x, pos.y, offset, size, color_mask, scale, mirrored);
 }
 
+sprite::sprite(e_image_id id) {
+    int image_id = image_id_from_group(id);
+    img = image_get(image_id);
+}
+
 sprite_resource_icon::sprite_resource_icon(e_resource res) {
     int image_id = image_id_resource_icon(res);
     img = image_get(image_id);

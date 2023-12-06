@@ -40,6 +40,7 @@ void config_load_scribal_school(archive arch) {
 
 static void building_education_draw_info(object_info& c, const char* type, e_figure_type ftype, e_resource resource) {
     auto &meta = building::get_info(type);
+
     c.help_id = meta.help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
     outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);

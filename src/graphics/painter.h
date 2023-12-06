@@ -3,6 +3,7 @@
 #include "core/vec2i.h"
 #include "color.h"
 #include "game/resource.h"
+#include "graphics/image_desc.h"
 
 struct figure_draw_cache_data_t;
 struct view_data_t;
@@ -12,10 +13,12 @@ struct image_t;
 
 struct sprite {
     const image_t *img = nullptr;
+    inline sprite() {}
+    sprite(e_image_id);
 };
 
 struct sprite_resource_icon : public sprite {
-    sprite_resource_icon(e_resource res);
+    sprite_resource_icon(e_resource);
 };
 
 struct painter {
