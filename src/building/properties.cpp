@@ -120,7 +120,7 @@ static building_properties properties[400] = {
     {2, 0, GROUP_BUILDING_LINEN_WORKSHOP},   // linen
     {2, 0, GROUP_BUILDING_WEAPONS_WORKSHOP}, // weapons
     {2, 0, GROUP_BUILDING_JEWELS_WORKSHOP},  // jewels
-    {2, 0, GROUP_BUILDING_POTTERY_WORKSHOP}, // pottery
+    {2, 0, 0, 0}, // pottery
 
     {2, 0, GROUP_BUILDING_HUNTING_LODGE}, // hunters
     {0, 0, 0, 0},
@@ -255,6 +255,7 @@ void building_properties_init() {
     properties[BUILDING_SCRIBAL_SCHOOL] = {2, 0, 0, 0, 0, IMG_SCRIBAL_SCHOOL};
     properties[BUILDING_TAX_COLLECTOR] = {2, 0, 0, 0, 0, IMG_TAX_COLLECTOR_BUILDING};
     properties[BUILDING_TAX_COLLECTOR_UPGRADED] = {2, 0, 0, 0, 0, IMG_TAX_COLLECTOR_BUILDING_UP};
+    properties[BUILDING_POTTERY_WORKSHOP] = {2, 0, 0, 0, 0, IMG_POTTERY_WORKSHOP};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

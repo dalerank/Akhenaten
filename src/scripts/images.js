@@ -121,6 +121,7 @@ images = [
 	{img: IMG_HOUSE_COTTAGE, pack:PACK_GENERAL, id:28, offset:0},
 	{img: IMG_HOUSE_HOMESTEAD, pack:PACK_GENERAL, id:29, offset:0},
 	{img: IMG_HOUSE_APARTMENT, pack:PACK_GENERAL, id:30, offset:0},
+	{img: IMG_POTTERY_WORKSHOP, pack:PACK_GENERAL, id:125, offset:0},
 ]
 
 cart_offsets = [
