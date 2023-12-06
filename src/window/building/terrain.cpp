@@ -13,7 +13,7 @@
 #include "building/building_plaza.h"
 
 void window_building_draw_no_people(object_info* c) {
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(70, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 }
 
@@ -69,7 +69,7 @@ void window_building_draw_terrain(object_info* c) {
         }
 
         window_building_prepare_figure_list(c);
-        outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+        outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
 
         int text_id_offset = 0;
         text_id_offset = 36;

@@ -47,7 +47,7 @@ static void init(void (*close_callback)()) {
 static void draw_foreground(void) {
     graphics_set_to_dialog();
 
-    outer_panel_draw(80, 80, 20, 14);
+    outer_panel_draw(vec2i{80, 80}, 20, 14);
     // ok/cancel labels
     label_draw(144, 232, 12, data.focus_button_id == 1 ? 1 : 2);
     label_draw(144, 262, 12, data.focus_button_id == 2 ? 1 : 2);

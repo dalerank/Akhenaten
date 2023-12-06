@@ -69,7 +69,7 @@ static void draw_priority_buttons(int x, int y, int buttons) {
 void window_building_draw_wall(object_info* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/wall.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(139, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 139, 1);
 }
@@ -77,7 +77,7 @@ void window_building_draw_wall(object_info* c) {
 void window_building_draw_ferry(object_info* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/gatehouse.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(e_text_ferry_landing, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     building *ferry = building_get(c->building_id);
     if (!map_routing_ferry_has_routes(ferry)) {
@@ -92,7 +92,7 @@ void window_building_draw_ferry(object_info* c) {
 void window_building_draw_gatehouse(object_info* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/gatehouse.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(e_text_gate_house, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 90, 1);
 }
@@ -100,7 +100,7 @@ void window_building_draw_gatehouse(object_info* c) {
 void window_building_draw_tower(object_info* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/tower.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(e_text_tower, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
@@ -124,7 +124,7 @@ void window_building_draw_barracks(object_info* c) {
     c->help_id = 37;
     data.building_id = c->building_id;
     window_building_play_sound(c, "wavs/barracks.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(136, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     ImageDraw::img_generic(ctx, image_id_resource_icon(military_resource), c->offset + vec2i{64, 38});
 
@@ -178,7 +178,7 @@ int window_building_handle_mouse_barracks(const mouse* m, object_info* c) {
 void window_building_draw_military_academy(object_info* c) {
     c->help_id = 88;
     window_building_play_sound(c, "wavs/mil_acad.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(135, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
@@ -198,7 +198,7 @@ void window_building_draw_military_academy(object_info* c) {
 void window_building_draw_fort(object_info* c) {
     c->help_id = 87;
     window_building_play_sound(c, "wavs/fort.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(89, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     int text_id = formation_get(c->formation_id)->cursed_by_mars ? 1 : 2;
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 89, text_id);
@@ -209,7 +209,7 @@ void window_building_draw_legion_info(object_info* c) {
     const formation* m = formation_get(c->formation_id);
     painter ctx = game.painter();
     c->help_id = 87;
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(138, m->legion_id, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     // standard icon at the top

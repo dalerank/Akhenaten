@@ -23,7 +23,7 @@ static struct {
 static void draw_foreground(void) {
     graphics_set_to_dialog();
 
-    outer_panel_draw(48, 80, 24, 12);
+    outer_panel_draw(vec2i{48, 80}, 24, 12);
 
     lang_text_draw_centered(153, 0, 48, 94, 384, FONT_LARGE_BLACK_ON_LIGHT);
 

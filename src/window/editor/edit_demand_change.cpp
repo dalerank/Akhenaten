@@ -84,7 +84,7 @@ static void draw_background(void) {
 static void draw_foreground(void) {
     graphics_set_to_dialog();
 
-    outer_panel_draw(0, 100, 40, 11);
+    outer_panel_draw(vec2i{0, 100}, 40, 11);
     lang_text_draw(44, 94, 20, 114, FONT_LARGE_BLACK_ON_LIGHT);
 
     button_border_draw(30, 152, 60, 25, data.focus_button_id == 1);

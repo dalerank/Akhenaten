@@ -46,12 +46,12 @@ static int get_max(int value1, int value2, int value3) {
 }
 
 static void draw_lost(void) {
-    outer_panel_draw(48, 16, 34, 16);
+    outer_panel_draw(vec2i{48, 16}, 34, 16);
     lang_text_draw_centered(62, 1, 48, 32, 544, FONT_LARGE_BLACK_ON_LIGHT);
     lang_text_draw_multiline(62, 16, vec2i{64, 72}, 496, FONT_NORMAL_BLACK_ON_LIGHT);
 }
 static void draw_won(void) {
-    outer_panel_draw(48, 128, 34, 18);
+    outer_panel_draw(vec2i{48, 128}, 34, 18);
     lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK_ON_LIGHT);
 
     inner_panel_draw(64, 184, 32, 7);

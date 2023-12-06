@@ -56,7 +56,7 @@ static void draw_background(void) {
 
     int dialog_width = get_dialog_width();
     int dialog_x = 160 - (dialog_width - MIN_DIALOG_WIDTH) / 2;
-    outer_panel_draw(dialog_x, 176, dialog_width / 16, 9);
+    outer_panel_draw(vec2i{dialog_x, 176}, dialog_width / 16, 9);
     lang_text_draw_centered(50, 25, 160, 185, 320, FONT_LARGE_BLACK_ON_LIGHT);
     for (int i = 0; i < 9; i++) {
         graphics_draw_rect(178 + 32 * i, 221, 27, 27, COLOR_BLACK);

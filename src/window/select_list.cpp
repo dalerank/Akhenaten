@@ -44,7 +44,7 @@ static generic_button buttons_list2[MAX_ITEMS_PER_LIST] = {
   {205, 368, 190, 18, select_item, button_none, 18, 1}, {205, 388, 190, 18, select_item, button_none, 19, 1},
 };
 
-static struct {
+struct select_list_t {
     int x;
     int y;
     int mode;
@@ -53,9 +53,12 @@ static struct {
     int num_items;
     void (*callback)(int);
     int focus_button_id;
-} data;
+};
+
+select_list_t g_select_list;
 
 static void init_group(int x, int y, int group, int num_items, void (*callback)(int)) {
+    auto &data = g_select_list;
     data.x = x;
     data.y = y;
     data.mode = MODE_GROUP;
@@ -65,6 +68,7 @@ static void init_group(int x, int y, int group, int num_items, void (*callback)(
 }
 
 static void init_text(int x, int y, uint8_t** items, int num_items, void (*callback)(int)) {
+    auto &data = g_select_list;
     data.x = x;
     data.y = y;
     data.mode = MODE_TEXT;
@@ -74,10 +78,12 @@ static void init_text(int x, int y, uint8_t** items, int num_items, void (*callb
 }
 
 static int items_in_first_list(void) {
+    auto &data = g_select_list;
     return data.num_items / 2 + data.num_items % 2;
 }
 
 static void draw_item(int item_id, int x, int y, int selected) {
+    auto &data = g_select_list;
     color color = selected ? COLOR_FONT_BLUE : COLOR_BLACK;
     if (data.mode == MODE_GROUP)
         lang_text_draw_centered_colored(data.group, item_id, data.x + x, data.y + y, 190, FONT_SMALL_PLAIN, color);
@@ -87,9 +93,10 @@ static void draw_item(int item_id, int x, int y, int selected) {
 }
 
 static void draw_foreground(void) {
+    auto &data = g_select_list;
     if (data.num_items > MAX_ITEMS_PER_LIST) {
         int max_first = items_in_first_list();
-        outer_panel_draw(data.x, data.y, 26, (20 * max_first + 24) / 16);
+        outer_panel_draw(vec2i{data.x, data.y}, 26, (20 * max_first + 24) / 16);
         for (int i = 0; i < max_first; i++) {
             draw_item(i, 5, 11 + 20 * i, i + 1 == data.focus_button_id);
         }
@@ -97,7 +104,7 @@ static void draw_foreground(void) {
             draw_item(i + max_first, 205, 11 + 20 * i, MAX_ITEMS_PER_LIST + i + 1 == data.focus_button_id);
         }
     } else {
-        outer_panel_draw(data.x, data.y, 13, (20 * data.num_items + 24) / 16);
+        outer_panel_draw(vec2i{data.x, data.y}, 13, (20 * data.num_items + 24) / 16);
         for (int i = 0; i < data.num_items; i++) {
             draw_item(i, 5, 11 + 20 * i, i + 1 == data.focus_button_id);
         }
@@ -105,6 +112,7 @@ static void draw_foreground(void) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto &data = g_select_list;
     if (data.num_items > MAX_ITEMS_PER_LIST) {
         int items_first = items_in_first_list();
         if (generic_buttons_handle_mouse(m, data.x, data.y, buttons_list1, items_first, &data.focus_button_id))
@@ -123,6 +131,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 void select_item(int id, int list_id) {
+    auto &data = g_select_list;
     window_go_back();
     if (list_id == 0)
         data.callback(id);

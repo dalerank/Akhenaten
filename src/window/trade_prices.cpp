@@ -18,7 +18,7 @@ static void draw_background() {
     graphics_set_to_dialog();
 
     graphics_shade_rect(33, 53, 574, 334, 0);
-    outer_panel_draw(16, 144, 38, 11);
+    outer_panel_draw(vec2i{16, 144}, 38, 11);
     lang_text_draw(54, 21, 26, 153, FONT_LARGE_BLACK_ON_LIGHT);
     lang_text_draw(54, 22, 26, 228, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(54, 23, 26, 253, FONT_NORMAL_BLACK_ON_LIGHT);

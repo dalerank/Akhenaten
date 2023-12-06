@@ -31,15 +31,16 @@ static generic_button category_buttons[] = {
   {40, 277, 560, 22, button_priority, button_none, 8, 0},
 };
 
-static arrow_button wage_buttons[]
-  = {{158, 354, 17, 24, arrow_button_wages, 1, 0}, {182, 354, 15, 24, arrow_button_wages, 0, 0}};
+static arrow_button wage_buttons[] = {
+    {158, 354, 17, 24, arrow_button_wages, 1, 0}, {182, 354, 15, 24, arrow_button_wages, 0, 0}
+};
 
 static int focus_button_id;
 static int arrow_button_focus;
 
 static int draw_background() {
     painter ctx = game.painter();
-    outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
+    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS), vec2i{10, 10});
 
     lang_text_draw(50, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);

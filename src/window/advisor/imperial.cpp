@@ -123,7 +123,7 @@ static int draw_background(void) {
     painter ctx = game.painter();
     city_emperor_calculate_gift_costs();
 
-    outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
+    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 2, 10, 10);
 
     text_draw(city_player_name(), 60, 12, FONT_LARGE_BLACK_ON_LIGHT, 0);

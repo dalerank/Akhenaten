@@ -55,7 +55,7 @@ static void draw_background(void) {
 static void draw_foreground(void) {
     graphics_set_to_dialog();
 
-    outer_panel_draw(16, 32, 38, 26);
+    outer_panel_draw(vec2i{16, 32}, 38, 26);
 
     lang_text_draw(44, 48, 26, 42, FONT_LARGE_BLACK_ON_LIGHT);
     lang_text_draw_centered(13, 3, 16, 424, 608, FONT_NORMAL_BLACK_ON_LIGHT);

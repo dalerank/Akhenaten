@@ -16,7 +16,7 @@ void building_plaza_draw_info(object_info &c) {
     c.help_id = 80;
     window_building_play_sound(&c, snd::get_building_info_sound("plaza"));
     window_building_prepare_figure_list(&c);
-    outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);
+    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
     lang_text_draw_centered(137, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_figure_list(&c);
     window_building_draw_description_at(c, 16 * c.height_blocks - 113, 137, 1);

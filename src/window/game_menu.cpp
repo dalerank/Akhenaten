@@ -77,7 +77,7 @@ static void draw_background() {
 }
 static void draw_foreground() {
     graphics_set_to_dialog();
-    outer_panel_draw(128, 56, 24, 19);
+    outer_panel_draw(vec2i{128, 56}, 24, 19);
 
     // title
     text_draw_centered(data.player_name_title, 170, 80, 304, FONT_LARGE_BLACK_ON_LIGHT, 0);

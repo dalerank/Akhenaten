@@ -113,7 +113,7 @@ static int draw_background() {
     city_gods_update(true);
     city_culture_calculate();
 
-    outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
+    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 8, vec2i{10, 10});
 
     lang_text_draw(58, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);

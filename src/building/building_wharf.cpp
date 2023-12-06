@@ -19,7 +19,7 @@ void building_wharf_draw_info(object_info &c) {
 
     c.help_id = 84;
     window_building_play_sound(&c, snd::get_building_info_sound("wharf"));
-    outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);
+    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
     lang_text_draw_centered(102, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_FIGS) + resource_image_offset(RESOURCE_FIGS, RESOURCE_IMAGE_ICON), c.offset.x + 10, c.offset.y + 10);
 

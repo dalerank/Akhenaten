@@ -30,7 +30,7 @@ static int get_health_advice() {
 }
 
 static int draw_background() {
-    outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
+    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
 

@@ -36,7 +36,7 @@ static void draw_background() {
 
     graphics_set_to_dialog();
 
-    outer_panel_draw(96, 144, 30, 15);
+    outer_panel_draw(vec2i{96, 144}, 30, 15);
     painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), vec2i{112, 160});
     lang_text_draw_centered(52, 69, 144, 160, 416, FONT_LARGE_BLACK_ON_LIGHT);

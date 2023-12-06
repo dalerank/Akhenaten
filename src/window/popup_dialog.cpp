@@ -57,7 +57,7 @@ static void draw_background(void) {
 
     window_draw_underlying_window();
     graphics_set_to_dialog();
-    outer_panel_draw(80, 80, 30, 10);
+    outer_panel_draw(vec2i{80, 80}, 30, 10);
     if (data.popup_text_offset >= 0) {
         lang_text_draw_centered(GROUP, data.popup_text_offset, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
         if (lang_text_get_width(GROUP, data.popup_text_offset + 1, FONT_NORMAL_BLACK_ON_LIGHT) >= 420)

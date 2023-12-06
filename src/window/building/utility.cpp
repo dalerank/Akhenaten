@@ -46,7 +46,7 @@ void window_building_draw_firehouse(object_info* c) {
     const int32_t LANG_GROUP_ID = 164;
     c->help_id = 81;                                      // TODO: change to firehouse
     window_building_play_sound(c, "wavs/prefecture.wav"); // TODO: change to firehouse
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(LANG_GROUP_ID, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
@@ -78,7 +78,7 @@ void window_building_draw_firehouse(object_info* c) {
 void window_building_draw_prefect(object_info* c) {
     c->help_id = 86;
     window_building_play_sound(c, "wavs/prefecture.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(88, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
@@ -111,7 +111,7 @@ void window_building_draw_prefect(object_info* c) {
 void window_building_draw_roadblock(object_info* c) {
     c->help_id = 0;
     window_building_play_sound(c, "wavs/prefecture.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(28, 115, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     building* b = building_get(c->building_id);
     window_building_draw_description(c, 28, 116);
@@ -123,7 +123,7 @@ void window_building_draw_roadblock_foreground(object_info* c) {
 void window_building_draw_roadblock_orders(object_info* c) {
     c->help_id = 3;
     int y_offset = window_building_get_vertical_offset(c, 28);
-    outer_panel_draw(c->offset.x, y_offset, 29, 28);
+    outer_panel_draw(vec2i{c->offset.x, y_offset}, 29, 28);
     lang_text_draw_centered(28, 115, c->offset.x, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(c->offset.x + 16, y_offset + 42, c->width_blocks - 2, 21);
 }
@@ -158,7 +158,7 @@ void window_building_draw_roadblock_orders_foreground(object_info* c) {
 void window_building_draw_burning_ruin(object_info* c) {
     c->help_id = 0;
     window_building_play_sound(c, "wavs/ruin.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(111, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     lang_text_draw(41, c->rubble_building_type, c->offset.x + 32, c->offset.y + 16 * c->height_blocks - 173, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -167,7 +167,7 @@ void window_building_draw_burning_ruin(object_info* c) {
 void window_building_draw_rubble(object_info* c) {
     c->help_id = 0;
     window_building_play_sound(c, "wavs/ruin.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(140, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     lang_text_draw(41, c->rubble_building_type, c->offset.x + 32, c->offset.y + 16 * c->height_blocks - 173, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -177,7 +177,7 @@ void window_building_draw_rubble(object_info* c) {
 void window_building_draw_water_lift(object_info* c) {
     c->help_id = 59;
     window_building_play_sound(c, "wavs/resevoir.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(107, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
@@ -197,14 +197,14 @@ void window_building_draw_water_lift(object_info* c) {
 void window_building_draw_aqueduct(object_info* c) {
     c->help_id = 60;
     window_building_play_sound(c, "wavs/aquaduct.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(141, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 16 * c->height_blocks - 144, 141, c->aqueduct_has_water ? 1 : 2);
 }
 void window_building_draw_fountain(object_info* c) {
     c->help_id = 61;
     window_building_play_sound(c, "wavs/fountain.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(108, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     int text_id;
     building* b = building_get(c->building_id);
@@ -224,7 +224,7 @@ void window_building_draw_fountain(object_info* c) {
 void window_building_draw_water_supply(object_info* c) {
     c->help_id = 61;
     window_building_play_sound(c, "wavs/fountain.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(108, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
@@ -255,7 +255,7 @@ void window_building_draw_water_supply(object_info* c) {
 void window_building_draw_well(object_info* c) {
     c->help_id = 62;
     window_building_play_sound(c, "wavs/well.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(109, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     int well_necessity = map_water_supply_is_well_unnecessary(c->building_id, 2);
     int text_id = 0;
@@ -272,7 +272,7 @@ void window_building_draw_well(object_info* c) {
 void window_building_draw_mission_post(object_info* c) {
     c->help_id = 8;
     window_building_play_sound(c, "wavs/mission.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(134, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description(c, 134, 1);
     inner_panel_draw(c->offset.x + 16, c->offset.y + 136, c->width_blocks - 2, 4);
@@ -282,7 +282,7 @@ void window_building_draw_mission_post(object_info* c) {
 static void draw_native(object_info* c, int group_id) {
     c->help_id = 0;
     window_building_play_sound(c, "wavs/empty_land.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(group_id, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 106, group_id, 1);
 }

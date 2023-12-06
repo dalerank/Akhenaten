@@ -38,7 +38,7 @@ static void draw_foreground(void) {
     auto& data = g_display_options_data;
     graphics_set_to_dialog();
 
-    outer_panel_draw(96, 80, 18, 12);
+    outer_panel_draw(vec2i{96, 80}, 18, 12);
 
     label_draw(128, 136, 14, data.focus_button_id == 1 ? 1 : 2);
     label_draw(128, 160, 14, data.focus_button_id == 2 ? 1 : 2);

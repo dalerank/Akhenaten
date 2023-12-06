@@ -125,7 +125,7 @@ static void draw_foreground() {
     auto& data = *g_window_player_selection;
     graphics_set_to_dialog();
 
-    outer_panel_draw(128, 40, 24, 21);
+    outer_panel_draw(vec2i{128, 40}, 24, 21);
 
     // title
     lang_text_draw_centered(292, 3, 160, 60, 304, FONT_LARGE_BLACK_ON_LIGHT);

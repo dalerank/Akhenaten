@@ -61,7 +61,7 @@ static int draw_background() {
     painter ctx = game.painter();
     city_resource_determine_available();
 
-    outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
+    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 4, 10, 10);
 
     lang_text_draw(54, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);

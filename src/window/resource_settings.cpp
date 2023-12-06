@@ -81,7 +81,7 @@ static void draw_foreground(void) {
     painter ctx = game.painter();
     graphics_set_to_dialog();
 
-    outer_panel_draw(32, 128, 36, 15);
+    outer_panel_draw(vec2i{32, 128}, 36, 15);
     int image_offset = data.resource + resource_image_offset(data.resource, RESOURCE_IMAGE_ICON);
     ImageDraw::img_generic(ctx, image_id_resource_icon(image_offset), 58 - 16, 136);
     lang_text_draw(23, data.resource, 92 - 16, 137, FONT_LARGE_BLACK_ON_LIGHT);

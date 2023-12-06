@@ -42,7 +42,7 @@ static void init() {
 
 static void draw_foreground() {
     graphics_set_to_dialog();
-    outer_panel_draw(128, 160, 24, 8);
+    outer_panel_draw(vec2i{128, 160}, 24, 8);
     lang_text_draw_centered(31, 0, 128, 172, 384, FONT_LARGE_BLACK_ON_LIGHT);
     lang_text_draw(13, 5, 352, 256, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(12, 0, 200, 256, FONT_NORMAL_BLACK_ON_LIGHT);

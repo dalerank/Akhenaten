@@ -394,7 +394,7 @@ static int draw_background() {
     painter ctx = game.painter();
     int width;
 
-    outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
+    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
 
     int graph_order = city_population_graph_order();

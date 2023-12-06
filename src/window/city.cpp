@@ -72,11 +72,11 @@ static void draw_paused_and_time_left() {
         text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK_ON_LIGHT);
         //        city_view_dirty = 1;
     }
+
     if (game_state_is_paused()) {
-        int x_offset = center_in_city(448);
-        outer_panel_draw(x_offset, 40, 28, 3);
-        lang_text_draw_centered(13, 2, x_offset, 58, 448, FONT_NORMAL_BLACK_ON_LIGHT);
-        //        city_view_dirty = 1;
+        vec2i offset{center_in_city(448), 40};
+        outer_panel_draw(offset, 28, 3);
+        lang_text_draw_centered(13, 2, offset.x, 58, 448, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
 static void draw_cancel_construction() {

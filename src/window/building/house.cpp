@@ -18,7 +18,7 @@
 
 static void draw_vacant_lot(object_info* c) {
     window_building_prepare_figure_list(c);
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(128, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_figure_list(c);
 
@@ -94,7 +94,7 @@ void window_building_draw_house(object_info* c) {
     }
 
     int level = b->type - 10;
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(29, level, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(c->offset.x + 16, c->offset.y + 148, c->width_blocks - 2, 10);
 

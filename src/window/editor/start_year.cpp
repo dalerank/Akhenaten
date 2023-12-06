@@ -32,7 +32,7 @@ static void draw_background(void) {
 static void draw_foreground(void) {
     graphics_set_to_dialog();
 
-    outer_panel_draw(128, 44, 20, 10);
+    outer_panel_draw(vec2i{128, 44}, 20, 10);
 
     lang_text_draw_centered(44, 13, 138, 56, 320, FONT_LARGE_BLACK_ON_LIGHT);
     lang_text_draw_centered(13, 3, 128, 178, 320, FONT_NORMAL_BLACK_ON_LIGHT);

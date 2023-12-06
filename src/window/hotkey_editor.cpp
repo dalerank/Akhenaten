@@ -41,7 +41,7 @@ static void init(int action, int index, void (*callback)(int, int, int, int)) {
 
 static void draw_background(void) {
     graphics_set_to_dialog();
-    outer_panel_draw(168, 128, 19, 9);
+    outer_panel_draw(vec2i{168, 128}, 19, 9);
 
     text_draw_centered(translation_for(TR_HOTKEY_EDIT_TITLE), 176, 144, 296, FONT_LARGE_BLACK_ON_LIGHT, 0);
 

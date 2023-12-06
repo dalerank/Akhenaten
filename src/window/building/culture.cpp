@@ -10,7 +10,7 @@
 void window_building_draw_oracle(object_info* c) {
     c->help_id = 67;
     window_building_play_sound(c, "wavs/oracle.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(110, 0, c->offset.x, c->offset.y + 12, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 110, 1);
 }
@@ -18,7 +18,7 @@ void window_building_draw_oracle(object_info* c) {
 void window_building_draw_pavilion(object_info* c) {
     c->help_id = 73;
     window_building_play_sound(c, "wavs/colloseum.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(74, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     building* b = building_get(c->building_id);
 
@@ -54,7 +54,7 @@ void window_building_draw_pavilion(object_info* c) {
 void window_building_draw_senet_house(object_info* c) {
     c->help_id = 74;
     window_building_play_sound(c, "wavs/hippodrome.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(73, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     building* b = building_get(c->building_id);
     if (!c->has_road_access)
@@ -82,6 +82,6 @@ void window_building_draw_festival_square(object_info* c) {
     c->help_id = 75;
     window_building_play_sound(c, "wavs/prefecture.wav"); // TODO: change to festival square
 
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(group_id, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 }

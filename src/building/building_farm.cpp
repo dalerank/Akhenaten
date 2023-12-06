@@ -29,7 +29,7 @@ static void building_farm_draw_info(object_info &c, const char* type, e_resource
     c.help_id = meta.help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
-    outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);
+    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
     ctx.draw(sprite_resource_icon(resource), c.offset + vec2i{10, 10});
     lang_text_draw_centered(meta.text_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 

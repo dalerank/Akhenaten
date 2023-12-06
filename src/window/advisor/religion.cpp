@@ -151,10 +151,10 @@ static int draw_background() {
     painter ctx = game.painter();
     if (g_settings.gods_enabled) {
         height_blocks = 27; // 17
-        outer_panel_draw(0, 0, 40, height_blocks);
+        outer_panel_draw(vec2i{0, 0}, 40, height_blocks);
     } else {
         height_blocks = 27; // 20
-        outer_panel_draw(0, 0, 40, height_blocks);
+        outer_panel_draw(vec2i{0, 0}, 40, height_blocks);
         lang_text_draw_multiline(59, 43, vec2i{60, 256}, 520, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 

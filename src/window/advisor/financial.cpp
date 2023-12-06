@@ -27,7 +27,7 @@ static void draw_row(int group, int number, int* y, int value_last_year, int val
 }
 static int draw_background() {
     painter ctx = game.painter();
-    outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
+    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 10, vec2i{10, 10});
 
     lang_text_draw(60, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);

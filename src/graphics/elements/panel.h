@@ -1,12 +1,13 @@
 #pragma once
 
 #include <cstdint>
+#include "core/vec2i.h"
 
 #define DEFAULT_BLOCK_SIZE 16
 
 struct painter;
 
-void outer_panel_draw(int x, int y, int width_blocks, int height_blocks);
+void outer_panel_draw(vec2i pos, int width_blocks, int height_blocks);
 
 void inner_panel_draw(int x, int y, int width_blocks, int height_blocks);
 

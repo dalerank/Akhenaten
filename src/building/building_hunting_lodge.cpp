@@ -21,7 +21,7 @@ void building_hunting_lodge_draw_info(object_info &c) {
     c.help_id = 90;
     window_building_play_sound(&c, snd::get_building_info_sound("hunting_lodge"));
 
-    outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);
+    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);

@@ -17,7 +17,7 @@ void building_work_camp_draw_info(object_info &c) {
     const int32_t group_id = 179;
     c.help_id = 81;
     window_building_play_sound(&c, snd::get_building_info_sound("work_camp")); // TODO: change to work_camp
-    outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);
+    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);

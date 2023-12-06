@@ -257,7 +257,7 @@ int window_building_handle_mouse_dock_orders(const mouse* m, object_info* c) {
 void window_building_draw_dock(object_info* c) {
     c->help_id = 83;
     window_building_play_sound(c, "wavs/dock.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(101, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
@@ -297,7 +297,7 @@ void window_building_draw_dock_foreground(object_info* c) {
 void window_building_draw_dock_orders(object_info* c) {
     c->help_id = 83;
     int y_offset = window_building_get_vertical_offset(c, 28);
-    outer_panel_draw(c->offset.x, y_offset, 29, 28);
+    outer_panel_draw(vec2i{c->offset.x, y_offset}, 29, 28);
     lang_text_draw_centered(101, 0, c->offset.x, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(c->offset.x + 16, y_offset + 42, c->width_blocks - 2, 21);
 }
@@ -354,7 +354,7 @@ void window_building_handle_mouse_market_orders(const mouse* m, object_info* c) 
 void window_building_draw_market(object_info* c) {
     c->help_id = 2;
     window_building_play_sound(c, "wavs/market.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(97, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     building* b = building_get(c->building_id);
     painter ctx = game.painter();
@@ -433,7 +433,7 @@ void window_building_draw_market_foreground(object_info* c) {
 void window_building_draw_market_orders(object_info* c) {
     c->help_id = 2;
     int y_offset = window_building_get_vertical_offset(c, 28 - 11);
-    outer_panel_draw(c->offset.x, y_offset, 29, 28 - 11);
+    outer_panel_draw(vec2i{c->offset.x, y_offset}, 29, 28 - 11);
     lang_text_draw_centered(97, 7, c->offset.x, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(c->offset.x + 16, y_offset + 42, c->width_blocks - 2, 21 - 10);
 }
@@ -515,7 +515,7 @@ void window_building_draw_granary(object_info* c) {
     c->help_id = 3;
     data.building_id = c->building_id;
     window_building_play_sound(c, "wavs/granary.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(98, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     building* b = building_get(c->building_id);
     if (!c->has_road_access) {
@@ -579,7 +579,7 @@ void window_building_draw_granary_foreground(object_info* c) {
 void window_building_draw_granary_orders(object_info* c) {
     c->help_id = 3;
     int y_offset = window_building_get_vertical_offset(c, 28 - 15);
-    outer_panel_draw(c->offset.x, y_offset, 29, 28 - 15);
+    outer_panel_draw(vec2i{c->offset.x, y_offset}, 29, 28 - 15);
     lang_text_draw_centered(98, 6, c->offset.x, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(c->offset.x + 16, y_offset + 42, c->width_blocks - 2, 21 - 15);
 }
@@ -693,7 +693,7 @@ void window_building_draw_warehouse(object_info* c) {
     auto &data = g_window_building_distribution;
     c->help_id = 4;
     window_building_play_sound(c, "wavs/warehouse.wav");
-    outer_panel_draw(c->offset.x, c->offset.y, c->width_blocks, c->height_blocks);
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(99, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     building* b = building_get(c->building_id);
     painter ctx = game.painter();
@@ -791,7 +791,7 @@ void window_building_draw_warehouse_foreground(object_info* c) {
 void window_building_draw_warehouse_orders(object_info* c) {
     int y_offset = window_building_get_vertical_offset(c, 28 + 5);
     c->help_id = 4;
-    outer_panel_draw(c->offset.x, y_offset, 29, 28 + 5);
+    outer_panel_draw(vec2i{c->offset.x, y_offset}, 29, 28 + 5);
     lang_text_draw_centered(99, 3, c->offset.x, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(c->offset.x + 16, y_offset + 42, c->width_blocks - 2, 21 + 5);
 }

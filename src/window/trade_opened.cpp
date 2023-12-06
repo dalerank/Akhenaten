@@ -26,7 +26,7 @@ static void draw_background(void) {
     window_draw_underlying_window();
     graphics_set_to_dialog();
 
-    outer_panel_draw(80, 64, 30, 14);
+    outer_panel_draw(vec2i{80, 64}, 30, 14);
     lang_text_draw_centered(142, 0, 80, 80, 480, FONT_LARGE_BLACK_ON_LIGHT);
     if (empire_city_get(selected_city)->is_sea_trade) {
         lang_text_draw_multiline(142, 1, vec2i{112, 120}, 416, FONT_NORMAL_BLACK_ON_LIGHT);

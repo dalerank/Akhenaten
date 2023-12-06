@@ -18,7 +18,7 @@ static void building_shrine_draw_info(object_info& c, const char* type, int text
     painter ctx = game.painter();
     c.help_id = 67;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
-    outer_panel_draw(c.offset.x, c.offset.y, c.width_blocks, c.height_blocks);
+    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
     lang_text_draw_centered(161, text_id, c.offset.x, c.offset.y + 12, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     if (c.has_road_access) {

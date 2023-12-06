@@ -27,7 +27,7 @@ static void draw_background(void) {
     window_draw_underlying_window();
     graphics_set_to_dialog();
 
-    outer_panel_draw(48, 128, 34, 15);
+    outer_panel_draw(vec2i{48, 128}, 34, 15);
     if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
         lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK_ON_LIGHT);
         lang_text_draw_centered(62, 2, 48, 175, 544, FONT_NORMAL_BLACK_ON_LIGHT);

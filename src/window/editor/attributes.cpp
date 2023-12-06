@@ -95,7 +95,7 @@ static void draw_background(void) {
 static void draw_foreground() {
     painter ctx = game.painter();
     graphics_set_to_dialog();
-    outer_panel_draw(0, 28, 30, 28);
+    outer_panel_draw(vec2i{0, 28}, 30, 28);
 
     input_box_draw(&scenario_description_input);
 

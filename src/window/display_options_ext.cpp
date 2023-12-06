@@ -88,7 +88,7 @@ static void button_fullscreen(int param1, int param2) {
 static void draw_foreground() {
     auto& data = g_display_options_ext;
     graphics_set_to_dialog();
-    outer_panel_draw(128, 40, 24, 21);
+    outer_panel_draw(vec2i{128, 40}, 24, 21);
 
     // title
     lang_text_draw_centered(e_text_display_options, 0, 160, 50, 304, FONT_LARGE_BLACK_ON_LIGHT);

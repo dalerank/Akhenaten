@@ -70,7 +70,7 @@ static void draw_background() {
     int text_id = 200 + scenario_campaign_scenario_id();
     const lang_message* msg = lang_get_message(text_id);
 
-    outer_panel_draw(16, 32, 38, 27);
+    outer_panel_draw(vec2i{16, 32}, 38, 27);
     text_draw(msg->title.text, 32, 48, FONT_LARGE_BLACK_ON_LIGHT, 0);
     text_draw(msg->subtitle.text, 32, 78, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 

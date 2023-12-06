@@ -4,7 +4,7 @@
 #include "graphics/view/view.h"
 #include "game/game.h"
 
-void outer_panel_draw(int x, int y, int width_blocks, int height_blocks) {
+void outer_panel_draw(vec2i pos, int width_blocks, int height_blocks) {
     int image_base = image_id_from_group(GROUP_DIALOG_BACKGROUND);
     int image_id;
     int image_y = 0;
@@ -41,7 +41,7 @@ void outer_panel_draw(int x, int y, int width_blocks, int height_blocks) {
                 }
                 y_add = 0;
             }
-            ImageDraw::img_generic(ctx, image_base + image_id, vec2i{x + 16 * xx, y + 16 * yy});
+            ImageDraw::img_generic(ctx, image_base + image_id, pos + vec2i{16 * xx, 16 * yy});
             if (image_x >= 10) {
                 image_x = 0;
             }
@@ -51,6 +51,7 @@ void outer_panel_draw(int x, int y, int width_blocks, int height_blocks) {
             image_y = 0;
     }
 }
+
 void unbordered_panel_draw(int x, int y, int width_blocks, int height_blocks) {
     int image_base = image_id_from_group(GROUP_DIALOG_BACKGROUND);
     int image_y = 0;

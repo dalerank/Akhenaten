@@ -193,7 +193,7 @@ static void draw_background() {
 
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_CONFIG_BACKGROUND));
     graphics_set_to_dialog();
-    outer_panel_draw(0, 0, 40, 30);
+    outer_panel_draw(vec2i{0, 0}, 40, 30);
 
     text_draw_centered(translation_for(TR_HOTKEY_TITLE), 16, 16, 608, FONT_LARGE_BLACK_ON_LIGHT, 0);
 

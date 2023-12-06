@@ -416,7 +416,7 @@ static void draw_background_normal(void) {
     data.x = msg->x;
     data.y = msg->y;
     data.x_text = data.x + 16;
-    outer_panel_draw(data.x, data.y, msg->width_blocks, msg->height_blocks);
+    outer_panel_draw(vec2i{data.x, data.y}, msg->width_blocks, msg->height_blocks);
 
     draw_title(msg);
     draw_subtitle(msg);
@@ -445,7 +445,7 @@ static void draw_background_image() {
         lines_required = rich_text_draw(msg->content.text, 0, 0, 384, lines_available, 1);
     }
 
-    outer_panel_draw(data.x, data.y, 26, 28);
+    outer_panel_draw(vec2i{data.x, data.y}, 26, 28);
     graphics_draw_rect(data.x + 7, data.y + 7, 402, 294, COLOR_BLACK);
 
     int y_base = data.y + 308;
@@ -528,7 +528,7 @@ static void draw_background_video() {
         lines_required = rich_text_draw(msg->content.text, 0, 0, 384, lines_available, 1);
     }
 
-    outer_panel_draw(data.x, data.y, 26, 28);
+    outer_panel_draw(vec2i{data.x, data.y}, 26, 28);
     graphics_draw_rect(data.x + 7, data.y + 7, 402, 294, COLOR_BLACK);
 
     int y_base = data.y + 308;

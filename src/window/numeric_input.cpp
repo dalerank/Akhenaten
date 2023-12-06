@@ -31,7 +31,7 @@ static generic_button buttons[] = {{21, 51, 25, 25, button_number, button_none, 
                                    {51, 141, 55, 25, button_accept, button_none, 1, 0},
                                    {21, 171, 85, 25, button_cancel, button_none, 1, 0}};
 
-static struct {
+struct numeric_input_t : public vec2i {
     int x;
     int y;
     int max_digits;
@@ -41,9 +41,12 @@ static struct {
     int num_digits;
     int value;
     int focus_button_id;
-} data;
+};
+
+numeric_input_t g_numeric_input;
 
 static void init(int x, int y, int max_digits, int max_value, void (*callback)(int)) {
+    auto &data = g_numeric_input;
     data.x = x;
     data.y = y;
     data.max_digits = max_digits;
@@ -69,8 +72,9 @@ static void draw_number_button(int x, int y, int number, int is_selected) {
     text_draw_centered(number_string, x, y, 25, FONT_NORMAL_BLUE, color);
 }
 
-static void draw_foreground(void) {
-    outer_panel_draw(data.x, data.y, 8, 14);
+static void draw_foreground() {
+    auto &data = g_numeric_input;
+    outer_panel_draw(data, 8, 14);
 
     graphics_fill_rect(data.x + 16, data.y + 16, 96, 30, COLOR_BLACK);
     if (data.num_digits > 0)
@@ -95,8 +99,10 @@ static void draw_foreground(void) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto &data = g_numeric_input;
     if (generic_buttons_handle_mouse(m, data.x, data.y, buttons, 12, &data.focus_button_id))
         return;
+
     if (input_go_back_requested(m, h))
         close();
 
@@ -117,6 +123,7 @@ static void button_cancel(int param1, int param2) {
 }
 
 static void input_number(int number) {
+    auto &data = g_numeric_input;
     if (data.num_digits < data.max_digits) {
         data.value = data.value * 10 + number;
         data.num_digits++;
@@ -124,7 +131,9 @@ static void input_number(int number) {
     }
 }
 
-static void input_accept(void) {
+static void input_accept() {
+    auto &data = g_numeric_input;
+
     close();
     if (data.value > data.max_value)
         data.value = data.max_value;

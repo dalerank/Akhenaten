@@ -32,7 +32,7 @@ static int init(int title, int message) {
 
 static void draw_background(void) {
     graphics_set_to_dialog();
-    outer_panel_draw(80, 80, 30, 12);
+    outer_panel_draw(vec2i{80, 80}, 30, 12);
     text_draw_centered(data.title, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT, 0);
     text_draw_multiline(data.message, 100, 140, 450, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     graphics_reset_dialog();

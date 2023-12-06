@@ -156,7 +156,7 @@ static void draw_foreground(void) {
     graphics_set_to_dialog();
     uint8_t file[MAX_FILE_NAME] = {0};
 
-    outer_panel_draw(128, 40, 24, 21);
+    outer_panel_draw(vec2i{128, 40}, 24, 21);
     input_box_draw(&file_name_input);
 
     // title

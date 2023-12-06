@@ -71,7 +71,7 @@ static void draw_foreground(void) {
     auto &data = g_sound_options;
     graphics_set_to_dialog();
 
-    outer_panel_draw(48, 80, 24, 18);
+    outer_panel_draw(vec2i{48, 80}, 24, 18);
 
     // on/off labels
     label_draw(64, 162, 14, data.focus_button_id == 1 ? 1 : 2);

@@ -81,7 +81,7 @@ static void draw_background(void) {
 
     graphics_set_to_dialog();
 
-    outer_panel_draw(48, 48, 34, 20);
+    outer_panel_draw(vec2i{48, 48}, 34, 20);
     lang_text_draw_centered(58, 25 + city_festival_selected_god(), 48, 60, 544, FONT_LARGE_BLACK_ON_LIGHT);
     for (int god = 0; god < MAX_GODS; god++) {
         if (god == city_festival_selected_god()) {
