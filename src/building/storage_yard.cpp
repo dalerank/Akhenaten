@@ -67,8 +67,9 @@ int building_storageyard_add_resource(building* b, e_resource resource, int amou
         return -1;
 
     building* main = b->main();
-    if (building_storageyard_is_not_accepting(resource, main))
+    if (building_storageyard_is_not_accepting(resource, main)) {
         return -1;
+    }
 
     // check the initial provided space itself, first
     bool look_for_space = false;
@@ -107,9 +108,10 @@ int building_storageyard_add_resource(building* b, e_resource resource, int amou
         int unloading_amount = std::min<int>(space_on_tile, amount_left);
         b->stored_full_amount += unloading_amount;
         space_on_tile -= unloading_amount;
-        if (space_on_tile == 0)
+        if (space_on_tile == 0) {
             look_for_space = true;
-        tutorial_on_add_to_storageyard();
+        }
+        
         building_storageyard_space_set_image(b, resource);
         amount_last_turn = amount_left;
         amount_left -= unloading_amount;
@@ -236,17 +238,13 @@ constexpr int QUARTER_WAREHOUSE = 800;
 bool building_storageyard_is_accepting(e_resource resource, building* b) {
     const building_storage* s = building_storage_get(b->storage_id);
     int amount = building_storageyard_get_amount(b, resource);
-    if ((s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT
-         && s->resource_max_accept[resource] == FULL_WAREHOUSE)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT
-            && s->resource_max_accept[resource] >= THREEQ_WAREHOUSE && amount < THREEQ_WAREHOUSE)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT
-            && s->resource_max_accept[resource] >= HALF_WAREHOUSE && amount < HALF_WAREHOUSE)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT
-            && s->resource_max_accept[resource] >= QUARTER_WAREHOUSE && amount < QUARTER_WAREHOUSE))
-        return true;
-    else
-        return false;
+    bool accepting = (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT);
+    bool fool_storage = (s->resource_max_accept[resource] == FULL_WAREHOUSE);
+    bool threeq_storage = (s->resource_max_accept[resource] >= THREEQ_WAREHOUSE && amount < THREEQ_WAREHOUSE);
+    bool half_storage = (s->resource_max_accept[resource] >= HALF_WAREHOUSE && amount < HALF_WAREHOUSE);
+    bool quart_storage = (s->resource_max_accept[resource] >= QUARTER_WAREHOUSE && amount < QUARTER_WAREHOUSE);
+
+    return (accepting && (fool_storage || threeq_storage || half_storage || quart_storage));
 }
 
 bool building_storageyard_is_getting(e_resource resource, building* b) {

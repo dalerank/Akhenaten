@@ -35,14 +35,13 @@ struct tutorial_flags_t {
     struct {
         bool spacious_apartment;
         bool papyrus_made;
+        bool bricks_bought;
     } tutorial_5;
 
     struct {
         bool flags[41];
         //
         bool crime;
-
-        bool bricks_bought;
 
         bool tut5_can_trade_finally;
 
@@ -83,11 +82,11 @@ int tutorial_handle_collapse();
 void tutorial_on_crime();
 void tutorial_on_disease();
 void tutorial_on_filled_granary(int quantity);
-void tutorial_on_add_to_storageyard();
 void tutorial_on_gold_extracted();
 void tutorial_on_religion();
 void tutorial_on_house_evolve(e_house_level level);
 
+void tutorial_check_resources_on_storageyard();
 void tutorial_starting_message();
 
 void tutorial_on_day_tick();

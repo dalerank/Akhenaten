@@ -46,7 +46,7 @@ static void set_all_tut_flags_null() {
 
     g_tutorials_flags.tutorial_5.spacious_apartment = 0;
     g_tutorials_flags.tutorial_5.papyrus_made = 0;
-    g_tutorials_flags.pharaoh.bricks_bought = 0;
+    g_tutorials_flags.tutorial_5.bricks_bought = 0;
 
     g_tutorials_flags.pharaoh.tut1_start = 0;
     g_tutorials_flags.pharaoh.tut3_start = 0;
@@ -93,9 +93,9 @@ void tutorial_init() {
     // tut5
     g_tutorials_flags.tutorial_5.spacious_apartment = tut_passed[4];
     g_tutorials_flags.tutorial_5.papyrus_made = tut_passed[4];
+    g_tutorials_flags.tutorial_5.bricks_bought = tut_passed[4];
 
     g_tutorials_flags.pharaoh.flags[8] = tut_passed[4];
-    g_tutorials_flags.pharaoh.bricks_bought = tut_passed[4];
 
     //
     g_tutorials_flags.pharaoh.tut1_start = tut_passed[0];
@@ -215,7 +215,7 @@ void tutorial_menu_update(int tut) {
         building_menu_update(BUILDSET_TUT5_START);
         if (g_tutorials_flags.tutorial_5.spacious_apartment) building_menu_update(BUILDSET_TUT5_EDUCATION);
         if (g_tutorials_flags.tutorial_5.papyrus_made) building_menu_update(BUILDSET_TUT5_TRADING);
-        if (g_tutorials_flags.pharaoh.bricks_bought) building_menu_update(BUILDING_MENU_MONUMENTS);
+        if (g_tutorials_flags.tutorial_5.bricks_bought) building_menu_update(BUILDING_MENU_MONUMENTS);
 
     } else if (tut == 6) {
         building_menu_update(BUILDSET_TUT6_START);
@@ -277,7 +277,7 @@ int tutorial_get_immediate_goal_text(void) {
             return 31;
         } else if (!g_tutorials_flags.tutorial_5.papyrus_made) {
             return 30;
-        } else if (!g_tutorials_flags.pharaoh.bricks_bought) {
+        } else if (!g_tutorials_flags.tutorial_5.bricks_bought) {
             return 29;
         } else {
             return 34;
@@ -359,7 +359,7 @@ void tutorial_on_filled_granary(int quantity) {
     }
 }
 
-void tutorial_on_add_to_storageyard() {
+void tutorial_check_resources_on_storageyard() {
     if (!g_tutorials_flags.tutorial_3.pottery_made && city_resource_count(RESOURCE_POTTERY) >= 1) {
         g_tutorials_flags.tutorial_3.pottery_made = true;
         g_tutorials_flags.tutorial_3.pottery_made_year = game_time_year();
@@ -377,8 +377,8 @@ void tutorial_on_add_to_storageyard() {
         g_tutorials_flags.tutorial_5.papyrus_made = 1;
         building_menu_update(BUILDSET_TUT5_TRADING);
         post_message(MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES);
-    } if (!g_tutorials_flags.pharaoh.bricks_bought && city_resource_count(RESOURCE_BRICKS) >= 1) {
-        g_tutorials_flags.pharaoh.bricks_bought = 1;
+    } if (!g_tutorials_flags.tutorial_5.bricks_bought && city_resource_count(RESOURCE_BRICKS) >= 1) {
+        g_tutorials_flags.tutorial_5.bricks_bought = 1;
         building_menu_update(BUILDSET_TUT5_MONUMENTS);
         post_message(MESSAGE_TUTORIAL_MONUMENTS);
     }
@@ -495,7 +495,7 @@ void tutorial_starting_message() {
     }
 }
 void tutorial_on_day_tick() {
-    if (g_tutorials_flags.tutorial_1.fire) {
+    if (scenario_is_mission_rank(1) && g_tutorials_flags.tutorial_1.fire) {
         city_mission_tutorial_set_fire_message_shown(1);
     }
 
@@ -506,14 +506,15 @@ void tutorial_on_day_tick() {
             post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
         }
     }
+
+    tutorial_check_resources_on_storageyard();
 }
+
 void tutorial_on_month_tick() {
     if (scenario_is_mission_rank(3)) {
-        if (game_time_month() == 5)
-            city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3,
-                                                 1,
-                                                 MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS,
-                                                 1200);
+        if (game_time_month() == 5) {
+            city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS, 1200);
+        }
     }
 }
 
@@ -536,7 +537,7 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     // tut 5
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.spacious_apartment);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.papyrus_made);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[13]);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.bricks_bought);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[14]);
 
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.tut1_start);
