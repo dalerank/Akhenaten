@@ -18,13 +18,11 @@ void building_government_distribute_treasury() {
     const uint32_t vil_palace_count = building_count_active(BUILDING_VILLAGE_PALACE);
     const uint32_t town_palace_count = building_count_active(BUILDING_TOWN_PALACE);
     const uint32_t city_palace_count = building_count_active(BUILDING_CITY_PALACE);
-    const uint32_t palace_count = building_count_active(BUILDING_GREATE_PALACE);
-    const uint32_t palace_up_count = building_count_active(BUILDING_GREATE_PALACE_UPGRADED);
     const uint32_t tax_col_count = building_count_active(BUILDING_TAX_COLLECTOR);
     const uint32_t tax_col_up_count = building_count_active(BUILDING_TAX_COLLECTOR_UPGRADED);
 
-    int units = palace_units * (palace_count + vil_palace_count + town_palace_count + city_palace_count)
-                    + greate_palace_units * palace_up_count;
+    int units = palace_units * (vil_palace_count + town_palace_count + city_palace_count);
+                    //+ greate_palace_units * palace_up_count;
 
     if (!config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
         units += tax_collector_units * tax_col_count 
@@ -52,12 +50,11 @@ void building_government_distribute_treasury() {
 
         switch (b.type) {
         // ordered based on importance: most important gets the remainder
-        case BUILDING_GREATE_PALACE_UPGRADED:
-            b.tax_income_or_storage = greate_palace_units * amount_per_unit + remainder;
-            remainder = 0;
-            break;
+        //case BUILDING_GREATE_PALACE_UPGRADED:
+        //    b.tax_income_or_storage = greate_palace_units * amount_per_unit + remainder;
+        //    remainder = 0;
+        //    break;
 
-        case BUILDING_GREATE_PALACE:
         case BUILDING_VILLAGE_PALACE:
         case BUILDING_TOWN_PALACE:
         case BUILDING_CITY_PALACE:

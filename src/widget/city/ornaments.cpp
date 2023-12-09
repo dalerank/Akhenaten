@@ -191,7 +191,7 @@ static void draw_hippodrome_ornaments(vec2i pixel, map_point point, painter &ctx
 }
 
 static void draw_palace_rating_flags(const building* b, int x, int y, color color_mask, painter &ctx) {
-    if (b->type == BUILDING_GREATE_PALACE || b->type == BUILDING_GREATE_PALACE_UPGRADED) {
+    if (b->type == BUILDING_VILLAGE_PALACE || b->type == BUILDING_TOWN_PALACE) {
         // rating flags
         int image_id = image_id_from_group(GROUP_BUILDING_PALACE);
         ImageDraw::img_generic(ctx, image_id + 1, x + 138, y + 44 - city_rating_culture() / 2, color_mask);

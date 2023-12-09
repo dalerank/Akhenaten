@@ -181,8 +181,8 @@ static int get_height_id() {
         case BUILDING_BOOTH:
         case BUILDING_SENET_HOUSE:
         case BUILDING_PAVILLION:
-        case BUILDING_GREATE_PALACE:
-        case BUILDING_GREATE_PALACE_UPGRADED:
+        case BUILDING_VILLAGE_PALACE:
+        case BUILDING_TOWN_PALACE:
         case BUILDING_MENU_BEAUTIFICATION:
             return 2;
 
@@ -712,8 +712,6 @@ static void draw_refresh_background() {
 
             case BUILDING_COURTHOUSE: window_building_draw_courthouse(&context); break;
 
-            case BUILDING_GREATE_PALACE:
-            case BUILDING_GREATE_PALACE_UPGRADED:
             case BUILDING_VILLAGE_PALACE:
             case BUILDING_TOWN_PALACE:
             case BUILDING_CITY_PALACE:

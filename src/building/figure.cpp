@@ -689,6 +689,7 @@ void building::spawn_figure_watersupply() {
 void building::set_greate_palace_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
+
     if (map_desirability_get(tile.grid_offset()) <= 30) {
         map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_PALACE), TERRAIN_BUILDING);
     } else {
@@ -697,7 +698,7 @@ void building::set_greate_palace_graphic() {
 }
 
 void building::spawn_figure_tax_collector() {
-    if (type == BUILDING_GREATE_PALACE_UPGRADED) {
+    if (type == BUILDING_TOWN_PALACE) {
         set_greate_palace_graphic();
     }
 

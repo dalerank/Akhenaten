@@ -151,8 +151,8 @@ void building_count_update() {
             // government
         case BUILDING_TAX_COLLECTOR:
         case BUILDING_TAX_COLLECTOR_UPGRADED:
-        case BUILDING_GREATE_PALACE:
-        case BUILDING_GREATE_PALACE_UPGRADED:
+        case BUILDING_VILLAGE_PALACE:
+        case BUILDING_TOWN_PALACE:
             // entertainment schools
         case BUILDING_JUGGLER_SCHOOL:
         case BUILDING_CONSERVATORY:
