@@ -289,7 +289,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->data.dock.orientation = orientation;
         break;
     case BUILDING_GATEHOUSE_PH:
-    case BUILDING_GATEHOUSE:
+    case BUILDING_MUD_GATEHOUSE:
         b->subtype.orientation = orientation;
         break;
     case BUILDING_BANDSTAND:
@@ -426,7 +426,7 @@ void building::clear_related_data() {
     if (type == BUILDING_SENET_HOUSE)
         city_buildings_remove_hippodrome();
 
-    if (type == BUILDING_TRIUMPHAL_ARCH) {
+    if (type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {
         city_buildings_remove_triumphal_arch();
         building_menu_update(BUILDSET_NORMAL);
     }
@@ -810,7 +810,7 @@ void building_update_state(void) {
 
         if (b->state != BUILDING_STATE_VALID || !b->house_size) {
             if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
-                if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
+                if (b->type == BUILDING_TOWER || b->type == BUILDING_MUD_GATEHOUSE) {
                     wall_recalc = true;
                     road_recalc = true;
                 } else if (b->type == BUILDING_WATER_LIFT) {

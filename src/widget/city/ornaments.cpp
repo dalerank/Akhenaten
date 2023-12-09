@@ -301,7 +301,7 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
         draw_fort_anim(point.x, point.y, b, ctx);
         break;
 
-    case BUILDING_GATEHOUSE:
+    case BUILDING_MUD_GATEHOUSE:
         draw_gatehouse_anim(point.x, point.y, b, ctx);
         break;
         //        case BUILDING_WELL:

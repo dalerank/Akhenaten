@@ -580,13 +580,13 @@ static void add_building(building* b, int orientation, int variant) {
         break;
 
     case BUILDING_GATEHOUSE_PH:
-    case BUILDING_GATEHOUSE:
+    case BUILDING_MUD_GATEHOUSE:
         map_building_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_TOWER) + orientation, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
         //            map_orientation_update_buildings();
         map_terrain_add_gatehouse_roads(b->tile.x(), b->tile.y(), orientation);
         break;
 
-    case BUILDING_TRIUMPHAL_ARCH:
+    case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1);
         //            map_orientation_update_buildings();
         map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), orientation);
@@ -1808,7 +1808,7 @@ void BuildPlanner::construction_update(tile2i tile) {
     case BUILDING_GATEHOUSE_PH:
         mark_construction(tile, 1, 3, ~TERRAIN_ROAD, false); // TODO
         break;
-    case BUILDING_TRIUMPHAL_ARCH:
+    case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
         mark_construction(tile, 3, 3, ~TERRAIN_ROAD, false);
         break;
     case BUILDING_STORAGE_YARD:

@@ -66,7 +66,7 @@ void city_ratings_monument_building_destroyed(int type) {
     case BUILDING_WELL:
     case BUILDING_MENU_FORTS:
     case BUILDING_FORT_GROUND:
-    case BUILDING_GATEHOUSE:
+    case BUILDING_MUD_GATEHOUSE:
     case BUILDING_TOWER:
         break;
 

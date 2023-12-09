@@ -264,7 +264,7 @@ void figure::advance_route_tile(int roaming_enabled) {
             direction = DIR_FIGURE_REROUTE;
         } else if (roaming_enabled && map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
             building* b = building_at(target_grid_offset);
-            if (b->type == BUILDING_GATEHOUSE || b->type == BUILDING_ROADBLOCK) {
+            if (b->type == BUILDING_MUD_GATEHOUSE || b->type == BUILDING_ROADBLOCK) {
                 // do not allow roaming through gatehouses or roadblocks
                 if (roaming_enabled)
                     direction = DIR_FIGURE_REROUTE;
@@ -275,7 +275,7 @@ void figure::advance_route_tile(int roaming_enabled) {
         switch (type) {
             //            case BUILDING_WAREHOUSE_SPACE:
             //            case BUILDING_GRANARY:
-        case BUILDING_TRIUMPHAL_ARCH:
+        case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
         case BUILDING_HOUSE_VACANT_LOT:
         case BUILDING_FORT_GROUND:
         case BUILDING_FESTIVAL_SQUARE:

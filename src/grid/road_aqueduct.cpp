@@ -88,7 +88,7 @@ static int is_road_tile_for_aqueduct(int grid_offset, int gate_orientation) {
     int is_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         building* b = building_at(grid_offset);
-        if (b->type == BUILDING_GATEHOUSE) {
+        if (b->type == BUILDING_MUD_GATEHOUSE) {
             if (b->subtype.orientation == gate_orientation)
                 is_road = 1;
 

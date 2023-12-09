@@ -7,11 +7,11 @@
 static int show_building_entertainment(const building* b) {
     return b->type == BUILDING_JUGGLER_SCHOOL || b->type == BUILDING_BOOTH || b->type == BUILDING_CONSERVATORY
            || b->type == BUILDING_BANDSTAND || b->type == BUILDING_DANCE_SCHOOL || b->type == BUILDING_PAVILLION
-           || b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_SENET_HOUSE;
+           || b->type == BUILDING_SENET_MASTER || b->type == BUILDING_SENET_HOUSE;
 }
 
 static int show_building_hippodrome(const building* b) {
-    return b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_SENET_HOUSE;
+    return b->type == BUILDING_SENET_MASTER || b->type == BUILDING_SENET_HOUSE;
 }
 
 static int show_figure_entertainment(const figure* f) {

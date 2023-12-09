@@ -231,11 +231,11 @@ static void add_definition(const hotkey_mapping* mapping) {
         break;
     case HOTKEY_BUILD_WALL:
         def->action = &data.hotkey_state.building;
-        def->value = BUILDING_WALL;
+        def->value = BUILDING_MUD_WALL;
         break;
     case HOTKEY_BUILD_GATEHOUSE:
         def->action = &data.hotkey_state.building;
-        def->value = BUILDING_GATEHOUSE;
+        def->value = BUILDING_MUD_GATEHOUSE;
         break;
     case HOTKEY_BUILD_PREFECTURE:
         def->action = &data.hotkey_state.building;

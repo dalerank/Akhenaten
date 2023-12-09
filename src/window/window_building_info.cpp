@@ -139,7 +139,7 @@ static int get_height_id() {
         case BUILDING_CONSERVATORY:
         case BUILDING_DANCE_SCHOOL:
         case BUILDING_JUGGLER_SCHOOL:
-        case BUILDING_CHARIOT_MAKER:
+        case BUILDING_SENET_MASTER:
         case BUILDING_APOTHECARY:
         case BUILDING_MORTUARY:
         case BUILDING_MENU_MONUMENTS:
@@ -156,7 +156,7 @@ static int get_height_id() {
         case BUILDING_SCRIBAL_SCHOOL:
         case BUILDING_ACADEMY:
         case BUILDING_LIBRARY:
-        case BUILDING_GATEHOUSE:
+        case BUILDING_MUD_GATEHOUSE:
         case BUILDING_TOWER:
         case BUILDING_MENU_FORTS:
         case BUILDING_MILITARY_ACADEMY:
@@ -657,7 +657,7 @@ static void draw_refresh_background() {
             case BUILDING_CONSERVATORY: building_conservatory_draw_info(context); break;
             case BUILDING_DANCE_SCHOOL: building_dancer_school_draw_info(context); break;
             case BUILDING_JUGGLER_SCHOOL: building_juggler_school_draw_info(context); break;
-            case BUILDING_CHARIOT_MAKER: building_bullfight_school_draw_info(context); break;
+            case BUILDING_SENET_MASTER: building_bullfight_school_draw_info(context); break;
             case BUILDING_APOTHECARY: building_apothecary_draw_info(context); break;
             case BUILDING_MORTUARY: building_mortuary_draw_info(context); break;
             case BUILDING_PHYSICIAN: building_physician_draw_info(context); break;
@@ -742,7 +742,7 @@ static void draw_refresh_background() {
                 building_statue_draw_info(context);
                 break;
 
-            case BUILDING_TRIUMPHAL_ARCH: window_building_draw_triumphal_arch(&context); break;
+            case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&context); break;
             case BUILDING_POLICE_STATION: window_building_draw_prefect(&context); break;
             
             case BUILDING_ROADBLOCK:
@@ -753,7 +753,7 @@ static void draw_refresh_background() {
                 break;
 
             case BUILDING_FERRY: window_building_draw_ferry(&context); break;
-            case BUILDING_GATEHOUSE: window_building_draw_gatehouse(&context); break;
+            case BUILDING_MUD_GATEHOUSE: window_building_draw_gatehouse(&context); break;
             case BUILDING_TOWER: window_building_draw_tower(&context); break;
             case BUILDING_MILITARY_ACADEMY: window_building_draw_military_academy(&context); break;
             case BUILDING_RECRUITER: window_building_draw_barracks(&context); break;

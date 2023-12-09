@@ -18,7 +18,8 @@ static bool road_tile_valid_access(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_ROAD)
         && (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || // general case -- no buildings over road!
                                                               // exceptions: vvv
-            building_at(grid_offset)->type == BUILDING_GATEHOUSE || building_at(grid_offset)->type == BUILDING_BOOTH
+            building_at(grid_offset)->type == BUILDING_MUD_GATEHOUSE 
+            || building_at(grid_offset)->type == BUILDING_BOOTH
             || building_at(grid_offset)->type == BUILDING_BANDSTAND
             || building_at(grid_offset)->type == BUILDING_PAVILLION
             || building_at(grid_offset)->type == BUILDING_FESTIVAL_SQUARE)) {
@@ -390,7 +391,7 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
         return 0;
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         building* b = building_at(grid_offset);
-        if (b->type == BUILDING_GATEHOUSE) {
+        if (b->type == BUILDING_MUD_GATEHOUSE) {
             is_road = 0;
 
         } else if (b->type == BUILDING_ROADBLOCK) {
@@ -409,7 +410,7 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
                     is_road = 1;
                 }
             }
-        } else if (b->type == BUILDING_TRIUMPHAL_ARCH) {
+        } else if (b->type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {
             if (map_routing_citizen_is_road(grid_offset))
                 is_road = 1;
         }

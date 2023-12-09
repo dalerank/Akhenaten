@@ -84,7 +84,7 @@ reservoir_range_data_t reservoir_range_data;
 
 static int get_building_image_id(int map_x, int map_y, int type, const building_properties* props) {
     int image_id = props->img_id();
-    if (type == BUILDING_GATEHOUSE) {
+    if (type == BUILDING_MUD_GATEHOUSE) {
         int orientation = map_orientation_for_gatehouse(map_x, map_y);
         int image_offset;
         if (orientation == 2)
@@ -99,7 +99,7 @@ static int get_building_image_id(int map_x, int map_y, int type, const building_
             image_offset = 1 - image_offset;
 
         image_id += image_offset;
-    } else if (type == BUILDING_TRIUMPHAL_ARCH) {
+    } else if (type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {
         int orientation = map_orientation_for_triumphal_arch(map_x, map_y);
         int image_offset;
         if (orientation == 2)

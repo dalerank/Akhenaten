@@ -85,7 +85,7 @@ void map_orientation_update_buildings(void) {
         int image_id;
         int image_offset;
         switch (b->type) {
-        case BUILDING_GATEHOUSE:
+        case BUILDING_MUD_GATEHOUSE:
             if (b->subtype.orientation == 1) {
                 if (orientation_is_top_bottom)
                     image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 1;
@@ -102,7 +102,7 @@ void map_orientation_update_buildings(void) {
             map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
             map_terrain_add_gatehouse_roads(b->tile.x(), b->tile.y(), 0);
             break;
-        case BUILDING_TRIUMPHAL_ARCH:
+        case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
             if (b->subtype.orientation == 1) {
                 if (orientation_is_top_bottom)
                     image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH);

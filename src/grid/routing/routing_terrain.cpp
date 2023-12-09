@@ -25,7 +25,7 @@ static int get_land_type_citizen_building(int grid_offset) {
     default:
         return CITIZEN_N1_BLOCKED;
 
-    case BUILDING_GATEHOUSE:
+    case BUILDING_MUD_GATEHOUSE:
     case BUILDING_FERRY:
         return CITIZEN_0_ROAD;
 
@@ -43,7 +43,7 @@ static int get_land_type_citizen_building(int grid_offset) {
         }
         return CITIZEN_N1_BLOCKED;
 
-    case BUILDING_TRIUMPHAL_ARCH:
+    case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
         if (b->subtype.orientation == 3) {
             switch (map_property_multi_tile_xy(grid_offset)) {
             case EDGE_X0Y1:
