@@ -93,7 +93,7 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
     {BUILDING_MENU_RAW_MATERIALS,
      BUILDING_JEWELS_WORKSHOP,
      BUILDING_POTTERY_WORKSHOP,
-     BUILDING_BEER_WORKSHOP,
+     BUILDING_BREWERY_WORKSHOP,
      BUILDING_LINEN_WORKSHOP,
      BUILDING_PAPYRUS_WORKSHOP,
      BUILDING_BRICKS_WORKSHOP,
@@ -326,7 +326,7 @@ static void disable_resources() {
     //
 
     disable_crafted_if_unavailable(BUILDING_POTTERY_WORKSHOP, RESOURCE_POTTERY);
-    disable_crafted_if_unavailable(BUILDING_BEER_WORKSHOP, RESOURCE_BEER);
+    disable_crafted_if_unavailable(BUILDING_BREWERY_WORKSHOP, RESOURCE_BEER);
     disable_crafted_if_unavailable(BUILDING_JEWELS_WORKSHOP, RESOURCE_LUXURY_GOODS);
     disable_crafted_if_unavailable(BUILDING_LINEN_WORKSHOP, RESOURCE_LINEN);
     disable_crafted_if_unavailable(BUILDING_PAPYRUS_WORKSHOP, RESOURCE_PAPYRUS);
@@ -592,7 +592,7 @@ void building_menu_update(int build_set) {
         building_menu_update(BUILDSET_TUT3_INDUSTRY);
         //toggle_building(BUILDING_LOW_BRIDGE);
         enable_gods(GOD_OSIRIS, GOD_RA, GOD_BAST);
-        building_menu_toggle_building(BUILDING_BEER_WORKSHOP);
+        building_menu_toggle_building(BUILDING_BREWERY_WORKSHOP);
         break;
 
     case BUILDSET_TUT4_FINANCE:
@@ -612,7 +612,7 @@ void building_menu_update(int build_set) {
 
         building_menu_toggle_building(BUILDING_CLAY_PIT);
         building_menu_toggle_building(BUILDING_POTTERY_WORKSHOP);
-        building_menu_toggle_building(BUILDING_BEER_WORKSHOP);
+        building_menu_toggle_building(BUILDING_BREWERY_WORKSHOP);
 
         building_menu_toggle_building(BUILDING_BAZAAR);
         building_menu_toggle_building(BUILDING_GRANARY);

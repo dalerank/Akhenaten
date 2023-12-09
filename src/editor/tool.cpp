@@ -312,17 +312,17 @@ static void place_building(map_point tile) {
     e_building_type type;
     switch (data.type) {
     case TOOL_NATIVE_HUT:
-        type = BUILDING_NATIVE_HUT;
+        type = BUILDING_UNUSED_NATIVE_HUT_88;
         image_id = image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE) + (random_byte() & 1);
         size = 1;
         break;
     case TOOL_NATIVE_CENTER:
-        type = BUILDING_NATIVE_MEETING;
+        type = BUILDING_UNUSED_NATIVE_MEETING_89;
         image_id = image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE) + 2;
         size = 2;
         break;
     case TOOL_NATIVE_FIELD:
-        type = BUILDING_NATIVE_CROPS;
+        type = BUILDING_UNUSED_NATIVE_CROPS_93;
         image_id = image_id_from_group(GROUP_EDITOR_BUILDING_CROPS);
         size = 1;
         break;

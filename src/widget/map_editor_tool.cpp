@@ -68,7 +68,7 @@ static void draw_building(tile2i tile, int screen_x, int screen_y, e_building_ty
         }
     } else {
         int image_id;
-        if (type == BUILDING_NATIVE_CROPS) {
+        if (type == BUILDING_UNUSED_NATIVE_CROPS_93) {
             image_id = image_id_from_group(GROUP_EDITOR_BUILDING_CROPS);
         } else {
             image_desc desc = props->img();
@@ -135,13 +135,13 @@ void map_editor_tool_draw(painter &ctx, tile2i tile) {
     int y = screen.y;
     switch (type) {
     case TOOL_NATIVE_CENTER:
-        draw_building(tile, x, y, BUILDING_NATIVE_MEETING);
+        draw_building(tile, x, y, BUILDING_UNUSED_NATIVE_MEETING_89);
         break;
     case TOOL_NATIVE_HUT:
-        draw_building(tile, x, y, BUILDING_NATIVE_HUT);
+        draw_building(tile, x, y, BUILDING_UNUSED_NATIVE_HUT_88);
         break;
     case TOOL_NATIVE_FIELD:
-        draw_building(tile, x, y, BUILDING_NATIVE_CROPS);
+        draw_building(tile, x, y, BUILDING_UNUSED_NATIVE_CROPS_93);
         break;
 
     case TOOL_EARTHQUAKE_POINT:

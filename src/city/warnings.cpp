@@ -166,7 +166,7 @@ static void check_copper_access(int type) {
 }
 
 static void check_vines_access(int type) {
-    if (type == BUILDING_BEER_WORKSHOP && building_count_industry_active(RESOURCE_BARLEY) <= 0) {
+    if (type == BUILDING_BREWERY_WORKSHOP && building_count_industry_active(RESOURCE_BARLEY) <= 0) {
         if (city_resource_count(RESOURCE_BEER) <= 0 && city_resource_count(RESOURCE_BARLEY) <= 0) {
             show(WARNING_VINES_NEEDED);
             if (empire_can_produce_resource(RESOURCE_BARLEY, true))

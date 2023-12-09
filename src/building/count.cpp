@@ -276,7 +276,7 @@ void building_count_update() {
         case BUILDING_POTTERY_WORKSHOP:
             increase_industry_count(RESOURCE_POTTERY, b.num_workers > 0);
             break;
-        case BUILDING_BEER_WORKSHOP:
+        case BUILDING_BREWERY_WORKSHOP:
             increase_industry_count(RESOURCE_BEER, b.num_workers > 0);
             break;
         case BUILDING_LINEN_WORKSHOP:

@@ -33,12 +33,14 @@ static building* get_deletable_building(int grid_offset) {
         return 0;
 
     building* b = building_get(building_id)->main();
-    if (b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_NATIVE_HUT
-        || b->type == BUILDING_NATIVE_MEETING) {
+    if (b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_UNUSED_NATIVE_CROPS_93 || b->type == BUILDING_UNUSED_NATIVE_HUT_88
+        || b->type == BUILDING_UNUSED_NATIVE_MEETING_89) {
         return 0;
     }
-    if (b->state == BUILDING_STATE_DELETED_BY_PLAYER || b->is_deleted)
+
+    if (b->state == BUILDING_STATE_DELETED_BY_PLAYER || b->is_deleted) {
         return 0;
+    }
 
     return b;
 }

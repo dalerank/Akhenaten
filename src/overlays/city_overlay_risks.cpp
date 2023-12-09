@@ -44,7 +44,7 @@ static int show_building_problems(const building* b) {
 }
 
 static int show_building_native(const building* b) {
-    return b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING || b->type == BUILDING_RESERVER_MISSION_POST_80;
+    return b->type == BUILDING_UNUSED_NATIVE_HUT_88 || b->type == BUILDING_UNUSED_NATIVE_MEETING_89 || b->type == BUILDING_RESERVER_MISSION_POST_80;
 }
 
 static int show_figure_problems(const figure* f) {

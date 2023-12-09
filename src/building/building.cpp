@@ -158,7 +158,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_CLAY_PIT:
         b->output_resource_first_id = RESOURCE_CLAY;
         break;
-    case BUILDING_BEER_WORKSHOP:
+    case BUILDING_BREWERY_WORKSHOP:
         b->data.industry.first_material_id = RESOURCE_BARLEY;
         b->output_resource_first_id = RESOURCE_BEER;
         //            b->subtype.workshop_type = WORKSHOP_BEER;
@@ -595,7 +595,7 @@ bool building_is_floodplain_farm(building &b) {
 }
 
 bool building_is_workshop(int type) {
-    return (type >= BUILDING_BEER_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
+    return (type >= BUILDING_BREWERY_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
            || (type >= BUILDING_PAPYRUS_WORKSHOP && type <= BUILDING_CHARIOTS_WORKSHOP) || type == BUILDING_CATTLE_RANCH
            || type == BUILDING_LAMP_WORKSHOP || type == BUILDING_PAINT_WORKSHOP;
 }
@@ -916,7 +916,7 @@ bool resource_required_by_workshop(building* b, e_resource resource) {
     switch (resource) {
     case RESOURCE_CLAY: return (b->type == BUILDING_POTTERY_WORKSHOP || b->type == BUILDING_BRICKS_WORKSHOP);
     case RESOURCE_STRAW: return (b->type == BUILDING_BRICKS_WORKSHOP || b->type == BUILDING_CATTLE_RANCH);
-    case RESOURCE_BARLEY: return b->type == BUILDING_BEER_WORKSHOP;
+    case RESOURCE_BARLEY: return b->type == BUILDING_BREWERY_WORKSHOP;
     case RESOURCE_REEDS: return b->type == BUILDING_PAPYRUS_WORKSHOP;
     case RESOURCE_FLAX: return b->type == BUILDING_LINEN_WORKSHOP;
     case RESOURCE_GEMS: return b->type == BUILDING_JEWELS_WORKSHOP;

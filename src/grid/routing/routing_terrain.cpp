@@ -111,9 +111,9 @@ static int get_land_type_noncitizen(int grid_offset) {
     case BUILDING_FORT_GROUND:
         return NONCITIZEN_0_PASSABLE;
     case BUILDING_BURNING_RUIN:
-    case BUILDING_NATIVE_HUT:
-    case BUILDING_NATIVE_MEETING:
-    case BUILDING_NATIVE_CROPS:
+    case BUILDING_UNUSED_NATIVE_HUT_88:
+    case BUILDING_UNUSED_NATIVE_MEETING_89:
+    case BUILDING_UNUSED_NATIVE_CROPS_93:
         return NONCITIZEN_N1_BLOCKED;
     case BUILDING_MENU_FORTS:
         return NONCITIZEN_5_FORT;

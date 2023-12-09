@@ -146,9 +146,9 @@ static int get_height_id() {
         case BUILDING_DENTIST:
         case BUILDING_BURNING_RUIN:
         case BUILDING_WATER_LIFT:
-        case BUILDING_NATIVE_HUT:
-        case BUILDING_NATIVE_MEETING:
-        case BUILDING_NATIVE_CROPS:
+        case BUILDING_UNUSED_NATIVE_HUT_88:
+        case BUILDING_UNUSED_NATIVE_MEETING_89:
+        case BUILDING_UNUSED_NATIVE_CROPS_93:
         case BUILDING_RESERVER_MISSION_POST_80:
         case BUILDING_POLICE_STATION:
         case BUILDING_ARCHITECT_POST:
@@ -171,7 +171,7 @@ static int get_height_id() {
         case BUILDING_TAX_COLLECTOR:
         case BUILDING_ROADBLOCK:
         case BUILDING_TAX_COLLECTOR_UPGRADED:
-        case BUILDING_BEER_WORKSHOP:
+        case BUILDING_BREWERY_WORKSHOP:
         case BUILDING_LINEN_WORKSHOP:
         case BUILDING_WEAPONS_WORKSHOP:
         case BUILDING_JEWELS_WORKSHOP:
@@ -620,7 +620,7 @@ static void draw_refresh_background() {
             case BUILDING_COPPER_MINE: building_copper_mine_draw_info(context); break;
             case BUILDING_SANDSTONE_QUARRY: building_sandstone_quarry_draw_info(context); break;
             case BUILDING_GRANITE_QUARRY: building_granite_quarry_draw_info(context); break;;
-            case BUILDING_BEER_WORKSHOP: building_brewery_draw_info(context); break;
+            case BUILDING_BREWERY_WORKSHOP: building_brewery_draw_info(context); break;
             case BUILDING_LINEN_WORKSHOP: building_flax_workshop_draw_info(context); break;
             case BUILDING_WEAPONS_WORKSHOP: building_weapons_workshop_draw_info(context); break;
             case BUILDING_JEWELS_WORKSHOP: building_luxury_workshop_draw_info(context); break;
@@ -757,9 +757,9 @@ static void draw_refresh_background() {
             case BUILDING_RECRUITER: window_building_draw_barracks(&context); break;
             case BUILDING_MENU_FORTS: window_building_draw_fort(&context); break;
             case BUILDING_BURNING_RUIN: window_building_draw_burning_ruin(&context); break;
-            case BUILDING_NATIVE_HUT: window_building_draw_native_hut(&context); break;
-            case BUILDING_NATIVE_MEETING: window_building_draw_native_meeting(&context); break;
-            case BUILDING_NATIVE_CROPS: window_building_draw_native_crops(&context); break;
+            case BUILDING_UNUSED_NATIVE_HUT_88: window_building_draw_native_hut(&context); break;
+            case BUILDING_UNUSED_NATIVE_MEETING_89: window_building_draw_native_meeting(&context); break;
+            case BUILDING_UNUSED_NATIVE_CROPS_93: window_building_draw_native_crops(&context); break;
             case BUILDING_RESERVER_MISSION_POST_80: window_building_draw_mission_post(&context); break;
             case BUILDING_FIREHOUSE: window_building_draw_firehouse(&context); break;
             case BUILDING_WORK_CAMP: building_work_camp_draw_info(context); break;
