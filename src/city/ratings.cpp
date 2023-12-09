@@ -62,7 +62,7 @@ void city_ratings_monument_building_destroyed(int type) {
     case BUILDING_HOUSE_CRUDE_HUT:
     case BUILDING_HOUSE_STURDY_HUT:
     case BUILDING_POLICE_STATION:
-    case BUILDING_ENGINEERS_POST:
+    case BUILDING_ARCHITECT_POST:
     case BUILDING_WELL:
     case BUILDING_MENU_FORTS:
     case BUILDING_FORT_GROUND:

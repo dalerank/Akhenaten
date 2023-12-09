@@ -57,7 +57,7 @@ struct city_overlay_damage : public city_overlay {
     }
 
     bool show_building(const building* b) const override {
-        return b->type == BUILDING_ENGINEERS_POST || b->type == BUILDING_FESTIVAL_SQUARE;
+        return b->type == BUILDING_ARCHITECT_POST || b->type == BUILDING_FESTIVAL_SQUARE;
     }
 };
 

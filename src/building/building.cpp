@@ -458,7 +458,7 @@ e_overlay building::get_overlay() const {
         case BUILDING_TEMPLE_BAST:
             return OVERLAY_RELIGION_BAST;
 
-        case BUILDING_ENGINEERS_POST: return OVERLAY_DAMAGE;
+        case BUILDING_ARCHITECT_POST: return OVERLAY_DAMAGE;
         case BUILDING_FIREHOUSE: return OVERLAY_FIRE;
         case BUILDING_POLICE_STATION: return OVERLAY_CRIME;
         case BUILDING_APOTHECARY: return OVERLAY_APOTHECARY;
@@ -702,7 +702,7 @@ bool building_is_food_category(int type) {
 }
 
 bool building_is_infrastructure(int type) {
-    if (type == BUILDING_ENGINEERS_POST || type == BUILDING_FIREHOUSE || type == BUILDING_POLICE_STATION)
+    if (type == BUILDING_ARCHITECT_POST || type == BUILDING_FIREHOUSE || type == BUILDING_POLICE_STATION)
         return true;
 
     if (building_is_water_crossing(type))

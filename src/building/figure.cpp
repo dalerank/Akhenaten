@@ -1304,7 +1304,7 @@ bool building::figure_generate() {
         case BUILDING_STORAGE_YARD: spawn_figure_storageyard(); break;
         case BUILDING_GRANARY: spawn_figure_granary(); break;
         case BUILDING_MUD_TOWER: spawn_figure_tower(); break;
-        case BUILDING_ENGINEERS_POST: spawn_figure_engineers_post(); break;
+        case BUILDING_ARCHITECT_POST: spawn_figure_engineers_post(); break;
         case BUILDING_POLICE_STATION: spawn_figure_police(); break;
         case BUILDING_FIREHOUSE: spawn_figure_firehouse(); break;
         case BUILDING_WATER_SUPPLY: spawn_figure_watersupply(); break;

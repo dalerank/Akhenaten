@@ -227,7 +227,7 @@ static void add_definition(const hotkey_mapping* mapping) {
         break;
     case HOTKEY_BUILD_ENGINEERS_POST:
         def->action = &data.hotkey_state.building;
-        def->value = BUILDING_ENGINEERS_POST;
+        def->value = BUILDING_ARCHITECT_POST;
         break;
     case HOTKEY_BUILD_WALL:
         def->action = &data.hotkey_state.building;

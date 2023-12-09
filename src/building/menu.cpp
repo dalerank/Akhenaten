@@ -58,7 +58,7 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      0}, // BUILDING_CHARIOT_MAKER
     // municipal structures
     {BUILDING_FIREHOUSE,
-     BUILDING_ENGINEERS_POST,
+     BUILDING_ARCHITECT_POST,
      BUILDING_POLICE_STATION,
      BUILDING_TAX_COLLECTOR,
      BUILDING_COURTHOUSE,
@@ -378,7 +378,7 @@ static void enable_common_municipal(int level) {
     enable_common_beautifications();
     building_menu_toggle_building(BUILDING_ROADBLOCK);
     building_menu_toggle_building(BUILDING_FIREHOUSE);
-    building_menu_toggle_building(BUILDING_ENGINEERS_POST);
+    building_menu_toggle_building(BUILDING_ARCHITECT_POST);
     building_menu_toggle_building(BUILDING_POLICE_STATION);
     if (level >= 3) building_menu_toggle_building(BUILDING_CITY_PALACE);
     else if (level >= 2) building_menu_toggle_building(BUILDING_TOWN_PALACE);
@@ -519,14 +519,14 @@ void building_menu_update(int build_set) {
         break;
 
     case BUILDSET_TUT1_COLLAPSE:
-        building_menu_toggle_building(BUILDING_ENGINEERS_POST);
+        building_menu_toggle_building(BUILDING_ARCHITECT_POST);
         break;
 
     case BUILDSET_TUT2_START:
         building_menu_disable_all();
 
         building_menu_toggle_building(BUILDING_FIREHOUSE);
-        building_menu_toggle_building(BUILDING_ENGINEERS_POST);
+        building_menu_toggle_building(BUILDING_ARCHITECT_POST);
         building_menu_toggle_building(BUILDING_POLICE_STATION);
         building_menu_toggle_building(BUILDING_BAZAAR);
         building_menu_toggle_building(BUILDING_GRANARY);
@@ -549,7 +549,7 @@ void building_menu_update(int build_set) {
         building_menu_disable_all();
 
         building_menu_toggle_building(BUILDING_FIREHOUSE);
-        building_menu_toggle_building(BUILDING_ENGINEERS_POST);
+        building_menu_toggle_building(BUILDING_ARCHITECT_POST);
         building_menu_toggle_building(BUILDING_POLICE_STATION);
         building_menu_toggle_building(BUILDING_VILLAGE_PALACE);
         building_menu_toggle_building(BUILDING_WATER_SUPPLY);

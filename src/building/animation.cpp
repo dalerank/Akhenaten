@@ -80,7 +80,7 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
         }
         break;
         //        case BUILDING_PREFECTURE: // police house
-        //        case BUILDING_ENGINEERS_POST:
+        //        case BUILDING_ARCHITECT_POST:
         //        case BUILDING_FIREHOUSE:
         //        case BUILDING_WATER_SUPPLY:
         //        case BUILDING_PHYSICIAN:

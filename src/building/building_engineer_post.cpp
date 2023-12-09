@@ -12,7 +12,7 @@
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
 
-void building_engineer_post_draw_info(object_info &c) {
+void building_architect_post_draw_info(object_info &c) {
     c.help_id = 81;
     window_building_play_sound(&c, snd::get_building_info_sound("engineer_post"));
     outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);

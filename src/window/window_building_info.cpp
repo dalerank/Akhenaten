@@ -151,7 +151,7 @@ static int get_height_id() {
         case BUILDING_NATIVE_CROPS:
         case BUILDING_RESERVER_MISSION_POST_80:
         case BUILDING_POLICE_STATION:
-        case BUILDING_ENGINEERS_POST:
+        case BUILDING_ARCHITECT_POST:
         case BUILDING_FIREHOUSE:
         case BUILDING_SCRIBAL_SCHOOL:
         case BUILDING_ACADEMY:
@@ -720,7 +720,7 @@ static void draw_refresh_background() {
                 building_palace_draw_info(context);
                 break;
 
-            case BUILDING_ENGINEERS_POST: building_engineer_post_draw_info(context); break;
+            case BUILDING_ARCHITECT_POST: building_architect_post_draw_info(context); break;
             case BUILDING_SHIPWRIGHT: building_shipyard_draw_info(context); break;
             
             case BUILDING_DOCK:
