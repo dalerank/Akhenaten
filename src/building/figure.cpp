@@ -1329,9 +1329,9 @@ bool building::figure_generate() {
         case BUILDING_DOCK: spawn_figure_dock(); break;
         case BUILDING_FISHING_WHARF: spawn_figure_wharf(); break;
         case BUILDING_SHIPWRIGHT: spawn_figure_shipyard(); break;
-        case BUILDING_NATIVE_HUT: spawn_figure_native_hut(); break;
-        case BUILDING_NATIVE_MEETING: spawn_figure_native_meeting(); break;
-        case BUILDING_NATIVE_CROPS: update_native_crop_progress(); break;
+        case BUILDING_UNUSED_NATIVE_HUT_88: spawn_figure_native_hut(); break;
+        case BUILDING_UNUSED_NATIVE_MEETING_89: spawn_figure_native_meeting(); break;
+        case BUILDING_UNUSED_NATIVE_CROPS_93: update_native_crop_progress(); break;
 
         case BUILDING_BARLEY_FARM:
         case BUILDING_FLAX_FARM:

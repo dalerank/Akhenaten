@@ -36,7 +36,7 @@ static int provide_missionary_coverage(int x, int y) {
         int building_id = map_building_at(tile.grid_offset());
         if (building_id) {
             building *b = building_get(building_id);
-            if (b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING)
+            if (b->type == BUILDING_UNUSED_NATIVE_HUT_88 || b->type == BUILDING_UNUSED_NATIVE_MEETING_89)
                 b->sentiment.native_anger = 0;
         }
     });
