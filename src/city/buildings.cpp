@@ -123,11 +123,11 @@ void city_buildings_set_trade_center(int building_id) {
     city_data.building.trade_center_building_id = building_id;
 }
 
-bool city_buildings_has_hippodrome(void) {
+bool city_buildings_has_hippodrome() {
     return city_data.building.hippodrome_placed;
 }
 
-void city_buildings_add_hippodrome(void) {
+void city_buildings_add_hippodrome() {
     city_data.building.hippodrome_placed = 1;
 }
 

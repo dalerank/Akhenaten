@@ -1,28 +1,56 @@
 #pragma once
 
 #include "building.h"
+#include "game/resource.h"
+#include "grid/road_access.h"
 
-enum {
-    MONUMENT_PYRAMID = 0,
-    MONUMENT_MASTABA = 1
-};
+#define MONUMENT_FINISHED -1
+#define MONUMENT_START 1
+#define MARS_OFFERING_FREQUENCY 16
 
-enum {
-    MONUMENT_PART_CORNERS = 0,
-    MONUMENT_PART_SIDES = 1,
-    MONUMENT_PART_CENTER = 2,
-    MONUMENT_PART_EXTRA = 3,
-    MONUMENT_PART_EXTERIORS = 4,
-    MONUMENT_PART_CORNERS_2 = 5,
-    MONUMENT_PART_SIDES_2 = 6,
-};
+enum module_type {
+    
+} ;
 
-enum {
-    TEMPLE_COMPLEX_ALTAR_ATTACHMENT = 1,
-    TEMPLE_COMPLEX_ORACLE_ATTACHMENT = 2,
-};
+int building_monument_access_point(building *b, map_point *dst);
+int building_monument_add_module(building *b, int module_type);
+int building_monument_deliver_resource(building *b, e_resource resource);
+int building_monument_get_monument(tile2i tile, e_resource resource, int road_network_id, map_point *dst);
+int building_monument_has_unfinished_monuments();
+void building_monument_set_phase(building *b, int phase);
+bool building_monument_is_monument(const building *b);
+bool building_monument_type_is_monument(e_building_type type);
+bool building_monument_type_is_mini_monument(e_building_type type);
+bool building_monument_is_temple_complex(e_building_type type);
+int building_monument_needs_resource(building *b, e_resource resource);
+bool building_monument_needs_resources(building *b);
+int building_monument_progress(building *b);
+int building_monument_has_labour_problems(building *b);
+int building_monument_working(e_building_type type);
+bool building_monument_requires_resource(e_building_type type, e_resource resource);
+int building_monument_has_required_resources_to_build(e_building_type type);
+bool building_monument_resources_needed_for_monument_type(e_building_type type, e_resource resource, int phase);
+int building_monument_resource_in_delivery(building *b, int resource_id);
+void building_monument_remove_delivery(int figure_id);
+void building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int num_loads);
+bool building_monument_has_delivery_for_worker(int figure_id);
+void building_monument_remove_all_deliveries(int monument_id);
+int building_monument_get_id(e_building_type type);
+int building_monument_upgraded(e_building_type type);
+int building_monument_module_type(e_building_type type);
+int building_monument_phases(e_building_type building_type);
+int building_monument_gt_module_is_active(int module);
+int building_monument_pantheon_module_is_active(int module);
+void building_monument_finish_monuments();
+void building_monuments_set_construction_phase(int phase);
+int building_monument_get_venus_gt();
+int building_monument_get_neptune_gt();
+void building_monument_initialize_deliveries();
+int building_monument_count_grand_temples();
+
+int building_monument_is_construction_halted(building *b);
+int building_monument_toggle_construction_halted(building *b);
+int building_monument_is_unfinished_monument(const building *b);
 
 int get_monument_part_image(int part, int orientation, int level);
-
 int get_temple_complex_part_image(int type, int part, int orientation, int level);
-building* get_temple_complex_front_facing_part(building* b);

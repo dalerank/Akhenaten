@@ -132,6 +132,10 @@ static building* add_temple_complex_element(int x, int y, int orientation, build
     return b;
 }
 
+static void add_mastaba(building *b, int orienation) {
+    Planner.add_building_tiles_from_list(b->id, false);
+}
+
 static void add_temple_complex(building* b, int orientation) {
     Planner.add_building_tiles_from_list(b->id, false);
     tile2i offset = {0, 0};
@@ -543,27 +547,31 @@ static void add_building(building* b, int orientation, int variant) {
         // ships
 
     case BUILDING_WATER_LIFT: {
-        auto props = building_properties_for_type(b->type);
-        map_water_add_building(b->id, b->tile, props->size, props->img_id() + orientation_rel + 4 * variant);
+            auto props = building_properties_for_type(b->type);
+            map_water_add_building(b->id, b->tile, props->size, props->img_id() + orientation_rel + 4 * variant);
+        }
         break;
-    }
 
     case BUILDING_FISHING_WHARF:
     case BUILDING_TRANSPORT_WHARF:
     case BUILDING_SHIPYARD:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_DOCK: {
-        auto props = building_properties_for_type(b->type);
-        map_water_add_building(b->id, b->tile, props->size, props->img_id() + orientation_rel);
+            auto props = building_properties_for_type(b->type);
+            map_water_add_building(b->id, b->tile, props->size, props->img_id() + orientation_rel);
+        }
         break;
-    }
+
+    case BUILDING_SMALL_MASTABA:
+        add_mastaba(b, orientation);
+        break;
 
     case BUILDING_FERRY: {
-        auto props = building_properties_for_type(b->type);
-        map_water_add_building(b->id, b->tile, props->size, props->img_id() + orientation_rel);
-        place_ferry(b, props->size, props->img_id() + orientation_rel);
+            auto props = building_properties_for_type(b->type);
+            map_water_add_building(b->id, b->tile, props->size, props->img_id() + orientation_rel);
+            place_ferry(b, props->size, props->img_id() + orientation_rel);
+        }
         break;
-    }
         // defense
     case BUILDING_TOWER:
         map_terrain_remove_with_radius(b->tile.x(), b->tile.y(), 2, 0, TERRAIN_WALL);
@@ -820,12 +828,13 @@ static bool attach_temple_upgrade(int upgrade_param, int grid_offset) {
     building_menu_update_temple_complexes();
     return true;
 }
+
 static tile2i temple_complex_part_target(building* main, int part) {
     building* b = main;
     if (part == 1) {
         b = b->next();
     } else if (part == 2) {
-        b = get_temple_complex_front_facing_part(main);
+       // b = get_temple_complex_front_facing_part(main);
     }
 
     int x = b->tile.x();
@@ -1272,11 +1281,7 @@ void BuildPlanner::setup_build_graphics() {
     case BUILDING_TEMPLE_COMPLEX_ALTAR:
     case BUILDING_TEMPLE_COMPLEX_ORACLE:
         init_tiles(3, 3);
-        set_tiles_building(get_temple_complex_part_image(building_at(end.grid_offset())->main()->type,
-                                                         additional_req_param1,
-                                                         relative_orientation,
-                                                         1),
-                           3);
+        set_tiles_building(get_temple_complex_part_image(building_at(end.grid_offset())->main()->type, additional_req_param1, relative_orientation, 1), 3);
         break;
 
     case BUILDING_WATER_LIFT:

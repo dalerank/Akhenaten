@@ -177,7 +177,8 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_SHRINE_BAST,
      0},
     // monuments
-    {BUILDING_SMALL_ROYAL_TOMB,
+    {BUILDING_SMALL_MASTABA,
+     BUILDING_SMALL_ROYAL_TOMB,
      BUILDING_MEDIUM_ROYAL_TOMB,
      BUILDING_LARGE_ROYAL_TOMB,
      BUILDING_GRAND_ROYAL_TOMB,
@@ -543,29 +544,6 @@ void building_menu_update(int build_set) {
         building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
         break;
 
-    case BUILDSET_TUT6_IRRIGATION:
-        building_menu_toggle_building(BUILDING_WATER_LIFT);
-        building_menu_toggle_building(BUILDING_IRRIGATION_DITCH);
-        building_menu_toggle_building(BUILDING_MENU_BEAUTIFICATION);
-        break;
-
-    case BUILDSET_TUT6_EDUCATION:
-        building_menu_toggle_building(BUILDING_GARDENS);
-        building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
-        building_menu_toggle_building(BUILDING_BOOTH);
-        building_menu_toggle_building(BUILDING_MENU_MONUMENTS);
-        building_menu_toggle_building(BUILDING_SCRIBAL_SCHOOL);
-        break;
-
-    case BUILDSET_TUT6_GUILDS:
-        building_menu_toggle_building(BUILDING_MENU_RAW_MATERIALS);
-        building_menu_toggle_building(BUILDING_MENU_GUILDS);
-        building_menu_toggle_building(BUILDING_STORAGE_YARD);
-        building_menu_toggle_building(BUILDING_TAX_COLLECTOR);
-        building_menu_toggle_building(BUILDING_BOOTH);
-        building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
-        break;
-
     case BUILDSET_TUT3_START:
         building_menu_disable_all();
 
@@ -651,40 +629,62 @@ void building_menu_update(int build_set) {
         break;
 
     case BUILDSET_TUT5_TRADING:
-        // TODO: enable trading
         building_menu_toggle_building(BUILDING_DOCK);
         break;
 
     case BUILDSET_TUT5_MONUMENTS:
         building_menu_toggle_building(BUILDING_BRICKLAYERS_GUILD);
-        //            enable_monument(MONUMENT_SMALL_MASTABA); // todo!!!!!!
+        building_menu_toggle_building(BUILDING_SMALL_MASTABA);
         break;
 
     case BUILDSET_TUT6_START:
         building_menu_disable_all();
-        // todo
+        break;
+
+    case BUILDSET_TUT6_IRRIGATION:
+        building_menu_toggle_building(BUILDING_WATER_LIFT);
+        building_menu_toggle_building(BUILDING_IRRIGATION_DITCH);
+        building_menu_toggle_building(BUILDING_MENU_BEAUTIFICATION);
+        break;
+
+    case BUILDSET_TUT6_EDUCATION:
+        building_menu_toggle_building(BUILDING_GARDENS);
+        building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
+        building_menu_toggle_building(BUILDING_BOOTH);
+        building_menu_toggle_building(BUILDING_MENU_MONUMENTS);
+        building_menu_toggle_building(BUILDING_SCRIBAL_SCHOOL);
+        break;
+
+    case BUILDSET_TUT6_GUILDS:
+        building_menu_toggle_building(BUILDING_MENU_RAW_MATERIALS);
+        building_menu_toggle_building(BUILDING_MENU_GUILDS);
+        building_menu_toggle_building(BUILDING_STORAGE_YARD);
+        building_menu_toggle_building(BUILDING_TAX_COLLECTOR);
+        building_menu_toggle_building(BUILDING_BOOTH);
+        building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
         break;
 
     case BUILDSET_TUT7_START:
         building_menu_disable_all();
-        for (int i = 0; i < BUILDING_MAX; i++)
+        for (int i = 0; i < BUILDING_MAX; i++) {
             enable_if_allowed(i);
-        // todo
+        }
         break;
 
     case BUILDSET_TUT8_START:
         building_menu_disable_all();
-        for (int i = 0; i < BUILDING_MAX; i++)
+        for (int i = 0; i < BUILDING_MAX; i++) {
             enable_if_allowed(i);
-        // todo
+        }
         break;
 
     default:
-        for (int i = 0; i < BUILDING_MAX; i++)
+        for (int i = 0; i < BUILDING_MAX; i++) {
             enable_if_allowed(i);
+        }
 
         // enable monuments!
-        building_menu_update_monuments(); // todo!!!!!!
+        building_menu_update_monuments();
 
         // update temple complexes
         building_menu_update_temple_complexes();

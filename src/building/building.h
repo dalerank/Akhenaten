@@ -214,6 +214,9 @@ public:
             uint8_t variant;
             uint8_t statue_offset;
             uint8_t temple_complex_attachments;
+            int resources[RESOURCES_MAX];
+            uint8_t phase;
+            uint8_t upgrades;
         } monuments;
     } data;
     int tax_income_or_storage;
@@ -466,6 +469,15 @@ template <typename T>
 inline building* building_first(T pred) {
     for (auto it = building_begin(), end = building_end(); it != end; ++it) {
         if (it->state == BUILDING_STATE_VALID && pred(*it)) {
+            return it;
+        }
+    }
+    return nullptr;
+}
+
+inline building* building_first_of_type(e_building_type type) {
+    for (auto it = building_begin(), end = building_end(); it != end; ++it) {
+        if (it->state == BUILDING_STATE_VALID && it->type == type) {
             return it;
         }
     }

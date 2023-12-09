@@ -607,6 +607,7 @@ bool building_is_harvester(int type) {
 }
 bool building_is_monument(int type) {
     switch (type) {
+    case BUILDING_SMALL_MASTABA:
     case BUILDING_PYRAMID:
     case BUILDING_SPHYNX:
     case BUILDING_MAUSOLEUM:

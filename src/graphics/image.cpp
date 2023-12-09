@@ -27,8 +27,6 @@ struct image_data_t {
 
     std::vector<imagepak**> pak_list;
 
-    imagepak* sprambient = nullptr;
-
     imagepak* expansion = nullptr;
     imagepak* sprmain2 = nullptr;
 
@@ -162,13 +160,11 @@ bool image_load_paks() {
 
     // add paks to parsing list cache
     data.pak_list.push_back(&data.temple);
-    data.pak_list.push_back(&data.sprambient);
     data.pak_list.push_back(&data.empire);
     data.pak_list.push_back(&data.sprmain2);
     data.pak_list.push_back(&data.expansion);
     data.pak_list.push_back(&data.monument);
 
-    data.sprambient = new imagepak("SprAmbient", 15831);           // 15831 --> 18765
     data.empire = new imagepak("Empire", 20305);                   // 20305 --> 20506 (+177)
     data.sprmain2 = new imagepak("SprMain2", 20683);               // 20683 --> 23035
     data.expansion = new imagepak("Expansion", 23035);             // 23035 --> 23935 (-200)
@@ -184,7 +180,7 @@ bool image_load_paks() {
     data.temple_paks.push_back(new imagepak("Temple_bast", 15591));
 
     // the various Monument paks.
-    data.monument_paks.push_back(new imagepak("Mastaba", 23735));
+    //data.monument_paks.push_back(new imagepak("Mastaba", 23735));
     data.monument_paks.push_back(new imagepak("Pyramid", 23735));
     data.monument_paks.push_back(new imagepak("bent_pyramid", 23735));
 
@@ -238,8 +234,6 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
     }
 
     switch (collection) {
-    case PACK_SPR_AMBIENT:
-        return data.sprambient;
     case PACK_EMPIRE:
         return data.empire;
         /////

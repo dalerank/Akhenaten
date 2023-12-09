@@ -456,6 +456,7 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
     }
     }
 }
+
 void map_building_tiles_add_temple_complex_parts(building* b) {
     int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
     int orientation_rel = city_view_relative_orientation(orientation);
@@ -463,8 +464,8 @@ void map_building_tiles_add_temple_complex_parts(building* b) {
     int part = 0;                                             // default = main
     if (b->prev_part_building_id && b->next_part_building_id) // the middle part is ALWAYS the altar
         part = 1;
-    else if (b == get_temple_complex_front_facing_part(b)) // front facing part (oracle)
-        part = 2;
+    //else if (b == get_temple_complex_front_facing_part(b)) // front facing part (oracle)
+    //    part = 2;
 
     int image_id = get_temple_complex_part_image(b->type, part, orientation_binary, (bool)(b->main()->data.monuments.temple_complex_attachments & part));
     map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);

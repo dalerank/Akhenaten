@@ -100,6 +100,7 @@ int building_rotation_get_delta_with_rotation(int default_delta) {
     else
         return GRID_OFFSET(0, default_delta);
 }
+
 void building_rotation_get_offset_with_rotation(int offset, int rot, int* x, int* y) {
     if (rot == 0) {
         *x = offset;
@@ -115,6 +116,7 @@ void building_rotation_get_offset_with_rotation(int offset, int rot, int* x, int
         *y = offset;
     }
 }
+
 int building_rotation_get_corner(int rot) {
     switch (rot) {
     case DIR_2_BOTTOM_RIGHT:
