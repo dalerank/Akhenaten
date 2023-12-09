@@ -631,8 +631,8 @@ bool building_is_monument(int type) {
         return false;
     }
 }
-bool building_is_palace(int type) {
-    return (type >= BUILDING_VILLAGE_PALACE && type <= BUILDING_CITY_PALACE);
+bool building_is_palace(e_building_type type) {
+    return building_type_any_of(type, BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_CITY_PALACE);
 }
 
 bool building_is_tax_collector(int type) {
@@ -711,7 +711,7 @@ bool building_is_infrastructure(int type) {
     return false;
 }
 
-bool building_is_administration(int type) {
+bool building_is_administration(e_building_type type) {
     if (building_is_palace(type) || building_is_tax_collector(type) || building_is_governor_mansion(type)) {
         return true;
     }
