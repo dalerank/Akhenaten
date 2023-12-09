@@ -1,4 +1,4 @@
-#include "market.h"
+#include "building_bazaar.h"
 
 #include "figure/figure.h"
 #include "building/storage.h"
@@ -21,9 +21,9 @@ struct resource_data {
     int num_buildings;
 };
 
-int building_market_get_max_food_stock(building* market) {
+int building_bazaar_get_max_food_stock(building* market) {
     int max_stock = 0;
-    if (market->id > 0 && market->type == BUILDING_MARKET) {
+    if (market->id > 0 && market->type == BUILDING_BAZAAR) {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
             int stock = market->data.market.inventory[i];
             if (stock > max_stock)
@@ -33,9 +33,9 @@ int building_market_get_max_food_stock(building* market) {
     return max_stock;
 }
 
-int building_market_get_max_goods_stock(building* market) {
+int building_bazaar_get_max_goods_stock(building* market) {
     int max_stock = 0;
-    if (market->id > 0 && market->type == BUILDING_MARKET) {
+    if (market->id > 0 && market->type == BUILDING_BAZAAR) {
         for (int i = INVENTORY_MIN_GOOD; i < INVENTORY_MAX_GOOD; i++) {
             int stock = market->data.market.inventory[i];
             if (stock > max_stock)
@@ -84,7 +84,7 @@ void unaccept_all_goods(building* market) {
     market->subtype.market_goods = 0xFFFF;
 }
 
-int building_market_get_storage_destination(building* market) {
+int building_bazaar_get_storage_destination(building* market) {
     resource_data resources[INVENTORY_MAX];
 
     for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -286,7 +286,7 @@ void building::spawn_figure_market() {
         if (!has_figure_of_type(1, FIGURE_MARKET_BUYER)) {
             figure_spawn_delay++;
             if (figure_spawn_delay > spawn_delay) {
-                building *dest = building_get(building_market_get_storage_destination(this));
+                building *dest = building_get(building_bazaar_get_storage_destination(this));
                 if (dest->id) {
                     figure_spawn_delay = 0;
                     figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, BUILDING_SLOT_MARKET_BUYER);

@@ -96,7 +96,7 @@ static void check_workers(int type) {
 
 static void check_market(int type) {
     if (!g_has_warning && type == BUILDING_GRANARY) {
-        if (building_count_active(BUILDING_MARKET) <= 0)
+        if (building_count_active(BUILDING_BAZAAR) <= 0)
             show(WARNING_BUILD_MARKET);
     }
 }

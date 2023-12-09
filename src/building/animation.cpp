@@ -87,7 +87,7 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
         //        case BUILDING_APOTHECARY:
         //        case BUILDING_DENTIST:
         //        case BUILDING_MORTUARY:
-        //        case BUILDING_MARKET:
+        //        case BUILDING_BAZAAR:
         //        case BUILDING_STORAGE_YARD: // b->num_workers < model_get_building(b->type)->laborers
         //        case BUILDING_GRANARY: // b->num_workers < model_get_building(b->type)->laborers
         //        case BUILDING_IRON_MINE:

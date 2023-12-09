@@ -6,7 +6,7 @@
 #include "building/barracks.h"
 #include "building/building_granary.h"
 #include "building/industry.h"
-#include "building/market.h"
+#include "building/building_bazaar.h"
 #include "building/model.h"
 #include "building/storage_yard.h"
 #include "city/buildings.h"
@@ -1315,7 +1315,7 @@ bool building::figure_generate() {
         case BUILDING_BOOTH: spawn_figure_booth(); break;
         case BUILDING_SENET_HOUSE: spawn_figure_senet(); break;
         case BUILDING_PAVILLION: spawn_figure_pavillion(); break;
-        case BUILDING_MARKET: spawn_figure_market(); break;
+        case BUILDING_BAZAAR: spawn_figure_market(); break;
         case BUILDING_SCRIBAL_SCHOOL: spawn_figure_school(); break;
         case BUILDING_LIBRARY: spawn_figure_library(); break;
         case BUILDING_WATER_LIFT: common_spawn_figure_trigger(50); break;

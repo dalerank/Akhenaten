@@ -160,7 +160,7 @@ static int get_height_id() {
         case BUILDING_MUD_TOWER:
         case BUILDING_MENU_FORTS:
         case BUILDING_MILITARY_ACADEMY:
-        case BUILDING_MARKET:
+        case BUILDING_BAZAAR:
         case BUILDING_GRANARY:
         case BUILDING_SHIPYARD:
         case BUILDING_DOCK:
@@ -629,7 +629,7 @@ static void draw_refresh_background() {
             case BUILDING_CATTLE_RANCH: building_cattle_ranch_draw_info(context); break;
             case BUILDING_BRICKS_WORKSHOP: building_brick_maker_workshop_draw_info(context); break;
             
-            case BUILDING_MARKET:
+            case BUILDING_BAZAAR:
                 if (context.storage_show_special_orders)
                     window_building_draw_market_orders(&context);
                 else
@@ -800,7 +800,7 @@ static void draw_foreground() {
                 window_building_draw_warehouse_foreground(&context);
             break;
 
-        case BUILDING_MARKET:
+        case BUILDING_BAZAAR:
             if (context.storage_show_special_orders)
                 window_building_draw_market_orders_foreground(&context);
             else
@@ -869,7 +869,7 @@ static int handle_specific_building_info_mouse(const mouse *m) {
         return window_building_handle_mouse_figure_list(m, &context);
     } else if (context.type == BUILDING_INFO_BUILDING) {
         switch (building_get(context.building_id)->type) {
-        case BUILDING_MARKET:
+        case BUILDING_BAZAAR:
             if (context.storage_show_special_orders)
                 window_building_handle_mouse_market_orders(m, &context);
             else

@@ -1,7 +1,7 @@
 #include "figure_phrase.h"
 
 #include "building/building.h"
-#include "building/market.h"
+#include "building/building_bazaar.h"
 #include "city/floods.h"
 #include "city/constants.h"
 #include "city/health.h"

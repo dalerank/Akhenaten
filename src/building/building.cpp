@@ -251,7 +251,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->data.granary.resource_stored[RESOURCE_NONE] = 3200;
         b->storage_id = building_storage_create(BUILDING_GRANARY);
         break;
-    case BUILDING_MARKET: // Set it as accepting all goods
+    case BUILDING_BAZAAR: // Set it as accepting all goods
         b->subtype.market_goods = 0x0000;
         break;
     case BUILDING_STORAGE_YARD:
@@ -693,7 +693,7 @@ bool building_is_food_category(int type) {
         return (type >= BUILDING_GRAIN_FARM && type <= BUILDING_CHICKPEAS_FARM) || type == BUILDING_FIGS_FARM;
     }
 
-    if (type == BUILDING_GRANARY || type == BUILDING_MARKET || type == BUILDING_WORK_CAMP
+    if (type == BUILDING_GRANARY || type == BUILDING_BAZAAR || type == BUILDING_WORK_CAMP
         || type == BUILDING_FISHING_WHARF || type == BUILDING_CATTLE_RANCH || type == BUILDING_HUNTING_LODGE) {
         return true;
     }
@@ -983,7 +983,7 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         if (version <= 163) { b->data.house.water_supply = 0; } 
         else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.water_supply); }
 
-    } else if (b->type == BUILDING_MARKET) {
+    } else if (b->type == BUILDING_BAZAAR) {
         iob->bind____skip(2);
         //            iob->bind____skip(8);
         iob->bind(BIND_SIGNATURE_INT16, &b->data.market.pottery_demand);

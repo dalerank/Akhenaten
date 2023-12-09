@@ -1,6 +1,6 @@
 #include "dock.h"
 
-#include "building/market.h"
+#include "building/building_bazaar.h"
 #include "building/building.h"
 #include "building/building_type.h"
 #include "grid/water.h"

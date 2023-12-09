@@ -308,7 +308,7 @@ void city_resource_calculate_food_stocks_and_supply_wheat() {
     if (scenario_property_kingdom_supplies_grain()) {
         for (int i = 1; i < MAX_BUILDINGS; i++) {
             building* b = building_get(i);
-            if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MARKET)
+            if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_BAZAAR)
                 b->data.market.inventory[0] = 200;
         }
     }

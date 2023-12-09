@@ -262,6 +262,7 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
         /////
     case PACK_EXPANSION:
         return data.expansion;
+
     case PACK_EXPANSION_SPR:
         return data.sprmain2;
         /////

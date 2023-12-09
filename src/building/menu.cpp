@@ -162,7 +162,7 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      0},
     // distribution structures
     {BUILDING_GRANARY,
-     BUILDING_MARKET,
+     BUILDING_BAZAAR,
      BUILDING_STORAGE_YARD,
      BUILDING_DOCK,
      0},
@@ -511,7 +511,7 @@ void building_menu_update(int build_set) {
     case BUILDSET_TUT1_FOOD:
         building_menu_toggle_building(BUILDING_HUNTING_LODGE);
         building_menu_toggle_building(BUILDING_GRANARY);
-        building_menu_toggle_building(BUILDING_MARKET);
+        building_menu_toggle_building(BUILDING_BAZAAR);
         break;
 
     case BUILDSET_TUT1_WATER:
@@ -528,7 +528,7 @@ void building_menu_update(int build_set) {
         building_menu_toggle_building(BUILDING_FIREHOUSE);
         building_menu_toggle_building(BUILDING_ENGINEERS_POST);
         building_menu_toggle_building(BUILDING_POLICE_STATION);
-        building_menu_toggle_building(BUILDING_MARKET);
+        building_menu_toggle_building(BUILDING_BAZAAR);
         building_menu_toggle_building(BUILDING_GRANARY);
         building_menu_toggle_building(BUILDING_HUNTING_LODGE);
         building_menu_toggle_building(BUILDING_WATER_SUPPLY);
@@ -557,7 +557,7 @@ void building_menu_update(int build_set) {
         building_menu_toggle_building(BUILDING_WORK_CAMP);
         building_menu_toggle_building(BUILDING_BOOTH);
         building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
-        building_menu_toggle_building(BUILDING_MARKET);
+        building_menu_toggle_building(BUILDING_BAZAAR);
         building_menu_toggle_building(BUILDING_GRANARY);
         enable_gods(GOD_OSIRIS);
         break;
@@ -586,7 +586,7 @@ void building_menu_update(int build_set) {
         building_menu_toggle_building(BUILDING_BARLEY_FARM);
         building_menu_toggle_building(BUILDING_WORK_CAMP);
         enable_entertainment(2);
-        building_menu_toggle_building(BUILDING_MARKET);
+        building_menu_toggle_building(BUILDING_BAZAAR);
         building_menu_toggle_building(BUILDING_GRANARY);
         building_menu_toggle_building(BUILDING_FERRY);
         building_menu_update(BUILDSET_TUT3_INDUSTRY);
@@ -614,7 +614,7 @@ void building_menu_update(int build_set) {
         building_menu_toggle_building(BUILDING_POTTERY_WORKSHOP);
         building_menu_toggle_building(BUILDING_BEER_WORKSHOP);
 
-        building_menu_toggle_building(BUILDING_MARKET);
+        building_menu_toggle_building(BUILDING_BAZAAR);
         building_menu_toggle_building(BUILDING_GRANARY);
         building_menu_toggle_building(BUILDING_STORAGE_YARD);
 

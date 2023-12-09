@@ -70,7 +70,7 @@ struct city_overlay_bazaar_access : public city_overlay {
     }
 
     bool show_building(const building* b) const override {
-        return b->type == BUILDING_MARKET;
+        return b->type == BUILDING_BAZAAR;
     }
 };
 

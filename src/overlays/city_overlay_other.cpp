@@ -20,7 +20,7 @@
 #include "overlays/city_overlay.h"
 
 static int show_building_food_stocks(const building* b) {
-    return b->type == BUILDING_MARKET || b->type == BUILDING_FISHING_WHARF || b->type == BUILDING_GRANARY;
+    return b->type == BUILDING_BAZAAR || b->type == BUILDING_FISHING_WHARF || b->type == BUILDING_GRANARY;
 }
 
 

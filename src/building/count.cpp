@@ -159,7 +159,7 @@ void building_count_update() {
         case BUILDING_DANCE_SCHOOL:
         case BUILDING_SENET_MASTER:
             // distribution
-        case BUILDING_MARKET:
+        case BUILDING_BAZAAR:
             // military
         case BUILDING_MILITARY_ACADEMY:
             // religion
@@ -397,8 +397,8 @@ io_buffer* iob_building_count_industry = new io_buffer([](io_buffer* iob, size_t
     //    data.buildings[BUILDING_RECRUITER].active = military->read_i32();
     //
     //    // support
-    //    data.buildings[BUILDING_MARKET].total = support->read_i32();
-    //    data.buildings[BUILDING_MARKET].active = support->read_i32();
+    //    data.buildings[BUILDING_BAZAAR].total = support->read_i32();
+    //    data.buildings[BUILDING_BAZAAR].active = support->read_i32();
     //    data.buildings[BUILDING_WATER_LIFT].total = support->read_i32();
     //    data.buildings[BUILDING_WATER_LIFT].active = support->read_i32();
     //    data.buildings[BUILDING_MENU_BEAUTIFICATION].total = support->read_i32();

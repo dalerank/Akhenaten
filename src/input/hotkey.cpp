@@ -251,7 +251,7 @@ static void add_definition(const hotkey_mapping* mapping) {
         break;
     case HOTKEY_BUILD_MARKET:
         def->action = &data.hotkey_state.building;
-        def->value = BUILDING_MARKET;
+        def->value = BUILDING_BAZAAR;
         break;
     case HOTKEY_BUILD_PLAZA:
         def->action = &data.hotkey_state.building;

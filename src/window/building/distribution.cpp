@@ -4,7 +4,7 @@
 #include "graphics/elements/scrollbar.h"
 
 #include "building/building.h"
-#include "building/market.h"
+#include "building/building_bazaar.h"
 #include "building/storage.h"
 #include "building/storage_yard.h"
 #include "city/buildings.h"
@@ -879,7 +879,7 @@ static void toggle_resource_state(int index, int param2) {
     auto &data = g_window_building_distribution;
     building* b = building_get(data.building_id);
     int resource;
-    if (b->type == BUILDING_MARKET || b->type == BUILDING_DOCK)
+    if (b->type == BUILDING_BAZAAR || b->type == BUILDING_DOCK)
         toggle_good_accepted(index - 1, b);
     else {
         if (b->type == BUILDING_STORAGE_YARD)
@@ -894,7 +894,7 @@ static void toggle_resource_state_backwards(int index, int param2) {
     auto &data = g_window_building_distribution;
     building* b = building_get(data.building_id);
     int resource;
-    if (b->type == BUILDING_MARKET || b->type == BUILDING_DOCK)
+    if (b->type == BUILDING_BAZAAR || b->type == BUILDING_DOCK)
         toggle_good_accepted(index - 1, b);
     else {
         if (b->type == BUILDING_STORAGE_YARD)
@@ -909,7 +909,7 @@ static void order_quantity_increase_decrease(int index, int param2) {
     auto &data = g_window_building_distribution;
     building* b = building_get(data.building_id);
     int resource;
-    if (b->type == BUILDING_MARKET || b->type == BUILDING_DOCK)
+    if (b->type == BUILDING_BAZAAR || b->type == BUILDING_DOCK)
         return;
     else {
         if (b->type == BUILDING_STORAGE_YARD)
