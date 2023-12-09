@@ -1301,16 +1301,9 @@ bool building::figure_generate() {
     } else {
         // single building type
         switch (type) {
-        case BUILDING_STORAGE_YARD:
-            spawn_figure_storageyard();
-            break;
-        case BUILDING_GRANARY:
-            spawn_figure_granary();
-            break;
-        case BUILDING_TOWER:
-            spawn_figure_tower();
-            break;
-
+        case BUILDING_STORAGE_YARD: spawn_figure_storageyard(); break;
+        case BUILDING_GRANARY: spawn_figure_granary(); break;
+        case BUILDING_MUD_TOWER: spawn_figure_tower(); break;
         case BUILDING_ENGINEERS_POST: spawn_figure_engineers_post(); break;
         case BUILDING_POLICE_STATION: spawn_figure_police(); break;
         case BUILDING_FIREHOUSE: spawn_figure_firehouse(); break;
@@ -1320,57 +1313,25 @@ bool building::figure_generate() {
         case BUILDING_DANCE_SCHOOL: spawn_figure_dancer(); break;
         case BUILDING_BANDSTAND: spawn_figure_bandstand(); break;
         case BUILDING_BOOTH: spawn_figure_booth(); break;
-
-        case BUILDING_SENET_HOUSE:
-            spawn_figure_senet();
-            break;
-        case BUILDING_PAVILLION:
-            spawn_figure_pavillion();
-            break;
-        case BUILDING_MARKET:
-            spawn_figure_market();
-            break;
-        case BUILDING_SCRIBAL_SCHOOL:
-            spawn_figure_school();
-            break;
-        case BUILDING_LIBRARY:
-            spawn_figure_library();
-            break;
-        case BUILDING_WATER_LIFT:
-            common_spawn_figure_trigger(50);
-            break;
-        case BUILDING_APOTHECARY:
-            spawn_figure_apothecary();
-            break;
-        case BUILDING_DENTIST:
-            spawn_figure_dentist();
-            break;
-        case BUILDING_MORTUARY:
-            spawn_figure_mortuary();
-            break;
-        case BUILDING_PHYSICIAN:
-            spawn_figure_physician();
-            break;
+        case BUILDING_SENET_HOUSE: spawn_figure_senet(); break;
+        case BUILDING_PAVILLION: spawn_figure_pavillion(); break;
+        case BUILDING_MARKET: spawn_figure_market(); break;
+        case BUILDING_SCRIBAL_SCHOOL: spawn_figure_school(); break;
+        case BUILDING_LIBRARY: spawn_figure_library(); break;
+        case BUILDING_WATER_LIFT: common_spawn_figure_trigger(50); break;
+        case BUILDING_APOTHECARY: spawn_figure_apothecary(); break;
+        case BUILDING_DENTIST: spawn_figure_dentist(); break;
+        case BUILDING_MORTUARY: spawn_figure_mortuary(); break;
+        case BUILDING_PHYSICIAN: spawn_figure_physician(); break;
             //            case BUILDING_MISSION_POST:
             //                spawn_figure_mission_post(); break;
-        case BUILDING_DOCK:
-            spawn_figure_dock();
-            break;
-        case BUILDING_FISHING_WHARF:
-            spawn_figure_wharf();
-            break;
-        case BUILDING_SHIPYARD:
-            spawn_figure_shipyard();
-            break;
-        case BUILDING_NATIVE_HUT:
-            spawn_figure_native_hut();
-            break;
-        case BUILDING_NATIVE_MEETING:
-            spawn_figure_native_meeting();
-            break;
-        case BUILDING_NATIVE_CROPS:
-            update_native_crop_progress();
-            break;
+        case BUILDING_DOCK: spawn_figure_dock(); break;
+        case BUILDING_FISHING_WHARF: spawn_figure_wharf(); break;
+        case BUILDING_SHIPYARD: spawn_figure_shipyard(); break;
+        case BUILDING_NATIVE_HUT: spawn_figure_native_hut(); break;
+        case BUILDING_NATIVE_MEETING: spawn_figure_native_meeting(); break;
+        case BUILDING_NATIVE_CROPS: update_native_crop_progress(); break;
+
         case BUILDING_BARLEY_FARM:
         case BUILDING_FLAX_FARM:
         case BUILDING_GRAIN_FARM:

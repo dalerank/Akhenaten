@@ -116,7 +116,7 @@ static void check_weapons_access(int type) {
 }
 
 static void check_wall(int type, int x, int y, int size) {
-    if (!g_has_warning && type == BUILDING_TOWER) {
+    if (!g_has_warning && type == BUILDING_MUD_TOWER) {
         if (!map_terrain_is_adjacent_to_wall(x, y, size))
             show(WARNING_SENTRIES_NEED_WALL);
     }

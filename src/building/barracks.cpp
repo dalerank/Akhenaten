@@ -103,7 +103,7 @@ bool building::barracks_create_tower_sentry() {
     building* tower = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_TOWER && b->num_workers > 0 && !b->has_figure(0)
+        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MUD_TOWER && b->num_workers > 0 && !b->has_figure(0)
             && (b->road_network_id == road_network_id || config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))) {
             tower = b;
             break;

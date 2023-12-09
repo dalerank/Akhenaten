@@ -573,7 +573,7 @@ static void add_building(building* b, int orientation, int variant) {
         }
         break;
         // defense
-    case BUILDING_TOWER:
+    case BUILDING_MUD_TOWER:
         map_terrain_remove_with_radius(b->tile.x(), b->tile.y(), 2, 0, TERRAIN_WALL);
         map_building_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_TOWER), TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
         map_tiles_update_area_walls(b->tile.x(), b->tile.y(), 5);
@@ -1065,7 +1065,7 @@ void BuildPlanner::setup_build_flags() {
         set_flag(PlannerFlags::NearbyWater);
         break;
 
-    case BUILDING_TOWER:
+    case BUILDING_MUD_TOWER:
         set_flag(PlannerFlags::Walls);
         break;
 

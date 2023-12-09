@@ -157,7 +157,7 @@ static int get_height_id() {
         case BUILDING_ACADEMY:
         case BUILDING_LIBRARY:
         case BUILDING_MUD_GATEHOUSE:
-        case BUILDING_TOWER:
+        case BUILDING_MUD_TOWER:
         case BUILDING_MENU_FORTS:
         case BUILDING_MILITARY_ACADEMY:
         case BUILDING_MARKET:
@@ -754,7 +754,7 @@ static void draw_refresh_background() {
 
             case BUILDING_FERRY: window_building_draw_ferry(&context); break;
             case BUILDING_MUD_GATEHOUSE: window_building_draw_gatehouse(&context); break;
-            case BUILDING_TOWER: window_building_draw_tower(&context); break;
+            case BUILDING_MUD_TOWER: window_building_draw_tower(&context); break;
             case BUILDING_MILITARY_ACADEMY: window_building_draw_military_academy(&context); break;
             case BUILDING_RECRUITER: window_building_draw_barracks(&context); break;
             case BUILDING_MENU_FORTS: window_building_draw_fort(&context); break;

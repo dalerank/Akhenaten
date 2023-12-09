@@ -810,7 +810,7 @@ void building_update_state(void) {
 
         if (b->state != BUILDING_STATE_VALID || !b->house_size) {
             if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
-                if (b->type == BUILDING_TOWER || b->type == BUILDING_MUD_GATEHOUSE) {
+                if (b->type == BUILDING_MUD_TOWER || b->type == BUILDING_MUD_GATEHOUSE) {
                     wall_recalc = true;
                     road_recalc = true;
                 } else if (b->type == BUILDING_WATER_LIFT) {
