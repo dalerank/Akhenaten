@@ -554,7 +554,7 @@ static void add_building(building* b, int orientation, int variant) {
 
     case BUILDING_FISHING_WHARF:
     case BUILDING_TRANSPORT_WHARF:
-    case BUILDING_SHIPYARD:
+    case BUILDING_SHIPWRIGHT:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_DOCK: {
             auto props = building_properties_for_type(b->type);
@@ -1092,7 +1092,7 @@ void BuildPlanner::setup_build_flags() {
         set_flag(PlannerFlags::ShoreLine, 2);
         break;
 
-    case BUILDING_SHIPYARD:
+    case BUILDING_SHIPWRIGHT:
     case BUILDING_DOCK:
     case BUILDING_WARSHIP_WHARF:
         set_flag(PlannerFlags::ShoreLine, 3);
@@ -1290,7 +1290,7 @@ void BuildPlanner::setup_build_graphics() {
 
     case BUILDING_FISHING_WHARF:
     case BUILDING_DOCK:
-    case BUILDING_SHIPYARD:
+    case BUILDING_SHIPWRIGHT:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_TRANSPORT_WHARF:
     case BUILDING_FERRY:
@@ -1818,7 +1818,7 @@ void BuildPlanner::construction_update(tile2i tile) {
     case BUILDING_WATER_LIFT:
     case BUILDING_FISHING_WHARF:
     case BUILDING_TRANSPORT_WHARF:
-    case BUILDING_SHIPYARD:
+    case BUILDING_SHIPWRIGHT:
     case BUILDING_DOCK:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_FERRY:

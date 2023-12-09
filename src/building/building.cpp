@@ -280,7 +280,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         break;
     case BUILDING_WATER_LIFT:
     case BUILDING_TRANSPORT_WHARF:
-    case BUILDING_SHIPYARD:
+    case BUILDING_SHIPWRIGHT:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_FERRY:
         b->data.industry.orientation = orientation;
@@ -667,7 +667,7 @@ bool building_is_water_crossing(int type) {
     return (type == BUILDING_FERRY) || type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE;
 }
 bool building_is_industry_type(const building* b) {
-    return b->output_resource_first_id || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_SHIPYARD || b->type == BUILDING_FISHING_WHARF;
+    return b->output_resource_first_id || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_SHIPWRIGHT || b->type == BUILDING_FISHING_WHARF;
 }
 
 bool building_is_industry(e_building_type type) {
@@ -681,7 +681,7 @@ bool building_is_industry(e_building_type type) {
         return true;
     if (building_is_guild(type))
         return true;
-    if (type == BUILDING_DOCK || type == BUILDING_SHIPYARD)
+    if (type == BUILDING_DOCK || type == BUILDING_SHIPWRIGHT)
         return true;
     if (type == BUILDING_STORAGE_YARD || type == BUILDING_STORAGE_YARD_SPACE)
         return true;

@@ -162,7 +162,7 @@ static int get_height_id() {
         case BUILDING_MILITARY_ACADEMY:
         case BUILDING_BAZAAR:
         case BUILDING_GRANARY:
-        case BUILDING_SHIPYARD:
+        case BUILDING_SHIPWRIGHT:
         case BUILDING_DOCK:
         case BUILDING_FISHING_WHARF:
         case BUILDING_PERSONAL_MANSION:
@@ -721,7 +721,7 @@ static void draw_refresh_background() {
                 break;
 
             case BUILDING_ENGINEERS_POST: building_engineer_post_draw_info(context); break;
-            case BUILDING_SHIPYARD: building_shipyard_draw_info(context); break;
+            case BUILDING_SHIPWRIGHT: building_shipyard_draw_info(context); break;
             
             case BUILDING_DOCK:
                 if (context.storage_show_special_orders)

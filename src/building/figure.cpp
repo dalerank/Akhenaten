@@ -1327,7 +1327,7 @@ bool building::figure_generate() {
             //                spawn_figure_mission_post(); break;
         case BUILDING_DOCK: spawn_figure_dock(); break;
         case BUILDING_FISHING_WHARF: spawn_figure_wharf(); break;
-        case BUILDING_SHIPYARD: spawn_figure_shipyard(); break;
+        case BUILDING_SHIPWRIGHT: spawn_figure_shipyard(); break;
         case BUILDING_NATIVE_HUT: spawn_figure_native_hut(); break;
         case BUILDING_NATIVE_MEETING: spawn_figure_native_meeting(); break;
         case BUILDING_NATIVE_CROPS: update_native_crop_progress(); break;

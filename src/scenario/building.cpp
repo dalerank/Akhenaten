@@ -11,7 +11,7 @@ bool scenario_building_allowed(int building_type) {
         return g_scenario_data.allowed_buildings[3];
     case BUILDING_IRRIGATION_DITCH:
         return g_scenario_data.allowed_buildings[4];
-    case BUILDING_SHIPYARD:
+    case BUILDING_SHIPWRIGHT:
         return g_scenario_data.allowed_buildings[5];
     case BUILDING_WORK_CAMP:
         return g_scenario_data.allowed_buildings[6];

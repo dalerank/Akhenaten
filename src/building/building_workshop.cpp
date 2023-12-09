@@ -238,7 +238,7 @@ void building_workshop_draw_raw_material_storage(painter &ctx, const building* b
         //            color_mask);
         break;
 
-    case BUILDING_SHIPYARD:
+    case BUILDING_SHIPWRIGHT:
         //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3,
         //            color_mask);
         break;

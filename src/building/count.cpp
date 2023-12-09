@@ -198,7 +198,7 @@ void building_count_update() {
             }
             break;
 
-        case BUILDING_SHIPYARD:
+        case BUILDING_SHIPWRIGHT:
             if (b.num_workers > 0 && b.has_open_water_access) {
                 city_buildings_add_working_shipyard(b.id);
             }

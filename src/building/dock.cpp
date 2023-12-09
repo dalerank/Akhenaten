@@ -34,7 +34,7 @@ void building_river_update_open_water_access() {
     map_routing_calculate_distances_water_boat(river_entry);
 
     buildings_valid_do([] (building &b) {
-        if (!building_type_any_of(b, BUILDING_DOCK, BUILDING_FISHING_WHARF, BUILDING_SHIPYARD)) {
+        if (!building_type_any_of(b, BUILDING_DOCK, BUILDING_FISHING_WHARF, BUILDING_SHIPWRIGHT)) {
             return;
         }
 

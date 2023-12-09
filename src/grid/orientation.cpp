@@ -119,7 +119,7 @@ void map_orientation_update_buildings(void) {
             map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_BUILDING);
             map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), b->subtype.orientation);
             break;
-        case BUILDING_SHIPYARD:
+        case BUILDING_SHIPWRIGHT:
             image_offset = city_view_relative_orientation(b->data.industry.orientation);
             image_id = image_id_from_group(GROUP_BUILDING_SHIPYARD) + image_offset;
             map_water_add_building(i, b->tile, 2, image_id);

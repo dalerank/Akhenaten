@@ -420,7 +420,7 @@ static void toggle_building(int id, int param2) {
     case CONFIG_GP_CH_BUILDING_REED_GATHERER: type = BUILDING_REED_GATHERER; break;
     case CONFIG_GP_CH_BUILDING_PAPYRUS_MAKER: type = BUILDING_PAPYRUS_WORKSHOP; break;
     case CONFIG_GP_CH_BUILDING_SCRIBAL_SCHOOL: type = BUILDING_SCRIBAL_SCHOOL; break;
-    case CONFIG_GP_CH_BUILDING_SHIPYARD: type = BUILDING_SHIPYARD; break;
+    case CONFIG_GP_CH_BUILDING_SHIPYARD: type = BUILDING_SHIPWRIGHT; break;
     case CONFIG_GP_CH_BUILDING_FISHING_WHARF: type = BUILDING_FISHING_WHARF; break;
     case CONFIG_GP_CH_BUILDING_CHICKPEAS_FARM: type = BUILDING_CHICKPEAS_FARM; break;
     case CONFIG_GP_CH_BUILDING_LETTUCE_FARM: type = BUILDING_LETTUCE_FARM; break;
@@ -554,7 +554,7 @@ static bool is_config_option_enabled(int option) {
     case CONFIG_GP_CH_BUILDING_REED_GATHERER: return building_menu_is_building_enabled(BUILDING_REED_GATHERER);
     case CONFIG_GP_CH_BUILDING_PAPYRUS_MAKER: return building_menu_is_building_enabled(BUILDING_PAPYRUS_WORKSHOP);
     case CONFIG_GP_CH_BUILDING_SCRIBAL_SCHOOL: return building_menu_is_building_enabled(BUILDING_SCRIBAL_SCHOOL);
-    case CONFIG_GP_CH_BUILDING_SHIPYARD: return building_menu_is_building_enabled(BUILDING_SHIPYARD);
+    case CONFIG_GP_CH_BUILDING_SHIPYARD: return building_menu_is_building_enabled(BUILDING_SHIPWRIGHT);
     case CONFIG_GP_CH_BUILDING_FISHING_WHARF: return building_menu_is_building_enabled(BUILDING_FISHING_WHARF);
     case CONFIG_GP_CH_BUILDING_POMEGRANATES_FARM: return building_menu_is_building_enabled(BUILDING_POMEGRANATES_FARM);
     case CONFIG_GP_CH_BUILDING_CHICKPEAS_FARM: return building_menu_is_building_enabled(BUILDING_CHICKPEAS_FARM);
