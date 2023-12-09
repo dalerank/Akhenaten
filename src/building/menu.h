@@ -93,10 +93,5 @@ void building_menu_update_monuments();
 void building_menu_update_temple_complexes();
 void building_menu_update_gods_available(e_god god, bool available);
 
-/**
- * Checks whether the building menu has changed.
- * Also marks the change as 'seen'.
- * @return True if the building menu has changed
- */
 bool building_menu_has_changed();
 void building_menu_invalidate();

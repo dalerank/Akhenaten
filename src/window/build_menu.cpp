@@ -110,7 +110,7 @@ static int set_submenu_for_type(int type) {
         data.selected_submenu = BUILD_MENU_RAW_MATERIALS;
         break;
         //        case BUILDING_MENU_GUILDS:
-    case BUILDING_MENU_GUILDS:
+    case BUILDING_MENU_CONSTURCTION_GUILDS:
         data.selected_submenu = BUILD_MENU_WORKSHOPS;
         break;
     case BUILDING_MENU_TEMPLES:
@@ -125,7 +125,7 @@ static int set_submenu_for_type(int type) {
     case BUILDING_MENU_MONUMENTS:
         data.selected_submenu = BUILD_MENU_MONUMENTS;
         break;
-    case BUILDING_MENU_WATER_CROSSING:
+    case BUILDING_MENU_WATER_CROSSINGS:
         data.selected_submenu = BUILD_MENU_WATER_CROSSINGS;
         break;
     case BUILDING_MENU_BEAUTIFICATION:
@@ -149,8 +149,8 @@ static void draw_background(void) {
 
 static int menu_index_to_text_index(int type) {
     switch (type) {
-    case BUILDING_MENU_WATER_CROSSING:
-        return 52;
+    default:
+        break;
     }
 
     return type;
@@ -264,7 +264,7 @@ static void button_menu_item(int item) {
     }
 }
 
-int window_build_menu_image(void) {
+int window_build_menu_image() {
     auto &data = g_build_menu_data;
     int image_base = image_id_from_group(GROUP_BUILD_MENU_CATEGORIES);
     switch (data.selected_submenu) {

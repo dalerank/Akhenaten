@@ -570,8 +570,8 @@ bool building::is_religion() {
 bool building::is_entertainment() {
     return building_is_entertainment(type);
 }
-bool building::is_culture() {
-    return building_is_culture(type);
+bool building::is_education() {
+    return building_is_education(type);
 }
 bool building::is_military() {
     return building_is_military(type);
@@ -589,22 +589,27 @@ bool building_is_farm(int type) {
     return (type >= BUILDING_BARLEY_FARM && type <= BUILDING_CHICKPEAS_FARM) || type == BUILDING_FIGS_FARM
            || type == BUILDING_HENNA_FARM;
 }
+
 bool building_is_floodplain_farm(building &b) {
     return (building_is_farm(b.type) && map_terrain_is(b.tile.grid_offset(), TERRAIN_FLOODPLAIN)); // b->data.industry.labor_state >= 1 // b->labor_category == 255
 }
+
 bool building_is_workshop(int type) {
     return (type >= BUILDING_BEER_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
            || (type >= BUILDING_PAPYRUS_WORKSHOP && type <= BUILDING_CHARIOTS_WORKSHOP) || type == BUILDING_CATTLE_RANCH
            || type == BUILDING_LAMP_WORKSHOP || type == BUILDING_PAINT_WORKSHOP;
 }
+
 bool building_is_extractor(int type) {
     return (type == BUILDING_STONE_QUARRY || type == BUILDING_LIMESTONE_QUARRY || type == BUILDING_CLAY_PIT)
            || type == BUILDING_GOLD_MINE || type == BUILDING_GEMSTONE_MINE || type == BUILDING_COPPER_MINE
            || type == BUILDING_GRANITE_QUARRY || type == BUILDING_SANDSTONE_QUARRY;
 }
-bool building_is_harvester(int type) {
+
+bool building_is_harvester(e_building_type type) {
     return (type == BUILDING_REED_GATHERER || type == BUILDING_WOOD_CUTTERS);
 }
+
 bool building_is_monument(int type) {
     switch (type) {
     case BUILDING_SMALL_MASTABA:
@@ -665,7 +670,7 @@ bool building_is_industry_type(const building* b) {
     return b->output_resource_first_id || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_SHIPYARD || b->type == BUILDING_FISHING_WHARF;
 }
 
-bool building_is_industry(int type) {
+bool building_is_industry(e_building_type type) {
     if (building_is_extractor(type))
         return true;
     if (building_is_harvester(type))
@@ -743,16 +748,17 @@ bool building_is_entertainment(int type) {
     return false;
 }
 
-bool building_is_culture(int type) {
-    if (type == BUILDING_SCRIBAL_SCHOOL || type == BUILDING_LIBRARY || type == BUILDING_ACADEMY)
-        return true;
-    return false;
+bool building_is_education(e_building_type type) {
+    return building_type_any_of(type, BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ACADEMY);
 }
+
 bool building_is_military(int type) {
     if (building_is_fort(type) || type == BUILDING_FORT_GROUND || type == BUILDING_MENU_FORTS)
         return true;
+    
     if (type == BUILDING_MILITARY_ACADEMY || type == BUILDING_RECRUITER)
         return true;
+    
     return false;
 }
 
@@ -761,16 +767,15 @@ bool building_is_draggable(int type) {
     case BUILDING_CLEAR_LAND:
     case BUILDING_ROAD:
     case BUILDING_IRRIGATION_DITCH:
-    case BUILDING_WALL:
+    case BUILDING_MUD_WALL:
     case BUILDING_PLAZA:
     case BUILDING_GARDENS:
     case BUILDING_HOUSE_VACANT_LOT:
         return true;
+
     case BUILDING_WATER_LIFT:
-        //            if (GAME_ENV == ENGINE_ENV_C3)
-        //                return true;
-        //            else
         return false;
+
     default:
         return false;
     }

@@ -994,10 +994,10 @@ void BuildPlanner::setup_build(e_building_type type) { // select building for co
     case BUILDING_MENU_SHRINES:
     case BUILDING_MENU_TEMPLES:
     case BUILDING_MENU_TEMPLE_COMPLEX:
-    case BUILDING_MENU_GUILDS:
+    case BUILDING_MENU_CONSTURCTION_GUILDS:
     case BUILDING_MENU_DEFENSES:
     case BUILDING_MENU_FORTS:
-    case BUILDING_MENU_WATER_CROSSING:
+    case BUILDING_MENU_WATER_CROSSINGS:
     case BUILDING_MENU_BEAUTIFICATION:
     case BUILDING_MENU_MONUMENTS:
         return;
@@ -1739,7 +1739,7 @@ void BuildPlanner::construction_start(tile2i tile) {
             //            case BUILDING_WATER_LIFT:
             can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start.x(), start.y());
             break;
-        case BUILDING_WALL:
+        case BUILDING_MUD_WALL:
             can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start.x(), start.y());
             break;
 
@@ -1782,7 +1782,7 @@ void BuildPlanner::construction_update(tile2i tile) {
     case BUILDING_CLEAR_LAND:
         items_placed = last_items_cleared = building_construction_clear_land(true, start, end);
         break;
-    case BUILDING_WALL:
+    case BUILDING_MUD_WALL:
         items_placed = building_construction_place_wall(true, start.x(), start.y(), end.x(), end.y());
         break;
     case BUILDING_ROAD:
@@ -1863,7 +1863,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     // attempt placing, restore terrain data on failure
     if (!place()) {
         map_property_clear_constructing_and_deleted();
-        if (build_type == BUILDING_WALL || build_type == BUILDING_ROAD || build_type == BUILDING_IRRIGATION_DITCH)
+        if (build_type == BUILDING_MUD_WALL || build_type == BUILDING_ROAD || build_type == BUILDING_IRRIGATION_DITCH)
             game_undo_restore_map(0);
         else if (build_type == BUILDING_PLAZA || build_type == BUILDING_GARDENS)
             game_undo_restore_map(1);
@@ -1995,7 +1995,7 @@ bool BuildPlanner::place() {
             map_property_clear_constructing_and_deleted();
         }
         break;
-    case BUILDING_WALL:
+    case BUILDING_MUD_WALL:
         placement_cost *= building_construction_place_wall(false, start.x(), start.y(), end.x(), end.y());
         break;
     case BUILDING_ROAD:

@@ -266,7 +266,7 @@ public:
     bool is_administration();
     bool is_religion();
     bool is_entertainment();
-    bool is_culture();
+    bool is_education();
     bool is_military();
 
     void clear_related_data();
@@ -388,9 +388,14 @@ inline building* building_end() {
 }
 
 template<typename ... Args>
-bool building_type_any_of(building &b, Args ... args) {
+bool building_type_any_of(e_building_type type, Args ... args) {
     int types[] = {args...};
-    return (std::find(std::begin(types), std::end(types), b.type) != std::end(types));
+    return (std::find(std::begin(types), std::end(types), type) != std::end(types));
+}
+
+template<typename ... Args>
+bool building_type_any_of(building &b, Args ... args) {
+    return building_type_any_of(b.type, args...);
 }
 
 template<typename ... Args>
@@ -428,7 +433,7 @@ bool building_is_farm(int type);
 bool building_is_floodplain_farm(building &b);
 bool building_is_workshop(int type);
 bool building_is_extractor(int type);
-bool building_is_harvester(int type);
+bool building_is_harvester(e_building_type type);
 bool building_is_monument(int type);
 bool building_is_administration(int type);
 bool building_is_palace(int type);
@@ -443,12 +448,12 @@ bool building_is_beautification(int type);
 bool building_is_water_crossing(int type);
 bool building_is_industry_type(const building* b);
 
-bool building_is_industry(int type);
+bool building_is_industry(e_building_type type);
 bool building_is_food_category(int type);
 bool building_is_infrastructure(int type);
 bool building_is_religion(int type);
 bool building_is_entertainment(int type);
-bool building_is_culture(int type);
+bool building_is_education(e_building_type type);
 bool building_is_military(int type);
 
 bool building_is_draggable(int type);

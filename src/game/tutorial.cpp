@@ -215,7 +215,7 @@ void tutorial_menu_update(int tut) {
         building_menu_update(BUILDSET_TUT5_START);
         if (g_tutorials_flags.tutorial_5.spacious_apartment) building_menu_update(BUILDSET_TUT5_EDUCATION);
         if (g_tutorials_flags.tutorial_5.papyrus_made) building_menu_update(BUILDSET_TUT5_TRADING);
-        if (g_tutorials_flags.tutorial_5.bricks_bought) building_menu_update(BUILDING_MENU_MONUMENTS);
+        if (g_tutorials_flags.tutorial_5.bricks_bought) building_menu_update(BUILDSET_TUT5_MONUMENTS);
 
     } else if (tut == 6) {
         building_menu_update(BUILDSET_TUT6_START);

@@ -69,10 +69,9 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_FAMILY_MANSION,
      BUILDING_DYNASTY_MANSION,
      BUILDING_ROADBLOCK,
-     BUILDING_MENU_WATER_CROSSING,
+     BUILDING_MENU_WATER_CROSSINGS,
      BUILDING_MENU_BEAUTIFICATION,
      0},
-
     // beautifications
     {BUILDING_GARDENS,
      BUILDING_PLAZA,
@@ -80,7 +79,6 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_MEDIUM_STATUE,
      BUILDING_LARGE_STATUE,
      0},
-
     // military structures
     {BUILDING_MENU_DEFENSES,
      BUILDING_RECRUITER,
@@ -102,9 +100,8 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_LAMP_WORKSHOP,
      BUILDING_PAINT_WORKSHOP,
      BUILDING_SHIPYARD,
-     BUILDING_MENU_GUILDS,
+     BUILDING_MENU_CONSTURCTION_GUILDS,
      0},
-
     // farms
     {BUILDING_GRAIN_FARM,
      BUILDING_LETTUCE_FARM,
@@ -154,7 +151,6 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_FORT_ARCHERS,
      BUILDING_FORT_CHARIOTEERS,
      0},
-
     // food structures
     {BUILDING_MENU_FARMS,
      BUILDING_WATER_LIFT,
@@ -162,7 +158,8 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_FISHING_WHARF,
      BUILDING_CATTLE_RANCH,
      BUILDING_HUNTING_LODGE,
-     BUILDING_WORK_CAMP},
+     BUILDING_WORK_CAMP,
+     0},
     // distribution structures
     {BUILDING_GRANARY,
      BUILDING_MARKET,
@@ -239,7 +236,7 @@ void building_menu_toggle_building(int type, bool enabled) {
         if (building_is_farm(type))
             building_menu_toggle_building(BUILDING_MENU_FARMS);
 
-        if (building_is_extractor(type))
+        if (building_is_extractor(type) || building_is_harvester((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_RAW_MATERIALS);
 
         if (building_is_fort(type))
@@ -258,16 +255,20 @@ void building_menu_toggle_building(int type, bool enabled) {
             building_menu_toggle_building(BUILDING_MENU_TEMPLE_COMPLEX);
 
         if (building_is_guild(type))
-            building_menu_toggle_building(BUILDING_MENU_GUILDS);
+            building_menu_toggle_building(BUILDING_MENU_CONSTURCTION_GUILDS);
 
         if (building_is_beautification(type))
             building_menu_toggle_building(BUILDING_MENU_BEAUTIFICATION);
 
         if (building_is_water_crossing(type))
-            building_menu_toggle_building(BUILDING_MENU_WATER_CROSSING);
+            building_menu_toggle_building(BUILDING_MENU_WATER_CROSSINGS);
 
         if (building_is_monument(type))
             building_menu_toggle_building(BUILDING_MENU_MONUMENTS);
+
+        if (building_is_education((e_building_type)type)) {
+            building_menu_toggle_building(BUILDING_MENU_EDUCATION);
+        }
     }
 }
 
@@ -657,7 +658,7 @@ void building_menu_update(int build_set) {
 
     case BUILDSET_TUT6_GUILDS:
         building_menu_toggle_building(BUILDING_MENU_RAW_MATERIALS);
-        building_menu_toggle_building(BUILDING_MENU_GUILDS);
+        building_menu_toggle_building(BUILDING_MENU_CONSTURCTION_GUILDS);
         building_menu_toggle_building(BUILDING_STORAGE_YARD);
         building_menu_toggle_building(BUILDING_TAX_COLLECTOR);
         building_menu_toggle_building(BUILDING_BOOTH);

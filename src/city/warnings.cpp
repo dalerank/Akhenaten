@@ -147,8 +147,8 @@ static void check_dancers_access(int type) {
 
 static void check_charioteer_access(int type) {
     if (!g_has_warning && type == BUILDING_SENET_HOUSE) {
-        if (building_count_active(BUILDING_CHARIOT_MAKER) <= 0)
-            show(WARNING_BUILD_CHARIOT_MAKER);
+        if (building_count_active(BUILDING_SENET_MASTER) <= 0)
+            show(WARNING_BUILD_SENET_MAKER);
     }
 }
 

@@ -155,7 +155,7 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
                 image_id = image_id_from_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
             } else if (building_is_religion(b->type)) {
                 image_id = image_id_from_group(IMG_MINIMAP_PURPLE); // purple
-            } else if (building_is_culture(b->type)) {
+            } else if (building_is_education(b->type)) {
                 image_id = image_id_from_group(IMG_MINIMAP_LIGHT_YELLOW); // light yellow
             } else if (building_is_infrastructure(b->type)) {
                 image_id = image_id_from_group(IMG_MINIMAP_BRIGHT_BLUE); // bright blue

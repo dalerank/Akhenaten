@@ -151,15 +151,9 @@ static void draw_buttons_collapsed(int x_offset) {
 static void draw_buttons_expanded(int x_offset) {
     buttons_build_expanded[12].enabled = game_can_undo();
     buttons_build_expanded[14].enabled = city_message_problem_area_count();
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_overlays_collapse_sidebar, 2);
-        image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_build_expanded, 15);
-        image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_top_expanded, 6);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_overlays_collapse_sidebar, 1);
-        image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_build_expanded, 15);
-        image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_top_expanded, 3);
-    }
+    image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_overlays_collapse_sidebar, 1);
+    image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_build_expanded, 15);
+    image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_top_expanded, 3);
 }
 
 static void refresh_build_menu_buttons(void) {
