@@ -286,7 +286,7 @@ static void set_native_target_building(formation* m) {
             continue;
 
         switch (b->type) {
-        case BUILDING_MISSION_POST:
+        case BUILDING_RESERVER_MISSION_POST_80:
         case BUILDING_NATIVE_HUT:
         case BUILDING_NATIVE_CROPS:
         case BUILDING_NATIVE_MEETING:

@@ -356,7 +356,7 @@ static void draw_bridge(map_point tile, int x, int y, int type, painter &ctx) {
         dir += 8;
 
     bool blocked = false;
-    if (type == BUILDING_SHIP_BRIDGE && length < 5)
+    if (type == BUILDING_UNUSED_SHIP_BRIDGE_83 && length < 5)
         blocked = true;
     else if (!end_grid_offset)
         blocked = true;
@@ -393,12 +393,12 @@ static void draw_bridge(map_point tile, int x, int y, int type, painter &ctx) {
     } else {
         if (dir == DIR_0_TOP_RIGHT || dir == DIR_6_TOP_LEFT) {
             for (int i = length - 1; i >= 0; i--) {
-                int sprite_id = map_bridge_get_sprite_id(i, length, dir, type == BUILDING_SHIP_BRIDGE);
+                int sprite_id = map_bridge_get_sprite_id(i, length, dir, type == BUILDING_UNUSED_SHIP_BRIDGE_83);
                 city_draw_bridge_tile(ctx, x + x_delta * i, y + y_delta * i, sprite_id, COLOR_MASK_GREEN);
             }
         } else {
             for (int i = 0; i < length; i++) {
-                int sprite_id = map_bridge_get_sprite_id(i, length, dir, type == BUILDING_SHIP_BRIDGE);
+                int sprite_id = map_bridge_get_sprite_id(i, length, dir, type == BUILDING_UNUSED_SHIP_BRIDGE_83);
                 city_draw_bridge_tile(ctx, x + x_delta * i, y + y_delta * i, sprite_id, COLOR_MASK_GREEN);
             }
         }

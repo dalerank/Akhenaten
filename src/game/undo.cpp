@@ -291,7 +291,7 @@ void game_undo_perform(void) {
         map_terrain_restore();
         map_aqueduct_restore();
         restore_map_images();
-    } else if (data.type == BUILDING_LOW_BRIDGE || data.type == BUILDING_SHIP_BRIDGE) {
+    } else if (data.type == BUILDING_LOW_BRIDGE || data.type == BUILDING_UNUSED_SHIP_BRIDGE_83) {
         map_terrain_restore();
         map_sprite_restore();
         restore_map_images();
@@ -355,7 +355,7 @@ void game_undo_reduce_time_available(void) {
     case BUILDING_ROAD:
     case BUILDING_MUD_WALL:
     case BUILDING_LOW_BRIDGE:
-    case BUILDING_SHIP_BRIDGE:
+    case BUILDING_UNUSED_SHIP_BRIDGE_83:
     case BUILDING_PLAZA:
     case BUILDING_GARDENS:
         return;

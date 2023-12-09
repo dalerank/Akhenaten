@@ -34,7 +34,7 @@ static bool has_building_on_native_land(int x, int y, int size, int radius) {
             int building_id = map_building_at(MAP_OFFSET(xx, yy));
             if (building_id > 0) {
                 int type = building_get(building_id)->type;
-                if (type != BUILDING_MISSION_POST && type != BUILDING_NATIVE_HUT && type != BUILDING_NATIVE_MEETING
+                if (type != BUILDING_UNUSED_SHIP_BRIDGE_83 && type != BUILDING_NATIVE_HUT && type != BUILDING_NATIVE_MEETING
                     && type != BUILDING_NATIVE_CROPS && type != BUILDING_ROADBLOCK) {
                     return true;
                 }

@@ -1104,7 +1104,7 @@ void BuildPlanner::setup_build_flags() {
         break;
 
     case BUILDING_LOW_BRIDGE:
-    case BUILDING_SHIP_BRIDGE:
+    case BUILDING_UNUSED_SHIP_BRIDGE_83:
         set_flag(PlannerFlags::ShoreLine, 1);
         set_flag(PlannerFlags::Bridge);
         break;
@@ -1298,7 +1298,7 @@ void BuildPlanner::setup_build_graphics() {
         break;
 
     case BUILDING_LOW_BRIDGE:
-    case BUILDING_SHIP_BRIDGE:
+    case BUILDING_UNUSED_SHIP_BRIDGE_83:
         // TODO
         break;
 
@@ -1799,7 +1799,7 @@ void BuildPlanner::construction_update(tile2i tile) {
         map_tiles_update_all_aqueducts(0);
         break;
     case BUILDING_LOW_BRIDGE:
-    case BUILDING_SHIP_BRIDGE:
+    case BUILDING_UNUSED_SHIP_BRIDGE_83:
         items_placed = map_bridge_building_length();
         break;
     case BUILDING_HOUSE_VACANT_LOT:
@@ -1867,7 +1867,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
             game_undo_restore_map(0);
         else if (build_type == BUILDING_PLAZA || build_type == BUILDING_GARDENS)
             game_undo_restore_map(1);
-        else if (build_type == BUILDING_LOW_BRIDGE || build_type == BUILDING_SHIP_BRIDGE)
+        else if (build_type == BUILDING_LOW_BRIDGE || build_type == BUILDING_UNUSED_SHIP_BRIDGE_83)
             map_bridge_reset_building_length();
         return;
     }
@@ -2009,8 +2009,8 @@ bool BuildPlanner::place() {
         map_routing_update_land();
         break;
     case BUILDING_LOW_BRIDGE:
-    case BUILDING_SHIP_BRIDGE: {
-        placement_cost *= map_bridge_add(x, y, build_type == BUILDING_SHIP_BRIDGE);
+    case BUILDING_UNUSED_SHIP_BRIDGE_83: {
+        placement_cost *= map_bridge_add(x, y, build_type == BUILDING_UNUSED_SHIP_BRIDGE_83);
         //            if (length <= 1) {
         //                city_warning_show(WARNING_SHORE_NEEDED);
         //                return false;

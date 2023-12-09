@@ -664,7 +664,7 @@ bool building_is_beautification(int type) {
     return building_is_statue(type) || type == BUILDING_GARDENS || type == BUILDING_PLAZA;
 }
 bool building_is_water_crossing(int type) {
-    return (type == BUILDING_FERRY) || type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE;
+    return (type == BUILDING_FERRY) || type == BUILDING_LOW_BRIDGE || type == BUILDING_UNUSED_SHIP_BRIDGE_83;
 }
 bool building_is_industry_type(const building* b) {
     return b->output_resource_first_id || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_SHIPWRIGHT || b->type == BUILDING_FISHING_WHARF;

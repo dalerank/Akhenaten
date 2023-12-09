@@ -134,13 +134,12 @@ int building_type_to_channel(building *b) {
     case BUILDING_ARCHITECT_POST: return SOUND_CHANNEL_CITY_ENGINEERS_POST;
 
     case BUILDING_LOW_BRIDGE:
-    case BUILDING_SHIP_BRIDGE:
+    case BUILDING_UNUSED_SHIP_BRIDGE_83:
         return 0;
 
     case BUILDING_TAX_COLLECTOR:
     case BUILDING_TAX_COLLECTOR_UPGRADED:
         return SOUND_CHANNEL_CITY_TAX_COLLECTOR;
-
 
     case BUILDING_WATER_LIFT: return 0;
     case BUILDING_WELL: return SOUND_CHANNEL_CITY_WELL;
