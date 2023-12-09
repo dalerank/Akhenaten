@@ -149,7 +149,7 @@ static int get_height_id() {
         case BUILDING_NATIVE_HUT:
         case BUILDING_NATIVE_MEETING:
         case BUILDING_NATIVE_CROPS:
-        case BUILDING_MISSION_POST:
+        case BUILDING_RESERVER_MISSION_POST_80:
         case BUILDING_POLICE_STATION:
         case BUILDING_ENGINEERS_POST:
         case BUILDING_FIREHOUSE:
@@ -762,7 +762,7 @@ static void draw_refresh_background() {
             case BUILDING_NATIVE_HUT: window_building_draw_native_hut(&context); break;
             case BUILDING_NATIVE_MEETING: window_building_draw_native_meeting(&context); break;
             case BUILDING_NATIVE_CROPS: window_building_draw_native_crops(&context); break;
-            case BUILDING_MISSION_POST: window_building_draw_mission_post(&context); break;
+            case BUILDING_RESERVER_MISSION_POST_80: window_building_draw_mission_post(&context); break;
             case BUILDING_FIREHOUSE: window_building_draw_firehouse(&context); break;
             case BUILDING_WORK_CAMP: building_work_camp_draw_info(context); break;
             case BUILDING_FESTIVAL_SQUARE: window_building_draw_festival_square(&context); break;
