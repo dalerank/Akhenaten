@@ -78,9 +78,9 @@ bool scenario_building_allowed(int building_type) {
         return g_scenario_data.allowed_buildings[32];
     case BUILDING_BRICK_WALL:
         return g_scenario_data.allowed_buildings[33];
-    case BUILDING_TOWER_PH:
+    case BUILDING_BRICK_TOWER:
         return g_scenario_data.allowed_buildings[34];
-    case BUILDING_GATEHOUSE_PH:
+    case BUILDING_BRICK_GATEHOUSE:
         return g_scenario_data.allowed_buildings[35];
     case BUILDING_RECRUITER:
         return g_scenario_data.allowed_buildings[36];

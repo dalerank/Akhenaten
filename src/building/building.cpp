@@ -288,7 +288,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_DOCK:
         b->data.dock.orientation = orientation;
         break;
-    case BUILDING_GATEHOUSE_PH:
+    case BUILDING_BRICK_GATEHOUSE:
     case BUILDING_MUD_GATEHOUSE:
         b->subtype.orientation = orientation;
         break;
@@ -506,8 +506,8 @@ bool building::is_house() {
 bool building::is_fort() {
     return building_is_fort(type);
 }
-bool building::is_defense_ph() {
-    return building_is_defense_ph(type);
+bool building::is_defense() {
+    return building_is_defense(type);
 }
 bool building::is_farm() {
     return building_is_farm(type);
@@ -582,8 +582,8 @@ bool building::is_military() {
 bool building_is_fort(int type) {
     return type == BUILDING_FORT_CHARIOTEERS || type == BUILDING_FORT_ARCHERS || type == BUILDING_FORT_INFANTRY;
 }
-bool building_is_defense_ph(int type) {
-    return (type == BUILDING_BRICK_WALL || type == BUILDING_GATEHOUSE_PH || type == BUILDING_TOWER_PH);
+bool building_is_defense(e_building_type type) {
+    return building_type_any_of(type, BUILDING_BRICK_WALL, BUILDING_BRICK_GATEHOUSE, BUILDING_BRICK_TOWER);
 }
 bool building_is_farm(int type) {
     return (type >= BUILDING_BARLEY_FARM && type <= BUILDING_CHICKPEAS_FARM) || type == BUILDING_FIGS_FARM

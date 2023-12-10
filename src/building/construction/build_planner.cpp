@@ -579,7 +579,7 @@ static void add_building(building* b, int orientation, int variant) {
         map_tiles_update_area_walls(b->tile.x(), b->tile.y(), 5);
         break;
 
-    case BUILDING_GATEHOUSE_PH:
+    case BUILDING_BRICK_GATEHOUSE:
     case BUILDING_MUD_GATEHOUSE:
         map_building_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_TOWER) + orientation, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
         //            map_orientation_update_buildings();
@@ -1805,12 +1805,15 @@ void BuildPlanner::construction_update(tile2i tile) {
     case BUILDING_HOUSE_VACANT_LOT:
         items_placed = place_houses(true, start.x(), start.y(), end.x(), end.y());
         break;
-    case BUILDING_GATEHOUSE_PH:
+
+    case BUILDING_BRICK_GATEHOUSE:
         mark_construction(tile, 1, 3, ~TERRAIN_ROAD, false); // TODO
         break;
+
     case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
         mark_construction(tile, 3, 3, ~TERRAIN_ROAD, false);
         break;
+
     case BUILDING_STORAGE_YARD:
         mark_construction(tile, 3, 3, TERRAIN_ALL, false);
         break;

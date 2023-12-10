@@ -188,9 +188,12 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_ABU_SIMBEL,
      0},
     // defensive structures
-    {BUILDING_BRICK_WALL,
-     BUILDING_TOWER_PH,
-     BUILDING_GATEHOUSE_PH,
+    {BUILDING_MUD_WALL,
+     BUILDING_MUD_TOWER,
+     BUILDING_MUD_GATEHOUSE,
+     BUILDING_BRICK_WALL,
+     BUILDING_BRICK_TOWER,
+     BUILDING_BRICK_GATEHOUSE,
      0},
 };
 int g_menu_enabled[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX];
@@ -242,7 +245,7 @@ void building_menu_toggle_building(int type, bool enabled) {
         if (building_is_fort(type))
             building_menu_toggle_building(BUILD_MENU_FORTS);
 
-        if (building_is_defense_ph(type))
+        if (building_is_defense((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_DEFENSES);
 
         if (building_is_shrine(type))

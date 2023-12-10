@@ -244,7 +244,7 @@ public:
 
     bool is_house();
     bool is_fort();
-    bool is_defense_ph();
+    bool is_defense();
     bool is_farm();
     bool is_floodplain_farm();
     bool is_workshop();
@@ -428,7 +428,7 @@ void building_clear_all(void);
 // void building_totals_add_corrupted_house(int unfixable);
 
 bool building_is_fort(int type);
-bool building_is_defense_ph(int type);
+bool building_is_defense(e_building_type type);
 bool building_is_farm(int type);
 bool building_is_floodplain_farm(building &b);
 bool building_is_workshop(int type);
