@@ -147,13 +147,20 @@ static void draw_background(void) {
     window_city_draw_panels();
 }
 
-static int menu_index_to_text_index(int type) {
-    switch (type) {
+struct text_group {
+    int group;
+    int id;
+};
+
+static text_group menu_index_to_text_index(text_group text) {
+    switch (text.id) {
+    case BUILDING_SMALL_MASTABA: return {198, 18};
+            
     default:
         break;
     }
 
-    return type;
+    return text;
 }
 
 static void draw_menu_buttons() {
@@ -175,13 +182,13 @@ static void draw_menu_buttons() {
 
         item_index = building_menu_next_index(data.selected_submenu, item_index);
         e_building_type type = building_menu_type(data.selected_submenu, item_index);
+        text_group tgroup = menu_index_to_text_index({28, type});
         
         if (building_is_palace(type)) {
             bool has_palace = city_buildings_has_palace();
-            int text_index = menu_index_to_text_index(type);
 
             label_draw_colored(ctx, x_offset - label_margin, data.y_offset + 110 + 24 * i, label_width, ((data.focus_button_id == i + 1) || has_palace) ? 1 : 2, has_palace ? 0xffC0C0C0 : 0xffffffff);
-            lang_text_draw_centered(28, text_index, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, has_palace ? FONT_NORMAL_BLACK_ON_LIGHT : font);
+            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, has_palace ? FONT_NORMAL_BLACK_ON_LIGHT : font);
         } else {
             label_draw(x_offset - label_margin, data.y_offset + 110 + 24 * i, label_width, data.focus_button_id == i + 1 ? 1 : 2);
         }
@@ -193,8 +200,7 @@ static void draw_menu_buttons() {
             int index = (type - BUILDING_TEMPLE_COMPLEX_ALTAR) + 2 * (b->type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
             lang_text_draw_centered(189, index, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, font);
         } else {
-            int text_index = menu_index_to_text_index(type);
-            lang_text_draw_centered(28, text_index, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, font);
+            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, font);
         }
 
         int cost = model_get_building(type)->cost;

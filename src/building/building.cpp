@@ -614,7 +614,7 @@ bool building_is_monument(int type) {
     switch (type) {
     case BUILDING_SMALL_MASTABA:
     case BUILDING_PYRAMID:
-    case BUILDING_SPHYNX:
+    case BUILDING_SPHINX:
     case BUILDING_MAUSOLEUM:
     case BUILDING_ALEXANDRIA_LIBRARY:
     case BUILDING_CAESAREUM:
