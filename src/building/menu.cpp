@@ -188,7 +188,7 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_ABU_SIMBEL,
      0},
     // defensive structures
-    {BUILDING_WALL_PH,
+    {BUILDING_BRICK_WALL,
      BUILDING_TOWER_PH,
      BUILDING_GATEHOUSE_PH,
      0},

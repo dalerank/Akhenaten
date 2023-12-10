@@ -583,7 +583,7 @@ bool building_is_fort(int type) {
     return type == BUILDING_FORT_CHARIOTEERS || type == BUILDING_FORT_ARCHERS || type == BUILDING_FORT_INFANTRY;
 }
 bool building_is_defense_ph(int type) {
-    return (type == BUILDING_WALL_PH || type == BUILDING_GATEHOUSE_PH || type == BUILDING_TOWER_PH);
+    return (type == BUILDING_BRICK_WALL || type == BUILDING_GATEHOUSE_PH || type == BUILDING_TOWER_PH);
 }
 bool building_is_farm(int type) {
     return (type >= BUILDING_BARLEY_FARM && type <= BUILDING_CHICKPEAS_FARM) || type == BUILDING_FIGS_FARM
@@ -667,7 +667,7 @@ bool building_is_water_crossing(int type) {
     return (type == BUILDING_FERRY) || type == BUILDING_LOW_BRIDGE || type == BUILDING_UNUSED_SHIP_BRIDGE_83;
 }
 bool building_is_industry_type(const building* b) {
-    return b->output_resource_first_id || b->type == BUILDING_UNUSED_NATIVE_CROPS_93 || b->type == BUILDING_SHIPWRIGHT || b->type == BUILDING_FISHING_WHARF;
+    return b->output_resource_first_id || building_type_any_of(b->type, BUILDING_SHIPWRIGHT, BUILDING_FISHING_WHARF);
 }
 
 bool building_is_industry(e_building_type type) {

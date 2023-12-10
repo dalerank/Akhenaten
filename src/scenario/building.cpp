@@ -76,7 +76,7 @@ bool scenario_building_allowed(int building_type) {
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
         return g_scenario_data.allowed_buildings[32];
-    case BUILDING_WALL_PH:
+    case BUILDING_BRICK_WALL:
         return g_scenario_data.allowed_buildings[33];
     case BUILDING_TOWER_PH:
         return g_scenario_data.allowed_buildings[34];
