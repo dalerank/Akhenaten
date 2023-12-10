@@ -228,7 +228,7 @@ void building_workshop_draw_raw_material_storage(painter &ctx, const building* b
         }
         break;
 
-    case BUILDING_LINEN_WORKSHOP:
+    case BUILDING_WEAVER_WORKSHOP:
         //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_FLAX_2) + amount, x + 65, y + 3,
         //            color_mask);
         break;

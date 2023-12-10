@@ -180,7 +180,7 @@ static void check_vines_access(int type) {
 }
 
 static void check_olives_access(int type) {
-    if (type == BUILDING_LINEN_WORKSHOP && building_count_industry_active(RESOURCE_STRAW) <= 0) {
+    if (type == BUILDING_WEAVER_WORKSHOP && building_count_industry_active(RESOURCE_STRAW) <= 0) {
         if (city_resource_count(RESOURCE_MEAT) <= 0 && city_resource_count(RESOURCE_STRAW) <= 0) {
             show(WARNING_OLIVES_NEEDED);
             if (empire_can_produce_resource(RESOURCE_STRAW, true))

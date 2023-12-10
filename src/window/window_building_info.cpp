@@ -172,7 +172,7 @@ static int get_height_id() {
         case BUILDING_ROADBLOCK:
         case BUILDING_TAX_COLLECTOR_UPGRADED:
         case BUILDING_BREWERY_WORKSHOP:
-        case BUILDING_LINEN_WORKSHOP:
+        case BUILDING_WEAVER_WORKSHOP:
         case BUILDING_WEAPONS_WORKSHOP:
         case BUILDING_JEWELS_WORKSHOP:
         case BUILDING_POTTERY_WORKSHOP:
@@ -621,14 +621,14 @@ static void draw_refresh_background() {
             case BUILDING_SANDSTONE_QUARRY: building_sandstone_quarry_draw_info(context); break;
             case BUILDING_GRANITE_QUARRY: building_granite_quarry_draw_info(context); break;;
             case BUILDING_BREWERY_WORKSHOP: building_brewery_draw_info(context); break;
-            case BUILDING_LINEN_WORKSHOP: building_flax_workshop_draw_info(context); break;
+            case BUILDING_WEAVER_WORKSHOP: building_flax_workshop_draw_info(context); break;
             case BUILDING_WEAPONS_WORKSHOP: building_weapons_workshop_draw_info(context); break;
             case BUILDING_JEWELS_WORKSHOP: building_luxury_workshop_draw_info(context); break;
             case BUILDING_POTTERY_WORKSHOP: building_pottery_workshop_draw_info(context); break;
             case BUILDING_PAPYRUS_WORKSHOP: building_papyrus_workshop_draw_info(context); break;
             case BUILDING_CATTLE_RANCH: building_cattle_ranch_draw_info(context); break;
             case BUILDING_BRICKS_WORKSHOP: building_brick_maker_workshop_draw_info(context); break;
-            
+
             case BUILDING_BAZAAR:
                 if (context.storage_show_special_orders)
                     window_building_draw_market_orders(&context);

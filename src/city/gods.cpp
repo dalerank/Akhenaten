@@ -108,7 +108,7 @@ static bool PTAH_warehouse_restock() {
 
 static bool PTAH_industry_restock() {
     // restocks shipwrights, weavers and jewelers
-    int industries[3] = {BUILDING_SHIPWRIGHT, BUILDING_LINEN_WORKSHOP, BUILDING_JEWELS_WORKSHOP};
+    int industries[3] = {BUILDING_SHIPWRIGHT, BUILDING_WEAVER_WORKSHOP, BUILDING_JEWELS_WORKSHOP};
     int industry_resource[3] = {-1, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
 
     // search for industries
@@ -172,7 +172,7 @@ static bool PTAH_warehouse_destruction() {
 
 static bool PTAH_industry_destruction() {
     // destroys random industry, if found
-    int industries[6] = {BUILDING_GOLD_MINE, BUILDING_GEMSTONE_MINE, BUILDING_CLAY_PIT, BUILDING_SHIPWRIGHT, BUILDING_LINEN_WORKSHOP, BUILDING_JEWELS_WORKSHOP};
+    int industries[6] = {BUILDING_GOLD_MINE, BUILDING_GEMSTONE_MINE, BUILDING_CLAY_PIT, BUILDING_SHIPWRIGHT, BUILDING_WEAVER_WORKSHOP, BUILDING_JEWELS_WORKSHOP};
     int industry_resource[6] = {RESOURCE_GOLD, RESOURCE_GEMS, RESOURCE_CLAY, -1, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
 
     // search for industries

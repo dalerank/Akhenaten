@@ -163,7 +163,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->output_resource_first_id = RESOURCE_BEER;
         //            b->subtype.workshop_type = WORKSHOP_BEER;
         break;
-    case BUILDING_LINEN_WORKSHOP:
+    case BUILDING_WEAVER_WORKSHOP:
         b->data.industry.first_material_id = RESOURCE_FLAX;
         b->output_resource_first_id = RESOURCE_LINEN;
         //            b->subtype.workshop_type = WORKSHOP_LINEN;
@@ -918,7 +918,7 @@ bool resource_required_by_workshop(building* b, e_resource resource) {
     case RESOURCE_STRAW: return (b->type == BUILDING_BRICKS_WORKSHOP || b->type == BUILDING_CATTLE_RANCH);
     case RESOURCE_BARLEY: return b->type == BUILDING_BREWERY_WORKSHOP;
     case RESOURCE_REEDS: return b->type == BUILDING_PAPYRUS_WORKSHOP;
-    case RESOURCE_FLAX: return b->type == BUILDING_LINEN_WORKSHOP;
+    case RESOURCE_FLAX: return b->type == BUILDING_WEAVER_WORKSHOP;
     case RESOURCE_GEMS: return b->type == BUILDING_JEWELS_WORKSHOP;
     case RESOURCE_COPPER: return b->type == BUILDING_WEAPONS_WORKSHOP;
     case RESOURCE_TIMBER: return b->type == BUILDING_CHARIOTS_WORKSHOP;
