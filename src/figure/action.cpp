@@ -178,7 +178,7 @@ bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
     return false;
 }
 
-bool figure::do_goto(map_point dest, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
+bool figure::do_goto(tile2i dest, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
     OZZY_PROFILER_SECTION("Figure/Goto");
     terrain_usage = terrainchoice;
     if (use_cross_country) {
@@ -224,7 +224,7 @@ bool figure::do_goto(map_point dest, int terrainchoice, short NEXT_ACTION, short
     return false;
 }
 bool figure::do_gotobuilding(building* dest, bool stop_at_road, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
-    map_point finish_tile;
+    tile2i finish_tile;
     set_destination(dest);
     if (dest->state != BUILDING_STATE_VALID) {
         advance_action(FAIL_ACTION);

@@ -18,7 +18,7 @@
 #include "grid/terrain.h"
 
 void figure_create_immigrant(building* house, int num_people) {
-    map_point& entry = city_map_entry_point();
+    tile2i entry = city_map_entry_point();
     figure* f = figure_create(FIGURE_IMMIGRANT, entry, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_1_IMMIGRANT_CREATED;
     f->set_immigrant_home(house->id);
@@ -63,7 +63,7 @@ void figure::update_direction_and_image() {
     }
 }
 
-static int closest_house_with_room(map_point tile) {
+static int closest_house_with_room(tile2i tile) {
     int min_dist = 1000;
     int min_building_id = 0;
     int max_id = building_get_highest_id();
@@ -249,7 +249,7 @@ void figure::emigrant_action() {
 
 void figure::homeless_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Homeless");
-    map_point& exit = city_map_exit_point();
+    tile2i exit = city_map_exit_point();
     switch (action_state) {
     case FIGURE_ACTION_7_HOMELESS_CREATED:
         anim_frame = 0;
@@ -332,7 +332,7 @@ void figure::homeless_action() {
             int building_id = closest_house_with_room(tile);
             if (building_id > 0) {
                 building* b = building_get(building_id);
-                map_point road_tile;
+                tile2i road_tile;
                 if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                     b->set_figure(2, id);
                     set_immigrant_home(building_id);

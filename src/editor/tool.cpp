@@ -29,7 +29,7 @@ static struct {
     int brush_size = 3;
     int build_in_progress = 0;
     int start_elevation = 0;
-    map_point start_tile = {0, 0};
+    tile2i start_tile = {0, 0};
 } data;
 
 int editor_tool_type(void) {

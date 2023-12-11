@@ -50,7 +50,7 @@ ferry_points map_water_docking_points(building *b) {
     }
 
     ferry_points result;
-    map_point tile = b->tile;
+    tile2i tile = b->tile;
     switch (b->data.industry.orientation) {
     case 0:
     result.point_a = {tile.x() + 1, tile.y() - 1};
@@ -73,12 +73,12 @@ ferry_points map_water_docking_points(building *b) {
     return result;
 }
 
-void map_water_add_building(int building_id, map_point tile, int size, int image_id, int ext_terrain_flags) {
+void map_water_add_building(int building_id, tile2i tile, int size, int image_id, int ext_terrain_flags) {
     if (!map_grid_is_inside(tile, size)) {
         return;
     }
 
-    map_point leftmost;
+    tile2i leftmost;
     switch (city_view_orientation()) {
     case DIR_0_TOP_RIGHT:
         leftmost.set(0, size - 1);
@@ -117,7 +117,7 @@ static int blocked_land_terrain(void) {
            | TERRAIN_ROAD | TERRAIN_ELEVATION | TERRAIN_RUBBLE;
 }
 
-shore_orientation map_shore_determine_orientation(map_point tile, int size, bool adjust_xy, bool adjacent, int shore_terrain) {
+shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool adjust_xy, bool adjacent, int shore_terrain) {
     int x = tile.x();
     int y = tile.y();
 
@@ -216,7 +216,7 @@ shore_orientation map_shore_determine_orientation(map_point tile, int size, bool
     return {false, 0};
 }
 
-int map_water_get_wharf_for_new_fishing_boat(figure* boat, map_point* tile) {
+int map_water_get_wharf_for_new_fishing_boat(figure* boat, tile2i* tile) {
     building* wharf = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
@@ -255,7 +255,7 @@ int map_water_get_wharf_for_new_fishing_boat(figure* boat, map_point* tile) {
     return wharf->id;
 }
 
-bool map_water_find_alternative_fishing_boat_tile(figure* boat, map_point* tile) {
+bool map_water_find_alternative_fishing_boat_tile(figure* boat, tile2i* tile) {
     if (map_figure_id_get(boat->tile) == boat->id) {
         return false;
     }

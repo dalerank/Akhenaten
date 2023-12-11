@@ -80,7 +80,7 @@ static int try_export_resource(building* warehouse, e_resource resource, int cit
     return 0;
 }
 
-static int get_closest_warehouse_for_import(vec2i pos, int city_id, int distance_from_entry, int road_network_id, map_point &warehouse, e_resource& import_resource) {
+static int get_closest_warehouse_for_import(vec2i pos, int city_id, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource& import_resource) {
     int importable[16];
     importable[RESOURCE_NONE] = 0;
     for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
@@ -232,7 +232,7 @@ int figure::deliver_import_resource(building* dock) {
 
     int x, y;
     get_trade_center_location(&x, &y);
-    map_point tile;
+    tile2i tile;
     e_resource resource;
     int warehouse_id = get_closest_warehouse_for_import(vec2i(x, y), ship->empire_city_id, dock->distance_from_entry, dock->road_network_id, tile, resource);
     if (!warehouse_id) {
@@ -260,7 +260,7 @@ int figure::fetch_export_resource(building* dock) {
 
     int x, y;
     get_trade_center_location(&x, &y);
-    map_point tile;
+    tile2i tile;
     e_resource resource;
     int warehouse_id = get_closest_warehouse_for_export(vec2i(x, y), ship->empire_city_id, dock->distance_from_entry, dock->road_network_id, tile, resource);
 

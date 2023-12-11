@@ -426,7 +426,7 @@ int formation_add_figure(int formation_id, int figure_id, int deployed, int dama
     return 0; // shouldn't happen
 }
 
-void formation_move_herds_away(map_point tile) {
+void formation_move_herds_away(tile2i tile) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* f = &g_formations[i];
         if (f->in_use != 1 || f->is_legion || !f->is_herd || f->num_figures <= 0)

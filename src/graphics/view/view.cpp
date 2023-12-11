@@ -158,11 +158,13 @@ screen_tile city_view_get_camera_screentile() {
 
     return data.camera.tile_internal;
 }
-map_point city_view_get_camera_mappoint() {
+
+tile2i city_view_get_camera_mappoint() {
     auto& data = g_city_view_data;
 
-    return map_point(data.camera.tile_internal.x, data.camera.tile_internal.y);
+    return tile2i(data.camera.tile_internal.x, data.camera.tile_internal.y);
 }
+
 vec2i camera_get_position() {
     auto& data = g_city_view_data;
 
@@ -205,7 +207,8 @@ void camera_go_to_screen_tile(screen_tile screen, bool validate) {
     painter ctx = game.painter();
     camera_go_to_pixel(ctx, {x, y}, validate);
 }
-void camera_go_to_mappoint(map_point point) {
+
+void camera_go_to_mappoint(tile2i point) {
     //camera_go_to_pixel(mappoint_to_pixel(point), true);
     auto& data = g_city_view_data;
         screen_tile screen = mappoint_to_screentile(point);
@@ -266,7 +269,7 @@ void city_view_rotate_left(void) {
         data.orientation = DIR_6_TOP_LEFT;
 
     if (center_grid_offset >= 0) {
-        screen_tile screen = mappoint_to_screentile(map_point(center_grid_offset));
+        vec2i screen = mappoint_to_screentile(tile2i(center_grid_offset));
         camera_go_to_screen_tile(screen, true);
     }
 }
@@ -279,7 +282,7 @@ void city_view_rotate_right(void) {
         data.orientation = DIR_0_TOP_RIGHT;
 
     if (center_grid_offset >= 0) {
-        screen_tile screen = mappoint_to_screentile(map_point(center_grid_offset));
+        vec2i screen = mappoint_to_screentile(tile2i(center_grid_offset));
         camera_go_to_screen_tile(screen, true);
     }
 }
@@ -527,19 +530,11 @@ void city_view_foreach_tile_in_range(painter &ctx, int grid_offset, int size, in
     for (int ring = 0; ring < radius; ++ring) {
         int offset_north = -ring - 2;
         int offset_south = ring + size;
-        map_point point = map_point(grid_offset);
-        do_valid_callback(ctx, {pixel.x, pixel.y + y_offset * pixel_rotation},
-                          point.shifted(offset_south * orientation_x, offset_south * orientation_y),
-                          callback);
-        do_valid_callback(ctx, {pixel.x, pixel.y - y_offset * pixel_rotation},
-                          point.shifted(offset_north * orientation_x, offset_north * orientation_y),
-                          callback);
-        do_valid_callback(ctx, {pixel.x - x_offset - x_delta, pixel.y},
-                          point.shifted(offset_north * orientation_x, offset_south * orientation_y),
-                          callback);
-        do_valid_callback(ctx, {pixel.x + x_offset + x_delta, pixel.y},
-                          point.shifted(offset_south * orientation_x, offset_north * orientation_y),
-                          callback);
+        tile2i point(grid_offset);
+        do_valid_callback(ctx, {pixel.x, pixel.y + y_offset * pixel_rotation}, point.shifted(offset_south * orientation_x, offset_south * orientation_y), callback);
+        do_valid_callback(ctx, {pixel.x, pixel.y - y_offset * pixel_rotation}, point.shifted(offset_north * orientation_x, offset_north * orientation_y), callback);
+        do_valid_callback(ctx, {pixel.x - x_offset - x_delta, pixel.y}, point.shifted(offset_north * orientation_x, offset_south * orientation_y), callback);
+        do_valid_callback(ctx, {pixel.x + x_offset + x_delta, pixel.y}, point.shifted(offset_south * orientation_x, offset_north * orientation_y), callback);
 
         for (int tile = 1; tile < ring * 2 + size + 2; ++tile) {
             do_valid_callback(ctx, {pixel.x + x_delta * tile,

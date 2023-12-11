@@ -4,7 +4,7 @@
 #include "graphics/image.h"
 #include "grid/grid.h"
 
-static map_point SCREENTILE_TO_MAPPOINT_LOOKUP[4][500][500];
+static tile2i SCREENTILE_TO_MAPPOINT_LOOKUP[4][500][500];
 static void screentile_calc_params_by_orientation(int city_orientation, vec2i* start, vec2i* column_step, vec2i* row_step) {
     switch (city_orientation) {
     default:

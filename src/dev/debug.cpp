@@ -547,13 +547,13 @@ void figure::draw_debug() {
     case FIGURE_DRAW_DEBUG_ROUTING:
         // draw path
         if (routing_path_id) { //&& (roam_length == max_roam_length || roam_length == 0)
-            vec2i coords = mappoint_to_pixel(map_point(destination()->tile.x(), destination()->tile.y()));
+            vec2i coords = mappoint_to_pixel(destination()->tile);
             draw_building(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, coords);
-            coords = mappoint_to_pixel(map_point(destination_tile.x(), destination_tile.y()));
+            coords = mappoint_to_pixel(destination_tile);
             draw_building(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords);
             int tx = tile.x();
             int ty = tile.y();
-            coords = mappoint_to_pixel(map_point(tx, ty));
+            coords = mappoint_to_pixel(tile);
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
             int starting_tile_index = routing_path_current_tile;
             if (progress_on_tile >= 0 && progress_on_tile < 8) { // adjust half-tile offset
@@ -668,7 +668,7 @@ void figure::draw_debug() {
     }
 }
 
-const char* get_terrain_type(char* buffer, const char* def, map_point tile) {
+const char* get_terrain_type(char* buffer, const char* def, tile2i tile) {
     int type = map_terrain_get(tile.grid_offset());
     strcat(buffer, def);
     if (type & TERRAIN_DUNE) strcat(buffer, "dune,");
@@ -1173,7 +1173,7 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x, y + 185, 50, "offset:", offset.x);
         debug_text(ctx, str, x + 40, y + 185, 50, "", offset.y);
 
-        map_point point = screentile_to_mappoint(screen);
+        tile2i point = screentile_to_mappoint(screen);
         debug_text(ctx, str, x, y + 195, 50, "point:", point.x());
         debug_text(ctx, str, x + 40, y + 195, 50, "", point.y());
         debug_text(ctx, str, x + 80, y + 195, 50, "", point.grid_offset());

@@ -15,7 +15,7 @@ void figure::fishing_boat_action() {
     //        poof();
 
     if (action_state != FIGURE_ACTION_190_FISHING_BOAT_CREATED && b->data.industry.fishing_boat_id != id) {
-        map_point tile;
+        tile2i tile;
         b = building_get(map_water_get_wharf_for_new_fishing_boat(this, &tile));
         if (b->id) {
             set_home(b->id);
@@ -37,7 +37,7 @@ void figure::fishing_boat_action() {
         wait_ticks++;
         if (wait_ticks >= 50) {
             wait_ticks = 0;
-            map_point tile;
+            tile2i tile;
             int wharf_id = map_water_get_wharf_for_new_fishing_boat(this, &tile);
             if (wharf_id) {
                 b->remove_figure(0); // remove from original building
@@ -59,7 +59,7 @@ void figure::fishing_boat_action() {
         move_ticks(1);
         height_adjusted_ticks = 0;
         if (direction == DIR_FIGURE_NONE) {
-            map_point tile;
+            tile2i tile;
             if (map_water_find_alternative_fishing_boat_tile(this, &tile)) {
                 route_remove();
                 destination_tile = tile;

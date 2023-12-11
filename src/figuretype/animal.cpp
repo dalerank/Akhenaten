@@ -112,7 +112,7 @@ static void create_herd(int x, int y) {
         for (int fig = 0; fig < num_animals; fig++) {
             random_generate_next();
 
-            figure* f = figure_create(herd_type, map_point(x, y), DIR_0_TOP_RIGHT);
+            figure* f = figure_create(herd_type, tile2i(x, y), DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             f->formation_id = formation_id;
             f->wait_ticks = f->id & 0x1f;
@@ -131,7 +131,7 @@ bool figure::herd_roost(int step, int bias, int max_dist, int terrain_mask) {
     }
 
     const formation* m = formation_get(formation_id);
-    tile2i dest = random_around_point(map_point(m->x_home, m->y_home), tile, step, bias, max_dist);
+    tile2i dest = random_around_point(tile2i(m->x_home, m->y_home), tile, step, bias, max_dist);
 
     if (!map_terrain_is(dest.grid_offset(), terrain_mask)) { // todo: fix gardens
         destination_tile = dest;

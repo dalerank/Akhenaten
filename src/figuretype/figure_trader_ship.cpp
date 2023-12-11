@@ -182,7 +182,7 @@ void figure::trade_ship_action() {
     case FIGURE_ACTION_114_TRADE_SHIP_ANCHORED:
         wait_ticks++;
         if (wait_ticks > 40) {
-            map_point tile;
+            tile2i tile;
             int dock_id = building_dock_get_free_destination(id, &tile);
             if (dock_id) {
                 set_destination(dock_id);

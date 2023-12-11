@@ -7,10 +7,10 @@
 #include "figuretype/maintenance.h"
 #include "core/random.h"
 
-static void scared_animals_in_area(map_point center, int size) {
+static void scared_animals_in_area(tile2i center, int size) {
     tile2i tmin, tmax;
-    map_point start = center.shifted(-size, -size);
-    map_point stop = center.shifted(size, size);
+    tile2i start = center.shifted(-size, -size);
+    tile2i stop = center.shifted(size, size);
     map_grid_start_end_to_area(start, stop, tmin, tmax);
 
     int needs_road_warning = 0;
@@ -54,7 +54,7 @@ void figure::ostrich_hunter_action() {
             advance_action(ACTION_9_CHASE_PREY);
         } else {
             advance_action(ACTION_16_HUNTER_INVESTIGATE);
-            map_point base_tile;
+            tile2i base_tile;
             int figure_id = is_nearby(NEARBY_ANIMAL, &dist, 10000, /*gang*/true);
             if (figure_id) {
                 base_tile = figure_get(figure_id)->tile;

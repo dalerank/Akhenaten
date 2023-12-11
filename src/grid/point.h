@@ -37,6 +37,7 @@ public:
     void shift(int _grid_offset);
     map_point shifted(int _x, int _y);
     map_point shifted(int _grid_offset);
+    inline map_point shifted(map_point offset) { return this->shifted(offset.p_X, offset.p_Y); }
 
     // SET BY CONSTRUCTION
     void set(int _x, int _y);

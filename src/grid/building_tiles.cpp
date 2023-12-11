@@ -143,7 +143,7 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
         //        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_FLOODPLAIN))
         //            image_id = image_id_from_group(GROUP_BUILDING_FARMLAND);
     painter ctx = game.painter();
-    map_building_tiles_add(building_id, map_point(x, y), 3, get_farm_image(MAP_OFFSET(x, y)), TERRAIN_BUILDING);
+    map_building_tiles_add(building_id, tile2i(x, y), 3, get_farm_image(MAP_OFFSET(x, y)), TERRAIN_BUILDING);
         //        crop_image_offset += image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH);
         return;
     //}
@@ -350,7 +350,7 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
     }
 
     // adjust northern tile offset
-    map_point north_tile = {x, y};
+    tile2i north_tile = {x, y};
     switch (orientation) {
     case 0: // NE
         north_tile.shift(-2, -10);

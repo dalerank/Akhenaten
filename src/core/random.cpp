@@ -123,7 +123,7 @@ void randomize_event_fields(int16_t field[4], int32_t* seed) {
     field[0] = f_fixed;
 }
 
-tile2i random_around_point(map_point tile, tile2i src, int step, int bias, int max_dist) {
+tile2i random_around_point(tile2i tile, tile2i src, int step, int bias, int max_dist) {
     random_generate_next();
     int det = 64 / step;
     int rand_x = random_byte() / det - step;

@@ -7,7 +7,7 @@
 
 #define MAX_BOOKMARKS 4
 
-static map_point bookmarks[MAX_BOOKMARKS];
+static tile2i bookmarks[MAX_BOOKMARKS];
 
 void map_bookmarks_clear(void) {
     for (int i = 0; i < MAX_BOOKMARKS; i++) {
@@ -25,7 +25,7 @@ bool map_bookmark_go_to(int number) {
         int x = bookmarks[number].x();
         int y = bookmarks[number].y();
         if (x > -1 && MAP_OFFSET(x, y) > -1) {
-            camera_go_to_corner_tile(screen_tile(x, y), true);
+            camera_go_to_corner_tile(vec2i(x, y), true);
             return true;
         }
     }

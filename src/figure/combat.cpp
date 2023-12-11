@@ -25,7 +25,7 @@ int attack_is_same_direction(int dir1, int dir2) {
     return 0;
 }
 
-int figure_combat_get_target_for_soldier(map_point tile, int max_distance) {
+int figure_combat_get_target_for_soldier(tile2i tile, int max_distance) {
     int figure_id = 0;
     int min_distance = 10000;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -59,7 +59,7 @@ int figure_combat_get_target_for_soldier(map_point tile, int max_distance) {
     }
     return 0;
 }
-int figure_combat_get_target_for_wolf(map_point tile, int max_distance) {
+int figure_combat_get_target_for_wolf(tile2i tile, int max_distance) {
     int min_figure_id = 0;
     int min_distance = 10000;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -105,7 +105,8 @@ int figure_combat_get_target_for_wolf(map_point tile, int max_distance) {
     }
     return 0;
 }
-int figure_combat_get_target_for_enemy(map_point tile) {
+
+int figure_combat_get_target_for_enemy(tile2i tile) {
     int min_figure_id = 0;
     int min_distance = 10000;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {

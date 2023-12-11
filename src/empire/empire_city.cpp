@@ -230,7 +230,7 @@ static bool generate_trader(int city_id, empire_city &city) {
         // generate ship
         if (city_buildings_has_working_dock() && scenario_map_has_river_entry()
             && !city_trade_has_sea_trade_problems()) {
-            map_point river_entry = scenario_map_river_entry();
+            tile2i river_entry = scenario_map_river_entry();
             city.trader_figure_ids[index] = figure_create_trade_ship(river_entry, city_id);
             return true;
         }

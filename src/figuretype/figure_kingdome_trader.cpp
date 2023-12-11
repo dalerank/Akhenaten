@@ -62,7 +62,7 @@ int figure_create_trade_caravan(tile2i tile, int city_id) {
 }
 
 
-int figure::get_closest_storageyard(map_point tile, int city_id, int distance_from_entry, tile2i &warehouse) {
+int figure::get_closest_storageyard(tile2i tile, int city_id, int distance_from_entry, tile2i &warehouse) {
     bool exportable[RESOURCES_MAX];
     bool importable[RESOURCES_MAX];
     exportable[RESOURCE_NONE] = false;
@@ -187,7 +187,7 @@ void figure::trade_caravan_action() {
         wait_ticks++;
         if (wait_ticks > 20) {
             wait_ticks = 0;
-            map_point base_tile;
+            tile2i base_tile;
             int trade_center_id = city_buildings_get_trade_center();
             if (trade_center_id) {
                 building* trade_center = building_get(trade_center_id);

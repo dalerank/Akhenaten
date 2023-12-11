@@ -338,7 +338,7 @@ void map_routing_update_ferry_routes() {
     svector<building *, 64> ferries;
     buildings_get(ferries, BUILDING_FERRY);
 
-    using path_points = std::pair<map_point, map_point>;
+    using path_points = std::pair<tile2i, tile2i>;
     auto mark_path = [] (path_points &ppoints) {
         std::array<uint8_t, 500> path_data;
         map_routing_calculate_distances_water_boat(ppoints.first);

@@ -371,7 +371,7 @@ static void set_plaza_image(int grid_offset) {
             else {
                 image_id += 6;
             }
-            map_building_tiles_add(0, map_point(x, y), 2, image_id, TERRAIN_ROAD);
+            map_building_tiles_add(0, tile2i(x, y), 2, image_id, TERRAIN_ROAD);
         } else {
             // single tile plaza
             switch ((x & 1) + (y & 1)) {
@@ -1352,7 +1352,7 @@ static void set_elevation_image(int grid_offset) {
                 map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7));
             }
         } else {
-            map_building_tiles_add(0, map_point(x, y), 2, image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + image_offset, TERRAIN_ACCESS_RAMP);
+            map_building_tiles_add(0, tile2i(x, y), 2, image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + image_offset, TERRAIN_ACCESS_RAMP);
         }
     }
 
@@ -1394,7 +1394,7 @@ void map_tiles_update_all_elevation(void) {
 
 void map_tiles_add_entry_exit_flags() {
     int entry_orientation;
-    map_point entry_point = scenario_map_entry();
+    tile2i entry_point = scenario_map_entry();
     if (entry_point.x() <= 5)
         entry_orientation = DIR_2_BOTTOM_RIGHT;
     else if (entry_point.y() <= 5)
@@ -1405,7 +1405,7 @@ void map_tiles_add_entry_exit_flags() {
         entry_orientation = DIR_0_TOP_RIGHT;
 
     int exit_orientation;
-    map_point exit_point = scenario_map_exit();
+    tile2i exit_point = scenario_map_exit();
     if (exit_point.x() <= 5)
         exit_orientation = DIR_6_TOP_LEFT;
     else if (exit_point.y() <= 5)
@@ -1445,7 +1445,7 @@ void map_tiles_add_entry_exit_flags() {
         map_image_set(grid_offset_flag, image_id_from_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + 4 + orientation / 2);
     }
 }
-static void remove_entry_exit_flag(map_point& tile) {
+static void remove_entry_exit_flag(tile2i& tile) {
     // re-calculate grid_offset_figure because the stored offset might be invalid
     map_terrain_remove(MAP_OFFSET(tile.x(), tile.y()), TERRAIN_ROCK);
 }

@@ -79,7 +79,7 @@ void figure::ballista_action() {
         wait_ticks++;
         if (wait_ticks > 20) {
             wait_ticks = 0;
-            map_point tile;
+            tile2i tile;
             if (figure_combat_get_missile_target_for_soldier(this, 15, &tile)) {
                 action_state = FIGURE_ACTION_181_BALLISTA_FIRING;
                 wait_ticks_missile = figure_properties_for_type(type)->missile_delay;
@@ -89,7 +89,7 @@ void figure::ballista_action() {
     case FIGURE_ACTION_181_BALLISTA_FIRING:
         wait_ticks_missile++;
         if (wait_ticks_missile > figure_properties_for_type(type)->missile_delay) {
-            map_point tile;
+            tile2i tile;
             if (figure_combat_get_missile_target_for_soldier(this, 15, &tile)) {
                 direction = calc_missile_shooter_direction(tile.x(), tile.y(), tile.x(), tile.y());
                 wait_ticks_missile = 0;
@@ -121,7 +121,7 @@ void figure::tower_sentry_pick_target() {
     wait_ticks_next_target++;
     if (wait_ticks_next_target >= 40) {
         wait_ticks_next_target = 0;
-        map_point tile;
+        tile2i tile;
         if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
             action_state = FIGURE_ACTION_172_TOWER_SENTRY_FIRING;
             destination_tile = tile;
@@ -230,7 +230,7 @@ void figure::tower_sentry_action() {
         move_ticks_tower_sentry(1);
         wait_ticks_missile++;
         if (wait_ticks_missile > figure_properties_for_type(type)->missile_delay) {
-            map_point tile;
+            tile2i tile;
             if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
                 direction = calc_missile_shooter_direction(tile.x(), tile.y(), tile.x(), tile.y());
                 wait_ticks_missile = 0;
@@ -264,7 +264,7 @@ void figure::tower_sentry_action() {
         move_ticks(1);
         if (direction == DIR_FIGURE_NONE) {
             map_figure_remove();
-            source_tile = tile = map_point(b->tile.x(), b->tile.y());
+            source_tile = tile = b->tile;
             //                source_tile.x() = tile.x() = b->tile.x();
             //                source_tile.y() = tile.y() = b->tile.y();
             //                tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
@@ -315,7 +315,7 @@ void figure_tower_sentry_reroute(void) {
             f->route_remove();
             f->progress_on_tile = 1;
             f->map_figure_remove();
-            f->previous_tile = f->tile = map_point(x_tile, y_tile);
+            f->previous_tile = f->tile = tile2i(x_tile, y_tile);
             //            f->previous_tile.x() = f->tile.x() = x_tile;
             //            f->previous_tile.y() = f->tile.y() = y_tile;
             f->cc_coords.x = 15 * x_tile;
@@ -330,7 +330,7 @@ void figure_tower_sentry_reroute(void) {
             // Teleport back to tower
             f->map_figure_remove();
             building* b = f->home();
-            f->source_tile = f->tile = map_point(b->tile.x(), b->tile.y());
+            f->source_tile = f->tile = tile2i(b->tile.x(), b->tile.y());
             //            f->source_tile.x() = f->tile.x() = b->tile.x();
             //            f->source_tile.y() = f->tile.y() = b->tile.y();
             //            f->tile.grid_offset() = MAP_OFFSET(f->tile.x(), f->tile.y());
@@ -341,7 +341,7 @@ void figure_tower_sentry_reroute(void) {
     }
 }
 
-void figure_kill_tower_sentries_at(map_point tile) {
+void figure_kill_tower_sentries_at(tile2i tile) {
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure* f = figure_get(i);
         if (!f->is_dead() && f->type == FIGURE_TOWER_SENTRY) {

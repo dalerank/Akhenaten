@@ -20,7 +20,7 @@ int formation_legion_create_for_fort(building* fort) {
     if (!m->id)
         return 0;
 
-    figure* standard = figure_create(FIGURE_FORT_STANDARD, map_point(0, 0), DIR_0_TOP_RIGHT);
+    figure* standard = figure_create(FIGURE_FORT_STANDARD, tile2i(0, 0), DIR_0_TOP_RIGHT);
     standard->set_home(fort->id);
     standard->formation_id = m->id;
     m->standard_figure_id = standard->id;
@@ -99,7 +99,7 @@ static int prepare_to_move(formation* m) {
 }
 
 void formation_legion_move_to(formation* m, int x, int y) {
-    map_routing_calculate_distances(map_point(m->x_home, m->y_home));
+    map_routing_calculate_distances(tile2i(m->x_home, m->y_home));
     if (map_routing_distance(MAP_OFFSET(x, y)) <= 0)
         return; // unable to route there
 
@@ -129,7 +129,7 @@ void formation_legion_move_to(formation* m, int x, int y) {
 }
 
 void formation_legion_return_home(formation* m) {
-    map_routing_calculate_distances(map_point(m->x_home, m->y_home));
+    map_routing_calculate_distances(tile2i(m->x_home, m->y_home));
     if (map_routing_distance(MAP_OFFSET(m->x, m->y)) <= 0)
         return; // unable to route home
 

@@ -24,7 +24,7 @@ void figure::policeman_action() {
         anim_frame = 0;
         wait_ticks--;
         if (wait_ticks <= 0) {
-            map_point road_tile;
+            tile2i road_tile;
             if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                 action_state = FIGURE_ACTION_71_POLICEMAN_ENTERING_EXITING;
                 set_cross_country_destination(road_tile.x(), road_tile.y());
@@ -55,7 +55,7 @@ void figure::policeman_action() {
     case FIGURE_ACTION_72_POLICEMAN_ROAMING:
         roam_length++;
         if (roam_length >= max_roam_length) {
-            map_point road_tile;
+            tile2i road_tile;
             if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                 action_state = FIGURE_ACTION_73_POLICEMAN_RETURNING;
                 destination_tile = road_tile;
@@ -82,7 +82,7 @@ void figure::policeman_action() {
     case FIGURE_ACTION_76_POLICEMAN_GOING_TO_ENEMY:
         terrain_usage = TERRAIN_USAGE_ANY;
         if (!target_is_alive()) {
-            map_point road_tile;
+            tile2i road_tile;
             if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                 action_state = FIGURE_ACTION_73_POLICEMAN_RETURNING;
                 destination_tile = road_tile;

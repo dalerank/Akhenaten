@@ -366,8 +366,7 @@ static building* add_storageyard_space(int x, int y, building* prev) {
 }
 
 static void add_storageyard(building* b) {
-    int x_offset[9] = {0, 0, 1, 1, 0, 2, 1, 2, 2};
-    int y_offset[9] = {0, 1, 0, 1, 2, 0, 2, 1, 2};
+    tile2i offset[9] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}, {0, 2}, {2, 0}, {1, 2}, {2, 1}, {2, 2}};
     int global_rotation = building_rotation_global_rotation();
     int corner = building_rotation_get_corner(2 * global_rotation);
 
@@ -377,7 +376,7 @@ static void add_storageyard(building* b) {
     }
 
     b->prev_part_building_id = 0;
-    tile2i shifted_tile = b->tile.shifted(x_offset[corner], y_offset[corner]);
+    tile2i shifted_tile = b->tile.shifted(offset[corner]);
     map_building_tiles_add(b->id, shifted_tile, 1, image_id_from_group(GROUP_BUILDING_STORAGE_YARD), TERRAIN_BUILDING);
 
     building* prev = b;
@@ -385,13 +384,10 @@ static void add_storageyard(building* b) {
         if (i == corner) {
             continue;
         }
-        prev = add_storageyard_space(b->tile.x() + x_offset[i], b->tile.y() + y_offset[i], prev);
+        prev = add_storageyard_space(b->tile.x() + offset[i].x(), b->tile.y() + offset[i].y(), prev);
     }
 
-    b->tile.set(b->tile.x() + x_offset[corner], b->tile.y() + y_offset[corner]);
-    //    b->tile.x() = b->tile.x() + x_offset[corner];
-    //    b->tile.y() = b->tile.y() + y_offset[corner];
-    //    b->tile.grid_offset() = MAP_OFFSET(b->tile.x(), b->tile.y());
+    b->tile.set(b->tile.x() + offset[corner].x(), b->tile.y() + offset[corner].y());
     game_undo_adjust_building(b);
 
     prev->next_part_building_id = 0;

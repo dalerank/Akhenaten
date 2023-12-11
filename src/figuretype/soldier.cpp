@@ -78,7 +78,7 @@ void figure::military_standard_action() {
 }
 
 void figure::javelin_launch_missile() {
-    map_point tile = {-1, -1};
+    tile2i tile = {-1, -1};
     wait_ticks_missile++;
     if (wait_ticks_missile > figure_properties_for_type(type)->missile_delay) {
         wait_ticks_missile = 0;
@@ -349,7 +349,7 @@ void figure::soldier_action() {
         }
         break;
     case FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE: {
-        map_point& exit = city_map_exit_point();
+        tile2i exit = city_map_exit_point();
         formation_at_rest = 0;
         destination_tile = exit;
         //            destination_tile.x() = exit->x();

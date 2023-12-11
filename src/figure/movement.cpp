@@ -121,7 +121,7 @@ int figure::get_permission_for_figure() {
     }
 }
 void figure::move_to_next_tile() {
-    map_point old = tile;
+    tile2i old = tile;
     //    int old_x = tile.x();
     //    int old_y = tile.y();
     map_figure_remove(); // is this necessary??? maybe could be refactored in the future...
@@ -358,7 +358,7 @@ void figure::init_roaming_from_building(int roam_dir) {
 
     // look for a road within the search area
     map_grid_bound(&offset_search_x, &offset_search_y);
-    map_point road_tile;
+    tile2i road_tile;
     int found_road = map_closest_road_within_radius(tile2i(offset_search_x, offset_search_y), 1, 6, road_tile);
     int road_network_original = map_road_network_get(MAP_OFFSET(tile.x(), tile.y()));
     int road_network_found = map_road_network_get(MAP_OFFSET(road_tile.x(), road_tile.y()));

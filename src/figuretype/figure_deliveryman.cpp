@@ -14,7 +14,7 @@
 #include "config/config.h"
 
 void figure::determine_deliveryman_destination() {
-    map_point dst;
+    tile2i dst;
     int road_network_id = map_road_network_get(tile.grid_offset());
     building* warehouse = home();
     int understaffed_storages = 0;
@@ -112,7 +112,7 @@ void figure::determine_deliveryman_destination() {
 void figure::determine_deliveryman_destination_food() {
     building* b = home();
     int road_network_id = map_road_network_get(tile.grid_offset());
-    map_point dst;
+    tile2i dst;
     // priority 1: accepting granary for food
     int dst_building_id = building_granary_for_storing(tile, resource_id, b->distance_from_entry, road_network_id, 0, 0, &dst);
     if (dst_building_id && config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {

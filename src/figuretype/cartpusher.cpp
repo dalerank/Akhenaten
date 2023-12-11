@@ -223,7 +223,7 @@ void figure::cartpusher_do_retrieve(int ACTION_DONE) {
 
 
 void figure::determine_granaryman_destination() {
-    map_point dst;
+    tile2i dst;
     int road_network_id = map_road_network_get(tile.grid_offset());
     building* granary = home();
     if (!resource_id) {

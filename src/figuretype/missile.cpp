@@ -14,7 +14,7 @@
 
 
 void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, e_figure_type type) {
-    figure* f = figure_create(type, map_point(x, y), DIR_0_TOP_RIGHT);
+    figure* f = figure_create(type, tile2i(x, y), DIR_0_TOP_RIGHT);
     if (f->id) {
         f->missile_damage = (type == FIGURE_BOLT ? 60 : 10);
         f->set_home(building_id);

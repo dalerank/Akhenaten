@@ -57,10 +57,10 @@ inline int calc_total_distance(int x1, int y1, int x2, int y2) {
     return distance_x + distance_y;
 }
 
-inline int point_get_x(map_point p) { return p.x(); }
+inline int point_get_x(tile2i p) { return p.x(); }
 inline int point_get_x(vec2i p) { return p.x; }
 
-inline int point_get_y(map_point p) { return p.y(); }
+inline int point_get_y(tile2i p) { return p.y(); }
 inline int point_get_y(vec2i p) { return p.y; }
 /**
  * Gets maximum distance
