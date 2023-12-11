@@ -20,7 +20,7 @@ uint8_t map_grasslevel_get(int grid_offset) {
         return 0;
     return 13;
 }
-// bool map_is_4x4_tallgrass(pixel_coordinate pixel, map_point point) {
+// bool map_is_4x4_tallgrass(pixel_coordinate pixel, tile2i point) {
 //     int x_min, y_min, x_max, y_max;
 //     map_grid_get_area(x, y, 1, 3, &x_min, &y_min, &x_max, &y_max);
 //

@@ -572,7 +572,7 @@ void figure::draw_debug() {
                 case 6: tx--; break;
                 case 7: tx--; ty--; break;
                 }
-                coords = mappoint_to_pixel(map_point(tx, ty));
+                coords = mappoint_to_pixel(tile2i(tx, ty));
                 ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
             }
         }

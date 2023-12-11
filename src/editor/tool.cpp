@@ -93,7 +93,7 @@ int editor_tool_is_in_use(void) {
     return data.build_in_progress;
 }
 
-void editor_tool_start_use(map_point tile) {
+void editor_tool_start_use(tile2i tile) {
     if (!data.active)
         return;
     data.build_in_progress = 1;
@@ -151,7 +151,7 @@ static int lower_land_tile(int x, int y, int grid_offset, int terrain) {
 }
 
 static void add_terrain(const void* tile_data, int dx, int dy) {
-    map_point tile = *(map_point*)tile_data;
+    tile2i tile = *(tile2i*)tile_data;
     int x = tile.x() + dx;
     int y = tile.y() + dy;
     if (!map_grid_is_inside(tile2i(x, y), 1))
@@ -208,7 +208,7 @@ static void add_terrain(const void* tile_data, int dx, int dy) {
     map_terrain_set(grid_offset, terrain);
 }
 
-void editor_tool_update_use(map_point tile) {
+void editor_tool_update_use(tile2i tile) {
     if (!data.build_in_progress)
         return;
     if (data.type == TOOL_ROAD) {
@@ -276,7 +276,7 @@ void editor_tool_update_use(map_point tile) {
     widget_minimap_invalidate();
 }
 
-static void place_earthquake_flag(map_point tile) {
+static void place_earthquake_flag(tile2i tile) {
     int warning = 0;
     if (editor_tool_can_place_flag(data.type, tile, &warning)) {
         if (scenario_editor_earthquake_severity())
@@ -289,7 +289,7 @@ static void place_earthquake_flag(map_point tile) {
     }
 }
 
-static void place_flag(map_point tile, void (*update)(int x, int y)) {
+static void place_flag(tile2i tile, void (*update)(int x, int y)) {
     int warning = 0;
     if (editor_tool_can_place_flag(data.type, tile, &warning))
         update(tile.x(), tile.y());
@@ -298,7 +298,7 @@ static void place_flag(map_point tile, void (*update)(int x, int y)) {
     }
 }
 
-static void place_flag_with_id(map_point tile, void (*update)(int id, int x, int y)) {
+static void place_flag_with_id(tile2i tile, void (*update)(int id, int x, int y)) {
     int warning = 0;
     if (editor_tool_can_place_flag(data.type, tile, &warning))
         update(data.id, tile.x(), tile.y());

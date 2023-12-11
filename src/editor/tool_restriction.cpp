@@ -17,7 +17,7 @@ static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_PH[4][6] = {
   {GRID_OFFSET(1, 0), GRID_OFFSET(1, 1), GRID_OFFSET(2, 0), GRID_OFFSET(2, 1), GRID_OFFSET(0, 0), GRID_OFFSET(0, 1)},
 };
 
-static int is_clear_terrain(map_point tile, int* warning) {
+static int is_clear_terrain(tile2i tile, int* warning) {
     int result = !map_terrain_is(tile.grid_offset(), TERRAIN_NOT_CLEAR ^ TERRAIN_ROAD);
     if (!result && warning)
         *warning = WARNING_EDITOR_CANNOT_PLACE;

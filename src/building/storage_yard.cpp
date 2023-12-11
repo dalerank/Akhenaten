@@ -296,7 +296,7 @@ int building_storageyard_get_accepting_amount(e_resource resource, building* b) 
     }
 }
 
-static int storageyard_is_this_space_the_best(building* space, map_point tile, e_resource resource, int distance_from_entry) {
+static int storageyard_is_this_space_the_best(building* space, tile2i tile, e_resource resource, int distance_from_entry) {
     building* b = space->main();
 
     // check storage settings first
