@@ -257,6 +257,8 @@ void building_properties_init() {
     properties[BUILDING_TAX_COLLECTOR_UPGRADED] = {2, 0, 0, 0, 0, IMG_TAX_COLLECTOR_BUILDING_UP};
     properties[BUILDING_POTTERY_WORKSHOP] = {2, 0, 0, 0, 0, IMG_POTTERY_WORKSHOP};
     properties[BUILDING_BREWERY_WORKSHOP] = {2, 0, 0, 0, 0, IMG_BEER_WORKSHOP};
+    properties[BUILDING_SMALL_MASTABA] = {4, 0, 0, 0, 0, IMG_SMALL_MASTABA};
+    properties[BUILDING_SMALL_MASTABA_SEC] = {4, 0, 0, 0, 0, IMG_SMALL_MASTABA};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

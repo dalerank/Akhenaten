@@ -211,7 +211,7 @@ void sound_city_mark_building_view(building* b, int direction) {
     }
 
     e_building_type type = b->type;
-    assert(type <= 236);
+    assert(type <= BUILDING_MAX);
     int system_channel_index = building_type_to_channel(b);
     if (!system_channel_index) {
         return;

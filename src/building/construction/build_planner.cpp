@@ -132,8 +132,26 @@ static building* add_temple_complex_element(int x, int y, int orientation, build
     return b;
 }
 
-static void add_mastaba(building *b, int orienation) {
-    Planner.add_building_tiles_from_list(b->id, false);
+static void add_mastaba(building *b, int orientation) {
+    b->prev_part_building_id = 0;
+    map_building_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
+
+    // create parade ground
+    tile2i offset = {0, 0};
+    switch (orientation) {
+    case 0: offset = {0, 4}; break;
+    case 1: offset = {-4, 0}; break;
+    case 2: offset = {0, -4}; break;
+    case 3: offset = {4, 0}; break;
+    }
+    int global_rotation = building_rotation_global_rotation();
+    building* ground = building_create(BUILDING_SMALL_MASTABA_SEC, b->tile.x() + offset.x(), b->tile.y() +offset.y(), 0);
+    game_undo_add_building(ground);
+    ground->prev_part_building_id = b->id;
+    b->next_part_building_id = ground->id;
+    ground->next_part_building_id = 0;
+    tile2i btile_add = b->tile.shifted(offset.x(), offset.y());
+    map_building_tiles_add(ground->id, btile_add, 4, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 }
 
 static void add_temple_complex(building* b, int orientation) {
