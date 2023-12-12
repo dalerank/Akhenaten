@@ -238,24 +238,24 @@ void figure::cart_update_image() {
     case RESOURCE_BRICKS:
         if (resource_amount_full > 0) {
             e_image_id image_id = resource_to_sled_image(resource_id);
-            cart_image_id = image_id_from_group(image_id);
+            cart_image_id = image_group(image_id);
         } else {
-            cart_image_id = image_id_from_group(IMG_SLED_EMPTY_SMALL);
+            cart_image_id = image_group(IMG_SLED_EMPTY_SMALL);
         }
         break;
 
     case RESOURCE_BARLEY:
     case RESOURCE_COPPER:
-        cart_image_id = image_id_from_group(IMG_CARTPUSHER_CART);
+        cart_image_id = image_group(IMG_CARTPUSHER_CART);
         if (resource_amount_full > 0) {
-            cart_image_id = image_id_from_group(resoure2imgid(resource_id));
+            cart_image_id = image_group(resoure2imgid(resource_id));
             int amount_offset = cart_image_offset_from_amount(resource_amount_full);
             cart_image_id += 8 * amount_offset;
         }
         break;
 
     default:
-        cart_image_id = image_id_from_group(IMG_CARTPUSHER_CART);
+        cart_image_id = image_group(IMG_CARTPUSHER_CART);
         if (resource_amount_full > 0) {
             int amount_offset = cart_image_offset_from_amount(resource_amount_full);
             cart_image_id += 8 + 24 * (resource_id - 1) + 8 * amount_offset;
@@ -272,9 +272,9 @@ void figure::cart_update_image() {
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        sprite_image_id = image_id_from_group(IMG_CARTPUSHER_DEATH);
+        sprite_image_id = image_group(IMG_CARTPUSHER_DEATH);
     } else {
-        sprite_image_id = image_id_from_group(IMG_CARTPUSHER) + dir + 8 * anim_frame;
+        sprite_image_id = image_group(IMG_CARTPUSHER) + dir + 8 * anim_frame;
     }
 
     switch (resource_id) {

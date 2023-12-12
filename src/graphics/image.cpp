@@ -271,14 +271,14 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
 }
 
 int image_id_resource_icon(int resource) {
-    return image_id_from_group(IMG_RESOURCE_ICONS) + resource;
+    return image_group(IMG_RESOURCE_ICONS) + resource;
 }
 
-int image_id_from_group(image_desc desc) {
+int image_group(image_desc desc) {
     return image_id_from_group(desc.pack, desc.id) + desc.offset;
 }
 
-int image_id_from_group(e_image_id type) {
+int image_group(e_image_id type) {
     image_desc desc = get_image_desc(type);
     return image_id_from_group(desc.pack, desc.id) + desc.offset;
 }

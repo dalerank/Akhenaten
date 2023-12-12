@@ -383,7 +383,7 @@ void figure::docker_action() {
 
         break;
     case FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
-        cart_image_id = image_id_from_group(IMG_CARTPUSHER_CART); // empty
+        cart_image_id = image_group(IMG_CARTPUSHER_CART); // empty
         move_ticks(1);
         if (direction == DIR_FIGURE_NONE)
             action_state = FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE;
@@ -453,7 +453,7 @@ void figure::docker_action() {
         anim_frame = 0;
         break;
     case FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE:
-        cart_image_id = image_id_from_group(IMG_CARTPUSHER_CART); // empty
+        cart_image_id = image_group(IMG_CARTPUSHER_CART); // empty
         wait_ticks++;
         if (wait_ticks > 10) {
             int trade_city_id;
@@ -482,10 +482,10 @@ void figure::docker_action() {
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        sprite_image_id = image_id_from_group(IMG_CARTPUSHER_DEATH);
+        sprite_image_id = image_group(IMG_CARTPUSHER_DEATH);
         cart_image_id = 0;
     } else {
-        sprite_image_id = image_id_from_group(IMG_CARTPUSHER) + dir + 8 * anim_frame;
+        sprite_image_id = image_group(IMG_CARTPUSHER) + dir + 8 * anim_frame;
     }
     if (cart_image_id) {
         cart_image_id += dir;

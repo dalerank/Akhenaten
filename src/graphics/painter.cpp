@@ -107,7 +107,7 @@ void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale, 
 }
 
 sprite::sprite(e_image_id id) {
-    int image_id = image_id_from_group(id);
+    int image_id = image_group(id);
     img = image_get(image_id);
 }
 

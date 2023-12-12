@@ -215,5 +215,5 @@ void figure::trade_ship_action() {
         break;
     }
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
-    sprite_image_id = image_id_from_group(IMG_FISHING_BOAT) + dir;
+    sprite_image_id = image_group(IMG_FISHING_BOAT) + dir;
 }

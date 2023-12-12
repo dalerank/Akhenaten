@@ -103,7 +103,7 @@ static int house_image_group(int level) {
     int image_id = 0;
     const auto &house_img_desc = HOUSE_IMAGE[level];
     if (house_img_desc.img_desc_id) {
-        image_id = image_id_from_group(house_img_desc.img_desc_id);
+        image_id = image_group(house_img_desc.img_desc_id);
     } else {
         image_id = image_id_from_group(house_img_desc.pack, house_img_desc.id);
     }

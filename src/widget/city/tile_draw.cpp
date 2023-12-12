@@ -250,7 +250,7 @@ bool draw_isometric_flat_building(building *b, tile2i point) {
     int tile_id = 0;
     switch (b->type) {
     case BUILDING_BOOTH:
-        img_id = image_id_from_group(IMG_BOOTH);
+        img_id = image_group(IMG_BOOTH);
         tile_id = map_image_at(point.grid_offset());
         return (img_id != tile_id);
 
@@ -258,7 +258,7 @@ bool draw_isometric_flat_building(building *b, tile2i point) {
             tile_id = map_image_at(point.grid_offset());
             e_image_id imgs[] = {IMG_BOOTH, IMG_BANDSTAND_SN_N, IMG_BANDSTAND_SN_S, IMG_BANDSTAND_WE_W, IMG_BANDSTAND_WE_E};
             for (const auto &i : imgs) {
-                img_id = image_id_from_group(i);
+                img_id = image_group(i);
                 if (img_id == tile_id) {
                     return false;
                 }

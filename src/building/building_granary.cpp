@@ -541,7 +541,7 @@ void draw_granary_stores(const building &b, vec2i point, color color_mask, paint
             for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
                 // draw sprite on each granary "spot"
                 vec2i spot_pos = granary_offsets_ph[spot];
-                ImageDraw::img_generic(ctx, image_id_from_group(IMG_GRANARY_RESOURCES) + r, point + spot_pos + vec2i{110, -74}, color_mask);
+                ImageDraw::img_generic(ctx, image_group(IMG_GRANARY_RESOURCES) + r, point + spot_pos + vec2i{110, -74}, color_mask);
             }
 
             last_spot_filled += spots_filled;

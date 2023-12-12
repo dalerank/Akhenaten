@@ -178,7 +178,7 @@ void building_workshop_draw_raw_material_storage(painter &ctx, const building* b
     switch (b->type) {
         case BUILDING_HUNTING_LODGE:
         if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_GAMEMEAT) + amount, pos + vec2i{61, 14}, color_mask);
+            ImageDraw::img_generic(ctx, image_group(IMG_RESOURCE_GAMEMEAT) + amount, pos + vec2i{61, 14}, color_mask);
         }
         break;
 
@@ -186,11 +186,11 @@ void building_workshop_draw_raw_material_storage(painter &ctx, const building* b
         amount = std::min<int>(2, ceil((float)b->stored_amount(RESOURCE_CLAY) / 100.0) - 1);
         amount2 = std::min<int>(2, ceil((float)b->stored_amount(RESOURCE_STRAW) / 100.0) - 1);
         if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_CLAY) + amount, pos + vec2i{46, 25}, color_mask);
+            ImageDraw::img_generic(ctx, image_group(IMG_RESOURCE_CLAY) + amount, pos + vec2i{46, 25}, color_mask);
         }
 
         if (amount2 >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_STRAW) + amount, pos + vec2i{51, 18}, color_mask);
+            ImageDraw::img_generic(ctx, image_group(IMG_RESOURCE_STRAW) + amount, pos + vec2i{51, 18}, color_mask);
         }
         break;
 
@@ -204,7 +204,7 @@ void building_workshop_draw_raw_material_storage(painter &ctx, const building* b
     case BUILDING_POTTERY_WORKSHOP:
         amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
         if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(IMG_RESOURCE_CLAY) + amount, pos + vec2i{65, 3}, color_mask);
+            ImageDraw::img_generic(ctx, image_group(IMG_RESOURCE_CLAY) + amount, pos + vec2i{65, 3}, color_mask);
         }
         break;
 

@@ -186,13 +186,13 @@ static void draw_trade_route(int route_id, e_empire_route_state effect) {
         //image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 211;
         break;
     case ROUTE_CLOSED_SELECTED: // highlighted, closed
-        image_id = image_id_from_group(IMG_EMPIRE_ROUTE_HL_CLOSED);
+        image_id = image_group(IMG_EMPIRE_ROUTE_HL_CLOSED);
         break;
     case ROUTE_OPEN: // open
-        image_id = image_id_from_group(IMG_EMPIRE_ROUTE_OPEN);
+        image_id = image_group(IMG_EMPIRE_ROUTE_OPEN);
         break;
     case ROUTE_OPEN_SELECTED: // highlighted, open
-        image_id = image_id_from_group(IMG_EMPIRE_ROUTE_HL_OPEN);
+        image_id = image_group(IMG_EMPIRE_ROUTE_HL_OPEN);
         break;
     }
 
@@ -250,17 +250,17 @@ static void draw_trade_resource(e_resource resource, int trade_max, vec2i offset
     switch (trade_max) {
     case 1500:
     case 15:
-        ImageDraw::img_generic(ctx, image_id_from_group(IMG_TRADE_AMOUNT), offset + vec2i{21, -1});
+        ImageDraw::img_generic(ctx, image_group(IMG_TRADE_AMOUNT), offset + vec2i{21, -1});
         break;
 
     case 2500:
     case 25:
-        ImageDraw::img_generic(ctx, image_id_from_group(IMG_TRADE_AMOUNT) + 1, offset + vec2i{17, -1});
+        ImageDraw::img_generic(ctx, image_group(IMG_TRADE_AMOUNT) + 1, offset + vec2i{17, -1});
         break;
 
     case 4000:
     case 40:
-        ImageDraw::img_generic(ctx, image_id_from_group(IMG_TRADE_AMOUNT) + 2, offset + vec2i{13, -1});
+        ImageDraw::img_generic(ctx, image_group(IMG_TRADE_AMOUNT) + 2, offset + vec2i{13, -1});
         break;
     }
 }

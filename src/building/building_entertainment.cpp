@@ -127,8 +127,8 @@ void building_entertainment_draw_show_jugglers(painter &ctx, building* b, vec2i 
     building* main = b->main();
     if (main->data.entertainment.days1) {
         building_draw_normal_anim(ctx, pixel + config->pos, b, b->tile,
-                                  image_id_from_group(config->anim_id), color_mask,
-                                  image_id_from_group(config->base_id),
+                                  image_group(config->anim_id), color_mask,
+                                  image_group(config->base_id),
                                   config->max_frames);
     }
 }
@@ -140,15 +140,15 @@ void building_entertainment_draw_shows_musicians(painter &ctx, building* b, vec2
         switch (direction) {
         case 0:
             building_draw_normal_anim(ctx, pixel + building_bandstand.musician_sn.pos, b, b->tile, 
-                                      image_id_from_group(building_bandstand.musician_sn.anim_id), color_mask,
-                                      image_id_from_group(building_bandstand.musician_sn.base_id),
+                                      image_group(building_bandstand.musician_sn.anim_id), color_mask,
+                                      image_group(building_bandstand.musician_sn.base_id),
                                       building_bandstand.musician_sn.max_frames);
             break;
 
         case 1:
             building_draw_normal_anim(ctx, pixel + vec2i{48, 4}, b, b->tile,
-                                      image_id_from_group(building_bandstand.musician_we.anim_id), color_mask,
-                                      image_id_from_group(building_bandstand.musician_we.base_id),
+                                      image_group(building_bandstand.musician_we.anim_id), color_mask,
+                                      image_group(building_bandstand.musician_we.base_id),
                                       building_bandstand.musician_we.max_frames);
             break;
         }

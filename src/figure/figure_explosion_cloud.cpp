@@ -39,9 +39,9 @@ void figure::explosion_cloud_action() {
 
     move_ticks_cross_country(speed_multiplier);
     if (progress_on_tile < 48) {
-        sprite_image_id = image_id_from_group(IMG_EXPLOSION) + std::clamp(progress_on_tile / 2, 0, MAX_CLOUD_IMAGE_OFFSETS);
+        sprite_image_id = image_group(IMG_EXPLOSION) + std::clamp(progress_on_tile / 2, 0, MAX_CLOUD_IMAGE_OFFSETS);
     } else {
-        sprite_image_id = image_id_from_group(IMG_EXPLOSION) + MAX_CLOUD_IMAGE_OFFSETS;
+        sprite_image_id = image_group(IMG_EXPLOSION) + MAX_CLOUD_IMAGE_OFFSETS;
     }
     anim_base = 0;
 }

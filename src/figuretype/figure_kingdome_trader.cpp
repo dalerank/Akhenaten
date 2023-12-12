@@ -253,7 +253,7 @@ void figure::trade_caravan_action() {
         break;
     }
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
-    sprite_image_id = image_id_from_group(IMG_TRADER_CARAVAN) + dir + 8 * anim_frame;
+    sprite_image_id = image_group(IMG_TRADER_CARAVAN) + dir + 8 * anim_frame;
 }
 
 void figure::trade_caravan_donkey_action() {
@@ -268,5 +268,5 @@ void figure::trade_caravan_donkey_action() {
         follow_ticks(1);
 
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
-    sprite_image_id = image_id_from_group(IMG_TRADER_CARAVAN) + dir + 8 * anim_frame;
+    sprite_image_id = image_group(IMG_TRADER_CARAVAN) + dir + 8 * anim_frame;
 }

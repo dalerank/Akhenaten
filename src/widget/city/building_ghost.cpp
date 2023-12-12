@@ -182,7 +182,7 @@ static void draw_partially_blocked(painter &ctx, vec2i tile, int fully_blocked, 
 }
 
 void draw_building(painter &ctx, e_image_id image_id, vec2i tile, color color_mask) {
-    int img = image_id_from_group(image_id);
+    int img = image_group(image_id);
     ImageDraw::isometric(ctx, img, tile, color_mask);
 }
 
@@ -221,7 +221,7 @@ static void draw_farm(painter &ctx, e_building_type type, vec2i tile, int grid_o
 }
 
 static void draw_small_mastaba(painter &ctx, e_building_type type, vec2i tile, int grid_offset) {
-    int image_id = image_id_from_group(IMG_SMALL_MASTABA);
+    int image_id = image_group(IMG_SMALL_MASTABA);
     draw_building(ctx, image_id, tile);
     for (int i = 1; i < 7; i++) {
         draw_building(ctx, image_id - 1, tile + vec2i(-30, 15) * i);
@@ -242,8 +242,6 @@ static void draw_small_mastaba(painter &ctx, e_building_type type, vec2i tile, i
             k = (k + 1) % 8;
         }
     }
-
-    //draw_farm_crops(ctx, type, 0, grid_offset, tile + vec2i{-60, 30}, COLOR_MASK_GREEN);
 }
 
 static void draw_fort(map_point* tile, vec2i pos, painter &ctx) {
@@ -482,49 +480,49 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
         switch (type) {
         case BUILDING_BOOTH:
             for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(ctx, image_id_from_group(IMG_BOOTH_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
+                ImageDraw::isometric(ctx, image_group(IMG_BOOTH_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
             }
             switch (orientation / 2) {
             case 0:
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x, y}, COLOR_MASK_GREEN);
                 break;
             case 1:
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x + 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x + 30, y + 15}, COLOR_MASK_GREEN);
                 break;
             case 2:
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 3:
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x - 30, y + 15}, COLOR_MASK_GREEN);
                 break;
             }
             break;
 
         case BUILDING_BANDSTAND:
             for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(ctx, image_id_from_group(IMG_BANDSTAND_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
+                ImageDraw::isometric(ctx, image_group(IMG_BANDSTAND_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
             }
 
             switch (orientation / 2) {
             case 0:
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x, y}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x + 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x + 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 1:
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_WE_W), {x + 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_WE_E), {x + 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_WE_W), {x + 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_WE_E), {x + 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
                 break;
             case 2:
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
                 break;
             case 3:
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_WE_W), {x, y}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_WE_E), {x + 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_WE_W), {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_WE_E), {x + 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             }
             break;
@@ -536,51 +534,51 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
             switch (orientation) {
             case 0:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x + 90, y + 45}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 60, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 1:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x, y}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 2:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x + 90, y + 45}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x, y + 90}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 60, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x, y + 90}, COLOR_MASK_GREEN);
                 break;
             case 3:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 45}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x + 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x, y + 90}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x + 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 30, y + 75}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x, y + 90}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x + 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             case 4:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 45}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             case 5:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x + 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 60, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 30, y + 75}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             case 6:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x, y + 60}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x - 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x, y}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x, y + 60}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 30, y + 75}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x, y}, COLOR_MASK_GREEN);
                 break;
             case 7:
                 draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_N), {x + 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BANDSTAND_SN_S), {x + 30, y + 45}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_id_from_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 30, y + 45}, COLOR_MASK_GREEN);
+                draw_building(ctx, image_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             }
             break;

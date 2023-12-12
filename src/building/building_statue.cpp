@@ -99,15 +99,15 @@ int building_statue_get_image(int type, int orientation, int variant) {
     switch (type) {
     case BUILDING_SMALL_STATUE:
         variant %= small_statues_img.size();
-        return image_id_from_group(small_statues_img[variant]);
+        return image_group(small_statues_img[variant]);
 
     case BUILDING_MEDIUM_STATUE:
         variant %= medium_statue_images.size();
-        return image_id_from_group(medium_statue_images[variant]);
+        return image_group(medium_statue_images[variant]);
 
     case BUILDING_LARGE_STATUE:
         variant %= big_statues_img.size();
-        return image_id_from_group(big_statues_img[variant]);
+        return image_group(big_statues_img[variant]);
     }
 
     return image_id;

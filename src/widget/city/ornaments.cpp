@@ -199,7 +199,7 @@ static void draw_palace_rating_flags(const building* b, int x, int y, color colo
         ImageDraw::img_generic(ctx, image_id + 3, x + 198, y + 27 - city_rating_monument() / 2, color_mask);
         ImageDraw::img_generic(ctx, image_id + 4, x + 228, y + 19 - city_rating_kingdom() / 2, color_mask);
         // unemployed
-        image_id = image_id_from_group(IMG_HOMELESS);
+        image_id = image_group(IMG_HOMELESS);
         int unemployment_pct = city_labor_unemployment_percentage_for_senate();
         if (unemployment_pct > 0)
             ImageDraw::img_generic(ctx, image_id + 108, x + 80, y, color_mask);
@@ -287,14 +287,14 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
     case BUILDING_GOLD_MINE:
     case BUILDING_COPPER_MINE:
     case BUILDING_GEMSTONE_MINE:
-        building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, tile, image_id_from_group(ANIM_GOLD_MINE) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, tile, image_group(ANIM_GOLD_MINE) - 1, color_mask);
         break;
 
     case BUILDING_STONE_QUARRY:
     case BUILDING_LIMESTONE_QUARRY:
     case BUILDING_GRANITE_QUARRY:
     case BUILDING_SANDSTONE_QUARRY:
-        building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, tile, image_id_from_group(ANIM_SANDSTONE_QUARRY_1) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, tile, image_group(ANIM_SANDSTONE_QUARRY_1) - 1, color_mask);
         break; 
 
     case BUILDING_MENU_FORTS:
@@ -316,19 +316,19 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
         //            }
         //            break;
     case BUILDING_BOOTH:
-        if (map_image_at(grid_offset) == image_id_from_group(IMG_BOOTH)) {
+        if (map_image_at(grid_offset) == image_group(IMG_BOOTH)) {
             building_entertainment_draw_show_jugglers(ctx, b, point, color_mask);
         }
         break;
 
     case BUILDING_BANDSTAND:
-        if (map_image_at(grid_offset) == image_id_from_group(IMG_BANDSTAND_SN_N)) {
+        if (map_image_at(grid_offset) == image_group(IMG_BANDSTAND_SN_N)) {
             building_entertainment_draw_shows_musicians(ctx, b, point, 1, color_mask);
-        } else if (map_image_at(grid_offset) == image_id_from_group(IMG_BANDSTAND_WE_W)) {
+        } else if (map_image_at(grid_offset) == image_group(IMG_BANDSTAND_WE_W)) {
             building_entertainment_draw_shows_musicians(ctx, b, point, 0, color_mask);
         }
 
-        if (map_image_at(grid_offset) == image_id_from_group(IMG_BOOTH)) {
+        if (map_image_at(grid_offset) == image_group(IMG_BOOTH)) {
             building_entertainment_draw_show_jugglers(ctx, b, point, color_mask);
         }
         break;
@@ -340,7 +340,7 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
         break;
 
     case BUILDING_CONSERVATORY:
-        building_draw_normal_anim(ctx, point + vec2i{82, 14}, b, tile, image_id_from_group(IMG_MUSICIAN_SHOW_SN), color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{82, 14}, b, tile, image_group(IMG_MUSICIAN_SHOW_SN), color_mask);
         break;
 
     case BUILDING_DANCE_SCHOOL:
@@ -348,7 +348,7 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
         break;
 
     case BUILDING_FISHING_WHARF:
-        building_draw_normal_anim(ctx, point + vec2i{74, 7}, b, tile, image_id_from_group(IMG_FISHIHG_WHARF_ANIM) - 1, color_mask);
+        building_draw_normal_anim(ctx, point + vec2i{74, 7}, b, tile, image_group(IMG_FISHIHG_WHARF_ANIM) - 1, color_mask);
         break;
 
     default:

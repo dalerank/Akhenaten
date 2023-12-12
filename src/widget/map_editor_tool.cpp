@@ -72,7 +72,7 @@ static void draw_building(tile2i tile, int screen_x, int screen_y, e_building_ty
             image_id = image_id_from_group(GROUP_EDITOR_BUILDING_CROPS);
         } else {
             image_desc desc = props->img();
-            image_id = image_id_from_group(desc) + props->image_offset;
+            image_id = image_group(desc) + props->image_offset;
         }
         draw_building_image(image_id, screen_x, screen_y);
     }

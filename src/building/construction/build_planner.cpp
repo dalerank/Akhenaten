@@ -232,8 +232,8 @@ static void add_entertainment_venue(building* b, int orientation) {
 
     int image_id = 0;
     switch (b->type) {
-    case BUILDING_BOOTH: image_id = image_id_from_group(IMG_BOOTH_SQUARE); break;
-    case BUILDING_BANDSTAND: image_id = image_id_from_group(IMG_BANDSTAND_SQUARE); break;
+    case BUILDING_BOOTH: image_id = image_group(IMG_BOOTH_SQUARE); break;
+    case BUILDING_BANDSTAND: image_id = image_group(IMG_BANDSTAND_SQUARE); break;
     case BUILDING_PAVILLION: image_id = image_id_from_group(GROUP_PAVILLION_SQUARE); break;
     case BUILDING_FESTIVAL_SQUARE: image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE); break;
     }
@@ -407,39 +407,39 @@ static void add_building(building* b, int orientation, int variant) {
     switch (b->type) {
     // houses
     case BUILDING_HOUSE_STURDY_HUT:
-        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_HUT) + 2);
+        add_building_tiles_image(b, image_group(IMG_HOUSE_HUT) + 2);
         break;
 
     case BUILDING_HOUSE_MEAGER_SHANTY:
-        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_SHANTY));
+        add_building_tiles_image(b, image_group(IMG_HOUSE_SHANTY));
         break;
 
     case BUILDING_HOUSE_COMMON_SHANTY:
-        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_SHANTY) + 2);
+        add_building_tiles_image(b, image_group(IMG_HOUSE_SHANTY) + 2);
         break;
 
     case BUILDING_HOUSE_ROUGH_COTTAGE:
-        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_COTTAGE));
+        add_building_tiles_image(b, image_group(IMG_HOUSE_COTTAGE));
         break;
 
     case BUILDING_HOUSE_ORDINARY_COTTAGE:
-        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_COTTAGE) + 2);
+        add_building_tiles_image(b, image_group(IMG_HOUSE_COTTAGE) + 2);
         break;
 
     case BUILDING_HOUSE_MODEST_HOMESTEAD:
-        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_HOMESTEAD));
+        add_building_tiles_image(b, image_group(IMG_HOUSE_HOMESTEAD));
         break;
 
     case BUILDING_HOUSE_SPACIOUS_HOMESTEAD:
-        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_HOMESTEAD) + 2);
+        add_building_tiles_image(b, image_group(IMG_HOUSE_HOMESTEAD) + 2);
         break;
 
     case BUILDING_HOUSE_MODEST_APARTMENT:
-        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_APARTMENT));
+        add_building_tiles_image(b, image_group(IMG_HOUSE_APARTMENT));
         break;
 
     case BUILDING_HOUSE_SPACIOUS_APARTMENT:
-        add_building_tiles_image(b, image_id_from_group(IMG_HOUSE_APARTMENT) + 2);
+        add_building_tiles_image(b, image_group(IMG_HOUSE_APARTMENT) + 2);
         break;
 
     case BUILDING_HOUSE_COMMON_RESIDENCE:

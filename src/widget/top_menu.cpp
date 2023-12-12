@@ -561,7 +561,7 @@ static void refresh_background() {
     int s_end = s_width - 1000 - 24 + city_view_is_sidebar_collapsed() * (162 - 18);
     int s_start = s_end - ceil((float)s_end / (float)block_width) * block_width;
 
-    int img_id = image_id_from_group(g_top_menu_data.background);
+    int img_id = image_group(g_top_menu_data.background);
     for (int i = 0; s_start + i * block_width < s_end; i++) {
         ImageDraw::img_generic(ctx, img_id, s_start + (i * block_width), COLOR_MASK_NONE);
     }

@@ -147,8 +147,8 @@ void figure::fishing_boat_action() {
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
 
     if (action_state == FIGURE_ACTION_192_FISHING_BOAT_FISHING)
-        sprite_image_id = image_id_from_group(IMG_FISHING_BOAT_WORK) + dir + 8;
+        sprite_image_id = image_group(IMG_FISHING_BOAT_WORK) + dir + 8;
     else {
-        sprite_image_id = image_id_from_group(IMG_FISHING_BOAT) + dir + 8;
+        sprite_image_id = image_group(IMG_FISHING_BOAT) + dir + 8;
     }
 }

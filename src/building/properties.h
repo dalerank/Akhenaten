@@ -21,7 +21,7 @@ struct building_properties {
     }
 
     int img_id() const {
-        return image_id_from_group(img()) + image_offset;
+        return image_group(img()) + image_offset;
     }
 };
 

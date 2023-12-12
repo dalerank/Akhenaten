@@ -250,9 +250,9 @@ int building_image_get(building *b) {
     case BUILDING_SMALL_MASTABA:
         switch (b->data.monuments.phase) {
         case MONUMENT_START:
-            return image_id_from_group(IMG_SMALL_MASTABA);
+            return image_group(IMG_SMALL_MASTABA);
         default:
-            return image_id_from_group(IMG_SMALL_MASTABA) + 1;
+            return image_group(IMG_SMALL_MASTABA) + 1;
         }
     }
 
