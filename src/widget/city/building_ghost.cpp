@@ -217,12 +217,33 @@ static void draw_farm(painter &ctx, e_building_type type, vec2i tile, int grid_o
     int image_id = get_farm_image(grid_offset);
     draw_building(ctx, image_id, tile + vec2i{-60, 0});
     
-    // fields
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    for (int i = 4; i < 9; i++)
-    //        ImageDraw::isometric(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH)
     draw_farm_crops(ctx, type, 0, grid_offset, tile + vec2i{-60, 30}, COLOR_MASK_GREEN);
+}
+
+static void draw_small_mastaba(painter &ctx, e_building_type type, vec2i tile, int grid_offset) {
+    int image_id = image_id_from_group(IMG_SMALL_MASTABA);
+    draw_building(ctx, image_id, tile);
+    for (int i = 1; i < 7; i++) {
+        draw_building(ctx, image_id - 1, tile + vec2i(-30, 15) * i);
+        draw_building(ctx, image_id - 5, tile + vec2i(-30, 15) * i + vec2i(30, 15) * 3);
+    }
+    draw_building(ctx, image_id-2, tile + vec2i(-30, 15) * 7);
+
+    draw_building(ctx, image_id-4, tile + vec2i(-30, 15) * 7 + vec2i(30, 15) * 3);
+    for (int i = 1; i < 4; i++) {
+        draw_building(ctx, image_id - 3, tile + vec2i(-30, 15) * 7 + vec2i(30, 15) * i);
+        draw_building(ctx, image_id - 7, tile + vec2i(-30, 15) * 0 + vec2i(30, 15) * i);
+    }
+    draw_building(ctx, image_id - 6, tile + vec2i(-30, 15) * 0 + vec2i(30, 15) * 3);
+
+    for (int i = 1, k = 0; i < 7; i++) {
+        for (int j = 1; j < 3; j++) {
+            draw_building(ctx, image_id + 5 + k, tile + vec2i(-30, 15) * i + vec2i(30, 15) * j);
+            k = (k + 1) % 8;
+        }
+    }
+
+    //draw_farm_crops(ctx, type, 0, grid_offset, tile + vec2i{-60, 30}, COLOR_MASK_GREEN);
 }
 
 static void draw_fort(map_point* tile, vec2i pos, painter &ctx) {
@@ -632,6 +653,10 @@ void BuildPlanner::draw_graphics(painter &ctx) {
     case BUILDING_PAVILLION:
     case BUILDING_FESTIVAL_SQUARE:
         draw_entertainment_venue(end, pixel.x, pixel.y, build_type, ctx);
+        break;
+
+    case BUILDING_SMALL_MASTABA:
+        draw_small_mastaba(ctx, build_type, pixel, end.grid_offset());
         break;
 
     case BUILDING_BARLEY_FARM:

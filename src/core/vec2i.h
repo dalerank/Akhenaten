@@ -15,6 +15,8 @@ struct vec2i {
     inline vec2i operator/(float v) const { return vec2i(this->x / v, this->y / v); }
     inline vec2i operator+(vec2i rhs) const { return {x + rhs.x, y + rhs.y}; }
     inline vec2i operator+=(vec2i rhs) { *this = *this + rhs; return *this; }
+    inline vec2i operator*(float v) const { return vec2i(this->x * v, this->y * v); }
+    inline vec2i operator*=(float v) { *this = vec2i(this->x * v, this->y * v); return *this; }
     inline bool operator==(vec2i rhs) const { return (x == rhs.x && y == rhs.y); }
     inline bool operator!=(vec2i rhs) const { return !(*this == rhs); }
 };

@@ -885,6 +885,7 @@ void BuildPlanner::reset() {
     immediate_warning_id = -1;
     extra_warning_id = -1;
 }
+
 void BuildPlanner::init_tiles(int size_x, int size_y) {
     size.x = size_x;
     size.y = size_y;
@@ -1310,12 +1311,16 @@ void BuildPlanner::setup_build_graphics() {
         set_tiles_building(props->img_id(), 3);
         break;
 
+    case BUILDING_SMALL_MASTABA:
+        init_tiles(4, 8);
+        break;    
+
     case BUILDING_BOOTH:
-        init_tiles(2, 2); // TODO
+        init_tiles(2, 2);
         break;
 
     case BUILDING_BANDSTAND:
-        init_tiles(3, 3); // TODO
+        init_tiles(3, 3);
         break;
 
     case BUILDING_PAVILLION:
