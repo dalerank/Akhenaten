@@ -839,8 +839,8 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x, y + 75, cl, "end:", Planner.end.x());
         debug_text(ctx, str, x + 40, y + 75, cl, "", Planner.end.y());
 
-        screen_tile screen_start = mappoint_to_screentile(Planner.start);
-        screen_tile screen_end = mappoint_to_screentile(Planner.end);
+        vec2i screen_start = mappoint_to_screentile(Planner.start);
+        vec2i screen_end = mappoint_to_screentile(Planner.end);
         debug_text(ctx, str, x + 170, y + 65, 60, "screen:", screen_start.x);
         debug_text(ctx, str, x + 170 + 40, y + 65, 60, "", screen_start.y);
         debug_text(ctx, str, x + 170, y + 75, 60, "screen:", screen_end.x);

@@ -10,6 +10,7 @@
 #include "building/menu.h"
 #include "building/model.h"
 #include "building/monuments.h"
+#include "building/monument_mastaba.h"
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/storage.h"
@@ -134,7 +135,7 @@ static building* add_temple_complex_element(int x, int y, int orientation, build
 
 static void add_mastaba(building *b, int orientation) {
     b->prev_part_building_id = 0;
-    map_building_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
+    map_mastaba_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 
     // create parade ground
     tile2i offset = {0, 0};
@@ -145,13 +146,13 @@ static void add_mastaba(building *b, int orientation) {
     case 3: offset = {4, 0}; break;
     }
     int global_rotation = building_rotation_global_rotation();
-    building* ground = building_create(BUILDING_SMALL_MASTABA_SEC, b->tile.x() + offset.x(), b->tile.y() +offset.y(), 0);
-    game_undo_add_building(ground);
-    ground->prev_part_building_id = b->id;
-    b->next_part_building_id = ground->id;
-    ground->next_part_building_id = 0;
+    building* next = building_create(BUILDING_SMALL_MASTABA_SEC, b->tile.x() + offset.x(), b->tile.y() +offset.y(), 0);
+    game_undo_add_building(next);
+    next->prev_part_building_id = b->id;
+    b->next_part_building_id = next->id;
+    next->next_part_building_id = 0;
     tile2i btile_add = b->tile.shifted(offset.x(), offset.y());
-    map_building_tiles_add(ground->id, btile_add, 4, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
+    map_mastaba_tiles_add(next->id, btile_add, next->size, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 }
 
 static void add_temple_complex(building* b, int orientation) {
@@ -1989,13 +1990,13 @@ void BuildPlanner::update(tile2i cursor_tile) {
     update_special_case_orientations_check();
     update_unique_only_one_check();
 }
-bool BuildPlanner::place() {
-    // attempt placing!
-    int x = end.x();
-    int y = end.y();
 
+bool BuildPlanner::place() {
     if (end == tile2i(-1, -1))
         return false;
+
+    int x = end.x();
+    int y = end.y();
 
     // for debugging...
     logs::info("Attempting to place at: %03i %03i %06i", x, y, MAP_OFFSET(x, y));

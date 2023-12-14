@@ -9,8 +9,6 @@ void init_draw_context(int selected_figure_id, vec2i* figure_coord, int highligh
 void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int image_offset, color color_mask, painter &ctx);
 void draw_flattened_footprint_building(const building* b, int x, int y, int image_offset, color color_mask, painter &ctx);
 
-void draw_debug_figurecaches(vec2i pixel, tile2i point, painter &ctx);
-
 void map_render_clear();
 
 void draw_isometric_flat(vec2i pixel, tile2i point, painter &ctx);

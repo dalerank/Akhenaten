@@ -9,6 +9,7 @@
 #include "building/building_education.h"
 #include "building/building_workshop.h"
 #include "building/building_farm.h"
+#include "building/monuments.h"
 #include "city/buildings.h"
 #include "city/floods.h"
 #include "city/labor.h"
@@ -18,6 +19,7 @@
 #include "graphics/boilerplate.h"
 #include "graphics/image_desc.h"
 #include "graphics/image.h"
+#include "graphics/view/lookup.h"
 #include "grid/floodplain.h"
 #include "grid/image.h"
 #include "grid/property.h"
@@ -74,6 +76,44 @@ static void draw_water_lift_anim(painter &ctx, building* b, int x, int y, color 
     }
 
     building_draw_normal_anim(ctx, vec2i{x, y}, b, b->tile, image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
+}
+
+static void draw_small_mastaba_anim(int x, int y, building *b, painter &ctx) {
+    int clear_land_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND);
+    //map_image_set(grid_offset, clear_land_id + (map_random_get(grid_offset) & 7));
+    for (int dy = 0; dy < 4; dy++) {
+        for (int dx = 0; dx < 4; dx++) {
+            tile2i ntile = b->tile.shifted(dx, dy);
+            vec2i offset = mappoint_to_pixel(ntile);
+            ImageDraw::img_sprite(ctx,clear_land_id + ((dy * 4 + dx) & 7), offset.x, offset.y, COLOR_WHITE);
+        }
+    }
+
+    int image_stick = image_group(IMG_SMALL_MASTABA) + 5 + 8;
+    const image_t* img = image_get(image_stick);
+    tile2i left_top = b->tile.shifted(0, 0);
+    if (map_monuments_get_progress(left_top.grid_offset()) == 0) {
+        vec2i offset = mappoint_to_pixel(left_top);
+        ImageDraw::img_sprite(ctx, image_stick, offset.x + img->animation.sprite_x_offset, offset.y + img->animation.sprite_y_offset - img->height + 30, COLOR_WHITE);
+    }
+
+    tile2i right_top = b->tile.shifted(3, 0);
+    if (map_monuments_get_progress(right_top.grid_offset()) == 0) {
+        vec2i offset = mappoint_to_pixel(right_top);
+        ImageDraw::img_sprite(ctx, image_stick, offset.x + img->animation.sprite_x_offset, offset.y + img->animation.sprite_y_offset - img->height + 30, COLOR_WHITE);
+    }
+
+    tile2i left_bottom = b->tile.shifted(0, 3);
+    if (map_monuments_get_progress(left_bottom.grid_offset()) == 0) {
+        vec2i offset = mappoint_to_pixel(left_bottom);
+        ImageDraw::img_sprite(ctx, image_stick, offset.x + img->animation.sprite_x_offset, offset.y + img->animation.sprite_y_offset - img->height + 30, COLOR_WHITE);
+    }
+
+    tile2i right_bottom = b->tile.shifted(3, 3);
+    if (map_monuments_get_progress(right_bottom.grid_offset()) == 0) {
+        vec2i offset = mappoint_to_pixel(right_bottom);
+        ImageDraw::img_sprite(ctx, image_stick, offset.x + img->animation.sprite_x_offset, offset.y + img->animation.sprite_y_offset - img->height + 30, COLOR_WHITE);
+    }
 }
 
 static void draw_fort_anim(int x, int y, building* b, painter &ctx) {
@@ -296,6 +336,11 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
     case BUILDING_SANDSTONE_QUARRY:
         building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, tile, image_group(ANIM_SANDSTONE_QUARRY_1) - 1, color_mask);
         break; 
+
+    case BUILDING_SMALL_MASTABA:
+    case BUILDING_SMALL_MASTABA_SEC:
+        draw_small_mastaba_anim(point.x, point.y, b, ctx);
+        break;
 
     case BUILDING_MENU_FORTS:
         draw_fort_anim(point.x, point.y, b, ctx);

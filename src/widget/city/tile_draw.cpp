@@ -17,6 +17,7 @@
 #include "ornaments.h"
 #include "sound/city.h"
 #include "game/game.h"
+#include "graphics/view/lookup.h"
 
 #include "overlays/city_overlay.h"
 #include "overlays/city_overlay_risks.h"
@@ -245,7 +246,8 @@ void draw_isometric_mark_sound(int building_id, int grid_offset, color &color_ma
     }
 }
 
-bool draw_isometric_flat_building(building *b, tile2i point) {
+template<bool flat>
+bool draw_isometric_flat_building(building *b, tile2i point, painter &ctx) {
     int img_id = 0;
     int tile_id = 0;
     switch (b->type) {
@@ -262,6 +264,15 @@ bool draw_isometric_flat_building(building *b, tile2i point) {
                 if (img_id == tile_id) {
                     return false;
                 }
+            }
+            return true;
+        }
+        break;
+
+    case BUILDING_SMALL_MASTABA_SEC: 
+    case BUILDING_SMALL_MASTABA: {
+            if (b->data.monuments.phase == 0) {
+                tile_id = map_image_at(point.grid_offset());
             }
             return true;
         }
@@ -300,7 +311,7 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
     int building_id = map_building_at(grid_offset);
     if (building_id > 0) {
         building *b = building_get(building_id);
-        if (!draw_isometric_flat_building(b, tile)) {
+        if (!draw_isometric_flat_building<true>(b, tile, ctx)) {
             return;
         }
     }
@@ -345,6 +356,13 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
         image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
     }
 
+    if (building_id > 0) {
+        building *b = building_get(building_id);
+        if (b->type == BUILDING_SMALL_MASTABA || b->type == BUILDING_SMALL_MASTABA_SEC) {
+            return;
+        }
+    }
+
     const image_t *img = ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
     if (!img) {
         return;
@@ -371,7 +389,7 @@ void draw_isometric_height(vec2i pixel, tile2i tile, painter &ctx) {
     int building_id = map_building_at(grid_offset);
     building* b = building_get(building_id);
     if (building_id > 0) {
-        if (draw_isometric_flat_building(b, tile)) {
+        if (draw_isometric_flat_building<false>(b, tile, ctx)) {
             return;
         }
     }

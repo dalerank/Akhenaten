@@ -92,14 +92,11 @@ int map_property_multi_tile_size(int grid_offset) {
 
     return 1;
 }
+
 void map_property_set_multi_tile_size(int grid_offset, int size) {
     map_grid_and(&bitfields_grid, grid_offset, BIT_NO_SIZES);
 
-    if (size < 1)
-        size = 1;
-
-    if (size > 6)
-        size = 6;
+    size = std::clamp(size, 1, 6);
 
     map_grid_or(&bitfields_grid, grid_offset, size - 1);
 }

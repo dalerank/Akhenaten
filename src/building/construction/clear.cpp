@@ -115,6 +115,7 @@ static int clear_land_confirmed(bool measure_only, tile2i start, tile2i end) {
                 for (int i = 0; i < 99; i++) {
                     if (space->prev_part_building_id <= 0)
                         break;
+
                     space = building_get(space->prev_part_building_id);
                     game_undo_add_building(space);
                     space->state = BUILDING_STATE_DELETED_BY_PLAYER;
@@ -235,6 +236,7 @@ int building_construction_clear_land(bool measure_only, tile2i start, tile2i end
     } else if (ask_confirm_bridge) {
         window_popup_dialog_show(POPUP_DIALOG_DELETE_BRIDGE, confirm_delete_bridge, e_popup_btns_yesno);
         return -1;
-    } else
+    } else {
         return clear_land_confirmed(measure_only, start, end);
+    }
 }

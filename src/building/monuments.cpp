@@ -34,6 +34,12 @@
 #define NOTHING 0
 #define INFINITE 10000
 
+grid_xx g_monuments_progress_grid = {0, {FS_UINT32, FS_UINT32}};
+
+io_buffer* iob_monuments_progress_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &g_monuments_progress_grid);
+});
+
 struct monument_phase_resource {
     int resource;
     uint16_t count;
@@ -71,6 +77,13 @@ struct monument_delivery {
 };
 
 svector<monument_delivery, 32> g_monument_deliveries;
+
+uint8_t map_monuments_get_progress(int grid_offset) {
+    return map_grid_get(&g_monuments_progress_grid, grid_offset);
+}
+void map_monuments_set_progress(int grid_offset, int growth) {
+    map_grid_set(&g_monuments_progress_grid, grid_offset, growth);
+}
 
 int building_monument_deliver_resource(building *b, e_resource resource) {
     if (b->id <= 0 || !building_monument_is_monument(b) ||
