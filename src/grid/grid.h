@@ -21,7 +21,7 @@ inline uint32_t MAP_OFFSET(uint32_t map_x, uint32_t map_y) {
     return scenario_map_data()->start_offset + GRID_OFFSET(map_x, map_y);
 }
 
-inline uint32_t MAP_OFFSET(map_point point) {
+inline uint32_t MAP_OFFSET(tile2i point) {
     return scenario_map_data()->start_offset + GRID_OFFSET(point.x(), point.y());
 }
 
@@ -92,4 +92,17 @@ void map_grid_area_foreach(tile2i tmin, tile2i tmax, T func) {
             func(tile2i(xx, yy));
         }
     }
+}
+
+template<typename T>
+tile2i map_grid_area_first(tile2i tmin, tile2i tmax, T func) {
+    for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
+            if (func(tile2i(xx, yy))) {
+                return tile2i(xx, yy);
+            }
+        }
+    }
+
+    return tile2i(-1, -1);
 }

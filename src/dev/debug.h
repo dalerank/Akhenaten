@@ -51,6 +51,7 @@ enum e_debug_render {
     e_debug_render_tile_pos = 20,
     e_debug_render_floodplain_shore = 21,
     e_debug_render_tile_toph = 22,
+    e_debug_render_monuments = 23,
 
     e_debug_render_size
 };

@@ -223,7 +223,7 @@ bool figure::do_goto(tile2i dest, int terrainchoice, short NEXT_ACTION, short FA
 
     return false;
 }
-bool figure::do_gotobuilding(building* dest, bool stop_at_road, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
+bool figure::do_gotobuilding(building* dest, bool stop_at_road, e_terrain_usage terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
     tile2i finish_tile;
     set_destination(dest);
     if (dest->state != BUILDING_STATE_VALID) {
@@ -279,7 +279,6 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, int terrainchoic
         }
         // found any road...?
         if (found_road) {
-            //            destination_tile.set(x, y);
             return do_goto(finish_tile, terrainchoice, NEXT_ACTION, FAIL_ACTION);
         } else {
             if (terrainchoice == TERRAIN_USAGE_ROADS && !use_cross_country) {
@@ -295,7 +294,7 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, int terrainchoic
     return false;
 }
 
-bool figure::do_returnhome(int terrainchoice, short NEXT_ACTION) {
+bool figure::do_returnhome(e_terrain_usage terrainchoice, short NEXT_ACTION) {
     return do_gotobuilding(home(), true, terrainchoice, NEXT_ACTION);
 }
 

@@ -120,3 +120,5 @@ extern io_buffer* iob_bizarre_ordered_fields_6;
 extern io_buffer* iob_bizarre_ordered_fields_7;
 extern io_buffer* iob_bizarre_ordered_fields_8;
 extern io_buffer* iob_bizarre_ordered_fields_9;
+
+extern io_buffer *iob_monuments_progress_grid;

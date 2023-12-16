@@ -23,9 +23,9 @@ void figure::reed_gatherer_action() {
         }
         break;
 
-    case 9: // go to gathering place
+    case ACTION_9_REED_GATHERER_GOTO_RESOURCE: // go to gathering place
         if (do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS)) {
-            if (!can_harvest_point(MAP_OFFSET(destination_tile.x(), destination_tile.y()))) {
+            if (!can_harvest_point(destination_tile.grid_offset())) {
                 wait_ticks = 0;
                 advance_action(8);
             } else
@@ -33,7 +33,7 @@ void figure::reed_gatherer_action() {
         }
         break;
 
-    case 10: // gathering resource
+    case ACTION_10_REED_GATHERER_WORK: // gathering resource
         // someone finished harvesting this spot (for "multiple gatherers" config setting enabled)
         if (map_get_vegetation_growth(tile.grid_offset()) < 255) {
             wait_ticks = 0;
@@ -52,7 +52,7 @@ void figure::reed_gatherer_action() {
         }
         break;
 
-    case 11: // returning with resource
+    case ACTION_10_REED_GATHERER_RETURN_HOME: // returning with resource
         if (do_returnhome(TERRAIN_USAGE_PREFER_ROADS)) {
             home()->stored_full_amount += 50;
         }
@@ -61,12 +61,12 @@ void figure::reed_gatherer_action() {
 
     switch (action_state) {
     default: // normal walk
-    case 8:
-    case 9:
+    case ACTION_8_RECALCULATE:
+    case ACTION_9_REED_GATHERER_GOTO_RESOURCE:
         return image_set_animation(GROUP_FIGURE_REED_GATHERER, 0, 12);
-    case 10: // gathering
+    case ACTION_10_REED_GATHERER_WORK: // gathering
         return image_set_animation(GROUP_FIGURE_REED_GATHERER, 104, 15);
-    case 11: // returning
+    case ACTION_10_REED_GATHERER_RETURN_HOME: // returning
         return image_set_animation(GROUP_FIGURE_REED_GATHERER, 224, 12);
     }
 }

@@ -350,8 +350,12 @@ void building::spawn_figure_work_camp() {
     building* dest = building_determine_worker_needed();
     if (dest) {
         figure *f = create_figure_with_destination(FIGURE_WORKER_PH, dest, FIGURE_ACTION_10_WORKER_CREATED, BUILDING_SLOT_SERVICE);
-        dest->data.industry.worker_id = f->id;
         data.industry.spawned_worker_this_month = true;
+        if (dest->is_industry()) {
+            dest->industry_add_workers(f->id);
+        } else if (dest->is_monument()) {
+            dest->monument_add_workers(f->id);
+        }
     }
 }
 

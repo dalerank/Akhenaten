@@ -23,6 +23,34 @@ void building::barracks_add_weapon(int amount) {
     }
 }
 
+void building::industry_add_workers(int fid) {
+    data.industry.worker_id = fid;
+}
+
+void building::industry_remove_worker(int fid) {
+    if (data.industry.worker_id == id) {
+        data.industry.worker_id = 0;
+    }
+}
+
+void building::monument_add_workers(int fid) {
+    for (auto &wid : data.monuments.workers) {
+        if (wid == 0) {
+            wid = fid;
+            return;
+        }
+    }
+}
+
+void building::monument_remove_worker(int fid) {
+    for (auto &wid : data.monuments.workers) {
+        if (wid == id) {
+            wid = 0;
+            return;
+        }
+    }
+}
+
 static int get_closest_legion_needing_soldiers(building* barracks) {
     int recruit_type = LEGION_RECRUIT_NONE;
     int min_formation_id = 0;

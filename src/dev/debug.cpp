@@ -8,6 +8,7 @@
 #include "graphics/boilerplate.h"
 
 #include "building/industry.h"
+#include "building/monuments.h"
 #include "city/data_private.h"
 #include "graphics/view/lookup.h"
 #include "grid/aqueduct.h"
@@ -487,6 +488,11 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         if (d != 0) {
             debug_text(ctx, str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         }
+        break;
+
+    case e_debug_render_monuments:
+        d = map_monuments_get_progress(grid_offset);
+        debug_text(ctx, str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
         break;
     }
 }

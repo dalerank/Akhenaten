@@ -276,6 +276,8 @@ void figure::advance_route_tile(int roaming_enabled) {
             //            case BUILDING_WAREHOUSE_SPACE:
             //            case BUILDING_GRANARY:
         case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
+        case BUILDING_SMALL_MASTABA:
+        case BUILDING_SMALL_MASTABA_SEC:
         case BUILDING_HOUSE_VACANT_LOT:
         case BUILDING_FORT_GROUND:
         case BUILDING_FESTIVAL_SQUARE:

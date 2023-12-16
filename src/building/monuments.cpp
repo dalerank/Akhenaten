@@ -85,6 +85,10 @@ void map_monuments_set_progress(int grid_offset, int growth) {
     map_grid_set(&g_monuments_progress_grid, grid_offset, growth);
 }
 
+void map_monuments_clear() {
+    map_grid_fill(&g_monuments_progress_grid, 0);
+}
+
 int building_monument_deliver_resource(building *b, e_resource resource) {
     if (b->id <= 0 || !building_monument_is_monument(b) ||
         b->data.monuments.resources[resource] <= 0) {
@@ -508,15 +512,9 @@ int building_monument_count_temple_complex(void) {
     return count;
 }
 
-int building_monument_has_labour_problems(building *b)
-{
+bool building_monument_has_labour_problems(building *b) {
     const model_building *model = model_get_building(b->type);
-
-    if (b->num_workers < model->laborers) {
-        return 1;
-    } else {
-        return 0;
-    }
+    return (b->num_workers < model->laborers);
 }
 
 int building_monument_working(e_building_type type) {
@@ -593,6 +591,23 @@ io_buffer *iob_city_building_monuments = new io_buffer([] (io_buffer *iob, size_
         iob->bind(BIND_SIGNATURE_INT32, &delivery.cartloads);
     }
 });
+
+bool building_monument_need_workers(building *b) {
+    switch (b->type) {
+    case BUILDING_SMALL_MASTABA:
+        while (b->prev_part_building_id) {
+            b = building_get(b->prev_part_building_id);
+        }
+        for (auto w_id : b->data.monuments.workers) {
+            if (!w_id) {
+                return true;
+            }
+        }
+        break;
+    }
+
+    return false;
+}
 
 int building_monument_is_construction_halted(building *b) {
     return b->main()->state == BUILDING_STATE_MOTHBALLED;

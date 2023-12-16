@@ -153,6 +153,14 @@ void figure::poof() {
     case FIGURE_TRADE_CARAVAN:
         i = 1;
         break;
+    case FIGURE_WORKER_PH:
+        building *b = destination();
+        if (b && b->is_industry()) {
+            b->industry_remove_worker(id);
+        } else if (b && b->is_monument()) {
+            b->monument_remove_worker(id);
+        }
+        break;
     }
     set_state(FIGURE_STATE_DEAD);
 }

@@ -39,7 +39,6 @@ void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id,
             map_property_clear_constructing(grid_offset);
             map_property_set_multi_tile_size(grid_offset, size);
             map_monuments_set_progress(grid_offset, 0);
-            //map_image_set(grid_offset, clear_land_id + (map_random_get(grid_offset) & 7));
             map_property_set_multi_tile_xy(grid_offset, dx, dy, dx == x_proper && dy == y_proper);
         }
     }

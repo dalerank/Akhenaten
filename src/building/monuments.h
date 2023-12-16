@@ -25,7 +25,7 @@ bool building_monument_is_temple_complex(e_building_type type);
 int building_monument_needs_resource(building *b, e_resource resource);
 bool building_monument_needs_resources(building *b);
 int building_monument_progress(building *b);
-int building_monument_has_labour_problems(building *b);
+bool building_monument_has_labour_problems(building *b);
 int building_monument_working(e_building_type type);
 bool building_monument_requires_resource(e_building_type type, e_resource resource);
 int building_monument_has_required_resources_to_build(e_building_type type);
@@ -39,15 +39,11 @@ int building_monument_get_id(e_building_type type);
 int building_monument_upgraded(e_building_type type);
 int building_monument_module_type(e_building_type type);
 int building_monument_phases(e_building_type building_type);
-int building_monument_gt_module_is_active(int module);
-int building_monument_pantheon_module_is_active(int module);
 void building_monument_finish_monuments();
 void building_monuments_set_construction_phase(int phase);
-int building_monument_get_venus_gt();
-int building_monument_get_neptune_gt();
 void building_monument_initialize_deliveries();
-int building_monument_count_grand_temples();
 
+bool building_monument_need_workers(building *b);
 int building_monument_is_construction_halted(building *b);
 int building_monument_toggle_construction_halted(building *b);
 int building_monument_is_unfinished_monument(const building *b);
@@ -57,4 +53,4 @@ int get_temple_complex_part_image(int type, int part, int orientation, int level
 
 uint8_t map_monuments_get_progress(int grid_offset);
 void map_monuments_set_progress(int grid_offset, int growth);
-
+void map_monuments_clear();

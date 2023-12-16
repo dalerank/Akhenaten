@@ -1,6 +1,7 @@
 #include "industry.h"
 
 #include "building/building_type.h"
+#include "building/monuments.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/profiler.h"
@@ -92,21 +93,13 @@ delivery_destination building_get_asker_for_resource(tile2i tile, e_building_typ
 }
 
 building* building_determine_worker_needed() {
-    for (building *it = building_begin(), *end = building_end(); it != end; ++it) {
-        if (it->state != BUILDING_STATE_VALID) {
-            continue;
+    return building_first([] (building &b) {
+        if (floodplains_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(b)) {
+            return (!b.data.industry.worker_id && b.data.industry.labor_days_left <= 47 && !b.num_workers);
+        } else if (building_is_monument(b.type)) {
+            return building_monument_need_workers(&b);
         }
-
-        if (floodplains_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(*it)) {
-            if (!it->data.industry.worker_id && it->data.industry.labor_days_left <= 47 && !it->num_workers) {
-                return it;
-            }
-        } else if (building_is_monument(it->type)) {
-            // todo
-        }
-    }
-
-    return nullptr;
+    });
 }
 
 static const float produce_uptick_per_day = 103.5f * 20.0f / 128.0f / 100.0f; // don't ask

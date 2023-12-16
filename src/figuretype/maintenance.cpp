@@ -4,6 +4,8 @@
 #include "building/building.h"
 #include "building/list.h"
 #include "building/maintenance.h"
+#include "building/animation.h"
+#include "building/monuments.h"
 #include "city/figures.h"
 #include "core/calc.h"
 #include "core/profiler.h"
@@ -364,23 +366,37 @@ void figure::water_carrier_action() {
 //}
 
 void figure::worker_action() {
-    terrain_usage = TERRAIN_USAGE_ROADS;
     use_cross_country = false;
     max_roam_length = 384;
     building* bhome = home();
     building* b_dest = destination();
-    if (bhome->state != BUILDING_STATE_VALID
-        || b_dest->state != BUILDING_STATE_VALID
-        || b_dest->data.industry.worker_id != id) {
+    e_terrain_usage terrain_usage = TERRAIN_USAGE_ROADS;
+    bool stot_at_road = true;
+    if (!bhome->is_valid() || !b_dest->is_valid()) {
         poof();
+        return;
+    }
+
+    if (b_dest->is_industry()) {
+        if (b_dest->data.industry.worker_id != id) {
+            poof();
+            return;
+        }
+
+        terrain_usage = TERRAIN_USAGE_ROADS;
+    } else if (b_dest->is_monument()) {
+        terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+        stot_at_road = false;
+    } else {
+        terrain_usage = TERRAIN_USAGE_ROADS;
     }
 
     switch (action_state) {
     case 9:
         break;
 
-    case ACTION_10_GOING:
-        if (do_gotobuilding(destination())) {
+    case FIGURE_ACTION_10_WORKER_GOING:
+        if (do_gotobuilding(destination(), stot_at_road, terrain_usage)) {
             if (building_is_farm(b_dest->type)) {
                 b_dest->num_workers = std::clamp<int>((1.f - bhome->tile.dist(b_dest->tile) / 20.f) * 12, 2, 10);
                 b_dest->data.industry.work_camp_id = bhome->id;
@@ -389,8 +405,39 @@ void figure::worker_action() {
                 b_dest->data.industry.labor_days_left = 96;
             } else if (b_dest->type == BUILDING_PYRAMID) {
                 // todo: MONUMENTSSSS
+            } else if (b_dest->type == BUILDING_SMALL_MASTABA || b_dest->type == BUILDING_SMALL_MASTABA_SEC) {
+                tile2i tmin, tmax;
+                map_grid_get_area(b_dest->tile, b_dest->size, 1, tmin, tmax);
+
+                tile2i tile_need_leveling = map_grid_area_first(tmin, tmax, [] (tile2i tile) { return !map_monuments_get_progress(tile.grid_offset()); });
+                map_monuments_set_progress(tile.grid_offset(), 1);
+                destination_tile = tile_need_leveling;
+                advance_action(FIGURE_ACTION_11_WORKER_GOING_TO_PLACE);
             }
         }
         break;
+
+    case FIGURE_ACTION_11_WORKER_GOING_TO_PLACE:
+        if (do_goto(destination_tile, false, TERRAIN_USAGE_ANY)) {
+            wait_ticks = 0;
+            direction = 0;
+            advance_action(FIGURE_ACTION_12_WORKER_LEVELING_GROUND);
+        }
+        break;
+
+    case FIGURE_ACTION_12_WORKER_LEVELING_GROUND:
+        if (wait_ticks < 200) {
+            wait_ticks++;
+            int progress = map_monuments_get_progress(tile.grid_offset());
+            map_monuments_set_progress(tile.grid_offset(), progress + 1);
+        } else {
+            poof();
+        }
+        break;
+    }
+
+    switch (action_state) {
+    case FIGURE_ACTION_12_WORKER_LEVELING_GROUND:
+        return image_set_animation(GROUP_FIGURE_WORKER_PH, 104, 15);
     }
 }

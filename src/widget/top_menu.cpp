@@ -176,6 +176,7 @@ static menu_item menu_render[] = {
     {6, 18, menu_debug_render_change_opt, e_debug_render_tile_pos},
     {6, 19, menu_debug_render_change_opt, e_debug_render_floodplain_shore},
     {6, 20, menu_debug_render_change_opt, e_debug_render_tile_toph},
+    {6, 21, menu_debug_render_change_opt, e_debug_render_monuments},
 };
 
 menu_bar_item g_top_menu[] = {
@@ -263,6 +264,7 @@ static void menu_debug_render_text(int opt, bool v) {
         {"Tile Coord ON", "Tile Coord OFF"},
         {"Flood Shore ON", "Flood Shore OFF"},
         {"Tile TopH ON", "Tile TopH OFF"},
+        {"Monuments ON", "Monuments OFF"},
     };
     menu_update_text(g_top_menu[INDEX_DEBUG_RENDER], opt, debug_text_rend[opt][v ? 0 : 1]);
 }

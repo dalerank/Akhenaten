@@ -215,6 +215,7 @@ public:
             uint8_t statue_offset;
             uint8_t temple_complex_attachments;
             int resources[RESOURCES_MAX];
+            int workers[5];
             uint8_t phase;
             uint8_t upgrades;
         } monuments;
@@ -242,6 +243,7 @@ public:
     building* top_xy();
     bool is_main();
 
+    inline bool is_valid() { return state == BUILDING_STATE_VALID; }
     bool is_house();
     bool is_fort();
     bool is_defense();
@@ -365,6 +367,10 @@ public:
 
     // barracks.c
     void barracks_add_weapon(int amount);
+    void monument_add_workers(int fid);
+    void monument_remove_worker(int fid);
+    void industry_add_workers(int fid);
+    void industry_remove_worker(int fid);
     int barracks_create_soldier();
     bool barracks_create_tower_sentry();
     void barracks_toggle_priority();
@@ -424,7 +430,7 @@ bool building_exists_at(int grid_offset, building* b);
 
 bool building_exists_at(map_point point, building* b);
 
-void building_clear_all(void);
+void building_clear_all();
 // void building_totals_add_corrupted_house(int unfixable);
 
 bool building_is_fort(int type);
@@ -458,10 +464,10 @@ bool building_is_military(int type);
 
 bool building_is_draggable(int type);
 
-int building_get_highest_id(void);
-void building_update_highest_id(void);
-void building_update_state(void);
-void building_update_desirability(void);
+int building_get_highest_id();
+void building_update_highest_id();
+void building_update_state();
+void building_update_desirability();
 
 int building_mothball_toggle(building* b);
 int building_mothball_set(building* b, int value);
@@ -473,58 +479,70 @@ std::span<building>& city_buildings();
 template <typename T>
 inline building* building_first(T pred) {
     for (auto it = building_begin(), end = building_end(); it != end; ++it) {
-        if (it->state == BUILDING_STATE_VALID && pred(*it)) {
+        if (it->is_valid() && pred(*it)) {
             return it;
         }
     }
     return nullptr;
 }
 
-inline building* building_first_of_type(e_building_type type) {
-    for (auto it = building_begin(), end = building_end(); it != end; ++it) {
-        if (it->state == BUILDING_STATE_VALID && it->type == type) {
-            return it;
+template <typename ... Args>
+inline building* building_first_of_type(Args ... types) {
+    for (auto &b: city_buildings()) {
+        if (b.is_valid() && building_type_any_of(b, types...)) {
+            return &b;
         }
     }
     return nullptr;
 }
 
 template<typename T>
+void buildings_valid_first(T func) {
+    for (auto &b: city_buildings()) {
+        if (b.is_valid()) {
+            if (func(b)) {
+                return &b;
+            }
+        }
+    }
+}
+
+template<typename T>
 void buildings_valid_do(T func) {
-    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
-        if (it->state == BUILDING_STATE_VALID) {
-            func(*it);
+    for (auto &b: city_buildings()) {
+        if (b.is_valid()) {
+            func(b);
         }
     }
 }
 
 template<typename ... Args, typename T>
 void buildings_valid_do(T func, Args ... args) {
-    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
-        if (!building_type_any_of(*it, args...)) {
+    for (auto &b: city_buildings()) {
+        if (!building_type_any_of(b, args...)) {
             continue;
         }
 
-        if (it->state == BUILDING_STATE_VALID) {
-            func(*it);
+        if (b.is_valid()) {
+            func(b);
         }
     }
 }
 
 template<typename T>
 void buildings_house_do(T func) {
-    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
-        if (it->state == BUILDING_STATE_VALID && building_is_house(it->type)) {
-            func(*it);
+    for (auto &b: city_buildings()) {
+        if (b.is_valid() && building_is_house(b.type)) {
+            func(b);
         }
     }
 }
 
 template<typename T>
 void buildings_workshop_do(T func) {
-    for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
-        if (it->state == BUILDING_STATE_VALID && building_is_workshop(it->type)) {
-            func(*it);
+    for (auto &b: city_buildings()) {
+        if (b.is_valid() && building_is_workshop(b.type)) {
+            func(b);
         }
     }
 }
