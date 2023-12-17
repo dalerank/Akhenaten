@@ -3,4 +3,4 @@
 	url = https://github.com/wolfpld/tracy.git
 [submodule "ext/cpptrace"]
 	path = ext/cpptrace
-	url = https://github.com/akuskis/cpptrace.git
+	url = https://github.com/jeremy-rifkin/cpptrace.git
