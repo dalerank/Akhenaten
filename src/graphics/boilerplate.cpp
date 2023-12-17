@@ -648,7 +648,7 @@ static void draw_footprint_size_any(int image_id, int x, int y, int size, color 
             int y_offset = k * 15;
 
             //            draw_footprint_tile(tile_data(data, index++), x + x_offset, y + y_offset, color_mask);
-            graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, false);
+            graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale);
         }
     }
 }
@@ -695,15 +695,15 @@ static void draw_multibyte_letter(font_t font, const image_t* img, int x, int y,
 
 void ImageDraw::img_generic(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
-    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, false);
+    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale);
 }
 
 void ImageDraw::img_generic(painter &ctx, int image_id, vec2i p, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
-    graphics_renderer()->draw_image(ctx, img, p.x, p.y, color_mask, scale, false);
+    graphics_renderer()->draw_image(ctx, img, p.x, p.y, color_mask, scale);
 }
 
-void ImageDraw::img_sprite(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
+void ImageDraw::img_sprite(painter &ctx, int image_id, int x, int y, color color_mask, float scale, bool alpha) {
     const image_t* img = image_get(image_id);
     bool mirrored = (img->offset_mirror != 0);
    
@@ -715,7 +715,7 @@ void ImageDraw::img_sprite(painter &ctx, int image_id, int x, int y, color color
     }
 
     y -= img->animation.sprite_y_offset;
-    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, mirrored);
+    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, mirrored, alpha);
 }
 
 void ImageDraw::img_ornament(painter &ctx, int image_id, int base_id, int x, int y, color color_mask, float scale) {
@@ -725,12 +725,12 @@ void ImageDraw::img_ornament(painter &ctx, int image_id, int base_id, int x, int
     x += base->animation.sprite_x_offset;
     y += base->animation.sprite_y_offset - base->height + ydiff;
     //    y += base->animation.sprite_y_offset - img->isometric_ydiff();
-    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, false);
+    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale);
 }
 
 void ImageDraw::img_from_below(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
-    graphics_renderer()->draw_image(ctx, img, x, y - img->height, color_mask, scale, false);
+    graphics_renderer()->draw_image(ctx, img, x, y - img->height, color_mask, scale);
 }
 
 void ImageDraw::img_letter(painter &ctx,font_t font, int letter_id, int x, int y, color color_mask, float scale) {
@@ -741,10 +741,11 @@ void ImageDraw::img_letter(painter &ctx,font_t font, int letter_id, int x, int y
     }
     if (!color_mask)
         color_mask = base_color_for_font(font);
-    if (font == FONT_SMALL_SHADED)
-        graphics_renderer()->draw_image(ctx, img, x + 1, y + 1, COLOR_BLACK, scale, false);
 
-    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, false);
+    if (font == FONT_SMALL_SHADED)
+        graphics_renderer()->draw_image(ctx, img, x + 1, y + 1, COLOR_BLACK, scale);
+
+    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale);
 }
 
 void ImageDraw::img_background(painter &ctx, int image_id, float scale) {
@@ -755,7 +756,7 @@ void ImageDraw::img_background(painter &ctx, int image_id, float scale) {
     if (scale == -1) {
         //        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
     } else {
-        graphics_renderer()->draw_image(ctx, img, (screen_width() - img->width) / 2, (screen_height() - img->height) / 2, COLOR_MASK_NONE, scale, false);
+        graphics_renderer()->draw_image(ctx, img, (screen_width() - img->width) / 2, (screen_height() - img->height) / 2, COLOR_MASK_NONE, scale);
     }
 }
 
@@ -773,7 +774,7 @@ const image_t* ImageDraw::isometric_from_drawtile(painter &ctx, int image_id, ve
     //        assets_load_unpacked_asset(image_id);
     //    }
     pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
-    graphics_renderer()->draw_image(ctx, img, pos.x, pos.y, color_mask, 1.0f, false);
+    graphics_renderer()->draw_image(ctx, img, pos.x, pos.y, color_mask);
     return img;
 }
 
@@ -783,6 +784,6 @@ const image_t* ImageDraw::isometric_from_drawtile_part(painter &ctx, int image_i
         offset = img->isometric_top_height();
     }
     pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
-    graphics_renderer()->draw_image_part(ctx, img, offset, pos.x, pos.y, color_mask, 1.0f, false);
+    graphics_renderer()->draw_image_part(ctx, img, offset, pos.x, pos.y, color_mask);
     return img;
 }

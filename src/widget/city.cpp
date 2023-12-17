@@ -148,7 +148,7 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
 
     map_render_clear();
     //city_view_foreach_valid_map_tile(ctx, cache_figures);
-    city_view_foreach_valid_map_tile(ctx, draw_isometric_flat);
+    city_view_foreach_valid_map_tile(ctx, draw_isometric_flat, draw_ornaments_flat);
     city_view_foreach_valid_map_tile(ctx, draw_isometric_height, draw_ornaments_and_animations, draw_figures);
 
     if (!selected_figure_id) {

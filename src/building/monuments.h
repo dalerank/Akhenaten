@@ -51,6 +51,6 @@ int building_monument_is_unfinished_monument(const building *b);
 int get_monument_part_image(int part, int orientation, int level);
 int get_temple_complex_part_image(int type, int part, int orientation, int level);
 
-uint8_t map_monuments_get_progress(int grid_offset);
-void map_monuments_set_progress(int grid_offset, int growth);
+uint32_t map_monuments_get_progress(int grid_offset);
+void map_monuments_set_progress(int grid_offset, uint32_t progress);
 void map_monuments_clear();

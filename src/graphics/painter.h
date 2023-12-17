@@ -27,7 +27,7 @@ struct painter {
     SDL_Renderer *renderer;
     float global_render_scale;
 
-    void draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, bool mirrored);
-    void draw(const sprite &spr, vec2i pos, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, bool mirrored = false);
+    void draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color = COLOR_MASK_NONE, float scale = 1.f, bool mirrored = false, bool alpha = false);
+    void draw(const sprite &spr, vec2i pos, color color_mask = COLOR_MASK_NONE, float scale = 1.f, bool mirrored = false, bool alpha = false);
 };
 

@@ -284,17 +284,17 @@ unsigned int graphics_renderer_interface::premult_alpha() {
     return ::premult_alpha;
 }
 
-void graphics_renderer_interface::draw_image_part(painter &ctx, const image_t* img, int offset, float x, float y, color color, float scale, bool mirrored) {
+void graphics_renderer_interface::draw_image_part(painter &ctx, const image_t* img, int offset, float x, float y, color color, float scale, bool mirrored, bool alpha) {
     if (game.paused || img == nullptr) {
         return;
     }
 
     vec2i atlas_offset = {img->atlas.x_offset, img->atlas.y_offset};
     vec2i size = {img->width, (img->height - offset) / 2 + offset};
-    ctx.draw(img->atlas.p_atlas->texture, x, y, atlas_offset, size, color, scale, mirrored);
+    ctx.draw(img->atlas.p_atlas->texture, x, y, atlas_offset, size, color, scale, mirrored, alpha);
 }
 
-void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, float x, float y, color color, float scale, bool mirrored) {
+void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, float x, float y, color color, float scale, bool mirrored, bool alpha) {
     if (game.paused || img == nullptr) {
         return;
     }
@@ -302,7 +302,7 @@ void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, f
     vec2i offset = {img->atlas.x_offset, img->atlas.y_offset};
     vec2i size = {img->width, img->height};
     if (offset.x >= 0 && offset.y >= 0) {
-        ctx.draw(img->atlas.p_atlas->texture, x, y, offset, size, color, scale, mirrored);
+        ctx.draw(img->atlas.p_atlas->texture, x, y, offset, size, color, scale, mirrored, alpha);
     }
 }
 

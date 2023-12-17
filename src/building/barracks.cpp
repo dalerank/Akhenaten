@@ -44,7 +44,7 @@ void building::monument_add_workers(int fid) {
 
 void building::monument_remove_worker(int fid) {
     for (auto &wid : data.monuments.workers) {
-        if (wid == id) {
+        if (wid == fid) {
             wid = 0;
             return;
         }

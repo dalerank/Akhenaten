@@ -78,11 +78,11 @@ struct monument_delivery {
 
 svector<monument_delivery, 32> g_monument_deliveries;
 
-uint8_t map_monuments_get_progress(int grid_offset) {
+uint32_t map_monuments_get_progress(int grid_offset) {
     return map_grid_get(&g_monuments_progress_grid, grid_offset);
 }
-void map_monuments_set_progress(int grid_offset, int growth) {
-    map_grid_set(&g_monuments_progress_grid, grid_offset, growth);
+void map_monuments_set_progress(int grid_offset, uint32_t progress) {
+    map_grid_set(&g_monuments_progress_grid, grid_offset, progress);
 }
 
 void map_monuments_clear() {

@@ -9,7 +9,7 @@
 
 #include <SDL.h>
 
-void painter::draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, bool mirrored) {
+void painter::draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, bool mirrored, bool alpha) {
     if (game.paused || texture == nullptr) {
         return;
     }
@@ -44,7 +44,7 @@ void painter::draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i s
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
                            (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE);
     SDL_SetTextureAlphaMod(texture, (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
-    SDL_SetTextureBlendMode(texture, (SDL_BlendMode)graphics_renderer()->premult_alpha());
+    SDL_SetTextureBlendMode(texture, alpha ? SDL_BLENDMODE_BLEND : (SDL_BlendMode)graphics_renderer()->premult_alpha());
 
     // uncomment here if you want save something from atlases
     int k = 0;
@@ -96,14 +96,14 @@ void painter::draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i s
     //     SDL_RenderCopy(data.renderer, texture, &src_coords, &dst_coords);
 }
 
-void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale, bool mirrored) {
+void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale, bool mirrored, bool alpha) {
     if (game.paused || spr.img == nullptr) {
         return;
     }
 
     vec2i offset{spr.img->atlas.x_offset, spr.img->atlas.y_offset};
     vec2i size{spr.img->width, spr.img->height};
-    draw(spr.img->atlas.p_atlas->texture, pos.x, pos.y, offset, size, color_mask, scale, mirrored);
+    draw(spr.img->atlas.p_atlas->texture, pos.x, pos.y, offset, size, color_mask, scale, mirrored, alpha);
 }
 
 sprite::sprite(e_image_id id) {
