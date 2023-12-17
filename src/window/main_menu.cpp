@@ -65,10 +65,8 @@ main_menu_data_t g_main_menu_data;
 void config_load_main_menu(archive arch) {
     arch.load_global_section("main_menu_window", [] (archive arch) {
         auto &data = g_main_menu_data;
-        data.button_pos.x = arch.read_integer("x_pos");
-        data.button_pos.y = arch.read_integer("y_pos");
-        data.button_size.x = arch.read_integer("btn_width");
-        data.button_size.y = arch.read_integer("btn_height");
+        data.button_pos = arch.read_vec2i("pos");
+        data.button_size = arch.read_vec2i("btn", "w", "h");
         data.button_offset = arch.read_integer("button_offset");
 
         data.buttons_text.clear();
@@ -128,7 +126,7 @@ static void draw_foreground() {
     }
 
     if (data.patreon_texture) {
-        ctx.draw(data.patreon_texture, scr_size.x - 100, scr_size.y - 50, {0, 0}, {48, 48}, 0xffffffff, 0.75f, false, true);
+        ctx.draw(data.patreon_texture, scr_size - vec2i(100, 50), {0, 0}, {48, 48}, 0xffffffff, 0.75f, false, true);
     }
 }
 
@@ -203,11 +201,11 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 
     vec2i scr_size = screen_size();
-    if (generic_buttons_handle_mouse(m, scr_size.x - 50, scr_size.y - 50, &data.discord_button, 1, nullptr)) {
+    if (generic_buttons_handle_mouse(m, scr_size - vec2i(50, 50), &data.discord_button, 1, nullptr)) {
         return;
     }
 
-    if (generic_buttons_handle_mouse(m, scr_size.x - 100, scr_size.y - 50, &data.patreon_button, 1, nullptr)) {
+    if (generic_buttons_handle_mouse(m, scr_size - vec2i(100, 50), &data.patreon_button, 1, nullptr)) {
         return;
     }
 

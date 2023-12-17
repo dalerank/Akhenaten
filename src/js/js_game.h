@@ -3,6 +3,7 @@
 #include "mujs/mujs.h"
 #include "core/bstring.h"
 #include "js/js_defines.h"
+#include "core/vec2i.h"
 
 #include <vector>
 
@@ -74,6 +75,15 @@ struct archive {
         js_getproperty(vm, -1, name);
         bool result = js_isundefined(vm, -1) ? 0 : js_toboolean(vm, -1);
         js_pop(vm, 1);
+        return result;
+    }
+
+    inline vec2i read_vec2i(pcstr name, pcstr x = "x", pcstr y = "y") {
+        vec2i result(0, 0);
+        read_object_section(name, [&] (archive arch) {
+            result.x = arch.read_integer(x);
+            result.y = arch.read_integer(y);
+        });
         return result;
     }
 

@@ -13,10 +13,8 @@ top_menu_bar = {
 }
 
 main_menu_window = {
-	x_pos : 192,
-	y_pos : 125,
-	btn_width : 256,
-	btn_height : 25,
+	pos : {x: 192, y: 125},
+	btn : {w: 256, h: 25},
 	button_offset : 40,
 
 	buttons : [
