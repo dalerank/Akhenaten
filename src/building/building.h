@@ -497,7 +497,7 @@ inline building* building_first_of_type(Args ... types) {
 }
 
 template<typename T>
-void buildings_valid_first(T func) {
+building* buildings_valid_first(T func) {
     for (auto &b: city_buildings()) {
         if (b.is_valid()) {
             if (func(b)) {
