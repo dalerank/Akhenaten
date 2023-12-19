@@ -82,3 +82,7 @@ int map_building_is_reservoir(tile2i tile) {
     }
     return 1;
 }
+
+void map_building_update_all_tiles() {
+
+}

@@ -20,6 +20,7 @@
 #include "graphics/window.h"
 #include "grid/building.h"
 #include "grid/grid.h"
+#include "grid/figure.h"
 #include "input/scroll.h"
 #include "config/config.h"
 #include "io/gamefiles/lang.h"
@@ -131,6 +132,10 @@ static void draw_tile_boxes(vec2i pixel, tile2i point) {
     }
 };
 
+static void update_tile_coords(vec2i pixel, tile2i tile, painter &ctx) {
+    record_mappoint_pixelcoord(tile, pixel);
+}
+
 void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord, tile2i tile) {
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
@@ -144,10 +149,11 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
 
     city_building_ghost_mark_deleting(tile);
 
-    //reset_tiledraw_caches(*ctx.figure_cache);
-
     map_render_clear();
-    //city_view_foreach_valid_map_tile(ctx, cache_figures);
+
+    city_view_foreach_valid_map_tile(ctx, update_tile_coords);
+
+    map_figure_sort_by_y();
     city_view_foreach_valid_map_tile(ctx, draw_isometric_flat, draw_ornaments_flat);
     city_view_foreach_valid_map_tile(ctx, draw_isometric_height, draw_ornaments_and_animations, draw_figures);
 
@@ -166,9 +172,7 @@ void widget_city_draw_with_overlay(painter &ctx, tile2i tile) {
         return;
 
     city_building_ghost_mark_deleting(tile);
-    //reset_tiledraw_caches(*ctx.figure_cache);
     map_render_clear();
-    //city_view_foreach_valid_map_tile(ctx, cache_figures);
     city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay_flat);
     city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay_height, draw_ornaments_overlay, draw_figures_overlay);
     Planner.update(tile);

@@ -94,9 +94,11 @@ void map_building_tiles_add(int building_id, tile2i tile, int size, int image_id
             map_property_clear_constructing(grid_offset);
             map_property_set_multi_tile_size(grid_offset, size);
             map_image_set(grid_offset, image_id);
-            map_property_set_multi_tile_xy(grid_offset, dx, dy, dx == x_proper && dy == y_proper);
+            map_property_set_multi_tile_xy(grid_offset, dx, dy, false);
         }
     }
+    tile2i draw_tile = tile.shifted(x_proper, y_proper);
+    map_property_mark_draw_tile(draw_tile.grid_offset());
 }
 
 void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_offset, int progress) {

@@ -66,8 +66,7 @@ void mouse_set_left_down(int down) {
     data.is_inside_window = 1;
     if (!down) {
         time_millis now = time_get_millis();
-        data.left.system_change
-          |= ((last_click < now) && ((now - last_click) <= DOUBLE_CLICK_TIME)) ? SYSTEM_DOUBLE_CLICK : SYSTEM_NONE;
+        data.left.system_change |= ((last_click < now) && ((now - last_click) <= DOUBLE_CLICK_TIME)) ? SYSTEM_DOUBLE_CLICK : SYSTEM_NONE;
         last_click = now;
     }
 }
@@ -99,7 +98,7 @@ static void update_button_state(mouse_button* button) {
     button->is_down = (button->is_down || button->went_down) && !button->went_up;
 }
 
-void mouse_determine_button_state(void) {
+void mouse_determine_button_state() {
     update_button_state(&data.left);
     update_button_state(&data.middle);
     update_button_state(&data.right);

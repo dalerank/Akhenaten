@@ -33,7 +33,6 @@
 #include "window/logo.h"
 #include "window/main_menu.h"
 #include "graphics/view/view.h"
-#include "widget/city/figures_cached_draw.h"
 #include "platform/renderer.h"
 
 static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};

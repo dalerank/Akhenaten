@@ -22,8 +22,9 @@ void foreach_marshland_tile(void (*callback)(int grid_offset)) {
         callback(marshland_tiles_cache.at(i));
 }
 void foreach_tree_tile(void (*callback)(int grid_offset)) {
-    for (int i = 0; i < trees_tiles_cache.size(); i++)
+    for (int i = 0; i < trees_tiles_cache.size(); i++) {
         callback(trees_tiles_cache.at(i));
+    }
 }
 
 grid_xx g_terrain_vegetation_growth = {0, {FS_UINT8, FS_UINT8}};

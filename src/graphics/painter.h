@@ -5,7 +5,6 @@
 #include "game/resource.h"
 #include "graphics/image_desc.h"
 
-struct figure_draw_cache_data_t;
 struct view_data_t;
 struct SDL_Renderer;
 struct SDL_Texture;
@@ -22,7 +21,6 @@ struct sprite_resource_icon : public sprite {
 };
 
 struct painter {
-    figure_draw_cache_data_t *figure_cache;
     view_data_t *view;
     SDL_Renderer *renderer;
     float global_render_scale;

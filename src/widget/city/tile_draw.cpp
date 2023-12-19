@@ -4,7 +4,6 @@
 #include "core/svector.h"
 #include "building/construction/build_planner.h"
 #include "graphics/view/view.h"
-#include "figures_cached_draw.h"
 #include "game/state.h"
 #include "graphics/boilerplate.h"
 #include "grid/building.h"
@@ -434,28 +433,32 @@ void draw_isometric_height(vec2i pixel, tile2i tile, painter &ctx) {
     ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
 }
 
-void draw_figures(vec2i pixel, tile2i point, painter &ctx) {
+void draw_figures(vec2i pixel, tile2i tile, painter &ctx) {
     auto& draw_context = get_draw_context();
 
-    // first, draw from the cache
-    //draw_cached_figures(pixel, point, e_figure_draw_common, ctx);
-
     // secondly, draw figures found on this tile as normal
-    int grid_offset = point.grid_offset();
-    int figure_id = map_figure_id_get(grid_offset);
-    while (figure_id) {
-        figure* f = figure_get(figure_id);
-        if (!f->is_ghost) {
-            if (!draw_context.selected_figure_id) {
-                int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
-                f->city_draw_figure(ctx, pixel, highlight);
-            } else if (figure_id == draw_context.selected_figure_id)
-                f->city_draw_figure(ctx, pixel, 0, draw_context.selected_figure_coord);
+    int grid_offset = tile.grid_offset();
+    auto figures = map_figures_in_row(tile);
+
+    for (auto *f : figures) {
+        if (f->is_ghost) {
+            continue;
         }
-        if (figure_id != f->next_figure)
-            figure_id = f->next_figure;
-        else
-            figure_id = 0;
+
+        if (f->is_drawn) {
+            continue;
+        }
+
+        if (f->cached_pos.x < pixel.x || f->cached_pos.x > pixel.x + TILE_WIDTH_PIXELS) {
+            continue;
+        }
+
+        if (!draw_context.selected_figure_id) {
+            int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
+            f->city_draw_figure(ctx, highlight);
+        } else if (f->id == draw_context.selected_figure_id) {
+            f->city_draw_figure(ctx, 0, draw_context.selected_figure_coord);
+        }
     }
 }
 
@@ -550,7 +553,7 @@ void draw_figures_overlay(vec2i pixel, tile2i point, painter &ctx) {
     while (figure_id) {
         figure* f = figure_get(figure_id);
         if (!f->is_ghost && get_city_overlay()->show_figure(f))
-            f->city_draw_figure(ctx, pixel, 0);
+            f->city_draw_figure(ctx, 0);
 
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;
