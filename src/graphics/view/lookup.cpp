@@ -5,6 +5,7 @@
 #include "grid/grid.h"
 
 static tile2i SCREENTILE_TO_MAPPOINT_LOOKUP[4][500][500];
+constexpr int max_grid_offset = 4 * 500 * 500;
 static void screentile_calc_params_by_orientation(int city_orientation, vec2i* start, vec2i* column_step, vec2i* row_step) {
     switch (city_orientation) {
     default:
@@ -77,7 +78,7 @@ tile2i screentile_to_mappoint(vec2i screen) {
     return SCREENTILE_TO_MAPPOINT_LOOKUP[city_orientation][screen.x][screen.y];
 }
 
-vec2i mappoint_to_screentile(tile2i point) {
+vec2i tile_to_screen(tile2i point) {
     if (!map_grid_inside_map_area(point.grid_offset())) {
         return {-1, -1};
     }
@@ -99,11 +100,15 @@ void record_mappoint_pixelcoord(tile2i point, vec2i pixel) {
     MAPPOINT_TO_PIXEL_LOOKUP[point.grid_offset()] = {pixel.x, pixel.y};
 }
 
-vec2i mappoint_to_pixel(tile2i point) {
-    return MAPPOINT_TO_PIXEL_LOOKUP[point.grid_offset()];
+vec2i tile_to_pixel(tile2i point) {
+    int grid_offset = point.grid_offset();
+    if (grid_offset >= max_grid_offset) {
+        return vec2i{-1, -1};
+    }
+    return MAPPOINT_TO_PIXEL_LOOKUP[grid_offset];
 }
 
-vec2i pixel_to_viewport_coord(vec2i pixel) {
+vec2i pixel_to_viewport(vec2i pixel) {
     return pixel - city_view_data_unsafe().viewport.offset;
 }
 
@@ -113,14 +118,13 @@ vec2i pixel_to_camera_coord(vec2i pixel, bool relative) {
         return {-1, -1};
 
     // remove viewport offset
-    pixel = pixel_to_viewport_coord(pixel);
+    pixel = pixel_to_viewport(pixel);
 
     // adjust by zoom scale
     pixel.x = calc_adjust_with_percentage<int>(pixel.x, zoom_get_percentage());
     pixel.y = calc_adjust_with_percentage<int>(pixel.y, zoom_get_percentage());
 
-    if (!relative)
-        pixel += city_view_data_unsafe().camera.position;
+    pixel += relative ? vec2i{0, 0} : city_view_data_unsafe().camera.position;
     return pixel;
 }
 

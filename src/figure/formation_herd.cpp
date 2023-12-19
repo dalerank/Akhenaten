@@ -291,6 +291,7 @@ static void update_herd_formation(formation* m) {
 }
 
 void formation_fish_update(int points_num) {
+    figure_clear_fishing_points();
     if (!can_city_produce_resource(RESOURCE_FISH)) {
         return;
     }
@@ -315,7 +316,6 @@ void formation_fish_update(int points_num) {
         }
     }
 
-    figure_clear_fishing_points();
     srand (time(nullptr));
 
     for (int i = 0; i < num_fishing_spots; i++) {

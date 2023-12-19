@@ -41,8 +41,9 @@ bool figure::is_non_citizen() {
     if (action_state == FIGURE_ACTION_149_CORPSE)
         return 0;
 
-    if (is_enemy())
+    if (is_enemy()) {
         return id;
+    }
 
     if (type == FIGURE_INDIGENOUS_NATIVE && action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
         return id;
@@ -92,30 +93,34 @@ void figure::missile_hit_target(int target_id, int legionary_type) {
 void figure::arrow_action() {
     use_cross_country = true;
     progress_on_tile++;
-    if (progress_on_tile > 120)
+    if (progress_on_tile > 120) {
         poof();
+    }
 
     int should_die = move_ticks_cross_country(4);
     int target_id = get_non_citizen_on_tile(tile.grid_offset());
     if (target_id) {
         missile_hit_target(target_id, FIGURE_FORT_SPEARMAN);
         sound_effect_play(SOUND_EFFECT_ARROW_HIT);
-    } else if (should_die)
+    } else if (should_die) {
         poof();
+    }
 }
 void figure::spear_action() {
     use_cross_country = true;
     progress_on_tile++;
-    if (progress_on_tile > 120)
+    if (progress_on_tile > 120) {
         poof();
+    }
 
     int should_die = move_ticks_cross_country(4);
     int target_id = get_citizen_on_tile(tile.grid_offset());
     if (target_id) {
         missile_hit_target(target_id, FIGURE_FORT_SPEARMAN);
         sound_effect_play(SOUND_EFFECT_JAVELIN);
-    } else if (should_die)
+    } else if (should_die) {
         poof();
+    }
 
     int dir = (16 + direction - 2 * city_view_orientation()) % 16;
     sprite_image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + dir;
@@ -123,16 +128,18 @@ void figure::spear_action() {
 void figure::javelin_action() {
     use_cross_country = true;
     progress_on_tile++;
-    if (progress_on_tile > 120)
+    if (progress_on_tile > 120) {
         poof();
+    }
 
     int should_die = move_ticks_cross_country(4);
     int target_id = get_non_citizen_on_tile(tile.grid_offset());
     if (target_id) {
         missile_hit_target(target_id, FIGURE_ENEMY_CAESAR_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_JAVELIN);
-    } else if (should_die)
+    } else if (should_die) {
         poof();
+    }
 }
 void figure::bolt_action() {
     use_cross_country = true;
@@ -147,26 +154,28 @@ void figure::bolt_action() {
         figure* target = figure_get(target_id);
         const figure_properties* target_props = figure_properties_for_type(target->type);
         int max_damage = target_props->max_damage;
-        int damage_inflicted
-          = figure_properties_for_type(type)->missile_attack_value - target_props->missile_defense_value;
-        if (damage_inflicted < 0)
+        int damage_inflicted = figure_properties_for_type(type)->missile_attack_value - target_props->missile_defense_value;
+        if (damage_inflicted < 0) {
             damage_inflicted = 0;
+        }
 
         int target_damage = damage_inflicted + target->damage;
-        if (target_damage <= max_damage)
+        if (target_damage <= max_damage) {
             target->damage = target_damage;
-        else { // poof target
+        } else { // poof target
             target->damage = max_damage + 1;
             target->kill();
             target->wait_ticks = 0;
             target->play_die_sound();
             formation_update_morale_after_death(formation_get(target->formation_id));
         }
+
         sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_PERSON);
         poof();
+
     } else if (should_die) {
-        poof();
         sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_GROUND);
+        poof();
     }
     int dir = (16 + direction - 2 * city_view_orientation()) % 16;
     sprite_image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + 32 + dir;

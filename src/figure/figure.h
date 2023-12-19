@@ -129,22 +129,23 @@ public:
     short cc_delta_xy;
     //    unsigned char loads_counter;
     //    unsigned short loads_full; // full load counter
-    unsigned char cc_direction; // 1 = x, 2 = y
-    unsigned char speed_multiplier;
+    uint8_t cc_direction; // 1 = x, 2 = y
+    uint8_t speed_multiplier;
     //    short building_id;
     //    short immigrant_building_id;
     //    short destination_building_id;
 
     short formation_id;
-    unsigned char index_in_formation;
-    unsigned char formation_at_rest;
-    unsigned char migrant_num_people;
+    uint8_t index_in_formation;
+    uint8_t formation_at_rest;
+    uint8_t migrant_num_people;
     bool is_ghost;
-    unsigned char min_max_seen;
-    unsigned char movement_ticks_watchdog;
+    bool is_drawn;
+    uint8_t min_max_seen;
+    uint8_t movement_ticks_watchdog;
     short leading_figure_id;
-    unsigned char attack_image_offset;
-    unsigned char wait_ticks_missile;
+    uint8_t attack_image_offset;
+    uint8_t wait_ticks_missile;
     vec2i cart_offset;
     //    signed char x_offset_cart;
     //    signed char y_offset_cart;
@@ -153,13 +154,13 @@ public:
     short name;
     char terrain_usage;
     e_move_type allow_move_type;
-    unsigned char height_adjusted_ticks;
-    unsigned char current_height;
-    unsigned char target_height;
-    unsigned char collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
-    unsigned char trade_ship_failed_dock_attempts;
-    unsigned char phrase_sequence_exact;
-    unsigned char phrase_id;
+    uint8_t height_adjusted_ticks;
+    uint8_t current_height;
+    uint8_t target_height;
+    uint8_t collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
+    uint8_t trade_ship_failed_dock_attempts;
+    uint8_t phrase_sequence_exact;
+    uint8_t phrase_id;
     bstring64 phrase_key;
     unsigned char phrase_sequence_city;
     unsigned char trader_id;
@@ -172,6 +173,7 @@ public:
     short attacker_id1;
     short attacker_id2;
     short opponent_id;
+    vec2i cached_pos;
 
     // pharaoh
 
@@ -310,11 +312,11 @@ public:
 
     // city_figure.c
     void draw_debug();
-    void adjust_pixel_offset(vec2i* pixel);
+    vec2i adjust_pixel_offset(const vec2i &pixel);
     //    void draw_figure(int x, int y, int highlight);
     void draw_figure_main(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
     void draw_figure_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
-    void city_draw_figure(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
+    void city_draw_figure(painter &ctx, int highlight, vec2i* coord_out = nullptr);
     //    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
     void draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
     //    void draw_hippodrome_horse(int x, int y);

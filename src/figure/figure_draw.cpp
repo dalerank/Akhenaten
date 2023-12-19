@@ -28,6 +28,7 @@ void figure::draw_fort_standard(vec2i pixel, int highlight, vec2i* coord_out) {
         ImageDraw::img_generic(ctx, icon_image_id, pixel.x, pixel.y - image_get(icon_image_id)->height - flag_height);
     }
 }
+
 void figure::draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out) {
     painter ctx = game.painter();
     // base
@@ -50,15 +51,14 @@ void figure::draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out) {
     }
 }
 
-void figure::adjust_pixel_offset(vec2i* pixel) {
+vec2i figure::adjust_pixel_offset(const vec2i &pixel) {
     // determining x/y offset on tile
-    int x_offset = 0;
-    int y_offset = 0;
+    vec2i offset(0, 0);
     if (use_cross_country) {
         auto cc_offets = tile_pixel_coords();
-        x_offset = cc_offets.x;
-        y_offset = cc_offets.y;
-        y_offset -= missile_damage;
+        offset.x = cc_offets.x;
+        offset.y = cc_offets.y;
+        offset.y -= missile_damage;
     } else {
         int dir = figure_image_normalize_direction(direction);
         //        x_offset = tile_progress_to_pixel_offset_x(dir, progress_on_tile);
@@ -76,53 +76,48 @@ void figure::adjust_pixel_offset(vec2i* pixel) {
 
         switch (dir) {
         case DIR_0_TOP_RIGHT:
-            x_offset += 2 * adjusted_progress;
-            y_offset -= adjusted_progress;
+            offset.x += 2 * adjusted_progress;
+            offset.y -= adjusted_progress;
             break;
         case DIR_1_RIGHT:
-            x_offset += 4 * adjusted_progress;
-            y_offset = 0;
+            offset.x += 4 * adjusted_progress;
+            offset.y = 0;
             break;
         case DIR_2_BOTTOM_RIGHT:
-            x_offset += 2 * adjusted_progress;
-            y_offset += adjusted_progress;
+            offset.x += 2 * adjusted_progress;
+            offset.y += adjusted_progress;
             break;
         case DIR_3_BOTTOM:
-            x_offset = 0;
-            y_offset += 2 * adjusted_progress;
+            offset.x = 0;
+            offset.y += 2 * adjusted_progress;
             break;
         case DIR_4_BOTTOM_LEFT:
-            x_offset -= 2 * adjusted_progress;
-            y_offset += adjusted_progress;
+            offset.x -= 2 * adjusted_progress;
+            offset.y += adjusted_progress;
             break;
         case DIR_5_LEFT:
-            x_offset -= 4 * adjusted_progress;
-            y_offset = 0;
+            offset.x -= 4 * adjusted_progress;
+            offset.y = 0;
             break;
         case DIR_6_TOP_LEFT:
-            x_offset -= 2 * adjusted_progress;
-            y_offset -= adjusted_progress;
+            offset.x -= 2 * adjusted_progress;
+            offset.y -= adjusted_progress;
             break;
         case DIR_7_TOP:
-            x_offset = 0;
-            y_offset -= 2 * adjusted_progress;
+            offset.x = 0;
+            offset.y -= 2 * adjusted_progress;
             break;
         }
-        y_offset -= current_height;
+        offset.y -= current_height;
     }
 
     if (config_get(CONFIG_GP_CH_CITIZEN_ROAD_OFFSET) && id && type != FIGURE_BALLISTA) {
         // an attempt to not let people walk through each other
-        x_offset += crowd_offsets[id % crowd_offsets_size].x;
-        y_offset += crowd_offsets[id % crowd_offsets_size].y;
+        offset.x += crowd_offsets[id % crowd_offsets_size].x;
+        offset.y += crowd_offsets[id % crowd_offsets_size].y;
     }
 
-    pixel->x += x_offset + 29;
-    pixel->y += y_offset + 15 + 8;
-
-    //    const image *img = is_enemy_image ? image_get_enemy(sprite_image_id) : image_get(sprite_image_id);
-    //    *x += x_offset - img->sprite_offset_x;
-    //    *y += y_offset - img->sprite_offset_y;
+    return {pixel.x + offset.x + 29, pixel.y + offset.y + 15 + 8};
 }
 
 void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
@@ -161,18 +156,16 @@ void figure::draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight, vec
     }
 }
 
-void figure::city_draw_figure(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
+void figure::city_draw_figure(painter &ctx, int highlight, vec2i* coord_out) {
     // This is to update the sprite's direction when rotating the city view.
     // Unfortunately, because the only thing we have at the time of file loading is
     // the raw sprite image id, it doesn't work if we haven't performed at least a
     // single frame of figure action after loading a file (i.e. if paused instantly)
     figure_image_update(true);
 
-    adjust_pixel_offset(&pixel);
     if (coord_out != nullptr) {
         highlight = 0;
-        coord_out->x = pixel.x;
-        coord_out->y = pixel.y;
+        *coord_out = cached_pos;
     }
 
     if (cart_image_id) {
@@ -184,25 +177,27 @@ void figure::city_draw_figure(painter &ctx, vec2i pixel, int highlight, vec2i* c
         case FIGURE_NATIVE_TRADER:
             //            case FIGURE_IMMIGRANT:
             //            case FIGURE_EMIGRANT:
-            draw_figure_with_cart(ctx, pixel, highlight, coord_out);
+            draw_figure_with_cart(ctx, cached_pos, highlight, coord_out);
             break;
             //            case FIGURE_HIPPODROME_HORSES:
             //                hippodrome_horse_adjust(&x, &y, wait_ticks_missile);
             //                draw_figure_with_cart(pixel, highlight, coord_out);
             //                break;
         case FIGURE_FORT_STANDARD:
-            draw_fort_standard(pixel, highlight, coord_out);
+            draw_fort_standard(cached_pos, highlight, coord_out);
             break;
         case FIGURE_MAP_FLAG:
-            draw_map_flag(pixel, highlight, coord_out);
+            draw_map_flag(cached_pos, highlight, coord_out);
             break;
         default:
-            draw_figure_main(ctx, pixel, highlight, coord_out);
+            draw_figure_main(ctx, cached_pos, highlight, coord_out);
             break;
         }
     } else {
-        draw_figure_main(ctx, pixel, highlight, coord_out);
+        draw_figure_main(ctx, cached_pos, highlight, coord_out);
         if (!is_enemy_image && highlight)
-            ImageDraw::img_sprite(ctx, sprite_image_id, pixel.x, pixel.y, COLOR_MASK_LEGION_HIGHLIGHT);
+            ImageDraw::img_sprite(ctx, sprite_image_id, cached_pos.x, cached_pos.y, COLOR_MASK_LEGION_HIGHLIGHT);
     }
+
+    is_drawn = true;
 }
