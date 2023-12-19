@@ -58,7 +58,7 @@ static void draw_flags(vec2i pixel, map_point point) {
     while (figure_id) {
         figure* f = figure_get(figure_id);
         if (!f->is_ghost) {
-            f->city_draw_figure(ctx, pixel, 0);
+            f->city_draw_figure(ctx, 0);
         }
 
         if (figure_id != f->next_figure) {

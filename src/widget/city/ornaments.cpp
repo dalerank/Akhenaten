@@ -85,7 +85,7 @@ static void draw_small_mastaba_anim_flat(painter &ctx, int x, int y, building *b
     for (int dy = 0; dy < 4; dy++) {
         for (int dx = 0; dx < 4; dx++) {
             tile2i ntile = b->tile.shifted(dx, dy);
-            vec2i offset = mappoint_to_pixel(ntile);
+            vec2i offset = tile_to_pixel(ntile);
             uint32_t progress = map_monuments_get_progress(ntile.grid_offset());
             if (progress < 200) {
                 ImageDraw::img_sprite(ctx, clear_land_id + ((dy * 4 + dx) & 7), offset.x, offset.y, color_mask);
@@ -102,25 +102,25 @@ static void draw_small_mastaba_anim_flat(painter &ctx, int x, int y, building *b
     const image_t* img = image_get(image_stick);
     tile2i left_top = b->tile.shifted(0, 0);
     if (map_monuments_get_progress(left_top.grid_offset()) == 0) {
-        vec2i offset = mappoint_to_pixel(left_top);
+        vec2i offset = tile_to_pixel(left_top);
         ImageDraw::img_sprite(ctx, image_stick, offset.x + img->animation.sprite_x_offset, offset.y + img->animation.sprite_y_offset - img->height + 30, color_mask);
     }
 
     tile2i right_top = b->tile.shifted(3, 0);
     if (map_monuments_get_progress(right_top.grid_offset()) == 0) {
-        vec2i offset = mappoint_to_pixel(right_top);
+        vec2i offset = tile_to_pixel(right_top);
         ImageDraw::img_sprite(ctx, image_stick, offset.x + img->animation.sprite_x_offset, offset.y + img->animation.sprite_y_offset - img->height + 30, color_mask);
     }
 
     tile2i left_bottom = b->tile.shifted(0, 3);
     if (map_monuments_get_progress(left_bottom.grid_offset()) == 0) {
-        vec2i offset = mappoint_to_pixel(left_bottom);
+        vec2i offset = tile_to_pixel(left_bottom);
         ImageDraw::img_sprite(ctx, image_stick, offset.x + img->animation.sprite_x_offset, offset.y + img->animation.sprite_y_offset - img->height + 30, color_mask);
     }
 
     tile2i right_bottom = b->tile.shifted(3, 3);
     if (map_monuments_get_progress(right_bottom.grid_offset()) == 0) {
-        vec2i offset = mappoint_to_pixel(right_bottom);
+        vec2i offset = tile_to_pixel(right_bottom);
         ImageDraw::img_sprite(ctx, image_stick, offset.x + img->animation.sprite_x_offset, offset.y + img->animation.sprite_y_offset - img->height + 30, color_mask);
     }
 }

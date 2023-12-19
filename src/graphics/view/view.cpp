@@ -209,9 +209,9 @@ void camera_go_to_screen_tile(screen_tile screen, bool validate) {
 }
 
 void camera_go_to_mappoint(tile2i point) {
-    //camera_go_to_pixel(mappoint_to_pixel(point), true);
+    //camera_go_to_pixel(tile_to_pixel(point), true);
     auto& data = g_city_view_data;
-        screen_tile screen = mappoint_to_screentile(point);
+        screen_tile screen = tile_to_screen(point);
         screen.x -= data.viewport.width_tiles / 2;
         screen.y -= data.viewport.height_tiles / 2;
         screen.y &= ~1;
@@ -269,7 +269,7 @@ void city_view_rotate_left(void) {
         data.orientation = DIR_6_TOP_LEFT;
 
     if (center_grid_offset >= 0) {
-        vec2i screen = mappoint_to_screentile(tile2i(center_grid_offset));
+        vec2i screen = tile_to_screen(tile2i(center_grid_offset));
         camera_go_to_screen_tile(screen, true);
     }
 }
@@ -282,7 +282,7 @@ void city_view_rotate_right(void) {
         data.orientation = DIR_0_TOP_RIGHT;
 
     if (center_grid_offset >= 0) {
-        vec2i screen = mappoint_to_screentile(tile2i(center_grid_offset));
+        vec2i screen = tile_to_screen(tile2i(center_grid_offset));
         camera_go_to_screen_tile(screen, true);
     }
 }
@@ -456,7 +456,6 @@ void city_view_foreach_valid_map_tile(painter &ctx,
             for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
                 if (screen.x >= 0 && screen.x < (2 * GRID_LENGTH) + 1) {
                     tile2i point = screentile_to_mappoint(screen);
-                    record_mappoint_pixelcoord(point, pixel);
                     if (point.grid_offset() >= 0) {
                         if (callback1)
                             callback1(pixel, point, ctx);
@@ -493,10 +492,9 @@ static void do_valid_callback(painter &ctx, vec2i pixel, tile2i point, tile_draw
 void city_view_foreach_tile_in_range(painter &ctx, int grid_offset, int size, int radius, tile_draw_callback* callback) {
     auto& data = g_city_view_data;
 
-    vec2i screen = mappoint_to_screentile(tile2i(grid_offset));
+    vec2i screen = tile_to_screen(tile2i(grid_offset));
     vec2i pixel;
-    pixel.x = (screen.x - data.camera.tile_internal.x) * TILE_WIDTH_PIXELS - (screen.y & 1) * HALF_TILE_WIDTH_PIXELS
-              + data.viewport.offset.x;
+    pixel.x = (screen.x - data.camera.tile_internal.x) * TILE_WIDTH_PIXELS - (screen.y & 1) * HALF_TILE_WIDTH_PIXELS + data.viewport.offset.x;
     pixel.y = (screen.y - data.camera.tile_internal.y - 1) * HALF_TILE_HEIGHT_PIXELS + data.viewport.offset.y;
     pixel -= camera_get_pixel_offset_internal(ctx);
 

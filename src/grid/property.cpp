@@ -72,10 +72,7 @@ int map_property_is_multi_tile_xy(int grid_offset, int x, int y) {
     return (map_grid_get(&g_edge_grid, grid_offset) & EDGE_MASK_XY) == edge_for(x, y);
 }
 void map_property_set_multi_tile_xy(int grid_offset, int x, int y, int is_draw_tile) {
-    if (is_draw_tile)
-        map_grid_set(&g_edge_grid, grid_offset, edge_for(x, y) | EDGE_LEFTMOST_TILE);
-    else
-        map_grid_set(&g_edge_grid, grid_offset, edge_for(x, y));
+    map_grid_set(&g_edge_grid, grid_offset, edge_for(x, y) | (is_draw_tile ? EDGE_LEFTMOST_TILE : 0));
 }
 void map_property_clear_multi_tile_xy(int grid_offset) {
     // only keep native land marker
