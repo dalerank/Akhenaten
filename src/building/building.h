@@ -57,15 +57,12 @@ public:
 public:
     int id;
     e_building_state state;
-    unsigned char faction_id;
-    unsigned char reserved_id;
-    unsigned char size;
-    unsigned char house_is_merged;
-    unsigned char house_size;
+    uint8_t faction_id;
+    uint8_t reserved_id;
+    uint8_t size;
+    uint8_t house_is_merged;
+    uint8_t house_size;
     tile2i tile;
-    //    unsigned char x;
-    //    unsigned char y;
-    //    unsigned short grid_offset;
     e_building_type type;
     union {
         e_house_level house_level;

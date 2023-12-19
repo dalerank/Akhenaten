@@ -90,7 +90,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     b->distance_from_entry = 0;
 
     b->tile.set(x, y);
-    b->draw_tile = b->tile.shifted(b->size - 1, b->size - 1);
     b->map_random_7bit = map_random_get(b->tile.grid_offset()) & 0x7f;
     b->figure_roam_direction = b->map_random_7bit & 6;
     b->fire_proof = props->fire_proof;

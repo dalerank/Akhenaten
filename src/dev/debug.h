@@ -52,6 +52,7 @@ enum e_debug_render {
     e_debug_render_floodplain_shore = 21,
     e_debug_render_tile_toph = 22,
     e_debug_render_monuments = 23,
+    e_debug_render_figures = 24,
 
     e_debug_render_size
 };
@@ -81,3 +82,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx);
 void draw_debug_figures(vec2i pixel, tile2i point, painter &ctx);
 
 void draw_debug_ui(int x, int y);
+
+inline bool draw_debug(e_debug_render opt) {
+    return g_debug_show_opts[opt];
+}

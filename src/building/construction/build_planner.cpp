@@ -123,8 +123,6 @@ static building* add_temple_complex_element(int x, int y, int orientation, build
     game_undo_add_building(b);
 
     b->size = 3;
-    //    b->tile = map_point()
-    //    b->tile.grid_offset() = MAP_OFFSET(b->tile.x(), b->tile.y());
     b->prev_part_building_id = prev->id;
     prev->next_part_building_id = b->id;
     int image_id = map_image_at(MAP_OFFSET(x, y));
@@ -1618,7 +1616,7 @@ void BuildPlanner::update_unique_only_one_check() {
     }
 }
 void BuildPlanner::update_coord_caches() {
-    vec2i view_tile = mappoint_to_pixel(end);
+    vec2i view_tile = tile_to_pixel(end);
     if (view_tile.x == 0 && view_tile.y == 0)
         // this prevents graphics from being drawn on the top left corner
         // of the screen when the current "end" tile isn't valid.
