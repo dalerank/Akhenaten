@@ -319,10 +319,8 @@ static void create_full_city_screenshot() {
                 
                //SDL_Rect rect{0, 0, canvas_width, canvas_height};
                //SDL_FillRect(surface, &rect, ((yy + i) % 2) ? 0xff00ff00 : 0xff0000ff);
-                figure_draw_cache_data_t local_figure_cache;
                 view_data_t local_view_data = full_city_view_data;
                 painter local_context;
-                local_context.figure_cache = &local_figure_cache;
                 local_context.view = &local_view_data;
                 local_context.global_render_scale = 1.f;
                 local_context.renderer = graphics_renderer()->renderer();

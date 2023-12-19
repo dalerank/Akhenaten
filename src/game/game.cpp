@@ -44,7 +44,6 @@ game_t game;
 
 ::painter game_t::painter() {
     ::painter ctx;
-    ctx.figure_cache = &figure_draw_cache();
     ctx.view = &city_view_data_unsafe();
     ctx.renderer = graphics_renderer()->renderer();
     ctx.global_render_scale = graphics_renderer()->scale();
