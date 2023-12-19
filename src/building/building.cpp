@@ -31,7 +31,7 @@
 #include <string.h>
 
 building g_all_buildings[5000];
-std::span<building> g_city_buildings = make_span(g_all_buildings, 5000);
+std::span<building> g_city_buildings = make_span(g_all_buildings);
 
 std::span<building>& city_buildings() {
     return g_city_buildings;
@@ -90,9 +90,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     b->distance_from_entry = 0;
 
     b->tile.set(x, y);
-    //    b->tile.x() = x;
-    //    b->tile.y() = y;
-    //    b->tile.grid_offset() = MAP_OFFSET(x, y);
+    b->draw_tile = b->tile.shifted(b->size - 1, b->size - 1);
     b->map_random_7bit = map_random_get(b->tile.grid_offset()) & 0x7f;
     b->figure_roam_direction = b->map_random_7bit & 6;
     b->fire_proof = props->fire_proof;
