@@ -14,7 +14,6 @@
 #include "city/sentiment.h"
 #include "scenario/property.h"
 #include "platform/renderer.h"
-#include "widget/city/figures_cached_draw.h"
 #include "game/game.h"
 
 view_data_t g_city_view_data;
@@ -49,13 +48,6 @@ void city_view_reset_orientation(void) {
 
 static const int X_DIRECTION_FOR_ORIENTATION[] = {1, 1, -1, -1};
 static const int Y_DIRECTION_FOR_ORIENTATION[] = {1, -1, -1, 1};
-
-// int MAP_TILE_UPPER_LIMIT_X() {
-//     return GRID_LENGTH + 3;
-// }
-// int MAP_TILE_UPPER_LIMIT_Y() {
-//     return (2 * GRID_LENGTH) + 1;
-// }
 
 int SCROLL_MIN_SCREENTILE_X = 0;
 int SCROLL_MIN_SCREENTILE_Y = 0;

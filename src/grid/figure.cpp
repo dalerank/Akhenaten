@@ -23,6 +23,11 @@ void map_figure_sort_by_y() {
     g_figures_y_sort.clear();
     for (auto *f : figures()) {
         if (f->state != FIGURE_STATE_NONE) {
+            if (f->tile.x() >= GRID_LENGTH || f->tile.y() > GRID_LENGTH) {
+                f->tile = {-1, -1};
+                f->cached_pos = {-1, -1};
+                continue;
+            }
             f->cached_pos = tile_to_pixel(f->tile);
             f->cached_pos = f->adjust_pixel_offset(f->cached_pos);
             f->is_drawn = false;

@@ -29,7 +29,6 @@
 #include "sound/city.h"
 #include "sound/effect.h"
 #include "sound/speech.h"
-#include "widget/city/figures_cached_draw.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/tile_draw.h"
 #include "widget/minimap.h"

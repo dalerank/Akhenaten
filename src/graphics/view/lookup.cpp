@@ -102,9 +102,7 @@ void record_mappoint_pixelcoord(tile2i point, vec2i pixel) {
 
 vec2i tile_to_pixel(tile2i point) {
     int grid_offset = point.grid_offset();
-    if (grid_offset >= max_grid_offset) {
-        return vec2i{-1, -1};
-    }
+    assert(grid_offset < max_grid_offset);
     return MAPPOINT_TO_PIXEL_LOOKUP[grid_offset];
 }
 
