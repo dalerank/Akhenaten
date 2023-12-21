@@ -128,6 +128,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"recruiter_not_need_forts", false},
     {"ui_highlight_top_menu_hover", true},
     {"ui_empire_city_old_names", true},
+    {"city_building_smal_mastaba", true},
 };
 
 static const char* ini_string_keys[] = {

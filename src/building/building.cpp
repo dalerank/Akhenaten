@@ -292,6 +292,10 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_BANDSTAND:
         b->fire_proof = 1;
         break;
+    case BUILDING_SMALL_MASTABA:
+        b->fire_proof = true;
+        break;
+
     default:
         b->output_resource_first_id = RESOURCE_NONE;
         break;

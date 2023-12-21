@@ -14,9 +14,18 @@
 #include "grid/tiles.h"
 #include <algorithm>
 
+static const int direction_indices[8][4] = {
+    {0, 2, 6, 4},
+    {0, 2, 6, 4},
+    {2, 4, 0, 6},
+    {2, 4, 0, 6},
+    {4, 6, 2, 0},
+    {4, 6, 2, 0},
+    {6, 0, 4, 2},
+    {6, 0, 4, 2}
+};
+
 static int place_routed_building(int x_start, int y_start, int x_end, int y_end, routed_int type, int* items) {
-    static const int direction_indices[8][4] = {
-      {0, 2, 6, 4}, {0, 2, 6, 4}, {2, 4, 0, 6}, {2, 4, 0, 6}, {4, 6, 2, 0}, {4, 6, 2, 0}, {6, 0, 4, 2}, {6, 0, 4, 2}};
     *items = 0;
     int grid_offset = MAP_OFFSET(x_end, y_end);
     int guard = 0;
@@ -79,6 +88,7 @@ int building_construction_place_road(bool measure_only, int x_start, int y_start
     }
     return items_placed;
 }
+
 int building_construction_place_wall(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
     game_undo_restore_map(0);
 
@@ -103,6 +113,7 @@ int building_construction_place_wall(bool measure_only, int x_start, int y_start
     }
     return items_placed;
 }
+
 int building_construction_place_aqueduct(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
     game_undo_restore_map(0);
     int items_placed = 0;

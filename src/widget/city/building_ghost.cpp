@@ -220,8 +220,40 @@ static void draw_farm(painter &ctx, e_building_type type, vec2i tile, int grid_o
     draw_farm_crops(ctx, type, 0, grid_offset, tile + vec2i{-60, 30}, COLOR_MASK_GREEN);
 }
 
-static void draw_small_mastaba(painter &ctx, e_building_type type, vec2i tile, int grid_offset) {
+static int get_small_mastabe_image(tile2i tile, tile2i start, vec2i size) {
     int image_id = image_group(IMG_SMALL_MASTABA);
+    if (tile == start) {
+        return image_id;
+    }
+
+    if (tile == start.shifted(size.x - 1, 0)) {
+        return image_id - 2;
+    }
+
+    if (tile == start.shifted(size.x - 1, size.y - 1)) {
+        return image_id - 4;
+    }
+
+    if (tile == start.shifted(0, size.y - 1)) {
+        return image_id - 6;
+    }
+
+    if (tile.y() == start.y()) { return image_id - 1; }
+    if (tile.y() == start.y() + size.y - 1) { return image_id - 5; }
+    if (tile.x() == start.x()) { return image_id - 7; }
+    if (tile.x() == start.x() + size.x - 1) { return image_id - 3; }
+
+    return (image_id + 5 + (tile.x() + tile.y()) % 7);
+}
+
+static void draw_small_mastaba(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end) {
+
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            draw_building(ctx, get_small_mastabe_image(end.shifted(i, j), end, vec2i{8, 4}), pixel + vec2i(-30, 15) * i + vec2i(30, 15) * j);
+        }
+    }
+/*  int image_id = image_group(IMG_SMALL_MASTABA);
     draw_building(ctx, image_id, tile);
     for (int i = 1; i < 7; i++) {
         draw_building(ctx, image_id - 1, tile + vec2i(-30, 15) * i);
@@ -242,6 +274,7 @@ static void draw_small_mastaba(painter &ctx, e_building_type type, vec2i tile, i
             k = (k + 1) % 8;
         }
     }
+    */
 }
 
 static void draw_fort(map_point* tile, vec2i pos, painter &ctx) {
@@ -654,7 +687,7 @@ void BuildPlanner::draw_graphics(painter &ctx) {
         break;
 
     case BUILDING_SMALL_MASTABA:
-        draw_small_mastaba(ctx, build_type, pixel, end.grid_offset());
+        draw_small_mastaba(ctx, build_type, pixel, start, end);
         break;
 
     case BUILDING_BARLEY_FARM:

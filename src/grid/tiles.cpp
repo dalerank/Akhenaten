@@ -729,6 +729,7 @@ int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain
     // TODO: canals disappearing into the Nile river --- good luck with that!
     return image_id_from_group(GROUP_BUILDING_AQUEDUCT) + water_offset + floodplains_offset + image_offset;
 }
+
 static void set_aqueduct_image(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
         const terrain_image* img = map_image_context_get_aqueduct(grid_offset);
@@ -746,6 +747,7 @@ static void set_aqueduct_image(int grid_offset) {
         map_aqueduct_set(grid_offset, img->aqueduct_offset);
     }
 }
+
 void map_tiles_update_all_aqueducts(int include_construction) {
     aqueduct_include_construction = include_construction;
     foreach_map_tile(set_aqueduct_image);
