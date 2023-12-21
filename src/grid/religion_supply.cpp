@@ -7,11 +7,10 @@
 #include "grid/grid.h"
 
 static void mark_shrine_access(building* shrine, int radius) {
-    tile2i tmin, tmax;
-    map_grid_get_area(shrine->tile, 1, radius, tmin, tmax);
+    grid_area area = map_grid_get_area(shrine->tile, 1, radius);
 
-    for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
-        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
+    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
+        for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
             int building_id = map_building_at(MAP_OFFSET(xx, yy));
 
             building* b = building_get(building_id);

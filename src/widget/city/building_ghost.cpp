@@ -3,6 +3,7 @@
 #include "grid/routing/routing.h"
 #include "building/construction/build_planner.h"
 #include "building/industry.h"
+#include "building/monument_mastaba.h"
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "city/buildings.h"
@@ -194,6 +195,14 @@ static void draw_fountain_range(vec2i pixel, tile2i point, painter &ctx) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE, zoom_get_scale());
 }
 
+static void draw_small_mastaba_ghost(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end) {
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            draw_building(ctx, building_small_mastabe_get_image(end.shifted(i, j), end, vec2i{8, 4}), pixel + vec2i(-30, 15) * i + vec2i(30, 15) * j);
+        }
+    }
+}
+
 static void draw_storage_yard(vec2i tile, painter &ctx) {
     int global_rotation = building_rotation_global_rotation();
     int index_rotation = building_rotation_get_storage_fort_orientation(global_rotation);
@@ -218,63 +227,6 @@ static void draw_farm(painter &ctx, e_building_type type, vec2i tile, int grid_o
     draw_building(ctx, image_id, tile + vec2i{-60, 0});
     
     draw_farm_crops(ctx, type, 0, grid_offset, tile + vec2i{-60, 30}, COLOR_MASK_GREEN);
-}
-
-static int get_small_mastabe_image(tile2i tile, tile2i start, vec2i size) {
-    int image_id = image_group(IMG_SMALL_MASTABA);
-    if (tile == start) {
-        return image_id;
-    }
-
-    if (tile == start.shifted(size.x - 1, 0)) {
-        return image_id - 2;
-    }
-
-    if (tile == start.shifted(size.x - 1, size.y - 1)) {
-        return image_id - 4;
-    }
-
-    if (tile == start.shifted(0, size.y - 1)) {
-        return image_id - 6;
-    }
-
-    if (tile.y() == start.y()) { return image_id - 1; }
-    if (tile.y() == start.y() + size.y - 1) { return image_id - 5; }
-    if (tile.x() == start.x()) { return image_id - 7; }
-    if (tile.x() == start.x() + size.x - 1) { return image_id - 3; }
-
-    return (image_id + 5 + (tile.x() + tile.y()) % 7);
-}
-
-static void draw_small_mastaba(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end) {
-
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            draw_building(ctx, get_small_mastabe_image(end.shifted(i, j), end, vec2i{8, 4}), pixel + vec2i(-30, 15) * i + vec2i(30, 15) * j);
-        }
-    }
-/*  int image_id = image_group(IMG_SMALL_MASTABA);
-    draw_building(ctx, image_id, tile);
-    for (int i = 1; i < 7; i++) {
-        draw_building(ctx, image_id - 1, tile + vec2i(-30, 15) * i);
-        draw_building(ctx, image_id - 5, tile + vec2i(-30, 15) * i + vec2i(30, 15) * 3);
-    }
-    draw_building(ctx, image_id-2, tile + vec2i(-30, 15) * 7);
-
-    draw_building(ctx, image_id-4, tile + vec2i(-30, 15) * 7 + vec2i(30, 15) * 3);
-    for (int i = 1; i < 4; i++) {
-        draw_building(ctx, image_id - 3, tile + vec2i(-30, 15) * 7 + vec2i(30, 15) * i);
-        draw_building(ctx, image_id - 7, tile + vec2i(-30, 15) * 0 + vec2i(30, 15) * i);
-    }
-    draw_building(ctx, image_id - 6, tile + vec2i(-30, 15) * 0 + vec2i(30, 15) * 3);
-
-    for (int i = 1, k = 0; i < 7; i++) {
-        for (int j = 1; j < 3; j++) {
-            draw_building(ctx, image_id + 5 + k, tile + vec2i(-30, 15) * i + vec2i(30, 15) * j);
-            k = (k + 1) % 8;
-        }
-    }
-    */
 }
 
 static void draw_fort(map_point* tile, vec2i pos, painter &ctx) {
@@ -687,7 +639,7 @@ void BuildPlanner::draw_graphics(painter &ctx) {
         break;
 
     case BUILDING_SMALL_MASTABA:
-        draw_small_mastaba(ctx, build_type, pixel, start, end);
+        draw_small_mastaba_ghost(ctx, build_type, pixel, start, end);
         break;
 
     case BUILDING_BARLEY_FARM:

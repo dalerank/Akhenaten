@@ -406,10 +406,9 @@ void figure::worker_action() {
             } else if (b_dest->type == BUILDING_PYRAMID) {
                 // todo: MONUMENTSSSS
             } else if (b_dest->type == BUILDING_SMALL_MASTABA || b_dest->type == BUILDING_SMALL_MASTABA_SEC) {
-                tile2i tmin, tmax;
-                map_grid_get_area(b_dest->tile, b_dest->size, 1, tmin, tmax);
+                grid_area area = map_grid_get_area(b_dest->tile, b_dest->size - 1, 1);
 
-                tile2i tile_need_leveling = map_grid_area_first(tmin, tmax, [] (tile2i tile) { return !map_monuments_get_progress(tile.grid_offset()); });
+                tile2i tile_need_leveling = map_grid_area_first(area.tmin, area.tmax, [] (tile2i tile) { return !map_monuments_get_progress(tile.grid_offset()); });
                 map_monuments_set_progress(tile_need_leveling.grid_offset(), 1);
                 destination_tile = tile_need_leveling;
                 advance_action(FIGURE_ACTION_11_WORKER_GOING_TO_PLACE);

@@ -775,11 +775,10 @@ void building_house_determine_evolve_text(building* house, int worst_desirabilit
 int building_house_determine_worst_desirability_building(building* house) {
     int lowest_desirability = 0;
     int lowest_building_id = 0;
-    tile2i tmin, tmax;
-    map_grid_get_area(house->tile, 1, 6, tmin, tmax);
+    grid_area area = map_grid_get_area(house->tile, 1, 6);
 
-    for (int y = tmin.y(), endy = tmax.y(); y <= endy; y++) {
-        for (int x = tmin.x(), endx = tmax.x(); x <= endx; x++) {
+    for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
+        for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int building_id = map_building_at(MAP_OFFSET(x, y));
             if (building_id <= 0)
                 continue;

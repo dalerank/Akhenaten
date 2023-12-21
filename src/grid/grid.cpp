@@ -275,10 +275,12 @@ void map_grid_bound_area(tile2i &tmin, tile2i &tmax) {
     if (tmax.y() >= scenario_map_data()->height) { tmax.set_y(scenario_map_data()->height - 1); }
 }
 
-void map_grid_get_area(tile2i tile, int size, int radius, tile2i &tmin, tile2i &tmax) {
-    tmin.set(tile.x() - radius, tile.y() - radius);
-    tmax.set(tile.x() + size + radius - 1, tile.y() + size + radius - 1);
-    map_grid_bound_area(tmin, tmax);
+grid_area map_grid_get_area(tile2i tile, int size, int radius) {
+    grid_area t;
+    t.tmin.set(tile.x() - radius, tile.y() - radius);
+    t.tmax.set(tile.x() + size + radius - 1, tile.y() + size + radius - 1);
+    map_grid_bound_area(t.tmin, t.tmax);
+    return t;
 }
 
 void map_grid_start_end_to_area(tile2i start, tile2i end, tile2i &tmin, tile2i &tmax) {

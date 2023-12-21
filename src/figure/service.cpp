@@ -12,9 +12,8 @@
 
 static int provide_entertainment(int x, int y, int shows, void (*callback)(building*, int)) {
     int serviced = 0;
-    tile2i tmin, tmax;
-    map_grid_get_area(tile2i(x, y), 1, 2, tmin, tmax);
-    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+    grid_area area = map_grid_get_area(tile2i(x, y), 1, 2);
+    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
         int grid_offset = tile.grid_offset();
         int building_id = map_building_at(grid_offset);
         if (building_id) {
@@ -29,10 +28,9 @@ static int provide_entertainment(int x, int y, int shows, void (*callback)(build
 }
 
 static int provide_missionary_coverage(int x, int y) {
-    tile2i tmin, tmax;
-    map_grid_get_area(tile2i(x, y), 1, 4, tmin, tmax);
+    grid_area area = map_grid_get_area(tile2i(x, y), 1, 4);
 
-    map_grid_area_foreach(tmin, tmax, [] (tile2i tile) {
+    map_grid_area_foreach(area.tmin, area.tmax, [] (tile2i tile) {
         int building_id = map_building_at(tile.grid_offset());
         if (building_id) {
             building *b = building_get(building_id);
@@ -46,10 +44,9 @@ static int provide_missionary_coverage(int x, int y) {
 template<typename T>
 static int provide_service(tile2i tile, figure* f, int* data, T callback) {
     int serviced = 0;
-    tile2i tmin, tmax;
-    map_grid_get_area(tile, 1, 2, tmin, tmax);
+    grid_area area = map_grid_get_area(tile, 1, 2);
 
-    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
         int grid_offset = tile.grid_offset();
         int building_id = map_building_at(grid_offset);
         if (building_id) {
@@ -282,11 +279,9 @@ static void distribute_market_resources(building* b, building* market) {
 }
 static int provide_market_goods(building* market, int x, int y) {
     int serviced = 0;
-    //    building *market = building_get(market);
-    tile2i tmin, tmax;
-    map_grid_get_area(tile2i(x, y), 1, 2, tmin, tmax);
+    grid_area area = map_grid_get_area(tile2i(x, y), 1, 2);
 
-    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
         int grid_offset = tile.grid_offset();
         int building_id = map_building_at(grid_offset);
         if (building_id) {

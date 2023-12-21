@@ -112,10 +112,9 @@ void map_floodplain_rebuild_shores() {
         // get current river tile's grid offset and coords
         tile2i tile(tile_offset);
 
-        tile2i tmin, tmax;
-        map_grid_get_area(tile, 1, 1, tmin, tmax);
+        grid_area area = map_grid_get_area(tile, 1, 1);
 
-        map_grid_area_foreach(tmin, tmax, [] (tile2i shore) {
+        map_grid_area_foreach(area.tmin, area.tmax, [] (tile2i shore) {
             if (map_get_floodplain_edge(shore)) {
                 return;
             }

@@ -46,6 +46,32 @@ void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id,
     }
 }
 
+int building_small_mastabe_get_image(tile2i tile, tile2i start, vec2i size) {
+    int image_id = image_group(IMG_SMALL_MASTABA);
+    if (tile == start) {
+        return image_id;
+    }
+
+    if (tile == start.shifted(size.x - 1, 0)) {
+        return image_id - 2;
+    }
+
+    if (tile == start.shifted(size.x - 1, size.y - 1)) {
+        return image_id - 4;
+    }
+
+    if (tile == start.shifted(0, size.y - 1)) {
+        return image_id - 6;
+    }
+
+    if (tile.y() == start.y()) { return image_id - 1; }
+    if (tile.y() == start.y() + size.y - 1) { return image_id - 5; }
+    if (tile.x() == start.x()) { return image_id - 7; }
+    if (tile.x() == start.x() + size.x - 1) { return image_id - 3; }
+
+    return (image_id + 5 + (tile.x() + tile.y()) % 7);
+}
+
 void draw_small_mastaba_anim_flat(painter &ctx, int x, int y, building *b, int color_mask) {
     int clear_land_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND);
     //map_image_set(grid_offset, clear_land_id + (map_random_get(grid_offset) & 7));

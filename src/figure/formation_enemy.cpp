@@ -342,11 +342,10 @@ bool formation_enemy_move_formation_to(const formation* m, tile2i tile, tile2i &
     }
     map_routing_noncitizen_can_travel_over_land(tile.x(), tile.y(), -1, -1, 0, 600);
     for (int r = 0; r <= 10; r++) {
-        tile2i tmin, tmax;
-        map_grid_get_area(tile, 1, r, tmin, tmax);
+        grid_area area = map_grid_get_area(tile, 1, r);
 
         bool found = false;
-        map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+        map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
             int can_move = 1;
             for (int fig = 0; fig < m->num_figures; fig++) {
                 int grid_offset = tile.grid_offset() + figure_offsets[fig];

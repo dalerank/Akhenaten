@@ -35,17 +35,15 @@ struct water_supply_queue_t {
 water_supply_queue_t g_water_supply_queue;
 
 static void mark_well_access(building *well) {
-    tile2i tmin, tmax;
-
     int radius = 1;
     if (config_get(CONFIG_GP_CH_WELL_RADIUS_DEPENDS_MOISTURE)) {
         radius = (map_moisture_get(well->tile.grid_offset()) / 40);
         radius = std::clamp(radius, 1, 4);
     }
 
-    map_grid_get_area(well->tile, 1, radius, tmin, tmax);
+    grid_area area = map_grid_get_area(well->tile, 1, radius);
 
-    map_grid_area_foreach(tmin, tmax, [] (tile2i tile) {
+    map_grid_area_foreach(area.tmin, area.tmax, [] (tile2i tile) {
         int building_id = map_building_at(tile.grid_offset());
 
         if (building_id) {
@@ -234,11 +232,10 @@ void map_update_wells_range(void) {
 e_well_status map_water_supply_is_well_unnecessary(int well_id, int radius) {
     building* well = building_get(well_id);
     int num_houses = 0;
-    tile2i tmin, tmax;
-    map_grid_get_area(well->tile, 1, radius, tmin, tmax);
+    grid_area area = map_grid_get_area(well->tile, 1, radius);
 
-    for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
-        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
+    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
+        for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
             int building_id = map_building_at(grid_offset);
             if (building_id && building_get(building_id)->house_size && !building_get(building_id)->data.house.water_supply) {
