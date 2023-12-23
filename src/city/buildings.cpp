@@ -259,3 +259,15 @@ void city_buildings_remove_temple_complex(void) {
 int city_buildings_unknown_value(void) {
     return city_data.building.unknown_value;
 }
+
+void city_buildings_update_day() {
+    buildings_valid_do([] (building &b) {
+        b.update_day();
+    });
+}
+
+void city_buildings_update_month() {
+    buildings_valid_do([] (building &b) {
+        b.update_month();
+    });
+}

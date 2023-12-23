@@ -356,6 +356,7 @@ public:
 
     void update_native_crop_progress();
     void update_road_access();
+    void update_day();
     void update_month();
     bool figure_generate();
     int get_fire_risk(int value);
@@ -468,7 +469,6 @@ void building_update_desirability();
 
 int building_mothball_toggle(building* b);
 int building_mothball_set(building* b, int value);
-
 bool resource_required_by_workshop(building* b, e_resource resource);
 
 std::span<building>& city_buildings();

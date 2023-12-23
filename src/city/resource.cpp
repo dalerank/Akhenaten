@@ -314,12 +314,6 @@ void city_resource_calculate_food_stocks_and_supply_wheat() {
     }
 }
 
-void city_buildings_update_month() {
-    buildings_valid_do([] (building &b) {
-        b.update_month();
-    });
-}
-
 void city_resource_consume_food() {
     calculate_available_food();
     city_data.resource.food_types_eaten_num = 0;

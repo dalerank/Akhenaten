@@ -9,6 +9,7 @@
 #include "building/building_bazaar.h"
 #include "building/model.h"
 #include "building/storage_yard.h"
+#include "building/monument_mastaba.h"
 #include "city/buildings.h"
 #include "city/data_private.h"
 #include "city/entertainment.h"
@@ -1182,6 +1183,15 @@ void building::update_native_crop_progress() {
         data.industry.progress = 0;
 
     map_image_set(tile.grid_offset(), image_id_from_group(GROUP_BUILDING_FARMLAND) + data.industry.progress);
+}
+
+void building::update_day() {
+    switch (type) {
+    case BUILDING_SMALL_MASTABA:
+    //case BUILDING_SMALL_MASTABA_SEC:
+        building_small_mastabe_update_day(this);
+        break;
+    }
 }
 
 void building::update_month() {

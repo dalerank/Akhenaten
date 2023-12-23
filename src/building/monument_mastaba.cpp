@@ -22,7 +22,7 @@ void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id,
     case DIR_4_BOTTOM_LEFT: x_leftmost = 1; y_leftmost = 0; break;
     case DIR_6_TOP_LEFT: x_leftmost = y_leftmost = 1; break;
     default:
-    return;
+        return;
     }
 
     if (!map_grid_is_inside(tile, size)) {
@@ -43,6 +43,26 @@ void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id,
             map_monuments_set_progress(grid_offset, 0);
             map_property_set_multi_tile_xy(grid_offset, dx, dy, dx == x_proper && dy == y_proper);
         }
+    }
+}
+
+void building_small_mastabe_update_day(building *b) {
+    vec2i offset = {0, 0};
+    switch (city_view_orientation()) {
+    case 0: offset = {4, 8}; break;
+    case 1: offset = {-8, 4}; break;
+    case 2: offset = {4, -8}; break;
+    case 3: offset = {8, 4}; break;
+    }
+
+    grid_area area = map_grid_get_area(b->tile, offset, 0);
+    tile2i tile2works = map_grid_area_first(area.tmin, area.tmax, [] (tile2i tile) { return map_monuments_get_progress(tile.grid_offset()) < 200; });
+    bool all_tiles_finished = (tile2works == tile2i{-1, -1});
+    if (all_tiles_finished) {
+        b->data.monuments.phase++;
+        map_grid_area_foreach(area.tmin, area.tmax, [] (tile2i tile) {
+            map_monuments_set_progress(tile.grid_offset(), 0);
+        });
     }
 }
 
@@ -74,8 +94,8 @@ int building_small_mastabe_get_image(tile2i tile, tile2i start, vec2i size) {
 
 void draw_small_mastaba_anim_flat(painter &ctx, int x, int y, building *b, int color_mask) {
     int clear_land_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND);
-    //map_image_set(grid_offset, clear_land_id + (map_random_get(grid_offset) & 7));
     int image_grounded = image_group(IMG_SMALL_MASTABA) + 5;
+    color_mask = (color_mask ? color_mask : 0xffffffff);
     if (b->data.monuments.phase == 0) {
         for (int dy = 0; dy < 4; dy++) {
             for (int dx = 0; dx < 4; dx++) {
@@ -87,7 +107,7 @@ void draw_small_mastaba_anim_flat(painter &ctx, int x, int y, building *b, int c
                 }
 
                 if (progress > 0 && progress <= 200) {
-                    int clr = ((0xff * progress / 200) << 24) | 0x00ffffff;
+                    int clr = ((0xff * progress / 200) << 24) | (color_mask & 0x00ffffff);
                     ImageDraw::img_sprite(ctx, image_grounded + ((dy * 4 + dx) & 7), offset, clr, 1.f, true);
                 }
             }
@@ -117,6 +137,23 @@ void draw_small_mastaba_anim_flat(painter &ctx, int x, int y, building *b, int c
         if (map_monuments_get_progress(right_bottom.grid_offset()) == 0) {
             vec2i offset = tile_to_pixel(right_bottom);
             ImageDraw::img_sprite(ctx, image_stick, offset.x + img->animation.sprite_x_offset, offset.y + img->animation.sprite_y_offset - img->height + 30, color_mask);
+        }
+    } else if (b->data.monuments.phase == 1) {
+        for (int dy = 0; dy < 4; dy++) {
+            for (int dx = 0; dx < 4; dx++) {
+                tile2i ntile = b->tile.shifted(dx, dy);
+                vec2i offset = tile_to_pixel(ntile);
+                uint32_t progress = map_monuments_get_progress(ntile.grid_offset());
+                if (progress < 200) {
+                    ImageDraw::img_sprite(ctx, image_grounded + ((dy * 4 + dx) & 7), offset, color_mask, 1.f, true);
+                }
+
+                if (progress > 0 && progress <= 200) {
+                    int clr = ((0xff * progress / 200) << 24) | 0x00ffffff;
+                    int img = building_small_mastabe_get_image(b->tile.shifted(dx, dy), b->tile, vec2i(8, 4));
+                    ImageDraw::img_sprite(ctx, img + ((dy * 4 + dx) & 7), offset, clr, 1.f, true);
+                }
+            }
         }
     }
 }

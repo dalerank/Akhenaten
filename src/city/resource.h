@@ -42,5 +42,4 @@ void city_resource_calculate_storageyard_stocks();
 void city_resource_determine_available();
 void city_resource_calculate_food_stocks_and_supply_wheat();
 void city_resource_consume_food();
-void city_buildings_update_month();
 void city_resource_add_items(e_resource res, int amount);

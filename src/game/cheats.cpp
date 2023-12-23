@@ -4,6 +4,7 @@
 #include "building/building_type.h"
 #include "building/house_population.h"
 #include "building/destruction.h"
+#include "building/monuments.h"
 #include "city/finance.h"
 #include "city/gods.h"
 #include "city/victory.h"
@@ -51,6 +52,8 @@ static void game_cheat_update_fish_points(pcstr);
 static void game_cheat_tutorial_step(pcstr);
 static void game_cheat_add_pottery(pcstr);
 static void game_cheat_add_beer(pcstr);
+static void game_cheat_finish_phase(pcstr);
+static void game_cheat_clear_progress(pcstr);
 
 using cheat_command = void(pcstr);
 
@@ -79,7 +82,9 @@ static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_mo
                                                   {"tutspaciousapt", game_cheat_spacious_apartment},
                                                   {"killfishboats", game_cheat_kill_fish_boats},
                                                   {"upfishpoints", game_cheat_update_fish_points},
-                                                  {"tutorialstep", game_cheat_tutorial_step}
+                                                  {"tutorialstep", game_cheat_tutorial_step},
+                                                  {"finishphase", game_cheat_finish_phase},
+                                                  {"clearprogress", game_cheat_clear_progress}
 };
 
 struct cheats_data_t {
@@ -165,6 +170,32 @@ static void game_cheat_add_pottery(pcstr args) {
     window_invalidate();
 
     city_warning_show_console("Added pottery");
+}
+
+static void game_cheat_finish_phase(pcstr args) {
+    buildings_valid_do([&] (building &b) {
+        if (!b.is_monument()) {
+            return;
+        }
+
+        if (!building_monument_is_unfinished_monument(&b)) {
+            return;
+        }
+
+        building *part = &b;
+        while (part) {
+            grid_area area = map_grid_get_area(part->tile, part->size, 0);
+            map_grid_area_foreach(area.tmin, area.tmax, [] (tile2i tile) {
+                map_monuments_set_progress(tile.grid_offset(), 200);
+            });
+
+            part = (part->next_part_building_id > 0) ? building_get(part->next_part_building_id) : nullptr;
+        };
+    });
+}
+
+static void game_cheat_clear_progress(pcstr args) {
+    map_monuments_clear();
 }
 
 static void game_cheat_add_beer(pcstr args) {

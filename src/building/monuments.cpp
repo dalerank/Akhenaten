@@ -299,8 +299,7 @@ bool building_monument_is_monument(const building *b) {
 }
 
 bool building_monument_type_is_monument(e_building_type type) {
-    return type > BUILDING_NONE && type < BUILDING_MAX
-                && type == BUILDING_SMALL_MASTABA;
+    return building_type_any_of(type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SEC);
 }
 
 bool building_monument_type_is_mini_monument(e_building_type type) {

@@ -301,6 +301,7 @@ static void draw_aqueduct(map_point tile, int x, int y, painter &ctx) {
         draw_building(ctx, get_aqueduct_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), {x, y});
     }
 }
+
 static void draw_road(tile2i tile, int x, int y, painter &ctx) {
     int grid_offset = tile.grid_offset();
     bool blocked = false;

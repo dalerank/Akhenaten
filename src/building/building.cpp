@@ -301,6 +301,8 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         break;
     }
 }
+
+
 building* building_create(e_building_type type, int x, int y, int orientation) {
     building* b = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
