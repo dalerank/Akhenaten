@@ -76,7 +76,7 @@ static building_properties properties[400] = {
     {3, 0, 0, 0},                         // ptah
     {3, 0, 0, 0},                         // seth
     {3, 0, 0, 0},                         // temple complex ^^^^
-    {2, 0, GROUP_BUILDING_MARKET},        // bazaar
+    {2, 0, 0, 0},        // bazaar
     {4, 0, 0, 0},       // granary
     {1, 1, GROUP_BUILDING_STORAGE_YARD},  // storageyard (hut)
     {1, 1, 0, 0},                         // storageyard (space tile)
@@ -259,6 +259,7 @@ void building_properties_init() {
     properties[BUILDING_BREWERY_WORKSHOP] = {2, 0, 0, 0, 0, IMG_BEER_WORKSHOP};
     properties[BUILDING_SMALL_MASTABA] = {4, 0, 0, 0, 0, IMG_SMALL_MASTABA};
     properties[BUILDING_SMALL_MASTABA_SEC] = {4, 0, 0, 0, 0, IMG_SMALL_MASTABA};
+    properties[BUILDING_BAZAAR] = {2, 0, 0, 0, 0, IMG_BAZAAR};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

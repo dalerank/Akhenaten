@@ -76,22 +76,19 @@ enum e_figure_type : uint16_t {
     FIGURE_ZEBRA = 70,
     FIGURE_SPEAR = 71,
     FIGURE_HIPPODROME_HORSES = 72,
-
-    // pharaoh
-
     FIGURE_OSTRICH_HUNTER = 73,
     FIGURE_HUNTER_ARROW = 74,
     FIGURE_LUMBERJACK = 75,
-    //
     FIGURE_PHARAOH = 76,
-    FIGURE_GOVERNOR = 77, // TODO
-    FIGURE_78, // TODO
-    //
+    FIGURE_GOVERNOR = 77,
+    FIGURE_WARSHIP = 78,
+    FIGURE_CARPENTER = 79,
+    FIGURE_BRICKLAYER = 80,
+    FIGURE_STONEMASON = 81,
     FIGURE_CROCODILE = 82,
-    //
+    FIGURE_HYENA = 83,
     FIGURE_HIPPO = 84,
     FIGURE_WORKER_PH = 85,
-    //
     FIGURE_WATER_CARRIER = 87,
     FIGURE_POLICEMAN = 88,
     FIGURE_MAGISTRATE = 89,
@@ -106,7 +103,7 @@ enum e_figure_type : uint16_t {
     FIGURE_100 = 100, // TODO
     FIGURE_101, // TODO
 
-    FIGURE_HYENA = 102,
+    FIGURE_102 = 102,
 
     // FIGURE_MAX = 999
 };

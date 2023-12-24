@@ -115,7 +115,7 @@ static figure_action_property action_properties_lookup[] = {
   {80, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
   {81, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
   {FIGURE_CROCODILE, TERRAIN_USAGE_ROADS, 0, 0, 0},
-  {83, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
+  {FIGURE_HYENA, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HYENA_WALK},
   {FIGURE_HIPPO, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HIPPO_WALK},
   {FIGURE_WORKER_PH, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_WORKER_PH},
   {86, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
@@ -134,7 +134,7 @@ static figure_action_property action_properties_lookup[] = {
   {99, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_100, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
   {FIGURE_101, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
-  {FIGURE_HYENA, 1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_HYENA_WALK},
+  {FIGURE_102, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
 };
 
 void figure::check_action_properties_lookup() {

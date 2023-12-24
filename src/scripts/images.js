@@ -124,6 +124,10 @@ images = [
 	{img: IMG_POTTERY_WORKSHOP, pack:PACK_GENERAL, id:125, offset:0},
 	{img: IMG_BEER_WORKSHOP, pack:PACK_GENERAL, id:116, offset:0},
 	{img: IMG_SMALL_MASTABA, pack:PACK_MASTABA, id:2, offset:7},
+	{img: IMG_BAZAAR, pack:PACK_GENERAL, id:22, offset:0},
+	{img: IMG_BAZAAR_FANCY, pack:PACK_GENERAL, id:23, offset:0},
+	{img: IMG_BRICKLAYER, pack:PACK_SPR_MAIN, id:187},
+	{img: IMG_BRICKLAYERS_GUILD, pack:PACK_GENERAL, id:25},
 ]
 
 cart_offsets = [

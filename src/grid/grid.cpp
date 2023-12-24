@@ -270,6 +270,7 @@ void map_grid_bound(int* x, int* y) {
     if (*y >= scenario_map_data()->height)
         *y = scenario_map_data()->height - 1;
 }
+
 void map_grid_bound_area(tile2i &tmin, tile2i &tmax) {
     if (tmin.x() < 0) { tmin.set_x(0); }
     if (tmin.y() < 0) { tmin.set_y(0); }
