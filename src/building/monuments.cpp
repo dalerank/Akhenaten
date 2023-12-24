@@ -594,9 +594,6 @@ io_buffer *iob_city_building_monuments = new io_buffer([] (io_buffer *iob, size_
 bool building_monument_need_workers(building *b) {
     switch (b->type) {
     case BUILDING_SMALL_MASTABA:
-        while (b->prev_part_building_id) {
-            b = building_get(b->prev_part_building_id);
-        }
         for (auto w_id : b->data.monuments.workers) {
             if (!w_id) {
                 return true;

@@ -94,17 +94,10 @@ void BuildPlanner::add_building_tiles_from_list(int building_id, bool graphics_o
 
             // correct for city orientation
             switch (city_view_orientation() / 2) {
-            case 0:
-                tile.shift(0, -size + 1);
-                break;
-            case 1:
-                break;
-            case 2:
-                tile.shift(-size + 1, 0);
-                break;
-            case 3:
-                tile.shift(-size + 1, -size + 1);
-                break;
+            case 0: tile.shift(0, -size + 1); break;
+            case 1: break;
+            case 2: tile.shift(-size + 1, 0); break;
+            case 3: tile.shift(-size + 1, -size + 1); break;
             }
 
             if (image_id > 0 && size > 0) {
@@ -853,18 +846,9 @@ static tile2i temple_complex_part_target(building* main, int part) {
     int x = b->tile.x();
     int y = b->tile.y();
     switch (city_view_orientation() / 2) {
-    case 1: // east
-        x += 2;
-        break;
-
-    case 2: // south
-        x += 2;
-        y += 2;
-        break;
-
-    case 3: // west
-        y += 2;
-        break;
+    case 1:  x += 2; break; // east
+    case 2:  x += 2; y += 2; break; // south
+    case 3:  y += 2; break; // west
     }
     return tile2i(x, y);
 }

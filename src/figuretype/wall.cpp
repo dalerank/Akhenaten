@@ -48,24 +48,16 @@ void figure::ballista_action() {
     map_figure_remove();
     switch (city_view_orientation()) {
     case DIR_0_TOP_RIGHT:
-        tile.set(b->tile.x(), b->tile.y());
-        //            tile.x() = b->tile.x();
-        //            tile.y() = b->tile.y();
+        tile = b->tile;
         break;
     case DIR_2_BOTTOM_RIGHT:
-        tile.set(b->tile.x() + 1, b->tile.y());
-        //            tile.x() = b->tile.x() + 1;
-        //            tile.y() = b->tile.y();
+        tile = b->tile.shifted(1, 0);
         break;
     case DIR_4_BOTTOM_LEFT:
-        tile.set(b->tile.x() + 1, b->tile.y() + 1);
-        //            tile.x() = b->tile.x() + 1;
-        //            tile.y() = b->tile.y() + 1;
+        tile = b->tile.shifted(1, 1);
         break;
     case DIR_6_TOP_LEFT:
-        tile.set(b->tile.x(), b->tile.y() + 1);
-        //            tile.x() = b->tile.x();
-        //            tile.y() = b->tile.y() + 1;
+        tile = b->tile.shifted(0, 1);
         break;
     }
     //    tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());

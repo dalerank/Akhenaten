@@ -2,6 +2,8 @@
 
 #include "scenario/scenario_data.h"
 #include "core/game_environment.h"
+#include "graphics/view/view.h"
+#include "building/building.h"
 
 #include <string.h>
 #include <cassert>
@@ -275,12 +277,25 @@ void map_grid_bound_area(tile2i &tmin, tile2i &tmax) {
     if (tmax.y() >= scenario_map_data()->height) { tmax.set_y(scenario_map_data()->height - 1); }
 }
 
-grid_area map_grid_get_area(tile2i tile, vec2i size, int radius) {
+grid_area map_grid_get_area(tile2i tile, int size, int radius) {
     grid_area t;
     t.tmin.set(tile.x() - radius, tile.y() - radius);
-    t.tmax.set(tile.x() + size.x + radius - 1, tile.y() + size.y + radius - 1);
+    t.tmax.set(tile.x() + size + radius - 1, tile.y() + size + radius - 1);
     map_grid_bound_area(t.tmin, t.tmax);
     return t;
+}
+
+grid_tiles map_grid_get_tiles(building *b, int radius) {
+    building *part = b;
+    grid_tiles tiles;
+    tiles.reserve(std::pow(b->size, 2) * 2);
+    while (part) {
+        grid_area area = map_grid_get_area(part->tile, part->size, 0);
+        map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) { tiles.push_back(tile); });
+        part = part->has_next() ? b->next() : nullptr;
+    }
+
+    return tiles;
 }
 
 void map_grid_start_end_to_area(tile2i start, tile2i end, tile2i &tmin, tile2i &tmax) {

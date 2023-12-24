@@ -212,7 +212,7 @@ public:
             uint8_t statue_offset;
             uint8_t temple_complex_attachments;
             int resources[RESOURCES_MAX];
-            int workers[5];
+            uint16_t workers[5];
             uint8_t phase;
             uint8_t upgrades;
         } monuments;
@@ -237,6 +237,7 @@ public:
     building();
     building* main();
     building* next();
+    inline bool has_next() const { return next_part_building_id > 0; }
     building* top_xy();
     bool is_main();
 

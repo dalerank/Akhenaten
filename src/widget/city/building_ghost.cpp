@@ -196,9 +196,35 @@ static void draw_fountain_range(vec2i pixel, tile2i point, painter &ctx) {
 }
 
 static void draw_small_mastaba_ghost(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end) {
+    auto get_image = [] (tile2i tile, tile2i start, vec2i size) {
+        int image_id = image_group(IMG_SMALL_MASTABA);
+        if (tile == start) {
+            return image_id;
+        }
+
+        if (tile == start.shifted(size.x - 1, 0)) {
+            return image_id - 2;
+        }
+
+        if (tile == start.shifted(size.x - 1, size.y - 1)) {
+            return image_id - 4;
+        }
+
+        if (tile == start.shifted(0, size.y - 1)) {
+            return image_id - 6;
+        }
+
+        if (tile.y() == start.y()) { return image_id - 1; }
+        if (tile.y() == start.y() + size.y - 1) { return image_id - 5; }
+        if (tile.x() == start.x()) { return image_id - 7; }
+        if (tile.x() == start.x() + size.x - 1) { return image_id - 3; }
+
+        return (image_id + 5 + (tile.x() + tile.y()) % 7);
+    };
+
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 4; ++j) {
-            draw_building(ctx, building_small_mastabe_get_image(end.shifted(i, j), end, vec2i{8, 4}), pixel + vec2i(-30, 15) * i + vec2i(30, 15) * j);
+            draw_building(ctx, get_image(end.shifted(i, j), end, vec2i{8, 4}), pixel + vec2i(-30, 15) * i + vec2i(30, 15) * j);
         }
     }
 }

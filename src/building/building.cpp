@@ -293,7 +293,8 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->fire_proof = 1;
         break;
     case BUILDING_SMALL_MASTABA:
-        b->fire_proof = true;
+    case BUILDING_SMALL_MASTABA_SEC:
+        b->fire_proof = 1;
         break;
 
     default:
@@ -616,6 +617,7 @@ bool building_is_harvester(e_building_type type) {
 bool building_is_monument(int type) {
     switch (type) {
     case BUILDING_SMALL_MASTABA:
+    case BUILDING_SMALL_MASTABA_SEC:
     case BUILDING_PYRAMID:
     case BUILDING_SPHINX:
     case BUILDING_MAUSOLEUM:
@@ -1064,12 +1066,15 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT16, &b->data.industry.work_camp_id);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.worker_id);
 
-    } else if (building_is_statue(b->type) || building_is_large_temple(b->type)) {
-        iob->bind____skip(86);
+    } else if (building_is_statue(b->type) || building_is_large_temple(b->type) || building_is_monument(b->type)) {
+        iob->bind____skip(75);
+        for (int i = 0; i < 5; i++) {
+            iob->bind(BIND_SIGNATURE_UINT16, &b->data.monuments.workers[i]);
+        }
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.phase);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.statue_offset);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.temple_complex_attachments);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.variant);
-
     } else if (b->type == BUILDING_WATER_LIFT || b->type == BUILDING_FERRY) {
         iob->bind____skip(88);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.orientation);

@@ -492,7 +492,10 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     case e_debug_render_monuments:
         d = map_monuments_get_progress(grid_offset);
-        debug_text(ctx, str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
+        b->is_valid()
+            ? snprintf((char *)str, 30, "%d[%d]", b ? b->data.monuments.phase : 0, d)
+            : snprintf((char *)str, 30, "%d", d);
+        debug_text_a(ctx, str, x, y + 10, 0, (const char *)str, COLOR_RED, FONT_SMALL_PLAIN);
         break;
     }
 }
