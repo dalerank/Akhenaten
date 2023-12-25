@@ -1,4 +1,4 @@
-#include "building_plaza.h"
+#include "building_temple.h"
 
 #include "building/building.h"
 #include "city/object_info.h"

@@ -22,6 +22,7 @@ building_info = [
   { help_id:90, type:"chickpeas_farm", text_id:182},
   { help_id:90, type:"figs_farm", text_id:183},
   { help_id:90, type:"henna_farm", text_id:306},
+  { help_id:92, type:"bricklayers_guild", text_id:172},
 ]
 
 building_booth = {

@@ -21,6 +21,7 @@
 #include "building/building_entertainment.h"
 #include "building/building_health.h"
 #include "building/building_education.h"
+#include "building/building_bricklayers_guild.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/storage_yard.h"
@@ -693,6 +694,10 @@ static void draw_refresh_background() {
             case BUILDING_TEMPLE_BAST:
             case BUILDING_TEMPLE_COMPLEX_BAST:
                 building_temple_bast_draw_info(context);
+                break;
+
+            case BUILDING_BRICKLAYERS_GUILD:
+                building_bricklayers_guild_draw_info(context);
                 break;
 
             case BUILDING_SHRINE_OSIRIS: building_shrine_osiris_draw_info(context); break;
