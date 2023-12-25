@@ -2,7 +2,7 @@
 
 #include "core/buffer.h"
 #include "core/game_environment.h"
-#include "figure/type.h"
+#include "figure/figure_type.h"
 #include "grid/point.h"
 
 // #define MAX_FORMATIONS 250

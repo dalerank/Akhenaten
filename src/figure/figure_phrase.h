@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/bstring.h"
-#include "figure/type.h"
+#include "figure/figure_type.h"
 
 using sound_key = bstring64;
 

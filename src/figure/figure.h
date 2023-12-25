@@ -7,7 +7,7 @@
 #include "core/span.hpp"
 #include "figure/action.h"
 #include "figure/formation.h"
-#include "figure/type.h"
+#include "figure/figure_type.h"
 #include "grid/point.h"
 #include "graphics/image_desc.h"
 #include "io/io_buffer.h"

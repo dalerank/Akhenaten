@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/buffer.h"
-#include "figure/type.h"
+#include "figure/figure_type.h"
 
 /**
  * Initializes the figure name generator.

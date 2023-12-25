@@ -6,7 +6,7 @@
 #include "overlays/city_overlay_fwd.h"
 #include "core/span.hpp"
 #include "figure/action.h"
-#include "figure/type.h"
+#include "figure/figure_type.h"
 #include "game/resource.h"
 #include "grid/point.h"
 
