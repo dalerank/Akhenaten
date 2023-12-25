@@ -44,24 +44,15 @@ struct main_menu_data_t {
 
     SDL_Texture *dicord_texture = nullptr;
     SDL_Texture *patreon_texture = nullptr;
-    generic_button discord_button = {0, 0, 48, 48, button_click, button_none, 10, 0};
-    generic_button patreon_button = {0, 0, 48, 48, button_click, button_none, 11, 0};
+    generic_button discord_button[1] = { {0, 0, 48, 48, button_click, button_none, 10, 0} };
+    generic_button patreon_button[1] = { {0, 0, 48, 48, button_click, button_none, 11, 0} };
     std::vector<std::pair<int, int>> buttons_text;
 
-    std::vector<generic_button> make_buttons() {
-        std::vector<generic_button> buttons = {
-            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 0, (short)button_size.x, (short)button_size.y, button_click, button_none, 5, 0},
-            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 1, (short)button_size.x, (short)button_size.y, button_click, button_none, 1, 0},
-            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 2, (short)button_size.x, (short)button_size.y, button_click, button_none, 2, 0},
-            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 3, (short)button_size.x, (short)button_size.y, button_click, button_none, 3, 0},
-            {(short)button_pos.x, (short)button_pos.y + (short)button_offset * 4, (short)button_size.x, (short)button_size.y, button_click, button_none, 4, 0},
-        };
-
-        return buttons;
-    }
+    generic_button buttons[5] = {};
 };
 
 main_menu_data_t g_main_menu_data;
+
 void config_load_main_menu(archive arch) {
     arch.load_global_section("main_menu_window", [] (archive arch) {
         auto &data = g_main_menu_data;
@@ -75,6 +66,10 @@ void config_load_main_menu(archive arch) {
             int id = arch.read_integer("id");
             data.buttons_text.push_back({group, id});
         });
+
+        for (int i = 0; i < 5; ++i) {
+            data.buttons[i] = {(short)data.button_pos.x, (short)data.button_pos.y + (short)(data.button_offset * i), (short)data.button_size.x, (short)data.button_size.y, button_click, button_none, i + 1, 0};
+        }
     });
 }
 
@@ -110,10 +105,9 @@ static void draw_foreground() {
     auto &data = g_main_menu_data;
     graphics_set_to_dialog();
 
-    auto buttons = data.make_buttons();
-    for (int i = 0; i < buttons.size(); i++) {
+    for (int i = 0; i < std::size(data.buttons); i++) {
         auto text = data.buttons_text[i];
-        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
+        large_label_draw(data.buttons[i].x, data.buttons[i].y, data.buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
         lang_text_draw_centered(text.first, text.second, data.button_pos.x, data.button_pos.y + 40 * i + 6, data.button_size.x, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
@@ -141,11 +135,11 @@ static void confirm_exit(bool accepted) {
 
 static void button_click(int type, int param2) {
     switch (type) {
-    case 1:
+    case 2:
         window_player_selection_show();
         break;
 
-    case 2:
+    case 3:
         window_records_show(); // TODO
         break;
 
@@ -161,15 +155,15 @@ static void button_click(int type, int param2) {
 //        }
 //        break;
 
-    case 3:
+    case 4:
         window_config_show(window_config_show_back);
         break;
 
-    case 4:
+    case 5:
         window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, e_popup_btns_yesno);
         break;
 
-    case 5: {
+    case 1: {
             pcstr last_save = config_get_string(CONFIG_STRING_LAST_SAVE);
             pcstr last_player = config_get_string(CONFIG_STRING_LAST_PLAYER);
             g_settings.set_player_name((const uint8_t*)last_player);
@@ -195,17 +189,17 @@ static void button_click(int type, int param2) {
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto &data = g_main_menu_data;
     const mouse* m_dialog = mouse_in_dialog(m);
-    auto buttons = data.make_buttons();
-    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons.data(), buttons.size(), &data.focus_button_id)) {
+    int tmp_button_id = 0;
+    if (generic_buttons_handle_mouse(m_dialog, vec2i(0, 0), data.buttons, data.focus_button_id)) {
         return;
     }
 
     vec2i scr_size = screen_size();
-    if (generic_buttons_handle_mouse(m, scr_size - vec2i(50, 50), &data.discord_button, 1, nullptr)) {
+    if (generic_buttons_handle_mouse(m, scr_size - vec2i(50, 50), data.discord_button, tmp_button_id)) {
         return;
     }
 
-    if (generic_buttons_handle_mouse(m, scr_size - vec2i(100, 50), &data.patreon_button, 1, nullptr)) {
+    if (generic_buttons_handle_mouse(m, scr_size - vec2i(100, 50), data.patreon_button, tmp_button_id)) {
         return;
     }
 

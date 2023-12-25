@@ -64,6 +64,9 @@
 #include "window/city.h"
 #include "window/message_dialog.h"
 
+#include <functional>
+#include <utility>
+
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_advisor(int advisor, int param2);
@@ -71,37 +74,37 @@ static void button_mothball(int mothball, int param2);
 static void button_debugpath(int debug, int param2);
 static void button_overlay(int overlay, int param2);
 
-static image_button image_buttons_help_close[] = {
-  {14, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
-  {424, 3, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1}
-};
+object_info g_building_info_context;
 
-static image_button image_buttons_advisor[] = {
-  {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1}
-};
-
-static generic_button generic_button_mothball[] = {
-  {400, 3, 24, 24, button_mothball, button_none, 0, 0}
-};
-
-static generic_button generic_button_figures[] = {
-  {400, 3, 24, 24, button_debugpath, button_none, 0, 0}
-};
-
-static generic_button generic_button_layer[] = {
-  {375, 3, 24, 24, button_overlay, button_none, 0, 0}
-};
-
-static object_info g_building_info_context;
-
-struct focus_button_id {
+struct building_info_data_t {
     int image_button_id = 0;
     int generic_button_id = 0;
     int debug_path_button_id = 0;
     int overlay_button_id = 0;
+
+    generic_button generic_button_layer[1] = {
+        {375, 3, 24, 24, button_overlay, button_none, 0, 0}
+    };
+
+    generic_button generic_button_figures[1] = {
+        {400, 3, 24, 24, button_debugpath, button_none, 0, 0}
+    };
+
+    generic_button generic_button_mothball[1] = {
+        {400, 3, 24, 24, button_mothball, button_none, 0, 0}
+    };
+
+    image_button image_buttons_advisor[1] = {
+        {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1}
+    };
+
+    image_button image_buttons_help_close[2] = {
+        {14, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
+        {424, 3, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1}
+    };
 };
 
-focus_button_id g_building_info_focus;
+building_info_data_t g_building_info;
 
 static int get_height_id() {
     auto &context = g_building_info_context;
@@ -204,13 +207,14 @@ static int get_height_id() {
     }
     return 0;
 }
+
 static void get_tooltip(tooltip_context* c) {
     auto &context = g_building_info_context;
     int text_id = 0, group_id = 0;
-    if (g_building_info_focus.image_button_id) {
-        text_id = g_building_info_focus.image_button_id;
+    if (g_building_info.image_button_id) {
+        text_id = g_building_info.image_button_id;
 
-    } else if (g_building_info_focus.generic_button_id) {
+    } else if (g_building_info.generic_button_id) {
         if (building_get(context.building_id)->state == BUILDING_STATE_VALID) {
             text_id = 8;
             group_id = 54;
@@ -219,7 +223,7 @@ static void get_tooltip(tooltip_context* c) {
             group_id = 54;
         }
 
-    } else if (g_building_info_focus.debug_path_button_id) {
+    } else if (g_building_info.debug_path_button_id) {
         ;
 
     } else if (context.type == BUILDING_INFO_LEGION) {
@@ -829,28 +833,28 @@ static void draw_foreground() {
 
     // general buttons
     if (context.storage_show_special_orders) {
-        image_buttons_draw(context.offset.x, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40, image_buttons_help_close, 2);
+        image_buttons_draw(vec2i(context.offset.x, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40), g_building_info.image_buttons_help_close);
     } else {
-        image_buttons_draw(context.offset.x, context.offset.y + 16 * context.height_blocks - 40, image_buttons_help_close, 2);
+        image_buttons_draw(context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.image_buttons_help_close);
     }
 
     if (context.can_go_to_advisor) {
-        image_buttons_draw(context.offset.x, context.offset.y + 16 * context.height_blocks - 40, image_buttons_advisor, 1);
+        image_buttons_draw(context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.image_buttons_advisor);
     }
 
     if (!context.storage_show_special_orders) {
         int workers_needed = model_get_building(building_get(context.building_id)->type)->laborers;
         if (workers_needed) {
-            draw_mothball_button(context.offset.x + 400, context.offset.y + 3 + 16 * context.height_blocks - 40, g_building_info_focus.generic_button_id);
+            draw_mothball_button(context.offset.x + 400, context.offset.y + 3 + 16 * context.height_blocks - 40, g_building_info.generic_button_id);
         }
     }
 
     if (context.figure.draw_debug_path) {
-        draw_debugpath_button(context.offset.x + 400, context.offset.y + 3 + 16 * context.height_blocks - 40, g_building_info_focus.debug_path_button_id);
+        draw_debugpath_button(context.offset.x + 400, context.offset.y + 3 + 16 * context.height_blocks - 40, g_building_info.debug_path_button_id);
     }
 
     if (context.show_overlay != OVERLAY_NONE) {
-        draw_overlay_button(context.offset.x + 375, context.offset.y + 3 + 16 * context.height_blocks - 40, g_building_info_focus.overlay_button_id);
+        draw_overlay_button(context.offset.x + 375, context.offset.y + 3 + 16 * context.height_blocks - 40, g_building_info.overlay_button_id);
     }
 }
 
@@ -911,17 +915,21 @@ static int handle_specific_building_info_mouse(const mouse *m) {
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto &context = g_building_info_context;
     bool button_id = 0;
+    int tmp_btn_id;
     // general buttons
     if (context.storage_show_special_orders) {
         //        int y_offset = window_building_get_vertical_offset(&context, 28 + 5);
-        button_id |= image_buttons_handle_mouse(m, context.offset.x, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40, image_buttons_help_close, 2, &g_building_info_focus.image_button_id);
+        button_id |= image_buttons_handle_mouse(m, vec2i(context.offset.x, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40), 
+                                                g_building_info.image_buttons_help_close, g_building_info.image_button_id);
     } else {
-        button_id |= image_buttons_handle_mouse(m, context.offset.x, context.offset.y + 16 * context.height_blocks - 40, image_buttons_help_close, 2, &g_building_info_focus.image_button_id);
-        button_id |= generic_buttons_handle_mouse(m, context.offset.x, context.offset.y + 16 * context.height_blocks - 40, generic_button_mothball, 1, &g_building_info_focus.generic_button_id);
+        button_id |= image_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40),
+                                                g_building_info.image_buttons_help_close, g_building_info.image_button_id);
+        button_id |= generic_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40),
+                                                  g_building_info.generic_button_mothball, g_building_info.generic_button_id);
     }
 
     if (context.can_go_to_advisor) {
-        button_id |= image_buttons_handle_mouse(m, context.offset.x, context.offset.y + 16 * context.height_blocks - 40, image_buttons_advisor, 1, 0);
+        button_id |= image_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.image_buttons_advisor, tmp_btn_id);
     }
 
     if (!button_id) {
@@ -929,11 +937,12 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 
     if (context.figure.draw_debug_path) {
-        button_id |= generic_buttons_handle_mouse(m, context.offset.x, context.offset.y + 16 * context.height_blocks - 40, generic_button_figures, 1, &g_building_info_focus.debug_path_button_id);
+        button_id |= generic_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40),
+                                                  g_building_info.generic_button_figures, g_building_info.debug_path_button_id);
     }
 
     if (context.show_overlay != OVERLAY_NONE) {
-        button_id |= generic_buttons_handle_mouse(m, context.offset.x, context.offset.y + 16 * context.height_blocks - 40, generic_button_layer, 1, &g_building_info_focus.overlay_button_id);
+        button_id |= generic_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.generic_button_layer, g_building_info.overlay_button_id);
     }
 
     if (!button_id && input_go_back_requested(m, h)) {

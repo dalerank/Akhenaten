@@ -185,7 +185,7 @@ static building_properties properties[400] = {
     {0, 0, 0, 0},
     {1, 1, 0, 0},
     {2, 0, GROUP_BUILDING_GUILD_CARPENTERS},
-    {2, 0, GROUP_BUILDING_GUILD_BRICKLAYERS},
+    {2, 0, 0, 0},
     {2, 0, GROUP_BUILDING_GUILD_STONEMASONS}, // guilds ^^^
     {2, 1, 0, 0, IMG_WATER_SUPPLY},      // water supply
     {2, 1, GROUP_BUILDING_TRANSPORT_WHARF},   // wharf (transport)
@@ -260,6 +260,7 @@ void building_properties_init() {
     properties[BUILDING_SMALL_MASTABA] = {4, 0, 0, 0, 0, IMG_SMALL_MASTABA};
     properties[BUILDING_SMALL_MASTABA_SEC] = {4, 0, 0, 0, 0, IMG_SMALL_MASTABA};
     properties[BUILDING_BAZAAR] = {2, 0, 0, 0, 0, IMG_BAZAAR};
+    properties[BUILDING_BRICKLAYERS_GUILD] = {2, 0, 0, 0, 0, IMG_BRICKLAYERS_GUILD};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

@@ -5,6 +5,8 @@
 
 #include "core/time.h"
 
+#include <utility>
+
 enum { 
     IB_BUILD = 2,
     IB_NORMAL = 4,
@@ -32,6 +34,16 @@ struct image_button {
     char focused;
     time_millis pressed_since;
 };
+
+template<class T>
+bool image_buttons_handle_mouse(const mouse *m, vec2i pos, T &buttons, int &focus_button_id) {
+    return image_buttons_handle_mouse(m, pos.x, pos.y, std::begin(buttons), (int)std::size(buttons), &focus_button_id);
+}
+
+template<class T>
+void image_buttons_draw(vec2i pos, T &buttons, int starting_button = 0) {
+    image_buttons_draw(pos.x, pos.y, std::begin(buttons), (int)std::size(buttons), starting_button);
+}
 
 void image_buttons_draw(int x, int y, image_button* buttons, int num_buttons, int starting_button = 0);
 bool image_buttons_handle_mouse(const mouse* m, int x, int y, image_button* buttons, int num_buttons, int* focus_button_id);
