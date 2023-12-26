@@ -62,7 +62,7 @@ void figure::military_standard_action() {
         else {
             cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + anim_frame / 2;
         }
-    } else if (m->figure_type == FIGURE_CHARIOTEER) {
+    } else if (m->figure_type == FIGURE_SENET_PLAYER) {
         if (m->is_halted)
             cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 26;
         else {
@@ -199,7 +199,7 @@ void figure::soldier_update_image(const formation* m) {
         update_image_javelin(dir);
     else if (type == FIGURE_INFANTRY)
         update_image_mounted(dir);
-    else if (type == FIGURE_SPEARMAN)
+    else if (type == FIGURE_FCHARIOTEER)
         update_image_legionary(m, dir);
 }
 
@@ -316,7 +316,7 @@ void figure::soldier_action() {
         if (action_state != FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD) {
             if (type == FIGURE_ARCHER)
                 javelin_launch_missile();
-            else if (type == FIGURE_SPEARMAN)
+            else if (type == FIGURE_FCHARIOTEER)
                 legionary_attack_adjacent_enemy();
         }
         break;

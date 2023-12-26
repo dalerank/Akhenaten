@@ -42,13 +42,13 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_STORAGE_YARD_DELIVERCART, 1, TERRAIN_USAGE_ROADS, 0, 0, 0, IMG_CARTPUSHER},
   {FIGURE_FIREMAN, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_FIREMAN},
   {FIGURE_ARCHER, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_ARCHER_PH},
-  {FIGURE_SPEARMAN, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_CHARIOTEER_PH},
+  {FIGURE_FCHARIOTEER, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_CHARIOTEER_PH},
   {FIGURE_INFANTRY, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_INFANTRY_PH},
   {FIGURE_STANDARD_BEARER, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_JUGGLER, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, IMG_JUGGLER_WALK},
   {FIGURE_MUSICIAN, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, IMG_MUSICIAN},
   {FIGURE_DANCER, 1, TERRAIN_USAGE_ROADS, 512, GROUP_FIGURE_DANCER},
-  {FIGURE_CHARIOTEER, 1, TERRAIN_USAGE_ROADS, 512, GROUP_FIGURE_CHARIOTEER},
+  {FIGURE_SENET_PLAYER, 1, TERRAIN_USAGE_ROADS, 512, GROUP_FIGURE_CHARIOTEER},
   {FIGURE_TRADE_CARAVAN, 1, TERRAIN_USAGE_PREFER_ROADS, 0, 0, 0, IMG_TRADER_CARAVAN},
   {FIGURE_TRADE_SHIP, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_TRADE_CARAVAN_DONKEY, 1, TERRAIN_USAGE_PREFER_ROADS, 0, 0, 0, IMG_TRADER_CARAVAN_DONKEY},
@@ -530,7 +530,7 @@ void figure::action_perform() {
         case FIGURE_JUGGLER: // entertainer_action();              break;
         case FIGURE_MUSICIAN: // entertainer_action();              break;
         case FIGURE_DANCER: // entertainer_action();              break;
-        case FIGURE_CHARIOTEER:
+        case FIGURE_SENET_PLAYER:
             entertainer_action();
             break;
 
@@ -596,7 +596,7 @@ void figure::action_perform() {
         case FIGURE_OSTRICH: ostrich_action(); break;
         case 70: zebra_action(); break; // 70
         case 71: spear_action(); break;
-        case 72: hippodrome_horse_action(); break;
+        case FIGURE_CHARIOR_RACER: hippodrome_horse_action(); break;
         case FIGURE_OSTRICH_HUNTER: ostrich_hunter_action(); break;
         case FIGURE_HUNTER_ARROW: arrow_action(); break;
         case FIGURE_LUMBERJACK: lumberjack_action(); break; // wood cutters

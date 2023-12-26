@@ -220,7 +220,7 @@ void window_building_draw_legion_info(object_info* c) {
     image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS);
     if (m->figure_type == FIGURE_ARCHER) {
         image_id += 9;
-    } else if (m->figure_type == FIGURE_CHARIOTEER) {
+    } else if (m->figure_type == FIGURE_FCHARIOTEER) {
         image_id += 18;
     }
 

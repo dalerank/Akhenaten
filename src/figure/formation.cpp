@@ -247,7 +247,7 @@ void formation_change_morale(formation* m, int amount) {
         max_morale = m->has_military_training ? 100 : 80;
     else if (m->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)
         max_morale = 100;
-    else if (m->figure_type == FIGURE_ARCHER|| m->figure_type == FIGURE_CHARIOTEER)
+    else if (m->figure_type == FIGURE_ARCHER|| m->figure_type == FIGURE_FCHARIOTEER)
         max_morale = m->has_military_training ? 80 : 60;
     else {
         switch (m->enemy_type) {

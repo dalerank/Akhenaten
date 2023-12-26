@@ -125,7 +125,7 @@ static int draw_background() {
         case FIGURE_INFANTRY:
             lang_text_draw(138, 33, 84 + width, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
             break;
-        case FIGURE_CHARIOTEER:
+        case FIGURE_FCHARIOTEER:
             lang_text_draw(138, 34, 84 + width, 100 + 44 * i, FONT_NORMAL_BLACK_ON_DARK);
             break;
         case FIGURE_ARCHER:

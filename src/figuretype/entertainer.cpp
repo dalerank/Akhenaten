@@ -125,7 +125,7 @@ void figure::entertainer_update_shows() {
 void figure::entertainer_update_image() {
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
 
-    if (type == FIGURE_CHARIOTEER) {
+    if (type == FIGURE_CHARIOR_RACER) {
         cart_image_id = 0;
         if (action_state == FIGURE_ACTION_150_ATTACK || action_state == FIGURE_ACTION_149_CORPSE) {
             sprite_image_id = image_id_from_group(GROUP_FIGURE_CHARIOTEER) + dir;
@@ -183,7 +183,7 @@ void figure::entertainer_action() {
     //        return;
     //    }
     //}
-    int speed_factor = type == FIGURE_CHARIOTEER ? 2 : 1;
+    int speed_factor = type == FIGURE_CHARIOR_RACER ? 2 : 1;
     switch (action_state) {
     case FIGURE_ACTION_150_ATTACK:
         figure_combat_handle_attack();
@@ -227,7 +227,8 @@ void figure::entertainer_action() {
                 dst_building_id = determine_venue_destination(tile, BUILDING_PAVILLION, 0, 0);
                 break;
 
-            case FIGURE_CHARIOTEER:
+            case FIGURE_CHARIOR_RACER:
+            case FIGURE_SENET_PLAYER:
                 dst_building_id = determine_venue_destination(tile, BUILDING_SENET_HOUSE, 0, 0);
                 break;
             }
@@ -265,7 +266,8 @@ void figure::entertainer_action() {
                 dst_building_id = determine_closest_venue_destination(tile, BUILDING_PAVILLION, 0, 0);
                 break;
 
-            case FIGURE_CHARIOTEER:
+            case FIGURE_CHARIOR_RACER:
+            case FIGURE_SENET_PLAYER:
                 dst_building_id = determine_closest_venue_destination(tile, BUILDING_SENET_HOUSE, 0, 0);
                 break;
             }

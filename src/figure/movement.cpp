@@ -95,9 +95,10 @@ int figure::get_permission_for_figure() {
         break;
 
     case FIGURE_MUSICIAN:
-    case FIGURE_CHARIOTEER:
+    case FIGURE_SENET_PLAYER:
     case FIGURE_JUGGLER:
     case FIGURE_DANCER:
+    case FIGURE_CHARIOR_RACER:
         return PERMISSION_ENTERTAINER;
         break;
 

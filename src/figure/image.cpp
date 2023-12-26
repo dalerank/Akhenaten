@@ -309,7 +309,7 @@ int figure::figure_image_corpse_offset() {
         type_offset = 136;
         break;
     case FIGURE_JAVELIN:
-    case FIGURE_CHARIOTEER:
+    case FIGURE_FCHARIOTEER:
         type_offset = 144;
         break;
     case FIGURE_INFANTRY:

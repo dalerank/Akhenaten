@@ -57,12 +57,12 @@ void formation_legion_update_recruit_status(building* fort) {
         return;
     if (m->num_figures < m->max_figures) {
         int type = fort->subtype.fort_figure_type;
-        if (type == FIGURE_SPEARMAN)
-            m->legion_recruit_type = LEGION_RECRUIT_SPEARMAN;
+        if (type == FIGURE_INFANTRY)
+            m->legion_recruit_type = LEGION_RECRUIT_INFANTRY;
         else if (type == FIGURE_ARCHER)
             m->legion_recruit_type = LEGION_RECRUIT_ARCHER;
-        else if (type == FIGURE_INFANTRY)
-            m->legion_recruit_type = LEGION_RECRUIT_INFANTRY;
+        else if (type == FIGURE_FCHARIOTEER)
+            m->legion_recruit_type = LEGION_RECRUIT_CHARIOTEER;
 
     } else { // too many figures
         int too_many = m->num_figures - m->max_figures;

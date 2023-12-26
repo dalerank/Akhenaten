@@ -48,7 +48,7 @@ void figure::play_die_sound() {
         break;
 
     case FIGURE_ARCHER:
-    case FIGURE_CHARIOTEER:
+    case FIGURE_FCHARIOTEER:
     case FIGURE_INFANTRY:
     case FIGURE_INDIGENOUS_NATIVE:
     case FIGURE_TOWER_SENTRY:
@@ -94,7 +94,7 @@ void figure::play_hit_sound() {
             sound_effect_play(SOUND_EFFECT_SWORD);
         break;
 
-    case FIGURE_CHARIOTEER:
+    case FIGURE_FCHARIOTEER:
     case FIGURE_ENEMY45_SWORD:
     case FIGURE_ENEMY48_CHARIOT:
     case FIGURE_ENEMY50_SWORD:

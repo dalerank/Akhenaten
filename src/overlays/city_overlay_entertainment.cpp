@@ -15,11 +15,11 @@ static int show_building_hippodrome(const building* b) {
 }
 
 static int show_figure_entertainment(const figure* f) {
-    return f->type == FIGURE_JUGGLER || f->type == FIGURE_MUSICIAN || f->type == FIGURE_DANCER || f->type == FIGURE_CHARIOTEER;
+    return f->type == FIGURE_JUGGLER || f->type == FIGURE_MUSICIAN || f->type == FIGURE_DANCER || f->type == FIGURE_SENET_PLAYER || f->type == FIGURE_CHARIOR_RACER;
 }
 
 static int show_figure_hippodrome(const figure* f) {
-    return f->type == FIGURE_CHARIOTEER;
+    return f->type == FIGURE_CHARIOR_RACER;
 }
 
 static int get_column_height_entertainment(const building* b) {
