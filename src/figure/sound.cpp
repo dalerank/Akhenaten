@@ -17,7 +17,7 @@ void figure::play_die_sound() {
         sound_effect_play(SOUND_EFFECT_OSTRICH_DIE);
         break;
 
-    case FIGURE_SHEEP:
+    case FIGURE_BIRDS:
         sound_effect_play(SOUND_EFFECT_SHEEP_DIE);
         break;
 

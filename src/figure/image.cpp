@@ -299,7 +299,7 @@ void figure::cart_update_image() {
 int figure::figure_image_corpse_offset() {
     int type_offset = 96;
     switch (type) {
-    case FIGURE_SHEEP:
+    case FIGURE_BIRDS:
         type_offset = 104;
         break;
     case FIGURE_INDIGENOUS_NATIVE:
