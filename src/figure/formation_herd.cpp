@@ -237,14 +237,14 @@ static void update_herd_formation(formation* m) {
     int allow_negative_desirability;
     int terrain_mask = TERRAIN_IMPASSABLE_WOLF;
     switch (m->figure_type) {
-    case FIGURE_SHEEP:
+    case FIGURE_BIRDS:
         roam_distance = 8;
         roam_delay = 20;
         allow_negative_desirability = 0;
         attacking_animals = 0;
         terrain_mask = TERRAIN_IMPASSABLE_WOLF;
         break;
-    case FIGURE_ZEBRA:
+    case FIGURE_ANTELOPE:
         roam_distance = 20;
         roam_delay = 4;
         allow_negative_desirability = 0;

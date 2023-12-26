@@ -88,7 +88,7 @@ static void create_herd(int x, int y) {
     int num_animals;
     switch (scenario_property_climate()) {
     case CLIMATE_CENTRAL:
-        herd_type = FIGURE_SHEEP;
+        herd_type = FIGURE_BIRDS;
         num_animals = 10;
         break;
 

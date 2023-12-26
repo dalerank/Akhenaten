@@ -48,8 +48,8 @@ struct city_overlay_crime : public city_overlay {
     }
 
     bool show_figure(const figure* f) const override {
-        return f->type == FIGURE_POLICEMAN || f->type == FIGURE_PROTESTER || f->type == FIGURE_CRIMINAL
-            || f->type == FIGURE_RIOTER;
+        return f->type == FIGURE_CONSTABLE || f->type == FIGURE_PROTESTER || f->type == FIGURE_CRIMINAL
+            || f->type == FIGURE_TOMB_ROBER;
     }
 
     void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {

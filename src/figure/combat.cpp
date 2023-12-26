@@ -33,7 +33,7 @@ int figure_combat_get_target_for_soldier(tile2i tile, int max_distance) {
         if (f->is_dead())
             continue;
 
-        if (f->is_enemy() || f->type == FIGURE_RIOTER || f->is_attacking_native()) {
+        if (f->is_enemy() || f->type == FIGURE_TOMB_ROBER || f->is_attacking_native()) {
             int distance = calc_maximum_distance(tile, f->tile);
             if (distance <= max_distance) {
                 if (f->targeted_by_figure_id)
@@ -54,7 +54,7 @@ int figure_combat_get_target_for_soldier(tile2i tile, int max_distance) {
         if (f->is_dead())
             continue;
 
-        if (f->is_enemy() || f->type == FIGURE_RIOTER || f->is_attacking_native())
+        if (f->is_enemy() || f->type == FIGURE_TOMB_ROBER || f->is_attacking_native())
             return i;
     }
     return 0;
@@ -180,10 +180,10 @@ int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, 
         case FIGURE_CREATURE:
         case FIGURE_FISHING_POINT:
         case FIGURE_SHIPWRECK:
-        case FIGURE_SHEEP:
+        case FIGURE_BIRDS:
         // case FIGURE_WOLF:
         case FIGURE_OSTRICH:
-        case FIGURE_ZEBRA:
+        case FIGURE_ANTELOPE:
         case FIGURE_SPEAR:
             continue;
         }

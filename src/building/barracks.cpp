@@ -63,7 +63,7 @@ static int get_closest_legion_needing_soldiers(building* barracks) {
         if (m->in_distant_battle || m->legion_recruit_type == LEGION_RECRUIT_NONE)
             continue;
 
-        if (m->legion_recruit_type == LEGION_RECRUIT_SPEARMAN && barracks->stored_full_amount <= 0)
+        if (m->legion_recruit_type == LEGION_RECRUIT_INFANTRY && barracks->stored_full_amount <= 0)
             continue;
 
         building* fort = building_get(m->building_id);

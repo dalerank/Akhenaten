@@ -54,7 +54,7 @@ static void generate_rioter(building* b) {
     int target_building_id = formation_rioter_get_target_building(&x_target, &y_target);
     for (int i = 0; i < people_in_mob; i++) {
         // TODO: to add correct rioter image
-        figure* f = figure_create(FIGURE_RIOTER, road_tile, DIR_4_BOTTOM_LEFT);
+        figure* f = figure_create(FIGURE_TOMB_ROBER, road_tile, DIR_4_BOTTOM_LEFT);
         f->advance_action(FIGURE_ACTION_120_RIOTER_CREATED);
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;

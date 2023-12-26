@@ -58,7 +58,7 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_MARKET_TRADER, "mkt_seller"},
     {FIGURE_MUSICIAN, "musician"},
     {FIGURE_NONE, "pharaoh"},
-    {FIGURE_POLICEMAN, "plice"},
+    {FIGURE_CONSTABLE, "plice"},
     {FIGURE_PRIEST, "priest_"},
     {FIGURE_REED_GATHERER, "reed"},
     {FIGURE_CRIMINAL, "robber"},
@@ -1151,7 +1151,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     case FIGURE_MARKET_TRADER: return marker_trader_phrase(f);
     case FIGURE_OSTRICH_HUNTER: return hunter_ostric_phrase(f);
     case FIGURE_MAGISTRATE: return magistrate_phrase(f);
-    case FIGURE_POLICEMAN: return policeman_phrase(f);
+    case FIGURE_CONSTABLE: return policeman_phrase(f);
     case FIGURE_TEACHER: return teacher_phrase(f);
     //        case FIGURE_PROTESTER:
     //        case FIGURE_CRIMINAL:
