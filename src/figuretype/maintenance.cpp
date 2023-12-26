@@ -49,7 +49,7 @@ int figure::is_nearby(int category, int* distance, int max_distance, bool gang_o
                 category_check = true;
             break;
         case NEARBY_HOSTILE: // hostile
-            if (f->is_enemy() || f->type == FIGURE_RIOTER || f->is_attacking_native())
+            if (f->is_enemy() || f->type == FIGURE_TOMB_ROBER || f->is_attacking_native())
                 category_check = true;
             break;
         }
@@ -61,7 +61,7 @@ int figure::is_nearby(int category, int* distance, int max_distance, bool gang_o
                 if (f->targeted_by_figure_id)
                     dist *= 2; // penalty
                 if (category == NEARBY_HOSTILE) {
-                    if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR)
+                    if (f->type == FIGURE_TOMB_ROBER || f->type == FIGURE_ENEMY54_GLADIATOR)
                         dist = calc_maximum_distance(tile, f->tile);
                     else if (f->type == FIGURE_INDIGENOUS_NATIVE
                              && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)

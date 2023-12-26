@@ -449,7 +449,7 @@ int figure::figure_service_provide_coverage() {
         }
         break;
 
-    case FIGURE_RIOTER:
+    case FIGURE_TOMB_ROBER:
         if (figure_rioter_collapse_building() == 1) {
             return 1;
         }

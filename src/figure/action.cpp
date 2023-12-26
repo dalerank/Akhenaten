@@ -54,7 +54,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_TRADE_CARAVAN_DONKEY, 1, TERRAIN_USAGE_PREFER_ROADS, 0, 0, 0, IMG_TRADER_CARAVAN_DONKEY},
   {FIGURE_PROTESTER, 1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_THIEF_WALK},
   {FIGURE_CRIMINAL, 1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_THIEF_WALK},
-  {FIGURE_RIOTER, 1, TERRAIN_USAGE_ENEMY, 480, GROUP_FIGURE_RIOTER_WALK},
+  {FIGURE_TOMB_ROBER, 1, TERRAIN_USAGE_ENEMY, 480, GROUP_FIGURE_RIOTER_WALK},
   {FIGURE_FISHING_BOAT, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_MARKET_TRADER, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_MARKET_LADY_2},
   {FIGURE_PRIEST, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_OSIRIS_PRIEST},
@@ -539,7 +539,7 @@ void figure::action_perform() {
         case FIGURE_TRADE_CARAVAN_DONKEY: trade_caravan_donkey_action(); break;
         case FIGURE_PROTESTER: protestor_action(); break;
         case FIGURE_CRIMINAL: mugger_action(); break;
-        case FIGURE_RIOTER: rioter_action(); break;
+        case FIGURE_TOMB_ROBER: rioter_action(); break;
         case FIGURE_FISHING_BOAT: fishing_boat_action(); break;
         case FIGURE_MARKET_TRADER: market_trader_action(); break;
         case FIGURE_PRIEST: priest_action(); break;
