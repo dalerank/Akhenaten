@@ -40,7 +40,7 @@ struct city_overlay_damage : public city_overlay {
     }
 
     bool show_figure(const figure* f) const override {
-        return f->type == FIGURE_ENGINEER;
+        return f->type == FIGURE_ARCHITECT;
     }
 
     void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {

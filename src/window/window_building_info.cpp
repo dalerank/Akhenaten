@@ -496,7 +496,7 @@ static void init(map_point tile) {
                 case FIGURE_CREATURE:
                 case FIGURE_FISHING_POINT:
                 case FIGURE_SPEAR:
-                case FIGURE_HIPPODROME_HORSES:
+                case FIGURE_CHARIOR_RACER:
                     break;
                 default:
                     context.figure.figure_ids[context.figure.count++] = figure_id;

@@ -404,7 +404,7 @@ bool building::spawn_noble(bool spawned) {
 }
 
 void building::spawn_figure_engineers_post() {
-    common_spawn_roamer(FIGURE_ENGINEER, 50, FIGURE_ACTION_60_ENGINEER_CREATED);
+    common_spawn_roamer(FIGURE_ARCHITECT, 50, FIGURE_ACTION_60_ENGINEER_CREATED);
 }
 
 void building::spawn_figure_firehouse() {

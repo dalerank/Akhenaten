@@ -41,7 +41,7 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_PHYSICIAN, "doctor"},
     {FIGURE_EMBALMER, "embalmer"},
     {FIGURE_EMIGRANT, "emigrant"},
-    {FIGURE_ENGINEER, "engineer"},
+    {FIGURE_ARCHITECT, "engineer"},
     {FIGURE_FIREMAN, "fireman"},
     {FIGURE_FISHING_BOAT, "fishing"},
     {FIGURE_LABOR_SEEKER, "laborseeker"},
@@ -1144,7 +1144,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     case FIGURE_MARKET_BUYER: return market_buyer_phrase(f);
     case FIGURE_PHYSICIAN: return physician_phrase(f);
     case FIGURE_CART_PUSHER: return cart_pusher_phrase(f);
-    case FIGURE_ENGINEER: return engineer_phrase(f);
+    case FIGURE_ARCHITECT: return engineer_phrase(f);
     case FIGURE_PRIEST: return priest_phrase(f);
     case FIGURE_FIREMAN: return fireman_phrase(f);
     case FIGURE_DANCER: return dancer_phrase(f);

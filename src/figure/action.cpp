@@ -38,7 +38,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_LABOR_SEEKER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_LABOR_SEEKER},
   {FIGURE_EXPLOSION, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_EXPLOSION},
   {FIGURE_TAX_COLLECTOR, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, IMG_TAX_COLLECTOR},
-  {FIGURE_ENGINEER, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_ENGINEER},
+  {FIGURE_ARCHITECT, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_ARCHITECT},
   {FIGURE_STORAGE_YARD_DELIVERCART, 1, TERRAIN_USAGE_ROADS, 0, 0, 0, IMG_CARTPUSHER},
   {FIGURE_FIREMAN, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_FIREMAN},
   {FIGURE_FORT_ARCHER, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_ARCHER_PH},
@@ -102,7 +102,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_OSTRICH, 2, TERRAIN_USAGE_ANIMAL, 0, 0, 0, IMG_OSTRICH_WALK},
   {FIGURE_ZEBRA, 2, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_CROCODILE},
   {FIGURE_SPEAR, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
-  {FIGURE_HIPPODROME_HORSES, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
+  {FIGURE_CHARIOR_RACER, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
 
 
   {FIGURE_OSTRICH_HUNTER, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HUNTER_OSTRICH_MOVE},
@@ -124,7 +124,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_MAGISTRATE, 1, TERRAIN_USAGE_ROADS, 800, GROUP_FIGURE_MAGISTRATE},
   {FIGURE_REED_GATHERER, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_REED_GATHERER},
   {FIGURE_FESTIVAL_PRIEST, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
-  {FIGURE_92, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
+  {FIGURE_ENEMY_TRANSPORT, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_93, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {94, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_FISHING_SPOT, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
@@ -369,7 +369,7 @@ void figure::action_perform() {
             }
             break;
 
-        case FIGURE_ENGINEER:
+        case FIGURE_ARCHITECT:
         case FIGURE_FIREMAN:
         case FIGURE_POLICEMAN:
         case FIGURE_MAGISTRATE:
@@ -513,7 +513,7 @@ void figure::action_perform() {
             //            case 5: common_action(12, GROUP_FIGURE_LABOR_SEEKER); break;
         case FIGURE_EXPLOSION: explosion_cloud_action(); break;
         case FIGURE_TAX_COLLECTOR: tax_collector_action(); break;
-        case FIGURE_ENGINEER: engineer_action(); break;
+        case FIGURE_ARCHITECT: engineer_action(); break;
         case FIGURE_STORAGE_YARD_DELIVERCART: storageyard_cart_action(); break; // warehouseman_action !!!!
         case FIGURE_FIREMAN: fireman_action(); break; // 10
 

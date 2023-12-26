@@ -428,7 +428,7 @@ int figure::figure_service_provide_coverage() {
         houses_serviced = provide_culture(tile, this, hippodrome_coverage);
         break;
 
-    case FIGURE_ENGINEER: {
+    case FIGURE_ARCHITECT: {
             int max_damage = 0;
             houses_serviced = provide_service(tile, this, &max_damage, engineer_coverage);
             if (max_damage > min_max_seen) {

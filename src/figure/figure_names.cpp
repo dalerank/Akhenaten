@@ -74,7 +74,7 @@ int figure_name_get(int type, int enemy) {
     case FIGURE_TAX_COLLECTOR:
         return get_next_name(&data.tax_collector, 132, 32);
 
-    case FIGURE_ENGINEER:
+    case FIGURE_ARCHITECT:
         return get_next_name(&data.engineer, 165, 32);
 
     case FIGURE_FIREMAN:
@@ -172,7 +172,7 @@ int figure_name_get(int type, int enemy) {
     case FIGURE_FORT_STANDARD:
     case FIGURE_FISHING_POINT:
     case FIGURE_CREATURE:
-    case FIGURE_HIPPODROME_HORSES:
+    case FIGURE_CHARIOR_RACER:
         return 0;
     }
 }
