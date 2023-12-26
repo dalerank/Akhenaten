@@ -73,7 +73,7 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_WATER_CARRIER, "water"},
     {FIGURE_NONE, "woodcutter"},
     {FIGURE_WORKER, "worker"},
-    {FIGURE_WORKER_PH, "worker"},
+    {FIGURE_LABORER, "worker"},
     {FIGURE_NONE, "zookeeper"}
 };
 
@@ -1161,7 +1161,7 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //            return citizen_phrase(f);
     //        case FIGURE_HOMELESS:
     case FIGURE_WATER_CARRIER: return water_carier_phrase(f);
-    case FIGURE_WORKER: case FIGURE_WORKER_PH: return worker_phrase(f);
+    case FIGURE_WORKER: case FIGURE_LABORER: return worker_phrase(f);
     case FIGURE_MUSICIAN: return musician_phrase(f);
     case FIGURE_JUGGLER: return juggler_phrase(f);
     case FIGURE_LABOR_SEEKER: return labor_seeker_phrase(f);

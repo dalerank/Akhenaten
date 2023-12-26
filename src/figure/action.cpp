@@ -117,7 +117,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_CROCODILE, TERRAIN_USAGE_ROADS, 0, 0, 0},
   {FIGURE_HYENA, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HYENA_WALK},
   {FIGURE_HIPPO, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HIPPO_WALK},
-  {FIGURE_WORKER_PH, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_WORKER_AKNH},
+  {FIGURE_LABORER, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_WORKER_AKNH},
   {86, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_WATER_CARRIER, 1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_WATER_CARRIER},
   {FIGURE_CONSTABLE, 1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_POLICEMAN},
@@ -602,7 +602,7 @@ void figure::action_perform() {
         case FIGURE_LUMBERJACK: lumberjack_action(); break; // wood cutters
         case FIGURE_GOVERNOR: governor_action(); break;
         case FIGURE_HIPPO: hippo_action(); break;
-        case FIGURE_WORKER_PH: worker_action(); break;
+        case FIGURE_LABORER: worker_action(); break;
         case FIGURE_BRICKLAYER: bricklayer_action(); break;
         case FIGURE_WATER_CARRIER: water_carrier_action(); break;
         case FIGURE_CONSTABLE: policeman_action(); break;

@@ -153,7 +153,7 @@ void figure::poof() {
     case FIGURE_TRADE_CARAVAN:
         i = 1;
         break;
-    case FIGURE_WORKER_PH:
+    case FIGURE_LABORER:
         building *b = destination();
         if (b && b->is_industry()) {
             b->industry_remove_worker(id);
