@@ -120,7 +120,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_WORKER_PH, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_WORKER_AKNH},
   {86, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_WATER_CARRIER, 1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_WATER_CARRIER},
-  {FIGURE_POLICEMAN, 1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_POLICEMAN},
+  {FIGURE_CONSTABLE, 1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_POLICEMAN},
   {FIGURE_MAGISTRATE, 1, TERRAIN_USAGE_ROADS, 800, GROUP_FIGURE_MAGISTRATE},
   {FIGURE_REED_GATHERER, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_REED_GATHERER},
   {FIGURE_FESTIVAL_PRIEST, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
@@ -371,7 +371,7 @@ void figure::action_perform() {
 
         case FIGURE_ARCHITECT:
         case FIGURE_FIREMAN:
-        case FIGURE_POLICEMAN:
+        case FIGURE_CONSTABLE:
         case FIGURE_MAGISTRATE:
         case FIGURE_WORKER:
         case FIGURE_MARKET_TRADER:
@@ -605,7 +605,7 @@ void figure::action_perform() {
         case FIGURE_WORKER_PH: worker_action(); break;
         case FIGURE_BRICKLAYER: bricklayer_action(); break;
         case FIGURE_WATER_CARRIER: water_carrier_action(); break;
-        case FIGURE_POLICEMAN: policeman_action(); break;
+        case FIGURE_CONSTABLE: policeman_action(); break;
         case FIGURE_MAGISTRATE: magistrate_action(); break;
         case FIGURE_REED_GATHERER: reed_gatherer_action(); break; // reed gatherers
         case 91: festival_guy_action(); break;

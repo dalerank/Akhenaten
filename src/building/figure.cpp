@@ -412,7 +412,7 @@ void building::spawn_figure_firehouse() {
 }
 
 void building::spawn_figure_police() {
-    common_spawn_roamer(FIGURE_POLICEMAN, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
+    common_spawn_roamer(FIGURE_CONSTABLE, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
 }
 
 void building::spawn_figure_juggler() {

@@ -455,7 +455,7 @@ int figure::figure_service_provide_coverage() {
         }
         break;
 
-    case FIGURE_POLICEMAN: {
+    case FIGURE_CONSTABLE: {
             int max_criminal_active = 0;
             houses_serviced = provide_service(tile, this, &max_criminal_active, policeman_coverage);
             if (max_criminal_active > min_max_seen)
