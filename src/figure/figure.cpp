@@ -173,7 +173,7 @@ bool figure::is_legion() {
 }
 
 bool figure::is_herd() {
-    return type >= FIGURE_BIRDS && type <= FIGURE_ZEBRA;
+    return type >= FIGURE_BIRDS && type <= FIGURE_ANTELOPE;
 }
 
 building* figure::home() {

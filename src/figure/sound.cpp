@@ -21,7 +21,7 @@ void figure::play_die_sound() {
         sound_effect_play(SOUND_EFFECT_SHEEP_DIE);
         break;
 
-    case FIGURE_ZEBRA:
+    case FIGURE_ANTELOPE:
         sound_effect_play(SOUND_EFFECT_ZEBRA_DIE);
         break;
 
