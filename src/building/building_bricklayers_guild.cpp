@@ -47,7 +47,7 @@ static void building_guild_draw_info(object_info& c, const char* type, e_resourc
         window_building_draw_description_at(c, 86, meta.text_id, 4);
     else if (b->num_workers <= 0)
         window_building_draw_description_at(c, 86, meta.text_id, 5);
-    else if (!b->workshop_has_resources())
+    else if (!b->guild_has_resources())
         window_building_draw_description_at(c, 86, meta.text_id, 11);
     else if (c.worker_percentage >= 100)
         window_building_draw_description_at(c, 86, meta.text_id, 6);

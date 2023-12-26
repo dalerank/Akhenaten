@@ -110,9 +110,9 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_LUMBERJACK, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_PHARAOH, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_PHARAOH_WALK},
   {FIGURE_GOVERNOR, 1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_GOVERNOR},
-  {78, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
-  {79, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
-  {FIGURE_BRICKLAYER, 1, TERRAIN_USAGE_ROADS, 0, 0, IMG_BRICKLAYER_WALK},
+  {FIGURE_WARSHIP, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
+  {FIGURE_CARPENTER, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
+  {FIGURE_BRICKLAYER, 1, TERRAIN_USAGE_ROADS, 0, 0, 0, IMG_BRICKLAYER_WALK},
   {FIGURE_STONEMASON, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
   {FIGURE_CROCODILE, TERRAIN_USAGE_ROADS, 0, 0, 0},
   {FIGURE_HYENA, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HYENA_WALK},
@@ -595,18 +595,15 @@ void figure::action_perform() {
         case 68: sheep_action(); break;
         case FIGURE_OSTRICH: ostrich_action(); break;
         case 70: zebra_action(); break; // 70
-        case 71:
-            spear_action();
-            break;
-        case 72:
-            hippodrome_horse_action();
-            break;
+        case 71: spear_action(); break;
+        case 72: hippodrome_horse_action(); break;
         case FIGURE_OSTRICH_HUNTER: ostrich_hunter_action(); break;
-        case 74: arrow_action(); break;
+        case FIGURE_HUNTER_ARROW: arrow_action(); break;
         case FIGURE_LUMBERJACK: lumberjack_action(); break; // wood cutters
         case FIGURE_GOVERNOR: governor_action(); break;
         case FIGURE_HIPPO: hippo_action(); break;
         case FIGURE_WORKER_PH: worker_action(); break;
+        case FIGURE_BRICKLAYER: bricklayer_action(); break;
         case FIGURE_WATER_CARRIER: water_carrier_action(); break;
         case FIGURE_POLICEMAN: policeman_action(); break;
         case FIGURE_MAGISTRATE: magistrate_action(); break;

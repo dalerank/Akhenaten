@@ -55,17 +55,17 @@ void figure::bricklayer_action() {
         break;
 
     case FIGURE_ACTION_12_BRICKLAYER_WAITING_RESOURCES:
-        int progress = map_monuments_get_progress(tile.grid_offset());
-        if (progress < 200) {
-            map_monuments_set_progress(tile.grid_offset(), progress + 1);
-        } else {
-            poof();
-        }
+        //int progress = map_monuments_get_progress(tile.grid_offset());
+        //if (progress < 200) {
+        //    map_monuments_set_progress(tile.grid_offset(), progress + 1);
+        //} else {
+        //    poof();
+        //}
         break;
     }
 
     switch (action_state) {
     case FIGURE_ACTION_12_BRICKLAYER_WAITING_RESOURCES:
-        return image_set_animation(IMG_BRICKLAYER_IDLE, 0, 12);
+        return image_set_animation(IMG_BRICKLAYER_IDLE, 0, 8);
     }
 }

@@ -361,6 +361,12 @@ void building::spawn_figure_work_camp() {
     }
 }
 
+bool building::guild_has_resources() {
+    assert(is_guild());
+    bool hase_first_resource = (stored_full_amount >= 100);
+    return hase_first_resource;
+}
+
 bool building::workshop_has_resources() {
     assert(is_workshop());
     bool has_second_material = true;
@@ -789,7 +795,7 @@ void building::spawn_figure_guilds() {
     }
 
     building* monument = buildings_valid_first([] (building &b) {
-        if (!b.is_monument() || building_monument_is_unfinished(&b)) {
+        if (!b.is_monument() || !building_monument_is_unfinished(&b)) {
             return false;
         }
 
@@ -800,7 +806,7 @@ void building::spawn_figure_guilds() {
         return;
     }
 
-    auto f = create_figure_generic(FIGURE_BRICKLAYER, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
+    auto f = create_figure_with_destination(FIGURE_BRICKLAYER, monument, FIGURE_ACTION_10_BRIRKLAYER_GOING, BUILDING_SLOT_SERVICE);
     monument->monument_add_workers(f->id);
     f->wait_ticks = random_short() % 30; // ok
 }
@@ -1440,13 +1446,8 @@ bool building::figure_generate() {
             common_spawn_figure_trigger(100);
             break;
 
-        case BUILDING_HUNTING_LODGE:
-            spawn_figure_hunting_lodge();
-            break;
-
-        case BUILDING_WORK_CAMP:
-            spawn_figure_work_camp();
-            break;
+        case BUILDING_HUNTING_LODGE: spawn_figure_hunting_lodge(); break;
+        case BUILDING_WORK_CAMP: spawn_figure_work_camp(); break;
         }
     }
 

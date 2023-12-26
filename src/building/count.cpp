@@ -26,28 +26,30 @@ static void clear_counters(void) {
 }
 static void increase_count(int type, bool active) {
     ++g_count_data.buildings[type].total;
-    if (active)
-        ++g_count_data.buildings[type].active;
+    g_count_data.buildings[type].active += (active ? 1 : 0);
 }
 static void increase_industry_count(int resource, bool active) {
     ++g_count_data.industry[resource].total;
-    if (active)
-        ++g_count_data.industry[resource].active;
+    g_count_data.industry[resource].active += (active ? 1 : 0);
 }
 
 static void limit_hippodrome(void) {
-    if (g_count_data.buildings[BUILDING_SENET_HOUSE].total > 1)
+    if (g_count_data.buildings[BUILDING_SENET_HOUSE].total > 1) {
         g_count_data.buildings[BUILDING_SENET_HOUSE].total = 1;
-    if (g_count_data.buildings[BUILDING_SENET_HOUSE].active > 1)
+    }
+
+    if (g_count_data.buildings[BUILDING_SENET_HOUSE].active > 1) {
         g_count_data.buildings[BUILDING_SENET_HOUSE].active = 1;
+    }
 }
 
 void building_entertainment_update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Entertainment Update");
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->house_size)
+        if (b->state != BUILDING_STATE_VALID || b->house_size) {
             continue;
+        }
 
         int is_entertainment_venue = 0;
         int type = b->type;
@@ -102,8 +104,10 @@ void building_count_update() {
             increase_count(type, b.num_workers > 0);
             break;
 
-        // SPECIAL TREATMENT
-        // entertainment venues
+        case BUILDING_SMALL_MASTABA:
+            increase_count(type, (b.state != BUILDING_STATE_MOTHBALLED));
+            break;
+
         case BUILDING_BOOTH:
             increase_count(type, b.num_workers > 0);
             break;
@@ -139,7 +143,6 @@ void building_count_update() {
             increase_count(type, b.has_water_access);
             break;
 
-            // DEFAULT TREATMENT
             // education
         case BUILDING_SCRIBAL_SCHOOL:
         case BUILDING_LIBRARY:
@@ -202,15 +205,13 @@ void building_count_update() {
             if (b.num_workers > 0 && b.has_open_water_access) {
                 city_buildings_add_working_shipyard(b.id);
             }
-        break;
+            break;
         }
         // industry
         switch (b.type) {
         case BUILDING_GRAIN_FARM:
             increase_industry_count(RESOURCE_GRAIN, b.num_workers > 0);
             break;
-            //                    increase_industry_count(RESOURCE_STRAW, b->num_workers > 0); break; // TODO: how is
-            //                    this handled in Pharaoh??
         case BUILDING_BARLEY_FARM:
             increase_industry_count(RESOURCE_BARLEY, b.num_workers > 0);
             break;
@@ -232,14 +233,12 @@ void building_count_update() {
         case BUILDING_HENNA_FARM:
             increase_industry_count(RESOURCE_HENNA, b.num_workers > 0);
             break;
-            ////
         case BUILDING_HUNTING_LODGE:
             increase_industry_count(RESOURCE_GAMEMEAT, b.num_workers > 0);
             break;
         case BUILDING_FISHING_WHARF:
             increase_industry_count(RESOURCE_FISH, b.num_workers > 0);
             break;
-            ////
         case BUILDING_CLAY_PIT:
             increase_industry_count(RESOURCE_CLAY, b.num_workers > 0);
             break;
@@ -249,7 +248,6 @@ void building_count_update() {
         case BUILDING_WOOD_CUTTERS:
             increase_industry_count(RESOURCE_TIMBER, b.num_workers > 0);
             break;
-            ////
         case BUILDING_GEMSTONE_MINE:
             increase_industry_count(RESOURCE_GEMS, b.num_workers > 0);
             break;
@@ -259,7 +257,6 @@ void building_count_update() {
         case BUILDING_COPPER_MINE:
             increase_industry_count(RESOURCE_COPPER, b.num_workers > 0);
             break;
-            ////
         case BUILDING_STONE_QUARRY:
             increase_industry_count(RESOURCE_STONE, b.num_workers > 0);
             break;
@@ -272,7 +269,6 @@ void building_count_update() {
         case BUILDING_SANDSTONE_QUARRY:
             increase_industry_count(RESOURCE_SANDSTONE, b.num_workers > 0);
             break;
-            ////
         case BUILDING_POTTERY_WORKSHOP:
             increase_industry_count(RESOURCE_POTTERY, b.num_workers > 0);
             break;
@@ -297,16 +293,13 @@ void building_count_update() {
         case BUILDING_PAINT_WORKSHOP:
             increase_industry_count(RESOURCE_PAINT, b.num_workers > 0);
             break;
-            //                case BUILDING_OIL_WORKSHOP:
-            //                    increase_industry_count(RESOURCE_OIL_PH, b->num_workers > 0); break;
-            ////
         case BUILDING_WEAPONS_WORKSHOP:
             increase_industry_count(RESOURCE_WEAPONS, b.num_workers > 0);
             break;
         case BUILDING_CHARIOTS_WORKSHOP:
             increase_industry_count(RESOURCE_CHARIOTS, b.num_workers > 0);
             break;
-            ////
+
         default:
             return;
         }
