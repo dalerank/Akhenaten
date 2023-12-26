@@ -56,13 +56,13 @@ void figure::military_standard_action() {
     map_figure_add();
 
     sprite_image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
-    if (m->figure_type == FIGURE_FORT_SPEARMAN) {
+    if (m->figure_type == FIGURE_INFANTRY) {
         if (m->is_halted)
             cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 8;
         else {
             cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + anim_frame / 2;
         }
-    } else if (m->figure_type == FIGURE_FORT_CHARIOT) {
+    } else if (m->figure_type == FIGURE_CHARIOTEER) {
         if (m->is_halted)
             cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 26;
         else {
@@ -181,6 +181,7 @@ void figure::update_image_legionary(const formation* m, int dir) {
         image_id = image_id + dir + 8 * anim_frame;
     }
 }
+
 void figure::soldier_update_image(const formation* m) {
     int dir;
     if (action_state == FIGURE_ACTION_150_ATTACK)
@@ -194,11 +195,11 @@ void figure::soldier_update_image(const formation* m) {
     else
         dir = previous_tile_direction;
     dir = figure_image_normalize_direction(dir);
-    if (type == FIGURE_FORT_ARCHER)
+    if (type == FIGURE_ARCHER)
         update_image_javelin(dir);
-    else if (type == FIGURE_FORT_CHARIOT)
+    else if (type == FIGURE_INFANTRY)
         update_image_mounted(dir);
-    else if (type == FIGURE_FORT_SPEARMAN)
+    else if (type == FIGURE_SPEARMAN)
         update_image_legionary(m, dir);
 }
 
@@ -212,9 +213,9 @@ void figure::soldier_action() {
         kill();
 
     int speed_factor;
-    if (type == FIGURE_FORT_CHARIOT)
+    if (type == FIGURE_INFANTRY)
         speed_factor = 3;
-    else if (type == FIGURE_FORT_ARCHER)
+    else if (type == FIGURE_ARCHER)
         speed_factor = 2;
     else {
         speed_factor = 1;
@@ -313,9 +314,9 @@ void figure::soldier_action() {
             }
         }
         if (action_state != FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD) {
-            if (type == FIGURE_FORT_ARCHER)
+            if (type == FIGURE_ARCHER)
                 javelin_launch_missile();
-            else if (type == FIGURE_FORT_SPEARMAN)
+            else if (type == FIGURE_SPEARMAN)
                 legionary_attack_adjacent_enemy();
         }
         break;

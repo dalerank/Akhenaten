@@ -47,9 +47,9 @@ void figure::play_die_sound() {
     case FIGURE_TRADE_CARAVAN_DONKEY:
         break;
 
-    case FIGURE_FORT_ARCHER:
-    case FIGURE_FORT_CHARIOT:
-    case FIGURE_FORT_SPEARMAN:
+    case FIGURE_ARCHER:
+    case FIGURE_CHARIOTEER:
+    case FIGURE_INFANTRY:
     case FIGURE_INDIGENOUS_NATIVE:
     case FIGURE_TOWER_SENTRY:
     case FIGURE_ENEMY43_SPEAR:
@@ -88,13 +88,13 @@ void figure::play_die_sound() {
 void figure::play_hit_sound() {
     figure* f = this;
     switch (type) {
-    case FIGURE_FORT_SPEARMAN:
+    case FIGURE_INFANTRY:
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
         if (city_sound_update_hit_soldier())
             sound_effect_play(SOUND_EFFECT_SWORD);
         break;
 
-    case FIGURE_FORT_CHARIOT:
+    case FIGURE_CHARIOTEER:
     case FIGURE_ENEMY45_SWORD:
     case FIGURE_ENEMY48_CHARIOT:
     case FIGURE_ENEMY50_SWORD:
@@ -104,7 +104,7 @@ void figure::play_hit_sound() {
             sound_effect_play(SOUND_EFFECT_SWORD_SWING);
         break;
 
-    case FIGURE_FORT_ARCHER:
+    case FIGURE_ARCHER:
         if (city_sound_update_hit_soldier())
             sound_effect_play(SOUND_EFFECT_LIGHT_SWORD);
         break;

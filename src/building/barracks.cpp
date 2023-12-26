@@ -100,7 +100,7 @@ int building::barracks_create_soldier() {
         figure* f = figure_create(m->figure_type, road_access, DIR_0_TOP_RIGHT);
         f->formation_id = formation_id;
         f->formation_at_rest = 1;
-        if (m->figure_type == FIGURE_FORT_SPEARMAN) {
+        if (m->figure_type == FIGURE_STANDARD_BEARER) {
             if (stored_full_amount > 0)
                 stored_full_amount -= 100;
         }

@@ -87,13 +87,13 @@ static void draw_fort_anim(int x, int y, building* b, painter &ctx) {
     if (map_property_is_draw_tile(b->tile.grid_offset())) {
         int offset = 0;
         switch (b->subtype.fort_figure_type) {
-        case FIGURE_FORT_SPEARMAN:
+        case FIGURE_SPEARMAN:
             offset = 4;
             break;
-        case FIGURE_FORT_CHARIOT:
+        case FIGURE_INFANTRY:
             offset = 3;
             break;
-        case FIGURE_FORT_ARCHER:
+        case FIGURE_ARCHER:
             offset = 2;
             break;
         }

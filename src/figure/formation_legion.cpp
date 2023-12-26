@@ -20,7 +20,7 @@ int formation_legion_create_for_fort(building* fort) {
     if (!m->id)
         return 0;
 
-    figure* standard = figure_create(FIGURE_FORT_STANDARD, tile2i(0, 0), DIR_0_TOP_RIGHT);
+    figure* standard = figure_create(FIGURE_STANDARD_BEARER, tile2i(0, 0), DIR_0_TOP_RIGHT);
     standard->set_home(fort->id);
     standard->formation_id = m->id;
     m->standard_figure_id = standard->id;
@@ -57,12 +57,12 @@ void formation_legion_update_recruit_status(building* fort) {
         return;
     if (m->num_figures < m->max_figures) {
         int type = fort->subtype.fort_figure_type;
-        if (type == FIGURE_FORT_SPEARMAN)
+        if (type == FIGURE_SPEARMAN)
             m->legion_recruit_type = LEGION_RECRUIT_SPEARMAN;
-        else if (type == FIGURE_FORT_ARCHER)
+        else if (type == FIGURE_ARCHER)
             m->legion_recruit_type = LEGION_RECRUIT_ARCHER;
-        else if (type == FIGURE_FORT_CHARIOT)
-            m->legion_recruit_type = LEGION_RECRUIT_CHARIOT;
+        else if (type == FIGURE_INFANTRY)
+            m->legion_recruit_type = LEGION_RECRUIT_INFANTRY;
 
     } else { // too many figures
         int too_many = m->num_figures - m->max_figures;
@@ -161,9 +161,9 @@ static int dispatch_soldiers(formation* m) {
     }
     int strength_factor;
     if (m->has_military_training)
-        strength_factor = m->figure_type == FIGURE_FORT_SPEARMAN ? 3 : 2;
+        strength_factor = m->figure_type == FIGURE_STANDARD_BEARER ? 3 : 2;
     else {
-        strength_factor = m->figure_type == FIGURE_FORT_SPEARMAN ? 2 : 1;
+        strength_factor = m->figure_type == FIGURE_STANDARD_BEARER ? 2 : 1;
     }
     return strength_factor * m->num_figures;
 }
@@ -250,7 +250,7 @@ int formation_legion_curse(void) {
         formation* m = formation_get(i);
         if (m->in_use == 1 && m->is_legion) {
             int weight = m->num_figures;
-            if (m->figure_type == FIGURE_FORT_SPEARMAN)
+            if (m->figure_type == FIGURE_STANDARD_BEARER)
                 weight *= 2;
 
             if (weight > best_legion_weight) {
@@ -272,7 +272,7 @@ int formation_legion_curse(void) {
 }
 
 bool figure::is_formation() {
-    if (is_legion() || type == FIGURE_FORT_STANDARD)
+    if (is_legion() || type == FIGURE_STANDARD_BEARER)
         return formation_id;
 
     return 0;

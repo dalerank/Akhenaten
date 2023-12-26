@@ -29,7 +29,7 @@ void figure::missile_fire_at(int target_id, e_figure_type missile_type) {
 
 bool figure::is_citizen() {
     if (action_state != FIGURE_ACTION_149_CORPSE) {
-        if ((type && type != FIGURE_EXPLOSION && type != FIGURE_FORT_STANDARD && type != FIGURE_MAP_FLAG
+        if ((type && type != FIGURE_EXPLOSION && type != FIGURE_STANDARD_BEARER && type != FIGURE_MAP_FLAG
              && type != FIGURE_FLOTSAM && type < FIGURE_INDIGENOUS_NATIVE)
             || type == FIGURE_TOWER_SENTRY) {
             return id;
@@ -100,12 +100,13 @@ void figure::arrow_action() {
     int should_die = move_ticks_cross_country(4);
     int target_id = get_non_citizen_on_tile(tile.grid_offset());
     if (target_id) {
-        missile_hit_target(target_id, FIGURE_FORT_SPEARMAN);
+        missile_hit_target(target_id, FIGURE_STANDARD_BEARER);
         sound_effect_play(SOUND_EFFECT_ARROW_HIT);
     } else if (should_die) {
         poof();
     }
 }
+
 void figure::spear_action() {
     use_cross_country = true;
     progress_on_tile++;
@@ -116,7 +117,7 @@ void figure::spear_action() {
     int should_die = move_ticks_cross_country(4);
     int target_id = get_citizen_on_tile(tile.grid_offset());
     if (target_id) {
-        missile_hit_target(target_id, FIGURE_FORT_SPEARMAN);
+        missile_hit_target(target_id, FIGURE_STANDARD_BEARER);
         sound_effect_play(SOUND_EFFECT_JAVELIN);
     } else if (should_die) {
         poof();
@@ -125,6 +126,7 @@ void figure::spear_action() {
     int dir = (16 + direction - 2 * city_view_orientation()) % 16;
     sprite_image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + dir;
 }
+
 void figure::javelin_action() {
     use_cross_country = true;
     progress_on_tile++;
@@ -141,6 +143,7 @@ void figure::javelin_action() {
         poof();
     }
 }
+
 void figure::bolt_action() {
     use_cross_country = true;
     progress_on_tile++;

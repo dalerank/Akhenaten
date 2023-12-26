@@ -122,15 +122,15 @@ int figure_name_get(int type, int enemy) {
     case FIGURE_NOBLES:
         return get_next_name(&data.nobles, 66, 32);
 
-    case FIGURE_FORT_ARCHER:
+    case FIGURE_ARCHER:
     case FIGURE_ENEMY_CAESAR_JAVELIN:
         return get_next_name(&data.javelin_thrower, 231, 32);
 
-    case FIGURE_FORT_SPEARMAN:
+    case FIGURE_SPEARMAN:
     case FIGURE_ENEMY_CAESAR_MOUNTED:
         return get_next_name(&data.cavalry, 264, 32);
 
-    case FIGURE_FORT_CHARIOT:
+    case FIGURE_INFANTRY:
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
         return get_next_name(&data.legionary, 297, 32);
 
@@ -169,7 +169,7 @@ int figure_name_get(int type, int enemy) {
         }
 
     case FIGURE_EXPLOSION:
-    case FIGURE_FORT_STANDARD:
+    case FIGURE_STANDARD_BEARER:
     case FIGURE_FISHING_POINT:
     case FIGURE_CREATURE:
     case FIGURE_CHARIOR_RACER:

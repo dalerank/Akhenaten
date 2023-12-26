@@ -218,9 +218,9 @@ void window_building_draw_legion_info(object_info* c) {
     ImageDraw::img_generic(ctx, image_id, c->offset + vec2i{16 + (40 - image_get(image_id)->width) / 2, 16});
     // standard flag
     image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS);
-    if (m->figure_type == FIGURE_FORT_ARCHER) {
+    if (m->figure_type == FIGURE_ARCHER) {
         image_id += 9;
-    } else if (m->figure_type == FIGURE_FORT_CHARIOT) {
+    } else if (m->figure_type == FIGURE_CHARIOTEER) {
         image_id += 18;
     }
 
@@ -281,7 +281,7 @@ void window_building_draw_legion_info(object_info* c) {
         if (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT)
             index = 1;
 
-        if (m->figure_type == FIGURE_FORT_SPEARMAN)
+        if (m->figure_type == FIGURE_INFANTRY)
             offsets = OFFSETS_LEGIONARY[index];
         else {
             offsets = OFFSETS_OTHER[index];
@@ -318,7 +318,7 @@ void window_building_draw_legion_info_foreground(object_info* c) {
             if (data.focus_button_id - 1 == i)
                 has_focus = 1;
 
-        } else if (m->figure_type == FIGURE_FORT_SPEARMAN) {
+        } else if (m->figure_type == FIGURE_INFANTRY) {
             if (i == 0 && m->layout == FORMATION_TORTOISE)
                 has_focus = 1;
             else if (i == 1 && m->layout == FORMATION_COLUMN)
@@ -351,7 +351,7 @@ void window_building_draw_legion_info_foreground(object_info* c) {
     switch (data.focus_button_id) {
     // single line or testudo
     case 1:
-        if (m->figure_type == FIGURE_FORT_SPEARMAN) {
+        if (m->figure_type == FIGURE_INFANTRY) {
             title_id = 12;
             text_id = m->has_military_training ? 18 : 17;
         } else {
@@ -360,7 +360,7 @@ void window_building_draw_legion_info_foreground(object_info* c) {
         }
         break;
     case 2:
-        if (m->figure_type == FIGURE_FORT_SPEARMAN) {
+        if (m->figure_type == FIGURE_INFANTRY) {
             title_id = 13;
             text_id = m->has_military_training ? 19 : 17;
         } else {
@@ -424,7 +424,7 @@ int window_building_handle_mouse_legion_info(const mouse* m, object_info* c) {
     auto& data = g_military_data;
     data.context_for_callback = c;
     int button_id = generic_buttons_handle_mouse(m, c->offset.x, c->offset.y, layout_buttons, 5, &data.focus_button_id);
-    if (formation_get(c->formation_id)->figure_type == FIGURE_FORT_SPEARMAN) {
+    if (formation_get(c->formation_id)->figure_type == FIGURE_INFANTRY) {
         if (data.focus_button_id == 1 || (data.focus_button_id == 2 && c->formation_types == 3))
             data.focus_button_id = 0;
     }
@@ -460,7 +460,7 @@ static void button_layout(int index, int param2) {
         return;
     // store layout in case of mop up
     int new_layout = m->layout;
-    if (m->figure_type == FIGURE_FORT_SPEARMAN) {
+    if (m->figure_type == FIGURE_INFANTRY) {
         switch (index) {
         case 0:
             new_layout = FORMATION_TORTOISE;

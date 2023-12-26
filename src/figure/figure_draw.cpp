@@ -183,7 +183,7 @@ void figure::city_draw_figure(painter &ctx, int highlight, vec2i* coord_out) {
             //                hippodrome_horse_adjust(&x, &y, wait_ticks_missile);
             //                draw_figure_with_cart(pixel, highlight, coord_out);
             //                break;
-        case FIGURE_FORT_STANDARD:
+        case FIGURE_STANDARD_BEARER:
             draw_fort_standard(cached_pos, highlight, coord_out);
             break;
         case FIGURE_MAP_FLAG:
