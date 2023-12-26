@@ -257,7 +257,7 @@ void building_menu_toggle_building(int type, bool enabled) {
         if (building_is_large_temple(type))
             building_menu_toggle_building(BUILDING_MENU_TEMPLE_COMPLEX);
 
-        if (building_is_guild(type))
+        if (building_is_guild((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_CONSTURCTION_GUILDS);
 
         if (building_is_beautification(type))

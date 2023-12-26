@@ -46,11 +46,13 @@ void building_monument_initialize_deliveries();
 bool building_monument_need_workers(building *b);
 int building_monument_is_construction_halted(building *b);
 int building_monument_toggle_construction_halted(building *b);
-int building_monument_is_unfinished_monument(const building *b);
+int building_monument_is_unfinished(const building *b);
 
 int get_monument_part_image(int part, int orientation, int level);
 int get_temple_complex_part_image(int type, int part, int orientation, int level);
 
 uint32_t map_monuments_get_progress(int grid_offset);
+inline uint32_t map_monuments_get_progress(tile2i tile) { return map_monuments_get_progress(tile.grid_offset()); }
 void map_monuments_set_progress(int grid_offset, uint32_t progress);
+inline void map_monuments_set_progress(tile2i tile, uint32_t progress) { return map_monuments_set_progress(tile.grid_offset(), progress); }
 void map_monuments_clear();

@@ -9,6 +9,7 @@
 #include "building/building_bazaar.h"
 #include "building/model.h"
 #include "building/storage_yard.h"
+#include "building/count.h"
 #include "building/monument_mastaba.h"
 #include "city/buildings.h"
 #include "city/data_private.h"
@@ -759,6 +760,51 @@ void building::spawn_figure_industry() {
         create_cartpusher(output_resource_first_id, 100);
     }
 }
+
+void building::spawn_figure_guilds() {
+    check_labor_problem();
+    if (!has_road_access) {
+        return;
+    }
+
+    common_spawn_labor_seeker(100);
+    int pct_workers = worker_percentage();
+    if (pct_workers < 50) {
+        return;
+    }
+
+    int spawn_delay = figure_spawn_timer();
+    if (spawn_delay == -1) {
+        return;
+    }
+
+    figure_spawn_delay++;
+    if (figure_spawn_delay < spawn_delay) {
+        return;
+    }
+    
+    figure_spawn_delay = 0;
+    if (!can_spawn_bricklayer_man(FIGURE_BRICKLAYER, data.guild.max_workers)) {
+        return;
+    }
+
+    building* monument = buildings_valid_first([] (building &b) {
+        if (!b.is_monument() || building_monument_is_unfinished(&b)) {
+            return false;
+        }
+
+        return b.data.monuments.phase == 2;
+    });
+
+    if (!monument) {
+        return;
+    }
+
+    auto f = create_figure_generic(FIGURE_BRICKLAYER, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
+    monument->monument_add_workers(f->id);
+    f->wait_ticks = random_short() % 30; // ok
+}
+
 void building::spawn_figure_farms() {
     bool is_floodplain = building_is_floodplain_farm(*this);
     if (!is_floodplain && has_road_access) { // only for meadow farms
@@ -856,6 +902,7 @@ void building::spawn_figure_wharf() {
         }
     }
 }
+
 void building::spawn_figure_shipyard() {
     //    check_labor_problem();
     //    map_point road;
@@ -887,6 +934,7 @@ void building::spawn_figure_shipyard() {
     //        }
     //    }
 }
+
 void building::spawn_figure_dock() {
     //    check_labor_problem();
     //    map_point road;
@@ -935,6 +983,7 @@ void building::spawn_figure_dock() {
     //        }
     //    }
 }
+
 void building::spawn_figure_storageyard() {
     check_labor_problem();
     building* space = this;
@@ -1025,7 +1074,7 @@ void building::spawn_figure_hunting_lodge() {
         return;
     }
     
-    if (num_workers < model_get_building(BUILDING_MILITARY_ACADEMY)->laborers) {
+    if (num_workers < model_get_building(BUILDING_HUNTING_LODGE)->laborers) {
         common_spawn_labor_seeker(100);
     }
 
@@ -1050,7 +1099,7 @@ void building::spawn_figure_hunting_lodge() {
     }
 }
 
-int building::get_gatherers_number(e_figure_type ftype) {
+int building::get_figures_number(e_figure_type ftype) {
     int gatherers_this_yard = 0;
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure* f = figure_get(i);
@@ -1060,6 +1109,22 @@ int building::get_gatherers_number(e_figure_type ftype) {
     }
 
     return gatherers_this_yard;
+}
+
+bool building::can_spawn_bricklayer_man(e_figure_type ftype, int max_gatherers_per_building) {
+    if (!is_guild()) {
+        return false;
+    }
+
+    bool can_spawn = false;
+    switch (ftype) {
+    case FIGURE_BRICKLAYER:
+        can_spawn = building_count_active(BUILDING_SMALL_MASTABA)
+                        && (get_figures_number(FIGURE_BRICKLAYER) < data.guild.max_workers);
+        break;
+    }
+
+    return can_spawn;
 }
 
 bool building::can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person) {
@@ -1078,7 +1143,7 @@ bool building::can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_bui
         return false;
     }
 
-    int gatherers_this_yard = get_gatherers_number(ftype);
+    int gatherers_this_yard = get_figures_number(ftype);
 
     // can only spawn if there's space for more reed in the building
     int max_loads = 500 / carry_per_person;
@@ -1338,14 +1403,16 @@ bool building::figure_generate() {
         case BUILDING_DENTIST: spawn_figure_dentist(); break;
         case BUILDING_MORTUARY: spawn_figure_mortuary(); break;
         case BUILDING_PHYSICIAN: spawn_figure_physician(); break;
-            //            case BUILDING_MISSION_POST:
-            //                spawn_figure_mission_post(); break;
         case BUILDING_DOCK: spawn_figure_dock(); break;
         case BUILDING_FISHING_WHARF: spawn_figure_wharf(); break;
         case BUILDING_SHIPWRIGHT: spawn_figure_shipyard(); break;
         case BUILDING_UNUSED_NATIVE_HUT_88: spawn_figure_native_hut(); break;
         case BUILDING_UNUSED_NATIVE_MEETING_89: spawn_figure_native_meeting(); break;
         case BUILDING_UNUSED_NATIVE_CROPS_93: update_native_crop_progress(); break;
+
+        case BUILDING_BRICKLAYERS_GUILD:
+            spawn_figure_guilds();
+            break;
 
         case BUILDING_BARLEY_FARM:
         case BUILDING_FLAX_FARM:

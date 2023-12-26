@@ -89,7 +89,7 @@ static int top(int input) {
     return input > 100 ? 100 : input;
 }
 
-static int god_coverage_total(e_god god, int temple, int shrine, int complex) {
+static int god_coverage_total(e_god god, e_building_type temple, e_building_type shrine, e_building_type complex) {
     switch (city_gods_is_known(god)) {
     default:
         return 0;

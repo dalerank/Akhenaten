@@ -152,33 +152,31 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->output_resource_first_id = RESOURCE_TIMBER;
         b->data.industry.max_gatheres = 1;
         break;
+    case BUILDING_BRICKLAYERS_GUILD:
+        b->data.guild.max_workers = 1;
+        break;
     case BUILDING_CLAY_PIT:
         b->output_resource_first_id = RESOURCE_CLAY;
         break;
     case BUILDING_BREWERY_WORKSHOP:
         b->data.industry.first_material_id = RESOURCE_BARLEY;
         b->output_resource_first_id = RESOURCE_BEER;
-        //            b->subtype.workshop_type = WORKSHOP_BEER;
         break;
     case BUILDING_WEAVER_WORKSHOP:
         b->data.industry.first_material_id = RESOURCE_FLAX;
         b->output_resource_first_id = RESOURCE_LINEN;
-        //            b->subtype.workshop_type = WORKSHOP_LINEN;
         break;
     case BUILDING_WEAPONS_WORKSHOP:
         b->data.industry.first_material_id = RESOURCE_COPPER;
         b->output_resource_first_id = RESOURCE_WEAPONS;
-        //            b->subtype.workshop_type = WORKSHOP_WEAPONS;
         break;
     case BUILDING_JEWELS_WORKSHOP:
         b->data.industry.first_material_id = RESOURCE_GEMS;
         b->output_resource_first_id = RESOURCE_LUXURY_GOODS;
-        //            b->subtype.workshop_type = WORKSHOP_JEWELS;
         break;
     case BUILDING_POTTERY_WORKSHOP:
         b->data.industry.first_material_id = RESOURCE_CLAY;
         b->output_resource_first_id = RESOURCE_POTTERY;
-        //            b->subtype.workshop_type = WORKSHOP_POTTERY;
         break;
     case BUILDING_HUNTING_LODGE:
         b->output_resource_first_id = RESOURCE_GAMEMEAT;
@@ -199,7 +197,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_CATTLE_RANCH:
         b->data.industry.first_material_id = RESOURCE_STRAW;
         b->output_resource_first_id = RESOURCE_MEAT;
-        //            b->subtype.workshop_type = WORKSHOP_CATTLE;
         break;
     case BUILDING_FIGS_FARM:
         b->output_resource_first_id = RESOURCE_FIGS;
@@ -208,19 +205,16 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_PAPYRUS_WORKSHOP:
         b->data.industry.first_material_id = RESOURCE_REEDS;
         b->output_resource_first_id = RESOURCE_PAPYRUS;
-        //            b->subtype.workshop_type = WORKSHOP_PAPYRUS;
         break;
     case BUILDING_BRICKS_WORKSHOP:
         b->data.industry.first_material_id = RESOURCE_STRAW;
         b->data.industry.second_material_id = RESOURCE_CLAY;
         b->output_resource_first_id = RESOURCE_BRICKS;
-        //            b->subtype.workshop_type = WORKSHOP_BRICKS;
         break;
     case BUILDING_CHARIOTS_WORKSHOP:
         b->data.industry.first_material_id = RESOURCE_TIMBER;
         b->data.industry.second_material_id = RESOURCE_WEAPONS;
         b->output_resource_first_id = RESOURCE_CHARIOTS;
-        //            b->subtype.workshop_type = WORKSHOP_CHARIOTS;
         break;
     case BUILDING_GRANITE_QUARRY:
         b->output_resource_first_id = RESOURCE_GRANITE;
@@ -659,8 +653,8 @@ bool building_is_large_temple(int type) {
 bool building_is_shrine(int type) {
     return (type >= BUILDING_SHRINE_OSIRIS && type <= BUILDING_SHRINE_BAST);
 }
-bool building_is_guild(int type) {
-    return (type >= BUILDING_CARPENTERS_GUILD && type <= BUILDING_STONEMASONS_GUILD);
+bool building_is_guild(e_building_type type) {
+    return building_type_any_of(type, BUILDING_CARPENTERS_GUILD, BUILDING_STONEMASONS_GUILD, BUILDING_BRICKLAYERS_GUILD);
 }
 bool building_is_statue(int type) {
     return (type >= BUILDING_SMALL_STATUE && type <= BUILDING_LARGE_STATUE);
@@ -940,7 +934,7 @@ bool resource_required_by_workshop(building* b, e_resource resource) {
 // iob->bind(BIND_SIGNATURE_INT32, &//    extra.unfixable_houses);
 // }
 
-static void read_type_data(io_buffer* iob, building* b, size_t version) {
+static void read_type_data(io_buffer *iob, building *b, size_t version) {
     if (building_is_house(b->type)) {
         for (e_resource e = RESOURCE_NONE; e < RESOURCES_FOODS_MAX; ++e) {
             iob->bind(BIND_SIGNATURE_INT16, &b->data.house.foods[e]);
@@ -979,14 +973,11 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.devolve_delay);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.evolve_text_id);
 
-        if (version <= 160) { b->data.house.shrine_access = 0; } 
-        else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.shrine_access); }
+        if (version <= 160) { b->data.house.shrine_access = 0; }         else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.shrine_access); }
 
-        if (version <= 162) { b->data.house.bazaar_access = 0; } 
-        else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.bazaar_access); }
+        if (version <= 162) { b->data.house.bazaar_access = 0; }         else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.bazaar_access); }
 
-        if (version <= 163) { b->data.house.water_supply = 0; } 
-        else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.water_supply); }
+        if (version <= 163) { b->data.house.water_supply = 0; }         else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.water_supply); }
 
     } else if (b->type == BUILDING_BAZAAR) {
         iob->bind____skip(2);
@@ -1079,6 +1070,8 @@ static void read_type_data(io_buffer* iob, building* b, size_t version) {
         iob->bind____skip(88);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.orientation);
 
+    } else if (building_is_guild(b->type)) {
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.guild.max_workers);
     } else {
         iob->bind____skip(26);
         iob->bind____skip(58);

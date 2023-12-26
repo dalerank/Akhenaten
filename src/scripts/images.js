@@ -131,6 +131,8 @@ images = [
 	{img: IMG_BRICKLAYER_DEATH, pack:PACK_SPR_MAIN, id:110},
 	{img: IMG_BRICKLAYER_WORK, pack:PACK_SPR_MAIN, id:111},
 	{img: IMG_BRICKLAYER_IDLE, pack:PACK_SPR_MAIN, id:112},
+	{img: IMG_WORKER_AKNH, pack:PACK_SPR_MAIN, id:116},
+	{img: IMG_WORKER_AKNH_WORK, pack:PACK_SPR_MAIN, id:117},
 ]
 
 cart_offsets = [

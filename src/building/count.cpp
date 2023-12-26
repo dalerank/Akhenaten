@@ -313,16 +313,19 @@ void building_count_update() {
     });
 }
 
-int building_count_active(int type) {
+int building_count_active(e_building_type type) {
     return g_count_data.buildings[type].active;
 }
-int building_count_total(int type) {
+
+int building_count_total(e_building_type type) {
     return g_count_data.buildings[type].total;
 }
-int building_count_industry_active(int resource) {
+
+int building_count_industry_active(e_resource resource) {
     return g_count_data.industry[resource].active;
 }
-int building_count_industry_total(int resource) {
+
+int building_count_industry_total(e_resource resource) {
     return g_count_data.industry[resource].total;
 }
 

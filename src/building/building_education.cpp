@@ -26,14 +26,11 @@ struct building_scribal_school_t {
 ANK_REGISTER_CONFIG_ITERATOR(config_load_scribal_school);
 void config_load_scribal_school(archive arch) {
     arch.load_global_section("building_scribal_school", [] (archive arch) {
-        building_scribal_school.papyrus.x = arch.read_integer("papyrus_x");
-        building_scribal_school.papyrus.y = arch.read_integer("papyrus_y");
+        building_scribal_school.papyrus = arch.read_vec2i("papyrus_icon");
 
         arch.read_object_section("info", [] (archive arch) {
-            building_scribal_school.icon_res.x = arch.read_integer("icon_res_x");
-            building_scribal_school.icon_res.y = arch.read_integer("icon_res_y");
-            building_scribal_school.text_res.x = arch.read_integer("text_res_x");
-            building_scribal_school.text_res.y = arch.read_integer("text_res_y");
+            building_scribal_school.icon_res = arch.read_vec2i("icon_res");
+            building_scribal_school.text_res = arch.read_vec2i("text_res");
         });
     });
 }

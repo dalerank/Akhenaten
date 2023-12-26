@@ -180,7 +180,7 @@ static void game_cheat_finish_phase(pcstr args) {
             return;
         }
 
-        if (!building_monument_is_unfinished_monument(&b)) {
+        if (!building_monument_is_unfinished(&b)) {
             return;
         }
 

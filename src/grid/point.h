@@ -38,6 +38,9 @@ public:
     map_point shifted(int _x, int _y);
     map_point shifted(int _grid_offset);
     inline map_point shifted(map_point offset) { return this->shifted(offset.p_X, offset.p_Y); }
+    inline map_point dist2i(map_point o) { return map_point(std::abs(this->x() - o.x()), std::abs(this->y() - o.y())); }
+
+    inline map_point mod(int x, int y) { return map_point(this->x() % x, this->y() % y); }
 
     // SET BY CONSTRUCTION
     void set(int _x, int _y);

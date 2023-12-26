@@ -108,21 +108,23 @@ static bool PTAH_warehouse_restock() {
 
 static bool PTAH_industry_restock() {
     // restocks shipwrights, weavers and jewelers
-    int industries[3] = {BUILDING_SHIPWRIGHT, BUILDING_WEAVER_WORKSHOP, BUILDING_JEWELS_WORKSHOP};
-    int industry_resource[3] = {-1, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
+    e_building_type industries[3] = {BUILDING_SHIPWRIGHT, BUILDING_WEAVER_WORKSHOP, BUILDING_JEWELS_WORKSHOP};
+    e_resource industry_resource[3] = {RESOURCE_NONE, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
 
     // search for industries
     int industries_found = 0;
     for (int i = 0; i < 6; ++i) {
         if (building_count_total(industries[i]) > 0
-            || (industry_resource[i] != -1 && building_count_industry_active(industry_resource[i]) > 0)) {
+            || (industry_resource[i] != RESOURCE_NONE && building_count_industry_active(industry_resource[i]) > 0)) {
             industries_found++;
         } else {
-            industries[i] = 0;
+            industries[i] = BUILDING_NONE;
         }
     }
-    if (industries_found == 0)
+
+    if (industries_found == 0) {
         return false;
+    }
 
     int randm = anti_scum_random_15bit() % industries_found;
     int industry = 0;
@@ -172,17 +174,17 @@ static bool PTAH_warehouse_destruction() {
 
 static bool PTAH_industry_destruction() {
     // destroys random industry, if found
-    int industries[6] = {BUILDING_GOLD_MINE, BUILDING_GEMSTONE_MINE, BUILDING_CLAY_PIT, BUILDING_SHIPWRIGHT, BUILDING_WEAVER_WORKSHOP, BUILDING_JEWELS_WORKSHOP};
-    int industry_resource[6] = {RESOURCE_GOLD, RESOURCE_GEMS, RESOURCE_CLAY, -1, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
+    e_building_type industries[6] = {BUILDING_GOLD_MINE, BUILDING_GEMSTONE_MINE, BUILDING_CLAY_PIT, BUILDING_SHIPWRIGHT, BUILDING_WEAVER_WORKSHOP, BUILDING_JEWELS_WORKSHOP};
+    e_resource industry_resource[6] = {RESOURCE_GOLD, RESOURCE_GEMS, RESOURCE_CLAY, RESOURCE_NONE, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
 
     // search for industries
     int industries_found = 0;
     for (int i = 0; i < 6; ++i) {
         if (building_count_total(industries[i]) > 0
-            || (industry_resource[i] != -1 && building_count_industry_active(industry_resource[i]) > 0)) {
+            || (industry_resource[i] != RESOURCE_NONE && building_count_industry_active(industry_resource[i]) > 0)) {
             industries_found++;
         } else {
-            industries[i] = 0;
+            industries[i] = BUILDING_NONE;
         }
     }
 

@@ -137,6 +137,9 @@ public:
         struct granary_t {
             short resource_stored[16];
         } granary;
+        struct guild_t {
+            uint8_t max_workers;
+        } guild;
         struct industry_t {
             short ready_production;
             short progress;
@@ -331,6 +334,7 @@ public:
     void spawn_figure_mortuary();
     void spawn_figure_physician();
     void spawn_figure_magistrate();
+    void spawn_figure_guilds();
     void spawn_figure_temple();
     void spawn_figure_watersupply();
     void set_greate_palace_graphic();
@@ -352,8 +356,9 @@ public:
     void spawn_figure_barracks();
 
     bool can_spawn_ostrich_hunter();
-    int get_gatherers_number(e_figure_type ftype);
+    int get_figures_number(e_figure_type ftype);
     bool can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person);
+    bool can_spawn_bricklayer_man(e_figure_type ftype, int max_gatherers_per_building);
 
     void update_native_crop_progress();
     void update_road_access();
@@ -447,7 +452,7 @@ bool building_is_governor_mansion(int type);
 bool building_is_temple(int type);
 bool building_is_large_temple(int type);
 bool building_is_shrine(int type);
-bool building_is_guild(int type);
+bool building_is_guild(e_building_type type);
 bool building_is_statue(int type);
 bool building_is_beautification(int type);
 bool building_is_water_crossing(int type);
@@ -495,7 +500,7 @@ inline building* building_first_of_type(Args ... types) {
 }
 
 template<typename T>
-building* buildings_valid_first(T func) {
+inline building* buildings_valid_first(T func) {
     for (auto &b: city_buildings()) {
         if (b.is_valid()) {
             if (func(b)) {
@@ -503,6 +508,7 @@ building* buildings_valid_first(T func) {
             }
         }
     }
+    return nullptr;
 }
 
 template<typename T>

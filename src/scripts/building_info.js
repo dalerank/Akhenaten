@@ -35,12 +35,10 @@ building_booth = {
 }
 
 building_scribal_school = {
-  papyrus_x : 61,
-  papyrus_y : 14,
+  papyrus_icon : {x: 61, y: 14},
 
   info : {
-    icon_res_x : 32,
-    icon_res_y : 106,
+    icon_res : {x: 32, y: 106},
     text_res_x : 60,
     text_res_y : 110,
   }

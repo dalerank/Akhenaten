@@ -115,7 +115,7 @@ void draw_farm_worker(painter &ctx, int direction, int action, int frame_offset,
         break;
     }
     int final_offset = action_offset + direction + 8 * (frame_offset - 1);
-    ImageDraw::img_sprite(ctx, image_id_from_group(GROUP_FIGURE_WORKER_PH) + final_offset, coords.x, coords.y, color_mask);
+    ImageDraw::img_sprite(ctx, image_group(IMG_WORKER_AKNH) + final_offset, coords.x, coords.y, color_mask);
 }
 
 static const vec2i FARM_TILE_OFFSETS_FLOODPLAIN[9] = {{60, 0}, {90, 15}, {120, 30}, {30, 15}, {60, 30}, {90, 45}, {0, 30}, {30, 45}, {60, 60}};

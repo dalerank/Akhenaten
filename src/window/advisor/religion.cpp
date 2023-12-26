@@ -101,7 +101,8 @@ static void draw_festival_info(int y_offset) {
         lang_text_draw_multiline(58, 18 + get_festival_advice(), vec2i{56, 305 + y_offset}, 400, FONT_NORMAL_WHITE_ON_DARK);
     }
 }
-static void draw_god_row(e_god god, int y_offset, int temple, int complex, int shrine) {
+
+static void draw_god_row(e_god god, int y_offset, e_building_type temple, e_building_type complex, e_building_type shrine) {
     painter ctx = game.painter();
     //    lang_text_draw(59, 11 + god, 40, y_offset, FONT_NORMAL_WHITE);
     //    lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);

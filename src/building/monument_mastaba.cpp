@@ -46,8 +46,27 @@ void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id,
     }
 }
 
+tile2i building_small_mastaba_bricks_waiting_tile(building *b) {
+    if (b->type != BUILDING_SMALL_MASTABA) {
+        return tile2i{-1, -1};
+    }
+
+    grid_tiles tiles = map_grid_get_tiles(b, 0);
+    tile2i tile = map_grid_area_first(tiles, [b] (tile2i tile) {
+        int progress = map_monuments_get_progress(tile.grid_offset());
+        tile2i offset = tile.dist2i(b->tile).mod(4, 4);
+        return !progress && (offset.x() == 1 || offset.x() == 3) && (offset.y() == 1 || offset.y() == 3);
+    });
+
+    return tile;
+}
+
 tile2i building_small_mastaba_tile4work(building *b) {
     if (b->type != BUILDING_SMALL_MASTABA) {
+        return tile2i{-1, -1};
+    }
+
+    if (b->data.monuments.phase >= 2) {
         return tile2i{-1, -1};
     }
 
