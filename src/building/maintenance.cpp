@@ -258,7 +258,7 @@ void building_maintenance_check_kingdome_access(void) {
                 OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/House/map_routing_distance");
                 b->distance_from_entry = map_routing_distance(road_tile.grid_offset());
                 b->house_unreachable_ticks = 0;
-            } else if (map_closest_reachable_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
+            } else if (map_closest_reachable_road_within_radius(b->tile, b->size, 2, road_tile)) {
                 b->distance_from_entry = map_routing_distance(road_tile.grid_offset());
                 b->house_unreachable_ticks = 0;
             } else {

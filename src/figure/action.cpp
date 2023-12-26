@@ -238,7 +238,7 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, e_terrain_usage 
         if (dest->type == BUILDING_STORAGE_YARD || dest->type == BUILDING_STORAGE_YARD_SPACE) {
             building* main = dest->main();
             if (terrainchoice == TERRAIN_USAGE_ROADS) {
-                found_road = map_closest_reachable_road_within_radius(main->tile.x(), main->tile.y(), 3, 1, finish_tile);
+                found_road = map_closest_reachable_road_within_radius(main->tile, 3, 1, finish_tile);
             }
 
             if (!found_road) {
@@ -261,7 +261,7 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, e_terrain_usage 
                 finish_tile = main->road_access;
             } else {
                 if (terrainchoice == TERRAIN_USAGE_ROADS) {
-                    found_road = map_closest_reachable_road_within_radius(dest->tile.x(), dest->tile.y(), dest->size, 1, finish_tile);
+                    found_road = map_closest_reachable_road_within_radius(dest->tile, dest->size, 1, finish_tile);
                 }
 
                 if (!found_road) {

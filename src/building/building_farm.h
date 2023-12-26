@@ -14,3 +14,4 @@ enum e_farm_worker_state {
 
 void building_farm_draw_info(object_info& c);
 void building_farm_draw_workers(painter &ctx, building *b, int grid_offset, vec2i pos);
+bool building_farm_time_to_deliver(bool floodplains, int resource_id = 0);

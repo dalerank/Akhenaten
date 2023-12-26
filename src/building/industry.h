@@ -25,8 +25,6 @@ struct delivery_destination {
 
 delivery_destination building_get_asker_for_resource(tile2i tile, e_building_type btype, e_resource resource, int road_network_id, int distance_from_entry);
 
-bool building_farm_time_to_deliver(bool floodplains, int resource_id = 0);
-
 void building_curse_farms(int big_curse);
 void building_farm_deplete_soil(building* b);
 

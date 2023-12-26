@@ -811,20 +811,6 @@ void building::spawn_figure_guilds() {
     f->wait_ticks = random_short() % 30; // ok
 }
 
-void building::spawn_figure_farms() {
-    bool is_floodplain = building_is_floodplain_farm(*this);
-    if (!is_floodplain && has_road_access) { // only for meadow farms
-        common_spawn_labor_seeker(50);
-        if (building_farm_time_to_deliver(false, output_resource_first_id)) { // UGH!!
-            spawn_figure_farm_harvests();
-        }
-    } else if (is_floodplain) {
-        if (building_farm_time_to_deliver(true)) {
-            spawn_figure_farm_harvests();
-        }
-    }
-}
-
 void building::spawn_figure_farm_harvests() {
     if (is_floodplain_farm()) { // floodplain farms
         // In OG Pharaoh, farms can NOT send out a cartpusher if the cartpusher
@@ -1307,11 +1293,7 @@ void building::update_month() {
     case BUILDING_WELL:
         {
             int avg_desirability = map_desirabilty_avg(tile.x(), tile.y(), 4);
-            if (avg_desirability > 30) {
-                map_image_set(tile.grid_offset(), IMG_WELL_FANCY);
-            } else {
-                map_image_set(tile.grid_offset(), IMG_WELL);
-            }
+            map_image_set(tile, avg_desirability > 30 ? IMG_WELL_FANCY : IMG_WELL);
         }
         break;
     }
@@ -1326,7 +1308,7 @@ void building::update_road_access() {
         break;
 
     case BUILDING_BURNING_RUIN:
-        has_road_access = burning_ruin_can_be_accessed(tile.x(), tile.y(), &road_access);
+        has_road_access = burning_ruin_can_be_accessed(tile, road_access);
         break;
 
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:

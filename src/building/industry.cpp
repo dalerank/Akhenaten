@@ -304,48 +304,6 @@ void building_industry_start_new_production(building* b) {
     }
 }
 
-static bool farm_harvesting_month_for_produce(int resource_id, int month) {
-    switch (resource_id) {
-    // annual meadow farms
-    case RESOURCE_CHICKPEAS:
-    case RESOURCE_LETTUCE:
-        return (month == MONTH_APRIL);
-        break;
-    case RESOURCE_FIGS:
-        return (month == MONTH_SEPTEMPTER);
-        break;
-    case RESOURCE_FLAX:
-        return (month == MONTH_DECEMBER);
-        break;
-
-    // biannual meadow farms
-    case RESOURCE_GRAIN:
-        return (month == MONTH_JANUARY || month == MONTH_MAY);
-        break;
-    case RESOURCE_BARLEY:
-        return (month == MONTH_FEBRUARY || month == MONTH_AUGUST);
-        break;
-    case RESOURCE_POMEGRANATES:
-        return (month == MONTH_JUNE || month == MONTH_NOVEMBER);
-        break;
-    }
-    return false;
-}
-
-bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
-    if (floodplains) {
-        auto current_cycle = floods_current_cycle();
-        auto start_cycle = floods_start_cycle();
-        auto harvest_cycle = start_cycle - 28.0f;
-        return floodplains_is(FLOOD_STATE_IMMINENT) && current_cycle >= harvest_cycle;
-    } else {
-        if (game_time_day() < 2 && farm_harvesting_month_for_produce(resource_id, game_time_month()))
-            return true;
-
-        return false;
-    }
-}
-
 void building_curse_farms(int big_curse) {
     // TODO
     //    for (int i = 1; i < MAX_BUILDINGS; i++) {

@@ -235,3 +235,58 @@ void building_farm_draw_workers(painter &ctx, building* b, int grid_offset, vec2
             draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 2, 0));
     }
 }
+
+static bool farm_harvesting_month_for_produce(int resource_id, int month) {
+    switch (resource_id) {
+        // annual meadow farms
+    case RESOURCE_CHICKPEAS:
+    case RESOURCE_LETTUCE:
+        return (month == MONTH_APRIL);
+
+    case RESOURCE_FIGS:
+        return (month == MONTH_SEPTEMPTER);
+
+    case RESOURCE_FLAX:
+        return (month == MONTH_DECEMBER);
+
+    // biannual meadow farms
+    case RESOURCE_GRAIN:
+    return (month == MONTH_JANUARY || month == MONTH_MAY);
+    break;
+    case RESOURCE_BARLEY:
+    return (month == MONTH_FEBRUARY || month == MONTH_AUGUST);
+    break;
+    case RESOURCE_POMEGRANATES:
+    return (month == MONTH_JUNE || month == MONTH_NOVEMBER);
+    break;
+    }
+    return false;
+}
+
+bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
+    if (floodplains) {
+        auto current_cycle = floods_current_cycle();
+        auto start_cycle = floods_start_cycle();
+        auto harvest_cycle = start_cycle - 28.0f;
+        return floodplains_is(FLOOD_STATE_IMMINENT) && current_cycle >= harvest_cycle;
+    } else {
+        if (game_time_day() < 2 && farm_harvesting_month_for_produce(resource_id, game_time_month()))
+            return true;
+
+        return false;
+    }
+}
+
+void building::spawn_figure_farms() {
+    bool is_floodplain = building_is_floodplain_farm(*this);
+    if (!is_floodplain && has_road_access) { // only for meadow farms
+        common_spawn_labor_seeker(50);
+        if (building_farm_time_to_deliver(false, output_resource_first_id)) { // UGH!!
+            spawn_figure_farm_harvests();
+        }
+    } else if (is_floodplain) {
+        if (building_farm_time_to_deliver(true)) {
+            spawn_figure_farm_harvests();
+        }
+    }
+}

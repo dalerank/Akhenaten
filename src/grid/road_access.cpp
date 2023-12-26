@@ -98,8 +98,8 @@ bool map_get_road_access_tile(tile2i tile, int size, tile2i &road) {
     return map_has_road_access_rotation(0, tile, size, &road);
 }
 
-bool burning_ruin_can_be_accessed(int x, int y, tile2i* point) {
-    int base_offset = MAP_OFFSET(x, y);
+bool burning_ruin_can_be_accessed(tile2i tile, tile2i &point) {
+    int base_offset = tile.grid_offset();
     offsets_array offsets;
     map_grid_adjacent_offsets(1, offsets);
     for (const auto &tile_delta: offsets) {
@@ -108,7 +108,7 @@ bool burning_ruin_can_be_accessed(int x, int y, tile2i* point) {
         if (road_tile_valid_access(grid_offset)
             || (building_at(grid_offset)->type == BUILDING_BURNING_RUIN
                 && building_at(grid_offset)->fire_duration <= 0)) {
-            map_point_store_result(tile2i(grid_offset), *point);
+            map_point_store_result(tile2i(grid_offset), point);
             return true;
         }
     }
@@ -207,9 +207,9 @@ bool map_has_road_access_temple_complex(tile2i tile, int orientation, bool from_
     return false;
 }
 
-bool map_road_within_radius(int x, int y, int size, int radius, tile2i &road_tile) {
+bool map_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile) {
     OZZY_PROFILER_SECTION("road_within_radius");
-    grid_area area = map_grid_get_area(tile2i(x, y), size, radius);
+    grid_area area = map_grid_get_area(tile, size, radius);
 
     for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
         for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
@@ -229,16 +229,16 @@ bool map_road_within_radius(int x, int y, int size, int radius, tile2i &road_til
 bool map_closest_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile) {
     OZZY_PROFILER_SECTION("map_closest_road_within_radius");
     for (int r = 1; r <= radius; r++) {
-        if (map_road_within_radius(tile.x(), tile.y(), size, r, road_tile)) {
+        if (map_road_within_radius(tile, size, r, road_tile)) {
             return true;
         }
     }
     return false;
 }
 
-bool map_reachable_road_within_radius(int x, int y, int size, int radius, tile2i &road_tile) {
+bool map_reachable_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile) {
     OZZY_PROFILER_SECTION("reachable_road_within_radius");
-    grid_area area = map_grid_get_area(tile2i(x, y), size, radius);
+    grid_area area = map_grid_get_area(tile, size, radius);
 
     for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
         for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
@@ -254,10 +254,10 @@ bool map_reachable_road_within_radius(int x, int y, int size, int radius, tile2i
     return false;
 }
 
-bool map_closest_reachable_road_within_radius(int x, int y, int size, int radius, tile2i &road_tile) {
+bool map_closest_reachable_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile) {
     OZZY_PROFILER_SECTION("map_closest_reachable_road_within_radius");
     for (int r = 1; r <= radius; r++) {
-        if (map_reachable_road_within_radius(x, y, size, r, road_tile))
+        if (map_reachable_road_within_radius(tile, size, r, road_tile))
             return true;
     }
     return false;
