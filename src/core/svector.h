@@ -265,6 +265,8 @@ public:
         m_size = 0;
     }
 
+    inline bool full() const { return size() >= Capacity; }
+
     void push_back(const_reference v) {
         assert(size() < Capacity);
 

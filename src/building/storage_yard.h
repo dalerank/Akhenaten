@@ -12,6 +12,7 @@ enum e_storageyard_task {
     STORAGEYARD_TASK_GETTING = 0,
     STORAGEYARD_TASK_DELIVERING = 1,
     STORAGEYARD_TASK_EMPTYING = 2,
+    STORAGEYARD_TASK_MONUMENT = 3,
     //
     STORAGEYARD_TASK_GETTING_MOAR = 9,
 };
@@ -21,11 +22,13 @@ struct storage_worker_task {
     building *space = nullptr;
     int amount = 0;
     e_resource resource = RESOURCE_NONE;
+    building *dest = nullptr;
 };
 
 int building_storageyard_get_space_info(building* warehouse);
 
 int building_storageyard_get_amount(building* warehouse, e_resource resource);
+int building_storageyard_get_freespace(building* warehouse, e_resource resource);
 
 int building_storageyard_add_resource(building* b, e_resource resource, int amount);
 
@@ -53,4 +56,4 @@ int building_storageyard_for_storing(building* src, tile2i tile, e_resource reso
 
 int building_storageyard_for_getting(building* src, e_resource resource, tile2i* dst);
 
-e_storageyard_task building_storageyard_determine_worker_task(building* warehouse, e_resource& resource, int& amount);
+storage_worker_task building_storageyard_determine_worker_task(building* warehouse);

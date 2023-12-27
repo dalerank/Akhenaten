@@ -272,6 +272,8 @@ public:
     bool is_education();
     bool is_military();
 
+    inline bool same_network(building &b) const { return road_network_id == b.road_network_id; }
+
     void clear_related_data();
 
     e_overlay get_overlay() const;

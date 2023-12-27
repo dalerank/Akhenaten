@@ -978,55 +978,55 @@ void building::spawn_figure_dock() {
 
 void building::spawn_figure_storageyard() {
     check_labor_problem();
-    building* space = this;
-    
+    building *space = this;
+
     for (int i = 0; i < 8; i++) {
         space = space->next();
         if (space->id)
             space->show_on_problem_overlay = show_on_problem_overlay;
     }
 
-    if (has_road_access) {
-        common_spawn_labor_seeker(100);
-        e_resource resource = RESOURCE_NONE;
-        int amount = 0;
-        int task = building_storageyard_determine_worker_task(this, resource, amount);
-        if (task != STORAGEYARD_TASK_NONE && amount > 0) {
-            // assume amount has been set to more than one.
-            //            if (true) // TODO: multiple loads setting?????
-            //                amount = 1;
+    if (!has_road_access) {
+        return;
+    }
 
-            if (!has_figure(0)) {
-                figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access, DIR_4_BOTTOM_LEFT);
-                f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+    common_spawn_labor_seeker(100);
+    auto task = building_storageyard_determine_worker_task(this);
+    if (task.result == STORAGEYARD_TASK_NONE || task.amount <= 0) {
+        return;
+    }
 
-                switch (task) {
-                case STORAGEYARD_TASK_GETTING:
-                case STORAGEYARD_TASK_GETTING_MOAR:
-                    f->load_resource(0, RESOURCE_NONE);
-                    f->collecting_item_id = resource;
-                    break;
-                case STORAGEYARD_TASK_DELIVERING:
-                case STORAGEYARD_TASK_EMPTYING:
-                    amount = std::min<int>(amount, 400);
-                    f->load_resource(amount, resource);
-                    building_storageyard_remove_resource(this, resource, amount);
-                    break;
-                }
-                set_figure(0, f->id);
-                f->set_home(id);
+    if (!has_figure(BUILDING_SLOT_SERVICE) && task.result == STORAGEYARD_TASK_MONUMENT) {
 
-            } else if (task == STORAGEYARD_TASK_GETTING_MOAR && !has_figure_of_type(1, FIGURE_STORAGE_YARD_DELIVERCART)) {
-                figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access, DIR_4_BOTTOM_LEFT);
-                f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+    } else if (!has_figure(BUILDING_SLOT_SERVICE)) {
+        figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access, DIR_4_BOTTOM_LEFT);
+        f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 
-                f->load_resource(0, RESOURCE_NONE);
-                f->collecting_item_id = resource;
-
-                set_figure(1, f->id);
-                f->set_home(id);
-            }
+        switch (task.result) {
+        case STORAGEYARD_TASK_GETTING:
+        case STORAGEYARD_TASK_GETTING_MOAR:
+            f->load_resource(0, RESOURCE_NONE);
+            f->collecting_item_id = task.resource;
+            break;
+        case STORAGEYARD_TASK_DELIVERING:
+        case STORAGEYARD_TASK_EMPTYING:
+            task.amount = std::min<int>(task.amount, 400);
+            f->load_resource(task.amount, task.resource);
+            building_storageyard_remove_resource(this, task.resource, task.amount);
+            break;
         }
+        set_figure(0, f->id);
+        f->set_home(id);
+
+    } else if (task.result == STORAGEYARD_TASK_GETTING_MOAR && !has_figure_of_type(1, FIGURE_STORAGE_YARD_DELIVERCART)) {
+        figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access, DIR_4_BOTTOM_LEFT);
+        f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+
+        f->load_resource(0, RESOURCE_NONE);
+        f->collecting_item_id = task.resource;
+
+        set_figure(1, f->id);
+        f->set_home(id);
     }
 }
 

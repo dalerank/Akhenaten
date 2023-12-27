@@ -626,3 +626,7 @@ bool building_monument_is_unfinished(const building *b) {
 bool building_monument_is_finished(const building *b) {
     return building_monument_is_monument(b) && b->data.monuments.phase == MONUMENT_FINISHED;
 }
+
+building *city_has_unfinished_monuments() {
+    return buildings_valid_first([] (building &b) { return (b.data.monuments.phase == MONUMENT_FINISHED); });
+}

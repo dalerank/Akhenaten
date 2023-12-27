@@ -481,9 +481,9 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i point, painter &ctx) {
         //    int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
         //    ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
         //
-        //} else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
-        //    ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
-        //
+        } else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
+        
         } else if (terrain & TERRAIN_BUILDING) {
             city_with_overlay_draw_building_footprint(ctx, pixel.x, pixel.y, grid_offset, 0);
         

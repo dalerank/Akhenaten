@@ -57,3 +57,5 @@ inline uint32_t map_monuments_get_progress(tile2i tile) { return map_monuments_g
 void map_monuments_set_progress(int grid_offset, uint32_t progress);
 inline void map_monuments_set_progress(tile2i tile, uint32_t progress) { return map_monuments_set_progress(tile.grid_offset(), progress); }
 void map_monuments_clear();
+
+building *city_has_unfinished_monuments();

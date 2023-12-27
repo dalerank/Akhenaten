@@ -369,12 +369,10 @@ void city_resource_add_items(e_resource res, int amount) {
     building* chosen_yard = nullptr;
     int lowest_stock_found = 10000;
     buildings_valid_do([&] (building &b) {
-        int total_stored = 0;
-        for (int j = 0; j < 6; ++j) {
-            total_stored += building_storageyard_get_amount(&b, res);
-        }
-
-        if (total_stored < lowest_stock_found) {
+        int total_stored = building_storageyard_get_amount(&b, res);
+        int free_space = building_storageyard_get_freespace(&b, res);
+        
+        if (free_space >= amount && total_stored < lowest_stock_found) {
             lowest_stock_found = total_stored;
             chosen_yard = &b;
         }

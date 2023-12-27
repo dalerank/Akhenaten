@@ -5,6 +5,7 @@
 #include "building/building_granary.h"
 #include "building/industry.h"
 #include "building/model.h"
+#include "building/monuments.h"
 #include "building/storage.h"
 #include "city/buildings.h"
 #include "city/finance.h"
@@ -56,10 +57,28 @@ int building_storageyard_get_amount(building* storageyard, e_resource resource) 
         if (space->id <= 0)
             return 0;
 
-        if (space->subtype.warehouse_resource_id && space->subtype.warehouse_resource_id == resource)
+        if (space->subtype.warehouse_resource_id && space->subtype.warehouse_resource_id == resource) {
             total += space->stored_full_amount;
+        }
     }
     return total;
+}
+
+int building_storageyard_get_freespace(building* storageyard, e_resource resource) {
+    int freespace = 0;
+    building* space = storageyard;
+    for (int i = 0; i < 8; i++) {
+        space = space->next();
+        if (space->id <= 0)
+            return 0;
+
+        if (!space->subtype.warehouse_resource_id) {
+            freespace += 400;
+        } else if(space->subtype.warehouse_resource_id == resource) {
+            freespace += (400 - space->stored_full_amount);
+        }
+    }
+    return freespace;
 }
 
 int building_storageyard_add_resource(building* b, e_resource resource, int amount) {
@@ -250,32 +269,24 @@ bool building_storageyard_is_accepting(e_resource resource, building* b) {
 bool building_storageyard_is_getting(e_resource resource, building* b) {
     const building_storage* s = building_storage_get(b->storage_id);
     int amount = building_storageyard_get_amount(b, resource);
-    if ((s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] == FULL_WAREHOUSE)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET
-            && s->resource_max_get[resource] >= THREEQ_WAREHOUSE && amount < THREEQ_WAREHOUSE / 100)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= HALF_WAREHOUSE
-            && amount < HALF_WAREHOUSE / 100)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET
-            && s->resource_max_get[resource] >= QUARTER_WAREHOUSE && amount < QUARTER_WAREHOUSE / 100))
+    if ((s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] == FULL_WAREHOUSE) 
+        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= THREEQ_WAREHOUSE && amount < THREEQ_WAREHOUSE / 100)
+        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= HALF_WAREHOUSE && amount < HALF_WAREHOUSE / 100)
+        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= QUARTER_WAREHOUSE && amount < QUARTER_WAREHOUSE / 100)) {
         return true;
-    else
+    } else {
         return false;
+    }
 }
 
 bool building_storageyard_is_emptying(e_resource resource, building* b) {
     const building_storage* s = building_storage_get(b->storage_id);
-    if (s->resource_state[resource] == STORAGE_STATE_PHARAOH_EMPTY)
-        return true;
-    else
-        return false;
+    return (s->resource_state[resource] == STORAGE_STATE_PHARAOH_EMPTY);
 }
 
 bool building_storageyard_is_gettable(e_resource resource, building* b) {
     const building_storage* s = building_storage_get(b->storage_id);
-    if (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET)
-        return true;
-    else
-        return false;
+    return (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET);
 }
 
 bool building_storageyard_is_not_accepting(e_resource resource, building* b) {
@@ -699,6 +710,44 @@ storage_worker_task building_storageyard_deliver_food_to_accepting_granary(build
     return {STORAGEYARD_TASK_NONE};
 }
 
+storage_worker_task building_storageyard_deliver_to_monuments(building *warehouse) {
+    building *space = warehouse;
+
+    svector<building *, 10> monuments;
+    buildings_valid_do([&] (building &b) { 
+        if (!monuments.full() && b.data.monuments.phase == MONUMENT_FINISHED) {
+            monuments.push_back(&b);
+        }
+    });
+
+    if (monuments.empty()) {
+        return {STORAGEYARD_TASK_NONE};
+    }
+
+    for (int i = 0; i < 8; i++) {
+        space = space->next();
+        int available = space->stored_full_amount;
+        if (space->id <= 0 || !space->subtype.warehouse_resource_id || available <= 0) {
+            continue;
+        }
+
+        e_resource resource = space->subtype.warehouse_resource_id;
+        if (city_resource_is_stockpiled(resource)) {
+            continue;
+        }
+
+        for (auto monument : monuments) {
+            auto monuments_want = building_monument_needs_resource(monument, resource);
+            if (monuments_want > 0 && warehouse->same_network(*monument)) {
+                int amount = std::min(available, monuments_want);
+                return {STORAGEYARD_TASK_MONUMENT, space, amount, resource, monument};
+            }
+        }
+    }
+
+    return {STORAGEYARD_TASK_NONE};
+}
+
 storage_worker_task building_storageyard_deliver_emptying_resources(building *warehouse) {
     building *space = warehouse;
 
@@ -717,11 +766,11 @@ storage_worker_task building_storageyard_deliver_emptying_resources(building *wa
     return {STORAGEYARD_TASK_NONE};
 }
 
-e_storageyard_task building_storageyard_determine_worker_task(building* warehouse, e_resource& resource, int& amount) {
+storage_worker_task building_storageyard_determine_worker_task(building* warehouse) {
     // check workers - if less than enough, no task will be done today.
     int pct_workers = calc_percentage<int>(warehouse->num_workers, model_get_building(warehouse->type)->laborers);
     if (pct_workers < 50) {
-        return STORAGEYARD_TASK_NONE;
+        return {STORAGEYARD_TASK_NONE};
     }
 
     using action_type = decltype(building_storageyard_deliver_weapons);
@@ -733,14 +782,13 @@ e_storageyard_task building_storageyard_determine_worker_task(building* warehous
         &building_storageyard_deliver_food_to_gettingup_granary,    // deliver food to getting granary
         &building_storageyard_deliver_food_to_accepting_granary,    // deliver food to accepting granary
         &building_storageyard_deliver_emptying_resources,           // emptying resource
+        &building_storageyard_deliver_to_monuments,                 // monuments resource
     };
 
     for (const auto &action : actions) {
         storage_worker_task task = (*action)(warehouse);
         if (task.result != STORAGEYARD_TASK_NONE) {
-            resource = task.resource;
-            amount = task.amount;
-            return task.result;
+            return task;
         }
     }
     
@@ -751,12 +799,10 @@ e_storageyard_task building_storageyard_determine_worker_task(building* warehous
         for (int i = 0; i < 8; i++) {
             space = space->next();
             if (space->id > 0 && space->stored_full_amount > 0) {
-                resource = space->subtype.warehouse_resource_id;
-                amount = space->stored_full_amount;
-                return STORAGEYARD_TASK_DELIVERING;
+                return {STORAGEYARD_TASK_DELIVERING, space, space->stored_full_amount, space->subtype.warehouse_resource_id};
             }
         }
     }
 
-    return STORAGEYARD_TASK_NONE;
+    return {STORAGEYARD_TASK_NONE};
 }

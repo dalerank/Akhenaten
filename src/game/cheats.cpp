@@ -167,7 +167,7 @@ void game_cheat_console(bool force) {
 
 static void game_cheat_add_pottery(pcstr args) {
     int pottery = 0;
-    parse_integer(args, pottery);
+    parse_integer(args ? args : (pcstr )"100", pottery);
     city_resource_add_items(RESOURCE_POTTERY, pottery);
     window_invalidate();
 
@@ -202,7 +202,7 @@ static void game_cheat_clear_progress(pcstr args) {
 
 static void game_cheat_add_beer(pcstr args) {
     int beer = 0;
-    parse_integer(args, beer);
+    parse_integer(args ? args : (pcstr )"100", beer);
     city_resource_add_items(RESOURCE_BEER, beer);
     window_invalidate();
 
@@ -211,7 +211,7 @@ static void game_cheat_add_beer(pcstr args) {
 
 static void game_cheat_add_bricks(pcstr args) {
     int bricks = 0;
-    parse_integer(args, bricks);
+    parse_integer(args ? args : (pcstr )"100", bricks);
     city_resource_add_items(RESOURCE_BRICKS, bricks);
     window_invalidate();
 
@@ -220,7 +220,7 @@ static void game_cheat_add_bricks(pcstr args) {
 
 static void game_cheat_add_money(pcstr args) {
     int money = 0;
-    parse_integer(args, money);
+    parse_integer(args ? args : (pcstr )"100", money);
     city_finance_process_console(money);
     window_invalidate();
 
