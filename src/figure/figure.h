@@ -361,6 +361,7 @@ public:
     void emigrant_action();
     void homeless_action();
     void cartpusher_action();
+    void sled_puller_action();
     //    void labor_seeker_action();
     void explosion_cloud_action();
     void tax_collector_action();
