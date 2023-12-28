@@ -27,7 +27,7 @@
 #define MODULES_PER_TEMPLE 2
 #define ARCHITECTS RESOURCE_NONE
 
-#define MAX_PHASES 6
+#define MAX_PHASES 10
 
 #define BUILDING_MONUMENT_FIRST_ID BUILDING_SMALL_MASTABA
 
@@ -41,7 +41,7 @@ io_buffer* iob_monuments_progress_grid = new io_buffer([](io_buffer* iob, size_t
 });
 
 struct monument_phase_resource {
-    int resource;
+    e_resource resource;
     uint16_t count;
 };
 
@@ -55,17 +55,20 @@ struct monument {
 };
 
 struct monument_mastaba : public monument {
-    monument_mastaba() {
-        btype = BUILDING_SMALL_MASTABA;
-        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_BRICKS, 3200}});
+    monument_mastaba() : monument{BUILDING_SMALL_MASTABA} {
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_BRICKS, 3200} });
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1600}, {RESOURCE_BRICKS, 3200}});
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1600}, {RESOURCE_BRICKS, 3200}});
         phases.push_back({monument_phase_resource{ARCHITECTS, 4}, {RESOURCE_TIMBER, 3200}, {RESOURCE_BRICKS, 3200}, {RESOURCE_MARBLE, 48}});
-        phases.push_back({monument_phase_resource{NOTHING, 0}});
+        phases.push_back({monument_phase_resource{RESOURCE_NONE, 0}});
     }
 } g_monument_mastaba;
 
+monument g_monument_invalid;
 const monument *g_monument_types[] = {
+    &g_monument_invalid,
     &g_monument_mastaba,
 };
 
@@ -108,16 +111,22 @@ int building_monument_deliver_resource(building *b, e_resource resource) {
     return 1;
 }
 
-int building_monument_access_point(building *b, tile2i *dst) {
-    if (b->size < 3 || b->type == BUILDING_SMALL_MASTABA) {
-        *dst = b->tile;
-        return true;
+const monument &building_monument_config(e_building_type type) {
+    auto it = std::find_if(std::begin(g_monument_types), std::end(g_monument_types), [type] (const monument *it) { return it->btype == type; });
+    return (it != std::end(g_monument_types) ? *(*it) : g_monument_invalid);
+}
+
+tile2i building_monument_access_point(building *b) {
+    if (b->type == BUILDING_SMALL_MASTABA) {
+        return b->tile.shifted(1, 0);
+    }
+
+    if (b->size < 3) {
+        return b->tile;
     }
 
     int half_size = b->size / 2;
-
-    *dst = b->tile.shifted(half_size, b->size - 1);
-    return true;
+    return b->tile.shifted(half_size, b->size - 1);
 }
 
 int get_temple_complex_part_image(int type, int part, int orientation, int level) {
@@ -240,26 +249,20 @@ int building_monument_has_unfinished_monuments() {
 }
 
 int building_monument_phases(e_building_type type) {
-    auto m_it = std::find_if(std::begin(g_monument_types), std::end(g_monument_types), [&] (auto m) { return m->btype == type; });
+    const monument &config = building_monument_config(type);
+    return config.phases.size();
+}
 
-    if (m_it == std::end(g_monument_types)) {
+int building_monument_needs_resources(e_building_type type, e_resource resource, int phase) {
+    const monument &config = building_monument_config(type);
+
+    if (phase >= config.phases.size()) {
         return 0;
     }
 
-    return (int)(*m_it)->phases.size();
-}
-
-bool building_monument_resources_needed_for_monument_type(e_building_type type, e_resource resource, int phase) {
-    auto m_it = std::find_if(std::begin(g_monument_types), std::end(g_monument_types), [&] (auto m) { return m->btype == type; });
-
-    if (m_it == std::end(g_monument_types)) {
-        return false;
-    }
-    
-    const monument_phase &ph = (*m_it)->phases[phase - 1];
-
+    const monument_phase &ph = config.phases[phase];
     auto r_it = std::find_if(ph.resources.begin(), ph.resources.end(), [&] (auto &p) { return p.resource == resource; });
-    return m_it != std::end(g_monument_types);
+    return (r_it != ph.resources.end() ? r_it->count : 0);
 }
 
 int building_image_get(building *b) {
@@ -289,7 +292,7 @@ void building_monument_set_phase(building *b, int phase) {
     map_building_tiles_add(b->id, b->tile, b->size, building_image_get(b), TERRAIN_BUILDING);
     if (b->data.monuments.phase != MONUMENT_FINISHED) {
         for (e_resource resource = RESOURCE_NONE; resource < RESOURCES_MAX; ++resource) {
-            b->data.monuments.resources[resource] = building_monument_resources_needed_for_monument_type(b->type, resource, b->data.monuments.phase);
+            b->data.monuments.resources[resource] = building_monument_needs_resources(b->type, resource, b->data.monuments.phase);
         }
     }
 }
@@ -326,17 +329,6 @@ int building_monument_needs_resource(building *b, e_resource resource) {
     return (b->data.monuments.resources[resource]);
 }
 
-void building_monuments_set_construction_phase(int phase) {
-    //for (building_type type = BUILDING_MONUMENT_FIRST_ID; type < BUILDING_TYPE_MAX; type++) {
-    //    if (!MONUMENT_TYPES[type]) {
-    //        continue;
-    //    }
-    //    for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-    //        building_monument_set_phase(b, phase);
-    //    }
-    //}
-}
-
 void building_monument_finish_monuments() {
     bool found = false;
     for (const auto &m: g_monument_types) {
@@ -354,8 +346,12 @@ void building_monument_finish_monuments() {
 }
 
 bool building_monument_needs_resources(building *b) {
+    if (!building_is_monument(b->type)) {
+        return false;
+    }
+    
     if (b->data.monuments.phase == MONUMENT_FINISHED) {
-        return 0;
+        return false;
     }
 
     for (auto &r: b->data.monuments.resources) {
@@ -536,7 +532,7 @@ int building_monument_working(e_building_type type) {
 bool building_monument_requires_resource(e_building_type type, e_resource resource) {
     int phases = building_monument_phases(type);
     for (int phase = 1; phase < phases; phase++) {
-        if (building_monument_resources_needed_for_monument_type(type, resource, phase)) {
+        if (building_monument_needs_resources(type, resource, phase) > 0) {
             return true;
         }
     }
@@ -547,7 +543,7 @@ int building_monument_has_required_resources_to_build(e_building_type type) {
     int phases = building_monument_phases(type);
     for (int phase = 1; phase < phases; phase++) {
         for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
-            if (building_monument_resources_needed_for_monument_type(type, r, phase) &&
+            if (building_monument_needs_resources(type, r, phase) > 0 &&
                 !empire_can_produce_resource(r, false) && !empire_can_produce_resource(r, false)) {
                 return 0;
             }
