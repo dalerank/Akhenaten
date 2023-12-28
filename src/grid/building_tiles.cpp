@@ -261,8 +261,9 @@ static void set_underlying_venue_plaza_tile(int grid_offset, int building_id, in
         map_building_set(grid_offset, building_id);
         map_property_clear_constructing(grid_offset);
     } else {
-        if (building_get(building_id)->type == BUILDING_FESTIVAL_SQUARE || map_terrain_is(grid_offset, TERRAIN_ROAD))
+        if (building_get(building_id)->type == BUILDING_FESTIVAL_SQUARE || map_terrain_is(grid_offset, TERRAIN_ROAD)) {
             map_image_set(grid_offset, image_id);
+        }
     }
 }
 void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int image_id, bool update_only) {

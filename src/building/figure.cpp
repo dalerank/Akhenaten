@@ -978,16 +978,16 @@ void building::spawn_figure_dock() {
 
 void building::spawn_figure_storageyard() {
     check_labor_problem();
-    building *space = this;
-
-    for (int i = 0; i < 8; i++) {
-        space = space->next();
-        if (space->id)
-            space->show_on_problem_overlay = show_on_problem_overlay;
-    }
-
     if (!has_road_access) {
         return;
+    }
+
+    building *space = this;
+    for (int i = 0; i < 8; i++) {
+        space = space->next();
+        if (space->id) {
+            space->show_on_problem_overlay = show_on_problem_overlay;
+        }
     }
 
     common_spawn_labor_seeker(100);
@@ -997,6 +997,8 @@ void building::spawn_figure_storageyard() {
     }
 
     if (!has_figure(BUILDING_SLOT_SERVICE) && task.result == STORAGEYARD_TASK_MONUMENT) {
+        figure* f = create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
+        f->wait_ticks = 20;
 
     } else if (!has_figure(BUILDING_SLOT_SERVICE)) {
         figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access, DIR_4_BOTTOM_LEFT);
