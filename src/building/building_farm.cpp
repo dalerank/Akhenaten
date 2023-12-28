@@ -101,21 +101,13 @@ void building_farm_draw_info(object_info& c) {
 }
 
 void draw_farm_worker(painter &ctx, int direction, int action, int frame_offset, vec2i coords, color color_mask = COLOR_MASK_NONE) {
-    int action_offset = 0;
+    e_image_id action_img;
     switch (action) {
-    case FARM_WORKER_TILING: // tiling
-        action_offset = 104;
-        break;
-    case FARM_WORKER_SEEDING: // seeding
-        action_offset = 208;
-        break;
-    case FARM_WORKER_HARVESTING: // harvesting
-        coords.y += 10;
-        action_offset = 312;
-        break;
+    case FARM_WORKER_TILING: action_img = IMG_WORKER_AKNH_TILING; break;
+    case FARM_WORKER_SEEDING: action_img = IMG_WORKER_AKNH_SEEDING; break;
+    case FARM_WORKER_HARVESTING: coords.y += 10; action_img = IMG_WORKER_AKNH_HARVESTING; break;
     }
-    int final_offset = action_offset + direction + 8 * (frame_offset - 1);
-    ImageDraw::img_sprite(ctx, image_group(IMG_WORKER_AKNH) + final_offset, coords.x, coords.y, color_mask);
+    ImageDraw::img_sprite(ctx, image_group(action_img) + direction + 8 * (frame_offset - 1), coords.x, coords.y, color_mask);
 }
 
 static const vec2i FARM_TILE_OFFSETS_FLOODPLAIN[9] = {{60, 0}, {90, 15}, {120, 30}, {30, 15}, {60, 30}, {90, 45}, {0, 30}, {30, 45}, {60, 60}};
