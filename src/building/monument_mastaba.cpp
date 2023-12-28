@@ -80,8 +80,8 @@ void building_small_mastabe_update_day(building *b) {
     bool all_tiles_finished = (tile2works == tile2i{-1, -1});
     if (all_tiles_finished) {
         map_grid_area_foreach(tiles, [] (tile2i tile) { map_monuments_set_progress(tile.grid_offset(), 0); });
-        b->data.monuments.phase++;
-        b->next()->data.monuments.phase++;
+        building_monument_set_phase(b, b->data.monuments.phase + 1);
+        b->next()->data.monuments.phase = b->data.monuments.phase;
     }
 }
 

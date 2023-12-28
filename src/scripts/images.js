@@ -133,6 +133,8 @@ images = [
 	{img: IMG_BRICKLAYER_IDLE, pack:PACK_SPR_MAIN, id:112},
 	{img: IMG_WORKER_AKNH, pack:PACK_SPR_MAIN, id:116},
 	{img: IMG_WORKER_AKNH_WORK, pack:PACK_SPR_MAIN, id:117},
+	{img: IMG_MONUMENT_ENTER, pack:PACK_GENERAL, id:114},
+	{img: IMG_SLED_PULLER, pack:PACK_SPR_MAIN, id:121},
 ]
 
 cart_offsets = [

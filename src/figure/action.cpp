@@ -118,7 +118,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_HYENA, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HYENA_WALK},
   {FIGURE_HIPPO, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HIPPO_WALK},
   {FIGURE_LABORER, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_WORKER_AKNH},
-  {86, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
+  {FIGURE_SLED, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_WATER_CARRIER, 1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_WATER_CARRIER},
   {FIGURE_CONSTABLE, 1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_POLICEMAN},
   {FIGURE_MAGISTRATE, 1, TERRAIN_USAGE_ROADS, 800, GROUP_FIGURE_MAGISTRATE},
@@ -128,7 +128,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_ENEMY_WARSHIP, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_FUNERAL_WALKER, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_FISHING_SPOT, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
-  {FIGURE_SLED_PULLER, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
+  {FIGURE_SLED_PULLER, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_SLED_PULLER},
   {FIGURE_SHOWMAN, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
   {FIGURE_PLAGUED_CITIZEN, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
   {FIGURE_BEDOUIN_INFANTRY, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
@@ -543,7 +543,7 @@ void figure::action_perform() {
         case FIGURE_FISHING_BOAT: fishing_boat_action(); break;
         case FIGURE_MARKET_TRADER: market_trader_action(); break;
         case FIGURE_PRIEST: priest_action(); break;
-            //            case 27: common_action(12, GROUP_FIGURE_PRIEST); break;
+
         case FIGURE_TEACHER: scribal_school_teacher_action(); break;
             //            case 29: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break;
             //            case 30: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break; //30
@@ -552,14 +552,12 @@ void figure::action_perform() {
         case 33: // doctor_action(); break;
                  //            case 34: common_action(12, GROUP_FIGURE_DOCTOR_SURGEON); break;
                  //            case 35: worker_action();                   break;
-        case 36:
-            editor_flag_action();
-            break;
+        case 36: editor_flag_action(); break;
         case FIGURE_FLOTSAM: flotsam_action(); break;
         case 38: docker_action(); break;
         case FIGURE_MARKET_BUYER: market_buyer_action(); break;
         case FIGURE_NOBLES: noble_action(); break; 
-        case 41:indigenous_native_action(); break;
+        case 41: indigenous_native_action(); break;
         case 42: tower_sentry_action(); break;
         case 43: enemy43_spear_action(); break;
         case 44: enemy44_sword_action(); break;
@@ -573,29 +571,19 @@ void figure::action_perform() {
         case 52: enemy52_mounted_archer_action(); break;
         case 53: enemy53_axe_action(); break;
         case 54: enemy_gladiator_action(); break;
-            //                no_action();                            break;
-            //                no_action();                            break;
         case 57: enemy_caesar_legionary_action(); break;
         case 58: native_trader_action(); break;
         case 59: arrow_action(); break;
-        case 60:
-            javelin_action();
-            break; // 60
-        case 61:
-            bolt_action();
-            break;
-        case 62:
-            ballista_action();
-            break;
-            //                no_action();                            break;
-            //            case 64: missionary_action();               break;
+        case FIGURE_JAVELIN: javelin_action(); break; // 60
+        case FIGURE_BOLT: bolt_action(); break;
+        case FIGURE_BALLISTA: ballista_action(); break;
         case FIGURE_FISHING_POINT: fishing_point_action(); break;
         case FIGURE_DELIVERY_BOY: delivery_boy_action(); break;
-        case 67: shipwreck_action(); break;
-        case 68: sheep_action(); break;
+        case FIGURE_SHIPWRECK: shipwreck_action(); break;
+        case FIGURE_BIRDS: sheep_action(); break;
         case FIGURE_OSTRICH: ostrich_action(); break;
-        case 70: zebra_action(); break; // 70
-        case 71: spear_action(); break;
+        case FIGURE_ANTELOPE: zebra_action(); break; // 70
+        case FIGURE_SPEAR: spear_action(); break;
         case FIGURE_CHARIOR_RACER: hippodrome_horse_action(); break;
         case FIGURE_OSTRICH_HUNTER: ostrich_hunter_action(); break;
         case FIGURE_HUNTER_ARROW: arrow_action(); break;
@@ -608,7 +596,8 @@ void figure::action_perform() {
         case FIGURE_CONSTABLE: policeman_action(); break;
         case FIGURE_MAGISTRATE: magistrate_action(); break;
         case FIGURE_REED_GATHERER: reed_gatherer_action(); break; // reed gatherers
-        case 91: festival_guy_action(); break;
+        case FIGURE_FESTIVAL_PRIEST: festival_guy_action(); break;
+        case FIGURE_SLED_PULLER: sled_puller_action(); break;
         case FIGURE_HYENA: hyena_action();
             break;
         default:
