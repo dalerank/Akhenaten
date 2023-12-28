@@ -178,8 +178,8 @@ public:
             e_resource consume_material_id;
         } entertainment;
         struct {
-            short foods[8];
-            short inventory[8];
+            uint16_t foods[8];
+            uint16_t inventory[8];
             unsigned char juggler;
             unsigned char bandstand_juggler;
             unsigned char bandstand_musician;
@@ -214,7 +214,7 @@ public:
             uint8_t variant;
             uint8_t statue_offset;
             uint8_t temple_complex_attachments;
-            int resources[RESOURCES_MAX];
+            uint16_t resources[RESOURCES_MAX];
             uint16_t workers[5];
             uint8_t phase;
             uint8_t upgrades;

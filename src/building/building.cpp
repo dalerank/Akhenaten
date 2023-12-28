@@ -1027,12 +1027,10 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         for (int i = 0; i < 10; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_b[i]);
         }
-        //        iob->bind____skip(12);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.has_fish);
         for (int i = 0; i < 14; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_c[i]);
         }
-        //        iob->bind____skip(14);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.blessing_days_left);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.orientation);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.has_raw_materials);
@@ -1043,7 +1041,6 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         for (int i = 0; i < 3; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_6[i]);
         }
-        //        iob->bind____skip(6);
         iob->bind(BIND_SIGNATURE_INT16, &b->data.industry.fishing_boat_id);
 
         for (int i = 0; i < 40; i++) {
@@ -1058,7 +1055,7 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.worker_id);
 
     } else if (building_is_statue(b->type) || building_is_large_temple(b->type) || building_is_monument(b->type)) {
-        iob->bind____skip(75);
+        iob->bind____skip(3);
         for (int i = 0; i < 5; i++) {
             iob->bind(BIND_SIGNATURE_UINT16, &b->data.monuments.workers[i]);
         }
@@ -1066,6 +1063,10 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.statue_offset);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.temple_complex_attachments);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.variant);
+
+        for (int i = 0; i < RESOURCES_MAX; i++) {
+            iob->bind(BIND_SIGNATURE_UINT16, &b->data.monuments.resources[i]);
+        }
     } else if (b->type == BUILDING_WATER_LIFT || b->type == BUILDING_FERRY) {
         iob->bind____skip(88);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.orientation);
