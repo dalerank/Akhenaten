@@ -41,6 +41,7 @@ public:
     inline map_point dist2i(map_point o) { return map_point(std::abs(this->x() - o.x()), std::abs(this->y() - o.y())); }
 
     inline map_point mod(int x, int y) { return map_point(this->x() % x, this->y() % y); }
+    inline bool valid() const { return (map_point(-1, -1) != *this); }
 
     // SET BY CONSTRUCTION
     void set(int _x, int _y);
