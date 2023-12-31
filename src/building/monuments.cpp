@@ -92,23 +92,28 @@ void map_monuments_clear() {
     map_grid_fill(&g_monuments_progress_grid, 0);
 }
 
-int building_monument_deliver_resource(building *b, e_resource resource) {
-    if (b->id <= 0 || !building_monument_is_monument(b) ||
-        b->data.monuments.resources[resource] <= 0) {
-        return 0;
+bool building_monument_deliver_resource(building *b, e_resource resource, int amount) {
+    if (b->id <= 0 || !building_monument_is_monument(b)) {
+        return false;
+    }
+
+    if (b->data.monuments.resources_pct[resource] >= 100) {
+        return false;
     }
 
     while (b->prev_part_building_id) {
         b = building_get(b->prev_part_building_id);
     }
 
-    b->data.monuments.resources[resource]--;
+    int full_resources = building_monument_needs_resources(b->type, resource, b->data.monuments.phase);
+    int amount_pct = calc_percentage(amount, full_resources);
+    b->data.monuments.resources_pct[resource] += amount_pct;
 
-    while (b->next_part_building_id) {
-        b = building_get(b->next_part_building_id);
-        b->data.monuments.resources[resource]--;
-    }
-    return 1;
+    //while (b->next_part_building_id) {
+    //    b = building_get(b->next_part_building_id);
+    //    b->data.monuments.resources[resource]--;
+    //}
+    return true;
 }
 
 const monument &building_monument_config(e_building_type type) {
@@ -292,7 +297,7 @@ void building_monument_set_phase(building *b, int phase) {
     map_building_tiles_add(b->id, b->tile, b->size, building_image_get(b), TERRAIN_BUILDING);
     if (b->data.monuments.phase != MONUMENT_FINISHED) {
         for (e_resource resource = RESOURCE_NONE; resource < RESOURCES_MAX; ++resource) {
-            b->data.monuments.resources[resource] = building_monument_needs_resources(b->type, resource, b->data.monuments.phase);
+            b->data.monuments.resources_pct[resource] = 0;
         }
     }
 }
@@ -326,7 +331,10 @@ int building_monument_needs_resource(building *b, e_resource resource) {
     if (b->data.monuments.phase == MONUMENT_FINISHED) {
         return 0;
     }
-    return (b->data.monuments.resources[resource]);
+
+    int full_resources = building_monument_needs_resources(b->type, resource, b->data.monuments.phase);
+    int resources_pct = b->data.monuments.resources_pct[resource];
+    return full_resources - (full_resources * resources_pct / 100);
 }
 
 void building_monument_finish_monuments() {
@@ -338,7 +346,7 @@ void building_monument_finish_monuments() {
             }
 
             building_monument_set_phase(&b, MONUMENT_FINISHED);
-            for (auto &r: b.data.monuments.resources) {
+            for (auto &r: b.data.monuments.resources_pct) {
                 r = 0;
             }
         }, m->btype);
@@ -354,8 +362,8 @@ bool building_monument_needs_resources(building *b) {
         return false;
     }
 
-    for (auto &r: b->data.monuments.resources) {
-        if (r > 0) {
+    for (auto &r: b->data.monuments.resources_pct) {
+        if (r < 100) {
             return true;
         }
     }

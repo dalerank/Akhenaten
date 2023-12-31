@@ -1055,7 +1055,7 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.worker_id);
 
     } else if (building_is_statue(b->type) || building_is_large_temple(b->type) || building_is_monument(b->type)) {
-        iob->bind____skip(3);
+        iob->bind____skip(39);
         for (int i = 0; i < 5; i++) {
             iob->bind(BIND_SIGNATURE_UINT16, &b->data.monuments.workers[i]);
         }
@@ -1065,7 +1065,7 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.variant);
 
         for (int i = 0; i < RESOURCES_MAX; i++) {
-            iob->bind(BIND_SIGNATURE_UINT16, &b->data.monuments.resources[i]);
+            iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.resources_pct[i]);
         }
     } else if (b->type == BUILDING_WATER_LIFT || b->type == BUILDING_FERRY) {
         iob->bind____skip(88);

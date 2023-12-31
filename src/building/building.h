@@ -214,7 +214,7 @@ public:
             uint8_t variant;
             uint8_t statue_offset;
             uint8_t temple_complex_attachments;
-            uint16_t resources[RESOURCES_MAX];
+            uint8_t resources_pct[RESOURCES_MAX];
             uint16_t workers[5];
             uint8_t phase;
             uint8_t upgrades;

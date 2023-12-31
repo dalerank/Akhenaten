@@ -14,7 +14,7 @@ enum module_type {
 
 tile2i building_monument_access_point(building *b);
 int building_monument_add_module(building *b, int module_type);
-int building_monument_deliver_resource(building *b, e_resource resource);
+bool building_monument_deliver_resource(building *b, e_resource resource, int amount);
 int building_monument_has_unfinished_monuments();
 void building_monument_set_phase(building *b, int phase);
 bool building_monument_is_monument(const building *b);
