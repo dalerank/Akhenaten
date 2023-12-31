@@ -118,7 +118,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_HYENA, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HYENA_WALK},
   {FIGURE_HIPPO, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HIPPO_WALK},
   {FIGURE_LABORER, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_WORKER_AKNH},
-  {FIGURE_SLED, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
+  {FIGURE_SLED, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_NONE},
   {FIGURE_WATER_CARRIER, 1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_WATER_CARRIER},
   {FIGURE_CONSTABLE, 1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_POLICEMAN},
   {FIGURE_MAGISTRATE, 1, TERRAIN_USAGE_ROADS, 800, GROUP_FIGURE_MAGISTRATE},
@@ -598,8 +598,9 @@ void figure::action_perform() {
         case FIGURE_REED_GATHERER: reed_gatherer_action(); break; // reed gatherers
         case FIGURE_FESTIVAL_PRIEST: festival_guy_action(); break;
         case FIGURE_SLED_PULLER: sled_puller_action(); break;
-        case FIGURE_HYENA: hyena_action();
-            break;
+        case FIGURE_SLED: sled_action(); break;
+        case FIGURE_HYENA: hyena_action(); break;
+
         default:
             break;
         }

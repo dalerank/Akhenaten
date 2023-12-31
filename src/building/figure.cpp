@@ -192,7 +192,7 @@ figure* building::create_cartpusher(e_resource resource_id, int quantity, e_figu
     // TODO: industry cartpushers do not spawn in the correct place?
 
     figure* f = create_figure_generic(FIGURE_CART_PUSHER, created_action, slot, DIR_4_BOTTOM_LEFT);
-    f->load_resource(quantity, resource_id);
+    f->load_resource(resource_id, quantity);
     f->set_destination(0);
     f->set_immigrant_home(0);
 
@@ -997,8 +997,14 @@ void building::spawn_figure_storageyard() {
     }
 
     if (!has_figure(BUILDING_SLOT_SERVICE) && task.result == STORAGEYARD_TASK_MONUMENT) {
-        figure* f = create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
-        f->wait_ticks = 20;
+        for (int i = 0; i < 5; ++i) {
+            figure *f = create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
+            f->wait_ticks = 4 * i;
+        }
+        figure *sled = create_figure_with_destination(FIGURE_SLED, task.dest, FIGURE_ACTION_50_SLED_CREATED);
+        sled->load_resource(task.resource, task.amount);
+        sled->wait_ticks = 24;
+        building_storageyard_remove_resource(this, task.resource, task.amount);
 
     } else if (!has_figure(BUILDING_SLOT_SERVICE)) {
         figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access, DIR_4_BOTTOM_LEFT);
@@ -1007,13 +1013,13 @@ void building::spawn_figure_storageyard() {
         switch (task.result) {
         case STORAGEYARD_TASK_GETTING:
         case STORAGEYARD_TASK_GETTING_MOAR:
-            f->load_resource(0, RESOURCE_NONE);
+            f->load_resource(RESOURCE_NONE, 0);
             f->collecting_item_id = task.resource;
             break;
         case STORAGEYARD_TASK_DELIVERING:
         case STORAGEYARD_TASK_EMPTYING:
             task.amount = std::min<int>(task.amount, 400);
-            f->load_resource(task.amount, task.resource);
+            f->load_resource(task.resource, task.amount);
             building_storageyard_remove_resource(this, task.resource, task.amount);
             break;
         }
@@ -1024,7 +1030,7 @@ void building::spawn_figure_storageyard() {
         figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access, DIR_4_BOTTOM_LEFT);
         f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 
-        f->load_resource(0, RESOURCE_NONE);
+        f->load_resource(RESOURCE_NONE, 0);
         f->collecting_item_id = task.resource;
 
         set_figure(1, f->id);
@@ -1046,7 +1052,7 @@ void building::spawn_figure_granary() {
         if (task.status != GRANARY_TASK_NONE) {
             figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road, DIR_4_BOTTOM_LEFT);
             f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
-            f->load_resource(0, task.resource);
+            f->load_resource(task.resource, 0);
             set_figure(0, f->id);
             f->set_home(id);
         }

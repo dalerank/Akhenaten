@@ -362,17 +362,17 @@ public:
     void homeless_action();
     void cartpusher_action();
     void sled_puller_action();
-    //    void labor_seeker_action();
+    void sled_action();
     void explosion_cloud_action();
     void tax_collector_action();
     void engineer_action();
     void storageyard_cart_action();
-    void fireman_action(); // 10
+    void fireman_action();
     void soldier_action();
     void military_standard_action();
     void entertainer_action();
     void trade_caravan_action();
-    void trade_ship_action(); // 20
+    void trade_ship_action();
     void trade_caravan_donkey_action();
     void protestor_action();
     void mugger_action();
@@ -398,7 +398,7 @@ public:
     void enemy_elephant_action();
     void enemy_chariot_action();
     void enemy49_fast_sword_action();
-    void enemy50_sword_action(); // 50
+    void enemy50_sword_action();
     void enemy51_spear_action();
     void enemy52_mounted_archer_action();
     void enemy53_axe_action();
@@ -429,47 +429,34 @@ public:
     void water_carrier_action();
     void festival_guy_action();
 
-    // migrant.c
-    void update_migrant_direction_and_image();
     void update_direction_and_image();
-
-    // animal.c
     int is_nearby(int category, int* distance, int max_distance = 10000, bool gang_on = true);
     bool herd_roost(int step, int bias, int max_dist, int terrain_mask);
-
-    // docker.c
     void get_trade_center_location(int* _x, int* _y);
     int deliver_import_resource(building* dock);
     int fetch_export_resource(building* dock);
 
-    // cartpusher.c
-    inline void set_resource(e_resource resource) {
-        resource_id = resource;
-    }
-    e_resource get_resource() const {
-        return resource_id;
-    }
-    void load_resource(int amount, e_resource resource);
+    inline void set_resource(e_resource resource) { resource_id = resource; }
+    e_resource get_resource() const { return resource_id; }
+    void load_resource(e_resource resource, int amount);
     int dump_resource(int amount);
     int get_carrying_amount();
     void determine_deliveryman_destination();
     void determine_deliveryman_destination_food();
     void cart_update_image();
     void determine_granaryman_destination();
-    //    void remove_resource_from_warehouse();
     void determine_storageyard_cart_destination();
     ////
     void cartpusher_calculate_destination(bool storageyard_cart);
-    void cartpusher_do_deliver(bool storageyard_cart, int ACTION_DONE);
-    void cartpusher_do_retrieve(int ACTION_DONE);
+    void cartpusher_do_deliver(bool storageyard_cart, int action_done);
+    void cartpusher_do_retrieve(int action_done);
 
-    // market.c
+    void sled_do_deliver(int action_done);
+
     int create_delivery_boy(int leader_id);
     int market_buyer_take_food_from_granary(building* market, building* granary);
     bool market_buyer_take_resource_from_storageyard(building* warehouse);
-    void figure_delivery_boy_action();
 
-    // trader.c
     void trader_buy(int amounts);
     void trader_sell(int amounts);
     int trader_total_bought();
@@ -479,20 +466,16 @@ public:
     int trade_ship_lost_queue();
     int trade_ship_done_trading();
 
-    // entertainer.c
     void entertainer_update_shows();
     void entertainer_update_image();
 
-    // maintenance.c
     bool policeman_fight_enemy(int category, int max_distance);
     bool fireman_fight_fire();
     void fireman_extinguish_fire();
     int target_is_alive();
 
-    // crime.c
     int figure_rioter_collapse_building();
 
-    // enemy.c
     void enemy_initial(formation* m);
     void enemy_marching(const formation* m);
     void enemy_fighting(const formation* m);
@@ -500,7 +483,6 @@ public:
     int get_direction();
     int get_missile_direction(const formation* m);
 
-    // soldier.c
     void javelin_launch_missile();
     void legionary_attack_adjacent_enemy();
     int find_mop_up_target();
@@ -509,7 +491,6 @@ public:
     void update_image_legionary(const formation* m, int dir);
     void soldier_update_image(const formation* m);
 
-    // combat.c
     void figure_combat_handle_corpse();
     void resume_activity_after_attack();
     void hit_opponent();
