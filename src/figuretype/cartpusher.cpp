@@ -6,6 +6,7 @@
 #include "building/storage.h"
 #include "building/building_type.h"
 #include "building/storage_yard.h"
+#include "building/monuments.h"
 #include "city/buildings.h"
 #include "city/resource.h"
 #include "core/calc.h"
@@ -28,10 +29,9 @@ static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 
 static const int CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
 static const int CART_OFFSET_8_LOADS_FOOD[] = {0, 40, 48, 56, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-void figure::load_resource(int amount, e_resource resource) {
+void figure::load_resource(e_resource resource, int amount) {
     resource_id = resource;
     resource_amount_full = amount;
-    //    resource_amount_loads = amount / 100;
 }
 
 int figure::dump_resource(int amount) {
@@ -41,6 +41,7 @@ int figure::dump_resource(int amount) {
     // automatically clear field if carrying nothing
     if (resource_amount_full == 0)
         resource_id = RESOURCE_NONE;
+
     return resource_amount_full;
 }
 
@@ -72,7 +73,27 @@ void figure::cartpusher_calculate_destination(bool warehouseman) {
     }
 }
 
-void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
+void figure::sled_do_deliver(int action_done) {
+    anim_frame = 0;
+    wait_ticks++;
+
+    int carrying = get_carrying_amount();
+    e_resource resource = get_resource();
+
+    if (resource == RESOURCE_NONE || carrying <= 0) {
+        progress_inside_speed = 0;
+        return advance_action(action_done);
+    }
+
+    building* dest = destination();
+    switch (dest->type) {
+    case BUILDING_SMALL_MASTABA:
+        building_monument_deliver_resource(dest, resource, carrying);
+        break;
+    };
+}
+
+void figure::cartpusher_do_deliver(bool warehouseman, int action_done) {
     anim_frame = 0;
     wait_ticks++;
 
@@ -85,7 +106,7 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
         // carrying nothing? done!
         if (resource == RESOURCE_NONE || carrying <= 0) {
             progress_inside_speed = 0;
-            return advance_action(ACTION_DONE);
+            return advance_action(action_done);
         } else {
             building* dest = destination();
 
@@ -160,7 +181,7 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
                         building_workshop_add_raw_material(dest, 100, resource);
                         dump_resource(100);
                         if (i + 1 == times) {
-                            advance_action(ACTION_DONE);
+                            advance_action(action_done);
                         }
                     } else {
                         return advance_action(ACTION_8_RECALCULATE);
@@ -173,7 +194,7 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
 
         // am I done?
         if (resource == RESOURCE_NONE || carrying <= 0) {
-            return advance_action(ACTION_DONE);
+            return advance_action(action_done);
         }
     }
 }
@@ -201,7 +222,7 @@ void figure::cartpusher_do_retrieve(int ACTION_DONE) {
             if (get_carrying_amount() < carry_amount_goal_max) {
                 if (building_storageyard_remove_resource(destination(), (e_resource)collecting_item_id, load_single_turn)
                     == 0) {
-                    load_resource(load_single_turn * 100, (e_resource)collecting_item_id);
+                    load_resource((e_resource)collecting_item_id, load_single_turn * 100);
                     if (get_carrying_amount() >= carry_amount_goal_max)
                         advance_action(ACTION_DONE);
                 } else {
@@ -213,7 +234,7 @@ void figure::cartpusher_do_retrieve(int ACTION_DONE) {
         case BUILDING_GRANARY: {
             e_resource resource;
             int loads = building_granary_remove_for_getting_deliveryman(destination(), home(), resource);
-            load_resource(loads * 100, resource);
+            load_resource(resource, loads * 100);
             advance_action(FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD);
             break;
         }
@@ -354,6 +375,41 @@ void figure::determine_storageyard_cart_destination() {
     //    advance_action(FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE);
 }
 
+void figure::sled_action() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Sled");
+    switch (action_state) {
+    case ACTION_8_RECALCULATE:
+        case FIGURE_ACTION_50_SLED_CREATED:
+        --wait_ticks;
+        if (wait_ticks > 0) {
+            return;
+        }
+        advance_action(FIGURE_ACTION_51_SLED_DELIVERING_RESOURCE);
+        break;
+
+    case FIGURE_ACTION_51_SLED_DELIVERING_RESOURCE:
+        do_gotobuilding(destination(), false, TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_52_SLED_AT_DELIVERY_BUILDING, ACTION_8_RECALCULATE);
+        break;
+
+    case FIGURE_ACTION_52_SLED_AT_DELIVERY_BUILDING:
+        sled_do_deliver(ACTION_11_RETURNING_EMPTY);
+        poof();
+        break;
+    }
+
+    switch (resource_id) {
+    case RESOURCE_STONE: image_set_animation(IMG_BIGSLED_STONE, 0, 1); break;
+    case RESOURCE_LIMESTONE: image_set_animation(IMG_BIGSLED_LIMESTONE, 0, 1); break;
+    case RESOURCE_GRANITE: image_set_animation(IMG_BIGSLED_GRANITE, 0, 1); break;
+    case RESOURCE_SANDSTONE: image_set_animation(IMG_BIGSLED_SANDSTONE, 0, 1); break;
+    case RESOURCE_BRICKS: image_set_animation(IMG_BIGSLED_BRICKS, 0, 1); break;
+
+    default:
+        image_set_animation(IMG_BIGSLED_EMPTY, 0, 1);
+        break;
+    }
+}
+
 void figure::sled_puller_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/SledPuller");
     switch (action_state) {
@@ -371,7 +427,7 @@ void figure::sled_puller_action() {
         break;
 
     case FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING:
-        cartpusher_do_deliver(true, ACTION_11_RETURNING_EMPTY);
+        //cartpusher_do_deliver(true, ACTION_11_RETURNING_EMPTY);
         poof();
         break;
     }

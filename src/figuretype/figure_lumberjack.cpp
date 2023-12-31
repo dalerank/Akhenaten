@@ -63,10 +63,15 @@ void figure::lumberjack_action() {
     default: // normal walk
     case 8:
     case 9:
-        return image_set_animation(GROUP_FIGURE_LUMBERJACK, 0, 12);
+        image_set_animation(GROUP_FIGURE_LUMBERJACK, 0, 12);
+        break;
+
     case 10: // gathering
-        return image_set_animation(GROUP_FIGURE_LUMBERJACK, 104, 12);
+        image_set_animation(GROUP_FIGURE_LUMBERJACK, 104, 12);
+        break;
+
     case 11: // returning
-        return image_set_animation(GROUP_FIGURE_LUMBERJACK, 200, 12);
+        image_set_animation(GROUP_FIGURE_LUMBERJACK, 200, 12);
+        break;
     }
 }

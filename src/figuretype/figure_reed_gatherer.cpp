@@ -63,10 +63,15 @@ void figure::reed_gatherer_action() {
     default: // normal walk
     case ACTION_8_RECALCULATE:
     case ACTION_9_REED_GATHERER_GOTO_RESOURCE:
-        return image_set_animation(GROUP_FIGURE_REED_GATHERER, 0, 12);
+        image_set_animation(GROUP_FIGURE_REED_GATHERER, 0, 12);
+        break;
+
     case ACTION_10_REED_GATHERER_WORK: // gathering
-        return image_set_animation(GROUP_FIGURE_REED_GATHERER, 104, 15);
+        image_set_animation(GROUP_FIGURE_REED_GATHERER, 104, 15);
+        break;
+
     case ACTION_10_REED_GATHERER_RETURN_HOME: // returning
-        return image_set_animation(GROUP_FIGURE_REED_GATHERER, 224, 12);
+        image_set_animation(GROUP_FIGURE_REED_GATHERER, 224, 12);
+        break;
     }
 }

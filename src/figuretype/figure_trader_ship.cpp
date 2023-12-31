@@ -80,7 +80,7 @@ void figure::trade_ship_action() {
     //    cart_image_id = 0;
     switch (action_state) {
     case FIGURE_ACTION_110_TRADE_SHIP_CREATED:
-        load_resource(1200, resource_id);
+        load_resource(resource_id, 1200);
         trader_amount_bought = 0;
         //            is_ghost = true;
         wait_ticks++;

@@ -77,6 +77,7 @@ void figure::worker_action() {
 
     switch (action_state) {
     case FIGURE_ACTION_12_WORKER_LEVELING_GROUND:
-        return image_set_animation(IMG_WORKER_AKNH_WORK, 0, 8);
+        image_set_animation(IMG_WORKER_AKNH_WORK, 0, 12);
+        break;
     }
 }
