@@ -655,14 +655,13 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end) {
 }
 
 static int place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
-    tile2i tmin, tmax;
-    map_grid_start_end_to_area(tile2i(x_start, y_start), tile2i(x_end, y_end), tmin, tmax);
+    grid_area area = map_grid_get_area(tile2i(x_start, y_start), tile2i(x_end, y_end));
 
     int needs_road_warning = 0;
     int items_placed = 0;
     game_undo_restore_building_state();
-    for (int y = tmin.y(), endy = tmax.y(); y <= endy; y++) {
-        for (int x = tmin.x(), endx = tmax.x(); x <= endx; x++) {
+    for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
+        for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
                 || map_terrain_exists_tile_in_radius_with_type(tile2i(x, y), 1, 1, TERRAIN_FLOODPLAIN)) {
@@ -706,13 +705,12 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
 }
 
 static int place_plaza(tile2i start, tile2i end) {
-    tile2i tmin, tmax;
-    map_grid_start_end_to_area(start, end, tmin, tmax);
+    grid_area area = map_grid_get_area(start, end);
     game_undo_restore_map(1);
 
     int items_placed = 0;
-    for (int y = tmin.y(), endy = tmax.y(); y <= endy; y++) {
-        for (int x = tmin.x(), endx = tmax.x(); x <= endx; x++) {
+    for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
+        for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)
                 && !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_CANAL)
@@ -735,11 +733,10 @@ static int place_plaza(tile2i start, tile2i end) {
 static int place_garden(tile2i start, tile2i end) {
     game_undo_restore_map(1);
 
-    tile2i tmin, tmax;
-    map_grid_start_end_to_area(start, end, tmin, tmax);
+    grid_area area = map_grid_get_area(start, end);
 
     int items_placed = 0;
-    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
         int grid_offset = tile.grid_offset();
         if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
             && !map_terrain_exists_tile_in_radius_with_type(tile, 1, 1, TERRAIN_FLOODPLAIN)) {

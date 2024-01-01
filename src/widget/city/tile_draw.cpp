@@ -535,10 +535,10 @@ void draw_ornaments_overlay(vec2i pixel, map_point point, painter &ctx) {
     if (b_id) {
         const building* b = building_at(grid_offset);
         if (get_city_overlay()->show_building(b)) {
-            draw_ornaments_and_animations(pixel, point, ctx);
+            draw_ornaments_and_animations_height(pixel, point, ctx);
         }
     } else {
-        draw_ornaments_and_animations(pixel, point, ctx);
+        draw_ornaments_and_animations_height(pixel, point, ctx);
     }
 }
 

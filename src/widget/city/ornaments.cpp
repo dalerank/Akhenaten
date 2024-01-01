@@ -79,10 +79,6 @@ static void draw_water_lift_anim(painter &ctx, building* b, int x, int y, color 
     building_draw_normal_anim(ctx, vec2i{x, y}, b, b->tile, image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
 }
 
-static void draw_small_mastaba_anim(painter &ctx, int x, int y, building *b) {
-
-}
-
 static void draw_fort_anim(int x, int y, building* b, painter &ctx) {
     if (map_property_is_draw_tile(b->tile.grid_offset())) {
         int offset = 0;
@@ -253,7 +249,7 @@ void draw_ornaments_flat(vec2i point, tile2i tile, painter &ctx) {
     }
 }
 
-void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
+void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx) {
     int grid_offset = tile.grid_offset();
     // tile must contain image draw data
     if (!map_property_is_draw_tile(grid_offset)) {
@@ -334,7 +330,7 @@ void draw_ornaments_and_animations(vec2i point, tile2i tile, painter &ctx) {
 
     case BUILDING_SMALL_MASTABA:
     case BUILDING_SMALL_MASTABA_SEC:
-        draw_small_mastaba_anim(ctx, point.x, point.y, b);
+        draw_small_mastaba_anim(ctx, point.x, point.y, b, color_mask);
         break;
 
     case BUILDING_MENU_FORTS:

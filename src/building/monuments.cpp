@@ -59,9 +59,9 @@ struct monument_mastaba : public monument {
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_BRICKS, 3200} });
-        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1600}, {RESOURCE_BRICKS, 3200}});
-        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1600}, {RESOURCE_BRICKS, 3200}});
-        phases.push_back({monument_phase_resource{ARCHITECTS, 4}, {RESOURCE_TIMBER, 3200}, {RESOURCE_BRICKS, 3200}, {RESOURCE_MARBLE, 48}});
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1600}, {RESOURCE_BRICKS, 3200}});
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1600}, {RESOURCE_BRICKS, 3200}});
+        phases.push_back({monument_phase_resource{ARCHITECTS, 4}, {RESOURCE_CLAY, 3200}, {RESOURCE_BRICKS, 3200}, {RESOURCE_MARBLE, 48}});
         phases.push_back({monument_phase_resource{RESOURCE_NONE, 0}});
     }
 } g_monument_mastaba;
@@ -109,10 +109,6 @@ bool building_monument_deliver_resource(building *b, e_resource resource, int am
     int amount_pct = calc_percentage(amount, full_resources);
     b->data.monuments.resources_pct[resource] += amount_pct;
 
-    //while (b->next_part_building_id) {
-    //    b = building_get(b->next_part_building_id);
-    //    b->data.monuments.resources[resource]--;
-    //}
     return true;
 }
 
@@ -255,7 +251,7 @@ int building_monument_has_unfinished_monuments() {
 
 int building_monument_phases(e_building_type type) {
     const monument &config = building_monument_config(type);
-    return config.phases.size();
+    return (int)config.phases.size();
 }
 
 int building_monument_needs_resources(e_building_type type, e_resource resource, int phase) {

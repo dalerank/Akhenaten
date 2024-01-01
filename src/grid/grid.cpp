@@ -299,9 +299,18 @@ grid_tiles map_grid_get_tiles(building *b, int radius) {
     return tiles;
 }
 
-void map_grid_start_end_to_area(tile2i start, tile2i end, tile2i &tmin, tile2i &tmax) {
-    tmin.set(0, 0);
-    tmax.set(0, 0);
+grid_tiles map_grid_get_tiles(tile2i start, tile2i end) {
+    grid_tiles tiles;
+    tiles.reserve(16);
+    grid_area area = map_grid_get_area(start, end);
+    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) { tiles.push_back(tile); });
+
+    return tiles;
+}
+
+grid_area map_grid_get_area(tile2i start, tile2i end) {
+    tile2i tmin(0, 0);
+    tile2i tmax(0, 0);
     if (start.x() < end.x()) {
         tmin.set_x(start.x());
         tmax.set_x(end.x());
@@ -318,6 +327,7 @@ void map_grid_start_end_to_area(tile2i start, tile2i end, tile2i &tmin, tile2i &
     }
 
     map_grid_bound_area(tmin, tmax);
+    return {tmin, tmax};
 }
 
 int map_grid_is_inside(tile2i tile, vec2i size) {

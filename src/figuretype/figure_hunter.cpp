@@ -8,15 +8,14 @@
 #include "core/random.h"
 
 static void scared_animals_in_area(tile2i center, int size) {
-    tile2i tmin, tmax;
     tile2i start = center.shifted(-size, -size);
     tile2i stop = center.shifted(size, size);
-    map_grid_start_end_to_area(start, stop, tmin, tmax);
+    grid_area area = map_grid_get_area(start, stop);
 
     int needs_road_warning = 0;
     int items_placed = 0;
-    for (int y = tmin.y(), endy = tmax.y(); y <= endy; y++) {
-        for (int x = tmin.x(), endx = tmax.x(); x <= endx; x++) {
+    for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
+        for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
             figure *f = map_figure_get(grid_offset);
             if (f && f->type == FIGURE_OSTRICH) {

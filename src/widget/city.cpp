@@ -154,7 +154,7 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
 
     map_figure_sort_by_y();
     city_view_foreach_valid_map_tile(ctx, draw_isometric_flat, draw_ornaments_flat);
-    city_view_foreach_valid_map_tile(ctx, draw_isometric_height, draw_ornaments_and_animations, draw_figures);
+    city_view_foreach_valid_map_tile(ctx, draw_isometric_height, draw_ornaments_and_animations_height, draw_figures);
 
     if (!selected_figure_id) {
         Planner.update(tile);

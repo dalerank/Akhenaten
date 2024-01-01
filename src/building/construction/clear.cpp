@@ -51,12 +51,11 @@ static int clear_land_confirmed(bool measure_only, tile2i start, tile2i end) {
     game_undo_restore_building_state();
     game_undo_restore_map(0);
 
-    tile2i tmin, tmax;
-    map_grid_start_end_to_area(start, end, tmin, tmax);
+    grid_area area = map_grid_get_area(start, end);
 
     int visual_feedback_on_delete = config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE);
-    for (int y = tmin.y(), endy = tmax.y(); y <= endy; y++) {
-        for (int x = tmin.x(), endx = tmax.x(); x <= endx; x++) {
+    for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
+        for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION | TERRAIN_DUNE)) {
                 continue;
@@ -151,17 +150,17 @@ static int clear_land_confirmed(bool measure_only, tile2i start, tile2i end) {
     }
     if (!measure_only || !visual_feedback_on_delete) {
         int radius;
-        if (tmax.x() - tmin.x() <= tmax.y() - tmin.y()) {
-            radius = tmax.y() - tmin.y() + 3;
+        if (area.tmax.x() - area.tmin.x() <= area.tmax.y() - area.tmin.y()) {
+            radius = area.tmax.y() - area.tmin.y() + 3;
         } else {
-            radius = tmax.x() - tmin.x() + 3;
+            radius = area.tmax.x() - area.tmin.x() + 3;
         }
 
-        const int x_min = tmin.x();
-        const int y_min = tmin.y();
-        const int x_max = tmax.x();
-        const int y_max = tmax.y();
-        map_tiles_update_region_empty_land(true, tmin, tmax);
+        const int x_min = area.tmin.x();
+        const int y_min = area.tmin.y();
+        const int x_max = area.tmax.x();
+        const int y_max = area.tmax.y();
+        map_tiles_update_region_empty_land(true, area.tmin, area.tmax);
         map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
         map_tiles_update_region_rubble(x_min, y_min, x_max, y_max);
         map_tiles_update_all_gardens();
@@ -207,12 +206,11 @@ int building_construction_clear_land(bool measure_only, tile2i start, tile2i end
         return clear_land_confirmed(measure_only, start, end);
     }
 
-    tile2i tmin, tmax;
-    map_grid_start_end_to_area(start, end, tmin, tmax);
+    grid_area area = map_grid_get_area(start, end);
 
     int ask_confirm_bridge = 0;
     int ask_confirm_fort = 0;
-    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
         int grid_offset = tile.grid_offset();
         int building_id = map_building_at(grid_offset);
         if (building_id) {

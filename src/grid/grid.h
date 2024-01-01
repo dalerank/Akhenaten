@@ -82,7 +82,8 @@ void map_grid_bound(int* x, int* y);
 void map_grid_bound_area(tile2i &tmin, tile2i &tmax);
 grid_area map_grid_get_area(tile2i tile, int size, int radius);
 grid_tiles map_grid_get_tiles(building *b, int radius);
-void map_grid_start_end_to_area(tile2i start, tile2i end, tile2i &tmin, tile2i &tmax);
+grid_area map_grid_get_area(tile2i start, tile2i end);
+grid_tiles map_grid_get_tiles(tile2i start, tile2i end);
 int map_grid_is_inside(tile2i tile, vec2i size);
 inline int map_grid_is_inside(tile2i tile, int size) { return map_grid_is_inside(tile, vec2i{size, size}); }
 bool map_grid_inside_map_area(int grid_offset, int edge_size = 0);
