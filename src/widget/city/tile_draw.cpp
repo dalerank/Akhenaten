@@ -268,7 +268,9 @@ bool draw_isometric_flat_building(building *b, tile2i point, painter &ctx) {
         }
         break;
 
-    case BUILDING_SMALL_MASTABA_SEC: 
+    case BUILDING_SMALL_MASTABA_SIDE:
+    case BUILDING_SMALL_MASTABA_WALL: 
+    case BUILDING_SMALL_MASTABA_ENTRANCE: 
     case BUILDING_SMALL_MASTABA: {
             if (b->data.monuments.phase == 0) {
                 tile_id = map_image_at(point.grid_offset());
@@ -357,7 +359,7 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
 
     if (building_id > 0) {
         building *b = building_get(building_id);
-        if (b->type == BUILDING_SMALL_MASTABA || b->type == BUILDING_SMALL_MASTABA_SEC) {
+        if (building_type_any_of(b->type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE)) {
           //  return;
         }
     }

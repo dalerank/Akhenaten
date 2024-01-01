@@ -61,7 +61,7 @@ struct monument_mastaba : public monument {
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_BRICKS, 3200} });
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1600}, {RESOURCE_BRICKS, 3200}});
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1600}, {RESOURCE_BRICKS, 3200}});
-        phases.push_back({monument_phase_resource{ARCHITECTS, 4}, {RESOURCE_CLAY, 3200}, {RESOURCE_BRICKS, 3200}, {RESOURCE_MARBLE, 48}});
+        phases.push_back({monument_phase_resource{ARCHITECTS, 4}, {RESOURCE_CLAY, 3200}, {RESOURCE_BRICKS, 3200}});
         phases.push_back({monument_phase_resource{RESOURCE_NONE, 0}});
     }
 } g_monument_mastaba;
@@ -303,7 +303,7 @@ bool building_monument_is_monument(const building *b) {
 }
 
 bool building_monument_type_is_monument(e_building_type type) {
-    return building_type_any_of(type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SEC);
+    return building_type_any_of(type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE);
 }
 
 bool building_monument_type_is_mini_monument(e_building_type type) {

@@ -287,7 +287,9 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->fire_proof = 1;
         break;
     case BUILDING_SMALL_MASTABA:
-    case BUILDING_SMALL_MASTABA_SEC:
+    case BUILDING_SMALL_MASTABA_SIDE:
+    case BUILDING_SMALL_MASTABA_ENTRANCE:
+    case BUILDING_SMALL_MASTABA_WALL:
         b->fire_proof = 1;
         break;
 
@@ -611,7 +613,9 @@ bool building_is_harvester(e_building_type type) {
 bool building_is_monument(int type) {
     switch (type) {
     case BUILDING_SMALL_MASTABA:
-    case BUILDING_SMALL_MASTABA_SEC:
+    case BUILDING_SMALL_MASTABA_SIDE:
+    case BUILDING_SMALL_MASTABA_WALL:
+    case BUILDING_SMALL_MASTABA_ENTRANCE:
     case BUILDING_PYRAMID:
     case BUILDING_SPHINX:
     case BUILDING_MAUSOLEUM:

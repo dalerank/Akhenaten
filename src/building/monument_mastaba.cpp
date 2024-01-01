@@ -78,10 +78,14 @@ void building_small_mastabe_update_day(building *b) {
     grid_tiles tiles = map_grid_get_tiles(b, 0);
     tile2i tile2works = map_grid_area_first(tiles, [] (tile2i tile) { return map_monuments_get_progress(tile.grid_offset()) < 200; });
     bool all_tiles_finished = (tile2works == tile2i{-1, -1});
+    building *part = b;
     if (all_tiles_finished) {
-        map_grid_area_foreach(tiles, [] (tile2i tile) { map_monuments_set_progress(tile.grid_offset(), 0); });
-        building_monument_set_phase(b, b->data.monuments.phase + 1);
-        b->next()->data.monuments.phase = b->data.monuments.phase;
+        int next_phase = b->data.monuments.phase + 1;
+        while (part) {
+            map_grid_area_foreach(tiles, [] (tile2i tile) { map_monuments_set_progress(tile.grid_offset(), 0); });
+            building_monument_set_phase(part, next_phase);
+            part = part->has_next() ? part->next() : nullptr;
+        }
     }
 
     if (b->data.monuments.phase == 2) {
@@ -105,27 +109,28 @@ void building_small_mastabe_update_day(building *b) {
     }
 }
 
-int building_small_mastabe_get_image(e_building_type type, tile2i tile, tile2i start, vec2i size) {
+int building_small_mastabe_get_image(tile2i tile, tile2i start, tile2i end) {
     int image_id = image_group(IMG_SMALL_MASTABA);
     int base_image_id = image_id - 7;
-    bool main = (type == BUILDING_SMALL_MASTABA);
+    bool insidex = (tile.x() > start.x() && tile.x() < end.x());
+    bool insidey = (tile.y() > start.y() && tile.y() < end.y());
     int random = (image_id + 5 + (tile.x() + tile.y()) % 7);
     int result = random;
     if (tile == start) { // top corner
-        result = main ? image_id : image_id - 1;
-    } else if (tile == start.shifted(0, size.y - 1)) {
-        result = main ? image_id - 1 : image_id - 2;
-    } else if (tile == start.shifted(size.x - 1, size.y - 1)) {
-        result = main ? image_id - 5 : image_id - 4;
-    } else if (tile == start.shifted(size.x - 1, 0)) {
-        result = main ? image_id - 6 : image_id - 5;
+        result = image_id;
+    } else if (tile == tile2i(start.x(), end.y())) {
+        result = image_id - 2;
+    } else if (tile == end) {
+        result = image_id - 4;
+    } else if (tile == tile2i(end.x(), start.y())) {
+        result = image_id - 6;
     } else if (tile.x() == start.x()) {
         result = image_id - 1;
-    } else if (tile.y() == start.y() + size.y - 1) {
-        result = main ? random : image_id - 3;
+    } else if (tile.y() == end.y()) {
+        result = image_id - 3;
     } else if (tile.y() == start.y()) {
-        result = main ? image_id - 7 : random;
-    } else if (tile.x() == start.x() + size.x - 1) {
+        result = (insidex || insidey) ? image_id - 7 : random;
+    } else if (tile.x() == end.x()) {
         result = image_id - 5;
     }
 
@@ -168,10 +173,11 @@ int building_small_mastabe_get_bricks_image(e_building_type type, tile2i tile, t
 void draw_small_mastaba_anim_flat(painter &ctx, int x, int y, building *b, int color_mask) {
     int clear_land_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND);
     int image_grounded = image_group(IMG_SMALL_MASTABA) + 5;
+    building *main = b->main();
     color_mask = (color_mask ? color_mask : 0xffffffff);
     if (b->data.monuments.phase == 0) {
-        for (int dy = 0; dy < 4; dy++) {
-            for (int dx = 0; dx < 4; dx++) {
+        for (int dy = 0; dy < b->size; dy++) {
+            for (int dx = 0; dx < b->size; dx++) {
                 tile2i ntile = b->tile.shifted(dx, dy);
                 vec2i offset = tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile.grid_offset());
@@ -189,31 +195,31 @@ void draw_small_mastaba_anim_flat(painter &ctx, int x, int y, building *b, int c
         int image_stick = image_group(IMG_SMALL_MASTABA) + 5 + 8;
         const image_t *img = image_get(image_stick);
         tile2i left_top = b->tile.shifted(0, 0);
-        if (map_monuments_get_progress(left_top.grid_offset()) == 0) {
+        if (left_top == main->tile && map_monuments_get_progress(left_top.grid_offset()) == 0) {
             vec2i offset = tile_to_pixel(left_top);
             ImageDraw::img_sprite(ctx, image_stick, offset.x + img->animation.sprite_x_offset, offset.y + img->animation.sprite_y_offset - img->height + 30, color_mask);
         }
 
         tile2i right_top = b->tile.shifted(3, 0);
-        if (map_monuments_get_progress(right_top.grid_offset()) == 0) {
+        if (right_top == main->tile.shifted(3, 0) && map_monuments_get_progress(right_top.grid_offset()) == 0) {
             vec2i offset = tile_to_pixel(right_top);
             ImageDraw::img_sprite(ctx, image_stick, offset.x + img->animation.sprite_x_offset, offset.y + img->animation.sprite_y_offset - img->height + 30, color_mask);
         }
 
         tile2i left_bottom = b->tile.shifted(0, 3);
-        if (map_monuments_get_progress(left_bottom.grid_offset()) == 0) {
+        if (left_bottom == main->tile.shifted(0, 9) && map_monuments_get_progress(left_bottom.grid_offset()) == 0) {
             vec2i offset = tile_to_pixel(left_bottom);
             ImageDraw::img_sprite(ctx, image_stick, offset.x + img->animation.sprite_x_offset, offset.y + img->animation.sprite_y_offset - img->height + 30, color_mask);
         }
 
         tile2i right_bottom = b->tile.shifted(3, 3);
-        if (map_monuments_get_progress(right_bottom.grid_offset()) == 0) {
+        if (right_bottom == main->tile.shifted(3, 9) && map_monuments_get_progress(right_bottom.grid_offset()) == 0) {
             vec2i offset = tile_to_pixel(right_bottom);
             ImageDraw::img_sprite(ctx, image_stick, offset.x + img->animation.sprite_x_offset, offset.y + img->animation.sprite_y_offset - img->height + 30, color_mask);
         }
     } else if (b->data.monuments.phase == 1) {
-        for (int dy = 0; dy < 4; dy++) {
-            for (int dx = 0; dx < 4; dx++) {
+        for (int dy = 0; dy < b->size; dy++) {
+            for (int dx = 0; dx < b->size; dx++) {
                 tile2i ntile = b->tile.shifted(dx, dy);
                 vec2i offset = tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile.grid_offset());
@@ -223,19 +229,19 @@ void draw_small_mastaba_anim_flat(painter &ctx, int x, int y, building *b, int c
 
                 if (progress > 0 && progress <= 200) {
                     int clr = ((0xff * progress / 200) << 24) | (color_mask & 0x00ffffff);
-                    int img = building_small_mastabe_get_image(b->type, b->tile.shifted(dx, dy), b->tile, vec2i(4, 4));
+                    int img = building_small_mastabe_get_image(b->tile.shifted(dx, dy), main->tile, main->tile.shifted(3, 9));
                     ImageDraw::img_sprite(ctx, img, offset, clr, 1.f, true);
                 }
             }
         }
     } else if (b->data.monuments.phase == 2) {
-        for (int dy = 0; dy < 4; dy++) {
-            for (int dx = 0; dx < 4; dx++) {
+        for (int dy = 0; dy < b->size; dy++) {
+            for (int dx = 0; dx < b->size; dx++) {
                 tile2i ntile = b->tile.shifted(dx, dy);
                 vec2i offset = tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile.grid_offset());
                 if (progress < 200) {
-                    int img = building_small_mastabe_get_image(b->type, b->tile.shifted(dx, dy), b->tile, vec2i(4, 4));
+                    int img = building_small_mastabe_get_image(b->tile.shifted(dx, dy), main->tile, main->tile.shifted(3, 9));
                     ImageDraw::img_sprite(ctx, img, offset, color_mask, 1.f, true);
                 }
             }
@@ -244,9 +250,14 @@ void draw_small_mastaba_anim_flat(painter &ctx, int x, int y, building *b, int c
 }
 
 void draw_small_mastaba_anim(painter &ctx, int x, int y, building *b, int color_mask) {
+    if (b->data.monuments.phase < 2) {
+        return;
+    }
+
     int clear_land_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND);
     int image_grounded = image_group(IMG_SMALL_MASTABA) + 5;
     color_mask = (color_mask ? color_mask : 0xffffffff);
+    building *main = b->main();
 
     vec2i city_orientation_offset{0, 0};
     switch (city_view_orientation()/2) {
@@ -256,28 +267,43 @@ void draw_small_mastaba_anim(painter &ctx, int x, int y, building *b, int color_
     case 3: city_orientation_offset = vec2i(-60, -30); break;
     }
 
-    if (b->data.monuments.phase == 2) {
-        svector<tile2i, 16> tiles2draw;
-        for (int dy = 0; dy < 4; dy++) {
-            for (int dx = 0; dx < 4; dx++) {
-                tile2i ntile = b->tile.shifted(dx, dy);
-                uint32_t progress = map_monuments_get_progress(ntile.grid_offset());
-                if (progress >= 200 && dx % 2 == 0 && dy % 2 == 0) {
-                    tiles2draw.push_back(ntile);
-                }
+    svector<tile2i, 16> tiles2draw;
+    for (int dy = 0; dy < 4; dy++) {
+        for (int dx = 0; dx < 4; dx++) {
+            tile2i ntile = b->tile.shifted(dx, dy);
+            if (dx % 2 == 0 && dy % 2 == 0) {
+                tiles2draw.push_back(ntile);
             }
         }
+    }
 
-        std::sort(tiles2draw.begin(), tiles2draw.end(), [] (tile2i lhs, tile2i rhs) {
-            vec2i lhs_offset = tile_to_pixel(lhs);
-            vec2i rhs_offset = tile_to_pixel(rhs);
-            return lhs_offset.y < rhs_offset.y;
-        });
+    std::sort(tiles2draw.begin(), tiles2draw.end(), [] (tile2i lhs, tile2i rhs) {
+        vec2i lhs_offset = tile_to_pixel(lhs);
+        vec2i rhs_offset = tile_to_pixel(rhs);
+        return lhs_offset.y < rhs_offset.y;
+    });
 
+    if (b->data.monuments.phase == 2) {
         for (auto &tile: tiles2draw) {
-            vec2i offset = tile_to_pixel(tile);
-            int img = building_small_mastabe_get_bricks_image(b->type, tile, b->tile, vec2i(4, 4), 1);
-            ImageDraw::img_sprite(ctx, img, offset + city_orientation_offset, color_mask, 1.f, true);
+            uint32_t progress = map_monuments_get_progress(tile.grid_offset());
+            if (progress >= 200) {
+                vec2i offset = tile_to_pixel(tile);
+                int img = building_small_mastabe_get_bricks_image(b->type, tile, b->tile, vec2i(4, 4), 1);
+                ImageDraw::img_sprite(ctx, img, offset + city_orientation_offset, color_mask, 1.f, true);
+            }
+        }
+    } else if (b->data.monuments.phase == 3) {
+        for (auto &tile: tiles2draw) {
+            uint32_t progress = map_monuments_get_progress(tile.grid_offset());
+            if (progress >= 200) {
+                vec2i offset = tile_to_pixel(tile);
+                int img = building_small_mastabe_get_bricks_image(b->type, tile, b->tile, vec2i(4, 4), 2);
+                ImageDraw::img_sprite(ctx, img, offset + city_orientation_offset, color_mask, 1.f, true);
+            } else {
+                vec2i offset = tile_to_pixel(tile);
+                int img = building_small_mastabe_get_bricks_image(b->type, tile, b->tile, vec2i(4, 4), 1);
+                ImageDraw::img_sprite(ctx, img, offset + city_orientation_offset, color_mask, 1.f, true);
+            }
         }
     }
 }

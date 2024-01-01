@@ -258,7 +258,9 @@ void building_properties_init() {
     properties[BUILDING_POTTERY_WORKSHOP] = {2, 0, 0, 0, 0, IMG_POTTERY_WORKSHOP};
     properties[BUILDING_BREWERY_WORKSHOP] = {2, 0, 0, 0, 0, IMG_BEER_WORKSHOP};
     properties[BUILDING_SMALL_MASTABA] = {4, 0, 0, 0, 0, IMG_SMALL_MASTABA};
-    properties[BUILDING_SMALL_MASTABA_SEC] = {4, 0, 0, 0, 0, IMG_SMALL_MASTABA};
+    properties[BUILDING_SMALL_MASTABA_SIDE] = {4, 0, 0, 0, 0, IMG_SMALL_MASTABA};
+    properties[BUILDING_SMALL_MASTABA_WALL] = {2, 0, 0, 0, 0, IMG_SMALL_MASTABA};
+    properties[BUILDING_SMALL_MASTABA_ENTRANCE] = {2, 0, 0, 0, 0, IMG_SMALL_MASTABA};
     properties[BUILDING_BAZAAR] = {2, 0, 0, 0, 0, IMG_BAZAAR};
     properties[BUILDING_BRICKLAYERS_GUILD] = {2, 0, 0, 0, 0, IMG_BRICKLAYERS_GUILD};
 }

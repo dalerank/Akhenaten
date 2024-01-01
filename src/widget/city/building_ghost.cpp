@@ -222,9 +222,10 @@ static void draw_small_mastaba_ghost(painter &ctx, e_building_type type, vec2i p
         return (image_id + 5 + (tile.x() + tile.y()) % 7);
     };
 
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            draw_building(ctx, get_image(end.shifted(i, j), end, vec2i{8, 4}), pixel + vec2i(-30, 15) * i + vec2i(30, 15) * j);
+    vec2i size{10, 4};
+    for (int i = 0; i < size.x; ++i) {
+        for (int j = 0; j < size.y; ++j) {
+            draw_building(ctx, get_image(end.shifted(i, j), end, size), pixel + vec2i(-30, 15) * i + vec2i(30, 15) * j);
         }
     }
 }

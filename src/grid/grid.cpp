@@ -293,7 +293,7 @@ grid_tiles map_grid_get_tiles(building *b, int radius) {
     while (part) {
         grid_area area = map_grid_get_area(part->tile, part->size, 0);
         map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) { tiles.push_back(tile); });
-        part = part->has_next() ? b->next() : nullptr;
+        part = part->has_next() ? part->next() : nullptr;
     }
 
     return tiles;

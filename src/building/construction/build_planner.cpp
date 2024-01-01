@@ -129,21 +129,37 @@ static void add_mastaba(building *b, int orientation) {
     map_mastaba_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 
     // create parade ground
-    tile2i offset = {0, 0};
+    tile2i side_offset = {0, 0};
+    tile2i wall_offset = {0, 0};
+    tile2i entrance_offset = {0, 0};
     switch (orientation) {
-    case 0: offset = {0, 4}; break;
-    case 1: offset = {-4, 0}; break;
-    case 2: offset = {0, -4}; break;
-    case 3: offset = {4, 0}; break;
+    case 0: entrance_offset = {2, 4}; wall_offset = {0, 4}; side_offset = {0, 6}; break;
+    case 1: entrance_offset = {-4, 2}; wall_offset = {-4, 0}; side_offset = {-6, 0}; break;
+    case 2: entrance_offset = {2, -4}; wall_offset = {0, -4}; side_offset = {0, -6}; break;
+    case 3: entrance_offset = {4, 2}; wall_offset = {4, 0}; side_offset = {6, 0}; break;
     }
-    int global_rotation = building_rotation_global_rotation();
-    building* next = building_create(BUILDING_SMALL_MASTABA_SEC, b->tile.x() + offset.x(), b->tile.y() +offset.y(), 0);
-    game_undo_add_building(next);
-    next->prev_part_building_id = b->id;
-    b->next_part_building_id = next->id;
-    next->next_part_building_id = 0;
-    tile2i btile_add = b->tile.shifted(offset.x(), offset.y());
-    map_mastaba_tiles_add(next->id, btile_add, next->size, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
+
+    building* mastaba_wall = building_create(BUILDING_SMALL_MASTABA_WALL, b->tile.x() + wall_offset.x(), b->tile.y() + wall_offset.y(), 0);
+    game_undo_add_building(mastaba_wall);
+    mastaba_wall->prev_part_building_id = b->id;
+    b->next_part_building_id = mastaba_wall->id;
+    tile2i btile_add = b->tile.shifted(wall_offset.x(), wall_offset.y());
+    map_mastaba_tiles_add(mastaba_wall->id, btile_add, mastaba_wall->size, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
+
+    building* mastaba_entrance = building_create(BUILDING_SMALL_MASTABA_ENTRANCE, b->tile.x() + entrance_offset.x(), b->tile.y() + entrance_offset.y(), 0);
+    game_undo_add_building(mastaba_entrance);
+    mastaba_entrance->prev_part_building_id = mastaba_wall->id;
+    mastaba_wall->next_part_building_id = mastaba_entrance->id;
+    btile_add = b->tile.shifted(entrance_offset.x(), entrance_offset.y());
+    map_mastaba_tiles_add(mastaba_entrance->id, btile_add, mastaba_entrance->size, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
+
+    building* mastaba_side = building_create(BUILDING_SMALL_MASTABA_SIDE, b->tile.x() + side_offset.x(), b->tile.y() + side_offset.y(), 0);
+    game_undo_add_building(mastaba_side);
+    mastaba_side->prev_part_building_id = mastaba_entrance->id;
+    mastaba_entrance->next_part_building_id = mastaba_side->id;
+    mastaba_side->next_part_building_id = 0;
+    btile_add = b->tile.shifted(side_offset.x(), side_offset.y());
+    map_mastaba_tiles_add(mastaba_side->id, btile_add, mastaba_side->size, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 }
 
 static void add_temple_complex(building* b, int orientation) {

@@ -44,7 +44,7 @@ void figure::worker_action() {
                 b_dest->data.industry.labor_days_left = 96;
             } else if (b_dest->type == BUILDING_PYRAMID) {
                 // todo: MONUMENTSSSS
-            } else if (b_dest->type == BUILDING_SMALL_MASTABA || b_dest->type == BUILDING_SMALL_MASTABA_SEC) {
+            } else if (building_type_any_of(b_dest->type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE)) {
                 tile2i tile_need_leveling = building_small_mastaba_tile4work(b_dest);
                 if (tile_need_leveling == tile2i{-1, -1}) {
                     poof();

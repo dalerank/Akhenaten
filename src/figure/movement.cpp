@@ -272,13 +272,11 @@ void figure::advance_route_tile(int roaming_enabled) {
             }
         }
     } else if (map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
-        int type = building_at(target_grid_offset)->type;
-        switch (type) {
+        building *b = building_at(target_grid_offset);
+        switch (b->type) {
             //            case BUILDING_WAREHOUSE_SPACE:
             //            case BUILDING_GRANARY:
         case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
-        case BUILDING_SMALL_MASTABA:
-        case BUILDING_SMALL_MASTABA_SEC:
         case BUILDING_HOUSE_VACANT_LOT:
         case BUILDING_FORT_GROUND:
         case BUILDING_FESTIVAL_SQUARE:
@@ -291,6 +289,16 @@ void figure::advance_route_tile(int roaming_enabled) {
         case BUILDING_CHICKPEAS_FARM:
             //
             break; // OK to walk
+
+        case BUILDING_SMALL_MASTABA:
+        case BUILDING_SMALL_MASTABA_SIDE:
+        case BUILDING_SMALL_MASTABA_WALL:
+        case BUILDING_SMALL_MASTABA_ENTRANCE:
+            if (b->data.monuments.phase > 2) {
+                direction = DIR_FIGURE_REROUTE;
+            }
+            break;
+            
         default:
             direction = DIR_FIGURE_REROUTE;
         }

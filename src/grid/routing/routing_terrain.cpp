@@ -37,7 +37,12 @@ static int get_land_type_citizen_building(int grid_offset) {
         return CITIZEN_2_PASSABLE_TERRAIN;
 
     case BUILDING_SMALL_MASTABA:
-    case BUILDING_SMALL_MASTABA_SEC:
+    case BUILDING_SMALL_MASTABA_SIDE:
+    case BUILDING_SMALL_MASTABA_WALL:
+    case BUILDING_SMALL_MASTABA_ENTRANCE:
+        if (b->data.monuments.phase > 2) {
+            return CITIZEN_N1_BLOCKED;
+        }
         return CITIZEN_2_PASSABLE_TERRAIN;
 
     case BUILDING_BANDSTAND:
