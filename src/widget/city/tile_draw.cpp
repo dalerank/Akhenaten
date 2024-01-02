@@ -436,6 +436,10 @@ void draw_isometric_height(vec2i pixel, tile2i tile, painter &ctx) {
 }
 
 void draw_figures(vec2i pixel, tile2i tile, painter &ctx) {
+    draw_figures(pixel, tile, ctx, false);
+}
+
+void draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
     auto& draw_context = get_draw_context();
 
     int grid_offset = tile.grid_offset();
@@ -446,7 +450,7 @@ void draw_figures(vec2i pixel, tile2i tile, painter &ctx) {
             continue;
         }
 
-        if (f->is_drawn) {
+        if (f->is_drawn && !force) {
             continue;
         }
 

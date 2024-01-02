@@ -73,9 +73,9 @@ public:
     unsigned char state;
     unsigned char faction_id; // 1 = city, 0 = enemy
     unsigned char action_state_before_attack;
-    signed char direction;
-    signed char previous_tile_direction;
-    signed char attack_direction;
+    uint8_t direction;
+    uint8_t previous_tile_direction;
+    uint8_t attack_direction;
     tile2i tile;
     tile2i previous_tile;
     tile2i source_tile;
@@ -253,6 +253,7 @@ public:
     bool is_boat();
     bool can_move_by_water();
     bool can_move_by_terrain();
+    void set_direction_to(building *b);
 
     void poof();
     inline bool available() { return state == FIGURE_STATE_NONE; };
@@ -326,6 +327,7 @@ public:
     // movement.c
     void advance_figure_tick();
     void set_target_height_bridge();
+    void set_target_height_building();
     int get_permission_for_figure();
     void move_to_next_tile();
     void set_next_tile_and_direction();
@@ -351,7 +353,7 @@ public:
     void action_perform();
     void advance_action(short NEXT_ACTION);
     bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = ACTION_2_ROAMERS_RETURNING);
-    bool do_goto(map_point dest, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
+    bool do_goto(tile2i dest, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
     bool do_gotobuilding(building* dest, bool stop_at_road = true, e_terrain_usage terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
     bool do_returnhome(e_terrain_usage terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1);
     bool do_exitbuilding(bool invisible, short NEXT_ACTION = -1, short FAIL_ACTION = -1);

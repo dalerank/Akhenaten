@@ -39,8 +39,7 @@ building_scribal_school = {
 
   info : {
     icon_res : {x: 32, y: 106},
-    text_res_x : 60,
-    text_res_y : 110,
+    text_res : {x: 60, y: 110},
   }
 }
 

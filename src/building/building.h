@@ -364,6 +364,7 @@ public:
     bool can_spawn_bricklayer_man(e_figure_type ftype, int max_gatherers_per_building);
 
     void update_native_crop_progress();
+    tile2i access_tile();
     void update_road_access();
     void update_day();
     void update_month();

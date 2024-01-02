@@ -41,7 +41,10 @@ static int get_land_type_citizen_building(int grid_offset) {
     case BUILDING_SMALL_MASTABA_WALL:
     case BUILDING_SMALL_MASTABA_ENTRANCE:
         if (b->data.monuments.phase > 2) {
-            return CITIZEN_N1_BLOCKED;
+            tile2i main = b->main()->tile;
+            tile2i end = main.shifted(3, 9);
+            tile2i tile(grid_offset);
+            return (tile.x() == main.x() || tile.y() == main.y() || tile.x() == end.x()) ? CITIZEN_N1_BLOCKED : CITIZEN_2_PASSABLE_TERRAIN;
         }
         return CITIZEN_2_PASSABLE_TERRAIN;
 

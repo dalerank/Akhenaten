@@ -8,7 +8,6 @@ void figure::bricklayer_action() {
     building* bhome = home();
     building* b_dest = destination();
     e_terrain_usage terrain_usage = TERRAIN_USAGE_ROADS;
-    bool stop_at_road = true;
     if (!bhome->is_valid() || !b_dest->is_valid()) {
         poof();
         return;
@@ -16,7 +15,6 @@ void figure::bricklayer_action() {
 
     if (b_dest->is_monument()) {
         terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-        stop_at_road = false;
     } else {
         terrain_usage = TERRAIN_USAGE_ROADS;
     }
@@ -25,13 +23,22 @@ void figure::bricklayer_action() {
     case 9:
         break;
 
-    case FIGURE_ACTION_10_BRIRKLAYER_GOING:
-        if (do_gotobuilding(destination(), stop_at_road, terrain_usage)) {
-            advance_action(FIGURE_ACTION_14_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
+    case FIGURE_ACTION_20_BRIRKLAYER_DESTROY:
+        poof();
+        break;
+
+    case FIGURE_ACTION_10_BRIRKLAYER_CREATED:
+        destination_tile = destination()->access_tile();
+        advance_action(FIGURE_ACTION_11_BRIRKLAYER_GOING);
+        break;
+
+    case FIGURE_ACTION_11_BRIRKLAYER_GOING:
+        if (do_goto(destination_tile, terrain_usage, -1, FIGURE_ACTION_20_BRIRKLAYER_DESTROY)) {
+            advance_action(FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
         }
         break;
 
-    case FIGURE_ACTION_14_BRICKLAYER_LOOKING_FOR_IDLE_TILE:
+    case FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE:
         if (building_type_any_of(b_dest->type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE)) {
             tile2i wait_tile = building_small_mastaba_bricks_waiting_tile(b_dest);
             if (wait_tile == tile2i{-1, -1}) {
@@ -46,46 +53,46 @@ void figure::bricklayer_action() {
             });
 
             destination_tile = wait_tile;
-            advance_action(FIGURE_ACTION_11_BRICKLAYER_GOING_TO_PLACE);
+            advance_action(FIGURE_ACTION_12_BRICKLAYER_GOING_TO_PLACE);
         }
         break;
 
-    case FIGURE_ACTION_11_BRICKLAYER_GOING_TO_PLACE:
+    case FIGURE_ACTION_12_BRICKLAYER_GOING_TO_PLACE:
         if (do_goto(destination_tile, false, TERRAIN_USAGE_ANY)) {
             wait_ticks = 0;
             direction = 0;
             map_grid_area_foreach(tile.shifted(-1, -1), tile, [&] (tile2i t) { map_monuments_set_progress(t.grid_offset(), 1); });
-            advance_action(FIGURE_ACTION_12_BRICKLAYER_WAITING_RESOURCES);
+            advance_action(FIGURE_ACTION_13_BRICKLAYER_WAITING_RESOURCES);
         }
         break;
 
-    case FIGURE_ACTION_12_BRICKLAYER_WAITING_RESOURCES:
+    case FIGURE_ACTION_13_BRICKLAYER_WAITING_RESOURCES:
         wait_ticks++;
         if (wait_ticks > 30) {
             wait_ticks = 0;
             bool area_ready = true;
             map_grid_area_foreach(tile.shifted(-1, -1), tile, [&] (tile2i t) { area_ready &= (map_monuments_get_progress(t) == 2); });
             if (area_ready) {
-                advance_action(FIGURE_ACTION_13_BRICKLAYER_LAY_BRICKS);
+                advance_action(FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS);
             }
         }
         break;
 
-    case FIGURE_ACTION_13_BRICKLAYER_LAY_BRICKS:
+    case FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS:
         int progress = map_monuments_get_progress(tile.grid_offset());
         if (progress < 200) {
             map_grid_area_foreach(tile.shifted(-1, -1), tile, [&] (tile2i t) { map_monuments_set_progress(t.grid_offset(), progress + 1); });
         } else {
-            advance_action(FIGURE_ACTION_14_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
+            advance_action(FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
         }
     }
 
     switch (action_state) {
-    case FIGURE_ACTION_12_BRICKLAYER_WAITING_RESOURCES:
+    case FIGURE_ACTION_13_BRICKLAYER_WAITING_RESOURCES:
         image_set_animation(IMG_BRICKLAYER_IDLE, 0, 8);
         break;
 
-    case FIGURE_ACTION_13_BRICKLAYER_LAY_BRICKS:
+    case FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS:
         image_set_animation(IMG_BRICKLAYER_WORK, 0, 12);
         break;
     }

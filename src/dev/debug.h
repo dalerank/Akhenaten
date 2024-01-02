@@ -53,6 +53,7 @@ enum e_debug_render {
     e_debug_render_tile_toph = 22,
     e_debug_render_monuments = 23,
     e_debug_render_figures = 24,
+    e_debug_render_height = 25,
 
     e_debug_render_size
 };

@@ -3,6 +3,7 @@
 #include "building.h"
 #include "game/resource.h"
 #include "grid/road_access.h"
+#include "grid/grid.h"
 
 #define MONUMENT_FINISHED -1
 #define MONUMENT_START 1
@@ -13,6 +14,8 @@ enum module_type {
 };
 
 tile2i building_monument_access_point(building *b);
+tile2i building_monument_center_point(building *b);
+grid_area building_monument_get_area(building *b);
 int building_monument_add_module(building *b, int module_type);
 bool building_monument_deliver_resource(building *b, e_resource resource, int amount);
 int building_monument_has_unfinished_monuments();
@@ -29,6 +32,8 @@ bool building_monument_requires_resource(e_building_type type, e_resource resour
 int building_monument_has_required_resources_to_build(e_building_type type);
 int building_monument_needs_resource(building *b, e_resource resource);
 int building_monument_needs_resources(e_building_type type, e_resource resource, int phase);
+int building_monument_needs_bricklayers(e_building_type type, int phase);
+bool building_monument_need_bricklayers(const building *b);
 int building_monument_resource_in_delivery(building *b, int resource_id);
 void building_monument_remove_delivery(int figure_id);
 void building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int num_loads);

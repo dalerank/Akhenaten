@@ -246,7 +246,7 @@ void draw_ornaments_flat(vec2i point, tile2i tile, painter &ctx) {
     case BUILDING_SMALL_MASTABA_SIDE:
     case BUILDING_SMALL_MASTABA_WALL:
     case BUILDING_SMALL_MASTABA_ENTRANCE:
-        draw_small_mastaba_anim_flat(ctx, point.x, point.y, b, color_mask);
+        draw_small_mastaba_anim_flat(ctx, point, b, color_mask);
         break;
     }
 }
@@ -334,7 +334,7 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
     case BUILDING_SMALL_MASTABA_SIDE:
     case BUILDING_SMALL_MASTABA_WALL:
     case BUILDING_SMALL_MASTABA_ENTRANCE:
-        draw_small_mastaba_anim(ctx, point.x, point.y, b, color_mask);
+        draw_small_mastaba_anim(ctx, point, b, color_mask);
         break;
 
     case BUILDING_MENU_FORTS:

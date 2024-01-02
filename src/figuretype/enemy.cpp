@@ -41,7 +41,7 @@ void figure::enemy_initial(formation* m) {
                                  m->destination_y + formation_position_y.enemy);
             //            destination_tile.x() = m->destination_x + formation_position_x.enemy;
             //            destination_tile.y() = m->destination_y + formation_position_y.enemy;
-            if (calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y()) < 8)
+            if (calc_general_direction(tile, destination_tile) < 8)
                 action_state = FIGURE_ACTION_153_ENEMY_MARCHING;
         }
     }
@@ -96,7 +96,7 @@ void figure::enemy_marching(const formation* m) {
                              m->destination_y + formation_position_y.enemy);
         //        destination_tile.x() = m->destination_x + formation_position_x.enemy;
         //        destination_tile.y() = m->destination_y + formation_position_y.enemy;
-        if (calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y()) == DIR_FIGURE_NONE) {
+        if (calc_general_direction(tile, destination_tile) == DIR_FIGURE_NONE) {
             action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
             return;
         }

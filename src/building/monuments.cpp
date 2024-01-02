@@ -8,6 +8,7 @@
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
 #include "empire/empire_city.h"
+#include "figure/figure.h"
 #include "core/svector.h"
 #include "city/resource.h"
 #include "city/message.h"
@@ -115,6 +116,40 @@ bool building_monument_deliver_resource(building *b, e_resource resource, int am
 const monument &building_monument_config(e_building_type type) {
     auto it = std::find_if(std::begin(g_monument_types), std::end(g_monument_types), [type] (const monument *it) { return it->btype == type; });
     return (it != std::end(g_monument_types) ? *(*it) : g_monument_invalid);
+}
+
+grid_area building_monument_get_area(building *b) {
+    if (b->id <= 0 || !building_monument_is_monument(b)) {
+        return {{-1, -1}, {-1, -1}};
+    }
+
+    tile2i main = b->tile;
+    tile2i end = main;
+
+    switch (b->type) {
+    case BUILDING_SMALL_MASTABA:
+        end = main.shifted(3, 9);
+        break;
+    }
+
+    return {main, end};
+}
+
+tile2i building_monument_center_point(building *b) {
+    if (b->id <= 0 || !building_monument_is_monument(b)) {
+        return {-1, -1};
+    }
+
+    tile2i main = b->tile;
+    tile2i end = main;
+
+    switch (b->type) {
+    case BUILDING_SMALL_MASTABA:
+        end = main.shifted(3, 9);
+        break;
+    }
+
+    return main.add(end).div(2);
 }
 
 tile2i building_monument_access_point(building *b) {
@@ -254,6 +289,17 @@ int building_monument_phases(e_building_type type) {
     return (int)config.phases.size();
 }
 
+int building_monument_needs_bricklayers(e_building_type type, int phase) {
+    const monument &config = building_monument_config(type);
+
+    if (phase >= config.phases.size()) {
+        return 0;
+    }
+
+    const monument_phase &ph = config.phases[phase];
+    return ph.resources.size() > 0 ? ph.resources[0].count : 0;
+}
+
 int building_monument_needs_resources(e_building_type type, e_resource resource, int phase) {
     const monument &config = building_monument_config(type);
 
@@ -367,11 +413,11 @@ bool building_monument_needs_resources(building *b) {
 }
 
 constexpr int MESSAGE_MONUMENT_COMPLETE = 171;
-int building_monument_progress(building *b)
-{
+int building_monument_progress(building *b) {
     if (building_monument_needs_resources(b)) {
         return 0;
     }
+
     if (b->data.monuments.phase == MONUMENT_FINISHED) {
         return 0;
     }
@@ -522,6 +568,7 @@ int building_monument_working(e_building_type type) {
     if (!monument_id) {
         return 0;
     }
+
     if (b->data.monuments.phase != MONUMENT_FINISHED || b->state != BUILDING_STATE_VALID) {
         return 0;
     }
@@ -617,6 +664,30 @@ int building_monument_toggle_construction_halted(building *b) {
         b->state = BUILDING_STATE_MOTHBALLED;
         return 1;
     }
+}
+
+bool building_monument_need_bricklayers(const building *b) {
+    if (!building_is_monument(b->type)) {
+        return false;
+    }
+
+    if (b->data.monuments.phase == MONUMENT_FINISHED) {
+        return false;
+    }
+
+    int phase = b->data.monuments.phase;
+    int works_bricklayers = 0;
+    for (auto &id : b->data.monuments.workers) {
+        figure *f = id > 0 ? figure_get(id) : nullptr;
+        works_bricklayers += (f && f->type == FIGURE_BRICKLAYER) ? 1 : 0;
+    }
+
+    switch (b->type) {
+    case BUILDING_SMALL_MASTABA:
+        return (phase >= 2 && phase <= 5 && works_bricklayers < building_monument_needs_bricklayers(b->type, b->data.monuments.phase));
+    }
+
+    return false;
 }
 
 bool building_monument_is_unfinished(const building *b) {

@@ -314,7 +314,6 @@ bool figure::do_enterbuilding(bool invisible, building* b, short NEXT_ACTION, sh
 }
 
 void figure::action_perform() {
-    //    return;
     if (action_state < 0) {
         set_state(FIGURE_STATE_DEAD);
     }
@@ -474,15 +473,23 @@ void figure::action_perform() {
             do_returnhome();
             break;
         }
-        if (state == FIGURE_STATE_DYING) // update corpses / dying animation
+        if (state == FIGURE_STATE_DYING) { // update corpses / dying animation
             figure_combat_handle_corpse();
+        }
+
         if (map_terrain_is(tile.grid_offset(), TERRAIN_ROAD)) { // update road flag
             outside_road_ticks = 0;
-            if (map_terrain_is(tile.grid_offset(), TERRAIN_WATER)) // bridge
+            if (map_terrain_is(tile.grid_offset(), TERRAIN_WATER)) { // bridge
                 set_target_height_bridge();
+            }
         } else {
-            if (outside_road_ticks < 255)
+            if (outside_road_ticks < 255) {
                 outside_road_ticks++;
+            }
+
+            if (map_terrain_is(tile.grid_offset(), TERRAIN_BUILDING)) { // bridge
+                set_target_height_building();
+            }
 
             const bool tile_is_water = map_terrain_is(tile.grid_offset(), TERRAIN_WATER);
             if (!can_move_by_water() && tile_is_water) {
@@ -494,16 +501,16 @@ void figure::action_perform() {
             }
 
             if (terrain_usage == TERRAIN_USAGE_ROADS) { // walkers outside of roads for too long?
-                if (destination_tile.x() && destination_tile.y()
-                    && outside_road_ticks > 100) // dudes with destination have a bit of lee way
+                                                        // dudes with destination have a bit of lee way
+                if (destination_tile.x() && destination_tile.y() && outside_road_ticks > 100) {
                     poof();
-                if (!destination_tile.x() && !destination_tile.y() && state == FIGURE_STATE_ALIVE
-                    && outside_road_ticks > 0)
+                }
+
+                if (!destination_tile.x() && !destination_tile.y() && state == FIGURE_STATE_ALIVE && outside_road_ticks > 0) {
                     poof();
+                }
             }
         }
-
-        ////////////
 
         switch (type) {
         case FIGURE_IMMIGRANT: immigrant_action(); break;

@@ -45,7 +45,7 @@ void figure::policeman_action() {
             } else {
                 action_state = FIGURE_ACTION_72_POLICEMAN_ROAMING;
                 init_roaming_from_building(0);
-                direction = calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+                direction = calc_general_direction(tile, destination_tile);
                 roam_length = 0;
             }
         }

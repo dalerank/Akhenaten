@@ -51,7 +51,7 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
             *items += 1;
             break;
         }
-        int direction = calc_general_direction(x_end, y_end, x_start, y_start);
+        int direction = calc_general_direction(tile2i(x_end, y_end), tile2i(x_start, y_start));
         if (direction == DIR_8_NONE)
             return 1; // destination reached
 

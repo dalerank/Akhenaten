@@ -36,7 +36,7 @@ void figure::fireman_action() { // doubles as fireman! not as policeman!!!
 
         if (direction == DIR_FIGURE_REROUTE) {
             movement_ticks_watchdog++;
-            int next_direction = calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+            int next_direction = calc_general_direction(tile, destination_tile);
             int dir_grid_offset = tile.grid_offset() + map_grid_direction_delta(next_direction);
             building *next_tile_b = building_at(dir_grid_offset);
             building *next_b = destination();

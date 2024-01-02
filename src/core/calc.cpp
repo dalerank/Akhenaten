@@ -10,7 +10,11 @@ int calc_minimum_distance(int x1, int y1, int x2, int y2) {
     }
 }
 
-int calc_general_direction(int x_from, int y_from, int x_to, int y_to) {
+int calc_general_direction(tile2i from, tile2i to) {
+    int x_from = from.x();
+    int x_to = to.x();
+    int y_from = from.y();
+    int y_to = to.y();
     if (x_from < x_to) {
         if (y_from > y_to)
             return DIR_1_RIGHT;

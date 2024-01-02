@@ -799,14 +799,14 @@ void building::spawn_figure_guilds() {
             return false;
         }
 
-        return b.data.monuments.phase == 2;
+        return building_monument_need_bricklayers(&b);
     });
 
     if (!monument) {
         return;
     }
 
-    auto f = create_figure_with_destination(FIGURE_BRICKLAYER, monument, FIGURE_ACTION_10_BRIRKLAYER_GOING, BUILDING_SLOT_SERVICE);
+    auto f = create_figure_with_destination(FIGURE_BRICKLAYER, monument, FIGURE_ACTION_10_BRIRKLAYER_CREATED, BUILDING_SLOT_SERVICE);
     monument->monument_add_workers(f->id);
     f->wait_ticks = random_short() % 30; // ok
 }
@@ -997,13 +997,18 @@ void building::spawn_figure_storageyard() {
     }
 
     if (!has_figure(BUILDING_SLOT_SERVICE) && task.result == STORAGEYARD_TASK_MONUMENT) {
+        figure *leader = create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
+        leader->set_direction_to(task.dest);
         for (int i = 0; i < 5; ++i) {
-            figure *f = create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
-            f->wait_ticks = 4 * i;
+            figure *follower = create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
+            follower->set_direction_to(task.dest);
+            follower->wait_ticks = i * 4;
         }
-        figure *sled = create_figure_with_destination(FIGURE_SLED, task.dest, FIGURE_ACTION_50_SLED_CREATED);
+        figure *sled = figure_create(FIGURE_SLED, tile, 0);
+        sled->set_destination(task.dest);
+        sled->set_direction_to(task.dest);
         sled->load_resource(task.resource, task.amount);
-        sled->wait_ticks = 24;
+        sled->leading_figure_id = leader->id;
         building_storageyard_remove_resource(this, task.resource, task.amount);
 
     } else if (!has_figure(BUILDING_SLOT_SERVICE)) {
@@ -1305,6 +1310,15 @@ void building::update_month() {
         }
         break;
     }
+}
+
+tile2i building::access_tile() {
+    switch (type) {
+    case BUILDING_SMALL_MASTABA:
+        return tile.shifted(0, 10);
+    }
+
+    return road_access;
 }
 
 void building::update_road_access() {

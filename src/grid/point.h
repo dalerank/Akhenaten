@@ -16,6 +16,7 @@ private:
     int p_ABS_Y = -1;
 
 public:
+    typedef map_point self;
     // SETTERS / GETTERS
     const int x(int v);
     const int y(int v);
@@ -30,18 +31,20 @@ public:
     const int ABS_X(void);
     const int ABS_Y(void);
 
-    inline float dist(map_point o) { return ::sqrtf(::powf(x() - o.x(), 2) + ::powf(y() - o.y(), 2)); }
+    inline float dist(self o) { return ::sqrtf(::powf(x() - o.x(), 2) + ::powf(y() - o.y(), 2)); }
 
     // MODIFIERS
     void shift(int _x, int _y);
     void shift(int _grid_offset);
-    map_point shifted(int _x, int _y);
-    map_point shifted(int _grid_offset);
-    inline map_point shifted(map_point offset) { return this->shifted(offset.p_X, offset.p_Y); }
-    inline map_point dist2i(map_point o) { return map_point(std::abs(this->x() - o.x()), std::abs(this->y() - o.y())); }
+    self shifted(int _x, int _y);
+    self shifted(int _grid_offset);
+    inline self shifted(self offset) { return this->shifted(offset.p_X, offset.p_Y); }
+    inline self dist2i(self o) { return self(std::abs(this->x() - o.x()), std::abs(this->y() - o.y())); }
 
-    inline map_point mod(int x, int y) { return map_point(this->x() % x, this->y() % y); }
-    inline bool valid() const { return (map_point(-1, -1) != *this); }
+    inline self mod(int x, int y) { return self(this->x() % x, this->y() % y); }
+    inline self add(self o) { return self(this->x() + o.x(), this->y() + o.y()); }
+    inline self div(float d) { return self(this->x() / d, this->y() / d); }
+    inline bool valid() const { return (self(-1, -1) != *this); }
 
     // SET BY CONSTRUCTION
     void set(int _x, int _y);
@@ -61,8 +64,8 @@ public:
     map_point(int _x, int _y);
 
     // COMPARISON
-    inline bool operator==(map_point rhs) { return p_GRID_OFFSET == rhs.p_GRID_OFFSET; }
-    inline bool operator!=(map_point rhs) { return p_GRID_OFFSET != rhs.p_GRID_OFFSET; }
+    inline bool operator==(self rhs) { return p_GRID_OFFSET == rhs.p_GRID_OFFSET; }
+    inline bool operator!=(self rhs) { return p_GRID_OFFSET != rhs.p_GRID_OFFSET; }
 };
 
 using tile2i = map_point;

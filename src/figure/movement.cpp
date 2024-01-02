@@ -58,15 +58,11 @@ void figure::advance_figure_tick() {
     if (height_adjusted_ticks) {
         height_adjusted_ticks--;
         if (height_adjusted_ticks > 0) {
-            //            is_ghost = true;
             if (current_height < target_height)
                 current_height++;
 
             if (current_height > target_height)
                 current_height--;
-
-        } else {
-            //            is_ghost = false;
         }
     } else {
         if (current_height)
@@ -77,6 +73,11 @@ void figure::advance_figure_tick() {
 void figure::set_target_height_bridge() {
     height_adjusted_ticks = 18;
     target_height = map_bridge_height(tile.grid_offset());
+}
+
+void figure::set_target_height_building() {
+    height_adjusted_ticks = 18;
+    target_height = map_building_height_at(tile.grid_offset());
 }
 
 int figure::get_permission_for_figure() {
@@ -197,7 +198,7 @@ void figure::set_next_tile_and_direction() {
             direction = DIR_FIGURE_NONE;
         }
     } else { // no path possible - should be at destination
-        direction = calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+        direction = calc_general_direction(tile, destination_tile);
         if (direction != DIR_FIGURE_NONE) {
             if (!roam_wander_freely) { // this is because the road network was cutoff from the "randomized direction"
                                      // target
@@ -295,7 +296,7 @@ void figure::advance_route_tile(int roaming_enabled) {
         case BUILDING_SMALL_MASTABA_WALL:
         case BUILDING_SMALL_MASTABA_ENTRANCE:
             if (b->data.monuments.phase > 2) {
-                direction = DIR_FIGURE_REROUTE;
+                //direction = DIR_FIGURE_REROUTE;
             }
             break;
             
@@ -383,7 +384,7 @@ void figure::init_roaming_from_building(int roam_dir) {
 
 void figure::roam_set_direction() {
     int grid_offset = MAP_OFFSET(tile.x(), tile.y());
-    int direction = calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+    int direction = calc_general_direction(tile, destination_tile);
     if (direction >= 8)
         direction = 0;
 
@@ -440,7 +441,7 @@ void figure::move_ticks_tower_sentry(int num_ticks) {
 
 void figure::follow_ticks(int num_ticks) {
     figure *leader = figure_get(leading_figure_id);
-    if (tile.x() == source_tile.x() && tile.y() == source_tile.y()) {
+    if (tile == source_tile) {
         is_ghost = true;
     }
 
@@ -453,7 +454,7 @@ void figure::follow_ticks(int num_ticks) {
 
         if (progress_on_tile >= 15) { // tile center
             figure_service_provide_coverage();
-            int found_dir = calc_general_direction(tile.x(), tile.y(), leader->previous_tile.x(), leader->previous_tile.y());
+            int found_dir = calc_general_direction(tile, leader->previous_tile);
             if (found_dir >= 8) {
                 anim_frame = 0;
                 progress_on_tile--;
@@ -615,7 +616,7 @@ void figure::set_cross_country_direction(int x_src, int y_src, int x_dst, int y_
     if (is_missile)
         direction = calc_missile_direction(x_src, y_src, x_dst, y_dst);
     else {
-        direction = calc_general_direction(x_src, y_src, x_dst, y_dst);
+        direction = calc_general_direction(tile2i(x_src, y_src), tile2i(x_dst, y_dst));
         if (cc_delta.y > 2 * cc_delta.x) {
             switch (direction) {
             case DIR_1_RIGHT:

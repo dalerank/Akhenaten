@@ -190,7 +190,7 @@ void figure::fireman_extinguish_fire() {
     } else {
         wait_ticks = 1;
     }
-    attack_direction = calc_general_direction(tile.x(), tile.y(), burn->tile.x(), burn->tile.y());
+    attack_direction = calc_general_direction(tile, burn->tile);
     attack_direction = attack_direction % 8;
 
     wait_ticks--;

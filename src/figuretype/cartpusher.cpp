@@ -377,24 +377,18 @@ void figure::determine_storageyard_cart_destination() {
 
 void figure::sled_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Sled");
-    switch (action_state) {
-    case ACTION_8_RECALCULATE:
-        case FIGURE_ACTION_50_SLED_CREATED:
-        --wait_ticks;
-        if (wait_ticks > 0) {
+    if (leading_figure_id > 0) {
+        figure* leader = figure_get(leading_figure_id);
+        if (leader->type == FIGURE_SLED_PULLER && leader->state == FIGURE_STATE_ALIVE) {
+            follow_ticks(1);
+        } else {
+            grid_area area = building_monument_get_area(destination());
+            if (map_tile_is_inside_area(tile, area.tmin, area.tmax)) {
+                sled_do_deliver(ACTION_11_RETURNING_EMPTY);
+            }
+            poof();
             return;
         }
-        advance_action(FIGURE_ACTION_51_SLED_DELIVERING_RESOURCE);
-        break;
-
-    case FIGURE_ACTION_51_SLED_DELIVERING_RESOURCE:
-        do_gotobuilding(destination(), false, TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_52_SLED_AT_DELIVERY_BUILDING, ACTION_8_RECALCULATE);
-        break;
-
-    case FIGURE_ACTION_52_SLED_AT_DELIVERY_BUILDING:
-        sled_do_deliver(ACTION_11_RETURNING_EMPTY);
-        poof();
-        break;
     }
 
     switch (resource_id) {
@@ -412,6 +406,21 @@ void figure::sled_action() {
 
 void figure::sled_puller_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/SledPuller");
+    if (leading_figure_id > 0) {
+        --wait_ticks;
+        if (wait_ticks > 0) {
+            return;
+        }
+
+        figure* leader = figure_get(leading_figure_id);
+        if (leader->type == FIGURE_SLED_PULLER && leader->state == FIGURE_STATE_ALIVE) {
+            follow_ticks(1);
+        } else {
+            poof();
+            return;
+        }
+    }
+
     switch (action_state) {
     case ACTION_8_RECALCULATE:
     case FIGURE_ACTION_50_SLED_PULLER_CREATED:
@@ -420,14 +429,28 @@ void figure::sled_puller_action() {
             return;
         }
         advance_action(FIGURE_ACTION_51_SLED_PULLER_DELIVERING_RESOURCE);
+        destination_tile = building_monument_center_point(destination());
         break;
 
     case FIGURE_ACTION_51_SLED_PULLER_DELIVERING_RESOURCE:
-        do_gotobuilding(destination(), false, TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING, ACTION_8_RECALCULATE);
+        do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING, FIGURE_ACTION_53_SLED_PULLER_DESTROY);
         break;
 
     case FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING:
         //cartpusher_do_deliver(true, ACTION_11_RETURNING_EMPTY);
+        wait_ticks = 25;
+        advance_action(FIGURE_ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY);
+        break;
+
+    case FIGURE_ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY:
+        --wait_ticks;
+        if (wait_ticks > 0) {
+            return;
+        }
+        advance_action(FIGURE_ACTION_53_SLED_PULLER_DESTROY);
+        break;
+
+    case FIGURE_ACTION_53_SLED_PULLER_DESTROY:
         poof();
         break;
     }

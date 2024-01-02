@@ -261,7 +261,7 @@ int map_routing_get_path(uint8_t* path, int src_x, int src_y, int dst_x, int dst
     while (distance > 1) {
         distance = map_routing_distance(grid_offset);
         int direction = -1;
-        int general_direction = calc_general_direction(x, y, src_x, src_y);
+        int general_direction = calc_general_direction(tile2i(x, y), tile2i(src_x, src_y));
         for (int d = 0; d < 8; d += step) {
             if (d != last_direction) {
                 int next_offset = grid_offset + map_grid_direction_delta(d);
@@ -321,7 +321,7 @@ int map_routing_get_closest_tile_within_range(int src_x,
         if (distance <= range)
             return 1;
         int direction = -1;
-        int general_direction = calc_general_direction(x, y, src_x, src_y);
+        int general_direction = calc_general_direction(tile2i(x, y), tile2i(src_x, src_y));
         for (int d = 0; d < 8; d += step) {
             if (d != last_direction) {
                 int next_offset = grid_offset + map_grid_direction_delta(d);

@@ -161,7 +161,7 @@ void figure::immigrant_action() {
                 wait_ticks = 20;
                 route_remove();
                 state = FIGURE_STATE_ALIVE;
-                direction = calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+                direction = calc_general_direction(tile, destination_tile);
                 advance_action(ACTION_8_RECALCULATE);
                 roam_wander_freely = true;
             }

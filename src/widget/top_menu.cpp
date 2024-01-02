@@ -178,6 +178,7 @@ static menu_item menu_render[] = {
     {6, 20, menu_debug_render_change_opt, e_debug_render_tile_toph},
     {6, 21, menu_debug_render_change_opt, e_debug_render_monuments},
     {6, 22, menu_debug_render_change_opt, e_debug_render_figures},
+    {6, 23, menu_debug_render_change_opt, e_debug_render_height},
 };
 
 menu_bar_item g_top_menu[] = {
@@ -267,6 +268,7 @@ static void menu_debug_render_text(int opt, bool v) {
         {"Tile TopH ON", "Tile TopH OFF"},
         {"Monuments ON", "Monuments OFF"},
         {"Figures ON", "Figures OFF"},
+        {"Height ON", "Height OFF"},
     };
     menu_update_text(g_top_menu[INDEX_DEBUG_RENDER], opt, debug_text_rend[opt][v ? 0 : 1]);
 }

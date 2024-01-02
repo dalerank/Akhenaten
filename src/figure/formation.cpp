@@ -434,7 +434,7 @@ void formation_move_herds_away(tile2i tile) {
 
         if (calc_maximum_distance(tile, vec2i(f->x_home, f->y_home)) <= 6) {
             g_formations[i].wait_ticks = 50;
-            g_formations[i].herd_direction = calc_general_direction(tile.x(), tile.y(), f->x_home, f->y_home);
+            g_formations[i].herd_direction = calc_general_direction(tile, tile2i(f->x_home, f->y_home));
         }
     }
 }

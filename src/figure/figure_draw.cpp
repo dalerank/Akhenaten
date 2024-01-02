@@ -11,9 +11,9 @@
 #include "game/game.h"
 
 static const vec2i crowd_offsets[] = {
-    {0, 0}, {4, 0}, {4, 4}, {-4, 8}, {-4, -4}, {0, -8}, {8, 0}, {0, 8}, {-8, 0}, {4, -8}, {-4, 8}, {8, 4}, {-8, -4}, {8,-4}, {-8,4}, {4,8}, {-4, -8}, {0,-12}, {12,0}, {0, 12}, {-12, 0}
+    {0, 0}, {3, 0}, {3, 3}, {-3, 6}, {-3, -3}, {0, -6}, {6, 0}, {0, 6}, {-6, 0}, {3, -6}, {-3, 6}, {6, 3}, {-6, -3}, {6, -3}, {-6, 3}, {3, 6}, {-3, -6}, {0,-10}, {10,0}, {0, 10}, {-10, 0}
 };
-static const int crowd_offsets_size = std::size(crowd_offsets);
+constexpr int crowd_offsets_size = (int)std::size(crowd_offsets);
 
 void figure::draw_fort_standard(vec2i pixel, int highlight, vec2i* coord_out) {
     painter ctx = game.painter();
@@ -56,23 +56,14 @@ vec2i figure::adjust_pixel_offset(const vec2i &pixel) {
     vec2i offset(0, 0);
     if (use_cross_country) {
         auto cc_offets = tile_pixel_coords();
-        offset.x = cc_offets.x;
-        offset.y = cc_offets.y;
+        offset = cc_offets;
         offset.y -= missile_damage;
     } else {
         int dir = figure_image_normalize_direction(direction);
-        //        x_offset = tile_progress_to_pixel_offset_x(dir, progress_on_tile);
-        //        y_offset = tile_progress_to_pixel_offset_y(dir, progress_on_tile);
-        //        if (progress_on_tile == 15) {
-        //            x_offset = 0;
-        //            y_offset = 0;
-        //        }
-
         int adjusted_progress = progress_on_tile;
-        if (progress_on_tile >= 8)
+        if (progress_on_tile >= 8) {
             adjusted_progress -= 15;
-        //        else
-        //            adjusted_progress -= 1;
+        }
 
         switch (dir) {
         case DIR_0_TOP_RIGHT:
@@ -113,8 +104,7 @@ vec2i figure::adjust_pixel_offset(const vec2i &pixel) {
 
     if (config_get(CONFIG_GP_CH_CITIZEN_ROAD_OFFSET) && id && type != FIGURE_BALLISTA) {
         // an attempt to not let people walk through each other
-        offset.x += crowd_offsets[id % crowd_offsets_size].x;
-        offset.y += crowd_offsets[id % crowd_offsets_size].y;
+        offset += crowd_offsets[id % crowd_offsets_size];
     }
 
     return {pixel.x + offset.x + 29, pixel.y + offset.y + 15 + 8};

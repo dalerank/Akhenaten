@@ -497,6 +497,12 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             : snprintf((char *)str, 30, "%d", d);
         debug_text_a(ctx, str, x, y + 10, 0, (const char *)str, COLOR_RED, FONT_SMALL_PLAIN);
         break;
+
+    case e_debug_render_height:
+        d = map_building_height_at(grid_offset);
+        snprintf((char *)str, 30, "%d", d);
+        debug_text_a(ctx, str, x, y + 10, 0, (const char *)str, COLOR_RED, FONT_SMALL_PLAIN);
+        break;
     }
 }
 

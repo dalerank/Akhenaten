@@ -200,8 +200,6 @@ void figure::tower_sentry_action() {
             if (tower_sentry_init_patrol(b, &x_tile, &y_tile)) {
                 action_state = FIGURE_ACTION_171_TOWER_SENTRY_PATROLLING;
                 destination_tile.set(x_tile, y_tile);
-                //                    destination_tile.x() = x_tile;
-                //                    destination_tile.y() = y_tile;
                 route_remove();
             }
         }
@@ -268,10 +266,12 @@ void figure::tower_sentry_action() {
 
         break;
     }
-    if (map_terrain_is(tile.grid_offset(), TERRAIN_WALL))
+
+    if (map_terrain_is(tile.grid_offset(), TERRAIN_WALL)) {
         current_height = 18;
-    else if (map_terrain_is(tile.grid_offset(), TERRAIN_GATEHOUSE))
+    } else if (map_terrain_is(tile.grid_offset(), TERRAIN_GATEHOUSE)) {
         in_building_wait_ticks = 24;
+    }
 
     if (in_building_wait_ticks) {
         in_building_wait_ticks--;

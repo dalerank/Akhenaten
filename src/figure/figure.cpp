@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "city/emperor.h"
 #include "core/random.h"
+#include "core/calc.h"
 #include "core/svector.h"
 #include "empire/empire_city.h"
 #include "figure/figure_names.h"
@@ -145,6 +146,10 @@ bool figure::can_move_by_water() {
 
 bool figure::can_move_by_terrain() {
     return (allow_move_type == EMOVE_TERRAIN || allow_move_type == EMOVE_HIPPO);
+}
+
+void figure::set_direction_to(building *b) {
+    direction = calc_general_direction(tile, b->tile);
 }
 
 void figure::poof() {
