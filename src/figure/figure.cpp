@@ -411,9 +411,9 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT16, &f->market_lady_bought_amount);         // 200
     iob->bind____skip(115);
     iob->bind(BIND_SIGNATURE_UINT8, &f->draw_debug_mode);     // 6
-    iob->bind(BIND_SIGNATURE_INT16, &f->service_values.value_a); // -1
-    iob->bind(BIND_SIGNATURE_INT16, &f->service_values.value_b); // -1
-    iob->bind(BIND_SIGNATURE_INT16, &f->service_values.value_c); // -1
+    iob->bind(BIND_SIGNATURE_INT16, &f->local_data.value[0]); // -1
+    iob->bind(BIND_SIGNATURE_INT16, &f->local_data.value[1]); // -1
+    iob->bind(BIND_SIGNATURE_INT16, &f->local_data.value[2]); // -1
     iob->bind____skip(44);
     iob->bind(BIND_SIGNATURE_INT8, &f->festival_remaining_dances);
     iob->bind____skip(27);

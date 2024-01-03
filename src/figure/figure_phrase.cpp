@@ -97,8 +97,8 @@ static sound_key tax_collector_phrase(figure *f) {
         keys.push_back("taxman_high_taxes");
     }
 
-    int all_taxed = f->service_values.taxman_poor_taxed + f->service_values.taxman_middle_taxed + f->service_values.taxman_reach_taxed;
-    int poor_taxed = calc_percentage<int>(f->service_values.taxman_poor_taxed, all_taxed);
+    int all_taxed = f->local_data.taxman.poor_taxed + f->local_data.taxman.middle_taxed + f->local_data.taxman.reach_taxed;
+    int poor_taxed = calc_percentage<int>(f->local_data.taxman.poor_taxed, all_taxed);
     if (poor_taxed > 50) {
         keys.push_back("taxman_much_pooh_houses");
     }
@@ -364,7 +364,7 @@ static sound_key deliverty_boy_phrase(figure *f) {
 }
 
 static sound_key apothecary_phrase(figure *f) {
-    if (f->service_values.herbalist_see_low_health > 0) {
+    if (f->local_data.herbalist.see_low_health > 0) {
         return "apothecary_have_malaria_risk_here";
     } else {
         return "apothecary_no_threat_malaria_here";

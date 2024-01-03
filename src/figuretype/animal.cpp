@@ -154,9 +154,9 @@ void figure::fishing_point_action() {
             progress_on_tile = 0;
         }
 
-        service_values.fishpoint_offset++;
-        service_values.fishpoint_offset %= std::size(FISHPOINT_OFFSETS);
-        vec2i offset = FISHPOINT_OFFSETS[service_values.fishpoint_offset];
+        local_data.fishpoint.offset++;
+        local_data.fishpoint.offset %= std::size(FISHPOINT_OFFSETS);
+        vec2i offset = FISHPOINT_OFFSETS[local_data.fishpoint.offset];
         set_cross_country_destination(source_tile.x() + offset.x, source_tile.y() + offset.y);
         animation_finished = true;
     }
@@ -165,9 +165,9 @@ void figure::fishing_point_action() {
     case FIGURE_ACTION_196_FISHPOINT_BUBLES:
         image_set_animation(IMG_FISHING_POINT_BUBLES, 0, 22, 4);
         if (animation_finished) {
-            service_values.fishpoint_current_step++;
-            if (service_values.fishpoint_current_step > service_values.fishpoint_max_step) {
-                service_values.fishpoint_current_step = 0;
+            local_data.fishpoint.current_step++;
+            if (local_data.fishpoint.current_step > local_data.fishpoint.max_step) {
+                local_data.fishpoint.current_step = 0;
                 advance_action(FIGURE_ACTION_197_FISHPOINT_JUMP);
             }
         }
@@ -177,7 +177,7 @@ void figure::fishing_point_action() {
         image_set_animation(IMG_FISHING_POINT, 0, 24, 4);
         if (animation_finished) {
             advance_action(FIGURE_ACTION_196_FISHPOINT_BUBLES);
-            service_values.fishpoint_max_step = 5 + rand() % 10;
+            local_data.fishpoint.max_step = 5 + rand() % 10;
         }
         break;
     }

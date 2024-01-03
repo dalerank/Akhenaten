@@ -162,9 +162,9 @@ public:
     uint8_t phrase_sequence_exact;
     uint8_t phrase_id;
     bstring64 phrase_key;
-    unsigned char phrase_sequence_city;
-    unsigned char trader_id;
-    unsigned char wait_ticks_next_target;
+    uint8_t phrase_sequence_city;
+    uint8_t trader_id;
+    uint8_t wait_ticks_next_target;
     short target_figure_id;
     short targeted_by_figure_id;
     unsigned short created_sequence;
@@ -190,35 +190,33 @@ public:
     unsigned char draw_debug_mode;
     union {
         struct {
-            short herbalist_see_low_health;
-            short herbalist_reserved_1;
-            short herbalist_reserved_2;
-        };
+            short see_low_health;
+            short reserved_1;
+            short reserved_2;
+        } herbalist;
 
         struct {
-            short taxman_poor_taxed;
-            short taxman_middle_taxed;
-            short taxman_reach_taxed;
-        };
+            short poor_taxed;
+            short middle_taxed;
+            short reach_taxed;
+        } taxman;
 
         struct {
-            short flotsam_frame;
-            short flotsam_value_b;
-            short flotsam_value_c;
-        };
+            short frame;
+        } flotsam;
 
         struct {
-            short fishpoint_offset;
-            short fishpoint_max_step;
-            short fishpoint_current_step;
-        };
+            short offset;
+            short max_step;
+            short current_step;
+        } fishpoint;
 
         struct {
-            short value_a;
-            short value_b;
-            short value_c;
-        };
-    } service_values;
+            short idle_wait_count;
+        } bricklayer;
+
+        short value[3];
+    } local_data;
     char festival_remaining_dances;
 
     //
