@@ -56,7 +56,7 @@ tile2i building_small_mastaba_bricks_waiting_tile(building *b) {
     tile2i tile = map_grid_area_first(tiles, [b] (tile2i tile) {
         int progress = map_monuments_get_progress(tile.grid_offset());
         tile2i offset = tile.dist2i(b->tile).mod(4, 4);
-        return !progress && (offset.x() == 1 || offset.x() == 3) && (offset.y() == 1 || offset.y() == 3);
+        return (progress == 0 || progress == 1 || progress == 2) && (offset.x() == 1 || offset.x() == 3) && (offset.y() == 1 || offset.y() == 3);
     });
 
     return tile;
@@ -89,7 +89,7 @@ void building_small_mastabe_update_day(building *b) {
         }
     }
 
-    if (b->data.monuments.phase == 2) {
+    if (b->data.monuments.phase >= 2) {
         int minimal_percent = 100;
         for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
             bool need_resource = building_monument_needs_resource(b, r);
@@ -312,6 +312,21 @@ void draw_small_mastaba_anim(painter &ctx, vec2i pixel, building *b, int color_m
             } else {
                 vec2i offset = tile_to_pixel(tile);
                 int img = building_small_mastabe_get_bricks_image(b->type, tile, main->tile, main->tile.shifted(3, 9), 1);
+                ImageDraw::isometric_from_drawtile(ctx, img, offset + city_orientation_offset, color_mask);
+                fill_tiles_height(ctx, tile, img);
+            }
+        }
+    } else if (b->data.monuments.phase == 4) {
+        for (auto &tile: tiles2draw) {
+            uint32_t progress = map_monuments_get_progress(tile.grid_offset());
+            if (progress >= 200) {
+                vec2i offset = tile_to_pixel(tile);
+                int img = building_small_mastabe_get_bricks_image(b->type, tile, main->tile, main->tile.shifted(3, 9), 3);
+                ImageDraw::isometric_from_drawtile(ctx, img, offset + city_orientation_offset, color_mask);
+                fill_tiles_height(ctx, tile, img);
+            } else {
+                vec2i offset = tile_to_pixel(tile);
+                int img = building_small_mastabe_get_bricks_image(b->type, tile, main->tile, main->tile.shifted(3, 9), 2);
                 ImageDraw::isometric_from_drawtile(ctx, img, offset + city_orientation_offset, color_mask);
                 fill_tiles_height(ctx, tile, img);
             }

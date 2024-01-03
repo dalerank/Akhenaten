@@ -70,9 +70,9 @@ public:
     //    unsigned char resource_id;
     bool use_cross_country;
     bool is_friendly;
-    unsigned char state;
-    unsigned char faction_id; // 1 = city, 0 = enemy
-    unsigned char action_state_before_attack;
+    uint8_t state;
+    uint8_t faction_id; // 1 = city, 0 = enemy
+    uint8_t action_state_before_attack;
     uint8_t direction;
     uint8_t previous_tile_direction;
     uint8_t attack_direction;

@@ -55,6 +55,7 @@ static void game_cheat_add_beer(pcstr);
 static void game_cheat_finish_phase(pcstr);
 static void game_cheat_clear_progress(pcstr);
 static void game_cheat_add_bricks(pcstr);
+static void game_cheat_add_clay(pcstr);
 
 using cheat_command = void(pcstr);
 
@@ -68,6 +69,7 @@ static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_mo
                                                   {"addpottery", game_cheat_add_pottery},
                                                   {"addbeer", game_cheat_add_beer},
                                                   {"addbricks", game_cheat_add_bricks},
+                                                  {"addclay", game_cheat_add_clay},
                                                   {"nextyear", game_cheat_advance_year},
                                                   {"blessing", game_cheat_cast_blessing},
                                                   {"godupset", game_cheat_cast_upset},
@@ -207,6 +209,15 @@ static void game_cheat_add_beer(pcstr args) {
     window_invalidate();
 
     city_warning_show_console("Added beer");
+}
+
+static void game_cheat_add_clay(pcstr args) {
+    int clay = 0;
+    parse_integer(args ? args : (pcstr )"100", clay);
+    city_resource_add_items(RESOURCE_CLAY, clay);
+    window_invalidate();
+
+    city_warning_show_console("Added clay");
 }
 
 static void game_cheat_add_bricks(pcstr args) {

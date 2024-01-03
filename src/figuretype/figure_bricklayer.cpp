@@ -46,7 +46,7 @@ void figure::bricklayer_action() {
                 return;
             }
 
-            map_grid_area_foreach(b_dest->tile, wait_tile, [] (tile2i t) {
+            map_grid_area_foreach(wait_tile.shifted(-1, -1), wait_tile, [] (tile2i t) {
                 if (!map_monuments_get_progress(t)) {
                     map_monuments_set_progress(t, 1);
                 }
@@ -58,6 +58,7 @@ void figure::bricklayer_action() {
         break;
 
     case FIGURE_ACTION_12_BRICKLAYER_GOING_TO_PLACE:
+        roam_wander_freely = false;
         if (do_goto(destination_tile, false, TERRAIN_USAGE_ANY)) {
             wait_ticks = 0;
             direction = 0;

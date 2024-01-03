@@ -396,6 +396,7 @@ void figure::sled_action() {
     case RESOURCE_LIMESTONE: image_set_animation(IMG_BIGSLED_LIMESTONE, 0, 1); break;
     case RESOURCE_GRANITE: image_set_animation(IMG_BIGSLED_GRANITE, 0, 1); break;
     case RESOURCE_SANDSTONE: image_set_animation(IMG_BIGSLED_SANDSTONE, 0, 1); break;
+    case RESOURCE_CLAY: image_set_animation(IMG_BIGSLED_CLAY, 0, 1); break;
     case RESOURCE_BRICKS: image_set_animation(IMG_BIGSLED_BRICKS, 0, 1); break;
 
     default:
