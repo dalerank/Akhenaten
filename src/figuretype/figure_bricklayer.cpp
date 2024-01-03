@@ -1,6 +1,7 @@
 #include "figure/figure.h"
 
 #include "building/monument_mastaba.h"
+#include "grid/terrain.h"
 
 void figure::bricklayer_action() {
     use_cross_country = false;
@@ -71,21 +72,42 @@ void figure::bricklayer_action() {
         wait_ticks++;
         if (wait_ticks > 30) {
             wait_ticks = 0;
+            local_data.bricklayer.idle_wait_count++;
             bool area_ready = true;
             map_grid_area_foreach(tile.shifted(-1, -1), tile, [&] (tile2i t) { area_ready &= (map_monuments_get_progress(t) == 2); });
             if (area_ready) {
                 advance_action(FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS);
+            } else if (local_data.bricklayer.idle_wait_count > 20) {
+                destination_tile = building_monument_access_point(destination());
+                destination_tile.shift(1, 1);
+                advance_action(FIGURE_ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT);
             }
         }
         break;
 
-    case FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS:
-        int progress = map_monuments_get_progress(tile.grid_offset());
-        if (progress < 200) {
-            map_grid_area_foreach(tile.shifted(-1, -1), tile, [&] (tile2i t) { map_monuments_set_progress(t.grid_offset(), progress + 1); });
-        } else {
-            advance_action(FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
+    case FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS: {
+            int progress = map_monuments_get_progress(tile.grid_offset());
+            if (progress < 200) {
+                map_grid_area_foreach(tile.shifted(-1, -1), tile, [&] (tile2i t) { map_monuments_set_progress(t.grid_offset(), progress + 1); });
+            } else {
+                advance_action(FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
+            }
         }
+        break;
+
+    case FIGURE_ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT:
+        roam_wander_freely = false;
+        if (do_goto(destination_tile, false, TERRAIN_USAGE_ANY)) {
+            wait_ticks = 0;
+            advance_action(FIGURE_ACTION_16_BRICKLAYER_RETURN_HOME);
+        }
+        break;
+
+    case FIGURE_ACTION_16_BRICKLAYER_RETURN_HOME:
+        if (do_gotobuilding(home(), true, TERRAIN_USAGE_PREFER_ROADS, -1, FIGURE_ACTION_18_BRICKLAYER_RANDOM_TILE)) {
+            poof();
+        }
+        break;
     }
 
     switch (action_state) {

@@ -153,8 +153,8 @@ tile2i building_monument_center_point(building *b) {
 }
 
 tile2i building_monument_access_point(building *b) {
-    if (b->type == BUILDING_SMALL_MASTABA) {
-        return b->tile.shifted(1, 0);
+    switch (b->type) {
+    case BUILDING_SMALL_MASTABA: return b->tile.shifted(0, 10);
     }
 
     if (b->size < 3) {
