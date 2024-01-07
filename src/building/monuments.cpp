@@ -59,10 +59,12 @@ struct monument_mastaba : public monument {
     monument_mastaba() : monument{BUILDING_SMALL_MASTABA} {
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
-        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_BRICKS, 3200} });
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_BRICKS, 4800} });
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 2000}, {RESOURCE_BRICKS, 4000}});
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1600}, {RESOURCE_BRICKS, 3200}});
-        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1600}, {RESOURCE_BRICKS, 3200}});
-        phases.push_back({monument_phase_resource{ARCHITECTS, 4}, {RESOURCE_CLAY, 3200}, {RESOURCE_BRICKS, 3200}});
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1200}, {RESOURCE_BRICKS, 2400}});
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 800}, {RESOURCE_BRICKS, 1600}});
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 400}, {RESOURCE_BRICKS, 800}});
         phases.push_back({monument_phase_resource{RESOURCE_NONE, 0}});
     }
 } g_monument_mastaba;
