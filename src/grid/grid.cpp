@@ -24,6 +24,7 @@ void map_grid_init(grid_xx* grid) {
     grid->items_xx = malloc(grid->size_total);
     grid->initialized = 1;
 }
+
 int32_t map_grid_get(grid_xx* grid, uint32_t at) {
     if (!grid->initialized)
         map_grid_init(grid);

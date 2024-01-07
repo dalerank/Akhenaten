@@ -865,7 +865,7 @@ void building_update_desirability(void) {
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
-        b->desirability = map_desirability_get_max(b->tile.x(), b->tile.y(), b->size);
+        b->desirability = map_desirability_get_max(b->tile, b->size);
         if (b->is_adjacent_to_water)
             b->desirability += 10;
 

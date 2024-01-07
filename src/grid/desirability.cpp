@@ -110,31 +110,32 @@ void map_desirability_update(void) {
     update_buildings();
     update_terrain();
 }
+
 int map_desirability_get(int grid_offset) {
     return map_grid_get(&desirability_grid, grid_offset);
 }
 
-int map_desirability_get_max(int x, int y, int size) {
+int map_desirability_get_max(tile2i tile, int size) {
     if (size == 1) {
-        return map_grid_get(&desirability_grid, MAP_OFFSET(x, y));
+        return map_grid_get(&desirability_grid, tile.grid_offset());
     }
 
     int max = -9999;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            int grid_offset = MAP_OFFSET(x + dx, y + dy);
-            int value = map_grid_get(&desirability_grid, grid_offset);
+            tile2i t = tile.shifted(dx, dy);
+            int value = map_grid_get(&desirability_grid, t.grid_offset());
             max = std::max(value, max);
         }
     }
     return max;
 }
 
-int map_desirabilty_avg(int x, int y, int size) {
+int map_desirabilty_avg(tile2i tile, int size) {
     if (size == 1) {
-        return map_grid_get(&desirability_grid, MAP_OFFSET(x, y));
+        return map_grid_get(&desirability_grid, tile.grid_offset());
     }
-    grid_area area = map_grid_get_area(tile2i(x - size, y - size), tile2i(x + size, y + size));
+    grid_area area = map_grid_get_area(tile.shifted(-size, -size), tile.shifted(size, size));
 
     int summ = 0;
     int count = 1;
