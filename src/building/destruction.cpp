@@ -87,7 +87,7 @@ static void destroy_on_fire(building* b, bool plagued) {
         }
 
         // FIXME: possible can't render image & fire animation
-        building* ruin = building_create(BUILDING_BURNING_RUIN, shifted.x(), shifted.y(), 0);
+        building* ruin = building_create(BUILDING_BURNING_RUIN, shifted, 0);
         unsigned char random = rand_int % 4;
         rand_int *= rand_int;
         int image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;

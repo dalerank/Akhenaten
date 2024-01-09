@@ -259,7 +259,7 @@ static void restore_housing(building* b) {
         }
 }
 
-void game_undo_perform(void) {
+void game_undo_perform() {
     auto &data = g_undo_data;
     if (!game_can_undo())
         return;
@@ -324,16 +324,15 @@ void game_undo_perform(void) {
         int grid_offset = data.newhouses_offsets[i] - 1;
         int vacant_lot_image = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
 
-        int x = MAP_X(grid_offset);
-        int y = MAP_Y(grid_offset);
+        tile2i tile(grid_offset);
 
-        building* new_b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y, 0);
+        building* new_b = building_create(BUILDING_HOUSE_VACANT_LOT, tile, 0);
         if (new_b->id > 0) {
-            map_building_tiles_add(new_b->id, tile2i(x, y), 1, image_group(IMG_HOUSE_HUT), TERRAIN_BUILDING);
+            map_building_tiles_add(new_b->id, tile, 1, image_group(IMG_HOUSE_HUT), TERRAIN_BUILDING);
         }
 
         map_image_set(grid_offset, vacant_lot_image);
-        //        map_property_mark_draw_tile(grid_offset);
+
         data.newhouses_offsets[i] = 0;
         data.newhouses_num--;
     }

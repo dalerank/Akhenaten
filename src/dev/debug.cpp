@@ -491,7 +491,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         break;
 
     case e_debug_render_monuments:
-        d = map_monuments_get_progress(grid_offset);
+        d = map_monuments_get_progress(tile2i(grid_offset));
         b->is_valid()
             ? snprintf((char *)str, 30, "%d[%d]", b ? b->data.monuments.phase : 0, d)
             : snprintf((char *)str, 30, "%d", d);

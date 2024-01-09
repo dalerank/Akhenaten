@@ -1292,8 +1292,7 @@ void building::update_month() {
         }
         break;
 
-    case BUILDING_WATER_SUPPLY:
-        {
+    case BUILDING_WATER_SUPPLY: {
             int avg_desirability = map_desirabilty_avg(tile, 4);
             if (avg_desirability > 30) {
                 map_building_tiles_add(id, tile, 2, IMG_WATER_SUPPLY_FANCY, TERRAIN_BUILDING);
@@ -1303,8 +1302,7 @@ void building::update_month() {
         }
         break;
 
-    case BUILDING_WELL:
-        {
+    case BUILDING_WELL: {
             int avg_desirability = map_desirabilty_avg(tile, 4);
             map_image_set(tile, avg_desirability > 30 ? IMG_WELL_FANCY : IMG_WELL);
         }

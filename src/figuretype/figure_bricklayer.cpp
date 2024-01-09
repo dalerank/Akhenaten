@@ -63,7 +63,7 @@ void figure::bricklayer_action() {
         if (do_goto(destination_tile, false, TERRAIN_USAGE_ANY)) {
             wait_ticks = 0;
             direction = 0;
-            map_grid_area_foreach(tile.shifted(-1, -1), tile, [&] (tile2i t) { map_monuments_set_progress(t.grid_offset(), 1); });
+            map_grid_area_foreach(tile.shifted(-1, -1), tile, [&] (tile2i t) { map_monuments_set_progress(t, 1); });
             advance_action(FIGURE_ACTION_13_BRICKLAYER_WAITING_RESOURCES);
         }
         break;
@@ -86,9 +86,9 @@ void figure::bricklayer_action() {
         break;
 
     case FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS: {
-            int progress = map_monuments_get_progress(tile.grid_offset());
+            int progress = map_monuments_get_progress(tile);
             if (progress < 200) {
-                map_grid_area_foreach(tile.shifted(-1, -1), tile, [&] (tile2i t) { map_monuments_set_progress(t.grid_offset(), progress + 1); });
+                map_grid_area_foreach(tile.shifted(-1, -1), tile, [&] (tile2i t) { map_monuments_set_progress(t, progress + 1); });
             } else {
                 advance_action(FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
             }

@@ -50,7 +50,7 @@ void figure::worker_action() {
                     poof();
                     return;
                 }
-                map_monuments_set_progress(tile_need_leveling.grid_offset(), 1);
+                map_monuments_set_progress(tile_need_leveling, 1);
                 destination_tile = tile_need_leveling;
                 advance_action(FIGURE_ACTION_11_WORKER_GOING_TO_PLACE);
             }
@@ -66,9 +66,9 @@ void figure::worker_action() {
         break;
 
     case FIGURE_ACTION_12_WORKER_LEVELING_GROUND:
-        int progress = map_monuments_get_progress(tile.grid_offset());
+        int progress = map_monuments_get_progress(tile);
         if (progress < 200) {
-            map_monuments_set_progress(tile.grid_offset(), progress + 1);
+            map_monuments_set_progress(tile, progress + 1);
         } else {
             poof();
         }

@@ -78,7 +78,7 @@ building* building_get(int id) {
     return &g_all_buildings[id];
 }
 
-static void building_new_fill_in_data_for_type(building* b, e_building_type type, int x, int y, int orientation) {
+static void building_new_fill_in_data_for_type(building* b, e_building_type type, tile2i tile, int orientation) {
     const building_properties* props = building_properties_for_type(type);
     b->state = BUILDING_STATE_CREATED;
     b->faction_id = 1;
@@ -89,11 +89,11 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     b->sentiment.house_happiness = 50;
     b->distance_from_entry = 0;
 
-    b->tile.set(x, y);
+    b->tile = tile;
     b->map_random_7bit = map_random_get(b->tile.grid_offset()) & 0x7f;
     b->figure_roam_direction = b->map_random_7bit & 6;
     b->fire_proof = props->fire_proof;
-    b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(x, y, b->size);
+    b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(tile, b->size);
 
     // house size
     b->house_size = 0;
@@ -300,7 +300,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
 }
 
 
-building* building_create(e_building_type type, int x, int y, int orientation) {
+building* building_create(e_building_type type, tile2i tile, int orientation) {
     building* b = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         if (g_all_buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
@@ -315,7 +315,7 @@ building* building_create(e_building_type type, int x, int y, int orientation) {
     }
 
     memset(&(b->data), 0, sizeof(b->data));
-    building_new_fill_in_data_for_type(b, type, x, y, orientation);
+    building_new_fill_in_data_for_type(b, type, tile, orientation);
     b->data.house.health = 100;
 
     return b;
@@ -399,6 +399,7 @@ static void building_delete_UNSAFE(building* b) {
     memset(b, 0, sizeof(building));
     b->id = id;
 }
+
 void building::clear_related_data() {
     if (storage_id)
         building_storage_delete(storage_id);
@@ -481,7 +482,7 @@ e_overlay building::get_overlay() const {
     return OVERLAY_NONE;
 }
 
-void building_clear_all(void) {
+void building_clear_all() {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         memset(&g_all_buildings[i], 0, sizeof(building));
         g_all_buildings[i].id = i;
@@ -799,6 +800,7 @@ void building_update_highest_id(void) {
     if (extra.highest_id_in_use > extra.highest_id_ever)
         extra.highest_id_ever = extra.highest_id_in_use;
 }
+
 void building_update_state(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Building State Update");
     bool land_recalc = false;
@@ -1059,7 +1061,8 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.worker_id);
 
     } else if (building_is_statue(b->type) || building_is_large_temple(b->type) || building_is_monument(b->type)) {
-        iob->bind____skip(39);
+        iob->bind____skip(38);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.monuments.orientation);
         for (int i = 0; i < 5; i++) {
             iob->bind(BIND_SIGNATURE_UINT16, &b->data.monuments.workers[i]);
         }

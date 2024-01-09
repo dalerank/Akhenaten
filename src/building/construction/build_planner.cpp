@@ -73,7 +73,7 @@ static void add_fort(int type, building* fort) {
     const int offsets_x[] = {3, -1, -4, 0};
     const int offsets_y[] = {-1, -4, 0, 3};
     int global_rotation = building_rotation_global_rotation();
-    building* ground = building_create(BUILDING_FORT_GROUND, fort->tile.x() + offsets_x[global_rotation], fort->tile.y() + offsets_y[global_rotation], 0);
+    building* ground = building_create(BUILDING_FORT_GROUND, fort->tile.shifted(offsets_x[global_rotation], offsets_y[global_rotation]), 0);
     game_undo_add_building(ground);
     ground->prev_part_building_id = fort->id;
     fort->next_part_building_id = ground->id;
@@ -112,7 +112,7 @@ void BuildPlanner::add_building_tiles_from_list(int building_id, bool graphics_o
 }
 
 static building* add_temple_complex_element(int x, int y, int orientation, building* prev) {
-    building* b = building_create(prev->type, x, y, orientation);
+    building* b = building_create(prev->type, tile2i(x, y), orientation);
     game_undo_add_building(b);
 
     b->size = 3;
@@ -126,40 +126,55 @@ static building* add_temple_complex_element(int x, int y, int orientation, build
 
 static void add_mastaba(building *b, int orientation) {
     b->prev_part_building_id = 0;
-    map_mastaba_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
+    int empty_img = image_group(IMG_SMALL_MASTABA) + 108;
+    map_mastaba_tiles_add(b->id, b->tile, b->size, empty_img, TERRAIN_BUILDING);
 
-    // create parade ground
-    tile2i side_offset = {0, 0};
-    tile2i wall_offset = {0, 0};
-    tile2i entrance_offset = {0, 0};
+    struct mastaba_part {
+        e_building_type type;
+        tile2i offset;
+    };
+    svector<mastaba_part, 10> parts;
     switch (orientation) {
-    case 0: entrance_offset = {2, 4}; wall_offset = {0, 4}; side_offset = {0, 6}; break;
-    case 1: entrance_offset = {-4, 2}; wall_offset = {-4, 0}; side_offset = {-6, 0}; break;
-    case 2: entrance_offset = {2, -4}; wall_offset = {0, -4}; side_offset = {0, -6}; break;
-    case 3: entrance_offset = {4, 2}; wall_offset = {4, 0}; side_offset = {6, 0}; break;
+    case 0: parts = {{ BUILDING_SMALL_MASTABA, {2, 0}},  
+                     { BUILDING_SMALL_MASTABA_WALL, {0, 2}}, {BUILDING_SMALL_MASTABA_WALL, {2, 2}},
+                     { BUILDING_SMALL_MASTABA_ENTRANCE, {2, 4}}, { BUILDING_SMALL_MASTABA_WALL, {0, 4}},
+                     { BUILDING_SMALL_MASTABA_WALL, {0, 6}}, { BUILDING_SMALL_MASTABA_WALL, {2, 6}},
+                     { BUILDING_SMALL_MASTABA_SIDE, {0, 8}}, { BUILDING_SMALL_MASTABA_SIDE, {2, 8}}
+                    }; 
+          break;
+    case 1: parts = {{ BUILDING_SMALL_MASTABA, {0, 2}},
+                     { BUILDING_SMALL_MASTABA_WALL, {-2, 0}}, { BUILDING_SMALL_MASTABA, {-2, 2}},
+                     { BUILDING_SMALL_MASTABA_ENTRANCE, {-4, 2}}, { BUILDING_SMALL_MASTABA_WALL, {-4, 0}},
+                     { BUILDING_SMALL_MASTABA_WALL, {-6, 0}}, { BUILDING_SMALL_MASTABA_WALL, {-6, 2}},
+                     { BUILDING_SMALL_MASTABA_SIDE, {-8, 0}}, { BUILDING_SMALL_MASTABA_SIDE, {-8, 2}}
+                    };
+          break;
+    case 2: parts = {{ BUILDING_SMALL_MASTABA, {0, -2}},
+                     { BUILDING_SMALL_MASTABA_WALL, {0, -2}}, { BUILDING_SMALL_MASTABA, {2, -2}},
+                     { BUILDING_SMALL_MASTABA_ENTRANCE, {2, -4}}, { BUILDING_SMALL_MASTABA_WALL, {0, -4}},
+                     { BUILDING_SMALL_MASTABA_WALL, {2, -6}}, { BUILDING_SMALL_MASTABA_WALL, {0, -6}},
+                     { BUILDING_SMALL_MASTABA_SIDE, {2, -8}}, { BUILDING_SMALL_MASTABA_SIDE, {0, -8}}
+                    };
+          break;
+    case 3: parts = {{ BUILDING_SMALL_MASTABA, {0, -2}},
+                     { BUILDING_SMALL_MASTABA_WALL, {2, 0}}, {BUILDING_SMALL_MASTABA_WALL, {2, -2}},
+                     { BUILDING_SMALL_MASTABA_ENTRANCE, {4, 0}}, { BUILDING_SMALL_MASTABA_WALL, {4, -2}},
+                     { BUILDING_SMALL_MASTABA_WALL, {6, 0}}, { BUILDING_SMALL_MASTABA_WALL, {6, -2}},
+                     { BUILDING_SMALL_MASTABA_SIDE, {8, 0}}, { BUILDING_SMALL_MASTABA_SIDE, {8, -2}}
+                    };
+          break;
     }
 
-    building* mastaba_wall = building_create(BUILDING_SMALL_MASTABA_WALL, b->tile.x() + wall_offset.x(), b->tile.y() + wall_offset.y(), 0);
-    game_undo_add_building(mastaba_wall);
-    mastaba_wall->prev_part_building_id = b->id;
-    b->next_part_building_id = mastaba_wall->id;
-    tile2i btile_add = b->tile.shifted(wall_offset.x(), wall_offset.y());
-    map_mastaba_tiles_add(mastaba_wall->id, btile_add, mastaba_wall->size, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
-
-    building* mastaba_entrance = building_create(BUILDING_SMALL_MASTABA_ENTRANCE, b->tile.x() + entrance_offset.x(), b->tile.y() + entrance_offset.y(), 0);
-    game_undo_add_building(mastaba_entrance);
-    mastaba_entrance->prev_part_building_id = mastaba_wall->id;
-    mastaba_wall->next_part_building_id = mastaba_entrance->id;
-    btile_add = b->tile.shifted(entrance_offset.x(), entrance_offset.y());
-    map_mastaba_tiles_add(mastaba_entrance->id, btile_add, mastaba_entrance->size, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
-
-    building* mastaba_side = building_create(BUILDING_SMALL_MASTABA_SIDE, b->tile.x() + side_offset.x(), b->tile.y() + side_offset.y(), 0);
-    game_undo_add_building(mastaba_side);
-    mastaba_side->prev_part_building_id = mastaba_entrance->id;
-    mastaba_entrance->next_part_building_id = mastaba_side->id;
-    mastaba_side->next_part_building_id = 0;
-    btile_add = b->tile.shifted(side_offset.x(), side_offset.y());
-    map_mastaba_tiles_add(mastaba_side->id, btile_add, mastaba_side->size, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
+    building* prev_part = b;
+    for (auto &part : parts) {
+        building* mastaba_part = building_create(part.type, b->tile.shifted(part.offset), 0);
+        game_undo_add_building(mastaba_part);
+        mastaba_part->prev_part_building_id = prev_part->id;
+        prev_part->next_part_building_id = mastaba_part->id;
+        tile2i btile_add = b->tile.shifted(part.offset);
+        map_mastaba_tiles_add(mastaba_part->id, btile_add, mastaba_part->size, empty_img, TERRAIN_BUILDING);
+        prev_part = mastaba_part;
+    }
 }
 
 static void add_temple_complex(building* b, int orientation) {
@@ -383,7 +398,7 @@ static void add_entertainment_venue(building* b, int orientation) {
 }
 
 static building* add_storageyard_space(int x, int y, building* prev) {
-    building* b = building_create(BUILDING_STORAGE_YARD_SPACE, x, y, 0);
+    building* b = building_create(BUILDING_STORAGE_YARD_SPACE, tile2i(x, y), 0);
     game_undo_add_building(b);
     b->prev_part_building_id = prev->id;
     prev->next_part_building_id = b->id;
@@ -693,7 +708,7 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
                     map_property_clear_constructing_and_deleted();
                     city_warning_show(WARNING_HERD_BREEDING_GROUNDS);
                 } else {
-                    building* b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y, 0);
+                    building* b = building_create(BUILDING_HOUSE_VACANT_LOT, tile2i(x, y), 0);
                     game_undo_add_building(b);
                     if (b->id > 0) {
                         items_placed++;
@@ -818,10 +833,7 @@ static bool place_building(e_building_type type, int x, int y, int orientation, 
 
     // create building
     last_created_building = nullptr;
-    building* b;
-    //    if (building_is_fort(type)) // TODO
-    //        b = building_create(BUILDING_MENU_FORTS, x, y);
-    b = building_create(type, x, y, orientation);
+    building* b = building_create(type, tile2i(x, y), orientation);
     game_undo_add_building(b);
     if (b->id <= 0) { // building creation failed????
         return false;
@@ -1326,7 +1338,12 @@ void BuildPlanner::setup_build_graphics() {
         break;
 
     case BUILDING_SMALL_MASTABA:
-        init_tiles(4, 8);
+        switch (city_view_orientation() / 2) {
+        case 0: init_tiles(4, 10); break;
+        case 1: init_tiles(10, 4); break;
+        case 2: init_tiles(4, 10); break;
+        case 3: init_tiles(10, 4); break;
+        }
         break;    
 
     case BUILDING_BOOTH:
@@ -1702,8 +1719,10 @@ void BuildPlanner::update_orientations(bool check_if_changed) {
     absolute_orientation = city_view_absolute_orientation(relative_orientation);
 
     // do not refresh graphics if nothing changed
-    if (check_if_changed && relative_orientation == prev_orientation && variant == prev_variant)
+    if (check_if_changed && relative_orientation == prev_orientation && variant == prev_variant) {
         return;
+    }
+
     setup_build_graphics(); // reload graphics, tiles, etc.
     update_coord_caches();  // refresh caches
 }

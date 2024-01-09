@@ -216,8 +216,9 @@ public:
             uint8_t temple_complex_attachments;
             uint8_t resources_pct[RESOURCES_MAX];
             uint16_t workers[5];
-            uint8_t phase;
+            int8_t phase;
             uint8_t upgrades;
+            uint8_t orientation;
         } monuments;
     } data;
     int tax_income_or_storage;
@@ -429,7 +430,8 @@ void buildings_get(Array &arr, Args ... args) {
         }
     }
 }
-building* building_create(e_building_type type, int x, int y, int orientation);
+
+building* building_create(e_building_type type, tile2i tile, int orientation);
 
 building* building_at(int grid_offset);
 building* building_at(int x, int y);

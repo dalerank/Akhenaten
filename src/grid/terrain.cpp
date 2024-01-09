@@ -236,8 +236,9 @@ bool map_terrain_is_adjacent_to_wall(int x, int y, int size) {
     }
     return false;
 }
-bool map_terrain_is_adjacent_to_water(int x, int y, int size) {
-    int base_offset = MAP_OFFSET(x, y);
+
+bool map_terrain_is_adjacent_to_water(tile2i tile, int size) {
+    int base_offset = tile.grid_offset();
     offsets_array offsets;
     map_grid_adjacent_offsets(size, offsets);
     for (const int& tile_delta: offsets) {

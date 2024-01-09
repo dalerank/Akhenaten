@@ -19,11 +19,11 @@ static void rotate(void) {
         g_global_rotation = 0;
 }
 
-int building_rotation_global_rotation(void) {
+int building_rotation_global_rotation() {
     return g_global_rotation;
 }
 
-void building_rotation_rotate_by_hotkey(void) {
+void building_rotation_rotate_by_hotkey() {
     if (config_get(CONFIG_UI_ROTATE_MANUALLY)) {
         rotate();
         road_orientation = road_orientation == 1 ? 2 : 1;

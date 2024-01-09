@@ -1,6 +1,7 @@
 #include "routing_terrain.h"
 
 #include "building/building.h"
+#include "building/monuments.h"
 #include "core/direction.h"
 #include "core/profiler.h"
 #include "core/svector.h"
@@ -40,7 +41,9 @@ static int get_land_type_citizen_building(int grid_offset) {
     case BUILDING_SMALL_MASTABA_SIDE:
     case BUILDING_SMALL_MASTABA_WALL:
     case BUILDING_SMALL_MASTABA_ENTRANCE:
-        if (b->data.monuments.phase > 2) {
+        if (b->data.monuments.phase == MONUMENT_FINISHED) {
+            return CITIZEN_N1_BLOCKED;
+        } else if (b->data.monuments.phase > 2) {
             tile2i main = b->main()->tile;
             tile2i end = main.shifted(3, 9);
             tile2i tile(grid_offset);

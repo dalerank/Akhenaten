@@ -73,7 +73,7 @@ static void determine_meeting_center(void) {
     }
 }
 
-void map_natives_init(void) {
+void map_natives_init() {
     int meeting_center_set = 0;
     int image_hut = scenario_building_image_native_hut();
     int image_meeting = scenario_building_image_native_meeting();
@@ -107,7 +107,7 @@ void map_natives_init(void) {
                 map_building_tiles_remove(0, tile2i(x, y));
                 continue;
             }
-            building* b = building_create(type, x, y, 0);
+            building* b = building_create(type, tile2i(x, y), 0);
             map_building_set(grid_offset, b->id);
             b->state = BUILDING_STATE_VALID;
             switch (type) {
@@ -168,7 +168,7 @@ void map_natives_init_editor(void) {
                 map_building_tiles_remove(0, tile2i(x, y));
                 continue;
             }
-            building* b = building_create(type, x, y, 0);
+            building* b = building_create(type, tile2i(x, y), 0);
             b->state = BUILDING_STATE_VALID;
             map_building_set(grid_offset, b->id);
             if (type == BUILDING_UNUSED_NATIVE_MEETING_89) {

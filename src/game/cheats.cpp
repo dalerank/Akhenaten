@@ -190,7 +190,7 @@ static void game_cheat_finish_phase(pcstr args) {
         while (part) {
             grid_area area = map_grid_get_area(part->tile, part->size, 0);
             map_grid_area_foreach(area.tmin, area.tmax, [] (tile2i tile) {
-                map_monuments_set_progress(tile.grid_offset(), 200);
+                map_monuments_set_progress(tile, 200);
             });
 
             part = (part->next_part_building_id > 0) ? building_get(part->next_part_building_id) : nullptr;
