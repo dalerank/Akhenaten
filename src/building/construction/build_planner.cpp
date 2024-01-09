@@ -132,6 +132,7 @@ static void add_mastaba(building *b, int orientation) {
     struct mastaba_part {
         e_building_type type;
         tile2i offset;
+        building *b;
     };
     svector<mastaba_part, 10> parts;
     switch (orientation) {
@@ -139,41 +140,49 @@ static void add_mastaba(building *b, int orientation) {
                      { BUILDING_SMALL_MASTABA_WALL, {0, 2}}, {BUILDING_SMALL_MASTABA_WALL, {2, 2}},
                      { BUILDING_SMALL_MASTABA_ENTRANCE, {2, 4}}, { BUILDING_SMALL_MASTABA_WALL, {0, 4}},
                      { BUILDING_SMALL_MASTABA_WALL, {0, 6}}, { BUILDING_SMALL_MASTABA_WALL, {2, 6}},
-                     { BUILDING_SMALL_MASTABA_SIDE, {0, 8}}, { BUILDING_SMALL_MASTABA_SIDE, {2, 8}}
-                    }; 
-          break;
-    case 1: parts = {{ BUILDING_SMALL_MASTABA, {0, 2}},
-                     { BUILDING_SMALL_MASTABA_WALL, {-2, 0}}, { BUILDING_SMALL_MASTABA, {-2, 2}},
-                     { BUILDING_SMALL_MASTABA_ENTRANCE, {-4, 2}}, { BUILDING_SMALL_MASTABA_WALL, {-4, 0}},
-                     { BUILDING_SMALL_MASTABA_WALL, {-6, 0}}, { BUILDING_SMALL_MASTABA_WALL, {-6, 2}},
-                     { BUILDING_SMALL_MASTABA_SIDE, {-8, 0}}, { BUILDING_SMALL_MASTABA_SIDE, {-8, 2}}
-                    };
-          break;
-    case 2: parts = {{ BUILDING_SMALL_MASTABA, {0, -2}},
-                     { BUILDING_SMALL_MASTABA_WALL, {0, -2}}, { BUILDING_SMALL_MASTABA, {2, -2}},
-                     { BUILDING_SMALL_MASTABA_ENTRANCE, {2, -4}}, { BUILDING_SMALL_MASTABA_WALL, {0, -4}},
-                     { BUILDING_SMALL_MASTABA_WALL, {2, -6}}, { BUILDING_SMALL_MASTABA_WALL, {0, -6}},
-                     { BUILDING_SMALL_MASTABA_SIDE, {2, -8}}, { BUILDING_SMALL_MASTABA_SIDE, {0, -8}}
-                    };
-          break;
-    case 3: parts = {{ BUILDING_SMALL_MASTABA, {0, -2}},
-                     { BUILDING_SMALL_MASTABA_WALL, {2, 0}}, {BUILDING_SMALL_MASTABA_WALL, {2, -2}},
-                     { BUILDING_SMALL_MASTABA_ENTRANCE, {4, 0}}, { BUILDING_SMALL_MASTABA_WALL, {4, -2}},
-                     { BUILDING_SMALL_MASTABA_WALL, {6, 0}}, { BUILDING_SMALL_MASTABA_WALL, {6, -2}},
-                     { BUILDING_SMALL_MASTABA_SIDE, {8, 0}}, { BUILDING_SMALL_MASTABA_SIDE, {8, -2}}
-                    };
+                     { BUILDING_SMALL_MASTABA_SIDE, {0, 8}}, { BUILDING_SMALL_MASTABA_SIDE, {2, 8}} }; 
+            break;
+    case 1: parts = {{ BUILDING_SMALL_MASTABA, {-2, 0}},  
+                     { BUILDING_SMALL_MASTABA_WALL, {0, 2}}, {BUILDING_SMALL_MASTABA_WALL, {-2, 2}},
+                     { BUILDING_SMALL_MASTABA_ENTRANCE, {0, 4}}, { BUILDING_SMALL_MASTABA_WALL, {-2, 4}},
+                     { BUILDING_SMALL_MASTABA_WALL, {0, 6}}, { BUILDING_SMALL_MASTABA_WALL, {-2, 6}},
+                     { BUILDING_SMALL_MASTABA_SIDE, {0, 8}}, { BUILDING_SMALL_MASTABA_SIDE, {-2, 8}} }; 
+            break;
+   //case 2: parts = {{ BUILDING_SMALL_MASTABA, {0, -2}},
+   //                 { BUILDING_SMALL_MASTABA_WALL, {0, -2}}, { BUILDING_SMALL_MASTABA, {2, -2}},
+   //                 { BUILDING_SMALL_MASTABA_ENTRANCE, {2, -4}}, { BUILDING_SMALL_MASTABA_WALL, {0, -4}},
+   //                 { BUILDING_SMALL_MASTABA_WALL, {2, -6}}, { BUILDING_SMALL_MASTABA_WALL, {0, -6}},
+   //                 { BUILDING_SMALL_MASTABA_SIDE, {2, -8}}, { BUILDING_SMALL_MASTABA_SIDE, {0, -8}}
+   //                };
+   //      break;
+    case 3: parts = {{ BUILDING_SMALL_MASTABA_SIDE, {0, -8}}, { BUILDING_SMALL_MASTABA_SIDE, {2, -8}},
+                     { BUILDING_SMALL_MASTABA_WALL, {0, -6}}, { BUILDING_SMALL_MASTABA_WALL, {2, -6}},
+                     { BUILDING_SMALL_MASTABA_ENTRANCE, {0, -4}}, { BUILDING_SMALL_MASTABA_WALL, {2, -4}},
+                     { BUILDING_SMALL_MASTABA_WALL, {0, -2}}, {BUILDING_SMALL_MASTABA_WALL, {2, -2}},
+                     { BUILDING_SMALL_MASTABA, {2, 0}} };
           break;
     }
 
-    building* prev_part = b;
     for (auto &part : parts) {
-        building* mastaba_part = building_create(part.type, b->tile.shifted(part.offset), 0);
-        game_undo_add_building(mastaba_part);
-        mastaba_part->prev_part_building_id = prev_part->id;
-        prev_part->next_part_building_id = mastaba_part->id;
+        part.b = building_create(part.type, b->tile.shifted(part.offset), 0);
+        game_undo_add_building(part.b);
         tile2i btile_add = b->tile.shifted(part.offset);
-        map_mastaba_tiles_add(mastaba_part->id, btile_add, mastaba_part->size, empty_img, TERRAIN_BUILDING);
-        prev_part = mastaba_part;
+        map_mastaba_tiles_add(part.b->id, btile_add, part.b->size, empty_img, TERRAIN_BUILDING);
+    }
+
+    switch (orientation) {
+    case 0: { mastaba_part main{BUILDING_SMALL_MASTABA, {-1, -1}, b}; parts.insert(parts.begin(), main); } break;
+    case 1: { mastaba_part main{BUILDING_SMALL_MASTABA, {-1, -1}, b}; parts.insert(parts.begin() + 1, main); } break;
+    case 3: { mastaba_part main{BUILDING_SMALL_MASTABA, {-1, -1}, b}; parts.push_back(main); } break;
+    }
+
+    building* prev_part = nullptr;
+    for (auto &part : parts) {
+        part.b->prev_part_building_id = prev_part ? prev_part->id : 0;
+        if (prev_part) {
+            prev_part->next_part_building_id = part.b->id;
+        }
+        prev_part = part.b;
     }
 }
 

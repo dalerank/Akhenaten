@@ -422,7 +422,7 @@ private:
     }
 
     T* grow_at(const T* cp, size_t by) {
-        assert(size() + by < Capacity);
+        assert(size() + by <= Capacity);
         assert(cp);
 
         auto position = const_cast<T*>(cp);
