@@ -1321,7 +1321,10 @@ void building::update_month() {
 tile2i building::access_tile() {
     switch (type) {
     case BUILDING_SMALL_MASTABA:
-        return tile.shifted(0, 10);
+    case BUILDING_SMALL_MASTABA_ENTRANCE:
+    case BUILDING_SMALL_MASTABA_WALL:
+    case BUILDING_SMALL_MASTABA_SIDE:
+        return main()->tile.shifted(0, 10);
     }
 
     return road_access;
