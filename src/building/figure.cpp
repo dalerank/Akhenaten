@@ -750,6 +750,14 @@ void building::spawn_figure_tax_collector() {
     }
 }
 
+int building::get_onespot_ready_production() {
+    switch (type) {
+    case BUILDING_POTTERY_WORKSHOP: return 10;
+    }
+
+    return 100;
+}
+
 void building::spawn_figure_industry() {
     check_labor_problem();
     if (!has_road_access) {
@@ -763,7 +771,7 @@ void building::spawn_figure_industry() {
 
     if (building_industry_has_produced_resource(*this)) {
         building_industry_start_new_production(this);
-        create_cartpusher(output_resource_first_id, 100);
+        create_cartpusher(output_resource_first_id, get_onespot_ready_production());
     }
 }
 

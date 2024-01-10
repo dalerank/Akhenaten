@@ -232,12 +232,9 @@ public:
         signed char house_happiness;
         signed char native_anger;
     } sentiment;
-    unsigned char show_on_problem_overlay;
-    unsigned short deben_storage;
+    uint8_t show_on_problem_overlay;
+    uint16_t deben_storage;
 
-    ////
-
-    // building.c
     building();
     building* main();
     building* next();
@@ -279,9 +276,7 @@ public:
 
     e_overlay get_overlay() const;
 
-    const int get_figureID(int i) const {
-        return figure_ids_array[i];
-    };
+    const int get_figureID(int i) const { return figure_ids_array[i]; };
 
     figure* get_figure(int i);
     void bind_iob_figures(io_buffer* iob);
@@ -315,6 +310,7 @@ public:
     void workshop_start_production();
 
     int correct_animation_speed(int anim_speed);
+    int get_onespot_ready_production();
 
     void spawn_figure_work_camp();
     bool spawn_noble(bool spawned);
@@ -394,13 +390,8 @@ building* building_first(e_building_type type);
 building* building_next(int id, e_building_type type);
 building* building_get(int id);
 
-inline building* building_begin() {
-    return building_get(1);
-}
-
-inline building* building_end() {
-    return building_get(MAX_BUILDINGS);
-}
+inline building* building_begin() { return building_get(1); }
+inline building* building_end() { return building_get(MAX_BUILDINGS); }
 
 template<typename ... Args>
 bool building_type_any_of(e_building_type type, Args ... args) {

@@ -64,7 +64,7 @@ public:
 
     template <size_t CapacityB>
     svector(const svector<T, CapacityB>& v) {
-        I_ITLIB_svector_OUT_OF_RANGE_IF(v.size() > Capacity);
+        assert(v.size() > Capacity);
 
         for (const auto& i : v) {
             push_back(i);
@@ -80,6 +80,15 @@ public:
 
     ~svector() {
         clear();
+    }
+
+    svector &operator=(const std::initializer_list<T> &v) {
+        clear();
+        for (auto& elem : v) {
+            push_back(elem);
+        }
+
+        return *this;
     }
 
     svector& operator=(const svector& v) {
