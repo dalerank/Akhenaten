@@ -77,6 +77,37 @@ tile2i building_small_mastaba_tile4work(building *b) {
     return map_grid_area_first(tiles, [] (tile2i tile) { return !map_monuments_get_progress(tile); });
 }
 
+void building_small_mastabe_update_images(building *b, int curr_phase) {
+    building *main = b->main();
+    building *part = b;
+
+    while (part) {
+        int image_id = 0;
+        if (curr_phase < 2) {
+            image_id = building_small_mastabe_get_image(b->data.monuments.orientation, part->tile, main->tile, main->tile.shifted(3, 9));
+        } else {
+            image_id = building_small_mastabe_get_bricks_image(b->data.monuments.orientation, part->type, part->tile, main->tile, main->tile.shifted(3, 9), curr_phase - 2);
+        }
+        for (int dy = 0; dy < part->size; dy++) {
+            for (int dx = 0; dx < part->size; dx++) {
+                int grid_offset = part->tile.shifted(dx, dy).grid_offset();
+                map_image_set(grid_offset, image_id);
+            }
+        }
+        part = part->has_next() ? part->next() : nullptr;
+    }
+}
+
+void building_small_mastabe_finalize(building *b) {
+    building *part = b;
+    building *main = b->main();
+    building_small_mastabe_update_images(b, 8);
+    while (!!part) {
+        part->data.monuments.phase = MONUMENT_FINISHED;
+        part = part->has_next() ? part->next() : nullptr;
+    }
+}
+
 void building_small_mastabe_update_day(building *b) {
     if (!building_monument_is_monument(b)) {
         return;
@@ -87,11 +118,7 @@ void building_small_mastabe_update_day(building *b) {
     }
 
     if (b->data.monuments.phase >= 8) {
-        building *part = b;
-        while (!!part) {
-            part->data.monuments.phase = MONUMENT_FINISHED;
-            part = part->has_next() ? part->next() : nullptr;
-        }
+        building_small_mastabe_finalize(b);
         return;
     }
 
@@ -102,22 +129,10 @@ void building_small_mastabe_update_day(building *b) {
     building *part = b;
     if (all_tiles_finished) {
         int curr_phase = b->data.monuments.phase;
-        int next_phase = curr_phase + 1;
+        map_grid_area_foreach(tiles, [] (tile2i tile) { map_monuments_set_progress(tile, 0); });
+        building_small_mastabe_update_images(b, curr_phase);
         while (part) {
-            map_grid_area_foreach(tiles, [] (tile2i tile) { map_monuments_set_progress(tile, 0); });
-            int image_id = 0;
-            if (curr_phase < 2) {
-                image_id = building_small_mastabe_get_image(b->data.monuments.orientation, part->tile, main->tile, main->tile.shifted(3, 9));
-            } else {
-                image_id = building_small_mastabe_get_bricks_image(b->data.monuments.orientation, part->type, part->tile, main->tile, main->tile.shifted(3, 9), curr_phase - 2);
-            }
-            for (int dy = 0; dy < part->size; dy++) {
-                for (int dx = 0; dx < part->size; dx++) {
-                    int grid_offset = part->tile.shifted(dx, dy).grid_offset();
-                    map_image_set(grid_offset, image_id);
-                }
-            }
-            building_monument_set_phase(part, next_phase);
+            building_monument_set_phase(part, curr_phase + 1);
             part = part->has_next() ? part->next() : nullptr;
         }
     }

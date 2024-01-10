@@ -4,6 +4,7 @@
 #include "core/svector.h"
 #include "building/construction/build_planner.h"
 #include "graphics/view/view.h"
+#include "building/monuments.h"
 #include "game/state.h"
 #include "graphics/boilerplate.h"
 #include "grid/building.h"
@@ -272,10 +273,11 @@ bool draw_isometric_flat_building(building *b, tile2i point, painter &ctx) {
     case BUILDING_SMALL_MASTABA_WALL: 
     case BUILDING_SMALL_MASTABA_ENTRANCE: 
     case BUILDING_SMALL_MASTABA: {
-            if (b->data.monuments.phase == 0) {
-                tile_id = map_image_at(point.grid_offset());
+            if (building_monument_is_finished(b)) {
+                return false;
             }
-            return true;
+
+            return ( b->data.monuments.phase < 2);
         }
         break;
 

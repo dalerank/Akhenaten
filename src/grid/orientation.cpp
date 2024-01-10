@@ -2,8 +2,9 @@
 
 #include "building.h"
 #include "building/rotation.h"
-#include "building/construction/build_planner.h"
 #include "building/monuments.h"
+#include "building/construction/build_planner.h"
+#include "building/monument_mastaba.h"
 #include "building/building_statue.h"
 #include "core/direction.h"
 #include "core/log.h"
@@ -185,6 +186,16 @@ void map_orientation_update_buildings(void) {
                 map_add_bandstand_tiles(b);
             }
             break;
+        case BUILDING_SMALL_MASTABA:
+        case BUILDING_SMALL_MASTABA_ENTRANCE:
+        case BUILDING_SMALL_MASTABA_SIDE:
+            if (building_monument_is_finished(b)) {
+               building *main = b->main();
+               int image_id = building_small_mastabe_get_bricks_image(b->data.monuments.orientation, b->type, b->tile, main->tile, main->tile.shifted(3, 9), 6);
+               map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_BUILDING);
+            }
+            break;
+
         case BUILDING_LARGE_STATUE:
         case BUILDING_MEDIUM_STATUE:
         case BUILDING_SMALL_STATUE:
