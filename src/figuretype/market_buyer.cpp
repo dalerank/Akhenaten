@@ -18,6 +18,9 @@ void figure::market_buyer_action() {
     image_set_animation(GROUP_FIGURE_MARKET_BUYER);
     switch (action_state) {
     case 8:
+    case FIGURE_ACTION_144_MARKET_BUYER_CREATE:
+        break;
+
     case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
         if (do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_146_MARKET_BUYER_RETURNING)) {
             if (collecting_item_id > 3) {

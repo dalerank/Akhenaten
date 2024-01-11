@@ -1249,6 +1249,9 @@ void building::update_day() {
     case BUILDING_SMALL_MASTABA:
         building_small_mastabe_update_day(this);
         break;
+
+    default:
+        dcast()->update_day();
     }
 }
 
@@ -1394,7 +1397,6 @@ bool building::figure_generate() {
         case BUILDING_BOOTH: spawn_figure_booth(); break;
         case BUILDING_SENET_HOUSE: spawn_figure_senet(); break;
         case BUILDING_PAVILLION: spawn_figure_pavillion(); break;
-        case BUILDING_BAZAAR: spawn_figure_market(); break;
         case BUILDING_SCRIBAL_SCHOOL: spawn_figure_school(); break;
         case BUILDING_LIBRARY: spawn_figure_library(); break;
         case BUILDING_WATER_LIFT: common_spawn_figure_trigger(50); break;

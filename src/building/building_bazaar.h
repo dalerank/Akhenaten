@@ -3,6 +3,14 @@
 #include "game/resource.h"
 #include "building/building.h"
 
+class building_bazaar : public building_impl {
+public:
+    building_bazaar(building &b) : building_impl(b) {}
+    void spawn_figure() override;
+    void update_graphic() override;
+    void update_day() override;
+};
+
 int building_bazaar_get_max_food_stock(building* market);
 int building_bazaar_get_max_goods_stock(building* market);
 int building_bazaar_get_storage_destination(building* market);

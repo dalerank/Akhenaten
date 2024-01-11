@@ -46,6 +46,8 @@ class building_impl {
 public:
     building_impl(building &b) : base(b) {}
     virtual void spawn_figure() {}
+    virtual void update_graphic() {}
+    virtual void update_day() {}
 
     building &base;
 };
@@ -330,8 +332,6 @@ public:
     void spawn_figure_booth();
     void spawn_figure_senet();
     void spawn_figure_pavillion();
-    void set_market_graphic();
-    void spawn_figure_market();
     void set_water_supply_graphic();
     void spawn_figure_school();
     void spawn_figure_library();
