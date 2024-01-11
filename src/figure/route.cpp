@@ -135,9 +135,9 @@ void figure::figure_route_add() {
         int can_travel;
         switch (terrain_usage) {
         case TERRAIN_USAGE_ENEMY:
-            can_travel = map_routing_noncitizen_can_travel_over_land(tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), destinationID(), 5000);
+            can_travel = map_routing_noncitizen_can_travel_over_land(tile, destination_tile, destinationID(), 5000);
             if (!can_travel) {
-                can_travel = map_routing_noncitizen_can_travel_over_land(tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), 0, 25000);
+                can_travel = map_routing_noncitizen_can_travel_over_land(tile, destination_tile, 0, 25000);
                 if (!can_travel)
                     can_travel = map_routing_noncitizen_can_travel_through_everything(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
             }
@@ -148,7 +148,7 @@ void figure::figure_route_add() {
             break;
 
         case TERRAIN_USAGE_ANIMAL:
-            can_travel = map_routing_noncitizen_can_travel_over_land(tile.x(), tile.y(), destination_tile.x(), destination_tile.y(), -1, 5000);
+            can_travel = map_routing_noncitizen_can_travel_over_land(tile, destination_tile, -1, 5000);
             break;
 
         case TERRAIN_USAGE_PREFER_ROADS:

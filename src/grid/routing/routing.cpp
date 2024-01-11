@@ -456,9 +456,9 @@ static void callback_travel_noncitizen_land(int next_offset, int dist) {
     }
 }
 
-bool map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y, int only_through_building_id, int max_tiles) {
-    int src_offset = MAP_OFFSET(src_x, src_y);
-    int dst_offset = MAP_OFFSET(dst_x, dst_y);
+bool map_routing_noncitizen_can_travel_over_land(tile2i src, tile2i dst, int only_through_building_id, int max_tiles) {
+    int src_offset = src.grid_offset();
+    int dst_offset = dst.grid_offset();
     ++g_routing_stats.total_routes_calculated;
     ++g_routing_stats.enemy_routes_calculated;
     if (only_through_building_id) {

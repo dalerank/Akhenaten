@@ -310,7 +310,7 @@ static void set_native_target_building(formation* m) {
 }
 
 static void approach_target(formation* m) {
-    if (map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home, m->destination_x, m->destination_y, m->destination_building_id, 400)
+    if (map_routing_noncitizen_can_travel_over_land(tile2i(m->x_home, m->y_home), tile2i(m->destination_x, m->destination_y), m->destination_building_id, 400)
         || map_routing_noncitizen_can_travel_through_everything(m->x_home, m->y_home, m->destination_x, m->destination_y)) {
         tile2i dest;
 
@@ -339,7 +339,7 @@ bool formation_enemy_move_formation_to(const formation* m, tile2i tile, tile2i &
     for (int i = 1; i < m->num_figures; i++) {
         figure_offsets[i] = MAP_OFFSET(formation_layout_position_x(m->layout, i), formation_layout_position_y(m->layout, i)) - base_offset;
     }
-    map_routing_noncitizen_can_travel_over_land(tile.x(), tile.y(), -1, -1, 0, 600);
+    map_routing_noncitizen_can_travel_over_land(tile, tile2i(-1, -1), 0, 600);
     for (int r = 0; r <= 10; r++) {
         grid_area area = map_grid_get_area(tile, 1, r);
 
@@ -572,7 +572,7 @@ static void update_enemy_formation(formation* m, int* roman_distance) {
         army->home_y = m->y_home;
         army->layout = m->layout;
         *roman_distance = 0;
-        map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home, -2, -2, 100000, 300);
+        map_routing_noncitizen_can_travel_over_land(tile2i(m->x_home, m->y_home), tile2i(-2, -2), 100000, 300);
         tile2i tile;
         if (map_soldier_strength_get_max(m->x_home, m->y_home, 16, tile)) {
             *roman_distance = 1;
