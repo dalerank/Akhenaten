@@ -92,7 +92,7 @@ void route_queue_until(int source, bool (*callback)(int next_offset, int distanc
             queue.head = 0;
     }
 }
-bool route_queue_until_found(int source, int* dst_x, int* dst_y, bool (*callback)(int, int)) {
+bool route_queue_until_found(int source, tile2i &dst, bool (*callback)(int, int)) {
     auto &queue = g_grid_rounting;
     clear_distances();
     queue.head = queue.tail = 0;
@@ -104,8 +104,7 @@ bool route_queue_until_found(int source, int* dst_x, int* dst_y, bool (*callback
             int next_offset = offset + ROUTE_OFFSETS(i);
             if (valid_offset(next_offset)) {
                 if (callback(next_offset, distance)) {
-                    *dst_x = MAP_X(next_offset);
-                    *dst_y = MAP_Y(next_offset);
+                    dst = tile2i(next_offset);
                     return true;
                 }
             }
@@ -113,8 +112,7 @@ bool route_queue_until_found(int source, int* dst_x, int* dst_y, bool (*callback
         if (++queue.head >= MAX_QUEUE)
             queue.head = 0;
     }
-    *dst_x = -1;
-    *dst_y = -1;
+    dst = tile2i(-1, -1);
     return false;
 }
 bool route_queue_until_terrain(int source, int terrain_type, tile2i* dst, bool (*callback)(int, int, int)) {

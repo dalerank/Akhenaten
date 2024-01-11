@@ -529,7 +529,7 @@ public:
     void draw_normal_figure(object_info* c);
 
     // grid/marshland.c
-    bool find_resource_tile(int resource_type, int* out_x, int* out_y);
+    bool find_resource_tile(int resource_type, tile2i &out);
 };
 
 figure* figure_get(int id);

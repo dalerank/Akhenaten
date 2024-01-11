@@ -10,13 +10,12 @@ void figure::lumberjack_action() {
     case ACTION_14_GATHERER_CREATED: // spawning
         anim_frame = 0;
         if (type == FIGURE_LUMBERJACK && --wait_ticks <= 0) {
-            int x = -1;
-            int y = -1;
-            bool found_resource = find_resource_tile(RESOURCE_TIMBER, &x, &y);
+            tile2i dest(-1, -1);
+            bool found_resource = find_resource_tile(RESOURCE_TIMBER, dest);
 
             if (found_resource) {
                 anim_offset = 0;
-                do_goto(tile2i(x, y), TERRAIN_USAGE_PREFER_ROADS);
+                do_goto(dest, TERRAIN_USAGE_PREFER_ROADS);
                 advance_action(9);
             } else {
                 poof();
