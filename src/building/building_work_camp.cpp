@@ -1,6 +1,6 @@
-#include "building_plaza.h"
+#include "building/building_work_camp.h"
 
-#include "building/building.h"
+#include "building/industry.h"
 #include "city/object_info.h"
 #include "figure/figure.h"
 #include "game/resource.h"
@@ -59,4 +59,25 @@ void building_work_camp_draw_info(object_info &c) {
 
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
     window_building_draw_employment(&c, 142);
+}
+
+void building_work_camp::spawn_figure() {
+    if (!base.common_spawn_figure_trigger(100)) {
+        return;
+    }
+
+    if (config_get(CONFIG_GP_CH_WORK_CAMP_ONE_WORKER_PER_MONTH) && base.data.industry.spawned_worker_this_month) {
+        return;
+    }
+
+    building* dest = building_determine_worker_needed();
+    if (dest) {
+        figure *f = base.create_figure_with_destination(FIGURE_LABORER, dest, FIGURE_ACTION_10_WORKER_CREATED, BUILDING_SLOT_SERVICE);
+        base.data.industry.spawned_worker_this_month = true;
+        if (dest->is_industry()) {
+            dest->industry_add_workers(f->id);
+        } else if (dest->is_monument()) {
+            dest->monument_add_workers(f->id);
+        }
+    }
 }

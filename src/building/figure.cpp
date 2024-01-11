@@ -11,6 +11,7 @@
 #include "building/storage_yard.h"
 #include "building/count.h"
 #include "building/monument_mastaba.h"
+#include "building/building_work_camp.h"
 #include "city/buildings.h"
 #include "city/data_private.h"
 #include "city/entertainment.h"
@@ -338,27 +339,6 @@ int building::correct_animation_speed(int anim_speed) {
     }
 
     return anim_speed;
-}
-
-void building::spawn_figure_work_camp() {
-    if (!common_spawn_figure_trigger(100)) {
-        return;
-    }
-
-    if (config_get(CONFIG_GP_CH_WORK_CAMP_ONE_WORKER_PER_MONTH) && data.industry.spawned_worker_this_month) {
-        return;
-    }
-
-    building* dest = building_determine_worker_needed();
-    if (dest) {
-        figure *f = create_figure_with_destination(FIGURE_LABORER, dest, FIGURE_ACTION_10_WORKER_CREATED, BUILDING_SLOT_SERVICE);
-        data.industry.spawned_worker_this_month = true;
-        if (dest->is_industry()) {
-            dest->industry_add_workers(f->id);
-        } else if (dest->is_monument()) {
-            dest->monument_add_workers(f->id);
-        }
-    }
 }
 
 bool building::guild_has_resources() {
@@ -1257,8 +1237,9 @@ void building::spawn_figure_barracks() {
 
 void building::update_native_crop_progress() {
     data.industry.progress++;
-    if (data.industry.progress >= 5)
+    if (data.industry.progress >= 5) {
         data.industry.progress = 0;
+    }
 
     map_image_set(tile.grid_offset(), image_id_from_group(GROUP_BUILDING_FARMLAND) + data.industry.progress);
 }
@@ -1266,7 +1247,6 @@ void building::update_native_crop_progress() {
 void building::update_day() {
     switch (type) {
     case BUILDING_SMALL_MASTABA:
-    //case BUILDING_SMALL_MASTABA_SEC:
         building_small_mastabe_update_day(this);
         break;
     }
@@ -1460,7 +1440,9 @@ bool building::figure_generate() {
             break;
 
         case BUILDING_HUNTING_LODGE: spawn_figure_hunting_lodge(); break;
-        case BUILDING_WORK_CAMP: spawn_figure_work_camp(); break;
+        default:
+            dcast()->spawn_figure();
+            break;
         }
     }
 

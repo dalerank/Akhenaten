@@ -39,13 +39,21 @@ enum e_building_slot {
     BUILDING_SLOT_CARTPUSHER_2 = 3,
 };
 
+class building_work_camp;
+
+class building;
+class building_impl {
+public:
+    building_impl(building &b) : base(b) {}
+    virtual void spawn_figure() {}
+
+    building &base;
+};
+
 class building {
 private:
-    //    short figure_id;
-    //    short figure_id2; // labor seeker or market buyer
-    //    short immigrant_figure_id;
-    //    short figure_id4; // tower ballista or burning ruin prefect
     short figure_ids_array[MAX_FIGURES_PER_BUILDING]; // oh boy!
+    building_impl *_ptr = nullptr;
 
 public:
     struct metainfo {
@@ -85,17 +93,12 @@ public:
     short house_highest_population;
     short house_unreachable_ticks;
     tile2i road_access;
-    //    figure *figure_id;
-    //    figure *figure_id2; // labor seeker or market buyer
-    //    short immigrant_figure_id;
-    //    short figure_id4; // tower ballista or burning ruin prefect
     short figure_spawn_delay;
     unsigned char figure_roam_direction;
     bool has_water_access;
     bool has_open_water_access;
     int prev_part_building_id;
     int next_part_building_id;
-    //    short stored_loads_c3;
     short stored_full_amount;
     bool has_well_access;
     short num_workers;
@@ -273,6 +276,7 @@ public:
     inline bool same_network(building &b) const { return road_network_id == b.road_network_id; }
 
     void clear_related_data();
+    void clear_impl();
 
     e_overlay get_overlay() const;
 
@@ -312,7 +316,9 @@ public:
     int correct_animation_speed(int anim_speed);
     int get_onespot_ready_production();
 
-    void spawn_figure_work_camp();
+public:
+    building_impl *dcast();
+
     bool spawn_noble(bool spawned);
     void spawn_figure_engineers_post();
     void spawn_figure_firehouse();
@@ -370,7 +376,6 @@ public:
 
     void school_add_papyrus(int amount);
 
-    // barracks.c
     void barracks_add_weapon(int amount);
     void monument_add_workers(int fid);
     void monument_remove_worker(int fid);

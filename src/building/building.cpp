@@ -5,6 +5,7 @@
 #include "building/building_type.h"
 #include "building/storage.h"
 #include "building/building_statue.h"
+#include "building/building_work_camp.h"
 #include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
@@ -299,9 +300,8 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     }
 }
 
-
 building* building_create(e_building_type type, tile2i tile, int orientation) {
-    building* b = 0;
+    building* b = nullptr;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         if (g_all_buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
             b = &g_all_buildings[i];
@@ -316,11 +316,25 @@ building* building_create(e_building_type type, tile2i tile, int orientation) {
 
     memset(&(b->data), 0, sizeof(b->data));
     building_new_fill_in_data_for_type(b, type, tile, orientation);
+    b->clear_impl();
     b->data.house.health = 100;
 
     return b;
 }
 
+building_impl *building::dcast() {
+    if (_ptr) {
+        return _ptr;
+    }
+
+    switch (type) {
+    case BUILDING_WORK_CAMP: _ptr = new building_work_camp{*this}; break;
+    default:
+        _ptr = new building_impl(*this);
+    }
+
+    return _ptr;
+}
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
 }
@@ -386,9 +400,11 @@ building* building::top_xy() {
     }
     return top;
 }
+
 building* building::next() {
     return building_get(next_part_building_id);
 }
+
 bool building::is_main() {
     return (prev_part_building_id == 0);
 }
@@ -398,6 +414,11 @@ static void building_delete_UNSAFE(building* b) {
     int id = b->id;
     memset(b, 0, sizeof(building));
     b->id = id;
+}
+
+void building::clear_impl() {
+    delete _ptr;
+    _ptr = nullptr;
 }
 
 void building::clear_related_data() {
