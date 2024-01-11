@@ -35,6 +35,6 @@ bool map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int d
 bool map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y);
 
 bool map_routing_noncitizen_can_travel_over_land(tile2i src, tile2i dst, int only_through_building_id, int max_tiles);
-bool map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, int dst_x, int dst_y);
+bool map_routing_noncitizen_can_travel_through_everything(tile2i src, tile2i dst);
 
 void map_routing_block(int x, int y, int size);

@@ -476,9 +476,9 @@ static void callback_travel_noncitizen_through_everything(int next_offset, int d
         enqueue(next_offset, dist);
 }
 
-bool map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, int dst_x, int dst_y) {
-    int src_offset = MAP_OFFSET(src_x, src_y);
-    int dst_offset = MAP_OFFSET(dst_x, dst_y);
+bool map_routing_noncitizen_can_travel_through_everything(tile2i src, tile2i dst) {
+    int src_offset = src.grid_offset();
+    int dst_offset = dst.grid_offset();
     ++g_routing_stats.total_routes_calculated;
     route_queue(src_offset, dst_offset, callback_travel_noncitizen_through_everything);
     return map_grid_get(&routing_distance, dst_offset) != 0;
@@ -487,6 +487,7 @@ bool map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, 
 void map_routing_block(int x, int y, int size) {
     if (!map_grid_is_inside(tile2i(x, y), size))
         return;
+
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             map_grid_set(&routing_distance, MAP_OFFSET(x + dx, y + dy), 0);

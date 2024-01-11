@@ -139,7 +139,7 @@ void figure::figure_route_add() {
             if (!can_travel) {
                 can_travel = map_routing_noncitizen_can_travel_over_land(tile, destination_tile, 0, 25000);
                 if (!can_travel)
-                    can_travel = map_routing_noncitizen_can_travel_through_everything(tile.x(), tile.y(), destination_tile.x(), destination_tile.y());
+                    can_travel = map_routing_noncitizen_can_travel_through_everything(tile, destination_tile);
             }
             break;
 
