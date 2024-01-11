@@ -310,14 +310,13 @@ static void set_native_target_building(formation* m) {
 }
 
 static void approach_target(formation* m) {
-    if (map_routing_noncitizen_can_travel_over_land(
-          m->x_home, m->y_home, m->destination_x, m->destination_y, m->destination_building_id, 400)
-        || map_routing_noncitizen_can_travel_through_everything(
-          m->x_home, m->y_home, m->destination_x, m->destination_y)) {
-        int x_tile, y_tile;
-        if (map_routing_get_closest_tile_within_range(
-              m->x_home, m->y_home, m->destination_x, m->destination_y, 8, 20, &x_tile, &y_tile))
-            formation_set_destination(m, x_tile, y_tile);
+    if (map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home, m->destination_x, m->destination_y, m->destination_building_id, 400)
+        || map_routing_noncitizen_can_travel_through_everything(m->x_home, m->y_home, m->destination_x, m->destination_y)) {
+        tile2i dest;
+
+        if (map_routing_get_closest_tile_within_range(tile2i(m->x_home, m->y_home), tile2i(m->destination_x, m->destination_y), 8, 20, dest)) {
+            formation_set_destination(m, dest.x(), dest.y());
+        }
     }
 }
 
