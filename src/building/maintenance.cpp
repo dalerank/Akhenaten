@@ -280,13 +280,15 @@ void building_maintenance_check_kingdome_access(void) {
             }
 
             b->distance_from_entry = 0;
-            int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), 3, &x_road, &y_road);
+            tile2i road;
+            int road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->tile, 3, road);
             if (road_grid_offset >= 0) {
                 b->road_network_id = map_road_network_get(road_grid_offset);
                 b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access.x(x_road);
-                b->road_access.y(y_road);
+                b->road_access = road;
+                b->has_road_access = true;
+            } else {
+                b->has_road_access = map_get_road_access_tile(b->tile, 3, b->road_access);
             }
         } else if (b->type == BUILDING_STORAGE_YARD_SPACE) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Storageyard Space");
@@ -310,13 +312,15 @@ void building_maintenance_check_kingdome_access(void) {
         } else { // other building
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Other");
             b->distance_from_entry = 0;
-            int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network(b->tile.x(), b->tile.y(), b->size, &x_road, &y_road);
+            tile2i road;
+            int road_grid_offset = map_road_to_largest_network(b->tile, b->size, road);
             if (road_grid_offset >= 0) {
                 b->road_network_id = map_road_network_get(road_grid_offset);
                 b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access.x(x_road);
-                b->road_access.y(y_road);
+                b->road_access = road;
+                b->has_road_access = true;
+            } else {
+                b->has_road_access = map_get_road_access_tile(b->tile, b->size, b->road_access);
             }
         }
     }

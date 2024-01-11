@@ -32,6 +32,7 @@
 #include "grid/image.h"
 #include "grid/random.h"
 #include "grid/road_access.h"
+#include "grid/road_network.h"
 #include "grid/routing/routing.h"
 #include "grid/terrain.h"
 #include "grid/water.h"
@@ -1315,10 +1316,19 @@ tile2i building::access_tile() {
 
 void building::update_road_access() {
     // update building road access
-    //    map_point road;
+    tile2i road;
+    int road_grid_offset;
     switch (type) {
     case BUILDING_STORAGE_YARD:
-        has_road_access = map_get_road_access_tile(tile, 3, road_access);
+        road_grid_offset = map_road_to_largest_network_rotation(subtype.orientation, tile, 3, road);
+        if (road_grid_offset >= 0) {
+            road_network_id = map_road_network_get(road_grid_offset);
+            distance_from_entry = map_routing_distance(road_grid_offset);
+            road_access = road;
+            has_road_access = true;
+        } else {
+            has_road_access = map_get_road_access_tile(tile, 3, road_access);
+        }
         break;
 
     case BUILDING_BURNING_RUIN:
@@ -1337,7 +1347,17 @@ void building::update_road_access() {
         break;
 
     default:
-        has_road_access = map_get_road_access_tile(tile, size, road_access);
+        //has_road_access = map_get_road_access_tile(tile, size, road_access);
+        tile2i road;
+        int road_grid_offset = map_road_to_largest_network(tile, size, road);
+        if (road_grid_offset >= 0) {
+            road_network_id = map_road_network_get(road_grid_offset);
+            distance_from_entry = map_routing_distance(road_grid_offset);
+            road_access = road;
+            has_road_access = true;
+        } else {
+            has_road_access = map_get_road_access_tile(tile, size, road_access);
+        }
         break;
     }
     // TODO: Temple Complexes

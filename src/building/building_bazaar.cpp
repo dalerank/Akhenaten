@@ -11,6 +11,7 @@
 #include "grid/desirability.h"
 #include "grid/building_tiles.h"
 #include "grid/terrain.h"
+#include "grid/routing/routing.h"
 #include "graphics/image.h"
 
 #include <numeric>

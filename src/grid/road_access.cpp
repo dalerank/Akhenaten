@@ -263,7 +263,9 @@ bool map_closest_reachable_road_within_radius(tile2i tile, int size, int radius,
     return false;
 }
 
-int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, int* x_road, int* y_road) {
+int map_road_to_largest_network_rotation(int rotation, tile2i tile, int size, tile2i &road) {
+    int x = tile.x();
+    int y = tile.y();
     switch (rotation) {
     case 1:
         x = x - size + 1;
@@ -278,6 +280,7 @@ int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, i
     default:
         break;
     }
+
     int min_index = 12;
     int min_grid_offset = -1;
     int base_offset = MAP_OFFSET(x, y);
@@ -294,8 +297,7 @@ int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, i
         }
     }
     if (min_index < 12) {
-        *x_road = MAP_X(min_grid_offset);
-        *y_road = MAP_Y(min_grid_offset);
+        road = tile2i(min_grid_offset);
         return min_grid_offset;
     }
     int min_dist = 100000;
@@ -311,14 +313,15 @@ int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, i
         }
     }
     if (min_grid_offset >= 0) {
-        *x_road = MAP_X(min_grid_offset);
-        *y_road = MAP_Y(min_grid_offset);
+        road = tile2i(min_grid_offset);
         return min_grid_offset;
     }
+
     return -1;
 }
-int map_road_to_largest_network(int x, int y, int size, int* x_road, int* y_road) {
-    return map_road_to_largest_network_rotation(0, x, y, size, x_road, y_road);
+
+int map_road_to_largest_network(tile2i tile, int size, tile2i &road) {
+    return map_road_to_largest_network_rotation(0, tile, size, road);
 }
 
 static void check_road_to_largest_network_hippodrome(int x, int y, int* min_index, int* min_grid_offset) {
