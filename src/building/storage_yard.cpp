@@ -49,11 +49,11 @@ int building_storageyard_get_space_info(building* storageyard) {
         return STORAGEYARD_FULL;
 }
 
-int building_storageyard_get_amount(building* storageyard, e_resource resource) {
+int building_storageyard_get_amount(const building *storageyard, e_resource resource) {
     int total = 0;
-    building* space = storageyard;
+    const building* space = storageyard;
     for (int i = 0; i < 8; i++) {
-        space = space->next();
+        space = (const building*)space->next();
         if (space->id <= 0)
             return 0;
 

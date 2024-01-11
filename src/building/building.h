@@ -25,6 +25,9 @@ enum e_labor_state {
     LABOR_STATE_JUST_ENTERED
 };
 
+class building;
+building* building_get(int id);
+
 enum e_building_slot {
     BUILDING_SLOT_SERVICE = 0,
     BUILDING_SLOT_CARTPUSHER = 1,
@@ -242,7 +245,8 @@ public:
 
     building();
     building* main();
-    building* next();
+    inline building *next() { return building_get(next_part_building_id); }
+    inline const building *next() const { return building_get(next_part_building_id); }
     inline bool has_next() const { return next_part_building_id > 0; }
     building* top_xy();
     bool is_main();
@@ -393,7 +397,6 @@ int building_id_first(e_building_type type);
 building* building_first(e_building_type type);
 
 building* building_next(int id, e_building_type type);
-building* building_get(int id);
 
 inline building* building_begin() { return building_get(1); }
 inline building* building_end() { return building_get(MAX_BUILDINGS); }

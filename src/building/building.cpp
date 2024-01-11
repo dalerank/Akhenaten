@@ -403,10 +403,6 @@ building* building::top_xy() {
     return top;
 }
 
-building* building::next() {
-    return building_get(next_part_building_id);
-}
-
 bool building::is_main() {
     return (prev_part_building_id == 0);
 }

@@ -27,7 +27,7 @@ struct storage_worker_task {
 
 int building_storageyard_get_space_info(building* warehouse);
 
-int building_storageyard_get_amount(building* warehouse, e_resource resource);
+int building_storageyard_get_amount(const building* warehouse, e_resource resource);
 int building_storageyard_get_freespace(building* warehouse, e_resource resource);
 
 int building_storageyard_add_resource(building* b, e_resource resource, int amount);
