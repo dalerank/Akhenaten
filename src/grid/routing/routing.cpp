@@ -110,8 +110,8 @@ static void callback_calc_distance_water_flotsam(int next_offset, int dist) {
         enqueue(next_offset, dist);
     }
 }
-void map_routing_calculate_distances_water_flotsam(int x, int y) {
-    int grid_offset = MAP_OFFSET(x, y);
+void map_routing_calculate_distances_water_flotsam(tile2i tile) {
+    int grid_offset = tile.grid_offset();
     if (map_grid_get(&routing_tiles_water, grid_offset) == WATER_N1_BLOCKED) {
         clear_distances();
     } else {

@@ -14,7 +14,7 @@ enum routed_int {
 
 void map_routing_calculate_distances(tile2i tile);
 void map_routing_calculate_distances_water_boat(tile2i tile);
-void map_routing_calculate_distances_water_flotsam(int x, int y);
+void map_routing_calculate_distances_water_flotsam(tile2i tile);
 
 bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct);
 bool map_routing_calculate_distances_for_building(routed_int type, int x, int y);
