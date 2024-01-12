@@ -140,10 +140,10 @@ void debug_draw_crosshair(int x, int y) {
 }
 
 void debug_draw_sprite_box(int x, int y, const image_t* img, float scale, color color_mask) {
-    int x2 = x - img->animation.sprite_x_offset;
-    int y2 = y - img->animation.sprite_y_offset;
+    int x2 = x - img->animation.sprite_offset.x;
+    int y2 = y - img->animation.sprite_offset.y;
     graphics_renderer()->draw_rect(x2 * scale, y2 * scale, img->width * scale, img->height * scale, color_mask);
-    debug_draw_crosshair((x2 + img->animation.sprite_x_offset) * scale, (y2 + img->animation.sprite_y_offset) * scale);
+    debug_draw_crosshair((x2 + img->animation.sprite_offset.x) * scale, (y2 + img->animation.sprite_offset.y) * scale);
 }
 
 void debug_draw_tile_box(int x, int y, color rect, color bb, int tile_size_x, int tile_size_y) {

@@ -42,7 +42,7 @@ static struct {
     int selected_button;
     int selected_city;
     int x_min, x_max, y_min, y_max;
-    int x_draw_offset, y_draw_offset;
+    vec2i draw_offset;
     int focus_button_id;
     int is_scrolling;
     int finished_scroll;
@@ -139,16 +139,16 @@ static void draw_empire_object(const empire_object* obj) {
             image_id = image_id_from_group(GROUP_EDITOR_EMPIRE_FOREIGN_CITY);
         }
     } else if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
-        draw_shadowed_number(obj->invasion_path_id, data.x_draw_offset + pos.x - 9, data.y_draw_offset + pos.y - 9, COLOR_WHITE);
-        draw_shadowed_number(obj->invasion_years, data.x_draw_offset + pos.x + 15, data.y_draw_offset + pos.y - 9, COLOR_FONT_RED);
+        draw_shadowed_number(obj->invasion_path_id, data.draw_offset.x + pos.x - 9, data.draw_offset.y + pos.y - 9, COLOR_WHITE);
+        draw_shadowed_number(obj->invasion_years, data.draw_offset.x + pos.x + 15, data.draw_offset.y + pos.y - 9, COLOR_FONT_RED);
     } else if (obj->type == EMPIRE_OBJECT_KINGDOME_ARMY || obj->type == EMPIRE_OBJECT_ENEMY_ARMY) {
-        draw_shadowed_number(obj->distant_battle_travel_months, data.x_draw_offset + pos.x + 7, data.y_draw_offset + pos.y - 9, obj->type == EMPIRE_OBJECT_KINGDOME_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
+        draw_shadowed_number(obj->distant_battle_travel_months, data.draw_offset.x + pos.x + 7, data.draw_offset.y + pos.y - 9, obj->type == EMPIRE_OBJECT_KINGDOME_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
     }
-    ImageDraw::img_generic(ctx, image_id, vec2i{data.x_draw_offset + pos.x, data.y_draw_offset + pos.y});
+    ImageDraw::img_generic(ctx, image_id, vec2i{data.draw_offset.x + pos.x, data.draw_offset.y + pos.y});
     const image_t* img = image_get(image_id);
     if (img->animation.speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
-        ImageDraw::img_generic(ctx, image_id + new_animation, vec2i{data.x_draw_offset + pos.x + img->animation.sprite_x_offset, data.y_draw_offset + pos.y + img->animation.sprite_y_offset});
+        ImageDraw::img_generic(ctx, image_id + new_animation, data.draw_offset + pos + img->animation.sprite_offset);
     }
 }
 
@@ -160,10 +160,10 @@ static void draw_map() {
 
     empire_set_viewport(viewport_width, viewport_height);
 
-    data.x_draw_offset = data.x_min + 16;
-    data.y_draw_offset = data.y_min + 16;
-    empire_adjust_scroll(&data.x_draw_offset, &data.y_draw_offset);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_EMPIRE_MAP), vec2i{data.x_draw_offset, data.y_draw_offset});
+    data.draw_offset.x = data.x_min + 16;
+    data.draw_offset.y = data.y_min + 16;
+    empire_adjust_scroll(&data.draw_offset.x, &data.draw_offset.y);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_EMPIRE_MAP), vec2i{data.draw_offset.x, data.draw_offset.y});
 
     empire_object_foreach(draw_empire_object);
 

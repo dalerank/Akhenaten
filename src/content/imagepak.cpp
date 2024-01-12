@@ -437,8 +437,7 @@ bool imagepak::load_folder_pak(pcstr folder) {
         img.unk03 = -1;
         img.animation.num_sprites = -1;
         img.animation.unk04 = -1;
-        img.animation.sprite_x_offset = -1;
-        img.animation.sprite_y_offset = -1;
+        img.animation.sprite_offset = {-1, -1};
         img.animation.unk05 = -1;
         img.animation.unk06 = -1;
         img.animation.unk07 = -1;
@@ -688,8 +687,8 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         img.unk03 = pak_buf->read_i16();
         img.animation.num_sprites = pak_buf->read_u16();
         img.animation.unk04 = pak_buf->read_i16();
-        img.animation.sprite_x_offset = pak_buf->read_i16();
-        img.animation.sprite_y_offset = pak_buf->read_i16();
+        img.animation.sprite_offset.x = pak_buf->read_i16();
+        img.animation.sprite_offset.y = pak_buf->read_i16();
         img.animation.unk05 = pak_buf->read_i16();
         img.animation.unk06 = pak_buf->read_i16();
         img.animation.unk07 = pak_buf->read_i16();

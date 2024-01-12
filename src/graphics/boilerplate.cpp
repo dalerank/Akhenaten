@@ -709,12 +709,12 @@ void ImageDraw::img_sprite(painter &ctx, int image_id, int x, int y, color color
    
     if (mirrored) {
         img = img->mirrored_img;
-        x -= (img->width - img->animation.sprite_x_offset);
+        x -= (img->width - img->animation.sprite_offset.x);
     } else {
-        x -= img->animation.sprite_x_offset;
+        x -= img->animation.sprite_offset.x;
     }
 
-    y -= img->animation.sprite_y_offset;
+    y -= img->animation.sprite_offset.y;
     graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, mirrored, alpha);
 }
 
@@ -722,8 +722,8 @@ void ImageDraw::img_ornament(painter &ctx, int image_id, int base_id, int x, int
     const image_t* img = image_get(image_id);
     const image_t* base = image_get(base_id);
     int ydiff = HALF_TILE_HEIGHT_PIXELS * (base->isometric_size() + 1);
-    x += base->animation.sprite_x_offset;
-    y += base->animation.sprite_y_offset - base->height + ydiff;
+    x += base->animation.sprite_offset.x;
+    y += base->animation.sprite_offset.y - base->height + ydiff;
     //    y += base->animation.sprite_y_offset - img->isometric_ydiff();
     graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale);
 }

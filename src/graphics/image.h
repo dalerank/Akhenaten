@@ -65,8 +65,7 @@ struct image_t {
     struct {
         int num_sprites;
         int unk04; //
-        int sprite_x_offset;
-        int sprite_y_offset;
+        vec2i sprite_offset;
         int unk05; //
         int unk06; //
         int unk07; //

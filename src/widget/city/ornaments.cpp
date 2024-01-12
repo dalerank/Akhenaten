@@ -169,7 +169,7 @@ static void draw_dock_workers(building* b, int x, int y, color color_mask, paint
             image_dockers += 2;
 
         const image_t* img = image_get(image_dockers);
-        ImageDraw::img_generic(ctx, image_dockers, x + img->animation.sprite_x_offset, y + img->animation.sprite_y_offset, color_mask);
+        ImageDraw::img_generic(ctx, image_dockers, x + img->animation.sprite_offset.x, y + img->animation.sprite_offset.y, color_mask);
     }
 }
 
@@ -189,7 +189,7 @@ static void draw_hippodrome_ornaments(vec2i pixel, map_point point, painter &ctx
     const image_t* img = image_get(image_id);
     building* b = building_at(grid_offset);
     if (img->animation.num_sprites && map_property_is_draw_tile(grid_offset) && b->type == BUILDING_SENET_HOUSE) {
-        ImageDraw::img_generic(ctx, image_id + 1, x + img->animation.sprite_x_offset, y + img->animation.sprite_y_offset - img->height + 90, drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0);
+        ImageDraw::img_generic(ctx, image_id + 1, x + img->animation.sprite_offset.x, y + img->animation.sprite_offset.y - img->height + 90, drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0);
     }
 }
 

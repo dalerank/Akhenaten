@@ -585,8 +585,8 @@ static void draw_texture_advanced(const image_t *img, float x, float y, color co
 
     set_texture_color_and_scale_mode(texture, color, scale);
 
-    x += img->animation.sprite_x_offset;
-    y += img->animation.sprite_y_offset;
+    x += img->animation.sprite_offset.x;
+    y += img->animation.sprite_offset.y;
 
     int src_correction = 0; // scale == data.city_scale && data.should_correct_texture_offset ? 1 : 0;
 

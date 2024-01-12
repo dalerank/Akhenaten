@@ -527,7 +527,7 @@ static void draw_empire_object(const empire_object* obj) {
     const image_t* img = image_get(image_id);
     if (img->animation.speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
-        ImageDraw::img_generic(ctx, image_id + new_animation, data.draw_offset + pos + vec2i{img->animation.sprite_x_offset, img->animation.sprite_y_offset});
+        ImageDraw::img_generic(ctx, image_id + new_animation, data.draw_offset + pos + img->animation.sprite_offset);
     }
 }
 
