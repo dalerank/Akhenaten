@@ -2,6 +2,8 @@
 
 #include "core/vec2i.h"
 
+#include <vector>
+
 /**
  * This code is based on the japacker image packing library, however, unlike japacker (which is public domain),
  * this version of the japacker library is released under aGPL v3.0.
@@ -30,40 +32,39 @@ enum image_packer_error_type {
 
 struct image_packer_rect {
     struct {
-        unsigned int width;
-        unsigned int height;
+        unsigned int width = 0;
+        unsigned int height = 0;
     } input;
     struct {
-        vec2i pos;
-        int packed;
-        int rotated;
-        int image_index;
+        vec2i pos = {0, 0};
+        int packed = 0;
+        int rotated = 0;
+        int image_index = 0;
     } output;
 };
 
 struct empty_area : public vec2i {
     unsigned int width, height;
     unsigned int comparator;
-    struct empty_area *prev, *next;
+    empty_area *prev, *next;
 };
 
 struct internal_data_t {
-    image_packer_rect** sorted_rects;
-    unsigned int num_rects;
-    unsigned int image_width;
-    unsigned int image_height;
+    std::vector<image_packer_rect*> sorted_rects;
+    unsigned int num_rects = 0;
+    vec2i image_size = {0, 0};
     struct {
-        struct empty_area* first;
-        struct empty_area* last;
-        struct empty_area* list;
-        int index;
-        int size;
-        void (*set_comparator)(empty_area* area);
+        empty_area* first = nullptr;
+        empty_area* last = nullptr;
+        empty_area* list = nullptr;
+        int index = 0;
+        int size = 0;
+        void (*set_comparator)(empty_area* area) = nullptr;
     } empty_areas;
 };
 
 struct image_packer {
-    image_packer_rect* rects;
+    std::vector<image_packer_rect> rects;
     struct {
         int allow_rotation;
         int rects_are_sorted;
@@ -77,22 +78,20 @@ struct image_packer {
         unsigned int last_image_height;
     } result;
     internal_data_t* internal_data;
-} ;
 
-extern image_packer packer;
-
-/**
- * @brief Initiates an image_packer object, allocating memory as needed.
- *
- * Don't use any other image_packer_* function on an image_packer without calling image_packer_init() first.
- *
- * @param packer The packer to init.
- * @param num_rectangles The total number of rectangles that need to be packed.
- * @param width The width of the destination rectangle.
- * @param height The height of the destination rectangle.
- * @return IMAGE_PACKER_OK on success, or another image_packer_error_type result on error.
- */
-int image_packer_init(image_packer* packer, unsigned int num_rectangles, unsigned int width, unsigned int height);
+    /**
+    * @brief Initiates an image_packer object, allocating memory as needed.
+    *
+    * Don't use any other image_packer_* function on an image_packer without calling image_packer_init() first.
+    *
+    * @param packer The packer to init.
+    * @param num_rectangles The total number of rectangles that need to be packed.
+    * @param width The width of the destination rectangle.
+    * @param height The height of the destination rectangle.
+    * @return IMAGE_PACKER_OK on success, or another image_packer_error_type result on error.
+    */
+    int init(unsigned int num_rectangles, vec2i image_size);
+};
 
 /**
  * @brief Resizes the destination image. Note that this won't automatically repack any rect already packed.
@@ -103,7 +102,7 @@ int image_packer_init(image_packer* packer, unsigned int num_rectangles, unsigne
  * @param image_width The new width of the destination image.
  * @param image_height The new height of the destination image.
  */
-void image_packer_resize_image(image_packer* packer, unsigned int image_width, unsigned int image_height);
+void image_packer_resize_image(image_packer* packer, vec2i image_size);
 
 /**
  * @brief Packs the rectangles into the destination image.
@@ -125,4 +124,4 @@ int image_packer_pack(image_packer* packer);
  * @brief Frees the memory associated with an image_packer object.
  * @param packer The object to free.
  */
-void image_packer_free(image_packer* packer);
+void image_packer_reset(image_packer &packer);
