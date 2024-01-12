@@ -101,8 +101,8 @@ void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale, 
         return;
     }
 
-    vec2i offset{spr.img->atlas.x_offset, spr.img->atlas.y_offset};
-    vec2i size{spr.img->width, spr.img->height};
+    vec2i offset = spr.img->atlas.offset;
+    vec2i size = spr.img->size();
     draw(spr.img->atlas.p_atlas->texture, pos.x, pos.y, offset, size, color_mask, scale, mirrored, alpha);
 }
 

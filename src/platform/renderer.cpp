@@ -289,7 +289,7 @@ void graphics_renderer_interface::draw_image_part(painter &ctx, const image_t* i
         return;
     }
 
-    vec2i atlas_offset = {img->atlas.x_offset, img->atlas.y_offset};
+    vec2i atlas_offset = img->atlas.offset;
     vec2i size = {img->width, (img->height - offset) / 2 + offset};
     ctx.draw(img->atlas.p_atlas->texture, x, y, atlas_offset, size, color, scale, mirrored, alpha);
 }
@@ -299,7 +299,7 @@ void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, f
         return;
     }
 
-    vec2i offset = {img->atlas.x_offset, img->atlas.y_offset};
+    vec2i offset = img->atlas.offset;
     vec2i size = {img->width, img->height};
     if (offset.x >= 0 && offset.y >= 0) {
         ctx.draw(img->atlas.p_atlas->texture, x, y, offset, size, color, scale, mirrored, alpha);
@@ -518,7 +518,7 @@ static void create_blend_texture(int type) {
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
                            (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE);
     SDL_SetTextureAlphaMod(flat_tile, 0xff);
-    SDL_Rect src_coords = {img->atlas.x_offset, img->atlas.y_offset, img->width, img->height};
+    SDL_Rect src_coords = {img->atlas.offset.x, img->atlas.offset.y, img->width, img->height};
     SDL_RenderCopy(data.renderer, flat_tile, &src_coords, 0);
 
     SDL_SetRenderTarget(data.renderer, former_target);
@@ -590,7 +590,7 @@ static void draw_texture_advanced(const image_t *img, float x, float y, color co
 
     int src_correction = 0; // scale == data.city_scale && data.should_correct_texture_offset ? 1 : 0;
 
-    SDL_Rect src_coords = { img->atlas.x_offset + src_correction, img->atlas.y_offset + src_correction, img->width - src_correction, img->height - src_correction };
+    SDL_Rect src_coords = { img->atlas.offset.x + src_correction, img->atlas.offset.y + src_correction, img->width - src_correction, img->height - src_correction };
 
     // When zooming out, instead of drawing the grid image, we reduce the isometric textures' size,
     // which ends up simulating a grid without any performance penalty

@@ -2,6 +2,7 @@
 
 #include "SDL_render.h"
 #include "core/encoding.h"
+#include "core/vec2i.h"
 #include "graphics/color.h"
 #include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
@@ -95,13 +96,13 @@ struct image_t {
 
     struct {
         int index;
-        int x_offset;
-        int y_offset;
+        vec2i offset;
         atlas_data_t* p_atlas = nullptr;
     } atlas;
 
     color* temp_pixel_data = nullptr;
 
+    inline vec2i size() const { return {width, height}; }
     const int isometric_size() const;
     const int isometric_top_height() const;
     const int isometric_3d_height() const;

@@ -1,5 +1,6 @@
-#ifndef CORE_IMAGE_PACKER_H
-#define CORE_IMAGE_PACKER_H
+#pragma once
+
+#include "core/vec2i.h"
 
 /**
  * This code is based on the japacker image packing library, however, unlike japacker (which is public domain),
@@ -8,43 +9,45 @@
  * If you want to use the japacker library, please check its original source at https://github.com/crudelios/japacker.
  */
 
-typedef enum { IMAGE_PACKER_STOP = 0, IMAGE_PACKER_CONTINUE = 1, IMAGE_PACKER_NEW_IMAGE = 2 } image_packer_fail_policy;
+enum image_packer_fail_policy {
+    IMAGE_PACKER_STOP = 0,
+    IMAGE_PACKER_CONTINUE = 1,
+    IMAGE_PACKER_NEW_IMAGE = 2
+};
 
-typedef enum {
+enum image_packer_sort_type {
     IMAGE_PACKER_SORT_BY_PERIMETER = 0,
     IMAGE_PACKER_SORT_BY_AREA = 1,
     IMAGE_PACKER_SORT_BY_HEIGHT = 2,
     IMAGE_PACKER_SORT_BY_WIDTH = 3
-} image_packer_sort_type;
+};
 
-typedef enum {
+enum image_packer_error_type {
     IMAGE_PACKER_OK = 0,
     IMAGE_PACKER_ERROR_WRONG_PARAMETERS = -1,
     IMAGE_PACKER_ERROR_NO_MEMORY = -2
-} image_packer_error_type;
+};
 
-typedef struct {
+struct image_packer_rect {
     struct {
         unsigned int width;
         unsigned int height;
     } input;
     struct {
-        unsigned int x;
-        unsigned int y;
+        vec2i pos;
         int packed;
         int rotated;
         int image_index;
     } output;
-} image_packer_rect;
+};
 
-typedef struct empty_area {
-    unsigned int x, y;
+struct empty_area : public vec2i {
     unsigned int width, height;
     unsigned int comparator;
     struct empty_area *prev, *next;
-} empty_area;
+};
 
-typedef struct {
+struct internal_data_t {
     image_packer_rect** sorted_rects;
     unsigned int num_rects;
     unsigned int image_width;
@@ -57,9 +60,9 @@ typedef struct {
         int size;
         void (*set_comparator)(empty_area* area);
     } empty_areas;
-} internal_data_t;
+};
 
-typedef struct {
+struct image_packer {
     image_packer_rect* rects;
     struct {
         int allow_rotation;
@@ -74,7 +77,7 @@ typedef struct {
         unsigned int last_image_height;
     } result;
     internal_data_t* internal_data;
-} image_packer;
+} ;
 
 extern image_packer packer;
 
@@ -123,5 +126,3 @@ int image_packer_pack(image_packer* packer);
  * @param packer The object to free.
  */
 void image_packer_free(image_packer* packer);
-
-#endif // CORE_IMAGE_PACKER_H

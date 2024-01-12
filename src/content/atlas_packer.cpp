@@ -237,8 +237,7 @@ static int pack_rect(internal_data_t* data, image_packer_rect* rect, int allow_r
         if (height > area->height || width > area->width) {
             continue;
         }
-        rect->output.x = area->x;
-        rect->output.y = area->y;
+        rect->output.pos = {area->x, area->y};
         rect->output.packed = 1;
 
         if (height == area->height && width == area->width) {
