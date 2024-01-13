@@ -131,29 +131,30 @@ static void draw_foreground(void) {
     bool could_export = empire_can_export_resource(data.resource, false);
 
     int trade_status = city_resource_trade_status(data.resource);
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        if (!can_import && !can_export)
-            lang_text_draw(54, 24, 98, 212, FONT_NORMAL_BLACK_ON_LIGHT);
-        else {
-            button_border_draw(98, 212, 432, 30, data.focus_button_id == 3);
-            switch (trade_status) {
-            case TRADE_STATUS_NONE:
-                lang_text_draw_centered(54, 18, 114, 221, 400, FONT_NORMAL_BLACK_ON_LIGHT);
-                break;
-            case TRADE_STATUS_IMPORT:
-                lang_text_draw_centered(54, 19, 114, 221, 200, FONT_NORMAL_BLACK_ON_LIGHT);
-                break;
-            case TRADE_STATUS_EXPORT:
-                lang_text_draw_centered(54, 20, 114, 221, 200, FONT_NORMAL_BLACK_ON_LIGHT);
-                break;
-            }
-        }
-        if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT) {
-            lang_text_draw_amount(
-              8, 10, city_resource_trading_amount(data.resource), 386, 221, FONT_NORMAL_BLACK_ON_LIGHT);
-            arrow_buttons_draw(0, 0, resource_arrow_buttons, 2);
-        }
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    //if (GAME_ENV == ENGINE_ENV_C3) {
+    //    if (!can_import && !can_export)
+    //        lang_text_draw(54, 24, 98, 212, FONT_NORMAL_BLACK_ON_LIGHT);
+    //    else {
+    //        button_border_draw(98, 212, 432, 30, data.focus_button_id == 3);
+    //        switch (trade_status) {
+    //        case TRADE_STATUS_NONE:
+    //            lang_text_draw_centered(54, 18, 114, 221, 400, FONT_NORMAL_BLACK_ON_LIGHT);
+    //            break;
+    //        case TRADE_STATUS_IMPORT:
+    //            lang_text_draw_centered(54, 19, 114, 221, 200, FONT_NORMAL_BLACK_ON_LIGHT);
+    //            break;
+    //        case TRADE_STATUS_EXPORT:
+    //            lang_text_draw_centered(54, 20, 114, 221, 200, FONT_NORMAL_BLACK_ON_LIGHT);
+    //            break;
+    //        }
+    //    }
+    //    if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT) {
+    //        lang_text_draw_amount(
+    //          8, 10, city_resource_trading_amount(data.resource), 386, 221, FONT_NORMAL_BLACK_ON_LIGHT);
+    //        arrow_buttons_draw(0, 0, resource_arrow_buttons, 2);
+    //    }
+    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) 
+    {
         auto btn_imp = resource_trade_ph_buttons[2];
         auto btn_exp = resource_trade_ph_buttons[3];
         int trading_amount = 0;

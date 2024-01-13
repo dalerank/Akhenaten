@@ -229,11 +229,7 @@ static void draw_extra_info_panel(void) {
 
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
         y_current_line += EXTRA_INFO_VERTICAL_PADDING;
-
-        if (GAME_ENV == ENGINE_ENV_C3)
-            y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 4, 6, &data.population, 1);
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 6, &data.population, 1);
+        y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 6, &data.population, 1);
         //            y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 44, 56,
         //            &data.population, 1);
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 1, &data.culture, 0);

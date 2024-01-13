@@ -147,11 +147,7 @@ static int is_blocked_for_building(int grid_offset, int num_tiles, int* blocked_
     int blocked = 0;
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = grid_offset; // + TILE_GRID_OFFSETS[orientation_index][i];
-        switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH:
-            tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
-            break;
-        }
+        tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
         bool tile_blocked = false;
         if (map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR))
             tile_blocked = true;

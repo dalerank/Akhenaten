@@ -67,8 +67,7 @@ static int get_request_status(int index) {
     }
     const scenario_request* request = scenario_request_get_visible(index - num_requests);
     if (request) {
-        if ((request->resource == RESOURCE_DEBEN && GAME_ENV == ENGINE_ENV_C3)
-            || (request->resource == RESOURCE_DEBEN && GAME_ENV == ENGINE_ENV_PHARAOH)) {
+        if (request->resource == RESOURCE_DEBEN ) {
             if (city_finance_treasury() <= request->amount)
                 return STATUS_NOT_ENOUGH_RESOURCES;
         } else {

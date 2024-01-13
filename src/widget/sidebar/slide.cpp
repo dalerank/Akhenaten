@@ -52,16 +52,14 @@ static void draw_sliding_foreground() {
     }
     x_offset += rel_offset;
 
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        int block_width = 96;
-        int s_end = screen_width() - 1000 - 24 + (rel_offset <= 162 - 18 ? rel_offset : 162 - 18);
+    int block_width = 96;
+    int s_end = screen_width() - 1000 - 24 + (rel_offset <= 162 - 18 ? rel_offset : 162 - 18);
 
-        int s_start = s_end - ceil((float)s_end / (float)block_width) * block_width;
-        for (int i = 0; s_start + i * block_width < s_end; i++) {
-            ImageDraw::img_generic(ctx, image_group(IMG_SIDE_PANEL) + 8, vec2i{s_start + (i * block_width), 0});
-        }
-        ImageDraw::img_generic(ctx, image_group(IMG_SIDE_PANEL) + 8, vec2i{s_end, 0});
+    int s_start = s_end - ceil((float)s_end / (float)block_width) * block_width;
+    for (int i = 0; s_start + i * block_width < s_end; i++) {
+        ImageDraw::img_generic(ctx, image_group(IMG_SIDE_PANEL) + 8, vec2i{s_start + (i * block_width), 0});
     }
+    ImageDraw::img_generic(ctx, image_group(IMG_SIDE_PANEL) + 8, vec2i{s_end, 0});
 
     data.back_sidebar_draw();
     data.front_sidebar_draw(x_offset);

@@ -3,6 +3,7 @@ package com.github.dalerank.akhenaten;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -37,7 +38,9 @@ public class DirectorySelectionActivity extends AppCompatActivity {
             },
             uri -> {
                 if (uri != null) {
-                    getContentResolver().takePersistableUriPermission(uri, RW_FLAGS_PERMISSION);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        getContentResolver().takePersistableUriPermission(uri, RW_FLAGS_PERMISSION);
+                    }
                     Intent result = new Intent();
                     result.setData(uri);
                     setResult(RESULT_OK, result);
@@ -49,13 +52,13 @@ public class DirectorySelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //setContentView(R.layout.activity_directory_selection);
+        setContentView(R.layout.activity_directory_selection);
 
-        //Button button = findViewById(R.id.directory_selector_button);
-        //button.setOnClickListener(v -> directorySelectionLauncher.launch(Uri.EMPTY));
+        Button button = findViewById(R.id.directory_selector_button);
+        button.setOnClickListener(v -> directorySelectionLauncher.launch(Uri.EMPTY));
 
-        //if (savedInstanceState == null && getIntent().getBooleanExtra(ARG_SKIP_INSTRUCTIONS, false)) {
-        //    directorySelectionLauncher.launch(Uri.EMPTY);
-        //}
+        if (savedInstanceState == null && getIntent().getBooleanExtra(ARG_SKIP_INSTRUCTIONS, false)) {
+            directorySelectionLauncher.launch(Uri.EMPTY);
+        }
     }
 }

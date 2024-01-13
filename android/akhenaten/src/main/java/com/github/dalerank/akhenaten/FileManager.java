@@ -18,7 +18,7 @@ public class FileManager {
     private static final int FILE_TYPE_FILE = 2;
 
     @SuppressWarnings("unused")
-    public static String getPharaohPath() {
+    public static String getAkhenatenPath() {
         return baseUri.toString();
     }
 
@@ -36,7 +36,7 @@ public class FileManager {
         try {
             baseUri = newUri;
             FileInfo.base = new FileInfo(DocumentsContract.getTreeDocumentId(newUri), null,
-                DocumentsContract.Document.MIME_TYPE_DIR, 0, Uri.EMPTY);
+                    DocumentsContract.Document.MIME_TYPE_DIR, 0, Uri.EMPTY);
             return 1;
         } catch (Exception e) {
             Log.e("akhenaten", "Error in setBaseUri: " + e);
@@ -59,16 +59,16 @@ public class FileManager {
         result = new HashMap<>();
         Uri children = DocumentsContract.buildChildDocumentsUriUsingTree(dir, DocumentsContract.getDocumentId(dir));
         String[] columns = new String[] {
-            DocumentsContract.Document.COLUMN_DOCUMENT_ID,
-            DocumentsContract.Document.COLUMN_DISPLAY_NAME,
-            DocumentsContract.Document.COLUMN_MIME_TYPE,
-            DocumentsContract.Document.COLUMN_LAST_MODIFIED
+                DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+                DocumentsContract.Document.COLUMN_DISPLAY_NAME,
+                DocumentsContract.Document.COLUMN_MIME_TYPE,
+                DocumentsContract.Document.COLUMN_LAST_MODIFIED
         };
         Cursor cursor = activity.getContentResolver().query(children, columns, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 FileInfo fileInfo = new FileInfo(cursor.getString(0), cursor.getString(1), cursor.getString(2),
-                    cursor.getLong(3), dir);
+                        cursor.getLong(3), dir);
                 result.put(cursor.getString(1).toLowerCase(), fileInfo);
             }
             cursor.close();
@@ -157,7 +157,7 @@ public class FileManager {
             }
             return DocumentsContract.deleteDocument(activity.getContentResolver(), fileInfo.getUri());
         } catch (Exception e) {
-            Log.e("akhenaten", "Error in deleteFile: " + e);
+            Log.e("augustus", "Error in deleteFile: " + e);
             return false;
         }
     }
@@ -195,14 +195,14 @@ public class FileManager {
                     return 0;
                 }
                 fileUri = DocumentsContract.createDocument(activity.getContentResolver(),
-                    folderInfo.getUri(), "application/octet-stream", fileName);
+                        folderInfo.getUri(), "application/octet-stream", fileName);
                 if (fileUri == null) {
                     return 0;
                 }
                 HashMap<String, FileInfo> dirCache = directoryStructureCache.get(folderInfo.getUri());
                 if (dirCache != null) {
                     fileInfo = new FileInfo(DocumentsContract.getDocumentId(fileUri),
-                        fileName, "application/octet-stream", System.currentTimeMillis(), folderInfo.getUri());
+                            fileName, "application/octet-stream", System.currentTimeMillis(), folderInfo.getUri());
                     dirCache.put(fileName.toLowerCase(), fileInfo);
                 }
             } else {
@@ -211,11 +211,10 @@ public class FileManager {
                     fileInfo.updateModifiedTime();
                 }
             }
-
             ParcelFileDescriptor pfd = activity.getContentResolver().openFileDescriptor(fileUri, internalMode);
             return (pfd == null) ? 0 : pfd.detachFd();
         } catch (Exception e) {
-            Log.e("oyz-and", "Error in openFileDescriptor: " + e);
+            Log.e("augustus", "Error in openFileDescriptor: " + e);
             return 0;
         }
     }

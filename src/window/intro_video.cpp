@@ -20,12 +20,8 @@ static const char* PH_INTRO_VIDEOS[] = {"BINKS/high/Intro_big.bik"};
 static int start_next_video(void) {
     int videos_num = 0;
     const char** videos;
-    switch (GAME_ENV) {
-    case ENGINE_ENV_PHARAOH:
-        videos_num = 1;
-        videos = PH_INTRO_VIDEOS;
-        break;
-    }
+    videos_num = 1;
+    videos = PH_INTRO_VIDEOS;
     while (data.current_video < 3) {
         if (videos && video_start(C3_INTRO_VIDEOS[data.current_video++])) {
             video_size(&data.width, &data.height);
