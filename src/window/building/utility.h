@@ -4,7 +4,6 @@
 
 struct object_info;
 
-void window_building_draw_firehouse(object_info* c);
 void window_building_draw_prefect(object_info* c);
 void window_building_draw_roadblock(object_info* c);
 void window_building_draw_roadblock_orders(object_info* c);

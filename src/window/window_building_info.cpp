@@ -770,9 +770,15 @@ static void draw_refresh_background() {
             case BUILDING_UNUSED_NATIVE_MEETING_89: window_building_draw_native_meeting(&context); break;
             case BUILDING_UNUSED_NATIVE_CROPS_93: window_building_draw_native_crops(&context); break;
             case BUILDING_RESERVER_MISSION_POST_80: window_building_draw_mission_post(&context); break;
-            case BUILDING_FIREHOUSE: window_building_draw_firehouse(&context); break;
             case BUILDING_WORK_CAMP: building_work_camp_draw_info(context); break;
             case BUILDING_FESTIVAL_SQUARE: window_building_draw_festival_square(&context); break;
+
+            default:
+                {
+                    building *b = building_get(context.building_id);
+                    b->dcast()->window_building_info(context);
+                }
+                break;
             }
         }
     } else if (context.type == BUILDING_INFO_LEGION) {

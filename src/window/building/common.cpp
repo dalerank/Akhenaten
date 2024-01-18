@@ -121,6 +121,7 @@ void window_building_draw_description(object_info* c, int text_group, int text_i
 void window_building_draw_description_at(object_info* c, int y_offset, int text_group, int text_id) {
     lang_text_draw_multiline(text_group, text_id, c->offset + vec2i{32, y_offset}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
+
 void window_building_play_sound(object_info* c, const char* sound_file) {
     if (c->can_play_sound) {
         sound_speech_play_file(sound_file);

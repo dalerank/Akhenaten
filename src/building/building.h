@@ -15,6 +15,8 @@
 
 class figure;
 class io_buffer;
+class building;
+struct object_info;
 
 constexpr uint32_t MAX_BUILDINGS = 4000;
 constexpr uint32_t MAX_FIGURES_PER_BUILDING = 8;
@@ -25,7 +27,6 @@ enum e_labor_state {
     LABOR_STATE_JUST_ENTERED
 };
 
-class building;
 building* building_get(int id);
 
 enum e_building_slot {
@@ -51,6 +52,7 @@ public:
     virtual void spawn_figure() {}
     virtual void update_graphic() {}
     virtual void update_day() {}
+    virtual void window_building_info(object_info &ctx) {}
 
     building &base;
 };
