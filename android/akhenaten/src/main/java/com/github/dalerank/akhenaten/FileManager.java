@@ -3,8 +3,11 @@ package com.github.dalerank.akhenaten;
 import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
+
+import java.io.File;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -17,8 +20,50 @@ public class FileManager {
     private static final int FILE_TYPE_DIR = 1;
     private static final int FILE_TYPE_FILE = 2;
 
+    private static String decodeUrl(String encodedUrl) {
+        StringBuilder decodedUrlBuilder = new StringBuilder();
+        char[] charArray = encodedUrl.toCharArray();
+
+        for (int i = 0; i < charArray.length; i++) {
+            char currentChar = charArray[i];
+
+            if (currentChar == '%' && i + 2 < charArray.length) {
+                // Check if there are two characters following '%' for a valid encoded sequence
+                char hex1 = charArray[i + 1];
+                char hex2 = charArray[i + 2];
+
+                try {
+                    // Convert the two hexadecimal characters to a decimal value and append the corresponding character
+                    int decimalValue = Integer.parseInt("" + hex1 + hex2, 16);
+                    decodedUrlBuilder.append((char) decimalValue);
+                    i += 2; // Skip the two characters processed
+                } catch (NumberFormatException e) {
+                    // Ignore invalid encoded sequence
+                    decodedUrlBuilder.append(currentChar);
+                }
+            } else {
+                // Append the character as it is
+                decodedUrlBuilder.append(currentChar);
+            }
+        }
+
+        return decodedUrlBuilder.toString();
+    }
+
     @SuppressWarnings("unused")
-    public static String getAkhenatenPath() {
+    public static String getPharaohPath(AkhenatenMainActivity activity) {
+        String decodedPath = decodeUrl(baseUri.toString());
+        baseUri = Uri.parse(decodedPath);
+
+        //try {
+        //    String[] split = baseUri.toString().split(":");
+        //    String absPath = Environment.getExternalStorageDirectory().toString();
+        //    String absDirName = absPath + File.separator + split[2];
+        //    return absDirName;
+        //}  catch (Exception e) {
+        //    Log.e("akhenaten", "Error in getPharaohPath: " + e);
+        //}
+
         return baseUri.toString();
     }
 
@@ -157,7 +202,7 @@ public class FileManager {
             }
             return DocumentsContract.deleteDocument(activity.getContentResolver(), fileInfo.getUri());
         } catch (Exception e) {
-            Log.e("augustus", "Error in deleteFile: " + e);
+            Log.e("akhenaten", "Error in deleteFile: " + e);
             return false;
         }
     }
@@ -214,7 +259,7 @@ public class FileManager {
             ParcelFileDescriptor pfd = activity.getContentResolver().openFileDescriptor(fileUri, internalMode);
             return (pfd == null) ? 0 : pfd.detachFd();
         } catch (Exception e) {
-            Log.e("augustus", "Error in openFileDescriptor: " + e);
+            Log.e("akhenaten", "Error in openFileDescriptor: " + e);
             return 0;
         }
     }

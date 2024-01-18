@@ -31,6 +31,7 @@
 #include <SDL.h>
 
 #include <set>
+#include <platform/android/android.h>
 
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
@@ -353,6 +354,9 @@ static void setup(Arguments& args) {
 
     // pre-init engine: assert game directory, pref files, etc.
     init_game_environment(ENGINE_ENV_PHARAOH);
+#if defined(GAME_PLATFORM_ANDROID)
+    bool again = false;
+#endif // GAME_PLATFORM_ANDROID
     while (!pre_init(args.get_data_directory())) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
                                  "Warning",
@@ -366,7 +370,28 @@ static void setup(Arguments& args) {
 #endif
                                  nullptr);
 #if defined(GAME_PLATFORM_ANDROID)
-       ; // do nothing
+        if (again) {
+            const SDL_MessageBoxButtonData buttons[] = {
+                {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK"},
+                {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"}
+            };
+            const SDL_MessageBoxData messageboxdata = {
+                SDL_MESSAGEBOX_WARNING, NULL, "Wrong folder selected",
+                "The selected folder is not a proper Pharaoh folder.\n\n"
+                "Please select a path directly from either the internal storage "
+                "or the SD card, otherwise the path may not be recognised.\n\n"
+                "Press OK to select another folder or Cancel to exit.",
+                SDL_arraysize(buttons), buttons, NULL
+            };
+            int result;
+            SDL_ShowMessageBox(&messageboxdata, &result);
+            if (!result) {
+                exit(-2);
+            }
+        }
+        again = true;
+        pcstr user_dir = android_show_pharaoh_path_dialog(again);
+        args.set_data_directory(user_dir);
 #else
         show_options_window(args);
 #endif

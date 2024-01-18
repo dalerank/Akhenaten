@@ -267,7 +267,7 @@ bool game_load_campaign_file() {
                         for (int i = 0; i < MAX_MISSION_CHOICE_BRANCHES; ++i) {
                             // TODO warning: passing NULL to non-pointer argument
                             bool end_of_line = (index_of(ptr, '\n', line_size) == 1
-                                                || index_of(ptr, NULL, line_size) == 1);
+                                                || index_of(ptr, '\0', line_size) == 1);
                             if (!end_of_line)
                                 ptr = get_value(ptr, endl, &step->path_ids[i]);
                             else

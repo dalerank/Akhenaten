@@ -10,22 +10,23 @@
 #include <SDL.h>
 #include <string.h>
 
-static int has_directory;
-static bstring256 path;
+static volatile int has_directory;
+static vfs::path path;
 
-static const char *get_pharaoh_path(void)
+static const char *get_pharaoh_path()
 {
     jni_function_handler handler;
-    if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "getPharaohPath", "()Ljava/lang/String;", &handler)) {
+    if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "getPharaohPath", "(L" CLASS_AKHENATEN_ACTIVITY ";)Ljava/lang/String;", &handler)) {
         jni_destroy_function_handler(&handler);
         return NULL;
     }
 
-    jobject result = handler.env->CallStaticObjectMethod(handler.nclass, handler.method);
+    jobject result = handler.env->CallStaticObjectMethod(handler.nclass, handler.method, handler.activity);
     const char *temp_path = handler.env->GetStringUTFChars((jstring) result, NULL);
     path = temp_path;
     handler.env->ReleaseStringUTFChars((jstring) result, temp_path);
     handler.env->DeleteLocalRef(result);
+
     jni_destroy_function_handler(&handler);
 
     return !path.empty() ? path.c_str() : nullptr;
@@ -169,7 +170,7 @@ int android_remove_file(const char *filename)
     return result;
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_github_dalerank_AKHENATEN_AkhenatenMainActivity_gotDirectory(JNIEnv *env, jobject thiz)
+extern "C" JNIEXPORT void JNICALL Java_com_github_dalerank_akhenaten_AkhenatenMainActivity_gotDirectory(JNIEnv *env, jobject thiz)
 {
     has_directory = 1;
 }

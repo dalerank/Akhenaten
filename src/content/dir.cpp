@@ -135,14 +135,17 @@ vfs::path content_path(const char *path) {
 }
 
 vfs::path content_file(const char *filepath) {
-    bstring256 corrected_filename = content_path(filepath);
-    
+    vfs::path corrected_filename = content_path(filepath);
+#ifndef GAME_PLATFORM_ANDROID
     bool exists = std::filesystem::exists(corrected_filename.c_str());
     if (exists) {
         return corrected_filename;
     }
 
     return vfs::path();
+#else
+    return corrected_filename;
+#endif
 }
 
 const dir_listing *dir_append_files_with_extension(const char *dir, const char *extension) {
