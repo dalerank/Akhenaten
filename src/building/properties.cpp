@@ -174,7 +174,7 @@ static building_properties properties[400] = {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
-    {1, 0, GROUP_BUILDING_FIREHOUSE}, // firehouse
+    {1, 0, 0, 0}, // firehouse
     {0, 0, 0, 0},
     {1, 1, 0, 0}, // wall
     {0, 0, 0, 0},
@@ -263,6 +263,7 @@ void building_properties_init() {
     properties[BUILDING_SMALL_MASTABA_ENTRANCE] = {2, 0, 0, 0, 0, IMG_SMALL_MASTABA};
     properties[BUILDING_BAZAAR] = {2, 0, 0, 0, 0, IMG_BAZAAR};
     properties[BUILDING_BRICKLAYERS_GUILD] = {2, 0, 0, 0, 0, IMG_BRICKLAYERS_GUILD};
+    properties[BUILDING_FIREHOUSE] = {1, 0, 0, 0, 0, IMG_BUILDING_FIREHOUSE};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

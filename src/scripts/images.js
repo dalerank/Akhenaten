@@ -146,6 +146,7 @@ images = [
 	{img: IMG_BIGSLED_CLAY, pack:PACK_SPR_MAIN, id:171},
 	{img: IMG_BIGSLED_BRICKS, pack:PACK_SPR_MAIN, id:172},
 	{img: IMG_SMALL_MASTABA_BRICKS, pack:PACK_MASTABA, id:1, offset:0},
+	{img: IMG_BUILDING_FIREHOUSE, pack:PACK_GENERAL, id:78},
 ]
 
 cart_offsets = [

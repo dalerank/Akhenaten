@@ -327,7 +327,6 @@ public:
 
     bool spawn_noble(bool spawned);
     void spawn_figure_engineers_post();
-    void spawn_figure_firehouse();
     void spawn_figure_police();
     void spawn_figure_juggler();
     void spawn_figure_musician();

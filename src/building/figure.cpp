@@ -388,10 +388,6 @@ void building::spawn_figure_engineers_post() {
     common_spawn_roamer(FIGURE_ARCHITECT, 50, FIGURE_ACTION_60_ENGINEER_CREATED);
 }
 
-void building::spawn_figure_firehouse() {
-    common_spawn_roamer(FIGURE_FIREMAN, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
-}
-
 void building::spawn_figure_police() {
     common_spawn_roamer(FIGURE_CONSTABLE, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
 }
@@ -1408,7 +1404,6 @@ bool building::figure_generate() {
         case BUILDING_MUD_TOWER: spawn_figure_tower(); break;
         case BUILDING_ARCHITECT_POST: spawn_figure_engineers_post(); break;
         case BUILDING_POLICE_STATION: spawn_figure_police(); break;
-        case BUILDING_FIREHOUSE: spawn_figure_firehouse(); break;
         case BUILDING_WATER_SUPPLY: spawn_figure_watersupply(); break;
         case BUILDING_JUGGLER_SCHOOL: spawn_figure_juggler(); break;
         case BUILDING_CONSERVATORY: spawn_figure_musician(); break;

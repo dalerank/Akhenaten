@@ -7,6 +7,7 @@
 #include "building/building_statue.h"
 #include "building/building_work_camp.h"
 #include "building/building_bazaar.h"
+#include "building/building_firehouse.h"
 #include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
@@ -331,6 +332,7 @@ building_impl *building::dcast() {
     switch (type) {
     case BUILDING_WORK_CAMP: _ptr = new building_work_camp(*this); break;
     case BUILDING_BAZAAR: _ptr = new building_bazaar(*this); break;
+    case BUILDING_FIREHOUSE: _ptr = new building_firehouse(*this); break;
     default:
         _ptr = new building_impl(*this);
     }
