@@ -217,14 +217,13 @@ bool platform_file_manager_remove_file(const char *filename) {
 #elif defined(GAME_PLATFORM_ANDROID)
 
 FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
-    /*
     int fd = android_get_file_descriptor(filename, mode);
     if (!fd) {
         return NULL;
     }
     return fdopen(fd, mode);
-     */
-    return fopen(filename, mode);
+
+    //return fopen(filename, mode);
 }
 
 bool platform_file_manager_remove_file(const char *filename) {

@@ -28,8 +28,10 @@ public class DirectorySelectionActivity extends AppCompatActivity {
                 @NonNull
                 public Intent createIntent(@NonNull Context context, Uri input) {
                     Intent intent = super.createIntent(context, input);
-                    intent.addFlags(RW_FLAGS_PERMISSION |
-                            Intent.FLAG_GRANT_PREFIX_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                    intent.addFlags(RW_FLAGS_PERMISSION
+                                    | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                                    | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+
                     intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
                     intent.putExtra("android.content.extra.FANCY", true);
                     intent.putExtra("android.content.extra.SHOW_FILESIZE", true);
@@ -41,7 +43,9 @@ public class DirectorySelectionActivity extends AppCompatActivity {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         getContentResolver().takePersistableUriPermission(uri, RW_FLAGS_PERMISSION);
                     }
-                    Intent result = new Intent();
+                    Intent result = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    result.addCategory(Intent.CATEGORY_OPENABLE);
+                    result.setType("*/*");
                     result.setData(uri);
                     setResult(RESULT_OK, result);
                     finish();

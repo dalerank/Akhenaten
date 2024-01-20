@@ -58,6 +58,9 @@ public class AkhenatenMainActivity extends SDLActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == GET_FOLDER_RESULT) {
             if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+                getContext().getContentResolver().takePersistableUriPermission(data.getData(),
+                                                                         Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                                                                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 FileManager.setBaseUri(data.getData());
             } else {
                 FileManager.setBaseUri(Uri.EMPTY);
