@@ -84,7 +84,7 @@ namespace config {
     void refresh(archive arch) {
         g_config_arch = {arch.vm};
         for (FuncLinkedList *s = FuncLinkedList::tail; s; s = s->next) {
-            s->func(arch);
+            s->func();
         }
     }
 

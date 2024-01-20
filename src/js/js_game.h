@@ -123,7 +123,7 @@ namespace config {
 void refresh(archive);
 archive load(pcstr filename);
 
-typedef void (*config_iterator_function_cb)(archive);
+typedef void (*config_iterator_function_cb)();
 
 struct FuncLinkedList {
     FuncLinkedList(config_iterator_function_cb cb) : func(cb) {
@@ -144,6 +144,6 @@ protected:
 #define ANK_CONFIG_CC1(a, b) ANK_CONFIG_CC0(a, b)
 #define ANK_CONFIG_PULL_VAR_NAME(func) ANK_CONFIG_CC1(config_pull, func)
 
-#define ANK_REGISTER_CONFIG_ITERATOR(func) void func(archive); \
+#define ANK_REGISTER_CONFIG_ITERATOR(func) void func(); \
     namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
     static config::FuncLinkedList ANK_CONFIG_CC1(config_handler, __LINE__)(func)

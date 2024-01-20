@@ -50,7 +50,7 @@ image_data_t *g_image_data = nullptr;
 
 int img_mapping[32000] = {0};
 ANK_REGISTER_CONFIG_ITERATOR(config_load_images_remap_config);
-void config_load_images_remap_config(archive arch) {
+void config_load_images_remap_config() {
     g_config_arch.r_array("images_remap", [] (archive arch) {
         int id = arch.read_integer("id");
         int remap = arch.read_integer("rid");
@@ -59,7 +59,7 @@ void config_load_images_remap_config(archive arch) {
 }
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_imagepaks_config);
-void config_load_imagepaks_config(archive arch) {
+void config_load_imagepaks_config() {
     if (g_image_data->common_inited) {
         return;
     }

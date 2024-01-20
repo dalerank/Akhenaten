@@ -7,7 +7,7 @@
 std::array<image_desc, IMG_SIZE> g_image_desc;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_images_info);
-void config_load_images_info(archive arch) {
+void config_load_images_info() {
     g_config_arch.r_array("images", [] (archive arch) {
         int type = arch.read_integer("img");
         int pack = arch.read_integer("pack");

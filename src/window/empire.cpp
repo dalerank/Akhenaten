@@ -148,7 +148,7 @@ static void init(void) {
 }
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_empire_window_config);
-void config_load_empire_window_config(archive arch) {
+void config_load_empire_window_config() {
     g_config_arch.r_section("empire_window", [] (archive arch) {
         auto &g = g_empire_window;
         g.trade_column_spacing = arch.read_integer("trade_column_spacing");
