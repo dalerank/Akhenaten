@@ -75,7 +75,7 @@ typedef struct js_StackTrace js_StackTrace;
 #define JS_GCLIMIT 10000	/* run gc cycle every N allocations */
 
 /* instruction size -- change to int if you get integer overflow syntax errors */
-typedef unsigned short js_Instruction;
+typedef int js_Instruction;
 
 /* String interning */
 

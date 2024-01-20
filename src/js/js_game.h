@@ -12,7 +12,7 @@ struct archive {
     inline archive(js_State *_vm) : vm(_vm) {}
 
     template<typename T>
-    inline void load_global_array(pcstr name, T read_func) {
+    inline void r_global_array(pcstr name, T read_func) {
         js_getglobal(vm, name);
         if (js_isarray(vm, -1)) {
             int length = js_getlength(vm, -1);

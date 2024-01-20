@@ -8,14 +8,10 @@ int io_read_file_into_buffer(const char* filepath, int localizable, buffer* buf,
         return 0;
     }
 
-#ifdef GAME_PLATFORM_ANDROID
-    vfs::path fs_file = filepath;
-#else
     vfs::path fs_file = vfs::content_file(filepath);
     if (fs_file.empty()) {
         return 0;
     }
-#endif // GAME_PLATFORM_ANDROID
 
     FILE* fp = vfs::file_open(fs_file, "rb");
     if (!fp) {

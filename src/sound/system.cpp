@@ -18,7 +18,7 @@ static vfs::path channel_filenames[SOUND_CHANNEL_MAX] = {};
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_city_sounds);
 void config_load_city_sounds(archive arch) {
-    arch.load_global_array("city_sounds", [] (archive arch) {
+    arch.r_global_array("city_sounds", [] (archive arch) {
         const int channel = arch.read_integer("c");
         const char *path = arch.read_string("p");
         sound_system_update_channel(channel, path);

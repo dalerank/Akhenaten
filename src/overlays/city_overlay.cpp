@@ -34,7 +34,7 @@ const city_overlay* g_city_overlay = 0;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays);
 void config_load_city_overlays(archive arch) {
-    arch.load_global_array("overlays", [] (archive arch) {
+    arch.r_global_array("overlays", [] (archive arch) {
         const int e_v = arch.read_integer("id");
         const char *caption = arch.read_string("caption");
         auto walkers = arch.read_integer_array<e_figure_type>("walkers");

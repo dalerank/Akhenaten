@@ -135,8 +135,8 @@ vfs::path content_path(const char *path) {
 }
 
 vfs::path content_file(const char *filepath) {
-    vfs::path corrected_filename = content_path(filepath);
 #ifndef GAME_PLATFORM_ANDROID
+    vfs::path corrected_filename = content_path(filepath);
     bool exists = std::filesystem::exists(corrected_filename.c_str());
     if (exists) {
         return corrected_filename;
@@ -144,7 +144,13 @@ vfs::path content_file(const char *filepath) {
 
     return vfs::path();
 #else
-    return corrected_filename;
+    vfs::path corrected_filename = content_path(filepath);
+    // works with native fs
+    if (!corrected_filename.empty() && corrected_filename.data()[0] == '/') {
+        return corrected_filename;
+    }
+    // works with content resolver
+    return filepath;
 #endif
 }
 

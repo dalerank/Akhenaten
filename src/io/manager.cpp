@@ -250,7 +250,7 @@ bool FileIOManager::unserialize(const char* filename, int offset, e_file_format 
     vfs::path fs_path = vfs::content_file(file_path);
     FILE* fp = vfs::file_open(fs_path, "rb");
     if (!fp) {
-        logs::error("Unable to read file, file could not be accessed.");
+        logs::error("Unable to read file [%s], file could not be accessed.", fs_path.c_str());
         clear();
         return false;
     } else if (file_offset) {
@@ -263,7 +263,7 @@ bool FileIOManager::unserialize(const char* filename, int offset, e_file_format 
     } else {
         file_version = determine_file_version(file_path, offset);
         if (file_version == -1) {
-            logs::info("Unable to read file %s, file version/format is invalid ", filename);
+            logs::info("Unable to read file [%s], file version/format is invalid ", filename);
             clear();
             return false;
         }
@@ -273,7 +273,7 @@ bool FileIOManager::unserialize(const char* filename, int offset, e_file_format 
     if (init_schema != nullptr) {
         init_schema(file_format, file_version);
     } else {
-        logs::error("Unable to read file, provided schema is invalid.");
+        logs::error("Unable to read file [%s], provided schema is invalid.", fs_path.c_str());
         clear();
         return false;
     }
@@ -290,7 +290,7 @@ bool FileIOManager::unserialize(const char* filename, int offset, e_file_format 
         if (chunk->compressed) {
             result = read_compressed_chunk(fp, chunk->buf, chunk->buf->size());
             if (!result) {
-                logs::error("Unable to read file chunk[%s], decompression failed.", chunk->name);
+                logs::error("Unable to read file[%s] chunk[%s], decompression failed.", fs_path.c_str(), chunk->name);
                 clear();
                 return false;
             }
@@ -300,7 +300,7 @@ bool FileIOManager::unserialize(const char* filename, int offset, e_file_format 
             result = (got == exp);
             if (!result) {
                 logs::info("Incorrect buffer size, expected %i, found %i", exp, got);
-                logs::error("Unable to read file, chunk size incorrect.");
+                logs::error("Unable to read file [%s], chunk size incorrect.", fs_path.c_str());
                 clear();
                 return false;
             }
