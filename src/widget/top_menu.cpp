@@ -314,7 +314,7 @@ static void button_rotate_right(int param1, int param2) {
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_top_menu_bar);
 void config_load_top_menu_bar(archive arch) {
-    arch.load_global_section("top_menu_bar", [] (archive arch) {
+    g_config_arch.r_section("top_menu_bar", [] (archive arch) {
         auto& data = g_top_menu_data;
         data.x_offset = arch.read_integer("x_offset");
         data.y_offset = arch.read_integer("y_offset");

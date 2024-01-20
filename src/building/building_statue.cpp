@@ -33,7 +33,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_big_statue_images);
 template<typename T>
 void config_load_statue_images_t(archive arch, pcstr key, T& config) {
     config.clear();
-    arch.r_global_array(key, [&] (archive arch) {
+    g_config_arch.r_array(key, [&] (archive arch) {
         int pack = arch.read_integer("pack");
         int id = arch.read_integer("id");
         int offset = arch.read_integer("offset");

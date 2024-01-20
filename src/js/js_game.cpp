@@ -17,6 +17,8 @@
 
 #include <vector>
 
+g_archive g_config_arch{nullptr};
+
 void js_game_log_info(js_State *J) {
     if (js_isundefined(J, 1)) {
         logs::info("log() Try to print undefined object", 0, 0);
@@ -80,6 +82,7 @@ namespace config {
     FuncLinkedList *FuncLinkedList::tail = nullptr;
     
     void refresh(archive arch) {
+        g_config_arch = {arch.vm};
         for (FuncLinkedList *s = FuncLinkedList::tail; s; s = s->next) {
             s->func(arch);
         }

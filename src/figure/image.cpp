@@ -27,7 +27,7 @@ static const int MISSILE_LAUNCHER_OFFSETS[128] = {
 static vec2i CART_OFFSETS[] = {{17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12}};
 void config_load_cart_offsets(archive arch) {
     int i = 0;
-    arch.r_global_array("cart_offsets", [&i] (archive arch) {
+    g_config_arch.r_array("cart_offsets", [&i] (archive arch) {
         int x = arch.read_integer("x");
         int y = arch.read_integer("y");
         CART_OFFSETS[i] = vec2i{x, y};
@@ -38,7 +38,7 @@ void config_load_cart_offsets(archive arch) {
 static vec2i SLED_OFFSETS[] = {{17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12}};
 void config_load_sled_offsets(archive arch) {
     int i = 0;
-    arch.r_global_array("sled_offsets", [&i] (archive arch) {
+    g_config_arch.r_array("sled_offsets", [&i] (archive arch) {
         int x = arch.read_integer("x");
         int y = arch.read_integer("y");
         SLED_OFFSETS[i] = vec2i{x, y};

@@ -9,7 +9,7 @@ std::map<std::string, building::metainfo> g_building_metainfo;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_info);
 void config_load_building_info(archive arch) {
-    arch.r_global_array("building_info", [] (archive arch) {
+    g_config_arch.r_array("building_info", [] (archive arch) {
         const char *type = arch.read_string("type");
         auto &meta = g_building_metainfo[type];
         meta.help_id = arch.read_integer("help_id");

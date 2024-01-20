@@ -54,7 +54,7 @@ struct main_menu_data_t {
 main_menu_data_t g_main_menu_data;
 
 void config_load_main_menu(archive arch) {
-    arch.load_global_section("main_menu_window", [] (archive arch) {
+    g_config_arch.r_section("main_menu_window", [] (archive arch) {
         auto &data = g_main_menu_data;
         data.button_pos = arch.read_vec2i("pos");
         data.button_size = arch.read_vec2i("btn", "w", "h");

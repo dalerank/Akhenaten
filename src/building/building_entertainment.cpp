@@ -79,7 +79,7 @@ struct building_booth_t {
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_booth_config);
 void config_load_building_booth_config(archive arch) {
-    arch.load_global_section("building_booth", [] (archive arch) {
+    g_config_arch.r_section("building_booth", [] (archive arch) {
         building_booth.juggler.load(arch, "juggler_anim");
     });
 }
@@ -92,7 +92,7 @@ struct building_bandstand_t {
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bandstand_config);
 void config_load_building_bandstand_config(archive arch) {
-    arch.load_global_section("building_bandstand", [] (archive arch) {
+    g_config_arch.r_section("building_bandstand", [] (archive arch) {
         building_bandstand.juggler.load(arch, "juggler_anim");
         building_bandstand.musician_sn.load(arch, "musician_anim_sn");
         building_bandstand.musician_we.load(arch, "musician_anim_we");

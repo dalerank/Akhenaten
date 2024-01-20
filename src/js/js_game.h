@@ -11,34 +11,6 @@ struct archive {
     js_State *vm;
     inline archive(js_State *_vm) : vm(_vm) {}
 
-    template<typename T>
-    inline void r_global_array(pcstr name, T read_func) {
-        js_getglobal(vm, name);
-        if (js_isarray(vm, -1)) {
-            int length = js_getlength(vm, -1);
-
-            for (int i = 0; i < length; ++i) {
-                js_getindex(vm, -1, i);
-
-                if (js_isobject(vm, -1)) {
-                    read_func(vm);
-                }
-
-                js_pop(vm, 1);
-            }
-            js_pop(vm, 1);
-        }
-    }
-
-    template<typename T>
-    inline void load_global_section(pcstr name, T read_func) {
-        js_getglobal(vm, name);
-        if (js_isobject(vm, -1)) {
-            read_func(vm);
-            js_pop(vm, 1);
-        }
-    }
-
     inline pcstr read_string(pcstr name) {
         js_getproperty(vm, -1, name);
         const char *result = js_isundefined(vm, -1) ? "" : js_tostring(vm, -1);
@@ -47,7 +19,7 @@ struct archive {
     }
 
     template<typename T = int>
-    inline std::vector<T> read_integer_array(pcstr name) {
+    inline std::vector<T> r_array_num(pcstr name) {
         js_getproperty(vm, -1, name);
         std::vector<T> result;
         if (js_isarray(vm, -1)) {
@@ -99,22 +71,50 @@ struct archive {
     template<typename T>
     inline void read_object_array(pcstr name, T read_func) {
         js_getproperty(vm, -1, name);
-        if (js_isarray(vm, -1)) {
-            int length = js_getlength(vm, -1);
-
-            for (int i = 0; i < length; ++i) {
-                js_getindex(vm, -1, i);
-
-                if (js_isobject(vm, -1)) {
-                    read_func(vm);
-                }
-
-                js_pop(vm, 1);
-            }
-        }
+        r_array_impl(read_func);
         js_pop(vm, 1);
     }
+
+protected:
+    template<typename T>
+    inline bool r_array_impl(T read_func) {
+        if (!js_isarray(vm, -1)) {
+            return false;
+        }
+
+        int length = js_getlength(vm, -1);
+        for (int i = 0; i < length; ++i) {
+            js_getindex(vm, -1, i);
+
+            if (js_isobject(vm, -1)) {
+                read_func(vm);
+            }
+
+            js_pop(vm, 1);
+        }
+        return true;
+    }
 };
+
+struct g_archive : public archive {
+    template<typename T>
+    inline void r_array(pcstr name, T read_func) {
+        js_getglobal(vm, name);
+        if (r_array_impl(read_func)) {
+            js_pop(vm, 1);
+        }
+    }
+
+    template<typename T>
+    inline void r_section(pcstr name, T read_func) {
+        js_getglobal(vm, name);
+        if (js_isobject(vm, -1)) {
+            read_func(vm);
+            js_pop(vm, 1);
+        }
+    }
+};
+extern g_archive g_config_arch;
 
 void js_register_game_functions(js_State *J);
 

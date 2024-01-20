@@ -25,7 +25,7 @@ struct building_scribal_school_t {
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_scribal_school);
 void config_load_scribal_school(archive arch) {
-    arch.load_global_section("building_scribal_school", [] (archive arch) {
+    g_config_arch.r_section("building_scribal_school", [] (archive arch) {
         building_scribal_school.papyrus = arch.read_vec2i("papyrus_icon");
 
         arch.read_object_section("info", [] (archive arch) {

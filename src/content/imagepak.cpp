@@ -395,7 +395,7 @@ bool imagepak::load_folder_pak(pcstr folder) {
     archive arch = config::load(configname);
 
     global_image_index_offset = 0;
-    arch.load_global_section(folder, [&] (archive arch) {
+    g_config_arch.r_section(folder, [&] (archive arch) {
         global_image_index_offset = arch.read_integer("global_index");
         version = arch.read_integer("version");
         useridx = arch.read_integer("pack");
@@ -488,7 +488,7 @@ bool imagepak::load_folder_pak(pcstr folder) {
     }
 
     int tmp_group_id = 0;
-    arch.load_global_section(folder, [&] (archive arch) {
+    g_config_arch.r_section(folder, [&] (archive arch) {
         arch.read_object_array("groups", [&] (archive arch) {
             pcstr prefix = arch.read_string("prefix");
             int start_index = arch.read_integer("start_index");
