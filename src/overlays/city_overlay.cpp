@@ -35,11 +35,11 @@ const city_overlay* g_city_overlay = 0;
 ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays);
 void config_load_city_overlays() {
     g_config_arch.r_array("overlays", [] (archive arch) {
-        const int e_v = arch.read_integer("id");
-        const char *caption = arch.read_string("caption");
+        const int e_v = arch.r_int("id");
+        const char *caption = arch.r_string("caption");
         auto walkers = arch.r_array_num<e_figure_type>("walkers");
         auto buildings = arch.r_array_num<e_building_type>("buildings");
-        int tooltip_base = arch.read_integer("tooltip_base");
+        int tooltip_base = arch.r_int("tooltip_base");
         auto tooltips = arch.r_array_num("tooltips");
         city_overlay* overlay = get_city_overlay((e_overlay)e_v);
 

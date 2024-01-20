@@ -63,12 +63,12 @@ struct anim_t {
     int max_frames;
 
     void load(archive arch, pcstr section) {
-        arch.read_object_section(section, [this] (archive arch) {
-           pos.x = arch.read_integer("pos_x");
-           pos.y = arch.read_integer("pos_y");
-           base_id = (e_image_id)arch.read_integer("base_id");
-           anim_id = (e_image_id)arch.read_integer("anim_id");
-           max_frames = arch.read_integer("max_frames");
+        arch.r_section(section, [this] (archive arch) {
+           pos.x = arch.r_int("pos_x");
+           pos.y = arch.r_int("pos_y");
+           base_id = (e_image_id)arch.r_int("base_id");
+           anim_id = (e_image_id)arch.r_int("anim_id");
+           max_frames = arch.r_int("max_frames");
         });
     }
 };
@@ -78,7 +78,7 @@ struct building_booth_t {
 } building_booth;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_booth_config);
-void config_load_building_booth_config(archive arch) {
+void config_load_building_booth_config() {
     g_config_arch.r_section("building_booth", [] (archive arch) {
         building_booth.juggler.load(arch, "juggler_anim");
     });
@@ -91,7 +91,7 @@ struct building_bandstand_t {
 } building_bandstand;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bandstand_config);
-void config_load_building_bandstand_config(archive arch) {
+void config_load_building_bandstand_config() {
     g_config_arch.r_section("building_bandstand", [] (archive arch) {
         building_bandstand.juggler.load(arch, "juggler_anim");
         building_bandstand.musician_sn.load(arch, "musician_anim_sn");

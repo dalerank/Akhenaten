@@ -7,11 +7,11 @@
 std::map<int, snd::mission_config> g_mission_configs;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_mission_sounds);
-void config_load_mission_sounds(archive arch) {
+void config_load_mission_sounds() {
     g_config_arch.r_array("mission_sounds", [] (archive arch) {
-        const int mission = arch.read_integer("mission");
-        const char *inter = arch.read_string("briefing");
-        const char *won = arch.read_string("victory");
+        const int mission = arch.r_int("mission");
+        const char *inter = arch.r_string("briefing");
+        const char *won = arch.r_string("victory");
         g_mission_configs[mission] = {inter, won};
     });
 }

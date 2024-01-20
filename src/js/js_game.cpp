@@ -42,10 +42,10 @@ void js_game_log_warn(js_State *J) {
 void js_game_set_image(js_State *J) {
     if (js_isobject(J, 1)) {
         archive arch{js_vm_state()};
-        int img = arch.read_integer("img");
-        int pack = arch.read_integer("pack");
-        int id = arch.read_integer("id");
-        int offset = arch.read_integer("offset");
+        int img = arch.r_int("img");
+        int pack = arch.r_int("pack");
+        int id = arch.r_int("id");
+        int offset = arch.r_int("offset");
         set_image_desc(img, pack, id, offset);
         js_pop(J, 1);
     }

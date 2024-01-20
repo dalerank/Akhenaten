@@ -28,8 +28,8 @@ static vec2i CART_OFFSETS[] = {{17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {
 void config_load_cart_offsets() {
     int i = 0;
     g_config_arch.r_array("cart_offsets", [&i] (archive arch) {
-        int x = arch.read_integer("x");
-        int y = arch.read_integer("y");
+        int x = arch.r_int("x");
+        int y = arch.r_int("y");
         CART_OFFSETS[i] = vec2i{x, y};
         i++;
     });
@@ -39,8 +39,8 @@ static vec2i SLED_OFFSETS[] = {{17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {
 void config_load_sled_offsets() {
     int i = 0;
     g_config_arch.r_array("sled_offsets", [&i] (archive arch) {
-        int x = arch.read_integer("x");
-        int y = arch.read_integer("y");
+        int x = arch.r_int("x");
+        int y = arch.r_int("y");
         SLED_OFFSETS[i] = vec2i{x, y};
         i++;
     });

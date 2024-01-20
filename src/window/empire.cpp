@@ -151,21 +151,21 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_empire_window_config);
 void config_load_empire_window_config() {
     g_config_arch.r_section("empire_window", [] (archive arch) {
         auto &g = g_empire_window;
-        g.trade_column_spacing = arch.read_integer("trade_column_spacing");
-        g.trade_row_spacing = arch.read_integer("trade_row_spacing");
-        g.info_y_traded = arch.read_integer("info_y_traded");
-        g.trade_button_offset_x = arch.read_integer("trade_button_offset_x");
-        g.info_y_sells = arch.read_integer("info_y_sells");
-        g.info_y_buys = arch.read_integer("info_y_buys");
-        g.info_y_footer_1 = arch.read_integer("info_y_footer_1");
-        g.info_y_city_name = arch.read_integer("info_y_city_name");
-        g.info_y_city_desc = arch.read_integer("info_y_city_desc");
-        g.text_group_old_names = arch.read_integer("text_group_old_names");
-        g.text_group_new_names = arch.read_integer("text_group_new_names");
-        g.trade_resource_size = arch.read_integer("trade_resource_size");
-        g.trade_resource_offset = arch.read_integer("trade_resource_offset");
-        g.sell_res_group = arch.read_integer("sell_res_group");
-        g.trade_button_offset_y = arch.read_integer("trade_button_offset_y");
+        g.trade_column_spacing = arch.r_int("trade_column_spacing");
+        g.trade_row_spacing = arch.r_int("trade_row_spacing");
+        g.info_y_traded = arch.r_int("info_y_traded");
+        g.trade_button_offset_x = arch.r_int("trade_button_offset_x");
+        g.info_y_sells = arch.r_int("info_y_sells");
+        g.info_y_buys = arch.r_int("info_y_buys");
+        g.info_y_footer_1 = arch.r_int("info_y_footer_1");
+        g.info_y_city_name = arch.r_int("info_y_city_name");
+        g.info_y_city_desc = arch.r_int("info_y_city_desc");
+        g.text_group_old_names = arch.r_int("text_group_old_names");
+        g.text_group_new_names = arch.r_int("text_group_new_names");
+        g.trade_resource_size = arch.r_int("trade_resource_size");
+        g.trade_resource_offset = arch.r_int("trade_resource_offset");
+        g.sell_res_group = arch.r_int("sell_res_group");
+        g.trade_button_offset_y = arch.r_int("trade_button_offset_y");
     });
 }
 

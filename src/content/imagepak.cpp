@@ -396,15 +396,15 @@ bool imagepak::load_folder_pak(pcstr folder) {
 
     global_image_index_offset = 0;
     g_config_arch.r_section(folder, [&] (archive arch) {
-        global_image_index_offset = arch.read_integer("global_index");
-        version = arch.read_integer("version");
-        useridx = arch.read_integer("pack");
+        global_image_index_offset = arch.r_int("global_index");
+        version = arch.r_int("version");
+        useridx = arch.r_int("pack");
 
-        arch.read_object_array("groups", [&] (archive arch) {
-            int start_index = arch.read_integer("start_index");
-            int finish_index = arch.read_integer("finish_index");
+        arch.r_array("groups", [&] (archive arch) {
+            int start_index = arch.r_int("start_index");
+            int finish_index = arch.r_int("finish_index");
             entries_num += (finish_index - start_index) + 1;
-            bmp_names[groups_num] = arch.read_string("name");
+            bmp_names[groups_num] = arch.r_string("name");
             ++groups_num;
         });
     });
@@ -489,10 +489,10 @@ bool imagepak::load_folder_pak(pcstr folder) {
 
     int tmp_group_id = 0;
     g_config_arch.r_section(folder, [&] (archive arch) {
-        arch.read_object_array("groups", [&] (archive arch) {
-            pcstr prefix = arch.read_string("prefix");
-            int start_index = arch.read_integer("start_index");
-            int finish_index = arch.read_integer("finish_index");
+        arch.r_array("groups", [&] (archive arch) {
+            pcstr prefix = arch.r_string("prefix");
+            int start_index = arch.r_int("start_index");
+            int finish_index = arch.r_int("finish_index");
 
             for (int i = start_index; i <= finish_index; ++i) {
                 bstring512 name;

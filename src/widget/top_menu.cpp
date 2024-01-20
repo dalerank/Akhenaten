@@ -313,18 +313,18 @@ static void button_rotate_right(int param1, int param2) {
 }
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_top_menu_bar);
-void config_load_top_menu_bar(archive arch) {
+void config_load_top_menu_bar() {
     g_config_arch.r_section("top_menu_bar", [] (archive arch) {
         auto& data = g_top_menu_data;
-        data.x_offset = arch.read_integer("x_offset");
-        data.y_offset = arch.read_integer("y_offset");
-        data.item_height = arch.read_integer("item_height");
-        data.background = (e_image_id)arch.read_integer("background");
-        data.spacing = arch.read_integer("spacing");
-        data.offset_funds_basic = arch.read_integer("offset_funds_basic");
-        data.offset_population_basic = arch.read_integer("offset_population_basic");
-        data.offset_date_basic = arch.read_integer("offset_date_basic");
-        data.offset_rotate_basic = arch.read_integer("offset_rotate_basic");
+        data.x_offset = arch.r_int("x_offset");
+        data.y_offset = arch.r_int("y_offset");
+        data.item_height = arch.r_int("item_height");
+        data.background = (e_image_id)arch.r_int("background");
+        data.spacing = arch.r_int("spacing");
+        data.offset_funds_basic = arch.r_int("offset_funds_basic");
+        data.offset_population_basic = arch.r_int("offset_population_basic");
+        data.offset_date_basic = arch.r_int("offset_date_basic");
+        data.offset_rotate_basic = arch.r_int("offset_rotate_basic");
     });
 }
 

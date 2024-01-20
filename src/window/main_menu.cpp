@@ -53,17 +53,17 @@ struct main_menu_data_t {
 
 main_menu_data_t g_main_menu_data;
 
-void config_load_main_menu(archive arch) {
+void config_load_main_menu() {
     g_config_arch.r_section("main_menu_window", [] (archive arch) {
         auto &data = g_main_menu_data;
-        data.button_pos = arch.read_vec2i("pos");
-        data.button_size = arch.read_vec2i("btn", "w", "h");
-        data.button_offset = arch.read_integer("button_offset");
+        data.button_pos = arch.r_vec2i("pos");
+        data.button_size = arch.r_vec2i("btn", "w", "h");
+        data.button_offset = arch.r_int("button_offset");
 
         data.buttons_text.clear();
-        arch.read_object_array("buttons", [&] (archive arch) {
-            int group = arch.read_integer("group");
-            int id = arch.read_integer("id");
+        arch.r_array("buttons", [&] (archive arch) {
+            int group = arch.r_int("group");
+            int id = arch.r_int("id");
             data.buttons_text.push_back({group, id});
         });
 

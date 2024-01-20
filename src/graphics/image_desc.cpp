@@ -9,10 +9,10 @@ std::array<image_desc, IMG_SIZE> g_image_desc;
 ANK_REGISTER_CONFIG_ITERATOR(config_load_images_info);
 void config_load_images_info() {
     g_config_arch.r_array("images", [] (archive arch) {
-        int type = arch.read_integer("img");
-        int pack = arch.read_integer("pack");
-        int id = arch.read_integer("id");
-        int offset = arch.read_integer("offset");
+        int type = arch.r_int("img");
+        int pack = arch.r_int("pack");
+        int id = arch.r_int("id");
+        int offset = arch.r_int("offset");
 
         if (type >= IMG_SIZE) {
             return;

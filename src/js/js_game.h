@@ -11,7 +11,7 @@ struct archive {
     js_State *vm;
     inline archive(js_State *_vm) : vm(_vm) {}
 
-    inline pcstr read_string(pcstr name) {
+    inline pcstr r_string(pcstr name) {
         js_getproperty(vm, -1, name);
         const char *result = js_isundefined(vm, -1) ? "" : js_tostring(vm, -1);
         js_pop(vm, 1);
@@ -36,31 +36,31 @@ struct archive {
         return result;
     }
 
-    inline int read_integer(pcstr name) {
+    inline int r_int(pcstr name) {
         js_getproperty(vm, -1, name);
         int result = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1);
         js_pop(vm, 1);
         return result;
     }
 
-    inline bool read_bool(pcstr name) {
+    inline bool r_bool(pcstr name) {
         js_getproperty(vm, -1, name);
         bool result = js_isundefined(vm, -1) ? 0 : js_toboolean(vm, -1);
         js_pop(vm, 1);
         return result;
     }
 
-    inline vec2i read_vec2i(pcstr name, pcstr x = "x", pcstr y = "y") {
+    inline vec2i r_vec2i(pcstr name, pcstr x = "x", pcstr y = "y") {
         vec2i result(0, 0);
-        read_object_section(name, [&] (archive arch) {
-            result.x = arch.read_integer(x);
-            result.y = arch.read_integer(y);
+        r_section(name, [&] (archive arch) {
+            result.x = arch.r_int(x);
+            result.y = arch.r_int(y);
         });
         return result;
     }
 
     template<typename T>
-    inline void read_object_section(pcstr name, T read_func) {
+    inline void r_section(pcstr name, T read_func) {
         js_getproperty(vm, -1, name);
         if (js_isobject(vm, -1)) {
             read_func(vm);
@@ -69,7 +69,7 @@ struct archive {
     }
 
     template<typename T>
-    inline void read_object_array(pcstr name, T read_func) {
+    inline void r_array(pcstr name, T read_func) {
         js_getproperty(vm, -1, name);
         r_array_impl(read_func);
         js_pop(vm, 1);

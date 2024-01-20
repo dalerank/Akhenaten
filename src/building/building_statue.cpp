@@ -31,26 +31,26 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_medium_statue_images);
 ANK_REGISTER_CONFIG_ITERATOR(config_load_big_statue_images);
 
 template<typename T>
-void config_load_statue_images_t(archive arch, pcstr key, T& config) {
+void config_load_statue_images_t(pcstr key, T& config) {
     config.clear();
     g_config_arch.r_array(key, [&] (archive arch) {
-        int pack = arch.read_integer("pack");
-        int id = arch.read_integer("id");
-        int offset = arch.read_integer("offset");
+        int pack = arch.r_int("pack");
+        int id = arch.r_int("id");
+        int offset = arch.r_int("offset");
         config.push_back({pack, id, offset});
     });
 }
 
-void config_load_small_statue_images(archive arch) {
-    config_load_statue_images_t(arch, "small_statue_images", small_statues_img);
+void config_load_small_statue_images() {
+    config_load_statue_images_t("small_statue_images", small_statues_img);
 }
 
-void config_load_medium_statue_images(archive arch) {
-    config_load_statue_images_t(arch, "medium_statue_images", medium_statue_images);
+void config_load_medium_statue_images() {
+    config_load_statue_images_t("medium_statue_images", medium_statue_images);
 }
 
-void config_load_big_statue_images(archive arch) {
-    config_load_statue_images_t(arch, "big_statue_images", big_statues_img);
+void config_load_big_statue_images() {
+    config_load_statue_images_t("big_statue_images", big_statues_img);
 }
 
 int building_statue_random_variant(int type, int variant) {

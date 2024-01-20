@@ -8,10 +8,10 @@
 std::map<std::string, vfs::path> g_building_sounds;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_sounds);
-void config_load_building_sounds(archive arch) {
+void config_load_building_sounds() {
     g_config_arch.r_array("building_sounds", [] (archive arch) {
-        const char *type = arch.read_string("type");
-        const char *path = arch.read_string("sound");
+        const char *type = arch.r_string("type");
+        const char *path = arch.r_string("sound");
         g_building_sounds[type] = path;
     });
 }

@@ -8,10 +8,10 @@
 std::map<std::string, bstring64> g_walker_reaction;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_walker_sounds);
-void config_load_walker_sounds(archive arch) {
+void config_load_walker_sounds() {
     g_config_arch.r_array("walker_sounds", [] (archive arch) {
-        const char *type = arch.read_string("type");
-        const char *path = arch.read_string("sound");
+        const char *type = arch.r_string("type");
+        const char *path = arch.r_string("sound");
         g_walker_reaction[type] = path;
     });
 }

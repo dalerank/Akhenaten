@@ -52,8 +52,8 @@ int img_mapping[32000] = {0};
 ANK_REGISTER_CONFIG_ITERATOR(config_load_images_remap_config);
 void config_load_images_remap_config() {
     g_config_arch.r_array("images_remap", [] (archive arch) {
-        int id = arch.read_integer("id");
-        int remap = arch.read_integer("rid");
+        int id = arch.r_int("id");
+        int remap = arch.r_int("rid");
         img_mapping[id] = remap;
     });
 }
@@ -65,11 +65,11 @@ void config_load_imagepaks_config() {
     }
     g_config_arch.r_array("imagepaks", [] (archive arch) {
         imagepak_handle config;
-        config.id = arch.read_integer("id");
-        config.name = arch.read_string("name");
-        config.index = arch.read_integer("index");
-        config.system = arch.read_bool("system");
-        config.custom = arch.read_bool("custom");
+        config.id = arch.r_int("id");
+        config.name = arch.r_string("name");
+        config.index = arch.r_int("index");
+        config.system = arch.r_bool("system");
+        config.custom = arch.r_bool("custom");
         g_image_data->common[config.id] = config;
     });
     g_image_data->common_inited = true;
