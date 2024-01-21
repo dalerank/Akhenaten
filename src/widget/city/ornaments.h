@@ -7,6 +7,7 @@
 class building;
 
 int get_farm_image(int grid_offset);
+bool drawing_building_as_deleted(building *b);
 void draw_farm_crops(painter &ctx, e_building_type type, int progress, int grid_offset, vec2i tile, color color_mask);
 
 void draw_ornaments_flat(vec2i pixel, tile2i point, painter &ctx);

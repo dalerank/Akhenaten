@@ -3,7 +3,11 @@
 
 #include "building/building.h"
 #include "grid/grid.h"
+#include "grid/property.h"
+#include "grid/image.h"
 #include "config/config.h"
+#include "graphics/boilerplate.h"
+#include "widget/city/ornaments.h"
 
 grid_xx g_buildings_grid = {0, {FS_UINT16, FS_UINT16}};
 grid_xx g_damage_grid = {0, {FS_UINT8, FS_UINT16}};
@@ -94,4 +98,19 @@ int map_building_is_reservoir(tile2i tile) {
 
 void map_building_update_all_tiles() {
 
+}
+
+bool building_impl::draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx) {
+    int color_mask = 0;
+    if (drawing_building_as_deleted(&base) || map_property_is_deleted(tile.grid_offset())) {
+        color_mask = COLOR_MASK_RED;
+    }
+
+    int image_id = map_image_at(tile.grid_offset());
+    building_draw_normal_anim(ctx, point, &base, tile, image_id, color_mask);
+    if (base.has_plague) {
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PLAGUE_SKULL), point.x + 18, point.y - 32, color_mask);
+    }
+
+    return false;
 }

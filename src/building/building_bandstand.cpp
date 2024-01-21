@@ -3,6 +3,8 @@
 #include "building/building.h"
 #include "city/object_info.h"
 #include "game/resource.h"
+#include "grid/property.h"
+#include "grid/image.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/boilerplate.h"
@@ -10,6 +12,8 @@
 #include "config/config.h"
 #include "window/building/common.h"
 #include "window/building/figures.h"
+#include "widget/city/ornaments.h"
+#include "building/building_entertainment.h"
 #include "sound/sound_building.h"
 
 void building_bandstand::on_create() {
@@ -73,4 +77,24 @@ void building_bandstand::window_info_background(object_info &c) {
     } else {
         lang_text_draw(71, 9, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
     }
+}
+
+bool building_bandstand::draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx) {
+    int color_mask = 0;
+    if (drawing_building_as_deleted(&base) || map_property_is_deleted(tile.grid_offset())) {
+        color_mask = COLOR_MASK_RED;
+    }
+
+    int grid_offset = tile.grid_offset();
+    if (map_image_at(grid_offset) == image_group(IMG_BANDSTAND_SN_N)) {
+        building_entertainment_draw_shows_musicians(ctx, &base, point, 1, color_mask);
+    } else if (map_image_at(grid_offset) == image_group(IMG_BANDSTAND_WE_W)) {
+        building_entertainment_draw_shows_musicians(ctx, &base, point, 0, color_mask);
+    }
+
+    if (map_image_at(grid_offset) == image_group(IMG_BOOTH)) {
+        building_entertainment_draw_show_jugglers(ctx, &base, point, color_mask);
+    }
+
+    return false;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/bstring.h"
+#include "core/vec2i.h"
 #include "building/building_type.h"
 #include "building/building_state.h"
 #include "overlays/city_overlay_fwd.h"
@@ -17,6 +18,7 @@ class figure;
 class io_buffer;
 class building;
 struct object_info;
+struct painter;
 
 constexpr uint32_t MAX_BUILDINGS = 4000;
 constexpr uint32_t MAX_FIGURES_PER_BUILDING = 8;
@@ -385,6 +387,7 @@ public:
     virtual void update_day() {}
     virtual void window_info_background(object_info &ctx) {}
     virtual void window_info_foreground(object_info &ctx) {}
+    virtual bool draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx);
 
     inline bool is_main() { return base.is_main(); }
     inline figure *create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) { return base.create_roaming_figure(_type, created_action, slot); }

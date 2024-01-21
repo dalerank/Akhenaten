@@ -28,7 +28,7 @@
 #include "grid/terrain.h"
 #include <cmath>
 
-static bool drawing_building_as_deleted(building* b) {
+bool drawing_building_as_deleted(building* b) {
     b = b->main();
     if (b->id && (b->is_deleted || map_property_is_deleted(b->tile.grid_offset()))) {
         return true;
@@ -361,18 +361,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         }
         break;
 
-    case BUILDING_BANDSTAND:
-        if (map_image_at(grid_offset) == image_group(IMG_BANDSTAND_SN_N)) {
-            building_entertainment_draw_shows_musicians(ctx, b, point, 1, color_mask);
-        } else if (map_image_at(grid_offset) == image_group(IMG_BANDSTAND_WE_W)) {
-            building_entertainment_draw_shows_musicians(ctx, b, point, 0, color_mask);
-        }
-
-        if (map_image_at(grid_offset) == image_group(IMG_BOOTH)) {
-            building_entertainment_draw_show_jugglers(ctx, b, point, color_mask);
-        }
-        break;
-
     case BUILDING_PAVILLION:
         if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_PAVILLION)) {
             building_entertainment_draw_shows_dancers(ctx, b, point, color_mask);
@@ -392,10 +380,7 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         break;
 
     default:
-        building_draw_normal_anim(ctx, point, b, tile, image_id, color_mask);
-        if (b->has_plague) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PLAGUE_SKULL), point.x + 18, point.y - 32, color_mask);
-        }
+        b->dcast()->draw_ornaments_and_animations_height(point, tile, ctx);
         break;
     }
 
