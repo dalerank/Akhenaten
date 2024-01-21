@@ -961,73 +961,6 @@ void building::spawn_figure_dock() {
     //    }
 }
 
-void building::spawn_figure_storageyard() {
-    check_labor_problem();
-    if (!has_road_access) {
-        return;
-    }
-
-    building *space = this;
-    for (int i = 0; i < 8; i++) {
-        space = space->next();
-        if (space->id) {
-            space->show_on_problem_overlay = show_on_problem_overlay;
-        }
-    }
-
-    common_spawn_labor_seeker(100);
-    auto task = building_storageyard_determine_worker_task(this);
-    if (task.result == STORAGEYARD_TASK_NONE || task.amount <= 0) {
-        return;
-    }
-
-    if (!has_figure(BUILDING_SLOT_SERVICE) && task.result == STORAGEYARD_TASK_MONUMENT) {
-        figure *leader = create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
-        leader->set_direction_to(task.dest);
-        for (int i = 0; i < 5; ++i) {
-            figure *follower = create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
-            follower->set_direction_to(task.dest);
-            follower->wait_ticks = i * 4;
-        }
-        figure *sled = figure_create(FIGURE_SLED, tile, 0);
-        sled->set_destination(task.dest);
-        sled->set_direction_to(task.dest);
-        sled->load_resource(task.resource, task.amount);
-        sled->leading_figure_id = leader->id;
-        building_storageyard_remove_resource(this, task.resource, task.amount);
-
-    } else if (!has_figure(BUILDING_SLOT_SERVICE)) {
-        figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access, DIR_4_BOTTOM_LEFT);
-        f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
-
-        switch (task.result) {
-        case STORAGEYARD_TASK_GETTING:
-        case STORAGEYARD_TASK_GETTING_MOAR:
-            f->load_resource(RESOURCE_NONE, 0);
-            f->collecting_item_id = task.resource;
-            break;
-        case STORAGEYARD_TASK_DELIVERING:
-        case STORAGEYARD_TASK_EMPTYING:
-            task.amount = std::min<int>(task.amount, 400);
-            f->load_resource(task.resource, task.amount);
-            building_storageyard_remove_resource(this, task.resource, task.amount);
-            break;
-        }
-        set_figure(0, f->id);
-        f->set_home(id);
-
-    } else if (task.result == STORAGEYARD_TASK_GETTING_MOAR && !has_figure_of_type(1, FIGURE_STORAGE_YARD_DELIVERCART)) {
-        figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road_access, DIR_4_BOTTOM_LEFT);
-        f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
-
-        f->load_resource(RESOURCE_NONE, 0);
-        f->collecting_item_id = task.resource;
-
-        set_figure(1, f->id);
-        f->set_home(id);
-    }
-}
-
 void building::spawn_figure_granary() {
     check_labor_problem();
     map_point road;
@@ -1399,7 +1332,6 @@ bool building::figure_generate() {
     } else {
         // single building type
         switch (type) {
-        case BUILDING_STORAGE_YARD: spawn_figure_storageyard(); break;
         case BUILDING_GRANARY: spawn_figure_granary(); break;
         case BUILDING_MUD_TOWER: spawn_figure_tower(); break;
         case BUILDING_ARCHITECT_POST: spawn_figure_engineers_post(); break;

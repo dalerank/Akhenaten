@@ -3,7 +3,15 @@
 #include "game/resource.h"
 #include "grid/point.h"
 
-class building;
+#include "building/building.h"
+
+class building_storage_yard : public building_impl {
+public:
+    building_storage_yard(building &b) : building_impl(b) {}
+    virtual void on_create() override;
+    virtual void spawn_figure() override;
+};
+
 
 enum e_storageyard_state { STORAGEYARD_ROOM = 0, STORAGEYARD_FULL = 1, STORAGEYARD_SOME_ROOM = 2 };
 

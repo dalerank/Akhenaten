@@ -4,7 +4,9 @@
 #include "building/count.h"
 #include "building/building_granary.h"
 #include "building/industry.h"
+#include "building/rotation.h"
 #include "building/model.h"
+#include "building/figure.h"
 #include "building/monuments.h"
 #include "building/storage.h"
 #include "city/buildings.h"
@@ -18,6 +20,7 @@
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "grid/image.h"
+#include "figure/figure.h"
 #include "grid/road_access.h"
 #include "scenario/property.h"
 #include "config/config.h"
@@ -805,4 +808,75 @@ storage_worker_task building_storageyard_determine_worker_task(building* warehou
     }
 
     return {STORAGEYARD_TASK_NONE};
+}
+
+void building_storage_yard::on_create() {
+    base.subtype.orientation = building_rotation_global_rotation();
+}
+
+void building_storage_yard::spawn_figure() {
+    base.check_labor_problem();
+    if (!base.has_road_access) {
+        return;
+    }
+
+    building *space = &base;
+    for (int i = 0; i < 8; i++) {
+        space = space->next();
+        if (space->id) {
+            space->show_on_problem_overlay = base.show_on_problem_overlay;
+        }
+    }
+
+    base.common_spawn_labor_seeker(100);
+    auto task = building_storageyard_determine_worker_task(&base);
+    if (task.result == STORAGEYARD_TASK_NONE || task.amount <= 0) {
+        return;
+    }
+
+    if (!base.has_figure(BUILDING_SLOT_SERVICE) && task.result == STORAGEYARD_TASK_MONUMENT) {
+        figure *leader = base.create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
+        leader->set_direction_to(task.dest);
+        for (int i = 0; i < 5; ++i) {
+            figure *follower = base.create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
+            follower->set_direction_to(task.dest);
+            follower->wait_ticks = i * 4;
+        }
+        figure *sled = figure_create(FIGURE_SLED, base.tile, 0);
+        sled->set_destination(task.dest);
+        sled->set_direction_to(task.dest);
+        sled->load_resource(task.resource, task.amount);
+        sled->leading_figure_id = leader->id;
+        building_storageyard_remove_resource(&base, task.resource, task.amount);
+
+    } else if (!base.has_figure(BUILDING_SLOT_SERVICE)) {
+        figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, base.road_access, DIR_4_BOTTOM_LEFT);
+        f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+
+        switch (task.result) {
+        case STORAGEYARD_TASK_GETTING:
+        case STORAGEYARD_TASK_GETTING_MOAR:
+            f->load_resource(RESOURCE_NONE, 0);
+            f->collecting_item_id = task.resource;
+            break;
+        case STORAGEYARD_TASK_DELIVERING:
+        case STORAGEYARD_TASK_EMPTYING:
+            task.amount = std::min<int>(task.amount, 400);
+            f->load_resource(task.resource, task.amount);
+            building_storageyard_remove_resource(&base, task.resource, task.amount);
+            break;
+        }
+        base.set_figure(0, f->id);
+        f->set_home(base.id);
+
+    } else if (task.result == STORAGEYARD_TASK_GETTING_MOAR && !base.has_figure_of_type(1, FIGURE_STORAGE_YARD_DELIVERCART)) {
+        figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, base.road_access, DIR_4_BOTTOM_LEFT);
+        f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+
+        f->load_resource(RESOURCE_NONE, 0);
+        f->collecting_item_id = task.resource;
+
+        base.set_figure(1, f->id);
+        f->set_home(base.id);
+    }
 }

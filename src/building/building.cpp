@@ -8,6 +8,7 @@
 #include "building/building_work_camp.h"
 #include "building/building_bazaar.h"
 #include "building/building_firehouse.h"
+#include "building/storage_yard.h"
 #include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
@@ -248,9 +249,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_BAZAAR: // Set it as accepting all goods
         b->subtype.market_goods = 0x0000;
         break;
-    case BUILDING_STORAGE_YARD:
-        b->subtype.orientation = building_rotation_global_rotation();
-        break;
 
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
@@ -298,6 +296,7 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
 
     default:
         b->output_resource_first_id = RESOURCE_NONE;
+        b->dcast()->on_create();
         break;
     }
 }
@@ -333,6 +332,7 @@ building_impl *building::dcast() {
     case BUILDING_WORK_CAMP: _ptr = new building_work_camp(*this); break;
     case BUILDING_BAZAAR: _ptr = new building_bazaar(*this); break;
     case BUILDING_FIREHOUSE: _ptr = new building_firehouse(*this); break;
+    case BUILDING_STORAGE_YARD: _ptr = new building_storage_yard(*this); break;
     default:
         _ptr = new building_impl(*this);
     }

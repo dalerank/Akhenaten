@@ -53,7 +53,7 @@ struct building_storage {
 /**
  * Clear and reset all building storages
  */
-void building_storage_clear_all(void);
+void building_storage_clear_all();
 
 /**
  * Creates a building storage

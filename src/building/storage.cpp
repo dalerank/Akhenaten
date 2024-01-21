@@ -1,6 +1,7 @@
 #include "storage.h"
 
 #include "building/building.h"
+#include "building/rotation.h"
 #include "city/resource.h"
 
 #include "io/io_buffer.h"

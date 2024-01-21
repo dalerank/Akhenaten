@@ -49,6 +49,7 @@ class building;
 class building_impl {
 public:
     building_impl(building &b) : base(b) {}
+    virtual void on_create() {}
     virtual void spawn_figure() {}
     virtual void update_graphic() {}
     virtual void update_day() {}
@@ -356,7 +357,6 @@ public:
     void spawn_figure_wharf();
     void spawn_figure_shipyard();
     void spawn_figure_dock();
-    void spawn_figure_storageyard();
     void spawn_figure_granary();
     void spawn_figure_hunting_lodge();
     void spawn_figure_reed_gatherers();
