@@ -56,16 +56,21 @@ static void draw_footprint_water(vec2i pixel, tile2i point, painter &ctx) {
 }
 
 static int get_tooltip_water(tooltip_context* c, int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_GROUNDWATER)) {
+    int building_id = map_building_at(grid_offset);
+    if (building_id && building_is_house(building_get(building_id)->type)) {
         if (map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE)) {
+            return 3;
+        } else {
             return 2;
+        }
+    } else if (map_terrain_is(grid_offset, TERRAIN_GROUNDWATER)) {
+        if (map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE)) {
+            return 3;
         } else {
             return 1;
         }
-    } else if (map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE)) {
-        return 3;
     }
-
+    
     return 0;
 }
 

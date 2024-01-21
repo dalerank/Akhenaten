@@ -49,6 +49,8 @@ static void mark_well_access(building *well) {
         if (building_id) {
             building_get(building_id)->has_well_access = true;
         }
+
+        map_terrain_add(tile.grid_offset(), TERRAIN_FOUNTAIN_RANGE);
     });
 }
 
