@@ -9,6 +9,7 @@
 #include "building/figure.h"
 #include "building/monuments.h"
 #include "building/storage.h"
+#include "window/building/distribution.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/military.h"
@@ -17,8 +18,14 @@
 #include "core/vec2i.h"
 #include "empire/trade_prices.h"
 #include "game/tutorial.h"
+#include "game/game.h"
 #include "graphics/image.h"
+#include "graphics/text.h"
 #include "graphics/image_groups.h"
+#include "graphics/elements/panel.h"
+#include "graphics/elements/button.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
 #include "grid/image.h"
 #include "figure/figure.h"
 #include "grid/road_access.h"
@@ -879,4 +886,183 @@ void building_storage_yard::spawn_figure() {
         base.set_figure(1, f->id);
         f->set_home(base.id);
     }
+}
+
+void building_storage_yard::draw_warehouse_orders(object_info* c) {
+    int y_offset = window_building_get_vertical_offset(c, 28 + 5);
+    c->help_id = 4;
+    outer_panel_draw(vec2i{c->offset.x, y_offset}, 29, 28 + 5);
+    lang_text_draw_centered(99, 3, c->offset.x, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    inner_panel_draw(c->offset.x + 16, y_offset + 42, c->width_blocks - 2, 21 + 5);
+}
+
+void building_storage_yard::draw_warehouse(object_info* c) {
+    auto &data = g_window_building_distribution;
+    c->help_id = 4;
+    window_building_play_sound(c, "wavs/warehouse.wav");
+    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(99, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    building* b = building_get(c->building_id);
+    painter ctx = game.painter();
+    data.building_id = c->building_id;
+    if (!c->has_road_access) {
+        window_building_draw_description(c, 69, 25);
+    }
+    //if (GAME_ENV == ENGINE_ENV_C3) {
+    //    const resources_list* list = city_resource_get_available();
+    //    for (int i = 0; i < list->size; i++) {
+    //        e_resource resource = list->items[i];
+    //        int x, y;
+    //        if (i < 5) { // column 1
+    //            x = c->offset.x + 20;
+    //            y = c->offset.y + 24 * i + 36;
+    //        } else if (i < 10) { // column 2
+    //            x = c->offset.x + 170;
+    //            y = c->offset.y + 24 * (i - 5) + 36;
+    //        } else { // column 3
+    //            x = c->offset.x + 320;
+    //            y = c->offset.y + 24 * (i - 10) + 36;
+    //        }
+    //        int amount = building_storageyard_get_amount(b, resource);
+    //        int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+    //        ImageDraw::img_generic(image_id, x, y);
+    //        int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_SMALL_PLAIN);
+    //        lang_text_draw(23, resource, x + 24 + width, y + 7, FONT_SMALL_PLAIN);
+    //    }
+    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) 
+    {
+        int x = c->offset.x + 20;
+        int y = c->offset.y + 45;
+        int lines = 0;
+
+        const resources_list* list = city_resource_get_available();
+        painter ctx = game.painter();
+        for (int i = 0; i < list->size; i++) {
+            e_resource resource = list->items[i];
+            int loads = building_storageyard_get_amount(b, resource);
+            if (loads) {
+                int amount = stack_proper_quantity(loads, resource);
+                int image_id = image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+                ImageDraw::img_generic(ctx, image_id, x, y);
+                int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_NORMAL_BLACK_ON_LIGHT);
+                lang_text_draw(23, resource, x + 24 + width, y + 7, FONT_NORMAL_BLACK_ON_LIGHT);
+                y += 24;
+                lines++;
+                if (lines >= 4) {
+                    lines = 0;
+                    y = c->offset.y + 45;
+                    x += 205;
+                }
+            }
+        }
+    }
+    inner_panel_draw(c->offset.x + 16, c->offset.y + 168, c->width_blocks - 2, 5);
+    window_building_draw_employment(c, 173);
+    // cartpusher state
+    figure* cartpusher = b->get_figure(0);
+    if (cartpusher->state == FIGURE_STATE_ALIVE) {
+        int resource = cartpusher->get_resource();
+        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->offset.x + 32, c->offset.y + 220);
+        lang_text_draw_multiline(99, 17, c->offset + vec2i{64, 223}, 16 * (c->width_blocks - 6), FONT_NORMAL_BLACK_ON_DARK);
+    } else if (b->num_workers) {
+        // cartpusher is waiting for orders
+        lang_text_draw_multiline(99, 15, c->offset + vec2i{32, 223}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
+    }
+
+    // if (c->warehouse_space_text == 1) { // full
+    //     lang_text_draw_multiline(99, 13, c->offset.x + 32, c->offset.y + 16 * c->height_blocks - 93,
+    //         16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
+    // }  else if (c->warehouse_space_text == 2) {
+    //     lang_text_draw_multiline(99, 14, c->offset.x + 32, c->offset.y + 16 * c->height_blocks - 93,
+    //         16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
+    // }
+
+    //    imagedrawnamespace::image_draw_namespace::image_draw(image_id_from_group(GROUP_FIGURE_MARKET_LADY) + 4,
+    //    c->offset.x + 32,
+    //               c->offset.y + 16 * c->height_blocks - 93);
+    //    imagedrawnamespace::image_draw_namespace::image_draw(image_id_from_group(GROUP_FIGURE_TRADE_CARAVAN) + 4,
+    //    c->offset.x + 128,
+    //               c->offset.y + 16 * c->height_blocks - 93);
+    //    imagedrawnamespace::image_draw_namespace::image_draw(image_id_from_group(GROUP_FIGURE_SHIP) + 4, c->offset.x +
+    //    216,
+    //               c->offset.y + 16 * c->height_blocks - 110);
+}
+
+void building_storage_yard::draw_warehouse_orders_foreground(object_info* c) {
+    auto &data = g_window_building_distribution;
+    draw_warehouse_orders(c);
+    int y_offset = window_building_get_vertical_offset(c, 28 + 5);
+    int line_x = c->offset.x + 215;
+
+    int storage_id = building_get(c->building_id)->storage_id;
+    backup_storage_settings(storage_id);
+    const building_storage* storage = building_storage_get(storage_id);
+    const resources_list* list = city_resource_get_available();
+    painter ctx = game.painter();
+    for (int i = 0; i < list->size; i++) {
+        int line_y = 20 * i;
+
+        int resource = list->items[i];
+        int image_id = image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+        ImageDraw::img_generic(ctx, image_id, c->offset.x + 25, y_offset + 48 + line_y);
+        lang_text_draw(23, resource, c->offset.x + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE_ON_DARK);
+        if (data.resource_focus_button_id - 1 == i) {
+            button_border_draw(line_x - 10, y_offset + 46 + line_y, data.orders_resource_buttons[i].width, data.orders_resource_buttons[i].height, true);
+        }
+
+        // order status
+        window_building_draw_order_instruction(INSTR_STORAGE_YARD, storage, resource, line_x, y_offset + 51 + line_y);
+
+        // arrows
+        int state = storage->resource_state[resource];
+        if (state == STORAGE_STATE_PHARAOH_ACCEPT || state == STORAGE_STATE_PHARAOH_GET) {
+            image_buttons_draw(c->offset.x + 165, y_offset + 49, data.orders_decrease_arrows.data(), 1, i);
+            image_buttons_draw(c->offset.x + 165 + 18, y_offset + 49, data.orders_increase_arrows.data(), 1, i);
+        }
+    }
+
+    // emptying button
+    button_border_draw(c->offset.x + 80, y_offset + 404 + 5 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 1 ? 1 : 0);
+    if (storage->empty_all) {
+        lang_text_draw_centered(99, 5, c->offset.x + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    } else {
+        lang_text_draw_centered(99, 4, c->offset.x + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    }
+
+    // trade center
+    //if (GAME_ENV == ENGINE_ENV_C3) {
+    //    button_border_draw(c->offset.x + 80, y_offset + 382 + 5 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 2 ? 1 : 0);
+    //    int is_trade_center = c->building_id == city_buildings_get_trade_center();
+    //    lang_text_draw_centered(99, is_trade_center ? 11 : 12, c->offset.x + 80, y_offset + 386 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    //    // accept none button
+    //    draw_accept_none_button(c->offset.x + 394, y_offset + 404, data.orders_focus_button_id == 3);
+    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) 
+    {
+        // accept none button
+        button_border_draw(c->offset.x + 80, y_offset + 382 + 5 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 2 ? 1 : 0);
+        lang_text_draw_centered(99, 7, c->offset.x + 80, y_offset + 386 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    }
+}
+
+void building_storage_yard::draw_warehouse_foreground(object_info* c) {
+    auto &data = g_window_building_distribution;
+    button_border_draw(c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, 16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(99, 2, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 30, 16 * (c->width_blocks - 10),FONT_NORMAL_BLACK_ON_LIGHT);
+
+    // temp - todo: fix buttons
+    //    draw_permissions_buttons(c->offset.x + 64, c->offset.y + 16 * c->height_blocks - 75, 3);
+}
+
+void building_storage_yard::window_info_background(object_info &ctx) {
+    if (ctx.storage_show_special_orders)
+        draw_warehouse_orders(&ctx);
+    else
+        draw_warehouse(&ctx);
+}
+
+void building_storage_yard::window_info_foreground(object_info &ctx) {
+    if (ctx.storage_show_special_orders)
+        draw_warehouse_orders_foreground(&ctx);
+    else
+        draw_warehouse_foreground(&ctx);
 }

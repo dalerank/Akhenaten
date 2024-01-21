@@ -10,6 +10,14 @@ public:
     building_storage_yard(building &b) : building_impl(b) {}
     virtual void on_create() override;
     virtual void spawn_figure() override;
+    virtual void window_info_background(object_info &ctx) override;
+    virtual void window_info_foreground(object_info &ctx) override;
+
+private:
+    void draw_warehouse_orders(object_info *c);
+    void draw_warehouse(object_info *c);
+    void draw_warehouse_orders_foreground(object_info *c);
+    void draw_warehouse_foreground(object_info *c);
 };
 
 

@@ -648,13 +648,6 @@ static void draw_refresh_background() {
                     window_building_draw_granary(&context);
                 break;
 
-            case BUILDING_STORAGE_YARD:
-                if (context.storage_show_special_orders)
-                    window_building_draw_warehouse_orders(&context);
-                else
-                    window_building_draw_warehouse(&context);
-                break;
-
             case BUILDING_BANDSTAND: building_bandstand_draw_info(context); break;
             case BUILDING_BOOTH: building_booth_draw_info(context); break;
             case BUILDING_SENET_HOUSE: window_building_draw_senet_house(&context); break;
@@ -776,7 +769,7 @@ static void draw_refresh_background() {
             default:
                 {
                     building *b = building_get(context.building_id);
-                    b->dcast()->window_building_info(context);
+                    b->dcast()->window_info_background(context);
                 }
                 break;
             }
@@ -797,20 +790,14 @@ static void draw_foreground() {
     auto &context = g_building_info_context;
     // building-specific buttons
     if (context.type == BUILDING_INFO_BUILDING) {
-        switch (building_get(context.building_id)->type) {
+        building *b = building_get(context.building_id);
+        switch (b->type) {
         case BUILDING_GRANARY:
             if (context.storage_show_special_orders) {
                 window_building_draw_granary_orders_foreground(&context);
             } else {
                 window_building_draw_granary_foreground(&context);
             }
-            break;
-
-        case BUILDING_STORAGE_YARD:
-            if (context.storage_show_special_orders)
-                window_building_draw_warehouse_orders_foreground(&context);
-            else
-                window_building_draw_warehouse_foreground(&context);
             break;
 
         case BUILDING_BAZAAR:
@@ -836,6 +823,10 @@ static void draw_foreground() {
 
         case BUILDING_RECRUITER:
             window_building_draw_barracks_foreground(&context);
+            break;
+
+        default:
+            b->dcast()->window_info_foreground(context);
             break;
         }
     } else if (context.type == BUILDING_INFO_LEGION) {

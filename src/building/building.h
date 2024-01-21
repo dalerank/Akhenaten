@@ -53,7 +53,8 @@ public:
     virtual void spawn_figure() {}
     virtual void update_graphic() {}
     virtual void update_day() {}
-    virtual void window_building_info(object_info &ctx) {}
+    virtual void window_info_background(object_info &ctx) {}
+    virtual void window_info_foreground(object_info &ctx) {}
 
     building &base;
 };

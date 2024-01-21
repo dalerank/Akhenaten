@@ -32,74 +32,76 @@ static void storage_toggle_permissions(int index, int param2);
 
 static generic_button go_to_orders_button[] = {{0, 0, 304, 20, go_to_orders, button_none, 0, 0}};
 
-static generic_button orders_resource_buttons[] = {
-  {0, 20 * 0, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 1, 0},
-  {0, 20 * 1, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 2, 0},
-  {0, 20 * 2, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 3, 0},
-  {0, 20 * 3, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 4, 0},
-  {0, 20 * 4, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 5, 0},
-  {0, 20 * 5, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 6, 0},
-  {0, 20 * 6, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 7, 0},
-  {0, 20 * 7, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 8, 0},
-  {0, 20 * 8, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 9, 0},
-  {0, 20 * 9, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 10, 0},
-  {0, 20 * 10, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 11, 0},
-  {0, 20 * 11, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 12, 0},
-  {0, 20 * 12, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 13, 0},
-  {0, 20 * 13, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 14, 0},
-  {0, 20 * 14, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 15, 0},
-  {0, 20 * 15, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 16, 0},
-  {0, 20 * 16, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 17, 0},
-  {0, 20 * 17, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 18, 0},
-  {0, 20 * 18, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 19, 0},
-  {0, 20 * 19, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 20, 0},
-};
+window_building_distribution::window_building_distribution() {
+    orders_resource_buttons = {
+        generic_button{0, 20 * 0, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 1, 0},
+        generic_button{0, 20 * 1, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 2, 0},
+        generic_button{0, 20 * 2, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 3, 0},
+        generic_button{0, 20 * 3, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 4, 0},
+        generic_button{0, 20 * 4, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 5, 0},
+        generic_button{0, 20 * 5, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 6, 0},
+        generic_button{0, 20 * 6, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 7, 0},
+        generic_button{0, 20 * 7, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 8, 0},
+        generic_button{0, 20 * 8, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 9, 0},
+        generic_button{0, 20 * 9, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 10, 0},
+        generic_button{0, 20 * 10, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 11, 0},
+        generic_button{0, 20 * 11, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 12, 0},
+        generic_button{0, 20 * 12, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 13, 0},
+        generic_button{0, 20 * 13, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 14, 0},
+        generic_button{0, 20 * 14, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 15, 0},
+        generic_button{0, 20 * 15, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 16, 0},
+        generic_button{0, 20 * 16, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 17, 0},
+        generic_button{0, 20 * 17, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 18, 0},
+        generic_button{0, 20 * 18, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 19, 0},
+        generic_button{0, 20 * 19, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 20, 0},
+    };
 
-static image_button orders_decrease_arrows[] = {
-  {0, 20 * 0,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 1,  0, true},
-  {0, 20 * 1,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 2,  0, true},
-  {0, 20 * 2,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 3,  0, true},
-  {0, 20 * 3,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 4,  0, true},
-  {0, 20 * 4,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 5,  0, true},
-  {0, 20 * 5,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 6,  0, true},
-  {0, 20 * 6,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 7,  0, true},
-  {0, 20 * 7,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 8,  0, true},
-  {0, 20 * 8,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 9,  0, true},
-  {0, 20 * 9,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 10, 0, true},
-  {0, 20 * 10, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 11, 0, true},
-  {0, 20 * 11, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 12, 0, true},
-  {0, 20 * 12, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 13, 0, true},
-  {0, 20 * 13, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 14, 0, true},
-  {0, 20 * 14, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 15, 0, true},
-  {0, 20 * 15, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 16, 0, true},
-  {0, 20 * 16, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 17, 0, true},
-  {0, 20 * 17, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 18, 0, true},
-  {0, 20 * 18, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 19, 0, true},
-  {0, 20 * 19, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 20, 0, true},
-};
+    orders_decrease_arrows = {
+        image_button{0, 20 * 0,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 1,  0, true},
+        image_button{0, 20 * 1,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 2,  0, true},
+        image_button{0, 20 * 2,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 3,  0, true},
+        image_button{0, 20 * 3,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 4,  0, true},
+        image_button{0, 20 * 4,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 5,  0, true},
+        image_button{0, 20 * 5,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 6,  0, true},
+        image_button{0, 20 * 6,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 7,  0, true},
+        image_button{0, 20 * 7,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 8,  0, true},
+        image_button{0, 20 * 8,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 9,  0, true},
+        image_button{0, 20 * 9,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 10, 0, true},
+        image_button{0, 20 * 10, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 11, 0, true},
+        image_button{0, 20 * 11, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 12, 0, true},
+        image_button{0, 20 * 12, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 13, 0, true},
+        image_button{0, 20 * 13, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 14, 0, true},
+        image_button{0, 20 * 14, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 15, 0, true},
+        image_button{0, 20 * 15, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 16, 0, true},
+        image_button{0, 20 * 16, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 17, 0, true},
+        image_button{0, 20 * 17, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 18, 0, true},
+        image_button{0, 20 * 18, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 19, 0, true},
+        image_button{0, 20 * 19, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, order_quantity_increase_decrease, order_quantity_increase_decrease, 20, 0, true},
+    };
 
-static image_button orders_increase_arrows[] = {
-  {0, 20 * 0,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 1,  1, true},
-  {0, 20 * 1,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 2,  1, true},
-  {0, 20 * 2,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 3,  1, true},
-  {0, 20 * 3,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 4,  1, true},
-  {0, 20 * 4,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 5,  1, true},
-  {0, 20 * 5,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 6,  1, true},
-  {0, 20 * 6,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 7,  1, true},
-  {0, 20 * 7,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 8,  1, true},
-  {0, 20 * 8,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 9,  1, true},
-  {0, 20 * 9,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 10, 1, true},
-  {0, 20 * 10, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 11, 1, true},
-  {0, 20 * 11, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 12, 1, true},
-  {0, 20 * 12, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 13, 1, true},
-  {0, 20 * 13, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 14, 1, true},
-  {0, 20 * 14, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 15, 1, true},
-  {0, 20 * 15, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 16, 1, true},
-  {0, 20 * 16, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 17, 1, true},
-  {0, 20 * 17, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 18, 1, true},
-  {0, 20 * 18, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 19, 1, true},
-  {0, 20 * 19, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 20, 1, true},
-};
+    orders_increase_arrows = {
+        image_button{0, 20 * 0,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 1,  1, true},
+        image_button{0, 20 * 1,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 2,  1, true},
+        image_button{0, 20 * 2,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 3,  1, true},
+        image_button{0, 20 * 3,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 4,  1, true},
+        image_button{0, 20 * 4,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 5,  1, true},
+        image_button{0, 20 * 5,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 6,  1, true},
+        image_button{0, 20 * 6,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 7,  1, true},
+        image_button{0, 20 * 7,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 8,  1, true},
+        image_button{0, 20 * 8,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 9,  1, true},
+        image_button{0, 20 * 9,  17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 10, 1, true},
+        image_button{0, 20 * 10, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 11, 1, true},
+        image_button{0, 20 * 11, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 12, 1, true},
+        image_button{0, 20 * 12, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 13, 1, true},
+        image_button{0, 20 * 13, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 14, 1, true},
+        image_button{0, 20 * 14, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 15, 1, true},
+        image_button{0, 20 * 15, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 16, 1, true},
+        image_button{0, 20 * 16, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 17, 1, true},
+        image_button{0, 20 * 17, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 18, 1, true},
+        image_button{0, 20 * 18, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 19, 1, true},
+        image_button{0, 20 * 19, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 20, 1, true},
+    };
+}
 
 static generic_button warehouse_distribution_permissions_buttons[] = {
   {0, 0, 20, 22, storage_toggle_permissions, button_none, 1, 0},
@@ -123,41 +125,19 @@ static generic_button warehouse_order_buttons[] = {
   {314, 5 * 16, 20, 20, warehouse_orders, button_none, 2, 0}, //
 };
 
-struct window_building_distribution_t {
-    int focus_button_id;
-    int orders_focus_button_id;
-    int resource_focus_button_id;
-    int permission_focus_button_id;
-    int decr_arrow_focus_button_id;
-    int incr_arrow_focus_button_id;
-    int building_id;
-    int partial_resource_focus_button_id;
-};
-
-window_building_distribution_t g_window_building_distribution = {0, 0, 0, 0, 0, 0};
+window_building_distribution g_window_building_distribution;
 
 uint8_t warehouse_full_button_text[] = "32";
 uint8_t warehouse_3quarters_button_text[] = "24";
 uint8_t warehouse_half_button_text[] = "16";
 uint8_t warehouse_quarter_button_text[] = "8";
+
 uint8_t granary_full_button_text[] = "24";
 uint8_t granary_3quarters_button_text[] = "18";
 uint8_t granary_half_button_text[] = "12";
 uint8_t granary_quarter_button_text[] = "6";
 
-enum e_instr {
-    INSTR_STORAGE_YARD = 0,
-    INSTR_GRANARY = 1,
-    INSTR_DOCK = 2,
-    INSTR_OTHERS = 3,
-};
-
-static void draw_order_instruction(int instr_kind,
-                                   const building_storage* storage,
-                                   int resource,
-                                   int x,
-                                   int y,
-                                   int market_order = -1) {
+void window_building_draw_order_instruction(int instr_kind, const building_storage* storage, int resource, int x, int y, int market_order) {
     font_t font_nope = FONT_NORMAL_BLACK_ON_DARK;
     font_t font_yes = FONT_NORMAL_WHITE_ON_DARK;
     font_t font_get = FONT_NORMAL_YELLOW;
@@ -249,7 +229,7 @@ int window_building_handle_mouse_dock_orders(const mouse* m, object_info* c) {
     int y_offset = window_building_get_vertical_offset(c, 28);
 
     data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, c->offset.x + 180, y_offset + 46, orders_resource_buttons, 15, &data.resource_focus_button_id)) {
+    if (generic_buttons_handle_mouse(m, c->offset.x + 180, y_offset + 46, data.orders_resource_buttons.data(), 15, &data.resource_focus_button_id)) {
         return 1;
     }
     return generic_buttons_handle_mouse(m, c->offset.x + 80, y_offset + 404, market_order_buttons, 1, &data.orders_focus_button_id);
@@ -342,7 +322,7 @@ void window_building_handle_mouse_market_orders(const mouse* m, object_info* c) 
     // resources
     int num_resources = city_resource_get_available_market_goods()->size;
     data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, c->offset.x + 205, y_offset + 46, orders_resource_buttons, num_resources, &data.resource_focus_button_id)) {
+    if (generic_buttons_handle_mouse(m, c->offset.x + 205, y_offset + 46, data.orders_resource_buttons.data(), num_resources, &data.resource_focus_button_id)) {
         return;
     }
 
@@ -455,10 +435,10 @@ void window_building_draw_market_orders_foreground(object_info* c) {
         ImageDraw::img_generic(ctx, image_id, c->offset.x + 25, y_offset + 48 + line_y);
         lang_text_draw(23, resource, c->offset.x + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE_ON_DARK);
         if (data.resource_focus_button_id - 1 == i)
-            button_border_draw(line_x - 10, y_offset + 46 + line_y, orders_resource_buttons[i].width, orders_resource_buttons[i].height, true);
+            button_border_draw(line_x - 10, y_offset + 46 + line_y, data.orders_resource_buttons[i].width, data.orders_resource_buttons[i].height, true);
 
         // order status
-        draw_order_instruction(INSTR_STORAGE_YARD, nullptr, resource, line_x, y_offset + 51 + line_y, is_good_accepted(i, b));
+        window_building_draw_order_instruction(INSTR_STORAGE_YARD, nullptr, resource, line_x, y_offset + 51 + line_y, is_good_accepted(i, b));
     }
 
     // accept none button
@@ -488,11 +468,11 @@ int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c) 
 
     // arrows
     bool handled = false;
-    if (image_buttons_handle_mouse(m, c->offset.x + 165, y_offset + 49, orders_decrease_arrows, 20, &data.decr_arrow_focus_button_id)) {
+    if (image_buttons_handle_mouse(m, c->offset.x + 165, y_offset + 49, data.orders_decrease_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
         handled = true;
     }
 
-    if (image_buttons_handle_mouse(m, c->offset.x + 165 + 18, y_offset + 49, orders_increase_arrows, 20, &data.decr_arrow_focus_button_id)) {
+    if (image_buttons_handle_mouse(m, c->offset.x + 165 + 18, y_offset + 49, data.orders_increase_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
         handled = true;
     }
 
@@ -503,7 +483,7 @@ int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c) 
     // resources
     int num_resources = city_resource_get_available_foods()->size;
     data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, c->offset.x + 205, y_offset + 46, orders_resource_buttons, num_resources, &data.resource_focus_button_id)) {
+    if (generic_buttons_handle_mouse(m, c->offset.x + 205, y_offset + 46, data.orders_resource_buttons.data(), num_resources, &data.resource_focus_button_id)) {
         return 1;
     }
 
@@ -583,6 +563,7 @@ void window_building_draw_granary_orders(object_info* c) {
     lang_text_draw_centered(98, 6, c->offset.x, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(c->offset.x + 16, y_offset + 42, c->width_blocks - 2, 21 - 15);
 }
+
 void window_building_draw_granary_orders_foreground(object_info* c) {
     auto &data = g_window_building_distribution;
     window_building_draw_granary_orders(c);
@@ -602,17 +583,17 @@ void window_building_draw_granary_orders_foreground(object_info* c) {
         ImageDraw::img_generic(ctx, image_id, c->offset.x + 25, y_offset + 48 + line_y);
         lang_text_draw(23, resource, c->offset.x + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE_ON_DARK);
         if (data.resource_focus_button_id - 1 == i) {
-            button_border_draw(line_x - 10, y_offset + 46 + line_y, orders_resource_buttons[i].width, orders_resource_buttons[i].height, true);
+            button_border_draw(line_x - 10, y_offset + 46 + line_y, data.orders_resource_buttons[i].width, data.orders_resource_buttons[i].height, true);
         }
 
         // order status
-        draw_order_instruction(INSTR_STORAGE_YARD, storage, resource, line_x, y_offset + 51 + line_y);
+        window_building_draw_order_instruction(INSTR_STORAGE_YARD, storage, resource, line_x, y_offset + 51 + line_y);
 
         // arrows
         int state = storage->resource_state[resource];
         if (state == STORAGE_STATE_PHARAOH_ACCEPT || state == STORAGE_STATE_PHARAOH_GET) {
-            image_buttons_draw(c->offset.x + 165, y_offset + 49, orders_decrease_arrows, 1, i);
-            image_buttons_draw(c->offset.x + 165 + 18, y_offset + 49, orders_increase_arrows, 1, i);
+            image_buttons_draw(c->offset.x + 165, y_offset + 49, data.orders_decrease_arrows.data(), 1, i);
+            image_buttons_draw(c->offset.x + 165 + 18, y_offset + 49, data.orders_increase_arrows.data(), 1, i);
         }
     }
 
@@ -664,11 +645,11 @@ int window_building_handle_mouse_warehouse_orders(const mouse* m, object_info* c
     //        return handled;
 
     // arrows
-    if (image_buttons_handle_mouse(m, c->offset.x + 165, y_offset + 49, orders_decrease_arrows, 20, &data.decr_arrow_focus_button_id)) {
+    if (image_buttons_handle_mouse(m, c->offset.x + 165, y_offset + 49, data.orders_decrease_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
         handled = true;
     }
 
-    if (image_buttons_handle_mouse(m, c->offset.x + 165 + 18, y_offset + 49, orders_increase_arrows, 20, &data.decr_arrow_focus_button_id)) {
+    if (image_buttons_handle_mouse(m, c->offset.x + 165 + 18, y_offset + 49, data.orders_increase_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
         handled = true;
     }
 
@@ -682,173 +663,12 @@ int window_building_handle_mouse_warehouse_orders(const mouse* m, object_info* c
     }
     data.building_id = c->building_id;
 
-    if (generic_buttons_handle_mouse(m, c->offset.x + 205, y_offset + 46, orders_resource_buttons, num_resources, &data.resource_focus_button_id)) {
+    if (generic_buttons_handle_mouse(m, c->offset.x + 205, y_offset + 46, data.orders_resource_buttons.data(), num_resources, &data.resource_focus_button_id)) {
         return 1;
     }
 
     // extra instructions
     return generic_buttons_handle_mouse(m, c->offset.x + 80, y_offset + 404, warehouse_order_buttons, 2, &data.orders_focus_button_id);
-}
-void window_building_draw_warehouse(object_info* c) {
-    auto &data = g_window_building_distribution;
-    c->help_id = 4;
-    window_building_play_sound(c, "wavs/warehouse.wav");
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(99, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    building* b = building_get(c->building_id);
-    painter ctx = game.painter();
-    data.building_id = c->building_id;
-    if (!c->has_road_access) {
-        window_building_draw_description(c, 69, 25);
-    }
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    const resources_list* list = city_resource_get_available();
-    //    for (int i = 0; i < list->size; i++) {
-    //        e_resource resource = list->items[i];
-    //        int x, y;
-    //        if (i < 5) { // column 1
-    //            x = c->offset.x + 20;
-    //            y = c->offset.y + 24 * i + 36;
-    //        } else if (i < 10) { // column 2
-    //            x = c->offset.x + 170;
-    //            y = c->offset.y + 24 * (i - 5) + 36;
-    //        } else { // column 3
-    //            x = c->offset.x + 320;
-    //            y = c->offset.y + 24 * (i - 10) + 36;
-    //        }
-    //        int amount = building_storageyard_get_amount(b, resource);
-    //        int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-    //        ImageDraw::img_generic(image_id, x, y);
-    //        int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_SMALL_PLAIN);
-    //        lang_text_draw(23, resource, x + 24 + width, y + 7, FONT_SMALL_PLAIN);
-    //    }
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) 
-    {
-        int x = c->offset.x + 20;
-        int y = c->offset.y + 45;
-        int lines = 0;
-
-        const resources_list* list = city_resource_get_available();
-        painter ctx = game.painter();
-        for (int i = 0; i < list->size; i++) {
-            e_resource resource = list->items[i];
-            int loads = building_storageyard_get_amount(b, resource);
-            if (loads) {
-                int amount = stack_proper_quantity(loads, resource);
-                int image_id = image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-                ImageDraw::img_generic(ctx, image_id, x, y);
-                int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_NORMAL_BLACK_ON_LIGHT);
-                lang_text_draw(23, resource, x + 24 + width, y + 7, FONT_NORMAL_BLACK_ON_LIGHT);
-                y += 24;
-                lines++;
-                if (lines >= 4) {
-                    lines = 0;
-                    y = c->offset.y + 45;
-                    x += 205;
-                }
-            }
-        }
-    }
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 168, c->width_blocks - 2, 5);
-    window_building_draw_employment(c, 173);
-    // cartpusher state
-    figure* cartpusher = b->get_figure(0);
-    if (cartpusher->state == FIGURE_STATE_ALIVE) {
-        int resource = cartpusher->get_resource();
-        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->offset.x + 32, c->offset.y + 220);
-        lang_text_draw_multiline(99, 17, c->offset + vec2i{64, 223}, 16 * (c->width_blocks - 6), FONT_NORMAL_BLACK_ON_DARK);
-    } else if (b->num_workers) {
-        // cartpusher is waiting for orders
-        lang_text_draw_multiline(99, 15, c->offset + vec2i{32, 223}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
-    }
-
-    // if (c->warehouse_space_text == 1) { // full
-    //     lang_text_draw_multiline(99, 13, c->offset.x + 32, c->offset.y + 16 * c->height_blocks - 93,
-    //         16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
-    // }  else if (c->warehouse_space_text == 2) {
-    //     lang_text_draw_multiline(99, 14, c->offset.x + 32, c->offset.y + 16 * c->height_blocks - 93,
-    //         16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
-    // }
-
-    //    imagedrawnamespace::image_draw_namespace::image_draw(image_id_from_group(GROUP_FIGURE_MARKET_LADY) + 4,
-    //    c->offset.x + 32,
-    //               c->offset.y + 16 * c->height_blocks - 93);
-    //    imagedrawnamespace::image_draw_namespace::image_draw(image_id_from_group(GROUP_FIGURE_TRADE_CARAVAN) + 4,
-    //    c->offset.x + 128,
-    //               c->offset.y + 16 * c->height_blocks - 93);
-    //    imagedrawnamespace::image_draw_namespace::image_draw(image_id_from_group(GROUP_FIGURE_SHIP) + 4, c->offset.x +
-    //    216,
-    //               c->offset.y + 16 * c->height_blocks - 110);
-}
-void window_building_draw_warehouse_foreground(object_info* c) {
-    auto &data = g_window_building_distribution;
-    button_border_draw(c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, 16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(99, 2, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 30, 16 * (c->width_blocks - 10),FONT_NORMAL_BLACK_ON_LIGHT);
-
-    // temp - todo: fix buttons
-    //    draw_permissions_buttons(c->offset.x + 64, c->offset.y + 16 * c->height_blocks - 75, 3);
-}
-void window_building_draw_warehouse_orders(object_info* c) {
-    int y_offset = window_building_get_vertical_offset(c, 28 + 5);
-    c->help_id = 4;
-    outer_panel_draw(vec2i{c->offset.x, y_offset}, 29, 28 + 5);
-    lang_text_draw_centered(99, 3, c->offset.x, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c->offset.x + 16, y_offset + 42, c->width_blocks - 2, 21 + 5);
-}
-
-void window_building_draw_warehouse_orders_foreground(object_info* c) {
-    auto &data = g_window_building_distribution;
-    window_building_draw_warehouse_orders(c);
-    int y_offset = window_building_get_vertical_offset(c, 28 + 5);
-    int line_x = c->offset.x + 215;
-
-    int storage_id = building_get(c->building_id)->storage_id;
-    backup_storage_settings(storage_id);
-    const building_storage* storage = building_storage_get(storage_id);
-    const resources_list* list = city_resource_get_available();
-    painter ctx = game.painter();
-    for (int i = 0; i < list->size; i++) {
-        int line_y = 20 * i;
-
-        int resource = list->items[i];
-        int image_id = image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        ImageDraw::img_generic(ctx, image_id, c->offset.x + 25, y_offset + 48 + line_y);
-        lang_text_draw(23, resource, c->offset.x + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE_ON_DARK);
-        if (data.resource_focus_button_id - 1 == i) {
-            button_border_draw(line_x - 10, y_offset + 46 + line_y, orders_resource_buttons[i].width, orders_resource_buttons[i].height, true);
-        }
-
-        // order status
-        draw_order_instruction(INSTR_STORAGE_YARD, storage, resource, line_x, y_offset + 51 + line_y);
-
-        // arrows
-        int state = storage->resource_state[resource];
-        if (state == STORAGE_STATE_PHARAOH_ACCEPT || state == STORAGE_STATE_PHARAOH_GET) {
-            image_buttons_draw(c->offset.x + 165, y_offset + 49, orders_decrease_arrows, 1, i);
-            image_buttons_draw(c->offset.x + 165 + 18, y_offset + 49, orders_increase_arrows, 1, i);
-        }
-    }
-
-    // emptying button
-    button_border_draw(c->offset.x + 80, y_offset + 404 + 5 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 1 ? 1 : 0);
-    if (storage->empty_all) {
-        lang_text_draw_centered(99, 5, c->offset.x + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
-    } else {
-        lang_text_draw_centered(99, 4, c->offset.x + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
-    }
-
-    // trade center
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        button_border_draw(c->offset.x + 80, y_offset + 382 + 5 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 2 ? 1 : 0);
-        int is_trade_center = c->building_id == city_buildings_get_trade_center();
-        lang_text_draw_centered(99, is_trade_center ? 11 : 12, c->offset.x + 80, y_offset + 386 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
-        // accept none button
-        draw_accept_none_button(c->offset.x + 394, y_offset + 404, data.orders_focus_button_id == 3);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        // accept none button
-        button_border_draw(c->offset.x + 80, y_offset + 382 + 5 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 2 ? 1 : 0);
-        lang_text_draw_centered(99, 7, c->offset.x + 80, y_offset + 386 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
-    }
 }
 
 void window_building_get_tooltip_warehouse_orders(int* group_id, int* text_id) {
