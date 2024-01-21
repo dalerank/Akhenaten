@@ -429,15 +429,6 @@ void building::spawn_figure_dancer() {
     }
 }
 
-void building::spawn_figure_booth() {
-    if (!is_main())
-        return;
-    if (common_spawn_figure_trigger(100)) {
-        if (data.entertainment.days1 > 0)
-            create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
-    }
-}
-
 void building::spawn_figure_pavillion() {
     if (!is_main())
         return;
@@ -1278,7 +1269,6 @@ bool building::figure_generate() {
         case BUILDING_JUGGLER_SCHOOL: spawn_figure_juggler(); break;
         case BUILDING_CONSERVATORY: spawn_figure_musician(); break;
         case BUILDING_DANCE_SCHOOL: spawn_figure_dancer(); break;
-        case BUILDING_BOOTH: spawn_figure_booth(); break;
         case BUILDING_SENET_HOUSE: spawn_figure_senet(); break;
         case BUILDING_PAVILLION: spawn_figure_pavillion(); break;
         case BUILDING_SCRIBAL_SCHOOL: spawn_figure_school(); break;
@@ -1342,6 +1332,7 @@ int building::get_fire_risk(int value) {
     case BUILDING_CLAY_PIT:
         if (config_get(CONFIG_GP_CH_CLAY_PIT_FIRE_RISK_REDUCED))
             return value / 2;
+
     case BUILDING_BOOTH:
     case BUILDING_BANDSTAND:
         return value / 10;

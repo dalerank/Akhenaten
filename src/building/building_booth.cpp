@@ -1,4 +1,4 @@
-#include "building_plaza.h"
+#include "building_booth.h"
 
 #include "building/building.h"
 #include "city/object_info.h"
@@ -8,11 +8,15 @@
 #include "graphics/boilerplate.h"
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
+#include "grid/property.h"
+#include "grid/image.h"
 #include "window/building/common.h"
 #include "window/building/figures.h"
+#include "widget/city/ornaments.h"
 #include "sound/sound_building.h"
+#include "building/building_entertainment.h"
 
-void building_booth_draw_info(object_info &c) {
+void building_booth::window_info_background(object_info &c) {
     c.help_id = 71;
     window_building_play_sound(&c, snd::get_building_info_sound("booth"));
     outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
@@ -37,4 +41,29 @@ void building_booth_draw_info(object_info &c) {
     } else {
         lang_text_draw(72, 5, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
     }
+}
+
+void building_booth::spawn_figure() {
+    if (!is_main()) {
+        return;
+    }
+
+    if (common_spawn_figure_trigger(100)) {
+        if (data.entertainment.days1 > 0) {
+            create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
+        }
+    }
+}
+
+bool building_booth::draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx) {
+    int color_mask = 0;
+    if (drawing_building_as_deleted(&base) || map_property_is_deleted(tile.grid_offset())) {
+        color_mask = COLOR_MASK_RED;
+    }
+
+    int grid_offset = tile.grid_offset();
+    if (map_image_at(grid_offset) == image_group(IMG_BOOTH)) {
+        building_entertainment_draw_show_jugglers(ctx, &base, point, color_mask);
+    }
+    return true;
 }

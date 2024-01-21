@@ -13,6 +13,7 @@
 #include "building/monument_mastaba.h"
 #include "building/building_bandstand.h"
 #include "building/building_bricklayers_guild.h"
+#include "building/building_booth.h"
 #include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
@@ -328,6 +329,7 @@ building_impl *building::dcast() {
     case BUILDING_BRICKLAYERS_GUILD: _ptr = new building_bricklayers_guild(*this); break;
     case BUILDING_ARCHITECT_POST: _ptr = new building_architect_post(*this); break;
     case BUILDING_BANDSTAND: _ptr = new building_bandstand(*this); break;
+    case BUILDING_BOOTH: _ptr = new building_booth(*this); break;
     
     case BUILDING_SMALL_MASTABA:
     case BUILDING_SMALL_MASTABA_SIDE:

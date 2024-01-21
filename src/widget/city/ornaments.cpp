@@ -355,12 +355,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         /// y - 20, color_mask);
         //            }
         //            break;
-    case BUILDING_BOOTH:
-        if (map_image_at(grid_offset) == image_group(IMG_BOOTH)) {
-            building_entertainment_draw_show_jugglers(ctx, b, point, color_mask);
-        }
-        break;
-
     case BUILDING_PAVILLION:
         if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_PAVILLION)) {
             building_entertainment_draw_shows_dancers(ctx, b, point, color_mask);
