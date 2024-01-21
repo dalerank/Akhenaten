@@ -281,7 +281,7 @@ void building_bazaar::update_day() {
 void building_bazaar::spawn_figure() {
     base.check_labor_problem();
 
-    if (base.common_spawn_figure_trigger(50)) {
+    if (common_spawn_figure_trigger(50)) {
         // market buyer
         int spawn_delay = base.figure_spawn_timer();
         if (!base.has_figure_of_type(1, FIGURE_MARKET_BUYER)) {

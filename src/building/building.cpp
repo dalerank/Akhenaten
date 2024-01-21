@@ -11,6 +11,7 @@
 #include "building_architect_post.h"
 #include "building/storage_yard.h"
 #include "building/monument_mastaba.h"
+#include "building/building_bandstand.h"
 #include "building/building_bricklayers_guild.h"
 #include "city/buildings.h"
 #include "city/population.h"
@@ -284,9 +285,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_MUD_GATEHOUSE:
         b->subtype.orientation = orientation;
         break;
-    case BUILDING_BANDSTAND:
-        b->fire_proof = 1;
-        break;
 
     default:
         b->output_resource_first_id = RESOURCE_NONE;
@@ -329,6 +327,7 @@ building_impl *building::dcast() {
     case BUILDING_STORAGE_YARD: _ptr = new building_storage_yard(*this); break;
     case BUILDING_BRICKLAYERS_GUILD: _ptr = new building_bricklayers_guild(*this); break;
     case BUILDING_ARCHITECT_POST: _ptr = new building_architect_post(*this); break;
+    case BUILDING_BANDSTAND: _ptr = new building_bandstand(*this); break;
     
     case BUILDING_SMALL_MASTABA:
     case BUILDING_SMALL_MASTABA_SIDE:

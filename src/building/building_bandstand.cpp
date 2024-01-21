@@ -1,4 +1,4 @@
-#include "building_plaza.h"
+#include "building_bandstand.h"
 
 #include "building/building.h"
 #include "city/object_info.h"
@@ -12,7 +12,30 @@
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
 
-void building_bandstand_draw_info(object_info &c) {
+void building_bandstand::on_create() {
+    base.fire_proof = 1;
+}
+
+void building_bandstand::spawn_figure() {
+    if (!is_main())
+        return;
+
+    if (common_spawn_figure_trigger(100)) {
+        if (data.entertainment.days1 > 0) {
+            create_roaming_figure(FIGURE_JUGGLER,
+                                  FIGURE_ACTION_94_ENTERTAINER_ROAMING,
+                                  BUILDING_SLOT_SERVICE);
+        }
+
+        if (data.entertainment.days2 > 0) {
+            create_roaming_figure(FIGURE_MUSICIAN,
+                                  FIGURE_ACTION_94_ENTERTAINER_ROAMING,
+                                  BUILDING_SLOT_SERVICE);
+        }
+    }
+}
+
+void building_bandstand::window_info_background(object_info &c) {
     c.help_id = 72;
 
     window_building_play_sound(&c, snd::get_building_info_sound("bandstand"));

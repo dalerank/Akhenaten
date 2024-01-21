@@ -320,7 +320,6 @@ public:
     void spawn_figure_juggler();
     void spawn_figure_musician();
     void spawn_figure_dancer();
-    void spawn_figure_bandstand();
     void spawn_figure_booth();
     void spawn_figure_senet();
     void spawn_figure_pavillion();
@@ -386,6 +385,10 @@ public:
     virtual void update_day() {}
     virtual void window_info_background(object_info &ctx) {}
     virtual void window_info_foreground(object_info &ctx) {}
+
+    inline bool is_main() { return base.is_main(); }
+    inline figure *create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) { return base.create_roaming_figure(_type, created_action, slot); }
+    inline bool common_spawn_figure_trigger(int min_houses) { return base.common_spawn_figure_trigger(min_houses); }
 
     building &base;
     building::impl_data_t &data;

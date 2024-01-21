@@ -62,7 +62,7 @@ void building_work_camp_draw_info(object_info &c) {
 }
 
 void building_work_camp::spawn_figure() {
-    if (!base.common_spawn_figure_trigger(100)) {
+    if (!common_spawn_figure_trigger(100)) {
         return;
     }
 

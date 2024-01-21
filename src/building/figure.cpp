@@ -437,16 +437,7 @@ void building::spawn_figure_booth() {
             create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
     }
 }
-void building::spawn_figure_bandstand() {
-    if (!is_main())
-        return;
-    if (common_spawn_figure_trigger(100)) {
-        if (data.entertainment.days1 > 0)
-            create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
-        if (data.entertainment.days2 > 0)
-            create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
-    }
-}
+
 void building::spawn_figure_pavillion() {
     if (!is_main())
         return;
@@ -1287,7 +1278,6 @@ bool building::figure_generate() {
         case BUILDING_JUGGLER_SCHOOL: spawn_figure_juggler(); break;
         case BUILDING_CONSERVATORY: spawn_figure_musician(); break;
         case BUILDING_DANCE_SCHOOL: spawn_figure_dancer(); break;
-        case BUILDING_BANDSTAND: spawn_figure_bandstand(); break;
         case BUILDING_BOOTH: spawn_figure_booth(); break;
         case BUILDING_SENET_HOUSE: spawn_figure_senet(); break;
         case BUILDING_PAVILLION: spawn_figure_pavillion(); break;
