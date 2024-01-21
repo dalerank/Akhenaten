@@ -316,7 +316,6 @@ public:
     building_impl *dcast();
 
     bool spawn_noble(bool spawned);
-    void spawn_figure_engineers_post();
     void spawn_figure_police();
     void spawn_figure_juggler();
     void spawn_figure_musician();

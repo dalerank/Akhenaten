@@ -8,6 +8,7 @@
 #include "building/building_work_camp.h"
 #include "building/building_bazaar.h"
 #include "building/building_firehouse.h"
+#include "building_architect_post.h"
 #include "building/storage_yard.h"
 #include "building/monument_mastaba.h"
 #include "building/building_bricklayers_guild.h"
@@ -327,6 +328,7 @@ building_impl *building::dcast() {
     case BUILDING_FIREHOUSE: _ptr = new building_firehouse(*this); break;
     case BUILDING_STORAGE_YARD: _ptr = new building_storage_yard(*this); break;
     case BUILDING_BRICKLAYERS_GUILD: _ptr = new building_bricklayers_guild(*this); break;
+    case BUILDING_ARCHITECT_POST: _ptr = new building_architect_post(*this); break;
     
     case BUILDING_SMALL_MASTABA:
     case BUILDING_SMALL_MASTABA_SIDE:

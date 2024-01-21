@@ -11,5 +11,3 @@ public:
     virtual void spawn_figure() override;
     virtual void window_info_background(object_info &c) override;
 };
-
-void building_bricklayers_guild_draw_info(object_info &c);

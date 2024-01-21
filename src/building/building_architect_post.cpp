@@ -1,4 +1,4 @@
-#include "building_plaza.h"
+#include "building_architect_post.h"
 
 #include "building/building.h"
 #include "city/object_info.h"
@@ -12,7 +12,7 @@
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
 
-void building_architect_post_draw_info(object_info &c) {
+void building_architect_post::window_info_background(object_info &c) {
     c.help_id = 81;
     window_building_play_sound(&c, snd::get_building_info_sound("engineer_post"));
     outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
@@ -46,3 +46,8 @@ void building_architect_post_draw_info(object_info &c) {
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
     window_building_draw_employment(&c, 142);
 }
+
+void building_architect_post::spawn_figure() {
+    base.common_spawn_roamer(FIGURE_ARCHITECT, 50, FIGURE_ACTION_60_ENGINEER_CREATED);
+}
+
