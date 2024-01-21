@@ -1176,10 +1176,6 @@ void building::update_native_crop_progress() {
 
 void building::update_day() {
     switch (type) {
-    case BUILDING_SMALL_MASTABA:
-        building_small_mastabe_update_day(this);
-        break;
-
     default:
         dcast()->update_day();
     }

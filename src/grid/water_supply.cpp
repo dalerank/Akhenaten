@@ -224,8 +224,9 @@ void map_update_wells_range(void) {
     const int* wells = building_list_small_items();
     for (int i = 0; i < total_wells; i++) {
         building* b = building_get(wells[i]);
-        if (b->type == BUILDING_WELL)
+        if (b->type == BUILDING_WELL) {
             map_terrain_add_with_radius(b->tile.x(), b->tile.y(), 1, 3, TERRAIN_FOUNTAIN_RANGE);
+        }
     }
 }
 

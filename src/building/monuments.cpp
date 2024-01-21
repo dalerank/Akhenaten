@@ -13,6 +13,8 @@
 #include "city/resource.h"
 #include "city/message.h"
 #include "game/resource.h"
+#include "grid/grid.h"
+#include "grid/figure.h"
 #include "grid/building_tiles.h"
 #include "grid/terrain.h"
 #include "core/calc.h"
@@ -136,6 +138,18 @@ grid_area building_monument_get_area(building *b) {
     }
 
     return {main, end};
+}
+
+int building_monument_workers_onsite(building *b, e_figure_type figure_type) {
+    auto tiles = map_grid_get_tiles(b, 0);
+
+    int num_workers = 0;
+    for (auto &tile : tiles) {
+        figure *f = map_figure_get(tile);
+        num_workers += (f->destination() == b) ? 1 : 0;
+    }
+
+    return num_workers;
 }
 
 tile2i building_monument_center_point(building *b) {

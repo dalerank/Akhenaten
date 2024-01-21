@@ -31,6 +31,7 @@ void city_resource_cycle_trade_export(e_resource resource);
 int city_resource_trading_amount(e_resource resource);
 void city_resource_change_trading_amount(e_resource resource, int delta);
 int city_resource_is_stockpiled(e_resource resource);
+int city_resource_ready_for_using(e_resource resource);
 void city_resource_toggle_stockpiled(e_resource resource);
 int city_resource_is_mothballed(e_resource resource);
 void city_resource_toggle_mothballed(e_resource resource);

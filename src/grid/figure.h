@@ -20,6 +20,7 @@ int map_figure_id_get(int grid_offset);
 inline int map_figure_id_get(tile2i tile) { return map_figure_id_get(tile.grid_offset());  }
 
 figure *map_figure_get(int grid_offset);
+inline figure *map_figure_get(tile2i tile) { return map_figure_get(tile.grid_offset()); }
 
 void map_figure_set(int grid_offset, int id);
 inline void map_figure_set(tile2i tile, int id) { map_figure_set(tile.grid_offset(), id); }

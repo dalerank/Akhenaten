@@ -21,7 +21,7 @@ struct count_data_t {
 
 count_data_t g_count_data;
 
-static void clear_counters(void) {
+static void clear_counters() {
     memset(&g_count_data, 0, sizeof(count_data_t));
 }
 static void increase_count(int type, bool active) {
@@ -33,7 +33,7 @@ static void increase_industry_count(int resource, bool active) {
     g_count_data.industry[resource].active += (active ? 1 : 0);
 }
 
-static void limit_hippodrome(void) {
+static void limit_hippodrome() {
     if (g_count_data.buildings[BUILDING_SENET_HOUSE].total > 1) {
         g_count_data.buildings[BUILDING_SENET_HOUSE].total = 1;
     }

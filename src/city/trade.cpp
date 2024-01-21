@@ -35,21 +35,8 @@ void city_trade_update() {
     empire_city_generate_trader();
 }
 
-int city_resource_ready_for_trade(e_resource resource) {
-    int amount = 0;
-    buildings_valid_do([&] (building &b) {
-        if (city_resource_is_stockpiled(resource)) {
-            return;
-        }
-
-        amount += building_storageyard_get_amount(&b, resource);
-    }, BUILDING_STORAGE_YARD);
-
-    return amount;
-}
-
 bool city_resource_trade_surplus_papyrus() {
-    int papyrus_amount_in_city = city_resource_ready_for_trade(RESOURCE_PAPYRUS);
+    int papyrus_amount_in_city = city_resource_ready_for_using(RESOURCE_PAPYRUS);
     const uint32_t scribal_school_count = building_count_active(BUILDING_SCRIBAL_SCHOOL);
     const uint32_t library_count = building_count_active(BUILDING_LIBRARY);
 

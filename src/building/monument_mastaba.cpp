@@ -5,6 +5,10 @@
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "widget/city/tile_draw.h"
+#include "window/building/common.h"
+#include "building/count.h"
+#include "game/game.h"
+#include "city/resource.h"
 #include "grid/random.h"
 #include "grid/tiles.h"
 #include "grid/grid.h"
@@ -15,6 +19,10 @@
 #include "grid/building_tiles.h"
 #include "graphics/view/lookup.h"
 #include "graphics/boilerplate.h"
+#include "graphics/elements/panel.h"
+#include "graphics/elements/lang_text.h"
+
+#include <numeric>
 
 void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain) {
     int x_leftmost, y_leftmost;
@@ -108,45 +116,45 @@ void building_small_mastabe_finalize(building *b) {
     }
 }
 
-void building_small_mastabe_update_day(building *b) {
-    if (!building_monument_is_monument(b)) {
+void building_small_mastaba::update_day() {
+    if (!building_monument_is_monument(&base)) {
         return;
     }
 
-    if (building_monument_is_finished(b)) {
+    if (building_monument_is_finished(&base)) {
         return;
     }
 
-    if (b->data.monuments.phase >= 8) {
-        building_small_mastabe_finalize(b);
+    if (base.data.monuments.phase >= 8) {
+        building_small_mastabe_finalize(&base);
         return;
     }
 
-    grid_tiles tiles = map_grid_get_tiles(b, 0);
+    grid_tiles tiles = map_grid_get_tiles(&base, 0);
     tile2i tile2works = map_grid_area_first(tiles, [] (tile2i tile) { return map_monuments_get_progress(tile) < 200; });
     bool all_tiles_finished = (tile2works == tile2i{-1, -1});
-    building *main = b->main();
-    building *part = b;
+    building *main = base.main();
+    building *part = &base;
     if (all_tiles_finished) {
-        int curr_phase = b->data.monuments.phase;
+        int curr_phase = base.data.monuments.phase;
         map_grid_area_foreach(tiles, [] (tile2i tile) { map_monuments_set_progress(tile, 0); });
-        building_small_mastabe_update_images(b, curr_phase);
+        building_small_mastabe_update_images(&base, curr_phase);
         while (part) {
             building_monument_set_phase(part, curr_phase + 1);
             part = part->has_next() ? part->next() : nullptr;
         }
     }
 
-    if (b->data.monuments.phase >= 2) {
+    if (base.data.monuments.phase >= 2) {
         int minimal_percent = 100;
         for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
-            bool need_resource = building_monument_needs_resource(b, r);
+            bool need_resource = building_monument_needs_resource(&base, r);
             if (need_resource) {
-                minimal_percent = std::min<int>(minimal_percent, b->data.monuments.resources_pct[r]);
+                minimal_percent = std::min<int>(minimal_percent, base.data.monuments.resources_pct[r]);
             }
         }
 
-        grid_tiles tiles = map_grid_get_tiles(b, 0);
+        grid_tiles tiles = map_grid_get_tiles(&base, 0);
         tiles.resize(tiles.size() * minimal_percent / 100);
 
         for (auto &tile : tiles) {
@@ -385,5 +393,61 @@ void draw_small_mastaba_anim(painter &ctx, vec2i pixel, building *b, int color_m
             vec2i offset = tile_to_pixel(t);
             draw_figures(offset, t, ctx, /*force*/true);
         }
+    }
+}
+
+void building_small_mastaba::on_create() {
+    base.fire_proof = 1;
+}
+
+void building_small_mastaba::window_info_background(object_info &ctx) {
+    ctx.help_id = 4;
+    window_building_play_sound(&ctx, "wavs/warehouse.wav");
+    outer_panel_draw(ctx.offset, ctx.width_blocks, ctx.height_blocks);
+    lang_text_draw_centered(178, 12, ctx.offset.x, ctx.offset.y + 10, 16 * ctx.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    building* b = building_get(ctx.building_id);
+
+    if (building_monument_is_unfinished(b)) {
+        std::pair<int, int> reason = {0, 0};
+
+        int workers_num = 0;
+        for (auto &wid : b->data.monuments.workers) {
+            workers_num += wid > 0 ? 1 : 0;
+        }
+
+        if (b->data.monuments.phase < 3) {
+            int work_camps_num = building_count_total(BUILDING_WORK_CAMP);
+            int work_camps_active_num = building_count_active(BUILDING_WORK_CAMP);
+
+            int work_camps_near_mastaba = 0;
+            buildings_valid_do([&] (building &b) {
+                int distance_to_mastaba = b.tile.dist(base.tile);
+                work_camps_near_mastaba += (distance_to_mastaba < 10) ? 1 : 0;
+            }, BUILDING_WORK_CAMP);
+
+            if (!work_camps_num) { reason = {178, 13}; }
+            else if (!work_camps_active_num) { reason = {178, 15}; }
+            else if (workers_num > 0) { reason = {178, 39}; }
+            else if (work_camps_near_mastaba < 3) { reason = {178, 51}; } // work camps too far
+            else { reason = {178, 17}; }
+        } else {
+
+            int stonemason_guilds_num = building_count_total(BUILDING_STONEMASONS_GUILD);
+            int bricklayers_guilds_num = building_count_total(BUILDING_BRICKLAYERS_GUILD);
+            int bricklayers_guilds_active_num = building_count_active(BUILDING_BRICKLAYERS_GUILD);
+            int bricks_on_storages = city_resource_ready_for_using(RESOURCE_BRICKS);
+            bool bricks_stockpiled = city_resource_is_stockpiled(RESOURCE_BRICKS);
+            int workers_onsite = building_monument_workers_onsite(&base, FIGURE_LABORER);
+
+            if (bricks_stockpiled) { reason = {178, 103}; }
+            else if (!bricklayers_guilds_num) { reason = {178, 15}; }
+            else if (!bricklayers_guilds_active_num) { reason = {178, 19}; }
+            else if (!bricks_on_storages) { reason = {178, 27}; }
+            else if (!workers_onsite && workers_num > 0) { reason = {178, 114}; }
+        }
+
+        lang_text_draw_multiline(reason.first, reason.second, ctx.offset + vec2i{32, 223}, 16 * (ctx.width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
+    } else {
+        lang_text_draw_multiline(178, 41, ctx.offset + vec2i{32, 48}, 16 * (ctx.width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
     }
 }

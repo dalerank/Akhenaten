@@ -88,6 +88,7 @@ void city_resource_cycle_trade_status(e_resource resource) {
         city_data.resource.stockpiled[resource] = 0;
     }
 }
+
 void city_resource_cycle_trade_import(e_resource resource) {
     // no sellers?
     if (!empire_can_import_resource(resource, true))
@@ -105,6 +106,7 @@ void city_resource_cycle_trade_import(e_resource resource) {
         break;
     }
 }
+
 void city_resource_cycle_trade_export(e_resource resource) {
     // no buyers?
     if (!empire_can_export_resource(resource, true))
@@ -135,6 +137,19 @@ int city_resource_is_stockpiled(e_resource resource) {
     return city_data.resource.stockpiled[resource];
 }
 
+int city_resource_ready_for_using(e_resource resource) {
+    int amount = 0;
+    buildings_valid_do([&] (building &b) {
+        if (city_resource_is_stockpiled(resource)) {
+            return;
+        }
+
+        amount += building_storageyard_get_amount(&b, resource);
+    }, BUILDING_STORAGE_YARD);
+
+    return amount;
+}
+
 void city_resource_toggle_stockpiled(e_resource resource) {
     if (city_data.resource.stockpiled[resource])
         city_data.resource.stockpiled[resource] = 0;
@@ -145,9 +160,11 @@ void city_resource_toggle_stockpiled(e_resource resource) {
             city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
     }
 }
+
 int city_resource_is_mothballed(e_resource resource) {
     return city_data.resource.mothballed[resource];
 }
+
 void city_resource_toggle_mothballed(e_resource resource) {
     city_data.resource.mothballed[resource] = city_data.resource.mothballed[resource] ? 0 : 1;
 }
@@ -205,6 +222,7 @@ void city_resource_calculate_storageyard_stocks() {
         }
     }
 }
+
 void city_resource_determine_available() {
     for (int i = 0; i < RESOURCES_MAX; i++) {
         g_available_data.resource_list.items[i] = RESOURCE_NONE;

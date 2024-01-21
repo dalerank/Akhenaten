@@ -52,6 +52,8 @@ int building_monument_toggle_construction_halted(building *b);
 bool building_monument_is_unfinished(const building *b);
 bool building_monument_is_finished(const building *b);
 
+int building_monument_workers_onsite(building *b, e_figure_type figure_type);
+
 int get_monument_part_image(int part, int orientation, int level);
 int get_temple_complex_part_image(int type, int part, int orientation, int level);
 
