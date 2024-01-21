@@ -15,7 +15,7 @@
 
 void building_palace_draw_info(object_info& c) {
     painter ctx = game.painter();
-    c.can_go_to_advisor = true;
+    c.go_to_advisor.first = ADVISOR_FINANCIAL;
     c.help_id = e_text_building_palace;
 
     window_building_play_sound(&c, snd::get_building_info_sound("palace"));

@@ -77,7 +77,7 @@ static void button_overlay(int overlay, int param2);
 
 object_info g_building_info_context;
 
-struct building_info_data_t {
+struct building_info_data {
     int image_button_id = 0;
     int generic_button_id = 0;
     int debug_path_button_id = 0;
@@ -95,9 +95,11 @@ struct building_info_data_t {
         {400, 3, 24, 24, button_mothball, button_none, 0, 0}
     };
 
-    image_button image_buttons_advisor[1] = {
-        {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1}
-    };
+    struct {
+        image_button advisor = {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1};
+        image_button l_advisor_a = {40, 0, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1};
+        image_button l_advisor_b = {65, 0, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1};
+    } buttons;
 
     image_button image_buttons_help_close[2] = {
         {14, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
@@ -105,7 +107,7 @@ struct building_info_data_t {
     };
 };
 
-building_info_data_t g_building_info;
+building_info_data g_building_info;
 
 static int get_height_id() {
     auto &context = g_building_info_context;
@@ -310,7 +312,7 @@ static void init(map_point tile) {
     const int grid_offset = tile.grid_offset();
     context.can_play_sound = true;
     context.storage_show_special_orders = 0;
-    context.can_go_to_advisor = 0;
+    context.go_to_advisor = {ADVISOR_NONE, ADVISOR_NONE, ADVISOR_NONE};
     context.building_id = map_building_at(grid_offset);
     context.rubble_building_type = map_rubble_building_type(grid_offset);
     context.has_reservoir_pipes = map_terrain_is(grid_offset, TERRAIN_GROUNDWATER);
@@ -835,8 +837,22 @@ static void draw_foreground() {
         image_buttons_draw(context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.image_buttons_help_close);
     }
 
-    if (context.can_go_to_advisor) {
-        image_buttons_draw(context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.image_buttons_advisor);
+    if (context.go_to_advisor.first) {
+        g_building_info.buttons.advisor.parameter1 = context.go_to_advisor.first;
+        g_building_info.buttons.advisor.image_offset = (context.go_to_advisor.first - 1) * 3;
+        image_buttons_draw(context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.buttons.advisor);
+    }
+
+    if (context.go_to_advisor.left_a) {
+        g_building_info.buttons.l_advisor_a.parameter1 = context.go_to_advisor.left_a;
+        g_building_info.buttons.l_advisor_a.image_offset = (context.go_to_advisor.left_a - 1) * 3;
+        image_buttons_draw(context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.buttons.l_advisor_a);
+    }
+
+    if (context.go_to_advisor.left_b) {
+        g_building_info.buttons.l_advisor_b.parameter1 = context.go_to_advisor.left_b;
+        g_building_info.buttons.l_advisor_b.image_offset = (context.go_to_advisor.left_b - 1) * 3;
+        image_buttons_draw(context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.buttons.l_advisor_b);
     }
 
     if (!context.storage_show_special_orders) {
@@ -909,13 +925,13 @@ static int handle_specific_building_info_mouse(const mouse *m) {
     }
     return 0;
 }
+
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto &context = g_building_info_context;
     bool button_id = 0;
     int tmp_btn_id;
     // general buttons
     if (context.storage_show_special_orders) {
-        //        int y_offset = window_building_get_vertical_offset(&context, 28 + 5);
         button_id |= image_buttons_handle_mouse(m, vec2i(context.offset.x, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40), 
                                                 g_building_info.image_buttons_help_close, g_building_info.image_button_id);
     } else {
@@ -925,8 +941,16 @@ static void handle_input(const mouse* m, const hotkeys* h) {
                                                   g_building_info.generic_button_mothball, g_building_info.generic_button_id);
     }
 
-    if (context.can_go_to_advisor) {
-        button_id |= image_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.image_buttons_advisor, tmp_btn_id);
+    if (context.go_to_advisor.first) {
+        button_id |= image_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.buttons.advisor, tmp_btn_id);
+    }
+
+    if (context.go_to_advisor.left_a) {
+        button_id |= image_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.buttons.l_advisor_a, tmp_btn_id);
+    }
+
+    if (context.go_to_advisor.left_b) {
+        button_id |= image_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.buttons.l_advisor_b, tmp_btn_id);
     }
 
     if (!button_id) {

@@ -1046,7 +1046,7 @@ void building_storage_yard::draw_warehouse_orders_foreground(object_info* c) {
 
 void building_storage_yard::draw_warehouse_foreground(object_info* c) {
     auto &data = g_window_building_distribution;
-    button_border_draw(c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, 16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    button_border_draw(c->offset.x + 96, c->offset.y + 16 * c->height_blocks - 34, 15 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
     lang_text_draw_centered(99, 2, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 30, 16 * (c->width_blocks - 10),FONT_NORMAL_BLACK_ON_LIGHT);
 
     // temp - todo: fix buttons
@@ -1054,6 +1054,7 @@ void building_storage_yard::draw_warehouse_foreground(object_info* c) {
 }
 
 void building_storage_yard::window_info_background(object_info &ctx) {
+    ctx.go_to_advisor = {ADVISOR_NONE, ADVISOR_IMPERIAL, ADVISOR_TRADE};
     if (ctx.storage_show_special_orders)
         draw_warehouse_orders(&ctx);
     else

@@ -2,6 +2,7 @@
 
 #include "core/string.h"
 #include "core/vec2i.h"
+#include "city/constants.h"
 
 enum building_info_type {
     BUILDING_INFO_NONE = 0,
@@ -62,7 +63,12 @@ struct object_info {
     building_info_type type;
     terrain_info_type terrain_type;
     int show_overlay;
-    bool can_go_to_advisor;
+    struct {
+        e_advisor first = ADVISOR_NONE;
+        e_advisor left_a = ADVISOR_NONE;
+        e_advisor left_b = ADVISOR_NONE;
+    } go_to_advisor;
+
     int rubble_building_type;
     int storage_show_special_orders;
     struct {
