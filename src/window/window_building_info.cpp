@@ -689,10 +689,6 @@ static void draw_refresh_background() {
                 building_temple_bast_draw_info(context);
                 break;
 
-            case BUILDING_BRICKLAYERS_GUILD:
-                building_bricklayers_guild_draw_info(context);
-                break;
-
             case BUILDING_SHRINE_OSIRIS: building_shrine_osiris_draw_info(context); break;
             case BUILDING_SHRINE_RA: building_shrine_ra_draw_info(context); break;
             case BUILDING_SHRINE_PTAH: building_shrine_ptah_draw_info(context); break;

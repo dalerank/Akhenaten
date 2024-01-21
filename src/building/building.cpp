@@ -10,6 +10,7 @@
 #include "building/building_firehouse.h"
 #include "building/storage_yard.h"
 #include "building/monument_mastaba.h"
+#include "building/building_bricklayers_guild.h"
 #include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
@@ -156,9 +157,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_WOOD_CUTTERS:
         b->output_resource_first_id = RESOURCE_TIMBER;
         b->data.industry.max_gatheres = 1;
-        break;
-    case BUILDING_BRICKLAYERS_GUILD:
-        b->data.guild.max_workers = 1;
         break;
     case BUILDING_CLAY_PIT:
         b->output_resource_first_id = RESOURCE_CLAY;
@@ -328,12 +326,14 @@ building_impl *building::dcast() {
     case BUILDING_BAZAAR: _ptr = new building_bazaar(*this); break;
     case BUILDING_FIREHOUSE: _ptr = new building_firehouse(*this); break;
     case BUILDING_STORAGE_YARD: _ptr = new building_storage_yard(*this); break;
+    case BUILDING_BRICKLAYERS_GUILD: _ptr = new building_bricklayers_guild(*this); break;
     
     case BUILDING_SMALL_MASTABA:
     case BUILDING_SMALL_MASTABA_SIDE:
     case BUILDING_SMALL_MASTABA_ENTRANCE:
     case BUILDING_SMALL_MASTABA_WALL:
-                            _ptr = new building_small_mastaba(*this); break;
+                            _ptr = new building_small_mastaba(*this);
+         break;
     default:
         _ptr = new building_impl(*this);
     }

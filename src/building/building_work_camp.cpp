@@ -66,14 +66,14 @@ void building_work_camp::spawn_figure() {
         return;
     }
 
-    if (config_get(CONFIG_GP_CH_WORK_CAMP_ONE_WORKER_PER_MONTH) && base.data.industry.spawned_worker_this_month) {
+    if (config_get(CONFIG_GP_CH_WORK_CAMP_ONE_WORKER_PER_MONTH) && data.industry.spawned_worker_this_month) {
         return;
     }
 
     building* dest = building_determine_worker_needed();
     if (dest) {
         figure *f = base.create_figure_with_destination(FIGURE_LABORER, dest, FIGURE_ACTION_10_WORKER_CREATED, BUILDING_SLOT_SERVICE);
-        base.data.industry.spawned_worker_this_month = true;
+        data.industry.spawned_worker_this_month = true;
         if (dest->is_industry()) {
             dest->industry_add_workers(f->id);
         } else if (dest->is_monument()) {

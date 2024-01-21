@@ -125,7 +125,7 @@ void building_small_mastaba::update_day() {
         return;
     }
 
-    if (base.data.monuments.phase >= 8) {
+    if (data.monuments.phase >= 8) {
         building_small_mastabe_finalize(&base);
         return;
     }
@@ -136,7 +136,7 @@ void building_small_mastaba::update_day() {
     building *main = base.main();
     building *part = &base;
     if (all_tiles_finished) {
-        int curr_phase = base.data.monuments.phase;
+        int curr_phase = data.monuments.phase;
         map_grid_area_foreach(tiles, [] (tile2i tile) { map_monuments_set_progress(tile, 0); });
         building_small_mastabe_update_images(&base, curr_phase);
         while (part) {
@@ -145,12 +145,12 @@ void building_small_mastaba::update_day() {
         }
     }
 
-    if (base.data.monuments.phase >= 2) {
+    if (data.monuments.phase >= 2) {
         int minimal_percent = 100;
         for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
             bool need_resource = building_monument_needs_resource(&base, r);
             if (need_resource) {
-                minimal_percent = std::min<int>(minimal_percent, base.data.monuments.resources_pct[r]);
+                minimal_percent = std::min<int>(minimal_percent, data.monuments.resources_pct[r]);
             }
         }
 

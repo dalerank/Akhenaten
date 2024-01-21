@@ -8,7 +8,7 @@ void building_firehouse::spawn_figure() {
     base.common_spawn_roamer(FIGURE_FIREMAN, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
 }
 
-void building_firehouse::window_building_info(object_info &c) {
+void building_firehouse::window_info_background(object_info &c) {
     const int32_t LANG_GROUP_ID = 164;
     c.help_id = 81;                                      // TODO: change to firehouse
     window_building_play_sound(&c, "wavs/prefecture.wav"); // TODO: change to firehouse

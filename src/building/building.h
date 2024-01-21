@@ -45,24 +45,10 @@ enum e_building_slot {
 
 class building_work_camp;
 
-class building;
-class building_impl {
-public:
-    building_impl(building &b) : base(b) {}
-    virtual void on_create() {}
-    virtual void spawn_figure() {}
-    virtual void update_graphic() {}
-    virtual void update_day() {}
-    virtual void window_info_background(object_info &ctx) {}
-    virtual void window_info_foreground(object_info &ctx) {}
-
-    building &base;
-};
-
 class building {
 private:
     short figure_ids_array[MAX_FIGURES_PER_BUILDING]; // oh boy!
-    building_impl *_ptr = nullptr;
+    class building_impl *_ptr = nullptr;
 
 public:
     struct metainfo {
@@ -129,7 +115,7 @@ public:
     unsigned char house_tax_coverage;
     unsigned short tax_collector_id;
     short formation_id;
-    union {
+    union  impl_data_t {
         struct dock_t {
             short queued_docker_id;
             int dock_tiles[2];
@@ -347,7 +333,6 @@ public:
     void spawn_figure_mortuary();
     void spawn_figure_physician();
     void spawn_figure_magistrate();
-    void spawn_figure_guilds();
     void spawn_figure_temple();
     void spawn_figure_watersupply();
     void set_greate_palace_graphic();
@@ -391,6 +376,20 @@ public:
     bool barracks_create_tower_sentry();
     void barracks_toggle_priority();
     int barracks_get_priority();
+};
+
+class building_impl {
+public:
+    building_impl(building &b) : base(b), data(b.data) {}
+    virtual void on_create() {}
+    virtual void spawn_figure() {}
+    virtual void update_graphic() {}
+    virtual void update_day() {}
+    virtual void window_info_background(object_info &ctx) {}
+    virtual void window_info_foreground(object_info &ctx) {}
+
+    building &base;
+    building::impl_data_t &data;
 };
 
 inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE; }

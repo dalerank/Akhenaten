@@ -129,23 +129,23 @@ building *building_bazaar::get_storage_destination() {
     }, BUILDING_GRANARY, BUILDING_STORAGE_YARD);
 
     // update demands
-    if (base.data.market.pottery_demand)
-        base.data.market.pottery_demand--;
+    if (data.market.pottery_demand)
+        data.market.pottery_demand--;
     else
         resources[INVENTORY_GOOD1].num_buildings = 0;
 
-    if (base.data.market.furniture_demand)
-        base.data.market.furniture_demand--;
+    if (data.market.furniture_demand)
+        data.market.furniture_demand--;
     else
         resources[INVENTORY_GOOD2].num_buildings = 0;
 
-    if (base.data.market.oil_demand)
-        base.data.market.oil_demand--;
+    if (data.market.oil_demand)
+        data.market.oil_demand--;
     else
         resources[INVENTORY_GOOD3].num_buildings = 0;
 
-    if (base.data.market.wine_demand)
-        base.data.market.wine_demand--;
+    if (data.market.wine_demand)
+        data.market.wine_demand--;
     else
         resources[INVENTORY_GOOD4].num_buildings = 0;
 
@@ -162,95 +162,95 @@ building *building_bazaar::get_storage_destination() {
     }
 
     // prefer food if we don't have it
-    if (!base.data.market.inventory[0] && resources[0].num_buildings && is_good_accepted(0, &base)) {
-        base.data.market.fetch_inventory_id = 0;
+    if (!data.market.inventory[0] && resources[0].num_buildings && is_good_accepted(0, &base)) {
+        data.market.fetch_inventory_id = 0;
         return building_get(resources[0].building_id);
 
-    } else if (!base.data.market.inventory[1] && resources[1].num_buildings && is_good_accepted(1, &base)) {
-        base.data.market.fetch_inventory_id = 1;
+    } else if (!data.market.inventory[1] && resources[1].num_buildings && is_good_accepted(1, &base)) {
+        data.market.fetch_inventory_id = 1;
         return building_get(resources[1].building_id);
 
-    } else if (!base.data.market.inventory[2] && resources[2].num_buildings && is_good_accepted(2, &base)) {
-        base.data.market.fetch_inventory_id = 2;
+    } else if (!data.market.inventory[2] && resources[2].num_buildings && is_good_accepted(2, &base)) {
+        data.market.fetch_inventory_id = 2;
         return building_get(resources[2].building_id);
 
-    } else if (!base.data.market.inventory[3] && resources[3].num_buildings && is_good_accepted(3, &base)) {
-        base.data.market.fetch_inventory_id = 3;
+    } else if (!data.market.inventory[3] && resources[3].num_buildings && is_good_accepted(3, &base)) {
+        data.market.fetch_inventory_id = 3;
         return building_get(resources[3].building_id);
     }
 
     // then prefer resource if we don't have it
-    if (!base.data.market.inventory[INVENTORY_GOOD1] && resources[INVENTORY_GOOD1].num_buildings && is_good_accepted(INVENTORY_GOOD1, &base)) {
-        base.data.market.fetch_inventory_id = INVENTORY_GOOD1;
+    if (!data.market.inventory[INVENTORY_GOOD1] && resources[INVENTORY_GOOD1].num_buildings && is_good_accepted(INVENTORY_GOOD1, &base)) {
+        data.market.fetch_inventory_id = INVENTORY_GOOD1;
         return building_get(resources[INVENTORY_GOOD1].building_id);
 
-    } else if (!base.data.market.inventory[INVENTORY_GOOD2] && resources[INVENTORY_GOOD2].num_buildings && is_good_accepted(INVENTORY_GOOD2, &base)) {
-        base.data.market.fetch_inventory_id = INVENTORY_GOOD2;
+    } else if (!data.market.inventory[INVENTORY_GOOD2] && resources[INVENTORY_GOOD2].num_buildings && is_good_accepted(INVENTORY_GOOD2, &base)) {
+        data.market.fetch_inventory_id = INVENTORY_GOOD2;
         return building_get(resources[INVENTORY_GOOD2].building_id);
 
-    } else if (!base.data.market.inventory[INVENTORY_GOOD3] && resources[INVENTORY_GOOD3].num_buildings && is_good_accepted(INVENTORY_GOOD3, &base)) {
-        base.data.market.fetch_inventory_id = INVENTORY_GOOD3;
+    } else if (!data.market.inventory[INVENTORY_GOOD3] && resources[INVENTORY_GOOD3].num_buildings && is_good_accepted(INVENTORY_GOOD3, &base)) {
+        data.market.fetch_inventory_id = INVENTORY_GOOD3;
         return building_get(resources[INVENTORY_GOOD3].building_id);
 
-    } else if (!base.data.market.inventory[INVENTORY_GOOD4] && resources[INVENTORY_GOOD4].num_buildings && is_good_accepted(INVENTORY_GOOD4, &base)) {
-        base.data.market.fetch_inventory_id = INVENTORY_GOOD4;
+    } else if (!data.market.inventory[INVENTORY_GOOD4] && resources[INVENTORY_GOOD4].num_buildings && is_good_accepted(INVENTORY_GOOD4, &base)) {
+        data.market.fetch_inventory_id = INVENTORY_GOOD4;
         return building_get(resources[INVENTORY_GOOD4].building_id);
     }
 
     // then prefer smallest stock below 50
     int min_stock = 50;
     int fetch_inventory = -1;
-    if (resources[0].num_buildings && base.data.market.inventory[0] < min_stock && is_good_accepted(0, &base)) {
-        min_stock = base.data.market.inventory[0];
+    if (resources[0].num_buildings && data.market.inventory[0] < min_stock && is_good_accepted(0, &base)) {
+        min_stock = data.market.inventory[0];
         fetch_inventory = 0;
     }
 
-    if (resources[1].num_buildings && base.data.market.inventory[1] < min_stock && is_good_accepted(1, &base)) {
-        min_stock = base.data.market.inventory[1];
+    if (resources[1].num_buildings && data.market.inventory[1] < min_stock && is_good_accepted(1, &base)) {
+        min_stock = data.market.inventory[1];
         fetch_inventory = 1;
     }
 
-    if (resources[2].num_buildings && base.data.market.inventory[2] < min_stock && is_good_accepted(2, &base)) {
-        min_stock = base.data.market.inventory[2];
+    if (resources[2].num_buildings && data.market.inventory[2] < min_stock && is_good_accepted(2, &base)) {
+        min_stock = data.market.inventory[2];
         fetch_inventory = 2;
     }
 
-    if (resources[3].num_buildings && base.data.market.inventory[3] < min_stock && is_good_accepted(3, &base)) {
-        min_stock = base.data.market.inventory[3];
+    if (resources[3].num_buildings && data.market.inventory[3] < min_stock && is_good_accepted(3, &base)) {
+        min_stock = data.market.inventory[3];
         fetch_inventory = 3;
     }
 
-    if (resources[INVENTORY_GOOD1].num_buildings && base.data.market.inventory[INVENTORY_GOOD1] < min_stock && is_good_accepted(INVENTORY_GOOD1, &base)) {
-        min_stock = base.data.market.inventory[INVENTORY_GOOD1];
+    if (resources[INVENTORY_GOOD1].num_buildings && data.market.inventory[INVENTORY_GOOD1] < min_stock && is_good_accepted(INVENTORY_GOOD1, &base)) {
+        min_stock = data.market.inventory[INVENTORY_GOOD1];
         fetch_inventory = INVENTORY_GOOD1;
     }
 
-    if (resources[INVENTORY_GOOD2].num_buildings && base.data.market.inventory[INVENTORY_GOOD2] < min_stock && is_good_accepted(INVENTORY_GOOD2, &base)) {
-        min_stock = base.data.market.inventory[INVENTORY_GOOD2];
+    if (resources[INVENTORY_GOOD2].num_buildings && data.market.inventory[INVENTORY_GOOD2] < min_stock && is_good_accepted(INVENTORY_GOOD2, &base)) {
+        min_stock = data.market.inventory[INVENTORY_GOOD2];
         fetch_inventory = INVENTORY_GOOD2;
     }
 
-    if (resources[INVENTORY_GOOD3].num_buildings && base.data.market.inventory[INVENTORY_GOOD3] < min_stock && is_good_accepted(INVENTORY_GOOD3, &base)) {
-        min_stock = base.data.market.inventory[INVENTORY_GOOD3];
+    if (resources[INVENTORY_GOOD3].num_buildings && data.market.inventory[INVENTORY_GOOD3] < min_stock && is_good_accepted(INVENTORY_GOOD3, &base)) {
+        min_stock = data.market.inventory[INVENTORY_GOOD3];
         fetch_inventory = INVENTORY_GOOD3;
     }
 
-    if (resources[INVENTORY_GOOD4].num_buildings && base.data.market.inventory[INVENTORY_GOOD4] < min_stock && is_good_accepted(INVENTORY_GOOD4, &base)) {
+    if (resources[INVENTORY_GOOD4].num_buildings && data.market.inventory[INVENTORY_GOOD4] < min_stock && is_good_accepted(INVENTORY_GOOD4, &base)) {
         fetch_inventory = INVENTORY_GOOD4;
     }
 
     if (fetch_inventory == -1) {
         // all items well stocked: pick food below threshold
-        if (resources[0].num_buildings && base.data.market.inventory[0] < 600 && is_good_accepted(0, &base)) {
+        if (resources[0].num_buildings && data.market.inventory[0] < 600 && is_good_accepted(0, &base)) {
             fetch_inventory = 0;
         }
-        if (resources[1].num_buildings && base.data.market.inventory[1] < 400 && is_good_accepted(1, &base)) {
+        if (resources[1].num_buildings && data.market.inventory[1] < 400 && is_good_accepted(1, &base)) {
             fetch_inventory = 1;
         }
-        if (resources[2].num_buildings && base.data.market.inventory[2] < 400 && is_good_accepted(2, &base)) {
+        if (resources[2].num_buildings && data.market.inventory[2] < 400 && is_good_accepted(2, &base)) {
             fetch_inventory = 2;
         }
-        if (resources[3].num_buildings && base.data.market.inventory[3] < 400 && is_good_accepted(3, &base)) {
+        if (resources[3].num_buildings && data.market.inventory[3] < 400 && is_good_accepted(3, &base)) {
             fetch_inventory = 3;
         }
     }
@@ -259,7 +259,7 @@ building *building_bazaar::get_storage_destination() {
         return building_get(0);
     }
 
-    base.data.market.fetch_inventory_id = fetch_inventory;
+    data.market.fetch_inventory_id = fetch_inventory;
     return building_get(resources[fetch_inventory].building_id);
 }
 
@@ -291,14 +291,14 @@ void building_bazaar::spawn_figure() {
                 if (dest->id) {
                     base.figure_spawn_delay = 0;
                     figure *f = base.create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, BUILDING_SLOT_MARKET_BUYER);
-                    f->collecting_item_id = base.data.market.fetch_inventory_id;
+                    f->collecting_item_id = data.market.fetch_inventory_id;
                 }
             }
         }
 
         // market trader
         if (!base.has_figure_of_type(0, FIGURE_MARKET_TRADER)) {
-            int bazar_inventory = std::accumulate(base.data.market.inventory, base.data.market.inventory + 7, 0);
+            int bazar_inventory = std::accumulate(data.market.inventory, data.market.inventory + 7, 0);
             if (bazar_inventory > 0) { // do not spawn trader if bazaar is 100% empty!
                 base.figure_spawn_delay++;
                 if (base.figure_spawn_delay > spawn_delay) {

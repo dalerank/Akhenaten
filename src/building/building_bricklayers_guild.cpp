@@ -1,9 +1,12 @@
 #include "building_bricklayers_guild.h"
 
 #include "building/building.h"
+#include "building/monuments.h"
 #include "city/object_info.h"
 #include "city/resource.h"
+#include "core/random.h"
 #include "core/calc.h"
+#include "figure/figure.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
@@ -64,6 +67,54 @@ static void building_guild_draw_info(object_info& c, const char* type, e_resourc
     window_building_draw_employment(&c, 142);
 }
 
-void building_bricklayers_guild_draw_info(object_info& c) {
+void building_bricklayers_guild::window_info_background(object_info& c) {
     building_guild_draw_info(c, "bricklayers_guild", RESOURCE_BRICKS, RESOURCE_NONE);
+}
+
+void building_bricklayers_guild::on_create() {
+    data.guild.max_workers = 1;
+}
+
+void building_bricklayers_guild::spawn_figure() {
+    base.check_labor_problem();
+    if (!base.has_road_access) {
+        return;
+    }
+
+    base.common_spawn_labor_seeker(100);
+    int pct_workers = base.worker_percentage();
+    if (pct_workers < 50) {
+        return;
+    }
+
+    int spawn_delay = base.figure_spawn_timer();
+    if (spawn_delay == -1) {
+        return;
+    }
+
+    base.figure_spawn_delay++;
+    if (base.figure_spawn_delay < spawn_delay) {
+        return;
+    }
+
+    base.figure_spawn_delay = 0;
+    if (!base.can_spawn_bricklayer_man(FIGURE_BRICKLAYER, data.guild.max_workers)) {
+        return;
+    }
+
+    building* monument = buildings_valid_first([&] (building &b) {
+        if (!b.is_monument() || !building_monument_is_unfinished(&base)) {
+            return false;
+        }
+
+        return building_monument_need_bricklayers(&b);
+    });
+
+    if (!monument) {
+        return;
+    }
+
+    auto f = base.create_figure_with_destination(FIGURE_BRICKLAYER, monument, FIGURE_ACTION_10_BRIRKLAYER_CREATED, BUILDING_SLOT_SERVICE);
+    monument->monument_add_workers(f->id);
+    f->wait_ticks = random_short() % 30; // ok
 }

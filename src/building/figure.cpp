@@ -752,50 +752,6 @@ void building::spawn_figure_industry() {
     }
 }
 
-void building::spawn_figure_guilds() {
-    check_labor_problem();
-    if (!has_road_access) {
-        return;
-    }
-
-    common_spawn_labor_seeker(100);
-    int pct_workers = worker_percentage();
-    if (pct_workers < 50) {
-        return;
-    }
-
-    int spawn_delay = figure_spawn_timer();
-    if (spawn_delay == -1) {
-        return;
-    }
-
-    figure_spawn_delay++;
-    if (figure_spawn_delay < spawn_delay) {
-        return;
-    }
-    
-    figure_spawn_delay = 0;
-    if (!can_spawn_bricklayer_man(FIGURE_BRICKLAYER, data.guild.max_workers)) {
-        return;
-    }
-
-    building* monument = buildings_valid_first([] (building &b) {
-        if (!b.is_monument() || !building_monument_is_unfinished(&b)) {
-            return false;
-        }
-
-        return building_monument_need_bricklayers(&b);
-    });
-
-    if (!monument) {
-        return;
-    }
-
-    auto f = create_figure_with_destination(FIGURE_BRICKLAYER, monument, FIGURE_ACTION_10_BRIRKLAYER_CREATED, BUILDING_SLOT_SERVICE);
-    monument->monument_add_workers(f->id);
-    f->wait_ticks = random_short() % 30; // ok
-}
-
 void building::spawn_figure_farm_harvests() {
     if (is_floodplain_farm()) { // floodplain farms
         // In OG Pharaoh, farms can NOT send out a cartpusher if the cartpusher
@@ -1353,10 +1309,6 @@ bool building::figure_generate() {
         case BUILDING_UNUSED_NATIVE_HUT_88: spawn_figure_native_hut(); break;
         case BUILDING_UNUSED_NATIVE_MEETING_89: spawn_figure_native_meeting(); break;
         case BUILDING_UNUSED_NATIVE_CROPS_93: update_native_crop_progress(); break;
-
-        case BUILDING_BRICKLAYERS_GUILD:
-            spawn_figure_guilds();
-            break;
 
         case BUILDING_BARLEY_FARM:
         case BUILDING_FLAX_FARM:
