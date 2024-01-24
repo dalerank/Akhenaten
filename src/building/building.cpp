@@ -16,6 +16,7 @@
 #include "building/building_booth.h"
 #include "building/building_health.h"
 #include "building/building_pottery.h"
+#include "building/building_well.h"
 #include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
@@ -330,6 +331,7 @@ building_impl *building::dcast() {
     case BUILDING_BOOTH: _ptr = new building_booth(*this); break;
     case BUILDING_APOTHECARY: _ptr = new building_apothecary(*this); break;
     case BUILDING_POTTERY_WORKSHOP: _ptr = new building_pottery(*this); break;
+    case BUILDING_WELL: _ptr = new building_well(*this); break;
     
     case BUILDING_SMALL_MASTABA:
     case BUILDING_SMALL_MASTABA_SIDE:
@@ -497,14 +499,11 @@ e_overlay building::get_overlay() const {
         case BUILDING_JUGGLER_SCHOOL:
             return OVERLAY_BOOTH;
 
-        case BUILDING_WELL:
-            return OVERLAY_WATER;
-
         case BUILDING_PHYSICIAN:
             return OVERLAY_PHYSICIAN;
     }
 
-    return OVERLAY_NONE;
+    return const_cast<building*>(this)->dcast()->get_overlay();
 }
 
 void building_clear_all() {

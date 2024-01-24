@@ -19,7 +19,6 @@ void window_building_draw_water_lift(object_info* c);
 void window_building_draw_aqueduct(object_info* c);
 void window_building_draw_fountain(object_info* c);
 void window_building_draw_water_supply(object_info* c);
-void window_building_draw_well(object_info* c);
 
 void window_building_draw_mission_post(object_info* c);
 void window_building_draw_native_hut(object_info* c);

@@ -45,11 +45,11 @@ void map_terrain_add_in_area(int x_min, int y_min, int x_max, int y_max, int ter
         }
     }
 }
-void map_terrain_add_with_radius(int x, int y, int size, int radius, int terrain) {
-    grid_area area = map_grid_get_area(tile2i(x, y), size, radius);
+void map_terrain_add_with_radius(tile2i tile, int size, int radius, int terrain) {
+    grid_area area = map_grid_get_area(tile, size, radius);
 
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
-        map_terrain_add(tile.grid_offset(), terrain);
+    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+        map_terrain_add(t.grid_offset(), terrain);
     });
 }
 void map_terrain_remove_with_radius(int x, int y, int size, int radius, int terrain) {

@@ -1136,10 +1136,8 @@ void building::update_month() {
         }
         break;
 
-    case BUILDING_WELL: {
-            int avg_desirability = map_desirabilty_avg(tile, 4);
-            map_image_set(tile, avg_desirability > 30 ? IMG_WELL_FANCY : IMG_WELL);
-        }
+    default:
+        dcast()->update_month();
         break;
     }
 }

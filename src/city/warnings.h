@@ -1,7 +1,6 @@
 #pragma once
 
-#include "building/building_type.h"
-#include "grid/point.h"
+#include "building/building.h"
 
 void building_construction_warning_reset(void);
 void building_construction_warning_check_food_stocks(int type);

@@ -63,8 +63,7 @@ void map_water_supply_update_houses() {
         } else if (b.house_size) {
             b.has_water_access = false;
             b.has_well_access = 0;
-            if (b.data.house.water_supply
-                || map_terrain_exists_tile_in_area_with_type(b.tile.x(), b.tile.y(), b.size, TERRAIN_FOUNTAIN_RANGE)) {
+            if (b.data.house.water_supply|| map_terrain_exists_tile_in_area_with_type(b.tile.x(), b.tile.y(), b.size, TERRAIN_FOUNTAIN_RANGE)) {
                 b.has_water_access = true;
             }
         }
@@ -120,7 +119,7 @@ static void fill_canals_from_offset(int grid_offset) {
         if (image_id >= image_without_water) {
             map_image_set(grid_offset, image_id - IMAGE_CANAL_FULL_OFFSET);
         }
-        map_terrain_add_with_radius(MAP_X(grid_offset), MAP_Y(grid_offset), 1, 2, TERRAIN_IRRIGATION_RANGE);
+        map_terrain_add_with_radius(tile2i(grid_offset), 1, 2, TERRAIN_IRRIGATION_RANGE);
 
         next_offset = -1;
         for (int i = 0; i < 4; i++) {
@@ -201,7 +200,7 @@ static void update_canals_from_water_lifts() {
             if (b->has_water_access) {
                 fill_canals_from_offset(b->tile.grid_offset() + OUTPUT_OFFSETS[b->data.industry.orientation][0]);
                 fill_canals_from_offset(b->tile.grid_offset() + OUTPUT_OFFSETS[b->data.industry.orientation][1]);
-                map_terrain_add_with_radius(b->tile.x(), b->tile.y(), 2, 2, TERRAIN_IRRIGATION_RANGE);
+                map_terrain_add_with_radius(b->tile, 2, 2, TERRAIN_IRRIGATION_RANGE);
             }
         }
     }
@@ -219,14 +218,12 @@ void map_update_canals(void) {
     update_canals_from_water_lifts();
 }
 
-void map_update_wells_range(void) {
+void map_update_wells_range() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Wells Range Update");
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE);
-    buildings_valid_do([&](building& b) {
-        if (b.type == BUILDING_WELL) {
-            map_terrain_add_with_radius(b.tile.x(), b.tile.y(), 1, 3, TERRAIN_FOUNTAIN_RANGE);
-        }
-    });
+    buildings_valid_do([](building& b) {
+        map_terrain_add_with_radius(b.tile, 1, 3, TERRAIN_FOUNTAIN_RANGE);
+    }, BUILDING_WELL);
 }
 
 e_well_status map_water_supply_is_well_unnecessary(int well_id, int radius) {

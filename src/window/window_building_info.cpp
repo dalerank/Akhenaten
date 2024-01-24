@@ -727,7 +727,6 @@ static void draw_refresh_background() {
             case BUILDING_WATER_LIFT: window_building_draw_water_lift(&context); break;
             case BUILDING_MENU_BEAUTIFICATION: window_building_draw_fountain(&context); break;
             case BUILDING_WATER_SUPPLY: window_building_draw_water_supply(&context); break;
-            case BUILDING_WELL: window_building_draw_well(&context); break;
 
             case BUILDING_SMALL_STATUE:
             case BUILDING_MEDIUM_STATUE:

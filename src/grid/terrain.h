@@ -91,7 +91,7 @@ void map_terrain_remove(int grid_offset, int terrain);
 
 void map_terrain_add_in_area(int x_min, int y_min, int x_max, int y_max, int terrain);
 
-void map_terrain_add_with_radius(int x, int y, int size, int radius, int terrain);
+void map_terrain_add_with_radius(tile2i tile, int size, int radius, int terrain);
 
 void map_terrain_remove_with_radius(int x, int y, int size, int radius, int terrain);
 
