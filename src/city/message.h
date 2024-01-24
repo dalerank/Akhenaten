@@ -13,6 +13,9 @@ enum e_mesage_category {
     MESSAGE_CAT_NO_WORKING_DOCK = 10,
     MESSAGE_CAT_FISHING_BLOCKED = 11,
     MESSAGE_CAT_HEALTH_PROBLEM = 12,
+    MESSAGE_CAT_MONUMENTS = 13,
+
+    MESSAGE_CAT_SIZE = 20,
 };
 
 enum e_message_advisor {
@@ -128,6 +131,7 @@ enum e_message_type {
     MESSAGE_HEALTH_DISEASE = 325 - 99,
     MESSAGE_HEALTH_PLAGUE = 326 - 99,
     MESSAGE_HEALTH_MALARIA_PROBLEM = 327 - 99,
+    MESSAGE_MASTABA_FINISHED = 394 - 99,
     MESSAGE_SPIRIT_OF_MARS = 105,
     MESSAGE_CAESAR_RESPECT_1 = 106,
     MESSAGE_CAESAR_RESPECT_2 = 107,
@@ -288,13 +292,20 @@ struct city_message {
     int eventmsg_phrase_id;
     int req_city_past;
     int unk_09;
-    int unk_10;
+    uint8_t unk_10;
+    bool hide_img;
 
     int req_amount_past;
     int req_resource_past;
     int unk_11a_i8;
-    int god;
+    uint8_t god;
     uint16_t background_img;
+};
+
+struct city_message_options {
+    bool force_popup = false;
+    int force_img = -1;
+    bool hide_img = false;
 };
 
 void city_message_init_scenario();
@@ -304,10 +315,10 @@ void city_message_disable_sound_for_next_message(void);
 void city_message_apply_sound_interval(int category);
 
 void city_message_post_full(bool use_popup, int template_id, int event_id, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2);
-void city_message_post(bool use_popup, int message_id, int param1, int param2);
+void city_message_post(bool use_popup, int message_id, int param1, int param2, city_message_options *opts = nullptr);
 void city_message_god_post(int god, bool use_popup, int message_id, int param1, int param2);
-void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2);
-void city_message_post_with_message_delay(int category, int use_popup, int message_type, int delay);
+void city_message_post_with_popup_delay(e_mesage_category category, int message_type, int param1, short param2, city_message_options *opts = nullptr);
+void city_message_post_with_message_delay(e_mesage_category category, int use_popup, int message_type, int delay);
 void city_message_population_post(bool use_popup, int message_id, int param1, int param2);
 
 void city_message_process_queue(void);
@@ -316,10 +327,10 @@ void city_message_sort_and_compact(void);
 int city_message_get_text_id(int message_id);
 int city_message_get_advisor(int message_type);
 
-void city_message_reset_category_count(int category);
-void city_message_increase_category_count(int category);
-int city_message_get_category_count(int category);
-void city_message_decrease_delays(void);
+void city_message_reset_category_count(e_mesage_category category);
+void city_message_increase_category_count(e_mesage_category category);
+int city_message_get_category_count(e_mesage_category category);
+void city_message_decrease_delays();
 
 bool city_message_mark_population_shown(int population);
 

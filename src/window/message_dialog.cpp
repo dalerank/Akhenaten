@@ -338,15 +338,19 @@ static void draw_city_message_text(const lang_message* msg) {
 }
 
 static void draw_title(const lang_message* msg) {
-    painter ctx = game.painter();
     auto &data = g_message_dialog_data;
+
+    painter ctx = game.painter();
     uint8_t* text = msg->title.text;
+    const city_message *city_msg = city_message_get(data.message_id);
     
     if (data.is_eventmsg)
         text = data.title_text;
 
-    if (!text)
+    if (!text) {
         return;
+    }
+
     int image_id = get_message_image_id(msg);
     const image_t* img = image_id ? image_get(image_id) : 0;
     // title
@@ -361,7 +365,7 @@ static void draw_title(const lang_message* msg) {
     data.y_text = data.y + 48;
 
     // picture
-    if (img) {
+    if (img && !city_msg->hide_img) {
         int image_x = msg->image.x;
         int image_y = msg->image.y;
         ImageDraw::img_generic(ctx, image_id, vec2i{data.x + image_x, data.y + image_y});
@@ -409,7 +413,7 @@ static void draw_content(const lang_message* msg) {
     graphics_reset_clip_rectangle();
 }
 
-static void draw_background_normal(void) {
+static void draw_background_normal() {
     auto &data = g_message_dialog_data;
     rich_text_set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
     const lang_message* msg = lang_get_message(data.text_id);

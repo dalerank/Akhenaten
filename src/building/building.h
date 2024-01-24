@@ -392,6 +392,8 @@ public:
     inline figure *create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) { return base.create_roaming_figure(_type, created_action, slot); }
     inline bool common_spawn_figure_trigger(int min_houses) { return base.common_spawn_figure_trigger(min_houses); }
     inline bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) { return base.common_spawn_roamer(type, min_houses, created_action); }
+    inline tile2i tile() const { return base.tile; }
+    inline e_building_type type() const { return base.type; }
 
     building &base;
     building::impl_data_t &data;

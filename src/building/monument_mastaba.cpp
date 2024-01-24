@@ -9,6 +9,7 @@
 #include "building/count.h"
 #include "game/game.h"
 #include "city/resource.h"
+#include "city/message.h"
 #include "grid/random.h"
 #include "grid/tiles.h"
 #include "grid/grid.h"
@@ -127,6 +128,12 @@ void building_small_mastaba::update_day() {
 
     if (data.monuments.phase >= 8) {
         building_small_mastabe_finalize(&base);
+        if (is_main()) {
+            city_message_options message;
+            message.force_popup = true;
+            message.hide_img = true;
+            city_message_post_with_popup_delay(MESSAGE_CAT_MONUMENTS, MESSAGE_MASTABA_FINISHED, type(), tile().grid_offset(), &message);
+        }
         return;
     }
 

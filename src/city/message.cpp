@@ -17,7 +17,6 @@
 
 #define MAX_MESSAGES 1000
 #define MAX_QUEUE 20
-#define MAX_MESSAGE_CATEGORIES 20
 
 struct message_data_t {
     city_message messages[MAX_MESSAGES];
@@ -49,8 +48,8 @@ struct message_data_t {
         uint16_t pop25000 : 1;
     } population_shown;
 
-    int message_count[MAX_MESSAGE_CATEGORIES];
-    int message_delay[MAX_MESSAGE_CATEGORIES];
+    int message_count[MESSAGE_CAT_SIZE];
+    int message_delay[MESSAGE_CAT_SIZE];
 
     time_millis last_sound_time[MESSAGE_CAT_RIOT_COLLAPSE + 1];
 
@@ -79,7 +78,7 @@ void city_message_init_scenario(void) {
     data.total_messages = 0;
     data.current_message_id = 0;
 
-    for (int i = 0; i < MAX_MESSAGE_CATEGORIES; i++) {
+    for (int i = 0; i < MESSAGE_CAT_SIZE; i++) {
         data.message_count[i] = 0;
         data.message_delay[i] = 0;
     }
@@ -225,7 +224,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     should_play_sound = true;
 }
 
-static void city_message_post_common(bool use_popup, int message_id, int param1, int param2, int god, int bg_img) {
+static void city_message_post_common(bool use_popup, int message_id, int param1, int param2, int god, int bg_img, city_message_options *opts) {
     auto &data = g_message_data;
 
     int id = new_message_id();
@@ -249,7 +248,8 @@ static void city_message_post_common(bool use_popup, int message_id, int param1,
     msg->param2 = param2;
     msg->sequence = data.next_message_sequence++;
     msg->god = god;
-    msg->background_img = bg_img;
+    msg->hide_img = (opts && opts->hide_img);
+    msg->background_img = (opts && (opts->force_img >= 0)) ? opts->force_img : bg_img;
 
     int text_id = city_message_get_text_id(message_id);
     int lang_msg_type = lang_get_message(text_id)->message_type;
@@ -271,30 +271,33 @@ static void city_message_post_common(bool use_popup, int message_id, int param1,
 }
 
 void city_message_god_post(int god, bool use_popup, int message_id, int param1, int param2) {
-    city_message_post_common(use_popup, message_id, param1, param2, god, 0);
+    city_message_post_common(use_popup, message_id, param1, param2, god, 0, nullptr);
 }
 
 void city_message_population_post(bool use_popup, int message_id, int param1, int param2) {
     int img_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 16;
-    city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN, img_id);
+    city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN, img_id, nullptr);
 }
 
-void city_message_post(bool use_popup, int message_id, int param1, int param2) {
-    city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN, 0);
+void city_message_post(bool use_popup, int message_id, int param1, int param2, city_message_options *opts) {
+    city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN, 0, opts);
 }
 
-void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2) {
+void city_message_post_with_popup_delay(e_mesage_category category, int message_type, int param1, short param2, city_message_options *opts) {
     auto& data = g_message_data;
     int use_popup = false;
+
     if (data.message_delay[category] <= 0) {
         use_popup = true;
         data.message_delay[category] = 12;
     }
-    city_message_post(use_popup, message_type, param1, param2);
+    use_popup |= (opts && opts->force_popup);
+
+    city_message_post(use_popup, message_type, param1, param2, opts);
     data.message_count[category]++;
 }
 
-void city_message_post_with_message_delay(int category, int use_popup, int message_type, int delay) {
+void city_message_post_with_message_delay(e_mesage_category category, int use_popup, int message_type, int delay) {
     auto& data = g_message_data;
     if (category == MESSAGE_CAT_FISHING_BLOCKED || category == MESSAGE_CAT_NO_WORKING_DOCK) {
         // bug in the original game: delays for 'fishing blocked' and 'no working dock'
@@ -414,22 +417,22 @@ int city_message_get_advisor(int message_type) {
     }
 }
 
-void city_message_reset_category_count(int category) {
+void city_message_reset_category_count(e_mesage_category category) {
     auto& data = g_message_data;
     data.message_count[category] = 0;
 }
-void city_message_increase_category_count(int category) {
+void city_message_increase_category_count(e_mesage_category category) {
     auto& data = g_message_data;
     data.message_count[category]++;
 }
-int city_message_get_category_count(int category) {
+int city_message_get_category_count(e_mesage_category category) {
     auto& data = g_message_data;
     return data.message_count[category];
 }
 
 void city_message_decrease_delays(void) {
     auto& data = g_message_data;
-    for (int i = 0; i < MAX_MESSAGE_CATEGORIES; i++) {
+    for (int i = 0; i < MESSAGE_CAT_SIZE; i++) {
         if (data.message_delay[i] > 0)
             data.message_delay[i]--;
     }
@@ -587,7 +590,8 @@ io_buffer* iob_messages = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_phrase_id);
         iob->bind(BIND_SIGNATURE_INT16, &msg->req_city_past); // enum?
         iob->bind(BIND_SIGNATURE_INT16, &msg->unk_09);        // 00 00
-        iob->bind(BIND_SIGNATURE_INT16, &msg->unk_10);        // 00 00
+        iob->bind(BIND_SIGNATURE_UINT8, &msg->unk_10);        // 00 00
+        iob->bind(BIND_SIGNATURE_UINT8, &msg->hide_img);        // 00 00
 
         iob->bind(BIND_SIGNATURE_INT16, &msg->req_amount_past);
         iob->bind(BIND_SIGNATURE_INT16, &msg->req_resource_past);
@@ -613,11 +617,11 @@ io_buffer* iob_message_extra = new io_buffer([](io_buffer* iob, size_t version) 
     iob->bind(BIND_SIGNATURE_UINT16, &data.reserved_5);
     iob->bind(BIND_SIGNATURE_UINT8, &data.reserved_6);
 
-    for (int i = 0; i < MAX_MESSAGE_CATEGORIES; i++) {
+    for (int i = 0; i < MESSAGE_CAT_SIZE; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.message_count[i]);
     }
 
-    for (int i = 0; i < MAX_MESSAGE_CATEGORIES; i++) {
+    for (int i = 0; i < MESSAGE_CAT_SIZE; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.message_delay[i]);
     }
 });
