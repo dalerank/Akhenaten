@@ -28,15 +28,6 @@
 #include "grid/terrain.h"
 #include <cmath>
 
-bool drawing_building_as_deleted(building* b) {
-    b = b->main();
-    if (b->id && (b->is_deleted || map_property_is_deleted(b->tile.grid_offset()))) {
-        return true;
-    }
-
-    return false;
-}
-
 /////// ANIMATIONS
 
 void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile, int sprite_id, int color_mask, int base_id, int max_frames) {
