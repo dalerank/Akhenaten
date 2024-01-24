@@ -15,6 +15,7 @@
 #include "building/building_bricklayers_guild.h"
 #include "building/building_booth.h"
 #include "building/building_health.h"
+#include "building/building_pottery.h"
 #include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
@@ -181,10 +182,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->data.industry.first_material_id = RESOURCE_GEMS;
         b->output_resource_first_id = RESOURCE_LUXURY_GOODS;
         break;
-    case BUILDING_POTTERY_WORKSHOP:
-        b->data.industry.first_material_id = RESOURCE_CLAY;
-        b->output_resource_first_id = RESOURCE_POTTERY;
-        break;
     case BUILDING_HUNTING_LODGE:
         b->output_resource_first_id = RESOURCE_GAMEMEAT;
         break;
@@ -332,6 +329,7 @@ building_impl *building::dcast() {
     case BUILDING_BANDSTAND: _ptr = new building_bandstand(*this); break;
     case BUILDING_BOOTH: _ptr = new building_booth(*this); break;
     case BUILDING_APOTHECARY: _ptr = new building_apothecary(*this); break;
+    case BUILDING_POTTERY_WORKSHOP: _ptr = new building_pottery(*this); break;
     
     case BUILDING_SMALL_MASTABA:
     case BUILDING_SMALL_MASTABA_SIDE:

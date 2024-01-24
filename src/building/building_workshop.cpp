@@ -16,7 +16,7 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 
-static void building_workshop_draw_info(object_info& c, int help_id, const char* type, int group_id, e_resource resource, e_resource input_resource) {
+void building_workshop_draw_info(object_info& c, int help_id, pcstr type, int group_id, e_resource resource, e_resource input_resource) {
     c.help_id = help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
@@ -146,12 +146,6 @@ void building_luxury_workshop_draw_info(object_info& c) {
     e_resource output_resource = RESOURCE_LUXURY_GOODS;
 
     building_workshop_draw_info(c, 99, "luxury_workshop", 125, output_resource, input_resource);
-}
-
-void building_pottery_workshop_draw_info(object_info& c) {
-    e_resource output_resource = RESOURCE_POTTERY;
-
-    building_workshop_draw_info(c, 1, "pottery_workshop", 126, output_resource, RESOURCE_CLAY);
 }
 
 void building_papyrus_workshop_draw_info(object_info& c) {
