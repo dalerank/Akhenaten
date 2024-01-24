@@ -52,7 +52,7 @@ static building_properties properties[400] = {
     {3, 1, 0, 0},                      // statues ^^^
     {3, 1, GROUP_BUILDING_FORT},       // archers
     {3, 1, GROUP_BUILDING_FORT},       // infantry
-    {1, 0, GROUP_BUILDING_APOTHECARY}, // apothecary
+    {1, 0, 0, 0}, // apothecary
     {2, 0, GROUP_BUILDING_MORTUARY},   // mortuary
     {2, 0, 0, 0},
     {1, 0, GROUP_BUILDING_DENTIST},        // dentist
@@ -264,6 +264,7 @@ void building_properties_init() {
     properties[BUILDING_BAZAAR] = {2, 0, 0, 0, 0, IMG_BAZAAR};
     properties[BUILDING_BRICKLAYERS_GUILD] = {2, 0, 0, 0, 0, IMG_BRICKLAYERS_GUILD};
     properties[BUILDING_FIREHOUSE] = {1, 0, 0, 0, 0, IMG_BUILDING_FIREHOUSE};
+    properties[BUILDING_APOTHECARY] = {1, 0, 0, 0, 0, IMG_BUILDING_APOTHECARY};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

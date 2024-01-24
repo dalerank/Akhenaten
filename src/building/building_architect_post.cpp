@@ -48,6 +48,6 @@ void building_architect_post::window_info_background(object_info &c) {
 }
 
 void building_architect_post::spawn_figure() {
-    base.common_spawn_roamer(FIGURE_ARCHITECT, 50, FIGURE_ACTION_60_ENGINEER_CREATED);
+    common_spawn_roamer(FIGURE_ARCHITECT, 50, FIGURE_ACTION_60_ENGINEER_CREATED);
 }
 

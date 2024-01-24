@@ -328,7 +328,6 @@ public:
     void set_water_supply_graphic();
     void spawn_figure_school();
     void spawn_figure_library();
-    void spawn_figure_apothecary();
     void spawn_figure_dentist();
     void spawn_figure_mortuary();
     void spawn_figure_physician();
@@ -392,6 +391,7 @@ public:
     inline bool is_main() { return base.is_main(); }
     inline figure *create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) { return base.create_roaming_figure(_type, created_action, slot); }
     inline bool common_spawn_figure_trigger(int min_houses) { return base.common_spawn_figure_trigger(min_houses); }
+    inline bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) { return base.common_spawn_roamer(type, min_houses, created_action); }
 
     building &base;
     building::impl_data_t &data;

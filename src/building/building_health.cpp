@@ -1,6 +1,7 @@
 #include "building_health.h"
 
 #include "building/building.h"
+#include "building/figure.h"
 #include "city/object_info.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
@@ -34,7 +35,7 @@ static void building_health_draw_info(object_info& c, int help_id, const char* t
     window_building_draw_employment(&c, 142);
 }
 
-void building_apothecary_draw_info(object_info& c) {
+void building_apothecary::window_info_background(object_info& c) {
     building_health_draw_info(c, 63, "apothecary", e_text_building_apothecary, FIGURE_HERBALIST);
 }
 
@@ -68,4 +69,23 @@ void building_physician_draw_info(object_info& c) {
 
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
     window_building_draw_employment(&c, 142);
+}
+
+void building_apothecary::spawn_figure() {
+    common_spawn_roamer(FIGURE_HERBALIST, 50, FIGURE_ACTION_125_ROAMING);
+    //    check_labor_problem();
+    //    if (has_figure_of_type(FIGURE_DOCTOR))
+    //        return;
+    //    map_point road;
+    //    if (map_has_road_access(x, y, size, &road)) {
+    //        spawn_labor_seeker(50);
+    //        int spawn_delay = figure_spawn_timer();
+    //        if (spawn_delay == -1)
+    //            return;
+    //        figure_spawn_delay++;
+    //        if (figure_spawn_delay > spawn_delay) {
+    //            figure_spawn_delay = 0;
+    //            create_roaming_figure(road.x, road.y, FIGURE_DOCTOR);
+    //        }
+    //    }
 }

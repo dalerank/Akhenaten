@@ -543,24 +543,7 @@ void building::spawn_figure_mortuary() {
     //        }
     //    }
 }
-void building::spawn_figure_apothecary() {
-    common_spawn_roamer(FIGURE_HERBALIST, 50);
-    //    check_labor_problem();
-    //    if (has_figure_of_type(FIGURE_DOCTOR))
-    //        return;
-    //    map_point road;
-    //    if (map_has_road_access(x, y, size, &road)) {
-    //        spawn_labor_seeker(50);
-    //        int spawn_delay = figure_spawn_timer();
-    //        if (spawn_delay == -1)
-    //            return;
-    //        figure_spawn_delay++;
-    //        if (figure_spawn_delay > spawn_delay) {
-    //            figure_spawn_delay = 0;
-    //            create_roaming_figure(road.x, road.y, FIGURE_DOCTOR);
-    //        }
-    //    }
-}
+
 void building::spawn_figure_dentist() {
     common_spawn_roamer(FIGURE_DENTIST, 50);
 }
@@ -1274,7 +1257,6 @@ bool building::figure_generate() {
         case BUILDING_SCRIBAL_SCHOOL: spawn_figure_school(); break;
         case BUILDING_LIBRARY: spawn_figure_library(); break;
         case BUILDING_WATER_LIFT: common_spawn_figure_trigger(50); break;
-        case BUILDING_APOTHECARY: spawn_figure_apothecary(); break;
         case BUILDING_DENTIST: spawn_figure_dentist(); break;
         case BUILDING_MORTUARY: spawn_figure_mortuary(); break;
         case BUILDING_PHYSICIAN: spawn_figure_physician(); break;
