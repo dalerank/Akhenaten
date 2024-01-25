@@ -148,6 +148,7 @@ images = [
 	{img: IMG_SMALL_MASTABA_BRICKS, pack:PACK_MASTABA, id:1, offset:0},
 	{img: IMG_BUILDING_FIREHOUSE, pack:PACK_GENERAL, id:78},
 	{img: IMG_BUILDING_APOTHECARY, pack:PACK_GENERAL, id:68},
+	{img: IMG_PERSONAL_MANSION, pack:PACK_GENERAL, id:85},
 ]
 
 cart_offsets = [

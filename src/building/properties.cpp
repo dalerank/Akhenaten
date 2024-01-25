@@ -83,7 +83,7 @@ static building_properties properties[400] = {
     {3, 0, GROUP_BUILDING_SHIPYARD},      // shipwright
     {3, 0, GROUP_BUILDING_DOCK},          // dock
     {2, 0, GROUP_BUILDING_FISHING_WHARF}, // wharf (fish)
-    {3, 0, GROUP_BUILDING_GOVERNORS_HOUSE},
+    {3, 0, 0, 0},
     {4, 0, GROUP_BUILDING_GOVERNORS_VILLA},
     {5, 0, GROUP_BUILDING_GOVERNORS_PALACE}, // mansions ^^^
     {2, 1, 0, 0},
@@ -265,6 +265,7 @@ void building_properties_init() {
     properties[BUILDING_BRICKLAYERS_GUILD] = {2, 0, 0, 0, 0, IMG_BRICKLAYERS_GUILD};
     properties[BUILDING_FIREHOUSE] = {1, 0, 0, 0, 0, IMG_BUILDING_FIREHOUSE};
     properties[BUILDING_APOTHECARY] = {1, 0, 0, 0, 0, IMG_BUILDING_APOTHECARY};
+    properties[BUILDING_PERSONAL_MANSION] = {3, 0, 0, 0, 0, IMG_PERSONAL_MANSION};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {
