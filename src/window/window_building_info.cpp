@@ -687,12 +687,8 @@ static void draw_refresh_background() {
                 building_temple_bast_draw_info(context);
                 break;
 
-            case BUILDING_ORACLE: window_building_draw_oracle(&context); break;
-
-            case BUILDING_PERSONAL_MANSION:
-            case BUILDING_FAMILY_MANSION:
-            case BUILDING_DYNASTY_MANSION:
-                window_building_draw_governor_home(&context);
+            case BUILDING_ORACLE:
+                window_building_draw_oracle(&context);
                 break;
 
             case BUILDING_TAX_COLLECTOR:

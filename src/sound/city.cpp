@@ -126,11 +126,6 @@ int building_type_to_channel(building *b) {
 
     case BUILDING_FISHING_WHARF: return SOUND_CHANNEL_CITY_WHARF;
 
-    case BUILDING_PERSONAL_MANSION:
-    case BUILDING_FAMILY_MANSION:
-    case BUILDING_DYNASTY_MANSION:
-        return SOUND_CHANNEL_CITY_MANSION;
-
     case BUILDING_ARCHITECT_POST: return SOUND_CHANNEL_CITY_ENGINEERS_POST;
 
     case BUILDING_LOW_BRIDGE:
@@ -168,7 +163,7 @@ int building_type_to_channel(building *b) {
     case BUILDING_HUNTING_LODGE: return  SOUND_CHANNEL_CITY_HUNTER_LOUDGE;
     }
 
-    return 0;
+    return b->dcast()->sound_channel();
 }
 
 void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction) {

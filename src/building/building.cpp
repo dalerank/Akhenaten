@@ -18,6 +18,7 @@
 #include "building/building_pottery.h"
 #include "building/building_well.h"
 #include "building/building_shrine.h"
+#include "building/building_mansion.h"
 #include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
@@ -340,6 +341,12 @@ building_impl *building::dcast() {
     case BUILDING_SHRINE_SETH:
     case BUILDING_SHRINE_BAST:
         _ptr = new building_shrine(*this); 
+        break;
+
+    case BUILDING_PERSONAL_MANSION:
+    case BUILDING_FAMILY_MANSION:
+    case BUILDING_DYNASTY_MANSION:
+        _ptr = new building_mansion(*this);
         break;
     
     case BUILDING_SMALL_MASTABA:

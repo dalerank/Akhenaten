@@ -10,6 +10,7 @@
 #include "figure/figure_type.h"
 #include "game/resource.h"
 #include "grid/point.h"
+#include "sound/city.h"
 
 #include <stdint.h>
 #include <algorithm>
@@ -390,6 +391,7 @@ public:
     virtual bool draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx);
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual bool need_road_access() const { return true; }
+    virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_NONE; }
 
     inline bool is_main() { return base.is_main(); }
     inline figure *create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) { return base.create_roaming_figure(_type, created_action, slot); }
@@ -397,7 +399,6 @@ public:
     inline bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) { return base.common_spawn_roamer(type, min_houses, created_action); }
     inline tile2i tile() const { return base.tile; }
     inline e_building_type type() const { return base.type; }
-
 
     building &base;
     building::impl_data_t &data;
