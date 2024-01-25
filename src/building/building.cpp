@@ -17,6 +17,7 @@
 #include "building/building_health.h"
 #include "building/building_pottery.h"
 #include "building/building_well.h"
+#include "building/building_shrine.h"
 #include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
@@ -332,12 +333,20 @@ building_impl *building::dcast() {
     case BUILDING_APOTHECARY: _ptr = new building_apothecary(*this); break;
     case BUILDING_POTTERY_WORKSHOP: _ptr = new building_pottery(*this); break;
     case BUILDING_WELL: _ptr = new building_well(*this); break;
+
+    case BUILDING_SHRINE_OSIRIS:
+    case BUILDING_SHRINE_RA:
+    case BUILDING_SHRINE_PTAH:
+    case BUILDING_SHRINE_SETH:
+    case BUILDING_SHRINE_BAST:
+        _ptr = new building_shrine(*this); 
+        break;
     
     case BUILDING_SMALL_MASTABA:
     case BUILDING_SMALL_MASTABA_SIDE:
     case BUILDING_SMALL_MASTABA_ENTRANCE:
     case BUILDING_SMALL_MASTABA_WALL:
-                            _ptr = new building_small_mastaba(*this);
+         _ptr = new building_small_mastaba(*this);
          break;
     default:
         _ptr = new building_impl(*this);

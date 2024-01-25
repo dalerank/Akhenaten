@@ -13,6 +13,7 @@
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
+#include "building_shrine.h"
 
 static void building_shrine_draw_info(object_info& c, const char* type, int text_id, int image_offset) {
     painter ctx = game.painter();
@@ -28,18 +29,22 @@ static void building_shrine_draw_info(object_info& c, const char* type, int text
     }
 }
 
-void building_shrine_osiris_draw_info(object_info& c) {
-    building_shrine_draw_info(c, "shrine_osiris", 0, 21);
-}
-void building_shrine_ra_draw_info(object_info& c) {
-    building_shrine_draw_info(c, "shrine_ra", 2, 22);
-}
-void building_shrine_ptah_draw_info(object_info& c) {
-    building_shrine_draw_info(c, "shrine_ptah", 4, 23);
-}
-void building_shrine_seth_draw_info(object_info& c) {
-    building_shrine_draw_info(c, "shrine_seth", 6, 24);
-}
-void building_shrine_bast_draw_info(object_info& c) {
-    building_shrine_draw_info(c, "shrine_bast", 8, 25);
+void building_shrine::window_info_background(object_info &ctx) {
+    switch (base.type) {
+    case BUILDING_SHRINE_OSIRIS:
+        building_shrine_draw_info(ctx, "shrine_osiris", 0, 21);
+        break;
+    case BUILDING_SHRINE_RA:
+        building_shrine_draw_info(ctx, "shrine_ra", 2, 22);
+        break;
+    case BUILDING_SHRINE_PTAH:
+        building_shrine_draw_info(ctx, "shrine_ptah", 4, 23);
+        break;
+    case BUILDING_SHRINE_SETH:
+        building_shrine_draw_info(ctx, "shrine_seth", 6, 24);
+        break;
+    case BUILDING_SHRINE_BAST:
+        building_shrine_draw_info(ctx, "shrine_bast", 8, 25);
+        break;
+    }
 }

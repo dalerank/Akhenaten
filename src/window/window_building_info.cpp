@@ -687,12 +687,6 @@ static void draw_refresh_background() {
                 building_temple_bast_draw_info(context);
                 break;
 
-            case BUILDING_SHRINE_OSIRIS: building_shrine_osiris_draw_info(context); break;
-            case BUILDING_SHRINE_RA: building_shrine_ra_draw_info(context); break;
-            case BUILDING_SHRINE_PTAH: building_shrine_ptah_draw_info(context); break;
-            case BUILDING_SHRINE_SETH: building_shrine_seth_draw_info(context); ;
-            case BUILDING_SHRINE_BAST: building_shrine_bast_draw_info(context); break;
-             
             case BUILDING_ORACLE: window_building_draw_oracle(&context); break;
 
             case BUILDING_PERSONAL_MANSION:

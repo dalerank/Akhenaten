@@ -1,9 +1,10 @@
 #pragma once
 
-struct object_info;
+#include "building/building.h"
 
-void building_shrine_osiris_draw_info(object_info& c);
-void building_shrine_ra_draw_info(object_info& c);
-void building_shrine_ptah_draw_info(object_info& c);
-void building_shrine_seth_draw_info(object_info& c);
-void building_shrine_bast_draw_info(object_info& c);
+class building_shrine : public building_impl {
+public:
+    building_shrine(building &b) : building_impl(b) {}
+
+    virtual void window_info_background(object_info &ctx) override;
+};
