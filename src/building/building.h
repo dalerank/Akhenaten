@@ -20,6 +20,7 @@ class io_buffer;
 class building;
 struct object_info;
 struct painter;
+struct mouse;
 
 constexpr uint32_t MAX_BUILDINGS = 4000;
 constexpr uint32_t MAX_FIGURES_PER_BUILDING = 8;
@@ -388,6 +389,7 @@ public:
     virtual void update_day() {}
     virtual void window_info_background(object_info &ctx) {}
     virtual void window_info_foreground(object_info &ctx) {}
+    virtual int window_info_handle_mouse(const mouse *m, object_info &c) { return 0; }
     virtual bool draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx);
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual bool need_road_access() const { return true; }

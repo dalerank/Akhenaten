@@ -1,4 +1,4 @@
-#include "imperial.h"
+#include "advisor_imperial.h"
 #include "city/city_data.h"
 
 #include "city/emperor.h"
@@ -78,6 +78,7 @@ static int get_request_status(int index) {
     }
     return 0;
 }
+
 static void draw_request(int index, const scenario_request* request) {
     if (index >= 5) {
         return;
@@ -162,6 +163,7 @@ static int draw_background(void) {
 
     return ADVISOR_HEIGHT;
 }
+
 static void draw_foreground(void) {
     inner_panel_draw(64, 324, 32, 6);
 
@@ -170,9 +172,11 @@ static void draw_foreground(void) {
     int width = lang_text_draw(52, 1, 72, 372, FONT_NORMAL_WHITE_ON_DARK);
     text_draw_money(city_emperor_personal_savings(), 80 + width, 372, FONT_NORMAL_WHITE_ON_DARK);
 
+    //
     button_border_draw(320, 367, 250, 20, focus_button_id == 1);
     lang_text_draw_centered(52, 2, 320, 372, 250, FONT_NORMAL_WHITE_ON_DARK);
 
+    // button set salary
     button_border_draw(70, 393, 500, 20, focus_button_id == 2);
     width = lang_text_draw(52, city_emperor_salary_rank() + 4, 120, 398, FONT_NORMAL_WHITE_ON_DARK);
     width += text_draw_number(city_emperor_salary_amount(), '@', " ", 120 + width, 398, FONT_NORMAL_WHITE_ON_DARK);

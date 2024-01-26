@@ -26,7 +26,7 @@
 #include "window/advisor/financial.h"
 #include "window/advisor/advisor_health.h"
 #include "window/advisor/housing.h"
-#include "window/advisor/imperial.h"
+#include "window/advisor/advisor_imperial.h"
 #include "window/advisor/labor.h"
 #include "window/advisor/military.h"
 #include "window/advisor/monuments.h"
@@ -131,6 +131,7 @@ static void set_advisor_window() {
         data.current_advisor_window = nullptr;
     }
 }
+
 static void set_advisor(int advisor) {
     auto &data = g_window_advisors;
     data.current_advisor = advisor;
@@ -201,6 +202,7 @@ static void draw_background(void) {
     data.advisor_height = data.current_advisor_window->draw_background();
     graphics_reset_dialog();
 }
+
 static void draw_foreground(void) {
     auto &data = g_window_advisors;
     graphics_set_to_dialog();

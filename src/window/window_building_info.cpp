@@ -868,6 +868,7 @@ static int handle_specific_building_info_mouse(const mouse *m) {
     } else if (context.figure.drawn) {
         return window_building_handle_mouse_figure_list(m, &context);
     } else if (context.type == BUILDING_INFO_BUILDING) {
+        building *b = building_get(context.building_id);
         switch (building_get(context.building_id)->type) {
         case BUILDING_BAZAAR:
             if (context.storage_show_special_orders)
@@ -906,6 +907,9 @@ static int handle_specific_building_info_mouse(const mouse *m) {
             else
                 window_building_handle_mouse_warehouse(m, &context);
             break;
+
+        default:
+            b->dcast()->window_info_handle_mouse(m, context);
         }
     }
     return 0;
