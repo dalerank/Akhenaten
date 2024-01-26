@@ -4,6 +4,7 @@
 #include "input/mouse.h"
 
 #include <vector>
+#include <cstdint>
 #include <functional>
 
 struct generic_button {
