@@ -1,6 +1,8 @@
 #include "generic_button.h"
 
-static int get_button(const mouse* m, int x, int y, generic_button* buttons, int num_buttons) {
+#include "input/mouse.h"
+
+static int get_button(const mouse* m, int x, int y, const generic_button* buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
         if (x + buttons[i].x <= m->x && x + buttons[i].x + buttons[i].width > m->x && y + buttons[i].y <= m->y
             && y + buttons[i].y + buttons[i].height > m->y) {
@@ -10,7 +12,7 @@ static int get_button(const mouse* m, int x, int y, generic_button* buttons, int
     return 0;
 }
 
-static int get_button_min(const mouse* m, int x, int y, generic_button* buttons, int num_buttons, int minimum_button) {
+static int get_button_min(const mouse* m, int x, int y, const generic_button* buttons, int num_buttons, int minimum_button) {
     for (int i = minimum_button; i < num_buttons; i++) {
         if (x + buttons[i].x <= m->x && x + buttons[i].x + buttons[i].width > m->x && y + buttons[i].y <= m->y
             && y + buttons[i].y + buttons[i].height > m->y) {
@@ -20,7 +22,7 @@ static int get_button_min(const mouse* m, int x, int y, generic_button* buttons,
     return 0;
 }
 
-int generic_buttons_handle_mouse(const mouse* m, int x, int y, generic_button* buttons, int num_buttons, int* focus_button_id) {
+int generic_buttons_handle_mouse(const mouse* m, int x, int y, const generic_button* buttons, int num_buttons, int* focus_button_id) {
     int button_id = get_button(m, x, y, buttons, num_buttons);
     if (focus_button_id) {
         *focus_button_id = button_id;
@@ -30,9 +32,12 @@ int generic_buttons_handle_mouse(const mouse* m, int x, int y, generic_button* b
         return 0;
     }
 
-    generic_button* button = &buttons[button_id - 1];
+    const generic_button* button = &buttons[button_id - 1];
     if (m->left.went_up) {
         button->left_click_handler(button->parameter1, button->parameter2);
+        if (button->onclick) {
+            button->onclick(button->parameter1, button->parameter2);
+        }
     } else if (m->right.went_up) {
         button->right_click_handler(button->parameter1, button->parameter2);
     } else {
@@ -42,7 +47,7 @@ int generic_buttons_handle_mouse(const mouse* m, int x, int y, generic_button* b
     return button_id;
 }
 
-int generic_buttons_min_handle_mouse(const mouse* m, int x, int y, generic_button* buttons, int num_buttons, int* focus_button_id, int minimum_button) {
+int generic_buttons_min_handle_mouse(const mouse* m, int x, int y, const generic_button* buttons, int num_buttons, int* focus_button_id, int minimum_button) {
     int button_id = get_button_min(m, x, y, buttons, num_buttons, minimum_button);
     if (focus_button_id)
         *focus_button_id = button_id;
@@ -50,7 +55,7 @@ int generic_buttons_min_handle_mouse(const mouse* m, int x, int y, generic_butto
     if (!button_id)
         return 0;
 
-    generic_button* button = &buttons[button_id - 1];
+    const generic_button* button = &buttons[button_id - 1];
     if (m->left.went_up)
         button->left_click_handler(button->parameter1, button->parameter2);
 
@@ -60,4 +65,11 @@ int generic_buttons_min_handle_mouse(const mouse* m, int x, int y, generic_butto
         return 0;
 
     return button_id;
+}
+
+bool is_button_hover(generic_button &button, vec2i context) {
+    const mouse *m = mouse_get();
+    vec2i bpos = context + vec2i{button.x, button.y};
+    return (   bpos.x <= m->x && bpos.x + button.width > m->x
+            && bpos.y <= m->y && bpos.y + button.height > m->y);
 }

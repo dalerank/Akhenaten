@@ -81,11 +81,8 @@ struct building_info_data {
     int image_button_id = 0;
     int generic_button_id = 0;
     int debug_path_button_id = 0;
-    int overlay_button_id = 0;
 
-    generic_button generic_button_layer[1] = {
-        {375, 3, 24, 24, button_overlay, button_none, 0, 0}
-    };
+    std::vector<generic_button> btns;
 
     generic_button generic_button_figures[1] = {
         {400, 3, 24, 24, button_debugpath, button_none, 0, 0}
@@ -579,12 +576,18 @@ static void draw_mothball_button(int x, int y, int focused) {
     }
 }
 
-static void draw_overlay_button(int x, int y, int focused) {
+template<class Func>
+static void make_button(pcstr label, vec2i pos, vec2i size, Func func) {
     auto &context = g_building_info_context;
-    button_border_draw(x, y, 20, 20, focused ? 1 : 0);
+    auto &data = g_building_info;
+
+    data.btns.push_back({pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0, func});
+    int focused = is_button_hover(data.btns.back(), context.offset);
+
+    button_border_draw(context.offset.x + pos.x, context.offset.y + pos.y, size.x, size.y, focused ? 1 : 0);
 
     if (context.show_overlay != OVERLAY_NONE) {
-        text_draw_centered((uint8_t *)(game_state_overlay() != context.show_overlay ? "V" : "v"), x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        text_draw_centered((uint8_t *)label, context.offset.x + pos.x + 1, context.offset.y + pos.y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
 }
 
@@ -770,6 +773,10 @@ static void draw_background() {
 
 static void draw_foreground() {
     auto &context = g_building_info_context;
+    auto &data = g_building_info;
+
+    data.btns.clear();
+
     // building-specific buttons
     if (context.type == BUILDING_INFO_BUILDING) {
         building *b = building_get(context.building_id);
@@ -852,8 +859,17 @@ static void draw_foreground() {
     }
 
     if (context.show_overlay != OVERLAY_NONE) {
-        draw_overlay_button(context.offset.x + 375, context.offset.y + 3 + 16 * context.height_blocks - 40, g_building_info.overlay_button_id);
+        pcstr label = (game_state_overlay() != context.show_overlay ? "v" : "V");
+        make_button(label, {375, 3 + 16 * context.height_blocks - 40}, {20, 20}, [&context] (int, int) {
+            if (game_state_overlay() != context.show_overlay) {
+                game_state_set_overlay((e_overlay)context.show_overlay);
+            } else {
+                game_state_reset_overlay();
+            }
+            window_invalidate();
+        });
     }
+
 }
 
 static int handle_specific_building_info_mouse(const mouse *m) {
@@ -917,6 +933,8 @@ static int handle_specific_building_info_mouse(const mouse *m) {
 
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto &context = g_building_info_context;
+    auto &data = g_building_info;
+
     bool button_id = 0;
     int tmp_btn_id;
     // general buttons
@@ -951,9 +969,8 @@ static void handle_input(const mouse* m, const hotkeys* h) {
                                                   g_building_info.generic_button_figures, g_building_info.debug_path_button_id);
     }
 
-    if (context.show_overlay != OVERLAY_NONE) {
-        button_id |= generic_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.generic_button_layer, g_building_info.overlay_button_id);
-    }
+    int tmp_btn;
+    button_id |= generic_buttons_handle_mouse(m, context.offset, data.btns, tmp_btn);
 
     if (!button_id && input_go_back_requested(m, h)) {
         if (context.storage_show_special_orders) {
@@ -1003,16 +1020,6 @@ static void button_debugpath(int debug, int param2) {
     auto &context = g_building_info_context;
     figure* f = figure_get(context.figure.figure_ids[0]);
     f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
-    window_invalidate();
-}
-
-static void button_overlay(int debug, int param2) {
-    auto &context = g_building_info_context;
-    if (game_state_overlay() != context.show_overlay) {
-        game_state_set_overlay((e_overlay)context.show_overlay);
-    } else {
-        game_state_reset_overlay();
-    }
     window_invalidate();
 }
 

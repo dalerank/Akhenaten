@@ -7,13 +7,11 @@ enum { SYSTEM_NONE = 0, SYSTEM_UP = 1, SYSTEM_DOWN = 2, SYSTEM_DOUBLE_CLICK = 4 
 
 #define DOUBLE_CLICK_TIME 500
 
-static mouse data;
+mouse g_mouse;
 static mouse dialog;
 static time_millis last_click;
 
-const mouse* mouse_get(void) {
-    return &data;
-}
+const mouse* mouse_get() { return &g_mouse; }
 
 static void clear_mouse_button(mouse_button* button) {
     button->is_down = 0;
@@ -24,6 +22,8 @@ static void clear_mouse_button(mouse_button* button) {
 }
 
 void mouse_set_from_touch(const touch* first, const touch* last) {
+    auto &data = g_mouse;
+
     data.x = first->current_point.x;
     data.y = first->current_point.y;
     data.scrolled = touch_get_scroll();
@@ -51,6 +51,8 @@ void mouse_set_from_touch(const touch* first, const touch* last) {
 }
 
 void mouse_set_position(int x, int y) {
+    auto &data = g_mouse;
+
     if (x != data.x || y != data.y)
         last_click = 0;
 
@@ -61,6 +63,8 @@ void mouse_set_position(int x, int y) {
 }
 
 void mouse_set_left_down(int down) {
+    auto &data = g_mouse;
+
     data.left.system_change |= down ? SYSTEM_DOWN : SYSTEM_UP;
     data.is_touch = 0;
     data.is_inside_window = 1;
@@ -72,6 +76,8 @@ void mouse_set_left_down(int down) {
 }
 
 void mouse_set_middle_down(int down) {
+    auto &data = g_mouse;
+
     data.middle.system_change |= down ? SYSTEM_DOWN : SYSTEM_UP;
     data.is_touch = 0;
     data.is_inside_window = 1;
@@ -79,6 +85,8 @@ void mouse_set_middle_down(int down) {
 }
 
 void mouse_set_right_down(int down) {
+    auto &data = g_mouse;
+
     data.right.system_change |= down ? SYSTEM_DOWN : SYSTEM_UP;
     data.is_touch = 0;
     data.is_inside_window = 1;
@@ -86,6 +94,8 @@ void mouse_set_right_down(int down) {
 }
 
 void mouse_set_inside_window(int inside) {
+    auto &data = g_mouse;
+
     data.is_inside_window = inside;
     data.is_touch = 0;
 }
@@ -99,28 +109,38 @@ static void update_button_state(mouse_button* button) {
 }
 
 void mouse_determine_button_state() {
+    auto &data = g_mouse;
+
     update_button_state(&data.left);
     update_button_state(&data.middle);
     update_button_state(&data.right);
 }
 
 void mouse_set_scroll(int state) {
+    auto &data = g_mouse;
+
     data.scrolled = state;
     data.is_touch = 0;
     data.is_inside_window = 1;
 }
 
-void mouse_reset_scroll(void) {
+void mouse_reset_scroll() {
+    auto &data = g_mouse;
+
     data.scrolled = SCROLL_NONE;
 }
 
-void mouse_reset_up_state(void) {
+void mouse_reset_up_state() {
+    auto &data = g_mouse;
+
     data.left.went_up = 0;
     data.middle.went_up = 0;
     data.right.went_up = 0;
 }
 
 void mouse_reset_button_state(void) {
+    auto &data = g_mouse;
+
     last_click = 0;
     clear_mouse_button(&data.left);
     clear_mouse_button(&data.middle);
