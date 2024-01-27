@@ -15,7 +15,7 @@ struct advisor_window_type {
 };
 
 int window_advisors_get_advisor(void);
-
+bool is_advisor_available(int btn_id);
 void window_advisors_draw_dialog_background(void);
 
 void window_advisors_show(void);

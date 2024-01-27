@@ -141,7 +141,7 @@ static void set_advisor(int advisor) {
     advisor_buttons[advisor - 1].pressed = 1; // set button active when coming back to menu
 }
 
-static bool is_advisor_available(int btn_id) {
+bool is_advisor_available(int btn_id) {
     return (mission_advisor_availability((e_advisor)btn_id, scenario_campaign_scenario_id() + 1) == AVAILABLE);
 }
 

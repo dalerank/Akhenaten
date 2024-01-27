@@ -48,6 +48,9 @@ struct object_info {
     int width_blocks;
     int height_blocks;
     int height_blocks_submenu;
+    int subwnd_wblocks_num;
+    int subwnd_hblocks_num;
+    int subwnd_y_offset;
     int help_id;
     bool can_play_sound;
     int building_id;

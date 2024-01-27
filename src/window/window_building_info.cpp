@@ -745,7 +745,7 @@ static void draw_foreground() {
     }
 
     // general buttons
-    int y_offset = (context.storage_show_special_orders) ? context.y_offset_submenu : 0;
+    int y_offset = (context.storage_show_special_orders) ? context.subwnd_y_offset : 0;
     int height_blocks = (context.storage_show_special_orders) ? context.height_blocks_submenu : context.height_blocks;
 
     ui::img_button(GROUP_CONTEXT_ICONS, vec2i(14, y_offset + 16 * height_blocks - 40), {28, 28}, 0)
@@ -769,7 +769,7 @@ static void draw_foreground() {
                     }
                });
 
-    if (context.go_to_advisor.first) {
+    if (!context.storage_show_special_orders && context.go_to_advisor.first && is_advisor_available(context.go_to_advisor.first)) {
         int img_offset = (context.go_to_advisor.left_a - 1) * 3;
         ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.height_blocks - 40), {28, 28}, img_offset)
                .onclick([&context] (int, int) {
@@ -777,7 +777,7 @@ static void draw_foreground() {
                });
     }
 
-    if (context.go_to_advisor.left_a) {
+    if (!context.storage_show_special_orders && context.go_to_advisor.left_a && is_advisor_available(context.go_to_advisor.left_a)) {
         int img_offset = (context.go_to_advisor.left_a - 1) * 3;
         ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.height_blocks - 40), {28, 28}, img_offset)
                .onclick([&context] (int, int) {
@@ -785,7 +785,7 @@ static void draw_foreground() {
                });
     }
 
-    if (context.go_to_advisor.left_b) {
+    if (!context.storage_show_special_orders && context.go_to_advisor.left_b && is_advisor_available(context.go_to_advisor.left_b)) {
         int img_offset = (context.go_to_advisor.left_b - 1) * 3;
         ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(65, 16 * context.height_blocks - 40), {28, 28}, img_offset)
                .onclick([&context] (int, int) {
@@ -793,7 +793,7 @@ static void draw_foreground() {
                });
     }
 
-    if (b) {
+    if (!context.storage_show_special_orders && b) {
         int workers_needed = model_get_building(b->type)->laborers;
         if (workers_needed) {
             pcstr label = (b->state == BUILDING_STATE_VALID ? "x" : "");
@@ -809,7 +809,7 @@ static void draw_foreground() {
         }
     }
 
-    if (context.figure.draw_debug_path) {
+    if (!context.storage_show_special_orders && context.figure.draw_debug_path) {
         figure* f = figure_get(context.figure.figure_ids[0]);
         pcstr label = (f->draw_debug_mode ? "P" : "p");
         ui::button(label, {400, 3 + 16 * context.height_blocks - 40}, {20, 20})
@@ -819,7 +819,7 @@ static void draw_foreground() {
               });
     }
 
-    if (context.show_overlay != OVERLAY_NONE) {
+    if (!context.storage_show_special_orders && context.show_overlay != OVERLAY_NONE) {
         pcstr label = (game_state_overlay() != context.show_overlay ? "v" : "V");
         ui::button(label, {375, 3 + 16 * context.height_blocks - 40}, {20, 20})
              .onclick([&context] (int, int) {
@@ -831,7 +831,6 @@ static void draw_foreground() {
                 window_invalidate();
              });
     }
-
 }
 
 static int handle_specific_building_info_mouse(const mouse *m) {

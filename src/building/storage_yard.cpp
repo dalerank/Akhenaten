@@ -889,11 +889,14 @@ void building_storage_yard::spawn_figure() {
 }
 
 void building_storage_yard::draw_warehouse_orders(object_info* c) {
-    int y_offset = window_building_get_vertical_offset(c, 28 + 5);
     c->help_id = 4;
-    outer_panel_draw(vec2i{c->offset.x, y_offset}, 29, 28 + 5);
-    lang_text_draw_centered(99, 3, c->offset.x, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c->offset.x + 16, y_offset + 42, c->width_blocks - 2, 21 + 5);
+    c->subwnd_wblocks_num = 29;
+    c->subwnd_hblocks_num = 33;
+    int y_pos = window_building_get_vertical_offset(c, c->subwnd_hblocks_num);
+    c->subwnd_y_offset = y_pos - c->offset.y;
+    outer_panel_draw(vec2i{c->offset.x, y_pos}, c->subwnd_wblocks_num, c->subwnd_hblocks_num);
+    lang_text_draw_centered(99, 3, c->offset.x, y_pos + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    inner_panel_draw(c->offset.x + 16, y_pos + 42, c->width_blocks - 2, 21 + 5);
 }
 
 void building_storage_yard::draw_warehouse(object_info* c) {
