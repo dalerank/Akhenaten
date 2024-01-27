@@ -25,12 +25,12 @@ static void noop(void) {
 }
 static void noop_input(const mouse* m, const hotkeys* h) {
 }
-static void reset_input(void) {
+static void reset_input() {
     mouse_reset_button_state();
     reset_touches(1);
     scroll_stop();
 }
-static void increase_queue_index(void) {
+static void increase_queue_index() {
     auto& data = g_window;
     data.queue_index++;
     if (data.queue_index >= MAX_QUEUE)
@@ -59,7 +59,7 @@ int window_is_invalid(void) {
     return data.refresh_immediate;
 }
 
-void window_request_refresh(void) {
+void window_request_refresh() {
     auto& data = g_window;
     data.refresh_on_draw = true;
 }
@@ -69,7 +69,7 @@ int window_is(e_window_id id) {
     return data.current_window->id == id;
 }
 
-e_window_id window_get_id(void) {
+e_window_id window_get_id() {
     auto& data = g_window;
     return data.current_window->id;
 }
@@ -89,14 +89,15 @@ void window_show(const window_type* window) {
         data.current_window->handle_input = noop_input;
     window_invalidate();
 }
-void window_go_back(void) {
+
+void window_go_back() {
     auto& data = g_window;
     reset_input();
     decrease_queue_index();
     data.current_window = &data.window_queue[data.queue_index];
     window_invalidate();
 }
-static void update_input_before(void) {
+static void update_input_before() {
     if (!touch_to_mouse()) {
         mouse_determine_button_state(); // touch overrides mouse
     }
@@ -146,7 +147,7 @@ window_type *window_current() {
     return g_window.current_window;
 }
 
-void window_draw_underlying_window(void) {
+void window_draw_underlying_window() {
     auto& data = g_window;
     if (data.underlying_windows_redrawing < MAX_QUEUE) {
         ++data.underlying_windows_redrawing;

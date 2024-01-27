@@ -2,6 +2,10 @@
 
 #include "input/mouse.h"
 
+namespace ui {
+    state g_state;
+}
+
 static int get_button(const mouse* m, int x, int y, const generic_button* buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
         if (x + buttons[i].x <= m->x && x + buttons[i].x + buttons[i].width > m->x && y + buttons[i].y <= m->y

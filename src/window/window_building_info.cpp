@@ -82,8 +82,6 @@ struct building_info_data {
     int generic_button_id = 0;
     int debug_path_button_id = 0;
 
-    std::vector<generic_button> btns;
-
     generic_button generic_button_figures[1] = {
         {400, 3, 24, 24, button_debugpath, button_none, 0, 0}
     };
@@ -576,21 +574,6 @@ static void draw_mothball_button(int x, int y, int focused) {
     }
 }
 
-template<class Func>
-static void make_button(pcstr label, vec2i pos, vec2i size, Func func) {
-    auto &context = g_building_info_context;
-    auto &data = g_building_info;
-
-    data.btns.push_back({pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0, func});
-    int focused = is_button_hover(data.btns.back(), context.offset);
-
-    button_border_draw(context.offset.x + pos.x, context.offset.y + pos.y, size.x, size.y, focused ? 1 : 0);
-
-    if (context.show_overlay != OVERLAY_NONE) {
-        text_draw_centered((uint8_t *)label, context.offset.x + pos.x + 1, context.offset.y + pos.y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    }
-}
-
 static void draw_debugpath_button(int x, int y, int focused) {
     auto &context = g_building_info_context;
     button_border_draw(x, y, 20, 20, focused ? 1 : 0);
@@ -772,10 +755,9 @@ static void draw_background() {
 }
 
 static void draw_foreground() {
+    ui::begin_window(g_building_info_context.offset);
     auto &context = g_building_info_context;
     auto &data = g_building_info;
-
-    data.btns.clear();
 
     // building-specific buttons
     if (context.type == BUILDING_INFO_BUILDING) {
@@ -860,7 +842,7 @@ static void draw_foreground() {
 
     if (context.show_overlay != OVERLAY_NONE) {
         pcstr label = (game_state_overlay() != context.show_overlay ? "v" : "V");
-        make_button(label, {375, 3 + 16 * context.height_blocks - 40}, {20, 20}, [&context] (int, int) {
+        ui::button(label, {375, 3 + 16 * context.height_blocks - 40}, {20, 20}, [&context] (int, int) {
             if (game_state_overlay() != context.show_overlay) {
                 game_state_set_overlay((e_overlay)context.show_overlay);
             } else {
@@ -969,8 +951,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
                                                   g_building_info.generic_button_figures, g_building_info.debug_path_button_id);
     }
 
-    int tmp_btn;
-    button_id |= generic_buttons_handle_mouse(m, context.offset, data.btns, tmp_btn);
+    button_id |= ui::handle_mouse(m);
 
     if (!button_id && input_go_back_requested(m, h)) {
         if (context.storage_show_special_orders) {
