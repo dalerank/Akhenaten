@@ -1,5 +1,4 @@
-#ifndef GRAPHICS_ARROW_BUTTON_H
-#define GRAPHICS_ARROW_BUTTON_H
+#pragma once
 
 #include "input/mouse.h"
 
@@ -18,11 +17,4 @@ typedef struct {
 
 void arrow_buttons_draw(int x, int y, arrow_button* buttons, int num_buttons, bool tiny = false);
 
-int arrow_buttons_handle_mouse(const mouse* m,
-                               int x,
-                               int y,
-                               arrow_button* buttons,
-                               int num_buttons,
-                               int* focus_button_id);
-
-#endif // GRAPHICS_ARROW_BUTTON_H
+int arrow_buttons_handle_mouse(const mouse* m, int x, int y, arrow_button* buttons, int num_buttons, int* focus_button_id);

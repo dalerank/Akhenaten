@@ -352,11 +352,13 @@ int text_draw_money(int value, int x_offset, int y_offset, font_t font) {
 
     return text_draw(str, x_offset, y_offset, font, 0);
 }
+
 int text_draw_percentage(int value, int x_offset, int y_offset, font_t font) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, '@', "%");
     return text_draw(str, x_offset, y_offset, font, 0);
 }
+
 int text_draw_label_and_number(const char* label,
                                int value,
                                const char* postfix,

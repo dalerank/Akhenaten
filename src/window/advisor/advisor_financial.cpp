@@ -1,4 +1,4 @@
-#include "financial.h"
+#include "advisor_financial.h"
 
 #include "city/finance.h"
 #include "core/calc.h"
@@ -14,8 +14,9 @@
 
 static void button_change_taxes(int is_down, int param2);
 
-static arrow_button arrow_buttons_taxes[]
-  = {{180, 75, 17, 24, button_change_taxes, 1, 0}, {204, 75, 15, 24, button_change_taxes, 0, 0}};
+static arrow_button arrow_buttons_taxes[] = {
+    {180, 75, 17, 24, button_change_taxes, 1, 0}, {204, 75, 15, 24, button_change_taxes, 0, 0}
+};
 
 static int arrow_button_focus;
 
@@ -25,6 +26,7 @@ static void draw_row(int group, int number, int* y, int value_last_year, int val
     text_draw_number(value_this_year, '@', " ", 430, *y, FONT_NORMAL_BLACK_ON_LIGHT);
     *y += 15;
 }
+
 static int draw_background() {
     painter ctx = game.painter();
     outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
@@ -55,8 +57,7 @@ static int draw_background() {
     // percentage taxpayers
     width = text_draw_percentage(city_finance_percentage_taxed_people(), 70, 103, FONT_NORMAL_WHITE_ON_DARK);
     width += lang_text_draw(60, 5, 70 + width, 103, FONT_NORMAL_WHITE_ON_DARK);
-    lang_text_draw_amount(
-      60, 22, city_finance_estimated_tax_uncollected(), 70 + width, 103, FONT_NORMAL_WHITE_ON_DARK, "Db");
+    lang_text_draw_amount(60, 22, city_finance_estimated_tax_uncollected(), 70 + width, 103, FONT_NORMAL_WHITE_ON_DARK, "Db");
 
     // table headers
     lang_text_draw(60, 6, 270, 133, FONT_NORMAL_BLACK_ON_LIGHT);

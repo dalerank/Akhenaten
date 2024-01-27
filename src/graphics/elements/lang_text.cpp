@@ -62,6 +62,7 @@ int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y
     }
     return desc_offset_x + lang_text_draw(group, number + amount_offset, x_offset + desc_offset_x, y_offset, font);
 }
+
 int lang_text_draw_year(int year, int x_offset, int y_offset, font_t font) {
     int width = 0;
     if (year >= 0) {

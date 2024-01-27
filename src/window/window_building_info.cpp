@@ -687,7 +687,7 @@ static void draw_background() {
 }
 
 static void draw_foreground() {
-    ui::begin_window(g_building_info_context.offset);
+    ui::begin_widget(g_building_info_context.offset);
     auto &context = g_building_info_context;
 
     // building-specific buttons
@@ -823,6 +823,7 @@ static void draw_foreground() {
                 window_invalidate();
              });
     }
+    ui::end_widget();
 }
 
 static int handle_specific_building_info_mouse(const mouse *m) {

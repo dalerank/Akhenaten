@@ -11,13 +11,15 @@
 struct mouse;
 
 enum UiFlags_ {
+    UiFlags_None = 0,
     UiFlags_LabelCentered = 1 << 1,
     UiFlags_PanelOuter = 1 << 2,
 };
 
 namespace ui {
 
-void begin_window(vec2i offset);
+void begin_widget(vec2i offset);
+void end_widget();
 bool handle_mouse(const mouse *m);
 
 }

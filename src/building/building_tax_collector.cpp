@@ -4,6 +4,7 @@
 #include "city/object_info.h"
 #include "figure/figure.h"
 #include "game/resource.h"
+#include "city/finance.h"
 #include "graphics/elements/panel.h"
 #include "graphics/view/view.h"
 #include "graphics/elements/lang_text.h"
@@ -15,7 +16,7 @@
 #include "game/game.h"
 
 void building_tax_collector::window_info_background(object_info &c) {
-    ui::begin_window(c.offset);
+    ui::begin_widget(c.offset);
 
     c.help_id = e_text_building_tax_collector;
     c.go_to_advisor.left_a = ADVISOR_RATINGS;
@@ -23,19 +24,19 @@ void building_tax_collector::window_info_background(object_info &c) {
 
     window_building_play_sound(&c, snd::get_building_info_sound("tax_collector"));
 
-    {
+    { // header
         ui::panel(vec2i{0, 0}, {c.width_blocks, c.height_blocks}, UiFlags_PanelOuter);
-        ui::label(106, 0, vec2i{0, 10}, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT, UiFlags_LabelCentered);
+        ui::label(106, 0, vec2i{0, 10}, FONT_LARGE_BLACK_ON_LIGHT, UiFlags_LabelCentered, 16 * c.width_blocks);
         ui::icon(vec2i{16, 36}, RESOURCE_DEBEN);
     }
 
     building* b = building_get(c.building_id);
-    int width = lang_text_draw(106, 2, c.offset.x + 44, c.offset.y + 43, FONT_NORMAL_BLACK_ON_LIGHT);
-    if (config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
-        lang_text_draw_amount(8, 0, b->deben_storage, c.offset.x + 44 + width, c.offset.y + 43, FONT_NORMAL_BLACK_ON_LIGHT);
-    } else {
-        lang_text_draw_amount(8, 0, b->tax_income_or_storage, c.offset.x + 44 + width, c.offset.y + 43, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
+    int width = ui::label(106, 2, {44, 43});
+    int amount = config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM) ? b->deben_storage : b->tax_income_or_storage;
+    ui::label_num(8, 0, amount, {44 + width, 43});
+
+    ui::label(60, 1, {c.width_blocks * 16 / 2 + 50, 40});
+    ui::label_percent(city_finance_tax_percentage(), {c.width_blocks * 16 / 2 + 150, 40});
 
     if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);
@@ -55,6 +56,8 @@ void building_tax_collector::window_info_background(object_info &c) {
 
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
     window_building_draw_employment(&c, 142);
+
+    ui::end_widget();
 }
 
 void building_tax_collector::update_month() {
