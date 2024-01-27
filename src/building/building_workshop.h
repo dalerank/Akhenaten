@@ -6,7 +6,6 @@
 struct object_info;
 struct painter;
 
-void building_brewery_draw_info(object_info& c);
 void building_flax_workshop_draw_info(object_info& c);
 void building_weapons_workshop_draw_info(object_info& c);
 void building_luxury_workshop_draw_info(object_info& c);

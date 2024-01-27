@@ -402,6 +402,11 @@ public:
     inline tile2i tile() const { return base.tile; }
     inline e_building_type type() const { return base.type; }
 
+    virtual bool is_workshop() const { return false; }
+
+    using resources_vec = std::array<e_resource, 4>;
+    virtual resources_vec required_resource() const { return {}; }
+
     building &base;
     building::impl_data_t &data;
 };

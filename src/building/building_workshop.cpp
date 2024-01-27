@@ -122,13 +122,6 @@ static void building_workshop_draw_info(object_info& c, int help_id, const char*
     window_building_draw_employment(&c, y_offset + 48);
 }
 
-void building_brewery_draw_info(object_info& c) {
-    e_resource input_resource = RESOURCE_BARLEY;
-    e_resource output_resource = RESOURCE_BEER;
-
-    building_workshop_draw_info(c, 96, "brewery", 122, output_resource, input_resource);
-}
-
 void building_flax_workshop_draw_info(object_info& c) {
     e_resource input_resource = RESOURCE_FLAX;
     e_resource output_resource = RESOURCE_LINEN;

@@ -10,6 +10,7 @@
 #include "building/building_firehouse.h"
 #include "building_architect_post.h"
 #include "building/storage_yard.h"
+#include "building/building_brewery.h"
 #include "building/monument_mastaba.h"
 #include "building/building_bandstand.h"
 #include "building/building_bricklayers_guild.h"
@@ -168,10 +169,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         break;
     case BUILDING_CLAY_PIT:
         b->output_resource_first_id = RESOURCE_CLAY;
-        break;
-    case BUILDING_BREWERY_WORKSHOP:
-        b->data.industry.first_material_id = RESOURCE_BARLEY;
-        b->output_resource_first_id = RESOURCE_BEER;
         break;
     case BUILDING_WEAVER_WORKSHOP:
         b->data.industry.first_material_id = RESOURCE_FLAX;
@@ -334,6 +331,7 @@ building_impl *building::dcast() {
     case BUILDING_APOTHECARY: _ptr = new building_apothecary(*this); break;
     case BUILDING_POTTERY_WORKSHOP: _ptr = new building_pottery(*this); break;
     case BUILDING_WELL: _ptr = new building_well(*this); break;
+    case BUILDING_BREWERY_WORKSHOP: _ptr = new building_brewery(*this); break;
 
     case BUILDING_SHRINE_OSIRIS:
     case BUILDING_SHRINE_RA:
