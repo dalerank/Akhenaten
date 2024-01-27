@@ -68,26 +68,7 @@
 #include <functional>
 #include <utility>
 
-static void button_help(int param1, int param2);
-static void button_close(int param1, int param2);
-static void button_advisor(int advisor, int param2);
-
 object_info g_building_info_context;
-
-struct building_info_data {
-    int image_button_id = 0;
-
-    struct {
-        image_button l_advisor_b = {65, 0, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1};
-    } buttons;
-
-    image_button image_buttons_help_close[2] = {
-        {14, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
-        {424, 3, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1}
-    };
-};
-
-building_info_data g_building_info;
 
 static int get_height_id() {
     auto &context = g_building_info_context;
@@ -194,16 +175,7 @@ static int get_height_id() {
 static void get_tooltip(tooltip_context* c) {
     auto &context = g_building_info_context;
     std::pair<int, int> tooltip;
-    if (g_building_info.image_button_id) {
-        tooltip.second = g_building_info.image_button_id;
-
-    //} else if (g_building_info.generic_button_id) {
-        ;
-
-    //} else if (g_building_info.debug_path_button_id) {
-        ;
-
-    } else if (context.type == BUILDING_INFO_LEGION) {
+    if (context.type == BUILDING_INFO_LEGION) {
         tooltip.second = window_building_get_legion_info_tooltip_text(&context);
 
     } else if (context.type == BUILDING_INFO_BUILDING && context.storage_show_special_orders) {
@@ -725,7 +697,6 @@ static void draw_background() {
 static void draw_foreground() {
     ui::begin_window(g_building_info_context.offset);
     auto &context = g_building_info_context;
-    auto &data = g_building_info;
 
     // building-specific buttons
     building *b = nullptr;
@@ -774,32 +745,52 @@ static void draw_foreground() {
     }
 
     // general buttons
-    if (context.storage_show_special_orders) {
-        image_buttons_draw(vec2i(context.offset.x, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40), g_building_info.image_buttons_help_close);
-    } else {
-        image_buttons_draw(context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.image_buttons_help_close);
-    }
+    int y_offset = (context.storage_show_special_orders) ? context.y_offset_submenu : 0;
+    int height_blocks = (context.storage_show_special_orders) ? context.height_blocks_submenu : context.height_blocks;
+
+    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(14, y_offset + 16 * height_blocks - 40), {28, 28}, 0)
+               .onclick([&context] (int, int) {
+                    if (context.help_id > 0) {
+                        window_message_dialog_show(context.help_id, -1, window_city_draw_all);
+                    } else {
+                        window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
+                    }
+                    window_invalidate();
+               });
+
+    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(16 * context.width_blocks - 40, y_offset + 16 * height_blocks - 40), {28, 28}, 4)
+               .onclick([&context] (int, int) {
+                    if (context.storage_show_special_orders) {
+                        context.storage_show_special_orders = 0;
+                        storage_settings_backup_reset();
+                        window_invalidate();
+                    } else {
+                        window_city_show();
+                    }
+               });
 
     if (context.go_to_advisor.first) {
         int img_offset = (context.go_to_advisor.left_a - 1) * 3;
         ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.height_blocks - 40), {28, 28}, img_offset)
-            .onclick([&context] (int, int) {
-                window_advisors_show_advisor(context.go_to_advisor.first);
-            });
+               .onclick([&context] (int, int) {
+                   window_advisors_show_advisor(context.go_to_advisor.first);
+               });
     }
 
     if (context.go_to_advisor.left_a) {
         int img_offset = (context.go_to_advisor.left_a - 1) * 3;
         ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.height_blocks - 40), {28, 28}, img_offset)
-            .onclick([&context] (int, int) {
-                window_advisors_show_advisor(context.go_to_advisor.left_a);
-            });
+               .onclick([&context] (int, int) {
+                   window_advisors_show_advisor(context.go_to_advisor.left_a);
+               });
     }
 
     if (context.go_to_advisor.left_b) {
-        g_building_info.buttons.l_advisor_b.parameter1 = context.go_to_advisor.left_b;
-        g_building_info.buttons.l_advisor_b.image_offset = (context.go_to_advisor.left_b - 1) * 3;
-        image_buttons_draw(context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.buttons.l_advisor_b);
+        int img_offset = (context.go_to_advisor.left_b - 1) * 3;
+        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(65, 16 * context.height_blocks - 40), {28, 28}, img_offset)
+               .onclick([&context] (int, int) {
+                   window_advisors_show_advisor(context.go_to_advisor.left_b);
+               });
     }
 
     if (b) {
@@ -808,13 +799,13 @@ static void draw_foreground() {
             pcstr label = (b->state == BUILDING_STATE_VALID ? "x" : "");
             auto tooltip = (b->state == BUILDING_STATE_VALID) ? std::pair{54, 8} : std::pair{53, 10};
             ui::button(label, {400, 3 + 16 * context.height_blocks - 40}, {20, 20})
-                .onclick([&context, b, workers_needed] (int, int) {
-                    if (workers_needed) {
-                        building_mothball_toggle(b);
-                        window_invalidate();
-                    }
-                })
-                .tooltip(tooltip);
+               .onclick([&context, b, workers_needed] (int, int) {
+                   if (workers_needed) {
+                       building_mothball_toggle(b);
+                       window_invalidate();
+                   }
+               })
+               .tooltip(tooltip);
         }
     }
 
@@ -822,10 +813,10 @@ static void draw_foreground() {
         figure* f = figure_get(context.figure.figure_ids[0]);
         pcstr label = (f->draw_debug_mode ? "P" : "p");
         ui::button(label, {400, 3 + 16 * context.height_blocks - 40}, {20, 20})
-            .onclick([&context, f] (int, int) {
-                f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
-                window_invalidate();
-            });
+              .onclick([&context, f] (int, int) {
+                  f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
+                  window_invalidate();
+              });
     }
 
     if (context.show_overlay != OVERLAY_NONE) {
@@ -904,28 +895,12 @@ static int handle_specific_building_info_mouse(const mouse *m) {
 
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto &context = g_building_info_context;
-    auto &data = g_building_info;
 
-    bool button_id = 0;
-    int tmp_btn_id;
-    // general buttons
-    if (context.storage_show_special_orders) {
-        button_id |= image_buttons_handle_mouse(m, vec2i(context.offset.x, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40), 
-                                                g_building_info.image_buttons_help_close, g_building_info.image_button_id);
-    } else {
-        button_id |= image_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40),
-                                                g_building_info.image_buttons_help_close, g_building_info.image_button_id);
-    }
-
-    if (context.go_to_advisor.left_b) {
-        button_id |= image_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.buttons.l_advisor_b, tmp_btn_id);
-    }
-
+    bool button_id = ui::handle_mouse(m);
+  
     if (!button_id) {
         button_id |= !!handle_specific_building_info_mouse(m);
     }
-
-    button_id |= ui::handle_mouse(m);
 
     if (!button_id && input_go_back_requested(m, h)) {
         if (context.storage_show_special_orders) {
@@ -934,31 +909,6 @@ static void handle_input(const mouse* m, const hotkeys* h) {
             window_city_show();
         }
     }
-}
-
-static void button_help(int param1, int param2) {
-    auto &context = g_building_info_context;
-    if (context.help_id > 0) {
-        window_message_dialog_show(context.help_id, -1, window_city_draw_all);
-    } else {
-        window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
-    }
-    window_invalidate();
-}
-
-static void button_close(int param1, int param2) {
-    auto &context = g_building_info_context;
-    if (context.storage_show_special_orders) {
-        context.storage_show_special_orders = 0;
-        storage_settings_backup_reset();
-        window_invalidate();
-    } else {
-        window_city_show();
-    }
-}
-
-static void button_advisor(int advisor, int param2) {
-    window_advisors_show_advisor((e_advisor)advisor);
 }
 
 void window_building_info_show(const map_point& point) {
