@@ -48,7 +48,7 @@ void image_buttons_draw(int x, int y, image_button* buttons, int num_buttons, in
         } else {
             image_id += 3;
         }
-        ImageDraw::img_generic(ctx, image_id, vec2i{x + btn->x_offset, y + btn->y_offset});
+        ImageDraw::img_generic(ctx, image_id, vec2i{x + btn->x, y + btn->y});
     }
 }
 
@@ -64,8 +64,8 @@ bool image_buttons_handle_mouse(const mouse* m, int x, int y, image_button* butt
         if (btn->focused)
             btn->focused--;
 
-        if (x + btn->x_offset <= m->x && x + btn->x_offset + btn->width > m->x && y + btn->y_offset <= m->y
-            && y + btn->y_offset + btn->height > m->y) {
+        if (x + btn->x <= m->x && x + btn->x + btn->width > m->x && y + btn->y <= m->y
+            && y + btn->y + btn->height > m->y) {
             if (focus_button_id)
                 *focus_button_id = i + 1;
 
@@ -82,11 +82,15 @@ bool image_buttons_handle_mouse(const mouse* m, int x, int y, image_button* butt
             }
         }
     }
-    if (!hit_button)
+    if (!hit_button) {
         return false;
-    if (hit_button->button_type == IB_SCROLL)
-        if (!m->left.went_down && !m->left.is_down)
+    }
+
+    if (hit_button->button_type == IB_SCROLL) {
+        if (!m->left.went_down && !m->left.is_down) {
             return false;
+        }
+    }
 
     // on click, press button and set reminder to this button (floating = true)
     if (m->left.went_down && hit_button->button_type != IB_SCROLL) {
@@ -99,11 +103,15 @@ bool image_buttons_handle_mouse(const mouse* m, int x, int y, image_button* butt
     if (m->left.went_up) {
         sound_effect_play(SOUND_EFFECT_ICON);
         remove_pressed_effect_build(buttons, num_buttons);
-        if (hit_button->button_type == IB_BUILD || hit_button->button_type == IB_OVERSEER)
+        if (hit_button->button_type == IB_BUILD || hit_button->button_type == IB_OVERSEER) {
             hit_button->pressed = 1;
+        }
         hit_button->floating = 0;
         hit_button->pressed_since = time_get_millis();
         hit_button->left_click_handler(hit_button->parameter1, hit_button->parameter2);
+        if (hit_button->_onclick) {
+            hit_button->_onclick(hit_button->parameter1, hit_button->parameter2);
+        }
     } else if (m->right.went_up) {
         if (hit_button->button_type == IB_BUILD || hit_button->button_type == IB_OVERSEER)
             hit_button->pressed = 1;

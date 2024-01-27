@@ -45,5 +45,5 @@ void building_mansion::window_info_background(object_info &c) {
 }
 
 int building_mansion::window_info_handle_mouse(const mouse *m, object_info &c) {
-    return generic_buttons_handle_mouse(m, 0, 0, imperial_buttons, 8, &g_window_info_mansion.focus_button_id);
+    return 0;
 }

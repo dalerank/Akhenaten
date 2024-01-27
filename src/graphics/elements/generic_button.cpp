@@ -66,10 +66,3 @@ int generic_buttons_min_handle_mouse(const mouse* m, int x, int y, const generic
 
     return button_id;
 }
-
-bool is_button_hover(generic_button &button, vec2i context) {
-    const mouse *m = mouse_get();
-    vec2i bpos = context + vec2i{button.x, button.y};
-    return (   bpos.x <= m->x && bpos.x + button.width > m->x
-            && bpos.y <= m->y && bpos.y + button.height > m->y);
-}

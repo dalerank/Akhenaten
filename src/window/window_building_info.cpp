@@ -78,7 +78,6 @@ struct building_info_data {
     int image_button_id = 0;
 
     struct {
-        image_button l_advisor_a = {40, 0, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1};
         image_button l_advisor_b = {65, 0, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1};
     } buttons;
 
@@ -782,16 +781,19 @@ static void draw_foreground() {
     }
 
     if (context.go_to_advisor.first) {
-        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(0, 16 * context.height_blocks - 40), {28, 28}, (context.go_to_advisor.first - 1) * 3)
+        int img_offset = (context.go_to_advisor.left_a - 1) * 3;
+        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.height_blocks - 40), {28, 28}, img_offset)
             .onclick([&context] (int, int) {
                 window_advisors_show_advisor(context.go_to_advisor.first);
             });
     }
 
     if (context.go_to_advisor.left_a) {
-        g_building_info.buttons.l_advisor_a.parameter1 = context.go_to_advisor.left_a;
-        g_building_info.buttons.l_advisor_a.image_offset = (context.go_to_advisor.left_a - 1) * 3;
-        image_buttons_draw(context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.buttons.l_advisor_a);
+        int img_offset = (context.go_to_advisor.left_a - 1) * 3;
+        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.height_blocks - 40), {28, 28}, img_offset)
+            .onclick([&context] (int, int) {
+                window_advisors_show_advisor(context.go_to_advisor.left_a);
+            });
     }
 
     if (context.go_to_advisor.left_b) {
@@ -913,14 +915,6 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     } else {
         button_id |= image_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40),
                                                 g_building_info.image_buttons_help_close, g_building_info.image_button_id);
-    }
-
-    //if (context.go_to_advisor.first) {
-    //    button_id |= image_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.buttons.advisor, tmp_btn_id);
-    //}
-
-    if (context.go_to_advisor.left_a) {
-        button_id |= image_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.buttons.l_advisor_a, tmp_btn_id);
     }
 
     if (context.go_to_advisor.left_b) {

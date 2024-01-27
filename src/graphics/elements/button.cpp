@@ -68,6 +68,7 @@ namespace ui {
 void ui::begin_window(vec2i offset) {
     g_state.offset = offset;
     g_state.buttons.clear();
+    g_state.img_buttons.clear();
 }
 
 bool ui::handle_mouse(const mouse *m) {
@@ -107,9 +108,13 @@ generic_button &ui::button(uint32_t id) {
 
 image_button &ui::img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, int offset) {
     const vec2i img_offset = g_state.offset;
+    const mouse *m = mouse_get();
 
     g_state.img_buttons.push_back({pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, group, id, offset, button_none, button_none, 0, 0, true});
-    image_buttons_draw(img_offset + pos, g_state.img_buttons.back());
+    auto &button = g_state.img_buttons.back();
+    button.focused = is_button_hover(g_state.img_buttons.back(), img_offset);
+    button.pressed = button.focused && m->left.is_down;
+    image_buttons_draw(img_offset, button);
 
     return g_state.img_buttons.back();
 }

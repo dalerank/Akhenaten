@@ -16,8 +16,8 @@ enum {
 };
 
 struct image_button {
-    int x_offset;
-    int y_offset;
+    int x;
+    int y;
     int width;
     int height;
     short button_type;
@@ -32,7 +32,7 @@ struct image_button {
     // state
     char pressed;
     char floating;
-    char focused;
+    uint8_t focused;
     time_millis pressed_since;
 
     std::function<void(int,int)> _onclick;
