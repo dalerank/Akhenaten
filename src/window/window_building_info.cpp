@@ -72,8 +72,6 @@ static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_advisor(int advisor, int param2);
 static void button_mothball(int mothball, int param2);
-static void button_debugpath(int debug, int param2);
-static void button_overlay(int overlay, int param2);
 
 object_info g_building_info_context;
 
@@ -81,10 +79,6 @@ struct building_info_data {
     int image_button_id = 0;
     int generic_button_id = 0;
     int debug_path_button_id = 0;
-
-    generic_button generic_button_figures[1] = {
-        {400, 3, 24, 24, button_debugpath, button_none, 0, 0}
-    };
 
     generic_button generic_button_mothball[1] = {
         {400, 3, 24, 24, button_mothball, button_none, 0, 0}
@@ -574,13 +568,6 @@ static void draw_mothball_button(int x, int y, int focused) {
     }
 }
 
-static void draw_debugpath_button(int x, int y, int focused) {
-    auto &context = g_building_info_context;
-    button_border_draw(x, y, 20, 20, focused ? 1 : 0);
-    figure* f = figure_get(context.figure.figure_ids[0]);
-    text_draw_centered((uint8_t *)(f->draw_debug_mode ? "P" : "p"), x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-}
-
 static void draw_refresh_background() {
     auto &context = g_building_info_context;
     if (context.type == BUILDING_INFO_NONE) {
@@ -837,19 +824,26 @@ static void draw_foreground() {
     }
 
     if (context.figure.draw_debug_path) {
-        draw_debugpath_button(context.offset.x + 400, context.offset.y + 3 + 16 * context.height_blocks - 40, g_building_info.debug_path_button_id);
+        figure* f = figure_get(context.figure.figure_ids[0]);
+        pcstr label = (f->draw_debug_mode ? "P" : "p");
+        ui::button(label, {400, 3 + 16 * context.height_blocks - 40}, {24, 24})
+            .onclick([&context, f] (int, int) {
+                f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
+                window_invalidate();
+            });
     }
 
     if (context.show_overlay != OVERLAY_NONE) {
         pcstr label = (game_state_overlay() != context.show_overlay ? "v" : "V");
-        ui::button(label, {375, 3 + 16 * context.height_blocks - 40}, {20, 20}, [&context] (int, int) {
-            if (game_state_overlay() != context.show_overlay) {
-                game_state_set_overlay((e_overlay)context.show_overlay);
-            } else {
-                game_state_reset_overlay();
-            }
-            window_invalidate();
-        });
+        ui::button(label, {375, 3 + 16 * context.height_blocks - 40}, {20, 20})
+             .onclick([&context] (int, int) {
+                if (game_state_overlay() != context.show_overlay) {
+                    game_state_set_overlay((e_overlay)context.show_overlay);
+                } else {
+                    game_state_reset_overlay();
+                }
+                window_invalidate();
+             });
     }
 
 }
@@ -946,11 +940,6 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         button_id |= !!handle_specific_building_info_mouse(m);
     }
 
-    if (context.figure.draw_debug_path) {
-        button_id |= generic_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40),
-                                                  g_building_info.generic_button_figures, g_building_info.debug_path_button_id);
-    }
-
     button_id |= ui::handle_mouse(m);
 
     if (!button_id && input_go_back_requested(m, h)) {
@@ -995,13 +984,6 @@ static void button_mothball(int mothball, int param2) {
         building_mothball_toggle(b);
         window_invalidate();
     }
-}
-
-static void button_debugpath(int debug, int param2) {
-    auto &context = g_building_info_context;
-    figure* f = figure_get(context.figure.figure_ids[0]);
-    f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
-    window_invalidate();
 }
 
 void window_building_info_show(const map_point& point) {

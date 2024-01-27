@@ -3,7 +3,34 @@
 #include "input/mouse.h"
 
 namespace ui {
+    struct state {
+        vec2i offset;
+        std::vector<generic_button> buttons;
+    };
+
     state g_state;
+}
+
+void ui::begin_window(vec2i offset) {
+    g_state.offset = offset;
+    g_state.buttons.clear();
+}
+
+int ui::handle_mouse(const mouse *m) {
+    int tmp_btn;
+    return generic_buttons_handle_mouse(m, g_state.offset, g_state.buttons, tmp_btn);
+}
+
+generic_button &ui::button(pcstr label, vec2i pos, vec2i size) {
+    const vec2i offset = g_state.offset;
+
+    g_state.buttons.push_back({pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    int focused = is_button_hover(g_state.buttons.back(), offset);
+
+    button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, focused ? 1 : 0);
+    text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+
+    return g_state.buttons.back();
 }
 
 static int get_button(const mouse* m, int x, int y, const generic_button* buttons, int num_buttons) {
@@ -39,8 +66,8 @@ int generic_buttons_handle_mouse(const mouse* m, int x, int y, const generic_but
     const generic_button* button = &buttons[button_id - 1];
     if (m->left.went_up) {
         button->left_click_handler(button->parameter1, button->parameter2);
-        if (button->onclick) {
-            button->onclick(button->parameter1, button->parameter2);
+        if (button->_onclick) {
+            button->_onclick(button->parameter1, button->parameter2);
         }
     } else if (m->right.went_up) {
         button->right_click_handler(button->parameter1, button->parameter2);
