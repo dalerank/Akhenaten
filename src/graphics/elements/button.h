@@ -22,8 +22,6 @@ struct mouse;
 
 namespace ui {
 
-void begin_window(vec2i offset);
-bool handle_mouse(const mouse *m);
 int button_hover(const mouse *m);
 generic_button &button(pcstr label, vec2i pos, vec2i size);
 generic_button &button(uint32_t id);

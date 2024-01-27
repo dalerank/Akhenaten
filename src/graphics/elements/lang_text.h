@@ -3,6 +3,7 @@
 #include "graphics/color.h"
 #include "core/vec2i.h"
 #include "graphics/font.h"
+#include "ui.h"
 
 int lang_text_get_width(int group, int number, font_t font);
 int lang_text_get_width(const char* str, font_t font);
@@ -29,3 +30,7 @@ int lang_text_draw_year(int year, int x_offset, int y_offset, font_t font);
 void lang_text_draw_month_year_max_width(int month, int year, int x_offset, int y_offset, int box_width, font_t font, color color);
 
 int lang_text_draw_multiline(int group, int number, vec2i offset, int box_width, font_t font);
+
+namespace ui {
+    void label(int group, int number, vec2i pos, int box_width, font_t font, UiFlags_ flags); 
+}

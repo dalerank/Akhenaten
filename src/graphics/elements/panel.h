@@ -1,7 +1,8 @@
 #pragma once
 
-#include <cstdint>
 #include "core/vec2i.h"
+#include "game/resource.h"
+#include "ui.h"
 
 #define DEFAULT_BLOCK_SIZE 16
 
@@ -17,3 +18,8 @@ void label_draw(int x, int y, int width_blocks, int type);
 void label_draw_colored(painter &ctx, int x, int y, int width_blocks, int type, uint32_t mask);
 
 void large_label_draw(int x, int y, int width_blocks, int type);
+
+namespace ui {
+    void panel(vec2i pos, vec2i size, UiFlags_ flags);
+    void icon(vec2i pos, e_resource img);
+}

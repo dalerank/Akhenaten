@@ -34,9 +34,7 @@
 #include "figure/formation_legion.h"
 #include "figure/figure_phrase.h"
 #include "graphics/boilerplate.h"
-#include "graphics/elements/generic_button.h"
-#include "graphics/elements/image_button.h"
-#include "graphics/image_groups.h"
+#include "graphics/elements/ui.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/view/view.h"
@@ -614,11 +612,6 @@ static void draw_refresh_background() {
 
             case BUILDING_ORACLE:
                 window_building_draw_oracle(&context);
-                break;
-
-            case BUILDING_TAX_COLLECTOR:
-            case BUILDING_TAX_COLLECTOR_UPGRADED:
-                building_tax_collector_draw_info(&context);
                 break;
 
             case BUILDING_COURTHOUSE: window_building_draw_courthouse(&context); break;

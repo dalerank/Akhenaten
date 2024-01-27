@@ -1108,24 +1108,6 @@ void building::update_month() {
         data.entertainment.spawned_entertainer_this_month = false;
         break;
 
-    case BUILDING_TAX_COLLECTOR:
-    case BUILDING_TAX_COLLECTOR_UPGRADED:
-        if (!config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
-            break;
-        }
-
-        if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
-            break;
-        }
-
-        if (has_road_access && deben_storage > 100) {
-            int may_send = std::min<int>((deben_storage / 100) * 100, 400);
-            figure *f = create_cartpusher(RESOURCE_GOLD, may_send, FIGURE_ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
-            deben_storage -= may_send;
-            f->sender_building_id = this->id;
-        }
-        break;
-
     case BUILDING_WATER_SUPPLY: {
             int avg_desirability = map_desirabilty_avg(tile, 4);
             if (avg_desirability > 30) {
