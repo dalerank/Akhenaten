@@ -32,21 +32,14 @@ int generic_buttons_min_handle_mouse(const mouse* m, int x, int y, const generic
 
 bool is_button_hover(generic_button &button, vec2i context);
 
-template<class T, uint32_t N>
-inline int generic_buttons_handle_mouse(const mouse *m, vec2i pos, const T (&buttons)[N], int &focus_button_id) {
+template<uint32_t N>
+inline int generic_buttons_handle_mouse(const mouse *m, vec2i pos, const generic_button (&buttons)[N], int &focus_button_id) {
     return generic_buttons_handle_mouse(m, pos.x, pos.y, buttons, N, &focus_button_id);
 }
 
 template<class T>
 inline int generic_buttons_handle_mouse(const mouse *m, vec2i pos, const T &buttons, int &focus_button_id) {
-    return generic_buttons_handle_mouse(m, pos.x, pos.y, &buttons.front(), (int)buttons.size(), &focus_button_id);
-}
-
-namespace ui {
-void begin_window(vec2i offset);
-int handle_mouse(const mouse *m);
-int button_hover(const mouse *m);
-generic_button &button(pcstr label, vec2i pos, vec2i size);
-generic_button &button(uint32_t id);
-
+    return buttons.size() > 0
+                ? generic_buttons_handle_mouse(m, pos.x, pos.y, &buttons.front(), (int)buttons.size(), &focus_button_id)
+                : 0; 
 }
