@@ -20,8 +20,11 @@ struct generic_button {
     int parameter2;
 
     std::function<void(int,int)> _onclick;
+    std::pair<int, int> _tooltip;
 
-    template<class Func> void onclick(Func f) { _onclick = f; }
+    template<class Func> generic_button &onclick(Func f) { _onclick = f; return *this; }
+    void tooltip(std::pair<int, int> t) { _tooltip = t; }
+    void tooltip(const std::initializer_list<int> &t) { _tooltip.first = *t.begin(); _tooltip.second = *(t.begin() + 1); }
 };
 
 int generic_buttons_handle_mouse(const mouse* m, int x, int y, const generic_button* buttons, int num_buttons, int* focus_button_id);
@@ -40,9 +43,10 @@ inline int generic_buttons_handle_mouse(const mouse *m, vec2i pos, const T &butt
 }
 
 namespace ui {
-
 void begin_window(vec2i offset);
 int handle_mouse(const mouse *m);
+int button_hover(const mouse *m);
 generic_button &button(pcstr label, vec2i pos, vec2i size);
+generic_button &button(uint32_t id);
 
 }

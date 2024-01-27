@@ -9,6 +9,7 @@ namespace ui {
     };
 
     state g_state;
+    generic_button dummy;
 }
 
 void ui::begin_window(vec2i offset) {
@@ -21,6 +22,16 @@ int ui::handle_mouse(const mouse *m) {
     return generic_buttons_handle_mouse(m, g_state.offset, g_state.buttons, tmp_btn);
 }
 
+int ui::button_hover(const mouse *m) {
+    for (auto &btn : g_state.buttons) {
+        if (is_button_hover(btn, g_state.offset)) {
+            return (std::distance(&g_state.buttons.front(), &btn) + 1);
+        }
+    }
+
+    return 0;
+}
+
 generic_button &ui::button(pcstr label, vec2i pos, vec2i size) {
     const vec2i offset = g_state.offset;
 
@@ -31,6 +42,11 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size) {
     text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     return g_state.buttons.back();
+}
+
+
+generic_button &ui::button(uint32_t id) {
+    return (id < g_state.buttons.size()) ? g_state.buttons[id] : dummy;
 }
 
 static int get_button(const mouse* m, int x, int y, const generic_button* buttons, int num_buttons) {

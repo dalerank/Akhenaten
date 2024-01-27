@@ -71,18 +71,11 @@
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_advisor(int advisor, int param2);
-static void button_mothball(int mothball, int param2);
 
 object_info g_building_info_context;
 
 struct building_info_data {
     int image_button_id = 0;
-    int generic_button_id = 0;
-    int debug_path_button_id = 0;
-
-    generic_button generic_button_mothball[1] = {
-        {400, 3, 24, 24, button_mothball, button_none, 0, 0}
-    };
 
     struct {
         image_button advisor = {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1};
@@ -202,42 +195,41 @@ static int get_height_id() {
 
 static void get_tooltip(tooltip_context* c) {
     auto &context = g_building_info_context;
-    int text_id = 0, group_id = 0;
+    std::pair<int, int> tooltip;
     if (g_building_info.image_button_id) {
-        text_id = g_building_info.image_button_id;
+        tooltip.second = g_building_info.image_button_id;
 
-    } else if (g_building_info.generic_button_id) {
-        if (building_get(context.building_id)->state == BUILDING_STATE_VALID) {
-            text_id = 8;
-            group_id = 54;
-        } else {
-            text_id = 10;
-            group_id = 54;
-        }
+    //} else if (g_building_info.generic_button_id) {
+        ;
 
-    } else if (g_building_info.debug_path_button_id) {
+    //} else if (g_building_info.debug_path_button_id) {
         ;
 
     } else if (context.type == BUILDING_INFO_LEGION) {
-        text_id = window_building_get_legion_info_tooltip_text(&context);
+        tooltip.second = window_building_get_legion_info_tooltip_text(&context);
 
     } else if (context.type == BUILDING_INFO_BUILDING && context.storage_show_special_orders) {
         switch (building_get(context.building_id)->type) {
         case BUILDING_GRANARY:
-            window_building_get_tooltip_granary_orders(&group_id, &text_id);
+            window_building_get_tooltip_granary_orders(&tooltip.first, &tooltip.second);
             break;
 
         case BUILDING_STORAGE_YARD:
-            window_building_get_tooltip_warehouse_orders(&group_id, &text_id);
+            window_building_get_tooltip_warehouse_orders(&tooltip.first, &tooltip.second);
             break;
         }
     }
 
-    if (text_id || group_id) {
+    int button_id = ui::button_hover(mouse_get());
+    if (button_id > 0) {
+        tooltip = ui::button(button_id - 1)._tooltip;
+    }
+
+    if (tooltip.first || tooltip.second) {
         c->type = TOOLTIP_BUTTON;
-        c->text_id = text_id;
-        if (group_id) {
-            c->text_group = group_id;
+        c->text_id = tooltip.second;
+        if (tooltip.first) {
+            c->text_group = tooltip.first;
         }
         window_request_refresh_background();
     }
@@ -559,15 +551,6 @@ static void init(map_point tile) {
     }
 }
 
-static void draw_mothball_button(int x, int y, int focused) {
-    auto &context = g_building_info_context;
-    button_border_draw(x, y, 20, 20, focused ? 1 : 0);
-    building* b = building_get(context.building_id);
-    if (b->state == BUILDING_STATE_VALID) {
-        text_draw_centered((uint8_t*)"x", x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    }
-}
-
 static void draw_refresh_background() {
     auto &context = g_building_info_context;
     if (context.type == BUILDING_INFO_NONE) {
@@ -747,8 +730,9 @@ static void draw_foreground() {
     auto &data = g_building_info;
 
     // building-specific buttons
+    building *b = nullptr;
     if (context.type == BUILDING_INFO_BUILDING) {
-        building *b = building_get(context.building_id);
+        b = building_get(context.building_id);
         switch (b->type) {
         case BUILDING_GRANARY:
             if (context.storage_show_special_orders) {
@@ -816,17 +800,26 @@ static void draw_foreground() {
         image_buttons_draw(context.offset + vec2i(0, 16 * context.height_blocks - 40), g_building_info.buttons.l_advisor_b);
     }
 
-    if (!context.storage_show_special_orders) {
-        int workers_needed = model_get_building(building_get(context.building_id)->type)->laborers;
+    if (b) {
+        int workers_needed = model_get_building(b->type)->laborers;
         if (workers_needed) {
-            draw_mothball_button(context.offset.x + 400, context.offset.y + 3 + 16 * context.height_blocks - 40, g_building_info.generic_button_id);
+            pcstr label = (b->state == BUILDING_STATE_VALID ? "x" : "");
+            auto tooltip = (b->state == BUILDING_STATE_VALID) ? std::pair{54, 8} : std::pair{53, 10};
+            ui::button(label, {400, 3 + 16 * context.height_blocks - 40}, {20, 20})
+                .onclick([&context, b, workers_needed] (int, int) {
+                    if (workers_needed) {
+                        building_mothball_toggle(b);
+                        window_invalidate();
+                    }
+                })
+                .tooltip(tooltip);
         }
     }
 
     if (context.figure.draw_debug_path) {
         figure* f = figure_get(context.figure.figure_ids[0]);
         pcstr label = (f->draw_debug_mode ? "P" : "p");
-        ui::button(label, {400, 3 + 16 * context.height_blocks - 40}, {24, 24})
+        ui::button(label, {400, 3 + 16 * context.height_blocks - 40}, {20, 20})
             .onclick([&context, f] (int, int) {
                 f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
                 window_invalidate();
@@ -920,8 +913,6 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     } else {
         button_id |= image_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40),
                                                 g_building_info.image_buttons_help_close, g_building_info.image_button_id);
-        button_id |= generic_buttons_handle_mouse(m, context.offset + vec2i(0, 16 * context.height_blocks - 40),
-                                                  g_building_info.generic_button_mothball, g_building_info.generic_button_id);
     }
 
     if (context.go_to_advisor.first) {
@@ -974,16 +965,6 @@ static void button_close(int param1, int param2) {
 
 static void button_advisor(int advisor, int param2) {
     window_advisors_show_advisor((e_advisor)advisor);
-}
-
-static void button_mothball(int mothball, int param2) {
-    auto &context = g_building_info_context;
-    building* b = building_get(context.building_id);
-    int workers_needed = model_get_building(b->type)->laborers;
-    if (workers_needed) {
-        building_mothball_toggle(b);
-        window_invalidate();
-    }
 }
 
 void window_building_info_show(const map_point& point) {
