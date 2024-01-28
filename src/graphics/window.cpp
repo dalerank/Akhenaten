@@ -6,6 +6,7 @@
 #include "graphics/elements/warning.h"
 #include "input/cursor.h"
 #include "input/scroll.h"
+#include "graphics/elements/ui.h"
 
 #define MAX_QUEUE 6
 
@@ -25,11 +26,13 @@ static void noop(void) {
 }
 static void noop_input(const mouse* m, const hotkeys* h) {
 }
+
 static void reset_input() {
     mouse_reset_button_state();
     reset_touches(1);
     scroll_stop();
 }
+
 static void increase_queue_index() {
     auto& data = g_window;
     data.queue_index++;
@@ -78,15 +81,20 @@ void window_show(const window_type* window) {
     auto& data = g_window;
     // push window into queue of screens to render
     reset_input();
+    ui::begin_frame();
     increase_queue_index();
     data.window_queue[data.queue_index] = *window;
     data.current_window = &data.window_queue[data.queue_index];
     if (!data.current_window->draw_background)
         data.current_window->draw_background = noop;
+
     if (!data.current_window->draw_foreground)
         data.current_window->draw_foreground = noop;
-    if (!data.current_window->handle_input)
+
+    if (!data.current_window->handle_input) {
         data.current_window->handle_input = noop_input;
+    }
+
     window_invalidate();
 }
 
@@ -97,6 +105,7 @@ void window_go_back() {
     data.current_window = &data.window_queue[data.queue_index];
     window_invalidate();
 }
+
 static void update_input_before() {
     if (!touch_to_mouse()) {
         mouse_determine_button_state(); // touch overrides mouse
@@ -104,6 +113,7 @@ static void update_input_before() {
 
     hotkey_handle_global_keys();
 }
+
 void window_update_input_after() {
     auto& data = g_window;
     reset_touches(0);
@@ -111,6 +121,7 @@ void window_update_input_after() {
     input_cursor_update(data.current_window->id);
     hotkey_reset_state();
 }
+
 void window_draw(int force) {
     auto& data = g_window;
     // draw the current (top) window in the queue
