@@ -13,9 +13,30 @@
 #include "scenario/property.h"
 #include "game/game.h"
 
-#define ADVISOR_HEIGHT 27
+#include "js/js_game.h"
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_rating);
 
 static void button_rating(int rating, int param2);
+
+struct advisor_rating_window {
+    vec2i outer_panel_pos;
+    vec2i outer_panel_size;
+    e_image_id advisor_icon_image;
+    vec2i advisor_icon_pos;
+};
+
+advisor_rating_window g_advisor_rating_window;
+
+void config_load_advisor_rating() {
+    g_config_arch.r_section("advisor_rating_window", [] (archive arch) {
+        auto &w = g_advisor_rating_window;
+        w.outer_panel_pos = arch.r_vec2i("outer_panel_pos");
+        w.outer_panel_size = arch.r_size2i("outer_panel_size");
+        w.advisor_icon_image = arch.r_image("advisor_icon_image");
+        w.advisor_icon_pos = arch.r_vec2i("advisor_icon_pos");
+    });
+}
 
 static generic_button rating_buttons[] = {
   {80, 276, 120, 60, button_rating, button_none, SELECTED_RATING_CULTURE, 0},
@@ -42,6 +63,7 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
     ImageDraw::img_generic(ctx, image_base, x_offset - 4, y);
     for (int i = 0; i < 2 * value_to_draw; i++)
         ImageDraw::img_generic(ctx, image_base + 1, x_offset + 11, --y);
+
     if (has_reached)
         ImageDraw::img_generic(ctx, image_base + 2, x_offset - 6, y - 50);
 }
@@ -59,9 +81,16 @@ static void draw_rating(int id, int value, int open_play, int goal) {
 }
 
 static int draw_background() {
+    return g_advisor_rating_window.outer_panel_size.y;
+}
+
+static void draw_foreground() {
     painter ctx = game.painter();
-    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
+
+    auto &w = g_advisor_rating_window;
+    ui::panel(w.outer_panel_pos, w.outer_panel_size, UiFlags_PanelOuter);
+    ui::icon(w.advisor_icon_pos, ADVISOR_RATINGS);
+
     int width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     if (!winning_population() || scenario_is_open_play()) {
         lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -86,42 +115,38 @@ static int draw_background() {
     inner_panel_draw(box_x, box_y, 35, 5);
     switch (city_rating_selected()) {
     case SELECTED_RATING_CULTURE:
-        lang_text_draw(53, 1, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-        if (city_rating_culture() <= 90) {
-            lang_text_draw_multiline(53, 9 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        } else
-            lang_text_draw_multiline(53, 50, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        break;
+    lang_text_draw(53, 1, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
+    if (city_rating_culture() <= 90) {
+        lang_text_draw_multiline(53, 9 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
+    } else
+        lang_text_draw_multiline(53, 50, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
+    break;
     case SELECTED_RATING_PROSPERITY:
-        lang_text_draw(53, 2, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-        if (city_rating_prosperity() <= 90) {
-            lang_text_draw_multiline(
-                53, 16 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        } else
-            lang_text_draw_multiline(53, 51, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        break;
+    lang_text_draw(53, 2, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
+    if (city_rating_prosperity() <= 90) {
+        lang_text_draw_multiline(53, 16 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
+    } else
+        lang_text_draw_multiline(53, 51, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
+    break;
     case SELECTED_RATING_MONUMENT:
-        lang_text_draw(53, 3, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-        if (city_rating_monument() <= 90) {
-            lang_text_draw_multiline(53, 41 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        } else
-            lang_text_draw_multiline(53, 52, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        break;
+    lang_text_draw(53, 3, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
+    if (city_rating_monument() <= 90) {
+        lang_text_draw_multiline(53, 41 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
+    } else
+        lang_text_draw_multiline(53, 52, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
+    break;
     case SELECTED_RATING_KINGDOM:
-        lang_text_draw(53, 4, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-        if (city_rating_kingdom() <= 90) {
-            lang_text_draw_multiline(53, 27 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        } else
-            lang_text_draw_multiline(53, 53, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        break;
+    lang_text_draw(53, 4, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
+    if (city_rating_kingdom() <= 90) {
+        lang_text_draw_multiline(53, 27 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
+    } else
+        lang_text_draw_multiline(53, 53, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
+    break;
     default:
-        lang_text_draw_centered(53, 8, box_x + 8, 380, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        break;
+    lang_text_draw_centered(53, 8, box_x + 8, 380, box_w, FONT_NORMAL_WHITE_ON_DARK);
+    break;
     }
 
-    return ADVISOR_HEIGHT;
-}
-static void draw_foreground(void) {
     button_border_draw(rating_buttons[0].x, rating_buttons[0].y, rating_buttons[0].width, rating_buttons[0].height, focus_button_id == SELECTED_RATING_CULTURE);
     button_border_draw(rating_buttons[1].x, rating_buttons[1].y, rating_buttons[1].width, rating_buttons[1].height, focus_button_id == SELECTED_RATING_PROSPERITY);
     button_border_draw(rating_buttons[2].x, rating_buttons[2].y, rating_buttons[2].width, rating_buttons[2].height, focus_button_id == SELECTED_RATING_MONUMENT);

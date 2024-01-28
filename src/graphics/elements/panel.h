@@ -2,6 +2,7 @@
 
 #include "core/vec2i.h"
 #include "game/resource.h"
+#include "city/constants.h"
 #include "ui.h"
 
 #define DEFAULT_BLOCK_SIZE 16
@@ -22,4 +23,5 @@ void large_label_draw(int x, int y, int width_blocks, int type);
 namespace ui {
     void panel(vec2i pos, vec2i size, UiFlags_ flags);
     void icon(vec2i pos, e_resource img);
+    void icon(vec2i pos, e_advisor advisor);
 }

@@ -128,6 +128,13 @@ void ui::icon(vec2i pos, e_resource img) {
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), offset.x + pos.x, offset.y + pos.y);
 }
 
+void ui::icon(vec2i pos, e_advisor adv) {
+    const vec2i offset = g_state.offset();
+    painter ctx = game.painter();
+    ImageDraw::img_generic(ctx, image_group(IMG_ADVISOR_ICONS) + (adv - 1), offset.x + pos.x, offset.y + pos.y);
+}
+
+
 arrow_button &ui::arw_button(vec2i pos, bool up, bool tiny) {
     const vec2i offset = g_state.offset();
 

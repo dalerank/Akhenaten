@@ -7,6 +7,8 @@
 
 #include <vector>
 
+enum e_image_id;
+
 struct archive {
     js_State *vm;
     inline archive(js_State *_vm) : vm(_vm) {}
@@ -43,11 +45,17 @@ struct archive {
         return result;
     }
 
+    inline e_image_id r_image(pcstr name) { return (e_image_id)r_int(name); }
+
     inline bool r_bool(pcstr name) {
         js_getproperty(vm, -1, name);
         bool result = js_isundefined(vm, -1) ? 0 : js_toboolean(vm, -1);
         js_pop(vm, 1);
         return result;
+    }
+
+    inline vec2i r_size2i(pcstr name, pcstr w = "w", pcstr h = "h") {
+        return r_vec2i(name, w, h);
     }
 
     inline vec2i r_vec2i(pcstr name, pcstr x = "x", pcstr y = "y") {

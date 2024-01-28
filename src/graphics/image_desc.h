@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-enum e_image_id : uint16_t {
+enum e_image_id {
 #define REGISTER_IMG(a, b) a = b,
 #include "graphics/indexes.h"
     IMG_SIZE

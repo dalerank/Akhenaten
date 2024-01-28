@@ -149,6 +149,8 @@ images = [
 	{img: IMG_BUILDING_FIREHOUSE, pack:PACK_GENERAL, id:78},
 	{img: IMG_BUILDING_APOTHECARY, pack:PACK_GENERAL, id:68},
 	{img: IMG_PERSONAL_MANSION, pack:PACK_GENERAL, id:85},
+	{img: IMG_ADVISOR_RATING_ICON, pack:PACK_GENERAL, id:128, offset:3},
+	{img: IMG_ADVISOR_ICONS, pack:PACK_GENERAL, id:128, offset:0},
 ]
 
 cart_offsets = [

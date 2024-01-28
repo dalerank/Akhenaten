@@ -13,8 +13,8 @@ top_menu_bar = {
 }
 
 main_menu_window = {
-	pos : {x: 192, y: 125},
-	btn : {w: 256, h: 25},
+	button_pos : {x: 192, y: 125},
+	button_size : {w: 256, h: 25},
 	button_offset : 40,
 
 	buttons : [
@@ -24,6 +24,13 @@ main_menu_window = {
 	  {group: 2, id: 0, },
 	  {group: 30, id: 4, }
 	]
+}
+
+advisor_rating_window = {
+		outer_panel_pos : {x:0, y:0},
+		outer_panel_size : {w:40, h:27},
+		advisor_icon_image : IMG_ADVISOR_RATING_ICON,
+		advisor_icon_pos : {x: 10, y: 10},
 }
 
 empire_window = {
