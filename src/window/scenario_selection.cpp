@@ -54,7 +54,7 @@ static scrollable_list_ui_params ui_params = [] {
 
 struct window_scenario_selection_t {
     scroll_list_panel *panel = nullptr;
-    map_selection_dialog_type dialog;
+    e_map_selection_dialog_type dialog;
     int campaign_sub_dialog;
     int scores_or_goals;
 
@@ -85,7 +85,7 @@ static generic_button buttons_campaigns[] = {
   {CSEL_X + CSEL_XGAP * 1, CSEL_Y + CSEL_YGAP * 3, CSEL_W, CSEL_H, button_select_campaign, button_none, 8, 0},
 };
 
-static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector = -1) {
+static void init(e_map_selection_dialog_type dialog_type, int sub_dialog_selector = -1) {
     auto &data = g_window_scenario_selection;
     data.dialog = dialog_type;
     data.campaign_sub_dialog = sub_dialog_selector;
@@ -151,13 +151,13 @@ static generic_button button_scores_goals[] = {
 };
 
 #define LINE_H 17
-static int draw_text_line(int* base_group, int* y, int* phrase_group, font_t font = FONT_NORMAL_BLACK_ON_DARK) {
+static int draw_text_line(int* base_group, int* y, int* phrase_group, e_font font = FONT_NORMAL_BLACK_ON_DARK) {
     int width = lang_text_draw(base_group[0], base_group[1], INFO_X, *y, font) - 5;
     width += lang_text_draw(phrase_group[0], phrase_group[1], INFO_X + width, *y, font);
     return width;
 }
 
-static int draw_info_line(int base_group, int base_id, int* y, int value, int special = -1, bool colon = false, font_t font = FONT_NORMAL_BLACK_ON_DARK) {
+static int draw_info_line(int base_group, int base_id, int* y, int value, int special = -1, bool colon = false, e_font font = FONT_NORMAL_BLACK_ON_DARK) {
     int width = 0;
     if (special != 5) {
         width += lang_text_draw(base_group, base_id, INFO_X, *y, font) - 5;
@@ -538,7 +538,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         return;
     }
 }
-void window_scenario_selection_show(map_selection_dialog_type dialog_type) {
+void window_scenario_selection_show(e_map_selection_dialog_type dialog_type) {
     // city construction kit
     window_type window = {WINDOW_CCK_SELECTION, draw_background, draw_foreground, handle_input};
     init(dialog_type);

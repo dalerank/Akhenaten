@@ -243,7 +243,7 @@ static void create_special_fonts(std::vector<image_t>* images, int start_index) 
         rect->input.height = img->height + 2;
     }
 }
-static bool is_font_glyph_in_range(const image_t &img, font_t font_start, font_t font_end) {
+static bool is_font_glyph_in_range(const image_t &img, e_font font_start, e_font font_end) {
     int i = img.sgx_index - 201;
     int starting_offset = font_definition_for(font_start)->image_offset;
     int ending_offset = -1;

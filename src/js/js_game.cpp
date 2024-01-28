@@ -12,6 +12,7 @@
 #include "graphics/image_desc.h"
 #include "figure/figure.h"
 #include "figure/image.h"
+#include "io/gamefiles/lang.h"
 
 #include "js.h"
 
@@ -94,3 +95,67 @@ namespace config {
         return {js_vm_state()};
     }
 } // config
+
+pcstr archive::r_string(pcstr name) {
+    js_getproperty(vm, -1, name);
+    const char *result = "";
+    if (js_isundefined(vm, -1)) {
+        ;
+    } else if (js_isstring(vm, -1)) {
+        result = js_tostring(vm, -1);
+    } else if (js_isobject(vm, -1)) {
+        js_getproperty(vm, -1, "group"); int group = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        js_getproperty(vm, -1, "id"); int id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        result = (pcstr)lang_get_string(group, id);
+    }
+    js_pop(vm, 1);
+    return result;
+}
+
+std::vector<std::string> archive::r_array_str(pcstr name) {
+    js_getproperty(vm, -1, name);
+    std::vector<std::string> result;
+    if (js_isarray(vm, -1)) {
+        int length = js_getlength(vm, -1);
+
+        for (int i = 0; i < length; ++i) {
+            js_getindex(vm, -1, i);
+            std::string v = js_tostring(vm, -1);
+            result.push_back(v);
+            js_pop(vm, 1);
+        }
+        js_pop(vm, 1);
+    }
+    return result;
+}
+
+int archive::r_int(pcstr name, int def) {
+    js_getproperty(vm, -1, name);
+    int result = js_isundefined(vm, -1) ? def : js_tointeger(vm, -1);
+    js_pop(vm, 1);
+    return result;
+}
+
+e_image_id archive::r_image(pcstr name) { 
+    return (e_image_id)r_int(name);
+}
+
+bool archive::r_bool(pcstr name) {
+    js_getproperty(vm, -1, name);
+    bool result = js_isundefined(vm, -1) ? 0 : js_toboolean(vm, -1);
+    js_pop(vm, 1);
+    return result;
+}
+
+vec2i archive::r_size2i(pcstr name, pcstr w, pcstr h) {
+    return r_vec2i(name, w, h);
+}
+
+vec2i archive::r_vec2i(pcstr name, pcstr x, pcstr y) {
+    vec2i result(0, 0);
+    r_section(name, [&] (archive arch) {
+        result.x = arch.r_int(x);
+        result.y = arch.r_int(y);
+    });
+    return result;
+}

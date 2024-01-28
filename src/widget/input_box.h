@@ -11,7 +11,7 @@ typedef struct {
     int y;
     int width_blocks;
     int height_blocks;
-    font_t font;
+    e_font font;
     int max_length;
     // private vars
     uint8_t* text;

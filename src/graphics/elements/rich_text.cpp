@@ -73,7 +73,7 @@ int rich_text_init(const uint8_t* text,
     return data.text_width_blocks;
 }
 
-void rich_text_set_fonts(font_t normal_font, font_t link_font) {
+void rich_text_set_fonts(e_font normal_font, e_font link_font) {
     normal_font_def = font_definition_for(normal_font);
     link_font_def = font_definition_for(link_font);
 }

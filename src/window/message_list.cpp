@@ -111,14 +111,14 @@ static void draw_messages(int total_messages) {
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_MESSAGE_ICON) + 14 + image_type_offset, data.x_text + 12, data.y_text + 6 + 20 * i);
         }
 
-        font_t font = FONT_NORMAL_WHITE_ON_DARK;
+        e_font font = FONT_NORMAL_WHITE_ON_DARK;
         if (data.focus_button_id == i + 1)
             font = FONT_NORMAL_YELLOW;
 
         if (false) {
             int o = -100;
             int oo = 45;
-            font_t f = FONT_NORMAL_BLUE;
+            e_font f = FONT_NORMAL_BLUE;
             color c = COLOR_WHITE;
             uint8_t str[10];
 

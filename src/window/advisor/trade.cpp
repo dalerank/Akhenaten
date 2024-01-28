@@ -81,7 +81,7 @@ static void draw_foreground() {
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         ImageDraw::img_generic(ctx, image_id_resource_icon(image_offset), 24, y_offset + 58);
 
-        font_t font_color = FONT_NORMAL_WHITE_ON_DARK;
+        e_font font_color = FONT_NORMAL_WHITE_ON_DARK;
         if (city_resource_is_mothballed(resource))
             font_color = FONT_NORMAL_YELLOW;
 

@@ -18,12 +18,6 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_rating);
 static void button_rating(int rating, int param2);
 
 struct advisor_rating_window : public ui::widget {
-    e_image_id advisor_icon_image;
-    vec2i advisor_icon_pos;
-    vec2i header_pos;
-    vec2i header_population_pos;
-    vec2i background_img_pos;
-    e_image_id background_img;
     vec2i column_offset;
 };
 
@@ -34,12 +28,6 @@ void config_load_advisor_rating() {
         g_advisor_rating_window.load(arch);
 
         auto &w = g_advisor_rating_window;
-        w.advisor_icon_image = arch.r_image("advisor_icon_image");
-        w.advisor_icon_pos = arch.r_vec2i("advisor_icon_pos");
-        w.header_pos = arch.r_vec2i("header_pos");
-        w.header_population_pos = arch.r_vec2i("header_population_pos");
-        w.background_img = arch.r_image("background_img");
-        w.background_img_pos = arch.r_vec2i("background_img_pos");
         w.column_offset = arch.r_vec2i("column_offset");
     });
 }
@@ -66,12 +54,15 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
         //        if (value < 30)
         //            has_reached = 0;
     }
-    ImageDraw::img_generic(ctx, image_base, x_offset - 4, y);
-    for (int i = 0; i < 2 * value_to_draw; i++)
-        ImageDraw::img_generic(ctx, image_base + 1, x_offset + 11, --y);
 
-    if (has_reached)
+    ImageDraw::img_generic(ctx, image_base, x_offset - 4, y);
+    for (int i = 0; i < 2 * value_to_draw; i++) {
+        ImageDraw::img_generic(ctx, image_base + 1, x_offset + 11, --y);
+    }
+
+    if (has_reached) {
         ImageDraw::img_generic(ctx, image_base + 2, x_offset - 6, y - 50);
+    }
 }
 
 static void draw_rating(int id, int value, int open_play, int goal) {
@@ -88,6 +79,12 @@ static void draw_rating(int id, int value, int open_play, int goal) {
 }
 
 static int draw_background() {
+    bstring128 caption = (pcstr)ui::str(53, 7);
+    if (!(!winning_population() || scenario_is_open_play())) {
+        caption = (pcstr)ui::str(53, 6);
+        caption.append("%u", winning_population());
+    }
+    g_advisor_rating_window["population_label"].text(caption);
     return 0;// g_advisor_rating_window.outer_panel_size.y;
 }
 
@@ -95,16 +92,6 @@ static void draw_foreground() {
     auto &w = g_advisor_rating_window;
 
     g_advisor_rating_window.draw();
-
-    ui::label(53, 0, w.header_pos, FONT_LARGE_BLACK_ON_LIGHT);
-    bstring128 caption = (pcstr)ui::str(53, 7);
-    if (!(!winning_population() || scenario_is_open_play())) {
-        caption = (pcstr)ui::str(53, 6);
-        caption.append("%u", winning_population());
-    }
-
-    ui::label(caption, w.header_population_pos, FONT_NORMAL_BLACK_ON_LIGHT);
-    ui::eimage(w.background_img, w.background_img_pos);
 
     int open_play = scenario_is_open_play();
 

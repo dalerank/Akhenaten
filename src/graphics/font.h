@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-enum font_t {
+enum e_font {
     FONT_SMALL_PLAIN,
     FONT_NORMAL_BLACK_ON_LIGHT,
     FONT_NORMAL_WHITE_ON_DARK,
@@ -19,7 +19,7 @@ enum font_t {
 };
 
 struct font_definition {
-    font_t font;
+    e_font font;
     int image_offset;
     int multibyte_image_offset;
     int space_width;
@@ -49,7 +49,7 @@ void font_set_encoding(encoding_type encoding);
  * @param font Font
  * @return Font definition
  */
-const font_definition* font_definition_for(font_t font);
+const font_definition* font_definition_for(e_font font);
 
 /**
  * Checks whether the font has a glyph for the passed character

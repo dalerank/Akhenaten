@@ -176,7 +176,7 @@ static int draw_extra_info_objective(int x_offset,
         text_draw(tmp, x_offset + 11, y_offset, FONT_NORMAL_WHITE_ON_DARK, 0);
     } else
         lang_text_draw(text_group, text_id, x_offset + 11, y_offset, FONT_NORMAL_WHITE_ON_DARK);
-    font_t font = obj->value >= obj->target ? FONT_NORMAL_BLACK_ON_DARK : FONT_NORMAL_YELLOW;
+    e_font font = obj->value >= obj->target ? FONT_NORMAL_BLACK_ON_DARK : FONT_NORMAL_YELLOW;
     int width = text_draw_number(obj->value, '@', "", x_offset + 11, y_offset + EXTRA_INFO_LINE_SPACE, font);
     text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + EXTRA_INFO_LINE_SPACE, font);
     return EXTRA_INFO_LINE_SPACE * 2;

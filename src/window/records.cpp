@@ -47,7 +47,7 @@ static void draw_foreground(void) {
     lang_text_draw_centered(296, 0, 160, 20, 304, FONT_LARGE_BLACK_ON_LIGHT);
 
     // high scores
-    font_t font = FONT_SMALL_SHADED;
+    e_font font = FONT_SMALL_SHADED;
     for (int i = 0; i < LIST_MAX_SIZE; i++) {
         const player_record* record = highscores_get(scrollbar.scroll_position + i);
         if (record->nonempty) {
@@ -69,7 +69,7 @@ static void draw_foreground(void) {
         }
 
         //        encoding_from_utf8(data.file_list->files[scrollbar.scroll_position + i], list_name, FILE_NAME_MAX);
-        //        font_t font = FONT_NORMAL_BLACK_ON_DARK;
+        //        e_font font = FONT_NORMAL_BLACK_ON_DARK;
         //        text_ellipsize(list_name, font, MAX_FILE_WINDOW_TEXT_WIDTH);
         //        text_draw(list_name, 160, LIST_Y + 2 + (16 * i), FONT_NORMAL_BLACK_ON_DARK, 0);
     }

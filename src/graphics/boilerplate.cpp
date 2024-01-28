@@ -652,12 +652,12 @@ static void draw_footprint_size_any(int image_id, int x, int y, int size, color 
         }
     }
 }
-static color base_color_for_font(font_t font) {
+static color base_color_for_font(e_font font) {
     if (font == FONT_SMALL_PLAIN || font == FONT_SMALL_OUTLINED || font == FONT_SMALL_SHADED)
         return COLOR_FONT_PLAIN;
     return COLOR_MASK_NONE;
 }
-static void draw_multibyte_letter(font_t font, const image_t* img, int x, int y, color color_mask, float scale) {
+static void draw_multibyte_letter(e_font font, const image_t* img, int x, int y, color color_mask, float scale) {
     //    switch (font) {
     //        case FONT_NORMAL_WHITE_ON_DARK:
     ////            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xff311c10, scale, false);
@@ -733,7 +733,7 @@ void ImageDraw::img_from_below(painter &ctx, int image_id, int x, int y, color c
     graphics_renderer()->draw_image(ctx, img, x, y - img->height, color_mask, scale);
 }
 
-void ImageDraw::img_letter(painter &ctx,font_t font, int letter_id, int x, int y, color color_mask, float scale) {
+void ImageDraw::img_letter(painter &ctx, e_font font, int letter_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_letter(letter_id);
     if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
         //        draw_multibyte_letter(font, img, x, y, color_mask, scale);

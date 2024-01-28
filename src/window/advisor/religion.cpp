@@ -108,7 +108,7 @@ static void draw_god_row(e_god god, int y_offset, e_building_type temple, e_buil
     //    lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);
 
     bool is_known = city_gods_is_known(god);
-    font_t font = FONT_NORMAL_WHITE_ON_DARK;
+    e_font font = FONT_NORMAL_WHITE_ON_DARK;
     if (is_known == GOD_STATUS_UNKNOWN) {
         font = FONT_NORMAL_YELLOW;
     }

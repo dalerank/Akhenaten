@@ -1,11 +1,10 @@
-#ifndef INPUT_KEYBOARD_H
-#define INPUT_KEYBOARD_H
+#pragma once
 
 #include "graphics/font.h"
 
 #include <stdint.h>
 
-void keyboard_start_capture(uint8_t* text, int max_length, int allow_punctuation, int box_width, font_t font);
+void keyboard_start_capture(uint8_t* text, int max_length, int allow_punctuation, int box_width, e_font font);
 void keyboard_refresh(void);
 void keyboard_resume_capture(void);
 void keyboard_pause_capture(void);
@@ -32,5 +31,3 @@ void keyboard_home(void);
 void keyboard_end(void);
 
 void keyboard_text(const char* text_utf8);
-
-#endif // INPUT_KEYBOARD_H

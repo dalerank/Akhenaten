@@ -39,7 +39,7 @@
 #include "js/js_game.h"
 
 const static vec2i EMPIRE_SIZE{1200 + 32,  1600 + 136 + 20};
-const static font_t FONT_OBJECT_INFO = FONT_NORMAL_BLACK_ON_LIGHT;
+const static e_font FONT_OBJECT_INFO = FONT_NORMAL_BLACK_ON_LIGHT;
 
 static void button_help(int param1, int param2);
 static void button_return_to_city(int param1, int param2);
@@ -274,7 +274,7 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
     data.selling_goods.clear();
 
     if (city->is_open) {
-        font_t traded_font = FONT_SMALL_PLAIN;
+        e_font traded_font = FONT_SMALL_PLAIN;
 
         // city sells
         lang_text_draw(data.sell_res_group, 11, x_offset + 44, y_offset + data.info_y_traded - 2, FONT_OBJECT_INFO);

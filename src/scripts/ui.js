@@ -38,11 +38,23 @@ advisor_rating_window = {
 				image : IMG_ADVISOR_RATING_ICON,
 			  pos  : {x: 10, y: 10},
 			},
+			header_label : {
+				type : "label",
+				font : FONT_LARGE_BLACK_ON_LIGHT,
+				text : {group: 53, id: 0},
+				pos  : {x: 60, y:17}
+			},
+			population_label : {
+				type : "label",
+				text : "",
+				pos  : {x: 300, y:20}
+			},
+			background_image : {
+				type : "image",
+				image : IMG_ADVISOR_BACKGROUND,
+			  pos  : {x:60, y:38},
+			},
 		},
-		header_pos : {x:60, y:17},
-		header_population_pos : {x: 160, y:20},
-		background_img : IMG_ADVISOR_BACKGROUND,
-		background_img_pos: {x:60, y:38},
 		column_offset : {x: 30, y:-11}
 }
 

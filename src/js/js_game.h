@@ -15,29 +15,13 @@ struct archive {
     js_State *vm;
     inline archive(js_State *_vm) : vm(_vm) {}
 
-    inline pcstr r_string(pcstr name) {
-        js_getproperty(vm, -1, name);
-        const char *result = js_isundefined(vm, -1) ? "" : js_tostring(vm, -1);
-        js_pop(vm, 1);
-        return result;
-    }
-
-    inline std::vector<std::string> r_array_str(pcstr name) {
-        js_getproperty(vm, -1, name);
-        std::vector<std::string> result;
-        if (js_isarray(vm, -1)) {
-            int length = js_getlength(vm, -1);
-
-            for (int i = 0; i < length; ++i) {
-                js_getindex(vm, -1, i);
-                std::string v = js_tostring(vm, -1);
-                result.push_back(v);
-                js_pop(vm, 1);
-            }
-            js_pop(vm, 1);
-        }
-        return result;
-    }
+    pcstr r_string(pcstr name);
+    std::vector<std::string> r_array_str(pcstr name);
+    int r_int(pcstr name, int def = 0);
+    e_image_id r_image(pcstr name);
+    bool r_bool(pcstr name);
+    vec2i r_size2i(pcstr name, pcstr w = "w", pcstr h = "h");
+    vec2i r_vec2i(pcstr name, pcstr x = "x", pcstr y = "y");
 
     template<typename T = int>
     inline std::vector<T> r_array_num(pcstr name) {
@@ -54,35 +38,6 @@ struct archive {
             }
             js_pop(vm, 1);
         }
-        return result;
-    }
-
-    inline int r_int(pcstr name) {
-        js_getproperty(vm, -1, name);
-        int result = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1);
-        js_pop(vm, 1);
-        return result;
-    }
-
-    inline e_image_id r_image(pcstr name) { return (e_image_id)r_int(name); }
-
-    inline bool r_bool(pcstr name) {
-        js_getproperty(vm, -1, name);
-        bool result = js_isundefined(vm, -1) ? 0 : js_toboolean(vm, -1);
-        js_pop(vm, 1);
-        return result;
-    }
-
-    inline vec2i r_size2i(pcstr name, pcstr w = "w", pcstr h = "h") {
-        return r_vec2i(name, w, h);
-    }
-
-    inline vec2i r_vec2i(pcstr name, pcstr x = "x", pcstr y = "y") {
-        vec2i result(0, 0);
-        r_section(name, [&] (archive arch) {
-            result.x = arch.r_int(x);
-            result.y = arch.r_int(y);
-        });
         return result;
     }
 

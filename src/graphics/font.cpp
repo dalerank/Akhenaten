@@ -361,7 +361,7 @@ void font_set_encoding(encoding_type encoding) {
     }
 }
 
-const font_definition* font_definition_for(font_t font) {
+const font_definition* font_definition_for(e_font font) {
     auto& data = g_font_data;
     return &data.font_definitions[font];
 }

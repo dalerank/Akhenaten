@@ -138,9 +138,9 @@ uint8_t granary_half_button_text[] = "12";
 uint8_t granary_quarter_button_text[] = "6";
 
 void window_building_draw_order_instruction(int instr_kind, const building_storage* storage, int resource, int x, int y, int market_order) {
-    font_t font_nope = FONT_NORMAL_BLACK_ON_DARK;
-    font_t font_yes = FONT_NORMAL_WHITE_ON_DARK;
-    font_t font_get = FONT_NORMAL_YELLOW;
+    e_font font_nope = FONT_NORMAL_BLACK_ON_DARK;
+    e_font font_yes = FONT_NORMAL_WHITE_ON_DARK;
+    e_font font_get = FONT_NORMAL_YELLOW;
 
     if (storage != nullptr) {
         switch (storage->resource_state[resource]) {
@@ -338,7 +338,7 @@ void window_building_draw_market(object_info* c) {
     lang_text_draw_centered(97, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     building* b = building_get(c->building_id);
     painter ctx = game.painter();
-    font_t font;
+    e_font font;
     if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);
     else if (b->num_workers <= 0)

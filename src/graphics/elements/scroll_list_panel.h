@@ -29,9 +29,9 @@ struct scrollable_list_ui_params {
     bool thin_scrollbar = false;
     bool draw_scrollbar_always = false;
     bool draw_paneling = true;
-    font_t font_asleep = FONT_NORMAL_BLACK_ON_DARK;
-    font_t font_focus = FONT_NORMAL_YELLOW;
-    font_t font_selected = FONT_NORMAL_WHITE_ON_DARK;
+    e_font font_asleep = FONT_NORMAL_BLACK_ON_DARK;
+    e_font font_focus = FONT_NORMAL_YELLOW;
+    e_font font_selected = FONT_NORMAL_WHITE_ON_DARK;
 };
 
 enum scroll_list_file_param {
@@ -61,7 +61,7 @@ private:
 
     bstring256 manual_entry_list[MAX_MANUAL_ENTRIES];
 
-    void (*custom_text_render)(int button_index, const uint8_t* text, int x, int y, font_t font) = nullptr;
+    void (*custom_text_render)(int button_index, const uint8_t* text, int x, int y, e_font font) = nullptr;
     bool using_custom_text_render = false;
 
     bool WAS_DRAWN = false; // for frame-ordered caching logic purposes

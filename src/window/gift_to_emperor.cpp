@@ -56,7 +56,7 @@ static void draw_foreground(void) {
     if (city_emperor_can_send_gift(GIFT_MODEST)) {
         const emperor_gift* gift = city_emperor_get_gift(GIFT_MODEST);
         lang_text_draw(52, 63, 128, 218, FONT_NORMAL_WHITE_ON_DARK);
-        font_t font = focus_button_id == 1 ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
+        e_font font = focus_button_id == 1 ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
         int width = lang_text_draw(52, 51 + gift->id, 224, 218, font);
         text_draw_money(gift->cost, 224 + width, 218, font);
     } else {
@@ -65,14 +65,14 @@ static void draw_foreground(void) {
     if (city_emperor_can_send_gift(GIFT_GENEROUS)) {
         const emperor_gift* gift = city_emperor_get_gift(GIFT_GENEROUS);
         lang_text_draw(52, 64, 128, 238, FONT_NORMAL_WHITE_ON_DARK);
-        font_t font = focus_button_id == 2 ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
+        e_font font = focus_button_id == 2 ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
         int width = lang_text_draw(52, 55 + gift->id, 224, 238, font);
         text_draw_money(gift->cost, 224 + width, 238, font);
     }
     if (city_emperor_can_send_gift(GIFT_LAVISH)) {
         const emperor_gift* gift = city_emperor_get_gift(GIFT_LAVISH);
         lang_text_draw(52, 65, 128, 258, FONT_NORMAL_WHITE_ON_DARK);
-        font_t font = focus_button_id == 3 ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
+        e_font font = focus_button_id == 3 ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
         int width = lang_text_draw(52, 59 + gift->id, 224, 258, font);
         text_draw_money(gift->cost, 224 + width, 258, font);
     }

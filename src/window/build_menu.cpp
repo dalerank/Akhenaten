@@ -170,7 +170,7 @@ static void draw_menu_buttons() {
     int label_margin = BTN_W_TOT + 10;
     int label_offset = 20;
 
-    font_t font = FONT_NORMAL_BLACK_ON_DARK;
+    e_font font = FONT_NORMAL_BLACK_ON_DARK;
     int item_index = -1;
     painter ctx = game.painter();
     for (int i = 0; i < data.num_items; i++) {

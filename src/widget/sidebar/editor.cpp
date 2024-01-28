@@ -146,16 +146,12 @@ static void draw_status(void) {
     map_point entry = scenario_map_entry();
     map_point exit = scenario_map_exit();
     int people_text;
-    font_t people_font = FONT_NORMAL_YELLOW;
+    e_font people_font = FONT_NORMAL_YELLOW;
     if (entry.x() == -1) {
-        if (exit.x() == -1)
-            people_text = 60;
-        else {
-            people_text = 59;
-        }
-    } else if (exit.x() == -1)
+        people_text = (exit.x() == -1) ? 60 : 59;
+    } else if (exit.x() == -1) {
         people_text = 61;
-    else {
+    } else {
         people_text = 62;
         people_font = FONT_NORMAL_BLACK_ON_DARK;
     }

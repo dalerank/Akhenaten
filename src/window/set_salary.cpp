@@ -63,7 +63,7 @@ static void draw_foreground() {
     inner_panel_draw(144, 80, 22, 15);
 
     for (int rank = 0; rank < 11; rank++) {
-        font_t font = focus_button_id == rank + 2 ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
+        e_font font = focus_button_id == rank + 2 ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
         int width = lang_text_draw(52, rank + 4, 176, 90 + 20 * rank, font);
         text_draw_money(city_emperor_salary_for_rank(rank), 176 + width, 90 + 20 * rank, font);
     }

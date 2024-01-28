@@ -9,6 +9,7 @@
 #include "building/building.h"
 #include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
+#include "graphics/font.h"
 
 #include "sound/city.h"
 
@@ -118,6 +119,19 @@ void js_register_city_buildings(js_State *J) {
 #define REGISTER_BLD(a, b) REGISTER_GLOBAL_CONSTANT(J, a);
 #include "building/building_type_indexes.h"
 #undef REGISTER_BLD
+}
+
+void js_register_ui_fonts(js_State *J) {
+   REGISTER_GLOBAL_CONSTANT(J, FONT_SMALL_PLAIN)
+   REGISTER_GLOBAL_CONSTANT(J, FONT_NORMAL_BLACK_ON_LIGHT)
+   REGISTER_GLOBAL_CONSTANT(J, FONT_NORMAL_WHITE_ON_DARK)
+   REGISTER_GLOBAL_CONSTANT(J, FONT_NORMAL_YELLOW)
+   REGISTER_GLOBAL_CONSTANT(J, FONT_NORMAL_BLUE)
+   REGISTER_GLOBAL_CONSTANT(J, FONT_LARGE_BLACK_ON_LIGHT)
+   REGISTER_GLOBAL_CONSTANT(J, FONT_LARGE_BLACK_ON_DARK)
+   REGISTER_GLOBAL_CONSTANT(J, FONT_SMALL_OUTLINED)
+   REGISTER_GLOBAL_CONSTANT(J, FONT_NORMAL_BLACK_ON_DARK)
+   REGISTER_GLOBAL_CONSTANT(J, FONT_SMALL_SHADED)
 }
 
 void js_register_city_overlays(js_State *J) {

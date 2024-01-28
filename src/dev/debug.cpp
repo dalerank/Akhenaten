@@ -65,7 +65,7 @@ static const uint8_t* font_test_str = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwx
 static const uint8_t* font_test_str_ascii = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._";
 static const uint8_t* font_test_str_extended = (uint8_t*)(char*)"äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
 
-static void debug_font_line(int* y, font_t font) {
+static void debug_font_line(int* y, e_font font) {
     int line_height = font_definition_for(font)->line_height;
     if (line_height < 11)
         line_height = 11;
@@ -90,13 +90,13 @@ void debug_font_test() {
     debug_font_line(&y, FONT_SMALL_SHADED);
 }
 
-void debug_text(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, int value, color color, font_t font) {
+void debug_text(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, int value, color color, e_font font) {
     text_draw(ctx, string_from_ascii(text), x, y, font, color);
     string_from_int(str, value, 0);
     text_draw(ctx, str, x + indent, y, font, color);
 }
 
-void debug_text_a(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, color color, font_t font) {
+void debug_text_a(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, color color, e_font font) {
     text_draw(ctx, string_from_ascii(text), x, y, font, color);
 }
 

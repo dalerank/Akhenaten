@@ -240,6 +240,7 @@ void js_reset_vm_state() {
     js_register_city_walkers(vm.J);
     js_register_city_images(vm.J);
     js_register_collection_images(vm.J);
+    js_register_ui_fonts(vm.J);
 
     int ok = js_vm_load_file_and_exec(":modules.js");
     if (ok) {

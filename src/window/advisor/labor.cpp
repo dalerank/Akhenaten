@@ -90,7 +90,7 @@ static void draw_foreground() {
         }
         lang_text_draw(50, i + 1, 170, y_offset, FONT_NORMAL_WHITE_ON_DARK);
         text_draw_number(cat->workers_needed, '@', " ", 410, y_offset, FONT_NORMAL_WHITE_ON_DARK);
-        font_t font = FONT_NORMAL_WHITE_ON_DARK;
+        e_font font = FONT_NORMAL_WHITE_ON_DARK;
         if (cat->workers_needed != cat->workers_allocated) {
             font = FONT_NORMAL_YELLOW;
         }

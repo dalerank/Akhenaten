@@ -10,10 +10,7 @@ void input_box_start(input_box* box, uint8_t* text, int length, int allow_punctu
     box->max_length = length;
     int text_width = (box->width_blocks - 2) * INPUT_BOX_BLOCK_SIZE;
     keyboard_start_capture(text, length, allow_punctuation, text_width, box->font);
-    system_keyboard_set_input_rect(box->x,
-                                   box->y,
-                                   box->width_blocks * INPUT_BOX_BLOCK_SIZE,
-                                   box->height_blocks * INPUT_BOX_BLOCK_SIZE);
+    system_keyboard_set_input_rect(box->x, box->y, box->width_blocks * INPUT_BOX_BLOCK_SIZE, box->height_blocks * INPUT_BOX_BLOCK_SIZE);
 }
 
 void input_box_pause(input_box* box) {

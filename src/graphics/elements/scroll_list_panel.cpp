@@ -197,7 +197,7 @@ void scroll_list_panel::draw() {
     bstring256 text_utf8;
     bstring256 text;
     for (int i = 0; i < num_buttons; ++i) {
-        font_t font = ui_params.font_asleep;
+        e_font font = ui_params.font_asleep;
         if (selected_entry_idx == i + scrollbar.scroll_position)
             font = ui_params.font_selected;
         else if (focus_button_id == i + 1)
@@ -221,9 +221,9 @@ void scroll_list_panel::draw() {
             encoding_from_utf8(text_utf8, text, text.capacity);
         }
 
-        if (using_custom_text_render)
+        if (using_custom_text_render) {
             custom_text_render(i, text, text_pos_x, text_pos_y, font);
-        else {
+        } else {
             if (ui_params.text_max_width != -1)
                 text_ellipsize(text, font, ui_params.text_max_width);
             text_draw(text, text_pos_x, text_pos_y, font, 0);

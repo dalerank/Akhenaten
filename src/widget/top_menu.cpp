@@ -331,11 +331,11 @@ void config_load_top_menu_bar() {
 void menu_bar_draw(const std::span<menu_bar_item>& items) {
     auto& data = g_top_menu_data;
     short x_offset = data.x_offset;
-    font_t hightlight_font = config_get(CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER) ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT;
+    e_font hightlight_font = config_get(CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER) ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT;
     for (auto& item : items) {
         item.x_start = x_offset;
         int current_id = std::distance(items.begin(), &item) + 1;
-        font_t font = (current_id == data.focus_menu_id) ? hightlight_font : FONT_NORMAL_BLACK_ON_LIGHT;
+        e_font font = (current_id == data.focus_menu_id) ? hightlight_font : FONT_NORMAL_BLACK_ON_LIGHT;
         int text_length = item.text_raw
                                 ? lang_text_draw(item.text_raw, vec2i{x_offset, data.y_offset}, font)
                                 : lang_text_draw(item.text_group, 0, vec2i{x_offset, data.y_offset}, font);
@@ -593,7 +593,7 @@ void widget_top_menu_draw(int force) {
         treasure_color = COLOR_FONT_RED;
     }
 
-    font_t treasure_font = (treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
+    e_font treasure_font = (treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
     int s_width = screen_width();
 
     data.offset_funds = s_width - data.offset_funds_basic;

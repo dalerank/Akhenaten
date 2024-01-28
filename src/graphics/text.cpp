@@ -33,7 +33,7 @@ static struct {
     int width[FONT_TYPES_MAX];
 } ellipsis = {{'.', '.', '.', 0}};
 
-static int get_ellipsis_width(font_t font) {
+static int get_ellipsis_width(e_font font) {
     if (!ellipsis.width[font])
         ellipsis.width[font] = text_get_width(ellipsis.string, font);
 
@@ -86,7 +86,7 @@ void text_draw_cursor(int x_offset, int y_offset, int is_insert) {
     }
 }
 
-int text_get_width(const uint8_t* str, font_t font) {
+int text_get_width(const uint8_t* str, e_font font) {
     const font_definition* def = font_definition_for(font);
     int maxlen = 10000;
     int width = 0;
@@ -119,7 +119,7 @@ static int get_letter_width(const uint8_t* str, const font_definition* def, int*
         return 0;
     }
 }
-static int get_word_width(const uint8_t* str, font_t font, int* out_num_chars) {
+static int get_word_width(const uint8_t* str, e_font font, int* out_num_chars) {
     const font_definition* def = font_definition_for(font);
     int width = 0;
     int guard = 0;
@@ -154,7 +154,7 @@ static int get_word_width(const uint8_t* str, font_t font, int* out_num_chars) {
     *out_num_chars = num_chars;
     return width;
 }
-uint32_t text_get_max_length_for_width(const uint8_t* str, int length, font_t font, unsigned int requested_width, int invert) {
+uint32_t text_get_max_length_for_width(const uint8_t* str, int length, e_font font, unsigned int requested_width, int invert) {
     const font_definition* def = font_definition_for(font);
     if (!length)
         length = string_length(str);
@@ -194,7 +194,7 @@ uint32_t text_get_max_length_for_width(const uint8_t* str, int length, font_t fo
     }
 }
 
-void text_ellipsize(uint8_t* str, font_t font, int requested_width) {
+void text_ellipsize(uint8_t* str, e_font font, int requested_width) {
     uint8_t* orig_str = str;
     const font_definition* def = font_definition_for(font);
     int ellipsis_width = get_ellipsis_width(font);
@@ -225,12 +225,12 @@ void text_ellipsize(uint8_t* str, font_t font, int requested_width) {
     }
 }
 
-int text_draw(const uint8_t *str, int x, int y, font_t font, color color) {
+int text_draw(const uint8_t *str, int x, int y, e_font font, color color) {
     painter ctx = game.painter();
     return text_draw(ctx, str, x, y, font, color);
 }
 
-int text_draw(painter &ctx, const uint8_t* str, int x, int y, font_t font, color color) {
+int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color color) {
     y = y - 3;
 
     const font_definition* def = font_definition_for(font);
@@ -291,7 +291,7 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, font_t font, color
     current_x += def->space_width;
     return current_x - x;
 }
-void text_draw_centered(const uint8_t* str, int x, int y, int box_width, font_t font, color color) {
+void text_draw_centered(const uint8_t* str, int x, int y, int box_width, e_font font, color color) {
     int offset = (box_width - (int)text_get_width(str, font)) / 2;
     if (offset < 0) {
         offset = 0;
@@ -299,7 +299,7 @@ void text_draw_centered(const uint8_t* str, int x, int y, int box_width, font_t 
 
     text_draw(str, offset + x, y, font, color);
 }
-int text_draw_left(uint8_t* str, int x, int y, font_t font, color color) {
+int text_draw_left(uint8_t* str, int x, int y, e_font font, color color) {
     return text_draw(str, x - (int)text_get_width(str, font), y, font, color);
 }
 
@@ -317,33 +317,33 @@ static int number_to_string(uint8_t* str, int value, char prefix, const char* po
     return offset;
 }
 
-int text_draw_number(int value, char prefix, const char* postfix, int x_offset, int y_offset, font_t font) {
+int text_draw_number(int value, char prefix, const char* postfix, int x_offset, int y_offset, e_font font) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, prefix, postfix);
     return text_draw(str, x_offset, y_offset, font, 0);
 }
-int text_draw_number_colored(int value, char prefix, const char* postfix, int x_offset, int y_offset, font_t font, color color) {
+int text_draw_number_colored(int value, char prefix, const char* postfix, int x_offset, int y_offset, e_font font, color color) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, prefix, postfix);
     return text_draw(str, x_offset, y_offset, font, color);
 }
-void text_draw_number_centered(int value, int x_offset, int y_offset, int box_width, font_t font) {
+void text_draw_number_centered(int value, int x_offset, int y_offset, int box_width, e_font font) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, '@', " ");
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
-void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int y_offset, int box_width, font_t font) {
+void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int y_offset, int box_width, e_font font) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, prefix, " ");
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
-void text_draw_number_centered_colored(int value, int x_offset, int y_offset, int box_width, font_t font, color color) {
+void text_draw_number_centered_colored(int value, int x_offset, int y_offset, int box_width, e_font font, color color) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, '@', " ");
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
-int text_draw_money(int value, int x_offset, int y_offset, font_t font) {
+int text_draw_money(int value, int x_offset, int y_offset, e_font font) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     int money_len = number_to_string(str, value, '@', " ");
     const uint8_t* postfix = lang_get_string(6, 0);
@@ -353,7 +353,7 @@ int text_draw_money(int value, int x_offset, int y_offset, font_t font) {
     return text_draw(str, x_offset, y_offset, font, 0);
 }
 
-int text_draw_percentage(int value, int x_offset, int y_offset, font_t font) {
+int text_draw_percentage(int value, int x_offset, int y_offset, e_font font) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, '@', "%");
     return text_draw(str, x_offset, y_offset, font, 0);
@@ -364,7 +364,7 @@ int text_draw_label_and_number(const char* label,
                                const char* postfix,
                                int x_offset,
                                int y_offset,
-                               font_t font,
+                               e_font font,
                                color color) {
     uint8_t str[2 * NUMBER_BUFFER_LENGTH];
     uint8_t* pos = label ? string_copy((const uint8_t*)label, str, NUMBER_BUFFER_LENGTH) : str;
@@ -377,7 +377,7 @@ void text_draw_label_and_number_centered(const char* label,
                                          int x_offset,
                                          int y_offset,
                                          int box_width,
-                                         font_t font,
+                                         e_font font,
                                          color color) {
     uint8_t str[2 * NUMBER_BUFFER_LENGTH];
     uint8_t* pos = label ? string_copy((const uint8_t*)label, str, NUMBER_BUFFER_LENGTH) : str;
@@ -385,7 +385,7 @@ void text_draw_label_and_number_centered(const char* label,
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
-int text_draw_multiline(const uint8_t* str, int x_offset, int y_offset, int box_width, font_t font, uint32_t color) {
+int text_draw_multiline(const uint8_t* str, int x_offset, int y_offset, int box_width, e_font font, uint32_t color) {
     int line_height = font_definition_for(font)->line_height;
     if (line_height < 11)
         line_height = 11;
@@ -432,7 +432,7 @@ int text_draw_multiline(const uint8_t* str, int x_offset, int y_offset, int box_
     }
     return y - y_offset;
 }
-int text_measure_multiline(const uint8_t* str, int box_width, font_t font) {
+int text_measure_multiline(const uint8_t* str, int box_width, e_font font) {
     int has_more_characters = 1;
     int guard = 0;
     int num_lines = 0;

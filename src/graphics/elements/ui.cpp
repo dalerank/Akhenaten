@@ -24,6 +24,7 @@ namespace ui {
 
     state g_state;
     generic_button dummy;
+    element dummy_element;
 }
 
 void ui::begin_widget(vec2i offset, bool relative) {
@@ -100,12 +101,12 @@ image_button &ui::img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size,
     return g_state.img_buttons.back();
 }
 
-int ui::label(int group, int number, vec2i pos, font_t font, UiFlags_ flags, int box_width) {
+int ui::label(int group, int number, vec2i pos, e_font font, UiFlags_ flags, int box_width) {
     pcstr str = (pcstr)lang_get_string(group, number);
     return label(str, pos, font, flags, box_width);
 }
 
-int ui::label(pcstr label, vec2i pos, font_t font, UiFlags_ flags, int box_width) {
+int ui::label(pcstr label, vec2i pos, e_font font, UiFlags_ flags, int box_width) {
     const vec2i offset = g_state.offset();
     if (!!(flags & UiFlags_LabelCentered)) {
         lang_text_draw_centered(label, offset.x + pos.x, offset.y + pos.y, box_width, font);
@@ -115,12 +116,12 @@ int ui::label(pcstr label, vec2i pos, font_t font, UiFlags_ flags, int box_width
     }
 }
 
-int ui::label_amount(int group, int number, int amount, vec2i pos, font_t font, pcstr postfix) {
+int ui::label_amount(int group, int number, int amount, vec2i pos, e_font font, pcstr postfix) {
     const vec2i offset = g_state.offset();
     return lang_text_draw_amount(group, number, amount, offset.x + pos.x, offset.y + pos.y, font, postfix);
 }
 
-int ui::label_percent(int amount, vec2i pos, font_t font) {
+int ui::label_percent(int amount, vec2i pos, e_font font) {
     const vec2i offset = g_state.offset();
     return text_draw_percentage(amount, offset.x + pos.x, offset.y + pos.y, font);
 }
@@ -168,10 +169,10 @@ void ui::outer_panel::draw() {
 }
 
 void ui::outer_panel::load(archive arch) {
+    element::load(arch);
+
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "outer_panel"));
-
-    element::load(arch);
 }
 
 void ui::widget::draw() {
@@ -184,23 +185,54 @@ void ui::widget::load(archive arch) {
     elements.clear();
     arch.r_objects("ui", [this] (pcstr key, archive elem) {
         pcstr type = elem.r_string("type");
+        element::ptr elm;
         if (!strcmp(type, "outer_panel")) {
-            elements.push_back(std::make_shared<outer_panel>());
-            elements.back()->load(elem);
+            elm = std::make_shared<outer_panel>();
         } else if (!strcmp(type, "image")) {
-            elements.push_back(std::make_shared<image>());
-            elements.back()->load(elem);
+            elm = std::make_shared<image>();
+        } else if (!strcmp(type, "label")) {
+            elm = std::make_shared<elabel>();
+        }
+
+        if (elm) {
+            elm->id = key;
+            elements.push_back(elm);
+            elm->load(elem);
         }
     });
 }
 
+ui::element& ui::widget::operator[](pcstr id) {
+    auto it = std::find_if(elements.begin(), elements.end(), [id] (const auto &e) { return e->id == id; });
+    return (it != elements.end() ? **it : ui::dummy_element);
+}
+
 void ui::image::draw() {
-    ui::icon(pos, ADVISOR_RATINGS);
+    ui::eimage(img, pos);
 }
 
 void ui::image::load(archive arch) {
+    element::load(arch);
+
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "image"));
     img = arch.r_image("image");
+}
+
+void ui::elabel::draw() {
+    ui::label(_text.c_str(), pos, _font);
+}
+
+void ui::elabel::load(archive arch) {
     element::load(arch);
+
+    pcstr type = arch.r_string("type");
+    assert(!strcmp(type, "label"));
+
+    _text = arch.r_string("text");
+    _font = (e_font)arch.r_int("font", FONT_NORMAL_BLACK_ON_LIGHT);
+}
+
+void ui::elabel::text(pcstr v) {
+    _text = v;
 }

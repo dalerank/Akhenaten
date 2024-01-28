@@ -65,7 +65,7 @@ static int get_festival_advice(void) {
 }
 
 static void draw_entertainer(int type, int y_offset, e_building_type venue, int shows, int coverage, int entertain_coeff) {
-    font_t font = FONT_NORMAL_WHITE_ON_DARK;
+    e_font font = FONT_NORMAL_WHITE_ON_DARK;
 
     if (!building_menu_is_building_enabled(venue)) {
         font = FONT_NORMAL_YELLOW;

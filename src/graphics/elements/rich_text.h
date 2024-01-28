@@ -27,7 +27,7 @@ int rich_text_init(const uint8_t* text,
  * @param normal_font Normal text
  * @param link_font Link text
  */
-void rich_text_set_fonts(font_t normal_font, font_t link_font);
+void rich_text_set_fonts(e_font normal_font, e_font link_font);
 
 /**
  * Resets the text to the specified scroll position and forces recalculation of lines

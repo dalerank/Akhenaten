@@ -28,10 +28,10 @@ void begin_widget(vec2i offset, bool relative = false);
 void end_widget();
 bool handle_mouse(const mouse *m);
 
-int label(int group, int number, vec2i pos, font_t font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_ flags = UiFlags_None, int box_width = 0);
-int label(pcstr, vec2i pos, font_t font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_ flags = UiFlags_None, int box_width = 0);
-int label_amount(int group, int number, int amount, vec2i pos, font_t font = FONT_NORMAL_BLACK_ON_LIGHT, pcstr postfix = "");
-int label_percent(int amount, vec2i pos, font_t font = FONT_NORMAL_BLACK_ON_LIGHT);
+int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_ flags = UiFlags_None, int box_width = 0);
+int label(pcstr, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_ flags = UiFlags_None, int box_width = 0);
+int label_amount(int group, int number, int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, pcstr postfix = "");
+int label_percent(int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
 void eimage(e_image_id img, vec2i pos);
 void panel(vec2i pos, vec2i size, UiFlags_ flags);
 void icon(vec2i pos, e_resource img);
@@ -40,11 +40,13 @@ void icon(vec2i pos, e_advisor advisor);
 pcstr str(int group, int id);
 
 struct element {
+    bstring64 id;
     vec2i pos;
     vec2i size;
 
     virtual void draw() {}
-    virtual void load(archive elem);
+    virtual void load(archive);
+    virtual void text(pcstr) {}
 
     using ptr = std::shared_ptr<element>;
 };
@@ -61,11 +63,22 @@ struct outer_panel : public element {
     virtual void load(archive elem) override;
 };
 
+struct elabel : public element {
+    std::string _text;
+    e_font _font;
+
+    virtual void draw() override;
+    virtual void load(archive elem) override;
+    virtual void text(pcstr) override;
+};
+
 struct widget {
     std::vector<element::ptr> elements;
 
     virtual void draw();
     virtual void load(archive arch);
+
+    element& operator[](pcstr id);
 };
 
 } // ui

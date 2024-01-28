@@ -35,7 +35,7 @@ inline void img_sprite(painter &ctx, int image_id, vec2i p, color color_mask = C
 
 void img_ornament(painter &ctx, int image_id, int base_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void img_from_below(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
-void img_letter(painter &ctx, font_t font, int letter_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+void img_letter(painter &ctx, e_font font, int letter_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void img_background(painter &ctx, int image_id, float scale = 1.0f);
 void isometric(painter &ctx, int image_id, vec2i pos, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 const image_t* isometric_from_drawtile(painter &ctx, int image_id, vec2i pos, color color_mask = COLOR_MASK_NONE, bool alpha = false);

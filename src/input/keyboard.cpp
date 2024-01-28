@@ -24,7 +24,7 @@ struct input_keyboard_data_t {
     int viewport_cursor_position;
 
     int box_width;
-    font_t font;
+    e_font font;
 };
 
 input_keyboard_data_t g_input_keyboard_data;
@@ -97,7 +97,7 @@ static void update_viewport(int has_changed) {
     data.viewport_cursor_position = data.cursor_position;
 }
 
-void keyboard_start_capture(uint8_t* text, int max_length, int allow_punctuation, int box_width, font_t font) {
+void keyboard_start_capture(uint8_t* text, int max_length, int allow_punctuation, int box_width, e_font font) {
     auto &data = g_input_keyboard_data;
     data.capture = 1;
     data.text = text;
