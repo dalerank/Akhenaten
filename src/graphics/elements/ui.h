@@ -20,6 +20,7 @@ enum UiFlags_ {
     UiFlags_None = 0,
     UiFlags_LabelCentered = 1 << 1,
     UiFlags_PanelOuter = 1 << 2,
+    UiFlags_PanelInner = 1 << 3,
 };
 
 namespace ui {
@@ -61,6 +62,11 @@ struct image : public element {
 };
 
 struct outer_panel : public element {
+    virtual void draw() override;
+    virtual void load(archive elem) override;
+};
+
+struct inner_panel : public element {
     virtual void draw() override;
     virtual void load(archive elem) override;
 };

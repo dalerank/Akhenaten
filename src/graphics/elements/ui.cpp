@@ -136,6 +136,8 @@ void ui::panel(vec2i pos, vec2i size, UiFlags_ flags) {
     const vec2i offset = g_state.offset();
     if (!!(flags & UiFlags_PanelOuter)) {
         outer_panel_draw(offset + pos, size.x, size.y);
+    } else if (!!(flags & UiFlags_PanelInner)) {
+        inner_panel_draw(offset + pos, size);
     }
 }
 
@@ -176,6 +178,17 @@ void ui::outer_panel::load(archive arch) {
     assert(!strcmp(type, "outer_panel"));
 }
 
+void ui::inner_panel::draw() {
+    ui::panel(pos, size, UiFlags_PanelInner);
+}
+
+void ui::inner_panel::load(archive arch) {
+    element::load(arch);
+
+    pcstr type = arch.r_string("type");
+    assert(!strcmp(type, "inner_panel"));
+}
+
 void ui::widget::draw() {
     for (auto &e : elements) {
         if (e->enabled) {
@@ -191,6 +204,8 @@ void ui::widget::load(archive arch) {
         element::ptr elm;
         if (!strcmp(type, "outer_panel")) {
             elm = std::make_shared<outer_panel>();
+        } else if (!strcmp(type, "inner_panel")) {
+            elm = std::make_shared<inner_panel>();
         } else if (!strcmp(type, "image")) {
             elm = std::make_shared<image>();
         } else if (!strcmp(type, "label")) {

@@ -76,10 +76,15 @@ mission_briefing_window = {
 			font : FONT_NORMAL_BLACK_ON_LIGHT
 		},
 		objectives : {
-			type : "label", 
+			type : "label",
 			text : {group:62, id:7},
 			pos : {x:376, y:433},
 			font : FONT_NORMAL_BLACK_ON_LIGHT
+		},
+		objectives_panel : {
+			type : "inner_panel",
+			pos : {x:32, y:96},
+			size: {w:33, h:6}
 		}
 	}
 }

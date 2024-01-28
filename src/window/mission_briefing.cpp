@@ -90,7 +90,6 @@ static void draw_foreground(void) {
 
     g_mission_briefing.draw();
 
-    inner_panel_draw(32, 96, 33, 6);
     lang_text_draw(62, 10, 48, 104, FONT_NORMAL_WHITE_ON_DARK);
     int goal_index = 0;
 
