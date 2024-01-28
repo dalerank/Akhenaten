@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 
 #include "core/vec2i.h"
 #include "city/resource.h"
