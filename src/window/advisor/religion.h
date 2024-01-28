@@ -1,5 +1,5 @@
 #pragma once
 
-struct advisor_window_type;
+#include "window/advisors.h"
 
-const advisor_window_type* window_advisor_religion();
+const advisor_window* window_advisor_religion();

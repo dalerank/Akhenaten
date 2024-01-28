@@ -127,7 +127,12 @@ static int draw_background() {
     return ADVISOR_HEIGHT;
 }
 
-const advisor_window_type* window_advisor_education(void) {
-    static const advisor_window_type window = {draw_background, 0, 0, 0};
+const advisor_window* window_advisor_education(void) {
+    static const advisor_window window = {
+        draw_background,
+        nullptr,
+        nullptr,
+        nullptr
+    };
     return &window;
 }

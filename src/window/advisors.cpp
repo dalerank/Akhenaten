@@ -31,7 +31,7 @@
 #include "window/advisor/military.h"
 #include "window/advisor/monuments.h"
 #include "window/advisor/population.h"
-#include "window/advisor/ratings.h"
+#include "window/advisor/advisor_ratings.h"
 #include "window/advisor/religion.h"
 #include "window/advisor/trade.h"
 #include "window/city.h"
@@ -61,7 +61,7 @@ static image_button advisor_buttons[] = {
   {588, 1, 42, 32, IB_NORMAL, GROUP_MENU_ADVISOR_BUTTONS, 52, button_back_to_city, button_none, 0, 0},
 };
 
-static const advisor_window_type* (*sub_advisors[])(void) = {
+static const advisor_window* (*sub_advisors[])(void) = {
   0,
   window_advisor_labor,
   window_advisor_military,
@@ -109,7 +109,7 @@ static const int ADVISOR_TO_MESSAGE_TEXT[] = {
 };
 
 struct window_advisors_t {
-    const advisor_window_type *current_advisor_window = nullptr;
+    const advisor_window *current_advisor_window = nullptr;
     int current_advisor = ADVISOR_NONE;
     int focus_button_id;
     int advisor_height;

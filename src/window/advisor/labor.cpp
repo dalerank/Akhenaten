@@ -127,7 +127,12 @@ static int get_tooltip_text(void) {
     }
 }
 
-const advisor_window_type* window_advisor_labor(void) {
-    static const advisor_window_type window = {draw_background, draw_foreground, handle_mouse, get_tooltip_text};
+const advisor_window* window_advisor_labor(void) {
+    static const advisor_window window = {
+        draw_background,
+        draw_foreground,
+        handle_mouse,
+        get_tooltip_text
+    };
     return &window;
 }

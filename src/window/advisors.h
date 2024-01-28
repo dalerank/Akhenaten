@@ -4,7 +4,7 @@
 
 struct mouse;
 
-struct advisor_window_type {
+struct advisor_window {
     /**
      * @return height of the advisor in blocks of 16px
      */

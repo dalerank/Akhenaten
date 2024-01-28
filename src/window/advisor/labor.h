@@ -1,8 +1,5 @@
-#ifndef WINDOW_ADVISOR_LABOR_H
-#define WINDOW_ADVISOR_LABOR_H
+#pragma once
 
 #include "window/advisors.h"
 
-const advisor_window_type* window_advisor_labor(void);
-
-#endif // WINDOW_ADVISOR_LABOR_H
+const advisor_window* window_advisor_labor(void);

@@ -4,16 +4,17 @@
 #include "building/model.h"
 #include "city/coverage.h"
 #include "city/data_private.h"
+#include "city/population.h"
 #include "core/calc.h"
 #include "game/time.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 
-int city_rating_culture(void) {
+int city_rating_culture() {
     return city_data.ratings.culture;
 }
 
-int city_rating_prosperity(void) {
+int city_rating_prosperity() {
     return city_data.ratings.prosperity;
 }
 
@@ -291,7 +292,7 @@ void city_ratings_update_explanations(void) {
     city_ratings_update_kingdom_explanation();
 }
 
-static void update_culture_rating(void) {
+static void update_culture_rating() {
     city_data.ratings.culture = 0;
     city_data.ratings.culture_explanation = 0;
 
@@ -383,7 +384,7 @@ static void update_culture_rating(void) {
     update_culture_explanation();
 }
 
-static void update_prosperity_rating(void) {
+static void update_prosperity_rating() {
     int change = 0;
     // unemployment: -1 for too high, +1 for low
     if (city_data.labor.unemployment_percentage < 5)
@@ -435,7 +436,7 @@ static void update_prosperity_rating(void) {
     update_prosperity_explanation();
 }
 
-static void calculate_max_prosperity(void) {
+static void calculate_max_prosperity() {
     int points = 0;
     int houses = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -452,7 +453,7 @@ static void calculate_max_prosperity(void) {
     }
 }
 
-static void update_monument_rating(void) {
+static void update_monument_rating() {
     int change = 0;
     if (city_data.ratings.monument_years_of_monument < 2)
         change += 2;
@@ -473,11 +474,15 @@ static void update_monument_rating(void) {
     else {
         city_data.ratings.monument_years_of_monument += 1;
     }
+
     city_data.ratings.monument_num_criminals = 0;
     city_data.ratings.monument_num_rioters = 0;
     city_data.ratings.monument_destroyed_buildings = 0;
 
-    city_data.ratings.monument = calc_bound(city_data.ratings.monument + change, 0, 100);
+    int max_population_limit = std::min<int>(city_population(), 4000);
+    int monument_ratings_cap = std::max(1, max_population_limit / 1000) * 25;
+
+    city_data.ratings.monument = calc_bound(city_data.ratings.monument + change, 0, monument_ratings_cap);
     update_monument_explanation();
 }
 

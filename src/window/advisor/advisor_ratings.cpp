@@ -1,4 +1,4 @@
-#include "ratings.h"
+#include "advisor_ratings.h"
 
 #include "city/ratings.h"
 #include "graphics/boilerplate.h"
@@ -49,11 +49,7 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
 static void draw_rating(int id, int value, int open_play, int goal) {
     //    int value = city_rating_culture();
     int enabled = !open_play && goal;
-    button_border_draw(rating_buttons[id].x,
-                       rating_buttons[id].y,
-                       rating_buttons[id].width,
-                       rating_buttons[id].height,
-                       focus_button_id == SELECTED_RATING_CULTURE);
+    button_border_draw(rating_buttons[id].x, rating_buttons[id].y, rating_buttons[id].width, rating_buttons[id].height, focus_button_id == SELECTED_RATING_CULTURE);
     lang_text_draw_centered(53, 1 + id, rating_buttons[id].x, rating_buttons[id].y + 8, rating_buttons[id].width, FONT_NORMAL_BLACK_ON_LIGHT);
     text_draw_number_centered(value, rating_buttons[id].x, rating_buttons[id].y + 21, rating_buttons[id].width, FONT_LARGE_BLACK_ON_LIGHT);
     int width = text_draw_number(enabled ? goal : 0, '@', " ", rating_buttons[id].x + 5, rating_buttons[id].y + 45, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -126,26 +122,10 @@ static int draw_background() {
     return ADVISOR_HEIGHT;
 }
 static void draw_foreground(void) {
-    button_border_draw(rating_buttons[0].x,
-                       rating_buttons[0].y,
-                       rating_buttons[0].width,
-                       rating_buttons[0].height,
-                       focus_button_id == SELECTED_RATING_CULTURE);
-    button_border_draw(rating_buttons[1].x,
-                       rating_buttons[1].y,
-                       rating_buttons[1].width,
-                       rating_buttons[1].height,
-                       focus_button_id == SELECTED_RATING_PROSPERITY);
-    button_border_draw(rating_buttons[2].x,
-                       rating_buttons[2].y,
-                       rating_buttons[2].width,
-                       rating_buttons[2].height,
-                       focus_button_id == SELECTED_RATING_MONUMENT);
-    button_border_draw(rating_buttons[3].x,
-                       rating_buttons[3].y,
-                       rating_buttons[3].width,
-                       rating_buttons[3].height,
-                       focus_button_id == SELECTED_RATING_KINGDOM);
+    button_border_draw(rating_buttons[0].x, rating_buttons[0].y, rating_buttons[0].width, rating_buttons[0].height, focus_button_id == SELECTED_RATING_CULTURE);
+    button_border_draw(rating_buttons[1].x, rating_buttons[1].y, rating_buttons[1].width, rating_buttons[1].height, focus_button_id == SELECTED_RATING_PROSPERITY);
+    button_border_draw(rating_buttons[2].x, rating_buttons[2].y, rating_buttons[2].width, rating_buttons[2].height, focus_button_id == SELECTED_RATING_MONUMENT);
+    button_border_draw(rating_buttons[3].x, rating_buttons[3].y, rating_buttons[3].width, rating_buttons[3].height, focus_button_id == SELECTED_RATING_KINGDOM);
 }
 
 static int handle_mouse(const mouse* m) {
@@ -172,7 +152,12 @@ static int get_tooltip_text(void) {
     }
 }
 
-const advisor_window_type* window_advisor_ratings(void) {
-    static const advisor_window_type window = {draw_background, draw_foreground, handle_mouse, get_tooltip_text};
+const advisor_window* window_advisor_ratings(void) {
+    static const advisor_window window = {
+        draw_background,
+        draw_foreground,
+        handle_mouse,
+        get_tooltip_text
+    };
     return &window;
 }

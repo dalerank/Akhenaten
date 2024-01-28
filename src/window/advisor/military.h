@@ -1,8 +1,5 @@
-#ifndef WINDOW_ADVISOR_MILITARY_H
-#define WINDOW_ADVISOR_MILITARY_H
+#pragma conce
 
 #include "window/advisors.h"
 
-const advisor_window_type* window_advisor_military(void);
-
-#endif // WINDOW_ADVISOR_MILITARY_H
+const advisor_window* window_advisor_military();

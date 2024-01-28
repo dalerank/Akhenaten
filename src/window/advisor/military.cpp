@@ -198,8 +198,13 @@ static void on_scroll(void) {
     window_invalidate();
 }
 
-const advisor_window_type* window_advisor_military(void) {
-    static const advisor_window_type window = {draw_background, draw_foreground, handle_mouse, 0};
+const advisor_window* window_advisor_military(void) {
+    static const advisor_window window = {
+        draw_background,
+        draw_foreground,
+        handle_mouse,
+        nullptr
+    };
     init();
     return &window;
 }

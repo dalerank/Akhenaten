@@ -2,4 +2,4 @@
 
 #include "window/advisors.h"
 
-const advisor_window_type* window_advisor_health(void);
+const advisor_window* window_advisor_health(void);
