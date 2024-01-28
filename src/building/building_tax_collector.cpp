@@ -5,6 +5,8 @@
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "city/finance.h"
+#include "graphics/window.h"
+#include "graphics/elements/arrow_button.h"
 #include "graphics/elements/panel.h"
 #include "graphics/view/view.h"
 #include "graphics/elements/lang_text.h"
@@ -35,8 +37,19 @@ void building_tax_collector::window_info_background(object_info &c) {
     int amount = config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM) ? b->deben_storage : b->tax_income_or_storage;
     ui::label_num(8, 0, amount, {44 + width, 43});
 
-    ui::label(60, 1, {c.width_blocks * 16 / 2 + 50, 40});
-    ui::label_percent(city_finance_tax_percentage(), {c.width_blocks * 16 / 2 + 150, 40});
+    int tax_block = c.width_blocks * 16 / 2;
+    ui::label(60, 1, {tax_block + 50, 44});
+    ui::label_percent(city_finance_tax_percentage(), {tax_block + 140, 44});
+    ui::arw_button({tax_block + 170, 36}, true)
+            .onclick([] (int, int) { 
+                city_finance_change_tax_percentage(-1);
+                window_invalidate();
+            });
+    ui::arw_button({tax_block + 194, 36}, false)
+            .onclick([] (int, int) { 
+                city_finance_change_tax_percentage(1);
+                window_invalidate();
+            });
 
     if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);
@@ -56,8 +69,6 @@ void building_tax_collector::window_info_background(object_info &c) {
 
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
     window_building_draw_employment(&c, 142);
-
-    ui::end_widget();
 }
 
 void building_tax_collector::update_month() {
