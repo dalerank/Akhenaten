@@ -1,6 +1,8 @@
 #include "ui.h"
 
+#include "button.h"
 #include "generic_button.h"
+#include "arrow_button.h"
 #include "image_button.h"
 #include "lang_text.h"
 #include "panel.h"
@@ -14,6 +16,7 @@ namespace ui {
         std::stack<vec2i> _offset;
         std::vector<generic_button> buttons;
         std::vector<image_button> img_buttons;
+        std::vector<arrow_button> arw_buttons;
 
         inline const vec2i offset() { return _offset.empty() ? vec2i{0, 0} : _offset.top(); }
     };
@@ -22,10 +25,19 @@ namespace ui {
     generic_button dummy;
 }
 
-void ui::begin_widget(vec2i offset) {
+void ui::begin_widget(vec2i offset, bool relative) {
+    if (relative) {
+        vec2i top = g_state._offset.empty() ? vec2i{0, 0} : g_state._offset.top();
+        offset += top;
+    }
     g_state._offset.push(offset);
+}
+
+void ui::begin_frame() {
+    g_state._offset = {};
     g_state.buttons.clear();
     g_state.img_buttons.clear();
+    g_state.arw_buttons.clear();
 }
 
 void ui::end_widget() {
@@ -38,7 +50,8 @@ bool ui::handle_mouse(const mouse *m) {
     bool handle = false;
     int tmp_btn = 0;
     handle |= !!generic_buttons_handle_mouse(m, g_state.offset(), g_state.buttons, tmp_btn);
-    handle |= image_buttons_handle_mouse(m, g_state.offset(), g_state.img_buttons, tmp_btn);
+    handle |= !!image_buttons_handle_mouse(m, g_state.offset(), g_state.img_buttons, tmp_btn);
+    handle |= !!arrow_buttons_handle_mouse(m, g_state.offset(), g_state.arw_buttons, tmp_btn);
 
     return handle;
 }
@@ -113,4 +126,13 @@ void ui::icon(vec2i pos, e_resource img) {
     const vec2i offset = g_state.offset();
     painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), offset.x + pos.x, offset.y + pos.y);
+}
+
+arrow_button &ui::arw_button(vec2i pos, bool up, bool tiny) {
+    const vec2i offset = g_state.offset();
+
+    g_state.arw_buttons.push_back({pos.x, pos.y, up ? 17 : 15, 24, button_none, 0, 0});
+    arrow_buttons_draw(offset, g_state.arw_buttons.back(), tiny);
+
+    return g_state.arw_buttons.back();
 }
