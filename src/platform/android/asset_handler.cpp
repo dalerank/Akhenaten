@@ -79,7 +79,7 @@ void *asset_handler_open_asset(const char *asset_name, const char *mode)
 
     switch (assets_location) {
         case ASSETS_LOCATION_DIRECTORY: {
-            location.append(asset_name);
+            location.append("%s", asset_name);
             int fd = android_get_file_descriptor(location, mode);
             if (!fd) {
                 return 0;
