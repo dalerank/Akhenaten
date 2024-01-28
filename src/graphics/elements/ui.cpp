@@ -125,7 +125,7 @@ int ui::label_percent(int amount, vec2i pos, font_t font) {
     return text_draw_percentage(amount, offset.x + pos.x, offset.y + pos.y, font);
 }
 
-void ui::image(e_image_id img, vec2i pos) {
+void ui::eimage(e_image_id img, vec2i pos) {
     painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_group(img), pos);
 }
@@ -149,7 +149,6 @@ void ui::icon(vec2i pos, e_advisor adv) {
     ImageDraw::img_generic(ctx, image_group(IMG_ADVISOR_ICONS) + (adv - 1), offset.x + pos.x, offset.y + pos.y);
 }
 
-
 arrow_button &ui::arw_button(vec2i pos, bool up, bool tiny) {
     const vec2i offset = g_state.offset();
 
@@ -157,4 +156,51 @@ arrow_button &ui::arw_button(vec2i pos, bool up, bool tiny) {
     arrow_buttons_draw(offset, g_state.arw_buttons.back(), tiny);
 
     return g_state.arw_buttons.back();
+}
+
+void ui::element::load(archive arch) {
+    pos = arch.r_vec2i("pos");
+    size = arch.r_size2i("size");
+}
+
+void ui::outer_panel::draw() {
+    ui::panel(pos, size, UiFlags_PanelOuter);
+}
+
+void ui::outer_panel::load(archive arch) {
+    pcstr type = arch.r_string("type");
+    assert(!strcmp(type, "outer_panel"));
+
+    element::load(arch);
+}
+
+void ui::widget::draw() {
+    for (auto &e : elements) {
+        e->draw();
+    }
+}
+
+void ui::widget::load(archive arch) {
+    elements.clear();
+    arch.r_objects("ui", [this] (pcstr key, archive elem) {
+        pcstr type = elem.r_string("type");
+        if (!strcmp(type, "outer_panel")) {
+            elements.push_back(std::make_shared<outer_panel>());
+            elements.back()->load(elem);
+        } else if (!strcmp(type, "image")) {
+            elements.push_back(std::make_shared<image>());
+            elements.back()->load(elem);
+        }
+    });
+}
+
+void ui::image::draw() {
+    ui::icon(pos, ADVISOR_RATINGS);
+}
+
+void ui::image::load(archive arch) {
+    pcstr type = arch.r_string("type");
+    assert(!strcmp(type, "image"));
+    img = arch.r_image("image");
+    element::load(arch);
 }

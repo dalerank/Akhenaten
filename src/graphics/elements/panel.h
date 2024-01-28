@@ -19,9 +19,3 @@ void label_draw(int x, int y, int width_blocks, int type);
 void label_draw_colored(painter &ctx, int x, int y, int width_blocks, int type, uint32_t mask);
 
 void large_label_draw(int x, int y, int width_blocks, int type);
-
-namespace ui {
-    void panel(vec2i pos, vec2i size, UiFlags_ flags);
-    void icon(vec2i pos, e_resource img);
-    void icon(vec2i pos, e_advisor advisor);
-}

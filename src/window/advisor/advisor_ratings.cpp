@@ -2,10 +2,8 @@
 
 #include "city/ratings.h"
 #include "graphics/boilerplate.h"
-#include "graphics/elements/generic_button.h"
-#include "graphics/elements/lang_text.h"
 #include "graphics/view/view.h"
-#include "graphics/elements/panel.h"
+#include "graphics/elements/ui.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "config/config.h"
@@ -19,9 +17,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_rating);
 
 static void button_rating(int rating, int param2);
 
-struct advisor_rating_window {
-    vec2i outer_panel_pos;
-    vec2i outer_panel_size;
+struct advisor_rating_window : public ui::widget {
     e_image_id advisor_icon_image;
     vec2i advisor_icon_pos;
     vec2i header_pos;
@@ -35,9 +31,9 @@ advisor_rating_window g_advisor_rating_window;
 
 void config_load_advisor_rating() {
     g_config_arch.r_section("advisor_rating_window", [] (archive arch) {
+        g_advisor_rating_window.load(arch);
+
         auto &w = g_advisor_rating_window;
-        w.outer_panel_pos = arch.r_vec2i("outer_panel_pos");
-        w.outer_panel_size = arch.r_size2i("outer_panel_size");
         w.advisor_icon_image = arch.r_image("advisor_icon_image");
         w.advisor_icon_pos = arch.r_vec2i("advisor_icon_pos");
         w.header_pos = arch.r_vec2i("header_pos");
@@ -92,13 +88,13 @@ static void draw_rating(int id, int value, int open_play, int goal) {
 }
 
 static int draw_background() {
-    return g_advisor_rating_window.outer_panel_size.y;
+    return 0;// g_advisor_rating_window.outer_panel_size.y;
 }
 
 static void draw_foreground() {
     auto &w = g_advisor_rating_window;
-    ui::panel(w.outer_panel_pos, w.outer_panel_size, UiFlags_PanelOuter);
-    ui::icon(w.advisor_icon_pos, ADVISOR_RATINGS);
+
+    g_advisor_rating_window.draw();
 
     ui::label(53, 0, w.header_pos, FONT_LARGE_BLACK_ON_LIGHT);
     bstring128 caption = (pcstr)ui::str(53, 7);
@@ -108,7 +104,7 @@ static void draw_foreground() {
     }
 
     ui::label(caption, w.header_population_pos, FONT_NORMAL_BLACK_ON_LIGHT);
-    ui::image(w.background_img, w.background_img_pos);
+    ui::eimage(w.background_img, w.background_img_pos);
 
     int open_play = scenario_is_open_play();
 

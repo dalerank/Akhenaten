@@ -81,13 +81,7 @@ int lang_text_draw_year(int year, int x_offset, int y_offset, font_t font) {
     }
     return width;
 }
-void lang_text_draw_month_year_max_width(int month,
-                                         int year,
-                                         int x_offset,
-                                         int y_offset,
-                                         int box_width,
-                                         font_t font,
-                                         color color) {
+void lang_text_draw_month_year_max_width(int month, int year, int x_offset, int y_offset, int box_width, font_t font, color color) {
     int month_width = lang_text_get_width(25, month, font);
     int ad_bc_width = lang_text_get_width(20, year >= 0 ? 1 : 0, font);
     int space_width = font_definition_for(font)->space_width;

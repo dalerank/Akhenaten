@@ -1,11 +1,13 @@
 #pragma once
 
 #include "mujs/mujs.h"
+
 #include "core/bstring.h"
 #include "js/js_defines.h"
 #include "core/vec2i.h"
 
 #include <vector>
+#include <string>
 
 enum e_image_id : uint16_t;
 
@@ -17,6 +19,23 @@ struct archive {
         js_getproperty(vm, -1, name);
         const char *result = js_isundefined(vm, -1) ? "" : js_tostring(vm, -1);
         js_pop(vm, 1);
+        return result;
+    }
+
+    inline std::vector<std::string> r_array_str(pcstr name) {
+        js_getproperty(vm, -1, name);
+        std::vector<std::string> result;
+        if (js_isarray(vm, -1)) {
+            int length = js_getlength(vm, -1);
+
+            for (int i = 0; i < length; ++i) {
+                js_getindex(vm, -1, i);
+                std::string v = js_tostring(vm, -1);
+                result.push_back(v);
+                js_pop(vm, 1);
+            }
+            js_pop(vm, 1);
+        }
         return result;
     }
 
@@ -81,6 +100,27 @@ struct archive {
         js_getproperty(vm, -1, name);
         r_array_impl(read_func);
         js_pop(vm, 1);
+    }
+
+    template<typename T>
+    inline void r_objects(pcstr name, T read_func) {
+        this->r_section(name, [&read_func] (archive s_arch) {
+            pcstr key;
+            std::vector<bstring128> keys;
+            js_pushiterator(s_arch.vm, -1, 1);
+            while (key = js_nextiterator(s_arch.vm, -1)) {
+                keys.push_back(key);
+            }
+            js_pop(s_arch.vm, 1);
+
+            for (const auto &key : keys) {
+                js_getproperty(s_arch.vm, -1, key.c_str());
+                if (js_isobject(s_arch.vm, -1)) {
+                    read_func(key.c_str(), s_arch.vm);
+                }
+                js_pop(s_arch.vm, 1);
+            }
+        });
     }
 
 protected:

@@ -31,11 +31,3 @@ int lang_text_draw_year(int year, int x_offset, int y_offset, font_t font);
 void lang_text_draw_month_year_max_width(int month, int year, int x_offset, int y_offset, int box_width, font_t font, color color);
 
 int lang_text_draw_multiline(int group, int number, vec2i offset, int box_width, font_t font);
-
-namespace ui {
-    int label(int group, int number, vec2i pos, font_t font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_ flags = UiFlags_None, int box_width = 0);
-    int label(pcstr, vec2i pos, font_t font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_ flags = UiFlags_None, int box_width = 0);
-    int label_amount(int group, int number, int amount, vec2i pos, font_t font = FONT_NORMAL_BLACK_ON_LIGHT, pcstr postfix = "");
-    int label_percent(int amount, vec2i pos, font_t font = FONT_NORMAL_BLACK_ON_LIGHT);
-    void image(e_image_id img, vec2i pos);
-}

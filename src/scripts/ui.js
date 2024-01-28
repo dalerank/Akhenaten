@@ -27,10 +27,18 @@ main_menu_window = {
 }
 
 advisor_rating_window = {
-		outer_panel_pos : {x:0, y:0},
-		outer_panel_size : {w:40, h:27},
-		advisor_icon_image : IMG_ADVISOR_RATING_ICON,
-		advisor_icon_pos : {x: 10, y: 10},
+	  ui : {
+			outer_panel : {
+				type : "outer_panel",
+				pos  : {x:0, y:0},
+			  size : {w:40, h:27},
+			},
+			advisor_icon : {
+				type : "image",
+				image : IMG_ADVISOR_RATING_ICON,
+			  pos  : {x: 10, y: 10},
+			},
+		},
 		header_pos : {x:60, y:17},
 		header_population_pos : {x: 160, y:20},
 		background_img : IMG_ADVISOR_BACKGROUND,
