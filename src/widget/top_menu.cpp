@@ -337,8 +337,8 @@ void menu_bar_draw(const std::span<menu_bar_item>& items) {
         int current_id = std::distance(items.begin(), &item) + 1;
         font_t font = (current_id == data.focus_menu_id) ? hightlight_font : FONT_NORMAL_BLACK_ON_LIGHT;
         int text_length = item.text_raw
-                                ? lang_text_draw(item.text_raw, x_offset, data.y_offset, font)
-                                : lang_text_draw(item.text_group, 0, x_offset, data.y_offset, font);
+                                ? lang_text_draw(item.text_raw, vec2i{x_offset, data.y_offset}, font)
+                                : lang_text_draw(item.text_group, 0, vec2i{x_offset, data.y_offset}, font);
         x_offset += text_length;
         item.x_end = x_offset;
         x_offset += data.spacing;
@@ -405,12 +405,12 @@ void menu_draw(menu_bar_item& menu, int focus_item_id) {
         // Set color/font on the menu item mouse hover
         if (i == focus_item_id - 1) {
             sub->text_raw
-                    ? lang_text_draw(sub->text_raw, menu.x_start + 8, y_offset, FONT_NORMAL_YELLOW)
-                    : lang_text_draw(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_NORMAL_YELLOW);
+                    ? lang_text_draw(sub->text_raw, vec2i{menu.x_start + 8, y_offset}, FONT_NORMAL_YELLOW)
+                    : lang_text_draw(sub->text_group, sub->text_number, vec2i{menu.x_start + 8, y_offset}, FONT_NORMAL_YELLOW);
         } else {
             sub->text_raw 
-                    ? lang_text_draw(sub->text_raw, menu.x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT)
-                    : lang_text_draw(sub->text_group, sub->text_number, menu.x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT);
+                    ? lang_text_draw(sub->text_raw, vec2i{menu.x_start + 8, y_offset}, FONT_NORMAL_BLACK_ON_LIGHT)
+                    : lang_text_draw(sub->text_group, sub->text_number, vec2i{menu.x_start + 8, y_offset}, FONT_NORMAL_BLACK_ON_LIGHT);
         }
         y_offset += data.item_height;
     }

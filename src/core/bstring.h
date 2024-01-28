@@ -65,13 +65,17 @@ public:
 
     inline ref ncat(const char* s, size_t cnt) { ::strncat(_data, s, cnt); return *this; }
 
-    inline ref append(const char* s) {
+    template <typename... Args>
+    inline ref append(const char* fmt, Args&&... args) {
         size_t size = this->len();
         char* dest = _data + size;
         size_t remain = _size - size;
-        snprintf(dest, remain, "%s", s);
+        if (remain > 0) {
+            snprintf(dest, remain, fmt, std::forward<Args>(args)...);
+        }
         return *this;
     }
+
     inline ref append(char s) {
         size_t size = this->len();
         char* dest = _data + size;
@@ -83,6 +87,7 @@ public:
 
         return *this;
     }
+
     inline ref itoa(int n) { ::snprintf(_data, _size, "%d", n); return *this; }
     inline int atoi() { return ::atoi(_data); }
     inline float atof() { return ::atof(_data); }

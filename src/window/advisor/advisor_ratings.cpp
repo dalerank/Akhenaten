@@ -24,6 +24,11 @@ struct advisor_rating_window {
     vec2i outer_panel_size;
     e_image_id advisor_icon_image;
     vec2i advisor_icon_pos;
+    vec2i header_pos;
+    vec2i header_population_pos;
+    vec2i background_img_pos;
+    e_image_id background_img;
+    vec2i column_offset;
 };
 
 advisor_rating_window g_advisor_rating_window;
@@ -35,6 +40,11 @@ void config_load_advisor_rating() {
         w.outer_panel_size = arch.r_size2i("outer_panel_size");
         w.advisor_icon_image = arch.r_image("advisor_icon_image");
         w.advisor_icon_pos = arch.r_vec2i("advisor_icon_pos");
+        w.header_pos = arch.r_vec2i("header_pos");
+        w.header_population_pos = arch.r_vec2i("header_population_pos");
+        w.background_img = arch.r_image("background_img");
+        w.background_img_pos = arch.r_vec2i("background_img_pos");
+        w.column_offset = arch.r_vec2i("column_offset");
     });
 }
 
@@ -69,6 +79,7 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
 }
 
 static void draw_rating(int id, int value, int open_play, int goal) {
+    auto &w = g_advisor_rating_window;
     //    int value = city_rating_culture();
     int enabled = !open_play && goal;
     button_border_draw(rating_buttons[id].x, rating_buttons[id].y, rating_buttons[id].width, rating_buttons[id].height, focus_button_id == SELECTED_RATING_CULTURE);
@@ -77,7 +88,7 @@ static void draw_rating(int id, int value, int open_play, int goal) {
     int width = text_draw_number(enabled ? goal : 0, '@', " ", rating_buttons[id].x + 5, rating_buttons[id].y + 45, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(53, 5, rating_buttons[id].x + 5 + width, rating_buttons[id].y + 45, FONT_NORMAL_BLACK_ON_LIGHT);
     int has_reached = !enabled || value >= goal;
-    draw_rating_column(rating_buttons[id].x + 30, rating_buttons[id].y, value, has_reached);
+    draw_rating_column(rating_buttons[id].x + w.column_offset.x, rating_buttons[id].y + w.column_offset.y, value, has_reached);
 }
 
 static int draw_background() {
@@ -85,20 +96,19 @@ static int draw_background() {
 }
 
 static void draw_foreground() {
-    painter ctx = game.painter();
-
     auto &w = g_advisor_rating_window;
     ui::panel(w.outer_panel_pos, w.outer_panel_size, UiFlags_PanelOuter);
     ui::icon(w.advisor_icon_pos, ADVISOR_RATINGS);
 
-    int width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
-    if (!winning_population() || scenario_is_open_play()) {
-        lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
-    } else {
-        width += lang_text_draw(53, 6, 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
-        text_draw_number(winning_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::label(53, 0, w.header_pos, FONT_LARGE_BLACK_ON_LIGHT);
+    bstring128 caption = (pcstr)ui::str(53, 7);
+    if (!(!winning_population() || scenario_is_open_play())) {
+        caption = (pcstr)ui::str(53, 6);
+        caption.append("%u", winning_population());
     }
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_RATINGS_BACKGROUND), 60, 48 - 10);
+
+    ui::label(caption, w.header_population_pos, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::image(w.background_img, w.background_img_pos);
 
     int open_play = scenario_is_open_play();
 

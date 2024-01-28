@@ -35,7 +35,7 @@ void building_tax_collector::window_info_background(object_info &c) {
     building* b = building_get(c.building_id);
     int width = ui::label(106, 2, {44, 43});
     int amount = config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM) ? b->deben_storage : b->tax_income_or_storage;
-    ui::label_num(8, 0, amount, {44 + width, 43});
+    ui::label_amount(8, 0, amount, {44 + width, 43});
 
     int tax_block = c.width_blocks * 16 / 2;
     ui::label(60, 1, {tax_block + 50, 44});

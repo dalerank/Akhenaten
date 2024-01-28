@@ -22,5 +22,6 @@ void begin_frame();
 void begin_widget(vec2i offset, bool relative = false);
 void end_widget();
 bool handle_mouse(const mouse *m);
+pcstr str(int group, int id);
 
 }

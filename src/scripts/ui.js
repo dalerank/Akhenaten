@@ -31,6 +31,11 @@ advisor_rating_window = {
 		outer_panel_size : {w:40, h:27},
 		advisor_icon_image : IMG_ADVISOR_RATING_ICON,
 		advisor_icon_pos : {x: 10, y: 10},
+		header_pos : {x:60, y:17},
+		header_population_pos : {x: 160, y:20},
+		background_img : IMG_ADVISOR_BACKGROUND,
+		background_img_pos: {x:60, y:38},
+		column_offset : {x: 30, y:-11}
 }
 
 empire_window = {

@@ -8,6 +8,7 @@
 #include "panel.h"
 #include "game/game.h"
 #include "graphics/boilerplate.h"
+#include "io/gamefiles/lang.h"
 
 #include <stack>
 
@@ -56,6 +57,10 @@ bool ui::handle_mouse(const mouse *m) {
     return handle;
 }
 
+pcstr ui::str(int group, int id) {
+    return (pcstr)lang_get_string(group, id);
+}
+
 int ui::button_hover(const mouse *m) {
     for (auto &btn : g_state.buttons) {
         if (is_button_hover(btn, g_state.offset())) {
@@ -96,16 +101,21 @@ image_button &ui::img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size,
 }
 
 int ui::label(int group, int number, vec2i pos, font_t font, UiFlags_ flags, int box_width) {
+    pcstr str = (pcstr)lang_get_string(group, number);
+    return label(str, pos, font, flags, box_width);
+}
+
+int ui::label(pcstr label, vec2i pos, font_t font, UiFlags_ flags, int box_width) {
     const vec2i offset = g_state.offset();
     if (!!(flags & UiFlags_LabelCentered)) {
-        lang_text_draw_centered(group, number, offset.x + pos.x, offset.y + pos.y, box_width, font);
+        lang_text_draw_centered(label, offset.x + pos.x, offset.y + pos.y, box_width, font);
         return box_width;
     } else {
-        return lang_text_draw(group, number, offset + pos, font);
+        return lang_text_draw(label, offset + pos, font);
     }
 }
 
-int ui::label_num(int group, int number, int amount, vec2i pos, font_t font, pcstr postfix) {
+int ui::label_amount(int group, int number, int amount, vec2i pos, font_t font, pcstr postfix) {
     const vec2i offset = g_state.offset();
     return lang_text_draw_amount(group, number, amount, offset.x + pos.x, offset.y + pos.y, font, postfix);
 }
@@ -113,6 +123,11 @@ int ui::label_num(int group, int number, int amount, vec2i pos, font_t font, pcs
 int ui::label_percent(int amount, vec2i pos, font_t font) {
     const vec2i offset = g_state.offset();
     return text_draw_percentage(amount, offset.x + pos.x, offset.y + pos.y, font);
+}
+
+void ui::image(e_image_id img, vec2i pos) {
+    painter ctx = game.painter();
+    ImageDraw::img_generic(ctx, image_group(img), pos);
 }
 
 void ui::panel(vec2i pos, vec2i size, UiFlags_ flags) {

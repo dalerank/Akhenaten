@@ -18,9 +18,10 @@ int lang_text_draw(int group, int number, int x_offset, int y_offset, font_t fon
     return text_draw(str, x_offset, y_offset, font, 0);
 }
 
-int lang_text_draw(const char* str, int x_offset, int y_offset, font_t font) {
-    return text_draw((const uint8_t*)str, x_offset, y_offset, font, 0);
+int lang_text_draw(pcstr str, vec2i pos, font_t font) {
+    return text_draw((const uint8_t*)str, pos.x, pos.y, font, 0);
 }
+
 int lang_text_draw_colored(int group, int number, int x_offset, int y_offset, font_t font, color color) {
     const uint8_t* str = lang_get_string(group, number);
     return text_draw(str, x_offset, y_offset, font, color);

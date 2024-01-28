@@ -106,7 +106,7 @@ static void draw_foreground() {
     graphics_set_to_dialog();
 
     for (int i = 0; i < std::size(data.buttons); i++) {
-        auto text = data.buttons_text[i];
+        auto text = (i >= data.buttons_text.size()) ? std::pair{0, 0} : data.buttons_text[i];
         large_label_draw(data.buttons[i].x, data.buttons[i].y, data.buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
         lang_text_draw_centered(text.first, text.second, data.button_pos.x, data.button_pos.y + 40 * i + 6, data.button_size.x, FONT_NORMAL_BLACK_ON_LIGHT);
     }
