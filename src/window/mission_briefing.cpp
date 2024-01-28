@@ -23,13 +23,15 @@
 #include "window/mission_next.h"
 #include "game/settings.h"
 
+ANK_REGISTER_CONFIG_ITERATOR(config_load_mission_briefing);
+
 static void button_back(int param1, int param2);
 static void button_start_mission(int param1, int param2);
 static void inc_dec_difficulty(int param1, int param2);
 
 static const vec2i GOAL_OFFSET[] = {{32, 90}, {288, 90}, {32, 112}, {288, 112}, {32, 134}, {288, 134}};
 
-struct mission_briefing_t {
+struct mission_briefing : ui::widget {
     struct {
         image_button back = {0, 0, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1};
         image_button start_mission = {0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_mission, button_none, 1, 0, 1};
@@ -43,7 +45,13 @@ struct mission_briefing_t {
     int difficulty;
 };
 
-mission_briefing_t g_mission_briefing;
+mission_briefing g_mission_briefing;
+
+void config_load_mission_briefing() {
+    g_config_arch.r_section("mission_briefing_window", [] (archive arch) {
+        g_mission_briefing.load(arch);
+    });
+}
 
 static void init() {
     g_mission_briefing.focus_button = 0;
@@ -56,31 +64,36 @@ static void init() {
 }
 
 static void draw_background() {
-    //    if (!data.campaign_mission_loaded) {
-    //        data.campaign_mission_loaded = 1;
-    //        if (!game_file_start_scenario_by_name(scenario_name())) {
-    //            window_city_show();
-    //            return;
-    //        }
-    //    }
     auto &data = g_mission_briefing;
     window_draw_underlying_window();
 
     graphics_set_to_dialog();
+
     int text_id = 200 + scenario_campaign_scenario_id();
     const lang_message* msg = lang_get_message(text_id);
 
-    outer_panel_draw(vec2i{16, 32}, 38, 27);
-    text_draw(msg->title.text, 32, 48, FONT_LARGE_BLACK_ON_LIGHT, 0);
-    text_draw(msg->subtitle.text, 32, 78, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    g_mission_briefing["title"].text((pcstr)msg->title.text);
+    g_mission_briefing["subtitle"].text((pcstr)msg->subtitle.text);
 
-    lang_text_draw(62, 7, 376, 433, FONT_NORMAL_BLACK_ON_LIGHT);
-    //    if (!data.is_review && game_mission_has_choice())
-    //        lang_text_draw(13, 4, 66, 435, FONT_NORMAL_BLACK_ON_LIGHT);
+    rich_text_set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
+    rich_text_init(msg->content.text, 64, 200, 31, 14, 0);
+
+    graphics_reset_dialog();
+}
+
+static void draw_foreground(void) {
+    auto &data = g_mission_briefing;
+    int text_id = 200 + scenario_campaign_scenario_id();
+    const lang_message* msg = lang_get_message(text_id);
+
+    graphics_set_to_dialog();
+
+    g_mission_briefing.draw();
 
     inner_panel_draw(32, 96, 33, 6);
     lang_text_draw(62, 10, 48, 104, FONT_NORMAL_WHITE_ON_DARK);
     int goal_index = 0;
+
     if (winning_population()) {
         vec2i offset = GOAL_OFFSET[goal_index];
         goal_index++;
@@ -136,21 +149,11 @@ static void draw_background() {
     }
 
     inner_panel_draw(32, 200, 33, 14);
-
-    rich_text_set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
-    rich_text_init(msg->content.text, 64, 200, 31, 14, 0);
-
-    graphics_set_clip_rectangle(35, 187, 522, 234);
-    rich_text_draw(msg->content.text, 48, 202, 496, 14, 0);
-    graphics_reset_clip_rectangle();
-
     lang_text_draw(153, g_settings.difficulty + 1, 65 + 45, 433, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    graphics_reset_dialog();
-}
-static void draw_foreground(void) {
-    auto &data = g_mission_briefing;
-    graphics_set_to_dialog();
+    graphics_set_clip_rectangle(35, 187, 522, 234);
+    rich_text_draw(msg->content.text, 48, 202, 512, 14, 0);
+    graphics_reset_clip_rectangle();
 
     rich_text_draw_scrollbar();
     image_buttons_draw(516, 426, &data.buttons.start_mission, 1);

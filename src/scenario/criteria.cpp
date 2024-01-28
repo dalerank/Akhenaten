@@ -44,8 +44,10 @@ int winning_kingdom() {
     return g_scenario_data.win_criteria.kingdom.goal;
 }
 int winning_housing() {
-    if (!g_scenario_data.win_criteria.housing_count.enabled)
+    if (!g_scenario_data.win_criteria.housing_count.enabled) {
         return 0;
+    }
+
     return g_scenario_data.win_criteria.housing_count.goal;
 }
 int winning_houselevel() {

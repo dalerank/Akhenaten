@@ -18,7 +18,7 @@
 
 #define DISPLAY_TIME_MILLIS 1200
 
-static const char SOUND_FILE_LOSE[] = "wavs/lose_game.wav";
+static pcstr SOUND_FILE_LOSE = "wavs/lose_game.wav";
 
 struct intermezzo_data_t {
     intermezzo_type type;
@@ -59,29 +59,20 @@ static void init(intermezzo_type type, void (*callback)(void)) {
 static void draw_background(void) {
     graphics_clear_screen();
     graphics_reset_dialog();
-    int x_offset = (screen_width() - 1024) / 2;
-    int y_offset = (screen_height() - 768) / 2;
+    vec2i offset = vec2i{screen_width() - 1024, screen_height() - 768} / 2;
 
     // draw background by mission
     int mission = scenario_campaign_scenario_id();
     int image_base = image_id_from_group(GROUP_INTERMEZZO_BACKGROUND);
     painter ctx = game.painter();
     if (g_intermezzo_data.type == INTERMEZZO_MISSION_BRIEFING) {
-        if (scenario_is_custom()) {
-            ImageDraw::img_generic(ctx, image_base + 1, x_offset, y_offset);
-        } else {
-            ImageDraw::img_generic(ctx, image_base + 1 + (mission >= 20), x_offset, y_offset);
-        }
+        ImageDraw::img_generic(ctx, scenario_is_custom() ? image_base + 1 : image_base + 1 + (mission >= 20), offset);
 
     } else if (g_intermezzo_data.type == INTERMEZZO_FIRED) {
-        ImageDraw::img_generic(ctx, image_base, x_offset, y_offset);
+        ImageDraw::img_generic(ctx, image_base, offset);
 
     } else if (g_intermezzo_data.type == INTERMEZZO_WON) {
-        if (scenario_is_custom()) {
-            ImageDraw::img_generic(ctx, image_base + 2, x_offset, y_offset);
-        } else {
-            ImageDraw::img_generic(ctx, image_base, x_offset, y_offset);
-        }
+        ImageDraw::img_generic(ctx, scenario_is_custom() ? image_base + 2 : image_base, offset);
     }
 }
 
@@ -93,7 +84,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-void window_intermezzo_show(intermezzo_type type, void (*callback)(void)) {
+void window_intermezzo_show(intermezzo_type type, void (*callback)()) {
     window_type window = {
         WINDOW_INTERMEZZO,
         draw_background,

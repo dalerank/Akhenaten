@@ -6,6 +6,7 @@
 #include "image_button.h"
 #include "lang_text.h"
 #include "panel.h"
+#include "graphics/text.h"
 #include "game/game.h"
 #include "graphics/boilerplate.h"
 #include "io/gamefiles/lang.h"
@@ -145,8 +146,8 @@ void ui::icon(vec2i pos, e_resource img) {
 }
 
 void ui::icon(vec2i pos, e_advisor adv) {
-    const vec2i offset = g_state.offset();
     painter ctx = game.painter();
+    const vec2i offset = g_state.offset();
     ImageDraw::img_generic(ctx, image_group(IMG_ADVISOR_ICONS) + (adv - 1), offset.x + pos.x, offset.y + pos.y);
 }
 
@@ -177,7 +178,9 @@ void ui::outer_panel::load(archive arch) {
 
 void ui::widget::draw() {
     for (auto &e : elements) {
-        e->draw();
+        if (e->enabled) {
+            e->draw();
+        }
     }
 }
 
@@ -192,6 +195,8 @@ void ui::widget::load(archive arch) {
             elm = std::make_shared<image>();
         } else if (!strcmp(type, "label")) {
             elm = std::make_shared<elabel>();
+        } else if (!strcmp(type, "text")) {
+            elm = std::make_shared<etext>();
         }
 
         if (elm) {
@@ -227,7 +232,6 @@ void ui::elabel::load(archive arch) {
     element::load(arch);
 
     pcstr type = arch.r_string("type");
-    assert(!strcmp(type, "label"));
 
     _text = arch.r_string("text");
     _font = (e_font)arch.r_int("font", FONT_NORMAL_BLACK_ON_LIGHT);
@@ -235,4 +239,15 @@ void ui::elabel::load(archive arch) {
 
 void ui::elabel::text(pcstr v) {
     _text = v;
+}
+
+void ui::etext::load(archive arch) {
+    elabel::load(arch);
+
+    pcstr type = arch.r_string("type");
+    assert(!strcmp(type, "text"));
+}
+
+void ui::etext::draw() {
+    text_draw((uint8_t*)_text.c_str(), pos.x, pos.y, _font, 0);
 }

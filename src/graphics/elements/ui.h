@@ -44,6 +44,7 @@ struct element {
     bstring64 id;
     vec2i pos;
     vec2i size;
+    bool enabled = true;
 
     virtual void draw() {}
     virtual void load(archive);
@@ -71,6 +72,11 @@ struct elabel : public element {
     virtual void draw() override;
     virtual void load(archive elem) override;
     virtual void text(pcstr) override;
+};
+
+struct etext : public elabel {
+    virtual void draw() override;
+    virtual void load(archive elem) override;
 };
 
 struct widget {

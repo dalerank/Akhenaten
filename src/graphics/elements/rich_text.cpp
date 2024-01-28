@@ -45,12 +45,7 @@ struct rich_text_data_t {
 
 rich_text_data_t g_rich_text_data;
 
-int rich_text_init(const uint8_t* text,
-                   int x_text,
-                   int y_text,
-                   int width_blocks,
-                   int height_blocks,
-                   int adjust_width_on_no_scroll) {
+int rich_text_init(const uint8_t* text, int x_text, int y_text, int width_blocks, int height_blocks, int adjust_width_on_no_scroll) {
     auto &data = g_rich_text_data;
     data.x_text = x_text;
     data.y_text = y_text;
@@ -59,14 +54,14 @@ int rich_text_init(const uint8_t* text,
         data.text_height_lines = height_blocks - 1;
         data.text_width_blocks = width_blocks;
 
-        data.num_lines = rich_text_draw(
-          text, data.x_text + 8, data.y_text + 6, 16 * data.text_width_blocks - 16, data.text_height_lines, 1);
+        data.num_lines = rich_text_draw(text, data.x_text + 8, data.y_text + 6, 16 * data.text_width_blocks - 16, data.text_height_lines, 1);
         scrollbar.x = data.x_text + 16 * data.text_width_blocks - 1;
         scrollbar.y = data.y_text;
         scrollbar.height = 16 * data.text_height_blocks;
         scrollbar_init(&scrollbar, scrollbar.scroll_position, data.num_lines - data.text_height_lines);
-        if (data.num_lines <= data.text_height_lines && adjust_width_on_no_scroll)
+        if (data.num_lines <= data.text_height_lines && adjust_width_on_no_scroll) {
             data.text_width_blocks += 2;
+        }
 
         window_invalidate();
     }
@@ -231,7 +226,7 @@ static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color colo
     }
 }
 
-static int draw_text(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, color color, bool measure_only) {
+static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, color color, bool measure_only) {
     int image_height_lines = 0;
     int image_id = 0;
     int lines_before_image = 0;
@@ -343,22 +338,12 @@ static int draw_text(const uint8_t* text, int x_offset, int y_offset, int box_wi
     return num_lines;
 }
 
-int rich_text_draw(const uint8_t* text,
-                   int x_offset,
-                   int y_offset,
-                   int box_width,
-                   int height_lines,
-                   bool measure_only) {
-    return draw_text(text, x_offset, y_offset, box_width, height_lines, 0, measure_only);
+int rich_text_draw(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, bool measure_only) {
+    return rich_text_draw_impl(text, x_offset, y_offset, box_width, height_lines, 0, measure_only);
 }
 
-int rich_text_draw_colored(const uint8_t* text,
-                           int x_offset,
-                           int y_offset,
-                           int box_width,
-                           int height_lines,
-                           color color) {
-    return draw_text(text, x_offset, y_offset, box_width, height_lines, color, 0);
+int rich_text_draw_colored(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, color color) {
+    return rich_text_draw_impl(text, x_offset, y_offset, box_width, height_lines, color, 0);
 }
 
 void rich_text_draw_scrollbar(void) {

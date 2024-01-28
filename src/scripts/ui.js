@@ -27,35 +27,61 @@ main_menu_window = {
 }
 
 advisor_rating_window = {
-	  ui : {
-			outer_panel : {
-				type : "outer_panel",
-				pos  : {x:0, y:0},
-			  size : {w:40, h:27},
-			},
-			advisor_icon : {
-				type : "image",
-				image : IMG_ADVISOR_RATING_ICON,
-			  pos  : {x: 10, y: 10},
-			},
-			header_label : {
-				type : "label",
-				font : FONT_LARGE_BLACK_ON_LIGHT,
-				text : {group: 53, id: 0},
-				pos  : {x: 60, y:17}
-			},
-			population_label : {
-				type : "label",
-				text : "",
-				pos  : {x: 300, y:20}
-			},
-			background_image : {
-				type : "image",
-				image : IMG_ADVISOR_BACKGROUND,
-			  pos  : {x:60, y:38},
-			},
+  ui : {
+		outer_panel : {
+			type : "outer_panel",
+			pos  : {x:0, y:0},
+		  size : {w:40, h:27},
 		},
-		column_offset : {x: 30, y:-11}
+		advisor_icon : {
+			type : "image",
+			image : IMG_ADVISOR_RATING_ICON,
+		  pos  : {x: 10, y: 10},
+		},
+		header_label : {
+			type : "label",
+			font : FONT_LARGE_BLACK_ON_LIGHT,
+			text : {group: 53, id: 0},
+			pos  : {x: 60, y:17}
+		},
+		population_label : {
+			type : "label",
+			text : "",
+			pos  : {x: 300, y:20}
+		},
+		background_image : {
+			type : "image",
+			image : IMG_ADVISOR_BACKGROUND,
+		  pos  : {x:60, y:38},
+		},
+	},
+	column_offset : {x: 30, y:-11}
+}
+
+mission_briefing_window = {
+	ui : {
+		outer_panel : {
+			type : "outer_panel",
+			pos  : {x:16, y:32},
+		  size : {w:38, h:27},
+		},
+		title : {
+			type : "text",
+			pos : {x:32, y:48},
+			font : FONT_LARGE_BLACK_ON_LIGHT,
+		},
+		subtitle : {
+			type : "text",
+			pos : {x: 32, y:78},
+			font : FONT_NORMAL_BLACK_ON_LIGHT
+		},
+		objectives : {
+			type : "label", 
+			text : {group:62, id:7},
+			pos : {x:376, y:433},
+			font : FONT_NORMAL_BLACK_ON_LIGHT
+		}
+	}
 }
 
 empire_window = {
