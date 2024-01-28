@@ -7,7 +7,7 @@
 
 #include <vector>
 
-enum e_image_id;
+enum e_image_id : uint16_t;
 
 struct archive {
     js_State *vm;
