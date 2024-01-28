@@ -823,7 +823,6 @@ static void draw_foreground() {
                 window_invalidate();
              });
     }
-    ui::end_widget();
 }
 
 static int handle_specific_building_info_mouse(const mouse *m) {

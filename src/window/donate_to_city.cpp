@@ -63,8 +63,8 @@ static void draw_background(void) {
     if (button_start < 240)
         button_start = 240;
 
-    arrow_buttons[0].x_offset = button_start;
-    arrow_buttons[1].x_offset = arrow_buttons[0].x_offset + arrow_buttons[0].size;
+    arrow_buttons[0].x = button_start;
+    arrow_buttons[1].x = arrow_buttons[0].x + arrow_buttons[0].size;
 
     text_draw_number(city_emperor_donate_amount(), '@', " ", button_start + 76, 248, FONT_NORMAL_WHITE_ON_DARK);
 
