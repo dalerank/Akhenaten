@@ -8,11 +8,14 @@
 
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
+#include "graphics/elements/arrow_button.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/elements/button.h"
 #include "graphics/elements/panel.h"
 #include "graphics/image_groups.h"
 
 #include "js/js_game.h"
+#include <functional>
 
 struct mouse;
 
@@ -38,6 +41,13 @@ void eimage(e_image_id img, vec2i pos);
 void panel(vec2i pos, vec2i size, UiFlags_ flags);
 void icon(vec2i pos, e_resource img);
 void icon(vec2i pos, e_advisor advisor);
+int button_hover(const mouse *m);
+generic_button &button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
+generic_button &large_button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
+generic_button &button(uint32_t id);
+image_button &img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, int offset = 0);
+arrow_button &arw_button(vec2i pos, bool up, bool tiny = false);
+
 
 pcstr str(int group, int id);
 
@@ -50,8 +60,9 @@ struct element {
     virtual void draw() {}
     virtual void load(archive);
     virtual void text(pcstr) {}
+    virtual void onclick(std::function<void(int, int)>) {}
 
-    template<class ... Args>
+    template<class ... Args> 
     inline void text_var(pcstr fmt, const Args&... args) { text(bstring512().printf(fmt, args...)); }
 
     using ptr = std::shared_ptr<element>;
@@ -87,6 +98,17 @@ struct elabel : public element {
 struct etext : public elabel {
     virtual void draw() override;
     virtual void load(archive elem) override;
+};
+
+struct egeneric_button : public elabel {
+    int mode = 0;
+    int param1 = 0;
+    int param2 = 0;
+    std::function<void(int, int)> _func;
+
+    virtual void draw() override;
+    virtual void load(archive elem) override;
+    virtual void onclick(std::function<void(int, int)> func) override { _func = func; }
 };
 
 struct widget {

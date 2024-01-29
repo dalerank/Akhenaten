@@ -13,24 +13,20 @@ top_menu_bar = {
 }
 
 main_menu_window = {
-	button_pos : [192, 125],
-	button_size : {w: 256, h: 25},
-	button_offset : 40,
-
-	buttons : [
-		{group: 13, id: 5, },
-	  {group: 30, id: 0, },
-	  {group: 30, id: 5, },
-	  {group: 2, id: 0, },
-	  {group: 30, id: 4, }
-	]
+	ui : {
+		continue_game : { type:"large_button", pos:[192, 125 + 40 * 0], size:[256, 25], text:{group: 13, id: 5}},
+		select_player : { type:"large_button", pos:[192, 125 + 40 * 1], size:[256, 25], text:{group: 30, id: 0}},
+		show_records : { type:"large_button", pos:[192, 125 + 40 * 2], size:[256, 25], text:{group: 30, id: 5}},
+		show_config : { type:"large_button", pos:[192, 125 + 40 * 3], size:[256, 25], text:{group: 2, id: 0}},
+		quit_game : { type:"large_button", pos:[192, 125 + 40 * 4], size:[256, 25], text:{group: 30, id: 4}},
+	}
 }
 
 advisor_rating_window = {
   ui : {
-		outer_panel : { type : "outer_panel", pos: [0, 0], size : {w:40, h:27} },
-		advisor_icon : { type : "image", image : IMG_ADVISOR_RATING_ICON, pos : {x: 10, y: 10} },
-		header_label : { type : "label", font : FONT_LARGE_BLACK_ON_LIGHT, text : {group: 53, id: 0},	pos : {x: 60, y:17} },
+		outer_panel : { type : "outer_panel", pos:[0, 0], size:[40, 27] },
+		advisor_icon : { type : "image", image : IMG_ADVISOR_RATING_ICON, pos:[10, 10] },
+		header_label : { type : "label", font : FONT_LARGE_BLACK_ON_LIGHT, text: {group: 53, id: 0},	pos:[60, 17] },
 		population_label : { type : "label", text : "",	pos  : {x: 300, y:20} },
 		background_image : { type : "image", image : IMG_ADVISOR_BACKGROUND, pos : {x:60, y:38}	},
 	},

@@ -73,14 +73,27 @@ int ui::button_hover(const mouse *m) {
     return 0;
 }
 
-generic_button &ui::button(pcstr label, vec2i pos, vec2i size) {
+generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font) {
     const vec2i offset = g_state.offset();
 
     g_state.buttons.push_back({pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
     int focused = is_button_hover(g_state.buttons.back(), offset);
 
     button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, focused ? 1 : 0);
-    text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 4, 20, font, 0);
+
+    return g_state.buttons.back();
+}
+
+generic_button &ui::large_button(pcstr label, vec2i pos, vec2i size, e_font font) {
+    const vec2i offset = g_state.offset();
+
+    g_state.buttons.push_back({pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    int focused = is_button_hover(g_state.buttons.back(), offset);
+
+    large_label_draw(offset.x + pos.x, offset.y + pos.y, size.x / 16, focused ? 1 : 0);
+    int letter_height = get_letter_height((uint8_t *)"A", font);
+    text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 2 + (size.y - letter_height) / 2, size.x, font, 0);
 
     return g_state.buttons.back();
 }
@@ -213,6 +226,12 @@ void ui::widget::load(archive arch) {
             elm = std::make_shared<elabel>();
         } else if (!strcmp(type, "text")) {
             elm = std::make_shared<etext>();
+        } else if (!strcmp(type, "generic_button")) {
+            elm = std::make_shared<egeneric_button>();
+        } else if (!strcmp(type, "large_button")) {
+            auto btn = std::make_shared<egeneric_button>();
+            btn->mode = 1;
+            elm = btn;
         }
 
         if (elm) {
@@ -250,8 +269,6 @@ void ui::elabel::draw() {
 void ui::elabel::load(archive arch) {
     element::load(arch);
 
-    pcstr type = arch.r_string("type");
-
     _text = arch.r_string("text");
     _font = (e_font)arch.r_int("font", FONT_NORMAL_BLACK_ON_LIGHT);
     _body = arch.r_size2i("body");
@@ -271,4 +288,27 @@ void ui::etext::load(archive arch) {
 
 void ui::etext::draw() {
     text_draw((uint8_t*)_text.c_str(), pos.x, pos.y, _font, 0);
+}
+
+void ui::egeneric_button::draw() {
+    switch (mode) {
+    case 0:
+        ui::button(_text.c_str(), pos, size)
+            .onclick(_func);
+        break;
+
+    case 1:
+        ui::large_button(_text.c_str(), pos, size)
+            .onclick(_func);
+        break;
+    }
+}
+
+void ui::egeneric_button::load(archive arch) {
+    elabel::load(arch);
+
+    pcstr mode_str = arch.r_string("mode");
+    if (mode_str && !strcmp(mode_str, "large")) {
+        mode = 1;
+    }
 }

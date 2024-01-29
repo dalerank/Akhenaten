@@ -16,18 +16,3 @@ bool is_button_hover(const T &button, vec2i context) {
     return (   bpos.x <= m->x && bpos.x + button.width > m->x
             && bpos.y <= m->y && bpos.y + button.height > m->y);
 }
-
-struct generic_button;
-struct image_button;
-struct arrow_button;
-struct mouse;
-
-namespace ui {
-
-int button_hover(const mouse *m);
-generic_button &button(pcstr label, vec2i pos, vec2i size);
-generic_button &button(uint32_t id);
-image_button &img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, int offset = 0);
-arrow_button &arw_button(vec2i pos, bool up, bool tiny = false);
-
-}

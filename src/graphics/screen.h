@@ -8,5 +8,7 @@ int screen_width();
 int screen_height();
 vec2i screen_size();
 
-int screen_dialog_offset_x(void);
-int screen_dialog_offset_y(void);
+int screen_dialog_offset_x();
+int screen_dialog_offset_y();
+
+inline vec2i screen_dialog_offset() { return {screen_dialog_offset_x(), screen_dialog_offset_y()}; }

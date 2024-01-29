@@ -35,41 +35,18 @@ static void button_click(int type, int param2);
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_main_menu);
 
-struct main_menu_data_t {
-    int focus_button_id;
-
-    vec2i button_pos;
-    vec2i button_size;
-    int button_offset;
-
+struct main_menu_data : public ui::widget {
     SDL_Texture *dicord_texture = nullptr;
     SDL_Texture *patreon_texture = nullptr;
     generic_button discord_button[1] = { {0, 0, 48, 48, button_click, button_none, 10, 0} };
     generic_button patreon_button[1] = { {0, 0, 48, 48, button_click, button_none, 11, 0} };
-    std::vector<std::pair<int, int>> buttons_text;
-
-    generic_button buttons[5] = {};
 };
 
-main_menu_data_t g_main_menu_data;
+main_menu_data g_main_menu_data;
 
 void config_load_main_menu() {
     g_config_arch.r_section("main_menu_window", [] (archive arch) {
-        auto &data = g_main_menu_data;
-        data.button_pos = arch.r_vec2i("button_pos");
-        data.button_size = arch.r_size2i("button_size");
-        data.button_offset = arch.r_int("button_offset");
-
-        data.buttons_text.clear();
-        arch.r_array("buttons", [&] (archive arch) {
-            int group = arch.r_int("group");
-            int id = arch.r_int("id");
-            data.buttons_text.push_back({group, id});
-        });
-
-        for (int i = 0; i < 5; ++i) {
-            data.buttons[i] = {(short)data.button_pos.x, (short)data.button_pos.y + (short)(data.button_offset * i), (short)data.button_size.x, (short)data.button_size.y, button_click, button_none, i + 1, 0};
-        }
+        g_main_menu_data.load(arch);
     });
 }
 
@@ -83,35 +60,62 @@ static void draw_version_string() {
     if (text_y <= 500 && (screen_width() - 640) / 2 < text_width + 18) {
         graphics_draw_rect(10, text_y, text_width + 14, 20, COLOR_BLACK);
         graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
-        // TODO: drop casts here and handle string as UTF8
+
         text_draw((const uint8_t*)version.c_str(), 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
     } else {
-        // TODO: drop casts here and handle string as UTF8
         text_draw((const uint8_t*)version.c_str(), 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
     }
 }
 
-static void draw_background() {
+static void main_menu_confirm_exit(bool accepted) {
+    if (accepted) {
+        system_exit();
+    }
+}
+
+static void window_config_show_back() {
+}
+
+static void main_menu_draw_background() {
     painter ctx = game.painter();
     graphics_clear_screen();
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_MAIN_MENU_BACKGROUND));
+
+    g_main_menu_data["continue_game"].onclick([] (int, int) {
+        pcstr last_save = config_get_string(CONFIG_STRING_LAST_SAVE);
+        pcstr last_player = config_get_string(CONFIG_STRING_LAST_PLAYER);
+        g_settings.set_player_name((const uint8_t *)last_player);
+        if (GamestateIO::load_savegame(last_save)) {
+            window_city_show();
+        }
+    });
+
+    g_main_menu_data["select_player"].onclick([] (int, int) {
+        window_player_selection_show();
+    });
+
+    g_main_menu_data["show_records"].onclick([] (int, int) {
+        window_records_show();
+    });
+
+    g_main_menu_data["show_config"].onclick([] (int, int) {
+        window_config_show(window_config_show_back);
+    });
+
+    g_main_menu_data["quit_game"].onclick([] (int, int) {
+        window_popup_dialog_show(POPUP_DIALOG_QUIT, main_menu_confirm_exit, e_popup_btns_yesno);
+    });
 
     if (window_is(WINDOW_MAIN_MENU)) {
         draw_version_string();
     }
 }
 
-static void draw_foreground() {
+static void main_menu_draw_foreground() {
     auto &data = g_main_menu_data;
-    graphics_set_to_dialog();
 
-    for (int i = 0; i < std::size(data.buttons); i++) {
-        auto text = (i >= data.buttons_text.size()) ? std::pair{0, 0} : data.buttons_text[i];
-        large_label_draw(data.buttons[i].x, data.buttons[i].y, data.buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
-        lang_text_draw_centered(text.first, text.second, data.button_pos.x, data.button_pos.y + 40 * i + 6, data.button_size.x, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
-
-    graphics_reset_dialog();
+    ui::begin_widget(screen_dialog_offset());
+    g_main_menu_data.draw();
 
     painter ctx = game.painter();
     vec2i scr_size = screen_size();
@@ -124,24 +128,8 @@ static void draw_foreground() {
     }
 }
 
-static void window_config_show_back() {
-}
-
-static void confirm_exit(bool accepted) {
-    if (accepted) {
-        system_exit();
-    }
-}
-
 static void button_click(int type, int param2) {
     switch (type) {
-    case 2:
-        window_player_selection_show();
-        break;
-
-    case 3:
-        window_records_show(); // TODO
-        break;
 
 //    case 3:
 //        window_scenario_selection_show(MAP_SELECTION_CUSTOM);
@@ -155,23 +143,6 @@ static void button_click(int type, int param2) {
 //        }
 //        break;
 
-    case 4:
-        window_config_show(window_config_show_back);
-        break;
-
-    case 5:
-        window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, e_popup_btns_yesno);
-        break;
-
-    case 1: {
-            pcstr last_save = config_get_string(CONFIG_STRING_LAST_SAVE);
-            pcstr last_player = config_get_string(CONFIG_STRING_LAST_PLAYER);
-            g_settings.set_player_name((const uint8_t*)last_player);
-            if (GamestateIO::load_savegame(last_save)) {
-                window_city_show();
-            }
-        }
-        break;
 
     case 10:
         platform_open_url("https://discord.gg/HS4njmBvpb", "");
@@ -186,20 +157,18 @@ static void button_click(int type, int param2) {
     }
 }
 
-static void handle_input(const mouse* m, const hotkeys* h) {
-    auto &data = g_main_menu_data;
+static void main_menu_handle_input(const mouse* m, const hotkeys* h) {
     const mouse* m_dialog = mouse_in_dialog(m);
     int tmp_button_id = 0;
-    if (generic_buttons_handle_mouse(m_dialog, vec2i(0, 0), data.buttons, data.focus_button_id)) {
-        return;
-    }
+
+    ui::handle_mouse(m);
 
     vec2i scr_size = screen_size();
-    if (generic_buttons_handle_mouse(m, scr_size - vec2i(50, 50), data.discord_button, tmp_button_id)) {
+    if (generic_buttons_handle_mouse(m, scr_size - vec2i(50, 50), g_main_menu_data.discord_button, tmp_button_id)) {
         return;
     }
 
-    if (generic_buttons_handle_mouse(m, scr_size - vec2i(100, 50), data.patreon_button, tmp_button_id)) {
+    if (generic_buttons_handle_mouse(m, scr_size - vec2i(100, 50), g_main_menu_data.patreon_button, tmp_button_id)) {
         return;
     }
 
@@ -228,9 +197,9 @@ void window_main_menu_show(bool restart_music) {
 
     window_type window = {
         WINDOW_MAIN_MENU,
-        draw_background,
-        draw_foreground,
-        handle_input
+        main_menu_draw_background,
+        main_menu_draw_foreground,
+        main_menu_handle_input
     };
 
     window_show(&window);

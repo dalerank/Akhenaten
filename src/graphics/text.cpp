@@ -86,6 +86,14 @@ void text_draw_cursor(int x_offset, int y_offset, int is_insert) {
     }
 }
 
+int get_letter_height(const uint8_t* str, e_font font) {
+    const font_definition* def = font_definition_for(font);
+    int num_bytes = 1;
+
+    int letter_id = font_letter_id(def, str, &num_bytes);
+    return letter_id >= 0 ? image_letter(letter_id)->height : 0;
+}
+
 int text_get_width(const uint8_t* str, e_font font) {
     const font_definition* def = font_definition_for(font);
     int maxlen = 10000;
