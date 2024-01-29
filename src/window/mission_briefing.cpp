@@ -29,8 +29,6 @@ static void button_back(int param1, int param2);
 static void button_start_mission(int param1, int param2);
 static void inc_dec_difficulty(int param1, int param2);
 
-static const vec2i GOAL_OFFSET[] = {{32, 90}, {288, 90}, {32, 112}, {288, 112}, {32, 134}, {288, 134}};
-
 struct mission_briefing : ui::widget {
     struct {
         image_button back = {0, 0, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1};
@@ -74,6 +72,29 @@ static void draw_background() {
 
     g_mission_briefing["title"].text((pcstr)msg->title.text);
     g_mission_briefing["subtitle"].text((pcstr)msg->subtitle.text);
+    g_mission_briefing["difficulty_lable"].text(ui::str(153, g_settings.difficulty + 1));
+
+    const pcstr widgets[] = {"goal_0", "goal_1", "goal_2", "goal_3", "goal_4", "goal_5"};
+    auto goal_label = widgets;
+
+    auto setup_goal = [&] (int group, int tid, bool enabled, int value) {
+        g_mission_briefing[*goal_label].enabled = enabled;
+        if (enabled) {
+            g_mission_briefing[*goal_label++].text_var("%s: %u", ui::str(group, tid), value);
+        }
+    };
+
+    setup_goal(62, 11, winning_population() > 0, winning_population());
+    setup_goal(29, 20 + winning_houselevel(), winning_housing() > 0, winning_housing());
+    setup_goal(62, 12, winning_culture() > 0, winning_culture());
+    setup_goal(62, 13, winning_prosperity() > 0, winning_prosperity());
+    setup_goal(62, 14, winning_monuments() > 0, winning_monuments());
+    setup_goal(62, 15, winning_kingdom() > 0, winning_kingdom());
+
+    int immediate_goal_text = tutorial_get_immediate_goal_text();
+    if (immediate_goal_text) {
+        g_mission_briefing["goal_immediate"].text(ui::str(62, immediate_goal_text));
+    }
 
     rich_text_set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
     rich_text_init(msg->content.text, 64, 200, 31, 14, 0);
@@ -89,66 +110,6 @@ static void draw_foreground(void) {
     graphics_set_to_dialog();
 
     g_mission_briefing.draw();
-
-    lang_text_draw(62, 10, 48, 104, FONT_NORMAL_WHITE_ON_DARK);
-    int goal_index = 0;
-
-    if (winning_population()) {
-        vec2i offset = GOAL_OFFSET[goal_index];
-        goal_index++;
-        label_draw(16 + offset.x, 32 + offset.y, 15, 1);
-        int width = lang_text_draw(62, 11, 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_population(), '@', " ", 16 + offset.x + 8 + width, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
-    }
-
-    if (winning_housing()) {
-        vec2i offset = GOAL_OFFSET[goal_index];
-        goal_index++;
-        label_draw(16 + offset.x, 32 + offset.y, 15, 1);
-        int width = text_draw_number(winning_housing(), '@', " ", 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
-        lang_text_draw(29, 20 + winning_houselevel(), 16 + offset.x + 8 + width, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
-    }
-
-    if (winning_culture()) {
-        vec2i offset = GOAL_OFFSET[goal_index];
-        goal_index++;
-        label_draw(16 + offset.x, 32 + offset.y, 15, 1);
-        int width = lang_text_draw(62, 12, 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_culture(), '@', " ", 16 + offset.x + 8 + width, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
-    }
-
-    if (winning_prosperity()) {
-        vec2i offset = GOAL_OFFSET[goal_index];
-        goal_index++;
-        label_draw(16 + offset.x, 32 + offset.y, 15, 1);
-        int width = lang_text_draw(62, 13, 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_prosperity(), '@', " ", 16 + offset.x + 8 + width, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
-    }
-
-    if (winning_monuments()) {
-        vec2i offset = GOAL_OFFSET[goal_index];
-        goal_index++;
-        label_draw(16 + offset.x, 32 + offset.y, 15, 1);
-        int width = lang_text_draw(62, 14, 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_monuments(), '@', " ", 16 + offset.x + 8 + width, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
-    }
-
-    if (winning_kingdom()) {
-        vec2i offset = GOAL_OFFSET[goal_index];
-        goal_index++;
-        label_draw(16 + offset.x, 32 + offset.y, 15, 1);
-        int width = lang_text_draw(62, 15, 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_kingdom(), '@', " ", 16 + offset.x + 8 + width, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
-    }
-    int immediate_goal_text = tutorial_get_immediate_goal_text();
-    if (immediate_goal_text) {
-        vec2i offset = GOAL_OFFSET[4];
-        label_draw(16 + offset.x, 32 + offset.y, 31, 1);
-        lang_text_draw(62, immediate_goal_text, 16 + offset.x + 8, 32 + offset.y + 3, FONT_NORMAL_YELLOW);
-    }
-
-    inner_panel_draw(32, 200, 33, 14);
-    lang_text_draw(153, g_settings.difficulty + 1, 65 + 45, 433, FONT_NORMAL_BLACK_ON_LIGHT);
 
     graphics_set_clip_rectangle(35, 187, 522, 234);
     rich_text_draw(msg->content.text, 48, 202, 512, 14, 0);

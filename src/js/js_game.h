@@ -19,7 +19,7 @@ struct archive {
     std::vector<std::string> r_array_str(pcstr name);
     int r_int(pcstr name, int def = 0);
     e_image_id r_image(pcstr name);
-    bool r_bool(pcstr name);
+    bool r_bool(pcstr name, bool def = false);
     vec2i r_size2i(pcstr name, pcstr w = "w", pcstr h = "h");
     vec2i r_vec2i(pcstr name, pcstr x = "x", pcstr y = "y");
 

@@ -51,6 +51,9 @@ struct element {
     virtual void load(archive);
     virtual void text(pcstr) {}
 
+    template<class ... Args>
+    inline void text_var(pcstr fmt, const Args&... args) { text(bstring512().printf(fmt, args...)); }
+
     using ptr = std::shared_ptr<element>;
 };
 
@@ -74,6 +77,7 @@ struct inner_panel : public element {
 struct elabel : public element {
     std::string _text;
     e_font _font;
+    vec2i _body;
 
     virtual void draw() override;
     virtual void load(archive elem) override;

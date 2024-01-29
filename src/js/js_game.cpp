@@ -140,9 +140,9 @@ e_image_id archive::r_image(pcstr name) {
     return (e_image_id)r_int(name);
 }
 
-bool archive::r_bool(pcstr name) {
+bool archive::r_bool(pcstr name, bool def) {
     js_getproperty(vm, -1, name);
-    bool result = js_isundefined(vm, -1) ? 0 : js_toboolean(vm, -1);
+    bool result = js_isundefined(vm, -1) ? def : js_toboolean(vm, -1);
     js_pop(vm, 1);
     return result;
 }

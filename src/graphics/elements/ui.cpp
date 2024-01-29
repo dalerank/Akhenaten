@@ -165,6 +165,7 @@ arrow_button &ui::arw_button(vec2i pos, bool up, bool tiny) {
 void ui::element::load(archive arch) {
     pos = arch.r_vec2i("pos");
     size = arch.r_size2i("size");
+    enabled = arch.r_bool("enabled", true);
 }
 
 void ui::outer_panel::draw() {
@@ -240,7 +241,10 @@ void ui::image::load(archive arch) {
 }
 
 void ui::elabel::draw() {
-    ui::label(_text.c_str(), pos, _font);
+    if (_body.x > 0) {
+        label_draw(pos.x, pos.y, _body.x, _body.y);
+    }
+    ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font);
 }
 
 void ui::elabel::load(archive arch) {
@@ -250,10 +254,12 @@ void ui::elabel::load(archive arch) {
 
     _text = arch.r_string("text");
     _font = (e_font)arch.r_int("font", FONT_NORMAL_BLACK_ON_LIGHT);
+    _body = arch.r_size2i("body");
 }
 
 void ui::elabel::text(pcstr v) {
     _text = v;
+    enabled = strlen(v) > 0;
 }
 
 void ui::etext::load(archive arch) {
