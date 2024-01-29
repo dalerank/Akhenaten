@@ -1,4 +1,4 @@
-log_info("akhenaten: top_menu_bar started")
+log_info("akhenaten: ui config started")
 
 top_menu_bar = {
 	x_offset : 10,
@@ -16,9 +16,9 @@ main_menu_window = {
 	ui : {
 		continue_game : { type:"large_button", pos:[192, 125 + 40 * 0], size:[256, 25], text:{group: 13, id: 5}},
 		select_player : { type:"large_button", pos:[192, 125 + 40 * 1], size:[256, 25], text:{group: 30, id: 0}},
-		show_records : { type:"large_button", pos:[192, 125 + 40 * 2], size:[256, 25], text:{group: 30, id: 5}},
-		show_config : { type:"large_button", pos:[192, 125 + 40 * 3], size:[256, 25], text:{group: 2, id: 0}},
-		quit_game : { type:"large_button", pos:[192, 125 + 40 * 4], size:[256, 25], text:{group: 30, id: 4}},
+		show_records  : { type:"large_button", pos:[192, 125 + 40 * 2], size:[256, 25], text:{group: 30, id: 5}},
+		show_config   : { type:"large_button", pos:[192, 125 + 40 * 3], size:[256, 25], text:{group: 2, id: 0}},
+		quit_game     : { type:"large_button", pos:[192, 125 + 40 * 4], size:[256, 25], text:{group: 30, id: 4}},
 	}
 }
 
