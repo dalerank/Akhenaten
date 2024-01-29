@@ -66,12 +66,22 @@ public:
     inline ref ncat(const char* s, size_t cnt) { ::strncat(_data, s, cnt); return *this; }
 
     template <typename... Args>
-    inline ref append(const char* fmt, Args&&... args) {
+    inline ref append(pcstr fmt, Args&&... args) {
         size_t size = this->len();
         char* dest = _data + size;
         size_t remain = _size - size;
         if (remain > 0) {
             snprintf(dest, remain, fmt, std::forward<Args>(args)...);
+        }
+        return *this;
+    }
+
+    inline ref append(pcstr str) {
+        size_t size = this->len();
+        char* dest = _data + size;
+        size_t remain = _size - size;
+        if (remain > 0) {
+            snprintf(dest, remain, "%s", str);
         }
         return *this;
     }
