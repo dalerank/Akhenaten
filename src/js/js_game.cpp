@@ -153,9 +153,22 @@ vec2i archive::r_size2i(pcstr name, pcstr w, pcstr h) {
 
 vec2i archive::r_vec2i(pcstr name, pcstr x, pcstr y) {
     vec2i result(0, 0);
-    r_section(name, [&] (archive arch) {
-        result.x = arch.r_int(x);
-        result.y = arch.r_int(y);
-    });
+    js_getproperty(vm, -1, name);
+    if (js_isobject(vm, -1)) {
+        if (js_isarray(vm, -1)) {
+            int length = js_getlength(vm, -1);
+            if (length > 0) {
+                js_getindex(vm, -1, 0); result.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+                if (length > 1) {
+                    js_getindex(vm, -1, 1); result.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+                }
+            }
+        } else {
+            js_getproperty(vm, -1, x); result.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+            js_getproperty(vm, -1, y); result.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+        }
+    }
+    js_pop(vm, 1);
+
     return result;
 }

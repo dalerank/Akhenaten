@@ -32,12 +32,12 @@ struct archive {
 
             for (int i = 0; i < length; ++i) {
                 js_getindex(vm, -1, i);
-                int v = js_tointeger(vm, -1);
+                float v = js_isnumber(vm, -1) ? (float)js_tonumber(vm, -1) : 0.f;
                 result.push_back((T)v);
                 js_pop(vm, 1);
             }
-            js_pop(vm, 1);
         }
+        js_pop(vm, 1);
         return result;
     }
 
@@ -103,9 +103,8 @@ struct g_archive : public archive {
     template<typename T>
     inline void r_array(pcstr name, T read_func) {
         js_getglobal(vm, name);
-        if (r_array_impl(read_func)) {
-            js_pop(vm, 1);
-        }
+        r_array_impl(read_func);
+        js_pop(vm, 1);
     }
 
     template<typename T>
@@ -113,8 +112,8 @@ struct g_archive : public archive {
         js_getglobal(vm, name);
         if (js_isobject(vm, -1)) {
             read_func(vm);
-            js_pop(vm, 1);
         }
+        js_pop(vm, 1);
     }
 };
 extern g_archive g_config_arch;

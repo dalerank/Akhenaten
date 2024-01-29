@@ -13,7 +13,7 @@ top_menu_bar = {
 }
 
 main_menu_window = {
-	button_pos : {x: 192, y: 125},
+	button_pos : [192, 125],
 	button_size : {w: 256, h: 25},
 	button_offset : 40,
 
@@ -28,7 +28,7 @@ main_menu_window = {
 
 advisor_rating_window = {
   ui : {
-		outer_panel : { type : "outer_panel", pos : {x:0, y:0}, size : {w:40, h:27} },
+		outer_panel : { type : "outer_panel", pos: [0, 0], size : {w:40, h:27} },
 		advisor_icon : { type : "image", image : IMG_ADVISOR_RATING_ICON, pos : {x: 10, y: 10} },
 		header_label : { type : "label", font : FONT_LARGE_BLACK_ON_LIGHT, text : {group: 53, id: 0},	pos : {x: 60, y:17} },
 		population_label : { type : "label", text : "",	pos  : {x: 300, y:20} },
@@ -39,11 +39,11 @@ advisor_rating_window = {
 
 mission_briefing_window = {
 	ui : {
-		outer_panel : { type : "outer_panel",	pos: {x:16, y:32}, size : {w:38, h:27} },
+		outer_panel : { type : "outer_panel",	pos: [16, 32], size : {w:38, h:27} },
 		title 		  : { type : "text", pos : {x:32, y:48}, font : FONT_LARGE_BLACK_ON_LIGHT },
 		subtitle 		: { type : "text",	pos : {x: 32, y:78}, font : FONT_NORMAL_BLACK_ON_LIGHT },
-		objectives_label : { type : "label", text : {group:62, id:10}, pos : {x:48, y:104},	font : FONT_NORMAL_WHITE_ON_DARK },
 		objectives_panel : { type : "inner_panel", pos : {x:32, y:96}, size: {w:33, h:6} },
+		objectives_label : { type : "label", text : {group:62, id:10}, pos : {x:48, y:104},	font : FONT_NORMAL_WHITE_ON_DARK },
 		tocity_label : { type : "label", text : {group:62, id:7},	pos : {x:416, y:433}, font : FONT_NORMAL_BLACK_ON_LIGHT },
 		goal_0 : { type : "label", pos : {x:32 + 16, y:90 + 32}, body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false	},
 		goal_1 : { type : "label", pos : {x:288 + 16, y:90 + 32},	body : {w:15, h:1},	font : FONT_NORMAL_YELLOW, enabled: false },
