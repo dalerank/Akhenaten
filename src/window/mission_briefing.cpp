@@ -72,7 +72,7 @@ static void draw_background() {
 
     g_mission_briefing["title"].text((pcstr)msg->title.text);
     g_mission_briefing["subtitle"].text((pcstr)msg->subtitle.text);
-    g_mission_briefing["difficulty_lable"].text(ui::str(153, g_settings.difficulty + 1));
+    g_mission_briefing["difficulty_label"].text(ui::str(153, g_settings.difficulty + 1));
 
     const pcstr widgets[] = {"goal_0", "goal_1", "goal_2", "goal_3", "goal_4", "goal_5"};
     auto goal_label = widgets;

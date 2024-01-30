@@ -49,7 +49,7 @@ mission_briefing_window = {
 		goal_5 : { type : "label", pos : {x:288 + 16, y:134 + 32}, body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false },
 		goal_immediate : { type : "label", pos : {x:32 + 16, y:134 + 32},	body : {w:31, h:1},	font : FONT_NORMAL_YELLOW, enabled: false },
 		description_panel : { type : "inner_panel", pos : {x:32, y:200}, size: {w:33, h:14} },
-		difficulty_label : { type : "label", pos : {x:35 + 45, y:433} },
+		difficulty_label : { type : "label", pos : {x:105, y:433}, font : FONT_NORMAL_BLACK_ON_LIGHT },
 	}
 }
 
