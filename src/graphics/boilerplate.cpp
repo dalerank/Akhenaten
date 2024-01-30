@@ -1,7 +1,8 @@
-#include "boilerplate.h"
+#include "graphics/graphics.h"
 
 #include "graphics/screen.h"
 #include "platform/renderer.h"
+#include "graphics/font.h"
 #include "graphics/view/view.h"
 #include "core/profiler.h"
 #include "game/game.h"

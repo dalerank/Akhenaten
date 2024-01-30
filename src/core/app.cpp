@@ -1,6 +1,8 @@
 #include "app.h"
 
 #include "game/settings.h"
+#include "platform/screen.h"
+#include "core/log.h"
 #include <SDL.h>
 
 void app_window_resize(const vec2i& wsize) {
@@ -29,4 +31,15 @@ void app_post_event(int code) {
     event.user.type = SDL_USEREVENT;
     event.user.code = code;
     SDL_PushEvent(&event);
+}
+
+void app_request_exit() {
+    app_post_event(USER_EVENT_QUIT);
+}
+
+void app_terminate(const char* message) noexcept {
+    logs::critical("%s", message);
+    platform_screen_show_error_message_box("CRASHED", message);
+
+    std::terminate();
 }

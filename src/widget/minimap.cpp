@@ -2,7 +2,7 @@
 
 #include "building/building.h"
 #include "core/profiler.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "grid/figure.h"
 #include "grid/property.h"
 #include "grid/random.h"

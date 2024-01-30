@@ -1,7 +1,8 @@
 #include "mission_next.h"
 
 #include "game/mission.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/view/view.h"

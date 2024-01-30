@@ -1092,10 +1092,7 @@ void building::update_native_crop_progress() {
 }
 
 void building::update_day() {
-    switch (type) {
-    default:
-        dcast()->update_day();
-    }
+    dcast()->update_day();
 }
 
 void building::update_month() {

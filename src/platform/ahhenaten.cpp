@@ -59,7 +59,7 @@
 
 #endif
 
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 
@@ -82,10 +82,6 @@ struct application_t {
 };
 
 application_t g_application;
-
-void system_exit() {
-    app_post_event(USER_EVENT_QUIT);
-}
 
 void system_center() {
     app_post_event(USER_EVENT_CENTER_WINDOW);

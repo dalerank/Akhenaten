@@ -1,7 +1,7 @@
 #include "arguments.h"
 
 #include "platform/platform.h"
-#include "core/application.h"
+#include "core/app.h"
 #include "core/bstring.h"
 #include "core/log.h"
 #include "content/vfs.h"
@@ -226,7 +226,7 @@ int Arguments::get_display_scale_percentage() const {
 
 void Arguments::set_display_scale_percentage(int value) {
     if (value < 50 || value > 500) {
-        app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+        app_terminate(DISPLAY_SCALE_ERROR_MESSAGE);
     }
 
     display_scale_percentage_ = value;
@@ -238,7 +238,7 @@ int Arguments::get_cursor_scale_percentage() const {
 
 void Arguments::set_cursor_scale_percentage(int value) {
     if (value != 100 && value != 150 && value != 200) {
-        app::terminate(CURSOR_SCALE_ERROR_MESSAGE);
+        app_terminate(CURSOR_SCALE_ERROR_MESSAGE);
     }
 
     cursor_scale_percentage_ = value;
@@ -287,7 +287,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
                 renderer_ = argv[i + 1];
                 ++i;
             } else {
-                app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+                app_terminate(DISPLAY_SCALE_ERROR_MESSAGE);
             }
         } else if (SDL_strcmp(argv[i], "--display-scale") == 0) {
             if (i + 1 < argc) {
@@ -296,20 +296,20 @@ void Arguments::parse_cli_(int argc, char** argv) {
 
                 set_display_scale_percentage(percentage);
             } else
-                app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+                app_terminate(DISPLAY_SCALE_ERROR_MESSAGE);
         } else if (SDL_strcmp(argv[i], "--size") == 0) {
             if (i + 1 < argc) {
                 SDL_sscanf(argv[i + 1], "%dx%d", &window_size_.x, &window_size_.y);
                 ++i;
             } else {
-                app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+                app_terminate(DISPLAY_SCALE_ERROR_MESSAGE);
             }
         } else if (SDL_strcmp(argv[i], "--mixed") == 0) {
             if (i + 1 < argc) {
                 scripts_directory_ = argv[i + 1];
                 ++i;
             } else {
-                app::terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+                app_terminate(DISPLAY_SCALE_ERROR_MESSAGE);
             }
 
         } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
@@ -319,13 +319,13 @@ void Arguments::parse_cli_(int argc, char** argv) {
 
                 set_cursor_scale_percentage(percentage);
             } else {
-                app::terminate(CURSOR_SCALE_ERROR_MESSAGE);
+                app_terminate(CURSOR_SCALE_ERROR_MESSAGE);
             }
-        } else if (SDL_strcmp(argv[i], "--help") == 0)
-            app::terminate(usage());
+        } else if (SDL_strcmp(argv[i], "--help") == 0) {
+            app_terminate(usage());
 
-        else if (SDL_strncmp(argv[i], "--", 2) == 0) {
-            app::terminate(bstring256(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));
+        } else if (SDL_strncmp(argv[i], "--", 2) == 0) {
+            app_terminate(bstring256(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));
 
         } else {
             // TODO: ???? check that there are no other arguments after

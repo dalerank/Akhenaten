@@ -1,7 +1,7 @@
 #include "scrollbar.h"
 
 #include "core/calc.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"

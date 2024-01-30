@@ -4,7 +4,7 @@
 #include "core/string.h"
 #include "core/log.h"
 #include "game/cheats.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"

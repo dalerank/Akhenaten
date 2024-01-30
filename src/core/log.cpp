@@ -1,7 +1,7 @@
 #include "core/log.h"
 
 #include "platform/platform.h"
-#include "core/application.h"
+#include "core/app.h"
 #include "widget/debug_console.h"
 
 #include <algorithm>
@@ -51,7 +51,7 @@ char const* get_prefix_of(SDL_LogPriority priority) {
         return it->second;
     }
 
-    app::terminate("Unknown SDL_LogPriority level");
+    return "unknown";
 }
 
 SDL_LogPriority get_log_priority() {

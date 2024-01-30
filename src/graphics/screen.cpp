@@ -1,6 +1,6 @@
 #include "screen.h"
 
-#include "boilerplate.h"
+#include "graphics/image.h"
 #include "city/warning.h"
 #include "graphics/view/view.h"
 #include "platform/renderer.h"

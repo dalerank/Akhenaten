@@ -5,7 +5,7 @@
 #include "config/config.h"
 #include "figuretype/editor.h"
 #include "formation.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/text.h"
 #include "image.h"
 #include "game/game.h"

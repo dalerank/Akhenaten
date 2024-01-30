@@ -1,7 +1,7 @@
 #include "culture.h"
 
 #include "building/building.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "io/gamefiles/lang.h"

@@ -2,34 +2,26 @@
 
 #include "editor/editor.h"
 #include "core/log.h"
-#include "config/config.h"
-#include "game/game.h"
-#include "game/system.h"
-#include "game/settings.h"
-#include "graphics/boilerplate.h"
+#include "platform/platform.h"
+#include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
-#include "graphics/elements/generic_button.h"
-#include "graphics/elements/lang_text.h"
-#include "graphics/elements/panel.h"
-#include "graphics/view/view.h"
-#include "graphics/screen.h"
-#include "graphics/text.h"
 #include "graphics/window.h"
-#include "platform/version.hpp"
-#include "platform/renderer.h"
-#include "records.h"
-#include "sound/music.h"
-#include "window/config.h"
-#include "window/file_dialog.h"
-#include "window/plain_message_dialog.h"
-#include "window/player_selection.h"
-#include "window/popup_dialog.h"
-#include "window/scenario_selection.h"
-#include "window/city.h"
-#include "resource/icons.h"
-#include "io/gamestate/boilerplate.h"
-
+#include "graphics/screen.h"
+#include "graphics/image.h"
+#include "game/game.h"
+#include "game/settings.h"
+#include "config/config.h"
+#include "core/app.h"
 #include "js/js_game.h"
+#include "window/records.h"
+#include "window/popup_dialog.h"
+#include "window/player_selection.h"
+#include "window/file_dialog.h"
+#include "window/config.h"
+#include "window/city.h"
+#include "sound/music.h"
+#include "io/gamestate/boilerplate.h"
+#include "resource/icons.h"
 
 static void button_click(int type, int param2);
 
@@ -52,7 +44,7 @@ void config_load_main_menu() {
 
 static void main_menu_confirm_exit(bool accepted) {
     if (accepted) {
-        system_exit();
+        app_request_exit();
     }
 }
 
@@ -88,10 +80,6 @@ static void main_menu_draw_background() {
     g_main_menu_data["quit_game"].onclick([] (int, int) {
         window_popup_dialog_show(POPUP_DIALOG_QUIT, main_menu_confirm_exit, e_popup_btns_yesno);
     });
-
-    if (window_is(WINDOW_MAIN_MENU)) {
-        draw_version_string();
-    }
 }
 
 static void main_menu_draw_foreground() {

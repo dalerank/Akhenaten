@@ -1,6 +1,7 @@
-#include "graphics/boilerplate.h"
+#include "debug_console.h"
 
 #include "graphics/screen.h"
+#include "graphics/graphics.h"
 #include "graphics/text.h"
 #include "core/bstring.h"
 

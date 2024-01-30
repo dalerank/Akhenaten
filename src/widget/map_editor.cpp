@@ -2,7 +2,8 @@
 #include <graphics/view/lookup.h>
 
 #include "editor/tool.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/elements/menu.h"
 #include "graphics/view/view.h"
 #include "graphics/window.h"

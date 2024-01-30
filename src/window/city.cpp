@@ -14,7 +14,7 @@
 #include "game/state.h"
 #include "game/time.h"
 #include "figure/formation.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/image.h"

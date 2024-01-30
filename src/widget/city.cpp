@@ -1,6 +1,7 @@
 #include "dev/debug.h"
 
-#include "graphics/boilerplate.h"
+#include "graphics/image.h"
+#include "graphics/graphics.h"
 #include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
 #include "grid/property.h"

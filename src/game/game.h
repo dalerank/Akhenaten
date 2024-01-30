@@ -20,7 +20,7 @@ void game_handle_input_after();
 
 void game_exit_editor(void);
 
-void game_exit(void);
+void game_exit();
 
 struct game_t {
     bool paused = false;

@@ -1,7 +1,8 @@
 #include "records.h"
 
 #include "core/game_environment.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/scrollbar.h"

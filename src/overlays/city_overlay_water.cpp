@@ -6,7 +6,7 @@
 #include "grid/property.h"
 #include "grid/image.h"
 #include "graphics/image.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "building/building.h"
 #include "widget/city/tile_draw.h"
 #include "core/vec2i.h"

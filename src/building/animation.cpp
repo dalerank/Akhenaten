@@ -7,6 +7,7 @@
 #include "core/calc.h"
 #include "core/game_environment.h"
 #include "graphics/animation_timers.h"
+#include "graphics/image.h"
 #include "grid/sprite.h"
 
 int generic_sprite_offset(int grid_offset, int max_frames, int anim_speed) {

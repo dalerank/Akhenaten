@@ -5,7 +5,7 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "game/file_editor.h"
-#include "graphics/boilerplate.h"
+#include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"

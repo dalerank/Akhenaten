@@ -7,8 +7,8 @@
 
 #include "game/mission.h"
 #include "game/settings.h"
-#include "graphics/boilerplate.h"
 #include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/view/view.h"
 #include "graphics/elements/lang_text.h"

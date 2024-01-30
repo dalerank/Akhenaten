@@ -1,7 +1,7 @@
 #include "config.h"
 
 #include "core/string.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/panel.h"
 #include "graphics/image_groups.h"

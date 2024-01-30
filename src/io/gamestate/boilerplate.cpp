@@ -17,7 +17,6 @@
 #include "city/resource.h"
 #include "city/victory.h"
 #include "core/bstring.h"
-#include "core/application.h"
 #include "content/vfs.h"
 #include "empire/empire.h"
 #include "empire/trade_prices.h"

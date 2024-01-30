@@ -10,7 +10,7 @@
 #include "grid/terrain.h"
 #include "grid/image.h"
 #include "graphics/color.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "grid/point.h"
 #include "game/state.h"
 

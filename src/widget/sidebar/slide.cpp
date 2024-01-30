@@ -1,9 +1,9 @@
 #include "slide.h"
-#include <graphics/boilerplate.h>
 #include <tgmath.h>
 
 #include "core/speed.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/elements/menu.h"
 #include "graphics/view/view.h"
 #include "graphics/window.h"

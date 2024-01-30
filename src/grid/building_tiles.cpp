@@ -1,7 +1,9 @@
 #include "building_tiles.h"
+
 #include "building/monuments.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/tile_draw.h"
+#include "graphics/image.h"
 
 #include "building/industry.h"
 #include "grid/aqueduct.h"

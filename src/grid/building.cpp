@@ -6,7 +6,8 @@
 #include "grid/property.h"
 #include "grid/image.h"
 #include "config/config.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "widget/city/ornaments.h"
 
 grid_xx g_buildings_grid = {0, {FS_UINT16, FS_UINT16}};

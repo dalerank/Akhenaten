@@ -5,7 +5,7 @@
 #include "core/string.h"
 #include "graphics/text.h"
 
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 
 #include "building/industry.h"
 #include "building/monuments.h"

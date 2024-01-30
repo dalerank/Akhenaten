@@ -14,7 +14,7 @@
 #include "empire/type.h"
 #include "game/settings.h"
 #include "game/tutorial.h"
-#include "graphics/boilerplate.h"
+#include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"

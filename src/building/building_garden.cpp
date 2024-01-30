@@ -5,7 +5,7 @@
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
 #include "window/building/common.h"

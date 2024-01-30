@@ -1,7 +1,8 @@
 #include "image_button.h"
 
 #include "core/game_environment.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "sound/effect.h"
 #include "game/game.h"
 

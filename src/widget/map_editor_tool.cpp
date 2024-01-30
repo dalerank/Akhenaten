@@ -4,7 +4,7 @@
 #include "building/properties.h"
 #include "editor/tool.h"
 #include "editor/tool_restriction.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/image_groups.h"
 #include "grid/terrain.h"
 #include "input/scroll.h"

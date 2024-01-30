@@ -19,7 +19,7 @@
 #include "grid/image.h"
 #include "grid/building_tiles.h"
 #include "graphics/view/lookup.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
 

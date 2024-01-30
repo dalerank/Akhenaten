@@ -8,7 +8,7 @@
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "game/state.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/tooltip.h"
 #include "grid/building.h"
 #include "grid/desirability.h"

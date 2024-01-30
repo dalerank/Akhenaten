@@ -9,7 +9,8 @@
 #include "grid/desirability.h"
 #include "grid/random.h"
 #include "graphics/color.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "config/config.h"
 
 static int terrain_on_desirability_overlay(void) {

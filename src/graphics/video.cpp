@@ -2,7 +2,7 @@
 
 #include "core/time.h"
 #include "game/settings.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "content/dir.h"
 #include "content/vfs.h"
 #include "io/gamefiles/smacker.h"

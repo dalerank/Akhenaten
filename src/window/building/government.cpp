@@ -4,7 +4,6 @@
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
 #include "game/resource.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "window/building/figures.h"

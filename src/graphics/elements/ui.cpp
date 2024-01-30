@@ -8,7 +8,8 @@
 #include "panel.h"
 #include "graphics/text.h"
 #include "game/game.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "io/gamefiles/lang.h"
 
 #include <stack>

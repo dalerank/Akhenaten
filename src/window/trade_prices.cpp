@@ -1,7 +1,8 @@
 #include "trade_prices.h"
 
 #include "empire/trade_prices.h"
-#include "graphics/boilerplate.h"
+#include "graphics/image.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/view/view.h"
 #include "graphics/elements/panel.h"

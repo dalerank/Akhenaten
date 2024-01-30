@@ -1,6 +1,7 @@
 #include "bridges.h"
 
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "grid/property.h"
 #include "grid/sprite.h"
 #include "grid/terrain.h"

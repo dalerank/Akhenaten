@@ -16,7 +16,7 @@
 #include "graphics/image_desc.h"
 #include "graphics/color.h"
 #include "graphics/graphics.h"
-#include "graphics/boilerplate.h"
+#include "graphics/image.h"
 #include "widget/city/ornaments.h"
 #include "game/game.h"
 

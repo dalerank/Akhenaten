@@ -2,7 +2,7 @@
 
 #include "core/calc.h"
 #include "core/string.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/view/view.h"
 #include "graphics/elements/scrollbar.h"

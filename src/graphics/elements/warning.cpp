@@ -2,7 +2,8 @@
 
 #include "city/warning.h"
 #include "game/state.h"
-#include "graphics/boilerplate.h"
+#include "graphics/image.h"
+#include "graphics/graphics.h"
 #include "graphics/view/view.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"

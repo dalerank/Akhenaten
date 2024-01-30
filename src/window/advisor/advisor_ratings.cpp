@@ -1,7 +1,8 @@
 #include "advisor_ratings.h"
 
 #include "city/ratings.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/view/view.h"
 #include "graphics/elements/ui.h"
 #include "graphics/text.h"

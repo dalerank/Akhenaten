@@ -4,7 +4,7 @@
 #include "city/ratings.h"
 #include "core/string.h"
 #include "game/settings.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"

@@ -6,7 +6,7 @@
 #include "empire/empire_object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
-#include "graphics/boilerplate.h"
+#include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/arrow_button.h"
 #include "graphics/elements/generic_button.h"

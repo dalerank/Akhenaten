@@ -2,7 +2,8 @@
 
 #include "core/game_environment.h"
 #include "core/string.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/view/view.h"
 #include "io/gamefiles/lang.h"
 #include "game/game.h"

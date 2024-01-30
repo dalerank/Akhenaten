@@ -1,7 +1,7 @@
 #pragma once
 
 #include "building/building.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "grid/point.h"
 
 // int get_farm_image(int grid_offset);

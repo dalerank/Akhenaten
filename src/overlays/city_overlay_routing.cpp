@@ -10,7 +10,8 @@
 #include "grid/building.h"
 #include "grid/image.h"
 #include "graphics/color.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "game/state.h"
 
 static int get_tooltip_routing(tooltip_context* c, const building* b) {

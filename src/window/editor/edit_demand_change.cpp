@@ -3,7 +3,7 @@
 #include "core/string.h"
 #include "empire/empire_city.h"
 #include "empire/type.h"
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/button.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"

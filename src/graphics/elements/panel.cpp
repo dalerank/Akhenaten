@@ -1,6 +1,7 @@
 #include "panel.h"
 
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/view/view.h"
 #include "game/game.h"
 

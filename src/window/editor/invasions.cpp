@@ -1,6 +1,6 @@
 #include "invasions.h"
 
-#include "graphics/boilerplate.h"
+#include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"

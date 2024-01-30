@@ -1,7 +1,6 @@
 #include "intro_video.h"
 
 #include "core/game_environment.h"
-#include "graphics/boilerplate.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
 #include "graphics/video.h"

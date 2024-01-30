@@ -13,3 +13,5 @@ enum e_user_event {
 void app_window_resize(const vec2i& wsize);
 void app_fullscreen(bool fullscreen);
 void app_post_event(int code);
+void app_request_exit();
+void app_terminate(const char* message) noexcept;
