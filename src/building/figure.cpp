@@ -1091,10 +1091,6 @@ void building::update_native_crop_progress() {
     map_image_set(tile.grid_offset(), image_id_from_group(GROUP_BUILDING_FARMLAND) + data.industry.progress);
 }
 
-void building::update_day() {
-    dcast()->update_day();
-}
-
 void building::update_month() {
     switch (type) {
     case BUILDING_JUGGLER_SCHOOL:

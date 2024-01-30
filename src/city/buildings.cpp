@@ -262,7 +262,7 @@ int city_buildings_unknown_value(void) {
 
 void city_buildings_update_day() {
     buildings_valid_do([] (building &b) {
-        b.update_day();
+        b.dcast()->update_day();
     });
 }
 

@@ -361,7 +361,6 @@ public:
     void update_native_crop_progress();
     tile2i access_tile();
     void update_road_access();
-    void update_day();
     void update_month();
     bool figure_generate();
     int get_fire_risk(int value);
