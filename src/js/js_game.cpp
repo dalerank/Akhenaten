@@ -13,6 +13,8 @@
 #include "figure/figure.h"
 #include "figure/image.h"
 #include "io/gamefiles/lang.h"
+#include "platform/version.hpp"
+#include "graphics/screen.h"
 
 #include "js.h"
 
@@ -70,6 +72,20 @@ void js_game_load_text(js_State *J) {
     text[fsize] = 0;
     js_pushstring(J, text);
     free(text);
+}
+
+void js_register_game_objects(js_State *J) {
+    js_newobject(J);
+    {
+        js_pushstring(J, get_version().c_str()); 
+        js_setproperty(J, -2, "version");
+
+        js_newobject(J);
+            js_pushnumber(J, screen_width()); js_setproperty(J, -2, "w");
+            js_pushnumber(J, screen_height()); js_setproperty(J, -2, "h");
+        js_setproperty(J, -2, "screen");
+    }
+    js_setglobal(J, "game");
 }
 
 void js_register_game_functions(js_State *J) {
@@ -132,6 +148,13 @@ std::vector<std::string> archive::r_array_str(pcstr name) {
 int archive::r_int(pcstr name, int def) {
     js_getproperty(vm, -1, name);
     int result = js_isundefined(vm, -1) ? def : js_tointeger(vm, -1);
+    js_pop(vm, 1);
+    return result;
+}
+
+uint32_t archive::r_uint(pcstr name, uint32_t def) {
+    js_getproperty(vm, -1, name);
+    uint32_t result = js_isundefined(vm, -1) ? def : js_touint32(vm, -1);
     js_pop(vm, 1);
     return result;
 }
