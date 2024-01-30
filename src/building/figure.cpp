@@ -1097,10 +1097,6 @@ void building::update_day() {
 
 void building::update_month() {
     switch (type) {
-    case BUILDING_WORK_CAMP:
-        data.industry.spawned_worker_this_month = false;
-        break;
-
     case BUILDING_JUGGLER_SCHOOL:
         data.entertainment.spawned_entertainer_this_month = false;
         break;

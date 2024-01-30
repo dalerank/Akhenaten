@@ -81,3 +81,7 @@ void building_work_camp::spawn_figure() {
         }
     }
 }
+
+void building_work_camp::update_day() {
+    data.industry.spawned_worker_this_month = false;
+}
