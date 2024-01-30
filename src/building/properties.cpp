@@ -194,7 +194,7 @@ static building_properties properties[400] = {
     {3, 0, GROUP_BUILDING_COURTHOUSE},        // courthouse
     {0, 0, 0, 0},
     {0, 0, 0, 0},
-    {4, 0, GROUP_BUILDING_VILLAGE_PALACE},
+    {4, 0, 0, 0},
     {5, 0, GROUP_BUILDING_TOWN_PALACE},
     {6, 0, GROUP_BUILDING_CITY_PALACE}, // town palace ^^^
     {0, 0, 0, 0},
@@ -266,6 +266,7 @@ void building_properties_init() {
     properties[BUILDING_FIREHOUSE] = {1, 0, 0, 0, 0, IMG_BUILDING_FIREHOUSE};
     properties[BUILDING_APOTHECARY] = {1, 0, 0, 0, 0, IMG_BUILDING_APOTHECARY};
     properties[BUILDING_PERSONAL_MANSION] = {3, 0, 0, 0, 0, IMG_PERSONAL_MANSION};
+    properties[BUILDING_VILLAGE_PALACE] = {4, 0, 0, 0, 0, IMG_VILLAGE_PALACE};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

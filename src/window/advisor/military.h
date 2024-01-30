@@ -1,4 +1,4 @@
-#pragma conce
+#pragma once
 
 #include "window/advisors.h"
 

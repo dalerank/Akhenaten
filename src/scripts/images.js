@@ -152,6 +152,7 @@ images = [
 	{img: IMG_ADVISOR_RATING_ICON, pack:PACK_GENERAL, id:128, offset:3},
 	{img: IMG_ADVISOR_ICONS, pack:PACK_GENERAL, id:128, offset:0},
 	{img: IMG_ADVISOR_BACKGROUND, pack:PACK_UNLOADED, id:2, offset:0},
+	{img: IMG_VILLAGE_PALACE, pack:PACK_GENERAL, id:47, offset:0},
 ]
 
 cart_offsets = [
