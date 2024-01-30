@@ -199,7 +199,7 @@ static void get_tooltip(tooltip_context* c) {
         if (tooltip.first) {
             c->text_group = tooltip.first;
         }
-        window_request_refresh_background();
+        window_invalidate();
     }
 }
 
@@ -789,7 +789,7 @@ static void draw_foreground() {
         int workers_needed = model_get_building(b->type)->laborers;
         if (workers_needed) {
             pcstr label = (b->state == BUILDING_STATE_VALID ? "x" : "");
-            auto tooltip = (b->state == BUILDING_STATE_VALID) ? std::pair{54, 8} : std::pair{53, 10};
+            auto tooltip = (b->state == BUILDING_STATE_VALID) ? std::pair{54, 16} : std::pair{54, 17};
             ui::button(label, {400, 3 + 16 * context.height_blocks - 40}, {20, 20})
                .onclick([&context, b, workers_needed] (int, int) {
                    if (workers_needed) {
