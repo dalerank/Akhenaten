@@ -2,10 +2,10 @@
 
 #include "core/vec2i.h"
 #include "graphics/color.h"
+#include "graphics/font.h"
 
 struct painter;
 struct image_t;
-enum e_font;
 
 void graphics_clear_screen();
 
