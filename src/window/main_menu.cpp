@@ -50,23 +50,6 @@ void config_load_main_menu() {
     });
 }
 
-static void draw_version_string() {
-    static bstring64 version = get_version();
-    int text_y = screen_height() - 30;
-
-    // TODO: drop casts here and handle string as UTF8
-    int text_width = text_get_width((const uint8_t*)version.c_str(), FONT_SMALL_PLAIN);
-
-    if (text_y <= 500 && (screen_width() - 640) / 2 < text_width + 18) {
-        graphics_draw_rect(10, text_y, text_width + 14, 20, COLOR_BLACK);
-        graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
-
-        text_draw((const uint8_t*)version.c_str(), 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
-    } else {
-        text_draw((const uint8_t*)version.c_str(), 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
-    }
-}
-
 static void main_menu_confirm_exit(bool accepted) {
     if (accepted) {
         system_exit();

@@ -229,8 +229,8 @@ void js_reset_vm_state() {
     js_atpanic(vm.J, js_game_panic);
 
     js_register_vm_functions(vm.J);
-    //js_register_graphics_functions(vm.J);
     js_register_game_functions(vm.J);
+    js_register_game_objects(vm.J);
     //js_register_mouse_functions(vm.J);
     //js_register_hotkey_functions(vm.J);
     js_register_game_constants(vm.J);

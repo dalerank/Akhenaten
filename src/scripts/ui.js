@@ -19,6 +19,7 @@ main_menu_window = {
 		show_records  : { type:"large_button", pos:[192, 125 + 40 * 2], size:[256, 25], text:{group: 30, id: 5}},
 		show_config   : { type:"large_button", pos:[192, 125 + 40 * 3], size:[256, 25], text:{group: 2, id: 0}},
 		quit_game     : { type:"large_button", pos:[192, 125 + 40 * 4], size:[256, 25], text:{group: 30, id: 4}},
+		version_number: { type:"text", pos:[18, game.screen.h - 30], text: game.version, font: FONT_SMALL_PLAIN, color: 0xffb3b3b3}
 	}
 }
 
