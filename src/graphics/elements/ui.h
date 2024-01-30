@@ -89,6 +89,7 @@ struct elabel : public element {
     std::string _text;
     e_font _font;
     vec2i _body;
+    uint32_t _color;
 
     virtual void draw() override;
     virtual void load(archive elem) override;

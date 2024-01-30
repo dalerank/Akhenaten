@@ -272,6 +272,7 @@ void ui::elabel::load(archive arch) {
     _text = arch.r_string("text");
     _font = (e_font)arch.r_int("font", FONT_NORMAL_BLACK_ON_LIGHT);
     _body = arch.r_size2i("body");
+    _color = arch.r_uint("color");
 }
 
 void ui::elabel::text(pcstr v) {
@@ -287,7 +288,7 @@ void ui::etext::load(archive arch) {
 }
 
 void ui::etext::draw() {
-    text_draw((uint8_t*)_text.c_str(), pos.x, pos.y, _font, 0);
+    text_draw((uint8_t*)_text.c_str(), pos.x, pos.y, _font, _color);
 }
 
 void ui::egeneric_button::draw() {
