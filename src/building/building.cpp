@@ -514,7 +514,6 @@ e_overlay building::get_overlay() const {
         case BUILDING_SCRIBAL_SCHOOL: return OVERLAY_SCRIBAL_SCHOOL;
         
         case BUILDING_BOOTH:
-        case BUILDING_JUGGLER_SCHOOL:
             return OVERLAY_BOOTH;
 
         case BUILDING_PHYSICIAN:

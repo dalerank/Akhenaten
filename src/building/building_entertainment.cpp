@@ -16,7 +16,7 @@
 
 #include "js/js_game.h"
 
-static void building_entertainment_school_draw_info(object_info& c, const char* type, int group_id) {
+void building_entertainment_school_draw_info(object_info& c, pcstr type, int group_id) {
     c.help_id = 75;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
@@ -39,10 +39,6 @@ static void building_entertainment_school_draw_info(object_info& c, const char* 
     }
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
     window_building_draw_employment(&c, 142);
-}
-
-void building_juggler_school_draw_info(object_info& c) {
-    building_entertainment_school_draw_info(c, "juggler_school", 77);
 }
 
 void building_conservatory_draw_info(object_info& c) {

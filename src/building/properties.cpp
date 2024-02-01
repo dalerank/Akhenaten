@@ -42,7 +42,7 @@ static building_properties properties[400] = {
     {2, 0, 0, 0},                          // pavillion
     {3, 0, 0, 0},   // conservatory
     {4, 0, GROUP_BUILDING_DANCE_SCHOOL},   // dance school
-    {2, 0, GROUP_BUILDING_JUGGLER_SCHOOL}, // juggler school
+    {2, 0, 0, 0}, // juggler school
     {3, 0, 0, 0},                          // unused (senet master)
     {1, 1, GROUP_TERRAIN_PLAZA},           // plaza
     {1, 1, GROUP_TERRAIN_GARDEN},          // gardens
@@ -267,6 +267,7 @@ void building_properties_init() {
     properties[BUILDING_APOTHECARY] = {1, 0, 0, 0, 0, IMG_BUILDING_APOTHECARY};
     properties[BUILDING_PERSONAL_MANSION] = {3, 0, 0, 0, 0, IMG_PERSONAL_MANSION};
     properties[BUILDING_VILLAGE_PALACE] = {4, 0, 0, 0, 0, IMG_VILLAGE_PALACE};
+    properties[BUILDING_JUGGLER_SCHOOL] = {2, 0, 0, 0, 0, IMG_JUGGLER_SCHOOL};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

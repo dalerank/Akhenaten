@@ -388,25 +388,6 @@ void building::spawn_figure_police() {
     common_spawn_roamer(FIGURE_CONSTABLE, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
 }
 
-void building::spawn_figure_juggler() {
-    if (!common_spawn_figure_trigger(50)) {
-        return;
-    }
-
-    if (data.entertainment.spawned_entertainer_this_month) {
-        return;
-    }
-
-    int venue_destination = determine_venue_destination(road_access, BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH);
-    building* dest = building_get(venue_destination);
-    if (dest->id > 0) {
-        create_figure_with_destination(FIGURE_JUGGLER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-        data.entertainment.spawned_entertainer_this_month = true;
-    } else {
-        common_spawn_roamer(FIGURE_JUGGLER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
-    }
-}
-
 void building::spawn_figure_musician() {
     if (common_spawn_figure_trigger(50)) {
         building* dest = building_get(determine_venue_destination(road_access, BUILDING_PAVILLION, BUILDING_BANDSTAND, 0));
@@ -1093,10 +1074,6 @@ void building::update_native_crop_progress() {
 
 void building::update_month() {
     switch (type) {
-    case BUILDING_JUGGLER_SCHOOL:
-        data.entertainment.spawned_entertainer_this_month = false;
-        break;
-
     case BUILDING_WATER_SUPPLY: {
             int avg_desirability = map_desirabilty_avg(tile, 4);
             if (avg_desirability > 30) {
@@ -1218,7 +1195,6 @@ bool building::figure_generate() {
         case BUILDING_MUD_TOWER: spawn_figure_tower(); break;
         case BUILDING_POLICE_STATION: spawn_figure_police(); break;
         case BUILDING_WATER_SUPPLY: spawn_figure_watersupply(); break;
-        case BUILDING_JUGGLER_SCHOOL: spawn_figure_juggler(); break;
         case BUILDING_CONSERVATORY: spawn_figure_musician(); break;
         case BUILDING_DANCE_SCHOOL: spawn_figure_dancer(); break;
         case BUILDING_SENET_HOUSE: spawn_figure_senet(); break;

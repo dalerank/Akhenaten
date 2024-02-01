@@ -321,10 +321,8 @@ public:
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
-    void spawn_figure_juggler();
     void spawn_figure_musician();
     void spawn_figure_dancer();
-    void spawn_figure_booth();
     void spawn_figure_senet();
     void spawn_figure_pavillion();
     void set_water_supply_graphic();
@@ -398,6 +396,7 @@ public:
     inline figure *create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) { return base.create_roaming_figure(_type, created_action, slot); }
     inline bool common_spawn_figure_trigger(int min_houses) { return base.common_spawn_figure_trigger(min_houses); }
     inline bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) { return base.common_spawn_roamer(type, min_houses, created_action); }
+    inline figure *create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE) { return base.create_figure_with_destination(_type, destination, created_action, slot); }
     inline tile2i tile() const { return base.tile; }
     inline e_building_type type() const { return base.type; }
 
