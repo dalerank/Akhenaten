@@ -39,7 +39,7 @@ mission_briefing_window = {
 		outer_panel : { type : "outer_panel",	pos: [16, 32], size : {w:38, h:27} },
 		title 		  : { type : "text", pos : {x:32, y:48}, font : FONT_LARGE_BLACK_ON_LIGHT },
 		subtitle 		: { type : "text",	pos : {x: 32, y:78}, font : FONT_NORMAL_BLACK_ON_LIGHT },
-		objectives_panel : { type : "inner_panel", pos : {x:32, y:96}, size: {w:33, h:6} },
+		objectives_panel : { type : "inner_panel", pos : {x:32, y:96}, size: {w:36, h:6} },
 		objectives_label : { type : "label", text : {group:62, id:10}, pos : {x:48, y:104},	font : FONT_NORMAL_WHITE_ON_DARK },
 		tocity_label : { type : "label", text : {group:62, id:7},	pos : {x:416, y:433}, font : FONT_NORMAL_BLACK_ON_LIGHT },
 		goal_0 : { type : "label", pos : {x:32 + 16, y:90 + 32}, body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false	},

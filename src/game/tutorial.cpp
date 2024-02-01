@@ -33,26 +33,32 @@ static void set_all_tut_flags_null() {
     g_tutorials_flags.tutorial_1.population_150_reached = 0;
     g_tutorials_flags.tutorial_1.gamemeat_400_stored = 0;
     g_tutorials_flags.tutorial_1.collapse = 0;
+    g_tutorials_flags.tutorial_1.started = 0;
 
     // tutorial 2
+    g_tutorials_flags.tutorial_2.started = 0;
     g_tutorials_flags.tutorial_2.gold_mined_500 = 0;
     g_tutorials_flags.tutorial_2.temples_built = 0;
 
     // tutorial 3
+    g_tutorials_flags.tutorial_3.started = 0;
     g_tutorials_flags.tutorial_3.figs_800_stored = 0;
     g_tutorials_flags.tutorial_3.pottery_made = 0;
 
+    // tutorial 4
+    g_tutorials_flags.tutorial_4.started = 0;
     g_tutorials_flags.tutorial_4.beer_made = 0;
 
+    // tutorial 5
+    g_tutorials_flags.tutorial_5.started = 0;
     g_tutorials_flags.tutorial_5.spacious_apartment = 0;
     g_tutorials_flags.tutorial_5.papyrus_made = 0;
     g_tutorials_flags.tutorial_5.bricks_bought = 0;
 
-    g_tutorials_flags.pharaoh.tut1_start = 0;
-    g_tutorials_flags.pharaoh.tut3_start = 0;
-    g_tutorials_flags.pharaoh.tut4_start = 0;
-    g_tutorials_flags.pharaoh.tut5_start = 0;
-    g_tutorials_flags.pharaoh.tut6_start = 0;
+    // tutorial 6
+    g_tutorials_flags.tutorial_6.started = 0;
+
+    //
     g_tutorials_flags.pharaoh.tut7_start = 0;
     g_tutorials_flags.pharaoh.tut8_start = 0;
 
@@ -76,34 +82,36 @@ void tutorial_init() {
     }
 
     // tut1
+    g_tutorials_flags.tutorial_1.started = tut_passed[0];
     g_tutorials_flags.tutorial_1.fire = tut_passed[0];
     g_tutorials_flags.tutorial_1.collapse = tut_passed[0];
     g_tutorials_flags.tutorial_1.population_150_reached = tut_passed[0];
     g_tutorials_flags.tutorial_1.gamemeat_400_stored = tut_passed[0];
     // tut2
+    g_tutorials_flags.tutorial_2.started = tut_passed[1];
     g_tutorials_flags.tutorial_2.gold_mined_500 = tut_passed[1];
     g_tutorials_flags.tutorial_2.temples_built = tut_passed[1];
     g_tutorials_flags.tutorial_2.crime = tut_passed[1];
     // tut3
+    g_tutorials_flags.tutorial_3.started = tut_passed[2];
     g_tutorials_flags.tutorial_3.pottery_made = tut_passed[2];
     g_tutorials_flags.tutorial_3.figs_800_stored = tut_passed[2];
     g_tutorials_flags.tutorial_3.disease = tut_passed[2];
     // tut4
+    g_tutorials_flags.tutorial_4.started = tut_passed[3];
     g_tutorials_flags.tutorial_4.beer_made = tut_passed[3];
     // tut5
+    g_tutorials_flags.tutorial_5.started = tut_passed[4];
     g_tutorials_flags.tutorial_5.spacious_apartment = tut_passed[4];
     g_tutorials_flags.tutorial_5.papyrus_made = tut_passed[4];
     g_tutorials_flags.tutorial_5.bricks_bought = tut_passed[4];
+    // tut6
+    g_tutorials_flags.tutorial_6.started = tut_passed[5];
+
 
     g_tutorials_flags.pharaoh.flags[8] = tut_passed[4];
 
     //
-    g_tutorials_flags.pharaoh.tut1_start = tut_passed[0];
-    g_tutorials_flags.pharaoh.tut2_start = tut_passed[1];
-    g_tutorials_flags.pharaoh.tut3_start = tut_passed[2];
-    g_tutorials_flags.pharaoh.tut4_start = tut_passed[3];
-    g_tutorials_flags.pharaoh.tut5_start = tut_passed[4];
-    g_tutorials_flags.pharaoh.tut6_start = tut_passed[5];
     g_tutorials_flags.pharaoh.tut7_start = tut_passed[6];
     g_tutorials_flags.pharaoh.tut8_start = tut_passed[7];
     //
@@ -148,6 +156,10 @@ e_availability mission_advisor_availability(e_advisor advisor, int mission) {
         if (g_tutorials_flags.tutorial_5.papyrus_made) {
             advisors.push_back(ADVISOR_TRADE);
         }
+        break;
+    case 6:
+        advisors = {ADVISOR_LABOR, ADVISOR_IMPERIAL, ADVISOR_RATINGS, ADVISOR_POPULATION, ADVISOR_HEALTH,
+                    ADVISOR_ENTERTAINMENT, ADVISOR_EDUCATION, ADVISOR_TRADE, ADVISOR_RELIGION, ADVISOR_FINANCIAL, ADVISOR_CHIEF};
         break;
     }
 
@@ -458,30 +470,31 @@ void tutorial_update_step(int step) {
 }
 
 void tutorial_starting_message() {
-    if (scenario_is_mission_rank(1) && !g_tutorials_flags.pharaoh.tut1_start) {
+    if (scenario_is_mission_rank(1) && !g_tutorials_flags.tutorial_1.started) {
         post_message(MESSAGE_TUTORIAL_HOUSING_AND_ROADS);
-        g_tutorials_flags.pharaoh.tut1_start = 1;
+        g_tutorials_flags.tutorial_1.started = 1;
     }
-    if (scenario_is_mission_rank(2) && !g_tutorials_flags.pharaoh.tut2_start) {
+    if (scenario_is_mission_rank(2) && !g_tutorials_flags.tutorial_2.started) {
         post_message(MESSAGE_TUTORIAL_GOLD_AND_CRIME);
-        g_tutorials_flags.pharaoh.tut2_start = 1;
+        g_tutorials_flags.tutorial_2.started = 1;
     }
-    if (scenario_is_mission_rank(3) && !g_tutorials_flags.pharaoh.tut3_start) {
+    if (scenario_is_mission_rank(3) && !g_tutorials_flags.tutorial_3.started) {
         post_message(MESSAGE_TUTORIAL_FARMING_ALONG_THE_NILE);
-        g_tutorials_flags.pharaoh.tut3_start = 1;
+        g_tutorials_flags.tutorial_3.started = 1;
     }
-    if (scenario_is_mission_rank(4) && !g_tutorials_flags.pharaoh.tut4_start) {
+    if (scenario_is_mission_rank(4) && !g_tutorials_flags.tutorial_4.started) {
         post_message(MESSAGE_TUTORIAL_DEVELOPING_CULTURE);
-        g_tutorials_flags.pharaoh.tut4_start = 1;
+        g_tutorials_flags.tutorial_4.started = 1;
     }
-    if (scenario_is_mission_rank(5) && !g_tutorials_flags.pharaoh.tut5_start) {
+    if (scenario_is_mission_rank(5) && !g_tutorials_flags.tutorial_5.started) {
         post_message(MESSAGE_TUTORIAL_GETTING_STARTED);
-        g_tutorials_flags.pharaoh.tut5_start = 1;
+        g_tutorials_flags.tutorial_5.started = 1;
     }
-    if (scenario_is_mission_rank(6) && !g_tutorials_flags.pharaoh.tut6_start) {
+    if (scenario_is_mission_rank(6) && !g_tutorials_flags.tutorial_6.started) {
         post_message(MESSAGE_TUTORIAL_SOLDIERS_AND_FORT);
-        g_tutorials_flags.pharaoh.tut6_start = 1;
+        g_tutorials_flags.tutorial_6.started = 1;
     }
+
     if (scenario_is_mission_rank(7) && !g_tutorials_flags.pharaoh.tut7_start) {
         if (scenario_campaign_scenario_id() == 6)
             post_message(MESSAGE_TUTORIAL_AT_WATERS_EDGE);
@@ -489,6 +502,7 @@ void tutorial_starting_message() {
             post_message(MESSAGE_TUTORIAL_AT_WATERS_EDGE_2);
         g_tutorials_flags.pharaoh.tut7_start = 1;
     }
+
     if (scenario_is_mission_rank(8) && !g_tutorials_flags.pharaoh.tut8_start) {
         post_message(MESSAGE_TUTORIAL_THE_FINER_THINGS);
         g_tutorials_flags.pharaoh.tut8_start = 1;
@@ -540,12 +554,12 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.bricks_bought);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[14]);
 
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.tut1_start);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.tut2_start);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.tut3_start);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.tut4_start);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.tut5_start);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.tut6_start);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.started);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_2.started);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.started);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_4.started);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.started);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_6.started);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.tut7_start);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.tut8_start);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[23]);

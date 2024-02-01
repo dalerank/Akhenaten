@@ -6,6 +6,7 @@
 
 struct tutorial_flags_t {
     struct {
+        bool started;
         bool fire;
         bool population_150_reached;
         bool gamemeat_400_stored;
@@ -13,6 +14,7 @@ struct tutorial_flags_t {
     } tutorial_1;
 
     struct {
+        bool started;
         bool population_250_reached;
         bool population_450_reached;
         bool granary_built;
@@ -22,6 +24,7 @@ struct tutorial_flags_t {
     } tutorial_2;
 
     struct {
+        bool started;
         bool figs_800_stored;
         bool pottery_made;
         bool disease;
@@ -29,29 +32,27 @@ struct tutorial_flags_t {
     } tutorial_3;
 
     struct {
+        bool started;
         bool beer_made;
     } tutorial_4;
 
     struct {
+        bool started;
         bool spacious_apartment;
         bool papyrus_made;
         bool bricks_bought;
+        bool can_trade_finally;
     } tutorial_5;
+
+    struct {
+        bool started;
+
+    } tutorial_6;
 
     struct {
         bool flags[41];
         //
         bool crime;
-
-        bool tut5_can_trade_finally;
-
-        //
-        bool tut1_start;
-        bool tut2_start;
-        bool tut3_start;
-        bool tut4_start;
-        bool tut5_start;
-        bool tut6_start;
         bool tut7_start;
         bool tut8_start;
 

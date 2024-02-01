@@ -643,6 +643,7 @@ void building_menu_update(int build_set) {
 
     case BUILDSET_TUT6_START:
         building_menu_disable_all();
+        enable_common_municipal(1);
         break;
 
     case BUILDSET_TUT6_IRRIGATION:
