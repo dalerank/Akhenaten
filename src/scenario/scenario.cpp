@@ -23,6 +23,7 @@ void scenario_settings_init() {
     g_scenario_data.settings.starting_kingdom = difficulty_starting_kingdom();
     g_scenario_data.settings.starting_personal_savings = 0;
 }
+
 void scenario_settings_init_mission() {
     g_scenario_data.settings.starting_kingdom = difficulty_starting_kingdom();
     g_scenario_data.settings.starting_personal_savings = g_settings.personal_savings_for_mission(g_scenario_data.settings.campaign_mission_rank);

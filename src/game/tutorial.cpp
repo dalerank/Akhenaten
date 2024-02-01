@@ -469,7 +469,7 @@ void tutorial_update_step(int step) {
 
 void tutorial_starting_message() {
     if (scenario_is_mission_rank(1) && !g_tutorials_flags.tutorial_1.started) {
-        post_message(MESSAGE_TUTORIAL_HOUSING_AND_ROADS);
+        post_message(g_scenario_data.meta.start_message);
         g_tutorials_flags.tutorial_1.started = 1;
     }
     if (scenario_is_mission_rank(2) && !g_tutorials_flags.tutorial_2.started) {

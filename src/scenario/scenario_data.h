@@ -250,6 +250,10 @@ struct scenario_data_t {
         bool has_animals;
     } env;
 
+    struct {
+        int start_message;
+    } meta;
+
     bool is_saved;
 };
 

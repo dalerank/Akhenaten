@@ -1,11 +1,14 @@
-#ifndef SCENARIO_PROPERTY_H
-#define SCENARIO_PROPERTY_H
+#pragma once
 
 #include <stdint.h>
 
-enum { CLIMATE_CENTRAL = 0, CLIMATE_NORTHERN = 1, CLIMATE_DESERT = 2 };
+enum e_climate { 
+    CLIMATE_CENTRAL = 0, 
+    CLIMATE_NORTHERN = 1, 
+    CLIMATE_DESERT = 2
+};
 
-int scenario_is_custom(void);
+int scenario_is_custom();
 
 void scenario_set_custom(int custom);
 
@@ -53,4 +56,4 @@ int scenario_property_monuments_is_enabled(void);
 int scenario_property_monument(int field);
 void scenario_set_monument(int field, int m);
 
-#endif // SCENARIO_PROPERTY_H
+void scenario_load_meta_data(int scenario_id);

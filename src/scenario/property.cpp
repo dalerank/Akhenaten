@@ -4,7 +4,9 @@
 #include "game/mission.h"
 #include "scenario/scenario_data.h"
 
-int scenario_is_custom(void) {
+#include "js/js_game.h"
+
+int scenario_is_custom() {
     return g_scenario_data.settings.is_custom;
 }
 void scenario_set_custom(int custom) {
@@ -24,9 +26,6 @@ void scenario_set_campaign_scenario(int scenario_id) {
 }
 
 bool scenario_is_mission_rank(int rank) {
-    //    if (GAME_ENV == ENGINE_ENV_C3)
-    //        return !g_scenario_data.settings.is_custom && g_scenario_data.settings.campaign_mission_rank == rank - 1;
-    //    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
     return !g_scenario_data.settings.is_custom && g_scenario_data.settings.campaign_mission_rank == rank - 1;
 }
 int scenario_is_tutorial_before_mission_5() {
@@ -74,14 +73,14 @@ int scenario_image_id(void) {
     return g_scenario_data.image_id;
 }
 
-const uint8_t* scenario_subtitle(void) {
+const uint8_t* scenario_subtitle() {
     return g_scenario_data.subtitle;
 }
 
-int scenario_initial_funds(void) {
+int scenario_initial_funds() {
     return g_scenario_data.initial_funds;
 }
-int scenario_rescue_loan(void) {
+int scenario_rescue_loan() {
     return g_scenario_data.rescue_loan;
 }
 
@@ -100,6 +99,7 @@ int scenario_property_monument(int field) {
     }
     return -1;
 }
+
 void scenario_set_monument(int field, int m) {
     switch (field) {
     case 0:
@@ -112,4 +112,17 @@ void scenario_set_monument(int field, int m) {
         g_scenario_data.monuments.third = m;
         break;
     }
+}
+
+void scenario_load_meta_data(int scenario_id) {
+    bstring128 missionid;
+    missionid.printf("mission%d", scenario_id);
+    g_config_arch.r_section(missionid.c_str(), [] (archive arch) {
+        g_scenario_data.meta.start_message = arch.r_int("start_message");
+    });
+}
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_scenario_load_meta_data);
+void config_load_scenario_load_meta_data() {
+    scenario_load_meta_data(g_scenario_data.settings.campaign_scenario_id);
 }
