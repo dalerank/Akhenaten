@@ -1251,22 +1251,22 @@ void draw_debug_ui(int x, int y) {
                 f = { "5:apartment", flags->tutorial_5.spacious_apartment };
                 break;
             case 15:
-                f = { "tut1 start", flags->pharaoh.tut1_start };
+                f = { "tut1 start", flags->tutorial_1.started };
                 break;
             case 16:
-                f = { "tut2 start", flags->pharaoh.tut2_start };
+                f = { "tut2 start", flags->tutorial_2.started };
                 break;
             case 17:
-                f = { "tut3 start", flags->pharaoh.tut3_start };
+                f = { "tut3 start", flags->tutorial_3.started };
                 break;
             case 18:
-                f = { "tut4 start", flags->pharaoh.tut4_start };
+                f = { "tut4 start", flags->tutorial_4.started };
                 break;
             case 19:
-                f = { "tut5 start", flags->pharaoh.tut5_start };
+                f = { "tut5 start", flags->tutorial_5.started };
                 break;
             case 20:
-                f = { "tut6 start", flags->pharaoh.tut6_start };
+                f = { "tut6 start", flags->tutorial_6.started };
                 break;
             case 21:
                 f = { "tut7 start", flags->pharaoh.tut7_start };

@@ -158,9 +158,7 @@ e_availability mission_advisor_availability(e_advisor advisor, int mission) {
         }
         break;
     case 6:
-        advisors = {ADVISOR_LABOR, ADVISOR_IMPERIAL, ADVISOR_RATINGS, ADVISOR_POPULATION, ADVISOR_HEALTH,
-                    ADVISOR_ENTERTAINMENT, ADVISOR_EDUCATION, ADVISOR_TRADE, ADVISOR_RELIGION, ADVISOR_FINANCIAL, ADVISOR_CHIEF};
-        break;
+        return AVAILABLE;
     }
 
     return advisors.empty() 

@@ -644,6 +644,33 @@ void building_menu_update(int build_set) {
     case BUILDSET_TUT6_START:
         building_menu_disable_all();
         enable_common_municipal(1);
+        enable_common_health();
+        building_menu_toggle_building(BUILDING_TAX_COLLECTOR);
+        building_menu_toggle_building(BUILDING_COURTHOUSE);
+        building_menu_toggle_building(BUILDING_PERSONAL_MANSION);
+
+        building_menu_toggle_building(BUILDING_BAZAAR);
+        building_menu_toggle_building(BUILDING_GRANARY);
+        building_menu_toggle_building(BUILDING_STORAGE_YARD);
+
+        building_menu_toggle_building(BUILDING_RECRUITER);
+        building_menu_toggle_building(BUILDING_FORT_INFANTRY);
+        building_menu_toggle_building(BUILDING_FORT_ARCHERS);
+        building_menu_toggle_building(BUILDING_WEAPONS_WORKSHOP);
+
+        building_menu_toggle_building(BUILDING_SCRIBAL_SCHOOL);
+
+        building_menu_toggle_building(BUILDING_CLAY_PIT);
+        building_menu_toggle_building(BUILDING_GEMSTONE_MINE);
+        building_menu_toggle_building(BUILDING_GOLD_MINE);
+        building_menu_toggle_building(BUILDING_COPPER_MINE);
+        building_menu_toggle_building(BUILDING_POTTERY_WORKSHOP);
+        building_menu_toggle_building(BUILDING_WEAVER_WORKSHOP);
+        
+        building_menu_toggle_building(BUILDING_HUNTING_LODGE);
+
+        enable_gods(GOD_SETH);
+        enable_entertainment(3);
         break;
 
     case BUILDSET_TUT6_IRRIGATION:
@@ -653,11 +680,6 @@ void building_menu_update(int build_set) {
         break;
 
     case BUILDSET_TUT6_EDUCATION:
-        building_menu_toggle_building(BUILDING_GARDENS);
-        building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
-        building_menu_toggle_building(BUILDING_BOOTH);
-        building_menu_toggle_building(BUILDING_MENU_MONUMENTS);
-        building_menu_toggle_building(BUILDING_SCRIBAL_SCHOOL);
         break;
 
     case BUILDSET_TUT6_GUILDS:

@@ -31,3 +31,4 @@ var images_remap = []
 var imagepaks = []
 var advisor_rating_window = {}
 var mission_briefing_window = {}
+var mission6 = {}
