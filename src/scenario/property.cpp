@@ -119,6 +119,7 @@ void scenario_load_meta_data(int scenario_id) {
     missionid.printf("mission%d", scenario_id);
     g_config_arch.r_section(missionid.c_str(), [] (archive arch) {
         g_scenario_data.meta.start_message = arch.r_int("start_message");
+        g_scenario_data.env.has_animals = arch.r_bool("city_has_animals");
     });
 }
 

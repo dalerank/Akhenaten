@@ -2,10 +2,12 @@ log_info("akhenaten: missions started")
 
 mission0 = { // Nubt
 	start_message : 150, //TUTORIAL_HOUSING_AND_ROADS, 248 = 150 + 99 - 1
+	city_has_animals : true,
 }
 
 mission5 = { // Timna
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
+	city_has_animals : true,
 	requests : [
 		{
 			year : 2850,
