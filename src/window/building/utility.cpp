@@ -189,37 +189,6 @@ void window_building_draw_fountain(object_info* c) {
     inner_panel_draw(c->offset.x + 16, c->offset.y + 166, c->width_blocks - 2, 4);
     window_building_draw_employment_without_house_cover(c, 172);
 }
-void window_building_draw_water_supply(object_info* c) {
-    c->help_id = 61;
-    window_building_play_sound(c, "wavs/fountain.wav");
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(108, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-
-    building* b = building_get(c->building_id);
-    if (!c->has_road_access)
-        window_building_draw_description(c, 69, 25);
-    else {
-        if (!b->num_workers)
-            window_building_draw_description(c, 108, 7);
-        else {
-            int text_id;
-            if (c->worker_percentage >= 100)
-                text_id = 2;
-            else if (c->worker_percentage >= 75)
-                text_id = 3;
-            else if (c->worker_percentage >= 50)
-                text_id = 4;
-            else if (c->worker_percentage >= 25)
-                text_id = 5;
-            else
-                text_id = 7;
-            window_building_draw_description(c, 108, text_id);
-            window_building_draw_description_at(c, 16 * c->height_blocks - 120, 108, 1);
-        }
-    }
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 144, c->width_blocks - 2, 4);
-    window_building_draw_employment(c, 150);
-}
 
 void window_building_draw_mission_post(object_info* c) {
     c->help_id = 8;

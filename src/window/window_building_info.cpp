@@ -605,13 +605,6 @@ static void draw_refresh_background() {
                 break;
 
             case BUILDING_COURTHOUSE: window_building_draw_courthouse(&context); break;
-
-            case BUILDING_VILLAGE_PALACE:
-            case BUILDING_TOWN_PALACE:
-            case BUILDING_CITY_PALACE:
-                building_palace_draw_info(context);
-                break;
-
             case BUILDING_SHIPWRIGHT: building_shipyard_draw_info(context); break;
             
             case BUILDING_DOCK:
@@ -624,7 +617,6 @@ static void draw_refresh_background() {
             case BUILDING_FISHING_WHARF: building_wharf_draw_info(context); break;
             case BUILDING_WATER_LIFT: window_building_draw_water_lift(&context); break;
             case BUILDING_MENU_BEAUTIFICATION: window_building_draw_fountain(&context); break;
-            case BUILDING_WATER_SUPPLY: window_building_draw_water_supply(&context); break;
 
             case BUILDING_SMALL_STATUE:
             case BUILDING_MEDIUM_STATUE:

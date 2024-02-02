@@ -24,6 +24,8 @@
 #include "building/building_shrine.h"
 #include "building/building_mansion.h"
 #include "building/building_hunting_lodge.h"
+#include "building/building_water_supply.h"
+#include "building/building_palace.h"
 #include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
@@ -331,6 +333,13 @@ building_impl *building::dcast() {
     case BUILDING_HUNTING_LODGE: _ptr = new building_hunting_lodge(*this); break;
     case BUILDING_STONE_QUARRY: _ptr = new building_quarry_stone(*this); break;
     case BUILDING_GOLD_MINE: _ptr = new building_mine_gold(*this); break;
+    case BUILDING_WATER_SUPPLY: _ptr = new building_water_supply(*this); break;
+
+    case BUILDING_VILLAGE_PALACE:
+    case BUILDING_TOWN_PALACE:
+    case BUILDING_CITY_PALACE:
+        _ptr = new building_palace(*this);
+        break;
 
     case BUILDING_TAX_COLLECTOR:
     case BUILDING_TAX_COLLECTOR_UPGRADED:
@@ -508,7 +517,6 @@ e_overlay building::get_overlay() const {
         case BUILDING_FIREHOUSE: return OVERLAY_FIRE;
         case BUILDING_POLICE_STATION: return OVERLAY_CRIME;
         case BUILDING_APOTHECARY: return OVERLAY_APOTHECARY;
-        case BUILDING_WATER_SUPPLY: return OVERLAY_WATER;
         case BUILDING_COURTHOUSE: return OVERLAY_COUTHOUSE;
         case BUILDING_SCRIBAL_SCHOOL: return OVERLAY_SCRIBAL_SCHOOL;
         

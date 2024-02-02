@@ -184,34 +184,6 @@ static void draw_hippodrome_ornaments(vec2i pixel, map_point point, painter &ctx
     }
 }
 
-static void draw_palace_rating_flags(const building* b, int x, int y, color color_mask, painter &ctx) {
-    if (b->type == BUILDING_VILLAGE_PALACE || b->type == BUILDING_TOWN_PALACE) {
-        // rating flags
-        int image_id = image_id_from_group(GROUP_BUILDING_PALACE);
-        ImageDraw::img_generic(ctx, image_id + 1, x + 138, y + 44 - city_rating_culture() / 2, color_mask);
-        ImageDraw::img_generic(ctx, image_id + 2, x + 168, y + 36 - city_rating_prosperity() / 2, color_mask);
-        ImageDraw::img_generic(ctx, image_id + 3, x + 198, y + 27 - city_rating_monument() / 2, color_mask);
-        ImageDraw::img_generic(ctx, image_id + 4, x + 228, y + 19 - city_rating_kingdom() / 2, color_mask);
-        // unemployed
-        image_id = image_group(IMG_HOMELESS);
-        int unemployment_pct = city_labor_unemployment_percentage_for_senate();
-        if (unemployment_pct > 0)
-            ImageDraw::img_generic(ctx, image_id + 108, x + 80, y, color_mask);
-
-        if (unemployment_pct > 5)
-            ImageDraw::img_generic(ctx, image_id + 104, x + 230, y - 30, color_mask);
-
-        if (unemployment_pct > 10)
-            ImageDraw::img_generic(ctx, image_id + 107, x + 100, y + 20, color_mask);
-
-        if (unemployment_pct > 15)
-            ImageDraw::img_generic(ctx, image_id + 106, x + 235, y - 10, color_mask);
-
-        if (unemployment_pct > 20)
-            ImageDraw::img_generic(ctx, image_id + 106, x + 66, y + 20, color_mask);
-    }
-}
-
 void draw_ornaments_flat(vec2i point, tile2i tile, painter &ctx) {
     int grid_offset = tile.grid_offset();
     // tile must contain image draw data
@@ -370,7 +342,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
     }
 
     // specific buildings
-    draw_palace_rating_flags(b, point.x, point.y, color_mask, ctx);
     building_workshop_draw_raw_material_storage(ctx, b, point, color_mask);
     building_education_draw_raw_material_storage(ctx, b, point, color_mask);
     //    draw_hippodrome_ornaments(pixel, point);

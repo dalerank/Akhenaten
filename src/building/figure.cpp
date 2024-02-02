@@ -547,45 +547,6 @@ void building::set_water_supply_graphic() {
     //}
 }
 
-void building::spawn_figure_watersupply() {
-    if (!has_water_access) {
-        show_on_problem_overlay = 2;
-    }
-
-    common_spawn_roamer(FIGURE_WATER_CARRIER, 50);
-    //    set_water_supply_graphic();
-
-    //    check_labor_problem();
-    //    if (has_figure_of_type(FIGURE_WATER_CARRIER))
-    //        return;
-    //    map_point road;
-    //    if (map_has_road_access(x, y, size, &road)) {
-    //        spawn_labor_seeker(100);
-    //        int pct_workers = worker_percentage();
-    //        int spawn_delay;
-    //        if (pct_workers >= 100)
-    //            spawn_delay = 0;
-    //        else if (pct_workers >= 75)
-    //            spawn_delay = 1;
-    //        else if (pct_workers >= 50)
-    //            spawn_delay = 3;
-    //        else if (pct_workers >= 25)
-    //            spawn_delay = 7;
-    //        else if (pct_workers >= 1)
-    //            spawn_delay = 15;
-    //        else
-    //            return;
-    //        figure_spawn_delay++;
-    //        if (figure_spawn_delay > spawn_delay) {
-    //            figure_spawn_delay = 0;
-    //            figure *f = figure_create(FIGURE_WATER_CARRIER, road.x, road.y, DIR_0_TOP_RIGHT);
-    //            f->action_state = ACTION_1_ROAMING;
-    //            f->home() = b;
-    //            figure_id = f->id;
-    //        }
-    //    }
-}
-
 void building::set_greate_palace_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
@@ -1003,16 +964,6 @@ void building::update_native_crop_progress() {
 
 void building::update_month() {
     switch (type) {
-    case BUILDING_WATER_SUPPLY: {
-            int avg_desirability = map_desirabilty_avg(tile, 4);
-            if (avg_desirability > 30) {
-                map_building_tiles_add(id, tile, 2, IMG_WATER_SUPPLY_FANCY, TERRAIN_BUILDING);
-            } else {
-                map_building_tiles_add(id, tile, 2, IMG_WATER_SUPPLY, TERRAIN_BUILDING);
-            }
-        }
-        break;
-
     default:
         dcast()->update_month();
         break;
@@ -1123,7 +1074,6 @@ bool building::figure_generate() {
         case BUILDING_GRANARY: spawn_figure_granary(); break;
         case BUILDING_MUD_TOWER: spawn_figure_tower(); break;
         case BUILDING_POLICE_STATION: spawn_figure_police(); break;
-        case BUILDING_WATER_SUPPLY: spawn_figure_watersupply(); break;
         case BUILDING_CONSERVATORY: spawn_figure_musician(); break;
         case BUILDING_DANCE_SCHOOL: spawn_figure_dancer(); break;
         case BUILDING_SENET_HOUSE: spawn_figure_senet(); break;

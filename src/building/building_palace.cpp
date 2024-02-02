@@ -2,19 +2,23 @@
 
 #include "building/building.h"
 #include "city/object_info.h"
+#include "city/ratings.h"
+#include "city/labor.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/view/view.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "grid/property.h"
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
 #include "window/building/common.h"
+#include "widget/city/ornaments.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
 
-void building_palace_draw_info(object_info& c) {
+void building_palace::window_info_background(object_info &c) {
     painter ctx = game.painter();
     c.go_to_advisor.first = ADVISOR_FINANCIAL;
     c.help_id = e_text_building_palace;
@@ -49,4 +53,29 @@ void building_palace_draw_info(object_info& c) {
     window_building_draw_employment(&c, 142);
 
     lang_text_draw(105, 3, c.offset.x + 60, c.offset.y + 220, FONT_NORMAL_BLACK_ON_LIGHT);
+}
+
+bool building_palace::draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx) {
+    return true;
+
+    int color_mask = 0;
+    if (drawing_building_as_deleted(&base) || map_property_is_deleted(tile.grid_offset())) {
+        color_mask = COLOR_MASK_RED;
+    }
+
+    int image_id = image_id_from_group(GROUP_BUILDING_PALACE);
+    ImageDraw::img_generic(ctx, image_id + 1, point.x + 138, point.y + 44 - city_rating_culture() / 2, color_mask);
+    ImageDraw::img_generic(ctx, image_id + 2, point.x + 168, point.y + 36 - city_rating_prosperity() / 2, color_mask);
+    ImageDraw::img_generic(ctx, image_id + 3, point.x + 198, point.y + 27 - city_rating_monument() / 2, color_mask);
+    ImageDraw::img_generic(ctx, image_id + 4, point.x + 228, point.y + 19 - city_rating_kingdom() / 2, color_mask);
+    // unemployed
+    image_id = image_group(IMG_HOMELESS);
+    int unemployment_pct = city_labor_unemployment_percentage_for_senate();
+    if (unemployment_pct > 0)  ImageDraw::img_generic(ctx, image_id + 108, point.x + 80,  point.y, color_mask);
+    if (unemployment_pct > 5)  ImageDraw::img_generic(ctx, image_id + 104, point.x + 230, point.y - 30, color_mask);
+    if (unemployment_pct > 10) ImageDraw::img_generic(ctx, image_id + 107, point.x + 100, point.y + 20, color_mask);
+    if (unemployment_pct > 15) ImageDraw::img_generic(ctx, image_id + 106, point.x + 235, point.y - 10, color_mask);
+    if (unemployment_pct > 20) ImageDraw::img_generic(ctx, image_id + 106, point.x + 66,  point.y + 20, color_mask);
+
+    return true;
 }
