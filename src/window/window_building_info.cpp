@@ -558,13 +558,6 @@ static void draw_refresh_background() {
             case BUILDING_CATTLE_RANCH: building_cattle_ranch_draw_info(context); break;
             case BUILDING_BRICKS_WORKSHOP: building_brick_maker_workshop_draw_info(context); break;
 
-            case BUILDING_BAZAAR:
-                if (context.storage_show_special_orders)
-                    window_building_draw_market_orders(&context);
-                else
-                    window_building_draw_market(&context);
-                break;
-
             case BUILDING_GRANARY:
                 if (context.storage_show_special_orders)
                     window_building_draw_granary_orders(&context);
@@ -700,13 +693,6 @@ static void draw_foreground() {
             } else {
                 window_building_draw_granary_foreground(&context);
             }
-            break;
-
-        case BUILDING_BAZAAR:
-            if (context.storage_show_special_orders)
-                window_building_draw_market_orders_foreground(&context);
-            else
-                window_building_draw_market_foreground(&context);
             break;
 
         case BUILDING_ROADBLOCK:

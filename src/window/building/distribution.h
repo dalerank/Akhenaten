@@ -43,11 +43,6 @@ void window_building_draw_dock_foreground(object_info* c);
 int window_building_handle_mouse_dock(const mouse* m, object_info* c);
 int window_building_handle_mouse_dock_orders(const mouse* m, object_info* c);
 
-void window_building_draw_market(object_info* c);
-void window_building_draw_market_foreground(object_info* c);
-void window_building_draw_market_orders(object_info* c);
-void window_building_draw_market_orders_foreground(object_info* c);
-
 void window_building_draw_granary(object_info* c);
 void window_building_draw_granary_foreground(object_info* c);
 void window_building_draw_granary_orders(object_info* c);
