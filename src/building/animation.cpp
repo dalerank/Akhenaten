@@ -136,10 +136,7 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
         max_frames = img->animation.num_sprites;
     }
 
-    int anim_speed = img->animation.speed_id;
-    // Bugfix: some wrong values from Pharaoh
-
-    anim_speed = b->correct_animation_speed(anim_speed);
+    int anim_speed = b->dcast()->animation_speed(img->animation.speed_id);
 
     if (!game_animation_should_advance(anim_speed)) {
         return map_sprite_animation_at(grid_offset) & 0x7f;

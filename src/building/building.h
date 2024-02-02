@@ -312,7 +312,6 @@ public:
     bool guild_has_resources();
     void workshop_start_production();
 
-    int correct_animation_speed(int anim_speed);
     int get_onespot_ready_production();
 
 public:
@@ -388,6 +387,7 @@ public:
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual bool need_road_access() const { return true; }
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_NONE; }
+    virtual int animation_speed(int speed) const { return speed; }
 
     inline bool is_main() { return base.is_main(); }
     inline void check_labor_problem() { base.check_labor_problem(); }
