@@ -13,6 +13,7 @@
 #include "grid/terrain.h"
 #include "grid/routing/routing.h"
 #include "graphics/image.h"
+#include "window/building/distribution.h"
 
 #include <numeric>
 
@@ -309,4 +310,28 @@ void building_bazaar::spawn_figure() {
             }
         }
     }
+}
+
+int window_building_handle_mouse_market(const mouse* m, object_info* c) {
+    auto &data = g_window_building_distribution;
+    return generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id);
+}
+
+int window_building_handle_mouse_market_orders(const mouse* m, object_info* c) {
+    auto &data = g_window_building_distribution;
+    int y_offset = window_building_get_vertical_offset(c, 28 - 11);
+    data.resource_focus_button_id = 0;
+
+    // resources
+    int num_resources = city_resource_get_available_market_goods()->size;
+    data.building_id = c->building_id;
+    return generic_buttons_handle_mouse(m, c->offset.x + 205, y_offset + 46, data.orders_resource_buttons.data(), num_resources, &data.resource_focus_button_id);
+}
+
+int building_bazaar::window_info_handle_mouse(const mouse *m, object_info &c) {
+    if (c.storage_show_special_orders) {
+        return window_building_handle_mouse_market_orders(m, &c);
+    }
+
+    return window_building_handle_mouse_market(m, &c);
 }

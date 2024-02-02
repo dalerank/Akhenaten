@@ -26,6 +26,7 @@ struct window_building_distribution {
     std::array<generic_button, 20> orders_resource_buttons;
     std::array<image_button, 20> orders_decrease_arrows;
     std::array<image_button, 20> orders_increase_arrows;
+    std::array<generic_button, 1> go_to_orders_button;
 
     window_building_distribution();
 };
@@ -46,9 +47,6 @@ void window_building_draw_market(object_info* c);
 void window_building_draw_market_foreground(object_info* c);
 void window_building_draw_market_orders(object_info* c);
 void window_building_draw_market_orders_foreground(object_info* c);
-
-void window_building_handle_mouse_market(const mouse* m, object_info* c);
-void window_building_handle_mouse_market_orders(const mouse* m, object_info* c);
 
 void window_building_draw_granary(object_info* c);
 void window_building_draw_granary_foreground(object_info* c);

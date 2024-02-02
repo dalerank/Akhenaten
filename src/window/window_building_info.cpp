@@ -838,13 +838,6 @@ static int handle_specific_building_info_mouse(const mouse *m) {
     } else if (context.type == BUILDING_INFO_BUILDING) {
         building *b = building_get(context.building_id);
         switch (building_get(context.building_id)->type) {
-        case BUILDING_BAZAAR:
-            if (context.storage_show_special_orders)
-                window_building_handle_mouse_market_orders(m, &context);
-            else
-                window_building_handle_mouse_market(m, &context);
-            break;
-
         case BUILDING_ROADBLOCK:
             if (context.storage_show_special_orders)
                 return window_building_handle_mouse_roadblock_orders(m, &context);

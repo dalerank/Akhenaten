@@ -31,8 +31,6 @@ static void warehouse_orders(int index, int param2);
 static void market_orders(int index, int param2);
 static void storage_toggle_permissions(int index, int param2);
 
-static generic_button go_to_orders_button[] = {{0, 0, 304, 20, go_to_orders, button_none, 0, 0}};
-
 window_building_distribution::window_building_distribution() {
     orders_resource_buttons = {
         generic_button{0, 20 * 0, 235, 22, toggle_resource_state, toggle_resource_state_backwards, 1, 0},
@@ -101,6 +99,10 @@ window_building_distribution::window_building_distribution() {
         image_button{0, 20 * 17, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 18, 1, true},
         image_button{0, 20 * 18, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 19, 1, true},
         image_button{0, 20 * 19, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, order_quantity_increase_decrease, order_quantity_increase_decrease, 20, 1, true},
+    };
+
+    go_to_orders_button = {
+        {0, 0, 304, 20, go_to_orders, button_none, 0, 0}
     };
 }
 
@@ -223,7 +225,7 @@ static void draw_permissions_buttons(int x, int y, int buttons) {
 
 int window_building_handle_mouse_dock(const mouse* m, object_info* c) {
     auto &data = g_window_building_distribution;
-    return generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, go_to_orders_button, 1, &data.focus_button_id);
+    return generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id);
 }
 int window_building_handle_mouse_dock_orders(const mouse* m, object_info* c) {
     auto &data = g_window_building_distribution;
@@ -311,27 +313,6 @@ void window_building_draw_dock_orders_foreground(object_info* c) {
 #define Y_FOODS 90           // 234
 #define Y_GOODS Y_FOODS + 20 // 174 //274
 
-void window_building_handle_mouse_market(const mouse* m, object_info* c) {
-    auto &data = g_window_building_distribution;
-    generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, go_to_orders_button, 1, &data.focus_button_id);
-}
-void window_building_handle_mouse_market_orders(const mouse* m, object_info* c) {
-    auto &data = g_window_building_distribution;
-    int y_offset = window_building_get_vertical_offset(c, 28 - 11);
-    data.resource_focus_button_id = 0;
-
-    // resources
-    int num_resources = city_resource_get_available_market_goods()->size;
-    data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, c->offset.x + 205, y_offset + 46, data.orders_resource_buttons.data(), num_resources, &data.resource_focus_button_id)) {
-        return;
-    }
-
-    // extra instructions
-    //if (GAME_ENV == ENGINE_ENV_C3)
-    //    generic_buttons_handle_mouse(
-    //      m, c->offset.x + 80, y_offset + 404, market_order_buttons, 1, &data.orders_focus_button_id);
-}
 void window_building_draw_market(object_info* c) {
     c->help_id = 2;
     window_building_play_sound(c, "wavs/market.wav");
@@ -458,7 +439,7 @@ int window_building_handle_mouse_granary(const mouse* m, object_info* c) {
     auto &data = g_window_building_distribution;
     data.building_id = c->building_id;
     generic_buttons_handle_mouse(m, c->offset.x + 58, c->offset.y + 19 * c->height_blocks - 82, warehouse_distribution_permissions_buttons, 1, &data.permission_focus_button_id);
-    generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, go_to_orders_button, 1, &data.focus_button_id);
+    generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id);
     return 0;
 }
 
@@ -626,7 +607,7 @@ static scrollbar_type scrollbar = {590, 52, 336, on_scroll};
 int window_building_handle_mouse_warehouse(const mouse* m, object_info* c) {
     auto &data = g_window_building_distribution;
     data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, go_to_orders_button, 1, &data.focus_button_id)) {
+    if (generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id)) {
     }
     // temp - todo: fix buttons
     //    if (generic_buttons_handle_mouse(m, c->offset.x + 64, c->offset.y + 16 * c->height_blocks - 75,
