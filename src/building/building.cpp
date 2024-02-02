@@ -11,6 +11,7 @@
 #include "building_architect_post.h"
 #include "building/building_tax_collector.h"
 #include "building/building_jugler_school.h"
+#include "building/building_raw_material.h"
 #include "building/storage_yard.h"
 #include "building/building_brewery.h"
 #include "building/monument_mastaba.h"
@@ -160,9 +161,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->output_resource_first_id = RESOURCE_CHICKPEAS;
         b->fire_proof = 1;
         break;
-    case BUILDING_STONE_QUARRY:
-        b->output_resource_first_id = RESOURCE_STONE;
-        break;
     case BUILDING_LIMESTONE_QUARRY:
         b->output_resource_first_id = RESOURCE_LIMESTONE;
         break;
@@ -191,9 +189,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_REED_GATHERER:
         b->output_resource_first_id = RESOURCE_REEDS;
         b->data.industry.max_gatheres = 1;
-        break;
-    case BUILDING_GOLD_MINE:
-        b->output_resource_first_id = RESOURCE_GOLD;
         break;
     case BUILDING_GEMSTONE_MINE:
         b->output_resource_first_id = RESOURCE_GEMS;
@@ -334,6 +329,9 @@ building_impl *building::dcast() {
     case BUILDING_BREWERY_WORKSHOP: _ptr = new building_brewery(*this); break;
     case BUILDING_JUGGLER_SCHOOL: _ptr = new building_juggler_school(*this); break;
     case BUILDING_HUNTING_LODGE: _ptr = new building_hunting_lodge(*this); break;
+    case BUILDING_STONE_QUARRY: _ptr = new building_quarry_stone(*this); break;
+    case BUILDING_GOLD_MINE: _ptr = new building_mine_gold(*this); break;
+
     case BUILDING_TAX_COLLECTOR:
     case BUILDING_TAX_COLLECTOR_UPGRADED:
         _ptr = new building_tax_collector(*this);

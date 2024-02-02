@@ -33,9 +33,9 @@ static void building_raw_material_draw_info(object_info& c, const char* type, e_
     width += text_draw_percentage(pct_done, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(meta.text_id, 3, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    if (!c.has_road_access)
+    if (!c.has_road_access) {
         window_building_draw_description_at(c, 70, 69, 25);
-    else if (city_resource_is_mothballed(resource))
+    } else if (city_resource_is_mothballed(resource))
         window_building_draw_description_at(c, 70, meta.text_id, 4);
     else if (b->data.industry.curse_days_left > 4)
         window_building_draw_description_at(c, 70, meta.text_id, 11);
@@ -63,9 +63,6 @@ void building_marble_quarry_draw_info(object_info& c) {
 void building_limestone_quarry_draw_info(object_info& c) {
     building_raw_material_draw_info(c, "limestone_quarry", RESOURCE_LIMESTONE);
 }
-void building_gold_mine_draw_info(object_info& c) {
-    building_raw_material_draw_info(c, "gold_mine", RESOURCE_GOLD);
-}
 void building_copper_mine_draw_info(object_info& c) {
     building_raw_material_draw_info(c, "copper_mine", RESOURCE_COPPER);
 }
@@ -84,6 +81,27 @@ void building_sandstone_quarry_draw_info(object_info& c) {
 void building_granite_quarry_draw_info(object_info& c) {
     building_raw_material_draw_info(c, "granite_quarry", RESOURCE_SANDSTONE);
 }
-void building_plainstone_quarry_draw_info(object_info& c) {
+
+void building_mine_gold::on_create() {
+    base.output_resource_first_id = RESOURCE_GOLD;
+}
+
+void building_mine_gold::window_info_background(object_info &c) {
+    building_raw_material_draw_info(c, "gold_mine", RESOURCE_GOLD);
+}
+
+int building_mine_gold::get_produce_uptick_per_day() const {
+    if (config_get(CONFIG_GP_CH_GOLDMINE_TWICE_PRODUCTION)) {
+        return base.num_workers / 5.f;
+    } else {
+        return base.num_workers / 10.f;
+    }
+}
+
+void building_quarry_stone::on_create() {
+    base.output_resource_first_id = RESOURCE_STONE;
+}
+
+void building_quarry_stone::window_info_background(object_info &c) {
     building_raw_material_draw_info(c, "plainstone_quarry", RESOURCE_STONE);
 }

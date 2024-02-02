@@ -325,7 +325,12 @@ void window_file_dialog_show(file_type type, file_dialog_type dialog_type) {
                                                          "folders");
     }
 
-    window_type window = {WINDOW_FILE_DIALOG, window_draw_underlying_window, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_FILE_DIALOG,
+        window_draw_underlying_window,
+        draw_foreground,
+        handle_input
+    };
     init(type, dialog_type);
     window_show(&window);
 }

@@ -542,12 +542,10 @@ static void draw_refresh_background() {
                 building_farm_draw_info(context);
                 break;
 
-            case BUILDING_STONE_QUARRY: building_plainstone_quarry_draw_info(context); break;
             case BUILDING_LIMESTONE_QUARRY: building_limestone_quarry_draw_info(context); break;
             case BUILDING_WOOD_CUTTERS: building_timber_yard_draw_info(context); break;
             case BUILDING_CLAY_PIT: building_clay_pit_draw_info(context); break;
             case BUILDING_REED_GATHERER: building_reed_gatherer_draw_info(context); break;
-            case BUILDING_GOLD_MINE: building_gold_mine_draw_info(context); break;
             case BUILDING_COPPER_MINE: building_copper_mine_draw_info(context); break;
             case BUILDING_SANDSTONE_QUARRY: building_sandstone_quarry_draw_info(context); break;
             case BUILDING_GRANITE_QUARRY: building_granite_quarry_draw_info(context); break;;

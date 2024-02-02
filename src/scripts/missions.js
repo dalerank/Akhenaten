@@ -5,7 +5,7 @@ mission0 = { // Nubt
 }
 
 mission5 = { // Timna
-	start_message : 0,
+	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	requests : [
 		{
 			year : 2850,

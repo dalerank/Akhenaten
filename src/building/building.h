@@ -388,6 +388,7 @@ public:
     virtual bool need_road_access() const { return true; }
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_NONE; }
     virtual int animation_speed(int speed) const { return speed; }
+    virtual int get_produce_uptick_per_day() const { return base.num_workers; }
 
     inline bool is_main() { return base.is_main(); }
     inline void check_labor_problem() { base.check_labor_problem(); }

@@ -469,7 +469,9 @@ void tutorial_update_step(int step) {
 
 void tutorial_starting_message() {
     if (!g_scenario_data.meta.start_message_shown) {
-        post_message(g_scenario_data.meta.start_message);
+        if (g_scenario_data.meta.start_message) {
+            post_message(g_scenario_data.meta.start_message);
+        }
         g_scenario_data.meta.start_message_shown = true;
     }
 
@@ -493,7 +495,6 @@ void tutorial_starting_message() {
         g_tutorials_flags.tutorial_5.started = 1;
     }
     if (scenario_is_mission_rank(6) && !g_tutorials_flags.tutorial_6.started) {
-        post_message(MESSAGE_TUTORIAL_SOLDIERS_AND_FORT);
         g_tutorials_flags.tutorial_6.started = 1;
     }
 

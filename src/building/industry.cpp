@@ -110,27 +110,6 @@ float get_farm_produce_uptick_per_day(building &b) {
     return produce_uptick_per_day;
 }
 
-float get_produce_uptick_per_day(building &b) {
-    switch (b.type) {
-    case BUILDING_GOLD_MINE:
-        if (config_get(CONFIG_GP_CH_GOLDMINE_TWICE_PRODUCTION)) {
-            return b.num_workers / 5.f;
-        } else {
-            return b.num_workers / 10.f;
-        }
-        break;
-
-    case BUILDING_STONE_QUARRY:
-        return b.num_workers / 2.f;
-        break;
-
-    default:
-        break;
-    }
-
-    return b.num_workers;
-}
-
 // void building_bless_farms(void) {
 //     for (int i = 1; i < MAX_BUILDINGS; i++) {
 //         building *b = building_get(i);
@@ -186,10 +165,11 @@ void building_industry_update_production(void) {
                 b.data.industry.blessing_days_left--;
             }
 
-            b.data.industry.progress += get_produce_uptick_per_day(b);
+            int progress_per_day = b.dcast()->get_produce_uptick_per_day();
+            b.data.industry.progress += progress_per_day;
 
             if (b.data.industry.blessing_days_left && building_is_farm(b.type)) {
-                const float normal_progress = get_produce_uptick_per_day(b);
+                const float normal_progress = progress_per_day;
                 b.data.industry.progress += normal_progress;
             }
 
