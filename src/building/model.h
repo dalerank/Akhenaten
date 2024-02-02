@@ -3,11 +3,6 @@
 #include "building/building_type.h"
 
 /**
- * @file
- * Building models.
- */
-
-/**
  * Building model
  */
 struct model_building {

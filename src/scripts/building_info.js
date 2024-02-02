@@ -25,12 +25,23 @@ building_info = [
   { help_id:92, type:"bricklayers_guild", text_id:172},
 ]
 
+building_personal_mansion = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_PERSONAL_MANSION }
+  }
+}
+
 building_booth = {
-  juggler_anim : {
-    pos_x : 35,
-    pos_y : 17,
-    base_id : IMG_BOOTH,
-    anim_id : IMG_JUGGLER_SHOW,
+  animations : {
+    juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW }
+  }
+}
+
+building_bandstand = {
+  animations : {
+    juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW },
+    musician_sn : { pos : [45, 7], base_id : IMG_BANDSTAND_SN_S, anim_id : IMG_MUSICIAN_SHOW_SN, max_frames : 12 },
+    musician_we : { pos : [48, 4], base_id : IMG_BANDSTAND_SN_S, anim_id : IMG_MUSICIAN_SHOW_WE, max_frames : 12 }
   }
 }
 
@@ -40,30 +51,5 @@ building_scribal_school = {
   info : {
     icon_res : {x: 32, y: 106},
     text_res : {x: 60, y: 110},
-  }
-}
-
-building_bandstand = {
-  juggler_anim : {
-    pos_x : 35,
-    pos_y : 17,
-    base_id : IMG_BOOTH,
-    anim_id : IMG_JUGGLER_SHOW,
-  },
-
-  musician_anim_sn : {
-    pos_x : 45,
-    pos_y : 7,
-    base_id : IMG_BANDSTAND_SN_S,
-    anim_id : IMG_MUSICIAN_SHOW_SN,
-    max_frames : 12,
-  },
-
-  musician_anim_we : {
-    pos_x : 48,
-    pos_y : 4,
-    base_id : IMG_BANDSTAND_SN_S,
-    anim_id : IMG_MUSICIAN_SHOW_WE,
-    max_frames : 12,
   }
 }

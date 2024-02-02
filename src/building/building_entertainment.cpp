@@ -13,8 +13,7 @@
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
-
-#include "js/js_game.h"
+#include "graphics/animation.h"
 
 void building_entertainment_school_draw_info(object_info& c, pcstr type, int group_id) {
     c.help_id = 75;
@@ -53,46 +52,25 @@ void building_bullfight_school_draw_info(object_info& c) {
     building_entertainment_school_draw_info(c, "bullfight_school", 78);
 }
 
-struct anim_t {
-    vec2i pos;
-    e_image_id base_id;
-    e_image_id anim_id;
-    int max_frames;
-
-    void load(archive arch, pcstr section) {
-        arch.r_section(section, [this] (archive arch) {
-           pos.x = arch.r_int("pos_x");
-           pos.y = arch.r_int("pos_y");
-           base_id = (e_image_id)arch.r_int("base_id");
-           anim_id = (e_image_id)arch.r_int("anim_id");
-           max_frames = arch.r_int("max_frames");
-        });
-    }
-};
-
 struct building_booth_t {
-    anim_t juggler;
+    animations_t anim;
 } building_booth;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_booth_config);
 void config_load_building_booth_config() {
     g_config_arch.r_section("building_booth", [] (archive arch) {
-        building_booth.juggler.load(arch, "juggler_anim");
+        building_booth.anim.load(arch);
     });
 }
 
 struct building_bandstand_t {
-    anim_t juggler;
-    anim_t musician_sn;
-    anim_t musician_we;
+    animations_t anim;
 } building_bandstand;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bandstand_config);
 void config_load_building_bandstand_config() {
     g_config_arch.r_section("building_bandstand", [] (archive arch) {
-        building_bandstand.juggler.load(arch, "juggler_anim");
-        building_bandstand.musician_sn.load(arch, "musician_anim_sn");
-        building_bandstand.musician_we.load(arch, "musician_anim_we");
+        building_bandstand.anim.load(arch);
     });
 }
 
@@ -104,17 +82,17 @@ void building_entertainment_draw_shows_dancers(painter &ctx, building* b, vec2i 
 }
 
 void building_entertainment_draw_show_jugglers(painter &ctx, building* b, vec2i pixel, color color_mask) {
-    const anim_t *config = nullptr;
+    const animation_t *config = nullptr;
 
     switch (b->type) {
     case BUILDING_BOOTH:
-        config = &building_booth.juggler;
+        config = &building_booth.anim["juggler"];
         break;
     case BUILDING_BANDSTAND:
-        config = &building_bandstand.juggler;
+        config = &building_bandstand.anim["juggler"];
         break;
     case BUILDING_PAVILLION:
-        config = &building_booth.juggler;
+        config = &building_booth.anim["juggler"];
         break;
     }
     if (!config) {
@@ -136,17 +114,17 @@ void building_entertainment_draw_shows_musicians(painter &ctx, building* b, vec2
         building* next_tile = b->next();
         switch (direction) {
         case 0:
-            building_draw_normal_anim(ctx, pixel + building_bandstand.musician_sn.pos, b, b->tile, 
-                                      image_group(building_bandstand.musician_sn.anim_id), color_mask,
-                                      image_group(building_bandstand.musician_sn.base_id),
-                                      building_bandstand.musician_sn.max_frames);
+            {
+                const animation_t &anim = building_bandstand.anim["musician_sn"];
+                building_draw_normal_anim(ctx, pixel, b, b->tile, anim, color_mask);
+            }
             break;
 
         case 1:
-            building_draw_normal_anim(ctx, pixel + vec2i{48, 4}, b, b->tile,
-                                      image_group(building_bandstand.musician_we.anim_id), color_mask,
-                                      image_group(building_bandstand.musician_we.base_id),
-                                      building_bandstand.musician_we.max_frames);
+            {
+                const animation_t &anim = building_bandstand.anim["musician_we"];
+                building_draw_normal_anim(ctx, pixel, b, b->tile, anim, color_mask);
+            }
             break;
         }
     }

@@ -63,7 +63,7 @@ public:
     inline ref cat(pcstr s1,pcstr s2, pcstr s3, pcstr s4) { snprintf(_data, _size, "%s%s%s%s%s", _data, s1, s2, s3, s4); return *this; }
     inline ref cat(pcstr*s1,pcstr s2, pcstr s3, pcstr s4, pcstr s5) { snprintf(_data, _size, "%s%s%s%s%s%s", _data, s1, s2, s3, s4, s5); return *this; }
 
-    inline ref ncat(const char* s, size_t cnt) { ::strncat(_data, s, cnt); return *this; }
+    inline ref ncat(pcstr s, size_t cnt) { ::strncat(_data, s, cnt); return *this; }
 
     template <typename... Args>
     inline ref append(pcstr fmt, Args&&... args) {
@@ -173,14 +173,14 @@ public:
     inline bool empty() const { return !_data[0]; }
     inline void clear() { _data[0] = 0; }
     inline bool equals(const_ref other) const { return ::strncmp(_data, other._data, _size) == 0; }
-    inline bool equals(const char* s) const { assert(s); return ::strncmp(_data, s, _size) == 0; }
+    inline bool equals(pcstr s) const { assert(s); return ::strncmp(_data, s, _size) == 0; }
     inline void operator=(const_ref other) { ::strncpy(_data, other._data, _size); }
-    inline void operator=(const char* s) { ::snprintf(_data, _size, "%s", s ? s : "null"); }
+    inline void operator=(pcstr s) { ::snprintf(_data, _size, "%s", s ? s : "null"); }
     inline void operator=(const uint8_t* s) { ::snprintf(_data, _size, "%s",  s ? (const char*)s : "null"); }
     inline bool operator==(const_ref other) const { return equals(other); }
     inline operator const uint8_t *() const { return (const uint8_t *)_data; }
     inline operator uint8_t *() { return (uint8_t *)_data; }
-    inline bool operator==(const char* s) const { assert(s); return ::strncmp(_data, s, _size) == 0; }
+    inline bool operator==(pcstr s) const { assert(s); return ::strncmp(_data, s, _size) == 0; }
 
     inline bool operator!=(const_ref other) const { return !equals(other); }
     inline bool operator!=(const char* s) const { assert(s); return ::strncmp(_data, s, _size) != 0; }

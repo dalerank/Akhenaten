@@ -1,6 +1,6 @@
 #include "ornaments.h"
 
-#include "building/animation.h"
+#include "building/building_animation.h"
 #include "building/building.h"
 #include "building/model.h"
 #include "building/dock.h"
@@ -30,15 +30,30 @@
 
 /////// ANIMATIONS
 
+void building_draw_normal_anim(painter &ctx, vec2i pixel, building *b, tile2i tile, const animation_t &anim, int color_mask) {
+    if (anim.anim_id <= 0) {
+        return;
+    }
+    int anim_id = image_group(anim.anim_id);
+    int base_id = anim.base_id > 0 ? image_group(anim.base_id) : 0;
+
+    building_draw_normal_anim(ctx, pixel + anim.pos, b, tile, anim_id, color_mask, base_id, anim.max_frames);
+}
+
 void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile, int sprite_id, int color_mask, int base_id, int max_frames) {
+    if (!sprite_id) {
+        return;
+    }
+
     int grid_offset = tile.grid_offset();
     if (!base_id) {
         base_id = map_image_at(grid_offset);
     }
 
     int animation_offset = building_animation_offset(b, base_id, grid_offset, max_frames);
-    if (animation_offset == 0)
+    if (animation_offset == 0) {
         return;
+    }
 
     if (base_id == sprite_id) {
         ImageDraw::img_ornament(ctx, sprite_id + animation_offset, base_id, pos.x, pos.y, color_mask);

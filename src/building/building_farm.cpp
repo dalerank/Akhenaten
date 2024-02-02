@@ -1,7 +1,7 @@
 #include "building_farm.h"
 
 #include "building/building.h"
-#include "building/animation.h"
+#include "building/building_animation.h"
 #include "city/object_info.h"
 #include "city/resource.h"
 #include "core/calc.h"
