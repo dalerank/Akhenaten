@@ -41,10 +41,6 @@ void lang_text_draw_centered(int group, int number, int x_offset, int y_offset, 
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 
-void lang_text_draw_centered(const char* text, int x_offset, int y_offset, int box_width, e_font font) {
-    text_draw_centered((const uint8_t*)text, x_offset, y_offset, box_width, font, 0);
-}
-
 void lang_text_draw_centered_colored(int group, int number, int x_offset, int y_offset, int box_width, e_font font, color color) {
     const uint8_t* str = lang_get_string(group, number);
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);

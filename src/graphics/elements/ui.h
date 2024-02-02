@@ -24,6 +24,7 @@ enum UiFlags_ {
     UiFlags_LabelCentered = 1 << 1,
     UiFlags_PanelOuter = 1 << 2,
     UiFlags_PanelInner = 1 << 3,
+    UiFlags_LabelMultiline = 1 << 4,
 };
 
 namespace ui {

@@ -120,7 +120,7 @@ sidebar_data_t g_sidebar_data;
 static void draw_overlay_text(int x_offset) {
     if (game_state_overlay()) {
         const char *overlay_text = game_state_overlay_text(game_state_overlay());
-        lang_text_draw_centered(overlay_text, x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_LIGHT);
+        text_draw_centered((uint8_t*)overlay_text, x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     } else {
         const bool is_button_focused = buttons_overlays_collapse_sidebar[1].focused;
         lang_text_draw_centered(6, 4, x_offset - 15, 30, 117, is_button_focused ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_BLACK_ON_LIGHT);

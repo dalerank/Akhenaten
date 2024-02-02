@@ -207,7 +207,7 @@ static void draw_foreground() {
             label_draw(x_offset - 348, 74 + 24 * (i + data.selected_menu), 10, data.submenu_focus_button_id == i + 1 ? 1 : 2);
 
             const char* text = game_state_overlay_text(submenu_id_to_overlay[data.selected_submenu][i]);
-            lang_text_draw_centered(text, x_offset - 348, 77 + 24 * (i + data.selected_menu), 160, FONT_NORMAL_BLACK_ON_DARK);
+            text_draw_centered((uint8_t*)text, x_offset - 348, 77 + 24 * (i + data.selected_menu), 160, FONT_NORMAL_BLACK_ON_DARK, 0);
         }
     }
 }

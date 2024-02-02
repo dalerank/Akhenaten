@@ -369,7 +369,7 @@ void building_bazaar::draw_simple_background(object_info &c) {
     }
 
     if (reason.first) {
-        lang_text_draw_multiline(reason.first, reason.second, c.offset + vec2i{32, 56}, 16 * (c.width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+        ui::label(reason.first, reason.second, vec2i{32, 56}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelMultiline, 16 * (c.width_blocks - 4));
         return;
     }
 
