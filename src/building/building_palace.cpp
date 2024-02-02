@@ -78,7 +78,6 @@ void building_palace::window_info_background(object_info &c) {
 }
 
 bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-
     switch (type()) {
     case BUILDING_VILLAGE_PALACE:
         if (worker_percentage() > 50) {

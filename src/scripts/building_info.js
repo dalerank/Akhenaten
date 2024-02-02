@@ -52,6 +52,13 @@ building_village_palace = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
 }
 
+building_hunting_lodge = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_HUNTING_LODGE }
+  },
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
 building_scribal_school = {
   papyrus_icon : {x: 61, y: 14},
 
