@@ -210,23 +210,6 @@ int building::worker_percentage() {
     return calc_percentage<int>(num_workers, model_get_building(type)->laborers);
 }
 
-int building::figure_hunting_longe_spawn_timer() {
-    int pct_workers = worker_percentage();
-    if (pct_workers >= 100) {
-        return 1;
-    } else if (pct_workers >= 75) {
-        return 5;
-    } else if (pct_workers >= 50) {
-        return 10;
-    } else if (pct_workers >= 25) {
-        return 15;
-    } else if (pct_workers >= 1) {
-        return 30;
-    } else {
-        return -1;
-    }
-}
-
 int building::figure_spawn_timer() {
     int pct_workers = worker_percentage();
     if (pct_workers >= 100) {
@@ -880,46 +863,6 @@ void building::spawn_figure_granary() {
     }
 }
 
-bool building::can_spawn_ostrich_hunter() { // no cache because fuck the system (also I can't find the memory offset for this)
-    if (has_figure_of_type(BUILDING_SLOT_HUNTER, FIGURE_OSTRICH_HUNTER)) {
-        return false;
-    }
-
-    return (stored_full_amount < 500);
-}
-
-void building::spawn_figure_hunting_lodge() {
-    check_labor_problem();
-
-    if (!has_road_access) {
-        return;
-    }
-    
-    if (num_workers < model_get_building(BUILDING_HUNTING_LODGE)->laborers) {
-        common_spawn_labor_seeker(100);
-    }
-
-    int spawn_delay = figure_hunting_longe_spawn_timer();
-    if (spawn_delay == -1) { // no workers
-        return;
-    }
-
-    figure_spawn_delay++;
-    if (figure_spawn_delay < spawn_delay) {
-        return;
-    }
-
-    if (can_spawn_ostrich_hunter()) {
-        figure_spawn_delay = 10;
-        figure* f = create_figure_generic(FIGURE_OSTRICH_HUNTER, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
-        set_figure(BUILDING_SLOT_HUNTER, f);
-    }
-
-    if (common_spawn_goods_output_cartpusher()) {
-        figure_spawn_delay = 10;
-    }
-}
-
 int building::get_figures_number(e_figure_type ftype) {
     int gatherers_this_yard = 0;
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -1238,7 +1181,6 @@ bool building::figure_generate() {
             common_spawn_figure_trigger(100);
             break;
 
-        case BUILDING_HUNTING_LODGE: spawn_figure_hunting_lodge(); break;
         default:
             dcast()->spawn_figure();
             break;

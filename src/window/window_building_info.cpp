@@ -542,7 +542,6 @@ static void draw_refresh_background() {
                 building_farm_draw_info(context);
                 break;
 
-            case BUILDING_HUNTING_LODGE: building_hunting_lodge_draw_info(context); break;
             case BUILDING_STONE_QUARRY: building_plainstone_quarry_draw_info(context); break;
             case BUILDING_LIMESTONE_QUARRY: building_limestone_quarry_draw_info(context); break;
             case BUILDING_WOOD_CUTTERS: building_timber_yard_draw_info(context); break;

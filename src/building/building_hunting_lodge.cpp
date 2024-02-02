@@ -1,6 +1,7 @@
 #include "building_hunting_lodge.h"
 
-#include "building/building.h"
+#include "building/model.h"
+#include "core/direction.h"
 #include "city/object_info.h"
 #include "city/resource.h"
 #include "game/resource.h"
@@ -16,7 +17,7 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 
-void building_hunting_lodge_draw_info(object_info &c) {
+void building_hunting_lodge::window_info_background(object_info &c) {
     painter ctx = game.painter();
     int group_id = 154;
     c.help_id = 90;
@@ -55,4 +56,67 @@ void building_hunting_lodge_draw_info(object_info &c) {
 
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
     window_building_draw_employment(&c, 142);
+}
+
+void building_hunting_lodge::on_create() {
+    base.output_resource_first_id = RESOURCE_GAMEMEAT;
+}
+
+
+int building_hunting_lodge::spawn_timer() {
+    int pct_workers = worker_percentage();
+    if (pct_workers >= 100) {
+        return 1;
+    } else if (pct_workers >= 75) {
+        return 5;
+    } else if (pct_workers >= 50) {
+        return 10;
+    } else if (pct_workers >= 25) {
+        return 15;
+    } else if (pct_workers >= 1) {
+        return 30;
+    } else {
+        return -1;
+    }
+}
+
+
+bool building_hunting_lodge::can_spawn_ostrich_hunter() { // no cache because fuck the system (also I can't find the memory offset for this)
+    if (has_figure_of_type(BUILDING_SLOT_HUNTER, FIGURE_OSTRICH_HUNTER)) {
+        return false;
+    }
+
+    return (base.stored_full_amount < 500);
+}
+
+void building_hunting_lodge::spawn_figure() {
+    check_labor_problem();
+
+    if (!base.has_road_access) {
+        return;
+    }
+
+    if (base.num_workers < model_get_building(BUILDING_HUNTING_LODGE)->laborers) {
+        common_spawn_labor_seeker(100);
+    }
+
+    int spawn_delay = spawn_timer();
+    if (spawn_delay == -1) { // no workers
+        return;
+    }
+
+    base.figure_spawn_delay++;
+    if (base.figure_spawn_delay < spawn_delay) {
+        return;
+    }
+
+    if (can_spawn_ostrich_hunter()) {
+        base.figure_spawn_delay = 10;
+        figure* f = base.create_figure_generic(FIGURE_OSTRICH_HUNTER, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
+        base.set_figure(BUILDING_SLOT_HUNTER, f);
+    }
+
+    if (base.common_spawn_goods_output_cartpusher()) {
+        base.figure_spawn_delay = 10;
+    }
 }

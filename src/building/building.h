@@ -302,7 +302,6 @@ public:
     figure* create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, e_building_slot slot = BUILDING_SLOT_CARTPUSHER);
 
     int worker_percentage();
-    int figure_hunting_longe_spawn_timer();
     int figure_spawn_timer();
     void check_labor_problem();
     bool common_spawn_figure_trigger(int min_houses);
@@ -343,7 +342,6 @@ public:
     void spawn_figure_shipyard();
     void spawn_figure_dock();
     void spawn_figure_granary();
-    void spawn_figure_hunting_lodge();
     void spawn_figure_reed_gatherers();
     void spawn_figure_wood_cutters();
     void spawn_figure_native_hut();
@@ -351,7 +349,6 @@ public:
     void spawn_figure_tower();
     void spawn_figure_barracks();
 
-    bool can_spawn_ostrich_hunter();
     int get_figures_number(e_figure_type ftype);
     bool can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person);
     bool can_spawn_bricklayer_man(e_figure_type ftype, int max_gatherers_per_building);
@@ -393,6 +390,10 @@ public:
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_NONE; }
 
     inline bool is_main() { return base.is_main(); }
+    inline void check_labor_problem() { base.check_labor_problem(); }
+    inline bool has_figure_of_type(int i, e_figure_type _type) { return base.has_figure_of_type(i, _type);  }
+    inline int worker_percentage() { return base.worker_percentage(); }
+    inline void common_spawn_labor_seeker(int min_houses) { base.common_spawn_labor_seeker(min_houses); }
     inline figure *create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) { return base.create_roaming_figure(_type, created_action, slot); }
     inline bool common_spawn_figure_trigger(int min_houses) { return base.common_spawn_figure_trigger(min_houses); }
     inline bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) { return base.common_spawn_roamer(type, min_houses, created_action); }

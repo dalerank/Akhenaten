@@ -22,6 +22,7 @@
 #include "building/building_well.h"
 #include "building/building_shrine.h"
 #include "building/building_mansion.h"
+#include "building/building_hunting_lodge.h"
 #include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
@@ -184,9 +185,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->data.industry.first_material_id = RESOURCE_GEMS;
         b->output_resource_first_id = RESOURCE_LUXURY_GOODS;
         break;
-    case BUILDING_HUNTING_LODGE:
-        b->output_resource_first_id = RESOURCE_GAMEMEAT;
-        break;
     case BUILDING_SCRIBAL_SCHOOL:
         b->data.entertainment.consume_material_id = RESOURCE_PAPYRUS;
         break;
@@ -335,6 +333,7 @@ building_impl *building::dcast() {
     case BUILDING_WELL: _ptr = new building_well(*this); break;
     case BUILDING_BREWERY_WORKSHOP: _ptr = new building_brewery(*this); break;
     case BUILDING_JUGGLER_SCHOOL: _ptr = new building_juggler_school(*this); break;
+    case BUILDING_HUNTING_LODGE: _ptr = new building_hunting_lodge(*this); break;
     case BUILDING_TAX_COLLECTOR:
     case BUILDING_TAX_COLLECTOR_UPGRADED:
         _ptr = new building_tax_collector(*this);
