@@ -345,76 +345,91 @@ int building_bazaar::window_info_handle_mouse(const mouse *m, object_info &c) {
 void building_bazaar::draw_simple_background(object_info &c) {
     c.help_id = 2;
     window_building_play_sound(&c, "wavs/market.wav");
-    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
-    lang_text_draw_centered(97, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    building* b = building_get(c.building_id);
+    {
+        ui::begin_widget(c.offset);
+
+        ui::panel({0, 0}, {c.width_blocks, c.height_blocks}, UiFlags_PanelOuter);
+        ui::label(97, 0, vec2i{0, 10}, FONT_LARGE_BLACK_ON_LIGHT, UiFlags_LabelCentered, 16 * c.width_blocks);
+
+        ui::panel({16, 136}, {c.width_blocks - 2, 4}, UiFlags_PanelInner);
+
+        int text_id = get_employment_info_text_id(&c, &base, 142, 1);
+        draw_employment_details(&c, &base, 142, text_id);
+    }
     painter ctx = game.painter();
     e_font font;
-    if (!c.has_road_access)
-        window_building_draw_description(c, 69, 25);
-    else if (b->num_workers <= 0)
-        window_building_draw_description(c, 97, 2);
-    else {
-        int image_id = image_id_resource_icon(0);
-        if (b->data.market.inventory[0] || b->data.market.inventory[1] || b->data.market.inventory[2]
-            || b->data.market.inventory[3]) {
-                {
-                    //
-                }
-        } else {
-            window_building_draw_description_at(c, 48, 97, 4);
-        }
 
-        // food stocks
-        // todo: fetch map available foods?
-        int food1 = ALLOWED_FOODS(0);
-        int food2 = ALLOWED_FOODS(1);
-        int food3 = ALLOWED_FOODS(2);
-        int food4 = ALLOWED_FOODS(3);
-
-        if (food1) {
-            font = is_good_accepted(0, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
-            ImageDraw::img_generic(ctx, image_id + food1, c.offset + vec2i{32, Y_FOODS});
-            text_draw_number(b->data.market.inventory[0], '@', " ", c.offset.x + 64, c.offset.y + Y_FOODS + 4, font);
-        }
-
-        if (food2) {
-            font = is_good_accepted(1, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
-            ImageDraw::img_generic(ctx, image_id + food2, c.offset + vec2i{142, Y_FOODS});
-            text_draw_number(b->data.market.inventory[1], '@', " ", c.offset.x + 174, c.offset.y + Y_FOODS + 4, font);
-        }
-
-        if (food3) {
-            font = is_good_accepted(2, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
-            ImageDraw::img_generic(ctx, image_id + food3, c.offset + vec2i{252, Y_FOODS});
-            text_draw_number(b->data.market.inventory[2], '@', " ", c.offset.x + 284, c.offset.y + Y_FOODS + 4, font);
-        }
-
-        if (food4) {
-            font = is_good_accepted(3, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
-            ImageDraw::img_generic(ctx, image_id + food4, c.offset + vec2i{362, Y_FOODS});
-            text_draw_number(b->data.market.inventory[3], '@', " ", c.offset.x + 394, c.offset.y + Y_FOODS + 4, font);
-        }
-
-        // good stocks
-        font = is_good_accepted(INVENTORY_GOOD1, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
-        ImageDraw::img_generic(ctx, image_id + INV_RESOURCES[0], c.offset.x + 32, c.offset.y + Y_GOODS);
-        text_draw_number(b->data.market.inventory[INVENTORY_GOOD1], '@', " ", c.offset.x + 64, c.offset.y + Y_GOODS + 4, font);
-
-        font = is_good_accepted(INVENTORY_GOOD2, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
-        ImageDraw::img_generic(ctx, image_id + INV_RESOURCES[1], c.offset.x + 142, c.offset.y + Y_GOODS);
-        text_draw_number(b->data.market.inventory[INVENTORY_GOOD2], '@', " ", c.offset.x + 174, c.offset.y + Y_GOODS + 4, font);
-
-        font = is_good_accepted(INVENTORY_GOOD3, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
-        ImageDraw::img_generic(ctx, image_id + INV_RESOURCES[2], c.offset.x + 252, c.offset.y + Y_GOODS);
-        text_draw_number(b->data.market.inventory[INVENTORY_GOOD3], '@', " ", c.offset.x + 284, c.offset.y + Y_GOODS + 4, font);
-
-        font = is_good_accepted(INVENTORY_GOOD4, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
-        ImageDraw::img_generic(ctx, image_id + INV_RESOURCES[3], c.offset.x + 362, c.offset.y + Y_GOODS);
-        text_draw_number(b->data.market.inventory[INVENTORY_GOOD4], '@', " ", c.offset.x + 394, c.offset.y + Y_GOODS + 4, font);
+    std::pair<int, int> reason = {0, 0};
+    if (!c.has_road_access) {
+        reason = {69, 25};
     }
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
-    window_building_draw_employment(&c, 142);
+
+    if (base.num_workers <= 0) {
+        reason = {97, 2};
+    }
+
+    if (reason.first) {
+        lang_text_draw_multiline(reason.first, reason.second, c.offset + vec2i{32, 56}, 16 * (c.width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+        return;
+    }
+
+    int image_id = image_id_resource_icon(0);
+    if (data.market.inventory[0] || data.market.inventory[1] || data.market.inventory[2]
+        || data.market.inventory[3]) {
+            {
+                //
+            }
+    } else {
+        window_building_draw_description_at(c, 48, 97, 4);
+    }
+
+    // food stocks
+    // todo: fetch map available foods?
+    int food1 = ALLOWED_FOODS(0);
+    int food2 = ALLOWED_FOODS(1);
+    int food3 = ALLOWED_FOODS(2);
+    int food4 = ALLOWED_FOODS(3);
+
+    if (food1) {
+        font = is_good_accepted(0, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+        ImageDraw::img_generic(ctx, image_id + food1, c.offset + vec2i{32, Y_FOODS});
+        text_draw_number(data.market.inventory[0], '@', " ", c.offset.x + 64, c.offset.y + Y_FOODS + 4, font);
+    }
+
+    if (food2) {
+        font = is_good_accepted(1, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+        ImageDraw::img_generic(ctx, image_id + food2, c.offset + vec2i{142, Y_FOODS});
+        text_draw_number(data.market.inventory[1], '@', " ", c.offset.x + 174, c.offset.y + Y_FOODS + 4, font);
+    }
+
+    if (food3) {
+        font = is_good_accepted(2, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+        ImageDraw::img_generic(ctx, image_id + food3, c.offset + vec2i{252, Y_FOODS});
+        text_draw_number(data.market.inventory[2], '@', " ", c.offset.x + 284, c.offset.y + Y_FOODS + 4, font);
+    }
+
+    if (food4) {
+        font = is_good_accepted(3, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+        ImageDraw::img_generic(ctx, image_id + food4, c.offset + vec2i{362, Y_FOODS});
+        text_draw_number(data.market.inventory[3], '@', " ", c.offset.x + 394, c.offset.y + Y_FOODS + 4, font);
+    }
+
+    // good stocks
+    font = is_good_accepted(INVENTORY_GOOD1, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+    ImageDraw::img_generic(ctx, image_id + INV_RESOURCES[0], c.offset.x + 32, c.offset.y + Y_GOODS);
+    text_draw_number(data.market.inventory[INVENTORY_GOOD1], '@', " ", c.offset.x + 64, c.offset.y + Y_GOODS + 4, font);
+
+    font = is_good_accepted(INVENTORY_GOOD2, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+    ImageDraw::img_generic(ctx, image_id + INV_RESOURCES[1], c.offset.x + 142, c.offset.y + Y_GOODS);
+    text_draw_number(data.market.inventory[INVENTORY_GOOD2], '@', " ", c.offset.x + 174, c.offset.y + Y_GOODS + 4, font);
+
+    font = is_good_accepted(INVENTORY_GOOD3, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+    ImageDraw::img_generic(ctx, image_id + INV_RESOURCES[2], c.offset.x + 252, c.offset.y + Y_GOODS);
+    text_draw_number(data.market.inventory[INVENTORY_GOOD3], '@', " ", c.offset.x + 284, c.offset.y + Y_GOODS + 4, font);
+
+    font = is_good_accepted(INVENTORY_GOOD4, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+    ImageDraw::img_generic(ctx, image_id + INV_RESOURCES[3], c.offset.x + 362, c.offset.y + Y_GOODS);
+    text_draw_number(data.market.inventory[INVENTORY_GOOD4], '@', " ", c.offset.x + 394, c.offset.y + Y_GOODS + 4, font);
 }
 
 void building_bazaar::draw_orders_background(object_info &c) {

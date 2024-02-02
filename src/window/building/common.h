@@ -1,10 +1,13 @@
 #pragma once
 
+#include "building/building.h"
 #include "city/object_info.h"
 
 static const int MIN_Y_POSITION = 32;
 static const int MARGIN_POSITION = 16;
 
+int get_employment_info_text_id(object_info *c, building *b, int y_offset, int consider_house_covering);
+void draw_employment_details(object_info *c, building *b, int y_offset, int text_id);
 void window_building_set_possible_position(int* x_offset, int* y_offset, int width_blocks, int height_blocks);
 int window_building_get_vertical_offset(object_info* c, int new_window_height);
 

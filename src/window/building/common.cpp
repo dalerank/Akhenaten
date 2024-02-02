@@ -52,7 +52,7 @@ int window_building_get_vertical_offset(object_info* c, int new_window_height) {
     return new_window_y;
 }
 
-static int get_employment_info_text_id(object_info* c, building* b, int y_offset, int consider_house_covering) {
+int get_employment_info_text_id(object_info* c, building* b, int y_offset, int consider_house_covering) {
     int text_id;
     if (b->num_workers >= model_get_building(b->type)->laborers)
         text_id = 0;
@@ -75,7 +75,7 @@ static int get_employment_info_text_id(object_info* c, building* b, int y_offset
     return text_id;
 }
 
-static void draw_employment_details(object_info* c, building* b, int y_offset, int text_id) {
+void draw_employment_details(object_info* c, building* b, int y_offset, int text_id) {
     painter ctx = game.painter();
     y_offset += c->offset.y;
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 14, vec2i{c->offset.x + 40, y_offset + 6});
@@ -103,11 +103,13 @@ void window_building_draw_employment(object_info* c, int y_offset) {
     int text_id = get_employment_info_text_id(c, b, y_offset, 1);
     draw_employment_details(c, b, y_offset, text_id);
 }
+
 void window_building_draw_employment_without_house_cover(object_info* c, int y_offset) {
     building* b = building_get(c->building_id);
     int text_id = get_employment_info_text_id(c, b, y_offset, 0);
     draw_employment_details(c, b, y_offset, text_id);
 }
+
 void window_building_draw_employment_flood_farm(object_info* c, int y_offset) {
     building* b = building_get(c->building_id);
     int text_id = 5;
