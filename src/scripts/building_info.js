@@ -46,6 +46,9 @@ building_bandstand = {
 }
 
 building_village_palace = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_VILLAGE_PALACE }
+  },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
 }
 
