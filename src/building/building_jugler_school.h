@@ -10,5 +10,4 @@ public:
     virtual void spawn_figure() override;
     virtual void update_month() override;
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_JUGGLER_SCHOOL; }
-
 };

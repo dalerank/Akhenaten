@@ -1,7 +1,7 @@
 log_info("akhenaten: missions started")
 
 mission0 = { // Nubt
-	start_message : 150, //TUTORIAL_HOUSING_AND_ROADS
+	start_message : 150, //TUTORIAL_HOUSING_AND_ROADS, 248 = 150 + 99 - 1
 }
 
 mission5 = { // Timna

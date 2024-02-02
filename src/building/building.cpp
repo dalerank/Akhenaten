@@ -10,6 +10,7 @@
 #include "building/building_firehouse.h"
 #include "building_architect_post.h"
 #include "building/building_tax_collector.h"
+#include "building/building_jugler_school.h"
 #include "building/storage_yard.h"
 #include "building/building_brewery.h"
 #include "building/monument_mastaba.h"
@@ -333,6 +334,7 @@ building_impl *building::dcast() {
     case BUILDING_POTTERY_WORKSHOP: _ptr = new building_pottery(*this); break;
     case BUILDING_WELL: _ptr = new building_well(*this); break;
     case BUILDING_BREWERY_WORKSHOP: _ptr = new building_brewery(*this); break;
+    case BUILDING_JUGGLER_SCHOOL: _ptr = new building_juggler_school(*this); break;
     case BUILDING_TAX_COLLECTOR:
     case BUILDING_TAX_COLLECTOR_UPGRADED:
         _ptr = new building_tax_collector(*this);
