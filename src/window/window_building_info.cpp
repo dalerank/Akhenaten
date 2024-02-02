@@ -902,7 +902,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-void window_building_info_show(const map_point& point) {
+void window_building_info_show(const tile2i& point) {
     window_type window = {
         WINDOW_BUILDING_INFO,
         draw_background,

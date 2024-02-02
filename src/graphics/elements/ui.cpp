@@ -116,6 +116,11 @@ image_button &ui::img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size,
     return g_state.img_buttons.back();
 }
 
+image_button &ui::img_button(e_image_id img, vec2i pos, vec2i size, int offset) {
+    image_desc desc = get_image_desc(img);
+    return img_button(desc.pack, desc.id, pos, size, desc.offset + offset);
+}
+
 int ui::label(int group, int number, vec2i pos, e_font font, UiFlags_ flags, int box_width) {
     pcstr str = (pcstr)lang_get_string(group, number);
     return label(str, pos, font, flags, box_width);
@@ -229,6 +234,8 @@ void ui::widget::load(archive arch) {
             elm = std::make_shared<etext>();
         } else if (!strcmp(type, "generic_button")) {
             elm = std::make_shared<egeneric_button>();
+        } else if (!strcmp(type, "image_button")) {
+            elm = std::make_shared<eimage_button>();
         } else if (!strcmp(type, "large_button")) {
             auto btn = std::make_shared<egeneric_button>();
             btn->mode = 1;
@@ -279,6 +286,21 @@ void ui::elabel::load(archive arch) {
 void ui::elabel::text(pcstr v) {
     _text = v;
     enabled = strlen(v) > 0;
+}
+
+void ui::eimage_button::load(archive arch) {
+    element::load(arch);
+
+    pcstr type = arch.r_string("type");
+    assert(!strcmp(type, "image_button"));
+
+    img = arch.r_image("image");
+    offset = arch.r_int("offset");
+}
+
+void ui::eimage_button::draw() {
+    ui::img_button(img, pos, size, offset)
+        .onclick(_func);
 }
 
 void ui::etext::load(archive arch) {

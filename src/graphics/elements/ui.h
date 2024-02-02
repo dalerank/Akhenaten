@@ -46,6 +46,7 @@ generic_button &button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NO
 generic_button &large_button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
 generic_button &button(uint32_t id);
 image_button &img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, int offset = 0);
+image_button &img_button(e_image_id img, vec2i pos, vec2i size, int offset = 0);
 arrow_button &arw_button(vec2i pos, bool up, bool tiny = false);
 
 
@@ -108,7 +109,17 @@ struct egeneric_button : public elabel {
     std::function<void(int, int)> _func;
 
     virtual void draw() override;
+    virtual void load(archive arch) override;
+    virtual void onclick(std::function<void(int, int)> func) override { _func = func; }
+};
+
+struct eimage_button : public element {
+    e_image_id img;
+    int offset;
+    std::function<void(int, int)> _func;
+
     virtual void load(archive elem) override;
+    virtual void draw() override;
     virtual void onclick(std::function<void(int, int)> func) override { _func = func; }
 };
 
