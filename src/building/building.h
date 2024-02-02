@@ -2,6 +2,7 @@
 
 #include "core/bstring.h"
 #include "core/vec2i.h"
+#include "graphics/color.h"
 #include "building/building_type.h"
 #include "building/building_state.h"
 #include "overlays/city_overlay_fwd.h"
@@ -11,6 +12,7 @@
 #include "game/resource.h"
 #include "grid/point.h"
 #include "sound/city.h"
+#include "model.h"
 
 #include <stdint.h>
 #include <algorithm>
@@ -382,7 +384,7 @@ public:
     virtual void window_info_background(object_info &ctx) {}
     virtual void window_info_foreground(object_info &ctx) {}
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) { return 0; }
-    virtual bool draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx);
+    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual bool need_road_access() const { return true; }
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_NONE; }
@@ -398,6 +400,7 @@ public:
     inline bool common_spawn_figure_trigger(int min_houses) { return base.common_spawn_figure_trigger(min_houses); }
     inline bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) { return base.common_spawn_roamer(type, min_houses, created_action); }
     inline figure *create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE) { return base.create_figure_with_destination(_type, destination, created_action, slot); }
+    inline const model_building *model() const { return model_get_building(type()); }
     
     inline int id() const { return base.id; }
     inline tile2i tile() const { return base.tile; }

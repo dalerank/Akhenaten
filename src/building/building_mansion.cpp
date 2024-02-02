@@ -10,6 +10,8 @@
 #include "city/victory.h"
 #include "city/finance.h"
 #include "city/ratings.h"
+#include "widget/city/ornaments.h"
+#include "graphics/image.h"
 
 struct window_info_mansion {
     int focus_button_id;
@@ -46,4 +48,16 @@ void building_mansion::window_info_background(object_info &c) {
 
 int building_mansion::window_info_handle_mouse(const mouse *m, object_info &c) {
     return 0;
+}
+
+bool building_mansion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
+    int max_workers = model()->laborers;
+    int image_id;
+    switch (type()) {
+    case BUILDING_PERSONAL_MANSION:
+        image_id = image_group(IMG_PERSONAL_MANSION);
+        building_draw_normal_anim(ctx, point + vec2i{34, 2}, &base, tile, image_id, mask);
+        break;
+    }
+    return true;
 }

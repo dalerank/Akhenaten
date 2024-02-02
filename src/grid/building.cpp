@@ -101,12 +101,7 @@ void map_building_update_all_tiles() {
 
 }
 
-bool building_impl::draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx) {
-    int color_mask = 0;
-    if (drawing_building_as_deleted(&base) || map_property_is_deleted(tile.grid_offset())) {
-        color_mask = COLOR_MASK_RED;
-    }
-
+bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     int image_id = map_image_at(tile.grid_offset());
     building_draw_normal_anim(ctx, point, &base, tile, image_id, color_mask);
     if (base.has_plague) {

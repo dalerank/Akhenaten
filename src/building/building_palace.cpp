@@ -20,7 +20,7 @@
 
 void building_palace::window_info_background(object_info &c) {
     painter ctx = game.painter();
-    c.go_to_advisor.first = ADVISOR_FINANCIAL;
+    c.go_to_advisor.left_a = ADVISOR_FINANCIAL;
     c.help_id = e_text_building_palace;
 
     window_building_play_sound(&c, snd::get_building_info_sound("palace"));
@@ -55,13 +55,8 @@ void building_palace::window_info_background(object_info &c) {
     lang_text_draw(105, 3, c.offset.x + 60, c.offset.y + 220, FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
-bool building_palace::draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx) {
+bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     return true;
-
-    int color_mask = 0;
-    if (drawing_building_as_deleted(&base) || map_property_is_deleted(tile.grid_offset())) {
-        color_mask = COLOR_MASK_RED;
-    }
 
     int image_id = image_id_from_group(GROUP_BUILDING_PALACE);
     ImageDraw::img_generic(ctx, image_id + 1, point.x + 138, point.y + 44 - city_rating_culture() / 2, color_mask);

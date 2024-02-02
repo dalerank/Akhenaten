@@ -337,7 +337,7 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         break;
 
     default:
-        b->dcast()->draw_ornaments_and_animations_height(point, tile, ctx);
+        b->dcast()->draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
         break;
     }
 
