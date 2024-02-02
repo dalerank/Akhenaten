@@ -251,7 +251,8 @@ struct scenario_data_t {
     } env;
 
     struct {
-        int start_message;
+        uint16_t start_message;
+        bool start_message_shown;
     } meta;
 
     bool is_saved;
