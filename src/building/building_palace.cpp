@@ -1,3 +1,4 @@
+
 #include "building_palace.h"
 
 #include "building/building.h"
@@ -17,6 +18,24 @@
 #include "widget/city/ornaments.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
+
+struct village_palace_model_t {
+    const e_building_type type = BUILDING_VILLAGE_PALACE;
+    e_labor_category labor_category;
+};
+village_palace_model_t village_palace_model;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_palace_model);
+void config_load_building_palace_model() {
+    g_config_arch.r_section("building_village_palace", [] (archive arch) {
+        village_palace_model.labor_category = arch.r_type<e_labor_category>("labor_category");
+        city_labor_set_category(village_palace_model.type, village_palace_model.labor_category);
+    });
+}
+
+void building_palace::on_create() {
+    base.labor_category = village_palace_model.labor_category;
+}
 
 void building_palace::window_info_background(object_info &c) {
     painter ctx = game.painter();

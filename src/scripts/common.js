@@ -23,7 +23,8 @@ var big_statue_images = []
 var top_menu_bar = {}
 var main_menu_window = {}
 var building_booth = {}
-var building_personal_mansion
+var building_village_palace = {}
+var building_personal_mansion = {}
 var building_bandstand = {}
 var building_scribal_school = {}
 var building_scribal_school_info = {}

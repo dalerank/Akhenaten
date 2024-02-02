@@ -16,7 +16,7 @@
 
 #include <algorithm>
 
-static int CATEGORY_FOR_int_arr[] = {
+static int category_for_int_arr[] = {
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 20
@@ -238,6 +238,10 @@ const labor_category_data* city_labor_category(int category) {
     return &city_data.labor.categories[category];
 }
 
+void city_labor_set_category(e_building_type type, int category) {
+    category_for_int_arr_ph[type] = category;
+}
+
 struct building_type_category {
     e_building_type btype;
     e_labor_category category;
@@ -292,17 +296,17 @@ static bool is_industry_disabled(building* b) {
     return city_data.resource.mothballed[resource];
 }
 
-int city_labor_wages(void) {
+int city_labor_wages() {
     return city_data.labor.wages;
 }
 void city_labor_change_wages(int amount) {
     city_data.labor.wages += amount;
     city_data.labor.wages = calc_bound(city_data.labor.wages, 0, 100);
 }
-int city_labor_wages_rome(void) {
+int city_labor_wages_rome() {
     return city_data.labor.wages_kingdome;
 }
-int city_labor_raise_wages_rome(void) {
+int city_labor_raise_wages_rome() {
     if (city_data.labor.wages_kingdome >= 45)
         return 0;
 
@@ -384,7 +388,7 @@ static void calculate_workers_needed_per_category(void) {
         // exception for floodplain farms in Pharaoh
         // it cover by distance from work camp
         if (building_is_floodplain_farm(b)) {
-            b.labor_category = -1;
+            b.labor_category = LABOR_CATEGORY_NONE;
         }
 
         if (!should_have_workers(&b, category, 1)) {

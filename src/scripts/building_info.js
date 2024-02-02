@@ -45,6 +45,10 @@ building_bandstand = {
   }
 }
 
+building_village_palace = {
+  labor_category : LABOR_CATEGORY_GOVERNMENT,
+}
+
 building_scribal_school = {
   papyrus_icon : {x: 61, y: 14},
 

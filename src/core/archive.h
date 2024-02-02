@@ -23,6 +23,9 @@ struct archive {
     vec2i r_size2i(pcstr name, pcstr w = "w", pcstr h = "h");
     vec2i r_vec2i(pcstr name, pcstr x = "x", pcstr y = "y");
 
+    template<class T>
+    inline T r_type(pcstr name) { return (T)r_int(name); }
+
     template<typename T = int>
     inline std::vector<T> r_array_num(pcstr name) {
         js_getproperty(vm, -1, name);

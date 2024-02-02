@@ -41,6 +41,7 @@ int city_labor_lower_wages_rome(void);
 e_labor_category category_for_building(building* b);
 
 const labor_category_data* city_labor_category(int category);
+void city_labor_set_category(e_building_type type, int category);
 
 void city_labor_calculate_workers(int num_plebs, int num_patricians);
 

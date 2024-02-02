@@ -236,6 +236,7 @@ void js_reset_vm_state() {
     js_register_game_constants(vm.J);
     js_register_city_sound_constants(vm.J);
     js_register_city_overlays(vm.J);
+    js_register_city_labor_category(vm.J);
     js_register_city_buildings(vm.J);
     js_register_city_walkers(vm.J);
     js_register_city_images(vm.J);
