@@ -1,5 +1,6 @@
 #pragma once
 
+#include "city/labor_category.h"
 #include "core/bstring.h"
 #include "core/vec2i.h"
 #include "graphics/color.h"
@@ -23,7 +24,6 @@ class building;
 struct object_info;
 struct painter;
 struct mouse;
-enum e_labor_category;
 
 constexpr uint32_t MAX_BUILDINGS = 4000;
 constexpr uint32_t MAX_FIGURES_PER_BUILDING = 8;
