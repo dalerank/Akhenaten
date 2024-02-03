@@ -59,6 +59,13 @@ building_clay_pit = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
+building_pottery = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_POTTERY_WORKSHOP }
+  },
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
 building_hunting_lodge = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_HUNTING_LODGE }
