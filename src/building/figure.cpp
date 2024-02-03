@@ -1132,20 +1132,6 @@ void building::school_add_papyrus(int amount) {
     }
 }
 
-int building::get_fire_risk(int value) {
-    switch (type) {
-    case BUILDING_CLAY_PIT:
-        if (config_get(CONFIG_GP_CH_CLAY_PIT_FIRE_RISK_REDUCED))
-            return value / 2;
-
-    case BUILDING_BOOTH:
-    case BUILDING_BANDSTAND:
-        return value / 10;
-    }
-
-    return value;
-}
-
 void building_figure_generate() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Generate");
     building_barracks_decay_tower_sentry_request();

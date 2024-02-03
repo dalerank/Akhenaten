@@ -155,6 +155,7 @@ images = [
 	{img: IMG_VILLAGE_PALACE, pack:PACK_GENERAL, id:47, offset:0},
 	{img: IMG_JUGGLER_SCHOOL, pack:PACK_GENERAL, id:46, offset:0},
 	{img: IMG_HUNTING_LODGE, pack:PACK_GENERAL, id:176, offset:0},
+	{img: IMG_CLAY_PIT, pack:PACK_GENERAL, id:40, offset:0},
 ]
 
 cart_offsets = [

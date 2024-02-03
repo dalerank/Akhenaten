@@ -16,6 +16,32 @@
 #include "graphics/text.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
+#include "city/labor.h"
+#include "widget/city/ornaments.h"
+
+#include "graphics/animation.h"
+
+namespace model {
+
+struct clay_pit_t {
+    static constexpr e_building_type type = BUILDING_CLAY_PIT;
+    e_labor_category labor_category;
+    animations_t anim;
+};
+
+clay_pit_t clay_pit;
+
+}
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_raw_materials);
+void config_load_building_raw_materials() {
+    g_config_arch.r_section("building_clay_pit", [] (archive arch) {
+        model::clay_pit.labor_category = arch.r_type<e_labor_category>("labor_category");
+        model::clay_pit.anim.load(arch);
+    });
+
+    city_labor_set_category(model::clay_pit);
+}
 
 static void building_raw_material_draw_info(object_info& c, const char* type, e_resource resource) {
     auto &meta = building::get_info(type);
@@ -69,9 +95,6 @@ void building_copper_mine_draw_info(object_info& c) {
 void building_timber_yard_draw_info(object_info& c) {
     building_raw_material_draw_info(c, "timber_yard", RESOURCE_TIMBER);
 }
-void building_clay_pit_draw_info(object_info& c) {
-    building_raw_material_draw_info(c, "clay_pit", RESOURCE_CLAY);
-}
 void building_reed_gatherer_draw_info(object_info& c) {
     building_raw_material_draw_info(c, "reed_farm", RESOURCE_REEDS);
 }
@@ -104,4 +127,29 @@ void building_quarry_stone::on_create() {
 
 void building_quarry_stone::window_info_background(object_info &c) {
     building_raw_material_draw_info(c, "plainstone_quarry", RESOURCE_STONE);
+}
+
+void building_clay_pit::on_create() {
+    base.output_resource_first_id = RESOURCE_CLAY;
+}
+
+void building_clay_pit::window_info_background(object_info &c) {
+    building_raw_material_draw_info(c, "clay_pit", RESOURCE_CLAY);
+}
+
+int building_clay_pit::get_fire_risk(int value) const {
+    if (config_get(CONFIG_GP_CH_CLAY_PIT_FIRE_RISK_REDUCED)) {
+        return value / 2;
+    }
+
+    return value;
+}
+
+bool building_clay_pit::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    if (worker_percentage() > 50) {
+        const animation_t &anim = model::clay_pit.anim["work"];
+        building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+    }
+
+    return true;
 }

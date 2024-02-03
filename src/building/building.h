@@ -359,7 +359,6 @@ public:
     void update_road_access();
     void update_month();
     bool figure_generate();
-    int get_fire_risk(int value);
 
     void school_add_papyrus(int amount);
 
@@ -391,6 +390,7 @@ public:
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_NONE; }
     virtual int animation_speed(int speed) const { return speed; }
     virtual int get_produce_uptick_per_day() const { return base.num_workers; }
+    virtual int get_fire_risk(int value) const { return value; }
 
     inline bool is_main() { return base.is_main(); }
     inline void check_labor_problem() { base.check_labor_problem(); }

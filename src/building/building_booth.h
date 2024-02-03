@@ -8,4 +8,5 @@ public:
     virtual void window_info_background(object_info &c) override;
     virtual void spawn_figure() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
+    virtual int get_fire_risk(int value) const override { return value / 10; }
 };

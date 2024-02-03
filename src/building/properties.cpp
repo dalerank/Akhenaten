@@ -115,7 +115,7 @@ static building_properties properties[400] = {
     {2, 0, 0, 0},     // stone
     {2, 0, GROUP_BUILDING_LIMESTONE_QUARRY}, // limestone
     {2, 0, GROUP_BUILDING_TIMBER_YARD},      // wood
-    {2, 0, GROUP_BUILDING_CLAY_PIT},         // clay
+    {2, 0, 0, 0},         // clay
     {2, 0, 0, 0},    // beer
     {2, 0, GROUP_BUILDING_LINEN_WORKSHOP},   // linen
     {2, 0, GROUP_BUILDING_WEAPONS_WORKSHOP}, // weapons
@@ -269,6 +269,7 @@ void building_properties_init() {
     properties[BUILDING_VILLAGE_PALACE] = {4, 0, 0, 0, 0, IMG_VILLAGE_PALACE};
     properties[BUILDING_JUGGLER_SCHOOL] = {2, 0, 0, 0, 0, IMG_JUGGLER_SCHOOL};
     properties[BUILDING_HUNTING_LODGE] = {2, 0, 0, 0, 0, IMG_HUNTING_LODGE};
+    properties[BUILDING_CLAY_PIT] = {2, 0, 0, 0, 0, IMG_CLAY_PIT};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

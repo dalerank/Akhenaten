@@ -43,6 +43,11 @@ e_labor_category category_for_building(building* b);
 const labor_category_data* city_labor_category(int category);
 void city_labor_set_category(e_building_type type, int category);
 
+template<class T>
+void city_labor_set_category(const T &model) {
+    city_labor_set_category(model.type, model.labor_category);
+}
+
 void city_labor_calculate_workers(int num_plebs, int num_patricians);
 
 void city_labor_allocate_workers(void);

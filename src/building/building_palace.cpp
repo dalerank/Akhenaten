@@ -33,7 +33,7 @@ void config_load_building_palace_model() {
         village_palace_model.anim.load(arch);
     });
     
-    city_labor_set_category(village_palace_model.type, village_palace_model.labor_category);
+    city_labor_set_category(village_palace_model);
 }
 
 void building_palace::on_create() {

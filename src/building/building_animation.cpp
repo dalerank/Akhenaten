@@ -1,5 +1,3 @@
-#include "building_animation.h"
-
 #include "building/building_type.h"
 #include "grid/water_supply.h"
 

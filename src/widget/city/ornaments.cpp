@@ -1,6 +1,5 @@
 #include "ornaments.h"
 
-#include "building/building_animation.h"
 #include "building/building.h"
 #include "building/model.h"
 #include "building/dock.h"

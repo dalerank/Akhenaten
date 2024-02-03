@@ -52,6 +52,13 @@ building_village_palace = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
 }
 
+building_clay_pit = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_CLAY_PIT }
+  },
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
 building_hunting_lodge = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_HUNTING_LODGE }

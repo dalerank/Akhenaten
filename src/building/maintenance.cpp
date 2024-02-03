@@ -210,7 +210,7 @@ void building_maintenance_check_fire_collapse(void) {
                 expected_fire_risk += 50;
             }
 
-            expected_fire_risk = b.get_fire_risk(expected_fire_risk);
+            expected_fire_risk = b.dcast()->get_fire_risk(expected_fire_risk);
             b.fire_risk += expected_fire_risk;
             //            if (climate == CLIMATE_NORTHERN)
             //                b->fire_risk = 0;
