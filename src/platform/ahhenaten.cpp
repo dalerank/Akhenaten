@@ -78,18 +78,12 @@ void show_usage() {
 struct application_t {
     bool active = true;
     bool quit = false;
-    bool console = false;
 };
 
 application_t g_application;
 
 void system_center() {
     app_post_event(USER_EVENT_CENTER_WINDOW);
-}
-
-void system_toggle_debug_console() {
-    g_application.console = !g_application.console;
-    //
 }
 
 static int init_sdl() {
@@ -440,6 +434,8 @@ static void run_and_draw() {
     time_millis time_before_run = SDL_GetTicks();
     time_set_millis(time_before_run);
 
+    game_imgui_overlay_begin_frame();
+
     game_run();
     Uint32 time_between_run_and_draw = SDL_GetTicks();
 
@@ -466,10 +462,9 @@ static void run_and_draw() {
         text_draw_number_colored(time_after_draw - time_between_run_and_draw, 'd', "", 70, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
     }
 
-    if (g_application.console) {
-        debug_console_window_draw();
-    }
+    game_debug_cli_draw();
 
+    game_imgui_overlay_draw();
     platform_renderer_render();
 
     js_vm_sync();
@@ -589,11 +584,13 @@ static void handle_event(SDL_Event* event, bool &active, bool &quit) {
 }
 
 static void main_loop() {
-    debug_console_window_init();
     mouse_set_inside_window(1);
+
+    game_imgui_overlay_init();
 
     run_and_draw();
     while (!g_application.quit) {
+
         SDL_Event event;
 #ifdef PLATFORM_ENABLE_PER_FRAME_CALLBACK
         platform_per_frame_callback();
@@ -606,16 +603,22 @@ static void main_loop() {
 #else
         while (SDL_PollEvent(&event)) {
 #endif
+            ImGui_ImplSDL2_ProcessEvent(&event);
             handle_event(&event, g_application.active, g_application.quit);
         }
-        if (!g_application.quit) {
-            if (g_application.active) {
-                run_and_draw();
-            } else {
-                SDL_WaitEvent(NULL);
-            }
+
+        if (g_application.quit) {
+            continue;
+        }
+
+        if (g_application.active) {
+            run_and_draw();
+        } else {
+            SDL_WaitEvent(NULL);
         }
     }
+
+    game_imgui_overlay_destroy();
 }
 
 int main(int argc, char** argv) {

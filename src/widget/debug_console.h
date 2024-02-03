@@ -1,5 +1,10 @@
 #pragma once
 
-void debug_console_window_init();
-void debug_console_window_draw();
-void debug_append_console_message(const char *msg);
+#include "core/string.h"
+
+void game_debug_cli_draw();
+void game_debug_cli_message(pcstr msg);
+void game_imgui_overlay_init();
+void game_imgui_overlay_destroy();
+void game_imgui_overlay_begin_frame();
+void game_imgui_overlay_draw();

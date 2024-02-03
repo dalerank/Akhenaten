@@ -89,6 +89,7 @@ public:
     bool save_texture_to_file(const char* filename, SDL_Texture* tex, e_file_format file_format = FILE_FORMAT_BMP);
     float scale();
     SDL_Renderer *renderer();
+    SDL_Window *window();
 };
 
 graphics_renderer_interface* graphics_renderer();

@@ -80,6 +80,7 @@ struct buffer_texture {
 };
 
 struct renderer_data_t {
+    SDL_Window *window;
     SDL_Renderer* renderer;
     SDL_Texture* render_texture;
     int is_software_renderer;
@@ -250,7 +251,7 @@ std::vector<video_mode> get_video_modes() {
     return modes;
 }
 
-graphics_renderer_interface* graphics_renderer(void) {
+graphics_renderer_interface* graphics_renderer() {
     auto &data = g_renderer_data;
     return &data.renderer_interface;
 }
@@ -777,6 +778,10 @@ SDL_Renderer *graphics_renderer_interface::renderer() {
     return g_renderer_data.renderer;
 }
 
+SDL_Window *graphics_renderer_interface::window() {
+    return g_renderer_data.window;
+}
+
 bool graphics_renderer_interface::save_texture_to_file(const char* filename, SDL_Texture* tex, e_file_format file_format) {
     auto &data = g_renderer_data;
     SDL_Texture* ren_tex;
@@ -893,6 +898,7 @@ int platform_renderer_init(SDL_Window* window, std::string renderer) {
     auto &data = g_renderer_data;
 
     auto drivers = get_video_drivers(true);
+    data.window = window;
 
     auto driver_it = std::find(drivers.begin(), drivers.end(), renderer);
     int driver_index = driver_it != drivers.end() ? std::distance(drivers.begin(), driver_it) : -1;

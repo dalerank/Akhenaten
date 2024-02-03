@@ -99,7 +99,7 @@ namespace config {
     FuncLinkedList *FuncLinkedList::tail = nullptr;
     
     void refresh(archive arch) {
-        g_config_arch = {arch.vm};
+        g_config_arch = {arch.state};
         for (FuncLinkedList *s = FuncLinkedList::tail; s; s = s->next) {
             s->func();
         }
@@ -111,87 +111,3 @@ namespace config {
         return {js_vm_state()};
     }
 } // config
-
-pcstr archive::r_string(pcstr name) {
-    js_getproperty(vm, -1, name);
-    const char *result = "";
-    if (js_isundefined(vm, -1)) {
-        ;
-    } else if (js_isstring(vm, -1)) {
-        result = js_tostring(vm, -1);
-    } else if (js_isobject(vm, -1)) {
-        js_getproperty(vm, -1, "group"); int group = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        js_getproperty(vm, -1, "id"); int id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        result = (pcstr)lang_get_string(group, id);
-    }
-    js_pop(vm, 1);
-    return result;
-}
-
-std::vector<std::string> archive::r_array_str(pcstr name) {
-    js_getproperty(vm, -1, name);
-    std::vector<std::string> result;
-    if (js_isarray(vm, -1)) {
-        int length = js_getlength(vm, -1);
-
-        for (int i = 0; i < length; ++i) {
-            js_getindex(vm, -1, i);
-            std::string v = js_tostring(vm, -1);
-            result.push_back(v);
-            js_pop(vm, 1);
-        }
-        js_pop(vm, 1);
-    }
-    return result;
-}
-
-int archive::r_int(pcstr name, int def) {
-    js_getproperty(vm, -1, name);
-    int result = js_isundefined(vm, -1) ? def : js_tointeger(vm, -1);
-    js_pop(vm, 1);
-    return result;
-}
-
-uint32_t archive::r_uint(pcstr name, uint32_t def) {
-    js_getproperty(vm, -1, name);
-    uint32_t result = js_isundefined(vm, -1) ? def : js_touint32(vm, -1);
-    js_pop(vm, 1);
-    return result;
-}
-
-e_image_id archive::r_image(pcstr name) { 
-    return (e_image_id)r_int(name);
-}
-
-bool archive::r_bool(pcstr name, bool def) {
-    js_getproperty(vm, -1, name);
-    bool result = js_isundefined(vm, -1) ? def : js_toboolean(vm, -1);
-    js_pop(vm, 1);
-    return result;
-}
-
-vec2i archive::r_size2i(pcstr name, pcstr w, pcstr h) {
-    return r_vec2i(name, w, h);
-}
-
-vec2i archive::r_vec2i(pcstr name, pcstr x, pcstr y) {
-    vec2i result(0, 0);
-    js_getproperty(vm, -1, name);
-    if (js_isobject(vm, -1)) {
-        if (js_isarray(vm, -1)) {
-            int length = js_getlength(vm, -1);
-            if (length > 0) {
-                js_getindex(vm, -1, 0); result.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
-                if (length > 1) {
-                    js_getindex(vm, -1, 1); result.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
-                }
-            }
-        } else {
-            js_getproperty(vm, -1, x); result.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
-            js_getproperty(vm, -1, y); result.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
-        }
-    }
-    js_pop(vm, 1);
-
-    return result;
-}

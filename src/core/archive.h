@@ -8,11 +8,10 @@
 #include <string>
 
 enum e_image_id : uint16_t;
-struct js_State;
 
 struct archive {
-    js_State *vm;
-    inline archive(js_State *_vm) : vm(_vm) {}
+    void *state = nullptr;
+    inline archive(void *_vm) : state(_vm) {}
 
     pcstr r_string(pcstr name);
     std::vector<std::string> r_array_str(pcstr name);
@@ -28,55 +27,55 @@ struct archive {
 
     template<typename T = int>
     inline std::vector<T> r_array_num(pcstr name) {
-        js_getproperty(vm, -1, name);
+        getproperty(-1, name);
         std::vector<T> result;
-        if (js_isarray(vm, -1)) {
-            int length = js_getlength(vm, -1);
+        if (isarray(-1)) {
+            int length = getlength(-1);
 
             for (int i = 0; i < length; ++i) {
-                js_getindex(vm, -1, i);
-                float v = js_isnumber(vm, -1) ? (float)js_tonumber(vm, -1) : 0.f;
+                getindex(-1, i);
+                float v = isnumber(-1) ? (float)tonumber(-1) : 0.f;
                 result.push_back((T)v);
-                js_pop(vm, 1);
+                pop(1);
             }
         }
-        js_pop(vm, 1);
+        pop(1);
         return result;
     }
 
     template<typename T>
     inline void r_section(pcstr name, T read_func) {
-        js_getproperty(vm, -1, name);
-        if (js_isobject(vm, -1)) {
-            read_func(vm);
+        getproperty(-1, name);
+        if (isobject(-1)) {
+            read_func(state);
         }
-        js_pop(vm, 1);
+        pop(1);
     }
 
     template<typename T>
     inline void r_array(pcstr name, T read_func) {
-        js_getproperty(vm, -1, name);
+        getproperty(-1, name);
         r_array_impl(read_func);
-        js_pop(vm, 1);
+        pop(1);
     }
 
     template<typename T>
     inline void r_objects(pcstr name, T read_func) {
-        this->r_section(name, [&read_func] (archive s_arch) {
+        this->r_section(name, [this, &read_func] (archive s_arch) {
             pcstr key;
             std::vector<bstring128> keys;
-            js_pushiterator(s_arch.vm, -1, 1);
-            while (key = js_nextiterator(s_arch.vm, -1)) {
+            pushiterator(s_arch, -1, 1);
+            while (key = nextiterator(s_arch, -1)) {
                 keys.push_back(key);
             }
-            js_pop(s_arch.vm, 1);
+            pop(s_arch, 1);
 
             for (const auto &key : keys) {
-                js_getproperty(s_arch.vm, -1, key.c_str());
-                if (js_isobject(s_arch.vm, -1)) {
-                    read_func(key.c_str(), s_arch.vm);
+                getproperty(s_arch, -1, key.c_str());
+                if (isobject(s_arch, -1)) {
+                    read_func(key.c_str(), s_arch);
                 }
-                js_pop(s_arch.vm, 1);
+                pop(s_arch, 1);
             }
         });
     }
@@ -84,39 +83,54 @@ struct archive {
 protected:
     template<typename T>
     inline bool r_array_impl(T read_func) {
-        if (!js_isarray(vm, -1)) {
+        if (!isarray(-1)) {
             return false;
         }
 
-        int length = js_getlength(vm, -1);
+        int length = getlength(-1);
         for (int i = 0; i < length; ++i) {
-            js_getindex(vm, -1, i);
+            getindex(-1, i);
 
-            if (js_isobject(vm, -1)) {
-                read_func(vm);
+            if (isobject(-1)) {
+                read_func(state);
             }
 
-            js_pop(vm, 1);
+            pop(1);
         }
         return true;
     }
+
+    void getproperty(int idx, pcstr name);
+    static void getproperty(archive arch, int idx, pcstr name);
+    bool isarray(int idx);
+    int getlength(int idx);
+    void getindex(int idx, int i);
+    bool isnumber(int idx);
+    double tonumber(int idx);
+    void pop(int num);
+    static void pop(archive arch, int n);
+    bool isobject(int idx);
+    static bool isobject(archive arch, int idx);
+    static void pushiterator(archive arch, int idx, int own);
+    static pcstr nextiterator(archive arch, int idx);
+    void getglobal(pcstr name);
 };
 
 struct g_archive : public archive {
     template<typename T>
     inline void r_array(pcstr name, T read_func) {
-        js_getglobal(vm, name);
+        getglobal(name);
         r_array_impl(read_func);
-        js_pop(vm, 1);
+        pop(1);
     }
 
     template<typename T>
     inline void r_section(pcstr name, T read_func) {
-        js_getglobal(vm, name);
-        if (js_isobject(vm, -1)) {
-            read_func(vm);
+        getglobal(name);
+        if (isobject(-1)) {
+            read_func(state);
         }
-        js_pop(vm, 1);
+        pop(1);
     }
 };
 

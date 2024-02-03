@@ -15,6 +15,7 @@
 #include "window/hotkey_editor.h"
 #include "window/main_menu.h"
 #include "window/popup_dialog.h"
+#include "game/game.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -425,7 +426,7 @@ void hotkey_key_released(int key, int modifiers) {
         return;
     }
     if (key == KEY_GRAVE) {
-        system_toggle_debug_console();
+        game_toggle_debug_console();
         return;
     }
     for (int i = 0; i < data.num_arrows; i++) {

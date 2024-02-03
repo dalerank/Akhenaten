@@ -35,9 +35,10 @@
 #include "graphics/view/view.h"
 #include "platform/renderer.h"
 
-static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
-
-static time_millis last_update;
+namespace {
+    static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
+    static time_millis last_update;
+}
 
 game_t game;
 
@@ -250,6 +251,10 @@ void game_handle_input_frame() {
 void game_draw_frame_warning() {
     OZZY_PROFILER_SECTION("Render/Frame/Warning");
     warning_draw();
+}
+
+void game_toggle_debug_console() {
+    game.console = !game.console;
 }
 
 void game_handle_input_after() {
