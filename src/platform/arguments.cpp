@@ -5,6 +5,7 @@
 #include "core/bstring.h"
 #include "core/log.h"
 #include "content/vfs.h"
+#include "game/game.h"
 
 #include <filesystem>
 #include <string>
@@ -145,9 +146,10 @@ static int parse_decimal_as_percentage(const char* str) {
             }
             percentage += fraction;
             break;
-        }
+            }
         }
     }
+
     if (*end) {
         // still some characters left, print out warning
         logs::warn("Invalid decimal: %s", str);
@@ -171,8 +173,8 @@ Arguments::Arguments(int argc, char** argv) {
 
     bstring256 steam_path = get_steam_path();
     if (!steam_path.empty()) {
-        bstring256 pharaoh_steam_path(steam_path, "/steamapps/common/Pharaoh + Cleopatra/");
-        bstring256 pharaoh_exe_path(pharaoh_steam_path, "Pharaoh.exe");
+        vfs::path pharaoh_steam_path(steam_path, "/steamapps/common/Pharaoh + Cleopatra/");
+        vfs::path pharaoh_exe_path(pharaoh_steam_path, "Pharaoh.exe");
         bool binary_exist = std::filesystem::exists(pharaoh_exe_path.c_str());
         if (binary_exist) {
             logs::info("Steam pharaoh path: %s", pharaoh_steam_path);
@@ -323,6 +325,9 @@ void Arguments::parse_cli_(int argc, char** argv) {
             }
         } else if (SDL_strcmp(argv[i], "--help") == 0) {
             app_terminate(usage());
+
+        } else if (SDL_strcmp(argv[i], "--save_debug_texture") == 0) {
+            game.save_debug_texture = true;
 
         } else if (SDL_strncmp(argv[i], "--", 2) == 0) {
             app_terminate(bstring256(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));

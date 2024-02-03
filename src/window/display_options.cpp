@@ -92,7 +92,12 @@ static void button_cancel(int param1, int param2) {
 }
 
 void window_display_options_show(void (*close_callback)(void)) {
-    window_type window = {WINDOW_DISPLAY_OPTIONS, window_draw_underlying_window, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_DISPLAY_OPTIONS,
+        window_draw_underlying_window,
+        draw_foreground,
+        handle_input
+    };
     init(close_callback);
     window_show(&window);
 }

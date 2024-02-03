@@ -49,6 +49,7 @@ struct image_t {
         int entry_index;
     } bmp;
     int sgx_index;
+    int rect_index;
     int sgx_data_offset;
     int data_length;
     int uncompressed_length;
@@ -56,6 +57,10 @@ struct image_t {
     int offset_mirror = 0;
     int start_index;
     image_t* mirrored_img = nullptr;
+    image_t* isometric_top = nullptr;
+    image_t *isometric_base = nullptr;
+    bool is_isometric_flat = false;
+    bool is_isometric_top = false;
     //
     short width;
     short height;

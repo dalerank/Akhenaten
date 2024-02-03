@@ -671,9 +671,13 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     int last_idx_in_bmp = 1;
     images_array.reserve(entries_num * 2);
     for (int i = 0; i < entries_num; i++) {
-        image_t img;
+        images_array.push_back({});
+        image_t &img = images_array.back();
+        img.is_isometric_flat = true;
+        img.is_isometric_top = false;
         img.pak_name = name;
         img.sgx_index = i;
+        img.rect_index = i;
         img.sgx_data_offset = pak_buf->read_i32();
         img.data_length = pak_buf->read_i32();
         img.uncompressed_length = pak_buf->read_i32();
@@ -731,12 +735,25 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
             // continue;
         } else {
             // record atlas rect sizes in the packer
-            image_packer_rect* rect = &packer.rects[i];
-            rect->input.width = img.width;
-            rect->input.height = img.height;
+            image_packer_rect& rect = packer.rects[i];
+            rect.input.width = img.width;
+            rect.input.height = img.height;
         }
-        images_array.push_back(img);
     }
+
+    //for (int i = 0, rect_i = entries_num; i < entries_num; ++i, ++rect_i) {
+    //    image_t &img = images_array[i];
+    //    image_t isometric_img = images_array[i];
+    //    image_packer_rect& rect = packer.rects[rect_i];
+    //    rect.input.width = img.width;
+    //    rect.input.height = img.height;
+    //    isometric_img.is_isometric_flat = false;
+    //    isometric_img.is_isometric_top = true;
+    //    isometric_img.isometric_base = &img;
+    //    isometric_img.rect_index = rect_i;
+    //    images_array.push_back(isometric_img);
+    //    img.isometric_top = &images_array.back();
+    //}
 
     // create special fonts
     if (should_convert_fonts) {
@@ -766,17 +783,16 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     }
 
     // finish filling in image and atlas information
-    for (int i = 0; i < entries_num; i++) {
-        image_t &img = images_array.at(i);
-        if (has_system_bmp && !should_load_system_sprites && i < 201) {
+    for (auto &img: images_array) {
+        if (has_system_bmp && !should_load_system_sprites && img.sgx_index < 201) {
             continue;
         }
 
         if (img.offset_mirror != 0) {
-            img.mirrored_img = &images_array.at(i + img.offset_mirror);
+            img.mirrored_img = &images_array.at(img.sgx_index + img.offset_mirror);
         }
 
-        image_packer_rect* rect = &packer.rects[i];
+        image_packer_rect* rect = &packer.rects[img.rect_index];
         img.atlas.index = rect->output.image_index;
         atlas_data_t* p_data = &atlas_pages.at(img.atlas.index);
         img.atlas.p_atlas = p_data;
@@ -801,13 +817,11 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
 
         // ********* DEBUGGING **********
 #if defined(GAME_PLATFORM_WIN)
-        //if (false) {
-        //    char* lfile = (char*)malloc(200);
-        //    sprintf(lfile, "DEV_TESTING/tex/%s_%i.bmp", name.c_str(), i); // TODO: make this a global function
-        //    bstring256 fs_fpath = dir_get_file(lfile, 0);
-        //    graphics_renderer()->save_texture_to_file(fs_fpath, atlas_data->texture);
-        //    free(lfile);
-        //}
+        if (game.save_debug_texture) {
+            vfs::path fs_fpath;
+            fs_fpath.printf("DEV_TESTING/tex/%s_%i.bmp", name.c_str(), i);
+            graphics_renderer()->save_texture_to_file(fs_fpath.c_str(), atlas_data->texture);
+        }
 #endif
         // ******************************
     }
@@ -821,7 +835,9 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     image_packer_reset(packer);
 
     logs::info("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u)",
-               filename_sgx.c_str(), entries_num, groups_num, atlas_pages.at(atlas_pages.size() - 1).width, atlas_pages.at(atlas_pages.size() - 1).height, atlas_pages.size());
+               filename_sgx.c_str(),
+               entries_num, groups_num,
+               atlas_pages.at(atlas_pages.size() - 1).width, atlas_pages.at(atlas_pages.size() - 1).height, atlas_pages.size());
 
     int y_offset = screen_height() - 24;
 

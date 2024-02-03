@@ -24,6 +24,7 @@ void game_exit();
 
 struct game_t {
     bool paused = false;
+    bool save_debug_texture = false;
 
     ::painter painter();
 };
