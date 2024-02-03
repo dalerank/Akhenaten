@@ -18,6 +18,7 @@
 #include "city/coverage.h"
 #include "city/emperor.h"
 #include "city/festival.h"
+#include "city/buildings.h"
 #include "city/finance.h"
 #include "city/gods.h"
 #include "city/health.h"

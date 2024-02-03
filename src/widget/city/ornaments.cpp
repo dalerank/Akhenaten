@@ -9,6 +9,7 @@
 #include "building/building_workshop.h"
 #include "building/building_farm.h"
 #include "building/monuments.h"
+#include "building/building_animation.h"
 #include "building/monument_mastaba.h"
 #include "city/buildings.h"
 #include "city/floods.h"
@@ -336,10 +337,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_PAVILLION)) {
             building_entertainment_draw_shows_dancers(ctx, b, point, color_mask);
         }
-        break;
-
-    case BUILDING_CONSERVATORY:
-        building_draw_normal_anim(ctx, point + vec2i{82, 14}, b, tile, image_group(IMG_MUSICIAN_SHOW_SN), color_mask);
         break;
 
     case BUILDING_DANCE_SCHOOL:

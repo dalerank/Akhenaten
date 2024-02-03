@@ -66,6 +66,13 @@ building_pottery = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
+building_conservatory = {
+  animations : {
+    work : { pos : [82, 14], anim_id: IMG_MUSICIAN_SHOW_SN }
+  },
+  labor_category : LABOR_CATEGORY_ENTERTAINMENT,
+}
+
 building_hunting_lodge = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_HUNTING_LODGE }

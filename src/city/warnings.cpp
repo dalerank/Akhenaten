@@ -8,6 +8,7 @@
 #include "city/population.h"
 #include "city/resource.h"
 #include "city/warning.h"
+#include "city/buildings.h"
 #include "core/calc.h"
 #include "empire/empire_city.h"
 #include "grid/grid.h"

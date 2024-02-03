@@ -40,10 +40,6 @@ void building_entertainment_school_draw_info(object_info& c, pcstr type, int gro
     window_building_draw_employment(&c, 142);
 }
 
-void building_conservatory_draw_info(object_info& c) {
-    building_entertainment_school_draw_info(c, "conservatory", 75);
-}
-
 void building_dancer_school_draw_info(object_info& c) {
     building_entertainment_school_draw_info(c, "dancer_school", 76);
 }
@@ -82,29 +78,27 @@ void building_entertainment_draw_shows_dancers(painter &ctx, building* b, vec2i 
 }
 
 void building_entertainment_draw_show_jugglers(painter &ctx, building* b, vec2i pixel, color color_mask) {
-    const animation_t *config = nullptr;
+    const animation_t *anim = nullptr;
 
     switch (b->type) {
     case BUILDING_BOOTH:
-        config = &building_booth.anim["juggler"];
+        anim = &building_booth.anim["juggler"];
         break;
     case BUILDING_BANDSTAND:
-        config = &building_bandstand.anim["juggler"];
+        anim = &building_bandstand.anim["juggler"];
         break;
     case BUILDING_PAVILLION:
-        config = &building_booth.anim["juggler"];
+        anim = &building_booth.anim["juggler"];
         break;
     }
-    if (!config) {
+
+    if (!anim) {
         return;
     }
 
     building* main = b->main();
     if (main->data.entertainment.days1) {
-        building_draw_normal_anim(ctx, pixel + config->pos, b, b->tile,
-                                  image_group(config->anim_id), color_mask,
-                                  image_group(config->base_id),
-                                  config->max_frames);
+        building_draw_normal_anim(ctx, pixel, b, b->tile, *anim, color_mask);
     }
 }
 

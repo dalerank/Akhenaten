@@ -357,17 +357,6 @@ void building::spawn_figure_police() {
     common_spawn_roamer(FIGURE_CONSTABLE, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
 }
 
-void building::spawn_figure_musician() {
-    if (common_spawn_figure_trigger(50)) {
-        building* dest = building_get(determine_venue_destination(road_access, BUILDING_PAVILLION, BUILDING_BANDSTAND, 0));
-        if (dest->id > 0) {
-            create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-        } else {
-            common_spawn_roamer(FIGURE_MUSICIAN, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
-        }
-    }
-}
-
 void building::spawn_figure_dancer() {
     if (common_spawn_figure_trigger(50)) {
         building* dest= building_get(determine_venue_destination(road_access, BUILDING_PAVILLION, 0, 0));
@@ -962,14 +951,6 @@ void building::update_native_crop_progress() {
     map_image_set(tile.grid_offset(), image_id_from_group(GROUP_BUILDING_FARMLAND) + data.industry.progress);
 }
 
-void building::update_month() {
-    switch (type) {
-    default:
-        dcast()->update_month();
-        break;
-    }
-}
-
 tile2i building::access_tile() {
     switch (type) {
     case BUILDING_SMALL_MASTABA:
@@ -1074,7 +1055,6 @@ bool building::figure_generate() {
         case BUILDING_GRANARY: spawn_figure_granary(); break;
         case BUILDING_MUD_TOWER: spawn_figure_tower(); break;
         case BUILDING_POLICE_STATION: spawn_figure_police(); break;
-        case BUILDING_CONSERVATORY: spawn_figure_musician(); break;
         case BUILDING_DANCE_SCHOOL: spawn_figure_dancer(); break;
         case BUILDING_SENET_HOUSE: spawn_figure_senet(); break;
         case BUILDING_PAVILLION: spawn_figure_pavillion(); break;

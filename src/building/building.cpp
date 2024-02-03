@@ -8,6 +8,7 @@
 #include "building/building_work_camp.h"
 #include "building/building_bazaar.h"
 #include "building/building_firehouse.h"
+#include "building/building_conservatory.h"
 #include "building_architect_post.h"
 #include "building/building_tax_collector.h"
 #include "building/building_jugler_school.h"
@@ -332,6 +333,7 @@ building_impl *building::dcast() {
     case BUILDING_GOLD_MINE: _ptr = new building_mine_gold(*this); break;
     case BUILDING_WATER_SUPPLY: _ptr = new building_water_supply(*this); break;
     case BUILDING_CLAY_PIT: _ptr = new building_clay_pit(*this); break;
+    case BUILDING_CONSERVATORY: _ptr = new building_conservatory(*this); break;
 
     case BUILDING_VILLAGE_PALACE:
     case BUILDING_TOWN_PALACE:

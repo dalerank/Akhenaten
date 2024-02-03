@@ -23,6 +23,7 @@ var big_statue_images = []
 var top_menu_bar = {}
 var main_menu_window = {}
 var building_booth = {}
+var building_conservatory = {}
 var building_pottery = {}
 var building_clay_pit = {}
 var building_hunting_lodge = {}

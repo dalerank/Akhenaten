@@ -250,13 +250,13 @@ void city_buildings_add_temple_complex(building* complex) {
     building_menu_update_temple_complexes();
 }
 
-void city_buildings_remove_temple_complex(void) {
+void city_buildings_remove_temple_complex() {
     city_data.building.temple_complex_id = 0;
     city_data.building.temple_complex_placed = false;
     building_menu_update_temple_complexes();
 }
 
-int city_buildings_unknown_value(void) {
+int city_buildings_unknown_value() {
     return city_data.building.unknown_value;
 }
 
@@ -268,6 +268,6 @@ void city_buildings_update_day() {
 
 void city_buildings_update_month() {
     buildings_valid_do([] (building &b) {
-        b.update_month();
+        b.dcast()->update_month();
     });
 }

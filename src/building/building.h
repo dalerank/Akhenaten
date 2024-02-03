@@ -322,7 +322,6 @@ public:
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
-    void spawn_figure_musician();
     void spawn_figure_dancer();
     void spawn_figure_senet();
     void spawn_figure_pavillion();
@@ -357,7 +356,6 @@ public:
     void update_native_crop_progress();
     tile2i access_tile();
     void update_road_access();
-    void update_month();
     bool figure_generate();
 
     void school_add_papyrus(int amount);
