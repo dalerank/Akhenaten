@@ -5,6 +5,7 @@ small_statue_images = [
 	{pack: PACK_GENERAL, id: 61, offset:5},
 	{pack: PACK_EXPANSION, id: 37, offset:1},
 	{pack: PACK_EXPANSION, id: 37, offset:5},
+	{pack: PACK_TEMPLE_RA, id: 1, offset:27},
 ]
 
 medium_statue_images = [

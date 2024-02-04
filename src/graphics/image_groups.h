@@ -19,6 +19,8 @@ enum e_pack {
     //
     PACK_MASTABA,
     //
+    PACK_TEMPLE_RA,
+    //
     PACK_CUSTOM,
 };
 
