@@ -487,10 +487,6 @@ void building::spawn_figure_dentist() {
     common_spawn_roamer(FIGURE_DENTIST, 50);
 }
 
-void building::spawn_figure_physician() {
-    common_spawn_roamer(FIGURE_PHYSICIAN, 50);
-}
-
 void building::spawn_figure_magistrate() {
     common_spawn_roamer(FIGURE_MAGISTRATE, 50);
 }
@@ -1063,7 +1059,6 @@ bool building::figure_generate() {
         case BUILDING_WATER_LIFT: common_spawn_figure_trigger(50); break;
         case BUILDING_DENTIST: spawn_figure_dentist(); break;
         case BUILDING_MORTUARY: spawn_figure_mortuary(); break;
-        case BUILDING_PHYSICIAN: spawn_figure_physician(); break;
         case BUILDING_DOCK: spawn_figure_dock(); break;
         case BUILDING_FISHING_WHARF: spawn_figure_wharf(); break;
         case BUILDING_SHIPWRIGHT: spawn_figure_shipyard(); break;

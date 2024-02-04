@@ -42,10 +42,8 @@ void building_pottery::window_info_background(object_info& c) {
 }
 
 bool building_pottery::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    if (worker_percentage() > 50) {
-        const animation_t &anim = model::pottery.anim["work"];
-        building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
-    }
+    const animation_t &anim = model::pottery.anim["work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;
 }

@@ -13,6 +13,7 @@
 #include "building/building_tax_collector.h"
 #include "building/building_jugler_school.h"
 #include "building/building_raw_material.h"
+#include "building/building_physician.h"
 #include "building/storage_yard.h"
 #include "building/building_brewery.h"
 #include "building/monument_mastaba.h"
@@ -325,6 +326,7 @@ building_impl *building::dcast() {
     case BUILDING_WATER_SUPPLY: _ptr = new building_water_supply(*this); break;
     case BUILDING_CLAY_PIT: _ptr = new building_clay_pit(*this); break;
     case BUILDING_CONSERVATORY: _ptr = new building_conservatory(*this); break;
+    case BUILDING_PHYSICIAN: _ptr = new building_physician(*this); break;
 
     case BUILDING_VILLAGE_PALACE:
     case BUILDING_TOWN_PALACE:
@@ -519,9 +521,6 @@ e_overlay building::get_overlay() const {
         
         case BUILDING_BOOTH:
             return OVERLAY_BOOTH;
-
-        case BUILDING_PHYSICIAN:
-            return OVERLAY_PHYSICIAN;
     }
 
     return const_cast<building*>(this)->dcast()->get_overlay();

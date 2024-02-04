@@ -330,7 +330,6 @@ public:
     void spawn_figure_library();
     void spawn_figure_dentist();
     void spawn_figure_mortuary();
-    void spawn_figure_physician();
     void spawn_figure_magistrate();
     void spawn_figure_temple();
     void set_greate_palace_graphic();
