@@ -1,6 +1,7 @@
 #include "building_statue.h"
 
 #include "building/building.h"
+#include "building/rotation.h"
 #include "city/object_info.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
@@ -15,7 +16,43 @@
 
 #include "js/js_game.h"
 
-void building_statue_draw_info(object_info &c) {
+namespace model {
+    struct small_statue_t {
+        std::vector<image_desc> var;
+    };
+    small_statue_t small_statue;
+
+    struct medium_statue_t {
+        std::vector<image_desc> var;
+    };
+    medium_statue_t medium_statue;
+
+    struct big_statue_t {
+        std::vector<image_desc> var;
+    };
+    big_statue_t big_statue;
+
+    template<typename T>
+    void config_load_statue(pcstr key, T& model) {
+        model.var.clear();
+        g_config_arch.r_section(key, [&model] (archive model_arch) {
+            model_arch.r_array("variants", [&model] (archive arch) {
+                int pack = arch.r_int("pack");
+                int id = arch.r_int("id");
+                int offset = arch.r_int("offset");
+                model.var.push_back({pack, id, offset});
+            });
+        });
+    }
+}
+
+void building_statue::on_create() {
+    int orientation = (4 + building_rotation_global_rotation() + city_view_orientation() / 2) % 4;
+    data.monuments.variant = building_rotation_get_building_variant();
+    data.monuments.statue_offset = rand() % 4;
+}
+
+void building_statue::window_info_background(object_info &c) {
     c.help_id = 79;
     window_building_play_sound(&c, snd::get_building_info_sound("statue"));
     outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
@@ -23,45 +60,26 @@ void building_statue_draw_info(object_info &c) {
     window_building_draw_description_at(c, 16 * c.height_blocks - 158, 80, 1);
 }
 
-svector<image_desc, 10> small_statues_img;
-svector<image_desc, 10> medium_statue_images;
-svector<image_desc, 10> big_statues_img;
+ANK_REGISTER_CONFIG_ITERATOR(config_load_statue_models);
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_small_statue_images);
-ANK_REGISTER_CONFIG_ITERATOR(config_load_medium_statue_images);
-ANK_REGISTER_CONFIG_ITERATOR(config_load_big_statue_images);
-
-template<typename T>
-void config_load_statue_images_t(pcstr key, T& config) {
-    config.clear();
-    g_config_arch.r_array(key, [&] (archive arch) {
-        int pack = arch.r_int("pack");
-        int id = arch.r_int("id");
-        int offset = arch.r_int("offset");
-        config.push_back({pack, id, offset});
-    });
+void config_load_statue_models() {
+    model::config_load_statue("building_small_statue", model::small_statue);
+    model::config_load_statue("building_medium_statue", model::medium_statue);
+    model::config_load_statue("building_big_statue", model::big_statue);
 }
 
-void config_load_small_statue_images() {
-    config_load_statue_images_t("small_statue_images", small_statues_img);
-}
+int building_statue_get_variant_size(int type) {
+    switch (type) {
+    case BUILDING_SMALL_STATUE: return model::small_statue.var.size(); break;
+    case BUILDING_MEDIUM_STATUE: return model::medium_statue.var.size(); break;
+    case BUILDING_LARGE_STATUE: return model::big_statue.var.size(); break;
+    }
 
-void config_load_medium_statue_images() {
-    config_load_statue_images_t("medium_statue_images", medium_statue_images);
-}
-
-void config_load_big_statue_images() {
-    config_load_statue_images_t("big_statue_images", big_statues_img);
+    return 0;
 }
 
 int building_statue_random_variant(int type, int variant) {
-    int size = 1;
-    switch (type) {
-    case BUILDING_SMALL_STATUE: size = small_statues_img.size(); break;
-    case BUILDING_MEDIUM_STATUE: size = medium_statue_images.size(); break;
-    case BUILDING_LARGE_STATUE: size = big_statues_img.size(); break;
-    }
-
+    int size = building_statue_get_variant_size(type);
     return rand() % size;
 }
 
@@ -70,13 +88,7 @@ int building_statue_next_variant(int type, int variant) {
         return 0;
     }
 
-    int size = 0;
-    switch (type) {
-    case BUILDING_SMALL_STATUE: size = small_statues_img.size(); break;
-    case BUILDING_MEDIUM_STATUE: size = medium_statue_images.size(); break;
-    case BUILDING_LARGE_STATUE: size = big_statues_img.size(); break;
-    }
-
+    int size = building_statue_get_variant_size(type);
     if (!size) {
         return variant;
     }
@@ -88,27 +100,28 @@ int building_statue_next_variant(int type, int variant) {
 int building_statue_get_image(int type, int orientation, int variant) {
     int image_id = 0;
 
-    while (orientation < 0)
-        orientation += 4;
-    while (orientation > 3)
-        orientation -= 4;
-    while (variant < 0)
-        variant += 4;
-    while (variant > 3)
-        variant -= 4;
+    int size = building_statue_get_variant_size(type);
+    //
+    while (orientation < 0) { orientation += 4; }
+    //
+    while (orientation > 3) { orientation -= 4; }
+
+    while (variant < 0) { variant += 4; }
+
+    while (variant > (size - 1)) { variant -= size; }
 
     switch (type) {
     case BUILDING_SMALL_STATUE:
-        variant %= small_statues_img.size();
-        return image_group(small_statues_img[variant]);
+        variant %= size;
+        return image_group(model::small_statue.var[variant]);
 
     case BUILDING_MEDIUM_STATUE:
-        variant %= medium_statue_images.size();
-        return image_group(medium_statue_images[variant]);
+        variant %= size;
+        return image_group(model::medium_statue.var[variant]);
 
     case BUILDING_LARGE_STATUE:
-        variant %= big_statues_img.size();
-        return image_group(big_statues_img[variant]);
+        variant %= size;
+        return image_group(model::big_statue.var[variant]);
     }
 
     return image_id;

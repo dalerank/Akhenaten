@@ -1726,6 +1726,9 @@ void BuildPlanner::update_orientations(bool check_if_changed) {
         relative_orientation = global_rotation + 1;
         variant = 0;
         break;
+
+    default:
+        break;
     }
     relative_orientation = relative_orientation % 4;
     absolute_orientation = city_view_absolute_orientation(relative_orientation);

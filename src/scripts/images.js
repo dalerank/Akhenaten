@@ -1,27 +1,5 @@
 log_info("akhenaten: images started")
 
-small_statue_images = [
-	{pack: PACK_GENERAL, id: 61, offset:1},
-	{pack: PACK_GENERAL, id: 61, offset:5},
-	{pack: PACK_EXPANSION, id: 37, offset:1},
-	{pack: PACK_EXPANSION, id: 37, offset:5},
-	{pack: PACK_TEMPLE_RA, id: 1, offset:27},
-]
-
-medium_statue_images = [
-	{pack: PACK_GENERAL, id: 8, offset:1},
-	{pack: PACK_GENERAL, id: 8, offset:5},
-	{pack: PACK_EXPANSION, id: 36, offset:1},
-	{pack: PACK_EXPANSION, id: 36, offset:5},
-]
-
-big_statue_images = [
-	{pack: PACK_GENERAL, id: 7, offset:1},
-	{pack: PACK_GENERAL, id: 7, offset:5},
-	{pack: PACK_EXPANSION, id: 35, offset:1},
-	{pack: PACK_EXPANSION, id: 35, offset:5},
-]
-
 images = [
 	{img: IMG_IMMIGRANT, pack: PACK_SPR_MAIN, id: 14},// 886
 	//{img: IMG_IMMIGRANT_DEATH, pack: PACK_SPR_MAIN, id: 15} // 982

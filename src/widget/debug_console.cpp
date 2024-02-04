@@ -15,6 +15,8 @@
 #include "imgui/backends/imgui_impl_sdlrenderer.h"
 #include "imgui/backends/imgui_impl_sdl.h"
 
+#include <iostream>
+
 dev::imgui_qconsole *_debug_console = nullptr;
 
 dev::imgui_qconsole &debug_console() {

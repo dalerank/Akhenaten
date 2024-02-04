@@ -616,12 +616,6 @@ static void draw_refresh_background() {
             case BUILDING_WATER_LIFT: window_building_draw_water_lift(&context); break;
             case BUILDING_MENU_BEAUTIFICATION: window_building_draw_fountain(&context); break;
 
-            case BUILDING_SMALL_STATUE:
-            case BUILDING_MEDIUM_STATUE:
-            case BUILDING_LARGE_STATUE:
-                building_statue_draw_info(context);
-                break;
-
             case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&context); break;
             case BUILDING_POLICE_STATION: window_building_draw_prefect(&context); break;
             

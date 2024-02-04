@@ -25,6 +25,34 @@ building_info = [
   { help_id:92, type:"bricklayers_guild", text_id:172},
 ]
 
+building_small_statue = {
+  variants : [
+    {pack: PACK_GENERAL, id: 61, offset:1},
+    {pack: PACK_GENERAL, id: 61, offset:5},
+    {pack: PACK_EXPANSION, id: 37, offset:1},
+    {pack: PACK_EXPANSION, id: 37, offset:5},
+    {pack: PACK_TEMPLE_RA, id: 1, offset:27},
+  ]
+}
+
+building_medium_statue = {
+  variants : [
+    {pack: PACK_GENERAL, id: 8, offset:1},
+    {pack: PACK_GENERAL, id: 8, offset:5},
+    {pack: PACK_EXPANSION, id: 36, offset:1},
+    {pack: PACK_EXPANSION, id: 36, offset:5},
+  ]
+}
+
+building_big_statue = {
+  variants : [
+    {pack: PACK_GENERAL, id: 7, offset:1},
+    {pack: PACK_GENERAL, id: 7, offset:5},
+    {pack: PACK_EXPANSION, id: 35, offset:1},
+    {pack: PACK_EXPANSION, id: 35, offset:5},
+  ]
+}
+
 building_personal_mansion = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_PERSONAL_MANSION }

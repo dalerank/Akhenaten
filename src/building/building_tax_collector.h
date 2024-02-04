@@ -5,7 +5,7 @@
 class building_tax_collector : public building_impl {
 public:
     building_tax_collector(building &b) : building_impl(b) {}
-    virtual bool is_workshop() const override { return true; }
+    virtual bool is_workshop() const override { return false; }
     virtual void window_info_background(object_info &c) override;
     virtual e_overlay get_overlay() const override { return OVERLAY_TAX_INCOME; }
     virtual void update_month() override;

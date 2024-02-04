@@ -3,6 +3,7 @@
 #include "core/string.h"
 
 #include <functional>
+#include <iosfwd>
 
 void game_debug_cli_draw();
 void game_debug_cli_message(pcstr msg);

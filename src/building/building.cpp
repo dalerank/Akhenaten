@@ -245,15 +245,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->subtype.market_goods = 0x0000;
         break;
 
-    case BUILDING_SMALL_STATUE:
-    case BUILDING_MEDIUM_STATUE:
-    case BUILDING_LARGE_STATUE: {
-            int orientation = (4 + building_rotation_global_rotation() + city_view_orientation() / 2) % 4;
-            b->data.monuments.variant = building_rotation_get_building_variant();
-            b->data.monuments.statue_offset = rand() % 4;
-        }
-        break;
-
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
@@ -344,6 +335,12 @@ building_impl *building::dcast() {
     case BUILDING_TAX_COLLECTOR:
     case BUILDING_TAX_COLLECTOR_UPGRADED:
         _ptr = new building_tax_collector(*this);
+        break;
+
+    case BUILDING_SMALL_STATUE:
+    case BUILDING_MEDIUM_STATUE:
+    case BUILDING_LARGE_STATUE:
+        _ptr = new building_statue(*this);
         break;
 
     case BUILDING_SHRINE_OSIRIS:
