@@ -8,6 +8,7 @@
 #include "input/hotkey.h"
 
 #include <functional>
+#include <iosfwd>
 
 extern int debug_range_1;
 extern int debug_range_2;

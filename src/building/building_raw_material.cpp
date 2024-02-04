@@ -29,7 +29,14 @@ struct clay_pit_t {
     animations_t anim;
 };
 
+struct gold_mine_t {
+    static constexpr e_building_type type = BUILDING_GOLD_MINE;
+    e_labor_category labor_category;
+    animations_t anim;
+};
+
 clay_pit_t clay_pit;
+gold_mine_t gold_mine;
 
 }
 
@@ -38,9 +45,15 @@ void config_load_building_raw_materials() {
     g_config_arch.r_section("building_clay_pit", [] (archive arch) {
         model::clay_pit.labor_category = arch.r_type<e_labor_category>("labor_category");
         model::clay_pit.anim.load(arch);
+        city_labor_set_category(model::clay_pit);
     });
 
-    city_labor_set_category(model::clay_pit);
+    g_config_arch.r_section("building_gold_mine", [] (archive arch) {
+        model::gold_mine.labor_category = arch.r_type<e_labor_category>("labor_category");
+        model::gold_mine.anim.load(arch);
+        city_labor_set_category(model::gold_mine);
+    });
+
 }
 
 static void building_raw_material_draw_info(object_info& c, const char* type, e_resource resource) {
@@ -121,6 +134,13 @@ int building_mine_gold::get_produce_uptick_per_day() const {
     }
 }
 
+bool building_mine_gold::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    const animation_t &anim = model::gold_mine.anim["work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+
+    return true;
+}
+
 void building_quarry_stone::on_create() {
     base.output_resource_first_id = RESOURCE_STONE;
 }
@@ -146,10 +166,8 @@ int building_clay_pit::get_fire_risk(int value) const {
 }
 
 bool building_clay_pit::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    if (worker_percentage() > 50) {
-        const animation_t &anim = model::clay_pit.anim["work"];
-        building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
-    }
+    const animation_t &anim = model::clay_pit.anim["work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;
 }

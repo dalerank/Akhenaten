@@ -25,6 +25,7 @@ var main_menu_window = {}
 var building_booth = {}
 var building_conservatory = {}
 var building_pottery = {}
+var building_gold_mine = {}
 var building_clay_pit = {}
 var building_hunting_lodge = {}
 var building_village_palace = {}

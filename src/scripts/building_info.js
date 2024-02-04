@@ -59,6 +59,13 @@ building_clay_pit = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
+building_gold_mine = {
+  animations : {
+    work : { pos : [54, 15], anim_id: ANIM_GOLD_MINE, max_frames: 16 }
+  },
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
 building_pottery = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_POTTERY_WORKSHOP }
