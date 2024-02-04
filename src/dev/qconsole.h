@@ -55,7 +55,7 @@ class qconsole
 
     /// function which takes in a string and a variable from client code we want to associate with it in the console.  Takes in an optional help string to describe the variable to the user.
     template <class T>
-    void bindCVar(const std::string &varname, T &var, const std::string &help = "");
+    void bind_cvar(const std::string &varname, T &var, const std::string &help = "");
 
     // ------------------------------------//
     /* --------- ADDING COMMANDS ----------*/
@@ -67,22 +67,22 @@ class qconsole
     // IF YOU ARE USING A MEMBER FUNCTION - we need to wrap the "this" pointer too, so call bindMemberCommand() which takes the object reference as the first argument after the command name
 
     /// add a command to the console using a function pointer that takes no arguments.  set the associated help string to the "help" argument
-    void bindCommand(const std::string &commandName, void (*fptr)(void), const std::string &help = "");
+    void bind_command(const std::string &commandName, void (*fptr)(void), const std::string &help = "");
 
     ///add a command to the console using a function pointer that takes arbitrary arguments, then set the associated help string to the "help" argument
     template <typename... Args>
-    void bindCommand(const std::string &commandName, void (*fptr)(Args...), const std::string &help = "");
+    void bind_command(const std::string &commandName, void (*fptr)(Args...), const std::string &help = "");
 
     ///add a command to the console using a function object with arbitrary arguments, then set the associated help string to the optional "help" argument
     template <typename... Args>
-    void bindCommand(const std::string &commandName, std::function<void(Args...)> fun, const std::string &help = "");
+    void bind_command(const std::string &commandName, std::function<void(Args...)> fun, const std::string &help = "");
 
     /// same as bindCommand, but for a member function of an object.  Object instance is first argument after the command name
     template <typename O, typename... Args>
-    void bindMemberCommand(const std::string &commandName, O &obj, void (O::*fptr)(Args...), const std::string &help = "");
+    void bind_member_command(const std::string &commandName, O &obj, void (O::*fptr)(Args...), const std::string &help = "");
 
     /// the bindCommand that actually does the work of adding commands to the table AFTER they've been coerced to a ConsoleFunc that takes the input/output from executeCommand.  Takes optional help string.
-    void bindCommand(const std::string &commandName, ConsoleFunc f, const std::string &help = "");
+    void bind_command(const std::string &commandName, ConsoleFunc f, const std::string &help = "");
 
     // ------------------------------------//
     /* --------- HISTORY FILES ----------- */
@@ -216,7 +216,7 @@ class qconsole
     ///function which simply sets the value of an arbitrary type based on what's in the input stream
     ///the arguments are "eaten" by std bind, allowing it to be stored as type void (*x)(void) in the cvarReadFTable
     template <class T>
-    void setCvar(std::istream &is, std::ostream &os, T *var);
+    void set_cvar(std::istream &is, std::ostream &os, T *var);
 
     ///function which simply prints the value of a variable to an output stream
     ///the arguments are "eaten" by std bind, allowing it to be stored as type void (*x)(void) in the cvarPrintFTable
@@ -419,7 +419,7 @@ inline void dev::qconsole::parse(std::istream &is, std::ostream &os, std::functi
     populateAndExecute<Args...>(is, os, f, (makeTemp<typename std::remove_const<typename std::remove_reference<Args>::type>::type>())...);
 }
 
-inline void dev::qconsole::bindCommand(const std::string &str, void (*fptr)(void), const std::string &help)
+inline void dev::qconsole::bind_command(const std::string &str, void (*fptr)(void), const std::string &help)
 {
     commandTable[str] = [fptr](std::istream &, std::ostream &) { fptr(); };
 
@@ -428,7 +428,7 @@ inline void dev::qconsole::bindCommand(const std::string &str, void (*fptr)(void
 }
 
 template <typename... Args>
-inline void dev::qconsole::bindCommand(const std::string &str, void (*fptr)(Args...), const std::string &help)
+inline void dev::qconsole::bind_command(const std::string &str, void (*fptr)(Args...), const std::string &help)
 {
     commandTable[str] =
         [this, fptr](std::istream &is, std::ostream &os) {
@@ -441,7 +441,7 @@ inline void dev::qconsole::bindCommand(const std::string &str, void (*fptr)(Args
 }
 
 template <typename... Args>
-inline void dev::qconsole::bindCommand(const std::string &str, std::function<void(Args...)> fun, const std::string &help)
+inline void dev::qconsole::bind_command(const std::string &str, std::function<void(Args...)> fun, const std::string &help)
 {
     commandTable[str] =
         [this, fun](std::istream &is, std::ostream &os) {
@@ -452,7 +452,7 @@ inline void dev::qconsole::bindCommand(const std::string &str, std::function<voi
         setHelpTopic(str, help);
 }
 
-inline void dev::qconsole::bindCommand(const std::string &str, ConsoleFunc fun, const std::string &help)
+inline void dev::qconsole::bind_command(const std::string &str, ConsoleFunc fun, const std::string &help)
 {
     if (help.length())
         setHelpTopic(str, help);
@@ -466,11 +466,11 @@ inline void dev::qconsole::setHelpTopic(const std::string &str, const std::strin
 }
 
 template <class T>
-inline void dev::qconsole::bindCVar(const std::string &str, T &var, const std::string &help)
+inline void dev::qconsole::bind_cvar(const std::string &str, T &var, const std::string &help)
 {
     cvarReadFTable[str] =
         [this, &var](std::istream &is, std::ostream &os) {
-            this->setCvar<T>(is, os, &var);
+            this->set_cvar<T>(is, os, &var);
         };
 
     cvarPrintFTable[str] =
@@ -483,7 +483,7 @@ inline void dev::qconsole::bindCVar(const std::string &str, T &var, const std::s
 }
 
 template <class T>
-void dev::qconsole::setCvar(std::istream &is, std::ostream &os, T *var)
+void dev::qconsole::set_cvar(std::istream &is, std::ostream &os, T *var)
 {
     T tmp; ///temp argument is a necessity; without it we risk corruption of our variable value if there is a parse error.  Should be no issue unless someone is using this to parse a ginormous structure or copy construction invokes a state change.
 
@@ -742,21 +742,21 @@ inline void dev::qconsole::bindBasicCommands()
             static_cast<void (qconsole::*)(const std::string &, const DynamicVariable &)>(&qconsole::bindDynamicCVar<DynamicVariable>),
             this, std::placeholders::_1, std::placeholders::_2);
 
-    bindCommand("var", f1,
+    bind_command("var", f1,
                 "Type var <varname> <value> to declare a dynamic variable with name <varname> and value <value>."
                 "\nVariable names are any space delimited string and variable value is set to the remainder of the line.");
 
-    bindCommand("cmds", [this](std::istream &is, std::ostream &os) { this->listCmd(os); }, "lists the available console commands");
+    bind_command("cmds", [this](std::istream &is, std::ostream &os) { this->listCmd(os); }, "lists the available console commands");
 
-    bindCommand("set", [this](std::istream &is, std::ostream &os) { this->commandSet(is, os); }, "type set <identifier> <val> to change the value of a cvar");
+    bind_command("set", [this](std::istream &is, std::ostream &os) { this->commandSet(is, os); }, "type set <identifier> <val> to change the value of a cvar");
 
-    bindCommand("echo", [this](std::istream &is, std::ostream &os) { this->commandEcho(is, os); }, "type echo <identifier> to print the value of a cvar");
+    bind_command("echo", [this](std::istream &is, std::ostream &os) { this->commandEcho(is, os); }, "type echo <identifier> to print the value of a cvar");
 
-    bindCommand("cvars", [this](std::istream &is, std::ostream &os) { listCVars(os); }, "lists the bound cvars");
+    bind_command("cvars", [this](std::istream &is, std::ostream &os) { listCVars(os); }, "lists the bound cvars");
 
-    bindCommand("help", [this](std::istream &is, std::ostream &os) { this->commandHelp(is, os); }, "you're a smarty");
+    bind_command("help", [this](std::istream &is, std::ostream &os) { this->commandHelp(is, os); }, "you're a smarty");
 
-    bindCommand("runFile", [this](std::istream &is, std::ostream &os) {
+    bind_command("run", [this](std::istream &is, std::ostream &os) {
         std::string f;
         is >> f;
         this->executeFile(f, os);
@@ -864,7 +864,7 @@ inline dev::qconsole::qconsole(size_t maxCapacity)
 }
 
 template <typename O, typename... Args>
-void dev::qconsole::bindMemberCommand(const std::string &commandName, O &obj, void (O::*fptr)(Args...), const std::string &help)
+void dev::qconsole::bind_member_command(const std::string &commandName, O &obj, void (O::*fptr)(Args...), const std::string &help)
 {
     auto mf = std::mem_fn(fptr);
 
@@ -873,7 +873,7 @@ void dev::qconsole::bindMemberCommand(const std::string &commandName, O &obj, vo
             mf(obj, args...);
         };
 
-    bindCommand(commandName, fp);
+    bind_command(commandName, fp);
 
     if (help.length())
     {

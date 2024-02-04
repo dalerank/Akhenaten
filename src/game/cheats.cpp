@@ -24,14 +24,15 @@
 #include "window/city.h"
 #include "window/console.h"
 #include "figure/formation_herd.h"
+#include "dev/debug.h"
 
 #include <string.h>
+#include <iostream>
 
 #ifndef _WIN32
 #define stricmp strcasecmp
 #endif
 
-static void game_cheat_add_money(pcstr);
 static void game_cheat_start_invasion(pcstr);
 static void game_cheat_advance_year(pcstr);
 static void game_cheat_cast_blessing(pcstr);
@@ -64,8 +65,7 @@ struct cheat_command_handle {
     cheat_command* command;
 };
 
-static cheat_command_handle g_cheat_commands[] = {{"addmoney", game_cheat_add_money},
-                                                  {"startinvasion", game_cheat_start_invasion},
+static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_start_invasion},
                                                   {"addpottery", game_cheat_add_pottery},
                                                   {"addbeer", game_cheat_add_beer},
                                                   {"addbricks", game_cheat_add_bricks},
@@ -227,15 +227,6 @@ static void game_cheat_add_bricks(pcstr args) {
     window_invalidate();
 
     city_warning_show_console("Added bricks");
-}
-
-static void game_cheat_add_money(pcstr args) {
-    int money = 0;
-    parse_integer(args ? args : (pcstr )"100", money);
-    city_finance_process_console(money);
-    window_invalidate();
-
-    city_warning_show_console("Added money");
 }
 
 static void game_cheat_pop_milestone(pcstr args) {
@@ -409,3 +400,16 @@ void game_cheat_parse_command(pcstr command) {
         }
     }
 }
+
+static void game_cheat_add_money(std::istream &is, std::ostream &os) {
+    int money = 0;
+    std::string args;
+    is >> args;
+    parse_integer(args.empty() ? (pcstr )"100" : args.c_str(), money);
+    city_finance_process_console(money);
+    window_invalidate();
+
+    city_warning_show_console("Added money");
+}
+
+declare_console_command(addmoney, game_cheat_add_money);

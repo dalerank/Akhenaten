@@ -236,7 +236,7 @@ class imgui_qconsole : public MultiStream
 
     float fontScale = 1.2f; ///< text scale for the console widget window
 
-    void ClearLog(); ///< Clear the ostream
+    void clear(); ///< Clear the ostream
 
     void render(const char *title, bool& p_open, int width, int height); ///< Renders an IMGUI window implementation of the console
 
@@ -354,13 +354,13 @@ inline imgui_qconsole::imgui_qconsole()
 
     is.textCallbacks[ImGuiInputTextFlags_CallbackHistory] = [this](ImGuiInputTextCallbackData *data) { this->historyCallback(data); };
 
-    con.bindMemberCommand("clear", *this, &imgui_qconsole::ClearLog, "Clear the console");
-    con.bindCVar("fontScale", fontScale);
+    con.bind_member_command("clear", *this, &imgui_qconsole::clear, "Clear the console");
+    con.bind_cvar("fontScale", fontScale);
 
     con.style = qconsole::ConsoleStylingColor();
 }
 
-inline void imgui_qconsole::ClearLog() { os.Clear(); }
+inline void imgui_qconsole::clear() { os.Clear(); }
 
 inline void imgui_qconsole::optionsMenu() { ImGui::Checkbox("Auto-scroll", &os.autoScrollEnabled); }
 

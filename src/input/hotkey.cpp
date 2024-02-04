@@ -425,10 +425,6 @@ void hotkey_key_released(int key, int modifiers) {
     if (key == KEY_NONE) {
         return;
     }
-    if (key == KEY_GRAVE) {
-        game_toggle_debug_console();
-        return;
-    }
     for (int i = 0; i < data.num_arrows; i++) {
         arrow_definition* arrow = &data.arrows[i];
         if (arrow->key == key)

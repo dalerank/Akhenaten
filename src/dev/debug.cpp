@@ -38,6 +38,7 @@
 #include "game/tutorial.h"
 #include "grid/figure.h"
 #include "platform/renderer.h"
+#include "widget/debug_console.h"
 
 int g_debug_tile = 0;
 int g_debug_render = 0;
@@ -1283,4 +1284,12 @@ void draw_debug_ui(int x, int y) {
             text_draw((uint8_t*)string_from_ascii(f.value ? "yes" : "no"), x + 3 + 45, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
         }
     }
+}
+
+console_command::console_command(pcstr name, std::function<void(std::istream &is, std::ostream &os)> f) {
+    bind_debug_command(name, f);
+}
+
+console_var_int::console_var_int(pcstr name, int value) {
+    bind_debug_console_var_int(name, value);
 }

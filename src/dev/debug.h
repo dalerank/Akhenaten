@@ -1,10 +1,13 @@
 #pragma once
 
 #include "graphics/color.h"
+#include "core/string.h"
 #include "graphics/image.h"
 #include "graphics/view/view.h"
 #include "graphics/font.h"
 #include "input/hotkey.h"
+
+#include <functional>
 
 extern int debug_range_1;
 extern int debug_range_2;
@@ -87,3 +90,16 @@ void draw_debug_ui(int x, int y);
 inline bool draw_debug(e_debug_render opt) {
     return g_debug_show_opts[opt];
 }
+
+struct console_command {
+    console_command(pcstr name, std::function<void(std::istream &is, std::ostream &os)> f);
+};
+
+struct console_var_int {
+    int value;
+    console_var_int(pcstr name, int init);
+};
+
+#define declare_console_command(a, f) namespace console { bool cmd_##a; }; console_command a(#a, f);
+#define declare_console_var_int(a, v) namespace console { bool var_##a; }; console_var_int a(#a, v);
+

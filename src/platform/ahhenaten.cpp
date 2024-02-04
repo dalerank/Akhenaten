@@ -603,8 +603,10 @@ static void main_loop() {
 #else
         while (SDL_PollEvent(&event)) {
 #endif
-            ImGui_ImplSDL2_ProcessEvent(&event);
-            handle_event(&event, g_application.active, g_application.quit);
+            game_imgui_overlay_handle_event(&event);
+            if (!game.console) {
+                handle_event(&event, g_application.active, g_application.quit);
+            }
         }
 
         if (g_application.quit) {
