@@ -296,7 +296,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         break;
 
     case BUILDING_COPPER_MINE:
-    case BUILDING_GEMSTONE_MINE:
         building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, tile, image_group(ANIM_GOLD_MINE) - 1, color_mask);
         break;
 

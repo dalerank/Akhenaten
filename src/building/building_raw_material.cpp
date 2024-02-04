@@ -35,8 +35,15 @@ struct gold_mine_t {
     animations_t anim;
 };
 
+struct gems_mine_t {
+    static constexpr e_building_type type = BUILDING_GEMSTONE_MINE;
+    e_labor_category labor_category;
+    animations_t anim;
+};
+
 clay_pit_t clay_pit;
 gold_mine_t gold_mine;
+gems_mine_t gems_mine;
 
 }
 
@@ -54,6 +61,11 @@ void config_load_building_raw_materials() {
         city_labor_set_category(model::gold_mine);
     });
 
+    g_config_arch.r_section("building_gems_mine", [] (archive arch) {
+        model::gems_mine.labor_category = arch.r_type<e_labor_category>("labor_category");
+        model::gems_mine.anim.load(arch);
+        city_labor_set_category(model::gems_mine);
+    });
 }
 
 static void building_raw_material_draw_info(object_info& c, const char* type, e_resource resource) {
@@ -167,6 +179,25 @@ int building_clay_pit::get_fire_risk(int value) const {
 
 bool building_clay_pit::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     const animation_t &anim = model::clay_pit.anim["work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+
+    return true;
+}
+
+void building_mine_gems::on_create() {
+    base.output_resource_first_id = RESOURCE_GEMS;
+}
+
+int building_mine_gems::get_produce_uptick_per_day() const {
+    return base.num_workers / 10.f;
+}
+
+void building_mine_gems::window_info_background(object_info &c) {
+    building_raw_material_draw_info(c, "gems_mine", RESOURCE_GEMS);
+}
+
+bool building_mine_gems::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    const animation_t &anim = model::gold_mine.anim["work"];
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;

@@ -191,9 +191,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->output_resource_first_id = RESOURCE_REEDS;
         b->data.industry.max_gatheres = 1;
         break;
-    case BUILDING_GEMSTONE_MINE:
-        b->output_resource_first_id = RESOURCE_GEMS;
-        break;
     case BUILDING_CATTLE_RANCH:
         b->data.industry.first_material_id = RESOURCE_STRAW;
         b->output_resource_first_id = RESOURCE_MEAT;
@@ -327,6 +324,7 @@ building_impl *building::dcast() {
     case BUILDING_CLAY_PIT: _ptr = new building_clay_pit(*this); break;
     case BUILDING_CONSERVATORY: _ptr = new building_conservatory(*this); break;
     case BUILDING_PHYSICIAN: _ptr = new building_physician(*this); break;
+    case BUILDING_GEMSTONE_MINE: _ptr = new building_mine_gems(*this); break;
 
     case BUILDING_VILLAGE_PALACE:
     case BUILDING_TOWN_PALACE:

@@ -169,7 +169,7 @@ static building_properties properties[400] = {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {2, 0, 0, 0},     // gold
-    {2, 0, GROUP_BUILDING_GEMSTONE_MINE}, // gemstone
+    {2, 0, 0, 0}, // gemstone
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
@@ -270,6 +270,7 @@ void building_properties_init() {
     properties[BUILDING_JUGGLER_SCHOOL] = {2, 0, 0, 0, 0, IMG_JUGGLER_SCHOOL};
     properties[BUILDING_HUNTING_LODGE] = {2, 0, 0, 0, 0, IMG_HUNTING_LODGE};
     properties[BUILDING_CLAY_PIT] = {2, 0, 0, 0, 0, IMG_CLAY_PIT};
+    properties[BUILDING_GEMSTONE_MINE] = {2, 0, 0, 0, 0, IMG_GEMSTONE_MINE};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

@@ -29,6 +29,15 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };
 
+class building_mine_gems : public building_impl {
+public:
+    building_mine_gems(building &b) : building_impl(b) {}
+    virtual void on_create() override;
+    virtual void window_info_background(object_info &c) override;
+    virtual int get_produce_uptick_per_day() const override;
+    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+};
+
 class building_quarry_stone : public building_impl {
 public:
     building_quarry_stone(building &b) : building_impl(b) {}
