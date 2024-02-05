@@ -7,6 +7,7 @@ public:
     building_apothecary(building &b) : building_impl(b) {}
     virtual void window_info_background(object_info &c) override;
     virtual void spawn_figure() override;
+    virtual e_overlay get_overlay() const override { return OVERLAY_APOTHECARY; }
     virtual int animation_speed(int speed) const override { return 3; }
 };
 

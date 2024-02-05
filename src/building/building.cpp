@@ -4,6 +4,7 @@
 #include "building/rotation.h"
 #include "building/building_type.h"
 #include "building/storage.h"
+#include "building/building_temple.h"
 #include "building/building_statue.h"
 #include "building/building_work_camp.h"
 #include "building/building_bazaar.h"
@@ -324,6 +325,14 @@ building_impl *building::dcast() {
     case BUILDING_GEMSTONE_MINE: _ptr = new building_mine_gems(*this); break;
     case BUILDING_COPPER_MINE: _ptr = new building_mine_copper(*this); break;
 
+    case BUILDING_TEMPLE_OSIRIS:
+    case BUILDING_TEMPLE_RA:
+    case BUILDING_TEMPLE_PTAH:
+    case BUILDING_TEMPLE_SETH:
+    case BUILDING_TEMPLE_BAST:
+        _ptr = new building_temple(*this);
+        break;
+
     case BUILDING_VILLAGE_PALACE:
     case BUILDING_TOWN_PALACE:
     case BUILDING_CITY_PALACE:
@@ -488,35 +497,9 @@ void building::clear_related_data() {
 
 e_overlay building::get_overlay() const {
     switch (type) {
-        case BUILDING_SHRINE_OSIRIS:
-        case BUILDING_TEMPLE_OSIRIS:
-             return OVERLAY_RELIGION_OSIRIS;
-
-        case BUILDING_SHRINE_RA:
-        case BUILDING_TEMPLE_RA:
-            return OVERLAY_RELIGION_RA;
-
-        case BUILDING_SHRINE_PTAH:
-        case BUILDING_TEMPLE_PTAH:
-            return OVERLAY_RELIGION_PTAH;
-
-        case BUILDING_SHRINE_SETH:
-        case BUILDING_TEMPLE_SETH:
-            return OVERLAY_RELIGION_SETH;
-
-        case BUILDING_SHRINE_BAST:
-        case BUILDING_TEMPLE_BAST:
-            return OVERLAY_RELIGION_BAST;
-
-        case BUILDING_ARCHITECT_POST: return OVERLAY_DAMAGE;
-        case BUILDING_FIREHOUSE: return OVERLAY_FIRE;
         case BUILDING_POLICE_STATION: return OVERLAY_CRIME;
-        case BUILDING_APOTHECARY: return OVERLAY_APOTHECARY;
         case BUILDING_COURTHOUSE: return OVERLAY_COUTHOUSE;
         case BUILDING_SCRIBAL_SCHOOL: return OVERLAY_SCRIBAL_SCHOOL;
-        
-        case BUILDING_BOOTH:
-            return OVERLAY_BOOTH;
     }
 
     return const_cast<building*>(this)->dcast()->get_overlay();

@@ -1,9 +1,13 @@
 #pragma once
 
-struct object_info;
+#include "building/building.h"
 
-void building_temple_osiris_draw_info(object_info& c);
-void building_temple_ra_draw_info(object_info& c);
-void building_temple_ptah_draw_info(object_info& c);
-void building_temple_seth_draw_info(object_info& c);
-void building_temple_bast_draw_info(object_info& c);
+class building_temple : public building_impl {
+public:
+    building_temple(building &b) : building_impl(b) {}
+    //virtual void on_create() override;
+    virtual e_overlay get_overlay() const override;
+    virtual e_sound_channel_city sound_channel() const override;
+    virtual void window_info_background(object_info &c) override;
+    virtual void spawn_figure() override;
+};

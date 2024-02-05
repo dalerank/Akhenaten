@@ -66,11 +66,11 @@ static building_properties properties[400] = {
     {3, 1, GROUP_BUILDING_FORT}, // fort (main)
     {2, 1, 0, 0},
     {2, 1, 0, 0},
-    {3, 0, GROUP_BUILDING_TEMPLE_OSIRIS},
-    {3, 0, GROUP_BUILDING_TEMPLE_RA},
-    {3, 0, GROUP_BUILDING_TEMPLE_PTAH},
-    {3, 0, GROUP_BUILDING_TEMPLE_SETH},
-    {3, 0, GROUP_BUILDING_TEMPLE_BAST},   // temples ^^^^
+    {3, 0, 0, 0},
+    {3, 0, 0, 0},
+    {3, 0, 0, 0},
+    {3, 0, 0, 0},
+    {3, 0, 0, 0},   // temples ^^^^
     {3, 0, 0, 0},                         // oz
     {3, 0, 0, 0},                         // ra
     {3, 0, 0, 0},                         // ptah
@@ -271,6 +271,11 @@ void building_properties_init() {
     properties[BUILDING_HUNTING_LODGE] = {2, 0, 0, 0, 0, IMG_HUNTING_LODGE};
     properties[BUILDING_CLAY_PIT] = {2, 0, 0, 0, 0, IMG_CLAY_PIT};
     properties[BUILDING_GEMSTONE_MINE] = {2, 0, 0, 0, 0, IMG_GEMSTONE_MINE};
+    properties[BUILDING_TEMPLE_OSIRIS] = {3, 0, 0, 0, 0, IMG_TEMPLE_OSIRIS};
+    properties[BUILDING_TEMPLE_RA] = {3, 0, 0, 0, 0, IMG_TEMPLE_RA};
+    properties[BUILDING_TEMPLE_PTAH] = {3, 0, 0, 0, 0, IMG_TEMPLE_PTAH};
+    properties[BUILDING_TEMPLE_SETH] = {3, 0, 0, 0, 0, IMG_TEMPLE_SETH};
+    properties[BUILDING_TEMPLE_BAST] = {3, 0, 0, 0, 0, IMG_TEMPLE_BAST};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

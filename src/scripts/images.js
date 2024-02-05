@@ -136,6 +136,11 @@ images = [
 	{img: IMG_HUNTING_LODGE, pack:PACK_GENERAL, id:176, offset:0},
 	{img: IMG_CLAY_PIT, pack:PACK_GENERAL, id:40, offset:0},
 	{img: IMG_GEMSTONE_MINE, pack:PACK_GENERAL, id:188, offset:0},
+	{img: IMG_TEMPLE_OSIRIS, pack:PACK_GENERAL, id:25, offset:0},
+	{img: IMG_TEMPLE_RA, pack:PACK_GENERAL, id:21, offset:0},
+	{img: IMG_TEMPLE_PTAH, pack:PACK_GENERAL, id:20, offset:0},
+	{img: IMG_TEMPLE_SETH, pack:PACK_GENERAL, id:19, offset:0},
+	{img: IMG_TEMPLE_BAST, pack:PACK_GENERAL, id:76, offset:0},
 ]
 
 cart_offsets = [

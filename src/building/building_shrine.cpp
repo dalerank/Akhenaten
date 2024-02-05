@@ -30,6 +30,18 @@ static void building_shrine_draw_info(object_info& c, const char* type, int text
     }
 }
 
+e_overlay building_shrine::get_overlay() const {
+    switch (type()) {
+    case BUILDING_SHRINE_OSIRIS: return OVERLAY_RELIGION_OSIRIS;
+    case BUILDING_SHRINE_RA:   return OVERLAY_RELIGION_RA;
+    case BUILDING_SHRINE_PTAH: return OVERLAY_RELIGION_PTAH;
+    case BUILDING_SHRINE_SETH: return OVERLAY_RELIGION_SETH;
+    case BUILDING_SHRINE_BAST: return OVERLAY_RELIGION_BAST;
+    }
+
+    return OVERLAY_NONE;
+}
+
 void building_shrine::window_info_background(object_info &ctx) {
     switch (base.type) {
     case BUILDING_SHRINE_OSIRIS:

@@ -571,31 +571,6 @@ static void draw_refresh_background() {
             case BUILDING_ACADEMY: building_academy_draw_info(context); break;
             case BUILDING_LIBRARY: building_library_draw_info(context); break;
             
-            case BUILDING_TEMPLE_OSIRIS:
-            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-                building_temple_osiris_draw_info(context);
-                break;
-
-            case BUILDING_TEMPLE_RA:
-            case BUILDING_TEMPLE_COMPLEX_RA:
-                building_temple_ra_draw_info(context);
-                break;
-
-            case BUILDING_TEMPLE_PTAH:
-            case BUILDING_TEMPLE_COMPLEX_PTAH:
-                building_temple_ptah_draw_info(context);
-                break;
-
-            case BUILDING_TEMPLE_SETH:
-            case BUILDING_TEMPLE_COMPLEX_SETH:
-                building_temple_seth_draw_info(context);
-                break;
-
-            case BUILDING_TEMPLE_BAST:
-            case BUILDING_TEMPLE_COMPLEX_BAST:
-                building_temple_bast_draw_info(context);
-                break;
-
             case BUILDING_ORACLE:
                 window_building_draw_oracle(&context);
                 break;

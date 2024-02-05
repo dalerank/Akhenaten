@@ -490,11 +490,6 @@ void building::spawn_figure_dentist() {
 void building::spawn_figure_magistrate() {
     common_spawn_roamer(FIGURE_MAGISTRATE, 50);
 }
-void building::spawn_figure_temple() {
-    if (is_main()) {
-        common_spawn_roamer(FIGURE_PRIEST, 50);
-    }
-}
 
 //void building::set_water_supply_graphic() {
 //    if (state != BUILDING_STATE_VALID) {
@@ -1043,8 +1038,6 @@ bool building::figure_generate() {
                 break;
             }
         }
-    } else if (is_temple() || is_large_temple()) {
-        spawn_figure_temple();
     } else {
         // single building type
         switch (type) {
