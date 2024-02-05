@@ -57,12 +57,19 @@ void game_imgui_overlay_destroy() {
 }
 
 void game_imgui_overlay_begin_frame() {
+    if (!game.console) {
+        return;
+    }
+
     ImGui_ImplSDLRenderer_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 }
 
 void game_imgui_overlay_draw() {
+    if (!game.console) {
+        return;
+    }
     ImGui::Render();
     ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
 }
