@@ -44,7 +44,6 @@ static void game_cheat_start_plague(pcstr);
 static void game_cheat_pop_milestone(pcstr);
 static void game_cheat_fire(pcstr);
 static void game_cheat_collapse(pcstr);
-static void game_cheat_nofire(pcstr);
 static void game_cheat_nodamage(pcstr);
 static void game_cheat_spacious_apartment(pcstr);
 static void game_cheat_spawn_nobles(pcstr);
@@ -79,7 +78,6 @@ static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_s
                                                   {"victory", game_cheat_victory},
                                                   {"popmilestone", game_cheat_pop_milestone},
                                                   {"fire", game_cheat_fire},
-                                                  {"nofire", game_cheat_nofire},
                                                   {"nodamage", game_cheat_nodamage},
                                                   {"collapse", game_cheat_collapse},
                                                   {"spawnnobles", game_cheat_spawn_nobles},
@@ -262,12 +260,6 @@ static void game_cheat_fire(pcstr args) {
 
 static void game_cheat_spacious_apartment(pcstr args) {
     tutorial_on_house_evolve(HOUSE_SPACIOUS_APARTMENT);
-}
-
-static void game_cheat_nofire(pcstr args) {
-    buildings_valid_do([&] (building &b) {
-        b.fire_risk = 0;
-    });
 }
 
 static void game_cheat_nodamage(pcstr args) {

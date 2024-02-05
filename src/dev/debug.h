@@ -68,8 +68,6 @@ extern int g_debug_render;
 
 void handle_debug_hotkeys(const hotkeys* h);
 
-void debug_e_fontest();
-
 void debug_text(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, int value, color color = COLOR_WHITE, e_font font = FONT_SMALL_OUTLINED);
 void debug_text_a(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, color color = COLOR_WHITE, e_font font = FONT_SMALL_OUTLINED);
 void debug_text_float(uint8_t* str, int x, int y, int indent, const char* text, double value, color color = COLOR_WHITE);
