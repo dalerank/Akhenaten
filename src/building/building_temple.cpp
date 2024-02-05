@@ -13,7 +13,48 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
+#include "graphics/animation.h"
 #include "game/game.h"
+#include "city/labor.h"
+#include "widget/city/ornaments.h"
+
+namespace model {
+
+struct building_temple_t {
+    const e_building_type type;
+    const pcstr name;
+    bstring64 meta_id;
+    e_labor_category labor_category;
+    animations_t anim;
+};
+
+building_temple_t temple_osiris{BUILDING_TEMPLE_OSIRIS, "building_temple_osiris"};
+building_temple_t temple_ra{BUILDING_TEMPLE_RA, "building_temple_ra"};
+building_temple_t temple_ptah{BUILDING_TEMPLE_PTAH, "building_temple_ptah"};
+building_temple_t temple_seth{BUILDING_TEMPLE_SETH, "building_temple_seth"};
+building_temple_t temple_bast{BUILDING_TEMPLE_BAST, "building_temple_bast"};
+building_temple_t temple_dummy{BUILDING_NONE, "unknown"};
+
+}
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_temples);
+void config_load_building_temples() {
+    auto load_temple_model = [] (model::building_temple_t &model) {
+        g_config_arch.r_section(model.name, [&model] (archive arch) {
+            model.labor_category = arch.r_type<e_labor_category>("labor_category");
+            model.meta_id = arch.r_string("meta_id");
+            model.anim.load(arch);
+            city_labor_set_category(model);
+        });
+
+    };
+
+    load_temple_model(model::temple_osiris);
+    load_temple_model(model::temple_ra);
+    load_temple_model(model::temple_ptah);
+    load_temple_model(model::temple_seth);
+    load_temple_model(model::temple_bast);
+}
 
 static void building_temple_draw_temple(object_info& c, const char* type, int group_id, int image_offset) {
     c.help_id = 67;
@@ -82,4 +123,24 @@ void building_temple::spawn_figure() {
     if (is_main()) {
         common_spawn_roamer(FIGURE_PRIEST, 50, FIGURE_ACTION_125_ROAMING);
     }
+}
+
+bool building_temple::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    const animation_t &anim = params().anim["work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+
+    return true;
+}
+
+const model::building_temple_t &building_temple::params() const {
+    switch (type()) {
+    case BUILDING_TEMPLE_OSIRIS: return model::temple_osiris;
+    case BUILDING_TEMPLE_RA: return model::temple_ra;
+    case BUILDING_TEMPLE_PTAH: return model::temple_ptah;
+    case BUILDING_TEMPLE_SETH: return model::temple_seth;
+    case BUILDING_TEMPLE_BAST: return model::temple_bast;
+    }
+
+    assert(false);
+    return model::temple_dummy;
 }

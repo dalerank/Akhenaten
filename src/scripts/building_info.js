@@ -59,6 +59,36 @@ building_personal_mansion = {
   }
 }
 
+building_temple_osiris = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_TEMPLE_OSIRIS }
+  }
+}
+
+building_temple_ra = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_TEMPLE_RA }
+  }
+}
+
+building_temple_ptah = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_TEMPLE_PTAH }
+  }
+}
+
+building_temple_seth = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_TEMPLE_SETH }
+  }
+}
+
+building_temple_bast = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_TEMPLE_BAST }
+  }
+}
+
 building_booth = {
   animations : {
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW }
