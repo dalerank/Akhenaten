@@ -84,6 +84,17 @@ building_clay_pit = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_CLAY_PIT }
   },
+  output_resource : RESOURCE_CLAY,
+  meta_id : "clay_pit",
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
+building_copper_mine = {
+  animations : {
+    work : { pos : [54, 15], anim_id: ANIM_GOLD_MINE, max_frames: 16 }
+  },
+  output_resource : RESOURCE_COPPER,
+  meta_id : "copper_mine",
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -91,6 +102,8 @@ building_gems_mine = {
   animations : {
     work : { pos : [54, 15], anim_id: ANIM_GOLD_MINE, max_frames: 16 }
   },
+  output_resource : RESOURCE_GEMS,
+  meta_id : "gems_mine",
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -98,6 +111,8 @@ building_gold_mine = {
   animations : {
     work : { pos : [54, 15], anim_id: ANIM_GOLD_MINE, max_frames: 16 }
   },
+  output_resource : RESOURCE_GOLD,
+  meta_id : "gold_mine",
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 

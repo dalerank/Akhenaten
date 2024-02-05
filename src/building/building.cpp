@@ -216,9 +216,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_GRANITE_QUARRY:
         b->output_resource_first_id = RESOURCE_GRANITE;
         break;
-    case BUILDING_COPPER_MINE:
-        b->output_resource_first_id = RESOURCE_COPPER;
-        break;
     case BUILDING_SANDSTONE_QUARRY:
         b->output_resource_first_id = RESOURCE_SANDSTONE;
         break;
@@ -325,6 +322,7 @@ building_impl *building::dcast() {
     case BUILDING_CONSERVATORY: _ptr = new building_conservatory(*this); break;
     case BUILDING_PHYSICIAN: _ptr = new building_physician(*this); break;
     case BUILDING_GEMSTONE_MINE: _ptr = new building_mine_gems(*this); break;
+    case BUILDING_COPPER_MINE: _ptr = new building_mine_copper(*this); break;
 
     case BUILDING_VILLAGE_PALACE:
     case BUILDING_TOWN_PALACE:

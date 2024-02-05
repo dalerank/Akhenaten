@@ -22,6 +22,7 @@ var medium_statue_images = []
 var big_statue_images = []
 var top_menu_bar = {}
 var main_menu_window = {}
+var building_copper_mine = {}
 var building_gems_mine = {}
 var building_physician = {}
 var building_small_statue = {}

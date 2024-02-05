@@ -10,3 +10,4 @@ void js_register_city_images(js_State *J);
 void js_register_city_labor_category(js_State *J);
 void js_register_collection_images(js_State *J);
 void js_register_ui_fonts(js_State *J);
+void js_register_city_resources(js_State *J);
