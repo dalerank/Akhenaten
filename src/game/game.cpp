@@ -253,10 +253,6 @@ void game_draw_frame_warning() {
     warning_draw();
 }
 
-void game_toggle_debug_console() {
-    game.console = !game.console;
-}
-
 void game_handle_input_after() {
     OZZY_PROFILER_SECTION("Input/Frame/After");
     window_update_input_after();

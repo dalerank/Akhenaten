@@ -85,12 +85,28 @@ bool game_imgui_overlay_handle_event(void *e) {
         }
     }
 
+    if (event->type == SDL_TEXTINPUT && *event->text.text == '`') {
+        debug_console().skip_event = true;
+    }
+
     if (!game.console) {
+        return false;
+    }
+
+    if (debug_console().skip_event) {
+        debug_console().skip_event = false;
         return false;
     }
 
     ImGui_ImplSDL2_ProcessEvent(event);
     return false;
+}
+
+void game_toggle_debug_console() {
+    game.console = !game.console;
+    if (game.console) {
+        debug_console().is.reclaim_focus = true;
+    }
 }
 
 void bind_debug_command(pcstr cmd, std::function<void(std::istream &, std::ostream &)> f) {

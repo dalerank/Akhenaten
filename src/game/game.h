@@ -17,7 +17,6 @@ void game_sound_frame();
 void game_handle_input_frame();
 void game_draw_frame_warning();
 void game_handle_input_after();
-void game_toggle_debug_console();
 void game_exit_editor();
 
 void game_exit();

@@ -132,7 +132,7 @@ building_physician = {
 
 building_conservatory = {
   animations : {
-    work : { pos : [82, 14], anim_id: IMG_MUSICIAN_SHOW_SN }
+    work : { pos : [82, 18], anim_id: IMG_MUSICIAN_SHOW_SN }
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
 }

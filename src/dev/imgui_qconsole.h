@@ -188,6 +188,7 @@ struct IMGUIInputLine
 
     /// Renders the contorl in whatever the surrounding IMGUI context is.  Returns true if new user input is available.
     bool render(int width);
+    bool reclaim_focus = false;
 };
 
 /// GUI Ostream pane with ANSI Color Code Support
@@ -235,6 +236,7 @@ class imgui_qconsole : public MultiStream
     int HistoryPos = -1; ///< index into the console history buffer, for when we press up/down arrow to scroll previous commands
 
     float fontScale = 1.2f; ///< text scale for the console widget window
+    bool skip_event = false;
 
     void clear(); ///< Clear the ostream
 
@@ -914,12 +916,12 @@ inline bool IMGUIInputLine::render(int width)
 {
     bool rval = false;
 
-    // Command-line
-    bool reclaim_focus = false;
-
     ImGui::SetNextWindowSize(ImVec2(width, 0));
-    if (ImGui::InputText("##Input", &InputBuf, input_text_flags, &TextEditCallbackStub, (void*)(&textCallbacks)))
-    {
+    if (reclaim_focus) {
+        ImGui::SetKeyboardFocusHere(0); // Auto focus previous widget
+        reclaim_focus = false;
+    }
+    if (ImGui::InputText("##Input", &InputBuf, input_text_flags, &TextEditCallbackStub, (void*)(&textCallbacks))) {
         reclaim_focus = true;
 
         char* s = InputBuf.data();
@@ -939,9 +941,7 @@ inline bool IMGUIInputLine::render(int width)
     }
 
     // Auto-focus on window apparition
-    ImGui::SetItemDefaultFocus();
-    if (reclaim_focus)
-        ImGui::SetKeyboardFocusHere(-1); // Auto focus previous widget
+    ImGui::SetItemDefaultFocus();     
 
     return rval;
 }
