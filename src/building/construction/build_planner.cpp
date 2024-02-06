@@ -52,8 +52,10 @@ BuildPlanner Planner;
 
 static int last_items_cleared;
 
-static const int FORT_X_OFFSET[4][4] = {{3, 4, 4, 3}, {-1, 0, 0, -1}, {-4, -3, -3, 4}, {0, 1, 1, 0}};
-static const int FORT_Y_OFFSET[4][4] = {{-1, -1, 0, 0}, {-4, -4, -3, -3}, {0, 0, 1, 1}, {3, 3, 4, 4}};
+static const vec2i FORT_OFFSET[4][4] = {{{3, -1}, {4, -1}, {4, 0}, {3, 0}}, 
+                                        {{-1, -4}, {0, -4}, {0, -3}, {-1, -3}}, 
+                                        {{-4, 0}, {-3, 0}, {-3, 1}, {4, 1}}, 
+                                        {{0, 3}, {1, 3}, {1, 4}, {0, 4}}};
 
 const int CROPS_OFFSETS[2] = {5, 6};
 
@@ -1816,16 +1818,18 @@ void BuildPlanner::construction_cancel() {
 
 void BuildPlanner::construction_update(tile2i tile) {
     end = tile;
-    if (end == tile2i(-1, -1))
+    if (end == tile2i(-1, -1)) {
         return;
+    }
 
     if (!build_type || city_finance_out_of_money()) {
         total_cost = 0;
         return;
     }
+
     map_property_clear_constructing_and_deleted();
     int current_cost = model_get_building(build_type)->cost;
-
+    int global_rotation = building_rotation_global_rotation();
     int items_placed = 1;
     switch (build_type) {
     case BUILDING_CLEAR_LAND:
@@ -1876,6 +1880,20 @@ void BuildPlanner::construction_update(tile2i tile) {
     case BUILDING_FERRY:
         draw_as_constructing = map_shore_determine_orientation(end, additional_req_param1, true).match;
         break;
+
+    case BUILDING_FORT_ARCHERS:
+    case BUILDING_FORT_CHARIOTEERS:
+    case BUILDING_FORT_INFANTRY:
+        if (formation_get_num_forts_cached() < 6) {
+            vec2i offset = FORT_OFFSET[global_rotation][city_view_orientation() / 2];
+            tile2i ground = tile.shifted(offset.x, offset.y);
+            if (map_building_tiles_are_clear(tile, 3, TERRAIN_ALL)
+                && map_building_tiles_are_clear(ground, 4, TERRAIN_ALL)) {
+                mark_construction(tile, 3, 3, TERRAIN_ALL, false);
+            }
+        }
+        break;
+
     default:
         if (special_flags & PlannerFlags::Meadow || special_flags & PlannerFlags::Rock
             || special_flags & PlannerFlags::Trees || special_flags & PlannerFlags::NearbyWater
@@ -1891,19 +1909,12 @@ void BuildPlanner::construction_update(tile2i tile) {
             }
         }
     }
-    if (items_placed >= 0)
+
+    if (items_placed >= 0) {
         current_cost *= items_placed;
+    }
     
     total_cost = current_cost;
-    int global_rotation = building_rotation_global_rotation();
-    if (building_is_fort(build_type)) {
-        if (formation_get_num_forts_cached() < 6) {
-            if (map_building_tiles_are_clear(tile, 3, TERRAIN_ALL)
-                && map_building_tiles_are_clear(tile.shifted(FORT_X_OFFSET[global_rotation][city_view_orientation() / 2], FORT_Y_OFFSET[global_rotation][city_view_orientation() / 2]), 4, TERRAIN_ALL)) {
-                mark_construction(tile, 3, 3, TERRAIN_ALL, false);
-            }
-        }
-    }
 }
 void BuildPlanner::construction_finalize() { // confirm final placement
     in_progress = false;

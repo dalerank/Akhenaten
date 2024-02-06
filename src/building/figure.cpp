@@ -1015,7 +1015,9 @@ bool building::figure_generate() {
             spawn_figure_farms();
             break;
 
-        case BUILDING_MENU_FORTS:
+        case BUILDING_FORT_CHARIOTEERS:
+        case BUILDING_FORT_ARCHERS:
+        case BUILDING_FORT_INFANTRY:
             formation_legion_update_recruit_status(this);
             break;
 

@@ -347,7 +347,9 @@ int figure::figure_rioter_collapse_building() {
         case BUILDING_STORAGE_YARD_SPACE:
         case BUILDING_STORAGE_YARD:
         case BUILDING_FORT_GROUND:
-        case BUILDING_MENU_FORTS:
+        case BUILDING_FORT_CHARIOTEERS:
+        case BUILDING_FORT_INFANTRY:
+        case BUILDING_FORT_ARCHERS:
         case BUILDING_BURNING_RUIN:
             continue;
         }

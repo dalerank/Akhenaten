@@ -479,8 +479,9 @@ void building::clear_related_data() {
     if (type == BUILDING_DISTRIBUTION_CENTER_UNUSED)
         city_buildings_remove_distribution_center(this);
 
-    if (type == BUILDING_MENU_FORTS)
+    if (building_is_fort(type)) {
         formation_legion_delete_for_fort(this);
+    }
 
     if (type == BUILDING_SENET_HOUSE)
         city_buildings_remove_hippodrome();

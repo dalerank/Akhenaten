@@ -31,7 +31,7 @@ static void draw_flat_tile(vec2i pos, color color_mask) {
     }
 }
 
-static void draw_partially_blocked(int x, int y, int num_tiles, int* blocked_tiles) {
+static void draw_partially_blocked_editor(int x, int y, int num_tiles, int* blocked_tiles) {
     for (int i = 0; i < num_tiles; i++) {
         int x_offset = x + X_VIEW_OFFSETS[i];
         int y_offset = y + Y_VIEW_OFFSETS[i];
@@ -58,7 +58,7 @@ static void draw_building(tile2i tile, int screen_x, int screen_y, e_building_ty
     int blocked = !editor_tool_can_place_building(tile, num_tiles, blocked_tiles);
 
     if (blocked) {
-        draw_partially_blocked(screen_x, screen_y, num_tiles, blocked_tiles);
+        draw_partially_blocked_editor(screen_x, screen_y, num_tiles, blocked_tiles);
     } else if (editor_tool_is_in_use()) {
         int image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
         for (int i = 0; i < num_tiles; i++) {
@@ -117,7 +117,7 @@ static void draw_access_ramp(tile2i tile, int x, int y) {
         draw_building_image(image_id, x, y);
     } else {
         int blocked[4] = {1, 1, 1, 1};
-        draw_partially_blocked(x, y, 4, blocked);
+        draw_partially_blocked_editor(x, y, 4, blocked);
     }
 }
 

@@ -53,58 +53,81 @@ building_big_statue = {
   ]
 }
 
+building_fort = {
+  ghost : {
+    main_N : [-55, -35],
+    main_W : [-55, -35],
+    main_S : [-55, -35],
+    main_E : [-60, -40],
+    ground_N : [35, 35],
+    ground_W : [5, -70],
+    ground_S : [-200, -55],
+    ground_E : [-180, 46],
+  },
+  labor_category : LABOR_CATEGORY_MILITARY,
+}
+
 building_weaponsmith = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_WEAPONSMITH }
-  }
+  },
+  labor_category : LABOR_CATEGORY_MILITARY,
 }
 
 building_courthouse = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_COURTHOUSE }
-  }
+  },
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
 }
 
 building_personal_mansion = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_PERSONAL_MANSION }
-  }
+  },
+  labor_category : LABOR_CATEGORY_GOVERNMENT,
 }
 
 building_temple_osiris = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_TEMPLE_OSIRIS }
-  }
+  },
+  labor_category : LABOR_CATEGORY_RELIGION,
 }
 
 building_temple_ra = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_TEMPLE_RA }
-  }
+  },
+  labor_category : LABOR_CATEGORY_RELIGION,
 }
 
 building_temple_ptah = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_TEMPLE_PTAH }
-  }
+  },
+  labor_category : LABOR_CATEGORY_RELIGION,
 }
 
 building_temple_seth = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_TEMPLE_SETH }
-  }
+  },
+  labor_category : LABOR_CATEGORY_RELIGION,
 }
 
 building_temple_bast = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_TEMPLE_BAST }
-  }
+  },
+  labor_category : LABOR_CATEGORY_RELIGION,
 }
 
 building_booth = {
   animations : {
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW }
-  }
+  },
+  labor_category : LABOR_CATEGORY_ENTERTAINMENT,
 }
 
 building_bandstand = {
@@ -112,7 +135,8 @@ building_bandstand = {
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW },
     musician_sn : { pos : [45, 7], base_id : IMG_BANDSTAND_SN_S, anim_id : IMG_MUSICIAN_SHOW_SN, max_frames : 12 },
     musician_we : { pos : [48, 4], base_id : IMG_BANDSTAND_SN_S, anim_id : IMG_MUSICIAN_SHOW_WE, max_frames : 12 }
-  }
+  },
+  labor_category : LABOR_CATEGORY_ENTERTAINMENT,
 }
 
 building_village_palace = {
@@ -192,5 +216,6 @@ building_scribal_school = {
   info : {
     icon_res : {x: 32, y: 106},
     text_res : {x: 60, y: 110},
-  }
+  },
+  labor_category : LABOR_CATEGORY_EDUCATION,
 }

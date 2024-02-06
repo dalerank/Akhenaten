@@ -124,7 +124,9 @@ static int get_height_id() {
         case BUILDING_LIBRARY:
         case BUILDING_MUD_GATEHOUSE:
         case BUILDING_MUD_TOWER:
-        case BUILDING_MENU_FORTS:
+        case BUILDING_FORT_CHARIOTEERS:
+        case BUILDING_FORT_INFANTRY:
+        case BUILDING_FORT_ARCHERS:
         case BUILDING_MILITARY_ACADEMY:
         case BUILDING_BAZAAR:
         case BUILDING_GRANARY:

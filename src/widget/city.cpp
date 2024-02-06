@@ -252,11 +252,11 @@ bool widget_city_draw_construction_cost_and_size() {
 
 // INPUT HANDLING
 
-static void build_start(map_point tile) {
+static void build_start(tile2i tile) {
     if (tile.grid_offset() > 0) // Allow building on paused
         Planner.construction_start(tile);
 }
-static void build_move(map_point tile) {
+static void build_move(tile2i tile) {
     if (!Planner.in_progress)
         return;
     Planner.construction_update(tile);

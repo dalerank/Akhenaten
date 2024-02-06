@@ -235,7 +235,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     case e_debug_render_building: // BUILDING IDS
         if (b_id && b->tile.grid_offset() == grid_offset) {
-            draw_building(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, {x - 15, y}, COLOR_MASK_GREEN_30);
+            draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, {x - 15, y}, COLOR_MASK_GREEN_30);
         }
 
         if (b_id && map_property_is_draw_tile(grid_offset)) { // b->tile.grid_offset() == grid_offset
@@ -267,7 +267,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             debug_text(ctx, str, x0, y + 15, 0, "", b->road_access.y(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);
             if (b->has_road_access) {
                 auto tile_coords = tile_to_pixel(b->road_access);
-                draw_building(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords, COLOR_MASK_GREEN);
             }
         }
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
@@ -393,7 +393,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     case e_debug_render_sprite_frames: // SPRITE FRAMES
         if (grid_offset == b->tile.grid_offset()) {
-            draw_building(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, {x - 15, y}, COLOR_MASK_GREEN);
+            draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, {x - 15, y}, COLOR_MASK_GREEN);
         }
         if (grid_offset == north_tile_grid_offset(b->tile.x(), b->tile.y())) {
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, x - 15, y, COLOR_MASK_RED);
@@ -564,9 +564,9 @@ void figure::draw_debug() {
         // draw path
         if (routing_path_id) { //&& (roam_length == max_roam_length || roam_length == 0)
             vec2i coords = tile_to_pixel(destination()->tile);
-            draw_building(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, coords);
+            draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, coords);
             coords = tile_to_pixel(destination_tile);
-            draw_building(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords);
+            draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords);
             int tx = tile.x();
             int ty = tile.y();
             coords = tile_to_pixel(tile);

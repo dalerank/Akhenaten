@@ -6,6 +6,7 @@
 #include "building/monument_mastaba.h"
 #include "building/properties.h"
 #include "building/rotation.h"
+#include "building/building_fort.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "grid/bridge.h"
@@ -57,17 +58,8 @@ static const int TILE_GRID_OFFSETS_PH[4][MAX_TILES] = {
    GRID_OFFSET(4, -2), GRID_OFFSET(2, -4), GRID_OFFSET(4, -3), GRID_OFFSET(3, -4), GRID_OFFSET(4, -4)},
 };
 
-static const int FORT_GROUND_GRID_OFFSETS_PH[4][4] = {
-     {GRID_OFFSET(3, -1), GRID_OFFSET(4, -1), GRID_OFFSET(4, 0), GRID_OFFSET(3, 0)},
-     {GRID_OFFSET(-1, -4), GRID_OFFSET(0, -4), GRID_OFFSET(0, -3), GRID_OFFSET(-1, -3)},
-     {GRID_OFFSET(-4, 0), GRID_OFFSET(-3, 0), GRID_OFFSET(-3, 1), GRID_OFFSET(-4, 1)},
-     {GRID_OFFSET(0, 3), GRID_OFFSET(1, 3), GRID_OFFSET(1, 4), GRID_OFFSET(0, 4)}
-};
-static const int FORT_GROUND_X_VIEW_OFFSETS[4] = {120, 90, -120, -90};
-static const int FORT_GROUND_Y_VIEW_OFFSETS[4] = {30, -75, -60, 45};
 
-static const int RESERVOIR_GRID_OFFSETS_PH[4]
-  = {GRID_OFFSET(-1, -1), GRID_OFFSET(1, -1), GRID_OFFSET(1, 1), GRID_OFFSET(-1, 1)};
+static const int RESERVOIR_GRID_OFFSETS_PH[4] = {GRID_OFFSET(-1, -1), GRID_OFFSET(1, -1), GRID_OFFSET(1, 1), GRID_OFFSET(-1, 1)};
 
 static const int HIPPODROME_X_VIEW_OFFSETS[4] = {150, 150, -150, -150};
 static const int HIPPODROME_Y_VIEW_OFFSETS[4] = {75, -75, -75, 75};
@@ -142,7 +134,7 @@ static void get_building_base_xy(int map_x, int map_y, int building_size, int* x
     }
 }
 
-static int is_blocked_for_building(int grid_offset, int num_tiles, int* blocked_tiles) {
+int is_blocked_for_building(int grid_offset, int num_tiles, int* blocked_tiles) {
     int orientation_index = city_view_orientation() / 2;
     int blocked = 0;
     for (int i = 0; i < num_tiles; i++) {
@@ -168,7 +160,7 @@ static void draw_flat_tile(painter &ctx, int x, int y, color color_mask) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
 }
 
-static void draw_partially_blocked(painter &ctx, vec2i tile, int fully_blocked, int num_tiles, int* blocked_tiles) {
+void draw_partially_blocked(painter &ctx, vec2i tile, int fully_blocked, int num_tiles, int* blocked_tiles) {
     for (int i = 0; i < num_tiles; i++) {
         vec2i offset = tile + VIEW_OFFSETS[i];
         if (fully_blocked || blocked_tiles[i])
@@ -178,12 +170,12 @@ static void draw_partially_blocked(painter &ctx, vec2i tile, int fully_blocked, 
     }
 }
 
-void draw_building(painter &ctx, e_image_id image_id, vec2i tile, color color_mask) {
+void draw_building_ghost(painter &ctx, e_image_id image_id, vec2i tile, color color_mask) {
     int img = image_group(image_id);
     ImageDraw::isometric(ctx, img, tile, color_mask);
 }
 
-void draw_building(painter &ctx, int image_id, vec2i tile, color color_mask) {
+void draw_building_ghost(painter &ctx, int image_id, vec2i tile, color color_mask) {
     ImageDraw::isometric(ctx, image_id, tile, color_mask);
 }
 
@@ -227,7 +219,7 @@ static void draw_small_mastaba_ghost(painter &ctx, e_building_type type, vec2i p
     }
     for (int i = 0; i < size.x; ++i) {
         for (int j = 0; j < size.y; ++j) {
-            draw_building(ctx, get_image(end.shifted(i, j), end, size), pixel + vec2i(-30, 15) * i + vec2i(30, 15) * j);
+            draw_building_ghost(ctx, get_image(end.shifted(i, j), end, size), pixel + vec2i(-30, 15) * i + vec2i(30, 15) * j);
         }
     }
 }
@@ -243,62 +235,19 @@ static void draw_storage_yard(vec2i tile, painter &ctx) {
     int image_id_space = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
-            draw_building(ctx, image_id_hut, tile + VIEW_OFFSETS[i]);
+            draw_building_ghost(ctx, image_id_hut, tile + VIEW_OFFSETS[i]);
             ImageDraw::img_generic(ctx, image_id_hut + 17, tile.x + VIEW_OFFSETS[i].x + corner_offset.x, tile.y + VIEW_OFFSETS[i].y + corner_offset.y, COLOR_MASK_GREEN);
         } else {
-            draw_building(ctx, image_id_space, tile + VIEW_OFFSETS[i] + place_offset);
+            draw_building_ghost(ctx, image_id_space, tile + VIEW_OFFSETS[i] + place_offset);
         }
     }
 }
 
 static void draw_farm(painter &ctx, e_building_type type, vec2i tile, int grid_offset) {
     int image_id = get_farm_image(grid_offset);
-    draw_building(ctx, image_id, tile + vec2i{-60, 0});
+    draw_building_ghost(ctx, image_id, tile + vec2i{-60, 0});
     
     draw_farm_crops(ctx, type, 0, grid_offset, tile + vec2i{-60, 30}, COLOR_MASK_GREEN);
-}
-
-static void draw_fort(tile2i* tile, vec2i pos, painter &ctx) {
-    bool fully_blocked = false;
-    bool blocked = false;
-    if (formation_get_num_forts_cached() >= formation_get_max_forts() || city_finance_out_of_money()) {
-        fully_blocked = true;
-        blocked = true;
-    }
-
-    int num_tiles_fort = building_properties_for_type(BUILDING_FORT_ARCHERS)->size;
-    num_tiles_fort *= num_tiles_fort;
-    int num_tiles_ground = building_properties_for_type(BUILDING_FORT_GROUND)->size;
-    num_tiles_ground *= num_tiles_ground;
-
-    //    int grid_offset_fort = tile->grid_offset;
-    int global_rotation = building_rotation_global_rotation();
-    int grid_offset_ground = tile->grid_offset() + FORT_GROUND_GRID_OFFSETS_PH[global_rotation][city_view_orientation() / 2];
-
-    int blocked_tiles_fort[MAX_TILES];
-    int blocked_tiles_ground[MAX_TILES];
-
-    blocked += is_blocked_for_building(tile->grid_offset(), num_tiles_fort, blocked_tiles_fort);
-    blocked += is_blocked_for_building(grid_offset_ground, num_tiles_ground, blocked_tiles_ground);
-
-    int orientation_index = building_rotation_get_storage_fort_orientation(global_rotation) / 2;
-    vec2i ground = pos + vec2i(FORT_GROUND_X_VIEW_OFFSETS[orientation_index], FORT_GROUND_Y_VIEW_OFFSETS[orientation_index]);
-
-    if (blocked) {
-        draw_partially_blocked(ctx, pos, fully_blocked, num_tiles_fort, blocked_tiles_fort);
-        draw_partially_blocked(ctx, ground, fully_blocked, num_tiles_ground, blocked_tiles_ground);
-    } else {
-        int image_id = image_id_from_group(GROUP_BUILDING_FORT);
-        if (orientation_index == 0 || orientation_index == 3) {
-            // draw fort first, then ground
-            draw_building(ctx, image_id, pos);
-            draw_building(ctx, image_id + 1, ground);
-        } else {
-            // draw ground first, then fort
-            draw_building(ctx, image_id + 1, ground);
-            draw_building(ctx, image_id, pos);
-        }
-    }
 }
 
 static void draw_aqueduct(map_point tile, int x, int y, painter &ctx) {
@@ -327,7 +276,7 @@ static void draw_aqueduct(map_point tile, int x, int y, painter &ctx) {
         draw_flat_tile(ctx, x, y, COLOR_MASK_RED);
     } else {
         const terrain_image* img = map_image_context_get_aqueduct(grid_offset); // get starting tile
-        draw_building(ctx, get_aqueduct_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), {x, y});
+        draw_building_ghost(ctx, get_aqueduct_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), {x, y});
     }
 }
 
@@ -377,7 +326,7 @@ static void draw_road(tile2i tile, int x, int y, painter &ctx) {
     if (blocked) {
         draw_flat_tile(ctx, x, y, COLOR_MASK_RED);
     } else {
-        draw_building(ctx, image_id, {x, y});
+        draw_building_ghost(ctx, image_id, {x, y});
     }
 }
 
@@ -499,16 +448,16 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
             }
             switch (orientation / 2) {
             case 0:
-                draw_building(ctx, image_group(IMG_BOOTH), {x, y}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x, y}, COLOR_MASK_GREEN);
                 break;
             case 1:
-                draw_building(ctx, image_group(IMG_BOOTH), {x + 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x + 30, y + 15}, COLOR_MASK_GREEN);
                 break;
             case 2:
-                draw_building(ctx, image_group(IMG_BOOTH), {x, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 3:
-                draw_building(ctx, image_group(IMG_BOOTH), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 30, y + 15}, COLOR_MASK_GREEN);
                 break;
             }
             break;
@@ -520,24 +469,24 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
 
             switch (orientation / 2) {
             case 0:
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x, y}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BOOTH), {x + 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x, y}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x + 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 1:
-                draw_building(ctx, image_group(IMG_BANDSTAND_WE_W), {x + 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_WE_E), {x + 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_W), {x + 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_E), {x + 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
                 break;
             case 2:
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
                 break;
             case 3:
-                draw_building(ctx, image_group(IMG_BANDSTAND_WE_W), {x, y}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_WE_E), {x + 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_W), {x, y}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_E), {x + 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             }
             break;
@@ -548,52 +497,52 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
             }
             switch (orientation) {
             case 0:
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 90, y + 45}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 60, y + 60}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 1:
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x, y}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x, y}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
                 break;
             case 2:
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 90, y + 45}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BOOTH), {x, y + 90}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 60, y + 60}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x, y + 90}, COLOR_MASK_GREEN);
                 break;
             case 3:
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 45}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x, y + 90}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BOOTH), {x + 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 30, y + 75}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x, y + 90}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x + 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             case 4:
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 45}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             case 5:
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 60, y + 60}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 30, y + 75}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             case 6:
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x, y + 60}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BOOTH), {x, y}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x, y + 60}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 30, y + 75}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x, y}, COLOR_MASK_GREEN);
                 break;
             case 7:
-                draw_building(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 30, y + 45}, COLOR_MASK_GREEN);
-                draw_building(ctx, image_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 30, y + 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
                 break;
             }
             break;
@@ -648,29 +597,29 @@ void BuildPlanner::draw_graphics(painter &ctx) {
     vec2i pixel = pixel_coords_cache[0][0];
     switch (build_type) {
     case BUILDING_ROAD:
-        return draw_road(end, pixel.x, pixel.y, ctx);
-        break;
+        draw_road(end, pixel.x, pixel.y, ctx);
+        return;
 
     case BUILDING_IRRIGATION_DITCH:
-        return draw_aqueduct(end, pixel.x, pixel.y, ctx);
-        break;
+        draw_aqueduct(end, pixel.x, pixel.y, ctx);
+        return;
         //        case BUILDING_WALL_PH:
         //            return draw_walls((const map_tile*)&end, end_coord.x, end_coord.y);
         //            break;
     case BUILDING_STORAGE_YARD:
-        return draw_storage_yard(pixel, ctx);
-        break;
+        draw_storage_yard(pixel, ctx);
+        return;
 
     case BUILDING_BOOTH:
     case BUILDING_BANDSTAND:
     case BUILDING_PAVILLION:
     case BUILDING_FESTIVAL_SQUARE:
         draw_entertainment_venue(end, pixel.x, pixel.y, build_type, ctx);
-        break;
+        return;
 
     case BUILDING_SMALL_MASTABA:
         draw_small_mastaba_ghost(ctx, build_type, pixel, start, end);
-        break;
+        return;
 
     case BUILDING_BARLEY_FARM:
     case BUILDING_FLAX_FARM:
@@ -681,7 +630,13 @@ void BuildPlanner::draw_graphics(painter &ctx) {
     case BUILDING_FIGS_FARM:
     case BUILDING_HENNA_FARM:
         draw_farm(ctx, build_type, pixel, end.grid_offset());
-        break;
+        return;
+
+    case BUILDING_FORT_ARCHERS:
+    case BUILDING_FORT_CHARIOTEERS:
+    case BUILDING_FORT_INFANTRY:
+        draw_fort_ghost(ctx, build_type, end, pixel);
+        return;
 
     case BUILDING_WELL:
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
@@ -714,13 +669,14 @@ void BuildPlanner::draw(painter &ctx) {
     if (size.x < 1 || size.y < 1)
         return;
 
-    if (can_place == CAN_NOT_PLACE)
+    if (can_place == CAN_NOT_PLACE) {
         // draw fully red (placement not allowed)
         draw_blueprints(ctx, true);
-    else if (tiles_blocked_total > 0)
+    } else if (tiles_blocked_total > 0) {
         // draw green blueprint with red (blocked) tiles
         draw_blueprints(ctx, false);
-    else if (!draw_as_constructing)
+    } else if (!draw_as_constructing) {
         // draw normal building ghost (green)
         draw_graphics(ctx);
+    }
 }
