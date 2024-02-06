@@ -263,7 +263,7 @@ bool map_closest_reachable_road_within_radius(tile2i tile, int size, int radius,
     return false;
 }
 
-int map_road_to_largest_network_rotation(int rotation, tile2i tile, int size, tile2i &road) {
+tile2i map_road_to_largest_network_rotation(int rotation, tile2i tile, int size, bool closest) {
     int x = tile.x();
     int y = tile.y();
     switch (rotation) {
@@ -286,25 +286,54 @@ int map_road_to_largest_network_rotation(int rotation, tile2i tile, int size, ti
     int base_offset = MAP_OFFSET(x, y);
     offsets_array offsets;
     map_grid_adjacent_offsets(size, offsets);
-    for (const auto &tile_delta: offsets) {
-        int grid_offset = base_offset + tile_delta;
-        if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
-            int index = city_map_road_network_index(map_road_network_get(grid_offset));
-            if (index < min_index) {
-                min_index = index;
-                min_grid_offset = grid_offset;
+    if (closest) {
+        std::sort(offsets.begin(), offsets.end(), [base_offset] (auto &lhs, auto &rhs) {
+            int lhs_network_id = map_road_network_get(base_offset + lhs);
+            int rhs_network_id = map_road_network_get(base_offset + rhs);
+            return (lhs_network_id > rhs_network_id);
+        });
+        
+        tile2i base_tile(base_offset);
+        tile2i current_tile(base_offset + offsets.front());
+        tile2i best_road_tile = current_tile;
+        float min_dist = base_tile.dist(best_road_tile);
+        int greatest_road_id = map_road_network_get(best_road_tile);
+        for (int i = 1, size = offsets.size(); i < size; ++i) {
+            current_tile = tile2i(base_offset + offsets[i]);
+            int cur_road_id = map_road_network_get(current_tile);
+            if (cur_road_id != greatest_road_id) {
+                break;
+            }
+            float cur_dist = base_tile.dist(current_tile);
+            if (cur_dist < min_dist) {
+                min_dist = cur_dist;
+                best_road_tile = current_tile;
             }
         }
+
+        return best_road_tile;
+    } else {
+        for (const auto &tile_delta: offsets) {
+            int grid_offset = base_offset + tile_delta;
+            if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
+                int index = city_map_road_network_index(map_road_network_get(grid_offset));
+                if (index < min_index) {
+                    min_index = index;
+                    min_grid_offset = grid_offset;
+                }
+            }
+        }
+
+        if (min_index < 12) {
+            return tile2i(min_grid_offset);
+        }
     }
-    if (min_index < 12) {
-        road = tile2i(min_grid_offset);
-        return min_grid_offset;
-    }
+   
     int min_dist = 100000;
     min_grid_offset = -1;
     offsets.clear();
     map_grid_adjacent_offsets(size, offsets);
-    for (const auto &tile_delta: offsets) {
+    for (const auto &tile_delta : offsets) {
         int grid_offset = base_offset + tile_delta;
         int dist = map_routing_distance(grid_offset);
         if (dist > 0 && dist < min_dist) {
@@ -312,16 +341,16 @@ int map_road_to_largest_network_rotation(int rotation, tile2i tile, int size, ti
             min_grid_offset = grid_offset;
         }
     }
+    
     if (min_grid_offset >= 0) {
-        road = tile2i(min_grid_offset);
-        return min_grid_offset;
+        return tile2i(min_grid_offset);
     }
 
-    return -1;
+    return tile2i{-1, -1};
 }
 
-int map_road_to_largest_network(tile2i tile, int size, tile2i &road) {
-    return map_road_to_largest_network_rotation(0, tile, size, road);
+tile2i map_road_to_largest_network(tile2i tile, int size, bool closest) {
+    return map_road_to_largest_network_rotation(0, tile, size, closest);
 }
 
 static void check_road_to_largest_network_hippodrome(int x, int y, int* min_index, int* min_grid_offset) {

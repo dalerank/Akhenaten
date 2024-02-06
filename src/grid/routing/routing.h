@@ -23,6 +23,7 @@ bool map_routing_ferry_has_routes(building *b);
 void map_routing_delete_first_wall_or_aqueduct(int x, int y);
 
 int map_routing_distance(int grid_offset);
+inline int map_routing_distance(tile2i tile) { return map_routing_distance(tile.grid_offset()); }
 int map_citizen_grid(int grid_offset);
 
 bool map_routing_citizen_found_terrain(tile2i src, tile2i *dst, int terrain_type);

@@ -11,8 +11,8 @@ bool map_has_road_access_temple_complex(tile2i tile, int orientation, bool from_
 bool map_closest_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile);
 bool map_closest_reachable_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile);
 bool map_reachable_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile);
-int map_road_to_largest_network_rotation(int rotation, tile2i tile, int size, tile2i &road);
-int map_road_to_largest_network(tile2i tile, int size, tile2i &road);
+tile2i map_road_to_largest_network_rotation(int rotation, tile2i tile, int size,  bool closest);
+tile2i map_road_to_largest_network(tile2i tile, int size, bool closest);
 int map_road_to_largest_network_hippodrome(int x, int y, int* x_road, int* y_road);
 int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int* road_tiles, int p);
 int map_get_diagonal_road_tiles_for_roaming(int grid_offset, int* road_tiles);
