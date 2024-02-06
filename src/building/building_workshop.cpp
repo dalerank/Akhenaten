@@ -129,12 +129,6 @@ void building_flax_workshop_draw_info(object_info& c) {
     building_workshop_draw_info(c, 97, "flax_workshop", 123, output_resource, input_resource);
 }
 
-void building_weapons_workshop_draw_info(object_info& c) {
-    e_resource output_resource = RESOURCE_WEAPONS;
-
-    building_workshop_draw_info(c, 98, "weapons_workshop", 124, output_resource, RESOURCE_COPPER);
-}
-
 void building_luxury_workshop_draw_info(object_info& c) {
     e_resource input_resource = RESOURCE_GEMS;
     e_resource output_resource = RESOURCE_LUXURY_GOODS;

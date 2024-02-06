@@ -118,7 +118,7 @@ static building_properties properties[400] = {
     {2, 0, 0, 0},         // clay
     {2, 0, 0, 0},    // beer
     {2, 0, GROUP_BUILDING_LINEN_WORKSHOP},   // linen
-    {2, 0, GROUP_BUILDING_WEAPONS_WORKSHOP}, // weapons
+    {2, 0, 0, 0}, // weapons
     {2, 0, GROUP_BUILDING_JEWELS_WORKSHOP},  // jewels
     {2, 0, 0, 0}, // pottery
 
@@ -277,6 +277,7 @@ void building_properties_init() {
     properties[BUILDING_TEMPLE_SETH] = {3, 0, 0, 0, 0, IMG_TEMPLE_SETH};
     properties[BUILDING_TEMPLE_BAST] = {3, 0, 0, 0, 0, IMG_TEMPLE_BAST};
     properties[BUILDING_COURTHOUSE] = {3, 0, 0, 0, 0, IMG_COURTHOUSE};
+    properties[BUILDING_WEAPONSMITH] = {2, 0, 0, 0, 0, IMG_WEAPONSMITH};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

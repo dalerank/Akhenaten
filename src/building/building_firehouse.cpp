@@ -7,7 +7,7 @@
 #include "dev/debug.h"
 
 declare_console_command_p(nofire, console_command_nofire);
-static void console_command_nofire(std::istream &, std::ostream &) {
+void console_command_nofire(std::istream &, std::ostream &) {
     buildings_valid_do([&] (building &b) {
         b.fire_risk = 0;
     });

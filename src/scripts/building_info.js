@@ -53,6 +53,12 @@ building_big_statue = {
   ]
 }
 
+building_weaponsmith = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_WEAPONSMITH }
+  }
+}
+
 building_courthouse = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_COURTHOUSE }
