@@ -65,7 +65,7 @@ struct archive {
             pcstr key;
             std::vector<bstring128> keys;
             pushiterator(s_arch, -1, 1);
-            while (key = nextiterator(s_arch, -1)) {
+            while ((key = nextiterator(s_arch, -1))) {
                 keys.push_back(key);
             }
             pop(s_arch, 1);

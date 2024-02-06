@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "city/emperor.h"
+#include "city/warning.h"
 #include "core/random.h"
 #include "core/calc.h"
 #include "core/svector.h"
@@ -15,6 +16,9 @@
 #include "io/io_buffer.h"
 
 #include <string.h>
+#include "dev/debug.h"
+
+declare_console_command_p(killall, console_command_killall);
 
 struct figure_data_t {
     int created_sequence;
@@ -30,6 +34,14 @@ figure *figure_get(int id) {
 
 std::span<figure *> figures() {
     return make_span(g_figure_data.figures.begin(), g_figure_data.figures.size());
+}
+
+void console_command_killall(std::istream &, std::ostream &) {
+    for (auto &f: figures()) {
+        f->poof();
+    }
+
+    city_warning_show_console("Killed all walkers");
 }
 
 figure *figure_take_from_pool () {
@@ -285,13 +297,10 @@ void init_figures() {
         g_figure_data.initialized = true;
     }
 }
+
 void figure_init_scenario(void) {
     init_figures();
     g_figure_data.created_sequence = 0;
-}
-void figure_kill_all() {
-    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++)
-        figure_get(i)->poof();
 }
 
 void figure::bind(io_buffer* iob) {

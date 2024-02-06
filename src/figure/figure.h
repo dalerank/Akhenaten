@@ -553,8 +553,6 @@ figure* figure_create(e_figure_type type, tile2i tile, int dir);
 
 void figure_init_scenario(void);
 
-void figure_kill_all();
-
 template<typename ... Args>
 bool figure_type_none_of(figure &f, Args ... args) {
     int types[] = {args...};
