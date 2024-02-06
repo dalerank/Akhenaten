@@ -130,6 +130,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"ui_empire_city_old_names", true},
     {"city_building_smal_mastaba", true},
     {"city_building_bricklayes", true},
+    {"city_building_road_closest", true},
 };
 
 static const char* ini_string_keys[] = {

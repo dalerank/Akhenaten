@@ -952,53 +952,6 @@ tile2i building::access_tile() {
 
 void building::update_road_access() {
     // update building road access
-    tile2i road;
-    int road_grid_offset;
-    switch (type) {
-    case BUILDING_STORAGE_YARD:
-        road_grid_offset = map_road_to_largest_network_rotation(subtype.orientation, tile, 3, road);
-        if (road_grid_offset >= 0) {
-            road_network_id = map_road_network_get(road_grid_offset);
-            distance_from_entry = map_routing_distance(road_grid_offset);
-            road_access = road;
-            has_road_access = true;
-        } else {
-            has_road_access = map_get_road_access_tile(tile, 3, road_access);
-        }
-        break;
-
-    case BUILDING_BURNING_RUIN:
-        has_road_access = burning_ruin_can_be_accessed(tile, road_access);
-        break;
-
-    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-    case BUILDING_TEMPLE_COMPLEX_RA:
-    case BUILDING_TEMPLE_COMPLEX_PTAH:
-    case BUILDING_TEMPLE_COMPLEX_SETH:
-    case BUILDING_TEMPLE_COMPLEX_BAST:
-        if (is_main()) {
-            int orientation = (5 - (data.monuments.variant / 2)) % 4;
-            has_road_access = map_has_road_access_temple_complex(tile, orientation, false, &road_access);
-        }
-        break;
-
-    default:
-        //has_road_access = map_get_road_access_tile(tile, size, road_access);
-        tile2i road;
-        int road_grid_offset = map_road_to_largest_network(tile, size, road);
-        if (road_grid_offset >= 0) {
-            road_network_id = map_road_network_get(road_grid_offset);
-            distance_from_entry = map_routing_distance(road_grid_offset);
-            road_access = road;
-            has_road_access = true;
-        } else {
-            has_road_access = map_get_road_access_tile(tile, size, road_access);
-        }
-        break;
-    }
-    // TODO: Temple Complexes
-    //    road_access.x() = road.x;
-    //    road_access.y() = road.y;
 }
 
 bool building::figure_generate() {
@@ -1027,6 +980,8 @@ bool building::figure_generate() {
                 f->wait_ticks = 10 + (map_random_7bit & 0xf);
                 set_figure(BUILDING_SLOT_GOVERNOR, f);
             }
+        } else {
+            dcast()->spawn_figure();
         }
     } else {
         // single building type
@@ -1094,16 +1049,12 @@ void building_figure_generate() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Generate");
     building_barracks_decay_tower_sentry_request();
     int max_id = building_get_highest_id();
-    for (int i = 1; i <= max_id; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID)
-            continue;
-
-        if (b->type == BUILDING_STORAGE_YARD_SPACE || (b->type == BUILDING_SENET_HOUSE && b->prev_part_building_id)) {
-            continue;
+    buildings_valid_do([] (building &b) {
+        if (b.type == BUILDING_STORAGE_YARD_SPACE || (b.type == BUILDING_SENET_HOUSE && b.prev_part_building_id)) {
+            return;
         }
 
-        b->update_road_access();
-        b->figure_generate();
-    }
+        //b->update_road_access();
+        b.figure_generate();
+    });
 }

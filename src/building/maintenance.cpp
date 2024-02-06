@@ -29,6 +29,7 @@
 #include "model.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
+#include "config/config.h"
 
 int g_fire_spread_direction = 0;
 
@@ -229,7 +230,7 @@ void building_maintenance_check_fire_collapse(void) {
 }
 
 void building_maintenance_check_kingdome_access(void) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access");
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access");
     tile2i entry_point = city_map_entry_point();
     map_routing_calculate_distances(entry_point);
     int problem_grid_offset = 0;
@@ -239,7 +240,7 @@ void building_maintenance_check_kingdome_access(void) {
             continue;
 
         if (b->house_size) {
-            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/House");
+            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/House");
             tile2i road_tile;
             if (!map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                 // no road: eject people
@@ -255,7 +256,7 @@ void building_maintenance_check_kingdome_access(void) {
                 }
             } else if (map_routing_distance(road_tile.grid_offset())) {
                 // reachable from rome
-                OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/House/map_routing_distance");
+                OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/House/map_routing_distance");
                 b->distance_from_entry = map_routing_distance(road_tile.grid_offset());
                 b->house_unreachable_ticks = 0;
             } else if (map_closest_reachable_road_within_radius(b->tile, b->size, 2, road_tile)) {
@@ -274,24 +275,24 @@ void building_maintenance_check_kingdome_access(void) {
                 }
             }
         } else if (b->type == BUILDING_STORAGE_YARD) {
-            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Storageyard");
+            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/Storageyard");
             if (!city_buildings_get_trade_center()) {
                 city_buildings_set_trade_center(i);
             }
 
             b->distance_from_entry = 0;
-            tile2i road;
-            int road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->tile, 3, road);
-            if (road_grid_offset >= 0) {
-                b->road_network_id = map_road_network_get(road_grid_offset);
-                b->distance_from_entry = map_routing_distance(road_grid_offset);
+            bool closest_road = config_get(CONFIG_GP_CH_BUILDING_CLOSEST_ROAD) > 0;
+            tile2i road = map_road_to_largest_network_rotation(b->subtype.orientation, b->tile, 3, closest_road);
+            if (road.x() >= 0) {
+                b->road_network_id = map_road_network_get(road);
+                b->distance_from_entry = map_routing_distance(road);
                 b->road_access = road;
                 b->has_road_access = true;
             } else {
                 b->has_road_access = map_get_road_access_tile(b->tile, 3, b->road_access);
             }
         } else if (b->type == BUILDING_STORAGE_YARD_SPACE) {
-            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Storageyard Space");
+            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/Storageyard Space");
             b->distance_from_entry = 0;
             building* main_building = b->main();
             b->road_network_id = main_building->road_network_id;
@@ -299,7 +300,7 @@ void building_maintenance_check_kingdome_access(void) {
             b->road_access = main_building->road_access;
 
         } else if (b->type == BUILDING_SENET_HOUSE) {
-            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Senet");
+            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/Senet");
             b->distance_from_entry = 0;
             int x_road, y_road;
             int road_grid_offset = map_road_to_largest_network_hippodrome(b->tile.x(), b->tile.y(), &x_road, &y_road);
@@ -309,14 +310,21 @@ void building_maintenance_check_kingdome_access(void) {
                 b->road_access.x(x_road);
                 b->road_access.y(y_road);
             }
+        } else if (b->type == BUILDING_BURNING_RUIN) {
+            b->has_road_access = burning_ruin_can_be_accessed(b->tile, b->road_access);
+        } else if (building_type_any_of(*b, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_SETH,BUILDING_TEMPLE_COMPLEX_BAST)) {
+            if (b->is_main()) {
+                int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
+                b->has_road_access = map_has_road_access_temple_complex(b->tile, orientation, false, &b->road_access);
+            }
         } else { // other building
-            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Other");
+            OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/Other");
             b->distance_from_entry = 0;
-            tile2i road;
-            int road_grid_offset = map_road_to_largest_network(b->tile, b->size, road);
-            if (road_grid_offset >= 0) {
-                b->road_network_id = map_road_network_get(road_grid_offset);
-                b->distance_from_entry = map_routing_distance(road_grid_offset);
+            bool closest_road = config_get(CONFIG_GP_CH_BUILDING_CLOSEST_ROAD) > 0;
+            tile2i road = map_road_to_largest_network(b->tile, b->size, closest_road);
+            if (road.x() >= 0) {
+                b->road_network_id = map_road_network_get(road);
+                b->distance_from_entry = map_routing_distance(road);
                 b->road_access = road;
                 b->has_road_access = true;
             } else {
