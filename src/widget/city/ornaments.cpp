@@ -309,7 +309,9 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         draw_small_mastaba_anim(ctx, point, b, color_mask);
         break;
 
-    case BUILDING_MENU_FORTS:
+    case BUILDING_FORT_ARCHERS:
+    case BUILDING_FORT_INFANTRY:
+    case BUILDING_FORT_CHARIOTEERS:
         draw_fort_anim(point.x, point.y, b, ctx);
         break;
 

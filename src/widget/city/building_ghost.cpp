@@ -258,7 +258,7 @@ static void draw_farm(painter &ctx, e_building_type type, vec2i tile, int grid_o
     draw_farm_crops(ctx, type, 0, grid_offset, tile + vec2i{-60, 30}, COLOR_MASK_GREEN);
 }
 
-static void draw_fort(map_point* tile, vec2i pos, painter &ctx) {
+static void draw_fort(tile2i* tile, vec2i pos, painter &ctx) {
     bool fully_blocked = false;
     bool blocked = false;
     if (formation_get_num_forts_cached() >= formation_get_max_forts() || city_finance_out_of_money()) {
@@ -266,7 +266,7 @@ static void draw_fort(map_point* tile, vec2i pos, painter &ctx) {
         blocked = true;
     }
 
-    int num_tiles_fort = building_properties_for_type(BUILDING_MENU_FORTS)->size;
+    int num_tiles_fort = building_properties_for_type(BUILDING_FORT_ARCHERS)->size;
     num_tiles_fort *= num_tiles_fort;
     int num_tiles_ground = building_properties_for_type(BUILDING_FORT_GROUND)->size;
     num_tiles_ground *= num_tiles_ground;

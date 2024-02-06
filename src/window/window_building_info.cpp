@@ -217,7 +217,7 @@ void highlight_waypoints(building* b) { // highlight the 4 routing tiles for roa
     if (b->has_road_access) {
         map_highlight_set(b->road_access.grid_offset(), 2);
     }
-    if (b->type == BUILDING_MENU_FORTS || b->house_size) { // building doesn't send roamers
+    if (building_is_fort(b->type) || b->house_size) { // building doesn't send roamers
         return;
     }
     int hx, hy;
@@ -354,7 +354,10 @@ static void init(map_point tile) {
         case BUILDING_FORT_GROUND:
             context.building_id = b->prev_part_building_id;
             // fallthrough
-        case BUILDING_MENU_FORTS:
+
+        case BUILDING_FORT_ARCHERS:
+        case BUILDING_FORT_CHARIOTEERS:
+        case BUILDING_FORT_INFANTRY:
             context.formation_id = b->formation_id;
             break;
 
@@ -602,7 +605,13 @@ static void draw_refresh_background() {
             case BUILDING_MUD_TOWER: window_building_draw_tower(&context); break;
             case BUILDING_MILITARY_ACADEMY: window_building_draw_military_academy(&context); break;
             case BUILDING_RECRUITER: window_building_draw_barracks(&context); break;
-            case BUILDING_MENU_FORTS: window_building_draw_fort(&context); break;
+            
+            case BUILDING_FORT_ARCHERS:
+            case BUILDING_FORT_CHARIOTEERS:
+            case BUILDING_FORT_INFANTRY:
+                window_building_draw_fort(&context);
+                break;
+            
             case BUILDING_BURNING_RUIN: window_building_draw_burning_ruin(&context); break;
             case BUILDING_UNUSED_NATIVE_HUT_88: window_building_draw_native_hut(&context); break;
             case BUILDING_UNUSED_NATIVE_MEETING_89: window_building_draw_native_meeting(&context); break;

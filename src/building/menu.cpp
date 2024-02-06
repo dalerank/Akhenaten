@@ -55,7 +55,7 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_JUGGLER_SCHOOL,
      BUILDING_CONSERVATORY,
      BUILDING_DANCE_SCHOOL,
-     0}, // BUILDING_CHARIOT_MAKER
+     0},
     // municipal structures
     {BUILDING_FIREHOUSE,
      BUILDING_ARCHITECT_POST,
@@ -243,7 +243,7 @@ void building_menu_toggle_building(int type, bool enabled) {
             building_menu_toggle_building(BUILDING_MENU_RAW_MATERIALS);
 
         if (building_is_fort(type))
-            building_menu_toggle_building(BUILD_MENU_FORTS);
+            building_menu_toggle_building(BUILDING_MENU_FORTS);
 
         if (building_is_defense((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_DEFENSES);

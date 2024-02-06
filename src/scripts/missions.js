@@ -34,6 +34,16 @@ mission5 = { // Timna
 			year : 2848,
 			type : "bedouin",
 			amount : 4,
+			pepeat_after : [6],
+		}
+	],
+
+	gifts : [
+		{
+				from: "pharaoh",
+				condition: {
+					kingdome : 65
+				}
 		}
 	],
 

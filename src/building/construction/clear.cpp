@@ -88,11 +88,14 @@ static int clear_land_confirmed(bool measure_only, tile2i start, tile2i end) {
                     continue;
                 }
 
-                if (b->type == BUILDING_FORT_GROUND || b->type == BUILDING_MENU_FORTS) {
-                    if (!measure_only && confirm.fort_confirmed != 1)
+                if (b->type == BUILDING_FORT_GROUND || building_is_fort(b->type)) {
+                    if (!measure_only && confirm.fort_confirmed != 1) {
                         continue;
-                    if (!measure_only && confirm.fort_confirmed == 1)
+                    }
+
+                    if (!measure_only && confirm.fort_confirmed == 1) {
                         game_undo_disable();
+                    }
                 }
 
                 if (b->house_size && b->house_population && !measure_only) {
@@ -215,7 +218,7 @@ int building_construction_clear_land(bool measure_only, tile2i start, tile2i end
         int building_id = map_building_at(grid_offset);
         if (building_id) {
             building *b = building_get(building_id);
-            if (b->type == BUILDING_MENU_FORTS || b->type == BUILDING_FORT_GROUND) {
+            if (building_is_fort(b->type) || b->type == BUILDING_FORT_GROUND) {
                 ask_confirm_fort = 1;
             }
         }

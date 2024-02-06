@@ -110,7 +110,6 @@ static int set_submenu_for_type(int type) {
     case BUILDING_MENU_RAW_MATERIALS:
         data.selected_submenu = BUILD_MENU_RAW_MATERIALS;
         break;
-        //        case BUILDING_MENU_GUILDS:
     case BUILDING_MENU_CONSTURCTION_GUILDS:
         data.selected_submenu = BUILD_MENU_WORKSHOPS;
         break;

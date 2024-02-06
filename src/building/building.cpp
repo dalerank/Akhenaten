@@ -779,7 +779,7 @@ bool building_is_education(e_building_type type) {
 }
 
 bool building_is_military(int type) {
-    if (building_is_fort(type) || type == BUILDING_FORT_GROUND || type == BUILDING_MENU_FORTS)
+    if (building_is_fort(type) || type == BUILDING_FORT_GROUND)
         return true;
     
     if (type == BUILDING_MILITARY_ACADEMY || type == BUILDING_RECRUITER)
