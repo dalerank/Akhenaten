@@ -158,7 +158,7 @@ static generic_button checkbox_buttons[] = {
     {20, 168, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_QUARRY_STONE, TR_CONFIG_BUILDING_QUARRY_STONE},
     {20, 192, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE, TR_CONFIG_BUILDING_QUARRY_LIMESTONE},
     {20, 216, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_CLAY_PIT, TR_CONFIG_BUILDING_CLAY_PIT},
-    {20, 240, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_WEAPON_WORKSHOP, TR_CONFIG_BUILDING_WEAPON_WORKSHOP},
+    {20, 240, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_WEAPONSMITH, TR_CONFIG_BUILDING_WEAPONSMITH},
     {20, 264, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_RECRUTER, TR_CONFIG_BUILDING_RECRUTER},
     {20, 288, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_SMALL_MASTABA, TR_CONFIG_BUILDING_SMALL_MASTABA},
     {20, 312, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BRICKLAYERS, TR_CONFIG_BUILDING_BRICKLAYERS},
@@ -439,7 +439,7 @@ static void toggle_building(int id, int param2) {
     case CONFIG_GP_CH_BUILDING_QUARRY_STONE: type = BUILDING_STONE_QUARRY; break;
     case CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE: type = BUILDING_LIMESTONE_QUARRY; break;
     case CONFIG_GP_CH_BUILDING_CLAY_PIT: type = BUILDING_CLAY_PIT; break;
-    case CONFIG_GP_CH_BUILDING_WEAPON_WORKSHOP: type = BUILDING_WEAPONS_WORKSHOP; break;
+    case CONFIG_GP_CH_BUILDING_WEAPONSMITH: type = BUILDING_WEAPONSMITH; break;
     case CONFIG_GP_CH_BUILDING_RECRUTER: type = BUILDING_RECRUITER; break;
     case CONFIG_GP_CH_BUILDING_SMALL_MASTABA: type = BUILDING_SMALL_MASTABA; break;
     case CONFIG_GP_CH_BUILDING_BRICKLAYERS: type = BUILDING_BRICKLAYERS_GUILD; break;
@@ -575,7 +575,7 @@ static bool is_config_option_enabled(int option) {
     case CONFIG_GP_CH_BUILDING_QUARRY_STONE: return building_menu_is_building_enabled(BUILDING_STONE_QUARRY);
     case CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE: return building_menu_is_building_enabled(BUILDING_LIMESTONE_QUARRY);
     case CONFIG_GP_CH_BUILDING_CLAY_PIT: return building_menu_is_building_enabled(BUILDING_CLAY_PIT);
-    case CONFIG_GP_CH_BUILDING_WEAPON_WORKSHOP: return building_menu_is_building_enabled(BUILDING_WEAPONS_WORKSHOP);
+    case CONFIG_GP_CH_BUILDING_WEAPONSMITH: return building_menu_is_building_enabled(BUILDING_WEAPONSMITH);
     case CONFIG_GP_CH_BUILDING_RECRUTER: return building_menu_is_building_enabled(BUILDING_RECRUITER);
     case CONFIG_GP_CH_BUILDING_SMALL_MASTABA: return building_menu_is_building_enabled(BUILDING_SMALL_MASTABA);
     case CONFIG_GP_CH_BUILDING_BRICKLAYERS: return building_menu_is_building_enabled(BUILDING_BRICKLAYERS_GUILD);

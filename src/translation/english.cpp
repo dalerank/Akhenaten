@@ -114,7 +114,7 @@ static translation_string all_strings[] = {
      {TR_CONFIG_BUILDING_QUARRY_STONE, "Quarry stone enabled"},
      {TR_CONFIG_BUILDING_QUARRY_LIMESTONE, "Quarry limestone enabled"},
      {TR_CONFIG_BUILDING_CLAY_PIT, "Clay pit enabled"},
-     {TR_CONFIG_BUILDING_WEAPON_WORKSHOP, "Weapon workshop enabled"},
+     {TR_CONFIG_BUILDING_WEAPONSMITH, "Weapon workshop enabled"},
      {TR_CONFIG_BUILDING_RECRUTER, "Recruter enabled"},
      {TR_CONFIG_BUILDING_SMALL_MASTABA, "Small mastaba enabled"},
      {TR_CONFIG_BUILDING_BRICKLAYERS, "Bricklayers guild enabled"},

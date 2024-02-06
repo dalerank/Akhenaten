@@ -136,7 +136,7 @@ int building_type_to_channel(building *b) {
     case BUILDING_LIMESTONE_QUARRY:
     case BUILDING_BREWERY_WORKSHOP:
     case BUILDING_WEAVER_WORKSHOP:
-    case BUILDING_WEAPONS_WORKSHOP:
+    case BUILDING_WEAPONSMITH:
     case BUILDING_JEWELS_WORKSHOP:
     case BUILDING_WOOD_CUTTERS:
         return 0;

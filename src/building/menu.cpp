@@ -84,7 +84,7 @@ static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
      BUILDING_RECRUITER,
      BUILDING_MENU_FORTS,
      BUILDING_MILITARY_ACADEMY,
-     BUILDING_WEAPONS_WORKSHOP,
+     BUILDING_WEAPONSMITH,
      BUILDING_CHARIOTS_WORKSHOP,
      BUILDING_WARSHIP_WHARF,
      BUILDING_TRANSPORT_WHARF,
@@ -335,7 +335,7 @@ static void disable_resources() {
     disable_crafted_if_unavailable(BUILDING_PAPYRUS_WORKSHOP, RESOURCE_PAPYRUS);
     disable_crafted_if_unavailable(BUILDING_BRICKS_WORKSHOP, RESOURCE_BRICKS, RESOURCE_STRAW);
     disable_crafted_if_unavailable(BUILDING_CATTLE_RANCH, RESOURCE_MEAT, RESOURCE_STRAW);
-    disable_crafted_if_unavailable(BUILDING_WEAPONS_WORKSHOP, RESOURCE_WEAPONS);
+    disable_crafted_if_unavailable(BUILDING_WEAPONSMITH, RESOURCE_WEAPONS);
     disable_crafted_if_unavailable(BUILDING_CHARIOTS_WORKSHOP, RESOURCE_CHARIOTS);
 
     disable_crafted_if_unavailable(BUILDING_PAINT_WORKSHOP, RESOURCE_PAINT);
@@ -656,7 +656,7 @@ void building_menu_update(int build_set) {
         building_menu_toggle_building(BUILDING_RECRUITER);
         building_menu_toggle_building(BUILDING_FORT_INFANTRY);
         building_menu_toggle_building(BUILDING_FORT_ARCHERS);
-        building_menu_toggle_building(BUILDING_WEAPONS_WORKSHOP);
+        building_menu_toggle_building(BUILDING_WEAPONSMITH);
 
         building_menu_toggle_building(BUILDING_SCRIBAL_SCHOOL);
 

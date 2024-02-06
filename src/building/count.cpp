@@ -293,7 +293,7 @@ void building_count_update() {
         case BUILDING_PAINT_WORKSHOP:
             increase_industry_count(RESOURCE_PAINT, b.num_workers > 0);
             break;
-        case BUILDING_WEAPONS_WORKSHOP:
+        case BUILDING_WEAPONSMITH:
             increase_industry_count(RESOURCE_WEAPONS, b.num_workers > 0);
             break;
         case BUILDING_CHARIOTS_WORKSHOP:

@@ -182,7 +182,7 @@ void building_workshop_draw_raw_material_storage(painter &ctx, const building* b
         }
         break;
 
-    case BUILDING_WEAPONS_WORKSHOP:
+    case BUILDING_WEAPONSMITH:
         amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
         if (amount >= 0) {
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_COPPER_2) + amount, pos + vec2i{61, 14}, color_mask);
