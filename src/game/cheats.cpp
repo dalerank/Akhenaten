@@ -37,7 +37,6 @@ static void game_cheat_start_invasion(pcstr);
 static void game_cheat_advance_year(pcstr);
 static void game_cheat_cast_blessing(pcstr);
 static void game_cheat_show_tooltip(pcstr);
-static void game_cheat_kill_all(pcstr);
 static void game_cheat_victory(pcstr);
 static void game_cheat_cast_upset(pcstr);
 static void game_cheat_start_plague(pcstr);
@@ -74,7 +73,6 @@ static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_s
                                                   {"godupset", game_cheat_cast_upset},
                                                   {"showtooltip", game_cheat_show_tooltip},
                                                   {"startplague", game_cheat_start_plague},
-                                                  {"killall", game_cheat_kill_all},
                                                   {"victory", game_cheat_victory},
                                                   {"popmilestone", game_cheat_pop_milestone},
                                                   {"fire", game_cheat_fire},
@@ -374,11 +372,6 @@ static void game_cheat_start_plague(pcstr args) {
         total_population += b.house_population;
     });
     city_health_start_disease(total_population, true, plague_people);
-}
-
-static void game_cheat_kill_all(pcstr args) {
-    figure_kill_all();
-    city_warning_show_console("Killed all walkers");
 }
 
 void game_cheat_parse_command(pcstr command) {

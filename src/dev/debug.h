@@ -100,5 +100,6 @@ struct console_var_int {
 };
 
 #define declare_console_command(a, f) namespace console { bool cmd_##a; }; console_command a(#a, f);
+#define declare_console_command_p(a, f) namespace console { bool cmd_##a; }; void f(std::istream &, std::ostream &); console_command a(#a, f);
 #define declare_console_var_int(a, v) namespace console { bool var_##a; }; console_var_int a(#a, v);
 

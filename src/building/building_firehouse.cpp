@@ -6,13 +6,13 @@
 
 #include "dev/debug.h"
 
+declare_console_command_p(nofire, console_command_nofire);
 static void console_command_nofire(std::istream &, std::ostream &) {
     buildings_valid_do([&] (building &b) {
         b.fire_risk = 0;
     });
 }
 
-declare_console_command(nofire, console_command_nofire);
 
 void building_firehouse::spawn_figure() {
     base.common_spawn_roamer(FIGURE_FIREMAN, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
@@ -25,11 +25,11 @@ void building_firehouse::window_info_background(object_info &c) {
     outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
     lang_text_draw_centered(LANG_GROUP_ID, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
-    if (!c.has_road_access)
+    if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);
-    else if (!base.num_workers)
+    } else if (!base.num_workers) {
         window_building_draw_description(c, LANG_GROUP_ID, 9);
-    else {
+    } else {
         if (base.has_figure(0))
             window_building_draw_description(c, LANG_GROUP_ID, 2);
         else
