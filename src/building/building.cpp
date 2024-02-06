@@ -10,6 +10,7 @@
 #include "building/building_bazaar.h"
 #include "building/building_firehouse.h"
 #include "building/building_conservatory.h"
+#include "building/building_courthouse.h"
 #include "building_architect_post.h"
 #include "building/building_tax_collector.h"
 #include "building/building_jugler_school.h"
@@ -324,6 +325,7 @@ building_impl *building::dcast() {
     case BUILDING_PHYSICIAN: _ptr = new building_physician(*this); break;
     case BUILDING_GEMSTONE_MINE: _ptr = new building_mine_gems(*this); break;
     case BUILDING_COPPER_MINE: _ptr = new building_mine_copper(*this); break;
+    case BUILDING_COURTHOUSE: _ptr = new building_courthouse(*this); break;
 
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_RA:
@@ -498,7 +500,6 @@ void building::clear_related_data() {
 e_overlay building::get_overlay() const {
     switch (type) {
         case BUILDING_POLICE_STATION: return OVERLAY_CRIME;
-        case BUILDING_COURTHOUSE: return OVERLAY_COUTHOUSE;
         case BUILDING_SCRIBAL_SCHOOL: return OVERLAY_SCRIBAL_SCHOOL;
     }
 

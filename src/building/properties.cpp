@@ -191,7 +191,7 @@ static building_properties properties[400] = {
     {2, 1, GROUP_BUILDING_TRANSPORT_WHARF},   // wharf (transport)
     {3, 1, GROUP_BUILDING_WARSHIP_WHARF},     // wharf (warship)
     {-1, 1, 0, 0},                            // pyramid
-    {3, 0, GROUP_BUILDING_COURTHOUSE},        // courthouse
+    {3, 0, 0, 0},        // courthouse
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {4, 0, 0, 0},
@@ -276,6 +276,7 @@ void building_properties_init() {
     properties[BUILDING_TEMPLE_PTAH] = {3, 0, 0, 0, 0, IMG_TEMPLE_PTAH};
     properties[BUILDING_TEMPLE_SETH] = {3, 0, 0, 0, 0, IMG_TEMPLE_SETH};
     properties[BUILDING_TEMPLE_BAST] = {3, 0, 0, 0, 0, IMG_TEMPLE_BAST};
+    properties[BUILDING_COURTHOUSE] = {3, 0, 0, 0, 0, IMG_COURTHOUSE};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

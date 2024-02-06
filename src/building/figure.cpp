@@ -487,10 +487,6 @@ void building::spawn_figure_dentist() {
     common_spawn_roamer(FIGURE_DENTIST, 50);
 }
 
-void building::spawn_figure_magistrate() {
-    common_spawn_roamer(FIGURE_MAGISTRATE, 50);
-}
-
 //void building::set_water_supply_graphic() {
 //    if (state != BUILDING_STATE_VALID) {
 //        return;
@@ -1030,12 +1026,6 @@ bool building::figure_generate() {
                 f->set_home(this);
                 f->wait_ticks = 10 + (map_random_7bit & 0xf);
                 set_figure(BUILDING_SLOT_GOVERNOR, f);
-            }
-        } else {
-            switch (type) {
-            case BUILDING_COURTHOUSE:
-                spawn_figure_magistrate();
-                break;
             }
         }
     } else {

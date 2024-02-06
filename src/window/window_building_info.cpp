@@ -575,7 +575,6 @@ static void draw_refresh_background() {
                 window_building_draw_oracle(&context);
                 break;
 
-            case BUILDING_COURTHOUSE: window_building_draw_courthouse(&context); break;
             case BUILDING_SHIPWRIGHT: building_shipyard_draw_info(context); break;
             
             case BUILDING_DOCK:

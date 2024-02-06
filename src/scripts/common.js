@@ -22,6 +22,7 @@ var medium_statue_images = []
 var big_statue_images = []
 var top_menu_bar = {}
 var main_menu_window = {}
+var building_courthouse = {}
 var building_temple_osiris = {}
 var building_temple_ra = {}
 var building_temple_ptah = {}

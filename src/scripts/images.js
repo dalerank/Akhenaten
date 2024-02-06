@@ -141,6 +141,7 @@ images = [
 	{img: IMG_TEMPLE_PTAH, pack:PACK_GENERAL, id:20, offset:0},
 	{img: IMG_TEMPLE_SETH, pack:PACK_GENERAL, id:19, offset:0},
 	{img: IMG_TEMPLE_BAST, pack:PACK_GENERAL, id:76, offset:0},
+	{img: IMG_COURTHOUSE, pack:PACK_GENERAL, id:62, offset:0},
 ]
 
 cart_offsets = [

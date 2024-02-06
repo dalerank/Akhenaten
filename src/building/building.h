@@ -330,7 +330,6 @@ public:
     void spawn_figure_library();
     void spawn_figure_dentist();
     void spawn_figure_mortuary();
-    void spawn_figure_magistrate();
     void set_greate_palace_graphic();
     void spawn_figure_tax_collector();
     void spawn_figure_industry();
@@ -404,6 +403,7 @@ public:
     inline e_building_type type() const { return base.type; }
 
     virtual bool is_workshop() const { return false; }
+    virtual bool is_administration() const { return false; }
 
     using resources_vec = std::array<e_resource, 4>;
     virtual resources_vec required_resource() const { return {}; }
