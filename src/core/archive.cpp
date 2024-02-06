@@ -94,6 +94,24 @@ std::vector<std::string> archive::r_array_str(pcstr name) {
     return result;
 }
 
+std::vector<vec2i> archive::r_array_vec2i(pcstr name) {
+    auto vm = (js_State *)state;
+    js_getproperty(vm, -1, name);
+    std::vector<vec2i> result;
+    if (js_isarray(vm, -1)) {
+        int length = js_getlength(vm, -1);
+
+        for (int i = 0; i < length; ++i) {
+            js_getindex(vm, -1, i);
+            vec2i v = r_vec2i_impl("x", "y");
+            result.push_back(v);
+            js_pop(vm, 1);
+        }
+        js_pop(vm, 1);
+    }
+    return result;
+}
+
 int archive::r_int(pcstr name, int def) {
     auto vm = (js_State *)state;
     js_getproperty(vm, -1, name);
@@ -126,10 +144,9 @@ vec2i archive::r_size2i(pcstr name, pcstr w, pcstr h) {
     return r_vec2i(name, w, h);
 }
 
-vec2i archive::r_vec2i(pcstr name, pcstr x, pcstr y) {
+vec2i archive::r_vec2i_impl(pcstr x, pcstr y) {
     auto vm = (js_State *)state;
     vec2i result(0, 0);
-    js_getproperty(vm, -1, name);
     if (js_isobject(vm, -1)) {
         if (js_isarray(vm, -1)) {
             int length = js_getlength(vm, -1);
@@ -144,6 +161,14 @@ vec2i archive::r_vec2i(pcstr name, pcstr x, pcstr y) {
             js_getproperty(vm, -1, y); result.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
         }
     }
+
+    return result;
+}
+
+vec2i archive::r_vec2i(pcstr name, pcstr x, pcstr y) {
+    auto vm = (js_State *)state;
+    js_getproperty(vm, -1, name);
+    vec2i result = r_vec2i_impl(x, y);
     js_pop(vm, 1);
 
     return result;

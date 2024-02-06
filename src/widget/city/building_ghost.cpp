@@ -27,7 +27,7 @@
 
 #define MAX_TILES 25
 
-const vec2i VIEW_OFFSETS[MAX_TILES] = {          {0, 0},
+const vec2i VIEW_OFFSETS[]          = {          {0, 0},
                                        {-30,15}, {30, 15}, {0,30},
                              {-60,30}, {60, 30}, {-30,45}, {30, 45}, {0,  60},
                   {-90, 45}, {90, 45}, {-60,60}, {60, 60}, {-30,75}, {30, 75},  {0, 90},
@@ -134,40 +134,26 @@ static void get_building_base_xy(int map_x, int map_y, int building_size, int* x
     }
 }
 
-int is_blocked_for_building(int grid_offset, int num_tiles, int* blocked_tiles) {
+int is_blocked_for_building(tile2i tile, int size, std::vector<blocked_tile> &blocked_tiles) {
     int orientation_index = city_view_orientation() / 2;
     int blocked = 0;
+    int num_tiles = pow(size, 2);
     for (int i = 0; i < num_tiles; i++) {
-        int tile_offset = grid_offset; // + TILE_GRID_OFFSETS[orientation_index][i];
-        tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
-        bool tile_blocked = false;
-        if (map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR))
-            tile_blocked = true;
-        if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) > 0
-            || map_terrain_count_diagonally_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) > 0)
-            tile_blocked = true;
+        int offset = TILE_GRID_OFFSETS_PH[orientation_index][i];
+        tile2i check_tile = tile.shifted(offset);
+        bool tile_blocked = map_terrain_is(check_tile, TERRAIN_NOT_CLEAR)
+                            || (map_terrain_count_directly_adjacent_with_type(check_tile.grid_offset(), TERRAIN_FLOODPLAIN) > 0)
+                            || (map_terrain_count_diagonally_adjacent_with_type(check_tile.grid_offset(), TERRAIN_FLOODPLAIN) > 0)
+                            || map_has_figure_at(check_tile);
 
-        if (map_has_figure_at(tile_offset))
-            tile_blocked = true;
-
-        blocked_tiles[i] = tile_blocked;
+        blocked_tiles.push_back({check_tile, tile_blocked});
         blocked += (tile_blocked ? 1 : 0);
     }
     return blocked;
 }
 
-static void draw_flat_tile(painter &ctx, int x, int y, color color_mask) {
+void draw_flat_tile(painter &ctx, int x, int y, color color_mask) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
-}
-
-void draw_partially_blocked(painter &ctx, vec2i tile, int fully_blocked, int num_tiles, int* blocked_tiles) {
-    for (int i = 0; i < num_tiles; i++) {
-        vec2i offset = tile + VIEW_OFFSETS[i];
-        if (fully_blocked || blocked_tiles[i])
-            draw_flat_tile(ctx, offset.x, offset.y, COLOR_MASK_RED);
-        else
-            draw_flat_tile(ctx, offset.x, offset.y, COLOR_MASK_GREEN);
-    }
 }
 
 void draw_building_ghost(painter &ctx, e_image_id image_id, vec2i tile, color color_mask) {

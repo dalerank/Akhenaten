@@ -6,13 +6,12 @@
 #include "city/finance.h"
 #include "building/properties.h"
 #include "graphics/view/view.h"
+#include "graphics/view/lookup.h"
 #include "grid/grid.h"
 
 #include "graphics/animation.h"
 #include "js/js_game.h"
 #include "city/labor.h"
-
-constexpr int MAX_TILES = 25;
 
 namespace model {
 
@@ -21,8 +20,9 @@ struct fort_t {
     e_labor_category labor_category;
     animations_t anim;
     struct {
-        vec2i main_view_offset[4];
-        vec2i ground_view_offset[4];
+        std::vector<vec2i> main_view_offset;
+        std::vector<vec2i> ground_view_offset;
+        std::vector<vec2i> ground_check_offset;
     } ghost;
 };
 
@@ -37,26 +37,21 @@ void config_load_building_fort() {
         model::fort.anim.load(arch);
 
         arch.r_section("ghost", [] (archive ghost_arch) {
-            model::fort.ghost.main_view_offset[0] = ghost_arch.r_vec2i("main_N");
-            model::fort.ghost.main_view_offset[1] = ghost_arch.r_vec2i("main_W");
-            model::fort.ghost.main_view_offset[2] = ghost_arch.r_vec2i("main_S");
-            model::fort.ghost.main_view_offset[3] = ghost_arch.r_vec2i("main_E");
-            model::fort.ghost.ground_view_offset[0] = ghost_arch.r_vec2i("ground_N");
-            model::fort.ghost.ground_view_offset[1] = ghost_arch.r_vec2i("ground_W");
-            model::fort.ghost.ground_view_offset[2] = ghost_arch.r_vec2i("ground_S");
-            model::fort.ghost.ground_view_offset[3] = ghost_arch.r_vec2i("ground_E");
+            model::fort.ghost.main_view_offset = ghost_arch.r_array_vec2i("main");
+            model::fort.ghost.ground_view_offset = ghost_arch.r_array_vec2i("ground");
+            model::fort.ghost.ground_check_offset = ghost_arch.r_array_vec2i("ground_check");
         });
     });
 
     city_labor_set_category(model::fort);
 }
 
-static const int FORT_GROUND_GRID_OFFSETS_PH[4][4] = {
-    {GRID_OFFSET(3, -1), GRID_OFFSET(4, -1), GRID_OFFSET(4, 0), GRID_OFFSET(3, 0)},
-    {GRID_OFFSET(-1, -4), GRID_OFFSET(0, -4), GRID_OFFSET(0, -3), GRID_OFFSET(-1, -3)},
-    {GRID_OFFSET(-4, 0), GRID_OFFSET(-3, 0), GRID_OFFSET(-3, 1), GRID_OFFSET(-4, 1)},
-    {GRID_OFFSET(0, 3), GRID_OFFSET(1, 3), GRID_OFFSET(1, 4), GRID_OFFSET(0, 4)}
-};
+void draw_partially_blocked(painter &ctx, int fully_blocked, const std::vector<blocked_tile> &blocked_tiles) {
+    for (auto &tile: blocked_tiles) {
+        vec2i pixel = tile_to_pixel(tile.tile);
+        draw_flat_tile(ctx, pixel.x, pixel.y, (fully_blocked || tile.blocked) ? COLOR_MASK_RED : COLOR_MASK_GREEN);
+    }
+}
 
 void draw_fort_ghost(painter &ctx, e_building_type build_type, tile2i &tile, vec2i pixel) {
     bool fully_blocked = false;
@@ -66,38 +61,37 @@ void draw_fort_ghost(painter &ctx, e_building_type build_type, tile2i &tile, vec
         blocked = true;
     }
 
-    int num_tiles_fort = building_properties_for_type(BUILDING_FORT_ARCHERS)->size;
-    num_tiles_fort *= num_tiles_fort;
-    int num_tiles_ground = building_properties_for_type(BUILDING_FORT_GROUND)->size;
-    num_tiles_ground *= num_tiles_ground;
+    int fort_size = building_properties_for_type(BUILDING_FORT_ARCHERS)->size;
+    int ground_size = building_properties_for_type(BUILDING_FORT_GROUND)->size;
 
     //    int grid_offset_fort = tile->grid_offset;
     int global_rotation = building_rotation_global_rotation();
-    int grid_offset_ground = tile.grid_offset() + FORT_GROUND_GRID_OFFSETS_PH[global_rotation][city_view_orientation() / 2];
+    vec2i tile_ground_offset = model::fort.ghost.ground_check_offset[global_rotation * 4 + (city_view_orientation() / 2)];
+    tile2i tile_ground = tile.shifted(tile_ground_offset.x, tile_ground_offset.y);
 
-    int blocked_tiles_fort[MAX_TILES];
-    int blocked_tiles_ground[MAX_TILES];
+    std::vector<blocked_tile> blocked_tiles_fort;
+    std::vector<blocked_tile> blocked_tiles_ground;
 
-    blocked += is_blocked_for_building(tile.grid_offset(), num_tiles_fort, blocked_tiles_fort);
-    blocked += is_blocked_for_building(grid_offset_ground, num_tiles_ground, blocked_tiles_ground);
+    blocked += is_blocked_for_building(tile, fort_size, blocked_tiles_fort);
+    blocked += is_blocked_for_building(tile_ground, ground_size, blocked_tiles_ground);
 
     int orientation_index = building_rotation_get_storage_fort_orientation(global_rotation) / 2;
-    vec2i main = pixel + model::fort.ghost.main_view_offset[orientation_index];
-    vec2i ground = pixel + model::fort.ghost.ground_view_offset[orientation_index];
+    vec2i main_pixel = pixel + model::fort.ghost.main_view_offset[orientation_index];
+    vec2i ground_pixel = pixel + model::fort.ghost.ground_view_offset[orientation_index];
 
     if (blocked) {
-        draw_partially_blocked(ctx, pixel, fully_blocked, num_tiles_fort, blocked_tiles_fort);
-        draw_partially_blocked(ctx, ground, fully_blocked, num_tiles_ground, blocked_tiles_ground);
+        draw_partially_blocked(ctx, fully_blocked, blocked_tiles_fort);
+        draw_partially_blocked(ctx, fully_blocked, blocked_tiles_ground);
     } else {
         int image_id = image_id_from_group(GROUP_BUILDING_FORT);
         if (orientation_index == 0 || orientation_index == 3) {
             // draw fort first, then ground
-            draw_building_ghost(ctx, image_id, main);
-            draw_building_ghost(ctx, image_id + 1, ground);
+            draw_building_ghost(ctx, image_id, main_pixel);
+            draw_building_ghost(ctx, image_id + 1, ground_pixel);
         } else {
             // draw ground first, then fort
-            draw_building_ghost(ctx, image_id + 1, ground);
-            draw_building_ghost(ctx, image_id, main);
+            draw_building_ghost(ctx, image_id + 1, ground_pixel);
+            draw_building_ghost(ctx, image_id, main_pixel);
         }
     }
 }

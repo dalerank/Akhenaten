@@ -22,6 +22,8 @@ struct archive {
     vec2i r_size2i(pcstr name, pcstr w = "w", pcstr h = "h");
     vec2i r_vec2i(pcstr name, pcstr x = "x", pcstr y = "y");
 
+    std::vector<vec2i> r_array_vec2i(pcstr name);
+
     template<class T>
     inline T r_type(pcstr name) { return (T)r_int(name); }
 
@@ -58,6 +60,8 @@ struct archive {
         r_array_impl(read_func);
         pop(1);
     }
+
+    vec2i r_vec2i_impl(pcstr x, pcstr y);
 
     template<typename T>
     inline void r_objects(pcstr name, T read_func) {

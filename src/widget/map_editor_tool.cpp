@@ -22,7 +22,7 @@ static void offset_to_view_offset(int dx, int dy, int* view_dx, int* view_dy) {
     *view_dy = (dx + dy) * 15;
 }
 
-static void draw_flat_tile(vec2i pos, color color_mask) {
+static void draw_flat_tile_editor(vec2i pos, color color_mask) {
     painter ctx = game.painter();
     if (color_mask == COLOR_MASK_GREEN && scenario_property_climate() != CLIMATE_DESERT)
         ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos, ALPHA_MASK_SEMI_TRANSPARENT & color_mask);
@@ -36,9 +36,9 @@ static void draw_partially_blocked_editor(int x, int y, int num_tiles, int* bloc
         int x_offset = x + X_VIEW_OFFSETS[i];
         int y_offset = y + Y_VIEW_OFFSETS[i];
         if (blocked_tiles[i])
-            draw_flat_tile(vec2i{x_offset, y_offset}, COLOR_MASK_RED);
+            draw_flat_tile_editor(vec2i{x_offset, y_offset}, COLOR_MASK_RED);
         else {
-            draw_flat_tile(vec2i{x_offset, y_offset}, COLOR_MASK_GREEN);
+            draw_flat_tile_editor(vec2i{x_offset, y_offset}, COLOR_MASK_GREEN);
         }
     }
 }
@@ -92,7 +92,7 @@ static void draw_road(painter &ctx, tile2i tile, int x, int y) {
         }
     }
     if (blocked)
-        draw_flat_tile(vec2i{x, y}, COLOR_MASK_RED);
+        draw_flat_tile_editor(vec2i{x, y}, COLOR_MASK_RED);
     else {
         draw_building_image(image_id, x, y);
     }
@@ -102,7 +102,7 @@ static void draw_brush_tile(const void* data, int dx, int dy) {
     screen_tile* view = (screen_tile*)data;
     int view_dx, view_dy;
     offset_to_view_offset(dx, dy, &view_dx, &view_dy);
-    draw_flat_tile(vec2i{view->x + view_dx, view->y + view_dy}, COLOR_MASK_GREEN);
+    draw_flat_tile_editor(vec2i{view->x + view_dx, view->y + view_dy}, COLOR_MASK_GREEN);
 }
 
 static void draw_brush(painter &ctx, tile2i tile, int x, int y) {
@@ -122,7 +122,7 @@ static void draw_access_ramp(tile2i tile, int x, int y) {
 }
 
 static void draw_map_flag(int x, int y, int is_ok) {
-    draw_flat_tile(vec2i{x, y}, is_ok ? COLOR_MASK_GREEN : COLOR_MASK_RED);
+    draw_flat_tile_editor(vec2i{x, y}, is_ok ? COLOR_MASK_GREEN : COLOR_MASK_RED);
 }
 
 void map_editor_tool_draw(painter &ctx, tile2i tile) {
