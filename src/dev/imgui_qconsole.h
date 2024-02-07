@@ -332,7 +332,7 @@ inline void IMGUIOstream::render()
                 ImGui::GetWindowDrawList()->AddRectFilled(cursorScreenPos, sum, seq.style.backgroundColor);
             }
 
-            ImGui::TextColored(seq.style.textColor, seq.text.c_str());
+            ImGui::TextColored(seq.style.textColor, "%s", seq.text.c_str());
             ImGui::SameLine();
         }
 

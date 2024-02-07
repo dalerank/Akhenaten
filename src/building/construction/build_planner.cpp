@@ -1620,12 +1620,14 @@ void BuildPlanner::update_unique_only_one_check() {
             unique_already_placed = true;
         break;
     case BUILDING_RECRUITER:
-        if (city_buildings_has_recruiter() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS))
+        if (city_buildings_has_recruiter() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
             unique_already_placed = true;
+        }
         break;
     case BUILDING_FESTIVAL_SQUARE:
-        if (city_building_has_festival_square())
+        if (city_building_has_festival_square()) {
             unique_already_placed = true;
+        }
         break;
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
@@ -1638,11 +1640,13 @@ void BuildPlanner::update_unique_only_one_check() {
             unique_already_placed = true;
         break;
     }
+
     if (unique_already_placed) {
         immediate_warning_id = WARNING_ONE_BUILDING_OF_TYPE;
         can_place = CAN_NOT_PLACE;
     }
 }
+
 void BuildPlanner::update_coord_caches() {
     vec2i view_tile = tile_to_pixel(end);
     if (view_tile.x == 0 && view_tile.y == 0)
