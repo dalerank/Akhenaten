@@ -9,6 +9,7 @@
 #include "building/building_work_camp.h"
 #include "building/building_barracks.h"
 #include "building/building_bazaar.h"
+#include "building/building_cattle_ranch.h"
 #include "building/building_firehouse.h"
 #include "building/building_conservatory.h"
 #include "building/building_courthouse.h"
@@ -192,10 +193,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->output_resource_first_id = RESOURCE_REEDS;
         b->data.industry.max_gatheres = 1;
         break;
-    case BUILDING_CATTLE_RANCH:
-        b->data.industry.first_material_id = RESOURCE_STRAW;
-        b->output_resource_first_id = RESOURCE_MEAT;
-        break;
     case BUILDING_FIGS_FARM:
         b->output_resource_first_id = RESOURCE_FIGS;
         b->fire_proof = 1;
@@ -324,6 +321,7 @@ building_impl *building::dcast() {
     case BUILDING_WEAPONSMITH: _ptr = new building_weaponsmith(*this); break;
     case BUILDING_RECRUITER: _ptr = new building_recruiter(*this); break;
     case BUILDING_GRANARY: _ptr = new building_granary(*this); break;
+    case BUILDING_CATTLE_RANCH: _ptr = new building_cattle_ranch(*this); break;
 
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_RA:

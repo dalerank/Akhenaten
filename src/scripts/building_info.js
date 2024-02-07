@@ -65,6 +65,13 @@ building_fort = {
   labor_category : LABOR_CATEGORY_MILITARY,
 }
 
+building_cattle_ranch = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_CATTLE_RANCH }
+  },
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
 building_granary = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_GRANARY_ANIM, max_frames:23 }

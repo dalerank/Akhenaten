@@ -552,7 +552,6 @@ static void draw_refresh_background() {
             case BUILDING_WEAVER_WORKSHOP: building_flax_workshop_draw_info(context); break;
             case BUILDING_JEWELS_WORKSHOP: building_luxury_workshop_draw_info(context); break;
             case BUILDING_PAPYRUS_WORKSHOP: building_papyrus_workshop_draw_info(context); break;
-            case BUILDING_CATTLE_RANCH: building_cattle_ranch_draw_info(context); break;
             case BUILDING_BRICKS_WORKSHOP: building_brick_maker_workshop_draw_info(context); break;
             case BUILDING_SENET_HOUSE: window_building_draw_senet_house(&context); break;
             case BUILDING_PAVILLION: window_building_draw_pavilion(&context); break;

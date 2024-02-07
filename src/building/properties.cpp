@@ -201,7 +201,7 @@ static building_properties properties[400] = {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
-    {3, 0, 0, 0}, //GROUP_BUILDING_CATTLE_RANCH},    // ranch
+    {3, 0, 0, 0},
     {2, 0, GROUP_BUILDING_REEDS_COLLECTOR}, // reeds
     {3, 1, 0, 0},                           // figs farm
     {0, 0, 0, 0},

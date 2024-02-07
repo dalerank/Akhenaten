@@ -142,12 +142,6 @@ void building_papyrus_workshop_draw_info(object_info& c) {
     building_workshop_draw_info(c, 1, "papyrus_workshop", 190, output_resource, RESOURCE_REEDS);
 }
 
-void building_cattle_ranch_draw_info(object_info &c) {
-    e_resource output_resource = RESOURCE_MEAT;
-
-    building_workshop_draw_info(c, 1, "cattle_ranch", 117, output_resource, RESOURCE_STRAW);
-}
-
 void building_brick_maker_workshop_draw_info(object_info& c) {
     e_resource output_resource = RESOURCE_BRICKS;
 
