@@ -7,6 +7,7 @@
 #include "building/building_temple.h"
 #include "building/building_statue.h"
 #include "building/building_work_camp.h"
+#include "building/building_barracks.h"
 #include "building/building_bazaar.h"
 #include "building/building_firehouse.h"
 #include "building/building_conservatory.h"
@@ -324,6 +325,7 @@ building_impl *building::dcast() {
     case BUILDING_COPPER_MINE: _ptr = new building_mine_copper(*this); break;
     case BUILDING_COURTHOUSE: _ptr = new building_courthouse(*this); break;
     case BUILDING_WEAPONSMITH: _ptr = new building_weaponsmith(*this); break;
+    case BUILDING_RECRUITER: _ptr = new building_recruiter(*this); break;
 
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_RA:

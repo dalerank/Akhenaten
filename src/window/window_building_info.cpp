@@ -374,11 +374,6 @@ static void init(map_point tile) {
             context.building_id = b->id;
             break;
 
-        case BUILDING_RECRUITER:
-            context.barracks_soldiers_requested = formation_legion_recruits_needed();
-            context.barracks_soldiers_requested += building_barracks_has_tower_sentry_request();
-            break;
-
         default:
             if (b->house_size) {
                 context.worst_desirability_building_id = building_house_determine_worst_desirability_building(b);
@@ -606,7 +601,6 @@ static void draw_refresh_background() {
             case BUILDING_MUD_GATEHOUSE: window_building_draw_gatehouse(&context); break;
             case BUILDING_MUD_TOWER: window_building_draw_tower(&context); break;
             case BUILDING_MILITARY_ACADEMY: window_building_draw_military_academy(&context); break;
-            case BUILDING_RECRUITER: window_building_draw_barracks(&context); break;
             
             case BUILDING_FORT_ARCHERS:
             case BUILDING_FORT_CHARIOTEERS:
@@ -670,10 +664,6 @@ static void draw_foreground() {
                 window_building_draw_dock_orders_foreground(&context);
             else
                 window_building_draw_dock_foreground(&context);
-            break;
-
-        case BUILDING_RECRUITER:
-            window_building_draw_barracks_foreground(&context);
             break;
 
         default:
@@ -800,9 +790,6 @@ static int handle_specific_building_info_mouse(const mouse *m) {
             else
                 return window_building_handle_mouse_dock(m, &context);
             break;
-
-        case BUILDING_RECRUITER:
-            return window_building_handle_mouse_barracks(m, &context);
 
         case BUILDING_GRANARY:
             if (context.storage_show_special_orders)

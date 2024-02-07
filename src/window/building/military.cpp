@@ -118,64 +118,6 @@ void window_building_draw_tower(object_info* c) {
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_barracks(object_info* c) {
-    painter ctx = game.painter();
-    auto& data = g_military_data;
-    int military_resource = RESOURCE_WEAPONS;
-    c->help_id = 37;
-    data.building_id = c->building_id;
-    window_building_play_sound(c, "wavs/barracks.wav");
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(136, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(military_resource), c->offset + vec2i{64, 38});
-
-    building* b = building_get(c->building_id);
-    if (b->stored_full_amount < 100)
-        lang_text_draw_amount(8, 10, 0, c->offset.x + 92, c->offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    else
-        lang_text_draw_amount(8, 10, b->stored_full_amount, c->offset.x + 92, c->offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    if (!c->has_road_access)
-        window_building_draw_description_at(c, 70, 69, 25);
-    else if (b->num_workers <= 0)
-        window_building_draw_description_at(c, 70, 136, 3);
-    else if (!c->barracks_soldiers_requested)
-        window_building_draw_description_at(c, 70, 136, 4);
-    else {
-        int offset = 0;
-        if (b->stored_full_amount > 0)
-            offset = 4;
-
-        if (c->worker_percentage >= 100)
-            window_building_draw_description_at(c, 70, 136, 5 + offset);
-        else if (c->worker_percentage >= 66)
-            window_building_draw_description_at(c, 70, 136, 6 + offset);
-        else if (c->worker_percentage >= 33)
-            window_building_draw_description_at(c, 70, 136, 7 + offset);
-        else {
-            window_building_draw_description_at(c, 70, 136, 8 + offset);
-        }
-    }
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 136, c->width_blocks - 2, 4);
-    window_building_draw_employment(c, 142);
-    lang_text_draw(50, 21, c->offset.x + 46, c->offset.y + 204, FONT_NORMAL_BLACK_ON_LIGHT); // "Priority"
-    lang_text_draw(91, 0, c->offset.x + 46, c->offset.y + 224, FONT_NORMAL_BLACK_ON_LIGHT);  // "Tower"
-    lang_text_draw(89, 0, c->offset.x + 46, c->offset.y + 244, FONT_NORMAL_BLACK_ON_LIGHT);  // "Fort"
-}
-
-void window_building_draw_barracks_foreground(object_info* c) {
-    draw_priority_buttons(c->offset.x + 46, c->offset.y + 224, 2);
-}
-
-int window_building_handle_mouse_barracks(const mouse* m, object_info* c) {
-    auto& data = g_military_data;
-    if (generic_buttons_handle_mouse(m, c->offset.x + 46, c->offset.y + 224, priority_buttons, 2, &data.focus_priority_button_id)) {
-        window_invalidate();
-        return 1;
-    }
-    return 0;
-}
-
 void window_building_draw_military_academy(object_info* c) {
     c->help_id = 88;
     window_building_play_sound(c, "wavs/mil_acad.wav");

@@ -344,7 +344,6 @@ public:
     void spawn_figure_native_hut();
     void spawn_figure_native_meeting();
     void spawn_figure_tower();
-    void spawn_figure_barracks();
 
     int get_figures_number(e_figure_type ftype);
     bool can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person);
@@ -401,6 +400,7 @@ public:
     inline int id() const { return base.id; }
     inline tile2i tile() const { return base.tile; }
     inline e_building_type type() const { return base.type; }
+    inline int figure_spawn_timer() const { return base.figure_spawn_timer(); }
 
     virtual bool is_workshop() const { return false; }
     virtual bool is_administration() const { return false; }

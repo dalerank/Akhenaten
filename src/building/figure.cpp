@@ -894,40 +894,6 @@ void building::spawn_figure_tower() {
         }
     }
 }
-void building::spawn_figure_barracks() {
-    check_labor_problem();
-    //    map_point road;
-    if (has_road_access) {
-        common_spawn_labor_seeker(100);
-        int pct_workers = worker_percentage();
-        int spawn_delay = figure_spawn_timer();
-        //        if (pct_workers >= 100)
-        //            spawn_delay = 8;
-        //        else if (pct_workers >= 75)
-        //            spawn_delay = 12;
-        //        else if (pct_workers >= 50)
-        //            spawn_delay = 16;
-        //        else if (pct_workers >= 25)
-        //            spawn_delay = 32;
-        //        else if (pct_workers >= 1)
-        //            spawn_delay = 48;
-        //        else
-        //            return;
-        figure_spawn_delay++;
-        if (figure_spawn_delay > spawn_delay) {
-            figure_spawn_delay = 0;
-            switch (subtype.barracks_priority) {
-            case PRIORITY_FORT:
-                if (!barracks_create_soldier())
-                    barracks_create_tower_sentry();
-                break;
-            default:
-                if (!barracks_create_tower_sentry())
-                    barracks_create_soldier();
-            }
-        }
-    }
-}
 
 void building::update_native_crop_progress() {
     data.industry.progress++;
@@ -1019,10 +985,6 @@ bool building::figure_generate() {
         case BUILDING_FORT_ARCHERS:
         case BUILDING_FORT_INFANTRY:
             formation_legion_update_recruit_status(this);
-            break;
-
-        case BUILDING_RECRUITER:
-            spawn_figure_barracks();
             break;
 
         case BUILDING_VILLAGE_PALACE:
