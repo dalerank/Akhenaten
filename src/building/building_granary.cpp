@@ -633,6 +633,8 @@ void window_building_draw_granary_orders(object_info* c) {
 void window_building_draw_granary(object_info* c) {
     auto &data = g_window_building_distribution;
     c->help_id = 3;
+    c->go_to_advisor.left_a = ADVISOR_LABOR;
+    c->go_to_advisor.left_b = ADVISOR_POPULATION;
     data.building_id = c->building_id;
     window_building_play_sound(c, "wavs/granary.wav");
     outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
