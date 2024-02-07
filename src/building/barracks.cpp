@@ -23,25 +23,6 @@ void building::barracks_add_weapon(int amount) {
     }
 }
 
-void building::industry_add_workers(int fid) {
-    data.industry.worker_id = fid;
-}
-
-void building::industry_remove_worker(int fid) {
-    if (data.industry.worker_id == id) {
-        data.industry.worker_id = 0;
-    }
-}
-
-void building::monument_add_workers(int fid) {
-    for (auto &wid : data.monuments.workers) {
-        if (wid == 0) {
-            wid = fid;
-            return;
-        }
-    }
-}
-
 void building::monument_remove_worker(int fid) {
     for (auto &wid : data.monuments.workers) {
         if (wid == fid) {
@@ -124,6 +105,7 @@ int building::barracks_create_soldier() {
     formation_calculate_figures();
     return formation_id ? 1 : 0;
 }
+
 bool building::barracks_create_tower_sentry() {
     if (g_tower_sentry_request <= 0)
         return false;
@@ -158,10 +140,12 @@ bool building::barracks_create_tower_sentry() {
 void building_barracks_request_tower_sentry() {
     g_tower_sentry_request = 2;
 }
+
 void building_barracks_decay_tower_sentry_request() {
     if (g_tower_sentry_request > 0)
         g_tower_sentry_request--;
 }
+
 int building_barracks_has_tower_sentry_request() {
     return g_tower_sentry_request;
 }

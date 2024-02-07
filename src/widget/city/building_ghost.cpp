@@ -58,7 +58,6 @@ static const int TILE_GRID_OFFSETS_PH[4][MAX_TILES] = {
    GRID_OFFSET(4, -2), GRID_OFFSET(2, -4), GRID_OFFSET(4, -3), GRID_OFFSET(3, -4), GRID_OFFSET(4, -4)},
 };
 
-
 static const int RESERVOIR_GRID_OFFSETS_PH[4] = {GRID_OFFSET(-1, -1), GRID_OFFSET(1, -1), GRID_OFFSET(1, 1), GRID_OFFSET(-1, 1)};
 
 static const int HIPPODROME_X_VIEW_OFFSETS[4] = {150, 150, -150, -150};
@@ -540,9 +539,6 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
             break;
         }
     }
-}
-static void draw_monument_blueprint(map_point tile, int x, int y, int type) {
-    // TODO: implement monuments
 }
 
 bool city_building_ghost_mark_deleting(tile2i tile) {

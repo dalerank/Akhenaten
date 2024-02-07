@@ -417,6 +417,25 @@ bool building_exists_at(tile2i tile, building* b) {
 building::building() {
 }
 
+void building::industry_add_workers(int fid) {
+    data.industry.worker_id = fid;
+}
+
+void building::industry_remove_worker(int fid) {
+    if (data.industry.worker_id == id) {
+        data.industry.worker_id = 0;
+    }
+}
+
+void building::monument_add_workers(int fid) {
+    for (auto &wid : data.monuments.workers) {
+        if (wid == 0) {
+            wid = fid;
+            return;
+        }
+    }
+}
+
 building* building::main() {
     building* b = this;
     for (int guard = 0; guard < 99; guard++) {
