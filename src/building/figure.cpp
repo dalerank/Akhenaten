@@ -3,7 +3,7 @@
 #include "city/data_private.h"
 #include "figuretype/entertainer.h"
 
-#include "building/barracks.h"
+#include "building/building_barracks.h"
 #include "building/building_granary.h"
 #include "building/industry.h"
 #include "building/building_bazaar.h"

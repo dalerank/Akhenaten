@@ -1,6 +1,6 @@
 #include "military.h"
 
-#include "building/barracks.h"
+#include "building/building_barracks.h"
 #include "building/building.h"
 #include "building/count.h"
 #include "core/calc.h"

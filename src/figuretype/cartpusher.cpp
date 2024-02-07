@@ -1,6 +1,6 @@
 #include "cartpusher.h"
 
-#include "building/barracks.h"
+#include "building/building_barracks.h"
 #include "building/building_granary.h"
 #include "building/industry.h"
 #include "building/storage.h"
