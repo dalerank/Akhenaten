@@ -13,7 +13,7 @@
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
 
-void building_work_camp_draw_info(object_info &c) {
+void building_work_camp::window_info_background(object_info &c) {
     const int32_t group_id = 179;
     c.help_id = 81;
     window_building_play_sound(&c, snd::get_building_info_sound("work_camp")); // TODO: change to work_camp
