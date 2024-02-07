@@ -49,7 +49,7 @@ void config_load_building_fort() {
 void draw_partially_blocked(painter &ctx, int fully_blocked, const std::vector<blocked_tile> &blocked_tiles) {
     for (auto &tile: blocked_tiles) {
         vec2i pixel = tile_to_pixel(tile.tile);
-        draw_flat_tile(ctx, pixel.x, pixel.y, (fully_blocked || tile.blocked) ? COLOR_MASK_RED : COLOR_MASK_GREEN);
+        draw_flat_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
     }
 }
 

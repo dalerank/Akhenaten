@@ -152,8 +152,8 @@ int is_blocked_for_building(tile2i tile, int size, std::vector<blocked_tile> &bl
     return blocked;
 }
 
-void draw_flat_tile(painter &ctx, int x, int y, color color_mask) {
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
+void draw_flat_tile(painter &ctx, vec2i pixel, color color_mask) {
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, color_mask);
 }
 
 void draw_building_ghost(painter &ctx, e_image_id image_id, vec2i tile, color color_mask) {
@@ -259,14 +259,14 @@ static void draw_aqueduct(map_point tile, int x, int y, painter &ctx) {
     }
 
     if (blocked) { // cannot draw!
-        draw_flat_tile(ctx, x, y, COLOR_MASK_RED);
+        draw_flat_tile(ctx, {x, y}, COLOR_MASK_RED);
     } else {
         const terrain_image* img = map_image_context_get_aqueduct(grid_offset); // get starting tile
         draw_building_ghost(ctx, get_aqueduct_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), {x, y});
     }
 }
 
-static void draw_road(tile2i tile, int x, int y, painter &ctx) {
+static void draw_road(tile2i tile, vec2i pixel, painter &ctx) {
     int grid_offset = tile.grid_offset();
     bool blocked = false;
     int image_id = 0;
@@ -310,13 +310,13 @@ static void draw_road(tile2i tile, int x, int y, painter &ctx) {
     }
 
     if (blocked) {
-        draw_flat_tile(ctx, x, y, COLOR_MASK_RED);
+        draw_flat_tile(ctx, pixel, COLOR_MASK_RED);
     } else {
-        draw_building_ghost(ctx, image_id, {x, y});
+        draw_building_ghost(ctx, image_id, pixel);
     }
 }
 
-static void draw_bridge(map_point tile, int x, int y, int type, painter &ctx) {
+static void draw_bridge(map_point tile, vec2i pixel, int type, painter &ctx) {
     int length, direction;
     int end_grid_offset = map_bridge_calculate_length_direction(tile.x(), tile.y(), &length, &direction);
 
@@ -355,20 +355,20 @@ static void draw_bridge(map_point tile, int x, int y, int type, painter &ctx) {
         return;
     }
     if (blocked) {
-        draw_flat_tile(ctx, x, y, length > 0 ? COLOR_MASK_GREEN : COLOR_MASK_RED);
+        draw_flat_tile(ctx, pixel, length > 0 ? COLOR_MASK_GREEN : COLOR_MASK_RED);
         if (length > 1)
-            draw_flat_tile(ctx, x + x_delta * (length - 1), y + y_delta * (length - 1), COLOR_MASK_RED);
+            draw_flat_tile(ctx, pixel + vec2i(x_delta * (length - 1), y_delta * (length - 1)), COLOR_MASK_RED);
 
     } else {
         if (dir == DIR_0_TOP_RIGHT || dir == DIR_6_TOP_LEFT) {
             for (int i = length - 1; i >= 0; i--) {
                 int sprite_id = map_bridge_get_sprite_id(i, length, dir, type == BUILDING_UNUSED_SHIP_BRIDGE_83);
-                city_draw_bridge_tile(ctx, x + x_delta * i, y + y_delta * i, sprite_id, COLOR_MASK_GREEN);
+                city_draw_bridge_tile(ctx, pixel.x + x_delta * i, pixel.y + y_delta * i, sprite_id, COLOR_MASK_GREEN);
             }
         } else {
             for (int i = 0; i < length; i++) {
                 int sprite_id = map_bridge_get_sprite_id(i, length, dir, type == BUILDING_UNUSED_SHIP_BRIDGE_83);
-                city_draw_bridge_tile(ctx, x + x_delta * i, y + y_delta * i, sprite_id, COLOR_MASK_GREEN);
+                city_draw_bridge_tile(ctx, pixel.x + x_delta * i, pixel.y + y_delta * i, sprite_id, COLOR_MASK_GREEN);
             }
         }
     }
@@ -418,7 +418,7 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
 
     if (can_build != 1) { // no can place
         for (int i = 0; i < size * size; i++) {
-            draw_flat_tile(ctx, x + VIEW_OFFSETS[i].x, y + VIEW_OFFSETS[i].y, COLOR_MASK_RED);
+            draw_flat_tile(ctx, vec2i{x, y} + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else { // can place (theoretically)
         if (type == BUILDING_FESTIVAL_SQUARE && city_building_has_festival_square()) {
@@ -568,12 +568,23 @@ void BuildPlanner::draw_flat_tile(vec2i pos, color color_mask, painter &ctx) {
 }
 
 void BuildPlanner::draw_blueprints(painter &ctx, bool fully_blocked) {
-    for (int row = 0; row < size.y; row++) {
-        for (int column = 0; column < size.x; column++) {
-            vec2i current_coord = pixel_coords_cache[row][column];
-            color color_mask = (tile_blocked_array[row][column] || fully_blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30;
-            draw_flat_tile(current_coord, color_mask, ctx);
+    vec2i pixel = pixel_coords_cache[0][0];
+    switch (build_type) {
+        case BUILDING_FORT_ARCHERS:
+        case BUILDING_FORT_CHARIOTEERS:
+        case BUILDING_FORT_INFANTRY:
+        draw_fort_ghost(ctx, build_type, end, pixel);
+        return;
+
+    default:
+        for (int row = 0; row < size.y; row++) {
+            for (int column = 0; column < size.x; column++) {
+                vec2i current_coord = pixel_coords_cache[row][column];
+                color color_mask = (tile_blocked_array[row][column] || fully_blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30;
+                draw_flat_tile(current_coord, color_mask, ctx);
+            }
         }
+        break;
     }
 }
 
@@ -583,7 +594,7 @@ void BuildPlanner::draw_graphics(painter &ctx) {
     vec2i pixel = pixel_coords_cache[0][0];
     switch (build_type) {
     case BUILDING_ROAD:
-        draw_road(end, pixel.x, pixel.y, ctx);
+        draw_road(end, pixel, ctx);
         return;
 
     case BUILDING_IRRIGATION_DITCH:
