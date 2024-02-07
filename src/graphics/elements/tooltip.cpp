@@ -74,6 +74,9 @@ static void draw_tooltip_box(int x, int y, int width, int height) {
 
 static void draw_button_tooltip(tooltip_context* c) {
     const uint8_t* text = lang_get_string(c->text_group, c->text_id);
+    if (!text) {
+        return;
+    }
 
     int width = 200;
     int lines = text_measure_multiline(text, width - 5, FONT_SMALL_SHADED);

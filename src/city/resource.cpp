@@ -268,22 +268,19 @@ static void calculate_available_food() {
     city_data.resource.granaries.understaffed = 0;
     city_data.resource.granaries.not_operating = 0;
     city_data.resource.granaries.not_operating_with_food = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY)
-            continue;
 
-        b->has_road_access = 0;
-        if (map_has_road_access(b->tile, b->size)) { // map_has_road_access_granary(b->tile.x(), b->tile.y(), 0)
-            b->has_road_access = 1;
-            int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
+    buildings_valid_do([] (building &b) {
+        b.has_road_access = false;
+        if (map_has_road_access(b.tile, b.size)) { // map_has_road_access_granary(b->tile.x(), b->tile.y(), 0)
+            b.has_road_access = true;
+            int pct_workers = calc_percentage<int>(b.num_workers, model_get_building(b.type)->laborers);
             if (pct_workers < 100) {
                 city_data.resource.granaries.understaffed++;
             }
 
             int amount_stored = 0;
             for (int r = RESOURCE_FOOD_MIN; r < RESOURCES_FOODS_MAX; r++) {
-                amount_stored += b->data.granary.resource_stored[r];
+                amount_stored += b.data.granary.resource_stored[r];
             }
 
             if (pct_workers < 50) {
@@ -294,19 +291,21 @@ static void calculate_available_food() {
             } else {
                 city_data.resource.granaries.operating++;
                 for (int r = 0; r < RESOURCES_FOODS_MAX; r++)
-                    city_data.resource.granary_food_stored[r] += b->data.granary.resource_stored[r];
+                    city_data.resource.granary_food_stored[r] += b.data.granary.resource_stored[r];
 
                 if (amount_stored >= 100)
                     tutorial_on_filled_granary(amount_stored);
             }
         }
-    }
+    }, BUILDING_GRANARY);
+
     for (int i = RESOURCE_FOOD_MIN; i < RESOURCES_FOODS_MAX; i++) {
         if (city_data.resource.granary_food_stored[i]) {
             city_data.resource.granary_total_stored += city_data.resource.granary_food_stored[i];
             city_data.resource.food_types_available_num++;
         }
     }
+
     city_data.resource.food_needed_per_month = calc_adjust_with_percentage(city_data.population.population, 50);
     if (city_data.resource.food_needed_per_month > 0) {
         city_data.resource.food_supply_months

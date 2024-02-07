@@ -464,6 +464,7 @@ const terrain_image* map_image_context_get_wall_gatehouse(int grid_offset) {
     }
     return get_image(CONTEXT_WALL_GATEHOUSE, tiles);
 }
+
 static void set_tiles_road(int grid_offset, int tiles[MAX_TILES]) {
     fill_matches(grid_offset, TERRAIN_ROAD, 1, 0, tiles);
     for (int i = 0; i < MAX_TILES; i += 2) {
@@ -486,6 +487,7 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES]) {
         }
     }
 }
+
 const terrain_image* map_image_context_get_dirt_road(int grid_offset) {
     int tiles[MAX_TILES];
     set_tiles_road(grid_offset, tiles);

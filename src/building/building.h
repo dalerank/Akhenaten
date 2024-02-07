@@ -338,7 +338,6 @@ public:
     void spawn_figure_wharf();
     void spawn_figure_shipyard();
     void spawn_figure_dock();
-    void spawn_figure_granary();
     void spawn_figure_reed_gatherers();
     void spawn_figure_wood_cutters();
     void spawn_figure_native_hut();
@@ -385,6 +384,7 @@ public:
     virtual int animation_speed(int speed) const { return speed; }
     virtual int get_produce_uptick_per_day() const { return base.num_workers; }
     virtual int get_fire_risk(int value) const { return value; }
+    virtual std::pair<int, int> get_tooltip() const { return {-1, -1}; }
 
     inline bool is_main() { return base.is_main(); }
     inline void check_labor_problem() { base.check_labor_problem(); }
@@ -399,8 +399,10 @@ public:
     
     inline int id() const { return base.id; }
     inline tile2i tile() const { return base.tile; }
+    inline int size() const { return base.size; }
     inline e_building_type type() const { return base.type; }
     inline int figure_spawn_timer() const { return base.figure_spawn_timer(); }
+    inline int num_workers() const { return base.num_workers; }
 
     virtual bool is_workshop() const { return false; }
     virtual bool is_administration() const { return false; }

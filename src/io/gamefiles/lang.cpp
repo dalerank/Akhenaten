@@ -184,6 +184,10 @@ const uint8_t* lang_get_string(int group, int index) {
     //        return translation_for(TR_BUILDING_ROADBLOCK_DESC);
     //}
 
+    if (group < 0 || index < 0) {
+        return nullptr;
+    }
+
     int32_t string_offset = g_lang_data.text_entries[group].offset;
     const uint8_t* str = &g_lang_data.text_data[string_offset];
     uint8_t prev = 0;

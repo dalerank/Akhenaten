@@ -42,7 +42,9 @@ mission5 = { // Timna
 		{
 				from: "pharaoh",
 				condition: {
-					kingdome : 65
+					kingdome : 65,
+					resource : RESOURCE_CHICKPEAS,
+					amount : [1600, 2400],
 				}
 		}
 	],

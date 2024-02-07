@@ -257,10 +257,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         building_draw_normal_anim(ctx, point, b, tile, image_id, color_mask);
         break;
 
-    case BUILDING_GRANARY:
-        building_granary_draw_anim(*b, point, tile, color_mask, ctx);
-        break;
-
     case BUILDING_STORAGE_YARD:
         draw_storageyard_ornaments(b, point.x, point.y, color_mask, ctx);
         building_draw_normal_anim(ctx, point + vec2i{21, 24}, b, tile, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);

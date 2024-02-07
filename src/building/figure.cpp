@@ -765,27 +765,6 @@ void building::spawn_figure_dock() {
     //    }
 }
 
-void building::spawn_figure_granary() {
-    check_labor_problem();
-    map_point road;
-    if (map_get_road_access_tile(tile, size, road)) { // map_has_road_access_granary(x, y, &road)
-        common_spawn_labor_seeker(100);
-
-        if (has_figure_of_type(0, FIGURE_STORAGE_YARD_DELIVERCART)) {
-            return;
-        }
-
-        auto task = building_granary_determine_worker_task(this);
-        if (task.status != GRANARY_TASK_NONE) {
-            figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road, DIR_4_BOTTOM_LEFT);
-            f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
-            f->load_resource(task.resource, 0);
-            set_figure(0, f->id);
-            f->set_home(id);
-        }
-    }
-}
-
 int building::get_figures_number(e_figure_type ftype) {
     int gatherers_this_yard = 0;
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -952,7 +931,6 @@ bool building::figure_generate() {
     } else {
         // single building type
         switch (type) {
-        case BUILDING_GRANARY: spawn_figure_granary(); break;
         case BUILDING_MUD_TOWER: spawn_figure_tower(); break;
         case BUILDING_POLICE_STATION: spawn_figure_police(); break;
         case BUILDING_DANCE_SCHOOL: spawn_figure_dancer(); break;

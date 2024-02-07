@@ -175,24 +175,26 @@ static int get_height_id() {
 
 static void get_tooltip(tooltip_context* c) {
     auto &context = g_building_info_context;
-    std::pair<int, int> tooltip;
+    std::pair<int, int> tooltip{-1, -1};
+    
     if (context.type == BUILDING_INFO_LEGION) {
         tooltip.second = window_building_get_legion_info_tooltip_text(&context);
 
     } else if (context.type == BUILDING_INFO_BUILDING && context.storage_show_special_orders) {
-        switch (building_get(context.building_id)->type) {
-        case BUILDING_GRANARY:
-            window_building_get_tooltip_granary_orders(&tooltip.first, &tooltip.second);
-            break;
-
+        building *b = building_get(context.building_id);
+        switch (b->type) {
         case BUILDING_STORAGE_YARD:
             window_building_get_tooltip_warehouse_orders(&tooltip.first, &tooltip.second);
+            break;
+
+        default:
+            tooltip = b->dcast()->get_tooltip();
             break;
         }
     }
 
     int button_id = ui::button_hover(mouse_get());
-    if (button_id > 0) {
+    if (button_id > 0 && tooltip.first < 0) {
         tooltip = ui::button(button_id - 1)._tooltip;
     }
 
@@ -552,14 +554,6 @@ static void draw_refresh_background() {
             case BUILDING_PAPYRUS_WORKSHOP: building_papyrus_workshop_draw_info(context); break;
             case BUILDING_CATTLE_RANCH: building_cattle_ranch_draw_info(context); break;
             case BUILDING_BRICKS_WORKSHOP: building_brick_maker_workshop_draw_info(context); break;
-
-            case BUILDING_GRANARY:
-                if (context.storage_show_special_orders)
-                    window_building_draw_granary_orders(&context);
-                else
-                    window_building_draw_granary(&context);
-                break;
-
             case BUILDING_SENET_HOUSE: window_building_draw_senet_house(&context); break;
             case BUILDING_PAVILLION: window_building_draw_pavilion(&context); break;
             case BUILDING_DANCE_SCHOOL: building_dancer_school_draw_info(context); break;
@@ -644,14 +638,6 @@ static void draw_foreground() {
     if (context.type == BUILDING_INFO_BUILDING) {
         b = building_get(context.building_id);
         switch (b->type) {
-        case BUILDING_GRANARY:
-            if (context.storage_show_special_orders) {
-                window_building_draw_granary_orders_foreground(&context);
-            } else {
-                window_building_draw_granary_foreground(&context);
-            }
-            break;
-
         case BUILDING_ROADBLOCK:
             if (context.storage_show_special_orders)
                 window_building_draw_roadblock_orders_foreground(&context);
@@ -791,13 +777,6 @@ static int handle_specific_building_info_mouse(const mouse *m) {
                 return window_building_handle_mouse_dock(m, &context);
             break;
 
-        case BUILDING_GRANARY:
-            if (context.storage_show_special_orders)
-                return window_building_handle_mouse_granary_orders(m, &context);
-            else
-                return window_building_handle_mouse_granary(m, &context);
-            break;
-
         case BUILDING_STORAGE_YARD:
             if (context.storage_show_special_orders)
                 return window_building_handle_mouse_warehouse_orders(m, &context);
@@ -806,9 +785,10 @@ static int handle_specific_building_info_mouse(const mouse *m) {
             break;
 
         default:
-            b->dcast()->window_info_handle_mouse(m, context);
+            return b->dcast()->window_info_handle_mouse(m, context);
         }
     }
+
     return 0;
 }
 

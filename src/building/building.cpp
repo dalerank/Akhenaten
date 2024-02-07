@@ -13,6 +13,7 @@
 #include "building/building_conservatory.h"
 #include "building/building_courthouse.h"
 #include "building/building_weaponsmith.h"
+#include "building/building_granary.h"
 #include "building_architect_post.h"
 #include "building/building_tax_collector.h"
 #include "building/building_jugler_school.h"
@@ -232,10 +233,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->output_resource_first_id = RESOURCE_PAINT;
         //            b->subtype.workshop_type = WORKSHOP_PAINT;
         break;
-    case BUILDING_GRANARY:
-        b->data.granary.resource_stored[RESOURCE_NONE] = 3200;
-        b->storage_id = building_storage_create(BUILDING_GRANARY);
-        break;
     case BUILDING_BAZAAR: // Set it as accepting all goods
         b->subtype.market_goods = 0x0000;
         break;
@@ -326,6 +323,7 @@ building_impl *building::dcast() {
     case BUILDING_COURTHOUSE: _ptr = new building_courthouse(*this); break;
     case BUILDING_WEAPONSMITH: _ptr = new building_weaponsmith(*this); break;
     case BUILDING_RECRUITER: _ptr = new building_recruiter(*this); break;
+    case BUILDING_GRANARY: _ptr = new building_granary(*this); break;
 
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_RA:
