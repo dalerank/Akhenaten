@@ -14,25 +14,27 @@ struct city_data_t {
     struct {
         bool palace_placed;
         int32_t palace_building_id;
-        map_point palace_point;
+        tile2i palace_point;
 
         bool festival_square_placed;
         int32_t festival_building_id;
-        map_point festival_square;
+        tile2i festival_square;
 
         bool mansion_placed;
         int32_t mansion_building_id;
-        map_point mansion;
+        tile2i mansion;
 
         int32_t hippodrome_placed;
 
-        bool barracks_placed;
-        int32_t barracks_building_id;
-        map_point barracks;
+        struct {
+            bool placed;
+            int32_t building_id;
+            tile2i tile;
+        } recruiter;
 
         bool distribution_center_placed;
         int32_t distribution_center_building_id;
-        map_point distribution_center;
+        tile2i distribution_center;
 
         int32_t trade_center_building_id;
         int8_t triumphal_arches_available;
@@ -43,7 +45,7 @@ struct city_data_t {
         int16_t working_dock_ids[10];
         int16_t working_shipyards;
         int32_t mission_post_operational;
-        map_point main_native_meeting;
+        tile2i main_native_meeting;
         int8_t unknown_value;
 
         bool temple_complex_placed;
@@ -391,10 +393,10 @@ struct city_data_t {
         e_resource docker_export_resource;
     } trade;
     struct {
-        map_point entry_point;
-        map_point exit_point;
-        map_point entry_flag;
-        map_point exit_flag;
+        tile2i entry_point;
+        tile2i exit_point;
+        tile2i entry_flag;
+        tile2i exit_flag;
         struct {
             int32_t id;
             int32_t size;

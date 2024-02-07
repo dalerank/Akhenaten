@@ -51,46 +51,41 @@ void city_buildings_add_mansion(building* mansion) {
 }
 
 void city_buildings_remove_mansion(building* mansion) {
-    if (mansion->tile.grid_offset() == city_data.building.mansion.grid_offset()) {
+    if (mansion->tile == city_data.building.mansion) {
         city_data.building.mansion.set(0);
         city_data.building.mansion_placed = 0;
     }
 }
 
 bool city_buildings_has_recruiter() {
-    return city_data.building.barracks_placed;
+    return city_data.building.recruiter.placed;
 }
 
 void city_buildings_add_recruiter(building* recruiter) {
-    city_data.building.barracks_placed = 1;
-    if (!city_data.building.barracks.grid_offset()) {
-        city_data.building.barracks_building_id = recruiter->id;
-        city_data.building.barracks.set(recruiter->tile.grid_offset());
-        //        city_data.building.barracks.x = recruiter->x;
-        //        city_data.building.barracks.y = recruiter->y;
-        //        city_data.building.barracks.grid_offset() = recruiter->grid_offset;
+    city_data.building.recruiter.placed = true;
+    if (!city_data.building.recruiter.tile.grid_offset()) {
+        city_data.building.recruiter.building_id = recruiter->id;
+        city_data.building.recruiter.tile = recruiter->tile;
     }
 }
 
 void city_buildings_remove_recruiter(building* recruiter) {
-    if (recruiter->tile.grid_offset() == city_data.building.barracks.grid_offset()) {
-        city_data.building.barracks.set(0);
-        //        city_data.building.barracks.grid_offset() = 0;
-        //        city_data.building.barracks.x = 0;
-        //        city_data.building.barracks.y = 0;
-        city_data.building.barracks_placed = 0;
+    city_data.building.recruiter.placed = false;
+    if (recruiter->tile == city_data.building.recruiter.tile) {
+        city_data.building.recruiter.tile.set(0);
+        city_data.building.recruiter.placed = 0;
     }
 }
 
-int city_buildings_get_recruiter(void) {
-    return city_data.building.barracks_building_id;
+int city_buildings_get_recruiter() {
+    return city_data.building.recruiter.building_id;
 }
 
 void city_buildings_set_recruiter(int building_id) {
-    city_data.building.barracks_building_id = building_id;
+    city_data.building.recruiter.building_id = building_id;
 }
 
-bool city_buildings_has_distribution_center(void) {
+bool city_buildings_has_distribution_center() {
     return city_data.building.distribution_center_placed;
 }
 
@@ -99,9 +94,6 @@ void city_buildings_add_distribution_center(building* center) {
     if (!city_data.building.distribution_center.grid_offset()) {
         city_data.building.distribution_center_building_id = center->id;
         city_data.building.distribution_center.set(center->tile.grid_offset());
-        //        city_data.building.distribution_center.x = center->x;
-        //        city_data.building.distribution_center.y = center->y;
-        //        city_data.building.distribution_center.grid_offset() = center->grid_offset;
     }
 }
 

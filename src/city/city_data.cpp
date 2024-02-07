@@ -458,13 +458,16 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.debt_state);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.months_in_debt);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.cheated_money);
-    iob->bind(BIND_SIGNATURE_INT8, city_data.building.barracks.private_access(_X));
-    iob->bind(BIND_SIGNATURE_INT8, city_data.building.barracks.private_access(_Y));
-    iob->bind(BIND_SIGNATURE_INT16, city_data.building.barracks.private_access(_GRID_OFFSET));
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.building.barracks_building_id);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.building.barracks_placed);
-    for (int i = 0; i < 5; i++)
+    iob->bind(BIND_SIGNATURE_INT8, city_data.building.recruiter.tile.private_access(_X));
+    iob->bind(BIND_SIGNATURE_INT8, city_data.building.recruiter.tile.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT16, city_data.building.recruiter.tile.private_access(_GRID_OFFSET));
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.building.recruiter.building_id);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.building.recruiter.placed);
+
+    for (int i = 0; i < 5; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_43d8[i]);
+    }
+    
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.lost_troop_request);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_43f0);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.mission.has_won);

@@ -404,6 +404,7 @@ public:
 
     virtual bool is_workshop() const { return false; }
     virtual bool is_administration() const { return false; }
+    virtual bool is_unique_building() const { return false; }
 
     using resources_vec = std::array<e_resource, 4>;
     virtual resources_vec required_resource() const { return {}; }

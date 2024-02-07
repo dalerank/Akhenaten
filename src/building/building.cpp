@@ -492,8 +492,9 @@ void building::clear_related_data() {
     if (type == BUILDING_DOCK)
         city_buildings_remove_dock();
 
-    if (type == BUILDING_RECRUITER)
+    if (type == BUILDING_RECRUITER) {
         city_buildings_remove_recruiter(this);
+    }
 
     if (type == BUILDING_DISTRIBUTION_CENTER_UNUSED)
         city_buildings_remove_distribution_center(this);
@@ -799,11 +800,13 @@ bool building_is_education(e_building_type type) {
 }
 
 bool building_is_military(int type) {
-    if (building_is_fort(type) || type == BUILDING_FORT_GROUND)
+    if (building_is_fort(type)) {
         return true;
+    }
     
-    if (type == BUILDING_MILITARY_ACADEMY || type == BUILDING_RECRUITER)
+    if (building_type_any_of(BUILDING_MILITARY_ACADEMY, BUILDING_RECRUITER, BUILDING_FORT_GROUND)) {
         return true;
+    }
     
     return false;
 }

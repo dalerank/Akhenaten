@@ -1920,6 +1920,7 @@ void BuildPlanner::construction_update(tile2i tile) {
     
     total_cost = current_cost;
 }
+
 void BuildPlanner::construction_finalize() { // confirm final placement
     in_progress = false;
 
@@ -1976,9 +1977,11 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     case BUILDING_DYNASTY_MANSION:
         city_buildings_add_mansion(last_created_building);
         break;
+
     case BUILDING_RECRUITER:
         city_buildings_add_recruiter(last_created_building);
         break;
+
     case BUILDING_FERRY:
         should_recalc_ferry_routes = true;
         break;
