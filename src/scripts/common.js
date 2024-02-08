@@ -24,6 +24,7 @@ var top_menu_bar = {}
 var building_weaponsmith = {}
 var main_menu_window = {}
 var building_granary = {}
+var building_firehouse = {}
 var building_cattle_ranch = {}
 var building_fort = {}
 var building_courthouse = {}

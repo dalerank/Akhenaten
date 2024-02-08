@@ -208,6 +208,13 @@ building_physician = {
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
 }
 
+building_firehouse = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_BUILDING_FIREHOUSE }
+  },
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+}
+
 building_conservatory = {
   animations : {
     work : { pos : [82, 18], anim_id: IMG_MUSICIAN_SHOW_SN }

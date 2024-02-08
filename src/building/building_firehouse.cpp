@@ -5,12 +5,37 @@
 #include "graphics/elements/lang_text.h"
 
 #include "dev/debug.h"
+#include "graphics/animation.h"
+#include "city/labor.h"
+#include "widget/city/ornaments.h"
+
+namespace model {
+
+struct firehouse_t {
+    static constexpr e_building_type type = BUILDING_FIREHOUSE;
+    e_labor_category labor_category;
+    animations_t anim;
+};
+
+firehouse_t firehouse;
+
+}
 
 declare_console_command_p(nofire, console_command_nofire);
 void console_command_nofire(std::istream &, std::ostream &) {
     buildings_valid_do([&] (building &b) {
         b.fire_risk = 0;
     });
+}
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_firehouse);
+void config_load_building_firehouse() {
+    g_config_arch.r_section("building_firehouse", [] (archive arch) {
+        model::firehouse.labor_category = arch.r_type<e_labor_category>("labor_category");
+        model::firehouse.anim.load(arch);
+    });
+
+    city_labor_set_category(model::firehouse);
 }
 
 
@@ -49,4 +74,11 @@ void building_firehouse::window_info_background(object_info &c) {
 
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
     window_building_draw_employment(&c, 142);
+}
+
+bool building_firehouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    const animation_t &anim = model::firehouse.anim["work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+
+    return true;
 }
