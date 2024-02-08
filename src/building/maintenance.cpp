@@ -254,18 +254,21 @@ void building_maintenance_check_kingdome_access(void) {
                     }
                     b->state = BUILDING_STATE_UNDO;
                 }
-            } else if (map_routing_distance(road_tile.grid_offset())) {
+            } else if (map_routing_distance(road_tile)) {
                 // reachable from rome
                 OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/House/map_routing_distance");
-                b->distance_from_entry = map_routing_distance(road_tile.grid_offset());
+                b->distance_from_entry = map_routing_distance(road_tile);
+                b->road_network_id = map_road_network_get(road_tile);
                 b->house_unreachable_ticks = 0;
             } else if (map_closest_reachable_road_within_radius(b->tile, b->size, 2, road_tile)) {
-                b->distance_from_entry = map_routing_distance(road_tile.grid_offset());
+                b->distance_from_entry = map_routing_distance(road_tile);
+                b->road_network_id = map_road_network_get(road_tile);
                 b->house_unreachable_ticks = 0;
             } else {
                 // no reachable road in radius
-                if (!b->house_unreachable_ticks)
+                if (!b->house_unreachable_ticks) {
                     problem_grid_offset = b->tile.grid_offset();
+                }
 
                 b->house_unreachable_ticks++;
                 if (b->house_unreachable_ticks > 8) {
@@ -312,10 +315,14 @@ void building_maintenance_check_kingdome_access(void) {
             }
         } else if (b->type == BUILDING_BURNING_RUIN) {
             b->has_road_access = burning_ruin_can_be_accessed(b->tile, b->road_access);
+            b->road_network_id = map_road_network_get(b->road_access);
+            b->distance_from_entry = map_routing_distance(b->road_access);
         } else if (building_type_any_of(*b, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_SETH,BUILDING_TEMPLE_COMPLEX_BAST)) {
             if (b->is_main()) {
                 int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
                 b->has_road_access = map_has_road_access_temple_complex(b->tile, orientation, false, &b->road_access);
+                b->road_network_id = map_road_network_get(b->road_access);
+                b->distance_from_entry = map_routing_distance(b->road_access);
             }
         } else { // other building
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/Other");
