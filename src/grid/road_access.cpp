@@ -226,6 +226,10 @@ bool map_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile
     return false;
 }
 
+bool map_closest_road_within_radius(building &b, int radius, tile2i &road_tile) {
+    return map_closest_road_within_radius(b.tile, b.size, radius, road_tile);
+}
+
 bool map_closest_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile) {
     OZZY_PROFILER_SECTION("map_closest_road_within_radius");
     for (int r = 1; r <= radius; r++) {

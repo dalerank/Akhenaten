@@ -111,5 +111,8 @@ void lang_text_draw_month_year_max_width(int month, int year, int x_offset, int 
 
 int lang_text_draw_multiline(int group, int number, vec2i offset, int box_width, e_font font) {
     const uint8_t* str = lang_get_string(group, number);
+    if (!str) {
+        return 0;
+    }
     return text_draw_multiline(str, offset.x, offset.y, box_width, font, 0);
 }

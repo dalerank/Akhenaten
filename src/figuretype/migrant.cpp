@@ -169,7 +169,6 @@ void figure::immigrant_action() {
         break;
 
     case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
-    case FIGURE_ACTION_10_HOMELESS_ENTERING_HOUSE:
         if (do_enterbuilding(false, home)) {
             add_house_population(home, migrant_num_people);
         }

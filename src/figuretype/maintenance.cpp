@@ -166,14 +166,14 @@ bool figure::fireman_fight_fire() {
     if (wait_ticks_missile < 20)
         return false;
 
-    int distance;
-    int ruin_id = building_maintenance_get_closest_burning_ruin(tile, &distance);
-    if (ruin_id > 0 && distance <= 25) {
-        building* ruin = building_get(ruin_id);
+    auto result = building_maintenance_get_closest_burning_ruin(tile);
+    int distance = calc_maximum_distance(tile, result.second);
+    if (result.first > 0 && distance <= 25) {
+        building* ruin = building_get(result.first);
         wait_ticks_missile = 0;
         advance_action(FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE);
-        destination_tile = ruin->road_access;
-        set_destination(ruin_id);
+        destination_tile = result.second;
+        set_destination(result.first);
         route_remove();
         ruin->set_figure(3, id);
         return true;

@@ -15,7 +15,7 @@ void figure::fireman_action() { // doubles as fireman! not as policeman!!!
 
     case ACTION_11_RETURNING_FROM_PATROL:
     case FIGURE_ACTION_73_FIREMAN_RETURNING:
-        do_returnhome(TERRAIN_USAGE_ROADS);
+        do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
         break;
 
     case 9:

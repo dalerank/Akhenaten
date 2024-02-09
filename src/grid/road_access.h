@@ -9,6 +9,7 @@ bool burning_ruin_can_be_accessed(tile2i tile, tile2i &point);
 bool map_has_road_access_rotation(int rotation, tile2i tile, int size, tile2i *road);
 bool map_has_road_access_temple_complex(tile2i tile, int orientation, bool from_corner, tile2i* road);
 bool map_closest_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile);
+bool map_closest_road_within_radius(building &b, int radius, tile2i &road_tile);
 bool map_closest_reachable_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile);
 bool map_reachable_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile);
 tile2i map_road_to_largest_network_rotation(int rotation, tile2i tile, int size,  bool closest);

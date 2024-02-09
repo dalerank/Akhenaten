@@ -227,8 +227,7 @@ bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
             else { // floodplain EDGES
                 if (is_aqueduct)
                     return false; // CAN NOT place canals on floodplain edges directly in Pharaoh
-                else if (!can_place_on_crossing_no_neighboring(
-                           grid_offset, TERRAIN_FLOODPLAIN, TERRAIN_ROAD, 0, 0, true))
+                else if (!can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_FLOODPLAIN, TERRAIN_ROAD, 0, 0, true))
                     return false;
             }
         }
