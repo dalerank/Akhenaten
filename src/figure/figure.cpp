@@ -14,6 +14,7 @@
 #include "grid/grid.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
+#include "figuretype/figure_fireman.h"
 
 #include <string.h>
 #include "dev/debug.h"
@@ -132,6 +133,21 @@ void figure::figure_delete_UNSAFE() {
     state = FIGURE_STATE_NONE;
     memset(this, 0, sizeof(figure));
     id = figure_id;
+}
+
+figure_impl *figure::dcast() {
+    if (_ptr) {
+        return _ptr;
+    }
+
+    switch (type) {
+    case FIGURE_FIREMAN: _ptr = new figure_fireman(this); break;
+        
+    default:
+        _ptr = new figure_impl(this);
+    }
+
+    return _ptr;
 }
 
 bool figure::is_dead() {

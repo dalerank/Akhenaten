@@ -148,63 +148,6 @@ bool figure::policeman_fight_enemy(int category, int max_distance) {
     return false;
 }
 
-bool figure::fireman_fight_fire() {
-    if (building_list_burning_items().size() <= 0) {
-        return false;
-    }
-
-    switch (action_state) {
-    case FIGURE_ACTION_150_ATTACK:
-    case FIGURE_ACTION_149_CORPSE:
-    case FIGURE_ACTION_70_FIREMAN_CREATED:
-    case FIGURE_ACTION_71_FIREMAN_ENTERING_EXITING:
-    case FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE:
-    case FIGURE_ACTION_75_FIREMAN_AT_FIRE:
-        return false;
-    }
-    wait_ticks_missile++;
-    if (wait_ticks_missile < 20)
-        return false;
-
-    auto result = building_maintenance_get_closest_burning_ruin(tile);
-    int distance = calc_maximum_distance(tile, result.second);
-    if (result.first > 0 && distance <= 25) {
-        building* ruin = building_get(result.first);
-        wait_ticks_missile = 0;
-        advance_action(FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE);
-        destination_tile = result.second;
-        set_destination(result.first);
-        route_remove();
-        ruin->set_figure(3, id);
-        return true;
-    }
-    return false;
-}
-void figure::fireman_extinguish_fire() {
-    building* burn = destination();
-    int distance = calc_maximum_distance(tile, burn->tile);
-    if ((burn->state == BUILDING_STATE_VALID || burn->state == BUILDING_STATE_MOTHBALLED)
-        && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
-        burn->fire_duration = 32;
-        sound_effect_play(SOUND_EFFECT_FIRE_SPLASH);
-    } else {
-        wait_ticks = 1;
-    }
-    attack_direction = calc_general_direction(tile, burn->tile);
-    attack_direction = attack_direction % 8;
-
-    wait_ticks--;
-    if (wait_ticks <= 0) {
-        wait_ticks_missile = 20;
-        advance_action(FIGURE_ACTION_73_FIREMAN_RETURNING);
-
-        if (!config_get(CONFIG_GP_CH_FIREMAN_RETUNING)) {
-            if (!fireman_fight_fire()) {
-                poof();
-            }
-        }
-    }
-}
 int figure::target_is_alive() {
     if (target_figure_id <= 0)
         return 0;

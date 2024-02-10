@@ -42,6 +42,8 @@ enum e_figure_draw_debug_mode {
 
 constexpr int MAX_CLOUD_IMAGE_OFFSETS = 19;
 
+class figure_impl;
+
 class figure {
 private:
     e_resource resource_id;
@@ -218,8 +220,9 @@ public:
         short value[3];
     } local_data;
     char festival_remaining_dances;
-
-    //
+    figure_impl *_ptr = nullptr;
+    
+    figure_impl *dcast();
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -367,7 +370,6 @@ public:
     void tax_collector_action();
     void engineer_action();
     void storageyard_cart_action();
-    void fireman_action();
     void soldier_action();
     void military_standard_action();
     void entertainer_action();
@@ -470,8 +472,6 @@ public:
     void entertainer_update_image();
 
     bool policeman_fight_enemy(int category, int max_distance);
-    bool fireman_fight_fire();
-    void fireman_extinguish_fire();
     int target_is_alive();
 
     int figure_rioter_collapse_building();
@@ -530,6 +530,26 @@ public:
 
     // grid/marshland.c
     bool find_resource_tile(int resource_type, tile2i &out);
+};
+
+class figure_impl {
+public:
+    figure_impl(figure *f) : base(*f) {}
+
+    virtual void figure_action() {}
+    virtual void poof() { base.poof(); }
+
+    inline building *home() { return base.home(); }
+    inline void advance_action(int action) { base.advance_action(action); }
+    inline bool do_returnhome(e_terrain_usage terrainchoice, short next_action = -1) { return base.do_returnhome(terrainchoice, next_action); }
+    inline bool do_enterbuilding(bool invisible, building *b, short next_action = -1, short fail_action = -1) { return base.do_enterbuilding(invisible, b, next_action, fail_action); }
+    inline bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short next_action = ACTION_2_ROAMERS_RETURNING) { return base.do_roam(terrainchoice, next_action); }
+    inline bool do_goto(tile2i dest, int terrainchoice = TERRAIN_USAGE_ROADS, short next_action = -1, short fail_action = -1) { return base.do_goto(dest, terrainchoice, next_action, fail_action); }
+    inline tile2i tile() const { return base.tile; }
+    inline building *destination() const { return base.destination(); }
+    inline void route_remove() { base.route_remove(); }
+
+    figure &base;
 };
 
 figure* figure_get(int id);

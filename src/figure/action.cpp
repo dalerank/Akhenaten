@@ -522,7 +522,6 @@ void figure::action_perform() {
         case FIGURE_TAX_COLLECTOR: tax_collector_action(); break;
         case FIGURE_ARCHITECT: engineer_action(); break;
         case FIGURE_STORAGE_YARD_DELIVERCART: storageyard_cart_action(); break; // warehouseman_action !!!!
-        case FIGURE_FIREMAN: fireman_action(); break; // 10
 
         case 11:   // soldier_action();                  break;
         case 12:   // soldier_action();                  break;
@@ -609,6 +608,7 @@ void figure::action_perform() {
         case FIGURE_HYENA: hyena_action(); break;
 
         default:
+            dcast()->figure_action();
             break;
         }
 
@@ -620,7 +620,7 @@ void figure::action_perform() {
         // poof if LOST
         if (direction == DIR_FIGURE_CAN_NOT_REACH) {
             if (figure_type_none_of(*this, FIGURE_ARROW, FIGURE_HUNTER_ARROW, FIGURE_BOLT)) {
-                poof();
+                dcast()->poof();
             }
         }
 
