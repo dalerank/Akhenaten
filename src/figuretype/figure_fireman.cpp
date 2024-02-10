@@ -8,6 +8,27 @@
 #include "config/config.h"
 #include "building/list.h"
 #include "building/maintenance.h"
+#include "graphics/animation.h"
+
+#include "js/js_game.h"
+
+namespace model {
+
+struct fireman_t {
+    static constexpr e_figure_type type = FIGURE_FIREMAN;
+    animations_t anim;
+};
+
+fireman_t fireman;
+
+}
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_fireman);
+void config_load_figure_fireman() {
+    g_config_arch.r_section("figure_fireman", [] (archive arch) {
+        model::fireman.anim.load(arch);
+    });
+}
 
 void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!!
     fight_fire();
@@ -107,7 +128,8 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
     case FIGURE_ACTION_75_FIREMAN_AT_FIRE:
     case 13:
         base.direction = base.attack_direction;
-        base.image_set_animation(GROUP_FIGURE_FIREMAN_ATFIRE, 0, 36);
+        //
+        base.image_set_animation(model::fireman.anim["fight_fire"]);
         break;
     }
 }

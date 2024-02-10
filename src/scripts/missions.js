@@ -6,7 +6,7 @@ mission0 = { // Nubt
 }
 
 mission1 = {
-	start_message = 241 - 99, //MESSAGE_TUTORIAL_GOLD_AND_CRIME
+	start_message : 241 - 99, //MESSAGE_TUTORIAL_GOLD_AND_CRIME
 	city_has_animals : true,
 }
 

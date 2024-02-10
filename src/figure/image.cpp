@@ -3,6 +3,7 @@
 #include "graphics/image.h"
 #include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
+#include "graphics/animation.h"
 
 #include "js/js_game.h"
 
@@ -100,6 +101,11 @@ vec2i figure::tile_pixel_coords() {
     }
 
     return {x, y};
+}
+
+void figure::image_set_animation(const animation_t &anim) {
+    image_desc desc = get_image_desc(anim.anim_id);
+    image_set_animation(desc.pack, desc.id, 0, anim.max_frames, 0);
 }
 
 void figure::image_set_animation(e_image_id img, int offset, int max_frames, int duration) {

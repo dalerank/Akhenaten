@@ -56,6 +56,7 @@ var images_remap = []
 var imagepaks = []
 var advisor_rating_window = {}
 var mission_briefing_window = {}
+var figure_fireman = {}
 var mission0 = {}
 var mission1 = {}
 var mission5 = {}

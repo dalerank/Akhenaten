@@ -18,8 +18,11 @@
 #include <memory.h>
 
 class building;
+class figure_impl;
+struct animation_t;
 
 constexpr int MAX_FIGURES[] = {5000, 2000};
+constexpr int MAX_CLOUD_IMAGE_OFFSETS = 19;
 
 enum e_minimap_figure_color {
     FIGURE_COLOR_NONE = 0,
@@ -39,10 +42,6 @@ enum e_move_type : uint8_t {
 enum e_figure_draw_debug_mode {
     FIGURE_DRAW_DEBUG_ROUTING = 2
 };
-
-constexpr int MAX_CLOUD_IMAGE_OFFSETS = 19;
-
-class figure_impl;
 
 class figure {
 private:
@@ -302,6 +301,7 @@ public:
     void route_remove();
 
     // image.c
+    void image_set_animation(const animation_t &anim);
     void image_set_animation(e_image_id img, int offset = 0, int max_frames = 12, int duration = 1);
     void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1);
     void figure_image_update(bool refresh_only);
@@ -548,6 +548,7 @@ public:
     inline tile2i tile() const { return base.tile; }
     inline building *destination() const { return base.destination(); }
     inline void route_remove() { base.route_remove(); }
+    inline void image_set_animation(const animation_t &anim) { base.image_set_animation(anim); }
 
     figure &base;
 };
