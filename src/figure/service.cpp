@@ -42,31 +42,12 @@ static int provide_missionary_coverage(int x, int y) {
 }
 
 template<typename T>
-static int provide_service(tile2i tile, figure* f, int* data, T callback) {
-    int serviced = 0;
-    grid_area area = map_grid_get_area(tile, 1, 2);
-
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
-        int grid_offset = tile.grid_offset();
-        int building_id = map_building_at(grid_offset);
-        if (building_id) {
-            building *b = building_get(building_id);
-            callback(b, f, data);
-            if (b->house_size && b->house_population > 0) {
-                serviced++;
-            }
-        }
-    });
-    return serviced;
-}
-
-template<typename T>
 static int provide_culture(tile2i tile, figure* f, T callback) {
     int none_service = 0;
-    return provide_service(tile, f, &none_service, callback);
+    return figure_provide_service(tile, f, none_service, callback);
 }
 
-static void juggler_coverage(building* b, figure *f, int*) {
+static void juggler_coverage(building* b, figure *f, int&) {
     b->data.house.juggler = MAX_COVERAGE;
 }
 
@@ -83,35 +64,35 @@ static void colosseum_coverage(building* b, int shows) {
     //        b->data.house.magistrate = MAX_COVERAGE;
 }
 
-static void hippodrome_coverage(building* b, figure *f, int*) {
+static void hippodrome_coverage(building* b, figure *f, int&) {
     b->data.house.hippodrome = MAX_COVERAGE;
 }
 
-static void magistrate_coverage(building* b, figure *f, int*) {
+static void magistrate_coverage(building* b, figure *f, int&) {
     b->data.house.magistrate = MAX_COVERAGE;
 }
 
-static void religion_coverage_osiris(building* b, figure *f, int*) {
+static void religion_coverage_osiris(building* b, figure *f, int&) {
     b->data.house.temple_osiris = MAX_COVERAGE;
 }
 
-static void religion_coverage_ra(building* b, figure *f, int*) {
+static void religion_coverage_ra(building* b, figure *f, int&) {
     b->data.house.temple_ra = MAX_COVERAGE;
 }
 
-static void religion_coverage_ptah(building* b, figure *f, int*) {
+static void religion_coverage_ptah(building* b, figure *f, int&) {
     b->data.house.temple_ptah = MAX_COVERAGE;
 }
 
-static void religion_coverage_seth(building* b, figure *f, int*) {
+static void religion_coverage_seth(building* b, figure *f, int&) {
     b->data.house.temple_seth = MAX_COVERAGE;
 }
 
-static void religion_coverage_bast(building* b, figure *f, int*) {
+static void religion_coverage_bast(building* b, figure *f, int&) {
     b->data.house.temple_bast = MAX_COVERAGE;
 }
 
-static void school_coverage(building* b, figure *f, int*) {
+static void school_coverage(building* b, figure *f, int&) {
     if (f->home()->stored_full_amount <= 0 ) {
         return;
     }
@@ -123,15 +104,15 @@ static void school_coverage(building* b, figure *f, int*) {
     b->data.house.school = MAX_COVERAGE;
 }
 
-static void academy_coverage(building* b, figure *f, int*) {
+static void academy_coverage(building* b, figure *f, int&) {
     b->data.house.academy = MAX_COVERAGE;
 }
 
-static void library_coverage(building* b, figure *f, int*) {
+static void library_coverage(building* b, figure *f, int&) {
     b->data.house.library = MAX_COVERAGE;
 }
 
-static void apothecary_coverage(building* b, figure *f, int*) {
+static void apothecary_coverage(building* b, figure *f, int&) {
     b->data.house.apothecary = MAX_COVERAGE;
     if (b->common_health < 50) {
         b->common_health++;
@@ -141,60 +122,47 @@ static void apothecary_coverage(building* b, figure *f, int*) {
     }
 }
 
-static void dentist_coverage(building* b, figure *f, int*) {
+static void dentist_coverage(building* b, figure *f, int&) {
     b->data.house.dentist = MAX_COVERAGE;
 }
 
-static void mortuary_coverage(building* b, figure *f, int*) {
+static void mortuary_coverage(building* b, figure *f, int&) {
     b->data.house.mortuary = MAX_COVERAGE;
 }
 
-static void physician_coverage(building* b, figure *f, int*) {
+static void physician_coverage(building* b, figure *f, int&) {
     b->data.house.physician = MAX_COVERAGE;
     b->common_health = std::min(b->common_health + 1, 100);
 }
 
-static void water_supply_coverage(building* b, figure *f, int*) {
-    b->data.house.water_supply = MAX_COVERAGE;
-}
-
-static void bazaar_coverage(building* b, figure *f, int*) {
+static void bazaar_coverage(building* b, figure *f, int &) {
     b->data.house.bazaar_access = MAX_COVERAGE;
 }
 
-static void engineer_coverage(building* b, figure *f, int* max_damage_seen) {
+static void engineer_coverage(building* b, figure *f, int &max_damage_seen) {
     if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_YARD_SPACE)
         b = b->main();
 
-    if (b->damage_risk > *max_damage_seen)
-        *max_damage_seen = b->damage_risk;
+    if (b->damage_risk > max_damage_seen)
+        max_damage_seen = b->damage_risk;
 
     b->damage_risk = 0;
-}
+} 
 
-static void prefect_coverage(building* b, figure *f, int* min_happiness_seen) {
-    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_YARD_SPACE)
-        b = b->main();
-
-    b->fire_risk = 0;
-    if (b->sentiment.house_happiness < *min_happiness_seen)
-        *min_happiness_seen = b->sentiment.house_happiness;
-}
-
-static void policeman_coverage(building* b, figure *f, int *max_anger_seen) {
+static void policeman_coverage(building* b, figure *f, int &max_anger_seen) {
     b->house_criminal_active -= 1;
     b->house_criminal_active = std::max<int>(0, b->house_criminal_active);
 
-    if (b->house_criminal_active > *max_anger_seen) {
-        *max_anger_seen = b->house_criminal_active;
+    if (b->house_criminal_active > max_anger_seen) {
+        max_anger_seen = b->house_criminal_active;
     }
 }
 
-static void tax_collector_coverage(building* b, figure *f, int* max_tax_multiplier) {
+static void tax_collector_coverage(building* b, figure *f, int &max_tax_multiplier) {
     if (b->house_size && b->house_population > 0) {
         int tax_multiplier = model_get_house(b->subtype.house_level)->tax_multiplier;
-        if (tax_multiplier > *max_tax_multiplier) {
-            *max_tax_multiplier = tax_multiplier;
+        if (tax_multiplier > max_tax_multiplier) {
+            max_tax_multiplier = tax_multiplier;
         }
 
         if (b->subtype.house_level < HOUSE_ORDINARY_COTTAGE) {
@@ -209,7 +177,7 @@ static void tax_collector_coverage(building* b, figure *f, int* max_tax_multipli
     }
 }
 
-static void labor_seeker_coverage(building* b, figure *f, int*) {
+static void labor_seeker_coverage(building* b, figure *f, int&) {
     // nothing here, the labor seeker works simply via the `houses_covered` variable
 }
 
@@ -317,14 +285,14 @@ int figure::figure_service_provide_coverage() {
 
     case FIGURE_TAX_COLLECTOR: {
             int max_tax_rate = 0;
-            houses_serviced = provide_service(tile, this, &max_tax_rate, tax_collector_coverage);
+            houses_serviced = figure_provide_service(tile, this, max_tax_rate, tax_collector_coverage);
             min_max_seen = max_tax_rate;
         }
         break;
 
     case FIGURE_MARKET_TRADER:
         houses_serviced = provide_market_goods(home(), tile.x(), tile.y());
-        provide_service(tile, this, &none_service, bazaar_coverage);
+        figure_provide_service(tile, this, none_service, bazaar_coverage);
         break;
 
     case FIGURE_MARKET_BUYER:
@@ -359,10 +327,6 @@ int figure::figure_service_provide_coverage() {
 
     case FIGURE_PHYSICIAN:
         houses_serviced = provide_culture(tile, this, physician_coverage);
-        break;
-
-    case FIGURE_WATER_CARRIER:
-        houses_serviced = provide_service(tile, this, &none_service, water_supply_coverage);
         break;
 
     case FIGURE_MISSIONARY:
@@ -431,7 +395,7 @@ int figure::figure_service_provide_coverage() {
 
     case FIGURE_ARCHITECT: {
             int max_damage = 0;
-            houses_serviced = provide_service(tile, this, &max_damage, engineer_coverage);
+            houses_serviced = figure_provide_service(tile, this, max_damage, engineer_coverage);
             if (max_damage > min_max_seen) {
                 min_max_seen = max_damage;
             } else if (min_max_seen <= 10) {
@@ -442,13 +406,6 @@ int figure::figure_service_provide_coverage() {
         }
         break;
  
-    case FIGURE_FIREMAN: {
-            int min_happiness = 100;
-            houses_serviced = provide_service(tile, this, &min_happiness, prefect_coverage);
-            min_max_seen = min_happiness;
-        }
-        break;
-
     case FIGURE_TOMB_ROBER:
         if (figure_rioter_collapse_building() == 1) {
             return 1;
@@ -457,7 +414,7 @@ int figure::figure_service_provide_coverage() {
 
     case FIGURE_CONSTABLE: {
             int max_criminal_active = 0;
-            houses_serviced = provide_service(tile, this, &max_criminal_active, policeman_coverage);
+            houses_serviced = figure_provide_service(tile, this, max_criminal_active, policeman_coverage);
             if (max_criminal_active > min_max_seen)
                 min_max_seen = max_criminal_active;
             else if (min_max_seen <= 10)
@@ -477,6 +434,10 @@ int figure::figure_service_provide_coverage() {
             else
                 min_max_seen -= 10;
         }
+        break;
+
+    default:
+        houses_serviced = dcast()->provide_service();
         break;
     }
 

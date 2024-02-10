@@ -459,7 +459,6 @@ static void window_info_select_figure(int index, int param2) {
 
 static int window_info_show_overlay(figure *f) {
     switch (f->type) {
-    case FIGURE_FIREMAN: return OVERLAY_FIRE;
     case FIGURE_HERBALIST: return OVERLAY_APOTHECARY;
     case FIGURE_PHYSICIAN: return OVERLAY_PHYSICIAN;
     case FIGURE_JUGGLER: return OVERLAY_BOOTH;
@@ -470,7 +469,6 @@ static int window_info_show_overlay(figure *f) {
     case FIGURE_WORKER: case FIGURE_LABORER: return OVERLAY_LABOR;
     case FIGURE_ARCHITECT: return OVERLAY_DAMAGE;
     case FIGURE_CONSTABLE: return OVERLAY_CRIME;
-    case FIGURE_WATER_CARRIER: return OVERLAY_WATER;
     case FIGURE_TAX_COLLECTOR: return OVERLAY_TAX_INCOME;
     case FIGURE_DELIVERY_BOY: return OVERLAY_BAZAAR_ACCESS;
     case FIGURE_MAGISTRATE: return OVERLAY_COUTHOUSE;
@@ -484,6 +482,8 @@ static int window_info_show_overlay(figure *f) {
         case BUILDING_SHRINE_BAST: case BUILDING_TEMPLE_BAST: case BUILDING_TEMPLE_COMPLEX_BAST: return OVERLAY_RELIGION_BAST;
         }
         break;
+    default:
+        return f->dcast()->get_overlay();
     }
 
     return OVERLAY_NONE;

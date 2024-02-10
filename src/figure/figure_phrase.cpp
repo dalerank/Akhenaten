@@ -42,7 +42,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_EMBALMER, "embalmer"},
     {FIGURE_EMIGRANT, "emigrant"},
     {FIGURE_ARCHITECT, "engineer"},
-    {FIGURE_FIREMAN, "fireman"},
     {FIGURE_FISHING_BOAT, "fishing"},
     {FIGURE_LABOR_SEEKER, "laborseeker"},
     {FIGURE_NONE, "governor"},
@@ -70,7 +69,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "transport"},
     {FIGURE_NONE, "vagrant"},
     {FIGURE_NONE, "warship"},
-    {FIGURE_WATER_CARRIER, "water"},
     {FIGURE_NONE, "woodcutter"},
     {FIGURE_WORKER, "worker"},
     {FIGURE_LABORER, "worker"},
@@ -141,52 +139,6 @@ static sound_key tax_collector_phrase(figure *f) {
 
     if (city_sentiment() > 90) {
         keys.push_back("taxman_city_is_amazing");
-    }
-
-    int index = rand() % keys.size();
-    return keys[index];
-}
-
-static sound_key water_carier_phrase(figure *f) {
-    svector<sound_key, 10> keys;
-    if (city_health() < 30) {
-        keys.push_back("water_desease_can_start_at_any_moment");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("water_no_food_in_city");
-    }
-
-    if (formation_get_num_forts() < 1) {
-        keys.push_back("water_city_have_no_army");
-    }
-
-    if (city_labor_workers_needed() >= 10) {
-        keys.push_back("water_need_workers");
-    }
-
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("water_gods_are_angry");
-    }
-
-    if (city_rating_kingdom() < 30) {
-        keys.push_back("water_city_is_bad");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
-        keys.push_back("water_much_unemployments");
-    }
-
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("water_low_entertainment");
-    }
-
-    if (city_sentiment() > 50) {
-        keys.push_back("water_city_is_good");
-    }
-
-    if (city_sentiment() > 90) {
-        keys.push_back("water_city_is_amazing");
     }
 
     int index = rand() % keys.size();
@@ -718,67 +670,6 @@ static sound_key priest_phrase(figure *f) {
     return keys[index];
 }
 
-static sound_key fireman_phrase(figure *f) {
-    if (f->action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE) {
-        return "fireman_going_to_fire";
-    }
-    
-    svector<sound_key, 10> keys;
-    if (f->action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
-        keys.push_back("fireman_fighting_fire_also");
-        keys.push_back("fireman_fighting_fire");
-
-        int index = rand() % keys.size();
-        return keys[index];
-    }
-
-    if (city_health() < 20) {
-        keys.push_back("fireman_desease_can_start_at_any_moment");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("fireman_no_food_in_city");
-    }
-
-    if (formation_get_num_forts() < 1) {
-        keys.push_back("fireman_city_not_safety_workers_leaving");
-    }
-
-    if (city_labor_workers_needed() >= 10) {
-        keys.push_back("fireman_need_workers");
-    }
-
-    if (city_labor_workers_needed() >= 20) {
-        keys.push_back("fireman_need_more_workers");
-    }
-
-    int houses_risk_fire = 0;
-    buildings_valid_do([&] (building &b) {
-        houses_risk_fire += (b.fire_risk > 70) ? 1 : 0;
-    });
-
-    if (houses_risk_fire > 0) {
-        keys.push_back("fireman_hight_fire_level");
-    }
-
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("fireman_gods_are_angry");
-    } else {
-        keys.push_back("fireman_gods_are_pleasures");
-    }
-
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("fireman_low_entertainment");
-    }
-
-    if (city_sentiment() > 90) {
-        keys.push_back("fireman_city_is_amazing");
-    }
-
-    int index = rand() % keys.size();
-    return keys[index];
-}
-
 static sound_key teacher_phrase(figure *f) {
     svector<sound_key, 10> keys;
 
@@ -1146,7 +1037,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     case FIGURE_CART_PUSHER: return cart_pusher_phrase(f);
     case FIGURE_ARCHITECT: return engineer_phrase(f);
     case FIGURE_PRIEST: return priest_phrase(f);
-    case FIGURE_FIREMAN: return fireman_phrase(f);
     case FIGURE_DANCER: return dancer_phrase(f);
     case FIGURE_MARKET_TRADER: return marker_trader_phrase(f);
     case FIGURE_OSTRICH_HUNTER: return hunter_ostric_phrase(f);
@@ -1160,7 +1050,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_MISSIONARY:
     //            return citizen_phrase(f);
     //        case FIGURE_HOMELESS:
-    case FIGURE_WATER_CARRIER: return water_carier_phrase(f);
     case FIGURE_WORKER: case FIGURE_LABORER: return worker_phrase(f);
     case FIGURE_MUSICIAN: return musician_phrase(f);
     case FIGURE_JUGGLER: return juggler_phrase(f);
@@ -1184,6 +1073,8 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //            return f->type == FIGURE_TRADE_CARAVAN ? trade_caravan_phrase(f) : 0;
     //        case FIGURE_TRADE_SHIP:
     //            return trade_ship_phrase(f);
+    default:
+        return f->dcast()->phrase_key();
     }
     return {};
 }
@@ -1256,7 +1147,15 @@ static int figure_play_phrase_file(figure *f, e_figure_type type, bstring64 key)
     if (type >= 0) {
         auto type_it = std::find_if(std::begin(g_figure_sounds), std::end(g_figure_sounds), [type] (auto &t) { return t.type == type; });
 
-        if (type_it == std::end(g_figure_sounds)) {
+        e_figure_sound phrase = (type_it == std::end(g_figure_sounds))
+                                   ? e_figure_sound{FIGURE_NONE, ""}
+                                   : *type_it;
+
+        if (phrase.type == FIGURE_NONE) {
+            phrase = f->dcast()->phrase();
+        }
+
+        if (phrase.type == FIGURE_NONE) {
             return -1;
         }
 

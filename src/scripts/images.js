@@ -146,6 +146,8 @@ images = [
 	{img: IMG_COURTHOUSE, pack:PACK_GENERAL, id:62, offset:0},
 	{img: IMG_WEAPONSMITH, pack:PACK_GENERAL, id:123, offset:0},
 	{img: IMG_GRANARY_ANIM, pack:PACK_SPR_AMBIENT, id:47, offset:0},
+	{img: IMG_WATER_CARRIER, pack:PACK_SPR_MAIN, id:59, offset:0},
+	{img: IMG_WATER_CARRIER_DEATH, pack:PACK_SPR_MAIN, id:60, offset:0},
 ]
 
 cart_offsets = [

@@ -91,6 +91,8 @@ figure* figure_create(e_figure_type type, tile2i tile, int dir) {
         f->trader_id = trader_create();
     }
 
+    f->dcast()->on_create();
+
     return f;
 }
 void figure::figure_delete_UNSAFE() {

@@ -13,6 +13,7 @@
 #include "io/io_buffer.h"
 #include "widget/city.h"
 #include "window/building/common.h"
+#include "figure_phrase.h"
 
 #include <algorithm>
 #include <memory.h>
@@ -428,7 +429,6 @@ public:
     void reed_gatherer_action();
     void policeman_action();
     void magistrate_action();
-    void water_carrier_action();
     void festival_guy_action();
 
     void update_direction_and_image();
@@ -536,8 +536,13 @@ class figure_impl {
 public:
     figure_impl(figure *f) : base(*f) {}
 
+    virtual void on_create() {}
     virtual void figure_action() {}
     virtual void poof() { base.poof(); }
+    virtual e_figure_sound phrase() const { return {FIGURE_NONE, ""}; }
+    virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
+    virtual sound_key phrase_key() const { return {}; }
+    virtual int provide_service() { return 0; }
 
     inline building *home() { return base.home(); }
     inline void advance_action(int action) { base.advance_action(action); }
@@ -572,7 +577,7 @@ figure* figure_create(e_figure_type type, tile2i tile, int dir);
 // int const figure *f->is_legion();
 // int const figure *f->is_herd();
 
-void figure_init_scenario(void);
+void figure_init_scenario();
 
 template<typename ... Args>
 bool figure_type_none_of(figure &f, Args ... args) {
