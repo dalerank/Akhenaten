@@ -5,6 +5,11 @@ mission0 = { // Nubt
 	city_has_animals : true,
 }
 
+mission1 = {
+	start_message = 241 - 99, //MESSAGE_TUTORIAL_GOLD_AND_CRIME
+	city_has_animals : true,
+}
+
 mission5 = { // Timna
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,

@@ -479,7 +479,6 @@ void tutorial_starting_message() {
         g_tutorials_flags.tutorial_1.started = 1;
     }
     if (scenario_is_mission_rank(2) && !g_tutorials_flags.tutorial_2.started) {
-        post_message(MESSAGE_TUTORIAL_GOLD_AND_CRIME);
         g_tutorials_flags.tutorial_2.started = 1;
     }
     if (scenario_is_mission_rank(3) && !g_tutorials_flags.tutorial_3.started) {
