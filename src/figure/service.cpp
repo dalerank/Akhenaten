@@ -72,26 +72,6 @@ static void magistrate_coverage(building* b, figure *f, int&) {
     b->data.house.magistrate = MAX_COVERAGE;
 }
 
-static void religion_coverage_osiris(building* b, figure *f, int&) {
-    b->data.house.temple_osiris = MAX_COVERAGE;
-}
-
-static void religion_coverage_ra(building* b, figure *f, int&) {
-    b->data.house.temple_ra = MAX_COVERAGE;
-}
-
-static void religion_coverage_ptah(building* b, figure *f, int&) {
-    b->data.house.temple_ptah = MAX_COVERAGE;
-}
-
-static void religion_coverage_seth(building* b, figure *f, int&) {
-    b->data.house.temple_seth = MAX_COVERAGE;
-}
-
-static void religion_coverage_bast(building* b, figure *f, int&) {
-    b->data.house.temple_bast = MAX_COVERAGE;
-}
-
 static void school_coverage(building* b, figure *f, int&) {
     if (f->home()->stored_full_amount <= 0 ) {
         return;
@@ -331,38 +311,6 @@ int figure::figure_service_provide_coverage() {
 
     case FIGURE_MISSIONARY:
         houses_serviced = provide_missionary_coverage(tile.x(), tile.y());
-        break;
-
-    case FIGURE_PRIEST:
-        tutorial_on_religion();
-        switch (home()->type) {
-        case BUILDING_TEMPLE_OSIRIS:
-        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-            houses_serviced = provide_culture(tile, this, religion_coverage_osiris);
-            break;
-
-        case BUILDING_TEMPLE_RA:
-        case BUILDING_TEMPLE_COMPLEX_RA:
-            houses_serviced = provide_culture(tile, this, religion_coverage_ra);
-            break;
-
-        case BUILDING_TEMPLE_PTAH:
-        case BUILDING_TEMPLE_COMPLEX_PTAH:
-            houses_serviced = provide_culture(tile, this, religion_coverage_ptah);
-            break;
-
-        case BUILDING_TEMPLE_SETH:
-        case BUILDING_TEMPLE_COMPLEX_SETH:
-            houses_serviced = provide_culture(tile, this, religion_coverage_seth);
-            break;
-
-        case BUILDING_TEMPLE_BAST:
-        case BUILDING_TEMPLE_COMPLEX_BAST:
-            houses_serviced = provide_culture(tile, this, religion_coverage_bast);
-            break;
-        default:
-            break;
-        }
         break;
 
     case FIGURE_JUGGLER:

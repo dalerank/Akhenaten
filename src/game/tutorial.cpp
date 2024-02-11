@@ -401,6 +401,7 @@ void tutorial_on_gold_extracted() {
         post_message(MESSAGE_TUTORIAL_GODS_OF_EGYPT);
     }
 }
+
 void tutorial_on_religion() {
     if (!g_tutorials_flags.tutorial_2.temples_built) {
         g_tutorials_flags.tutorial_2.temples_built = true;

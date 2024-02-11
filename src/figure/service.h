@@ -1,6 +1,8 @@
 #pragma once
 
 #include "figure/figure.h"
+#include "building/building.h"
+#include "grid/building.h"
 
 constexpr uint8_t MAX_COVERAGE = 96;
 

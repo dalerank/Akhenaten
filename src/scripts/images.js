@@ -148,6 +148,16 @@ images = [
 	{img: IMG_GRANARY_ANIM, pack:PACK_SPR_AMBIENT, id:47, offset:0},
 	{img: IMG_WATER_CARRIER, pack:PACK_SPR_MAIN, id:59, offset:0},
 	{img: IMG_WATER_CARRIER_DEATH, pack:PACK_SPR_MAIN, id:60, offset:0},
+	{img: IMG_PRIEST_OSIRIS, pack:PACK_SPR_MAIN, id:197, offset:0},
+	{img: IMG_PRIEST_OSIRIS_DEATH, pack:PACK_SPR_MAIN, id:198, offset:0},
+	{img: IMG_PRIEST_RA, pack:PACK_SPR_MAIN, id:210, offset:0},
+	{img: IMG_PRIEST_RA_DEATH, pack:PACK_SPR_MAIN, id:211, offset:0},
+	{img: IMG_PRIEST_PTAH, pack:PACK_SPR_MAIN, id:187, offset:0},
+	{img: IMG_PRIEST_PTAH_DEATH, pack:PACK_SPR_MAIN, id:188, offset:0},
+	{img: IMG_PRIEST_SETH, pack:PACK_SPR_MAIN, id:193, offset:0},
+	{img: IMG_PRIEST_SETH_DEATH, pack:PACK_SPR_MAIN, id:194, offset:0},
+	{img: IMG_PRIEST_BAST, pack:PACK_SPR_MAIN, id:208, offset:0},
+	{img: IMG_PRIEST_BAST_DEATH, pack:PACK_SPR_MAIN, id:209, offset:0},
 ]
 
 cart_offsets = [

@@ -57,7 +57,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_TOMB_ROBER, 1, TERRAIN_USAGE_ENEMY, 480, GROUP_FIGURE_RIOTER_WALK},
   {FIGURE_FISHING_BOAT, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_MARKET_TRADER, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_MARKET_LADY_2},
-  {FIGURE_PRIEST, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_OSIRIS_PRIEST},
+  {FIGURE_PRIEST, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_PRIEST_OSIRIS},
   {FIGURE_TEACHER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_TEACHER_WALK},
   {FIGURE_SCRIBER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_SCRIBER_WALK},
   {FIGURE_LIBRARIAN, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_LIBRARIAN},
@@ -548,7 +548,6 @@ void figure::action_perform() {
         case FIGURE_TOMB_ROBER: rioter_action(); break;
         case FIGURE_FISHING_BOAT: fishing_boat_action(); break;
         case FIGURE_MARKET_TRADER: market_trader_action(); break;
-        case FIGURE_PRIEST: priest_action(); break;
 
         case FIGURE_TEACHER: scribal_school_teacher_action(); break;
             //            case 29: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break;

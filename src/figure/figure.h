@@ -545,6 +545,7 @@ public:
     virtual int provide_service() { return 0; }
 
     inline building *home() { return base.home(); }
+    inline const building *home() const { return base.home(); }
     inline void advance_action(int action) { base.advance_action(action); }
     inline bool do_returnhome(e_terrain_usage terrainchoice, short next_action = -1) { return base.do_returnhome(terrainchoice, next_action); }
     inline bool do_enterbuilding(bool invisible, building *b, short next_action = -1, short fail_action = -1) { return base.do_enterbuilding(invisible, b, next_action, fail_action); }

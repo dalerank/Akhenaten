@@ -15,6 +15,7 @@
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
 #include "figuretype/figure_fireman.h"
+#include "figuretype/figure_priest.h"
 
 #include <string.h>
 #include "dev/debug.h"
@@ -144,6 +145,7 @@ figure_impl *figure::dcast() {
 
     switch (type) {
     case FIGURE_FIREMAN: _ptr = new figure_fireman(this); break;
+    case FIGURE_PRIEST: _ptr = new figure_priest(this); break;
         
     default:
         _ptr = new figure_impl(this);

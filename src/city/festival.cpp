@@ -196,23 +196,23 @@ void figure::festival_guy_action() {
     switch (b->type) {
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        image_set_animation(GROUP_FIGURE_OSIRIS_PRIEST);
+        image_set_animation(IMG_PRIEST_OSIRIS);
         break;
     case BUILDING_TEMPLE_RA:
     case BUILDING_TEMPLE_COMPLEX_RA:
-        image_set_animation(GROUP_PRIEST_RA);
+        image_set_animation(IMG_PRIEST_RA);
         break;
     case BUILDING_TEMPLE_PTAH:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
-        image_set_animation(GROUP_PRIEST_PTAH);
+        image_set_animation(IMG_PRIEST_PTAH);
         break;
     case BUILDING_TEMPLE_SETH:
     case BUILDING_TEMPLE_COMPLEX_SETH:
-        image_set_animation(GROUP_PRIEST_SETH);
+        image_set_animation(IMG_PRIEST_SETH);
         break;
     case BUILDING_TEMPLE_BAST:
     case BUILDING_TEMPLE_COMPLEX_BAST:
-        image_set_animation(GROUP_PRIEST_BAST);
+        image_set_animation(IMG_PRIEST_BAST);
         break;
     case BUILDING_JUGGLER_SCHOOL:
         image_set_animation(IMG_JUGGLER_WALK);
