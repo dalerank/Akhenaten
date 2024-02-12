@@ -25,7 +25,7 @@ figure_priest = {
 		ptah_death : { pos : [0, 0], anim_id: IMG_PRIEST_PTAH_DEATH },
 		seth_walk : { pos : [0, 0], anim_id: IMG_PRIEST_SETH },
 		seth_death : { pos : [0, 0], anim_id: IMG_PRIEST_SETH_DEATH },
-		bast_walk : { pos : [0, 0], anim_id: IMG_PRIEST_BAST },
+		bast_walk : { pos : [0, 0], anim_id: IMG_PRIEST_BAST, max_frames:12 },
 		bast_death : { pos : [0, 0], anim_id: IMG_PRIEST_BAST_DEATH },
   },
 }
