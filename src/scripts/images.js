@@ -34,7 +34,10 @@ images = [
 	{img: IMG_RESOURCE_STRAW, pack:PACK_GENERAL, id:206},
 	{img: IMG_RESOURCE_CLAY, pack:PACK_GENERAL, id:207},
 	{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
-	{img: IMG_OSTRICH_WALK, pack:PACK_SPR_MAIN, id:156}, // 7823 - 0
+	{img: ANIM_OSTRICH_WALK, pack:PACK_SPR_MAIN, id:156}, // 7823 - 0
+	{img: ANIM_OSTRICH_DEATH, pack:PACK_SPR_MAIN, id:158}, // 7823 - 0
+	{img: ANIM_OSTRICH_EATING, pack:PACK_SPR_MAIN, id:159, offset:0},
+	{img: ANIM_OSTRICH_IDLE, pack:PACK_SPR_MAIN, id:160, offset:0},
 	{img: IMG_FIREMAN, pack:PACK_SPR_MAIN, id:6},  // 273
 	{img: IMG_FIREMAN_DEATH, pack:PACK_SPR_MAIN, id:7},  // 273
   {img: IMG_FIREMAN_FIGHT_FIRE, pack:PACK_SPR_MAIN, id:8, offset:0},

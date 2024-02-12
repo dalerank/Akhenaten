@@ -46,7 +46,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_LABOR_SEEKER, "laborseeker"},
     {FIGURE_NONE, "governor"},
     {FIGURE_NONE, "guard"},
-    {FIGURE_OSTRICH_HUNTER, "hunt_ant"},
     {FIGURE_IMMIGRANT, "immigrant"},
     {FIGURE_JUGGLER, "juggler"},
     {FIGURE_NONE, "labor"},

@@ -9,14 +9,14 @@ void figure::play_die_sound() {
     figure* f = this;
     int is_soldier = 0;
     int is_citizen = 0;
+    if (f->dcast()->play_die_sound()) {
+        return;
+    }
+
     switch (f->type) {
     // case FIGURE_WOLF:
     //     sound_effect_play(SOUND_EFFECT_WOLF_DIE);
     //     break;
-    case FIGURE_OSTRICH:
-        sound_effect_play(SOUND_EFFECT_OSTRICH_DIE);
-        break;
-
     case FIGURE_BIRDS:
         sound_effect_play(SOUND_EFFECT_SHEEP_DIE);
         break;
@@ -70,10 +70,12 @@ void figure::play_die_sound() {
         is_citizen = 1;
         break;
     }
-    if (is_soldier)
+
+    if (is_soldier) {
         sound_effect_play(SOUND_EFFECT_SOLDIER_DIE + city_sound_update_die_soldier());
-    else if (is_citizen)
+    } else if (is_citizen) {
         sound_effect_play(SOUND_EFFECT_CITIZEN_DIE + city_sound_update_die_citizen());
+    }
 
     if (f->is_enemy()) {
         if (city_figures_enemies() == 1)

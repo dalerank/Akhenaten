@@ -302,6 +302,7 @@ public:
     void route_remove();
 
     // image.c
+    void image_set_die_animation(const animation_t &anim);
     void image_set_animation(const animation_t &anim);
     void image_set_animation(e_image_id img, int offset = 0, int max_frames = 12, int duration = 1);
     void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1);
@@ -418,7 +419,6 @@ public:
     void shipwreck_action();
     void sheep_action();
     void hyena_action();
-    void ostrich_action();
     void hippo_action();
     void zebra_action();
     void spear_action();
@@ -543,8 +543,10 @@ public:
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual sound_key phrase_key() const { return {}; }
     virtual int provide_service() { return 0; }
+    virtual bool play_die_sound() { return false; }
 
     inline building *home() { return base.home(); }
+    inline int id() { return base.id; }
     inline const building *home() const { return base.home(); }
     inline void advance_action(int action) { base.advance_action(action); }
     inline bool do_returnhome(e_terrain_usage terrainchoice, short next_action = -1) { return base.do_returnhome(terrainchoice, next_action); }
@@ -555,6 +557,7 @@ public:
     inline building *destination() const { return base.destination(); }
     inline void route_remove() { base.route_remove(); }
     inline void image_set_animation(const animation_t &anim) { base.image_set_animation(anim); }
+    inline void image_set_die_animation(const animation_t &anim) { base.image_set_die_animation(anim); }
 
     figure &base;
 };

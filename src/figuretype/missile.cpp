@@ -37,6 +37,7 @@ bool figure::is_citizen() {
     }
     return 0;
 }
+
 bool figure::is_non_citizen() {
     if (action_state == FIGURE_ACTION_149_CORPSE)
         return 0;
@@ -53,6 +54,7 @@ bool figure::is_non_citizen() {
 
     return 0;
 }
+
 static int get_citizen_on_tile(int grid_offset) {
     return map_figure_foreach_until(grid_offset, TEST_SEARCH_CITIZEN);
 }

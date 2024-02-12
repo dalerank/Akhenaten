@@ -99,7 +99,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_DELIVERY_BOY, 1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_GRANARY_BOY},
   {FIGURE_SHIPWRECK, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_BIRDS, 2, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_SHEEP},
-  {FIGURE_OSTRICH, 2, TERRAIN_USAGE_ANIMAL, 0, 0, 0, IMG_OSTRICH_WALK},
+  {FIGURE_OSTRICH, 2, TERRAIN_USAGE_ANIMAL, 0, 0, 0, ANIM_OSTRICH_WALK},
   {FIGURE_ANTELOPE, 2, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_CROCODILE},
   {FIGURE_SPEAR, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_CHARIOR_RACER, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
@@ -586,7 +586,6 @@ void figure::action_perform() {
         case FIGURE_DELIVERY_BOY: delivery_boy_action(); break;
         case FIGURE_SHIPWRECK: shipwreck_action(); break;
         case FIGURE_BIRDS: sheep_action(); break;
-        case FIGURE_OSTRICH: ostrich_action(); break;
         case FIGURE_ANTELOPE: zebra_action(); break; // 70
         case FIGURE_SPEAR: spear_action(); break;
         case FIGURE_CHARIOR_RACER: hippodrome_horse_action(); break;

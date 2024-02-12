@@ -29,3 +29,12 @@ figure_priest = {
 		bast_death : { pos : [0, 0], anim_id: IMG_PRIEST_BAST_DEATH },
   },
 }
+
+figure_ostrich = {
+	animations : {
+		idle : { pos : [0, 0], anim_id: ANIM_OSTRICH_IDLE, max_frames:8 },
+		eating : { pos : [0, 0], anim_id: ANIM_OSTRICH_EATING, max_frames:7 },
+		walk : { pos : [0, 0], anim_id: ANIM_OSTRICH_WALK, max_frames:12 },
+		death : { pos : [0, 0], anim_id: ANIM_OSTRICH_DEATH, max_frames:8 },
+	}
+}

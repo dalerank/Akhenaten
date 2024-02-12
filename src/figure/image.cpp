@@ -61,6 +61,7 @@ static void cc_coords_to_pixel_offset(int cross_country_x, int cross_country_y, 
         *pixel_y = dir == DIR_6_TOP_LEFT ? base_pixel_y : -base_pixel_y;
     }
 }
+
 vec2i figure::tile_pixel_coords() {
     int x;
     int y;
@@ -101,6 +102,10 @@ vec2i figure::tile_pixel_coords() {
     }
 
     return {x, y};
+}
+
+void figure::image_set_die_animation(const animation_t &anim) {
+    sprite_image_id = image_group(ANIM_OSTRICH_DEATH);
 }
 
 void figure::image_set_animation(const animation_t &anim) {
