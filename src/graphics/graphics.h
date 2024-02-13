@@ -40,5 +40,5 @@ void img_letter(painter &ctx, e_font font, int letter_id, int x, int y, color co
 void img_background(painter &ctx, int image_id, float scale = 1.0f);
 void isometric(painter &ctx, int image_id, vec2i pos, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 const image_t* isometric_from_drawtile(painter &ctx, int image_id, vec2i pos, color color_mask = COLOR_MASK_NONE, bool alpha = false);
-const image_t* isometric_from_drawtile_part(painter &ctx, int image_id, vec2i pos, int offset, color color_mask = COLOR_MASK_NONE);
+const image_t* isometric_from_drawtile_top(painter &ctx, int image_id, vec2i pos, color color_mask = COLOR_MASK_NONE);
 } // namespace ImageDraw

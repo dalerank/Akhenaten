@@ -650,6 +650,7 @@ void BuildPlanner::draw_graphics(painter &ctx) {
             if (image_id > 0) {
                 vec2i current_coord = pixel_coords_cache[row][column];
                 ImageDraw::isometric_from_drawtile(ctx, image_id, current_coord, COLOR_MASK_GREEN);
+                ImageDraw::isometric_from_drawtile_top(ctx, image_id, current_coord, COLOR_MASK_GREEN);
                 //                ImageDraw::isometric_top_from_drawtile(image_id, current_coord.x, current_coord.y,
                 //                COLOR_MASK_GREEN, city_view_get_scale_float());
             }

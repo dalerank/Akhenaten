@@ -406,7 +406,7 @@ void draw_isometric_height(vec2i pixel, tile2i tile, painter &ctx) {
 
     int image_id = map_image_at(grid_offset);
     if (tall_flat_tile) {
-        ImageDraw::isometric_from_drawtile_part(ctx, image_id, pixel, -1, color_mask);
+        ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, color_mask);
         return;
     }
 
