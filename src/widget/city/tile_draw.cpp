@@ -315,9 +315,9 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
     int building_id = map_building_at(grid_offset);
     if (building_id > 0) {
         building *b = building_get(building_id);
-        if (!draw_isometric_flat_building<true>(b, tile, ctx)) {
-            return;
-        }
+        draw_isometric_flat_building<true>(b, tile, ctx);
+        //return;
+        //}
     }
 
     color color_mask = COLOR_MASK_NONE;
@@ -358,13 +358,6 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
 
     if (map_property_is_constructing(grid_offset)) {
         image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
-    }
-
-    if (building_id > 0) {
-        building *b = building_get(building_id);
-        if (building_type_any_of(b->type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE)) {
-          //  return;
-        }
     }
 
     const image_t *img = ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
@@ -435,7 +428,7 @@ void draw_isometric_height(vec2i pixel, tile2i tile, painter &ctx) {
         image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
     }
 
-    ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
+    //ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
 }
 
 void draw_figures(vec2i pixel, tile2i tile, painter &ctx) {

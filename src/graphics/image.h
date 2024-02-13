@@ -59,7 +59,7 @@ struct image_t {
     image_t* mirrored_img = nullptr;
     image_t* isometric_top = nullptr;
     image_t *isometric_base = nullptr;
-    bool is_isometric_flat = false;
+    bool is_isometric_foot = false;
     bool is_isometric_top = false;
     //
     short width;

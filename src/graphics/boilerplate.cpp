@@ -781,10 +781,14 @@ const image_t* ImageDraw::isometric_from_drawtile(painter &ctx, int image_id, ve
 
 const image_t* ImageDraw::isometric_from_drawtile_part(painter &ctx, int image_id, vec2i pos, int offset, color color_mask) {
     const image_t* img = image_get(image_id);
-    if (offset < 0) {
-        offset = img->isometric_top_height();
+    if (!img) {
+        return nullptr;
+    }
+    const image_t *img_top = img->isometric_top;
+    if (!img_top) {
+        return nullptr;
     }
     pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
-    graphics_renderer()->draw_image_part(ctx, img, offset, pos.x, pos.y, color_mask);
+    graphics_renderer()->draw_image(ctx, img_top, pos.x, pos.y, color_mask);
     return img;
 }

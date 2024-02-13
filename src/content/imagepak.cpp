@@ -101,7 +101,7 @@ static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
     28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
 };
 #define FOOTPRINT_WIDTH 58
-#define FOOTPRINT_HEIGHT 30
+constexpr int FOOTPRINT_HEIGHT = 30;
 #define FOOTPRINT_HALF_HEIGHT 15
 
 static int convert_footprint_tile(buffer* buf, const image_t &img, int x_offset, int y_offset) {
@@ -295,6 +295,28 @@ static int isometric_calculate_top_height(const image_t &img) {
     return top_height;
 }
 
+static void isometric_clear_top_height(const image_t &img) {
+    for (int x = 0; x < img.width; ++x) {  // diagonals
+        int start_y = 15 * (img.width / 58) + ((x < img.width / 2) ? (x / 2) : ((img.width - x) / 2)) + 2;
+        for (int y = img.height - start_y; y >= 0; --y) { // steps in the diagonal == y axis, too
+            int atlas_y = (y * img.atlas.p_atlas->width);
+            color &c = img.temp_pixel_data[atlas_y + x];
+            c = 0;
+        }
+    }
+}
+
+static void isometric_clear_foot_bottom(const image_t &img) {
+    for (int x = 0; x < img.width; ++x) {  // diagonals
+        int start_y = 15 * (img.width / 58) + ((x < img.width / 2) ? (x / 4) : ((img.width - x) / 4));
+        for (int y = img.height - start_y; y < img.height; ++y) { // steps in the diagonal == y axis, too
+            int atlas_y = (y * img.atlas.p_atlas->width);
+            color &c = img.temp_pixel_data[atlas_y + x];
+            c = 0;
+        }
+    }
+}
+
 static bool convert_image_data(buffer* buf, image_t &img, bool convert_fonts) {
     if (img.is_external)
         buf = load_external_data(img);
@@ -309,6 +331,14 @@ static bool convert_image_data(buffer* buf, image_t &img, bool convert_fonts) {
         if (img.has_isometric_top) {
             convert_compressed(buf, img.data_length - img.uncompressed_length, img);
             img.isometric_box_height = isometric_calculate_top_height(img);
+        }
+
+        if (img.is_isometric_foot) {
+            isometric_clear_top_height(img);
+        }
+
+        if (img.is_isometric_top) {
+            isometric_clear_foot_bottom(img);
         }
     } else if (img.is_fully_compressed) {
         convert_compressed(buf, img.data_length, img);
@@ -673,7 +703,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     for (int i = 0; i < entries_num; i++) {
         images_array.push_back({});
         image_t &img = images_array.back();
-        img.is_isometric_flat = true;
+        img.is_isometric_foot = true;
         img.is_isometric_top = false;
         img.pak_name = name;
         img.sgx_index = i;
@@ -741,19 +771,23 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         }
     }
 
-    //for (int i = 0, rect_i = entries_num; i < entries_num; ++i, ++rect_i) {
-    //    image_t &img = images_array[i];
-    //    image_t isometric_img = images_array[i];
-    //    image_packer_rect& rect = packer.rects[rect_i];
-    //    rect.input.width = img.width;
-    //    rect.input.height = img.height;
-    //    isometric_img.is_isometric_flat = false;
-    //    isometric_img.is_isometric_top = true;
-    //    isometric_img.isometric_base = &img;
-    //    isometric_img.rect_index = rect_i;
-    //    images_array.push_back(isometric_img);
-    //    img.isometric_top = &images_array.back();
-    //}
+    for (int i = 0, rect_i = entries_num; i < entries_num; ++i) {
+        image_t &img = images_array[i];
+        if (img.type != IMAGE_TYPE_ISOMETRIC) {
+            continue;
+        }
+        image_t isometric_img = images_array[i];
+        image_packer_rect& rect = packer.rects[rect_i];
+        rect.input.width = img.width;
+        rect.input.height = img.height;
+        isometric_img.is_isometric_foot = false;
+        isometric_img.is_isometric_top = true;
+        isometric_img.isometric_base = &img;
+        isometric_img.rect_index = rect_i;
+        images_array.push_back(isometric_img);
+        img.isometric_top = &images_array.back();
+        ++rect_i;
+    }
 
     // create special fonts
     if (should_convert_fonts) {
