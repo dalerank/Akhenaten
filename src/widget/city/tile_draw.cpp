@@ -490,7 +490,9 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i point, painter &ctx) {
             city_with_overlay_draw_building_footprint(ctx, pixel.x, pixel.y, grid_offset, 0);
         
         } else {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, 0);
+            const image_t *img = ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, 0);
+            int top_height = img->isometric_top_height();
+            map_render_set(grid_offset, top_height > 0 ? RENDER_TALL_TILE : 0);
         }
     }
 
@@ -509,20 +511,25 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
         //get_city_overlay()->draw_custom_footprint(pixel, point, ctx);
 
     } else if (map_property_is_draw_tile(grid_offset)) {
+        bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
+        if (tall_flat_tile) {
+            ImageDraw::isometric_from_drawtile_top(ctx, map_image_at(grid_offset), pixel, 0);
+        }
+
         //int terrain = map_terrain_get(grid_offset);
         //if (terrain & (TERRAIN_CANAL | TERRAIN_WALL)) {
         //    // display groundwater
         //    int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-        //    ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
+        //    ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
         //
         //} else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
-        //    ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
+        //    ImageDraw::isometric_from_drawtile_top(ctx, map_image_at(grid_offset), pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
         //
         //} else if (terrain & TERRAIN_BUILDING) {
-        //    city_with_overlay_draw_building_footprint(ctx, pixel.x, pixel.y, grid_offset, 0);
+        //    //city_with_overlay_draw_building_footprint(ctx, pixel.x, pixel.y, grid_offset, 0);
         //
         //} else {
-        //    ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, 0);
+        //    ImageDraw::isometric_from_drawtile_top(ctx, map_image_at(grid_offset), pixel, 0);
         //}
     }
 
