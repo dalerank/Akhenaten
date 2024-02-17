@@ -6,8 +6,8 @@
 
 void init_draw_context(int selected_figure_id, vec2i* figure_coord, int highlighted_formation);
 
-void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int image_offset, color color_mask, painter &ctx);
-void draw_flattened_footprint_building(const building* b, int x, int y, int image_offset, color color_mask, painter &ctx);
+void draw_flattened_footprint_anysize(vec2i pos, int size_x, int size_y, int image_offset, color color_mask, painter &ctx);
+void draw_flattened_footprint_building(const building* b, vec2i pos, int image_offset, color color_mask, painter &ctx);
 
 void map_render_clear();
 

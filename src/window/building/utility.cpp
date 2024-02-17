@@ -169,6 +169,7 @@ void window_building_draw_aqueduct(object_info* c) {
     lang_text_draw_centered(141, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 16 * c->height_blocks - 144, 141, c->aqueduct_has_water ? 1 : 2);
 }
+
 void window_building_draw_fountain(object_info* c) {
     c->help_id = 61;
     window_building_play_sound(c, "wavs/fountain.wav");

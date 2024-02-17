@@ -267,19 +267,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         draw_dock_workers(b, point.x, point.y, color_mask, ctx);
         break;
 
-    case BUILDING_GRAIN_FARM:
-    case BUILDING_LETTUCE_FARM:
-    case BUILDING_CHICKPEAS_FARM:
-    case BUILDING_POMEGRANATES_FARM:
-    case BUILDING_BARLEY_FARM:
-    case BUILDING_FLAX_FARM:
-    case BUILDING_HENNA_FARM:
-        if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            draw_farm_crops(ctx, b->type, b->data.industry.progress, b->tile.grid_offset(), point, color_mask);
-            building_farm_draw_workers(ctx, b, grid_offset, point);
-        }
-        break;
-
     case BUILDING_FIGS_FARM:
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
             draw_farm_crops(ctx, b->type, b->data.industry.progress, b->tile.grid_offset(), point, color_mask);

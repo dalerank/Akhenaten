@@ -86,10 +86,8 @@ static void building_farm_draw_info(object_info &c, const char* type, e_resource
     }
 }
 
-void building_farm_draw_info(object_info& c) {
-    building *b = building_get(c.building_id);
-
-    switch (b->type) {
+void building_farm::window_info_background(object_info& c) {
+    switch (base.type) {
     case BUILDING_BARLEY_FARM: building_farm_draw_info(c, "barley_farm", RESOURCE_BARLEY); break;
     case BUILDING_FLAX_FARM: building_farm_draw_info(c, "flax_farm", RESOURCE_FLAX); break;
     case BUILDING_GRAIN_FARM: building_farm_draw_info(c, "grain_farm", RESOURCE_GRAIN); break;
@@ -282,4 +280,44 @@ void building::spawn_figure_farms() {
             spawn_figure_farm_harvests();
         }
     }
+}
+
+void building_farm::on_create() {
+    switch (type()) {
+    case BUILDING_BARLEY_FARM:
+        base.output_resource_first_id = RESOURCE_BARLEY;
+        base.fire_proof = 1;
+        break;
+    case BUILDING_FLAX_FARM:
+        base.output_resource_first_id = RESOURCE_FLAX;
+        base.fire_proof = 1;
+        break;
+    case BUILDING_GRAIN_FARM:
+        base.output_resource_first_id = RESOURCE_GRAIN;
+        base.output_resource_second_id = RESOURCE_STRAW;
+        base.output_resource_second_rate = 10;
+        base.fire_proof = 1;
+        break;
+    case BUILDING_LETTUCE_FARM:
+        base.output_resource_first_id = RESOURCE_LETTUCE;
+        base.fire_proof = 1;
+        break;
+    case BUILDING_POMEGRANATES_FARM:
+        base.output_resource_first_id = RESOURCE_POMEGRANATES;
+        base.fire_proof = 1;
+        break;
+    case BUILDING_CHICKPEAS_FARM:
+        base.output_resource_first_id = RESOURCE_CHICKPEAS;
+        base.fire_proof = 1;
+        break;
+    }
+}
+
+bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color mask) {
+    if (map_terrain_is(t.grid_offset(), TERRAIN_BUILDING)) {
+        draw_farm_crops(ctx, type(), data.industry.progress, tile().grid_offset(), point, mask);
+        building_farm_draw_workers(ctx, &base, t.grid_offset(), point);
+    }
+
+    return true;
 }

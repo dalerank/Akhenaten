@@ -189,12 +189,12 @@ static bool is_drawable_farm_corner(int grid_offset) {
     return false;
 }
 
-void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int image_offset, color color_mask, painter &ctx) {
+void draw_flattened_footprint_anysize(vec2i pos, int size_x, int size_y, int image_offset, color color_mask, painter &ctx) {
     int image_base = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT) + image_offset;
 
     for (int xx = 0; xx < size_x; xx++) {
         for (int yy = 0; yy < size_y; yy++) {
-            vec2i tp = {x + (30 * xx) + (30 * yy), y + (15 * xx) - (15 * yy)};
+            vec2i tp = pos + vec2i{(30 * xx) + (30 * yy), (15 * xx) - (15 * yy)};
 
             // tile shape -- image offset
             // (0 = top corner, 1 = left edge, 2 = right edge, 3 = any other case)
@@ -212,8 +212,8 @@ void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int 
     }
 }
 
-void draw_flattened_footprint_building(const building* b, int x, int y, int image_offset, color color_mask, painter &ctx) {
-    return (draw_flattened_footprint_anysize(x, y, b->size, b->size, image_offset, color_mask, ctx));
+void draw_flattened_footprint_building(const building* b, vec2i pos, int image_offset, color color_mask, painter &ctx) {
+    return draw_flattened_footprint_anysize(pos, b->size, b->size, image_offset, color_mask, ctx);
 }
 
 static void clip_between_rectangles(int* xOut, int* yOut, int* wOut, int* hOut, int xA, int yA, int wA, int hA, int xB, int yB, int wB, int hB) {
@@ -487,7 +487,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i point, painter &ctx) {
             ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
         
         } else if (terrain & TERRAIN_BUILDING) {
-            city_with_overlay_draw_building_footprint(ctx, pixel.x, pixel.y, grid_offset, 0);
+            city_with_overlay_draw_building_footprint(ctx, pixel, grid_offset, 0);
         
         } else {
             const image_t *img = ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, 0);
@@ -536,7 +536,7 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
     get_city_overlay()->draw_custom_top(pixel, point, ctx);
 }
 
-void draw_ornaments_overlay(vec2i pixel, map_point point, painter &ctx) {
+void draw_ornaments_overlay(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -622,7 +622,7 @@ static void draw_overlay_column(int x, int y, int height, int column_style, pain
     }
 }
 
-void city_with_overlay_draw_building_footprint(painter &ctx, int x, int y, int grid_offset, int image_offset) {
+void city_with_overlay_draw_building_footprint(painter &ctx, vec2i pos, int grid_offset, int image_offset) {
     int building_id = map_building_at(grid_offset);
     if (!building_id) {
         return;
@@ -632,12 +632,12 @@ void city_with_overlay_draw_building_footprint(painter &ctx, int x, int y, int g
     if (get_city_overlay()->show_building(b)) {
         if (building_is_farm(b->type)) {
             if (is_drawable_farmhouse(grid_offset, city_view_orientation())) {
-                ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), vec2i{x, y}, 0);
+                ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pos, 0);
             } else if (map_property_is_draw_tile(grid_offset)) {
-                ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), vec2i{x, y}, 0);
+                ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pos, 0);
             }
         } else {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), vec2i{x, y}, 0);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pos, 0);
         }
     } else {
         if (b->type == BUILDING_FESTIVAL_SQUARE) {
@@ -649,7 +649,7 @@ void city_with_overlay_draw_building_footprint(painter &ctx, int x, int y, int g
         }
 
         if (draw) {
-            draw_flattened_footprint_building(b, x, y, image_offset, 0, ctx);
+            draw_flattened_footprint_building(b, pos, image_offset, 0, ctx);
         }
     }
 }

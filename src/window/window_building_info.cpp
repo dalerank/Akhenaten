@@ -533,17 +533,6 @@ static void draw_refresh_background() {
             window_building_draw_house(&context);
         } else {
             switch (building_get(context.building_id)->type) {
-            case BUILDING_BARLEY_FARM:
-            case BUILDING_FLAX_FARM:
-            case BUILDING_GRAIN_FARM:
-            case BUILDING_LETTUCE_FARM:
-            case BUILDING_POMEGRANATES_FARM:
-            case BUILDING_CHICKPEAS_FARM:
-            case BUILDING_FIGS_FARM:
-            case BUILDING_HENNA_FARM:
-                building_farm_draw_info(context);
-                break;
-
             case BUILDING_LIMESTONE_QUARRY: building_limestone_quarry_draw_info(context); break;
             case BUILDING_WOOD_CUTTERS: building_timber_yard_draw_info(context); break;
             case BUILDING_REED_GATHERER: building_reed_gatherer_draw_info(context); break;

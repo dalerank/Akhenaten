@@ -5,6 +5,7 @@
 #include "building/building_type.h"
 #include "building/storage.h"
 #include "building/building_temple.h"
+#include "building/building_farm.h"
 #include "building/building_statue.h"
 #include "building/building_work_camp.h"
 #include "building/building_barracks.h"
@@ -145,32 +146,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
 
     // unique data
     switch (type) {
-    case BUILDING_BARLEY_FARM:
-        b->output_resource_first_id = RESOURCE_BARLEY;
-        b->fire_proof = 1;
-        break;
-    case BUILDING_FLAX_FARM:
-        b->output_resource_first_id = RESOURCE_FLAX;
-        b->fire_proof = 1;
-        break;
-    case BUILDING_GRAIN_FARM:
-        b->output_resource_first_id = RESOURCE_GRAIN;
-        b->output_resource_second_id = RESOURCE_STRAW;
-        b->output_resource_second_rate = 10;
-        b->fire_proof = 1;
-        break;
-    case BUILDING_LETTUCE_FARM:
-        b->output_resource_first_id = RESOURCE_LETTUCE;
-        b->fire_proof = 1;
-        break;
-    case BUILDING_POMEGRANATES_FARM:
-        b->output_resource_first_id = RESOURCE_POMEGRANATES;
-        b->fire_proof = 1;
-        break;
-    case BUILDING_CHICKPEAS_FARM:
-        b->output_resource_first_id = RESOURCE_CHICKPEAS;
-        b->fire_proof = 1;
-        break;
     case BUILDING_LIMESTONE_QUARRY:
         b->output_resource_first_id = RESOURCE_LIMESTONE;
         break;
@@ -322,6 +297,15 @@ building_impl *building::dcast() {
     case BUILDING_RECRUITER: _ptr = new building_recruiter(*this); break;
     case BUILDING_GRANARY: _ptr = new building_granary(*this); break;
     case BUILDING_CATTLE_RANCH: _ptr = new building_cattle_ranch(*this); break;
+    case BUILDING_GRAIN_FARM:
+    case BUILDING_LETTUCE_FARM:
+    case BUILDING_CHICKPEAS_FARM:
+    case BUILDING_POMEGRANATES_FARM:
+    case BUILDING_BARLEY_FARM:
+    case BUILDING_FLAX_FARM:
+    case BUILDING_HENNA_FARM:
+         _ptr = new building_farm(*this);
+         break;
 
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_RA:
@@ -627,6 +611,7 @@ bool building_is_fort(int type) {
 bool building_is_defense(e_building_type type) {
     return building_type_any_of(type, BUILDING_BRICK_WALL, BUILDING_BRICK_GATEHOUSE, BUILDING_BRICK_TOWER);
 }
+
 bool building_is_farm(int type) {
     return (type >= BUILDING_BARLEY_FARM && type <= BUILDING_CHICKPEAS_FARM) || type == BUILDING_FIGS_FARM
            || type == BUILDING_HENNA_FARM;
