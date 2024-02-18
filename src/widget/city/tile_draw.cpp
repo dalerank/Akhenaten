@@ -364,6 +364,14 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
     if (!img) {
         return;
     }
+
+    int image_alt_value = map_image_alt_at(grid_offset);
+    int image_alt_id = (image_alt_value & 0x00ffffff);
+    uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
+    if (image_alt_id > 0 && image_alt_alpha > 0) {
+        ImageDraw::isometric_from_drawtile(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), /*alpha*/true);
+    }
+
     int top_height = img->isometric_top_height();
     map_render_set(grid_offset, top_height > 0 ? RENDER_TALL_TILE : 0);
 }
@@ -407,6 +415,13 @@ void draw_isometric_height(vec2i pixel, tile2i tile, painter &ctx) {
     int image_id = map_image_at(grid_offset);
     if (tall_flat_tile) {
         ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, color_mask);
+
+        int image_alt_value = map_image_alt_at(grid_offset);
+        int image_alt_id = (image_alt_value & 0x00ffffff);
+        uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
+        if (image_alt_id > 0 && image_alt_alpha > 0) {
+            ImageDraw::isometric_from_drawtile_top(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), /*alpha*/true);
+        }
         return;
     }
 

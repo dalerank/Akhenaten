@@ -57,7 +57,7 @@ static const vec2i FORT_OFFSET[4][4] = {{{3, -1}, {4, -1}, {4, 0}, {3, 0}},
                                         {{-4, 0}, {-3, 0}, {-3, 1}, {4, 1}}, 
                                         {{0, 3}, {1, 3}, {1, 4}, {0, 4}}};
 
-const int CROPS_OFFSETS[2] = {5, 6};
+constexpr int CROPS_OFFSETS = 6;
 
 static void add_fort(int type, building* fort) {
     fort->prev_part_building_id = 0;
@@ -553,35 +553,35 @@ static void add_building(building* b, int orientation, int variant) {
         break;
         // farms
     case BUILDING_BARLEY_FARM:
-        map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), 0, 0);
+        map_building_tiles_add_farm(b->id, b->tile, 0, 0);
         break;
 
     case BUILDING_FLAX_FARM:
-        map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV], 0);
+        map_building_tiles_add_farm(b->id, b->tile, CROPS_OFFSETS, 0);
         break;
 
     case BUILDING_GRAIN_FARM:
-        map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 2, 0);
+        map_building_tiles_add_farm(b->id, b->tile, CROPS_OFFSETS * 2, 0);
         break;
 
     case BUILDING_LETTUCE_FARM:
-        map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 3, 0);
+        map_building_tiles_add_farm(b->id, b->tile, CROPS_OFFSETS * 3, 0);
         break;
 
     case BUILDING_POMEGRANATES_FARM:
-        map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 4, 0);
+        map_building_tiles_add_farm(b->id, b->tile, CROPS_OFFSETS * 4, 0);
         break;
 
     case BUILDING_CHICKPEAS_FARM:
-        map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 5, 0);
+        map_building_tiles_add_farm(b->id, b->tile, CROPS_OFFSETS * 5, 0);
         break;
 
     case BUILDING_FIGS_FARM:
-        map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 6, 0);
+        map_building_tiles_add_farm(b->id, b->tile, CROPS_OFFSETS * 6, 0);
         break;
 
     case BUILDING_HENNA_FARM:
-        map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 7, 0);
+        map_building_tiles_add_farm(b->id, b->tile, CROPS_OFFSETS * 7, 0);
         break;
         // government
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:

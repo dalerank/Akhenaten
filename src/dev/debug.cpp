@@ -459,6 +459,18 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         debug_text(ctx, str, x, y + 10, 0, "", map_image_at(grid_offset), COLOR_LIGHT_RED);
         break;
 
+    case e_debug_render_image_alt: // IMAGE ALT FIELD
+        { 
+            int image_alt_value = map_image_alt_at(grid_offset);
+            int image_alt_id = (image_alt_value & 0x00ffffff);
+            uint8_t image_alt_alpha = (image_alt_value & 0xff000000) >> 24;
+            if (image_alt_id > 0 && image_alt_alpha > 0) {
+                snprintf((char *)str, 30, "%d(%d)", image_alt_id, image_alt_alpha);
+                debug_text_a(ctx, str, x, y + 10, 0, (pcstr)str, COLOR_LIGHT_RED);
+            }
+        }
+        break;
+
     case e_debug_render_marshland_depl: // MARSHLAND DEPLETION
         d = map_get_vegetation_growth(grid_offset);
         if (d != 255) {
@@ -497,13 +509,13 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         b->is_valid()
             ? snprintf((char *)str, 30, "%d[%d]", b ? b->data.monuments.phase : 0, d)
             : snprintf((char *)str, 30, "%d", d);
-        debug_text_a(ctx, str, x, y + 10, 0, (const char *)str, COLOR_RED, FONT_SMALL_PLAIN);
+        debug_text_a(ctx, str, x, y + 10, 0, (pcstr)str, COLOR_RED, FONT_SMALL_PLAIN);
         break;
 
     case e_debug_render_height:
         d = map_building_height_at(grid_offset);
         snprintf((char *)str, 30, "%d", d);
-        debug_text_a(ctx, str, x, y + 10, 0, (const char *)str, COLOR_RED, FONT_SMALL_PLAIN);
+        debug_text_a(ctx, str, x, y + 10, 0, (pcstr)str, COLOR_RED, FONT_SMALL_PLAIN);
         break;
     }
 }

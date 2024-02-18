@@ -45,6 +45,7 @@ static int fticks = 0;
 int floods_debug_period() {
     return debug_year_period;
 }
+
 int floods_fticks() {
     return fticks;
 }
@@ -314,15 +315,15 @@ void floodplains_tick_update(bool calc_only) {
     // update tiles!!
     if (cycle >= cycle_start && cycle <= cycle_start + flooding_period) {
         int fticks = (cycle - cycle_start) * 25 + subcycle + 1;
-        map_update_floodplain_inundation(data.flood_progress, 1, fticks);
+        map_floodplain_update_inundation(data.flood_progress, 1, fticks);
     } else if (cycle >= cycle_end - flooding_period && cycle <= cycle_end) {
         int fticks = (cycle_end - cycle) * 25 - subcycle + 25;
-        map_update_floodplain_inundation(data.flood_progress, -1, fticks);
+        map_floodplain_update_inundation(data.flood_progress, -1, fticks);
     }
 
     // update grass growth
     if (subcycle % flood_multiplier_grow == 0 && (cycle < cycle_start - 27 || cycle >= cycle_end - 24)) {
-        map_advance_floodplain_growth();
+        map_floodplain_advance_growth();
     }
 }
 

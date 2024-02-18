@@ -5,6 +5,7 @@
 
 #include "building/building_barracks.h"
 #include "building/building_granary.h"
+#include "building/building_farm.h"
 #include "building/industry.h"
 #include "building/building_bazaar.h"
 #include "building/model.h"
@@ -617,7 +618,10 @@ void building::spawn_figure_farm_harvests() {
             int expected_produce = farm_expected_produce(this);
             {
                 figure *f = create_cartpusher(output_resource_first_id, expected_produce);
-                building_farm_deplete_soil(this);
+                building_farm *farm = dcast_farm();
+                if (farm) {
+                    farm->deplete_soil();
+                }
 
                 f->sender_building_id = this->id;
 

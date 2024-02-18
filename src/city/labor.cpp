@@ -256,9 +256,7 @@ static bool category_alias_inited = false;
 static e_labor_category category_alias[255];
 
 e_labor_category category_for_building(building* b) {
-    int btype = std::clamp<int>(b->type, 0, 240);
-
-    if (map_terrain_is(b->tile.grid_offset(), TERRAIN_FLOODPLAIN) && building_is_farm(btype)) {
+    if (map_terrain_is(b->tile, TERRAIN_FLOODPLAIN) && building_is_farm(*b)) {
         return LABOR_CATEGORY_NONE;
     }
 

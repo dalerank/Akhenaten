@@ -16,18 +16,20 @@ public:
 };
 
 int map_image_at(int grid_offset);
+int map_image_alt_at(int grid_offset);
 void map_image_set(int grid_offset, int image_id);
+void map_image_alt_set(int grid_offset, int image_id, uint8_t alpha);
 void map_image_set(int grid_offset, e_image_id img);
 inline void map_image_set(tile2i tile, e_image_id img) { map_image_set(tile.grid_offset(), img); }
 void map_image_set(int grid_offset, e_image_id img, int offset);
 inline void map_image_set(tile2i tile, e_image_id img, int offset) { map_image_set(tile.grid_offset(), img, offset); }
 
-void map_image_backup(void);
-void map_image_restore(void);
+void map_image_backup();
+void map_image_restore();
 void map_image_restore_at(int grid_offset);
 void map_image_fix_icorrect_tiles();
 
-void map_image_clear(void);
-void map_image_init_edges(void);
+void map_image_clear();
+void map_image_init_edges();
 
 void set_image_grid_correction_shift(int shift);

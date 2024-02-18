@@ -15,8 +15,18 @@ grid_xx g_images_grid_backup = {0,
                                   FS_UINT32  // ph
                                 }};
 
+grid_xx g_images_alt_grid = {0,
+                             {
+                               FS_UINT16, // c3
+                               FS_UINT32  // ph
+                             }};
+
 int map_image_at(int grid_offset) {
     return (int)map_grid_get(&g_images_grid, grid_offset);
+}
+
+int map_image_alt_at(int grid_offset) {
+    return (int)map_grid_get(&g_images_alt_grid, grid_offset);
 }
 
 void map_image_set(int grid_offset, e_image_id img) {
@@ -33,10 +43,18 @@ void map_image_set(int grid_offset, int image_id) {
     map_grid_set(&g_images_grid, grid_offset, image_id);
 }
 
-void map_image_backup(void) {
+void map_image_alt_set(int grid_offset, int image_id, uint8_t alpha) {
+    if (image_id < 0) {
+        image_id = map_image_alt_at(grid_offset);
+    }
+    uint32_t value = (image_id & 0x00ffffff) | (((uint32_t)alpha) << 24);
+    map_grid_set(&g_images_alt_grid, grid_offset, value);
+}
+
+void map_image_backup() {
     map_grid_copy(&g_images_grid, &g_images_grid_backup);
 }
-void map_image_restore(void) {
+void map_image_restore() {
     map_grid_copy(&g_images_grid_backup, &g_images_grid);
 }
 void map_image_restore_at(int grid_offset) {
@@ -49,8 +67,10 @@ void map_image_fix_icorrect_tiles() {
 
 void map_image_clear(void) {
     map_grid_clear(&g_images_grid);
+    map_grid_clear(&g_images_alt_grid);
 }
-void map_image_init_edges(void) {
+
+void map_image_init_edges() {
     int width = scenario_map_data()->width;
     int height = scenario_map_data()->height;
     //    map_grid_size(&width, &height);

@@ -250,8 +250,9 @@ static void draw_aqueduct(map_point tile, int x, int y, painter &ctx) {
             if (map_property_is_plaza_or_earthquake(grid_offset))      // todo: plaza not allowing aqueducts? maybe?
                 blocked = true;
         } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
-                   && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) // terrain is not clear!
+                   && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {// terrain is not clear!
             blocked = true;
+        }
     }
     if (city_finance_out_of_money()) { // check sufficient funds to continue
         blocked = true;
@@ -297,9 +298,11 @@ static void draw_road(tile2i tile, vec2i pixel, painter &ctx) {
                     else
                         image_id++;
                 }
+
                 if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_FLOODPLAIN)
-                    && map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD))
+                    && map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD)) {
                     blocked = true;
+                }
             }
         }
     }

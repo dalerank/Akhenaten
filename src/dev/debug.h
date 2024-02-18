@@ -47,7 +47,7 @@ enum e_debug_render {
     e_debug_render_sprite_frames = 12,
     e_debug_render_terrain_bits = 13,
     e_debug_render_image = 14,
-    e_debug_render_marshland_depl = 15,
+    e_debug_render_image_alt = 15,
     e_debug_render_marshland = 16,
     e_debug_render_terrain_type = 17,
     e_debug_render_soil = 18,
@@ -58,6 +58,7 @@ enum e_debug_render {
     e_debug_render_monuments = 23,
     e_debug_render_figures = 24,
     e_debug_render_height = 25,
+    e_debug_render_marshland_depl = 26,
 
     e_debug_render_size
 };

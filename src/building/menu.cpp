@@ -236,8 +236,9 @@ void building_menu_toggle_building(int type, bool enabled) {
 
     // additional buildings / building menus
     if (enabled) {
-        if (building_is_farm(type))
+        if (building_is_farm((e_building_type)type)) {
             building_menu_toggle_building(BUILDING_MENU_FARMS);
+        }
 
         if (building_is_extractor(type) || building_is_harvester((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_RAW_MATERIALS);

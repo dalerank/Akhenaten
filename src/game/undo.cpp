@@ -191,8 +191,7 @@ static void add_building_to_terrain(building* b) {
             image_offset = 25;
             break;
         }
-        map_building_tiles_add_farm(
-          b->id, b->tile.x(), b->tile.y(), image_id_from_group(GROUP_BUILDING_FARMLAND) + image_offset, 0);
+        map_building_tiles_add_farm(b->id, b->tile, image_id_from_group(GROUP_BUILDING_FARMLAND) + image_offset, 0);
     } else if (b->house_size) {
     } else {
         int size = building_properties_for_type(b->type)->size;

@@ -1,6 +1,7 @@
 #include "industry.h"
 
 #include "building/building_type.h"
+#include "building/building_farm.h"
 #include "building/monuments.h"
 #include "city/resource.h"
 #include "core/calc.h"
@@ -22,9 +23,8 @@
 
 #include <cmath>
 
-#define MAX_PROGRESS_RAW 200
+constexpr short MAX_PROGRESS_RAW = 200;
 #define MAX_PROGRESS_WORKSHOP 400
-#define MAX_PROGRESS_FARM_PH 2000
 #define INFINITE 10000
 
 static int max_progress(building &b) {
@@ -33,22 +33,6 @@ static int max_progress(building &b) {
     }
 
     return building_is_workshop(b.type) ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
-}
-
-static void update_farm_image(building &b) {
-    bool is_flooded = false;
-    if (building_is_floodplain_farm(b)) {
-        for (int _y = b.tile.y(); _y < b.tile.y() + b.size; _y++) {
-            for (int _x = b.tile.x(); _x < b.tile.x() + b.size; _x++) {
-                if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER))
-                    is_flooded = true;
-            }
-        }
-    }
-
-    if (!is_flooded) {
-        map_building_tiles_add_farm(b.id, b.tile.x(), b.tile.y(), image_id_from_group(GROUP_BUILDING_FARMLAND) + 5 * (b.output_resource_first_id - 1), b.data.industry.progress);
-    }
 }
 
 delivery_destination building_get_asker_for_resource(tile2i tile, e_building_type btype, e_resource resource, int road_network_id, int distance_from_entry) {
@@ -184,12 +168,8 @@ void building_industry_update_production(void) {
 void building_industry_update_farms(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Farms Update");
 
-    buildings_valid_do([] (building &b) {
+    buildings_valid_farms_do([] (building &b) {
         if (!b.output_resource_first_id) {
-            return;
-        }
-
-        if (!building_is_farm(b.type)) {
             return;
         }
 
@@ -235,7 +215,8 @@ void building_industry_update_farms(void) {
         int max = max_progress(b);
         b.data.industry.progress = std::clamp<int>(b.data.industry.progress, 0, max);
 
-        update_farm_image(b);
+        building_farm *farm = b.dcast_farm();
+        farm->update_tiles_image();
     });
     city_data.religion.osiris_double_farm_yield = false;
 }
@@ -259,10 +240,9 @@ void building_industry_update_wheat_production() {
             if (b.data.industry.blessing_days_left)
                 b.data.industry.progress += b.num_workers;
 
-            if (b.data.industry.progress > MAX_PROGRESS_RAW)
-                b.data.industry.progress = MAX_PROGRESS_RAW;
+            b.data.industry.progress = std::min<short>(b.data.industry.progress, MAX_PROGRESS_RAW);
 
-            update_farm_image(b);
+            b.dcast_farm()->update_tiles_image();
         }
     });
 }
@@ -279,8 +259,9 @@ void building_industry_start_new_production(building* b) {
         }
     }
 
-    if (building_is_farm(b->type)) {
-        update_farm_image(*b);
+    building_farm *farm = b->dcast_farm();
+    if (farm) {
+        farm->update_tiles_image();
     }
 }
 
@@ -295,27 +276,6 @@ void building_curse_farms(int big_curse) {
     //            update_farm_image(b);
     //        }
     //    }
-}
-
-void building_farm_deplete_soil(building* b) {
-    // DIFFERENT from original Pharaoh... and a bit easier to do?
-    if (config_get(CONFIG_GP_CH_SOIL_DEPLETION)) {
-        int malus = (float)b->data.industry.progress / (float)MAX_PROGRESS_FARM_PH * (float)-100;
-        for (int _y = b->tile.y(); _y < b->tile.y() + b->size; _y++) {
-            for (int _x = b->tile.x(); _x < b->tile.x() + b->size; _x++) {
-                map_soil_set_depletion(MAP_OFFSET(_x, _y), malus);
-            }
-        }
-    } else {
-        for (int _y = b->tile.y(); _y < b->tile.y() + b->size; _y++) {
-            for (int _x = b->tile.x(); _x < b->tile.x() + b->size; _x++) {
-                int new_fert = map_get_fertility(MAP_OFFSET(_x, _y), FERT_WITH_MALUS) * 0.2f;
-                int malus = new_fert - map_get_fertility(MAP_OFFSET(_x, _y), FERT_NO_MALUS);
-                map_soil_set_depletion(MAP_OFFSET(_x, _y), malus);
-            }
-        }
-    }
-    update_farm_image(*b);
 }
 
 void building_workshop_add_raw_material(building* b, int amount, e_resource res) {

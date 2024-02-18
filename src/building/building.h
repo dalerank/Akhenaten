@@ -51,6 +51,7 @@ enum e_building_slot {
 };
 
 class building_work_camp;
+class building_farm;
 
 class building {
 private:
@@ -319,6 +320,7 @@ public:
 
 public:
     building_impl *dcast();
+    building_farm *dcast_farm();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -386,7 +388,10 @@ public:
     virtual int get_fire_risk(int value) const { return value; }
     virtual std::pair<int, int> get_tooltip() const { return {-1, -1}; }
 
+    virtual building_farm *dcast_farm() { return 0; }
+
     inline bool is_main() { return base.is_main(); }
+    inline e_building_state state() const { return base.state; }
     inline void check_labor_problem() { base.check_labor_problem(); }
     inline bool has_figure_of_type(int i, e_figure_type _type) { return base.has_figure_of_type(i, _type);  }
     inline int worker_percentage() { return base.worker_percentage(); }
@@ -399,6 +404,9 @@ public:
     
     inline int id() const { return base.id; }
     inline tile2i tile() const { return base.tile; }
+    inline int tilex() const { return base.tile.x(); }
+    inline int tiley() const { return base.tile.y(); }
+
     inline int size() const { return base.size; }
     inline e_building_type type() const { return base.type; }
     inline int figure_spawn_timer() const { return base.figure_spawn_timer(); }
@@ -407,6 +415,7 @@ public:
     virtual bool is_workshop() const { return false; }
     virtual bool is_administration() const { return false; }
     virtual bool is_unique_building() const { return false; }
+    virtual void destroy_by_poof(bool clouds);
 
     using resources_vec = std::array<e_resource, 4>;
     virtual resources_vec required_resource() const { return {}; }
@@ -468,7 +477,8 @@ void building_clear_all();
 
 bool building_is_fort(int type);
 bool building_is_defense(e_building_type type);
-bool building_is_farm(int type);
+bool building_is_farm(e_building_type type);
+inline bool building_is_farm(building &b) { return building_is_farm(b.type); }
 bool building_is_floodplain_farm(building &b);
 bool building_is_workshop(int type);
 bool building_is_extractor(int type);
@@ -488,7 +498,7 @@ bool building_is_water_crossing(int type);
 bool building_is_industry_type(const building* b);
 
 bool building_is_industry(e_building_type type);
-bool building_is_food_category(int type);
+bool building_is_food_category(e_building_type type);
 bool building_is_infrastructure(int type);
 bool building_is_religion(int type);
 bool building_is_entertainment(int type);
@@ -544,6 +554,15 @@ template<typename T>
 void buildings_valid_do(T func) {
     for (auto &b: city_buildings()) {
         if (b.is_valid()) {
+            func(b);
+        }
+    }
+}
+
+template<typename T>
+void buildings_valid_farms_do(T func) {
+    for (auto &b: city_buildings()) {
+        if (b.is_valid() && building_is_farm(b)) {
             func(b);
         }
     }

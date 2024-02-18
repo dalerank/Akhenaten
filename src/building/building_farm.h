@@ -18,6 +18,10 @@ public:
     virtual void on_create() override;
     virtual void window_info_background(object_info &ctx) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
+    virtual building_farm *dcast_farm() override { return this; }
+
+    void deplete_soil();
+    void update_tiles_image();
 };
 
 void building_farm_draw_workers(painter &ctx, building *b, int grid_offset, vec2i pos);

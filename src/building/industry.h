@@ -8,6 +8,8 @@
 // int get_crops_image(int type, int growth);
 // void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color color_mask);
 
+constexpr uint32_t MAX_PROGRESS_FARM_PH = 2000;
+
 building* building_determine_worker_needed();
 
 int farm_expected_produce(building* b);
@@ -26,7 +28,6 @@ struct delivery_destination {
 delivery_destination building_get_asker_for_resource(tile2i tile, e_building_type btype, e_resource resource, int road_network_id, int distance_from_entry);
 
 void building_curse_farms(int big_curse);
-void building_farm_deplete_soil(building* b);
 
 void building_workshop_add_raw_material(building* b, int amount, e_resource res);
 

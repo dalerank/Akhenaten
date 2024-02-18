@@ -32,5 +32,7 @@ void set_floodplain_land_tiles_image(int grid_offset);
 void advance_floodplain_growth_tile(int grid_offset, int order);
 void map_image_set_road_floodplain(int grid_offset);
 void set_floodplain_edges_image(int grid_offset);
+void map_floodplain_advance_growth();
+void map_floodplain_update_inundation(int leading_row, int is_flooding, int flooding_ticks);
 
 int map_get_UNK04(int grid_offset);

@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/industry.h"
+#include "building/building_farm.h"
 #include "city/warning.h"
 #include "figuretype/migrant.h"
 #include "game/undo.h"
@@ -104,7 +105,7 @@ static int clear_land_confirmed(bool measure_only, tile2i start, tile2i end) {
                 }
 
                 if (building_is_floodplain_farm(*b) && config_get(CONFIG_GP_CH_SOIL_DEPLETION)) {
-                    building_farm_deplete_soil(b);
+                    b->dcast_farm()->deplete_soil();
                 }
 
                 if (b->state != BUILDING_STATE_DELETED_BY_PLAYER) {

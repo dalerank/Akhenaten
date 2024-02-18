@@ -1,6 +1,7 @@
 #include "floodplain.h"
 
 #include "building_tiles.h"
+#include "building/building_farm.h"
 #include "config/config.h"
 #include "scenario/map.h"
 #include "grid/tiles.h"
@@ -9,6 +10,12 @@
 #include "graphics/image.h"
 #include "grid/property.h"
 #include "grid/image.h"
+#include "grid/random.h"
+#include "city/floods.h"
+#include "grid/building.h"
+#include "core/calc.h"
+#include "city/data_private.h"
+#include "building/industry.h"
 
 #include <cstdint>
 #include <algorithm>
@@ -34,6 +41,110 @@ grid_xx g_terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
 grid_xx g_terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
 grid_xx g_terrain_floodplain_max_fertile = {0, {FS_UINT8, FS_UINT8}};
 grid_xx g_terrain_floodplain_flood_shore = {0, {FS_UINT8, FS_UINT8}};
+
+int floodplain_growth_advance = 0;
+void map_floodplain_advance_growth() {
+    // do groups of 12 rows at a time. every 12 cycle, do another pass over them.
+    foreach_floodplain_row(0 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_row(12 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_row(24 + floodplain_growth_advance, advance_floodplain_growth_tile);
+
+    floodplain_growth_advance++;
+    if (floodplain_growth_advance >= 12) {
+        floodplain_growth_advance = 0;
+    }
+}
+
+int floodplain_is_flooding = 0;
+static void map_floodplain_update_inundation_row(int grid_offset, int order) {
+    // TODO: I can not find the way the OG game determines which tile to update.
+    //  I know it's deterministic, so I just used the random grid for now.
+    int randm = map_random_get(grid_offset);
+    int ticks = floods_fticks();
+    int local_tick_bound = calc_bound(ticks - order * 25, 0, 25);
+    bool flooded = randm % 25 < local_tick_bound;
+
+    int b_id = map_building_at(grid_offset);
+    building_farm* farm = building_get(b_id)->dcast_farm();
+
+    // tile is updating!
+    if (flooded != map_terrain_is(grid_offset, TERRAIN_WATER)) {
+        // tile is FLOODING
+        if (floodplain_is_flooding == 1) {
+            map_terrain_add(grid_offset, TERRAIN_WATER);
+
+            map_soil_set_depletion(grid_offset, 0);
+
+            // hide / destroy farm
+            if (farm && farm->state() == BUILDING_STATE_VALID && map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+                if (city_data.religion.osiris_flood_will_destroy_active > 0) { // destroy farm
+                    farm->deplete_soil();
+                    farm->destroy_by_poof(true);
+                    city_data.religion.osiris_flood_will_destroy_active = 2;
+                    for (int _y = farm->tiley(); _y < farm->tiley() + farm->size(); _y++)
+                        for (int _x = farm->tilex(); _x < farm->tilex() + farm->size(); _x++) {
+                            int _offset = MAP_OFFSET(_x, _y);
+                            map_soil_set_depletion(_offset, -65);
+                            map_terrain_remove(_offset, TERRAIN_BUILDING);
+                            //                            map_property_set_multi_tile_size(_offset, 1);
+                            map_refresh_river_image_at(_offset);
+                        }
+                } else { // hide building by unsetting the TERRAIN_BUILDING bitflag
+                    farm->data.industry.progress = 0;
+                    farm->data.industry.labor_state = LABOR_STATE_NONE;
+                    farm->data.industry.labor_days_left = 0;
+                    for (int _y = farm->tiley(); _y < farm->tiley() + farm->size(); _y++)
+                        for (int _x = farm->tilex(); _x < farm->tilex() + farm->size(); _x++) {
+                            int _offset = MAP_OFFSET(_x, _y);
+                            map_terrain_remove(_offset, TERRAIN_BUILDING);
+                            map_property_set_multi_tile_size(_offset, 1);
+                            map_refresh_river_image_at(_offset);
+                        }
+                }
+            }
+
+            // flood roads
+            if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+                map_terrain_remove(grid_offset, TERRAIN_ROAD);
+                map_terrain_add(grid_offset, TERRAIN_SUBMERGED_ROAD);
+            }
+        } else if (floodplain_is_flooding == -1) { // tile is RESURFACING
+            map_terrain_remove(grid_offset, TERRAIN_WATER);
+
+            // bring back flooded buildings
+            if (farm && farm->state() == BUILDING_STATE_VALID && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+                // check if any other tile of the farm is still submerged
+                bool still_flooded = false;
+                for (int _y = farm->tiley(); _y < farm->tiley() + farm->size(); _y++) {
+                    for (int _x = farm->tilex(); _x < farm->tilex() + farm->size(); _x++) {
+                        if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER)) {
+                            still_flooded = true;
+                        }
+                    }
+                }
+
+                if (!still_flooded) {
+                    map_building_tiles_add_farm(b_id, farm->tile(), 0, 0);
+                }
+            }
+
+            // resurface roads
+            if (map_terrain_is(grid_offset, TERRAIN_SUBMERGED_ROAD)) {
+                map_terrain_remove(grid_offset, TERRAIN_SUBMERGED_ROAD);
+                map_terrain_add(grid_offset, TERRAIN_ROAD);
+            }
+        }
+        map_refresh_river_image_at(grid_offset);
+    }
+}
+
+void map_floodplain_update_inundation(int leading_row, int is_flooding, int flooding_ticks) {
+    floodplain_is_flooding = is_flooding;
+    if (floodplain_is_flooding == 0)
+        return;
+    // no need to update every single row -- only update the "leading" shore
+    foreach_floodplain_row(29 - leading_row, map_floodplain_update_inundation_row);
+}
 
 int map_floodplain_rebuild_rows() {
     // reset all to zero
@@ -158,23 +269,31 @@ void set_floodplain_land_tiles_image(int grid_offset) {
                             && !map_terrain_is(grid_offset, TERRAIN_ROAD)
                             && !map_terrain_is(grid_offset, TERRAIN_CANAL);
 
-    if (is_floodpain) {
-        int growth = map_get_floodplain_growth(grid_offset);
-        int image_id = image_group(IMG_TERRAIN_FLOODPLAIN) + growth;
-        int fertility_index = 0;
-
-        int fertility_value = map_get_fertility(grid_offset, FERT_WITH_MALUS); // todo
-        fertility_index = std::clamp(fertility_value / 25, 0, 3);
-
-        image_id += 12 * fertility_index;
-        if (map_property_is_alternate_terrain(grid_offset) && fertility_index < 7) {
-            image_id += 6;
-        }
-
-        map_image_set(grid_offset, image_id);
-        map_property_set_multi_tile_size(grid_offset, 1);
-        map_property_mark_draw_tile(grid_offset);
+    if (!is_floodpain) {
+        return;
     }
+
+    int growth = map_get_floodplain_growth(grid_offset);
+    int image_id = image_group(IMG_TERRAIN_FLOODPLAIN) + growth;
+    int image_alt_id = image_id;
+    int fertility_index = 0;
+
+    int fertility_value = map_get_fertility(grid_offset, FERT_WITH_MALUS);
+    fertility_index = std::clamp(fertility_value / 25, 0, 3);
+    int fertility_next_index = std::clamp(fertility_index + 1, 0, 3);
+    int alpha = std::clamp((fertility_value % 25) * 10, 0, 0xff);
+
+    image_id += 12 * fertility_index;
+    image_alt_id += 12 * fertility_next_index;
+    if (map_property_is_alternate_terrain(grid_offset) && fertility_index < 7) {
+        image_id += 6;
+        image_alt_id += 6;
+    }
+
+    map_image_set(grid_offset, image_id);
+    map_image_alt_set(grid_offset, image_alt_id, 0);
+    map_property_set_multi_tile_size(grid_offset, 1);
+    map_property_mark_draw_tile(grid_offset);
 }
 
 void advance_floodplain_growth_tile(int grid_offset, int order) {
@@ -223,6 +342,7 @@ void set_floodplain_edges_image(int grid_offset) {
 
         const terrain_image* img = map_image_context_get_floodplain_shore(grid_offset); // this checks against FLOODPLAIN tiles
         image_id = image_group(IMG_TERRAIN_FLOODPLAIN) + 48 + img->group_offset + img->item_offset;
+
     } else { // floodplain which is ALSO flooded --  this is a waterline
         const terrain_image* img = map_image_context_get_floodplain_waterline(grid_offset); // this checks against WATER tiles
         image_id = image_id_from_group(GROUP_TERRAIN_FLOODSYSTEM) + 209 + img->group_offset + img->item_offset;
@@ -239,6 +359,7 @@ void set_floodplain_edges_image(int grid_offset) {
         //            image_id = 0;
         //        }
     }
+
     if (image_id) {
         map_image_set(grid_offset, image_id);
         map_property_set_multi_tile_size(grid_offset, 1);

@@ -35,8 +35,10 @@
 #include "building/building_hunting_lodge.h"
 #include "building/building_water_supply.h"
 #include "building/building_palace.h"
+#include "building/destruction.h"
 #include "city/buildings.h"
 #include "city/population.h"
+#include "widget/city/ornaments.h"
 #include "city/warning.h"
 #include "core/svector.h"
 #include "core/profiler.h"
@@ -50,10 +52,12 @@
 #include "grid/elevation.h"
 #include "grid/grid.h"
 #include "grid/random.h"
+#include "grid/image.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "io/io_buffer.h"
+#include "graphics/graphics.h"
 #include "menu.h"
 #include "monuments.h"
 #include "overlays/city_overlay.h"
@@ -358,6 +362,11 @@ building_impl *building::dcast() {
 
     return _ptr;
 }
+
+building_farm *building::dcast_farm() {
+    return dcast()->dcast_farm();
+}
+
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
 }
@@ -608,11 +617,12 @@ bool building::is_military() {
 bool building_is_fort(int type) {
     return type == BUILDING_FORT_CHARIOTEERS || type == BUILDING_FORT_ARCHERS || type == BUILDING_FORT_INFANTRY;
 }
+
 bool building_is_defense(e_building_type type) {
     return building_type_any_of(type, BUILDING_BRICK_WALL, BUILDING_BRICK_GATEHOUSE, BUILDING_BRICK_TOWER);
 }
 
-bool building_is_farm(int type) {
+bool building_is_farm(e_building_type type) {
     return (type >= BUILDING_BARLEY_FARM && type <= BUILDING_CHICKPEAS_FARM) || type == BUILDING_FIGS_FARM
            || type == BUILDING_HENNA_FARM;
 }
@@ -718,7 +728,7 @@ bool building_is_industry(e_building_type type) {
     return false;
 }
 
-bool building_is_food_category(int type) {
+bool building_is_food_category(e_building_type type) {
     if (building_is_farm(type)) { // special case for food-producing farms
         return (type >= BUILDING_GRAIN_FARM && type <= BUILDING_CHICKPEAS_FARM) || type == BUILDING_FIGS_FARM;
     }
@@ -943,6 +953,20 @@ int building_mothball_set(building* b, int mothball) {
     }
 
     return b->state;
+}
+
+bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    int image_id = map_image_at(tile.grid_offset());
+    building_draw_normal_anim(ctx, point, &base, tile, image_id, color_mask);
+    if (base.has_plague) {
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PLAGUE_SKULL), point.x + 18, point.y - 32, color_mask);
+    }
+
+    return false;
+}
+
+void building_impl::destroy_by_poof(bool clouds) {
+    building_destroy_by_poof(&base, clouds);
 }
 
 bool resource_required_by_workshop(building* b, e_resource resource) {

@@ -779,7 +779,7 @@ const image_t* ImageDraw::isometric_from_drawtile(painter &ctx, int image_id, ve
     return img;
 }
 
-const image_t* ImageDraw::isometric_from_drawtile_top(painter &ctx, int image_id, vec2i pos, color color_mask) {
+const image_t* ImageDraw::isometric_from_drawtile_top(painter &ctx, int image_id, vec2i pos, color color_mask, bool alpha) {
     const image_t* img = image_get(image_id);
     if (!img) {
         return nullptr;
@@ -789,6 +789,6 @@ const image_t* ImageDraw::isometric_from_drawtile_top(painter &ctx, int image_id
         return nullptr;
     }
     pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
-    graphics_renderer()->draw_image(ctx, img_top, pos.x, pos.y, color_mask);
+    graphics_renderer()->draw_image(ctx, img_top, pos.x, pos.y, color_mask, 1.f, false, alpha);
     return img;
 }

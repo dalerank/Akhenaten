@@ -170,7 +170,7 @@ static menu_item menu_render[] = {
     {6, 12, menu_debug_render_change_opt, e_debug_render_sprite_frames},
     {6, 13, menu_debug_render_change_opt, e_debug_render_terrain_bits},
     {6, 14, menu_debug_render_change_opt, e_debug_render_image},
-    {6, 15, menu_debug_render_change_opt, e_debug_render_marshland_depl},
+    {6, 15, menu_debug_render_change_opt, e_debug_render_image_alt},
     {6, 16, menu_debug_render_change_opt, e_debug_render_marshland},
     {6, 17, menu_debug_render_change_opt, e_debug_render_terrain_type},
     {6, 18, menu_debug_render_change_opt, e_debug_render_tile_pos},
@@ -179,6 +179,7 @@ static menu_item menu_render[] = {
     {6, 21, menu_debug_render_change_opt, e_debug_render_monuments},
     {6, 22, menu_debug_render_change_opt, e_debug_render_figures},
     {6, 23, menu_debug_render_change_opt, e_debug_render_height},
+    {6, 24, menu_debug_render_change_opt, e_debug_render_marshland_depl},
 };
 
 menu_bar_item g_top_menu[] = {
@@ -260,7 +261,7 @@ static void menu_debug_render_text(int opt, bool v) {
         {"Sprite Frames ON", "Sprite Frames OFF"},
         {"Terrain Bits ON", "Terrain Bits OFF"},
         {"Image ON", "Image OFF"},
-        {"Marshland Depl ON", "Marshland Depl OFF"},
+        {"Image Alt ON", "Image Alt OFF"},
         {"Marshland ON", "Marshland OFF"},
         {"Terrain ON", "Terrain OFF"},
         {"Tile Coord ON", "Tile Coord OFF"},
@@ -269,6 +270,7 @@ static void menu_debug_render_text(int opt, bool v) {
         {"Monuments ON", "Monuments OFF"},
         {"Figures ON", "Figures OFF"},
         {"Height ON", "Height OFF"},
+        {"Marshland Depl ON", "Marshland Depl OFF"},
     };
     menu_update_text(g_top_menu[INDEX_DEBUG_RENDER], opt, debug_text_rend[opt][v ? 0 : 1]);
 }

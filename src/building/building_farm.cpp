@@ -1,6 +1,7 @@
 #include "building_farm.h"
 
 #include "building/building.h"
+#include "building/industry.h"
 #include "building/building_animation.h"
 #include "city/object_info.h"
 #include "city/resource.h"
@@ -14,6 +15,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "grid/floodplain.h"
+#include "grid/building_tiles.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
 #include "city/floods.h"
@@ -320,4 +322,41 @@ bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     }
 
     return true;
+}
+
+void building_farm::update_tiles_image() {
+    bool is_flooded = false;
+    if (building_is_floodplain_farm(base)) {
+        for (int _y = tile().y(); _y < tile().y() + size(); _y++) {
+            for (int _x = tile().x(); _x < tile().x() + size(); _x++) {
+                if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER))
+                    is_flooded = true;
+            }
+        }
+    }
+
+    if (!is_flooded) {
+        map_building_tiles_add_farm(id(), tile(), image_id_from_group(GROUP_BUILDING_FARMLAND) + 5 * (base.output_resource_first_id - 1), data.industry.progress);
+    }
+}
+
+void building_farm::deplete_soil() {
+    // DIFFERENT from original Pharaoh... and a bit easier to do?
+    if (config_get(CONFIG_GP_CH_SOIL_DEPLETION)) {
+        int malus = (float)data.industry.progress / (float)MAX_PROGRESS_FARM_PH * (float)-100;
+        for (int _y = tiley(); _y < tiley() + size(); _y++) {
+            for (int _x = tilex(); _x < tilex() + size(); _x++) {
+                map_soil_set_depletion(MAP_OFFSET(_x, _y), malus);
+            }
+        }
+    } else {
+        for (int _y = tiley(); _y < tiley() + size(); _y++) {
+            for (int _x = tilex(); _x < tilex() + size(); _x++) {
+                int new_fert = map_get_fertility(MAP_OFFSET(_x, _y), FERT_WITH_MALUS) * 0.2f;
+                int malus = new_fert - map_get_fertility(MAP_OFFSET(_x, _y), FERT_NO_MALUS);
+                map_soil_set_depletion(MAP_OFFSET(_x, _y), malus);
+            }
+        }
+    }
+    update_tiles_image();
 }
