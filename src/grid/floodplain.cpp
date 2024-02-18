@@ -19,11 +19,14 @@
 
 #include <cstdint>
 #include <algorithm>
+#include <random>
 
 constexpr uint32_t PH_FLOODPLAIN_GROWTH_MAX = 6;
 
 tile_cache floodplain_tiles_cache;
 tile_cache floodplain_tiles_caches_by_row[MAX_FLOODPLAIN_ROWS + 1];
+tile_cache floodplain_tiles_random;
+tile_cache floodplain_tiles_local;
 
 void foreach_floodplain_row(int row, void (*callback)(int grid_offset, int order)) {
     if (row < 0 || row > MAX_FLOODPLAIN_ROWS) {
@@ -46,26 +49,46 @@ int floodplain_growth_advance = 0;
 void map_floodplain_advance_growth() {
     // do groups of 12 rows at a time. every 12 cycle, do another pass over them.
     if (config_get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
-        foreach_floodplain_row(0 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
+        //foreach_floodplain_row(0 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
+        floodplain_tiles_local.clear();
+        std::copy_if(floodplain_tiles_random.begin(), floodplain_tiles_random.end(), std::back_inserter(floodplain_tiles_local), [] (auto grid_offset) {
+            int value = map_image_alt_at(grid_offset);
+            int image_id = (value & 0x00ffffff);
+            int want_growth = map_get_floodplain_growth(grid_offset);
+            return (image_id == 0 || want_growth == 0);
+        });
+
+        std::random_device rd;
+        std::mt19937 random(rd());
+        std::shuffle(floodplain_tiles_local.begin(), floodplain_tiles_local.end(), random);
+
+        int size = std::min(floodplain_tiles_random.size() / 12, floodplain_tiles_local.size());
+        for (int i = 0; i < size; ++i) {
+            int grid_offset = floodplain_tiles_local[i];
+            map_floodplain_adv_growth_tile(grid_offset, 0);
+        }
     } else {
         foreach_floodplain_row(0 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
         foreach_floodplain_row(12 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
         foreach_floodplain_row(24 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
-    }
 
-    floodplain_growth_advance++;
-    if (floodplain_growth_advance >= 12) {
-        floodplain_growth_advance = 0;
+        floodplain_growth_advance++;
+        if (floodplain_growth_advance >= 12) {
+            floodplain_growth_advance = 0;
+        }
     }
 }
 
 void map_floodplain_sub_growth() {
-    if (config_get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
-        foreach_floodplain_row(0 + floodplain_growth_advance, map_floodplain_sub_growth_tile);
-    } else {
-        foreach_floodplain_row(0 + floodplain_growth_advance, map_floodplain_sub_growth_tile);
-        foreach_floodplain_row(12 + floodplain_growth_advance, map_floodplain_sub_growth_tile);
-        foreach_floodplain_row(24 + floodplain_growth_advance, map_floodplain_sub_growth_tile);
+    if (!config_get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
+        return;
+    }
+    
+    for (auto grid_offset : floodplain_tiles_cache) {
+        if (!map_get_floodplain_growth(grid_offset)) {
+            continue;
+        }
+        map_floodplain_sub_growth_tile(grid_offset, 0);
     }
 }
 
@@ -174,6 +197,17 @@ int map_floodplain_rebuild_rows() {
     for (int row = 0; row < MAX_FLOODPLAIN_ROWS; row++) {
         floodplain_tiles_caches_by_row[row].clear();
     }
+
+    foreach_river_tile([&] (int tile_offset) {
+        bool is_vergin_floodplain = map_terrain_is(tile_offset, TERRAIN_FLOODPLAIN);
+        if (is_vergin_floodplain) {
+            floodplain_tiles_random.push_back(tile_offset);
+        }
+    });
+
+    std::random_device rd;
+    std::mt19937 random(rd());
+    std::shuffle(floodplain_tiles_random.begin(), floodplain_tiles_random.end(), random);
 
     // fill in shore order data
     for (int row = -1; row < MAX_FLOODPLAIN_ROWS - 1; row++) {
@@ -319,7 +353,7 @@ void set_floodplain_land_tiles_image(int grid_offset) {
     map_property_mark_draw_tile(grid_offset);
 }
 
-void map_floodplain_adv_growth_tile(int grid_offset, int order) {
+void map_floodplain_adv_growth_tile(int grid_offset, int /*order*/) {
     if (map_terrain_is(grid_offset, TERRAIN_WATER) || map_terrain_is(grid_offset, TERRAIN_BUILDING)
         || map_terrain_is(grid_offset, TERRAIN_ROAD) || map_terrain_is(grid_offset, TERRAIN_CANAL)) {
         map_set_floodplain_growth(grid_offset, 0);
@@ -348,7 +382,7 @@ void map_floodplain_sub_growth_tile(int grid_offset, int order) {
         map_image_set(grid_offset, image_id);
         map_image_alt_set(grid_offset, 0, 0);
     } else {
-        map_image_alt_set(grid_offset, -1, alpha + 15);
+        map_image_alt_set(grid_offset, -1, alpha + 5);
     }
 }
 

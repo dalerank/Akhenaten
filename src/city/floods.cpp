@@ -306,17 +306,20 @@ void floodplains_tick_update(bool calc_only) {
 
     // update at the end of each day
     if (game_time_tick() == 50) {
-        if (floodplains_is(FLOOD_STATE_INUNDATED))
+        if (floodplains_is(FLOOD_STATE_INUNDATED)) {
             city_data.religion.osiris_flood_will_destroy_active = 0;
+        }
         // send nilometer message!
-        if (cycle_is(floods_end_cycle() + 23))
+        if (cycle_is(floods_end_cycle() + 23)) {
             post_flood_prediction_message();
+        }
     }
 
     // update tiles!!
     if (cycle >= cycle_start && cycle <= cycle_start + flooding_period) {
         int fticks = (cycle - cycle_start) * 25 + subcycle + 1;
         map_floodplain_update_inundation(data.flood_progress, 1, fticks);
+
     } else if (cycle >= cycle_end - flooding_period && cycle <= cycle_end) {
         int fticks = (cycle_end - cycle) * 25 - subcycle + 25;
         map_floodplain_update_inundation(data.flood_progress, -1, fticks);
@@ -325,9 +328,9 @@ void floodplains_tick_update(bool calc_only) {
     // update grass growth
     if (subcycle % flood_multiplier_grow == 0 && (cycle < cycle_start - 27 || cycle >= cycle_end - 24)) {
         map_floodplain_advance_growth();
-    } else {
-        map_floodplain_sub_growth();
     }
+
+    map_floodplain_sub_growth();
 }
 
 io_buffer* iob_floodplain_settings = new io_buffer([](io_buffer* iob, size_t version) {

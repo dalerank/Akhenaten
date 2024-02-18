@@ -346,6 +346,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
                     debug_text(ctx, str, x, y + 10, 0, "", d, 0xffaa0000);
             }
         }
+
         if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
             int a = map_aqueduct_at(grid_offset);
             if (map_terrain_is(grid_offset, TERRAIN_WATER))

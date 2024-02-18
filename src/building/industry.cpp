@@ -216,7 +216,9 @@ void building_industry_update_farms(void) {
         b.data.industry.progress = std::clamp<int>(b.data.industry.progress, 0, max);
 
         building_farm *farm = b.dcast_farm();
-        farm->update_tiles_image();
+        if (farm) {
+            farm->update_tiles_image();
+        }
     });
     city_data.religion.osiris_double_farm_yield = false;
 }
