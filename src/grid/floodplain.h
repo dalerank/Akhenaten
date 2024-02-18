@@ -28,5 +28,9 @@ uint8_t map_get_fertility_for_farm(int grid_offset);
 void map_soil_set_depletion(int grid_offset, int malus);
 void map_update_tile_fertility(int grid_offset, int delta);
 void map_update_area_fertility(int x, int y, int size, int delta);
+void set_floodplain_land_tiles_image(int grid_offset);
+void advance_floodplain_growth_tile(int grid_offset, int order);
+void map_image_set_road_floodplain(int grid_offset);
+void set_floodplain_edges_image(int grid_offset);
 
 int map_get_UNK04(int grid_offset);

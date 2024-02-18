@@ -161,6 +161,7 @@ images = [
 	{img: IMG_PRIEST_SETH_DEATH, pack:PACK_SPR_MAIN, id:194, offset:0},
 	{img: IMG_PRIEST_BAST, pack:PACK_SPR_MAIN, id:208, offset:0},
 	{img: IMG_PRIEST_BAST_DEATH, pack:PACK_SPR_MAIN, id:209, offset:0},
+	{img: IMG_TERRAIN_FLOODPLAIN, pack:PACK_TERRAIN, id:31, offset:0},
 ]
 
 cart_offsets = [

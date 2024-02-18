@@ -6,9 +6,14 @@
 #include "grid/tiles.h"
 #include "terrain.h"
 #include "water.h"
+#include "graphics/image.h"
+#include "grid/property.h"
+#include "grid/image.h"
 
 #include <cstdint>
 #include <algorithm>
+
+constexpr uint32_t PH_FLOODPLAIN_GROWTH_MAX = 6;
 
 tile_cache floodplain_tiles_cache;
 tile_cache floodplain_tiles_caches_by_row[MAX_FLOODPLAIN_ROWS + 1];
@@ -93,9 +98,7 @@ int map_floodplain_rebuild_rows() {
     }
 
     // if past 29, fill in all the rest with the same order
-    for (int i = 0; i < floodplain_tiles_cache.size(); i++) {
-        int grid_offset = floodplain_tiles_cache.at(i);
-
+    for (auto grid_offset: floodplain_tiles_cache) {
         if (map_get_floodplain_row(grid_offset) == -1) {
             map_grid_set(&g_terrain_floodplain_row, grid_offset, MAX_FLOODPLAIN_ROWS);
             floodplain_tiles_caches_by_row[MAX_FLOODPLAIN_ROWS].push_back(grid_offset);
@@ -111,7 +114,6 @@ void map_floodplain_rebuild_shores() {
     foreach_river_tile([&] (int tile_offset) {
         // get current river tile's grid offset and coords
         tile2i tile(tile_offset);
-
         grid_area area = map_grid_get_area(tile, 1, 1);
 
         map_grid_area_foreach(area.tmin, area.tmax, [] (tile2i shore) {
@@ -119,11 +121,11 @@ void map_floodplain_rebuild_shores() {
                 return;
             }
 
-            if (map_terrain_is(shore.grid_offset(), TERRAIN_WATER) || map_terrain_is(shore.grid_offset(), TERRAIN_FLOODPLAIN)) {
+            int base_offset = shore.grid_offset();
+            if (map_terrain_is(base_offset, TERRAIN_WATER) || map_terrain_is(base_offset, TERRAIN_FLOODPLAIN)) {
                 return;
             }
 
-            int base_offset = shore.grid_offset();
             offsets_array offsets;
             map_grid_adjacent_offsets_xy(1, 1, offsets);
             for (const auto &tile_delta: offsets) {
@@ -147,6 +149,101 @@ uint8_t map_get_floodplain_growth(int grid_offset) {
 
 void map_clear_floodplain_growth() {
     map_grid_fill(&g_terrain_floodplain_growth, 0);
+}
+
+void set_floodplain_land_tiles_image(int grid_offset) {
+    bool is_floodpain = map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)
+                            && !map_terrain_is(grid_offset, TERRAIN_WATER)
+                            && !map_terrain_is(grid_offset, TERRAIN_BUILDING)
+                            && !map_terrain_is(grid_offset, TERRAIN_ROAD)
+                            && !map_terrain_is(grid_offset, TERRAIN_CANAL);
+
+    if (is_floodpain) {
+        int growth = map_get_floodplain_growth(grid_offset);
+        int image_id = image_group(IMG_TERRAIN_FLOODPLAIN) + growth;
+        int fertility_index = 0;
+
+        int fertility_value = map_get_fertility(grid_offset, FERT_WITH_MALUS); // todo
+        fertility_index = std::clamp(fertility_value / 25, 0, 3);
+
+        image_id += 12 * fertility_index;
+        if (map_property_is_alternate_terrain(grid_offset) && fertility_index < 7) {
+            image_id += 6;
+        }
+
+        map_image_set(grid_offset, image_id);
+        map_property_set_multi_tile_size(grid_offset, 1);
+        map_property_mark_draw_tile(grid_offset);
+    }
+}
+
+void advance_floodplain_growth_tile(int grid_offset, int order) {
+    if (map_terrain_is(grid_offset, TERRAIN_WATER) || map_terrain_is(grid_offset, TERRAIN_BUILDING)
+        || map_terrain_is(grid_offset, TERRAIN_ROAD) || map_terrain_is(grid_offset, TERRAIN_CANAL)) {
+        map_set_floodplain_growth(grid_offset, 0);
+        set_floodplain_land_tiles_image(grid_offset);
+        map_refresh_river_image_at(grid_offset);
+        return;
+    }
+
+    int growth_current = map_get_floodplain_growth(grid_offset);
+    if (growth_current < PH_FLOODPLAIN_GROWTH_MAX - 1) {
+        map_set_floodplain_growth(grid_offset, growth_current + 1);
+        set_floodplain_land_tiles_image(grid_offset);
+        map_refresh_river_image_at(grid_offset);
+    }
+}
+
+void map_image_set_road_floodplain(int grid_offset) {
+    const terrain_image* img = map_image_context_get_dirt_road(grid_offset);
+    if (map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_FLOODPLAIN)) {
+        map_image_set(grid_offset, image_group(IMG_TERRAIN_FLOODPLAIN) + 84);
+    } else if (map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_FLOODPLAIN)) {
+        map_image_set(grid_offset, image_group(IMG_TERRAIN_FLOODPLAIN) + 85);
+    } else if (map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_FLOODPLAIN)) {
+        map_image_set(grid_offset, image_group(IMG_TERRAIN_FLOODPLAIN) + 86);
+    } else if (map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_FLOODPLAIN)) {
+        map_image_set(grid_offset, image_group(IMG_TERRAIN_FLOODPLAIN) + 87);
+    } else {
+        map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_ROAD) + img->group_offset + img->item_offset + 49);
+    }
+}
+
+void set_floodplain_edges_image(int grid_offset) {
+    if (map_terrain_is(grid_offset, TERRAIN_BUILDING)
+        || (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER))) { // non-flooded floodplain, skip
+        return;
+    }
+
+    int image_id = 0;
+    if (!map_terrain_is(grid_offset, TERRAIN_WATER)) { // NOT floodplain, but not water either -- dry land shoreline
+        if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+            return;
+        }
+
+        const terrain_image* img = map_image_context_get_floodplain_shore(grid_offset); // this checks against FLOODPLAIN tiles
+        image_id = image_group(IMG_TERRAIN_FLOODPLAIN) + 48 + img->group_offset + img->item_offset;
+    } else { // floodplain which is ALSO flooded --  this is a waterline
+        const terrain_image* img = map_image_context_get_floodplain_waterline(grid_offset); // this checks against WATER tiles
+        image_id = image_id_from_group(GROUP_TERRAIN_FLOODSYSTEM) + 209 + img->group_offset + img->item_offset;
+        if (!img->is_valid) { // else, normal water tile
+            image_id = 0;
+        }
+        //            image_id = image_id_from_group(GROUP_TERRAIN_BLACK); // temp
+
+        //        if (map_terrain_is(grid_offset, TERRAIN_GROUNDWATER)) {
+        //            if (map_terrain_get(grid_offset - 1) == TERRAIN_GROUNDWATER ||
+        //                map_terrain_get(grid_offset + 1) == TERRAIN_GROUNDWATER ||
+        //                map_terrain_get(grid_offset - 228) == TERRAIN_GROUNDWATER ||
+        //                map_terrain_get(grid_offset + 228) == TERRAIN_GROUNDWATER)
+        //            image_id = 0;
+        //        }
+    }
+    if (image_id) {
+        map_image_set(grid_offset, image_id);
+        map_property_set_multi_tile_size(grid_offset, 1);
+        map_property_mark_draw_tile(grid_offset);
+    }
 }
 
 void map_tiles_update_floodplain_images() {
