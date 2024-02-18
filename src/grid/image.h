@@ -18,7 +18,7 @@ public:
 int map_image_at(int grid_offset);
 int map_image_alt_at(int grid_offset);
 void map_image_set(int grid_offset, int image_id);
-void map_image_alt_set(int grid_offset, int image_id, uint8_t alpha);
+void map_image_alt_set(int grid_offset, int image_id, int alpha);
 void map_image_set(int grid_offset, e_image_id img);
 inline void map_image_set(tile2i tile, e_image_id img) { map_image_set(tile.grid_offset(), img); }
 void map_image_set(int grid_offset, e_image_id img, int offset);

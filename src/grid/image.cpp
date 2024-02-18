@@ -43,7 +43,11 @@ void map_image_set(int grid_offset, int image_id) {
     map_grid_set(&g_images_grid, grid_offset, image_id);
 }
 
-void map_image_alt_set(int grid_offset, int image_id, uint8_t alpha) {
+void map_image_alt_set(int grid_offset, int image_id, int alpha) {
+    if (alpha == -1) {
+        int current = map_image_alt_at(grid_offset);
+        alpha = (current >> 24) & 0xff;
+    }
     if (image_id < 0) {
         image_id = map_image_alt_at(grid_offset);
     }

@@ -46,22 +46,22 @@ int floodplain_growth_advance = 0;
 void map_floodplain_advance_growth() {
     // do groups of 12 rows at a time. every 12 cycle, do another pass over them.
     if (config_get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
-
+        foreach_floodplain_row(0 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
     } else {
         foreach_floodplain_row(0 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
         foreach_floodplain_row(12 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
         foreach_floodplain_row(24 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
+    }
 
-        floodplain_growth_advance++;
-        if (floodplain_growth_advance >= 12) {
-            floodplain_growth_advance = 0;
-        }
+    floodplain_growth_advance++;
+    if (floodplain_growth_advance >= 12) {
+        floodplain_growth_advance = 0;
     }
 }
 
 void map_floodplain_sub_growth() {
     if (config_get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
-
+        foreach_floodplain_row(0 + floodplain_growth_advance, map_floodplain_sub_growth_tile);
     } else {
         foreach_floodplain_row(0 + floodplain_growth_advance, map_floodplain_sub_growth_tile);
         foreach_floodplain_row(12 + floodplain_growth_advance, map_floodplain_sub_growth_tile);
@@ -311,7 +311,7 @@ void set_floodplain_land_tiles_image(int grid_offset) {
     }
 
     if (config_get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
-        map_image_alt_set(grid_offset, image_alt_id, 0);
+        map_image_alt_set(grid_offset, image_alt_id, -1);
     } else {
         map_image_set(grid_offset, image_id);
     }
@@ -411,11 +411,13 @@ void map_tiles_update_floodplain_images() {
     if (config_get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
         for (int i = 0; i < 12; ++i) {
             foreach_floodplain_row(0 + i, callback);
+        }
+    } else {
+        for (int i = 0; i < 12; ++i) {
+            foreach_floodplain_row(0 + i, callback);
             foreach_floodplain_row(12 + i, callback);
             foreach_floodplain_row(24 + i, callback);
         }
-    } else {
-
     }
 }
 
