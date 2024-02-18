@@ -259,6 +259,7 @@ static void post_flood_prediction_message() {
         city_message_post(true, MESSAGE_FLOOD_FAIL, 0, 0);
     }
 }
+
 void floodplains_tick_update(bool calc_only) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Floodplains Update");
     auto& data = floodplain_data();
@@ -324,6 +325,8 @@ void floodplains_tick_update(bool calc_only) {
     // update grass growth
     if (subcycle % flood_multiplier_grow == 0 && (cycle < cycle_start - 27 || cycle >= cycle_end - 24)) {
         map_floodplain_advance_growth();
+    } else {
+        map_floodplain_sub_growth();
     }
 }
 

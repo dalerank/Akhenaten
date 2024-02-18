@@ -128,6 +128,7 @@ static generic_button checkbox_buttons[] = {
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_COPPER_NEAR_MOUNTAINS, TR_CONFIG_COPPER_NEAR_MOUNTAINS},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS, TR_CONFIG_RECRUITER_NOT_NEED_FORTS},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_BUILDING_CLOSEST_ROAD, TR_CONFIG_BUILDING_CLOSEST_ROAD},
+    {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW, TR_CONFIG_FLOODPLAIN_RANDOM_GROW},
     
     // GODS
     {20, 72, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_OSIRIS_DISABLED, TR_CONFIG_GOD_OSIRIS_DISABLED},
@@ -179,7 +180,7 @@ static generic_button checkbox_buttons[] = {
     {20, 360, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CLAY, TR_CONFIG_RESOURCE_CLAY},
 };
 
-static int options_per_page[] = {14, 14, 14, 14, 3, 5, 14, 11, 13};
+static int options_per_page[] = {14, 14, 14, 14, 4, 5, 14, 11, 13};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -237,7 +238,7 @@ window_config_ext_data_t g_window_config_ext_data;
 
 static void set_language(int index) {
     auto& data = g_window_config_ext_data;
-    const char* dir = index == 0 ? "" : data.language_options_utf8[index];
+    const char* dir = (index == 0 ? "" : data.language_options_utf8[index]);
     strncpy(data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].new_value, dir, CONFIG_STRING_VALUE_MAX - 1);
 
     data.selected_language_option = index;
@@ -248,20 +249,22 @@ static void cancel_values(void) {
     for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
         data.config_values[i].new_value = data.config_values[i].original_value;
     }
+
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-        memcpy(data.config_string_values[i].new_value,
-               data.config_string_values[i].original_value,
-               CONFIG_STRING_VALUE_MAX - 1); // memcpy required to fix warning on Switch build
+        memcpy(data.config_string_values[i].new_value, data.config_string_values[i].original_value, CONFIG_STRING_VALUE_MAX - 1); // memcpy required to fix warning on Switch build
     }
 }
+
 static int config_changed(e_config_key key) {
     auto& data = g_window_config_ext_data;
     return data.config_values[key].original_value != data.config_values[key].new_value;
 }
+
 static int config_string_changed(int key) {
     auto& data = g_window_config_ext_data;
     return strcmp(data.config_string_values[key].original_value, data.config_string_values[key].new_value) != 0;
 }
+
 static int config_change_basic(int key) {
     auto& data = g_window_config_ext_data;
     config_set((e_config_key)key, data.config_values[key].new_value);

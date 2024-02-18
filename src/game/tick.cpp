@@ -136,7 +136,6 @@ static void advance_day() {
 
 static void advance_tick(void) {
     tutorial_starting_message();
-
     floodplains_tick_update(false);
 
     // NB: these ticks are noop:
