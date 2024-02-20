@@ -60,6 +60,7 @@ var figure_fireman = {}
 var figure_water_carrier = {}
 var figure_priest = {}
 var figure_ostrich = {}
+var figure_immigrant = {}
 var mission0 = {}
 var mission1 = {}
 var mission5 = {}

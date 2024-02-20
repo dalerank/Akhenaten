@@ -17,16 +17,6 @@
 #include "grid/road_access.h"
 #include "grid/terrain.h"
 
-void figure_create_immigrant(building* house, int num_people) {
-    tile2i entry = city_map_entry_point();
-    figure* f = figure_create(FIGURE_IMMIGRANT, entry, DIR_0_TOP_RIGHT);
-    f->action_state = FIGURE_ACTION_1_IMMIGRANT_CREATED;
-    f->set_immigrant_home(house->id);
-    house->set_figure(BUILDING_SLOT_IMMIGRANT, f->id);
-    f->wait_ticks = 10 + (house->map_random_7bit & 0x7f);
-    f->migrant_num_people = num_people;
-}
-
 void figure_create_emigrant(building* house, int num_people) {
     city_population_remove(num_people);
     if (num_people < house->house_population) {
@@ -83,7 +73,7 @@ static int closest_house_with_room(tile2i tile) {
     return min_building_id;
 }
 
-static void add_house_population(building* house, int num_people) {
+void figure_add_house_population(building* house, int num_people) {
     int max_people = model_get_house(house->subtype.house_level)->max_people;
     if (house->house_is_merged)
         max_people *= 4;
@@ -103,82 +93,6 @@ static void add_house_population(building* house, int num_people) {
     house->house_population_room = max_people - house->house_population;
     city_population_add(num_people);
     house->remove_figure(2);
-}
-
-bool is_near_ferry_route(int base_offset, int radius) {
-    offsets_array offsets;
-    map_grid_adjacent_offsets_xy(1, 1, offsets);
-    for (const auto &tile_delta: offsets) {
-        if (map_terrain_is(base_offset + tile_delta, TERRAIN_FERRY_ROUTE)) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-void figure::immigrant_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant");
-    building* home = immigrant_home();
-
-    switch (action_state) {
-    case FIGURE_ACTION_1_IMMIGRANT_CREATED:
-    case ACTION_8_RECALCULATE:
-        //            is_ghost = true;
-        anim_frame = 0;
-        wait_ticks--;
-        if (wait_ticks <= 0) {
-            advance_action(FIGURE_ACTION_2_IMMIGRANT_ARRIVING);
-        }
-        break;
-    case FIGURE_ACTION_2_IMMIGRANT_ARRIVING:
-    case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE: // arriving
-        {
-            OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant/Goto Building");
-            if (direction <= 8) {
-                int next_tile_grid_offset = tile.grid_offset() + map_grid_direction_delta(direction);
-                if (map_terrain_is(next_tile_grid_offset, TERRAIN_WATER)) {
-                    bool is_ferry_route = map_terrain_is(next_tile_grid_offset, TERRAIN_FERRY_ROUTE);
-
-                    if (!is_ferry_route) {
-                        is_ferry_route = is_near_ferry_route(next_tile_grid_offset, 1);
-                    }
-                   
-                    if (!is_ferry_route) {
-                        route_remove();
-                    }
-                }
-            }
-
-            do_gotobuilding(home, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE, ACTION_8_RECALCULATE);
-
-            if (direction == DIR_FIGURE_CAN_NOT_REACH) {
-                routing_try_reroute_counter++;
-                if (routing_try_reroute_counter > 20) {
-                    poof();
-                    break;
-                }
-                wait_ticks = 20;
-                route_remove();
-                state = FIGURE_STATE_ALIVE;
-                direction = calc_general_direction(tile, destination_tile);
-                advance_action(ACTION_8_RECALCULATE);
-                roam_wander_freely = true;
-            }
-        }
-        break;
-
-    case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
-        if (do_enterbuilding(false, home)) {
-            add_house_population(home, migrant_num_people);
-        }
-        //            is_ghost = in_building_wait_ticks ? 1 : 0;
-        break;
-    }
-    {
-        OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant/Update Image");
-        update_direction_and_image();
-    }
 }
 
 void figure::emigrant_action() {
@@ -261,7 +175,7 @@ void figure::homeless_action() {
                 tile2i road_tile;
                 if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                     b->set_figure(2, id);
-                    set_immigrant_home(building_id);
+                    immigrant_home_building_id = building_id;
                     advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
                 } else {
                     poof();
@@ -277,15 +191,19 @@ void figure::homeless_action() {
             direction = DIR_0_TOP_RIGHT;
             advance_action(FIGURE_ACTION_6_HOMELESS_LEAVING);
         } else {
-            do_gotobuilding(immigrant_home(), true, TERRAIN_USAGE_ANY, FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE);
+            building *ihome = building_get(immigrant_home_building_id);
+            do_gotobuilding(ihome, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE);
         }
         break;
 
     case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE:
-        if (do_enterbuilding(false, immigrant_home())) {
-            add_house_population(immigrant_home(), migrant_num_people);
+        {
+            building *ihome = building_get(immigrant_home_building_id);
+            if (do_enterbuilding(false, ihome)) {
+                figure_add_house_population(ihome, migrant_num_people);
+            }
+            //            is_ghost = in_building_wait_ticks ? 1 : 0;
         }
-        //            is_ghost = in_building_wait_ticks ? 1 : 0;
         break;
 
     case ACTION_16_HOMELESS_RANDOM:
@@ -334,7 +252,7 @@ void figure::homeless_action() {
                 tile2i road_tile;
                 if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
                     b->set_figure(2, id);
-                    set_immigrant_home(building_id);
+                    immigrant_home_building_id = building_id;
                     advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
                 }
             }

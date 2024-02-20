@@ -324,6 +324,14 @@ bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     return true;
 }
 
+e_sound_channel_city building_farm::sound_channel() const {
+    switch (type()) {
+    case BUILDING_CHICKPEAS_FARM:
+        return SOUND_CHANNEL_CITY_CHICKFARM;
+    }
+    return SOUND_CHANNEL_CITY_NONE;
+}
+
 void building_farm::update_tiles_image() {
     bool is_flooded = false;
     if (building_is_floodplain_farm(base)) {

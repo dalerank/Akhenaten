@@ -20,6 +20,7 @@
 
 class building;
 class figure_impl;
+class figure_immigrant;
 struct animation_t;
 
 constexpr int MAX_FIGURES[] = {5000, 2000};
@@ -45,7 +46,7 @@ enum e_figure_draw_debug_mode {
 };
 
 class figure {
-private:
+public:
     e_resource resource_id;
     //    unsigned char resource_amount_loads;
     unsigned short resource_amount_full; // full load counter
@@ -54,7 +55,6 @@ private:
     short immigrant_home_building_id;
     short destination_building_id;
 
-public:
     int id;
     int sprite_image_id;
     int cart_image_id;
@@ -223,6 +223,7 @@ public:
     figure_impl *_ptr = nullptr;
     
     figure_impl *dcast();
+    figure_immigrant *dcast_immigrant();
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -267,7 +268,7 @@ public:
     // figure/figure.c
     void figure_delete_UNSAFE();
     building* home();
-    building* immigrant_home();
+
     building* destination();
     const int homeID() const {
         return home_building_id;
@@ -280,10 +281,8 @@ public:
     }
 
     void set_home(int _id);
-    void set_immigrant_home(int _id);
     void set_destination(int _id);
     void set_home(building* b);
-    void set_immigrant_home(building* b);
     void set_destination(building* b);
     bool has_home(int _id = -1);
     bool has_home(building* b);
@@ -362,7 +361,6 @@ public:
     bool do_exitbuilding(bool invisible, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
     bool do_enterbuilding(bool invisible, building* b, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
 
-    void immigrant_action();
     void emigrant_action();
     void homeless_action();
     void cartpusher_action();
@@ -538,18 +536,27 @@ public:
 
     virtual void on_create() {}
     virtual void figure_action() {}
+    virtual void figure_before_action() {}
     virtual void poof() { base.poof(); }
     virtual e_figure_sound phrase() const { return {FIGURE_NONE, ""}; }
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual sound_key phrase_key() const { return {}; }
     virtual int provide_service() { return 0; }
     virtual bool play_die_sound() { return false; }
+    virtual void update_direction_and_image() { base.update_direction_and_image(); }
+    virtual bool can_move_by_water() const;
+    virtual int y_correction(int y) const { return y; }
+
+    virtual figure_immigrant *dcast_immigrant() { return nullptr; }
 
     inline building *home() { return base.home(); }
     inline int id() { return base.id; }
+    inline short action_state() const { return base.action_state; }
+    inline uint8_t direction() const { return base.direction; }
     inline const building *home() const { return base.home(); }
     inline void advance_action(int action) { base.advance_action(action); }
     inline bool do_returnhome(e_terrain_usage terrainchoice, short next_action = -1) { return base.do_returnhome(terrainchoice, next_action); }
+    inline bool do_gotobuilding(building *dest, bool stop_at_road = true, e_terrain_usage terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1) { return base.do_gotobuilding(dest, stop_at_road, terrainchoice, NEXT_ACTION, FAIL_ACTION); }
     inline bool do_enterbuilding(bool invisible, building *b, short next_action = -1, short fail_action = -1) { return base.do_enterbuilding(invisible, b, next_action, fail_action); }
     inline bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short next_action = ACTION_2_ROAMERS_RETURNING) { return base.do_roam(terrainchoice, next_action); }
     inline bool do_goto(tile2i dest, int terrainchoice = TERRAIN_USAGE_ROADS, short next_action = -1, short fail_action = -1) { return base.do_goto(dest, terrainchoice, next_action, fail_action); }

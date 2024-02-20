@@ -181,11 +181,10 @@ void figure::move_to_next_tile() {
 
     switch (type) {
     case FIGURE_IMMIGRANT: 
-        terrain_type = map_terrain_is(tile.grid_offset(), TERRAIN_WATER) ? TERRAIN_WATER : TERRAIN_NONE;
+        terrain_type = map_terrain_is(tile, TERRAIN_WATER) ? TERRAIN_WATER : TERRAIN_NONE;
         break;
     }
-    //    previous_tile.x() = old_x;
-    //    previous_tile.y() = old_y;
+
     previous_tile = old;
 }
 

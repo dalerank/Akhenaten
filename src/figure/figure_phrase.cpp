@@ -46,7 +46,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_LABOR_SEEKER, "laborseeker"},
     {FIGURE_NONE, "governor"},
     {FIGURE_NONE, "guard"},
-    {FIGURE_IMMIGRANT, "immigrant"},
     {FIGURE_JUGGLER, "juggler"},
     {FIGURE_NONE, "labor"},
     {FIGURE_LIBRARIAN, "library"},
@@ -287,16 +286,6 @@ static sound_key physician_phrase(figure *f) {
     if (keys.empty()) {
         return "physician_all_good_in_city";
     }
-
-    int index = rand() % keys.size();
-    return keys[index];
-}
-
-static sound_key immigrant_phrase(figure *f) {
-    svector<sound_key, 10> keys;
-    keys.push_back("immigrant_i_hope_i_need_here");
-    keys.push_back("immigrant_i_heard_city_have_work_for_all");
-    keys.push_back("immigrant_i_heard_city_have_cheap_food");
 
     int index = rand() % keys.size();
     return keys[index];
@@ -949,7 +938,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //            return gladiator_phrase(f);
     case FIGURE_TAX_COLLECTOR: return tax_collector_phrase(f);
     case FIGURE_DELIVERY_BOY: return deliverty_boy_phrase(f);
-    case FIGURE_IMMIGRANT: return immigrant_phrase(f);
     case FIGURE_HERBALIST: return apothecary_phrase(f);
     case FIGURE_MARKET_BUYER: return market_buyer_phrase(f);
     case FIGURE_PHYSICIAN: return physician_phrase(f);

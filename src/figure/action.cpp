@@ -223,6 +223,7 @@ bool figure::do_goto(tile2i dest, int terrainchoice, short NEXT_ACTION, short FA
 
     return false;
 }
+
 bool figure::do_gotobuilding(building* dest, bool stop_at_road, e_terrain_usage terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
     tile2i finish_tile;
     set_destination(dest);
@@ -350,24 +351,8 @@ void figure::action_perform() {
 
         // check for building being alive (at the start of the action)
         building* b = home();
-        building* b_imm = immigrant_home();
         figure* leader = figure_get(leading_figure_id);
         switch (type) {
-        case FIGURE_IMMIGRANT:
-            //                if (b_imm->state != BUILDING_STATE_VALID)
-            //                    poof();
-            //                if (!b_imm->house_size)
-            //                    poof();
-            //                if (!b_imm->has_figure(2, id))
-            //                    poof();
-            if (b_imm->type == BUILDING_BURNING_RUIN) {
-                poof();
-            }
-            if (terrain_type == TERRAIN_WATER) {
-                image_set_animation(GROUP_FIGURE_FERRY_BOAT, 0, 4, 4);
-            }
-            break;
-
         case FIGURE_ARCHITECT:
         case FIGURE_FIREMAN:
         case FIGURE_CONSTABLE:
@@ -445,6 +430,9 @@ void figure::action_perform() {
                 is_ghost = true;
             }
             break;
+        default:
+            dcast()->figure_before_action();
+            break;
         }
 
         // common action states handling
@@ -473,6 +461,7 @@ void figure::action_perform() {
             do_returnhome();
             break;
         }
+
         if (state == FIGURE_STATE_DYING) { // update corpses / dying animation
             figure_combat_handle_corpse();
         }
@@ -513,7 +502,6 @@ void figure::action_perform() {
         }
 
         switch (type) {
-        case FIGURE_IMMIGRANT: immigrant_action(); break;
         case FIGURE_EMIGRANT: emigrant_action(); break;
         case FIGURE_HOMELESS: homeless_action(); break;
         case FIGURE_CART_PUSHER: cartpusher_action(); break;

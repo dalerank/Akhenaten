@@ -652,7 +652,7 @@ void figure::draw_debug() {
         debug_text(ctx, str, pixel.x + 0, pixel.y + 10, indent, "", destinationID(), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 20, pixel.y + 10, 8, ":", destination()->get_figure_slot(this), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 0, pixel.y + 20, indent, "", immigrant_homeID(), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + 20, pixel.y + 20, 8, ":", immigrant_home()->get_figure_slot(this), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+        debug_text(ctx, str, pixel.x + 20, pixel.y + 20, 8, ":", building_get(immigrant_home_building_id)->get_figure_slot(this), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         break;
     case 5: // FESTIVAL
         pixel.y += 30;

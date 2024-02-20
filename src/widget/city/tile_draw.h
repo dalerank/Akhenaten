@@ -12,7 +12,8 @@ void draw_flattened_footprint_building(const building* b, vec2i pos, int image_o
 void map_render_clear();
 
 void draw_isometric_flat(vec2i pixel, tile2i point, painter &ctx);
-void draw_isometric_height(vec2i pixel, tile2i point, painter &ctx);
+void draw_isometric_terrain_height(vec2i pixel, tile2i point, painter &ctx);
+void draw_isometric_nonterrain_height(vec2i pixel, tile2i point, painter &ctx);
 void draw_figures(vec2i pixel, tile2i point, painter &ctx);
 void draw_figures(vec2i pixel, tile2i point, painter &ctx, bool force);
 

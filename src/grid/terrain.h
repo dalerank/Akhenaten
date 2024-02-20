@@ -133,10 +133,12 @@ void map_terrain_add_roadblock_road(int x, int y, int orientation);
 void map_terrain_add_gatehouse_roads(int x, int y, int orientation);
 void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation);
 
-void map_terrain_backup(void);
-void map_terrain_restore(void);
-void map_terrain_clear(void);
-void map_terrain_init_outside_map(void);
+void map_terrain_backup();
+void map_terrain_restore();
+void map_terrain_clear();
+void map_terrain_init_outside_map();
+
+bool map_terrain_is_near_ferry_route(int base_offset, int radius);
 
 void build_terrain_caches();
 

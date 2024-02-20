@@ -95,7 +95,7 @@ void widget_map_editor_draw() {
     init_draw_context();
     //    city_view_foreach_map_tile(draw_buildings);
     city_view_foreach_valid_map_tile(ctx, draw_isometric_flat);
-    city_view_foreach_valid_map_tile(ctx, draw_isometric_height);
+    city_view_foreach_valid_map_tile(ctx, draw_isometric_terrain_height);
     //    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
     map_editor_tool_draw(ctx, data.current_tile);
 }

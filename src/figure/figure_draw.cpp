@@ -117,16 +117,7 @@ void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight, vec2i* c
     int x_correction = 0;
     int y_correction = 3;
 
-    switch (type) {
-    case FIGURE_IMMIGRANT: // todo: mmmmmmaybe I was using the wrong draw function all along. look into this
-        y_correction = 10;
-        break;
-        //        case FIGURE_TRADE_CARAVAN:
-        //        case FIGURE_TRADE_CARAVAN_DONKEY:
-        //            _x = 20;
-        //            _y = -4;
-        //            break;
-    }
+    y_correction = dcast()->y_correction(y_correction);
 
     const image_t* img = is_enemy_image ? image_get_enemy(sprite_image_id) : image_get(sprite_image_id);
     ImageDraw::img_sprite(ctx, sprite_image_id, pixel.x + x_correction, pixel.y + y_correction, COLOR_MASK_NONE);

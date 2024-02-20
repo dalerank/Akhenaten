@@ -17,6 +17,7 @@
 #include "figuretype/figure_fireman.h"
 #include "figuretype/figure_priest.h"
 #include "figuretype/animal_ostrich.h"
+#include "figuretype/figure_immigrant.h"
 
 #include <string.h>
 #include "dev/debug.h"
@@ -127,8 +128,10 @@ void figure::figure_delete_UNSAFE() {
     if (empire_city_id)
         empire_city_remove_trader(empire_city_id, id);
 
-    if (has_immigrant_home())
-        immigrant_home()->remove_figure(2);
+    if (has_immigrant_home()) {
+        auto bhome = building_get(immigrant_home_building_id);
+        bhome->remove_figure(2);
+    }
 
     route_remove();
     map_figure_remove();
@@ -148,12 +151,17 @@ figure_impl *figure::dcast() {
     case FIGURE_FIREMAN: _ptr = new figure_fireman(this); break;
     case FIGURE_PRIEST: _ptr = new figure_priest(this); break;
     case FIGURE_OSTRICH: _ptr = new figure_ostrich(this); break;
+    case FIGURE_IMMIGRANT: _ptr = new figure_immigrant(this); break;
         
     default:
         _ptr = new figure_impl(this);
     }
 
     return _ptr;
+}
+
+figure_immigrant *figure::dcast_immigrant() {
+    return dcast()->dcast_immigrant();
 }
 
 bool figure::is_dead() {
@@ -165,17 +173,14 @@ bool figure::is_boat() {
 }
 
 bool figure::can_move_by_water() {
-    switch (type) {
-    case FIGURE_IMMIGRANT:
-        return map_terrain_is(tile.grid_offset(), TERRAIN_FERRY_ROUTE);
-    
+    switch (type) {   
     case FIGURE_HIPPO:
         return !map_terrain_is(tile.grid_offset(), TERRAIN_DEEPWATER);
 
     case FIGURE_FISHING_POINT:
         return map_terrain_is(tile.grid_offset(), TERRAIN_DEEPWATER);
     }
-    return (allow_move_type == EMOVE_BOAT || allow_move_type == EMOVE_FLOTSAM || allow_move_type == EMOVE_HIPPO);
+    return dcast()->can_move_by_water();
 }
 
 bool figure::can_move_by_terrain() {
@@ -221,23 +226,16 @@ building* figure::home() {
 building* figure::destination() {
     return building_get(destination_building_id);
 };
-building* figure::immigrant_home() {
-    return building_get(immigrant_home_building_id);
-};
+
 void figure::set_home(int _id) {
     home_building_id = _id;
 };
-void figure::set_immigrant_home(int _id) {
-    immigrant_home_building_id = _id;
-};
+
 void figure::set_destination(int _id) {
     destination_building_id = _id;
 };
 void figure::set_home(building* b) {
     home_building_id = b->id;
-};
-void figure::set_immigrant_home(building* b) {
-    immigrant_home_building_id = b->id;
 };
 void figure::set_destination(building* b) {
     destination_building_id = b->id;
@@ -257,7 +255,8 @@ bool figure::has_immigrant_home(int _id) {
     return (immigrant_home_building_id == _id);
 }
 bool figure::has_immigrant_home(building* b) {
-    return (b == immigrant_home());
+    auto bhome = building_get(immigrant_home_building_id);
+    return (b == bhome);
 }
 bool figure::has_destination(int _id) {
     if (_id == -1) {

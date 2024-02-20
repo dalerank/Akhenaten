@@ -376,7 +376,50 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
     map_render_set(grid_offset, top_height > 0 ? RENDER_TALL_TILE : 0);
 }
 
-void draw_isometric_height(vec2i pixel, tile2i tile, painter &ctx) {
+void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx) {
+    auto& draw_context = get_draw_context();
+
+    int grid_offset = tile.grid_offset();
+    // black tile outside of map
+    if (grid_offset < 0) {
+        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
+        return;
+    }
+
+    Planner.construction_record_view_position(pixel, tile);
+    if (!map_property_is_draw_tile(grid_offset)) {
+        return;
+    }
+
+    bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
+    if (!tall_flat_tile) {
+        return;
+    }
+
+    const bool non_terrain = map_terrain_is(grid_offset, TERRAIN_TREE|TERRAIN_ROCK|TERRAIN_BUILDING|TERRAIN_ELEVATION|TERRAIN_WALL|TERRAIN_GATEHOUSE);
+    if (non_terrain) {
+        return;
+    }
+
+    map_render_set(grid_offset, 0);
+    color color_mask = COLOR_MASK_NONE;
+    bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == tile);
+    if (deletion_tool || map_property_is_deleted(tile.grid_offset())) {
+        color_mask = COLOR_MASK_RED;
+    }
+
+    int image_id = map_image_at(grid_offset);
+    ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, color_mask);
+
+    int image_alt_value = map_image_alt_at(grid_offset);
+    int image_alt_id = (image_alt_value & 0x00ffffff);
+    uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
+    if (image_alt_id > 0 && image_alt_alpha > 0) {
+        ImageDraw::isometric_from_drawtile_top(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), /*alpha*/true);
+    }
+}
+
+void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx) {
     auto& draw_context = get_draw_context();
 
     int grid_offset = tile.grid_offset();
@@ -679,18 +722,21 @@ void city_with_overlay_draw_building_top(vec2i pixel, tile2i point, painter &ctx
     }
 
     if (get_city_overlay()->show_building(b)) {
-        draw_isometric_height(pixel, point, ctx);
-    } else {
-        int column_height = get_city_overlay()->get_column_height(b);
-        if (column_height != NO_COLUMN) {
-            int draw = 1;
-            if (building_is_farm(b->type)) {
-                draw = is_drawable_farm_corner(grid_offset);
-            }
+        draw_isometric_nonterrain_height(pixel, point, ctx);
+        return;
+    }
 
-            if (draw) {
-                draw_overlay_column(x, y, column_height, get_city_overlay()->column_type, ctx);
-            }
-        }
+    int column_height = get_city_overlay()->get_column_height(b);
+    if (column_height == NO_COLUMN) {
+        return;
+    }
+
+    int draw = 1;
+    if (building_is_farm(b->type)) {
+        draw = is_drawable_farm_corner(grid_offset);
+    }
+
+    if (draw) {
+        draw_overlay_column(x, y, column_height, get_city_overlay()->column_type, ctx);
     }
 }

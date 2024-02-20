@@ -13,6 +13,7 @@
 #include "core/profiler.h"
 #include "core/game_environment.h"
 #include "figuretype/migrant.h"
+#include "figuretype/figure_immigrant.h"
 #include "figure/figure.h"
 
 int house_population_add_to_city(int num_people) {
@@ -110,10 +111,10 @@ int house_population_create_immigrants(int num_people) {
         building* b = building_get(houses[i]);
         if (b->distance_from_entry > 0 && b->house_population_room >= 8 && !b->has_figure(2, -1)) {
             if (to_immigrate <= 4) {
-                figure_create_immigrant(b, to_immigrate);
+                figure_immigrant::create(b, to_immigrate);
                 to_immigrate = 0;
             } else {
-                figure_create_immigrant(b, 4);
+                figure_immigrant::create(b, 4);
                 to_immigrate -= 4;
             }
         }
@@ -123,10 +124,10 @@ int house_population_create_immigrants(int num_people) {
         building* b = building_get(houses[i]);
         if (b->distance_from_entry > 0 && b->house_population_room > 0 && !b->has_figure(2, -1)) {
             if (to_immigrate <= b->house_population_room) {
-                figure_create_immigrant(b, to_immigrate);
+                figure_immigrant::create(b, to_immigrate);
                 to_immigrate = 0;
             } else {
-                figure_create_immigrant(b, b->house_population_room);
+                figure_immigrant::create(b, b->house_population_room);
                 to_immigrate -= b->house_population_room;
             }
         }

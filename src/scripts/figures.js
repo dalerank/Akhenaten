@@ -38,3 +38,9 @@ figure_ostrich = {
 		death : { pos : [0, 0], anim_id: ANIM_OSTRICH_DEATH, max_frames:8 },
 	}
 }
+
+figure_immigrant = {
+	animations : {
+		swim : { pos : [0, 0], anim_id: ANIM_FERRY_BOAT, max_frames:4, duration:4 },
+	}
+}

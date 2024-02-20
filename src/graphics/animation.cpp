@@ -7,6 +7,7 @@ void animation_t::load(archive arch) {
     base_id = (e_image_id)arch.r_int("base_id");
     anim_id = (e_image_id)arch.r_int("anim_id");
     max_frames = arch.r_int("max_frames");
+    duration = arch.r_int("duration");
 }
 
 void animations_t::load(archive arch, pcstr section) {

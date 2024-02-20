@@ -26,6 +26,18 @@ bool map_terrain_is(int grid_offset, int terrain_mask) {
     return map_grid_is_valid_offset(grid_offset) && !!(map_grid_get(&g_terrain_grid, grid_offset) & terrain_mask);
 }
 
+bool map_terrain_is_near_ferry_route(int base_offset, int radius) {
+    offsets_array offsets;
+    map_grid_adjacent_offsets_xy(1, 1, offsets);
+    for (const auto &tile_delta: offsets) {
+        if (map_terrain_is(base_offset + tile_delta, TERRAIN_FERRY_ROUTE)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 int map_terrain_get(int grid_offset) {
     return map_grid_get(&g_terrain_grid, grid_offset);
 }

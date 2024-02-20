@@ -11,6 +11,7 @@ struct animation_t {
     e_image_id base_id = IMG_NONE;
     e_image_id anim_id = IMG_NONE;
     int max_frames;
+    int duration;
 
     void load(archive arch);
 };

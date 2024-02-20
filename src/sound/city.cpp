@@ -121,8 +121,6 @@ int building_type_to_channel(building *b) {
 
     case BUILDING_BURNING_RUIN: return SOUND_CHANNEL_CITY_BURNING_RUIN;
 
-    case BUILDING_CHICKPEAS_FARM: return SOUND_CHANNEL_CITY_CHICKFARM;
-
     case BUILDING_BARLEY_FARM:
     case BUILDING_FLAX_FARM:
     case BUILDING_GRAIN_FARM:

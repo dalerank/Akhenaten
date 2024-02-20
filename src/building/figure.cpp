@@ -80,7 +80,7 @@ bool building::has_figure(int i, int figure_id) {
     } else {
         figure* f = this->get_figure(i);
         if (f->state
-            && (f->home() == this || f->immigrant_home() == this)) { // check if figure belongs to this building...
+            && (f->home() == this || building_get(f->immigrant_home_building_id) == this)) { // check if figure belongs to this building...
             if (figure_id < 0)                                       // only check if there is a figure
                 return true;
             return (f->id == figure_id);
@@ -167,7 +167,7 @@ figure* building::create_roaming_figure(e_figure_type _type, e_figure_action cre
     figure* f = create_figure_generic(_type, created_action, slot, figure_roam_direction);
 
     f->set_destination(0);
-    f->set_immigrant_home(0);
+    f->immigrant_home_building_id = 0;
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
     f->init_roaming_from_building(figure_roam_direction);
@@ -185,7 +185,7 @@ figure* building::create_roaming_figure(e_figure_type _type, e_figure_action cre
 figure* building::create_figure_with_destination(e_figure_type _type, building* destination, e_figure_action created_action, e_building_slot slot) {
     figure* f = create_figure_generic(_type, created_action, slot, DIR_4_BOTTOM_LEFT);
     f->set_destination(destination->id);
-    f->set_immigrant_home(0);
+    f->immigrant_home_building_id = 0;
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
     return f;
@@ -197,7 +197,7 @@ figure* building::create_cartpusher(e_resource resource_id, int quantity, e_figu
     figure* f = create_figure_generic(FIGURE_CART_PUSHER, created_action, slot, DIR_4_BOTTOM_LEFT);
     f->load_resource(resource_id, quantity);
     f->set_destination(0);
-    f->set_immigrant_home(0);
+    f->immigrant_home_building_id = 0;
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
     if (config_get(CONFIG_GP_CH_CART_SPEED_QUANTITY)) {
@@ -1003,4 +1003,8 @@ void building_figure_generate() {
         //b->update_road_access();
         b.figure_generate();
     });
+}
+
+bool figure_impl::can_move_by_water() const {
+    return (base.allow_move_type == EMOVE_BOAT || base.allow_move_type == EMOVE_FLOTSAM || base.allow_move_type == EMOVE_HIPPO);
 }
