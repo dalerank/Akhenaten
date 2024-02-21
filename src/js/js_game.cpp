@@ -95,19 +95,15 @@ void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_set_image, "set_image", 1);
 }
 
-namespace config {
-    FuncLinkedList *FuncLinkedList::tail = nullptr;
-    
-    void refresh(archive arch) {
-        g_config_arch = {arch.state};
-        for (FuncLinkedList *s = FuncLinkedList::tail; s; s = s->next) {
-            s->func();
-        }
+void config::refresh(archive arch) {
+    g_config_arch = {arch.state};
+    for (ArchiveIterator *s = ArchiveIterator::tail; s; s = s->next) {
+        s->func();
     }
+}
 
-    archive load(pcstr filename) {
-        vfs::path fspath = vfs::content_path(filename);
-        js_vm_load_file_and_exec(fspath);
-        return {js_vm_state()};
-    }
-} // config
+archive config::load(pcstr filename) {
+    vfs::path fspath = vfs::content_path(filename);
+    js_vm_load_file_and_exec(fspath);
+    return {js_vm_state()};
+}
