@@ -18,6 +18,7 @@
 #include "figuretype/figure_priest.h"
 #include "figuretype/animal_ostrich.h"
 #include "figuretype/figure_immigrant.h"
+#include "figuretype/figure_water_carrier.h"
 
 #include <string.h>
 #include "dev/debug.h"
@@ -152,6 +153,7 @@ figure_impl *figure::dcast() {
     case FIGURE_PRIEST: _ptr = new figure_priest(this); break;
     case FIGURE_OSTRICH: _ptr = new figure_ostrich(this); break;
     case FIGURE_IMMIGRANT: _ptr = new figure_immigrant(this); break;
+    case FIGURE_WATER_CARRIER: _ptr = new figure_water_carrier(this); break;
         
     default:
         _ptr = new figure_impl(this);
