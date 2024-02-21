@@ -19,20 +19,16 @@
 
 #include "js/js_game.h"
 
-namespace model {
+struct fireman_model : 
+            figures::model_t<FIGURE_FIREMAN, 
+                             figure_fireman> {};
 
-struct fireman_t {
-    static constexpr e_figure_type type = FIGURE_FIREMAN;
-    animations_t anim;
-};
-
-fireman_t fireman;
-}
+fireman_model fireman_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_fireman);
 void config_load_figure_fireman() {
     g_config_arch.r_section("figure_fireman", [] (archive arch) {
-        model::fireman.anim.load(arch);
+        fireman_m.anim.load(arch);
     });
 }
 
@@ -200,7 +196,7 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
     case 13:
         base.direction = base.attack_direction;
         //
-        base.image_set_animation(model::fireman.anim["fight_fire"]);
+        base.image_set_animation(fireman_m.anim["fight_fire"]);
         break;
     }
 }

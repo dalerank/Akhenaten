@@ -149,13 +149,15 @@ figure_impl *figure::dcast() {
     }
 
     switch (type) {
-    case FIGURE_FIREMAN: _ptr = new figure_fireman(this); break;
     case FIGURE_PRIEST: _ptr = new figure_priest(this); break;
     case FIGURE_OSTRICH: _ptr = new figure_ostrich(this); break;
     case FIGURE_IMMIGRANT: _ptr = new figure_immigrant(this); break;
     }
 
-    return figures::create(type, this);
+    if (!_ptr) {
+        _ptr = figures::create(type, this);
+    }
+    return _ptr;
 }
 
 figure_immigrant *figure::dcast_immigrant() {
