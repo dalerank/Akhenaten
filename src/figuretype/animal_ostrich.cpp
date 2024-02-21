@@ -12,20 +12,16 @@
 
 #include "js/js_game.h"
 
-namespace model {
+struct ostrich_model :
+            public figures::model_t<FIGURE_OSTRICH,
+                                    figure_ostrich> {};
 
-struct ostrich_t {
-    static constexpr e_figure_type type = FIGURE_OSTRICH;
-    animations_t anim;
-};
-
-ostrich_t ostrich;
-}
+ostrich_model ostrich_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_ostrich);
 void config_load_figure_ostrich() {
     g_config_arch.r_section("figure_ostrich", [] (archive arch) {
-        model::ostrich.anim.load(arch);
+        ostrich_m.anim.load(arch);
     });
 }
 
@@ -76,26 +72,26 @@ void figure_ostrich::figure_action() {
     switch (base.action_state) {
     case ACTION_8_RECALCULATE:
     case FIGURE_ACTION_19_ANIMAL_IDLE: // idle
-        image_set_animation(model::ostrich.anim["idle"]);
+        image_set_animation(ostrich_m.anim["idle"]);
         break;
 
     case ACTION_18_ROOSTING: // roosting
-        image_set_animation(model::ostrich.anim["eating"]);
+        image_set_animation(ostrich_m.anim["eating"]);
         break;
 
     case ACTION_16_FLEEING: // fleeing
     case ACTION_10_GOING:   // on the move
-        image_set_animation(model::ostrich.anim["walk"]);
+        image_set_animation(ostrich_m.anim["walk"]);
         break;
 
     case ACTION_15_ANIMAL_TERRIFIED: // terrified
     case 14:                         // scared
-        image_set_animation(model::ostrich.anim["idle"]);
+        image_set_animation(ostrich_m.anim["idle"]);
         base.anim_frame = 0;
         break;
 
     case FIGURE_ACTION_149_CORPSE:
-        image_set_die_animation(model::ostrich.anim["death"]);
+        image_set_die_animation(ostrich_m.anim["death"]);
         break;
 
     case FIGURE_ACTION_150_ATTACK:
@@ -106,7 +102,7 @@ void figure_ostrich::figure_action() {
 
     default:
         // In any strange situation load eating/roosting animation
-        image_set_animation(model::ostrich.anim["eating"]);
+        image_set_animation(ostrich_m.anim["eating"]);
         break;
     }
 }

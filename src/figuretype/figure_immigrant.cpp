@@ -10,20 +10,16 @@
 
 #include "js/js_game.h"
 
-namespace model {
+struct immigrant_model : public
+            figures::model_t<FIGURE_IMMIGRANT,
+                             figure_immigrant> {};
 
-struct immigrant_t {
-    static constexpr e_figure_type type = FIGURE_IMMIGRANT;
-    animations_t anim;
-};
-
-immigrant_t immigrant;
-}
+immigrant_model immigrant_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_immigrant);
 void config_load_figure_immigrant() {
     g_config_arch.r_section("figure_immigrant", [] (archive arch) {
-        model::immigrant.anim.load(arch);
+        immigrant_m.anim.load(arch);
     });
 }
 
@@ -98,7 +94,7 @@ void figure_immigrant::figure_before_action() {
         poof();
     }
     if (base.terrain_type == TERRAIN_WATER) {
-        image_set_animation(model::immigrant.anim["swim"]);
+        image_set_animation(immigrant_m.anim["swim"]);
     }
 }
 

@@ -14,8 +14,6 @@
 #include "grid/grid.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
-#include "figuretype/animal_ostrich.h"
-#include "figuretype/figure_immigrant.h"
 
 #include <string.h>
 #include "dev/debug.h"
@@ -145,14 +143,7 @@ figure_impl *figure::dcast() {
         return _ptr;
     }
 
-    switch (type) {
-    case FIGURE_OSTRICH: _ptr = new figure_ostrich(this); break;
-    case FIGURE_IMMIGRANT: _ptr = new figure_immigrant(this); break;
-    }
-
-    if (!_ptr) {
-        _ptr = figures::create(type, this);
-    }
+    _ptr = figures::create(type, this);
     return _ptr;
 }
 
