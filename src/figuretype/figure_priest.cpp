@@ -14,20 +14,16 @@
 
 #include "js/js_game.h"
 
-namespace model {
+struct priest_model :
+            public figures::model_t<FIGURE_PRIEST,
+                                    figure_priest> {};
 
-struct priest_t {
-    static constexpr e_figure_type type = FIGURE_PRIEST;
-    animations_t anim;
-};
-
-priest_t priest;
-}
+priest_model priest_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_priest);
 void config_load_figure_priest() {
     g_config_arch.r_section("figure_priest", [] (archive arch) {
-        model::priest.anim.load(arch);
+        priest_m.anim.load(arch);
     });
 }
 
@@ -36,27 +32,27 @@ void figure_priest::figure_action() {
     switch (temple->type) {
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        image_set_animation(model::priest.anim["osiris_walk"]);
+        image_set_animation(priest_m.anim["osiris_walk"]);
         break;
 
     case BUILDING_TEMPLE_RA:
     case BUILDING_TEMPLE_COMPLEX_RA:
-        image_set_animation(model::priest.anim["ra_walk"]);
+        image_set_animation(priest_m.anim["ra_walk"]);
         break;
 
     case BUILDING_TEMPLE_PTAH:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
-        image_set_animation(model::priest.anim["ptah_walk"]);
+        image_set_animation(priest_m.anim["ptah_walk"]);
         break;
 
     case BUILDING_TEMPLE_SETH:
     case BUILDING_TEMPLE_COMPLEX_SETH:
-        image_set_animation(model::priest.anim["seth_walk"]);
+        image_set_animation(priest_m.anim["seth_walk"]);
         break;
 
     case BUILDING_TEMPLE_BAST:
     case BUILDING_TEMPLE_COMPLEX_BAST:
-        image_set_animation(model::priest.anim["bast_walk"]);
+        image_set_animation(priest_m.anim["bast_walk"]);
         break;
     }
 }

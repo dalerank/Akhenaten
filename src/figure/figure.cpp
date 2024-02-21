@@ -14,11 +14,8 @@
 #include "grid/grid.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
-#include "figuretype/figure_fireman.h"
-#include "figuretype/figure_priest.h"
 #include "figuretype/animal_ostrich.h"
 #include "figuretype/figure_immigrant.h"
-#include "figuretype/figure_water_carrier.h"
 
 #include <string.h>
 #include "dev/debug.h"
@@ -149,7 +146,6 @@ figure_impl *figure::dcast() {
     }
 
     switch (type) {
-    case FIGURE_PRIEST: _ptr = new figure_priest(this); break;
     case FIGURE_OSTRICH: _ptr = new figure_ostrich(this); break;
     case FIGURE_IMMIGRANT: _ptr = new figure_immigrant(this); break;
     }
