@@ -309,6 +309,9 @@ static void isometric_clear_top_height(const image_t &img) {
 static void isometric_clear_foot_bottom(const image_t &img) {
     for (int x = 0; x < img.width; ++x) {  // diagonals
         int start_y = 15 * (img.width / 58) + ((x < img.width / 2) ? (x / 4) : ((img.width - x) / 4));
+        if (x < 4 || x > img.width - 4) {
+            start_y += 4;
+        }
         for (int y = img.height - start_y; y < img.height; ++y) { // steps in the diagonal == y axis, too
             int atlas_y = (y * img.atlas.p_atlas->width);
             color &c = img.temp_pixel_data[atlas_y + x];

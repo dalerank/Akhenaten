@@ -330,7 +330,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
             game.save_debug_texture = true;
 
         } else if (SDL_strncmp(argv[i], "--", 2) == 0) {
-            app_terminate(bstring256(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));
+            logs::info(bstring256(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));
 
         } else {
             // TODO: ???? check that there are no other arguments after

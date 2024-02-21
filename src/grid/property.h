@@ -1,7 +1,6 @@
-#ifndef MAP_PROPERTY_H
-#define MAP_PROPERTY_H
+#pragma once
 
-#include "core/buffer.h"
+#include "grid/point.h"
 
 enum {
     EDGE_X0Y0 = 0,
@@ -46,6 +45,7 @@ void map_property_mark_constructing(int grid_offset);
 void map_property_clear_constructing(int grid_offset);
 
 int map_property_is_deleted(int grid_offset);
+inline int map_property_is_deleted(tile2i tile) { return map_property_is_deleted(tile.grid_offset()); }
 void map_property_mark_deleted(int grid_offset);
 void map_property_clear_deleted(int grid_offset);
 
@@ -58,5 +58,3 @@ void map_property_restore(void);
 
 uint8_t map_bitfield_get(int grid_offset);
 uint8_t map_edge_get(int grid_offset);
-
-#endif // MAP_PROPERTY_H

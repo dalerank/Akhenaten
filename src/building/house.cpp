@@ -275,19 +275,19 @@ int building_house_can_expand(building* house, int num_tiles) {
         int ok_tiles = 0;
         for (int i = 0; i < num_tiles; i++) {
             int tile_offset = base_offset + house_tile_offsets(i);
-            if (!map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR))
+            if (!map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR)) {
                 ok_tiles++;
-            else if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
+            } else if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
                 building* other_house = building_at(tile_offset);
-                if (other_house->id == house->id)
+                if (other_house->id == house->id) {
                     ok_tiles++;
-                else if (other_house->state == BUILDING_STATE_VALID && other_house->house_size) {
+                } else if (other_house->state == BUILDING_STATE_VALID && other_house->house_size) {
                     if (other_house->subtype.house_level <= house->subtype.house_level)
                         ok_tiles++;
                 }
-            } else if (map_terrain_is(tile_offset, TERRAIN_GARDEN)
-                       && !config_get(CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS))
+            } else if (map_terrain_is(tile_offset, TERRAIN_GARDEN) && !config_get(CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS)) {
                 ok_tiles++;
+            }
         }
         if (ok_tiles == num_tiles) {
             g_merge_data.x = house->tile.x() + expand_delta(dir).x;

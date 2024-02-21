@@ -16,6 +16,7 @@ public:
 };
 
 int map_image_at(int grid_offset);
+inline int map_image_at(tile2i tile) { return map_image_at(tile.grid_offset()); }
 int map_image_alt_at(int grid_offset);
 void map_image_set(int grid_offset, int image_id);
 void map_image_alt_set(int grid_offset, int image_id, int alpha);
