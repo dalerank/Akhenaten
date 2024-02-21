@@ -619,7 +619,7 @@ void figure_action_handle() {
     city_figures_reset();
     city_entertainment_set_hippodrome_has_race(0);
 
-    for (auto &figure: figures()) {
+    for (auto &figure: map_figures()) {
         figure->action_perform();
     }
 }

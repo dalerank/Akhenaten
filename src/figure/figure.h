@@ -1,6 +1,7 @@
 #pragma once
 
 #include "building/building.h"
+#include "core/core.h"
 #include "core/buffer.h"
 #include "core/string.h"
 #include "core/direction.h"
@@ -14,6 +15,7 @@
 #include "widget/city.h"
 #include "window/building/common.h"
 #include "figure_phrase.h"
+#include "graphics/animation.h"
 
 #include <algorithm>
 #include <memory.h>
@@ -570,7 +572,7 @@ public:
 };
 
 figure* figure_get(int id);
-std::span<figure*> figures();
+std::span<figure*> map_figures();
 
 /**
  * Creates a figure
@@ -598,3 +600,30 @@ bool figure_type_none_of(figure &f, Args ... args) {
 
 int figure_movement_can_launch_cross_country_missile(map_point src, map_point dst);
 void figure_create_explosion_cloud(tile2i tile, int size);
+
+namespace figures {
+
+figure_impl *create(e_figure_type, figure*);
+typedef figure_impl* (*create_figure_function_cb)(e_figure_type, figure*);
+
+using FigureIterator = FuncLinkedList<create_figure_function_cb>;
+
+template<e_figure_type E, typename T>
+struct model_t {
+    static constexpr e_figure_type type = E;
+    animations_t anim;
+
+    model_t() {
+        static figures::FigureIterator config_handler(&create);
+    }
+
+    static figure_impl *create(e_figure_type e, figure *data) {
+        if (e == type) {
+            return new T(data);
+        }
+        return nullptr;
+    }
+};
+
+} // end namespace config
+    

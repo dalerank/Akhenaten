@@ -21,7 +21,7 @@ int map_figure_id_get(int grid_offset) {
 
 void map_figure_sort_by_y() {
     g_figures_y_sort.clear();
-    for (auto *f : figures()) {
+    for (auto *f : map_figures()) {
         if (f->state != FIGURE_STATE_NONE) {
             if (f->tile.x() >= GRID_LENGTH || f->tile.y() > GRID_LENGTH) {
                 f->tile = {-1, -1};

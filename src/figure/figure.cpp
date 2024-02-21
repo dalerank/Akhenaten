@@ -37,12 +37,12 @@ figure *figure_get(int id) {
     return g_figure_data.figures[id];
 }
 
-std::span<figure *> figures() {
+std::span<figure *> map_figures() {
     return make_span(g_figure_data.figures.begin(), g_figure_data.figures.size());
 }
 
 void console_command_killall(std::istream &, std::ostream &) {
-    for (auto &f: figures()) {
+    for (auto &f: map_figures()) {
         f->poof();
     }
 
@@ -153,13 +153,9 @@ figure_impl *figure::dcast() {
     case FIGURE_PRIEST: _ptr = new figure_priest(this); break;
     case FIGURE_OSTRICH: _ptr = new figure_ostrich(this); break;
     case FIGURE_IMMIGRANT: _ptr = new figure_immigrant(this); break;
-    case FIGURE_WATER_CARRIER: _ptr = new figure_water_carrier(this); break;
-        
-    default:
-        _ptr = new figure_impl(this);
     }
 
-    return _ptr;
+    return figures::create(type, this);
 }
 
 figure_immigrant *figure::dcast_immigrant() {
@@ -296,6 +292,21 @@ e_minimap_figure_color figure::get_figure_color() {
     //     return FIGURE_COLOR_WOLF;
 
     return FIGURE_COLOR_NONE;
+}
+
+bool figure_impl::can_move_by_water() const {
+    return (base.allow_move_type == EMOVE_BOAT || base.allow_move_type == EMOVE_FLOTSAM || base.allow_move_type == EMOVE_HIPPO);
+}
+
+figure_impl *figures::create(e_figure_type e, figure *data) {
+    for (FigureIterator *s = FigureIterator::tail; s; s = s->next) {
+        auto impl = s->func(e, data);
+        if (impl) {
+            return impl;
+        }
+    }
+
+    return new figure_impl(data);
 }
 
 // bool figure::is_roamer() {

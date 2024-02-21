@@ -12,23 +12,18 @@
 
 #include "js/js_game.h"
 
-namespace model {
+struct water_carrier_m :
+        public figures::model_t<FIGURE_WATER_CARRIER,
+                                figure_water_carrier> {};
 
-struct water_carrier_t {
-    static constexpr e_figure_type type = FIGURE_WATER_CARRIER;
-    animations_t anim;
-};
-
-water_carrier_t water_carrier;
-}
+water_carrier_m water_carrier;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_water_carrier);
 void config_load_figure_water_carrier() {
     g_config_arch.r_section("figure_water_carrier", [] (archive arch) {
-        model::water_carrier.anim.load(arch);
+        water_carrier.anim.load(arch);
     });
 }
-
 
 void figure_water_carrier::figure_action() {
     // TODO

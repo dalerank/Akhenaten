@@ -942,7 +942,3 @@ void building_figure_generate() {
         b.figure_generate();
     });
 }
-
-bool figure_impl::can_move_by_water() const {
-    return (base.allow_move_type == EMOVE_BOAT || base.allow_move_type == EMOVE_FLOTSAM || base.allow_move_type == EMOVE_HIPPO);
-}
