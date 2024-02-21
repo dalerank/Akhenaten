@@ -254,7 +254,6 @@ public:
     bool is_fort();
     bool is_defense();
     bool is_farm();
-    bool is_floodplain_farm();
     bool is_workshop();
     bool is_extractor();
     bool is_monument();
@@ -335,8 +334,6 @@ public:
     void set_greate_palace_graphic();
     void spawn_figure_tax_collector();
     void spawn_figure_industry();
-    void spawn_figure_farms();
-    void spawn_figure_farm_harvests();
     void spawn_figure_wharf();
     void spawn_figure_shipyard();
     void spawn_figure_dock();
@@ -401,6 +398,7 @@ public:
     inline bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) { return base.common_spawn_roamer(type, min_houses, created_action); }
     inline figure *create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE) { return base.create_figure_with_destination(_type, destination, created_action, slot); }
     inline const model_building *model() const { return model_get_building(type()); }
+    inline figure *create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, e_building_slot slot = BUILDING_SLOT_CARTPUSHER) { return base.create_cartpusher(resource_id, quantity, created_action, slot); }
     
     inline int id() const { return base.id; }
     inline tile2i tile() const { return base.tile; }

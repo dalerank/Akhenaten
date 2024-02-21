@@ -24,6 +24,7 @@
 #include "window/building/common.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
+#include "figure/figure.h"
 
 static void building_farm_draw_info(object_info &c, const char* type, e_resource resource) {
     painter ctx = game.painter();
@@ -123,22 +124,13 @@ int get_crops_image(e_building_type type, int growth) {
     int base = 0;
     base = image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH);
     switch (type) {
-    case BUILDING_BARLEY_FARM:
-    return base + 6 * 0 + growth;
-    case BUILDING_FLAX_FARM:
-    return base + 6 * 6 + growth;
-    case BUILDING_GRAIN_FARM:
-    return base + 6 * 2 + growth;
-    case BUILDING_LETTUCE_FARM:
-    return base + 6 * 3 + growth;
-    case BUILDING_POMEGRANATES_FARM:
-    return base + 6 * 4 + growth;
-    case BUILDING_CHICKPEAS_FARM:
-    return base + 6 * 5 + growth;
-    case BUILDING_FIGS_FARM:
-    return base + 6 * 1 + growth;
-    //            case BUILDING_HENNA_FARM:
-    //                return base + 6 * 0 + growth;
+    case BUILDING_BARLEY_FARM: return base + 6 * 0 + growth;
+    case BUILDING_FLAX_FARM: return base + 6 * 6 + growth;
+    case BUILDING_GRAIN_FARM: return base + 6 * 2 + growth;
+    case BUILDING_LETTUCE_FARM: return base + 6 * 3 + growth;
+    case BUILDING_POMEGRANATES_FARM: return base + 6 * 4 + growth;
+    case BUILDING_CHICKPEAS_FARM: return base + 6 * 5 + growth;
+    case BUILDING_FIGS_FARM: return base + 6 * 1 + growth;
     }
 
     return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
@@ -270,49 +262,33 @@ bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
     }
 }
 
-void building::spawn_figure_farms() {
-    bool is_floodplain = building_is_floodplain_farm(*this);
-    if (!is_floodplain && has_road_access) { // only for meadow farms
-        common_spawn_labor_seeker(50);
-        if (building_farm_time_to_deliver(false, output_resource_first_id)) { // UGH!!
-            spawn_figure_farm_harvests();
-        }
-    } else if (is_floodplain) {
-        if (building_farm_time_to_deliver(true)) {
-            spawn_figure_farm_harvests();
-        }
-    }
-}
-
 void building_farm::on_create() {
     switch (type()) {
     case BUILDING_BARLEY_FARM:
         base.output_resource_first_id = RESOURCE_BARLEY;
-        base.fire_proof = 1;
         break;
     case BUILDING_FLAX_FARM:
         base.output_resource_first_id = RESOURCE_FLAX;
-        base.fire_proof = 1;
         break;
     case BUILDING_GRAIN_FARM:
         base.output_resource_first_id = RESOURCE_GRAIN;
         base.output_resource_second_id = RESOURCE_STRAW;
         base.output_resource_second_rate = 10;
-        base.fire_proof = 1;
         break;
     case BUILDING_LETTUCE_FARM:
         base.output_resource_first_id = RESOURCE_LETTUCE;
-        base.fire_proof = 1;
         break;
     case BUILDING_POMEGRANATES_FARM:
         base.output_resource_first_id = RESOURCE_POMEGRANATES;
-        base.fire_proof = 1;
         break;
     case BUILDING_CHICKPEAS_FARM:
         base.output_resource_first_id = RESOURCE_CHICKPEAS;
-        base.fire_proof = 1;
+        break;
+    case BUILDING_FIGS_FARM:
+        base.output_resource_first_id = RESOURCE_FIGS;
         break;
     }
+    base.fire_proof = 1;
 }
 
 bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color mask) {
@@ -330,6 +306,69 @@ e_sound_channel_city building_farm::sound_channel() const {
         return SOUND_CHANNEL_CITY_CHICKFARM;
     }
     return SOUND_CHANNEL_CITY_NONE;
+}
+
+void building_farm::spawn_figure() {
+    bool is_floodplain = building_is_floodplain_farm(base);
+    if (!is_floodplain && base.has_road_access) { // only for meadow farms
+        common_spawn_labor_seeker(50);
+        if (building_farm_time_to_deliver(false, base.output_resource_first_id)) { // UGH!!
+            spawn_figure_harvests();
+        }
+    } else if (is_floodplain) {
+        if (building_farm_time_to_deliver(true)) {
+            spawn_figure_harvests();
+        }
+    }
+}
+
+void building_farm::spawn_figure_harvests() {
+    if (is_floodplain_farm()) { // floodplain farms
+                                // In OG Pharaoh, farms can NOT send out a cartpusher if the cartpusher
+                                // from the previous harvest is still alive. The farm will get "stuck"
+                                // and remain in active production till flooded, though the farm worker
+                                // still displays with the harvesting animation.
+        if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
+            return;
+        }
+
+        if (base.has_road_access && data.industry.progress > 0) {
+            int farm_fertility = map_get_fertility_for_farm(tile());
+
+            data.industry.ready_production = data.industry.progress * farm_fertility / 100;
+            int expected_produce = farm_expected_produce(&base);
+            {
+                figure *f = create_cartpusher(base.output_resource_first_id, expected_produce);
+                building_farm *farm = dcast_farm();
+                farm->deplete_soil();
+
+                f->sender_building_id = id();
+
+                data.industry.progress = 0;
+                data.industry.ready_production = 0;
+                data.industry.worker_id = 0;
+                data.industry.work_camp_id = 0;
+                data.industry.labor_state = LABOR_STATE_NONE;
+                data.industry.labor_days_left = 0;
+                base.num_workers = 0;
+            }
+
+            if (base.output_resource_second_id != RESOURCE_NONE) {
+                int rate = std::max<int>(1, base.output_resource_second_rate);
+                int second_produce_expected = expected_produce / rate;
+                figure *f = create_cartpusher(base.output_resource_second_id, second_produce_expected, FIGURE_ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
+                f->sender_building_id = id();
+            }
+        }
+    } else { // meadow farms
+        if (base.has_road_access) {
+            if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
+                return;
+            }
+            create_cartpusher(base.output_resource_first_id, farm_expected_produce(&base));
+            building_industry_start_new_production(&base);
+        }
+    }
 }
 
 void building_farm::update_tiles_image() {

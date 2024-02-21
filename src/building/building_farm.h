@@ -20,9 +20,12 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual building_farm *dcast_farm() override { return this; }
     virtual e_sound_channel_city sound_channel() const;
+    virtual void spawn_figure() override;
 
     void deplete_soil();
     void update_tiles_image();
+    void spawn_figure_harvests();
+    inline bool is_floodplain_farm() const { return building_is_floodplain_farm(base); }
 };
 
 void building_farm_draw_workers(painter &ctx, building *b, int grid_offset, vec2i pos);

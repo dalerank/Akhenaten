@@ -172,10 +172,6 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
         b->output_resource_first_id = RESOURCE_REEDS;
         b->data.industry.max_gatheres = 1;
         break;
-    case BUILDING_FIGS_FARM:
-        b->output_resource_first_id = RESOURCE_FIGS;
-        b->fire_proof = 1;
-        break;
     case BUILDING_PAPYRUS_WORKSHOP:
         b->data.industry.first_material_id = RESOURCE_REEDS;
         b->output_resource_first_id = RESOURCE_PAPYRUS;
@@ -301,6 +297,7 @@ building_impl *building::dcast() {
     case BUILDING_RECRUITER: _ptr = new building_recruiter(*this); break;
     case BUILDING_GRANARY: _ptr = new building_granary(*this); break;
     case BUILDING_CATTLE_RANCH: _ptr = new building_cattle_ranch(*this); break;
+
     case BUILDING_GRAIN_FARM:
     case BUILDING_LETTUCE_FARM:
     case BUILDING_CHICKPEAS_FARM:
@@ -308,6 +305,7 @@ building_impl *building::dcast() {
     case BUILDING_BARLEY_FARM:
     case BUILDING_FLAX_FARM:
     case BUILDING_HENNA_FARM:
+    case BUILDING_FIGS_FARM:
          _ptr = new building_farm(*this);
          break;
 
@@ -546,9 +544,6 @@ bool building::is_defense() {
 }
 bool building::is_farm() {
     return building_is_farm(type);
-}
-bool building::is_floodplain_farm() {
-    return building_is_floodplain_farm(*this);
 }
 bool building::is_workshop() {
     return building_is_workshop(type);

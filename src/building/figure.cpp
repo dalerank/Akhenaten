@@ -601,57 +601,6 @@ void building::spawn_figure_industry() {
     }
 }
 
-void building::spawn_figure_farm_harvests() {
-    if (is_floodplain_farm()) { // floodplain farms
-        // In OG Pharaoh, farms can NOT send out a cartpusher if the cartpusher
-        // from the previous harvest is still alive. The farm will get "stuck"
-        // and remain in active production till flooded, though the farm worker
-        // still displays with the harvesting animation.
-        if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER))
-            return;
-
-        if (has_road_access && data.industry.progress > 0) {
-            int grid_offset = tile.grid_offset();
-            int farm_fertility = map_get_fertility_for_farm(grid_offset);
-
-            data.industry.ready_production = data.industry.progress * farm_fertility / 100;
-            int expected_produce = farm_expected_produce(this);
-            {
-                figure *f = create_cartpusher(output_resource_first_id, expected_produce);
-                building_farm *farm = dcast_farm();
-                if (farm) {
-                    farm->deplete_soil();
-                }
-
-                f->sender_building_id = this->id;
-
-                data.industry.progress = 0;
-                data.industry.ready_production = 0;
-                data.industry.worker_id = 0;
-                data.industry.work_camp_id = 0;
-                data.industry.labor_state = LABOR_STATE_NONE;
-                data.industry.labor_days_left = 0;
-                num_workers = 0;
-            }
-
-            if (output_resource_second_id != RESOURCE_NONE) {
-                int rate = std::max<int>(1, output_resource_second_rate);
-                int second_produce_expected = expected_produce / rate;
-                figure *f = create_cartpusher(output_resource_second_id, second_produce_expected, FIGURE_ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
-                f->sender_building_id = this->id;
-            }
-        }
-    } else { // meadow farms
-        if (has_road_access) {
-            if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
-                return;
-            }
-            create_cartpusher(output_resource_first_id, farm_expected_produce(this));
-            building_industry_start_new_production(this);
-        }
-    }
-}
-
 void building::spawn_figure_wharf() {
     check_labor_problem();
     if (has_road_access) {
@@ -951,17 +900,6 @@ bool building::figure_generate() {
         case BUILDING_UNUSED_NATIVE_HUT_88: spawn_figure_native_hut(); break;
         case BUILDING_UNUSED_NATIVE_MEETING_89: spawn_figure_native_meeting(); break;
         case BUILDING_UNUSED_NATIVE_CROPS_93: update_native_crop_progress(); break;
-
-        case BUILDING_BARLEY_FARM:
-        case BUILDING_FLAX_FARM:
-        case BUILDING_GRAIN_FARM:
-        case BUILDING_LETTUCE_FARM:
-        case BUILDING_POMEGRANATES_FARM:
-        case BUILDING_CHICKPEAS_FARM:
-        case BUILDING_FIGS_FARM:
-        case BUILDING_HENNA_FARM:
-            spawn_figure_farms();
-            break;
 
         case BUILDING_FORT_CHARIOTEERS:
         case BUILDING_FORT_ARCHERS:
