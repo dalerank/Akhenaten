@@ -119,16 +119,6 @@ static void bazaar_coverage(building* b, figure *f, int &) {
     b->data.house.bazaar_access = MAX_COVERAGE;
 }
 
-static void engineer_coverage(building* b, figure *f, int &max_damage_seen) {
-    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_YARD_SPACE)
-        b = b->main();
-
-    if (b->damage_risk > max_damage_seen)
-        max_damage_seen = b->damage_risk;
-
-    b->damage_risk = 0;
-} 
-
 static void policeman_coverage(building* b, figure *f, int &max_anger_seen) {
     b->house_criminal_active -= 1;
     b->house_criminal_active = std::max<int>(0, b->house_criminal_active);
@@ -339,19 +329,6 @@ int figure::figure_service_provide_coverage() {
     case FIGURE_CHARIOR_RACER:
     case FIGURE_SENET_PLAYER:
         houses_serviced = provide_culture(tile, this, hippodrome_coverage);
-        break;
-
-    case FIGURE_ARCHITECT: {
-            int max_damage = 0;
-            houses_serviced = figure_provide_service(tile, this, max_damage, engineer_coverage);
-            if (max_damage > min_max_seen) {
-                min_max_seen = max_damage;
-            } else if (min_max_seen <= 10) {
-                min_max_seen = 0;
-            } else {
-                min_max_seen -= 10;
-            }
-        }
         break;
  
     case FIGURE_TOMB_ROBER:

@@ -50,3 +50,9 @@ figure_worker = {
 		work : { pos : [0, 0], anim_id: IMG_WORKER_AKNH_WORK, max_frames:12 },
 	}
 }
+
+figure_architect = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: IMG_ARCHITECT, max_frames:12 },
+	}
+}

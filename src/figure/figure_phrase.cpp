@@ -41,7 +41,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_PHYSICIAN, "doctor"},
     {FIGURE_EMBALMER, "embalmer"},
     {FIGURE_EMIGRANT, "emigrant"},
-    {FIGURE_ARCHITECT, "engineer"},
     {FIGURE_FISHING_BOAT, "fishing"},
     {FIGURE_LABOR_SEEKER, "laborseeker"},
     {FIGURE_NONE, "governor"},
@@ -630,66 +629,6 @@ static sound_key policeman_phrase(figure *f) {
     return keys[index];
 }
 
-static sound_key engineer_phrase(figure *f) {
-    svector<sound_key, 10> keys;
-
-    int houses_damage_risk = 0;
-    int hoeses_damage_high = 0;
-    buildings_valid_do([&] (building &b) {
-        houses_damage_risk += (b.damage_risk > 70) ? 1 : 0;
-        hoeses_damage_high += (b.damage_risk > 50) ? 1 : 0;
-    });
-
-    if (houses_damage_risk > 0) {
-        keys.push_back("engineer_extreme_damage_level");
-    }
-
-    if (formation_get_num_forts() < 0) {
-        keys.push_back("engineer_city_not_safety");
-    }
-
-    if (hoeses_damage_high > 0) {
-        keys.push_back("engineer_high_damage_level");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("engineer_no_food_in_city");
-    }
-
-    if (city_labor_workers_needed() >= 20) {
-        keys.push_back("engineer_need_more_workers");
-    }
-
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("engineer_gods_are_angry");
-    }
-
-    if (city_sentiment() < 30) {
-        keys.push_back("engineer_city_has_bad_reputation");
-    }
-
-    if (city_sentiment() > 50) {
-        keys.push_back("engineer_city_is_good");
-    }
-
-    if (city_sentiment() >= 30) {
-        keys.push_back("engineer_city_is_bad");
-    }
-
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("engineer_low_entertainment");
-    }
-
-    if (city_sentiment() > 90) {
-        keys.push_back("engineer_city_is_amazing");
-    }
-
-    keys.push_back("engineer_i_am_works");
-
-    int index = rand() % keys.size();
-    return keys[index];
-}
-
 static int citizen_phrase() {
     //    if (++f->phrase_sequence_exact >= 3)
     //        f->phrase_sequence_exact = 0;
@@ -886,7 +825,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     case FIGURE_MARKET_BUYER: return market_buyer_phrase(f);
     case FIGURE_PHYSICIAN: return physician_phrase(f);
     case FIGURE_CART_PUSHER: return cart_pusher_phrase(f);
-    case FIGURE_ARCHITECT: return engineer_phrase(f);
     case FIGURE_DANCER: return dancer_phrase(f);
     case FIGURE_MARKET_TRADER: return marker_trader_phrase(f);
     case FIGURE_OSTRICH_HUNTER: return hunter_ostric_phrase(f);

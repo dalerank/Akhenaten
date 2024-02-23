@@ -370,7 +370,6 @@ public:
     void sled_action();
     void explosion_cloud_action();
     void tax_collector_action();
-    void engineer_action();
     void storageyard_cart_action();
     void soldier_action();
     void military_standard_action();

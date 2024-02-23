@@ -508,7 +508,6 @@ void figure::action_perform() {
             //            case 5: common_action(12, GROUP_FIGURE_LABOR_SEEKER); break;
         case FIGURE_EXPLOSION: explosion_cloud_action(); break;
         case FIGURE_TAX_COLLECTOR: tax_collector_action(); break;
-        case FIGURE_ARCHITECT: engineer_action(); break;
         case FIGURE_STORAGE_YARD_DELIVERCART: storageyard_cart_action(); break; // warehouseman_action !!!!
 
         case 11:   // soldier_action();                  break;
