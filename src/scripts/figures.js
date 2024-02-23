@@ -44,3 +44,9 @@ figure_immigrant = {
 		swim : { pos : [0, 0], anim_id: ANIM_FERRY_BOAT, max_frames:4, duration:4 },
 	}
 }
+
+figure_worker = {
+	animations : {
+		work : { pos : [0, 0], anim_id: IMG_WORKER_AKNH_WORK, max_frames:12 },
+	}
+}

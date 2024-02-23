@@ -466,7 +466,6 @@ static int window_info_show_overlay(figure *f) {
     case FIGURE_DANCER: return OVERLAY_PAVILION;
     case FIGURE_MARKET_BUYER: return OVERLAY_BAZAAR_ACCESS;
     case FIGURE_MARKET_TRADER: return OVERLAY_BAZAAR_ACCESS;
-    case FIGURE_WORKER: case FIGURE_LABORER: return OVERLAY_LABOR;
     case FIGURE_ARCHITECT: return OVERLAY_DAMAGE;
     case FIGURE_CONSTABLE: return OVERLAY_CRIME;
     case FIGURE_TAX_COLLECTOR: return OVERLAY_TAX_INCOME;
