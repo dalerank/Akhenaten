@@ -50,7 +50,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_LIBRARIAN, "library"},
     {FIGURE_MAGISTRATE, "magistrate"},
     {FIGURE_DELIVERY_BOY, "marketboy"},
-    {FIGURE_MARKET_BUYER, "mkt_buyer"},
     {FIGURE_MARKET_TRADER, "mkt_seller"},
     {FIGURE_MUSICIAN, "musician"},
     {FIGURE_NONE, "pharaoh"},
@@ -134,56 +133,6 @@ static sound_key tax_collector_phrase(figure *f) {
 
     if (city_sentiment() > 90) {
         keys.push_back("taxman_city_is_amazing");
-    }
-
-    int index = rand() % keys.size();
-    return keys[index];
-}
-
-static sound_key market_buyer_phrase(figure *f) {
-    svector<sound_key, 10> keys;
-    if (f->action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
-        keys.push_back("market_buyer_goto_store");
-    } else if (f->action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
-        keys.push_back("market_buyer_back_to_market");
-    } 
-
-    if (city_health() < 30) {
-        keys.push_back("market_buyer_city_has_low_health");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("market_buyer_no_food_in_city");
-    }
-
-    if (formation_get_num_forts() < 1) {
-        keys.push_back("market_buyer_city_have_no_army");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
-        keys.push_back("market_buyer_much_unemployments");
-    }
-
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("market_buyer_gods_are_angry");
-    }
-
-    if (city_rating_kingdom() < 30) {
-        keys.push_back("market_buyer_city_is_bad_reputation");
-    }
-
-    if (city_labor_unemployment_percentage() >= 15) {
-        keys.push_back("market_buyer_too_much_unemployments");
-    }
-
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("market_buyer_low_entertainment");
-    }
-
-    if (city_sentiment() > 90) {
-        keys.push_back("market_buyer_city_is_amazing");
-    } else if (city_sentiment() > 50) {
-        keys.push_back("market_buyer_city_is_good");
     }
 
     int index = rand() % keys.size();
@@ -822,7 +771,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     case FIGURE_TAX_COLLECTOR: return tax_collector_phrase(f);
     case FIGURE_DELIVERY_BOY: return deliverty_boy_phrase(f);
     case FIGURE_HERBALIST: return apothecary_phrase(f);
-    case FIGURE_MARKET_BUYER: return market_buyer_phrase(f);
     case FIGURE_PHYSICIAN: return physician_phrase(f);
     case FIGURE_CART_PUSHER: return cart_pusher_phrase(f);
     case FIGURE_DANCER: return dancer_phrase(f);

@@ -1,5 +1,6 @@
 #include "service.h"
 
+#include "figuretype/figure_market_buyer.h"
 #include "building/building.h"
 #include "building/house.h"
 #include "building/model.h"
@@ -151,88 +152,6 @@ static void labor_seeker_coverage(building* b, figure *f, int&) {
     // nothing here, the labor seeker works simply via the `houses_covered` variable
 }
 
-static void distribute_good(building* b, building* market, int stock_wanted, int inventory_resource) {
-    int amount_wanted = stock_wanted - b->data.house.inventory[inventory_resource];
-    if (market->data.market.inventory[inventory_resource] > 0 && amount_wanted > 0) {
-        if (amount_wanted <= market->data.market.inventory[inventory_resource]) {
-            b->data.house.inventory[inventory_resource] += amount_wanted;
-            market->data.market.inventory[inventory_resource] -= amount_wanted;
-        } else {
-            b->data.house.inventory[inventory_resource] += market->data.market.inventory[inventory_resource];
-            market->data.market.inventory[inventory_resource] = 0;
-        }
-    }
-}
-static void distribute_market_resources(building* b, building* market) {
-    int level = b->subtype.house_level;
-    if (level < HOUSE_PALATIAL_ESTATE) {
-        level++;
-    }
-
-    int max_food_stocks = 4 * b->house_highest_population;
-    int food_types_stored_max = 0;
-    for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-        if (b->data.house.inventory[i] >= max_food_stocks)
-            food_types_stored_max++;
-    }
-
-    const model_house* model = model_get_house(level);
-    if (model->food_types > food_types_stored_max) {
-        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            if (b->data.house.inventory[i] >= max_food_stocks) {
-                continue;
-            }
-
-            if (market->data.market.inventory[i] >= max_food_stocks) {
-                b->data.house.inventory[i] += max_food_stocks;
-                market->data.market.inventory[i] -= max_food_stocks;
-                break;
-            } else if (market->data.market.inventory[i]) {
-                b->data.house.inventory[i] += market->data.market.inventory[i];
-                market->data.market.inventory[i] = 0;
-                break;
-            }
-        }
-    }
-    if (model->pottery) {
-        market->data.market.pottery_demand = 10;
-        distribute_good(b, market, 8 * model->pottery, INVENTORY_GOOD1);
-    }
-    int goods_no = 4;
-    if (config_get(CONFIG_GP_CH_MORE_STOCKPILE))
-        goods_no = 8;
-
-    if (model->jewelry_furniture) {
-        market->data.market.furniture_demand = 10;
-        distribute_good(b, market, goods_no * model->jewelry_furniture, INVENTORY_GOOD2);
-    }
-    if (model->linen_oil) {
-        market->data.market.oil_demand = 10;
-        distribute_good(b, market, goods_no * model->linen_oil, INVENTORY_GOOD3);
-    }
-    if (model->beer_wine) {
-        market->data.market.wine_demand = 10;
-        distribute_good(b, market, goods_no * model->beer_wine, INVENTORY_GOOD4);
-    }
-}
-static int provide_market_goods(building* market, int x, int y) {
-    int serviced = 0;
-    grid_area area = map_grid_get_area(tile2i(x, y), 1, 2);
-
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
-        int grid_offset = tile.grid_offset();
-        int building_id = map_building_at(grid_offset);
-        if (building_id) {
-            building *b = building_get(building_id);
-            if (b->house_size && b->house_population > 0) {
-                distribute_market_resources(b, market);
-                serviced++;
-            }
-        }
-    });
-    return serviced;
-}
-
 building* figure::get_entertainment_building() {
     if (action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING
         || action_state == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
@@ -261,14 +180,8 @@ int figure::figure_service_provide_coverage() {
         break;
 
     case FIGURE_MARKET_TRADER:
-        houses_serviced = provide_market_goods(home(), tile.x(), tile.y());
+        houses_serviced = provide_market_goods(home(), tile);
         figure_provide_service(tile, this, none_service, bazaar_coverage);
-        break;
-
-    case FIGURE_MARKET_BUYER:
-        if (!config_get(CONFIG_GP_CH_NO_BUYER_DISTRIBUTION)) {
-            houses_serviced = provide_market_goods(home(), tile.x(), tile.y());
-        }
         break;
 
     case FIGURE_TEACHER:

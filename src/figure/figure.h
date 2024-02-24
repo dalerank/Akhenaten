@@ -388,7 +388,6 @@ public:
     void editor_flag_action();
     void flotsam_action();
     void docker_action();
-    void market_buyer_action();
     void noble_action();
     void indigenous_native_action();
     void tower_sentry_action();
@@ -451,11 +450,7 @@ public:
     void cartpusher_do_retrieve(int action_done);
 
     void sled_do_deliver(int action_done);
-
-    int create_delivery_boy(int leader_id);
-    int market_buyer_take_food_from_granary(building* market, building* granary);
-    bool market_buyer_take_resource_from_storageyard(building* warehouse);
-
+    
     void trader_buy(int amounts);
     void trader_sell(int amounts);
     int trader_total_bought();

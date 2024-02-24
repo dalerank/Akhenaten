@@ -63,6 +63,7 @@ var figure_ostrich = {}
 var figure_immigrant = {}
 var figure_worker = {}
 var figure_architect = {}
+var figure_market_buyer = {}
 var mission0 = {}
 var mission1 = {}
 var mission5 = {}

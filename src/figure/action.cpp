@@ -56,7 +56,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_CRIMINAL, 1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_THIEF_WALK},
   {FIGURE_TOMB_ROBER, 1, TERRAIN_USAGE_ENEMY, 480, GROUP_FIGURE_RIOTER_WALK},
   {FIGURE_FISHING_BOAT, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
-  {FIGURE_MARKET_TRADER, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_MARKET_LADY_2},
+  {FIGURE_MARKET_TRADER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, ANIM_MARKET_LADY_WALK},
   {FIGURE_PRIEST, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_PRIEST_OSIRIS},
   {FIGURE_TEACHER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_TEACHER_WALK},
   {FIGURE_SCRIBER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_SCRIBER_WALK},
@@ -358,7 +358,6 @@ void figure::action_perform() {
         case FIGURE_CONSTABLE:
         case FIGURE_MAGISTRATE:
         case FIGURE_WORKER:
-        case FIGURE_MARKET_TRADER:
         case FIGURE_NATIVE_TRADER:
         case FIGURE_TAX_COLLECTOR:
         case FIGURE_TOWER_SENTRY:
@@ -547,7 +546,6 @@ void figure::action_perform() {
         case 36: editor_flag_action(); break;
         case FIGURE_FLOTSAM: flotsam_action(); break;
         case 38: docker_action(); break;
-        case FIGURE_MARKET_BUYER: market_buyer_action(); break;
         case FIGURE_NOBLES: noble_action(); break; 
         case 41: indigenous_native_action(); break;
         case 42: tower_sentry_action(); break;

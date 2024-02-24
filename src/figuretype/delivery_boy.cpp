@@ -14,14 +14,6 @@
 #include "graphics/image_groups.h"
 #include "config/config.h"
 
-int figure::create_delivery_boy(int leader_id) {
-    figure* boy = figure_create(FIGURE_DELIVERY_BOY, tile, 0);
-    boy->leading_figure_id = leader_id;
-    boy->collecting_item_id = collecting_item_id;
-    boy->set_home(homeID());
-    return boy->id;
-}
-
 void figure::delivery_boy_action() {
     figure* leader = figure_get(leading_figure_id);
     if (leader->state == FIGURE_STATE_ALIVE) {
