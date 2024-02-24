@@ -345,7 +345,7 @@ enum e_pack {
 //#define GROUP_FIGURE_FIREMAN PACK_SPR_MAIN, 6                     // 273
 #define GROUP_FIGURE_FIREMAN_DEATH PACK_SPR_MAIN, 7               // 369
 //#define GROUP_FIGURE_FIREMAN_ATFIRE PACK_SPR_MAIN, 8              // 377
-#define GROUP_FIGURE_GRANARY_BOY PACK_SPR_MAIN, 9                 // 673
+//#define GROUP_FIGURE_GRANARY_BOY PACK_SPR_MAIN, 9                 // 673
 #define GROUP_FIGURE_GRANARY_BOY_DEATH PACK_SPR_MAIN, 10          // 769
 #define GROUP_FIGURE_HUNTER_STICK PACK_SPR_MAIN, 11               // 777
 //#define GROUP_FIGURE_VAGRANT PACK_SPR_MAIN, 12                    // 782 -- homeless

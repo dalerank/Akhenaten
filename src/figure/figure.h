@@ -411,7 +411,6 @@ public:
     void ballista_action();
     //    void missionary_action();
     void fishing_point_action();
-    void delivery_boy_action();
     void shipwreck_action();
     void sheep_action();
     void hyena_action();
@@ -559,6 +558,7 @@ public:
     inline void route_remove() { base.route_remove(); }
     inline void image_set_animation(const animation_t &anim) { base.image_set_animation(anim); }
     inline void image_set_die_animation(const animation_t &anim) { base.image_set_die_animation(anim); }
+    inline void follow_ticks(int num_ticks) { base.follow_ticks(num_ticks); }
 
     figure &base;
 };

@@ -49,7 +49,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "labor"},
     {FIGURE_LIBRARIAN, "library"},
     {FIGURE_MAGISTRATE, "magistrate"},
-    {FIGURE_DELIVERY_BOY, "marketboy"},
     {FIGURE_MARKET_TRADER, "mkt_seller"},
     {FIGURE_MUSICIAN, "musician"},
     {FIGURE_NONE, "pharaoh"},
@@ -181,17 +180,6 @@ static sound_key physician_phrase(figure *f) {
 
     int index = rand() % keys.size();
     return keys[index];
-}
-
-static sound_key deliverty_boy_phrase(figure *f) {
-    svector<sound_key, 10> keys;
-    keys.push_back("marketboy_those_baskets_too_heavy");
-    keys.push_back("marketboy_i_works_all_day");
-    keys.push_back("marketboy_upon_ill_be_market_owner");
-
-    int index = rand() % keys.size();
-    return keys[index];
-    
 }
 
 static sound_key apothecary_phrase(figure *f) {
@@ -769,7 +757,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_GLADIATOR:
     //            return gladiator_phrase(f);
     case FIGURE_TAX_COLLECTOR: return tax_collector_phrase(f);
-    case FIGURE_DELIVERY_BOY: return deliverty_boy_phrase(f);
     case FIGURE_HERBALIST: return apothecary_phrase(f);
     case FIGURE_PHYSICIAN: return physician_phrase(f);
     case FIGURE_CART_PUSHER: return cart_pusher_phrase(f);
@@ -782,7 +769,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_PROTESTER:
     //        case FIGURE_CRIMINAL:
     //        case FIGURE_RIOTER:
-    //        case FIGURE_DELIVERY_BOY:
     //        case FIGURE_MISSIONARY:
     //            return citizen_phrase(f);
     //        case FIGURE_HOMELESS:

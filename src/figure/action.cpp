@@ -96,7 +96,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_CREATURE, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_MISSIONARY, 1, TERRAIN_USAGE_ROADS, 192, GROUP_FIGURE_MISSIONARY},
   {FIGURE_FISHING_POINT, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_FISHING_POINT},
-  {FIGURE_DELIVERY_BOY, 1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_GRANARY_BOY},
+  {FIGURE_DELIVERY_BOY, 1, TERRAIN_USAGE_ROADS, 0, 0, 0, ANIM_DELIVERY_BOY_WALK},
   {FIGURE_SHIPWRECK, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_BIRDS, 2, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_SHEEP},
   {FIGURE_OSTRICH, 2, TERRAIN_USAGE_ANIMAL, 0, 0, 0, ANIM_OSTRICH_WALK},
@@ -415,7 +415,6 @@ void figure::action_perform() {
             }
             break;
 
-        case FIGURE_DELIVERY_BOY:
         case FIGURE_TRADE_CARAVAN_DONKEY:
             if (leading_figure_id <= 0) {
                 //poof();
@@ -429,6 +428,7 @@ void figure::action_perform() {
                 is_ghost = true;
             }
             break;
+
         default:
             dcast()->figure_before_action();
             break;
@@ -568,7 +568,6 @@ void figure::action_perform() {
         case FIGURE_BOLT: bolt_action(); break;
         case FIGURE_BALLISTA: ballista_action(); break;
         case FIGURE_FISHING_POINT: fishing_point_action(); break;
-        case FIGURE_DELIVERY_BOY: delivery_boy_action(); break;
         case FIGURE_SHIPWRECK: shipwreck_action(); break;
         case FIGURE_BIRDS: sheep_action(); break;
         case FIGURE_ANTELOPE: zebra_action(); break; // 70

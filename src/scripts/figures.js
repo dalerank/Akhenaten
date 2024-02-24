@@ -62,3 +62,10 @@ figure_market_buyer = {
 		walk : { pos : [0, 0], anim_id: ANIM_MARKET_BUYER_WALK, max_frames:12 },
 	}
 }
+
+figure_market_buyer = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_DELIVERY_BOY_WALK, max_frames:12 },
+	}
+}
+
