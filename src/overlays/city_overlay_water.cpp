@@ -11,6 +11,7 @@
 #include "widget/city/tile_draw.h"
 #include "core/vec2i.h"
 #include "figure/figure.h"
+#include "widget/city/tile_draw.h"
 
 static int terrain_on_water_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD
@@ -28,6 +29,7 @@ static void draw_footprint_water(vec2i pixel, tile2i point, painter &ctx) {
             city_with_overlay_draw_building_footprint(ctx, pixel, grid_offset, 0);
         } else if (map_property_is_draw_tile(grid_offset)) {
             ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, 0);
+            ImageDraw::isometric_from_drawtile_top(ctx, map_image_at(grid_offset), pixel, 0);
         }
     } else {
         int terrain = map_terrain_get(grid_offset);
@@ -112,14 +114,14 @@ struct city_overlay_water : public city_overlay {
         return f->type == FIGURE_WATER_CARRIER;
     }
 
-    void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
-        int grid_offset = point.grid_offset();
+    void draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const override {
+        int grid_offset = tile.grid_offset();
         if (!map_property_is_draw_tile(grid_offset)) {
             return;
         }
 
         if (map_building_at(grid_offset)) {
-            city_with_overlay_draw_building_top(pixel, point, ctx);
+            city_with_overlay_draw_building_top(pixel, tile, ctx);
         }
     }
 

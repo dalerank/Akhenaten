@@ -64,10 +64,6 @@ grid_xx g_render_grid = {0,
                           }
 };
 
-enum e_render_state {
-    RENDER_TALL_TILE = 1,
-};
-
 void map_render_clear() {
     map_grid_clear(&g_render_grid);
 }
@@ -735,15 +731,16 @@ void city_with_overlay_draw_building_footprint(painter &ctx, vec2i pos, int grid
     }
 }
 
-void city_with_overlay_draw_building_top(vec2i pixel, tile2i point, painter &ctx) {
-    int grid_offset = point.grid_offset();
+void city_with_overlay_draw_building_top(vec2i pixel, tile2i tile, painter &ctx) {
+    int grid_offset = tile.grid_offset();
     building* b = building_at(grid_offset);
     if (get_city_overlay()->type == OVERLAY_PROBLEMS) {
         overlay_problems_prepare_building(b);
     }
 
     if (get_city_overlay()->show_building(b)) {
-        draw_isometric_nonterrain_height(pixel, point, ctx);
+        map_render_set(grid_offset, RENDER_TALL_TILE);
+        draw_isometric_nonterrain_height(pixel, tile, ctx);
         return;
     }
 
