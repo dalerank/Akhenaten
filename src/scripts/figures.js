@@ -68,7 +68,7 @@ figure_market_buyer = {
 	}
 }
 
-figure_market_buyer = {
+figure_delivery_boy = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_DELIVERY_BOY_WALK, max_frames:12 },
 	}

@@ -22,7 +22,7 @@ physician_t physician;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_physician);
 void config_load_building_physician() {
-    g_config_arch.r_section("building_pphysician", [] (archive arch) {
+    g_config_arch.r_section("building_physician", [] (archive arch) {
         model::physician.labor_category = arch.r_type<e_labor_category>("labor_category");
         model::physician.anim.load(arch);
     });
