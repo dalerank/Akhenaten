@@ -42,6 +42,11 @@ figure_ostrich = {
 figure_immigrant = {
 	animations : {
 		swim : { pos : [0, 0], anim_id: ANIM_FERRY_BOAT, max_frames:4, duration:4 },
+	},
+	sounds : {
+		i_need_here: {sound:"immigrant_e01.wav", group: 202, text:0},
+ 		work_for_all : {sound:"immigrant_e02.wav", group: 202, text:1},
+ 		cheap_food : {sound:"immigrant_e03.wav", group: 202, text:2},
 	}
 }
 

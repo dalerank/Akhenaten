@@ -16,6 +16,7 @@
 #include "window/building/common.h"
 #include "figure_phrase.h"
 #include "graphics/animation.h"
+#include "sound/sound_walker.h"
 
 #include <algorithm>
 #include <memory.h>
@@ -164,6 +165,7 @@ public:
     uint8_t collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
     uint8_t trade_ship_failed_dock_attempts;
     uint8_t phrase_sequence_exact;
+    uint16_t phrase_group;
     uint8_t phrase_id;
     bstring64 phrase_key;
     uint8_t phrase_sequence_city;
@@ -533,6 +535,7 @@ public:
     virtual void poof() { base.poof(); }
     virtual e_figure_sound phrase() const { return {FIGURE_NONE, ""}; }
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
+    virtual figure_sound_t get_sound_reaction(pcstr key) const;
     virtual sound_key phrase_key() const { return {}; }
     virtual int provide_service() { return 0; }
     virtual bool play_die_sound() { return false; }
@@ -604,6 +607,7 @@ template<e_figure_type E, typename T>
 struct model_t {
     static constexpr e_figure_type type = E;
     animations_t anim;
+    figure_sounds_t sounds;
 
     model_t() {
         static figures::FigureIterator config_handler(&create);

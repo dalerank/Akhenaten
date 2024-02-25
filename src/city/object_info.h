@@ -76,7 +76,7 @@ struct object_info {
     int storage_show_special_orders;
     struct {
         int draw_debug_path;
-        int sound_id;
+        int phrase_group;
         int phrase_id;
         bstring64 phrase_key;
         int selected_index;

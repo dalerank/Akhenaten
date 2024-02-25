@@ -350,8 +350,8 @@ void figure::draw_market_buyer(object_info* c) {
         ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->offset + vec2i{90 + width, 135});
     }
 
-    if (c->figure.phrase_id >= 0) {
-        lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1, c->offset + vec2i{90, 160}, 16 * (c->width_blocks - 8), FONT_NORMAL_BLACK_ON_DARK);
+    if (c->figure.phrase_group > 0 && c->figure.phrase_id >= 0) {
+        lang_text_draw_multiline(c->figure.phrase_group, c->figure.phrase_id, c->offset + vec2i{90, 160}, 16 * (c->width_blocks - 8), FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 
@@ -367,8 +367,8 @@ void figure::draw_normal_figure(object_info* c) {
     lang_text_draw(name_group_id(), name, c->offset.x + 90, c->offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
     lang_text_draw(64, type, c->offset.x + 92, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
 
-    if (c->figure.phrase_id >= 0) {
-        lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1, c->offset + vec2i{90, 160}, 16 * (c->width_blocks - 8), FONT_NORMAL_BLACK_ON_DARK);
+    if (c->figure.phrase_group > 0 && c->figure.phrase_id >= 0) {
+        lang_text_draw_multiline(c->figure.phrase_group, c->figure.phrase_id, c->offset + vec2i{90, 160}, 16 * (c->width_blocks - 8), FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 
@@ -479,8 +479,9 @@ static int window_info_show_overlay(figure *f) {
 void window_building_play_figure_phrase(object_info* c) {
     int figure_id = c->figure.figure_ids[c->figure.selected_index];
     figure* f = figure_get(figure_id);
+    f->figure_phrase_play();
     c->show_overlay = window_info_show_overlay(f);
-    c->figure.sound_id = f->figure_phrase_play();
+    c->figure.phrase_group = f->phrase_group;
     c->figure.phrase_id = f->phrase_id;
     c->figure.phrase_key = f->phrase_key;
 }

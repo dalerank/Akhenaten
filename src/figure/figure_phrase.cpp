@@ -862,6 +862,12 @@ void figure::figure_phrase_determine() {
     } else {
         phrase_key = phrase_based_on_city_state();
     }
+
+    if (!phrase_key.empty()) {
+        figure_sound_t reaction = dcast()->get_sound_reaction(phrase_key.c_str());
+        phrase_group = reaction.group;
+        phrase_id = reaction.text;
+    }
 }
 
 static int figure_play_phrase_file(figure *f, e_figure_type type, bstring64 key) {
@@ -892,8 +898,8 @@ static int figure_play_phrase_file(figure *f, e_figure_type type, bstring64 key)
                 path.printf("Voice/Walker/%s_random_01.wav", type_it->prefix.c_str(), key.c_str());
             }
         } else {
-            auto reaction = snd::get_walker_reaction(key);
-            path.printf("Voice/Walker/%s", reaction.c_str());
+            auto reaction = f->dcast()->get_sound_reaction(key);
+            path.printf("Voice/Walker/%s", reaction.fname.c_str());
         }
 
         sound_speech_play_file(path);

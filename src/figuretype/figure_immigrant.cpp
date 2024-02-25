@@ -10,16 +10,14 @@
 
 #include "js/js_game.h"
 
-struct immigrant_model : public
-            figures::model_t<FIGURE_IMMIGRANT,
-                             figure_immigrant> {};
-
+struct immigrant_model : public figures::model_t<FIGURE_IMMIGRANT, figure_immigrant> {};
 immigrant_model immigrant_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_immigrant);
 void config_load_figure_immigrant() {
     g_config_arch.r_section("figure_immigrant", [] (archive arch) {
         immigrant_m.anim.load(arch);
+        immigrant_m.sounds.load(arch);
     });
 }
 
@@ -102,14 +100,13 @@ bool figure_immigrant::can_move_by_water() const {
     return map_terrain_is(tile(), TERRAIN_FERRY_ROUTE);;
 }
 
-sound_key figure_immigrant::phrase_key() const {
-    svector<sound_key, 10> keys;
-    keys.push_back("immigrant_i_hope_i_need_here");
-    keys.push_back("immigrant_i_heard_city_have_work_for_all");
-    keys.push_back("immigrant_i_heard_city_have_cheap_food");
+figure_sound_t figure_immigrant::get_sound_reaction(pcstr key) const {
+    return immigrant_m.sounds[key];
+}
 
-    int index = rand() % keys.size();
-    return keys[index];
+sound_key figure_immigrant::phrase_key() const {
+    svector<sound_key, 10> keys = {"i_need_here", "work_for_all", "cheap_food"};
+    return keys[rand() % keys.size()];
 }
 
 void figure_immigrant::create(building *house, int num_people) {
