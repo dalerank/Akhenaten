@@ -32,6 +32,8 @@
 #include "scenario/property.h"
 #include "config/config.h"
 
+#include "figuretype/figure_storageyard_cart.h"
+
 #include <cmath>
 
 int building_storageyard_get_space_info(building* storageyard) {
@@ -849,6 +851,7 @@ void building_storage_yard::spawn_figure() {
             follower->set_direction_to(task.dest);
             follower->wait_ticks = i * 4;
         }
+
         figure *sled = figure_create(FIGURE_SLED, base.tile, 0);
         sled->set_destination(task.dest);
         sled->set_direction_to(task.dest);
@@ -858,18 +861,21 @@ void building_storage_yard::spawn_figure() {
 
     } else if (!base.has_figure(BUILDING_SLOT_SERVICE)) {
         figure* f = figure_create(FIGURE_STORAGEYARD_CART, base.road_access, DIR_4_BOTTOM_LEFT);
-        f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+        auto cart = f->dcast_storageyard_cart();
+
+        cart->base.action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 
         switch (task.result) {
         case STORAGEYARD_TASK_GETTING:
         case STORAGEYARD_TASK_GETTING_MOAR:
-            f->load_resource(RESOURCE_NONE, 0);
-            f->collecting_item_id = task.resource;
+            cart->load_resource(RESOURCE_NONE, 0);
+            cart->base.collecting_item_id = task.resource;
             break;
+
         case STORAGEYARD_TASK_DELIVERING:
         case STORAGEYARD_TASK_EMPTYING:
             task.amount = std::min<int>(task.amount, 400);
-            f->load_resource(task.resource, task.amount);
+            cart->load_resource(task.resource, task.amount);
             building_storageyard_remove_resource(&base, task.resource, task.amount);
             break;
         }
@@ -878,13 +884,13 @@ void building_storage_yard::spawn_figure() {
 
     } else if (task.result == STORAGEYARD_TASK_GETTING_MOAR && !base.has_figure_of_type(1, FIGURE_STORAGEYARD_CART)) {
         figure* f = figure_create(FIGURE_STORAGEYARD_CART, base.road_access, DIR_4_BOTTOM_LEFT);
-        f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+        auto cart = f->dcast_storageyard_cart();
+        cart->base.action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+        cart->load_resource(RESOURCE_NONE, 0);
+        cart->base.collecting_item_id = task.resource;
 
-        f->load_resource(RESOURCE_NONE, 0);
-        f->collecting_item_id = task.resource;
-
-        base.set_figure(1, f->id);
-        f->set_home(base.id);
+        base.set_figure(1, cart->id());
+        cart->set_home(base.id);
     }
 }
 

@@ -8,6 +8,18 @@
 
 #include "graphics/image.h"
 #include "grid/figure.h"
+#include "js/js_game.h"
+
+struct trade_ship_model : public figures::model_t<FIGURE_TRADE_SHIP, figure_trade_ship> {};
+trade_ship_model trader_ship_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_trade_ship);
+void config_load_figure_trade_ship() {
+    g_config_arch.r_section("figure_trade_ship", [] (archive arch) {
+        trader_ship_m.anim.load(arch);
+    });
+}
+
 
 int figure_create_trade_ship(tile2i tile, int city_id) {
     figure* ship = figure_create(FIGURE_TRADE_SHIP, tile, DIR_0_TOP_RIGHT);
@@ -44,16 +56,16 @@ int figure_trade_ship_is_trading(figure* ship) {
     return TRADE_SHIP_NONE;
 }
 
-int figure::trade_ship_lost_queue() {
+int figure_trade_ship::lost_queue() {
     building* b = destination();
     if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_DOCK && b->num_workers > 0
-        && b->data.dock.trade_ship_id == id) {
+        && b->data.dock.trade_ship_id == id()) {
         return 0;
     }
     return 1;
 }
 
-int figure::trade_ship_done_trading() {
+int figure_trade_ship::done_trading() {
     building* b = destination();
     if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_DOCK && b->num_workers > 0) {
         for (int i = 0; i < 3; i++) {
@@ -63,9 +75,9 @@ int figure::trade_ship_done_trading() {
                     return 0;
             }
         }
-        trade_ship_failed_dock_attempts++;
-        if (trade_ship_failed_dock_attempts >= 10) {
-            trade_ship_failed_dock_attempts = 11;
+        base.trade_ship_failed_dock_attempts++;
+        if (base.trade_ship_failed_dock_attempts >= 10) {
+            base.trade_ship_failed_dock_attempts = 11;
             return 1;
         }
         return 0;
@@ -73,46 +85,43 @@ int figure::trade_ship_done_trading() {
     return 1;
 }
 
-void figure::trade_ship_action() {
+void figure_trade_ship::figure_action() {
     //    is_ghost = false;
-    allow_move_type = EMOVE_BOAT;
+    base.allow_move_type = EMOVE_BOAT;
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
-    switch (action_state) {
+    switch (action_state()) {
     case FIGURE_ACTION_110_TRADE_SHIP_CREATED:
-        load_resource(resource_id, 1200);
-        trader_amount_bought = 0;
+        load_resource(base.resource_id, 1200);
+        base.trader_amount_bought = 0;
         //            is_ghost = true;
-        wait_ticks++;
-        if (wait_ticks > 20) {
-            wait_ticks = 0;
+        base.wait_ticks++;
+        if (base.wait_ticks > 20) {
+            base.wait_ticks = 0;
             map_point tile;
-            int dock_id = building_dock_get_free_destination(id, &tile);
+            int dock_id = building_dock_get_free_destination(id(), &tile);
             if (dock_id) {
                 set_destination(dock_id);
-                action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
-                destination_tile = tile;
-                //                    destination_tile.x() = tile.x();
-                //                    destination_tile.y() = tile.y();
-            } else if (building_dock_get_queue_destination(id, &tile)) {
-                action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
-                destination_tile = tile;
-                //                    destination_tile.x() = tile.x();
-                //                    destination_tile.y() = tile.y();
+                base.action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
+                base.destination_tile = tile;
+            } else if (building_dock_get_queue_destination(id(), &tile)) {
+                base.action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
+                base.destination_tile = tile;
             } else {
                 poof();
             }
         }
-        anim_frame = 0;
+        base.anim_frame = 0;
         break;
+
     case FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK:
-        move_ticks(1);
-        height_adjusted_ticks = 0;
-        if (direction == DIR_FIGURE_NONE)
-            action_state = FIGURE_ACTION_112_TRADE_SHIP_MOORED;
-        else if (direction == DIR_FIGURE_REROUTE)
+        base.move_ticks(1);
+        base.height_adjusted_ticks = 0;
+        if (direction() == DIR_FIGURE_NONE)
+            base.action_state = FIGURE_ACTION_112_TRADE_SHIP_MOORED;
+        else if (direction() == DIR_FIGURE_REROUTE)
             route_remove();
-        else if (direction == DIR_FIGURE_CAN_NOT_REACH) {
+        else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
             if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
                 city_message_post(true, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0);
@@ -120,9 +129,9 @@ void figure::trade_ship_action() {
             }
         }
         if (destination()->state != BUILDING_STATE_VALID) {
-            action_state = FIGURE_ACTION_115_TRADE_SHIP_LEAVING;
-            wait_ticks = 0;
-            destination_tile = scenario_map_river_exit();
+            base.action_state = FIGURE_ACTION_115_TRADE_SHIP_LEAVING;
+            base.wait_ticks = 0;
+            base.destination_tile = scenario_map_river_exit();
             //                map_point river_exit = scenario_map_river_exit();
             //                destination_tile.x() = river_exit.x();
             //                destination_tile.y() = river_exit.y();
@@ -130,19 +139,19 @@ void figure::trade_ship_action() {
         break;
 
     case FIGURE_ACTION_112_TRADE_SHIP_MOORED:
-        if (trade_ship_lost_queue()) {
-            trade_ship_failed_dock_attempts = 0;
-            action_state = FIGURE_ACTION_115_TRADE_SHIP_LEAVING;
-            wait_ticks = 0;
-            destination_tile = scenario_map_river_entry();
+        if (lost_queue()) {
+            base.trade_ship_failed_dock_attempts = 0;
+            base.action_state = FIGURE_ACTION_115_TRADE_SHIP_LEAVING;
+            base.wait_ticks = 0;
+            base.destination_tile = scenario_map_river_entry();
             //                map_point river_entry = scenario_map_river_entry();
             //                destination_tile.x() = river_entry.x();
             //                destination_tile.y() = river_entry.y();
-        } else if (trade_ship_done_trading()) {
-            trade_ship_failed_dock_attempts = 0;
-            action_state = FIGURE_ACTION_115_TRADE_SHIP_LEAVING;
-            wait_ticks = 0;
-            destination_tile = scenario_map_river_entry();
+        } else if (done_trading()) {
+            base.trade_ship_failed_dock_attempts = 0;
+            base.action_state = FIGURE_ACTION_115_TRADE_SHIP_LEAVING;
+            base.wait_ticks = 0;
+            base.destination_tile = scenario_map_river_entry();
             //                map_point river_entry = scenario_map_river_entry();
             //                destination_tile.x() = river_entry.x();
             //                destination_tile.y() = river_entry.y();
@@ -152,68 +161,71 @@ void figure::trade_ship_action() {
         }
         switch (destination()->data.dock.orientation) {
         case 0:
-            direction = DIR_2_BOTTOM_RIGHT;
+            base.direction = DIR_2_BOTTOM_RIGHT;
             break;
         case 1:
-            direction = DIR_4_BOTTOM_LEFT;
+            base.direction = DIR_4_BOTTOM_LEFT;
             break;
         case 2:
-            direction = DIR_6_TOP_LEFT;
+            base.direction = DIR_6_TOP_LEFT;
             break;
         default:
-            direction = DIR_0_TOP_RIGHT;
+            base.direction = DIR_0_TOP_RIGHT;
             break;
         }
-        anim_frame = 0;
+        base.anim_frame = 0;
         city_message_reset_category_count(MESSAGE_CAT_BLOCKED_DOCK);
         break;
 
-        case FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE:
-        move_ticks(1);
-        height_adjusted_ticks = 0;
-        if (direction == DIR_FIGURE_NONE)
-            action_state = FIGURE_ACTION_114_TRADE_SHIP_ANCHORED;
-        else if (direction == DIR_FIGURE_REROUTE)
+    case FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE:
+        base.move_ticks(1);
+        base.height_adjusted_ticks = 0;
+        if (direction() == DIR_FIGURE_NONE) {
+            base.action_state = FIGURE_ACTION_114_TRADE_SHIP_ANCHORED;
+        } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
-        else if (direction == DIR_FIGURE_CAN_NOT_REACH)
+        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
+        }
         break;
 
     case FIGURE_ACTION_114_TRADE_SHIP_ANCHORED:
-        wait_ticks++;
-        if (wait_ticks > 40) {
+        base.wait_ticks++;
+        if (base.wait_ticks > 40) {
             tile2i tile;
-            int dock_id = building_dock_get_free_destination(id, &tile);
+            int dock_id = building_dock_get_free_destination(id(), &tile);
             if (dock_id) {
                 set_destination(dock_id);
-                action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
-                destination_tile = tile;
+                base.action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
+                base.destination_tile = tile;
                 //                    destination_tile.x() = tile.x();
                 //                    destination_tile.y() = tile.y();
-            } else if (map_figure_id_get(tile) != id && building_dock_get_queue_destination(id, &tile)) {
-                action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
-                destination_tile = tile;
+            } else if (map_figure_id_get(tile) != id() && building_dock_get_queue_destination(id(), &tile)) {
+                base.action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
+                base.destination_tile = tile;
                 //                    destination_tile.x() = tile.x();
                 //                    destination_tile.y() = tile.y();
             }
-            wait_ticks = 0;
+            base.wait_ticks = 0;
         }
-        anim_frame = 0;
+        base.anim_frame = 0;
         break;
 
     case FIGURE_ACTION_115_TRADE_SHIP_LEAVING:
-        move_ticks(1);
-        height_adjusted_ticks = 0;
-        if (direction == DIR_FIGURE_NONE) {
-            action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
+        base.move_ticks(1);
+        base.height_adjusted_ticks = 0;
+        if (direction() == DIR_FIGURE_NONE) {
+            base.action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
             poof();
-        } else if (direction == DIR_FIGURE_REROUTE)
+        } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
-        else if (direction == DIR_FIGURE_CAN_NOT_REACH)
+        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
+        }
 
         break;
     }
-    int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
-    sprite_image_id = image_group(IMG_FISHING_BOAT) + dir;
+
+    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
+    base.sprite_image_id = image_group(IMG_FISHING_BOAT) + dir;
 }

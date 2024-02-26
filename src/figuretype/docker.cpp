@@ -19,6 +19,7 @@
 #include "graphics/image_groups.h"
 #include "graphics/image_desc.h"
 #include "grid/road_access.h"
+#include "figuretype/figure_trader_ship.h"
 
 static bool try_import_resource(building* warehouse, e_resource resource, int city_id) {
     if (warehouse->type != BUILDING_STORAGE_YARD)
@@ -221,20 +222,22 @@ void figure::get_trade_center_location(int* _x, int* _y) {
         *_y = tile.y();
     }
 }
+
 int figure::deliver_import_resource(building* dock) {
     int ship_id = dock->data.dock.trade_ship_id;
     if (!ship_id)
         return 0;
 
-    figure* ship = figure_get(ship_id);
-    if (ship->action_state != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->get_carrying_amount() <= 0)
+    figure* f = figure_get(ship_id);
+    auto ship = f->dcast_trade_ship();
+    if (ship->action_state() != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->base.get_carrying_amount() <= 0)
         return 0;
 
     int x, y;
     get_trade_center_location(&x, &y);
     tile2i tile;
     e_resource resource;
-    int warehouse_id = get_closest_warehouse_for_import(vec2i(x, y), ship->empire_city_id, dock->distance_from_entry, dock->road_network_id, tile, resource);
+    int warehouse_id = get_closest_warehouse_for_import(vec2i(x, y), ship->base.empire_city_id, dock->distance_from_entry, dock->road_network_id, tile, resource);
     if (!warehouse_id) {
         return 0;
     }

@@ -85,3 +85,10 @@ figure_storageyard_cart = {
 		walk : { pos : [0, 0], anim_id: ANIM_CARTPUSHER_WALK, max_frames:12 },
 	}
 }
+
+figure_trade_ship = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_TRADER_SHIP_WALK, max_frames:3 },
+		idle : { pos : [0, 0], anim_id: ANIM_TRADER_SHIP_IDLE, max_frames:1 },
+	}
+}

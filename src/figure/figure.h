@@ -24,6 +24,9 @@
 class building;
 class figure_impl;
 class figure_immigrant;
+class figure_cartpusher;
+class figure_storageyard_cart;
+class figure_trade_ship;
 struct animation_t;
 
 constexpr int MAX_FIGURES[] = {5000, 2000};
@@ -228,6 +231,9 @@ public:
     
     figure_impl *dcast();
     figure_immigrant *dcast_immigrant();
+    figure_cartpusher *dcast_cartpusher();
+    figure_storageyard_cart *dcast_storageyard_cart();
+    figure_trade_ship *dcast_trade_ship();
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -375,7 +381,6 @@ public:
     void military_standard_action();
     void entertainer_action();
     void trade_caravan_action();
-    void trade_ship_action();
     void trade_caravan_donkey_action();
     void protestor_action();
     void mugger_action();
@@ -435,8 +440,6 @@ public:
 
     inline void set_resource(e_resource resource) { resource_id = resource; }
     e_resource get_resource() const { return resource_id; }
-    void load_resource(e_resource resource, int amount);
-    int dump_resource(int amount);
     int get_carrying_amount();
     void determine_deliveryman_destination_food();
     void cart_update_image();
@@ -449,8 +452,6 @@ public:
     int trader_total_sold();
     int get_closest_storageyard(tile2i tile, int city_id, int distance_from_entry, tile2i &storageyard);
     void go_to_next_storageyard(tile2i src_tile, int distance_to_entry);
-    int trade_ship_lost_queue();
-    int trade_ship_done_trading();
 
     void entertainer_update_shows();
     void entertainer_update_image();
@@ -518,7 +519,7 @@ public:
 
 class figure_impl {
 public:
-    figure_impl(figure *f) : base(*f) {}
+    figure_impl(figure *f) : base(*f), wait_ticks(f->wait_ticks) {}
 
     virtual void on_create() {}
     virtual void figure_action() {}
@@ -536,6 +537,9 @@ public:
     virtual int y_correction(int y) const { return y; }
 
     virtual figure_immigrant *dcast_immigrant() { return nullptr; }
+    virtual figure_cartpusher *dcast_cartpusher() { return nullptr; }
+    virtual figure_storageyard_cart *dcast_storageyard_cart() { return nullptr; }
+    virtual figure_trade_ship *dcast_trade_ship() { return nullptr; }
 
     inline building *home() { return base.home(); }
     inline int id() { return base.id; }
@@ -557,28 +561,17 @@ public:
     inline bool has_destination(int _id = -1) { return base.has_destination(_id); }
     inline void set_destination(int _id) { base.set_destination(_id); }
     inline void set_destination(building *b) { base.set_destination(b); }
+    inline void set_home(int _id) { base.set_home(_id); }
+    inline void set_home(building *b) { base.set_home(b); }
 
     figure &base;
+    short &wait_ticks;
 };
 
 figure* figure_get(int id);
 std::span<figure*> map_figures();
 
-/**
- * Creates a figure
- * @param type Figure type
- * @param x X position
- * @param y Y position
- * @param dir Direction the figure faces
- * @return Always a figure. If figure->id is zero, it is an invalid one.
- */
 figure* figure_create(e_figure_type type, tile2i tile, int dir);
-
-// void figure *f->map_figure_remove();
-// int figure_is_dead(const figure *f);
-// int const figure *f->is_enemy();
-// int const figure *f->is_legion();
-// int const figure *f->is_herd();
 
 void figure_init_scenario();
 

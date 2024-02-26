@@ -40,6 +40,8 @@
 #include "grid/floodplain.h"
 #include "config/config.h"
 
+#include "figuretype/figure_cartpusher.h"
+
 #include <cmath>
 #include <algorithm>
 #include <numeric>
@@ -192,18 +194,19 @@ figure* building::create_figure_with_destination(e_figure_type _type, building* 
 }
 
 figure* building::create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action, e_building_slot slot) {
-    // TODO: industry cartpushers do not spawn in the correct place?
-
     figure* f = create_figure_generic(FIGURE_CART_PUSHER, created_action, slot, DIR_4_BOTTOM_LEFT);
-    f->load_resource(resource_id, quantity);
-    f->set_destination(0);
-    f->immigrant_home_building_id = 0;
+    auto cart = f->dcast_cartpusher();
 
-    set_figure(slot, f->id); // warning: this overwrites any existing figure!
+    cart->load_resource(resource_id, quantity);
+    cart->set_destination(0);
+    cart->base.immigrant_home_building_id = 0;
+
+    set_figure(slot, cart->id()); // warning: this overwrites any existing figure!
     if (config_get(CONFIG_GP_CH_CART_SPEED_QUANTITY)) {
         f->progress_inside_speed = std::clamp(quantity / 400, 0, 2);
     }
-    f->wait_ticks = 30;
+    cart->wait_ticks = 30;
+
     return f;
 }
 

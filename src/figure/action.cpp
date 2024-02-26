@@ -50,7 +50,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_DANCER, 1, TERRAIN_USAGE_ROADS, 512, GROUP_FIGURE_DANCER},
   {FIGURE_SENET_PLAYER, 1, TERRAIN_USAGE_ROADS, 512, GROUP_FIGURE_CHARIOTEER},
   {FIGURE_TRADE_CARAVAN, 1, TERRAIN_USAGE_PREFER_ROADS, 0, 0, 0, IMG_TRADER_CARAVAN},
-  {FIGURE_TRADE_SHIP, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
+  {FIGURE_TRADE_SHIP, 1, TERRAIN_USAGE_ANY, 0, 0, 0, ANIM_TRADER_SHIP_WALK},
   {FIGURE_TRADE_CARAVAN_DONKEY, 1, TERRAIN_USAGE_PREFER_ROADS, 0, 0, 0, IMG_TRADER_CARAVAN_DONKEY},
   {FIGURE_PROTESTER, 1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_THIEF_WALK},
   {FIGURE_CRIMINAL, 1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_THIEF_WALK},
@@ -508,7 +508,6 @@ void figure::action_perform() {
             break;
 
         case FIGURE_TRADE_CARAVAN: trade_caravan_action(); break;
-        case FIGURE_TRADE_SHIP: trade_ship_action(); break; // 20
         case FIGURE_TRADE_CARAVAN_DONKEY: trade_caravan_donkey_action(); break;
         case FIGURE_PROTESTER: protestor_action(); break;
         case FIGURE_CRIMINAL: mugger_action(); break;

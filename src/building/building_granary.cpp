@@ -25,6 +25,7 @@
 #include "window/building/distribution.h"
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
+#include "figuretype/figure_storageyard_cart.h"
 
 #include <cmath>
 
@@ -589,22 +590,27 @@ void building_granary::on_create() {
 void building_granary::spawn_figure() {
     check_labor_problem();
     map_point road;
-    if (map_get_road_access_tile(tile(), size(), road)) { // map_has_road_access_granary(x, y, &road)
-        common_spawn_labor_seeker(100);
-
-        if (has_figure_of_type(0, FIGURE_STORAGEYARD_CART)) {
-            return;
-        }
-
-        auto task = building_granary_determine_worker_task(&base);
-        if (task.status != GRANARY_TASK_NONE) {
-            figure* f = figure_create(FIGURE_STORAGEYARD_CART, road, DIR_4_BOTTOM_LEFT);
-            f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
-            f->load_resource(task.resource, 0);
-            base.set_figure(0, f->id);
-            f->set_home(id());
-        }
+    if (!map_get_road_access_tile(tile(), size(), road)) { // map_has_road_access_granary(x, y, &road)
+        return;
     }
+    
+    common_spawn_labor_seeker(100);
+    if (has_figure_of_type(0, FIGURE_STORAGEYARD_CART)) {
+        return;
+    }
+
+    auto task = building_granary_determine_worker_task(&base);
+    if (task.status == GRANARY_TASK_NONE) {
+        return;
+    }
+
+    figure* f = figure_create(FIGURE_STORAGEYARD_CART, road, DIR_4_BOTTOM_LEFT);
+    auto cart = f->dcast_storageyard_cart();
+
+    cart->base.action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+    cart->load_resource(task.resource, 0);
+    base.set_figure(0, cart->id());
+    cart->set_home(id());
 }
 
 bool building_granary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
