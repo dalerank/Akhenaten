@@ -184,7 +184,7 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
     }
 }
 
-void figure_cartpusher::do_retrieve(int ACTION_DONE) {
+void figure_cartpusher::do_retrieve(int action_done) {
     base.wait_ticks++;
     base.anim_frame = 0;
     if (base.wait_ticks > 4) {
@@ -208,7 +208,7 @@ void figure_cartpusher::do_retrieve(int ACTION_DONE) {
                 if (building_storageyard_remove_resource(destination(), (e_resource)base.collecting_item_id, load_single_turn) == 0) {
                     base.load_resource((e_resource)base.collecting_item_id, load_single_turn * 100);
                     if (base.get_carrying_amount() >= carry_amount_goal_max) {
-                        advance_action(ACTION_DONE);
+                        advance_action(action_done);
                     }
                 } else {
                     advance_action(ACTION_8_RECALCULATE);
