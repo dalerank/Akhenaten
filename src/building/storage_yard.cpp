@@ -33,6 +33,7 @@
 #include "config/config.h"
 
 #include "figuretype/figure_storageyard_cart.h"
+#include "figuretype/figure_sled.h"
 
 #include <cmath>
 
@@ -852,11 +853,12 @@ void building_storage_yard::spawn_figure() {
             follower->wait_ticks = i * 4;
         }
 
-        figure *sled = figure_create(FIGURE_SLED, base.tile, 0);
+        figure *f = figure_create(FIGURE_SLED, base.tile, 0);
+        figure_sled *sled = f->dcast_sled();
         sled->set_destination(task.dest);
         sled->set_direction_to(task.dest);
         sled->load_resource(task.resource, task.amount);
-        sled->leading_figure_id = leader->id;
+        sled->base.leading_figure_id = leader->id;
         building_storageyard_remove_resource(&base, task.resource, task.amount);
 
     } else if (!base.has_figure(BUILDING_SLOT_SERVICE)) {

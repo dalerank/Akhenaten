@@ -58,26 +58,6 @@ int figure::get_carrying_amount() {
     return resource_amount_full;
 }
 
-void figure::sled_do_deliver(int action_done) {
-    anim_frame = 0;
-    wait_ticks++;
-
-    int carrying = get_carrying_amount();
-    e_resource resource = get_resource();
-
-    if (resource == RESOURCE_NONE || carrying <= 0) {
-        progress_inside_speed = 0;
-        return advance_action(action_done);
-    }
-
-    building* dest = destination();
-    switch (dest->type) {
-    case BUILDING_SMALL_MASTABA:
-        building_monument_deliver_resource(dest, resource, carrying);
-        break;
-    };
-}
-
 void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
     base.anim_frame = 0;
     base.wait_ticks++;
@@ -480,36 +460,6 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
     //    advance_action(FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE);
 }
 
-void figure::sled_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Sled");
-    if (leading_figure_id > 0) {
-        figure* leader = figure_get(leading_figure_id);
-        if (leader->type == FIGURE_SLED_PULLER && leader->state == FIGURE_STATE_ALIVE) {
-            follow_ticks(1);
-        } else {
-            grid_area area = building_monument_get_area(destination());
-            if (map_tile_is_inside_area(tile, area.tmin, area.tmax)) {
-                sled_do_deliver(ACTION_11_RETURNING_EMPTY);
-            }
-            poof();
-            return;
-        }
-    }
-
-    switch (resource_id) {
-    case RESOURCE_STONE: image_set_animation(IMG_BIGSLED_STONE, 0, 1); break;
-    case RESOURCE_LIMESTONE: image_set_animation(IMG_BIGSLED_LIMESTONE, 0, 1); break;
-    case RESOURCE_GRANITE: image_set_animation(IMG_BIGSLED_GRANITE, 0, 1); break;
-    case RESOURCE_SANDSTONE: image_set_animation(IMG_BIGSLED_SANDSTONE, 0, 1); break;
-    case RESOURCE_CLAY: image_set_animation(IMG_BIGSLED_CLAY, 0, 1); break;
-    case RESOURCE_BRICKS: image_set_animation(IMG_BIGSLED_BRICKS, 0, 1); break;
-
-    default:
-        image_set_animation(IMG_BIGSLED_EMPTY, 0, 1);
-        break;
-    }
-}
-
 void figure::sled_puller_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/SledPuller");
     if (leading_figure_id > 0) {
@@ -561,7 +511,6 @@ void figure::sled_puller_action() {
         break;
     }
 }
-
 
 void figure_cartpusher::figure_before_action() {
     if (has_destination()) {

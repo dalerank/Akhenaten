@@ -92,3 +92,9 @@ figure_trade_ship = {
 		idle : { pos : [0, 0], anim_id: ANIM_TRADER_SHIP_IDLE, max_frames:1 },
 	}
 }
+
+figure_sled = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: IMG_BIGSLED_EMPTY, max_frames:1 },
+	}
+}

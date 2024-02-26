@@ -564,7 +564,6 @@ void figure::action_perform() {
         case FIGURE_REED_GATHERER: reed_gatherer_action(); break; // reed gatherers
         case FIGURE_FESTIVAL_PRIEST: festival_guy_action(); break;
         case FIGURE_SLED_PULLER: sled_puller_action(); break;
-        case FIGURE_SLED: sled_action(); break;
         case FIGURE_HYENA: hyena_action(); break;
 
         default:

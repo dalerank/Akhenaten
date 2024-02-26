@@ -152,6 +152,7 @@ figure_immigrant *figure::dcast_immigrant() { return dcast()->dcast_immigrant();
 figure_cartpusher *figure::dcast_cartpusher() { return dcast()->dcast_cartpusher(); }
 figure_storageyard_cart *figure::dcast_storageyard_cart() { return dcast()->dcast_storageyard_cart(); }
 figure_trade_ship *figure::dcast_trade_ship() { return dcast()->dcast_trade_ship(); }
+figure_sled *figure::dcast_sled() { return dcast()->dcast_sled(); }
 
 bool figure::is_dead() {
     return state != FIGURE_STATE_ALIVE || action_state == FIGURE_ACTION_149_CORPSE;

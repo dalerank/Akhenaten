@@ -27,6 +27,8 @@ class figure_immigrant;
 class figure_cartpusher;
 class figure_storageyard_cart;
 class figure_trade_ship;
+class figure_sled;
+
 struct animation_t;
 
 constexpr int MAX_FIGURES[] = {5000, 2000};
@@ -234,6 +236,7 @@ public:
     figure_cartpusher *dcast_cartpusher();
     figure_storageyard_cart *dcast_storageyard_cart();
     figure_trade_ship *dcast_trade_ship();
+    figure_sled *dcast_sled();
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -374,7 +377,6 @@ public:
     void emigrant_action();
     void homeless_action();
     void sled_puller_action();
-    void sled_action();
     void explosion_cloud_action();
     void tax_collector_action();
     void soldier_action();
@@ -443,8 +445,6 @@ public:
     int get_carrying_amount();
     void determine_deliveryman_destination_food();
     void cart_update_image();
-
-    void sled_do_deliver(int action_done);
     
     void trader_buy(int amounts);
     void trader_sell(int amounts);
@@ -519,7 +519,7 @@ public:
 
 class figure_impl {
 public:
-    figure_impl(figure *f) : base(*f), wait_ticks(f->wait_ticks) {}
+    figure_impl(figure *f) : base(*f), wait_ticks(f->wait_ticks), destination_tile(f->destination_tile) {}
 
     virtual void on_create() {}
     virtual void figure_action() {}
@@ -540,6 +540,7 @@ public:
     virtual figure_cartpusher *dcast_cartpusher() { return nullptr; }
     virtual figure_storageyard_cart *dcast_storageyard_cart() { return nullptr; }
     virtual figure_trade_ship *dcast_trade_ship() { return nullptr; }
+    virtual figure_sled *dcast_sled() { return nullptr; }
 
     inline building *home() { return base.home(); }
     inline int id() { return base.id; }
@@ -557,15 +558,18 @@ public:
     inline void route_remove() { base.route_remove(); }
     inline void image_set_animation(const animation_t &anim) { base.image_set_animation(anim); }
     inline void image_set_die_animation(const animation_t &anim) { base.image_set_die_animation(anim); }
+    inline void image_set_animation(e_image_id img, int offset = 0, int max_frames = 12, int duration = 1) { base.image_set_animation(img, offset, max_frames, duration);}
     inline void follow_ticks(int num_ticks) { base.follow_ticks(num_ticks); }
     inline bool has_destination(int _id = -1) { return base.has_destination(_id); }
     inline void set_destination(int _id) { base.set_destination(_id); }
     inline void set_destination(building *b) { base.set_destination(b); }
     inline void set_home(int _id) { base.set_home(_id); }
     inline void set_home(building *b) { base.set_home(b); }
+    inline void set_direction_to(building *b) { return base.set_direction_to(b); }
 
     figure &base;
     short &wait_ticks;
+    tile2i &destination_tile;
 };
 
 figure* figure_get(int id);
