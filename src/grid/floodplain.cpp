@@ -175,6 +175,12 @@ static void map_floodplain_update_inundation_row(int grid_offset, int order) {
         if (map_terrain_is(grid_offset, TERRAIN_SUBMERGED_ROAD)) {
             map_terrain_remove(grid_offset, TERRAIN_SUBMERGED_ROAD);
             map_terrain_add(grid_offset, TERRAIN_ROAD);
+        } else {
+            int fertility_value = map_get_fertility(grid_offset, FERT_WITH_MALUS);
+            int fertility_index = std::clamp(fertility_value / 25, 0, 3);
+            int image_id = image_group(IMG_TERRAIN_FLOODPLAIN);
+            image_id += 12 * fertility_index;
+            map_image_set(grid_offset, image_id);
         }
     }
     map_refresh_river_image_at(grid_offset);
