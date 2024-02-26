@@ -857,7 +857,7 @@ void building_storage_yard::spawn_figure() {
         building_storageyard_remove_resource(&base, task.resource, task.amount);
 
     } else if (!base.has_figure(BUILDING_SLOT_SERVICE)) {
-        figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, base.road_access, DIR_4_BOTTOM_LEFT);
+        figure* f = figure_create(FIGURE_STORAGEYARD_CART, base.road_access, DIR_4_BOTTOM_LEFT);
         f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 
         switch (task.result) {
@@ -876,8 +876,8 @@ void building_storage_yard::spawn_figure() {
         base.set_figure(0, f->id);
         f->set_home(base.id);
 
-    } else if (task.result == STORAGEYARD_TASK_GETTING_MOAR && !base.has_figure_of_type(1, FIGURE_STORAGE_YARD_DELIVERCART)) {
-        figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, base.road_access, DIR_4_BOTTOM_LEFT);
+    } else if (task.result == STORAGEYARD_TASK_GETTING_MOAR && !base.has_figure_of_type(1, FIGURE_STORAGEYARD_CART)) {
+        figure* f = figure_create(FIGURE_STORAGEYARD_CART, base.road_access, DIR_4_BOTTOM_LEFT);
         f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 
         f->load_resource(RESOURCE_NONE, 0);

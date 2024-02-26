@@ -592,13 +592,13 @@ void building_granary::spawn_figure() {
     if (map_get_road_access_tile(tile(), size(), road)) { // map_has_road_access_granary(x, y, &road)
         common_spawn_labor_seeker(100);
 
-        if (has_figure_of_type(0, FIGURE_STORAGE_YARD_DELIVERCART)) {
+        if (has_figure_of_type(0, FIGURE_STORAGEYARD_CART)) {
             return;
         }
 
         auto task = building_granary_determine_worker_task(&base);
         if (task.status != GRANARY_TASK_NONE) {
-            figure* f = figure_create(FIGURE_STORAGE_YARD_DELIVERCART, road, DIR_4_BOTTOM_LEFT);
+            figure* f = figure_create(FIGURE_STORAGEYARD_CART, road, DIR_4_BOTTOM_LEFT);
             f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
             f->load_resource(task.resource, 0);
             base.set_figure(0, f->id);

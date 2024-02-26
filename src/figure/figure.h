@@ -367,12 +367,10 @@ public:
 
     void emigrant_action();
     void homeless_action();
-    void cartpusher_action();
     void sled_puller_action();
     void sled_action();
     void explosion_cloud_action();
     void tax_collector_action();
-    void storageyard_cart_action();
     void soldier_action();
     void military_standard_action();
     void entertainer_action();
@@ -440,15 +438,8 @@ public:
     void load_resource(e_resource resource, int amount);
     int dump_resource(int amount);
     int get_carrying_amount();
-    void determine_deliveryman_destination();
     void determine_deliveryman_destination_food();
     void cart_update_image();
-    void determine_granaryman_destination();
-    void determine_storageyard_cart_destination();
-    ////
-    void cartpusher_calculate_destination(bool storageyard_cart);
-    void cartpusher_do_deliver(bool storageyard_cart, int action_done);
-    void cartpusher_do_retrieve(int action_done);
 
     void sled_do_deliver(int action_done);
     
@@ -532,6 +523,7 @@ public:
     virtual void on_create() {}
     virtual void figure_action() {}
     virtual void figure_before_action() {}
+    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out);
     virtual void poof() { base.poof(); }
     virtual e_figure_sound phrase() const { return {FIGURE_NONE, ""}; }
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
@@ -562,6 +554,9 @@ public:
     inline void image_set_animation(const animation_t &anim) { base.image_set_animation(anim); }
     inline void image_set_die_animation(const animation_t &anim) { base.image_set_die_animation(anim); }
     inline void follow_ticks(int num_ticks) { base.follow_ticks(num_ticks); }
+    inline bool has_destination(int _id = -1) { return base.has_destination(_id); }
+    inline void set_destination(int _id) { base.set_destination(_id); }
+    inline void set_destination(building *b) { base.set_destination(b); }
 
     figure &base;
 };

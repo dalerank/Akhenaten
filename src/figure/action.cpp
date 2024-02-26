@@ -34,12 +34,12 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_IMMIGRANT,1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, IMG_IMMIGRANT},
   {FIGURE_EMIGRANT, 1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, IMG_EMIGRANT},
   {FIGURE_HOMELESS, 1, TERRAIN_USAGE_PREFER_ROADS, 0, 0, 0, IMG_HOMELESS},
-  {FIGURE_CART_PUSHER, 1, TERRAIN_USAGE_ROADS, 0, 0, 0,  IMG_CARTPUSHER},
+  {FIGURE_CART_PUSHER, 1, TERRAIN_USAGE_ROADS, 0, 0, 0,  ANIM_CARTPUSHER_WALK},
   {FIGURE_LABOR_SEEKER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_LABOR_SEEKER},
   {FIGURE_EXPLOSION, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_EXPLOSION},
   {FIGURE_TAX_COLLECTOR, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, IMG_TAX_COLLECTOR},
   {FIGURE_ARCHITECT, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_ARCHITECT},
-  {FIGURE_STORAGE_YARD_DELIVERCART, 1, TERRAIN_USAGE_ROADS, 0, 0, 0, IMG_CARTPUSHER},
+  {FIGURE_STORAGEYARD_CART, 1, TERRAIN_USAGE_ROADS, 0, 0, 0, ANIM_CARTPUSHER_WALK},
   {FIGURE_FIREMAN, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_FIREMAN},
   {FIGURE_ARCHER, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_ARCHER_PH},
   {FIGURE_FCHARIOTEER, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_CHARIOTEER_PH},
@@ -386,23 +386,6 @@ void figure::action_perform() {
             }
             break;
 
-        case FIGURE_CART_PUSHER:
-            if (has_destination())
-                break;
-
-            if (!building_is_floodplain_farm(*b)
-                && (b->state != BUILDING_STATE_VALID || (!b->has_figure(0, id) && !b->has_figure(1, id)))) {
-                poof();
-            }
-            break;
-
-        case FIGURE_STORAGE_YARD_DELIVERCART:
-            if (has_destination())
-                break;
-            if (b->state != BUILDING_STATE_VALID || (!b->has_figure(0, id) && !b->has_figure(1, id)))
-                poof();
-            break;
-
         case FIGURE_LABOR_SEEKER:
             //            case FIGURE_MARKET_BUYER:
             if (b->state != BUILDING_STATE_VALID) //  || !b->has_figure(1, id)
@@ -503,11 +486,9 @@ void figure::action_perform() {
         switch (type) {
         case FIGURE_EMIGRANT: emigrant_action(); break;
         case FIGURE_HOMELESS: homeless_action(); break;
-        case FIGURE_CART_PUSHER: cartpusher_action(); break;
-            //            case 5: common_action(12, GROUP_FIGURE_LABOR_SEEKER); break;
+
         case FIGURE_EXPLOSION: explosion_cloud_action(); break;
         case FIGURE_TAX_COLLECTOR: tax_collector_action(); break;
-        case FIGURE_STORAGE_YARD_DELIVERCART: storageyard_cart_action(); break; // warehouseman_action !!!!
 
         case 11:   // soldier_action();                  break;
         case 12:   // soldier_action();                  break;

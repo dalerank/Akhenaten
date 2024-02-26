@@ -283,9 +283,9 @@ void figure::cart_update_image() {
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        sprite_image_id = image_group(IMG_CARTPUSHER_DEATH);
+        sprite_image_id = image_group(ANIM_CARTPUSHER_DEATH);
     } else {
-        sprite_image_id = image_group(IMG_CARTPUSHER) + dir + 8 * anim_frame;
+        sprite_image_id = image_group(ANIM_CARTPUSHER_WALK) + dir + 8 * anim_frame;
     }
 
     switch (resource_id) {

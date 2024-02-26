@@ -74,3 +74,14 @@ figure_delivery_boy = {
 	}
 }
 
+figure_cartpusher = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_CARTPUSHER_WALK, max_frames:12 },
+	}
+}
+
+figure_storageyard_cart = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_CARTPUSHER_WALK, max_frames:12 },
+	}
+}

@@ -238,6 +238,7 @@ bool figure::has_immigrant_home(building* b) {
     auto bhome = building_get(immigrant_home_building_id);
     return (b == bhome);
 }
+
 bool figure::has_destination(int _id) {
     if (_id == -1) {
         return (destination_building_id != 0);
@@ -245,6 +246,7 @@ bool figure::has_destination(int _id) {
 
     return (destination_building_id == _id);
 }
+
 bool figure::has_destination(building* b) {
     return (b == destination());
 }
@@ -274,6 +276,10 @@ e_minimap_figure_color figure::get_figure_color() {
     //     return FIGURE_COLOR_WOLF;
 
     return FIGURE_COLOR_NONE;
+}
+
+void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
+    base.draw_figure_main(ctx, base.cached_pos, highlight, coord_out);
 }
 
 figure_sound_t figure_impl::get_sound_reaction(pcstr key) const {

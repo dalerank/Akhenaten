@@ -33,7 +33,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "brick"},
     {FIGURE_TRADE_CARAVAN, "caravan"},
     {FIGURE_NONE, "carpenter"},
-    {FIGURE_CART_PUSHER, "cartpusher"},
     {FIGURE_DANCER, "dancer"},
     {FIGURE_DENTIST, "dentist"},
     {FIGURE_NONE, "desease"},
@@ -187,24 +186,6 @@ static sound_key apothecary_phrase(figure *f) {
         return "apothecary_have_malaria_risk_here";
     } else {
         return "apothecary_no_threat_malaria_here";
-    }
-
-    return {};
-}
-
-static sound_key cart_pusher_phrase(figure *f) {
-    if (f->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL) {
-        return "cartpusher_i_have_no_destination";
-    }
-
-    if (f->action_state == FIGURE_ACTION_27_CARTPUSHER_RETURNING) {
-        return "cartpusher_back_to_home";
-    }
-
-    if (f->action_state == FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE ||
-        f->action_state == FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY ||
-        f->action_state == FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP) {
-        return "cartpusher_delivering_items";
     }
 
     return {};
@@ -752,14 +733,10 @@ static int trade_ship_phrase() {
 
 static sound_key phrase_based_on_figure_state(figure *f) {
     switch (f->type) {
-    //        case FIGURE_LION_TAMER:
-    //            return lion_tamer_phrase(f);
-    //        case FIGURE_GLADIATOR:
-    //            return gladiator_phrase(f);
+
     case FIGURE_TAX_COLLECTOR: return tax_collector_phrase(f);
     case FIGURE_HERBALIST: return apothecary_phrase(f);
     case FIGURE_PHYSICIAN: return physician_phrase(f);
-    case FIGURE_CART_PUSHER: return cart_pusher_phrase(f);
     case FIGURE_DANCER: return dancer_phrase(f);
     case FIGURE_MARKET_TRADER: return marker_trader_phrase(f);
     case FIGURE_OSTRICH_HUNTER: return hunter_ostric_phrase(f);

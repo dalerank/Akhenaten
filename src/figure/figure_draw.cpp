@@ -122,10 +122,12 @@ void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight, vec2i* c
     const image_t* img = is_enemy_image ? image_get_enemy(sprite_image_id) : image_get(sprite_image_id);
     ImageDraw::img_sprite(ctx, sprite_image_id, pixel.x + x_correction, pixel.y + y_correction, COLOR_MASK_NONE);
 }
+
 void figure::draw_figure_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
     const image_t* img = image_get(cart_image_id);
     ImageDraw::img_sprite(ctx, cart_image_id, pixel.x + cart_offset.x, pixel.y + cart_offset.y - 7);
 }
+
 void figure::draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
     draw_figure_cart(ctx, pixel, highlight, coord_out);
     draw_figure_main(ctx, pixel, highlight, coord_out);
@@ -154,9 +156,6 @@ void figure::city_draw_figure(painter &ctx, int highlight, vec2i* coord_out) {
 
     if (cart_image_id) {
         switch (type) {
-        case FIGURE_CART_PUSHER:
-        case FIGURE_STORAGE_YARD_DELIVERCART:
-            //            case FIGURE_LION_TAMER:
         case FIGURE_DOCKER:
         case FIGURE_NATIVE_TRADER:
             //            case FIGURE_IMMIGRANT:
@@ -173,14 +172,16 @@ void figure::city_draw_figure(painter &ctx, int highlight, vec2i* coord_out) {
         case FIGURE_MAP_FLAG:
             draw_map_flag(cached_pos, highlight, coord_out);
             break;
+
         default:
-            draw_figure_main(ctx, cached_pos, highlight, coord_out);
+            dcast()->figure_draw(ctx, cached_pos, highlight, coord_out);
             break;
         }
     } else {
         draw_figure_main(ctx, cached_pos, highlight, coord_out);
-        if (!is_enemy_image && highlight)
+        if (!is_enemy_image && highlight) {
             ImageDraw::img_sprite(ctx, sprite_image_id, cached_pos.x, cached_pos.y, COLOR_MASK_LEGION_HIGHLIGHT);
+        }
     }
 
     is_drawn = true;
