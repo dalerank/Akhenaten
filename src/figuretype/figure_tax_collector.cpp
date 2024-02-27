@@ -76,83 +76,50 @@ void figure_tax_collector::figure_action() {
 
     case ACTION_11_RETURNING_EMPTY:
     case FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING:
-    base.move_ticks(1);
-        if (direction() == DIR_FIGURE_NONE) {
-            base.action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
-            base.set_cross_country_destination(b->tile.x(), b->tile.y());
-            base.roam_length = 0;
-        } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            poof();
-        }
+        base.move_ticks(1);
+            if (direction() == DIR_FIGURE_NONE) {
+                base.action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
+                base.set_cross_country_destination(b->tile.x(), b->tile.y());
+                base.roam_length = 0;
+            } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+                poof();
+            }
 
-    break;
+        break;
     };
 }
 
 sound_key figure_tax_collector::phrase_key() const {
-    svector<sound_key, 10> keys;
-    if (city_finance_percentage_taxed_people() < 80) {
-        keys.push_back("taxman_need_more_tax_collectors");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_HIGH_TAXES) {
-        keys.push_back("taxman_high_taxes");
-    }
-
     auto &taxman = base.local_data.taxman;
+
     int all_taxed = taxman.poor_taxed + taxman.middle_taxed + taxman.reach_taxed;
     int poor_taxed = calc_percentage<int>(taxman.poor_taxed, all_taxed);
-    if (poor_taxed > 50) {
-        keys.push_back("taxman_much_pooh_houses");
-    }
+    
+    svector<sound_key_state, 16> keys = {
+        {"taxman_need_more_tax_collectors", city_finance_percentage_taxed_people() < 80},
+        {"taxman_high_taxes", city_sentiment_low_mood_cause() == LOW_MOOD_HIGH_TAXES},
+        {"much_pooh_houses", poor_taxed > 50},
+        {"desease_can_start_at_any_moment", city_health() < 30},
+        {"no_food_in_city", city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD},
+        {"buyer_city_have_no_army", formation_get_num_forts() < 1},
+        {"need_workers", city_labor_workers_needed() >= 10},
+        {"gods_are_angry", city_gods_least_mood() <= GOD_MOOD_INDIFIRENT},
+        {"city_is_bad", city_rating_kingdom() < 30},
+        {"much_unemployments", city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS},
+        {"low_entertainment", city_data_struct()->festival.months_since_festival > 6},
+        {"city_is_good", city_sentiment() > 50},
+        {"city_is_amazing", city_sentiment() > 90}
+    };
 
-    if (city_health() < 30) {
-        keys.push_back("taxman_desease_can_start_at_any_moment");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("taxman_no_food_in_city");
-    }
-
-    if (formation_get_num_forts() < 1) {
-        keys.push_back("taxman_buyer_city_have_no_army");
-    }
-
-    if (city_labor_workers_needed() >= 10) {
-        keys.push_back("taxman_need_workers");
-    }
-
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("taxman_gods_are_angry");
-    }
-
-    if (city_rating_kingdom() < 30) {
-        keys.push_back("taxman_city_is_bad");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
-        keys.push_back("taxman_much_unemployments");
-    }
-
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("taxman_low_entertainment");
-    }
-
-    if (city_sentiment() > 50) {
-        keys.push_back("taxman_city_is_good");
-    }
-
-    if (city_sentiment() > 90) {
-        keys.push_back("taxman_city_is_amazing");
-    }
+    std::remove_if(keys.begin(), keys.end(), [] (auto &it) { return !it.valid; });
 
     int index = rand() % keys.size();
-    return keys[index];
+    return keys[index].prefix;
 }
 
 void figure_tax_collector::figure_before_action() {
     building* b = home();
-    if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id())) {
+    if (!b->is_valid() || !b->has_figure(0, id())) {
         poof();
     }
 }

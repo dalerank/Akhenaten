@@ -9,3 +9,8 @@ struct e_figure_sound {
     e_figure_type type;
     sound_key prefix;
 };
+
+struct sound_key_state {
+    sound_key prefix;
+    bool valid;
+};
