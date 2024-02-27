@@ -69,6 +69,7 @@ var figure_cartpusher = {}
 var figure_storageyard_cart = {}
 var figure_trade_ship = {}
 var figure_sled = {}
+var figure_tax_collector = {}
 var mission0 = {}
 var mission1 = {}
 var mission5 = {}

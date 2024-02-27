@@ -1,23 +1,44 @@
-#include "figuretype/service.h"
+#include "figuretype/figure_tax_collector.h"
 
 #include "figure/figure.h"
 #include "core/profiler.h"
 #include "grid/road_access.h"
 #include "grid/building.h"
+#include "city/finance.h"
+#include "city/sentiment.h"
+#include "core/calc.h"
+#include "city/health.h"
+#include "city/labor.h"
+#include "city/gods.h"
+#include "city/ratings.h"
+#include "city/data_private.h"
+#include "figure/service.h"
 
-void figure::tax_collector_action() {
+#include "js/js_game.h"
+
+struct tax_collector_model : figures::model_t<FIGURE_TAX_COLLECTOR, figure_tax_collector> {};
+tax_collector_model tax_collector_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_tax_collector);
+void config_load_figure_tax_collector() {
+    g_config_arch.r_section("figure_tax_collector", [] (archive arch) {
+        tax_collector_m.anim.load(arch);
+    });
+}
+
+void figure_tax_collector::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Tax Collector");
     building* b = home();
-    switch (action_state) {
+    switch (action_state()) {
     case FIGURE_ACTION_40_TAX_COLLECTOR_CREATED:
-        anim_frame = 0;
+        base.anim_frame = 0;
         wait_ticks--;
         if (wait_ticks <= 0) {
             tile2i road_tile;
             if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
-                action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
-                set_cross_country_destination(road_tile.x(), road_tile.y());
-                roam_length = 0;
+                base.action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
+                base.set_cross_country_destination(road_tile.x(), road_tile.y());
+                base.roam_length = 0;
             } else {
                 poof();
             }
@@ -25,45 +46,140 @@ void figure::tax_collector_action() {
         break;
 
     case FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING:
-        use_cross_country = true;
-        if (move_ticks_cross_country(1) == 1) {
-            if (has_home(map_building_at(tile.grid_offset()))) {
+        base.use_cross_country = true;
+        if (base.move_ticks_cross_country(1) == 1) {
+            if (base.has_home(map_building_at(tile()))) {
                 // returned to own building
                 poof();
             } else {
-                action_state = FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING;
-                init_roaming_from_building(0);
-                roam_length = 0;
+                base.action_state = FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING;
+                base.init_roaming_from_building(0);
+                base.roam_length = 0;
             }
         }
         break;
 
     case ACTION_10_DELIVERING_FOOD:
     case FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING:
-        roam_length++;
-        if (roam_length >= max_roam_length) {
+        base.roam_length++;
+        if (base.roam_length >= base.max_roam_length) {
             tile2i road_tile;
             if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
-                action_state = FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING;
+                base.action_state = FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING;
                 destination_tile = road_tile;
             } else {
                 poof();
             }
         }
-        roam_ticks(1);
+        base.roam_ticks(1);
         break;
 
     case ACTION_11_RETURNING_EMPTY:
     case FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING:
-        move_ticks(1);
-        if (direction == DIR_FIGURE_NONE) {
-            action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
-            set_cross_country_destination(b->tile.x(), b->tile.y());
-            roam_length = 0;
-        } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
+    base.move_ticks(1);
+        if (direction() == DIR_FIGURE_NONE) {
+            base.action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
+            base.set_cross_country_destination(b->tile.x(), b->tile.y());
+            base.roam_length = 0;
+        } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
         }
 
     break;
     };
+}
+
+sound_key figure_tax_collector::phrase_key() const {
+    svector<sound_key, 10> keys;
+    if (city_finance_percentage_taxed_people() < 80) {
+        keys.push_back("taxman_need_more_tax_collectors");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_HIGH_TAXES) {
+        keys.push_back("taxman_high_taxes");
+    }
+
+    auto &taxman = base.local_data.taxman;
+    int all_taxed = taxman.poor_taxed + taxman.middle_taxed + taxman.reach_taxed;
+    int poor_taxed = calc_percentage<int>(taxman.poor_taxed, all_taxed);
+    if (poor_taxed > 50) {
+        keys.push_back("taxman_much_pooh_houses");
+    }
+
+    if (city_health() < 30) {
+        keys.push_back("taxman_desease_can_start_at_any_moment");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+        keys.push_back("taxman_no_food_in_city");
+    }
+
+    if (formation_get_num_forts() < 1) {
+        keys.push_back("taxman_buyer_city_have_no_army");
+    }
+
+    if (city_labor_workers_needed() >= 10) {
+        keys.push_back("taxman_need_workers");
+    }
+
+    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+        keys.push_back("taxman_gods_are_angry");
+    }
+
+    if (city_rating_kingdom() < 30) {
+        keys.push_back("taxman_city_is_bad");
+    }
+
+    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+        keys.push_back("taxman_much_unemployments");
+    }
+
+    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
+        keys.push_back("taxman_low_entertainment");
+    }
+
+    if (city_sentiment() > 50) {
+        keys.push_back("taxman_city_is_good");
+    }
+
+    if (city_sentiment() > 90) {
+        keys.push_back("taxman_city_is_amazing");
+    }
+
+    int index = rand() % keys.size();
+    return keys[index];
+}
+
+void figure_tax_collector::figure_before_action() {
+    building* b = home();
+    if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id())) {
+        poof();
+    }
+}
+
+
+static void tax_collector_coverage(building* b, figure *f, int &max_tax_multiplier) {
+    if (b->house_size && b->house_population > 0) {
+        int tax_multiplier = model_get_house(b->subtype.house_level)->tax_multiplier;
+        if (tax_multiplier > max_tax_multiplier) {
+            max_tax_multiplier = tax_multiplier;
+        }
+
+        if (b->subtype.house_level < HOUSE_ORDINARY_COTTAGE) {
+            f->local_data.taxman.poor_taxed++;
+        } else if (b->subtype.house_level < HOUSE_COMMON_MANOR) {
+            f->local_data.taxman.middle_taxed++;
+        } else {
+            f->local_data.taxman.reach_taxed++;
+        }
+        b->tax_collector_id = f->home()->id;
+        b->house_tax_coverage = 50;
+    }
+}
+
+int figure_tax_collector::provide_service() {
+    int max_tax_rate = 0;
+    int houses_serviced = figure_provide_service(tile(), &base, max_tax_rate, tax_collector_coverage);
+    base.min_max_seen = max_tax_rate;
+    return houses_serviced;
 }

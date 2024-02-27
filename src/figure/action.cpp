@@ -37,7 +37,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_CART_PUSHER, 1, TERRAIN_USAGE_ROADS, 0, 0, 0,  ANIM_CARTPUSHER_WALK},
   {FIGURE_LABOR_SEEKER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_LABOR_SEEKER},
   {FIGURE_EXPLOSION, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_EXPLOSION},
-  {FIGURE_TAX_COLLECTOR, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, IMG_TAX_COLLECTOR},
+  {FIGURE_TAX_COLLECTOR, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, ANIM_TAX_COLLECTOR_WALK},
   {FIGURE_ARCHITECT, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_ARCHITECT},
   {FIGURE_STORAGEYARD_CART, 1, TERRAIN_USAGE_ROADS, 0, 0, 0, ANIM_CARTPUSHER_WALK},
   {FIGURE_FIREMAN, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_FIREMAN},
@@ -359,7 +359,6 @@ void figure::action_perform() {
         case FIGURE_MAGISTRATE:
         case FIGURE_WORKER:
         case FIGURE_NATIVE_TRADER:
-        case FIGURE_TAX_COLLECTOR:
         case FIGURE_TOWER_SENTRY:
         case FIGURE_MISSIONARY:
         case FIGURE_WATER_CARRIER:
@@ -488,7 +487,6 @@ void figure::action_perform() {
         case FIGURE_HOMELESS: homeless_action(); break;
 
         case FIGURE_EXPLOSION: explosion_cloud_action(); break;
-        case FIGURE_TAX_COLLECTOR: tax_collector_action(); break;
 
         case 11:   // soldier_action();                  break;
         case 12:   // soldier_action();                  break;

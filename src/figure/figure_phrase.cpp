@@ -56,7 +56,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_CRIMINAL, "robber"},
     {FIGURE_SCRIBER, "scribe"},
     {FIGURE_NONE, "senet"},
-    {FIGURE_TAX_COLLECTOR, "taxman"},
     {FIGURE_TEACHER,"teacher"},
     {FIGURE_NONE, "thief"},
     {FIGURE_NONE, "transport"},
@@ -75,66 +74,6 @@ static int lion_tamer_phrase() {
     //        return 7 + phrase_sequence_exact;
     //    }
     return 0;
-}
-
-static sound_key tax_collector_phrase(figure *f) {
-    svector<sound_key, 10> keys;
-    if (city_finance_percentage_taxed_people() < 80) {
-        keys.push_back("taxman_need_more_tax_collectors");
-    }
-    
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_HIGH_TAXES) {
-        keys.push_back("taxman_high_taxes");
-    }
-
-    int all_taxed = f->local_data.taxman.poor_taxed + f->local_data.taxman.middle_taxed + f->local_data.taxman.reach_taxed;
-    int poor_taxed = calc_percentage<int>(f->local_data.taxman.poor_taxed, all_taxed);
-    if (poor_taxed > 50) {
-        keys.push_back("taxman_much_pooh_houses");
-    }
-
-    if (city_health() < 30) {
-        keys.push_back("taxman_desease_can_start_at_any_moment");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("taxman_no_food_in_city");
-    }
-
-    if (formation_get_num_forts() < 1) {
-        keys.push_back("taxman_buyer_city_have_no_army");
-    }
-
-    if (city_labor_workers_needed() >= 10) {
-        keys.push_back("taxman_need_workers");
-    }
-
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("taxman_gods_are_angry");
-    }
-
-    if (city_rating_kingdom() < 30) {
-        keys.push_back("taxman_city_is_bad");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
-        keys.push_back("taxman_much_unemployments");
-    }
-
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("taxman_low_entertainment");
-    }
-
-    if (city_sentiment() > 50) {
-        keys.push_back("taxman_city_is_good");
-    }
-
-    if (city_sentiment() > 90) {
-        keys.push_back("taxman_city_is_amazing");
-    }
-
-    int index = rand() % keys.size();
-    return keys[index];
 }
 
 static sound_key physician_phrase(figure *f) {
@@ -734,7 +673,6 @@ static int trade_ship_phrase() {
 static sound_key phrase_based_on_figure_state(figure *f) {
     switch (f->type) {
 
-    case FIGURE_TAX_COLLECTOR: return tax_collector_phrase(f);
     case FIGURE_HERBALIST: return apothecary_phrase(f);
     case FIGURE_PHYSICIAN: return physician_phrase(f);
     case FIGURE_DANCER: return dancer_phrase(f);

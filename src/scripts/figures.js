@@ -98,3 +98,24 @@ figure_sled = {
 		walk : { pos : [0, 0], anim_id: IMG_BIGSLED_EMPTY, max_frames:1 },
 	}
 }
+
+figure_tax_collector = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: IMG_BIGSLED_EMPTY, max_frames:1 },
+	},
+	sound : {
+		need_more_tax_collectors: {sound: "taxman_e01.wav", group: 245, text:0},
+    high_taxes: {sound: "taxman_e02.wav", group: 245, text:1},
+    much_pooh_houses: {sound: "taxman_e03.wav", group: 245, text:2},
+    desease_can_start_at_any_moment: {sound: "taxman_g01.wav", group: 245, text:3},
+    no_food_in_city: {sound: "taxman_g02.wav", group: 245, text:4},
+    city_have_no_army: {sound: "taxman_g03.wav", group: 245, text:5},
+    need_workers: {sound: "taxman_g04.wav", group: 245, text:6},
+    gods_are_angry: {sound: "taxman_g05.wav", group: 245, text:7},
+    city_is_bad: {sound: "taxman_g06.wav", group: 245, text:8},
+    much_unemployments: {sound: "taxman_g07.wav", group: 245, text:9},
+    low_entertainment: {sound: "taxman_g08.wav", group: 245, text:10},
+    city_is_good: {sound: "taxman_g09.wav", group: 245, text:11},
+    city_is_amazing: {sound: "taxman_g10.wav", group: 245, text:12},
+	}
+}

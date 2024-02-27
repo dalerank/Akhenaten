@@ -378,7 +378,6 @@ public:
     void homeless_action();
     void sled_puller_action();
     void explosion_cloud_action();
-    void tax_collector_action();
     void soldier_action();
     void military_standard_action();
     void entertainer_action();

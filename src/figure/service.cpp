@@ -129,25 +129,6 @@ static void policeman_coverage(building* b, figure *f, int &max_anger_seen) {
     }
 }
 
-static void tax_collector_coverage(building* b, figure *f, int &max_tax_multiplier) {
-    if (b->house_size && b->house_population > 0) {
-        int tax_multiplier = model_get_house(b->subtype.house_level)->tax_multiplier;
-        if (tax_multiplier > max_tax_multiplier) {
-            max_tax_multiplier = tax_multiplier;
-        }
-
-        if (b->subtype.house_level < HOUSE_ORDINARY_COTTAGE) {
-            f->local_data.taxman.poor_taxed++;
-        } else if (b->subtype.house_level < HOUSE_COMMON_MANOR) {
-            f->local_data.taxman.middle_taxed++;
-        } else {
-            f->local_data.taxman.reach_taxed++;
-        }
-        b->tax_collector_id = f->home()->id;
-        b->house_tax_coverage = 50;
-    }
-}
-
 static void labor_seeker_coverage(building* b, figure *f, int&) {
     // nothing here, the labor seeker works simply via the `houses_covered` variable
 }
@@ -170,13 +151,6 @@ int figure::figure_service_provide_coverage() {
 
     case FIGURE_LABOR_SEEKER:
         houses_serviced = provide_culture(tile, this, labor_seeker_coverage);
-        break;
-
-    case FIGURE_TAX_COLLECTOR: {
-            int max_tax_rate = 0;
-            houses_serviced = figure_provide_service(tile, this, max_tax_rate, tax_collector_coverage);
-            min_max_seen = max_tax_rate;
-        }
         break;
 
     case FIGURE_MARKET_TRADER:
