@@ -48,7 +48,7 @@ void building_mortuary_draw_info(object_info& c) {
 }
 
 void building_apothecary::spawn_figure() {
-    common_spawn_roamer(FIGURE_HERBALIST, 50, FIGURE_ACTION_125_ROAMING);
+    common_spawn_roamer(FIGURE_HERBALIST, 50, FIGURE_ACTION_62_HERBALIST_ROAMING);
     //    check_labor_problem();
     //    if (has_figure_of_type(FIGURE_DOCTOR))
     //        return;

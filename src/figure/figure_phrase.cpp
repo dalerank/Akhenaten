@@ -27,7 +27,6 @@
 #include <string.h>
 
 static e_figure_sound g_figure_sounds[] = {
-    {FIGURE_HERBALIST, "apothecary"},
     {FIGURE_NONE, "artisan"},
     {FIGURE_NONE, "barge"},
     {FIGURE_NONE, "brick"},
@@ -73,16 +72,6 @@ static int lion_tamer_phrase() {
     //        return 7 + phrase_sequence_exact;
     //    }
     return 0;
-}
-
-static sound_key apothecary_phrase(figure *f) {
-    if (f->local_data.herbalist.see_low_health > 0) {
-        return "apothecary_have_malaria_risk_here";
-    } else {
-        return "apothecary_no_threat_malaria_here";
-    }
-
-    return {};
 }
 
 static sound_key marker_trader_phrase(figure *f) {
@@ -628,7 +617,6 @@ static int trade_ship_phrase() {
 static sound_key phrase_based_on_figure_state(figure *f) {
     switch (f->type) {
 
-    case FIGURE_HERBALIST: return apothecary_phrase(f);
     case FIGURE_DANCER: return dancer_phrase(f);
     case FIGURE_MARKET_TRADER: return marker_trader_phrase(f);
     case FIGURE_OSTRICH_HUNTER: return hunter_ostric_phrase(f);
@@ -713,6 +701,9 @@ void figure::figure_phrase_determine() {
     }
 
     if (!phrase_key.empty()) {
+        figure_sound_t reaction = dcast()->get_sound_reaction(phrase_key.c_str());
+        phrase_group = reaction.group;
+        phrase_id = reaction.text;
         return;
     }
 

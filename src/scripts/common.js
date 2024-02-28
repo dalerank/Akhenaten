@@ -71,6 +71,7 @@ var figure_trade_ship = {}
 var figure_sled = {}
 var figure_tax_collector = {}
 var figure_physician = {}
+var figure_herbalist = {}
 var mission0 = {}
 var mission1 = {}
 var mission5 = {}

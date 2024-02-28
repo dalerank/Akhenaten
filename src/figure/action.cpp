@@ -513,9 +513,6 @@ void figure::action_perform() {
             //            case 30: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break; //30
             //            case 31: common_action(12, GROUP_FIGURE_BARBER); break;
             //            case 32: common_action(12, GROUP_FIGURE_BATHHOUSE_WORKER); break;
-        case 33: // doctor_action(); break;
-                 //            case 34: common_action(12, GROUP_FIGURE_DOCTOR_SURGEON); break;
-                 //            case 35: worker_action();                   break;
         case 36: editor_flag_action(); break;
         case FIGURE_FLOTSAM: flotsam_action(); break;
         case 38: docker_action(); break;

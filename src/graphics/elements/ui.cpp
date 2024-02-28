@@ -132,7 +132,7 @@ int ui::label(pcstr label, vec2i pos, e_font font, UiFlags_ flags, int box_width
         text_draw_centered((uint8_t*)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
         return box_width;
     } else if (!!(flags & UiFlags_LabelMultiline)) {
-        text_draw_multiline((uint8_t*)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
+        return text_draw_multiline((uint8_t*)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
     } else {
         return lang_text_draw(label, offset + pos, font);
     }

@@ -1,9 +1,6 @@
 log_info("akhenaten: walker sounds started")
 
 walker_sounds = [
- // herbalist
- {type: "apothecary_no_threat_malaria_here", 						sound:"apothecary_e02.wav"},
- {type: "apothecary_have_malaria_risk_here", 						sound:"apothecary_e03.wav"},
  // artisan
  {type: "artisan_work_my_tools_need_for_monument", 			sound:"artisan_e01.wav"},
  {type: "artisan_work_i_write_history_of_egypt", 				sound:"artisan_e02.wav"},

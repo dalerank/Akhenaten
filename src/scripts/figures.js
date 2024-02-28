@@ -134,6 +134,17 @@ figure_sled = {
 	}
 }
 
+figure_herbalist = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_HERBALIST_WALK, max_frames:12 },
+		death : { pos : [0, 0], anim_id: ANIM_HERBALIST_DEATH, max_frames:8 },
+	},
+	sounds : {
+		no_threat_malaria_here : {sound:"apothecary_e02.wav", group: 241, text:1},
+    have_malaria_risk_here : {sound:"apothecary_e03.wav", group: 241, text:2},
+	}
+}
+
 figure_tax_collector = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: IMG_BIGSLED_EMPTY, max_frames:1 },

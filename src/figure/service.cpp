@@ -87,16 +87,6 @@ static void library_coverage(building* b, figure *f, int&) {
     b->data.house.library = MAX_COVERAGE;
 }
 
-static void apothecary_coverage(building* b, figure *f, int&) {
-    b->data.house.apothecary = MAX_COVERAGE;
-    if (b->common_health < 50) {
-        b->common_health++;
-        if (b->common_health < 20) {
-            f->local_data.herbalist.see_low_health++;
-        }
-    }
-}
-
 static void dentist_coverage(building* b, figure *f, int&) {
     b->data.house.dentist = MAX_COVERAGE;
 }
@@ -157,10 +147,6 @@ int figure::figure_service_provide_coverage() {
 
     case FIGURE_LIBRARIAN:
         houses_serviced = figure_provide_culture(tile, this, library_coverage);
-        break;
-
-    case FIGURE_HERBALIST:
-        houses_serviced = figure_provide_culture(tile, this, apothecary_coverage);
         break;
 
     case FIGURE_DENTIST:

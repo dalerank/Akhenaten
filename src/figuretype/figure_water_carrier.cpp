@@ -40,7 +40,7 @@ void figure_water_carrier::figure_action() {
     //            image_set_animation(GROUP_FIGURE_PREFECT);
 
     building* b = home();
-    switch (base.action_state) {
+    switch (action_state()) {
     case ACTION_10_GOING:
     case FIGURE_ACTION_72_FIREMAN_ROAMING:
         do_roam(TERRAIN_USAGE_ROADS, ACTION_2_ROAMERS_RETURNING);
