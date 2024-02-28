@@ -26,11 +26,19 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_fireman);
 void config_load_figure_fireman() {
     g_config_arch.r_section("figure_fireman", [] (archive arch) {
         fireman_m.anim.load(arch);
+        fireman_m.sounds.load(arch);
     });
 }
 
 void figure_fireman::on_create() {
 
+}
+
+void figure_fireman::figure_before_action() {
+    building* b = home();
+    if (!b->is_valid() || !b->has_figure(0, id())) {
+        poof();
+    }
 }
 
 sound_key figure_fireman::phrase_key() const {

@@ -353,7 +353,6 @@ void figure::action_perform() {
         building* b = home();
         figure* leader = figure_get(leading_figure_id);
         switch (type) {
-        case FIGURE_FIREMAN:
         case FIGURE_CONSTABLE:
         case FIGURE_MAGISTRATE:
         case FIGURE_WORKER:
