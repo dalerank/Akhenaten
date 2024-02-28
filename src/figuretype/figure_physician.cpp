@@ -18,6 +18,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_physician);
 void config_load_figure_physician() {
     g_config_arch.r_section("figure_physician", [] (archive arch) {
         physician_m.anim.load(arch);
+        physician_m.sounds.load(arch);
     });
 }
 
@@ -57,40 +58,40 @@ sound_key figure_physician::phrase_key() const {
     svector<sound_key, 10> keys;
     if (city_health() < 40) {
         keys.push_back(city_health() < 20
-                       ? "physician_desease_can_start_at_any_moment"
-                       : "physician_city_has_low_health");
+                       ? "desease_can_start_at_any_moment"
+                       : "city_has_low_health");
     } else if (city_health() > 80) {
-        keys.push_back("physician_city_very_healthy");
+        keys.push_back("city_very_healthy");
     }
 
     if (formation_get_num_forts() < 1) {
-        keys.push_back("physician_city_have_no_army");
+        keys.push_back("city_have_no_army");
     }
 
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("physician_no_food_in_city");
+        keys.push_back("no_food_in_city");
     }
 
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
-        keys.push_back("physician_no_job_in_city");
+        keys.push_back("no_job_in_city");
     }
 
     if (city_labor_workers_needed() >= 10) {
-        keys.push_back("physician_need_workers");
+        keys.push_back("need_workers");
     }
 
     if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("physician_gods_are_angry");
+        keys.push_back("gods_are_angry");
     } else { // gods are good
-        keys.push_back("physician_gods_are_pleasures");
+        keys.push_back("gods_are_pleasures");
     }
 
     if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("physician_low_entertainment");
+        keys.push_back("low_entertainment");
     }
 
     if (keys.empty()) {
-        return "physician_all_good_in_city";
+        return "all_good_in_city";
     }
 
     int index = rand() % keys.size();
@@ -106,4 +107,8 @@ int figure_physician::provide_service() {
     int none_service = 0;
     int houses_serviced = figure_provide_service(tile(), &base, none_service, physician_coverage);
     return houses_serviced;
+}
+
+figure_sound_t figure_physician::get_sound_reaction(pcstr key) const {
+    return physician_m.sounds[key];
 }

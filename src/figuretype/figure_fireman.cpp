@@ -273,3 +273,7 @@ int figure_fireman::provide_service() {
     base.min_max_seen = min_happiness;
     return result;
 }
+
+figure_sound_t figure_fireman::get_sound_reaction(pcstr key) const {
+    return fireman_m.sounds[key];
+}

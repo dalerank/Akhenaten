@@ -477,3 +477,20 @@ private:
     typename std::aligned_storage<sizeof(T), std::alignment_of<T>::value>::type m_data[Capacity];
     size_t m_size = 0;
 };
+
+namespace std {
+    template<typename _Container, typename _Predicate>
+    typename _Container::size_type
+        erase_if(_Container& __cont, _Predicate __pred) {
+        typename _Container::size_type __num = 0;
+        for (auto __iter = __cont.begin(); __iter != __cont.end();) {
+            if (__pred(*__iter)) {
+                __iter = __cont.erase(__iter);
+                ++__num;
+            } else {
+                ++__iter;
+            }
+        }
+        return __num;
+    }
+}

@@ -66,11 +66,14 @@ void figure_delivery_boy::figure_action() {
 }
 
 sound_key figure_delivery_boy::phrase_key() const {
-    svector<sound_key, 10> keys;
-    keys.push_back("marketboy_those_baskets_too_heavy");
-    keys.push_back("marketboy_i_works_all_day");
-    keys.push_back("marketboy_upon_ill_be_market_owner");
+    svector<sound_key, 10> keys{"marketboy_those_baskets_too_heavy",
+                                "marketboy_i_works_all_day",
+                                "marketboy_upon_ill_be_market_owner"};
 
     int index = rand() % keys.size();
     return keys[index];
+}
+
+figure_sound_t figure_delivery_boy::get_sound_reaction(pcstr key) const {
+    return delivery_boy_m.sounds[key];
 }

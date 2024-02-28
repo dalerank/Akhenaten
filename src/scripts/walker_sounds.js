@@ -48,20 +48,6 @@ walker_sounds = [
  {type: "emigrant_tax_too_high", 												sound:"emigrant_e03.wav"},
  {type: "emigrant_salary_too_low", 											sound:"emigrant_e04.wav"},
  {type: "emigrant_no_house_for_me", 										sound:"emigrant_e05.wav"},
- // physician
- {type: "physician_desease_can_start_at_any_moment", 		sound:"doctor_e01.wav"},
- {type: "physician_city_has_low_health", 								sound:"doctor_g01.wav"},
- {type: "physician_no_food_in_city", 										sound:"doctor_g02.wav"},
- {type: "physician_city_have_no_army", 									sound:"doctor_g03.wav"},
- {type: "physician_need_workers", 											sound:"doctor_g04.wav"},
- {type: "physician_gods_are_angry", 										sound:"doctor_g05.wav"},
- {type: "physician_gods_are_pleasures", 								sound:"doctor_g06.wav"},
- {type: "physician_no_job_in_city", 										sound:"doctor_g07.wav"},
- {type: "physician_low_entertainment", 									sound:"doctor_g08.wav"},
- {type: "physician_all_good_in_city", 									sound:"doctor_g09.wav"},
- {type: "physician_city_very_healthy", 									sound:"doctor_g10.wav"},
- // immigrant
- 
  // cartpusher
  {type: "cartpusher_i_have_no_destination", 						sound:"cartpusher_e01.wav"},
  {type: "cartpusher_back_to_home", 											sound:"cartpusher_e02.wav"},

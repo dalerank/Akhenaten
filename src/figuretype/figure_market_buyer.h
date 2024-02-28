@@ -13,6 +13,7 @@ public:
     virtual e_overlay get_overlay() const override { return OVERLAY_BAZAAR_ACCESS; }
     virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
+    virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 
     bool take_resource_from_storageyard(building *warehouse);
     int take_food_from_granary(building *market, building *granary);

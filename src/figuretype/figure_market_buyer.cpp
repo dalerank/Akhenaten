@@ -268,6 +268,10 @@ int figure_market_buyer::provide_service() {
     return houses_serviced;
 }
 
+figure_sound_t figure_market_buyer::get_sound_reaction(pcstr key) const {
+    return market_buyer_m.sounds[key];
+}
+
 int figure_market_buyer::take_food_from_granary(building* market, building* granary) {
     int resource;
     switch (base.collecting_item_id) {

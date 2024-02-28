@@ -14,16 +14,14 @@
 
 #include "js/js_game.h"
 
-struct priest_model :
-            public figures::model_t<FIGURE_PRIEST,
-                                    figure_priest> {};
-
+struct priest_model : public figures::model_t<FIGURE_PRIEST,figure_priest> {};
 priest_model priest_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_priest);
 void config_load_figure_priest() {
     g_config_arch.r_section("figure_priest", [] (archive arch) {
         priest_m.anim.load(arch);
+        priest_m.sounds.load(arch);
     });
 }
 
@@ -202,4 +200,8 @@ e_overlay figure_priest::get_overlay() const {
     }
 
     return OVERLAY_NONE;
+}
+
+figure_sound_t figure_priest::get_sound_reaction(pcstr key) const {
+    return priest_m.sounds[key];
 }

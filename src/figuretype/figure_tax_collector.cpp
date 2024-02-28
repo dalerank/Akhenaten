@@ -23,6 +23,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_tax_collector);
 void config_load_figure_tax_collector() {
     g_config_arch.r_section("figure_tax_collector", [] (archive arch) {
         tax_collector_m.anim.load(arch);
+        tax_collector_m.sounds.load(arch);
     });
 }
 
@@ -111,7 +112,7 @@ sound_key figure_tax_collector::phrase_key() const {
         {"city_is_amazing", city_sentiment() > 90}
     };
 
-    std::remove_if(keys.begin(), keys.end(), [] (auto &it) { return !it.valid; });
+    std::erase_if(keys, [] (auto &it) { return !it.valid; });
 
     int index = rand() % keys.size();
     return keys[index].prefix;
@@ -149,4 +150,8 @@ int figure_tax_collector::provide_service() {
     int houses_serviced = figure_provide_service(tile(), &base, max_tax_rate, tax_collector_coverage);
     base.min_max_seen = max_tax_rate;
     return houses_serviced;
+}
+
+figure_sound_t figure_tax_collector::get_sound_reaction(pcstr key) const {
+    return tax_collector_m.sounds[key];
 }

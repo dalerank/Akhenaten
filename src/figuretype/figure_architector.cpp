@@ -16,6 +16,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_architector);
 void config_load_figure_architector() {
     g_config_arch.r_section("figure_architect", [] (archive arch) {
         architector_m.anim.load(arch);
+        architector_m.sounds.load(arch);
     });
 }
 
@@ -74,10 +75,14 @@ sound_key figure_architector::phrase_key() const {
         {"i_am_works", true}
     };
 
-    std::remove_if(keys.begin(), keys.end(), [] (auto &it) { return !it.valid; });
+    std::erase_if(keys, [] (auto &it) { return !it.valid; });
 
     int index = rand() % keys.size();
     return keys[index].prefix;
+}
+
+figure_sound_t figure_architector::get_sound_reaction(pcstr key) const {
+    return architector_m.sounds[key];
 }
 
 static void engineer_coverage(building* b, figure *f, int &max_damage_seen) {
