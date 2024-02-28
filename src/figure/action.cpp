@@ -359,7 +359,6 @@ void figure::action_perform() {
         case FIGURE_NATIVE_TRADER:
         case FIGURE_TOWER_SENTRY:
         case FIGURE_MISSIONARY:
-        case FIGURE_WATER_CARRIER:
         case FIGURE_HERBALIST:
         case FIGURE_DENTIST:
         case FIGURE_EMBALMER:

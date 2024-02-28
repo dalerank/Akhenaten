@@ -22,7 +22,15 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_water_carrier);
 void config_load_figure_water_carrier() {
     g_config_arch.r_section("figure_water_carrier", [] (archive arch) {
         water_carrier_m.anim.load(arch);
+        water_carrier_m.sounds.load(arch);
     });
+}
+
+void figure_water_carrier::figure_before_action() {
+    building* b = home();
+    if (!b->is_valid() || !b->has_figure(0, id())) {
+        poof();
+    }
 }
 
 void figure_water_carrier::figure_action() {
