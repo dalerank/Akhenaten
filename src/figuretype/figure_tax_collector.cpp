@@ -96,8 +96,8 @@ sound_key figure_tax_collector::phrase_key() const {
     int poor_taxed = calc_percentage<int>(taxman.poor_taxed, all_taxed);
     
     svector<sound_key_state, 16> keys = {
-        {"taxman_need_more_tax_collectors", city_finance_percentage_taxed_people() < 80},
-        {"taxman_high_taxes", city_sentiment_low_mood_cause() == LOW_MOOD_HIGH_TAXES},
+        {"need_more_tax_collectors", city_finance_percentage_taxed_people() < 80},
+        {"high_taxes", city_sentiment_low_mood_cause() == LOW_MOOD_HIGH_TAXES},
         {"much_pooh_houses", poor_taxed > 50},
         {"desease_can_start_at_any_moment", city_health() < 30},
         {"no_food_in_city", city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD},

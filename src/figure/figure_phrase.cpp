@@ -37,7 +37,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_DENTIST, "dentist"},
     {FIGURE_NONE, "desease"},
     {FIGURE_DOCKER, "dock_pusher"},
-    {FIGURE_PHYSICIAN, "doctor"},
     {FIGURE_EMBALMER, "embalmer"},
     {FIGURE_EMIGRANT, "emigrant"},
     {FIGURE_FISHING_BOAT, "fishing"},
@@ -74,50 +73,6 @@ static int lion_tamer_phrase() {
     //        return 7 + phrase_sequence_exact;
     //    }
     return 0;
-}
-
-static sound_key physician_phrase(figure *f) {
-    svector<sound_key, 10> keys;
-    if (city_health() < 40) {
-        keys.push_back(city_health() < 20
-                       ? "physician_desease_can_start_at_any_moment"
-                       : "physician_city_has_low_health");
-    } else if (city_health() > 80) {
-        keys.push_back("physician_city_very_healthy");
-    }
-
-    if (formation_get_num_forts() < 1) {
-        keys.push_back("physician_city_have_no_army");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("physician_no_food_in_city");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
-        keys.push_back("physician_no_job_in_city");
-    }
-
-    if (city_labor_workers_needed() >= 10) {
-        keys.push_back("physician_need_workers");
-    }
-
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("physician_gods_are_angry");
-    } else { // gods are good
-        keys.push_back("physician_gods_are_pleasures");
-    }
-
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("physician_low_entertainment");
-    }
-
-    if (keys.empty()) {
-        return "physician_all_good_in_city";
-    }
-
-    int index = rand() % keys.size();
-    return keys[index];
 }
 
 static sound_key apothecary_phrase(figure *f) {
@@ -674,7 +629,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     switch (f->type) {
 
     case FIGURE_HERBALIST: return apothecary_phrase(f);
-    case FIGURE_PHYSICIAN: return physician_phrase(f);
     case FIGURE_DANCER: return dancer_phrase(f);
     case FIGURE_MARKET_TRADER: return marker_trader_phrase(f);
     case FIGURE_OSTRICH_HUNTER: return hunter_ostric_phrase(f);

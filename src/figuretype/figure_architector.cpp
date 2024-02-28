@@ -44,9 +44,14 @@ void figure_architector::figure_action() {
     }
 }
 
-sound_key figure_architector::phrase_key() const {
-    svector<sound_key, 10> keys;
+void figure_architector::figure_before_action() {
+    building* b = home();
+    if (!b->is_valid() || !b->has_figure(0, id())) {
+        poof();
+    }
+}
 
+sound_key figure_architector::phrase_key() const {
     int houses_damage_risk = 0;
     int hoeses_damage_high = 0;
     buildings_valid_do([&] (building &b) {
@@ -54,54 +59,25 @@ sound_key figure_architector::phrase_key() const {
         hoeses_damage_high += (b.damage_risk > 50) ? 1 : 0;
     });
 
-    if (houses_damage_risk > 0) {
-        keys.push_back("engineer_extreme_damage_level");
-    }
+    svector<sound_key_state, 16> keys = {
+        {"extreme_damage_level", houses_damage_risk > 0},
+        {"city_not_safety", formation_get_num_forts() < 0},
+        {"high_damage_level", hoeses_damage_high > 0},
+        {"no_food_in_city", city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD},
+        {"need_more_workers",city_labor_workers_needed() >= 20},
+        {"gods_are_angry", city_gods_least_mood() <= GOD_MOOD_INDIFIRENT},
+        {"city_has_bad_reputation", city_sentiment() < 30},
+        {"city_is_good", city_sentiment() > 50},
+        {"city_is_bad",city_sentiment() >= 30},
+        {"low_entertainment",city_data_struct()->festival.months_since_festival > 6},
+        {"city_is_amazing", city_sentiment() > 90},
+        {"i_am_works", true}
+    };
 
-    if (formation_get_num_forts() < 0) {
-        keys.push_back("engineer_city_not_safety");
-    }
-
-    if (hoeses_damage_high > 0) {
-        keys.push_back("engineer_high_damage_level");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("engineer_no_food_in_city");
-    }
-
-    if (city_labor_workers_needed() >= 20) {
-        keys.push_back("engineer_need_more_workers");
-    }
-
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("engineer_gods_are_angry");
-    }
-
-    if (city_sentiment() < 30) {
-        keys.push_back("engineer_city_has_bad_reputation");
-    }
-
-    if (city_sentiment() > 50) {
-        keys.push_back("engineer_city_is_good");
-    }
-
-    if (city_sentiment() >= 30) {
-        keys.push_back("engineer_city_is_bad");
-    }
-
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("engineer_low_entertainment");
-    }
-
-    if (city_sentiment() > 90) {
-        keys.push_back("engineer_city_is_amazing");
-    }
-
-    keys.push_back("engineer_i_am_works");
+    std::remove_if(keys.begin(), keys.end(), [] (auto &it) { return !it.valid; });
 
     int index = rand() % keys.size();
-    return keys[index];
+    return keys[index].prefix;
 }
 
 static void engineer_coverage(building* b, figure *f, int &max_damage_seen) {

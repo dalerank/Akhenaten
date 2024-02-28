@@ -42,12 +42,6 @@ static int provide_missionary_coverage(int x, int y) {
     return 1;
 }
 
-template<typename T>
-static int provide_culture(tile2i tile, figure* f, T callback) {
-    int none_service = 0;
-    return figure_provide_service(tile, f, none_service, callback);
-}
-
 static void juggler_coverage(building* b, figure *f, int&) {
     b->data.house.juggler = MAX_COVERAGE;
 }
@@ -111,11 +105,6 @@ static void mortuary_coverage(building* b, figure *f, int&) {
     b->data.house.mortuary = MAX_COVERAGE;
 }
 
-static void physician_coverage(building* b, figure *f, int&) {
-    b->data.house.physician = MAX_COVERAGE;
-    b->common_health = std::min(b->common_health + 1, 100);
-}
-
 static void bazaar_coverage(building* b, figure *f, int &) {
     b->data.house.bazaar_access = MAX_COVERAGE;
 }
@@ -150,7 +139,7 @@ int figure::figure_service_provide_coverage() {
         return 0;
 
     case FIGURE_LABOR_SEEKER:
-        houses_serviced = provide_culture(tile, this, labor_seeker_coverage);
+        houses_serviced = figure_provide_culture(tile, this, labor_seeker_coverage);
         break;
 
     case FIGURE_MARKET_TRADER:
@@ -159,31 +148,27 @@ int figure::figure_service_provide_coverage() {
         break;
 
     case FIGURE_TEACHER:
-        houses_serviced = provide_culture(tile, this, school_coverage);
+        houses_serviced = figure_provide_culture(tile, this, school_coverage);
         break;
 
     case FIGURE_SCRIBER:
-        houses_serviced = provide_culture(tile, this, academy_coverage);
+        houses_serviced = figure_provide_culture(tile, this, academy_coverage);
         break;
 
     case FIGURE_LIBRARIAN:
-        houses_serviced = provide_culture(tile, this, library_coverage);
+        houses_serviced = figure_provide_culture(tile, this, library_coverage);
         break;
 
     case FIGURE_HERBALIST:
-        houses_serviced = provide_culture(tile, this, apothecary_coverage);
+        houses_serviced = figure_provide_culture(tile, this, apothecary_coverage);
         break;
 
     case FIGURE_DENTIST:
-        houses_serviced = provide_culture(tile, this, dentist_coverage);
+        houses_serviced = figure_provide_culture(tile, this, dentist_coverage);
         break;
 
     case FIGURE_EMBALMER:
-        houses_serviced = provide_culture(tile, this, mortuary_coverage);
-        break;
-
-    case FIGURE_PHYSICIAN:
-        houses_serviced = provide_culture(tile, this, physician_coverage);
+        houses_serviced = figure_provide_culture(tile, this, mortuary_coverage);
         break;
 
     case FIGURE_MISSIONARY:
@@ -193,7 +178,7 @@ int figure::figure_service_provide_coverage() {
     case FIGURE_JUGGLER:
         b = get_entertainment_building();
         if (b->type == BUILDING_BOOTH) {
-            houses_serviced = provide_culture(tile, this, juggler_coverage);
+            houses_serviced = figure_provide_culture(tile, this, juggler_coverage);
         } else if (b->type == BUILDING_BANDSTAND) {
             houses_serviced = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days1 ? 2 : 1, bandstand_coverage);
         }
@@ -215,7 +200,7 @@ int figure::figure_service_provide_coverage() {
 
     case FIGURE_CHARIOR_RACER:
     case FIGURE_SENET_PLAYER:
-        houses_serviced = provide_culture(tile, this, hippodrome_coverage);
+        houses_serviced = figure_provide_culture(tile, this, hippodrome_coverage);
         break;
  
     case FIGURE_TOMB_ROBER:
@@ -238,7 +223,7 @@ int figure::figure_service_provide_coverage() {
 
     case FIGURE_MAGISTRATE: {
             int max_criminal_active = 0;
-            houses_serviced = provide_culture(tile, this, magistrate_coverage);
+            houses_serviced = figure_provide_service(tile, this, max_criminal_active, magistrate_coverage);
             if (max_criminal_active > min_max_seen)
                 min_max_seen = max_criminal_active;
             else if (min_max_seen <= 10)

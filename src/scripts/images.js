@@ -20,8 +20,8 @@ images = [
 	{img: IMG_LABOR_SEEKER_DEATH, pack:PACK_SPR_MAIN, id:207}, // 10005
 	{img: IMG_FISHING_POINT, pack:PACK_SPR_AMBIENT, id:8},
 	{img: IMG_FISHING_POINT_BUBLES, pack:PACK_SPR_AMBIENT, id:11},
-	{img: IMG_ARCHITECT, pack:PACK_SPR_MAIN, id:4},  //  169
-	{img: IMG_ARCHITECT_DEATH, pack:PACK_SPR_MAIN, id:5}, // 265
+	{img: ANIM_ARCHITECT_WALK, pack:PACK_SPR_MAIN, id:4},  //  169
+	{img: ANIM_ARCHITECT_DEATH, pack:PACK_SPR_MAIN, id:5}, // 265
 	{img: IMG_WATER_SUPPLY, pack:PACK_GENERAL, id:69, offset:0},
 	{img: IMG_WATER_SUPPLY_FANCY, pack:PACK_GENERAL, id:69, offset:2},
 	{img: IMG_WELL, pack:PACK_GENERAL, id:23, offset:0},
@@ -171,6 +171,8 @@ images = [
 	{img: ANIM_TRADER_SHIP_WALK, pack:PACK_SPR_MAIN, id:40, offset:0},
 	{img: ANIM_TRADER_SHIP_DEATH, pack:PACK_SPR_MAIN, id:41, offset:0},
 	{img: ANIM_TRADER_SHIP_IDLE, pack:PACK_SPR_MAIN, id:42, offset:0},
+	{img: ANIM_DOCTOR_WALK, pack:PACK_SPR_MAIN, id:71, offset:0},
+	{img: ANIM_DOCTOR_DEATH, pack:PACK_SPR_MAIN, id:72, offset:0},
 ]
 
 cart_offsets = [

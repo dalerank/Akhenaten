@@ -56,9 +56,31 @@ figure_worker = {
 	}
 }
 
+figure_physician = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_DOCTOR_WALK, max_frames:12 },
+		death : { pos : [0, 0], anim_id: ANIM_DOCTOR_DEATH, max_frames:8 },
+	},
+}
+
 figure_architect = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: IMG_ARCHITECT, max_frames:12 },
+		walk : { pos : [0, 0], anim_id: ANIM_ARCHITECT_WALK, max_frames:12 },
+		death : { pos : [0, 0], anim_id: ANIM_ARCHITECT_DEATH, max_frames:8 },
+	},
+	sounds : {
+		engineer_extreme_damage_level: {sound:"engineer_e01.wav", group: 243, text:0},
+    engineer_i_am_works: {sound:"engineer_e02.wav", group: 243, text:1},
+    engineer_high_damage_level: {sound:"engineer_g01.wav", group: 243, text:2},
+    engineer_no_food_in_city: {sound:"engineer_g02.wav", group: 243, text:3},
+    engineer_city_not_safety: {sound:"engineer_g03.wav", group: 243, text:4},
+    engineer_need_more_workers: {sound:"engineer_g04.wav", group: 243, text:5},
+    engineer_gods_are_angry: {sound:"engineer_g05.wav", group: 243, text:6},
+    engineer_city_has_bad_reputation: {sound:"engineer_g06.wav", group: 243, text:7},
+    engineer_city_is_good: {sound:"engineer_g07.wav", group: 243, text:7},
+    engineer_low_entertainment: {sound:"engineer_g08.wav", group: 243, text:8},
+    engineer_city_is_bad: {sound:"engineer_g09.wav", group: 243, text:9},
+    engineer_city_is_amazing: {sound:"engineer_g10.wav", group: 243, text:10},
 	}
 }
 
@@ -103,7 +125,7 @@ figure_tax_collector = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: IMG_BIGSLED_EMPTY, max_frames:1 },
 	},
-	sound : {
+	sounds : {
 		need_more_tax_collectors: {sound: "taxman_e01.wav", group: 245, text:0},
     high_taxes: {sound: "taxman_e02.wav", group: 245, text:1},
     much_pooh_houses: {sound: "taxman_e03.wav", group: 245, text:2},
