@@ -25,6 +25,13 @@ void config_load_figure_priest() {
     });
 }
 
+void figure_priest::figure_before_action() {
+    building* b = home();
+    if (!b->is_valid() || !b->has_figure(0, id())) {
+        poof();
+    }
+}
+
 void figure_priest::figure_action() {
     building* temple = home();
     switch (temple->type) {

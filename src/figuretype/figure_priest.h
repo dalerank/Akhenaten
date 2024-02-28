@@ -6,6 +6,7 @@ class figure_priest : public figure_impl {
 public:
     figure_priest(figure *f) : figure_impl(f) {}
 
+    virtual void figure_before_action() override;
     virtual void figure_action() override;
     virtual e_figure_sound phrase() const override { return {FIGURE_PRIEST, "priest"}; }
     virtual sound_key phrase_key() const override;
