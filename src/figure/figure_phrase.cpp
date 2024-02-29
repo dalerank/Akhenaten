@@ -37,7 +37,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "desease"},
     {FIGURE_DOCKER, "dock_pusher"},
     {FIGURE_EMBALMER, "embalmer"},
-    {FIGURE_EMIGRANT, "emigrant"},
     {FIGURE_FISHING_BOAT, "fishing"},
     {FIGURE_LABOR_SEEKER, "laborseeker"},
     {FIGURE_NONE, "governor"},
@@ -438,22 +437,6 @@ static int citizen_phrase() {
     return 0;
 }
 
-static sound_key emigrant_phrase(figure *f) {
-    switch (city_sentiment_low_mood_cause()) {
-    case LOW_MOOD_NO_JOBS: return "emigrant_no_job_in_city";
-    case LOW_MOOD_NO_FOOD: return "emigrant_no_food_in_city";
-    case LOW_MOOD_HIGH_TAXES: return "emigrant_tax_too_high";
-    case LOW_MOOD_LOW_WAGES: return "emigrant_salary_too_low";
-    }
-
-    building *b = f->destination();
-    if (!b || !b->id) {
-        return "emigrant_no_house_for_me";
-    }
-
-    return  "emigrant_all_good_in_city";
-}
-
 static sound_key governor_phrase(figure *f) {
     int nobles_in_city = 0;
     buildings_valid_do([&] (building &b) {
@@ -632,7 +615,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     case FIGURE_MUSICIAN: return musician_phrase(f);
     case FIGURE_JUGGLER: return juggler_phrase(f);
     case FIGURE_LABOR_SEEKER: return labor_seeker_phrase(f);
-    case FIGURE_EMIGRANT: return emigrant_phrase(f);
     case FIGURE_GOVERNOR: return governor_phrase(f);
     //        case FIGURE_TOWER_SENTRY:
     //            return tower_sentry_phrase(f);

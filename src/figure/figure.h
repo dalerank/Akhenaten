@@ -374,7 +374,6 @@ public:
     bool do_exitbuilding(bool invisible, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
     bool do_enterbuilding(bool invisible, building* b, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
 
-    void emigrant_action();
     void homeless_action();
     void sled_puller_action();
     void explosion_cloud_action();
@@ -550,6 +549,7 @@ public:
     inline bool do_returnhome(e_terrain_usage terrainchoice, short next_action = -1) { return base.do_returnhome(terrainchoice, next_action); }
     inline bool do_gotobuilding(building *dest, bool stop_at_road = true, e_terrain_usage terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1) { return base.do_gotobuilding(dest, stop_at_road, terrainchoice, NEXT_ACTION, FAIL_ACTION); }
     inline bool do_enterbuilding(bool invisible, building *b, short next_action = -1, short fail_action = -1) { return base.do_enterbuilding(invisible, b, next_action, fail_action); }
+    inline bool do_exitbuilding(bool invisible, short next_action = -1, short fail_action = -1) { return base.do_exitbuilding(invisible, next_action, fail_action); }
     inline bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short next_action = ACTION_2_ROAMERS_RETURNING) { return base.do_roam(terrainchoice, next_action); }
     inline bool do_goto(tile2i dest, int terrainchoice = TERRAIN_USAGE_ROADS, short next_action = -1, short fail_action = -1) { return base.do_goto(dest, terrainchoice, next_action, fail_action); }
     inline tile2i tile() const { return base.tile; }

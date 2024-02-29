@@ -21,7 +21,6 @@ void config_load_figure_immigrant() {
     });
 }
 
-
 void figure_immigrant::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant");
     building* home = immigrant_home();

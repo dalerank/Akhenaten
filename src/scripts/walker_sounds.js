@@ -39,12 +39,6 @@ walker_sounds = [
  {type: "market_buyer_low_entertainment", 							sound:"mkt_buyer_g08.wav"},
  {type: "market_buyer_city_is_good", 										sound:"mkt_buyer_g09.wav"},
  {type: "market_buyer_city_is_amazing", 								sound:"mkt_buyer_g10.wav"},
- // emigrant
- {type: "emigrant_no_job_in_city", 											sound:"emigrant_e01.wav"},
- {type: "emigrant_no_food_in_city", 										sound:"emigrant_e02.wav"},
- {type: "emigrant_tax_too_high", 												sound:"emigrant_e03.wav"},
- {type: "emigrant_salary_too_low", 											sound:"emigrant_e04.wav"},
- {type: "emigrant_no_house_for_me", 										sound:"emigrant_e05.wav"},
  // cartpusher
  {type: "cartpusher_i_have_no_destination", 						sound:"cartpusher_e01.wav"},
  {type: "cartpusher_back_to_home", 											sound:"cartpusher_e02.wav"},

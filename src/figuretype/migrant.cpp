@@ -17,25 +17,6 @@
 #include "grid/road_access.h"
 #include "grid/terrain.h"
 
-void figure_create_emigrant(building* house, int num_people) {
-    city_population_remove(num_people);
-    if (num_people < house->house_population) {
-        house->house_population -= num_people;
-    } else {
-        house->house_population = 0;
-        building_house_change_to_vacant_lot(house);
-    }
-
-    figure* f = figure_create(FIGURE_EMIGRANT, house->tile, DIR_0_TOP_RIGHT);
-    if (house->subtype.house_level >= HOUSE_COMMON_MANOR) {
-        city_migration_nobles_leave_city(num_people);
-    }
-
-    f->action_state = FIGURE_ACTION_4_EMIGRANT_CREATED;
-    f->wait_ticks = 0;
-    f->migrant_num_people = num_people;
-}
-
 void figure_create_homeless(tile2i tile, int num_people) {
     figure* f = figure_create(FIGURE_HOMELESS, tile, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_7_HOMELESS_CREATED;
@@ -93,71 +74,6 @@ void figure_add_house_population(building* house, int num_people) {
     house->house_population_room = max_people - house->house_population;
     city_population_add(num_people);
     house->remove_figure(2);
-}
-
-void figure::emigrant_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Emigrant");
-    tile2i exit = city_map_exit_point();
-    switch (action_state) {
-    case FIGURE_ACTION_4_EMIGRANT_CREATED:
-        //            is_ghost = true;
-        anim_frame = 0;
-        wait_ticks++;
-        if (wait_ticks >= 5) {
-            advance_action(FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE);
-        }
-        break;
-
-    case FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE:
-        do_exitbuilding(false, FIGURE_ACTION_6_EMIGRANT_LEAVING);
-        //            is_ghost = in_building_wait_ticks ? 1 : 0;
-        break;
-
-    case ACTION_16_EMIGRANT_RANDOM:
-        roam_wander_freely = false;
-        do_goto(destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_6_EMIGRANT_LEAVING, FIGURE_ACTION_6_EMIGRANT_LEAVING);
-        if (direction == DIR_FIGURE_CAN_NOT_REACH || direction == DIR_FIGURE_REROUTE) {
-            state = FIGURE_STATE_ALIVE;
-            destination_tile = random_around_point(tile, tile, /*step*/2, /*bias*/4, /*max_dist*/8);
-            direction = DIR_0_TOP_RIGHT;
-            advance_action(FIGURE_ACTION_6_EMIGRANT_LEAVING);
-        }
-        break;
-
-    case FIGURE_ACTION_6_EMIGRANT_LEAVING:
-    case 10:
-        wait_ticks--;
-        if (wait_ticks > 0) {
-            anim_frame = 0;
-            break;
-        }
-
-        if (do_goto(exit, TERRAIN_USAGE_ANY)) {
-            poof();
-        }
-
-        if (direction == DIR_FIGURE_CAN_NOT_REACH) {
-            routing_try_reroute_counter++;
-            if (routing_try_reroute_counter > 20) {
-                poof();
-                break;
-            }
-            wait_ticks = 20;
-            route_remove();
-            state = FIGURE_STATE_ALIVE;
-            tile2i road_tile;
-            map_closest_road_within_radius(exit, 1, 2, road_tile);
-            destination_tile = road_tile;
-            direction = DIR_0_TOP_RIGHT;
-            advance_action(ACTION_16_EMIGRANT_RANDOM);
-        }
-        break;
-    }
-
-    {
-        OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Emigrant/Update Image");
-        update_direction_and_image();
-    }
 }
 
 void figure::homeless_action() {

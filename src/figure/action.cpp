@@ -32,7 +32,7 @@ struct figure_action_property {
 static figure_action_property action_properties_lookup[] = {
   {FIGURE_NONE,     0, 0, 0, 0, 0},
   {FIGURE_IMMIGRANT,1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, IMG_IMMIGRANT},
-  {FIGURE_EMIGRANT, 1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, IMG_EMIGRANT},
+  {FIGURE_EMIGRANT, 1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, ANIM_EMIGRANT_WALK},
   {FIGURE_HOMELESS, 1, TERRAIN_USAGE_PREFER_ROADS, 0, 0, 0, IMG_HOMELESS},
   {FIGURE_CART_PUSHER, 1, TERRAIN_USAGE_ROADS, 0, 0, 0,  ANIM_CARTPUSHER_WALK},
   {FIGURE_LABOR_SEEKER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_LABOR_SEEKER},
@@ -478,7 +478,6 @@ void figure::action_perform() {
         }
 
         switch (type) {
-        case FIGURE_EMIGRANT: emigrant_action(); break;
         case FIGURE_HOMELESS: homeless_action(); break;
 
         case FIGURE_EXPLOSION: explosion_cloud_action(); break;

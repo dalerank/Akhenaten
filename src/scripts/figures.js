@@ -128,6 +128,20 @@ figure_trade_ship = {
 	}
 }
 
+figure_emigrant = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_EMIGRANT_WALK, max_frames:12 },
+		death : { pos : [0, 0], anim_id: ANIM_EMIGRANT_DEATH, max_frames:8 },
+	},
+	sounds : {
+		no_job_in_city : {sound:"emigrant_e01.wav", group: 203, text:0},
+    no_food_in_city : {sound:"emigrant_e02.wav", group: 203, text:1},
+    tax_too_high : {sound:"emigrant_e03.wav", group: 203, text:2},
+    salary_too_low : {sound:"emigrant_e04.wav", group: 203, text:3},
+    no_house_for_me : {sound:"emigrant_e05.wav", group: 203, text:4},
+	}
+}
+
 figure_sled = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: IMG_BIGSLED_EMPTY, max_frames:1 },
