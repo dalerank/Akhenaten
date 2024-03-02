@@ -50,6 +50,7 @@
 #include "grid/road_access.h"
 #include "grid/sprite.h"
 #include "grid/terrain.h"
+#include "game/game.h"
 #include "input/input.h"
 #include "window/advisors.h"
 #include "window/building/common.h"
@@ -611,7 +612,7 @@ static void draw_refresh_background() {
 }
 
 static void draw_background() {
-    auto &context = g_building_info_context;
+    game.animation = false;
     window_city_draw_panels();
     window_city_draw();
     draw_refresh_background();

@@ -1,6 +1,7 @@
 #include "animation_timers.h"
 
 #include "core/time.h"
+#include "game/game.h"
 
 #define MAX_ANIM_TIMERS 51
 
@@ -34,6 +35,9 @@ void game_animation_update(void) {
     }
 }
 bool game_animation_should_advance(int speed) {
+    if (!game.animation) {
+        return false;
+    }
     auto &timers = g_animation_timers;
     return timers[speed].should_update;
 }

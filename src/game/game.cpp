@@ -228,9 +228,14 @@ void game_run() {
         anti_scum_random_15bit();
     }
 }
-void game_draw_frame() {
+
+void game_frame_draw() {
     OZZY_PROFILER_SECTION("Render/Frame");
     window_draw(false);
+}
+
+void game_frame_end() {
+    game.animation = true;
 }
 
 void game_sound_frame() {

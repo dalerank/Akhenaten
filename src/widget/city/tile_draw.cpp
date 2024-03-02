@@ -617,6 +617,7 @@ void draw_ornaments_overlay(vec2i pixel, tile2i point, painter &ctx) {
     int x = pixel.x;
     int y = pixel.y;
     int b_id = map_building_at(grid_offset);
+
     if (b_id) {
         const building* b = building_at(grid_offset);
         if (get_city_overlay()->show_building(b)) {

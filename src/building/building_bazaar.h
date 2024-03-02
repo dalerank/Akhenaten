@@ -6,6 +6,7 @@
 class building_bazaar : public building_impl {
 public:
     building_bazaar(building &b) : building_impl(b) {}
+
     virtual void spawn_figure() override;
     virtual void update_graphic() override;
     virtual void update_day() override;

@@ -421,14 +421,6 @@ static void teardown(void) {
     SDL_Quit();
 }
 
-struct fps_data_t {
-    int frame_count;
-    int last_fps;
-    Uint32 last_update_time;
-};
-
-fps_data_t g_fps = {0, 0, 0};
-
 static void run_and_draw() {
     OZZY_PROFILER_FRAME(x);
     time_millis time_before_run = SDL_GetTicks();
@@ -439,25 +431,25 @@ static void run_and_draw() {
     game_run();
     Uint32 time_between_run_and_draw = SDL_GetTicks();
 
-    game_draw_frame();
+    game_frame_draw();
     game_sound_frame();
     game_handle_input_frame();
     game_draw_frame_warning();
     game_handle_input_after();
     Uint32 time_after_draw = SDL_GetTicks();
 
-    g_fps.frame_count++;
-    if (time_after_draw - g_fps.last_update_time > 1000) {
-        g_fps.last_fps = g_fps.frame_count;
-        g_fps.last_update_time = time_after_draw;
-        g_fps.frame_count = 0;
+    game.fps.frame_count++;
+    if (time_after_draw - game.fps.last_update_time > 1000) {
+        game.fps.last_fps = game.fps.frame_count;
+        game.fps.last_update_time = time_after_draw;
+        game.fps.frame_count = 0;
     }
 
     if (config_get(CONFIG_UI_DRAW_FPS) && (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY) || window_is(WINDOW_SLIDING_SIDEBAR))) {
         int y_offset = screen_height() - 24;
         int y_offset_text = y_offset + 5;
  
-        text_draw_number_colored(g_fps.last_fps, 'f', "", 5, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
+        text_draw_number_colored(game.fps.last_fps, 'f', "", 5, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
         text_draw_number_colored(time_between_run_and_draw - time_before_run, 'g', "", 40, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
         text_draw_number_colored(time_after_draw - time_between_run_and_draw, 'd', "", 70, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
     }
@@ -466,6 +458,7 @@ static void run_and_draw() {
 
     game_imgui_overlay_draw();
     platform_renderer_render();
+    game_frame_end();
 
     js_vm_sync();
 }
