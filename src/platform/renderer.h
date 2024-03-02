@@ -93,6 +93,7 @@ public:
 };
 
 graphics_renderer_interface* graphics_renderer();
+extern graphics_renderer_interface g_render;
 
 void set_render_scale(painter &ctx, float scale);
 std::vector<video_mode> get_video_modes();

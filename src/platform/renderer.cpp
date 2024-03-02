@@ -111,12 +111,12 @@ struct renderer_data_t {
         time_millis last_used;
         SDL_Texture* texture;
     } unpacked_images[MAX_UNPACKED_IMAGES];
-    graphics_renderer_interface renderer_interface;
     int supports_yuv_textures;
 
     float global_render_scale = 1.0f;
 };
 
+graphics_renderer_interface g_render;
 renderer_data_t g_renderer_data;
 
 bool graphics_renderer_interface::save_screen_buffer(painter &ctx, color* pixels, int x, int y, int width, int height, int row_width) {
@@ -129,11 +129,11 @@ bool graphics_renderer_interface::save_screen_buffer(painter &ctx, color* pixels
 }
 
 void graphics_renderer_interface::draw_line(int x_start, int x_end, int y_start, int y_end, color color) {
-    auto &data = g_renderer_data;
     if (game.paused) {
         return;
     }
 
+    auto &data = g_renderer_data;
     SDL_SetRenderDrawColor(data.renderer,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
@@ -157,10 +157,11 @@ void graphics_renderer_interface::draw_rect(int x, int y, int width, int height,
 }
 
 void graphics_renderer_interface::fill_rect(int x, int y, int width, int height, color color) {
-    auto &data = g_renderer_data;
     if (game.paused) {
         return;
     }
+
+    auto &data = g_renderer_data;
     SDL_SetRenderDrawColor(data.renderer,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
@@ -171,46 +172,46 @@ void graphics_renderer_interface::fill_rect(int x, int y, int width, int height,
 }
 
 void graphics_renderer_interface::clear_screen(void) {
-    auto &data = g_renderer_data;
     if (game.paused) {
         return;
     }
+    auto &data = g_renderer_data;
     SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0xff);
     SDL_RenderClear(data.renderer);
 }
 
 void graphics_renderer_interface::set_viewport(int x, int y, int width, int height) {
-    auto &data = g_renderer_data;
     if (game.paused) {
         return;
     }
+    auto &data = g_renderer_data;
     SDL_Rect viewport = {x, y, width, height};
     SDL_RenderSetViewport(data.renderer, &viewport);
 }
 
 void graphics_renderer_interface::reset_viewport(void) {
-    auto &data = g_renderer_data;
     if (game.paused) {
         return;
     }
+    auto &data = g_renderer_data;
     SDL_RenderSetViewport(data.renderer, NULL);
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
 
 void graphics_renderer_interface::set_clip_rectangle(int x, int y, int width, int height) {
-    auto &data = g_renderer_data;
     if (game.paused) {
         return;
     }
+    auto &data = g_renderer_data;
     SDL_Rect clip = {x, y, width, height};
     SDL_RenderSetClipRect(data.renderer, &clip);
 }
 
 void graphics_renderer_interface::reset_clip_rectangle(void) {
-    auto &data = g_renderer_data;
     if (game.paused) {
         return;
     }
+    auto &data = g_renderer_data;
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
 
@@ -252,8 +253,7 @@ std::vector<video_mode> get_video_modes() {
 }
 
 graphics_renderer_interface* graphics_renderer() {
-    auto &data = g_renderer_data;
-    return &data.renderer_interface;
+    return &g_render;
 }
 
 static const SDL_BlendMode premult_alpha = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE,
@@ -537,7 +537,6 @@ static void create_blend_texture(int type) {
 }
 
 static void set_texture_color_and_scale_mode(SDL_Texture *texture, color color, float scale) {
-    auto &data = g_renderer_data;
     if (!color) {
         color = COLOR_MASK_NONE;
     }
@@ -968,10 +967,10 @@ static void destroy_render_texture(void) {
 }
 
 int platform_renderer_create_render_texture(int width, int height) {
-    auto &data = g_renderer_data;
     if (game.paused) {
         return 1;
     }
+    auto &data = g_renderer_data;
     destroy_render_texture();
 
 #ifdef USE_TEXTURE_SCALE_MODE
@@ -1064,10 +1063,10 @@ void platform_renderer_clear() {
 }
 
 void platform_renderer_render() {
-    auto &data = g_renderer_data;
     if (game.paused) {
         return;
     }
+    auto &data = g_renderer_data;
     SDL_SetRenderTarget(data.renderer, NULL);
     SDL_RenderCopy(data.renderer, data.render_texture, NULL, NULL);
 #ifdef PLATFORM_USE_SOFTWARE_CURSOR

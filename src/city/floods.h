@@ -32,7 +32,7 @@ struct floods_data_t {
     bool has_floodplains; // 0 - 1
 };
 
-floods_data_t& floodplain_data();
+extern floods_data_t g_floods;
 
 void floodplains_init();
 

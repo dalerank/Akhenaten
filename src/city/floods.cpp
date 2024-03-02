@@ -13,18 +13,14 @@
 
 #include <cmath>
 
-floods_data_t g_floods_data;
-
-floods_data_t& floodplain_data() {
-    return g_floods_data;
-}
+floods_data_t g_floods;
 
 static int flood_multiplier_grow = 20;
 static int randomizing_int_1 = 0;
 static int randomizing_int_2 = 0;
 
 void floodplains_init() {
-    auto& data = floodplain_data();
+    auto& data = g_floods;
     data.flood_progress = 0;
     data.unk01 = 0;
     data.state = FLOOD_STATE_FARMABLE;
@@ -63,19 +59,19 @@ bool tick_is_flood_cycle() {
     return floods_current_subcycle() == 0;
 }
 int floods_start_cycle() {
-    auto& data = floodplain_data();
+    auto& data = g_floods;
     double cycles_so_far = CYCLES_IN_A_YEAR * game_time_year_since_start();
     double cycle_start = ((double)data.season * 105.0f) / 100.0f + 15.0f + cycles_so_far - 0.5f;
     return (int)cycle_start;
 }
 
 int floods_end_cycle() {
-    auto& data = floodplain_data();
+    auto& data = g_floods;
     return floods_start_cycle() + data.duration + data.floodplain_width * 2;
 }
 
 double floods_period_length(bool upcoming) {
-    auto& data = floodplain_data();
+    auto& data = g_floods;
     if (upcoming)
         return (float)data.quality_next * (float)data.floodplain_width * 0.01;
     return (float)data.quality_last * (float)data.floodplain_width * 0.01;
@@ -95,22 +91,22 @@ bool cycle_is(int c2, bool relative = true) {
 }
 
 bool floodplains_is(int state) {
-    auto& data = floodplain_data();
+    auto& data = g_floods;
     return data.state == state;
 }
 
 void floodplains_adjust_next_quality(int quality) {
-    auto& data = floodplain_data();
+    auto& data = g_floods;
     data.quality_next = calc_bound(data.quality_next + quality, 0, 100);
 }
 
 int floodplains_expected_quality() {
-    auto& data = floodplain_data();
+    auto& data = g_floods;
     return data.quality_next;
 }
 
 int floodplains_expected_month() {
-    auto& data = floodplain_data();
+    auto& data = g_floods;
     return (data.season_initial / 15) - 10;
 }
 
@@ -135,7 +131,7 @@ static void floodplains_reset_farms() {
 }
 
 static void cycle_states_recalc() {
-    auto &data = floodplain_data();
+    auto &data = g_floods;
     // if no floodplains present, return
     if (!data.has_floodplains) {
         data.state = FLOOD_STATE_FARMABLE;
@@ -211,7 +207,7 @@ static void cycle_states_recalc() {
     }
 }
 static void update_next_flood_params() {
-    auto& data = floodplain_data();
+    auto& data = g_floods;
 
     // update values
     data.season = data.season_initial;     // reset to initial
@@ -243,7 +239,7 @@ static void update_next_flood_params() {
     data.quality_next = data.quality_next & (data.quality_next < 1) - 1;
 }
 static void post_flood_prediction_message() {
-    auto& data = floodplain_data();
+    auto& data = g_floods;
 
     if (data.quality_next == 100) {
         city_message_post(true, MESSAGE_FLOOD_PERFECT, 0, 0);
@@ -262,7 +258,7 @@ static void post_flood_prediction_message() {
 
 void floodplains_tick_update(bool calc_only) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Floodplains Update");
-    auto& data = floodplain_data();
+    auto& data = g_floods;
 
     cycle_states_recalc();
 
@@ -334,7 +330,7 @@ void floodplains_tick_update(bool calc_only) {
 }
 
 io_buffer* iob_floodplain_settings = new io_buffer([](io_buffer* iob, size_t version) {
-    auto& data = floodplain_data();
+    auto& data = g_floods;
 
     iob->bind(BIND_SIGNATURE_INT32, &data.season_initial);
     iob->bind(BIND_SIGNATURE_INT32, &data.duration_initial);
@@ -344,8 +340,9 @@ io_buffer* iob_floodplain_settings = new io_buffer([](io_buffer* iob, size_t ver
     iob->bind(BIND_SIGNATURE_INT32, &data.quality);
     iob->bind(BIND_SIGNATURE_INT32, &data.unk00);
     iob->bind(BIND_SIGNATURE_INT32, &data.quality_next);
-    if (FILEIO.get_file_version() >= 149)
+    if (FILEIO.get_file_version() >= 149) {
         iob->bind(BIND_SIGNATURE_INT32, &data.quality_last);
+    }
 
     data.flood_progress = 30;
     data.unk00 = 0;

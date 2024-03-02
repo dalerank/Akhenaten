@@ -649,7 +649,7 @@ static void draw_footprint_size_any(int image_id, int x, int y, int size, color 
             int y_offset = k * 15;
 
             //            draw_footprint_tile(tile_data(data, index++), x + x_offset, y + y_offset, color_mask);
-            graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale);
+            g_render.draw_image(ctx, img, x, y, color_mask, scale);
         }
     }
 }
@@ -757,7 +757,7 @@ void ImageDraw::img_background(painter &ctx, int image_id, float scale) {
     if (scale == -1) {
         //        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
     } else {
-        graphics_renderer()->draw_image(ctx, img, (screen_width() - img->width) / 2, (screen_height() - img->height) / 2, COLOR_MASK_NONE, scale);
+        g_render.draw_image(ctx, img, (screen_width() - img->width) / 2, (screen_height() - img->height) / 2, COLOR_MASK_NONE, scale);
     }
 }
 
@@ -775,7 +775,7 @@ const image_t* ImageDraw::isometric_from_drawtile(painter &ctx, int image_id, ve
     //        assets_load_unpacked_asset(image_id);
     //    }
     pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
-    graphics_renderer()->draw_image(ctx, img, pos.x, pos.y, color_mask, 1.f, false, alpha);
+    g_render.draw_image(ctx, img, pos.x, pos.y, color_mask, 1.f, false, alpha);
     return img;
 }
 
@@ -789,6 +789,6 @@ const image_t* ImageDraw::isometric_from_drawtile_top(painter &ctx, int image_id
         return nullptr;
     }
     pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
-    graphics_renderer()->draw_image(ctx, img_top, pos.x, pos.y, color_mask, 1.f, false, alpha);
+    g_render.draw_image(ctx, img_top, pos.x, pos.y, color_mask, 1.f, false, alpha);
     return img;
 }

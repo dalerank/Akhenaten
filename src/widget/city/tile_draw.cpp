@@ -320,8 +320,6 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
     if (building_id > 0) {
         building *b = building_get(building_id);
         draw_isometric_flat_building<true>(b, tile, ctx);
-        //return;
-        //}
     }
 
     color color_mask = COLOR_MASK_NONE;

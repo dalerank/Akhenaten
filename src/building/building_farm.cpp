@@ -152,7 +152,7 @@ void draw_farm_crops(painter &ctx, e_building_type type, int progress, int grid_
     }
 }
 
-void building_farm_draw_workers(painter &ctx, building* b, int grid_offset, vec2i pos) {
+void building_farm_draw_workers(painter &ctx, building* b, tile2i tile, vec2i pos) {
     if (b->num_workers == 0) {
         return;
     }
@@ -168,7 +168,7 @@ void building_farm_draw_workers(painter &ctx, building* b, int grid_offset, vec2
             //auto coords = farm_tile_coords(x, y, random_x, random_y);
             //draw_ph_worker(d, 2, animation_offset, coords);
         } else {
-            animation_offset = generic_sprite_offset(grid_offset, 13, 1);
+            animation_offset = generic_sprite_offset(tile.grid_offset(), 13, 1);
             if (b->data.industry.progress < 400)
                 draw_farm_worker(ctx, game_time_absolute_tick() % 128 / 16, 1, animation_offset, farm_tile_coords(pos, 1, 1));
             else if (b->data.industry.progress < 500)
@@ -205,7 +205,7 @@ void building_farm_draw_workers(painter &ctx, building* b, int grid_offset, vec2
                 draw_farm_worker(ctx, d, 2, animation_offset, farm_tile_coords(pos, 2, 2));
         }
     } else {
-        animation_offset = generic_sprite_offset(grid_offset, 13, 1);
+        animation_offset = generic_sprite_offset(tile.grid_offset(), 13, 1);
         if (b->data.industry.progress < 100)
             draw_farm_worker(ctx, game_time_absolute_tick() % 128 / 16, 1, animation_offset, farm_tile_coords(pos, 1, 1));
         else if (b->data.industry.progress < 400)
@@ -294,7 +294,7 @@ void building_farm::on_create() {
 bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color mask) {
     if (map_terrain_is(t.grid_offset(), TERRAIN_BUILDING)) {
         draw_farm_crops(ctx, type(), data.industry.progress, tile().grid_offset(), point, mask);
-        building_farm_draw_workers(ctx, &base, t.grid_offset(), point);
+        building_farm_draw_workers(ctx, &base, t, point);
     }
 
     return true;
