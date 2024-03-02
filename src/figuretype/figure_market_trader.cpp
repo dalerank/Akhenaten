@@ -1,0 +1,52 @@
+#include "figure_market_trader.h"
+
+#include "building/building_bazaar.h"
+#include "figuretype/figure_market_buyer.h"
+#include "figure/service.h"
+
+#include "js/js_game.h"
+
+struct market_trader_model : public figures::model_t<FIGURE_MARKET_TRADER, figure_market_trader> {};
+market_trader_model market_trader_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_market_trader);
+void config_load_figure_market_trader() {
+    g_config_arch.r_section("figure_market_trader", [] (archive arch) {
+        market_trader_m.anim.load(arch);
+        market_trader_m.sounds.load(arch);
+    });
+}
+
+void figure_market_trader::figure_action() {
+    building* market = home();
+    if (action_state() == FIGURE_ACTION_125_ROAMING) {
+        // force return on out of stock
+        int stock = building_bazaar_get_max_food_stock(market) + building_bazaar_get_max_goods_stock(market);
+        if (base.roam_length >= 96 && stock <= 0) {
+            base.roam_length = base.max_roam_length;
+        }
+    }
+}
+
+figure_sound_t figure_market_trader::get_sound_reaction(pcstr key) const {
+    return market_trader_m.sounds[key];
+}
+
+sound_key figure_market_trader::phrase_key() const {
+    if (base.action_state == FIGURE_ACTION_126_ROAMER_RETURNING) {
+        return "goods_are_finished";
+    } else {
+        return "we_are_selling_goods";
+    }
+}
+
+void bazaar_coverage(building* b, figure *f, int &) {
+    b->data.house.bazaar_access = MAX_COVERAGE;
+}
+
+int figure_market_trader::provide_service() {
+    int none_service;
+    int houses_serviced = provide_market_goods(home(), tile());
+    figure_provide_service(tile(), &base, none_service, bazaar_coverage);
+    return houses_serviced;
+}

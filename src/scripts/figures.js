@@ -115,6 +115,20 @@ figure_architect = {
 figure_market_buyer = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_MARKET_BUYER_WALK, max_frames:12 },
+	},
+	sounds : {
+		goto_store : {sound:"mkt_buyer_e01.wav", group:244, text:0 },
+    back_to_market : {sound:"mkt_buyer_e02.wav", group:244, text:0 },
+    city_has_low_health : {sound:"mkt_buyer_g01.wav", group:244, text:0 },
+    no_food_in_city : {sound:"mkt_buyer_g02.wav", group:244, text:0 },
+    city_have_no_army : {sound:"mkt_buyer_g03.wav", group:244, text:0 },
+    much_unemployments : {sound:"mkt_buyer_g04.wav", group:244, text:0 },
+    gods_are_angry : {sound:"mkt_buyer_g05.wav", group:244, text:0 },
+    city_is_bad_reputation : {sound:"mkt_buyer_g06.wav", group:244, text:0 },
+    too_much_unemployments : {sound:"mkt_buyer_g07.wav", group:244, text:0 },
+    low_entertainment : {sound:"mkt_buyer_g08.wav", group:244, text:0 },
+    city_is_good : {sound:"mkt_buyer_g09.wav", group:244, text:0 },
+    city_is_amazing : {sound:"mkt_buyer_g10.wav", group:244, text:0 },
 	}
 }
 
@@ -171,6 +185,17 @@ figure_herbalist = {
 	sounds : {
 		no_threat_malaria_here : {sound:"apothecary_e02.wav", group: 241, text:1},
     have_malaria_risk_here : {sound:"apothecary_e03.wav", group: 241, text:2},
+	}
+}
+
+figure_market_trader = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_HERBALIST_WALK, max_frames:12 },
+		death : { pos : [0, 0], anim_id: ANIM_HERBALIST_DEATH, max_frames:8 },
+	},
+	sounds : {
+		goods_are_finished : {sound:"mkt_seller_e01.wav", group:245, text:0},
+ 	  we_are_selling_goods : {sound:"mkt_seller_e02.wav", group:245, text:0},
 	}
 }
 

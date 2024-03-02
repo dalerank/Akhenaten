@@ -45,7 +45,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "labor"},
     {FIGURE_LIBRARIAN, "library"},
     {FIGURE_MAGISTRATE, "magistrate"},
-    {FIGURE_MARKET_TRADER, "mkt_seller"},
     {FIGURE_MUSICIAN, "musician"},
     {FIGURE_NONE, "pharaoh"},
     {FIGURE_CONSTABLE, "police"},
@@ -71,14 +70,6 @@ static int lion_tamer_phrase() {
     //        return 7 + phrase_sequence_exact;
     //    }
     return 0;
-}
-
-static sound_key marker_trader_phrase(figure *f) {
-    if (f->action_state == FIGURE_ACTION_126_ROAMER_RETURNING) {
-        return "market_seller_goods_are_finished";
-    } else {
-        return "market_seller_we_are_selling_goods";
-    }
 }
 
 static sound_key hunter_ostric_phrase(figure *f) {
@@ -601,7 +592,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     switch (f->type) {
 
     case FIGURE_DANCER: return dancer_phrase(f);
-    case FIGURE_MARKET_TRADER: return marker_trader_phrase(f);
     case FIGURE_OSTRICH_HUNTER: return hunter_ostric_phrase(f);
     case FIGURE_MAGISTRATE: return magistrate_phrase(f);
     case FIGURE_CONSTABLE: return policeman_phrase(f);

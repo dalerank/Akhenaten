@@ -95,10 +95,6 @@ static void mortuary_coverage(building* b, figure *f, int&) {
     b->data.house.mortuary = MAX_COVERAGE;
 }
 
-static void bazaar_coverage(building* b, figure *f, int &) {
-    b->data.house.bazaar_access = MAX_COVERAGE;
-}
-
 static void policeman_coverage(building* b, figure *f, int &max_anger_seen) {
     b->house_criminal_active -= 1;
     b->house_criminal_active = std::max<int>(0, b->house_criminal_active);
@@ -130,11 +126,6 @@ int figure::figure_service_provide_coverage() {
 
     case FIGURE_LABOR_SEEKER:
         houses_serviced = figure_provide_culture(tile, this, labor_seeker_coverage);
-        break;
-
-    case FIGURE_MARKET_TRADER:
-        houses_serviced = provide_market_goods(home(), tile);
-        figure_provide_service(tile, this, none_service, bazaar_coverage);
         break;
 
     case FIGURE_TEACHER:

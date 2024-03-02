@@ -505,7 +505,6 @@ void figure::action_perform() {
         case FIGURE_CRIMINAL: mugger_action(); break;
         case FIGURE_TOMB_ROBER: rioter_action(); break;
         case FIGURE_FISHING_BOAT: fishing_boat_action(); break;
-        case FIGURE_MARKET_TRADER: market_trader_action(); break;
 
         case FIGURE_TEACHER: scribal_school_teacher_action(); break;
             //            case 29: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break;

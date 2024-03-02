@@ -26,19 +26,6 @@ walker_sounds = [
  {type: "cartpusher_have_no_place_for_goods", 					sound:"cartpusher_e01.wav"},
  {type: "cartpusher_i_have_time_for_rest", 							sound:"cartpusher_e02.wav"},
  {type: "cartpusher_road_too_long", 										sound:"cartpusher_e03.wav"},
- // market
- {type: "market_buyer_goto_store", 											sound:"mkt_buyer_e01.wav"},
- {type: "market_buyer_back_to_market", 									sound:"mkt_buyer_e02.wav"},
- {type: "market_buyer_city_has_low_health", 						sound:"mkt_buyer_g01.wav"},
- {type: "market_buyer_no_food_in_city", 								sound:"mkt_buyer_g02.wav"},
- {type: "market_buyer_city_have_no_army", 							sound:"mkt_buyer_g03.wav"},
- {type: "market_buyer_much_unemployments", 							sound:"mkt_buyer_g04.wav"},
- {type: "market_buyer_gods_are_angry", 									sound:"mkt_buyer_g05.wav"},
- {type: "market_buyer_city_is_bad_reputation", 					sound:"mkt_buyer_g06.wav"},
- {type: "market_buyer_too_much_unemployments", 					sound:"mkt_buyer_g07.wav"},
- {type: "market_buyer_low_entertainment", 							sound:"mkt_buyer_g08.wav"},
- {type: "market_buyer_city_is_good", 										sound:"mkt_buyer_g09.wav"},
- {type: "market_buyer_city_is_amazing", 								sound:"mkt_buyer_g10.wav"},
  // cartpusher
  {type: "cartpusher_i_have_no_destination", 						sound:"cartpusher_e01.wav"},
  {type: "cartpusher_back_to_home", 											sound:"cartpusher_e02.wav"},
@@ -92,9 +79,6 @@ walker_sounds = [
  {type: "dancer_salary_too_low", 												sound:"dancer_g08.wav"},
  {type: "dancer_city_is_good", 													sound:"dancer_g09.wav"},
  {type: "dancer_city_is_amazing", 											sound:"dancer_g10.wav"},
- // market_seller
- {type: "market_seller_goods_are_finished", 						sound:"mkt_seller_e01.wav"},
- {type: "market_seller_we_are_selling_goods", 					sound:"mkt_seller_e02.wav"},
  // priest bast
  {type: "priest_osiris_god_love_festival", 							sound:"priest_osiris_e01.wav"},
  {type: "priest_osiris_city_low_mood", 									sound:"priest_osiris_e02.wav"},

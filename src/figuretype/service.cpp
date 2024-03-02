@@ -29,13 +29,3 @@ void figure::scribal_school_teacher_action() {
     
     }
 }
-
-void figure::market_trader_action() {
-    building* market = home();
-    if (action_state == FIGURE_ACTION_125_ROAMING) {
-        // force return on out of stock
-        int stock = building_bazaar_get_max_food_stock(market) + building_bazaar_get_max_goods_stock(market);
-        if (roam_length >= 96 && stock <= 0)
-            roam_length = max_roam_length;
-    }
-}

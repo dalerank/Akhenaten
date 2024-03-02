@@ -31,6 +31,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_market_buyer);
 void config_load_figure_market_buyer() {
     g_config_arch.r_section("figure_market_buyer", [] (archive arch) {
         market_buyer_m.anim.load(arch);
+        market_buyer_m.sounds.load(arch);
     });
 }
 
@@ -77,47 +78,47 @@ void figure_market_buyer::figure_action() {
 sound_key figure_market_buyer::phrase_key() const {
     svector<sound_key, 10> keys;
     if (action_state() == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
-        keys.push_back("market_buyer_goto_store");
+        keys.push_back("goto_store");
     } else if (action_state() == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
-        keys.push_back("market_buyer_back_to_market");
+        keys.push_back("buyer_back_to_market");
     } 
 
     if (city_health() < 30) {
-        keys.push_back("market_buyer_city_has_low_health");
+        keys.push_back("buyer_city_has_low_health");
     }
 
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("market_buyer_no_food_in_city");
+        keys.push_back("buyer_no_food_in_city");
     }
 
     if (formation_get_num_forts() < 1) {
-        keys.push_back("market_buyer_city_have_no_army");
+        keys.push_back("buyer_city_have_no_army");
     }
 
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
-        keys.push_back("market_buyer_much_unemployments");
+        keys.push_back("buyer_much_unemployments");
     }
 
     if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("market_buyer_gods_are_angry");
+        keys.push_back("buyer_gods_are_angry");
     }
 
     if (city_rating_kingdom() < 30) {
-        keys.push_back("market_buyer_city_is_bad_reputation");
+        keys.push_back("buyer_city_is_bad_reputation");
     }
 
     if (city_labor_unemployment_percentage() >= 15) {
-        keys.push_back("market_buyer_too_much_unemployments");
+        keys.push_back("buyer_too_much_unemployments");
     }
 
     if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("market_buyer_low_entertainment");
+        keys.push_back("buyer_low_entertainment");
     }
 
     if (city_sentiment() > 90) {
-        keys.push_back("market_buyer_city_is_amazing");
+        keys.push_back("buyer_city_is_amazing");
     } else if (city_sentiment() > 50) {
-        keys.push_back("market_buyer_city_is_good");
+        keys.push_back("buyer_city_is_good");
     }
 
     int index = rand() % keys.size();

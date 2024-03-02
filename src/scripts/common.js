@@ -73,6 +73,7 @@ var figure_tax_collector = {}
 var figure_physician = {}
 var figure_herbalist = {}
 var figure_emigrant = {}
+var figure_market_trader = {}
 var mission0 = {}
 var mission1 = {}
 var mission5 = {}

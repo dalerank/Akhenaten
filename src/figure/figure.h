@@ -387,7 +387,6 @@ public:
     void rioter_action();
     void governor_action();
     void fishing_boat_action();
-    void market_trader_action();
     void scribal_school_teacher_action();
     void bricklayer_action();
     void editor_flag_action();
