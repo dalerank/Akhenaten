@@ -64,7 +64,7 @@ static int clear_land_confirmed(bool measure_only, tile2i start, tile2i end) {
 
             if (measure_only && visual_feedback_on_delete) {
                 building* b = get_deletable_building(grid_offset);
-                if (map_property_is_deleted(grid_offset) || (b && map_property_is_deleted(b->tile.grid_offset()))) {
+                if (map_property_is_deleted(grid_offset) || (b && map_property_is_deleted(b->tile))) {
                     continue;
                 }
 

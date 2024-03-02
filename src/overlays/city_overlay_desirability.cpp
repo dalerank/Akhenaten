@@ -24,7 +24,7 @@ static int has_deleted_building(int grid_offset) {
 
     building* b = building_at(grid_offset);
     b = b->main();
-    return b->id && (b->is_deleted || map_property_is_deleted(b->tile.grid_offset()));
+    return b->id && (b->is_deleted || map_property_is_deleted(b->tile));
 }
 
 static int get_tooltip_desirability(tooltip_context* c, int grid_offset) {

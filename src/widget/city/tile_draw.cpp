@@ -130,7 +130,7 @@ bool drawing_building_as_deleted(building* b) {
         return false;
 
     b = b->main();
-    if (b->id && (b->is_deleted || map_property_is_deleted(b->tile.grid_offset())))
+    if (b->id && (b->is_deleted || map_property_is_deleted(b->tile)))
         return true;
 
     return false;
@@ -326,7 +326,7 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
 
     color color_mask = COLOR_MASK_NONE;
     bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == tile);
-    if (deletion_tool || map_property_is_deleted(tile.grid_offset())) {
+    if (deletion_tool || map_property_is_deleted(tile)) {
         color_mask = COLOR_MASK_RED;
     }
 
@@ -408,7 +408,7 @@ void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx) {
     map_render_set(grid_offset, 0);
     color color_mask = COLOR_MASK_NONE;
     bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == tile);
-    if (deletion_tool || map_property_is_deleted(tile.grid_offset())) {
+    if (deletion_tool || map_property_is_deleted(tile)) {
         color_mask = COLOR_MASK_RED;
     }
 
@@ -455,7 +455,7 @@ void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx) {
 
     color color_mask = COLOR_MASK_NONE;
     bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == tile);
-    if (deletion_tool || map_property_is_deleted(tile)) {
+    if (deletion_tool || map_property_is_deleted(tile) || drawing_building_as_deleted(b)) {
         color_mask = COLOR_MASK_RED;
     }
 
