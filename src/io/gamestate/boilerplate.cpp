@@ -32,7 +32,6 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
-#include "graphics/animation_timers.h"
 #include "graphics/image.h"
 #include "grid/aqueduct.h"
 #include "grid/bookmark.h"

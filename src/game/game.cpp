@@ -11,7 +11,6 @@
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/tick.h"
-#include "graphics/animation_timers.h"
 #include "graphics/elements/warning.h"
 #include "graphics/font.h"
 #include "graphics/image.h"

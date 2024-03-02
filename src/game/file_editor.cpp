@@ -18,7 +18,6 @@
 #include "figuretype/water.h"
 #include "game/state.h"
 #include "game/time.h"
-#include "graphics/animation_timers.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"

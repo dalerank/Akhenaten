@@ -6,7 +6,6 @@
 #include "empire/empire_city.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
-#include "graphics/animation_timers.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "io/gamestate/boilerplate.h"

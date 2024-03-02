@@ -4,7 +4,6 @@
 #include "building/industry.h"
 #include "core/calc.h"
 #include "core/game_environment.h"
-#include "graphics/animation_timers.h"
 #include "graphics/image.h"
 #include "game/game.h"
 #include "grid/sprite.h"
