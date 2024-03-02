@@ -42,6 +42,41 @@ namespace {
 
 game_t game;
 
+void game_t::animation_timers_init() {
+    for (auto &timer: animation_timers) {
+        timer.last_update = 0;
+        timer.should_update = false;
+    }
+}
+
+void game_t::animation_timers_update() {
+    time_millis now_millis = time_get_millis();
+    for (auto &timer : animation_timers) {
+        timer.should_update = false;
+    }
+
+    unsigned int delay_millis = 0;
+    for (auto &timer: animation_timers) {
+        if (now_millis - timer.last_update >= delay_millis) {
+            timer.should_update = true;
+            timer.last_update = now_millis;
+        }
+        delay_millis += 20;
+    }
+}
+
+bool game_t::animation_should_advance(uint32_t speed) {
+    if (!animation) {
+        return false;
+    }
+
+    if (speed >= MAX_ANIM_TIMERS) {
+        return false;
+    }
+
+    return animation_timers[speed].should_update;
+}
+
 ::painter game_t::painter() {
     ::painter ctx;
     ctx.view = &city_view_data_unsafe();
@@ -213,7 +248,7 @@ int game_reload_language() {
 }
 void game_run() {
     OZZY_PROFILER_SECTION("Game/Run");
-    game_animation_update();
+    game.animation_timers_update();
 
     int num_ticks = get_elapsed_ticks();
     for (int i = 0; i < num_ticks; i++) {

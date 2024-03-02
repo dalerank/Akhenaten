@@ -13,6 +13,7 @@
 #include "io/io_buffer.h"
 #include "io/manager.h"
 #include "scenario/empire.h"
+#include "game/game.h"
 
 #define MAX_OBJECTS 200
 #define MAX_ROUTES 20
@@ -293,7 +294,7 @@ static int get_animation_offset(int image_id, int current_index) {
 
     const image_t* img = image_get(image_id);
     int animation_speed = img->animation.speed_id;
-    if (!game_animation_should_advance(animation_speed))
+    if (!game.animation_should_advance(animation_speed))
         return current_index;
 
     if (img->animation.can_reverse) {

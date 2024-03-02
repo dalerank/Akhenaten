@@ -1,6 +1,7 @@
 #pragma once
 
 #include "graphics/painter.h"
+#include "core/time.h"
 
 bool game_pre_init();
 
@@ -28,12 +29,26 @@ struct fps_data_t {
     uint32_t last_update_time;
 };
 
+struct animation_timer {
+    time_millis last_update;
+    bool should_update;
+};
+
 struct game_t {
+    enum {
+        MAX_ANIM_TIMERS = 51
+    };
     bool paused = false;
     bool save_debug_texture = false;
     bool animation = false;
     bool console = false;
     fps_data_t fps = {0, 0, 0};
+
+    animation_timer animation_timers[MAX_ANIM_TIMERS];
+
+    void animation_timers_init();
+    void animation_timers_update();
+    bool animation_should_advance(uint32_t speed);
 
     ::painter painter();
 };

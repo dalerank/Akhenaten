@@ -46,6 +46,7 @@
 #include "scenario/property.h"
 #include "sound/city.h"
 #include "sound/music.h"
+#include "game/game.h"
 
 void game_file_editor_clear_data(void) {
     city_victory_reset();
@@ -54,7 +55,7 @@ void game_file_editor_clear_data(void) {
     city_data_init_custom_map();
     city_message_init_scenario();
     game_state_init();
-    game_animation_init();
+    game.animation_timers_init();
     sound_city_init();
     building_menu_enable_all();
     building_clear_all();

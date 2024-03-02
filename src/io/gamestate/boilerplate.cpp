@@ -52,6 +52,7 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "grid/floodplain.h"
+#include "game/game.h"
 #include "content/vfs.h"
 #include "scenario/criteria.h"
 #include "scenario/demand_change.h"
@@ -137,7 +138,7 @@ static void pre_load() { // do we NEED this...?
     city_data_init();
     city_message_init_scenario();
     game_state_init();
-    game_animation_init();
+    game.animation_timers_init();
     sound_city_init();
     building_menu_enable_all();
     building_clear_all();

@@ -1,5 +1,4 @@
-#ifndef CORE_TIME_H
-#define CORE_TIME_H
+#pragma once
 
 /**
  * @file
@@ -22,5 +21,3 @@ time_millis time_get_millis(void);
  * @param millis Current milliseconds
  */
 void time_set_millis(time_millis millis);
-
-#endif // CORE_TIME_H

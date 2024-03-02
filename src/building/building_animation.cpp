@@ -6,6 +6,7 @@
 #include "core/game_environment.h"
 #include "graphics/animation_timers.h"
 #include "graphics/image.h"
+#include "game/game.h"
 #include "grid/sprite.h"
 
 int generic_sprite_offset(int grid_offset, int max_frames, int anim_speed) {
@@ -13,7 +14,7 @@ int generic_sprite_offset(int grid_offset, int max_frames, int anim_speed) {
     //    if (!max_frames)
     //        max_frames = img->animation.num_sprites;
     //    int anim_speed = img->animation.speed_id;
-    if (!game_animation_should_advance(anim_speed))
+    if (!game.animation_should_advance(anim_speed))
         return map_sprite_animation_at(grid_offset) & 0x7f;
 
     // advance animation
@@ -138,7 +139,7 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
 
     int anim_speed = b->dcast()->animation_speed(img->animation.speed_id);
 
-    if (!game_animation_should_advance(anim_speed)) {
+    if (!game.animation_should_advance(anim_speed)) {
         return map_sprite_animation_at(grid_offset) & 0x7f;
     }
 
