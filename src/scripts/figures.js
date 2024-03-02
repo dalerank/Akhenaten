@@ -6,6 +6,21 @@ figure_fireman = {
 		death : { pos : [0, 0], anim_id: IMG_FIREMAN_DEATH },
     fight_fire : { pos : [0, 0], anim_id: IMG_FIREMAN_FIGHT_FIRE, max_frames: 36 }
   },
+  sounds : {
+  	fighting_fire : {sound:"fireman_e01.wav", group: 242, text:0},
+ 		going_to_fire : {sound:"fireman_e02.wav", group: 242, text:1},
+ 		fighting_fire_also : {sound:"fireman_e03.WAV", group: 242, text:2},
+ 		desease_can_start_at_any_moment : {sound:"fireman_g01.WAV", group: 242, text:3},
+ 		no_food_in_city : {sound:"fireman_g02.WAV", group: 242, text:4},
+ 		city_not_safety_workers_leaving : {sound:"fireman_g03.WAV", group: 242, text:5},
+ 		need_workers : {sound:"fireman_g04.WAV", group: 242, text:6},
+ 		hight_fire_level : {sound:"fireman_g05.WAV", group: 242, text:7},
+ 		gods_are_angry : {sound:"fireman_g06.WAV", group: 242, text:8},
+ 		need_more_workers : {sound:"fireman_g07.WAV", group: 242, text:9},
+ 		low_entertainment : {sound:"fireman_g08.WAV", group: 242, text:10},
+ 		gods_are_pleasures : {sound:"fireman_g09.WAV", group: 242, text:11},
+ 		city_is_amazing : {sound:"fireman_g10.wav", group: 242, text:12},
+  }
 }
 
 figure_water_carrier = {
@@ -62,17 +77,17 @@ figure_physician = {
 		death : { pos : [0, 0], anim_id: ANIM_DOCTOR_DEATH, max_frames:8 },
 	},
 	sounds : {
-		desease_can_start_at_any_moment : {sound:"doctor_e01.wav", group: 242, text:1},
-    city_has_low_health : {sound:"doctor_g01.wav", group: 242, text:1},
-    no_food_in_city : {sound:"doctor_g02.wav", group: 242, text:2},
-    city_have_no_army : {sound:"doctor_g03.wav", group: 242, text:3},
-    need_workers : {sound:"doctor_g04.wav", group: 242, text:4},
-    gods_are_angry : {sound:"doctor_g05.wav", group: 242, text:5},
-    gods_are_pleasures : {sound:"doctor_g06.wav", group: 242, text:6},
-    no_job_in_city : {sound:"doctor_g07.wav", group: 242, text:7},
-    low_entertainment : {sound:"doctor_g08.wav", group: 241, text:8},
-    all_good_in_city : {sound:"doctor_g09.wav", group: 242, text:9},
-    city_very_healthy : {sound:"doctor_g10.wav", group: 242, text:10},
+		desease_can_start_at_any_moment : {sound:"doctor_e01.wav", group: 239, text:1},
+    city_has_low_health : {sound:"doctor_g01.wav", group: 239, text:1},
+    no_food_in_city : {sound:"doctor_g02.wav", group: 239, text:2},
+    city_have_no_army : {sound:"doctor_g03.wav", group: 239, text:3},
+    need_workers : {sound:"doctor_g04.wav", group: 239, text:4},
+    gods_are_angry : {sound:"doctor_g05.wav", group: 239, text:5},
+    gods_are_pleasures : {sound:"doctor_g06.wav", group: 239, text:6},
+    no_job_in_city : {sound:"doctor_g07.wav", group: 239, text:7},
+    low_entertainment : {sound:"doctor_g08.wav", group: 239, text:8},
+    all_good_in_city : {sound:"doctor_g09.wav", group: 239, text:9},
+    city_very_healthy : {sound:"doctor_g10.wav", group: 239, text:10},
 	}
 }
 

@@ -43,36 +43,36 @@ void figure_fireman::figure_before_action() {
 
 sound_key figure_fireman::phrase_key() const {
     if (base.action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE) {
-        return "fireman_going_to_fire";
+        return "going_to_fire";
     }
 
     svector<sound_key, 10> keys;
     if (base.action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
-        keys.push_back("fireman_fighting_fire_also");
-        keys.push_back("fireman_fighting_fire");
+        keys.push_back("fighting_fire_also");
+        keys.push_back("fighting_fire");
 
         int index = rand() % keys.size();
         return keys[index];
     }
 
     if (city_health() < 20) {
-        keys.push_back("fireman_desease_can_start_at_any_moment");
+        keys.push_back("desease_can_start_at_any_moment");
     }
 
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("fireman_no_food_in_city");
+        keys.push_back("no_food_in_city");
     }
 
     if (formation_get_num_forts() < 1) {
-        keys.push_back("fireman_city_not_safety_workers_leaving");
+        keys.push_back("city_not_safety_workers_leaving");
     }
 
     if (city_labor_workers_needed() >= 10) {
-        keys.push_back("fireman_need_workers");
+        keys.push_back("need_workers");
     }
 
     if (city_labor_workers_needed() >= 20) {
-        keys.push_back("fireman_need_more_workers");
+        keys.push_back("need_more_workers");
     }
 
     int houses_risk_fire = 0;
@@ -81,21 +81,21 @@ sound_key figure_fireman::phrase_key() const {
     });
 
     if (houses_risk_fire > 0) {
-        keys.push_back("fireman_hight_fire_level");
+        keys.push_back("hight_fire_level");
     }
 
     if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("fireman_gods_are_angry");
+        keys.push_back("gods_are_angry");
     } else {
-        keys.push_back("fireman_gods_are_pleasures");
+        keys.push_back("gods_are_pleasures");
     }
 
     if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("fireman_low_entertainment");
+        keys.push_back("low_entertainment");
     }
 
     if (city_sentiment() > 90) {
-        keys.push_back("fireman_city_is_amazing");
+        keys.push_back("city_is_amazing");
     }
 
     int index = rand() % keys.size();
