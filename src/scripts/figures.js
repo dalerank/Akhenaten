@@ -353,6 +353,27 @@ figure_market_trader = {
 	}
 }
 
+figure_labor_seeker = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_LABOR_SEEKER_WALK, max_frames:12 },
+		death : { pos : [0, 0], anim_id: ANIM_LABOR_SEEKER_DEATH, max_frames:8 },
+	},
+	sounds : {
+		no_jobs : { sound:"Labor_e01.wav", group:213, text:0},
+    need_workers : { sound:"Labor_e02.WAV", group:213, text:1},
+    disease_in_city : { sound:"Labor_g01.WAV", group:213, text:2},
+    i_looking_for_the_workers : { sound:"Labor_g02.WAV", group:213, text:3},
+    city_not_safety_workers_leaving : { sound:"Labor_g03.WAV", group:213, text:4},
+    need_more_workers : { sound:"Labor_g04.WAV", group:213, text:5},
+    gods_are_angry : { sound:"Labor_g05.WAV", group:213, text:6},
+    no_food_in_city : { sound:"Labor_g06.WAV", group:213, text:7},
+    much_unemployments : { sound:"Labor_g07.WAV", group:213, text:8},
+    no_some_workers : { sound:"Labor_g08.WAV", group:213, text:9},
+    i_want_to_leave_city : { sound:"Labor_g09.WAV", group:213, text:10},
+    city_is_amazing : { sound:"Labor_g10.WAV", group:213, text:11},
+	}
+}
+
 figure_tax_collector = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: IMG_BIGSLED_EMPTY, max_frames:1 },

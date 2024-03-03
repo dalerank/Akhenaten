@@ -35,7 +35,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_EMIGRANT, 1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, ANIM_EMIGRANT_WALK},
   {FIGURE_HOMELESS, 1, TERRAIN_USAGE_PREFER_ROADS, 0, 0, 0, IMG_HOMELESS},
   {FIGURE_CART_PUSHER, 1, TERRAIN_USAGE_ROADS, 0, 0, 0,  ANIM_CARTPUSHER_WALK},
-  {FIGURE_LABOR_SEEKER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_LABOR_SEEKER},
+  {FIGURE_LABOR_SEEKER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, ANIM_LABOR_SEEKER_WALK},
   {FIGURE_EXPLOSION, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_EXPLOSION},
   {FIGURE_TAX_COLLECTOR, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, ANIM_TAX_COLLECTOR_WALK},
   {FIGURE_ARCHITECT, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, ANIM_ARCHITECT_WALK},
@@ -378,12 +378,6 @@ void figure::action_perform() {
             if (b->state != BUILDING_STATE_VALID) {
                 poof();
             }
-            break;
-
-        case FIGURE_LABOR_SEEKER:
-            //            case FIGURE_MARKET_BUYER:
-            if (b->state != BUILDING_STATE_VALID) //  || !b->has_figure(1, id)
-                poof();
             break;
 
         case FIGURE_NOBLES:

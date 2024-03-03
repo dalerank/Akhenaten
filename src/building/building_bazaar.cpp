@@ -271,8 +271,6 @@ building *building_bazaar::get_storage_destination() {
 }
 
 void building_bazaar::update_graphic() {
-    assert(base.type == BUILDING_BAZAAR);
-
     if (base.state != BUILDING_STATE_VALID) {
         return;
     }

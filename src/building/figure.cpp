@@ -230,9 +230,11 @@ int building::figure_spawn_timer() {
         return -1;
     }
 }
+
 void building::check_labor_problem() {
-    if ((houses_covered <= 0 && labor_category != 255) || (labor_category == 255 && num_workers <= 0))
+    if ((houses_covered <= 0 && labor_category != 255) || (labor_category == 255 && num_workers <= 0)) {
         show_on_problem_overlay = 2;
+    }
 }
 
 void building::common_spawn_labor_seeker(int min_houses) {
@@ -243,14 +245,20 @@ void building::common_spawn_labor_seeker(int min_houses) {
     if (config_get(CONFIG_GP_CH_GLOBAL_LABOUR)) {
         // If it can access Rome
         houses_covered = std::min(300, distance_from_entry ? 2 * min_houses : 0);
-    } else if (houses_covered <= min_houses) {
-        if (has_figure(BUILDING_SLOT_LABOR_SEEKER)) { // no figure slot available!
-            return;
-        } else {
-            create_roaming_figure(FIGURE_LABOR_SEEKER, FIGURE_ACTION_125_ROAMING, BUILDING_SLOT_LABOR_SEEKER);
-        }
+        return;
+    } 
+    
+    if (houses_covered > min_houses) {
+        return;
     }
+
+    if (has_figure(BUILDING_SLOT_LABOR_SEEKER)) { // no figure slot available!
+        return;
+    } 
+    
+    create_roaming_figure(FIGURE_LABOR_SEEKER, FIGURE_ACTION_125_ROAMING, BUILDING_SLOT_LABOR_SEEKER);
 }
+
 bool building::common_spawn_figure_trigger(int min_houses) {
     check_labor_problem();
     if (has_figure(BUILDING_SLOT_SERVICE)) {

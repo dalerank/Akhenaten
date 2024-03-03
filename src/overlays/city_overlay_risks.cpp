@@ -49,11 +49,11 @@ static int show_building_native(const building* b) {
 }
 
 static int show_figure_problems(const figure* f) {
-    if (f->type == FIGURE_LABOR_SEEKER)
-        return ((figure*)f)->home()->show_on_problem_overlay;
-    else if (f->type == FIGURE_CART_PUSHER)
+    if (f->type == FIGURE_LABOR_SEEKER) {
+        return ((figure *)f)->home()->show_on_problem_overlay;
+    } else if (f->type == FIGURE_CART_PUSHER) {
         return f->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL || f->min_max_seen;
-    else {
+    } else {
         return 0;
     }
 }

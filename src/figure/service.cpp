@@ -70,10 +70,6 @@ static void policeman_coverage(building* b, figure *f, int &max_anger_seen) {
     }
 }
 
-static void labor_seeker_coverage(building* b, figure *f, int&) {
-    // nothing here, the labor seeker works simply via the `houses_covered` variable
-}
-
 int figure::figure_service_provide_coverage() {
     int houses_serviced = 0;
     int none_service = 0;
@@ -81,10 +77,6 @@ int figure::figure_service_provide_coverage() {
     switch (type) {
     case FIGURE_NOBLES:
         return 0;
-
-    case FIGURE_LABOR_SEEKER:
-        houses_serviced = figure_provide_culture(tile, this, labor_seeker_coverage);
-        break;
 
     case FIGURE_TEACHER:
         houses_serviced = figure_provide_culture(tile, this, school_coverage);
