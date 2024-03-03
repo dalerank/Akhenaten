@@ -5,17 +5,21 @@
 #include "city_overlay.h"
 #include "grid/building.h"
 #include "figure/figure.h"
+#include "figuretype/figure_musician.h"
+#include "figuretype/figure_dancer.h"
 
-static int get_column_height_colosseum(const building* b) {
-    return b->house_size && b->data.house.colosseum_gladiator ? b->data.house.colosseum_gladiator / 10 : NO_COLUMN;
+static int get_column_height_senet(const building* b) {
+    return (b->house_size && b->data.house.senet_player)
+                ? b->data.house.senet_player / 10 
+                : NO_COLUMN;
 }
 
-static int get_tooltip_colosseum(tooltip_context* c, const building* b) {
-    if (b->data.house.colosseum_gladiator <= 0) {
+static int get_tooltip_senet(tooltip_context* c, const building* b) {
+    if (b->data.house.senet_player <= 0) {
         return 83;
-    } else if (b->data.house.colosseum_gladiator >= 80) {
+    } else if (b->data.house.senet_player >= 80) {
         return 84;
-    } else if (b->data.house.colosseum_gladiator >= 20) {
+    } else if (b->data.house.senet_player >= 20) {
         return 85;
     } else {
         return 86;
@@ -27,18 +31,22 @@ struct city_overlay_pavilion : public city_overlay {
         type = OVERLAY_PAVILION;
         column_type = COLUMN_TYPE_WATER_ACCESS;
 
-        get_column_height = get_column_height_colosseum;
-        get_tooltip_for_building = get_tooltip_colosseum;
+        get_column_height = get_column_height_senet;
+        get_tooltip_for_building = get_tooltip_senet;
     }
 
     bool show_figure(const figure* f) const override {
-        if (f->type == FIGURE_MUSICIAN) {
-            return ((figure *)f)->get_entertainment_building()->type == BUILDING_PAVILLION;
-        } else if (f->type == FIGURE_DANCER) {
-            return 1;
+        figure_musician *musician = ((figure*)f)->dcast_musician();
+        if (musician) {
+            return musician->current_destination()->type == BUILDING_PAVILLION;
         }
 
-        return 0;
+        figure_dancer *dancer = ((figure*)f)->dcast_dancer();
+        if (dancer) {
+            return true;
+        }
+
+        return false;
     }
 
     void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {

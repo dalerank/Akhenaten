@@ -646,6 +646,7 @@ void figure::set_cross_country_direction(int x_src, int y_src, int x_dst, int y_
     else
         cc_direction = 2;
 }
+
 void figure::set_cross_country_destination(int x_dst, int y_dst) {
     destination_tile.set(x_dst, y_dst);
     //    destination_tile.x() = x_dst;

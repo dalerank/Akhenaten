@@ -186,12 +186,12 @@ public:
         struct {
             uint16_t foods[8];
             uint16_t inventory[8];
-            unsigned char juggler;
-            unsigned char bandstand_juggler;
-            unsigned char bandstand_musician;
-            unsigned char colosseum_gladiator;
-            unsigned char magistrate;
-            unsigned char hippodrome;
+            uint8_t juggler;
+            uint8_t bandstand_juggler;
+            uint8_t bandstand_musician;
+            uint8_t senet_player;
+            uint8_t magistrate;
+            uint8_t hippodrome;
             uint8_t school;
             unsigned char library;
             unsigned char academy;

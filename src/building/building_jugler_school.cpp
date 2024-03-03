@@ -1,7 +1,7 @@
 #include "building_jugler_school.h"
 
 #include "building/building_entertainment.h"
-#include "figuretype/entertainer.h"
+#include "figuretype/figure_entertainer.h"
 
 void building_juggler_school::window_info_background(object_info &c) {
     building_entertainment_school_draw_info(c, "juggler_school", 77);
@@ -20,7 +20,7 @@ void building_juggler_school::spawn_figure() {
         return;
     }
 
-    int venue_destination = determine_venue_destination(base.road_access, BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH);
+    int venue_destination = figure_entertainer::determine_venue_destination(base.road_access, {BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH});
     building* dest = building_get(venue_destination);
     if (dest->id > 0) {
         create_figure_with_destination(FIGURE_JUGGLER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);

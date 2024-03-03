@@ -53,7 +53,8 @@ images = [
 	{img: IMG_SLED_GRANITE_SMALL, pack:PACK_SPR_MAIN, id:103},
 	{img: IMG_SLED_LIMESTONE_SMALL, pack:PACK_GENERAL, id:104},
 	{img: IMG_SLED_BRICKS, pack:PACK_SPR_MAIN, id:89},
-	{img: IMG_JUGGLER_WALK, pack:PACK_SPR_MAIN, id:130},
+	{img: ANIM_JUGGLER_WALK, pack:PACK_SPR_MAIN, id:130},
+	{img: ANIM_JUGGLER_DEATH, pack:PACK_SPR_MAIN, id:131},
 	{img: IMG_PLAINSTONE_QUARRY, pack:PACK_GENERAL, id:187},
 	{img: IMG_GRANARY, pack:PACK_GENERAL, id:99},
 	{img: IMG_GRANARY_RESOURCES, pack:PACK_GENERAL, id:99, offset:2},
@@ -74,7 +75,8 @@ images = [
 	{img: IMG_BOOTH, pack:PACK_GENERAL, id:114},
 	{img: IMG_BOOTH_SQUARE, pack:PACK_GENERAL, id:112},
 	{img: IMG_BANDSTAND_SQUARE, pack:PACK_GENERAL, id:58},
-	{img: IMG_MUSICIAN, pack:PACK_SPR_MAIN, id:191},
+	{img: ANIM_MUSICIAN_WALK, pack:PACK_SPR_MAIN, id:191},
+	{img: ANIM_MUSICIAN_DEATH, pack:PACK_SPR_MAIN, id:192},
 	{img: IMG_JUGGLER_SHOW, pack:PACK_SPR_AMBIENT, id:7, offset:-1},
 	{img: IMG_MUSICIAN_SHOW_SN, pack:PACK_SPR_AMBIENT, id:10, offset:-1},
 	{img: IMG_MUSICIAN_SHOW_WE, pack:PACK_SPR_AMBIENT, id:9, offset:-1},
@@ -177,6 +179,8 @@ images = [
 	{img: ANIM_DOCTOR_DEATH, pack:PACK_SPR_MAIN, id:72, offset:0},
 	{img: ANIM_HERBALIST_WALK, pack:PACK_SPR_MAIN, id:180, offset:0},
 	{img: ANIM_HERBALIST_DEATH, pack:PACK_SPR_MAIN, id:181, offset:0},
+	{img: ANIM_DANCER_WALK, pack:PACK_SPR_MAIN, id:128, offset:0},
+	{img: ANIM_DANCER_DEATH, pack:PACK_SPR_MAIN, id:129, offset:0},
 ]
 
 cart_offsets = [

@@ -45,9 +45,9 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_FCHARIOTEER, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_CHARIOTEER_PH},
   {FIGURE_INFANTRY, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_INFANTRY_PH},
   {FIGURE_STANDARD_BEARER, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
-  {FIGURE_JUGGLER, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, IMG_JUGGLER_WALK},
-  {FIGURE_MUSICIAN, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, IMG_MUSICIAN},
-  {FIGURE_DANCER, 1, TERRAIN_USAGE_ROADS, 512, GROUP_FIGURE_DANCER},
+  {FIGURE_JUGGLER, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, ANIM_JUGGLER_WALK},
+  {FIGURE_MUSICIAN, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, ANIM_MUSICIAN_WALK},
+  {FIGURE_DANCER, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, ANIM_DANCER_WALK},
   {FIGURE_SENET_PLAYER, 1, TERRAIN_USAGE_ROADS, 512, GROUP_FIGURE_CHARIOTEER},
   {FIGURE_TRADE_CARAVAN, 1, TERRAIN_USAGE_PREFER_ROADS, 0, 0, 0, IMG_TRADER_CARAVAN},
   {FIGURE_TRADE_SHIP, 1, TERRAIN_USAGE_ANY, 0, 0, 0, ANIM_TRADER_SHIP_WALK},
@@ -490,13 +490,6 @@ void figure::action_perform() {
 
         case 14:
             military_standard_action();
-            break;
-
-        case FIGURE_JUGGLER: // entertainer_action();              break;
-        case FIGURE_MUSICIAN: // entertainer_action();              break;
-        case FIGURE_DANCER: // entertainer_action();              break;
-        case FIGURE_SENET_PLAYER:
-            entertainer_action();
             break;
 
         case FIGURE_TRADE_CARAVAN: trade_caravan_action(); break;

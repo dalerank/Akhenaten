@@ -1,7 +1,6 @@
 #include "building/figure.h"
 
 #include "city/data_private.h"
-#include "figuretype/entertainer.h"
 
 #include "building/building_barracks.h"
 #include "building/building_granary.h"
@@ -25,6 +24,7 @@
 #include "figure/figure.h"
 #include "figure/formation_legion.h"
 #include "figure/movement.h"
+#include "figuretype/figure_entertainer.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
@@ -363,7 +363,8 @@ void building::spawn_figure_police() {
 
 void building::spawn_figure_dancer() {
     if (common_spawn_figure_trigger(50)) {
-        building* dest= building_get(determine_venue_destination(road_access, BUILDING_PAVILLION, 0, 0));
+        int building_id = figure_entertainer::determine_venue_destination(road_access, {BUILDING_PAVILLION});
+        building* dest= building_get(building_id);
         if (dest->id > 0) {
             create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
         } else {
@@ -384,6 +385,7 @@ void building::spawn_figure_pavillion() {
             create_roaming_figure(FIGURE_DANCER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
     }
 }
+
 void building::spawn_figure_senet() {
     // TODO
     //    check_labor_problem();

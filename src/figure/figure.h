@@ -28,6 +28,8 @@ class figure_cartpusher;
 class figure_storageyard_cart;
 class figure_trade_ship;
 class figure_sled;
+class figure_musician;
+class figure_dancer;
 
 struct animation_t;
 
@@ -237,6 +239,8 @@ public:
     figure_storageyard_cart *dcast_storageyard_cart();
     figure_trade_ship *dcast_trade_ship();
     figure_sled *dcast_sled();
+    figure_musician *dcast_musician();
+    figure_dancer *dcast_dancer();
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -379,7 +383,6 @@ public:
     void explosion_cloud_action();
     void soldier_action();
     void military_standard_action();
-    void entertainer_action();
     void trade_caravan_action();
     void trade_caravan_donkey_action();
     void protestor_action();
@@ -450,9 +453,6 @@ public:
     int get_closest_storageyard(tile2i tile, int city_id, int distance_from_entry, tile2i &storageyard);
     void go_to_next_storageyard(tile2i src_tile, int distance_to_entry);
 
-    void entertainer_update_shows();
-    void entertainer_update_image();
-
     bool policeman_fight_enemy(int category, int max_distance);
     int target_is_alive();
 
@@ -498,7 +498,6 @@ public:
     int figure_phrase_play();
 
     // service.c
-    building* get_entertainment_building();
     int figure_service_provide_coverage();
 
     // window/building/figures.c
@@ -538,8 +537,11 @@ public:
     virtual figure_storageyard_cart *dcast_storageyard_cart() { return nullptr; }
     virtual figure_trade_ship *dcast_trade_ship() { return nullptr; }
     virtual figure_sled *dcast_sled() { return nullptr; }
+    virtual figure_musician *dcast_musician() { return nullptr; }
+    virtual figure_dancer *dcast_dancer() { return nullptr; }
 
     inline building *home() { return base.home(); }
+    inline e_figure_type type() const { return base.type; }
     inline int id() { return base.id; }
     inline short action_state() const { return base.action_state; }
     inline uint8_t direction() const { return base.direction; }

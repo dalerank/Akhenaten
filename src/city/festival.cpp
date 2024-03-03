@@ -215,13 +215,13 @@ void figure::festival_guy_action() {
         image_set_animation(IMG_PRIEST_BAST);
         break;
     case BUILDING_JUGGLER_SCHOOL:
-        image_set_animation(IMG_JUGGLER_WALK);
+        image_set_animation(ANIM_JUGGLER_WALK);
         break;
     case BUILDING_CONSERVATORY:
-        image_set_animation(IMG_MUSICIAN);
+        image_set_animation(ANIM_MUSICIAN_WALK);
         break;
     case BUILDING_DANCE_SCHOOL:
-        image_set_animation(GROUP_FIGURE_DANCER);
+        image_set_animation(ANIM_DANCER_WALK);
         break;
     }
     switch (action_state) {

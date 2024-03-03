@@ -5,6 +5,7 @@
 #include "grid/property.h"
 #include "grid/building.h"
 #include "graphics/elements/tooltip.h"
+#include "figuretype/figure_musician.h"
 
 static int get_column_height_bandstand(const building* b) {
     if (b->house_size) {
@@ -38,11 +39,10 @@ struct city_overlay_bandstand : public city_overlay {
     }
 
     bool show_figure(const figure* f) const override {
-        if (f->type == FIGURE_MUSICIAN) {
-            return ((figure*)f)->get_entertainment_building()->type == BUILDING_BANDSTAND;
-        }
-
-        return false;
+        figure_musician *musician = ((figure*)f)->dcast_musician();
+        return musician
+                    ? musician->current_destination()->type == BUILDING_BANDSTAND
+                    : false;
     }
 
     void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {

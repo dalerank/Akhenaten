@@ -188,6 +188,66 @@ figure_herbalist = {
 	}
 }
 
+figure_dancer = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_DANCER_WALK, max_frames:12 },
+		death : { pos : [0, 0], anim_id: ANIM_DANCER_DEATH, max_frames:8 },
+	},
+	sounds : {
+		i_like_festivals : {sound:"dancer_e01.wav", group:228, text:0},
+    desease_can_start_at_any_moment : {sound:"dancer_g01.wav", group:228, text:1},
+    no_food_in_city : {sound:"dancer_g02.wav", group:228, text:2},
+    city_not_safety_workers_leaving : {sound:"dancer_g03.wav", group:228, text:3},
+    need_workers : {sound:"dancer_g04.wav", group:228, text:4},
+    gods_are_angry : {sound:"dancer_g05.wav", group:228, text:5},
+    city_is_bad : {sound:"dancer_g06.wav", group:228, text:6},
+    much_unemployments : {sound:"dancer_g07.wav", group:228, text:7},
+    salary_too_low : {sound:"dancer_g08.wav", group:228, text:8},
+    city_is_good : {sound:"dancer_g09.wav", group:228, text:9},
+    city_is_amazing : {sound:"dancer_g10.wav", group:228, text:10},
+	}
+}
+
+figure_musician = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_MUSICIAN_WALK, max_frames:12 },
+		death : { pos : [0, 0], anim_id: ANIM_MUSICIAN_DEATH, max_frames:8 },
+	},
+	sounds : {
+		i_like_festivals : { sound:"musician_e01.wav", group:229, text:0 },
+ 		city_heath_too_low : { sound:"musician_g01.wav", group:229, text:0 },
+ 		no_food_in_city : { sound:"musician_g02.wav", group:229, text:0 },
+ 		city_not_safety_workers_leaving : { sound:"musician_g03.wav", group:229, text:0 },
+ 		need_workers : { sound:"musician_g04.wav", group:229, text:0 },
+ 		gods_are_angry : { sound:"musician_g05.wav", group:229, text:0 },
+ 		city_is_bad_reputation : { sound:"musician_g06.wav", group:229, text:0 },
+ 		much_unemployments : { sound:"musician_g07.wav", group:229, text:0 },
+ 		no_entertainment_need : { sound:"musician_g08.wav", group:229, text:0 },
+ 		city_not_bad : { sound:"musician_g09.wav", group:229, text:0 },
+ 		city_is_good : { sound:"musician_g10.wav", group:229, text:0 },
+	}
+}
+
+figure_juggler = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_JUGGLER_WALK, max_frames:12 },
+		death : { pos : [0, 0], anim_id: ANIM_JUGGLER_DEATH, max_frames:8 },
+	},
+	sounds : {
+		i_like_festivals : {sound:"juggler_e01.wav", group: 230, text:0 },
+    disease_in_city : {sound:"juggler_g01.wav", group: 230, text:0 },
+    city_low_sentiment : {sound:"juggler_g02.wav", group: 230, text:0 },
+    city_not_safety_workers_leaving : {sound:"juggler_g03.wav", group: 230, text:0 },
+    salary_too_low : {sound:"juggler_g04.wav", group: 230, text:0 },
+    gods_are_angry : {sound:"juggler_g05.wav", group: 230, text:0 },
+    city_verylow_sentiment : {sound:"juggler_g06.wav", group: 230, text:0 },
+    much_unemployments : {sound:"juggler_g07.wav", group: 230, text:0 },
+    low_entertainment : {sound:"juggler_g08.wav", group: 230, text:0 },
+    city_is_good : {sound:"juggler_g09.wav", group: 230, text:0 },
+    city_is_amazing : {sound:"juggler_g10.wav", group: 230, text:0 },
+	}
+}
+
 figure_market_trader = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_HERBALIST_WALK, max_frames:12 },

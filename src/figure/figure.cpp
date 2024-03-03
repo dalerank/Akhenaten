@@ -153,6 +153,8 @@ figure_cartpusher *figure::dcast_cartpusher() { return dcast()->dcast_cartpusher
 figure_storageyard_cart *figure::dcast_storageyard_cart() { return dcast()->dcast_storageyard_cart(); }
 figure_trade_ship *figure::dcast_trade_ship() { return dcast()->dcast_trade_ship(); }
 figure_sled *figure::dcast_sled() { return dcast()->dcast_sled(); }
+figure_musician *figure::dcast_musician() { return dcast()->dcast_musician(); }
+figure_dancer *figure::dcast_dancer() { return dcast()->dcast_dancer(); }
 
 bool figure::is_dead() {
     return state != FIGURE_STATE_ALIVE || action_state == FIGURE_ACTION_149_CORPSE;

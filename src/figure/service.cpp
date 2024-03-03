@@ -11,23 +11,6 @@
 #include "game/tutorial.h"
 #include "config/config.h"
 
-static int provide_entertainment(int x, int y, int shows, void (*callback)(building*, int)) {
-    int serviced = 0;
-    grid_area area = map_grid_get_area(tile2i(x, y), 1, 2);
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
-        int grid_offset = tile.grid_offset();
-        int building_id = map_building_at(grid_offset);
-        if (building_id) {
-            building *b = building_get(building_id);
-            if (b->house_size && b->house_population > 0) {
-                callback(b, shows);
-                serviced++;
-            }
-        }
-    });
-    return serviced;
-}
-
 static int provide_missionary_coverage(int x, int y) {
     grid_area area = map_grid_get_area(tile2i(x, y), 1, 4);
 
@@ -40,23 +23,6 @@ static int provide_missionary_coverage(int x, int y) {
         }
     });
     return 1;
-}
-
-static void juggler_coverage(building* b, figure *f, int&) {
-    b->data.house.juggler = MAX_COVERAGE;
-}
-
-static void bandstand_coverage(building* b, int shows) {
-    b->data.house.bandstand_juggler = MAX_COVERAGE;
-    if (shows == 2) {
-        b->data.house.bandstand_musician = MAX_COVERAGE;
-    }
-}
-
-static void colosseum_coverage(building* b, int shows) {
-    b->data.house.colosseum_gladiator = MAX_COVERAGE;
-    //    if (shows == 2)
-    //        b->data.house.magistrate = MAX_COVERAGE;
 }
 
 static void hippodrome_coverage(building* b, figure *f, int&) {
@@ -108,14 +74,6 @@ static void labor_seeker_coverage(building* b, figure *f, int&) {
     // nothing here, the labor seeker works simply via the `houses_covered` variable
 }
 
-building* figure::get_entertainment_building() {
-    if (action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING
-        || action_state == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
-        return home();
-    } else { // going to venue
-        return destination();
-    }
-}
 int figure::figure_service_provide_coverage() {
     int houses_serviced = 0;
     int none_service = 0;
@@ -150,29 +108,6 @@ int figure::figure_service_provide_coverage() {
 
     case FIGURE_MISSIONARY:
         houses_serviced = provide_missionary_coverage(tile.x(), tile.y());
-        break;
-
-    case FIGURE_JUGGLER:
-        b = get_entertainment_building();
-        if (b->type == BUILDING_BOOTH) {
-            houses_serviced = figure_provide_culture(tile, this, juggler_coverage);
-        } else if (b->type == BUILDING_BANDSTAND) {
-            houses_serviced = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days1 ? 2 : 1, bandstand_coverage);
-        }
-        break;
-
-    case FIGURE_MUSICIAN:
-        b = get_entertainment_building();
-        if (b->type == BUILDING_BANDSTAND) {
-            houses_serviced = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days2 ? 2 : 1, bandstand_coverage);
-        } else if (b->type == BUILDING_PAVILLION) {
-            houses_serviced = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days1 ? 2 : 1, colosseum_coverage);
-        }
-        break;
-
-    case FIGURE_DANCER:
-        b = get_entertainment_building();
-        houses_serviced = provide_entertainment(tile.x(), tile.y(), b->data.entertainment.days2 ? 2 : 1, colosseum_coverage);
         break;
 
     case FIGURE_CHARIOR_RACER:

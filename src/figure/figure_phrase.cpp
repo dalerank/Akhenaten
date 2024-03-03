@@ -32,7 +32,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "brick"},
     {FIGURE_TRADE_CARAVAN, "caravan"},
     {FIGURE_NONE, "carpenter"},
-    {FIGURE_DANCER, "dancer"},
     {FIGURE_DENTIST, "dentist"},
     {FIGURE_NONE, "desease"},
     {FIGURE_DOCKER, "dock_pusher"},
@@ -41,11 +40,9 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_LABOR_SEEKER, "laborseeker"},
     {FIGURE_NONE, "governor"},
     {FIGURE_NONE, "guard"},
-    {FIGURE_JUGGLER, "juggler"},
     {FIGURE_NONE, "labor"},
     {FIGURE_LIBRARIAN, "library"},
     {FIGURE_MAGISTRATE, "magistrate"},
-    {FIGURE_MUSICIAN, "musician"},
     {FIGURE_NONE, "pharaoh"},
     {FIGURE_CONSTABLE, "police"},
     {FIGURE_REED_GATHERER, "reed"},
@@ -78,59 +75,6 @@ static sound_key hunter_ostric_phrase(figure *f) {
     } else {
         return "hunterostrich_back";
     }
-}
-
-static sound_key dancer_phrase(figure *f) {
-    svector<sound_key, 10> keys;
-    uint32_t months_since_last_festival = city_months_since_last_festival();
-    if (months_since_last_festival < 6) {
-        keys.push_back("dancer_i_like_festivals");
-    }
-
-    if (city_health() < 20) {
-        keys.push_back("dancer_desease_can_start_at_any_moment");
-    }
-
-    if (formation_get_num_forts() < 1) {
-        keys.push_back("dancer_city_not_safety_workers_leaving");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("dancer_no_food_in_city");
-    }
-
-    if (city_labor_workers_needed() >= 10) {
-        keys.push_back("dancer_need_workers");
-    }
-
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("dancer_gods_are_angry");
-    } else {
-        keys.push_back("dancer_gods_are_pleasures");
-    }
-
-    if (city_rating_kingdom() < 30) {
-        keys.push_back("dancer_city_is_bad");
-    }
-
-    if (city_sentiment() > 50) {
-        keys.push_back("dancer_city_is_good");
-    }
-
-    if (city_sentiment() > 90) {
-        keys.push_back("dancer_city_is_amazing");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_LOW_WAGES) {
-        keys.push_back("dancer_salary_too_low");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
-        keys.push_back("dancer_much_unemployments");
-    }
-
-    int index = rand() % keys.size();
-    return keys[index];
 }
 
 static sound_key magistrate_phrase(figure *f) {
@@ -194,119 +138,6 @@ static sound_key magistrate_phrase(figure *f) {
     }
 
     keys.push_back("magistrate_i_hope_we_are_ready");
-
-    int index = rand() % keys.size();
-    return keys[index];
-}
-
-static sound_key musician_phrase(figure *f) {
-    svector<sound_key, 10> keys;
-    uint32_t months_since_last_festival = city_months_since_last_festival();
-    if (months_since_last_festival < 6) {
-        keys.push_back("musician_i_like_festivals");
-    }
-
-    if (formation_get_num_forts() < 1) {
-        keys.push_back("musician_city_not_safety_workers_leaving");
-    }
-
-    if (city_health() < 40) {
-        keys.push_back("musician_city_heath_too_low");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("musician_no_food_in_city");
-    }
-
-    if (city_labor_workers_needed() >= 10) {
-        keys.push_back("musician_need_workers");
-    }
-
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("musician_gods_are_angry");
-    } else {
-        keys.push_back("musician_gods_are_pleasures");
-    }
-
-    if (city_sentiment() < 30) {
-        keys.push_back("musician_city_is_bad_reputation");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
-        keys.push_back("musician_much_unemployments");
-    }
-
-    const house_demands *demands = city_houses_demands();
-    if (demands->missing.more_entertainment == 0) {
-        keys.push_back("musician_no_entertainment_need");
-    }
-
-    if (city_sentiment() < 50) {
-        keys.push_back("musician_city_not_bad");
-    } else {
-        keys.push_back("musician_city_is_good");
-    }
-
-    int index = rand() % keys.size();
-    return keys[index];
-}
-
-static sound_key juggler_phrase(figure *f) {
-    int enemies = city_figures_enemies();
-    if (enemies > 0) {
-       return "juggler_city_not_safety_workers_leaving";
-    }
-
-    svector<sound_key, 10> keys;
-    uint32_t months_since_last_festival = city_months_since_last_festival();
-    if (months_since_last_festival < 6) {
-        keys.push_back("juggler_i_like_festivals");
-    }
-
-    int houses_in_disease = 0;
-    buildings_valid_do([&] (building &b) {
-        if (!b.house_size || !b.house_population) {
-            return;
-        }
-        houses_in_disease = (b.disease_days > 0) ? 1 : 0;
-    });
-
-    if (houses_in_disease > 0) {
-        return "juggler_disease_in_city";
-    }
-
-    if (city_sentiment() < 30) {
-        if (city_sentiment() < 20) {
-            keys.push_back("juggler_city_verylow_sentiment");
-        }
-        keys.push_back("juggler_city_low_sentiment");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
-        keys.push_back("juggler_much_unemployments");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_LOW_WAGES) {
-        keys.push_back("juggler_salary_too_low");
-    }
-
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("juggler_gods_are_angry");
-    } else {
-        keys.push_back("juggler_gods_are_pleasures");
-    }
-
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("juggler_low_entertainment");
-    }
-
-    if (city_sentiment() > 40) {
-        keys.push_back("juggler_city_is_good");
-    }
-
-    if (city_sentiment() > 90) {
-        keys.push_back("juggler_city_is_amazing");
-    }
 
     int index = rand() % keys.size();
     return keys[index];
@@ -591,7 +422,6 @@ static int trade_ship_phrase() {
 static sound_key phrase_based_on_figure_state(figure *f) {
     switch (f->type) {
 
-    case FIGURE_DANCER: return dancer_phrase(f);
     case FIGURE_OSTRICH_HUNTER: return hunter_ostric_phrase(f);
     case FIGURE_MAGISTRATE: return magistrate_phrase(f);
     case FIGURE_CONSTABLE: return policeman_phrase(f);
@@ -602,8 +432,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_MISSIONARY:
     //            return citizen_phrase(f);
     //        case FIGURE_HOMELESS:
-    case FIGURE_MUSICIAN: return musician_phrase(f);
-    case FIGURE_JUGGLER: return juggler_phrase(f);
     case FIGURE_LABOR_SEEKER: return labor_seeker_phrase(f);
     case FIGURE_GOVERNOR: return governor_phrase(f);
     //        case FIGURE_TOWER_SENTRY:

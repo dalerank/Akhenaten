@@ -459,9 +459,6 @@ static void window_info_select_figure(int index, int param2) {
 
 static int window_info_show_overlay(figure *f) {
     switch (f->type) {
-    case FIGURE_JUGGLER: return OVERLAY_BOOTH;
-    case FIGURE_MUSICIAN: return OVERLAY_BANDSTAND;
-    case FIGURE_DANCER: return OVERLAY_PAVILION;
     case FIGURE_CONSTABLE: return OVERLAY_CRIME;
     case FIGURE_MAGISTRATE: return OVERLAY_COUTHOUSE;
     case FIGURE_TEACHER: return OVERLAY_SCRIBAL_SCHOOL;

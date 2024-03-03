@@ -25,5 +25,4 @@ void map_highlight_clear(int grid_offset);
 int map_is_highlighted(int grid_offset);
 void map_clear_highlights(void);
 
-int map_building_is_reservoir(int x, int y);
 void map_building_update_all_tiles();

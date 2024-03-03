@@ -1,7 +1,7 @@
 #include "building/building_conservatory.h"
 
 #include "building/building_entertainment.h"
-#include "figuretype/entertainer.h"
+#include "figuretype/figure_entertainer.h"
 
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
@@ -35,7 +35,8 @@ void building_conservatory::window_info_background(object_info& c) {
 
 void building_conservatory::spawn_figure() {
     if (common_spawn_figure_trigger(50)) {
-        building* dest = building_get(determine_venue_destination(base.road_access, BUILDING_PAVILLION, BUILDING_BANDSTAND, 0));
+        int dest_id = figure_entertainer::determine_venue_destination(base.road_access, {BUILDING_PAVILLION, BUILDING_BANDSTAND});
+        building* dest = building_get(dest_id);
         if (dest->id > 0) {
             create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
         } else {
