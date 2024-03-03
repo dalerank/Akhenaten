@@ -12,10 +12,7 @@
 
 #include "js/js_game.h"
 
-struct water_carrier_model :
-        public figures::model_t<FIGURE_WATER_CARRIER,
-                                figure_water_carrier> {};
-
+struct water_carrier_model : public figures::model_t<FIGURE_WATER_CARRIER, figure_water_carrier> {};
 water_carrier_model water_carrier_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_water_carrier);
@@ -65,43 +62,43 @@ void figure_water_carrier::figure_action() {
 sound_key figure_water_carrier::phrase_key() const {
     svector<sound_key, 10> keys;
     if (city_health() < 30) {
-        keys.push_back("water_desease_can_start_at_any_moment");
+        keys.push_back("desease_can_start_at_any_moment");
     }
 
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("water_no_food_in_city");
+        keys.push_back("no_food_in_city");
     }
 
     if (formation_get_num_forts() < 1) {
-        keys.push_back("water_city_have_no_army");
+        keys.push_back("city_have_no_army");
     }
 
     if (city_labor_workers_needed() >= 10) {
-        keys.push_back("water_need_workers");
+        keys.push_back("need_workers");
     }
 
     if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("water_gods_are_angry");
+        keys.push_back("gods_are_angry");
     }
 
     if (city_rating_kingdom() < 30) {
-        keys.push_back("water_city_is_bad");
+        keys.push_back("city_is_bad");
     }
 
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
-        keys.push_back("water_much_unemployments");
+        keys.push_back("much_unemployments");
     }
 
     if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("water_low_entertainment");
+        keys.push_back("low_entertainment");
     }
 
     if (city_sentiment() > 50) {
-        keys.push_back("water_city_is_good");
+        keys.push_back("city_is_good");
     }
 
     if (city_sentiment() > 90) {
-        keys.push_back("water_city_is_amazing");
+        keys.push_back("city_is_amazing");
     }
 
     int index = rand() % keys.size();
@@ -115,4 +112,8 @@ void water_supply_coverage(building* b, figure *f, int&) {
 int figure_water_carrier::provide_service() {
     int none_service;
     return figure_provide_service(tile(), &base, none_service, water_supply_coverage);
+}
+
+figure_sound_t figure_water_carrier::get_sound_reaction(pcstr key) const {
+    return water_carrier_m.sounds[key];
 }

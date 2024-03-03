@@ -241,17 +241,6 @@ walker_sounds = [
  {type: "", sound: "warship_e03.wav"},
  {type: "", sound: "warship_e04.wav"},
  {type: "", sound: "warship_e05.wav"},
- // water carrier
- {type: "water_desease_can_start_at_any_moment", sound: "water_g01.wav"},
- {type: "water_no_food_in_city", sound: "water_g02.wav"},
- {type: "water_city_have_no_army", sound: "water_g03.wav"},
- {type: "water_need_workers", sound: "water_g04.wav"},
- {type: "water_gods_are_angry", sound: "water_g05.wav"},
- {type: "water_city_is_bad", sound: "water_g06.wav"},
- {type: "water_much_unemployments", sound: "water_g07.wav"},
- {type: "water_low_entertainment", sound: "water_g08.wav"},
- {type: "water_city_is_good", sound: "water_g09.wav"},
- {type: "water_city_is_amazing", sound: "water_g10.wav"},
  //
  {type: "", sound: "woodcutter_e01.wav"},
  {type: "", sound: "woodcutter_e02.wav"},

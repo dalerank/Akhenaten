@@ -28,6 +28,18 @@ figure_water_carrier = {
 		walk : { pos : [0, 0], anim_id: IMG_WATER_CARRIER },
 		death : { pos : [0, 0], anim_id: IMG_WATER_CARRIER_DEATH },
   },
+  sounds : {
+  	desease_can_start_at_any_moment : {sound: "water_g01.wav", group:237, text:0},
+    no_food_in_city : {sound: "water_g02.wav", group:237, text:1},
+    city_have_no_army : {sound: "water_g03.wav", group:237, text:2},
+    need_workers : {sound: "water_g04.wav", group:237, text:3},
+    gods_are_angry : {sound: "water_g05.wav", group:237, text:4},
+    city_is_bad : {sound: "water_g06.wav", group:237, text:5},
+    much_unemployments : {sound: "water_g07.wav", group:237, text:6},
+    low_entertainment : {sound: "water_g08.wav", group:237, text:7},
+    city_is_good : {sound: "water_g09.wav", group:237, text:8},
+    city_is_amazing : {sound: "water_g10.wav", group:237, text:9},
+  }
 }
 
 figure_priest = {
