@@ -44,13 +44,13 @@ figure_water_carrier = {
 
 figure_priest = {
 	animations : {
-		osiris_walk : { pos : [0, 0], anim_id: IMG_PRIEST_OSIRIS },
+		osiris_walk : { pos : [0, 0], anim_id: IMG_PRIEST_OSIRIS, max_frames:12},
 		osiris_death : { pos : [0, 0], anim_id: IMG_PRIEST_OSIRIS_DEATH },
-		ra_walk : { pos : [0, 0], anim_id: IMG_PRIEST_RA },
+		ra_walk : { pos : [0, 0], anim_id: IMG_PRIEST_RA, max_frames:12 },
 		ra_death : { pos : [0, 0], anim_id: IMG_PRIEST_RA_DEATH },
-		ptah_walk : { pos : [0, 0], anim_id: IMG_PRIEST_PTAH },
+		ptah_walk : { pos : [0, 0], anim_id: IMG_PRIEST_PTAH, max_frames:12 },
 		ptah_death : { pos : [0, 0], anim_id: IMG_PRIEST_PTAH_DEATH },
-		seth_walk : { pos : [0, 0], anim_id: IMG_PRIEST_SETH },
+		seth_walk : { pos : [0, 0], anim_id: IMG_PRIEST_SETH, max_frames:12 },
 		seth_death : { pos : [0, 0], anim_id: IMG_PRIEST_SETH_DEATH },
 		bast_walk : { pos : [0, 0], anim_id: IMG_PRIEST_BAST, max_frames:12 },
 		bast_death : { pos : [0, 0], anim_id: IMG_PRIEST_BAST_DEATH },
