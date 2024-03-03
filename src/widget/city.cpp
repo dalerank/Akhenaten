@@ -189,7 +189,7 @@ void widget_city_draw(painter &ctx) {
     update_zoom_level(ctx);
     set_render_scale(ctx, zoom_get_scale());
     set_city_clip_rectangle(ctx);
-    if (game_state_overlay()) {
+    if (game.current_overlay) {
         widget_city_draw_with_overlay(ctx, data.current_tile);
     } else {
         widget_city_draw_without_overlay(ctx, 0, nullptr, data.current_tile);
@@ -608,23 +608,22 @@ void widget_city_get_tooltip(tooltip_context* c) {
     }
 
     int building_id = map_building_at(grid_offset);
-    int overlay = game_state_overlay();
     // cheat tooltips
-    if (overlay == OVERLAY_NONE && game_cheat_tooltip_enabled()) {
+    if (game.current_overlay == OVERLAY_NONE && game_cheat_tooltip_enabled()) {
         c->type = TOOLTIP_TILES;
         c->high_priority = 1;
         return;
     }
 
     // regular tooltips
-    if (overlay == OVERLAY_NONE && building_id && building_get(building_id)->is_palace()) {
+    if (game.current_overlay == OVERLAY_NONE && building_id && building_get(building_id)->is_palace()) {
         c->type = TOOLTIP_SENATE;
         c->high_priority = 1;
         return;
     }
 
     // overlay tooltips
-    if (overlay != OVERLAY_NONE) {
+    if (game.current_overlay != OVERLAY_NONE) {
         c->text_group = e_text_tooltip;
         c->text_id = widget_city_overlay_get_tooltip_text(c, grid_offset);
         if (c->text_id) {

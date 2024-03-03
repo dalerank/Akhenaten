@@ -4,13 +4,7 @@
 
 void game_state_init();
 
-bool game_state_is_paused();
-
 void game_state_toggle_paused();
-
-void game_state_unpause();
-
-e_overlay game_state_overlay();
 
 void game_state_reset_overlay();
 

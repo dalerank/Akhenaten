@@ -118,8 +118,8 @@ struct sidebar_data_t {
 sidebar_data_t g_sidebar_data;
 
 static void draw_overlay_text(int x_offset) {
-    if (game_state_overlay()) {
-        const char *overlay_text = game_state_overlay_text(game_state_overlay());
+    if (game.current_overlay) {
+        const char *overlay_text = game_state_overlay_text(game.current_overlay);
         text_draw_centered((uint8_t*)overlay_text, x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     } else {
         const bool is_button_focused = buttons_overlays_collapse_sidebar[1].focused;
@@ -128,8 +128,11 @@ static void draw_overlay_text(int x_offset) {
 }
 static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
     int width = SIDEBAR_EXPANDED_WIDTH;
-    if (is_collapsed)
+
+    if (is_collapsed) {
         width = SIDEBAR_COLLAPSED_WIDTH;
+    }
+
     int available_height = sidebar_common_get_height() - SIDEBAR_MAIN_SECTION_HEIGHT;
     int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT, 162, available_height, is_collapsed, SIDEBAR_EXTRA_DISPLAY_ALL);
     sidebar_extra_draw_foreground();

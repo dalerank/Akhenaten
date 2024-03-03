@@ -725,10 +725,10 @@ static void draw_foreground() {
     }
 
     if (!context.storage_show_special_orders && context.show_overlay != OVERLAY_NONE) {
-        pcstr label = (game_state_overlay() != context.show_overlay ? "v" : "V");
+        pcstr label = (game.current_overlay != context.show_overlay ? "v" : "V");
         ui::button(label, {375, 3 + 16 * context.height_blocks - 40}, {20, 20})
              .onclick([&context] (int, int) {
-                if (game_state_overlay() != context.show_overlay) {
+                if (game.current_overlay != context.show_overlay) {
                     game_state_set_overlay((e_overlay)context.show_overlay);
                 } else {
                     game_state_reset_overlay();

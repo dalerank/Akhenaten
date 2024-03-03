@@ -65,7 +65,7 @@ void game_t::animation_timers_update() {
 }
 
 bool game_t::animation_should_advance(uint32_t speed) {
-    if (!animation) {
+    if (!animation || paused) {
         return false;
     }
 
@@ -124,34 +124,39 @@ static bool reload_language(int is_editor, int reload_images) {
     return true;
 }
 
-static int get_elapsed_ticks(void) {
-    if (game_state_is_paused() || !city_has_loaded)
+static int get_elapsed_ticks() {
+    if (game.paused || !city_has_loaded) {
         return 0;
+    }
 
     int game_speed_index = 0;
     int ticks_per_frame = 1;
     switch (window_get_id()) {
     default:
         return 0;
+
     case WINDOW_CITY:
     case WINDOW_CITY_MILITARY:
     case WINDOW_SLIDING_SIDEBAR:
     case WINDOW_OVERLAY_MENU:
     case WINDOW_BUILD_MENU:
         game_speed_index = (100 - g_settings.game_speed) / 10;
-        if (game_speed_index >= 10)
+        if (game_speed_index >= 10) {
             return 0;
-        else if (game_speed_index < 0) {
+        } else if (game_speed_index < 0) {
             ticks_per_frame = g_settings.game_speed / 100;
             game_speed_index = 0;
         }
         break;
+
     case WINDOW_EDITOR_MAP:
         game_speed_index = 3; // 70%, nice speed for flag animations
         break;
     }
-    if (Planner.in_progress)
+
+    if (Planner.in_progress) {
         return 0;
+    }
 
     if (scroll_in_progress() && !scroll_is_smooth())
         return 0;
@@ -178,7 +183,7 @@ bool game_pre_init(void) {
     scenario_settings_init();
     random_init();
 
-    game_state_unpause();
+    game.paused = false;
     return true;
 }
 

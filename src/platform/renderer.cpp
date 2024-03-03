@@ -120,19 +120,11 @@ graphics_renderer_interface g_render;
 renderer_data_t g_renderer_data;
 
 bool graphics_renderer_interface::save_screen_buffer(painter &ctx, color* pixels, int x, int y, int width, int height, int row_width) {
-    if (game.paused) {
-        return false;
-    }
-
     SDL_Rect rect = {x, y, width, height};
     return SDL_RenderReadPixels(ctx.renderer, &rect, SDL_PIXELFORMAT_ARGB8888, pixels, row_width * sizeof(color)) == 0;
 }
 
 void graphics_renderer_interface::draw_line(int x_start, int x_end, int y_start, int y_end, color color) {
-    if (game.paused) {
-        return;
-    }
-
     auto &data = g_renderer_data;
     SDL_SetRenderDrawColor(data.renderer,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
@@ -144,9 +136,6 @@ void graphics_renderer_interface::draw_line(int x_start, int x_end, int y_start,
 
 void graphics_renderer_interface::draw_rect(int x, int y, int width, int height, color color) {
     auto &data = g_renderer_data;
-    if (game.paused) {
-        return;
-    }
     SDL_SetRenderDrawColor(data.renderer,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
@@ -157,10 +146,6 @@ void graphics_renderer_interface::draw_rect(int x, int y, int width, int height,
 }
 
 void graphics_renderer_interface::fill_rect(int x, int y, int width, int height, color color) {
-    if (game.paused) {
-        return;
-    }
-
     auto &data = g_renderer_data;
     SDL_SetRenderDrawColor(data.renderer,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
@@ -172,45 +157,30 @@ void graphics_renderer_interface::fill_rect(int x, int y, int width, int height,
 }
 
 void graphics_renderer_interface::clear_screen(void) {
-    if (game.paused) {
-        return;
-    }
     auto &data = g_renderer_data;
     SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0xff);
     SDL_RenderClear(data.renderer);
 }
 
 void graphics_renderer_interface::set_viewport(int x, int y, int width, int height) {
-    if (game.paused) {
-        return;
-    }
     auto &data = g_renderer_data;
     SDL_Rect viewport = {x, y, width, height};
     SDL_RenderSetViewport(data.renderer, &viewport);
 }
 
 void graphics_renderer_interface::reset_viewport(void) {
-    if (game.paused) {
-        return;
-    }
     auto &data = g_renderer_data;
     SDL_RenderSetViewport(data.renderer, NULL);
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
 
 void graphics_renderer_interface::set_clip_rectangle(int x, int y, int width, int height) {
-    if (game.paused) {
-        return;
-    }
     auto &data = g_renderer_data;
     SDL_Rect clip = {x, y, width, height};
     SDL_RenderSetClipRect(data.renderer, &clip);
 }
 
 void graphics_renderer_interface::reset_clip_rectangle(void) {
-    if (game.paused) {
-        return;
-    }
     auto &data = g_renderer_data;
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
@@ -269,7 +239,7 @@ void set_render_scale(painter &ctx, float scale) {
 
 void graphics_renderer_interface::set_texture_scale_mode(SDL_Texture* texture, float scale_factor) {
 #ifdef USE_TEXTURE_SCALE_MODE
-    if (!game.paused && HAS_TEXTURE_SCALE_MODE) {
+    if (HAS_TEXTURE_SCALE_MODE) {
         SDL_ScaleMode current_scale_mode;
         SDL_GetTextureScaleMode(texture, &current_scale_mode);
         SDL_ScaleMode desired_scale_mode = (scale_factor < 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest);
@@ -286,7 +256,7 @@ unsigned int graphics_renderer_interface::premult_alpha() {
 }
 
 void graphics_renderer_interface::draw_image_part(painter &ctx, const image_t* img, int offset, float x, float y, color color, float scale, bool mirrored, bool alpha) {
-    if (game.paused || img == nullptr) {
+    if (img == nullptr) {
         return;
     }
 
@@ -296,7 +266,7 @@ void graphics_renderer_interface::draw_image_part(painter &ctx, const image_t* i
 }
 
 void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, float x, float y, color color, float scale, bool mirrored, bool alpha) {
-    if (game.paused || img == nullptr) {
+    if (img == nullptr) {
         return;
     }
 
@@ -329,7 +299,7 @@ void graphics_renderer_interface::create_custom_texture(int type, int width, int
 }
 color* graphics_renderer_interface::get_custom_texture_buffer(int type, int* actual_texture_width) {
     auto &data = g_renderer_data;
-    if (game.paused || !data.custom_textures[type].texture) {
+    if (!data.custom_textures[type].texture) {
         return 0;
     }
 
@@ -366,7 +336,7 @@ void graphics_renderer_interface::release_custom_texture_buffer(int type) {
 void graphics_renderer_interface::update_custom_texture(int type) {
     auto &data = g_renderer_data;
 #ifndef __vita__
-    if (game.paused || !data.custom_textures[type].texture || !data.custom_textures[type].buffer) {
+    if (!data.custom_textures[type].texture || !data.custom_textures[type].buffer) {
         return;
     }
     int width, height;
@@ -377,7 +347,7 @@ void graphics_renderer_interface::update_custom_texture(int type) {
 void graphics_renderer_interface::update_custom_texture_yuv(int type, const uint8_t* y_data, int y_width, const uint8_t* cb_data, int cb_width, const uint8_t* cr_data, int cr_width) {
     auto &data = g_renderer_data;
 #ifdef USE_YUV_TEXTURES
-    if (game.paused || !data.supports_yuv_textures || !data.custom_textures[type].texture) {
+    if (!data.supports_yuv_textures || !data.custom_textures[type].texture) {
         return;
     }
     int width, height;
@@ -406,9 +376,6 @@ static buffer_texture* get_saved_texture_info(int texture_id) {
 
 int graphics_renderer_interface::save_texture_from_screen(int texture_id, int x, int y, int width, int height) {
     auto &data = g_renderer_data;
-    if (game.paused) {
-        return 0;
-    }
     SDL_Texture* former_target = SDL_GetRenderTarget(data.renderer);
     if (!former_target) {
         return 0;
@@ -568,10 +535,6 @@ static void set_texture_color_and_scale_mode(SDL_Texture *texture, color color, 
 
 static void draw_texture_advanced(const image_t *img, float x, float y, color color, float scale_x, float scale_y, double angle, int disable_coord_scaling) {
     auto &data = g_renderer_data;
-    if (game.paused) {
-        return;
-    }
-
     if (!img->atlas.p_atlas) {
         return;
     }
@@ -627,10 +590,6 @@ static void draw_texture(const image_t *img, int x, int y, color color, float sc
 
 void graphics_renderer_interface::draw_custom_texture(int type, int x, int y, float scale) {
     auto &data = g_renderer_data;
-    if (game.paused) {
-        return;
-    }
-
     if (type == CUSTOM_IMAGE_RED_FOOTPRINT || type == CUSTOM_IMAGE_GREEN_FOOTPRINT) {
         if (!data.custom_textures[type].texture) {
             create_blend_texture(type);
@@ -648,9 +607,6 @@ int graphics_renderer_interface::has_custom_texture(int type) {
 
 void load_unpacked_image(const image_t* img, const color* pixels) {
     auto &data = g_renderer_data;
-    if (game.paused) {
-        return;
-    }
     //    int unpacked_image_id = img->atlas.bitflags & IMAGE_ATLAS_BIT_MASK;
     int unpacked_image_id = 0;
     int first_empty = -1;
@@ -938,7 +894,6 @@ int platform_renderer_init(SDL_Window* window, std::string renderer) {
         data.max_texture_size.width = info.max_texture_width;
         data.max_texture_size.height = info.max_texture_height;
     }
-    game.paused = 0;
 
 #if defined(MAX_TEXTURE_SIZE)
     if (data.max_texture_size.width > MAX_TEXTURE_SIZE) {
@@ -967,9 +922,6 @@ static void destroy_render_texture(void) {
 }
 
 int platform_renderer_create_render_texture(int width, int height) {
-    if (game.paused) {
-        return 1;
-    }
     auto &data = g_renderer_data;
     destroy_render_texture();
 
@@ -1063,9 +1015,6 @@ void platform_renderer_clear() {
 }
 
 void platform_renderer_render() {
-    if (game.paused) {
-        return;
-    }
     auto &data = g_renderer_data;
     SDL_SetRenderTarget(data.renderer, NULL);
     SDL_RenderCopy(data.renderer, data.render_texture, NULL, NULL);
@@ -1078,9 +1027,6 @@ void platform_renderer_render() {
 
 void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color* pixels, int hotspot_x, int hotspot_y) {
     auto &data = g_renderer_data;
-    if (game.paused) {
-        return;
-    }
     if (data.cursors[cursor_id].texture) {
         SDL_DestroyTexture(data.cursors[cursor_id].texture);
         SDL_memset(&data.cursors[cursor_id], 0, sizeof(data.cursors[cursor_id]));
@@ -1099,12 +1045,10 @@ void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, co
 void platform_renderer_pause() {
     auto &data = g_renderer_data;
     SDL_SetRenderTarget(data.renderer, NULL);
-    game.paused = true;
 }
 
 void platform_renderer_resume() {
     auto &data = g_renderer_data;
-    game.paused = false;
     platform_renderer_create_render_texture(screen_width(), screen_height());
     SDL_SetRenderTarget(data.renderer, data.render_texture);
 }

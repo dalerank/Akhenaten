@@ -1,6 +1,7 @@
 #pragma once
 
 #include "graphics/painter.h"
+#include "overlays/city_overlay_fwd.h"
 #include "core/time.h"
 
 bool game_pre_init();
@@ -43,6 +44,8 @@ struct game_t {
     bool animation = false;
     bool console = false;
     fps_data_t fps = {0, 0, 0};
+    e_overlay current_overlay = OVERLAY_NONE;
+    e_overlay previous_overlay = OVERLAY_NONE;
 
     animation_timer animation_timers[MAX_ANIM_TIMERS];
 

@@ -28,6 +28,7 @@
 #include "overlays/city_overlay_labor.h"
 #include "overlays/city_overlay_tax_income.h"
 #include "overlays/city_overlay_courthouse.h"
+#include "game/game.h"
 #include "js/js_game.h"
 
 const city_overlay* g_city_overlay = 0;
@@ -134,8 +135,8 @@ const city_overlay* get_city_overlay() {
 }
 
 bool select_city_overlay() {
-    if (!g_city_overlay || g_city_overlay->type != game_state_overlay()) {
-        g_city_overlay = get_city_overlay(game_state_overlay());
+    if (!g_city_overlay || g_city_overlay->type != game.current_overlay) {
+        g_city_overlay = get_city_overlay(game.current_overlay);
     }
 
     return g_city_overlay != 0;

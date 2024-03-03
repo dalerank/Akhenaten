@@ -10,7 +10,7 @@
 #include <SDL.h>
 
 void painter::draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, bool mirrored, bool alpha) {
-    if (game.paused || texture == nullptr) {
+    if (texture == nullptr) {
         return;
     }
 
@@ -97,7 +97,7 @@ void painter::draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i s
 }
 
 void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale, bool mirrored, bool alpha) {
-    if (game.paused || spr.img == nullptr) {
+    if (spr.img == nullptr) {
         return;
     }
 

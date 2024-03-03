@@ -728,7 +728,7 @@ void GamestateIO::start_loaded_file() {
     if (last_loaded == LOADED_MISSION) {
         window_mission_briefing_show();
     } else {
-        game_state_unpause();
+        game.paused = false;
         window_city_show();
     }
     sound_music_update(true);

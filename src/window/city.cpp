@@ -46,12 +46,13 @@ static void window_city_draw_background() {
     widget_sidebar_city_draw_background();
     widget_top_menu_draw(1);
 }
+
 static void draw_paused_and_time_left() {
     if (scenario_criteria_time_limit_enabled() && !city_victory_has_won()) {
         int years;
-        if (scenario_criteria_max_year() <= game_time_year() + 1)
+        if (scenario_criteria_max_year() <= game_time_year() + 1) {
             years = 0;
-        else {
+        } else {
             years = scenario_criteria_max_year() - game_time_year() - 1;
         }
         int total_months = 12 - game_time_month() + 12 * years;
@@ -61,24 +62,24 @@ static void draw_paused_and_time_left() {
         //        city_view_dirty = 1;
     } else if (scenario_criteria_survival_enabled() && !city_victory_has_won()) {
         int years;
-        if (scenario_criteria_max_year() <= game_time_year() + 1)
+        if (scenario_criteria_max_year() <= game_time_year() + 1) {
             years = 0;
-        else {
+        } else {
             years = scenario_criteria_max_year() - game_time_year() - 1;
         }
         int total_months = 12 - game_time_month() + 12 * years;
         label_draw(1, 25, 15, 1);
         int width = lang_text_draw(6, 3, 6, 29, FONT_NORMAL_BLACK_ON_LIGHT);
         text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK_ON_LIGHT);
-        //        city_view_dirty = 1;
     }
 
-    if (game_state_is_paused()) {
+    if (game.paused) {
         vec2i offset{center_in_city(448), 40};
         outer_panel_draw(offset, 28, 3);
         lang_text_draw_centered(13, 2, offset.x, 58, 448, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
+
 static void draw_cancel_construction() {
     if (!mouse_get()->is_touch || !Planner.build_type) {
         return;
@@ -92,6 +93,7 @@ static void draw_cancel_construction() {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, vec2i{view_size.x, 44});
     //    city_view_dirty = 1;
 }
+
 static void draw_foreground() {
     //    clear_city_view(0);
     widget_top_menu_draw(0);
@@ -106,6 +108,7 @@ static void draw_foreground() {
     if (window_is(WINDOW_CITY))
         city_message_process_queue();
 }
+
 static void draw_foreground_military() {
     widget_top_menu_draw(0);
     window_city_draw();
@@ -117,9 +120,10 @@ static void exit_military_command() {
     if (window_is(WINDOW_CITY_MILITARY))
         window_city_show();
 }
+
 static void show_overlay(e_overlay overlay) {
     exit_military_command();
-    if (game_state_overlay() == overlay) {
+    if (game.current_overlay == overlay) {
         game_state_set_overlay(OVERLAY_NONE);
     } else {
         game_state_set_overlay(overlay);
@@ -128,6 +132,7 @@ static void show_overlay(e_overlay overlay) {
     select_city_overlay();
     window_invalidate();
 }
+
 static void cycle_legion(void) {
     static int current_legion_id = 1;
     if (window_is(WINDOW_CITY)) {
@@ -153,6 +158,7 @@ static void cycle_legion(void) {
         }
     }
 }
+
 static void toggle_pause() {
     game_state_toggle_paused();
     city_warning_clear_all();
@@ -240,6 +246,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     widget_city_handle_input(m, h);
     city_has_loaded = true;
 }
+
 static void handle_input_military(const mouse* m, const hotkeys* h) {
     handle_hotkeys(h);
     widget_city_handle_input_military(m, h, selected_legion_formation_id);

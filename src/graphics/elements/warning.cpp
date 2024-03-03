@@ -38,8 +38,9 @@ void warning_draw() {
         }
 
         int top_offset = TOP_OFFSETS[i];
-        if (game_state_is_paused())
+        if (game.paused) {
             top_offset += 70;
+        }
 
         int box_width = determine_width(text);
         label_draw(center - box_width / 2 + 1, top_offset, box_width / 16 + 1, 1);
