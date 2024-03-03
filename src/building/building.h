@@ -388,6 +388,7 @@ public:
     virtual building_farm *dcast_farm() { return 0; }
 
     inline bool is_main() { return base.is_main(); }
+    inline bool is_valid() const { return base.is_valid(); }
     inline e_building_state state() const { return base.state; }
     inline void check_labor_problem() { base.check_labor_problem(); }
     inline bool has_figure_of_type(int i, e_figure_type _type) { return base.has_figure_of_type(i, _type);  }

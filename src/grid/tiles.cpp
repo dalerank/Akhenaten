@@ -992,10 +992,10 @@ static void set_floodplain_edge_3x3_tiles(int grid_offset) {
     }
 }
 
-void map_refresh_river_image_at(int grid_offset) {
+void map_refresh_river_image_at(int grid_offset, bool force) {
     set_river_3x3_tiles(grid_offset);
     set_floodplain_edge_3x3_tiles(grid_offset);
-    set_floodplain_land_tiles_image(grid_offset);
+    set_floodplain_land_tiles_image(grid_offset, force);
     set_road_image(grid_offset);
     set_aqueduct_image(grid_offset);
 }
@@ -1014,7 +1014,7 @@ void map_tiles_river_refresh_region(int x_min, int y_min, int x_max, int y_max) 
 
 void map_tiles_set_water(int grid_offset) { // todo: broken
     map_terrain_add(grid_offset, TERRAIN_WATER);
-    map_refresh_river_image_at(grid_offset);
+    map_refresh_river_image_at(grid_offset, true);
     //    set_water_image(x, y, map_grid_offset(x, y));
     //    foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_water_image);
 }

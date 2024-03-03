@@ -48,7 +48,7 @@ void map_tiles_update_all_rubble(void);
 void map_tiles_update_region_rubble(int x_min, int y_min, int x_max, int y_max);
 
 void map_tiles_update_all_elevation(void);
-void map_refresh_river_image_at(int grid_offset);
+void map_refresh_river_image_at(int grid_offset, bool force);
 
 enum {
     CLEAR_LAND_DONT_CHECK_FIGURES = 0,
