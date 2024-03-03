@@ -40,13 +40,13 @@ svector<e_building_type, 4> figure_juggler::allow_venue_types() const {
 sound_key figure_juggler::phrase_key() const {
     int enemies = city_figures_enemies();
     if (enemies > 0) {
-        return "juggler_city_not_safety_workers_leaving";
+        return "city_not_safety_workers_leaving";
     }
 
     svector<sound_key, 10> keys;
     uint32_t months_since_last_festival = city_months_since_last_festival();
     if (months_since_last_festival < 6) {
-        keys.push_back("juggler_i_like_festivals");
+        keys.push_back("i_like_festivals");
     }
 
     int houses_in_disease = 0;
