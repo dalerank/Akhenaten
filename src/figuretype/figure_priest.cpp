@@ -74,7 +74,7 @@ sound_key figure_priest::phrase_key() const {
     }
 
     svector<sound_key, 10> keys;
-    auto create_key = [&] (pcstr fmt) { return sound_key().printf("priest_%s_%s", god_prefix, fmt); };
+    auto create_key = [&] (pcstr fmt) { return sound_key().printf("%s_%s", god_prefix, fmt); };
 
     if (formation_get_num_forts() < 1) {
         keys.push_back(create_key("city_not_safety"));
