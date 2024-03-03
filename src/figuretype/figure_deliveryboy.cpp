@@ -14,6 +14,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_delivery_boy);
 void config_load_figure_delivery_boy() {
     g_config_arch.r_section("figure_delivery_boy", [] (archive arch) {
         delivery_boy_m.anim.load(arch);
+        delivery_boy_m.sounds.load(arch);
     });
 }
 
@@ -66,9 +67,9 @@ void figure_delivery_boy::figure_action() {
 }
 
 sound_key figure_delivery_boy::phrase_key() const {
-    svector<sound_key, 10> keys{"marketboy_those_baskets_too_heavy",
-                                "marketboy_i_works_all_day",
-                                "marketboy_upon_ill_be_market_owner"};
+    svector<sound_key, 10> keys{"those_baskets_too_heavy",
+                                "i_works_all_day",
+                                "upon_ill_be_market_owner"};
 
     int index = rand() % keys.size();
     return keys[index];

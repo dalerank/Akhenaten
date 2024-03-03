@@ -135,6 +135,12 @@ figure_market_buyer = {
 figure_delivery_boy = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_DELIVERY_BOY_WALK, max_frames:12 },
+		death : { pos : [0, 0], anim_id: ANIM_DELIVERY_BOY_DEATH, max_frames:8 },
+	},
+	sounds : {
+		those_baskets_too_heavy : {sound: "marketboy_e01.wav", group:221, text: 0},
+    i_works_all_day : {sound: "marketboy_e02.wav", group:221, text: 1},
+    upon_ill_be_market_owner : {sound: "marketboy_e03.wav", group:221, text: 2},
 	}
 }
 

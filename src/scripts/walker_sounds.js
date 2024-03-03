@@ -158,10 +158,6 @@ walker_sounds = [
  {type: "magistrate_no_entertainment_need", 						sound: "magistrate_g08.wav"},
  {type: "magistrate_city_not_bad", 											sound: "magistrate_g09.wav"},
  {type: "magistrate_city_is_amazing", 									sound: "magistrate_g10.wav"},
- // market boy
- {type: "marketboy_those_baskets_too_heavy", 						sound: "marketboy_e01.wav"},
- {type: "marketboy_i_works_all_day", 										sound: "marketboy_e02.wav"},
- {type: "marketboy_upon_ill_be_market_owner", 					sound: "marketboy_e03.wav"},
  // pharaoh
  {type: "", sound: "pharaoh_e01.wav"},
  // policeman
