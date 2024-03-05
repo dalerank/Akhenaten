@@ -371,8 +371,8 @@ void figure::init_roaming_from_building(int roam_dir) {
     map_grid_bound(&offset_search_x, &offset_search_y);
     tile2i road_tile;
     int found_road = map_closest_road_within_radius(tile2i(offset_search_x, offset_search_y), 1, 6, road_tile);
-    int road_network_original = map_road_network_get(MAP_OFFSET(tile.x(), tile.y()));
-    int road_network_found = map_road_network_get(MAP_OFFSET(road_tile.x(), road_tile.y()));
+    int road_network_original = map_road_network_get(tile);
+    int road_network_found = map_road_network_get(road_tile);
 
     if (found_road && road_network_original == road_network_found) { // must be in the same network!!
         destination_tile = road_tile;
@@ -397,9 +397,11 @@ void figure::roam_set_direction() {
                 break;
             }
         }
+
         dir++;
-        if (dir > 7)
+        if (dir > 7) {
             dir = 0;
+        }
         road_offset_dir1++;
     }
     int road_offset_dir2 = 0;
@@ -412,11 +414,14 @@ void figure::roam_set_direction() {
                 break;
             }
         }
+
         dir--;
-        if (dir < 0)
+        if (dir < 0) {
             dir = 7;
+        }
         road_offset_dir2++;
     }
+
     if (road_offset_dir1 <= road_offset_dir2) {
         direction = road_dir1;
         roam_turn_direction = 2;
@@ -431,10 +436,11 @@ void figure::move_ticks_tower_sentry(int num_ticks) {
     while (num_ticks > 0) {
         num_ticks--;
         progress_on_tile++;
-        if (progress_on_tile < 15)
+        if (progress_on_tile < 15) {
             advance_figure_tick();
-        else
+        } else {
             progress_on_tile = 14;
+        }
     }
 }
 

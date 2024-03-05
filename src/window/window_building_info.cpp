@@ -453,6 +453,7 @@ static void init(map_point tile) {
                 case FIGURE_SPEAR:
                 case FIGURE_CHARIOR_RACER:
                     break;
+
                 default:
                     context.figure.figure_ids[context.figure.count++] = figure_id;
                     //                        f->igure_phrase_determine();

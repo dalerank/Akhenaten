@@ -20,7 +20,6 @@ void config_load_figure_labor_seeker() {
     });
 }
 
-
 void figure_labor_seeker::figure_before_action() {
     building *b = home();
     if (!b->is_valid()) {

@@ -163,12 +163,11 @@ void figure::figure_image_update(bool refresh_only) {
         anim_frame = 0;
 
     switch (type) {
-    case FIGURE_EXPLOSION:
     case FIGURE_FISHING_POINT:
         break;
 
     default:
-        cart_update_image();
+        dcast()->cart_update_image();
     }
 
     switch (type) {

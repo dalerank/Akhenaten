@@ -380,7 +380,6 @@ public:
 
     void homeless_action();
     void sled_puller_action();
-    void explosion_cloud_action();
     void soldier_action();
     void military_standard_action();
     void trade_caravan_action();
@@ -531,6 +530,7 @@ public:
     virtual void update_direction_and_image() { base.update_direction_and_image(); }
     virtual bool can_move_by_water() const;
     virtual int y_correction(int y) const { return y; }
+    virtual void cart_update_image() { base.cart_update_image(); }
 
     virtual figure_immigrant *dcast_immigrant() { return nullptr; }
     virtual figure_cartpusher *dcast_cartpusher() { return nullptr; }

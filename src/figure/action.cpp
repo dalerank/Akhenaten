@@ -474,8 +474,6 @@ void figure::action_perform() {
         switch (type) {
         case FIGURE_HOMELESS: homeless_action(); break;
 
-        case FIGURE_EXPLOSION: explosion_cloud_action(); break;
-
         case 11:   // soldier_action();                  break;
         case 12:   // soldier_action();                  break;
         case 13:

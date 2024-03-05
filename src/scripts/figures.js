@@ -374,6 +374,12 @@ figure_labor_seeker = {
 	}
 }
 
+figure_explosion = {
+	animations : {
+		poof : { pos : [0, 0], anim_id: IMG_EXPLOSION, max_frames:12 },
+	}
+}
+
 figure_tax_collector = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: IMG_BIGSLED_EMPTY, max_frames:1 },
