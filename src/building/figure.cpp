@@ -196,6 +196,9 @@ figure* building::create_figure_with_destination(e_figure_type _type, building* 
 figure* building::create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action, e_building_slot slot) {
     figure* f = create_figure_generic(FIGURE_CART_PUSHER, created_action, slot, DIR_4_BOTTOM_LEFT);
     auto cart = f->dcast_cartpusher();
+    if (!cart) {
+        return f;
+    }
 
     cart->load_resource(resource_id, quantity);
     cart->set_destination(0);

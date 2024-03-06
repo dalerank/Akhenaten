@@ -5,7 +5,6 @@
 #include "building/building_type.h"
 #include "building/storage.h"
 #include "building/building_temple.h"
-#include "building/building_farm.h"
 #include "building/building_statue.h"
 #include "building/building_work_camp.h"
 #include "building/building_barracks.h"
@@ -264,6 +263,17 @@ building* building_create(e_building_type type, tile2i tile, int orientation) {
     return b;
 }
 
+building_impl *buildings::create(e_building_type e, building &data) {
+    for (BuildingIterator *s = BuildingIterator::tail; s; s = s->next) {
+        auto impl = s->func(e, data);
+        if (impl) {
+            return impl;
+        }
+    }
+
+    return new building_impl(data);
+}
+
 building_impl *building::dcast() {
     if (_ptr) {
         return _ptr;
@@ -297,17 +307,6 @@ building_impl *building::dcast() {
     case BUILDING_RECRUITER: _ptr = new building_recruiter(*this); break;
     case BUILDING_GRANARY: _ptr = new building_granary(*this); break;
     case BUILDING_CATTLE_RANCH: _ptr = new building_cattle_ranch(*this); break;
-
-    case BUILDING_GRAIN_FARM:
-    case BUILDING_LETTUCE_FARM:
-    case BUILDING_CHICKPEAS_FARM:
-    case BUILDING_POMEGRANATES_FARM:
-    case BUILDING_BARLEY_FARM:
-    case BUILDING_FLAX_FARM:
-    case BUILDING_HENNA_FARM:
-    case BUILDING_FIGS_FARM:
-         _ptr = new building_farm(*this);
-         break;
 
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_RA:
@@ -354,10 +353,11 @@ building_impl *building::dcast() {
     case BUILDING_SMALL_MASTABA_WALL:
          _ptr = new building_small_mastaba(*this);
          break;
-    default:
-        _ptr = new building_impl(*this);
     }
 
+    if (!_ptr) {
+        _ptr = buildings::create(type, *this);
+    }
     return _ptr;
 }
 

@@ -35,7 +35,7 @@ building_temple_t temple_seth{BUILDING_TEMPLE_SETH, "building_temple_seth"};
 building_temple_t temple_bast{BUILDING_TEMPLE_BAST, "building_temple_bast"};
 building_temple_t temple_dummy{BUILDING_NONE, "unknown"};
 
-}
+} // model
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_temples);
 void config_load_building_temples() {

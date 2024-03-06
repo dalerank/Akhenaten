@@ -26,7 +26,9 @@ void console_command_collapse(std::istream &is, std::ostream &) {
 
     svector<building *, 1000> buildings;
     buildings_valid_do([&] (building &b) {
-        buildings.push_back(&b);
+        if (!b.dcast_farm()) {
+            buildings.push_back(&b);
+        }
     });
 
     int step = std::max<int>(1, (int)buildings.size() / count);

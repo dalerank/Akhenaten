@@ -3,6 +3,8 @@
 #include "city/labor_category.h"
 #include "core/bstring.h"
 #include "core/vec2i.h"
+#include "core/core.h"
+#include "graphics/animation.h"
 #include "graphics/color.h"
 #include "building/building_type.h"
 #include "building/building_state.h"
@@ -597,3 +599,29 @@ void buildings_workshop_do(T func) {
         }
     }
 }
+
+namespace buildings {
+
+building_impl *create(e_building_type, building&);
+typedef building_impl* (*create_building_function_cb)(e_building_type, building&);
+
+using BuildingIterator = FuncLinkedList<create_building_function_cb>;
+
+template<e_building_type E, typename T>
+struct model_t {
+    static constexpr e_building_type type = E;
+    animations_t anim;
+
+    model_t() {
+        static BuildingIterator config_handler(&create);
+    }
+
+    static building_impl *create(e_building_type e, building &data) {
+        if (e == type) {
+            return new T(data);
+        }
+        return nullptr;
+    }
+};
+
+} // buildings

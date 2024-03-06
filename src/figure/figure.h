@@ -602,7 +602,7 @@ struct model_t {
     figure_sounds_t sounds;
 
     model_t() {
-        static figures::FigureIterator config_handler(&create);
+        static FigureIterator config_handler(&create);
     }
 
     static figure_impl *create(e_figure_type e, figure *data) {

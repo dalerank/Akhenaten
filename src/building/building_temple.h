@@ -3,7 +3,7 @@
 #include "building/building.h"
 
 namespace model {
-struct building_temple_t;
+    struct building_temple_t;
 }
 
 class building_temple : public building_impl {

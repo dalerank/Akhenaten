@@ -26,6 +26,18 @@
 #include "game/game.h"
 #include "figure/figure.h"
 
+template<e_building_type E>
+struct farm_model : public buildings::model_t<E, building_farm> {};
+
+farm_model<BUILDING_GRAIN_FARM> farm_grain_m;
+farm_model<BUILDING_LETTUCE_FARM> farm_lettuce_m;
+farm_model<BUILDING_CHICKPEAS_FARM> farm_chickpeas_m;
+farm_model<BUILDING_POMEGRANATES_FARM> farm_pomegranates_m;
+farm_model<BUILDING_BARLEY_FARM> farm_barley_m;
+farm_model<BUILDING_FLAX_FARM> farm_flax_m;
+farm_model<BUILDING_HENNA_FARM> farm_henna_m;
+farm_model<BUILDING_FIGS_FARM> farm_figs_m;
+
 static void building_farm_draw_info(object_info &c, const char* type, e_resource resource) {
     painter ctx = game.painter();
     auto &meta = building::get_info(type);
@@ -236,14 +248,13 @@ static bool farm_harvesting_month_for_produce(int resource_id, int month) {
 
     // biannual meadow farms
     case RESOURCE_GRAIN:
-    return (month == MONTH_JANUARY || month == MONTH_MAY);
-    break;
+        return (month == MONTH_JANUARY || month == MONTH_MAY);
+
     case RESOURCE_BARLEY:
-    return (month == MONTH_FEBRUARY || month == MONTH_AUGUST);
-    break;
+        return (month == MONTH_FEBRUARY || month == MONTH_AUGUST);
+
     case RESOURCE_POMEGRANATES:
-    return (month == MONTH_JUNE || month == MONTH_NOVEMBER);
-    break;
+        return (month == MONTH_JUNE || month == MONTH_NOVEMBER);
     }
     return false;
 }
