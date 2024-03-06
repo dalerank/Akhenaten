@@ -42,7 +42,6 @@ static void game_cheat_cast_upset(pcstr);
 static void game_cheat_start_plague(pcstr);
 static void game_cheat_pop_milestone(pcstr);
 static void game_cheat_fire(pcstr);
-static void game_cheat_collapse(pcstr);
 static void game_cheat_nodamage(pcstr);
 static void game_cheat_spacious_apartment(pcstr);
 static void game_cheat_spawn_nobles(pcstr);
@@ -77,7 +76,6 @@ static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_s
                                                   {"popmilestone", game_cheat_pop_milestone},
                                                   {"fire", game_cheat_fire},
                                                   {"nodamage", game_cheat_nodamage},
-                                                  {"collapse", game_cheat_collapse},
                                                   {"spawnnobles", game_cheat_spawn_nobles},
                                                   {"tutspaciousapt", game_cheat_spacious_apartment},
                                                   {"killfishboats", game_cheat_kill_fish_boats},
@@ -264,21 +262,6 @@ static void game_cheat_nodamage(pcstr args) {
     buildings_valid_do([&] (building &b) {
         b.damage_risk = 0;
     });
-}
-
-static void game_cheat_collapse(pcstr args) {
-    int count = 0;
-    parse_integer(args ? args : (pcstr )"10", count);
-
-    svector<building *, 1000> buildings;
-    buildings_valid_do([&] (building &b) {
-        buildings.push_back(&b);
-    });
-
-    int step = std::max<int>(1, (int)buildings.size() / count);
-    for (int i = 0; i < buildings.size(); i += step) {
-        building_destroy_by_collapse(buildings[i]);
-    }
 }
 
 static void game_cheat_update_fish_points(pcstr args) {

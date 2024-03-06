@@ -1,6 +1,8 @@
 #include "building_architect_post.h"
 
 #include "building/building.h"
+#include "core/svector.h"
+#include "building/destruction.h"
 #include "city/object_info.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
@@ -11,6 +13,27 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
+#include "dev/debug.h"
+
+#include <iostream>
+
+declare_console_command_p(collapse, console_command_collapse);
+
+void console_command_collapse(std::istream &is, std::ostream &) {
+    std::string args;
+    is >> args;
+    int count = atoi(!args.empty() ? args.c_str() : "10");
+
+    svector<building *, 1000> buildings;
+    buildings_valid_do([&] (building &b) {
+        buildings.push_back(&b);
+    });
+
+    int step = std::max<int>(1, (int)buildings.size() / count);
+    for (int i = 0; i < buildings.size(); i += step) {
+        building_destroy_by_collapse(buildings[i]);
+    }
+}
 
 void building_architect_post::window_info_background(object_info &c) {
     c.help_id = 81;
