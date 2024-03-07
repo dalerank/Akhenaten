@@ -9,6 +9,13 @@
 #include "city/resource.h"
 #include "empire/trade_prices.h"
 #include "city/finance.h"
+#include "core/log.h"
+
+struct storage_room_model : public buildings::model_t<BUILDING_STORAGE_ROOM, building_storage_room> {};
+storage_room_model storage_room_m;
+
+void building_storage_room::on_create() {
+}
 
 void building_storage_room::window_info_background(object_info &ctx) {
     yard()->window_info_background(ctx);

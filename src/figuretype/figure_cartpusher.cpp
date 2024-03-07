@@ -78,14 +78,9 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
             building* dest = destination();
 
             int accepting = 0;
-            auto warehouse = destination()->dcast_storage_yard();
+            auto warehouse = storage_yard_cast(dest);
             if (warehouse) {
                 accepting = warehouse->accepting_amount(base.resource_id);
-            }
-
-            auto warehouse_room = destination()->dcast_storage_room();
-            if (warehouse_room) {
-                accepting = warehouse_room->accepting_amount(base.resource_id);
             }
 
             if (!accepting) {
@@ -130,7 +125,7 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
             case BUILDING_STORAGE_YARD:
             case BUILDING_STORAGE_ROOM:
                 for (int i = 0; i < times; i++) { // do one by one...
-                    auto warehouse = dest->dcast_storage_yard();
+                    auto warehouse = storage_yard_cast(dest);
                     int amount_refused = warehouse->add_resource(base.resource_id, amount_single_turn);
                     if (amount_refused != -1) {
                         dump_resource(amount_single_turn - amount_refused);

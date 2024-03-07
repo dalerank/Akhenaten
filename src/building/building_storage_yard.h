@@ -47,6 +47,8 @@ private:
     bool is_accepting(e_resource resource);
 };
 
+building_storage_yard *storage_yard_cast(building *b);
+
 int get_storage_accepting_amount(building *b, e_resource resource);
 int building_storage_yard_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int *understaffed, tile2i *dst);
 

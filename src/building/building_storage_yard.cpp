@@ -39,10 +39,7 @@
 #include <cmath>
 
 struct storage_yard_model : public buildings::model_t<BUILDING_STORAGE_YARD, building_storage_yard> {};
-struct storage_room_model : public buildings::model_t<BUILDING_STORAGE_ROOM, building_storage_yard> {};
-
 storage_yard_model storage_yard_m;
-storage_room_model storage_room_m;
 
 int get_storage_accepting_amount(building *b, e_resource resource) {
     const building_storage* s = building_storage_get(b->storage_id);
@@ -172,13 +169,9 @@ int building_storage_yard::add_resource(e_resource resource, int amount) {
 
 int building_storage_yard::remove_resource(e_resource resource, int amount) {
     building_storage_room* space = room();
-    for (int i = 0; i < 8; i++) {
+    while (space) {
         if (amount <= 0)
             return 0;
-
-        space = space->next_room();
-        if (space->id() <= 0)
-            continue;
 
         if (space->base.subtype.warehouse_resource_id != resource || space->base.stored_full_amount <= 0)
             continue;
@@ -195,6 +188,7 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
             space->base.subtype.warehouse_resource_id = RESOURCE_NONE;
         }
         space->set_image(resource);
+        space = space->next_room();
     }
     return amount;
 }
@@ -385,7 +379,7 @@ int building_storage_yard::for_getting(e_resource resource, tile2i* dst) {
     building* min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building_storage_yard *other_warehouse = building_get(i)->dcast_storage_yard();
-        if (other_warehouse && other_warehouse->is_valid()) {
+        if (!other_warehouse || !other_warehouse->is_valid()) {
             continue;
         }
 
@@ -1033,4 +1027,18 @@ void building_storage_yard::window_info_foreground(object_info &ctx) {
         draw_warehouse_orders_foreground(&ctx);
     else
         draw_warehouse_foreground(&ctx);
+}
+
+building_storage_yard *storage_yard_cast(building *b) {
+    auto yard = b->dcast_storage_yard();
+    if (yard) {
+        return yard;
+    }
+
+    auto room = b->dcast_storage_room();
+    if (room) {
+        return room->yard();
+    }
+
+    return nullptr;
 }

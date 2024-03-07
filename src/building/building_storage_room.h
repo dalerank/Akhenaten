@@ -8,6 +8,7 @@ class building_storage_room : public building_impl {
 public:
     building_storage_room(building &b) : building_impl(b), stored_full_amount(b.stored_full_amount) {}
 
+    virtual void on_create() override;
     virtual building_storage_room *dcast_storage_room() { return this; }
     virtual void window_info_background(object_info &ctx) override;
     virtual void window_info_foreground(object_info &ctx) override;
