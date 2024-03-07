@@ -13,7 +13,7 @@ using v_table_ptr = const uintptr_t*;
 #ifdef _MSC_VER
 #define FORCELINLINE __forceinline
 #else
-#define FORCELINLINE forceinline
+#define FORCELINLINE inline
 #endif
 
 template < typename T >
