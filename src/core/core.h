@@ -1,5 +1,7 @@
 #pragma once
 
+#include "smart_cast.h"
+
 #define ANK_CONFIG_CC0(a, b) a##b
 #define ANK_CONFIG_CC1(a, b) ANK_CONFIG_CC0(a, b)
 #define ANK_CONFIG_PULL_VAR_NAME(func) ANK_CONFIG_CC1(config_pull, func)

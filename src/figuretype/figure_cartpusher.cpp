@@ -127,7 +127,7 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
                 break;
 
             case BUILDING_STORAGE_YARD:
-            case BUILDING_STORAGE_YARD_SPACE:
+            case BUILDING_STORAGE_ROOM:
                 for (int i = 0; i < times; i++) { // do one by one...
                     auto warehouse = dest->dcast_storage_yard();
                     int amount_refused = warehouse->add_resource(base.resource_id, amount_single_turn);
@@ -177,7 +177,7 @@ void figure_cartpusher::do_retrieve(int action_done) {
         building* dest = destination();
         switch (dest->type) {
         case BUILDING_STORAGE_YARD:
-        case BUILDING_STORAGE_YARD_SPACE: {
+        case BUILDING_STORAGE_ROOM: {
             int home_accepting_quantity= get_storage_accepting_amount(home(), (e_resource)base.collecting_item_id);
             int carry_amount_goal_max = fmin(100, home_accepting_quantity);
             int load_single_turn = 1;

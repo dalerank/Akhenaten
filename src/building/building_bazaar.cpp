@@ -70,7 +70,7 @@ static void update_food_resource(resource_data &data, int resource, const buildi
 static void update_good_resource(resource_data &data, e_resource resource, building &b, int distance) {
     building_storage_yard *warehouse = b.dcast_storage_yard();
 
-    if (!city_resource_is_stockpiled(resource) && warehouse->get_amount(resource) > 0) {
+    if (!city_resource_is_stockpiled(resource) && warehouse->amount(resource) > 0) {
         data.num_buildings++;
 
         if (distance < data.distance) {

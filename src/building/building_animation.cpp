@@ -55,7 +55,7 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
     case BUILDING_BURNING_RUIN:
         break;
 
-    case BUILDING_STORAGE_YARD_SPACE:
+    case BUILDING_STORAGE_ROOM:
         return 0;
         break;
 

@@ -716,7 +716,7 @@ bool building_is_industry(e_building_type type) {
         return true;
     if (type == BUILDING_DOCK || type == BUILDING_SHIPWRIGHT)
         return true;
-    if (type == BUILDING_STORAGE_YARD || type == BUILDING_STORAGE_YARD_SPACE)
+    if (type == BUILDING_STORAGE_YARD || type == BUILDING_STORAGE_ROOM)
         return true;
     return false;
 }

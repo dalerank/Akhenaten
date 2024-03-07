@@ -69,7 +69,7 @@ int building_storage_create(int building_type) {
                 int resource = list->items[r];
                 switch (building_type) {
                 case BUILDING_STORAGE_YARD:
-                case BUILDING_STORAGE_YARD_SPACE:
+                case BUILDING_STORAGE_ROOM:
                     if (resource < 9)
                         data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_REFUSE;
                     else

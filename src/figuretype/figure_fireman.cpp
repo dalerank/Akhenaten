@@ -266,7 +266,7 @@ bool figure_fireman::fight_fire() {
 }
 
 void prefect_coverage(building* b, figure *f, int &min_happiness_seen) {
-    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_YARD_SPACE)
+    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_ROOM)
         b = b->main();
 
     b->fire_risk = 0;

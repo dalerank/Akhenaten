@@ -220,8 +220,8 @@ bool figure_market_buyer::take_resource_from_storageyard(building* b) {
     default:
     return false;
     }
-    //    building *warehouse = building_get(warehouse);
-    int stored = warehouse->get_amount(resource);
+
+    int stored = warehouse->amount(resource);
     int num_loads = std::min<int>(stored, 200);
 
     if (num_loads <= 0) {

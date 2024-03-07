@@ -236,7 +236,7 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, e_terrain_usage 
         bool already_there = false;
 
         // correct road lookup for warehouse tiles range
-        if (dest->type == BUILDING_STORAGE_YARD || dest->type == BUILDING_STORAGE_YARD_SPACE) {
+        if (dest->type == BUILDING_STORAGE_YARD || dest->type == BUILDING_STORAGE_ROOM) {
             building* main = dest->main();
             if (terrainchoice == TERRAIN_USAGE_ROADS) {
                 found_road = map_closest_reachable_road_within_radius(main->tile, 3, 1, finish_tile);

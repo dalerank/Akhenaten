@@ -38,6 +38,10 @@
 #include <cmath>
 
 struct storage_yard_model : public buildings::model_t<BUILDING_STORAGE_YARD, building_storage_yard> {};
+struct storage_room_model : public buildings::model_t<BUILDING_STORAGE_ROOM, building_storage_yard> {};
+
+storage_yard_model storage_yard_m;
+storage_room_model storage_room_m;
 
 int get_storage_accepting_amount(building *b, e_resource resource) {
     const building_storage* s = building_storage_get(b->storage_id);
@@ -78,7 +82,7 @@ const building_storage *building_storage_yard::storage() {
     return building_storage_get(this->base.storage_id);
 }
 
-int building_storage_yard::get_amount(e_resource resource) {
+int building_storage_yard::amount(e_resource resource) {
     int total = 0;
     const building* space = &base;
     for (int i = 0; i < 8; i++) {
@@ -93,19 +97,16 @@ int building_storage_yard::get_amount(e_resource resource) {
     return total;
 }
 
-int building_storageyard_get_freespace(building* storageyard, e_resource resource) {
+int building_storage_yard::freespace(e_resource resource) {
     int freespace = 0;
-    building* space = storageyard;
-    for (int i = 0; i < 8; i++) {
-        space = space->next();
-        if (space->id <= 0)
-            return 0;
-
-        if (!space->subtype.warehouse_resource_id) {
+    building_storage_room* space = room();
+    while (space) {
+        if (!space->base.subtype.warehouse_resource_id) {
             freespace += 400;
-        } else if(space->subtype.warehouse_resource_id == resource) {
+        } else if(space->base.subtype.warehouse_resource_id == resource) {
             freespace += (400 - space->stored_full_amount);
         }
+        space = space->next_room();
     }
     return freespace;
 }
@@ -224,6 +225,15 @@ void building_storageyard_remove_resource_curse(building* b, int amount) {
     }
 }
 
+
+void building_storage_room::window_info_background(object_info &ctx) {
+    yard()->window_info_background(ctx);
+}
+
+void building_storage_room::window_info_foreground(object_info &ctx) {
+    yard()->window_info_foreground(ctx);
+}
+
 const building_storage *building_storage_room::storage() {
     return building_storage_get(base.storage_id);
 }
@@ -295,7 +305,7 @@ constexpr int QUARTER_WAREHOUSE = 800;
 bool building_storage_yard::is_accepting(e_resource resource) {
     const building_storage* s = building_storage_get(base.storage_id);
 
-    int amount = get_amount(resource);
+    int amount = this->amount(resource);
     bool accepting = (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT);
     bool fool_storage = (s->resource_max_accept[resource] == FULL_WAREHOUSE);
     bool threeq_storage = (s->resource_max_accept[resource] >= THREEQ_WAREHOUSE && amount < THREEQ_WAREHOUSE);
@@ -307,7 +317,7 @@ bool building_storage_yard::is_accepting(e_resource resource) {
 
 bool building_storage_yard::is_getting(e_resource resource) {
     const building_storage* s = building_storage_get(base.storage_id);
-    int amount = get_amount(resource);
+    int amount = this->amount(resource);
     if ((s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] == FULL_WAREHOUSE) 
         || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= THREEQ_WAREHOUSE && amount < THREEQ_WAREHOUSE / 100)
         || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= HALF_WAREHOUSE && amount < HALF_WAREHOUSE / 100)
@@ -799,7 +809,7 @@ storage_worker_task building_storage_yard_deliver_emptying_resources(building *b
             continue;
         }
 
-        int in_storage = warehouse->get_amount(r);
+        int in_storage = warehouse->amount(r);
         if (in_storage > 0) {
             return {STORAGEYARD_TASK_EMPTYING, nullptr, in_storage, r};
         }
@@ -984,7 +994,7 @@ void building_storage_yard::draw_warehouse(object_info* c) {
         painter ctx = game.painter();
         for (int i = 0; i < list->size; i++) {
             e_resource resource = list->items[i];
-            int loads = warehouse->get_amount(resource);
+            int loads = warehouse->amount(resource);
             if (loads) {
                 int amount = stack_proper_quantity(loads, resource);
                 int image_id = image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON);

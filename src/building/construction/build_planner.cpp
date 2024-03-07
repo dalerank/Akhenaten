@@ -412,7 +412,7 @@ static void add_entertainment_venue(building* b, int orientation) {
 }
 
 static building* add_storageyard_space(int x, int y, building* prev) {
-    building* b = building_create(BUILDING_STORAGE_YARD_SPACE, tile2i(x, y), 0);
+    building* b = building_create(BUILDING_STORAGE_ROOM, tile2i(x, y), 0);
     game_undo_add_building(b);
     b->prev_part_building_id = prev->id;
     prev->next_part_building_id = b->id;

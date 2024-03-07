@@ -1,6 +1,7 @@
 #include "water_supply.h"
 
 #include "building/building.h"
+#include "building/building_well.h"
 #include "building/list.h"
 #include "core/game_environment.h"
 #include "core/svector.h"
@@ -221,9 +222,9 @@ void map_update_canals(void) {
 void map_update_wells_range() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Wells Range Update");
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE);
-    buildings_valid_do([](building& b) {
-        map_terrain_add_with_radius(b.tile, 1, 3, TERRAIN_FOUNTAIN_RANGE);
-    }, BUILDING_WELL);
+    buildings_valid_do<building_well>([](building_well *b) {
+        map_terrain_add_with_radius(b->tile(), 1, 3, TERRAIN_FOUNTAIN_RANGE);
+    });
 }
 
 e_well_status map_water_supply_is_well_unnecessary(int well_id, int radius) {

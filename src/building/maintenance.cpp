@@ -297,7 +297,7 @@ void building_maintenance_check_kingdome_access() {
             } else {
                 b.has_road_access = map_get_road_access_tile(b.tile, 3, b.road_access);
             }
-        } else if (b.type == BUILDING_STORAGE_YARD_SPACE) {
+        } else if (b.type == BUILDING_STORAGE_ROOM) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/Storageyard Space");
             b.distance_from_entry = 0;
             building* main_building = b.main();

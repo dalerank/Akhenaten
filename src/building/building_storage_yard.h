@@ -15,13 +15,14 @@ public:
     virtual void spawn_figure() override;
     virtual void window_info_background(object_info &ctx) override;
     virtual void window_info_foreground(object_info &ctx) override;
+    virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
 
     virtual building_storage_yard *dcast_storage_yard() override { return this; }
     
     building_storage_room *room() { return next()->dcast_storage_room(); }
     const building_storage *storage();
 
-    int get_amount(e_resource resource);
+    int amount(e_resource resource);
     bool is_not_accepting(e_resource resource);
 
     int remove_resource(e_resource resource, int amount);
@@ -31,10 +32,10 @@ public:
     bool is_emptying(e_resource resource);
     bool get_permission(int p) const;
 
+    int freespace(e_resource resource);
     int accepting_amount(e_resource resource);
 
     int for_getting(e_resource resource, tile2i *dst);
-
     short &stored_full_amount;
 
 private:
@@ -51,10 +52,13 @@ public:
     building_storage_room(building &b) : building_impl(b), stored_full_amount(b.stored_full_amount) {}
 
     virtual building_storage_room *dcast_storage_room() { return this; }
-    building_storage_room *next_room() { return next()->dcast_storage_room(); }
-    building_storage_yard *yard() { return main()->dcast_storage_yard(); }
-    const building_storage *storage();
+    virtual void window_info_background(object_info &ctx) override;
+    virtual void window_info_foreground(object_info &ctx) override;
+    virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
 
+    const building_storage *storage();
+    building_storage_yard *yard() { return main()->dcast_storage_yard(); }
+    building_storage_room *next_room() { return next()->dcast_storage_room(); }
     void set_image(e_resource resource);
     void add_import(e_resource resource);
     bool is_this_space_the_best(tile2i tile, e_resource resource, int distance_from_entry);
@@ -86,8 +90,6 @@ struct storage_worker_task {
     e_resource resource = RESOURCE_NONE;
     building *dest = nullptr;
 };
-
-int building_storageyard_get_freespace(building* warehouse, e_resource resource);
 
 void building_storageyard_remove_resource_curse(building* warehouse, int amount);
 

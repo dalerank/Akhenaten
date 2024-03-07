@@ -366,7 +366,7 @@ static void init(map_point tile) {
             context.formation_id = b->formation_id;
             break;
 
-        case BUILDING_STORAGE_YARD_SPACE:
+        case BUILDING_STORAGE_ROOM:
         case BUILDING_SENET_HOUSE:
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:

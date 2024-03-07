@@ -8,9 +8,9 @@
 #include "graphics/image_groups.h"
 
 building* find_most_crime_building(figure *f) {
-    buildings_valid_do([] (building &b) {
-
-    });
+    //buildings_valid_do([] (building &b) {
+    //
+    //});
 
     return nullptr;
 }

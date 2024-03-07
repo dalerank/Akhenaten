@@ -143,10 +143,9 @@ int city_resource_ready_for_using(e_resource resource) {
     }
 
     int amount = 0;
-    buildings_valid_do([&] (building &b) {
-        building_storage_yard *warehouse = b.dcast_storage_yard();
-        amount += warehouse->get_amount(resource);
-    }, BUILDING_STORAGE_YARD);
+    buildings_valid_do<building_storage_yard>([&] (building_storage_yard *warehouse) {
+        amount += warehouse->amount(resource);
+    });
 
     return amount;
 }
@@ -206,7 +205,7 @@ void city_resource_calculate_storageyard_stocks() {
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_YARD_SPACE)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_ROOM)
             continue;
 
         building* warehouse = b->main();
@@ -386,16 +385,15 @@ void city_resource_consume_food() {
 void city_resource_add_items(e_resource res, int amount) {
     building_storage_yard* chosen_yard = nullptr;
     int lowest_stock_found = 10000;
-    buildings_valid_do([&] (building &b) {
-        auto warehouse = b.dcast_storage_yard();
-        int total_stored = warehouse->get_amount(res);
-        int free_space = building_storageyard_get_freespace(&b, res);
+    buildings_valid_do<building_storage_yard>([&] (building_storage_yard *warehouse) {
+        int total_stored = warehouse->amount(res);
+        int free_space = warehouse->freespace(res);
         
         if (free_space >= amount && total_stored < lowest_stock_found) {
             lowest_stock_found = total_stored;
             chosen_yard = warehouse;
         }
-    }, BUILDING_STORAGE_YARD);
+    });
 
     bool storage_found = false;
     int lowest_resource_found = 10000;
@@ -404,7 +402,7 @@ void city_resource_add_items(e_resource res, int amount) {
     }
 
     for (int i = 0; i < 6; ++i) {
-        int stored = chosen_yard->get_amount(res);
+        int stored = chosen_yard->amount(res);
         if (stored >= 0 && stored < lowest_resource_found) {
             lowest_resource_found = stored;
             storage_found = true;

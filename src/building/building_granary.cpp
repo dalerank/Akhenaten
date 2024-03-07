@@ -509,7 +509,7 @@ void building_granary_storageyard_curse(int big) {
         if (b->type == BUILDING_STORAGE_YARD) {
             building_storage_yard *warehouse = b->dcast_storage_yard();
             for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
-                total_stored += warehouse->get_amount(r);
+                total_stored += warehouse->amount(r);
             }
         } else if (b->type == BUILDING_GRANARY) {
             for (e_resource r = RESOURCE_FOOD_MIN; r < RESOURCES_FOODS_MAX; ++r) {

@@ -571,6 +571,19 @@ void buildings_valid_do(T func) {
     }
 }
 
+template<typename T, typename F>
+void buildings_valid_do(F func) {
+    for (auto &b: city_buildings()) {
+        if (!b.is_valid()) {
+            continue;
+        }
+        T *ptr = smart_cast<T*>(b.dcast());
+        if (ptr) {
+            func(ptr);
+        }
+    }
+}
+
 template<typename T>
 void buildings_valid_farms_do(T func) {
     for (auto &b: city_buildings()) {

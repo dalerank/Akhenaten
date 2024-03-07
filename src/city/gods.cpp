@@ -73,25 +73,23 @@ static bool PTAH_warehouse_restock() {
 
     building_storage_yard* chosen_yard = nullptr;
     int lowest_stock_found = 10000;
-    buildings_valid_do([&] (building &b) {
-        building_storage_yard *warehouse = b.dcast_storage_yard();
-
+    buildings_valid_do<building_storage_yard>([&] (building_storage_yard *warehouse) {
         int total_stored = 0;
         for (int j = 0; j < 6; ++j) {
-            total_stored += warehouse->get_amount(resources[j]);
+            total_stored += warehouse->amount(resources[j]);
         }
 
         if (total_stored > 0 && total_stored < lowest_stock_found) {
             lowest_stock_found = total_stored;
             chosen_yard = warehouse;
         }
-    }, BUILDING_STORAGE_YARD);
+    });
 
     e_resource chosen_resource = RESOURCE_NONE;
     int lowest_resource_found = 10000;
     if (lowest_stock_found > 0 && chosen_yard != nullptr) {
         for (int i = 0; i < 6; ++i) {
-            int stored = chosen_yard->get_amount(resources[i]);
+            int stored = chosen_yard->amount(resources[i]);
             if (stored > 0 && stored < lowest_resource_found) {
                 lowest_resource_found = stored;
                 chosen_resource = resources[i];
@@ -100,7 +98,7 @@ static bool PTAH_warehouse_restock() {
 
         if (chosen_resource > 0) {
             chosen_yard->add_resource(chosen_resource, 999999); // because I'm lazy.
-            bool was_added = (chosen_yard->get_amount(chosen_resource) == lowest_resource_found);
+            bool was_added = (chosen_yard->amount(chosen_resource) == lowest_resource_found);
             return !was_added;
         }
     }
@@ -160,7 +158,7 @@ static bool PTAH_warehouse_destruction() {
 
         int total_stored = 0;
         for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
-            total_stored += warehouse->get_amount(r);
+            total_stored += warehouse->amount(r);
         }
 
         if (total_stored > max_stored) {

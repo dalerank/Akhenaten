@@ -950,7 +950,7 @@ void building_figure_generate() {
     building_barracks_decay_tower_sentry_request();
     int max_id = building_get_highest_id();
     buildings_valid_do([] (building &b) {
-        if (b.type == BUILDING_STORAGE_YARD_SPACE || (b.type == BUILDING_SENET_HOUSE && b.prev_part_building_id)) {
+        if (b.type == BUILDING_STORAGE_ROOM || (b.type == BUILDING_SENET_HOUSE && b.prev_part_building_id)) {
             return;
         }
 
