@@ -10,8 +10,14 @@
 using class_obj_ptr = const uintptr_t*;
 using v_table_ptr = const uintptr_t*;
 
+#ifdef _MSC_VER
+#define FORCELINLINE __forceinline
+#else
+#define FORCELINLINE forceinline
+#endif
+
 template < typename T >
-__forceinline v_table_ptr smart_cast_get_vtable(const T* ptr) {
+FORCELINLINE v_table_ptr smart_cast_get_vtable(const T* ptr) {
     // __vftable is at [ptr + 0]
     return reinterpret_cast<v_table_ptr>(*reinterpret_cast<class_obj_ptr>(ptr));
 }
@@ -25,7 +31,7 @@ using clean_type_t = typename std::remove_cv_t<std::remove_reference_t<std::remo
 // Should be nothrow but this decreases performance. In practice this is not
 // an issue.
 template < typename _To, typename _From >
-__forceinline _To smart_cast(_From* ptr) {
+FORCELINLINE _To smart_cast(_From* ptr) {
     // Not required, dynamic_cast already produces a compile-time error in this case
     // static_assert(std::is_polymorphic<_From>::value, "Type is not polymorphic!");
 
@@ -56,7 +62,7 @@ __forceinline _To smart_cast(_From* ptr) {
 
 // const T*
 template < typename _To, typename _From >
-__forceinline const _To smart_cast(const _From* ptr) {
+FORCELINLINE const _To smart_cast(const _From* ptr) {
     _From* nonconst_ptr = const_cast<_From*>(ptr);
     _To casted_ptr = smart_cast<_To>(nonconst_ptr);
     return const_cast<const _To>(casted_ptr);
@@ -64,7 +70,7 @@ __forceinline const _To smart_cast(const _From* ptr) {
 
 // T&
 template < typename _To, typename _From, typename = std::enable_if_t<!std::is_same<clean_type_t<_To>, clean_type_t<_From&>>::value>>
-__forceinline _To smart_cast(_From& ref) {
+FORCELINLINE _To smart_cast(_From& ref) {
     using _ToPtr = std::add_pointer_t<std::remove_reference_t<_To>>;
     auto casted_ptr = smart_cast<_ToPtr>(&ref);
     assert(casted_ptr);
@@ -74,7 +80,7 @@ __forceinline _To smart_cast(_From& ref) {
 
 // const T&
 template < typename _To, typename _From, typename = std::enable_if_t<!std::is_same<clean_type_t<_To>, clean_type_t<_From&>>::value>>
-__forceinline _To fast_dynamic_cast(const _From& ref) {
+FORCELINLINE _To fast_dynamic_cast(const _From& ref) {
     using _ToPtr = std::add_pointer_t<std::remove_reference_t<_To>>;
     auto casted_ptr = smart_cast<_ToPtr>(const_cast<_From*>(&ref));
     assert(casted_ptr);
@@ -83,11 +89,11 @@ __forceinline _To fast_dynamic_cast(const _From& ref) {
 
 // std::dynamic_pointer_cast
 template < typename _To, typename _From >
-__forceinline std::shared_ptr<_To> smart_pointer_cast(const std::shared_ptr<_From>& ptr) {
+FORCELINLINE std::shared_ptr<_To> smart_pointer_cast(const std::shared_ptr<_From>& ptr) {
     // Do not use std::move, since this might actually prevent RVO on MSVC 2015 and upwards
     return std::shared_ptr<_To>(ptr, fast_dynamic_cast<_To*>(ptr.get()));
 }
 
 // T -> T
 template < typename _To >
-__forceinline _To smart_cast(_To ptr) { return ptr; }
+FORCELINLINE _To smart_cast(_To ptr) { return ptr; }
