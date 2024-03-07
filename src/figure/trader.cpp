@@ -4,6 +4,7 @@
 #include "empire/trade_prices.h"
 #include "building/storage.h"
 #include "building/building_storage_yard.h"
+#include "building/building_storage_room.h"
 #include "io/io_buffer.h"
 #include "empire/empire.h"
 #include "figure/figure.h"

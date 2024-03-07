@@ -6,6 +6,7 @@
 #include "building/storage.h"
 #include "building/building_type.h"
 #include "building/building_storage_yard.h"
+#include "building/building_storage_room.h"
 #include "building/monuments.h"
 #include "city/buildings.h"
 #include "city/resource.h"
@@ -247,7 +248,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
     building* warehouse = home();
     int understaffed_storages = 0;
 
-    base.destination_tile.set(0, 0);
+    destination_tile.set(0, 0);
     //    destination_tile.x() = 0;
     //    destination_tile.y() = 0;
 

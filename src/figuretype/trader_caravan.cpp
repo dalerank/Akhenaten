@@ -5,6 +5,7 @@
 
 #include "building/storage.h"
 #include "building/building_storage_yard.h"
+#include "building/building_storage_room.h"
 
 #include "empire/empire.h"
 #include "empire/trade_prices.h"

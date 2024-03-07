@@ -4,6 +4,7 @@
 #include "building/dock.h"
 #include "building/storage.h"
 #include "building/building_storage_yard.h"
+#include "building/building_storage_room.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/map.h"
