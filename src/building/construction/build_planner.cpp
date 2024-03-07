@@ -15,7 +15,7 @@
 #include "building/rotation.h"
 #include "building/storage.h"
 #include "building/building_statue.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/resource.h"
@@ -2004,7 +2004,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
     // consume resources for specific buildings (e.g. marble, granite)
     if (special_flags & PlannerFlags::Resources) {
-        building_storageyard_remove_resource((e_resource)additional_req_param1, additional_req_param2);
+        building_storageyards_remove_resource((e_resource)additional_req_param1, additional_req_param2);
     }
 
     // finally, go over the rest of the stuff for all building types

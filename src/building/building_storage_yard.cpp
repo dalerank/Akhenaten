@@ -1,4 +1,4 @@
-#include "storage_yard.h"
+#include "building_storage_yard.h"
 
 #include "building/building_barracks.h"
 #include "building/count.h"
@@ -37,10 +37,22 @@
 
 #include <cmath>
 
-int building_storageyard_get_space_info(building* storageyard) {
+struct storage_yard_model : public buildings::model_t<BUILDING_STORAGE_YARD, building_storage_yard> {};
+
+int get_storage_accepting_amount(building *b, e_resource resource) {
+    const building_storage* s = building_storage_get(b->storage_id);
+
+    switch (s->resource_state[resource]) {
+    case STORAGE_STATE_PHARAOH_ACCEPT: return s->resource_max_accept[resource];
+    case STORAGE_STATE_PHARAOH_GET: return s->resource_max_get[resource];
+    default: return 0;
+    }
+}
+
+int building_storage_yard::get_space_info() const {
     int total_amounts = 0;
     int empty_spaces = 0;
-    building* space = storageyard;
+    building* space = &base;
     for (int i = 0; i < 8; i++) {
         space = space->next();
         if (space->id <= 0) {
@@ -62,9 +74,13 @@ int building_storageyard_get_space_info(building* storageyard) {
         return STORAGEYARD_FULL;
 }
 
-int building_storageyard_get_amount(const building *storageyard, e_resource resource) {
+const building_storage *building_storage_yard::storage() {
+    return building_storage_get(this->base.storage_id);
+}
+
+int building_storage_yard::get_amount(e_resource resource) {
     int total = 0;
-    const building* space = storageyard;
+    const building* space = &base;
     for (int i = 0; i < 8; i++) {
         space = (const building*)space->next();
         if (space->id <= 0)
@@ -94,108 +110,105 @@ int building_storageyard_get_freespace(building* storageyard, e_resource resourc
     return freespace;
 }
 
-int building_storageyard_add_resource(building* b, e_resource resource, int amount) {
-    if (b->id <= 0)
-        return -1;
+int building_storage_yard::add_resource(e_resource resource, int amount) {
+    assert(id() > 0);
 
-    building* main = b->main();
-    if (building_storageyard_is_not_accepting(resource, main)) {
+    if (is_not_accepting(resource)) {
         return -1;
     }
 
     // check the initial provided space itself, first
     bool look_for_space = false;
-    if (b->subtype.warehouse_resource_id && b->subtype.warehouse_resource_id != resource)
+    if (base.subtype.warehouse_resource_id && base.subtype.warehouse_resource_id != resource)
         look_for_space = true;
-    else if (b->stored_full_amount >= 400)
+    else if (base.stored_full_amount >= 400)
         look_for_space = true;
-    else if (b->type == BUILDING_STORAGE_YARD)
+    else if (type() == BUILDING_STORAGE_YARD)
         look_for_space = true;
 
     // repeat until no space left... easier than calculating all amounts by hand.
     int amount_left = amount;
     int amount_last_turn = amount;
+    building_storage_room* space = room();
     while (amount_left > 0) {
         if (look_for_space) {
             bool space_found = false;
-            building* space = b->main();
-            for (int i = 0; i < 8; i++) {
-                space = space->next();
-                if (!space->id)
-                    return -1;
-                if (!space->subtype.warehouse_resource_id || space->subtype.warehouse_resource_id == resource) {
+            while (space) {
+                if (!space->base.subtype.warehouse_resource_id || space->base.subtype.warehouse_resource_id == resource) {
                     if (space->stored_full_amount < 400) {
                         space_found = true;
-                        b = space;
                         break;
                     }
                 }
+                space = space->next_room();
             }
-            if (!space_found)
+
+            if (!space_found) {
                 return -1; // no space found at all!
+            }
         }
+
         city_resource_add_to_storageyard(resource, 1);
-        b->subtype.warehouse_resource_id = resource;
-        int space_on_tile = 400 - b->stored_full_amount;
+        space->base.subtype.warehouse_resource_id = resource;
+        int space_on_tile = 400 - space->stored_full_amount;
         int unloading_amount = std::min<int>(space_on_tile, amount_left);
-        b->stored_full_amount += unloading_amount;
+        space->stored_full_amount += unloading_amount;
         space_on_tile -= unloading_amount;
         if (space_on_tile == 0) {
             look_for_space = true;
         }
         
-        building_storageyard_space_set_image(b, resource);
+        space->set_image(resource);
         amount_last_turn = amount_left;
         amount_left -= unloading_amount;
+
         if (amount_left == amount_last_turn)
             return amount_left;
     }
     return amount_left;
 }
 
-int building_storageyard_remove_resource(building* storageyard, e_resource resource, int amount) {
-    // returns amount still needing removal
-    if (storageyard->type != BUILDING_STORAGE_YARD)
-        return amount;
-
-    building* space = storageyard;
+int building_storage_yard::remove_resource(e_resource resource, int amount) {
+    building_storage_room* space = room();
     for (int i = 0; i < 8; i++) {
         if (amount <= 0)
             return 0;
 
-        space = space->next();
-        if (space->id <= 0)
+        space = space->next_room();
+        if (space->id() <= 0)
             continue;
 
-        if (space->subtype.warehouse_resource_id != resource || space->stored_full_amount <= 0)
+        if (space->base.subtype.warehouse_resource_id != resource || space->base.stored_full_amount <= 0)
             continue;
 
-        if (space->stored_full_amount > amount) {
+        if (space->base.stored_full_amount > amount) {
             city_resource_remove_from_storageyard(resource, amount);
-            space->stored_full_amount -= amount;
+            space->base.stored_full_amount -= amount;
             amount = 0;
 
         } else {
-            city_resource_remove_from_storageyard(resource, space->stored_full_amount);
-            amount -= space->stored_full_amount;
-            space->stored_full_amount = 0;
-            space->subtype.warehouse_resource_id = RESOURCE_NONE;
+            city_resource_remove_from_storageyard(resource, space->base.stored_full_amount);
+            amount -= space->base.stored_full_amount;
+            space->base.stored_full_amount = 0;
+            space->base.subtype.warehouse_resource_id = RESOURCE_NONE;
         }
-        building_storageyard_space_set_image(space, resource);
+        space->set_image(resource);
     }
     return amount;
 }
-void building_storageyard_remove_resource_curse(building* storageyard, int amount) {
-    if (storageyard->type != BUILDING_STORAGE_YARD)
+void building_storageyard_remove_resource_curse(building* b, int amount) {
+    building_storage_yard *warehouse = b->dcast_storage_yard();
+    if (!warehouse) {
         return;
-    building* space = storageyard;
-    for (int i = 0; i < 8 && amount > 0; i++) {
-        space = space->next();
-        if (space->id <= 0 || space->stored_full_amount <= 0) {
+    }
+    
+    building_storage_room* space = warehouse->room();
+    while(space && amount > 0) {
+        if (space->stored_full_amount <= 0) {
             continue;
         }
 
-        e_resource resource = space->subtype.warehouse_resource_id;
+        e_resource resource = space->base.subtype.warehouse_resource_id;
         if (space->stored_full_amount > amount) {
             city_resource_remove_from_storageyard(resource, amount);
             space->stored_full_amount -= amount;
@@ -204,60 +217,72 @@ void building_storageyard_remove_resource_curse(building* storageyard, int amoun
             city_resource_remove_from_storageyard(resource, space->stored_full_amount);
             amount -= space->stored_full_amount;
             space->stored_full_amount = 0;
-            space->subtype.warehouse_resource_id = RESOURCE_NONE;
+            space->base.subtype.warehouse_resource_id = RESOURCE_NONE;
         }
-        building_storageyard_space_set_image(space, resource);
+        space->set_image(resource);
+        space = space->next_room();
     }
 }
 
-void building_storageyard_space_set_image(building* space, e_resource resource) {
+const building_storage *building_storage_room::storage() {
+    return building_storage_get(base.storage_id);
+}
+
+void building_storage_room::set_image(e_resource resource) {
     int image_id;
-    if (space->stored_full_amount <= 0)
+    if (base.stored_full_amount <= 0) {
         image_id = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
-    else {
+    } else {
         image_id = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_FILLED) + 4 * (resource - 1)
-                   + resource_image_offset(resource, RESOURCE_IMAGE_STORAGE)
-                   + (int)ceil((float)space->stored_full_amount / 100.0f) - 1;
+                    + resource_image_offset(resource, RESOURCE_IMAGE_STORAGE)
+                    + (int)ceil((float)stored_full_amount / 100.0f) - 1;
     }
-    map_image_set(space->tile.grid_offset(), image_id);
+    map_image_set(tile(), image_id);
 }
 
-void building_storageyard_space_add_import(building* space, e_resource resource) {
+void building_storage_room::add_import(e_resource resource) {
     city_resource_add_to_storageyard(resource, 100);
-    space->stored_full_amount += 100;
-    space->subtype.warehouse_resource_id = resource;
+    stored_full_amount += 100;
+    base.subtype.warehouse_resource_id = resource;
 
     int price = trade_price_buy(resource);
     city_finance_process_import(price);
 
-    building_storageyard_space_set_image(space, resource);
+    set_image(resource);
 }
 
-void building_storageyard_space_remove_export(building* space, e_resource resource) {
+void building_storage_room::remove_export(e_resource resource) {
     city_resource_remove_from_storageyard(resource, 100);
-    space->stored_full_amount -= 100;
-    if (space->stored_full_amount <= 0) {
-        space->subtype.warehouse_resource_id = RESOURCE_NONE;
+    stored_full_amount -= 100;
+    if (stored_full_amount <= 0) {
+        base.subtype.warehouse_resource_id = RESOURCE_NONE;
     }
 
     int price = trade_price_sell(resource);
     city_finance_process_export(price);
 
-    building_storageyard_space_set_image(space, resource);
+    set_image(resource);
+}
+
+int building_storage_room::accepting_amount(e_resource resource) {
+    return get_storage_accepting_amount(&base, resource);
 }
 
 void building_storageyards_add_resource(e_resource resource, int amount) {
     int building_id = city_resource_last_used_storageyard();
+
     for (int i = 1; i < MAX_BUILDINGS && amount > 0; i++) {
         building_id++;
-        if (building_id >= MAX_BUILDINGS)
+        if (building_id >= MAX_BUILDINGS) {
             building_id = 1;
+        }
 
-        building* b = building_get(building_id);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_STORAGE_YARD) {
+        auto warehouse = building_get(building_id)->dcast_storage_yard();
+        if (warehouse && warehouse->is_valid()) {
             city_resource_set_last_used_storageyard(building_id);
-            while (amount && building_storageyard_add_resource(b, resource, 100))
+            while (amount && warehouse->add_resource(resource, 100)) {
                 amount--;
+            }
         }
     }
 }
@@ -267,9 +292,10 @@ constexpr int THREEQ_WAREHOUSE = 2400;
 constexpr int HALF_WAREHOUSE = 1600;
 constexpr int QUARTER_WAREHOUSE = 800;
 
-bool building_storageyard_is_accepting(e_resource resource, building* b) {
-    const building_storage* s = building_storage_get(b->storage_id);
-    int amount = building_storageyard_get_amount(b, resource);
+bool building_storage_yard::is_accepting(e_resource resource) {
+    const building_storage* s = building_storage_get(base.storage_id);
+
+    int amount = get_amount(resource);
     bool accepting = (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT);
     bool fool_storage = (s->resource_max_accept[resource] == FULL_WAREHOUSE);
     bool threeq_storage = (s->resource_max_accept[resource] >= THREEQ_WAREHOUSE && amount < THREEQ_WAREHOUSE);
@@ -279,9 +305,9 @@ bool building_storageyard_is_accepting(e_resource resource, building* b) {
     return (accepting && (fool_storage || threeq_storage || half_storage || quart_storage));
 }
 
-bool building_storageyard_is_getting(e_resource resource, building* b) {
-    const building_storage* s = building_storage_get(b->storage_id);
-    int amount = building_storageyard_get_amount(b, resource);
+bool building_storage_yard::is_getting(e_resource resource) {
+    const building_storage* s = building_storage_get(base.storage_id);
+    int amount = get_amount(resource);
     if ((s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] == FULL_WAREHOUSE) 
         || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= THREEQ_WAREHOUSE && amount < THREEQ_WAREHOUSE / 100)
         || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= HALF_WAREHOUSE && amount < HALF_WAREHOUSE / 100)
@@ -292,67 +318,64 @@ bool building_storageyard_is_getting(e_resource resource, building* b) {
     }
 }
 
-bool building_storageyard_is_emptying(e_resource resource, building* b) {
-    const building_storage* s = building_storage_get(b->storage_id);
+bool building_storage_yard::is_emptying(e_resource resource) {
+    const building_storage* s = building_storage_get(base.storage_id);
     return (s->resource_state[resource] == STORAGE_STATE_PHARAOH_EMPTY);
 }
 
-bool building_storageyard_is_gettable(e_resource resource, building* b) {
-    const building_storage* s = building_storage_get(b->storage_id);
+bool building_storage_yard::get_permission(int p) const {
+    return building_storage_get_permission(p, &base); 
+}
+
+int building_storage_yard::accepting_amount(e_resource resource) {
+    return get_storage_accepting_amount(&base, resource);
+}
+
+bool building_storage_yard::is_gettable(e_resource resource) {
+    const building_storage* s = building_storage_get(base.storage_id);
     return (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET);
 }
 
-bool building_storageyard_is_not_accepting(e_resource resource, building* b) {
-    return !((building_storageyard_is_accepting(resource, b) || building_storageyard_is_getting(resource, b)));
+bool building_storage_yard::is_not_accepting(e_resource resource) {
+    return !((is_accepting(resource) || is_getting(resource)));
 }
 
-int building_storageyard_get_accepting_amount(e_resource resource, building* b) {
-    const building_storage* s = building_storage_get(b->main()->storage_id);
-    switch (s->resource_state[resource]) {
-    case STORAGE_STATE_PHARAOH_ACCEPT:
-        return s->resource_max_accept[resource];
-        break;
-    case STORAGE_STATE_PHARAOH_GET:
-        return s->resource_max_get[resource];
-        break;
-    default:
-        return 0;
-    }
-}
-
-static int storageyard_is_this_space_the_best(building* space, tile2i tile, e_resource resource, int distance_from_entry) {
-    building* b = space->main();
+bool building_storage_room::is_this_space_the_best(tile2i tile, e_resource resource, int distance_from_entry) {
+    building_storage_yard* warehouse = yard();
 
     // check storage settings first
-    if (building_storageyard_is_not_accepting(resource, b))
+    if (warehouse->is_not_accepting(resource)) {
         return 0;
+    }
 
     // check for spaces that already has some of the resource, first
-    building* check = b;
-    while (check->next_part_building_id) {
-        check = check->next();
-        if (check->subtype.warehouse_resource_id == resource && check->stored_full_amount < 400) {
-            if (check == space)
-                return calc_distance_with_penalty(space->tile, tile, distance_from_entry, space->distance_from_entry);
+    building_storage_room *check = warehouse->room();
+    while (check) {
+        if (check->base.subtype.warehouse_resource_id == resource && check->base.stored_full_amount < 400) {
+            if (check == this)
+                return calc_distance_with_penalty(this->tile(), tile, distance_from_entry, this->base.distance_from_entry);
             else
-                return 0;
+                return false;
         }
+        check = check->next_room();
     }
+
     // second pass, return the first
-    check = b;
-    while (check->next_part_building_id) {
-        check = check->next();
-        if (check->subtype.warehouse_resource_id == RESOURCE_NONE) { // empty warehouse space
-            if (check == space)
-                return calc_distance_with_penalty(space->tile, tile, distance_from_entry, space->distance_from_entry);
-            else
-                return 0;
+    check = warehouse->room();
+    while (check) {
+        if (check->base.subtype.warehouse_resource_id == RESOURCE_NONE) { // empty warehouse space
+            if (check == this) {
+                return calc_distance_with_penalty(this->tile(), tile, distance_from_entry, this->base.distance_from_entry);
+            } else {
+                return false;
+            }
         }
+        check = check->next_room();
     }
     return 0;
 }
 
-int building_storageyard_remove_resource(e_resource resource, int amount) {
+int building_storageyards_remove_resource(e_resource resource, int amount) {
     int amount_left = amount;
     int building_id = city_resource_last_used_storageyard();
     // first go for non-getting warehouses
@@ -362,11 +385,11 @@ int building_storageyard_remove_resource(e_resource resource, int amount) {
             building_id = 1;
         }
 
-        building* b = building_get(building_id);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_STORAGE_YARD) {
-            if (!building_storageyard_is_getting(resource, b)) {
+        building_storage_yard *warehouse = building_get(building_id)->dcast_storage_yard();
+        if (warehouse && warehouse->is_valid()) {
+            if (!warehouse->is_getting(resource)) {
                 city_resource_set_last_used_storageyard(building_id);
-                amount_left = building_storageyard_remove_resource(b, resource, amount_left);
+                amount_left = warehouse->remove_resource(resource, amount_left);
             }
         }
     }
@@ -377,44 +400,46 @@ int building_storageyard_remove_resource(e_resource resource, int amount) {
             building_id = 1;
         }
 
-        building* b = building_get(building_id);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_STORAGE_YARD) {
+        building_storage_yard* warehouse = building_get(building_id)->dcast_storage_yard();
+        if (warehouse && warehouse->is_valid()) {
             city_resource_set_last_used_storageyard(building_id);
-            amount_left = building_storageyard_remove_resource(b, resource, amount_left);
+            amount_left = warehouse->remove_resource(resource, amount_left);
         }
     }
     return amount - amount_left;
 }
 
-int building_storageyard_for_storing(building* src, map_point tile, e_resource resource, int distance_from_entry, int road_network_id, int* understaffed, map_point* dst) {
+int building_storage_yard_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int* understaffed, tile2i* dst) {
     int min_dist = 10000;
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_YARD_SPACE)
+        building_storage_room* room = building_get(i)->dcast_storage_room();
+        if (!room || !room->is_valid()) {
+            continue;
+        }
+
+        if (!room->has_road_access() || room->base.distance_from_entry <= 0 || room->road_network() != road_network_id)
             continue;
 
-        if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id)
-            continue;
-
-        building* dest = b->main();
+        building_storage_yard* warehouse = room->yard();
         //        if (src == dest)
         //            continue;
 
-        const building_storage* s = building_storage_get(dest->storage_id);
-        if (building_storageyard_is_not_accepting(resource, dest) || s->empty_all) {
+        const building_storage* s = warehouse->storage();
+        if (warehouse->is_not_accepting(resource) || s->empty_all) {
             continue;
         }
 
         if (!config_get(CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS)) {
-            int pct_workers = calc_percentage<int>(dest->num_workers, model_get_building(dest->type)->laborers);
+            int pct_workers = calc_percentage<int>(warehouse->num_workers(), model_get_building(warehouse->type())->laborers);
             if (pct_workers < 100) {
                 if (understaffed)
                     *understaffed += 1;
                 continue;
             }
         }
-        int dist = storageyard_is_this_space_the_best(b, tile, resource, distance_from_entry);
+
+        int dist = room->is_this_space_the_best(tile, resource, distance_from_entry);
         if (dist > 0 && dist < min_dist) {
             min_dist = dist;
             min_building_id = i;
@@ -431,33 +456,37 @@ int building_storageyard_for_storing(building* src, map_point tile, e_resource r
 
     return min_building_id;
 }
-int building_storageyard_for_getting(building* src, e_resource resource, tile2i* dst) {
+
+int building_storage_yard::for_getting(e_resource resource, tile2i* dst) {
     int min_dist = 10000;
     building* min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_YARD)
+        building_storage_yard *other_warehouse = building_get(i)->dcast_storage_yard();
+        if (other_warehouse && other_warehouse->is_valid()) {
             continue;
+        }
 
-        if (i == src->id)
+        if (i == id()) {
             continue;
+        }
 
         int amounts_stored = 0;
-        building* space = b;
-        const building_storage* s = building_storage_get(b->storage_id);
-        for (int t = 0; t < 8; t++) {
-            space = space->next();
-            if (space->id > 0 && space->stored_full_amount > 0) {
-                if (space->subtype.warehouse_resource_id == resource)
+        building_storage_room* space = other_warehouse->room();
+        const building_storage* s = space->storage();
+        while (space) {
+            if (space->stored_full_amount > 0) {
+                if (space->base.subtype.warehouse_resource_id == resource)
                     amounts_stored += space->stored_full_amount;
             }
+            space = space->next_room();
         }
-        if (amounts_stored > 0 && !building_storageyard_is_gettable(resource, b)) {
-            int dist = calc_distance_with_penalty(b->tile, src->tile, src->distance_from_entry, b->distance_from_entry);
+
+        if (amounts_stored > 0 && !other_warehouse->is_gettable(resource)) {
+            int dist = calc_distance_with_penalty(other_warehouse->tile(), tile(), base.distance_from_entry, other_warehouse->base.distance_from_entry);
             dist -= 4 * (amounts_stored / 100);
             if (dist < min_dist) {
                 min_dist = dist;
-                min_building = b;
+                min_building = &other_warehouse->base;
             }
         }
     }
@@ -554,36 +583,34 @@ static int contains_non_stockpiled_food(building* space, const int* resources) {
     return 0;
 }
 
-storage_worker_task building_storageyard_determine_getting_up_resources(building* warehouse) {
-    building* space = nullptr;
+storage_worker_task building_storage_yard_determine_getting_up_resources(building* b) {
+    building_storage_yard* warehouse = b->dcast_storage_yard();
     for (e_resource check_resource = RESOURCE_MIN; check_resource < RESOURCES_MAX; ++check_resource) {
-        if (!building_storageyard_is_getting(check_resource, warehouse) || city_resource_is_stockpiled(check_resource)) {
+        if (!warehouse->is_getting(check_resource) || city_resource_is_stockpiled(check_resource)) {
             continue;
         }
 
         int total_stored = 0; // total amounts of resource in warehouse!
         int room = 0;         // total potential room for resource!
-        space = warehouse;
-        for (int i = 0; i < 8; i++) {
-            space = space->next();
-            if (space->id > 0) {
-                if (space->stored_full_amount <= 0) { // this space (tile) is empty! FREE REAL ESTATE
-                    room += 4;
-                }
-
-                if (space->subtype.warehouse_resource_id == check_resource) { // found a space (tile) with resource on it!
-                    total_stored += space->stored_full_amount;   // add loads to total, if any!
-                    room += 400 - space->stored_full_amount;     // add room to total, if any!
-                }
+        auto space = warehouse->room();
+        while (space) {
+            if (space->stored_full_amount <= 0) { // this space (tile) is empty! FREE REAL ESTATE
+                room += 4;
             }
+
+            if (space->base.subtype.warehouse_resource_id == check_resource) { // found a space (tile) with resource on it!
+                total_stored += space->stored_full_amount;   // add loads to total, if any!
+                room += 400 - space->stored_full_amount;     // add room to total, if any!
+            }
+            space = space->next_room();
         }
 
-        int requesting = building_storageyard_get_accepting_amount(check_resource, warehouse);
+        int requesting = warehouse->accepting_amount(check_resource);
         int lacking = requesting - total_stored;
 
         // determine if there's enough room for more to accept, depending on "get up to..." settings!
         if (room >= 0 && lacking > 0 && city_resource_count(check_resource) - total_stored > 0) {
-            if (!building_storageyard_for_getting(warehouse, check_resource, 0)) { // any other place contain this resource..?
+            if (!warehouse->for_getting(check_resource, 0)) { // any other place contain this resource..?
                 continue;
             }
 
@@ -591,7 +618,7 @@ storage_worker_task building_storageyard_determine_getting_up_resources(building
             e_storageyard_task status = lacking > requesting / 2
                                             ? STORAGEYARD_TASK_GETTING_MOAR
                                             : STORAGEYARD_TASK_GETTING;
-            return {status, space, lacking, check_resource};
+            return {status, &space->base, lacking, check_resource};
         }
     }
 
@@ -761,18 +788,20 @@ storage_worker_task building_storageyard_deliver_to_monuments(building *warehous
     return {STORAGEYARD_TASK_NONE};
 }
 
-storage_worker_task building_storageyard_deliver_emptying_resources(building *warehouse) {
-    building *space = warehouse;
+storage_worker_task building_storage_yard_deliver_emptying_resources(building *b) {
+    building_storage_yard *warehouse = b->dcast_storage_yard();
+    if (!warehouse) {
+        return {STORAGEYARD_TASK_NONE};
+    }
 
     for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
-        if (!building_storageyard_is_emptying(r, warehouse)) {
+        if (!warehouse->is_emptying(r)) {
             continue;
         }
 
-        int in_storage = building_storageyard_get_amount(warehouse, r);
+        int in_storage = warehouse->get_amount(r);
         if (in_storage > 0) {
-            int amount = building_storageyard_get_amount(warehouse, r);
-            return {STORAGEYARD_TASK_EMPTYING, nullptr, amount, r};
+            return {STORAGEYARD_TASK_EMPTYING, nullptr, in_storage, r};
         }
     }
 
@@ -788,13 +817,13 @@ storage_worker_task building_storageyard_determine_worker_task(building* warehou
 
     using action_type = decltype(building_storageyard_deliver_weapons);
     action_type *actions[] = {
-        &building_storageyard_determine_getting_up_resources,       // getting up resources
+        &building_storage_yard_determine_getting_up_resources,       // getting up resources
         &building_storageyard_deliver_weapons,                      // deliver weapons to barracks
         &building_storageyard_deliver_resource_to_workshop,         // deliver raw materials to workshops
         &building_storageyard_deliver_papyrus_to_scribal_school,    // deliver raw materials to workshops
         &building_storageyard_deliver_food_to_gettingup_granary,    // deliver food to getting granary
         &building_storageyard_deliver_food_to_accepting_granary,    // deliver food to accepting granary
-        &building_storageyard_deliver_emptying_resources,           // emptying resource
+        &building_storage_yard_deliver_emptying_resources,           // emptying resource
         &building_storageyard_deliver_to_monuments,                 // monuments resource
     };
 
@@ -859,7 +888,7 @@ void building_storage_yard::spawn_figure() {
         sled->set_direction_to(task.dest);
         sled->load_resource(task.resource, task.amount);
         sled->base.leading_figure_id = leader->id;
-        building_storageyard_remove_resource(&base, task.resource, task.amount);
+        remove_resource(task.resource, task.amount);
 
     } else if (!base.has_figure(BUILDING_SLOT_SERVICE)) {
         figure* f = figure_create(FIGURE_STORAGEYARD_CART, base.road_access, DIR_4_BOTTOM_LEFT);
@@ -878,7 +907,7 @@ void building_storage_yard::spawn_figure() {
         case STORAGEYARD_TASK_EMPTYING:
             task.amount = std::min<int>(task.amount, 400);
             cart->load_resource(task.resource, task.amount);
-            building_storageyard_remove_resource(&base, task.resource, task.amount);
+            remove_resource(task.resource, task.amount);
             break;
         }
         base.set_figure(0, f->id);
@@ -908,14 +937,19 @@ void building_storage_yard::draw_warehouse_orders(object_info* c) {
 }
 
 void building_storage_yard::draw_warehouse(object_info* c) {
+    building_storage_yard* warehouse = building_get(c->building_id)->dcast_storage_yard();
+    if (!warehouse) {
+        return;
+    }
+
     auto &data = g_window_building_distribution;
+    data.building_id = c->building_id;
+
     c->help_id = 4;
     window_building_play_sound(c, "wavs/warehouse.wav");
     outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(99, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    building* b = building_get(c->building_id);
     painter ctx = game.painter();
-    data.building_id = c->building_id;
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
     }
@@ -950,7 +984,7 @@ void building_storage_yard::draw_warehouse(object_info* c) {
         painter ctx = game.painter();
         for (int i = 0; i < list->size; i++) {
             e_resource resource = list->items[i];
-            int loads = building_storageyard_get_amount(b, resource);
+            int loads = warehouse->get_amount(resource);
             if (loads) {
                 int amount = stack_proper_quantity(loads, resource);
                 int image_id = image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
@@ -969,13 +1003,14 @@ void building_storage_yard::draw_warehouse(object_info* c) {
     }
     inner_panel_draw(c->offset.x + 16, c->offset.y + 168, c->width_blocks - 2, 5);
     window_building_draw_employment(c, 173);
+
     // cartpusher state
-    figure* cartpusher = b->get_figure(0);
+    figure* cartpusher = warehouse->get_figure(BUILDING_SLOT_SERVICE);
     if (cartpusher->state == FIGURE_STATE_ALIVE) {
         int resource = cartpusher->get_resource();
         ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->offset.x + 32, c->offset.y + 220);
         lang_text_draw_multiline(99, 17, c->offset + vec2i{64, 223}, 16 * (c->width_blocks - 6), FONT_NORMAL_BLACK_ON_DARK);
-    } else if (b->num_workers) {
+    } else if (warehouse->num_workers()) {
         // cartpusher is waiting for orders
         lang_text_draw_multiline(99, 15, c->offset + vec2i{32, 223}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
     }
@@ -1005,9 +1040,7 @@ void building_storage_yard::draw_warehouse_orders_foreground(object_info* c) {
     int y_offset = window_building_get_vertical_offset(c, 28 + 5);
     int line_x = c->offset.x + 215;
 
-    int storage_id = building_get(c->building_id)->storage_id;
-    backup_storage_settings(storage_id);
-    const building_storage* storage = building_storage_get(storage_id);
+    backup_storage_settings(base.storage_id);
     const resources_list* list = city_resource_get_available();
     painter ctx = game.painter();
     for (int i = 0; i < list->size; i++) {
@@ -1022,10 +1055,10 @@ void building_storage_yard::draw_warehouse_orders_foreground(object_info* c) {
         }
 
         // order status
-        window_building_draw_order_instruction(INSTR_STORAGE_YARD, storage, resource, line_x, y_offset + 51 + line_y);
+        window_building_draw_order_instruction(INSTR_STORAGE_YARD, storage(), resource, line_x, y_offset + 51 + line_y);
 
         // arrows
-        int state = storage->resource_state[resource];
+        int state = storage()->resource_state[resource];
         if (state == STORAGE_STATE_PHARAOH_ACCEPT || state == STORAGE_STATE_PHARAOH_GET) {
             image_buttons_draw(c->offset.x + 165, y_offset + 49, data.orders_decrease_arrows.data(), 1, i);
             image_buttons_draw(c->offset.x + 165 + 18, y_offset + 49, data.orders_increase_arrows.data(), 1, i);
@@ -1034,7 +1067,7 @@ void building_storage_yard::draw_warehouse_orders_foreground(object_info* c) {
 
     // emptying button
     button_border_draw(c->offset.x + 80, y_offset + 404 + 5 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 1 ? 1 : 0);
-    if (storage->empty_all) {
+    if (storage()->empty_all) {
         lang_text_draw_centered(99, 5, c->offset.x + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
         lang_text_draw_centered(99, 4, c->offset.x + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);

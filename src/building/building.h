@@ -23,6 +23,8 @@
 class figure;
 class io_buffer;
 class building;
+class building_storage_yard;
+class building_storage_room;
 struct object_info;
 struct painter;
 struct mouse;
@@ -322,6 +324,8 @@ public:
 public:
     building_impl *dcast();
     building_farm *dcast_farm();
+    building_storage_yard *dcast_storage_yard();
+    building_storage_room *dcast_storage_room();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -387,8 +391,12 @@ public:
     virtual int get_fire_risk(int value) const { return value; }
     virtual std::pair<int, int> get_tooltip() const { return {-1, -1}; }
 
-    virtual building_farm *dcast_farm() { return 0; }
+    virtual building_farm *dcast_farm() { return nullptr; }
+    virtual building_storage_yard *dcast_storage_yard() { return nullptr; }
+    virtual building_storage_room *dcast_storage_room() { return nullptr; }
 
+    inline building_impl *next() { return base.next()->dcast(); }
+    inline building_impl *main() { return base.main()->dcast(); }
     inline bool is_main() { return base.is_main(); }
     inline bool is_valid() const { return base.is_valid(); }
     inline e_building_state state() const { return base.state; }
@@ -402,6 +410,7 @@ public:
     inline figure *create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE) { return base.create_figure_with_destination(_type, destination, created_action, slot); }
     inline const model_building *model() const { return model_get_building(type()); }
     inline figure *create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, e_building_slot slot = BUILDING_SLOT_CARTPUSHER) { return base.create_cartpusher(resource_id, quantity, created_action, slot); }
+    inline figure *get_figure(int slot) { return base.get_figure(slot); }
     
     inline int id() const { return base.id; }
     inline tile2i tile() const { return base.tile; }
@@ -412,6 +421,8 @@ public:
     inline e_building_type type() const { return base.type; }
     inline int figure_spawn_timer() const { return base.figure_spawn_timer(); }
     inline int num_workers() const { return base.num_workers; }
+    inline bool has_road_access() const { return base.has_road_access; }
+    inline int road_network() const { return base.road_network_id; }
 
     virtual bool is_workshop() const { return false; }
     virtual bool is_administration() const { return false; }

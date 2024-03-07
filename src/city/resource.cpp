@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "building/industry.h"
 #include "building/model.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "city/data_private.h"
 #include "core/calc.h"
 #include "core/profiler.h"
@@ -138,13 +138,14 @@ int city_resource_is_stockpiled(e_resource resource) {
 }
 
 int city_resource_ready_for_using(e_resource resource) {
+    if (city_resource_is_stockpiled(resource)) {
+        return 0;
+    }
+
     int amount = 0;
     buildings_valid_do([&] (building &b) {
-        if (city_resource_is_stockpiled(resource)) {
-            return;
-        }
-
-        amount += building_storageyard_get_amount(&b, resource);
+        building_storage_yard *warehouse = b.dcast_storage_yard();
+        amount += warehouse->get_amount(resource);
     }, BUILDING_STORAGE_YARD);
 
     return amount;
@@ -383,15 +384,16 @@ void city_resource_consume_food() {
 }
 
 void city_resource_add_items(e_resource res, int amount) {
-    building* chosen_yard = nullptr;
+    building_storage_yard* chosen_yard = nullptr;
     int lowest_stock_found = 10000;
     buildings_valid_do([&] (building &b) {
-        int total_stored = building_storageyard_get_amount(&b, res);
+        auto warehouse = b.dcast_storage_yard();
+        int total_stored = warehouse->get_amount(res);
         int free_space = building_storageyard_get_freespace(&b, res);
         
         if (free_space >= amount && total_stored < lowest_stock_found) {
             lowest_stock_found = total_stored;
-            chosen_yard = &b;
+            chosen_yard = warehouse;
         }
     }, BUILDING_STORAGE_YARD);
 
@@ -402,7 +404,7 @@ void city_resource_add_items(e_resource res, int amount) {
     }
 
     for (int i = 0; i < 6; ++i) {
-        int stored = building_storageyard_get_amount(chosen_yard, res);
+        int stored = chosen_yard->get_amount(res);
         if (stored >= 0 && stored < lowest_resource_found) {
             lowest_resource_found = stored;
             storage_found = true;
@@ -410,6 +412,6 @@ void city_resource_add_items(e_resource res, int amount) {
     }
 
     if (storage_found) {
-        building_storageyard_add_resource(chosen_yard, res, amount); // because I'm lazy.
+        chosen_yard->add_resource(res, amount); // because I'm lazy.
     }
 }

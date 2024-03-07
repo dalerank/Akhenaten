@@ -1,7 +1,7 @@
 #include "festival.h"
 
 #include "building/building_type.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "buildings.h"
 #include "city/constants.h"
 #include "city/data_private.h"
@@ -75,7 +75,7 @@ void city_festival_schedule(void) {
     city_finance_process_requests_and_festivals(cost);
 
     if (city_data.festival.selected.size == FESTIVAL_GRAND) {
-        building_storageyard_remove_resource(RESOURCE_BEER, city_data.festival.grand_alcohol);
+        building_storageyards_remove_resource(RESOURCE_BEER, city_data.festival.grand_alcohol);
     }
 }
 

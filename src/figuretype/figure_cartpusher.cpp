@@ -5,7 +5,7 @@
 #include "building/industry.h"
 #include "building/storage.h"
 #include "building/building_type.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "building/monuments.h"
 #include "city/buildings.h"
 #include "city/resource.h"
@@ -72,24 +72,29 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
         if (resource == RESOURCE_NONE || carrying <= 0) {
             base.progress_inside_speed = 0;
             return advance_action(action_done);
+
         } else {
             building* dest = destination();
 
             int accepting = 0;
-            switch (dest->type) {
-            case BUILDING_STORAGE_YARD:
-            case BUILDING_STORAGE_YARD_SPACE:
-                accepting = building_storageyard_get_accepting_amount(base.resource_id, dest);
-                break;
-            default:
-                accepting = 200 - dest->stored_amount(resource);
-                //                    accepting = stack_proper_quantity(2 - dest->loads_stored, resource);
-                break;
+            auto warehouse = destination()->dcast_storage_yard();
+            if (warehouse) {
+                accepting = warehouse->accepting_amount(base.resource_id);
             }
 
-            int total_depositable = fmin(carrying, accepting);
-            if (total_depositable <= 0)
+            auto warehouse_room = destination()->dcast_storage_room();
+            if (warehouse_room) {
+                accepting = warehouse_room->accepting_amount(base.resource_id);
+            }
+
+            if (!accepting) {
+                accepting = 200 - dest->stored_amount(resource);
+            }
+
+            int total_depositable = std::min<int>(carrying, accepting);
+            if (total_depositable <= 0) {
                 return advance_action(ACTION_8_RECALCULATE);
+            }
 
             int max_single_turn = 100;
             if (true) // TODO: more than 100 at once?????
@@ -124,7 +129,8 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
             case BUILDING_STORAGE_YARD:
             case BUILDING_STORAGE_YARD_SPACE:
                 for (int i = 0; i < times; i++) { // do one by one...
-                    int amount_refused = building_storageyard_add_resource(dest, base.resource_id, amount_single_turn);
+                    auto warehouse = dest->dcast_storage_yard();
+                    int amount_refused = warehouse->add_resource(base.resource_id, amount_single_turn);
                     if (amount_refused != -1) {
                         dump_resource(amount_single_turn - amount_refused);
                     } else {
@@ -172,9 +178,14 @@ void figure_cartpusher::do_retrieve(int action_done) {
         switch (dest->type) {
         case BUILDING_STORAGE_YARD:
         case BUILDING_STORAGE_YARD_SPACE: {
-            int home_accepting_quantity= building_storageyard_get_accepting_amount((e_resource)base.collecting_item_id, home());
+            int home_accepting_quantity= get_storage_accepting_amount(home(), (e_resource)base.collecting_item_id);
             int carry_amount_goal_max = fmin(100, home_accepting_quantity);
             int load_single_turn = 1;
+            building_storage_yard *warehouse = dest->dcast_storage_yard();
+            if (!warehouse) {
+                building_storage_room *room = dest->dcast_storage_room();
+                warehouse = room->yard();
+            }
 
             if (true) // TODO: multiple loads setting?????
                 carry_amount_goal_max = fmin(400, home_accepting_quantity);
@@ -185,7 +196,7 @@ void figure_cartpusher::do_retrieve(int action_done) {
             // grab goods, quantity & max load changed by above settings;
             // if load is finished, go back home - otherwise, recalculate
             if (base.get_carrying_amount() < carry_amount_goal_max) {
-                if (building_storageyard_remove_resource(destination(), (e_resource)base.collecting_item_id, load_single_turn) == 0) {
+                if (warehouse->remove_resource((e_resource)base.collecting_item_id, load_single_turn) == 0) {
                     load_resource((e_resource)base.collecting_item_id, load_single_turn * 100);
                     if (base.get_carrying_amount() >= carry_amount_goal_max) {
                         advance_action(action_done);
@@ -256,8 +267,8 @@ void figure_cartpusher::determine_deliveryman_destination() {
     }
 
     // priority 1: warehouse if resource is on stockpile
-    int warehouse_id = building_storageyard_for_storing(0, tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, &dst);
-    set_destination(warehouse_id);
+    int stockpile_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, &dst);
+    set_destination(stockpile_id);
     if (!city_resource_is_stockpiled(base.resource_id)) {
         set_destination(0);
     }
@@ -295,7 +306,8 @@ void figure_cartpusher::determine_deliveryman_destination() {
     }
 
     // priority 4: warehouse
-    set_destination(building_storageyard_for_storing(0, tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, &dst));
+    int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, &dst);
+    set_destination(warehouse_id);
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE);
     }
@@ -351,8 +363,10 @@ void figure_cartpusher::determine_granaryman_destination() {
         building_granary_remove_resource(granary, base.resource_id, 100);
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
+
     // priority 2: warehouse
-    set_destination(building_storageyard_for_storing(0, tile(), base.resource_id, granary->distance_from_entry, road_network_id, 0, &dst));
+    int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, granary->distance_from_entry, road_network_id, 0, &dst);
+    set_destination(warehouse_id);
     if (has_destination()) {
         building_granary_remove_resource(granary, base.resource_id, 100);
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
@@ -373,7 +387,11 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
     ////// getting resources!
     if (!base.resource_id) {
         tile2i dst;
-        set_destination(building_storageyard_for_getting(home(), (e_resource)base.collecting_item_id, &dst));
+        building_storage_yard *warhouse = home()->dcast_storage_yard();
+        int building_id = warhouse
+                            ? warhouse->for_getting((e_resource)base.collecting_item_id, &dst)
+                            : 0;
+        set_destination(building_id);
         if (has_destination()) {
             advance_action(FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE);
             base.terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
@@ -435,8 +453,8 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
 
     // priority 6: resource to other warehouse
     tile2i dest;
-    int building_id = building_storageyard_for_storing(home(), tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, &dest);
-    set_destination(building_id);
+    int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, &dest);
+    set_destination(warehouse_id);
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }

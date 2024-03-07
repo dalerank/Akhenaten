@@ -8,7 +8,7 @@
 #include "building/industry.h"
 #include "building/building_bazaar.h"
 #include "building/model.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "building/count.h"
 #include "building/monument_mastaba.h"
 #include "building/building_work_camp.h"

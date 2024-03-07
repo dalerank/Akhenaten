@@ -3,7 +3,7 @@
 #include "building/destruction.h"
 #include "building/model.h"
 #include "building/storage.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "city/message.h"
 #include "city/resource.h"
 #include "core/calc.h"
@@ -507,8 +507,9 @@ void building_granary_storageyard_curse(int big) {
 
         int total_stored = 0;
         if (b->type == BUILDING_STORAGE_YARD) {
+            building_storage_yard *warehouse = b->dcast_storage_yard();
             for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
-                total_stored += building_storageyard_get_amount(b, r);
+                total_stored += warehouse->get_amount(r);
             }
         } else if (b->type == BUILDING_GRANARY) {
             for (e_resource r = RESOURCE_FOOD_MIN; r < RESOURCES_FOODS_MAX; ++r) {

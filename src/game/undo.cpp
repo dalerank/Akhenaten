@@ -3,7 +3,7 @@
 #include "building/industry.h"
 #include "building/properties.h"
 #include "building/storage.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "city/finance.h"
 #include "game/resource.h"
 #include "graphics/image.h"

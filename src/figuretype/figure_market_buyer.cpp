@@ -5,7 +5,7 @@
 #include "building/building_granary.h"
 #include "building/storage.h"
 #include "core/log.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
@@ -193,36 +193,42 @@ void distribute_market_resources(building* b, building* market) {
 }
 
 
-bool figure_market_buyer::take_resource_from_storageyard(building* warehouse) {
+bool figure_market_buyer::take_resource_from_storageyard(building* b) {
+    building_storage_yard *warehouse = b->dcast_storage_yard();
+    if (!warehouse) {
+        return false;
+    }
+
     e_resource resource;
     switch (base.collecting_item_id) {
     case INVENTORY_GOOD1:
-    resource = RESOURCE_POTTERY;
-    break;
+        resource = RESOURCE_POTTERY;
+        break;
 
     case INVENTORY_GOOD2:
-    resource = RESOURCE_LUXURY_GOODS;
-    break;
+        resource = RESOURCE_LUXURY_GOODS;
+        break;
+
     case INVENTORY_GOOD3:
-    resource = RESOURCE_LINEN;
-    break;
+        resource = RESOURCE_LINEN;
+        break;
 
     case INVENTORY_GOOD4:
-    resource = RESOURCE_BEER;
-    break;
+        resource = RESOURCE_BEER;
+        break;
 
     default:
     return false;
     }
     //    building *warehouse = building_get(warehouse);
-    int stored = building_storageyard_get_amount(warehouse, resource);
+    int stored = warehouse->get_amount(resource);
     int num_loads = std::min<int>(stored, 200);
 
     if (num_loads <= 0) {
         return false;
     }
 
-    building_storageyard_remove_resource(warehouse, resource, num_loads);
+    warehouse->remove_resource(resource, num_loads);
 
     // create delivery boys
     int boy1 = create_delivery_boy(id());

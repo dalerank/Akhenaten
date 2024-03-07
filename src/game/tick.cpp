@@ -14,7 +14,7 @@
 #include "building/house_service.h"
 #include "building/industry.h"
 #include "building/maintenance.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "city/coverage.h"
 #include "city/emperor.h"
 #include "city/festival.h"

@@ -1,6 +1,6 @@
 #include "request.h"
 
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/population.h"
@@ -92,6 +92,7 @@ void scenario_request_process_C3(void) {
         }
     }
 }
+
 void scenario_request_dispatch(int id) {
     if (g_scenario_data.requests[id].state == REQUEST_STATE_NORMAL)
         g_scenario_data.requests[id].state = REQUEST_STATE_DISPATCHED;
@@ -105,9 +106,9 @@ void scenario_request_dispatch(int id) {
         city_finance_process_requests_and_festivals(amount);
     } else if (g_scenario_data.requests[id].resource == RESOURCE_TROOPS) {
         city_population_remove_for_troop_request(amount);
-        building_storageyard_remove_resource(RESOURCE_WEAPONS, amount);
+        building_storageyards_remove_resource(RESOURCE_WEAPONS, amount);
     } else {
-        building_storageyard_remove_resource(g_scenario_data.requests[id].resource, amount);
+        building_storageyards_remove_resource(g_scenario_data.requests[id].resource, amount);
     }
 }
 

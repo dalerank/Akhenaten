@@ -2,7 +2,7 @@
 
 #include "building/building.h"
 #include "building/storage.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "city/buildings.h"
 #include "city/trade.h"
 #include "core/calc.h"
@@ -21,62 +21,62 @@
 #include "grid/road_access.h"
 #include "figuretype/figure_trader_ship.h"
 
-static bool try_import_resource(building* warehouse, e_resource resource, int city_id) {
-    if (warehouse->type != BUILDING_STORAGE_YARD)
+static bool try_import_resource(building* b, e_resource resource, int city_id) {
+    building_storage_yard *warehouse = b->dcast_storage_yard();
+    if (warehouse) {
         return false;
+    }
 
-    if (building_storageyard_is_not_accepting(resource, warehouse))
+    if (warehouse->is_not_accepting(resource)) {
         return false;
+    }
 
-    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse))
+    if (!warehouse->get_permission(BUILDING_STORAGE_PERMISSION_DOCK)) {
         return false;
+    }
 
     int route_id = empire_city_get_route_id(city_id);
     // try existing storage bay with the same resource
-    building* space = warehouse;
-    for (int i = 0; i < 8; i++) {
-        space = space->next();
-        if (space->id > 0) {
-            if (space->stored_full_amount && space->stored_full_amount < 400 && space->subtype.warehouse_resource_id == resource) {
-                trade_route_increase_traded(route_id, resource, 100);
-                building_storageyard_space_add_import(space, resource);
-                return true;
-            }
+    building_storage_room* space = warehouse->room();
+    while (space) {
+        if (space->base.stored_full_amount && space->base.stored_full_amount < 400 && space->base.subtype.warehouse_resource_id == resource) {
+            trade_route_increase_traded(route_id, resource, 100);
+            space->add_import(resource);
+            return true;
         }
+        space = space->next_room();
     }
     // try unused storage bay
-    space = warehouse;
-    for (int i = 0; i < 8; i++) {
-        space = space->next();
-        if (space->id > 0) {
-            if (space->subtype.warehouse_resource_id == RESOURCE_NONE) {
-                trade_route_increase_traded(route_id, resource, 100);
-                building_storageyard_space_add_import(space, resource);
-                return true;
-            }
+    space = warehouse->room();
+    while (space) {
+        if (space->base.subtype.warehouse_resource_id == RESOURCE_NONE) {
+            trade_route_increase_traded(route_id, resource, 100);
+            space->add_import(resource);
+            return true;
         }
+        space = space->next_room();
     }
     return false;
 }
 
-static int try_export_resource(building* warehouse, e_resource resource, int city_id) {
-    //    building *warehouse = building_get(b);
-    if (warehouse->type != BUILDING_STORAGE_YARD)
+static int try_export_resource(building* b, e_resource resource, int city_id) {
+    building_storage_yard *warehouse = b->dcast_storage_yard();
+    if (!warehouse) {
         return 0;
+    }
 
-    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse))
+    if (!warehouse->get_permission(BUILDING_STORAGE_PERMISSION_DOCK)) {
         return 0;
+    }
 
-    building* space = warehouse;
-    for (int i = 0; i < 8; i++) {
-        space = space->next();
-        if (space->id > 0) {
-            if (space->stored_full_amount && space->subtype.warehouse_resource_id == resource) {
-                trade_route_increase_traded(empire_city_get_route_id(city_id), resource, 100);
-                building_storageyard_space_remove_export(space, resource);
-                return 1;
-            }
+    building_storage_room* space = warehouse->room();
+    while (space) {
+        if (space->stored_full_amount && space->base.subtype.warehouse_resource_id == resource) {
+            trade_route_increase_traded(empire_city_get_route_id(city_id), resource, 100);
+            space->remove_export(resource);
+            return 1;
         }
+        space = space->next_room();
     }
     return 0;
 }
@@ -98,33 +98,35 @@ static int get_closest_warehouse_for_import(vec2i pos, int city_id, int distance
     int min_distance = 10000;
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_YARD)
+        building_storage_yard* warehouse = building_get(i)->dcast_storage_yard();
+        if (!warehouse || warehouse->is_valid())
             continue;
 
-        if (!b->has_road_access || b->distance_from_entry <= 0)
+        if (!warehouse->has_road_access() || warehouse->base.distance_from_entry <= 0)
             continue;
 
-        if (b->road_network_id != road_network_id)
+        if (warehouse->road_network() != road_network_id)
             continue;
 
-        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, b))
+        if (!warehouse->get_permission(BUILDING_STORAGE_PERMISSION_DOCK))
             continue;
 
-        const building_storage* storage = building_storage_get(b->storage_id);
-        if (!building_storageyard_is_not_accepting(resource, b) && !storage->empty_all) {
+        const building_storage* storage = warehouse->storage();
+        if (!warehouse->is_not_accepting(resource) && !storage->empty_all) {
             int distance_penalty = 32;
-            building* space = b;
-            for (int s = 0; s < 8; s++) {
-                space = space->next();
-                if (space->id && space->subtype.warehouse_resource_id == RESOURCE_NONE)
+            building_storage_room* space = warehouse->room();
+            while (space) {
+                if (space->base.subtype.warehouse_resource_id == RESOURCE_NONE)
                     distance_penalty -= 8;
 
-                if (space->id && space->subtype.warehouse_resource_id == resource && space->stored_full_amount < 400)
+                if (space->base.subtype.warehouse_resource_id == resource && space->stored_full_amount < 400)
                     distance_penalty -= 4;
+
+                space = space->next_room();
             }
+
             if (distance_penalty < 32) {
-                int distance = calc_distance_with_penalty(b->tile, pos, distance_from_entry, b->distance_from_entry);
+                int distance = calc_distance_with_penalty(warehouse->tile(), pos, distance_from_entry, warehouse->base.distance_from_entry);
                 // prefer emptier warehouse
                 distance += distance_penalty;
                 if (distance < min_distance) {

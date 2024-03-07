@@ -6,7 +6,7 @@
 #include "building/building.h"
 #include "building/building_bazaar.h"
 #include "building/storage.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "city/buildings.h"
 #include "city/resource.h"
 #include "figure/figure.h"

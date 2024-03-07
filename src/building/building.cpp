@@ -20,7 +20,6 @@
 #include "building/building_jugler_school.h"
 #include "building/building_raw_material.h"
 #include "building/building_physician.h"
-#include "building/storage_yard.h"
 #include "building/building_brewery.h"
 #include "building/monument_mastaba.h"
 #include "building/building_bandstand.h"
@@ -283,7 +282,6 @@ building_impl *building::dcast() {
     case BUILDING_WORK_CAMP: _ptr = new building_work_camp(*this); break;
     case BUILDING_BAZAAR: _ptr = new building_bazaar(*this); break;
     case BUILDING_FIREHOUSE: _ptr = new building_firehouse(*this); break;
-    case BUILDING_STORAGE_YARD: _ptr = new building_storage_yard(*this); break;
     case BUILDING_BRICKLAYERS_GUILD: _ptr = new building_bricklayers_guild(*this); break;
     case BUILDING_ARCHITECT_POST: _ptr = new building_architect_post(*this); break;
     case BUILDING_BANDSTAND: _ptr = new building_bandstand(*this); break;
@@ -361,9 +359,9 @@ building_impl *building::dcast() {
     return _ptr;
 }
 
-building_farm *building::dcast_farm() {
-    return dcast()->dcast_farm();
-}
+building_farm *building::dcast_farm() { return dcast()->dcast_farm(); }
+building_storage_yard *building::dcast_storage_yard() { return dcast()->dcast_storage_yard(); }
+building_storage_room *building::dcast_storage_room() { return dcast()->dcast_storage_room(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

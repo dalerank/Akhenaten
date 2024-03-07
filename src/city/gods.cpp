@@ -4,7 +4,7 @@
 #include "building/destruction.h"
 #include "building/building_granary.h"
 #include "building/industry.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "city/coverage.h"
 #include "city/data_private.h"
 #include "city/health.h"
@@ -71,17 +71,19 @@ static bool PTAH_warehouse_restock() {
     // fill warehouses with gems, clay, pottery, flax, linen, or jewelry
     e_resource resources[6] = {RESOURCE_GEMS, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
 
-    building* chosen_yard = nullptr;
+    building_storage_yard* chosen_yard = nullptr;
     int lowest_stock_found = 10000;
     buildings_valid_do([&] (building &b) {
+        building_storage_yard *warehouse = b.dcast_storage_yard();
+
         int total_stored = 0;
         for (int j = 0; j < 6; ++j) {
-            total_stored += building_storageyard_get_amount(&b, resources[j]);
+            total_stored += warehouse->get_amount(resources[j]);
         }
 
         if (total_stored > 0 && total_stored < lowest_stock_found) {
             lowest_stock_found = total_stored;
-            chosen_yard = &b;
+            chosen_yard = warehouse;
         }
     }, BUILDING_STORAGE_YARD);
 
@@ -89,7 +91,7 @@ static bool PTAH_warehouse_restock() {
     int lowest_resource_found = 10000;
     if (lowest_stock_found > 0 && chosen_yard != nullptr) {
         for (int i = 0; i < 6; ++i) {
-            int stored = building_storageyard_get_amount(chosen_yard, resources[i]);
+            int stored = chosen_yard->get_amount(resources[i]);
             if (stored > 0 && stored < lowest_resource_found) {
                 lowest_resource_found = stored;
                 chosen_resource = resources[i];
@@ -97,8 +99,8 @@ static bool PTAH_warehouse_restock() {
         }
 
         if (chosen_resource > 0) {
-            building_storageyard_add_resource(chosen_yard, chosen_resource, 999999); // because I'm lazy.
-            bool was_added = building_storageyard_get_amount(chosen_yard, chosen_resource) == lowest_resource_found;
+            chosen_yard->add_resource(chosen_resource, 999999); // because I'm lazy.
+            bool was_added = (chosen_yard->get_amount(chosen_resource) == lowest_resource_found);
             return !was_added;
         }
     }
@@ -145,29 +147,34 @@ static bool PTAH_industry_restock() {
     }
     return false;
 }
+
 static bool PTAH_warehouse_destruction() {
     // destroy the "best" warehouse found (most stocked up)
     int max_stored = 0;
-    building* max_building = nullptr;
+    building_storage_yard* max_building = nullptr;
+
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_YARD)
+        building_storage_yard *warehouse = building_get(i)->dcast_storage_yard();
+        if (!warehouse || !warehouse->is_valid())
             continue;
 
         int total_stored = 0;
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1))
-            total_stored += building_storageyard_get_amount(b, r);
+        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
+            total_stored += warehouse->get_amount(r);
+        }
 
         if (total_stored > max_stored) {
             max_stored = total_stored;
-            max_building = b;
+            max_building = warehouse;
         }
     }
-    if (max_building == nullptr)
+
+    if (max_building == nullptr) {
         return false;
+    }
     //    city_message_disable_sound_for_next_message();
     //    city_message_post(false, MESSAGE_FIRE, max_building->type, max_building->tile.grid_offset());
-    building_destroy_by_fire(max_building);
+    building_destroy_by_fire(&max_building->base);
     map_routing_update_land();
     return true;
 }

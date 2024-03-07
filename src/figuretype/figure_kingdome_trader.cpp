@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "building/dock.h"
 #include "building/storage.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/map.h"
@@ -93,60 +93,62 @@ int figure::get_closest_storageyard(tile2i tile, int city_id, int distance_from_
     int min_distance = 10000;
     building* min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_YARD) {
+        building_storage_yard* warehouse = building_get(i)->dcast_storage_yard();
+        if (!warehouse || !warehouse->is_valid()) {
             continue;
         }
 
-        if (!b->has_road_access || b->distance_from_entry <= 0) {
+        if (!warehouse->has_road_access() || warehouse->base.distance_from_entry <= 0) {
             continue;
         }
 
-        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_TRADERS, b)) {
+        if (!warehouse->get_permission(BUILDING_STORAGE_PERMISSION_TRADERS)) {
             continue;
         }
 
-        const building_storage* s = building_storage_get(b->storage_id);
+        const building_storage* s = warehouse->storage();
         int num_imports_for_warehouse = 0;
         for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
-            if (!building_storageyard_is_not_accepting(r, b) && empire_can_import_resource_from_city(city_id, r)) {
+            if (!warehouse->is_not_accepting(r) && empire_can_import_resource_from_city(city_id, r)) {
                 num_imports_for_warehouse++;
             }
         }
         int distance_penalty = 32;
-        building* space = b;
-        for (int space_cnt = 0; space_cnt < 8; space_cnt++) {
-            space = space->next();
-            if (space->id && exportable[space->subtype.warehouse_resource_id])
+        building_storage_room* space = warehouse->room();
+        while (space) {
+            if (exportable[space->base.subtype.warehouse_resource_id])
                 distance_penalty -= 4;
 
             if (num_importable && num_imports_for_warehouse && !s->empty_all) {
                 for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
-                    if (!building_storageyard_is_not_accepting(city_trade_next_caravan_import_resource(), b))
+                    if (!warehouse->is_not_accepting(city_trade_next_caravan_import_resource()))
                         break;
                 }
+
                 e_resource resource = city_trade_current_caravan_import_resource();
-                if (!building_storageyard_is_not_accepting(resource, b)) {
-                    if (space->subtype.warehouse_resource_id == RESOURCE_NONE)
+                if (!warehouse->is_not_accepting(resource)) {
+                    if (space->base.subtype.warehouse_resource_id == RESOURCE_NONE)
                         distance_penalty -= 16;
 
-                    if (space->id && importable[space->subtype.warehouse_resource_id] && space->stored_full_amount < 400
-                        && space->subtype.warehouse_resource_id == resource) {
+                    if (importable[space->base.subtype.warehouse_resource_id] && space->stored_full_amount < 400
+                        && space->base.subtype.warehouse_resource_id == resource) {
                         distance_penalty -= 8;
                     }
                 }
             }
+            space = space->next_room();
         }
 
         if (distance_penalty < 32) {
-            int distance = calc_distance_with_penalty(b->tile, tile, distance_from_entry, b->distance_from_entry);
+            int distance = calc_distance_with_penalty(warehouse->tile(), tile, distance_from_entry, warehouse->base.distance_from_entry);
             distance += distance_penalty;
             if (distance < min_distance) {
                 min_distance = distance;
-                min_building = b;
+                min_building = &warehouse->base;
             }
         }
     }
+
     if (!min_building)
         return 0;
 

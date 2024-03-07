@@ -3,7 +3,7 @@
 #include "figure/figure.h"
 #include "building/storage.h"
 #include "building/building_type.h"
-#include "building/storage_yard.h"
+#include "building/building_storage_yard.h"
 #include "graphics/elements/ui.h"
 #include "city/resource.h"
 #include "core/calc.h"
@@ -67,8 +67,10 @@ static void update_food_resource(resource_data &data, int resource, const buildi
     }
 }
 
-static void update_good_resource(resource_data &data, e_resource resource, const building &b, int distance) {
-    if (!city_resource_is_stockpiled(resource) && building_storageyard_get_amount(&b, resource) > 0) {
+static void update_good_resource(resource_data &data, e_resource resource, building &b, int distance) {
+    building_storage_yard *warehouse = b.dcast_storage_yard();
+
+    if (!city_resource_is_stockpiled(resource) && warehouse->get_amount(resource) > 0) {
         data.num_buildings++;
 
         if (distance < data.distance) {
