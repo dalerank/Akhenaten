@@ -39,7 +39,7 @@
 #include <cmath>
 
 struct storage_yard_model : public buildings::model_t<BUILDING_STORAGE_YARD, building_storage_yard> {};
-storage_yard_model storage_yard_m;
+storage_yard_model storage_yard_m{"building_storage_yard"};
 
 int get_storage_accepting_amount(building *b, e_resource resource) {
     const building_storage* s = building_storage_get(b->storage_id);

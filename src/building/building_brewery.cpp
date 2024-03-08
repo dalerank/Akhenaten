@@ -3,7 +3,7 @@
 #include "building/building_workshop.h"
 
 struct brewery_model : public buildings::model_t<BUILDING_BREWERY_WORKSHOP, building_brewery> {};
-brewery_model brewery_m;
+brewery_model brewery_m{"building_brewery"};
 
 void building_brewery::on_create() {
     data.industry.first_material_id = RESOURCE_BARLEY;

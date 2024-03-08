@@ -14,7 +14,7 @@
 #include "sound/sound_building.h"
 
 struct work_camp_model : public buildings::model_t<BUILDING_WORK_CAMP, building_work_camp> {};
-work_camp_model work_camp_m;
+work_camp_model work_camp_m{"building_work_camp"};
 
 void building_work_camp::window_info_background(object_info &c) {
     const int32_t group_id = 179;

@@ -109,7 +109,7 @@ images = [
 	{img: IMG_HOUSE_HOMESTEAD, pack:PACK_GENERAL, id:29, offset:0},
 	{img: IMG_HOUSE_APARTMENT, pack:PACK_GENERAL, id:30, offset:0},
 	{img: IMG_POTTERY_WORKSHOP, pack:PACK_GENERAL, id:125, offset:0},
-	{img: IMG_BEER_WORKSHOP, pack:PACK_GENERAL, id:116, offset:0},
+	{img: ANIM_BREWERY_WORKSHOP, pack:PACK_GENERAL, id:116, offset:0},
 	{img: IMG_SMALL_MASTABA, pack:PACK_MASTABA, id:2, offset:7},
 	{img: IMG_BAZAAR, pack:PACK_GENERAL, id:22, offset:0},
 	{img: IMG_BAZAAR_FANCY, pack:PACK_GENERAL, id:23, offset:0},

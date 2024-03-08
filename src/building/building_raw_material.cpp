@@ -21,23 +21,10 @@
 
 #include "graphics/animation.h"
 
-template<e_building_type E, typename T>
-struct raw_building_model : public raw_building_params, public buildings::model_t<E, T> {
-    void load() {
-        g_config_arch.r_section(name, [this] (archive arch) {
-            labor_category = arch.r_type<e_labor_category>("labor_category");
-            output_resource = arch.r_type<e_resource>("output_resource");
-            meta_id = arch.r_string("meta_id");
-            anim.load(arch);
-            city_labor_set_category(*this);
-        });
-    }
-};
-
-raw_building_model<BUILDING_CLAY_PIT, building_clay_pit> clay_pit_m{"building_clay_pit"};
-raw_building_model<BUILDING_GOLD_MINE, building_mine_gold> gold_mine_m{"building_gold_mine"};
-raw_building_model<BUILDING_GEMSTONE_MINE, building_mine_gems> gems_mine_m{"building_gems_mine"};
-raw_building_model<BUILDING_COPPER_MINE, building_mine_copper> copper_mine_m{"building_copper_mine"};
+buildings::model_t<BUILDING_CLAY_PIT, building_clay_pit> clay_pit_m{"building_clay_pit"};
+buildings::model_t<BUILDING_GOLD_MINE, building_mine_gold> gold_mine_m{"building_gold_mine"};
+buildings::model_t<BUILDING_GEMSTONE_MINE, building_mine_gems> gems_mine_m{"building_gems_mine"};
+buildings::model_t<BUILDING_COPPER_MINE, building_mine_copper> copper_mine_m{"building_copper_mine"};
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_raw_materials);
 void config_load_building_raw_materials() {
@@ -128,13 +115,13 @@ int building_mine_gold::get_produce_uptick_per_day() const {
     }
 }
 
-const raw_building_params &building_mine_gold::params() const { return gold_mine_m; }
+const building_impl::static_params &building_mine_gold::params() const { return gold_mine_m; }
 const animation_t &building_mine_gold::anim(pcstr key) const { return gold_mine_m.anim[key]; }
 
-const raw_building_params &building_mine_copper::params() const { return copper_mine_m; }
+const building_impl::static_params &building_mine_copper::params() const { return copper_mine_m; }
 const animation_t &building_mine_copper::anim(pcstr key) const { return copper_mine_m.anim[key]; }
 
-const raw_building_params &building_mine_gems::params() const { return gems_mine_m; }
+const building_impl::static_params &building_mine_gems::params() const { return gems_mine_m; }
 const animation_t &building_mine_gems::anim(pcstr key) const { return gems_mine_m.anim[key]; }
 
 void building_quarry_stone::on_create() {

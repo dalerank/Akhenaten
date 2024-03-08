@@ -56,11 +56,14 @@
 #include "menu.h"
 #include "monuments.h"
 #include "overlays/city_overlay.h"
+#include "city/labor.h"
 
 #include <string.h>
 
 building g_all_buildings[5000];
 std::span<building> g_city_buildings = make_span(g_all_buildings);
+
+building_impl::static_params building_impl::static_params::dummy;
 
 std::span<building>& city_buildings() {
     return g_city_buildings;
@@ -967,6 +970,13 @@ bool resource_required_by_workshop(building* b, e_resource resource) {
     }
     return false;
 }
+
+void building_impl::static_params::load(archive arch) {
+    labor_category = arch.r_type<e_labor_category>("labor_category");
+    output_resource = arch.r_type<e_resource>("output_resource");
+    meta_id = arch.r_string("meta_id");
+}
+
 
 // void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever) {
 

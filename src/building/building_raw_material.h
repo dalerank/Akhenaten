@@ -10,13 +10,6 @@ void building_reed_gatherer_draw_info(object_info& c);
 void building_sandstone_quarry_draw_info(object_info &c);
 void building_granite_quarry_draw_info(object_info &c);
 
-struct raw_building_params {
-    pcstr name;
-    bstring64 meta_id;
-    e_resource output_resource;
-    e_labor_category labor_category;
-};
-
 class building_clay_pit : public building_impl {
 public:
     building_clay_pit(building &b) : building_impl(b) {}
@@ -31,7 +24,6 @@ class building_mine : public building_impl {
 public:
     building_mine(building &b) : building_impl(b) {}
     virtual void on_create() override;
-    virtual const raw_building_params &params() const = 0;
     virtual const animation_t &anim(pcstr key) const = 0;
     virtual void window_info_background(object_info &c) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
@@ -40,7 +32,7 @@ public:
 class building_mine_gold : public building_mine {
 public:
     building_mine_gold(building &b) : building_mine(b) {}
-    virtual const raw_building_params &params() const override;
+    virtual const static_params &params() const override;
     virtual const animation_t &anim(pcstr key) const override;
     virtual int get_produce_uptick_per_day() const override;
 };
@@ -48,7 +40,7 @@ public:
 class building_mine_gems : public building_mine {
 public:
     building_mine_gems(building &b) : building_mine(b) {}
-    virtual const raw_building_params &params() const override;
+    virtual const static_params &params() const override;
     virtual const animation_t &anim(pcstr key) const override;
     virtual int get_produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 3) : 0; }
 };
@@ -64,7 +56,7 @@ public:
 class building_mine_copper : public building_mine {
 public:
     building_mine_copper(building &b) : building_mine(b) {}
-    virtual const raw_building_params &params() const override;
+    virtual const static_params &params() const override;
     virtual const animation_t &anim(pcstr key) const override;
     virtual int get_produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 2) : 0; }
 };

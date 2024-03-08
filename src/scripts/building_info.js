@@ -167,6 +167,12 @@ building_clay_pit = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
+building_brewery = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: ANIM_BREWERY_WORKSHOP }
+  }
+}
+
 building_copper_mine = {
   animations : {
     work : { pos : [54, 15], anim_id: ANIM_GOLD_MINE, max_frames: 16 }

@@ -126,13 +126,13 @@ void building_temple::spawn_figure() {
 }
 
 bool building_temple::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const animation_t &anim = params().anim["work"];
+    const animation_t &anim = temple_params().anim["work"];
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;
 }
 
-const model::building_temple_t &building_temple::params() const {
+const model::building_temple_t &building_temple::temple_params() const {
     switch (type()) {
     case BUILDING_TEMPLE_OSIRIS: return model::temple_osiris;
     case BUILDING_TEMPLE_RA: return model::temple_ra;

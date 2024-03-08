@@ -29,14 +29,14 @@
 template<e_building_type E>
 struct farm_model : public buildings::model_t<E, building_farm> {};
 
-farm_model<BUILDING_GRAIN_FARM> farm_grain_m;
-farm_model<BUILDING_LETTUCE_FARM> farm_lettuce_m;
-farm_model<BUILDING_CHICKPEAS_FARM> farm_chickpeas_m;
-farm_model<BUILDING_POMEGRANATES_FARM> farm_pomegranates_m;
-farm_model<BUILDING_BARLEY_FARM> farm_barley_m;
-farm_model<BUILDING_FLAX_FARM> farm_flax_m;
-farm_model<BUILDING_HENNA_FARM> farm_henna_m;
-farm_model<BUILDING_FIGS_FARM> farm_figs_m;
+farm_model<BUILDING_GRAIN_FARM> farm_grain_m{"building_farm_grain"};
+farm_model<BUILDING_LETTUCE_FARM> farm_lettuce_m{"building_farm_lettuce"};
+farm_model<BUILDING_CHICKPEAS_FARM> farm_chickpeas_m{"building_farm_chickpeas"};
+farm_model<BUILDING_POMEGRANATES_FARM> farm_pomegranates_m{"building_farm_pomegranates"};
+farm_model<BUILDING_BARLEY_FARM> farm_barley_m{"building_farm_barley"};
+farm_model<BUILDING_FLAX_FARM> farm_flax_m{"building_farm_flax"};
+farm_model<BUILDING_HENNA_FARM> farm_henna_m{"building_farm_henna"};
+farm_model<BUILDING_FIGS_FARM> farm_figs_m{"building_farm_figs"};
 
 static void building_farm_draw_info(object_info &c, const char* type, e_resource resource) {
     painter ctx = game.painter();

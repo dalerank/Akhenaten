@@ -373,12 +373,23 @@ public:
 
 class building_impl {
 public:
+    struct static_params {
+        pcstr name;
+        bstring64 meta_id;
+        e_resource output_resource;
+        e_labor_category labor_category;
+        static static_params dummy;
+
+        void load(archive arch);
+    };
+
     building_impl(building &b) : base(b), data(b.data) {}
     virtual void on_create() {}
     virtual void spawn_figure() {}
     virtual void update_graphic() {}
     virtual void update_month() {}
     virtual void update_day() {}
+    virtual const static_params &params() const { return static_params::dummy; }
     virtual void window_info_background(object_info &ctx) {}
     virtual void window_info_foreground(object_info &ctx) {}
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) { return 0; }
@@ -632,12 +643,21 @@ typedef building_impl* (*create_building_function_cb)(e_building_type, building&
 using BuildingIterator = FuncLinkedList<create_building_function_cb>;
 
 template<e_building_type E, typename T>
-struct model_t {
+struct model_t : public building_impl::static_params {
     static constexpr e_building_type type = E;
     animations_t anim;
 
-    model_t() {
+    model_t(pcstr section) {
+        name = section;
         static BuildingIterator config_handler(&create);
+    }
+
+    void load() {
+        g_config_arch.r_section(name, [this] (archive arch) {
+            static_params::load(arch);
+            anim.load(arch);
+            city_labor_set_category(*this);
+        });
     }
 
     static building_impl *create(e_building_type e, building &data) {
