@@ -145,36 +145,7 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
     // advance animation
     int new_sprite = 0;
     bool is_reverse = false;
-    if (b->type == BUILDING_BREWERY_WORKSHOP) {
-        // exception for wine...
-        int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
-        if (pct_done <= 0)
-            new_sprite = 0;
-        else if (pct_done < 4)
-            new_sprite = 1;
-        else if (pct_done < 8)
-            new_sprite = 2;
-        else if (pct_done < 12)
-            new_sprite = 3;
-        else if (pct_done < 96) {
-            if (map_sprite_animation_at(grid_offset) < 4)
-                new_sprite = 4;
-            else {
-                new_sprite = map_sprite_animation_at(grid_offset) + 1;
-                if (new_sprite > 8)
-                    new_sprite = 4;
-            }
-        } else {
-            // close to done
-            if (map_sprite_animation_at(grid_offset) < 9)
-                new_sprite = 9;
-            else {
-                new_sprite = map_sprite_animation_at(grid_offset) + 1;
-                if (new_sprite > 12)
-                    new_sprite = 12;
-            }
-        }
-    } else if (img->animation.can_reverse) {
+    if (img->animation.can_reverse) {
         if (map_sprite_animation_at(grid_offset) & 0x80)
             is_reverse = true;
 
