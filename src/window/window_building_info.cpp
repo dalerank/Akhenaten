@@ -10,7 +10,6 @@
 #include "building/building_farm.h"
 #include "building/building_hunting_lodge.h"
 #include "building/building_raw_material.h"
-#include "building/building_work_camp.h"
 #include "building/building_workshop.h"
 #include "building/building_wharf.h"
 #include "building/building_shipyard.h"
