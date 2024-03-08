@@ -2,6 +2,9 @@
 
 #include "building/building_workshop.h"
 
+struct brewery_model : public buildings::model_t<BUILDING_BREWERY_WORKSHOP, building_brewery> {};
+brewery_model brewery_m;
+
 void building_brewery::on_create() {
     data.industry.first_material_id = RESOURCE_BARLEY;
     base.output_resource_first_id = RESOURCE_BEER;

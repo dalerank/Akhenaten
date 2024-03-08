@@ -18,7 +18,6 @@
 #include "building/building_tax_collector.h"
 #include "building/building_jugler_school.h"
 #include "building/building_physician.h"
-#include "building/building_brewery.h"
 #include "building/monument_mastaba.h"
 #include "building/building_bandstand.h"
 #include "building/building_bricklayers_guild.h"
@@ -286,7 +285,6 @@ building_impl *building::dcast() {
     case BUILDING_APOTHECARY: _ptr = new building_apothecary(*this); break;
     case BUILDING_POTTERY_WORKSHOP: _ptr = new building_pottery(*this); break;
     case BUILDING_WELL: _ptr = new building_well(*this); break;
-    case BUILDING_BREWERY_WORKSHOP: _ptr = new building_brewery(*this); break;
     case BUILDING_JUGGLER_SCHOOL: _ptr = new building_juggler_school(*this); break;
     case BUILDING_HUNTING_LODGE: _ptr = new building_hunting_lodge(*this); break;
     case BUILDING_WATER_SUPPLY: _ptr = new building_water_supply(*this); break;
