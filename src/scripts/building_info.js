@@ -169,7 +169,8 @@ building_clay_pit = {
 
 building_brewery = {
   animations : {
-    work : { pos : [-1, -1], anim_id: ANIM_BREWERY_WORKSHOP }
+    work : { pos : [-1, -1], base_id : ANIM_BREWERY_WORKSHOP, anim_id: ANIM_BREWERY_WORKSHOP, max_frames: 2
+     }
   }
 }
 

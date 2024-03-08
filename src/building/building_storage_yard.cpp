@@ -173,8 +173,10 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
         if (amount <= 0)
             return 0;
 
-        if (space->base.subtype.warehouse_resource_id != resource || space->base.stored_full_amount <= 0)
+        if (space->base.subtype.warehouse_resource_id != resource || space->base.stored_full_amount <= 0) {
+            space = space->next_room();
             continue;
+        }
 
         if (space->base.stored_full_amount > amount) {
             city_resource_remove_from_storageyard(resource, amount);
