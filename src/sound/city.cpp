@@ -130,8 +130,6 @@ int building_type_to_channel(building *b) {
     case BUILDING_JEWELS_WORKSHOP:
     case BUILDING_WOOD_CUTTERS:
         return 0;
-
-    case BUILDING_POTTERY_WORKSHOP: return  SOUND_CHANNEL_CITY_POTTERY_WORKSHOP;
     }
 
     return b->dcast()->sound_channel();

@@ -8,26 +8,12 @@
 
 #include "js/js_game.h"
 
-namespace model {
-
-struct pottery_t {
-    static constexpr e_building_type type = BUILDING_POTTERY_WORKSHOP;
-    e_labor_category labor_category;
-    animations_t anim;
-};
-
-pottery_t pottery;
-
-}
+struct pottery_model : public buildings::model_t<BUILDING_POTTERY_WORKSHOP, building_pottery> {};
+pottery_model pottery_m{"building_pottery"};
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_pottery);
 void config_load_building_pottery() {
-    g_config_arch.r_section("building_pottery", [] (archive arch) {
-        model::pottery.labor_category = arch.r_type<e_labor_category>("labor_category");
-        model::pottery.anim.load(arch);
-    });
-
-    city_labor_set_category(model::pottery);
+    pottery_m.load();
 }
 
 void building_pottery::on_create() {
@@ -42,7 +28,7 @@ void building_pottery::window_info_background(object_info& c) {
 }
 
 bool building_pottery::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const animation_t &anim = model::pottery.anim["work"];
+    const animation_t &anim = pottery_m.anim["work"];
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;

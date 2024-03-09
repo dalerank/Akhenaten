@@ -23,7 +23,6 @@
 #include "building/building_bricklayers_guild.h"
 #include "building/building_booth.h"
 #include "building/building_health.h"
-#include "building/building_pottery.h"
 #include "building/building_well.h"
 #include "building/building_shrine.h"
 #include "building/building_mansion.h"
@@ -286,7 +285,6 @@ building_impl *building::dcast() {
     case BUILDING_BANDSTAND: _ptr = new building_bandstand(*this); break;
     case BUILDING_BOOTH: _ptr = new building_booth(*this); break;
     case BUILDING_APOTHECARY: _ptr = new building_apothecary(*this); break;
-    case BUILDING_POTTERY_WORKSHOP: _ptr = new building_pottery(*this); break;
     case BUILDING_WELL: _ptr = new building_well(*this); break;
     case BUILDING_JUGGLER_SCHOOL: _ptr = new building_juggler_school(*this); break;
     case BUILDING_HUNTING_LODGE: _ptr = new building_hunting_lodge(*this); break;
