@@ -25,6 +25,8 @@ class io_buffer;
 class building;
 class building_storage_yard;
 class building_storage_room;
+class building_brewery;
+class building_pottery;
 struct object_info;
 struct painter;
 struct mouse;
@@ -319,11 +321,11 @@ public:
     bool guild_has_resources();
     void workshop_start_production();
 
-    int get_onespot_ready_production();
-
 public:
     building_impl *dcast();
     building_farm *dcast_farm();
+    building_brewery *dcast_brewery();
+    building_pottery *dcast_pottery();
     building_storage_yard *dcast_storage_yard();
     building_storage_room *dcast_storage_room();
 
@@ -401,8 +403,11 @@ public:
     virtual int get_produce_uptick_per_day() const { return base.num_workers; }
     virtual int get_fire_risk(int value) const { return value; }
     virtual std::pair<int, int> get_tooltip() const { return {-1, -1}; }
+    virtual int ready_production() const { return 100; }
 
     virtual building_farm *dcast_farm() { return nullptr; }
+    virtual building_brewery *dcast_brewery() { return nullptr; }
+    virtual building_pottery *dcast_pottery() { return nullptr; }
     virtual building_storage_yard *dcast_storage_yard() { return nullptr; }
     virtual building_storage_room *dcast_storage_room() { return nullptr; }
 

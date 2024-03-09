@@ -351,6 +351,8 @@ building_impl *building::dcast() {
 }
 
 building_farm *building::dcast_farm() { return dcast()->dcast_farm(); }
+building_brewery *building::dcast_brewery() { return dcast()->dcast_brewery(); }
+building_pottery *building::dcast_pottery() { return dcast()->dcast_pottery(); }
 building_storage_yard *building::dcast_storage_yard() { return dcast()->dcast_storage_yard(); }
 building_storage_room *building::dcast_storage_room() { return dcast()->dcast_storage_room(); }
 
