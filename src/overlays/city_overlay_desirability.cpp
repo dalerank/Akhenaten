@@ -82,7 +82,9 @@ static void draw_footprint_desirability(vec2i pixel, tile2i point, painter &ctx)
         }
 
         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
-        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, pixel, color_mask);
+        int img_id = image_id_from_group(GROUP_TERRAIN_DESIRABILITY);
+        ImageDraw::isometric_from_drawtile(ctx, img_id + offset, pixel, color_mask);
+        ImageDraw::isometric_from_drawtile_top(ctx, img_id + offset, pixel, color_mask);
     } else {
         ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, color_mask);
     }
