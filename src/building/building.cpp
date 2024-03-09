@@ -16,7 +16,6 @@
 #include "building/building_granary.h"
 #include "building_architect_post.h"
 #include "building/building_tax_collector.h"
-#include "building/building_jugler_school.h"
 #include "building/building_physician.h"
 #include "building/monument_mastaba.h"
 #include "building/building_bandstand.h"
@@ -109,101 +108,115 @@ building* building_get(int id) {
     return &g_all_buildings[id];
 }
 
-static void building_new_fill_in_data_for_type(building* b, e_building_type type, tile2i tile, int orientation) {
-    const building_properties* props = building_properties_for_type(type);
-    b->state = BUILDING_STATE_CREATED;
-    b->faction_id = 1;
-    b->reserved_id = false; // city_buildings_unknown_value();
-    b->type = type;
-    b->size = props->size;
-    b->creation_sequence_index = building_extra_data.created_sequence++;
-    b->sentiment.house_happiness = 50;
-    b->distance_from_entry = 0;
+void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int orientation) {
+    assert(!_ptr);
+    const building_properties* props = building_properties_for_type(_tp);
+    type = _tp;
+    tile = _tl;
+    state = BUILDING_STATE_CREATED;
+    faction_id = 1;
+    reserved_id = false; // city_buildings_unknown_value();
+    size = props->size;
+    creation_sequence_index = building_extra_data.created_sequence++;
+    sentiment.house_happiness = 50;
+    distance_from_entry = 0;
 
-    b->tile = tile;
-    b->map_random_7bit = map_random_get(b->tile.grid_offset()) & 0x7f;
-    b->figure_roam_direction = b->map_random_7bit & 6;
-    b->fire_proof = props->fire_proof;
-    b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(tile, b->size);
+    map_random_7bit = map_random_get(tile.grid_offset()) & 0x7f;
+    figure_roam_direction = map_random_7bit & 6;
+    fire_proof = props->fire_proof;
+    is_adjacent_to_water = map_terrain_is_adjacent_to_water(tile, size);
 
     // house size
-    b->house_size = 0;
+    house_size = 0;
     if (type >= BUILDING_HOUSE_CRUDE_HUT && type <= BUILDING_HOUSE_SPACIOUS_APARTMENT) {
-        b->house_size = 1;
+        house_size = 1;
     } else if (type >= BUILDING_HOUSE_COMMON_RESIDENCE && type <= BUILDING_HOUSE_FANCY_RESIDENCE) {
-        b->house_size = 2;
+        house_size = 2;
     } else if (type >= BUILDING_HOUSE_COMMON_MANOR && type <= BUILDING_HOUSE_MEDIUM_PALACE) {
-        b->house_size = 3;
+        house_size = 3;
     } else if (type >= BUILDING_HOUSE_LARGE_PALACE && type <= BUILDING_HOUSE_LUXURY_PALACE) {
-        b->house_size = 4;
+        house_size = 4;
     }
 
     // subtype
-    if (b->is_house()) {
-        b->subtype.house_level = (e_house_level)(type - BUILDING_HOUSE_VACANT_LOT);
+    if (is_house()) {
+        subtype.house_level = (e_house_level)(type - BUILDING_HOUSE_VACANT_LOT);
     } else {
-        b->subtype.house_level = HOUSE_CRUDE_HUT;
+        subtype.house_level = HOUSE_CRUDE_HUT;
     }
 
     // unique data
     switch (type) {
     case BUILDING_LIMESTONE_QUARRY:
-        b->output_resource_first_id = RESOURCE_LIMESTONE;
+        output_resource_first_id = RESOURCE_LIMESTONE;
         break;
+
     case BUILDING_WOOD_CUTTERS:
-        b->output_resource_first_id = RESOURCE_TIMBER;
-        b->data.industry.max_gatheres = 1;
+        output_resource_first_id = RESOURCE_TIMBER;
+        data.industry.max_gatheres = 1;
         break;
+
     case BUILDING_WEAVER_WORKSHOP:
-        b->data.industry.first_material_id = RESOURCE_FLAX;
-        b->output_resource_first_id = RESOURCE_LINEN;
+        data.industry.first_material_id = RESOURCE_FLAX;
+        output_resource_first_id = RESOURCE_LINEN;
         break;
+
     case BUILDING_JEWELS_WORKSHOP:
-        b->data.industry.first_material_id = RESOURCE_GEMS;
-        b->output_resource_first_id = RESOURCE_LUXURY_GOODS;
+        data.industry.first_material_id = RESOURCE_GEMS;
+        output_resource_first_id = RESOURCE_LUXURY_GOODS;
         break;
+
     case BUILDING_SCRIBAL_SCHOOL:
-        b->data.entertainment.consume_material_id = RESOURCE_PAPYRUS;
+        data.entertainment.consume_material_id = RESOURCE_PAPYRUS;
         break;
+
     case BUILDING_REED_GATHERER:
-        b->output_resource_first_id = RESOURCE_REEDS;
-        b->data.industry.max_gatheres = 1;
+        output_resource_first_id = RESOURCE_REEDS;
+        data.industry.max_gatheres = 1;
         break;
+
     case BUILDING_PAPYRUS_WORKSHOP:
-        b->data.industry.first_material_id = RESOURCE_REEDS;
-        b->output_resource_first_id = RESOURCE_PAPYRUS;
+        data.industry.first_material_id = RESOURCE_REEDS;
+        output_resource_first_id = RESOURCE_PAPYRUS;
         break;
+
     case BUILDING_BRICKS_WORKSHOP:
-        b->data.industry.first_material_id = RESOURCE_STRAW;
-        b->data.industry.second_material_id = RESOURCE_CLAY;
-        b->output_resource_first_id = RESOURCE_BRICKS;
+        data.industry.first_material_id = RESOURCE_STRAW;
+        data.industry.second_material_id = RESOURCE_CLAY;
+        output_resource_first_id = RESOURCE_BRICKS;
         break;
+
     case BUILDING_CHARIOTS_WORKSHOP:
-        b->data.industry.first_material_id = RESOURCE_TIMBER;
-        b->data.industry.second_material_id = RESOURCE_WEAPONS;
-        b->output_resource_first_id = RESOURCE_CHARIOTS;
+        data.industry.first_material_id = RESOURCE_TIMBER;
+        data.industry.second_material_id = RESOURCE_WEAPONS;
+        output_resource_first_id = RESOURCE_CHARIOTS;
         break;
+
     case BUILDING_GRANITE_QUARRY:
-        b->output_resource_first_id = RESOURCE_GRANITE;
+        output_resource_first_id = RESOURCE_GRANITE;
         break;
+
     case BUILDING_SANDSTONE_QUARRY:
-        b->output_resource_first_id = RESOURCE_SANDSTONE;
+        output_resource_first_id = RESOURCE_SANDSTONE;
         break;
+
     case BUILDING_HENNA_FARM:
-        b->output_resource_first_id = RESOURCE_HENNA;
+        output_resource_first_id = RESOURCE_HENNA;
         break;
+
     case BUILDING_LAMP_WORKSHOP:
-        b->data.industry.first_material_id = RESOURCE_OIL;
-        b->data.industry.second_material_id = RESOURCE_TIMBER;
-        b->output_resource_first_id = RESOURCE_LAMPS;
+        data.industry.first_material_id = RESOURCE_OIL;
+        data.industry.second_material_id = RESOURCE_TIMBER;
+        output_resource_first_id = RESOURCE_LAMPS;
         break;
+
     case BUILDING_PAINT_WORKSHOP:
-        b->data.industry.first_material_id = RESOURCE_OIL;
-        b->output_resource_first_id = RESOURCE_PAINT;
-        //            b->subtype.workshop_type = WORKSHOP_PAINT;
+        data.industry.first_material_id = RESOURCE_OIL;
+        output_resource_first_id = RESOURCE_PAINT;
         break;
+
     case BUILDING_BAZAAR: // Set it as accepting all goods
-        b->subtype.market_goods = 0x0000;
+        subtype.market_goods = 0x0000;
         break;
 
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
@@ -211,30 +224,34 @@ static void building_new_fill_in_data_for_type(building* b, e_building_type type
     case BUILDING_TEMPLE_COMPLEX_PTAH:
     case BUILDING_TEMPLE_COMPLEX_SETH:
     case BUILDING_TEMPLE_COMPLEX_BAST:
-        b->data.monuments.variant = (10 - (2 * orientation)) % 8; // ugh!
+        data.monuments.variant = (10 - (2 * orientation)) % 8; // ugh!
         break;
+
     case BUILDING_FISHING_WHARF:
-        b->data.industry.orientation = orientation;
-        b->output_resource_first_id = RESOURCE_FISH;
+        data.industry.orientation = orientation;
+        output_resource_first_id = RESOURCE_FISH;
         break;
+
     case BUILDING_WATER_LIFT:
     case BUILDING_TRANSPORT_WHARF:
     case BUILDING_SHIPWRIGHT:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_FERRY:
-        b->data.industry.orientation = orientation;
+        data.industry.orientation = orientation;
         break;
+
     case BUILDING_DOCK:
-        b->data.dock.orientation = orientation;
+        data.dock.orientation = orientation;
         break;
+
     case BUILDING_BRICK_GATEHOUSE:
     case BUILDING_MUD_GATEHOUSE:
-        b->subtype.orientation = orientation;
+        subtype.orientation = orientation;
         break;
 
     default:
-        b->output_resource_first_id = RESOURCE_NONE;
-        b->dcast()->on_create();
+        output_resource_first_id = RESOURCE_NONE;
+        dcast()->on_create();
         break;
     }
 }
@@ -253,9 +270,11 @@ building* building_create(e_building_type type, tile2i tile, int orientation) {
         return &g_all_buildings[0];
     }
 
-    memset(&(b->data), 0, sizeof(b->data));
-    building_new_fill_in_data_for_type(b, type, tile, orientation);
     b->clear_impl();
+
+    memset(&(b->data), 0, sizeof(b->data));
+    b->new_fill_in_data_for_type(type, tile, orientation);
+    
     b->data.house.health = 100;
 
     return b;
@@ -286,7 +305,6 @@ building_impl *building::dcast() {
     case BUILDING_BOOTH: _ptr = new building_booth(*this); break;
     case BUILDING_APOTHECARY: _ptr = new building_apothecary(*this); break;
     case BUILDING_WELL: _ptr = new building_well(*this); break;
-    case BUILDING_JUGGLER_SCHOOL: _ptr = new building_juggler_school(*this); break;
     case BUILDING_HUNTING_LODGE: _ptr = new building_hunting_lodge(*this); break;
     case BUILDING_WATER_SUPPLY: _ptr = new building_water_supply(*this); break;
     case BUILDING_CONSERVATORY: _ptr = new building_conservatory(*this); break;
@@ -355,6 +373,7 @@ building_brewery *building::dcast_brewery() { return dcast()->dcast_brewery(); }
 building_pottery *building::dcast_pottery() { return dcast()->dcast_pottery(); }
 building_storage_yard *building::dcast_storage_yard() { return dcast()->dcast_storage_yard(); }
 building_storage_room *building::dcast_storage_room() { return dcast()->dcast_storage_room(); }
+building_juggler_school *building::dcast_juggler_school() { return dcast()->dcast_juggler_school(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
@@ -494,6 +513,9 @@ void building::clear_related_data() {
     if (type == BUILDING_FESTIVAL_SQUARE) {
         city_buildings_remove_festival_square();
     }
+
+    dcast()->on_destroy();
+    clear_impl();
 }
 
 e_overlay building::get_overlay() const {

@@ -2,6 +2,17 @@
 
 #include "building/building_entertainment.h"
 #include "figuretype/figure_entertainer.h"
+#include "city/labor.h"
+#include "widget/city/ornaments.h"
+
+#include "js/js_game.h"
+
+buildings::model_t<building_juggler_school> juggler_school_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_juggler_school);
+void config_load_building_juggler_school() {
+    juggler_school_m.load();
+}
 
 void building_juggler_school::window_info_background(object_info &c) {
     building_entertainment_school_draw_info(c, "juggler_school", 77);
@@ -28,4 +39,11 @@ void building_juggler_school::spawn_figure() {
     } else {
         common_spawn_roamer(FIGURE_JUGGLER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
+}
+
+bool building_juggler_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    const auto &anim = juggler_school_m.anim["work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+
+    return true;
 }

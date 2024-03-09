@@ -52,6 +52,7 @@ var building_bandstand = {}
 var building_scribal_school = {}
 var building_scribal_school_info = {}
 var building_brewery = {}
+var building_juggler_school = {}
 var empire_window = {}
 var images_remap = []
 var imagepaks = []

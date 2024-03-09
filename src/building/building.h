@@ -23,6 +23,7 @@
 class figure;
 class io_buffer;
 class building;
+class building_juggler_school;
 class building_storage_yard;
 class building_storage_room;
 class building_brewery;
@@ -286,6 +287,7 @@ public:
 
     void clear_related_data();
     void clear_impl();
+    void new_fill_in_data_for_type(e_building_type type, tile2i tile, int orientation);
 
     e_overlay get_overlay() const;
 
@@ -328,6 +330,7 @@ public:
     building_pottery *dcast_pottery();
     building_storage_yard *dcast_storage_yard();
     building_storage_room *dcast_storage_room();
+    building_juggler_school *dcast_juggler_school();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -389,6 +392,7 @@ public:
 
     building_impl(building &b) : base(b), data(b.data) {}
     virtual void on_create() {}
+    virtual void on_destroy() {}
     virtual void spawn_figure() {}
     virtual void update_graphic() {}
     virtual void update_month() {}
@@ -412,6 +416,7 @@ public:
     virtual building_pottery *dcast_pottery() { return nullptr; }
     virtual building_storage_yard *dcast_storage_yard() { return nullptr; }
     virtual building_storage_room *dcast_storage_room() { return nullptr; }
+    virtual building_juggler_school *dcast_juggler_school() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

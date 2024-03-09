@@ -135,6 +135,12 @@ building_temple_bast = {
   labor_category : LABOR_CATEGORY_RELIGION,
 }
 
+building_juggler_school = {
+  animations : {
+    work : { pos : [0, 0], anim_id : IMG_JUGGLER_SCHOOL }
+  },
+}
+
 building_booth = {
   animations : {
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW }
