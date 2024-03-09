@@ -12,13 +12,13 @@
 #include "js/js_game.h"
 
 struct physician_model : public figures::model_t<FIGURE_PHYSICIAN, figure_physician> {};
-physician_model physician_m;
+physician_model fphysician_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_physician);
 void config_load_figure_physician() {
     g_config_arch.r_section("figure_physician", [] (archive arch) {
-        physician_m.anim.load(arch);
-        physician_m.sounds.load(arch);
+        fphysician_m.anim.load(arch);
+        fphysician_m.sounds.load(arch);
     });
 }
 
@@ -110,5 +110,5 @@ int figure_physician::provide_service() {
 }
 
 figure_sound_t figure_physician::get_sound_reaction(pcstr key) const {
-    return physician_m.sounds[key];
+    return fphysician_m.sounds[key];
 }
