@@ -7,26 +7,11 @@
 #include "city/labor.h"
 #include "js/js_game.h"
 
-namespace model {
-
-struct conservatory_t {
-    static constexpr e_building_type type = BUILDING_CONSERVATORY;
-    e_labor_category labor_category;
-    animations_t anim;
-};
-
-conservatory_t conservatory;
-
-}
+buildings::model_t<building_conservatory> conservatory_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_conservatory);
 void config_load_building_conservatory() {
-    g_config_arch.r_section("building_conservatory", [] (archive arch) {
-        model::conservatory.labor_category = arch.r_type<e_labor_category>("labor_category");
-        model::conservatory.anim.load(arch);
-    });
-
-    city_labor_set_category(model::conservatory);
+    conservatory_m.load();
 }
 
 void building_conservatory::window_info_background(object_info& c) {
@@ -47,7 +32,7 @@ void building_conservatory::spawn_figure() {
 
 bool building_conservatory::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (worker_percentage() > 50) {
-        const animation_t &anim = model::conservatory.anim["work"];
+        const animation_t &anim = conservatory_m.anim["work"];
         building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
 

@@ -12,6 +12,8 @@ void building_granite_quarry_draw_info(object_info &c);
 
 class building_clay_pit : public building_impl {
 public:
+    BUILDING_METAINFO(BUILDING_CLAY_PIT, building_clay_pit)
+
     building_clay_pit(building &b) : building_impl(b) {}
     virtual void on_create() override;
     virtual void window_info_background(object_info &c) override;
@@ -31,6 +33,8 @@ public:
 
 class building_mine_gold : public building_mine {
 public:
+    BUILDING_METAINFO(BUILDING_GOLD_MINE, building_mine_gold)
+
     building_mine_gold(building &b) : building_mine(b) {}
     virtual const static_params &params() const override;
     virtual const animation_t &anim(pcstr key) const override;
@@ -39,6 +43,8 @@ public:
 
 class building_mine_gems : public building_mine {
 public:
+    BUILDING_METAINFO(BUILDING_GEMSTONE_MINE, building_mine_gems)
+
     building_mine_gems(building &b) : building_mine(b) {}
     virtual const static_params &params() const override;
     virtual const animation_t &anim(pcstr key) const override;
@@ -55,6 +61,8 @@ public:
 
 class building_mine_copper : public building_mine {
 public:
+    BUILDING_METAINFO(BUILDING_COPPER_MINE, building_mine_copper)
+
     building_mine_copper(building &b) : building_mine(b) {}
     virtual const static_params &params() const override;
     virtual const animation_t &anim(pcstr key) const override;

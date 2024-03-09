@@ -19,25 +19,20 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 
-struct village_palace_model_t {
-    static constexpr e_building_type type = BUILDING_VILLAGE_PALACE;
-    e_labor_category labor_category;
-    animations_t anim;
+struct building_village_palace : public building_impl { 
+    building_village_palace(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_VILLAGE_PALACE, building_village_palace)
 };
-village_palace_model_t village_palace_model;
+
+buildings::model_t<building_village_palace> village_building_palace_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_palace_model);
 void config_load_building_palace_model() {
-    g_config_arch.r_section("building_village_palace", [] (archive arch) {
-        village_palace_model.labor_category = arch.r_type<e_labor_category>("labor_category");
-        village_palace_model.anim.load(arch);
-    });
-    
-    city_labor_set_category(village_palace_model);
+    village_building_palace_m.load();
 }
 
 void building_palace::on_create() {
-    base.labor_category = village_palace_model.labor_category;
+    base.labor_category = village_building_palace_m.labor_category;
 }
 
 void building_palace::window_info_background(object_info &c) {
@@ -81,7 +76,7 @@ bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     switch (type()) {
     case BUILDING_VILLAGE_PALACE:
         if (worker_percentage() > 50) {
-            const animation_t &anim = village_palace_model.anim["work"];
+            const animation_t &anim = params().anim["work"];
             building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
         }
         break;

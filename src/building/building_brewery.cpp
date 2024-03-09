@@ -6,8 +6,7 @@
 
 #include "js/js_game.h"
 
-struct brewery_model : public buildings::model_t<BUILDING_BREWERY_WORKSHOP, building_brewery> {};
-brewery_model brewery_m{"building_brewery"};
+buildings::model_t<building_brewery> brewery_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_brewery);
 void config_load_building_brewery() {

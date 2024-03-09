@@ -5,6 +5,8 @@
 
 class building_work_camp : public building_impl {
 public:
+    BUILDING_METAINFO(BUILDING_WORK_CAMP, building_work_camp)
+
     building_work_camp(building &b) : building_impl(b) {}
     virtual void spawn_figure() override;
     virtual void update_day() override;

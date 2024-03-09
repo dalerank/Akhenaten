@@ -16,7 +16,7 @@
 namespace model {
 
 struct fort_t {
-    static constexpr e_building_type type = BUILDING_COURTHOUSE;
+    static constexpr e_building_type TYPE = BUILDING_COURTHOUSE;
     e_labor_category labor_category;
     animations_t anim;
     struct {

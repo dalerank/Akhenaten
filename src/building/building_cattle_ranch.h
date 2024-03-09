@@ -4,6 +4,8 @@
 
 class building_cattle_ranch : public building_impl {
 public:
+    BUILDING_METAINFO(BUILDING_CATTLE_RANCH, building_cattle_ranch)
+
     building_cattle_ranch(building &b) : building_impl(b) {}
     virtual void on_create() override;
     virtual void window_info_background(object_info &c) override;

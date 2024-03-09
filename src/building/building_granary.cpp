@@ -39,26 +39,11 @@ const int THREEQUARTERS_GRANARY = 2400;
 const int HALF_GRANARY = 1600;
 const int QUARTER_GRANARY = 800;
 
-namespace model {
-
-struct granary_t {
-    static constexpr e_building_type type = BUILDING_GRANARY;
-    e_labor_category labor_category;
-    animations_t anim;
-};
-
-granary_t granary;
-
-}
+buildings::model_t<building_granary> granary_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_granary);
 void config_load_building_granary() {
-    g_config_arch.r_section("building_granary", [] (archive arch) {
-        model::granary.labor_category = arch.r_type<e_labor_category>("labor_category");
-        model::granary.anim.load(arch);
-    });
-
-    city_labor_set_category(model::granary);
+    granary_m.load();
 }
 
 struct non_getting_granaries_t {
@@ -617,9 +602,9 @@ void building_granary::spawn_figure() {
 bool building_granary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
     draw_granary_stores(base, point, mask, ctx);
     int max_workers = model_get_building(BUILDING_GRANARY)->laborers;
-    building_draw_normal_anim(ctx, point + vec2i{114, 2}, &base, tile, model::granary.anim["work"], mask);
+    building_draw_normal_anim(ctx, point + vec2i{114, 2}, &base, tile, granary_m.anim["work"], mask);
     if (num_workers() > max_workers / 2) {
-        building_draw_normal_anim(ctx, point + vec2i{96, -4}, &base, tile, model::granary.anim["work"], mask);
+        building_draw_normal_anim(ctx, point + vec2i{96, -4}, &base, tile, granary_m.anim["work"], mask);
     }
 
     return false;

@@ -4,6 +4,8 @@
 
 class building_brewery : public building_impl {
 public:
+    BUILDING_METAINFO(BUILDING_BREWERY_WORKSHOP, building_brewery)
+
     building_brewery(building &b) : building_impl(b) {}
     virtual void on_create() override;
     virtual bool is_workshop() const override { return true; }

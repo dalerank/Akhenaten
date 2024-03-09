@@ -7,26 +7,11 @@
 #include "graphics/animation.h"
 #include "city/labor.h"
 
-namespace model {
-
-struct courthouse_t {
-    static constexpr e_building_type type = BUILDING_COURTHOUSE;
-    e_labor_category labor_category;
-    animations_t anim;
-};
-
-courthouse_t courthouse;
-
-}
+buildings::model_t<building_courthouse> courthouse_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_courthouse);
 void config_load_building_courthouse() {
-    g_config_arch.r_section("building_courthouse", [] (archive arch) {
-        model::courthouse.labor_category = arch.r_type<e_labor_category>("labor_category");
-        model::courthouse.anim.load(arch);
-    });
-
-    city_labor_set_category(model::courthouse);
+    courthouse_m.load();
 }
 
 void building_courthouse::spawn_figure() {
@@ -63,7 +48,7 @@ void building_courthouse::window_info_background(object_info &c) {
 }
 
 bool building_courthouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const animation_t &anim = model::courthouse.anim["work"];
+    const animation_t &anim = courthouse_m.anim["work"];
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;

@@ -373,6 +373,7 @@ public:
     int barracks_get_priority();
 };
 
+#define BUILDING_METAINFO(type, clsid) static constexpr e_building_type TYPE = type; static constexpr pcstr CLSID = #clsid;
 class building_impl {
 public:
     struct static_params {
@@ -381,6 +382,7 @@ public:
         e_resource output_resource;
         e_labor_category labor_category;
         static static_params dummy;
+        animations_t anim;
 
         void load(archive arch);
     };
@@ -647,26 +649,25 @@ typedef building_impl* (*create_building_function_cb)(e_building_type, building&
 
 using BuildingIterator = FuncLinkedList<create_building_function_cb>;
 
-template<e_building_type E, typename T>
+template<typename T>
 struct model_t : public building_impl::static_params {
-    static constexpr e_building_type type = E;
-    animations_t anim;
+    static constexpr e_building_type TYPE = T::TYPE;
+    static constexpr pcstr CLSID = T::CLSID;
 
-    model_t(pcstr section) {
-        name = section;
+    model_t() {
+        name = CLSID;
         static BuildingIterator config_handler(&create);
     }
 
     void load() {
         g_config_arch.r_section(name, [this] (archive arch) {
             static_params::load(arch);
-            anim.load(arch);
             city_labor_set_category(*this);
         });
     }
 
     static building_impl *create(e_building_type e, building &data) {
-        if (e == type) {
+        if (e == TYPE) {
             return new T(data);
         }
         return nullptr;

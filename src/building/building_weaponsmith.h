@@ -4,6 +4,8 @@
 
 class building_weaponsmith : public building_impl {
 public:
+    BUILDING_METAINFO(BUILDING_WEAPONSMITH, building_weaponsmith)
+
     building_weaponsmith(building &b) : building_impl(b) {}
     virtual void on_create() override;
     virtual bool need_road_access() const { return true; }

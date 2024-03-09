@@ -4,6 +4,8 @@
 
 class building_firehouse : public building_impl {
 public:
+    BUILDING_METAINFO(BUILDING_FIREHOUSE, building_firehouse)
+
     building_firehouse(building &b) : building_impl(b) {}
     virtual void spawn_figure() override;
     virtual void window_info_background(object_info &c) override;

@@ -4,6 +4,8 @@
 
 class building_conservatory : public building_impl {
 public:
+    BUILDING_METAINFO(BUILDING_CONSERVATORY, building_conservatory)
+
     building_conservatory(building &b) : building_impl(b) {}
     //virtual void on_create() override;
     virtual void window_info_background(object_info &c) override;

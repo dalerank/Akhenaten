@@ -975,6 +975,7 @@ void building_impl::static_params::load(archive arch) {
     labor_category = arch.r_type<e_labor_category>("labor_category");
     output_resource = arch.r_type<e_resource>("output_resource");
     meta_id = arch.r_string("meta_id");
+    anim.load(arch);
 }
 
 

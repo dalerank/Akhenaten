@@ -7,28 +7,12 @@
 #include "js/js_game.h"
 #include "widget/city/ornaments.h"
 
-namespace model {
-
-struct cattle_ranch_t {
-    static constexpr e_building_type type = BUILDING_CATTLE_RANCH;
-    e_labor_category labor_category;
-    animations_t anim;
-};
-
-cattle_ranch_t cattle_ranch;
-
-}
+buildings::model_t<building_cattle_ranch> cattle_ranch_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_cattle_ranch);
 void config_load_building_cattle_ranch() {
-    g_config_arch.r_section("building_cattle_ranch", [] (archive arch) {
-        model::cattle_ranch.labor_category = arch.r_type<e_labor_category>("labor_category");
-        model::cattle_ranch.anim.load(arch);
-    });
-
-    city_labor_set_category(model::cattle_ranch);
+    cattle_ranch_m.load();
 }
-
 
 void building_cattle_ranch::on_create() {
     data.industry.first_material_id = RESOURCE_STRAW;
@@ -42,7 +26,7 @@ void building_cattle_ranch::window_info_background(object_info &c) {
 
 bool building_cattle_ranch::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (worker_percentage() > 50) {
-        const animation_t &anim = model::cattle_ranch.anim["work"];
+        const animation_t &anim = cattle_ranch_m.anim["work"];
         building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
 

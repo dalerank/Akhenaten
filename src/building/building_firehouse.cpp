@@ -9,17 +9,7 @@
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
 
-namespace model {
-
-struct firehouse_t {
-    static constexpr e_building_type type = BUILDING_FIREHOUSE;
-    e_labor_category labor_category;
-    animations_t anim;
-};
-
-firehouse_t firehouse;
-
-}
+buildings::model_t<building_firehouse> firehouse_m;
 
 declare_console_command_p(nofire, console_command_nofire);
 void console_command_nofire(std::istream &, std::ostream &) {
@@ -30,12 +20,7 @@ void console_command_nofire(std::istream &, std::ostream &) {
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_firehouse);
 void config_load_building_firehouse() {
-    g_config_arch.r_section("building_firehouse", [] (archive arch) {
-        model::firehouse.labor_category = arch.r_type<e_labor_category>("labor_category");
-        model::firehouse.anim.load(arch);
-    });
-
-    city_labor_set_category(model::firehouse);
+    firehouse_m.load();
 }
 
 
@@ -77,7 +62,7 @@ void building_firehouse::window_info_background(object_info &c) {
 }
 
 bool building_firehouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const animation_t &anim = model::firehouse.anim["work"];
+    const animation_t &anim = firehouse_m.anim["work"];
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;

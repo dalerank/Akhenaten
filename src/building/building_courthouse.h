@@ -4,6 +4,8 @@
 
 class building_courthouse : public building_impl {
 public:
+    BUILDING_METAINFO(BUILDING_COURTHOUSE, building_courthouse)
+
     building_courthouse(building &b) : building_impl(b) {}
     //virtual void on_create() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_COUTHOUSE; }

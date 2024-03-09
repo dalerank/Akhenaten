@@ -18,42 +18,40 @@
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
 
-namespace model {
-
-struct building_temple_t {
-    const e_building_type type;
-    const pcstr name;
-    bstring64 meta_id;
-    e_labor_category labor_category;
-    animations_t anim;
+struct building_temple_osiris : public building_impl {
+    building_temple_osiris(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_TEMPLE_OSIRIS, building_temple_osiris);
+};
+struct building_temple_ra : public building_impl {
+    building_temple_ra(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_TEMPLE_RA, building_temple_ra);
+};
+struct building_temple_ptah : public building_impl {
+    building_temple_ptah(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_TEMPLE_PTAH, building_temple_ptah);
+};
+struct building_temple_seth : public building_impl {
+    building_temple_seth(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_TEMPLE_SETH, building_temple_seth);
+};
+struct building_temple_bast : public building_impl {
+    building_temple_bast(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_TEMPLE_BAST, building_temple_bast);
 };
 
-building_temple_t temple_osiris{BUILDING_TEMPLE_OSIRIS, "building_temple_osiris"};
-building_temple_t temple_ra{BUILDING_TEMPLE_RA, "building_temple_ra"};
-building_temple_t temple_ptah{BUILDING_TEMPLE_PTAH, "building_temple_ptah"};
-building_temple_t temple_seth{BUILDING_TEMPLE_SETH, "building_temple_seth"};
-building_temple_t temple_bast{BUILDING_TEMPLE_BAST, "building_temple_bast"};
-building_temple_t temple_dummy{BUILDING_NONE, "unknown"};
-
-} // model
+buildings::model_t<building_temple_osiris> temple_osiris_m;
+buildings::model_t<building_temple_ra> temple_ra_m;
+buildings::model_t<building_temple_ptah> temple_ptah_m;
+buildings::model_t<building_temple_seth> temple_seth_m;
+buildings::model_t<building_temple_bast> temple_bast_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_temples);
 void config_load_building_temples() {
-    auto load_temple_model = [] (model::building_temple_t &model) {
-        g_config_arch.r_section(model.name, [&model] (archive arch) {
-            model.labor_category = arch.r_type<e_labor_category>("labor_category");
-            model.meta_id = arch.r_string("meta_id");
-            model.anim.load(arch);
-            city_labor_set_category(model);
-        });
-
-    };
-
-    load_temple_model(model::temple_osiris);
-    load_temple_model(model::temple_ra);
-    load_temple_model(model::temple_ptah);
-    load_temple_model(model::temple_seth);
-    load_temple_model(model::temple_bast);
+    temple_osiris_m.load();
+    temple_ra_m.load();
+    temple_ptah_m.load();
+    temple_seth_m.load();
+    temple_bast_m.load();
 }
 
 static void building_temple_draw_temple(object_info& c, const char* type, int group_id, int image_offset) {
@@ -126,21 +124,11 @@ void building_temple::spawn_figure() {
 }
 
 bool building_temple::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const animation_t &anim = temple_params().anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+    building_draw_normal_anim(ctx, point, &base, tile, anim("work"), color_mask);
 
     return true;
 }
 
-const model::building_temple_t &building_temple::temple_params() const {
-    switch (type()) {
-    case BUILDING_TEMPLE_OSIRIS: return model::temple_osiris;
-    case BUILDING_TEMPLE_RA: return model::temple_ra;
-    case BUILDING_TEMPLE_PTAH: return model::temple_ptah;
-    case BUILDING_TEMPLE_SETH: return model::temple_seth;
-    case BUILDING_TEMPLE_BAST: return model::temple_bast;
-    }
-
-    assert(false);
-    return model::temple_dummy;
+const animation_t &building_temple::anim(pcstr key) const {
+    return params().anim[key];
 }

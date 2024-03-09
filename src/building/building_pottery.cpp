@@ -8,8 +8,8 @@
 
 #include "js/js_game.h"
 
-struct pottery_model : public buildings::model_t<BUILDING_POTTERY_WORKSHOP, building_pottery> {};
-pottery_model pottery_m{"building_pottery"};
+struct pottery_model : public buildings::model_t<building_pottery> {};
+pottery_model pottery_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_pottery);
 void config_load_building_pottery() {

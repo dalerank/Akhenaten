@@ -4,6 +4,8 @@
 
 class building_physician : public building_impl {
 public:
+    BUILDING_METAINFO(BUILDING_PHYSICIAN, building_physician)
+
     building_physician(building &b) : building_impl(b) {}
     virtual void window_info_background(object_info &c) override;
     virtual void spawn_figure() override;

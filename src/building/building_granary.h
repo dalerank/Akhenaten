@@ -18,6 +18,8 @@ struct granary_task_status {
 
 class building_granary : public building_impl {
 public:
+    BUILDING_METAINFO(BUILDING_GRANARY, building_granary)
+
     building_granary(building &b) : building_impl(b) {}
     virtual void on_create() override;
     virtual void spawn_figure() override;

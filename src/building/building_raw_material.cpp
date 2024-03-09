@@ -21,10 +21,10 @@
 
 #include "graphics/animation.h"
 
-buildings::model_t<BUILDING_CLAY_PIT, building_clay_pit> clay_pit_m{"building_clay_pit"};
-buildings::model_t<BUILDING_GOLD_MINE, building_mine_gold> gold_mine_m{"building_gold_mine"};
-buildings::model_t<BUILDING_GEMSTONE_MINE, building_mine_gems> gems_mine_m{"building_gems_mine"};
-buildings::model_t<BUILDING_COPPER_MINE, building_mine_copper> copper_mine_m{"building_copper_mine"};
+buildings::model_t<building_clay_pit> clay_pit_m;
+buildings::model_t<building_mine_gold> gold_mine_m;
+buildings::model_t<building_mine_gems> gems_mine_m;
+buildings::model_t<building_mine_copper> copper_mine_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_raw_materials);
 void config_load_building_raw_materials() {

@@ -26,17 +26,47 @@
 #include "game/game.h"
 #include "figure/figure.h"
 
-template<e_building_type E>
-struct farm_model : public buildings::model_t<E, building_farm> {};
+struct building_farm_grain : public building_farm {
+    building_farm_grain(building &b) : building_farm(b) {}
+    BUILDING_METAINFO(BUILDING_GRAIN_FARM, building_farm_grain);
+};
+struct building_farm_lettuce : public building_farm {
+    building_farm_lettuce(building &b) : building_farm(b) {}
+    BUILDING_METAINFO(BUILDING_LETTUCE_FARM, building_farm_lettuce);
+};
+struct building_farm_chickpeas : public building_farm {
+    building_farm_chickpeas(building &b) : building_farm(b) {}
+    BUILDING_METAINFO(BUILDING_CHICKPEAS_FARM, building_farm_chickpeas);
+};
+struct building_farm_pomegranates : public building_farm {
+    building_farm_pomegranates(building &b) : building_farm(b) {}
+    BUILDING_METAINFO(BUILDING_POMEGRANATES_FARM, building_farm_pomegranates);
+};
+struct building_farm_barley : public building_farm {
+    building_farm_barley(building &b) : building_farm(b) {}
+    BUILDING_METAINFO(BUILDING_BARLEY_FARM, building_farm_barley);
+};
+struct building_farm_flax : public building_farm {
+    building_farm_flax(building &b) : building_farm(b) {}
+    BUILDING_METAINFO(BUILDING_FLAX_FARM, building_farm_flax);
+};
+struct building_farm_henna : public building_farm {
+    building_farm_henna(building &b) : building_farm(b) {}
+    BUILDING_METAINFO(BUILDING_HENNA_FARM, building_farm_henna);
+};
+struct building_farm_figs : public building_farm {
+    building_farm_figs(building &b) : building_farm(b) {}
+    BUILDING_METAINFO(BUILDING_FIGS_FARM, building_farm_figs);
+};
 
-farm_model<BUILDING_GRAIN_FARM> farm_grain_m{"building_farm_grain"};
-farm_model<BUILDING_LETTUCE_FARM> farm_lettuce_m{"building_farm_lettuce"};
-farm_model<BUILDING_CHICKPEAS_FARM> farm_chickpeas_m{"building_farm_chickpeas"};
-farm_model<BUILDING_POMEGRANATES_FARM> farm_pomegranates_m{"building_farm_pomegranates"};
-farm_model<BUILDING_BARLEY_FARM> farm_barley_m{"building_farm_barley"};
-farm_model<BUILDING_FLAX_FARM> farm_flax_m{"building_farm_flax"};
-farm_model<BUILDING_HENNA_FARM> farm_henna_m{"building_farm_henna"};
-farm_model<BUILDING_FIGS_FARM> farm_figs_m{"building_farm_figs"};
+buildings::model_t<building_farm_grain> farm_grain_m;
+buildings::model_t<building_farm_lettuce> farm_lettuce_m;
+buildings::model_t<building_farm_chickpeas> farm_chickpeas_m;
+buildings::model_t<building_farm_pomegranates> farm_pomegranates_m;
+buildings::model_t<building_farm_barley> farm_barley_m;
+buildings::model_t<building_farm_flax> farm_flax_m;
+buildings::model_t<building_farm_henna> farm_henna_m;
+buildings::model_t<building_farm_figs> farm_figs_m;
 
 static void building_farm_draw_info(object_info &c, const char* type, e_resource resource) {
     painter ctx = game.painter();

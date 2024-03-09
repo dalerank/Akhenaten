@@ -8,26 +8,11 @@
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
 
-namespace model {
-
-struct physician_t {
-    static constexpr e_building_type type = BUILDING_PHYSICIAN;
-    e_labor_category labor_category;
-    animations_t anim;
-};
-
-physician_t physician;
-
-}
+buildings::model_t<building_physician> physician_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_physician);
 void config_load_building_physician() {
-    g_config_arch.r_section("building_physician", [] (archive arch) {
-        model::physician.labor_category = arch.r_type<e_labor_category>("labor_category");
-        model::physician.anim.load(arch);
-    });
-
-    city_labor_set_category(model::physician);
+    physician_m.load();
 }
 
 void building_physician::window_info_background(object_info& c) {
@@ -59,7 +44,7 @@ void building_physician::spawn_figure() {
 }
 
 bool building_physician::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const animation_t &anim = model::physician.anim["work"];
+    const animation_t &anim = physician_m.anim["work"];
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;

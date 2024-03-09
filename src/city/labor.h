@@ -34,7 +34,7 @@ void city_labor_set_category(e_building_type type, int category);
 
 template<class T>
 void city_labor_set_category(const T &model) {
-    city_labor_set_category(model.type, model.labor_category);
+    city_labor_set_category(model.TYPE, model.labor_category);
 }
 
 void city_labor_calculate_workers(int num_plebs, int num_patricians);

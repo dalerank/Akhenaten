@@ -10,6 +10,8 @@ class building_storage_room;
 
 class building_storage_yard : public building_impl {
 public:
+    BUILDING_METAINFO(BUILDING_STORAGE_YARD, building_storage_yard)
+
     building_storage_yard(building &b) : building_impl(b), stored_full_amount(b.stored_full_amount) {}
     virtual void on_create() override;
     virtual void spawn_figure() override;
