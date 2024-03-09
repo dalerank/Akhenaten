@@ -536,7 +536,7 @@ storage_worker_task building_storage_yard_determine_getting_up_resources(buildin
             e_storageyard_task status = lacking > requesting / 2
                                             ? STORAGEYARD_TASK_GETTING_MOAR
                                             : STORAGEYARD_TASK_GETTING;
-            return {status, &space->base, lacking, check_resource};
+            return {status, &warehouse->base, lacking, check_resource};
         }
     }
 
@@ -811,6 +811,11 @@ void building_storage_yard::spawn_figure() {
     } else if (!base.has_figure(BUILDING_SLOT_SERVICE)) {
         figure* f = figure_create(FIGURE_STORAGEYARD_CART, base.road_access, DIR_4_BOTTOM_LEFT);
         auto cart = f->dcast_storageyard_cart();
+        assert(cart);
+        if (!cart) {
+            f->poof();
+            return;
+        }
 
         cart->base.action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 

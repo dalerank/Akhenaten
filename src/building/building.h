@@ -129,7 +129,7 @@ public:
     unsigned char house_tax_coverage;
     unsigned short tax_collector_id;
     short formation_id;
-    union  impl_data_t {
+    union impl_data_t {
         struct dock_t {
             short queued_docker_id;
             int dock_tiles[2];
