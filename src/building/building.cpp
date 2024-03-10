@@ -9,7 +9,6 @@
 #include "building/building_barracks.h"
 #include "building/building_bazaar.h"
 #include "building/building_cattle_ranch.h"
-#include "building/building_firehouse.h"
 #include "building/building_conservatory.h"
 #include "building/building_courthouse.h"
 #include "building/building_weaponsmith.h"
@@ -297,8 +296,6 @@ building_impl *building::dcast() {
     }
 
     switch (type) {
-
-    case BUILDING_FIREHOUSE: _ptr = new building_firehouse(*this); break;
     case BUILDING_BRICKLAYERS_GUILD: _ptr = new building_bricklayers_guild(*this); break;
     case BUILDING_ARCHITECT_POST: _ptr = new building_architect_post(*this); break;
     case BUILDING_BANDSTAND: _ptr = new building_bandstand(*this); break;
