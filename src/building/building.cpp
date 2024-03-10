@@ -297,7 +297,7 @@ building_impl *building::dcast() {
     }
 
     switch (type) {
-    case BUILDING_BAZAAR: _ptr = new building_bazaar(*this); break;
+
     case BUILDING_FIREHOUSE: _ptr = new building_firehouse(*this); break;
     case BUILDING_BRICKLAYERS_GUILD: _ptr = new building_bricklayers_guild(*this); break;
     case BUILDING_ARCHITECT_POST: _ptr = new building_architect_post(*this); break;
@@ -374,6 +374,7 @@ building_pottery *building::dcast_pottery() { return dcast()->dcast_pottery(); }
 building_storage_yard *building::dcast_storage_yard() { return dcast()->dcast_storage_yard(); }
 building_storage_room *building::dcast_storage_room() { return dcast()->dcast_storage_room(); }
 building_juggler_school *building::dcast_juggler_school() { return dcast()->dcast_juggler_school(); }
+building_bazaar *building::dcast_bazaar() { return dcast()->dcast_bazaar(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

@@ -56,6 +56,16 @@ bool building_dock_is_connected_to_open_water(tile2i tile) {
     return map_terrain_is_adjacent_to_open_water(tile, 3);
 }
 
+bool dock_is_good_accepted(int index, building *b) {
+    int goods_bit = 1 << index;
+    return !(b->subtype.market_goods & goods_bit);
+}
+
+void dock_toggle_good_accepted(int index, building *b) {
+    int goods_bit = (1 << index);
+    b->subtype.market_goods ^= goods_bit;
+}
+
 int building_dock_accepts_ship(int ship_id, int dock_id) {
     building* dock = building_get(dock_id);
     figure* f = figure_get(ship_id);
@@ -63,7 +73,7 @@ int building_dock_accepts_ship(int ship_id, int dock_id) {
     empire_city* city = empire_city_get(f->empire_city_id);
     for (int resource = RESOURCE_GRAIN; resource < RESOURCES_MAX; resource++) {
         if (city->sells_resource[resource] || city->buys_resource[resource]) {
-            if (!is_good_accepted(resource - 1, dock)) {
+            if (!dock_is_good_accepted(resource - 1, dock)) {
                 dock_id = 0;
                 return 0;
             }

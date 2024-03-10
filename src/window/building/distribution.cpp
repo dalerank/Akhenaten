@@ -5,6 +5,7 @@
 
 #include "building/building.h"
 #include "building/building_bazaar.h"
+#include "building/dock.h"
 #include "building/storage.h"
 #include "building/building_storage_yard.h"
 #include "city/buildings.h"
@@ -305,7 +306,7 @@ void window_building_draw_dock_orders_foreground(object_info* c) {
         lang_text_draw(23, resource, c->offset.x + 72, y_offset + 50 + line_y, FONT_NORMAL_WHITE_ON_DARK);
         button_border_draw(c->offset.x + 180, y_offset + 46 + line_y, 210, 22, data.resource_focus_button_id == i + 1);
         building* b = building_get(c->building_id);
-        int state = is_good_accepted(i, b);
+        int state = dock_is_good_accepted(i, b);
         if (state)
             lang_text_draw(99, 7, line_x, y_offset + 51 + line_y, FONT_NORMAL_WHITE_ON_DARK);
         else
@@ -444,11 +445,14 @@ static void storage_toggle_permissions(int index, int param2) {
 
 static void toggle_resource_state(int index, int param2) {
     auto &data = g_window_building_distribution;
-    building* b = building_get(data.building_id);
+    building *b = building_get(data.building_id);
     int resource;
-    if (b->type == BUILDING_BAZAAR || b->type == BUILDING_DOCK)
-        toggle_good_accepted(index - 1, b);
-    else {
+    if (b->type == BUILDING_BAZAAR) {
+        building_bazaar *bazaar = b->dcast_bazaar();
+        bazaar->toggle_good_accepted(index - 1);
+    } else if (b->type == BUILDING_DOCK) {
+        dock_toggle_good_accepted(index - 1, b);
+    } else {
         if (b->type == BUILDING_STORAGE_YARD)
             resource = city_resource_get_available()->items[index - 1];
         else
@@ -462,9 +466,12 @@ static void toggle_resource_state_backwards(int index, int param2) {
     auto &data = g_window_building_distribution;
     building* b = building_get(data.building_id);
     int resource;
-    if (b->type == BUILDING_BAZAAR || b->type == BUILDING_DOCK)
-        toggle_good_accepted(index - 1, b);
-    else {
+    if (b->type == BUILDING_BAZAAR) {
+        building_bazaar *bazaar = b->dcast_bazaar();
+        bazaar->toggle_good_accepted(index - 1);
+    } if (b->type == BUILDING_DOCK) {
+        dock_toggle_good_accepted(index - 1, b);
+    } else {
         if (b->type == BUILDING_STORAGE_YARD)
             resource = city_resource_get_available()->items[index - 1];
         else
@@ -492,9 +499,10 @@ static void order_quantity_increase_decrease(int index, int param2) {
 
 static void market_orders(int index, int param2) {
     auto &data = g_window_building_distribution;
-    building* b = building_get(data.building_id);
-    if (index == 0)
-        unaccept_all_goods(b);
+    building_bazaar* bazaar = building_get(data.building_id)->dcast_bazaar();
+    if (index == 0) {
+        bazaar->unaccept_all_goods();
+    }
 }
 
 static void granary_orders(int index, int param2) {

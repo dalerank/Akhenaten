@@ -6,6 +6,7 @@
 #include "building/building_storage_yard.h"
 #include "graphics/elements/ui.h"
 #include "city/resource.h"
+#include "city/labor.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "scenario/property.h"
@@ -17,11 +18,19 @@
 #include "window/building/distribution.h"
 #include "graphics/graphics.h"
 #include "game/game.h"
+#include "widget/city/ornaments.h"
 
 #include <numeric>
 
 constexpr int Y_FOODS = 90;           // 234
 constexpr int Y_GOODS = Y_FOODS + 20; // 174 //274
+
+buildings::model_t<building_bazaar> bazaar_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bazaar);
+void config_load_building_bazaar() {
+    bazaar_m.load();
+}
 
 struct resource_data {
     int building_id;
@@ -29,28 +38,14 @@ struct resource_data {
     int num_buildings;
 };
 
-int building_bazaar_get_max_food_stock(building* market) {
-    int max_stock = 0;
-    if (market->id > 0 && market->type == BUILDING_BAZAAR) {
-        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            int stock = market->data.market.inventory[i];
-            if (stock > max_stock)
-                max_stock = stock;
-        }
-    }
-    return max_stock;
+int building_bazaar::max_food_stock() {
+    auto it = std::max_element(data.market.inventory + INVENTORY_MIN_FOOD, data.market.inventory + INVENTORY_MAX_FOOD);
+    return *it;
 }
 
-int building_bazaar_get_max_goods_stock(building* market) {
-    int max_stock = 0;
-    if (market->id > 0 && market->type == BUILDING_BAZAAR) {
-        for (int i = INVENTORY_MIN_GOOD; i < INVENTORY_MAX_GOOD; i++) {
-            int stock = market->data.market.inventory[i];
-            if (stock > max_stock)
-                max_stock = stock;
-        }
-    }
-    return max_stock;
+int building_bazaar::max_goods_stock() {
+    auto it = std::max_element(data.market.inventory + INVENTORY_MIN_GOOD, data.market.inventory + INVENTORY_MAX_GOOD);
+    return *it;
 }
 
 static void update_food_resource(resource_data &data, int resource, const building &b, int distance) {
@@ -80,18 +75,18 @@ static void update_good_resource(resource_data &data, e_resource resource, build
     }
 }
 
-bool is_good_accepted(int index, building* market) {
+bool building_bazaar::is_good_accepted(int index) {
     int goods_bit = 1 << index;
-    return !(market->subtype.market_goods & goods_bit);
+    return !(base.subtype.market_goods & goods_bit);
 }
 
-void toggle_good_accepted(int index, building* market) {
+void building_bazaar::toggle_good_accepted(int index) {
     int goods_bit = (1 << index);
-    market->subtype.market_goods ^= goods_bit;
+    base.subtype.market_goods ^= goods_bit;
 }
 
-void unaccept_all_goods(building* market) {
-    market->subtype.market_goods = 0xFFFF;
+void building_bazaar::unaccept_all_goods() {
+    base.subtype.market_goods = 0xFFFF;
 }
 
 building *building_bazaar::get_storage_destination() {
@@ -171,37 +166,37 @@ building *building_bazaar::get_storage_destination() {
     }
 
     // prefer food if we don't have it
-    if (!data.market.inventory[0] && resources[0].num_buildings && is_good_accepted(0, &base)) {
+    if (!data.market.inventory[0] && resources[0].num_buildings && is_good_accepted(0)) {
         data.market.fetch_inventory_id = 0;
         return building_get(resources[0].building_id);
 
-    } else if (!data.market.inventory[1] && resources[1].num_buildings && is_good_accepted(1, &base)) {
+    } else if (!data.market.inventory[1] && resources[1].num_buildings && is_good_accepted(1)) {
         data.market.fetch_inventory_id = 1;
         return building_get(resources[1].building_id);
 
-    } else if (!data.market.inventory[2] && resources[2].num_buildings && is_good_accepted(2, &base)) {
+    } else if (!data.market.inventory[2] && resources[2].num_buildings && is_good_accepted(2)) {
         data.market.fetch_inventory_id = 2;
         return building_get(resources[2].building_id);
 
-    } else if (!data.market.inventory[3] && resources[3].num_buildings && is_good_accepted(3, &base)) {
+    } else if (!data.market.inventory[3] && resources[3].num_buildings && is_good_accepted(3)) {
         data.market.fetch_inventory_id = 3;
         return building_get(resources[3].building_id);
     }
 
     // then prefer resource if we don't have it
-    if (!data.market.inventory[INVENTORY_GOOD1] && resources[INVENTORY_GOOD1].num_buildings && is_good_accepted(INVENTORY_GOOD1, &base)) {
+    if (!data.market.inventory[INVENTORY_GOOD1] && resources[INVENTORY_GOOD1].num_buildings && is_good_accepted(INVENTORY_GOOD1)) {
         data.market.fetch_inventory_id = INVENTORY_GOOD1;
         return building_get(resources[INVENTORY_GOOD1].building_id);
 
-    } else if (!data.market.inventory[INVENTORY_GOOD2] && resources[INVENTORY_GOOD2].num_buildings && is_good_accepted(INVENTORY_GOOD2, &base)) {
+    } else if (!data.market.inventory[INVENTORY_GOOD2] && resources[INVENTORY_GOOD2].num_buildings && is_good_accepted(INVENTORY_GOOD2)) {
         data.market.fetch_inventory_id = INVENTORY_GOOD2;
         return building_get(resources[INVENTORY_GOOD2].building_id);
 
-    } else if (!data.market.inventory[INVENTORY_GOOD3] && resources[INVENTORY_GOOD3].num_buildings && is_good_accepted(INVENTORY_GOOD3, &base)) {
+    } else if (!data.market.inventory[INVENTORY_GOOD3] && resources[INVENTORY_GOOD3].num_buildings && is_good_accepted(INVENTORY_GOOD3)) {
         data.market.fetch_inventory_id = INVENTORY_GOOD3;
         return building_get(resources[INVENTORY_GOOD3].building_id);
 
-    } else if (!data.market.inventory[INVENTORY_GOOD4] && resources[INVENTORY_GOOD4].num_buildings && is_good_accepted(INVENTORY_GOOD4, &base)) {
+    } else if (!data.market.inventory[INVENTORY_GOOD4] && resources[INVENTORY_GOOD4].num_buildings && is_good_accepted(INVENTORY_GOOD4)) {
         data.market.fetch_inventory_id = INVENTORY_GOOD4;
         return building_get(resources[INVENTORY_GOOD4].building_id);
     }
@@ -209,57 +204,57 @@ building *building_bazaar::get_storage_destination() {
     // then prefer smallest stock below 50
     int min_stock = 50;
     int fetch_inventory = -1;
-    if (resources[0].num_buildings && data.market.inventory[0] < min_stock && is_good_accepted(0, &base)) {
+    if (resources[0].num_buildings && data.market.inventory[0] < min_stock && is_good_accepted(0)) {
         min_stock = data.market.inventory[0];
         fetch_inventory = 0;
     }
 
-    if (resources[1].num_buildings && data.market.inventory[1] < min_stock && is_good_accepted(1, &base)) {
+    if (resources[1].num_buildings && data.market.inventory[1] < min_stock && is_good_accepted(1)) {
         min_stock = data.market.inventory[1];
         fetch_inventory = 1;
     }
 
-    if (resources[2].num_buildings && data.market.inventory[2] < min_stock && is_good_accepted(2, &base)) {
+    if (resources[2].num_buildings && data.market.inventory[2] < min_stock && is_good_accepted(2)) {
         min_stock = data.market.inventory[2];
         fetch_inventory = 2;
     }
 
-    if (resources[3].num_buildings && data.market.inventory[3] < min_stock && is_good_accepted(3, &base)) {
+    if (resources[3].num_buildings && data.market.inventory[3] < min_stock && is_good_accepted(3)) {
         min_stock = data.market.inventory[3];
         fetch_inventory = 3;
     }
 
-    if (resources[INVENTORY_GOOD1].num_buildings && data.market.inventory[INVENTORY_GOOD1] < min_stock && is_good_accepted(INVENTORY_GOOD1, &base)) {
+    if (resources[INVENTORY_GOOD1].num_buildings && data.market.inventory[INVENTORY_GOOD1] < min_stock && is_good_accepted(INVENTORY_GOOD1)) {
         min_stock = data.market.inventory[INVENTORY_GOOD1];
         fetch_inventory = INVENTORY_GOOD1;
     }
 
-    if (resources[INVENTORY_GOOD2].num_buildings && data.market.inventory[INVENTORY_GOOD2] < min_stock && is_good_accepted(INVENTORY_GOOD2, &base)) {
+    if (resources[INVENTORY_GOOD2].num_buildings && data.market.inventory[INVENTORY_GOOD2] < min_stock && is_good_accepted(INVENTORY_GOOD2)) {
         min_stock = data.market.inventory[INVENTORY_GOOD2];
         fetch_inventory = INVENTORY_GOOD2;
     }
 
-    if (resources[INVENTORY_GOOD3].num_buildings && data.market.inventory[INVENTORY_GOOD3] < min_stock && is_good_accepted(INVENTORY_GOOD3, &base)) {
+    if (resources[INVENTORY_GOOD3].num_buildings && data.market.inventory[INVENTORY_GOOD3] < min_stock && is_good_accepted(INVENTORY_GOOD3)) {
         min_stock = data.market.inventory[INVENTORY_GOOD3];
         fetch_inventory = INVENTORY_GOOD3;
     }
 
-    if (resources[INVENTORY_GOOD4].num_buildings && data.market.inventory[INVENTORY_GOOD4] < min_stock && is_good_accepted(INVENTORY_GOOD4, &base)) {
+    if (resources[INVENTORY_GOOD4].num_buildings && data.market.inventory[INVENTORY_GOOD4] < min_stock && is_good_accepted(INVENTORY_GOOD4)) {
         fetch_inventory = INVENTORY_GOOD4;
     }
 
     if (fetch_inventory == -1) {
         // all items well stocked: pick food below threshold
-        if (resources[0].num_buildings && data.market.inventory[0] < 600 && is_good_accepted(0, &base)) {
+        if (resources[0].num_buildings && data.market.inventory[0] < 600 && is_good_accepted(0)) {
             fetch_inventory = 0;
         }
-        if (resources[1].num_buildings && data.market.inventory[1] < 400 && is_good_accepted(1, &base)) {
+        if (resources[1].num_buildings && data.market.inventory[1] < 400 && is_good_accepted(1)) {
             fetch_inventory = 1;
         }
-        if (resources[2].num_buildings && data.market.inventory[2] < 400 && is_good_accepted(2, &base)) {
+        if (resources[2].num_buildings && data.market.inventory[2] < 400 && is_good_accepted(2)) {
             fetch_inventory = 2;
         }
-        if (resources[3].num_buildings && data.market.inventory[3] < 400 && is_good_accepted(3, &base)) {
+        if (resources[3].num_buildings && data.market.inventory[3] < 400 && is_good_accepted(3)) {
             fetch_inventory = 3;
         }
     }
@@ -391,43 +386,43 @@ void building_bazaar::draw_simple_background(object_info &c) {
     int food4 = ALLOWED_FOODS(3);
 
     if (food1) {
-        font = is_good_accepted(0, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+        font = is_good_accepted(0) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
         ImageDraw::img_generic(ctx, image_id + food1, c.offset + vec2i{32, Y_FOODS});
         text_draw_number(data.market.inventory[0], '@', " ", c.offset.x + 64, c.offset.y + Y_FOODS + 4, font);
     }
 
     if (food2) {
-        font = is_good_accepted(1, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+        font = is_good_accepted(1) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
         ImageDraw::img_generic(ctx, image_id + food2, c.offset + vec2i{142, Y_FOODS});
         text_draw_number(data.market.inventory[1], '@', " ", c.offset.x + 174, c.offset.y + Y_FOODS + 4, font);
     }
 
     if (food3) {
-        font = is_good_accepted(2, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+        font = is_good_accepted(2) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
         ImageDraw::img_generic(ctx, image_id + food3, c.offset + vec2i{252, Y_FOODS});
         text_draw_number(data.market.inventory[2], '@', " ", c.offset.x + 284, c.offset.y + Y_FOODS + 4, font);
     }
 
     if (food4) {
-        font = is_good_accepted(3, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+        font = is_good_accepted(3) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
         ImageDraw::img_generic(ctx, image_id + food4, c.offset + vec2i{362, Y_FOODS});
         text_draw_number(data.market.inventory[3], '@', " ", c.offset.x + 394, c.offset.y + Y_FOODS + 4, font);
     }
 
     // good stocks
-    font = is_good_accepted(INVENTORY_GOOD1, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+    font = is_good_accepted(INVENTORY_GOOD1) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
     ImageDraw::img_generic(ctx, image_id + INV_RESOURCES[0], c.offset.x + 32, c.offset.y + Y_GOODS);
     text_draw_number(data.market.inventory[INVENTORY_GOOD1], '@', " ", c.offset.x + 64, c.offset.y + Y_GOODS + 4, font);
 
-    font = is_good_accepted(INVENTORY_GOOD2, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+    font = is_good_accepted(INVENTORY_GOOD2) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
     ImageDraw::img_generic(ctx, image_id + INV_RESOURCES[1], c.offset.x + 142, c.offset.y + Y_GOODS);
     text_draw_number(data.market.inventory[INVENTORY_GOOD2], '@', " ", c.offset.x + 174, c.offset.y + Y_GOODS + 4, font);
 
-    font = is_good_accepted(INVENTORY_GOOD3, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+    font = is_good_accepted(INVENTORY_GOOD3) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
     ImageDraw::img_generic(ctx, image_id + INV_RESOURCES[2], c.offset.x + 252, c.offset.y + Y_GOODS);
     text_draw_number(data.market.inventory[INVENTORY_GOOD3], '@', " ", c.offset.x + 284, c.offset.y + Y_GOODS + 4, font);
 
-    font = is_good_accepted(INVENTORY_GOOD4, &base) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
+    font = is_good_accepted(INVENTORY_GOOD4) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
     ImageDraw::img_generic(ctx, image_id + INV_RESOURCES[3], c.offset.x + 362, c.offset.y + Y_GOODS);
     text_draw_number(data.market.inventory[INVENTORY_GOOD4], '@', " ", c.offset.x + 394, c.offset.y + Y_GOODS + 4, font);
 }
@@ -454,7 +449,7 @@ void building_bazaar::draw_orders_foreground(object_info &c) {
     int y_offset = window_building_get_vertical_offset(&c, 28 - 11);
     painter ctx = game.painter();
 
-    building* b = building_get(c.building_id);
+    building_bazaar* bazaar = building_get(c.building_id)->dcast_bazaar();
     //    backup_storage_settings(storage_id); // TODO: market state backup
     const resources_list* list = city_resource_get_available_market_goods();
     for (int i = 0; i < list->size; i++) {
@@ -468,7 +463,7 @@ void building_bazaar::draw_orders_foreground(object_info &c) {
             button_border_draw(line_x - 10, y_offset + 46 + line_y, data.orders_resource_buttons[i].width, data.orders_resource_buttons[i].height, true);
 
         // order status
-        window_building_draw_order_instruction(INSTR_STORAGE_YARD, nullptr, resource, line_x, y_offset + 51 + line_y, is_good_accepted(i, b));
+        window_building_draw_order_instruction(INSTR_STORAGE_YARD, nullptr, resource, line_x, y_offset + 51 + line_y, bazaar->is_good_accepted(i));
     }
 
     // accept none button
@@ -494,4 +489,11 @@ void building_bazaar::window_info_foreground(object_info &ctx) {
         draw_orders_foreground(ctx);
     else
         draw_simple_foreground(ctx);
+}
+
+bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    const auto &anim = bazaar_m.anim["work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+
+    return true;
 }

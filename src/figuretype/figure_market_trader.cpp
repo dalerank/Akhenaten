@@ -18,13 +18,19 @@ void config_load_figure_market_trader() {
 }
 
 void figure_market_trader::figure_action() {
-    building* market = home();
-    if (action_state() == FIGURE_ACTION_125_ROAMING) {
-        // force return on out of stock
-        int stock = building_bazaar_get_max_food_stock(market) + building_bazaar_get_max_goods_stock(market);
-        if (base.roam_length >= 96 && stock <= 0) {
-            base.roam_length = base.max_roam_length;
-        }
+    if (action_state() != FIGURE_ACTION_125_ROAMING) {
+        return;
+    }
+
+    building_bazaar* bazaar = home()->dcast_bazaar();
+    assert(bazaar);
+    if (!bazaar) {
+        return;
+    }
+    // force return on out of stock
+    int stock = bazaar->max_food_stock() + bazaar->max_goods_stock();
+    if (base.roam_length >= 96 && stock <= 0) {
+        base.roam_length = base.max_roam_length;
     }
 }
 

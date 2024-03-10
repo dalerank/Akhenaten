@@ -141,6 +141,13 @@ building_juggler_school = {
   },
 }
 
+building_bazaar = {
+  animations : {
+    work : { pos : [0, 0], anim_id : IMG_BAZAAR },
+    work_fancy : { pos : [0, 0], anim_id : IMG_BAZAAR_FANCY }
+  },
+}
+
 building_booth = {
   animations : {
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW }
