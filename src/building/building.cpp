@@ -372,6 +372,7 @@ building_storage_yard *building::dcast_storage_yard() { return dcast()->dcast_st
 building_storage_room *building::dcast_storage_room() { return dcast()->dcast_storage_room(); }
 building_juggler_school *building::dcast_juggler_school() { return dcast()->dcast_juggler_school(); }
 building_bazaar *building::dcast_bazaar() { return dcast()->dcast_bazaar(); }
+building_firehouse *building::dcast_firehouse() { return dcast()->dcast_firehouse(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

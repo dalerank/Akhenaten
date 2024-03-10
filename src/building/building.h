@@ -29,6 +29,7 @@ class building_storage_room;
 class building_brewery;
 class building_pottery;
 class building_bazaar;
+class building_firehouse;
 struct object_info;
 struct painter;
 struct mouse;
@@ -333,6 +334,7 @@ public:
     building_storage_room *dcast_storage_room();
     building_juggler_school *dcast_juggler_school();
     building_bazaar *dcast_bazaar();
+    building_firehouse *dcast_firehouse();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -420,6 +422,7 @@ public:
     virtual building_storage_room *dcast_storage_room() { return nullptr; }
     virtual building_juggler_school *dcast_juggler_school() { return nullptr; }
     virtual building_bazaar *dcast_bazaar() { return nullptr; }
+    virtual building_firehouse *dcast_firehouse() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
