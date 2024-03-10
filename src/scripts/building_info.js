@@ -155,6 +155,13 @@ building_booth = {
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
 }
 
+building_apothecary = {
+  animations : {
+    work : { pos : [0, 0], anim_id : IMG_BUILDING_APOTHECARY }
+  },
+  labor_category : LABOR_CATEGORY_WATER_HEALTH,
+}
+
 building_bandstand = {
   animations : {
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW },

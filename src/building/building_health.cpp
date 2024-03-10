@@ -12,6 +12,16 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
+#include "widget/city/ornaments.h"
+#include "city/labor.h"
+
+buildings::model_t<building_apothecary> apothercary_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_health);
+void config_load_building_health() {
+    apothercary_m.load();
+}
+
 
 static void building_health_draw_info(object_info& c, int help_id, const char* type, int group_id, e_figure_type ftype) {
     c.help_id = help_id;
@@ -64,4 +74,11 @@ void building_apothecary::spawn_figure() {
     //            create_roaming_figure(road.x, road.y, FIGURE_DOCTOR);
     //        }
     //    }
+}
+
+bool building_apothecary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    const animation_t &anim = apothercary_m.anim["work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+
+    return true;
 }

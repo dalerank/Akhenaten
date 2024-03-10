@@ -55,6 +55,7 @@ var building_brewery = {}
 var building_juggler_school = {}
 var building_bazaar = {}
 var building_architect_post = {}
+var building_apothecary = {}
 var empire_window = {}
 var images_remap = []
 var imagepaks = []
