@@ -406,30 +406,33 @@ void figure::action_perform() {
         }
 
         // common action states handling
-        switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
+        const bool common_roaming = dcast()->is_common_roaming();
+        if (common_roaming) {
+            switch (action_state) {
+            case FIGURE_ACTION_150_ATTACK:
+                figure_combat_handle_attack();
+                break;
 
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
+            case FIGURE_ACTION_149_CORPSE:
+                figure_combat_handle_corpse();
+                break;
 
-        case FIGURE_ACTION_125_ROAMING:
-        case ACTION_1_ROAMING:
-            if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS) {
+            case FIGURE_ACTION_125_ROAMING:
+            case ACTION_1_ROAMING:
+                if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS) {
+                    break;
+                }
+                do_roam();
+                break;
+
+            case FIGURE_ACTION_126_ROAMER_RETURNING:
+            case ACTION_2_ROAMERS_RETURNING:
+                if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS) {
+                    break;
+                }
+                do_returnhome();
                 break;
             }
-            do_roam();
-            break;
-
-        case FIGURE_ACTION_126_ROAMER_RETURNING:
-        case ACTION_2_ROAMERS_RETURNING:
-            if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS) {
-                break;
-            }
-            do_returnhome();
-            break;
         }
 
         if (state == FIGURE_STATE_DYING) { // update corpses / dying animation

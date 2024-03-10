@@ -124,12 +124,11 @@ int figure::get_permission_for_figure() {
 }
 void figure::move_to_next_tile() {
     tile2i old = tile;
-    //    int old_x = tile.x();
-    //    int old_y = tile.y();
     map_figure_remove(); // is this necessary??? maybe could be refactored in the future...
     switch (direction) {
     default:
         return;
+
     case DIR_0_TOP_RIGHT:
         tile.shift(0, -1);
         //            tile.y()--;
@@ -478,21 +477,12 @@ void figure::follow_ticks(int num_ticks) {
 }
 void figure::roam_ticks(int num_ticks) {
     route_remove(); // refresh path to check if road network is disconnected
-    // TODO: this mess... eventually.
-    //    if (!roam_wander_freely) {
-    //        move_ticks(num_ticks, true);
-    //        if (direction == DIR_FIGURE_AT_DESTINATION)
-    //            roam_wander_freely = true;
-    //        else if (direction == DIR_FIGURE_REROUTE)
-    //            roam_wander_freely = true;
-    //
-    //        if (roam_wander_freely) { // keep going in same direction until turn
-    //            roam_ticks_until_next_turn = 100;
-    //            direction = previous_tile_direction;
-    //        } else
-    //            return;
-    //    }
     // no destination: walk to end of tile and pick a direction
+    auto clamp_direction = [] (int direction) {
+        if (direction > 6) direction = 0;
+        else if (direction < 0) direction = 6;
+        return direction;
+    };
     while (num_ticks > 0) {
         num_ticks--;
         progress_on_tile++;
@@ -504,6 +494,8 @@ void figure::roam_ticks(int num_ticks) {
             if (figure_service_provide_coverage()) {
                 return;
             }
+
+            add_roam_history(tile.grid_offset());
 
             int came_from_direction = (previous_tile_direction + 4) % 8;
             int road_tiles[8];
@@ -528,7 +520,7 @@ void figure::roam_ticks(int num_ticks) {
                 }
             }
 
-            if (adjacent_road_tiles == 4 && map_get_diagonal_road_tiles_for_roaming(tile.grid_offset(), road_tiles) >= 8) {
+            if (adjacent_road_tiles == 4 && map_get_diagonal_road_tiles_for_roaming(tile, road_tiles) >= 8) {
                 // go straight on when all surrounding tiles are road
                 adjacent_road_tiles = 2;
                 if (came_from_direction == DIR_0_TOP_RIGHT || came_from_direction == DIR_4_BOTTOM_LEFT) {
@@ -561,40 +553,51 @@ void figure::roam_ticks(int num_ticks) {
                         break;
                     }
 
-                    direction += roam_turn_direction;
-                    if (direction > 6) {
-                        direction = 0;
-                    }
-                    if (direction < 0) {
-                        direction = 6;
-                    }
+                    direction = clamp_direction(direction + roam_turn_direction);
                 } while (dir++ < 4);
             } else { // > 2 road tiles
-                direction = (roam_random_counter + map_random_get(tile.grid_offset())) & 6;
+                direction = (roam_random_counter + map_random_get(tile)) & 6;
                 if (!road_tiles[direction] || direction == came_from_direction) {
                     roam_ticks_until_next_turn--;
                     if (roam_ticks_until_next_turn <= 0) {
                         roam_set_direction();
                         came_from_direction = -1;
                     }
-                    int dir = 0;
-                    do {
-                        if (road_tiles[direction] && direction != came_from_direction)
-                            break;
+                    for (int dir = 0; dir < 4; ++dir) {
+                        if (road_tiles[direction]) {
+                            if (direction != came_from_direction) {
+                                break;
+                            }
 
-                        direction += roam_turn_direction;
-                        if (direction > 6)
-                            direction = 0;
-                        if (direction < 0)
-                            direction = 6;
-                    } while (dir++ < 4);
+                            const int dirtile = tile.grid_offset() + map_grid_direction_delta(direction);
+                            if (!in_roam_history(dirtile)) {
+                                break;
+                            }
+                        }
+
+                        direction = clamp_direction(direction + roam_turn_direction);
+                    }
+                } else {
+                    if (in_roam_history(tile.grid_offset())) {
+                        for (int dir = 0; dir < 4; ++dir) {
+                            const int dirtile = tile.grid_offset() + map_grid_direction_delta(direction);
+                            if (!in_roam_history(dirtile)) {
+                                break;
+                            }
+
+                            direction = clamp_direction(direction + roam_turn_direction);
+                        };
+                    }
                 }
             }
             routing_path_current_tile++;
             previous_tile_direction = direction;
         }
-        if (progress_on_tile > 14) // wrap around
+
+        if (progress_on_tile > 14) { // wrap around
             progress_on_tile = 0;
+        }
+
         advance_figure_tick();
     }
 }

@@ -20,6 +20,26 @@ void config_load_figure_labor_seeker() {
     });
 }
 
+void figure_labor_seeker::figure_action() {
+    switch (action_state()) {
+    case FIGURE_ACTION_150_ATTACK:
+        base.figure_combat_handle_attack();
+        break;
+
+    case FIGURE_ACTION_149_CORPSE:
+        base.figure_combat_handle_corpse();
+        break;
+
+    case FIGURE_ACTION_125_ROAMING:
+        do_roam(TERRAIN_USAGE_ROADS, FIGURE_ACTION_126_ROAMER_RETURNING);
+        break;
+
+    case FIGURE_ACTION_126_ROAMER_RETURNING:
+        do_returnhome(TERRAIN_USAGE_ROADS);
+        break;
+    }
+}
+
 void figure_labor_seeker::figure_before_action() {
     building *b = home();
     if (!b->is_valid()) {

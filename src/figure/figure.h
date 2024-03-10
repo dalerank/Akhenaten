@@ -30,6 +30,7 @@ class figure_trade_ship;
 class figure_sled;
 class figure_musician;
 class figure_dancer;
+class figure_labor_seeker;
 
 struct animation_t;
 
@@ -127,6 +128,8 @@ public:
     short roam_length;
     bool roam_wander_freely;
     unsigned char roam_random_counter;
+    int roam_history[128];
+    uint8_t roam_history_i;
     signed char roam_turn_direction;
     signed char roam_ticks_until_next_turn;
     vec2i cc_coords;
@@ -241,6 +244,7 @@ public:
     figure_sled *dcast_sled();
     figure_musician *dcast_musician();
     figure_dancer *dcast_dancer();
+    figure_labor_seeker *dcast_labor_seeker();
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -250,6 +254,9 @@ public:
     };
 
     // map search tests
+    bool in_roam_history(int goffset);
+    void add_roam_history(int goffset);
+
     bool is_dead(); // figure.c
     bool is_enemy();
     bool is_herd();
@@ -531,6 +538,7 @@ public:
     virtual bool can_move_by_water() const;
     virtual int y_correction(int y) const { return y; }
     virtual void cart_update_image() { base.cart_update_image(); }
+    virtual bool is_common_roaming() { return true; }
 
     virtual figure_immigrant *dcast_immigrant() { return nullptr; }
     virtual figure_cartpusher *dcast_cartpusher() { return nullptr; }
@@ -539,6 +547,7 @@ public:
     virtual figure_sled *dcast_sled() { return nullptr; }
     virtual figure_musician *dcast_musician() { return nullptr; }
     virtual figure_dancer *dcast_dancer() { return nullptr; }
+    virtual figure_labor_seeker *dcast_labor_seeker() { return nullptr; }
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -551,7 +560,7 @@ public:
     inline bool do_gotobuilding(building *dest, bool stop_at_road = true, e_terrain_usage terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1) { return base.do_gotobuilding(dest, stop_at_road, terrainchoice, NEXT_ACTION, FAIL_ACTION); }
     inline bool do_enterbuilding(bool invisible, building *b, short next_action = -1, short fail_action = -1) { return base.do_enterbuilding(invisible, b, next_action, fail_action); }
     inline bool do_exitbuilding(bool invisible, short next_action = -1, short fail_action = -1) { return base.do_exitbuilding(invisible, next_action, fail_action); }
-    inline bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short next_action = ACTION_2_ROAMERS_RETURNING) { return base.do_roam(terrainchoice, next_action); }
+    inline bool do_roam(int terrainchoice, short next_action) { return base.do_roam(terrainchoice, next_action); }
     inline bool do_goto(tile2i dest, int terrainchoice = TERRAIN_USAGE_ROADS, short next_action = -1, short fail_action = -1) { return base.do_goto(dest, terrainchoice, next_action, fail_action); }
     inline tile2i tile() const { return base.tile; }
     inline building *destination() const { return base.destination(); }

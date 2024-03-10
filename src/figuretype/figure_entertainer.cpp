@@ -222,7 +222,7 @@ void figure_entertainer::figure_action() {
     case 12:
         //        case ACTION_10_DELIVERING_FOOD:
     case FIGURE_ACTION_94_ENTERTAINER_ROAMING:
-        do_roam();
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_2_ROAMERS_RETURNING);
         break;
 
     case ACTION_11_RETURNING_EMPTY:
