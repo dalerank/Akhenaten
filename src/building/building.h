@@ -31,6 +31,7 @@ class building_pottery;
 class building_bazaar;
 class building_firehouse;
 class building_architect_post;
+class building_booth;
 struct object_info;
 struct painter;
 struct mouse;
@@ -337,6 +338,7 @@ public:
     building_bazaar *dcast_bazaar();
     building_firehouse *dcast_firehouse();
     building_architect_post *dcast_architect_post();
+    building_booth *dcast_booth();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -426,6 +428,7 @@ public:
     virtual building_bazaar *dcast_bazaar() { return nullptr; }
     virtual building_firehouse *dcast_firehouse() { return nullptr; }
     virtual building_architect_post *dcast_architect_post() { return nullptr; }
+    virtual building_booth *dcast_booth() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

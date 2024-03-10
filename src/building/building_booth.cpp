@@ -16,6 +16,14 @@
 #include "widget/city/ornaments.h"
 #include "sound/sound_building.h"
 #include "building/building_entertainment.h"
+#include "city/labor.h"
+
+buildings::model_t<building_booth> booth_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_booth);
+void config_load_building_booth() {
+    booth_m.load();
+}
 
 void building_booth::window_info_background(object_info &c) {
     c.help_id = 71;

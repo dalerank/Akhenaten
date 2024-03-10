@@ -18,7 +18,6 @@
 #include "building/monument_mastaba.h"
 #include "building/building_bandstand.h"
 #include "building/building_bricklayers_guild.h"
-#include "building/building_booth.h"
 #include "building/building_health.h"
 #include "building/building_well.h"
 #include "building/building_shrine.h"
@@ -297,7 +296,6 @@ building_impl *building::dcast() {
     switch (type) {
     case BUILDING_BRICKLAYERS_GUILD: _ptr = new building_bricklayers_guild(*this); break;
     case BUILDING_BANDSTAND: _ptr = new building_bandstand(*this); break;
-    case BUILDING_BOOTH: _ptr = new building_booth(*this); break;
     case BUILDING_APOTHECARY: _ptr = new building_apothecary(*this); break;
     case BUILDING_WELL: _ptr = new building_well(*this); break;
     case BUILDING_HUNTING_LODGE: _ptr = new building_hunting_lodge(*this); break;
@@ -372,6 +370,7 @@ building_juggler_school *building::dcast_juggler_school() { return dcast()->dcas
 building_bazaar *building::dcast_bazaar() { return dcast()->dcast_bazaar(); }
 building_firehouse *building::dcast_firehouse() { return dcast()->dcast_firehouse(); }
 building_architect_post *building::dcast_architect_post() { return dcast()->dcast_architect_post(); }
+building_booth *building::dcast_booth() { return dcast()->dcast_booth(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
