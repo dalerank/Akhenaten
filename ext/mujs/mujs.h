@@ -160,6 +160,7 @@ int js_isundefined(js_State *J, int idx);
 int js_isnull(js_State *J, int idx);
 int js_isboolean(js_State *J, int idx);
 int js_isnumber(js_State *J, int idx);
+int js_iscnumber(js_State *J, int idx);
 int js_isstring(js_State *J, int idx);
 int js_isprimitive(js_State *J, int idx);
 int js_isobject(js_State *J, int idx);

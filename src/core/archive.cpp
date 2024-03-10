@@ -23,7 +23,7 @@ void archive::getindex(int idx, int i) {
 }
 
 bool archive::isnumber(int idx) {
-    return js_isnumber((js_State*)state, idx);
+    return (js_isnumber((js_State*)state, idx) || js_iscnumber((js_State*)state, idx));
 }
 
 double archive::tonumber(int idx) {

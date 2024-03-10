@@ -189,6 +189,7 @@ int js_isundefined(js_State *J, int idx) { return stackidx(J, idx)->type == JS_T
 int js_isnull(js_State *J, int idx) { return stackidx(J, idx)->type == JS_TNULL; }
 int js_isboolean(js_State *J, int idx) { return stackidx(J, idx)->type == JS_TBOOLEAN; }
 int js_isnumber(js_State *J, int idx) { return stackidx(J, idx)->type == JS_TNUMBER; }
+int js_iscnumber(js_State *J, int idx) { return stackidx(J, idx)->type == JS_CNUMBER; }
 int js_isstring(js_State *J, int idx) { enum js_Type t = stackidx(J, idx)->type; return t == JS_TSHRSTR || t == JS_TLITSTR || t == JS_TMEMSTR; }
 int js_isprimitive(js_State *J, int idx) { return stackidx(J, idx)->type != JS_TOBJECT; }
 int js_isobject(js_State *J, int idx) { return stackidx(J, idx)->type == JS_TOBJECT; }

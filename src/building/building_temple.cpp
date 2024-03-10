@@ -129,6 +129,18 @@ bool building_temple::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     return true;
 }
 
+const building_impl::static_params &building_temple::params() const {
+    switch(type()) {
+    case BUILDING_TEMPLE_OSIRIS: return temple_osiris_m;
+    case BUILDING_TEMPLE_RA: return temple_ra_m;
+    case BUILDING_TEMPLE_PTAH: return temple_ptah_m;
+    case BUILDING_TEMPLE_SETH: return temple_seth_m;
+    case BUILDING_TEMPLE_BAST: return temple_bast_m;
+    }
+
+    return building_impl::params();
+}
+
 const animation_t &building_temple::anim(pcstr key) const {
     return params().anim[key];
 }
