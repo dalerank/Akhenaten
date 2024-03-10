@@ -4,6 +4,7 @@
 #include "core/svector.h"
 #include "building/destruction.h"
 #include "city/object_info.h"
+#include "city/labor.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
@@ -13,11 +14,19 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
+#include "widget/city/ornaments.h"
 #include "dev/debug.h"
 
 #include <iostream>
 
 declare_console_command_p(collapse, console_command_collapse);
+
+buildings::model_t<building_architect_post> architect_post_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_architect_post);
+void config_load_building_architect_post() {
+    architect_post_m.load();
+}
 
 void console_command_collapse(std::istream &is, std::ostream &) {
     std::string args;
@@ -74,4 +83,11 @@ void building_architect_post::window_info_background(object_info &c) {
 
 void building_architect_post::spawn_figure() {
     common_spawn_roamer(FIGURE_ARCHITECT, 50, FIGURE_ACTION_60_ENGINEER_CREATED);
+}
+
+bool building_architect_post::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    const animation_t &anim = architect_post_m.anim["work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+
+    return true;
 }

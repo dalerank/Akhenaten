@@ -234,6 +234,13 @@ building_firehouse = {
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
 }
 
+building_architect_post = {
+  animations : {
+    work : { pos : [0, 0], anim_id: IMG_ARCHITECT_POST }
+  },
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+}
+
 building_conservatory = {
   animations : {
     work : { pos : [82, 18], anim_id: IMG_MUSICIAN_SHOW_SN }

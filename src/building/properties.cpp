@@ -87,7 +87,7 @@ static building_properties properties[400] = {
     {4, 0, GROUP_BUILDING_GOVERNORS_VILLA},
     {5, 0, GROUP_BUILDING_GOVERNORS_PALACE}, // mansions ^^^
     {2, 1, 0, 0},
-    {1, 1, GROUP_BUILDING_ENGINEERS_POST}, // architects
+    {1, 1, 0, 0}, // architects
     {1, 1, 0, 0},                          // bridge
     {1, 1, 0, 0},
     {0, 0, 0, 0}, // senate (unused?)
@@ -278,6 +278,7 @@ void building_properties_init() {
     properties[BUILDING_TEMPLE_BAST] = {3, 0, 0, 0, 0, IMG_TEMPLE_BAST};
     properties[BUILDING_COURTHOUSE] = {3, 0, 0, 0, 0, IMG_COURTHOUSE};
     properties[BUILDING_WEAPONSMITH] = {2, 0, 0, 0, 0, IMG_WEAPONSMITH};
+    properties[BUILDING_ARCHITECT_POST] = {1, 0, 0, 0, IMG_ARCHITECT_POST};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {
