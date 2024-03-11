@@ -32,6 +32,7 @@
 #include "grid/road_access.h"
 #include "scenario/property.h"
 #include "config/config.h"
+#include "widget/city/ornaments.h"
 
 #include "figuretype/figure_storageyard_cart.h"
 #include "figuretype/figure_sled.h"
@@ -291,6 +292,13 @@ bool building_storage_yard::is_gettable(e_resource resource) {
 
 bool building_storage_yard::is_not_accepting(e_resource resource) {
     return !((is_accepting(resource) || is_getting(resource)));
+}
+
+bool building_storage_yard::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    building_draw_normal_anim(ctx, point + vec2i{21, 24}, &base, tile, storage_yard_m.anim["work"], color_mask);
+    ImageDraw::img_generic(ctx, image_group(IMG_STORAGE_YARD) + 17, point.x - 5, point.y - 42, color_mask);
+
+    return true;
 }
 
 int building_storageyards_remove_resource(e_resource resource, int amount) {

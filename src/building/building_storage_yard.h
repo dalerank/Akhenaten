@@ -20,6 +20,7 @@ public:
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
 
     virtual building_storage_yard *dcast_storage_yard() override { return this; }
+    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     
     building_storage_room *room() { return next()->dcast_storage_room(); }
     const building_storage *storage();

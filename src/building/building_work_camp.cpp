@@ -13,6 +13,8 @@
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
 
+#include "widget/city/ornaments.h"
+
 buildings::model_t<building_work_camp> work_camp_m;
 
 void building_work_camp::window_info_background(object_info &c) {
@@ -82,6 +84,12 @@ void building_work_camp::spawn_figure() {
             dest->monument_add_workers(f->id);
         }
     }
+}
+
+bool building_work_camp::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    building_draw_normal_anim(ctx, point, &base, tile, work_camp_m.anim["work"], color_mask);
+
+    return true;
 }
 
 void building_work_camp::update_day() {

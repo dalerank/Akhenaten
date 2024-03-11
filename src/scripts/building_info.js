@@ -141,11 +141,25 @@ building_juggler_school = {
   },
 }
 
+building_storage_yard = {
+  animations : {
+    work : { pos : [0, 0], anim_id : IMG_STORAGE_YARD }
+  },
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
 building_bazaar = {
   animations : {
     work : { pos : [0, 0], anim_id : IMG_BAZAAR },
     work_fancy : { pos : [0, 0], anim_id : IMG_BAZAAR_FANCY }
   },
+}
+
+building_work_camp = {
+  animations : {
+    work : { pos : [0, 0], anim_id : IMG_WORKCAMP },
+  },
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
 building_booth = {

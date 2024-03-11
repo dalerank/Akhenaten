@@ -78,7 +78,7 @@ static building_properties properties[400] = {
     {3, 0, 0, 0},                         // temple complex ^^^^
     {2, 0, 0, 0},        // bazaar
     {4, 0, 0, 0},       // granary
-    {1, 1, GROUP_BUILDING_STORAGE_YARD},  // storageyard (hut)
+    {1, 1, 0, 0},  // storageyard (hut)
     {1, 1, 0, 0},                         // storageyard (space tile)
     {3, 0, GROUP_BUILDING_SHIPYARD},      // shipwright
     {3, 0, GROUP_BUILDING_DOCK},          // dock
@@ -206,7 +206,7 @@ static building_properties properties[400] = {
     {3, 1, 0, 0},                           // figs farm
     {0, 0, 0, 0},
     {0, 0, 0, 0},
-    {2, 0, GROUP_BUILDING_WORKCAMP}, // work camp
+    {2, 0, 0, 0}, // work camp
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {1, 1, 0, 0},                              // gatehouse (2)
@@ -279,6 +279,8 @@ void building_properties_init() {
     properties[BUILDING_COURTHOUSE] = {3, 0, 0, 0, 0, IMG_COURTHOUSE};
     properties[BUILDING_WEAPONSMITH] = {2, 0, 0, 0, 0, IMG_WEAPONSMITH};
     properties[BUILDING_ARCHITECT_POST] = {1, 0, 0, 0, 0, IMG_ARCHITECT_POST};
+    properties[BUILDING_STORAGE_YARD] = {1, 0, 0, 0, 0, IMG_STORAGE_YARD};
+    properties[BUILDING_WORK_CAMP] = {2, 0, 0, 0, 0, IMG_WORKCAMP};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

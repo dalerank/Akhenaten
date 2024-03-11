@@ -432,7 +432,7 @@ static void add_storageyard(building* b) {
 
     b->prev_part_building_id = 0;
     tile2i shifted_tile = b->tile.shifted(offset[corner]);
-    map_building_tiles_add(b->id, shifted_tile, 1, image_id_from_group(GROUP_BUILDING_STORAGE_YARD), TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, shifted_tile, 1, image_group(IMG_STORAGE_YARD), TERRAIN_BUILDING);
 
     building* prev = b;
     for (int i = 0; i < 9; i++) {

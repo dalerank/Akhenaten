@@ -181,12 +181,6 @@ static void draw_dock_workers(building* b, int x, int y, color color_mask, paint
 
 /////// ORNAMENTS
 
-static void draw_storageyard_ornaments(const building* b, int x, int y, color color_mask, painter &ctx) {
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BUILDING_STORAGE_YARD) + 17, x - 5, y - 42, color_mask);
-    //if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
-    //    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
-}
-
 static void draw_hippodrome_ornaments(vec2i pixel, map_point point, painter &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
@@ -255,12 +249,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
     switch (b->type) {
     case BUILDING_BURNING_RUIN:
         building_draw_normal_anim(ctx, point, b, tile, image_id, color_mask);
-        break;
-
-    case BUILDING_STORAGE_YARD:
-        draw_storageyard_ornaments(b, point.x, point.y, color_mask, ctx);
-        building_draw_normal_anim(ctx, point + vec2i{21, 24}, b, tile, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
-        ImageDraw::img_generic(ctx, image_id + 17, point.x - 5, point.y - 42, color_mask);
         break;
 
     case BUILDING_DOCK:

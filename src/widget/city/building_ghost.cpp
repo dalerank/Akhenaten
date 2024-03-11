@@ -216,7 +216,7 @@ static void draw_storage_yard(vec2i tile, painter &ctx) {
     vec2i corner_offset{-5, -45};
     vec2i place_offset{0, -15};
 
-    int image_id_hut = image_id_from_group(GROUP_BUILDING_STORAGE_YARD);
+    int image_id_hut = image_group(IMG_STORAGE_YARD);
     int image_id_space = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
