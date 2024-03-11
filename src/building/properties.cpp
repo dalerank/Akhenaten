@@ -278,7 +278,7 @@ void building_properties_init() {
     properties[BUILDING_TEMPLE_BAST] = {3, 0, 0, 0, 0, IMG_TEMPLE_BAST};
     properties[BUILDING_COURTHOUSE] = {3, 0, 0, 0, 0, IMG_COURTHOUSE};
     properties[BUILDING_WEAPONSMITH] = {2, 0, 0, 0, 0, IMG_WEAPONSMITH};
-    properties[BUILDING_ARCHITECT_POST] = {1, 0, 0, 0, IMG_ARCHITECT_POST};
+    properties[BUILDING_ARCHITECT_POST] = {1, 0, 0, 0, 0, IMG_ARCHITECT_POST};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {
