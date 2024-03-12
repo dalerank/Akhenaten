@@ -672,11 +672,6 @@ void GamestateIO::start_loaded_file() {
         figure_create_fishing_points();
         figure_create_herds();
 
-        map_point entry = scenario_map_entry();
-        map_point exit = scenario_map_exit();
-        city_map_set_entry_point(entry.x(), entry.y());
-        city_map_set_exit_point(exit.x(), exit.y());
-
         // game time
         game_time_init(scenario_property_start_year());
 
@@ -698,6 +693,11 @@ void GamestateIO::start_loaded_file() {
         // tutorial flags
         tutorial_init();
     }
+
+    tile2i entry = scenario_map_entry();
+    tile2i exit = scenario_map_exit();
+    city_map_set_entry_point(entry);
+    city_map_set_exit_point(exit);
 
     scenario_load_meta_data(g_scenario_data.settings.campaign_scenario_id);
     building_properties_init();

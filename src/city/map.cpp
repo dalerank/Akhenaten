@@ -3,37 +3,37 @@
 #include "city/data_private.h"
 #include "grid/grid.h"
 
-tile2i& city_map_entry_point(void) {
+tile2i& city_map_entry_point() {
     return city_data.map.entry_point;
 }
 
-tile2i& city_map_exit_point(void) {
+tile2i& city_map_exit_point() {
     return city_data.map.exit_point;
 }
 
-tile2i& city_map_entry_flag(void) {
+tile2i& city_map_entry_flag() {
     return city_data.map.entry_flag;
 }
 
-tile2i& city_map_exit_flag(void) {
+tile2i& city_map_exit_flag() {
     return city_data.map.exit_flag;
 }
 
-void city_map_set_entry_point(int x, int y) {
-    city_data.map.entry_point.set(x, y);
+void city_map_set_entry_point(tile2i tile) {
+    city_data.map.entry_point = tile;
 }
 
-void city_map_set_exit_point(int x, int y) {
-    city_data.map.exit_point.set(x, y);
+void city_map_set_exit_point(tile2i tile) {
+    city_data.map.exit_point = tile;
 }
 
-int city_map_set_entry_flag(int x, int y) {
-    city_data.map.entry_flag.set(x, y);
+int city_map_set_entry_flag(tile2i tile) {
+    city_data.map.entry_flag = tile;
     return city_data.map.entry_flag.grid_offset();
 }
 
-int city_map_set_exit_flag(int x, int y) {
-    city_data.map.exit_flag.set(x, y);
+int city_map_set_exit_flag(tile2i tile) {
+    city_data.map.exit_flag = tile;
     return city_data.map.exit_flag.grid_offset();
 }
 
@@ -45,7 +45,7 @@ int city_map_road_network_index(int network_id) {
     return 11;
 }
 
-void city_map_clear_largest_road_networks(void) {
+void city_map_clear_largest_road_networks() {
     for (int i = 0; i < 10; i++) {
         city_data.map.largest_road_networks[i].id = 0;
         city_data.map.largest_road_networks[i].size = 0;

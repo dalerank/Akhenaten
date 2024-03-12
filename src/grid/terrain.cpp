@@ -167,22 +167,20 @@ bool map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int ra
     return false;
 }
 
-bool map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset, int* x_tile, int* y_tile) {
-    grid_area area = map_grid_get_area(tile2i(x, y), size, radius);
+bool map_terrain_exists_clear_tile_in_radius(tile2i tile, int size, int radius, int except_grid_offset, tile2i &result) {
+    grid_area area = map_grid_get_area(tile, size, radius);
 
     for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
         for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
             if (grid_offset != except_grid_offset && !map_grid_get(&g_terrain_grid, grid_offset)) {
-                *x_tile = xx;
-                *y_tile = yy;
+                result = {xx,yy};
                 return true;
             }
         }
     }
 
-    *x_tile = area.tmax.x();
-    *y_tile = area.tmax.y();
+    result = {area.tmax.x(), area.tmax.y()};
     return false;
 }
 
