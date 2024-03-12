@@ -2,6 +2,7 @@
 
 #include "building/industry.h"
 #include "city/object_info.h"
+#include "city/labor.h"
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
@@ -16,6 +17,11 @@
 #include "widget/city/ornaments.h"
 
 buildings::model_t<building_work_camp> work_camp_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_work_camp);
+void config_load_building_work_camp() {
+    work_camp_m.load();
+}
 
 void building_work_camp::window_info_background(object_info &c) {
     const int32_t group_id = 179;
