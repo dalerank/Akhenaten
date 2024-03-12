@@ -18,10 +18,10 @@ struct storage_t {
     building_storage storage;
 };
 
-storage_t g_storages[MAX_STORAGES] ;
+storage_t g_storages[MAX_STORAGES];
 
 void building_storage_clear_all(void) {
-    memset(g_storages, 0, 1000 * sizeof(storage_t));
+    memset(g_storages, 0, MAX_STORAGES * sizeof(storage_t));
 }
 
 void building_storage_reset_building_ids(void) {
@@ -85,7 +85,6 @@ int building_storage_create(int building_type) {
 }
 
 int building_storage_restore(int storage_id) {
-    auto& data = g_storages;
     if (g_storages[storage_id].in_use) {
         return 0;
     }
@@ -110,7 +109,6 @@ void backup_storage_settings(int storage_id) {
 }
 
 void restore_storage_settings(bool do_forget_changes) {
-    auto& data = g_storages;
     if (do_forget_changes) {
         if (backup_storage_id == -1)
             return;
@@ -170,6 +168,8 @@ void building_storage_cycle_resource_state(int storage_id, int resource_id, bool
 }
 
 void building_storage_set_permission(int p, building* b) {
+    auto& data = g_storages;
+
     has_unsaved_changes = true;
     const building_storage* s = building_storage_get(b->storage_id);
     int permission_bit = 1 << p;
