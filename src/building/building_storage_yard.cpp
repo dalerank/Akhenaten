@@ -15,6 +15,7 @@
 #include "city/finance.h"
 #include "city/military.h"
 #include "city/resource.h"
+#include "city/labor.h"
 #include "core/calc.h"
 #include "core/vec2i.h"
 #include "empire/trade_prices.h"
@@ -40,6 +41,11 @@
 #include <cmath>
 
 buildings::model_t<building_storage_yard> storage_yard_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_storage_yard);
+void config_load_building_storage_yard() {
+    storage_yard_m.load();
+}
 
 int get_storage_accepting_amount(building *b, e_resource resource) {
     const building_storage* s = building_storage_get(b->storage_id);
@@ -295,7 +301,7 @@ bool building_storage_yard::is_not_accepting(e_resource resource) {
 }
 
 bool building_storage_yard::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    building_draw_normal_anim(ctx, point + vec2i{21, 24}, &base, tile, storage_yard_m.anim["work"], color_mask);
+    building_draw_normal_anim(ctx, point, &base, tile, storage_yard_m.anim["work"], color_mask);
     ImageDraw::img_generic(ctx, image_group(IMG_STORAGE_YARD) + 17, point.x - 5, point.y - 42, color_mask);
 
     return true;

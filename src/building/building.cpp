@@ -12,7 +12,6 @@
 #include "building/building_conservatory.h"
 #include "building/building_courthouse.h"
 #include "building/building_weaponsmith.h"
-#include "building/building_granary.h"
 #include "building/building_tax_collector.h"
 #include "building/building_physician.h"
 #include "building/monument_mastaba.h"
@@ -303,7 +302,6 @@ building_impl *building::dcast() {
     case BUILDING_COURTHOUSE: _ptr = new building_courthouse(*this); break;
     case BUILDING_WEAPONSMITH: _ptr = new building_weaponsmith(*this); break;
     case BUILDING_RECRUITER: _ptr = new building_recruiter(*this); break;
-    case BUILDING_GRANARY: _ptr = new building_granary(*this); break;
     case BUILDING_CATTLE_RANCH: _ptr = new building_cattle_ranch(*this); break;
 
     case BUILDING_TEMPLE_OSIRIS:
@@ -370,6 +368,7 @@ building_firehouse *building::dcast_firehouse() { return dcast()->dcast_firehous
 building_architect_post *building::dcast_architect_post() { return dcast()->dcast_architect_post(); }
 building_booth *building::dcast_booth() { return dcast()->dcast_booth(); }
 building_apothecary *building::dcast_apothecary() { return dcast()->dcast_apothecary(); }
+building_granary *building::dcast_granary() { return dcast()->dcast_granary(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

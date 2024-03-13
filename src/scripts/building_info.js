@@ -143,7 +143,7 @@ building_juggler_school = {
 
 building_storage_yard = {
   animations : {
-    work : { pos : [0, 0], anim_id : IMG_STORAGE_YARD }
+    work : { pos : [23, 27], anim_id : ANIM_STORAGE_YARD_WORK, max_frames:15 }
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
