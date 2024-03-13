@@ -59,6 +59,7 @@ var building_apothecary = {}
 var building_storage_yard = {}
 var building_storage_room = {}
 var building_work_camp = {}
+var building_water_supply = {}
 var empire_window = {}
 var images_remap = []
 var imagepaks = []

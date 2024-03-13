@@ -404,7 +404,9 @@ static void toggle_god_disabled(int key, int param2) {
     data.config_values[key].new_value = 1 - data.config_values[key].new_value;
 
     e_god god = (e_god)(key - CONFIG_GP_CH_GOD_OSIRIS_DISABLED);
-    building_menu_update_gods_available(god, !data.config_values[key].new_value);
+    bool known = !data.config_values[key].new_value;
+    building_menu_update_gods_available(god, known);
+    city_god_set_known(god, known ? GOD_STATUS_KNOWN : GOD_STATUS_UNKNOWN);
 
     window_invalidate();
 }

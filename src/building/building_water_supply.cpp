@@ -5,7 +5,16 @@
 #include "graphics/image_desc.h"
 #include "grid/building_tiles.h"
 #include "window/building/common.h"
+#include "widget/city/ornaments.h"
 #include "graphics/elements/ui.h"
+#include "city/labor.h"
+
+buildings::model_t<building_water_supply> water_supply_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_water_supply);
+void config_load_building_water_supply() {
+    water_supply_m.load();
+}
 
 void building_water_supply::update_month() {
     int avg_desirability = map_desirabilty_avg(tile(), 4);
@@ -53,6 +62,13 @@ void building_water_supply::spawn_figure() {
     //            figure_id = f->id;
     //        }
     //    }
+}
+
+bool building_water_supply::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    const auto &anim = water_supply_m.anim["work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+
+    return true;
 }
 
 void building_water_supply::window_info_background(object_info &c) {

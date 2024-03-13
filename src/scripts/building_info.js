@@ -176,6 +176,13 @@ building_apothecary = {
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
 }
 
+building_water_supply = {
+  animations : {
+    work : { pos : [0, 0], anim_id : IMG_WATER_SUPPLY }
+  },
+  labor_category : LABOR_CATEGORY_WATER_HEALTH,
+}
+
 building_bandstand = {
   animations : {
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW },

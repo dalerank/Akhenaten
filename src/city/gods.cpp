@@ -62,6 +62,10 @@ e_god_status city_gods_is_known(e_god god) {
     return city_data.religion.gods[god].is_known;
 }
 
+void city_god_set_known(e_god god, e_god_status v) {
+    city_data.religion.gods[god].is_known = v;
+}
+
 static bool OSIRIS_locusts() {
     // TODO
     return 0;
@@ -147,6 +151,10 @@ static bool PTAH_industry_restock() {
 }
 
 static bool PTAH_warehouse_destruction() {
+    if (!city_gods_is_known(GOD_PTAH)) {
+        return false;
+    }
+
     // destroy the "best" warehouse found (most stocked up)
     int max_stored = 0;
     building_storage_yard* max_building = nullptr;
@@ -966,7 +974,7 @@ int city_god_happy_angels(int god_id) {
     return city_data.religion.gods[god_id].happy_ankhs;
 }
 
-int city_gods_least_mood() {
+e_god_mood city_gods_least_mood() {
     int least_god_happiness = 100;
     for (auto *god: city_gods_knowns()) {
         int happiness = city_god_happiness(god->type);
@@ -1005,8 +1013,8 @@ int city_months_since_last_festival() {
     return since_last_festival_months;
 }
 
-int city_god_least_happy() {
-    return city_data.religion.least_happy_god - 1;
+e_god city_god_least_happy() {
+    return (e_god)(city_data.religion.least_happy_god - 1);
 }
 
 int city_god_spirit_of_seth_power(void) {
