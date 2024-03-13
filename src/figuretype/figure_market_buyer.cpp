@@ -279,7 +279,7 @@ figure_sound_t figure_market_buyer::get_sound_reaction(pcstr key) const {
     return market_buyer_m.sounds[key];
 }
 
-int figure_market_buyer::take_food_from_granary(building* market, building* granary) {
+int figure_market_buyer::take_food_from_granary(building* market, building* b) {
     int resource;
     switch (base.collecting_item_id) {
     case 0:
@@ -300,6 +300,8 @@ int figure_market_buyer::take_food_from_granary(building* market, building* gran
     default:
     return 0;
     }
+
+    building_granary *granary = b->dcast_granary();
     //    building *granary = building_get(granary);
     //    int market_units = building_get(market)->data.market.inventory[collecting_item_id];
     int market_units = market->data.market.inventory[base.collecting_item_id];
@@ -332,7 +334,7 @@ int figure_market_buyer::take_food_from_granary(building* market, building* gran
     if (num_loads <= 0)
         return 0;
 
-    building_granary_remove_resource(granary, (e_resource)resource, 100 * num_loads);
+    granary->remove_resource((e_resource)resource, 100 * num_loads);
 
     // create delivery boys
     int previous_boy = id();

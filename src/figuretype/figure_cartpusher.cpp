@@ -101,10 +101,14 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
 
             switch (dest->type) {
             case BUILDING_GRANARY:
-                if (building_granary_add_resource(dest, base.resource_id, 0, amount_single_turn) != -1) {
-                    dump_resource(amount_single_turn);
-                } else {
-                    return advance_action(ACTION_8_RECALCULATE);
+                {
+                    building_granary *granary = dest->dcast_granary();
+                    int amount = granary->add_resource(base.resource_id, 0, amount_single_turn);
+                    if (amount != -1) {
+                        dump_resource(amount_single_turn);
+                    } else {
+                        return advance_action(ACTION_8_RECALCULATE);
+                    }
                 }
                 break;
 
@@ -205,7 +209,7 @@ void figure_cartpusher::do_retrieve(int action_done) {
         }
         case BUILDING_GRANARY: {
             e_resource resource;
-            int loads = building_granary_remove_for_getting_deliveryman(destination(), home(), resource);
+            int loads = building_granary::remove_for_getting_deliveryman(destination(), home(), resource);
             load_resource(resource, loads * 100);
             advance_action(FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD);
             break;
@@ -337,10 +341,11 @@ void figure_cartpusher::determine_deliveryman_destination() {
 void figure_cartpusher::determine_granaryman_destination() {
     tile2i dst;
     int road_network_id = map_road_network_get(tile());
-    building* granary = home();
+    building_granary* granary = home()->dcast_granary();
     if (!base.resource_id) {
         // getting granaryman
-        set_destination(building_granary_for_getting(granary, &dst));
+        int dest_id = granary->for_getting(&dst);
+        set_destination(dest_id);
         if (has_destination()) {
             advance_action(FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD);
             //            set_destination(FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD, dst_building_id, dst.x, dst.y);
@@ -354,23 +359,25 @@ void figure_cartpusher::determine_granaryman_destination() {
     }
     // delivering resource
     // priority 1: another granary
-    set_destination(building_granary_for_storing(tile(), base.resource_id, granary->distance_from_entry, road_network_id, 0, 0, &dst));
+    set_destination(building_granary_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 0, 0, &dst));
     if (has_destination()) {
-        building_granary_remove_resource(granary, base.resource_id, 100);
+        granary->remove_resource(base.resource_id, 100);
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
 
     // priority 2: warehouse
-    int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, granary->distance_from_entry, road_network_id, 0, &dst);
+    int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 0, &dst);
     set_destination(warehouse_id);
     if (has_destination()) {
-        building_granary_remove_resource(granary, base.resource_id, 100);
+        granary->remove_resource(base.resource_id, 100);
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
+
     // priority 3: granary even though resource is on stockpile
-    set_destination(building_granary_for_storing(tile(), base.resource_id, granary->distance_from_entry, road_network_id, 1, 0, &dst));
+    int granary_second_id = building_granary_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 1, 0, &dst);
+    set_destination(granary_second_id);
     if (has_destination()) {
-        building_granary_remove_resource(granary, base.resource_id, 100);
+        granary->remove_resource(base.resource_id, 100);
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
     // nowhere to go to: recalculate

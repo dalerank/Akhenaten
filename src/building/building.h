@@ -463,6 +463,7 @@ public:
     inline int figure_spawn_timer() const { return base.figure_spawn_timer(); }
     inline int num_workers() const { return base.num_workers; }
     inline bool has_road_access() const { return base.has_road_access; }
+    inline short distance_from_entry() const { return base.distance_from_entry; }
     inline int road_network() const { return base.road_network_id; }
 
     virtual bool is_workshop() const { return false; }

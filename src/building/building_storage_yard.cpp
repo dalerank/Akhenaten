@@ -440,19 +440,19 @@ static int determine_granary_accept_foods(int resources[8], int road_network) {
     }
     int can_accept = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY || !b->has_road_access)
+        building_granary* granary = building_get(i)->dcast_granary();
+        if (!granary || !granary->is_valid() || !granary->has_road_access())
             continue;
 
-        if (road_network != b->road_network_id)
+        if (road_network != granary->road_network())
             continue;
 
-        int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
-        if (pct_workers >= 100 && b->data.granary.resource_stored[RESOURCE_NONE] >= 1200) {
-            const building_storage* s = building_storage_get(b->storage_id);
+        int pct_workers = calc_percentage<int>(granary->num_workers(), model_get_building(granary->type())->laborers);
+        if (pct_workers >= 100 && granary->data.granary.resource_stored[RESOURCE_NONE] >= 1200) {
+            const building_storage* s = granary->storage();
             if (!s->empty_all) {
                 for (e_resource r = RESOURCE_MIN; r < RESOURCES_FOODS_MAX; ++r) {
-                    if (!building_granary_is_not_accepting(r, b)) {
+                    if (!granary->is_not_accepting(r)) {
                         ++resources[r];
                         can_accept = 1;
                     }
@@ -474,19 +474,20 @@ static int determine_granary_get_foods(int resources[8], int road_network) {
 
     int can_get = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY || !b->has_road_access)
+        building_granary* granary = building_get(i)->dcast_granary();
+        if (!granary || !granary->is_valid() || !granary->has_road_access())
             continue;
 
-        if (road_network != b->road_network_id)
+        if (road_network != granary->road_network())
             continue;
 
-        int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
-        if (pct_workers >= 100 && b->data.granary.resource_stored[RESOURCE_NONE] > 100) {
-            const building_storage* s = building_storage_get(b->storage_id);
+        int pct_workers = calc_percentage<int>(granary->num_workers(), model_get_building(granary->type())->laborers);
+        if (pct_workers >= 100 && granary->data.granary.resource_stored[RESOURCE_NONE] > 100) {
+            const building_storage* s = granary->storage();
             if (!s->empty_all) {
                 for (e_resource r = RESOURCE_MIN; r < RESOURCES_FOODS_MAX; ++r) {
-                    if (building_granary_is_getting(r, b)) {
+                    bool is_getting = granary->is_getting(r);
+                    if (is_getting) {
                         ++resources[r];
                         can_get = 1;
                     }
