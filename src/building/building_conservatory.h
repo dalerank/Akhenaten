@@ -7,6 +7,8 @@ public:
     BUILDING_METAINFO(BUILDING_CONSERVATORY, building_conservatory)
 
     building_conservatory(building &b) : building_impl(b) {}
+    virtual building_conservatory *dcast_conservatory() override { return this; }
+
     //virtual void on_create() override;
     virtual void window_info_background(object_info &c) override;
     virtual void spawn_figure() override;
