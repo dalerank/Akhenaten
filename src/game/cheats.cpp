@@ -49,7 +49,6 @@ static void game_cheat_kill_fish_boats(pcstr);
 static void game_cheat_update_fish_points(pcstr);
 static void game_cheat_tutorial_step(pcstr);
 static void game_cheat_add_pottery(pcstr);
-static void game_cheat_add_beer(pcstr);
 static void game_cheat_finish_phase(pcstr);
 static void game_cheat_clear_progress(pcstr);
 static void game_cheat_add_bricks(pcstr);
@@ -64,7 +63,6 @@ struct cheat_command_handle {
 
 static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_start_invasion},
                                                   {"addpottery", game_cheat_add_pottery},
-                                                  {"addbeer", game_cheat_add_beer},
                                                   {"addbricks", game_cheat_add_bricks},
                                                   {"addclay", game_cheat_add_clay},
                                                   {"nextyear", game_cheat_advance_year},
@@ -194,15 +192,6 @@ static void game_cheat_finish_phase(pcstr args) {
 
 static void game_cheat_clear_progress(pcstr args) {
     map_monuments_clear();
-}
-
-static void game_cheat_add_beer(pcstr args) {
-    int beer = 0;
-    parse_integer(args ? args : (pcstr )"100", beer);
-    city_resource_add_items(RESOURCE_BEER, beer);
-    window_invalidate();
-
-    city_warning_show_console("Added beer");
 }
 
 static void game_cheat_add_clay(pcstr args) {
@@ -380,4 +369,16 @@ static void game_cheat_add_money(std::istream &is, std::ostream &os) {
     city_warning_show_console("Added money");
 }
 
+static void game_cheat_add_beer(std::istream &is, std::ostream &os) {
+    std::string args;
+    is >> args;
+    int beer = 0;
+    parse_integer(args.empty() ? (pcstr )"100" : args.c_str(), beer);
+    city_resource_add_items(RESOURCE_BEER, beer);
+    window_invalidate();
+
+    city_warning_show_console("Added beer");
+}
+
 declare_console_command(addmoney, game_cheat_add_money);
+declare_console_command(addbeer, game_cheat_add_beer);
