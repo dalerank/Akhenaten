@@ -48,7 +48,6 @@ static void game_cheat_spawn_nobles(pcstr);
 static void game_cheat_kill_fish_boats(pcstr);
 static void game_cheat_update_fish_points(pcstr);
 static void game_cheat_tutorial_step(pcstr);
-static void game_cheat_add_pottery(pcstr);
 static void game_cheat_finish_phase(pcstr);
 static void game_cheat_clear_progress(pcstr);
 static void game_cheat_add_bricks(pcstr);
@@ -62,7 +61,6 @@ struct cheat_command_handle {
 };
 
 static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_start_invasion},
-                                                  {"addpottery", game_cheat_add_pottery},
                                                   {"addbricks", game_cheat_add_bricks},
                                                   {"addclay", game_cheat_add_clay},
                                                   {"nextyear", game_cheat_advance_year},
@@ -103,7 +101,7 @@ static int parse_word(pcstr string, pstr word) {
 }
 
 // return value is next argument index
-static int parse_integer(pcstr string, int &value) {
+int parse_integer(pcstr string, int &value) {
     bstring64 copy;
     int count = 0;
     while (*string && *string != ' ') {
@@ -157,15 +155,6 @@ void game_cheat_console(bool force) {
         window_city_show();
         window_console_show();
     }
-}
-
-static void game_cheat_add_pottery(pcstr args) {
-    int pottery = 0;
-    parse_integer(args ? args : (pcstr )"100", pottery);
-    city_resource_add_items(RESOURCE_POTTERY, pottery);
-    window_invalidate();
-
-    city_warning_show_console("Added pottery");
 }
 
 static void game_cheat_finish_phase(pcstr args) {
@@ -359,9 +348,8 @@ void game_cheat_parse_command(pcstr command) {
 }
 
 static void game_cheat_add_money(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
     int money = 0;
-    std::string args;
-    is >> args;
     parse_integer(args.empty() ? (pcstr )"100" : args.c_str(), money);
     city_finance_process_console(money);
     window_invalidate();
@@ -369,16 +357,4 @@ static void game_cheat_add_money(std::istream &is, std::ostream &os) {
     city_warning_show_console("Added money");
 }
 
-static void game_cheat_add_beer(std::istream &is, std::ostream &os) {
-    std::string args;
-    is >> args;
-    int beer = 0;
-    parse_integer(args.empty() ? (pcstr )"100" : args.c_str(), beer);
-    city_resource_add_items(RESOURCE_BEER, beer);
-    window_invalidate();
-
-    city_warning_show_console("Added beer");
-}
-
 declare_console_command(addmoney, game_cheat_add_money);
-declare_console_command(addbeer, game_cheat_add_beer);

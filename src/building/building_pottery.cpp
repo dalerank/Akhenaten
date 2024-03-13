@@ -3,10 +3,16 @@
 #include "building/building_workshop.h"
 #include "graphics/animation.h"
 #include "city/labor.h"
+#include "city/resource.h"
+#include "city/warning.h"
 
 #include "widget/city/ornaments.h"
+#include "graphics/window.h"
 
 #include "js/js_game.h"
+#include "dev/debug.h"
+
+#include <iostream>
 
 struct pottery_model : public buildings::model_t<building_pottery> {};
 pottery_model pottery_m;
@@ -15,6 +21,17 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_building_pottery);
 void config_load_building_pottery() {
     pottery_m.load();
 }
+
+static void game_cheat_add_pottery(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    int pottery = atoi(args.empty() ? (pcstr )"100" : args.c_str());
+    city_resource_add_items(RESOURCE_POTTERY, pottery);
+    window_invalidate();
+
+    city_warning_show_console("Added pottery");
+}
+
+declare_console_command(addpottery, game_cheat_add_pottery);
 
 void building_pottery::on_create() {
     data.industry.first_material_id = RESOURCE_CLAY;

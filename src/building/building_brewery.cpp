@@ -3,8 +3,14 @@
 #include "building/building_workshop.h"
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
+#include "city/resource.h"
+#include "city/warning.h"
 
 #include "js/js_game.h"
+#include "graphics/window.h"
+#include "dev/debug.h"
+
+#include <iostream>
 
 buildings::model_t<building_brewery> brewery_m;
 
@@ -12,6 +18,17 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_building_brewery);
 void config_load_building_brewery() {
     brewery_m.load();
 }
+
+static void game_cheat_add_beer(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    int beer = atoi(args.empty() ? (pcstr )"100" : args.c_str());
+    city_resource_add_items(RESOURCE_BEER, beer);
+    window_invalidate();
+
+    city_warning_show_console("Added beer");
+}
+
+declare_console_command(addbeer, game_cheat_add_beer);
 
 void building_brewery::on_create() {
     data.industry.first_material_id = RESOURCE_BARLEY;
