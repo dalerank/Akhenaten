@@ -536,7 +536,6 @@ static void draw_refresh_background() {
             switch (building_get(context.building_id)->type) {
             case BUILDING_LIMESTONE_QUARRY: building_limestone_quarry_draw_info(context); break;
             case BUILDING_WOOD_CUTTERS: building_timber_yard_draw_info(context); break;
-            case BUILDING_REED_GATHERER: building_reed_gatherer_draw_info(context); break;
             case BUILDING_SANDSTONE_QUARRY: building_sandstone_quarry_draw_info(context); break;
             case BUILDING_GRANITE_QUARRY: building_granite_quarry_draw_info(context); break;;
             case BUILDING_WEAVER_WORKSHOP: building_flax_workshop_draw_info(context); break;

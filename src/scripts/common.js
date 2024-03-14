@@ -61,6 +61,7 @@ var building_storage_room = {}
 var building_work_camp = {}
 var building_water_supply = {}
 var building_well = {}
+var building_reed_gatherer = {}
 var empire_window = {}
 var images_remap = []
 var imagepaks = []

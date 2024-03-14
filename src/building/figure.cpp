@@ -758,10 +758,6 @@ bool building::can_spawn_bricklayer_man(e_figure_type ftype, int max_gatherers_p
 bool building::can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person) {
     bool resource_reachable = false;
     switch (ftype) {
-    case FIGURE_REED_GATHERER:
-        resource_reachable = map_routing_citizen_found_terrain(road_access, nullptr, TERRAIN_MARSHLAND);
-        break;
-
     case FIGURE_LUMBERJACK:
         resource_reachable = map_routing_citizen_found_terrain(road_access, nullptr, TERRAIN_TREE);
         break;
@@ -867,8 +863,6 @@ bool building::figure_generate() {
     bool noble_generated = false;
     if (type >= BUILDING_HOUSE_COMMON_MANOR && type <= BUILDING_HOUSE_LUXURY_PALACE) {
         noble_generated = spawn_noble(noble_generated);
-    } else if (type == BUILDING_REED_GATHERER) {
-        spawn_figure_reed_gatherers();
     } else if (type == BUILDING_WOOD_CUTTERS) {
         spawn_figure_wood_cutters();
     } else if (is_workshop() || is_extractor()) {// farms are handled by a separate cycle in Pharaoh!

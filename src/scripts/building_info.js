@@ -190,6 +190,13 @@ building_well = {
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
 }
 
+building_reed_gatherer = {
+  animations : {
+    work : { pos : [0, 0], anim_id : IMG_BUILDING_REED_GATHERER }
+  },
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
 building_bandstand = {
   animations : {
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW },

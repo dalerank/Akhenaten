@@ -202,7 +202,7 @@ static building_properties properties[400] = {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {3, 0, 0, 0},
-    {2, 0, GROUP_BUILDING_REEDS_COLLECTOR}, // reeds
+    {2, 0, 0, 0}, // reeds
     {3, 1, 0, 0},                           // figs farm
     {0, 0, 0, 0},
     {0, 0, 0, 0},
@@ -281,6 +281,7 @@ void building_properties_init() {
     properties[BUILDING_ARCHITECT_POST] = {1, 0, 0, 0, 0, IMG_ARCHITECT_POST};
     properties[BUILDING_STORAGE_YARD] = {1, 0, 0, 0, 0, IMG_STORAGE_YARD};
     properties[BUILDING_WORK_CAMP] = {2, 0, 0, 0, 0, IMG_WORKCAMP};
+    properties[BUILDING_REED_GATHERER] = {2, 0, 0, 0, 0, IMG_BUILDING_REED_GATHERER};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

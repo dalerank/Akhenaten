@@ -38,6 +38,8 @@ class building_water_supply;
 class building_conservatory;
 class building_courthouse;
 class building_well;
+class building_clay_pit;
+class building_reed_gatherer;
 struct object_info;
 struct painter;
 struct mouse;
@@ -351,6 +353,8 @@ public:
     building_conservatory *dcast_conservatory();
     building_courthouse *dcast_courthouse();
     building_well *dcast_well();
+    building_clay_pit *dcast_clay_pit();
+    building_reed_gatherer *dcast_reed_gatherer();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -447,6 +451,8 @@ public:
     virtual building_conservatory *dcast_conservatory() { return nullptr; }
     virtual building_courthouse *dcast_courthouse() { return nullptr; }
     virtual building_well *dcast_well() { return nullptr; }
+    virtual building_clay_pit *dcast_clay_pit() { return nullptr; }
+    virtual building_reed_gatherer *dcast_reed_gatherer() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -454,14 +460,16 @@ public:
     inline bool is_valid() const { return base.is_valid(); }
     inline e_building_state state() const { return base.state; }
     inline void check_labor_problem() { base.check_labor_problem(); }
-    inline bool has_figure_of_type(int i, e_figure_type _type) { return base.has_figure_of_type(i, _type);  }
     inline int worker_percentage() { return base.worker_percentage(); }
     inline void common_spawn_labor_seeker(int min_houses) { base.common_spawn_labor_seeker(min_houses); }
-    inline figure *create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) { return base.create_roaming_figure(_type, created_action, slot); }
     inline bool common_spawn_figure_trigger(int min_houses) { return base.common_spawn_figure_trigger(min_houses); }
     inline bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) { return base.common_spawn_roamer(type, min_houses, created_action); }
-    inline figure *create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE) { return base.create_figure_with_destination(_type, destination, created_action, slot); }
     inline const model_building *model() const { return model_get_building(type()); }
+
+    inline bool has_figure_of_type(int i, e_figure_type _type) { return base.has_figure_of_type(i, _type);  }
+    inline figure *create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE) { return base.create_figure_with_destination(_type, destination, created_action, slot); }
+    inline figure *create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) { return base.create_roaming_figure(_type, created_action, slot); }
+    inline figure *create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir) { return base.create_figure_generic(_type, created_action, slot, created_dir); }
     inline figure *create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, e_building_slot slot = BUILDING_SLOT_CARTPUSHER) { return base.create_cartpusher(resource_id, quantity, created_action, slot); }
     inline figure *get_figure(int slot) { return base.get_figure(slot); }
     

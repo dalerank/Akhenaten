@@ -4,6 +4,7 @@
 #include "city/object_info.h"
 #include "city/resource.h"
 #include "core/calc.h"
+#include "core/random.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
@@ -18,6 +19,10 @@
 #include "game/game.h"
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
+#include "grid/random.h"
+#include "grid/routing/routing.h"
+#include "grid/terrain.h"
+#include "figure/figure.h"
 
 #include "graphics/animation.h"
 
@@ -25,6 +30,7 @@ buildings::model_t<building_clay_pit> clay_pit_m;
 buildings::model_t<building_mine_gold> gold_mine_m;
 buildings::model_t<building_mine_gems> gems_mine_m;
 buildings::model_t<building_mine_copper> copper_mine_m;
+buildings::model_t<building_reed_gatherer> reed_gatherer_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_raw_materials);
 void config_load_building_raw_materials() {
@@ -32,6 +38,7 @@ void config_load_building_raw_materials() {
     gold_mine_m.load();
     gems_mine_m.load();
     copper_mine_m.load();
+    reed_gatherer_m.load();
 }
 
 static void building_raw_material_draw_info(object_info& c, const char* type, e_resource resource) {
@@ -84,9 +91,7 @@ void building_limestone_quarry_draw_info(object_info& c) {
 void building_timber_yard_draw_info(object_info& c) {
     building_raw_material_draw_info(c, "timber_yard", RESOURCE_TIMBER);
 }
-void building_reed_gatherer_draw_info(object_info& c) {
-    building_raw_material_draw_info(c, "reed_farm", RESOURCE_REEDS);
-}
+
 void building_sandstone_quarry_draw_info(object_info& c) {
     building_raw_material_draw_info(c, "sandstone_quarry", RESOURCE_SANDSTONE);
 }
@@ -153,4 +158,67 @@ bool building_clay_pit::draw_ornaments_and_animations_height(painter &ctx, vec2i
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;
+}
+
+void building_reed_gatherer::on_create() {
+    base.output_resource_first_id = RESOURCE_REEDS;
+    data.industry.max_gatheres = 1;
+}
+
+void building_reed_gatherer::window_info_background(object_info &c) {
+    building_raw_material_draw_info(c, "reed_farm", RESOURCE_REEDS);
+}
+
+bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, int carry_per_person) {
+    bool resource_reachable = false;
+    resource_reachable = map_routing_citizen_found_terrain(base.road_access, nullptr, TERRAIN_MARSHLAND);
+
+    if (!resource_reachable) {
+        return false;
+    }
+
+    int gatherers_this_yard = base.get_figures_number(FIGURE_REED_GATHERER);
+
+    // can only spawn if there's space for more reed in the building
+    int max_loads = 500 / carry_per_person;
+    if (gatherers_this_yard < max_gatherers_per_building
+        && gatherers_this_yard + (base.stored_amount() / carry_per_person) < (max_loads - gatherers_this_yard)) {
+        return true;
+    }
+
+    return false;
+}
+
+bool building_reed_gatherer::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    const auto &anim = reed_gatherer_m.anim["work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+
+    return true;
+}
+
+void building_reed_gatherer::spawn_figure() {
+    check_labor_problem();
+    if (!has_road_access()) {
+        return;
+    }
+
+    common_spawn_labor_seeker(100);
+    int spawn_delay = figure_spawn_timer();
+    if (spawn_delay == -1) {
+        return;
+    }
+
+    base.figure_spawn_delay++;
+    if (base.figure_spawn_delay > spawn_delay) {
+        base.figure_spawn_delay = 0;
+
+        if (can_spawn_gatherer(data.industry.max_gatheres, 50)) {
+            auto f = create_figure_generic(FIGURE_REED_GATHERER, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
+            random_generate_next();
+            f->wait_ticks = random_short() % 30; // ok
+            return;
+        }
+    }
+
+    base.common_spawn_goods_output_cartpusher();
 }

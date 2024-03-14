@@ -185,6 +185,7 @@ images = [
 	{img: IMG_STORAGE_YARD, pack:PACK_GENERAL, id:82, offset:0},
 	{img: ANIM_STORAGE_YARD_WORK, pack:PACK_SPR_AMBIENT, id:51, offset:0},
 	{img: IMG_WORKCAMP, pack:PACK_GENERAL, id:77, offset:0},
+	{img: IMG_BUILDING_REED_GATHERER, pack:PACK_GENERAL, id:24, offset:0},
 ]
 
 cart_offsets = [
