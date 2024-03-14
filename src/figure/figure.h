@@ -434,7 +434,6 @@ public:
     // pharaoh
     void ostrich_hunter_action();
     void lumberjack_action();
-    void reed_gatherer_action();
     void policeman_action();
     void magistrate_action();
     void festival_guy_action();

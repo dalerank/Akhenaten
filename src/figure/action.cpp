@@ -122,7 +122,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_WATER_CARRIER, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_WATER_CARRIER},
   {FIGURE_CONSTABLE, 1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_POLICEMAN},
   {FIGURE_MAGISTRATE, 1, TERRAIN_USAGE_ROADS, 800, GROUP_FIGURE_MAGISTRATE},
-  {FIGURE_REED_GATHERER, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_REED_GATHERER},
+  {FIGURE_REED_GATHERER, 1, TERRAIN_USAGE_ANY, 0, 0, 0, ANIM_REED_GATHERER_WALK},
   {FIGURE_FESTIVAL_PRIEST, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_ENEMY_TRANSPORT, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_ENEMY_WARSHIP, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
@@ -373,7 +373,6 @@ void figure::action_perform() {
             }
             break;
 
-        case FIGURE_REED_GATHERER:
         case FIGURE_LUMBERJACK:
             if (b->state != BUILDING_STATE_VALID) {
                 poof();
@@ -537,7 +536,6 @@ void figure::action_perform() {
         case FIGURE_BRICKLAYER: bricklayer_action(); break;
         case FIGURE_CONSTABLE: policeman_action(); break;
         case FIGURE_MAGISTRATE: magistrate_action(); break;
-        case FIGURE_REED_GATHERER: reed_gatherer_action(); break; // reed gatherers
         case FIGURE_FESTIVAL_PRIEST: festival_guy_action(); break;
         case FIGURE_SLED_PULLER: sled_puller_action(); break;
         case FIGURE_HYENA: hyena_action(); break;

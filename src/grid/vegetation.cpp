@@ -32,10 +32,12 @@ grid_xx g_terrain_vegetation_growth = {0, {FS_UINT8, FS_UINT8}};
 int map_get_vegetation_growth(int grid_offset) {
     return map_grid_get(&g_terrain_vegetation_growth, grid_offset);
 }
+
 void vegetation_deplete(int grid_offset) {
     map_grid_set(&g_terrain_vegetation_growth, grid_offset, 0);
     map_tiles_update_vegetation(grid_offset);
 }
+
 static void vegetation_tile_update(int grid_offset) {
     int growth = map_get_vegetation_growth(grid_offset);
     if (growth < 255) {
@@ -77,6 +79,7 @@ int gatherers_harvesting_point(int grid_offset) {
     }
     return gatherers_present;
 }
+
 bool can_harvest_point(int grid_offset, int max_gatherers) {
     // check if harvestable
     if (map_get_vegetation_growth(grid_offset) != 255) {
@@ -91,6 +94,7 @@ bool can_harvest_point(int grid_offset, int max_gatherers) {
 
     return true;
 }
+
 bool figure::find_resource_tile(int resource_type, tile2i &out) {
     switch (resource_type) {
     case RESOURCE_REEDS:

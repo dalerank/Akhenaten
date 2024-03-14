@@ -1,55 +1,64 @@
 log_info("akhenaten: images started")
 
 images = [
-	{img: IMG_IMMIGRANT, pack: PACK_SPR_MAIN, id: 14},// 886
-	//{img: IMG_IMMIGRANT_DEATH, pack: PACK_SPR_MAIN, id: 15} // 982
+	// spr main
 	{img: ANIM_EMIGRANT_WALK, pack: PACK_SPR_MAIN, id: 2}, // 65
 	{img: ANIM_EMIGRANT_DEATH, pack: PACK_SPR_MAIN, id: 3}, // 161
+	{img: ANIM_ARCHITECT_WALK, pack:PACK_SPR_MAIN, id:4},  //  169
+	{img: ANIM_ARCHITECT_DEATH, pack:PACK_SPR_MAIN, id:5}, // 265
+	{img: IMG_FIREMAN, pack:PACK_SPR_MAIN, id:6},  // 273
+	{img: IMG_FIREMAN_DEATH, pack:PACK_SPR_MAIN, id:7},  // 273
+  {img: IMG_FIREMAN_FIGHT_FIRE, pack:PACK_SPR_MAIN, id:8, offset:0},
 	{img: IMG_HOMELESS, pack: PACK_SPR_MAIN, id: 12}, // 782
-	//{img: IMG_EMIGRANT, pack: PACK_SPR_MAIN, id: 13}, // 878
-	{img: IMG_FISHIHG_WHARF_ANIM, pack: PACK_SPR_AMBIENT, id:47},  // 2551 + 15831
+	{img: IMG_IMMIGRANT, pack: PACK_SPR_MAIN, id: 14},// 886
+	{img: ANIM_TAX_COLLECTOR_WALK, pack:PACK_SPR_MAIN, id:41},
+	{img: ANIM_TAX_COLLECTOR_DEATH, pack:PACK_SPR_MAIN, id:42},
 	{img: ANIM_CARTPUSHER_WALK, pack: PACK_SPR_MAIN, id:43},
 	{img: ANIM_CARTPUSHER_DEATH, pack: PACK_SPR_MAIN, id:44},
+	{img: IMG_CARTPUSHER_CART, pack:PACK_SPR_MAIN, id:77},
+	{img: IMG_SLED_SANDSTONE_SMALL, pack:PACK_SPR_MAIN, id:101},
+	{img: IMG_SLED_STONE_SMALL, pack:PACK_SPR_MAIN, id:102},
 	{img: IMG_FISHING_BOAT, pack:PACK_SPR_MAIN, id:133 }, 	// 7014
-	//{img: IMG_FISHING_BOAT ???, pack:PACK_SPR_MAIN, id:133 }, 	// 7014
 	{img: IMG_FISHING_BOAT_WORK, pack:PACK_SPR_MAIN, id:135 }, // 7046
 	{img: IMG_FISHING_BOAT_DEATH, pack:PACK_SPR_MAIN, id:136 }, // 7118
 	{img: IMG_FISHING_BOAT_IDLE, pack:PACK_SPR_MAIN, id:137 }, // 7129
-	{img: IMG_FLOTSAM, pack:PACK_SPR_AMBIENT, id:0},  // 1 + 15831
-	{img: ANIM_LABOR_SEEKER_WALK, pack:PACK_SPR_MAIN, id:206},       // 9909
-	{img: ANIM_LABOR_SEEKER_DEATH, pack:PACK_SPR_MAIN, id:207}, // 10005
-	{img: IMG_FISHING_POINT, pack:PACK_SPR_AMBIENT, id:8},
-	{img: IMG_FISHING_POINT_BUBLES, pack:PACK_SPR_AMBIENT, id:11},
-	{img: ANIM_ARCHITECT_WALK, pack:PACK_SPR_MAIN, id:4},  //  169
-	{img: ANIM_ARCHITECT_DEATH, pack:PACK_SPR_MAIN, id:5}, // 265
-	{img: IMG_WATER_SUPPLY, pack:PACK_GENERAL, id:69, offset:0},
-	{img: IMG_WATER_SUPPLY_FANCY, pack:PACK_GENERAL, id:69, offset:2},
-	{img: IMG_WELL, pack:PACK_GENERAL, id:23, offset:0},
-	{img: IMG_WELL_FANCY, pack:PACK_GENERAL, id:23, offset:2},
-	{img: IMG_EXPLOSION, pack:PACK_SPR_AMBIENT, id:12, offset:0},
-	{img: IMG_CATTLE_RANCH, pack:PACK_GENERAL, id:105},
-	{img: ANIM_TAX_COLLECTOR_WALK, pack:PACK_SPR_MAIN, id:41},
-	{img: ANIM_TAX_COLLECTOR_DEATH, pack:PACK_SPR_MAIN, id:42},
-	{img: IMG_BRICKS_WORKSHOP, pack:PACK_GENERAL, id:124},
-	{img: IMG_RESOURCE_GAMEMEAT, pack:PACK_GENERAL, id:205},
-	{img: IMG_RESOURCE_STRAW, pack:PACK_GENERAL, id:206},
-	{img: IMG_RESOURCE_CLAY, pack:PACK_GENERAL, id:207},
-	{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
 	{img: ANIM_OSTRICH_WALK, pack:PACK_SPR_MAIN, id:156}, // 7823 - 0
 	{img: ANIM_OSTRICH_DEATH, pack:PACK_SPR_MAIN, id:158}, // 7823 - 0
 	{img: ANIM_OSTRICH_EATING, pack:PACK_SPR_MAIN, id:159, offset:0},
 	{img: ANIM_OSTRICH_IDLE, pack:PACK_SPR_MAIN, id:160, offset:0},
-	{img: IMG_FIREMAN, pack:PACK_SPR_MAIN, id:6},  // 273
-	{img: IMG_FIREMAN_DEATH, pack:PACK_SPR_MAIN, id:7},  // 273
-  {img: IMG_FIREMAN_FIGHT_FIRE, pack:PACK_SPR_MAIN, id:8, offset:0},
-	{img: IMG_GOLD_MINE, pack:PACK_GENERAL, id:185},
+	{img: ANIM_LABOR_SEEKER_WALK, pack:PACK_SPR_MAIN, id:206},       // 9909
+	{img: ANIM_LABOR_SEEKER_DEATH, pack:PACK_SPR_MAIN, id:207}, // 10005
+
+	// spr ambient
+	{img: IMG_FLOTSAM, pack:PACK_SPR_AMBIENT, id:0},  // 1 + 15831
+	{img: IMG_FISHING_POINT, pack:PACK_SPR_AMBIENT, id:8},
+	{img: IMG_EXPLOSION, pack:PACK_SPR_AMBIENT, id:12, offset:0},
+	{img: IMG_FISHING_POINT_BUBLES, pack:PACK_SPR_AMBIENT, id:11},
+	{img: IMG_FISHIHG_WHARF_ANIM, pack: PACK_SPR_AMBIENT, id:47},  // 2551 + 15831
 	{img: ANIM_GOLD_MINE, pack:PACK_SPR_AMBIENT, id:48},
-	{img: IMG_SANDSTONE_QUARRY, pack:PACK_GENERAL, id:197},
 	{img: ANIM_SANDSTONE_QUARRY_1, pack:PACK_SPR_AMBIENT, id:49},
 	{img: ANIM_SANDSTONE_QUARRY_2, pack:PACK_SPR_AMBIENT, id:49},
-	{img: IMG_CARTPUSHER_CART, pack:PACK_SPR_MAIN, id:77},
-	{img: IMG_SLED_SANDSTONE_SMALL, pack:PACK_SPR_MAIN, id:101},
-	{img: IMG_SLED_STONE_SMALL, pack:PACK_SPR_MAIN, id:102},
+
+	// spr general
+	{img: IMG_WELL, pack:PACK_GENERAL, id:23, offset:0},
+	{img: IMG_WELL_FANCY, pack:PACK_GENERAL, id:23, offset:2},
+	{img: IMG_WATER_SUPPLY, pack:PACK_GENERAL, id:69, offset:0},
+	{img: IMG_WATER_SUPPLY_FANCY, pack:PACK_GENERAL, id:69, offset:2},
+	{img: IMG_CATTLE_RANCH, pack:PACK_GENERAL, id:105},
+	{img: IMG_GOLD_MINE, pack:PACK_GENERAL, id:185},
+	{img: IMG_SANDSTONE_QUARRY, pack:PACK_GENERAL, id:197},
+
+	// icon resources
+	{img: IMG_BRICKS_WORKSHOP, pack:PACK_GENERAL, id:124},
+	{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
+	{img: IMG_RESOURCE_GAMEMEAT, pack:PACK_GENERAL, id:205},
+	{img: IMG_RESOURCE_STRAW, pack:PACK_GENERAL, id:206},
+	{img: IMG_RESOURCE_CLAY, pack:PACK_GENERAL, id:207},
+
+
+	//{img: IMG_IMMIGRANT_DEATH, pack: PACK_SPR_MAIN, id: 15} // 982
+	//{img: IMG_EMIGRANT, pack: PACK_SPR_MAIN, id: 13}, // 878
+	//{img: IMG_FISHING_BOAT ???, pack:PACK_SPR_MAIN, id:133 }, 	// 7014
 	{img: IMG_SLED_GRANITE_SMALL, pack:PACK_SPR_MAIN, id:103},
 	{img: IMG_SLED_LIMESTONE_SMALL, pack:PACK_GENERAL, id:104},
 	{img: IMG_SLED_BRICKS, pack:PACK_SPR_MAIN, id:89},
@@ -186,6 +195,10 @@ images = [
 	{img: ANIM_STORAGE_YARD_WORK, pack:PACK_SPR_AMBIENT, id:51, offset:0},
 	{img: IMG_WORKCAMP, pack:PACK_GENERAL, id:77, offset:0},
 	{img: IMG_BUILDING_REED_GATHERER, pack:PACK_GENERAL, id:24, offset:0},
+	{img: ANIM_REED_GATHERER_WALK, pack:PACK_SPR_MAIN, id:37, offset:0},
+	{img: ANIM_REED_GATHERER_DEATH, pack:PACK_SPR_MAIN, id:38, offset:0},
+	{img: ANIM_REED_GATHERER_WORK, pack:PACK_SPR_MAIN, id:39, offset:0},
+	{img: ANIM_REED_GATHERER_RETURN, pack:PACK_SPR_MAIN, id:40, offset:0},
 ]
 
 cart_offsets = [
