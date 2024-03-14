@@ -87,15 +87,15 @@ void figure_reed_gatherer::figure_action() {
     default: // normal walk
     case ACTION_8_RECALCULATE:
     case ACTION_9_REED_GATHERER_GOTO_RESOURCE:
-        image_set_animation(ANIM_REED_GATHERER_WALK, 0, 12);
+        image_set_animation(reed_gatherer_m.anim["walk"]);
         break;
 
     case ACTION_10_REED_GATHERER_WORK: // gathering
-        image_set_animation(ANIM_REED_GATHERER_WORK, 0, 15);
+        image_set_animation(reed_gatherer_m.anim["work"]);
         break;
 
     case ACTION_10_REED_GATHERER_RETURN_HOME: // returning
-        image_set_animation(ANIM_REED_GATHERER_RETURN, 0, 12);
+        image_set_animation(reed_gatherer_m.anim["return"]);
         break;
     }
 }

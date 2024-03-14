@@ -374,6 +374,15 @@ figure_labor_seeker = {
 	}
 }
 
+figure_reed_gatherer = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_REED_GATHERER_WALK, max_frames:12 },
+		work : { pos : [0, 0], anim_id: ANIM_REED_GATHERER_WORK, max_frames:15 },
+		return : { pos : [0, 0], anim_id: ANIM_REED_GATHERER_RETURN, max_frames:12 },
+		death : { pos : [0, 0], anim_id: ANIM_REED_GATHERER_DEATH, max_frames:8 },
+	},
+}
+
 figure_explosion = {
 	animations : {
 		poof : { pos : [0, 0], anim_id: IMG_EXPLOSION, max_frames:12 },

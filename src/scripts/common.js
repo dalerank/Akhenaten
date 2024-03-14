@@ -90,6 +90,7 @@ var figure_dancer = {}
 var figure_musician = {}
 var figure_labor_seeker = {}
 var figure_explosion = {}
+var figure_reed_gatherer = {}
 var mission0 = {}
 var mission1 = {}
 var mission5 = {}
