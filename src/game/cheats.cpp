@@ -39,7 +39,6 @@ static void game_cheat_cast_blessing(pcstr);
 static void game_cheat_show_tooltip(pcstr);
 static void game_cheat_victory(pcstr);
 static void game_cheat_cast_upset(pcstr);
-static void game_cheat_start_plague(pcstr);
 static void game_cheat_pop_milestone(pcstr);
 static void game_cheat_fire(pcstr);
 static void game_cheat_nodamage(pcstr);
@@ -67,7 +66,6 @@ static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_s
                                                   {"blessing", game_cheat_cast_blessing},
                                                   {"godupset", game_cheat_cast_upset},
                                                   {"showtooltip", game_cheat_show_tooltip},
-                                                  {"startplague", game_cheat_start_plague},
                                                   {"victory", game_cheat_victory},
                                                   {"popmilestone", game_cheat_pop_milestone},
                                                   {"fire", game_cheat_fire},
@@ -319,20 +317,6 @@ static void game_cheat_show_tooltip(pcstr args) {
     parse_integer(args, g_cheats_data.tooltip_enabled);
 
     city_warning_show_console("Show tooltip toggled");
-}
-
-static void game_cheat_start_plague(pcstr args) {
-    int plague_people = 0;
-    int total_population = 0;
-    parse_integer(args ? args : "100", plague_people);
-
-    buildings_valid_do([&] (building &b) {
-        if (!b.house_size || !b.house_population) {
-            return;
-        }
-        total_population += b.house_population;
-    });
-    city_health_start_disease(total_population, true, plague_people);
 }
 
 void game_cheat_parse_command(pcstr command) {

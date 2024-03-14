@@ -14,6 +14,10 @@
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
+#include "city/health.h"
+
+#include "dev/debug.h"
+#include <iostream>
 
 buildings::model_t<building_apothecary> apothercary_m;
 
@@ -22,6 +26,33 @@ void config_load_building_health() {
     apothercary_m.load();
 }
 
+static void game_cheat_noplague(std::istream &is, std::ostream &os) {
+    buildings_valid_do([&] (building &b) {
+        if (!b.house_size || !b.house_population) {
+            return;
+        }
+        building *main = b.main();
+        main->disease_days = 0;
+        main->has_plague = false;
+    });
+}
+
+static void game_cheat_start_plague(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    int plague_people = atoi(args.empty() ? "100" : args.c_str());
+
+    int total_population = 0;
+    buildings_valid_do([&] (building &b) {
+        if (!b.house_size || !b.house_population) {
+            return;
+        }
+        total_population += b.house_population;
+    });
+    city_health_start_disease(total_population, true, plague_people);
+}
+
+declare_console_command(plague_start, game_cheat_start_plague);
+declare_console_command(plague_no, game_cheat_noplague);
 
 static void building_health_draw_info(object_info& c, int help_id, const char* type, int group_id, e_figure_type ftype) {
     c.help_id = help_id;
