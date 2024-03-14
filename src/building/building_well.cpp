@@ -6,6 +6,15 @@
 #include "window/building/common.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
+#include "widget/city/ornaments.h"
+#include "city/labor.h"
+
+buildings::model_t<building_well> well_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_well);
+void config_load_building_well() {
+    well_m.load();
+}
 
 void building_well::update_month() {
     int avg_desirability = map_desirabilty_avg(tile(), 4);
@@ -31,3 +40,11 @@ void building_well::window_info_background(object_info &c) {
         window_building_draw_description_at(c, 16 * c.height_blocks - 160, 109, text_id);
     }
 }
+
+bool building_well::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    const animation_t &anim = well_m.anim["work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+
+    return true;
+}
+

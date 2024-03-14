@@ -282,17 +282,7 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
     case BUILDING_MUD_GATEHOUSE:
         draw_gatehouse_anim(point.x, point.y, b, ctx);
         break;
-        //        case BUILDING_WELL:
-        //            if (map_water_supply_is_well_unnecessary(b->id, 3) == WELL_NECESSARY) {
-        //                draw_normal_anim(x, y + 20, b, grid_offset, image_id_from_group(GROUP_BUILDING_WELL) + 1,
-        //                color_mask);
-        ////                const image *img = image_get(image_id_from_group(GROUP_BUILDING_WELL));
-        ////                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WELL) + 1, x +
-        /// img->animation.sprite_x_offset, /                                       y + img->animation.sprite_y_offset -
-        /// 20, color_mask); /                ImageDraw::img_ornament(image_id_from_group(GROUP_BUILDING_WELL) + 1, x, /
-        /// y - 20, color_mask);
-        //            }
-        //            break;
+
     case BUILDING_PAVILLION:
         if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_PAVILLION)) {
             building_entertainment_draw_shows_dancers(ctx, b, point, color_mask);

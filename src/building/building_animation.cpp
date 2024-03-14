@@ -72,6 +72,7 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
             return 0;
         }
         break;
+
     case BUILDING_PERSONAL_MANSION:
         break;
 

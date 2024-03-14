@@ -37,6 +37,7 @@ class building_granary;
 class building_water_supply;
 class building_conservatory;
 class building_courthouse;
+class building_well;
 struct object_info;
 struct painter;
 struct mouse;
@@ -349,6 +350,7 @@ public:
     building_water_supply *dcast_water_supply();
     building_conservatory *dcast_conservatory();
     building_courthouse *dcast_courthouse();
+    building_well *dcast_well();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -444,6 +446,7 @@ public:
     virtual building_water_supply *dcast_water_supply() { return nullptr; }
     virtual building_conservatory *dcast_conservatory() { return nullptr; }
     virtual building_courthouse *dcast_courthouse() { return nullptr; }
+    virtual building_well *dcast_well() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

@@ -112,7 +112,6 @@ int building_type_to_channel(building *b) {
         return 0;
 
     case BUILDING_WATER_LIFT: return 0;
-    case BUILDING_WELL: return SOUND_CHANNEL_CITY_WELL;
 
     case BUILDING_BURNING_RUIN: return SOUND_CHANNEL_CITY_BURNING_RUIN;
 

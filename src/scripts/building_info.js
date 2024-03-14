@@ -183,6 +183,13 @@ building_water_supply = {
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
 }
 
+building_well = {
+  animations : {
+    work : { pos : [0, 0], anim_id : IMG_WELL }
+  },
+  labor_category : LABOR_CATEGORY_WATER_HEALTH,
+}
+
 building_bandstand = {
   animations : {
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW },
