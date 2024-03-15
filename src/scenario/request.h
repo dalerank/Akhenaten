@@ -1,22 +1,23 @@
-#ifndef SCENARIO_REQUEST_H
-#define SCENARIO_REQUEST_H
+#pragma once
 
-enum {
-    REQUEST_STATE_NORMAL = 0,
-    REQUEST_STATE_OVERDUE = 1,
-    REQUEST_STATE_DISPATCHED = 2,
-    REQUEST_STATE_DISPATCHED_LATE = 3,
-    REQUEST_STATE_IGNORED = 4,
-    REQUEST_STATE_RECEIVED = 5
+#include "game/resource.h"
+
+enum e_request_stat {
+    e_request_state_normal = 0,
+    e_request_state_overdue = 1,
+    e_request_state_dispatched = 2,
+    e_request_state_dispatched_late = 3,
+    e_request_state_ignored = 4,
+    e_request_state_received = 5
 };
 
-typedef struct {
+struct scenario_request {
     int id;
     int state;
-    int resource;
+    e_resource resource;
     int amount;
     int months_to_comply;
-} scenario_request;
+};
 
 void scenario_request_init(void);
 
@@ -29,5 +30,3 @@ const scenario_request* scenario_request_get(int id);
 const scenario_request* scenario_request_get_visible(int index);
 
 int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request* request));
-
-#endif // SCENARIO_REQUEST_H

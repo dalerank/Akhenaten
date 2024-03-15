@@ -25,41 +25,41 @@ void scenario_request_init(void) {
 
 void scenario_request_process_C3(void) {
     for (int i = 0; i < MAX_REQUESTS; i++) {
-        if (!g_scenario_data.requests[i].resource || g_scenario_data.requests[i].state > REQUEST_STATE_DISPATCHED_LATE)
+        if (!g_scenario_data.requests[i].resource || g_scenario_data.requests[i].state > e_request_state_dispatched_late)
             continue;
 
         int state = g_scenario_data.requests[i].state;
-        if (state == REQUEST_STATE_DISPATCHED || state == REQUEST_STATE_DISPATCHED_LATE) {
+        if (state == e_request_state_dispatched || state == e_request_state_dispatched_late) {
             --g_scenario_data.requests[i].months_to_comply;
             if (g_scenario_data.requests[i].months_to_comply <= 0) {
-                if (state == REQUEST_STATE_DISPATCHED) {
+                if (state == e_request_state_dispatched) {
                     city_message_post(true, MESSAGE_REQUEST_RECEIVED, i, 0);
                     city_ratings_change_kingdom(g_scenario_data.requests[i].kingdom);
                 } else {
                     city_message_post(true, MESSAGE_REQUEST_RECEIVED_LATE, i, 0);
                     city_ratings_change_kingdom(g_scenario_data.requests[i].kingdom / 2);
                 }
-                g_scenario_data.requests[i].state = REQUEST_STATE_RECEIVED;
+                g_scenario_data.requests[i].state = e_request_state_received;
                 g_scenario_data.requests[i].visible = false;
             }
         } else {
             // normal or overdue
             if (g_scenario_data.requests[i].visible) {
                 --g_scenario_data.requests[i].months_to_comply;
-                if (state == REQUEST_STATE_NORMAL) {
+                if (state == e_request_state_normal) {
                     if (g_scenario_data.requests[i].months_to_comply == 12) {
                         // reminder
                         city_message_post(true, MESSAGE_REQUEST_REMINDER, i, 0);
                     } else if (g_scenario_data.requests[i].months_to_comply <= 0) {
                         city_message_post(true, MESSAGE_REQUEST_REFUSED, i, 0);
-                        g_scenario_data.requests[i].state = REQUEST_STATE_OVERDUE;
+                        g_scenario_data.requests[i].state = e_request_state_overdue;
                         g_scenario_data.requests[i].months_to_comply = 24;
                         city_ratings_reduce_kingdom_missed_request(3);
                     }
-                } else if (state == REQUEST_STATE_OVERDUE) {
+                } else if (state == e_request_state_overdue) {
                     if (g_scenario_data.requests[i].months_to_comply <= 0) {
                         city_message_post(true, MESSAGE_REQUEST_REFUSED_OVERDUE, i, 0);
-                        g_scenario_data.requests[i].state = REQUEST_STATE_IGNORED;
+                        g_scenario_data.requests[i].state = e_request_state_ignored;
                         g_scenario_data.requests[i].visible = false;
                         city_ratings_reduce_kingdom_missed_request(5);
                     }
@@ -94,10 +94,10 @@ void scenario_request_process_C3(void) {
 }
 
 void scenario_request_dispatch(int id) {
-    if (g_scenario_data.requests[id].state == REQUEST_STATE_NORMAL)
-        g_scenario_data.requests[id].state = REQUEST_STATE_DISPATCHED;
+    if (g_scenario_data.requests[id].state == e_request_state_normal)
+        g_scenario_data.requests[id].state = e_request_state_dispatched;
     else {
-        g_scenario_data.requests[id].state = REQUEST_STATE_DISPATCHED_LATE;
+        g_scenario_data.requests[id].state = e_request_state_dispatched_late;
     }
     g_scenario_data.requests[id].months_to_comply = (random_byte() & 3) + 1;
     g_scenario_data.requests[id].visible = 0;
@@ -139,7 +139,7 @@ const scenario_request* scenario_request_get(int id) {
     request.id = id;
     auto event = get_scenario_event(id);
     request.amount = event->amount_fields[0];
-    request.resource = event->item_fields[0];
+    request.resource = (e_resource)event->item_fields[0];
     request.state = event->event_state;
     request.months_to_comply = event->quest_months_left;
 

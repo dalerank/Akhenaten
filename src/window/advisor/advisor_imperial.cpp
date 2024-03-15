@@ -227,10 +227,13 @@ static void confirm_send_troops(bool accepted) {
         window_empire_show();
     }
 }
+
 static void confirm_send_goods(bool accepted) {
-    if (accepted)
+    if (accepted) {
         scenario_request_dispatch(selected_request_id);
+    }
 }
+
 static void button_request(int index, int param2) {
     int status = get_request_status(index);
     // in C3, the enums are offset by two! (I have not fixed this)
