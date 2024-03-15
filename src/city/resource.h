@@ -1,8 +1,11 @@
 #pragma once
 
 #include "city/constants.h"
+#include "core/bstring.h"
 #include "core/game_environment.h"
 #include "game/resource.h"
+
+#include <iosfwd>
 
 struct resources_list {
     int size;
@@ -10,6 +13,7 @@ struct resources_list {
 };
 
 int city_resource_count(e_resource resource);
+pcstr city_resource_id(e_resource resource);
 
 const resources_list* city_resource_get_available();
 const resources_list* city_resource_get_available_foods();
@@ -44,3 +48,12 @@ void city_resource_determine_available();
 void city_resource_calculate_food_stocks_and_supply_wheat();
 void city_resource_consume_food();
 void city_resource_add_items(e_resource res, int amount);
+
+template<e_resource R>
+void game_cheat_add_resource(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    int amount = atoi(args.empty() ? (pcstr)"100" : args.c_str());
+    city_resource_add_items(R, amount);
+    window_invalidate();
+    city_warning_show_console(bstring128("Added ", city_resource_id(R)).c_str());
+};

@@ -22,16 +22,7 @@ void config_load_building_pottery() {
     pottery_m.load();
 }
 
-static void game_cheat_add_pottery(std::istream &is, std::ostream &os) {
-    std::string args; is >> args;
-    int pottery = atoi(args.empty() ? (pcstr )"100" : args.c_str());
-    city_resource_add_items(RESOURCE_POTTERY, pottery);
-    window_invalidate();
-
-    city_warning_show_console("Added pottery");
-}
-
-declare_console_command(addpottery, game_cheat_add_pottery);
+declare_console_command(addpottery, game_cheat_add_resource<RESOURCE_POTTERY>);
 
 void building_pottery::on_create() {
     data.industry.first_material_id = RESOURCE_CLAY;

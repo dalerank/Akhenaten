@@ -3,8 +3,14 @@
 #include "building_workshop.h"
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
+#include "city/resource.h"
+#include "city/warning.h"
+#include "graphics/window.h"
 
 #include "js/js_game.h"
+#include "dev/debug.h"
+
+#include <iostream>
 
 buildings::model_t<building_papyrus_maker> papyrus_maker_m;
 
@@ -12,6 +18,8 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_building_papyrus_maker);
 void config_load_building_papyrus_maker() {
     papyrus_maker_m.load();
 }
+
+declare_console_command(addpapyrus, game_cheat_add_resource<RESOURCE_PAPYRUS>);
 
 void building_papyrus_maker::on_create() {
     data.industry.first_material_id = RESOURCE_REEDS;

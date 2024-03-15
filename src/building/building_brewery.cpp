@@ -19,16 +19,7 @@ void config_load_building_brewery() {
     brewery_m.load();
 }
 
-static void game_cheat_add_beer(std::istream &is, std::ostream &os) {
-    std::string args; is >> args;
-    int beer = atoi(args.empty() ? (pcstr )"100" : args.c_str());
-    city_resource_add_items(RESOURCE_BEER, beer);
-    window_invalidate();
-
-    city_warning_show_console("Added beer");
-}
-
-declare_console_command(addbeer, game_cheat_add_beer);
+declare_console_command(addbeer, game_cheat_add_resource<RESOURCE_BEER>);
 
 void building_brewery::on_create() {
     data.industry.first_material_id = RESOURCE_BARLEY;
