@@ -241,20 +241,20 @@ static void button_request(int index, int param2) {
         city_military_clear_empire_service_legions();
         switch (status) {
         case STATUS_NO_LEGIONS_AVAILABLE:
-            window_popup_dialog_show(POPUP_DIALOG_NO_LEGIONS_AVAILABLE, confirm_nothing, e_popup_btns_ok);
+            window_popup_dialog_show(e_popup_dialog_no_legions_available, confirm_nothing, e_popup_btns_ok);
             break;
         case STATUS_NO_LEGIONS_SELECTED:
-            window_popup_dialog_show(POPUP_DIALOG_NO_LEGIONS_SELECTED, confirm_nothing, e_popup_btns_ok);
+            window_popup_dialog_show(e_popup_dialog_no_legions_selected, confirm_nothing, e_popup_btns_ok);
             break;
         case STATUS_CONFIRM_SEND_LEGIONS:
-            window_popup_dialog_show(POPUP_DIALOG_SEND_TROOPS, confirm_send_troops, e_popup_btns_yesno);
+            window_popup_dialog_show(e_popup_dialog_send_troops, confirm_send_troops, e_popup_btns_yesno);
             break;
         case STATUS_NOT_ENOUGH_RESOURCES:
-            window_popup_dialog_show(POPUP_DIALOG_NOT_ENOUGH_GOODS, confirm_nothing, e_popup_btns_ok);
+            window_popup_dialog_show(e_popup_dialog_not_enough_goods, confirm_nothing, e_popup_btns_ok);
             break;
         default:
             selected_request_id = status - 1;
-            window_popup_dialog_show(POPUP_DIALOG_SEND_GOODS, confirm_send_goods, e_popup_btns_yesno);
+            window_popup_dialog_show(e_popup_dialog_send_goods, confirm_send_goods, e_popup_btns_yesno);
             break;
         }
     }

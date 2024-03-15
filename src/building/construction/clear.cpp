@@ -233,10 +233,10 @@ int building_construction_clear_land(bool measure_only, tile2i start, tile2i end
     confirm.cend = end;
 
     if (ask_confirm_fort) {
-        window_popup_dialog_show(POPUP_DIALOG_DELETE_FORT, confirm_delete_fort, e_popup_btns_yesno);
+        window_popup_dialog_show(e_popup_dialog_delete_fort, confirm_delete_fort, e_popup_btns_yesno);
         return -1;
     } else if (ask_confirm_bridge) {
-        window_popup_dialog_show(POPUP_DIALOG_DELETE_BRIDGE, confirm_delete_bridge, e_popup_btns_yesno);
+        window_popup_dialog_show(e_popup_dialog_delete_bridge, confirm_delete_bridge, e_popup_btns_yesno);
         return -1;
     } else {
         return clear_land_confirmed(measure_only, start, end);

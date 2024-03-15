@@ -106,13 +106,15 @@ static void confirm(void) {
 }
 
 void window_popup_dialog_show(int type, void (*close_func)(bool accepted), e_popup_dialog_btns has_ok_cancel_buttons) {
-    if (init(type, 0, 0, close_func, has_ok_cancel_buttons)) {
+    bool ok = init(type, 0, 0, close_func, has_ok_cancel_buttons);
+    if (ok) {
         window_type window = {WINDOW_POPUP_DIALOG, draw_background, draw_foreground, handle_input};
         window_show(&window);
     }
 }
 void window_popup_dialog_show_confirmation(int text_group, int text_id, void (*close_func)(bool accepted)) {
-    if (init(POPUP_DIALOG_NONE, text_group, text_id, close_func, e_popup_btns_yesno)) {
+    bool ok = init(e_popup_dialog_none, text_group, text_id, close_func, e_popup_btns_yesno);
+    if (ok) {
         window_type window = {WINDOW_POPUP_DIALOG, draw_background, draw_foreground, handle_input};
         window_show(&window);
     }
