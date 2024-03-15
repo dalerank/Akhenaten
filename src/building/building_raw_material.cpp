@@ -30,7 +30,7 @@ buildings::model_t<building_clay_pit> clay_pit_m;
 buildings::model_t<building_mine_gold> gold_mine_m;
 buildings::model_t<building_mine_gems> gems_mine_m;
 buildings::model_t<building_mine_copper> copper_mine_m;
-buildings::model_t<building_reed_gatherer> reed_gatherer_m;
+buildings::model_t<building_reed_gatherer> gatherer_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_raw_materials);
 void config_load_building_raw_materials() {
@@ -38,7 +38,7 @@ void config_load_building_raw_materials() {
     gold_mine_m.load();
     gems_mine_m.load();
     copper_mine_m.load();
-    reed_gatherer_m.load();
+    gatherer_m.load();
 }
 
 static void building_raw_material_draw_info(object_info& c, const char* type, e_resource resource) {
@@ -190,7 +190,7 @@ bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, 
 }
 
 bool building_reed_gatherer::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const auto &anim = reed_gatherer_m.anim["work"];
+    const auto &anim = gatherer_m.anim["work"];
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;
