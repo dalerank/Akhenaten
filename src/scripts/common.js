@@ -62,6 +62,7 @@ var building_work_camp = {}
 var building_water_supply = {}
 var building_well = {}
 var building_reed_gatherer = {}
+var building_papyrus_maker = {}
 var empire_window = {}
 var images_remap = []
 var imagepaks = []

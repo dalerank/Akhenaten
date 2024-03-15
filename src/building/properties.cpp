@@ -210,7 +210,7 @@ static building_properties properties[400] = {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {1, 1, 0, 0},                              // gatehouse (2)
-    {2, 0, GROUP_BUILDING_PAPYRUS_WORKSHOP},   // papyrus
+    {2, 0, 0, 0},   // papyrus
     {2, 0, 0, 0, 0}, // bricks
     {4, 0, 0, 0},                              // chariots
     {2, 0, 0, 0},       // physician
@@ -282,6 +282,7 @@ void building_properties_init() {
     properties[BUILDING_STORAGE_YARD] = {1, 0, 0, 0, 0, IMG_STORAGE_YARD};
     properties[BUILDING_WORK_CAMP] = {2, 0, 0, 0, 0, IMG_WORKCAMP};
     properties[BUILDING_REED_GATHERER] = {2, 0, 0, 0, 0, IMG_BUILDING_REED_GATHERER};
+    properties[BUILDING_PAPYRUS_WORKSHOP] = {2, 0, 0, 0, 0, IMG_PAPYRUS_WORKSHOP};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

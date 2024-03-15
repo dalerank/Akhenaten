@@ -136,12 +136,6 @@ void building_luxury_workshop_draw_info(object_info& c) {
     building_workshop_draw_info(c, 99, "luxury_workshop", 125, output_resource, input_resource);
 }
 
-void building_papyrus_workshop_draw_info(object_info& c) {
-    e_resource output_resource = RESOURCE_PAPYRUS;
-
-    building_workshop_draw_info(c, 1, "papyrus_workshop", 190, output_resource, RESOURCE_REEDS);
-}
-
 void building_brick_maker_workshop_draw_info(object_info& c) {
     e_resource output_resource = RESOURCE_BRICKS;
 

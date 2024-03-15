@@ -190,6 +190,13 @@ building_well = {
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
 }
 
+building_papyrus_maker = {
+  animations : {
+    work : { pos : [0, 0], anim_id : IMG_PAPYRUS_WORKSHOP }
+  },
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
 building_reed_gatherer = {
   animations : {
     work : { pos : [0, 0], anim_id : IMG_BUILDING_REED_GATHERER }

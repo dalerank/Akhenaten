@@ -161,11 +161,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
         data.entertainment.consume_material_id = RESOURCE_PAPYRUS;
         break;
 
-    case BUILDING_PAPYRUS_WORKSHOP:
-        data.industry.first_material_id = RESOURCE_REEDS;
-        output_resource_first_id = RESOURCE_PAPYRUS;
-        break;
-
     case BUILDING_BRICKS_WORKSHOP:
         data.industry.first_material_id = RESOURCE_STRAW;
         data.industry.second_material_id = RESOURCE_CLAY;
@@ -362,6 +357,7 @@ building_courthouse *building::dcast_courthouse() { return dcast()->dcast_courth
 building_well *building::dcast_well() { return dcast()->dcast_well(); }
 building_clay_pit *building::dcast_clay_pit() { return dcast()->dcast_clay_pit(); }
 building_reed_gatherer *building::dcast_reed_gatherer() { return dcast()->dcast_reed_gatherer(); }
+building_papyrus_maker *building::dcast_papyrus_maker() { return dcast()->dcast_papyrus_maker(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

@@ -65,7 +65,7 @@ void figure_reed_gatherer::figure_action() {
             // harvesting.....
             if (wait_ticks >= 300) {
                 vegetation_deplete(tile());
-                advance_action(11);
+                advance_action(ACTION_11_REED_GATHERER_RETURN_HOME);
             }
             // progress faster with multiple people on one spot
             if (config_get(CONFIG_GP_CH_MULTIPLE_GATHERERS)) {
@@ -76,7 +76,7 @@ void figure_reed_gatherer::figure_action() {
         }
         break;
 
-    case ACTION_10_REED_GATHERER_RETURN_HOME: // returning with resource
+    case ACTION_11_REED_GATHERER_RETURN_HOME: // returning with resource
         if (do_returnhome(TERRAIN_USAGE_PREFER_ROADS)) {
             home()->stored_full_amount += 50;
         }
@@ -94,7 +94,7 @@ void figure_reed_gatherer::figure_action() {
         image_set_animation(reed_gatherer_m.anim["work"]);
         break;
 
-    case ACTION_10_REED_GATHERER_RETURN_HOME: // returning
+    case ACTION_11_REED_GATHERER_RETURN_HOME: // returning
         image_set_animation(reed_gatherer_m.anim["return"]);
         break;
     }

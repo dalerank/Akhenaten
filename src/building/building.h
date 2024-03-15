@@ -40,6 +40,7 @@ class building_courthouse;
 class building_well;
 class building_clay_pit;
 class building_reed_gatherer;
+class building_papyrus_maker;
 struct object_info;
 struct painter;
 struct mouse;
@@ -355,6 +356,7 @@ public:
     building_well *dcast_well();
     building_clay_pit *dcast_clay_pit();
     building_reed_gatherer *dcast_reed_gatherer();
+    building_papyrus_maker *dcast_papyrus_maker();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -453,6 +455,7 @@ public:
     virtual building_well *dcast_well() { return nullptr; }
     virtual building_clay_pit *dcast_clay_pit() { return nullptr; }
     virtual building_reed_gatherer *dcast_reed_gatherer() { return nullptr; }
+    virtual building_papyrus_maker *dcast_papyrus_maker() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
