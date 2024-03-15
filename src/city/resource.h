@@ -48,12 +48,12 @@ void city_resource_determine_available();
 void city_resource_calculate_food_stocks_and_supply_wheat();
 void city_resource_consume_food();
 void city_resource_add_items(e_resource res, int amount);
+void city_resource_was_added_warning(e_resource res);
 
 template<e_resource R>
 void game_cheat_add_resource(std::istream &is, std::ostream &os) {
     std::string args; is >> args;
     int amount = atoi(args.empty() ? (pcstr)"100" : args.c_str());
     city_resource_add_items(R, amount);
-    window_invalidate();
-    city_warning_show_console(bstring128("Added ", city_resource_id(R)).c_str());
+    city_resource_was_added_warning(R);
 };

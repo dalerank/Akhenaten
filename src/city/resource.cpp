@@ -5,6 +5,8 @@
 #include "building/model.h"
 #include "building/building_storage_yard.h"
 #include "city/data_private.h"
+#include "city/warning.h"
+#include "graphics/window.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "empire/empire_city.h"
@@ -456,4 +458,9 @@ void city_resource_add_items(e_resource res, int amount) {
     if (storage_found) {
         chosen_yard->add_resource(res, amount); // because I'm lazy.
     }
+}
+
+void city_resource_was_added_warning(e_resource res) {
+    window_invalidate();
+    city_warning_show_console(bstring128("Added ", city_resource_id(res)).c_str());
 }
