@@ -6,6 +6,7 @@
 #include "game/resource.h"
 
 #include <iosfwd>
+#include <string>
 
 struct resources_list {
     int size;
