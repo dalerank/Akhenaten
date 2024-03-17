@@ -198,7 +198,7 @@ static void menu_file_exit_editor(int param) {
     if (scenario_is_saved())
         game_exit_editor();
     else {
-        window_popup_dialog_show(e_popup_dialog_quit_without_saving, menu_file_confirm_exit, e_popup_btns_yes);
+        window_popup_dialog_show({5, e_popup_dialog_quit_without_saving}, menu_file_confirm_exit, e_popup_btns_yes);
     }
 }
 

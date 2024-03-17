@@ -8,8 +8,6 @@
 #include "graphics/window.h"
 #include "input/input.h"
 
-#define GROUP 5
-
 #define PROCEED_GROUP 43
 #define PROCEED_TEXT 5
 
@@ -23,29 +21,23 @@ static image_button buttons[] = {
 };
 
 struct popup_dialog_t {
-    int popup_text_offset;
-    int custom_text_group;
-    int custom_text_id;
+    loc_text text;
+    loc_text custom_text;
     int ok_clicked;
-    void (*close_func)(bool accepted);
+    window_popup_dialog_callback *close_func;
     e_popup_dialog_btns num_buttons;
 };
 
 popup_dialog_t g_popup_dialog;
 
-static int init(int type,
-                int custom_text_group,
-                int custom_text_id,
-                void (*close_func)(bool accepted),
-                e_popup_dialog_btns buttons) {
+static int init(loc_text loc, loc_text custom_text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
     auto& data = g_popup_dialog;
     if (window_is(WINDOW_POPUP_DIALOG)) {
         // don't show popup over popup
         return 0;
     }
-    data.popup_text_offset = type;
-    data.custom_text_group = custom_text_group;
-    data.custom_text_id = custom_text_id;
+    data.text = loc;
+    data.custom_text = custom_text;
     data.ok_clicked = 0;
     data.close_func = close_func;
     data.num_buttons = buttons;
@@ -58,14 +50,15 @@ static void draw_background(void) {
     window_draw_underlying_window();
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{80, 80}, 30, 10);
-    if (data.popup_text_offset >= 0) {
-        lang_text_draw_centered(GROUP, data.popup_text_offset, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
-        if (lang_text_get_width(GROUP, data.popup_text_offset + 1, FONT_NORMAL_BLACK_ON_LIGHT) >= 420)
-            lang_text_draw_multiline(GROUP, data.popup_text_offset + 1, vec2i{110, 140}, 420, FONT_NORMAL_BLACK_ON_LIGHT);
-        else
-            lang_text_draw_centered(GROUP, data.popup_text_offset + 1, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
+    if (data.text.valid() >= 0) {
+        lang_text_draw_centered(data.text.group, data.text.id, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
+        if (lang_text_get_width(data.text.group, data.text.id + 1, FONT_NORMAL_BLACK_ON_LIGHT) >= 420) {
+            lang_text_draw_multiline(data.text.group, data.text.id + 1, vec2i{110, 140}, 420, FONT_NORMAL_BLACK_ON_LIGHT);
+        } else {
+            lang_text_draw_centered(data.text.group, data.text.id + 1, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
+        }
     } else {
-        lang_text_draw_centered(data.custom_text_group, data.custom_text_id, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
+        lang_text_draw_centered(data.custom_text.group, data.custom_text.id, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
         lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     graphics_reset_dialog();
@@ -105,17 +98,39 @@ static void confirm(void) {
     g_popup_dialog.close_func(1);
 }
 
-void window_popup_dialog_show(int type, void (*close_func)(bool accepted), e_popup_dialog_btns has_ok_cancel_buttons) {
-    bool ok = init(type, 0, 0, close_func, has_ok_cancel_buttons);
-    if (ok) {
-        window_type window = {WINDOW_POPUP_DIALOG, draw_background, draw_foreground, handle_input};
-        window_show(&window);
-    }
+void window_popup_dialog_show(pcstr loc_id, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
+    loc_text text = loc_text_from_key(loc_id);
+    window_popup_dialog_show(text, close_func, buttons);
 }
-void window_popup_dialog_show_confirmation(int text_group, int text_id, void (*close_func)(bool accepted)) {
-    bool ok = init(e_popup_dialog_none, text_group, text_id, close_func, e_popup_btns_yesno);
+
+void window_popup_dialog_show(loc_text text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
+    bool ok = init(text, {}, close_func, buttons);
+    if (!ok) {
+        return;
+    }
+    window_type window = {
+        WINDOW_POPUP_DIALOG,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
+    window_show(&window);
+}
+
+void window_popup_dialog_show_confirmation(pcstr key, window_popup_dialog_callback close_func) {
+    loc_text text = loc_text_from_key(key);
+    window_popup_dialog_show_confirmation(text, close_func);
+}
+
+void window_popup_dialog_show_confirmation(loc_text custom, window_popup_dialog_callback close_func) {
+    bool ok = init({}, custom, close_func, e_popup_btns_yesno);
     if (ok) {
-        window_type window = {WINDOW_POPUP_DIALOG, draw_background, draw_foreground, handle_input};
+        window_type window = {
+            WINDOW_POPUP_DIALOG,
+            draw_background,
+            draw_foreground,
+            handle_input
+        };
         window_show(&window);
     }
 }

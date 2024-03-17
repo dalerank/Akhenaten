@@ -797,13 +797,14 @@ static void menu_file_new_game_handle(bool confirmed) {
 
 static void menu_file_new_game(int param) {
     widget_top_menu_clear_state();
-    window_popup_dialog_show(e_popup_dialog_quit, menu_file_new_game_handle, e_popup_btns_yesno);
+    window_popup_dialog_show("#popup_dialog_quit", menu_file_new_game_handle, e_popup_btns_yesno);
 }
 
 static void menu_file_replay_map(int param) {
     widget_top_menu_clear_state();
-    window_popup_dialog_show_confirmation(1, 2, replay_map_handle);
+    window_popup_dialog_show_confirmation("#replay_mission", replay_map_handle);
 }
+
 static void menu_file_load_game(int param) {
     widget_top_menu_clear_state();
     Planner.reset();
@@ -830,7 +831,7 @@ static void menu_file_confirm_exit(bool accepted) {
 }
 static void menu_file_exit_city(int param) {
     widget_top_menu_clear_state();
-    window_popup_dialog_show(e_popup_dialog_quit, menu_file_confirm_exit, e_popup_btns_yesno);
+    window_popup_dialog_show("#popup_dialog_quit", menu_file_confirm_exit, e_popup_btns_yesno);
 }
 
 static void menu_options_display(int param) {

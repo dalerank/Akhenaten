@@ -1,18 +1,16 @@
 #pragma once
 
+#include "graphics/elements/lang_text.h"
+
 enum e_popup_dialog_opt {
     e_popup_dialog_none = -1,
-    e_popup_dialog_quit = 0,
     e_popup_dialog_open_trade = 2,
-    e_popup_dialog_send_goods = 7,
     e_popup_dialog_dispatch_goods = 6,
     e_popup_dialog_not_enough_goods = 8,
     e_popup_dialog_no_legions_available = 10,
     e_popup_dialog_no_legions_selected = 12,
     e_popup_dialog_send_troops = 14,
-    e_popup_dialog_delete_fort = 16,
     e_popup_dialog_missing_cd = 18,
-    e_popup_dialog_delete_bridge = 20,
     e_popup_dialog_quit_without_saving = 22,
     e_popup_dialog_old_version = 24,
     //
@@ -50,8 +48,6 @@ enum e_popup_dialog_opt {
     e_popup_dialog_infantry_needs_weapons = 84,
     e_popup_dialog_charioteers_needs_chariots = 86,
     //
-    e_popup_dialog_no_festival_square = 88,
-    //
     e_popup_dialog_delete_dynasty = 90,
     e_popup_dialog_dynasty_name_exists = 92,
     e_popup_dialog_no_dynasty = 94,
@@ -88,6 +84,10 @@ enum e_popup_dialog_opt {
 
 enum e_popup_dialog_btns { e_popup_btns_ok = 0, e_popup_btns_yes = 1, e_popup_btns_yesno = 2 };
 
-void window_popup_dialog_show(int type, void (*close_func)(bool accepted), e_popup_dialog_btns has_ok_cancel_buttons);
+using window_popup_dialog_callback = void(bool);
 
-void window_popup_dialog_show_confirmation(int text_group, int text_id, void (*close_func)(bool accepted));
+void window_popup_dialog_show(loc_text text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons);
+void window_popup_dialog_show(pcstr text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons);
+
+void window_popup_dialog_show_confirmation(loc_text custom, window_popup_dialog_callback close_func);
+void window_popup_dialog_show_confirmation(pcstr key, window_popup_dialog_callback close_func);

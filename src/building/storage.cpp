@@ -120,7 +120,7 @@ void restore_storage_settings(bool do_forget_changes) {
 
 void storage_settings_backup_check() {
     if (has_unsaved_changes)
-        window_popup_dialog_show_confirmation(5, 23, restore_storage_settings);
+        window_popup_dialog_show_confirmation("#exit_without_saving", restore_storage_settings);
     else {
         storage_settings_backup_reset();
         window_city_show();

@@ -199,6 +199,18 @@ public:
     inline int cmp(const char* str) const { return strcmp(_data, str); }
     inline int icmp(const char* str) const { return stricmp(_data, str); }
     inline int ncmp(const char* str, unsigned int count) const { return ::strncmp(_data, str, count); }
+
+    inline size_t hash() {
+        const size_t p = 31;
+        const size_t m = 1e9 + 9;
+        size_t hash_value = 0;
+        size_t p_pow = 1;
+        for (char c : _data) {
+            hash_value = (hash_value + (c - 'a' + 1) * p_pow) % m;
+            p_pow = (p_pow * p) % m;
+        }
+        return hash_value;
+    }
 };
 
 using bstring32 = bstring<32>;

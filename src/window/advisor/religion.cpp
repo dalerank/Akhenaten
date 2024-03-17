@@ -206,10 +206,13 @@ static void confirm_nothing(bool accepted) {
 }
 
 static void button_hold_festival(int param1, int param2) {
-    if (!city_building_has_festival_square())
-        return window_popup_dialog_show(e_popup_dialog_no_festival_square, confirm_nothing, e_popup_btns_ok);
-    if (!city_festival_is_planned())
+    if (!city_building_has_festival_square()) {
+        return window_popup_dialog_show("#popup_dialog_no_festival_square", confirm_nothing, e_popup_btns_ok);
+    }
+
+    if (!city_festival_is_planned()) {
         window_hold_festival_show();
+    }
 }
 
 static int handle_mouse(const mouse* m) {

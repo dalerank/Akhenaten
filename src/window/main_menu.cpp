@@ -78,7 +78,7 @@ static void main_menu_draw_background() {
     });
 
     g_main_menu_data["quit_game"].onclick([] (int, int) {
-        window_popup_dialog_show(e_popup_dialog_quit, main_menu_confirm_exit, e_popup_btns_yesno);
+        window_popup_dialog_show("#popup_dialog_quit", main_menu_confirm_exit, e_popup_btns_yesno);
     });
 }
 

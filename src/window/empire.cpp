@@ -867,7 +867,7 @@ static void confirmed_open_trade(bool accepted) {
 }
 
 static void button_open_trade(int param1, int param2) {
-    window_popup_dialog_show(e_popup_dialog_open_trade, confirmed_open_trade, e_popup_btns_yesno);
+    window_popup_dialog_show({5, e_popup_dialog_open_trade}, confirmed_open_trade, e_popup_btns_yesno);
 }
 
 void window_empire_show() {
