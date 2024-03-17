@@ -24,7 +24,7 @@ struct popup_dialog_t {
     loc_text text;
     loc_text custom_text;
     int ok_clicked;
-    window_popup_dialog_callback *close_func;
+    window_popup_dialog_callback close_func;
     e_popup_dialog_btns num_buttons;
 };
 
@@ -98,6 +98,26 @@ static void confirm(void) {
     g_popup_dialog.close_func(1);
 }
 
+void window_popup_dialog_show(pcstr loc_id, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func) {
+    window_popup_dialog_show(loc_id, close_func, buttons);
+}
+
+void window_yesno_dialog_show(pcstr loc_id, window_popup_dialog_callback close_func) {
+    window_popup_dialog_show(loc_id, close_func, e_popup_btns_yesno);
+}
+
+void window_yes_dialog_show(pcstr text, window_yes_dialog_callback close_func) {
+    window_yesno_dialog_show(text, [=] (bool accepted) {
+        if (accepted) { close_func(); }
+    });
+}
+
+void window_ok_dialog_show(pcstr loc_id, window_yes_dialog_callback close_func) {
+    window_popup_dialog_show(loc_id, [=] (bool accepted) {
+        if (accepted) { close_func(); }
+    }, e_popup_btns_ok);
+}
+
 void window_popup_dialog_show(pcstr loc_id, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
     loc_text text = loc_text_from_key(loc_id);
     window_popup_dialog_show(text, close_func, buttons);
@@ -124,13 +144,14 @@ void window_popup_dialog_show_confirmation(pcstr key, window_popup_dialog_callba
 
 void window_popup_dialog_show_confirmation(loc_text custom, window_popup_dialog_callback close_func) {
     bool ok = init({}, custom, close_func, e_popup_btns_yesno);
-    if (ok) {
-        window_type window = {
-            WINDOW_POPUP_DIALOG,
-            draw_background,
-            draw_foreground,
-            handle_input
-        };
-        window_show(&window);
+    if (!ok) {
+        return;
     }
+    window_type window = {
+        WINDOW_POPUP_DIALOG,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
+    window_show(&window);
 }

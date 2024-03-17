@@ -766,43 +766,39 @@ int widget_top_menu_get_tooltip_text(tooltip_context* c) {
     return 0;
 }
 
-static void replay_map_handle(bool confirmed) {
-    if (!confirmed) {
-        window_city_show();
-        return;
-    }
-
-    Planner.reset();
-    if (scenario_is_custom()) {
-        GamestateIO::load_savegame("autosave_replay.sav");
-        window_city_show();
-    } else {
-        int scenario_id = scenario_campaign_scenario_id();
-        widget_top_menu_clear_state();
-        GamestateIO::load_mission(scenario_id, true);
-    }
-}
-
-static void menu_file_new_game_handle(bool confirmed) {
-    if (!confirmed) {
-        window_city_show();
-        return;
-    }
-
-    Planner.reset();
-    game_undo_disable();
-    game_state_reset_overlay();
-    window_game_menu_show();
-}
-
 static void menu_file_new_game(int param) {
     widget_top_menu_clear_state();
-    window_popup_dialog_show("#popup_dialog_quit", menu_file_new_game_handle, e_popup_btns_yesno);
+    window_yesno_dialog_show("#popup_dialog_quit", [] (bool confirmed) {
+        if (!confirmed) {
+            window_city_show();
+            return;
+        }
+
+        Planner.reset();
+        game_undo_disable();
+        game_state_reset_overlay();
+        window_game_menu_show();
+    });
 }
 
 static void menu_file_replay_map(int param) {
     widget_top_menu_clear_state();
-    window_popup_dialog_show_confirmation("#replay_mission", replay_map_handle);
+    window_popup_dialog_show_confirmation("#replay_mission", [] (bool confirmed) {
+        if (!confirmed) {
+            window_city_show();
+            return;
+        }
+
+        Planner.reset();
+        if (scenario_is_custom()) {
+            GamestateIO::load_savegame("autosave_replay.sav");
+            window_city_show();
+        } else {
+            int scenario_id = scenario_campaign_scenario_id();
+            widget_top_menu_clear_state();
+            GamestateIO::load_mission(scenario_id, true);
+        }
+    });
 }
 
 static void menu_file_load_game(int param) {
@@ -821,17 +817,17 @@ static void menu_file_delete_game(int param) {
     window_city_show();
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_DELETE);
 }
-static void menu_file_confirm_exit(bool accepted) {
-    if (accepted) {
-        widget_top_menu_clear_state();
-        window_main_menu_show(true);
-    } else {
-        window_city_show();
-    }
-}
+
 static void menu_file_exit_city(int param) {
     widget_top_menu_clear_state();
-    window_popup_dialog_show("#popup_dialog_quit", menu_file_confirm_exit, e_popup_btns_yesno);
+    window_yesno_dialog_show("#popup_dialog_quit", [] (bool accepted) {
+        if (accepted) {
+            widget_top_menu_clear_state();
+            window_main_menu_show(true);
+        } else {
+            window_city_show();
+        }
+    });
 }
 
 static void menu_options_display(int param) {

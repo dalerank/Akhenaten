@@ -42,12 +42,6 @@ void config_load_main_menu() {
     });
 }
 
-static void main_menu_confirm_exit(bool accepted) {
-    if (accepted) {
-        app_request_exit();
-    }
-}
-
 static void window_config_show_back() {
 }
 
@@ -78,7 +72,7 @@ static void main_menu_draw_background() {
     });
 
     g_main_menu_data["quit_game"].onclick([] (int, int) {
-        window_popup_dialog_show("#popup_dialog_quit", main_menu_confirm_exit, e_popup_btns_yesno);
+        window_yes_dialog_show("#popup_dialog_quit", [] { app_request_exit(); });
     });
 }
 

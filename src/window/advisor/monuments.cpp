@@ -221,38 +221,33 @@ static void button_gift_to_emperor(int param1, int param2) {
 static void confirm_nothing(bool accepted) {
 }
 
-static void confirm_send_troops(bool accepted) {
-    if (accepted) {
-        formation_legions_dispatch_to_distant_battle();
-        window_empire_show();
-    }
-}
-
-static void confirm_send_goods(bool accepted) {
-    if (accepted)
-        scenario_request_dispatch(selected_request_id);
-}
-
 static void button_request(int index, int param2) {
     int status = get_request_status(index);
     if (status) {
         city_military_clear_empire_service_legions();
         switch (status) {
         case STATUS_NO_LEGIONS_AVAILABLE:
-            window_popup_dialog_show({5, e_popup_dialog_no_legions_available}, confirm_nothing, e_popup_btns_ok);
+            window_ok_dialog_show("#popup_dialog_no_legions_available");
             break;
+
         case STATUS_NO_LEGIONS_SELECTED:
-            window_popup_dialog_show({5, e_popup_dialog_no_legions_selected}, confirm_nothing, e_popup_btns_ok);
+            window_ok_dialog_show("#popup_dialog_no_legions_selected");
             break;
+
         case STATUS_CONFIRM_SEND_LEGIONS:
-            window_popup_dialog_show({5, e_popup_dialog_send_troops}, confirm_send_troops, e_popup_btns_yesno);
+            window_yes_dialog_show("#popup_dialog_send_troops", [] {
+                formation_legions_dispatch_to_distant_battle();
+                window_empire_show();
+            });
             break;
+
         case STATUS_NOT_ENOUGH_RESOURCES:
-            window_popup_dialog_show({5, e_popup_dialog_not_enough_goods}, confirm_nothing, e_popup_btns_ok);
+            window_ok_dialog_show("#popup_dialog_not_enough_goods");
             break;
+
         default:
             selected_request_id = status - 1;
-            window_popup_dialog_show("#popup_dialog_send_goods", confirm_send_goods, e_popup_btns_yesno);
+            window_yes_dialog_show("#popup_dialog_send_goods", [] { scenario_request_dispatch(selected_request_id); });
             break;
         }
     }

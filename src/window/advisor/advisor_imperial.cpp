@@ -50,7 +50,6 @@ static generic_button imperial_buttons[] = {
 };
 
 static int focus_button_id;
-static int selected_request_id;
 
 static int get_request_status(int index) {
     int num_requests = 0;
@@ -228,12 +227,6 @@ static void confirm_send_troops(bool accepted) {
     }
 }
 
-static void confirm_send_goods(bool accepted) {
-    if (accepted) {
-        scenario_request_dispatch(selected_request_id);
-    }
-}
-
 static void button_request(int index, int param2) {
     int status = get_request_status(index);
     // in C3, the enums are offset by two! (I have not fixed this)
@@ -241,20 +234,21 @@ static void button_request(int index, int param2) {
         city_military_clear_empire_service_legions();
         switch (status) {
         case STATUS_NO_LEGIONS_AVAILABLE:
-            window_popup_dialog_show({5, e_popup_dialog_no_legions_available}, confirm_nothing, e_popup_btns_ok);
+            window_ok_dialog_show("#popup_dialog_no_legions_available");
             break;
         case STATUS_NO_LEGIONS_SELECTED:
-            window_popup_dialog_show({5, e_popup_dialog_no_legions_selected}, confirm_nothing, e_popup_btns_ok);
+            window_ok_dialog_show("#popup_dialog_no_legions_selected");
             break;
         case STATUS_CONFIRM_SEND_LEGIONS:
-            window_popup_dialog_show({5, e_popup_dialog_send_troops}, confirm_send_troops, e_popup_btns_yesno);
+            window_ok_dialog_show("#popup_dialog_send_troops");
             break;
         case STATUS_NOT_ENOUGH_RESOURCES:
-            window_popup_dialog_show({5, e_popup_dialog_not_enough_goods}, confirm_nothing, e_popup_btns_ok);
+            window_ok_dialog_show("#popup_dialog_not_enough_goods");
             break;
         default:
-            selected_request_id = status - 1;
-            window_popup_dialog_show("#popup_dialog_send_goods", confirm_send_goods, e_popup_btns_yesno);
+            window_yes_dialog_show("#popup_dialog_send_goods", [selected_request_id = index - 1] {
+                scenario_request_dispatch(selected_request_id);
+            });
             break;
         }
     }

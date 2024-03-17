@@ -108,20 +108,22 @@ void backup_storage_settings(int storage_id) {
     backup_settings = g_storages[storage_id].storage;
 }
 
-void restore_storage_settings(bool do_forget_changes) {
-    if (do_forget_changes) {
-        if (backup_storage_id == -1)
-            return;
-        g_storages[backup_storage_id].storage = backup_settings;
-        storage_settings_backup_reset();
-        window_city_show();
-    }
-}
-
 void storage_settings_backup_check() {
-    if (has_unsaved_changes)
-        window_popup_dialog_show_confirmation("#exit_without_saving", restore_storage_settings);
-    else {
+    if (has_unsaved_changes) {
+        window_popup_dialog_show_confirmation("#exit_without_saving", [] (bool do_forget_changes) {
+            if (!do_forget_changes) {
+                return;
+            }
+
+            if (backup_storage_id == -1) {
+                return;
+            }
+
+            g_storages[backup_storage_id].storage = backup_settings;
+            storage_settings_backup_reset();
+            window_city_show();
+        });
+    } else {
         storage_settings_backup_reset();
         window_city_show();
     }

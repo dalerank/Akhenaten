@@ -857,17 +857,12 @@ static void button_show_resource_window(int resource, int param2) {
     window_resource_settings_show((e_resource)resource);
 }
 
-static void confirmed_open_trade(bool accepted) {
-    auto &data = g_empire_window;
-    if (accepted) {
-        empire_city_open_trade(data.selected_city);
-        building_menu_update(BUILDSET_NORMAL);
-        window_trade_opened_show(data.selected_city);
-    }
-}
-
 static void button_open_trade(int param1, int param2) {
-    window_popup_dialog_show("#popup_dialog_open_trade", confirmed_open_trade, e_popup_btns_yesno);
+    window_yes_dialog_show("#popup_dialog_open_trade", [] {
+        empire_city_open_trade(g_empire_window.selected_city);
+        building_menu_update(BUILDSET_NORMAL);
+        window_trade_opened_show(g_empire_window.selected_city);
+    });
 }
 
 void window_empire_show() {

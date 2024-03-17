@@ -184,21 +184,19 @@ static void menu_file_save_map(int param) {
     window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
 }
 
-static void menu_file_confirm_exit(bool accepted) {
-    if (accepted)
-        game_exit_editor();
-    else {
-        window_editor_map_show();
-    }
-}
-
 static void menu_file_exit_editor(int param) {
     clear_state();
     window_editor_map_show();
     if (scenario_is_saved())
         game_exit_editor();
     else {
-        window_popup_dialog_show({5, e_popup_dialog_quit_without_saving}, menu_file_confirm_exit, e_popup_btns_yes);
+        window_yesno_dialog_show("#popup_dialog_quit_without_saving", [] (bool accepted) {
+            if (accepted)
+                game_exit_editor();
+            else {
+                window_editor_map_show();
+            }
+        });
     }
 }
 

@@ -186,22 +186,6 @@ static int clear_land_confirmed(bool measure_only, tile2i start, tile2i end) {
     return items_placed;
 }
 
-static void confirm_delete_fort(bool accepted) {
-    auto& confirm = g_clear_confirm;
-    confirm.fort_confirmed = accepted ? 1 : -1;
-
-    clear_land_confirmed(0, confirm.cstart, confirm.cend);
-}
-
-static void confirm_delete_bridge(bool accepted) {
-    auto& confirm = g_clear_confirm;
-    if (accepted)
-        confirm.bridge_confirmed = 1;
-    else
-        confirm.bridge_confirmed = -1;
-    clear_land_confirmed(0, confirm.cstart, confirm.cend);
-}
-
 int building_construction_clear_land(bool measure_only, tile2i start, tile2i end) {
     auto& confirm = g_clear_confirm;
     confirm.fort_confirmed = 0;
@@ -233,12 +217,20 @@ int building_construction_clear_land(bool measure_only, tile2i start, tile2i end
     confirm.cend = end;
 
     if (ask_confirm_fort) {
-        window_popup_dialog_show("#popup_dialog_delete_fort", confirm_delete_fort, e_popup_btns_yesno);
+        window_yesno_dialog_show("#popup_dialog_delete_fort", [] (bool accepted) {
+            g_clear_confirm.fort_confirmed =
+            clear_land_confirmed(0, g_clear_confirm.cstart, g_clear_confirm.cend);
+        });
         return -1;
-    } else if (ask_confirm_bridge) {
-        window_popup_dialog_show("#popup_dialog_delete_bridge", confirm_delete_bridge, e_popup_btns_yesno);
+    } 
+    
+    if (ask_confirm_bridge) {
+        window_yesno_dialog_show("#popup_dialog_delete_bridge", [] (bool accepted) {
+            g_clear_confirm.bridge_confirmed = accepted ? 1 : -1;
+            clear_land_confirmed(0, g_clear_confirm.cstart, g_clear_confirm.cend);
+        });
         return -1;
-    } else {
-        return clear_land_confirmed(measure_only, start, end);
     }
+
+    return clear_land_confirmed(measure_only, start, end);
 }

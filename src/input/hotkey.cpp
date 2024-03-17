@@ -432,18 +432,16 @@ void hotkey_key_released(int key, int modifiers) {
     }
 }
 
-static void confirm_city_exit(bool accepted) {
-    if (accepted) {
-        widget_top_menu_clear_state();
-        window_main_menu_show(true);
-    } else {
-        window_city_show();
-    }
-}
-
 void hotkey_handle_escape(void) {
     video_stop();
-    window_popup_dialog_show("#popup_dialog_quit", confirm_city_exit, e_popup_btns_yesno);
+    window_yesno_dialog_show("#popup_dialog_quit", [] (bool accepted) {
+        if (accepted) {
+            widget_top_menu_clear_state();
+            window_main_menu_show(true);
+        } else {
+            window_city_show();
+        }
+    });
 }
 
 void hotkey_handle_global_keys() {

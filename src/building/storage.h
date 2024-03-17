@@ -55,7 +55,6 @@ void building_storage_delete(int storage_id);
 const building_storage* building_storage_get(int storage_id);
 
 void backup_storage_settings(int storage_id);
-void restore_storage_settings(bool do_forget_changes);
 void storage_settings_backup_check();
 void storage_settings_backup_reset();
 

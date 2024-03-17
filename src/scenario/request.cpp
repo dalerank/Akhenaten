@@ -13,7 +13,7 @@
 #include "game/tutorial.h"
 #include "scenario/scenario_data.h"
 
-void scenario_request_init(void) {
+void scenario_request_init() {
     for (int i = 0; i < MAX_REQUESTS; i++) {
         random_generate_next();
         if (g_scenario_data.requests[i].resource) {
@@ -23,7 +23,7 @@ void scenario_request_init(void) {
     }
 }
 
-void scenario_request_process_C3(void) {
+void scenario_request_process_C3() {
     for (int i = 0; i < MAX_REQUESTS; i++) {
         if (!g_scenario_data.requests[i].resource || g_scenario_data.requests[i].state > e_request_state_dispatched_late)
             continue;
@@ -145,54 +145,38 @@ const scenario_request* scenario_request_get(int id) {
 
     return &request;
 }
-const scenario_request* scenario_request_get_visible(int index) {
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    for (int i = 0; i < MAX_REQUESTS; i++) {
-    //        if (g_scenario_data.requests[i].resource && g_scenario_data.requests[i].visible
-    //            && g_scenario_data.requests[i].state <= 1) {
-    //            if (index == 0)
-    //                return scenario_request_get(i);
-    //            index--; // I have no idea
-    //        }
-    //    }
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        int event_index = -1;
-        for (int i = 0; i < MAX_REQUESTS; i++) {
-            const event_ph_t* event;
-            do {
-                event_index++;
-                if (event_index >= get_scenario_events_num())
-                    return 0;
-                event = get_scenario_event(event_index);
-            } while (event->type != EVENT_TYPE_REQUEST || event->is_active == 0);
 
-            if (event->event_state <= EVENT_STATE_IN_PROGRESS) {
-                if (index == 0)
-                    return scenario_request_get(event_index);
-                index--;
-            }
+const scenario_request* scenario_request_get_visible(int index) {
+    int event_index = -1;
+    for (int i = 0; i < MAX_REQUESTS; i++) {
+        const event_ph_t* event;
+        do {
+            event_index++;
+            if (event_index >= get_scenario_events_num())
+                return 0;
+            event = get_scenario_event(event_index);
+        } while (event->type != EVENT_TYPE_REQUEST || event->is_active == 0);
+
+        if (event->event_state <= EVENT_STATE_IN_PROGRESS) {
+            if (index == 0)
+                return scenario_request_get(event_index);
+
+            index--;
         }
-    //}
-    return 0;
+    }
+
+    return nullptr;
 }
 
 int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request* request)) {
     int index = start_index;
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    for (int i = 0; i < MAX_REQUESTS; i++) {
-    //        if (g_scenario_data.requests[i].resource && g_scenario_data.requests[i].visible) {
-    //            callback(index, scenario_request_get(i));
-    //            index++;
-    //        }
-    //    }
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        for (int i = 0; i < MAX_REQUESTS; i++) {
-            auto request = scenario_request_get_visible(i);
-            if (request) {
-                callback(index, request);
-                index++;
-            }
+    for (int i = 0; i < MAX_REQUESTS; i++) {
+        auto request = scenario_request_get_visible(i);
+        if (request) {
+            callback(index, request);
+            index++;
         }
-    //}
+    }
+
     return index;
 }

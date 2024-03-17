@@ -149,14 +149,6 @@ static void draw_foreground() {
 static void confirm_nothing(bool accepted) {
 }
 
-static void confirm_delete_player(bool accepted) {
-    auto &data = *g_window_player_selection;
-    if (accepted) {
-        player_data_delete(data.selected_player);
-        data.panel->refresh_file_finder();
-    }
-}
-
 static void button_select_file(int index, int param2) {
     auto& data = *g_window_player_selection;
 
@@ -180,15 +172,18 @@ static void button_click(int param1, int param2) {
 
     case 1: // delete player
         if (is_valid_selected_player()) {
-            window_popup_dialog_show({5, e_popup_dialog_delete_dynasty}, confirm_delete_player, e_popup_btns_yesno);
+            window_yes_dialog_show("#popup_dialog_delete_dynasty", [] {
+                player_data_delete(g_window_player_selection->selected_player);
+                g_window_player_selection->panel->refresh_file_finder();
+            });
         } else {
-            window_popup_dialog_show({5, e_popup_dialog_no_dynasty}, confirm_nothing, e_popup_btns_yes);
+            window_ok_dialog_show("#popup_dialog_no_dynasty");
         }
         break;
 
     case 2: // proceed with selected player
         if (!is_valid_selected_player()) {
-            window_popup_dialog_show({5, e_popup_dialog_no_dynasty}, confirm_nothing, e_popup_btns_yes);
+            window_ok_dialog_show("#popup_dialog_no_dynasty");
         } else {
             window_game_menu_show();
         }
