@@ -2,7 +2,7 @@
 
 #include "core/buffer.h"
 
-enum {
+enum e_event_type {
     EVENT_TYPE_NONE = 0,
 
     EVENT_TYPE_REQUEST = 1,
@@ -93,6 +93,7 @@ enum {
     EVENT_STATE_FINISHED = 2,
     EVENT_STATE_FINISHED_LATE = 3,
     EVENT_STATE_FAILED = 4,
+    EVENT_STATE_RECEIVED = 5,
 };
 
 enum {
@@ -113,7 +114,7 @@ enum {
     EVENT_ACTION_DEFEAT = 3,
 };
 
-typedef struct {
+struct event_ph_t {
     int16_t num_total_header;
     int16_t __unk01;
     int16_t event_id;
@@ -158,11 +159,12 @@ typedef struct {
     int16_t __unk20c;
     int16_t __unk21;
     int16_t __unk22;
-} event_ph_t;
+};
 
 const int get_scenario_events_num();
 
 const event_ph_t* get_scenario_event(int id);
+event_ph_t* set_scenario_event(int id);
 uint8_t* get_eventmsg_text(int group_id, int index);
 
 void scenario_event_process();

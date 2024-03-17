@@ -7,6 +7,7 @@
 #include "city/ratings.h"
 #include "city/resource.h"
 #include "core/random.h"
+#include "core/svector.h"
 #include "events.h"
 #include "game/resource.h"
 #include "game/time.h"
@@ -94,21 +95,27 @@ void scenario_request_process_C3() {
 }
 
 void scenario_request_dispatch(int id) {
-    if (g_scenario_data.requests[id].state == e_request_state_normal)
-        g_scenario_data.requests[id].state = e_request_state_dispatched;
-    else {
-        g_scenario_data.requests[id].state = e_request_state_dispatched_late;
+    const scenario_request* request = scenario_request_get_visible(id);
+    if (!request) {
+        return;
     }
-    g_scenario_data.requests[id].months_to_comply = (random_byte() & 3) + 1;
-    g_scenario_data.requests[id].visible = 0;
-    int amount = g_scenario_data.requests[id].amount;
-    if (g_scenario_data.requests[id].resource == RESOURCE_DEBEN) {
-        city_finance_process_requests_and_festivals(amount);
-    } else if (g_scenario_data.requests[id].resource == RESOURCE_TROOPS) {
-        city_population_remove_for_troop_request(amount);
-        building_storageyards_remove_resource(RESOURCE_WEAPONS, amount);
+
+    e_request_stat new_state = (request->state == e_request_state_normal)
+                                    ? e_request_state_dispatched
+                                    : e_request_state_dispatched_late;
+
+    scenario_request_set_state(*request, new_state);
+    //scenario_request_delay(id, (random_byte() & 3) + 1);
+    scenario_request_set_active(*request, false);
+
+    if (request->resource == RESOURCE_DEBEN) {
+        city_finance_process_requests_and_festivals(request->amount);
+    } else if (request->resource == RESOURCE_TROOPS) {
+        city_population_remove_for_troop_request(request->amount);
+        building_storageyards_remove_resource(RESOURCE_WEAPONS, request->amount);
     } else {
-        building_storageyards_remove_resource(g_scenario_data.requests[id].resource, amount);
+        int amount = request->get_resource_amount();
+        building_storageyards_remove_resource(request->resource, amount);
     }
 }
 
@@ -133,35 +140,41 @@ int scenario_requests_active_count() {
     return count;
 }
 
-const scenario_request* scenario_request_get(int id) {
+static const scenario_request *scenario_request_get(const event_ph_t &event) {
     static scenario_request request;
 
-    request.id = id;
-    auto event = get_scenario_event(id);
-    request.amount = event->amount_fields[0];
-    request.resource = (e_resource)event->item_fields[0];
-    request.state = event->event_state;
-    request.months_to_comply = event->quest_months_left;
+    request.event_id = event.event_id;
+    request.amount = event.amount_fields[0];
+    request.resource = (e_resource)event.item_fields[0];
+    request.state = event.event_state;
+    request.months_to_comply = event.quest_months_left;
 
     return &request;
 }
 
+void scenario_request_set_state(const scenario_request &request, e_request_stat new_state) {
+    event_ph_t &event = *set_scenario_event(request.event_id);
+    event.event_state = new_state;
+}
+
+void scenario_request_set_active(const scenario_request &request, bool active) {
+    event_ph_t &event = *set_scenario_event(request.event_id);
+    event.is_active = active;
+}
+
 const scenario_request* scenario_request_get_visible(int index) {
-    int event_index = -1;
+    int event_index = 0;
     for (int i = 0; i < MAX_REQUESTS; i++) {
-        const event_ph_t* event;
-        do {
-            event_index++;
-            if (event_index >= get_scenario_events_num())
-                return 0;
-            event = get_scenario_event(event_index);
-        } while (event->type != EVENT_TYPE_REQUEST || event->is_active == 0);
-
-        if (event->event_state <= EVENT_STATE_IN_PROGRESS) {
-            if (index == 0)
-                return scenario_request_get(event_index);
-
-            index--;
+        if (i >= get_scenario_events_num()) {
+            return nullptr;
+        }
+        
+        const event_ph_t* event = get_scenario_event(i);
+        if (event->type == EVENT_TYPE_REQUEST && event->is_active && event->event_state <= EVENT_STATE_IN_PROGRESS) {
+            if (event_index == index) {
+                return scenario_request_get(*event);
+            }
+            ++event_index;
         }
     }
 

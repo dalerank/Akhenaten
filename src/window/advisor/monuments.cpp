@@ -137,32 +137,32 @@ static int draw_background(void) {
 }
 
 static int get_request_status(int index) {
-    int num_requests = 0;
-    if (city_military_months_until_distant_battle() > 0
-        && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
-        num_requests = 1;
-        if (index == 0) {
-            if (city_military_total_legions() <= 0)
-                return STATUS_NO_LEGIONS_AVAILABLE;
-            else if (city_military_empire_service_legions() <= 0)
-                return STATUS_NO_LEGIONS_SELECTED;
-            else {
-                return STATUS_CONFIRM_SEND_LEGIONS;
-            }
-        }
-    }
-    const scenario_request* request = scenario_request_get_visible(index - num_requests);
-    if (request) {
-        if (request->resource == RESOURCE_DEBEN) {
-            if (city_finance_treasury() <= request->amount)
-                return STATUS_NOT_ENOUGH_RESOURCES;
-
-        } else {
-            if (city_resource_count((e_resource)request->resource) < request->amount)
-                return STATUS_NOT_ENOUGH_RESOURCES;
-        }
-        return request->id + 1;
-    }
+    //int num_requests = 0;
+    //if (city_military_months_until_distant_battle() > 0
+    //    && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
+    //    num_requests = 1;
+    //    if (index == 0) {
+    //        if (city_military_total_legions() <= 0)
+    //            return STATUS_NO_LEGIONS_AVAILABLE;
+    //        else if (city_military_empire_service_legions() <= 0)
+    //            return STATUS_NO_LEGIONS_SELECTED;
+    //        else {
+    //            return STATUS_CONFIRM_SEND_LEGIONS;
+    //        }
+    //    }
+    //}
+    //const scenario_request* request = scenario_request_get_visible(index - num_requests);
+    //if (request) {
+    //    if (request->resource == RESOURCE_DEBEN) {
+    //        if (city_finance_treasury() <= request->amount)
+    //            return STATUS_NOT_ENOUGH_RESOURCES;
+    //
+    //    } else {
+    //        if (city_resource_count((e_resource)request->resource) < request->amount)
+    //            return STATUS_NOT_ENOUGH_RESOURCES;
+    //    }
+    //    return request->event_id + 1;
+    //}
     return 0;
 }
 
@@ -186,20 +186,20 @@ static void draw_foreground(void) {
     lang_text_draw_centered(52, 49, 320, 346, 250, FONT_NORMAL_WHITE_ON_DARK);
 
     // Request buttons
-    if (get_request_status(0))
-        button_border_draw(38, 96, 560, 40, focus_button_id == 4);
-
-    if (get_request_status(1))
-        button_border_draw(38, 138, 560, 40, focus_button_id == 5);
-
-    if (get_request_status(2))
-        button_border_draw(38, 180, 560, 40, focus_button_id == 6);
-
-    if (get_request_status(3))
-        button_border_draw(38, 222, 560, 40, focus_button_id == 7);
-
-    if (get_request_status(4))
-        button_border_draw(38, 264, 560, 40, focus_button_id == 8);
+    //if (get_request_status(0))
+    //    button_border_draw(38, 96, 560, 40, focus_button_id == 4);
+    //
+    //if (get_request_status(1))
+    //    button_border_draw(38, 138, 560, 40, focus_button_id == 5);
+    //
+    //if (get_request_status(2))
+    //    button_border_draw(38, 180, 560, 40, focus_button_id == 6);
+    //
+    //if (get_request_status(3))
+    //    button_border_draw(38, 222, 560, 40, focus_button_id == 7);
+    //
+    //if (get_request_status(4))
+    //    button_border_draw(38, 264, 560, 40, focus_button_id == 8);
 }
 
 static int handle_mouse(const mouse* m) {

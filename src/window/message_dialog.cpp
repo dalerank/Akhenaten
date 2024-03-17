@@ -488,7 +488,7 @@ static void draw_background_image() {
         if (lines_required > lines_available)
             y_text += 8;
 
-        const scenario_request* request = scenario_request_get(g_player_message_data.param1);
+        const scenario_request* request = scenario_request_get_visible(g_player_message_data.param1);
         text_draw_number(request->amount, '@', " ", data.x + 8, y_text, FONT_NORMAL_WHITE_ON_DARK);
         ImageDraw::img_generic(ctx, image_id_resource_icon(request->resource) + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON), vec2i{data.x + 70, y_text - 5});
         lang_text_draw(23, request->resource, data.x + 100, y_text, FONT_NORMAL_WHITE_ON_DARK);
@@ -572,7 +572,7 @@ static void draw_background_video() {
         if (lines_required > lines_available)
             y_text += 8;
 
-        const scenario_request* request = scenario_request_get(g_player_message_data.param1);
+        const scenario_request* request = scenario_request_get_visible(g_player_message_data.param1);
         text_draw_number(request->amount, '@', " ", data.x + 8, y_text, FONT_NORMAL_WHITE_ON_DARK);
         ImageDraw::img_generic(ctx, image_id_resource_icon(request->resource) + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON), data.x + 70, y_text - 5);
         lang_text_draw(23, request->resource, data.x + 100, y_text, FONT_NORMAL_WHITE_ON_DARK);

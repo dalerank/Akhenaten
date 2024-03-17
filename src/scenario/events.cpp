@@ -70,8 +70,7 @@ static bool create_triggered_active_event(const event_ph_t* master, const event_
         // calculate date of activation
         int month_abs_parent = parent->time_fields[0] * 12 + parent->month; // field is YEARS in parent
         int month_abs_child = month_abs_parent + child->time_fields[0];     // field is MONTHS in child
-        child->time_fields[0]
-          = month_abs_child / 12;            // relinquish previous field (the child needs this for storing the YEAR)
+        child->time_fields[0] = month_abs_child / 12;            // relinquish previous field (the child needs this for storing the YEAR)
         child->month = month_abs_child % 12; // update proper month value relative to the year
         child->quest_months_left = month_abs_child - month_abs_parent;
 
@@ -83,6 +82,11 @@ static bool create_triggered_active_event(const event_ph_t* master, const event_
 const event_ph_t* get_scenario_event(int id) {
     return &g_events_data.event_list[id];
 }
+
+event_ph_t* set_scenario_event(int id) {
+    return &g_events_data.event_list[id];
+}
+
 static bool is_valid_event_index(int id) {
     if (id >= MAX_EVENTS || id >= *g_events_data.num_of_events)
         return false;

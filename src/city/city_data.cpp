@@ -102,6 +102,7 @@ int stack_proper_quantity(int full, int resource) {
     switch (stack_units_by_resource(resource)) {
     default: // all other goods are 100 worth of, per pile
         return full;
+
     case RESOURCE_UNIT_BLOCK:
     case RESOURCE_UNIT_WEAPON:
     case RESOURCE_UNIT_CHARIOT:

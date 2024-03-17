@@ -52,29 +52,28 @@ static generic_button imperial_buttons[] = {
 static int focus_button_id;
 
 static int get_request_status(int index) {
-    int num_requests = 0;
-    if (city_military_months_until_distant_battle() > 0
-        && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
-        num_requests = 1; // if there's an army request, display that first?
-        if (index == 0) {
-            if (city_military_total_legions() <= 0)
-                return STATUS_NO_LEGIONS_AVAILABLE;
-            else if (city_military_empire_service_legions() <= 0)
-                return STATUS_NO_LEGIONS_SELECTED;
-            else
-                return STATUS_CONFIRM_SEND_LEGIONS;
-        }
-    }
-    const scenario_request* request = scenario_request_get_visible(index - num_requests);
+    const scenario_request* request = scenario_request_get_visible(index);
     if (request) {
-        if (request->resource == RESOURCE_DEBEN ) {
-            if (city_finance_treasury() <= request->amount)
+        if (request->resource == RESOURCE_DEBEN) {
+            if (city_finance_treasury() <= request->amount) {
                 return STATUS_NOT_ENOUGH_RESOURCES;
+            }
+        } else if (request->resource == RESOURCE_TROOPS) {
+            if (city_military_months_until_distant_battle() > 0 && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
+                if (city_military_total_legions() <= 0) {
+                    return STATUS_NO_LEGIONS_AVAILABLE;
+                } else if (city_military_empire_service_legions() <= 0) {
+                    return STATUS_NO_LEGIONS_SELECTED;
+                } else {
+                    return STATUS_CONFIRM_SEND_LEGIONS;
+                }
+            }
         } else {
-            if (city_resource_count((e_resource)request->resource) < request->amount)
+            if (city_resource_count((e_resource)request->resource) < request->get_resource_amount()) {
                 return STATUS_NOT_ENOUGH_RESOURCES;
+            }
         }
-        return request->id + 1;
+        return request->event_id;
     }
     return 0;
 }
@@ -88,7 +87,15 @@ static void draw_request(int index, const scenario_request* request) {
     button_border_draw(38, 96 + 42 * index, 560, 42, 0);
     int resource_offset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
     ImageDraw::img_generic(ctx, image_id_resource_icon(resource_offset), 45, 103 + 42 * index);
-    int width = text_draw_number(stack_proper_quantity(request->amount, request->resource), '@', " ", 65, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
+
+    int request_amount = 0;
+    if (request->resource == RESOURCE_DEBEN) {
+        request_amount = request->amount;
+    } else {
+        request_amount = request->get_resource_amount();
+    }
+
+    int width = text_draw_number(stack_proper_quantity(request_amount, request->resource), '@', " ", 65, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(23, request->resource, 65 + width, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
 
     width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
@@ -106,10 +113,11 @@ static void draw_request(int index, const scenario_request* request) {
         }
     } else {
         // normal goods request
-        int amount_stored = city_resource_count((e_resource)request->resource);
+        int amount_stored = city_resource_count(request->resource);
+        int request_amount = request->get_resource_amount();
         width = text_draw_number(amount_stored, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         width += lang_text_draw(52, 43, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        if (amount_stored < request->amount) {
+        if (amount_stored < request_amount) {
             lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         } else {
             lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
@@ -187,21 +195,10 @@ static void draw_foreground(void) {
 
     // Request buttons
     for (int i = 0; i < 5; i++) {
-        if (get_request_status(i))
+        if (get_request_status(i)) {
             button_border_draw(38, 96 + i * 42, 560, 42, focus_button_id == (4 + i));
+        }
     }
-
-    //    if (get_request_status(1))
-    //        button_border_draw(38, 138, 560, 40, focus_button_id == 5);
-    //
-    //    if (get_request_status(2))
-    //        button_border_draw(38, 180, 560, 40, focus_button_id == 6);
-    //
-    //    if (get_request_status(3))
-    //        button_border_draw(38, 222, 560, 40, focus_button_id == 7);
-    //
-    //    if (get_request_status(4))
-    //        button_border_draw(38, 264, 560, 40, focus_button_id == 8);
 }
 
 static int handle_mouse(const mouse* m) {
@@ -246,7 +243,7 @@ static void button_request(int index, int param2) {
             window_ok_dialog_show("#popup_dialog_not_enough_goods");
             break;
         default:
-            window_yes_dialog_show("#popup_dialog_send_goods", [selected_request_id = index - 1] {
+            window_yes_dialog_show("#popup_dialog_send_goods", [selected_request_id = index] {
                 scenario_request_dispatch(selected_request_id);
             });
             break;
