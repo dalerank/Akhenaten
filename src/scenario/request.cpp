@@ -15,83 +15,83 @@
 #include "scenario/scenario_data.h"
 
 void scenario_request_init() {
-    for (int i = 0; i < MAX_REQUESTS; i++) {
-        random_generate_next();
-        if (g_scenario_data.requests[i].resource) {
-            g_scenario_data.requests[i].month = (random_byte() & 7) + 2;
-            g_scenario_data.requests[i].months_to_comply = 12 * g_scenario_data.requests[i].deadline_years;
-        }
-    }
+    //for (int i = 0; i < MAX_REQUESTS; i++) {
+    //    random_generate_next();
+    //    if (g_scenario_data.requests[i].resource) {
+    //        g_scenario_data.requests[i].month = (random_byte() & 7) + 2;
+    //        g_scenario_data.requests[i].months_to_comply = 12 * g_scenario_data.requests[i].deadline_years;
+    //    }
+    //}
 }
 
 void scenario_request_process_C3() {
-    for (int i = 0; i < MAX_REQUESTS; i++) {
-        if (!g_scenario_data.requests[i].resource || g_scenario_data.requests[i].state > e_request_state_dispatched_late)
-            continue;
-
-        int state = g_scenario_data.requests[i].state;
-        if (state == e_request_state_dispatched || state == e_request_state_dispatched_late) {
-            --g_scenario_data.requests[i].months_to_comply;
-            if (g_scenario_data.requests[i].months_to_comply <= 0) {
-                if (state == e_request_state_dispatched) {
-                    city_message_post(true, MESSAGE_REQUEST_RECEIVED, i, 0);
-                    city_ratings_change_kingdom(g_scenario_data.requests[i].kingdom);
-                } else {
-                    city_message_post(true, MESSAGE_REQUEST_RECEIVED_LATE, i, 0);
-                    city_ratings_change_kingdom(g_scenario_data.requests[i].kingdom / 2);
-                }
-                g_scenario_data.requests[i].state = e_request_state_received;
-                g_scenario_data.requests[i].visible = false;
-            }
-        } else {
-            // normal or overdue
-            if (g_scenario_data.requests[i].visible) {
-                --g_scenario_data.requests[i].months_to_comply;
-                if (state == e_request_state_normal) {
-                    if (g_scenario_data.requests[i].months_to_comply == 12) {
-                        // reminder
-                        city_message_post(true, MESSAGE_REQUEST_REMINDER, i, 0);
-                    } else if (g_scenario_data.requests[i].months_to_comply <= 0) {
-                        city_message_post(true, MESSAGE_REQUEST_REFUSED, i, 0);
-                        g_scenario_data.requests[i].state = e_request_state_overdue;
-                        g_scenario_data.requests[i].months_to_comply = 24;
-                        city_ratings_reduce_kingdom_missed_request(3);
-                    }
-                } else if (state == e_request_state_overdue) {
-                    if (g_scenario_data.requests[i].months_to_comply <= 0) {
-                        city_message_post(true, MESSAGE_REQUEST_REFUSED_OVERDUE, i, 0);
-                        g_scenario_data.requests[i].state = e_request_state_ignored;
-                        g_scenario_data.requests[i].visible = false;
-                        city_ratings_reduce_kingdom_missed_request(5);
-                    }
-                }
-                if (!g_scenario_data.requests[i].can_comply_dialog_shown
-                    && city_resource_count(g_scenario_data.requests[i].resource)
-                         >= g_scenario_data.requests[i].amount) {
-                    g_scenario_data.requests[i].can_comply_dialog_shown = 1;
-                    city_message_post(true, MESSAGE_REQUEST_CAN_COMPLY, i, 0);
-                }
-            } else {
-                // request is not visible
-                int year = g_scenario_data.start_year;
-                if (!tutorial_adjust_request_year(&year))
-                    return;
-                if (game_time_year() == year + g_scenario_data.requests[i].year
-                    && game_time_month() == g_scenario_data.requests[i].month) {
-                    g_scenario_data.requests[i].visible = true;
-                    if (city_resource_count(g_scenario_data.requests[i].resource) >= g_scenario_data.requests[i].amount)
-                        g_scenario_data.requests[i].can_comply_dialog_shown = 1;
-
-                    if (g_scenario_data.requests[i].resource == RESOURCE_DEBEN)
-                        city_message_post(true, MESSAGE_KINGDOME_REQUESTS_MONEY, i, 0);
-                    else if (g_scenario_data.requests[i].resource == RESOURCE_TROOPS)
-                        city_message_post(true, MESSAGE_KINGDOME_REQUESTS_ARMY, i, 0);
-                    else
-                        city_message_post(true, MESSAGE_KINGDOME_REQUESTS_GOODS, i, 0);
-                }
-            }
-        }
-    }
+    //for (int i = 0; i < MAX_REQUESTS; i++) {
+    //    if (!g_scenario_data.requests[i].resource || g_scenario_data.requests[i].state > e_request_state_dispatched_late)
+    //        continue;
+    //
+    //    int state = g_scenario_data.requests[i].state;
+    //    if (state == e_request_state_dispatched || state == e_request_state_dispatched_late) {
+    //        --g_scenario_data.requests[i].months_to_comply;
+    //        if (g_scenario_data.requests[i].months_to_comply <= 0) {
+    //            if (state == e_request_state_dispatched) {
+    //                city_message_post(true, MESSAGE_REQUEST_RECEIVED, i, 0);
+    //                city_ratings_change_kingdom(g_scenario_data.requests[i].kingdom);
+    //            } else {
+    //                city_message_post(true, MESSAGE_REQUEST_RECEIVED_LATE, i, 0);
+    //                city_ratings_change_kingdom(g_scenario_data.requests[i].kingdom / 2);
+    //            }
+    //            g_scenario_data.requests[i].state = e_request_state_received;
+    //            g_scenario_data.requests[i].visible = false;
+    //        }
+    //    } else {
+    //        // normal or overdue
+    //        if (g_scenario_data.requests[i].visible) {
+    //            --g_scenario_data.requests[i].months_to_comply;
+    //            if (state == e_request_state_normal) {
+    //                if (g_scenario_data.requests[i].months_to_comply == 12) {
+    //                    // reminder
+    //                    city_message_post(true, MESSAGE_REQUEST_REMINDER, i, 0);
+    //                } else if (g_scenario_data.requests[i].months_to_comply <= 0) {
+    //                    city_message_post(true, MESSAGE_REQUEST_REFUSED, i, 0);
+    //                    g_scenario_data.requests[i].state = e_request_state_overdue;
+    //                    g_scenario_data.requests[i].months_to_comply = 24;
+    //                    city_ratings_reduce_kingdom_missed_request(3);
+    //                }
+    //            } else if (state == e_request_state_overdue) {
+    //                if (g_scenario_data.requests[i].months_to_comply <= 0) {
+    //                    city_message_post(true, MESSAGE_REQUEST_REFUSED_OVERDUE, i, 0);
+    //                    g_scenario_data.requests[i].state = e_request_state_ignored;
+    //                    g_scenario_data.requests[i].visible = false;
+    //                    city_ratings_reduce_kingdom_missed_request(5);
+    //                }
+    //            }
+    //            if (!g_scenario_data.requests[i].can_comply_dialog_shown
+    //                && city_resource_count(g_scenario_data.requests[i].resource)
+    //                     >= g_scenario_data.requests[i].amount) {
+    //                g_scenario_data.requests[i].can_comply_dialog_shown = 1;
+    //                city_message_post(true, MESSAGE_REQUEST_CAN_COMPLY, i, 0);
+    //            }
+    //        } else {
+    //            // request is not visible
+    //            int year = g_scenario_data.start_year;
+    //            if (!tutorial_adjust_request_year(&year))
+    //                return;
+    //            if (game_time_year() == year + g_scenario_data.requests[i].year
+    //                && game_time_month() == g_scenario_data.requests[i].month) {
+    //                g_scenario_data.requests[i].visible = true;
+    //                if (city_resource_count(g_scenario_data.requests[i].resource) >= g_scenario_data.requests[i].amount)
+    //                    g_scenario_data.requests[i].can_comply_dialog_shown = 1;
+    //
+    //                if (g_scenario_data.requests[i].resource == RESOURCE_DEBEN)
+    //                    city_message_post(true, MESSAGE_KINGDOME_REQUESTS_MONEY, i, 0);
+    //                else if (g_scenario_data.requests[i].resource == RESOURCE_TROOPS)
+    //                    city_message_post(true, MESSAGE_KINGDOME_REQUESTS_ARMY, i, 0);
+    //                else
+    //                    city_message_post(true, MESSAGE_KINGDOME_REQUESTS_GOODS, i, 0);
+    //            }
+    //        }
+    //    }
+    //}
 }
 
 void scenario_request_dispatch(int id) {
@@ -121,22 +121,13 @@ void scenario_request_dispatch(int id) {
 
 int scenario_requests_active_count() {
     int count = 0;
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    for (int i = 0; i < MAX_REQUESTS; i++) {
-    //        if (g_scenario_data.requests[i].resource && g_scenario_data.requests[i].visible
-    //            && g_scenario_data.requests[i].state <= 1) {
-    //            count++;
-    //        }
-    //    }
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        for (int i = 0; i < get_scenario_events_num(); i++) {
-            const event_ph_t* event = get_scenario_event(i);
-            if (event->type == EVENT_TYPE_REQUEST && event->is_active != 0
-                && event->event_state <= EVENT_STATE_IN_PROGRESS) {
-                count++;
-            }
+    for (int i = 0; i < get_scenario_events_num(); i++) {
+        const event_ph_t* event = get_scenario_event(i);
+        if (event->type == EVENT_TYPE_REQUEST && event->is_active != 0
+            && event->event_state <= EVENT_STATE_IN_PROGRESS) {
+            count++;
         }
-    //}
+    }
     return count;
 }
 

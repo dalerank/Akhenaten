@@ -79,10 +79,10 @@ void scenario_editor_create(int map_size) {
     for (int i = 0; i < MAX_PREY_HERD_POINTS; i++)
         g_scenario_data.herd_points_prey[i].set(-1);
 
-    for (int i = 0; i < MAX_REQUESTS; i++) {
-        g_scenario_data.requests[i].deadline_years = 5;
-        g_scenario_data.requests[i].kingdom = 8;
-    }
+    //for (int i = 0; i < MAX_REQUESTS; i++) {
+    //    g_scenario_data.requests[i].deadline_years = 5;
+    //    g_scenario_data.requests[i].kingdom = 8;
+    //}
     for (int i = 0; i < MAX_INVASIONS; i++) {
         g_scenario_data.invasions[i].from = 8;
     }
@@ -97,43 +97,43 @@ void scenario_editor_set_native_images(int image_hut, int image_meeting, int ima
 }
 
 void scenario_editor_request_get(int index, editor_request* request) {
-    request->year = g_scenario_data.requests[index].year;
-    request->amount = g_scenario_data.requests[index].amount;
-    request->resource = g_scenario_data.requests[index].resource;
-    request->deadline_years = g_scenario_data.requests[index].deadline_years;
-    request->kingdom = g_scenario_data.requests[index].kingdom;
+    //request->year = g_scenario_data.requests[index].year;
+    //request->amount = g_scenario_data.requests[index].amount;
+    //request->resource = g_scenario_data.requests[index].resource;
+    //request->deadline_years = g_scenario_data.requests[index].deadline_years;
+    //request->kingdom = g_scenario_data.requests[index].kingdom;
 }
 
 static void sort_requests(void) {
-    for (int i = 0; i < MAX_REQUESTS; i++) {
-        for (int j = MAX_REQUESTS - 1; j > 0; j--) {
-            request_t* current = &g_scenario_data.requests[j];
-            request_t* prev = &g_scenario_data.requests[j - 1];
-            if (current->resource && (!prev->resource || prev->year > current->year)) {
-                request_t tmp = *current;
-                *current = *prev;
-                *prev = tmp;
-            }
-        }
-    }
+    //for (int i = 0; i < MAX_REQUESTS; i++) {
+    //    for (int j = MAX_REQUESTS - 1; j > 0; j--) {
+    //        request_t* current = &g_scenario_data.requests[j];
+    //        request_t* prev = &g_scenario_data.requests[j - 1];
+    //        if (current->resource && (!prev->resource || prev->year > current->year)) {
+    //            request_t tmp = *current;
+    //            *current = *prev;
+    //            *prev = tmp;
+    //        }
+    //    }
+    //}
 }
 
 void scenario_editor_request_delete(int index) {
-    g_scenario_data.requests[index].year = 0;
-    g_scenario_data.requests[index].amount = 0;
-    g_scenario_data.requests[index].resource = RESOURCE_NONE;
-    g_scenario_data.requests[index].deadline_years = 5;
-    g_scenario_data.requests[index].kingdom = 8;
+    //g_scenario_data.requests[index].year = 0;
+    //g_scenario_data.requests[index].amount = 0;
+    //g_scenario_data.requests[index].resource = RESOURCE_NONE;
+    //g_scenario_data.requests[index].deadline_years = 5;
+    //g_scenario_data.requests[index].kingdom = 8;
     sort_requests();
     g_scenario_data.is_saved = 0;
 }
 
 void scenario_editor_request_save(int index, editor_request* request) {
-    g_scenario_data.requests[index].year = request->year;
-    g_scenario_data.requests[index].amount = request->amount;
-    g_scenario_data.requests[index].resource = request->resource;
-    g_scenario_data.requests[index].deadline_years = request->deadline_years;
-    g_scenario_data.requests[index].kingdom = request->kingdom;
+    //g_scenario_data.requests[index].year = request->year;
+    //g_scenario_data.requests[index].amount = request->amount;
+    //g_scenario_data.requests[index].resource = request->resource;
+    //g_scenario_data.requests[index].deadline_years = request->deadline_years;
+    //g_scenario_data.requests[index].kingdom = request->kingdom;
     sort_requests();
     g_scenario_data.is_saved = 0;
 }

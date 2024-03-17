@@ -163,7 +163,7 @@ struct scenario_data_t {
         int distant_battle_enemy_travel_months;
     } empire;
 
-    request_t requests[40];
+    //request_t requests[40];
     demand_change_t demand_changes[40];
     price_change_t price_changes[40];
     invasion_t invasions[40];
