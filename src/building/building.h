@@ -125,6 +125,7 @@ public:
     short stored_full_amount;
     bool has_well_access;
     short num_workers;
+    short internal_state;
     e_labor_category labor_category;
     e_resource output_resource_first_id;
     e_resource output_resource_second_id;
@@ -422,7 +423,7 @@ public:
     virtual void spawn_figure() {}
     virtual void update_graphic() {}
     virtual void update_month() {}
-    virtual void update_day() {}
+    virtual void update_day();
     virtual const static_params &params() const { return static_params::dummy; }
     virtual void window_info_background(object_info &ctx) {}
     virtual void window_info_foreground(object_info &ctx) {}

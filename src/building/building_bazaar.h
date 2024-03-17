@@ -12,7 +12,6 @@ public:
 
     virtual void spawn_figure() override;
     virtual void update_graphic() override;
-    virtual void update_day() override;
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
     virtual e_overlay get_overlay() const override { return OVERLAY_BAZAAR_ACCESS; }
     virtual void window_info_background(object_info &ctx) override;

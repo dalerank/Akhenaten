@@ -947,6 +947,10 @@ int building_mothball_set(building* b, int mothball) {
     return b->state;
 }
 
+void building_impl::update_day() {
+    update_graphic();
+}
+
 bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     int image_id = map_image_at(tile.grid_offset());
     building_draw_normal_anim(ctx, point, &base, tile, image_id, color_mask);
@@ -1239,8 +1243,9 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_second_id); // 1
         iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_second_rate); // 1
 
+        iob->bind(BIND_SIGNATURE_INT16, &b->internal_state); // 2
         // 63 additional bytes
-        iob->bind____skip(63); // temp for debugging
+        iob->bind____skip(61); // temp for debugging
                                //            assert(iob->get_offset() - sind == 264);
         g_all_buildings[i].id = i;
 

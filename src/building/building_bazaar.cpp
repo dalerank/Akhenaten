@@ -272,12 +272,8 @@ void building_bazaar::update_graphic() {
         return;
     }
 
-    e_image_id img_id = (map_desirability_get(base.tile.grid_offset()) <= 30) ? IMG_BAZAAR : IMG_BAZAAR_FANCY;
-    map_building_tiles_add(base.id, base.tile, base.size, image_group(img_id), TERRAIN_BUILDING);
-}
-
-void building_bazaar::update_day() {
-    update_graphic();
+    base.internal_state = (map_desirability_get(base.tile.grid_offset()) <= 30) ? IMG_BAZAAR : IMG_BAZAAR_FANCY;
+    map_building_tiles_add(base.id, base.tile, base.size, image_group(e_image_id(base.internal_state)), TERRAIN_BUILDING);
 }
 
 void building_bazaar::spawn_figure() {
@@ -492,8 +488,8 @@ void building_bazaar::window_info_foreground(object_info &ctx) {
 }
 
 bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const auto &anim = bazaar_m.anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+    pcstr anim_name = base.internal_state == IMG_BAZAAR_FANCY ? "work_fancy" : "work";
+    building_draw_normal_anim(ctx, point, &base, tile, bazaar_m.anim[anim_name], color_mask);
 
     return true;
 }
