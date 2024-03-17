@@ -4,7 +4,6 @@
 
 enum e_popup_dialog_opt {
     e_popup_dialog_none = -1,
-    e_popup_dialog_open_trade = 2,
     e_popup_dialog_dispatch_goods = 6,
     e_popup_dialog_not_enough_goods = 8,
     e_popup_dialog_no_legions_available = 10,

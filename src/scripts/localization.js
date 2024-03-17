@@ -8,4 +8,5 @@ localization = [
   {key: "#popup_dialog_quit", group:5, id:0 },
   {key: "#replay_mission", group:1, id:2 },
   {key: "#popup_dialog_no_festival_square", group:5, id:88 },
+  {key: "#popup_dialog_open_trade", group:5, id:2 },
 ]
