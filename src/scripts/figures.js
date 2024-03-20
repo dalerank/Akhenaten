@@ -271,6 +271,18 @@ figure_sled = {
 	}
 }
 
+figure_trade_caravan = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN },
+	}
+}
+
+figure_caravan_donkey = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DONKEY },
+	}
+}
+
 figure_herbalist = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_HERBALIST_WALK, max_frames:12 },

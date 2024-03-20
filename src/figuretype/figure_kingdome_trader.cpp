@@ -27,15 +27,18 @@
 #include "grid/figure.h"
 #include "grid/road_access.h"
 #include "scenario/map.h"
-#include "figuretype/trader_caravan.h"
 
-void figure::trader_buy(int amounts) {
-    trader_amount_bought += amounts;
-}
+#include "js/js_game.h"
 
-void figure::trader_sell(int amounts) {
-    resource_amount_full += amounts;
-    //    resource_amount_loads += amounts / 100;
+struct trade_caravan_model : public figures::model_t<FIGURE_TRADE_CARAVAN, figure_trade_caravan> {};
+trade_caravan_model trade_caravan_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_trade_caravan);
+void config_load_figure_trade_caravan() {
+    g_config_arch.r_section("figure_trade_caravan", [] (archive arch) {
+        trade_caravan_m.anim.load(arch);
+        trade_caravan_m.sounds.load(arch);
+    });
 }
 
 int figure::trader_total_bought() {
@@ -62,128 +65,28 @@ int figure_create_trade_caravan(tile2i tile, int city_id) {
     return caravan->id;
 }
 
-
-int figure::get_closest_storageyard(tile2i tile, int city_id, int distance_from_entry, tile2i &warehouse) {
-    bool exportable[RESOURCES_MAX];
-    bool importable[RESOURCES_MAX];
-    exportable[RESOURCE_NONE] = false;
-    importable[RESOURCE_NONE] = false;
-
-    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
-        exportable[r] = empire_can_export_resource_to_city(city_id, r);
-        if (trader_amount_bought >= 800) {
-            exportable[r] = false;
-        }
-
-        if (city_id) {
-            importable[r] = empire_can_import_resource_from_city(city_id, r);
-        } else { // exclude own city (id=0), shouldn't happen, but still..
-            importable[r] = false;
-        }
-
-        if (get_carrying_amount() >= 800) {
-            importable[r] = false;
-        }
-    }
-
-    int num_importable = 0;
-    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
-        num_importable += importable[r] ? 1 : 0;
-    }
-
-    int min_distance = 10000;
-    building* min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building_storage_yard* warehouse = building_get(i)->dcast_storage_yard();
-        if (!warehouse || !warehouse->is_valid()) {
-            continue;
-        }
-
-        if (!warehouse->has_road_access() || warehouse->base.distance_from_entry <= 0) {
-            continue;
-        }
-
-        if (!warehouse->get_permission(BUILDING_STORAGE_PERMISSION_TRADERS)) {
-            continue;
-        }
-
-        const building_storage* s = warehouse->storage();
-        int num_imports_for_warehouse = 0;
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
-            if (!warehouse->is_not_accepting(r) && empire_can_import_resource_from_city(city_id, r)) {
-                num_imports_for_warehouse++;
-            }
-        }
-        int distance_penalty = 32;
-        building_storage_room* space = warehouse->room();
-        while (space) {
-            if (exportable[space->base.subtype.warehouse_resource_id])
-                distance_penalty -= 4;
-
-            if (num_importable && num_imports_for_warehouse && !s->empty_all) {
-                for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
-                    if (!warehouse->is_not_accepting(city_trade_next_caravan_import_resource()))
-                        break;
-                }
-
-                e_resource resource = city_trade_current_caravan_import_resource();
-                if (!warehouse->is_not_accepting(resource)) {
-                    if (space->base.subtype.warehouse_resource_id == RESOURCE_NONE)
-                        distance_penalty -= 16;
-
-                    if (importable[space->base.subtype.warehouse_resource_id] && space->stored_full_amount < 400
-                        && space->base.subtype.warehouse_resource_id == resource) {
-                        distance_penalty -= 8;
-                    }
-                }
-            }
-            space = space->next_room();
-        }
-
-        if (distance_penalty < 32) {
-            int distance = calc_distance_with_penalty(warehouse->tile(), tile, distance_from_entry, warehouse->base.distance_from_entry);
-            distance += distance_penalty;
-            if (distance < min_distance) {
-                min_distance = distance;
-                min_building = &warehouse->base;
-            }
-        }
-    }
-
-    if (!min_building)
-        return 0;
-
-    if (min_building->has_road_access == 1) {
-        map_point_store_result(min_building->tile, warehouse);
-    } else if (!map_get_road_access_tile(min_building->tile, 3, warehouse)) {
-        return 0;
-    }
-
-    return min_building->id;
-}
-
-void figure::go_to_next_storageyard(tile2i src_tile, int distance_to_entry) {
+void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_to_entry) {
     tile2i dst;
-    int warehouse_id = get_closest_storageyard(src_tile, empire_city_id, distance_to_entry, dst);
-    if (warehouse_id && warehouse_id != destinationID()) {
+    int warehouse_id = get_closest_storageyard(src_tile, base.empire_city_id, distance_to_entry, dst);
+    if (warehouse_id && warehouse_id != base.destinationID()) {
         set_destination(warehouse_id);
-        action_state = FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING;
+        base.action_state = FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING;
         destination_tile = dst;
     } else {
         tile2i exit = city_map_exit_point();
         tile2i road_tile;
-        state = FIGURE_STATE_ALIVE;
+        base.state = FIGURE_STATE_ALIVE;
         map_closest_road_within_radius(exit, 1, 2, road_tile);
         destination_tile = road_tile;
-        direction = DIR_0_TOP_RIGHT;
+        base.direction = DIR_0_TOP_RIGHT;
         advance_action(ACTION_16_EMIGRANT_RANDOM);
-        action_state = FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING;
+        base.action_state = FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING;
     }
 }
 
-void figure::trade_caravan_action() {
-    int last_action_state = action_state;
-    switch (action_state) {
+void figure_trade_caravan::figure_action() {
+    int last_action_state = action_state();
+    switch (action_state()) {
     default:
     case FIGURE_ACTION_100_TRADE_CARAVAN_CREATED:
     case 8:
@@ -196,19 +99,21 @@ void figure::trade_caravan_action() {
                 building* trade_center = building_get(trade_center_id);
                 base_tile = trade_center->tile;
             } else {
-                base_tile = tile;
+                base_tile = tile();
             }
             go_to_next_storageyard(base_tile, 0);
         }
-        anim_frame = 0;
+        base.anim_frame = 0;
         break;
+
     case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING:
     case 9:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_102_TRADE_CARAVAN_TRADING, FIGURE_ACTION_100_TRADE_CARAVAN_CREATED);
-        if (direction == DIR_FIGURE_CAN_NOT_REACH || direction == DIR_FIGURE_REROUTE) {
+        if (direction() == DIR_FIGURE_CAN_NOT_REACH || direction() == DIR_FIGURE_REROUTE) {
             int i = 0; // break
         }
         break;
+
     case FIGURE_ACTION_102_TRADE_CARAVAN_TRADING:
     case 10:
         wait_ticks++;
@@ -216,11 +121,11 @@ void figure::trade_caravan_action() {
             wait_ticks = 0;
             int move_on = 0;
             constexpr int one_operation_amount = 100;
-            if (figure_trade_caravan_can_buy(this, destination(), empire_city_id)) {
-                e_resource resource = trader_get_buy_resource(destination(), empire_city_id, one_operation_amount);
+            if (can_buy(destination(), base.empire_city_id)) {
+                e_resource resource = trader_get_buy_resource(destination(), base.empire_city_id, one_operation_amount);
                 if (resource) {
-                    trade_route_increase_traded(empire_city_get_route_id(empire_city_id), resource, one_operation_amount);
-                    trader_record_bought_resource(trader_id, resource);
+                    trade_route_increase_traded(empire_city_get_route_id(base.empire_city_id), resource, one_operation_amount);
+                    trader_record_bought_resource(base.trader_id, resource);
                     trader_buy(one_operation_amount);
                 } else {
                     move_on++;
@@ -229,11 +134,11 @@ void figure::trade_caravan_action() {
                 move_on++;
             }
 
-            if (move_on > 0 && figure_trade_caravan_can_sell(this, destination(), empire_city_id)) {
-                e_resource resource = trader_get_sell_resource(destination(), empire_city_id);
+            if (move_on > 0 && can_sell(destination(), base.empire_city_id)) {
+                e_resource resource = trader_get_sell_resource(destination(), base.empire_city_id);
                 if (resource) {
-                    trade_route_increase_traded(empire_city_get_route_id(empire_city_id), resource, one_operation_amount);
-                    trader_record_sold_resource(trader_id, resource);
+                    trade_route_increase_traded(empire_city_get_route_id(base.empire_city_id), resource, one_operation_amount);
+                    trader_record_sold_resource(base.trader_id, resource);
                     trader_sell(one_operation_amount);
                 } else {
                     move_on++;
@@ -243,11 +148,12 @@ void figure::trade_caravan_action() {
             }
 
             if (move_on == 2) {
-                go_to_next_storageyard(tile, -1);
+                go_to_next_storageyard(tile(), -1);
             }
         }
-        anim_frame = 0;
+        base.anim_frame = 0;
         break;
+
     case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
     case 11:
         if (do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS)) {
@@ -255,21 +161,32 @@ void figure::trade_caravan_action() {
         }
         break;
     }
-    int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
-    sprite_image_id = image_group(IMG_TRADER_CARAVAN) + dir + 8 * anim_frame;
+
+    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
+    base.sprite_image_id = image_group(IMG_TRADER_CARAVAN) + dir + 8 * base.anim_frame;
 }
 
-void figure::trade_caravan_donkey_action() {
-    figure* leader = figure_get(leading_figure_id);
-    if (leader->action_state == FIGURE_ACTION_149_CORPSE)
-        poof();
-    else if (leader->state != FIGURE_STATE_ALIVE)
-        poof();
-    else if (leader->type != FIGURE_TRADE_CARAVAN && leader->type != FIGURE_TRADE_CARAVAN_DONKEY)
-        poof();
-    else
-        follow_ticks(1);
+sound_key figure_trade_caravan::phrase_key() const {
+    //    if (++f->phrase_sequence_exact >= 2)
+    //        f->phrase_sequence_exact = 0;
+    //
+    //    if (f->action_state == FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING) {
+    //        if (!trader_has_traded(f->trader_id))
+    //            return 7; // no trade
+    //
+    //    } else if (f->action_state == FIGURE_ACTION_102_TRADE_CARAVAN_TRADING) {
+    //        if (figure_trade_caravan_can_buy(f, f->destination_building_id, f->empire_city_id))
+    //            return 11; // buying goods
+    //        else if (figure_trade_caravan_can_sell(f, f->destination_building_id, f->empire_city_id))
+    //            return 10; // selling goods
+    //
+    //    }
+    //    return 8 + f->phrase_sequence_exact;
+    return 0;
+}
 
-    int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
-    sprite_image_id = image_group(IMG_TRADER_CARAVAN) + dir + 8 * anim_frame;
+bool figure_trade_caravan::window_info_background(object_info &ctx) {
+    draw_trader(&ctx);
+
+    return true;
 }

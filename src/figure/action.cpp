@@ -385,20 +385,6 @@ void figure::action_perform() {
             }
             break;
 
-        case FIGURE_TRADE_CARAVAN_DONKEY:
-            if (leading_figure_id <= 0) {
-                //poof();
-            }
-
-            if (leader->action_state == FIGURE_ACTION_149_CORPSE) {  
-                poof(); // TODO make runaway from this tile
-            }
-
-            if (leader->is_ghost) {
-                is_ghost = true;
-            }
-            break;
-
         default:
             dcast()->figure_before_action();
             break;
@@ -486,8 +472,6 @@ void figure::action_perform() {
             military_standard_action();
             break;
 
-        case FIGURE_TRADE_CARAVAN: trade_caravan_action(); break;
-        case FIGURE_TRADE_CARAVAN_DONKEY: trade_caravan_donkey_action(); break;
         case FIGURE_PROTESTER: protestor_action(); break;
         case FIGURE_CRIMINAL: mugger_action(); break;
         case FIGURE_TOMB_ROBER: rioter_action(); break;
@@ -517,7 +501,6 @@ void figure::action_perform() {
         case 53: enemy53_axe_action(); break;
         case 54: enemy_gladiator_action(); break;
         case 57: enemy_caesar_legionary_action(); break;
-        case 58: native_trader_action(); break;
         case 59: arrow_action(); break;
         case FIGURE_JAVELIN: javelin_action(); break; // 60
         case FIGURE_BOLT: bolt_action(); break;

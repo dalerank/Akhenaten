@@ -195,12 +195,6 @@ void figure::set_direction_to(building *b) {
 }
 
 void figure::poof() {
-    int i = 0;
-    switch (type) {
-    case FIGURE_TRADE_CARAVAN:
-        i = 1;
-        break;
-    }
     set_state(FIGURE_STATE_DEAD);
 }
 

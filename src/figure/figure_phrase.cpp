@@ -30,7 +30,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "artisan"},
     {FIGURE_NONE, "barge"},
     {FIGURE_NONE, "brick"},
-    {FIGURE_TRADE_CARAVAN, "caravan"},
     {FIGURE_NONE, "carpenter"},
     {FIGURE_DENTIST, "dentist"},
     {FIGURE_NONE, "desease"},
@@ -319,25 +318,6 @@ static int docker_phrase() {
     return 0;
 }
 
-static int trade_caravan_phrase() {
-    //    if (++f->phrase_sequence_exact >= 2)
-    //        f->phrase_sequence_exact = 0;
-    //
-    //    if (f->action_state == FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING) {
-    //        if (!trader_has_traded(f->trader_id))
-    //            return 7; // no trade
-    //
-    //    } else if (f->action_state == FIGURE_ACTION_102_TRADE_CARAVAN_TRADING) {
-    //        if (figure_trade_caravan_can_buy(f, f->destination_building_id, f->empire_city_id))
-    //            return 11; // buying goods
-    //        else if (figure_trade_caravan_can_sell(f, f->destination_building_id, f->empire_city_id))
-    //            return 10; // selling goods
-    //
-    //    }
-    //    return 8 + f->phrase_sequence_exact;
-    return 0;
-}
-
 static int trade_ship_phrase() {
     //    if (f->action_state == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
     //        if (!trader_has_traded(f->trader_id))
@@ -382,13 +362,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //            return soldier_phrase();
     //        case FIGURE_DOCKER:
     //            return docker_phrase(f);
-    //        case FIGURE_TRADE_CARAVAN:
-    //            return trade_caravan_phrase(f);
-    //        case FIGURE_TRADE_CARAVAN_DONKEY:
-    //            while (f->type == FIGURE_TRADE_CARAVAN_DONKEY && f->leading_figure_id) {
-    //                f = figure_get(f->leading_figure_id);
-    //            }
-    //            return f->type == FIGURE_TRADE_CARAVAN ? trade_caravan_phrase(f) : 0;
     //        case FIGURE_TRADE_SHIP:
     //            return trade_ship_phrase(f);
     default:

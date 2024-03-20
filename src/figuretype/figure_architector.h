@@ -1,3 +1,5 @@
+#pragma once
+
 #include "figure/figure.h"
 
 class figure_architector : public figure_impl {

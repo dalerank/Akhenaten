@@ -389,8 +389,6 @@ public:
     void sled_puller_action();
     void soldier_action();
     void military_standard_action();
-    void trade_caravan_action();
-    void trade_caravan_donkey_action();
     void protestor_action();
     void mugger_action();
     void rioter_action();
@@ -417,7 +415,6 @@ public:
     void enemy53_axe_action();
     void enemy_gladiator_action();
     void enemy_caesar_legionary_action();
-    void native_trader_action();
     void arrow_action();
     void javelin_action();
     void bolt_action();
@@ -451,12 +448,8 @@ public:
     void determine_deliveryman_destination_food();
     void cart_update_image();
     
-    void trader_buy(int amounts);
-    void trader_sell(int amounts);
     int trader_total_bought();
     int trader_total_sold();
-    int get_closest_storageyard(tile2i tile, int city_id, int distance_from_entry, tile2i &storageyard);
-    void go_to_next_storageyard(tile2i src_tile, int distance_to_entry);
 
     bool policeman_fight_enemy(int category, int max_distance);
     int target_is_alive();
@@ -506,8 +499,6 @@ public:
     int figure_service_provide_coverage();
 
     // window/building/figures.c
-    figure* get_head_of_caravan();
-    void draw_trader(object_info* c);
     void draw_enemy(object_info* c);
     void draw_animal(object_info* c);
     void draw_cartpusher(object_info* c);
@@ -525,6 +516,7 @@ public:
     virtual void on_create() {}
     virtual void figure_action() {}
     virtual void figure_before_action() {}
+    virtual bool window_info_background(object_info &ctx) { return false; }
     virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out);
     virtual void poof() { base.poof(); }
     virtual e_figure_sound phrase() const { return {FIGURE_NONE, ""}; }

@@ -43,7 +43,6 @@ void figure::play_die_sound() {
         break;
 
     case FIGURE_NATIVE_TRADER:
-    case FIGURE_TRADE_CARAVAN:
     case FIGURE_TRADE_CARAVAN_DONKEY:
         break;
 
