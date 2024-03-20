@@ -48,16 +48,6 @@ struct image_data_t {
 
 image_data_t *g_image_data = nullptr;
 
-int img_mapping[32000] = {0};
-ANK_REGISTER_CONFIG_ITERATOR(config_load_images_remap_config);
-void config_load_images_remap_config() {
-    g_config_arch.r_array("images_remap", [] (archive arch) {
-        int id = arch.r_int("id");
-        int remap = arch.r_int("rid");
-        img_mapping[id] = remap;
-    });
-}
-
 ANK_REGISTER_CONFIG_ITERATOR(config_load_imagepaks_config);
 void config_load_imagepaks_config() {
     if (g_image_data->common_inited) {
@@ -289,22 +279,29 @@ int image_id_from_group(int collection, int group, int pak_cache_idx) {
     return pak->get_global_image_index(group);
 }
 
-int image_id_map(int id) {
-    int rimg = img_mapping[id];
-    return rimg ? rimg : id;
+const image_t *image_get(int pak, int id) {
+    auto& data = *g_image_data;
+    if (pak >= data.common.size()) {
+        return nullptr;
+    }
+    const image_t* img = nullptr;
+    auto pakptr = data.common[pak].handle;
+    if (pakptr != nullptr) {
+        return pakptr->get_image(id);
+    }
+
+    return nullptr;
 }
 
 const image_t* image_get(int id) {
     auto& data = *g_image_data;
     const image_t* img;
-    id = image_id_map(id);
-    for (int i = 0; i < data.pak_list.size(); ++i) {
-        imagepak* pak = *(data.pak_list.at(i));
-        if (pak == nullptr) {
+    for (auto &pak: data.pak_list) {
+        if (*pak == nullptr) {
             continue;
         }
 
-        img = pak->get_image(id);
+        img = (*pak)->get_image(id);
         if (img != nullptr) {
             return img;
         }

@@ -30,6 +30,7 @@ void graphics_draw_from_texture(int image_id, int x, int y, int width, int heigh
 
 namespace ImageDraw {
 void img_generic(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+void img_generic(painter &ctx, int pak, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void img_generic(painter &ctx, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void img_sprite(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, bool alpha = false);
 inline void img_sprite(painter &ctx, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, bool alpha = false) { img_sprite(ctx, image_id, p.x, p.y, color_mask, scale, alpha); }

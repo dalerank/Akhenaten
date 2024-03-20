@@ -38,6 +38,21 @@
 
 #include "js/js_game.h"
 
+int img_mapping[32000] = {0};
+ANK_REGISTER_CONFIG_ITERATOR(config_load_images_remap_config);
+void config_load_images_remap_config() {
+    g_config_arch.r_array("empire_images_remap", [] (archive arch) {
+        int id = arch.r_int("id");
+        int remap = arch.r_int("rid");
+        img_mapping[id] = remap;
+    });
+}
+
+int image_id_remap(int id) {
+    int rimg = img_mapping[id];
+    return rimg ? rimg : id;
+}
+
 const static vec2i EMPIRE_SIZE{1200 + 32,  1600 + 136 + 20};
 const static e_font FONT_OBJECT_INFO = FONT_NORMAL_BLACK_ON_LIGHT;
 
@@ -522,12 +537,13 @@ static void draw_empire_object(const empire_object* obj) {
     }
 
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id, vec2i{data.draw_offset.x + pos.x, data.draw_offset.y + pos.y});
+    image_id = image_id_remap(image_id);
+    const image_t* img = image_get(PACK_GENERAL, image_id);
+    ImageDraw::img_generic(ctx, PACK_GENERAL, image_id, data.draw_offset + pos);
 
-    const image_t* img = image_get(image_id);
-    if (img->animation.speed_id) {
+    if (img && img->animation.speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
-        ImageDraw::img_generic(ctx, image_id + new_animation, data.draw_offset + pos + img->animation.sprite_offset);
+        ImageDraw::img_generic(ctx, PACK_GENERAL, image_id + new_animation, data.draw_offset + pos + img->animation.sprite_offset);
     }
 }
 
