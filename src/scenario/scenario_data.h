@@ -196,16 +196,6 @@ struct scenario_data_t {
 
     map_data_t map;
 
-    //    struct {
-    //        int width;
-    //        int height;
-    //        int grid_start;
-    //        int grid_border_size;
-    ////        map_tile entry_point;
-    ////        map_tile exit_point;
-    ////        map_tile entry_flag;
-    ////        map_tile exit_flag;
-    //    } map;
     map_point entry_point;
     map_point exit_point;
     map_point river_entry_point;
