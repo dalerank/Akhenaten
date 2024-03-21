@@ -14,6 +14,7 @@
 #include "core/game_environment.h"
 #include "figuretype/migrant.h"
 #include "figuretype/figure_immigrant.h"
+#include "figuretype/figure_homeless.h"
 #include "figure/figure.h"
 
 int house_population_add_to_city(int num_people) {
