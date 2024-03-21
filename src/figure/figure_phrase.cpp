@@ -352,7 +352,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_RIOTER:
     //        case FIGURE_MISSIONARY:
     //            return citizen_phrase(f);
-    //        case FIGURE_HOMELESS:
     case FIGURE_GOVERNOR: return governor_phrase(f);
     //        case FIGURE_TOWER_SENTRY:
     //            return tower_sentry_phrase(f);

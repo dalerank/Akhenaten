@@ -274,12 +274,21 @@ figure_sled = {
 figure_trade_caravan = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN },
+		death : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DEATH },
 	}
 }
 
 figure_caravan_donkey = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DONKEY },
+		death : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DONKEY_DEATH },
+	}
+}
+
+figure_homeless = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: IMG_HOMELESS },
+		death : { pos : [0, 0], anim_id: IMG_HOMELESS_DEATH },
 	}
 }
 

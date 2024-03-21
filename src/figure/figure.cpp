@@ -229,12 +229,14 @@ void figure::set_home(building* b) {
 void figure::set_destination(building* b) {
     destination_building_id = b->id;
 };
+
 bool figure::has_home(int _id) {
     if (_id == -1)
         return (home_building_id != 0);
 
     return (home_building_id == _id);
 }
+
 bool figure::has_home(building* b) {
     return (b == home());
 }

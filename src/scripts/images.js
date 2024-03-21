@@ -10,7 +10,9 @@ images = [
 	{img: IMG_FIREMAN_DEATH, pack:PACK_SPR_MAIN, id:7},  // 273
   {img: IMG_FIREMAN_FIGHT_FIRE, pack:PACK_SPR_MAIN, id:8, offset:0},
 	{img: IMG_HOMELESS, pack: PACK_SPR_MAIN, id: 12}, // 782
+	{img: IMG_HOMELESS_DEATH, pack: PACK_SPR_MAIN, id: 13}, // 782
 	{img: IMG_IMMIGRANT, pack: PACK_SPR_MAIN, id: 14},// 886
+	{img: IMG_IMMIGRANT_DEATH, pack: PACK_SPR_MAIN, id: 15},// 886
 	{img: ANIM_TAX_COLLECTOR_WALK, pack:PACK_SPR_MAIN, id:41},
 	{img: ANIM_TAX_COLLECTOR_DEATH, pack:PACK_SPR_MAIN, id:42},
 	{img: ANIM_CARTPUSHER_WALK, pack: PACK_SPR_MAIN, id:43},
@@ -55,8 +57,6 @@ images = [
 	{img: IMG_RESOURCE_STRAW, pack:PACK_GENERAL, id:206},
 	{img: IMG_RESOURCE_CLAY, pack:PACK_GENERAL, id:207},
 
-
-	//{img: IMG_IMMIGRANT_DEATH, pack: PACK_SPR_MAIN, id: 15} // 982
 	//{img: IMG_EMIGRANT, pack: PACK_SPR_MAIN, id: 13}, // 878
 	//{img: IMG_FISHING_BOAT ???, pack:PACK_SPR_MAIN, id:133 }, 	// 7014
 	{img: IMG_SLED_GRANITE_SMALL, pack:PACK_SPR_MAIN, id:103},

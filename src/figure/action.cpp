@@ -404,7 +404,7 @@ void figure::action_perform() {
 
             case FIGURE_ACTION_125_ROAMING:
             case ACTION_1_ROAMING:
-                if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS) {
+                if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT) {
                     break;
                 }
                 do_roam();
@@ -412,7 +412,7 @@ void figure::action_perform() {
 
             case FIGURE_ACTION_126_ROAMER_RETURNING:
             case ACTION_2_ROAMERS_RETURNING:
-                if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS) {
+                if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT) {
                     break;
                 }
                 do_returnhome();
@@ -460,8 +460,6 @@ void figure::action_perform() {
         }
 
         switch (type) {
-        case FIGURE_HOMELESS: homeless_action(); break;
-
         case 11:   // soldier_action();                  break;
         case 12:   // soldier_action();                  break;
         case 13:

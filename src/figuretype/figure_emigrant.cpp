@@ -22,7 +22,6 @@ void config_load_figure_emigrant() {
     });
 }
 
-
 void figure_create_emigrant(building* house, int num_people) {
     city_population_remove(num_people);
     if (num_people < house->house_population) {
