@@ -64,6 +64,7 @@ var building_water_supply = {}
 var building_well = {}
 var building_reed_gatherer = {}
 var building_papyrus_maker = {}
+var building_guild_stonemasons = {}
 var empire_window = {}
 var empire_images_remap = []
 var imagepaks = []

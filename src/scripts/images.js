@@ -49,6 +49,7 @@ images = [
 	{img: IMG_CATTLE_RANCH, pack:PACK_GENERAL, id:105},
 	{img: IMG_GOLD_MINE, pack:PACK_GENERAL, id:185},
 	{img: IMG_SANDSTONE_QUARRY, pack:PACK_GENERAL, id:197},
+	{img: IMG_GUILD_STONEMASONS, pack:PACK_GENERAL, id:88},
 
 	// icon resources
 	{img: IMG_BRICKS_WORKSHOP, pack:PACK_GENERAL, id:124},

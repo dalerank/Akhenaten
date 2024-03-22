@@ -93,6 +93,14 @@ building_courthouse = {
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
 }
 
+building_guild_stonemasons = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_GUILD_STONEMASONS }
+  },
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+}
+
+
 building_personal_mansion = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_PERSONAL_MANSION }

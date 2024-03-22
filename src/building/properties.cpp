@@ -186,8 +186,8 @@ static building_properties properties[400] = {
     {1, 1, 0, 0},
     {2, 0, GROUP_BUILDING_GUILD_CARPENTERS},
     {2, 0, 0, 0},
-    {2, 0, GROUP_BUILDING_GUILD_STONEMASONS}, // guilds ^^^
-    {2, 1, 0, 0, IMG_WATER_SUPPLY},      // water supply
+    {2, 0, 0, 0}, // guilds ^^^
+    {2, 1, 0, 0},      // water supply
     {2, 1, GROUP_BUILDING_TRANSPORT_WHARF},   // wharf (transport)
     {3, 1, GROUP_BUILDING_WARSHIP_WHARF},     // wharf (warship)
     {-1, 1, 0, 0},                            // pyramid
@@ -283,6 +283,8 @@ void building_properties_init() {
     properties[BUILDING_WORK_CAMP] = {2, 0, 0, 0, 0, IMG_WORKCAMP};
     properties[BUILDING_REED_GATHERER] = {2, 0, 0, 0, 0, IMG_BUILDING_REED_GATHERER};
     properties[BUILDING_PAPYRUS_WORKSHOP] = {2, 0, 0, 0, 0, IMG_PAPYRUS_WORKSHOP};
+    properties[BUILDING_WATER_SUPPLY] = {2, 1, 0, 0, 0, IMG_WATER_SUPPLY};
+    properties[BUILDING_STONEMASONS_GUILD] = {2, 0, 0, 0, 0, IMG_GUILD_STONEMASONS};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {
