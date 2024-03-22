@@ -14,7 +14,6 @@
 #include "building/building_physician.h"
 #include "building/monument_mastaba.h"
 #include "building/building_bandstand.h"
-#include "building/building_bricklayers_guild.h"
 #include "building/building_shrine.h"
 #include "building/building_mansion.h"
 #include "building/building_hunting_lodge.h"
@@ -278,7 +277,6 @@ building_impl *building::dcast() {
     }
 
     switch (type) {
-    case BUILDING_BRICKLAYERS_GUILD: _ptr = new building_bricklayers_guild(*this); break;
     case BUILDING_BANDSTAND: _ptr = new building_bandstand(*this); break;
     case BUILDING_HUNTING_LODGE: _ptr = new building_hunting_lodge(*this); break;
     case BUILDING_PHYSICIAN: _ptr = new building_physician(*this); break;

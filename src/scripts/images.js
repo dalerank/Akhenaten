@@ -46,10 +46,11 @@ images = [
 	{img: IMG_WELL_FANCY, pack:PACK_GENERAL, id:23, offset:2},
 	{img: IMG_WATER_SUPPLY, pack:PACK_GENERAL, id:69, offset:0},
 	{img: IMG_WATER_SUPPLY_FANCY, pack:PACK_GENERAL, id:69, offset:2},
+	{img: IMG_BRICKLAYERS_GUILD, pack:PACK_GENERAL, id:57},
+	{img: IMG_GUILD_STONEMASONS, pack:PACK_GENERAL, id:88},
 	{img: IMG_CATTLE_RANCH, pack:PACK_GENERAL, id:105},
 	{img: IMG_GOLD_MINE, pack:PACK_GENERAL, id:185},
 	{img: IMG_SANDSTONE_QUARRY, pack:PACK_GENERAL, id:197},
-	{img: IMG_GUILD_STONEMASONS, pack:PACK_GENERAL, id:88},
 
 	// icon resources
 	{img: IMG_BRICKS_WORKSHOP, pack:PACK_GENERAL, id:124},
@@ -125,7 +126,6 @@ images = [
 	{img: IMG_SMALL_MASTABA, pack:PACK_MASTABA, id:2, offset:7},
 	{img: IMG_BAZAAR, pack:PACK_GENERAL, id:22, offset:0},
 	{img: IMG_BAZAAR_FANCY, pack:PACK_GENERAL, id:22, offset:13},
-	{img: IMG_BRICKLAYERS_GUILD, pack:PACK_GENERAL, id:57},
 	{img: IMG_BRICKLAYER_WALK, pack:PACK_SPR_MAIN, id:109},
 	{img: IMG_BRICKLAYER_DEATH, pack:PACK_SPR_MAIN, id:110},
 	{img: IMG_BRICKLAYER_WORK, pack:PACK_SPR_MAIN, id:111},

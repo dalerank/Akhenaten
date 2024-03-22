@@ -4,6 +4,7 @@
 #include "building/monuments.h"
 #include "city/object_info.h"
 #include "city/resource.h"
+#include "city/labor.h"
 #include "core/random.h"
 #include "core/calc.h"
 #include "figure/figure.h"
@@ -19,7 +20,15 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
+#include "widget/city/ornaments.h"
 #include "game/game.h"
+
+buildings::model_t<building_bricklayers_guild> bricklayers_guild_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bricklayers_guild);
+void config_load_building_bricklayers_guild() {
+    bricklayers_guild_m.load();
+}
 
 void building_bricklayers_guild::window_info_background(object_info& c) {
     constexpr pcstr btype = "bricklayers_guild";
@@ -115,4 +124,9 @@ void building_bricklayers_guild::spawn_figure() {
     auto f = base.create_figure_with_destination(FIGURE_BRICKLAYER, monument, FIGURE_ACTION_10_BRIRKLAYER_CREATED, BUILDING_SLOT_SERVICE);
     monument->monument_add_workers(f->id);
     f->wait_ticks = random_short() % 30; // ok
+}
+
+bool building_bricklayers_guild::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    building_draw_normal_anim(ctx, point, &base, tile, bricklayers_guild_m.anim["work"], color_mask);
+    return true;
 }
