@@ -292,6 +292,13 @@ figure_homeless = {
 	}
 }
 
+figure_teacher = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: IMG_TEACHER_WALK },
+		death : { pos : [0, 0], anim_id: IMG_TEACHER_DEATH },
+	}
+}
+
 figure_herbalist = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_HERBALIST_WALK, max_frames:12 },

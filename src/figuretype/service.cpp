@@ -13,19 +13,3 @@
 #include "grid/road_access.h"
 #include "config/config.h"
 
-void figure::scribal_school_teacher_action() {
-    switch (action_state) {
-    case FIGURE_ACTION_125_ROAMING:
-        roam_length++;
-        if (roam_length >= max_roam_length) {
-            advance_action(FIGURE_ACTION_126_ROAMER_RETURNING);
-        }
-
-        break;
-
-    case FIGURE_ACTION_126_ROAMER_RETURNING:
-        ; // nothing here
-        break;
-    
-    }
-}

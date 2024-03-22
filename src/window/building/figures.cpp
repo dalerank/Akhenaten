@@ -362,7 +362,6 @@ static int window_info_show_overlay(figure *f) {
     switch (f->type) {
     case FIGURE_CONSTABLE: return OVERLAY_CRIME;
     case FIGURE_MAGISTRATE: return OVERLAY_COUTHOUSE;
-    case FIGURE_TEACHER: return OVERLAY_SCRIBAL_SCHOOL;
     default:
         return f->dcast()->get_overlay();
     }

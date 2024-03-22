@@ -96,6 +96,7 @@ var figure_reed_gatherer = {}
 var figure_caravan_donkey = {}
 var figure_trade_caravan = {}
 var figure_homeless = {}
+var figure_teacher = {}
 var mission0 = {}
 var mission1 = {}
 var mission5 = {}

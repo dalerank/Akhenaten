@@ -46,7 +46,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_CRIMINAL, "robber"},
     {FIGURE_SCRIBER, "scribe"},
     {FIGURE_NONE, "senet"},
-    {FIGURE_TEACHER,"teacher"},
     {FIGURE_NONE, "thief"},
     {FIGURE_NONE, "transport"},
     {FIGURE_NONE, "vagrant"},
@@ -135,55 +134,6 @@ static sound_key magistrate_phrase(figure *f) {
     }
 
     keys.push_back("magistrate_i_hope_we_are_ready");
-
-    int index = rand() % keys.size();
-    return keys[index];
-}
-
-static sound_key teacher_phrase(figure *f) {
-    svector<sound_key, 10> keys;
-
-    if (city_health() < 20) {
-        keys.push_back("teacher_desease_can_start_at_any_moment");
-    }
-
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("teacher_low_entertainment");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("teacher_no_food_in_city");
-    }
-
-    if (formation_get_num_forts() < 1) {
-        keys.push_back("teacher_city_not_safety");
-    }
-
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("teacher_gods_are_angry");
-    }
-
-    if (city_labor_workers_needed() >= 10) {
-        keys.push_back("teacher_need_workers");
-    }
-
-    if (city_rating_kingdom() < 30) {
-        keys.push_back("teacher_low_rating");
-    }
-
-    if (city_labor_unemployment_percentage() >= 15) {
-        keys.push_back("teacher_much_unemployments");
-    }
-
-    if (city_sentiment() > 90) {
-        keys.push_back("teacher_city_is_amazing");
-    } else if (city_sentiment() > 70) {
-        keys.push_back("teacher_city_much_better");
-    } else if (city_sentiment() > 40) {
-        keys.push_back("teacher_city_is_good");
-    } 
-
-    keys.push_back("teacher_festival_info");
 
     int index = rand() % keys.size();
     return keys[index];
@@ -346,7 +296,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     case FIGURE_OSTRICH_HUNTER: return hunter_ostric_phrase(f);
     case FIGURE_MAGISTRATE: return magistrate_phrase(f);
     case FIGURE_CONSTABLE: return policeman_phrase(f);
-    case FIGURE_TEACHER: return teacher_phrase(f);
     //        case FIGURE_PROTESTER:
     //        case FIGURE_CRIMINAL:
     //        case FIGURE_RIOTER:

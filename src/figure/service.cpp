@@ -33,18 +33,6 @@ static void magistrate_coverage(building* b, figure *f, int&) {
     b->data.house.magistrate = MAX_COVERAGE;
 }
 
-static void school_coverage(building* b, figure *f, int&) {
-    if (f->home()->stored_full_amount <= 0 ) {
-        return;
-    }
-
-    const uint8_t delta_allow_papyrus = MAX_COVERAGE / 4;
-    if ((MAX_COVERAGE - b->data.house.school) > delta_allow_papyrus) {
-        f->home()->stored_full_amount--;
-    }
-    b->data.house.school = MAX_COVERAGE;
-}
-
 static void academy_coverage(building* b, figure *f, int&) {
     b->data.house.academy = MAX_COVERAGE;
 }
@@ -77,10 +65,6 @@ int figure::figure_service_provide_coverage() {
     switch (type) {
     case FIGURE_NOBLES:
         return 0;
-
-    case FIGURE_TEACHER:
-        houses_serviced = figure_provide_culture(tile, this, school_coverage);
-        break;
 
     case FIGURE_SCRIBER:
         houses_serviced = figure_provide_culture(tile, this, academy_coverage);
