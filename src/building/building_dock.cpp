@@ -29,6 +29,11 @@ void config_load_building_dock() {
     dock_m.load();
 }
 
+void window_building_dock_orders(int index, int param2);
+static generic_button dock_order_buttons[] = {
+    {314, -15 * 16, 20, 20, window_building_dock_orders, button_none, 0, 0},
+};
+
 void building_dock::on_create(int orientation) {
     data.dock.orientation = orientation;
 }
@@ -59,77 +64,55 @@ void building_dock::update_map_orientation(int orientation) {
 }
 
 void building_dock::spawn_figure() {
-    //    check_labor_problem();
-    //    map_point road;
-    //    if (map_has_road_access(x, y, size, &road)) {
-    //        spawn_labor_seeker(50);
-    //        int pct_workers = worker_percentage();
-    //        int max_dockers;
-    //        if (pct_workers >= 75)
-    //            max_dockers = 3;
-    //        else if (pct_workers >= 50)
-    //            max_dockers = 2;
-    //        else if (pct_workers > 0)
-    //            max_dockers = 1;
-    //        else {
-    //            max_dockers = 0;
-    //        }
-    //        // count existing dockers
-    //        int existing_dockers = 0;
-    //        for (int i = 0; i < 3; i++) {
-    //            if (data.dock.docker_ids[i]) {
-    //                if (figure_get(data.dock.docker_ids[i])->type == FIGURE_DOCKER)
-    //                    existing_dockers++;
-    //                else {
-    //                    data.dock.docker_ids[i] = 0;
-    //                }
-    //            }
-    //        }
-    //        if (existing_dockers > max_dockers) {
-    //            // too many dockers, poof one of them
-    //            for (int i = 2; i >= 0; i--) {
-    //                if (data.dock.docker_ids[i]) {
-    //                    figure_get(data.dock.docker_ids[i])->poof();
-    //                    break;
-    //                }
-    //            }
-    //        } else if (existing_dockers < max_dockers) {
-    //            figure *f = figure_create(FIGURE_DOCKER, road.x, road.y, DIR_4_BOTTOM_LEFT);
-    //            f->action_state = FIGURE_ACTION_132_DOCKER_IDLING;
-    //            f->home() = b;
-    //            for (int i = 0; i < 3; i++) {
-    //                if (!data.dock.docker_ids[i]) {
-    //                    data.dock.docker_ids[i] = f->id;
-    //                    break;
-    //                }
-    //            }
-    //        }
-    //    }
-}
-
-void draw_dock_workers(building* b, int x, int y, color color_mask, painter &ctx) {
-    building_dock *dock = b->dcast_dock();
-
-    int num_dockers = dock->count_idle_dockers();
-    if (num_dockers > 0) {
-        int image_dock = map_image_at(dock->tile());
-        int image_dockers = image_id_from_group(GROUP_BUILDING_DOCK_DOCKERS);
-        if (image_dock == image_group(IMG_BUILDING_DOCK))
-            image_dockers += 0;
-        else if (image_dock == image_group(IMG_BUILDING_DOCK) + 1)
-            image_dockers += 3;
-        else if (image_dock == image_group(IMG_BUILDING_DOCK) + 2)
-            image_dockers += 6;
-        else
-            image_dockers += 9;
-
-        if (num_dockers == 2)
-            image_dockers += 1;
-        else if (num_dockers == 3)
-            image_dockers += 2;
-
-        const image_t* img = image_get(image_dockers);
-        ImageDraw::img_generic(ctx, image_dockers, x + img->animation.sprite_offset.x, y + img->animation.sprite_offset.y, color_mask);
+    check_labor_problem();
+    tile2i road;
+    if (!has_road_access()) {
+        return;
+    }
+    common_spawn_labor_seeker(50);
+    int pct_workers = worker_percentage();
+    int max_dockers;
+    if (pct_workers >= 75) {
+        max_dockers = 3;
+    } else if (pct_workers >= 50) {
+        max_dockers = 2;
+    } else if (pct_workers > 0) {
+        max_dockers = 1;
+    } else {
+        max_dockers = 0;
+    }
+    // count existing dockers
+    int existing_dockers = 0;
+    for (int i = 0; i < 3; i++) {
+        if (data.dock.docker_ids[i]) {
+            if (figure_get(data.dock.docker_ids[i])->type == FIGURE_DOCKER) {
+                existing_dockers++;
+            } else {
+                data.dock.docker_ids[i] = 0;
+            }
+        }
+    }
+    
+    if (existing_dockers > max_dockers) {
+        // too many dockers, poof one of them
+        for (int i = 2; i >= 0; i--) {
+            if (data.dock.docker_ids[i]) {
+                figure_get(data.dock.docker_ids[i])->poof();
+                return;
+            }
+        }
+    } 
+    
+    if (existing_dockers < max_dockers) {
+        figure *f = figure_create(FIGURE_DOCKER, road, DIR_4_BOTTOM_LEFT);
+        f->action_state = FIGURE_ACTION_132_DOCKER_IDLING;
+        f->set_home(&base);
+        for (int i = 0; i < 3; i++) {
+            if (!data.dock.docker_ids[i]) {
+                data.dock.docker_ids[i] = f->id;
+                return;
+            }
+        }
     }
 }
 
@@ -226,12 +209,59 @@ void building_dock::window_info_foreground(object_info &c) {
         window_building_draw_dock_foreground(&c);
 }
 
-int building_dock::window_info_handle_mouse(const mouse *m, object_info &c) {
-    return 0;
+void window_building_dock_orders(int index, int param2) {
+    auto &data = g_window_building_distribution;
+    building_dock* bazaar = building_get(data.building_id)->dcast_dock();
+    //if (index == 0) {
+    //    bazaar->unaccept_all_goods();
+    //}
 }
 
-bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_dock_workers(&base, point.x, point.y, color_mask, ctx);
+int window_building_handle_mouse_dock(const mouse* m, object_info* c) {
+    auto &data = g_window_building_distribution;
+    return generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id);
+}
+
+int window_building_handle_mouse_dock_orders(const mouse* m, object_info* c) {
+    auto &data = g_window_building_distribution;
+    int y_offset = window_building_get_vertical_offset(c, 28);
+
+    data.building_id = c->building_id;
+    if (generic_buttons_handle_mouse(m, c->offset.x + 180, y_offset + 46, data.orders_resource_buttons.data(), 15, &data.resource_focus_button_id)) {
+        return 1;
+    }
+    return generic_buttons_handle_mouse(m, c->offset.x + 80, y_offset + 404, dock_order_buttons, 1, &data.orders_focus_button_id);
+}
+
+int building_dock::window_info_handle_mouse(const mouse *m, object_info &c) {
+    if (c.storage_show_special_orders)
+        return window_building_handle_mouse_dock_orders(m, &c);
+    else
+        return window_building_handle_mouse_dock(m, &c);
+}
+
+bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color color_mask) {
+    int num_dockers = count_idle_dockers();
+    if (num_dockers > 0) {
+        int image_dock = map_image_at(t);
+        int image_dockers = image_id_from_group(GROUP_BUILDING_DOCK_DOCKERS);
+        if (image_dock == image_group(IMG_BUILDING_DOCK))
+            image_dockers += 0;
+        else if (image_dock == image_group(IMG_BUILDING_DOCK) + 1)
+            image_dockers += 3;
+        else if (image_dock == image_group(IMG_BUILDING_DOCK) + 2)
+            image_dockers += 6;
+        else
+            image_dockers += 9;
+
+        if (num_dockers == 2)
+            image_dockers += 1;
+        else if (num_dockers == 3)
+            image_dockers += 2;
+
+        const image_t* img = image_get(image_dockers);
+        ImageDraw::img_generic(ctx, image_dockers, t.x() + img->animation.sprite_offset.x, t.y() + img->animation.sprite_offset.y, color_mask);
+    }
     return false;
 }
 

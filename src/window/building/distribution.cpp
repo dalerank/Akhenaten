@@ -225,22 +225,6 @@ void draw_permissions_buttons(int x, int y, int buttons) {
     }
 }
 
-int window_building_handle_mouse_dock(const mouse* m, object_info* c) {
-    auto &data = g_window_building_distribution;
-    return generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id);
-}
-
-int window_building_handle_mouse_dock_orders(const mouse* m, object_info* c) {
-    auto &data = g_window_building_distribution;
-    int y_offset = window_building_get_vertical_offset(c, 28);
-
-    data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, c->offset.x + 180, y_offset + 46, data.orders_resource_buttons.data(), 15, &data.resource_focus_button_id)) {
-        return 1;
-    }
-    return generic_buttons_handle_mouse(m, c->offset.x + 80, y_offset + 404, market_order_buttons, 1, &data.orders_focus_button_id);
-}
-
 #define Y_FOODS 90           // 234
 #define Y_GOODS Y_FOODS + 20 // 174 //274
 

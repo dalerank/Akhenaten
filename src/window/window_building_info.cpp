@@ -737,13 +737,6 @@ static int handle_specific_building_info_mouse(const mouse *m) {
                 return window_building_handle_mouse_roadblock(m, &context);
             break;
 
-        case BUILDING_DOCK:
-            if (context.storage_show_special_orders)
-                return window_building_handle_mouse_dock_orders(m, &context);
-            else
-                return window_building_handle_mouse_dock(m, &context);
-            break;
-
         case BUILDING_STORAGE_YARD:
             if (context.storage_show_special_orders)
                 return window_building_handle_mouse_warehouse_orders(m, &context);
