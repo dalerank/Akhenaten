@@ -678,55 +678,6 @@ void building::spawn_figure_shipyard() {
     //    }
 }
 
-void building::spawn_figure_dock() {
-    //    check_labor_problem();
-    //    map_point road;
-    //    if (map_has_road_access(x, y, size, &road)) {
-    //        spawn_labor_seeker(50);
-    //        int pct_workers = worker_percentage();
-    //        int max_dockers;
-    //        if (pct_workers >= 75)
-    //            max_dockers = 3;
-    //        else if (pct_workers >= 50)
-    //            max_dockers = 2;
-    //        else if (pct_workers > 0)
-    //            max_dockers = 1;
-    //        else {
-    //            max_dockers = 0;
-    //        }
-    //        // count existing dockers
-    //        int existing_dockers = 0;
-    //        for (int i = 0; i < 3; i++) {
-    //            if (data.dock.docker_ids[i]) {
-    //                if (figure_get(data.dock.docker_ids[i])->type == FIGURE_DOCKER)
-    //                    existing_dockers++;
-    //                else {
-    //                    data.dock.docker_ids[i] = 0;
-    //                }
-    //            }
-    //        }
-    //        if (existing_dockers > max_dockers) {
-    //            // too many dockers, poof one of them
-    //            for (int i = 2; i >= 0; i--) {
-    //                if (data.dock.docker_ids[i]) {
-    //                    figure_get(data.dock.docker_ids[i])->poof();
-    //                    break;
-    //                }
-    //            }
-    //        } else if (existing_dockers < max_dockers) {
-    //            figure *f = figure_create(FIGURE_DOCKER, road.x, road.y, DIR_4_BOTTOM_LEFT);
-    //            f->action_state = FIGURE_ACTION_132_DOCKER_IDLING;
-    //            f->home() = b;
-    //            for (int i = 0; i < 3; i++) {
-    //                if (!data.dock.docker_ids[i]) {
-    //                    data.dock.docker_ids[i] = f->id;
-    //                    break;
-    //                }
-    //            }
-    //        }
-    //    }
-}
-
 int building::get_figures_number(e_figure_type ftype) {
     int gatherers_this_yard = 0;
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -897,7 +848,6 @@ bool building::figure_generate() {
         case BUILDING_WATER_LIFT: common_spawn_figure_trigger(50); break;
         case BUILDING_DENTIST: spawn_figure_dentist(); break;
         case BUILDING_MORTUARY: spawn_figure_mortuary(); break;
-        case BUILDING_DOCK: spawn_figure_dock(); break;
         case BUILDING_FISHING_WHARF: spawn_figure_wharf(); break;
         case BUILDING_SHIPWRIGHT: spawn_figure_shipyard(); break;
         case BUILDING_UNUSED_NATIVE_HUT_88: spawn_figure_native_hut(); break;

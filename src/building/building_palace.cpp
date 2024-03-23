@@ -31,7 +31,7 @@ void config_load_building_palace_model() {
     village_building_palace_m.load();
 }
 
-void building_palace::on_create() {
+void building_palace::on_create(int orientation) {
     base.labor_category = village_building_palace_m.labor_category;
 }
 

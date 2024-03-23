@@ -578,7 +578,7 @@ void building_granary_draw_anim(building &b, vec2i point, tile2i tile, color mas
 
 }
 
-void building_granary::on_create() {
+void building_granary::on_create(int orientation) {
     data.granary.resource_stored[RESOURCE_NONE] = 3200;
     base.storage_id = building_storage_create(BUILDING_GRANARY);
 }

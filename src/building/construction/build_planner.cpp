@@ -6,7 +6,7 @@
 #include "core/log.h"
 #include "widget/sidebar/city.h"
 
-#include "building/dock.h"
+#include "building/building_dock.h"
 #include "building/menu.h"
 #include "building/model.h"
 #include "building/monuments.h"
@@ -1537,7 +1537,7 @@ void BuildPlanner::update_requirements_check() {
     }
 
     if (special_flags & PlannerFlags::RiverAccess) {
-        if (!building_dock_is_connected_to_open_water(end)) {
+        if (!map_tile_is_connected_to_open_water(end)) {
             immediate_warning_id = WARNING_DOCK_OPEN_WATER_NEEDED;
         }
     }

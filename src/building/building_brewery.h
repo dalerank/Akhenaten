@@ -9,7 +9,7 @@ public:
     building_brewery(building &b) : building_impl(b) {}
     virtual building_brewery *dcast_brewery() override { return this; }
 
-    virtual void on_create() override;
+    virtual void on_create(int orientation) override;
     virtual bool is_workshop() const override { return true; }
     virtual e_overlay get_overlay() const override { return OVERLAY_BREWERY; }
     virtual void window_info_background(object_info &c) override;

@@ -78,7 +78,7 @@ void building_bricklayers_guild::window_info_background(object_info& c) {
     window_building_draw_employment(&c, 142);
 }
 
-void building_bricklayers_guild::on_create() {
+void building_bricklayers_guild::on_create(int orientation) {
     data.guild.max_workers = 1;
 }
 

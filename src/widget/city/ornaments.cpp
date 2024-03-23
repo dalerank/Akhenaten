@@ -2,7 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
-#include "building/dock.h"
+#include "building/building_dock.h"
 #include "building/building_granary.h"
 #include "building/building_entertainment.h"
 #include "building/building_education.h"
@@ -155,30 +155,6 @@ int get_farm_image(int grid_offset) {
     }
 }
 
-static void draw_dock_workers(building* b, int x, int y, color color_mask, painter &ctx) {
-    int num_dockers = building_dock_count_idle_dockers(b);
-    if (num_dockers > 0) {
-        int image_dock = map_image_at(b->tile.grid_offset());
-        int image_dockers = image_id_from_group(GROUP_BUILDING_DOCK_DOCKERS);
-        if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK))
-            image_dockers += 0;
-        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK) + 1)
-            image_dockers += 3;
-        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK) + 2)
-            image_dockers += 6;
-        else
-            image_dockers += 9;
-
-        if (num_dockers == 2)
-            image_dockers += 1;
-        else if (num_dockers == 3)
-            image_dockers += 2;
-
-        const image_t* img = image_get(image_dockers);
-        ImageDraw::img_generic(ctx, image_dockers, x + img->animation.sprite_offset.x, y + img->animation.sprite_offset.y, color_mask);
-    }
-}
-
 /////// ORNAMENTS
 
 static void draw_hippodrome_ornaments(vec2i pixel, map_point point, painter &ctx) {
@@ -249,10 +225,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
     switch (b->type) {
     case BUILDING_BURNING_RUIN:
         building_draw_normal_anim(ctx, point, b, tile, image_id, color_mask);
-        break;
-
-    case BUILDING_DOCK:
-        draw_dock_workers(b, point.x, point.y, color_mask, ctx);
         break;
 
     case BUILDING_WATER_LIFT:

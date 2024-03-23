@@ -81,7 +81,7 @@ static building_properties properties[400] = {
     {1, 1, 0, 0},  // storageyard (hut)
     {1, 1, 0, 0},                         // storageyard (space tile)
     {3, 0, GROUP_BUILDING_SHIPYARD},      // shipwright
-    {3, 0, GROUP_BUILDING_DOCK},          // dock
+    {3, 0, 0, 0},          // dock
     {2, 0, GROUP_BUILDING_FISHING_WHARF}, // wharf (fish)
     {3, 0, 0, 0},
     {4, 0, GROUP_BUILDING_GOVERNORS_VILLA},
@@ -285,6 +285,7 @@ void building_properties_init() {
     properties[BUILDING_PAPYRUS_WORKSHOP] = {2, 0, 0, 0, 0, IMG_PAPYRUS_WORKSHOP};
     properties[BUILDING_WATER_SUPPLY] = {2, 1, 0, 0, 0, IMG_WATER_SUPPLY};
     properties[BUILDING_STONEMASONS_GUILD] = {2, 0, 0, 0, 0, IMG_GUILD_STONEMASONS};
+    properties[BUILDING_DOCK] = {3, 1, 0, 0, 0, IMG_BUILDING_DOCK};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

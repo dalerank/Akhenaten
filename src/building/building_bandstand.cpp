@@ -17,7 +17,7 @@
 #include "building/building_entertainment.h"
 #include "sound/sound_building.h"
 
-void building_bandstand::on_create() {
+void building_bandstand::on_create(int orientation) {
     base.fire_proof = 1;
 }
 

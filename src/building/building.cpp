@@ -220,10 +220,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
         data.industry.orientation = orientation;
         break;
 
-    case BUILDING_DOCK:
-        data.dock.orientation = orientation;
-        break;
-
     case BUILDING_BRICK_GATEHOUSE:
     case BUILDING_MUD_GATEHOUSE:
         subtype.orientation = orientation;
@@ -231,7 +227,7 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
 
     default:
         output_resource_first_id = RESOURCE_NONE;
-        dcast()->on_create();
+        dcast()->on_create(orientation);
         break;
     }
 }
@@ -356,6 +352,7 @@ building_well *building::dcast_well() { return dcast()->dcast_well(); }
 building_clay_pit *building::dcast_clay_pit() { return dcast()->dcast_clay_pit(); }
 building_reed_gatherer *building::dcast_reed_gatherer() { return dcast()->dcast_reed_gatherer(); }
 building_papyrus_maker *building::dcast_papyrus_maker() { return dcast()->dcast_papyrus_maker(); }
+building_dock *building::dcast_dock() { return dcast()->dcast_dock(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
@@ -469,9 +466,6 @@ void building::clear_related_data() {
     if (is_governor_mansion()) {
         city_buildings_remove_mansion(this);
     }
-
-    if (type == BUILDING_DOCK)
-        city_buildings_remove_dock();
 
     if (type == BUILDING_RECRUITER) {
         city_buildings_remove_recruiter(this);

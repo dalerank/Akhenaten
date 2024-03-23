@@ -195,12 +195,6 @@ void building_count_update() {
             }
             break;
 
-        case BUILDING_DOCK:
-            if (b.num_workers > 0 && b.has_open_water_access) {
-                city_buildings_add_working_dock(b.id);
-            }
-            break;
-
         case BUILDING_SHIPWRIGHT:
             if (b.num_workers > 0 && b.has_open_water_access) {
                 city_buildings_add_working_shipyard(b.id);
@@ -301,6 +295,7 @@ void building_count_update() {
             break;
 
         default:
+            b.dcast()->update_count();
             return;
         }
     });

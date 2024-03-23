@@ -15,7 +15,7 @@ enum e_farm_worker_state {
 class building_farm : public building_impl {
 public:
     building_farm(building &b) : building_impl(b) {}
-    virtual void on_create() override;
+    virtual void on_create(int orientation) override;
     virtual void window_info_background(object_info &ctx) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual building_farm *dcast_farm() override { return this; }

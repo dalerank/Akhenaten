@@ -11,7 +11,7 @@ struct painter;
 class building_small_mastaba : public building_impl {
 public:
     building_small_mastaba(building & b) : building_impl(b) {}
-    virtual void on_create() override;
+    virtual void on_create(int orientation) override;
     virtual void update_day() override;
     virtual void window_info_background(object_info &ctx) override;
 };

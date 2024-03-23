@@ -86,6 +86,10 @@ void map_orientation_update_buildings(void) {
         int image_id;
         int image_offset;
         switch (b->type) {
+        default:
+            b->dcast()->update_map_orientation(map_orientation);
+            break;
+
         case BUILDING_MUD_GATEHOUSE:
             if (b->subtype.orientation == 1) {
                 if (orientation_is_top_bottom)
@@ -103,6 +107,7 @@ void map_orientation_update_buildings(void) {
             map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
             map_terrain_add_gatehouse_roads(b->tile.x(), b->tile.y(), 0);
             break;
+
         case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
             if (b->subtype.orientation == 1) {
                 if (orientation_is_top_bottom)
@@ -120,26 +125,25 @@ void map_orientation_update_buildings(void) {
             map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_BUILDING);
             map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), b->subtype.orientation);
             break;
+
         case BUILDING_SHIPWRIGHT:
             image_offset = city_view_relative_orientation(b->data.industry.orientation);
             image_id = image_id_from_group(GROUP_BUILDING_SHIPYARD) + image_offset;
             map_water_add_building(i, b->tile, 2, image_id);
             break;
+
         case BUILDING_FISHING_WHARF:
             image_offset = city_view_relative_orientation(b->data.industry.orientation);
             image_id = image_id_from_group(GROUP_BUILDING_FISHING_WHARF) + image_offset;
             map_water_add_building(i, b->tile, 2, image_id);
             break;
+
         case BUILDING_FERRY:
             image_offset = city_view_relative_orientation(b->data.industry.orientation);
             image_id = image_id_from_group(GROUP_BUILDING_FERRY) + image_offset;
             map_water_add_building(i, b->tile, 2, image_id);
             break;
-        case BUILDING_DOCK:
-            image_offset = city_view_relative_orientation(b->data.dock.orientation);
-            image_id = image_id_from_group(GROUP_BUILDING_DOCK) + image_offset;
-            map_water_add_building(i, b->tile, 3, image_id);
-            break;
+
         case BUILDING_WATER_LIFT:
             image_offset = city_view_relative_orientation(b->data.industry.orientation);
             if (!map_terrain_exists_tile_in_radius_with_type(b->tile, 2, 1, TERRAIN_WATER)) {
@@ -150,6 +154,7 @@ void map_orientation_update_buildings(void) {
             image_id = image_id_from_group(GROUP_BUILDING_WATER_LIFT) + image_offset;
             map_water_add_building(i, b->tile, 2, image_id);
             break;
+
         case BUILDING_BOOTH:
         case BUILDING_BANDSTAND:
         case BUILDING_PAVILLION:
@@ -186,6 +191,7 @@ void map_orientation_update_buildings(void) {
                 map_add_bandstand_tiles(b);
             }
             break;
+
         case BUILDING_SMALL_MASTABA:
         case BUILDING_SMALL_MASTABA_ENTRANCE:
         case BUILDING_SMALL_MASTABA_SIDE:
@@ -204,6 +210,7 @@ void map_orientation_update_buildings(void) {
                 map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_BUILDING);
             }
             break;
+
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:
         case BUILDING_TEMPLE_COMPLEX_PTAH:

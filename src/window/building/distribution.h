@@ -44,6 +44,7 @@ int window_building_handle_mouse_dock(const mouse* m, object_info* c);
 int window_building_handle_mouse_dock_orders(const mouse* m, object_info* c);
 
 void draw_permissions_buttons(int x, int y, int buttons);
+void draw_accept_none_button(int x, int y, int focused);
 
 int window_building_handle_mouse_granary(const mouse* m, object_info* c);
 int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c);

@@ -2,7 +2,7 @@
 
 #include "figure/figure.h"
 #include "figure/image.h"
-#include "building/dock.h"
+#include "building/building_dock.h"
 
 #include "city/message.h"
 
@@ -98,18 +98,22 @@ void figure_trade_ship::figure_action() {
         base.wait_ticks++;
         if (base.wait_ticks > 20) {
             base.wait_ticks = 0;
-            map_point tile;
-            int dock_id = building_dock_get_free_destination(id(), &tile);
-            if (dock_id) {
-                set_destination(dock_id);
+            auto free_dock = map_get_free_destination_dock(id());
+            if (free_dock.bid) {
+                set_destination(free_dock.bid);
                 base.action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
-                base.destination_tile = tile;
-            } else if (building_dock_get_queue_destination(id(), &tile)) {
+                base.destination_tile = free_dock.tile;
+                break;
+            } 
+            
+            auto queued_dock = map_get_queue_destination_dock(id());
+            if (queued_dock.bid) {
                 base.action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
-                base.destination_tile = tile;
-            } else {
-                poof();
-            }
+                base.destination_tile = queued_dock.tile;
+                break;
+            } 
+            
+            poof();
         }
         base.anim_frame = 0;
         break;
@@ -192,17 +196,18 @@ void figure_trade_ship::figure_action() {
     case FIGURE_ACTION_114_TRADE_SHIP_ANCHORED:
         base.wait_ticks++;
         if (base.wait_ticks > 40) {
-            tile2i tile;
-            int dock_id = building_dock_get_free_destination(id(), &tile);
-            if (dock_id) {
-                set_destination(dock_id);
+            auto free_dock = map_get_free_destination_dock(id());
+            if (free_dock.bid) {
+                set_destination(free_dock.bid);
                 base.action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
-                base.destination_tile = tile;
-                //                    destination_tile.x() = tile.x();
-                //                    destination_tile.y() = tile.y();
-            } else if (map_figure_id_get(tile) != id() && building_dock_get_queue_destination(id(), &tile)) {
+                base.destination_tile = free_dock.tile;
+                break;
+            }
+            
+            auto queue_dock = map_get_queue_destination_dock(id());
+            if (map_figure_id_get(free_dock.tile) != id() && queue_dock.bid) {
                 base.action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
-                base.destination_tile = tile;
+                base.destination_tile = free_dock.tile;
                 //                    destination_tile.x() = tile.x();
                 //                    destination_tile.y() = tile.y();
             }

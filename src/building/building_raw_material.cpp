@@ -99,7 +99,7 @@ void building_granite_quarry_draw_info(object_info& c) {
     building_raw_material_draw_info(c, "granite_quarry", RESOURCE_SANDSTONE);
 }
 
-void building_mine::on_create() {
+void building_mine::on_create(int orientation) {
     base.output_resource_first_id = params().output_resource;
 }
 
@@ -129,7 +129,7 @@ const animation_t &building_mine_copper::anim(pcstr key) const { return copper_m
 const building_impl::static_params &building_mine_gems::params() const { return gems_mine_m; }
 const animation_t &building_mine_gems::anim(pcstr key) const { return gems_mine_m.anim[key]; }
 
-void building_quarry_stone::on_create() {
+void building_quarry_stone::on_create(int orientation) {
     base.output_resource_first_id = RESOURCE_STONE;
 }
 
@@ -137,7 +137,7 @@ void building_quarry_stone::window_info_background(object_info &c) {
     building_raw_material_draw_info(c, "plainstone_quarry", RESOURCE_STONE);
 }
 
-void building_clay_pit::on_create() {
+void building_clay_pit::on_create(int orientation) {
     base.output_resource_first_id = clay_pit_m.output_resource;
 }
 
@@ -160,7 +160,7 @@ bool building_clay_pit::draw_ornaments_and_animations_height(painter &ctx, vec2i
     return true;
 }
 
-void building_reed_gatherer::on_create() {
+void building_reed_gatherer::on_create(int orientation) {
     base.output_resource_first_id = RESOURCE_REEDS;
     data.industry.max_gatheres = 1;
 }

@@ -5,7 +5,7 @@
 #include "grid/vegetation.h"
 #include "scenario/events.h"
 #include "building/count.h"
-#include "building/dock.h"
+#include "building/building_dock.h"
 #include "building/figure.h"
 #include "building/government.h"
 #include "building/building_granary.h"

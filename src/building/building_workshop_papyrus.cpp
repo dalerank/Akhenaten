@@ -21,7 +21,7 @@ void config_load_building_papyrus_maker() {
 
 declare_console_command(addpapyrus, game_cheat_add_resource<RESOURCE_PAPYRUS>);
 
-void building_papyrus_maker::on_create() {
+void building_papyrus_maker::on_create(int orientation) {
     data.industry.first_material_id = RESOURCE_REEDS;
     base.output_resource_first_id = RESOURCE_PAPYRUS;
 }

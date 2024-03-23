@@ -782,7 +782,7 @@ storage_worker_task building_storageyard_determine_worker_task(building* warehou
     return {STORAGEYARD_TASK_NONE};
 }
 
-void building_storage_yard::on_create() {
+void building_storage_yard::on_create(int orientation) {
     base.subtype.orientation = building_rotation_global_rotation();
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/buffer.h"
+#include "grid/point.h"
 
 /**
  * @file
@@ -12,6 +13,7 @@
 
 int map_sprite_animation_at(int grid_offset);
 void map_sprite_animation_set(int grid_offset, int value);
+inline void map_sprite_animation_set(tile2i tile, int value) { map_sprite_animation_set(tile.grid_offset(), value); }
 
 void map_sprite_clear_tile(int grid_offset);
 void map_sprite_clear();

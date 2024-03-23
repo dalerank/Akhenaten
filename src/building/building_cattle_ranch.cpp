@@ -14,7 +14,7 @@ void config_load_building_cattle_ranch() {
     cattle_ranch_m.load();
 }
 
-void building_cattle_ranch::on_create() {
+void building_cattle_ranch::on_create(int orientation) {
     data.industry.first_material_id = RESOURCE_STRAW;
     base.output_resource_first_id = RESOURCE_MEAT;
 }

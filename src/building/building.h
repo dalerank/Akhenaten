@@ -41,6 +41,7 @@ class building_well;
 class building_clay_pit;
 class building_reed_gatherer;
 class building_papyrus_maker;
+class building_dock;
 struct object_info;
 struct painter;
 struct mouse;
@@ -358,6 +359,7 @@ public:
     building_clay_pit *dcast_clay_pit();
     building_reed_gatherer *dcast_reed_gatherer();
     building_papyrus_maker *dcast_papyrus_maker();
+    building_dock *dcast_dock();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -374,8 +376,6 @@ public:
     void spawn_figure_industry();
     void spawn_figure_wharf();
     void spawn_figure_shipyard();
-    void spawn_figure_dock();
-    void spawn_figure_reed_gatherers();
     void spawn_figure_wood_cutters();
     void spawn_figure_native_hut();
     void spawn_figure_native_meeting();
@@ -418,7 +418,7 @@ public:
     };
 
     building_impl(building &b) : base(b), data(b.data) {}
-    virtual void on_create() {}
+    virtual void on_create(int orientation) {}
     virtual void on_destroy() {}
     virtual void spawn_figure() {}
     virtual void update_graphic() {}
@@ -431,6 +431,9 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual bool need_road_access() const { return true; }
+    virtual bool can_play_animation() const { return true; }
+    virtual void update_count() const {}
+    virtual void update_map_orientation(int orientation) {}
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_NONE; }
     virtual int animation_speed(int speed) const { return speed; }
     virtual int get_produce_uptick_per_day() const { return base.num_workers; }
@@ -457,6 +460,7 @@ public:
     virtual building_clay_pit *dcast_clay_pit() { return nullptr; }
     virtual building_reed_gatherer *dcast_reed_gatherer() { return nullptr; }
     virtual building_papyrus_maker *dcast_papyrus_maker() { return nullptr; }
+    virtual building_dock *dcast_dock() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

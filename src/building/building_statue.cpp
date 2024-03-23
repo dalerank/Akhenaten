@@ -46,7 +46,7 @@ namespace model {
     }
 }
 
-void building_statue::on_create() {
+void building_statue::on_create(int o) {
     int orientation = (4 + building_rotation_global_rotation() + city_view_orientation() / 2) % 4;
     data.monuments.variant = building_rotation_get_building_variant();
     data.monuments.statue_offset = rand() % 4;

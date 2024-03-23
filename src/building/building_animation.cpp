@@ -51,6 +51,10 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
         return 0;
     }
 
+    if (!b->dcast()->can_play_animation()) {
+        return 0;
+    }
+
     switch (b->type) {
     case BUILDING_BURNING_RUIN:
         break;
@@ -115,13 +119,6 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
             return 0;
             //map_sprite_animation_set(grid_offset, 1);
             //return 1;
-        }
-        break;
-
-    case BUILDING_DOCK:
-        if (b->data.dock.num_ships <= 0) {
-            map_sprite_animation_set(grid_offset, 1);
-            return 1;
         }
         break;
 

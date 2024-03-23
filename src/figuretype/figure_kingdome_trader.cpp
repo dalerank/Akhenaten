@@ -1,7 +1,7 @@
 #include "figure_kingdome_trader.h"
 
 #include "building/building.h"
-#include "building/dock.h"
+#include "building/building_dock.h"
 #include "building/storage.h"
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"

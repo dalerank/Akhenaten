@@ -24,7 +24,7 @@ void config_load_building_pottery() {
 
 declare_console_command(addpottery, game_cheat_add_resource<RESOURCE_POTTERY>);
 
-void building_pottery::on_create() {
+void building_pottery::on_create(int orientation) {
     data.industry.first_material_id = RESOURCE_CLAY;
     base.output_resource_first_id = RESOURCE_POTTERY;
 }

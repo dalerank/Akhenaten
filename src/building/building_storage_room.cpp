@@ -13,7 +13,7 @@
 
 buildings::model_t<building_storage_room> storage_room_m;
 
-void building_storage_room::on_create() {
+void building_storage_room::on_create(int orientation) {
 }
 
 void building_storage_room::window_info_background(object_info &ctx) {

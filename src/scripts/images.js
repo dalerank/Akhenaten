@@ -18,8 +18,14 @@ images = [
 	{img: ANIM_CARTPUSHER_WALK, pack: PACK_SPR_MAIN, id:43},
 	{img: ANIM_CARTPUSHER_DEATH, pack: PACK_SPR_MAIN, id:44},
 	{img: IMG_CARTPUSHER_CART, pack:PACK_SPR_MAIN, id:77},
+	{img: IMG_SLED_BRICKS, pack:PACK_SPR_MAIN, id:89},
 	{img: IMG_SLED_SANDSTONE_SMALL, pack:PACK_SPR_MAIN, id:101},
 	{img: IMG_SLED_STONE_SMALL, pack:PACK_SPR_MAIN, id:102},
+	{img: IMG_SLED_GRANITE_SMALL, pack:PACK_SPR_MAIN, id:103},
+	{img: IMG_SLED_LIMESTONE_SMALL, pack:PACK_GENERAL, id:104},
+	{img: IMG_CART_COPPER, pack:PACK_SPR_MAIN, id:107},
+	{img: ANIM_JUGGLER_WALK, pack:PACK_SPR_MAIN, id:130},
+	{img: ANIM_JUGGLER_DEATH, pack:PACK_SPR_MAIN, id:131},
 	{img: IMG_FISHING_BOAT, pack:PACK_SPR_MAIN, id:133 }, 	// 7014
 	{img: IMG_FISHING_BOAT_WORK, pack:PACK_SPR_MAIN, id:135 }, // 7046
 	{img: IMG_FISHING_BOAT_DEATH, pack:PACK_SPR_MAIN, id:136 }, // 7118
@@ -28,6 +34,11 @@ images = [
 	{img: ANIM_OSTRICH_DEATH, pack:PACK_SPR_MAIN, id:158}, // 7823 - 0
 	{img: ANIM_OSTRICH_EATING, pack:PACK_SPR_MAIN, id:159, offset:0},
 	{img: ANIM_OSTRICH_IDLE, pack:PACK_SPR_MAIN, id:160, offset:0},
+	{img: ANIM_MUSICIAN_WALK, pack:PACK_SPR_MAIN, id:191},
+	{img: IMG_SCRIBER_WALK, pack:PACK_SPR_MAIN, id:199},
+	{img: IMG_SCRIBER_DEATH, pack:PACK_SPR_MAIN, id:200},
+	{img: IMG_TEACHER_WALK, pack:PACK_SPR_MAIN, id:201},
+	{img: IMG_TEACHER_DEATH, pack:PACK_SPR_MAIN, id:202},
 	{img: ANIM_LABOR_SEEKER_WALK, pack:PACK_SPR_MAIN, id:206},       // 9909
 	{img: ANIM_LABOR_SEEKER_DEATH, pack:PACK_SPR_MAIN, id:207}, // 10005
 
@@ -41,15 +52,33 @@ images = [
 	{img: ANIM_SANDSTONE_QUARRY_1, pack:PACK_SPR_AMBIENT, id:49},
 	{img: ANIM_SANDSTONE_QUARRY_2, pack:PACK_SPR_AMBIENT, id:49},
 
+	// spr terrain
+	{img: IMG_BUILDING_DOCK, pack:PACK_TERRAIN, id:49},
+
 	// spr general
 	{img: IMG_WELL, pack:PACK_GENERAL, id:23, offset:0},
 	{img: IMG_WELL_FANCY, pack:PACK_GENERAL, id:23, offset:2},
+	{img: IMG_SCRIBAL_SCHOOL, pack:PACK_GENERAL, id:42},
+	{img: IMG_CONSERVATORY, pack:PACK_GENERAL, id:51},
+	{img: IMG_BRICKLAYERS_GUILD, pack:PACK_GENERAL, id:57},
+	{img: IMG_BANDSTAND_SQUARE, pack:PACK_GENERAL, id:58},
 	{img: IMG_WATER_SUPPLY, pack:PACK_GENERAL, id:69, offset:0},
 	{img: IMG_WATER_SUPPLY_FANCY, pack:PACK_GENERAL, id:69, offset:2},
-	{img: IMG_BRICKLAYERS_GUILD, pack:PACK_GENERAL, id:57},
+	{img: IMG_PHYSICIAN, pack:PACK_GENERAL, id:70},
 	{img: IMG_GUILD_STONEMASONS, pack:PACK_GENERAL, id:88},
+	{img: IMG_BANDSTAND_SN_S, pack:PACK_GENERAL, id:92},
+	{img: IMG_BANDSTAND_SN_N, pack:PACK_GENERAL, id:92, offset:1},
+	{img: IMG_BANDSTAND_WE_W, pack:PACK_GENERAL, id:92, offset:2},
+	{img: IMG_BANDSTAND_WE_E, pack:PACK_GENERAL, id:92, offset:3},
+	{img: IMG_GRANARY, pack:PACK_GENERAL, id:99},
+	{img: IMG_BOOTH_SQUARE, pack:PACK_GENERAL, id:112},
+	{img: IMG_BOOTH, pack:PACK_GENERAL, id:114},
+	{img: IMG_GRANARY_RESOURCES, pack:PACK_GENERAL, id:99, offset:2},
 	{img: IMG_CATTLE_RANCH, pack:PACK_GENERAL, id:105},
+	{img: IMG_BARRACKS, pack:PACK_GENERAL, id:166},
 	{img: IMG_GOLD_MINE, pack:PACK_GENERAL, id:185},
+	{img: IMG_PLAINSTONE_QUARRY, pack:PACK_GENERAL, id:187},
+	{img: IMG_COPPER_MINE, pack:PACK_GENERAL, id:196},
 	{img: IMG_SANDSTONE_QUARRY, pack:PACK_GENERAL, id:197},
 
 	// icon resources
@@ -61,32 +90,6 @@ images = [
 
 	//{img: IMG_EMIGRANT, pack: PACK_SPR_MAIN, id: 13}, // 878
 	//{img: IMG_FISHING_BOAT ???, pack:PACK_SPR_MAIN, id:133 }, 	// 7014
-	{img: IMG_SLED_GRANITE_SMALL, pack:PACK_SPR_MAIN, id:103},
-	{img: IMG_SLED_LIMESTONE_SMALL, pack:PACK_GENERAL, id:104},
-	{img: IMG_SLED_BRICKS, pack:PACK_SPR_MAIN, id:89},
-	{img: ANIM_JUGGLER_WALK, pack:PACK_SPR_MAIN, id:130},
-	{img: ANIM_JUGGLER_DEATH, pack:PACK_SPR_MAIN, id:131},
-	{img: IMG_PLAINSTONE_QUARRY, pack:PACK_GENERAL, id:187},
-	{img: IMG_GRANARY, pack:PACK_GENERAL, id:99},
-	{img: IMG_GRANARY_RESOURCES, pack:PACK_GENERAL, id:99, offset:2},
-	{img: IMG_CART_COPPER, pack:PACK_SPR_MAIN, id:107},
-	{img: IMG_COPPER_MINE, pack:PACK_GENERAL, id:196},
-	{img: IMG_CONSERVATORY, pack:PACK_GENERAL, id:51},
-	{img: IMG_PHYSICIAN, pack:PACK_GENERAL, id:70},
-	{img: IMG_BARRACKS, pack:PACK_GENERAL, id:166},
-	{img: IMG_SCRIBAL_SCHOOL, pack:PACK_GENERAL, id:42},
-	{img: IMG_SCRIBER_WALK, pack:PACK_SPR_MAIN, id:199},
-	{img: IMG_SCRIBER_DEATH, pack:PACK_SPR_MAIN, id:200},
-	{img: IMG_TEACHER_WALK, pack:PACK_SPR_MAIN, id:201},
-	{img: IMG_TEACHER_DEATH, pack:PACK_SPR_MAIN, id:202},
-	{img: IMG_BANDSTAND_SN_S, pack:PACK_GENERAL, id:92},
-	{img: IMG_BANDSTAND_SN_N, pack:PACK_GENERAL, id:92, offset:1},
-	{img: IMG_BANDSTAND_WE_W, pack:PACK_GENERAL, id:92, offset:2},
-	{img: IMG_BANDSTAND_WE_E, pack:PACK_GENERAL, id:92, offset:3},
-	{img: IMG_BOOTH, pack:PACK_GENERAL, id:114},
-	{img: IMG_BOOTH_SQUARE, pack:PACK_GENERAL, id:112},
-	{img: IMG_BANDSTAND_SQUARE, pack:PACK_GENERAL, id:58},
-	{img: ANIM_MUSICIAN_WALK, pack:PACK_SPR_MAIN, id:191},
 	{img: ANIM_MUSICIAN_DEATH, pack:PACK_SPR_MAIN, id:192},
 	{img: IMG_JUGGLER_SHOW, pack:PACK_SPR_AMBIENT, id:7, offset:-1},
 	{img: IMG_MUSICIAN_SHOW_SN, pack:PACK_SPR_AMBIENT, id:10, offset:-1},

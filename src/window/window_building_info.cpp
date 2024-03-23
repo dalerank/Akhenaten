@@ -550,24 +550,11 @@ static void draw_refresh_background() {
             case BUILDING_SCRIBAL_SCHOOL: building_scribal_school_draw_info(context); break;
             case BUILDING_ACADEMY: building_academy_draw_info(context); break;
             case BUILDING_LIBRARY: building_library_draw_info(context); break;
-            
-            case BUILDING_ORACLE:
-                window_building_draw_oracle(&context);
-                break;
-
+            case BUILDING_ORACLE: window_building_draw_oracle(&context); break;
             case BUILDING_SHIPWRIGHT: building_shipyard_draw_info(context); break;
-            
-            case BUILDING_DOCK:
-                if (context.storage_show_special_orders)
-                    window_building_draw_dock_orders(&context);
-                else
-                    window_building_draw_dock(&context);
-                break;
-
             case BUILDING_FISHING_WHARF: building_wharf_draw_info(context); break;
             case BUILDING_WATER_LIFT: window_building_draw_water_lift(&context); break;
             case BUILDING_MENU_BEAUTIFICATION: window_building_draw_fountain(&context); break;
-
             case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&context); break;
             case BUILDING_POLICE_STATION: window_building_draw_prefect(&context); break;
             
@@ -630,13 +617,6 @@ static void draw_foreground() {
                 window_building_draw_roadblock_orders_foreground(&context);
             else
                 window_building_draw_roadblock_foreground(&context);
-            break;
-
-        case BUILDING_DOCK:
-            if (context.storage_show_special_orders)
-                window_building_draw_dock_orders_foreground(&context);
-            else
-                window_building_draw_dock_foreground(&context);
             break;
 
         default:

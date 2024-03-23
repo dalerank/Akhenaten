@@ -188,7 +188,7 @@ int building::barracks_get_priority() {
     return subtype.barracks_priority;
 }
 
-void building_recruiter::on_create() {
+void building_recruiter::on_create(int orientation) {
     city_buildings_add_recruiter(&base);
 }
 

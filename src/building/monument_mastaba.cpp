@@ -403,7 +403,7 @@ void draw_small_mastaba_anim(painter &ctx, vec2i pixel, building *b, int color_m
     }
 }
 
-void building_small_mastaba::on_create() {
+void building_small_mastaba::on_create(int orientation) {
     base.fire_proof = 1;
 }
 

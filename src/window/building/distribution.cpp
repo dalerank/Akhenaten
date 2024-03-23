@@ -5,7 +5,7 @@
 
 #include "building/building.h"
 #include "building/building_bazaar.h"
-#include "building/dock.h"
+#include "building/building_dock.h"
 #include "building/storage.h"
 #include "building/building_storage_yard.h"
 #include "city/buildings.h"
@@ -203,7 +203,7 @@ void window_building_draw_order_instruction(int instr_kind, const building_stora
     }
 }
 
-static void draw_accept_none_button(int x, int y, int focused) {
+void draw_accept_none_button(int x, int y, int focused) {
     //    return; // temp - todo: fix buttons
     uint8_t refuse_button_text[] = {'x', 0};
     button_border_draw(x, y, 20, 20, focused ? 1 : 0);
@@ -239,79 +239,6 @@ int window_building_handle_mouse_dock_orders(const mouse* m, object_info* c) {
         return 1;
     }
     return generic_buttons_handle_mouse(m, c->offset.x + 80, y_offset + 404, market_order_buttons, 1, &data.orders_focus_button_id);
-}
-
-void window_building_draw_dock(object_info* c) {
-    c->help_id = 83;
-    window_building_play_sound(c, "wavs/dock.wav");
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(101, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-
-    building* b = building_get(c->building_id);
-
-    if (!c->has_road_access) {
-        window_building_draw_description(c, 69, 25);
-    } else if (b->data.dock.trade_ship_id) {
-        if (c->worker_percentage <= 0)
-            window_building_draw_description(c, 101, 2);
-        else if (c->worker_percentage < 50)
-            window_building_draw_description(c, 101, 3);
-        else if (c->worker_percentage < 75)
-            window_building_draw_description(c, 101, 4);
-        else {
-            window_building_draw_description(c, 101, 5);
-        }
-    } else {
-        if (c->worker_percentage <= 0)
-            window_building_draw_description(c, 101, 6);
-        else if (c->worker_percentage < 50)
-            window_building_draw_description(c, 101, 7);
-        else if (c->worker_percentage < 75)
-            window_building_draw_description(c, 101, 8);
-        else {
-            window_building_draw_description(c, 101, 9);
-        }
-    }
-
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 136, c->width_blocks - 2, 4);
-    window_building_draw_employment(c, 142);
-}
-void window_building_draw_dock_foreground(object_info* c) {
-    auto &data = g_window_building_distribution;
-    button_border_draw(c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, 16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(98, 5, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 30, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
-}
-void window_building_draw_dock_orders(object_info* c) {
-    c->help_id = 83;
-    int y_offset = window_building_get_vertical_offset(c, 28);
-    outer_panel_draw(vec2i{c->offset.x, y_offset}, 29, 28);
-    lang_text_draw_centered(101, 0, c->offset.x, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c->offset.x + 16, y_offset + 42, c->width_blocks - 2, 21);
-}
-
-void window_building_draw_dock_orders_foreground(object_info* c) {
-    auto &data = g_window_building_distribution;
-    painter ctx = game.painter();
-    int y_offset = window_building_get_vertical_offset(c, 28);
-    int line_x = c->offset.x + 215;
-
-    draw_accept_none_button(c->offset.x + 394, y_offset + 404, data.orders_focus_button_id == 1);
-
-    for (int i = 0; i < 15; i++) {
-        int line_y = 20 * i;
-        int resource = i + 1;
-        int image_id= image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        ImageDraw::img_generic(ctx, image_id, c->offset.x + 32, y_offset + 46 + line_y);
-        ImageDraw::img_generic(ctx, image_id, c->offset.x + 408, y_offset + 46 + line_y);
-        lang_text_draw(23, resource, c->offset.x + 72, y_offset + 50 + line_y, FONT_NORMAL_WHITE_ON_DARK);
-        button_border_draw(c->offset.x + 180, y_offset + 46 + line_y, 210, 22, data.resource_focus_button_id == i + 1);
-        building* b = building_get(c->building_id);
-        int state = dock_is_good_accepted(i, b);
-        if (state)
-            lang_text_draw(99, 7, line_x, y_offset + 51 + line_y, FONT_NORMAL_WHITE_ON_DARK);
-        else
-            lang_text_draw(99, 8, line_x, y_offset + 51 + line_y, FONT_NORMAL_YELLOW);
-    }
 }
 
 #define Y_FOODS 90           // 234
@@ -447,54 +374,71 @@ static void toggle_resource_state(int index, int param2) {
     auto &data = g_window_building_distribution;
     building *b = building_get(data.building_id);
     int resource;
-    if (b->type == BUILDING_BAZAAR) {
-        building_bazaar *bazaar = b->dcast_bazaar();
+
+    building_bazaar *bazaar = b->dcast_bazaar();
+    if (bazaar) {
         bazaar->toggle_good_accepted(index - 1);
-    } else if (b->type == BUILDING_DOCK) {
-        dock_toggle_good_accepted(index - 1, b);
-    } else {
-        if (b->type == BUILDING_STORAGE_YARD)
-            resource = city_resource_get_available()->items[index - 1];
-        else
-            resource = city_resource_get_available_foods()->items[index - 1];
-        building_storage_cycle_resource_state(b->storage_id, resource, false);
+        return;
+    } 
+    
+    building_dock *dock = b->dcast_dock();
+    if (dock) {
+        dock->toggle_good_accepted(index - 1);
+        return;
     }
-    //    window_invalidate();
+
+    if (b->type == BUILDING_STORAGE_YARD)
+        resource = city_resource_get_available()->items[index - 1];
+    else
+        resource = city_resource_get_available_foods()->items[index - 1];
+
+    building_storage_cycle_resource_state(b->storage_id, resource, false);
 }
 
 static void toggle_resource_state_backwards(int index, int param2) {
     auto &data = g_window_building_distribution;
     building* b = building_get(data.building_id);
     int resource;
-    if (b->type == BUILDING_BAZAAR) {
-        building_bazaar *bazaar = b->dcast_bazaar();
+    building_bazaar *bazaar = b->dcast_bazaar();
+    if (bazaar) {
         bazaar->toggle_good_accepted(index - 1);
-    } if (b->type == BUILDING_DOCK) {
-        dock_toggle_good_accepted(index - 1, b);
-    } else {
-        if (b->type == BUILDING_STORAGE_YARD)
-            resource = city_resource_get_available()->items[index - 1];
-        else
-            resource = city_resource_get_available_foods()->items[index - 1];
-        building_storage_cycle_resource_state(b->storage_id, resource, true);
+        return;
     }
-    //    window_invalidate();
+    
+    building_dock *dock = b->dcast_dock();
+    if (dock) {
+        dock->toggle_good_accepted(index - 1);
+        return;
+    } 
+
+    if (b->type == BUILDING_STORAGE_YARD)
+        resource = city_resource_get_available()->items[index - 1];
+    else
+        resource = city_resource_get_available_foods()->items[index - 1];
+
+    building_storage_cycle_resource_state(b->storage_id, resource, true);
 }
 
 static void order_quantity_increase_decrease(int index, int param2) {
     auto &data = g_window_building_distribution;
     building* b = building_get(data.building_id);
     int resource;
-    if (b->type == BUILDING_BAZAAR || b->type == BUILDING_DOCK)
+
+    building_bazaar *bazaar = b->dcast_bazaar();
+    if (bazaar) {
         return;
-    else {
-        if (b->type == BUILDING_STORAGE_YARD)
-            resource = city_resource_get_available()->items[index - 1];
-        else
-            resource = city_resource_get_available_foods()->items[index - 1];
-        building_storage_increase_decrease_resource_state(b->storage_id, resource, param2);
     }
-    //    window_invalidate();
+
+    building_dock *dock = b->dcast_dock();
+    if (dock) {
+        return;
+    }
+
+    if (b->type == BUILDING_STORAGE_YARD)
+        resource = city_resource_get_available()->items[index - 1];
+    else
+        resource = city_resource_get_available_foods()->items[index - 1];
+    building_storage_increase_decrease_resource_state(b->storage_id, resource, param2);
 }
 
 static void market_orders(int index, int param2) {

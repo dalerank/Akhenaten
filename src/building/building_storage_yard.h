@@ -13,7 +13,7 @@ public:
     BUILDING_METAINFO(BUILDING_STORAGE_YARD, building_storage_yard)
 
     building_storage_yard(building &b) : building_impl(b), stored_full_amount(b.stored_full_amount) {}
-    virtual void on_create() override;
+    virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;
     virtual void window_info_background(object_info &ctx) override;
     virtual void window_info_foreground(object_info &ctx) override;

@@ -5,7 +5,7 @@
 class building_statue : public building_impl {
 public:
     building_statue(building &b) : building_impl(b) {}
-    virtual void on_create() override;
+    virtual void on_create(int orientation) override;
     virtual bool is_workshop() const override { return true; }
     virtual void window_info_background(object_info &c) override;
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STATUE; }

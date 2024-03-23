@@ -79,7 +79,7 @@ void building_hunting_lodge::window_info_background(object_info &c) {
     window_building_draw_employment(&c, 142);
 }
 
-void building_hunting_lodge::on_create() {
+void building_hunting_lodge::on_create(int orientation) {
     base.output_resource_first_id = RESOURCE_GAMEMEAT;
     base.labor_category = hunting_lodge_model.labor_category;
 }

@@ -14,7 +14,7 @@ void config_load_building_weaponsmith() {
     weaponsmith_m.load();
 }
 
-void building_weaponsmith::on_create() {
+void building_weaponsmith::on_create(int orientation) {
     data.industry.first_material_id = RESOURCE_COPPER;
     base.output_resource_first_id = RESOURCE_WEAPONS;
 }

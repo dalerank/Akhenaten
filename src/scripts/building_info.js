@@ -100,6 +100,19 @@ building_guild_stonemasons = {
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
 }
 
+building_guild_bricklayers = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_BRICKLAYERS_GUILD }
+  },
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+}
+
+building_dock = {
+  animations : {
+    work : { pos : [-1, -1], anim_id: IMG_BUILDING_DOCK }
+  },
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
 
 building_personal_mansion = {
   animations : {

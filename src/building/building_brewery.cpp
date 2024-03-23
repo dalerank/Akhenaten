@@ -21,7 +21,7 @@ void config_load_building_brewery() {
 
 declare_console_command(addbeer, game_cheat_add_resource<RESOURCE_BEER>);
 
-void building_brewery::on_create() {
+void building_brewery::on_create(int orientation) {
     data.industry.first_material_id = RESOURCE_BARLEY;
     base.output_resource_first_id = RESOURCE_BEER;
 }
