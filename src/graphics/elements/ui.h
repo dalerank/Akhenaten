@@ -66,6 +66,8 @@ struct element {
     virtual void image(int) {}
     virtual void onclick(std::function<void(int, int)>) {}
 
+    pcstr text_from_key(pcstr key);
+
     template<class T>
     void preformat_text(T& str) {
         T result;
@@ -83,7 +85,7 @@ struct element {
             if (inSubstr) {
                 if (*ptr == ' ') {
                     inSubstr = false;
-                    result.append(lang_text_from_key(replacement));
+                    result.append(text_from_key(replacement.c_str()));
                     replacement.clear();
                 } else {
                     replacement.append(*ptr);

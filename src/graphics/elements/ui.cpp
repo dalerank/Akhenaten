@@ -190,6 +190,10 @@ void ui::element::load(archive arch) {
     enabled = arch.r_bool("enabled", true);
 }
 
+pcstr ui::element::text_from_key(pcstr key) {
+    return lang_text_from_key(key);
+}
+
 void ui::eouter_panel::draw() {
     ui::panel(pos, size, UiFlags_PanelOuter);
 }
