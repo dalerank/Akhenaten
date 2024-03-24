@@ -18,8 +18,8 @@ void config_load_building_physician() {
 void building_physician::window_info_background(object_info& c) {
     c.help_id = 64;
     window_building_play_sound(&c, snd::get_building_info_sound("physician"));
-    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
-    lang_text_draw_centered(e_text_building_physician, e_text_title, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
+    lang_text_draw_centered(e_text_building_physician, e_text_title, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     building *b = building_get(c.building_id);
     //if (!b->has_water_access)
@@ -35,7 +35,7 @@ void building_physician::window_info_background(object_info& c) {
         window_building_draw_description(c, e_text_building_physician, e_text_works_fine);
     }
 
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
     window_building_draw_employment(&c, 142);
 }
 

@@ -45,8 +45,7 @@ enum terrain_info_type {
 struct object_info {
     vec2i offset;
     int y_offset_submenu;
-    int width_blocks;
-    int height_blocks;
+    vec2i bgsize;
     int height_blocks_submenu;
     int subwnd_wblocks_num;
     int subwnd_hblocks_num;

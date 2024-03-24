@@ -27,8 +27,8 @@ void building_tax_collector::window_info_background(object_info &c) {
     window_building_play_sound(&c, snd::get_building_info_sound("tax_collector"));
 
     { // header
-        ui::panel(vec2i{0, 0}, {c.width_blocks, c.height_blocks}, UiFlags_PanelOuter);
-        ui::label(106, 0, vec2i{0, 10}, FONT_LARGE_BLACK_ON_LIGHT, UiFlags_LabelCentered, 16 * c.width_blocks);
+        ui::panel(vec2i{0, 0}, {c.bgsize.x, c.bgsize.y}, UiFlags_PanelOuter);
+        ui::label(106, 0, vec2i{0, 10}, FONT_LARGE_BLACK_ON_LIGHT, UiFlags_LabelCentered, 16 * c.bgsize.x);
         ui::icon(vec2i{16, 36}, RESOURCE_DEBEN);
     }
 
@@ -37,7 +37,7 @@ void building_tax_collector::window_info_background(object_info &c) {
     int amount = config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM) ? b->deben_storage : b->tax_income_or_storage;
     ui::label_amount(8, 0, amount, {44 + width, 43});
 
-    int tax_block = c.width_blocks * 16 / 2;
+    int tax_block = c.bgsize.x * 16 / 2;
     ui::label(60, 1, {tax_block + 50, 44});
     ui::label_percent(city_finance_tax_percentage(), {tax_block + 140, 44});
     ui::arw_button({tax_block + 170, 36}, true)
@@ -67,7 +67,7 @@ void building_tax_collector::window_info_background(object_info &c) {
         window_building_draw_description_at(c, 72, 106, 9);
     }
 
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
     window_building_draw_employment(&c, 142);
 }
 

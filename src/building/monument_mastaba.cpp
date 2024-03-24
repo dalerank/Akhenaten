@@ -410,8 +410,8 @@ void building_small_mastaba::on_create(int orientation) {
 void building_small_mastaba::window_info_background(object_info &ctx) {
     ctx.help_id = 4;
     window_building_play_sound(&ctx, "wavs/warehouse.wav");
-    outer_panel_draw(ctx.offset, ctx.width_blocks, ctx.height_blocks);
-    lang_text_draw_centered(178, 12, ctx.offset.x, ctx.offset.y + 10, 16 * ctx.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(ctx.offset, ctx.bgsize.x, ctx.bgsize.y);
+    lang_text_draw_centered(178, 12, ctx.offset.x, ctx.offset.y + 10, 16 * ctx.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     building* b = building_get(ctx.building_id);
 
     if (building_monument_is_unfinished(b)) {
@@ -453,8 +453,8 @@ void building_small_mastaba::window_info_background(object_info &ctx) {
             else if (!workers_onsite && workers_num > 0) { reason = {178, 114}; }
         }
 
-        lang_text_draw_multiline(reason.first, reason.second, ctx.offset + vec2i{32, 223}, 16 * (ctx.width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(reason.first, reason.second, ctx.offset + vec2i{32, 223}, 16 * (ctx.bgsize.x - 4), FONT_NORMAL_BLACK_ON_DARK);
     } else {
-        lang_text_draw_multiline(178, 41, ctx.offset + vec2i{32, 48}, 16 * (ctx.width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(178, 41, ctx.offset + vec2i{32, 48}, 16 * (ctx.bgsize.x - 4), FONT_NORMAL_BLACK_ON_DARK);
     }
 }

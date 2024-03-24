@@ -870,8 +870,8 @@ void building_storage_yard::draw_warehouse_orders(object_info* c) {
     int y_pos = window_building_get_vertical_offset(c, c->subwnd_hblocks_num);
     c->subwnd_y_offset = y_pos - c->offset.y;
     outer_panel_draw(vec2i{c->offset.x, y_pos}, c->subwnd_wblocks_num, c->subwnd_hblocks_num);
-    lang_text_draw_centered(99, 3, c->offset.x, y_pos + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c->offset.x + 16, y_pos + 42, c->width_blocks - 2, 21 + 5);
+    lang_text_draw_centered(99, 3, c->offset.x, y_pos + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    inner_panel_draw(c->offset.x + 16, y_pos + 42, c->bgsize.x - 2, 21 + 5);
 }
 
 void building_storage_yard::draw_warehouse(object_info* c) {
@@ -885,8 +885,8 @@ void building_storage_yard::draw_warehouse(object_info* c) {
 
     c->help_id = 4;
     window_building_play_sound(c, "wavs/warehouse.wav");
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(99, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(99, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     painter ctx = game.painter();
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
@@ -939,7 +939,7 @@ void building_storage_yard::draw_warehouse(object_info* c) {
             }
         }
     }
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 168, c->width_blocks - 2, 5);
+    inner_panel_draw(c->offset.x + 16, c->offset.y + 168, c->bgsize.x - 2, 5);
     window_building_draw_employment(c, 173);
 
     // cartpusher state
@@ -947,10 +947,10 @@ void building_storage_yard::draw_warehouse(object_info* c) {
     if (cartpusher->state == FIGURE_STATE_ALIVE) {
         int resource = cartpusher->get_resource();
         ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->offset.x + 32, c->offset.y + 220);
-        lang_text_draw_multiline(99, 17, c->offset + vec2i{64, 223}, 16 * (c->width_blocks - 6), FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(99, 17, c->offset + vec2i{64, 223}, 16 * (c->bgsize.x - 6), FONT_NORMAL_BLACK_ON_DARK);
     } else if (warehouse->num_workers()) {
         // cartpusher is waiting for orders
-        lang_text_draw_multiline(99, 15, c->offset + vec2i{32, 223}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(99, 15, c->offset + vec2i{32, 223}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_DARK);
     }
 
     // if (c->warehouse_space_text == 1) { // full
@@ -1004,11 +1004,11 @@ void building_storage_yard::draw_warehouse_orders_foreground(object_info* c) {
     }
 
     // emptying button
-    button_border_draw(c->offset.x + 80, y_offset + 404 + 5 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 1 ? 1 : 0);
+    button_border_draw(c->offset.x + 80, y_offset + 404 + 5 * 16, 16 * (c->bgsize.x - 10), 20, data.orders_focus_button_id == 1 ? 1 : 0);
     if (storage()->empty_all) {
-        lang_text_draw_centered(99, 5, c->offset.x + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_centered(99, 5, c->offset.x + 80, y_offset + 408 + 5 * 16, 16 * (c->bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
-        lang_text_draw_centered(99, 4, c->offset.x + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_centered(99, 4, c->offset.x + 80, y_offset + 408 + 5 * 16, 16 * (c->bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     // trade center
@@ -1021,15 +1021,15 @@ void building_storage_yard::draw_warehouse_orders_foreground(object_info* c) {
     //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) 
     {
         // accept none button
-        button_border_draw(c->offset.x + 80, y_offset + 382 + 5 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 2 ? 1 : 0);
-        lang_text_draw_centered(99, 7, c->offset.x + 80, y_offset + 386 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+        button_border_draw(c->offset.x + 80, y_offset + 382 + 5 * 16, 16 * (c->bgsize.x - 10), 20, data.orders_focus_button_id == 2 ? 1 : 0);
+        lang_text_draw_centered(99, 7, c->offset.x + 80, y_offset + 386 + 5 * 16, 16 * (c->bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
 
 void building_storage_yard::draw_warehouse_foreground(object_info* c) {
     auto &data = g_window_building_distribution;
-    button_border_draw(c->offset.x + 96, c->offset.y + 16 * c->height_blocks - 34, 15 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(99, 2, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 30, 16 * (c->width_blocks - 10),FONT_NORMAL_BLACK_ON_LIGHT);
+    button_border_draw(c->offset.x + 96, c->offset.y + 16 * c->bgsize.y - 34, 15 * (c->bgsize.x - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(99, 2, c->offset.x + 80, c->offset.y + 16 * c->bgsize.y - 30, 16 * (c->bgsize.x - 10),FONT_NORMAL_BLACK_ON_LIGHT);
 
     // temp - todo: fix buttons
     //    draw_permissions_buttons(c->offset.x + 64, c->offset.y + 16 * c->height_blocks - 75, 3);

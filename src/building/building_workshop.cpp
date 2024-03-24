@@ -23,9 +23,9 @@ void building_workshop_draw_info(object_info& c, int help_id, pcstr type, int gr
 
     painter ctx = game.painter();
 
-    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     ImageDraw::img_generic(ctx, image_id_resource_icon(resource), c.offset.x + 10, c.offset.y + 10);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
     int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
@@ -60,7 +60,7 @@ void building_workshop_draw_info(object_info& c, int help_id, pcstr type, int gr
     else
         window_building_draw_description_at(c, 86, group_id, 10);
 
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
     window_building_draw_employment(&c, 142);
 }
 
@@ -70,9 +70,9 @@ static void building_workshop_draw_info(object_info& c, int help_id, const char*
 
     painter ctx = game.painter();
 
-    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     ImageDraw::img_generic(ctx, image_id_resource_icon(resource), c.offset.x + 10, c.offset.y + 10);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
     int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
@@ -119,7 +119,7 @@ static void building_workshop_draw_info(object_info& c, int help_id, const char*
     else
         window_building_draw_description_at(c, y_offset, group_id, 10);
 
-    inner_panel_draw(c.offset.x + 16, c.offset.y + y_offset + 40, c.width_blocks - 2, 4);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + y_offset + 40, c.bgsize.x - 2, 4);
     window_building_draw_employment(&c, y_offset + 48);
 }
 

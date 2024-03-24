@@ -487,37 +487,37 @@ static void init(map_point tile) {
         }
     }
     // dialog size
-    context.width_blocks = 29;
+    context.bgsize.x = 29;
     switch (get_height_id()) {
     case 1:
-        context.height_blocks = 16;
+        context.bgsize.y = 16;
         break;
     case 2:
-        context.height_blocks = 18;
+        context.bgsize.y = 18;
         break;
     case 3:
-        context.height_blocks = 19;
+        context.bgsize.y = 19;
         break;
     case 4:
-        context.height_blocks = 14;
+        context.bgsize.y = 14;
         break;
     case 5:
-        context.height_blocks = 23;
+        context.bgsize.y = 23;
         break;
     default:
-        context.height_blocks = 22;
+        context.bgsize.y = 22;
         break;
     }
     // dialog placement
     int s_width = screen_width();
     int s_height = screen_height();
-    context.offset.x = center_in_city(16 * context.width_blocks);
+    context.offset.x = center_in_city(16 * context.bgsize.x);
     if (s_width >= 1024 && s_height >= 768) {
         context.offset.x = mouse_get()->x;
         context.offset.y = mouse_get()->y;
-        window_building_set_possible_position(&context.offset.x, &context.offset.y, context.width_blocks, context.height_blocks);
+        window_building_set_possible_position(&context.offset.x, &context.offset.y, context.bgsize.x, context.bgsize.y);
     } else if (s_height >= 600 && mouse_get()->y <= (s_height - 24) / 2 + 24) {
-        context.offset.y = s_height - 16 * context.height_blocks - MARGIN_POSITION;
+        context.offset.y = s_height - 16 * context.bgsize.y - MARGIN_POSITION;
     } else {
         context.offset.y = MIN_Y_POSITION;
     }
@@ -629,7 +629,7 @@ static void draw_foreground() {
 
     // general buttons
     int y_offset = (context.storage_show_special_orders) ? context.subwnd_y_offset : 0;
-    int height_blocks = (context.storage_show_special_orders) ? context.height_blocks_submenu : context.height_blocks;
+    int height_blocks = (context.storage_show_special_orders) ? context.height_blocks_submenu : context.bgsize.y;
 
     ui::img_button(GROUP_CONTEXT_ICONS, vec2i(14, y_offset + 16 * height_blocks - 40), {28, 28}, 0)
                .onclick([&context] (int, int) {
@@ -641,7 +641,7 @@ static void draw_foreground() {
                     window_invalidate();
                });
 
-    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(16 * context.width_blocks - 40, y_offset + 16 * height_blocks - 40), {28, 28}, 4)
+    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(16 * context.bgsize.x - 40, y_offset + 16 * height_blocks - 40), {28, 28}, 4)
                .onclick([&context] (int, int) {
                     if (context.storage_show_special_orders) {
                         context.storage_show_special_orders = 0;
@@ -654,7 +654,7 @@ static void draw_foreground() {
 
     if (!context.storage_show_special_orders && context.go_to_advisor.first && is_advisor_available(context.go_to_advisor.first)) {
         int img_offset = (context.go_to_advisor.left_a - 1) * 3;
-        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.height_blocks - 40), {28, 28}, img_offset)
+        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.bgsize.y - 40), {28, 28}, img_offset)
                .onclick([&context] (int, int) {
                    window_advisors_show_advisor(context.go_to_advisor.first);
                });
@@ -662,7 +662,7 @@ static void draw_foreground() {
 
     if (!context.storage_show_special_orders && context.go_to_advisor.left_a && is_advisor_available(context.go_to_advisor.left_a)) {
         int img_offset = (context.go_to_advisor.left_a - 1) * 3;
-        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.height_blocks - 40), {28, 28}, img_offset)
+        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.bgsize.y - 40), {28, 28}, img_offset)
                .onclick([&context] (int, int) {
                    window_advisors_show_advisor(context.go_to_advisor.left_a);
                });
@@ -670,7 +670,7 @@ static void draw_foreground() {
 
     if (!context.storage_show_special_orders && context.go_to_advisor.left_b && is_advisor_available(context.go_to_advisor.left_b)) {
         int img_offset = (context.go_to_advisor.left_b - 1) * 3;
-        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(65, 16 * context.height_blocks - 40), {28, 28}, img_offset)
+        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(65, 16 * context.bgsize.y - 40), {28, 28}, img_offset)
                .onclick([&context] (int, int) {
                    window_advisors_show_advisor(context.go_to_advisor.left_b);
                });
@@ -681,7 +681,7 @@ static void draw_foreground() {
         if (workers_needed) {
             pcstr label = (b->state == BUILDING_STATE_VALID ? "x" : "");
             auto tooltip = (b->state == BUILDING_STATE_VALID) ? std::pair{54, 16} : std::pair{54, 17};
-            ui::button(label, {400, 3 + 16 * context.height_blocks - 40}, {20, 20})
+            ui::button(label, {400, 3 + 16 * context.bgsize.y - 40}, {20, 20})
                .onclick([&context, b, workers_needed] (int, int) {
                    if (workers_needed) {
                        building_mothball_toggle(b);
@@ -695,7 +695,7 @@ static void draw_foreground() {
     if (!context.storage_show_special_orders && context.figure.draw_debug_path) {
         figure* f = figure_get(context.figure.figure_ids[0]);
         pcstr label = (f->draw_debug_mode ? "P" : "p");
-        ui::button(label, {400, 3 + 16 * context.height_blocks - 40}, {20, 20})
+        ui::button(label, {400, 3 + 16 * context.bgsize.y - 40}, {20, 20})
               .onclick([&context, f] (int, int) {
                   f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
                   window_invalidate();
@@ -704,7 +704,7 @@ static void draw_foreground() {
 
     if (!context.storage_show_special_orders && context.show_overlay != OVERLAY_NONE) {
         pcstr label = (game.current_overlay != context.show_overlay ? "v" : "V");
-        ui::button(label, {375, 3 + 16 * context.height_blocks - 40}, {20, 20})
+        ui::button(label, {375, 3 + 16 * context.bgsize.y - 40}, {20, 20})
              .onclick([&context] (int, int) {
                 if (game.current_overlay != context.show_overlay) {
                     game_state_set_overlay((e_overlay)context.show_overlay);

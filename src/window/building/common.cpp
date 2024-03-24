@@ -31,9 +31,10 @@ void window_building_set_possible_position(int* x_offset, int* y_offset, int wid
         *x_offset = view_size.x - dialog_width;
     }
 }
+
 int window_building_get_vertical_offset(object_info* c, int new_window_height) {
     new_window_height = new_window_height * 16;
-    int old_window_height = c->height_blocks * 16;
+    int old_window_height = c->bgsize.y * 16;
     c->height_blocks_submenu = new_window_height / 16;
 
     int center = (old_window_height / 2) + c->offset.y;
@@ -95,7 +96,7 @@ static void draw_employment_farm_ph_details(object_info* c, building* b, int y_o
     painter ctx = game.painter();
     y_offset += c->offset.y;
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 14, vec2i{c->offset.x + 40, y_offset + 6});
-    int width = lang_text_draw_multiline(177, text_id, vec2i{c->offset.x + 70, y_offset + 10}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
+    int width = lang_text_draw_multiline(177, text_id, vec2i{c->offset.x + 70, y_offset + 10}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_DARK);
 }
 
 void window_building_draw_employment(object_info* c, int y_offset) {
@@ -119,10 +120,10 @@ void window_building_draw_employment_flood_farm(object_info* c, int y_offset) {
     draw_employment_farm_ph_details(c, b, y_offset, text_id);
 }
 void window_building_draw_description(object_info* c, int text_group, int text_id) {
-    lang_text_draw_multiline(text_group, text_id, c->offset + vec2i{32, 56}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(text_group, text_id, c->offset + vec2i{32, 56}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 void window_building_draw_description_at(object_info* c, int y_offset, int text_group, int text_id) {
-    lang_text_draw_multiline(text_group, text_id, c->offset + vec2i{32, y_offset}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(text_group, text_id, c->offset + vec2i{32, y_offset}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
 void window_building_play_sound(object_info* c, const char* sound_file) {

@@ -24,8 +24,8 @@ void building_well::update_month() {
 void building_well::window_info_background(object_info &c) {
     c.help_id = 62;
     window_building_play_sound(&c, "wavs/well.wav");
-    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
-    lang_text_draw_centered(109, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
+    lang_text_draw_centered(109, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     int well_necessity = map_water_supply_is_well_unnecessary(c.building_id, 2);
     int text_id = 0;
     if (well_necessity == WELL_NECESSARY) { // well is OK
@@ -37,7 +37,7 @@ void building_well::window_info_background(object_info &c) {
     }
 
     if (text_id) {
-        window_building_draw_description_at(c, 16 * c.height_blocks - 160, 109, text_id);
+        window_building_draw_description_at(c, 16 * c.bgsize.y - 160, 109, text_id);
     }
 }
 

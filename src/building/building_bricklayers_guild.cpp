@@ -37,9 +37,9 @@ void building_bricklayers_guild::window_info_background(object_info& c) {
 
     painter ctx = game.painter();
 
-    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_BRICKS), c.offset.x + 10, c.offset.y + 10);
-    lang_text_draw_centered(meta.text_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(meta.text_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
     int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
@@ -74,7 +74,7 @@ void building_bricklayers_guild::window_info_background(object_info& c) {
     else
         window_building_draw_description_at(c, 86, meta.text_id, 10);
 
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
     window_building_draw_employment(&c, 142);
 }
 

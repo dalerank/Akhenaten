@@ -28,8 +28,8 @@ void config_load_building_booth() {
 void building_booth::window_info_background(object_info &c) {
     c.help_id = 71;
     window_building_play_sound(&c, snd::get_building_info_sound("booth"));
-    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
-    lang_text_draw_centered(72, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
+    lang_text_draw_centered(72, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     building* b = building_get(c.building_id);
     if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);
@@ -41,7 +41,7 @@ void building_booth::window_info_background(object_info &c) {
         window_building_draw_description(c, 72, 3);
     }
 
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 6);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 6);
     window_building_draw_employment(&c, 138);
     if (b->data.entertainment.days1 > 0) {
         int width = lang_text_draw(72, 6, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);

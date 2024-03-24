@@ -57,8 +57,8 @@ declare_console_command(plague_no, game_cheat_noplague);
 static void building_health_draw_info(object_info& c, int help_id, const char* type, int group_id, e_figure_type ftype) {
     c.help_id = help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
-    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
+    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     building *b = building_get(c.building_id);
 
@@ -72,7 +72,7 @@ static void building_health_draw_info(object_info& c, int help_id, const char* t
         window_building_draw_description(c, group_id, e_text_works_fine);
     }
 
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
     window_building_draw_employment(&c, 142);
 }
 

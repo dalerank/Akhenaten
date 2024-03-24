@@ -311,7 +311,7 @@ void building_bazaar::spawn_figure() {
 
 int window_building_handle_mouse_market(const mouse* m, object_info &c) {
     auto &data = g_window_building_distribution;
-    return generic_buttons_handle_mouse(m, c.offset.x + 80, c.offset.y + 16 * c.height_blocks - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id);
+    return generic_buttons_handle_mouse(m, c.offset.x + 80, c.offset.y + 16 * c.bgsize.x - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id);
 }
 
 int window_building_handle_mouse_market_orders(const mouse* m, object_info &c) {
@@ -339,10 +339,10 @@ void building_bazaar::draw_simple_background(object_info &c) {
     {
         ui::begin_widget(c.offset);
 
-        ui::panel({0, 0}, {c.width_blocks, c.height_blocks}, UiFlags_PanelOuter);
-        ui::label(97, 0, vec2i{0, 10}, FONT_LARGE_BLACK_ON_LIGHT, UiFlags_LabelCentered, 16 * c.width_blocks);
+        ui::panel({0, 0}, {c.bgsize.x, c.bgsize.y}, UiFlags_PanelOuter);
+        ui::label(97, 0, vec2i{0, 10}, FONT_LARGE_BLACK_ON_LIGHT, UiFlags_LabelCentered, 16 * c.bgsize.x);
 
-        ui::panel({16, 136}, {c.width_blocks - 2, 4}, UiFlags_PanelInner);
+        ui::panel({16, 136}, {c.bgsize.x - 2, 4}, UiFlags_PanelInner);
 
         int text_id = get_employment_info_text_id(&c, &base, 142, 1);
         draw_employment_details(&c, &base, 142, text_id);
@@ -360,7 +360,7 @@ void building_bazaar::draw_simple_background(object_info &c) {
     }
 
     if (reason.first) {
-        ui::label(reason.first, reason.second, vec2i{32, 56}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelMultiline, 16 * (c.width_blocks - 4));
+        ui::label(reason.first, reason.second, vec2i{32, 56}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelMultiline, 16 * (c.bgsize.x - 4));
         return;
     }
 
@@ -427,8 +427,8 @@ void building_bazaar::draw_orders_background(object_info &c) {
     c.help_id = 2;
     int y_offset = window_building_get_vertical_offset(&c, 28 - 11);
     outer_panel_draw(vec2i{c.offset.x, y_offset}, 29, 28 - 11);
-    lang_text_draw_centered(97, 7, c.offset.x, y_offset + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c.offset.x + 16, y_offset + 42, c.width_blocks - 2, 21 - 10);
+    lang_text_draw_centered(97, 7, c.offset.x, y_offset + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    inner_panel_draw(c.offset.x + 16, y_offset + 42, c.bgsize.x - 2, 21 - 10);
 }
 
 void building_bazaar::window_info_background(object_info &c) {
@@ -476,8 +476,8 @@ void building_bazaar::draw_orders_foreground(object_info &c) {
 
 void building_bazaar::draw_simple_foreground(object_info &c) {
     auto &data = g_window_building_distribution;
-    button_border_draw(c.offset.x + 80, c.offset.y + 16 * c.height_blocks - 34, 16 * (c.width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(98, 5, c.offset.x + 80, c.offset.y + 16 * c.height_blocks - 30, 16 * (c.width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    button_border_draw(c.offset.x + 80, c.offset.y + 16 * c.bgsize.y - 34, 16 * (c.bgsize.x - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(98, 5, c.offset.x + 80, c.offset.y + 16 * c.bgsize.y - 30, 16 * (c.bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
 void building_bazaar::window_info_foreground(object_info &ctx) {

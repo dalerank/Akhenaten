@@ -236,8 +236,8 @@ void building_recruiter::window_info_background(object_info &c) {
     g_rectuiter_data.building_id = c.building_id;
 
     window_building_play_sound(&c, "wavs/barracks.wav");
-    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
-    lang_text_draw_centered(136, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
+    lang_text_draw_centered(136, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_WEAPONS), c.offset + vec2i{64, 38});
 
     building* b = building_get(c.building_id);
@@ -267,7 +267,7 @@ void building_recruiter::window_info_background(object_info &c) {
             window_building_draw_description_at(c, 70, 136, 8 + offset);
         }
     }
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
     window_building_draw_employment(&c, 142);
     lang_text_draw(50, 21, c.offset.x + 46, c.offset.y + 204, FONT_NORMAL_BLACK_ON_LIGHT); // "Priority"
     lang_text_draw(91, 0, c.offset.x + 46, c.offset.y + 224, FONT_NORMAL_BLACK_ON_LIGHT);  // "Tower"

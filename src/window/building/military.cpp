@@ -70,39 +70,39 @@ static void draw_priority_buttons(int x, int y, int buttons) {
 void window_building_draw_wall(object_info* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/wall.wav");
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(139, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 139, 1);
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(139, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    window_building_draw_description_at(c, 16 * c->bgsize.y - 158, 139, 1);
 }
 
 void window_building_draw_ferry(object_info* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/gatehouse.wav");
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(e_text_ferry_landing, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(e_text_ferry_landing, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     building *ferry = building_get(c->building_id);
     if (!map_routing_ferry_has_routes(ferry)) {
-        window_building_draw_description_at(c, 16 * c->height_blocks - 158, e_text_ferry_landing, e_text_ferry_landing_no_routes);
+        window_building_draw_description_at(c, 16 * c->bgsize.y - 158, e_text_ferry_landing, e_text_ferry_landing_no_routes);
     } else if (!ferry->has_road_access) {
-        window_building_draw_description_at(c, 16 * c->height_blocks - 158, e_text_ferry_landing, e_text_ferry_landing_no_roads);
+        window_building_draw_description_at(c, 16 * c->bgsize.y - 158, e_text_ferry_landing, e_text_ferry_landing_no_roads);
     } else if (ferry->num_workers <= 0) {
-        window_building_draw_description_at(c, 16 * c->height_blocks - 158, e_text_ferry_landing, e_text_ferry_landing_no_workers);
+        window_building_draw_description_at(c, 16 * c->bgsize.y - 158, e_text_ferry_landing, e_text_ferry_landing_no_workers);
     }
 }
 
 void window_building_draw_gatehouse(object_info* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/gatehouse.wav");
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(e_text_gate_house, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 90, 1);
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(e_text_gate_house, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    window_building_draw_description_at(c, 16 * c->bgsize.y - 158, 90, 1);
 }
 
 void window_building_draw_tower(object_info* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/tower.wav");
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(e_text_tower, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(e_text_tower, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
     if (!c->has_road_access)
@@ -114,15 +114,15 @@ void window_building_draw_tower(object_info* c) {
     else {
         window_building_draw_description(c, 91, 4);
     }
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 136, c->width_blocks - 2, 4);
+    inner_panel_draw(c->offset.x + 16, c->offset.y + 136, c->bgsize.x - 2, 4);
     window_building_draw_employment(c, 142);
 }
 
 void window_building_draw_military_academy(object_info* c) {
     c->help_id = 88;
     window_building_play_sound(c, "wavs/mil_acad.wav");
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(135, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(135, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
     if (!c->has_road_access)
@@ -134,17 +134,17 @@ void window_building_draw_military_academy(object_info* c) {
     else {
         window_building_draw_description(c, 135, 3);
     }
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 136, c->width_blocks - 2, 4);
+    inner_panel_draw(c->offset.x + 16, c->offset.y + 136, c->bgsize.x - 2, 4);
     window_building_draw_employment(c, 142);
 }
 
 void window_building_draw_fort(object_info* c) {
     c->help_id = 87;
     window_building_play_sound(c, "wavs/fort.wav");
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(89, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(89, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     int text_id = formation_get(c->formation_id)->cursed_by_mars ? 1 : 2;
-    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 89, text_id);
+    window_building_draw_description_at(c, 16 * c->bgsize.y - 158, 89, text_id);
 }
 
 void window_building_draw_legion_info(object_info* c) {
@@ -152,8 +152,8 @@ void window_building_draw_legion_info(object_info* c) {
     const formation* m = formation_get(c->formation_id);
     painter ctx = game.painter();
     c->help_id = 87;
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(138, m->legion_id, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(138, m->legion_id, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     // standard icon at the top
     int image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
@@ -287,7 +287,7 @@ void window_building_draw_legion_info_foreground(object_info* c) {
         }
         button_border_draw(c->offset.x + 19 + 85 * i, c->offset.y + 139, 84, 84, has_focus);
     }
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 230, c->width_blocks - 2, 4);
+    inner_panel_draw(c->offset.x + 16, c->offset.y + 230, c->bgsize.x - 2, 4);
 
     int title_id;
     int text_id;
@@ -355,11 +355,11 @@ void window_building_draw_legion_info_foreground(object_info* c) {
         break;
     }
     lang_text_draw(138, title_id, c->offset.x + 24, c->offset.y + 236, FONT_NORMAL_WHITE_ON_DARK);
-    lang_text_draw_multiline(138, text_id, c->offset + vec2i{24, 252}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw_multiline(138, text_id, c->offset + vec2i{24, 252}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_DARK);
 
     if (!m->is_at_fort) {
-        button_border_draw(c->offset.x + 16 * (c->width_blocks - 18) / 2, c->offset.y + 16 * c->height_blocks - 48, 288, 32, data.return_button_id == 1);
-        lang_text_draw_centered(138, 58, c->offset.x + 16 * (c->width_blocks - 18) / 2, c->offset.y + 16 * c->height_blocks - 39, 288, FONT_NORMAL_BLACK_ON_LIGHT);
+        button_border_draw(c->offset.x + 16 * (c->bgsize.x - 18) / 2, c->offset.y + 16 * c->bgsize.y - 48, 288, 32, data.return_button_id == 1);
+        lang_text_draw_centered(138, 58, c->offset.x + 16 * (c->bgsize.x - 18) / 2, c->offset.y + 16 * c->bgsize.y - 39, 288, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
 
@@ -372,7 +372,7 @@ int window_building_handle_mouse_legion_info(const mouse* m, object_info* c) {
             data.focus_button_id = 0;
     }
     if (!button_id) {
-        button_id = generic_buttons_handle_mouse(m, c->offset.x + 16 * (c->width_blocks - 18) / 2, c->offset.y + 16 * c->height_blocks - 48, return_button, 1, &data.return_button_id);
+        button_id = generic_buttons_handle_mouse(m, c->offset.x + 16 * (c->bgsize.x - 18) / 2, c->offset.y + 16 * c->bgsize.y - 48, return_button, 1, &data.return_button_id);
     }
     data.context_for_callback = 0;
     return button_id;

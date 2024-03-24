@@ -120,15 +120,15 @@ void window_building_draw_dock_orders(object_info* c) {
     c->help_id = 83;
     int y_offset = window_building_get_vertical_offset(c, 28);
     outer_panel_draw(vec2i{c->offset.x, y_offset}, 29, 28);
-    lang_text_draw_centered(101, 0, c->offset.x, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c->offset.x + 16, y_offset + 42, c->width_blocks - 2, 21);
+    lang_text_draw_centered(101, 0, c->offset.x, y_offset + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    inner_panel_draw(c->offset.x + 16, y_offset + 42, c->bgsize.x - 2, 21);
 }
 
 void window_building_draw_dock(object_info* c) {
     c->help_id = 83;
     window_building_play_sound(c, "wavs/dock.wav");
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(101, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(101, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c->building_id);
 
@@ -156,7 +156,7 @@ void window_building_draw_dock(object_info* c) {
         }
     }
 
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 136, c->width_blocks - 2, 4);
+    inner_panel_draw(c->offset.x + 16, c->offset.y + 136, c->bgsize.x - 2, 4);
     window_building_draw_employment(c, 142);
 }
 
@@ -191,8 +191,8 @@ void window_building_draw_dock_orders_foreground(object_info* c) {
 
 void window_building_draw_dock_foreground(object_info* c) {
     auto &data = g_window_building_distribution;
-    button_border_draw(c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, 16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(98, 5, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 30, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    button_border_draw(c->offset.x + 80, c->offset.y + 16 * c->bgsize.y - 34, 16 * (c->bgsize.x - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(98, 5, c->offset.x + 80, c->offset.y + 16 * c->bgsize.y - 30, 16 * (c->bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
 void building_dock::window_info_background(object_info &c) {
@@ -219,7 +219,7 @@ void window_building_dock_orders(int index, int param2) {
 
 int window_building_handle_mouse_dock(const mouse* m, object_info* c) {
     auto &data = g_window_building_distribution;
-    return generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id);
+    return generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->bgsize.y - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id);
 }
 
 int window_building_handle_mouse_dock_orders(const mouse* m, object_info* c) {

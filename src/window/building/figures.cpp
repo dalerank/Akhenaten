@@ -247,7 +247,7 @@ void figure::draw_market_buyer(object_info* c) {
     }
 
     if (c->figure.phrase_group > 0 && c->figure.phrase_id >= 0) {
-        lang_text_draw_multiline(c->figure.phrase_group, c->figure.phrase_id, c->offset + vec2i{90, 160}, 16 * (c->width_blocks - 8), FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(c->figure.phrase_group, c->figure.phrase_id, c->offset + vec2i{90, 160}, 16 * (c->bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 
@@ -264,12 +264,12 @@ void figure::draw_normal_figure(object_info* c) {
     lang_text_draw(64, type, c->offset.x + 92, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
 
     if (c->figure.phrase_group > 0 && c->figure.phrase_id >= 0) {
-        lang_text_draw_multiline(c->figure.phrase_group, c->figure.phrase_id, c->offset + vec2i{90, 160}, 16 * (c->width_blocks - 8), FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(c->figure.phrase_group, c->figure.phrase_id, c->offset + vec2i{90, 160}, 16 * (c->bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 
 static void draw_figure_info(object_info* c, int figure_id) {
-    button_border_draw(c->offset.x + 24, c->offset.y + 102, 16 * (c->width_blocks - 3), 138, 0);
+    button_border_draw(c->offset.x + 24, c->offset.y + 102, 16 * (c->bgsize.x - 3), 138, 0);
 
     figure* f = figure_get(figure_id);
     int type = f->type;
@@ -293,9 +293,9 @@ static void draw_figure_info(object_info* c, int figure_id) {
 }
 
 void window_building_draw_figure_list(object_info* c) {
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 40, c->width_blocks - 2, 13);
+    inner_panel_draw(c->offset.x + 16, c->offset.y + 40, c->bgsize.x - 2, 13);
     if (c->figure.count <= 0) {
-        lang_text_draw_centered(70, 0, c->offset.x, c->offset.y + 120, 16 * c->width_blocks, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_centered(70, 0, c->offset.x, c->offset.y + 120, 16 * c->bgsize.x, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         for (int i = 0; i < c->figure.count; i++) {
             button_border_draw(c->offset.x + 60 * i + 25, c->offset.y + 45, 52, 52, i == c->figure.selected_index);

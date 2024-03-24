@@ -61,16 +61,16 @@ void building_granary::draw_orders_foreground(object_info &c) {
     }
 
     // emptying button
-    button_border_draw(c.offset.x + 80, y_offset + 404 - 15 * 16, 16 * (c.width_blocks - 10), 20, data.orders_focus_button_id == 1 ? 1 : 0);
+    button_border_draw(c.offset.x + 80, y_offset + 404 - 15 * 16, 16 * (c.bgsize.x - 10), 20, data.orders_focus_button_id == 1 ? 1 : 0);
     if (storage->empty_all) {
-        lang_text_draw_centered(98, 8, c.offset.x + 80, y_offset + 408 - 15 * 16, 16 * (c.width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_centered(98, 8, c.offset.x + 80, y_offset + 408 - 15 * 16, 16 * (c.bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
-        lang_text_draw_centered(98, 7, c.offset.x + 80, y_offset + 408 - 15 * 16, 16 * (c.width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_centered(98, 7, c.offset.x + 80, y_offset + 408 - 15 * 16, 16 * (c.bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     // accept none button
-    button_border_draw(c.offset.x + 80, y_offset + 382 - 15 * 16, 16 * (c.width_blocks - 10), 20, data.orders_focus_button_id == 2 ? 1 : 0);
-    lang_text_draw_centered(99, 7, c.offset.x + 80, y_offset + 386 - 15 * 16, 16 * (c.width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    button_border_draw(c.offset.x + 80, y_offset + 382 - 15 * 16, 16 * (c.bgsize.x - 10), 20, data.orders_focus_button_id == 2 ? 1 : 0);
+    lang_text_draw_centered(99, 7, c.offset.x + 80, y_offset + 386 - 15 * 16, 16 * (c.bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
 int building_granary::window_info_handle_mouse(const mouse *m, object_info &c) {
@@ -90,9 +90,9 @@ void building_granary::window_info_foreground(object_info &ctx) {
     g_granary_info_window.draw();
 
     auto &data = g_window_building_distribution;
-    button_border_draw(ctx.offset.x + 80, ctx.offset.y + 16 * ctx.height_blocks - 34, 16 * (ctx.width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(98, 5, ctx.offset.x + 80, ctx.offset.y + 16 * ctx.height_blocks - 30, 16 * (ctx.width_blocks - 10), FONT_NORMAL_BLACK_ON_LIGHT);
-    draw_permissions_buttons(ctx.offset.x + 58, ctx.offset.y + 19 * ctx.height_blocks - 82, 1);
+    button_border_draw(ctx.offset.x + 80, ctx.offset.y + 16 * ctx.bgsize.y - 34, 16 * (ctx.bgsize.x - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(98, 5, ctx.offset.x + 80, ctx.offset.y + 16 * ctx.bgsize.y - 30, 16 * (ctx.bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    draw_permissions_buttons(ctx.offset.x + 58, ctx.offset.y + 19 * ctx.bgsize.y - 82, 1);
 }
 
 void building_granary::window_info_background(object_info &ctx) {
@@ -102,8 +102,8 @@ void building_granary::window_info_background(object_info &ctx) {
         ctx.help_id = 3;
         int y_offset = window_building_get_vertical_offset(&ctx, 28 - 15);
         outer_panel_draw(vec2i{ctx.offset.x, y_offset}, 29, 28 - 15);
-        lang_text_draw_centered(98, 6, ctx.offset.x, y_offset + 10, 16 * ctx.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-        inner_panel_draw(ctx.offset.x + 16, y_offset + 42, ctx.width_blocks - 2, 21 - 15);
+        lang_text_draw_centered(98, 6, ctx.offset.x, y_offset + 10, 16 * ctx.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+        inner_panel_draw(ctx.offset.x + 16, y_offset + 42, ctx.bgsize.x - 2, 21 - 15);
         return;
     }
 
@@ -113,8 +113,7 @@ void building_granary::window_info_background(object_info &ctx) {
     ctx.help_id = 3;
     ctx.go_to_advisor.left_a = ADVISOR_LABOR;
     ctx.go_to_advisor.left_b = ADVISOR_POPULATION;
-    ctx.width_blocks = ui["background"].size.x;
-    ctx.height_blocks = ui["background"].size.y;
+    ctx.bgsize = ui["background"].size;
     data.building_id = ctx.building_id;
     window_building_play_sound(&ctx, "wavs/granary.wav");
     
@@ -131,9 +130,6 @@ void building_granary::window_info_background(object_info &ctx) {
     ui["storing"].text_var("#granary_storing %u #granary_units", granary->total_stored());
     ui["free_space"].text_var("#granary_space_for %u #granary_units", granary->space_for());
 
-    //        resource_image_offset(RESOURCE_FIGS, RESOURCE_IMAGE_ICON);
-    int image_id = image_id_resource_icon(0);
-    painter p = game.painter();
     int food1 = city_allowed_foods(0);
     ui["food0_icon"].image(food1); // grain
     ui["food0_text"].text_var(food1 ? "%u %s" : "", granary->data.granary.resource_stored[food1], (pcstr)lang_get_string(ui.resource_text_group, food1));

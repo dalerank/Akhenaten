@@ -19,8 +19,8 @@
 
 static void draw_vacant_lot(object_info* c) {
     window_building_prepare_figure_list(c);
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(128, 0, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(128, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_figure_list(c);
 
     int text_id = 2;
@@ -30,7 +30,7 @@ static void draw_vacant_lot(object_info* c) {
         text_id = 1;
     }
 
-    window_building_draw_description_at(c, 16 * c->height_blocks - 113, 128, text_id);
+    window_building_draw_description_at(c, 16 * c->bgsize.y - 113, 128, text_id);
 }
 static void draw_population_info(object_info* c, int y_offset) {
     painter ctx = game.painter();
@@ -95,17 +95,17 @@ void window_building_draw_house(object_info* c) {
     }
 
     int level = b->type - 10;
-    outer_panel_draw(c->offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(29, level, c->offset.x, c->offset.y + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 148, c->width_blocks - 2, 10);
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(29, level, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    inner_panel_draw(c->offset.x + 16, c->offset.y + 148, c->bgsize.x - 2, 10);
 
     if (b->data.house.evolve_text_id == 62) { // is about to devolve
         int width = lang_text_draw(127, 40 + b->data.house.evolve_text_id, c->offset.x + 32, c->offset.y + Y_COMPLAINTS, FONT_NORMAL_BLACK_ON_LIGHT);
         width += lang_text_draw_colored(41, building_get(c->worst_desirability_building_id)->type, c->offset.x + 32 + width, c->offset.y + Y_COMPLAINTS, FONT_NORMAL_YELLOW, 0);
         text_draw((uint8_t*)")", c->offset.x + 32 + width, c->offset.y + Y_COMPLAINTS, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-        lang_text_draw_multiline(127, 41 + b->data.house.evolve_text_id, c->offset + vec2i{32, Y_COMPLAINTS + 16}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_multiline(127, 41 + b->data.house.evolve_text_id, c->offset + vec2i{32, Y_COMPLAINTS + 16}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
     } else { // needs something to evolve 
-        lang_text_draw_multiline(127, 40 + b->data.house.evolve_text_id, c->offset + vec2i{32, Y_COMPLAINTS}, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_multiline(127, 40 + b->data.house.evolve_text_id, c->offset + vec2i{32, Y_COMPLAINTS}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     int resource_image = image_id_resource_icon(0);
@@ -151,6 +151,6 @@ void window_building_draw_house(object_info* c) {
     draw_tax_info(c, c->offset.y + 194);
     draw_happiness_info(c, c->offset.y + 214);
     if (!model_get_house(b->subtype.house_level)->food_types) { // no foods
-        lang_text_draw_multiline(127, 33, c->offset + vec2i{36, 234}, 16 * (c->width_blocks - 6), FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_multiline(127, 33, c->offset + vec2i{36, 234}, 16 * (c->bgsize.x - 6), FONT_NORMAL_BLACK_ON_DARK);
     }
 }

@@ -231,8 +231,8 @@ void draw_permissions_buttons(int x, int y, int buttons) {
 int window_building_handle_mouse_granary(const mouse* m, object_info* c) {
     auto &data = g_window_building_distribution;
     data.building_id = c->building_id;
-    generic_buttons_handle_mouse(m, c->offset.x + 58, c->offset.y + 19 * c->height_blocks - 82, warehouse_distribution_permissions_buttons, 1, &data.permission_focus_button_id);
-    generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id);
+    generic_buttons_handle_mouse(m, c->offset.x + 58, c->offset.y + 19 * c->bgsize.y - 82, warehouse_distribution_permissions_buttons, 1, &data.permission_focus_button_id);
+    generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->bgsize.y - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id);
     return 0;
 }
 
@@ -283,7 +283,7 @@ static scrollbar_type scrollbar = {590, 52, 336, on_scroll};
 int window_building_handle_mouse_warehouse(const mouse* m, object_info* c) {
     auto &data = g_window_building_distribution;
     data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->height_blocks - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id)) {
+    if (generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->bgsize.y - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id)) {
     }
     // temp - todo: fix buttons
     //    if (generic_buttons_handle_mouse(m, c->offset.x + 64, c->offset.y + 16 * c->height_blocks - 75,

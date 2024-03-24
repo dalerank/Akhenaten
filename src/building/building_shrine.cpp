@@ -20,13 +20,13 @@ static void building_shrine_draw_info(object_info& c, const char* type, int text
     painter ctx = game.painter();
     c.help_id = 67;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
-    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
-    lang_text_draw_centered(161, text_id, c.offset.x, c.offset.y + 12, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
+    lang_text_draw_centered(161, text_id, c.offset.x, c.offset.y + 12, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     if (c.has_road_access) {
-        ImageDraw::img_generic(ctx, image_offset + image_id_from_group(GROUP_PANEL_WINDOWS), c.offset.x + 190, c.offset.y + 16 * c.height_blocks - 148);
+        ImageDraw::img_generic(ctx, image_offset + image_id_from_group(GROUP_PANEL_WINDOWS), c.offset.x + 190, c.offset.y + 16 * c.bgsize.y - 148);
     } else {
-        window_building_draw_description_at(c, 16 * c.height_blocks - 128, 69, 25);
+        window_building_draw_description_at(c, 16 * c.bgsize.y - 128, 69, 25);
     }
 }
 

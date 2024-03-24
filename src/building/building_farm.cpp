@@ -75,9 +75,9 @@ static void building_farm_draw_info(object_info &c, const char* type, e_resource
     c.help_id = meta.help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
-    outer_panel_draw(c.offset, c.width_blocks, c.height_blocks);
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     ctx.draw(sprite_resource_icon(resource), c.offset + vec2i{10, 10});
-    lang_text_draw_centered(meta.text_id, 0, c.offset.x, c.offset.y + 10, 16 * c.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(meta.text_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
 
@@ -111,23 +111,23 @@ static void building_farm_draw_info(object_info &c, const char* type, e_resource
     else
         window_building_draw_description_at(c, 70, meta.text_id, 10);
 
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.width_blocks - 2, 4);
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
     if (building_is_floodplain_farm(*b)) {
         window_building_draw_employment_flood_farm(&c, 142);
 
         // next flood info
         int month_id = 8; // TODO: fetch flood info
-        width = lang_text_draw(177, 2, c.offset.x + 32, c.offset.y + 16 * c.height_blocks - 136, FONT_NORMAL_BLACK_ON_LIGHT);
-        lang_text_draw(160, month_id, c.offset.x + 32 + width, c.offset.y + 16 * c.height_blocks - 136, FONT_NORMAL_BLACK_ON_LIGHT);
+        width = lang_text_draw(177, 2, c.offset.x + 32, c.offset.y + 16 * c.bgsize.y - 136, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw(160, month_id, c.offset.x + 32 + width, c.offset.y + 16 * c.bgsize.y - 136, FONT_NORMAL_BLACK_ON_LIGHT);
 
         // irrigated?
         int is_not_irrigated = 0; // TODO: fetch irrigation info
-        lang_text_draw(177, is_not_irrigated, c.offset.x + 32, c.offset.y + 16 * c.height_blocks - 120,FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw(177, is_not_irrigated, c.offset.x + 32, c.offset.y + 16 * c.bgsize.y - 120,FONT_NORMAL_BLACK_ON_LIGHT);
 
-        window_building_draw_description_at(c, 16 * c.height_blocks - 96, meta.text_id, 1);
+        window_building_draw_description_at(c, 16 * c.bgsize.y - 96, meta.text_id, 1);
     } else {
         window_building_draw_employment(&c, 142);
-        window_building_draw_description_at(c, 16 * c.height_blocks - 136, meta.text_id, 1);
+        window_building_draw_description_at(c, 16 * c.bgsize.y - 136, meta.text_id, 1);
     }
 }
 
