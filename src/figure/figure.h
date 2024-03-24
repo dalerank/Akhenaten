@@ -31,6 +31,7 @@ class figure_sled;
 class figure_musician;
 class figure_dancer;
 class figure_labor_seeker;
+class figure_worker;
 
 struct animation_t;
 
@@ -245,6 +246,7 @@ public:
     figure_musician *dcast_musician();
     figure_dancer *dcast_dancer();
     figure_labor_seeker *dcast_labor_seeker();
+    figure_worker *dcast_worker();
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -537,6 +539,7 @@ public:
     virtual figure_musician *dcast_musician() { return nullptr; }
     virtual figure_dancer *dcast_dancer() { return nullptr; }
     virtual figure_labor_seeker *dcast_labor_seeker() { return nullptr; }
+    virtual figure_worker *dcast_worker() { return nullptr; }
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }

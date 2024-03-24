@@ -5,6 +5,7 @@
 class figure_worker : public figure_impl {
 public:
     figure_worker(figure *f) : figure_impl(f) {}
+    virtual figure_worker *dcast_worker() override { return this; }
 
     virtual void on_create() override {}
     virtual void figure_action() override;

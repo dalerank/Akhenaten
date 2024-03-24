@@ -28,6 +28,7 @@ void config_load_figure_worker() {
 void figure_worker::figure_action() {
     base.use_cross_country = false;
     base.max_roam_length = 384;
+    int progress = 0;
     building* bhome = home();
     building* b_dest = destination();
     e_terrain_usage terrain_usage = TERRAIN_USAGE_ROADS;
@@ -87,10 +88,19 @@ void figure_worker::figure_action() {
         break;
 
     case FIGURE_ACTION_12_WORKER_LEVELING_GROUND:
-        int progress = map_monuments_get_progress(tile());
+        progress = map_monuments_get_progress(tile());
         if (progress < 200) {
             map_monuments_set_progress(tile(), progress + 1);
         } else {
+            advance_action(FIGURE_ACTION_13_WORKER_BACK_FROM_WORKS);
+            if (home()) {
+                set_destination(home());
+            }
+        }
+        break;
+
+    case FIGURE_ACTION_13_WORKER_BACK_FROM_WORKS:
+        if (do_gotobuilding(destination(), stop_at_road, TERRAIN_USAGE_PREFER_ROADS)) {
             poof();
         }
         break;
