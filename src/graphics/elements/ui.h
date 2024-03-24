@@ -98,7 +98,7 @@ struct element {
         }
 
         if (inSubstr) {
-            result.append(lang_text_from_key(replacement));
+            result.append(text_from_key(replacement.c_str()));
         }
 
         str = result;
