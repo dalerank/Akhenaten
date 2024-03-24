@@ -887,14 +887,14 @@ static void update_marshland_image(int grid_offset) {
             else
                 image_id = image_id_from_group(GROUP_TERRAIN_REEDS) + (map_random_get(grid_offset) & 7);
         }
-        return map_image_set(grid_offset, image_id);
+        map_image_set(grid_offset, image_id);
     }
 }
 void map_tiles_update_vegetation(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND)) {
-        return update_marshland_image(grid_offset);
+        update_marshland_image(grid_offset);
     } else if (map_terrain_is(grid_offset, TERRAIN_TREE)) {
-        return update_tree_image(grid_offset);
+        update_tree_image(grid_offset);
     }
 }
 void map_tiles_update_all_vegetation_tiles() {

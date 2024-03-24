@@ -33,7 +33,7 @@ int map_get_vegetation_growth(int grid_offset) {
     return map_grid_get(&g_terrain_vegetation_growth, grid_offset);
 }
 
-void vegetation_deplete(int grid_offset) {
+void map_vegetation_deplete(int grid_offset) {
     map_grid_set(&g_terrain_vegetation_growth, grid_offset, 0);
     map_tiles_update_vegetation(grid_offset);
 }
@@ -42,17 +42,16 @@ static void vegetation_tile_update(int grid_offset) {
     int growth = map_get_vegetation_growth(grid_offset);
     if (growth < 255) {
         random_generate_next();
-        int r = random_short() % 10 + 25;
-        growth += r;
-        if (growth > 255)
-            growth -= 255;
+        int r = random_short() % 10 + 5;
+        growth = std::clamp(growth + r, 0, 255);
 
         map_grid_set(&g_terrain_vegetation_growth, grid_offset, growth);
-        if (growth == 255)
+        if (growth == 255) {
             map_tiles_update_vegetation(grid_offset);
+        }
     }
 }
-void vegetation_growth_update() {
+void map_vegetation_growth_update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Vegetation Groth Update");
     for (int i = 0; i < trees_tiles_cache.size(); ++i)
         vegetation_tile_update(trees_tiles_cache.at(i));

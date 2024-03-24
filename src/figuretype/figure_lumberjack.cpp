@@ -41,7 +41,7 @@ void figure::lumberjack_action() {
         } else {
             // harvesting.....
             if (wait_ticks >= 300) {
-                vegetation_deplete(tile.grid_offset());
+                map_vegetation_deplete(tile.grid_offset());
                 advance_action(11);
             }
             // progress faster with multiple people on one spot

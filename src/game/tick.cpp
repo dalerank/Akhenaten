@@ -181,14 +181,13 @@ static void advance_tick(void) {
         city_resource_calculate_food_stocks_and_supply_wheat();
         break;
     case 18:
-        //            city_resource_calculate_workshop_stocks();
+        map_vegetation_growth_update();
         break;
     case 19:
         building_river_update_open_water_access();
         break;
     case 20:
         building_industry_update_production();
-        vegetation_growth_update();
         break;
     case 21:
         building_maintenance_check_kingdome_access();

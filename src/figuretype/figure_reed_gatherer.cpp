@@ -64,7 +64,7 @@ void figure_reed_gatherer::figure_action() {
         } else {
             // harvesting.....
             if (wait_ticks >= 300) {
-                vegetation_deplete(tile());
+                map_vegetation_deplete(tile());
                 advance_action(ACTION_11_REED_GATHERER_RETURN_HOME);
             }
             // progress faster with multiple people on one spot
