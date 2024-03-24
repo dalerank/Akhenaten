@@ -19,7 +19,7 @@ public:
     virtual void window_info_background(object_info &ctx) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual building_farm *dcast_farm() override { return this; }
-    virtual e_sound_channel_city sound_channel() const;
+    virtual e_sound_channel_city sound_channel() const override;
     virtual void spawn_figure() override;
 
     void deplete_soil();
