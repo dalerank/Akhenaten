@@ -100,7 +100,7 @@ building_guild_stonemasons = {
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
 }
 
-building_guild_bricklayers = {
+building_bricklayers_guild = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_BRICKLAYERS_GUILD }
   },
