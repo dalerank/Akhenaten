@@ -12,7 +12,6 @@
 #include "building/building_weaponsmith.h"
 #include "building/building_tax_collector.h"
 #include "building/building_physician.h"
-#include "building/monument_mastaba.h"
 #include "building/building_bandstand.h"
 #include "building/building_shrine.h"
 #include "building/building_mansion.h"
@@ -318,13 +317,6 @@ building_impl *building::dcast() {
     case BUILDING_DYNASTY_MANSION:
         _ptr = new building_mansion(*this);
         break;
-    
-    case BUILDING_SMALL_MASTABA:
-    case BUILDING_SMALL_MASTABA_SIDE:
-    case BUILDING_SMALL_MASTABA_ENTRANCE:
-    case BUILDING_SMALL_MASTABA_WALL:
-         _ptr = new building_small_mastaba(*this);
-         break;
     }
 
     if (!_ptr) {
@@ -353,6 +345,7 @@ building_clay_pit *building::dcast_clay_pit() { return dcast()->dcast_clay_pit()
 building_reed_gatherer *building::dcast_reed_gatherer() { return dcast()->dcast_reed_gatherer(); }
 building_papyrus_maker *building::dcast_papyrus_maker() { return dcast()->dcast_papyrus_maker(); }
 building_dock *building::dcast_dock() { return dcast()->dcast_dock(); }
+building_work_camp *building::dcast_work_camp() { return dcast()->dcast_work_camp(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

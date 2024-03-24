@@ -1,8 +1,10 @@
 #include "building/building_work_camp.h"
 
 #include "building/industry.h"
+#include "building/monuments.h"
 #include "city/object_info.h"
 #include "city/labor.h"
+#include "city/floods.h"
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
@@ -71,6 +73,23 @@ void building_work_camp::window_info_background(object_info &c) {
     window_building_draw_employment(&c, 142);
 }
 
+building* building_work_camp::determine_worker_needed() {
+    return building_first([] (building &b) {
+        const bool floodplain_farm = floodplains_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(b);
+        if (floodplain_farm) {
+            return (!b.data.industry.worker_id && b.data.industry.labor_days_left <= 47 && !b.num_workers);
+        }
+
+        const bool monument_leveling = building_is_monument(b.type) && b.data.monuments.phase < 2;
+        if (monument_leveling) {
+            return building_monument_need_workers(&b);
+        }
+
+        return false;
+    });
+}
+
+
 void building_work_camp::spawn_figure() {
     if (!common_spawn_figure_trigger(100)) {
         return;
@@ -80,7 +99,7 @@ void building_work_camp::spawn_figure() {
         return;
     }
 
-    building* dest = building_determine_worker_needed();
+    building* dest = determine_worker_needed();
     if (dest) {
         figure *f = base.create_figure_with_destination(FIGURE_LABORER, dest, FIGURE_ACTION_10_WORKER_CREATED, BUILDING_SLOT_SERVICE);
         data.industry.spawned_worker_this_month = true;

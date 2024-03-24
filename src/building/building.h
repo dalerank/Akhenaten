@@ -360,6 +360,7 @@ public:
     building_reed_gatherer *dcast_reed_gatherer();
     building_papyrus_maker *dcast_papyrus_maker();
     building_dock *dcast_dock();
+    building_work_camp *dcast_work_camp();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -461,6 +462,7 @@ public:
     virtual building_reed_gatherer *dcast_reed_gatherer() { return nullptr; }
     virtual building_papyrus_maker *dcast_papyrus_maker() { return nullptr; }
     virtual building_dock *dcast_dock() { return nullptr; }
+    virtual building_work_camp *dcast_work_camp() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
